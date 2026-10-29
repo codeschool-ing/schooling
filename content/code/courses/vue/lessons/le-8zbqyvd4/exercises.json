@@ -1,0 +1,771 @@
+[
+  {
+    "id": "ex-beec1gyb",
+    "version": 1,
+    "section": "same-component",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `TwoApis` transcript, why does the Options card say `(1 requests)` and the Composition card `(0 requests)`?",
+    "hint": "Which of the two values is shared, and which is each card's own?",
+    "choices": [
+      {
+        "text": "The Composition card's `ref` did not redraw its template",
+        "correct": false,
+        "why": "It did redraw: its percentage moved to 33% with the other. Its count is 0 because nobody pressed its button."
+      },
+      {
+        "text": "Only one card may count requests while they share `done`",
+        "correct": false,
+        "why": "Sharing `done` says nothing about `clicks`. Press the second button and it counts too."
+      },
+      {
+        "text": "Each card has its own `clicks`, and one was pressed",
+        "correct": true,
+        "why": "Right. `done` lives in `TwoApis` and both read it; `clicks` is state of each card, and only the first was clicked."
+      },
+      {
+        "text": "The Options card counted one click in `data` and its `emit` counted none",
+        "correct": false,
+        "why": "There is one count per card and it lives in `data`; the emit only told the parent to add 15 minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybzy9n97",
+    "version": 1,
+    "section": "same-component",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `TwoApis` transcript, what percentage did both cards show after the click?",
+    "hint": "60 of 180, rounded.",
+    "value": 33,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-axjg2mrr",
+    "version": 1,
+    "section": "same-component",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component of five hundred lines does four things in the Options API. What does changing one of those things involve?",
+    "hint": "The second row of the table: what is the code grouped by?",
+    "choices": [
+      {
+        "text": "One entry in `methods`, since each concern is one method",
+        "correct": false,
+        "why": "A concern has state, derived values, a watcher and cleanup too, and those live in other options."
+      },
+      {
+        "text": "A rewrite into `<script setup>` before anything can change",
+        "correct": false,
+        "why": "Options components keep working and can be changed in place; the last section moves one across a piece at a time."
+      },
+      {
+        "text": "One mixin, because Options code keeps each concern in a mixin of its own",
+        "correct": false,
+        "why": "Mixins are a way to share options between components, not how a single component is laid out."
+      },
+      {
+        "text": "Visits to `data`, `computed`, `watch` and `beforeUnmount`",
+        "correct": true,
+        "why": "Right. The code is grouped by kind, so one concern's pieces sit in four options, far apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cmh5pft",
+    "version": 1,
+    "section": "data-methods-computed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `data` written as a function that returns an object, rather than as the object itself?",
+    "hint": "How many cards would hold the same `clicks`?",
+    "choices": [
+      {
+        "text": "Each instance calls it and gets a fresh object",
+        "correct": true,
+        "why": "Right. Vue calls it once per instance; one shared object would give every card the same `clicks`."
+      },
+      {
+        "text": "Vue 3 cannot make a plain object reactive",
+        "correct": false,
+        "why": "It can: `reactive({})` does exactly that. The function is about how many objects there are, not whether they react."
+      },
+      {
+        "text": "So Vue can wait to build the state until the template first reads it",
+        "correct": false,
+        "why": "Vue calls `data()` while the instance is created, before `created`, whatever the template reads."
+      },
+      {
+        "text": "So that `this` inside it is the parent component",
+        "correct": false,
+        "why": "`this` in an option is the component's own instance; the function is there to make a new object per instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-hk7nm65h",
+    "version": 1,
+    "section": "data-methods-computed",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an Options API component, which of these can `this.label` be? Choose all that apply.",
+    "hint": "Vue merges several options onto one object.",
+    "choices": [
+      {
+        "text": "A prop",
+        "correct": true,
+        "why": "Right. Props are on `this` beside everything else."
+      },
+      {
+        "text": "A ref that you read as `this.label.value`",
+        "correct": false,
+        "why": "On `this` a ref is unwrapped: `this.label` is already the value."
+      },
+      {
+        "text": "A computed value",
+        "correct": true,
+        "why": "Right. Computed values join `this` as well, read without calling them."
+      },
+      {
+        "text": "A property that a mixin's `data` added",
+        "correct": true,
+        "why": "Right. That is why nothing says where a name came from: a mixin can put it there too."
+      },
+      {
+        "text": "A `const` declared inside another method",
+        "correct": false,
+        "why": "A local constant belongs to the call of that method and never reaches the instance."
+      },
+      {
+        "text": "A data property",
+        "correct": true,
+        "why": "Right. `data()` returns the state, and each key of it is on `this`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h2svgvs",
+    "version": 1,
+    "section": "data-methods-computed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`this.clicks` is the value, not a ref. Which cost of that does the lesson name?",
+    "hint": "Think of a function that should keep following a value after it was called.",
+    "choices": [
+      {
+        "text": "Every read needs `.value`, and it is easy to forget",
+        "correct": false,
+        "why": "That is the Composition API's cost, the other way round: on `this` there is no `.value` to forget."
+      },
+      {
+        "text": "There is no ref to hand to a function that should follow it",
+        "correct": true,
+        "why": "Right. You can only pass the current number; lesson 2's rules needed the ref itself to keep tracking."
+      },
+      {
+        "text": "The template no longer updates when `clicks` changes",
+        "correct": false,
+        "why": "It does: the card redrew `(1 requests)`. Unwrapping changes how you read the value, not whether it reacts."
+      },
+      {
+        "text": "Vue copies the number on every read, which slows a large component down",
+        "correct": false,
+        "why": "Nothing is copied; `this.clicks` reads through to the reactive state each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fmdk17c",
+    "version": 1,
+    "section": "this",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `ThisTrap`, why did `Shorter` throw while `Longer` worked?",
+    "hint": "Read the error: what was `this` when `minutes` was read?",
+    "choices": [
+      {
+        "text": "Its `this` was `window`, which has no `minutes`",
+        "correct": false,
+        "why": "Then the read would give `undefined`, not throw. The error reads a property of `undefined`: in a module the top-level `this` is `undefined`."
+      },
+      {
+        "text": "Vue binds methods in order and stopped after the first",
+        "correct": false,
+        "why": "Vue binds every method; binding an arrow simply has no effect, because an arrow keeps the `this` it was written with."
+      },
+      {
+        "text": "It is an arrow, and its `this` is the module's: `undefined`",
+        "correct": true,
+        "why": "Right. An arrow ignores how it is called; its `this` was fixed when the module was evaluated."
+      },
+      {
+        "text": "A method may not subtract from `data`; only a computed can change it",
+        "correct": false,
+        "why": "`longer` changed `data` from a method a moment earlier. Computed values derive, they do not write."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6p7b030",
+    "version": 1,
+    "section": "this",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `ThisTrap` transcript, how many minutes did the page show after both clicks?",
+    "hint": "Only one of the two buttons did its job.",
+    "value": 45,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n2p5d1ht",
+    "version": 1,
+    "section": "this",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method contains `setTimeout(function () { this.minutes += 15 }, 1000)`. What happens to the component's `minutes`?",
+    "hint": "The callback is an ordinary function. Who calls it?",
+    "choices": [
+      {
+        "text": "It goes up by 15, because Vue binds every function written inside a method",
+        "correct": false,
+        "why": "Vue binds the method itself, not the functions it creates; this one gets its `this` from the timer."
+      },
+      {
+        "text": "Nothing: the callback's `this` is set by the timer",
+        "correct": true,
+        "why": "Right. An ordinary function has a `this` of its own, and the timer's is not the component. An arrow would have kept the method's."
+      },
+      {
+        "text": "It goes up by 15 only if the method is written as an arrow too",
+        "correct": false,
+        "why": "An arrow method has the module's `this`, `undefined`, so the arrow inside it would inherit `undefined` as well."
+      },
+      {
+        "text": "The component fails to load: `function` is refused inside `methods`",
+        "correct": false,
+        "why": "Vue never sees the inner function; it is ordinary JavaScript and runs, with the wrong `this`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ntctcaf",
+    "version": 1,
+    "section": "lifecycle-names",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `OptionsLifecycle`, why did `beforeCreate` print `minutes is undefined`?",
+    "hint": "Compare it with the line `created` printed.",
+    "choices": [
+      {
+        "text": "`minutes` is in `data`, and only `props` exist that early",
+        "correct": false,
+        "why": "Props are set up before this hook, but that is beside the point: `minutes` is data, and data comes later."
+      },
+      {
+        "text": "`data` had not been set up yet",
+        "correct": true,
+        "why": "Right. The instance existed and its state did not; by `created`, one step later, `minutes` was 30."
+      },
+      {
+        "text": "`this` inside a hook is not the component",
+        "correct": false,
+        "why": "A hook written as a method has the component as `this`; `created` read `minutes` through it a moment later."
+      },
+      {
+        "text": "The template had not drawn `minutes` on the page yet",
+        "correct": false,
+        "why": "Rendering has nothing to do with the value: `created` read 30 with nothing rendered."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1hv3ams",
+    "version": 1,
+    "section": "lifecycle-names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `mounted` print `the element is a #text`?",
+    "hint": "Count the roots of the template.",
+    "choices": [
+      {
+        "text": "`mounted` runs before the DOM exists, so `$el` is a placeholder",
+        "correct": false,
+        "why": "The DOM exists by `mounted`; `created` was the hook with nothing rendered, and there `$el` was `null`."
+      },
+      {
+        "text": "`$el` is the first text of the template, `30 minutes`",
+        "correct": false,
+        "why": "The text node is empty, not the paragraph's text: Vue adds it as a marker."
+      },
+      {
+        "text": "Two roots, so `$el` is Vue's empty marker node",
+        "correct": true,
+        "why": "Right. A component with several roots has no single element; a template ref names the one you mean."
+      },
+      {
+        "text": "Vue 3 reports the `nodeName` of a `<p>` as `#text`",
+        "correct": false,
+        "why": "A `<p>` reports `P`. The node here is not the paragraph at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8axbp28",
+    "version": 1,
+    "section": "lifecycle-names",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Options API hooks have no `on…` partner in the Composition API? Choose all that apply.",
+    "hint": "The top of `<script setup>` takes their place.",
+    "choices": [
+      {
+        "text": "`mounted`",
+        "correct": false,
+        "why": "Its partner is `onMounted`."
+      },
+      {
+        "text": "`created`",
+        "correct": true,
+        "why": "Right. Top-level code in `<script setup>` runs at creation; there is no `onCreated`."
+      },
+      {
+        "text": "`beforeUnmount`",
+        "correct": false,
+        "why": "Its partner is `onBeforeUnmount`."
+      },
+      {
+        "text": "`beforeCreate`",
+        "correct": true,
+        "why": "Right. Like `created`, it is the top level of `<script setup>`."
+      },
+      {
+        "text": "`activated`",
+        "correct": false,
+        "why": "Its partner is `onActivated`, for a component kept alive."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcrct706",
+    "version": 1,
+    "section": "lifecycle-names",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Vue 2's `beforeDestroy` is called ___ in Vue 3, and a component still using the old name never runs that cleanup.",
+    "hint": "The Composition partner is `onBeforeUnmount`; drop the `on`.",
+    "blanks": [
+      {
+        "accept": [
+          "beforeUnmount"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fxw31tzj",
+    "version": 1,
+    "section": "watch-option",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After an upgrade to Vue 3, the watcher `sessions(list) {}` stopped running when the code calls `this.sessions.push(…)`. What fixes it?",
+    "hint": "Vue 2 watched arrays for mutation by default.",
+    "choices": [
+      {
+        "text": "Adding `immediate: true`",
+        "correct": false,
+        "why": "`immediate` runs it once at the start; afterwards it is still shallow and a push still passes unseen."
+      },
+      {
+        "text": "Moving it into `computed`, which follows arrays",
+        "correct": false,
+        "why": "A computed derives a value; it is not where a side effect such as saving belongs, and it is not a watcher."
+      },
+      {
+        "text": "`sessions: { handler(list) {}, deep: true }`",
+        "correct": true,
+        "why": "Right. The option form is shallow too, unless `deep: true` is said."
+      },
+      {
+        "text": "Calling `this.$forceUpdate()` after every push to the array",
+        "correct": false,
+        "why": "That redraws the component and runs no watcher; the watcher is shallow and stays so."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcmpaf2e",
+    "version": 1,
+    "section": "watch-option",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the Options API's closest thing to `watchEffect`?",
+    "hint": "It is a method on the instance, called from a hook.",
+    "choices": [
+      {
+        "text": "A `watchEffect` key inside the `watch` option",
+        "correct": false,
+        "why": "The `watch` option takes sources by name; there is no `watchEffect` in the options."
+      },
+      {
+        "text": "A `watch` entry with `immediate: true`",
+        "correct": false,
+        "why": "That runs once at the start and then watches the one name it was given, not whatever it reads."
+      },
+      {
+        "text": "A computed value that saves as a side effect",
+        "correct": false,
+        "why": "A computed runs when something reads it, not when its sources change; a side effect there is a bug."
+      },
+      {
+        "text": "`this.$watch(() => …, handler)` in `created`",
+        "correct": true,
+        "why": "Right. It returns a stop function, and a component that needs more than that is a candidate for `setup()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpspxft7",
+    "version": 1,
+    "section": "watch-option",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `watch()` call is the Composition partner of the option `'session.minutes'(now) {}`?",
+    "hint": "In the Composition API, a nested property is watched through a getter.",
+    "choices": [
+      {
+        "text": "`watch('session.minutes', (now) => {})`",
+        "correct": false,
+        "why": "A string path is the option form's spelling; `watch()` takes a ref, a reactive object or a getter."
+      },
+      {
+        "text": "`watch(() => session.value.minutes, (now) => {})`",
+        "correct": true,
+        "why": "Right. The getter reads the one property, so the watcher runs when it changes."
+      },
+      {
+        "text": "`watch(session, (now) => {}, { deep: true })`",
+        "correct": false,
+        "why": "That runs on any change inside `session`, and `now` is the whole session rather than its minutes."
+      },
+      {
+        "text": "`watch(session.value.minutes, (now) => {})`",
+        "correct": false,
+        "why": "That passes the number the property holds at that moment, which nothing can track."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp0s26dv",
+    "version": 1,
+    "section": "mixins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Mixins.vue`, why did the page show `course: course`?",
+    "hint": "Look at the order of the `mixins` array.",
+    "choices": [
+      {
+        "text": "The first mixin's `describe` ran with the second one's `label`",
+        "correct": false,
+        "why": "Then the page would read `progress: course`. Both names came from the same mixin."
+      },
+      {
+        "text": "The component itself sets `label` to `'course'`",
+        "correct": false,
+        "why": "`Mixins.vue` has no `data` of its own; every name on its `this` came from a mixin."
+      },
+      {
+        "text": "Vue merges mixins in alphabetical order of their names",
+        "correct": false,
+        "why": "The order is the array's, and `courseMixin` is listed second, which is why it won."
+      },
+      {
+        "text": "The second mixin won both names",
+        "correct": true,
+        "why": "Right. For `data` and `methods` the later one wins, and nothing warns."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6cvh3cd",
+    "version": 1,
+    "section": "mixins",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component and its mixins define the same options. Which statements describe how Vue 3 merges them? Choose all that apply.",
+    "hint": "There are two rules, one for names and one for hooks.",
+    "choices": [
+      {
+        "text": "The component's own `methods` win over any mixin's",
+        "correct": true,
+        "why": "Right. A mixin fills in; the component has the last word."
+      },
+      {
+        "text": "Vue warns in development when two mixins define one method",
+        "correct": false,
+        "why": "The transcript shows no warning: overwriting is how the merge works."
+      },
+      {
+        "text": "Every `mounted` hook runs, the mixins' first",
+        "correct": true,
+        "why": "Right. Hooks are the exception: they are all kept, in order."
+      },
+      {
+        "text": "The first mixin in the list wins, and later ones only fill gaps",
+        "correct": false,
+        "why": "It is the other way round: `courseMixin`, listed second, overwrote `progressMixin`."
+      },
+      {
+        "text": "For `data`, the later mixin in the list wins",
+        "correct": true,
+        "why": "Right. That is how `label` became `'course'`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j4mhmqc",
+    "version": 1,
+    "section": "mixins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the mixins' problems does `const { label: courseLabel } = useCourse()` deal with?",
+    "hint": "What happens to a second `label` on the way in?",
+    "choices": [
+      {
+        "text": "Parameters: the rename hands `courseLabel` to the function",
+        "correct": false,
+        "why": "Destructuring renames what came back; arguments go in the parentheses, as with `useWeek('2026-10-19')`."
+      },
+      {
+        "text": "The collision, and the unclear origin with it",
+        "correct": true,
+        "why": "Right. The caller names what it receives, so two `label`s cannot overwrite each other, and the line says where the name came from."
+      },
+      {
+        "text": "Neither: a composable is merged into `this` the way a mixin is",
+        "correct": false,
+        "why": "A composable is a function that returns values; nothing is merged, which is the point."
+      },
+      {
+        "text": "Reactivity, which a mixin's `data` lacked",
+        "correct": false,
+        "why": "A mixin's `data` is as reactive as the component's; the problems were all about names."
+      }
+    ]
+  },
+  {
+    "id": "ex-g928sdp7",
+    "version": 1,
+    "section": "mixing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Mixing.vue`, where did `this.next` come from?",
+    "hint": "Read the first option of the component.",
+    "choices": [
+      {
+        "text": "From `setup()`, which returned what `useWeek` gave it",
+        "correct": true,
+        "why": "Right. What `setup()` returns joins `this`, beside `data` and `methods`."
+      },
+      {
+        "text": "From `methods`, where Vue copies a composable's functions",
+        "correct": false,
+        "why": "`methods` holds only `forward`. Nothing is copied: `setup()` returned `next` by name."
+      },
+      {
+        "text": "From a mixin Vue builds out of `useWeek`",
+        "correct": false,
+        "why": "Vue builds no mixin; the composable is called once, inside `setup()`."
+      },
+      {
+        "text": "From `data`, into which `setup()` writes its values",
+        "correct": false,
+        "why": "`data` holds only `moves`. What `setup()` returns sits on `this` beside it, not inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkxwjm4e",
+    "version": 1,
+    "section": "mixing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `this` inside the `setup()` option?",
+    "hint": "When does `setup()` run, relative to the other options?",
+    "choices": [
+      {
+        "text": "The props object, which is why props reach `this`",
+        "correct": false,
+        "why": "Props arrive as `setup()`'s first argument instead; `this` is not involved."
+      },
+      {
+        "text": "The component, with `data` and `methods` already on it",
+        "correct": false,
+        "why": "Those options are set up after `setup()` returns; that is why it cannot read them through `this`."
+      },
+      {
+        "text": "There is no `this` there",
+        "correct": true,
+        "why": "Right. It runs before the instance's options are set up, and takes `props` as its first argument."
+      },
+      {
+        "text": "The parent component that rendered it",
+        "correct": false,
+        "why": "Nothing hands the parent to a child as `this`; inside `setup()` there is no `this` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-04h0w7e8",
+    "version": 1,
+    "section": "mixing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An old component keeps a timer in `data`, `mounted` and `beforeUnmount`, and you are asked to add a new composable to it. What is the first step the lesson gives?",
+    "hint": "Step 1 of moving a component across.",
+    "choices": [
+      {
+        "text": "Change `<script>` to `<script setup>` and move every option across at once",
+        "correct": false,
+        "why": "That is step 3, after nothing is left outside `setup()`. A component is moved, not rewritten in one go."
+      },
+      {
+        "text": "Wrap the composable in a mixin, so that it fits the Options API",
+        "correct": false,
+        "why": "That brings back the mixins' three problems; an Options component can call a composable from `setup()`."
+      },
+      {
+        "text": "Add `setup()` and call the composable there, leaving the timer as it is",
+        "correct": true,
+        "why": "Right. The rest of the options keep working, and the timer can move into `setup()` later as one concern."
+      },
+      {
+        "text": "Move the timer's `data` into `setup()` first, and its hooks later",
+        "correct": false,
+        "why": "A concern moves as a whole, state and hooks together, and nothing has to move for the new composable to be used."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3qnfmjp",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving an Options API component to `<script setup>` in order.",
+    "hint": "The component keeps working after every step.",
+    "items": [
+      "Add `setup()` and use a new composable from it",
+      "Move one concern's state, derived values, watcher and hooks into `setup()`",
+      "Repeat until nothing is left outside `setup()`",
+      "Change `<script>` to `<script setup>` and remove the `return`"
+    ]
+  },
+  {
+    "id": "ex-132a50s3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of Options API code to its Composition API partner.",
+    "hint": "One line on the right has no partner on the left, and no partner in Vue either.",
+    "pairs": [
+      {
+        "left": "`data() { return { clicks: 0 } }`",
+        "right": "`const clicks = ref(0)`"
+      },
+      {
+        "left": "`created() {}`",
+        "right": "the top level of `<script setup>`"
+      },
+      {
+        "left": "`mounted() {}`",
+        "right": "`onMounted(() => {})`"
+      },
+      {
+        "left": "`this.$emit('more', 15)`",
+        "right": "`emit('more', 15)`"
+      }
+    ],
+    "right_distractors": [
+      "`onCreated(() => {})`"
+    ]
+  },
+  {
+    "id": "ex-fsqbx62c",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the Options API, props, data, computed values and methods are merged onto ___, which is why a method written as an arrow cannot reach them.",
+    "hint": "One keyword, the component instance as an option sees it.",
+    "blanks": [
+      {
+        "accept": [
+          "this"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x5j4snnj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Vue 2 mixin `timerMixin`, used by six components, starts an interval in `mounted` and clears it in `beforeDestroy`. After the upgrade to Vue 3, removed components keep their intervals running. What is wrong?",
+    "hint": "Two of the lesson's sections meet here: the hooks' names, and how a mixin's hooks are merged.",
+    "choices": [
+      {
+        "text": "Each component's own `beforeUnmount` overwrites the mixin's, as `methods` do",
+        "correct": false,
+        "why": "Hooks are the exception to the merge: every one is kept and runs, the mixin's first."
+      },
+      {
+        "text": "`beforeDestroy` is a Vue 2 name, and Vue 3 never calls it",
+        "correct": true,
+        "why": "Right. Rename it `beforeUnmount`; and since the mixin has to be changed anyway, it is the moment to make it a composable."
+      },
+      {
+        "text": "The watcher on the interval needs `deep: true` since Vue 3",
+        "correct": false,
+        "why": "That was the arrays' upgrade problem. Nothing here is watched; a hook that never runs is the fault."
+      },
+      {
+        "text": "The interval callback is an arrow, so `this` is lost",
+        "correct": false,
+        "why": "An arrow inside a method keeps the method's `this`; that is the one place arrows are what you want."
+      }
+    ]
+  }
+]

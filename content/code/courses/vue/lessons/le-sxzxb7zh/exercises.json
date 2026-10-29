@@ -1,0 +1,680 @@
+[
+  {
+    "id": "ex-a0250636",
+    "version": 1,
+    "section": "props",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `PropsBasics`, the second bar is written `<GoalBar label=\"Spanish\" minutes=\"30\" />`. What did `GoalBar` receive as `minutes`, and what did Vue do about it?",
+    "hint": "Look at the line the component logged for Spanish.",
+    "choices": [
+      {
+        "text": "The number 30, because the prop is declared as a `Number`",
+        "correct": false,
+        "why": "The declaration says what the child expects, not what it gets. Without the colon nothing converts the text."
+      },
+      {
+        "text": "Nothing: Vue refused to render that bar",
+        "correct": false,
+        "why": "The transcript shows `Spanish: 30 of 60 minutes` on the page. A failed check warns; it does not stop anything."
+      },
+      {
+        "text": "The string `\"30\"`; Vue warned and used it",
+        "correct": true,
+        "why": "Right. A plain attribute is text, the type check failed, and the bar still drew with the string: `minutes is a string`."
+      },
+      {
+        "text": "`undefined`, because a prop passed without a colon is dropped",
+        "correct": false,
+        "why": "It is not dropped; it arrives as text. `undefined` is what the fourth bar got for `label`, which was not passed at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9r7czjy",
+    "version": 1,
+    "section": "props",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `PropsBasics` transcript, how many `[Vue warn]` lines did the four bars produce?",
+    "hint": "Three of the four uses were wrong.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-e0b73e3x",
+    "version": 1,
+    "section": "props",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of `defineProps`? Choose all that apply.",
+    "hint": "It is read by the compiler before the code ever runs.",
+    "choices": [
+      {
+        "text": "It is used without being imported",
+        "correct": true,
+        "why": "Right. It is a compiler macro, and the SFC compiler turns it into the component's options."
+      },
+      {
+        "text": "It works only at the top level of `<script setup>`",
+        "correct": true,
+        "why": "Right. The compiler looks for it there; inside a function it is not seen."
+      },
+      {
+        "text": "A failed `validator` keeps the value out of the component",
+        "correct": false,
+        "why": "`unit=\"days\"` failed its validator and the bar still said `days`. A check in development warns and nothing more."
+      },
+      {
+        "text": "A prop left out falls back to its `default`",
+        "correct": true,
+        "why": "Right. `goal` was 60 on every bar that did not pass one."
+      },
+      {
+        "text": "The array form `['label', 'minutes']` checks the types too",
+        "correct": false,
+        "why": "The array form names the props and says nothing about their types; the object forms are the ones that check."
+      }
+    ]
+  },
+  {
+    "id": "ex-366s51vb",
+    "version": 1,
+    "section": "props",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A child writes `const { done } = defineProps({ done: Number })` and then `const label = describe(done)`, where `describe` is a function of its own that builds a string. The parent later changes `done`. What happens to `label`?",
+    "hint": "The compiler rewrites `done`, but what does `describe` receive?",
+    "choices": [
+      {
+        "text": "It keeps the first value",
+        "correct": true,
+        "why": "Right. `describe` ran once with a plain number, as in lesson 2. Wrap it, `computed(() => describe(done))`, and the read happens inside a computed that follows the prop."
+      },
+      {
+        "text": "Vue warns that a destructured prop was passed to a function",
+        "correct": false,
+        "why": "There is no such warning. The code is valid; it just reads the value once."
+      },
+      {
+        "text": "It follows, because a destructured prop stays reactive since Vue 3.5",
+        "correct": false,
+        "why": "The prop stays reactive where the compiler rewrites it. `label` is computed once in the script, and nothing reruns it."
+      },
+      {
+        "text": "It becomes `undefined`, because the props were destructured away",
+        "correct": false,
+        "why": "Destructuring copied the value it had; nothing turns it into `undefined` afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-9g15fmex",
+    "version": 1,
+    "section": "one-way",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `OneWay`, the student clicks `Change the number prop` and then `Change inside the object prop`. What does the parent's line say afterwards?",
+    "hint": "One of the two writes was refused.",
+    "choices": [
+      {
+        "text": "Parent has 35 and 35",
+        "correct": false,
+        "why": "That would mean the number prop changed too. Assigning to `props.minutes` was refused with a warning, and the parent kept 30."
+      },
+      {
+        "text": "Parent has 30 and 35",
+        "correct": true,
+        "why": "Right. The number was refused; the property inside the object was not, and the object is the parent's own."
+      },
+      {
+        "text": "Parent has 30 and 30",
+        "correct": false,
+        "why": "That is what read-only all the way down would give, and Vue does not do that: `session.minutes` reached the parent."
+      },
+      {
+        "text": "Parent has 35 and 30",
+        "correct": false,
+        "why": "Both halves are the wrong way round: the number stayed and the object's property moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpe07az8",
+    "version": 1,
+    "section": "one-way",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Vue refuse `props.minutes += 5` but let `props.session.minutes += 5` through?",
+    "hint": "Which object is read-only, and which object was written to?",
+    "choices": [
+      {
+        "text": "The props object is read-only one level deep; `session` points at the parent's own object",
+        "correct": true,
+        "why": "Right. The child could not replace `session`, but it reached into the object `session` points at, which belongs to the parent."
+      },
+      {
+        "text": "An object prop is handed to the child as a copy, so the change stays in the child and is harmless",
+        "correct": false,
+        "why": "If it were a copy, the parent would still say 30. It says 35: the child changed the parent's data."
+      },
+      {
+        "text": "Numbers are frozen by JavaScript, objects are not",
+        "correct": false,
+        "why": "A number in a variable can be reassigned; it was Vue's read-only proxy that refused the write, not the language."
+      },
+      {
+        "text": "`session` was declared as `Object`, a type Vue does not check",
+        "correct": false,
+        "why": "The declared type is about what is passed, not about writes. The refusal comes from the props object being read-only."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vqphng9",
+    "version": 1,
+    "section": "one-way",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A child that is given `initial` and then edits its own draft copies it once: `const draft = ___(props.initial)`.",
+    "hint": "The function that makes a piece of state the child owns.",
+    "blanks": [
+      {
+        "accept": [
+          "ref"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-55pd62t6",
+    "version": 1,
+    "section": "emits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Emits`, the second `DoneButton` has 0 minutes, and its `done` check is `minutes > 0`. What happened when it was clicked?",
+    "hint": "Read the log under the buttons as well as the warning.",
+    "choices": [
+      {
+        "text": "The event was dropped, and the log stayed at two lines",
+        "correct": false,
+        "why": "The log has a third line, `s9 done, 0 minutes`. A check on an event is not a filter."
+      },
+      {
+        "text": "Vue warned, and the event still reached `onDone`",
+        "correct": true,
+        "why": "Right. `event validation failed` was printed, and `s9 done, 0 minutes` was logged anyway, as with props."
+      },
+      {
+        "text": "The button was disabled by the check",
+        "correct": false,
+        "why": "A check runs when the event is emitted; it does not touch the button."
+      },
+      {
+        "text": "Vue threw an error and the page stopped updating",
+        "correct": false,
+        "why": "There is a warning, not an error, and the page went on: the log line appeared."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tm4gv27",
+    "version": 1,
+    "section": "emits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A row lets the student delete a session. Which event name follows the lesson's rule?",
+    "hint": "Name what the student did, not what somebody should do about it.",
+    "choices": [
+      {
+        "text": "`update-total`",
+        "correct": false,
+        "why": "That names one consequence the parent might choose. The row does not know there is a total."
+      },
+      {
+        "text": "`save-to-storage`",
+        "correct": false,
+        "why": "Saving is the parent's decision, and a name like this ties the row to how the parent works today."
+      },
+      {
+        "text": "`splice-sessions`",
+        "correct": false,
+        "why": "That is an instruction about the parent's array, which the row should not know exists."
+      },
+      {
+        "text": "`remove-requested`",
+        "correct": true,
+        "why": "Right. It says what happened, and leaves the parent to decide what removing means."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwxabg4v",
+    "version": 1,
+    "section": "emits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component calls `emit('click')` from its button but never declares `click`. The parent writes `<SaveButton @click=\"save\" />`. What does one click on the button do?",
+    "hint": "An undeclared event is treated as something else as well.",
+    "choices": [
+      {
+        "text": "Calls `save` once, from the emitted event",
+        "correct": false,
+        "why": "That is what happens once `click` is declared. Undeclared, `@click` also becomes a native listener on the root element."
+      },
+      {
+        "text": "Calls `save` twice",
+        "correct": true,
+        "why": "Right. The undeclared `@click` fell through to the root as a native listener, and the emitted `click` reached it as the component's event too."
+      },
+      {
+        "text": "Nothing, because Vue ignores an event that was not declared",
+        "correct": false,
+        "why": "Declaring is not what lets an event through; both the emit and the native listener arrive."
+      },
+      {
+        "text": "Vue refuses to compile the component until `click` is declared",
+        "correct": false,
+        "why": "Undeclared events compile and run; the price is the fallthrough, not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gcdggat",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A parent puts `class=\"wide\"` on a component that declares no `class` prop and has one root element. Where does the class go?",
+    "hint": "It is called a fallthrough attribute.",
+    "choices": [
+      {
+        "text": "Into `$attrs`, until the child places it",
+        "correct": false,
+        "why": "That is the case of a component with several roots, or one with `inheritAttrs: false`. With one root, Vue puts it there itself."
+      },
+      {
+        "text": "It is lost, with a warning that the prop is unknown",
+        "correct": false,
+        "why": "Nothing is lost. The `Fallthrough` capture shows `class=\"wide\"` on `GoalBar`'s `<p>`."
+      },
+      {
+        "text": "On the root element, in place of the classes it had",
+        "correct": false,
+        "why": "It lands on the root, but `class` merges; replacing the child's own classes would break its styling."
+      },
+      {
+        "text": "On the root element, merged with the classes it already has",
+        "correct": true,
+        "why": "Right. `class` and `style` merge with the root's own rather than replacing them."
+      }
+    ]
+  },
+  {
+    "id": "ex-fazms226",
+    "version": 1,
+    "section": "the-contract",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `Fallthrough` capture, which attributes appear on the `<p>` of `GoalBar`? Choose all that apply.",
+    "hint": "A declared prop is used by the component, not written on its element.",
+    "choices": [
+      {
+        "text": "`id=\"stats\"`",
+        "correct": true,
+        "why": "Right. `GoalBar` declares no `id`, so it fell through."
+      },
+      {
+        "text": "`label=\"Statistics\"`",
+        "correct": false,
+        "why": "`label` is a declared prop: the component used it in its text and it is not on the element."
+      },
+      {
+        "text": "`aria-describedby=\"help\"`",
+        "correct": true,
+        "why": "Right. It reached the root, which is how the parent tied the help text to the bar."
+      },
+      {
+        "text": "`minutes=\"45\"`",
+        "correct": false,
+        "why": "`minutes` is declared too, and was passed with `v-bind` as a number; it became text inside the `<p>`."
+      },
+      {
+        "text": "`class=\"wide\"`",
+        "correct": true,
+        "why": "Right. It merged with the root's classes, of which `GoalBar`'s `<p>` has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-w35wtj2w",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `LabelledInput` has a `<label>` as its root and an `<input>` inside it. The parent writes `<LabelledInput placeholder=\"Minutes\" />` and wants the placeholder on the input. What does the component need?",
+    "hint": "Two pieces: one turns the default off, one says where.",
+    "choices": [
+      {
+        "text": "Nothing; a fallthrough attribute finds the element it belongs on",
+        "correct": false,
+        "why": "Vue does not know which element a `placeholder` belongs on. It puts it on the root, the `<label>`, where it does nothing."
+      },
+      {
+        "text": "A prop called `placeholder`, so that it stops falling through",
+        "correct": false,
+        "why": "That works for one attribute and needs a new prop for every attribute an input accepts; the lesson's answer is to move all of them at once."
+      },
+      {
+        "text": "`inheritAttrs: false` and `v-bind=\"$attrs\"` on the `<input>`",
+        "correct": true,
+        "why": "Right. The first stops Vue placing them on the root; the second puts them on the element they belong to."
+      },
+      {
+        "text": "A second root element, so that Vue spreads the attributes over both",
+        "correct": false,
+        "why": "With several roots, Vue warns and puts the attributes nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-157q80ss",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By the lesson's table, what is wrong with a component that needs eight props?",
+    "hint": "Ask what the fewest props would be.",
+    "choices": [
+      {
+        "text": "It is two components, or is given state it should ask for by id",
+        "correct": true,
+        "why": "Right. A good contract is the fewest props that let it draw itself: an id and a title, not the application's state."
+      },
+      {
+        "text": "Vue refuses more than a fixed number of props",
+        "correct": false,
+        "why": "There is no such limit. The problem is the design, not the framework."
+      },
+      {
+        "text": "Its props should be grouped into one object prop so the list is shorter",
+        "correct": false,
+        "why": "One object prop hides the same eight values and adds the risk of the last section: a child reaching into the parent's object."
+      },
+      {
+        "text": "Nothing, as long as each is declared in the full form",
+        "correct": false,
+        "why": "The full form documents and checks each prop; it does not make eight of them a clear contract."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvskrd23",
+    "version": 1,
+    "section": "define-model",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`planned` starts at 45 in `ModelDemo`. What does the parent's line show after one press of `+15`?",
+    "hint": "The child writes to the model ref, and the parent's `v-model` does the rest.",
+    "value": 60,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jdfj36kh",
+    "version": 1,
+    "section": "define-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the parent, `<MinutesField v-model=\"planned\" />` is shorthand for what?",
+    "hint": "A prop down, and an event back up.",
+    "choices": [
+      {
+        "text": "`:planned=\"planned\" @change=\"planned = $event\"`",
+        "correct": false,
+        "why": "The names are not the variable's. Both sides agree on `modelValue` and `update:modelValue`."
+      },
+      {
+        "text": "`:model-value=\"planned\" @update:model-value=\"(value) => (planned = value)\"`",
+        "correct": true,
+        "why": "Right. A prop called `modelValue` and an event called `update:modelValue`, whose listener assigns."
+      },
+      {
+        "text": "`:value=\"planned\" @input=\"planned = $event.target.value\"`",
+        "correct": false,
+        "why": "That is `v-model` on a native `<input>`, and it hands back text; on a component it binds a prop and an event."
+      },
+      {
+        "text": "`:model=\"planned\"`, a prop the child writes to directly",
+        "correct": false,
+        "why": "No prop is writable by the child. Writing to the model ref emits an event, and the parent assigns."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wp2qda9",
+    "version": 1,
+    "section": "define-model",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`defineModel()` with no name declares a prop called ___, and its update event.",
+    "hint": "The name of the long form, in camelCase.",
+    "blanks": [
+      {
+        "accept": [
+          "modelValue",
+          "model-value"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p0yz4j3d",
+    "version": 1,
+    "section": "planner-components",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the guitar session is ticked, what percentage of the weekly goal does Guitar's card show? Guitar has 20 minutes done and a goal of 90.",
+    "hint": "`Math.round((done / goal) * 100)`.",
+    "value": 22,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sz4sbx5h",
+    "version": 1,
+    "section": "planner-components",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `SessionRow` emit `toggle` with an id instead of calling `toggleDone` itself?",
+    "hint": "Who owns the list of sessions?",
+    "choices": [
+      {
+        "text": "`toggleDone` is not exported from `planner.js`",
+        "correct": false,
+        "why": "`App` imports it from there, so it is exported. Where it is called is a decision about ownership."
+      },
+      {
+        "text": "An emitted event is faster than a function call",
+        "correct": false,
+        "why": "Speed has nothing to do with it; the event ends up calling the same `toggle` function anyway."
+      },
+      {
+        "text": "A component may import nothing except Vue and other components",
+        "correct": false,
+        "why": "`SessionRow` imports `formatDay` from `planner.js`. Importing a rule is fine; changing the parent's state is what it avoids."
+      },
+      {
+        "text": "The list is `App`'s; the row reports",
+        "correct": true,
+        "why": "Right. The row has no idea a list exists or is saved; `App` replaces the list, and everything that reads it follows."
+      }
+    ]
+  },
+  {
+    "id": "ex-zshd3azr",
+    "version": 1,
+    "section": "planner-components",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `CourseCard`, what is the text `{{ percent }}%` inside `<progress>` for?",
+    "hint": "Not every browser draws the element.",
+    "choices": [
+      {
+        "text": "What a browser that cannot draw `<progress>` shows instead",
+        "correct": true,
+        "why": "Right. A browser that knows the element draws the bar; one that does not falls back to the text."
+      },
+      {
+        "text": "It sets the bar's value, as `:value` does on an input",
+        "correct": false,
+        "why": "`:value=\"done\"` and `:max=\"goal\"` set the bar. The text inside sets nothing."
+      },
+      {
+        "text": "It is the label a screen reader reads instead of the value",
+        "correct": false,
+        "why": "A screen reader announces the `<progress>` with its value; the text inside is not what it reads."
+      },
+      {
+        "text": "A tooltip shown when the pointer rests on the bar",
+        "correct": false,
+        "why": "A tooltip would be a `title` attribute. The text inside is the fallback content."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9zx4rkb",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The student ticks the guitar session. Put what happens in order, from the click to the card.",
+    "hint": "Up as an event, then down as props.",
+    "items": [
+      "The checkbox fires `change`",
+      "`SessionRow` emits `toggle` with the session's id",
+      "`App`'s `toggle` replaces `sessions` with a new list",
+      "`perCourse` recomputes",
+      "Guitar's `CourseCard` receives a new `done` prop",
+      "The card's `percent` follows, to 22%"
+    ]
+  },
+  {
+    "id": "ex-rp5n8rxw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the tool the lesson gives for it.",
+    "hint": "Down, up, both, or neither.",
+    "pairs": [
+      {
+        "left": "A course's title, for a card to draw",
+        "right": "A prop"
+      },
+      {
+        "left": "The news that the student ticked a row",
+        "right": "An emitted event"
+      },
+      {
+        "left": "A field that edits a number the parent owns",
+        "right": "`defineModel`"
+      },
+      {
+        "left": "An `aria-describedby` the component never mentions",
+        "right": "A fallthrough attribute"
+      }
+    ],
+    "right_distractors": [
+      "A `computed` of the prop"
+    ]
+  },
+  {
+    "id": "ex-1yrsb8zv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate wants `CourseCard` to mark its course finished, and adds a button that runs `props.done = props.goal`. What happens when it is pressed?",
+    "hint": "`done` is a number, and the props object is read-only.",
+    "choices": [
+      {
+        "text": "The card shows 100%, and `App`'s data stays as it was",
+        "correct": false,
+        "why": "That would be a local copy. Nothing changes at all: the write to a number prop is refused."
+      },
+      {
+        "text": "It works, and the session list in `App` is marked done",
+        "correct": false,
+        "why": "Even an accepted write would not reach the sessions: `done` is a total `App` computes from them."
+      },
+      {
+        "text": "Vue warns that the target is readonly, and nothing changes",
+        "correct": true,
+        "why": "Right. As with `Counter`'s number prop. The card should emit an event and let `App` change its own sessions."
+      },
+      {
+        "text": "The compiler refuses the file, because `props` is a constant",
+        "correct": false,
+        "why": "`const` stops `props` being reassigned, not a property being written. The refusal comes at run time, as a warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymy1r1e6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these belong to `CourseCard`'s public contract, the part `App` relies on? Choose all that apply.",
+    "hint": "The contract is what it must be given and what it can report.",
+    "choices": [
+      {
+        "text": "That `goal` is a required `Number`",
+        "correct": true,
+        "why": "Right. A declared prop, with its type: `App` has to pass it."
+      },
+      {
+        "text": "The `percent` it computes",
+        "correct": false,
+        "why": "`percent` is private. It could be renamed or worked out differently without `App` noticing."
+      },
+      {
+        "text": "That `planned` falls back to 0 when it is left out",
+        "correct": true,
+        "why": "Right. A default is part of the declaration, and `App` relies on it."
+      },
+      {
+        "text": "The colour its scoped style gives a paragraph",
+        "correct": false,
+        "why": "Its markup and style are private too; they could change without anybody else noticing."
+      }
+    ]
+  }
+]

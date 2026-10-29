@@ -1,0 +1,729 @@
+[
+  {
+    "id": "ex-vm688pnh",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is one of the three things `app.use(router)` does in the planner?",
+    "hint": "The section lists them right after `main.js`.",
+    "choices": [
+      {
+        "text": "Builds the routes from the folders under `src/pages`",
+        "correct": false,
+        "why": "That is version 5's routing by file, which this lesson does not use; the planner writes its routes by hand in `router.js`."
+      },
+      {
+        "text": "Calls `createRouter` with the list in `router.js`",
+        "correct": false,
+        "why": "It is the other way round: `createRouter` has already run, at the import, and `app.use` installs what it made."
+      },
+      {
+        "text": "Registers `<RouterView>` and `<RouterLink>`",
+        "correct": true,
+        "why": "Right. Together with providing the router and starting to listen to the address bar."
+      },
+      {
+        "text": "Reloads the page whenever the address changes",
+        "correct": false,
+        "why": "Changing the screen without a reload is the whole point of a router."
+      }
+    ]
+  },
+  {
+    "id": "ex-0dny87be",
+    "version": 1,
+    "section": "installing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`npm install --save-___ vue-router@5.4.0` writes `\"5.4.0\"` into `package.json` with no caret.",
+    "hint": "The flag that pins a version.",
+    "blanks": [
+      {
+        "accept": [
+          "exact"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-faysed1b",
+    "version": 1,
+    "section": "routes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the planner, where is the view that matches the address drawn?",
+    "hint": "Look at `App.vue`'s template.",
+    "choices": [
+      {
+        "text": "In place of `App`, which the router takes off the page",
+        "correct": false,
+        "why": "`App` stays: its header and footer are drawn on every page, around the view."
+      },
+      {
+        "text": "Inside the `<RouterLink>` that was clicked",
+        "correct": false,
+        "why": "A link only asks the router to change the screen; it draws an `<a>` and nothing else."
+      },
+      {
+        "text": "Beside `App`, in the `#app` element of `index.html`",
+        "correct": false,
+        "why": "`#app` holds `App` alone; the view is inside it, one level down."
+      },
+      {
+        "text": "In `App`'s `<RouterView />`, inside `<main>`",
+        "correct": true,
+        "why": "Right. Between the header and the footer, which stay on every page."
+      }
+    ]
+  },
+  {
+    "id": "ex-xswnxg6t",
+    "version": 1,
+    "section": "routes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `CourseCard` link with `<RouterLink>` rather than a plain `<a href>`?",
+    "hint": "What happens to the application's refs on each kind of click?",
+    "choices": [
+      {
+        "text": "A plain `<a>` would reload the whole application on each click",
+        "correct": true,
+        "why": "Right. And loses every ref that was not saved; `<RouterLink>` stops the load and asks the router instead."
+      },
+      {
+        "text": "A plain `<a>` to `/courses/spanish` gets a 404 from the dev server",
+        "correct": false,
+        "why": "The dev server answers every such address with `index.html`; the history section shows it."
+      },
+      {
+        "text": "`<RouterLink>` is the one a reader can open in a new tab",
+        "correct": false,
+        "why": "Both are an `<a href>` in the page, so both open in a new tab and read as a link."
+      },
+      {
+        "text": "The router ignores an address it did not change itself",
+        "correct": false,
+        "why": "The router reads the address bar on start and on back and forward too, whoever wrote it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jr1xrc0b",
+    "version": 1,
+    "section": "routes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the planner's `router.js`? Choose all that apply.",
+    "hint": "Read the notes beside each part of the example.",
+    "choices": [
+      {
+        "text": "`name` lets a link refer to a route without spelling its path",
+        "correct": true,
+        "why": "Right. `CourseView`'s links use `course-week` and `course-all`."
+      },
+      {
+        "text": "`HomeView` is loaded lazily, like the course's views",
+        "correct": false,
+        "why": "It is imported at the top, normally: the week is the page everybody sees first."
+      },
+      {
+        "text": "`meta.title` is read by `afterEach`",
+        "correct": true,
+        "why": "Right. `meta` is free-form, and the planner's `afterEach` builds the tab's title from it."
+      },
+      {
+        "text": "`createWebHistory` writes each address after a `#`",
+        "correct": false,
+        "why": "That is `createWebHashHistory`; `createWebHistory` gives real paths such as `/courses/spanish`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns2j78xx",
+    "version": 1,
+    "section": "params",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The route `/courses/:id` says `props: true`. How does `CourseView` learn which course to show?",
+    "hint": "Look at the first lines of its `<script setup>`.",
+    "choices": [
+      {
+        "text": "It parses `window.location.pathname` in setup",
+        "correct": false,
+        "why": "Nothing in the view reads the address; the router has already matched it."
+      },
+      {
+        "text": "`App` passes `id` to its `<RouterView>`",
+        "correct": false,
+        "why": "`App`'s `<RouterView />` has no attributes; the `:course=\"id\"` is on the one inside `CourseView`, for its children."
+      },
+      {
+        "text": "`defineProps` declares `id`, which the router fills from `params.id`",
+        "correct": true,
+        "why": "Right. `props: true` hands every parameter over as a prop of the same name."
+      },
+      {
+        "text": "It calls `useRoute()`, and `props: true` makes that result reactive",
+        "correct": false,
+        "why": "`useRoute()` is reactive with or without `props: true`, and `CourseView` does not call it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dz001aw8",
+    "version": 1,
+    "section": "params",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A view of `/courses/:id` copies its course's data into a ref once, in setup, from its `id` prop. The student follows a link from `/courses/spanish` to `/courses/guitar`. What does the view show?",
+    "hint": "Does the router make a new component for the new address?",
+    "choices": [
+      {
+        "text": "The new course, because each address gets a component of its own",
+        "correct": false,
+        "why": "The route is the same, so the router reuses the component and only changes the prop."
+      },
+      {
+        "text": "The first course's data, under the new address",
+        "correct": true,
+        "why": "Right. Setup ran once, with `spanish`; only a `computed` or a watcher of `id` would follow the change."
+      },
+      {
+        "text": "Nothing, while the router destroys the old view and builds a new one",
+        "correct": false,
+        "why": "There is no destroying: reusing the component is what makes the switch fast."
+      },
+      {
+        "text": "The not-found page, since setup does not run for the new `id`",
+        "correct": false,
+        "why": "Setup not running again is true, and it leaves the old data on screen; nothing sends the student elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-q82xmg3m",
+    "version": 1,
+    "section": "params",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson prefer the `id` prop to `useRoute().params.id`?",
+    "hint": "Think about lesson 21, and what each view needs around it.",
+    "choices": [
+      {
+        "text": "`useRoute()` is not reactive, so it misses a new parameter",
+        "correct": false,
+        "why": "The route `useRoute()` returns is reactive; the preference is about what the view depends on."
+      },
+      {
+        "text": "A prop works with no router around it",
+        "correct": true,
+        "why": "Right. Giving the view an `id` is enough to use and test it; `useRoute()` needs a whole router."
+      },
+      {
+        "text": "A prop is quicker, because the router skips resolving the route",
+        "correct": false,
+        "why": "The route is resolved the same way either way; `props: true` only changes how the view receives it."
+      },
+      {
+        "text": "`useRoute()` works in the matched view and not in its children",
+        "correct": false,
+        "why": "It works in any component under the router; `NotFound` and any child could call it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zhdkfyx",
+    "version": 1,
+    "section": "nested",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On `/courses/spanish/all`, the captured HTML of the Sessions nav has two links. How many of them carry the class `router-link-active`?",
+    "hint": "Read each `class` attribute in the capture.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-r238a3mb",
+    "version": 1,
+    "section": "nested",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On `/courses/spanish/all`, what is on the All sessions link in the captured HTML? Choose all that apply.",
+    "hint": "Some of the attributes come from the router and one from the scoped style.",
+    "choices": [
+      {
+        "text": "`aria-current=\"page\"`",
+        "correct": true,
+        "why": "Right. The router sets it on the exact link, so a screen reader announces the current page."
+      },
+      {
+        "text": "`aria-selected=\"true\"`, written by the router for the screen reader",
+        "correct": false,
+        "why": "The router's attribute for this is `aria-current`; `aria-selected` belongs to tabs and options."
+      },
+      {
+        "text": "The class `router-link-exact-active`",
+        "correct": true,
+        "why": "Right. Its route is exactly the current one, and `CourseView`'s style makes it bold."
+      },
+      {
+        "text": "The class `router-link-active`",
+        "correct": true,
+        "why": "Right. An exact link is also an active one, so it carries both classes."
+      },
+      {
+        "text": "`data-v-62175599`, the router's mark for the active link",
+        "correct": false,
+        "why": "That attribute is on both links and on the nav: it is the scoped style's, from the compiler."
+      }
+    ]
+  },
+  {
+    "id": "ex-twzngce7",
+    "version": 1,
+    "section": "nested",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A settings page keeps a list of five categories on screen, and the form beside it changes with `/settings/profile`, `/settings/billing` and so on. How would this lesson route it?",
+    "hint": "Which part of the screen stays, and which part changes with the address?",
+    "choices": [
+      {
+        "text": "Five top-level routes, as nesting is for paths that look nested",
+        "correct": false,
+        "why": "The lesson's test is the screen, not the path: here part of the page stays, which is the case for nesting."
+      },
+      {
+        "text": "One route, with the form switched by a ref",
+        "correct": false,
+        "why": "Then `/settings/billing` could not be bookmarked or reached with back: the address would not change."
+      },
+      {
+        "text": "A parent drawing the list and a `<RouterView>`, with a child route per category",
+        "correct": true,
+        "why": "Right. The list is the part that stays, the form is the part that changes, as in the course page."
+      },
+      {
+        "text": "A child route per category, each drawing the list of categories again",
+        "correct": false,
+        "why": "A child is drawn inside the parent's `<RouterView>`, so the list belongs in the parent, drawn once."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjfz6cfd",
+    "version": 1,
+    "section": "guards",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the planner as written, the student is on `/courses/spanish` and follows a link to `/courses/latin`. What happens?",
+    "hint": "Which guard runs when only a parameter changes?",
+    "choices": [
+      {
+        "text": "`beforeEnter` runs and redirects to the not-found page",
+        "correct": false,
+        "why": "That is what a fresh entry does; going from one course to another by a link only changes `:id`."
+      },
+      {
+        "text": "No guard checks it, and a course page headed `latin` is drawn",
+        "correct": true,
+        "why": "Right. `beforeEnter` runs on entering the route, not when only its params change."
+      },
+      {
+        "text": "The router reloads the page, and then `beforeEnter` runs",
+        "correct": false,
+        "why": "A link never reloads; a reload is what would make it a fresh entry."
+      },
+      {
+        "text": "`afterEach` sees the unknown course and cancels",
+        "correct": false,
+        "why": "The planner's `afterEach` only sets the title, and by then the navigation has already happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-as7rd79p",
+    "version": 1,
+    "section": "guards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course route's guard fetch `courses.json` itself instead of using `App`'s data?",
+    "hint": "Where does a guard run?",
+    "choices": [
+      {
+        "text": "Guards have to be synchronous, so they cannot wait for `inject`",
+        "correct": false,
+        "why": "A guard can be `async`, and the router waits for it; this one awaits a fetch."
+      },
+      {
+        "text": "It runs outside any component, so `App`'s provide is out of reach",
+        "correct": true,
+        "why": "Right. The duplicated load is the cue for lesson 13's store, a module a guard can import."
+      },
+      {
+        "text": "Injected data is a copy taken at start-up",
+        "correct": false,
+        "why": "`inject` hands over the same refs `App` holds, not a copy; the guard simply cannot reach them."
+      },
+      {
+        "text": "A fetch inside a guard is faster than reading a ref",
+        "correct": false,
+        "why": "It is slower, a second request; it is there because there is no other way yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-yktfre9m",
+    "version": 1,
+    "section": "guards",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these, returned by a guard, let the navigation go ahead to where it was heading? Choose all that apply.",
+    "hint": "A location goes somewhere; one value stays put.",
+    "choices": [
+      {
+        "text": "`false`",
+        "correct": false,
+        "why": "`false` cancels it and leaves the student where they were."
+      },
+      {
+        "text": "Nothing at all, `undefined`",
+        "correct": true,
+        "why": "Right. A guard that returns nothing lets the navigation continue."
+      },
+      {
+        "text": "A location such as `{ name: 'home' }`",
+        "correct": false,
+        "why": "A location redirects: the navigation goes there instead."
+      },
+      {
+        "text": "`true`",
+        "correct": true,
+        "why": "Right. The same as returning nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkg3wvyq",
+    "version": 1,
+    "section": "guards",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner sets `document.title` in `router.___((to) => …)`, the hook the router calls once a navigation is over.",
+    "hint": "It is the last guard in the lesson's table but one.",
+    "blanks": [
+      {
+        "accept": [
+          "afterEach"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-cnrsv4e0",
+    "version": 1,
+    "section": "lazy-loading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `router.js` make `CourseView` load lazily?",
+    "hint": "Look at the course route's `component`.",
+    "choices": [
+      {
+        "text": "`component: CourseView, lazy: true` on the route",
+        "correct": false,
+        "why": "There is no `lazy` option; the laziness is in giving a function instead of the component."
+      },
+      {
+        "text": "`component: () => import('./views/CourseView.vue')`",
+        "correct": true,
+        "why": "Right. The function runs the first time the route is opened, and the import becomes a file of its own."
+      },
+      {
+        "text": "An `import` of it at the top of the file",
+        "correct": false,
+        "why": "That is how `HomeView` and `NotFound` are imported, eagerly, into the first file."
+      },
+      {
+        "text": "`props: true`, which defers the view until a parameter arrives",
+        "correct": false,
+        "why": "`props: true` only passes the parameters as props; it has nothing to do with loading."
+      }
+    ]
+  },
+  {
+    "id": "ex-beyqx2rr",
+    "version": 1,
+    "section": "lazy-loading",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the output of `npm run build`, how many `.js` files in `dist/assets` came from lazily imported views?",
+    "hint": "Count the `.js` lines other than `index-….js`.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-m4ft1369",
+    "version": 1,
+    "section": "lazy-loading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`NotFound` is small and rarely seen. Why is it imported eagerly all the same?",
+    "hint": "When is that page shown?",
+    "choices": [
+      {
+        "text": "A route whose path is `(.*)*` refuses a lazy component",
+        "correct": false,
+        "why": "Any route can take a lazy component; keeping this one eager was a choice."
+      },
+      {
+        "text": "Vite does not split off a file smaller than 2 kB",
+        "correct": false,
+        "why": "Vite split off `CourseAll` at 0.50 kB; the 2 kB in the lesson is about what a request costs."
+      },
+      {
+        "text": "It appears when something is already wrong, so one more request must not be needed",
+        "correct": true,
+        "why": "Right. That is not the moment to depend on one more request succeeding."
+      },
+      {
+        "text": "`beforeEnter` redirects to it before lazy files are allowed to load",
+        "correct": false,
+        "why": "Lazy files load during a navigation, redirected or not; the course views load after the guard in the capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-9acwb20a",
+    "version": 1,
+    "section": "lazy-loading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the click on Spanish, the dev server's network list shows four requests. Which one was made by the course route's guard rather than by lazy loading?",
+    "hint": "What does `courseExists` ask for?",
+    "choices": [
+      {
+        "text": "`GET /src/views/CourseWeek.vue`",
+        "correct": false,
+        "why": "That is the child view, imported lazily by the `''` child route."
+      },
+      {
+        "text": "`GET /src/views/CourseView.vue?vue&type=style…`",
+        "correct": false,
+        "why": "That is `CourseView`'s scoped style, which arrives with the lazily loaded component."
+      },
+      {
+        "text": "`GET /courses.json`",
+        "correct": true,
+        "why": "Right. `courseExists` fetches the data file again, before the views are loaded."
+      },
+      {
+        "text": "`GET /src/views/CourseView.vue`",
+        "correct": false,
+        "why": "That is the course page itself, the lazy import in the course route's `component`."
+      }
+    ]
+  },
+  {
+    "id": "ex-njmxhfkr",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The built planner is served from `dist` with `python3 -m http.server`. Which of these gets a 404?",
+    "hint": "Which requests reach the server, and for which path?",
+    "choices": [
+      {
+        "text": "Clicking a course card after opening `/`",
+        "correct": false,
+        "why": "A click asks nothing of the server for the page: the router changes the address and draws the course."
+      },
+      {
+        "text": "Reloading the page while on `/courses/spanish`",
+        "correct": true,
+        "why": "Right. The browser asks for that path, and `dist` has no file called `courses/spanish`."
+      },
+      {
+        "text": "Opening `/` for the first time on a new computer",
+        "correct": false,
+        "why": "`/` is `index.html`, a file that exists, and the capture shows it answering 200."
+      },
+      {
+        "text": "The browser fetching `assets/index-….js` from the built `index.html`",
+        "correct": false,
+        "why": "That file is in `dist/assets`, so a plain server finds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vn7vfs8j",
+    "version": 1,
+    "section": "history",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a reload of `/courses/spanish` draw the course? Choose all that apply.",
+    "hint": "Either the server falls back, or the path never reaches it.",
+    "choices": [
+      {
+        "text": "Setting the host to answer any path that is not a file with `index.html`",
+        "correct": true,
+        "why": "Right. That is the fallback, under names such as rewrites or SPA mode."
+      },
+      {
+        "text": "Importing `CourseView` eagerly",
+        "correct": false,
+        "why": "The 404 comes from the server before any of the application's code runs, eager or lazy."
+      },
+      {
+        "text": "Serving the build with `npm run preview`",
+        "correct": true,
+        "why": "Right. Vite's preview server falls back to `index.html`."
+      },
+      {
+        "text": "Switching the router to `createWebHashHistory()`",
+        "correct": true,
+        "why": "Right. The address becomes `/#/courses/spanish`, and what follows `#` is not sent."
+      },
+      {
+        "text": "Adding a `beforeEnter` guard to the course route",
+        "correct": false,
+        "why": "A guard runs inside the application, and the application never starts when the server answers 404."
+      }
+    ]
+  },
+  {
+    "id": "ex-9r0nrj0f",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `createWebHashHistory()` need no server configuration?",
+    "hint": "What does the browser send when it asks for `/#/courses/spanish`?",
+    "choices": [
+      {
+        "text": "Hash addresses are kept in the browser's cache after the first visit",
+        "correct": false,
+        "why": "Caching is not involved; even a first visit to a hash address works."
+      },
+      {
+        "text": "The router answers the request before the server sees it",
+        "correct": false,
+        "why": "The router is code in the page, so it cannot run before the page has arrived."
+      },
+      {
+        "text": "Servers drop the path of any request that contains `#`",
+        "correct": false,
+        "why": "The server never receives a `#`; the browser leaves it out of the request."
+      },
+      {
+        "text": "The part after `#` is never sent, so every reload asks for `/`",
+        "correct": true,
+        "why": "Right. The cost is the `#` in every address."
+      }
+    ]
+  },
+  {
+    "id": "ex-71r29b4r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The student clicks the Spanish card on the week. Put what happens in order.",
+    "hint": "The network list after `-- click` gives the middle two.",
+    "items": [
+      "`RouterLink`'s handler stops the browser loading the address",
+      "The course route's `beforeEnter` fetches `courses.json`",
+      "The files of `CourseView` and `CourseWeek` arrive",
+      "`afterEach` sets the tab's title to `Course · Study planner`"
+    ]
+  },
+  {
+    "id": "ex-yetsnd0y",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each guard to the job the lesson gives it.",
+    "hint": "The table at the end of the section on guards.",
+    "pairs": [
+      {
+        "left": "`router.beforeEach`",
+        "right": "redirect to a sign-in page"
+      },
+      {
+        "left": "`beforeEnter` on a route",
+        "right": "check that a parameter names something real"
+      },
+      {
+        "left": "`router.afterEach`",
+        "right": "set the tab's title"
+      },
+      {
+        "left": "`onBeforeRouteLeave`",
+        "right": "ask about unsaved changes"
+      }
+    ],
+    "right_distractors": [
+      "react when only the parameter changes"
+    ]
+  },
+  {
+    "id": "ex-8pcq033a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student bookmarks `/courses/guitar/all` and opens it next week, on the built planner served by a plain static server. What do they see?",
+    "hint": "Who answers first: the server or the router?",
+    "choices": [
+      {
+        "text": "A bare 404 page, and no sign of the application",
+        "correct": true,
+        "why": "Right. There is no such file in `dist`, so the application, and its router, never start."
+      },
+      {
+        "text": "The not-found page, drawn by the `(.*)*` route",
+        "correct": false,
+        "why": "That route is the router's, and the router is in `index.html`'s scripts, which the server did not send."
+      },
+      {
+        "text": "Guitar's sessions, since the address names a real route",
+        "correct": false,
+        "why": "It names a real route of the application, but the server has to send the application first."
+      },
+      {
+        "text": "The week, because the router falls back to `/` for a bookmark",
+        "correct": false,
+        "why": "No part of the router falls back to `/`; the fallback in the lesson is the server's, and this one has none."
+      }
+    ]
+  }
+]

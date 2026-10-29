@@ -1,0 +1,499 @@
+{
+  "ex-cj849gb2": {
+    "prompt": "Em `ComputedTotal.vue`, como o template mostra o valor de `total`?",
+    "hint": "Um computed é um ref, e o template trata um ref de nível superior de um jeito particular.",
+    "choices": [
+      {
+        "text": "`{{ total.value }}`",
+        "why": "É assim que o script o lê. No template um ref de nível superior é desembrulhado, e o `.value` fica de fora."
+      },
+      {
+        "text": "`{{ total() }}`",
+        "why": "Um computed não é uma função que você chama; o `computed()` devolveu um ref, e quem roda a função dentro dele é o Vue."
+      },
+      {
+        "text": "`{{ total }}`",
+        "why": "Isso. O `computed()` devolveu um ref, e o template desembrulha um ref de nível superior."
+      },
+      {
+        "text": "`{{ total.get() }}`",
+        "why": "`get` é uma chave que você passa ao `computed()` quando quer um setter também; o ref que ele devolve não tem um `get()` para chamar."
+      }
+    ]
+  },
+  "ex-37mh2s69": {
+    "prompt": "Depois de um clique na demo `ComputedTotal`, `computing total` foi impresso uma vez e `totalByHand called` três vezes. Por que a diferença?",
+    "hint": "Conte quantas vezes cada um é lido no template.",
+    "choices": [
+      {
+        "text": "O template lê `total` uma vez e chama a função três vezes",
+        "why": "O template também lê `total` três vezes: `{{ total }}`, `total / 60` e `total % 60`. O número de leituras não é a diferença."
+      },
+      {
+        "text": "O Vue imprimiu a linha do computed uma vez para deixar o console legível",
+        "why": "O Vue não filtra o que o `console.log` imprime. A própria função rodou uma vez."
+      },
+      {
+        "text": "Uma função no template roda a cada chamada, em cada renderização; o computed rodou uma vez e serviu o resultado guardado às outras leituras",
+        "why": "Isso. O computed é calculado uma vez por mudança e fica em cache; uma função comum não tem cache."
+      },
+      {
+        "text": "O computed rodou antes do clique e não depois dele",
+        "why": "A transcrição imprime `computing total` dos dois lados de `-- click button`: o push mudou `sessions`, e ele rodou de novo."
+      }
+    ]
+  },
+  "ex-3pd9yjfw": {
+    "prompt": "No planner, quais destes são derivados e pertencem a um `computed`? Escolha todas as que se aplicam.",
+    "hint": "Pergunte de cada um: dá para calcular isto a partir do que eu já tenho?",
+    "choices": [
+      {
+        "text": "O total da semana",
+        "why": "Isso. É um fato sobre as sessões, não algo que o aluno edita."
+      },
+      {
+        "text": "O texto digitado numa caixa de busca",
+        "why": "Nada produz esse texto além do aluno digitando. Ele é próprio, então é um `ref`."
+      },
+      {
+        "text": "Os cursos cujo título bate com a busca",
+        "why": "Isso. Ele decorre dos cursos e do texto digitado."
+      },
+      {
+        "text": "A segunda-feira da semana na tela",
+        "why": "Os botões a escolhem e nada a calcula. Ela é o único `ref` novo do planner."
+      },
+      {
+        "text": "As sessões dentro da semana mostrada",
+        "why": "Isso. Elas decorrem das sessões e da segunda-feira."
+      }
+    ]
+  },
+  "ex-n1vk8sm6": {
+    "prompt": "Na transcrição de `LazyComputed`, quantas vezes a função de `hours` rodou, da abertura da página até o fim?",
+    "hint": "Conte as linhas `computing hours`."
+  },
+  "ex-6qmnw9qt": {
+    "prompt": "Em `LazyComputed`, o primeiro clique mudou `minutes` duas vezes e `hours` não foi calculado. Por quê?",
+    "hint": "Olhe o `v-if` no parágrafo que o mostra.",
+    "choices": [
+      {
+        "text": "O Vue segura as duas escritas e calcula no próximo tick",
+        "why": "Agrupar é coisa da renderização. Um computed não é calculado num tick, e sim quando algo o lê."
+      },
+      {
+        "text": "Ninguém o tinha lido: o `v-if` escondia o lugar que o lê",
+        "why": "Isso. Preguiçoso quer dizer calculado quando lido, e nada o leu até o `Show hours`."
+      },
+      {
+        "text": "O `+=` no `.value` de um ref passa despercebido pelo rastreamento do Vue",
+        "why": "Ele é percebido: o parágrafo com `minutes` foi redesenhado, e o `hours` seguinte saiu de 150."
+      },
+      {
+        "text": "Um computed espera a primeira mudança antes de rodar",
+        "why": "Houve mudança e ele mesmo assim não rodou. O que o dispara é uma leitura."
+      }
+    ]
+  },
+  "ex-13nfjf8f": {
+    "prompt": "Um componente tem `const factor = multiplier.value` no topo do script, e depois `const scaled = computed(() => base.value * factor)`. Mais tarde `multiplier.value` muda. O que o `scaled` faz?",
+    "hint": "O que a função leu enquanto rodava?",
+    "choices": [
+      {
+        "text": "Recalcula com o novo multiplicador, porque `multiplier` é um ref",
+        "why": "Ser um ref não basta. O computed depende do que a função lê, e ela nunca leu `multiplier`."
+      },
+      {
+        "text": "O Vue avisa que `factor` não é reativo e recalcula mesmo assim",
+        "why": "O Vue não tem como saber que um número comum já foi o valor de um ref, então não há aviso a dar."
+      },
+      {
+        "text": "Continua com o valor antigo: `factor` é uma cópia lida fora da função",
+        "why": "Isso. As dependências são o que a última execução leu, só `base`, então a mudança em `multiplier` não marca nada como desatualizado."
+      },
+      {
+        "text": "É marcado como desatualizado, como qualquer mudança de ref no componente marca os computed dele",
+        "why": "A desatualização é por dependência. Um ref que a função não leu o deixa em paz."
+      }
+    ]
+  },
+  "ex-cadp326j": {
+    "prompt": "Um computed roda a sua função de forma ___: não quando as entradas mudam, mas na próxima vez que alguém o lê.",
+    "hint": "Uma palavra, um adjetivo.",
+    "blanks": [
+      {
+        "accept": [
+          "preguiçosa",
+          "lazy"
+        ]
+      }
+    ]
+  },
+  "ex-yhp2vxkc": {
+    "prompt": "Em `WritableHours`, depois que o primeiro botão roda `hours.value = 2`, quantos minutos `minutes` guarda?",
+    "hint": "O setter multiplica por 60 e arredonda."
+  },
+  "ex-sdrwf57x": {
+    "prompt": "Em `WritableHours`, o segundo botão roda `readOnly.value = 3` num computed sem setter. O que aconteceu, no servidor de desenvolvimento?",
+    "hint": "Procure a linha `[warn]` e o texto da página depois dela.",
+    "choices": [
+      {
+        "text": "Um aviso, e o valor ficou como estava",
+        "why": "Isso. `Write operation failed: computed value is readonly`, e a página continua dizendo 120 minutos. Um build de produção tira até o aviso."
+      },
+      {
+        "text": "A escrita chegou a `minutes`, e a página mostrou 180 minutos",
+        "why": "A escrita chega à origem quando um setter diz como. Este tem só um getter."
+      },
+      {
+        "text": "Um erro parou o componente, e a página ficou em branco",
+        "why": "O texto da página continua lá depois do aviso. O Vue recusou a escrita e seguiu em frente."
+      },
+      {
+        "text": "O `readOnly` virou um ref comum guardando 3, até a próxima mudança",
+        "why": "Um computed não vira ref. A escrita foi recusada e o valor dele continua sendo calculado a partir de `minutes`."
+      }
+    ]
+  },
+  "ex-zzyajxs1": {
+    "prompt": "As tags são guardadas num array `tags` e editadas num campo de texto como `\"grammar, verbs\"`. O getter é `() => tags.value.join(', ')`. Qual setter passa no teste da aula para um computed gravável?",
+    "hint": "Depois de um `set`, o `get` devolve o que acabou de ser escrito?",
+    "choices": [
+      {
+        "text": "`(text) => { field.value = text }`, com um ref `field` ao lado",
+        "why": "O getter junta `tags`, que este setter nem toca, então um `get` depois dele mostra as tags antigas. E se o getter lesse `field`, seria um ref com passos a mais."
+      },
+      {
+        "text": "`(text) => { tags.value.push(text) }`",
+        "why": "Ele acrescenta a string inteira como mais uma tag, então escrever `\"grammar, verbs\"` volta com as tags antigas na frente."
+      },
+      {
+        "text": "`(text) => { console.log(text) }`, já que o getter já lê `tags`",
+        "why": "Um setter que não guarda coisa alguma deixa a verdade como estava; o campo voltaria às tags antigas."
+      },
+      {
+        "text": "`(text) => { tags.value = text.split(', ') }`",
+        "why": "Isso. Ele transforma a visão de volta na verdade, e o getter a junta de novo no mesmo texto."
+      }
+    ]
+  },
+  "ex-ghw7gg8f": {
+    "prompt": "`computed({ get, ___ })` recebe duas funções, e a segunda é o que o torna gravável.",
+    "hint": "A chave da função que transforma a visão de volta na verdade.",
+    "blanks": [
+      {
+        "accept": [
+          "set"
+        ]
+      }
+    ]
+  },
+  "ex-66wym3m3": {
+    "prompt": "O que `SyncedByWatch` mostrou na primeira renderização, com duas sessões de 45 e 30 minutos?",
+    "hint": "Quando um watcher roda pela primeira vez?",
+    "choices": [
+      {
+        "text": "Planned: 75 minutes",
+        "why": "Isso exigiria que o watcher rodasse ao ser criado. Ele roda quando a origem muda, e nada tinha mudado."
+      },
+      {
+        "text": "Planned: 0 minutes",
+        "why": "Isso. O `total` ainda guardava o valor inicial, 0, enquanto a página tinha duas sessões."
+      },
+      {
+        "text": "Planned: undefined minutes",
+        "why": "O `total` começa como `ref(0)`, então o valor dele é um número desde a primeira linha."
+      },
+      {
+        "text": "Planned: 115 minutes",
+        "why": "115 veio no fim, depois que o segundo botão juntou as duas adições de guitarra."
+      }
+    ]
+  },
+  "ex-3cn2bv83": {
+    "prompt": "Em `SyncedByWatch`, por que o botão do `push` não acordou o watcher?",
+    "hint": "O que um watcher sobre um ref compara?",
+    "choices": [
+      {
+        "text": "O proxy do Vue não rastreia o `push`",
+        "why": "Rastreia: a versão com computed percebe o `push`, porque o `reduce` leu cada item. O watcher é que não olhava ali."
+      },
+      {
+        "text": "O watcher disparou, e a linha de log se perdeu atrás da renderização",
+        "why": "Nenhuma linha de renderização vem depois do push também, e o total ficou errado em 20 minutos até o segundo botão."
+      },
+      {
+        "text": "Os watchers esperam uma segunda mudança antes de disparar",
+        "why": "O segundo botão o acordou na hora. Acordou porque substituiu o `.value`, não por ter vindo em segundo."
+      },
+      {
+        "text": "Ele dispara quando o `.value` é substituído, e o `push` mudou o array que já estava lá",
+        "why": "Isso. É o segundo defeito; o `{ deep: true }` trata o sintoma, e um computed elimina a cópia."
+      }
+    ]
+  },
+  "ex-gr97s1wq": {
+    "prompt": "Quais destes são trabalho para um watcher e não para um computed? Escolha todas as que se aplicam.",
+    "hint": "Um watcher serve para alcançar algo fora do estado do próprio componente.",
+    "choices": [
+      {
+        "text": "Salvar as sessões no armazenamento quando mudam",
+        "why": "Isso. Escrever no armazenamento é um efeito colateral."
+      },
+      {
+        "text": "Calcular o total da semana a partir das sessões",
+        "why": "Um valor que decorre de outros valores é um computed; um watcher aqui é o erro da aula."
+      },
+      {
+        "text": "Buscar os detalhes de um curso quando o id dele muda",
+        "why": "Isso. Uma requisição leva tempo e sai do componente."
+      },
+      {
+        "text": "Manter um ref `fullName` em sincronia com `first` e `last`",
+        "why": "Se o corpo do watcher só atribui a outro ref, ele era um computed desde o começo."
+      },
+      {
+        "text": "Mover o foco para um campo quando aparece um erro",
+        "why": "Isso. O foco é a página, não o estado do componente."
+      }
+    ]
+  },
+  "ex-66666h5r": {
+    "prompt": "Qual destes métodos de array devolve um array novo e deixa em paz aquele em que é chamado?",
+    "hint": "O nome diz que ele te devolve algo.",
+    "choices": [
+      {
+        "text": "`sort()`",
+        "why": "O `sort` reorganiza o array no lugar e devolve esse mesmo array, e foi isso que quebrou o `SortInPlace`."
+      },
+      {
+        "text": "`reverse()`",
+        "why": "O `reverse` muda o array no lugar, como o `sort`; a cópia dele é o `toReversed()`."
+      },
+      {
+        "text": "`splice()`",
+        "why": "O `splice` remove e insere no próprio array; a cópia dele é o `toSpliced()`."
+      },
+      {
+        "text": "`toSorted()`",
+        "why": "Isso. Ele devolve uma cópia ordenada, em todo navegador desde 2023 e no Node 20 em diante."
+      }
+    ]
+  },
+  "ex-nfbdpbft": {
+    "prompt": "Em `SortInPlace`, a linha que devia mostrar os dados como foram escritos saiu ordenada. Por quê?",
+    "hint": "Qual dos dois computed mudou algo que leu?",
+    "choices": [
+      {
+        "text": "O `toSorted()` ordena o original também, e só o retorno é uma cópia",
+        "why": "O `toSorted()` deixa o original em paz; é exatamente por isso que a aula o recomenda."
+      },
+      {
+        "text": "O `byDateWrong` chamou `sort` no próprio `sessions.value`",
+        "why": "Isso. O `sort` reorganizou o array original através do proxy, e cada leitor de `sessions` viu a nova ordem."
+      },
+      {
+        "text": "O template ordena uma lista de datas antes de imprimi-la",
+        "why": "Um template imprime o que a expressão devolve. A linha de `first` confirma que os dados foram escritos com o dia 23 primeiro."
+      },
+      {
+        "text": "Os dois computed compartilham um cache, então a primeira linha leu a cópia ordenada",
+        "why": "Cada computed tem o seu próprio cache, e a primeira linha lê `sessions`, não um dos computed."
+      }
+    ]
+  },
+  "ex-cbk3x0b0": {
+    "prompt": "`AsyncComputed` passa ao `computed()` uma função `async` que busca `/courses.json` e devolve o status. O que aconteceu?",
+    "hint": "O que uma função `async` devolve?",
+    "choices": [
+      {
+        "text": "A página mostrou 200 quando a requisição respondeu",
+        "why": "Um computed não espera uma promise. O valor dele é a própria promise."
+      },
+      {
+        "text": "A página imprimiu `\"[object Promise]\"`, e a requisição não foi enviada",
+        "why": "A função rodou, então o `fetch` saiu; a resposta é que não foi para lugar algum."
+      },
+      {
+        "text": "A página imprimiu `\"[object Promise]\"`, e a requisição rodou mesmo assim",
+        "why": "Isso. O valor é a promise, e o template a imprimiu do único jeito que imprime um objeto."
+      },
+      {
+        "text": "O Vue avisou que um computed não aceita `async` e não mostrou coisa alguma",
+        "why": "A transcrição não tem aviso nenhum. Nada avisou ninguém, e é esse o perigo."
+      }
+    ]
+  },
+  "ex-xckfyvtm": {
+    "prompt": "Qual destes corpos de computed quebra a regra de que um computed só lê e devolve?",
+    "hint": "Procure um método que muda o array em que é chamado.",
+    "choices": [
+      {
+        "text": "`() => [...items.value].reverse()`",
+        "why": "O `reverse` muda um array no lugar, mas este é a cópia nova que o spread acabou de fazer."
+      },
+      {
+        "text": "`() => items.value.filter((i) => i.done)`",
+        "why": "O `filter` devolve um array novo e deixa `items` como estava."
+      },
+      {
+        "text": "`() => items.value.reverse()`",
+        "why": "Isso. Ele vira o próprio `items` ao contrário, e cada um dos outros leitores o vê invertido."
+      },
+      {
+        "text": "`() => items.value.length`",
+        "why": "Ler um tamanho não muda coisa alguma."
+      }
+    ]
+  },
+  "ex-t3cf9cq1": {
+    "prompt": "Qual é a única peça nova de estado que o `App.vue` ganha nesta seção?",
+    "hint": "Todo o resto da tela é calculado a partir dela e das sessões.",
+    "choices": [
+      {
+        "text": "`total`",
+        "why": "O `total` é um computed, calculado a partir das sessões e da segunda-feira."
+      },
+      {
+        "text": "`perCourse`",
+        "why": "O `perCourse` é um computed: cada curso com os seus totais."
+      },
+      {
+        "text": "`monday`",
+        "why": "Isso. `ref(weekStart(new Date()))`, e os dois botões o substituem."
+      },
+      {
+        "text": "`weekTotal`",
+        "why": "O `weekTotal` é uma função comum em `planner.js` e não guarda estado."
+      }
+    ]
+  },
+  "ex-1fwgkbes": {
+    "prompt": "O `sessionsInWeek` escreve `s.date >= monday && s.date <= sunday` sem objeto `Date` à vista. Por que isso compara datas corretamente?",
+    "hint": "Em que forma as datas são guardadas?",
+    "choices": [
+      {
+        "text": "O JavaScript converte as duas strings em datas antes de comparar",
+        "why": "O `>=` entre duas strings compara como texto. Funciona por causa da forma do texto."
+      },
+      {
+        "text": "`YYYY-MM-DD` ordena como texto na ordem das datas",
+        "why": "Isso. Ano, depois mês, depois dia, cada um com zeros à esquerda, então a ordem do texto é a ordem das datas."
+      },
+      {
+        "text": "`monday` é um ref, e o Vue compara o valor de um ref como data",
+        "why": "Dentro de `planner.js` nada sabe do Vue; o `monday` chega como uma string comum."
+      },
+      {
+        "text": "A comparação é aproximada, o que basta para uma semana de sessões",
+        "why": "Ela é exata para qualquer data nessa forma; a sessão do dia 12 fica fora da semana do dia 19, como o cabeçalho mostra."
+      }
+    ]
+  },
+  "ex-k0v3dgs3": {
+    "prompt": "Com o relógio em 21 de outubro de 2026, o cabeçalho disse `75 of 195 minutes done`. O que é o 195?",
+    "hint": "O `weekTotal` filtra antes de somar.",
+    "choices": [
+      {
+        "text": "Os minutos de cada sessão do arquivo, a do dia 12 incluída",
+        "why": "A sessão do dia 12 não está na semana de 19 de outubro; com ela o total seria 245."
+      },
+      {
+        "text": "As metas dos três cursos somadas",
+        "why": "As metas são 180, 120 e 90, que dão 390, e o cabeçalho não as lê."
+      },
+      {
+        "text": "Os minutos planejados naquela semana",
+        "why": "Isso. Cinco sessões de segunda, dia 19, a domingo, dia 25: 45, 30, 60, 20 e 40."
+      },
+      {
+        "text": "Os minutos planejados nesta semana e na anterior",
+        "why": "Uma semana para trás o cabeçalho diz 50 of 50, então as duas semanas juntas dariam 245."
+      }
+    ]
+  },
+  "ex-rn0x9wef": {
+    "prompt": "Ponha em ordem o que acontece depois de um clique em Previous week no planner.",
+    "hint": "Os computed são calculados pela leitura, não pela escrita.",
+    "items": [
+      "O `monday` é substituído",
+      "`total` e `perCourse` são marcados como desatualizados",
+      "O template entra na fila para redesenhar",
+      "A renderização lê `total` e `perCourse`",
+      "Cada computed roda a sua função uma vez"
+    ]
+  },
+  "ex-6emnmh5v": {
+    "prompt": "Associe cada demo desta aula ao que a transcrição dela mostrou.",
+    "hint": "Uma coisa da direita aconteceu numa demo que não está à esquerda.",
+    "pairs": [
+      {
+        "left": "`ComputedTotal`",
+        "right": "uma função no template rodou três vezes por renderização"
+      },
+      {
+        "left": "`LazyComputed`",
+        "right": "nada foi calculado até um botão mostrar o valor"
+      },
+      {
+        "left": "`SyncedByWatch`",
+        "right": "a primeira renderização disse 0"
+      },
+      {
+        "left": "`AsyncComputed`",
+        "right": "a página imprimiu uma promise"
+      }
+    ],
+    "right_distractors": [
+      "o Vue recusou uma escrita com um aviso"
+    ]
+  },
+  "ex-shben250": {
+    "prompt": "Uma caixa de busca guarda os resultados com `watch(query, (q) => { matches.value = courses.value.filter((c) => c.title.includes(q)) })`. Os cursos chegam do `fetch` um instante depois de a página abrir. O que dá errado?",
+    "hint": "Qual é a origem do watcher, e de que mais o resultado depende?",
+    "choices": [
+      {
+        "text": "Nada: o watcher roda uma vez ao ser criado, então `matches` já começa preenchido",
+        "why": "Um watcher roda quando a origem muda, não ao ser criado; foi a primeira renderização de `SyncedByWatch`."
+      },
+      {
+        "text": "A lista fica vazia até alguém digitar, já que o watcher olha `query` e não os cursos",
+        "why": "Isso. Um computed sobre `query` e `courses` estaria certo na primeira leitura e acompanharia os dois."
+      },
+      {
+        "text": "Ele precisa de `{ deep: true }` para perceber a digitação",
+        "why": "Digitar substitui a string em `query.value`, e um watcher comum vê isso. O que ele perde são os cursos."
+      },
+      {
+        "text": "O `filter` muda `courses` no lugar, e a lista encolhe a cada busca",
+        "why": "O `filter` devolve um array novo; quem muda o original são `sort`, `reverse` e `splice`."
+      }
+    ]
+  },
+  "ex-ydtfj2xn": {
+    "prompt": "Quais destes poderiam ser o corpo de um computed sem quebrar a regra dele? Escolha todas as que se aplicam.",
+    "hint": "Daria para chamá-lo dez vezes seguidas, ou nenhuma, e a página ficar igual?",
+    "choices": [
+      {
+        "text": "`[...sessions.value].sort(byDate)`",
+        "why": "Isso. A cópia é ordenada, e `sessions` mantém a ordem."
+      },
+      {
+        "text": "`localStorage.setItem('total', t)`, e depois devolver `t`",
+        "why": "Escrever no armazenamento é um efeito colateral num momento que ninguém escolheu. Isso fica num watcher."
+      },
+      {
+        "text": "`weekTotal(sessions.value, monday.value)`",
+        "why": "Isso. O `weekTotal` lê a entrada e devolve um objeto novo."
+      },
+      {
+        "text": "`sessions.value.push(extra)`, e depois devolver o tamanho",
+        "why": "O `push` muda o array que o computed lê, e cada leitor de `sessions` recebe a sessão a mais."
+      },
+      {
+        "text": "`sessions.value.filter((s) => s.done).length`",
+        "why": "Isso. Filtrar cria um array novo, e contá-lo não muda coisa alguma."
+      }
+    ]
+  }
+}

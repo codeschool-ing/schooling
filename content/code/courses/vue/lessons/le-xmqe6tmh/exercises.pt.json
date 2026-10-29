@@ -1,0 +1,491 @@
+{
+  "ex-q2smge31": {
+    "prompt": "Na demo `Lifecycle`, *15 more* é clicado uma vez. O que o `onBeforeUpdate` e o `onUpdated` leem do `<p>`?",
+    "hint": "Os dois hooks ficam um de cada lado de um redesenho.",
+    "choices": [
+      {
+        "text": "45 nos dois, porque o ref já tinha mudado",
+        "why": "O ref tinha mudado, mas os hooks leem a página, e antes do redesenho a página ainda dizia 30."
+      },
+      {
+        "text": "Nada no `onBeforeUpdate`; o elemento é refeito",
+        "why": "O redesenho corrige o mesmo `<p>`. A transcrição lê 30 e 45 de um único elemento."
+      },
+      {
+        "text": "30 antes do redesenho e 45 depois dele, lidos do mesmo elemento",
+        "why": "Certo. O `onBeforeUpdate` roda antes do redesenho e vê o valor antigo; o `onUpdated` roda depois e vê o novo."
+      },
+      {
+        "text": "30 nos dois: a página só é redesenhada depois dos hooks",
+        "why": "O redesenho acontece entre os dois hooks, que é o que os nomes dizem."
+      }
+    ]
+  },
+  "ex-rp5b6xx6": {
+    "prompt": "Num componente com `<script setup>`, onde vai o código que o Vue 2 colocava no hook `created`?",
+    "hint": "Procure o hook que a aula diz que não existe.",
+    "choices": [
+      {
+        "text": "No `onBeforeMount`, o primeiro hook que o Vue chama",
+        "why": "O `onBeforeMount` vem depois do setup, então é mais tarde do que o `created` era."
+      },
+      {
+        "text": "No `onCreated`, importado de `vue` como os outros",
+        "why": "Não existe `onCreated` na Composition API."
+      },
+      {
+        "text": "No `onMounted`, quando o componente já existe na página",
+        "why": "Isso é ainda mais tarde: a essa altura o componente já foi criado e inserido."
+      },
+      {
+        "text": "No nível de cima do `<script setup>`, que é a criação",
+        "why": "Certo. O próprio setup é a criação, então o nível de cima dele roda onde o `created` rodava."
+      }
+    ]
+  },
+  "ex-egfmgt6n": {
+    "prompt": "Um componente entrega um elemento a uma biblioteca de gráficos. Na remoção, a biblioteca precisa receber `chart.destroy()`, e essa chamada lê o elemento. Que hook deve fazê-la?",
+    "hint": "Em que hook os elementos ainda existem?",
+    "choices": [
+      {
+        "text": "`onBeforeUnmount`",
+        "why": "Certo. Os elementos ainda estão lá e ainda funcionam, então a biblioteca consegue soltar o seu."
+      },
+      {
+        "text": "`onUnmounted`, onde tudo o que o componente começou é parado",
+        "why": "É o lugar de um timer. A essa altura os elementos já se foram, e o `destroy()` precisa de um."
+      },
+      {
+        "text": "`onUpdated`, depois do último redesenho",
+        "why": "Uma remoção não é um redesenho do componente, e o `onUpdated` não roda nela."
+      },
+      {
+        "text": "Um watcher com `flush: 'post'` nos dados do gráfico",
+        "why": "Um watcher roda quando um valor muda. A remoção não muda nenhum valor do gráfico."
+      }
+    ]
+  },
+  "ex-s96f81cb": {
+    "prompt": "Código que roda depois que um valor muda e precisa da página é um watcher com `flush: '___'`, e não `onUpdated`.",
+    "hint": "A aula 4 usou isso, e é o contrário de *pre*.",
+    "blanks": [
+      {
+        "accept": [
+          "post"
+        ]
+      }
+    ]
+  },
+  "ex-vh6zecs8": {
+    "prompt": "Na demo `Order`, de quem é a linha `mounted` impressa por último?",
+    "hint": "A criação desce; a montagem volta subindo.",
+    "choices": [
+      {
+        "text": "A do segundo filho, o último componente criado",
+        "why": "Ele foi criado por último, mas o `mounted` do pai espera os dois filhos."
+      },
+      {
+        "text": "A do primeiro filho, porque a montagem anda de trás para a frente",
+        "why": "Os filhos são montados do primeiro ao último; o que volta subindo é a árvore, filho e depois pai."
+      },
+      {
+        "text": "A do pai, depois que os dois filhos estão montados",
+        "why": "Certo. O pai é montado depois que todos os filhos estão na página."
+      },
+      {
+        "text": "A do filho que terminou de renderizar por último, o que varia",
+        "why": "A ordem é fixada pela árvore, e a transcrição mostra: os dois filhos, depois o pai."
+      }
+    ]
+  },
+  "ex-9kxaj286": {
+    "prompt": "Quais destas coisas são verdade dentro do `onMounted` do próprio pai? Escolha todas as que se aplicam.",
+    "hint": "Na transcrição, o que já tinha sido impresso quando `parent: mounted` apareceu?",
+    "choices": [
+      {
+        "text": "Todos os filhos estão na página",
+        "why": "Certo. O pai só é montado depois dos filhos."
+      },
+      {
+        "text": "Os filhos ainda não rodaram o setup",
+        "why": "O setup deles rodou logo depois do `beforeMount` do pai, bem antes."
+      },
+      {
+        "text": "Um ref de template para um componente filho está preenchido",
+        "why": "Certo. Ele é `null` até ali, e está preenchido quando o `onMounted` do pai roda."
+      },
+      {
+        "text": "O `onMounted` de cada filho já rodou",
+        "why": "Certo. As linhas `mounted` dos dois filhos vêm antes da do pai."
+      }
+    ]
+  },
+  "ex-bm58wzh9": {
+    "prompt": "Um pai cria um objeto no seu `onMounted` e o coloca onde os filhos o leem. Um filho o lê no próprio `onMounted`. O que o filho encontra?",
+    "hint": "Qual `onMounted` roda primeiro, o do pai ou o do filho?",
+    "choices": [
+      {
+        "text": "O objeto, porque todos os hooks do pai rodam antes dos do filho",
+        "why": "Isso vale para o setup e o `beforeMount`, não para o `mounted`, que volta subindo a árvore."
+      },
+      {
+        "text": "Nada ainda: o `onMounted` dele roda antes do do pai",
+        "why": "Certo. A solução é criar o objeto no setup do pai, que roda antes de qualquer filho existir."
+      },
+      {
+        "text": "Um erro, porque um filho não consegue ler do pai no `onMounted`",
+        "why": "Ler é permitido; o problema é só o momento. O valor ainda não está lá."
+      },
+      {
+        "text": "O objeto, porque os dois hooks rodam no mesmo instante",
+        "why": "Eles rodam um depois do outro, os filhos primeiro, como a transcrição imprime."
+      }
+    ]
+  },
+  "ex-s9zcz014": {
+    "prompt": "Um pai e os dois filhos são removidos juntos. No `onUnmounted` de quem os outros com certeza já terminaram de limpar?",
+    "hint": "O `unmounted` roda na direção oposta à do `beforeUnmount`.",
+    "choices": [
+      {
+        "text": "No do primeiro filho, que é o primeiro a sair",
+        "why": "É o primeiro `unmounted`, então ninguém mais terminou naquele ponto."
+      },
+      {
+        "text": "No de ninguém: o Vue não fixa a ordem",
+        "why": "Fixa, e a transcrição mostra: os filhos primeiro, depois o pai."
+      },
+      {
+        "text": "No do segundo filho, o último filho removido",
+        "why": "O `unmounted` do pai ainda vem depois dele."
+      },
+      {
+        "text": "No do pai, o último dos três a sair de cena",
+        "why": "Certo. A remoção começa e termina no topo, então o pai é o último a sair."
+      }
+    ]
+  },
+  "ex-0nsk86ty": {
+    "prompt": "O que `minutesField.value` contém logo depois de `adding.value = true`, antes de `await nextTick()`?",
+    "hint": "O `v-if` foi avisado, não redesenhado.",
+    "choices": [
+      {
+        "text": "O `<input>`, já que o `v-if` agora é verdadeiro",
+        "why": "A condição é verdadeira, mas o redesenho ainda está na fila."
+      },
+      {
+        "text": "Uma promise que resolve para o input",
+        "why": "Um ref de template guarda um elemento ou `null`, nunca uma promise; a promise aqui é o `nextTick`."
+      },
+      {
+        "text": "`null`",
+        "why": "Certo. O elemento não existe até o redesenho na fila rodar, e é isso que o `await nextTick()` espera."
+      },
+      {
+        "text": "Um array vazio, já que o campo fica numa lista",
+        "why": "Só um `ref` dentro de um `v-for` junta um array, e o campo está fora do laço."
+      }
+    ]
+  },
+  "ex-mxx2e17q": {
+    "prompt": "Por que a aula diz para procurar os elementos de um ref em `v-for` por algo no elemento, e não pelo índice?",
+    "hint": "Compare o array com a lista de onde ele veio.",
+    "choices": [
+      {
+        "text": "O array guarda instâncias de componente, não elementos",
+        "why": "Em elementos `<li>` comuns ele guarda elementos; a demo contou 3."
+      },
+      {
+        "text": "A ordem do array não tem garantia de seguir a ordem da lista",
+        "why": "Certo. O índice 0 do array não precisa ser o primeiro item da lista."
+      },
+      {
+        "text": "O array fica `null` até o `nextTick`, então os índices falham",
+        "why": "No `onMounted` ele já tinha 3 linhas."
+      },
+      {
+        "text": "Cada leitura do ref monta um array novo, numa ordem nova",
+        "why": "A ordem não é especificada, não é embaralhada a cada leitura; a questão é que ninguém a prometeu."
+      }
+    ]
+  },
+  "ex-hne23hg5": {
+    "prompt": "Um pai coloca `ref=\"field\"` num componente filho escrito com `<script setup>`. Quais funções do filho o pai consegue chamar por ele?",
+    "hint": "Quem decide é o filho.",
+    "choices": [
+      {
+        "text": "Todas as funções declaradas no script do filho",
+        "why": "Com `<script setup>` a instância é fechada: nada chega ao pai só por ter sido declarado."
+      },
+      {
+        "text": "Só aquelas que o próprio filho passa para `defineExpose`",
+        "why": "Certo. O filho oferece algumas, como `focus()`, e guarda o resto para si."
+      },
+      {
+        "text": "Nenhuma: um ref num componente é sempre `null`",
+        "why": "Ele guarda a instância do componente; o que dá para alcançar nela é o que o filho expõe."
+      },
+      {
+        "text": "Os métodos do elemento raiz dele, como `focus()` num input",
+        "why": "Um ref num componente dá a instância, não um elemento. O `focus()` só está lá se o filho o expuser."
+      }
+    ]
+  },
+  "ex-70h2rd2a": {
+    "prompt": "O `Ticker` define o intervalo em 100 milissegundos. Quantas vezes por segundo o `careless` continua tiquetaqueando depois de ser removido?",
+    "hint": "Mil milissegundos num segundo."
+  },
+  "ex-vj7k1898": {
+    "prompt": "Na demo `Leak`, o que acontece com os dois timers depois de *Remove both*?",
+    "hint": "Só um dos dois registrou `onUnmounted`.",
+    "choices": [
+      {
+        "text": "Os dois param, porque o Vue limpa os timers do componente",
+        "why": "O Vue limpa o que o Vue criou. O `setInterval` é do navegador, e nada o para a não ser `clearInterval`."
+      },
+      {
+        "text": "Os dois continuam até a página recarregar",
+        "why": "O `tidy` chamou `clearInterval` no `onUnmounted`, e as linhas dele param na transcrição."
+      },
+      {
+        "text": "O `careless` continua; o `tidy` para",
+        "why": "Certo. O componente sumiu da página e do Vue, e o intervalo dele ainda roda."
+      },
+      {
+        "text": "O `careless` para um pouco depois, quando a coleta de lixo o libera",
+        "why": "O intervalo mantém a função alcançável, então nada do que ela segura é liberado."
+      }
+    ]
+  },
+  "ex-sqs0xxw8": {
+    "prompt": "Um componente é removido. Quais destas coisas o Vue para sozinho? Escolha todas as que se aplicam.",
+    "hint": "O Vue limpa o que o Vue criou.",
+    "choices": [
+      {
+        "text": "Um `ResizeObserver` observando um dos elementos dele",
+        "why": "O observer é do navegador; ele precisa de `disconnect()`."
+      },
+      {
+        "text": "Um watcher criado durante o setup dele",
+        "why": "Certo. Watchers criados no setup pertencem ao componente e param com ele."
+      },
+      {
+        "text": "Um listener que ele adicionou em `window` no `onMounted`",
+        "why": "O listener está em `window`, que não é removido; ele precisa de `removeEventListener` com a mesma função."
+      },
+      {
+        "text": "As próprias renderizações",
+        "why": "Certo. O Vue as criou e o Vue as para."
+      },
+      {
+        "text": "Um `fetch` que ele começou e que ainda não respondeu",
+        "why": "A requisição vai até o fim, a não ser que um `AbortController` a aborte."
+      }
+    ]
+  },
+  "ex-natvq2zg": {
+    "prompt": "O `App` só é removido quando a página fecha. Por que o planner ainda acompanha o relógio com `onUnmounted(() => clearInterval(timer))`?",
+    "hint": "Em que outro lugar essas linhas vão rodar?",
+    "choices": [
+      {
+        "text": "Um navegador mantém um intervalo rodando depois que a aba fecha",
+        "why": "Fechar a aba encerra tudo o que a página começou; o motivo não é esse."
+      },
+      {
+        "text": "O Vue avisa sobre um `onMounted` sem `onUnmounted`",
+        "why": "O Vue não tem esse aviso; os dois hooks são independentes."
+      },
+      {
+        "text": "Um teste desmonta o `App`, e as linhas depois vão para um composable que qualquer componente usa",
+        "why": "Certo. No teste da aula 21 e no composable da aula 10, a remoção acontece e a limpeza importa toda vez."
+      },
+      {
+        "text": "Sem isso, o `today` seria atualizado duas vezes por minuto",
+        "why": "Um `onMounted` começa um intervalo; o número só cresce quando o componente é montado de novo."
+      }
+    ]
+  },
+  "ex-8rzztpsk": {
+    "prompt": "Onde a aula começa a requisição de dados de um componente, e por quê?",
+    "hint": "Uma requisição precisa da página?",
+    "choices": [
+      {
+        "text": "No `onMounted`, para ser enviada uma vez, como no React",
+        "why": "O setup já roda uma vez. No React o effect evita um corpo que roda a cada renderização, coisa que o Vue não tem."
+      },
+      {
+        "text": "No setup: ela não precisa da página e assim sai mais cedo",
+        "why": "Certo. Ela estava a caminho enquanto o Vue renderizava e montava, e respondeu depois dos dois."
+      },
+      {
+        "text": "No `onMounted`, porque o setup roda de novo a cada redesenho",
+        "why": "Esse é o corpo de um componente React. O setup do Vue roda uma vez por construção."
+      },
+      {
+        "text": "No `onBeforeMount`, o último momento antes de a página existir, para a resposta chegar a tempo",
+        "why": "A aula não o usa, e ele ainda começaria a requisição depois do setup."
+      }
+    ]
+  },
+  "ex-wvc9mz8q": {
+    "prompt": "Um componente lê `localStorage` no nível de cima do `<script setup>`. Mais tarde o app é renderizado num servidor. O que acontece lá?",
+    "hint": "Qual dos dois roda no servidor, o setup ou o `onMounted`?",
+    "choices": [
+      {
+        "text": "Nada: o setup só roda no navegador",
+        "why": "É o contrário. O setup roda no servidor também; quem não roda é o `onMounted`."
+      },
+      {
+        "text": "A leitura falha, porque `localStorage` não existe no servidor",
+        "why": "Certo. O setup roda nos dois lugares, então essa leitura precisa ir para o `onMounted`."
+      },
+      {
+        "text": "Ela é pulada no servidor, como o `onMounted`",
+        "why": "Só o hook é pulado; o nível de cima do setup roda."
+      },
+      {
+        "text": "Funciona, porque o Nuxt dá ao servidor um `localStorage` próprio",
+        "why": "Nem `localStorage` nem `window` existem no servidor, e é por isso que as leituras do planner mudam de lugar."
+      }
+    ]
+  },
+  "ex-8bpmssbk": {
+    "prompt": "No servidor, o setup roda e o `___` não: não há página onde colocar o componente.",
+    "hint": "O hook que espera a página.",
+    "blanks": [
+      {
+        "accept": [
+          "onMounted"
+        ]
+      }
+    ]
+  },
+  "ex-kwyeg79y": {
+    "prompt": "Dentro do `<KeepAlive>`, o aluno troca de Statistics para Spanish. O que acontece com o componente de statistics?",
+    "hint": "Leia a linha impressa logo depois de `-- click #spanish`.",
+    "choices": [
+      {
+        "text": "Ele é desmontado, e a nota é copiada para o `localStorage`",
+        "why": "Nada escreve no `localStorage` aqui, e o componente não foi desmontado."
+      },
+      {
+        "text": "Ele é desmontado e refeito na volta com a mesma `:key`",
+        "why": "Sem `<KeepAlive>` é isso que acontece, e a nota volta vazia."
+      },
+      {
+        "text": "Ele continua montado e é escondido como com `v-show`",
+        "why": "Ele sai da página; o `onDeactivated` é um hook próprio, não um estilo."
+      },
+      {
+        "text": "Ele é desativado e guardado na memória, com nota e tudo",
+        "why": "Certo. Voltar ativou a mesma instância, e os 5 caracteres estavam lá."
+      }
+    ]
+  },
+  "ex-sqtz6at5": {
+    "prompt": "Um componente guardado roda um timer que só serve enquanto a aba está à mostra. Onde ele o para e o reinicia?",
+    "hint": "Um componente guardado não é desmontado quando sai de cena.",
+    "choices": [
+      {
+        "text": "`onDeactivated` e `onActivated`",
+        "why": "Certo. São os momentos em que ele é guardado e volta."
+      },
+      {
+        "text": "`onUnmounted` e `onMounted`, como em qualquer componente",
+        "why": "O `onUnmounted` não roda num componente guardado até o próprio `<KeepAlive>` sair."
+      },
+      {
+        "text": "`onBeforeUpdate` e `onUpdated`, em volta da troca",
+        "why": "Trocar de aba não redesenha o componente guardado; tira-o da página."
+      },
+      {
+        "text": "Um watcher no ref `tab` do pai, dentro do filho",
+        "why": "O filho não enxerga o `tab` do pai, e os hooks já dizem quando ele é guardado."
+      }
+    ]
+  },
+  "ex-24hfb89v": {
+    "prompt": "Por que o planner não confia no `<KeepAlive>` para guardar as sessões?",
+    "hint": "Onde mora um componente guardado?",
+    "choices": [
+      {
+        "text": "Ele guarda no máximo dez componentes, a não ser que `max` seja aumentado",
+        "why": "Não existe esse padrão; `max` é algo que você define para limitar."
+      },
+      {
+        "text": "Ele joga fora o estado do componente no `onDeactivated`",
+        "why": "O estado sobrevive à desativação; a nota de statistics voltou."
+      },
+      {
+        "text": "Um recarregamento perde tudo o que fica só na memória, componentes guardados inclusive",
+        "why": "Certo. Estado que precisa sobreviver de qualquer jeito vai para o `localStorage` ou para uma store."
+      },
+      {
+        "text": "Ele guarda só a última tela que o aluno viu",
+        "why": "Ele guarda todas as telas que viu, e é por isso que troca memória por estado."
+      }
+    ]
+  },
+  "ex-60seg5qt": {
+    "prompt": "Um pai com dois filhos é mostrado e depois removido. Coloque estes momentos na ordem em que acontecem.",
+    "hint": "Descendo para a criação, subindo para a montagem; a remoção começa e termina no topo.",
+    "items": [
+      "O setup do pai",
+      "O setup do segundo filho",
+      "O `onMounted` do primeiro filho",
+      "O `onMounted` do pai",
+      "O `onBeforeUnmount` do segundo filho",
+      "O `onUnmounted` do pai"
+    ]
+  },
+  "ex-6h3ga6x3": {
+    "prompt": "Associe cada tarefa ao hook que esta aula dá para ela.",
+    "hint": "A tarefa precisa dos elementos, e está começando ou parando algo?",
+    "pairs": [
+      {
+        "left": "medir um elemento quando o componente aparece pela primeira vez",
+        "right": "`onMounted`"
+      },
+      {
+        "left": "limpar o intervalo que o componente começou",
+        "right": "`onUnmounted`"
+      },
+      {
+        "left": "dizer a uma biblioteca para soltar o elemento onde ela desenha",
+        "right": "`onBeforeUnmount`"
+      },
+      {
+        "left": "pausar o timer de uma aba guardada enquanto ninguém está olhando",
+        "right": "`onDeactivated`"
+      }
+    ],
+    "right_distractors": [
+      "`onBeforeMount`"
+    ]
+  },
+  "ex-zetjn9cz": {
+    "prompt": "Um componente mostrado com `v-if` roda `window.addEventListener('resize', () => measure())` no `onMounted` e `window.removeEventListener('resize', () => measure())` no `onUnmounted`. Ele é mostrado e escondido 5 vezes. Quantos listeners de resize dele sobram em `window`?",
+    "hint": "A função passada para `removeEventListener` é a mesma função?"
+  },
+  "ex-gek9cn5w": {
+    "prompt": "Um campo aparece quando o aluno clica em *Edit*, e ele precisa receber o foco. Quais destas opções põem o foco nele? Escolha todas as que se aplicam.",
+    "hint": "O campo só existe depois do redesenho que o clique coloca na fila.",
+    "choices": [
+      {
+        "text": "Mudar a flag e chamar `focus()` na linha seguinte",
+        "why": "O redesenho ainda está na fila, então o ref é `null` nessa linha."
+      },
+      {
+        "text": "Mudar a flag, `await nextTick()`, e então chamar `focus()`",
+        "why": "Certo. É o padrão da demo: depois do tick o elemento existe."
+      },
+      {
+        "text": "Chamar `focus()` no `onMounted` do pai",
+        "why": "O pai foi montado bem antes do clique, quando o campo não existia."
+      },
+      {
+        "text": "Fazer do campo um componente próprio que foca o input no seu `onMounted`",
+        "why": "Certo. O `onMounted` dele roda quando o `v-if` o põe na página, o que é depois do clique."
+      }
+    ]
+  }
+}

@@ -805,32 +805,45 @@ var allowedOutsideTheFont = map[rune]string{
 		"follows it, and a capture is pasted byte for byte",
 	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
 		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
-	// Vite's development server, and create-vite, which every front-end course
-	// built on Vite starts with.
-	'\u279c': "Vite's development server opens each address it prints with it (`➜  Local:`). " +
-		"IBM Plex Mono has no U+279C at all. It opens the line after the indentation, and the " +
-		"two lines that carry it carry it in the same column, so they move together",
-	'\u25c7': "create-vite marks the step it is on with it (`◇  Scaffolding project in …`). " +
-		"IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to what " +
-		"follows it",
-	// Vitest's default reporter, which the React course's tests print.
-	'\u276f': "Vitest opens a file that has failures, and each line of a stack trace, with it " +
-		"(`❯ src/WeekSummary.test.tsx`). IBM Plex Mono has no U+276F at all. It opens the line after " +
-		"the indentation, and the lines that carry it carry it in the same column, so they move together",
-	'\u23af': "Vitest draws the rules around its list of failures with it (`⎯⎯⎯ Failed Tests 1 ⎯⎯⎯`). " +
-		"IBM Plex Mono has no U+23AF at all. A rule of them is a line of its own, and nothing below it is " +
-		"aligned to where it ends",
-	// Next.js, whose build and development server the React course runs.
+	// Vite's own tools. `npm create vite` draws its steps on a rail of box-drawing
+	// characters, which the terminal cut carries, with a diamond on each step it
+	// reports; and the dev server opens each address it prints with an arrow.
+	'\u25c7': "`npm create vite` and `create-nuxt` mark each step they report with it (`◇  Scaffolding project`). " +
+		"IBM Plex Mono has no U+25C7 at all. It opens a line, on the rail of `│` above and " +
+		"below it, and nothing after it is aligned to anything",
+	'\u279c': "Vite's dev server opens each address it prints with it (`➜  Local:`). IBM Plex " +
+		"Mono has no U+279C at all. It opens every such line at the same indentation, so " +
+		"whatever width it is given, the lines stay aligned with each other",
+	// Vitest's default reporter: an arrow before each file and each place in the
+	// code it points at, and a rule of these around the heading of a failure.
+	'\u276f': "Vitest opens the line of each test file, and each `file:line:column` it points " +
+		"at, with it (`❯ src/planner.test.ts`). IBM Plex Mono has no U+276F at all. It opens " +
+		"the line after the indentation and nothing below is aligned to the column it ends in",
+	'\u23af': "Vitest draws the rule around the heading of a failure with a run of it " +
+		"(`⎯⎯⎯ Failed Tests 2 ⎯⎯⎯`). IBM Plex Mono has no U+23AF at all. A rule is the whole " +
+		"line and nothing is aligned to where it ends",
+	// And Nuxt's: create-nuxt and `nuxt dev` mark a finished step with U+25C6 and
+	// end with U+2728; Vue Router's warnings, as Nuxt prints them, hang two lines
+	// off the message with U+25B6.
+	'\u25c6': "`create-nuxt` and `nuxt dev` open a finished step with it (`◆ Ready in 2.76s`). IBM " +
+		"Plex Mono has no U+25C6 at all. It opens a line and nothing is aligned to what follows it",
+	'\u2728': "`create-nuxt` and `nuxt build` put it before their last message (`└  ✨ Happy " +
+		"building!`, `◆ ✨ Build complete in 6.37s!`). No font this interface serves has U+2728. " +
+		"It is on the last line of what they print, so no line below is aligned to it",
+	'\u25b6': "Vue Router's warnings, as Nuxt prints them, hang two lines off the message with it " +
+		"(`├▶ fix:` and `╰▶ see:`). IBM Plex Mono has no U+25B6 at all. Both lines carry it in the " +
+		"same column, so whatever width the reader's machine gives it moves them together",
+	// `next build` ends with a table of routes, one of these before each.
+	'\u25cb': "`next build` marks a route prerendered as static content with it, in its route " +
+		"table and in the legend under it. IBM Plex Mono has no U+25CB at all. The two columns at " +
+		"the right of those lines move by whatever the reader's machine gives the glyph, which is " +
+		"a fraction of a cell; the alternative is a table that is not the one the build printed",
+	'\u25d0': "`next build` marks a partially prerendered route with it, in the same table and " +
+		"legend as U+25CB, with the same consequence. IBM Plex Mono has no U+25D0 at all",
+	// And Next.js's own banner, which opens `next dev`, `next build` and `next start`.
 	'\u25b2': "Next.js opens the first line of `next dev`, `next build` and `next start` with it " +
 		"(`▲ Next.js 16.4.3`). IBM Plex Mono has no U+25B2 at all. It opens a line and nothing is " +
 		"aligned to what follows it",
-	'\u25d0': "`next build` marks a partially prerendered route with it, in its route table and its " +
-		"legend. IBM Plex Mono has no U+25D0 at all. Where it is followed by aligned text, so is " +
-		"U+25CB, in the same column of the line beside it, and the two come from the same block, so " +
-		"they move together",
-	'\u25cb': "`next build` marks a static route with it, in its route table and its legend. IBM " +
-		"Plex Mono has no U+25CB at all. Where it is followed by aligned text, so is U+25D0, in the " +
-		"same column of the line beside it, and the two come from the same block, so they move together",
 }
 
 // coverage is the set of code points the interface declares a face for.

@@ -1,0 +1,457 @@
+{
+  "ex-vgh5cf7t": {
+    "prompt": "Na demo `PropDrilling`, qual componente declara `unit` como prop e nunca o usa?",
+    "hint": "O próprio comentário dele diz isso.",
+    "choices": [
+      {
+        "text": "`DrillLeaf`",
+        "why": "Ele usa `unit` duas vezes: para decidir se divide por 60, e para escrever a palavra."
+      },
+      {
+        "text": "`PropDrilling`, que só escreve `unit=\"hours\"`",
+        "why": "`PropDrilling` define o valor; ele passa `unit` como atributo no `DrillMiddle` e não declara prop nenhuma."
+      },
+      {
+        "text": "`DrillMiddle`, que desenha a lista",
+        "why": "Certo. Ele nomeia `unit` nas props e o repassa no template, e não faz mais nada com ele."
+      },
+      {
+        "text": "O `DrillMiddle` e o `DrillLeaf`, os dois",
+        "why": "A folha é o único componente que lê `unit`, e é por isso que o valor precisava chegar até ela."
+      }
+    ]
+  },
+  "ex-zmsnh079": {
+    "prompt": "Quais destes são valores ambiente no sentido da aula, o tipo que o drilling transforma em problema? Escolha todas as que se aplicam.",
+    "hint": "Necessário em muitas profundidades, definido num lugar só para todos.",
+    "choices": [
+      {
+        "text": "Os minutos de uma sessão, passados à linha que a desenha",
+        "why": "Esse valor pertence a uma linha e é a razão de ela existir; uma prop é o jeito certo de enviá-lo."
+      },
+      {
+        "text": "Um tema para uma parte inteira da árvore",
+        "why": "Certo. Uma configuração que vale para uma subárvore, definida uma vez para todo componente dentro dela."
+      },
+      {
+        "text": "O usuário atual, que todo componente de uma funcionalidade lê",
+        "why": "Certo. Um serviço que uma funcionalidade inteira usa é o segundo tipo que a aula lista."
+      },
+      {
+        "text": "A aba ativa de um grupo de abas, compartilhada com as abas",
+        "why": "Certo. Componentes de uma biblioteca compartilhando estado entre si é o terceiro tipo."
+      }
+    ]
+  },
+  "ex-ewek1jsm": {
+    "prompt": "Na transcrição de `PropDrilling`, que número mostra a folha da sessão de 45 minutos?",
+    "hint": "Ela divide por 60 quando a unidade é hours."
+  },
+  "ex-kbwfj8pb": {
+    "prompt": "Na demo `ProvideInject`, o que o `InjectMiddle` declara como props?",
+    "hint": "Compare com o `DrillMiddle`.",
+    "choices": [
+      {
+        "text": "`sessions` e `unit`, como o `DrillMiddle` fazia",
+        "why": "Essa era a versão com drilling. O ponto da versão provida é que o meio deixa de nomear a unidade."
+      },
+      {
+        "text": "Nenhuma prop: as sessões também são injetadas",
+        "why": "Só a unidade é provida. As sessões continuam sendo uma prop, vindas do pai que é dono delas."
+      },
+      {
+        "text": "`unitKey`, para as folhas acharem o valor",
+        "why": "A chave é importada do `keys.js` por quem provê ou injeta; o meio não faz nenhum dos dois."
+      },
+      {
+        "text": "`sessions`, a lista que ele desenha, e mais nada",
+        "why": "Certo. Ele desenha a lista e não menciona unidade nenhuma."
+      }
+    ]
+  },
+  "ex-b2abkqgy": {
+    "prompt": "O planner inteiro provê `'minutes'` sob `unitKey`, e um painel dentro dele provê `'hours'` sob a mesma chave. O que uma folha dentro desse painel injeta?",
+    "hint": "Um inject olha para o ancestral mais próximo que proveu a chave.",
+    "choices": [
+      {
+        "text": "`'hours'`",
+        "why": "Certo. O valor do painel fica por cima do do planner e o esconde, só na subárvore do painel."
+      },
+      {
+        "text": "`'minutes'`, porque o primeiro a prover ganha",
+        "why": "Ganha o mais próximo, não o primeiro. É isso que faz do provide um jeito de sobrescrever para uma subárvore."
+      },
+      {
+        "text": "Nada, e o Vue avisa que a chave foi provida duas vezes",
+        "why": "Prover a mesma chave em duas profundidades é permitido e é o ponto da sobrescrita; esse aviso não existe."
+      },
+      {
+        "text": "O dos dois que mudou por último",
+        "why": "Nenhum dos valores muda aqui. Qual provedor responde é decidido pela árvore, não pelo tempo."
+      }
+    ]
+  },
+  "ex-n13vxp50": {
+    "prompt": "Uma folha chama `inject(unitKey)` dentro de um handler de clique, e não no nível de cima do `<script setup>`. Ela está abaixo de quem provê. O que acontece quando o botão é clicado?",
+    "hint": "As duas regras desta seção são sobre o momento.",
+    "choices": [
+      {
+        "text": "Recebe `'hours'`, já que a folha está abaixo de quem provê",
+        "why": "Estar abaixo de quem provê é uma das duas regras, e só uma. A chamada também precisa acontecer durante o setup."
+      },
+      {
+        "text": "O Vue avisa que o inject só funciona no setup, e nada volta",
+        "why": "Certo. Durante um clique não há componente em setup a que prender a chamada, então o Vue avisa e o inject não devolve nada."
+      },
+      {
+        "text": "Recebe o valor que quem provê tinha quando a folha passou pelo setup",
+        "why": "Isso é o que um inject durante o setup dá. Depois, não há de onde procurar a chave."
+      },
+      {
+        "text": "O handler de clique lança um erro, e a página para de responder",
+        "why": "O Vue não lança erro aqui; ele avisa no console, e o handler continua sem nada."
+      }
+    ]
+  },
+  "ex-b4yvfjee": {
+    "prompt": "Um componente `Panel` chama `provide(unitKey, 'hours')`. Quais destes podem injetá-lo? Escolha todas as que se aplicam.",
+    "hint": "Abaixo, em qualquer profundidade. Em nenhum outro lugar.",
+    "choices": [
+      {
+        "text": "O componente que renderiza o `Panel`",
+        "why": "Esse é o pai de quem provê, que está acima. Um valor só é encontrado abaixo de quem provê."
+      },
+      {
+        "text": "Um componente quatro níveis dentro do `Panel`",
+        "why": "Certo. A profundidade não importa, e os componentes do meio não precisam saber."
+      },
+      {
+        "text": "Um irmão do `Panel`, renderizado ao lado dele",
+        "why": "Um irmão não está abaixo do `Panel`, então vê o que os próprios ancestrais dele proveem."
+      },
+      {
+        "text": "Um filho direto do `Panel`",
+        "why": "Certo. Um filho é o lugar mais próximo abaixo de quem provê."
+      }
+    ]
+  },
+  "ex-x3jv3h79": {
+    "prompt": "Na transcrição de `ReactiveProvide`, depois de `Add five` e da escrita direta de 999, que total quem provê mostra?",
+    "hint": "Um dos dois cliques foi recusado."
+  },
+  "ex-db5rs5x6": {
+    "prompt": "Um provedor tem `const total = ref(75)` e chama `provide(totalKey, total.value)`. Depois ele soma cinco a `total`. O que mostra um componente que injetou `totalKey`?",
+    "hint": "O `provide` entrega o que recebe, uma vez.",
+    "choices": [
+      {
+        "text": "75, e continua 75",
+        "why": "Certo. `total.value` foi lido uma vez, na chamada. Para acompanhar as mudanças, proveja o próprio ref."
+      },
+      {
+        "text": "80, porque valores providos são reativos",
+        "why": "O provide não torna nada reativo. Ele entregou o número 75, e um número não acompanha um ref."
+      },
+      {
+        "text": "Nada, com um aviso de que `.value` não pode ser provido",
+        "why": "Um número simples é um valor perfeitamente válido para prover; o Vue o aceita sem dizer nada."
+      },
+      {
+        "text": "75 até quem injeta redesenhar por outro motivo, e então 80",
+        "why": "Um redesenho lê de novo o mesmo número injetado. Nada nunca deu o ref a quem injeta."
+      }
+    ]
+  },
+  "ex-88rn8nme": {
+    "prompt": "Mude a demo para quem provê chamar `provide(plannerKey, { total, addFive })`, sem `readonly`. O que o `Write to it directly` do badge faz agora?",
+    "hint": "Veja a segunda linha da tabela da seção.",
+    "choices": [
+      {
+        "text": "Continua recusado, já que um ref injetado é só de leitura",
+        "why": "Só o `readonly` recusa uma escrita. Um ref entregue como está aceita uma de qualquer um que o tenha."
+      },
+      {
+        "text": "O badge e quem provê mostram 999, pelo mesmo ref que os dois têm",
+        "why": "Certo. O badge tem o próprio ref de quem provê e escreve nele, e o dono não fica sabendo quem fez isso."
+      },
+      {
+        "text": "Só o badge mostra 999; quem provê mantém o próprio total",
+        "why": "Há um ref só, não uma cópia por quem injeta, então uma escrita por ele aparece em todo lugar."
+      },
+      {
+        "text": "O Vue avisa que um filho alterou um valor provido, e aplica a mudança",
+        "why": "Esse aviso é de props. Um ref provido não tem regra própria, e é por isso que quem provê acrescenta `readonly`."
+      }
+    ]
+  },
+  "ex-hkqg5xap": {
+    "prompt": "Para dar a quem injeta uma visão de um ref que acompanha toda mudança e não aceita nenhuma, quem provê o embrulha: `___(total)`.",
+    "hint": "A função que a demo importa ao lado de `ref` e `provide`.",
+    "blanks": [
+      {
+        "accept": [
+          "readonly"
+        ]
+      }
+    ]
+  },
+  "ex-t5ckd120": {
+    "prompt": "Por que a aula provê sob um Symbol, e não sob uma string como `'unit'`?",
+    "hint": "O que `Symbol('unit') === Symbol('unit')` imprime?",
+    "choices": [
+      {
+        "text": "O Vue 3.5 recusa uma chave string",
+        "why": "Uma chave string ainda funciona, e os exemplos mais curtos da documentação usam uma."
+      },
+      {
+        "text": "Um Symbol torna o valor provido reativo",
+        "why": "A reatividade vem do que é provido, um ref ou um `computed`, nunca da chave."
+      },
+      {
+        "text": "Dois Symbols nunca são iguais, então o provide de mais ninguém responde por ele",
+        "why": "Certo. Só código que importa exatamente aquele Symbol chega ao valor; duas strings iguais são a mesma chave."
+      },
+      {
+        "text": "Uma busca por Symbol é mais rápida que uma por string",
+        "why": "Velocidade não é o motivo que a aula dá, e a diferença nem apareceria."
+      }
+    ]
+  },
+  "ex-0ssdeect": {
+    "prompt": "O que manter todas as chaves num só `keys.js` dá, segundo a aula? Escolha todas as que se aplicam.",
+    "hint": "Três coisas, cada uma para quem lê ou muda o código.",
+    "choices": [
+      {
+        "text": "Um lugar para dar a cada chave o tipo do seu valor",
+        "why": "Certo. A aula 16 faz isso com `InjectionKey`."
+      },
+      {
+        "text": "Uma verificação, na hora do build, de que toda chave injetada tem quem a proveja",
+        "why": "Nada verifica isso. A falta de quem proveja aparece na execução, como `undefined` e um aviso, ou como o padrão."
+      },
+      {
+        "text": "Uma lista de tudo o que é provido, num arquivo",
+        "why": "Certo. O provide não aparece no template, então esse arquivo é onde um leitor começa."
+      },
+      {
+        "text": "Um nome para buscar e achar todo provedor e todo injetor",
+        "why": "Certo. Uma busca por `unitKey` acha todos, onde `'unit'` ficaria enterrado no meio de tudo o mais."
+      },
+      {
+        "text": "Os valores providos sob essas chaves ficam só de leitura",
+        "why": "Só de leitura é o que o `readonly` dá, aplicado ao valor. O arquivo guarda chaves, não valores."
+      }
+    ]
+  },
+  "ex-tsb8f5cn": {
+    "prompt": "No `keys.js`, alguém troca `Symbol('unit')` por `Symbol('display unit')` e não mexe em mais nada. O que muda quando a aplicação roda?",
+    "hint": "A descrição é a chave, ou um rótulo nela?",
+    "choices": [
+      {
+        "text": "Todo `inject(unitKey)` deixa de achar o valor até ser renomeado também",
+        "why": "Os componentes importam `unitKey`, a variável, e ela continua guardando o Symbol que os dois lados usam."
+      },
+      {
+        "text": "A aplicação quebra, já que uma descrição não aceita espaço",
+        "why": "Uma descrição é qualquer string; ela existe para pessoas, em mensagens e no console."
+      },
+      {
+        "text": "Componentes que usavam a string `'unit'` agora acham outro valor",
+        "why": "Um Symbol nunca é igual a uma string, diga o que disser a descrição, então nenhuma chave string esteve envolvida."
+      },
+      {
+        "text": "Só o texto de um aviso, ou de uma linha de log, que nomeia a chave",
+        "why": "Certo. Quem provê e quem injeta ainda compartilham um Symbol; a descrição é o que `injection \"Symbol(...)\" not found` imprime."
+      }
+    ]
+  },
+  "ex-vrx0v1c2": {
+    "prompt": "Na demo `Orphan`, sem nada acima dela, o que `inject(unitKey, 'minutes')` dá?",
+    "hint": "Veja a segunda linha da página, e os avisos acima dela.",
+    "choices": [
+      {
+        "text": "`undefined`, e um aviso",
+        "why": "Esse é o primeiro inject, sem segundo argumento. Um padrão muda as duas metades."
+      },
+      {
+        "text": "`'minutes'`, e nenhum aviso",
+        "why": "Certo. Um padrão diz que ser usado sem quem proveja é esperado, então o Vue não tem do que avisar."
+      },
+      {
+        "text": "`'minutes'`, com um aviso de que ninguém proveu",
+        "why": "Houve um aviso na transcrição, e ele veio do inject sem padrão."
+      },
+      {
+        "text": "Um erro, já que `unitKey` nunca foi provido em lugar nenhum",
+        "why": "A falta de quem proveja nunca é um erro no Vue; é `undefined` ou o padrão."
+      }
+    ]
+  },
+  "ex-khbh9q34": {
+    "prompt": "Sem quem proveja, o que `inject('settings', () => ({ weekStartsOn: 'Monday' }))` devolve? Ele não tem terceiro argumento.",
+    "hint": "O terceiro argumento diz que a função é uma factory, e não o valor.",
+    "choices": [
+      {
+        "text": "O objeto `{ weekStartsOn: 'Monday' }`",
+        "why": "Isso é o que a demo recebeu, e ela também passou `true`. Sem ele, o Vue não chama a função."
+      },
+      {
+        "text": "`undefined`, e um aviso que nomeia `settings`",
+        "why": "Há um segundo argumento, então isso é um padrão e nenhum aviso é dado; só é o padrão errado."
+      },
+      {
+        "text": "A própria arrow function",
+        "why": "Certo. Sem `true`, o segundo argumento é o valor, e aqui o valor é uma função. `made.weekStartsOn` seria então `undefined`."
+      },
+      {
+        "text": "Um erro, porque um padrão não pode ser uma função",
+        "why": "Uma função é um valor padrão aceitável; é exatamente por isso que o terceiro argumento é necessário para dizer qual se quer."
+      }
+    ]
+  },
+  "ex-9stwm323": {
+    "prompt": "Um `FormField` injeta o formulário a que pertence, e não funciona sem ele. Que resposta a tabela da aula dá para a falta de quem proveja?",
+    "hint": "Um campo fora de um formulário é um bug.",
+    "choices": [
+      {
+        "text": "Um objeto de formulário vazio, para o campo ainda desenhar",
+        "why": "Isso esconde o bug: o campo parece certo e envia para lugar nenhum. É a falha silenciosa contra a qual a aula alerta."
+      },
+      {
+        "text": "Um padrão que piora visivelmente, como o id do curso",
+        "why": "Isso é para um extra, como os títulos. Um campo sem o seu formulário não está pior, está quebrado."
+      },
+      {
+        "text": "O valor usual, como com uma unidade",
+        "why": "Um formulário não tem valor usual em que se apoiar; cada campo pertence a um formulário específico."
+      },
+      {
+        "text": "Nenhum padrão, e um erro claro",
+        "why": "Certo. Algo sem o qual o componente não funciona é melhor encontrar na hora."
+      }
+    ]
+  },
+  "ex-f84vaj3p": {
+    "prompt": "Por que o `SessionRow` escreve `titles?.value[session.course]` no script, com `.value`?",
+    "hint": "O template e o script tratam um ref de jeitos diferentes.",
+    "choices": [
+      {
+        "text": "Um ref injetado só é desembrulhado no template, nunca no script",
+        "why": "Certo. `titles` é o `computed` que o `App` proveu, e no script ele é lido pelo `.value`."
+      },
+      {
+        "text": "O `inject` devolve uma cópia, e o `.value` chega ao original",
+        "why": "O inject devolve o próprio `computed` que foi provido; não há cópia para atravessar."
+      },
+      {
+        "text": "O `.value` faz a linha acompanhar os títulos quando eles chegam",
+        "why": "A linha acompanha os títulos porque um `computed` é reativo; o `.value` é só como o script o lê."
+      },
+      {
+        "text": "Sem quem proveja, é o `.value` que guarda o padrão",
+        "why": "Sem quem proveja, `titles` é `null`, e é por isso que o `?.` está ali, e a linha cai para o id."
+      }
+    ]
+  },
+  "ex-216tj3sx": {
+    "prompt": "Segundo a tabela da seção, como deve ser passado um valor compartilhado pela aplicação inteira e alterado de muitos lugares?",
+    "hint": "A última linha da tabela.",
+    "choices": [
+      {
+        "text": "Provido pelo `App`, já que o `App` está acima de tudo",
+        "why": "Chegaria a todo lugar, e nada diria quem o mudou. É aí que a maior parte dos \"preciso de provide\" acaba errada."
+      },
+      {
+        "text": "Como props, já que o drilling é honesto",
+        "why": "O drilling é honesto por dois ou três níveis, não para um valor que a aplicação inteira muda."
+      },
+      {
+        "text": "Numa store, onde um módulo é dono do estado e dá nome a cada mudança",
+        "why": "Certo. Um módulo é dono do estado, toda mudança é uma action com nome, e as ferramentas do Vue no navegador mostram cada uma."
+      },
+      {
+        "text": "Com `app.provide` no `main.js`",
+        "why": "Isso deixa um valor disponível em todo lugar, como uma biblioteca faz, mas não dá nenhuma das regras que uma store acrescenta."
+      }
+    ]
+  },
+  "ex-vmhscn11": {
+    "prompt": "Do que um componente abre mão quando injeta um valor em vez de recebê-lo como prop? Escolha todas as que se aplicam.",
+    "hint": "Visibilidade, portabilidade, facilidade de testar.",
+    "choices": [
+      {
+        "text": "A tag dele deixa de mostrar tudo de que ele precisa",
+        "why": "Certo. `<SessionRow :session=\"s\" />` parece completo e também precisa dos títulos."
+      },
+      {
+        "text": "Um ref injetado deixa de atualizar o componente",
+        "why": "Um ref injetado é acompanhado do mesmo jeito que um recebido como prop; as linhas do planner acompanham os títulos quando eles chegam."
+      },
+      {
+        "text": "Movido para fora da subárvore de quem provê, ele recebe o padrão em silêncio",
+        "why": "Certo. A mudança compila e roda, e é por isso que a escolha do padrão importa."
+      },
+      {
+        "text": "Um teste precisa prover o valor também",
+        "why": "Certo. A aula 21 faz isso com `global.provide`."
+      }
+    ]
+  },
+  "ex-fa7b0a5t": {
+    "prompt": "Ponha em ordem o que acontece entre o `App` do planner e uma linha que mostra `Statistics`.",
+    "hint": "O provide e o inject acontecem durante o setup; os cursos chegam depois.",
+    "items": [
+      "O `App` declara `titles` como um `computed`",
+      "O `App` chama `provide(titlesKey, titles)`",
+      "Cada `SessionRow` chama `inject(titlesKey, null)` no seu setup",
+      "Os cursos chegam e `titles` recalcula",
+      "O `title` de cada linha acompanha, e mostra `Statistics`"
+    ]
+  },
+  "ex-5rvjc2bn": {
+    "prompt": "Associe cada necessidade ao que esta aula dá para ela.",
+    "hint": "Um nível abaixo, muitos níveis, de qualquer lugar, ou um nome que mais ninguém pode usar.",
+    "pairs": [
+      {
+        "left": "a sessão que uma linha existe para desenhar",
+        "right": "uma prop"
+      },
+      {
+        "left": "uma unidade definida uma vez para todo componente de um painel",
+        "right": "`provide` e `inject`"
+      },
+      {
+        "left": "estado que a aplicação inteira muda de muitos lugares",
+        "right": "uma store"
+      },
+      {
+        "left": "uma chave que nenhum outro código pode igualar por acaso",
+        "right": "um `Symbol`"
+      }
+    ],
+    "right_distractors": [
+      "uma chave string com prefixo"
+    ]
+  },
+  "ex-j07n8v6j": {
+    "prompt": "O `TotalBadge` roda `const { total, addFive } = inject(plannerKey)`. Alguém o move para o cabeçalho da página, fora do componente que provê `plannerKey`. O que acontece quando a página carrega?",
+    "hint": "Descubra o que o `inject` devolve ali, e depois o que a desestruturação faz com isso.",
+    "choices": [
+      {
+        "text": "Ele mostra `Total:  minutes`, com o número em branco",
+        "why": "Isso exigiria que o `inject` devolvesse um objeto com campos vazios. Ele devolve `undefined`, que não tem campo nenhum."
+      },
+      {
+        "text": "Ele continua funcionando, já que todo valor provido chega à página inteira",
+        "why": "Só componentes abaixo de quem provê o encontram; o cabeçalho não está abaixo."
+      },
+      {
+        "text": "Ele ganha um total novo de 75, só dele",
+        "why": "O inject nunca cria o estado de quem provê. Sem quem proveja e sem padrão não há nada a receber."
+      },
+      {
+        "text": "O Vue avisa que a injeção não foi encontrada, e desestruturar `undefined` lança um erro",
+        "why": "Certo. Sem padrão é `undefined` e um aviso, e tirar `total` de `undefined` é um TypeError. Um padrão aqui teria sido uma escolha sobre o que o badge faz sozinho."
+      }
+    ]
+  }
+}

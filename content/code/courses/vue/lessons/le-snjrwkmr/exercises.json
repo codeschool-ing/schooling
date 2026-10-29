@@ -1,0 +1,674 @@
+[
+  {
+    "id": "ex-vgh5cf7t",
+    "version": 1,
+    "section": "prop-drilling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `PropDrilling` demo, which component declares `unit` as a prop and never uses it?",
+    "hint": "Its own comment says so.",
+    "choices": [
+      {
+        "text": "`DrillLeaf`",
+        "correct": false,
+        "why": "It uses `unit` twice: to decide whether to divide by 60, and to print the word."
+      },
+      {
+        "text": "`PropDrilling`, which only writes `unit=\"hours\"`",
+        "correct": false,
+        "why": "`PropDrilling` sets the value; it passes `unit` as an attribute on `DrillMiddle` and declares no props at all."
+      },
+      {
+        "text": "`DrillMiddle`, the component drawing the list",
+        "correct": true,
+        "why": "Right. It names `unit` in its props and passes it on in its template, and does nothing else with it."
+      },
+      {
+        "text": "Both `DrillMiddle` and `DrillLeaf`",
+        "correct": false,
+        "why": "The leaf is the one component that reads `unit`, which is why the value had to reach it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmsnh079",
+    "version": 1,
+    "section": "prop-drilling",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are ambient values in the lesson's sense, the kind drilling makes a problem of? Choose all that apply.",
+    "hint": "Needed at many depths, set in one place for all of them.",
+    "choices": [
+      {
+        "text": "The minutes of one session, passed to the row that draws it",
+        "correct": false,
+        "why": "That value belongs to one row and is its reason to exist; a prop is the right way to send it."
+      },
+      {
+        "text": "A theme for a whole part of the tree",
+        "correct": true,
+        "why": "Right. A setting that applies to a subtree, set once for every component in it."
+      },
+      {
+        "text": "The current user, which every component of a feature reads",
+        "correct": true,
+        "why": "Right. A service a whole feature uses is the second kind the lesson lists."
+      },
+      {
+        "text": "The active tab of a tab group, shared with its tabs",
+        "correct": true,
+        "why": "Right. Components of one library sharing state among themselves is the third kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewek1jsm",
+    "version": 1,
+    "section": "prop-drilling",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `PropDrilling` transcript, what number does the leaf for the 45-minute session show?",
+    "hint": "It divides by 60 when the unit is hours.",
+    "value": 0.75,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kbwfj8pb",
+    "version": 1,
+    "section": "provide-inject",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `ProvideInject` demo, what does `InjectMiddle` declare as props?",
+    "hint": "Compare it with `DrillMiddle`.",
+    "choices": [
+      {
+        "text": "`sessions` and `unit`, as `DrillMiddle` did",
+        "correct": false,
+        "why": "That was the drilled version. The point of the provided one is that the middle stops naming the unit."
+      },
+      {
+        "text": "No props: the sessions are injected too",
+        "correct": false,
+        "why": "Only the unit is provided. The sessions are still a prop, from the parent that owns them."
+      },
+      {
+        "text": "`unitKey`, so the leaves can find the value",
+        "correct": false,
+        "why": "The key is imported from `keys.js` by whoever provides or injects; the middle does neither."
+      },
+      {
+        "text": "`sessions`, the list it draws, and nothing else",
+        "correct": true,
+        "why": "Right. It draws the list and never mentions a unit at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2abkqgy",
+    "version": 1,
+    "section": "provide-inject",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The whole planner provides `'minutes'` under `unitKey`, and one panel inside it provides `'hours'` under the same key. What does a leaf inside that panel inject?",
+    "hint": "An inject looks at the nearest ancestor that provided the key.",
+    "choices": [
+      {
+        "text": "`'hours'`",
+        "correct": true,
+        "why": "Right. The panel's value sits on top of the planner's and hides it, for the panel's subtree only."
+      },
+      {
+        "text": "`'minutes'`, because the first provider wins",
+        "correct": false,
+        "why": "Nearer wins, not earlier. That is what makes provide a way to override for a subtree."
+      },
+      {
+        "text": "Nothing, and Vue warns that the key was provided twice",
+        "correct": false,
+        "why": "Providing the same key at two depths is allowed and is the point of the override; there is no such warning."
+      },
+      {
+        "text": "Whichever of the two changed most recently",
+        "correct": false,
+        "why": "Neither value changes here. Which provider answers is decided by the tree, not by time."
+      }
+    ]
+  },
+  {
+    "id": "ex-n13vxp50",
+    "version": 1,
+    "section": "provide-inject",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A leaf calls `inject(unitKey)` inside a click handler rather than at the top level of its `<script setup>`. It is below the provider. What happens when the button is clicked?",
+    "hint": "The two rules in this section are about timing.",
+    "choices": [
+      {
+        "text": "It gets `'hours'`, since the leaf is below the provider",
+        "correct": false,
+        "why": "Being below the provider is one of the two rules, and only one. The call has to happen during setup as well."
+      },
+      {
+        "text": "Vue warns that inject only works in setup, and nothing comes back",
+        "correct": true,
+        "why": "Right. During a click there is no component being set up to attach the call to, so Vue warns and the inject returns nothing."
+      },
+      {
+        "text": "It gets the value the provider held when the leaf was first set up",
+        "correct": false,
+        "why": "That is what an inject during setup gives. Later, there is nothing to look the key up from."
+      },
+      {
+        "text": "The click handler throws, and the page stops responding",
+        "correct": false,
+        "why": "Vue does not throw here; it warns in the console, and the handler carries on with nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4yvfjee",
+    "version": 1,
+    "section": "provide-inject",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component `Panel` calls `provide(unitKey, 'hours')`. Which of these can inject it? Choose all that apply.",
+    "hint": "Below, at any depth. Nowhere else.",
+    "choices": [
+      {
+        "text": "The component that renders `Panel`",
+        "correct": false,
+        "why": "That is the provider's parent, which is above it. A value is found only below the provider."
+      },
+      {
+        "text": "A component four levels inside `Panel`",
+        "correct": true,
+        "why": "Right. Depth does not matter, and the components in between need not know."
+      },
+      {
+        "text": "A sibling of `Panel`, rendered beside it",
+        "correct": false,
+        "why": "A sibling is not below `Panel`, so it sees whatever its own ancestors provide."
+      },
+      {
+        "text": "A direct child of `Panel`",
+        "correct": true,
+        "why": "Right. A child is the nearest place below the provider."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3jv3h79",
+    "version": 1,
+    "section": "reactive-provide",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `ReactiveProvide` transcript, after `Add five` and then the direct write of 999, what total does the provider show?",
+    "hint": "One of the two clicks was refused.",
+    "value": 80,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-db5rs5x6",
+    "version": 1,
+    "section": "reactive-provide",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A provider holds `const total = ref(75)` and calls `provide(totalKey, total.value)`. Later it adds five to `total`. What does a component that injected `totalKey` show?",
+    "hint": "`provide` hands over whatever it is given, once.",
+    "choices": [
+      {
+        "text": "75, and it stays 75",
+        "correct": true,
+        "why": "Right. `total.value` was read once, at the call. To follow the changes, provide the ref itself."
+      },
+      {
+        "text": "80, because provided values are reactive",
+        "correct": false,
+        "why": "Provide does not make anything reactive. It handed over the number 75, and a number does not follow a ref."
+      },
+      {
+        "text": "Nothing, with a warning that `.value` cannot be provided",
+        "correct": false,
+        "why": "A plain number is a perfectly good value to provide; Vue accepts it without a word."
+      },
+      {
+        "text": "75 until the injector re-renders for some other reason, then 80",
+        "correct": false,
+        "why": "A re-render reads the same injected number again. Nothing ever gave the injector the ref."
+      }
+    ]
+  },
+  {
+    "id": "ex-88rn8nme",
+    "version": 1,
+    "section": "reactive-provide",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Change the demo so the provider calls `provide(plannerKey, { total, addFive })`, with no `readonly`. What does the badge's `Write to it directly` do now?",
+    "hint": "Look at the second row of the section's table.",
+    "choices": [
+      {
+        "text": "It is still refused, since an injected ref is read-only",
+        "correct": false,
+        "why": "Only `readonly` refuses a write. A ref handed over as it is accepts one from anybody who holds it."
+      },
+      {
+        "text": "The badge and the provider both show 999, through the one ref",
+        "correct": true,
+        "why": "Right. The badge holds the provider's own ref and writes to it, and the owner is not told who did it."
+      },
+      {
+        "text": "Only the badge shows 999; the provider keeps its own total",
+        "correct": false,
+        "why": "There is one ref, not a copy per injector, so a write through it is seen everywhere."
+      },
+      {
+        "text": "Vue warns that a child mutated a provided value, and applies it",
+        "correct": false,
+        "why": "That warning is for props. A provided ref has no rule of its own, which is why the provider adds `readonly`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkqg5xap",
+    "version": 1,
+    "section": "reactive-provide",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To give injectors a view of a ref that follows every change and accepts none, the provider wraps it: `___(total)`.",
+    "hint": "The function the demo imports beside `ref` and `provide`.",
+    "blanks": [
+      {
+        "accept": [
+          "readonly"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t5ckd120",
+    "version": 1,
+    "section": "injection-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson provide under a Symbol rather than a string like `'unit'`?",
+    "hint": "What does `Symbol('unit') === Symbol('unit')` print?",
+    "choices": [
+      {
+        "text": "Vue 3.5 refuses a string key",
+        "correct": false,
+        "why": "A string key still works, and the documentation's shortest examples use one."
+      },
+      {
+        "text": "A Symbol makes the provided value reactive",
+        "correct": false,
+        "why": "Reactivity comes from what is provided, a ref or a `computed`, never from the key."
+      },
+      {
+        "text": "Two Symbols are never equal, so nobody else's provide answers for it",
+        "correct": true,
+        "why": "Right. Only code that imports that exact Symbol reaches the value; two equal strings are the same key."
+      },
+      {
+        "text": "A lookup by Symbol is faster than one by string",
+        "correct": false,
+        "why": "Speed is not the reason the lesson gives, and the difference would not show."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ssdeect",
+    "version": 1,
+    "section": "injection-keys",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does keeping every key in one `keys.js` give, according to the lesson? Choose all that apply.",
+    "hint": "Three things, each for somebody reading or changing the code.",
+    "choices": [
+      {
+        "text": "A place to give each key the type of its value",
+        "correct": true,
+        "why": "Right. Lesson 16 does it with `InjectionKey`."
+      },
+      {
+        "text": "A check, when the app is built, that every injected key has a provider",
+        "correct": false,
+        "why": "Nothing checks that. A missing provider shows up at run time, as `undefined` and a warning, or as the default."
+      },
+      {
+        "text": "A list of everything provided, in one file",
+        "correct": true,
+        "why": "Right. Provide is not visible in the template, so this file is where a reader starts."
+      },
+      {
+        "text": "One name to search for to find every provider and injector",
+        "correct": true,
+        "why": "Right. A search for `unitKey` finds them all, where `'unit'` would be buried among everything else."
+      },
+      {
+        "text": "Values provided under those keys become read-only",
+        "correct": false,
+        "why": "Read-only is what `readonly` gives, applied to the value. The file holds keys, not values."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsb8f5cn",
+    "version": 1,
+    "section": "injection-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `keys.js`, somebody changes `Symbol('unit')` to `Symbol('display unit')` and touches nothing else. What changes when the app runs?",
+    "hint": "Is the description the key, or a label on it?",
+    "choices": [
+      {
+        "text": "Every `inject(unitKey)` stops finding the value until it is renamed too",
+        "correct": false,
+        "why": "The components import `unitKey`, the variable, and it still holds the one Symbol both sides use."
+      },
+      {
+        "text": "The app breaks, since a description may not contain a space",
+        "correct": false,
+        "why": "A description is any string; it is there for people, in messages and in the console."
+      },
+      {
+        "text": "Components that used the string `'unit'` now find a different value",
+        "correct": false,
+        "why": "A Symbol never equals a string, whatever its description says, so no string key was ever involved."
+      },
+      {
+        "text": "Only the text of a warning, or a log line, that names the key",
+        "correct": true,
+        "why": "Right. Provider and injector still share one Symbol; the description is what `injection \"Symbol(...)\" not found` prints."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrx0v1c2",
+    "version": 1,
+    "section": "missing-provider",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `Orphan` demo, with nothing above it, what does `inject(unitKey, 'minutes')` give?",
+    "hint": "Look at the second line of the page, and at the warnings above it.",
+    "choices": [
+      {
+        "text": "`undefined`, and a warning",
+        "correct": false,
+        "why": "That is the first inject, with no second argument. A default changes both halves."
+      },
+      {
+        "text": "`'minutes'`, and no warning",
+        "correct": true,
+        "why": "Right. A default says that being used without a provider is expected, so Vue has nothing to warn about."
+      },
+      {
+        "text": "`'minutes'`, with a warning that no provider was found",
+        "correct": false,
+        "why": "There was one warning in the transcript, and it came from the inject without a default."
+      },
+      {
+        "text": "An error, since `unitKey` was never provided anywhere",
+        "correct": false,
+        "why": "A missing provider is never an error in Vue; it is `undefined` or the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-khbh9q34",
+    "version": 1,
+    "section": "missing-provider",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With no provider, what does `inject('settings', () => ({ weekStartsOn: 'Monday' }))` return? It has no third argument.",
+    "hint": "The third argument says the function is a factory rather than the value.",
+    "choices": [
+      {
+        "text": "The object `{ weekStartsOn: 'Monday' }`",
+        "correct": false,
+        "why": "That is what the demo got, and it passed `true` as well. Without it, Vue does not call the function."
+      },
+      {
+        "text": "`undefined`, and a warning naming `settings`",
+        "correct": false,
+        "why": "A second argument is present, so this is a default and no warning is given; it is just the wrong default."
+      },
+      {
+        "text": "The arrow function itself",
+        "correct": true,
+        "why": "Right. Without `true`, the second argument is the value, and here the value is a function. `made.weekStartsOn` would then be `undefined`."
+      },
+      {
+        "text": "An error, because a default must not be a function",
+        "correct": false,
+        "why": "A function is an acceptable default value; that is exactly why the third argument is needed to say which is meant."
+      }
+    ]
+  },
+  {
+    "id": "ex-9stwm323",
+    "version": 1,
+    "section": "missing-provider",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `FormField` injects the form it belongs to, and cannot work without it. Which answer for a missing provider does the lesson's table give?",
+    "hint": "A field outside a form is a bug.",
+    "choices": [
+      {
+        "text": "An empty form object, so the field still draws",
+        "correct": false,
+        "why": "That hides the bug: the field looks fine and submits to nothing. It is the silent failure the lesson warns about."
+      },
+      {
+        "text": "A default that degrades visibly, like the course's id",
+        "correct": false,
+        "why": "That is for a nice-to-have, such as the titles. A field without its form is not degraded, it is broken."
+      },
+      {
+        "text": "The usual value, as with a unit",
+        "correct": false,
+        "why": "A form has no usual value to fall back on; every field belongs to a particular one."
+      },
+      {
+        "text": "No default, and a clear error",
+        "correct": true,
+        "why": "Right. Something the component cannot work without is better found at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-f84vaj3p",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `SessionRow` write `titles?.value[session.course]` in its script, with `.value`?",
+    "hint": "The template and the script treat a ref differently.",
+    "choices": [
+      {
+        "text": "An injected ref is unwrapped in the template only, never in the script",
+        "correct": true,
+        "why": "Right. `titles` is the `computed` that `App` provided, and in the script it is read through `.value`."
+      },
+      {
+        "text": "`inject` returns a copy, and `.value` reaches the original",
+        "correct": false,
+        "why": "Inject returns the very `computed` that was provided; there is no copy to get past."
+      },
+      {
+        "text": "`.value` makes the row follow the titles when they arrive",
+        "correct": false,
+        "why": "The row follows the titles because a `computed` is reactive; `.value` is only how the script reads it."
+      },
+      {
+        "text": "Without a provider, `.value` is what holds the default",
+        "correct": false,
+        "why": "Without a provider `titles` is `null`, which is why the `?.` is there, and the row falls back to the id."
+      }
+    ]
+  },
+  {
+    "id": "ex-216tj3sx",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to the section's table, how should a value shared by the whole application and changed from many places be passed?",
+    "hint": "The last row of the table.",
+    "choices": [
+      {
+        "text": "Provided by `App`, since `App` is above everything",
+        "correct": false,
+        "why": "It would reach everywhere, and nothing would say who changed it. That is where most \"I need provide\" ends up being wrong."
+      },
+      {
+        "text": "As props, since drilling is honest",
+        "correct": false,
+        "why": "Drilling is honest for two or three levels, not for a value the whole application changes."
+      },
+      {
+        "text": "In a store, where one module owns the state and names every change",
+        "correct": true,
+        "why": "Right. One module owns the state, every change is a named action, and the browser's Vue tools show each one."
+      },
+      {
+        "text": "With `app.provide` in `main.js`",
+        "correct": false,
+        "why": "That makes a value available everywhere, as a library does, but gives none of the rules a store adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmhscn11",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a component give up when it injects a value instead of receiving it as a prop? Choose all that apply.",
+    "hint": "Visibility, portability, easy testing.",
+    "choices": [
+      {
+        "text": "Its tag no longer shows everything it needs",
+        "correct": true,
+        "why": "Right. `<SessionRow :session=\"s\" />` looks complete and also needs the titles."
+      },
+      {
+        "text": "An injected ref no longer updates the component",
+        "correct": false,
+        "why": "An injected ref is followed exactly like one received as a prop; the planner's rows follow the titles when they arrive."
+      },
+      {
+        "text": "Moved outside the provider's subtree, it quietly gets the default",
+        "correct": true,
+        "why": "Right. The move compiles and runs, which is why the choice of default matters."
+      },
+      {
+        "text": "A test has to provide the value as well",
+        "correct": true,
+        "why": "Right. Lesson 21 does it with `global.provide`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fa7b0a5t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens between the planner's `App` and a row showing `Statistics`.",
+    "hint": "The provide and the inject happen during setup; the courses arrive later.",
+    "items": [
+      "`App` declares `titles` as a `computed`",
+      "`App` calls `provide(titlesKey, titles)`",
+      "Each `SessionRow` calls `inject(titlesKey, null)` in its setup",
+      "The courses arrive and `titles` recomputes",
+      "Each row's `title` follows, and shows `Statistics`"
+    ]
+  },
+  {
+    "id": "ex-5rvjc2bn",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to what this lesson gives for it.",
+    "hint": "Down one level, down many, from anywhere, or a name nobody else can use.",
+    "pairs": [
+      {
+        "left": "the session a row exists to draw",
+        "right": "a prop"
+      },
+      {
+        "left": "a unit set once for every component in a panel",
+        "right": "`provide` and `inject`"
+      },
+      {
+        "left": "state the whole application changes from many places",
+        "right": "a store"
+      },
+      {
+        "left": "a key no other code can match by accident",
+        "right": "a `Symbol`"
+      }
+    ],
+    "right_distractors": [
+      "a string key with a prefix"
+    ]
+  },
+  {
+    "id": "ex-j07n8v6j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`TotalBadge` runs `const { total, addFive } = inject(plannerKey)`. Somebody moves it into the page header, outside the component that provides `plannerKey`. What happens when the page loads?",
+    "hint": "Work out what `inject` returns there, then what destructuring does with it.",
+    "choices": [
+      {
+        "text": "It shows `Total:  minutes`, with the number left blank",
+        "correct": false,
+        "why": "That would need `inject` to return an object with empty fields. It returns `undefined`, which has no fields at all."
+      },
+      {
+        "text": "It still works, since every provided value reaches the whole page",
+        "correct": false,
+        "why": "Only components below the provider can find it; the header is not below it."
+      },
+      {
+        "text": "It gets a fresh total of 75 of its own",
+        "correct": false,
+        "why": "Inject never creates the provider's state. Without a provider and without a default there is nothing to get."
+      },
+      {
+        "text": "Vue warns the injection was not found, then destructuring `undefined` throws",
+        "correct": true,
+        "why": "Right. No default means `undefined` and a warning, and taking `total` out of `undefined` is a TypeError. A default here would have been a choice about what the badge does alone."
+      }
+    ]
+  }
+]

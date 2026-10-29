@@ -1,0 +1,726 @@
+[
+  {
+    "id": "ex-q2smge31",
+    "version": 1,
+    "section": "the-hooks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `Lifecycle` demo, *15 more* is clicked once. What do `onBeforeUpdate` and `onUpdated` read from the `<p>`?",
+    "hint": "The two hooks sit on either side of one redraw.",
+    "choices": [
+      {
+        "text": "45 in both, since the ref had already changed",
+        "correct": false,
+        "why": "The ref had changed, but the hooks read the page, and before the redraw the page still said 30."
+      },
+      {
+        "text": "Nothing in `onBeforeUpdate`; the element is rebuilt",
+        "correct": false,
+        "why": "The redraw patches the same `<p>`. The transcript reads 30 and 45 from one element."
+      },
+      {
+        "text": "30 before the redraw and then 45 after it, read from one element",
+        "correct": true,
+        "why": "Right. `onBeforeUpdate` runs before the redraw and sees the old value; `onUpdated` runs after it and sees the new one."
+      },
+      {
+        "text": "30 in both, as the page redraws once every hook is done",
+        "correct": false,
+        "why": "The redraw happens between the two hooks, which is what the names say."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp5b6xx6",
+    "version": 1,
+    "section": "the-hooks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a `<script setup>` component, where does the code go that Vue 2 put in the `created` hook?",
+    "hint": "Look for the hook the lesson says does not exist.",
+    "choices": [
+      {
+        "text": "In `onBeforeMount`, the first hook Vue calls",
+        "correct": false,
+        "why": "`onBeforeMount` comes after setup, so it is later than `created` was."
+      },
+      {
+        "text": "In `onCreated`, imported from `vue` like the others",
+        "correct": false,
+        "why": "There is no `onCreated` in the Composition API."
+      },
+      {
+        "text": "In `onMounted`, once the component exists on the page",
+        "correct": false,
+        "why": "That is later still: the component has been created and inserted by then."
+      },
+      {
+        "text": "At the top level of `<script setup>`, which is creation",
+        "correct": true,
+        "why": "Right. Setup itself is creation, so its top level runs where `created` ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-egfmgt6n",
+    "version": 1,
+    "section": "the-hooks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component hands an element to a chart library. On removal the library must be told `chart.destroy()`, and that call reads the element. Which hook should make it?",
+    "hint": "Which hook still has the elements?",
+    "choices": [
+      {
+        "text": "`onBeforeUnmount`",
+        "correct": true,
+        "why": "Right. The elements are still there and still working, so the library is able to let go of its own."
+      },
+      {
+        "text": "`onUnmounted`, where everything a component started is stopped",
+        "correct": false,
+        "why": "That is the place for a timer. By then the elements are gone, and `destroy()` needs one."
+      },
+      {
+        "text": "`onUpdated`, after the last redraw",
+        "correct": false,
+        "why": "A removal is not a redraw of the component, and `onUpdated` does not run for it."
+      },
+      {
+        "text": "A watcher with `flush: 'post'` on the chart's data",
+        "correct": false,
+        "why": "A watcher runs when a value changes. Removal changes no value of the chart's."
+      }
+    ]
+  },
+  {
+    "id": "ex-s96f81cb",
+    "version": 1,
+    "section": "the-hooks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Code that runs after one value changes and needs the page is a watcher with `flush: '___'`, rather than `onUpdated`.",
+    "hint": "Lesson 4 set it, and it is the opposite of *pre*.",
+    "blanks": [
+      {
+        "accept": [
+          "post"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vh6zecs8",
+    "version": 1,
+    "section": "order",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `Order` demo, whose `mounted` line is printed last?",
+    "hint": "Creation goes down; mounting comes back up.",
+    "choices": [
+      {
+        "text": "The second child's, the last component created",
+        "correct": false,
+        "why": "It was created last, but the parent's `mounted` waits for both children."
+      },
+      {
+        "text": "The first child's, since mounting runs backwards",
+        "correct": false,
+        "why": "The children are mounted first to last; what comes back up is the tree, child then parent."
+      },
+      {
+        "text": "The parent's, after both of its children are mounted",
+        "correct": true,
+        "why": "Right. A parent is mounted after all its children are on the page."
+      },
+      {
+        "text": "Whichever child finished rendering last, which varies",
+        "correct": false,
+        "why": "The order is fixed by the tree, and the transcript shows it: the two children, then the parent."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kxaj286",
+    "version": 1,
+    "section": "order",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true inside a parent's own `onMounted`? Choose all that apply.",
+    "hint": "In the transcript, what had already been printed when `parent: mounted` appeared?",
+    "choices": [
+      {
+        "text": "Every child is on the page",
+        "correct": true,
+        "why": "Right. The parent is mounted only after its children are."
+      },
+      {
+        "text": "The children have not run their setup yet",
+        "correct": false,
+        "why": "Their setup ran right after the parent's `beforeMount`, long before."
+      },
+      {
+        "text": "A template ref to a child component is filled",
+        "correct": true,
+        "why": "Right. It is `null` until then, and filled by the time the parent's `onMounted` runs."
+      },
+      {
+        "text": "Each child's `onMounted` has already run",
+        "correct": true,
+        "why": "Right. Both children's `mounted` lines come before the parent's."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm58wzh9",
+    "version": 1,
+    "section": "order",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A parent creates an object in its `onMounted` and puts it where its children read it. A child reads it in its own `onMounted`. What does the child find?",
+    "hint": "Which `onMounted` runs first, the parent's or the child's?",
+    "choices": [
+      {
+        "text": "The object, since a parent's hooks all run before its children's",
+        "correct": false,
+        "why": "That holds for setup and `beforeMount`, not for `mounted`, which comes back up the tree."
+      },
+      {
+        "text": "Nothing yet: its `onMounted` runs before the parent's",
+        "correct": true,
+        "why": "Right. The fix is to create it in the parent's setup, which runs before any child exists."
+      },
+      {
+        "text": "An error, because a child cannot read from its parent in `onMounted`",
+        "correct": false,
+        "why": "Reading is allowed; the problem is only the timing. The value is not there yet."
+      },
+      {
+        "text": "The object, because both hooks run at the same moment",
+        "correct": false,
+        "why": "They run one after the other, children first, as the transcript prints them."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9zcz014",
+    "version": 1,
+    "section": "order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parent and its two children are removed together. In whose `onUnmounted` are the others sure to have finished cleaning up?",
+    "hint": "`unmounted` runs in the opposite direction to `beforeUnmount`.",
+    "choices": [
+      {
+        "text": "The first child's, as it is the first to go",
+        "correct": false,
+        "why": "It is the first `unmounted`, so nobody else has finished at that point."
+      },
+      {
+        "text": "Nobody's: Vue does not fix the order",
+        "correct": false,
+        "why": "It does, and the transcript shows it: children first, then the parent."
+      },
+      {
+        "text": "The second child's, the last child removed",
+        "correct": false,
+        "why": "The parent's `unmounted` still comes after it."
+      },
+      {
+        "text": "The parent's, the last of the three to be gone",
+        "correct": true,
+        "why": "Right. Removal starts and finishes at the top, so the parent is the last to be gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nsk86ty",
+    "version": 1,
+    "section": "template-refs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `minutesField.value` hold right after `adding.value = true`, before `await nextTick()`?",
+    "hint": "The `v-if` has been told, not redrawn.",
+    "choices": [
+      {
+        "text": "The `<input>`, since the `v-if` is now true",
+        "correct": false,
+        "why": "The condition is true, but the redraw is still in the queue."
+      },
+      {
+        "text": "A promise that resolves to the input",
+        "correct": false,
+        "why": "A template ref holds an element or `null`, never a promise; `nextTick` is the promise here."
+      },
+      {
+        "text": "`null`",
+        "correct": true,
+        "why": "Right. The element does not exist until the queued redraw runs, which is what `await nextTick()` waits for."
+      },
+      {
+        "text": "An empty array, as the field sits in a list",
+        "correct": false,
+        "why": "Only a `ref` inside a `v-for` collects an array, and the field is outside the loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxx2e17q",
+    "version": 1,
+    "section": "template-refs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say to look up the elements of a `v-for` ref by something on the element rather than by index?",
+    "hint": "Compare the array with the list it came from.",
+    "choices": [
+      {
+        "text": "The array holds component instances, not elements",
+        "correct": false,
+        "why": "On plain `<li>` elements it holds elements; the demo counted 3 of them."
+      },
+      {
+        "text": "Its order is not guaranteed to match the order of the list",
+        "correct": true,
+        "why": "Right. Index 0 of the array need not be the first item of the list."
+      },
+      {
+        "text": "The array stays `null` until `nextTick`, so reading an index fails",
+        "correct": false,
+        "why": "In `onMounted` it already held 3 rows."
+      },
+      {
+        "text": "Every read of the ref builds a new array in a new order",
+        "correct": false,
+        "why": "The order is unspecified, not reshuffled on each read; the point is that nobody promised it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hne23hg5",
+    "version": 1,
+    "section": "template-refs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parent puts `ref=\"field\"` on a child component written with `<script setup>`. Which of the child's functions is the parent able to call through it?",
+    "hint": "The child decides.",
+    "choices": [
+      {
+        "text": "Every function declared in the child's script",
+        "correct": false,
+        "why": "With `<script setup>` the instance is closed: nothing reaches the parent by being declared."
+      },
+      {
+        "text": "Only the ones the child passes to `defineExpose`",
+        "correct": true,
+        "why": "Right. The child offers a few, like `focus()`, and keeps the rest to itself."
+      },
+      {
+        "text": "None: a ref on a component is always `null`",
+        "correct": false,
+        "why": "It holds the component's instance; what is reachable on it is what the child exposes."
+      },
+      {
+        "text": "The methods of its root element, such as `focus()` on an input",
+        "correct": false,
+        "why": "A ref on a component gives the instance, not an element. `focus()` is there only if the child exposes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-70h2rd2a",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Ticker` sets its interval to 100 milliseconds. How many times a second does `careless` go on ticking after it has been removed?",
+    "hint": "A thousand milliseconds in a second.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vj7k1898",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `Leak` demo, what happens to the two timers after *Remove both*?",
+    "hint": "Only one of the two registered `onUnmounted`.",
+    "choices": [
+      {
+        "text": "Both stop, because Vue clears a component's timers",
+        "correct": false,
+        "why": "Vue cleans up what Vue created. `setInterval` is the browser's, and nothing stops it but `clearInterval`."
+      },
+      {
+        "text": "Both keep ticking until the page reloads",
+        "correct": false,
+        "why": "`tidy` called `clearInterval` in its `onUnmounted`, and its lines stop in the transcript."
+      },
+      {
+        "text": "`careless` goes on ticking; `tidy` stops",
+        "correct": true,
+        "why": "Right. The component is gone from the page and from Vue, and its interval still runs."
+      },
+      {
+        "text": "`careless` stops a moment later, once garbage collection frees it",
+        "correct": false,
+        "why": "The interval keeps its function reachable, so nothing it holds is ever freed."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqs0xxw8",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component is removed. Which of these does Vue stop by itself? Choose all that apply.",
+    "hint": "Vue cleans up what Vue created.",
+    "choices": [
+      {
+        "text": "A `ResizeObserver` watching one of its elements",
+        "correct": false,
+        "why": "The observer is the browser's; it needs `disconnect()`."
+      },
+      {
+        "text": "A watcher made during its setup",
+        "correct": true,
+        "why": "Right. Watchers made in setup belong to the component and stop with it."
+      },
+      {
+        "text": "A listener it added to `window` in `onMounted`",
+        "correct": false,
+        "why": "The listener is on `window`, which is not removed; it needs `removeEventListener` with the same function."
+      },
+      {
+        "text": "Its own renders",
+        "correct": true,
+        "why": "Right. Vue made them and Vue stops them."
+      },
+      {
+        "text": "A `fetch` it started that has not answered",
+        "correct": false,
+        "why": "The request runs to the end unless an `AbortController` aborts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-natvq2zg",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`App` is removed only when the page closes. Why does the planner still pair its clock with `onUnmounted(() => clearInterval(timer))`?",
+    "hint": "Where else will these lines run?",
+    "choices": [
+      {
+        "text": "A browser keeps an interval running after its tab closes",
+        "correct": false,
+        "why": "Closing the tab ends everything the page started; that is not the reason."
+      },
+      {
+        "text": "Vue warns about an `onMounted` that has no `onUnmounted`",
+        "correct": false,
+        "why": "Vue has no such warning; the two hooks are independent."
+      },
+      {
+        "text": "A test unmounts `App`, and the lines later move into a composable any component uses",
+        "correct": true,
+        "why": "Right. In lesson 21's test and in lesson 10's composable, the removal happens and the cleanup matters every time."
+      },
+      {
+        "text": "Without it, `today` would be refreshed twice a minute",
+        "correct": false,
+        "why": "One `onMounted` starts one interval; the count only grows when the component is mounted again."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rzztpsk",
+    "version": 1,
+    "section": "setup-or-mounted",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the lesson start a component's request for its data, and why?",
+    "hint": "Does a request need the page?",
+    "choices": [
+      {
+        "text": "In `onMounted`, so that it is sent once, as in React",
+        "correct": false,
+        "why": "Setup already runs once. In React the effect avoids a body that runs on every render, which Vue does not have."
+      },
+      {
+        "text": "In setup: a request needs no page, so it starts sooner",
+        "correct": true,
+        "why": "Right. It was in flight while Vue rendered and mounted, and answered after both."
+      },
+      {
+        "text": "In `onMounted`, because setup runs again on every redraw",
+        "correct": false,
+        "why": "That is a React component's body. Vue's setup runs once by construction."
+      },
+      {
+        "text": "In `onBeforeMount`, the last moment before the page exists, so the answer lands in time",
+        "correct": false,
+        "why": "The lesson does not use it, and it would still start the request later than setup does."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvc9mz8q",
+    "version": 1,
+    "section": "setup-or-mounted",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component reads `localStorage` at the top level of `<script setup>`. Later the app is rendered on a server. What happens there?",
+    "hint": "Which of the two runs on the server, setup or `onMounted`?",
+    "choices": [
+      {
+        "text": "Nothing: setup runs only in the browser",
+        "correct": false,
+        "why": "It is the other way round. Setup runs on the server too; `onMounted` is what does not."
+      },
+      {
+        "text": "The read fails, since `localStorage` does not exist on the server",
+        "correct": true,
+        "why": "Right. Setup runs in both places, so that read has to move into `onMounted`."
+      },
+      {
+        "text": "It is skipped on the server, the way `onMounted` is",
+        "correct": false,
+        "why": "Only the hook is skipped; setup's top level runs."
+      },
+      {
+        "text": "It works, because Nuxt gives the server a `localStorage` of its own",
+        "correct": false,
+        "why": "Neither `localStorage` nor `window` exists on the server, which is why the planner's reads move."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bpmssbk",
+    "version": 1,
+    "section": "setup-or-mounted",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the server, setup runs and `___` does not: there is no page to put the component into.",
+    "hint": "The hook that waits for the page.",
+    "blanks": [
+      {
+        "accept": [
+          "onMounted"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kwyeg79y",
+    "version": 1,
+    "section": "keep-alive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `<KeepAlive>`, the student switches from Statistics to Spanish. What happens to the statistics component?",
+    "hint": "Read the line printed right after `-- click #spanish`.",
+    "choices": [
+      {
+        "text": "It is unmounted, and its note is copied to `localStorage`",
+        "correct": false,
+        "why": "Nothing writes to `localStorage` here, and the component was not unmounted."
+      },
+      {
+        "text": "It is unmounted and rebuilt on return with the same `:key`",
+        "correct": false,
+        "why": "Without `<KeepAlive>` that is what happens, and the note comes back empty."
+      },
+      {
+        "text": "It stays mounted and is hidden like `v-show`",
+        "correct": false,
+        "why": "It is taken off the page; `onDeactivated` is a hook of its own, not a style."
+      },
+      {
+        "text": "It is deactivated and kept in memory, note and all",
+        "correct": true,
+        "why": "Right. Switching back activated the same instance, and its 5 characters were there."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqtz6at5",
+    "version": 1,
+    "section": "keep-alive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A kept component runs a timer that is only useful while the tab is shown. Where does it stop and restart it?",
+    "hint": "A kept component is not unmounted when it is switched away.",
+    "choices": [
+      {
+        "text": "`onDeactivated` and `onActivated`",
+        "correct": true,
+        "why": "Right. Those are the moments it is put away and comes back."
+      },
+      {
+        "text": "`onUnmounted` and `onMounted`, as for any component",
+        "correct": false,
+        "why": "`onUnmounted` does not run for a kept component until the `<KeepAlive>` itself goes."
+      },
+      {
+        "text": "`onBeforeUpdate` and `onUpdated`, around the switch",
+        "correct": false,
+        "why": "Switching tabs does not redraw the kept component; it takes it off the page."
+      },
+      {
+        "text": "A watcher on the parent's `tab` ref, inside the child",
+        "correct": false,
+        "why": "The child does not see the parent's `tab`, and the hooks already say when it is put away."
+      }
+    ]
+  },
+  {
+    "id": "ex-24hfb89v",
+    "version": 1,
+    "section": "keep-alive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner not rely on `<KeepAlive>` to hold its sessions?",
+    "hint": "Where does a kept component live?",
+    "choices": [
+      {
+        "text": "It keeps at most ten components unless `max` is raised",
+        "correct": false,
+        "why": "There is no such default; `max` is something you set to limit it."
+      },
+      {
+        "text": "It throws a component's state away at `onDeactivated`",
+        "correct": false,
+        "why": "The state survives deactivation; the statistics note came back."
+      },
+      {
+        "text": "A reload loses everything that is kept only in memory, kept components included",
+        "correct": true,
+        "why": "Right. State that must survive anyway goes in `localStorage` or a store."
+      },
+      {
+        "text": "It keeps only the view the student saw most recently",
+        "correct": false,
+        "why": "It keeps every view it has seen, which is why it trades memory for state."
+      }
+    ]
+  },
+  {
+    "id": "ex-60seg5qt",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parent with two children is shown and later removed. Put these moments in the order they happen.",
+    "hint": "Down for creation, back up for mounting; removal starts and ends at the top.",
+    "items": [
+      "The parent's setup",
+      "The second child's setup",
+      "The first child's `onMounted`",
+      "The parent's `onMounted`",
+      "The second child's `onBeforeUnmount`",
+      "The parent's `onUnmounted`"
+    ]
+  },
+  {
+    "id": "ex-6h3ga6x3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job to the hook this lesson gives it.",
+    "hint": "Does the job need the elements, and is it starting or stopping?",
+    "pairs": [
+      {
+        "left": "measure an element when the component first appears",
+        "right": "`onMounted`"
+      },
+      {
+        "left": "clear the interval the component started",
+        "right": "`onUnmounted`"
+      },
+      {
+        "left": "tell a library to let go of the element it draws in",
+        "right": "`onBeforeUnmount`"
+      },
+      {
+        "left": "pause a kept tab's timer while nobody is looking",
+        "right": "`onDeactivated`"
+      }
+    ],
+    "right_distractors": [
+      "`onBeforeMount`"
+    ]
+  },
+  {
+    "id": "ex-zetjn9cz",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component shown with `v-if` runs `window.addEventListener('resize', () => measure())` in `onMounted` and `window.removeEventListener('resize', () => measure())` in `onUnmounted`. It is shown and hidden 5 times. How many of its resize listeners are left on `window`?",
+    "hint": "Is the function given to `removeEventListener` the same function?",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gek9cn5w",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A field appears when the student clicks *Edit*, and it must receive the focus. Which of these put the focus in it? Choose all that apply.",
+    "hint": "The field exists only after the redraw that the click queues.",
+    "choices": [
+      {
+        "text": "Set the flag, then call `focus()` on the next line",
+        "correct": false,
+        "why": "The redraw is still queued, so the ref is `null` on that line."
+      },
+      {
+        "text": "Set the flag, `await nextTick()`, then call `focus()`",
+        "correct": true,
+        "why": "Right. That is the demo's pattern: after the tick the element exists."
+      },
+      {
+        "text": "Call `focus()` in the parent's `onMounted`",
+        "correct": false,
+        "why": "The parent was mounted long before the click, when the field did not exist."
+      },
+      {
+        "text": "Make the field a component of its own that focuses its input in its `onMounted`",
+        "correct": true,
+        "why": "Right. Its `onMounted` runs when the `v-if` puts it on the page, which is after the click."
+      }
+    ]
+  }
+]
