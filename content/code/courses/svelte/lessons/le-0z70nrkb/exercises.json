@@ -1,0 +1,702 @@
+[
+  {
+    "id": "ex-nz92msge",
+    "version": 1,
+    "section": "load-function",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a page's `load` function run, relative to the page rendering?",
+    "hint": "The component never sees a moment without its data.",
+    "choices": [
+      {
+        "text": "Only in the browser, after hydration",
+        "correct": false,
+        "why": "A universal load runs on the server first; a server load only on the server."
+      },
+      {
+        "text": "Whenever the component decides it wants the data, by calling a method named `getData()` on itself",
+        "correct": false,
+        "why": "There is no such call; SvelteKit calls `load` itself."
+      },
+      {
+        "text": "Before the page renders: its result is the `data`",
+        "correct": true,
+        "why": "Right: the page gets its data before it renders."
+      },
+      {
+        "text": "After: the page renders, then `load` fills `data` in",
+        "correct": false,
+        "why": "That was the old `{#await}` way, which this lesson replaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjm52b26",
+    "version": 1,
+    "section": "load-function",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the change, `curl` of the home page found no `<title>`. Why?",
+    "hint": "The title is set on the week page.",
+    "choices": [
+      {
+        "text": "The week page was inside an `{#await}` that never settles on the server, so it never rendered there",
+        "correct": true,
+        "why": "Right: no data on the server meant the loading branch, with no title."
+      },
+      {
+        "text": "`curl` cannot see a `<svelte:head>` title",
+        "correct": false,
+        "why": "It can; after the change the same `curl` found it."
+      },
+      {
+        "text": "The server strips the title to save bytes",
+        "correct": false,
+        "why": "Nothing strips it; it was simply never rendered."
+      },
+      {
+        "text": "A `<title>` only works once JavaScript runs",
+        "correct": false,
+        "why": "`<svelte:head>` renders on the server too."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgm2aghz",
+    "version": 1,
+    "section": "load-function",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why use the `fetch` that `load` receives rather than the global `fetch`?",
+    "hint": "Two reasons, one per place it runs.",
+    "choices": [
+      {
+        "text": "It is the only `fetch` that a component is allowed to call from inside its script block",
+        "correct": false,
+        "why": "The global one works in a component; this is about `load`."
+      },
+      {
+        "text": "It takes a relative address on the server, and reuses the HTML response in the browser",
+        "correct": true,
+        "why": "Right: both problems the global `fetch` would have."
+      },
+      {
+        "text": "It is faster because it is written in Rust",
+        "correct": false,
+        "why": "Speed is not the point, and it is not Rust."
+      },
+      {
+        "text": "It encrypts the request",
+        "correct": false,
+        "why": "It does nothing of the sort."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2350bfs",
+    "version": 1,
+    "section": "load-function",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What a `load` function returns arrives in the component as a prop called `___`.",
+    "hint": "SvelteKit's own name for it.",
+    "blanks": [
+      {
+        "accept": [
+          "data"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g4bc1syw",
+    "version": 1,
+    "section": "server-load",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file name makes a `load` function run only on the server?",
+    "hint": "The rename was the whole fix.",
+    "choices": [
+      {
+        "text": "`+layout.js`, with `export const ssr = true` set at the top of the file",
+        "correct": false,
+        "why": "That is universal: it runs in both places."
+      },
+      {
+        "text": "`+server.layout.js`",
+        "correct": false,
+        "why": "Not a name SvelteKit reads."
+      },
+      {
+        "text": "`+layout.node.js`",
+        "correct": false,
+        "why": "There is no such convention."
+      },
+      {
+        "text": "`+layout.server.js`",
+        "correct": true,
+        "why": "Right: a name ending in `.server.js` never goes to the browser."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkybt470",
+    "version": 1,
+    "section": "server-load",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Putting the file-reading import in `+layout.js` failed. What exactly broke?",
+    "hint": "A universal load is sent to the browser to run again.",
+    "choices": [
+      {
+        "text": "SvelteKit refused to ship the `src/lib/server` module to the browser",
+        "correct": true,
+        "why": "Right: `server_only_import`, before the file read could even fail."
+      },
+      {
+        "text": "The server could not read the file",
+        "correct": false,
+        "why": "The server was happy; the title proved it rendered."
+      },
+      {
+        "text": "The data in the file was too large to be serialized and written into the HTML of the page",
+        "correct": false,
+        "why": "Size was not the issue; the import was."
+      },
+      {
+        "text": "`git mv` corrupted the file",
+        "correct": false,
+        "why": "`git mv` just moves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1dqcd9e",
+    "version": 1,
+    "section": "server-load",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why move `planner.json` out of `static`?",
+    "hint": "Think about what lesson 14 does, and about more than one user.",
+    "choices": [
+      {
+        "text": "A JSON file is not allowed in `static`",
+        "correct": false,
+        "why": "Any file is allowed there."
+      },
+      {
+        "text": "Vite refuses to build with data in `static`",
+        "correct": false,
+        "why": "It does not; the move is a design choice."
+      },
+      {
+        "text": "`static` is served to anyone, and the file is about to be written to and, for more than one user, be a database",
+        "correct": true,
+        "why": "Right: reading has to move to the server either way."
+      },
+      {
+        "text": "`static` files cannot be read by `node:fs`",
+        "correct": false,
+        "why": "They can; the reason is exposure and writing, not reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vxyvkw0",
+    "version": 1,
+    "section": "server-load",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Besides a name ending in `.server.js`, what else keeps a module off the browser?",
+    "hint": "A particular folder is treated specially.",
+    "choices": [
+      {
+        "text": "Importing it only from another `+page.js`",
+        "correct": false,
+        "why": "A `+page.js` is universal, so that would not keep it off the browser."
+      },
+      {
+        "text": "Putting it in `src/lib/server`",
+        "correct": true,
+        "why": "Right: that folder is the other server-only place."
+      },
+      {
+        "text": "Putting it in `static`",
+        "correct": false,
+        "why": "`static` is served to everyone; it is the opposite."
+      },
+      {
+        "text": "Adding `// @server` at the top of it",
+        "correct": false,
+        "why": "There is no such comment; the folder or the name decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-h50vn3xk",
+    "version": 1,
+    "section": "over-the-wire",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a client-side navigation, where does the browser get a server load's data from?",
+    "hint": "The section asked for it by hand.",
+    "choices": [
+      {
+        "text": "From `localStorage`, where the first visit saved it",
+        "correct": false,
+        "why": "Nothing is saved there; it is fetched fresh when needed."
+      },
+      {
+        "text": "It reruns the server load in the browser",
+        "correct": false,
+        "why": "A server load never runs in the browser."
+      },
+      {
+        "text": "From a global `fetch` of `/planner.json`",
+        "correct": false,
+        "why": "That file is gone; the data comes as `__data.json`."
+      },
+      {
+        "text": "From the page's address with `__data.json` on the end",
+        "correct": true,
+        "why": "Right: that is where SvelteKit serves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8rh2jv8",
+    "version": 1,
+    "section": "over-the-wire",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server load returns `{ ...data, courseName: (id) => ... }`. What happens?",
+    "hint": "The result has to be written down as data.",
+    "choices": [
+      {
+        "text": "A 500 on every request",
+        "correct": true,
+        "why": "Right: `load_not_serializable`, naming `data.courseName`."
+      },
+      {
+        "text": "It works, and the browser is handed the function so that any component can call it",
+        "correct": false,
+        "why": "Code cannot make the trip as data."
+      },
+      {
+        "text": "The function is silently dropped and the rest arrives",
+        "correct": false,
+        "why": "It fails loudly, on every request."
+      },
+      {
+        "text": "Only the second visit fails",
+        "correct": false,
+        "why": "It fails on every request, which is the helpful choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-45gpq96e",
+    "version": 1,
+    "section": "over-the-wire",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Beyond plain JSON, which can a server load's result carry across to the browser? Choose all that apply.",
+    "hint": "devalue carries more than JSON, but not code.",
+    "choices": [
+      {
+        "text": "A `Date`",
+        "correct": true,
+        "why": "Yes: devalue handles it."
+      },
+      {
+        "text": "A `Map` or a `Set`",
+        "correct": true,
+        "why": "Yes, both."
+      },
+      {
+        "text": "An object referenced twice, kept as one",
+        "correct": true,
+        "why": "Yes: it arrives referenced twice, not copied."
+      },
+      {
+        "text": "A function",
+        "correct": false,
+        "why": "No: code cannot be serialized."
+      },
+      {
+        "text": "An instance of your own class",
+        "correct": false,
+        "why": "No: its methods are code."
+      }
+    ]
+  },
+  {
+    "id": "ex-hc5nyk7r",
+    "version": 1,
+    "section": "parent-and-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `await parent()` return inside a page's `load`?",
+    "hint": "Not only the nearest layout.",
+    "choices": [
+      {
+        "text": "The page's own `params`, the parts of the address the route matched",
+        "correct": false,
+        "why": "`params` is a separate argument."
+      },
+      {
+        "text": "A promise that never settles on the server",
+        "correct": false,
+        "why": "It settles once the layouts' loads are done."
+      },
+      {
+        "text": "Every layout above, merged",
+        "correct": true,
+        "why": "Right: all of them, merged into one object."
+      },
+      {
+        "text": "Only the immediate parent layout's data",
+        "correct": false,
+        "why": "It merges every layout above, not just the nearest."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcarqrp8",
+    "version": 1,
+    "section": "parent-and-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The course page's `load` calls `error(404, ...)` for an unknown course. What does the visitor get?",
+    "hint": "Compare with lesson 12's answer.",
+    "choices": [
+      {
+        "text": "A redirect straight back to the planner's home page at `/`",
+        "correct": false,
+        "why": "`error` does not redirect."
+      },
+      {
+        "text": "The error page, that message, and a 404",
+        "correct": true,
+        "why": "Right, where lesson 12 answered 200."
+      },
+      {
+        "text": "The page, rendering \"No such course\" with a 200",
+        "correct": false,
+        "why": "That was lesson 12; the load now answers 404."
+      },
+      {
+        "text": "A blank page",
+        "correct": false,
+        "why": "The error page renders, not nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt7g3xkk",
+    "version": 1,
+    "section": "parent-and-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the course page's `load` a universal `+page.js` and not a `+page.server.js`?",
+    "hint": "Where do the courses come from?",
+    "choices": [
+      {
+        "text": "It needs nothing the server has that the browser does not: the courses arrive from the layout",
+        "correct": true,
+        "why": "Right: so it can run in the browser on later navigations."
+      },
+      {
+        "text": "A course page may not read files, which only a server load can",
+        "correct": false,
+        "why": "It reads no file; it looks up data it already has."
+      },
+      {
+        "text": "Universal loads are always faster",
+        "correct": false,
+        "why": "Not the reason; it is about needing the server or not."
+      },
+      {
+        "text": "`error()` only works in a `+page.js`",
+        "correct": false,
+        "why": "It works in both."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7vbw4rj",
+    "version": 1,
+    "section": "parent-and-errors",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `load` needs both its own data and the parent's, and neither depends on the other. Put its body in the order that avoids a waterfall.",
+    "hint": "Start the work that does not wait, first.",
+    "items": [
+      "Start fetching its own data (do not await yet)",
+      "`await parent()` for the layouts' data",
+      "`await` its own data",
+      "Return the two merged"
+    ],
+    "trap": "Awaiting parent first would make the own fetch wait for no reason."
+  },
+  {
+    "id": "ex-e9exqx5w",
+    "version": 1,
+    "section": "where-it-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A universal `load` opened by a typed address: where does it run?",
+    "hint": "On the first page it runs in both places.",
+    "choices": [
+      {
+        "text": "Only on the server",
+        "correct": false,
+        "why": "That is a server load; a universal one runs in the browser too."
+      },
+      {
+        "text": "Only in the browser",
+        "correct": false,
+        "why": "The server runs it first to render the HTML."
+      },
+      {
+        "text": "In neither place, until something on the page asks for the data by pressing a button",
+        "correct": false,
+        "why": "SvelteKit runs it for the page without being asked."
+      },
+      {
+        "text": "On the server, and again in the browser while hydrating",
+        "correct": true,
+        "why": "Right: both, on a first visit."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxscsyza",
+    "version": 1,
+    "section": "where-it-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You click a course link from the week. The course page's universal `load` runs where?",
+    "hint": "Nothing new appeared in the server's terminal.",
+    "choices": [
+      {
+        "text": "In both, as on a first visit",
+        "correct": false,
+        "why": "Only the first visit runs it in both."
+      },
+      {
+        "text": "Nowhere, because the data is cached",
+        "correct": false,
+        "why": "It ran: the console printed its line."
+      },
+      {
+        "text": "Only in the browser",
+        "correct": true,
+        "why": "Right: a client-side navigation runs the universal load in the browser alone."
+      },
+      {
+        "text": "Only on the server",
+        "correct": false,
+        "why": "The server was not asked; the browser ran it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9c90xkrb",
+    "version": 1,
+    "section": "where-it-runs",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is true of a universal `load` because it runs in two places? Choose all that apply.",
+    "hint": "Think server and browser, and side effects.",
+    "choices": [
+      {
+        "text": "It cannot use `window`, `localStorage` or `node:fs`",
+        "correct": true,
+        "why": "Yes: each exists on only one side."
+      },
+      {
+        "text": "A side effect in it may happen twice on a first visit",
+        "correct": true,
+        "why": "Yes: once on the server, once in the browser."
+      },
+      {
+        "text": "Its result cannot be a function or class instance",
+        "correct": false,
+        "why": "No: that is the server load's limit; a universal one may return them."
+      },
+      {
+        "text": "Counting or logging belongs in a server load instead",
+        "correct": true,
+        "why": "Yes: a server load runs once per request."
+      }
+    ]
+  },
+  {
+    "id": "ex-8npp9m3j",
+    "version": 1,
+    "section": "rerunning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner's layout `load` reads no `params` and no `url`. How often does it run as you click around the group?",
+    "hint": "SvelteKit tracks what each load reads.",
+    "choices": [
+      {
+        "text": "Once, for the first page",
+        "correct": true,
+        "why": "Right: its data was kept across the navigations."
+      },
+      {
+        "text": "Once per navigation",
+        "correct": false,
+        "why": "Only loads whose inputs changed rerun."
+      },
+      {
+        "text": "Once per course page",
+        "correct": false,
+        "why": "That is the page's own load, not the layout's."
+      },
+      {
+        "text": "Never again, once SvelteKit has primed a special cache of the layout's data",
+        "correct": false,
+        "why": "It ran once, for the first page."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfry4a8m",
+    "version": 1,
+    "section": "rerunning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When a `load` reruns and `data` changes, what happens to the component?",
+    "hint": "Think about `new Planner(untrack(() => data))`.",
+    "choices": [
+      {
+        "text": "Nothing: a rerun does not touch the component",
+        "correct": false,
+        "why": "It does update the `data` prop."
+      },
+      {
+        "text": "It is not recreated; it gets the new `data` as a changed prop",
+        "correct": true,
+        "why": "Right: which is why a component that read `data` once keeps what it read."
+      },
+      {
+        "text": "It is destroyed and created again with the new data",
+        "correct": false,
+        "why": "No: SvelteKit keeps it and updates the prop."
+      },
+      {
+        "text": "Its `$state` is reset to the new data",
+        "correct": false,
+        "why": "Nothing resets it; the prop changes, the state does not follow."
+      }
+    ]
+  },
+  {
+    "id": "ex-9e3xkk90",
+    "version": 1,
+    "section": "rerunning",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To rerun every load function of the current page by hand, call `___()` from `$app/navigation`.",
+    "hint": "Its older name was `invalidateAll`.",
+    "blanks": [
+      {
+        "accept": [
+          "refreshAll"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gfwpas4c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You must read a private API key and query a database for the planner's data. Which load, and why?",
+    "hint": "What must never reach the browser?",
+    "choices": [
+      {
+        "text": "A universal load, so it can run in the browser too",
+        "correct": false,
+        "why": "That would ship the secret to the browser, which SvelteKit refuses."
+      },
+      {
+        "text": "Either; it makes no difference for secrets",
+        "correct": false,
+        "why": "It makes all the difference: a universal load is public."
+      },
+      {
+        "text": "Neither; fetch the key in the component",
+        "correct": false,
+        "why": "A component runs in the browser too; same exposure."
+      },
+      {
+        "text": "A server load, so the key never reaches the browser",
+        "correct": true,
+        "why": "Right: secrets and a database belong on the server only."
+      }
+    ]
+  },
+  {
+    "id": "ex-pj35awrq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server load returns the whole data file, including a field no component shows. Is that field safe?",
+    "hint": "Whatever a server load returns, the visitor can read.",
+    "choices": [
+      {
+        "text": "Yes, as long as it is a server load",
+        "correct": false,
+        "why": "A server load's return is exactly what is public."
+      },
+      {
+        "text": "Only if `__data.json` is disabled",
+        "correct": false,
+        "why": "It is also inlined in the HTML; you cannot hide it."
+      },
+      {
+        "text": "No: the visitor reads it in the HTML or at `__data.json`, shown or not",
+        "correct": true,
+        "why": "Right: return only what the pages need."
+      },
+      {
+        "text": "Yes: a field no component renders is never sent",
+        "correct": false,
+        "why": "Everything returned is sent, whether displayed or not."
+      }
+    ]
+  }
+]

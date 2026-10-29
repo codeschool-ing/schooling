@@ -1,0 +1,486 @@
+{
+  "ex-y1rkc6cy": {
+    "prompt": "Com o middleware de log no lugar, você carrega a página da semana do zero, numa aba nova. Quem envia a requisição para `/api/courses`?",
+    "hint": "Compare a lista de rede do navegador com o terminal do servidor.",
+    "choices": [
+      {
+        "text": "O navegador, depois que a página hidrata",
+        "why": "Isso é uma navegação dentro de uma página já rodando. Num primeiro carregamento, a lista de rede do navegador não teve linha de `/api/`."
+      },
+      {
+        "text": "O servidor, ao renderizar",
+        "why": "Certo. O terminal imprimiu `api: GET /api/courses`, e o navegador achou a resposta no payload."
+      },
+      {
+        "text": "Os dois: o servidor para desenhar a página, o navegador para hidratá-la",
+        "why": "Isso é o que um `$fetch` simples no setup faz. O `useFetch` entrega a resposta do servidor, e o navegador não pergunta."
+      },
+      {
+        "text": "Nenhum: o Nuxt lê o `courses.get.ts` no build",
+        "why": "Só o `/about` é pré-renderizado. A semana é renderizada a cada requisição, e o terminal mostra a chamada."
+      }
+    ]
+  },
+  "ex-vvnftdsp": {
+    "prompt": "Na semana, já aberta no navegador, você clica em *Spanish*. Por que a requisição dos dados do curso agora aparece na lista de rede do navegador?",
+    "hint": "Quem renderiza uma página que o router troca no lugar?",
+    "choices": [
+      {
+        "text": "O payload da primeira página expirou",
+        "why": "O payload não tem relógio; ele guarda os dados da página que o servidor renderizou, e a página do curso não foi essa."
+      },
+      {
+        "text": "O `useFetch` pergunta de novo em cada página para conferir a cópia do servidor",
+        "why": "Ele busca uma vez por página mostrada. Num primeiro carregamento, essa busca foi a do servidor."
+      },
+      {
+        "text": "O middleware em `server/middleware/` manda o navegador para lá",
+        "why": "O middleware imprime uma linha e não devolve nada; a requisição segue para a sua rota como antes."
+      },
+      {
+        "text": "Nenhum servidor renderiza esta página, então o `useFetch` roda no navegador",
+        "why": "Certo. Uma navegação dentro da página em execução é desenhada pelo navegador, e o `useFetch` dela faz a requisição."
+      }
+    ]
+  },
+  "ex-qnny2cn5": {
+    "prompt": "Por que o `useFetch` é escrito com `await` no setup de uma página?",
+    "hint": "O que o servidor mandaria se a renderização não esperasse?",
+    "choices": [
+      {
+        "text": "Sem ele, `data` seria uma promise e não um ref",
+        "why": "O `useFetch` devolve refs de qualquer jeito; o `await` decide quando a renderização continua."
+      },
+      {
+        "text": "Ele faz o setup rodar só no navegador",
+        "why": "O setup continua rodando dos dois lados; o `<Suspense>` é o que permite que ele seja `async`."
+      },
+      {
+        "text": "Para o servidor esperar os dados e desenhar o HTML com eles",
+        "why": "Certo. Sem ele, o servidor mandaria a página antes de a resposta voltar."
+      },
+      {
+        "text": "Para o navegador esperar a hidratação terminar antes de perguntar à API",
+        "why": "Num primeiro carregamento, o navegador nem pergunta à API; a espera que importa é a do servidor."
+      }
+    ]
+  },
+  "ex-0f7nmpy8": {
+    "prompt": "Qual chamada de `useAsyncData` o `useFetch('/api/courses')` abrevia?",
+    "hint": "A primeira frase da seção.",
+    "choices": [
+      {
+        "text": "`useAsyncData(() => $fetch('/api/courses'))`, sem chave nenhuma",
+        "why": "Existe uma chave mesmo assim; o `useFetch` faz uma a partir da URL, o `$f…` que o payload mostra."
+      },
+      {
+        "text": "`useAsyncData('/api/courses', { server: false })`",
+        "why": "Isso não tem função, e o `server: false` pularia a busca do servidor, o que o `useFetch` não faz por padrão."
+      },
+      {
+        "text": "`useAsyncData('courses', () => fetch('/api/courses'))`",
+        "why": "A chave é feita da URL, não de uma palavra que você escolhe, e a função é o `$fetch`, que interpreta o JSON; o `fetch` simples devolve uma resposta."
+      },
+      {
+        "text": "`useAsyncData(key, () => $fetch('/api/courses'))`, com a chave feita da URL",
+        "why": "Certo. O `useFetch` acrescenta só a chave e a chamada ao `$fetch`."
+      }
+    ]
+  },
+  "ex-wptjf27h": {
+    "prompt": "Para quais destes casos a aula usaria `useAsyncData` em vez de `useFetch`? Escolha todas as que se aplicam.",
+    "hint": "Os dados são a resposta de uma URL?",
+    "choices": [
+      {
+        "text": "Duas requisições cujas respostas são combinadas",
+        "why": "Certo. Nenhuma URL sozinha responde isso, então a função faz as duas."
+      },
+      {
+        "text": "Ler `/api/courses/spanish` exatamente como a rota responde",
+        "why": "Isso é uma URL, respondida como está: o `useFetch` é o jeito curto de escrever."
+      },
+      {
+        "text": "Um valor lido de um módulo no servidor, sem requisição",
+        "why": "Certo. A função é qualquer uma que devolva uma promise."
+      },
+      {
+        "text": "Dados buscados só no navegador, depois que a página montou",
+        "why": "Isso é o `onMounted`, ou o `server: false`; o `useAsyncData` roda primeiro na renderização do servidor, por padrão."
+      }
+    ]
+  },
+  "ex-87j1e4ky": {
+    "prompt": "O payload em `__NUXT_DATA__` é escrito por uma biblioteca chamada ___, que guarda cada valor repetido uma vez e aponta para ele pela posição.",
+    "hint": "O nome aparece onde a seção explica o formato, e de novo no `-1`.",
+    "blanks": [
+      {
+        "accept": [
+          "devalue"
+        ]
+      }
+    ]
+  },
+  "ex-wydwvg6r": {
+    "prompt": "A página da semana mediu 5.081 bytes com `wc -c`. Quantos bytes dela eram o payload `__NUXT_DATA__`?",
+    "hint": "O segundo dos três `wc -c`."
+  },
+  "ex-bnmpc7cw": {
+    "prompt": "No payload, a chave `session-count` do layout aponta para um item que guarda `6`, e não para os cursos e sessões do planner. Por quê?",
+    "hint": "Quando o `transform` roda?",
+    "choices": [
+      {
+        "text": "O `devalue` guarda os números e descarta objetos que já viu",
+        "why": "O `devalue` guarda um valor repetido uma vez e aponta para ele; ele mantém cada objeto que recebe."
+      },
+      {
+        "text": "O `transform` rodou no servidor antes de o payload ser escrito",
+        "why": "Certo. O que a função e o seu `transform` devolvem, e só isso, é o que atravessa."
+      },
+      {
+        "text": "O navegador roda o `transform` no payload quando ele chega",
+        "why": "Aí o payload levaria o planner inteiro. Ele rodou antes de o payload ser escrito."
+      },
+      {
+        "text": "O planner fica guardado na chave `$f…` da página",
+        "why": "A chave da página tem o planner, mas os dados do layout são próprios, o item 4; é um número por causa do `transform`."
+      }
+    ]
+  },
+  "ex-kff3sv82": {
+    "prompt": "`/api/me` devolve uma conta com nome, e-mail e hash da senha. Uma página mostra o nome, buscado com `useFetch('/api/me', { pick: ['name'] })`. O que um estranho ainda consegue ler?",
+    "hint": "O `pick` roda no servidor, mas depois de a rota responder.",
+    "choices": [
+      {
+        "text": "Nada além do nome: o `pick` deixou o resto no servidor",
+        "why": "Ele deixou o resto fora do payload. A rota ainda responde o registro inteiro a quem chamá-la."
+      },
+      {
+        "text": "O registro inteiro, dentro do script `__NUXT_DATA__` da página",
+        "why": "Esse é o caso sem `pick`; com ele, o payload leva só o nome."
+      },
+      {
+        "text": "O registro inteiro, para quem chamar `/api/me` com `curl`",
+        "why": "Certo. O `pick` corta o payload, não a rota; a correção é uma rota que devolve só o que quem a chama deve ver."
+      },
+      {
+        "text": "O e-mail, porque o `pick` descarta os campos que parecem secretos e mantém o resto",
+        "why": "O `pick` mantém os campos que ele nomeia e descarta os outros; ele não julga o que parece secreto."
+      }
+    ]
+  },
+  "ex-htgcqnrf": {
+    "prompt": "Com um `$fetch` simples no setup da página de demonstração, quantas linhas `api:` o terminal do servidor imprimiu para uma visita a `/demo/twice`?",
+    "hint": "A contagem do layout é uma delas."
+  },
+  "ex-7v57wdj7": {
+    "prompt": "`/demo/twice` chegou com *6 sessions* já desenhado, e o navegador ainda pediu `/api/courses`. Por quê?",
+    "hint": "O que o `$fetch` sabe da página em que roda?",
+    "choices": [
+      {
+        "text": "O HTML do servidor não tinha o número, e o navegador o preencheu",
+        "why": "O HTML tinha o número; *6 sessions* foi desenhado no servidor."
+      },
+      {
+        "text": "A hidratação confere as respostas do servidor buscando-as de novo",
+        "why": "A hidratação lê o payload; ela não confere o servidor perguntando de novo."
+      },
+      {
+        "text": "O setup rodou de novo para hidratar, e o `$fetch` não sabe nada de payloads",
+        "why": "Certo. O `useFetch` e o `useAsyncData` existem para que as duas execuções façam uma requisição."
+      },
+      {
+        "text": "O `useAsyncData` do layout perguntou pelo navegador, por engano",
+        "why": "A contagem do layout foi buscada pelo servidor; a requisição do navegador veio do `$fetch` da página."
+      }
+    ]
+  },
+  "ex-xw5bjf9c": {
+    "prompt": "`/demo/mounted` busca no `onMounted`. O que o `curl` dessa página acha dentro do `<p>`?",
+    "hint": "O `onMounted` roda de um lado só.",
+    "choices": [
+      {
+        "text": "*6 sessions*, desenhado pelo servidor",
+        "why": "Isso exigiria a busca rodar na renderização do servidor, e o `onMounted` não roda lá."
+      },
+      {
+        "text": "Um parágrafo vazio, já que `data` é undefined no servidor",
+        "why": "O ramo `v-else` tem o seu próprio texto, e o servidor o desenhou."
+      },
+      {
+        "text": "*6 sessions*, lido do payload quando a página hidratou",
+        "why": "Nada foi buscado no servidor, então o payload não tem nada disso, e o `curl` não hidrata página."
+      },
+      {
+        "text": "*Loading…*",
+        "why": "Certo. O `onMounted` roda só no navegador, então o servidor desenhou o `v-else`."
+      }
+    ]
+  },
+  "ex-t47cyz48": {
+    "prompt": "A página do curso passa ao `useFetch` uma função que monta a URL a partir de `route.params.id`, em vez de uma string. O que a função compra?",
+    "hint": "O que acontece com a URL, e portanto com a chave, quando a rota muda?",
+    "choices": [
+      {
+        "text": "A URL é montada no navegador, então o servidor pula a busca",
+        "why": "Num primeiro carregamento, o servidor ainda busca; a função trata de mudança, não de lado."
+      },
+      {
+        "text": "Uma chave que ninguém mais vai escolher, então nada de `NUXT_E3004`",
+        "why": "Uma chave vinda de URL é compartilhada por qualquer chamada à mesma URL; o conflito veio de duas chaves escritas à mão."
+      },
+      {
+        "text": "Uma chave reativa: quando o `id` da rota muda, o curso novo é buscado sozinho",
+        "why": "Certo. A URL muda com a rota, a chave muda com a URL, e o `useFetch` busca de novo sozinho."
+      },
+      {
+        "text": "Os dados são buscados depois de a página aparecer, como com `lazy`",
+        "why": "Isso é o `lazy: true`, uma opção à parte; a função muda o que é buscado, não quando a navegação segue."
+      }
+    ]
+  },
+  "ex-e5cy3e8e": {
+    "prompt": "`/demo/clash` desenhou *6 sessions in courses*, sem número antes de *courses*. O que aconteceu?",
+    "hint": "Leia o aviso, depois pergunte o que a segunda chamada recebeu.",
+    "choices": [
+      {
+        "text": "A segunda chamada recebeu os dados da primeira, a contagem, e leu um campo que ela não tem",
+        "why": "Certo. Uma chave é um dado só; a função diferente rendeu um aviso e nada mais."
+      },
+      {
+        "text": "A segunda busca falhou, então `planner` ficou undefined",
+        "why": "Nenhuma requisição falhou; o aviso é sobre funções diferentes, e a segunda chamada recebeu dados."
+      },
+      {
+        "text": "As duas chamadas rodaram, e a segunda sobrescreveu a contagem",
+        "why": "Aí `count` guardaria o planner, e a página não diria *6 sessions*."
+      },
+      {
+        "text": "O `useAsyncData` juntou as duas respostas num objeto",
+        "why": "Não há junção: a chave estava ocupada, e a segunda chamada compartilha o que está nela."
+      }
+    ]
+  },
+  "ex-066s6180": {
+    "prompt": "Segundo a aula, o que a chave de um `useFetch` ou `useAsyncData` decide? Escolha todas as que se aplicam.",
+    "hint": "A seção abre com três coisas.",
+    "choices": [
+      {
+        "text": "Onde o payload guarda a resposta",
+        "why": "Certo. O payload liga cada chave ao item que guarda os dados dela."
+      },
+      {
+        "text": "Se a chamada roda no servidor ou no navegador",
+        "why": "Isso depende de onde a página é renderizada, e do `server: false`; a chave dá nome aos dados."
+      },
+      {
+        "text": "Quais chamadas compartilham um mesmo dado",
+        "why": "Certo. Duas chamadas com uma chave são um dado só, para o bem ou para o mal."
+      },
+      {
+        "text": "Quando os dados são buscados de novo",
+        "why": "Certo. Uma chave que muda, como a montada a partir da rota, busca de novo."
+      }
+    ]
+  },
+  "ex-9gefrcyd": {
+    "prompt": "Com o endpoint da semana respondendo 503, e antes de a linha com `role=\"alert\"` existir, o que a página da semana mostrou?",
+    "hint": "O `useFetch` não lança erro.",
+    "choices": [
+      {
+        "text": "A página de erro do Nuxt, com o status 503",
+        "why": "Isso exige que a própria página lance `createError`, como a página do curso faz; o `useFetch` põe a falha em `error`."
+      },
+      {
+        "text": "A última semana que ela tinha desenhado, guardada num cache",
+        "why": "O `swr` saiu no começo da aula, e `data` estava `undefined` aqui."
+      },
+      {
+        "text": "Uma semana vazia com zeros, e nenhuma palavra sobre o motivo",
+        "why": "Certo. Cada `computed` cai para `[]`, então a página parece um planner sem sessões."
+      },
+      {
+        "text": "Uma página em branco, porque o setup lançou erro ao ler `data.value`",
+        "why": "Os `computed` usam `?.` e `?? []`, então o setup rodou até o fim e a página desenhou."
+      }
+    ]
+  },
+  "ex-dgrhwx48": {
+    "prompt": "Uma página em `/invoices/:id` mostra uma fatura, e o `useFetch` dela volta com um 404. Seguindo a pergunta da aula, o que a página deve fazer?",
+    "hint": "A página ainda vale a pena sem esses dados?",
+    "choices": [
+      {
+        "text": "Mostrar uma linha com `role=\"alert\"` acima de uma fatura vazia",
+        "why": "Essa é a resposta da semana, para uma página que vale desenhar sem os dados. Uma fatura vazia não vale."
+      },
+      {
+        "text": "Chamar `refresh()` até a fatura chegar",
+        "why": "Um 404 é uma resposta, não uma demora; perguntar de novo dá o mesmo."
+      },
+      {
+        "text": "Lançar `createError` com o status da rota, como a página do curso faz",
+        "why": "Certo. Uma página de fatura sem a fatura não deve ser desenhada; o Nuxt desenha o `error.vue` com o 404."
+      },
+      {
+        "text": "Nada: o `useFetch` lança o 404 e o Nuxt mostra a página de erro",
+        "why": "O `useFetch` não lança erro. A própria página tem de repassar o erro."
+      }
+    ]
+  },
+  "ex-p85fpmf0": {
+    "prompt": "A linha de erro da semana é `<p v-if=\"error\" role=\"___\">`, que um leitor de tela lê em voz alta assim que ela aparece.",
+    "hint": "O papel ARIA de uma mensagem que interrompe.",
+    "blanks": [
+      {
+        "accept": [
+          "alert"
+        ]
+      }
+    ]
+  },
+  "ex-mkp71703": {
+    "prompt": "A rota do curso espera dois segundos antes de responder, e a página do curso não é lazy. Você clica em *Spanish* na semana. O que o título diz um instante depois?",
+    "hint": "Por padrão, quem espera os dados?",
+    "choices": [
+      {
+        "text": "*Spanish*, com uma lista vazia embaixo",
+        "why": "O título vem dos dados, e a página não aparece antes de os dados chegarem."
+      },
+      {
+        "text": "*This week*",
+        "why": "Certo. O router mantém a página antiga até os dados da próxima chegarem."
+      },
+      {
+        "text": "Nada: o título fica vazio até os dados chegarem",
+        "why": "Isso é o que o `lazy: true` dá, a página nova na hora, sem nada nela."
+      },
+      {
+        "text": "*Loading the course…*, de uma linha que lê `status`",
+        "why": "Essa linha é de uma página lazy; esta não é, e o router ainda não a mostrou."
+      }
+    ]
+  },
+  "ex-wn7fv6hh": {
+    "prompt": "Com `lazy: true` no `useFetch` da página do curso, o que o leitor vê logo depois do clique, antes de passarem os dois segundos?",
+    "hint": "A captura feita sem a espera.",
+    "choices": [
+      {
+        "text": "A semana, sem mudança, até os dados chegarem",
+        "why": "Esse é o padrão; o `lazy: true` deixa a navegação seguir na hora."
+      },
+      {
+        "text": "Uma barra de carregamento do Nuxt, desenhada sobre a semana",
+        "why": "O Nuxt não desenhou nada disso aqui; o que aparece durante a espera é trabalho do template, com `status`."
+      },
+      {
+        "text": "A página do curso sem dados: *Goal: minutes a week*",
+        "why": "Certo. A página aparece na hora e se preenche quando os dados chegam."
+      },
+      {
+        "text": "O curso, lido do payload, e depois um refresh",
+        "why": "Uma navegação não traz payload próprio; o navegador busca, aqui de forma lazy."
+      }
+    ]
+  },
+  "ex-4e41mzf5": {
+    "prompt": "Uma página mostra um relatório que leva segundos para ser calculado, e você põe `server: false` no `useFetch` dela. O que muda num primeiro carregamento?",
+    "hint": "Qual lado pula a busca?",
+    "choices": [
+      {
+        "text": "O servidor espera o relatório, e o navegador não pergunta",
+        "why": "Esse é o `useFetch` comum num primeiro carregamento; o `server: false` é o contrário."
+      },
+      {
+        "text": "Ela chega sem o relatório, e quem o busca depois é o navegador",
+        "why": "Certo. A renderização do servidor pula a busca: o client-only da aula 19, aplicado a um dado."
+      },
+      {
+        "text": "O relatório é buscado uma vez no build, como o `/about` é pré-renderizado",
+        "why": "Pré-renderizar é uma regra de rota; o `server: false` trata de uma busca, na hora da requisição."
+      },
+      {
+        "text": "O relatório vai no payload, mas é desenhado de forma lazy",
+        "why": "Com a busca pulada no servidor, o payload não tem nada do relatório para levar."
+      }
+    ]
+  },
+  "ex-hjre6ysr": {
+    "prompt": "Ponha estes passos na ordem em que acontecem quando um leitor abre a semana numa aba nova e depois clica num curso.",
+    "hint": "A figura da seção sobre o payload, e depois um clique.",
+    "items": [
+      "A renderização do servidor roda o `useFetch`, que chama `/api/courses`",
+      "O servidor manda o HTML com o payload dentro",
+      "O navegador mostra o HTML",
+      "O navegador hidrata, e o `useFetch` acha a chave dele no payload",
+      "O navegador pede `/api/courses/spanish` para a página do curso"
+    ]
+  },
+  "ex-ndfhdqvg": {
+    "prompt": "Ligue cada necessidade ao que a aula usa para ela.",
+    "hint": "Uma URL, várias fontes, uma resposta lenta, um fato do navegador.",
+    "pairs": [
+      {
+        "left": "A resposta de uma URL, como ela é",
+        "right": "`useFetch(url)`"
+      },
+      {
+        "left": "Duas requisições combinadas num valor",
+        "right": "`useAsyncData` com uma chave própria"
+      },
+      {
+        "left": "Uma API lenta, e um clique que segue na hora",
+        "right": "`lazy: true`"
+      },
+      {
+        "left": "Um valor que só o navegador do leitor conhece",
+        "right": "`onMounted`"
+      }
+    ],
+    "right_distractors": [
+      "`pick: ['name']`"
+    ]
+  },
+  "ex-0sxr4k83": {
+    "prompt": "Um leitor abre `/courses/guitar` direto numa aba nova. Quantas requisições para `/api/courses/guitar` o navegador dele faz?",
+    "hint": "Quem renderiza uma página aberta numa aba nova?",
+    "choices": [
+      {
+        "text": "Uma, porque a função que monta a URL roda no navegador",
+        "why": "A função roda no servidor também; ela faz a chave seguir a rota, não muda a busca de lado."
+      },
+      {
+        "text": "Uma, como a captura do clique em *Guitar* mostrou",
+        "why": "Aquela captura era uma navegação dentro de uma página rodando, que o próprio navegador renderiza."
+      },
+      {
+        "text": "Uma, para hidratar, como o `$fetch` simples no setup fez",
+        "why": "Isso foi a busca dupla, e é o que o `useFetch` existe para evitar."
+      },
+      {
+        "text": "Nenhuma: a resposta veio no payload",
+        "why": "Certo. Um primeiro carregamento é renderizado pelo servidor, e uma chave reativa não muda nada nisso."
+      }
+    ]
+  },
+  "ex-h41v644d": {
+    "prompt": "Quais destes acabam no `__NUXT_DATA__` de uma página renderizada no servidor? Escolha todas as que se aplicam.",
+    "hint": "O que o servidor buscou ao renderizar, por `useFetch` ou `useAsyncData`.",
+    "choices": [
+      {
+        "text": "Dados buscados com `$fetch` no `onMounted`",
+        "why": "O `onMounted` roda no navegador, depois de o payload ser escrito."
+      },
+      {
+        "text": "A contagem de sessões do layout, depois do `transform`",
+        "why": "Certo. O item 4 do payload da semana é `6`."
+      },
+      {
+        "text": "A resposta de um `$fetch` simples no setup",
+        "why": "O `$fetch` não sabe nada de payloads, e é por isso que o navegador buscou de novo."
+      },
+      {
+        "text": "Um registro inteiro buscado pelo `useFetch`, embora o template mostre um campo dele",
+        "why": "Certo. Tudo o que o servidor buscou ao renderizar está nele, o template usando ou não."
+      }
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "ex-ws7t6b3x": {
+    "prompt": "O botão do `RunsOnce` foi clicado três vezes. Quantas linhas da transcrição começam com `render read count`?",
+    "hint": "O primeiro desenho também conta."
+  },
+  "ex-1fdq6r5x": {
+    "prompt": "Na demonstração `RunsOnce`, por que `setup ran` aparece uma vez, embora o botão tenha sido clicado três vezes?",
+    "hint": "Qual parte do componente é o render?",
+    "choices": [
+      { "text": "O `<script setup>` roda uma vez, quando o componente é criado", "why": "Certo. Depois disso, só o render que leu `count` roda de novo a cada clique." },
+      { "text": "O Vue imprime uma linha repetida do console uma vez", "why": "Nada é juntado: `render read count` foi impresso quatro vezes, uma linha por render." },
+      { "text": "O handler inline `count++` passa por fora do setup, e uma função com nome o teria rodado de novo", "why": "O jeito de escrever o handler não faz diferença. Uma mudança no Vue roda os renders que leram o valor, seja quem for que o escreveu." },
+      { "text": "O setup rodou a cada clique, mas o console do Vite mostra uma linha do setup só na primeira carga", "why": "A transcrição mostra cada linha que a página registrou; `setup ran` está lá uma vez porque o setup rodou uma vez." }
+    ]
+  },
+  "ex-5shwx1fh": {
+    "prompt": "Um componente React e um componente Vue registram cada um uma linha no topo do seu código, fora de qualquer coisa renderizada. O valor que eles mostram muda três vezes. Quantas vezes cada linha é impressa, no total?",
+    "hint": "No React, a função inteira é o render.",
+    "choices": [
+      { "text": "React 4, Vue 4", "why": "Essa é a imagem do Vue como um React com outra sintaxe. O setup do Vue não é o render, e não roda de novo." },
+      { "text": "React 4, Vue 1", "why": "Certo. O React chama a função inteira no primeiro desenho e a cada mudança; o Vue roda o setup uma vez e repete só o render." },
+      { "text": "React 1, Vue 4", "why": "Os modelos são o contrário: o React roda a função de novo, e o Vue lembra o que foi lido." },
+      { "text": "React 3, Vue 3", "why": "Isso esquece o primeiro desenho, e trata os dois modelos como um só." }
+    ]
+  },
+  "ex-ma6d833k": {
+    "prompt": "No `RunsOnce`, o botão muda `count`. Quais destes rodam de novo depois de um clique? Escolha todas as que se aplicam.",
+    "hint": "O que o template leu?",
+    "choices": [
+      { "text": "`console.log('setup ran')`", "why": "Ele está no setup, que rodou uma vez; a transcrição o mostra uma única vez." },
+      { "text": "O render do template", "why": "Certo. Ele leu `count`, então uma escrita em `count` o roda de novo." },
+      { "text": "A chamada a `ref(0)` que criou `count`", "why": "Isso criaria um ref novo valendo 0 a cada clique, e a contagem nunca cresceria. Ela pertence ao setup." },
+      { "text": "`label()`, chamada pelo template", "why": "Certo. O template a chama, então ela roda toda vez que o template roda, e registra a linha a cada vez." }
+    ]
+  },
+  "ex-ve55ygkb": {
+    "prompt": "Com `const counts = { total: ref(0) }` no `<script setup>`, o que `{{ counts.total + 1 }}` mostrou?",
+    "hint": "`counts` é um objeto comum, e o ref está dentro dele.",
+    "choices": [
+      { "text": "`1`", "why": "Isso foi o que `{{ total + 1 }}` mostrou, porque `total` é um nome do nível de cima e foi desembrulhado antes do `+`." },
+      { "text": "`NaN`, porque o `+` encontrou um objeto que não conseguiu transformar em número", "why": "Quando um dos lados é um objeto, o `+` o transforma em string e junta; ele não tenta um número." },
+      { "text": "`0`, porque a interpolação desembrulhou o ref e depois ignorou a soma", "why": "Isso é `{{ counts.total }}` sozinho. O desembrulhar do fim acontece depois que o `+` já encontrou o invólucro." },
+      { "text": "`[object Object]1`", "why": "Certo. Um ref aninhado num objeto comum não é desembrulhado dentro de uma expressão, então o `+` transformou o invólucro em string." }
+    ]
+  },
+  "ex-c6p69624": {
+    "prompt": "Uma função auxiliar `startTimer(m)` lê `m` uma vez por minuto e o registra. O componente chama `startTimer(minutes.value)` e, mais tarde, faz `minutes.value = 50`. O que o timer registra depois disso?",
+    "hint": "O que a função recebeu: o invólucro, ou o que estava dentro dele?",
+    "choices": [
+      { "text": "50, porque uma escrita em `.value` chega a todos que leram o ref", "why": "A função nunca leu o ref. Ela recebeu o número que estava dentro dele naquele momento." },
+      { "text": "O número antigo", "why": "Certo. `minutes.value` entregou um número comum, e um número não muda. Passar o próprio `minutes` deixaria a função ler o valor atual." },
+      { "text": "Um objeto `RefImpl`, porque o ref é passado inteiro", "why": "Isso é o que passar `minutes` sem `.value` registraria. Com `.value`, é o número que é passado." },
+      { "text": "50, assim que a fila de atualização rodar", "why": "A fila roda de novo os renders que leram o ref. Uma função que guarda uma cópia do número não é um deles." }
+    ]
+  },
+  "ex-3ewf4fqg": {
+    "prompt": "Para dados grandes que você troca inteiros e nunca muda no lugar, `___` observa `.value` e nada dentro dele.",
+    "hint": "Uma variante de `ref`, com o nome da profundidade até onde ela olha.",
+    "blanks": [{ "accept": ["shallowRef"] }]
+  },
+  "ex-tg7mzygr": {
+    "prompt": "No `ReactiveProxy`, o primeiro clique passou pelo proxy e o segundo somou 10 a `raw.minutes`. O que a página dizia depois dos dois?",
+    "hint": "`raw.minutes is now 50` foi registrado.",
+    "choices": [
+      { "text": "spanish: 40 minutes", "why": "Certo. Só a primeira mudança passou pelo proxy, então só a primeira foi vista." },
+      { "text": "spanish: 50 minutes", "why": "Esse é o valor dentro do objeto, mas nada avisou o Vue de que ele mudou, então a página não foi redesenhada." },
+      { "text": "spanish: 30 minutes", "why": "O primeiro clique passou pelo proxy e foi desenhado: 30 virou 40." },
+      { "text": "Um erro, porque o original foi mudado depois que um proxy dele foi criado", "why": "Mudar o original é JavaScript comum e não lança nada. Esse silêncio é a armadilha." }
+    ]
+  },
+  "ex-ahvev45j": {
+    "prompt": "Na segunda execução do `ReactiveProxy`, um terceiro clique passou pelo proxy e a página pulou de 40 para 60. Por que 60, e não 50?",
+    "hint": "O que havia dentro do objeto antes do terceiro clique?",
+    "choices": [
+      { "text": "O proxy enfileirou a mudança feita pelo original e a repetiu na escrita seguinte", "why": "Nenhuma mudança foi registrada. O proxy lê e escreve o mesmo objeto, que já guardava 50." },
+      { "text": "O terceiro clique somou 20, para compensar o que tinha sido perdido", "why": "O `viaProxy` soma 10 toda vez; ele não sabe nada do clique anterior." },
+      { "text": "`raw` ficou reativo quando passou a existir um proxy", "why": "`isReactive(raw)` imprimiu `false`. Criar um proxy não muda o objeto que ele embrulha." },
+      { "text": "O objeto já guardava 50, porque o segundo clique o mudou, e o redesenho mostrou o que ele guardava", "why": "Certo. A mudança feita pelas costas do Vue não se perdeu; só ficou invisível até que outra coisa provocasse um redesenho." }
+    ]
+  },
+  "ex-evx5y9ry": {
+    "prompt": "Quais destes o `reactive()` consegue tornar reativos? Escolha todas as que se aplicam.",
+    "hint": "A demonstração tentou um que não dá, e o Vue avisou.",
+    "choices": [
+      { "text": "Um Map", "why": "Certo. Objetos, arrays, Maps e Sets são o que um Proxy consegue substituir." },
+      { "text": "O número 25", "why": "A demonstração registrou `value cannot be made reactive: 25` e devolveu o número. Um número não tem propriedades para observar; para isso existe o `ref`." },
+      { "text": "Um array de sessões", "why": "Certo. Um array é um objeto, e as leituras e escritas dele passam pelo proxy." },
+      { "text": "Um objeto comum, como `{ course: 'spanish' }`", "why": "Certo. Esse é o caso que a demonstração montou." }
+    ]
+  },
+  "ex-wq8qpnmq": {
+    "prompt": "`isReactive(session.tags)` imprimiu `true`, embora `tags` fosse um array comum em `raw`. O que isso mostra?",
+    "hint": "O array foi alcançado através de alguma coisa.",
+    "choices": [
+      { "text": "O `reactive()` copiou o objeto inteiro, arrays incluídos, quando foi chamado", "why": "Nada foi copiado: `isReactive(raw)` continuou `false` e o proxy lê o original. O proxy aninhado é criado quando é lido." },
+      { "text": "Arrays são reativos no Vue por padrão", "why": "`raw.tags` é o mesmo array, e ele não é reativo. O que fez a diferença foi o caminho pelo qual ele foi lido." },
+      { "text": "`tags` foi transformado num ref", "why": "Ele é lido como `session.tags`, sem `.value`. Dentro de um `reactive`, ele é um proxy, não um ref." },
+      { "text": "Ler um objeto aninhado através de um proxy devolve um proxy dele", "why": "Certo. É isso que profundo quer dizer aqui: por mais fundo que uma mudança seja feita, o caminho até ela passou por um proxy." }
+    ]
+  },
+  "ex-tzvabqr8": {
+    "prompt": "No `LostReactivity`, `week.done` foi de 75 para 95. O que a linha `destructured: {{ done }}` mostrou depois do clique?",
+    "hint": "`const { done } = week` rodou uma vez, no setup.",
+    "choices": [
+      { "text": "95, um instante depois do clique", "why": "É assim que a fila de atualização se parece, mas não há nada para alcançar: `done` é um número comum, e nada vai redesenhá-lo para 95." },
+      { "text": "95", "why": "Essa é a linha do `toRefs`. Desestruturar o próprio proxy tirou uma cópia do número." },
+      { "text": "75", "why": "Certo. A desestruturação leu `week.done` uma vez e pôs o número numa variável nova, e um número não tem como relatar uma mudança." },
+      { "text": "Nada, e um aviso de que um objeto reativo foi desestruturado", "why": "O Vue não avisa, porque tirar um valor de um objeto é JavaScript comum. A página mostrou um número, o errado." }
+    ]
+  },
+  "ex-mcbehw9p": {
+    "prompt": "`const { done } = week` tira uma cópia. Para ter, em vez disso, um único ref que continua ligado àquela propriedade, escreva `___(week, 'done')`.",
+    "hint": "O singular da função que faz isso para cada propriedade.",
+    "blanks": [{ "accept": ["toRef"] }]
+  },
+  "ex-bc0wv5ag": {
+    "prompt": "Um componente declara `let week = reactive({ planned: 0, done: 0 })` e, quando os dados chegam, roda `week = reactive(loaded)`. O que a página mostra?",
+    "hint": "Qual proxy o template guarda?",
+    "choices": [
+      { "text": "Os dados carregados, assim que a fila de atualização rodar", "why": "A fila roda de novo os renders que leram um valor que mudou. Nada do que o template leu mudou: ele ainda guarda o primeiro proxy." },
+      { "text": "Os zeros do primeiro objeto", "why": "Certo. Apontar a variável para um segundo proxy não muda nada na tela. Um `ref` e `week.value = loaded` é a correção." },
+      { "text": "Um erro, porque uma variável reativa é uma constante", "why": "Ela foi declarada com `let`, então a atribuição é JavaScript válido. Nada reclama, e é por isso que passa despercebido." },
+      { "text": "Os dados carregados, e o proxy antigo é jogado fora", "why": "O template foi compilado contra o primeiro proxy e o mantém; o segundo é um que ninguém observa." }
+    ]
+  },
+  "ex-gqp4hjza": {
+    "prompt": "O script tem `const left = minutesLeft(week.goal, week.done)` e o template mostra `{{ left }}`. Quando `week.done` muda, `left` fica parado. Qual é a correção que a aula dá?",
+    "hint": "Um valor que precisa ser recalculado sempre que as entradas dele mudam.",
+    "choices": [
+      { "text": "`await nextTick()` antes de ler `left`", "why": "O `nextTick` espera a página alcançar a mudança. Ele não recalcula um número que foi tirado uma vez." },
+      { "text": "Embrulhar o resultado: `const left = ref(minutesLeft(week.goal, week.done))`", "why": "Isso cria um ref que guarda a primeira resposta. Nada escreve nele quando `week.done` muda, então ele fica parado." },
+      { "text": "`computed(() => minutesLeft(week.goal, week.done))`", "why": "Certo. As leituras acontecem dentro do `computed`, então são rastreadas e ele recalcula. A aula 3 é sobre ele." },
+      { "text": "Desestruturar antes: `const { goal, done } = toRefs(week)` e passar esses", "why": "A função receberia refs e subtrairia invólucros. E ela continua rodando uma vez; é a própria chamada que precisa ser repetida." }
+    ]
+  },
+  "ex-bbfc5jag": {
+    "prompt": "O `addThree` mudou `count` três vezes seguidas. Quantas vezes `render with count = 3` foi registrado?",
+    "hint": "As escritas enfileiram redesenhos."
+  },
+  "ex-tt5xdkd4": {
+    "prompt": "Dentro do `addThree`, logo depois dos três incrementos, o código lê o `<output>`. O que ele encontrou, e por quê?",
+    "hint": "Veja a linha que começa com `count is 3`.",
+    "choices": [
+      { "text": "1, porque a primeira escrita redesenhou a página e as outras duas esperaram", "why": "Nenhuma escrita redesenhou a página na hora. As três foram enfileiradas num redesenho que rodou depois que a função parou." },
+      { "text": "3, porque cada escrita redesenha na hora", "why": "Essa é a imagem comum, e a transcrição a desmente: `the page still says 0`." },
+      { "text": "Nada ainda, porque o `<output>` só é desenhado depois do `nextTick`", "why": "O output foi desenhado no primeiro render, com 0; ele está esperando ser redesenhado, não passar a existir." },
+      { "text": "0, porque o redesenho vai para a fila e espera terminar o código que mudou `count`", "why": "Certo. O valor era 3 e a página ainda dizia 0; a fila roda como microtarefa quando o código atual termina." }
+    ]
+  },
+  "ex-63bkyfq0": {
+    "prompt": "O total de uma colega fica errado por um instante depois de cada mudança, então ela faz `await nextTick()` antes de calculá-lo a partir do DOM. O que a aula diz que isso indica?",
+    "hint": "O `nextTick` é sobre a página, não sobre valores.",
+    "choices": [
+      { "text": "O total está sendo calculado no lugar errado, e pertence a um `computed`", "why": "Certo. Um `computed` nunca fica desatualizado. O `nextTick` serve para mexer no DOM depois de uma mudança, como pôr o foco num campo que acabou de aparecer." },
+      { "text": "Nada de errado: é para isso que o `nextTick` serve", "why": "Esperar a página e depois ler um valor dela põe um valor onde o DOM é a fonte. A aula reserva o `nextTick` para trabalho no próprio DOM." },
+      { "text": "A fila de atualização está quebrada e precisa ser esvaziada à mão", "why": "A fila fez o que faz: um redesenho depois que o código terminou. Não há nada para esvaziar." },
+      { "text": "As mudanças deviam ser feitas com `reactive` em vez de `ref`", "why": "Os dois enfileiram os redesenhos do mesmo jeito. Qual invólucro guarda o valor não muda quando a página alcança a mudança." }
+    ]
+  },
+  "ex-6p31r0hr": {
+    "prompt": "Com o `public/courses.json` tirado do lugar, a página disse `Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON`. O que aconteceu?",
+    "hint": "O `curl -si` mostrou as primeiras linhas da resposta.",
+    "choices": [
+      { "text": "O arquivo foi encontrado, mas tinha um `<` perdido", "why": "Não havia arquivo nenhum. O `<` é o começo do HTML de uma página." },
+      { "text": "O servidor respondeu 404, e o `fetch` transformou isso num erro de JSON", "why": "Um 404 teria falhado na verificação do `response.ok`, com a mensagem dele. O `curl` mostrou `HTTP/1.1 200 OK`." },
+      { "text": "A requisição recebeu a página HTML da aplicação, com um 200", "why": "Certo. O Vite responde um endereço que ele não tem com a página, então `response.ok` era verdadeiro e `response.json()` falhou no primeiro `<`." },
+      { "text": "O Vite ainda não tinha iniciado, e respondeu com a tela de carregamento dele", "why": "O servidor de desenvolvimento estava rodando e serviu o resto da página; ele respondeu este endereço com a aplicação, como faz para qualquer coisa desconhecida." }
+    ]
+  },
+  "ex-ejf08pht": {
+    "prompt": "Por que o cabeçalho do planner tem um estado `Loading…`?",
+    "hint": "Quando a requisição começa, e o que é desenhado antes de ela terminar?",
+    "choices": [
+      { "text": "O Vite o mostra sozinho enquanto os módulos carregam", "why": "O parágrafo está no `App.vue`, escolhido por `v-else-if=\"courses.length === 0\"`. O Vite não desenha nada da página." },
+      { "text": "Os refs começam vazios e a página é desenhada antes de o arquivo chegar", "why": "Certo. O setup inicia a requisição e o template desenha o que os refs guardam, uma lista vazia, até os dados a substituírem." },
+      { "text": "O `fetch` bloqueia o componente até o arquivo ser lido, e o parágrafo cobre essa pausa", "why": "O `fetch` não bloqueia nada. O componente é desenhado na hora, e é por isso que existe um estado para desenhar." },
+      { "text": "Todo `ref` aparece como carregando até a primeira escrita", "why": "Um ref não tem estado de carregamento. É o template que decide o que uma lista vazia quer dizer." }
+    ]
+  },
+  "ex-rqf7db1w": {
+    "prompt": "Os dados chegam e o código roda `courses.value = data.courses`. Por que a lista aparece, se o template foi desenhado enquanto `courses` estava vazio?",
+    "hint": "O que o template leu na primeira vez que foi desenhado?",
+    "choices": [
+      { "text": "Atribuir `.value` roda de novo cada render que leu `courses`", "why": "Certo. O template leu `courses.value` sem dizer, e trocá-lo redesenhou o que dependia dele." },
+      { "text": "As chamadas `.then` mandam o Vue desenhar o componente de novo desde o começo", "why": "Promises não sabem nada do Vue, e nada é desenhado de novo desde o começo: o setup roda uma vez." },
+      { "text": "O `v-for` confere o array de novo num timer", "why": "Não há verificação periódica. O redesenho acontece por causa da escrita, não porque o tempo passou." },
+      { "text": "O navegador troca o `<ul>` vazio quando o `fetch` se resolve", "why": "O navegador não liga uma requisição a um elemento. O Vue redesenhou a lista porque um ref que o template leu foi escrito." }
+    ]
+  },
+  "ex-6cwcp4z9": {
+    "prompt": "Ponha o que acontece quando o planner abre na ordem em que acontece.",
+    "items": [
+      "O `<script setup>` roda e inicia o `fetch`",
+      "O template desenha `Loading…`",
+      "O `/courses.json` chega",
+      "`courses.value` recebe uma atribuição",
+      "O render que leu `courses` roda de novo"
+    ]
+  },
+  "ex-4pe7wraf": {
+    "prompt": "Ligue cada linha de código ao que ela deixa nas suas mãos.",
+    "hint": "Cada uma lê pelo invólucro ou tira algo de dentro dele.",
+    "pairs": [
+      { "left": "`const { done } = week`", "right": "Um número tirado uma vez" },
+      { "left": "`week = reactive(other)`", "right": "Um segundo proxy que ninguém observa" },
+      { "left": "`const { done } = toRefs(week)`", "right": "Um ref ligado ao proxy" },
+      { "left": "`raw.minutes += 10`", "right": "Uma mudança que a página não viu" }
+    ],
+    "right_distractors": ["Um aviso no console"]
+  },
+  "ex-xw48808q": {
+    "prompt": "Um componente tem `const goal = ref(180)` e `const doubled = goal.value * 2`, e o template mostra `{{ goal }}` e `{{ doubled }}`. Um botão faz `goal.value = 200`. Depois do redesenho, o que a página mostra?",
+    "hint": "Um dos dois nomes é um ref; o outro foi calculado a partir de um, uma vez.",
+    "choices": [
+      { "text": "200 e 400", "why": "Isso exigiria que `doubled` fosse um `computed`. Do jeito que está escrito, ele é um número tirado uma vez no setup." },
+      { "text": "180 e 360, porque o template só desembrulha refs no primeiro desenho", "why": "O template lê `goal` a cada render, e a escrita em `goal.value` o roda de novo, então `goal` mostra 200." },
+      { "text": "200 e 360", "why": "Certo. `goal` é lido pelo invólucro na hora do render; `doubled` é um número comum que o setup calculou uma vez." },
+      { "text": "200 e `[object Object]2`", "why": "`goal.value` é o número 180, então `goal.value * 2` dá 360. O invólucro só encontra um operador quando o `.value` fica de fora." }
+    ]
+  },
+  "ex-spw83fmj": {
+    "prompt": "`week` é um objeto `reactive`. Quais destes mostram o `week.done` atual depois que ele muda? Escolha todas as que se aplicam.",
+    "hint": "Leia pelo invólucro no último momento.",
+    "choices": [
+      { "text": "`{{ week.done }}` no template", "why": "Certo. O template lê pelo proxy a cada render, então a leitura é rastreada." },
+      { "text": "`const shown = week.done` no script, e depois `{{ shown }}`", "why": "Isso lê cedo, numa variável comum, e guarda uma cópia do número." },
+      { "text": "`const left = computed(() => week.goal - week.done)`, e depois `{{ left }}`", "why": "Certo. A leitura acontece dentro do `computed`, que recalcula quando `week.done` muda." },
+      { "text": "`const { done } = toRefs(week)`, e depois `{{ done }}`", "why": "Certo. Cada pedaço é um ref ligado à propriedade do proxy." }
+    ]
+  }
+}

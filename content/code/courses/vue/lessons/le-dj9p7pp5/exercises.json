@@ -1,0 +1,728 @@
+[
+  {
+    "id": "ex-86sqbssp",
+    "version": 1,
+    "section": "binding-inputs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `Fields` demo the student picks *Spanish* from the course `<select>`. What does `course` hold?",
+    "hint": "Look at the JSON the demo printed, and at the options' attributes.",
+    "choices": [
+      {
+        "text": "`\"Spanish\"`, the text the student saw on the screen",
+        "correct": false,
+        "why": "That is what an option with no `value` would give. These options all have one."
+      },
+      {
+        "text": "`1`, the option's place in the list",
+        "correct": false,
+        "why": "A select hands over a value, not a position; the position is not stored anywhere."
+      },
+      {
+        "text": "`\"spanish\"`, the option's `value`",
+        "correct": true,
+        "why": "Right. The value is the id and the text is the title, the planner's rule for every list."
+      },
+      {
+        "text": "The `<option>` element that was chosen",
+        "correct": false,
+        "why": "`v-model` holds data, never an element; an element is what a template ref gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-j752fd32",
+    "version": 1,
+    "section": "binding-inputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The student empties the `Minutes` field of `Fields.vue`, an `<input type=\"number\" v-model=\"minutes\">`. What does `minutes` hold now?",
+    "hint": "Vue converts what it can convert, and leaves the rest.",
+    "choices": [
+      {
+        "text": "`0`, since an empty number field counts as zero",
+        "correct": false,
+        "why": "Vue never invents a zero; an empty field would then pass a rule that only checks the range."
+      },
+      {
+        "text": "`NaN`, the result of a conversion that failed",
+        "correct": false,
+        "why": "A conversion that fails leaves the original value rather than writing `NaN`."
+      },
+      {
+        "text": "`null`, to say the field has no value",
+        "correct": false,
+        "why": "Vue writes what the field gives, and an empty field gives text, not `null`."
+      },
+      {
+        "text": "`\"\"`, an empty string",
+        "correct": true,
+        "why": "Right. Only what parses becomes a number; the table says an empty field gives `\"\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8wd8sj1",
+    "version": 1,
+    "section": "binding-inputs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these fields hand `v-model` a value that is not a string, with no modifier? Choose all that apply.",
+    "hint": "Only one field type is converted by Vue on its own; the other way is to bind the value yourself.",
+    "choices": [
+      {
+        "text": "`<input type=\"number\">` holding 45",
+        "correct": true,
+        "why": "Right. Vue reads the field's `type` and converts it to a number."
+      },
+      {
+        "text": "`<input type=\"date\">` holding the 30th of October",
+        "correct": false,
+        "why": "A date field gives `\"2026-10-30\"`, a string, which is the format the planner already uses."
+      },
+      {
+        "text": "A `<select>` whose options bind `:value` to numbers",
+        "correct": true,
+        "why": "Right. Bound with `:value`, the option hands over whatever you gave it, a number included."
+      },
+      {
+        "text": "Radio buttons with `value=\"reading\"` and `value=\"practice\"`",
+        "correct": false,
+        "why": "A plain `value` attribute is text, so the radio gives the string of the one chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pm82fyt",
+    "version": 1,
+    "section": "modifiers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the first run of the `Modifiers` demo, `lazy` stayed `\"\"` although `verbs` had been typed. In the second it showed `\"verbs\"` after Tab. Why?",
+    "hint": "Which event does each kind of `v-model` listen to?",
+    "choices": [
+      {
+        "text": "`.lazy` waits a short delay after the last key, and the first run ended too soon",
+        "correct": false,
+        "why": "There is no timer in `.lazy`. It waits for an event, not for time to pass."
+      },
+      {
+        "text": "`.lazy` writes on `change`, which fires when the field is left",
+        "correct": true,
+        "why": "Right. Without it `v-model` always writes on `input`, once per key."
+      },
+      {
+        "text": "`.lazy` writes when the form around the field is submitted",
+        "correct": false,
+        "why": "There was no form in the demo; leaving the field was enough."
+      },
+      {
+        "text": "Tab re-rendered the page, and the ref had been written all along",
+        "correct": false,
+        "why": "The ref was empty until the focus left: the first run printed it while it still was."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytscc63r",
+    "version": 1,
+    "section": "modifiers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A text field has `v-model.number=\"minutes\"` and the student types `abc`. What does `minutes` hold?",
+    "hint": "Read what the lesson says `.number` does with a value that does not parse.",
+    "choices": [
+      {
+        "text": "`NaN`",
+        "correct": false,
+        "why": "That is what `parseFloat` returns, and Vue does not write it: it checks for it."
+      },
+      {
+        "text": "`0`, the number it falls back to",
+        "correct": false,
+        "why": "There is no fallback number; inventing one would hide the mistake."
+      },
+      {
+        "text": "The string `\"abc\"`",
+        "correct": true,
+        "why": "Right. A value that does not parse is left as it was: `.number` checks nothing, so it is a convenience and not validation."
+      },
+      {
+        "text": "`\"\"`, because the modifier refuses what is not a number",
+        "correct": false,
+        "why": "`.number` refuses nothing. Refusing is the validation's job, a few sections on."
+      }
+    ]
+  },
+  {
+    "id": "ex-z25z7z79",
+    "version": 1,
+    "section": "modifiers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A course title saved as ` Guitar`, with a space in front, sorts first and never matches a search. Written as `v-model.___`, the field stores `Guitar`.",
+    "hint": "The modifier that removes spaces at the ends.",
+    "blanks": [
+      {
+        "accept": [
+          "trim"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-re2t0mgy",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `useId()` give each copy of `FormField`?",
+    "hint": "Two fields of one form are two copies of the same component.",
+    "choices": [
+      {
+        "text": "The component's name, shared by the copies",
+        "correct": false,
+        "why": "Then two fields would share one id, and a label would reach the wrong input."
+      },
+      {
+        "text": "An id unique on the page, for its label and its error to point at",
+        "correct": true,
+        "why": "Right. The capture shows `v-0`, and the message's `v-0-error` is built from it, so every copy is joined to its own parts."
+      },
+      {
+        "text": "A random id drawn again on every render",
+        "correct": false,
+        "why": "An id that changed on every render would detach the label between two renders; it is fixed per copy."
+      },
+      {
+        "text": "The `id` the parent wrote on `<FormField>`",
+        "correct": false,
+        "why": "The parent writes none in this lesson; the component makes its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6y6bg88",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Remove `inheritAttrs: false` and `v-bind=\"$attrs\"` from `FormField`, and keep `type=\"number\" min=\"5\"` on the parent's tag. Where do those two attributes end up?",
+    "hint": "Lesson 6's fallthrough picks one element of the component.",
+    "choices": [
+      {
+        "text": "On the `<input>`, the first element inside the component",
+        "correct": false,
+        "why": "Fallthrough does not look for an input; it uses the root element."
+      },
+      {
+        "text": "They are dropped, as a component keeps its declared props and discards the rest",
+        "correct": false,
+        "why": "Undeclared attributes are not dropped: that is exactly what fallthrough is."
+      },
+      {
+        "text": "Vue refuses to compile a component given attributes it never declared",
+        "correct": false,
+        "why": "Vue accepts them and passes them on; nothing fails, which is why the mistake is easy to miss."
+      },
+      {
+        "text": "On the wrapping `<div class=\"field\">`, so the input stays a text field",
+        "correct": true,
+        "why": "Right. The root gets them, and a `<div>` with `type` does nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-3snwh405",
+    "version": 1,
+    "section": "the-contract",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `FieldContract`, `1.5` is typed into the hours field. How many minutes does `minutes` hold afterwards?",
+    "hint": "The writable computed's setter multiplies by 60 and rounds.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-6wx5gxw5",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the form have `shown` as well as `errors`?",
+    "hint": "One answers what is wrong; the other answers what to say.",
+    "choices": [
+      {
+        "text": "`errors` is recomputed on submit, and `shown` keeps it fresh in between",
+        "correct": false,
+        "why": "`errors` is a computed, so it is never stale; it is current at every keystroke."
+      },
+      {
+        "text": "`errors` is always current; `shown` stays empty until the first submit",
+        "correct": true,
+        "why": "Right. An untouched form is not greeted with three red messages, and after one try each one disappears as it is fixed."
+      },
+      {
+        "text": "`shown` caches `errors`, so the rules run once instead of on every key",
+        "correct": false,
+        "why": "A computed already caches; `shown` exists for when to speak, not for speed."
+      },
+      {
+        "text": "`shown` holds the sentences for the screen, `errors` short codes",
+        "correct": false,
+        "why": "Both hold the same sentences; `shown` is `errors` or nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-xdjsbdd6",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The form has `novalidate`, yet the minutes field still carries `min=\"5\"` and `max=\"240\"`. What are they there for?",
+    "hint": "`novalidate` stops one thing the browser does with them, not everything.",
+    "choices": [
+      {
+        "text": "The browser still blocks a submit outside the range, as a second check",
+        "correct": false,
+        "why": "Blocking the submit is precisely what `novalidate` stops."
+      },
+      {
+        "text": "Vue reads them to write the message *Between 5 and 240 whole minutes.*",
+        "correct": false,
+        "why": "The message is written by hand in `errors`; Vue never reads `min` or `max`."
+      },
+      {
+        "text": "The arrows of the number field, and the range a screen reader announces",
+        "correct": true,
+        "why": "Right. They describe the field; `novalidate` only stops the browser's bubble."
+      },
+      {
+        "text": "They are left over from before `novalidate` was added",
+        "correct": false,
+        "why": "They still do two jobs, both for the student rather than for the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8j1b3qa",
+    "version": 1,
+    "section": "validation",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which values of `draft.minutes` make `errors.minutes` a message? Choose all that apply.",
+    "hint": "Three conditions: whole, at least 5, at most 240.",
+    "choices": [
+      {
+        "text": "`4`",
+        "correct": true,
+        "why": "Right. Below the minimum of 5."
+      },
+      {
+        "text": "`240`",
+        "correct": false,
+        "why": "The rule is `<= 240`, so four hours exactly is allowed."
+      },
+      {
+        "text": "`22.5`",
+        "correct": true,
+        "why": "Right. Inside the range, but `Number.isInteger` refuses it: whole minutes only."
+      },
+      {
+        "text": "`\"\"`, from an emptied field",
+        "correct": true,
+        "why": "Right. An empty number field gives a string, and a string is not an integer."
+      },
+      {
+        "text": "`5`",
+        "correct": false,
+        "why": "The rule is `>= 5`; the minimum itself passes."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6vtd1wa",
+    "version": 1,
+    "section": "accessible-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The form was submitted with the course empty and 500 minutes. In the HTML it printed, which control had neither `aria-invalid` nor `aria-describedby`?",
+    "hint": "Which field had nothing wrong with it?",
+    "choices": [
+      {
+        "text": "The course `<select>`",
+        "correct": false,
+        "why": "It was empty, so it carried both, pointing at *Choose a course.*"
+      },
+      {
+        "text": "The date field",
+        "correct": true,
+        "why": "Right. It held today, so it was fine, and a field with nothing wrong is never marked."
+      },
+      {
+        "text": "The minutes field",
+        "correct": false,
+        "why": "500 is above 240, so it was marked and described by `v-2-error`."
+      },
+      {
+        "text": "None of them: a failed submit marks every field of the form",
+        "correct": false,
+        "why": "Each field is marked from its own error, not from the submit; the date had none."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kqxkjn3",
+    "version": 1,
+    "section": "accessible-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `aria-describedby=\"v-2-error\"` on the minutes input do for a screen-reader user?",
+    "hint": "Look at the table: one attribute names, one marks, one describes.",
+    "choices": [
+      {
+        "text": "It names the field, as `<label for>` does",
+        "correct": false,
+        "why": "The label names the field; the description comes after the name."
+      },
+      {
+        "text": "It moves the focus to the message when the submit fails",
+        "correct": false,
+        "why": "No attribute moves the focus; the planner moves it only after a success, with a template ref."
+      },
+      {
+        "text": "It reads the message after the field's name and value",
+        "correct": true,
+        "why": "Right. The field points at the `<p>` by id, so the message is heard every time the field is reached."
+      },
+      {
+        "text": "It announces the field as invalid when it is reached",
+        "correct": false,
+        "why": "That is `aria-invalid`'s job, the attribute beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgyqcvh5",
+    "version": 1,
+    "section": "accessible-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's form sets `aria-invalid=\"true\"` on every empty field from the start, and removes it as each one is filled. What goes wrong?",
+    "hint": "Think of the student who has not touched anything yet.",
+    "choices": [
+      {
+        "text": "The student notices no change: `aria-invalid` is ignored until a message exists",
+        "correct": false,
+        "why": "A screen reader announces it whether or not a message is there."
+      },
+      {
+        "text": "Every field is announced as wrong on the first visit, before anything was typed",
+        "correct": true,
+        "why": "Right. It is the screen-reader version of greeting a fresh form with three red messages."
+      },
+      {
+        "text": "The browser blocks the submit, because `novalidate` covers `min` and `max` and not ARIA",
+        "correct": false,
+        "why": "`aria-invalid` is for assistive technology; the browser's own checks never read it."
+      },
+      {
+        "text": "The `role=\"status\"` line reads the errors aloud as the page opens",
+        "correct": false,
+        "why": "The status line says only what it is given, and nothing writes errors into it."
+      }
+    ]
+  },
+  {
+    "id": "ex-67bbvadc",
+    "version": 1,
+    "section": "submitting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `submit()` set `saved.value = ''` before returning on an invalid form?",
+    "hint": "What would the status line still say from the session before?",
+    "choices": [
+      {
+        "text": "So an old *Added…* line does not linger over a new failure",
+        "correct": true,
+        "why": "Right. Nothing should say a session was added when none was."
+      },
+      {
+        "text": "So the live region reads the errors out instead",
+        "correct": false,
+        "why": "Nothing writes errors into the status line; each field announces its own when reached."
+      },
+      {
+        "text": "Because `role=\"status\"` refuses a new text while the form is invalid",
+        "correct": false,
+        "why": "The role refuses nothing; it announces whatever the paragraph is given."
+      },
+      {
+        "text": "It is step four, the reset for the next entry",
+        "correct": false,
+        "why": "The reset happens only after a success; this is the early return of step two."
+      }
+    ]
+  },
+  {
+    "id": "ex-57nmft0c",
+    "version": 1,
+    "section": "submitting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a successful submit the course is cleared and the minutes go back to 30. Why is the date left as it was?",
+    "hint": "Think of the next session the student adds.",
+    "choices": [
+      {
+        "text": "The date came in as a prop, and a component cannot write to its props",
+        "correct": false,
+        "why": "It was copied into `draft` once; the draft is the form's own, and it could be reset."
+      },
+      {
+        "text": "Clearing it would show *Choose a date.* at once",
+        "correct": false,
+        "why": "`tried` goes back to false in the same reset, so nothing would show."
+      },
+      {
+        "text": "A student planning a day adds its sessions one after another",
+        "correct": true,
+        "why": "Right. The reset keeps what the student would type again, and nothing else."
+      },
+      {
+        "text": "`Object.assign` cannot set a property back to a string",
+        "correct": false,
+        "why": "It sets `course` back to the string `''` on the line itself, as any reset would."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdfdv0qg",
+    "version": 1,
+    "section": "submitting",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Guitar was added on the 24th, for 25 minutes. How many minutes did the week's footer then say were planned?",
+    "hint": "The line under the week's list: `75 of … minutes done`.",
+    "value": 220,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-vbgdazn7",
+    "version": 1,
+    "section": "submitting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The form now sends each session to a server, and the request fails. What should the form do, as the lesson describes?",
+    "hint": "The student should not have to type everything twice.",
+    "choices": [
+      {
+        "text": "Clear the fields, so the next try starts clean",
+        "correct": false,
+        "why": "Clearing makes the student type the whole session again for a failure that was not theirs."
+      },
+      {
+        "text": "Say so in the status line, and keep what was typed",
+        "correct": true,
+        "why": "Right. The same line that says *Added…* says what failed, and the student tries again with every field as it was."
+      },
+      {
+        "text": "Set `tried` back to false and hide the messages",
+        "correct": false,
+        "why": "`tried` is about the student's own mistakes; a failed request is not one."
+      },
+      {
+        "text": "Disable the button until the page is reloaded",
+        "correct": false,
+        "why": "The button is disabled while sending, not after; a reload would lose every ref."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4ffvg1e",
+    "version": 1,
+    "section": "session-form",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `SessionForm`, how does the course `<select>` get the field's id and the id of its message?",
+    "hint": "The select is not `FormField`'s own `<input>`; it is content the form hands in.",
+    "choices": [
+      {
+        "text": "Through `$attrs`, which `inheritAttrs: false` sends on to it",
+        "correct": false,
+        "why": "`$attrs` goes to the default `<input>`; the select is not that element."
+      },
+      {
+        "text": "By calling `useId()` itself, which repeats the id within one form",
+        "correct": false,
+        "why": "Each call gives a new id; calling it again would detach the select from its label."
+      },
+      {
+        "text": "Through provide and inject, from the form down to each field",
+        "correct": false,
+        "why": "Nothing is provided here; the values travel one level, from the field to its slot."
+      },
+      {
+        "text": "From the scoped slot, which hands it `id`, `invalid` and `describedBy`",
+        "correct": true,
+        "why": "Right. Lesson 7's scoped slot: the field passes the three values, and the select wires them; nothing else is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-vk595gcx",
+    "version": 1,
+    "section": "session-form",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Pressed empty, the planner's form showed only *Choose a course.* Why not the other two messages?",
+    "hint": "What were the date and the minutes when the form opened?",
+    "choices": [
+      {
+        "text": "A form shows the message of its first invalid field and no other",
+        "correct": false,
+        "why": "Every invalid field shows its own; the 500-minute capture showed two at once."
+      },
+      {
+        "text": "The date started as today and the minutes as 30, both within the rules",
+        "correct": true,
+        "why": "Right. Only the course had no starting value."
+      },
+      {
+        "text": "Only the select is checked on submit; inputs are checked as they are typed in",
+        "correct": false,
+        "why": "All three rules sit in one computed, and `shown` reveals all of them on the first submit."
+      },
+      {
+        "text": "`shown` reveals one more error each time the button is pressed",
+        "correct": false,
+        "why": "`shown` is all of `errors` or nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3ajvzym",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens on a valid submit in the order the planner does it.",
+    "hint": "Stop, check, act, reset; the focus moves last.",
+    "items": [
+      "`.prevent` stops the browser's own submit",
+      "`tried` is set to true and `valid` is checked",
+      "The store is handed a copy of the draft",
+      "The status line says what was added",
+      "The course is cleared and the minutes go back to 30",
+      "The focus returns to the course field"
+    ]
+  },
+  {
+    "id": "ex-msypdh0s",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each attribute of the planner's form to what it does.",
+    "hint": "One description is something the planner deliberately does not do.",
+    "pairs": [
+      {
+        "left": "`aria-invalid=\"true\"`",
+        "right": "Marks the field as wrong when it is reached"
+      },
+      {
+        "left": "`aria-describedby`",
+        "right": "Has the message read after the field's value"
+      },
+      {
+        "left": "`role=\"status\"`",
+        "right": "Announces a new line without moving the focus"
+      },
+      {
+        "left": "`novalidate`",
+        "right": "Keeps the browser's bubble from blocking the submit"
+      }
+    ],
+    "right_distractors": [
+      "Moves the focus to the first invalid field"
+    ]
+  },
+  {
+    "id": "ex-mwtd6hx5",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a component, `v-model` is a prop plus a listener for `update:modelValue`. In the child, both halves are written as one call to the macro `___()`.",
+    "hint": "The same call `FormField` makes on its third line of script.",
+    "blanks": [
+      {
+        "accept": [
+          "defineModel"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-azf61vm6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new `FormField` for a session's title has the rule `title: draft.title ? '' : 'Write a title.'`. A student types three spaces and the rule lets them through. What on the parent's `v-model` would catch them?",
+    "hint": "A modifier on a component is applied to the value the component emits.",
+    "choices": [
+      {
+        "text": "`.trim`, so the three spaces arrive as `\"\"`",
+        "correct": true,
+        "why": "Right. Vue applies the modifier to all that `FormField` emits, and an empty string fails the rule: none of the spaces get through."
+      },
+      {
+        "text": "`.lazy`, so nothing is written until the field is left",
+        "correct": false,
+        "why": "On leaving, `.lazy` writes the three spaces all the same; it changes when, not what."
+      },
+      {
+        "text": "`.number`, which turns text that is not a number into `\"\"`",
+        "correct": false,
+        "why": "`.number` leaves text that does not parse as it was, spaces included."
+      },
+      {
+        "text": "None: a modifier works on `<input>` and is lost on a component",
+        "correct": false,
+        "why": "The `.number` on the hours field in `FieldContract` worked through a component; `.trim` does too."
+      }
+    ]
+  }
+]

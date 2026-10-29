@@ -1,0 +1,870 @@
+[
+  {
+    "id": "ex-w07r2j9n",
+    "version": 1,
+    "section": "errors-nobody-sees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A click handler throws in a student's browser. Who learns of it, with no monitoring?",
+    "choices": [
+      {
+        "text": "The host, from its access log",
+        "correct": false,
+        "why": "The host saw only a file being fetched."
+      },
+      {
+        "text": "Only that student, if anyone",
+        "correct": true,
+        "why": "Right: the error stays in that browser's console."
+      },
+      {
+        "text": "The GraphQL server",
+        "correct": false,
+        "why": "No request reached it."
+      },
+      {
+        "text": "The team, through the browser vendor",
+        "correct": false,
+        "why": "Browsers send page errors to nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhx11m7e",
+    "version": 1,
+    "section": "errors-nobody-sees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does no `catch` in the planner see?",
+    "choices": [
+      {
+        "text": "`saveDone` failing",
+        "correct": false,
+        "why": "`main.ts` catches it."
+      },
+      {
+        "text": "The first load failing when the page opens",
+        "correct": false,
+        "why": "`watch` has a `catch`."
+      },
+      {
+        "text": "A `TypeError` in a click handler",
+        "correct": true,
+        "why": "Right: only the `error` listener sees it."
+      },
+      {
+        "text": "A query that answers with errors",
+        "correct": false,
+        "why": "`watchPlanner` reports it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wevgt0a",
+    "version": 1,
+    "section": "errors-nobody-sees",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's chain in order.",
+    "items": [
+      "The page catches the error",
+      "It sends a report to the collector",
+      "The collector keeps it",
+      "A source map turns the stack back into source lines"
+    ]
+  },
+  {
+    "id": "ex-s65wn4av",
+    "version": 1,
+    "section": "catching-what-escapes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each event to what it reports.",
+    "pairs": [
+      {
+        "left": "`error`",
+        "right": "An exception nobody caught"
+      },
+      {
+        "left": "`unhandledrejection`",
+        "right": "A promise rejected with nothing waiting"
+      }
+    ],
+    "right_distractors": [
+      "A request that took too long",
+      "A console message"
+    ]
+  },
+  {
+    "id": "ex-bajvpsce",
+    "version": 1,
+    "section": "catching-what-escapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `report` wrap a thrown value that is not an `Error`?",
+    "choices": [
+      {
+        "text": "Only an `Error` has a stack",
+        "correct": true,
+        "why": "Right, and JavaScript lets anything be thrown."
+      },
+      {
+        "text": "`sendBeacon` refuses strings",
+        "correct": false,
+        "why": "It sends a string here."
+      },
+      {
+        "text": "The collector requires an `Error` object",
+        "correct": false,
+        "why": "It receives JSON."
+      },
+      {
+        "text": "TypeScript forbids throwing strings",
+        "correct": false,
+        "why": "It allows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-41p47c4h",
+    "version": 1,
+    "section": "catching-what-escapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner send reports with `navigator.sendBeacon` rather than waiting on a `fetch`?",
+    "choices": [
+      {
+        "text": "A beacon is encrypted",
+        "correct": false,
+        "why": "It is an ordinary `POST`."
+      },
+      {
+        "text": "`fetch` cannot send JSON",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "It survives the page closing",
+        "correct": true,
+        "why": "Right: the browser finishes it even then, which is when some errors happen."
+      },
+      {
+        "text": "A beacon retries until it succeeds",
+        "correct": false,
+        "why": "It does not retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8gsk35x",
+    "version": 1,
+    "section": "catching-what-escapes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An error from a script on another origin arrives as only *Script error.* What lets the page see the real one?",
+    "choices": [
+      {
+        "text": "A second `error` listener",
+        "correct": false,
+        "why": "Every listener gets the same hidden error."
+      },
+      {
+        "text": "`crossorigin` on the tag, and a CORS header",
+        "correct": true,
+        "why": "Right: the other origin has to agree to share it."
+      },
+      {
+        "text": "Loading the script with `async`",
+        "correct": false,
+        "why": "Timing does not change what is shared."
+      },
+      {
+        "text": "A source map for that script",
+        "correct": false,
+        "why": "The error itself is hidden, not only its position."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m68y28s",
+    "version": 1,
+    "section": "a-collector",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the collector answer to a report it accepted?",
+    "choices": [
+      {
+        "text": "200, with the report back",
+        "correct": false,
+        "why": "It sends nothing back."
+      },
+      {
+        "text": "204, with no content",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "201, with an id",
+        "correct": false,
+        "why": "It returns no id."
+      },
+      {
+        "text": "Nothing: beacons get no answer",
+        "correct": false,
+        "why": "The server answers; the page does not wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-d536a66z",
+    "version": 1,
+    "section": "a-collector",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the lesson's collector do with what browsers send? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Refuses a body over 16 kB",
+        "correct": true,
+        "why": "Right, with a 413."
+      },
+      {
+        "text": "Uses its own clock for the time",
+        "correct": true,
+        "why": "Right: a browser's clock can be wrong."
+      },
+      {
+        "text": "Limits reports per address",
+        "correct": false,
+        "why": "A public one would need that; this one does not do it."
+      },
+      {
+        "text": "Stores the sender's IP address",
+        "correct": false,
+        "why": "It stores only what the report says."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv9bnj34",
+    "version": 1,
+    "section": "a-collector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first report said `dev` as its release. Why?",
+    "choices": [
+      {
+        "text": "The dev server overrides the release",
+        "correct": false,
+        "why": "Nothing overrides it."
+      },
+      {
+        "text": "`dev` is the collector's default",
+        "correct": false,
+        "why": "The page sends the release."
+      },
+      {
+        "text": "`VITE_RELEASE` was not set",
+        "correct": true,
+        "why": "Right: `monitor.ts` falls back to `dev`."
+      },
+      {
+        "text": "The report came from Apollo",
+        "correct": false,
+        "why": "That is its message, not its release."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzkg66yv",
+    "version": 1,
+    "section": "a-collector",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which port does the lesson's collector listen?",
+    "value": 4001,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x6nyjs6x",
+    "version": 1,
+    "section": "a-production-stack",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was the monitor committed before the bug was added?",
+    "choices": [
+      {
+        "text": "The build refuses uncommitted files",
+        "correct": false,
+        "why": "It builds the working folder."
+      },
+      {
+        "text": "So `git restore` takes the bug out cleanly",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The release name needs a clean tree",
+        "correct": false,
+        "why": "`rev-parse` works either way."
+      },
+      {
+        "text": "Vite only minifies committed code",
+        "correct": false,
+        "why": "Vite knows nothing of Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-accts4dt",
+    "version": 1,
+    "section": "a-production-stack",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The report's source was `error`. What does that say?",
+    "choices": [
+      {
+        "text": "The collector refused it",
+        "correct": false,
+        "why": "It kept it."
+      },
+      {
+        "text": "Apollo caught it and reported it",
+        "correct": false,
+        "why": "Apollo reports nothing itself."
+      },
+      {
+        "text": "The error came from the server",
+        "correct": false,
+        "why": "It was thrown in the page."
+      },
+      {
+        "text": "Only the window's listener saw it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-z89mm3s7",
+    "version": 1,
+    "section": "a-production-stack",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the minified stack's line number say almost nothing?",
+    "choices": [
+      {
+        "text": "A minified build has only a few lines",
+        "correct": true,
+        "why": "Right: line 1 is most of the planner."
+      },
+      {
+        "text": "Browsers round line numbers",
+        "correct": false,
+        "why": "They report them exactly."
+      },
+      {
+        "text": "Line numbers are hidden in production",
+        "correct": false,
+        "why": "They are there."
+      },
+      {
+        "text": "Vite renumbers lines on every build",
+        "correct": false,
+        "why": "Lines are just few."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cwjrrax",
+    "version": 1,
+    "section": "source-maps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `sourcemap: \"hidden\"` leave out of the built files?",
+    "choices": [
+      {
+        "text": "The maps themselves",
+        "correct": false,
+        "why": "It writes them."
+      },
+      {
+        "text": "The `//# sourceMappingURL=` comment",
+        "correct": true,
+        "why": "Right: so no browser asks for a map."
+      },
+      {
+        "text": "The function names",
+        "correct": false,
+        "why": "Minifying renames them either way."
+      },
+      {
+        "text": "The original source",
+        "correct": false,
+        "why": "That is inside the map."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz0wzmsm",
+    "version": 1,
+    "section": "source-maps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must the maps not be deployed with the site?",
+    "choices": [
+      {
+        "text": "They make the page load slower",
+        "correct": false,
+        "why": "No browser asks for them."
+      },
+      {
+        "text": "Hosts refuse `.map` files",
+        "correct": false,
+        "why": "They serve them like any file."
+      },
+      {
+        "text": "They break the minified code",
+        "correct": false,
+        "why": "The code does not read them."
+      },
+      {
+        "text": "They hold the original source",
+        "correct": true,
+        "why": "Right, comments included, for anyone to read."
+      }
+    ]
+  },
+  {
+    "id": "ex-98tcxy37",
+    "version": 1,
+    "section": "source-maps",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Node reads a map with the class ___ from `node:module`, with no package.",
+    "hint": "One word, as in the code.",
+    "blanks": [
+      {
+        "accept": [
+          "SourceMap"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kd37mwa9",
+    "version": 1,
+    "section": "source-maps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The symbolicated stack said `src/main.ts:56:3` under the bug's line. What is line 56?",
+    "choices": [
+      {
+        "text": "The bug again",
+        "correct": false,
+        "why": "The bug is line 16."
+      },
+      {
+        "text": "Where `render` was called from",
+        "correct": true,
+        "why": "Right: the call in the callback given to `watch`; a frame is where a function was called from."
+      },
+      {
+        "text": "Where `watchErrors` was installed",
+        "correct": false,
+        "why": "That is line 8."
+      },
+      {
+        "text": "The `catch` that reported it",
+        "correct": false,
+        "why": "The window's listener reported it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jgsvnk9",
+    "version": 1,
+    "section": "releases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What goes wrong when a stack is read with the maps of a different build?",
+    "choices": [
+      {
+        "text": "The script refuses to run",
+        "correct": false,
+        "why": "It runs, which is the problem."
+      },
+      {
+        "text": "Positions point at other code",
+        "correct": true,
+        "why": "Right, confidently: wrong lines that look right."
+      },
+      {
+        "text": "Every frame prints as anonymous",
+        "correct": false,
+        "why": "It prints real-looking lines."
+      },
+      {
+        "text": "Nothing: maps are the same each build",
+        "correct": false,
+        "why": "Any change moves positions."
+      }
+    ]
+  },
+  {
+    "id": "ex-v41h3j4a",
+    "version": 1,
+    "section": "releases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a deploy, reports of an old bug keep arriving from the previous release. What are they?",
+    "choices": [
+      {
+        "text": "A sign the fix failed",
+        "correct": false,
+        "why": "The new release does not send them."
+      },
+      {
+        "text": "A new bug with the old message",
+        "correct": false,
+        "why": "They come from the old build."
+      },
+      {
+        "text": "Tabs still running the old build",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The collector replaying old reports",
+        "correct": false,
+        "why": "It replays nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k19ddas",
+    "version": 1,
+    "section": "what-a-report-carries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the report send `location.pathname` and not `location.href`?",
+    "choices": [
+      {
+        "text": "`href` is not available in a beacon",
+        "correct": false,
+        "why": "Both are strings in the page."
+      },
+      {
+        "text": "The path is shorter to store",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "The query string carries personal data",
+        "correct": true,
+        "why": "Right: a token, a search, an e-mail address."
+      },
+      {
+        "text": "Collectors refuse any address that contains `?`",
+        "correct": false,
+        "why": "This one accepts any JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4v6t0kf",
+    "version": 1,
+    "section": "what-a-report-carries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of the planner's report to why it is there.",
+    "pairs": [
+      {
+        "left": "`release`",
+        "right": "Which maps to read the stack with"
+      },
+      {
+        "left": "`source`",
+        "right": "Which part of the planner caught it"
+      },
+      {
+        "left": "`at`",
+        "right": "When, by a clock the team trusts"
+      },
+      {
+        "left": "`path`",
+        "right": "Which screen"
+      }
+    ],
+    "right_distractors": [
+      "Who the student is"
+    ]
+  },
+  {
+    "id": "ex-exgj6jjc",
+    "version": 1,
+    "section": "what-a-report-carries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a breadcrumb in an error report?",
+    "choices": [
+      {
+        "text": "The list of pages the site has",
+        "correct": false,
+        "why": "That is a sitemap."
+      },
+      {
+        "text": "Something that happened just before the error",
+        "correct": true,
+        "why": "Right: a click, a request, a console line."
+      },
+      {
+        "text": "A cookie that names the user",
+        "correct": false,
+        "why": "No such thing is needed."
+      },
+      {
+        "text": "One frame of the stack",
+        "correct": false,
+        "why": "Frames are the stack."
+      }
+    ]
+  },
+  {
+    "id": "ex-c14qeh5b",
+    "version": 1,
+    "section": "privacy-and-the-lgpd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report with no name and no e-mail in it. Can it still be personal data under the LGPD?",
+    "choices": [
+      {
+        "text": "No: only names and e-mails count",
+        "correct": false,
+        "why": "Any information about an identifiable person counts."
+      },
+      {
+        "text": "Yes, when other data ties it to someone",
+        "correct": true,
+        "why": "Right: beside the IP it came from, for instance."
+      },
+      {
+        "text": "No: error reports are exempt",
+        "correct": false,
+        "why": "The law has no such exemption."
+      },
+      {
+        "text": "Only if it is stored abroad",
+        "correct": false,
+        "why": "Where it is stored is a separate rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbjm24a7",
+    "version": 1,
+    "section": "privacy-and-the-lgpd",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each LGPD principle to what it means for error reports.",
+    "pairs": [
+      {
+        "left": "finalidade",
+        "right": "Used to fix faults and for nothing else"
+      },
+      {
+        "left": "necessidade",
+        "right": "Only the fields that purpose needs"
+      },
+      {
+        "left": "transparência",
+        "right": "The privacy notice says they are collected"
+      }
+    ],
+    "right_distractors": [
+      "Every report is sent to the ANPD"
+    ]
+  },
+  {
+    "id": "ex-n6z6j0kt",
+    "version": 1,
+    "section": "privacy-and-the-lgpd",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The team sends reports to a service whose servers are in another country. What does the LGPD treat that as?",
+    "choices": [
+      {
+        "text": "Nothing special, if the service is well known",
+        "correct": false,
+        "why": "Fame is not one of the law's cases."
+      },
+      {
+        "text": "A breach, always forbidden",
+        "correct": false,
+        "why": "Article 33 lists when it is allowed."
+      },
+      {
+        "text": "An international transfer",
+        "correct": true,
+        "why": "Right, allowed only in the cases article 33 lists."
+      },
+      {
+        "text": "The service's problem, not the team's",
+        "correct": false,
+        "why": "The team is the controller."
+      }
+    ]
+  },
+  {
+    "id": "ex-n280jjy0",
+    "version": 1,
+    "section": "hosted-services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Sentry's setup, which value must be kept secret?",
+    "choices": [
+      {
+        "text": "The DSN",
+        "correct": false,
+        "why": "It is in every copy of the page."
+      },
+      {
+        "text": "The release name",
+        "correct": false,
+        "why": "It is a commit hash."
+      },
+      {
+        "text": "The auth token",
+        "correct": true,
+        "why": "Right: the build uploads maps with it, so it goes in the pipeline's secrets."
+      },
+      {
+        "text": "The project's name",
+        "correct": false,
+        "why": "It is printed in the config file."
+      }
+    ]
+  },
+  {
+    "id": "ex-abykn2xh",
+    "version": 1,
+    "section": "hosted-services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `sendDefaultPii: false` stop the Sentry SDK from doing?",
+    "choices": [
+      {
+        "text": "Sending any report at all",
+        "correct": false,
+        "why": "Reports still go."
+      },
+      {
+        "text": "Attaching IP addresses on its own",
+        "correct": true,
+        "why": "Right, and cookies and headers too."
+      },
+      {
+        "text": "Uploading source maps",
+        "correct": false,
+        "why": "That is the Vite plugin's job."
+      },
+      {
+        "text": "Reading the release name from the environment",
+        "correct": false,
+        "why": "`release` is passed separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wh2syrs",
+    "version": 1,
+    "section": "alerts-people-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these deserves an alert that interrupts somebody?",
+    "choices": [
+      {
+        "text": "An old release still sending a known error",
+        "correct": false,
+        "why": "Those are old tabs."
+      },
+      {
+        "text": "A `ResizeObserver loop` message",
+        "correct": false,
+        "why": "Almost never a user's problem."
+      },
+      {
+        "text": "An issue new in the latest release",
+        "correct": true,
+        "why": "Right: new in this release."
+      },
+      {
+        "text": "An error from a browser extension",
+        "correct": false,
+        "why": "Not the planner's bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn263bj2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner's errors should go to a hosted service. Which plan keeps the lesson's rules?",
+    "choices": [
+      {
+        "text": "Hidden maps uploaded per release, a secret token, lean reports",
+        "correct": true,
+        "why": "Right, with the privacy notice updated to say so."
+      },
+      {
+        "text": "Maps published beside the site, so that the service can fetch them itself",
+        "correct": false,
+        "why": "That publishes the source."
+      },
+      {
+        "text": "The auth token in a `VITE_` variable",
+        "correct": false,
+        "why": "That puts it in every copy of the page."
+      },
+      {
+        "text": "The user's e-mail in every report",
+        "correct": false,
+        "why": "Not needed to find a bug."
+      }
+    ]
+  }
+]

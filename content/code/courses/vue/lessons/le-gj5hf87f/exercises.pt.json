@@ -1,0 +1,490 @@
+{
+  "ex-x930k55g": {
+    "prompt": "Por que `watch(minutes.value, …)` não faz o que o autor queria?",
+    "hint": "O que é `minutes.value` no momento em que a linha roda?",
+    "choices": [
+      {
+        "text": "Ele observa `minutes` em profundidade, o que é mais lento",
+        "why": "A profundidade não é o problema: nada reativo foi passado."
+      },
+      {
+        "text": "Ele passa o número 30, que o Vue não consegue rastrear",
+        "why": "Certo. Passe o próprio ref; o Vue avisa sobre uma fonte assim."
+      },
+      {
+        "text": "Ele dispara a cada renderização, e não a cada mudança",
+        "why": "Ele nunca dispara. O que ele recebeu é um valor, não uma fonte."
+      },
+      {
+        "text": "Funciona, sem o valor antigo",
+        "why": "O valor antigo vem com qualquer fonte que funcione; esta não funciona."
+      }
+    ]
+  },
+  "ex-d4xqv5de": {
+    "prompt": "No `WatchSources`, o watcher do getter `() => minutes.value >= 60` imprimiu uma vez, em 60. Por que ele ficou calado em 45?",
+    "hint": "O que o getter devolveu antes dessa mudança, e depois dela?",
+    "choices": [
+      {
+        "text": "Um getter pula a primeira mudança que vê",
+        "why": "Não existe essa regra; o getter roda de novo a cada mudança do que ele leu."
+      },
+      {
+        "text": "O watcher do array pegou essa mudança antes",
+        "why": "Cada watcher é independente; um disparar não tira nada dos outros."
+      },
+      {
+        "text": "O resultado era `false` antes e depois",
+        "why": "Certo. 30 e 45 dão `false`, e o callback roda quando o resultado muda; 60 é o primeiro `true`."
+      },
+      {
+        "text": "O Vue rastreou `minutes` a partir de 60, quando o getter devolveu algo pela primeira vez",
+        "why": "Ele rastreou `minutes` desde a primeira execução; o getter rodou em 45 também, e devolveu `false` de novo."
+      }
+    ]
+  },
+  "ex-9pt8h018": {
+    "prompt": "Na transcrição do `WatchSources`, quantos dos três watchers dispararam no clique em `Guitar`?",
+    "hint": "Conte as linhas sob `-- click #guitar`."
+  },
+  "ex-c5adg715": {
+    "prompt": "No `DeepAndOnce`, quais watchers dispararam no primeiro clique em `Push a session`? Escolha todas as que se aplicam.",
+    "hint": "Um push muda o array que já está em `.value`.",
+    "choices": [
+      {
+        "text": "O que tem `deep: true`",
+        "why": "Certo. Um push muda algo lá dentro, e um watcher deep lê tudo lá dentro."
+      },
+      {
+        "text": "O watcher simples no ref",
+        "why": "Nada foi substituído, então um watcher raso não viu nada; ele perdeu os dois pushes."
+      },
+      {
+        "text": "O que observa o objeto `reactive`",
+        "why": "Certo. Um objeto `reactive` é observado em profundidade sem você pedir."
+      },
+      {
+        "text": "O que tem `immediate: true`",
+        "why": "Ele rodou quando a página abriu e depois se comporta como um watcher simples, que um push não acorda."
+      },
+      {
+        "text": "O que tem `once: true` e deep",
+        "why": "Certo. Ele é deep, e esta foi a primeira mudança dele; ele não rodou de novo."
+      }
+    ]
+  },
+  "ex-afz99zyr": {
+    "prompt": "O watcher do objeto `reactive` `plan` disparou nos dois pushes e não em `Replace the list`. Por que não no replace?",
+    "hint": "Veja a que o `replace()` atribui.",
+    "choices": [
+      {
+        "text": "Um objeto `reactive` é observado de forma rasa",
+        "why": "O contrário: ele é observado em profundidade sem você pedir, e por isso viu os pushes."
+      },
+      {
+        "text": "Copiar um array com `[...]` não é mudança reativa nenhuma",
+        "why": "Os watchers do próprio ref dispararam no replace, então foi uma mudança; só não em `plan`."
+      },
+      {
+        "text": "Ele já tinha gastado a sua única execução",
+        "why": "Esse é o watcher com `once`; este não tem `once`."
+      },
+      {
+        "text": "O `replace` deu um array novo ao ref `sessions` e deixou `plan` em paz",
+        "why": "Certo. Os dois botões mudam coisas diferentes, e só o `push` mexeu em `plan`."
+      }
+    ]
+  },
+  "ex-gb4dnzfn": {
+    "prompt": "Uma lista de dez mil sessões é observada com `deep: true` só para mostrar quantas são. Para onde aponta o conselho da aula?",
+    "hint": "Qual é a única coisa de que este watcher precisa?",
+    "choices": [
+      {
+        "text": "Acrescentar `immediate: true`, para que o passeio aconteça uma vez",
+        "why": "O `immediate` acrescenta uma execução no começo; cada mudança depois continua sendo um passeio pela árvore inteira."
+      },
+      {
+        "text": "Um getter: `() => sessions.value.length`",
+        "why": "Certo. Ele dispara quando a contagem muda e não lê mais nada."
+      },
+      {
+        "text": "`flush: 'sync'`, para baixar o custo",
+        "why": "O `'sync'` o roda a cada escrita, o que custa mais, não menos."
+      },
+      {
+        "text": "Passar a lista para um `reactive` em vez de um ref",
+        "why": "Um objeto `reactive` é observado em profundidade de qualquer jeito: o mesmo passeio, sem a opção escrita."
+      }
+    ]
+  },
+  "ex-byf1x41n": {
+    "prompt": "No `EffectTracking`, o efeito assíncrono lê `note`, e mesmo assim `Add a note` não rodou nada de novo. Por quê?",
+    "hint": "Em que ponto da função `note` é lido?",
+    "choices": [
+      {
+        "text": "`note` começa como string vazia, que não é reativa",
+        "why": "Uma string vazia num ref é tão reativa quanto qualquer outro valor."
+      },
+      {
+        "text": "Um efeito assíncrono roda uma vez, quando a página abre, e para",
+        "why": "Ele rodou de novo em `Spanish`, porque tinha lido `course` antes do `await`."
+      },
+      {
+        "text": "O primeiro efeito já tinha tomado `note` para si",
+        "why": "Efeitos não dividem nem tomam fontes, e o primeiro nem leu `note`."
+      },
+      {
+        "text": "Ele é lido depois do `await`, quando o Vue já tinha parado de registrar",
+        "why": "Certo. O rastreamento dura enquanto a função roda de forma síncrona; as leituras depois disso não contam nada."
+      }
+    ]
+  },
+  "ex-nqvjchnp": {
+    "prompt": "Num `watchEffect` assíncrono, leia cada fonte de que você depende antes do primeiro ___, em constantes locais.",
+    "hint": "A palavra-chave em que a função pausa.",
+    "blanks": [
+      {
+        "accept": [
+          "await"
+        ]
+      }
+    ]
+  },
+  "ex-7bb0aca5": {
+    "prompt": "Por que um `watchEffect` roda uma vez assim que é criado?",
+    "hint": "Ele não tem argumento de fonte.",
+    "choices": [
+      {
+        "text": "Ele é um `watch` com `immediate: true`, escrito mais curto",
+        "why": "Ele difere mais do que isso: não tem fontes nomeadas nem valor antigo."
+      },
+      {
+        "text": "O Vue roda todo watcher uma vez quando um componente é montado",
+        "why": "Um `watch` não roda até a primeira mudança, a não ser com `immediate`."
+      },
+      {
+        "text": "Rodá-lo é como ele encontra as suas fontes",
+        "why": "Certo. A primeira execução registra o que ele lê, e é isso que ele passa a observar."
+      },
+      {
+        "text": "Para guardar os valores antigos antes de qualquer mudança",
+        "why": "Um `watchEffect` não dá valor antigo; a tabela desta seção diz isso."
+      }
+    ]
+  },
+  "ex-yr1wagg0": {
+    "prompt": "Um clique em `Add two` no `FlushTiming`. Quantas vezes o watcher `'sync'` rodou?",
+    "hint": "Conte as linhas que começam com `sync:`."
+  },
+  "ex-eah3g7a2": {
+    "prompt": "Um watcher rola uma lista até a sessão recém-acrescentada. De que `flush` ele precisa?",
+    "hint": "O elemento da sessão nova já existe?",
+    "choices": [
+      {
+        "text": "`'pre'`, já que é o padrão",
+        "why": "Antes de redesenhar, o elemento da sessão nova ainda não existe."
+      },
+      {
+        "text": "`'sync'`, para que rode no momento da escrita",
+        "why": "No momento da escrita a página ainda mostra a lista antiga, como o `page says 0` mostrou."
+      },
+      {
+        "text": "Qualquer um dos três, porque o valor é o mesmo em todos",
+        "why": "O valor é o mesmo; a página não, e rolar precisa da página."
+      },
+      {
+        "text": "`'post'`",
+        "why": "Certo. O elemento só existe depois de redesenhar."
+      }
+    ]
+  },
+  "ex-jhjgsrne": {
+    "prompt": "O watcher padrão imprimiu `pre:  count 2, page says 0`. O que essa linha mostra?",
+    "hint": "Compare com as linhas `sync` e a linha `post` em volta dela.",
+    "choices": [
+      {
+        "text": "Ele rodou na primeira escrita e perdeu a segunda",
+        "why": "Então teria dito count 1, como a primeira linha `sync` disse."
+      },
+      {
+        "text": "Uma vez, com o valor final, antes de redesenhar",
+        "why": "Certo. As duas escritas foram agrupadas, e a página ainda não tinha sido redesenhada."
+      },
+      {
+        "text": "O redesenho falhou e a página ficou em 0",
+        "why": "A linha `post`, um instante depois, viu a página dizer 2."
+      },
+      {
+        "text": "Ele leu a página antes de o Vue sequer começar a fila daquele clique",
+        "why": "Ele roda a partir da fila; o lugar dele na fila é antes de redesenhar."
+      }
+    ]
+  },
+  "ex-gmppactm": {
+    "prompt": "Por que o watcher descuidado acaba mostrando as notas de statistics, enquanto o curso escolhido é Spanish?",
+    "hint": "Veja quando cada resposta chegou.",
+    "choices": [
+      {
+        "text": "Statistics foi pedido primeiro, então o Vue mostra a resposta dele",
+        "why": "O Vue não ordena as respostas; a última atribuição vence."
+      },
+      {
+        "text": "A resposta lenta chegou por último e sobrescreveu a rápida",
+        "why": "Certo. As duas requisições estavam em andamento; statistics respondeu 500 milissegundos depois de Spanish."
+      },
+      {
+        "text": "A requisição de Spanish falhou sem avisar",
+        "why": "Nada falhou: Spanish respondeu depois de 100 milissegundos e foi mostrado."
+      },
+      {
+        "text": "O watcher disparou na primeira mudança e não na segunda",
+        "why": "Ele disparou nas duas; é por isso que havia duas requisições em andamento."
+      }
+    ]
+  },
+  "ex-jxy9vkzd": {
+    "prompt": "Quando o Vue chama uma função registrada com `onWatcherCleanup`?",
+    "hint": "Na demo, a flag da execução de statistics foi ligada quando Spanish foi escolhido.",
+    "choices": [
+      {
+        "text": "Quando o `await` dentro do callback se resolve",
+        "why": "A chegada da resposta não chama nada; a próxima mudança chama."
+      },
+      {
+        "text": "Depois de o componente redesenhar",
+        "why": "Isso é o `flush: 'post'`, que trata do callback, não da limpeza."
+      },
+      {
+        "text": "Logo antes de o watcher rodar de novo, e quando ele é parado",
+        "why": "Certo. Por isso a execução de statistics foi marcada como velha antes de a de Spanish começar."
+      },
+      {
+        "text": "Uma vez, quando o componente é removido da página",
+        "why": "A remoção para o watcher e a chama, mas ela também é chamada antes de cada nova execução."
+      }
+    ]
+  },
+  "ex-ymvgw3zz": {
+    "prompt": "Sobre cancelar uma requisição velha, quais destas a seção sustenta? Escolha todas as que se aplicam.",
+    "hint": "Uma flag ignora; um `AbortController` interrompe.",
+    "choices": [
+      {
+        "text": "Com uma flag `stale`, a requisição lenta continua até o fim",
+        "why": "Certo. A flag só decide que a resposta dela vai para o lixo."
+      },
+      {
+        "text": "Uma limpeza registrada depois do primeiro `await` também fica ligada à execução",
+        "why": "Registrada depois de um `await`, o Vue não consegue saber a que execução ela pertence, e avisa."
+      },
+      {
+        "text": "`controller.abort()` faz o `fetch` pendente rejeitar com um `AbortError`",
+        "why": "Certo. Então as linhas depois do `fetch` nunca rodam para o curso velho."
+      },
+      {
+        "text": "Abortar também precisa da flag `stale`, senão a resposta velha ainda chega",
+        "why": "Um `fetch` abortado rejeita, então a atribuição depois dele nunca acontece."
+      }
+    ]
+  },
+  "ex-xnfnn4wd": {
+    "prompt": "Desde o Vue 3.5, `___(fn)`, chamada dentro do callback de um watcher, registra uma função que pertence àquela execução.",
+    "hint": "O `StaleAnswer` a importa de `vue`.",
+    "blanks": [
+      {
+        "accept": [
+          "onWatcherCleanup"
+        ]
+      }
+    ]
+  },
+  "ex-00fgnn2a": {
+    "prompt": "Depois de `Remove the listener`, só o watcher tardio viu o tick 3. Por que esse?",
+    "hint": "Veja quando cada um dos três foi criado.",
+    "choices": [
+      {
+        "text": "Ele foi o último a ser registrado, então o Vue o mantém",
+        "why": "O Vue não mantém nada pela ordem; o que importa é se um componente estava sendo montado."
+      },
+      {
+        "text": "Ele observa `tick` pelo módulo, e não pelo componente",
+        "why": "Os três observam o mesmo `tick`, do mesmo módulo."
+      },
+      {
+        "text": "O watcher do setup tinha chamado `stop()` no primeiro tick",
+        "why": "Esse foi o watcher que se para sozinho; o do setup viu o tick 2 e depois parou junto com o componente."
+      },
+      {
+        "text": "Foi criado num `setTimeout`, depois do setup",
+        "why": "Certo. Nenhum componente estava sendo montado naquele momento, então ele não pertence a ninguém e remover o componente não o para."
+      }
+    ]
+  },
+  "ex-wbmw9feq": {
+    "prompt": "Num `<script setup>`, um watcher é criado dentro de `loadCourses().then(() => { … })`. O componente é mostrado e escondido muitas vezes. O que decorre da aula?",
+    "hint": "O que o Vue sabe sobre o componente quando o callback do `.then()` roda?",
+    "choices": [
+      {
+        "text": "Os watchers se acumulam: guarde cada função de parar e chame-a no `onUnmounted`",
+        "why": "Certo. Criado num callback que roda depois, ele não pertence a ninguém e sobrevive ao componente."
+      },
+      {
+        "text": "Nada muda: o `.then()` está escrito no nível de cima do script",
+        "why": "Está escrito ali, mas o callback roda depois, quando nenhum componente está sendo montado."
+      },
+      {
+        "text": "O Vue o para na próxima mudança da fonte",
+        "why": "Uma mudança o roda; nada para um watcher que não pertence a ninguém até a página fechar."
+      },
+      {
+        "text": "Ele roda uma vez e para, como com `{ once: true }`",
+        "why": "O `once` é uma opção que você passa; um `await` não a acrescenta."
+      }
+    ]
+  },
+  "ex-fwr6twjh": {
+    "prompt": "O que `watch` e `watchEffect` devolvem?",
+    "hint": "O watcher que se para sozinho no `Listener` o guarda numa constante.",
+    "choices": [
+      {
+        "text": "O primeiro resultado do watcher",
+        "why": "Para um `watch`, nada rodou ainda quando ele retorna."
+      },
+      {
+        "text": "Uma promise que se resolve na primeira mudança",
+        "why": "Não há promise; a demo chama o que foi devolvido diretamente, como função."
+      },
+      {
+        "text": "Um ref que guarda o último valor",
+        "why": "Isso está mais perto de um `computed`; o que um watcher devolve é como você o para."
+      },
+      {
+        "text": "Uma função que para o watcher",
+        "why": "Certo. No Vue 3.5 a mesma alça também tem `pause()` e `resume()`."
+      }
+    ]
+  },
+  "ex-n1g9qhpp": {
+    "prompt": "Por que um watcher raso em `sessions` basta para manter a cópia do navegador em dia?",
+    "hint": "Como as regras do planner mudam a lista?",
+    "choices": [
+      {
+        "text": "O `localStorage` mantém a própria cópia em dia com o ref",
+        "why": "O `localStorage` guarda o que recebeu por último; nada nele acompanha o ref."
+      },
+      {
+        "text": "As regras devolvem arrays novos, então cada mudança é um `.value` novo",
+        "why": "Certo. `toggleDone` e `addSession` nunca mudam a lista que recebem."
+      },
+      {
+        "text": "O `JSON.stringify` lê a lista inteira, o que torna o watcher deep",
+        "why": "Ele lê a lista quando o callback roda; não decide quando o callback roda."
+      },
+      {
+        "text": "O planner nunca muda as suas sessões",
+        "why": "Ainda não; as aulas 5 e 14 mudam, e substituem a lista a cada vez."
+      }
+    ]
+  },
+  "ex-az5ckbws": {
+    "prompt": "O `courses.json` ganha uma sessão nova. Um estudante cujo navegador tem uma cópia salva recarrega a página. O que o planner mostra?",
+    "hint": "Leia a linha que atribui `sessions.value`.",
+    "choices": [
+      {
+        "text": "A lista do arquivo, porque o arquivo é a fonte",
+        "why": "As sessões vêm da cópia do navegador quando ela existe; só os cursos vêm do arquivo."
+      },
+      {
+        "text": "As duas listas, juntas",
+        "why": "Nada as junta; `saved ? JSON.parse(saved) : data.sessions` escolhe uma das duas."
+      },
+      {
+        "text": "Um erro dizendo que os cursos não puderam ser carregados",
+        "why": "Isso é o que uma cópia que não é JSON válido causaria, não um arquivo mudado."
+      },
+      {
+        "text": "A cópia salva, sem a sessão nova",
+        "why": "Certo. A cópia vence, e a aula chama isso de resposta certa para sessões que pertencem ao estudante."
+      }
+    ]
+  },
+  "ex-hyksx4g0": {
+    "prompt": "Por que a captura do planner acrescenta `--do 'goto /'`?",
+    "hint": "O que o `look` tem guardado quando começa?",
+    "choices": [
+      {
+        "text": "O `look` começa sempre com um navegador vazio",
+        "why": "Certo. Então a página é carregada duas vezes no mesmo navegador, e a segunda carga encontra a cópia que a primeira salvou."
+      },
+      {
+        "text": "Para esperar o watcher terminar de salvar",
+        "why": "O watcher salva assim que a lista é atribuída; a segunda carga serve para ler a cópia de volta."
+      },
+      {
+        "text": "Para limpar o `localStorage` antes da execução",
+        "why": "Faz o contrário: mantém o mesmo navegador, com o que foi guardado."
+      },
+      {
+        "text": "A primeira carga lê a cópia e a segunda o arquivo",
+        "why": "É o contrário: a primeira visita leu o arquivo, a segunda a cópia."
+      }
+    ]
+  },
+  "ex-rs58ka92": {
+    "prompt": "Ponha em ordem o que acontece em volta do watcher cuidadoso do `StaleAnswer`, do clique em `Statistics` ao fim da espera.",
+    "hint": "A limpeza roda antes de a próxima execução começar, não quando uma resposta chega.",
+    "items": [
+      "O curso vira statistics, e a execução dele pergunta ao servidor lento",
+      "O curso vira Spanish",
+      "O Vue chama a limpeza da execução de statistics, que liga o `stale` dela",
+      "A execução de Spanish pergunta, e a resposta dela é mostrada depois de 100 milissegundos",
+      "A resposta de statistics chega, e a execução dela a descarta"
+    ]
+  },
+  "ex-vvm7bay7": {
+    "prompt": "Associe cada opção ao que ela muda num watcher.",
+    "hint": "Uma descrição da direita pertence a uma opção que não está à esquerda.",
+    "pairs": [
+      {
+        "left": "`deep: true`",
+        "right": "percebe uma mudança em qualquer lugar dentro do valor"
+      },
+      {
+        "left": "`immediate: true`",
+        "right": "roda uma vez antes de qualquer mudança"
+      },
+      {
+        "left": "`once: true`",
+        "right": "para depois da primeira mudança"
+      },
+      {
+        "left": "`flush: 'post'`",
+        "right": "roda depois de o componente redesenhar"
+      }
+    ],
+    "right_distractors": [
+      "roda no momento de cada escrita"
+    ]
+  },
+  "ex-jy44y472": {
+    "prompt": "`watchEffect(async () => { await loadSettings(); notes.value = await lookUp(course.value) })`. O estudante escolhe outro curso. O que acontece?",
+    "hint": "Onde `course` é lido, em relação ao primeiro `await`?",
+    "choices": [
+      {
+        "text": "O efeito roda de novo e busca as notas do curso novo",
+        "why": "Isso exige `course` lido antes do primeiro `await`; aqui ele é lido depois."
+      },
+      {
+        "text": "Ele roda de novo duas vezes, uma para cada `await`",
+        "why": "Os `await`s não geram execuções; mudanças em fontes rastreadas geram, e este efeito não rastreou nenhuma."
+      },
+      {
+        "text": "O Vue avisa que `course` foi lido tarde demais, e roda de novo assim mesmo",
+        "why": "Não há aviso; esse silêncio é a armadilha que a aula aponta."
+      },
+      {
+        "text": "Nada: `course` foi lido depois de um `await`, então não é uma fonte",
+        "why": "Certo. As notas continuam as do primeiro curso, e nada avisa."
+      }
+    ]
+  }
+}

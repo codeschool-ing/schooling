@@ -1,0 +1,32 @@
+---
+title: O que um cliente GraphQL acrescenta
+version: 1
+---
+
+**Um cliente GraphQL é um cache com uma conexão de rede atrás.** O `request` da aula 9 mandava uma
+consulta e devolvia a resposta, e não guardava nada. Toda tela que precisava de uma sessão perguntava ao
+servidor de novo, e nada avisava a lista de cursos de que uma sessão tinha mudado na página do curso. Um
+cliente guarda cada objeto que recebeu, responde dessa memória quando pode e avisa cada parte da página que
+lê um objeto quando esse objeto muda.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 240\" role=\"img\" aria-label=\"Duas partes de uma página, a página do curso e um resumo da semana, observam cada uma uma consulta. As duas consultas apontam, no cache do Apollo, para a mesma entrada, Session:6. A resposta de uma mutation vinda do servidor atualiza essa entrada, e as duas partes da página se redesenham. Um segundo pedido de dados que já estão no cache é respondido sem o servidor.\"><text x=\"20\" y=\"20\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a página</text><rect x=\"20\" y=\"34\" width=\"170\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"105\" y=\"59\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">página do curso</text><rect x=\"20\" y=\"110\" width=\"170\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"105\" y=\"135\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">resumo da semana</text><text x=\"290\" y=\"20\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">o cache</text><rect x=\"280\" y=\"34\" width=\"200\" height=\"170\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><rect x=\"296\" y=\"48\" width=\"168\" height=\"26\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"380\" y=\"61\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">Course:javascript</text><rect x=\"296\" y=\"86\" width=\"168\" height=\"26\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"380\" y=\"99\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">Session:4</text><rect x=\"296\" y=\"124\" width=\"168\" height=\"26\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"380\" y=\"137\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--phosphor)\">Session:6</text><rect x=\"296\" y=\"162\" width=\"168\" height=\"26\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"380\" y=\"175\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ROOT_QUERY</text><line x1=\"192\" y1=\"59\" x2=\"294\" y2=\"121\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></line><polygon points=\"294.0,121.0 286.1,119.8 289.3,114.5\" fill=\"var(--phosphor)\"></polygon><line x1=\"192\" y1=\"135\" x2=\"294\" y2=\"125\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></line><polygon points=\"294.0,125.0 287.0,128.8 286.4,122.6\" fill=\"var(--phosphor)\"></polygon><text x=\"590\" y=\"20\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">o servidor</text><rect x=\"530\" y=\"60\" width=\"120\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"590\" y=\"85\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">/graphql</text><line x1=\"528\" y1=\"100\" x2=\"466\" y2=\"121\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></line><polygon points=\"466.0,121.0 472.0,115.7 474.0,121.6\" fill=\"var(--amber)\"></polygon><text x=\"560\" y=\"138\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">a resposta do markDone</text><text x=\"560\" y=\"154\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">atualiza a entrada</text><text x=\"380\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">pedido de novo: respondido aqui, sem requisição</text></svg>", "caption": "Uma entrada por objeto: uma mudança em Session:6 chega a toda consulta que a mostra, e uma pergunta repetida não sai do navegador."}
+```
+
+| | o `request` da aula 9 | um cliente como Apollo ou Relay |
+|---|---|---|
+| um segundo pedido dos mesmos dados | vai ao servidor | respondido pelo cache |
+| a resposta de uma mutation | devolvida a quem chamou | gravada no cache, e toda consulta que mostra aquele objeto se atualiza |
+| dois componentes pedindo ao mesmo tempo | dois pedidos | um pedido, compartilhado |
+| uma mudança que o servidor recusa | a tela fica errada | uma mudança otimista é desfeita |
+| o código que você acrescenta à página | doze linhas | uma biblioteca própria, medida nesta aula |
+
+Os dois clientes desta aula fazem a mesma promessa central e diferem no que pedem de você. O **Apollo
+Client** funciona com qualquer schema e qualquer framework, inclusive nenhum, e deixa você organizar as
+consultas como quiser. O **Relay**, que a Meta usa nos próprios apps, precisa de um schema que siga as
+convenções dele e de um compilador no build, e em troca obriga cada componente a declarar exatamente os
+campos que lê.
+
+O planner passa para o Apollo aqui, porque ele roda em TypeScript puro e contra o servidor da aula 9 do
+jeito que está. O Relay é mostrado, e não executado: ele só funciona em React, e o planner não tem
+framework.
