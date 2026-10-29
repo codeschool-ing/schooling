@@ -52,7 +52,7 @@ arrived, `App` rendered again with `status` set to `'ready'`, went past the `ret
 more effects. React kept a list of six slots and was asked for eight.
 
 The console says it twice. First, a table of the hooks `App` called on the previous render against
-the ones it called on this one, where slot 7 was `undefined` and is now a `useEffect`; `look` prints
+the ones it called on this one, where slot 7 was `undefined` and is now a `useEffect`. `look` prints
 React's message before its `%s` placeholders are filled in with the component's name, which your
 browser's console fills in for you. Then the error itself: **"Rendered more hooks than during the
 previous render"**, and a warning that suggests an error boundary, the subject of lesson 12. An

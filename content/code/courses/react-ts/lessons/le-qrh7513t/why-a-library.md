@@ -27,7 +27,7 @@ caching is about knowing when a copy has gone stale.
 ```
 
 TanStack Query, still widely called React Query, is a cache for server data with a hook in front of
-it. You tell it how to fetch something and give the data a key; it decides when to fetch, keeps the
+it. You tell it how to fetch something and give the data a key. It decides when to fetch, keeps the
 answer under that key, shares it with every component that asks for the same key, and fetches again
 when told the data has changed or when it judges the copy stale. Lesson 9 ended on this: global state
 libraries hold client state, and this is the tool for the other kind.

@@ -87,7 +87,7 @@ ana@dev:~/planner$ look http://localhost:5173/ --today 2026-10-21 --do 'click bu
 
 **After reversing, the note says "read chapter 3" beside Wednesday the 21st.** The sessions moved; the
 note did not. React compared the two renders by key: key `0` was there before and is there now, so the
-first `<li>` was kept, with its input and the text in it, and only the parts drawn from the data, the
+first `<li>` was kept, with its input and the text in it. Only the parts drawn from the data, the
 date, the minutes and the checkbox's state, were updated to the session now first in the array. The
 field's label changed too, so a screen reader would announce "Note for Wed 21 Oct, read chapter 3", a
 note that nobody wrote for that session.

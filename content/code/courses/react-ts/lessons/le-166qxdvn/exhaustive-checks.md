@@ -33,8 +33,8 @@ removed the shape again.
 
 That check only works because of how `stateOf` is written. **TypeScript narrows a variable to what was
 assigned to it**: a `const state: PlannerState = …` built from three conditions would be typed as the
-three shapes those conditions produce, not as the union it was declared with, and a fourth shape added
-to the union would never reach `ReturnType<typeof usePlanner>`. A function with a declared return type
+three shapes those conditions produce, not as the union it was declared with. A fourth shape added
+to the union would then never reach `ReturnType<typeof usePlanner>`. A function with a declared return type
 has no such shortcut: whatever it returns, its callers see `PlannerState`, all of it.
 
 The same pattern fits any value that can be one of a fixed set of things: a request that is idle,

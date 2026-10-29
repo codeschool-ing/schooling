@@ -177,5 +177,5 @@ This failure is not an error boundary's business, and the difference is worth ke
 request that fails is an expected event: the query reports it as `isError`, and the component that
 asked draws the screen for it. A boundary is for what nobody expected, an exception in the middle of a
 render. React Query can be told to throw its errors into the nearest boundary, with the
-`throwOnError` option, and some projects prefer one place for every failure; but then the boundary's
+`throwOnError` option, and some projects prefer one place for every failure. But then the boundary's
 fallback is the screen that needs a retry button, and it has to be told how to reset the query too.

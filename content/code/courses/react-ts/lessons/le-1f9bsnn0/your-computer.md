@@ -28,7 +28,7 @@ differ from yours.
 **A virtual machine** is VirtualBox on Windows or Linux, or UTM on a Mac with an Apple chip, with
 Ubuntu Server 24.04 LTS as the guest and the Linux steps inside it. It is how this course was
 recorded. A server has no desktop and no browser, so you read the app from your own computer's
-browser, which needs two things the installed path does not: the development server started with
+browser. That needs two things the installed path does not: the development server started with
 `--host`, so that it answers on the machine's network address and not only inside it, and a port
 forwarded from your computer to the machine. Lesson 20 shows `--host` running.
 

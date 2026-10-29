@@ -105,5 +105,5 @@ ana@dev:~/planner$ sed -i 's|onToggle={(id) => toggleDone(id)} />}|onToggle={tog
 `useCallback` would have. That is the point of it. Stability no longer depends on everyone remembering.
 
 **What to do with a slow screen, in order**: measure it with the profiler, or the Profiler tab of
-React's developer tools in the browser; find the render that is slow, not the one that is frequent; and only then change the code, with the
-compiler on, which leaves far fewer places where `memo` by hand is the answer.
+React's developer tools in the browser; find the render that is slow, not the one that is frequent;
+and only then change the code. With the compiler on, far fewer of those places need `memo` by hand.

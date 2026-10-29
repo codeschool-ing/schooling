@@ -18,8 +18,8 @@ of the dependency array from lesson 5.
 The rules look arbitrary until you know what React does with a hook call, and then they look
 inevitable. The next section shows the mechanism. The three after it break the first rule in the
 planner, in the two ways it is usually broken, and see what each costs: one crashes the app on its
-first load, and one does nothing visible at all and quietly throws away what the user chose, which is
-the worse of the two. The last section is about a mistake that breaks neither rule and is the
+first load, and one does nothing visible at all and quietly throws away what the user chose. The
+second is the worse of the two. The last section is about a mistake that breaks neither rule and is the
 commonest hook bug there is.
 
 The second rule is shorter to explain. A hook works by attaching state to the component React is

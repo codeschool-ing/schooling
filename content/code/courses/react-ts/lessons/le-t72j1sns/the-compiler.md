@@ -23,5 +23,5 @@ That raises a fair question: why learn the hooks it writes for you?
 
 So the order of work is the same with or without it: write pure components that follow the rules,
 reach for a ref when something must be remembered without being drawn, extract a custom hook when a
-component carries two concerns, and memoise only where identity matters or a measurement says so,
-which the compiler then does in most places for you.
+component carries two concerns, and memoise only where identity matters or a measurement says so.
+In most of those places the compiler then does it for you.
