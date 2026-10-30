@@ -28,9 +28,9 @@ tem 5 GB para tudo o que ela tem. Um arquivo sozinho fica de fora quando se marc
 
 ## Um planner que guarda um anexo de 24 MB
 
-O programa abaixo monta uma caixa de areia do jeito que cada plataforma monta, com um banco, um
-arquivo de configurações, um PDF de anotações que a pessoa baixou para o curso de Estatística, uma
-imagem de capa em cache e um arquivo que cada plataforma mantém fora do backup. Depois ele percorre
+O programa abaixo monta uma caixa de areia do jeito que cada plataforma monta. Nela vão um banco,
+um arquivo de configurações, um PDF de anotações que a pessoa baixou para o curso de Estatística,
+uma imagem de capa em cache e um arquivo que cada plataforma mantém fora do backup. Depois ele percorre
 a pasta e aplica as regras. Salve como `sandbox.ts` na `~/planner`:
 
 ```typescript
