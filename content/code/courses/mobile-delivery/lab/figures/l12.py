@@ -53,4 +53,5 @@ def figures(lang):
     f.box(470, 220, 160, 40, [t["server"]], stroke="phosphor", ground="ink")
     f.arrow([(170, 180), (210, 218)], color="amber")
     f.arrow([(330, 230), (468, 230)], color="phosphor")
-    return {"l12-sequence": f.json(t["cap"])}
+    same = None if lang == "en" else ["3  crash"]
+    return {"l12-sequence": f.json(t["cap"], same=same)}
