@@ -1,0 +1,288 @@
+{
+ "ex-fcaetqgs": {
+  "prompt": "Um `google_storage_bucket` não define `project`. Onde ele é criado?",
+  "hint": "Olhe o bloco do provider.",
+  "choices": [
+   {
+    "text": "No projeto para o qual o gcloud está configurado",
+    "why": "O Terraform lê o bloco do provider, não a configuração do gcloud, quando project está definido ali."
+   },
+   {
+    "text": "No projeto do provider",
+    "why": "Certo. O projeto do provider é o padrão de todo recurso que não nomeia o seu."
+   },
+   {
+    "text": "Num projeto novo que o Terraform cria para a configuração, com o nome do diretório",
+    "why": "O Terraform não cria nada que não mandaram criar."
+   },
+   {
+    "text": "Em lugar nenhum: project é obrigatório em todo recurso",
+    "why": "É opcional no recurso justamente porque o provider o fornece."
+   }
+  ]
+ },
+ "ex-cm0k72pt": {
+  "prompt": "Por que o `.terraform.lock.hcl` vai no commit junto com o código?",
+  "hint": "Um provider é um programa.",
+  "choices": [
+   {
+    "text": "Ele guarda o estado, para os outros verem o que existe",
+    "why": "O estado é outro arquivo; o arquivo de lock não guarda recursos."
+   },
+   {
+    "text": "Ele guarda o token de acesso do time",
+    "why": "Nenhuma credencial é escrita ali."
+   },
+   {
+    "text": "Para todos rodarem o mesmo provider, por checksum",
+    "why": "Certo. Um provider diferente pode mudar o que o plan significa."
+   },
+   {
+    "text": "Ele impede duas pessoas de aplicarem ao mesmo tempo",
+    "why": "Isso é a trava do estado, lição 6, não este arquivo."
+   }
+  ]
+ },
+ "ex-wn36e34y": {
+  "prompt": "O que fazem os `default_labels` no bloco do provider?",
+  "hint": "Nada é escrito por recurso.",
+  "choices": [
+   {
+    "text": "Rotulam todo recurso que ele cria e que aceita rótulos",
+    "why": "Certo. A forma mais barata de dar dono a todo recurso."
+   },
+   {
+    "text": "Rotulam só os recursos que já declaram rótulos próprios",
+    "why": "Valem para todo recurso que aceita rótulos, declarados ou não."
+   },
+   {
+    "text": "Rotulam o próprio projeto",
+    "why": "O projeto não é criado aqui; os recursos nele é que recebem rótulos."
+   },
+   {
+    "text": "Filtram que recursos o Terraform pode gerenciar",
+    "why": "Rótulos não decidem nada sobre o que o Terraform gerencia."
+   }
+  ]
+ },
+ "ex-mrsy640j": {
+  "prompt": "Ponha os lugares onde o provider google procura credenciais na ordem em que ele tenta.",
+  "hint": "A primeira que achar vence, do mais explícito ao da própria máquina.",
+  "items": [
+   "Um token de acesso em GOOGLE_OAUTH_ACCESS_TOKEN",
+   "Um arquivo nomeado por GOOGLE_APPLICATION_CREDENTIALS",
+   "Application Default Credentials do gcloud",
+   "O servidor de metadados da máquina"
+  ],
+  "trap": "Pôr o servidor de metadados primeiro é o deslize: um token ou arquivo explícito sempre vence a máquina."
+ },
+ "ex-v1q1w60j": {
+  "prompt": "O `terraform plan` num laptop novo para com \"could not find default credentials\". Qual é a correção certa para uma pessoa com conta Google?",
+  "hint": "Qual dos quatro lugares pertence a uma pessoa num laptop?",
+  "choices": [
+   {
+    "text": "Baixar uma chave de conta de serviço e definir GOOGLE_APPLICATION_CREDENTIALS",
+    "why": "Um arquivo de chave é o último recurso, um segredo duradouro num laptop."
+   },
+   {
+    "text": "gcloud auth application-default login",
+    "why": "Certo. O login de curta duração da própria pessoa, renovado pelo gcloud."
+   },
+   {
+    "text": "Escrever a chave no argumento credentials do provider",
+    "why": "Aí a chave está no repositório, e sobrevive a toda rotação."
+   },
+   {
+    "text": "Definir GOOGLE_OAUTH_ACCESS_TOKEN=fake",
+    "why": "Isso só funciona contra o emulador; o Google o recusa."
+   }
+  ]
+ },
+ "ex-vmqqwxqv": {
+  "prompt": "O Terraform roda num passo do Cloud Build. De onde devem vir as credenciais dele?",
+  "hint": "Nada guardado em lugar nenhum.",
+  "choices": [
+   {
+    "text": "Um arquivo de chave enviado ao workspace do build",
+    "why": "Uma chave teria de ficar onde o build lê, e outros também."
+   },
+   {
+    "text": "Um token de acesso colado nas substituições do gatilho",
+    "why": "Um token expira em uma hora e fica visível na configuração do gatilho."
+   },
+   {
+    "text": "As Application Default Credentials da pessoa desenvolvedora",
+    "why": "Elas vivem num laptop, não numa máquina de build."
+   },
+   {
+    "text": "O servidor de metadados",
+    "why": "Certo. A conta de serviço do próprio build, sem nada guardado."
+   }
+  ]
+ },
+ "ex-skm5ywbb": {
+  "prompt": "Com `impersonate_service_account` definido, do que a pessoa que roda o Terraform precisa no projeto de produção?",
+  "hint": "As credenciais dela são usadas para uma coisa só.",
+  "choices": [
+   {
+    "text": "Owner, já que o Terraform muda tudo",
+    "why": "A conta de serviço tem as permissões; a pessoa quase nenhuma."
+   },
+   {
+    "text": "Token Creator naquela única conta de serviço, e nada no projeto",
+    "why": "Certo. Nada no projeto em si; tirar esse papel tira o acesso."
+   },
+   {
+    "text": "Editor no projeto e Token Creator na conta",
+    "why": "Editor é exatamente o que a personificação existe para não dar."
+   },
+   {
+    "text": "Uma chave da conta de serviço no laptop",
+    "why": "A personificação não precisa de chave nenhuma."
+   }
+  ]
+ },
+ "ex-taqxkn24": {
+  "prompt": "Depois do apply, o `gcloud` mostra o bucket em `US-CENTRAL1` sem rótulos. Por quê?",
+  "hint": "O que o fake-gcs-server guarda?",
+  "choices": [
+   {
+    "text": "default_labels só valem no segundo apply",
+    "why": "Valem no primeiro; o plano os mostrou."
+   },
+   {
+    "text": "O token fake é recusado para rótulos",
+    "why": "Nada verificou o token; o emulador só não os guardou."
+   },
+   {
+    "text": "O emulador não guarda nenhum dos dois, e responde padrões",
+    "why": "Certo. Aceito não é o mesmo que feito; o Google guardaria os dois."
+   },
+   {
+    "text": "A localização de um bucket é US-CENTRAL1 até ele ser movido",
+    "why": "A localização é definida na criação e nunca pode ser movida."
+   }
+  ]
+ },
+ "ex-tf77r6jv": {
+  "prompt": "Um plano mostra `location = \"US\" -> \"SOUTHAMERICA-EAST1\" # forces replacement` num bucket cheio de dados. O que aplicá-lo faria no Google?",
+  "hint": "Uma localização pode mudar sem recriar?",
+  "choices": [
+   {
+    "text": "Mover o bucket e os objetos para São Paulo",
+    "why": "Nada move um bucket; o provider só pode destruir e recriar."
+   },
+   {
+    "text": "Mudar o rótulo de localização e deixar os dados onde estão",
+    "why": "Localização não é rótulo; é onde os dados ficam fisicamente."
+   },
+   {
+    "text": "Apagar o bucket, com os objetos, e criar um vazio",
+    "why": "Certo. A linha que merece a leitura mais lenta de qualquer plano."
+   },
+   {
+    "text": "Nada: o Google recusa mudanças de localização",
+    "why": "O Google recusa a mudança no lugar, e é por isso que o provider substitui."
+   }
+  ]
+ },
+ "ex-bnw5t3qb": {
+  "prompt": "Criar um serviço do Cloud Run num projeto novo falha com `SERVICE_DISABLED`, embora quem chama seja owner. O que falta?",
+  "hint": "Permissões não são o problema.",
+  "choices": [
+   {
+    "text": "A API run.googleapis.com está desligada",
+    "why": "Certo. APIs começam desligadas; um google_project_service a liga."
+   },
+   {
+    "text": "Uma conta de faturamento com orçamento",
+    "why": "Uma conta de faturamento ausente dá outro erro; orçamentos não recusam nada."
+   },
+   {
+    "text": "O papel roles/run.admin, que owner não inclui",
+    "why": "Owner o inclui; a API desligada é o problema."
+   },
+   {
+    "text": "Uma região no bloco do provider",
+    "why": "Uma região ausente dá outro erro, explícito."
+   }
+  ]
+ },
+ "ex-1d888x63": {
+  "prompt": "Por que a loja define `disable_on_destroy = false` nos recursos `google_project_service`?",
+  "hint": "Quem mais usa a API?",
+  "choices": [
+   {
+    "text": "Para o destroy rodar mais rápido",
+    "why": "Velocidade não é o motivo; o efeito colateral é."
+   },
+   {
+    "text": "Porque o Google cobra por desligar uma API",
+    "why": "Desligar uma não custa nada em dinheiro."
+   },
+   {
+    "text": "Porque APIs desligadas não podem ser ligadas de novo",
+    "why": "Podem; o dano é o que para no meio-tempo."
+   },
+   {
+    "text": "Para que desmontar isto deixe a API ligada para os outros",
+    "why": "Certo. Serviços que esta configuração nunca criou parariam também."
+   }
+  ]
+ },
+ "ex-ee0fe8dv": {
+  "prompt": "Para agir como uma conta de serviço sem chave, o argumento do provider é `___` (uma palavra com sublinhados).",
+  "hint": "Começa com impersonate.",
+  "blanks": [
+   {
+    "accept": [
+     "impersonate_service_account"
+    ]
+   }
+  ]
+ },
+ "ex-46p5qbaf": {
+  "prompt": "Quais destes pertencem ao repositório Terraform da loja? Escolha todos os que se aplicam.",
+  "hint": "Código e o lock, sim; segredos e caches, não.",
+  "choices": [
+   {
+    "text": "main.tf",
+    "why": "Sim, a configuração."
+   },
+   {
+    "text": ".terraform.lock.hcl",
+    "why": "Sim, para todos rodarem o mesmo provider."
+   },
+   {
+    "text": ".terraform/, o provider baixado",
+    "why": "Não. O init o baixa de novo a partir do lock."
+   },
+   {
+    "text": "Um arquivo de chave de conta de serviço",
+    "why": "Não. Nunca uma chave num repositório."
+   }
+  ]
+ },
+ "ex-f2hf3cc4": {
+  "prompt": "Uma configuração gerencia buckets em `planner-dev` e `planner-prod` com um bloco de provider cujo `project` é `planner-dev`. Um bucket de prod esqueceu o argumento `project`. O que acontece?",
+  "hint": "O padrão preenche o que não está escrito.",
+  "choices": [
+   {
+    "text": "O plano falha porque o projeto do bucket é ambíguo",
+    "why": "Nada é ambíguo para o Terraform: o padrão se aplica."
+   },
+   {
+    "text": "Ele é criado em planner-dev, em silêncio",
+    "why": "Certo. Por isso tal configuração nomeia o projeto em todo recurso ou usa aliases."
+   },
+   {
+    "text": "O Terraform adivinha planner-prod pelo nome do bucket",
+    "why": "Nomes não significam nada para o provider."
+   },
+   {
+    "text": "Ele é criado nos dois projetos",
+    "why": "Um recurso é um objeto num projeto."
+   }
+  ]
+ }
+}

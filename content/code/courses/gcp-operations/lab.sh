@@ -46,6 +46,7 @@ case "${1:-}" in
   tools)
     # shellcheck source=capture.sh
     . "$COURSE/capture.sh"
+    fence "$COURSE/lessons/le-c0fx9rz5/provider.md" 1     # Terraform
     ;;
   *)
     echo "usage: bash lab.sh student|tools" >&2
