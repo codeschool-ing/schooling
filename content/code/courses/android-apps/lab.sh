@@ -259,6 +259,9 @@ for m in re.finditer(r'^```([\w-]*)\n(.*?)^```$', text, re.S | re.M):
         f = re.fullmatch(r'// ' + NAME, first)
     elif lang in ('toml', 'properties', 'proguard', 'sh', 'bash', 'ini', 'conf'):
         f = re.fullmatch(r'# ' + NAME, first)
+        if not f and lang == 'conf':
+            # a format whose comments are `//`, like the Compose compiler's stability file
+            f = re.fullmatch(r'// ' + NAME, first)
     elif lang == 'xml':
         f = re.fullmatch(r'<!-- ' + NAME + r' -->', first)
     elif lang == 'schooling-example':

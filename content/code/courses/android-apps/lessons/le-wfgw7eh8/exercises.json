@@ -1,0 +1,728 @@
+[
+  {
+    "id": "ex-kbz2hzyv",
+    "version": 1,
+    "section": "what-triggers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After three clicks, how many times had `Title` run?",
+    "hint": "Its argument never changed.",
+    "choices": [
+      {
+        "text": "Once",
+        "correct": true,
+        "why": "Right: the first composition, then skipped each time."
+      },
+      {
+        "text": "Four times, like its parent",
+        "correct": false,
+        "why": "The parent ran four times; `Title` got the same string and was skipped."
+      },
+      {
+        "text": "Three times, once per click",
+        "correct": false,
+        "why": "A click does not run a composable that read nothing that changed."
+      },
+      {
+        "text": "Never, since it is constant",
+        "correct": false,
+        "why": "It ran once, in the first composition."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkqer31y",
+    "version": 1,
+    "section": "what-triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `WeekScreen` itself run four times?",
+    "hint": "Where is `minutes` read?",
+    "choices": [
+      {
+        "text": "Because its child `Total` ran",
+        "correct": false,
+        "why": "A child running does not run the parent."
+      },
+      {
+        "text": "It read `minutes` itself",
+        "correct": true,
+        "why": "Right: it read the value in its own body, to pass it to `Total`."
+      },
+      {
+        "text": "A click runs all the composables on screen",
+        "correct": false,
+        "why": "`Title` ran once."
+      },
+      {
+        "text": "`SideEffect` made it run again",
+        "correct": false,
+        "why": "`SideEffect` only counts; it triggers nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpkza2ck",
+    "version": 1,
+    "section": "what-triggers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Total(minutesProvider = { minutes })` replaces `Total(minutes)`. What changes in the counts after three clicks?",
+    "hint": "Who reads the value now?",
+    "choices": [
+      {
+        "text": "`WeekScreen` stays at one; `Total` still runs four times",
+        "correct": true,
+        "why": "Right: the read moved into `Total`; section 05 measured `Banners` at one."
+      },
+      {
+        "text": "Both stay at one, since a lambda is never re-read",
+        "correct": false,
+        "why": "`Total` calls the lambda in its body, so it reads the state."
+      },
+      {
+        "text": "Nothing changes",
+        "correct": false,
+        "why": "The parent no longer reads the value."
+      },
+      {
+        "text": "`Title` starts running four times",
+        "correct": false,
+        "why": "`Title` never read the minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-djpspfqg",
+    "version": 1,
+    "section": "what-triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `SideEffect` acceptable for counting, when lesson 3 said a composable's body must not do work?",
+    "hint": "When does its block run?",
+    "choices": [
+      {
+        "text": "It runs once after each applied composition",
+        "correct": true,
+        "why": "Right: that is exactly one count per run."
+      },
+      {
+        "text": "It runs on a background thread",
+        "correct": false,
+        "why": "It runs on the main thread after composition."
+      },
+      {
+        "text": "Tests are allowed side effects that apps are not",
+        "correct": false,
+        "why": "The same rule holds in tests."
+      },
+      {
+        "text": "It prevents recomposition while it runs",
+        "correct": false,
+        "why": "It does not affect recomposition."
+      }
+    ]
+  },
+  {
+    "id": "ex-91q5fph9",
+    "version": 1,
+    "section": "skipping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which child ran every time the screen ran?",
+    "hint": "A class with a `var`.",
+    "choices": [
+      {
+        "text": "The one given the remembered list",
+        "correct": false,
+        "why": "Same object: skipped."
+      },
+      {
+        "text": "The one given a new equal list",
+        "correct": false,
+        "why": "Compared by value and equal: skipped."
+      },
+      {
+        "text": "The one given a new `Draft`",
+        "correct": true,
+        "why": "Right: unstable, compared by identity, never identical."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "The draft ran four times."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ng7x33w",
+    "version": 1,
+    "section": "skipping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With strong skipping on, how are an unstable argument and a stable one compared?",
+    "hint": "Identity and equality.",
+    "choices": [
+      {
+        "text": "Unstable by `===`, stable by `equals`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Both by `equals`",
+        "correct": false,
+        "why": "The unstable `Draft` was compared by identity, which is why each new one reran."
+      },
+      {
+        "text": "Unstable ones skip the comparison and rerun",
+        "correct": false,
+        "why": "That was the rule before strong skipping."
+      },
+      {
+        "text": "Stable by `===`, unstable by `equals`",
+        "correct": false,
+        "why": "The other way round."
+      }
+    ]
+  },
+  {
+    "id": "ex-3drx1qts",
+    "version": 1,
+    "section": "skipping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A list screen calls `Row(session.copy(minutes = session.minutes))` for each session, in a project where `StudySession` is stable. Does each `Row` skip when the screen reruns with unchanged data?",
+    "hint": "`copy` makes a new object; how is a stable type compared?",
+    "choices": [
+      {
+        "text": "No: a new object is never equal",
+        "correct": false,
+        "why": "A data class copy is equal by value."
+      },
+      {
+        "text": "Yes: stable arguments are compared with `equals`",
+        "correct": true,
+        "why": "Right; with an unstable `StudySession` it would rerun, as the `Draft` did."
+      },
+      {
+        "text": "Only if the list itself is remembered",
+        "correct": false,
+        "why": "Each `Row` compares its own argument."
+      },
+      {
+        "text": "No, because `copy` is a side effect",
+        "correct": false,
+        "why": "Creating an object changes nothing outside."
+      }
+    ]
+  },
+  {
+    "id": "ex-rys6xm6g",
+    "version": 1,
+    "section": "skipping",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After three clicks, how many times had the child given a new `Draft` run?",
+    "hint": "Once at first, then every time.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yh0dxmva",
+    "version": 1,
+    "section": "compiler-reports",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which field made `StudySession` unstable in the compiler's report?",
+    "hint": "A Java type.",
+    "choices": [
+      {
+        "text": "`id: Long`",
+        "correct": false,
+        "why": "Marked `stable val`."
+      },
+      {
+        "text": "`date: LocalDate`",
+        "correct": true,
+        "why": "Right: a `java.time` class the compiler cannot see into."
+      },
+      {
+        "text": "`done: Boolean`, because it has a default",
+        "correct": false,
+        "why": "A default changes nothing about stability."
+      },
+      {
+        "text": "`courseId: String`",
+        "correct": false,
+        "why": "`String` is known stable."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5fcwpt6",
+    "version": 1,
+    "section": "compiler-reports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does adding `java.time.LocalDate` to `stability.conf` do?",
+    "hint": "It is a promise.",
+    "choices": [
+      {
+        "text": "It makes `LocalDate` immutable",
+        "correct": false,
+        "why": "It already is; the file changes only what the compiler assumes."
+      },
+      {
+        "text": "Makes the compiler treat it as stable",
+        "correct": true,
+        "why": "Right: `StudySession` then became `stable class` in the report."
+      },
+      {
+        "text": "It turns strong skipping on",
+        "correct": false,
+        "why": "Strong skipping was already on."
+      },
+      {
+        "text": "It replaces `LocalDate` with a Kotlin type at compile time",
+        "correct": false,
+        "why": "Nothing is replaced; only the assumption changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxbyy9kg",
+    "version": 1,
+    "section": "compiler-reports",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate adds a class of yours with a `var` to `stability.conf` to stop it rerunning. What is the risk?",
+    "hint": "The compiler does not check the promise.",
+    "choices": [
+      {
+        "text": "The build fails, since the class has a `var`",
+        "correct": false,
+        "why": "The file is trusted, not checked."
+      },
+      {
+        "text": "None: it only affects the report",
+        "correct": false,
+        "why": "It changes how arguments are compared at run time."
+      },
+      {
+        "text": "Composables are skipped that should run, and show stale data",
+        "correct": true,
+        "why": "Right: only documented-immutable classes belong there."
+      },
+      {
+        "text": "Every composable taking it reruns twice",
+        "correct": false,
+        "why": "The danger is the opposite: too few runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fez2a81",
+    "version": 1,
+    "section": "compiler-reports",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the module's metrics, the flag `___Skipping` was `true`.",
+    "hint": "The default since Kotlin 2.0.20.",
+    "blanks": [
+      {
+        "accept": [
+          "Strong"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ftptaza8",
+    "version": 1,
+    "section": "compiler-reports",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each report line to what it means.",
+    "hint": "Section 04 read all three.",
+    "pairs": [
+      {
+        "left": "`unstable draft: Draft`",
+        "right": "compared by identity"
+      },
+      {
+        "left": "`stable name: String`",
+        "right": "compared by `equals`"
+      },
+      {
+        "left": "`sessions: List<StudySession>`",
+        "right": "stability left to run time"
+      }
+    ],
+    "right_distractors": [
+      "never compared, always reruns"
+    ]
+  },
+  {
+    "id": "ex-1a23b31h",
+    "version": 1,
+    "section": "derived-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Over fourteen clicks, how many times did the composable reading the derived `reached` run?",
+    "hint": "At first, and when the answer changed.",
+    "choices": [
+      {
+        "text": "Twice",
+        "correct": true,
+        "why": "Right: at first, and when 300 was reached."
+      },
+      {
+        "text": "15 times",
+        "correct": false,
+        "why": "That was the one reading the minutes."
+      },
+      {
+        "text": "14 times",
+        "correct": false,
+        "why": "Once per click would be reading the minutes."
+      },
+      {
+        "text": "Once",
+        "correct": false,
+        "why": "It ran again when the answer flipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-75qn4n41",
+    "version": 1,
+    "section": "derived-state",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At which click, counting from 1, did 25-minute clicks reach the goal of 300?",
+    "hint": "300 divided by 25.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9qjfpsc2",
+    "version": 1,
+    "section": "derived-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is `derivedStateOf` pure overhead?",
+    "hint": "Compare how often the result and the input change.",
+    "choices": [
+      {
+        "text": "When the result changes each time its input does",
+        "correct": true,
+        "why": "Right: like a full name built from two names."
+      },
+      {
+        "text": "When it is wrapped in `remember`",
+        "correct": false,
+        "why": "`remember` is required, not the cost."
+      },
+      {
+        "text": "When the source is a scroll position",
+        "correct": false,
+        "why": "That is the classic case where it pays."
+      },
+      {
+        "text": "Whenever the result is a `Boolean`",
+        "correct": false,
+        "why": "A `Boolean` is often exactly the right result."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdxhx51j",
+    "version": 1,
+    "section": "derived-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`val reached = derivedStateOf { minutes >= GOAL }` is written without `remember`. What happens?",
+    "hint": "Lesson 4 section 02.",
+    "choices": [
+      {
+        "text": "It works the same, only slightly slower on each run",
+        "correct": false,
+        "why": "A new derived state each run tracks nothing across runs."
+      },
+      {
+        "text": "Each run builds a new one that saves nothing",
+        "correct": true,
+        "why": "Right: the same mistake as state without `remember`."
+      },
+      {
+        "text": "The compiler refuses it",
+        "correct": false,
+        "why": "It compiles; the mistake is silent."
+      },
+      {
+        "text": "It throws when `minutes` changes",
+        "correct": false,
+        "why": "Nothing throws."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hnr3s1y",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without `key`, how does Compose match the calls in a loop to their nodes?",
+    "hint": "Section 06's first sentence.",
+    "choices": [
+      {
+        "text": "By position",
+        "correct": true,
+        "why": "Right: the first call gets the first node, whatever its item."
+      },
+      {
+        "text": "By the item's `equals`",
+        "correct": false,
+        "why": "That is how arguments are compared, not how nodes are matched."
+      },
+      {
+        "text": "By the item's hash code",
+        "correct": false,
+        "why": "Nothing hashes the items without a key."
+      },
+      {
+        "text": "By the composable's name",
+        "correct": false,
+        "why": "Every call has the same name in a loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-vs062st8",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without keys, after inserting Sunday at the top, what did Sunday's row remember?",
+    "hint": "It took over the first node.",
+    "choices": [
+      {
+        "text": "`Sun 25 min`",
+        "correct": false,
+        "why": "That was with keys."
+      },
+      {
+        "text": "`Mon 45 min`",
+        "correct": true,
+        "why": "Right: the first node used to be Monday's."
+      },
+      {
+        "text": "`Tue 50 min`",
+        "correct": false,
+        "why": "That landed in Monday's row."
+      },
+      {
+        "text": "Nothing: the row was blank",
+        "correct": false,
+        "why": "Every row had a remembered value."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvqsxpd2",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two sessions on the same day with the same minutes are drawn with `key(label)`. What goes wrong?",
+    "hint": "A key must be unique.",
+    "choices": [
+      {
+        "text": "Nothing: equal labels are equal sessions",
+        "correct": false,
+        "why": "Two sessions can look alike and be different."
+      },
+      {
+        "text": "The keys collide; key by the session's `id` instead",
+        "correct": true,
+        "why": "Right: the `id` is what the model has for this."
+      },
+      {
+        "text": "The second one is skipped forever",
+        "correct": false,
+        "why": "The problem is matching nodes, not skipping."
+      },
+      {
+        "text": "`key` refuses strings",
+        "correct": false,
+        "why": "It accepts any value; uniqueness is the requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm984f02",
+    "version": 1,
+    "section": "when-to-care",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the lesson say to judge Compose performance?",
+    "hint": "Debug skips an optimiser.",
+    "choices": [
+      {
+        "text": "In a debug build, where the counts are clearest",
+        "correct": false,
+        "why": "Debug runs without R8's optimisations."
+      },
+      {
+        "text": "In a release build",
+        "correct": true,
+        "why": "Right, with lesson 22's settings."
+      },
+      {
+        "text": "In previews",
+        "correct": false,
+        "why": "Previews draw; they do not measure."
+      },
+      {
+        "text": "In the compiler report",
+        "correct": false,
+        "why": "The report says what is skippable, not how fast it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-90azm4dh",
+    "version": 1,
+    "section": "when-to-care",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A composable reruns once per tap on a settings screen. Should you rewrite it to read state through lambdas?",
+    "hint": "When does each fix pay?",
+    "choices": [
+      {
+        "text": "Yes, every extra run is a cost to remove",
+        "correct": false,
+        "why": "Recomposition is the job; only the wasteful kind is a problem."
+      },
+      {
+        "text": "No: that pays off for every-frame work, not taps",
+        "correct": true,
+        "why": "Right: measure first."
+      },
+      {
+        "text": "Yes, because lambdas are faster than values",
+        "correct": false,
+        "why": "They cost readability, and pay only in hot paths."
+      },
+      {
+        "text": "No, because settings screens skip recomposition",
+        "correct": false,
+        "why": "It recomposes once per tap, as the question says."
+      }
+    ]
+  },
+  {
+    "id": "ex-zje3fwxm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of investigating a screen that stutters while scrolling in the order the lesson suggests.",
+    "hint": "Measure, then read, then change.",
+    "items": [
+      "reproduce it on a release build",
+      "count which composables run per frame",
+      "read the compiler's report for the types they take",
+      "move reads lower, remember arguments or derive a value"
+    ]
+  },
+  {
+    "id": "ex-dr8pnqrj",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these make a child composable rerun every time its parent does? Choose all that apply.",
+    "hint": "Think identity versus equality.",
+    "choices": [
+      {
+        "text": "Passing `Draft(25)`, a new unstable object, each run",
+        "correct": true,
+        "why": "Yes: compared by identity."
+      },
+      {
+        "text": "Passing a remembered list",
+        "correct": false,
+        "why": "No: same object."
+      },
+      {
+        "text": "Passing a number that changed",
+        "correct": true,
+        "why": "Yes: a changed argument always reruns."
+      },
+      {
+        "text": "Passing the same `String` literal",
+        "correct": false,
+        "why": "No: like `Title`."
+      }
+    ]
+  },
+  {
+    "id": "ex-44k3nqrv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A *back to top* button reads the list's first visible item index directly and recomposes on every scroll frame. Which fix does the lesson point to?",
+    "hint": "The button only needs a yes or a no.",
+    "choices": [
+      {
+        "text": "Add the index type to `stability.conf`",
+        "correct": false,
+        "why": "An `Int` is already stable; the problem is how often it changes."
+      },
+      {
+        "text": "Wrap it in `key`",
+        "correct": false,
+        "why": "Keys match nodes in loops."
+      },
+      {
+        "text": "`remember { derivedStateOf { index > 0 } }`",
+        "correct": true,
+        "why": "Right: it changes when the answer changes."
+      },
+      {
+        "text": "Read it inside a `SideEffect`",
+        "correct": false,
+        "why": "`SideEffect` counts; it does not reduce runs."
+      }
+    ]
+  }
+]
