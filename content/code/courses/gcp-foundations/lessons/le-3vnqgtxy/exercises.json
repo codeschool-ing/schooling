@@ -1,0 +1,500 @@
+[
+  {
+    "id": "ex-wsqe9ymd",
+    "version": 1,
+    "section": "shared-vpc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Shared VPC, which project owns the network and its firewall rules?",
+    "hint": "The one that shares.",
+    "choices": [
+      {
+        "text": "Each service project, for its own subnets",
+        "correct": false,
+        "why": "The subnets are the host's; the machines are the service project's."
+      },
+      {
+        "text": "The host project",
+        "correct": true,
+        "why": "Right. Service projects put machines in its subnets."
+      },
+      {
+        "text": "The organisation",
+        "correct": false,
+        "why": "A network belongs to a project, here the host."
+      },
+      {
+        "text": "The billing account",
+        "correct": false,
+        "why": "Billing accounts pay; they own no networks."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3nhsr6r",
+    "version": 1,
+    "section": "shared-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner grant Network User on one subnet rather than on the host project?",
+    "hint": "What would the project grant cover?",
+    "choices": [
+      {
+        "text": "Subnet grants are cheaper",
+        "correct": false,
+        "why": "Roles cost nothing."
+      },
+      {
+        "text": "Network User cannot be granted on a project",
+        "correct": false,
+        "why": "It can; it would reach too far."
+      },
+      {
+        "text": "It lets the team edit the subnet's range",
+        "correct": false,
+        "why": "Network User uses a subnet; changing it is networkAdmin."
+      },
+      {
+        "text": "On the project it covers every subnet",
+        "correct": true,
+        "why": "Right. On one subnet, the team puts machines there and nowhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kj2rpyg",
+    "version": 1,
+    "section": "shared-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine that `planner-staging` creates in a subnet of `planner-network` sends a terabyte to Santiago. Which project is billed?",
+    "hint": "Billing follows the machine.",
+    "choices": [
+      {
+        "text": "planner-staging, which owns the machine",
+        "correct": true,
+        "why": "Right. The service project pays for its machines and the traffic they send."
+      },
+      {
+        "text": "planner-network, which owns the subnet",
+        "correct": false,
+        "why": "The network's owner does not pay for others' machines."
+      },
+      {
+        "text": "Both, half each",
+        "correct": false,
+        "why": "The cost is not split."
+      },
+      {
+        "text": "Whichever project the billing account names first",
+        "correct": false,
+        "why": "There is no such order."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zz6ntgr",
+    "version": 1,
+    "section": "shared-vpc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who can make `planner-network` a host project?",
+    "hint": "A role on the tree.",
+    "choices": [
+      {
+        "text": "Any owner of planner-network",
+        "correct": false,
+        "why": "Making a host needs the Shared VPC Admin role on the tree."
+      },
+      {
+        "text": "A Network User of its subnets",
+        "correct": false,
+        "why": "That role uses a subnet; it attaches nothing."
+      },
+      {
+        "text": "A Shared VPC Admin",
+        "correct": true,
+        "why": "Right. `roles/compute.xpnAdmin`, on the organisation or a folder."
+      },
+      {
+        "text": "The billing administrator",
+        "correct": false,
+        "why": "Billing roles do not touch networks."
+      }
+    ]
+  },
+  {
+    "id": "ex-xb1ranpb",
+    "version": 1,
+    "section": "shared-vpc",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service project is attached to ___ host project at a time.",
+    "hint": "A number.",
+    "blanks": [
+      {
+        "accept": [
+          "one",
+          "1",
+          "a single"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-egm76fv1",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner creates a peering to the partner's network. When does traffic flow?",
+    "hint": "Two sides.",
+    "choices": [
+      {
+        "text": "At once, since the planner created it",
+        "correct": false,
+        "why": "One side cannot join itself to a network that did not agree."
+      },
+      {
+        "text": "When Google approves the request",
+        "correct": false,
+        "why": "Google does not approve peerings; the other side does, by making its own."
+      },
+      {
+        "text": "Once the other side makes its own",
+        "correct": true,
+        "why": "Right. A peering is inactive until both sides have created it."
+      },
+      {
+        "text": "After the next route refresh, within an hour",
+        "correct": false,
+        "why": "Time is not the condition; the other side is."
+      }
+    ]
+  },
+  {
+    "id": "ex-xv6tq3x5",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner peers with the partner and with analytics. Can the partner reach analytics?",
+    "hint": "reach.py said.",
+    "choices": [
+      {
+        "text": "No; peering is not transitive",
+        "correct": true,
+        "why": "Right. They need a peering of their own."
+      },
+      {
+        "text": "Yes, through the planner",
+        "correct": false,
+        "why": "Routes learned over a peering are not passed on to another peer."
+      },
+      {
+        "text": "Yes, if the planner exports custom routes",
+        "correct": false,
+        "why": "Peering subnet routes still stop at one hop."
+      },
+      {
+        "text": "Only if all three are in one organisation",
+        "correct": false,
+        "why": "Organisations do not change transitivity."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhqhzpac",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the planner not peer with the company it bought?",
+    "hint": "Compare their ranges.",
+    "choices": [
+      {
+        "text": "They are in different organisations",
+        "correct": false,
+        "why": "Peering works across organisations."
+      },
+      {
+        "text": "The acquired network is in auto mode",
+        "correct": false,
+        "why": "Its ranges are 10.10.0.0/20 and 192.168.0.0/24, outside the auto block."
+      },
+      {
+        "text": "Peering needs Shared VPC first",
+        "correct": false,
+        "why": "They are separate features."
+      },
+      {
+        "text": "Their ranges overlap",
+        "correct": true,
+        "why": "Right. 10.10.0.0/20 is inside the planner's 10.10.0.0/16, and Google refuses the peering."
+      }
+    ]
+  },
+  {
+    "id": "ex-42b20mxr",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After both sides create a peering, the partner's machines still cannot connect to the planner's service. What is missing?",
+    "hint": "Peering exchanges routes only.",
+    "choices": [
+      {
+        "text": "A third peering through analytics",
+        "correct": false,
+        "why": "The two are already peered directly."
+      },
+      {
+        "text": "A firewall rule on the planner's side",
+        "correct": true,
+        "why": "Right. Firewall rules stay on each side, and the implied deny refuses the rest."
+      },
+      {
+        "text": "Exporting custom routes",
+        "correct": false,
+        "why": "Subnet routes are exchanged already."
+      },
+      {
+        "text": "Cloud NAT on the partner's side",
+        "correct": false,
+        "why": "Peering traffic uses internal addresses; NAT is for the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-c25y4z97",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the planner leave `export_custom_routes` false on the partner peering?",
+    "hint": "What custom routes does the planner have?",
+    "choices": [
+      {
+        "text": "So the office route stays the planner's",
+        "correct": true,
+        "why": "Right. Exported, the partner would learn a route to the planner's office."
+      },
+      {
+        "text": "Exporting routes costs extra per route",
+        "correct": false,
+        "why": "The setting decides what is learned, not a price."
+      },
+      {
+        "text": "Subnet routes would stop being exchanged",
+        "correct": false,
+        "why": "Subnet routes are exchanged either way."
+      },
+      {
+        "text": "The partner's network is in another region",
+        "correct": false,
+        "why": "Networks are global; regions do not enter into it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx2bpka9",
+    "version": 1,
+    "section": "peering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five networks must all reach each other through peering alone. How many peerings, each counted once for both of its sides, does that take?",
+    "hint": "Every pair needs its own.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "peerings"
+  },
+  {
+    "id": "ex-khcfh8k8",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two teams of the same company want their machines in one network, with one firewall run by the network team. Which fits?",
+    "hint": "One network.",
+    "choices": [
+      {
+        "text": "A peering between their networks",
+        "correct": false,
+        "why": "That is two networks with two firewalls."
+      },
+      {
+        "text": "A VPN between their projects",
+        "correct": false,
+        "why": "A VPN joins networks; it does not make one."
+      },
+      {
+        "text": "Shared VPC, with one host",
+        "correct": true,
+        "why": "Right. One host, the teams as service projects."
+      },
+      {
+        "text": "One project for both teams",
+        "correct": false,
+        "why": "That shares far more than a network."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr6kgyeq",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the planner's development network not peered with production?",
+    "hint": "What would it be the first step towards?",
+    "choices": [
+      {
+        "text": "Their ranges overlap",
+        "correct": false,
+        "why": "The planner's ranges were cut not to."
+      },
+      {
+        "text": "To keep test code away from live data",
+        "correct": true,
+        "why": "Right. A peering would be the first step towards it."
+      },
+      {
+        "text": "Peering is forbidden inside one organisation",
+        "correct": false,
+        "why": "It is allowed."
+      },
+      {
+        "text": "Development has no network of its own",
+        "correct": false,
+        "why": "It keeps one in planner-dev."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hvzrwa1",
+    "version": 1,
+    "section": "which-one",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each neighbour of the planner to how it is joined.",
+    "hint": "Four cases.",
+    "pairs": [
+      {
+        "left": "planner-prod",
+        "right": "a service project of the host"
+      },
+      {
+        "left": "the partner",
+        "right": "a peering, with no custom routes"
+      },
+      {
+        "left": "the acquired company",
+        "right": "nothing until it renumbers"
+      },
+      {
+        "left": "planner-dev",
+        "right": "a network of its own, unpeered"
+      }
+    ],
+    "right_distractors": [
+      "a host project of its own partner"
+    ]
+  },
+  {
+    "id": "ex-d1e5en0f",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner's estate grows to eight networks that must all reach each other. What does the lesson point to?",
+    "hint": "A hub.",
+    "choices": [
+      {
+        "text": "Twenty-eight peerings, kept by hand",
+        "correct": false,
+        "why": "That works and grows as the square of the networks."
+      },
+      {
+        "text": "One peering to a central network",
+        "correct": false,
+        "why": "Peering is not transitive, so the spokes would not reach each other."
+      },
+      {
+        "text": "Merging them into one auto mode network",
+        "correct": false,
+        "why": "Auto mode makes joining harder, not easier."
+      },
+      {
+        "text": "Network Connectivity Center",
+        "correct": true,
+        "why": "Right. Networks attach as spokes to one hub and reach each other through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5bq3vtc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of joining the acquired company to the planner in order.",
+    "hint": "The overlap comes first.",
+    "items": [
+      "check the ranges with reach.py",
+      "renumber the acquired network",
+      "create the peering on both sides",
+      "write firewall rules on each side"
+    ],
+    "trap": "Creating the peering before renumbering is the slip: Google refuses it while the ranges overlap."
+  },
+  {
+    "id": "ex-vp23b99q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new team in the planner wants staging machines and the right to change the staging subnet's firewall rules. What does the planner's design give them?",
+    "hint": "Who runs the firewall?",
+    "choices": [
+      {
+        "text": "securityAdmin on the host project",
+        "correct": false,
+        "why": "That would give them every rule in the shared network."
+      },
+      {
+        "text": "A peering to a network of their own",
+        "correct": false,
+        "why": "That leaves Shared VPC for a second network to run."
+      },
+      {
+        "text": "networkAdmin on the staging subnet",
+        "correct": false,
+        "why": "networkAdmin changes networks; firewall rules are securityAdmin's."
+      },
+      {
+        "text": "Network User on the subnet, no more",
+        "correct": true,
+        "why": "Right. Machines are theirs to place; rules are the host's."
+      }
+    ]
+  }
+]

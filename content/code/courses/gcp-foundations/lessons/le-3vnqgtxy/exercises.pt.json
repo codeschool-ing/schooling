@@ -1,0 +1,343 @@
+{
+  "ex-wsqe9ymd": {
+    "prompt": "No Shared VPC, que projeto é dono da rede e das regras de firewall?",
+    "hint": "O que compartilha.",
+    "choices": [
+      {
+        "text": "Cada projeto de serviço, para as próprias sub-redes",
+        "why": "As sub-redes são do host; as máquinas, do projeto de serviço."
+      },
+      {
+        "text": "O projeto host",
+        "why": "Isso. Projetos de serviço põem máquinas nas sub-redes dele."
+      },
+      {
+        "text": "A organização",
+        "why": "Uma rede pertence a um projeto, aqui o host."
+      },
+      {
+        "text": "A conta de faturamento",
+        "why": "Contas de faturamento pagam; não são donas de redes."
+      }
+    ]
+  },
+  "ex-b3nhsr6r": {
+    "prompt": "Por que o planner dá Network User numa sub-rede e não no projeto host?",
+    "hint": "O que o papel no projeto cobriria?",
+    "choices": [
+      {
+        "text": "Papéis em sub-rede são mais baratos",
+        "why": "Papéis não custam nada."
+      },
+      {
+        "text": "Network User não pode ser dado num projeto",
+        "why": "Pode; alcançaria longe demais."
+      },
+      {
+        "text": "Deixa a equipe editar a faixa da sub-rede",
+        "why": "Network User usa uma sub-rede; mudá-la é networkAdmin."
+      },
+      {
+        "text": "No projeto ele cobre toda sub-rede",
+        "why": "Isso. Numa sub-rede, a equipe põe máquinas ali e em nenhum outro lugar."
+      }
+    ]
+  },
+  "ex-2kj2rpyg": {
+    "prompt": "Uma máquina que o `planner-staging` cria numa sub-rede do `planner-network` manda um terabyte para Santiago. Que projeto é cobrado?",
+    "hint": "A cobrança segue a máquina.",
+    "choices": [
+      {
+        "text": "planner-staging, dono da máquina",
+        "why": "Isso. O projeto de serviço paga pelas máquinas e pelo tráfego que elas mandam."
+      },
+      {
+        "text": "planner-network, dono da sub-rede",
+        "why": "O dono da rede não paga pelas máquinas dos outros."
+      },
+      {
+        "text": "Os dois, metade cada",
+        "why": "O custo não é dividido."
+      },
+      {
+        "text": "O projeto que a conta de faturamento nomear primeiro",
+        "why": "Não há essa ordem."
+      }
+    ]
+  },
+  "ex-1zz6ntgr": {
+    "prompt": "Quem pode tornar o `planner-network` um projeto host?",
+    "hint": "Um papel na árvore.",
+    "choices": [
+      {
+        "text": "Qualquer owner do planner-network",
+        "why": "Fazer um host exige o papel de Shared VPC Admin na árvore."
+      },
+      {
+        "text": "Um Network User das sub-redes",
+        "why": "Esse papel usa uma sub-rede; não prende nada."
+      },
+      {
+        "text": "Um Shared VPC Admin",
+        "why": "Isso. `roles/compute.xpnAdmin`, na organização ou numa pasta."
+      },
+      {
+        "text": "O administrador de faturamento",
+        "why": "Papéis de faturamento não mexem em redes."
+      }
+    ]
+  },
+  "ex-xb1ranpb": {
+    "prompt": "Um projeto de serviço fica preso a ___ projeto host de cada vez.",
+    "hint": "Um número.",
+    "blanks": [
+      {
+        "accept": [
+          "um",
+          "1",
+          "um só",
+          "um único"
+        ]
+      }
+    ]
+  },
+  "ex-egm76fv1": {
+    "prompt": "O planner cria um peering para a rede do parceiro. Quando o tráfego passa?",
+    "hint": "Dois lados.",
+    "choices": [
+      {
+        "text": "Na hora, já que o planner o criou",
+        "why": "Um lado não se junta sozinho a uma rede que não concordou."
+      },
+      {
+        "text": "Quando o Google aprova o pedido",
+        "why": "O Google não aprova peerings; o outro lado aprova, fazendo o seu."
+      },
+      {
+        "text": "Quando o outro lado fizer o seu",
+        "why": "Isso. Um peering fica inativo até os dois lados o criarem."
+      },
+      {
+        "text": "Depois da próxima atualização de rotas, em até uma hora",
+        "why": "Tempo não é a condição; o outro lado é."
+      }
+    ]
+  },
+  "ex-xv6tq3x5": {
+    "prompt": "O planner faz peering com o parceiro e com analytics. O parceiro alcança analytics?",
+    "hint": "O reach.py disse.",
+    "choices": [
+      {
+        "text": "Não; peering não é transitivo",
+        "why": "Isso. Eles precisam de um peering próprio."
+      },
+      {
+        "text": "Sim, pelo planner",
+        "why": "Rotas aprendidas num peering não são repassadas a outro par."
+      },
+      {
+        "text": "Sim, se o planner exportar rotas personalizadas",
+        "why": "As rotas de sub-rede do peering ainda param num salto."
+      },
+      {
+        "text": "Só se os três estiverem numa organização",
+        "why": "Organizações não mudam a transitividade."
+      }
+    ]
+  },
+  "ex-qhqhzpac": {
+    "prompt": "Por que o planner não consegue fazer peering com a empresa que comprou?",
+    "hint": "Compare as faixas.",
+    "choices": [
+      {
+        "text": "Estão em organizações diferentes",
+        "why": "Peering funciona entre organizações."
+      },
+      {
+        "text": "A rede comprada está em modo automático",
+        "why": "As faixas dela são 10.10.0.0/20 e 192.168.0.0/24, fora do bloco automático."
+      },
+      {
+        "text": "Peering exige Shared VPC antes",
+        "why": "São recursos separados."
+      },
+      {
+        "text": "As faixas das duas se sobrepõem",
+        "why": "Isso. 10.10.0.0/20 está dentro do 10.10.0.0/16 do planner, e o Google recusa o peering."
+      }
+    ]
+  },
+  "ex-42b20mxr": {
+    "prompt": "Depois que os dois lados criam um peering, as máquinas do parceiro ainda não conectam no serviço do planner. O que falta?",
+    "hint": "Peering troca só rotas.",
+    "choices": [
+      {
+        "text": "Um terceiro peering por analytics",
+        "why": "Os dois já têm peering direto."
+      },
+      {
+        "text": "Uma regra de firewall do lado do planner",
+        "why": "Isso. Regras de firewall ficam em cada lado, e o deny implícito recusa o resto."
+      },
+      {
+        "text": "Exportar rotas personalizadas",
+        "why": "Rotas de sub-rede já são trocadas."
+      },
+      {
+        "text": "Cloud NAT do lado do parceiro",
+        "why": "O tráfego de peering usa endereços internos; NAT é para a internet."
+      }
+    ]
+  },
+  "ex-c25y4z97": {
+    "prompt": "Por que o planner deixou `export_custom_routes` falso no peering do parceiro?",
+    "hint": "Que rotas personalizadas o planner tem?",
+    "choices": [
+      {
+        "text": "Para a rota do escritório ficar só do planner",
+        "why": "Isso. Exportada, o parceiro aprenderia uma rota para o escritório do planner."
+      },
+      {
+        "text": "Exportar rotas custa a mais por rota",
+        "why": "A opção decide o que é aprendido, não um preço."
+      },
+      {
+        "text": "Rotas de sub-rede parariam de ser trocadas",
+        "why": "Rotas de sub-rede são trocadas de todo jeito."
+      },
+      {
+        "text": "A rede do parceiro está noutra região",
+        "why": "Redes são globais; regiões não entram nisso."
+      }
+    ]
+  },
+  "ex-gx2bpka9": {
+    "prompt": "Cinco redes precisam todas se alcançar só por peering. Quantos peerings, cada um contado uma vez pelos dois lados, isso exige?",
+    "hint": "Todo par precisa do seu.",
+    "unit": "peerings"
+  },
+  "ex-khcfh8k8": {
+    "prompt": "Duas equipes da mesma empresa querem as máquinas numa rede, com um firewall operado pela equipe de rede. O que serve?",
+    "hint": "Uma rede.",
+    "choices": [
+      {
+        "text": "Um peering entre as redes delas",
+        "why": "Isso são duas redes com dois firewalls."
+      },
+      {
+        "text": "Uma VPN entre os projetos delas",
+        "why": "Uma VPN junta redes; não faz uma."
+      },
+      {
+        "text": "Shared VPC, com um host",
+        "why": "Isso. Um host, as equipes como projetos de serviço."
+      },
+      {
+        "text": "Um projeto para as duas equipes",
+        "why": "Isso compartilha muito mais que uma rede."
+      }
+    ]
+  },
+  "ex-dr6kgyeq": {
+    "prompt": "Por que a rede de desenvolvimento do planner não tem peering com a produção?",
+    "hint": "Seria o primeiro passo para quê?",
+    "choices": [
+      {
+        "text": "As faixas delas se sobrepõem",
+        "why": "As faixas do planner foram cortadas para não se sobreporem."
+      },
+      {
+        "text": "Para manter código de teste longe de dados reais",
+        "why": "Isso. Um peering seria o primeiro passo para isso."
+      },
+      {
+        "text": "Peering é proibido dentro de uma organização",
+        "why": "É permitido."
+      },
+      {
+        "text": "Desenvolvimento não tem rede própria",
+        "why": "Ele mantém uma no planner-dev."
+      }
+    ]
+  },
+  "ex-0hvzrwa1": {
+    "prompt": "Ligue cada vizinho do planner a como ele é unido.",
+    "hint": "Quatro casos.",
+    "pairs": [
+      {
+        "left": "planner-prod",
+        "right": "um projeto de serviço do host"
+      },
+      {
+        "left": "o parceiro",
+        "right": "um peering, sem rotas personalizadas"
+      },
+      {
+        "left": "a empresa comprada",
+        "right": "nada até renumerar"
+      },
+      {
+        "left": "planner-dev",
+        "right": "uma rede própria, sem peering"
+      }
+    ],
+    "right_distractors": [
+      "um projeto host do próprio parceiro"
+    ]
+  },
+  "ex-d1e5en0f": {
+    "prompt": "O ambiente do planner cresce para oito redes que precisam todas se alcançar. Para onde a lição aponta?",
+    "hint": "Um hub.",
+    "choices": [
+      {
+        "text": "Vinte e oito peerings, mantidos à mão",
+        "why": "Isso funciona e cresce com o quadrado das redes."
+      },
+      {
+        "text": "Um peering para uma rede central",
+        "why": "Peering não é transitivo, então os raios não se alcançariam."
+      },
+      {
+        "text": "Fundi-las numa rede em modo automático",
+        "why": "Modo automático dificulta unir, não facilita."
+      },
+      {
+        "text": "O Network Connectivity Center",
+        "why": "Isso. Redes se prendem como raios a um hub e se alcançam por ele."
+      }
+    ]
+  },
+  "ex-g5bq3vtc": {
+    "prompt": "Ponha em ordem os passos de unir a empresa comprada ao planner.",
+    "hint": "A sobreposição vem primeiro.",
+    "items": [
+      "conferir as faixas com o reach.py",
+      "renumerar a rede comprada",
+      "criar o peering dos dois lados",
+      "escrever regras de firewall em cada lado"
+    ],
+    "trap": "Criar o peering antes de renumerar é o deslize: o Google o recusa enquanto as faixas se sobrepõem."
+  },
+  "ex-vp23b99q": {
+    "prompt": "Uma equipe nova do planner quer máquinas em staging e o direito de mudar as regras de firewall da sub-rede de staging. O que o desenho do planner lhes dá?",
+    "hint": "Quem opera o firewall?",
+    "choices": [
+      {
+        "text": "securityAdmin no projeto host",
+        "why": "Isso lhes daria toda regra da rede compartilhada."
+      },
+      {
+        "text": "Um peering para uma rede própria",
+        "why": "Isso troca o Shared VPC por uma segunda rede para operar."
+      },
+      {
+        "text": "networkAdmin na sub-rede de staging",
+        "why": "networkAdmin muda redes; regras de firewall são do securityAdmin."
+      },
+      {
+        "text": "Network User na sub-rede, e só",
+        "why": "Isso. Máquinas são delas para pôr; regras são do host."
+      }
+    ]
+  }
+}
