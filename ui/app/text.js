@@ -666,6 +666,15 @@ const RULES = {
 
   /* HCL is what Terraform, OpenTofu and Packer are written in. `#` and `//`
      both start a comment; a heredoc is left uncoloured rather than guessed. */
+  /* Bicep, Azure's own declaration language. Its multi-line string is three quotes, and it goes
+     first, or the plain quote would end that string after its first character. */
+  bicep: language({
+    quotes: ["'"],
+    long: ["'''"],
+    keywords: `targetScope param var resource module output existing metadata type func import
+      using extension if for in true false null`,
+  }),
+
   hcl: language({
     line: ['#', '//'],
     quotes: ['"'],
