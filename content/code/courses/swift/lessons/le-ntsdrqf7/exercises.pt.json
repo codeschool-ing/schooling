@@ -1,0 +1,415 @@
+{
+  "ex-7ek03aq4": {
+    "prompt": "Você escreve `var minutes: [Int] = []` dentro de uma struct, sem palavra de acesso. Que nível ela tem?",
+    "hint": "A tabela da seção 02 marca um nível como padrão.",
+    "choices": [
+      {
+        "text": "`private`",
+        "why": "Private precisa ser escrito; é o mais estreito, não o padrão."
+      },
+      {
+        "text": "`internal`",
+        "why": "Isso: visível em qualquer lugar do mesmo módulo, e em nenhum outro."
+      },
+      {
+        "text": "`public`, porque a struct é visível",
+        "why": "Nada fica público sem a palavra; é o primeiro erro inteiro da seção 03."
+      },
+      {
+        "text": "`fileprivate`, o arquivo onde foi escrita",
+        "why": "O arquivo é mais estreito que o padrão, que é o módulo inteiro."
+      }
+    ]
+  },
+  "ex-z1p1946v": {
+    "prompt": "O `Week.swift` tem uma struct com `private var log` e, abaixo dela no mesmo arquivo, uma função solta que lê `week.log`. Compila?",
+    "hint": "Private cobre uma declaração e suas extensões no arquivo.",
+    "choices": [
+      {
+        "text": "Sim, já que `private` quer dizer o arquivo inteiro",
+        "why": "Isso é `fileprivate`; `private` para no tipo e nas extensões dele."
+      },
+      {
+        "text": "Sim, porque toda função de um arquivo faz parte do tipo",
+        "why": "Uma função solta não pertence a tipo nenhum."
+      },
+      {
+        "text": "Não: a função está fora do tipo e das extensões dele",
+        "why": "Isso: é por isso que a seção 02 fez `minutes` `fileprivate`, o nível que cobre uma função solta no mesmo arquivo."
+      },
+      {
+        "text": "Não: propriedades `private` só são legíveis no `init`",
+        "why": "Todo método do tipo as lê, e as extensões no arquivo também."
+      }
+    ]
+  },
+  "ex-3rvvth3q": {
+    "prompt": "Uma propriedade é `internal` e usada por doze arquivos de um módulo. Você quer torná-la `private`. Qual é o custo?",
+    "hint": "Seção 02: alargar é barato, e a outra direção não.",
+    "choices": [
+      {
+        "text": "Nenhum; níveis de acesso não mudam nada na execução",
+        "why": "Verdade sobre a execução, e os doze arquivos param de compilar do mesmo jeito."
+      },
+      {
+        "text": "Cada um daqueles doze usos tem de mudar antes",
+        "why": "Isso: estreitar quebra todo uso fora da nova região, então você os reescreve por métodos antes."
+      },
+      {
+        "text": "Um aviso em cada arquivo, e o programa ainda compila",
+        "why": "Usar um nome inacessível é erro, não aviso."
+      },
+      {
+        "text": "A propriedade tem de virar `let`",
+        "why": "Acesso e mutabilidade são perguntas separadas."
+      }
+    ]
+  },
+  "ex-ww3vtycq": {
+    "prompt": "O `plan` importa o `PlannerCore`, cuja `struct Week` não tem palavra de acesso. O que o compilador diz em `Week()` no `plan`?",
+    "choices": [
+      {
+        "text": "`'Week' is inaccessible due to 'internal' protection level`",
+        "why": "Essa mensagem cita algo que ele enxerga; do `plan`, um tipo internal simplesmente não está lá."
+      },
+      {
+        "text": "`cannot find 'Week' in scope`",
+        "why": "Isso: fora do módulo, um tipo internal não existe."
+      },
+      {
+        "text": "Nada: o import deixa todo nome visível",
+        "why": "Um import traz só o que o outro módulo marcou como public ou mais largo."
+      },
+      {
+        "text": "Um aviso de que o tipo deveria ser public",
+        "why": "É erro, e o build falha."
+      }
+    ]
+  },
+  "ex-hj4xfykw": {
+    "prompt": "`public struct Week` com propriedades públicas e nenhum `init` escrito. Por que `Week()` ainda falha em outro módulo?",
+    "hint": "Olhe a nota que o compilador imprimiu.",
+    "choices": [
+      {
+        "text": "Structs não podem ser public",
+        "why": "O tipo ficou visível; só o inicializador não."
+      },
+      {
+        "text": "Outro módulo tem de chamar `Week.init()` por extenso",
+        "why": "`Week()` e `Week.init()` são a mesma chamada ao mesmo inicializador internal."
+      },
+      {
+        "text": "A biblioteca não foi recompilada depois da mudança",
+        "why": "O `swift build` recompila o que mudou; a mensagem é sobre acesso, não sobre um build antigo."
+      },
+      {
+        "text": "O inicializador gerado é `internal`",
+        "why": "Isso: a nota mostra `internal init()`. Um tipo público precisa de um `init` público escrito à mão."
+      }
+    ]
+  },
+  "ex-x270x4ts": {
+    "prompt": "O pacote da seção 03 tem uma biblioteca e um executável. Quantos módulos ele compila?",
+    "hint": "Um target é um módulo."
+  },
+  "ex-kszpya54": {
+    "prompt": "Uma unidade de código compilada junta e importada pelo nome, como `Foundation` ou `PlannerCore`, é um ___.",
+    "hint": "A fronteira onde o `internal` para.",
+    "blanks": [
+      {
+        "accept": [
+          "módulo",
+          "modulo"
+        ]
+      }
+    ]
+  },
+  "ex-9pjfycem": {
+    "prompt": "O que `public private(set) var minutes` deixa outro módulo fazer?",
+    "choices": [
+      {
+        "text": "Ler `minutes` quantas vezes quiser, mas nunca atribuir a ela",
+        "why": "Isso: o getter é público e o setter é privado."
+      },
+      {
+        "text": "Ler e substituir `minutes`, mas não acrescentar",
+        "why": "Substituir precisa do setter tanto quanto acrescentar."
+      },
+      {
+        "text": "Nada; o `private` vence o `public`",
+        "why": "As duas palavras cobrem o getter e o setter separadamente."
+      },
+      {
+        "text": "Ler e escrever, com um aviso",
+        "why": "Escrever de fora é erro."
+      }
+    ]
+  },
+  "ex-hgc0k6k7": {
+    "prompt": "`week.minutes.append(45)` no `plan` é recusado, embora só acrescente. Por quê?",
+    "hint": "Acrescentar muda o array.",
+    "choices": [
+      {
+        "text": "`append` é um método privado de `Array`",
+        "why": "`append` é público na biblioteca padrão; o que falta é o setter de `minutes`."
+      },
+      {
+        "text": "Mudar o array precisa do setter, e ele é privado",
+        "why": "Isso: `cannot use mutating member on immutable value: 'minutes' setter is inaccessible`."
+      },
+      {
+        "text": "`week` foi declarado com `let`",
+        "why": "Era um `var`; a mensagem cita o setter."
+      },
+      {
+        "text": "Arrays de outro módulo são copiados e não podem mudar",
+        "why": "Uma fronteira de módulo não torna um valor imutável; o nível de acesso do setter, sim."
+      }
+    ]
+  },
+  "ex-3bcpe4pm": {
+    "prompt": "O `add` da seção 04 recusa uma sessão negativa. O que o `private(set)` acrescentou a essa regra?",
+    "hint": "O que um chamador ainda poderia fazer sem ele?",
+    "choices": [
+      {
+        "text": "Ele confere o sinal de cada número",
+        "why": "O `guard` confere; o `private(set)` não confere valor nenhum."
+      },
+      {
+        "text": "Velocidade, já que o array não é mais copiado quando o `plan` o lê",
+        "why": "Níveis de acesso não mudam como valores são copiados."
+      },
+      {
+        "text": "Nenhum chamador acrescenta por fora do `add`",
+        "why": "Isso: sem ele, o `plan` acrescentaria `-30` diretamente e o `guard` nunca veria."
+      },
+      {
+        "text": "Ele torna `minutes` uma constante",
+        "why": "O valor ainda muda, pelo `add`."
+      }
+    ]
+  },
+  "ex-crv8rrgm": {
+    "prompt": "`public class Reminder` numa biblioteca. O que outro módulo NÃO pode fazer com ela?",
+    "choices": [
+      {
+        "text": "Criar uma com o `init` público",
+        "why": "Criar é usar, e `public` permite usar."
+      },
+      {
+        "text": "Chamar os métodos públicos",
+        "why": "Chamar é usar."
+      },
+      {
+        "text": "Herdar dela e sobrescrever os métodos",
+        "why": "Isso: herdar fora do módulo precisa de `open`."
+      },
+      {
+        "text": "Guardá-la num array de `Reminder`",
+        "why": "Guardar também é usar."
+      }
+    ]
+  },
+  "ex-9j9fa3nr": {
+    "prompt": "Uma classe é `open` e o método `text()` dela é `public`. Outro módulo herda dela e sobrescreve `text()`. O que acontece?",
+    "hint": "Seção 05: duas decisões.",
+    "choices": [
+      {
+        "text": "Compila: uma classe open abre todos os métodos",
+        "why": "Cada método é aberto separadamente."
+      },
+      {
+        "text": "A subclasse compila, e a sobrescrita é recusada",
+        "why": "Isso: `overriding non-open instance method outside of its defining module`."
+      },
+      {
+        "text": "A subclasse é recusada, e a sobrescrita também",
+        "why": "A classe é open, então herdar dela é permitido."
+      },
+      {
+        "text": "Compila, e o `text()` da biblioteca roda no lugar",
+        "why": "O Swift não ignora uma sobrescrita em silêncio; ele a recusa."
+      }
+    ]
+  },
+  "ex-3ek32fbf": {
+    "prompt": "Quais destes podem ser marcados `open`? Escolha todos os que se aplicam.",
+    "hint": "O que tem subclasses?",
+    "choices": [
+      {
+        "text": "Uma classe",
+        "why": "Sim."
+      },
+      {
+        "text": "Um método de uma classe",
+        "why": "Sim: a sobrescrita é aberta por método."
+      },
+      {
+        "text": "Uma struct",
+        "why": "Uma struct não tem subclasses, então `public` é o nível mais largo dela."
+      },
+      {
+        "text": "Um protocolo",
+        "why": "Protocolos são adotados, não herdados."
+      }
+    ]
+  },
+  "ex-k52y468k": {
+    "prompt": "Onde uma `package func` é visível?",
+    "choices": [
+      {
+        "text": "Só no próprio arquivo",
+        "why": "Isso é `fileprivate`."
+      },
+      {
+        "text": "Em todo módulo que importa o módulo dela, onde quer que esteja",
+        "why": "Isso é `public`; o `report` foi recusado."
+      },
+      {
+        "text": "Em todo módulo do mesmo pacote",
+        "why": "Isso: o `plan` usou e o `report`, outro pacote, não conseguiu."
+      },
+      {
+        "text": "Só no próprio módulo",
+        "why": "Isso é `internal`, e o `plan` é outro módulo."
+      }
+    ]
+  },
+  "ex-82mdver8": {
+    "prompt": "Antes do Swift 5.9, como dois módulos de um pacote compartilhavam um ajudante?",
+    "hint": "Que nível atravessava a fronteira de módulo antes de existir o `package`?",
+    "choices": [
+      {
+        "text": "Com `internal`, o padrão",
+        "why": "Internal para no módulo."
+      },
+      {
+        "text": "Tornando-o `public`",
+        "why": "Isso: todo usuário da biblioteca também o via, com um comentário pedindo que não chamasse."
+      },
+      {
+        "text": "Copiando o arquivo nos dois targets",
+        "why": "Isso cria dois ajudantes diferentes em dois módulos, não um compartilhado."
+      },
+      {
+        "text": "Por `fileprivate` e um diretório comum",
+        "why": "Fileprivate para no arquivo."
+      }
+    ]
+  },
+  "ex-527wdxtj": {
+    "prompt": "O `report` foi recusado porque a fronteira do nível `package` é o ___, o diretório com um `Package.swift`.",
+    "hint": "Nem o módulo, nem o arquivo.",
+    "blanks": [
+      {
+        "accept": [
+          "pacote",
+          "package"
+        ]
+      }
+    ]
+  },
+  "ex-mfshkt1m": {
+    "prompt": "Por que `Goals` é um enum sem casos, e não uma struct?",
+    "choices": [
+      {
+        "text": "Ninguém consegue criar um valor `Goals` por engano",
+        "why": "Isso: `'Goals' cannot be constructed because it has no accessible initializers`."
+      },
+      {
+        "text": "Propriedades estáticas só funcionam em enums",
+        "why": "Structs e classes também têm."
+      },
+      {
+        "text": "Enums são mais rápidos",
+        "why": "Nada sobre velocidade: não há instância nenhuma."
+      },
+      {
+        "text": "Uma struct tornaria `Goals.weekly` público",
+        "why": "O acesso é escrito por membro de qualquer jeito."
+      }
+    ]
+  },
+  "ex-2s9b91y6": {
+    "prompt": "O `plan` declara sua própria `struct Week` e importa o `PlannerCore`, que também tem uma. O que um `Week` simples quer dizer dentro do `plan`?",
+    "hint": "O `String(reflecting:)` imprimiu os dois nomes completos.",
+    "choices": [
+      {
+        "text": "O da biblioteca, porque foi importado primeiro",
+        "why": "A ordem dos imports não decide; o nome do módulo atual vence."
+      },
+      {
+        "text": "Nenhum: o compilador recusa por ambiguidade",
+        "why": "O programa compilou e rodou."
+      },
+      {
+        "text": "O do próprio `plan`, e o outro é `PlannerCore.Week`",
+        "why": "Isso: um nome declarado no módulo atual vence, e o nome do módulo passa por cima dele."
+      },
+      {
+        "text": "O que tiver um `init` que sirva à chamada",
+        "why": "A busca de nome escolhe o tipo antes de considerar qualquer inicializador."
+      }
+    ]
+  },
+  "ex-gjt9gvsf": {
+    "prompt": "Na seção 07, `Goals.weekly` vale 300 e a semana tem 200 e 150 minutos. O que `print(Goals.weekly - theirs.total)` imprime?"
+  },
+  "ex-mtb48ef0": {
+    "prompt": "Ligue cada necessidade do planner ao nível de acesso que a atende da forma mais estreita.",
+    "hint": "O mais estreito que funciona, como a seção 02 aconselhou.",
+    "pairs": [
+      {
+        "left": "Um registro de notas que só `Week` e suas extensões tocam",
+        "right": "`private`"
+      },
+      {
+        "left": "Um resumo de depuração para o `plan`, módulo do mesmo pacote",
+        "right": "`package`"
+      },
+      {
+        "left": "O próprio `Week`, usado por outros pacotes",
+        "right": "`public`"
+      },
+      {
+        "left": "Uma classe de lembrete que outros pacotes podem herdar",
+        "right": "`open`"
+      }
+    ],
+    "right_distractors": [
+      "`fileprivate`"
+    ]
+  },
+  "ex-r1mtzz0r": {
+    "prompt": "Ordene estes da região mais estreita para a mais larga.",
+    "items": [
+      "`private`",
+      "`fileprivate`",
+      "`internal`",
+      "`package`",
+      "`public`"
+    ]
+  },
+  "ex-qt550k7q": {
+    "prompt": "O `public func save(_ week: Week)` de uma biblioteca recebe um `Week` que é `internal`. O que o compilador faz?",
+    "hint": "Um chamador fora do módulo conseguiria nomear o tipo do parâmetro?",
+    "choices": [
+      {
+        "text": "Torna `Week` público para combinar",
+        "why": "O compilador nunca alarga um nível por você."
+      },
+      {
+        "text": "Aceita, e chamadores de fora passam qualquer valor",
+        "why": "Eles nem conseguiriam escrever o tipo do argumento."
+      },
+      {
+        "text": "Aceita e trata a função como internal",
+        "why": "Ele não rebaixa uma declaração em silêncio; a seção 06 diz que recusa."
+      },
+      {
+        "text": "Recusa a declaração",
+        "why": "Isso: nada pode ser usado de mais longe do que as coisas que menciona."
+      }
+    ]
+  }
+}
