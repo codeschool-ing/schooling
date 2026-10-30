@@ -3,7 +3,7 @@ title: Testando o que dá errado
 version: 1
 ---
 
-A lição 17 tomou uma decisão sobre falhas: **um arquivo que falta é um estado que a tela desenha, e um bug
+A aula 17 tomou uma decisão sobre falhas: **um arquivo que falta é um estado que a tela desenha, e um bug
 não é**. O `refresh` pega `IOException` e nada mais. As duas metades são comportamento, e as duas podem
 ser testadas, porque o modelo recebe a fonte em vez de procurar uma:
 
@@ -66,7 +66,7 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 O primeiro teste é o caminho triste da tela, sem sistema de arquivos envolvido: a fonte lança a exceção
 que um arquivo faltando lançaria, e o estado diz isso. **O segundo é o que protege a decisão.** O
 `error(…)` lança `IllegalStateException`, que o `refresh` não pega, então a corrotina lançada falha, a
-falha chega ao escopo do teste como a lição 15 descreveu, e o `runTest` a relança quando termina. O
+falha chega ao escopo do teste como a aula 15 descreveu, e o `runTest` a relança quando termina. O
 `assertFailsWith` em volta do `runTest` transforma isso num teste que passa.
 
 Alguém arrumando o código depois vai ter vontade de escrever `catch (e: Exception)` no `refresh`, para

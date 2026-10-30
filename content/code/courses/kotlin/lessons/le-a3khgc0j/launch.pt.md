@@ -52,7 +52,7 @@ entrelaçamento são os pontos de suspensão se revezando.
 
 O `launch` devolve um `Job`, um controle da corrotina que ele iniciou. `isActive` e `isCompleted` dizem
 onde ela está; **o `join()` suspende até ela terminar**, que é como o `main` esperou o terceiro
-lembrete antes de imprimir a última linha. O `cancel()` a para, e a lição 15 é sobre o que acontece
+lembrete antes de imprimir a última linha. O `cancel()` a para, e a aula 15 é sobre o que acontece
 então.
 
 ## O `runBlocking` espera os filhos
@@ -60,4 +60,4 @@ então.
 Tire o `join()`, e a última linha é impressa antes do terceiro lembrete, mas o programa ainda imprime o
 terceiro lembrete antes de terminar. **O `runBlocking` não retorna até toda corrotina iniciada dentro
 dele ter terminado.** Essa regra, de que uma corrotina espera as corrotinas que iniciou, é a
-concorrência estruturada, e a lição 15 é construída sobre ela.
+concorrência estruturada, e a aula 15 é construída sobre ela.

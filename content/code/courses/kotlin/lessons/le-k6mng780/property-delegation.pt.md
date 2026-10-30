@@ -45,7 +45,7 @@ dark
 ## `by lazy`
 
 `goal` não foi calculado quando o objeto foi montado, `created` foi impresso antes, e ele foi calculado
-**uma vez**, na primeira leitura; a segunda leitura reaproveitou o valor. Essa é a promessa da lição 7:
+**uma vez**, na primeira leitura; a segunda leitura reaproveitou o valor. Essa é a promessa da aula 7:
 diferente do `lateinit`, uma propriedade `lazy` não é lida vazia, porque lê-la é o que a preenche. Por
 padrão, o primeiro cálculo é protegido contra duas threads rodando-o ao mesmo tempo.
 

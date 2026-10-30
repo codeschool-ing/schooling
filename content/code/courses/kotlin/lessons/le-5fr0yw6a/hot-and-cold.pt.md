@@ -3,7 +3,7 @@ title: Quente e frio
 version: 1
 ---
 
-Os flows da lição 16 eram frios: uma receita que roda uma vez por coletor, desde o começo, e não faz nada
+Os flows da aula 16 eram frios: uma receita que roda uma vez por coletor, desde o começo, e não faz nada
 enquanto ninguém coleta. Isso é certo para ler um registro. É errado para **o estado de uma tela**: o
 total da semana existe esteja algo o desenhando ou não, uma tela que abre tarde deve ver o total atual e
 não uma reprise de como se chegou a ele, e duas telas que o mostram devem ver o mesmo número, não rodar
@@ -54,5 +54,5 @@ o valor atual, não o histórico. Ele viu 135 quando foi definido, e não viu o 
 não tinha mudado.
 
 O observador precisou ser cancelado. **Coletar um flow quente nunca termina sozinho**, porque o flow não
-tem fim: sempre há um valor atual e possivelmente outro vindo. É por isso que a lição 16 disse que uma
+tem fim: sempre há um valor atual e possivelmente outro vindo. É por isso que a aula 16 disse que uma
 tela coleta numa corrotina própria, e para quando a tela vai embora.

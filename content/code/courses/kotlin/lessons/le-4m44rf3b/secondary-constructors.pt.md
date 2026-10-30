@@ -49,7 +49,7 @@ escrita uma vez no `init` cobre todos.
 
 ## Em geral, um padrão ou uma função no lugar
 
-Os argumentos padrão da lição 3 eliminam a maioria dos motivos pelos quais o Java precisa de vários
+Os argumentos padrão da aula 3 eliminam a maioria dos motivos pelos quais o Java precisa de vários
 construtores. Um `Session(course, minutes = 30)` cobre o que um segundo construtor sem `minutes`
 cobriria. E interpretar texto, como acima, costuma se ler melhor como uma função com um nome que diz o
 que ela faz:
@@ -79,5 +79,5 @@ null
 
 **Um construtor precisa produzir um objeto ou lançar exceção.** Uma função consegue devolver `null`
 para uma entrada que está só errada, o que, para texto que uma estudante digitou, costuma ser a
-resposta honesta. A lição 10 leva funções como `parseSession` para dentro da própria classe, como um
+resposta honesta. A aula 10 leva funções como `parseSession` para dentro da própria classe, como um
 companion object, que é onde o código Kotlin guarda as fábricas dele.

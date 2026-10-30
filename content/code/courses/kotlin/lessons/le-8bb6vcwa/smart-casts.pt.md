@@ -61,7 +61,7 @@ Draft.kt:9:17: error: smart cast to 'String' is impossible, because 'note' is a 
                 ^^^^^^^^^^
 ```
 
-`class Draft` declara uma classe com uma propriedade, o que a lição 7 cobre. A mensagem diz o motivo
+`class Draft` declara uma classe com uma propriedade, o que a aula 7 cobre. A mensagem diz o motivo
 por inteiro: `note` é uma propriedade mutável que poderia ser alterada concorrentemente, então a
 verificação numa linha não prova nada sobre a seguinte. **A solução é tirar uma cópia para um
 `val`**, verificar a cópia e usar a cópia:
@@ -93,5 +93,5 @@ copiou, que é o que você verificou.
 ## `is` faz cast do mesmo jeito
 
 O mesmo mecanismo vale para qualquer verificação de tipo, não só para `null`. `if (value is String)`
-faz `value` ser uma `String` dentro das chaves. A lição 9 se apoia muito nisso, porque é o que faz um
+faz `value` ser uma `String` dentro das chaves. A aula 9 se apoia muito nisso, porque é o que faz um
 `when` sobre uma sealed class se ler tão bem.

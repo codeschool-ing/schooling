@@ -33,7 +33,7 @@ tem umas quinze linhas. Não há `new`: uma classe é construída chamando-a com
 `Course("Kotlin", 300)`.
 
 A última linha imprimiu `Course@` e um número, que é o texto padrão da JVM para um objeto: a classe
-dele e um hash code. As data classes da lição 8 trocam isso por algo legível.
+dele e um hash code. As data classes da aula 8 trocam isso por algo legível.
 
 ## `val`, `var`, ou nenhum
 
@@ -74,6 +74,6 @@ foi feita é a única coisa que se mexe.
 
 ## Argumentos nomeados e padrão valem aqui também
 
-Um construtor é uma função, então a lição 3 vale inteira: padrões, nomes e a vírgula no fim. A
+Um construtor é uma função, então a aula 3 vale inteira: padrões, nomes e a vírgula no fim. A
 chamada acima nomeia `date` porque ele vem depois de um parâmetro com padrão, exatamente o caso que a
-lição 3 mandou nomear.
+aula 3 mandou nomear.

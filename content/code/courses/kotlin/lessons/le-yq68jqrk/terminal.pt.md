@@ -4,7 +4,7 @@ version: 1
 ---
 
 O `collect` é um jeito de terminar um flow. **Um operador terminal é uma função suspensa que roda o flow
-e devolve algo que não é um flow**, e a biblioteca tem os que você esperaria da lição 5:
+e devolve algo que não é um flow**, e a biblioteca tem os que você esperaria da aula 5:
 
 ```kotlin
 // src/main/kotlin/FlowTerminal.kt

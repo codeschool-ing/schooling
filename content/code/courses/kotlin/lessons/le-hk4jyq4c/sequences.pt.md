@@ -90,5 +90,5 @@ ana@vm:~/kt/l05$ kotlinc Infinite.kt -include-runtime -d infinite.jar && java -j
 **Uma lista é o padrão, e uma sequência é para uma corrente longa sobre uma coleção grande, ou uma
 fonte sem fim.** Para algumas dezenas de itens, as listas intermediárias custam menos que a maquinaria
 da sequência, e uma lista é mais fácil de depurar, porque cada passo pode ser impresso inteiro. O
-`Flow` da lição 16 é a mesma ideia estendida a valores que chegam ao longo do tempo, e ele é frio, a
-palavra da lição 16 para preguiçoso.
+`Flow` da aula 16 é a mesma ideia estendida a valores que chegam ao longo do tempo, e ele é frio, a
+palavra da aula 16 para preguiçoso.

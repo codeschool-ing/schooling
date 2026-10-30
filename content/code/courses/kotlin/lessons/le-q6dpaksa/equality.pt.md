@@ -3,7 +3,7 @@ title: == e ===
 version: 1
 ---
 
-A lição 1 disse que o `==` do Kotlin chama o `equals`, e prometeu o `===` para depois. **O `==`
+A aula 1 disse que o `==` do Kotlin chama o `equals`, e prometeu o `===` para depois. **O `==`
 pergunta se dois valores são iguais; o `===` pergunta se são o mesmo objeto**, o mesmo lugar na
 memória.
 

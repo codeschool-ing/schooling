@@ -104,7 +104,7 @@ Inferir é o padrão, e um tipo declarado vale a pena em três lugares:
 
 - **quando o valor à direita não diz o bastante**, como em `val total: Long = 0`, em que o literal
   sozinho daria um `Int`;
-- **no tipo de retorno de uma função pública**, que a lição 3 transforma em hábito, porque é uma
+- **no tipo de retorno de uma função pública**, que a aula 3 transforma em hábito, porque é uma
   promessa a quem chama e não deve mudar porque alguém editou o corpo;
 - **quando você não tem certeza do que o compilador inferiu.** Escrever o tipo que você espera e
   compilar é o jeito mais rápido de descobrir se acertou.

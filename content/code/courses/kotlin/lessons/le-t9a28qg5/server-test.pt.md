@@ -58,5 +58,5 @@ tests passed
 porta; o módulo guarda o comportamento, e o `application { planner() }` o instala num teste sem nenhum
 dos dois. Cada teste ganha um módulo novo, então a sessão postada no primeiro não vaza para o segundo.
 
-O JSON é escrito como strings cruas, o `"""…"""` da lição 1, para o teste dizer exatamente o que passa
+O JSON é escrito como strings cruas, o `"""…"""` da aula 1, para o teste dizer exatamente o que passa
 pelo fio. Esse é o contrato de que um cliente, como o app que o `android-apps` constrói, depende.

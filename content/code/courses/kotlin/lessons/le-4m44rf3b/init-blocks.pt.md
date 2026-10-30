@@ -101,5 +101,5 @@ Exception in thread "main" java.lang.IllegalArgumentException: minutes out of ra
 
 O `require` lança `IllegalArgumentException` com a mensagem da lambda dele. **Uma sessão inválida
 agora nem chega a ser montada**, então nenhum código que recebe uma `Session` precisa perguntar se os
-minutos dela fazem sentido. É a mesma troca que a lição 2 fez com o `null`: uma verificação onde o
+minutos dela fazem sentido. É a mesma troca que a aula 2 fez com o `null`: uma verificação onde o
 valor é criado, em vez de uma dúvida em todo lugar onde ele é usado.

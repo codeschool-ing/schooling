@@ -58,11 +58,11 @@ could not load the week: the file is missing
 ```
 
 `data object Loading` declara um único objeto em vez de uma classe, porque um estado de carregamento
-não tem dados e só existe um; a lição 10 é sobre objetos. O ramo dele não tem `is`, porque compara com
+não tem dados e só existe um; a aula 10 é sobre objetos. O ramo dele não tem `is`, porque compara com
 esse único objeto.
 
 **Estados impossíveis agora são impossíveis de escrever.** Um `Loaded` sem sessões não compila, um
 `Failed` tem mensagem por construção, e a semana vazia é um `Loaded` com lista vazia, um estado real
 que a tela precisa desenhar, e não um `null` que significa duas coisas. Essa é a forma que toda tela do
-`android-apps` usa: a lição 17 deste curso guarda um `WeekState` num `StateFlow`, e uma tela Compose de
+`android-apps` usa: a aula 17 deste curso guarda um `WeekState` num `StateFlow`, e uma tela Compose de
 lá é um `when` sobre ele, exatamente como o `render`.

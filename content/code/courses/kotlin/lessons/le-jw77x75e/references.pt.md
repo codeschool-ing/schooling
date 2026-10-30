@@ -50,7 +50,7 @@ Três formas de referência aparecem aqui:
 
 `String::length` recebe a string como parâmetro: `map(String::length)` pede o comprimento a cada
 curso. `kotlin::startsWith` já tem o objeto dele, a string `"Kotlin"`, então a função que ele dá
-recebe só o prefixo a testar. Essa é uma **referência ligada**, e a lição 7 encontra a mesma forma com
+recebe só o prefixo a testar. Essa é uma **referência ligada**, e a aula 7 encontra a mesma forma com
 um objeto de uma classe sua.
 
 ## Lambda ou referência

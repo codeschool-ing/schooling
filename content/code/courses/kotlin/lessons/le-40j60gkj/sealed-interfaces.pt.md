@@ -55,7 +55,7 @@ linha separada para declará-lo.
 
 **`parse` devolve um valor que diz o que deu errado, em vez de lançar exceção.** Quem chama não
 consegue esquecer uma falha, porque o `when` sobre `Parsed` não compila sem o ramo `Failed`, e dentro
-dele o `when` sobre `ParseError` não compila sem os dois tipos. A lição 13 compara isso com exceções e
+dele o `when` sobre `ParseError` não compila sem os dois tipos. A aula 13 compara isso com exceções e
 com o `Result` da biblioteca padrão, e esta forma é a que ela recomenda para falhas que se espera que
 quem chama trate.
 

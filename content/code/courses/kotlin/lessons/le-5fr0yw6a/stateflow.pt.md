@@ -12,7 +12,7 @@ estado.
 | um coletor novo recebe primeiro o valor atual | uma tela que abre tarde fica em dia na hora |
 | valores iguais não são emitidos duas vezes, e um coletor lento recebe só o mais recente | redesenhar sem mudança, ou para um valor já substituído, é trabalho jogado fora |
 
-A terceira regra é o `conflate()` da lição 16, embutido:
+A terceira regra é o `conflate()` da aula 16, embutido:
 
 ```kotlin
 // src/main/kotlin/State.kt

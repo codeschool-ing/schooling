@@ -6,10 +6,10 @@ version: 1
 O Android é onde a maioria das pessoas conhece o Kotlin, e a JVM é onde a linguagem começou: boa parte do
 código Kotlin roda em servidores, respondendo requisições HTTP, e nada do que este curso ensinou muda
 lá. **O Ktor é o framework da JetBrains para escrever esses servidores em Kotlin**, feito sobre corrotinas
-desde a base, então todo tratador de requisição é uma função suspensa, e as lições 14 a 17 valem como
+desde a base, então todo tratador de requisição é uma função suspensa, e as aulas 14 a 17 valem como
 estão.
 
-O servidor mora num build próprio, `~/kt/server`, começado como a lição 19 começou o `studyplan`: uma
+O servidor mora num build próprio, `~/kt/server`, começado como a aula 19 começou o `studyplan`: uma
 cópia do wrapper, um `settings.gradle.kts` com os repositórios, e um catálogo. O catálogo nomeia as peças
 do Ktor e um plugin de que o build da JVM não precisava, o plugin de serialização do Kotlin:
 
@@ -77,7 +77,7 @@ tasks.test {
 
 O `ktor-server-netty` é o servidor em si, rodando sobre o Netty, a biblioteca de rede que a maioria dos
 servidores JVM usa por baixo. As duas linhas depois dele transformam objetos Kotlin em JSON e de volta. O
-`slf4j-simple` é `runtimeOnly`, da tabela da lição 19: o Ktor escreve o log pelo SLF4J, e este é o menor
+`slf4j-simple` é `runtimeOnly`, da tabela da aula 19: o Ktor escreve o log pelo SLF4J, e este é o menor
 componente que o imprime.
 
 ```kotlin
@@ -127,12 +127,12 @@ fun main() {
 }
 ```
 
-**O `planner()` é uma função de extensão em `Application`**, a ferramenta da lição 11, e o Ktor chama um
+**O `planner()` é uma função de extensão em `Application`**, a ferramenta da aula 11, e o Ktor chama um
 servidor montado assim de módulo. O `routing` liga um método e um caminho a um bloco suspenso; dentro
 dele, `call` é a requisição sendo respondida. O `start(wait = true)` mantém o `main` rodando até o
 processo ser parado.
 
-Construa-o como a lição 19 construiu o `app`, e inicie-o:
+Construa-o como a aula 19 construiu o `app`, e inicie-o:
 
 ```
 ana@vm:~/kt/server$ ./gradlew -q installDist

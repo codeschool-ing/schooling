@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um companion object é um objeto de verdade, detalhe que o código Kotlin nunca nota e o código Java
-sempre nota. O `javap`, que o JDK instalou na lição 1, imprime o que uma classe compilada declara.
+sempre nota. O `javap`, que o JDK instalou na aula 1, imprime o que uma classe compilada declara.
 Compile o `Companion.kt` da seção 03 num diretório de arquivos de classe e pergunte a ele:
 
 ```

@@ -43,7 +43,7 @@ Exception in thread "main" kotlin.UninitializedPropertyAccessException: lateinit
 `title` é uma `String`, não uma `String?`, então `show` a usa sem verificação. O preço é a última
 linha: **ler uma propriedade `lateinit` antes da atribuição lança
 `UninitializedPropertyAccessException`**, com o nome da propriedade na mensagem. Isso é um crash, como
-o `!!` da lição 2, e é a mesma aposta: a de que o valor vai estar lá quando for preciso.
+o `!!` da aula 2, e é a mesma aposta: a de que o valor vai estar lá quando for preciso.
 
 `this::title.isInitialized` pergunta se a atribuição já aconteceu, o que de vez em quando é útil em
 código de limpeza. Precisar disso com frequência é sinal de que a propriedade devia ser anulável.
@@ -58,6 +58,6 @@ signifique "ainda não".
 
 **Use `lateinit` quando algo fora da classe garante a atribuição antes de qualquer uso**, e a garantia
 faz parte de como o framework funciona: o ciclo de vida do Android, o método de preparação de um
-framework de teste na lição 18. Quando o valor pode ser calculado pela própria classe na primeira vez
-em que é preciso, o `by lazy` da lição 11 é melhor: ele não é lido vazio, porque lê-lo é o que o
+framework de teste na aula 18. Quando o valor pode ser calculado pela própria classe na primeira vez
+em que é preciso, o `by lazy` da aula 11 é melhor: ele não é lido vazio, porque lê-lo é o que o
 preenche.

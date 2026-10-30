@@ -50,15 +50,15 @@ de baixo. Não há fall-through nem `break`: cada ramo roda sozinho.
 
 `label` precisa devolver uma `String` para todo `Int`, e o compilador não consegue saber que as quatro
 condições cobrem todo número, então o `else` é obrigatório. Tire-o e o programa não compila, pelo
-mesmo motivo de o `if` da lição 3 precisar do `else`.
+mesmo motivo de o `if` da aula 3 precisar do `else`.
 
 Há um tipo de valor para o qual o compilador **consegue** saber que todo caso está coberto sem `else`:
 um valor cujos casos possíveis são todos conhecidos na compilação. Os enums são o primeiro, na seção
-03, e as sealed classes o segundo, que é o assunto desta lição.
+03, e as sealed classes o segundo, que é o assunto desta aula.
 
 ## `is` dentro do `when`
 
-Um ramo testa um tipo com `is`, e dentro dele o valor sofre smart cast, como a lição 2 prometeu:
+Um ramo testa um tipo com `is`, e dentro dele o valor sofre smart cast, como a aula 2 prometeu:
 
 ```kotlin
 // WhenIs.kt
@@ -87,5 +87,5 @@ something else
 
 `x.length` compila no ramo de `String` porque o ramo só roda quando `x` é uma `String`. `Any` é o tipo
 do qual todo tipo Kotlin é subtipo, e `List<*>` é uma lista de um tipo de item desconhecido, que a
-lição 12 explica. Testar um `Any` assim é o último recurso; o resto da lição troca o `Any` por um tipo
+aula 12 explica. Testar um `Any` assim é o último recurso; o resto da aula troca o `Any` por um tipo
 que conhece os próprios casos.

@@ -6,7 +6,7 @@ version: 1
 O objeto `Planner` da seção 02 guardava as sessões do programa inteiro. **Todo trecho de código que
 nomeia `Planner` divide essa única lista, e nada no código diz isso.** Tudo bem até dois deles suporem
 que começam de uma semana vazia. Duas pequenas verificações mostram isso, escritas como funções
-simples porque a lição 18 ainda não apresentou um framework de teste:
+simples porque a aula 18 ainda não apresentou um framework de teste:
 
 ```kotlin
 // Shared.kt

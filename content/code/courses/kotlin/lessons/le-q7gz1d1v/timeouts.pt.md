@@ -40,7 +40,7 @@ gave up: Timed out waiting for 500 ms
 planner carries on
 ```
 
-O `withTimeoutOrNull` devolve `null` quando o tempo acaba, que o `?:` da lição 2 então responde: **use-o
+O `withTimeoutOrNull` devolve `null` quando o tempo acaba, que o `?:` da aula 2 então responde: **use-o
 quando uma resposta lenta tem um substituto sensato**, uma semana em cache, uma lista vazia. O
 `withTimeout` lança `TimeoutCancellationException` no lugar, para quando o tempo acabar é uma falha que
 quem chama precisa saber.

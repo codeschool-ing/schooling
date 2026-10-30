@@ -3,7 +3,7 @@ title: O agendador do teste decide quando as corrotinas rodam
 version: 1
 ---
 
-O `WeekModel` da lição 17 lança o trabalho num escopo que recebe. Num teste esse escopo é o próprio
+O `WeekModel` da aula 17 lança o trabalho num escopo que recebe. Num teste esse escopo é o próprio
 teste: o `runTest` entrega `this`, e toda corrotina lançada nele roda no **agendador do teste**, que não
 roda nada até o teste deixar. É esse o ponto. O teste pode olhar o estado entre quaisquer dois passos do
 trabalho, no momento em que uma tela de verdade o teria desenhado.

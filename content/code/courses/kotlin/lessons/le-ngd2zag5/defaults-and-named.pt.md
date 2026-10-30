@@ -26,7 +26,7 @@ ana@vm:~/kt/l03$ kotlinc Describe.kt -include-runtime -d describe.jar && java -j
 `describe("Kotlin", 45, done = true)` diz isso na chamada. **Nomeie um `Boolean`, nomeie um número
 cuja unidade não é óbvia, e nomeie qualquer argumento que vem depois de um padrão que você pulou.** A
 própria biblioteca padrão do Kotlin faz isso, como em `equals("KOTLIN", ignoreCase = true)` da
-lição 1.
+aula 1.
 
 Depois que um argumento é nomeado, os seguintes só continuam posicionais se estiverem nas próprias
 posições. Ponha um argumento posicional onde o compilador não sabe qual parâmetro ele preenche, e ele

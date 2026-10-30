@@ -62,6 +62,6 @@ funções em `String` que ninguém encontra:
 ## Extensões dentro de uma classe
 
 Uma extensão também pode ser declarada dentro de uma classe, onde tem dois receptores: a instância da
-classe e o valor estendido. Os blocos da lição 6 que se leem como uma pequena linguagem para um objeto
-muitas vezes são feitos assim, e o script do Gradle da lição 19 também, onde `implementation("…")`
+classe e o valor estendido. Os blocos da aula 6 que se leem como uma pequena linguagem para um objeto
+muitas vezes são feitos assim, e o script do Gradle da aula 19 também, onde `implementation("…")`
 dentro de `dependencies { }` é exatamente uma função dessas.

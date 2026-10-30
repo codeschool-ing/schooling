@@ -4,7 +4,7 @@ version: 1
 ---
 
 O produtor de um flow roda na corrotina que o coleta, no dispatcher dela. Uma tela coletando na thread
-principal do Android leria então arquivos na thread principal, o que a lição 14 disse que congela o app.
+principal do Android leria então arquivos na thread principal, o que a aula 14 disse que congela o app.
 **O `flowOn(dispatcher)` leva tudo o que está acima dele para outro dispatcher**, e deixa o coletor onde
 estava:
 

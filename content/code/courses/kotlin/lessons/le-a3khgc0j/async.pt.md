@@ -10,7 +10,7 @@ e o devolve. Duas cargas que não dependem uma da outra podem então rodar ao me
 O `Async.kt` não declara `loadWeek` nem `loadGoal` próprios: ele usa os do `Suspend.kt`. **Todo arquivo
 em `src/main/kotlin` é compilado junto, num único espaço de nomes**, então uma função de nível superior
 num arquivo é visível em todos os outros, e declarar um segundo `loadWeek` em outro arquivo não
-compilaria: o compilador chama isso de sobrecargas conflitantes. Os programas das lições 14 a 17 dividem
+compilaria: o compilador chama isso de sobrecargas conflitantes. Os programas das aulas 14 a 17 dividem
 este projeto, então cada arquivo novo usa nomes próprios, ou reaproveita o que um arquivo anterior
 declarou.
 
@@ -67,5 +67,5 @@ mais palavras. **Inicie tudo o que pode rodar ao mesmo tempo, depois espere os r
 
 Se `loadWeek` lança uma exceção, o `await()` lança a mesma exceção em quem chama, e o outro `async` é
 cancelado: um resultado que falhou quer dizer que o resultado combinado não pode ser montado, então o
-irmão dele para de gastar trabalho. Isso é concorrência estruturada de novo, e a lição 15 mostra
+irmão dele para de gastar trabalho. Isso é concorrência estruturada de novo, e a aula 15 mostra
 acontecendo.

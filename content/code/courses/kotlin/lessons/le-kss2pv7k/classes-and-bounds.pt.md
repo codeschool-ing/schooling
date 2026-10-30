@@ -55,7 +55,7 @@ Unranked.kt:9:20: error: argument type mismatch: actual type is 'List<Session>',
 
 **O limite moveu o erro para a linha que o causou**: a chamada que passa sessões, e não alguma linha
 dentro de `Ranked` que tentou comparar duas delas. É o mesmo movimento que a verificação no `init` da
-lição 7 fez, aplicado a tipos.
+aula 7 fez, aplicado a tipos.
 
 ## Vários limites
 

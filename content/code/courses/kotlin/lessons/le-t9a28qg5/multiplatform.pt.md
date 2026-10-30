@@ -108,7 +108,7 @@ actual fun platform(): String = "Linux, natively"
 O `./gradlew runDebugExecutableLinuxX64` o constrói e roda, e num Mac o alvo é `macosArm64`. Este é o
 único programa do curso sem transcrição. O compilador do Kotlin/Native vem do Maven Central, mas o
 toolchain de C com que ele liga o programa é baixado de `download.jetbrains.com`, que a máquina em que
-estas lições foram gravadas não alcançava, como a lição 1 disse. Na sua máquina é mais um download na
+estas aulas foram gravadas não alcançava, como a aula 1 disse. Na sua máquina é mais um download na
 primeira execução.
 
 Esse é o mecanismo por trás do Compose Multiplatform e do código dividido entre Android e iOS: as regras

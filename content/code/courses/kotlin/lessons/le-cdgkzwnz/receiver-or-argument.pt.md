@@ -52,9 +52,9 @@ e 20 do `also`.
 
 Em `run { sum() }`, o `sum()` é chamado na lista sem nomeá-la. O bloco é uma **lambda com receptor**:
 o tipo dela se escreve `MutableList<Int>.() -> Int`, e dentro dela `this` é a lista, assim como dentro
-de um método `this` é o objeto. As lambdas da lição 4 tinham parâmetros; este tipo tem um objeto sobre
-o qual trabalha, e as funções de extensão da lição 11 são a mesma ideia declarada com nome.
+de um método `this` é o objeto. As lambdas da aula 4 tinham parâmetros; este tipo tem um objeto sobre
+o qual trabalha, e as funções de extensão da aula 11 são a mesma ideia declarada com nome.
 
-O `buildList { add(45) }` da lição 5 era uma dessas, e também é cada bloco de um script de build do
-Gradle na lição 19. **Quando o `this` pode ser omitido, um bloco se lê como uma pequena linguagem para
+O `buildList { add(45) }` da aula 5 era uma dessas, e também é cada bloco de um script de build do
+Gradle na aula 19. **Quando o `this` pode ser omitido, um bloco se lê como uma pequena linguagem para
 um objeto**, e esse é o motivo de tudo isso existir.

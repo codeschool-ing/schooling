@@ -49,7 +49,7 @@ false
 ## Ler um mapa dá um valor anulável
 
 `goals["Swift"]` imprimiu `null`, e o tipo dele é `Int?`. **Um mapa não promete que uma chave
-existe**, então toda leitura simples é anulável, e as ferramentas da lição 2 a respondem:
+existe**, então toda leitura simples é anulável, e as ferramentas da aula 2 a respondem:
 `getOrDefault`, ou `?: 0` como no laço. O `getValue` é a leitura que promete: devolve um `Int` e lança
 `NoSuchElementException` quando a chave falta, o que é o certo quando uma chave ausente é um bug.
 

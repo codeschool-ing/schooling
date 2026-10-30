@@ -38,7 +38,7 @@ ana@vm:~/kt/l05$ kotlinc Grouping.kt -include-runtime -d grouping.jar && java -j
 Leia as duas primeiras linhas da saída juntas. **O `groupBy` guarda todas as sessões**, arquivadas
 pelo curso, e os cursos aparecem na ordem em que cada um foi visto pela primeira vez. O `mapValues`
 então transforma cada lista no total dela. A lambda desmonta a entrada do mapa em chave e valor,
-`(_, list)`, com `_` para a chave de que não precisa; a lição 8 explica essa sintaxe, chamada
+`(_, list)`, com `_` para a chave de que não precisa; a aula 8 explica essa sintaxe, chamada
 desestruturação.
 
 ## partition

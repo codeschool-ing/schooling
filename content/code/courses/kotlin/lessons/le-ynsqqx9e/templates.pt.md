@@ -49,7 +49,7 @@ Kotlin
 ```
 
 `course` continua `kotlin` depois do `uppercase()`, porque a chamada montou `KOTLIN` como uma segunda
-string. A última linha recebe um bloco de código entre chaves, que a lição 4 chama de lambda; por
+string. A última linha recebe um bloco de código entre chaves, que a aula 4 chama de lambda; por
 enquanto basta saber que ele põe a primeira letra em maiúscula. **Numa `String` não existe outro tipo
 de função**: nada consegue mudá-la, então tudo o que parece uma mudança devolve uma string nova, e
 esquecer de guardar o resultado é o bug. `course.uppercase()` sozinho numa linha compila, roda e não
@@ -58,7 +58,7 @@ faz nada que se veja.
 ## Comparando strings
 
 O `==` compara duas strings pelos caracteres. Não é o hábito do Java, em que `==` em objetos compara
-identidade e `equals` compara conteúdo; o `==` do Kotlin chama o `equals` por você. A lição 8 volta a
+identidade e `equals` compara conteúdo; o `==` do Kotlin chama o `equals` por você. A aula 8 volta a
 isso com classes suas, e ao `===`, que é identidade.
 
 ```kotlin
@@ -80,4 +80,4 @@ true
 ```
 
 A última linha dá nome a um argumento, `ignoreCase = true`, que é um recurso de toda chamada de
-função em Kotlin e o assunto da lição 3.
+função em Kotlin e o assunto da aula 3.

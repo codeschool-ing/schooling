@@ -56,4 +56,4 @@ subir.
 
 O Java 21 tem threads virtuais, que aplicam a mesma ideia à própria `Thread`. **As corrotinas acrescentam
 o que as threads virtuais não têm**: concorrência estruturada, cancelamento que se propaga e o `Flow`,
-que são as lições 15 a 17, e rodam sem mudança no Android, onde threads virtuais não estão disponíveis.
+que são as aulas 15 a 17, e rodam sem mudança no Android, onde threads virtuais não estão disponíveis.

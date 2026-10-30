@@ -8,7 +8,7 @@ nome vai poder apontar para outra coisa depois?** `val` diz que não. `var` diz 
 outra linguagem tende a pegar a que muda, porque toda variável que já usou mudava; o hábito do Kotlin
 é o contrário, e é o compilador que torna esse hábito barato.
 
-O planejador de estudos que este curso constrói de lição em lição começa aqui, com um curso e os
+O planejador de estudos que este curso constrói de aula em aula começa aqui, com um curso e os
 minutos estudados nesta semana:
 
 ```schooling-example
@@ -70,7 +70,7 @@ ana@vm:~/kt/l01$ kotlinc Sessions.kt -include-runtime -d sessions.jar && java -j
 
 `sessions` é `val`, e a lista para onde ele aponta cresceu de dois itens para três. O que o `val`
 proíbe é `sessions = mutableListOf()`, uma segunda lista com o mesmo nome. Se a lista em si muda ou
-não é decidido pelo tipo dela, e a lição 5 põe os dois tipos de lista lado a lado.
+não é decidido pelo tipo dela, e a aula 5 põe os dois tipos de lista lado a lado.
 
 Então um `val` guardando uma lista mutável é uma coisa comum e correta de escrever. Um `var`
 guardando uma lista mutável costuma ser uma mudança a mais: dois jeitos diferentes de os mesmos dados

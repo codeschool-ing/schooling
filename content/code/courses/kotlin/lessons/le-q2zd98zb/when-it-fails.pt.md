@@ -57,7 +57,7 @@ e o que o código produziu. Tudo de `FAILURE:` para baixo é o Gradle dizendo qu
 o relatório que ele cita traz a mesma informação como página web, útil quando as falhas são dezenas.
 
 As duas strings diferem por um `s`. **A pergunta que uma falha faz é qual lado está errado**, e nem sempre
-é o código. Aqui o código diz `min`, como toda captura desde a lição 17, e o teste foi digitado de
+é o código. Aqui o código diz `min`, como toda captura desde a aula 17, e o teste foi digitado de
 memória. Troque a string esperada por `"3 sessions, 135 min"` e rode de novo:
 
 ```

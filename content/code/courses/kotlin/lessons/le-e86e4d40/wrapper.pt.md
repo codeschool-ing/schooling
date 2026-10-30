@@ -3,7 +3,7 @@ title: O wrapper fixa o Gradle
 version: 1
 ---
 
-Desde a lição 14 todo build começou com `./gradlew`, não `gradle`. A diferença é a razão inteira de um
+Desde a aula 14 todo build começou com `./gradlew`, não `gradle`. A diferença é a razão inteira de um
 projeto Gradle construir igual em duas máquinas. **O `gradlew` é um script pequeno, guardado no projeto,
 que baixa uma versão exata do Gradle e a roda**, seja qual for o Gradle instalado na máquina, ou nenhum.
 A versão mora num arquivo:
@@ -22,7 +22,7 @@ zipStorePath=wrapper/dists
 ```
 
 O `distributionUrl` nomeia a versão, 9.8.2. O primeiro `./gradlew` numa máquina baixa aquele zip para
-`~/.gradle/wrapper/dists`, que foi a espera que a lição 14 viu; toda execução seguinte o encontra lá. O
+`~/.gradle/wrapper/dists`, que foi a espera que a aula 14 viu; toda execução seguinte o encontra lá. O
 resto são configurações desse download.
 
 ```

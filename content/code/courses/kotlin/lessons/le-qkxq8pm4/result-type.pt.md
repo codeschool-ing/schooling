@@ -46,12 +46,12 @@ Failure(java.lang.IndexOutOfBoundsException: Empty list doesn't contain element 
 Ler o primeiro item de uma lista vazia é um bug, e o `runCatching` o transformou num `Failure`
 arrumado que o `getOrElse` transformou em `0`. **Mantenha o bloco de um `runCatching` restrito à única
 chamada que se espera que falhe**, a interpretação, a leitura do arquivo, e nada mais. Em código de
-corrotina ele também pega o cancelamento, o que a lição 15 mostra quebrando um escopo.
+corrotina ele também pega o cancelamento, o que a aula 15 mostra quebrando um escopo.
 
 ## `Result` ou um tipo selado
 
 O `Result` carrega uma exceção, e uma exceção carrega uma mensagem e um stack trace, que é a carga certa
 para uma falha vinda de código Java ou de I/O que você não escreveu. **Para falhas que o seu próprio
-código define, a sealed interface da lição 9 é melhor**: `ParseError.OutOfRange(900)` diz no tipo o
+código define, a sealed interface da aula 9 é melhor**: `ParseError.OutOfRange(900)` diz no tipo o
 que deu errado, e um `when` sobre ela é verificado quanto à completude, o que o `Throwable` de um
 `Result` nunca é.

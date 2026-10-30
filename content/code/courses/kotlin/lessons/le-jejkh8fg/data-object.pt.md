@@ -3,7 +3,7 @@ title: data object, para um caso sem dados
 version: 1
 ---
 
-O `WeekState.Loading` da lição 9 era um `data object`. Um `object` sozinho teria funcionado como
+O `WeekState.Loading` da aula 9 era um `data object`. Um `object` sozinho teria funcionado como
 estado; o `data` muda uma coisa que se vê e uma que não se vê:
 
 ```kotlin

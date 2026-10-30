@@ -33,5 +33,5 @@ anexa. Quem o desempacota precisa de um Java na versão 21 ou mais nova, o núme
 bytecode, e de mais nada.
 
 O `./gradlew build` é a tarefa que a CI roda: compila todo módulo, roda todo teste e monta os pacotes, e
-falha se algum passo falhar. Os testes da lição 18 fazem parte do build daqui em diante, não são um
+falha se algum passo falhar. Os testes da aula 18 fazem parte do build daqui em diante, não são um
 passo extra que alguém precisa lembrar.

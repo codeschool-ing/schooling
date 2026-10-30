@@ -55,7 +55,7 @@ fun label(minutes: Int) = if (minutes >= 60) "long"
                           ^^
 ```
 
-O mesmo vale para `when` e `try`, que as lições 9 e 13 usam como valores do mesmo jeito. Isso é boa
+O mesmo vale para `when` e `try`, que as aulas 9 e 13 usam como valores do mesmo jeito. Isso é boa
 parte do motivo de código Kotlin ter menos `var` que Java: um nome que antes era declarado vazio e
 preenchido por dois ramos agora é declarado uma vez, com o `if` à direita.
 

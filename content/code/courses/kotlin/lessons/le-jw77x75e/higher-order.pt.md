@@ -50,7 +50,7 @@ hora, `scaledBy(2)(45)`, o que é legal e raramente mais claro do que dar um nom
 
 ## Isso é a maior parte da biblioteca padrão
 
-A lição 5 é um passeio por funções com exatamente a forma de `countWhere`: `count`, `filter`, `map`,
+A aula 5 é um passeio por funções com exatamente a forma de `countWhere`: `count`, `filter`, `map`,
 `any`, `sortedBy`, `groupBy`. Cada uma recebe uma coleção e uma lambda, e **cada uma substitui um laço
 que você escreveria à mão**. A biblioteca padrão já tem `count`, então em código real `countWhere` é
 `week.count { it >= 60 }`, que a próxima seção explica.

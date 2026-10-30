@@ -85,4 +85,4 @@ Exception in thread "main" java.util.NoSuchElementException
 A soma de nada é 0, que é uma resposta de verdade. O mais longo de nada é `null` na forma `OrNull`, e
 uma exceção sem ela. **Use a forma `OrNull` sempre que a lista puder estar vazia**, o que, para as
 sessões de uma estudante numa semana nova, é a primeira coisa que acontece, e responda o `null` com as
-ferramentas da lição 2.
+ferramentas da aula 2.

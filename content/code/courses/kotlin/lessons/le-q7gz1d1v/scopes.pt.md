@@ -3,7 +3,7 @@ title: Um escopo: nenhuma corrotina sobrevive ao trabalho a que pertence
 version: 1
 ---
 
-A lição 14 terminou com uma regra: o `runBlocking` espera toda corrotina iniciada dentro dele. **Essa
+A aula 14 terminou com uma regra: o `runBlocking` espera toda corrotina iniciada dentro dele. **Essa
 regra é toda a concorrência estruturada**: toda corrotina é iniciada dentro de um escopo, o escopo não
 termina até todas terminarem, e assim nenhuma corrotina é esquecida, rodando depois de o código que a
 iniciou já ter seguido em frente.
@@ -82,8 +82,8 @@ que ela usou corrotinas. **Vista de fora, uma função com um `coroutineScope` d
 `suspend` que demora um pouco.** É isso que torna a concorrência combinável: `loadPlan` é chamada de
 qualquer lugar onde uma função suspensa é, e nada do que ela iniciou vaza.
 
-`fetchCourse` é `private`, porque as lições 14 a 17 dividem um projeto e um nome de nível superior
-precisa ser único nele; o `Async.kt` da lição 14 mostrou o que acontece caso contrário.
+`fetchCourse` é `private`, porque as aulas 14 a 17 dividem um projeto e um nome de nível superior
+precisa ser único nele; o `Async.kt` da aula 14 mostrou o que acontece caso contrário.
 
 ## A árvore
 

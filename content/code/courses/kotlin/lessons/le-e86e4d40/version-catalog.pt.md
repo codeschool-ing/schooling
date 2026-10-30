@@ -70,7 +70,7 @@ loading…
 3 sessions, 135 min
 ```
 
-O programa imprimiu o que imprimiu na lição 17, e esse é o teste de uma mudança assim: **o build quer
+O programa imprimiu o que imprimiu na aula 17, e esse é o teste de uma mudança assim: **o build quer
 dizer a mesma coisa, e as versões agora moram num lugar só**. O `kotlin("test")` fica como estava,
 porque já pega a versão do plugin do Kotlin.
 

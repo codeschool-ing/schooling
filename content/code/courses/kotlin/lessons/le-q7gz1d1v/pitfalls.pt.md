@@ -9,7 +9,7 @@ quebrada.
 
 ## Engolindo o cancelamento
 
-A lição 13 avisou que o `runCatching` pega tudo. Numa corrotina, tudo inclui a
+A aula 13 avisou que o `runCatching` pega tudo. Numa corrotina, tudo inclui a
 `CancellationException`:
 
 ```kotlin

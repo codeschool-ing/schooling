@@ -16,7 +16,7 @@ igualdade é a pergunta errada:
 | `assertContains(collection, element)` | o elemento está na coleção |
 
 As duas últimas devolvem algo, e é isso que as torna úteis: um teste pode seguir verificando a mensagem
-da exceção, ou uma propriedade do subtipo. O `WeekTotal` da lição 17 recusa minutos que não sejam
+da exceção, ou uma propriedade do subtipo. O `WeekTotal` da aula 17 recusa minutos que não sejam
 positivos, e um teste pode cobrar isso dele:
 
 ```kotlin
@@ -81,8 +81,8 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 **O `refusesZero` testa uma falha, e passa porque a falha aconteceu.** Uma recusa é comportamento como
 qualquer outro, e no dia em que alguém remover o `require`, é este teste que avisa. O `assertIs` devolveu
 `state` com o tipo `WeekUi.Loaded`, então `loaded.sessions` compilou sem cast, o mesmo smart cast que o
-`is` da lição 9 dava.
+`is` da aula 9 dava.
 
-O `assertEquals` compara com `==`, e é por isso que as data classes da lição 8 deixam os testes curtos:
+O `assertEquals` compara com `==`, e é por isso que as data classes da aula 8 deixam os testes curtos:
 dois valores `Loaded` com a mesma lista são iguais, e um teste pode escrever o estado esperado inteiro
 numa linha.

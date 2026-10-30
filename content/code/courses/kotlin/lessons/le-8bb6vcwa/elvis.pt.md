@@ -12,7 +12,7 @@ número. O `toIntOrNull()` transforma `"45"` em `45` e tudo o que não consegue 
 tipo dele é `Int?`. O operador elvis transforma isso num `Int`:
 
 ```schooling-example
-{"language": "kotlin", "file": "Elvis.kt", "parts": [{"code": "fun minutesFrom(input: String): Int {\n    return input.toIntOrNull() ?: 0\n}", "note": "Uma função que promete um `Int`. O `toIntOrNull()` dá um `Int?`, e o `?: 0` responde o caso ausente, então a expressão inteira é um `Int` e a promessa é cumprida."}, {"code": "fun describe(note: String?): String {\n    val text = note ?: return \"no note\"\n    return \"note: $text (${text.length} chars)\"\n}", "note": "O lado direito do `?:` também sai da função. `return` ali quer dizer: se não há anotação, esta função terminou. Depois dessa linha, `text` é uma `String`, nunca null."}, {"code": "fun main() {\n    println(minutesFrom(\"45\"))\n    println(minutesFrom(\"forty\"))\n    println(minutesFrom(\"\"))\n    println(describe(null))\n    println(describe(\"read chapter 3\"))\n}", "note": "Cinco chamadas: duas que dá para ler, duas que não dá, uma sem anotação nenhuma. A lição 3 é sobre funções; aqui elas só dão ao operador um lugar onde ficar."}]}
+{"language": "kotlin", "file": "Elvis.kt", "parts": [{"code": "fun minutesFrom(input: String): Int {\n    return input.toIntOrNull() ?: 0\n}", "note": "Uma função que promete um `Int`. O `toIntOrNull()` dá um `Int?`, e o `?: 0` responde o caso ausente, então a expressão inteira é um `Int` e a promessa é cumprida."}, {"code": "fun describe(note: String?): String {\n    val text = note ?: return \"no note\"\n    return \"note: $text (${text.length} chars)\"\n}", "note": "O lado direito do `?:` também sai da função. `return` ali quer dizer: se não há anotação, esta função terminou. Depois dessa linha, `text` é uma `String`, nunca null."}, {"code": "fun main() {\n    println(minutesFrom(\"45\"))\n    println(minutesFrom(\"forty\"))\n    println(minutesFrom(\"\"))\n    println(describe(null))\n    println(describe(\"read chapter 3\"))\n}", "note": "Cinco chamadas: duas que dá para ler, duas que não dá, uma sem anotação nenhuma. A aula 3 é sobre funções; aqui elas só dão ao operador um lugar onde ficar."}]}
 ```
 
 ```
@@ -37,7 +37,7 @@ de torná-la correta. Três lados direitos, três decisões:
 | `?: return …` | quando o resto da função não tem nada a fazer sem o valor |
 | `?: throw IllegalArgumentException("…")` | quando um valor ausente é um erro que alguém precisa ouvir |
 
-`throw` é uma expressão em Kotlin, então fica à direita do `?:` como o `return`. A lição 13 é sobre
+`throw` é uma expressão em Kotlin, então fica à direita do `?:` como o `return`. A aula 13 é sobre
 falhas e volta a isso; o ponto aqui é que **o operador é o lugar onde um programa diz o que a ausência
 significa**, e vale um segundo para escolher.
 

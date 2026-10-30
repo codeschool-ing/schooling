@@ -74,9 +74,9 @@ studying Android
 `show` foi escrita quando `course` era `"Kotlin"` e imprimiu `"Android"`, porque, na hora em que
 rodou, esse era o valor da variável que ela segura. **A solução, quando você quer o valor do momento
 em que escreveu, é uma cópia `val`**, tirada antes de a lambda ser criada. É a mesma regra dos smart
-casts da lição 2, vista do outro lado: um `var` que outra coisa enxerga é um `var` que muda debaixo de
+casts da aula 2, vista do outro lado: um `var` que outra coisa enxerga é um `var` que muda debaixo de
 você.
 
-Isso importa mais adiante, nas lições 14 e 15, quando uma lambda roda em outra thread ou depois de um
+Isso importa mais adiante, nas aulas 14 e 15, quando uma lambda roda em outra thread ou depois de um
 atraso. Uma closure que captura um `var` e roda em outro lugar é o jeito clássico de ler um valor que
 já mudou, e as corrotinas do Kotlin foram desenhadas para você raramente precisar de uma.

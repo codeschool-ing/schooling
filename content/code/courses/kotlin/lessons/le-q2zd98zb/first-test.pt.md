@@ -61,7 +61,7 @@ testes compilam e rodam, e ausentes do que o `./gradlew run` inicia. Sem o `test
 imprime nada sobre testes que passam, o que é silencioso mas não diz nada a quem está começando.
 
 Os testes moram em `src/test/kotlin`, ao lado de `src/main/kotlin`, e enxergam tudo dele que não for
-`private`. O primeiro verifica o `describe` da lição 17:
+`private`. O primeiro verifica o `describe` da aula 17:
 
 ```kotlin
 // src/test/kotlin/DescribeTest.kt

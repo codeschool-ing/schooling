@@ -47,7 +47,7 @@ screen B got 60
 `opening the log` foi impresso uma vez, e as duas telas receberam os três valores. A divisão roda numa
 corrotina do escopo passado, aqui o do `runBlocking`, e **continua rodando até esse escopo ser
 cancelado**: o `cancelChildren()` no fim a para, junto com os dois coletores, para o programa conseguir
-terminar. É a estrutura da lição 15 fazendo o trabalho dela: o produtor compartilhado pertence a um
+terminar. É a estrutura da aula 15 fazendo o trabalho dela: o produtor compartilhado pertence a um
 escopo, e não sobrevive a ele.
 
 ## Quando a divisão começa e para

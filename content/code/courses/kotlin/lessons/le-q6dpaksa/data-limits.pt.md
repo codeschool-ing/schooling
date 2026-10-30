@@ -63,6 +63,6 @@ gerado compara os dois arrays como objetos. Duas semanas com os mesmos minutos n
 - ela **pode** implementar interfaces e estender outra classe, e pode declarar o próprio `toString` ou
   `equals`, e nesse caso o compilador não gera aquele.
 
-A segunda regra importa para a lição 9. Uma família de formas de dados relacionadas, uma sessão que
+A segunda regra importa para a aula 9. Uma família de formas de dados relacionadas, uma sessão que
 está planejada, em andamento ou feita, não é uma data class com subclasses. É uma hierarquia selada,
 cujos membros são cada um uma data class própria.

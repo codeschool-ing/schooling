@@ -43,7 +43,7 @@ posição, e `valueOf` transforma um nome de volta num valor, lançando exceçã
 ## Sem `else`, e por que isso importa
 
 `next` cobre os três status e não tem `else`, e compila, porque o compilador sabe que os três são todos
-os que existem. **Essa é a propriedade de que esta lição trata**: acrescente um quarto status, e todo
+os que existem. **Essa é a propriedade de que esta aula trata**: acrescente um quarto status, e todo
 `when` sobre `Status` sem `else` para de compilar até dizer o que fazer com o novo.
 
 ```kotlin

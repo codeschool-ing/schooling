@@ -3,7 +3,7 @@ title: Operadores: map, filter, take e onEach
 version: 1
 ---
 
-Um flow tem os operadores das coleções da lição 5, com os mesmos nomes e as mesmas lambdas. **Cada
+Um flow tem os operadores das coleções da aula 5, com os mesmos nomes e as mesmas lambdas. **Cada
 operador devolve um flow novo e não roda nada**; a corrente descreve o que vai acontecer com cada valor,
 e o `collect` no fim faz acontecer, um valor por vez pela corrente inteira.
 
@@ -42,10 +42,10 @@ ana@vm:~/kt/planner$ ./gradlew -q run -Pmain=FlowOpsKt
 O `asFlow()` transforma uma lista num flow. Siga os valores: o 45 passou por todos os passos e foi
 impresso; o 20 foi visto e barrado pelo filtro; o 60 passou e era o segundo valor que o `take(2)` queria.
 **Então o flow parou**: 30 e 90 nem foram vistos. O `take` cancela o produtor quando tem a quantidade
-dele, usando o cancelamento da lição 15, então um flow que lê um arquivo grande para de lê-lo.
+dele, usando o cancelamento da aula 15, então um flow que lê um arquivo grande para de lê-lo.
 
 O `onEach` roda um efeito colateral e passa o valor adiante sem mudança, a versão de flow do `also` da
-lição 6. Posto primeiro, ele mostra exatamente quais valores o produtor emitiu.
+aula 6. Posto primeiro, ele mostra exatamente quais valores o produtor emitiu.
 
 ## Os operadores rodam as lambdas como código suspenso
 

@@ -48,12 +48,12 @@ Em Java, um método que pode falhar com `IOException` precisa declarar `throws I
 chamador precisa pegá-la ou declará-la por sua vez. A intenção era que nenhuma falha fosse esquecida. O
 efeito, em bases de código grandes, foram camadas de `catch (Exception e) {}` escritas para o
 compilador parar de perguntar, que esquecem todas as falhas de uma vez. **A visão do Kotlin é que uma
-falha que o chamador precisa tratar deve estar no tipo de retorno**, como o `Parsed` da lição 9 e o
+falha que o chamador precisa tratar deve estar no tipo de retorno**, como o `Parsed` da aula 9 e o
 `Result` da seção 06, e que exceções são para as falhas que um chamador não tem como tratar ali mesmo.
 
 ## `throw` é uma expressão
 
-A lição 3 mostrou que `throw` tem o tipo `Nothing`, então ele cabe onde se espera um valor:
+A aula 3 mostrou que `throw` tem o tipo `Nothing`, então ele cabe onde se espera um valor:
 `val minutes = text.toIntOrNull() ?: throw IllegalArgumentException("not a number: $text")`. Essa é a
 forma comum: **transformar um valor ausente ou errado numa exceção, com mensagem, na linha onde se sabe
 pela primeira vez que ele está errado**.

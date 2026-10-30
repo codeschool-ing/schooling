@@ -80,8 +80,8 @@ ana@vm:~/kt/l03$ kotlinc Planner.kt Main.kt -include-runtime -d planner.jar && j
 this week: 2 h 15 min
 ```
 
-A lição 7 cobre direito os quatro modificadores de visibilidade, incluindo o `internal`, que é o que
-importa quando um projeto tem módulos, na lição 19.
+A aula 7 cobre direito os quatro modificadores de visibilidade, incluindo o `internal`, que é o que
+importa quando um projeto tem módulos, na aula 19.
 
 ## A ordem das declarações não importa
 

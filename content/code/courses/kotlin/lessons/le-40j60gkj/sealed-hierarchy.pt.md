@@ -8,7 +8,7 @@ de carregar dados próprios. As subclasses dela precisam ser declaradas no mesmo
 o compilador vê cada uma, e ninguém acrescenta outra de fora.
 
 ```schooling-example
-{"language": "kotlin", "file": "Sealed.kt", "parts": [{"code": "sealed class Session {\n    data class Planned(val course: String, val minutes: Int) : Session()\n    data class Running(val course: String, val startedAt: String) : Session()\n    data class Done(val course: String, val minutes: Int) : Session()\n}", "note": "Três formas de sessão, cada uma uma data class com exatamente os dados que aquela forma tem. `: Session()` torna cada uma subclasse da sealed class; a lição 11 cobre herança direito."}, {"code": "fun describe(s: Session): String = when (s) {\n    is Session.Planned -> \"${s.course}: ${s.minutes} min planned\"\n    is Session.Running -> \"${s.course}: running since ${s.startedAt}\"\n    is Session.Done -> \"${s.course}: ${s.minutes} min done\"\n}", "note": "Um ramo por subclasse, sem `else`, e cada ramo faz smart cast: `s.startedAt` só existe no ramo `Running`, porque só uma sessão em andamento tem hora de início."}, {"code": "fun main() {\n    val week = listOf(\n        Session.Done(\"Kotlin\", 45),\n        Session.Running(\"Android\", \"14:30\"),\n        Session.Planned(\"Kotlin\", 30),\n    )\n    week.forEach { println(describe(it)) }\n}"}]}
+{"language": "kotlin", "file": "Sealed.kt", "parts": [{"code": "sealed class Session {\n    data class Planned(val course: String, val minutes: Int) : Session()\n    data class Running(val course: String, val startedAt: String) : Session()\n    data class Done(val course: String, val minutes: Int) : Session()\n}", "note": "Três formas de sessão, cada uma uma data class com exatamente os dados que aquela forma tem. `: Session()` torna cada uma subclasse da sealed class; a aula 11 cobre herança direito."}, {"code": "fun describe(s: Session): String = when (s) {\n    is Session.Planned -> \"${s.course}: ${s.minutes} min planned\"\n    is Session.Running -> \"${s.course}: running since ${s.startedAt}\"\n    is Session.Done -> \"${s.course}: ${s.minutes} min done\"\n}", "note": "Um ramo por subclasse, sem `else`, e cada ramo faz smart cast: `s.startedAt` só existe no ramo `Running`, porque só uma sessão em andamento tem hora de início."}, {"code": "fun main() {\n    val week = listOf(\n        Session.Done(\"Kotlin\", 45),\n        Session.Running(\"Android\", \"14:30\"),\n        Session.Planned(\"Kotlin\", 30),\n    )\n    week.forEach { println(describe(it)) }\n}"}]}
 ```
 
 ```
@@ -27,7 +27,7 @@ Kotlin: 30 min planned
 `describe` não tem `else`, e o compilador aceita, porque **os três ramos `is` são todas as `Session`
 possíveis**. É o mesmo conhecimento que ele tinha sobre os valores do enum, agora sobre tipos.
 
-Compare com a data class da lição 8 com um campo de status: `Session(course, minutes, status,
+Compare com a data class da aula 8 com um campo de status: `Session(course, minutes, status,
 startedAt: String?)`. Uma sessão planejada carregaria um `startedAt` `null`, os `minutes` de uma
 sessão em andamento não significariam nada, e toda função teria de lembrar quais campos fazem sentido
 para qual status. **Na versão selada cada forma tem os campos de que precisa e nenhum outro**, e o

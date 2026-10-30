@@ -3,7 +3,7 @@ title: internal é visível dentro de um módulo
 version: 1
 ---
 
-A tabela da lição 7 deu ao `internal` uma linha e uma promessa: **visível em todo lugar do mesmo módulo,
+A tabela da aula 7 deu ao `internal` uma linha e uma promessa: **visível em todo lugar do mesmo módulo,
 e em nenhum outro**. Com um módulo ele se comportou como `public`. Com dois ele traça uma linha, e o
 `Week.percent()` fica atrás dela: o `summary()` o usa, um teste no `core` pode verificá-lo, e o `app`
 não pode chamá-lo.

@@ -24,12 +24,12 @@ fun <T> isListOf(value: Any): Boolean = value is List<T>
 ```
 
 Em tempo de execução não há `T` com que comparar, então `is List<T>` não tem resposta e é recusado. É
-também por isso que a lição 9 escreveu `is List<*>`: a estrela pergunta só "é uma lista", o que dá para
+também por isso que a aula 9 escreveu `is List<*>`: a estrela pergunta só "é uma lista", o que dá para
 verificar.
 
 ## `reified`: guardando o T numa função inline
 
-A lição 4 disse que havia um caso em que o `inline` é obrigatório e não uma otimização. **O corpo de uma
+A aula 4 disse que havia um caso em que o `inline` é obrigatório e não uma otimização. **O corpo de uma
 função inline é copiado em cada lugar de chamada, onde o argumento de tipo é conhecido**, então o
 compilador consegue escrever o tipo real na cópia. Marcar o parâmetro como `reified` pede que ele faça
 isso:

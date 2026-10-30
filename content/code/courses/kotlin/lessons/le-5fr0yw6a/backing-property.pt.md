@@ -4,7 +4,7 @@ version: 1
 ---
 
 Se toda tela pudesse definir o total, ninguém saberia quem o definiu, e um bug que escreve 0 poderia
-estar em qualquer lugar. A lição 5 tinha a resposta para listas, uma `MutableList` privada entregue como
+estar em qualquer lugar. A aula 5 tinha a resposta para listas, uma `MutableList` privada entregue como
 `List`, e a forma aqui é a mesma. **A classe dona do estado guarda um `MutableStateFlow` privado e o expõe
 como um `StateFlow` somente leitura**; as mudanças passam pelas funções dela.
 
@@ -58,7 +58,7 @@ e: file:///home/ana/kt/planner/src/main/kotlin/BackingWrite.kt:4:18 'val' cannot
 FAILURE: Build failed with an exception.
 ```
 
-Apague o `BackingWrite.kt` depois de ver a mensagem, como o `NotSuspend.kt` da lição 14.
+Apague o `BackingWrite.kt` depois de ver a mensagem, como o `NotSuspend.kt` da aula 14.
 
 ## `update`, não `value +=`
 

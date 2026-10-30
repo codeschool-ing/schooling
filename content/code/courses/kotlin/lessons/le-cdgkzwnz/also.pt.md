@@ -38,7 +38,7 @@ Exception in thread "main" java.lang.IllegalArgumentException: out of range: 900
 As duas linhas de log mostram o tamanho da lista em dois pontos da corrente, e **tirando os `also` a
 corrente calcula o mesmo resultado**, que é o teste de um bom. O segundo uso é uma verificação: o
 `require` lança `IllegalArgumentException` com a mensagem da lambda dele quando a condição é falsa, e
-a lição 13 volta a ele. Aqui ele deixa um valor ser verificado no momento em que é criado, e o terceiro
+a aula 13 volta a ele. Aqui ele deixa um valor ser verificado no momento em que é criado, e o terceiro
 caso mostra a verificação disparando.
 
 ## Por que `it` e não `this`

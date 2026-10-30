@@ -65,6 +65,6 @@ então a linha de log basta para entender a falha sem depurador.
 ## Elas são para bugs
 
 `require` e `check` descrevem condições que um programa correto nunca viola. Não são um jeito de tratar
-uma estudante digitando `forty`; isso é entrada esperada, e pertence ao `?:` da lição 2, aos resultados
-selados da lição 9 ou ao `Result` da próxima seção. **Se um `require` dispara em produção, a correção
+uma estudante digitando `forty`; isso é entrada esperada, e pertence ao `?:` da aula 2, aos resultados
+selados da aula 9 ou ao `Result` da próxima seção. **Se um `require` dispara em produção, a correção
 está no código que o chamou**, não num `catch` em volta dele.

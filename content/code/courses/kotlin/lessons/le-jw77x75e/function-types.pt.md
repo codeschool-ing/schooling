@@ -54,7 +54,7 @@ outros. O Kotlin na JVM representa toda lambda como um objeto com um método `in
 
 Um tipo de função pode ser anulável como qualquer outro, e os parênteses importam: `(() -> Unit)?` é
 "uma função, ou nada", enquanto `() -> Unit?` é "uma função que devolve um `Unit?`". O primeiro é o
-que você quer para um callback opcional, e as ferramentas da lição 2 valem para ele:
+que você quer para um callback opcional, e as ferramentas da aula 2 valem para ele:
 
 ```kotlin
 // Callback.kt

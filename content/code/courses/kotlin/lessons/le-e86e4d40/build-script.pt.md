@@ -3,7 +3,7 @@ title: Lendo um script de build
 version: 1
 ---
 
-Um build do Gradle tem dois tipos de script, e a lição 14 escreveu um de cada sem se demorar neles. **O
+Um build do Gradle tem dois tipos de script, e a aula 14 escreveu um de cada sem se demorar neles. **O
 `settings.gradle.kts` diz do que o build é feito**: o nome e, na seção 06, os módulos. **O
 `build.gradle.kts` diz como um projeto é construído**: quais plugins, de onde vêm as dependências, quais
 dependências, e como as tarefas são configuradas. Os dois são Kotlin, com a API do Gradle à mão.

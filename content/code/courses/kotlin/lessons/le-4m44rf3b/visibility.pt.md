@@ -15,7 +15,7 @@ biblioteca existe para ser usada. Os outros três modificadores estreitam isso:
 | `internal` | em qualquer lugar do mesmo **módulo** | em qualquer lugar do mesmo módulo |
 
 Um módulo é o que é compilado junto: um módulo Gradle, uma execução do `kotlinc`. O `internal` importa
-quando a lição 19 monta um projeto de dois módulos, onde ele quer dizer "público dentro deste módulo,
+quando a aula 19 monta um projeto de dois módulos, onde ele quer dizer "público dentro deste módulo,
 invisível para os outros".
 
 ## Escondendo as partes que cumprem uma promessa
@@ -88,7 +88,7 @@ ana@vm:~/kt/l07$ kotlinc TrackerOk.kt -include-runtime -d trackerok.jar && java 
 [45, 30]
 ```
 
-`sessions()` devolve uma cópia, como a lição 5 aconselhou, então quem recebe a lista não alcança o
+`sessions()` devolve uma cópia, como a aula 5 aconselhou, então quem recebe a lista não alcança o
 rastreador por ela. **A classe agora é o único código capaz de quebrar a própria promessa**, o que
 torna a promessa algo que se verifica num arquivo só.
 

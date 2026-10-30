@@ -87,7 +87,7 @@ Duas peças fazem o segundo teste funcionar:
   por você.
 - **O `UnconfinedTestDispatcher(testScheduler)`** roda o coletor no instante em que um valor é definido,
   em vez de pô-lo na fila. No dispatcher de fila da seção 06, um valor definido e substituído antes da vez
-  do coletor seria pulado, que é a conflação da lição 17, e o teste estaria verificando o agendador em
+  do coletor seria pulado, que é a conflação da aula 17, e o teste estaria verificando o agendador em
   vez do modelo.
 
 O `seen` guarda exatamente três estados, embora o `refresh` defina `Loading` num estado que já era

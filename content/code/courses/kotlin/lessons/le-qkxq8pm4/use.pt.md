@@ -72,7 +72,7 @@ ana@vm:~/kt/l13$ kotlinc Files.kt -include-runtime -d files.jar && java -jar fil
 ```
 
 O `useLines` abre o arquivo, entrega ao bloco uma sequência preguiçosa das linhas dele, as sequências
-da lição 5, e fecha o arquivo quando o bloco retorna. **A sequência só vale dentro do bloco**: devolvê-la
+da aula 5, e fecha o arquivo quando o bloco retorna. **A sequência só vale dentro do bloco**: devolvê-la
 e lê-la depois seria ler um arquivo fechado. O `readLines()` lê o arquivo inteiro numa lista e o fecha
 na hora, o que é bom para um arquivo pequeno e desperdício para um grande.
 

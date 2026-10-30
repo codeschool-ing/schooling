@@ -35,7 +35,7 @@ note of 3 words
 ```
 
 Três usos num arquivo. O primeiro transforma um número que pode faltar em outro número que pode
-faltar, e a corrente para no primeiro `null`, como as chamadas seguras da lição 2. O segundo roda um
+faltar, e a corrente para no primeiro `null`, como as chamadas seguras da aula 2. O segundo roda um
 bloco pelo efeito só quando há algo sobre o que agir. O terceiro mostra um nome para o `it`, `text`,
 que é a escolha certa quando o bloco passa de uma linha.
 
@@ -62,12 +62,12 @@ Kotlin this week: 1 h 45 min
 ```
 
 O total é usado duas vezes dentro do template, então precisa de nome, e o `let` dá um sem interromper
-a corrente. O último `let` recebe uma referência a função, que a lição 4 mostrou ser permitida onde
+a corrente. O último `let` recebe uma referência a função, que a aula 4 mostrou ser permitida onde
 quer que caiba uma lambda do mesmo tipo.
 
 ## `?.let` contra `if`
 
 `if (note != null) { … }` faz o mesmo que `note?.let { … }` para um `val` local, e muitas vezes é mais
-claro. Os dois diferem para uma propriedade `var`, em que a lição 2 mostrou que o `if` não faz smart
+claro. Os dois diferem para uma propriedade `var`, em que a aula 2 mostrou que o `if` não faz smart
 cast: o `?.let` lê a propriedade uma vez e trabalha sobre esse valor, então é a forma curta do "copie
-para um `val` antes" da lição 2.
+para um `val` antes" da aula 2.

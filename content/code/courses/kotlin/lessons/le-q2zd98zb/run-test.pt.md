@@ -4,7 +4,7 @@ version: 1
 ---
 
 Uma função `@Test` é uma função comum, e uma função comum não chama uma suspensa. Um teste do `loadWeek`
-da lição 14 precisa de uma corrotina em que rodar. **O `runTest`, do `kotlinx-coroutines-test`, é essa
+da aula 14 precisa de uma corrotina em que rodar. **O `runTest`, do `kotlinx-coroutines-test`, é essa
 corrotina**, feita para testes, e ele faz mais uma coisa: **o `delay` dentro dele não espera**.
 
 ```kotlin

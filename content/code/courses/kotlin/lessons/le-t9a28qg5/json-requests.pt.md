@@ -40,12 +40,12 @@ Failed to convert request body to class studyplan.server.Session
 ```
 
 A primeira chegou ao tratador: o JSON era um `Session` válido, e o `if` recusou zero minutos, como o
-`WeekTotal` fez na lição 17. **A segunda nem chegou ao tratador.** Um corpo sem `minutes` não vira um
+`WeekTotal` fez na aula 17. **A segunda nem chegou ao tratador.** Um corpo sem `minutes` não vira um
 `Session`, que não tem valor padrão para ele, então o `receive` lançou exceção, e o Ktor respondeu `400`
 por ela. Nada no `Server.kt` trata esse caso, e nada precisa: um `Int` não nulo sem valor padrão é um
 campo que a requisição tem de trazer, e o tipo diz isso.
 
-O `sessions` é um `MutableStateFlow`, mudado com `update`, pelo motivo que a lição 17 deu. O Ktor
+O `sessions` é um `MutableStateFlow`, mudado com `update`, pelo motivo que a aula 17 deu. O Ktor
 responde requisições em várias threads ao mesmo tempo, e dois POSTs chegando juntos precisam ser os dois
 contados. Um servidor de verdade guardaria a lista num banco de dados, não na memória, onde ela se perde
 toda vez que o servidor para.

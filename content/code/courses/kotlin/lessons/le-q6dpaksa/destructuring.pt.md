@@ -3,7 +3,7 @@ title: Desestruturação, e por que ela é por posição
 version: 1
 ---
 
-A lição 5 usou `val (long, short) = sessions.partition { … }` e `{ (_, list) -> … }` e prometeu uma
+A aula 5 usou `val (long, short) = sessions.partition { … }` e `{ (_, list) -> … }` e prometeu uma
 explicação. **A desestruturação desmonta um objeto em vários nomes numa declaração só**, e para uma
 data class ela funciona de fábrica:
 
@@ -38,7 +38,7 @@ Android: 30
 class gerou um `componentN` por propriedade do construtor, **na ordem em que foram declaradas**, e a
 desestruturação os chama nessa ordem. Nomes que você não quer ficam de fora no fim, ou são pulados com
 `_` em qualquer lugar. A mesma sintaxe funciona num laço `for` e nos parâmetros de uma lambda, que é o
-que a lição 5 usou: `Pair` e as entradas de mapa também têm `component1` e `component2`.
+que a aula 5 usou: `Pair` e as entradas de mapa também têm `component1` e `component2`.
 
 ## Os nomes que você escreve não importam
 

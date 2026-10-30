@@ -3,7 +3,7 @@ title: Funções genéricas: uma função para todo tipo
 version: 1
 ---
 
-`List<Int>` aparece desde a lição 3, e os sinais de menor e maior ficaram sem explicação. **Eles são um
+`List<Int>` aparece desde a aula 3, e os sinais de menor e maior ficaram sem explicação. **Eles são um
 parâmetro de tipo**: `List` é escrita uma vez, para um tipo a ser nomeado depois, e `List<Int>` e
 `List<String>` são dois usos dela. Funções também têm parâmetros de tipo:
 

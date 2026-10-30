@@ -5,7 +5,7 @@ version: 1
 
 Nem tudo precisa de um build. Um arquivo que soma os minutos de uma semana, rodado quando preciso e
 mudado quando preciso, é um script, e **um arquivo terminado em `.main.kts` é um script Kotlin que o
-comando `kotlin` roda direto**: sem `main`, sem Gradle, sem jar. A entrada é o `week.txt` que a lição 14
+comando `kotlin` roda direto**: sem `main`, sem Gradle, sem jar. A entrada é o `week.txt` que a aula 14
 escreveu no planejador, os minutos de uma sessão por linha, copiado para um diretório novo,
 `~/kt/scripts`:
 
@@ -60,5 +60,5 @@ um arquivo `.main.kts` um substituto razoável para um script de shell que cresc
 shell é agradável: os tipos do Kotlin, a biblioteca padrão dele, e qualquer biblioteca JVM, num arquivo.
 
 Os arquivos de build do próprio Gradle são os scripts Kotlin mais conhecidos. O `build.gradle.kts` é um
-script com a API do Gradle à mão, e é por isso que o da lição 18 podia começar com um `import` como
+script com a API do Gradle à mão, e é por isso que o da aula 18 podia começar com um `import` como
 qualquer arquivo Kotlin.

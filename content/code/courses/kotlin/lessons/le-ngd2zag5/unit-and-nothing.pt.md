@@ -4,7 +4,7 @@ version: 1
 ---
 
 Toda função Kotlin devolve alguma coisa, inclusive as que parecem não devolver nada. Dois tipos fazem
-isso funcionar, e o segundo deles explica um pedaço da lição 2 que ficou sem explicação: como
+isso funcionar, e o segundo deles explica um pedaço da aula 2 que ficou sem explicação: como
 `?: return` e `?: throw` ficam onde deveria haver um valor.
 
 ## `Unit`: terminou, nada a relatar
@@ -45,7 +45,7 @@ Exception in thread "main" java.lang.IllegalStateException: not a number: forty
 ```
 
 `println(result)` imprimiu `kotlin.Unit`, o nome do único valor. Que `Unit` seja um valor importa mais
-do que parece quando funções passam a ser valores, na lição 4: uma função "que não devolve nada" é uma
+do que parece quando funções passam a ser valores, na aula 4: uma função "que não devolve nada" é uma
 função que devolve `Unit`, e ela cabe em qualquer lugar onde se espera uma função que devolve algum
 tipo, sem caso especial.
 
@@ -58,7 +58,7 @@ sabe disso, e usa.
 Como `Nothing` não tem valores, o compilador o trata como compatível com qualquer tipo: não existe
 valor dele que possa ser do tipo errado. É por isso que `minutesFrom` compila. O `?:` precisa de um
 `Int` à direita, e `fail(…)` é `Nothing`, que cabe. **`throw` e `return` também são expressões do tipo
-`Nothing`**, e essa é toda a explicação do `?: return` e do `?: throw` da lição 2.
+`Nothing`**, e essa é toda a explicação do `?: return` e do `?: throw` da aula 2.
 
 O compilador também sabe que o código depois de uma chamada a `fail` nunca roda, e avisa que ele é
 inalcançável. Um ajudante como `fail` vale a pena justamente por isso: um lugar que monta a mensagem e

@@ -63,5 +63,5 @@ para a centena mais próxima, porque o número exato varia alguns milissegundos 
 
 **`buffer` quando todo valor importa**, cada sessão gravada em disco, cada mensagem enviada. **`conflate`
 quando só o mais recente importa**: uma tela que mostra o total atual não tem uso para um total que já
-estava desatualizado quando foi desenhado. O `StateFlow` da lição 17 se comporta como se fosse
+estava desatualizado quando foi desenhado. O `StateFlow` da aula 17 se comporta como se fosse
 `conflate`, exatamente por esse motivo.

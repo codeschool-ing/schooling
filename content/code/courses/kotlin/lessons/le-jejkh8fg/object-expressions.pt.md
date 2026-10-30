@@ -34,10 +34,10 @@ ana@vm:~/kt/l10$ kotlinc Anonymous.kt -include-runtime -d anonymous.jar && java 
 ```
 
 `object : Comparator<String> { … }` monta um objeto que implementa a interface `Comparator` do Java,
-com o único método dela escrito no lugar; `override` diz que o método cumpre a interface, o que a lição
+com o único método dela escrito no lugar; `override` diz que o método cumpre a interface, o que a aula
 11 cobre. O `sortedWith` o usa para ordenar os cursos pelo comprimento.
 
-O segundo objeto não implementa nada e tem uma função própria. Como as lambdas da lição 4, **ele lê e
+O segundo objeto não implementa nada e tem uma função própria. Como as lambdas da aula 4, **ele lê e
 muda as variáveis em volta dele**: `clicks` pertence ao `main`, e a função do objeto o incrementa.
 
 ## Uma lambda costuma ser mais curta

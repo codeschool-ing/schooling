@@ -3,9 +3,9 @@ title: O toolchain e o bytecode que ele mira
 version: 1
 ---
 
-O `kotlin { jvmToolchain(21) }` está em todo script de build desde a lição 14. **Ele diz qual JDK compila
+O `kotlin { jvmToolchain(21) }` está em todo script de build desde a aula 14. **Ele diz qual JDK compila
 e roda o projeto, e para qual versão do Java é o bytecode.** O Gradle procura um JDK 21 na máquina e o
-usa, seja qual for o JDK que iniciou o Gradle; sem um, o build para com a mensagem que a lição 14
+usa, seja qual for o JDK que iniciou o Gradle; sem um, o build para com a mensagem que a aula 14
 provocou de propósito.
 
 A versão é escrita em todo arquivo `.class` que o compilador produz, como um número que a JVM confere

@@ -66,7 +66,7 @@ ana@vm:~/kt/l13$ kotlinc TooBroad.kt -include-runtime -d toobroad.jar && java -j
 Os dois imprimiram `0`. O segundo não era uma estudante digitando uma palavra; era um `null` que nunca
 deveria ter chegado a esta função, um bug em outro lugar, e o `catch` largo o fez parecer uma entrada
 comum. **Um catch que nomeia a única exceção que você espera deixa toda outra falha continuar
-barulhenta.** A lição 15 acrescenta um motivo mais forte: em código de corrotina, pegar `Exception`
+barulhenta.** A aula 15 acrescenta um motivo mais forte: em código de corrotina, pegar `Exception`
 também pega o sinal que cancela uma tarefa, e a tarefa então se recusa a parar.
 
 ## Vários catch

@@ -5,7 +5,7 @@ version: 1
 
 Um programa Kotlin começa numa função chamada `main`. Ela não precisa morar dentro de uma classe, não
 recebe argumentos a menos que você peça, e não devolve nada. Crie uma pasta para os programas desta
-lição, `~/kt/l01`, e salve isto como `Hello.kt` nela:
+aula, `~/kt/l01`, e salve isto como `Hello.kt` nela:
 
 ```kotlin
 // Hello.kt
@@ -62,7 +62,7 @@ qualquer classe numa classe com o nome do arquivo. E este jar pequeno, de cerca 
 rodou com o `java` puro, uma surpresa que vale explicar. O `println` é uma das funções **inline** da
 biblioteca padrão: o compilador copiou o corpo dela, uma chamada ao `System.out.println` do próprio
 Java, para dentro do `HelloKt`, então nada da biblioteca do Kotlin é necessário em tempo de execução.
-A lição 4 diz para que serve o `inline`.
+A aula 4 diz para que serve o `inline`.
 
 A maior parte da biblioteca não é inline. Duas linhas que usam uma lista bastam para precisar dela:
 

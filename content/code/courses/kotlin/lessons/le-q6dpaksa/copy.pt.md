@@ -29,14 +29,14 @@ Session(course=Kotlin, minutes=60, done=false)
 ```
 
 O `copy` tem um parâmetro por propriedade, cada um com o valor atual como padrão, então uma chamada
-nomeia só o que muda: os argumentos nomeados e padrão da lição 3 fazendo exatamente aquilo para que
+nomeia só o que muda: os argumentos nomeados e padrão da aula 3 fazendo exatamente aquilo para que
 foram feitos.
 
 ## Por que não um `var`
 
 Um `var done` deixaria qualquer código que segure uma sessão mudá-la, e todo outro dono veria a
 mudança sem ser avisado. **Com `val` e `copy`, uma sessão que alguém lhe deu não muda debaixo de
-você**; uma sessão mudada é um objeto novo, e quem precisa dele tem de recebê-lo. A lição 17 se apoia
+você**; uma sessão mudada é um objeto novo, e quem precisa dele tem de recebê-lo. A aula 17 se apoia
 nisso: o estado de um app é uma data class, toda mudança é um `copy`, e a tela se redesenha quando
 recebe um valor novo. Isso só funciona porque o valor antigo nunca mudou.
 

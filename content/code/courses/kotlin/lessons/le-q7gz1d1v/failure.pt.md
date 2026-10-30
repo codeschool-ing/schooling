@@ -95,7 +95,7 @@ nenhum foi esquecido**: a atualização como um todo falhou, e o código que a p
 
 Porque o resultado para o qual eles contribuíam não pode mais ser montado. As três atualizações são
 uma operação só, "abrir o planejador", e depois que uma parte falhou, o resto é na melhor das hipóteses
-trabalho desperdiçado e, na pior, metade de uma atualização gravada em disco. O par de `async` da lição
+trabalho desperdiçado e, na pior, metade de uma atualização gravada em disco. O par de `async` da aula
 14 se comportava do mesmo jeito: se uma carga lança exceção, a outra é cancelada e o `await` relança.
 
 Quando as partes são de fato independentes, de modo que uma falhar deve deixar as outras em paz, o

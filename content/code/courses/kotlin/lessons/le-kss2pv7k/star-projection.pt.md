@@ -56,5 +56,5 @@ StarAdd.kt:3:15: error: receiver type 'MutableList<*>' contains star projection 
 
 O compilador não sabe se a lista guarda `Int`, e no `main` ela guarda `String`, então o `add(0)` é
 recusado. **A estrela é o tipo honesto para "aceito qualquer lista e prometo não acrescentar nada"**, e
-o lugar em que você mais a encontra é em ramos de `when` como o `is List<*>` da lição 9, que é o
+o lugar em que você mais a encontra é em ramos de `when` como o `is List<*>` da aula 9, que é o
 assunto da próxima seção.

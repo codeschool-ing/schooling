@@ -3,11 +3,11 @@ title: Três jeitos de ter Kotlin
 version: 1
 ---
 
-Da seção 04 desta lição até o fim da lição 20, este curso pede que você digite programas, compile e
+Da seção 04 desta aula até o fim da aula 20, este curso pede que você digite programas, compile e
 leia o que volta. Você precisa de três coisas numa máquina: um **JDK**, porque Kotlin no computador
 compila para o mesmo bytecode do Java e roda na mesma máquina virtual; o **compilador Kotlin**,
 `kotlinc`; e o **Gradle**, a ferramenta de build que todo projeto Android e a maioria dos projetos
-Kotlin usam, e que este curso usa a partir da lição 14. A plataforma não dá máquina nenhuma para
+Kotlin usam, e que este curso usa a partir da aula 14. A plataforma não dá máquina nenhuma para
 você digitar, então o primeiro trabalho é ter uma sua.
 
 **Há três lugares para pôr essas ferramentas, e o curso recomenda o primeiro**: instaladas num
@@ -23,17 +23,17 @@ Ubuntu 24.04, no seu próprio computador ou numa máquina virtual rodando nele.
 
 **Todo programa deste curso roda num computador, e nenhum precisa de celular.** Kotlin é antes de
 tudo uma linguagem, e tudo, de `val` a `StateFlow`, roda na JVM exatamente como vai rodar dentro de
-um app Android. Então cada transcrição destas vinte lições foi produzida na máquina descrita abaixo,
+um app Android. Então cada transcrição destas vinte aulas foi produzida na máquina descrita abaixo,
 e você consegue reproduzir todas.
 
 O que este curso não faz é construir um app Android. Isso exige o Android SDK, o Android Studio e um
 emulador, e é o próximo curso deste caminho, `android-apps`, que os instala. A máquina que você
 monta aqui é a de onde aquele curso parte.
 
-Mais uma coisa é descrita e não rodada: o build nativo da lição 20, que compila Kotlin para um executável
+Mais uma coisa é descrita e não rodada: o build nativo da aula 20, que compila Kotlin para um executável
 Linux sem JVM. O compilador dele chega do Maven Central como todo o resto, mas o toolchain de C com que
-ele liga o programa é baixado de `download.jetbrains.com`, e a máquina em que estas lições foram gravadas
-não alcançava esse endereço. A lição 20 mostra o arquivo de build e diz onde a transcrição dele estaria.
+ele liga o programa é baixado de `download.jetbrains.com`, e a máquina em que estas aulas foram gravadas
+não alcançava esse endereço. A aula 20 mostra o arquivo de build e diz onde a transcrição dele estaria.
 
 ## Instalado: o caminho recomendado
 
@@ -161,8 +161,8 @@ nada no curso depende disso.
 
 Uma linha parece contradição: `Kotlin: 2.4.10`, ao lado de um compilador que acabou de dizer
 2.4.21. O Gradle carrega um Kotlin próprio, para ler os scripts de build, que são escritos em
-Kotlin. O Kotlin com que os seus programas são compilados da lição 14 em diante é escolhido por cada
-projeto, e a lição 19 é exatamente sobre essa diferença. Os zips em `~/downloads`, 231 MB deles,
+Kotlin. O Kotlin com que os seus programas são compilados da aula 14 em diante é escolhido por cada
+projeto, e a aula 19 é exatamente sobre essa diferença. Os zips em `~/downloads`, 231 MB deles,
 podem ser apagados quando as duas ferramentas responderem.
 
 ## Uma máquina virtual
@@ -189,7 +189,7 @@ Um ambiente de desenvolvimento na nuvem abre uma máquina Linux numa aba do nave
 terminal. Várias empresas oferecem isso e mudam as condições com frequência, então este curso não
 depende de nenhuma. **Não custa nada ao seu computador e custa uma conta**, uma franquia mensal de
 horas e uma conexão de rede a cada minuto de estudo. O JDK de lá é outro build, em outro diretório,
-então os caminhos desta lição serão diferentes; os passos do Kotlin e do Gradle acima funcionam lá
+então os caminhos desta aula serão diferentes; os passos do Kotlin e do Gradle acima funcionam lá
 como estão escritos.
 
 Então: **instale no Ubuntu se puder, use uma máquina virtual quando o seu computador não for Ubuntu,

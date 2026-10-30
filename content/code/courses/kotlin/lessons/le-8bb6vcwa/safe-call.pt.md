@@ -33,7 +33,7 @@ null
 ```
 
 `for (note in notes)` executa o corpo uma vez por item da lista, com `note` representando cada item
-por vez; a lição 5 tem muito mais a dizer sobre listas. As três linhas de saída são os três desfechos
+por vez; a aula 5 tem muito mais a dizer sobre listas. As três linhas de saída são os três desfechos
 que vale distinguir: **um comprimento, `null` para a anotação que falta e `0` para a vazia.** Uma
 string vazia é uma string. Só `null` é ausência, e o `?.` trata as duas de jeitos diferentes de
 propósito.
@@ -53,7 +53,7 @@ do null, e a seção 04 é essa coisa.
 
 Uma chamada segura também chama uma função cujo resultado não interessa. `note?.let { println(it) }`
 executa o bloco entre chaves só quando `note` não é `null`, com `it` representando o valor. É uma
-forma comum em Kotlin e em código Android, e a lição 6 explica o `let` direito, junto com os quatro
+forma comum em Kotlin e em código Android, e a aula 6 explica o `let` direito, junto com os quatro
 irmãos dele; por enquanto basta reconhecê-la como "se existir, faça isto".
 
 ## Quanto custa uma chamada segura

@@ -42,7 +42,7 @@ parece um laço que a linguagem oferece, e é uma função comum** da biblioteca
 `repeat(times: Int, action: (Int) -> Unit)`, chamada com uma lambda no fim.
 
 Esse é o propósito da regra. Código escrito em Kotlin parece ter estruturas de controle novas, e a
-maioria delas são funções: `repeat`, `use` na lição 13, `launch` na lição 14, `runTest` na lição 18.
+maioria delas são funções: `repeat`, `use` na aula 13, `launch` na aula 14, `runTest` na aula 18.
 O Jetpack Compose, sobre o qual o `android-apps` é construído, é essa regra levada até o fim: uma tela
 é uma árvore de chamadas de função, cada uma com uma lambda no fim guardando as chamadas aninhadas
 nela.

@@ -72,7 +72,7 @@ NoteLength.kt:4:17: error: only safe (?.) or non-null asserted (!!.) calls are a
                 ^
 ```
 
-Repare no que a segunda recusa diz, porque é o cardápio do resto desta lição: **só chamadas seguras
+Repare no que a segunda recusa diz, porque é o cardápio do resto desta aula: **só chamadas seguras
 (`?.`) ou com afirmação de não nulo (`!!.`) são permitidas**. A anotação neste programa nem está
 faltando. O compilador recusa mesmo assim, porque o tipo diz que ela poderia faltar, e um tipo é uma
 promessa sobre todo valor, não sobre este.

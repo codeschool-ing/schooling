@@ -49,7 +49,7 @@ ana@vm:~$ kotlinc -version; echo $?
 A mensagem cita `java`, não `kotlinc`. **Leia uma mensagem pelo programa que ela cita**: o script foi
 encontrado, rodou e não conseguiu iniciar a JVM que ele embrulha. A solução é a linha de `apt` da
 seção 02. Instalar só um JRE, o runtime sem as ferramentas de desenvolvimento, faria esta mensagem
-sumir e deixaria o Gradle sem conseguir compilar nada na lição 14, então instale o JDK.
+sumir e deixaria o Gradle sem conseguir compilar nada na aula 14, então instale o JDK.
 
 ## Um download que parou no meio
 

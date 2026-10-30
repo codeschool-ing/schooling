@@ -3,7 +3,7 @@ title: Funções de extensão
 version: 1
 ---
 
-O planejador imprime minutos como horas numa dúzia de lugares, e o `format(minutes)` da lição 3 se lê
+O planejador imprime minutos como horas numa dúzia de lugares, e o `format(minutes)` da aula 3 se lê
 ao contrário: o valor vem em segundo. **Uma função de extensão acrescenta uma função a um tipo que você
 não escreveu**, chamada com ponto como se fosse um membro:
 
@@ -31,7 +31,7 @@ none
 ```
 
 `fun Int.asHours()` declara uma função cujo **receptor** é um `Int`; dentro dela, `this` é o número em
-que ela foi chamada. É o receptor da lição 6 de novo, agora com nome. O receptor pode ser qualquer
+que ela foi chamada. É o receptor da aula 6 de novo, agora com nome. O receptor pode ser qualquer
 tipo, inclusive uma lista genérica e um tipo anulável: `orNone` é declarada em `String?`, então pode
 ser chamada num valor que é `null`, e trata esse caso ela mesma.
 
