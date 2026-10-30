@@ -115,3 +115,18 @@ if len(found) != 1:
 sys.stdout.write(''.join(p['code'] for p in found[0]['parts']))
 PY
 }
+
+# THE TERRAFORM DIRECTORIES. Lesson 2 has the student write provider.tf, and
+# every later lesson that plans starts a directory of its own with a copy of
+# it. tf_dir NAME empties ~/gcp/NAME, puts lesson 2's provider.tf in it, runs
+# `terraform init` quietly (the prose shows the command; lesson 2 shows its
+# output) and moves the prompt there. tf_file LESSONFILE N NAME writes the Nth
+# ```hcl fence of a lesson's section into NAME.
+L2_ESTATE=$GCP_COURSE/lessons/le-mj28pc0k/the-estate-as-code.md
+tf_dir() {
+  rm -rf "$HOME/gcp/$1" && mkdir -p "$HOME/gcp/$1" && cd "$HOME/gcp/$1" || exit 1
+  fences hcl "$L2_ESTATE" 1 > provider.tf || exit 1
+  at "~/gcp/$1"
+  terraform init -input=false > "$LAB_ROOT/init.log" 2>&1 || { cat "$LAB_ROOT/init.log"; exit 1; }
+}
+tf_file() { fences hcl "$1" "$2" > "$3" || exit 1; }
