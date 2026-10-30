@@ -47,6 +47,6 @@ each takes seconds to plan and run, which a screen cannot wait for. A lake engin
 database is slow and, at this volume, not even cheap.
 
 **None of these numbers is Azure's.** Run the price sheet of lesson 1 for real prices, replace the
-first block of constants, and run the program again; the ranking changes only if the real prices
+first block of constants, and run the program again. The ranking changes only if the real prices
 differ from these by more than an order of magnitude, which is the useful thing to know about a
 comparison before trusting it.

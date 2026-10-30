@@ -47,6 +47,6 @@ kilobytes cada, e cada uma leva segundos para ser planejada e executada, o que u
 esperar. Um motor de lake usado como banco de dados é lento e, neste volume, nem barato é.
 
 **Nenhum destes números é do Azure.** Rode a tabela de preços da lição 1 para preços reais, troque o
-primeiro bloco de constantes e rode o programa de novo; a ordem só muda se os preços reais diferirem
+primeiro bloco de constantes e rode o programa de novo. A ordem só muda se os preços reais diferirem
 destes por mais de uma ordem de grandeza, que é o que vale saber sobre uma comparação antes de confiar
 nela.

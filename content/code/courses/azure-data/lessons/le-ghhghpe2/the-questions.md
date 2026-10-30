@@ -34,7 +34,7 @@ design, behind their source.
 **4. How big, and how fast does it grow?** Gigabytes or terabytes, a hundred requests a second or a
 hundred thousand, and above all whether the load is steady or spiky. A single relational database
 grows by moving to more vCores until the tier has no more, with Hyperscale in lesson 8 as the way
-past that; Cosmos DB and Blob Storage grow by spreading, with no machine to outgrow, as long as the
+past that. Cosmos DB and Blob Storage grow by spreading, with no machine to outgrow, as long as the
 partition key of lesson 11 spreads; a warehouse grows by capacity bought in units.
 
 **5. Who runs it?** Every store has work that does not go away: sizes to choose, indexes to maintain,

@@ -34,7 +34,7 @@ lake estão todos, por projeto, atrás da sua origem.
 
 **4. Qual o tamanho, e quão rápido cresce?** Gigabytes ou terabytes, cem requisições por segundo ou
 cem mil, e acima de tudo se a carga é estável ou em picos. Um banco relacional único cresce passando
-para mais vCores até a camada não ter mais, com o Hyperscale da lição 8 como caminho além disso; o
+para mais vCores até a camada não ter mais, com o Hyperscale da lição 8 como caminho além disso. O
 Cosmos DB e o Blob Storage crescem se espalhando, sem máquina para ficar pequena, desde que a chave de
 partição da lição 11 espalhe; um warehouse cresce por capacidade comprada em unidades.
 
