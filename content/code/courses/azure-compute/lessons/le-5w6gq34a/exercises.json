@@ -10,6 +10,11 @@
     "hint": "On demand, Flex bills memory while executing and the executions themselves.",
     "choices": [
       {
+        "text": "The volume",
+        "correct": true,
+        "why": "Right. Each request is billed the same GB-seconds and one execution, so the bill is the volume times a price per request."
+      },
+      {
         "text": "The peak hour",
         "correct": false,
         "why": "The peak sizes machines, replicas and nodes. Functions adds instances as requests arrive and pays for none in advance."
@@ -18,11 +23,6 @@
         "text": "The number of idle hours",
         "correct": false,
         "why": "An idle hour costs a function nothing, so it is where Functions gains, but it does not set the bill."
-      },
-      {
-        "text": "The volume of requests in the month",
-        "correct": true,
-        "why": "Right. Each request is billed the same GB-seconds and one execution, so the bill is the volume times a price per request."
       },
       {
         "text": "The hour the traffic starts",
@@ -60,14 +60,14 @@
         "why": "16 is the default for a 2,048 MB instance in other languages. Microsoft's documentation sets Python apps to one."
       },
       {
-        "text": "Eighty, one for each request that arrives in a second",
-        "correct": false,
-        "why": "A request lasts a tenth of a second, so the eighty of one second are not all in flight together."
-      },
-      {
         "text": "Eight: 80 × 0.1 s are in flight, one per instance",
         "correct": true,
         "why": "Right. Concurrency is the rate times the duration, and a Python app takes one HTTP request per instance by default."
+      },
+      {
+        "text": "Eighty, one for each request that arrives in a second",
+        "correct": false,
+        "why": "A request lasts a tenth of a second, so the eighty of one second are not all in flight together."
       },
       {
         "text": "Two, the floor the program keeps for every option",
@@ -144,14 +144,14 @@
         "why": "It sizes them per hour with `copies`; the profiles simply never ask for more than the floor."
       },
       {
-        "text": "Each is a fixed count of machines paid by the hour, and no profile outgrows the floor",
-        "correct": true,
-        "why": "Right. Even busy fits two `D2s_v5` exactly, so the bill does not move with the traffic."
-      },
-      {
         "text": "Reservations are applied to them automatically",
         "correct": false,
         "why": "No discount is in the file; the program uses pay-as-you-go rates for all three."
+      },
+      {
+        "text": "Each is a fixed count of machines paid by the hour, and no profile outgrows the floor",
+        "correct": true,
+        "why": "Right. Even busy fits two `D2s_v5` exactly, so the bill does not move with the traffic."
       },
       {
         "text": "Their rates are documented by Microsoft, unlike the others",
@@ -181,14 +181,14 @@
         "why": "The program leaves Functions' grants at zero; the difference is there without them."
       },
       {
-        "text": "No hour is idle, so two replicas bill as active all month, while a function bills only its executions",
-        "correct": true,
-        "why": "Right. A call in every hour keeps the replicas active; Flex pays for 131,400 seconds and nothing else."
-      },
-      {
         "text": "A replica cannot take a request that arrives every twenty seconds",
         "correct": false,
         "why": "It can, easily; the problem is that it is paid for in between."
+      },
+      {
+        "text": "No hour is idle, so replicas bill as active all month",
+        "correct": true,
+        "why": "Right. A call in every hour keeps the replicas active; Flex pays for 131,400 seconds and nothing else."
       }
     ]
   },
@@ -317,6 +317,11 @@
     "hint": "Two of the three limits are not the timeout you set.",
     "choices": [
       {
+        "text": "Make it a job that finance collects when it is ready",
+        "correct": true,
+        "why": "Right. Nothing waits on an open request, so no front end's limit applies."
+      },
+      {
         "text": "Set `functionTimeout` in `host.json` to ten minutes",
         "correct": false,
         "why": "An HTTP function still has 230 seconds to answer, whatever its timeout says."
@@ -325,11 +330,6 @@
         "text": "Move it to App Service, which has no request limit",
         "correct": false,
         "why": "The same 230 seconds applies, the idle timeout of the load balancer in front."
-      },
-      {
-        "text": "Make it a job: queue the request, build the file, let finance collect it",
-        "correct": true,
-        "why": "Right. Nothing waits on an open request, so no front end's limit applies."
       },
       {
         "text": "Keep it on Container Apps, whose ingress waits longer than five minutes",
@@ -370,11 +370,6 @@
         "why": "Connections can be kept by a client created outside the handler; the number of instances is the problem."
       },
       {
-        "text": "Every request in flight is an instance, and every instance opens its own pool",
-        "correct": true,
-        "why": "Right. One HTTP request per instance by default means a burst to 100 instances is 100 pools."
-      },
-      {
         "text": "Flex Consumption cannot reach a database in a virtual network",
         "correct": false,
         "why": "It can: virtual network integration is one of Flex's additions over the old Consumption plan."
@@ -383,6 +378,11 @@
         "text": "The 230-second limit holds connections open too long",
         "correct": false,
         "why": "The limit is on answering a request; it says nothing about how many connections exist."
+      },
+      {
+        "text": "Every request in flight is an instance with its own pool",
+        "correct": true,
+        "why": "Right. One HTTP request per instance by default means a burst to 100 instances is 100 pools."
       }
     ]
   },
@@ -434,14 +434,14 @@
         "why": "Nothing about an evening hour is free; the grants are a monthly total."
       },
       {
+        "text": "80 needs two replicas of 50, and two run anyway",
+        "correct": true,
+        "why": "Right. Only four hours exceed what one replica carries, and the floor already covers them."
+      },
+      {
         "text": "Container Apps does not bill for requests at the peak",
         "correct": false,
         "why": "It bills requests past two million a month whenever they arrive."
-      },
-      {
-        "text": "80 needs two replicas of 50, and two is the minimum kept anyway",
-        "correct": true,
-        "why": "Right. Only four hours exceed what one replica carries, and the floor already covers them."
       },
       {
         "text": "Scale-out is faster than scale-in",
@@ -474,17 +474,17 @@
     "hint": "Compare the two profiles hour by hour.",
     "choices": [
       {
-        "text": "Two replicas billed active through eight hours when they could have been idle",
-        "correct": true,
-        "why": "Right. The trickle of 2 a second keeps both replicas off the idle rate all night."
-      },
-      {
-        "text": "The request charge on the trickle's requests",
+        "text": "The request charge on the requests the trickle sends",
         "correct": false,
         "why": "The trickle is 1.75 million requests a month; at 0.40 a million that is under a dollar."
       },
       {
-        "text": "A third replica the trickle starts every night",
+        "text": "Two replicas kept at the active rate all night",
+        "correct": true,
+        "why": "Right. The trickle of 2 a second keeps both replicas off the idle rate all night."
+      },
+      {
+        "text": "A third replica that the trickle starts every night",
         "correct": false,
         "why": "Two requests a second fit in one replica; the floor is two and stays two."
       },
@@ -533,14 +533,14 @@
         "why": "Today Container Apps is 60.19 cheaper; the crossing is a trigger to watch, not a date."
       },
       {
-        "text": "That growth near that size reopens the decision, and the real rates have to settle it",
-        "correct": true,
-        "why": "Right. Within 20% is a tie even at real rates, and these are illustrative; it is where to price machines properly."
-      },
-      {
         "text": "That Container Apps stops scaling past 240 requests a second",
         "correct": false,
         "why": "It scales to five replicas there; the program prices them, which is how the total grew."
+      },
+      {
+        "text": "That growth near that size reopens the decision, and the real rates have to settle it",
+        "correct": true,
+        "why": "Right. Within 20% is a tie even at real rates, and these are illustrative; it is where to price machines properly."
       },
       {
         "text": "That the free grants run out at that volume",
@@ -621,6 +621,11 @@
     "hint": "Fifteen silent hours, nobody waiting, and an image the team can build.",
     "choices": [
       {
+        "text": "Container Apps, scaled to zero",
+        "correct": true,
+        "why": "Right. 42.18 in the zero run, the silent hours free, and the cold start lands on nobody who minds."
+      },
+      {
         "text": "Two virtual machines, the simplest move",
         "correct": false,
         "why": "146.00 a month for a tool that is silent fifteen hours a day, plus the operating system to look after."
@@ -629,11 +634,6 @@
         "text": "Functions on Flex, since it pays nothing while idle",
         "correct": false,
         "why": "Idle is free, but 59.13 million requests at one billed second each cost 3,098.41 at the file's rates."
-      },
-      {
-        "text": "Container Apps with a minimum of zero, accepting a cold start",
-        "correct": true,
-        "why": "Right. 42.18 in the zero run, the silent hours free, and the cold start lands on nobody who minds."
       },
       {
         "text": "A small AKS cluster on the Free tier",

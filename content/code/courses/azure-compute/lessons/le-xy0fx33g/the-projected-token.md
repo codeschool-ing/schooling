@@ -72,8 +72,8 @@ ana@laptop:~/azure$ kubectl wait --for=condition=Ready nodes --all --timeout=120
 node/shop-control-plane condition met
 node/shop-worker condition met
 ana@laptop:~/azure$ kind load docker-image shop:1.0 --name shop
-Image: "shop:1.0" with ID "sha256:e12f2489dfed00b906d45acfa642bfc3ae3b02cfd5a14f95afceb83c8d80e3ea" not yet present on node "shop-control-plane", loading...
-Image: "shop:1.0" with ID "sha256:e12f2489dfed00b906d45acfa642bfc3ae3b02cfd5a14f95afceb83c8d80e3ea" not yet present on node "shop-worker", loading...
+Image: "shop:1.0" with ID "sha256:ccce3de6a33ead4655a393bc31514eefb0e039d69d7ce27b8f1d9a0cbd6b019e" not yet present on node "shop-worker", loading...
+Image: "shop:1.0" with ID "sha256:ccce3de6a33ead4655a393bc31514eefb0e039d69d7ce27b8f1d9a0cbd6b019e" not yet present on node "shop-control-plane", loading...
 ```
 
 Now the namespace, the service account and the pod. Save this as `orders.yaml`. Everything from
@@ -133,7 +133,8 @@ spec:
 
 The path is the one Microsoft's documentation gives as an example, and the same documentation
 warns against writing it into an application: the webhook chooses it, and it can change. A program
-that needs the token reads `AZURE_FEDERATED_TOKEN_FILE` and opens whatever path it names.
+that needs the token reads `AZURE_FEDERATED_TOKEN_FILE` and opens whatever path it names. Apply the
+file, wait for the pod, and list what is in its environment:
 
 ```
 ana@laptop:~/azure$ kubectl apply -f orders.yaml
@@ -171,42 +172,42 @@ base64url-encoded JSON, the third a signature. This program prints the first two
 third alone. Save it as `~/azure/decode.py`:
 
 ```schooling-example
-{"language": "python", "file": "decode.py", "parts": [{"code": "# decode.py: the header and claims of a token, WITHOUT checking its signature\nimport base64\nimport json\nimport sys\nfrom datetime import datetime, timezone\n\n\n", "note": "Standard library only, so it runs with the Python every machine in this course has. The first line says what the program does not do, which matters more than what it does."}, {"code": "def part(text):\n    return json.loads(base64.urlsafe_b64decode(text + '=' * (-len(text) % 4)))\n\n\n", "note": "**base64url, padded back.** A token drops the `=` padding that Python's decoder wants, so the function adds as many as the length needs before decoding the JSON."}, {"code": "header, claims, signature = open(sys.argv[1]).read().strip().split('.')\nprint('header:', json.dumps(part(header)))\nbody = part(claims)\nprint('claims:', json.dumps(body, indent=2))\n", "note": "The three parts. The header names the algorithm and the key that signed the token; the claims say who it is for and until when."}, {"code": "for name in ('iat', 'exp'):\n    print(name, datetime.fromtimestamp(body[name], timezone.utc).isoformat())\nprint('lifetime:', body['exp'] - body['iat'], 'seconds')\nprint('signature:', len(signature), 'characters, not checked')\n", "note": "`iat` and `exp` are seconds since 1970, printed as dates in UTC. **The signature is counted and not checked**: checking it needs the cluster's public key, and the next section shows where that is published."}]}
+{"language": "python", "file": "decode.py", "parts": [{"code": "# decode.py: the header and claims of a token, WITHOUT checking its signature\nimport base64\nimport json\nimport sys\nfrom datetime import datetime, timezone\n\n\n", "note": "Standard library only, so it runs with the Python every machine in this course has. The first line warns whoever finds the file later that it checks nothing."}, {"code": "def part(text):\n    return json.loads(base64.urlsafe_b64decode(text + '=' * (-len(text) % 4)))\n\n\n", "note": "**base64url, padded back.** A token drops the `=` padding that Python's decoder wants, so the function adds as many as the length needs before decoding the JSON."}, {"code": "header, claims, signature = open(sys.argv[1]).read().strip().split('.')\nprint('header:', json.dumps(part(header)))\nbody = part(claims)\nprint('claims:', json.dumps(body, indent=2))\n", "note": "The three parts. The header names the algorithm and the key that signed the token; the claims say who it is for and until when."}, {"code": "for name in ('iat', 'exp'):\n    print(name, datetime.fromtimestamp(body[name], timezone.utc).isoformat())\nprint('lifetime:', body['exp'] - body['iat'], 'seconds')\nprint('signature:', len(signature), 'characters, not checked')\n", "note": "`iat` and `exp` are seconds since 1970, printed as dates in UTC. **The signature is counted and not checked**: checking it needs the cluster's public key, and the next section shows where that is published."}]}
 ```
 
 Run it on the copy:
 
 ```
 ana@laptop:~/azure$ python3 decode.py token
-header: {"alg": "RS256", "kid": "99-AqXpwvaaJFbhi-CMj4RxNpGO2Fraa1hS_2keI3XU"}
+header: {"alg": "RS256", "kid": "XRBr3pJmOiPXL-AaUkREEj_6qffoEunMXctRB_Mk3xs"}
 claims: {
   "aud": [
     "api://AzureADTokenExchange"
   ],
-  "exp": 1793393959,
-  "iat": 1793390359,
+  "exp": 1793395241,
+  "iat": 1793391641,
   "iss": "https://kubernetes.default.svc.cluster.local",
-  "jti": "dcc0b3bb-706b-43b5-b95a-6d464941e0df",
+  "jti": "3b5241e7-943b-47e7-a302-bfcf6f5ea867",
   "kubernetes.io": {
     "namespace": "shop",
     "node": {
       "name": "shop-worker",
-      "uid": "77f5b5db-474b-41a0-b7e7-4bcbbf5897c2"
+      "uid": "acd5d609-1d06-4d2e-ab20-d595b16fb559"
     },
     "pod": {
       "name": "shop",
-      "uid": "4f8ea57a-9baf-4df6-91d4-3788efe16004"
+      "uid": "8af9702f-3b46-4a0e-899b-6e9f14355112"
     },
     "serviceaccount": {
       "name": "orders",
-      "uid": "b8f4510f-b05c-47d1-a701-e5caa22e5d09"
+      "uid": "17ba2d40-24a0-4916-b08a-7f5629eb8281"
     }
   },
-  "nbf": 1793390359,
+  "nbf": 1793391641,
   "sub": "system:serviceaccount:shop:orders"
 }
-iat 2026-10-30T19:59:19+00:00
-exp 2026-10-30T20:59:19+00:00
+iat 2026-10-30T20:20:41+00:00
+exp 2026-10-30T21:20:41+00:00
 lifetime: 3600 seconds
 signature: 342 characters, not checked
 ```
@@ -235,16 +236,13 @@ Kubernetes always mounts it. Decode it too, and keep only the lines that differ:
 ```
 ana@laptop:~/azure$ kubectl exec -n shop shop -- cat /var/run/secrets/kubernetes.io/serviceaccount/token > api-token
 ana@laptop:~/azure$ python3 decode.py api-token | grep -e kid -e '"aud"' -e '"https' -e '"sub"' -e warnafter -e lifetime
+header: {"alg": "RS256", "kid": "XRBr3pJmOiPXL-AaUkREEj_6qffoEunMXctRB_Mk3xs"}
   "aud": [
     "https://kubernetes.default.svc.cluster.local"
-  ],
---
-    "warnafter": 1793393966
-  },
-  "nbf": 1793390359,
---
+  "iss": "https://kubernetes.default.svc.cluster.local",
+    "warnafter": 1793395248
+  "sub": "system:serviceaccount:shop:orders"
 lifetime: 31536000 seconds
-signature: 342 characters, not checked
 ```
 
 Same issuer, same subject, same signing key, so the same cluster vouches for the same service

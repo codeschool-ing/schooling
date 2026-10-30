@@ -30,7 +30,7 @@
         "why": "Os dois leem `networking.k8s.io/v1`; o recurso é o mesmo."
       },
       {
-        "text": "O caminho do probe e o draining são anotações, e só o AGIC lê `appgw.ingress.kubernetes.io/`",
+        "text": "O probe e o draining são anotações que só o AGIC lê",
         "why": "Isso. O que os campos não dizem vai para anotações, e cada controller tem seu prefixo e sua grafia."
       },
       {
@@ -38,7 +38,7 @@
         "why": "Nada a prende; um nome de classe ou anotação só diz qual controller deve lê-la."
       },
       {
-        "text": "O ingress-nginx precisa de uma Ingress por Service",
+        "text": "O ingress-nginx precisa de uma Ingress por Service, então o arquivo da shop teria de ser dividido",
         "why": "Uma Ingress pode citar vários Services nas regras; é no canary que o nginx pede uma segunda Ingress."
       }
     ]
@@ -94,8 +94,8 @@
         "why": "As próprias páginas do AGIC apontam para o Application Gateway for Containers."
       },
       {
-        "text": "Migrar para a implementação de Gateway API do add-on ou para o Application Gateway for Containers antes do fim do suporte, em novembro de 2026",
-        "why": "Isso. A Microsoft corrige falhas críticas de segurança no NGINX do add-on até lá, e cita esses dois destinos."
+        "text": "Migrar para a Gateway API do add-on, ou para o Application Gateway for Containers",
+        "why": "Isso. A Microsoft corrige falhas críticas de segurança no NGINX do add-on até novembro de 2026, e cita esses dois destinos."
       },
       {
         "text": "Fixar a versão do NGINX do add-on para que nunca seja atualizado",
@@ -154,7 +154,7 @@
         "why": "Ready no Kubernetes e saudável no gateway são dois veredictos separados."
       },
       {
-        "text": "Faz o probe em `/`, recebe 404, fora de 200 a 399, e marca todo pod como não saudável",
+        "text": "Faz o probe em `/`, recebe 404 e dá todo pod como não saudável",
         "why": "Isso. Sem probe, o AGIC usa o caminho da Ingress, e um 404 não é resposta saudável, então o gateway não serve nada."
       }
     ]
@@ -164,7 +164,7 @@
     "hint": "De quem o AGIC acha que o gateway é?",
     "choices": [
       {
-        "text": "O AGIC o remove em segundos, porque por padrão ele é dono do gateway inteiro",
+        "text": "O AGIC o apaga, pois se considera dono do gateway todo",
         "why": "Isso. O AGIC sobrescreve qualquer configuração que nenhuma Ingress descreve; o modo compartilhado, só no Helm, é a saída."
       },
       {
@@ -245,7 +245,7 @@
         "why": "Pesos não contam na escolha da regra; eles só dividem as requisições da regra escolhida."
       },
       {
-        "text": "`testers`, porque com caminhos iguais vence a regra com mais cabeçalhos casados",
+        "text": "`testers`: os caminhos empatam, e ela casa mais cabeçalhos",
         "why": "Isso. As duas têm PathPrefix `/` e nenhum método, e `testers` tem um cabeçalho contra nenhum."
       },
       {
@@ -402,8 +402,8 @@
         "why": "Um controller que o tivesse visto escreveria `True` ou `False` com a razão dele."
       },
       {
-        "text": "O valor padrão de status da definição, para que um gateway sem dono diga isso",
-        "why": "Isso. Nada reivindicou a classe, e o padrão é tudo o que existe."
+        "text": "Um padrão da própria definição do Gateway",
+        "why": "Isso. A definição o põe no status para que um gateway sem dono diga isso; nada reivindicou a classe."
       },
       {
         "text": "O API server, depois de não conseguir alcançar o endereço do gateway",
@@ -458,8 +458,8 @@
         "why": "Nada cria uma; ela é escrita pelos donos do namespace referido."
       },
       {
-        "text": "Ligar-se a um gateway é a exceção: o `allowedRoutes` dele escolheu o namespace",
-        "why": "Isso. O gateway aceita rotas de namespaces com o rótulo `gateway-access: \"true\"`, e `shop` é um deles."
+        "text": "O `allowedRoutes` do gateway admite esse namespace",
+        "why": "Isso. Ligar-se a um gateway é a única referência que o lado do gateway controla: ele aceita rotas de namespaces com o rótulo `gateway-access: \"true\"`, e `shop` é um deles."
       }
     ]
   }

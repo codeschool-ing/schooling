@@ -3,7 +3,7 @@ title: "Consumption and Standard: two products under one name"
 version: 1
 ---
 
-When you create a logic app you choose **Consumption** or **Standard**, and the choice looks like a
+When you create a logic app you choose Consumption or Standard, and the choice looks like a
 tier: the same thing, smaller or larger. **They are two products that read the same language.** A
 Consumption logic app is one workflow running in a service that every Azure customer shares, billed
 for each operation it runs. A Standard logic app is an app of the Functions family, running on
@@ -24,10 +24,10 @@ Almost everything around it differs.
 | on a laptop | nothing | the runtime, through Visual Studio Code |
 
 The documentation's own summary of Consumption is "easiest to get started, pay for what you use,
-fully managed". Standard trades that for control: built-in versions of connectors such as Service
-Bus, Event Hubs and SQL Server that run in the same process as the workflow, a static outbound
-address of its own, higher limits on run time and message size, and data that stays in the region
-it was deployed to.
+fully managed". Standard trades that for control. It has built-in versions of connectors such as
+Service Bus, Event Hubs and SQL Server, which run in the same process as the workflow. It has a
+static outbound address of its own, higher limits on run time and message size, and data that
+stays in the region it was deployed to.
 
 ## Standard is an app on a plan
 
@@ -79,10 +79,9 @@ runtime is `dotnet` for every Standard logic app. The workflows are not in this 
 folder in the app's files with a `workflow.json` holding the same kind of definition, deployed as
 the files of a function app are.
 
-The plan is the price. **Workflow Standard has three tiers, and the documentation gives their
-size**: WS1 has 1 vCPU and 3.5 GB of memory, WS2 has 2 and 7 GB, WS3 has 4 and 14 GB. The CLI
-shows the same split. Standard's commands are in the CLI itself, under `az logicapp`, and they ask
-for an App Service plan; Consumption's are in an extension that this lab never added:
+The CLI draws the same line between the two. Standard's commands are in the CLI itself, under
+`az logicapp`, and they ask for an App Service plan; Consumption's are in an extension that this
+lab never added:
 
 ```
 ana@laptop:~/azure$ az logicapp create --help | grep -A3 -- "--plan -p"
@@ -97,24 +96,28 @@ ERROR: 'logic' is misspelled or not recognized by the system.
 `az extension add --name logic` adds it. It is not run here: every command in it needs a
 subscription.
 
+The plan is the price. **Workflow Standard has three tiers, and the documentation gives their
+size**: WS1 has 1 vCPU and 3.5 GB of memory, WS2 has 2 and 7 GB, WS3 has 4 and 14 GB. The plan is
+billed for those resources whether its workflows run or not, as lesson 16's Premium plan is.
+
 ## Stateful and stateless
 
-A Standard workflow is created as one of two kinds, and the same definition can be either. A **stateful** workflow saves every action's inputs, outputs and status to external
-storage, so its runs can be read afterwards and an interrupted run can be resumed when the service
-comes back. A **stateless** workflow keeps them in memory only. It is faster and cheaper, and the
-documentation gives it a run of five minutes by default against a stateful one's 90 days, and pages
-of things it cannot do: only push triggers, so no Recurrence, and no polling of a `202 Accepted`. A
-run interrupted by an outage is lost, and the caller has to send it again. Every Consumption
-workflow is stateful.
+A Standard workflow is created as one of two kinds. A **stateful** workflow saves every action's
+inputs, outputs and status to external storage, so its runs can be read afterwards and an
+interrupted run can be resumed when the service comes back. A **stateless** workflow keeps them in
+memory only. It is faster and cheaper, and the documentation gives it a run of five minutes by
+default against a stateful one's 90 days. It also lists what a stateless workflow cannot do: it
+takes only push triggers, so no Recurrence, and it does not poll a `202 Accepted`. A run interrupted
+by an outage is lost, and the caller has to send it again. Every Consumption workflow is stateful.
 
 ## Run history is the debugger
 
-With no breakpoint and no log line of your own, **the record of a run is how a workflow is
-debugged**. A stateful workflow keeps one entry per run, with its status, and inside it every
-action's status, inputs and outputs, as Azure saw them. A failed `Get_orders` shows the request it
-sent, the answer it got and each retry; a `Skipped` action shows that something before it failed.
-The trigger has a history of its own, where a polling check that found nothing is *Skipped* and
-started no run. Consumption keeps runs for 90 days by default, counted from the start of the run.
+In Azure there is no breakpoint and no log line of your own, so **the record of a run is how a
+workflow is debugged**. A stateful workflow keeps one entry per run, with its status, and inside it
+every action's status, inputs and outputs, as Azure saw them. A failed `Get_orders` shows the
+request it sent and the answer it got; a `Skipped` action shows that something before it failed. The
+trigger has a history of its own, where a polling check that found nothing is *Skipped* and started
+no run. Consumption keeps runs for 90 days by default, counted from the start of the run.
 
 A finished run can be **resubmitted** with the same inputs, from the start or from one action on,
 in the portal. The documentation lists the conditions: the workflow must be stateful or have its
@@ -124,12 +127,12 @@ keeps no history unless it is turned on, for a while, to debug it.
 
 ## The arithmetic of an execution
 
-Consumption bills executions, so it pays to count them. The documentation's rules are short:
+**Consumption bills executions, so it pays to count them.** The documentation's rules are short:
 
-- **each trigger and each action that runs is one execution**, whether the run succeeds or not;
+- each trigger and each action that runs is one execution, whether the run succeeds or not;
   actions that never ran because the run stopped are not billed;
-- **a retry is another execution**: an action that runs with 5 retries is billed as 6;
-- **a loop is billed per item**: a `foreach` over 10 items with one action inside is 10 × 1, plus 1
+- a retry is another execution: an action that runs with 5 retries is billed as 6;
+- a loop is billed per item: a `foreach` over 10 items with one action inside is 10 × 1, plus 1
   for the loop itself, so 11.
 
 The shop's morning export is a trigger, `Get_orders`, `Any_orders`, `Export`, `Summary` and

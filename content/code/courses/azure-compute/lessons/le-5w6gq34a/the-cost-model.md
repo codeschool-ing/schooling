@@ -54,8 +54,7 @@ differs between the rows is the profile.
 Three columns do not move. Two virtual machines cost 146.00 on every row, the App Service plan
 219.00, AKS 511.00: each is a fixed number of machines paid by the hour, and none of these profiles
 outgrows the floor of two, or of three nodes. **A fixed column is the same bill for 0.13 million
-requests and for 1,051 million**, which is a bargain at the bottom of the table and nothing at the
-top. The other two columns move with every row.
+requests and for 1,051 million**, which is a bargain on the busy row and a waste on the webhook. The other two columns move with every row.
 
 **steady, office and nightly: Container Apps.** 89.49, 52.04 and 15.82 USD. Two replicas of half a
 core carry the steady 30 a second and the office 60, and the free grants of the subscription pay
@@ -68,20 +67,19 @@ Container Apps. The webhook never has an idle hour, so both replicas are billed 
 month; a function is billed for 131,400 seconds of execution and nothing for the rest.
 
 **busy: the virtual machines.** At 400 a second the two `D2s_v5` machines are exactly full, and
-146.00 against 667.65 for Container Apps, where eight replicas run all day and 1,049.20 million
-requests past the free two million cost 419.68 on their own.
+they still cost 146.00. Container Apps costs 667.65: eight replicas run all day, and 1,049.20
+million requests past the free two million cost 419.68 on their own.
 
 **And Functions loses every row but one**: by ten times on the nightly row and by more than forty
-on the others. That is the shop's
-assumption meeting Flex's meter: a request is billed as one second of a 2 GB instance, the
+on the others. That is the shop's assumption meeting Flex's meter: a request is billed as one second of a 2 GB instance, the
 documented minimum, and a Python app takes one request per instance at a time. 78.84 million
 requests a month are 157.68 million GB-seconds. The column is an upper bound, and the next
 subsection says what moves it.
 
-AKS is the dearest column on every row, and it would be wrong to read that as a verdict on AKS.
-Three nodes of 4 vCPUs are the system pool lesson 11 recommends, and the Standard tier is what
-lesson 11 puts under production. They are sized for a cluster's own system pods and for many services, and one
-small API uses a corner of them. The next service the shop adds costs nothing more on AKS until the
+AKS costs more than Container Apps on every row but busy, and it would be wrong to read that as a
+verdict on AKS. Three nodes of 4 vCPUs are the system pool lesson 11 recommends, and the Standard
+tier is the one lesson 11 gives production. They are sized for a cluster's own system pods and for
+many services, and one small API uses a corner of them. The next service the shop adds costs nothing more on AKS until the
 nodes are full, and a new line on every other column.
 
 ## What zero is worth
@@ -106,8 +104,7 @@ USD a month, at the rates in rates.json: illustrative, not Azure's prices.
 The nightly service falls from 15.82 to 0.43 USD: its two busy hours run on one replica inside the
 free grants, the 0.43 left is the requests past two million, and the 22 silent hours cost nothing.
 The office tool falls from 52.04 to 42.18, its fifteen silent hours now free. That is what zero is
-for. **Two other rows fell for a
-different reason**: with no floor, the steady service runs on one replica, and 89.49 becomes 57.95
+for. **Two other rows fell for a different reason**: with no floor, the steady service runs on one replica, and 89.49 becomes 57.95
 because there is no second copy, not because anything went idle. That is availability sold, and it
 belongs in the decision as such. The webhook halves for the same reason and never reaches zero at
 all, because its calls arrive every twenty seconds. The cool-down lesson 8 read in the

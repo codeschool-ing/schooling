@@ -23,11 +23,10 @@ morning, read afterwards in its history.
 
 There is help, and it is partial. A definition can carry **static results**, kept under its key
 `staticResults`: an action marked to return one of them gives a mock output instead of calling
-anything, so a run can be tried without the shop's API. A
-Standard logic app has a local runtime, run from Visual Studio Code with Microsoft's extension,
-which installs Azure Functions Core Tools, .NET and Node.js for it; it can stop on a breakpoint
-inside `workflow.json`. This course uses neither Visual Studio Code nor Core Tools, so that runtime
-is read, not run, here.
+anything, so a run can be tried without the shop's API. A Standard logic app has a local runtime,
+run from Visual Studio Code with Microsoft's extension, which installs Azure Functions Core Tools,
+.NET and Node.js for it; it can stop on a breakpoint inside `workflow.json`. This course uses
+neither Visual Studio Code nor Core Tools, so that runtime is read, not run, here.
 
 ## Can a change be reviewed?
 
@@ -43,8 +42,8 @@ the repository, and a reviewer can read a loop or a condition the way it runs.
 **A workflow is billed and limited per step, and a loop multiplies steps.** Suppose the shop wanted
 a line for each order rather than one CSV: a `foreach` over the orders, with three actions inside.
 On a day of 2,000 orders, that is 2,000 × 3 + 1, so 6,001 executions in one run, where the
-morning export needed six. The loop is also limited: by default 20 iterations run at once, at most
-50, and a `foreach` takes up to 100,000 items in a stateful workflow; an `until` loop stops after 60
+morning export needed six. The loop is also limited. By default 20 iterations run at once, at most
+50, and a `foreach` takes up to 100,000 items in a stateful workflow. An `until` loop stops after 60
 cycles or an hour unless told otherwise. Data operations such as `Select`, `Query` and `Table` do
 a whole array in one action, which is why `daily-orders.bicep` builds its CSV with `Table` rather
 than a loop.
@@ -87,8 +86,8 @@ This lesson's own job comes out the other way.
 | who reads it | finance, who can open the run history and see yesterday's CSV |
 | what code would add | a function, its plan, a mail library, credentials to store, and somebody to deploy it |
 
-**Nothing in that job is the shop's own logic.** It is plumbing between three services that each
-have a connector or an address, run once a day. Written as a function, it is a timer trigger, an
+**Nothing in that job is the shop's own logic.** It is plumbing between the shop's API and a
+mailbox, run once a day. Written as a function, it is a timer trigger, an
 HTTP client, a CSV writer and a mail library, plus a secret for the mailbox, all owned by three
 developers whose time costs more than six executions a day. Written as a workflow, it is the file of
 the first section and one connection, and the person who wants to know why Tuesday's email was

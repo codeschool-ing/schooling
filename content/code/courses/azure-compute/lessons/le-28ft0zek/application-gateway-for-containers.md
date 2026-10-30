@@ -7,26 +7,26 @@ With AGIC's name in its own, Application Gateway for Containers reads like AGIC'
 same gateway, a newer controller. **It is a different product, built for Kubernetes, with a
 control plane and a data plane of its own**; Microsoft describes it as shaped by what AGIC taught
 and separate from it. The proxy is still outside the cluster and operated by Azure. What changed is
-everything between the cluster and that proxy. A controller in the cluster, the **ALB Controller**,
-reads Gateway API resources as well as Ingress, and the Azure side is split into small resources
-with one job each, so the gateway the shop's route attached to in section 03 is, in Azure, a
-*frontend*.
+everything between the cluster and that proxy. A controller in the cluster, the ALB Controller,
+reads Gateway API resources as well as Ingress. On the Azure side the work is split into small
+resources with one job each, and the gateway the shop's route attached to in section 03 is, in
+Azure, a *frontend*.
 
 ## Four resources, and two dependencies
 
 Microsoft's documentation, read on 30 October 2026, lists the parts of a deployment:
 
-- the **Application Gateway for Containers** resource itself, of type
+- the *Application Gateway for Containers* resource itself, of type
   `Microsoft.ServiceNetworking/trafficControllers`, a parent that deploys the control plane;
-- a **frontend**, a child that is one entry point for clients. Each frontend gets a name Azure
+- a *frontend*, a child that is one entry point for clients. Each frontend gets a name Azure
   generates, of the form `*.fzXX.alb.azure.com`, which you use as it is or point a CNAME at. It
   listens on ports 80 and 443 only, and has no private address;
-- an **association**, a child that connects the data plane to a subnet of your virtual network,
+- an *association*, a child that connects the data plane to a subnet of your virtual network,
   one to one. Today a resource can have only one;
-- a **security policy**, which points at a Web Application Firewall policy.
+- a *security policy*, which points at a Web Application Firewall policy.
 
-The two dependencies are a **subnet delegated** to `Microsoft.ServiceNetworking/trafficControllers`,
-where the association puts the data plane, and a **user-assigned managed identity** for the ALB
+The two dependencies are a *subnet delegated* to `Microsoft.ServiceNetworking/trafficControllers`,
+where the association puts the data plane, and a *user-assigned managed identity* for the ALB
 Controller, holding the built-in role *AppGw for Containers Configuration Manager*. That role has
 data actions that Owner and Contributor do not have, so giving the controller Contributor is not
 enough. The identity reaches the controller's pod by workload identity, the federated credential of
@@ -39,7 +39,7 @@ is a `/24` or larger**, and several resources sharing one subnet need n × 256 o
 
 There are two ways to own these resources, and the choice decides who creates a frontend.
 
-**Bring your own.** You create the resource, the frontend and the association in Azure, with the
+*Bring your own.* You create the resource, the frontend and the association in Azure, with the
 CLI, Bicep or Terraform, and a Gateway in the cluster refers to them: an annotation names the
 resource and an address names the frontend. Deleting the Gateway leaves the frontend where it is,
 and its FQDN with it, because the Azure administrator owns it. In the shop's `gateway.yaml` that is
@@ -58,7 +58,7 @@ spec:
     value: shop-frontend
 ```
 
-**Managed by the ALB Controller.** You create a custom resource in the cluster, an
+*Managed by the ALB Controller.* You create a custom resource in the cluster, an
 `ApplicationLoadBalancer` naming the delegated subnet, and the controller creates the Azure resource
 and its association; the documentation allows five to six minutes for that. Each Gateway that names
 it by two annotations, `alb.networking.azure.io/alb-namespace` and `alb.networking.azure.io/alb-name`,
@@ -79,7 +79,14 @@ you. The add-on is in preview, and Microsoft's quickstart reaches it through the
 extension and two feature registrations. The resource commands live in an extension too, `alb`,
 which this course's command line does not have:
 
-@@az-alb@@
+```
+ana@laptop:~/azure$ az network alb --help
+ERROR: 'alb' is misspelled or not recognized by the system.
+Did you mean 'lb' ?
+
+https://aka.ms/cli_ref
+Read more about the command in reference docs
+```
 
 Once installed, the controller claims the class the lab wrote by hand. The add-on's quickstart
 checks for a GatewayClass called `azure-alb-external` with the controller name
@@ -162,14 +169,44 @@ resource association 'Microsoft.ServiceNetworking/trafficControllers/association
 output frontendFqdn string = frontend.properties.fqdn
 ```
 
-@@bicep@@
+```
+ana@laptop:~/azure$ bicep build agc.bicep
+ana@laptop:~/azure$ jq -c '.resources[] | [.type, .name]' agc.json
+["Microsoft.Network/virtualNetworks","shop-vnet"]
+["Microsoft.ServiceNetworking/trafficControllers","shop-agc"]
+["Microsoft.ServiceNetworking/trafficControllers/frontends","[format('{0}/{1}', 'shop-agc', 'shop-frontend')]"]
+["Microsoft.ServiceNetworking/trafficControllers/associations","[format('{0}/{1}', 'shop-agc', 'shop-association')]"]
+ana@laptop:~/azure$ jq -c '.resources[] | select(.type | endswith("associations")) | .dependsOn' agc.json
+["[resourceId('Microsoft.ServiceNetworking/trafficControllers', 'shop-agc')]","[resourceId('Microsoft.Network/virtualNetworks', 'shop-vnet')]"]
+```
 
 No warnings, four resources, and the association waits for both the network and its parent. The
 frontend has no properties at all, and the output reads its `fqdn` back: it is Azure's to choose.
 Now four slips in one copy: an FQDN of the shop's choosing on the frontend, `subnet` for `subnets`,
 a `/26`, and the delegation's name missing its last letter:
 
-@@slips@@
+```
+ana@laptop:~/azure$ sed -e "/name: 'shop-frontend'/a\\  properties: {\n    fqdn: 'shop.example.com'\n  }" -e "s/'subnets'/'subnet'/" -e 's#10.20.8.0/24#10.20.8.0/26#' -e '26s/trafficControllers/trafficController/' agc.bicep > slips.bicep
+ana@laptop:~/azure$ diff agc.bicep slips.bicep
+21c21
+<           addressPrefix: '10.20.8.0/24'
+---
+>           addressPrefix: '10.20.8.0/26'
+26c26
+<                 serviceName: 'Microsoft.ServiceNetworking/trafficControllers'
+---
+>                 serviceName: 'Microsoft.ServiceNetworking/trafficController'
+43a44,46
+>   properties: {
+>     fqdn: 'shop.example.com'
+>   }
+52c55
+<     associationType: 'subnets'
+---
+>     associationType: 'subnet'
+ana@laptop:~/azure$ bicep build slips.bicep
+/home/ana/azure/slips.bicep(45,5) : Warning BCP073: The property "fqdn" is read-only. Expressions cannot be assigned to read-only properties. If this is a resource type definition inaccuracy, report it using https://aka.ms/bicep-type-issues. [https://aka.ms/bicep/core-diagnostics#BCP073]
+```
 
 **One warning for four mistakes.** The compiler knows `fqdn` is read-only, so it refuses a name
 written there; that is the frontend's design showing through the type. The other three pass. The

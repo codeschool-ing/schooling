@@ -38,7 +38,7 @@ USD a month, at the rates in rates.json: illustrative, not Azure's prices.
 ```
 
 Container Apps is the cheapest at 85.81 USD a month, against 146.00 for the two virtual machines,
-and **the evening peak is why it costs so little**: 80 a second needs two replicas of 50, and two is
+and **the peak fits inside the minimum**: 80 a second needs two replicas of 50, and two is
 the minimum the program keeps anyway. The figure shows it: only four hours of the day go above what
 one replica carries. Functions costs 3,649.24, because 69.64 million requests a month is 25 times
 the break-even of the last line, and the shop's average of 26.5 a second is 25 times its 1.06.
@@ -72,9 +72,9 @@ confirms that or overrules it:
   limit is 230 seconds; only a virtual machine would let it stay as it is;
 - **the report takes six minutes**, which fits everything, including Flex Consumption's default
   timeout of 30 minutes. As a scheduled Container Apps job, at 1 vCPU and 1 GiB like lesson 7's
-  group, it is 360 seconds × 30.42 nights, 10,950 vCPU-seconds and as many GiB-seconds a month, about
-  0.24 USD at the file's active rates, since the API has already used the free grants. Lesson 8
-  gives its schedule in UTC: `30 2 * * *`;
+  group, it runs 360 seconds × 30.42 nights: 10,950 vCPU-seconds and as many GiB-seconds a month.
+  The API has already used the free grants, so that is about 0.24 USD at the file's active rates. Lesson 8
+  showed that its schedule is read in UTC, so 23:30 is `30 2 * * *`;
 - **the orders live in memory**, and section 04 showed what two copies do to them. They move to a
   database whichever column wins, since every option in the table runs two of something;
 - **the report's files live on the machine's disk**, and go to an Azure Files share as lesson 7
@@ -105,13 +105,13 @@ Functions costs what two VMs cost at 2.79M requests a month, 1.06 a second on av
 USD a month, at the rates in rates.json: illustrative, not Azure's prices.
 ```
 
-159.92 against 146.00: at that size the first two columns change places, and two machines, or a
+159.92 against 146.00: at that size the virtual machines and Container Apps change places, and two machines, or a
 scale set (lesson 4) with reservations, are worth pricing properly. So three things would reopen it:
 
-- **traffic near three times today's**, which the hourly request counts show months ahead;
+- **traffic near three times today's**, which the hourly request counts show long before it arrives;
 - **real rates.** This decision was made at illustrative ones. Put the real rates in `rates.json`
-  and run the same commands: if Container Apps stops being cheapest by more than 20%, the price is a
-  tie, and the effort of section 04 decides, which it still wins;
+  and run the same commands. Today Container Apps costs 41% less than the next column; if the gap
+  falls under 20%, the price is a tie, and the effort of section 04 decides, which it still wins;
 - **a second app in the subscription**, which spends the free grants this table counted on.
 
 None of them is close today, and all three are cheap to watch. Lesson 22 is about writing this

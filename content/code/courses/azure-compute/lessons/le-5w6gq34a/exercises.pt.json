@@ -4,16 +4,16 @@
     "hint": "Sob demanda, o Flex cobra memória durante a execução e as próprias execuções.",
     "choices": [
       {
+        "text": "O volume",
+        "why": "Isso. Cada requisição é cobrada nos mesmos GB-segundos e numa execução, então a conta é o volume vezes um preço por requisição."
+      },
+      {
         "text": "A hora de pico",
         "why": "O pico dimensiona máquinas, réplicas e nós. O Functions soma instâncias conforme as requisições chegam e não paga nenhuma adiantado."
       },
       {
         "text": "O número de horas ociosas",
         "why": "Uma hora ociosa não custa nada a uma função, então é onde o Functions ganha, mas não é ela que faz a conta."
-      },
-      {
-        "text": "O volume de requisições no mês",
-        "why": "Isso. Cada requisição é cobrada nos mesmos GB-segundos e numa execução, então a conta é o volume vezes um preço por requisição."
       },
       {
         "text": "A hora em que o tráfego começa",
@@ -35,12 +35,12 @@
         "why": "16 é o padrão de uma instância de 2.048 MB em outras linguagens. A documentação da Microsoft põe apps Python em uma."
       },
       {
-        "text": "Oitenta, uma para cada requisição que chega num segundo",
-        "why": "Uma requisição dura um décimo de segundo, então as oitenta de um segundo não estão todas em andamento juntas."
-      },
-      {
         "text": "Oito: 80 × 0,1 s estão em andamento, uma por instância",
         "why": "Isso. A concorrência é a taxa vezes a duração, e um app Python aceita uma requisição HTTP por instância por padrão."
+      },
+      {
+        "text": "Oitenta, uma para cada requisição que chega num segundo",
+        "why": "Uma requisição dura um décimo de segundo, então as oitenta de um segundo não estão todas em andamento juntas."
       },
       {
         "text": "Duas, o piso que o programa mantém para toda opção",
@@ -95,12 +95,12 @@
         "why": "Ele as dimensiona hora a hora com `copies`; os perfis só nunca pedem mais que o piso."
       },
       {
-        "text": "Cada uma é um número fixo de máquinas pago por hora, e nenhum perfil passa do piso",
-        "why": "Isso. Até o busy cabe exato em duas `D2s_v5`, então a conta não se move com o tráfego."
-      },
-      {
         "text": "Reservas são aplicadas a elas automaticamente",
         "why": "Nenhum desconto está no arquivo; o programa usa tarifas pré-pagas por uso nas três."
+      },
+      {
+        "text": "Cada uma é um número fixo de máquinas pago por hora, e nenhum perfil passa do piso",
+        "why": "Isso. Até o busy cabe exato em duas `D2s_v5`, então a conta não se move com o tráfego."
       },
       {
         "text": "As tarifas delas são documentadas pela Microsoft, ao contrário das outras",
@@ -121,12 +121,12 @@
         "why": "O programa deixa as cotas do Functions em zero; a diferença existe sem elas."
       },
       {
-        "text": "Nenhuma hora é ociosa, então duas réplicas cobram como ativas o mês todo, enquanto uma função cobra só as execuções",
-        "why": "Isso. Uma chamada em cada hora mantém as réplicas ativas; o Flex paga 131.400 segundos e mais nada."
-      },
-      {
         "text": "Uma réplica não consegue atender uma requisição que chega a cada vinte segundos",
         "why": "Consegue, com folga; o problema é que ela é paga no intervalo."
+      },
+      {
+        "text": "Nenhuma hora é ociosa, então as réplicas cobram como ativas o mês todo",
+        "why": "Isso. Uma chamada em cada hora mantém as réplicas ativas; o Flex paga 131.400 segundos e mais nada."
       }
     ]
   },
@@ -210,16 +210,16 @@
     "hint": "Dois dos três limites não são o timeout que você configura.",
     "choices": [
       {
+        "text": "Torná-la um job que o financeiro busca quando ficar pronto",
+        "why": "Isso. Nada espera numa requisição aberta, então o limite de nenhuma porta de entrada se aplica."
+      },
+      {
         "text": "Pôr o `functionTimeout` do `host.json` em dez minutos",
         "why": "Uma função HTTP continua com 230 segundos para responder, diga o timeout o que disser."
       },
       {
         "text": "Movê-la para o App Service, que não tem limite por requisição",
         "why": "Os mesmos 230 segundos valem, o tempo ocioso do balanceador na frente."
-      },
-      {
-        "text": "Torná-la um job: enfileirar o pedido, gerar o arquivo, deixar o financeiro buscá-lo",
-        "why": "Isso. Nada espera numa requisição aberta, então o limite de nenhuma porta de entrada se aplica."
       },
       {
         "text": "Mantê-la no Container Apps, cujo ingress espera mais de cinco minutos",
@@ -246,16 +246,16 @@
         "why": "Conexões podem ser mantidas por um cliente criado fora do handler; o problema é o número de instâncias."
       },
       {
-        "text": "Cada requisição em andamento é uma instância, e cada instância abre o próprio pool",
-        "why": "Isso. Uma requisição HTTP por instância por padrão quer dizer que uma rajada até 100 instâncias são 100 pools."
-      },
-      {
         "text": "O Flex Consumption não alcança um banco numa rede virtual",
         "why": "Alcança: a integração com rede virtual é um dos acréscimos do Flex sobre o antigo Consumption."
       },
       {
         "text": "O limite de 230 segundos segura as conexões abertas por tempo demais",
         "why": "O limite é sobre responder uma requisição; ele não diz nada sobre quantas conexões existem."
+      },
+      {
+        "text": "Cada requisição em andamento é uma instância com o próprio pool",
+        "why": "Isso. Uma requisição HTTP por instância por padrão quer dizer que uma rajada até 100 instâncias são 100 pools."
       }
     ]
   },
@@ -290,12 +290,12 @@
         "why": "Nada numa hora da noite é grátis; as cotas são um total mensal."
       },
       {
-        "text": "O Container Apps não cobra pelas requisições do pico",
-        "why": "Ele cobra as requisições além de dois milhões no mês, chegue quando chegar."
+        "text": "80 pedem duas réplicas de 50, e duas rodam de qualquer jeito",
+        "why": "Isso. Só quatro horas passam do que uma réplica aguenta, e o piso já as cobre."
       },
       {
-        "text": "80 pedem duas réplicas de 50, e duas é o mínimo mantido de qualquer jeito",
-        "why": "Isso. Só quatro horas passam do que uma réplica aguenta, e o piso já as cobre."
+        "text": "O Container Apps não cobra pelas requisições do pico",
+        "why": "Ele cobra as requisições além de dois milhões no mês, chegue quando chegar."
       },
       {
         "text": "Escalar para cima é mais rápido que escalar para baixo",
@@ -313,15 +313,15 @@
     "hint": "Compare os dois perfis hora a hora.",
     "choices": [
       {
-        "text": "Duas réplicas cobradas como ativas por oito horas em que poderiam estar ociosas",
-        "why": "Isso. O fio de 2 por segundo mantém as duas réplicas fora da tarifa ociosa a noite toda."
-      },
-      {
-        "text": "A cobrança por requisição sobre as requisições do fio",
+        "text": "A cobrança por requisição sobre o que o fio de tráfego envia",
         "why": "O fio são 1,75 milhão de requisições por mês; a 0,40 por milhão isso dá menos de um dólar."
       },
       {
-        "text": "Uma terceira réplica que o fio inicia toda noite",
+        "text": "Duas réplicas mantidas na tarifa ativa a noite toda",
+        "why": "Isso. O fio de 2 por segundo mantém as duas réplicas fora da tarifa ociosa a noite toda."
+      },
+      {
+        "text": "Uma terceira réplica que o fio de tráfego inicia toda noite",
         "why": "Duas requisições por segundo cabem numa réplica; o piso é dois e continua dois."
       },
       {
@@ -354,12 +354,12 @@
         "why": "Hoje o Container Apps é 60,19 mais barato; o cruzamento é um gatilho a acompanhar, não uma data."
       },
       {
-        "text": "Que crescer perto desse tamanho reabre a decisão, e as tarifas reais têm de resolvê-la",
-        "why": "Isso. Dentro de 20% é empate mesmo com tarifas reais, e estas são ilustrativas; é onde precificar máquinas direito."
-      },
-      {
         "text": "Que o Container Apps para de escalar acima de 240 requisições por segundo",
         "why": "Ele escala para cinco réplicas ali; o programa as precifica, e foi assim que o total cresceu."
+      },
+      {
+        "text": "Que crescer perto desse tamanho reabre a decisão, e as tarifas reais têm de resolvê-la",
+        "why": "Isso. Dentro de 20% é empate mesmo com tarifas reais, e estas são ilustrativas; é onde precificar máquinas direito."
       },
       {
         "text": "Que as cotas gratuitas acabam nesse volume",
@@ -413,16 +413,16 @@
     "hint": "Quinze horas em silêncio, ninguém esperando, e uma imagem que a equipe sabe construir.",
     "choices": [
       {
+        "text": "Container Apps, com escala a zero",
+        "why": "Isso. 42,18 na rodada com zero, as horas em silêncio de graça, e a partida a frio cai em ninguém que se importe."
+      },
+      {
         "text": "Duas máquinas virtuais, o movimento mais simples",
         "why": "146,00 por mês para uma ferramenta em silêncio quinze horas por dia, mais o sistema operacional para cuidar."
       },
       {
         "text": "Functions no Flex, já que não paga nada parado",
         "why": "Parado é grátis, mas 59,13 milhões de requisições a um segundo cobrado cada custam 3.098,41 nas tarifas do arquivo."
-      },
-      {
-        "text": "Container Apps com mínimo zero, aceitando uma partida a frio",
-        "why": "Isso. 42,18 na rodada com zero, as horas em silêncio de graça, e a partida a frio cai em ninguém que se importe."
       },
       {
         "text": "Um cluster AKS pequeno no tier Free",

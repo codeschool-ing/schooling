@@ -54,7 +54,7 @@ them with `--raw`. Ask the cluster from the last section:
 ana@laptop:~/azure$ kubectl get --raw /.well-known/openid-configuration | jq
 {
   "issuer": "https://kubernetes.default.svc.cluster.local",
-  "jwks_uri": "https://172.19.0.2:6443/openid/v1/jwks",
+  "jwks_uri": "https://172.19.0.3:6443/openid/v1/jwks",
   "response_types_supported": [
     "id_token"
   ],
@@ -67,7 +67,7 @@ ana@laptop:~/azure$ kubectl get --raw /.well-known/openid-configuration | jq
 }
 ana@laptop:~/azure$ kubectl get --raw /openid/v1/jwks | jq '.keys[] | {kid, kty, alg, use}'
 {
-  "kid": "99-AqXpwvaaJFbhi-CMj4RxNpGO2Fraa1hS_2keI3XU",
+  "kid": "XRBr3pJmOiPXL-AaUkREEj_6qffoEunMXctRB_Mk3xs",
   "kty": "RSA",
   "alg": "RS256",
   "use": "sig"
@@ -132,8 +132,8 @@ ana@laptop:~/azure$ bicep build slips.bicep
 suggested, and its absence reported as a missing required property. The other two compile without
 a word, because to the compiler they are a string and a boolean of the right type.
 `system:serviceaccounts:shop:orders` is a subject no token will ever carry, so Entra ID would find no
-credential to match; the documented message for a token with no matching record is
-`AADSTS70021: No matching federated identity record found for presented assertion`. The issuer
+credential to match, the state the words of
+`AADSTS70021: No matching federated identity record found for presented assertion` describe. The issuer
 switched off leaves the webhook on with nothing for Entra ID to fetch keys from. Neither mistake
 shows until a pod asks for a token, which is the strongest argument for reading `issuer`
 from the cluster, as the file does, and checking `subject` against a decoded token, as the last

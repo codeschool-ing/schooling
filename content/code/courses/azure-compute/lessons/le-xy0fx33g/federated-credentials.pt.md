@@ -53,7 +53,7 @@ lê-los com `--raw`. Pergunte ao cluster da seção anterior:
 ana@laptop:~/azure$ kubectl get --raw /.well-known/openid-configuration | jq
 {
   "issuer": "https://kubernetes.default.svc.cluster.local",
-  "jwks_uri": "https://172.19.0.2:6443/openid/v1/jwks",
+  "jwks_uri": "https://172.19.0.3:6443/openid/v1/jwks",
   "response_types_supported": [
     "id_token"
   ],
@@ -66,7 +66,7 @@ ana@laptop:~/azure$ kubectl get --raw /.well-known/openid-configuration | jq
 }
 ana@laptop:~/azure$ kubectl get --raw /openid/v1/jwks | jq '.keys[] | {kid, kty, alg, use}'
 {
-  "kid": "99-AqXpwvaaJFbhi-CMj4RxNpGO2Fraa1hS_2keI3XU",
+  "kid": "XRBr3pJmOiPXL-AaUkREEj_6qffoEunMXctRB_Mk3xs",
   "kty": "RSA",
   "alg": "RS256",
   "use": "sig"
@@ -131,8 +131,8 @@ ana@laptop:~/azure$ bicep build slips.bicep
 sugerido, e a ausência dela relatada como uma propriedade obrigatória que falta. Os outros dois
 compilam sem uma palavra, porque para o compilador são uma string e um booleano do tipo certo.
 `system:serviceaccounts:shop:orders` é um sujeito que nenhum token vai trazer, então o Entra ID não
-acharia credencial correspondente; a mensagem documentada para um token sem registro correspondente
-é `AADSTS70021: No matching federated identity record found for presented assertion`. O emissor
+acharia credencial correspondente, o estado que as palavras de
+`AADSTS70021: No matching federated identity record found for presented assertion` descrevem. O emissor
 desligado deixa o webhook ligado sem nada de onde o Entra ID possa buscar chaves. Nenhum dos dois
 erros aparece até um pod pedir um token, e esse é o argumento mais forte para ler `issuer` do
 cluster, como o arquivo faz, e conferir `subject` contra um token decodificado, como a seção anterior

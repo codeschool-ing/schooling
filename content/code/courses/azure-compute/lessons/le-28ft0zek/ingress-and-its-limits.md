@@ -14,21 +14,21 @@ both halves in the lab, and lists what AKS offers to read the file.
 
 ## What an Ingress can say
 
-The resource is `networking.k8s.io/v1` and its whole vocabulary fits in a sentence. A **rule**
-matches a host, a **path** under it matches by `Exact` or `Prefix` (or `ImplementationSpecific`,
-which means "whatever the controller decides"), the path names a **backend** Service and port, a
-`tls` entry names the Secret holding a certificate, and `ingressClassName` says which controller
-should read it. There is no field for anything else, and there will not be one: the Kubernetes
+The resource is `networking.k8s.io/v1` and its whole vocabulary fits in two sentences. A rule
+matches a host, and a path under it matches by `Exact` or `Prefix` (or `ImplementationSpecific`,
+which means "whatever the controller decides"). The path names a backend Service and port, a `tls`
+entry names the Secret holding a certificate, and `ingressClassName` says which controller should
+read it. There is no field for anything else, and there will not be one: the Kubernetes
 documentation says the project recommends Gateway instead of Ingress, and that **the Ingress API
 has been frozen**. It stays available and supported, and it is no longer developed.
 
 So every controller grew annotations to say what the fields cannot. Three examples, all for the
 shop's release of 1.1:
 
-- **ingress-nginx** does a canary with a *second* Ingress for the same host, marked
+- ingress-nginx does a canary with a *second* Ingress for the same host, marked
   `nginx.ingress.kubernetes.io/canary: "true"`, with `canary-weight` for a share of the traffic or
   `canary-by-header` for testers who send a header;
-- **AGIC**, the next section's controller, has annotations for its health probe, connection
+- AGIC, the next section's controller, has annotations for its health probe, connection
   draining, timeouts and private addresses, and none for a weighted split;
 - a third controller has its own prefix and its own spelling of the same ideas.
 
@@ -59,7 +59,15 @@ nodes:
 - role: worker
 ```
 
-@@create@@
+```
+ana@laptop:~/azure$ kind create cluster --name shop --config cluster.yaml --quiet
+ana@laptop:~/azure$ kubectl wait --for=condition=Ready nodes --all --timeout=120s
+node/shop-control-plane condition met
+node/shop-worker condition met
+ana@laptop:~/azure$ kind load docker-image shop:1.0 --name shop
+Image: "shop:1.0" with ID "sha256:57a79283049df01c404cb32f1eee2892090634f599171ee97f2c5e153ee7ac4f" not yet present on node "shop-control-plane", loading...
+Image: "shop:1.0" with ID "sha256:57a79283049df01c404cb32f1eee2892090634f599171ee97f2c5e153ee7ac4f" not yet present on node "shop-worker", loading...
+```
 
 The shop runs as two versions at once, which is what a canary needs. Lesson 8 did the same with two
 revisions; here it is two Deployments of lesson 7's image, told apart by `SHOP_VERSION`, each with
@@ -146,7 +154,20 @@ spec:
   - {port: 80, targetPort: 8080}
 ```
 
-@@shop@@
+```
+ana@laptop:~/azure$ kubectl apply -f shop.yaml
+namespace/shop created
+deployment.apps/shop-v1-0 created
+deployment.apps/shop-v1-1 created
+service/shop-v1-0 created
+service/shop-v1-1 created
+ana@laptop:~/azure$ kubectl rollout status deployment/shop-v1-0 -n shop --timeout=120s
+Waiting for deployment "shop-v1-0" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "shop-v1-0" rollout to finish: 1 of 2 updated replicas are available...
+deployment "shop-v1-0" successfully rolled out
+ana@laptop:~/azure$ kubectl rollout status deployment/shop-v1-1 -n shop --timeout=120s
+deployment "shop-v1-1" successfully rolled out
+```
 
 The Ingress is written for AGIC, the way Microsoft's AGIC documentation writes one: the class as
 the annotation `kubernetes.io/ingress.class`, and two of AGIC's own annotations. Save it as
@@ -177,7 +198,16 @@ spec:
               number: 80
 ```
 
-@@ingress@@
+```
+ana@laptop:~/azure$ kubectl apply -f ingress.yaml
+ingress.networking.k8s.io/shop created
+Warning: annotation "kubernetes.io/ingress.class" is deprecated, please use 'spec.ingressClassName' instead
+ana@laptop:~/azure$ kubectl get ingress -n shop
+NAME   CLASS    HOSTS              ADDRESS   PORTS   AGE
+shop   <none>   shop.example.com             80      0s
+ana@laptop:~/azure$ kubectl get ingressclass
+No resources found
+```
 
 Three things in that answer. The warning is the API server's: the annotation is the old way to name
 a class, and `spec.ingressClassName` replaced it, but AGIC's documentation still writes the
@@ -212,7 +242,12 @@ control plane without the mesh: no sidecars, only the gateways.
 The command line in this course's version knows the add-on in both forms, and the switch that
 installs the Gateway API's definitions on a cluster:
 
-@@az-flags@@
+```
+ana@laptop:~/azure$ az aks create --help | awk '/^    --/ {print ""} {printf "%s ", $0}' | tr -s ' ' | grep -E -- '^ --(enable-app-routing|enable-app-routing-istio --enable-ari|enable-gateway-api) '
+ --enable-app-routing : Enable Application Routing addon. 
+ --enable-app-routing-istio --enable-ari : Enable Gateway API based ingress on App Routing via Istio without service mesh functionality. This enables an ingress-only version of Istio that reconciles Gateway API resources for App Routing. It does not provide service mesh functionality (e.g. mTLS, traffic management between services). Cannot be used simultaneously with the Istio service mesh add-on (--enable-azure-service- mesh). 
+ --enable-gateway-api : Enable managed installation of Gateway API CRDs from the standard release channel. 
+```
 
 None of those is run here: each needs a cluster in a subscription. What the lab can show is the
 part they all have in common, the resources a controller reads. The next section takes the row

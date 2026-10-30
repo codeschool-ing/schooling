@@ -47,7 +47,7 @@
         "why": "Both read `networking.k8s.io/v1`; the resource is the same."
       },
       {
-        "text": "Its probe path and draining are annotations, and only AGIC reads `appgw.ingress.kubernetes.io/`",
+        "text": "Its probe and draining are annotations only AGIC reads",
         "correct": true,
         "why": "Right. What the fields cannot say goes into annotations, and each controller has its own prefix and spelling."
       },
@@ -57,7 +57,7 @@
         "why": "Nothing binds it; a class name or annotation only says which controller should read it."
       },
       {
-        "text": "ingress-nginx needs one Ingress per Service",
+        "text": "ingress-nginx needs one Ingress per Service, so the shop's file would have to be split",
         "correct": false,
         "why": "One Ingress may name several Services across its rules; the canary is where nginx asks for a second Ingress."
       }
@@ -140,9 +140,9 @@
         "why": "AGIC's own pages point at Application Gateway for Containers instead."
       },
       {
-        "text": "A move to the add-on's Gateway API implementation or to Application Gateway for Containers before support ends in November 2026",
+        "text": "Moving to the add-on's Gateway API, or to Application Gateway for Containers",
         "correct": true,
-        "why": "Right. Microsoft patches critical security issues in the add-on's NGINX until then, and names those two destinations."
+        "why": "Right. Microsoft patches critical security issues in the add-on's NGINX until November 2026, and names those two destinations."
       },
       {
         "text": "Pinning the add-on's NGINX version so that it is never upgraded",
@@ -227,7 +227,7 @@
         "why": "Readiness in Kubernetes and health at the gateway are two separate verdicts."
       },
       {
-        "text": "It probes `/`, gets 404 outside 200 to 399, and marks every pod unhealthy",
+        "text": "It probes `/`, gets a 404 and marks every pod unhealthy",
         "correct": true,
         "why": "Right. With no probe AGIC uses the Ingress path, and a 404 is not a healthy answer, so the gateway serves nothing."
       }
@@ -244,7 +244,7 @@
     "hint": "Who does AGIC think the gateway belongs to?",
     "choices": [
       {
-        "text": "AGIC removes it within seconds, because by default it owns the whole gateway",
+        "text": "AGIC deletes it, as by default the whole gateway is AGIC's",
         "correct": true,
         "why": "Right. AGIC overwrites any configuration no Ingress describes; shared mode, Helm only, is the way around it."
       },
@@ -356,7 +356,7 @@
         "why": "Weights play no part in choosing a rule; they only split the chosen rule's requests."
       },
       {
-        "text": "`testers`, because with equal paths the match with more header matches wins",
+        "text": "`testers`: the paths tie, and it has more header matches",
         "correct": true,
         "why": "Right. Both have a PathPrefix of `/` and no method, and `testers` has one header against none."
       },
@@ -598,9 +598,9 @@
         "why": "A controller that had seen it would write `True` or `False` with its own reason."
       },
       {
-        "text": "The definition's default for status, so an unclaimed gateway says so",
+        "text": "A default in the Gateway's own definition",
         "correct": true,
-        "why": "Right. Nothing has claimed the class, and the default is all there is."
+        "why": "Right. The definition puts it in status so that an unclaimed gateway says so; nothing has claimed the class."
       },
       {
         "text": "The API server, after failing to reach the gateway's address",
@@ -677,9 +677,9 @@
         "why": "Nothing creates one; it is written by the owners of the namespace referred to."
       },
       {
-        "text": "Attachment to a gateway is the exception: its `allowedRoutes` selected the namespace",
+        "text": "The gateway's `allowedRoutes` admits that namespace",
         "correct": true,
-        "why": "Right. The gateway accepts routes from namespaces labelled `gateway-access: \"true\"`, and `shop` is one."
+        "why": "Right. Attaching to a gateway is the one reference the gateway's side controls: it accepts routes from namespaces labelled `gateway-access: \"true\"`, and `shop` is one."
       }
     ]
   }

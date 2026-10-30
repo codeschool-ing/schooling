@@ -13,13 +13,13 @@ them are services somewhere else.
 ## Built-in and managed
 
 Microsoft's documentation splits connectors in two. A **built-in** connector runs directly and
-natively inside the Logic Apps runtime: the Recurrence trigger, the HTTP trigger and action, the
-Request trigger that gives a workflow an address of its own, and the control and data actions of the
-previous section, `If`, `Compose` and `Table` among them. A **managed** connector is deployed,
-hosted and run by Microsoft in Azure, mostly as a proxy or wrapper around the API of the service it
-reaches; the designer lists them under *Shared*, and they are billed at a *Standard* or an
-*Enterprise* level. Office 365 Outlook, SQL Server, Service Bus and Blob Storage all have one, and
-the documentation counts more than 1,400.
+natively inside the Logic Apps runtime. The Recurrence trigger is one, and so are the HTTP trigger
+and action, the Request trigger that gives a workflow an address of its own, and the control and
+data actions of the previous section, `If`, `Compose` and `Table` among them. A **managed**
+connector is deployed, hosted and run by Microsoft in Azure, mostly as a proxy or wrapper around the
+API of the service it reaches. The designer lists them under *Shared*, and they are billed at a
+*Standard* or an *Enterprise* level. Office 365 Outlook, SQL Server, Service Bus and Blob Storage
+all have one, and the documentation counts more than 1,400.
 
 When there is no connector, the HTTP action is the general answer: `Get_orders` in the previous
 section is one, calling an API nobody wrote a connector for.
@@ -62,11 +62,11 @@ ana@laptop:~/azure$ jq ".resources[0] | {type, name, api: .properties.api.id}" o
 }
 ```
 
-**Two expression languages are now in the same file, and they run at different times.** The `[...]`
-in `api` is an ARM template expression, evaluated once by Resource Manager when the file is
+**Two expression languages now meet in one deployment, and they run at different times.** The
+`[...]` in `api` is an ARM template expression, evaluated once by Resource Manager when the file is
 deployed. The `@...` strings in `daily-orders.bicep` are workflow expressions, carried through the
-deployment untouched and evaluated on every run. A workflow parameter, `@parameters('shopUrl')`,
-and a template parameter, `[parameters('location')]`, read different things.
+deployment untouched and evaluated on every run. A workflow parameter, `@parameters('shopUrl')`, and
+a template parameter, `[parameters('location')]`, read different things.
 
 The send itself is one more action in the true branch of `Any_orders`, after `Summary`. It is
 written here as the workflow would carry it; it was not compiled into the workflow or run:
@@ -94,12 +94,12 @@ The workflow finds the connection through a definition parameter named `$connect
 resource fills in with the connection's id, as it filled in `shopUrl`.
 
 **The connection is the part of the workflow that is not in the file.** Office 365 signs in with
-Microsoft Entra ID, so somebody has to sign in once and consent; the documentation says Logic Apps
+Microsoft Entra ID, so somebody has to sign in once and consent. The documentation says Logic Apps
 then stores the access and refresh tokens, not the password, and refreshes the access token while
 the refresh token stays valid. A refresh token can expire or be revoked, and a changed password
 can invalidate it. The morning email then stops on the day it does, until somebody authorises the
-connection again. Some connectors, though not every one, can use a managed
-identity instead of a person's account, which `azure-foundations` lesson 8 explains.
+connection again. Some connectors, though not every one, can use a managed identity instead of a
+person's account, which `azure-foundations` lesson 8 explains.
 
 ## Throttling
 
@@ -128,8 +128,8 @@ returns an array, starts one run for each item.
 The Recurrence trigger in `daily-orders.bicep` is the simplest case: it calls nobody, and fires on
 its schedule. Three details in it are the documentation's rules rather than style:
 
-- **`timeZone` applies only together with `startTime`**, and the trigger accepts no UTC offset. Without
-  a zone, a `startTime` is UTC, written with a final `Z`: six in the morning in São Paulo is
+- **`timeZone` applies only together with `startTime`**, and the trigger accepts no UTC offset.
+  Without a zone, a `startTime` is UTC, written with a final `Z`: six in the morning in São Paulo is
   `09:00:00Z`.
 - The `hours` and `minutes` of a `schedule` apply only when the frequency is `Day` or `Week`. A
   managed connector's polling trigger ignores them and uses only its frequency and interval.
