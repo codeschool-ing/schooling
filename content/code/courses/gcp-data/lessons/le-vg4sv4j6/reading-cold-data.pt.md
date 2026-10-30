@@ -48,7 +48,7 @@ Três detalhes da taxa, da página de preços, decidem como ela cai:
   primeiros 8 MB de um objeto de 100 MB em Nearline paga a taxa sobre 8 MB, e um download que quebra
   depois de 8 MB também;
 - **copiar, mover e reescrever também são leituras.** A página diz que a taxa se aplica quando você
-  "read, copy, move, or rewrite" um objeto guardado nas três classes mais frias, então a mudança de
+  "read, copy, move, or rewrite" um objeto guardado nas três classes mais frias. A mudança de
   classe da seção anterior, feita a partir de Coldline ou Archive, paga uma taxa de recuperação além da
   reescrita;
 - **ela não se aplica num bucket com Autoclass ligado**, que é o assunto da próxima seção.

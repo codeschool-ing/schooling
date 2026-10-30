@@ -49,7 +49,7 @@ Three details of the fee, from the pricing page, decide how it lands:
   8 MB of a 100 MB Nearline object pays the fee on 8 MB, and so does a download that breaks after
   8 MB;
 - **copying, moving and rewriting are reads too.** The page says the fee applies when you "read,
-  copy, move, or rewrite" an object stored in the three colder classes, so the class change of the
+  copy, move, or rewrite" an object stored in the three colder classes. The class change of the
   previous section, made from Coldline or Archive, pays a retrieval fee as well as the rewrite;
 - **it does not apply in a bucket with Autoclass on**, which the next section is about.
 

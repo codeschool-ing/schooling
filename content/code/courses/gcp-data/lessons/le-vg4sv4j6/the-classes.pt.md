@@ -52,7 +52,7 @@ ação, e são o próximo parágrafo.
 
 **A estadia mínima é uma conta por sair cedo.** Um objeto apagado, substituído ou reescrito em outra
 classe antes do mínimo é cobrado como se tivesse ficado o mínimo inteiro. Um tebibyte, 1.024 GiB,
-guardado em Archive por dez dias custaria 1.024 × 0,003 × 10 / 30 = 1,02 USD; apagado no décimo dia,
+guardado em Archive por dez dias custaria 1.024 × 0,003 × 10 / 30 = 1,02 USD. Apagado no décimo dia,
 é cobrado pelos 365 inteiros, que, contando um mês como 30 dias, dá 1.024 × 0,003 × 365 / 30 = 37,38. A página de preços cita três casos em que a
 cobrança não se aplica: um objeto em Standard, uma classe mudada por uma regra de ciclo de vida, e um
 objeto num bucket com Autoclass ligado. A aula 3 escreve a regra, e a seção sobre Autoclass desta aula

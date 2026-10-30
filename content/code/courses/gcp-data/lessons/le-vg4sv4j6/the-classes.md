@@ -51,8 +51,8 @@ work, and they are the next paragraph.
 
 **The minimum stay is a bill for leaving early.** An object deleted, replaced or rewritten into
 another class before its minimum is charged as if it had stayed the whole minimum. A tebibyte, 1,024
-GiB, kept in Archive for ten days would cost 1,024 × 0.003 × 10 / 30 = 1.02 USD; deleted on the tenth
-day it is billed for all 365, which with a month counted as 30 days is 1,024 × 0.003 × 365 / 30 =
+GiB, kept in Archive for ten days would cost 1,024 × 0.003 × 10 / 30 = 1.02 USD. Deleted on the tenth
+day, it is billed for all 365, which with a month counted as 30 days is 1,024 × 0.003 × 365 / 30 =
 37.38. The pricing page names three cases
 where the charge does not apply: an object in Standard, a class changed by a life-cycle rule, and
 an object in a bucket with Autoclass on. Lesson 3 writes the rule, and this lesson's section on

@@ -1,0 +1,571 @@
+[
+  {
+    "id": "ex-c79ra6yx",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a versioned bucket, what does `gcloud storage rm gs://quitanda-curated-prod/customers/customers.csv`, with no generation, do on Cloud Storage?",
+    "hint": "There is no delete marker in Cloud Storage.",
+    "choices": [
+      {
+        "text": "It removes every generation of the name",
+        "correct": false,
+        "why": "Only deletes that name a generation remove anything for good."
+      },
+      {
+        "text": "It makes the live generation noncurrent",
+        "correct": true,
+        "why": "Right. The name stops being listed; copying a generation back restores it."
+      },
+      {
+        "text": "It adds an empty delete marker on top of the live version",
+        "correct": false,
+        "why": "That is another object store's mechanism. Cloud Storage has no marker: the name simply has no live generation."
+      },
+      {
+        "text": "It is refused, because versioned objects cannot be deleted",
+        "correct": false,
+        "why": "Versioning refuses nothing; a retention policy is what refuses deletes."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zv3afda",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The customer table was deleted by mistake in a versioned bucket. How does Quitanda bring it back?",
+    "hint": "A noncurrent generation can be the source of a copy.",
+    "choices": [
+      {
+        "text": "`gcloud storage restore` on the name",
+        "correct": false,
+        "why": "That restores soft-deleted objects; a noncurrent version is not soft-deleted."
+      },
+      {
+        "text": "Turn versioning off and on again",
+        "correct": false,
+        "why": "Versioning off keeps the noncurrent versions where they are and brings nothing back."
+      },
+      {
+        "text": "Copy the generation wanted onto the name",
+        "correct": true,
+        "why": "Right: `gcloud storage cp gs://…#GENERATION gs://…` writes a new live generation with those bytes."
+      },
+      {
+        "text": "Delete the newest noncurrent generation",
+        "correct": false,
+        "why": "That destroys a version; there is no marker to remove in Cloud Storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvf97k74",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda turns versioning off on a bucket that holds 40 noncurrent versions. What happens to them?",
+    "hint": "Turning it off changes the next write.",
+    "choices": [
+      {
+        "text": "They stay, still listed and billed, until something deletes them",
+        "correct": true,
+        "why": "Right. Off stops the growth and keeps what was kept."
+      },
+      {
+        "text": "They are deleted at once",
+        "correct": false,
+        "why": "Nothing is deleted by the setting; a rule or a delete per generation does that."
+      },
+      {
+        "text": "They become soft-deleted for seven days",
+        "correct": false,
+        "why": "Soft delete applies to deleted or replaced objects, and turning versioning off deletes nothing."
+      },
+      {
+        "text": "They are merged into the live object",
+        "correct": false,
+        "why": "Generations are separate objects; nothing merges them."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hedtd33",
+    "version": 1,
+    "section": "versioning",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A second, separate protection that Google turns on for new buckets keeps a deleted or replaced object for seven days by default. It is called soft ___.",
+    "hint": "`gcloud storage restore` brings its objects back.",
+    "blanks": [
+      {
+        "accept": [
+          "delete"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gty4x26v",
+    "version": 1,
+    "section": "what-versions-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 20 GiB file is rewritten every night in a versioned bucket with no rule, in Standard at 0.035 USD per GiB-month. How many GiB does the bucket hold after 100 nights?",
+    "hint": "Every night adds one full copy.",
+    "value": 2000,
+    "tolerance": 0.5
+  },
+  {
+    "id": "ex-fyewvjxp",
+    "version": 1,
+    "section": "what-versions-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Versioning is off on Quitanda's curated bucket, and its 50 GiB table is rewritten nightly. Why does the bucket hold 400 GiB?",
+    "hint": "Something keeps replaced objects whether you asked or not.",
+    "choices": [
+      {
+        "text": "Noncurrent versions are kept anyway, versioning or not",
+        "correct": false,
+        "why": "With versioning off there are no noncurrent versions of new writes."
+      },
+      {
+        "text": "Soft delete keeps each old copy a week",
+        "correct": true,
+        "why": "Right: the live table plus seven soft-deleted ones, billed at the class's price."
+      },
+      {
+        "text": "The emulator miscounts",
+        "correct": false,
+        "why": "The number comes from the program's arithmetic, which models Cloud Storage."
+      },
+      {
+        "text": "A rewrite is billed as two copies",
+        "correct": false,
+        "why": "A rewrite is one Class A operation; it does not double the storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q8ggyx2",
+    "version": 1,
+    "section": "what-versions-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A versioned bucket deletes noncurrent versions 7 days after they are replaced, and soft delete is on at 7 days. A 50 GiB table is rewritten nightly. What is the most the bucket is billed for?",
+    "hint": "Count the live one, the noncurrent ones, and what happens to a version the rule deletes.",
+    "choices": [
+      {
+        "text": "400 GiB: one live and seven noncurrent",
+        "correct": false,
+        "why": "That forgets that a version the rule deletes is soft-deleted for seven more days."
+      },
+      {
+        "text": "750 GiB, fifteen copies",
+        "correct": true,
+        "why": "Right: one live, seven noncurrent and seven soft-deleted, which is what keep.py's second column reaches."
+      },
+      {
+        "text": "50 GiB, since the rule removes old versions",
+        "correct": false,
+        "why": "The rule waits seven days, and soft delete keeps what it removes."
+      },
+      {
+        "text": "18,000 GiB by the end of the year",
+        "correct": false,
+        "why": "That is the bucket with no rule at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-28esvymq",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each life-cycle condition to what it tests.",
+    "hint": "Some conditions only make sense in a versioned bucket.",
+    "pairs": [
+      {
+        "left": "age",
+        "right": "Days since the object was created"
+      },
+      {
+        "left": "daysSinceNoncurrentTime",
+        "right": "Days since the version was replaced"
+      },
+      {
+        "left": "numNewerVersions",
+        "right": "How many newer versions of the name exist"
+      },
+      {
+        "left": "matchesPrefix",
+        "right": "How the object's name begins"
+      }
+    ],
+    "right_distractors": [
+      "The object's tags"
+    ]
+  },
+  {
+    "id": "ex-xgbbhd6t",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did fake-gcs-server do with `gcloud storage buckets update --lifecycle-file=lifecycle.json`?",
+    "hint": "Read the `describe` that followed.",
+    "choices": [
+      {
+        "text": "It applied the rules at once, since it has no clock",
+        "correct": false,
+        "why": "It applied nothing, and kept nothing to apply."
+      },
+      {
+        "text": "It refused the file as invalid",
+        "correct": false,
+        "why": "It answered with success."
+      },
+      {
+        "text": "It stored the rules and will apply them within a day",
+        "correct": false,
+        "why": "No lifecycle_config came back from describe."
+      },
+      {
+        "text": "It accepted the request and stored no rules",
+        "correct": true,
+        "why": "Right: success, and the bucket came back with no life-cycle configuration at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p9rfxdy",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rule file names an action `Teleport` and, in another rule, a condition `agee`. Which does `gcloud` refuse before sending anything?",
+    "hint": "The command line knows the names of one of the two.",
+    "choices": [
+      {
+        "text": "Both",
+        "correct": false,
+        "why": "It passed the action type through; only the condition was checked."
+      },
+      {
+        "text": "Only the misspelt condition",
+        "correct": true,
+        "why": "Right. The action reached the emulator, which accepted it; Cloud Storage would refuse it."
+      },
+      {
+        "text": "Only the unknown action",
+        "correct": false,
+        "why": "It is the other way round in the transcript."
+      },
+      {
+        "text": "Neither: gcloud checks only that the file is JSON",
+        "correct": false,
+        "why": "It refused `agee` with an error about the lifecycle rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4ekj0e1",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under Quitanda's rules a GiB costs 0.4773 USD over seven years, and 2.9808 if left in Standard. For 3,000 GiB of exports, how many USD does the rule save over the seven years?",
+    "hint": "Save per GiB, times the volume.",
+    "value": 7510.5,
+    "tolerance": 1.0
+  },
+  {
+    "id": "ex-wk1phmap",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's archive bucket has an unlocked retention policy of five years. Who can delete a three-month-old invoice in it?",
+    "hint": "Unlocked policies can be changed.",
+    "choices": [
+      {
+        "text": "Nobody, until the five years pass",
+        "correct": false,
+        "why": "That is true only once the policy is locked."
+      },
+      {
+        "text": "Anyone with `storage.objects.delete`",
+        "correct": false,
+        "why": "The policy refuses that delete whatever the role, while it is in place."
+      },
+      {
+        "text": "An administrator, after first removing that setting",
+        "correct": true,
+        "why": "Right: `--clear-retention-period`, then the delete. Locking is what closes that path."
+      },
+      {
+        "text": "Only Google support, after a request from the project's owner",
+        "correct": false,
+        "why": "Google support plays no part in it; an unlocked policy is the project's own to change."
+      }
+    ]
+  },
+  {
+    "id": "ex-nch4x26j",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A supplier contract must be kept five years after the contract ends, and nobody knows today when that will be. Which tool fits?",
+    "hint": "One kind of hold moves the start of the retention clock.",
+    "choices": [
+      {
+        "text": "A temporary hold",
+        "correct": false,
+        "why": "It keeps the object while it is on, and does nothing to the retention clock."
+      },
+      {
+        "text": "A locked retention policy of five years",
+        "correct": false,
+        "why": "The period would count from when the file was written, not from when the contract ends."
+      },
+      {
+        "text": "Soft delete set to 90 days",
+        "correct": false,
+        "why": "Ninety days is the longest soft delete there is, and it only starts at a deletion."
+      },
+      {
+        "text": "An event-based hold",
+        "correct": true,
+        "why": "Right. Released when the contract ends, it starts the retention period from that day."
+      }
+    ]
+  },
+  {
+    "id": "ex-pr10y8k5",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after `--retention-period=1y`, `gcloud storage buckets update --lock-retention-period` failed in the lab. What does that failure show?",
+    "hint": "The command line reads the policy before locking it.",
+    "choices": [
+      {
+        "text": "That locking needs a second person's approval",
+        "correct": false,
+        "why": "Nothing in the command asks for one; the message was about the policy."
+      },
+      {
+        "text": "That the emulator kept no policy",
+        "correct": true,
+        "why": "Right: gcloud found no policy to lock, one command after setting it."
+      },
+      {
+        "text": "That a lock can only be applied a day after the policy",
+        "correct": false,
+        "why": "No such delay exists; the bucket simply had no policy."
+      },
+      {
+        "text": "That the bucket already had a locked policy",
+        "correct": false,
+        "why": "It had none at all, locked or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zmrc5t1",
+    "version": 1,
+    "section": "where-the-emulator-is-weaker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `gcloud storage ls -a` show only the live generation against fake-gcs-server?",
+    "hint": "Compare the two curl requests.",
+    "choices": [
+      {
+        "text": "The emulator keeps no noncurrent versions",
+        "correct": false,
+        "why": "It keeps them: versions.py and curl with versions=true list them."
+      },
+      {
+        "text": "gcloud asks with versions=True, in capitals",
+        "correct": true,
+        "why": "Right. The emulator only understands versions=true; one letter of case decides between one generation and three."
+      },
+      {
+        "text": "`-a` lists only live objects on Cloud Storage too",
+        "correct": false,
+        "why": "On Cloud Storage `ls -a` lists every generation."
+      },
+      {
+        "text": "Versioning was off when they were written",
+        "correct": false,
+        "why": "It was on, and the noncurrent versions exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-939c7gpm",
+    "version": 1,
+    "section": "where-the-emulator-is-weaker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pruning script deletes old generations with `gcloud storage rm gs://…#GENERATION` and passes its tests against fake-gcs-server. What did the lab show would happen in those tests?",
+    "hint": "Look at the listing after the delete.",
+    "choices": [
+      {
+        "text": "The named generation goes and the live one stays, as on Cloud Storage",
+        "correct": false,
+        "why": "The named generation was still listed afterwards."
+      },
+      {
+        "text": "Nothing is deleted, because the emulator ignores deletes",
+        "correct": false,
+        "why": "Something was deleted: the live version."
+      },
+      {
+        "text": "The live version goes; the named one stays",
+        "correct": true,
+        "why": "Right. A test that only checks that something went would pass while the current data disappeared."
+      },
+      {
+        "text": "Every generation of the name is deleted",
+        "correct": false,
+        "why": "The two noncurrent ones were still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-5npyadr8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the life of an export under Quitanda's rules, from when it is written.",
+    "hint": "Standard first, gone last.",
+    "items": [
+      "Standard for 30 days",
+      "Nearline until it is a year old",
+      "Archive for six more years",
+      "Deleted at 2,555 days"
+    ]
+  },
+  {
+    "id": "ex-193swx24",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each Quitanda need to the protection that meets it.",
+    "hint": "Ask whether the threat is an accident or somebody who means it.",
+    "pairs": [
+      {
+        "left": "Undo last night's broken rewrite of the customer table",
+        "right": "Object versioning"
+      },
+      {
+        "left": "Keep invoices five years, even against an administrator",
+        "right": "A locked retention policy"
+      },
+      {
+        "left": "Keep one customer's orders until a court case ends",
+        "right": "A temporary hold"
+      },
+      {
+        "left": "Recover a file deleted by mistake in an unversioned bucket",
+        "right": "Soft delete"
+      }
+    ],
+    "right_distractors": [
+      "Autoclass"
+    ]
+  },
+  {
+    "id": "ex-5g65bzm4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Against fake-gcs-server, a test creates a bucket with a one-year retention policy, writes an object, tries to delete it and expects a refusal. What happens?",
+    "hint": "Recall what the emulator kept of the policy.",
+    "choices": [
+      {
+        "text": "The delete is refused, as on Cloud Storage",
+        "correct": false,
+        "why": "The emulator kept no policy, so nothing refused it."
+      },
+      {
+        "text": "The bucket creation fails",
+        "correct": false,
+        "why": "It succeeded; the period was dropped silently."
+      },
+      {
+        "text": "The delete succeeds, and the test fails",
+        "correct": true,
+        "why": "Right, though the policy is fine on Cloud Storage. Here the emulator fails a correct test; the next mistake may be one it passes."
+      },
+      {
+        "text": "The object is soft-deleted instead",
+        "correct": false,
+        "why": "The emulator keeps no soft-deleted objects either."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jqnyrnm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which check caught the emulator serving the wrong bytes for an old generation?",
+    "hint": "It is done on every download by the command line.",
+    "choices": [
+      {
+        "text": "The emulator's own error message",
+        "correct": false,
+        "why": "The emulator answered as if all was well."
+      },
+      {
+        "text": "The sizes that versions.py prints",
+        "correct": false,
+        "why": "versions.py listed the generations correctly; it reads no bytes."
+      },
+      {
+        "text": "The MD5 hash gcloud checks",
+        "correct": true,
+        "why": "Right: the bytes received did not match the hash the metadata declared."
+      },
+      {
+        "text": "A retention policy",
+        "correct": false,
+        "why": "Retention has nothing to say about which bytes are served."
+      }
+    ]
+  }
+]

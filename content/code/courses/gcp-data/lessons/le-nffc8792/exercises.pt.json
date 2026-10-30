@@ -1,0 +1,389 @@
+{
+  "ex-c79ra6yx": {
+    "prompt": "Num bucket versionado, o que `gcloud storage rm gs://quitanda-curated-prod/customers/customers.csv`, sem geração, faz no Cloud Storage?",
+    "hint": "Não existe marcador de exclusão no Cloud Storage.",
+    "choices": [
+      {
+        "text": "Remove todas as gerações do nome",
+        "why": "Só exclusões que citam uma geração removem algo de vez."
+      },
+      {
+        "text": "Torna a geração viva não atual",
+        "why": "Isso. O nome deixa de ser listado; copiar uma geração de volta o restaura."
+      },
+      {
+        "text": "Acrescenta um marcador de exclusão vazio sobre a versão viva",
+        "why": "Esse é o mecanismo de outro armazenamento de objetos. O Cloud Storage não tem marcador: o nome só fica sem geração viva."
+      },
+      {
+        "text": "É recusado, porque objetos versionados não podem ser apagados",
+        "why": "O versionamento não recusa nada; quem recusa exclusões é uma política de retenção."
+      }
+    ]
+  },
+  "ex-0zv3afda": {
+    "prompt": "A tabela de clientes foi apagada por engano num bucket versionado. Como a Quitanda a traz de volta?",
+    "hint": "Uma geração não atual pode ser a origem de uma cópia.",
+    "choices": [
+      {
+        "text": "`gcloud storage restore` no nome",
+        "why": "Isso restaura objetos excluídos de forma reversível; uma versão não atual não está nesse estado."
+      },
+      {
+        "text": "Desligar e religar o versionamento",
+        "why": "Desligar o versionamento mantém as versões não atuais onde estão e não traz nada de volta."
+      },
+      {
+        "text": "Copiar a geração desejada sobre o nome",
+        "why": "Isso: `gcloud storage cp gs://…#GERAÇÃO gs://…` escreve uma nova geração viva com esses bytes."
+      },
+      {
+        "text": "Apagar a geração não atual mais recente",
+        "why": "Isso destrói uma versão; não há marcador para remover no Cloud Storage."
+      }
+    ]
+  },
+  "ex-wvf97k74": {
+    "prompt": "A Quitanda desliga o versionamento de um bucket com 40 versões não atuais. O que acontece com elas?",
+    "hint": "Desligar muda a próxima escrita.",
+    "choices": [
+      {
+        "text": "Ficam, ainda listadas e cobradas, até algo apagá-las",
+        "why": "Isso. Desligar para o crescimento e mantém o que foi guardado."
+      },
+      {
+        "text": "São apagadas na hora",
+        "why": "A configuração não apaga nada; quem faz isso é uma regra ou uma exclusão por geração."
+      },
+      {
+        "text": "Passam a ficar excluídas de forma reversível por sete dias",
+        "why": "A exclusão reversível vale para objetos apagados ou substituídos, e desligar o versionamento não apaga nada."
+      },
+      {
+        "text": "São fundidas no objeto vivo",
+        "why": "Gerações são objetos separados; nada as funde."
+      }
+    ]
+  },
+  "ex-0hedtd33": {
+    "prompt": "Uma segunda proteção, separada, que o Google liga em buckets novos guarda um objeto apagado ou substituído por sete dias por padrão. Em inglês ela se chama soft ___.",
+    "hint": "`gcloud storage restore` traz os objetos dela de volta.",
+    "blanks": [
+      {
+        "accept": [
+          "delete"
+        ]
+      }
+    ]
+  },
+  "ex-gty4x26v": {
+    "prompt": "Um arquivo de 20 GiB é reescrito toda noite num bucket versionado sem regra, em Standard a 0,035 USD por GiB-mês. Quantos GiB o bucket guarda depois de 100 noites?",
+    "hint": "Cada noite acrescenta uma cópia inteira."
+  },
+  "ex-fyewvjxp": {
+    "prompt": "O versionamento está desligado no bucket curated da Quitanda, e a tabela de 50 GiB é reescrita toda noite. Por que o bucket guarda 400 GiB?",
+    "hint": "Algo guarda objetos substituídos, você pedindo ou não.",
+    "choices": [
+      {
+        "text": "Versões não atuais são guardadas mesmo assim, com ou sem versionamento",
+        "why": "Com o versionamento desligado não há versões não atuais das escritas novas."
+      },
+      {
+        "text": "A exclusão reversível guarda cada cópia antiga por uma semana",
+        "why": "Isso: a tabela viva mais sete excluídas de forma reversível, cobradas ao preço da classe."
+      },
+      {
+        "text": "O emulador conta errado",
+        "why": "O número vem da aritmética do programa, que modela o Cloud Storage."
+      },
+      {
+        "text": "Uma reescrita é cobrada como duas cópias",
+        "why": "Uma reescrita é uma operação Class A; ela não dobra o armazenamento."
+      }
+    ]
+  },
+  "ex-9q8ggyx2": {
+    "prompt": "Um bucket versionado apaga versões não atuais 7 dias depois de substituídas, e a exclusão reversível está ligada com 7 dias. Uma tabela de 50 GiB é reescrita toda noite. Qual é o máximo pelo qual o bucket é cobrado?",
+    "hint": "Conte a viva, as não atuais, e o que acontece com uma versão que a regra apaga.",
+    "choices": [
+      {
+        "text": "400 GiB: uma viva e sete não atuais",
+        "why": "Isso esquece que uma versão apagada pela regra fica excluída de forma reversível por mais sete dias."
+      },
+      {
+        "text": "750 GiB, quinze cópias",
+        "why": "Isso: uma viva, sete não atuais e sete excluídas de forma reversível, que é aonde chega a segunda coluna do keep.py."
+      },
+      {
+        "text": "50 GiB, já que a regra remove as versões antigas",
+        "why": "A regra espera sete dias, e a exclusão reversível guarda o que ela remove."
+      },
+      {
+        "text": "18.000 GiB no fim do ano",
+        "why": "Esse é o bucket sem regra nenhuma."
+      }
+    ]
+  },
+  "ex-28esvymq": {
+    "prompt": "Ligue cada condição de ciclo de vida ao que ela testa.",
+    "hint": "Algumas condições só fazem sentido num bucket versionado.",
+    "pairs": [
+      {
+        "left": "age",
+        "right": "Dias desde que o objeto foi criado"
+      },
+      {
+        "left": "daysSinceNoncurrentTime",
+        "right": "Dias desde que a versão foi substituída"
+      },
+      {
+        "left": "numNewerVersions",
+        "right": "Quantas versões mais novas do nome existem"
+      },
+      {
+        "left": "matchesPrefix",
+        "right": "Como o nome do objeto começa"
+      }
+    ],
+    "right_distractors": [
+      "As tags do objeto"
+    ]
+  },
+  "ex-xgbbhd6t": {
+    "prompt": "O que o fake-gcs-server fez com `gcloud storage buckets update --lifecycle-file=lifecycle.json`?",
+    "hint": "Leia o `describe` que veio depois.",
+    "choices": [
+      {
+        "text": "Aplicou as regras na hora, já que não tem relógio",
+        "why": "Não aplicou nada, e não guardou nada para aplicar."
+      },
+      {
+        "text": "Recusou o arquivo como inválido",
+        "why": "Respondeu com sucesso."
+      },
+      {
+        "text": "Guardou as regras e vai aplicá-las em até um dia",
+        "why": "Nenhum lifecycle_config voltou no describe."
+      },
+      {
+        "text": "Aceitou e não guardou regra nenhuma",
+        "why": "Isso: sucesso, e o bucket voltou sem configuração de ciclo de vida nenhuma."
+      }
+    ]
+  },
+  "ex-1p9rfxdy": {
+    "prompt": "Um arquivo de regras cita uma ação `Teleport` e, em outra regra, uma condição `agee`. Qual delas o `gcloud` recusa antes de mandar qualquer coisa?",
+    "hint": "A linha de comando conhece os nomes de uma das duas.",
+    "choices": [
+      {
+        "text": "As duas",
+        "why": "Ele deixou passar o tipo da ação; só a condição foi conferida."
+      },
+      {
+        "text": "Só a condição digitada errado",
+        "why": "Isso. A ação chegou ao emulador, que a aceitou; o Cloud Storage a recusaria."
+      },
+      {
+        "text": "Só a ação desconhecida",
+        "why": "Na transcrição é o contrário."
+      },
+      {
+        "text": "Nenhuma: o gcloud só confere se o arquivo é JSON",
+        "why": "Ele recusou `agee` com um erro sobre a regra de ciclo de vida."
+      }
+    ]
+  },
+  "ex-g4ekj0e1": {
+    "prompt": "Com as regras da Quitanda um GiB custa 0,4773 USD em sete anos, e 2,9808 se ficar em Standard. Para 3.000 GiB de exportações, quantos USD a regra economiza nos sete anos?",
+    "hint": "Economia por GiB, vezes o volume."
+  },
+  "ex-wk1phmap": {
+    "prompt": "O bucket de arquivo da Quitanda tem uma política de retenção destravada de cinco anos. Quem pode apagar uma nota fiscal de três meses nele?",
+    "hint": "Políticas destravadas podem ser mudadas.",
+    "choices": [
+      {
+        "text": "Ninguém, até passarem os cinco anos",
+        "why": "Isso só vale depois que a política é travada."
+      },
+      {
+        "text": "Qualquer um com `storage.objects.delete`",
+        "why": "A política recusa essa exclusão, seja qual for o papel, enquanto existir."
+      },
+      {
+        "text": "Um administrador, depois de remover essa configuração",
+        "why": "Isso: `--clear-retention-period`, depois a exclusão. Travar é o que fecha esse caminho."
+      },
+      {
+        "text": "Só o suporte do Google, depois de um pedido do dono do projeto",
+        "why": "O suporte do Google não tem papel nisso; uma política destravada é do projeto para mudar."
+      }
+    ]
+  },
+  "ex-nch4x26j": {
+    "prompt": "Um contrato de fornecedor precisa ser guardado cinco anos depois que o contrato termina, e ninguém sabe hoje quando será. Que ferramenta serve?",
+    "hint": "Um tipo de retenção temporária muda o início do relógio da retenção.",
+    "choices": [
+      {
+        "text": "Uma retenção temporária (temporary hold)",
+        "why": "Ela guarda o objeto enquanto está ligada, e não mexe no relógio da retenção."
+      },
+      {
+        "text": "Uma política de retenção travada de cinco anos",
+        "why": "O prazo contaria a partir de quando o arquivo foi escrito, não de quando o contrato termina."
+      },
+      {
+        "text": "Exclusão reversível de 90 dias",
+        "why": "Noventa dias é o máximo da exclusão reversível, e ela só começa numa exclusão."
+      },
+      {
+        "text": "Uma retenção por evento (event-based hold)",
+        "why": "Isso. Liberada quando o contrato termina, ela faz o prazo de retenção contar a partir desse dia."
+      }
+    ]
+  },
+  "ex-pr10y8k5": {
+    "prompt": "Logo depois de `--retention-period=1y`, `gcloud storage buckets update --lock-retention-period` falhou no laboratório. O que essa falha mostra?",
+    "hint": "A linha de comando lê a política antes de travá-la.",
+    "choices": [
+      {
+        "text": "Que travar exige a aprovação de uma segunda pessoa",
+        "why": "Nada no comando pede isso; a mensagem era sobre a política."
+      },
+      {
+        "text": "Que o emulador não guardou a política",
+        "why": "Isso: o gcloud não encontrou política para travar, um comando depois de defini-la."
+      },
+      {
+        "text": "Que uma trava só pode ser aplicada um dia depois da política",
+        "why": "Esse atraso não existe; o bucket simplesmente não tinha política."
+      },
+      {
+        "text": "Que o bucket já tinha uma política travada",
+        "why": "Não tinha nenhuma, travada ou não."
+      }
+    ]
+  },
+  "ex-5zmrc5t1": {
+    "prompt": "Por que `gcloud storage ls -a` mostra só a geração viva contra o fake-gcs-server?",
+    "hint": "Compare as duas requisições com curl.",
+    "choices": [
+      {
+        "text": "O emulador não guarda versões não atuais",
+        "why": "Guarda: o versions.py e o curl com versions=true as listam."
+      },
+      {
+        "text": "O gcloud pede versions=True, com maiúscula",
+        "why": "Isso. O emulador só entende versions=true; uma letra maiúscula decide entre uma geração e três."
+      },
+      {
+        "text": "O `-a` lista só objetos vivos no Cloud Storage também",
+        "why": "No Cloud Storage o `ls -a` lista todas as gerações."
+      },
+      {
+        "text": "O versionamento estava desligado quando foram escritas",
+        "why": "Estava ligado, e as versões não atuais existem."
+      }
+    ]
+  },
+  "ex-939c7gpm": {
+    "prompt": "Um script de limpeza apaga gerações antigas com `gcloud storage rm gs://…#GERAÇÃO` e passa nos testes contra o fake-gcs-server. O que o laboratório mostrou que aconteceria nesses testes?",
+    "hint": "Olhe a listagem depois da exclusão.",
+    "choices": [
+      {
+        "text": "A geração citada sai e a viva fica, como no Cloud Storage",
+        "why": "A geração citada continuava listada depois."
+      },
+      {
+        "text": "Nada é apagado, porque o emulador ignora exclusões",
+        "why": "Algo foi apagado: a versão viva."
+      },
+      {
+        "text": "A viva sai; a citada fica",
+        "why": "Isso. Um teste que só confere que algo sumiu passaria enquanto os dados atuais desapareciam."
+      },
+      {
+        "text": "Todas as gerações do nome são apagadas",
+        "why": "As duas não atuais continuavam lá."
+      }
+    ]
+  },
+  "ex-5npyadr8": {
+    "prompt": "Ordene a vida de uma exportação sob as regras da Quitanda, a partir de quando é escrita.",
+    "hint": "Standard primeiro, apagada por último.",
+    "items": [
+      "Standard por 30 dias",
+      "Nearline até completar um ano",
+      "Archive por mais seis anos",
+      "Apagada aos 2.555 dias"
+    ]
+  },
+  "ex-193swx24": {
+    "prompt": "Ligue cada necessidade da Quitanda à proteção que a atende.",
+    "hint": "Pergunte se a ameaça é um acidente ou alguém de propósito.",
+    "pairs": [
+      {
+        "left": "Desfazer a reescrita quebrada de ontem da tabela de clientes",
+        "right": "Versionamento de objetos"
+      },
+      {
+        "left": "Guardar notas fiscais por cinco anos, mesmo contra um administrador",
+        "right": "Uma política de retenção travada"
+      },
+      {
+        "left": "Guardar os pedidos de um cliente até um processo terminar",
+        "right": "Uma retenção temporária (temporary hold)"
+      },
+      {
+        "left": "Recuperar um arquivo apagado por engano num bucket sem versionamento",
+        "right": "Exclusão reversível (soft delete)"
+      }
+    ],
+    "right_distractors": [
+      "Autoclass"
+    ]
+  },
+  "ex-5g65bzm4": {
+    "prompt": "Contra o fake-gcs-server, um teste cria um bucket com política de retenção de um ano, escreve um objeto, tenta apagá-lo e espera uma recusa. O que acontece?",
+    "hint": "Lembre o que o emulador guardou da política.",
+    "choices": [
+      {
+        "text": "A exclusão é recusada, como no Cloud Storage",
+        "why": "O emulador não guardou política, então nada a recusou."
+      },
+      {
+        "text": "A criação do bucket falha",
+        "why": "Ela funcionou; o prazo foi descartado em silêncio."
+      },
+      {
+        "text": "A exclusão funciona, e o teste falha",
+        "why": "Isso, embora a política esteja certa no Cloud Storage. Aqui o emulador reprova um teste correto; o próximo erro pode ser um que ele aprova."
+      },
+      {
+        "text": "O objeto passa a ficar excluído de forma reversível",
+        "why": "O emulador também não guarda objetos excluídos de forma reversível."
+      }
+    ]
+  },
+  "ex-0jqnyrnm": {
+    "prompt": "Que verificação pegou o emulador servindo os bytes errados de uma geração antiga?",
+    "hint": "É feita em todo download pela linha de comando.",
+    "choices": [
+      {
+        "text": "A própria mensagem de erro do emulador",
+        "why": "O emulador respondeu como se estivesse tudo bem."
+      },
+      {
+        "text": "Os tamanhos que o versions.py imprime",
+        "why": "O versions.py listou as gerações corretamente; ele não lê bytes."
+      },
+      {
+        "text": "O hash MD5 que o gcloud confere",
+        "why": "Isso: os bytes recebidos não batiam com o hash que os metadados declaravam."
+      },
+      {
+        "text": "Uma política de retenção",
+        "why": "A retenção não tem nada a dizer sobre quais bytes são servidos."
+      }
+    ]
+  }
+}
