@@ -32,7 +32,7 @@ T = {
    cap="The dialog is the system's, shown once. What your app controls is when it asks, and what it does with a no."),
  "pt": dict(aria="O que acontece na primeira vez que o planner pede a localização. A chamada vai ao plugin, que confere a permissão. Se ela nunca foi pedida, o sistema mostra o diálogo dele, com a frase do Info.plist ou o texto do próprio sistema no Android. Um sim fica guardado e a posição volta; um não também fica guardado, e as chamadas seguintes falham na hora sem perguntar de novo, até a pessoa mudar isso nas configurações do sistema.",
    a=["o seu código chama", "getCurrentPosition()"], b=["o plugin confere", "a permissão"], c=["nunca pedida:", "o sistema pergunta"],
-   yes=["concedida: a posição", "volta"], no=["negada: a chamada falha,", "e falha de novo depois"], again="só as configurações do sistema desfazem um não",
+   yes=["concedida: a posição", "volta"], no=["negada: a chamada falha,", "e falha de novo depois"], again="só os ajustes do sistema desfazem um não",
    cap="O diálogo é do sistema, mostrado uma vez. O que o seu app controla é quando pergunta, e o que faz com um não."),
 }
 
