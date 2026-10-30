@@ -51,4 +51,4 @@ def figures(lang):
         f.arrow([(x + 170, y + 15), (370, y + 15)], dashed=True)
         f.box(370, y, 160, 30, [a], mono=True, size=9.5)
         f.box(550, y, 140, 30, [b], mono=True, size=9.5)
-    return {"l04-tree": f.json(caption=t["cap"])}
+    return {"l04-tree": f.json(caption=t["cap"], same=None if lang == "en" else ["Android", "iOS"])}
