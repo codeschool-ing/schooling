@@ -20,7 +20,7 @@ shell in the browser, no account.
   Start menu. Everything below runs in that terminal.
 - **A virtual machine**, which is the path on a Mac: Ubuntu Server 24.04 in UTM, VirtualBox or
   Multipass, with 2 processors, 6 GB of memory and 20 GB of disk. The emulators of lessons 9 to 11
-  are Java and C++ programs, and two of them at once want more memory than the AWS courses asked for.
+  are Java, C++ and Go programs, and two of them at once want more memory than a single server does.
 - **An online shell rented by the hour.** Nothing here needs more than a terminal with the network
   for the installation and none after it, but no lesson depends on any company's free allowance.
 
@@ -106,8 +106,8 @@ fake-gcs-server -scheme http -port 4443 -backend memory -location southamerica-e
 Leave it running. `Ctrl+C` stops it, and **stopping it forgets everything**, because `-backend
 memory` keeps the buckets in memory and nowhere else. `-scheme http` saves you a certificate the
 command line would not trust, and `-location` is the region it reports for every bucket, for a
-reason the next section but one shows. Lessons 9, 10, 11 and 19 start their own emulators the same
-way, each in its terminal, and say which.
+reason the next section but one shows. The lessons that need another emulator start it the same way,
+each in a terminal of its own, and say which.
 
 ## Every time you open a terminal
 
