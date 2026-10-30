@@ -1,0 +1,387 @@
+{
+  "ex-zp0ybnc3": {
+    "prompt": "Onde o planner põe o seu `NavigationStack`?",
+    "hint": "Uma vez, na raiz do que navega.",
+    "choices": [
+      {
+        "text": "Em volta de cada tela que tem título",
+        "why": "Cada uma seria uma pilha separada com o seu path."
+      },
+      {
+        "text": "Uma vez, em volta da lista de cursos na raiz",
+        "why": "Isso: toda tela empilhada nela ganha a barra e um botão de voltar."
+      },
+      {
+        "text": "No `PlannerApp`, em volta do `WindowGroup`",
+        "why": "Um `WindowGroup` é uma cena, e uma pilha é uma view dentro dela."
+      },
+      {
+        "text": "Dentro de cada `NavigationLink`",
+        "why": "Um link empilha numa pilha; não cria uma."
+      }
+    ]
+  },
+  "ex-d3n49pn0": {
+    "prompt": "O que uma pilha feita só de `NavigationLink(title) { DestinationView() }` não consegue fazer?",
+    "hint": "A pilha só sabe que alguma view foi empilhada.",
+    "choices": [
+      {
+        "text": "Mostrar um botão de voltar na tela empilhada",
+        "why": "Ele mostra; isso vem com qualquer push."
+      },
+      {
+        "text": "Empilhar mais de uma tela seguida",
+        "why": "Links dentro do destino empilham mais."
+      },
+      {
+        "text": "Ser salva, ou aberta por um link",
+        "why": "Isso: não há valor para salvar nem para montar um path."
+      },
+      {
+        "text": "Rodar no iOS 17",
+        "why": "Roda; é a forma antiga, não uma removida."
+      }
+    ]
+  },
+  "ex-93t1mqhn": {
+    "prompt": "Por que `Route.course` carrega o id do curso e não o próprio `Course`?",
+    "hint": "O que a tela de detalhe mostraria depois de uma renomeação?",
+    "choices": [
+      {
+        "text": "Ela é procurada ao ser mostrada, nunca uma cópia velha",
+        "why": "Isso, e um id pode ser salvo e lido de volta."
+      },
+      {
+        "text": "`Course` não pode ser `Hashable`",
+        "why": "A aula 1 o fez `Hashable`."
+      },
+      {
+        "text": "Enums não podem guardar structs como valores associados",
+        "why": "Podem; o motivo é frescor, não uma regra da linguagem."
+      },
+      {
+        "text": "Uma string deixa o push mais rápido",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-tmgzn06j": {
+    "prompt": "Onde o `navigationDestination(for: Route.self)` deve ir?",
+    "hint": "A documentação da Apple adverte sobre um tipo de contêiner.",
+    "choices": [
+      {
+        "text": "Dentro de cada linha do `List`, ao lado do link",
+        "why": "Isso é um contêiner preguiçoso, contra o qual a documentação adverte."
+      },
+      {
+        "text": "Dentro da pilha, numa view que está sempre lá",
+        "why": "Isso: na lista raiz, por exemplo."
+      },
+      {
+        "text": "No `PlannerApp`, no `WindowGroup`",
+        "why": "Ele tem de estar dentro da pilha que serve."
+      },
+      {
+        "text": "Uma vez por tela empilhada, no `body` dela",
+        "why": "Um lugar decide a tela de uma rota."
+      }
+    ]
+  },
+  "ex-d0419qjh": {
+    "prompt": "O `NavigationStack` compara os valores do seu path, então o tipo do valor tem de ser ___.",
+    "hint": "Um protocolo que `Route` declara, além de `Codable` e `Sendable`.",
+    "blanks": [
+      {
+        "accept": [
+          "Hashable"
+        ]
+      }
+    ]
+  },
+  "ex-s7vm5rht": {
+    "prompt": "Ligue cada coisa que a pessoa faz ao que acontece com `model.path`.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "Toca no link de uma sessão",
+        "right": "Um elemento é acrescentado"
+      },
+      {
+        "left": "Toca em voltar",
+        "right": "`removeLast()`"
+      },
+      {
+        "left": "Salva uma sessão nova e volta à lista",
+        "right": "`removeAll()`"
+      },
+      {
+        "left": "Abre um deep link",
+        "right": "O array inteiro é atribuído"
+      }
+    ],
+    "right_distractors": [
+      "O primeiro elemento é removido"
+    ]
+  },
+  "ex-g1y85rrs": {
+    "prompt": "Com a sessão `s3` do curso de SQL no topo, quantos elementos `model.path` tem?",
+    "hint": "A raiz não está no path."
+  },
+  "ex-8dgh0gbh": {
+    "prompt": "Por que guardar o path no `PlannerModel` em vez de deixar o `NavigationStack` guardá-lo internamente?",
+    "hint": "Quem mais precisa mudá-lo?",
+    "choices": [
+      {
+        "text": "Uma pilha que guarda o próprio path não consegue empilhar",
+        "why": "Ela empilha bem; os links funcionam dos dois jeitos."
+      },
+      {
+        "text": "O `NavigationPath` está obsoleto",
+        "why": "Ele é atual; serve para pilhas de vários tipos de valor."
+      },
+      {
+        "text": "Notificações e links precisam pôr o app numa tela específica",
+        "why": "Isso: com o path na mão, isso é uma atribuição."
+      },
+      {
+        "text": "Para toda view empilhar sem `NavigationLink`",
+        "why": "Os links continuam empilhando; o path no modelo é para código fora das telas."
+      }
+    ]
+  },
+  "ex-hmmz0e1b": {
+    "prompt": "Por que os valores associados de `Route` têm rótulo, `course(id:)` em vez de `course(String)`?",
+    "hint": "Olhe o JSON salvo.",
+    "choices": [
+      {
+        "text": "Valores associados sem rótulo não são permitidos no Swift 6",
+        "why": "São permitidos."
+      },
+      {
+        "text": "Os rótulos viram as chaves do JSON",
+        "why": "Isso: `{\"course\":{\"id\":\"sql\"}}`."
+      },
+      {
+        "text": "O `Hashable` não é sintetizado sem rótulos",
+        "why": "Ele é sintetizado dos dois jeitos."
+      },
+      {
+        "text": "A barra de navegação os imprime como título",
+        "why": "O título vem do `.navigationTitle`."
+      }
+    ]
+  },
+  "ex-4rvy4pnt": {
+    "prompt": "Um path salvo é `[.course(id: \"sql\"), .session(id: \"s3\")]` e `s3` foi apagada desde então. O que o `stillValid` devolve?",
+    "hint": "O maior começo em que toda rota ainda cita algo.",
+    "choices": [
+      {
+        "text": "O path inteiro, e a tela da sessão mostra uma mensagem",
+        "why": "O ponto é não empilhar uma tela para algo que sumiu."
+      },
+      {
+        "text": "Um path vazio, de volta à lista",
+        "why": "O curso ainda existe, então a tela dele fica."
+      },
+      {
+        "text": "`[.course(id: \"sql\")]`",
+        "why": "Isso, como o programa imprimiu para `s3 deleted`."
+      },
+      {
+        "text": "`[.session(id: \"s3\")]`, a tela do topo",
+        "why": "Essa é a rota que não cita mais nada."
+      }
+    ]
+  },
+  "ex-szkjhjex": {
+    "prompt": "O `stillValid` usa `prefix(while:)` e não `filter`. Qual path mostra por quê?",
+    "hint": "Uma tela cujo pai sumiu.",
+    "choices": [
+      {
+        "text": "`[.week(day: \"2026-10-19\")]`, uma rota só",
+        "why": "Com uma rota as duas dão a mesma resposta."
+      },
+      {
+        "text": "Curso apagado, sessão ainda lá",
+        "why": "Isso: o `filter` ficaria com a sessão e a empilharia sem curso embaixo; o `prefix(while:)` para no curso e não fica com nenhuma das duas."
+      },
+      {
+        "text": "Um path vazio",
+        "why": "As duas o devolvem vazio."
+      },
+      {
+        "text": "Um path em que toda rota ainda existe",
+        "why": "As duas o devolvem inteiro."
+      }
+    ]
+  },
+  "ex-8mgnq75n": {
+    "prompt": "Depois de renomear o case `session` para `sessionDetail`, um path salvo na semana passada falha ao decodificar. O que o app deve fazer?",
+    "hint": "Um path salvo é dado salvo como qualquer outro.",
+    "choices": [
+      {
+        "text": "Cair, para o bug ser notado",
+        "why": "A pessoa não fez nada errado; o app deve seguir."
+      },
+      {
+        "text": "Tentar a decodificação de novo até funcionar",
+        "why": "Os mesmos bytes falham do mesmo jeito."
+      },
+      {
+        "text": "Começar na raiz, com um path vazio",
+        "why": "Isso: perder a posição de uma tela é melhor que não abrir."
+      },
+      {
+        "text": "Mostrar o JSON cru para a pessoa consertar",
+        "why": "Ninguém deve ter de editar um path salvo."
+      }
+    ]
+  },
+  "ex-074xjhwt": {
+    "prompt": "Ponha em ordem o tratamento de `planner://course/sql/session/s3`.",
+    "hint": "Da URL à tela.",
+    "items": [
+      "O iOS entrega a URL ao `onOpenURL`",
+      "`Route.path(from:)` a transforma em rotas",
+      "`Route.stillValid` tira o que o plano não tem mais",
+      "O resultado é atribuído a `model.path`",
+      "A pilha mostra o curso de SQL com `s3` no topo"
+    ]
+  },
+  "ex-49sbj7qd": {
+    "prompt": "Por que `planner://course/sql/session` recebe `nil`?",
+    "hint": "As palavras são lidas em pares.",
+    "choices": [
+      {
+        "text": "`session` não é um tipo que o planner tem",
+        "why": "É; `teacher` é o que falta."
+      },
+      {
+        "text": "Sobra uma palavra: o link foi cortado",
+        "why": "Isso: `session` não tem valor depois."
+      },
+      {
+        "text": "O host tem de ser `planner`",
+        "why": "`planner` é o esquema; o host é `course`."
+      },
+      {
+        "text": "Links só podem citar uma rota",
+        "why": "O link do primeiro teste cita duas."
+      }
+    ]
+  },
+  "ex-y4s8s74y": {
+    "prompt": "O `aLinkThatIsNotARouteIsRefused` rodou uma vez por argumento. Quantos casos de teste ele informou?",
+    "hint": "Conte as strings em `arguments:`."
+  },
+  "ex-yysyxw78": {
+    "prompt": "Por que um deep link é conferido duas vezes, pelo interpretador e pelo `stillValid`?",
+    "hint": "Eles conferem coisas diferentes.",
+    "choices": [
+      {
+        "text": "O segundo pega bugs do interpretador que os testes deixaram passar",
+        "why": "Ele confere algo que o interpretador não tem como saber."
+      },
+      {
+        "text": "Um confere a forma da URL; o outro, que os ids ainda existem",
+        "why": "Isso: um link bem formado pode citar uma sessão apagada."
+      },
+      {
+        "text": "A Apple exige duas conferências para esquemas próprios",
+        "why": "Não há essa regra; é o desenho do próprio app."
+      },
+      {
+        "text": "O primeiro roda no aparelho, o segundo no servidor",
+        "why": "Os dois rodam no app."
+      }
+    ]
+  },
+  "ex-dqg417wq": {
+    "prompt": "Por que acrescentar uma sessão é uma sheet e não um push?",
+    "hint": "O que voltar deve fazer?",
+    "choices": [
+      {
+        "text": "Uma tarefa que volta para cá",
+        "why": "Isso: salvar ou cancelar, e a pessoa está onde estava."
+      },
+      {
+        "text": "Formulários não podem ser empilhados num `NavigationStack`",
+        "why": "Podem; só seria a apresentação errada."
+      },
+      {
+        "text": "Uma sheet não pode ser fechada por acidente",
+        "why": "Um deslizar fecha uma, a não ser que isso seja desativado."
+      },
+      {
+        "text": "Sheets guardam a sessão nova mesmo quando canceladas",
+        "why": "Cancelar joga o rascunho fora."
+      }
+    ]
+  },
+  "ex-htmaf1tc": {
+    "prompt": "O formulário dentro da sheet tem o seu próprio `NavigationStack`. Esse é o aninhamento de que a seção 02 falou?",
+    "hint": "Uma sheet é uma apresentação separada.",
+    "choices": [
+      {
+        "text": "Sim, e o formulário deveria usar a pilha da tela de curso",
+        "why": "A sheet não é empilhada naquela pilha."
+      },
+      {
+        "text": "Não: é uma apresentação separada",
+        "why": "Isso: é ali que *Cancel* e *Save* ficam."
+      },
+      {
+        "text": "Sim, mas o SwiftUI junta as duas pilhas",
+        "why": "Nada as junta."
+      },
+      {
+        "text": "Não, porque sheets não podem conter um `NavigationStack`",
+        "why": "Podem, que é o que o formulário faz."
+      }
+    ]
+  },
+  "ex-wtce4gpe": {
+    "prompt": "Qual apresentação cabe num cronômetro de estudo que marca a sessão como feita quando a pessoa o para?",
+    "hint": "Ele não pode se perder num deslizar.",
+    "choices": [
+      {
+        "text": "Um push na pilha do curso",
+        "why": "Voltar o abandonaria, e não é um lugar para onde voltar."
+      },
+      {
+        "text": "Uma sheet",
+        "why": "Um deslizar acabaria com o cronômetro sem decisão."
+      },
+      {
+        "text": "Uma tela cheia",
+        "why": "Isso: um modo que a pessoa encerra de propósito, com o seu próprio botão Stop."
+      },
+      {
+        "text": "Um alerta",
+        "why": "Um alerta faz uma pergunta; um cronômetro é uma tela."
+      }
+    ]
+  },
+  "ex-05yg7dsy": {
+    "prompt": "Quais destes são Swift puro que rodou no Linux nesta aula? Escolha todos os que se aplicam.",
+    "hint": "O SwiftUI não rodou.",
+    "choices": [
+      {
+        "text": "Codificar e decodificar um `[Route]`",
+        "why": "Sim: o `paths` imprimiu o JSON."
+      },
+      {
+        "text": "O `onOpenURL` recebendo um link",
+        "why": "Não: isso é SwiftUI, num aparelho ou simulador."
+      },
+      {
+        "text": "Transformar uma URL em rotas",
+        "why": "Sim: o `RouteLinkTests` o rodou."
+      },
+      {
+        "text": "Apresentar o formulário como sheet",
+        "why": "Não: isso é SwiftUI."
+      }
+    ]
+  }
+}

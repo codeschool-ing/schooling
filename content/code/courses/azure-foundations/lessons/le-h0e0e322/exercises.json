@@ -1,0 +1,548 @@
+[
+ {
+  "id": "ex-w0bnfdtp",
+  "version": 1,
+  "section": "system-routes",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A machine in `snet-app` sends a packet to `10.20.3.4`, in `snet-data`. With no route table attached, which route carries it?",
+  "hint": "The network's own range is a system route.",
+  "choices": [
+   {
+    "text": "`0.0.0.0/0` to the internet, since no route names it",
+    "correct": false,
+    "why": "A system route for `10.20.0.0/16` exists, and it is longer."
+   },
+   {
+    "text": "`10.0.0.0/8`, which drops it",
+    "correct": false,
+    "why": "That route is shorter than the network's `/16`."
+   },
+   {
+    "text": "`10.20.0.0/16`, to the virtual network",
+    "correct": true,
+    "why": "Right. The network's own range stays inside it."
+   },
+   {
+    "text": "None until somebody writes one",
+    "correct": false,
+    "why": "System routes exist from the start."
+   }
+  ]
+ },
+ {
+  "id": "ex-cxvr96zc",
+  "version": 1,
+  "section": "system-routes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A typo sends traffic from `snet-app` to `10.99.0.1`, in no network. With no route table, what happens to it?",
+  "hint": "Which system route is the longest that contains it?",
+  "choices": [
+   {
+    "text": "It goes to the internet by `0.0.0.0/0`",
+    "correct": false,
+    "why": "`10.0.0.0/8` is longer, and its next hop is `None`."
+   },
+   {
+    "text": "It is dropped by the `None` route of `10.0.0.0/8`",
+    "correct": true,
+    "why": "Right. Unclaimed private ranges are dropped inside Azure."
+   },
+   {
+    "text": "It is delivered to the gateway at `10.20.2.1`",
+    "correct": false,
+    "why": "That address is the subnet's door, not a destination for unknown ranges."
+   },
+   {
+    "text": "Azure asks the office whether it owns the address",
+    "correct": false,
+    "why": "Nothing asks anybody; routes decide."
+   }
+  ]
+ },
+ {
+  "id": "ex-zm97vgxz",
+  "version": 1,
+  "section": "system-routes",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Two routes contain `10.30.1.4`: `10.0.0.0/8` and `10.30.0.0/16`. What is the prefix length of the one Azure chooses?",
+  "hint": "Longest prefix first.",
+  "value": 16,
+  "tolerance": 0,
+  "unit": "bits"
+ },
+ {
+  "id": "ex-zcfx9cxx",
+  "version": 1,
+  "section": "system-routes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A user-defined route and a system route both have the prefix `0.0.0.0/0`. Which one is used?",
+  "hint": "The prefixes tie, so the source decides.",
+  "choices": [
+   {
+    "text": "The one you wrote",
+    "correct": true,
+    "why": "Right. That is how the default route is replaced."
+   },
+   {
+    "text": "Both, alternating packet by packet",
+    "correct": false,
+    "why": "Azure picks one route per destination."
+   },
+   {
+    "text": "Whichever was created last",
+    "correct": false,
+    "why": "Creation time plays no part."
+   },
+   {
+    "text": "The system route, since Azure's own routes come first",
+    "correct": false,
+    "why": "On a tie of prefix, the user's route beats the system's."
+   }
+  ]
+ },
+ {
+  "id": "ex-pcdv765k",
+  "version": 1,
+  "section": "system-routes",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The office announces `10.20.2.0/24` over BGP, a longer prefix inside production's range. Does production's traffic to `10.20.2.4` go to the office?",
+  "hint": "The lesson names an exception to longest prefix.",
+  "choices": [
+   {
+    "text": "Yes: a `/24` beats the network's `/16`",
+    "correct": false,
+    "why": "That would hold for most routes, and not for the network's own."
+   },
+   {
+    "text": "The packet is dropped as a conflict",
+    "correct": false,
+    "why": "No conflict drops anything; one route is preferred."
+   },
+   {
+    "text": "Yes, because BGP routes always beat system routes",
+    "correct": false,
+    "why": "BGP beats system routes only on equal prefixes, and not for the network's own range."
+   },
+   {
+    "text": "No: the network's own system route is preferred",
+    "correct": true,
+    "why": "Right. Routes for the network, its peers and service endpoints beat more specific BGP routes."
+   }
+  ]
+ },
+ {
+  "id": "ex-14h6kn7z",
+  "version": 1,
+  "section": "system-routes",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A route whose next hop is `___` drops the packet.",
+  "hint": "The word Azure prints for nowhere.",
+  "blanks": [
+   {
+    "accept": [
+     "None"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-zcypfq0x",
+  "version": 1,
+  "section": "route-tables",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a route table do before it is attached to a subnet?",
+  "hint": "Like an NSG.",
+  "choices": [
+   {
+    "text": "It is attached to the default subnet automatically",
+    "correct": false,
+    "why": "There is no default subnet, and nothing attaches it for you."
+   },
+   {
+    "text": "It applies to every subnet of its region",
+    "correct": false,
+    "why": "A table applies to the subnets it is attached to and no others."
+   },
+   {
+    "text": "It replaces the system routes of the whole network",
+    "correct": false,
+    "why": "It never replaces them all; it overrides on matching prefixes."
+   },
+   {
+    "text": "Nothing",
+    "correct": true,
+    "why": "Right. Its routes join a subnet's only once attached."
+   }
+  ]
+ },
+ {
+  "id": "ex-zhh54a1n",
+  "version": 1,
+  "section": "route-tables",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each next hop type to where the packet goes.",
+  "hint": "One of them drops it.",
+  "pairs": [
+   {
+    "left": "`VirtualAppliance`",
+    "right": "to a private address you name, such as a firewall"
+   },
+   {
+    "left": "`VirtualNetworkGateway`",
+    "right": "to the network's VPN or ExpressRoute gateway"
+   },
+   {
+    "left": "`None`",
+    "right": "nowhere"
+   },
+   {
+    "left": "`Internet`",
+    "right": "straight out, on purpose"
+   }
+  ],
+  "right_distractors": [
+   "to the paired region"
+  ]
+ },
+ {
+  "id": "ex-gbts7b3a",
+  "version": 1,
+  "section": "route-tables",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `rt-shop-prod` set `disableBgpRoutePropagation: true`?",
+  "hint": "What would a longer prefix from the office do?",
+  "choices": [
+   {
+    "text": "To make the routes in the table take effect",
+    "correct": false,
+    "why": "They take effect either way."
+   },
+   {
+    "text": "So that no route learned from the office bypasses the firewall",
+    "correct": true,
+    "why": "Right. A `/24` from the gateway would beat the table's `/16`."
+   },
+   {
+    "text": "Because BGP is not supported in `brazilsouth`",
+    "correct": false,
+    "why": "BGP works there; lesson 23 uses it."
+   },
+   {
+    "text": "To stop the firewall announcing production to the office",
+    "correct": false,
+    "why": "It governs what reaches these subnets, not what is announced."
+   }
+  ]
+ },
+ {
+  "id": "ex-vcq8gc57",
+  "version": 1,
+  "section": "route-tables",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With `rt-shop-prod` attached, where does a packet from `snet-app` to `snet-web` go?",
+  "hint": "Does the table have a route longer than the network's?",
+  "choices": [
+   {
+    "text": "To the firewall, like everything else",
+    "correct": false,
+    "why": "The `/16` system route is longer than the table's `/0`."
+   },
+   {
+    "text": "To the office, by `192.168.0.0/16`",
+    "correct": false,
+    "why": "`10.20.1.x` is not in that range."
+   },
+   {
+    "text": "Straight to `snet-web`",
+    "correct": true,
+    "why": "Right. Traffic inside production stays local by design, filtered by the NSGs."
+   },
+   {
+    "text": "Nowhere: the table removes local routes",
+    "correct": false,
+    "why": "A table adds routes and overrides ties; it removes nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-z7x72djr",
+  "version": 1,
+  "section": "route-tables",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A machine in production gets its own public address. Requests to it arrive, but no reply reaches the customer. What is the likely cause?",
+  "hint": "Which way does the reply leave?",
+  "choices": [
+   {
+    "text": "The reply follows `0.0.0.0/0` to a firewall that never saw the request",
+    "correct": true,
+    "why": "Right. Once traffic leaves through a firewall, the way in must go through it too."
+   },
+   {
+    "text": "Public addresses do not work in private subnets",
+    "correct": false,
+    "why": "A public address is the explicit way out a private subnet asks for."
+   },
+   {
+    "text": "The office's gateway answers in its place",
+    "correct": false,
+    "why": "The office plays no part in this path."
+   },
+   {
+    "text": "The NSG forbids replies to the internet",
+    "correct": false,
+    "why": "An NSG is stateful and lets replies through."
+   }
+  ]
+ },
+ {
+  "id": "ex-5kzhcddj",
+  "version": 1,
+  "section": "firewall-and-tunnelling",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a new Azure Firewall with no rules let through?",
+  "hint": "The opposite of an NSG's defaults.",
+  "choices": [
+   {
+    "text": "Everything inside the network, like `AllowVnetInBound`",
+    "correct": false,
+    "why": "That is an NSG's default. The firewall has none."
+   },
+   {
+    "text": "Nothing",
+    "correct": true,
+    "why": "Right. It denies until a rule says otherwise."
+   },
+   {
+    "text": "Outbound HTTPS only",
+    "correct": false,
+    "why": "Not even that, until a rule allows it."
+   },
+   {
+    "text": "Whatever Microsoft's threat intelligence approves",
+    "correct": false,
+    "why": "Threat intelligence only adds refusals."
+   }
+  ]
+ },
+ {
+  "id": "ex-txtgnmsr",
+  "version": 1,
+  "section": "firewall-and-tunnelling",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the three kinds of firewall rule in the order Azure Firewall processes them.",
+  "hint": "The order is fixed, whatever the priorities.",
+  "items": [
+   "DNAT rules",
+   "network rules",
+   "application rules"
+  ],
+  "trap": "Priorities order the groups and collections only within each kind."
+ },
+ {
+  "id": "ex-qfwcpcn7",
+  "version": 1,
+  "section": "firewall-and-tunnelling",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the shop allow the payment provider with an application rule naming `api.payments.example` rather than an NSG rule with its addresses?",
+  "hint": "What does an NSG know?",
+  "choices": [
+   {
+    "text": "The firewall is cheaper than an NSG for one rule",
+    "correct": false,
+    "why": "NSGs are free; the firewall is the network's dearest part."
+   },
+   {
+    "text": "NSGs cannot filter outbound traffic",
+    "correct": false,
+    "why": "They can; lesson 17's NSG does."
+   },
+   {
+    "text": "Application rules decrypt the payments to check them",
+    "correct": false,
+    "why": "The Standard tier reads the name without decrypting anything."
+   },
+   {
+    "text": "Its addresses change, and an NSG knows only addresses",
+    "correct": true,
+    "why": "Right. The firewall reads the name from the opening of the HTTPS conversation."
+   }
+  ]
+ },
+ {
+  "id": "ex-4szzcac4",
+  "version": 1,
+  "section": "firewall-and-tunnelling",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A company forces all internet traffic through its office, with Azure Firewall in the hub. Which of these stops working?",
+  "hint": "Replies would leave by another path.",
+  "choices": [
+   {
+    "text": "Network rules between spokes",
+    "correct": false,
+    "why": "Traffic between spokes does not involve the internet path."
+   },
+   {
+    "text": "Application rules that match names",
+    "correct": false,
+    "why": "Those still work; the firewall still sees the names."
+   },
+   {
+    "text": "Inbound DNAT",
+    "correct": true,
+    "why": "Right. Requests would arrive at the firewall and replies leave through the office."
+   },
+   {
+    "text": "The firewall's own management",
+    "correct": false,
+    "why": "It keeps working through `AzureFirewallManagementSubnet`."
+   }
+  ]
+ },
+ {
+  "id": "ex-q8eyrje9",
+  "version": 1,
+  "section": "firewall-and-tunnelling",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Forced tunnelling with Azure Firewall needs a second subnet, `AzureFirewall___Subnet`, of at least a `/26`.",
+  "hint": "It carries the firewall's own management traffic.",
+  "blanks": [
+   {
+    "accept": [
+     "Management"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-ap6qnpgw",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Production sends `0.0.0.0/0` to the firewall. Where does a packet to the firewall's own address, `10.0.1.4`, go?",
+  "hint": "Which matching route is longest?",
+  "choices": [
+   {
+    "text": "Straight through the peering, by `10.0.0.0/16`",
+    "correct": true,
+    "why": "Right. The longer prefix wins."
+   },
+   {
+    "text": "To the firewall by `0.0.0.0/0`, which is a loop",
+    "correct": false,
+    "why": "The peering's `/16` is longer, so no loop forms."
+   },
+   {
+    "text": "It is dropped by `10.0.0.0/8`",
+    "correct": false,
+    "why": "The peering's `/16` is longer than the `/8`."
+   },
+   {
+    "text": "To the office, which owns all `10.` addresses",
+    "correct": false,
+    "why": "The office is `192.168.0.0/16`."
+   }
+  ]
+ },
+ {
+  "id": "ex-kby3c7g6",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these placements of a route table does the lesson warn against? Choose all that apply.",
+  "hint": "Two subnets with names Azure chose.",
+  "choices": [
+   {
+    "text": "`0.0.0.0/0` to the firewall on `AzureFirewallSubnet`",
+    "correct": true,
+    "why": "Right. The firewall would send its own traffic to itself."
+   },
+   {
+    "text": "`0.0.0.0/0` on `GatewaySubnet`",
+    "correct": true,
+    "why": "Right. It can stop the gateway working."
+   },
+   {
+    "text": "`0.0.0.0/0` to the firewall on `snet-app`",
+    "correct": false,
+    "why": "That is the shop's design."
+   },
+   {
+    "text": "One table attached to three subnets",
+    "correct": false,
+    "why": "One table may serve many subnets."
+   }
+  ]
+ },
+ {
+  "id": "ex-wcgrpsfa",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "After lesson 20 peers production with the hub, bia removes `office-via-firewall` from `rt-shop-prod` but leaves propagation disabled. Where does traffic to `192.168.10.5` go?",
+  "hint": "Which routes are left that contain it?",
+  "choices": [
+   {
+    "text": "To the office through the gateway, by BGP",
+    "correct": false,
+    "why": "Propagation is disabled, so no BGP route reaches the subnet."
+   },
+   {
+    "text": "To the firewall by `0.0.0.0/0`",
+    "correct": false,
+    "why": "The system `192.168.0.0/16` route is longer."
+   },
+   {
+    "text": "To the internet",
+    "correct": false,
+    "why": "A longer route matches first."
+   },
+   {
+    "text": "Nowhere: the system `None` route for `192.168.0.0/16` drops it",
+    "correct": true,
+    "why": "Right. The `/16` beats the user `/0`, and its next hop is `None`."
+   }
+  ]
+ }
+]

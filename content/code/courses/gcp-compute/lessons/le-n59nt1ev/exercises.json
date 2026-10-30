@@ -1,0 +1,662 @@
+[
+  {
+    "id": "ex-wezscxe2",
+    "version": 1,
+    "section": "http-functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Google Cloud, who runs the web server in front of a Python function?",
+    "hint": "You write one function, not a program that listens.",
+    "choices": [
+      {
+        "text": "Your main.py, which must open port 8080 itself",
+        "correct": false,
+        "why": "main.py only defines the function; nothing in it listens."
+      },
+      {
+        "text": "A shared nginx that Google runs for every function in the region",
+        "correct": false,
+        "why": "Each function is its own Cloud Run service with the framework inside."
+      },
+      {
+        "text": "The Functions Framework",
+        "correct": true,
+        "why": "Right. The same library you ran locally, in a container on Cloud Run."
+      },
+      {
+        "text": "gunicorn, which you add to requirements.txt",
+        "correct": false,
+        "why": "The build installs the framework; you add nothing to serve HTTP."
+      }
+    ]
+  },
+  {
+    "id": "ex-k68dqts2",
+    "version": 1,
+    "section": "http-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The quote function returned {\"error\": \"POST a list of items\"}, 405 for a GET. Who chose 405?",
+    "hint": "Look at the return statement.",
+    "choices": [
+      {
+        "text": "The function, by returning a dictionary and the number 405",
+        "correct": true,
+        "why": "Right. The framework turned the pair into a JSON body and a status."
+      },
+      {
+        "text": "The framework, which allows only POST by default",
+        "correct": false,
+        "why": "The framework passes every method to the function."
+      },
+      {
+        "text": "curl, which reports 405 when it sends no body",
+        "correct": false,
+        "why": "curl only prints the status the server sent."
+      },
+      {
+        "text": "Cloud Run, which refuses GET on HTTP-triggered functions",
+        "correct": false,
+        "why": "Nothing was deployed, and HTTP functions accept any method."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctb43t0g",
+    "version": 1,
+    "section": "http-functions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With PRICES = mug 3500, tee 7900, poster 2500 (cents), what total_cents does the quote function return for three posters and one mug?",
+    "hint": "3 x 2500 + 1 x 3500.",
+    "value": 11000,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-bgf32b4p",
+    "version": 1,
+    "section": "http-functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer adds a module-level counter to the quote function to number each quote. In production the numbers repeat and skip. Why?",
+    "hint": "How many copies of the module are there?",
+    "choices": [
+      {
+        "text": "Python integers overflow once the counter passes a few thousand calls",
+        "correct": false,
+        "why": "Python integers do not overflow."
+      },
+      {
+        "text": "The framework reloads main.py before every request",
+        "correct": false,
+        "why": "The module is loaded once per instance, which is why PRICES is reused."
+      },
+      {
+        "text": "Requests are retried, and each retry increments it twice",
+        "correct": false,
+        "why": "An HTTP call is not retried by the platform; the copies are the problem."
+      },
+      {
+        "text": "Each instance has its own counter, and instances start and stop",
+        "correct": true,
+        "why": "Right. Anything that must survive a call belongs in a database or a queue."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rzywpbr",
+    "version": 1,
+    "section": "http-functions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The functions-framework flag that names the function inside main.py is --___.",
+    "hint": "It points the framework at the function.",
+    "blanks": [
+      {
+        "accept": [
+          "target"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q7hdez1f",
+    "version": 1,
+    "section": "event-functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an event function return to say it succeeded?",
+    "hint": "The framework reads one thing.",
+    "choices": [
+      {
+        "text": "The string OK",
+        "correct": false,
+        "why": "The framework sends OK itself; the function returns nothing."
+      },
+      {
+        "text": "Nothing; not raising is success",
+        "correct": true,
+        "why": "Right. An exception becomes a 500, which is a failure."
+      },
+      {
+        "text": "The number 200",
+        "correct": false,
+        "why": "Statuses are for HTTP functions; an event function returns nothing."
+      },
+      {
+        "text": "The event it received, unchanged",
+        "correct": false,
+        "why": "Nothing is read from the return value."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0gex8nb",
+    "version": 1,
+    "section": "event-functions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each CloudEvent attribute to what it says.",
+    "hint": "The four the curl call sent as headers.",
+    "pairs": [
+      {
+        "left": "id",
+        "right": "This event, unique for its source"
+      },
+      {
+        "left": "source",
+        "right": "What produced it"
+      },
+      {
+        "left": "type",
+        "right": "What kind of thing happened"
+      },
+      {
+        "left": "specversion",
+        "right": "The version of the specification"
+      }
+    ],
+    "right_distractors": [
+      "How many times it was delivered"
+    ]
+  },
+  {
+    "id": "ex-zpyw4tga",
+    "version": 1,
+    "section": "event-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request to the notify function carried ce-type, ce-source and ce-specversion but no ce-id. What happened?",
+    "hint": "Did the function's terminal print anything?",
+    "choices": [
+      {
+        "text": "The function ran with an empty id and printed it",
+        "correct": false,
+        "why": "Its terminal showed one event, the first one."
+      },
+      {
+        "text": "The framework invented an id and answered 200",
+        "correct": false,
+        "why": "It answered 400; inventing ids would break deduplication."
+      },
+      {
+        "text": "Framework said 400; the function never ran",
+        "correct": true,
+        "why": "Right. Without an id it is not a CloudEvent."
+      },
+      {
+        "text": "curl refused to send a request without the header",
+        "correct": false,
+        "why": "curl sent it; the 400 came back from the framework."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejk7faxe",
+    "version": 1,
+    "section": "event-functions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Sending CloudEvent attributes as ce- headers with the data as the body is called the ___ content mode.",
+    "hint": "The other mode is structured.",
+    "blanks": [
+      {
+        "accept": [
+          "binary"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bz229v74",
+    "version": 1,
+    "section": "event-functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An event function catches every exception, logs it and returns normally, \"so the logs stay clean\". What does that cost on Google Cloud?",
+    "hint": "What does a normal return tell the sender?",
+    "choices": [
+      {
+        "text": "Failures pass as successes, never retried",
+        "correct": true,
+        "why": "Right. Catch what you handled and let the rest escape."
+      },
+      {
+        "text": "Nothing; the event is retried anyway after a log entry",
+        "correct": false,
+        "why": "Retries are decided by the status, and a normal return is a 2xx."
+      },
+      {
+        "text": "The function is disabled after ten logged errors",
+        "correct": false,
+        "why": "No such rule; it keeps receiving events."
+      },
+      {
+        "text": "A 500 for every call, which is billed twice",
+        "correct": false,
+        "why": "A normal return is a 2xx, not a 500."
+      }
+    ]
+  },
+  {
+    "id": "ex-h88vy5zy",
+    "version": 1,
+    "section": "pubsub-trigger",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a function with a Pub/Sub trigger receive messages?",
+    "hint": "Who opens the connection?",
+    "choices": [
+      {
+        "text": "It keeps a connection open to the topic and reads from it",
+        "correct": false,
+        "why": "Nothing listens to the topic; that is the common wrong picture."
+      },
+      {
+        "text": "It pulls the subscription every few seconds",
+        "correct": false,
+        "why": "A function does not poll; it is called."
+      },
+      {
+        "text": "Pub/Sub writes each message to a file the function opens",
+        "correct": false,
+        "why": "Delivery is an HTTP request, not a file."
+      },
+      {
+        "text": "A push subscription POSTs each message to it over HTTP",
+        "correct": true,
+        "why": "Right. The trigger is a subscription pointed at the function."
+      }
+    ]
+  },
+  {
+    "id": "ex-k39e12c6",
+    "version": 1,
+    "section": "pubsub-trigger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course use pubsub.py instead of gcloud pubsub against the emulator?",
+    "hint": "What does gcloud check before anything else?",
+    "choices": [
+      {
+        "text": "gcloud cannot create push subscriptions at all",
+        "correct": false,
+        "why": "It can, given an account; the account is the obstacle."
+      },
+      {
+        "text": "gcloud needs an account; the library does not",
+        "correct": true,
+        "why": "Right. With PUBSUB_EMULATOR_HOST set, the library needs no credentials."
+      },
+      {
+        "text": "The emulator speaks a protocol gcloud never learnt",
+        "correct": false,
+        "why": "The emulator speaks Pub/Sub's own API."
+      },
+      {
+        "text": "pubsub.py is faster because it skips encryption",
+        "correct": false,
+        "why": "Speed is not the reason; the account check is."
+      }
+    ]
+  },
+  {
+    "id": "ex-vee5mc9y",
+    "version": 1,
+    "section": "pubsub-trigger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What stops pubsub.py from ever creating a topic in the real Pub/Sub?",
+    "hint": "Read its first lines of main.",
+    "choices": [
+      {
+        "text": "The project id planner-dev, which Google refuses",
+        "correct": false,
+        "why": "A project id is not a guard; the program checks something else first."
+      },
+      {
+        "text": "The token no-account, which the library sends",
+        "correct": false,
+        "why": "That variable is Terraform's; the library does not read it."
+      },
+      {
+        "text": "It exits when PUBSUB_EMULATOR_HOST is not set",
+        "correct": true,
+        "why": "Right. Without the variable the library would go to the real service."
+      },
+      {
+        "text": "Docker's network, which has no route to Google",
+        "correct": false,
+        "why": "pubsub.py runs on the laptop, not in a container."
+      }
+    ]
+  },
+  {
+    "id": "ex-1k3z9wvz",
+    "version": 1,
+    "section": "pubsub-trigger",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of message 1042 in order, from the command to the printed line.",
+    "hint": "Follow the figure from left to right.",
+    "items": [
+      "pubsub.py publishes 1042 with source=web",
+      "The topic keeps a copy for the subscription orders-fn",
+      "The subscription POSTs it to localhost:8080",
+      "The framework turns the push into a CloudEvent",
+      "on_order decodes the base64 and prints the line"
+    ]
+  },
+  {
+    "id": "ex-x1an0ky9",
+    "version": 1,
+    "section": "pubsub-trigger",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where in the CloudEvent does on_order find the order number?",
+    "hint": "It is encoded.",
+    "choices": [
+      {
+        "text": "In data.message.data, as base64",
+        "correct": true,
+        "why": "Right. The function decodes it."
+      },
+      {
+        "text": "In the ce-id header",
+        "correct": false,
+        "why": "The id is the message id, 1, not the order."
+      },
+      {
+        "text": "In the attribute source",
+        "correct": false,
+        "why": "source carried web, the attribute that was set."
+      },
+      {
+        "text": "In the URL of the push endpoint",
+        "correct": false,
+        "why": "The endpoint is the same for every message."
+      }
+    ]
+  },
+  {
+    "id": "ex-1msn6p15",
+    "version": 1,
+    "section": "pubsub-trigger",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the deployed version of this chain have that the laptop's did not? Choose all that apply.",
+    "hint": "The section names the differences.",
+    "choices": [
+      {
+        "text": "An identity token proving the caller is Pub/Sub",
+        "correct": true,
+        "why": "Right; the laptop's push carried none."
+      },
+      {
+        "text": "A topic and subscription living in the project",
+        "correct": true,
+        "why": "Right; here they lived in a container."
+      },
+      {
+        "text": "A different payload format for the message",
+        "correct": false,
+        "why": "The shape is the one you ran."
+      },
+      {
+        "text": "A function that pulls instead of being pushed to",
+        "correct": false,
+        "why": "It is still pushed to."
+      }
+    ]
+  },
+  {
+    "id": "ex-n80mjx9y",
+    "version": 1,
+    "section": "generations-and-limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Google call the second generation of Cloud Functions now?",
+    "hint": "Its name says what it is built on.",
+    "choices": [
+      {
+        "text": "App Engine functions",
+        "correct": false,
+        "why": "App Engine is lesson 19's platform."
+      },
+      {
+        "text": "Eventarc functions",
+        "correct": false,
+        "why": "Eventarc delivers events; it does not run code."
+      },
+      {
+        "text": "Cloud Functions Plus",
+        "correct": false,
+        "why": "No such product."
+      },
+      {
+        "text": "Cloud Run functions",
+        "correct": true,
+        "why": "Right. Each one is a Cloud Run service with the framework inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-w56q4nqf",
+    "version": 1,
+    "section": "generations-and-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A burst brings 300 simultaneous requests to a first-generation function. How many instances does it need at least?",
+    "hint": "One request per instance.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "ex-5sasqg37",
+    "version": 1,
+    "section": "generations-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which limit is the same in both generations?",
+    "hint": "One of the rows in the table does not change.",
+    "choices": [
+      {
+        "text": "The longest HTTP call",
+        "correct": false,
+        "why": "9 minutes against 60."
+      },
+      {
+        "text": "The longest event call, 9 minutes",
+        "correct": true,
+        "why": "Right. Only HTTP got the hour."
+      },
+      {
+        "text": "Requests per instance",
+        "correct": false,
+        "why": "One against up to 1,000."
+      },
+      {
+        "text": "The largest instance you may ask for",
+        "correct": false,
+        "why": "8 GiB against 32 GiB."
+      }
+    ]
+  },
+  {
+    "id": "ex-92b21a4h",
+    "version": 1,
+    "section": "generations-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function calls its own URL by mistake for every request it receives. Which setting in main.tf bounds the damage?",
+    "hint": "It is a ceiling on copies.",
+    "choices": [
+      {
+        "text": "timeout_seconds",
+        "correct": false,
+        "why": "It limits one call, not how many run."
+      },
+      {
+        "text": "available_memory",
+        "correct": false,
+        "why": "Memory per instance does not bound instances."
+      },
+      {
+        "text": "max_instance_count",
+        "correct": true,
+        "why": "Right. It caps how far the loop can scale."
+      },
+      {
+        "text": "entry_point",
+        "correct": false,
+        "why": "It names the function, nothing more."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vhw0em0",
+    "version": 1,
+    "section": "generations-and-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The plan printed uri = (known after apply). What would make it known?",
+    "hint": "Who chooses the address?",
+    "choices": [
+      {
+        "text": "Deploying the function, because Google assigns the address then",
+        "correct": true,
+        "why": "Right. Like an instance id, it is decided on the other side."
+      },
+      {
+        "text": "Setting GOOGLE_OAUTH_ACCESS_TOKEN to a real token and planning again",
+        "correct": false,
+        "why": "A plan does not create the function; the address appears when it exists."
+      },
+      {
+        "text": "Adding a uri line to service_config",
+        "correct": false,
+        "why": "It is an output, not something you set."
+      },
+      {
+        "text": "Running terraform init with the mirror again",
+        "correct": false,
+        "why": "init installs the provider; it decides no addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrvash13",
+    "version": 1,
+    "section": "generations-and-limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In gcloud functions deploy, the flag that turns an HTTP function into one fed by the Pub/Sub messages of orders is --trigger-___=orders.",
+    "hint": "It names what feeds the function.",
+    "blanks": [
+      {
+        "accept": [
+          "topic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-75sgcekz",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order these by how many instances 200 simultaneous requests would need, from fewest to most.",
+    "hint": "Divide by what one instance takes at once.",
+    "items": [
+      "A second-generation function with concurrency 200",
+      "A second-generation function with concurrency 80",
+      "A second-generation function with concurrency 10",
+      "A first-generation function"
+    ],
+    "trap": "The first generation takes one request per instance, so it needs all 200."
+  },
+  {
+    "id": "ex-0r5n4579",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team needs to resize product photos whenever one is uploaded. Which shape fits best?",
+    "hint": "A small piece of work with a clear trigger.",
+    "choices": [
+      {
+        "text": "A Compute Engine machine polling the bucket every minute",
+        "correct": false,
+        "why": "It pays all month to wait, and lags by up to a minute."
+      },
+      {
+        "text": "An HTTP function the browser calls after uploading",
+        "correct": false,
+        "why": "A closed tab would leave a photo unresized."
+      },
+      {
+        "text": "A Cloud Run service with twenty routes",
+        "correct": false,
+        "why": "One reaction does not need an application."
+      },
+      {
+        "text": "An event function triggered by the upload",
+        "correct": true,
+        "why": "Right. Lesson 18 wires exactly this."
+      }
+    ]
+  }
+]

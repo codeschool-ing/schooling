@@ -1,0 +1,494 @@
+{
+  "ex-pfdgb83n": {
+    "prompt": "Por que este curso não consegue rodar o SwiftData na máquina de gravação?",
+    "hint": "Onde o SwiftData vem?",
+    "choices": [
+      {
+        "text": "Ele precisa de uma assinatura paga de desenvolvedor",
+        "why": "O SwiftData é gratuito no Xcode; o problema é onde ele existe."
+      },
+      {
+        "text": "Só os SDKs da Apple o têm",
+        "why": "Isso: a seção 05 mostra o compilador dizendo `no such module`."
+      },
+      {
+        "text": "Ele precisa de conexão com os servidores da Apple",
+        "why": "Ele guarda no aparelho; a sincronização pelo iCloud é opcional."
+      },
+      {
+        "text": "O Linux não tem a biblioteca SQLite",
+        "why": "O Linux tem SQLite; a peça que falta é o próprio framework."
+      }
+    ]
+  },
+  "ex-0w4rmg44": {
+    "prompt": "O que a macro `@Model` acrescenta ao `SessionRecord` quando o app é compilado?",
+    "hint": "Dois protocolos, segundo a documentação da Apple.",
+    "choices": [
+      {
+        "text": "`Codable` e `Hashable`",
+        "why": "Nenhum dos dois é o que a documentação cita."
+      },
+      {
+        "text": "`PersistentModel` e `Observable`",
+        "why": "Isso: armazenamento, e a observação que o SwiftUI já vigia."
+      },
+      {
+        "text": "Só `Identifiable` e `Sendable`",
+        "why": "Os dois que a documentação põe à frente são `PersistentModel` e `Observable`."
+      },
+      {
+        "text": "Um método `save()` em cada registro",
+        "why": "Salvar é do contexto, não do registro."
+      }
+    ]
+  },
+  "ex-1smqxmzg": {
+    "prompt": "Por que o planner não põe `@Model` na `StudySession` da aula 1?",
+    "hint": "Dois motivos: a que o `@Model` se prende, e onde o pacote compila.",
+    "choices": [
+      {
+        "text": "O `@Model` não guarda uma data `String`",
+        "why": "Ele guarda `String`; os registros mantêm o dia como texto."
+      },
+      {
+        "text": "Uma struct sincronizaria com o iCloud sozinha, sem pedir",
+        "why": "Nada sincroniza a não ser que o app seja configurado para isso."
+      },
+      {
+        "text": "É uma struct, e o SwiftData impediria o pacote de compilar no Linux",
+        "why": "Isso: os valores ficam portáveis e testáveis, e os registros são do app."
+      },
+      {
+        "text": "A Apple proíbe `@Model` em qualquer pacote Swift, sejam quais forem as plataformas",
+        "why": "Um pacote para plataformas da Apple pode usá-lo; este também compila no Linux."
+      }
+    ]
+  },
+  "ex-2bjy31rb": {
+    "prompt": "Qual identificador de uma sessão é enviado ao servidor do planner?",
+    "hint": "Um significa algo fora deste armazenamento.",
+    "choices": [
+      {
+        "text": "`sessionID`, o id do próprio planner",
+        "why": "Isso: o mesmo id em toda plataforma e todo telefone."
+      },
+      {
+        "text": "`persistentModelID`, atribuído pelo SwiftData",
+        "why": "Ele não significa nada fora deste armazenamento, e muda num segundo telefone."
+      },
+      {
+        "text": "O número da linha no arquivo SQLite",
+        "why": "Nada no planner lê as linhas do arquivo."
+      },
+      {
+        "text": "Um UUID novo feito na hora do envio",
+        "why": "Aí a mesma sessão chegaria duas vezes com dois ids."
+      }
+    ]
+  },
+  "ex-jwbwf19n": {
+    "prompt": "O que `.modelContainer(for: [CourseRecord.self, SessionRecord.self])` põe no ambiente da cena?",
+    "hint": "É do que o `@Query` depende.",
+    "choices": [
+      {
+        "text": "Uma lista de todos os registros, buscada na abertura",
+        "why": "Buscar é tarefa de cada consulta, quando a view dela aparece."
+      },
+      {
+        "text": "Um contexto de modelo desse contêiner",
+        "why": "Isso: `@Query` e `@Environment(\\.modelContext)` o acham ali."
+      },
+      {
+        "text": "Um gerenciador de desfazer, ligado",
+        "why": "Desfazer fica desligado a não ser que se passe `isUndoEnabled: true`."
+      },
+      {
+        "text": "O caminho do arquivo do armazenamento",
+        "why": "O arquivo é assunto do contêiner; as telas nunca o veem."
+      }
+    ]
+  },
+  "ex-c739pm70": {
+    "prompt": "Qual armazenamento um preview deve usar, para nunca escrever sessões de exemplo no plano do estudante?",
+    "hint": "Um que dura só enquanto o processo dura.",
+    "choices": [
+      {
+        "text": "O armazenamento do próprio app, esvaziado depois de cada preview",
+        "why": "Esvaziá-lo apagaria também o plano real do estudante."
+      },
+      {
+        "text": "Uma cópia do armazenamento, feita na abertura",
+        "why": "Uma cópia ainda vive no disco e se afasta do que os testes esperam."
+      },
+      {
+        "text": "Um em memória, `inMemory: true`",
+        "why": "Isso: some quando o processo acaba, para previews e testes."
+      },
+      {
+        "text": "Um armazenamento num App Group, compartilhado com o widget",
+        "why": "Isso é para compartilhar dados reais, o contrário do que um preview precisa."
+      }
+    ]
+  },
+  "ex-3epz3n51": {
+    "prompt": "`context.insert(record)` roda e nenhum save aconteceu ainda. A sessão nova aparece numa lista com `@Query`?",
+    "hint": "O que uma consulta lê?",
+    "choices": [
+      {
+        "text": "Sim: as consultas leem o contexto",
+        "why": "Isso; o save decide quando chega ao disco."
+      },
+      {
+        "text": "Não, só depois de chamar `save()`",
+        "why": "A consulta vê na hora as inserções no contexto."
+      },
+      {
+        "text": "Só depois de o app ser reaberto",
+        "why": "Nada numa inserção espera o app reabrir."
+      },
+      {
+        "text": "Só se a view chamar `refresh()`",
+        "why": "Uma consulta não tem `refresh()`."
+      }
+    ]
+  },
+  "ex-3c1m96gb": {
+    "prompt": "O `CourseDetailView` monta o `@Query` no `init`. Por que não na própria declaração da propriedade?",
+    "hint": "O filtro depende do curso que a view recebeu.",
+    "choices": [
+      {
+        "text": "O `@Query` não aceita filtro numa declaração, só dentro de um inicializador",
+        "why": "Aceita, desde que o filtro não precise de nada da view."
+      },
+      {
+        "text": "Os argumentos de um wrapper não leem as outras propriedades da view",
+        "why": "Isso: o id do curso só é conhecido no `init`."
+      },
+      {
+        "text": "Uma consulta no `init` roda mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para a consulta rodar uma vez e nunca atualizar",
+        "why": "Ela continua atualizando conforme o contexto muda."
+      }
+    ]
+  },
+  "ex-36hvx9m2": {
+    "prompt": "O que o `#Predicate` produz que uma closure passada a `filter` não produziria?",
+    "hint": "É uma macro.",
+    "choices": [
+      {
+        "text": "Código Swift mais rápido, que a macro compila com otimizações extras",
+        "why": "O ponto não é velocidade em Swift, mas onde a filtragem acontece."
+      },
+      {
+        "text": "Uma consulta que roda numa thread de fundo, e não na thread principal",
+        "why": "Threads não são o assunto da macro."
+      },
+      {
+        "text": "Uma descrição da condição que um armazenamento consegue avaliar",
+        "why": "Isso, e é por isso que só aceita o que pode ser descrito desse jeito."
+      },
+      {
+        "text": "Um predicado que também ordena o resultado",
+        "why": "Ordenar é um argumento à parte."
+      }
+    ]
+  },
+  "ex-gek905j2": {
+    "prompt": "Ligue o que o estudante faz ao código que faz isso.",
+    "hint": "A consulta segue o contexto.",
+    "pairs": [
+      {
+        "left": "acrescenta uma sessão",
+        "right": "`context.insert(record)`"
+      },
+      {
+        "left": "marca uma como feita",
+        "right": "`record.done = true`"
+      },
+      {
+        "left": "apaga uma com um gesto",
+        "right": "`context.delete(record)`"
+      },
+      {
+        "left": "abre um curso",
+        "right": "um `@Query` com o predicado desse curso"
+      }
+    ],
+    "right_distractors": [
+      "`query.refresh()`"
+    ]
+  },
+  "ex-9kq1dfkz": {
+    "prompt": "No Linux, `import SwiftData` falha com o erro `no such ___ 'SwiftData'`.",
+    "hint": "Leia a captura.",
+    "blanks": [
+      {
+        "accept": [
+          "module"
+        ]
+      }
+    ]
+  },
+  "ex-nwvge78x": {
+    "prompt": "Por que `#Predicate` e `SortDescriptor` rodam na máquina Linux do curso quando o SwiftData não roda?",
+    "hint": "Em que framework eles estão?",
+    "choices": [
+      {
+        "text": "O laboratório instala um port do SwiftData para Linux",
+        "why": "Não há nenhum; a captura mostra o import falhando."
+      },
+      {
+        "text": "São do Foundation, não do SwiftData",
+        "why": "Isso: a consulta é feita deles, e eles não são do SwiftData."
+      },
+      {
+        "text": "Eles são compilados para JavaScript no Linux",
+        "why": "O Swift compila para código nativo no Linux."
+      },
+      {
+        "text": "O Linux os avalia perguntando a um Mac na rede",
+        "why": "Nada no laboratório fala com um Mac."
+      }
+    ]
+  },
+  "ex-jjnqtjfn": {
+    "prompt": "O programa `query` ordena as sessões do curso mobile da mais recente para a mais antiga. Ponha os ids na ordem em que ele os imprimiu.",
+    "hint": "Datas 27, 22 e 20 de outubro.",
+    "items": [
+      "`s4`",
+      "`s5`",
+      "`s2`"
+    ]
+  },
+  "ex-n9kzb896": {
+    "prompt": "`#Predicate<StudySession> { mondayOf($0.date) == \"2026-10-19\" }` é recusado. Qual é a correção que a seção dá?",
+    "hint": "Calcule em Swift comum antes, depois compare o texto guardado.",
+    "choices": [
+      {
+        "text": "Marcar `mondayOf` com `@Predicate` para que a macro aceite a chamada",
+        "why": "Essa marcação não existe; um armazenamento não roda a sua função."
+      },
+      {
+        "text": "Filtrar todas as sessões em Swift depois de buscar todas",
+        "why": "Funciona, e abre mão daquilo para que o predicado serve."
+      },
+      {
+        "text": "Comparar `date` com os dois dias da semana, calculados antes",
+        "why": "Isso: duas comparações de strings, como a terceira linha da saída fez."
+      },
+      {
+        "text": "Guardar a segunda de cada sessão como `Date`",
+        "why": "Um `Date` traz de volta o problema de fuso que a aula 1 evitou."
+      }
+    ]
+  },
+  "ex-z6zst0dd": {
+    "prompt": "Com o inverso declarado, o que acontece quando o código faz `record.course = course`?",
+    "hint": "Os dois lados são um fato só.",
+    "choices": [
+      {
+        "text": "A sessão aparece em `course.sessions` sem `append`",
+        "why": "Isso: o SwiftData mantém os dois lados da relação em sincronia."
+      },
+      {
+        "text": "Nada até `course.sessions.append(record)` também ser chamado",
+        "why": "Com um inverso há uma relação, não duas a sincronizar."
+      },
+      {
+        "text": "A sessão é copiada para dentro do curso, como um valor dentro dele",
+        "why": "Registros são classes, referenciadas, não copiadas."
+      },
+      {
+        "text": "O curso é salvo no disco na hora",
+        "why": "Salvar é do contexto, nos momentos dele."
+      }
+    ]
+  },
+  "ex-077bpqze": {
+    "prompt": "Com a regra de exclusão padrão, um curso é apagado. O que acontece com as sessões dele?",
+    "hint": "A padrão não perde nada.",
+    "choices": [
+      {
+        "text": "São apagadas com ele",
+        "why": "Isso é `.cascade`, que o planner escolhe."
+      },
+      {
+        "text": "A exclusão é recusada",
+        "why": "Isso é `.deny`."
+      },
+      {
+        "text": "Ficam, com `course` posto em `nil`",
+        "why": "Isso: `.nullify`, que deixa sessões que nenhuma tela do planner mostra."
+      },
+      {
+        "text": "Vão para o próximo curso da lista",
+        "why": "Nenhuma regra as reatribui."
+      }
+    ]
+  },
+  "ex-zfjc0v08": {
+    "prompt": "Ligue cada regra de exclusão ao que apagar um curso faz.",
+    "hint": "Quatro regras na documentação da Apple.",
+    "pairs": [
+      {
+        "left": "`.nullify`",
+        "right": "as sessões ficam, sem curso"
+      },
+      {
+        "left": "`.cascade`",
+        "right": "as sessões são apagadas também"
+      },
+      {
+        "left": "`.deny`",
+        "right": "recusada enquanto houver sessões"
+      },
+      {
+        "left": "`.noAction`",
+        "right": "as sessões ainda apontam para ele"
+      }
+    ],
+    "right_distractors": [
+      "as sessões são arquivadas por um ano"
+    ]
+  },
+  "ex-kb85zz85": {
+    "prompt": "Num app SwiftUI com `.modelContainer(for:)`, o contexto principal salva sozinho?",
+    "hint": "O SwiftData ajusta uma propriedade no contexto principal.",
+    "choices": [
+      {
+        "text": "Não, toda mudança precisa de um `save()` explícito",
+        "why": "O salvamento automático está ligado no contexto principal."
+      },
+      {
+        "text": "Sim: o `autosaveEnabled` vem ligado nele",
+        "why": "Isso; um contexto que você cria começa com ele desligado."
+      },
+      {
+        "text": "Só quando o app vai para o segundo plano",
+        "why": "Ele salva depois de mudanças e em momentos do ciclo de vida, não só nesse."
+      },
+      {
+        "text": "Só se o desfazer estiver ligado",
+        "why": "Desfazer e salvamento automático são ajustes separados."
+      }
+    ]
+  },
+  "ex-42g4mpr1": {
+    "prompt": "Por que o save do planner antes de uma sincronização usa `do`/`catch` e não `try?`?",
+    "hint": "O que o estudante veria se o save falhasse?",
+    "choices": [
+      {
+        "text": "O `try?` não é permitido num método que lança erros",
+        "why": "É permitido; ele transforma o erro em nada."
+      },
+      {
+        "text": "O `do`/`catch` deixa o save mais rápido",
+        "why": "Tratar erro não muda velocidade."
+      },
+      {
+        "text": "Um save que falha tem de chegar à tela, não sumir",
+        "why": "Isso: senão o estudante descobre na semana seguinte que nada foi guardado."
+      },
+      {
+        "text": "O SwiftData tenta de novo um save que foi capturado",
+        "why": "Nada tenta de novo sozinho; a tela mostra o erro."
+      }
+    ]
+  },
+  "ex-vnmppj6k": {
+    "prompt": "O que a aula oferece quando um estudante apaga um curso inteiro?",
+    "hint": "Apagar um curso leva junto as sessões dele.",
+    "choices": [
+      {
+        "text": "Nada: apagar é definitivo, por desenho",
+        "why": "A aula defende o Desfazer."
+      },
+      {
+        "text": "Só Desfazer, sem confirmação",
+        "why": "Isso é o que uma sessão sozinha ganha."
+      },
+      {
+        "text": "Uma confirmação, e Desfazer depois",
+        "why": "Isso: uma perda maior ganha os dois."
+      },
+      {
+        "text": "Uma confirmação que precisa ser digitada",
+        "why": "Nada tão pesado é proposto."
+      }
+    ]
+  },
+  "ex-bx48612w": {
+    "prompt": "A versão 2 renomeia `length` para `minutes` sem `originalName`. O que acontece num telefone com o armazenamento da versão 1?",
+    "hint": "Uma renomeação sem o nome antigo parece duas mudanças.",
+    "choices": [
+      {
+        "text": "O armazenamento não abre e o app trava",
+        "why": "Ele abre: o perigo é que nada falha."
+      },
+      {
+        "text": "Ele abre, e os minutos de todas as sessões se perdem",
+        "why": "Isso: uma propriedade removida, outra acrescentada, e nenhum erro."
+      },
+      {
+        "text": "O SwiftData adivinha a renomeação pelo tipo, `Int`",
+        "why": "Nenhum palpite é documentado; o `originalName` é como se avisa."
+      },
+      {
+        "text": "A coluna antiga fica ao lado da nova",
+        "why": "A propriedade foi removida do esquema."
+      }
+    ]
+  },
+  "ex-fk00h4zy": {
+    "prompt": "A versão 2 acrescenta `@Attribute(.unique)` ao `sessionID`. Por que a etapa é `custom` e não `lightweight`?",
+    "hint": "O que um armazenamento antigo pode já conter?",
+    "choices": [
+      {
+        "text": "Toda etapa que mexe em `@Attribute` tem de ser custom, seja qual for a mudança",
+        "why": "O motivo são os dados, não a macro."
+      },
+      {
+        "text": "Uma etapa leve não consegue mudar uma propriedade que guarda uma `String`",
+        "why": "O tipo não muda aqui."
+      },
+      {
+        "text": "Duplicados antigos precisam sair antes, no `willMigrate`",
+        "why": "Isso: não se põe restrição de unicidade sobre dois ids iguais."
+      },
+      {
+        "text": "Etapas custom rodam mais rápido em armazenamentos grandes",
+        "why": "Elas rodam código seu, o que não é mais rápido."
+      }
+    ]
+  },
+  "ex-5x3r1ea0": {
+    "prompt": "Quantas regras de exclusão a documentação da Apple lista para uma relação?",
+    "hint": "A tabela da seção 06."
+  },
+  "ex-z01d982r": {
+    "prompt": "Quais destes foram executados para esta aula na máquina do curso? Escolha todos os que se aplicam.",
+    "hint": "Só o Foundation e a recusa do compilador.",
+    "choices": [
+      {
+        "text": "Um `#Predicate` avaliado contra valores `StudySession`",
+        "why": "Sim: o programa `query` da seção 05."
+      },
+      {
+        "text": "Um `@Query` atualizando uma lista depois de uma inserção",
+        "why": "Não: isso precisa do SwiftData e do SwiftUI."
+      },
+      {
+        "text": "`swift swiftdata.swift`, recusado com `no such module`",
+        "why": "Sim: o muro, capturado."
+      },
+      {
+        "text": "Uma etapa de migração custom removendo duplicados",
+        "why": "Não: é SwiftData, lido da documentação."
+      }
+    ]
+  }
+}

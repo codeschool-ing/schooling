@@ -1,0 +1,656 @@
+[
+  {
+    "id": "ex-bregth5h",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where must a Cloud Run container listen?",
+    "hint": "An address and a port.",
+    "choices": [
+      {
+        "text": "127.0.0.1, on port 80",
+        "correct": false,
+        "why": "Loopback answers nobody outside, and the port is the one in PORT."
+      },
+      {
+        "text": "Any address, on port 443 with its own certificate",
+        "correct": false,
+        "why": "Cloud Run terminates HTTPS; the container gets plain HTTP."
+      },
+      {
+        "text": "0.0.0.0, on the port in PORT",
+        "correct": true,
+        "why": "Right. Requests arrive from outside the container's loopback."
+      },
+      {
+        "text": "A Unix socket the platform names in K_SERVICE",
+        "correct": false,
+        "why": "K_SERVICE is the service's name, not a socket."
+      }
+    ]
+  },
+  {
+    "id": "ex-th7c7bsw",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service writes each new order to a file under /tmp and reads the file back on the next request. What goes wrong on Cloud Run?",
+    "hint": "Where does /tmp live, and how many instances are there?",
+    "choices": [
+      {
+        "text": "Each instance has its own file, gone with the instance",
+        "correct": true,
+        "why": "Right. The next request may reach another instance, or a new one."
+      },
+      {
+        "text": "The write fails, because the file system is read-only",
+        "correct": false,
+        "why": "It is writable; that is what makes the bug quiet."
+      },
+      {
+        "text": "Nothing, as long as the file is smaller than the memory limit",
+        "correct": false,
+        "why": "Size is the lesser problem; the file is not shared and does not last."
+      },
+      {
+        "text": "Cloud Run copies /tmp between instances, so writes conflict",
+        "correct": false,
+        "why": "Nothing is copied between instances."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tgk6pw7",
+    "version": 1,
+    "section": "the-contract",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After SIGTERM, how many seconds does a Cloud Run instance get before SIGKILL?",
+    "hint": "The same as Docker's default.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-xwny51ds",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An image built on an Arm laptop for Arm is deployed to Cloud Run. What happens?",
+    "hint": "What does Cloud Run execute?",
+    "choices": [
+      {
+        "text": "It runs, more slowly, under emulation",
+        "correct": false,
+        "why": "Cloud Run does not emulate another architecture."
+      },
+      {
+        "text": "It runs at the same speed, since Python is interpreted",
+        "correct": false,
+        "why": "The interpreter itself is an Arm binary in that image."
+      },
+      {
+        "text": "Cloud Run rebuilds it for amd64 from the Dockerfile",
+        "correct": false,
+        "why": "Cloud Run receives an image, not a Dockerfile."
+      },
+      {
+        "text": "It does not start: Cloud Run executes linux/amd64",
+        "correct": true,
+        "why": "Right. Build for amd64, or for both."
+      }
+    ]
+  },
+  {
+    "id": "ex-cw8xy13q",
+    "version": 1,
+    "section": "the-contract",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Cloud Run sets K_SERVICE, K_CONFIGURATION and K____ to name what is serving the request.",
+    "hint": "Lesson 9 is about it.",
+    "blanks": [
+      {
+        "accept": [
+          "REVISION"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bn4h562w",
+    "version": 1,
+    "section": "a-container-that-fits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the orders service log one JSON object per line with a severity field?",
+    "hint": "Who reads standard output on Cloud Run?",
+    "choices": [
+      {
+        "text": "Because Cloud Run refuses plain-text logs",
+        "correct": false,
+        "why": "Plain text is accepted, as unstructured entries."
+      },
+      {
+        "text": "Cloud Logging files each line as a structured entry",
+        "correct": true,
+        "why": "Right. A warning stays a warning."
+      },
+      {
+        "text": "JSON lines are shorter, so they cost less to store in Cloud Logging",
+        "correct": false,
+        "why": "They are longer, if anything; structure is the point."
+      },
+      {
+        "text": "Python's http.server writes JSON by default",
+        "correct": false,
+        "why": "The program overrides log_message to write it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9v4c0ktj",
+    "version": 1,
+    "section": "a-container-that-fits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is ORDERS_DELAY_MS in the orders service for?",
+    "hint": "Zero unless set.",
+    "choices": [
+      {
+        "text": "It sets how long Cloud Run waits before killing the instance",
+        "correct": false,
+        "why": "That is the ten seconds after SIGTERM, which no variable changes."
+      },
+      {
+        "text": "It throttles clients that send too many requests",
+        "correct": false,
+        "why": "It delays every /orders answer equally."
+      },
+      {
+        "text": "It stands in for a database call, for lesson 11",
+        "correct": true,
+        "why": "Right. A request that waits, without a database to wait on."
+      },
+      {
+        "text": "It is the startup probe's timeout",
+        "correct": false,
+        "why": "The probe is configured on the service, not in the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkbydmx8",
+    "version": 1,
+    "section": "a-container-that-fits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "docker image ls reported the size of orders:1. How many MB?",
+    "hint": "Nearly all of it is the base image.",
+    "value": 177,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-vq4hv47c",
+    "version": 1,
+    "section": "a-container-that-fits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the Dockerfile's CMD a JSON list rather than CMD python3 app.py?",
+    "hint": "Which process receives SIGTERM?",
+    "choices": [
+      {
+        "text": "Python is then process 1 and receives SIGTERM itself",
+        "correct": true,
+        "why": "Right. In the shell form sh gets it and does not pass it on."
+      },
+      {
+        "text": "The JSON form starts Python faster",
+        "correct": false,
+        "why": "Start-up time is not what differs."
+      },
+      {
+        "text": "Cloud Run only accepts the JSON form",
+        "correct": false,
+        "why": "Both forms run; one of them stops badly."
+      },
+      {
+        "text": "The shell form cannot read the PORT variable",
+        "correct": false,
+        "why": "A shell reads variables perfectly well."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpdhda1t",
+    "version": 1,
+    "section": "running-it-at-home",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server inside the container listened on 127.0.0.1:8081, published with -p 8081:8081. What did curl get, and why?",
+    "hint": "Which interface do published connections arrive on?",
+    "choices": [
+      {
+        "text": "A 404, because http.server serves no /orders path",
+        "correct": false,
+        "why": "The request never reached a server to say 404."
+      },
+      {
+        "text": "A timeout, because Docker blocks port 8081",
+        "correct": false,
+        "why": "Docker accepted the connection and found nobody behind it."
+      },
+      {
+        "text": "The directory listing, because loopback is reachable through -p",
+        "correct": false,
+        "why": "It is not; that is the bug."
+      },
+      {
+        "text": "A reset connection: nothing listened on the outside interface",
+        "correct": true,
+        "why": "Right. Status 56, Recv failure. Cloud Run would fail its startup probe."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsz1hz4c",
+    "version": 1,
+    "section": "running-it-at-home",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With CMD in shell form, docker stop took 10.227 seconds and the exit code was 137. What signal number killed it?",
+    "hint": "137 minus 128.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-xqdmxd0j",
+    "version": 1,
+    "section": "running-it-at-home",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The orders service was started a second time with -e PORT=9090. What does that test?",
+    "hint": "Who chooses the port on Cloud Run?",
+    "choices": [
+      {
+        "text": "Whether two copies can share one port",
+        "correct": false,
+        "why": "They used different ports on the laptop."
+      },
+      {
+        "text": "That it listens where PORT says",
+        "correct": true,
+        "why": "Right. Cloud Run is free to choose."
+      },
+      {
+        "text": "Whether the image can be rebuilt for another port",
+        "correct": false,
+        "why": "Nothing was rebuilt; the same image ran."
+      },
+      {
+        "text": "That Cloud Run only allows ports above 9000",
+        "correct": false,
+        "why": "There is no such rule; 8080 is the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-81payhw1",
+    "version": 1,
+    "section": "running-it-at-home",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happened when docker stop ran against the orders service in order.",
+    "hint": "A signal, a handler, an exit.",
+    "items": [
+      "Docker sends SIGTERM to process 1",
+      "Python's handler logs \"SIGTERM: shutting down\"",
+      "The program exits",
+      "docker stop returns, in a fraction of a second"
+    ],
+    "trap": "With the shell form, the second step never happens and the last one waits ten seconds."
+  },
+  {
+    "id": "ex-tf0hb8hf",
+    "version": 1,
+    "section": "running-it-at-home",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's service drops a few requests every time Cloud Run scales in, and its Dockerfile ends with CMD gunicorn app:app. What is the most likely cause?",
+    "hint": "Which process hears the signal?",
+    "choices": [
+      {
+        "text": "gunicorn cannot run on Cloud Run",
+        "correct": false,
+        "why": "It runs; lesson 19 uses it."
+      },
+      {
+        "text": "Scale-in sends requests to instances that have already stopped",
+        "correct": false,
+        "why": "Cloud Run stops routing to an instance before shutting it down."
+      },
+      {
+        "text": "The shell form: sh hears SIGTERM, gunicorn never does",
+        "correct": true,
+        "why": "Right. Ten seconds later, SIGKILL cuts the requests in flight."
+      },
+      {
+        "text": "The image is too large to be pulled during scale-in",
+        "correct": false,
+        "why": "Scaling in pulls nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4hbs9ry",
+    "version": 1,
+    "section": "scale-to-zero",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service has min_instance_count = 0 and nobody has called it for an hour. How many instances does it have?",
+    "hint": "Idle instances are not kept forever.",
+    "choices": [
+      {
+        "text": "None; the next request waits for one",
+        "correct": true,
+        "why": "Right. That wait is the cold start."
+      },
+      {
+        "text": "One, kept warm by default",
+        "correct": false,
+        "why": "Only a minimum keeps one; the default is zero."
+      },
+      {
+        "text": "As many as the last busy hour needed",
+        "correct": false,
+        "why": "Idle instances are shut down, after up to about fifteen minutes."
+      },
+      {
+        "text": "Ten, the max_instance_count",
+        "correct": false,
+        "why": "The maximum is a ceiling, not a target."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m6qqn27",
+    "version": 1,
+    "section": "scale-to-zero",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is max_instance_count = 10 protecting against?",
+    "hint": "What would a burst of traffic do without it?",
+    "choices": [
+      {
+        "text": "Instances starting before the image is pulled",
+        "correct": false,
+        "why": "Pulling comes before starting, whatever the maximum."
+      },
+      {
+        "text": "Requests waiting longer than the timeout",
+        "correct": false,
+        "why": "A ceiling can make requests wait longer, not shorter."
+      },
+      {
+        "text": "Ten requests arriving at the same instance at once",
+        "correct": false,
+        "why": "That is concurrency per instance, a different setting."
+      },
+      {
+        "text": "A burst, or an attack, scaling the bill without limit",
+        "correct": true,
+        "why": "Right. It caps how many instances you can be charged for."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9qcnw5g",
+    "version": 1,
+    "section": "scale-to-zero",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the image named by an Artifact Registry path in main.tf?",
+    "hint": "Where does Cloud Run pull from?",
+    "choices": [
+      {
+        "text": "Terraform validates the image's contents through the path",
+        "correct": false,
+        "why": "The plan checked nothing about the image."
+      },
+      {
+        "text": "Cloud Run pulls from a registry, never from your laptop",
+        "correct": true,
+        "why": "Right. orders:1 on your laptop is invisible to Google."
+      },
+      {
+        "text": "Because Artifact Registry builds the image from app.py",
+        "correct": false,
+        "why": "A registry stores images; it does not build them."
+      },
+      {
+        "text": "The region in the path sets the service's region",
+        "correct": false,
+        "why": "location sets the region; the path only says where the image is."
+      }
+    ]
+  },
+  {
+    "id": "ex-ec2axfh5",
+    "version": 1,
+    "section": "scale-to-zero",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With min_instance_count = ___, a single instance is always there and is billed while idle.",
+    "hint": "A number.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vnamzgv6",
+    "version": 1,
+    "section": "scale-to-zero",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can this lab show about deploying the orders service? Choose all that apply.",
+    "hint": "What needs Google and what does not?",
+    "choices": [
+      {
+        "text": "That the container keeps the runtime contract",
+        "correct": true,
+        "why": "Right; docker run proved it."
+      },
+      {
+        "text": "The service description Terraform would send",
+        "correct": true,
+        "why": "Right; the plan is computed locally."
+      },
+      {
+        "text": "The run.app address the service would get",
+        "correct": false,
+        "why": "Only Google assigns it, and nothing is invented here."
+      },
+      {
+        "text": "How long Cloud Run takes to start an instance",
+        "correct": false,
+        "why": "A laptop timing is the laptop's, not Cloud Run's."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1sq7q19",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four states of a scale-to-zero service in the order a quiet morning goes through them.",
+    "hint": "It ends where it began.",
+    "items": [
+      "No instances",
+      "Starting",
+      "Serving",
+      "Idle, then shut down"
+    ],
+    "trap": "Idle comes after serving, and only then does the instance go."
+  },
+  {
+    "id": "ex-x07n7dzm",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the contract to who keeps it.",
+    "hint": "Left of the line is Google, right of it is you.",
+    "pairs": [
+      {
+        "left": "The HTTPS certificate",
+        "right": "Cloud Run"
+      },
+      {
+        "left": "Listening on 0.0.0.0:$PORT",
+        "right": "Your container"
+      },
+      {
+        "left": "How many instances run",
+        "right": "Cloud Run, inside your ceiling"
+      },
+      {
+        "left": "Exiting soon after SIGTERM",
+        "right": "Your program"
+      }
+    ],
+    "right_distractors": [
+      "The Docker daemon on your laptop"
+    ]
+  },
+  {
+    "id": "ex-rc0sr69p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer counts page views in a global variable of the service and the number on the dashboard keeps jumping backwards. Why?",
+    "hint": "How many copies hold that variable?",
+    "choices": [
+      {
+        "text": "Python integers overflow and wrap around",
+        "correct": false,
+        "why": "Python integers do not overflow."
+      },
+      {
+        "text": "Cloud Run resets globals on every request",
+        "correct": false,
+        "why": "Globals live as long as the instance."
+      },
+      {
+        "text": "Each instance has its own counter, and instances come and go",
+        "correct": true,
+        "why": "Right. The dashboard shows whichever instance answered."
+      },
+      {
+        "text": "The counter is written to /tmp, which Cloud Run cleans each hour",
+        "correct": false,
+        "why": "Nothing cleans /tmp hourly; the instance itself goes away."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgq7b2yj",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, how many minutes may a Cloud Run request take before it times out?",
+    "hint": "It can be raised to sixty.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-fs7bp7v1",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The time a request waits while Cloud Run pulls the image and starts the container is the cold ___.",
+    "hint": "Lesson 11 takes it apart.",
+    "blanks": [
+      {
+        "accept": [
+          "start"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9ymd5nc3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would make the orders service fail Cloud Run's default startup probe?",
+    "hint": "The probe opens a TCP connection to PORT.",
+    "choices": [
+      {
+        "text": "Hard-coding port 8000 while PORT says 8080",
+        "correct": true,
+        "why": "Right. The probe connects to PORT and finds nothing."
+      },
+      {
+        "text": "Answering /health with a 404 and a JSON body",
+        "correct": false,
+        "why": "The default probe is TCP; it never asks for /health."
+      },
+      {
+        "text": "Logging in plain text instead of JSON lines",
+        "correct": false,
+        "why": "Log format does not affect the probe."
+      },
+      {
+        "text": "Running as the user nobody",
+        "correct": false,
+        "why": "Ports above 1024 need no root."
+      }
+    ]
+  }
+]

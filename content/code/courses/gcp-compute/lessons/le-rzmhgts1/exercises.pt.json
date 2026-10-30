@@ -1,0 +1,465 @@
+{
+  "ex-cznw0t9k": {
+    "prompt": "Quando o Compute Engine roda o script de inicialização de uma máquina?",
+    "hint": "Não só na criação.",
+    "choices": [
+      {
+        "text": "Uma vez, na primeira criação da máquina",
+        "why": "Essa é a crença comum; o ambiente convidado o roda a cada inicialização."
+      },
+      {
+        "text": "Sempre que os metadados mudam, sem reiniciar",
+        "why": "A mudança vale na próxima inicialização, ou quando você roda o executor de scripts à mão."
+      },
+      {
+        "text": "Em toda inicialização, como root",
+        "why": "Isso. É por isso que o script precisa ser seguro para rodar duas vezes."
+      },
+      {
+        "text": "Só quando a máquina é ligada a partir de parada, como usuário sem privilégio",
+        "why": "Ele roda a cada inicialização, e como root."
+      }
+    ]
+  },
+  "ex-jmdbztmh": {
+    "prompt": "Uma imagem pública roda o script de inicialização; uma imagem custom feita do zero liga e o ignora. Qual é a causa provável?",
+    "hint": "Quem lê a chave startup-script?",
+    "choices": [
+      {
+        "text": "A imagem não tem ambiente convidado para rodá-lo",
+        "why": "Isso. O Google não roda nada; quem roda é o ambiente convidado na máquina."
+      },
+      {
+        "text": "Imagens custom não podem ter scripts de inicialização",
+        "why": "Podem; algo na máquina precisa rodá-los."
+      },
+      {
+        "text": "A chave de metadados precisa ser startup-script-url para imagens custom",
+        "why": "Qualquer chave serve quando o ambiente convidado está presente."
+      },
+      {
+        "text": "O script é longo demais para o servidor de metadados",
+        "why": "O tamanho daria erro na criação, não um pulo silencioso."
+      }
+    ]
+  },
+  "ex-9rwm90r5": {
+    "prompt": "Rodado no laptop, o startup.sh parou com curl: (6) e status 6. Sem -sSf e set -euo pipefail, o que ele teria feito?",
+    "hint": "O que fica em ENV quando o curl falha calado?",
+    "choices": [
+      {
+        "text": "Parado do mesmo jeito, porque o bash sai no primeiro erro",
+        "why": "O bash segue depois de um comando que falhou, a não ser que mandem parar."
+      },
+      {
+        "text": "Perguntado a zona de novo até o servidor responder",
+        "why": "Nada no script tenta de novo."
+      },
+      {
+        "text": "Lido os valores do estado do Terraform no lugar",
+        "why": "O script não sabe nada do Terraform."
+      },
+      {
+        "text": "Escrito uma página com valores vazios e saído com 0",
+        "why": "Isso. Uma falha silenciosa que ninguém encontra até um cliente encontrar."
+      }
+    ]
+  },
+  "ex-nb7ncss1": {
+    "prompt": "O script está em metadata_startup_script, e alguém corrige um erro de digitação nele. O que acontece no próximo apply, segundo a documentação do provider?",
+    "hint": "Esse atributo é especial entre os jeitos de definir um script.",
+    "choices": [
+      {
+        "text": "Os metadados mudam no lugar e o script roda na próxima inicialização",
+        "why": "Isso é o que faz a chave startup-script dentro de metadata."
+      },
+      {
+        "text": "A instância é destruída e uma nova é criada",
+        "why": "Isso. Esse atributo força substituição; a chave de metadados atualiza no lugar."
+      },
+      {
+        "text": "Nada até alguém rodar o executor de scripts na máquina",
+        "why": "O Terraform age sobre a mudança, e de forma drástica."
+      },
+      {
+        "text": "O apply falha, porque o script de uma máquina ligada fica travado",
+        "why": "Nada trava; o provider planeja uma substituição."
+      }
+    ]
+  },
+  "ex-x70bz2a5": {
+    "prompt": "A saída de um script de inicialização pode ser lida de fora da máquina no console ___, mesmo com o SSH quebrado.",
+    "hint": "Uma porta, não uma tela.",
+    "blanks": [
+      {
+        "accept": [
+          "serial"
+        ]
+      }
+    ]
+  },
+  "ex-by7jg5rh": {
+    "prompt": "Qual cabeçalho toda requisição ao servidor de metadados precisa levar?",
+    "hint": "Ele diz de quem são esses metadados.",
+    "choices": [
+      {
+        "text": "Authorization: Bearer com o token da instância",
+        "why": "O token é o que você pede; não dá para precisar dele para pedir."
+      },
+      {
+        "text": "X-Forwarded-For com o endereço da máquina",
+        "why": "Uma requisição com esse cabeçalho é recusada."
+      },
+      {
+        "text": "Metadata-Flavor: Google",
+        "why": "Isso. Sem ele o servidor responde 403."
+      },
+      {
+        "text": "X-Goog-Project com o id do projeto",
+        "why": "Esse cabeçalho não é exigido; a máquina já pertence a um projeto."
+      }
+    ]
+  },
+  "ex-1gz2p9y1": {
+    "prompt": "Por que o servidor de metadados recusa requisições com X-Forwarded-For?",
+    "hint": "Quem acrescenta esse cabeçalho?",
+    "choices": [
+      {
+        "text": "Um proxy enganado para repassar uma requisição o acrescenta no caminho",
+        "why": "Isso. Fecha o caminho do proxy reverso até o token."
+      },
+      {
+        "text": "Porque o cabeçalho revelaria o endereço interno da máquina",
+        "why": "O servidor fica dentro do host; revelar endereços não é a preocupação."
+      },
+      {
+        "text": "Porque balanceadores na frente da máquina o mandam",
+        "why": "Um balanceador não alcança o endereço de metadados de jeito nenhum."
+      },
+      {
+        "text": "Porque o cabeçalho deixa as respostas grandes demais para cache",
+        "why": "Cache não tem nada a ver."
+      }
+    ]
+  },
+  "ex-g5wdrpeg": {
+    "prompt": "Um atacante consegue um shell na web-1. O que o cabeçalho Metadata-Flavor faz para impedi-lo de pegar o token da conta de serviço?",
+    "hint": "Um filtro contra buscas forjadas, ou uma tranca?",
+    "choices": [
+      {
+        "text": "Bloqueia requisições de sessões interativas",
+        "why": "O servidor não distingue um shell de um serviço."
+      },
+      {
+        "text": "Exige que a requisição venha do ambiente convidado",
+        "why": "Qualquer processo da máquina pode perguntar."
+      },
+      {
+        "text": "Limita o token a escopos só de leitura para shells",
+        "why": "Escopos são por instância, não por quem chama."
+      },
+      {
+        "text": "Nada: um shell manda o cabeçalho como qualquer programa",
+        "why": "Isso. É por isso que o token deve valer o mínimo possível."
+      }
+    ]
+  },
+  "ex-7cjqrxvg": {
+    "prompt": "Um script precisa reagir quando o atributo shop-env mudar, sem perguntar a cada poucos segundos. O que o servidor de metadados oferece?",
+    "hint": "Um parâmetro de consulta.",
+    "choices": [
+      {
+        "text": "?recursive=true, que transmite cada mudança",
+        "why": "recursive devolve uma árvore inteira de uma vez; não espera."
+      },
+      {
+        "text": "?wait_for_change=true",
+        "why": "Isso. O ambiente convidado o usa para chaves SSH novas."
+      },
+      {
+        "text": "Um tópico de Pub/Sub onde o servidor publica mudanças",
+        "why": "O servidor de metadados não publica nada."
+      },
+      {
+        "text": "Uma URL de webhook nos metadados da instância",
+        "why": "Esse webhook não existe."
+      }
+    ]
+  },
+  "ex-xjwrjpds": {
+    "prompt": "Quais destes cabem nos metadados da instância? Escolha todos os que se aplicam.",
+    "hint": "Quem consegue ler os metadados?",
+    "choices": [
+      {
+        "text": "O nome do ambiente, staging",
+        "why": "Isso; ninguém sai prejudicado por ler."
+      },
+      {
+        "text": "A senha do banco de dados",
+        "why": "Todo processo e todo leitor da instância lê metadados; use o Secret Manager."
+      },
+      {
+        "text": "O próprio script de inicialização",
+        "why": "Isso, contanto que nenhum segredo esteja escrito nele."
+      },
+      {
+        "text": "A chave JSON de uma conta de serviço",
+        "why": "É o pior dos dois: um segredo, e um que nunca expira."
+      }
+    ]
+  },
+  "ex-a995p0es": {
+    "prompt": "Quanto tempo dura o token que o servidor de metadados entrega?",
+    "hint": "Dura pouco, e é trocado.",
+    "choices": [
+      {
+        "text": "Até a máquina ser apagada",
+        "why": "Isso seria a fraqueza de um arquivo de chave."
+      },
+      {
+        "text": "Noventa dias, como uma chave rotacionada",
+        "why": "Tokens duram muito menos que os períodos de rotação de chaves."
+      },
+      {
+        "text": "Cerca de uma hora, renovado antes de expirar",
+        "why": "Isso. O seu código nunca vê uma chave."
+      },
+      {
+        "text": "Uma requisição; cada chamada precisa de um novo",
+        "why": "Um token é reaproveitado até perto de expirar."
+      }
+    ]
+  },
+  "ex-3nb89rrb": {
+    "prompt": "O adc.py rodou com GOOGLE_APPLICATION_CREDENTIALS apontando para um arquivo que não existe e disse \"File ... was not found.\" Por que não seguiu para o servidor de metadados?",
+    "hint": "O que essa variável significa para a biblioteca?",
+    "choices": [
+      {
+        "text": "Com a variável definida, só aquele arquivo é lido",
+        "why": "Isso. É o primeiro passo da ordem e não passa adiante."
+      },
+      {
+        "text": "O servidor de metadados foi tentado primeiro e já tinha falhado",
+        "why": "Ele vem por último na ordem, não primeiro."
+      },
+      {
+        "text": "Um arquivo inexistente é tratado como conta revogada",
+        "why": "Nada da conta foi verificado."
+      },
+      {
+        "text": "A execução foi rápida demais para a rede subir",
+        "why": "O motivo não é tempo; é a ordem."
+      }
+    ]
+  },
+  "ex-2spmke5y": {
+    "prompt": "Ponha os lugares onde o Application Default Credentials procura na ordem em que ele os tenta.",
+    "hint": "A escolha explícita primeiro, a máquina por último.",
+    "items": [
+      "O arquivo apontado por GOOGLE_APPLICATION_CREDENTIALS",
+      "O arquivo que o gcloud auth application-default login escreve",
+      "O servidor de metadados"
+    ],
+    "trap": "O servidor de metadados vem por último, e é por isso que o laptop gastou três segundos nele antes de desistir."
+  },
+  "ex-fasf9nnz": {
+    "prompt": "Por que criar a shop-web em vez de usar a conta de serviço padrão do Compute Engine?",
+    "hint": "O que a conta padrão recebeu em projetos mais antigos?",
+    "choices": [
+      {
+        "text": "A conta padrão não pode ser presa a máquinas E2",
+        "why": "Ela pode ser presa a qualquer máquina."
+      },
+      {
+        "text": "Os tokens da conta padrão nunca expiram, ao contrário dos de uma dedicada",
+        "why": "Os tokens dela expiram como quaisquer outros."
+      },
+      {
+        "text": "O Terraform não consegue ler o e-mail da conta padrão",
+        "why": "Esse não é o motivo; o risco são os papéis dela."
+      },
+      {
+        "text": "A padrão antiga tem Editor; a dedicada tem só o necessário",
+        "why": "Isso. Um token roubado então lê o que um servidor web lê, nada mais."
+      }
+    ]
+  },
+  "ex-4fg4cymk": {
+    "prompt": "Na captura, quantos segundos (real) o adc.py levou para desistir num laptop sem servidor de metadados? Responda com uma casa decimal.",
+    "hint": "Leia a linha real do time.",
+    "unit": "segundos"
+  },
+  "ex-t36g00em": {
+    "prompt": "Uma chamada da máquina só dá certo quando o quê vale?",
+    "hint": "Duas verificações.",
+    "choices": [
+      {
+        "text": "O escopo cobre a API, sejam quais forem os papéis",
+        "why": "Os papéis também são verificados."
+      },
+      {
+        "text": "O escopo cobre a API e um papel cobre a ação",
+        "why": "Isso. Cada um pode falhar sozinho."
+      },
+      {
+        "text": "Um papel cobre a ação, seja qual for o escopo",
+        "why": "Um escopo estreito bloqueia mesmo com o papel."
+      },
+      {
+        "text": "A máquina está na mesma zona do recurso",
+        "why": "Localização não autoriza nada."
+      }
+    ]
+  },
+  "ex-ghdajt7a": {
+    "prompt": "No plan o apelido storage-ro virou https://www.googleapis.com/auth/devstorage.___.",
+    "hint": "Somente leitura.",
+    "blanks": [
+      {
+        "accept": [
+          "read_only"
+        ]
+      }
+    ]
+  },
+  "ex-8hsmh7fv": {
+    "prompt": "O que o Google recomenda para os escopos de uma máquina?",
+    "hint": "Qual das duas verificações sabe dizer \"este bucket\"?",
+    "choices": [
+      {
+        "text": "Os escopos mais estreitos possíveis, e nenhum papel do IAM",
+        "why": "Sem papéis a conta não faz nada."
+      },
+      {
+        "text": "Nenhum escopo, para o servidor não emitir token",
+        "why": "Aí a máquina não tem uso para a conta."
+      },
+      {
+        "text": "cloud-platform, com os papéis do IAM decidindo",
+        "why": "Isso. Papéis são precisos e mudam sem mexer na máquina."
+      },
+      {
+        "text": "Um escopo diferente por processo na máquina",
+        "why": "Escopos são definidos por instância."
+      }
+    ]
+  },
+  "ex-p028p441": {
+    "prompt": "Uma equipe retira um papel da shop-web depois de um vazamento, e um token da web-1 continua funcionando minutos depois numa API que aquele papel cobria. O que explica isso, e o que corta mais rápido?",
+    "hint": "Mudanças de papel se propagam; tokens vivem até expirar.",
+    "choices": [
+      {
+        "text": "A propagação demora; desativar a conta de serviço corta antes",
+        "why": "Isso. As credenciais de uma conta desativada são recusadas."
+      },
+      {
+        "text": "O papel ficou em cache na máquina; reinicie-a",
+        "why": "Papéis são verificados pela API, não guardados na máquina."
+      },
+      {
+        "text": "Escopos se sobrepõem a papéis, então mude os escopos da máquina",
+        "why": "Mudar escopos exige parar e não afeta tokens emitidos."
+      },
+      {
+        "text": "Tokens de metadados ignoram o IAM; apague a instância",
+        "why": "Toda chamada é conferida no IAM."
+      }
+    ]
+  },
+  "ex-hmdx5n08": {
+    "prompt": "O Terraform se recusa a mudar os escopos da web-1 ligada. O que torna a mudança possível?",
+    "hint": "A máquina precisa parar para isso.",
+    "choices": [
+      {
+        "text": "Rodar o terraform apply duas vezes seguidas",
+        "why": "Repetir não muda o que a API exige."
+      },
+      {
+        "text": "Mover os escopos para os metadados",
+        "why": "Escopos não são valores de metadados."
+      },
+      {
+        "text": "Desprender a conta de serviço antes",
+        "why": "Isso já é uma mudança que exige parar."
+      },
+      {
+        "text": "allow_stopping_for_update = true",
+        "why": "Isso. A mudança precisa da instância parada."
+      }
+    ]
+  },
+  "ex-0tk05gqt": {
+    "prompt": "Ponha em ordem o que acontece quando a web-1 liga.",
+    "hint": "O script precisa do servidor de metadados e do ambiente convidado.",
+    "items": [
+      "O ambiente convidado começa na máquina",
+      "Ele lê a chave startup-script no servidor de metadados",
+      "O script pergunta shop-env e a zona ao servidor de metadados",
+      "O nginx serve a página que o script escreveu"
+    ],
+    "trap": "O script não pergunta nada antes de o ambiente convidado buscá-lo e iniciá-lo."
+  },
+  "ex-wjcshgeq": {
+    "prompt": "Ligue cada caminho de metadados ao que ele devolve.",
+    "hint": "instance/ é esta máquina, project/ é de todas.",
+    "pairs": [
+      {
+        "left": "project/project-id",
+        "right": "O id do projeto, planner-dev"
+      },
+      {
+        "left": "instance/zone",
+        "right": "Onde o Compute Engine pôs a máquina"
+      },
+      {
+        "left": "instance/attributes/shop-env",
+        "right": "Um valor que você definiu nesta máquina"
+      },
+      {
+        "left": "instance/service-accounts/default/token",
+        "right": "Um token de acesso de vida curta"
+      }
+    ],
+    "right_distractors": [
+      "O arquivo de chave privada da máquina"
+    ]
+  },
+  "ex-4zdnjerm": {
+    "prompt": "Um servidor web busca imagens de URLs que os usuários digitam. Que mudança limita o estrago se esse recurso for usado para alcançar o servidor de metadados?",
+    "hint": "Duas camadas: o filtro, e quanto o token vale.",
+    "choices": [
+      {
+        "text": "Tirar shop-env dos metadados da instância",
+        "why": "O prêmio é o token, não o nome do ambiente."
+      },
+      {
+        "text": "Uma conta de serviço dedicada só com os papéis do servidor web",
+        "why": "Isso. Mesmo que uma busca passasse, o token valeria pouco."
+      },
+      {
+        "text": "Desligar o OS Login na máquina",
+        "why": "O OS Login trata do SSH, não do servidor de metadados."
+      },
+      {
+        "text": "Usar startup-script-url em vez da chave startup-script",
+        "why": "Onde o script mora não protege o token."
+      }
+    ]
+  },
+  "ex-5wah1b3x": {
+    "prompt": "Na captura da seção 03, que status de saída o curl deu para o endereço de metadados neste laptop?",
+    "hint": "O curl numera as falhas.",
+    "unit": ""
+  },
+  "ex-mjy9g66v": {
+    "prompt": "As bibliotecas do Google acham credenciais pelo Application ___ Credentials, a mesma busca num laptop e numa máquina.",
+    "hint": "As credenciais usadas quando nada mais é dito.",
+    "blanks": [
+      {
+        "accept": [
+          "Default"
+        ]
+      }
+    ]
+  }
+}

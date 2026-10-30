@@ -1,0 +1,639 @@
+[
+ {
+  "id": "ex-hafjc569",
+  "version": 1,
+  "section": "the-cli",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`az group create` with no parameters answers `the following arguments are required`. Who refused?",
+  "hint": "Did anything leave the computer?",
+  "choices": [
+   {
+    "text": "Resource Manager, which needs a name for every group",
+    "correct": false,
+    "why": "No request was sent; Resource Manager never saw it."
+   },
+   {
+    "text": "The CLI itself, while reading the line",
+    "correct": true,
+    "why": "Right. Parsing happens before any sign-in or request."
+   },
+   {
+    "text": "Microsoft Entra ID, for want of a sign-in",
+    "correct": false,
+    "why": "A missing sign-in gives `Please run 'az login'`, a different stop."
+   },
+   {
+    "text": "Azure Policy, which requires names to follow a convention",
+    "correct": false,
+    "why": "Policy is judged in Resource Manager, which this command never reached."
+   }
+  ]
+ },
+ {
+  "id": "ex-39vsj012",
+  "version": 1,
+  "section": "the-cli",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The help for `--location` ends with `Config: brazilsouth.`. What does that tell you?",
+  "hint": "Which setting does `env.sh` export?",
+  "choices": [
+   {
+    "text": "That `brazilsouth` is the only region the lab supports",
+    "correct": false,
+    "why": "Any region can be named on the line; this is only the fallback."
+   },
+   {
+    "text": "That the subscription was created in São Paulo",
+    "correct": false,
+    "why": "A subscription has no location, and the lab has none at all."
+   },
+   {
+    "text": "That a default location is set and will fill the parameter",
+    "correct": true,
+    "why": "Right. It came from `AZURE_DEFAULTS_LOCATION`."
+   },
+   {
+    "text": "That `--location` is required for this command",
+    "correct": false,
+    "why": "Only `--name` was marked `[Required]`."
+   }
+  ]
+ },
+ {
+  "id": "ex-jdtbkbc8",
+  "version": 1,
+  "section": "the-cli",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`az config get defaults` lists `group` with the source `/home/ana/azure/.azure/config`. Where did that value come from?",
+  "hint": "Which command writes that file?",
+  "choices": [
+   {
+    "text": "From an `az config set` someone ran",
+    "correct": true,
+    "why": "Right. It writes the configuration file inside `AZURE_CONFIG_DIR`."
+   },
+   {
+    "text": "From `env.sh`, like the location",
+    "correct": false,
+    "why": "`env.sh` exports only the location; its source reads `AZURE_DEFAULTS_LOCATION`."
+   },
+   {
+    "text": "From the last resource group the CLI created",
+    "correct": false,
+    "why": "The CLI does not remember what it created as a default."
+   },
+   {
+    "text": "From the subscription's own settings in Azure",
+    "correct": false,
+    "why": "A path on disk is a local file, not something read from Azure."
+   }
+  ]
+ },
+ {
+  "id": "ex-wzz62dk9",
+  "version": 1,
+  "section": "the-cli",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A deploy script runs `az group delete --yes` and relies on the default group. Last week a colleague ran `az config set defaults.group=rg-shop-prod` in the same CLI. What is the lesson's advice?",
+  "hint": "Which of the three places wins?",
+  "choices": [
+   {
+    "text": "Export `AZURE_DEFAULTS_GROUP` in the script, which outranks the file",
+    "correct": false,
+    "why": "It would win, but it is still a default the next person may change; naming the group is safer."
+   },
+   {
+    "text": "Run `az config unset` at the start of every script",
+    "correct": false,
+    "why": "It removes one default and leaves the script still depending on whatever else is set."
+   },
+   {
+    "text": "Nothing: `--yes` asks for confirmation before deleting",
+    "correct": false,
+    "why": "`--yes` does the opposite: it skips the confirmation."
+   },
+   {
+    "text": "Name the group on the command line every time",
+    "correct": true,
+    "why": "Right. A parameter on the line always wins, and does not depend on anybody's defaults."
+   }
+  ]
+ },
+ {
+  "id": "ex-ve1zrjb0",
+  "version": 1,
+  "section": "the-cli",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Order the three places a setting can come from, from the one that loses to the one that wins.",
+  "hint": "The one closest to the command wins.",
+  "items": [
+   "the configuration file in `AZURE_CONFIG_DIR`",
+   "an environment variable `AZURE_<SECTION>_<NAME>`",
+   "a parameter on the command line"
+  ],
+  "trap": "The environment variable beats the file, which is why `env.sh` could set the location without touching it."
+ },
+ {
+  "id": "ex-jwzve2wg",
+  "version": 1,
+  "section": "the-cli",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Where does an extension installed with `az extension add` land in this lab?",
+  "hint": "What did `env.sh` set aside for the CLI?",
+  "choices": [
+   {
+    "text": "In `~/azure/venv`, beside the CLI's own packages",
+    "correct": false,
+    "why": "Extensions are kept apart from the installation, so an upgrade does not lose them."
+   },
+   {
+    "text": "Nowhere: extensions run in Azure, not locally",
+    "correct": false,
+    "why": "An extension is a Python package the CLI loads on your computer."
+   },
+   {
+    "text": "In `/usr/lib`, shared by every user",
+    "correct": false,
+    "why": "Nothing in this lab is installed system-wide except Ubuntu's packages."
+   },
+   {
+    "text": "Inside `AZURE_CONFIG_DIR`, in `~/azure/.azure`",
+    "correct": true,
+    "why": "Right. So the lab's extensions are separate from any other CLI on the machine."
+   }
+  ]
+ },
+ {
+  "id": "ex-jt467tn1",
+  "version": 1,
+  "section": "the-cli",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To see every step the CLI takes, including each request and response, add `--___` to the command.",
+  "hint": "The same word as a programmer's tool for finding bugs.",
+  "blanks": [
+   {
+    "accept": [
+     "debug"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-ftw99aq5",
+  "version": 1,
+  "section": "output-and-query",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which `--output` format is meant for shell scripts?",
+  "hint": "No keys, no quotes.",
+  "choices": [
+   {
+    "text": "`table`",
+    "correct": false,
+    "why": "Its column widths depend on the data, which breaks parsing."
+   },
+   {
+    "text": "`jsonc`",
+    "correct": false,
+    "why": "Its colour codes break a pipe."
+   },
+   {
+    "text": "`tsv`",
+    "correct": true,
+    "why": "Right. Values separated by tabs, with nothing around them."
+   },
+   {
+    "text": "`yaml`",
+    "correct": false,
+    "why": "Readable, but a script would have to parse YAML."
+   }
+  ]
+ },
+ {
+  "id": "ex-e0scfmfv",
+  "version": 1,
+  "section": "output-and-query",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did `--query \"[?name=='AzureCloud'].endpoints.resourceManager | [0]\" --output tsv` print a bare address with no brackets?",
+  "hint": "What does `| [0]` do to a list?",
+  "choices": [
+   {
+    "text": "Because `| [0]` turned the one-entry list into its value",
+    "correct": true,
+    "why": "Right. The filter returned a list, and `[0]` took its first entry."
+   },
+   {
+    "text": "Because `tsv` removes brackets from any list",
+    "correct": false,
+    "why": "`tsv` prints a list as several lines, not as a single value."
+   },
+   {
+    "text": "Because only one cloud is active",
+    "correct": false,
+    "why": "The filter was on the name, not on `isActive`."
+   },
+   {
+    "text": "Because `endpoints` is never a list in JMESPath",
+    "correct": false,
+    "why": "It is an object; the list came from the filter in front of it."
+   }
+  ]
+ },
+ {
+  "id": "ex-49qsq5dk",
+  "version": 1,
+  "section": "output-and-query",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each JMESPath piece to what it does.",
+  "hint": "One of them builds something new.",
+  "pairs": [
+   {
+    "left": "`[?name=='AzureCloud']`",
+    "right": "keep the entries where the test is true"
+   },
+   {
+    "left": "`{name: name, active: isActive}`",
+    "right": "build a new object from chosen fields"
+   },
+   {
+    "left": "`length([])`",
+    "right": "count the entries"
+   },
+   {
+    "left": "`&name` inside `sort_by`",
+    "right": "refer to a field rather than its value"
+   }
+  ],
+  "right_distractors": [
+   "send the query to Azure"
+  ]
+ },
+ {
+  "id": "ex-hpkcg7eg",
+  "version": 1,
+  "section": "output-and-query",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A query written as `--query '[?name==\"AzureCloud\"].name'` fails with an error about a field. What is the lesson's rule?",
+  "hint": "In JMESPath, which quotes make a string?",
+  "choices": [
+   {
+    "text": "JMESPath does not support filters on names",
+    "correct": false,
+    "why": "It does: the lesson's own filter compares `name`."
+   },
+   {
+    "text": "Double quotes outside, single quotes for strings inside",
+    "correct": true,
+    "why": "Right. In JMESPath double quotes name a field, so `\"AzureCloud\"` was read as one."
+   },
+   {
+    "text": "The query must end in `| [0]`",
+    "correct": false,
+    "why": "`| [0]` is for taking one value, not for making a filter work."
+   },
+   {
+    "text": "Queries only work with `--output tsv`",
+    "correct": false,
+    "why": "`--query` works with every output format."
+   }
+  ]
+ },
+ {
+  "id": "ex-vyvp4mc8",
+  "version": 1,
+  "section": "output-and-query",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A script runs `az account list --query \"[0].id\" -o tsv` and stores the result as the subscription to deploy to. In a terminal nobody signed in to, what happens?",
+  "hint": "What did `az account list` answer in the lab, and with which exit code?",
+  "choices": [
+   {
+    "text": "The command fails, and a script with `set -e` stops at once",
+    "correct": false,
+    "why": "It did not fail: it exited with 0."
+   },
+   {
+    "text": "The CLI opens a browser to sign in first",
+    "correct": false,
+    "why": "Only `az login` does that; this command just warns."
+   },
+   {
+    "text": "It gets an empty value and carries on, with exit code 0",
+    "correct": true,
+    "why": "Right. An empty list is a correct answer, so the script must check what came back."
+   },
+   {
+    "text": "It picks the subscription named in `env.sh`",
+    "correct": false,
+    "why": "`env.sh` names no subscription."
+   }
+  ]
+ },
+ {
+  "id": "ex-7nskw6pp",
+  "version": 1,
+  "section": "output-and-query",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "You have a compiled `main.json` and want its resource types. Which tool does the lesson say to use?",
+  "hint": "Is a file the answer of an `az` command?",
+  "choices": [
+   {
+    "text": "`az --query`, which accepts a file name",
+    "correct": false,
+    "why": "`--query` works only on the answer of the command it is given to."
+   },
+   {
+    "text": "`jq`, since the template is a file and not a CLI answer",
+    "correct": true,
+    "why": "Right. `--query` for an `az` answer, `jq` for everything else."
+   },
+   {
+    "text": "`grep` on the `table` output",
+    "correct": false,
+    "why": "There is no `table` of a file, and parsing a table is the thing to avoid."
+   },
+   {
+    "text": "`az bicep build --query`",
+    "correct": false,
+    "why": "Building prints a template; it is not a JSON answer the CLI filters."
+   }
+  ]
+ },
+ {
+  "id": "ex-rvbd86ys",
+  "version": 1,
+  "section": "output-and-query",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The query language behind `--query` is called ___.",
+  "hint": "Its name starts with JMES.",
+  "blanks": [
+   {
+    "accept": [
+     "JMESPath"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-6y2jh1d8",
+  "version": 1,
+  "section": "powershell-and-cloud-shell",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the Azure PowerShell equivalent of `az group list`?",
+  "hint": "Verb-noun, with `Az` in the noun.",
+  "choices": [
+   {
+    "text": "`List-AzGroup`",
+    "correct": false,
+    "why": "`List` is not one of PowerShell's verbs; `Get` is."
+   },
+   {
+    "text": "`az-group-list`",
+    "correct": false,
+    "why": "That is the CLI's command with dashes, not a cmdlet."
+   },
+   {
+    "text": "`Show-AzureGroups`",
+    "correct": false,
+    "why": "The module's nouns start with `Az` and are singular."
+   },
+   {
+    "text": "`Get-AzResourceGroup`",
+    "correct": true,
+    "why": "Right. `Get` reads, and the noun names the type."
+   }
+  ]
+ },
+ {
+  "id": "ex-a14khm2x",
+  "version": 1,
+  "section": "powershell-and-cloud-shell",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is the difference between the Azure CLI and Azure PowerShell that the lesson says matters?",
+  "hint": "Look at what comes back.",
+  "choices": [
+   {
+    "text": "PowerShell returns objects, the CLI prints text",
+    "correct": true,
+    "why": "Right. Choose by what your team already writes."
+   },
+   {
+    "text": "PowerShell reaches services the CLI cannot",
+    "correct": false,
+    "why": "Both reach the same API, so neither can do what the other cannot."
+   },
+   {
+    "text": "The CLI is faster because it skips Resource Manager",
+    "correct": false,
+    "why": "Neither skips it; both send their requests through Resource Manager."
+   },
+   {
+    "text": "PowerShell runs only on Windows",
+    "correct": false,
+    "why": "PowerShell 7 runs on Linux and macOS too."
+   }
+  ]
+ },
+ {
+  "id": "ex-43gc6yr1",
+  "version": 1,
+  "section": "powershell-and-cloud-shell",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these are true of Cloud Shell, by Microsoft's documentation? Choose all that apply.",
+  "hint": "Think of the machine, the storage and the account.",
+  "choices": [
+   {
+    "text": "A session ends after 20 minutes without interactive activity",
+    "correct": true,
+    "why": "Right. The machine is temporary."
+   },
+   {
+    "text": "It keeps `$HOME` on a 5 GB file share in your own storage account",
+    "correct": true,
+    "why": "Right, and that storage is billed at normal rates."
+   },
+   {
+    "text": "It works without an Azure account",
+    "correct": false,
+    "why": "It opens from the portal, signed in as you."
+   },
+   {
+    "text": "It is already signed in with the identity you used for the portal",
+    "correct": true,
+    "why": "Right. That is what makes it handy for five minutes."
+   },
+   {
+    "text": "Software installed outside `$HOME` survives to the next session",
+    "correct": false,
+    "why": "The machine is replaced; only `$HOME` persists, and only with storage."
+   }
+  ]
+ },
+ {
+  "id": "ex-4h0edq4w",
+  "version": 1,
+  "section": "powershell-and-cloud-shell",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Ana keeps production and staging apart by signing in to each in a separate terminal, each with its own `AZURE_CONFIG_DIR`. What does that arrangement protect against?",
+  "hint": "What does a CLI that never signed in to staging know about it?",
+  "choices": [
+   {
+    "text": "Against a token being stolen from the disk",
+    "correct": false,
+    "why": "Each directory still holds a token; the arrangement is about mistakes, not theft."
+   },
+   {
+    "text": "Against pointing a command at the wrong subscription by mistake",
+    "correct": true,
+    "why": "Right. The production terminal cannot reach staging at all."
+   },
+   {
+    "text": "Against throttling, since each directory has its own limit",
+    "correct": false,
+    "why": "Limits are counted per subscription and region in Azure, not per directory."
+   },
+   {
+    "text": "Against needing multifactor authentication twice",
+    "correct": false,
+    "why": "Two sign-ins mean two second factors, not fewer."
+   }
+  ]
+ },
+ {
+  "id": "ex-8y0rr5nv",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`az network vnet create` is typed without `--location`, in a terminal that read `env.sh`. Where would the network go?",
+  "hint": "Which default does `env.sh` export?",
+  "choices": [
+   {
+    "text": "To `southcentralus`, São Paulo's pair",
+    "correct": false,
+    "why": "The pair has nothing to do with defaults."
+   },
+   {
+    "text": "Nowhere: the command is refused without a location",
+    "correct": false,
+    "why": "A default fills it, as the help said with `Config:`."
+   },
+   {
+    "text": "To the region of the subscription",
+    "correct": false,
+    "why": "A subscription has no region of its own."
+   },
+   {
+    "text": "To `brazilsouth`",
+    "correct": true,
+    "why": "Right. `AZURE_DEFAULTS_LOCATION` fills the missing parameter."
+   }
+  ]
+ },
+ {
+  "id": "ex-5a5h85ea",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A script parses `az vm list --output table` with `awk '{print $2}'` and works for months, then breaks. What is the likeliest cause the lesson warns about?",
+  "hint": "What decides a table's layout?",
+  "choices": [
+   {
+    "text": "A new value changed the columns",
+    "correct": true,
+    "why": "Right. Widths and columns follow the data, so ask for fields with `--query` and use `tsv`."
+   },
+   {
+    "text": "Microsoft removed `--output table`",
+    "correct": false,
+    "why": "It still exists; the layout is what changed."
+   },
+   {
+    "text": "`awk` cannot read output from Python programs",
+    "correct": false,
+    "why": "`awk` reads any text; the problem is which text arrives."
+   },
+   {
+    "text": "The VM list became too long for a pipe",
+    "correct": false,
+    "why": "A pipe has no length limit that matters here."
+   }
+  ]
+ },
+ {
+  "id": "ex-pzecc486",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what happens to an `az` command's answer in order.",
+  "hint": "The format comes last.",
+  "items": [
+   "the CLI receives the JSON answer",
+   "`--query` keeps the part asked for",
+   "`--output` prints that part in the chosen format"
+  ],
+  "trap": "Both steps after the first run on your computer, after the answer arrived."
+ },
+ {
+  "id": "ex-s76fst5j",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "To make a command print nothing when only its exit code matters, use `--output ___`.",
+  "hint": "The word for nothing.",
+  "blanks": [
+   {
+    "accept": [
+     "none"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]
