@@ -1,0 +1,508 @@
+[
+  {
+    "id": "ex-10qfzmqx",
+    "version": 1,
+    "section": "the-export",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the Cloud Billing export write the bill?",
+    "hint": "The customer owns it.",
+    "choices": [
+      {
+        "text": "Into a CSV file e-mailed each month",
+        "correct": false,
+        "why": "The export is a table that grows, not a file."
+      },
+      {
+        "text": "Into a BigQuery dataset",
+        "correct": true,
+        "why": "Right. Every line of the bill becomes rows there, and any question about cost becomes a query."
+      },
+      {
+        "text": "Into the project's audit logs",
+        "correct": false,
+        "why": "Audit logs record who did what, not what it cost."
+      },
+      {
+        "text": "Into a Pub/Sub topic of the billing account",
+        "correct": false,
+        "why": "That is where a budget can publish, lesson 12."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz04642h",
+    "version": 1,
+    "section": "the-export",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of setting up the billing export can be written in Terraform?",
+    "hint": "Two things, by two people.",
+    "choices": [
+      {
+        "text": "The export itself, with its own resource",
+        "correct": false,
+        "why": "There is no Terraform resource or gcloud command for it."
+      },
+      {
+        "text": "Both, in one resource",
+        "correct": false,
+        "why": "The export is switched on in the console only."
+      },
+      {
+        "text": "Neither; both are console-only",
+        "correct": false,
+        "why": "The dataset is an ordinary resource."
+      },
+      {
+        "text": "The dataset it writes into",
+        "correct": true,
+        "why": "Right. Switching the export on is done in the console, by somebody with a billing role."
+      }
+    ]
+  },
+  {
+    "id": "ex-0svz7kdf",
+    "version": 1,
+    "section": "the-export",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the plan refuse `dataset_id = \"billing-export\"`?",
+    "hint": "Read the error.",
+    "choices": [
+      {
+        "text": "A dataset id takes no hyphens",
+        "correct": true,
+        "why": "Right. Letters, numbers and underscores, and the provider checked before asking anyone."
+      },
+      {
+        "text": "The name was already taken in BigQuery",
+        "correct": false,
+        "why": "The plan asked BigQuery nothing."
+      },
+      {
+        "text": "The project planner-logs does not exist",
+        "correct": false,
+        "why": "The error names the dataset id, not the project."
+      },
+      {
+        "text": "The location is not supported",
+        "correct": false,
+        "why": "The corrected file kept the same location and planned."
+      }
+    ]
+  },
+  {
+    "id": "ex-qf7f2qzy",
+    "version": 1,
+    "section": "the-export",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the finance group get `roles/bigquery.dataViewer` on the dataset rather than on `planner-logs`?",
+    "hint": "What else is in the project?",
+    "choices": [
+      {
+        "text": "Dataset roles are cheaper than project roles",
+        "correct": false,
+        "why": "Roles cost nothing."
+      },
+      {
+        "text": "BigQuery roles cannot be granted on a project",
+        "correct": false,
+        "why": "They can; it would just reach too far."
+      },
+      {
+        "text": "On the project it would open everything kept there",
+        "correct": true,
+        "why": "Right. A grant goes on the smallest thing that does the job."
+      },
+      {
+        "text": "The export needs the role on the dataset to write",
+        "correct": false,
+        "why": "This grant is for people reading, not for the export."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jcvjn9f",
+    "version": 1,
+    "section": "the-export",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner switches the export on in November 2026 and is asked in December for the cost of each team in August. What can the queries of this lesson answer?",
+    "hint": "When does the export start?",
+    "choices": [
+      {
+        "text": "All of it, since the export copies the account's history",
+        "correct": false,
+        "why": "The lesson says not to count on history before it was switched on."
+      },
+      {
+        "text": "August's total, though not by team",
+        "correct": false,
+        "why": "The rows for August are not in the dataset either way."
+      },
+      {
+        "text": "Nothing: those rows were never written",
+        "correct": true,
+        "why": "Right. The cheapest moment to switch it on is the day the billing account is opened."
+      },
+      {
+        "text": "All of it, once the dataset's location is changed",
+        "correct": false,
+        "why": "A location is set once, and has nothing to do with history."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwhdt56g",
+    "version": 1,
+    "section": "the-export",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the name of the export's table, each hyphen of the billing account's id becomes ___.",
+    "hint": "Look at gcp_billing_export_v1_012345_6789AB_CDEF01.",
+    "blanks": [
+      {
+        "accept": [
+          "an underscore",
+          "underscore",
+          "_"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cr5pb9kq",
+    "version": 1,
+    "section": "a-month-of-rows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do the numbers in the lab's month of billing rows come from?",
+    "hint": "The lab has no bill.",
+    "choices": [
+      {
+        "text": "make_export.py invents them",
+        "correct": true,
+        "why": "Right. What is real is the shape of the rows and what the queries do with them."
+      },
+      {
+        "text": "DuckDB downloads them from Google",
+        "correct": false,
+        "why": "Nothing in the lesson reaches Google."
+      },
+      {
+        "text": "The emulator records them",
+        "correct": false,
+        "why": "The emulator is Pub/Sub only, and it bills nothing."
+      },
+      {
+        "text": "A public sample of the planner's real bill",
+        "correct": false,
+        "why": "The planner is the course's invented company."
+      }
+    ]
+  },
+  {
+    "id": "ex-6esw2ns0",
+    "version": 1,
+    "section": "a-month-of-rows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is there no `labels.team` column to group by?",
+    "hint": "Look at the type of `labels`.",
+    "choices": [
+      {
+        "text": "The export drops labels",
+        "correct": false,
+        "why": "They are in the row, as a list."
+      },
+      {
+        "text": "Labels are a struct read with a dot",
+        "correct": false,
+        "why": "`project` and `sku` are structs; `labels` is an array of them."
+      },
+      {
+        "text": "DuckDB cannot read nested columns",
+        "correct": false,
+        "why": "It read `service.description` with a dot."
+      },
+      {
+        "text": "Labels are a list per row",
+        "correct": true,
+        "why": "Right. A row's list holds a `team` entry or none, and it is looked for inside the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sbm1n5t",
+    "version": 1,
+    "section": "a-month-of-rows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The export's `cost` column is `FLOAT64`. What does the lesson do about it?",
+    "hint": "When is the total rounded?",
+    "choices": [
+      {
+        "text": "Converts every row to integer cents first",
+        "correct": false,
+        "why": "That is rounding row by row, which makes the error larger."
+      },
+      {
+        "text": "Rounds totals at the end, never row by row",
+        "correct": true,
+        "why": "Right. Rounding each row first would add to the fraction-of-a-cent error, not remove it."
+      },
+      {
+        "text": "Nothing; floats are exact for money",
+        "correct": false,
+        "why": "A sum of floating-point amounts can be a fraction of a cent off."
+      },
+      {
+        "text": "Reads the invoice instead of the export",
+        "correct": false,
+        "why": "The lesson queries the export."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7c1gjdj",
+    "version": 1,
+    "section": "a-month-of-rows",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows did `make_export.py` write for October?",
+    "hint": "Seven lines a day.",
+    "value": 217,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-85xsx480",
+    "version": 1,
+    "section": "a-month-of-rows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`month.sql` reported 469.05 dollars. Why is that not what the invoice charges?",
+    "hint": "What column did it sum?",
+    "choices": [
+      {
+        "text": "It sums cost and leaves credits out",
+        "correct": true,
+        "why": "Right. Credits are a list of their own on each row, and `net.sql` subtracts them."
+      },
+      {
+        "text": "It counts October 31 twice",
+        "correct": false,
+        "why": "There are 31 days and seven lines each: 217 rows."
+      },
+      {
+        "text": "It is in reais, not dollars",
+        "correct": false,
+        "why": "Every row says `USD`."
+      },
+      {
+        "text": "It includes tax that the invoice leaves out",
+        "correct": false,
+        "why": "The rows carry no tax."
+      }
+    ]
+  },
+  {
+    "id": "ex-avvz8cv2",
+    "version": 1,
+    "section": "who-spent-this",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `net.sql`'s answer, how many dollars of credits did Compute Engine receive? Give the amount as a positive number.",
+    "hint": "The credits column, without its sign.",
+    "value": 66.53,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-qh4xe6db",
+    "version": 1,
+    "section": "who-spent-this",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are a row's credits summed inside the row before being summed across rows?",
+    "hint": "Each row holds a list.",
+    "choices": [
+      {
+        "text": "Credits are already totals for the month",
+        "correct": false,
+        "why": "They are per row, like costs."
+      },
+      {
+        "text": "BigQuery forbids summing a column twice",
+        "correct": false,
+        "why": "No such rule; the list is the reason."
+      },
+      {
+        "text": "Each row has its own list of credits",
+        "correct": true,
+        "why": "Right. A small query over the row's list gives one number per row, and those numbers add up."
+      },
+      {
+        "text": "It makes the query cheaper",
+        "correct": false,
+        "why": "It reads the same bytes either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-7dbz2qvc",
+    "version": 1,
+    "section": "who-spent-this",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`forgotten.sql` found sixteen dollars of N2 cores in `planner-dev` with no label. Which machine was it?",
+    "hint": "The standard export has no resource names.",
+    "choices": [
+      {
+        "text": "The one named in the SKU",
+        "correct": false,
+        "why": "A SKU names what Google sells, not a customer's machine."
+      },
+      {
+        "text": "The query cannot say",
+        "correct": true,
+        "why": "Right. The detailed export or a look at planner-dev's instances would."
+      },
+      {
+        "text": "The data team's Pub/Sub machine",
+        "correct": false,
+        "why": "Pub/Sub is its own service, and that line carries `team=data`."
+      },
+      {
+        "text": "A machine in planner-prod billed to dev",
+        "correct": false,
+        "why": "The row's project is where the cost belongs."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpe5cqx2",
+    "version": 1,
+    "section": "who-spent-this",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report run against the real export, with no `WHERE` clause, shows a total several times larger than this month's invoice. What is the likeliest cause?",
+    "hint": "The export keeps every month.",
+    "choices": [
+      {
+        "text": "It left the credits out",
+        "correct": false,
+        "why": "Credits are a share of one month, not several times it."
+      },
+      {
+        "text": "BigQuery's floats inflated it",
+        "correct": false,
+        "why": "Floating-point errors are fractions of a cent."
+      },
+      {
+        "text": "The detailed export doubled each row",
+        "correct": false,
+        "why": "The two exports are separate tables."
+      },
+      {
+        "text": "It summed every month in the table",
+        "correct": true,
+        "why": "Right. Filter on `invoice.month`; it also keeps the bytes read, and so the query's price, down."
+      }
+    ]
+  },
+  {
+    "id": "ex-8q1m2f3f",
+    "version": 1,
+    "section": "who-spent-this",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each DuckDB spelling to its BigQuery one.",
+    "hint": "Three differences.",
+    "pairs": [
+      {
+        "left": "coalesce(x, 0)",
+        "right": "IFNULL(x, 0)"
+      },
+      {
+        "left": "unnest(credits) AS t(c)",
+        "right": "UNNEST(credits) AS c"
+      },
+      {
+        "left": "len(labels)",
+        "right": "ARRAY_LENGTH(labels)"
+      }
+    ],
+    "right_distractors": [
+      "labels.team"
+    ]
+  },
+  {
+    "id": "ex-xr0qwg1s",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps from nothing to a query about last month's cost in order.",
+    "hint": "The dataset comes before the export.",
+    "items": [
+      "create a dataset in planner-logs",
+      "switch the export on in the console",
+      "wait while a month of rows arrives",
+      "query with a WHERE on invoice.month"
+    ],
+    "trap": "Switching the export on first is the slip: it writes into a dataset, which has to exist for it to name."
+  },
+  {
+    "id": "ex-7ym3e72x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner's finance lead asks for the team totals of last month, net of credits, every month. Which query does that need that this lesson did not write?",
+    "hint": "Combine two of them.",
+    "choices": [
+      {
+        "text": "forgotten.sql with every label instead of none",
+        "correct": false,
+        "why": "That would list labelled rows, still gross."
+      },
+      {
+        "text": "month.sql run once per team",
+        "correct": false,
+        "why": "month.sql has no team in it and leaves out credits."
+      },
+      {
+        "text": "None; the console's cost table is enough",
+        "correct": false,
+        "why": "The lesson's point is that the export answers what the table does not."
+      },
+      {
+        "text": "teams.sql with net.sql's credits and a month filter",
+        "correct": true,
+        "why": "Right. Group by the team label, add the per-row credits, and filter on `invoice.month`."
+      }
+    ]
+  }
+]
