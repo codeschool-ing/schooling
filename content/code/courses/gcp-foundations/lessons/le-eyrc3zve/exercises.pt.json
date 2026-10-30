@@ -1,0 +1,357 @@
+{
+  "ex-2mc379qt": {
+    "prompt": "Onde uma regra de firewall da VPC é aplicada?",
+    "hint": "Não há caixa para dimensionar.",
+    "choices": [
+      {
+        "text": "Num appliance na borda da rede",
+        "why": "Não há appliance; a regra faz parte da rede."
+      },
+      {
+        "text": "Na interface de cada máquina",
+        "why": "Isso. Duas máquinas numa sub-rede são filtradas uma da outra como da internet."
+      },
+      {
+        "text": "No endereço de gateway da sub-rede",
+        "why": "O tráfego dentro de uma sub-rede passaria sem filtro, e não passa."
+      },
+      {
+        "text": "No nó raiz da organização",
+        "why": "Políticas de firewall podem ser presas ali; a aplicação é na máquina."
+      }
+    ]
+  },
+  "ex-avt5cack": {
+    "prompt": "Duas regras casam com um pacote: um allow com prioridade 500 e um deny com prioridade 1000. O que acontece?",
+    "hint": "Menor é lido primeiro.",
+    "choices": [
+      {
+        "text": "Ele é negado, já que deny sempre ganha",
+        "why": "Deny só ganha na mesma prioridade."
+      },
+      {
+        "text": "Ele é negado, já que 1000 é maior",
+        "why": "O número menor é lido primeiro."
+      },
+      {
+        "text": "O Google recusa criar a segunda regra",
+        "why": "Regras em prioridades diferentes convivem."
+      },
+      {
+        "text": "Ele é permitido, pela regra em 500",
+        "why": "Isso. 500 é lido antes de 1000, e a primeira que casa decide."
+      }
+    ]
+  },
+  "ex-018zvdcg": {
+    "prompt": "Um allow e um deny para o mesmo pacote estão os dois em 1000. Qual decide?",
+    "hint": "Um empate tem um sentido.",
+    "choices": [
+      {
+        "text": "O deny, no empate",
+        "why": "Isso. Na mesma prioridade, deny ganha."
+      },
+      {
+        "text": "O allow, por ser o mais específico",
+        "why": "Especificidade não faz parte da ordem."
+      },
+      {
+        "text": "O que foi criado primeiro",
+        "why": "A ordem de criação também não faz parte."
+      },
+      {
+        "text": "Nenhum; a regra implícita decide",
+        "why": "A regra implícita só é lida quando nada acima casa."
+      }
+    ]
+  },
+  "ex-nze36c8d": {
+    "prompt": "Uma rede em modo personalizado não tem regra nenhuma. Uma máquina dela alcança outra na porta 22?",
+    "hint": "O que fica em 65535?",
+    "choices": [
+      {
+        "text": "Sim, tráfego dentro de uma rede é livre",
+        "why": "Essa era a regra extra da rede padrão, não uma propriedade das redes."
+      },
+      {
+        "text": "Sim, a regra implícita permite SSH",
+        "why": "A regra implícita de entrada nega."
+      },
+      {
+        "text": "Não: a regra implícita nega toda entrada",
+        "why": "Isso. Até o tráfego entre as próprias máquinas precisa de uma regra para entrar."
+      },
+      {
+        "text": "Só da mesma zona",
+        "why": "Zonas não mudam regras de firewall."
+      }
+    ]
+  },
+  "ex-adgzkd7p": {
+    "prompt": "Por que o planner não usa a rede padrão?",
+    "hint": "Leia as regras dela em 65534.",
+    "choices": [
+      {
+        "text": "Ela não tem regras de firewall",
+        "why": "Ela tem quatro."
+      },
+      {
+        "text": "Não se pode pôr regras próprias nela",
+        "why": "Regras podem ser postas em qualquer rede."
+      },
+      {
+        "text": "Ela permite SSH, RDP e ping de qualquer lugar",
+        "why": "Isso. Essas três regras abrem toda máquina dela para a internet."
+      },
+      {
+        "text": "Ela nega a saída",
+        "why": "A regra implícita de saída permite."
+      }
+    ]
+  },
+  "ex-8gqhwmvd": {
+    "prompt": "Um administrador de projeto escreve um allow com prioridade 0 para SSH de qualquer lugar em produção. A equipe de segurança do planner já tinha decidido nada de SSH da internet em produção. Onde essa decisão precisa morar para valer?",
+    "hint": "Acima da rede.",
+    "choices": [
+      {
+        "text": "Uma política de firewall na pasta",
+        "why": "Isso. Políticas na árvore são avaliadas antes das regras da própria rede."
+      },
+      {
+        "text": "Um deny com prioridade 0 na mesma rede",
+        "why": "O administrador pode apagá-lo; a rede é dele."
+      },
+      {
+        "text": "A regra implícita de deny",
+        "why": "Ela fica em 65535, abaixo de tudo."
+      },
+      {
+        "text": "Um orçamento na produção",
+        "why": "Orçamentos veem dinheiro, não pacotes."
+      }
+    ]
+  },
+  "ex-hwvq59pe": {
+    "prompt": "Por que uma tag de rede amplia uma regra mais facilmente que uma conta de serviço?",
+    "hint": "Quem pode pôr cada uma numa máquina?",
+    "choices": [
+      {
+        "text": "Tags valem para toda rede do projeto",
+        "why": "A tag de uma regra vale na rede dela."
+      },
+      {
+        "text": "Tags são herdadas da pasta",
+        "why": "Tags de rede ficam nas máquinas, não na árvore."
+      },
+      {
+        "text": "Contas de serviço não podem ser alvos",
+        "why": "Podem, e o planner as usa."
+      },
+      {
+        "text": "Quem edita a máquina põe tags",
+        "why": "Isso. Prender uma conta exige um papel na própria conta."
+      }
+    ]
+  },
+  "ex-ttsaa36v": {
+    "prompt": "Por que `priority = 70000` foi recusado?",
+    "hint": "A faixa de uma prioridade.",
+    "choices": [
+      {
+        "text": "A regra implícita já a usa",
+        "why": "As regras implícitas estão em 65535."
+      },
+      {
+        "text": "Prioridades param em 65535",
+        "why": "Isso. O provider confere a faixa antes de perguntar ao Google."
+      },
+      {
+        "text": "A rede tem uma regra nessa prioridade",
+        "why": "O plano não perguntou nada sobre a rede."
+      },
+      {
+        "text": "Prioridades têm de ser múltiplos de 100",
+        "why": "Qualquer número de 0 a 65535 é aceito."
+      }
+    ]
+  },
+  "ex-q9dytwt1": {
+    "prompt": "O plano informou que `source_tags` conflita com `target_service_accounts`. Qual é o conserto?",
+    "hint": "Um jeito de nomear por regra.",
+    "choices": [
+      {
+        "text": "Nomear as máquinas web pela conta delas",
+        "why": "Isso. Uma regra nomeia máquinas por tags ou por contas, nunca os dois."
+      },
+      {
+        "text": "Dividi-la em duas regras na mesma prioridade",
+        "why": "Cada uma ainda precisaria de origem e alvo nomeados do mesmo jeito."
+      },
+      {
+        "text": "Acrescentar `direction = \"INGRESS\"`",
+        "why": "A direção não era o conflito."
+      },
+      {
+        "text": "Trocar a tag pelos endereços das máquinas web",
+        "why": "Isso funciona, e quebra na primeira vez que uma máquina é trocada."
+      }
+    ]
+  },
+  "ex-wk6n1c8d": {
+    "prompt": "No plano corrigido, `direction` estava *known after apply*. Por quê?",
+    "hint": "O arquivo não dizia uma.",
+    "choices": [
+      {
+        "text": "O Terraform não planeja direções",
+        "why": "Ele planeja uma quando o arquivo a diz."
+      },
+      {
+        "text": "A regra é de entrada e de saída",
+        "why": "Uma regra tem uma direção."
+      },
+      {
+        "text": "O Google preenche INGRESS na criação",
+        "why": "Isso. A direção é definida pela API quando o arquivo a omite."
+      },
+      {
+        "text": "A rede ainda não existe",
+        "why": "A prioridade era conhecida, embora a rede não."
+      }
+    ]
+  },
+  "ex-3z48tf9f": {
+    "prompt": "Uma regra de firewall sem prioridade escrita ganha prioridade ___.",
+    "hint": "O plano mostrou.",
+    "blanks": [
+      {
+        "accept": [
+          "1000"
+        ]
+      }
+    ]
+  },
+  "ex-gh424ccs": {
+    "prompt": "Por que o `rules.json` do planner não tem regra dizendo *negar todo o resto*?",
+    "hint": "O que recusou o estranho?",
+    "choices": [
+      {
+        "text": "JSON não consegue expressar um deny",
+        "why": "A última regra é um deny."
+      },
+      {
+        "text": "O deny implícito de entrada já faz isso",
+        "why": "Isso. O que nenhuma regra deixa entrar é recusado em 65535."
+      },
+      {
+        "text": "O Google proíbe denies genéricos",
+        "why": "Eles são permitidos; aqui são redundantes."
+      },
+      {
+        "text": "As verificações de saúde falhariam",
+        "why": "Não com precedência menor que o allow delas."
+      }
+    ]
+  },
+  "ex-genbp2wz": {
+    "prompt": "SSH de 35.235.240.7 para uma máquina web com tag `frozen` casa com `allow-ssh-from-iap` em 1000 e `deny-ssh-to-frozen` em 900. O que decide?",
+    "hint": "Qual é lida primeiro?",
+    "choices": [
+      {
+        "text": "O allow, escrito antes no arquivo",
+        "why": "A ordem do arquivo não significa nada; a prioridade sim."
+      },
+      {
+        "text": "Os dois, então o pacote é meio permitido",
+        "why": "Uma regra decide."
+      },
+      {
+        "text": "A regra implícita, depois de um conflito",
+        "why": "Não há conflito; a ordem resolve."
+      },
+      {
+        "text": "O deny, lido primeiro em 900",
+        "why": "Isso. O allow em 1000 nunca é alcançado."
+      }
+    ]
+  },
+  "ex-wwzc9ma2": {
+    "prompt": "O job de relatórios foi recusado pelo banco. Que conserto a lição recomenda?",
+    "hint": "Nomeie, não amplie.",
+    "choices": [
+      {
+        "text": "Uma faixa de origem 10.0.0.0/8 no allow-web-to-db",
+        "why": "Isso abre o banco a toda máquina da rede."
+      },
+      {
+        "text": "Rodar o job de relatórios como web@",
+        "why": "Isso lhe dá toda permissão que web@ tem."
+      },
+      {
+        "text": "Apagar o deny implícito",
+        "why": "Ele não pode ser apagado."
+      },
+      {
+        "text": "Uma regra nomeando reports como origem",
+        "why": "Isso. Escrita e revisada como as outras."
+      }
+    ]
+  },
+  "ex-x664s72q": {
+    "prompt": "Em que prioridade o `walk.py` disse que a regra implícita decidiu?",
+    "hint": "A última possível."
+  },
+  "ex-29g0g00b": {
+    "prompt": "Ligue cada faixa de origem do rules.json ao que manda dela.",
+    "hint": "Faixas que o Google publica.",
+    "pairs": [
+      {
+        "left": "35.191.0.0/16",
+        "right": "verificações de saúde do balanceador"
+      },
+      {
+        "left": "35.235.240.0/20",
+        "right": "o SSH do Identity-Aware Proxy"
+      },
+      {
+        "left": "0.0.0.0/0",
+        "right": "qualquer lugar"
+      }
+    ],
+    "right_distractors": [
+      "o servidor de metadados"
+    ]
+  },
+  "ex-wmdg9nfv": {
+    "prompt": "Ponha em ordem os passos que o Google dá para um pacote.",
+    "hint": "Políticas vêm antes das regras.",
+    "items": [
+      "políticas de firewall na organização e nas pastas",
+      "as regras da rede, menor número primeiro",
+      "no empate, deny antes de allow",
+      "a regra implícita em 65535"
+    ],
+    "trap": "Ler as regras da rede primeiro é o deslize: uma política na árvore é avaliada antes delas, e é assim que ela vale contra a prioridade 0 de um projeto."
+  },
+  "ex-1mef177y": {
+    "prompt": "O planner quer que máquinas guardadas para uma investigação fiquem inalcançáveis por SSH, seja quem for que as edite. Que regra serve, e por que uma tag é aceitável aqui?",
+    "hint": "O que uma tag mal posta pode fazer?",
+    "choices": [
+      {
+        "text": "Um allow em 900 na tag frozen, do IAP",
+        "why": "Isso abre SSH, o oposto do objetivo."
+      },
+      {
+        "text": "Um deny em 900 na tag frozen; uma tag perdida fecha, nunca abre",
+        "why": "Isso. Uma tag que tira acesso deixa uma máquina mais difícil de alcançar, e nada mais."
+      },
+      {
+        "text": "Um deny em 70000, abaixo da regra implícita",
+        "why": "Prioridades param em 65535, e abaixo dos allows ela nunca seria lida."
+      },
+      {
+        "text": "Tirar as contas de serviço das máquinas",
+        "why": "allow-ssh-from-iap tem como alvo todas as máquinas; tirar uma conta não muda nada para ela."
+      }
+    ]
+  }
+}
