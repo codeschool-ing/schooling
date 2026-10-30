@@ -23,7 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -119,7 +119,7 @@ ana@vm:~/planner$ ./gradlew --console=plain testDebugUnitTest --tests "*RunsTest
 RunsTest > aComposableRunsMoreThanOnce STANDARD_OUT
     the screen says: 120 min this week
     the list says: [week total shown, week total shown, week total shown, week total shown]
-BUILD SUCCESSFUL in 26s
+BUILD SUCCESSFUL in 19s
 ```
 
 **One screen, four entries.** The total was right every time, 120 at the end, because describing the

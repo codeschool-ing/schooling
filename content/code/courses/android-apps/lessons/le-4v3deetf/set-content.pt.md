@@ -16,7 +16,7 @@ conteúdo da activity e entrega a ela a lambda para desenhar. Um teste consegue 
 package com.example.planner
 
 import android.view.ViewGroup
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -51,7 +51,7 @@ ana@vm:~/planner$ ./gradlew --console=plain recordRoborazziDebug --rerun --tests
 WindowTest > theContentIsOneComposeView STANDARD_OUT
     views in the content: 1
     the view: androidx.compose.ui.platform.ComposeView
-BUILD SUCCESSFUL in 20s
+BUILD SUCCESSFUL in 17s
 ```
 
 Uma view, da classe `ComposeView`. Tudo o que o planner vai mostrar, cada lista e cada botão das
