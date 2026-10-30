@@ -10,8 +10,9 @@
 #
 # STAGED: the emulators are started by `services` rather than by the
 # `docker compose up -d` the student types; the failures in when-it-fails.md
-# are produced by undoing one line of the lab each, in a subshell, as the
-# commands themselves show.
+# are produced by undoing one line of the lab each, as the commands
+# themselves show, except the taken port: a python3 http.server holds
+# 127.0.0.1:10000 while Azurite is stopped, standing in for the other program.
 #
 # Recorded 2026-10-30 on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
