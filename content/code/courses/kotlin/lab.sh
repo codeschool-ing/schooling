@@ -47,6 +47,12 @@
 #     it too); ~ana/.curlrc names the proxy for curl, and
 #     ~ana/.gradle/gradle.properties names it for Gradle. On the student's
 #     machine none of these exists and none is needed. No lesson prints them.
+#   - MAVEN CENTRAL. Through that proxy, repo.maven.apache.org answers
+#     "429 Too Many Requests" to a build that fetches many files at once.
+#     ~ana/.gradle/init.d/recording-mirror.init.gradle.kts points Gradle at
+#     Google's mirror of Maven Central, which serves the same files. A build
+#     on the student's machine fetches them from Maven Central itself, as
+#     its build script says.
 #   - PATH. Lesson 1 appends one line to ~/.bashrc that puts the two
 #     unpacked bin directories on PATH. A capture runs a non-interactive
 #     shell, which never reads ~/.bashrc, so the same two directories are
@@ -105,6 +111,24 @@ stage_proxy() { # $1 = machine root
   mkdir -p "$R/home/ana/.gradle"
   printf 'systemProp.https.proxyHost=%s\nsystemProp.https.proxyPort=%s\nsystemProp.http.proxyHost=%s\nsystemProp.http.proxyPort=%s\n' \
     "$host" "$port" "$host" "$port" > "$R/home/ana/.gradle/gradle.properties"
+  mkdir -p "$R/home/ana/.gradle/init.d"
+  cat > "$R/home/ana/.gradle/init.d/recording-mirror.init.gradle.kts" <<'KTS'
+// Recording machine only: Maven Central answers 429 to the recording proxy
+// under load, so its artifacts are fetched from Google's copy of Central.
+val mirror = "https://maven-central.storage-download.googleapis.com/maven2/"
+fun RepositoryHandler.useMirror() = all {
+    if (this is MavenArtifactRepository && url.host == "repo.maven.apache.org") url = uri(mirror)
+}
+settingsEvaluated {
+    pluginManagement.repositories.maven(mirror)
+    pluginManagement.repositories.gradlePluginPortal()
+    dependencyResolutionManagement.repositories.useMirror()
+}
+allprojects {
+    buildscript.repositories.useMirror()
+    repositories.useMirror()
+}
+KTS
   chown -R 1000:1000 "$R/home/ana/.curlrc" "$R/home/ana/.gradle"
 }
 
