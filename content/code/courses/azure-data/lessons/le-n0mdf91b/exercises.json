@@ -1,0 +1,587 @@
+[
+  {
+    "id": "ex-szv1a161",
+    "version": 1,
+    "section": "the-tiers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which access tier makes a blob unreadable until it is brought back?",
+    "hint": "Three of the four answer in milliseconds.",
+    "choices": [
+      {
+        "text": "Cold",
+        "correct": false,
+        "why": "Cold answers in milliseconds; what it changes is the price of reading."
+      },
+      {
+        "text": "Cool",
+        "correct": false,
+        "why": "Cool answers in milliseconds too."
+      },
+      {
+        "text": "Archive",
+        "correct": true,
+        "why": "Right. It has to be rehydrated first."
+      },
+      {
+        "text": "Hot",
+        "correct": false,
+        "why": "Hot is the tier with nothing extra to read."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgfhyg2r",
+    "version": 1,
+    "section": "the-tiers",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tier to its documented minimum days billed.",
+    "hint": "They grow with how cold the tier is.",
+    "pairs": [
+      {
+        "left": "hot",
+        "right": "none"
+      },
+      {
+        "left": "cool",
+        "right": "30 days"
+      },
+      {
+        "left": "cold",
+        "right": "90 days"
+      },
+      {
+        "left": "archive",
+        "right": "180 days"
+      }
+    ],
+    "right_distractors": [
+      "365 days"
+    ]
+  },
+  {
+    "id": "ex-qsh6ny02",
+    "version": 1,
+    "section": "the-tiers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where is a blob's access tier set?",
+    "hint": "One container held three tiers side by side.",
+    "choices": [
+      {
+        "text": "On each block blob, with the account's default for blobs given none",
+        "correct": true,
+        "why": "Right. Blobs with no tier of their own report the default as inferred."
+      },
+      {
+        "text": "On the container, and every blob in it shares it",
+        "correct": false,
+        "why": "Containers have no tier; the lesson set two different tiers in one."
+      },
+      {
+        "text": "On the account only, so moving data between tiers means moving accounts",
+        "correct": false,
+        "why": "That describes performance, Standard or Premium, not access tiers."
+      },
+      {
+        "text": "On every blob type alike: block, append and page",
+        "correct": false,
+        "why": "An append blob was refused with `AccessTierNotSupportedForBlobType`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzjhybrj",
+    "version": 1,
+    "section": "the-tiers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Moving ten million 4 KB log blobs from hot to cool saves almost nothing on storage, and the bill for the month goes up. Why?",
+    "hint": "What is billed per blob rather than per gigabyte?",
+    "choices": [
+      {
+        "text": "Cool charges more per gigabyte kept than hot for small blobs",
+        "correct": false,
+        "why": "The price per gigabyte kept is lower in cool whatever the blob's size."
+      },
+      {
+        "text": "Cool keeps an extra copy of each blob, doubling the storage",
+        "correct": false,
+        "why": "Copies are decided by the account's replication, not by the tier."
+      },
+      {
+        "text": "The blobs were rehydrated first, at the high priority price",
+        "correct": false,
+        "why": "Rehydration is for leaving archive; nothing here was archived."
+      },
+      {
+        "text": "Ten million tier changes, each an operation at cool's price",
+        "correct": true,
+        "why": "Right. The data is about 40 GB; the operations are ten million."
+      }
+    ]
+  },
+  {
+    "id": "ex-9a1yy930",
+    "version": 1,
+    "section": "setting-a-tier",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A blob was uploaded without `--tier`. `az storage blob show` reports `Hot` and `blobTierInferred: true`. What does that mean?",
+    "hint": "Who chose the tier?",
+    "choices": [
+      {
+        "text": "Azure watched how the blob is used and moved it to hot",
+        "correct": false,
+        "why": "Nothing watched anything; the blob was just uploaded."
+      },
+      {
+        "text": "It follows the account's default",
+        "correct": true,
+        "why": "Right. A tier set on the blob would say `false` and stay put."
+      },
+      {
+        "text": "The tier was set on the blob and cannot be changed again",
+        "correct": false,
+        "why": "`set-tier` changed the same blob to cold a moment later."
+      },
+      {
+        "text": "Azurite could not read the tier and guessed",
+        "correct": false,
+        "why": "Azure reports the same flag for the same reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j1kbcvv",
+    "version": 1,
+    "section": "setting-a-tier",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the Terraform provider refuse `access_tier = \"Archive\"` on a storage account?",
+    "hint": "What would happen to every blob uploaded without a tier?",
+    "choices": [
+      {
+        "text": "Archive is not offered in `brazilsouth`",
+        "correct": false,
+        "why": "validate checks the value against a list and knows nothing about regions."
+      },
+      {
+        "text": "Archive is set blob by blob, never by default",
+        "correct": true,
+        "why": "Right. The accepted list was `Cold`, `Cool`, `Hot`, `Premium` and `Smart`."
+      },
+      {
+        "text": "The value is spelt `ARCHIVE` in capitals",
+        "correct": false,
+        "why": "The list printed mixed case, `Cold` and `Cool`, and had no archive in any case."
+      },
+      {
+        "text": "Terraform needs the account to be created before a tier is set",
+        "correct": false,
+        "why": "`Cool` validated in the same file a moment earlier."
+      }
+    ]
+  },
+  {
+    "id": "ex-js0vg948",
+    "version": 1,
+    "section": "setting-a-tier",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda moves a 2 TB folder of photos from cool back to hot, the week after moving it to cool. What does Microsoft document that the move is billed as?",
+    "hint": "Warming a blob reads it out of the tier it leaves, and the week matters.",
+    "choices": [
+      {
+        "text": "Nothing: tier changes are free and only storage is billed",
+        "correct": false,
+        "why": "Each change is an operation, and warming adds a price per gigabyte."
+      },
+      {
+        "text": "A write in hot for each blob, and nothing more",
+        "correct": false,
+        "why": "That is how cooling is billed, in the destination tier."
+      },
+      {
+        "text": "A full rehydration, at standard priority",
+        "correct": false,
+        "why": "Rehydration applies only to archive."
+      },
+      {
+        "text": "Cool reads and retrieval, plus early deletion",
+        "correct": true,
+        "why": "Right. A week is short of cool's 30 days."
+      }
+    ]
+  },
+  {
+    "id": "ex-f77qt2eh",
+    "version": 1,
+    "section": "archived-blobs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Downloading a blob in the archive tier is refused with the error code ___.",
+    "hint": "Two words, run together.",
+    "blanks": [
+      {
+        "accept": [
+          "BlobArchived"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ve20t2s3",
+    "version": 1,
+    "section": "archived-blobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Azure, a rehydration of a 2 GB blob to hot at standard priority has just started. What does a download return for the next few hours?",
+    "hint": "Azurite finished at once; Azure does not.",
+    "choices": [
+      {
+        "text": "`BlobArchived`, until the rehydration finishes",
+        "correct": true,
+        "why": "Right. The tier keeps saying `Archive` and the status says `rehydrate-pending-to-hot`."
+      },
+      {
+        "text": "The content, slowly, as the blob comes back",
+        "correct": false,
+        "why": "There is no partial read; the blob stays offline until the end."
+      },
+      {
+        "text": "The content, at once, as Azurite showed",
+        "correct": false,
+        "why": "That is the emulator's shortcut, not Azure's behaviour."
+      },
+      {
+        "text": "`BlobNotFound`, because the blob is moved during rehydration",
+        "correct": false,
+        "why": "The blob stays listed with its properties the whole time."
+      }
+    ]
+  },
+  {
+    "id": "ex-bchbh99e",
+    "version": 1,
+    "section": "archived-blobs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At standard priority, within how many hours does Microsoft document that an archived blob is rehydrated?",
+    "hint": "The table in the section.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-6pzvfnwh",
+    "version": 1,
+    "section": "archived-blobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An auditor needs September's archived export this afternoon, and the archive copy must stay where it is. What does Quitanda do?",
+    "hint": "Two ways out of archive, and two constraints.",
+    "choices": [
+      {
+        "text": "Change the archived blob's tier to hot at high priority",
+        "correct": false,
+        "why": "Fast, but it moves the archive copy, which had to stay."
+      },
+      {
+        "text": "Copy it to a new name at standard priority, which is cheaper and just as quick",
+        "correct": false,
+        "why": "Standard is documented at up to 15 hours, too slow for this afternoon."
+      },
+      {
+        "text": "Copy it to a new name in hot at high priority, leaving the archive copy",
+        "correct": true,
+        "why": "Right. `rehydrate.py` did this; on Azure the copy is pending until the rehydration behind it ends."
+      },
+      {
+        "text": "Download it directly; archive only delays the first byte",
+        "correct": false,
+        "why": "A download of an archived blob is refused outright."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2yw04c7",
+    "version": 1,
+    "section": "archived-blobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Quitanda's archive account use LRS rather than the ZRS of its exports account?",
+    "hint": "A tier and a replication option that do not go together.",
+    "choices": [
+      {
+        "text": "LRS is faster to rehydrate from",
+        "correct": false,
+        "why": "Rehydration time depends on the priority, not on replication."
+      },
+      {
+        "text": "Azurite only accepts archive on LRS",
+        "correct": false,
+        "why": "Azurite has no replication and accepted every tier."
+      },
+      {
+        "text": "Archived data is never worth three copies",
+        "correct": false,
+        "why": "LRS also keeps three copies, in one datacentre."
+      },
+      {
+        "text": "Archive is not offered on ZRS accounts at all",
+        "correct": true,
+        "why": "Right, nor on GZRS or RA-GZRS, according to the documentation at the time of writing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9d7h9xaj",
+    "version": 1,
+    "section": "early-deletion",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At an illustrative 0.010 USD per GB-month, what is one GB billed if it is moved to cool and deleted after 12 days? A month counts as 30 days.",
+    "hint": "The minimum is billed in full.",
+    "value": 0.01,
+    "tolerance": 0.0001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-4tyj1sjt",
+    "version": 1,
+    "section": "early-deletion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens when a blob in cold is deleted on its twentieth day?",
+    "hint": "Does anything stop the deletion?",
+    "choices": [
+      {
+        "text": "The deletion is refused until the 90 days have passed",
+        "correct": false,
+        "why": "Nothing refuses it; Azurite and Azure both delete at once."
+      },
+      {
+        "text": "It is moved to archive instead, to finish its minimum there",
+        "correct": false,
+        "why": "No tier change happens on a delete."
+      },
+      {
+        "text": "It is deleted, and 70 more days of cold are billed",
+        "correct": true,
+        "why": "Right. The minimum arrives on the bill, not as a refusal."
+      },
+      {
+        "text": "It is deleted, and the twenty days are refunded",
+        "correct": false,
+        "why": "The days used are billed normally; it is the unused ones that are added."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvf6yx70",
+    "version": 1,
+    "section": "early-deletion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A life-cycle rule archives blobs at 30 days and deletes them at 90. What does every blob it touches cost?",
+    "hint": "How long does the blob stay in archive, and what is archive's minimum?",
+    "choices": [
+      {
+        "text": "60 days of archive, the time it spent there",
+        "correct": false,
+        "why": "Archive's minimum is 180 days and it is billed in full."
+      },
+      {
+        "text": "180 days of archive, though it stayed 60",
+        "correct": true,
+        "why": "Right. 120 days of early deletion on every blob."
+      },
+      {
+        "text": "Nothing extra, because a rule is exempt from early deletion",
+        "correct": false,
+        "why": "The charge is about the blob's stay, whoever moves or deletes it."
+      },
+      {
+        "text": "90 days of cold, since the rule skips cool",
+        "correct": false,
+        "why": "The rule moves to archive, not to cold."
+      }
+    ]
+  },
+  {
+    "id": "ex-erptk3r8",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `year.py`'s illustrative prices, cool costs 122.88 a year and 10.24 per full read; hot costs 245.76 and nothing to read. How many full reads a year make the two cost the same?",
+    "hint": "Divide the difference in the year by the price of a read.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "reads"
+  },
+  {
+    "id": "ex-p8r6c4tz",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `year.py`'s last column, why is ten days in archive dearer than ten days in hot?",
+    "hint": "How many days is each one billed for?",
+    "choices": [
+      {
+        "text": "Archive is billed for 180 days, and that outweighs its lower price",
+        "correct": true,
+        "why": "Right. 12.29 against hot's 6.83."
+      },
+      {
+        "text": "Archive's price per gigabyte is higher than hot's",
+        "correct": false,
+        "why": "It is ten times lower in the program."
+      },
+      {
+        "text": "The column includes a rehydration of the whole terabyte at the end of the ten days",
+        "correct": false,
+        "why": "It keeps the data ten days and deletes it, with no read."
+      },
+      {
+        "text": "Hot gives the first ten days for free",
+        "correct": false,
+        "why": "Hot bills the ten days at its price: 6.83."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypsm3b54",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's analysts reread one 500 GB table about twice a month. Using the arithmetic of `year.py`, which tier fits it?",
+    "hint": "Twenty-four full reads a year; where is cool's break-even?",
+    "choices": [
+      {
+        "text": "Cold, because it is the cheapest online tier",
+        "correct": false,
+        "why": "Cold's reads are the dearest online; 24 of them would cost far more than hot."
+      },
+      {
+        "text": "Archive, because the table is large",
+        "correct": false,
+        "why": "Size is not the question; a twice-monthly read cannot wait for a rehydration."
+      },
+      {
+        "text": "Hot",
+        "correct": true,
+        "why": "Right. At 24 reads a year, every cooler tier costs more."
+      },
+      {
+        "text": "Cool, because it costs half as much to keep",
+        "correct": false,
+        "why": "Its break-even with hot is 12 full reads a year; 24 is past it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdfj9fv0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the tiers from the lowest price for keeping a gigabyte to the highest.",
+    "hint": "The colder, the cheaper to keep.",
+    "items": [
+      "archive",
+      "cold",
+      "cool",
+      "hot"
+    ]
+  },
+  {
+    "id": "ex-agsbzg2x",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did Azurite do that Azure would not? Choose all that apply.",
+    "hint": "Look for the places where time or money would have shown.",
+    "choices": [
+      {
+        "text": "Finish a rehydration before the next command",
+        "correct": true,
+        "why": "Yes; Azure documents up to 15 hours at standard priority."
+      },
+      {
+        "text": "Delete a blob in cold after minutes, with no charge",
+        "correct": true,
+        "why": "Yes; Azure would bill the rest of the 90 days."
+      },
+      {
+        "text": "Refuse a download from archive with `BlobArchived`",
+        "correct": false,
+        "why": "Azure refuses the same way."
+      },
+      {
+        "text": "Refuse a tier on an append blob",
+        "correct": false,
+        "why": "Azure refuses that too."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsdfebka",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command moves an existing blob to the cold tier?",
+    "hint": "One request, nothing copied.",
+    "choices": [
+      {
+        "text": "`az storage blob set-tier --tier Cold`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`az storage blob copy start --tier Cold`",
+        "correct": false,
+        "why": "That makes a second blob under another name."
+      },
+      {
+        "text": "`az storage blob upload --tier Cold --overwrite`",
+        "correct": false,
+        "why": "That sends the content again to replace the blob."
+      },
+      {
+        "text": "`az storage blob update --tier Cold`",
+        "correct": false,
+        "why": "`update` changes content settings, not the tier."
+      }
+    ]
+  }
+]

@@ -1,0 +1,626 @@
+[
+  {
+    "id": "ex-x1440ae2",
+    "version": 1,
+    "section": "the-job",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a Stream Analytics query produce while its job is started?",
+    "hint": "It never finishes.",
+    "choices": [
+      {
+        "text": "One result set, when the stream ends",
+        "correct": false,
+        "why": "A stream does not end; a job that waited for the end would never answer."
+      },
+      {
+        "text": "Rows written to its output whenever it has something to say",
+        "correct": true,
+        "why": "Right. The answer is another stream, such as one row a minute for a count by minute."
+      },
+      {
+        "text": "A table in the event hub that readers query later",
+        "correct": false,
+        "why": "An event hub holds events, not tables; the job writes to the outputs it was given."
+      },
+      {
+        "text": "A new partition per window",
+        "correct": false,
+        "why": "Windows are groups of events in the query; they create nothing in the input."
+      }
+    ]
+  },
+  {
+    "id": "ex-7hmz84fq",
+    "version": 1,
+    "section": "the-job",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants each checkout count labelled with the store's neighbourhood, from a small list that changes once a month. Where does the list go?",
+    "hint": "A job has two kinds of input.",
+    "choices": [
+      {
+        "text": "Into every click, sent by the app",
+        "correct": false,
+        "why": "Repeating a monthly list in millions of events is waste; the job can join it instead."
+      },
+      {
+        "text": "In a second event hub that the job reads as a separate stream beside the first",
+        "correct": false,
+        "why": "A list that changes monthly is not a stream; it would expire with the hub's retention."
+      },
+      {
+        "text": "A reference input, from Blob Storage or SQL Database",
+        "correct": true,
+        "why": "Right. Reference inputs are small tables the stream is joined against, refreshed on a schedule."
+      },
+      {
+        "text": "In the output table, filled in by the screen",
+        "correct": false,
+        "why": "The output receives the job's rows; it is not where the job reads lookups from."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zptbkn8",
+    "version": 1,
+    "section": "the-job",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform validate` accepted the job. What would it have said about a query misspelt as `TumblingWindw(minute, 1)`?",
+    "hint": "What is `transformation_query` to the provider?",
+    "choices": [
+      {
+        "text": "That the window function is unknown, with the line",
+        "correct": false,
+        "why": "The provider does not parse the query language; that check belongs to the service."
+      },
+      {
+        "text": "Valid, because to the provider the query is a string",
+        "correct": true,
+        "why": "Right. Only the service refuses it, when the job is created or started."
+      },
+      {
+        "text": "A warning, and the job would run with a tumbling window",
+        "correct": false,
+        "why": "Nothing guesses the intended function; a misspelt query is refused by the service, not corrected."
+      },
+      {
+        "text": "That the query needs `TIMESTAMP BY`",
+        "correct": false,
+        "why": "The query has it, and validate does not read the query anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds59h37p",
+    "version": 1,
+    "section": "event-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without `TIMESTAMP BY`, which clock does a Stream Analytics query count by?",
+    "hint": "The other clock is the app's.",
+    "choices": [
+      {
+        "text": "The time each event reached Azure",
+        "correct": true,
+        "why": "Right: arrival time, the enqueued time of lesson 22."
+      },
+      {
+        "text": "The time written by the app in the event body",
+        "correct": false,
+        "why": "That field becomes the clock only when `TIMESTAMP BY` names it."
+      },
+      {
+        "text": "The time the output row is written",
+        "correct": false,
+        "why": "The output's time is a result of the windows, not what they are cut by."
+      },
+      {
+        "text": "The time the job was started",
+        "correct": false,
+        "why": "The start time decides where reading begins, not how events are grouped."
+      }
+    ]
+  },
+  {
+    "id": "ex-580wwd5d",
+    "version": 1,
+    "section": "event-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`windows.py` printed that all ten events were enqueued in the same millisecond. If the job counted by arrival time, what would the screen show?",
+    "hint": "They were sent as one batch.",
+    "choices": [
+      {
+        "text": "Four windows, as by event time, because the batch keeps the app's times",
+        "correct": false,
+        "why": "The app's times are only used when `TIMESTAMP BY` names them; arrival put all ten together."
+      },
+      {
+        "text": "Nothing, because a batch is counted as one event",
+        "correct": false,
+        "why": "A batch is a way of sending; the job still sees ten events."
+      },
+      {
+        "text": "Ten checkouts in one minute, the minute the batch arrived",
+        "correct": true,
+        "why": "Right, at a moment when nobody was buying; by event time they spread over four minutes."
+      },
+      {
+        "text": "Five checkouts, because checkout 7 is late",
+        "correct": false,
+        "why": "Lateness is a notion of event time; by arrival time nothing is late."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvew41eg",
+    "version": 1,
+    "section": "event-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the run with 20 seconds of tolerance, why did checkout 4, from 20:00:40, count in the 20:00 window though it arrived after checkout 3, from 20:00:50?",
+    "hint": "Compare its time with the watermark when it arrived.",
+    "choices": [
+      {
+        "text": "It was behind by ten, less than the twenty allowed",
+        "correct": true,
+        "why": "Right. The watermark was 20:00:30, so 20:00:40 was not late."
+      },
+      {
+        "text": "The program sorts all events by time before counting",
+        "correct": false,
+        "why": "It replays them in arrival order; that is why checkout 7 could be late at all."
+      },
+      {
+        "text": "`adjust` moved it into the right window",
+        "correct": false,
+        "why": "That run used `drop`, and checkout 4 was never behind the watermark."
+      },
+      {
+        "text": "Windows by event time accept every event that belongs to them, however late",
+        "correct": false,
+        "why": "Checkout 7 belonged to the same window and was dropped; a window closes once the watermark passes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bk1xsz51",
+    "version": 1,
+    "section": "event-time",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `windows.py drop 20`, the window 20:00 to 20:01 was closed by checkout 6, at 20:01:30. At what second past 20:01 was the watermark then? Answer the seconds, 0 to 59.",
+    "hint": "Latest time seen, minus the tolerance.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-g5jgr2cg",
+    "version": 1,
+    "section": "windows",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the window that answers it.",
+    "hint": "One of them exists only where events change it.",
+    "pairs": [
+      {
+        "left": "Checkouts per hour, for a report",
+        "right": "tumbling"
+      },
+      {
+        "left": "Checkouts in the last five minutes, updated every minute",
+        "right": "hopping"
+      },
+      {
+        "left": "Did one customer check out more than ten times within any ten minutes?",
+        "right": "sliding"
+      },
+      {
+        "left": "How long does a visit to the app last?",
+        "right": "session"
+      }
+    ],
+    "right_distractors": [
+      "snapshot"
+    ]
+  },
+  {
+    "id": "ex-w3gemnxc",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A hopping window of five minutes with a hop of one minute. In how many windows is each event counted?",
+    "hint": "Size divided by hop.",
+    "choices": [
+      {
+        "text": "One",
+        "correct": false,
+        "why": "One window per event is tumbling, which is a hopping window whose hop equals its size."
+      },
+      {
+        "text": "Five",
+        "correct": true,
+        "why": "Right. Five overlapping windows cover any instant."
+      },
+      {
+        "text": "Six, counting the one that is opening",
+        "correct": false,
+        "why": "Each instant lies in exactly size ÷ hop windows, here five."
+      },
+      {
+        "text": "It depends on how many events arrive in the minute",
+        "correct": false,
+        "why": "Hopping windows are fixed in time; that dependence describes sliding windows."
+      }
+    ]
+  },
+  {
+    "id": "ex-9m6ywvm9",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The fraud check counts each customer's checkouts with `TumblingWindow(minute, 10)` and flags more than ten. A customer checks out six times from 20:07 to 20:09 and six more from 20:10 to 20:12. What happens?",
+    "hint": "Where is the window boundary?",
+    "choices": [
+      {
+        "text": "Flagged, with twelve in one window",
+        "correct": false,
+        "why": "The twelve straddle the 20:10 boundary; no tumbling window holds more than six."
+      },
+      {
+        "text": "Not flagged: two windows of six; a sliding window would catch it",
+        "correct": true,
+        "why": "Right. Twelve fell within six minutes, which a window that moves with the events sees."
+      },
+      {
+        "text": "Flagged twice, once per window",
+        "correct": false,
+        "why": "Neither window passes ten, so neither flags."
+      },
+      {
+        "text": "Not flagged, because tumbling windows ignore a customer's grouping",
+        "correct": false,
+        "why": "`GROUP BY customer` works with every window; the miss comes from the boundary."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vpfss75",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a session window grouped by customer need more memory on a busy evening than a one-minute count?",
+    "hint": "A window holds state until it closes.",
+    "choices": [
+      {
+        "text": "Session windows store every event's body",
+        "correct": false,
+        "why": "What a window holds depends on the aggregate, not on the kind of window."
+      },
+      {
+        "text": "Every shopper online holds an open group of its own",
+        "correct": true,
+        "why": "Right. A count is one number per window; open sessions grow with the customers online."
+      },
+      {
+        "text": "Sessions close only when the job stops",
+        "correct": false,
+        "why": "A session closes after its timeout with no event, or at its maximum duration."
+      },
+      {
+        "text": "Session windows read every partition twice",
+        "correct": false,
+        "why": "Reading is the same for every window; the difference is the state kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz0rtzgj",
+    "version": 1,
+    "section": "late-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `adjust`, checkout 7, from 20:00:55, was counted in the 20:01 window. What is true of the counts?",
+    "hint": "Compare with the `drop` run.",
+    "choices": [
+      {
+        "text": "Both windows are now correct, each with its own checkouts",
+        "correct": false,
+        "why": "The 20:00 window still says four and there were five."
+      },
+      {
+        "text": "The evening's total is right; one minute is wrong",
+        "correct": true,
+        "why": "Right. Nothing was lost, and one checkout sits in a window it did not happen in."
+      },
+      {
+        "text": "The 20:00 window was reopened to take it",
+        "correct": false,
+        "why": "A closed window is final; `adjust` moves the event, not the window."
+      },
+      {
+        "text": "The total is one short, as with `drop`",
+        "correct": false,
+        "why": "`drop` lost the event; `adjust` kept it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b9wrgyk",
+    "version": 1,
+    "section": "late-data",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a tolerance of 60 seconds no checkout was late. Why not set every job to 60, or more?",
+    "hint": "Look at which event closed the 20:00 window.",
+    "choices": [
+      {
+        "text": "Because the provider refuses tolerances above 59 seconds",
+        "correct": false,
+        "why": "The provider's limit for out-of-order tolerance is 599 seconds."
+      },
+      {
+        "text": "Because a larger tolerance drops more events",
+        "correct": false,
+        "why": "It drops fewer: more events fall inside it."
+      },
+      {
+        "text": "Windows wait longer to close",
+        "correct": true,
+        "why": "Right. The 20:00 window waited for checkout 8 instead of 6; tolerance is paid in delay."
+      },
+      {
+        "text": "Because tolerance is billed per second",
+        "correct": false,
+        "why": "Jobs are billed by streaming unit-hours; tolerance is not a meter."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfghdwqp",
+    "version": 1,
+    "section": "late-data",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Stream Analytics, events beyond either tolerance are handled by one policy, which is either `Adjust` or ___.",
+    "hint": "The other choice discards them.",
+    "blanks": [
+      {
+        "accept": [
+          "Drop",
+          "`Drop`"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wpsyy551",
+    "version": 1,
+    "section": "late-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the job's settings catches a phone that sends its clicks a minute late even when no later event arrives to move a watermark?",
+    "hint": "It compares the app's clock with Azure's.",
+    "choices": [
+      {
+        "text": "The out-of-order tolerance, which reorders events",
+        "correct": false,
+        "why": "That one compares events with each other, so it needs later events to act."
+      },
+      {
+        "text": "The late arrival tolerance",
+        "correct": true,
+        "why": "Right. It compares each event's own time with its arrival time."
+      },
+      {
+        "text": "`output_error_policy`",
+        "correct": false,
+        "why": "That setting decides what happens when the output refuses a row."
+      },
+      {
+        "text": "The compatibility level",
+        "correct": false,
+        "why": "It changes how the query is interpreted, including parallelism; it measures no lateness."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv8cm46s",
+    "version": 1,
+    "section": "late-data",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`validate` refused a late arrival tolerance of 1,814,400 seconds. What is the largest it accepts, in seconds?",
+    "hint": "One second short of 21 days.",
+    "value": 1814399,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-w998fqq1",
+    "version": 1,
+    "section": "streaming-units",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A checkout job is started and no click arrives all night. What does it cost for those hours?",
+    "hint": "What is the meter?",
+    "choices": [
+      {
+        "text": "Nothing, because no event was processed",
+        "correct": false,
+        "why": "There is no per-event charge; the job is billed for being started."
+      },
+      {
+        "text": "Its units, by the hour",
+        "correct": true,
+        "why": "Right. Streaming unit-hours are billed whether one event arrives or a million."
+      },
+      {
+        "text": "Half its units, because the service scales idle jobs down",
+        "correct": false,
+        "why": "Units are set on the job; nothing in the lesson halves them on its own."
+      },
+      {
+        "text": "A charge per window closed",
+        "correct": false,
+        "why": "Windows are not a meter."
+      }
+    ]
+  },
+  {
+    "id": "ex-ayn9ppgb",
+    "version": 1,
+    "section": "streaming-units",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The job is given 12 streaming units to count checkouts faster, and its input is the four-partition `clicks` hub. What limits how far it can read in parallel?",
+    "hint": "The same ceiling as consumer groups in lesson 22.",
+    "choices": [
+      {
+        "text": "The compatibility level",
+        "correct": false,
+        "why": "Level 1.2 aligns the query with the partitions, but the partitions are still four."
+      },
+      {
+        "text": "The output table's number of columns",
+        "correct": false,
+        "why": "Columns have nothing to do with parallel reading."
+      },
+      {
+        "text": "The streaming units: twelve units, twelve readers",
+        "correct": false,
+        "why": "Units buy processor and memory; readers in parallel are bounded by partitions."
+      },
+      {
+        "text": "The hub's four partitions",
+        "correct": true,
+        "why": "Right. At most four parallel readers, whatever the units."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kg7bq8d",
+    "version": 1,
+    "section": "streaming-units",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the lesson's illustrative 0.11 USD per streaming unit-hour, what does a 6-unit job started 12 hours a day cost in a 30-day month, in USD?",
+    "hint": "Units × hours × price.",
+    "value": 237.6,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-0fyjthb6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `windows.py drop 20` did with the first six checkouts.",
+    "hint": "The window closes only after the watermark passes its end.",
+    "items": [
+      "Checkouts 1, 2 and 3 are counted in the 20:00 window",
+      "Checkout 4, ten seconds out of place, is counted there too",
+      "Checkout 5 opens the 20:01 window",
+      "Checkout 6 moves the watermark to 20:01:10",
+      "The 20:00 window is printed with four checkouts"
+    ]
+  },
+  {
+    "id": "ex-qqcteqp0",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson actually run? Choose all that apply.",
+    "hint": "Stream Analytics itself has no emulator.",
+    "choices": [
+      {
+        "text": "Terraform refusing an out-of-order tolerance of 600 seconds",
+        "correct": true,
+        "why": "Right; the provider's range is 0 to 599."
+      },
+      {
+        "text": "The course's program dropping a late checkout",
+        "correct": true,
+        "why": "Right; checkout 7 with `drop`."
+      },
+      {
+        "text": "A Stream Analytics job counting checkouts per minute",
+        "correct": false,
+        "why": "There is no emulator; the query was only declared and validated as a string."
+      },
+      {
+        "text": "A sliding window over the emulator's events",
+        "correct": false,
+        "why": "The program implements tumbling windows only."
+      },
+      {
+        "text": "A job reading from where it stopped the night before",
+        "correct": false,
+        "why": "That is documented, not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgktj3g9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A phone's clock is an hour fast, and the job counts by `TIMESTAMP BY at` with 20 seconds of out-of-order tolerance. What does its first click do?",
+    "hint": "What moves the watermark?",
+    "choices": [
+      {
+        "text": "It is dropped, because it is late",
+        "correct": false,
+        "why": "A click from the future is the latest time seen, not a late one."
+      },
+      {
+        "text": "Nothing, because the service corrects clocks from the arrival time",
+        "correct": false,
+        "why": "`TIMESTAMP BY` trusts the field; only a late arrival tolerance compares clocks, and only for old events."
+      },
+      {
+        "text": "It moves the watermark an hour ahead, so every honest click of that hour arrives late",
+        "correct": true,
+        "why": "Right. Every correct click of the next hour is then behind the watermark."
+      },
+      {
+        "text": "It opens a window an hour away and nothing else changes",
+        "correct": false,
+        "why": "The watermark follows the latest time seen, so every open window is affected."
+      }
+    ]
+  }
+]
