@@ -37,6 +37,6 @@ a pessoa precisa terminar ou dispensar uma tarefa antes de seguir, e é por isso
 cronômetro e a pergunta são modais e as telas de curso e de sessão não são.
 
 **Apresentação é estado como qualquer outro**, e tem um dono. O `adding` mora na tela de curso, o path
-mora no modelo, e uma sheet que o modelo precisasse abrir de outro lugar, uma notificação pedindo para
-acrescentar a sessão de amanhã, levaria a sua flag para o modelo ao lado do path, pelo mesmo motivo
-pelo qual a seção 04 levou o path.
+mora no modelo. Uma sheet que o modelo precisasse abrir de outro lugar, digamos uma notificação
+pedindo para acrescentar a sessão de amanhã, levaria a sua flag para o modelo ao lado do path, pelo
+mesmo motivo pelo qual a seção 04 levou o path.
