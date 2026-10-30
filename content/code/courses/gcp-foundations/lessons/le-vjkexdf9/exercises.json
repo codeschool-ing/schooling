@@ -1,0 +1,507 @@
+[
+  {
+    "id": "ex-e5a9jgcz",
+    "version": 1,
+    "section": "ha-vpn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does an HA VPN gateway have two interfaces?",
+    "hint": "One can fail.",
+    "choices": [
+      {
+        "text": "One for ingress and one for egress",
+        "correct": false,
+        "why": "Each tunnel carries both directions."
+      },
+      {
+        "text": "To survive one of them failing",
+        "correct": true,
+        "why": "Right. A tunnel from each is the design Google offers 99.99% for."
+      },
+      {
+        "text": "One per region it serves",
+        "correct": false,
+        "why": "The gateway is in one region."
+      },
+      {
+        "text": "One for IPv4 and one for IPv6",
+        "correct": false,
+        "why": "Both are about availability, not address families."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehkzax7k",
+    "version": 1,
+    "section": "ha-vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the planner network learn the office's range, 192.168.0.0/16, over HA VPN?",
+    "hint": "No routes by hand.",
+    "choices": [
+      {
+        "text": "A static route written per tunnel",
+        "correct": false,
+        "why": "HA VPN takes no static routes."
+      },
+      {
+        "text": "The VPN gateway reads the office's subnets",
+        "correct": false,
+        "why": "The gateway encrypts; the router exchanges routes."
+      },
+      {
+        "text": "Cloud DNS forwards it",
+        "correct": false,
+        "why": "DNS is names, not routes."
+      },
+      {
+        "text": "The Cloud Router learns it over BGP",
+        "correct": true,
+        "why": "Right. It appears as a dynamic route, and is withdrawn if the tunnel fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5bqmhzk",
+    "version": 1,
+    "section": "ha-vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A route learned by the router in São Paulo must be usable by machines in Santiago. What makes that so?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Global routing mode",
+        "correct": true,
+        "why": "Right. Regional mode would keep dynamic routes in the router's region."
+      },
+      {
+        "text": "A second HA VPN in Santiago",
+        "correct": false,
+        "why": "That works and is not needed for this."
+      },
+      {
+        "text": "Peering between the two regions",
+        "correct": false,
+        "why": "Regions of one network need no peering."
+      },
+      {
+        "text": "Exporting custom routes",
+        "correct": false,
+        "why": "That setting belongs to peering."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvw6pkkz",
+    "version": 1,
+    "section": "ha-vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the plan refuse to run until `TF_VAR_shared_secret` was set?",
+    "hint": "The file has no secret.",
+    "choices": [
+      {
+        "text": "Google rejected the empty key",
+        "correct": false,
+        "why": "The plan asked Google nothing."
+      },
+      {
+        "text": "Sensitive variables are always refused",
+        "correct": false,
+        "why": "They are accepted and hidden on screen."
+      },
+      {
+        "text": "It has no default value",
+        "correct": true,
+        "why": "Right. The secret comes from outside the file, here an environment variable."
+      },
+      {
+        "text": "The tunnels need IKE version 1",
+        "correct": false,
+        "why": "The file asks for IKEv2, and that was not the error."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0da8t8x",
+    "version": 1,
+    "section": "ha-vpn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The plan shows `shared_secret = (sensitive value)`. Where can the secret still be read after an apply?",
+    "hint": "Sensitive is not secret.",
+    "choices": [
+      {
+        "text": "Nowhere; Terraform discards it",
+        "correct": false,
+        "why": "It is written to state like any attribute."
+      },
+      {
+        "text": "In the plan's output on screen",
+        "correct": false,
+        "why": "That is exactly where it is hidden."
+      },
+      {
+        "text": "In Terraform's state file",
+        "correct": true,
+        "why": "Right. Unless the write-only shared_secret_wo is used, the state holds it."
+      },
+      {
+        "text": "In the office router's public address",
+        "correct": false,
+        "why": "Addresses carry no secrets."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmm1c0kb",
+    "version": 1,
+    "section": "ha-vpn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `asn = 100` refused for the Cloud Router?",
+    "hint": "Read the ranges.",
+    "choices": [
+      {
+        "text": "It is not a private ASN",
+        "correct": true,
+        "why": "Right. 64512 to 65534, or 4200000000 to 4294967294."
+      },
+      {
+        "text": "It matches the office's ASN",
+        "correct": false,
+        "why": "The office uses 65010."
+      },
+      {
+        "text": "ASNs must be even",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "The router has no interfaces yet",
+        "correct": false,
+        "why": "The check is on the number alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-93z5z6vm",
+    "version": 1,
+    "section": "ha-vpn",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The BGP sessions inside the tunnels use addresses from the link-local range 169.254.0.0/___.",
+    "hint": "Sixteen bits.",
+    "blanks": [
+      {
+        "accept": [
+          "16"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8y38tz10",
+    "version": 1,
+    "section": "interconnect",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Cloud Interconnect replace between the datacentre and Google?",
+    "hint": "A road, not a tunnel.",
+    "choices": [
+      {
+        "text": "The Cloud Router",
+        "correct": false,
+        "why": "Interconnect uses a Cloud Router, over its VLAN attachment."
+      },
+      {
+        "text": "The VPC network",
+        "correct": false,
+        "why": "The network stays; the road to it changes."
+      },
+      {
+        "text": "BGP",
+        "correct": false,
+        "why": "The router still speaks BGP over the attachment."
+      },
+      {
+        "text": "The internet",
+        "correct": true,
+        "why": "Right. Traffic does not cross the public internet at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7seppt6a",
+    "version": 1,
+    "section": "interconnect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner has no equipment in any of Google's colocation facilities. Which Interconnect can it use?",
+    "hint": "Through someone else.",
+    "choices": [
+      {
+        "text": "Dedicated Interconnect, from the office",
+        "correct": false,
+        "why": "Dedicated is a cable in a colocation facility."
+      },
+      {
+        "text": "Partner Interconnect",
+        "correct": true,
+        "why": "Right. The provider is already connected to Google."
+      },
+      {
+        "text": "Cross-Cloud Interconnect",
+        "correct": false,
+        "why": "That joins Google to another cloud."
+      },
+      {
+        "text": "None until it moves its datacentre",
+        "correct": false,
+        "why": "Partner Interconnect exists for exactly this."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mjgcffz",
+    "version": 1,
+    "section": "interconnect",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The security team requires that customer data on the planner's Dedicated Interconnect be encrypted. Which options fit?",
+    "hint": "Private is not encrypted.",
+    "choices": [
+      {
+        "text": "MACsec, or HA VPN over the Interconnect",
+        "correct": true,
+        "why": "Right. One encrypts frames on the link; the other runs IPsec through the attachment."
+      },
+      {
+        "text": "Nothing; a circuit is encrypted already",
+        "correct": false,
+        "why": "A circuit is private, which is a different thing."
+      },
+      {
+        "text": "A firewall rule on the attachment",
+        "correct": false,
+        "why": "Firewalls filter; they do not encrypt."
+      },
+      {
+        "text": "Private Google Access",
+        "correct": false,
+        "why": "That reaches Google's APIs; it encrypts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzxh83c1",
+    "version": 1,
+    "section": "interconnect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the first thing to know about Interconnect when a project's schedule depends on it?",
+    "hint": "Half of it is physical.",
+    "choices": [
+      {
+        "text": "It needs a new VPC network",
+        "correct": false,
+        "why": "It attaches to an existing one."
+      },
+      {
+        "text": "It cannot carry BGP",
+        "correct": false,
+        "why": "It does, through the Cloud Router."
+      },
+      {
+        "text": "It takes weeks of lead time",
+        "correct": true,
+        "why": "Right. A connection is ordered, authorised and cabled before any Terraform matters."
+      },
+      {
+        "text": "It is limited to 50 Mbps at first",
+        "correct": false,
+        "why": "Capacity is chosen when ordering."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ggzsryz",
+    "version": 1,
+    "section": "interconnect",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece to its job.",
+    "hint": "From the cable to the routes.",
+    "pairs": [
+      {
+        "left": "Dedicated connection",
+        "right": "the physical circuit"
+      },
+      {
+        "left": "VLAN attachment",
+        "right": "ties the connection to a router in one region"
+      },
+      {
+        "left": "Cloud Router",
+        "right": "exchanges routes over BGP"
+      }
+    ],
+    "right_distractors": [
+      "encrypts every packet"
+    ]
+  },
+  {
+    "id": "ex-e9pmvy91",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does one HA VPN tunnel cost over a 730-hour month, at 0.05 dollars an hour, in dollars?",
+    "hint": "Hours times price.",
+    "value": 36.5,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-c2kgmkgk",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many minutes a month, in a 30-day month, does 99.9% availability still allow to be down? Give one decimal.",
+    "hint": "A thousandth of 43,200 minutes.",
+    "value": 43.2,
+    "tolerance": 0.05,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-3yg7pykr",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What justifies moving the planner from HA VPN to Interconnect, according to the lesson?",
+    "hint": "Not the extra nine.",
+    "choices": [
+      {
+        "text": "Reaching 99.99% availability",
+        "correct": false,
+        "why": "HA VPN already reaches it."
+      },
+      {
+        "text": "Bandwidth, or the transfer price",
+        "correct": true,
+        "why": "Right. HA VPN already gives 99.99%."
+      },
+      {
+        "text": "Removing the need for BGP",
+        "correct": false,
+        "why": "Interconnect uses BGP too."
+      },
+      {
+        "text": "Avoiding a Cloud Router",
+        "correct": false,
+        "why": "Both need one."
+      }
+    ]
+  },
+  {
+    "id": "ex-nsnxhgzy",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner considers one 10 Gbps Interconnect connection to save money. What availability does that design reach, by the lesson's table?",
+    "hint": "Every design on the table is a pair.",
+    "choices": [
+      {
+        "text": "99.9%",
+        "correct": false,
+        "why": "That takes two connections in different edge availability domains."
+      },
+      {
+        "text": "99.99%",
+        "correct": false,
+        "why": "That takes two pairs in two cities."
+      },
+      {
+        "text": "100%, since a circuit has no internet in it",
+        "correct": false,
+        "why": "A cable can be cut like any other."
+      },
+      {
+        "text": "None the table offers",
+        "correct": true,
+        "why": "Right. Even 99.9% takes two connections in one city."
+      }
+    ]
+  },
+  {
+    "id": "ex-hahjysep",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of bringing up the planner's HA VPN in order.",
+    "hint": "Ends first, then tunnels, then routes.",
+    "items": [
+      "the HA VPN gateway and the office's external gateway",
+      "the Cloud Router with its ASN",
+      "two tunnels, one per interface",
+      "a router interface and a BGP peer per tunnel"
+    ],
+    "trap": "Creating the BGP peers before the tunnels is the slip: each peer sits on an interface bound to a tunnel, so the tunnel has to exist first."
+  },
+  {
+    "id": "ex-5wsyvsd5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One of the planner's two tunnels goes down at night. What do the machines in São Paulo notice?",
+    "hint": "BGP withdraws.",
+    "choices": [
+      {
+        "text": "The office becomes unreachable until morning",
+        "correct": false,
+        "why": "That would be a design with one tunnel."
+      },
+      {
+        "text": "Half the packets are dropped",
+        "correct": false,
+        "why": "Routes are withdrawn; nothing is sent into a dead tunnel for long."
+      },
+      {
+        "text": "Someone must edit a static route",
+        "correct": false,
+        "why": "There are none; the routes are dynamic."
+      },
+      {
+        "text": "Little: traffic moves to the other tunnel",
+        "correct": true,
+        "why": "Right. The failed tunnel's routes are withdrawn and the remaining one carries everything."
+      }
+    ]
+  }
+]
