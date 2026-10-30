@@ -1,0 +1,597 @@
+[
+  {
+    "id": "ex-q8b1zmj4",
+    "version": 1,
+    "section": "the-parts",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a factory to what it is.",
+    "hint": "Only one of them knows how to sign in.",
+    "pairs": [
+      {
+        "left": "Linked service",
+        "right": "Where a store is and how to sign in to it"
+      },
+      {
+        "left": "Dataset",
+        "right": "A named view of data inside a store, such as a folder of CSV"
+      },
+      {
+        "left": "Activity",
+        "right": "One step, such as a copy or a lookup"
+      },
+      {
+        "left": "Trigger",
+        "right": "What decides when a pipeline runs"
+      }
+    ],
+    "right_distractors": [
+      "The Spark cluster that cleans the data"
+    ]
+  },
+  {
+    "id": "ex-a44r6rtq",
+    "version": 1,
+    "section": "the-parts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody renames the dataset `ds_raw_orders` to `ds_orders_raw` in the portal. What happens to `pl_orders_nightly`?",
+    "hint": "How does an activity find its dataset?",
+    "choices": [
+      {
+        "text": "Nothing; the pipeline follows the dataset to its new name",
+        "correct": false,
+        "why": "References are by name, and nothing rewrites them."
+      },
+      {
+        "text": "It fails at its next run, because its activity names the old dataset",
+        "correct": true,
+        "why": "Right. Every arrow in a factory is a reference by name."
+      },
+      {
+        "text": "It copies into a new folder named after the dataset",
+        "correct": false,
+        "why": "The folder comes from the dataset's location, not its name."
+      },
+      {
+        "text": "The linked service is renamed too, to keep them matched",
+        "correct": false,
+        "why": "Nothing renames one part because another changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-3621c0j6",
+    "version": 1,
+    "section": "the-parts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The night's export has duplicate orders and totals written with a comma. Where in Quitanda's night are they fixed?",
+    "hint": "What does a copy activity do, and what does it hand on?",
+    "choices": [
+      {
+        "text": "In the copy activity, which can deduplicate on the way",
+        "correct": false,
+        "why": "A copy maps columns and converts formats; cleaning is a transformation."
+      },
+      {
+        "text": "In the linked service, which validates what it reads",
+        "correct": false,
+        "why": "A linked service is a connection; it validates nothing."
+      },
+      {
+        "text": "In a data flow or a notebook the pipeline starts",
+        "correct": true,
+        "why": "Right. Data Factory orders the night and leaves the transformation to an engine, lesson 20's choice."
+      },
+      {
+        "text": "In the trigger, which skips files with errors",
+        "correct": false,
+        "why": "A trigger decides when, not what."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbc9mtgx",
+    "version": 1,
+    "section": "integration-runtimes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda's stock system runs on a SQL Server behind the firewall of its warehouse. Which runtime copies from it?",
+    "hint": "Azure cannot open a connection into that network.",
+    "choices": [
+      {
+        "text": "The Azure runtime, with the firewall opened to Azure's addresses",
+        "correct": false,
+        "why": "That opens the warehouse to traffic coming in, which the self-hosted runtime avoids."
+      },
+      {
+        "text": "A self-hosted runtime, on a machine inside that network",
+        "correct": true,
+        "why": "Right. It connects outwards to Data Factory and reads the SQL Server next to it."
+      },
+      {
+        "text": "The Azure-SSIS runtime",
+        "correct": false,
+        "why": "That one runs SSIS packages in Azure; it does not reach into a private network by itself."
+      },
+      {
+        "text": "None; Data Factory cannot read a server it cannot reach",
+        "correct": false,
+        "why": "The self-hosted runtime exists for exactly this."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce7h005k",
+    "version": 1,
+    "section": "integration-runtimes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a self-hosted runtime need nothing opened in the warehouse's firewall for traffic coming in?",
+    "hint": "Who opens the connection?",
+    "choices": [
+      {
+        "text": "It opens its connections outwards, over HTTPS, and asks for work",
+        "correct": true,
+        "why": "Right. Nothing outside starts a connection to it."
+      },
+      {
+        "text": "Data Factory reaches it through a VPN that the runtime creates when it is installed",
+        "correct": false,
+        "why": "No VPN is involved; the runtime calls out."
+      },
+      {
+        "text": "Its traffic is encrypted, and firewalls let encrypted traffic in",
+        "correct": false,
+        "why": "Encryption decides nothing about direction."
+      },
+      {
+        "text": "It copies files to a USB disk that is uploaded every night",
+        "correct": false,
+        "why": "Everything goes over the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-8x7fr9cs",
+    "version": 1,
+    "section": "integration-runtimes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy between two cloud stores is slow, and somebody doubles its DIUs. What does that change?",
+    "hint": "DIUs are both speed and the meter.",
+    "choices": [
+      {
+        "text": "Nothing, because DIUs are only a label that the bill carries for each copy run",
+        "correct": false,
+        "why": "DIUs are the processor, memory and network the copy gets."
+      },
+      {
+        "text": "The speed, at no extra cost",
+        "correct": false,
+        "why": "The copy is billed per DIU-hour."
+      },
+      {
+        "text": "Faster until source or sink limits it; billed per DIU-hour",
+        "correct": true,
+        "why": "Right. Past that point the extra DIUs wait, and the waiting is billed."
+      },
+      {
+        "text": "The region where the copy runs",
+        "correct": false,
+        "why": "The region comes from AutoResolve or the runtime's location."
+      }
+    ]
+  },
+  {
+    "id": "ex-1awxth1w",
+    "version": 1,
+    "section": "integration-runtimes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bank's policy says its data may be processed only in Brazil. Its factory copies between two accounts in `brazilsouth` on the default runtime. What should change?",
+    "hint": "What does AutoResolve promise?",
+    "choices": [
+      {
+        "text": "Nothing, since both accounts are in Brazil",
+        "correct": false,
+        "why": "AutoResolve chooses where to run; it is not a promise about a country."
+      },
+      {
+        "text": "Use an Azure runtime pinned to `brazilsouth`",
+        "correct": true,
+        "why": "Right. A runtime with a location says where the copy runs, which a policy can be checked against."
+      },
+      {
+        "text": "Use a self-hosted runtime in the bank's office",
+        "correct": false,
+        "why": "That would route cloud-to-cloud data through an office, for nothing."
+      },
+      {
+        "text": "Move the factory itself to `brazilsouth`, which is where copies run",
+        "correct": false,
+        "why": "The factory's region is where definitions live; the runtime decides where the copy runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-eggb53sg",
+    "version": 1,
+    "section": "declaring-a-pipeline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the linked service `ls_lake` sign in to the storage account?",
+    "hint": "No key is written anywhere in `main.tf`.",
+    "choices": [
+      {
+        "text": "With the account key, read from the connection string",
+        "correct": false,
+        "why": "There is no connection string in the file."
+      },
+      {
+        "text": "As the factory's managed identity",
+        "correct": true,
+        "why": "Right. `use_managed_identity = true`, and the identity needs a role on the account."
+      },
+      {
+        "text": "With a SAS token kept in the pipeline's parameters",
+        "correct": false,
+        "why": "The pipeline's parameter is `day`; no token is involved."
+      },
+      {
+        "text": "Anonymously, since the container is public",
+        "correct": false,
+        "why": "Nothing in the file makes a container public."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj0fxkbc",
+    "version": 1,
+    "section": "declaring-a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform validate` accepted an activity of type `Cpy`. What does that tell you?",
+    "hint": "What is `activities_json` to the provider?",
+    "choices": [
+      {
+        "text": "`Cpy` is an older name for the copy activity",
+        "correct": false,
+        "why": "It is a typo; Azure would refuse it."
+      },
+      {
+        "text": "That the provider sees the activities as a string, and only Azure checks what is in it",
+        "correct": true,
+        "why": "Right. The factory's name was checked; the pipeline's contents are checked at deployment."
+      },
+      {
+        "text": "That the pipeline would run and do nothing",
+        "correct": false,
+        "why": "Azure would refuse to deploy it before any run."
+      },
+      {
+        "text": "That validate is broken for Data Factory",
+        "correct": false,
+        "why": "It does what it does: the schema it knows, and nothing it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-15es0g6z",
+    "version": 1,
+    "section": "declaring-a-pipeline",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a dataset's path, a string that starts with the character ___ is an expression Data Factory evaluates at run time, such as `concat('orders/dt=', dataset().day)`.",
+    "hint": "It is the first character of `@pipeline()`.",
+    "blanks": [
+      {
+        "accept": [
+          "@"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yeaqn681",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The tumbling window starts at `2026-10-01T06:00:00Z`, with 24-hour windows and a 30-minute delay. When does the run for `day = 2026-10-01` start, in São Paulo time?",
+    "hint": "06:00 UTC is 03:00 in São Paulo, and a window runs after it closes.",
+    "choices": [
+      {
+        "text": "At 03:00 on 1 October",
+        "correct": false,
+        "why": "That is when the window opens; it runs after it closes."
+      },
+      {
+        "text": "At 06:30 on 2 October",
+        "correct": false,
+        "why": "06:00 is UTC; São Paulo is three hours behind."
+      },
+      {
+        "text": "At 03:30 on 2 October",
+        "correct": true,
+        "why": "Right. The window closes at 03:00 on the 2nd, and the delay adds thirty minutes."
+      },
+      {
+        "text": "At midnight, as the day changes",
+        "correct": false,
+        "why": "Windows follow the start time, not the calendar."
+      }
+    ]
+  },
+  {
+    "id": "ex-vberbz9f",
+    "version": 1,
+    "section": "triggers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The tumbling window with a start date of 1 October is activated at noon on 30 October. How many daily windows does it owe the pipeline at that moment?",
+    "hint": "Count the windows that have already closed.",
+    "value": 29,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gaat18r2",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner uploads its file whenever its own system finishes, sometimes at 01:00, sometimes at 05:00, and some nights not at all. Which trigger fits, and what must be added?",
+    "hint": "One trigger starts nothing when nothing arrives.",
+    "choices": [
+      {
+        "text": "A schedule trigger at 05:00, which covers every case",
+        "correct": false,
+        "why": "A file that arrives at 05:10 is missed until the next day."
+      },
+      {
+        "text": "A storage event trigger, and an alert when no file came",
+        "correct": true,
+        "why": "Right. The event runs on arrival, and a missing file starts nothing, so something else has to notice."
+      },
+      {
+        "text": "A tumbling window of one minute",
+        "correct": false,
+        "why": "That is 1,440 runs a day, nearly all of them for nothing."
+      },
+      {
+        "text": "A storage event trigger alone, since it fails when no file comes",
+        "correct": false,
+        "why": "It does not fail: with no event, there is no run to fail."
+      }
+    ]
+  },
+  {
+    "id": "ex-phh1fr06",
+    "version": 1,
+    "section": "triggers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are true of a tumbling window trigger, and not of a schedule trigger? Choose all that apply.",
+    "hint": "One of them remembers.",
+    "choices": [
+      {
+        "text": "Each run gets the start and end of its window",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A start date in the past runs every window since",
+        "correct": true,
+        "why": "Yes: a backfill."
+      },
+      {
+        "text": "A failed window stays failed and can be rerun on its own",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "It accepts a Windows time zone name",
+        "correct": false,
+        "why": "The schedule trigger takes `time_zone`; the window's start time is in UTC."
+      },
+      {
+        "text": "It can start several pipelines",
+        "correct": false,
+        "why": "That is the schedule trigger; a tumbling window runs one."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7sn066d",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A night failed halfway through the copy, after some Parquet files were written. The cause is fixed and the window is rerun. When is the rerun safe?",
+    "hint": "What does a second run do to what the first one left?",
+    "choices": [
+      {
+        "text": "Always, because Data Factory deletes what a failed run wrote",
+        "correct": false,
+        "why": "Data Factory does not clean up after a failed copy."
+      },
+      {
+        "text": "When the day's folder is replaced, not added to",
+        "correct": true,
+        "why": "Right. Then running twice gives the same day as running once."
+      },
+      {
+        "text": "Never; a failed window has to be deleted and recreated",
+        "correct": false,
+        "why": "Rerunning a window is the normal way out."
+      },
+      {
+        "text": "Only if the retry policy is set to zero",
+        "correct": false,
+        "why": "Retries are reruns too; they need the same property."
+      }
+    ]
+  },
+  {
+    "id": "ex-r432cnkh",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Microsoft documents that a factory keeps the history of its pipeline runs for ___ days; longer needs a Log Analytics workspace.",
+    "hint": "A month and a half.",
+    "blanks": [
+      {
+        "accept": [
+          "45",
+          "forty-five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vvd4nwja",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy runs on 4 DIUs for 2 minutes every night of a 31-night month. At an illustrative 0.25 USD per DIU-hour, what is the month's data movement line, in USD, to two decimals?",
+    "hint": "DIUs × minutes / 60 × nights × price.",
+    "value": 1.03,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-mgq6rvd6",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pipeline starts a Databricks job and waits an hour for it. Which bills does that hour appear on?",
+    "hint": "One service works and the other waits.",
+    "choices": [
+      {
+        "text": "Databricks' only, since Data Factory did no work",
+        "correct": false,
+        "why": "Data Factory bills external activities by the hour of waiting."
+      },
+      {
+        "text": "Data Factory's only, billed at the rate of a mapping data flow",
+        "correct": false,
+        "why": "No data flow ran; Databricks bills its own job."
+      },
+      {
+        "text": "Both: Databricks for the work, Data Factory for the wait",
+        "correct": true,
+        "why": "Right. An external activity is billed for the hours it waits."
+      },
+      {
+        "text": "Neither, as orchestration is free",
+        "correct": false,
+        "why": "Activity runs are billed per thousand, and waiting per hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgyyxpje",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda moves its load from once a night to every minute, with the same four activities. Which line of the bill grows the most, and by how much?",
+    "hint": "Count the runs in a day.",
+    "choices": [
+      {
+        "text": "Orchestration, about 1,440 times, since every run is billed per thousand",
+        "correct": true,
+        "why": "Right. Runs grow with frequency; the data moved per day stays about the same."
+      },
+      {
+        "text": "Data movement, 1,440 times, since each run copies the whole day",
+        "correct": false,
+        "why": "Each run copies what arrived in its minute, not the day."
+      },
+      {
+        "text": "None; the factory's price is per month",
+        "correct": false,
+        "why": "There is no line for the factory itself."
+      },
+      {
+        "text": "The self-hosted machine, which must be sixty times larger",
+        "correct": false,
+        "why": "There is no self-hosted runtime in this load."
+      }
+    ]
+  },
+  {
+    "id": "ex-kg8yygsm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of Quitanda's night in the order Data Factory runs them.",
+    "hint": "The window has to close first.",
+    "items": [
+      "The day's window closes at 03:00",
+      "The delay of thirty minutes passes",
+      "The pipeline starts with `day` set from the window's start",
+      "The copy reads `raw` and writes `curated`"
+    ]
+  },
+  {
+    "id": "ex-4ww4s07t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which runtime runs a copy from the `raw` container to the `curated` one, both in Quitanda's lake in `brazilsouth`?",
+    "hint": "Nothing in it leaves Azure.",
+    "choices": [
+      {
+        "text": "The self-hosted runtime in Guarulhos, which is already there for the stock copy",
+        "correct": false,
+        "why": "That would send cloud data through the warehouse and back."
+      },
+      {
+        "text": "The Azure runtime",
+        "correct": true,
+        "why": "Right. Both ends are Azure services the managed runtime reaches."
+      },
+      {
+        "text": "The Azure-SSIS runtime",
+        "correct": false,
+        "why": "No SSIS package is involved."
+      },
+      {
+        "text": "No runtime, since a copy inside one account is done by the account",
+        "correct": false,
+        "why": "Every activity runs on a runtime, the default one included."
+      }
+    ]
+  }
+]

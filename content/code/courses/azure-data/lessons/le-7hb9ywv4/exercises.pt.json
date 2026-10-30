@@ -1,0 +1,402 @@
+{
+  "ex-q8b1zmj4": {
+    "prompt": "Ligue cada parte de uma factory ao que ela é.",
+    "hint": "Só uma delas sabe como entrar.",
+    "pairs": [
+      {
+        "left": "Linked service",
+        "right": "Onde um armazenamento está e como entrar nele"
+      },
+      {
+        "left": "Dataset",
+        "right": "Uma visão com nome de dados dentro de um armazenamento, como uma pasta de CSV"
+      },
+      {
+        "left": "Atividade",
+        "right": "Um passo, como uma cópia ou um lookup"
+      },
+      {
+        "left": "Gatilho",
+        "right": "O que decide quando um pipeline roda"
+      }
+    ],
+    "right_distractors": [
+      "O cluster Spark que limpa os dados"
+    ]
+  },
+  "ex-a44r6rtq": {
+    "prompt": "Alguém renomeia o dataset `ds_raw_orders` para `ds_orders_raw` no portal. O que acontece com o `pl_orders_nightly`?",
+    "hint": "Como uma atividade encontra o dataset dela?",
+    "choices": [
+      {
+        "text": "Nada; o pipeline segue o dataset até o nome novo",
+        "why": "As referências são por nome, e nada as reescreve."
+      },
+      {
+        "text": "Falha na próxima execução, porque a atividade cita o dataset antigo",
+        "why": "Isso. Toda seta numa factory é uma referência por nome."
+      },
+      {
+        "text": "Copia para uma pasta nova com o nome do dataset",
+        "why": "A pasta vem da localização do dataset, não do nome dele."
+      },
+      {
+        "text": "O linked service também é renomeado, para manter os dois iguais",
+        "why": "Nada renomeia uma parte porque outra mudou."
+      }
+    ]
+  },
+  "ex-3621c0j6": {
+    "prompt": "O export da noite tem pedidos duplicados e totais escritos com vírgula. Em que ponto da noite da Quitanda eles são corrigidos?",
+    "hint": "O que uma atividade de cópia faz, e o que ela repassa?",
+    "choices": [
+      {
+        "text": "Na atividade de cópia, que pode deduplicar no caminho",
+        "why": "Uma cópia mapeia colunas e converte formatos; limpar é transformação."
+      },
+      {
+        "text": "No linked service, que valida o que lê",
+        "why": "Um linked service é uma conexão; não valida nada."
+      },
+      {
+        "text": "Num data flow ou notebook que o pipeline inicia",
+        "why": "Isso. O Data Factory ordena a noite e deixa a transformação para um motor, a escolha da lição 20."
+      },
+      {
+        "text": "No gatilho, que pula arquivos com erro",
+        "why": "Um gatilho decide quando, não o quê."
+      }
+    ]
+  },
+  "ex-gbc9mtgx": {
+    "prompt": "O sistema de estoque da Quitanda roda num SQL Server atrás do firewall do depósito. Que runtime copia dele?",
+    "hint": "O Azure não consegue abrir uma conexão para dentro daquela rede.",
+    "choices": [
+      {
+        "text": "O runtime do Azure, com o firewall aberto para os endereços do Azure",
+        "why": "Isso abre o depósito para tráfego de entrada, que o runtime self-hosted evita."
+      },
+      {
+        "text": "Um runtime self-hosted, numa máquina dentro daquela rede",
+        "why": "Isso. Ele se conecta para fora, ao Data Factory, e lê o SQL Server ao lado."
+      },
+      {
+        "text": "O runtime Azure-SSIS",
+        "why": "Esse roda pacotes SSIS no Azure; não alcança sozinho uma rede privada."
+      },
+      {
+        "text": "Nenhum; o Data Factory não lê um servidor que não alcança",
+        "why": "O runtime self-hosted existe exatamente para isso."
+      }
+    ]
+  },
+  "ex-ce7h005k": {
+    "prompt": "Por que um runtime self-hosted não precisa de nada aberto no firewall do depósito para tráfego de entrada?",
+    "hint": "Quem abre a conexão?",
+    "choices": [
+      {
+        "text": "Ele abre as conexões para fora, por HTTPS, e pede trabalho",
+        "why": "Isso. Nada de fora inicia uma conexão com ele."
+      },
+      {
+        "text": "O Data Factory o alcança por uma VPN que o runtime cria quando é instalado",
+        "why": "Não há VPN; o runtime é quem chama para fora."
+      },
+      {
+        "text": "O tráfego dele é criptografado, e firewalls deixam tráfego criptografado entrar",
+        "why": "A criptografia não decide nada sobre direção."
+      },
+      {
+        "text": "Ele copia arquivos para um disco USB que é enviado toda noite",
+        "why": "Tudo vai pela rede."
+      }
+    ]
+  },
+  "ex-8x7fr9cs": {
+    "prompt": "Uma cópia entre dois armazenamentos na nuvem está lenta, e alguém dobra as DIUs dela. O que isso muda?",
+    "hint": "As DIUs são velocidade e medidor ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Nada, porque DIUs são só um rótulo que a conta traz para cada execução de cópia",
+        "why": "DIUs são o processador, a memória e a rede que a cópia recebe."
+      },
+      {
+        "text": "A velocidade, sem custo a mais",
+        "why": "A cópia é cobrada por DIU-hora."
+      },
+      {
+        "text": "Mais rápida até a origem ou o destino limitarem; cobrada por DIU-hora",
+        "why": "Isso. Depois desse ponto as DIUs a mais esperam, e a espera é cobrada."
+      },
+      {
+        "text": "A região em que a cópia roda",
+        "why": "A região vem do AutoResolve ou da localização do runtime."
+      }
+    ]
+  },
+  "ex-1awxth1w": {
+    "prompt": "A política de um banco diz que os dados dele só podem ser processados no Brasil. A factory dele copia entre duas contas em `brazilsouth` no runtime padrão. O que deve mudar?",
+    "hint": "O que o AutoResolve promete?",
+    "choices": [
+      {
+        "text": "Nada, já que as duas contas estão no Brasil",
+        "why": "O AutoResolve escolhe onde rodar; não é uma promessa sobre um país."
+      },
+      {
+        "text": "Usar um runtime do Azure fixado em `brazilsouth`",
+        "why": "Isso. Um runtime com localização diz onde a cópia roda, e a política pode ser conferida contra isso."
+      },
+      {
+        "text": "Usar um runtime self-hosted no escritório do banco",
+        "why": "Isso faria dados de nuvem para nuvem passarem por um escritório, à toa."
+      },
+      {
+        "text": "Mudar a própria factory para `brazilsouth`, que é onde as cópias rodam",
+        "why": "A região da factory é onde as definições vivem; o runtime decide onde a cópia roda."
+      }
+    ]
+  },
+  "ex-eggb53sg": {
+    "prompt": "Como o linked service `ls_lake` entra na conta de armazenamento?",
+    "hint": "Nenhuma chave está escrita no `main.tf`.",
+    "choices": [
+      {
+        "text": "Com a chave da conta, lida da connection string",
+        "why": "Não há connection string no arquivo."
+      },
+      {
+        "text": "Como a identidade gerenciada da factory",
+        "why": "Isso. `use_managed_identity = true`, e a identidade precisa de um papel na conta."
+      },
+      {
+        "text": "Com um token SAS guardado nos parâmetros do pipeline",
+        "why": "O parâmetro do pipeline é `day`; não há token."
+      },
+      {
+        "text": "Anonimamente, já que o contêiner é público",
+        "why": "Nada no arquivo torna um contêiner público."
+      }
+    ]
+  },
+  "ex-hj0fxkbc": {
+    "prompt": "O `terraform validate` aceitou uma atividade do tipo `Cpy`. O que isso lhe diz?",
+    "hint": "O que é `activities_json` para o provider?",
+    "choices": [
+      {
+        "text": "`Cpy` é um nome antigo da atividade de cópia",
+        "why": "É um erro de digitação; o Azure o recusaria."
+      },
+      {
+        "text": "Que o provider vê as atividades como texto, e só o Azure confere o que há nelas",
+        "why": "Isso. O nome da factory foi conferido; o conteúdo do pipeline é conferido na implantação."
+      },
+      {
+        "text": "Que o pipeline rodaria e não faria nada",
+        "why": "O Azure se recusaria a implantá-lo antes de qualquer execução."
+      },
+      {
+        "text": "Que o validate está quebrado para o Data Factory",
+        "why": "Ele faz o que faz: o schema que conhece, e nada além."
+      }
+    ]
+  },
+  "ex-15es0g6z": {
+    "prompt": "No caminho de um dataset, um texto que começa com o caractere ___ é uma expressão que o Data Factory avalia na hora da execução, como `concat('orders/dt=', dataset().day)`.",
+    "hint": "É o primeiro caractere de `@pipeline()`.",
+    "blanks": [
+      {
+        "accept": [
+          "@"
+        ]
+      }
+    ]
+  },
+  "ex-yeaqn681": {
+    "prompt": "A tumbling window começa em `2026-10-01T06:00:00Z`, com janelas de 24 horas e atraso de 30 minutos. Quando começa a execução de `day = 2026-10-01`, no horário de São Paulo?",
+    "hint": "06:00 UTC são 03:00 em São Paulo, e uma janela roda depois de fechar.",
+    "choices": [
+      {
+        "text": "Às 03:00 de 1º de outubro",
+        "why": "É quando a janela abre; ela roda depois de fechar."
+      },
+      {
+        "text": "Às 06:30 de 2 de outubro",
+        "why": "06:00 é UTC; São Paulo está três horas atrás."
+      },
+      {
+        "text": "Às 03:30 de 2 de outubro",
+        "why": "Isso. A janela fecha às 03:00 do dia 2, e o atraso soma trinta minutos."
+      },
+      {
+        "text": "À meia-noite, na virada do dia",
+        "why": "As janelas seguem o horário de início, não o calendário."
+      }
+    ]
+  },
+  "ex-vberbz9f": {
+    "prompt": "A tumbling window com início em 1º de outubro é ativada ao meio-dia de 30 de outubro. Quantas janelas diárias ela deve ao pipeline nesse momento?",
+    "hint": "Conte as janelas que já fecharam."
+  },
+  "ex-gaat18r2": {
+    "prompt": "Um parceiro sobe o arquivo quando o sistema dele termina, às vezes à 01:00, às vezes às 05:00, e algumas noites nem sobe. Que gatilho serve, e o que precisa ser acrescentado?",
+    "hint": "Um gatilho não inicia nada quando nada chega.",
+    "choices": [
+      {
+        "text": "Um gatilho agendado às 05:00, que cobre todos os casos",
+        "why": "Um arquivo que chega às 05:10 fica para o dia seguinte."
+      },
+      {
+        "text": "Um gatilho de evento, e um alerta quando nenhum arquivo vier",
+        "why": "Isso. O evento roda na chegada, e um arquivo que falta não inicia nada, então outra coisa precisa perceber."
+      },
+      {
+        "text": "Uma tumbling window de um minuto",
+        "why": "São 1.440 execuções por dia, quase todas à toa."
+      },
+      {
+        "text": "Só um gatilho de evento de armazenamento, já que ele falha quando nenhum arquivo vem",
+        "why": "Ele não falha: sem evento, não há execução para falhar."
+      }
+    ]
+  },
+  "ex-phh1fr06": {
+    "prompt": "Quais valem para um gatilho tumbling window, e não para um gatilho agendado? Escolha todas as que se aplicam.",
+    "hint": "Um deles se lembra.",
+    "choices": [
+      {
+        "text": "Cada execução recebe o início e o fim da sua janela",
+        "why": "Sim."
+      },
+      {
+        "text": "Uma data de início no passado roda todas as janelas desde então",
+        "why": "Sim: um backfill."
+      },
+      {
+        "text": "Uma janela que falhou fica falha e pode ser reexecutada sozinha",
+        "why": "Sim."
+      },
+      {
+        "text": "Aceita o nome de um fuso horário do Windows",
+        "why": "O gatilho agendado recebe `time_zone`; o início da janela é em UTC."
+      },
+      {
+        "text": "Pode iniciar vários pipelines",
+        "why": "Isso é o gatilho agendado; uma tumbling window roda um."
+      }
+    ]
+  },
+  "ex-t7sn066d": {
+    "prompt": "Uma noite falhou no meio da cópia, depois de alguns arquivos Parquet escritos. A causa é corrigida e a janela é reexecutada. Quando a reexecução é segura?",
+    "hint": "O que uma segunda execução faz com o que a primeira deixou?",
+    "choices": [
+      {
+        "text": "Sempre, porque o Data Factory apaga o que uma execução falha escreveu",
+        "why": "O Data Factory não limpa o que uma cópia falha deixou."
+      },
+      {
+        "text": "Quando a pasta do dia é substituída, não somada",
+        "why": "Isso. Assim rodar duas vezes dá o mesmo dia que rodar uma."
+      },
+      {
+        "text": "Nunca; uma janela falha precisa ser apagada e recriada",
+        "why": "Reexecutar uma janela é o caminho normal."
+      },
+      {
+        "text": "Só se a política de retry estiver em zero",
+        "why": "Retries também são reexecuções; precisam da mesma propriedade."
+      }
+    ]
+  },
+  "ex-r432cnkh": {
+    "prompt": "A Microsoft documenta que uma factory guarda o histórico das execuções de pipeline por ___ dias; mais que isso exige um workspace do Log Analytics.",
+    "hint": "Um mês e meio.",
+    "blanks": [
+      {
+        "accept": [
+          "45",
+          "quarenta e cinco"
+        ]
+      }
+    ]
+  },
+  "ex-vvd4nwja": {
+    "prompt": "Uma cópia roda com 4 DIUs por 2 minutos toda noite de um mês de 31 noites. A um preço ilustrativo de 0,25 USD por DIU-hora, quanto dá a linha de movimentação de dados do mês, em USD, com duas casas?",
+    "hint": "DIUs × minutos / 60 × noites × preço."
+  },
+  "ex-mgq6rvd6": {
+    "prompt": "Um pipeline inicia um job do Databricks e espera uma hora por ele. Em que contas essa hora aparece?",
+    "hint": "Um serviço trabalha e o outro espera.",
+    "choices": [
+      {
+        "text": "Só na do Databricks, já que o Data Factory não trabalhou",
+        "why": "O Data Factory cobra atividades externas pela hora de espera."
+      },
+      {
+        "text": "Só na do Data Factory, cobrada à tarifa de um mapping data flow",
+        "why": "Nenhum data flow rodou; o Databricks cobra o próprio job."
+      },
+      {
+        "text": "As duas: o Databricks pelo trabalho, o Data Factory pelo tempo parado",
+        "why": "Isso. Uma atividade externa é cobrada pelas horas em que espera."
+      },
+      {
+        "text": "Em nenhuma, porque a orquestração é grátis",
+        "why": "Execuções de atividade são cobradas por mil, e a espera por hora."
+      }
+    ]
+  },
+  "ex-sgyyxpje": {
+    "prompt": "A Quitanda passa a carga de uma vez por noite para cada minuto, com as mesmas quatro atividades. Que linha da conta cresce mais, e quanto?",
+    "hint": "Conte as execuções num dia.",
+    "choices": [
+      {
+        "text": "A orquestração, umas 1.440 vezes, já que toda execução é cobrada por mil",
+        "why": "Isso. As execuções crescem com a frequência; os dados movidos por dia ficam mais ou menos iguais."
+      },
+      {
+        "text": "A movimentação de dados, 1.440 vezes, já que cada execução copia o dia inteiro",
+        "why": "Cada execução copia o que chegou no seu minuto, não o dia."
+      },
+      {
+        "text": "Nenhuma; o preço da factory é por mês",
+        "why": "Não há linha para a própria factory."
+      },
+      {
+        "text": "A máquina self-hosted, que precisa ser sessenta vezes maior",
+        "why": "Não há runtime self-hosted nessa carga."
+      }
+    ]
+  },
+  "ex-kg8yygsm": {
+    "prompt": "Ponha os passos da noite da Quitanda na ordem em que o Data Factory os executa.",
+    "hint": "A janela precisa fechar primeiro.",
+    "items": [
+      "A janela do dia fecha às 03:00",
+      "O atraso de trinta minutos passa",
+      "O pipeline começa com `day` vindo do início da janela",
+      "A cópia lê `raw` e escreve `curated`"
+    ]
+  },
+  "ex-4ww4s07t": {
+    "prompt": "Que runtime roda uma cópia do contêiner `raw` para o `curated`, os dois no lago da Quitanda em `brazilsouth`?",
+    "hint": "Nada nela sai do Azure.",
+    "choices": [
+      {
+        "text": "O runtime self-hosted de Guarulhos, que já está lá para a cópia do estoque",
+        "why": "Isso mandaria dados da nuvem pelo depósito e de volta."
+      },
+      {
+        "text": "O runtime do Azure",
+        "why": "Isso. As duas pontas são serviços do Azure que o runtime gerenciado alcança."
+      },
+      {
+        "text": "O runtime Azure-SSIS",
+        "why": "Não há pacote SSIS."
+      },
+      {
+        "text": "Nenhum, já que uma cópia dentro de uma conta é feita pela própria conta",
+        "why": "Toda atividade roda num runtime, inclusive o padrão."
+      }
+    ]
+  }
+}

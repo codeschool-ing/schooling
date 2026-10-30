@@ -1,0 +1,583 @@
+[
+  {
+    "id": "ex-e9jfw35v",
+    "version": 1,
+    "section": "bytes-billed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these changes what an on-demand query is billed?",
+    "hint": "Three things fix the bill before the query runs.",
+    "choices": [
+      {
+        "text": "A filter `store_id = 7` on a table partitioned by `dt` only",
+        "correct": false,
+        "why": "A filter on another column reads the column; it prunes nothing."
+      },
+      {
+        "text": "Adding `LIMIT 100`",
+        "correct": false,
+        "why": "The rows returned do not change the bytes read."
+      },
+      {
+        "text": "Naming one column fewer",
+        "correct": true,
+        "why": "Right. Every column referenced is billed."
+      },
+      {
+        "text": "Asking for the result in JSON",
+        "correct": false,
+        "why": "The output format has nothing to do with the bytes read."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9914tj0",
+    "version": 1,
+    "section": "bytes-billed",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query references `dt` only in its `WHERE`, and reads 594,882 rows of a partitioned table. How many bytes does `dt` add to what it processes?",
+    "hint": "A `DATE` is 8 bytes.",
+    "value": 4759056,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4777v6b0",
+    "version": 1,
+    "section": "bytes-billed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bqbill.py` printed 15,023,069 bytes processed and 15,728,640 billed. What makes the difference?",
+    "hint": "Divide the billed number by 1,048,576.",
+    "choices": [
+      {
+        "text": "The 10 MB minimum",
+        "correct": false,
+        "why": "15 MB is already above the minimum."
+      },
+      {
+        "text": "The rounding up to the next MB",
+        "correct": true,
+        "why": "Right. 15,728,640 is exactly 15 MB."
+      },
+      {
+        "text": "Compression of the Parquet files",
+        "correct": false,
+        "why": "Compression lowers bytes on disk, never the billed ones."
+      },
+      {
+        "text": "The bytes of the files' footers",
+        "correct": false,
+        "why": "Footers are not in the logical size at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8p68k80",
+    "version": 1,
+    "section": "bytes-billed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `bqbill.py` accept a range of `dt` and no other filter?",
+    "hint": "Which filter changes which rows are counted?",
+    "choices": [
+      {
+        "text": "DuckDB cannot filter on other columns",
+        "correct": false,
+        "why": "DuckDB filters on anything; the program refuses on purpose."
+      },
+      {
+        "text": "Only the partition filter changes the bytes billed",
+        "correct": true,
+        "why": "Right. Any other filter is billed for its column and prunes nothing."
+      },
+      {
+        "text": "Filters on strings are billed twice",
+        "correct": false,
+        "why": "No column is billed twice; it is counted once if referenced."
+      },
+      {
+        "text": "Other filters make the bill depend on the cache",
+        "correct": false,
+        "why": "The cache depends on the whole query and the tables, not on its filters."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhtxnamc",
+    "version": 1,
+    "section": "dry-run",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a dry run cost on BigQuery?",
+    "hint": "The query is planned, not run.",
+    "choices": [
+      {
+        "text": "The 10 MB minimum",
+        "correct": false,
+        "why": "The minimum applies to queries that run."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. It reports the bytes and reads none."
+      },
+      {
+        "text": "The bytes of the table's metadata",
+        "correct": false,
+        "why": "Metadata is not billed as query bytes."
+      },
+      {
+        "text": "Half of the estimate it prints",
+        "correct": false,
+        "why": "There is no partial charge for an estimate."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffpg8rg5",
+    "version": 1,
+    "section": "dry-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query has `maximum_bytes_billed` set to 1 GiB and would be billed 3 GiB. What happens?",
+    "hint": "The limit acts before anything is read.",
+    "choices": [
+      {
+        "text": "It runs and is billed 1 GiB",
+        "correct": false,
+        "why": "There is no capped bill; the query either runs in full or not at all."
+      },
+      {
+        "text": "It reads the first GiB and stops",
+        "correct": false,
+        "why": "Nothing is read: it fails before starting."
+      },
+      {
+        "text": "It fails with an error and costs nothing",
+        "correct": true,
+        "why": "Right. That is the per-query guardrail."
+      },
+      {
+        "text": "It moves to a reservation to finish",
+        "correct": false,
+        "why": "No limit changes a query's pricing model."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qsy5h4k",
+    "version": 1,
+    "section": "dry-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly transformation bills 400 GiB, and somebody sets `maximum_bytes_billed` to 1 GiB on every query of the project's code. What does this lesson predict?",
+    "hint": "The limit is chosen per query.",
+    "choices": [
+      {
+        "text": "A safer night",
+        "correct": false,
+        "why": "The night's job is refused every time it runs."
+      },
+      {
+        "text": "The transformation is refused every night",
+        "correct": true,
+        "why": "Right. A limit fitted to the dashboard is wrong for the large job."
+      },
+      {
+        "text": "The transformation runs, billed at 1 GiB",
+        "correct": false,
+        "why": "There is no capped bill; it fails."
+      },
+      {
+        "text": "Nothing, since the limit only applies to dashboards",
+        "correct": false,
+        "why": "It applies to whatever query carries it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tpskzpy",
+    "version": 1,
+    "section": "dry-run",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `bq` flag that asks BigQuery for the bytes a query would process, without running it, is `--___`.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "dry_run"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9yqgdxv2",
+    "version": 1,
+    "section": "duckdb-plan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In which direction is a DuckDB plan read?",
+    "hint": "Where is the table read?",
+    "choices": [
+      {
+        "text": "From the bottom up",
+        "correct": true,
+        "why": "Right. Each step hands rows to the one above it."
+      },
+      {
+        "text": "From the top, in the order the SQL is written",
+        "correct": false,
+        "why": "SQL's order is not the order of execution."
+      },
+      {
+        "text": "Left to right, one column per step",
+        "correct": false,
+        "why": "The boxes are stacked by step, not by column."
+      },
+      {
+        "text": "In any order, since all steps run at once",
+        "correct": false,
+        "why": "Each step depends on the rows of the one below."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpxnwdat",
+    "version": 1,
+    "section": "duckdb-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan of the district query lists only `district` and `total_cents` as projections. Why is `dt` missing?",
+    "hint": "Where does `dt` live in these files?",
+    "choices": [
+      {
+        "text": "The filter on `dt` was dropped",
+        "correct": false,
+        "why": "It is right there under File Filters."
+      },
+      {
+        "text": "`dt` is too small to list",
+        "correct": false,
+        "why": "Size has nothing to do with the projections."
+      },
+      {
+        "text": "It came from the folder names",
+        "correct": true,
+        "why": "Right. In BigQuery `dt` is a column and is billed."
+      },
+      {
+        "text": "Only `SELECT`ed columns are ever projected",
+        "correct": false,
+        "why": "Filter columns are read too when they are columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfg4em2m",
+    "version": 1,
+    "section": "duckdb-plan",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`HASH_GROUP_BY` received 594,882 rows and produced 8. How many rows went in for each one that came out? Round to a whole number.",
+    "hint": "Divide.",
+    "value": 74360,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-avg66xzz",
+    "version": 1,
+    "section": "duckdb-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query meant for one day shows `Scanning Files: 60/60` in its plan. What has the plan caught?",
+    "hint": "The file count is the partitions read.",
+    "choices": [
+      {
+        "text": "A filter that did not prune",
+        "correct": true,
+        "why": "Right. That is the expensive mistake, caught in advance."
+      },
+      {
+        "text": "A slow laptop",
+        "correct": false,
+        "why": "The count is about files, not speed."
+      },
+      {
+        "text": "Too many slots",
+        "correct": false,
+        "why": "DuckDB has no slots."
+      },
+      {
+        "text": "A day with too many orders for one file",
+        "correct": false,
+        "why": "One day would be one file however many orders it had."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhz3vddt",
+    "version": 1,
+    "section": "execution-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a stage, the maximum compute time is ten times the average. What does the documentation call this, and what usually causes it?",
+    "hint": "The stage ends when its slowest worker does.",
+    "choices": [
+      {
+        "text": "Slot contention, from other queries",
+        "correct": false,
+        "why": "Contention shows as waiting, not as one worker computing longer."
+      },
+      {
+        "text": "Skew: one key value far more common than the rest",
+        "correct": true,
+        "why": "Right. One worker was given far more than the others."
+      },
+      {
+        "text": "A cache miss",
+        "correct": false,
+        "why": "The cache answers whole queries, not stages."
+      },
+      {
+        "text": "Insufficient shuffle quota",
+        "correct": false,
+        "why": "That shows as shuffle bytes spilled to disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8156tk5",
+    "version": 1,
+    "section": "execution-graph",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job used 120,000 slot-milliseconds and took 4 seconds. How many slots did it hold on average?",
+    "hint": "Slot time divided by elapsed time, in the same unit.",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-g90c981x",
+    "version": 1,
+    "section": "execution-graph",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do the first stage's workers already sum `total_cents` per district before the shuffle?",
+    "hint": "Compare what would cross the network either way.",
+    "choices": [
+      {
+        "text": "BigQuery bills fewer bytes for partial sums",
+        "correct": false,
+        "why": "On demand, the bill was fixed before the graph existed."
+      },
+      {
+        "text": "So that a few rows per worker cross the shuffle instead of every order",
+        "correct": true,
+        "why": "Right. That is where the query becomes cheap to move."
+      },
+      {
+        "text": "Because the second stage cannot add",
+        "correct": false,
+        "why": "It finishes the aggregation from the partials."
+      },
+      {
+        "text": "To sort the answer earlier",
+        "correct": false,
+        "why": "The sort is the last stage's."
+      }
+    ]
+  },
+  {
+    "id": "ex-3732kmcq",
+    "version": 1,
+    "section": "actually-scanned",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which bytes does BigQuery bill on demand?",
+    "hint": "A price list has to be knowable in advance.",
+    "choices": [
+      {
+        "text": "The compressed bytes its engine reads",
+        "correct": false,
+        "why": "Those depend on compression and are never what is billed."
+      },
+      {
+        "text": "The logical bytes, by type",
+        "correct": true,
+        "why": "Right. Uncompressed, value by value."
+      },
+      {
+        "text": "The bytes of the result",
+        "correct": false,
+        "why": "The result size does not enter the bill."
+      },
+      {
+        "text": "The physical bytes of the whole table",
+        "correct": false,
+        "why": "Only referenced columns count, and logically."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhcmvaz3",
+    "version": 1,
+    "section": "actually-scanned",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`district` is 230,035 bytes on disk for September and about 5.5 million on the bill. Why so far apart?",
+    "hint": "Eight values, nearly 600,000 rows.",
+    "choices": [
+      {
+        "text": "BigQuery stores strings uncompressed, unlike Parquet",
+        "correct": false,
+        "why": "It compresses them; it bills them as if it did not."
+      },
+      {
+        "text": "Parquet stores each name once, in a dictionary",
+        "correct": true,
+        "why": "Right. `RLE_DICTIONARY` in the encodings."
+      },
+      {
+        "text": "Accented names count double",
+        "correct": false,
+        "why": "Accents add one byte each in UTF-8, nowhere near the gap."
+      },
+      {
+        "text": "The bill includes `dt`",
+        "correct": false,
+        "why": "`dt` is its own 4,759,056; this is `district` alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-zc59kzy8",
+    "version": 1,
+    "section": "actually-scanned",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A notebook pulls `orders` out of BigQuery through the Storage Read API. What does it pay for, by the pricing page?",
+    "hint": "Same rule, another price.",
+    "choices": [
+      {
+        "text": "Logical bytes, at 1.98 USD per TiB past 300 free",
+        "correct": true,
+        "why": "Right. The size by type, again."
+      },
+      {
+        "text": "The compressed bytes sent over the network to the notebook",
+        "correct": false,
+        "why": "The page bills by data type size, not by what crosses the wire."
+      },
+      {
+        "text": "Nothing, since it is not a query",
+        "correct": false,
+        "why": "It has its own price on the page."
+      },
+      {
+        "text": "11.25 USD per TiB, as a query",
+        "correct": false,
+        "why": "That is on demand; the Storage Read API has its own line."
+      }
+    ]
+  },
+  {
+    "id": "ex-fj7jfwy3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the three stages of the district query in the order BigQuery runs them.",
+    "hint": "Partials come before totals.",
+    "items": [
+      "Read September's two columns and sum per district for each worker's share",
+      "Shuffle by district and finish the sums",
+      "Sort the eight totals and write the answer"
+    ]
+  },
+  {
+    "id": "ex-eaw4h3ts",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to the question it answers.",
+    "hint": "One right-hand question has no tool here.",
+    "pairs": [
+      {
+        "left": "A dry run",
+        "right": "How many bytes will this be billed, before it runs?"
+      },
+      {
+        "left": "`maximum_bytes_billed`",
+        "right": "Refuse this query if it would cost more than this"
+      },
+      {
+        "left": "The execution graph",
+        "right": "Which stage took the time, and how many slots?"
+      },
+      {
+        "left": "`parquet_metadata`",
+        "right": "How many bytes does each column occupy on disk?"
+      }
+    ],
+    "right_distractors": [
+      "Which analyst typed the query?"
+    ]
+  },
+  {
+    "id": "ex-q06gaa10",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these were measured in this lesson rather than computed or taken from Google's documentation? Choose all that apply.",
+    "hint": "DuckDB and the Parquet footers measured; the rest was computed or documented.",
+    "choices": [
+      {
+        "text": "September's two columns occupy 2,978,159 bytes on disk",
+        "correct": true,
+        "why": "Yes, from `parquet_metadata`."
+      },
+      {
+        "text": "`HASH_GROUP_BY` turned 594,882 rows into 8",
+        "correct": true,
+        "why": "Yes, from `EXPLAIN ANALYZE`."
+      },
+      {
+        "text": "The district query would be billed 15,728,640 bytes",
+        "correct": false,
+        "why": "Computed by `bqbill.py` from documented sizes."
+      },
+      {
+        "text": "BigQuery runs it in three stages",
+        "correct": false,
+        "why": "An illustration after the documentation; no job ran."
+      }
+    ]
+  }
+]

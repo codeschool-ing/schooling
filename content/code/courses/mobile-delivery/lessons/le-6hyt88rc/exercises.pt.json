@@ -1,0 +1,317 @@
+{
+  "ex-3km3jxcm": {
+    "prompt": "Quantos segundos o Android espera um app responder a um evento de entrada antes de declarar um ANR?"
+  },
+  "ex-snge9mmn": {
+    "prompt": "Por que o limite de ANR do Google Play, 0,47%, fica abaixo do de crash, 1,09%?",
+    "choices": [
+      {
+        "text": "ANRs são mais raros, então a régua é mais baixa",
+        "why": "Raridade não é o argumento; o dano é."
+      },
+      {
+        "text": "ANRs são contados por sessão, crashes por usuário",
+        "why": "As duas são taxas percebidas pelo usuário."
+      },
+      {
+        "text": "Um travamento faz as pessoas esperarem, e depois decidirem",
+        "why": "Isso. O Google trata um app travado como pior que um que quebrou."
+      },
+      {
+        "text": "ANRs são mais fáceis de corrigir",
+        "why": "Não é motivo para um limite."
+      }
+    ]
+  },
+  "ex-06ec4m2s": {
+    "prompt": "Quais destes, feitos na thread principal, podem causar um ANR? Escolha todos.",
+    "choices": [
+      {
+        "text": "Abrir o banco do planner",
+        "why": "Isso. Disco na thread principal."
+      },
+      {
+        "text": "Interpretar um ano de sessões",
+        "why": "Isso. Computação longa."
+      },
+      {
+        "text": "Esperar um lock que outra thread segura",
+        "why": "Isso."
+      },
+      {
+        "text": "Atribuir uma variável",
+        "why": "Instantâneo; não bloqueia nada."
+      }
+    ]
+  },
+  "ex-1hc7zt1f": {
+    "prompt": "Um relatório de crash do iOS mostra `0x8badf00d` com `scene-create`. O que aconteceu?",
+    "choices": [
+      {
+        "text": "Uma abertura que demorou demais",
+        "why": "Isso. O watchdog a encerrou: o primeiro quadro não foi desenhado a tempo."
+      },
+      {
+        "text": "Um erro Swift foi lançado",
+        "why": "Isso seria um crash comum."
+      },
+      {
+        "text": "O app ficou sem memória",
+        "why": "Isso é um evento jetsam, com relatório próprio."
+      },
+      {
+        "text": "A pessoa arrastou o app para fora",
+        "why": "Isso não deixa código de watchdog."
+      }
+    ]
+  },
+  "ex-k5y9c24g": {
+    "prompt": "A pilha de um relatório do watchdog mostra uma formatação rápida de texto. A equipe não entende como isso levou segundos. O que a documentação da Apple diz?",
+    "choices": [
+      {
+        "text": "A formatação foi lenta naquele aparelho",
+        "why": "Possível, mas não é o aviso da documentação."
+      },
+      {
+        "text": "O dSYM estava errado",
+        "why": "Um dSYM errado dá nomes errados, não isso."
+      },
+      {
+        "text": "Pilhas do watchdog são aleatórias",
+        "why": "Elas são exatas sobre o último momento."
+      },
+      {
+        "text": "A pilha mostra a última tarefa, não a que gastou o tempo",
+        "why": "Isso. A gota d'água, não o balde."
+      }
+    ]
+  },
+  "ex-rq8qhcke": {
+    "prompt": "Por que nenhum coletor de crashes consegue pegar uma morte por jetsam?",
+    "choices": [
+      {
+        "text": "O jetsam só acontece com o app fechado",
+        "why": "Ele pode encerrar o app em primeiro plano também."
+      },
+      {
+        "text": "SIGKILL, que nada pega",
+        "why": "Isso. Não há momento para gravar nada."
+      },
+      {
+        "text": "O relatório vai primeiro para a Apple",
+        "why": "A ordem não é o problema."
+      },
+      {
+        "text": "A Apple proíbe coletores de pegá-lo",
+        "why": "Não há o que proibir; ele não pode ser pego."
+      }
+    ]
+  },
+  "ex-aj09ap6c": {
+    "prompt": "Associe cada fonte de evidência ao que ela diz depois de uma morte.",
+    "pairs": [
+      {
+        "left": "ApplicationExitInfo",
+        "right": "por que o processo Android anterior terminou"
+      },
+      {
+        "left": "MetricKit",
+        "right": "os diagnósticos do sistema, na abertura seguinte do iOS"
+      },
+      {
+        "left": "um relatório de evento jetsam",
+        "right": "a memória de todo processo, sem as pilhas do seu"
+      }
+    ],
+    "right_distractors": [
+      "a pilha do momento em que o app foi morto"
+    ]
+  },
+  "ex-s0ay6ktr": {
+    "prompt": "Na execução que bloqueia do `hang.ts`, por que a linha do watchdog aparece antes de `week ready`?",
+    "choices": [
+      {
+        "text": "O Node imprime workers primeiro",
+        "why": "Essa regra não existe."
+      },
+      {
+        "text": "Outra thread, ainda livre",
+        "why": "Isso. A thread principal estava presa no laço."
+      },
+      {
+        "text": "A thread principal terminou cedo",
+        "why": "Ela rodou seis segundos."
+      },
+      {
+        "text": "O watchdog pausou o laço",
+        "why": "Ele só vigiou."
+      }
+    ]
+  },
+  "ex-440d6m69": {
+    "prompt": "O watchdog imprime com `writeSync(1, ...)` em vez de `console.log`. O que o `console.log` teria feito?",
+    "choices": [
+      {
+        "text": "Impresso a mesma linha no mesmo momento",
+        "why": "Ele passa pela thread principal, que estava presa."
+      },
+      {
+        "text": "Derrubado a worker",
+        "why": "Funciona numa worker; só chega tarde."
+      },
+      {
+        "text": "Gravado o relatório de travamento duas vezes",
+        "why": "Gravar o relatório é separado."
+      },
+      {
+        "text": "Depois do travamento descrito",
+        "why": "Isso. Numa worker ele entrega o texto à thread principal."
+      }
+    ]
+  },
+  "ex-kd475cr3": {
+    "prompt": "A thread principal grava um horário várias vezes por segundo, e a thread vigia o lê. A lição chama esse horário de ___.",
+    "blanks": [
+      {
+        "accept": [
+          "batimento"
+        ]
+      }
+    ]
+  },
+  "ex-6radj7sv": {
+    "prompt": "Por que detectores de travamento de verdade muitas vezes relatam aos 2 segundos e não aos 5?",
+    "choices": [
+      {
+        "text": "Dois segundos já é perceptível",
+        "why": "Isso. O Sentry chama esses de app hangs."
+      },
+      {
+        "text": "Checagens mais curtas gastam menos bateria do celular",
+        "why": "O limite não muda a frequência da checagem."
+      },
+      {
+        "text": "O watchdog da Apple dispara em exatos 2 segundos",
+        "why": "Nenhum número fixo assim é dado."
+      },
+      {
+        "text": "O Android exige 2 segundos",
+        "why": "O limite do Android é 5 para entrada."
+      }
+    ]
+  },
+  "ex-r0hh4gzh": {
+    "prompt": "Na listagem em Kotlin, qual linha tira a leitura do banco da thread principal?",
+    "choices": [
+      {
+        "text": "viewModelScope.launch",
+        "why": "Isso começa na thread principal."
+      },
+      {
+        "text": "_week.value = ...",
+        "why": "Isso precisa rodar na thread principal."
+      },
+      {
+        "text": "withContext(Dispatchers.IO)",
+        "why": "Isso. Depois volta à principal para a atribuição."
+      },
+      {
+        "text": "sumOf",
+        "why": "Essa é a soma, já de volta na principal."
+      }
+    ]
+  },
+  "ex-syw7f085": {
+    "prompt": "Uma tela React Native soma 50.000 sessões em JavaScript a cada renderização. Qual thread congela?",
+    "choices": [
+      {
+        "text": "A thread onde roda o seu código",
+        "why": "Isso. Tratadores de toque e animações conduzidos pelo JavaScript param."
+      },
+      {
+        "text": "A thread principal nativa, e o sistema mostra um ANR",
+        "why": "As views nativas continuam desenhando; o lado JavaScript para de responder."
+      },
+      {
+        "text": "A thread do banco",
+        "why": "A soma não está no banco."
+      },
+      {
+        "text": "Nenhuma; o Hermes a roda em paralelo",
+        "why": "O Hermes roda o seu código na thread JavaScript."
+      }
+    ]
+  },
+  "ex-a17h56m1": {
+    "prompt": "Depois de tirar trabalho da thread principal, qual número mostra que a cura funcionou?",
+    "choices": [
+      {
+        "text": "A duração do trabalho",
+        "why": "Ele demora o mesmo; o app responde enquanto isso."
+      },
+      {
+        "text": "O tamanho de download do app na loja",
+        "why": "Sem relação."
+      },
+      {
+        "text": "A taxa de ANR caindo",
+        "why": "Isso. E os relatórios de travamento sumindo."
+      },
+      {
+        "text": "A taxa de crash no Android vitals",
+        "why": "ANRs são contados à parte."
+      }
+    ]
+  },
+  "ex-wj0k0hmm": {
+    "prompt": "Coloque os passos de um detector de travamento em ordem.",
+    "items": [
+      "a thread principal atualiza o batimento",
+      "a thread principal fica presa",
+      "a vigia vê o batimento parar de mudar",
+      "passado o limite, ela grava um relatório da própria thread"
+    ]
+  },
+  "ex-qkz1r08h": {
+    "prompt": "Os relatórios de crash do planner estão estáveis, mas o ApplicationExitInfo na abertura seguinte diz muitas vezes que o low-memory killer encerrou o app em primeiro plano. O que está acontecendo?",
+    "choices": [
+      {
+        "text": "Pessoas fechando o app",
+        "why": "Isso tem motivo de saída próprio."
+      },
+      {
+        "text": "Mortes por memória que nenhum coletor pegaria",
+        "why": "Isso. Olhe a memória, não a lista de crashes."
+      },
+      {
+        "text": "Um coletor de crashes quebrado",
+        "why": "Ele funciona; essas mortes são invisíveis para ele."
+      },
+      {
+        "text": "ANRs com rótulo errado",
+        "why": "ANRs também têm motivo próprio."
+      }
+    ]
+  },
+  "ex-7pa8q00j": {
+    "prompt": "Em qual plataforma uma thread principal congelada produz um diálogo oferecendo esperar ou fechar?",
+    "choices": [
+      {
+        "text": "iOS",
+        "why": "O iOS encerra o app em vez disso."
+      },
+      {
+        "text": "Nenhum",
+        "why": "O Android pergunta."
+      },
+      {
+        "text": "Os dois",
+        "why": "Só o Android pergunta."
+      },
+      {
+        "text": "Android",
+        "why": "Isso. O diálogo de ANR."
+      }
+    ]
+  }
+}

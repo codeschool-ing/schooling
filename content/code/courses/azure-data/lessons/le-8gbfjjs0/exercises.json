@@ -1,0 +1,635 @@
+[
+  {
+    "id": "ex-0cmzkky1",
+    "version": 1,
+    "section": "the-workspace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do the virtual machines of a classic Databricks cluster run?",
+    "hint": "Who pays Azure for them?",
+    "choices": [
+      {
+        "text": "In Databricks' own Azure account, next to the control plane",
+        "correct": false,
+        "why": "That is where the control plane and serverless compute run."
+      },
+      {
+        "text": "In your subscription",
+        "correct": true,
+        "why": "Right. In a managed resource group, or in subnets of your own network, billed to you by Azure."
+      },
+      {
+        "text": "Inside the storage account that holds the lake",
+        "correct": false,
+        "why": "A storage account holds data, not machines."
+      },
+      {
+        "text": "On whichever region Databricks chooses that night",
+        "correct": false,
+        "why": "Clusters run in the workspace's region."
+      }
+    ]
+  },
+  {
+    "id": "ex-11whffvc",
+    "version": 1,
+    "section": "the-workspace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An engineer tries to resize a disk on one of the cluster machines in the workspace's managed resource group, and Azure refuses, though she owns the subscription. Why?",
+    "hint": "Who manages that group?",
+    "choices": [
+      {
+        "text": "Her role is missing a permission for disks",
+        "correct": false,
+        "why": "An owner has every permission an Azure role can give."
+      },
+      {
+        "text": "The machine is running, and disks change only when it is stopped",
+        "correct": false,
+        "why": "The refusal is about who may change it, not when."
+      },
+      {
+        "text": "A deny assignment protects what Databricks manages, owners included",
+        "correct": true,
+        "why": "Right. A machine fixed by hand is a cluster that fails for no visible reason."
+      },
+      {
+        "text": "The managed resource group belongs to another tenant",
+        "correct": false,
+        "why": "It is in her subscription, and her tenant."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndxeswh6",
+    "version": 1,
+    "section": "the-workspace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A year after creating its workspace, Quitanda decides the clusters must run inside its own virtual network, with no public addresses. What does that take?",
+    "hint": "When is VNet injection decided?",
+    "choices": [
+      {
+        "text": "Adding two subnets to the existing workspace's settings",
+        "correct": false,
+        "why": "Injection cannot be added to a workspace after it is created."
+      },
+      {
+        "text": "A new workspace, created injected, and the work moved to it",
+        "correct": true,
+        "why": "Right. VNet injection is decided at creation, which is why the declaration has it from the start."
+      },
+      {
+        "text": "A peering between the managed network and Quitanda's",
+        "correct": false,
+        "why": "Peering connects networks; the machines still get public addresses."
+      },
+      {
+        "text": "Switching the workspace to the trial tier",
+        "correct": false,
+        "why": "The tier changes prices and features, not the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-yh5ffs5k",
+    "version": 1,
+    "section": "the-workspace",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Unity Catalog needs a workspace on the ___ tier.",
+    "hint": "One of `standard`, `premium` and `trial`.",
+    "blanks": [
+      {
+        "accept": [
+          "premium"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yr0r8jtg",
+    "version": 1,
+    "section": "declaring-a-workspace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `azurerm_databricks_access_connector` for, in the declaration?",
+    "hint": "It holds one thing.",
+    "choices": [
+      {
+        "text": "It connects the workspace's two subnets to each other",
+        "correct": false,
+        "why": "Subnets of one network reach each other already."
+      },
+      {
+        "text": "It holds a managed identity that Unity Catalog uses to reach the lake",
+        "correct": true,
+        "why": "Right. No storage key is handed to Databricks."
+      },
+      {
+        "text": "It stores the token that Databricks' own Terraform provider signs in with",
+        "correct": false,
+        "why": "It holds an identity for storage, not a token for the API."
+      },
+      {
+        "text": "It gives the clusters a public address for the control plane",
+        "correct": false,
+        "why": "`no_public_ip = true` says the opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-ern2dkkt",
+    "version": 1,
+    "section": "declaring-a-workspace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform validate` accepted the workspace. Which of these could still fail when the file is applied to a subscription?",
+    "hint": "What can only Azure know?",
+    "choices": [
+      {
+        "text": "A tier spelt `gold`",
+        "correct": false,
+        "why": "That one validate already refused."
+      },
+      {
+        "text": "Subnets too small for the machines, or a name already taken",
+        "correct": true,
+        "why": "Right. Those are Azure's checks, at `apply`."
+      },
+      {
+        "text": "A file not laid out as `terraform fmt` would",
+        "correct": false,
+        "why": "Layout never fails an apply; `fmt -check` already passed."
+      },
+      {
+        "text": "`no_public_ip` written as a string",
+        "correct": false,
+        "why": "A wrong type is refused by validate."
+      }
+    ]
+  },
+  {
+    "id": "ex-knbdkr0f",
+    "version": 1,
+    "section": "declaring-a-workspace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants its clusters, jobs and grants declared in Terraform too. Why can the file of this lesson not hold them?",
+    "hint": "Which API knows a cluster?",
+    "choices": [
+      {
+        "text": "Databricks' own provider declares them; `azurerm` cannot reach them",
+        "correct": true,
+        "why": "Right. Two providers: `azurerm` for the workspace, `databricks/databricks` for what is inside."
+      },
+      {
+        "text": "Clusters cannot be declared in any tool at all, and are only ever clicked",
+        "correct": false,
+        "why": "Databricks' provider declares them."
+      },
+      {
+        "text": "They would make the file too long for validate",
+        "correct": false,
+        "why": "Length is not the issue."
+      },
+      {
+        "text": "Grants belong to Entra ID, not to the workspace",
+        "correct": false,
+        "why": "Unity Catalog's grants are kept by Databricks."
+      }
+    ]
+  },
+  {
+    "id": "ex-46a3nf7q",
+    "version": 1,
+    "section": "compute",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of Databricks compute to what it is for.",
+    "hint": "Who uses it, and for how long?",
+    "pairs": [
+      {
+        "left": "All-purpose cluster",
+        "right": "Notebooks that people work on, shared"
+      },
+      {
+        "left": "Job cluster",
+        "right": "One run of a job, then terminated"
+      },
+      {
+        "left": "SQL warehouse",
+        "right": "SQL from analysts and BI tools"
+      },
+      {
+        "left": "Serverless compute",
+        "right": "Warm compute in Databricks' account, billed in DBUs alone"
+      }
+    ],
+    "right_distractors": [
+      "A copy between two storage accounts"
+    ]
+  },
+  {
+    "id": "ex-8pmwy9n1",
+    "version": 1,
+    "section": "compute",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should Quitanda's nightly cleaning notebook run?",
+    "hint": "Nobody is attached to it at three in the morning.",
+    "choices": [
+      {
+        "text": "On the all-purpose cluster the analysts use during the day",
+        "correct": false,
+        "why": "That pays the all-purpose rate and shares a cluster with people."
+      },
+      {
+        "text": "On a job cluster created for the run",
+        "correct": true,
+        "why": "Right. It exists for the half hour it needs, at the jobs rate."
+      },
+      {
+        "text": "On a SQL warehouse, since the rules are SQL",
+        "correct": false,
+        "why": "A warehouse serves queries; a notebook job runs on cluster or serverless compute."
+      },
+      {
+        "text": "On a pool, with no cluster at all",
+        "correct": false,
+        "why": "A pool lends machines to clusters; it runs nothing itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-qytm452y",
+    "version": 1,
+    "section": "compute",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a pool of idle machines cost, according to Databricks' documentation?",
+    "hint": "Two bills, and only one of them stops.",
+    "choices": [
+      {
+        "text": "Nothing, until a cluster takes a machine",
+        "correct": false,
+        "why": "Azure still bills the idle machines."
+      },
+      {
+        "text": "DBUs and machines, as if they were running a cluster",
+        "correct": false,
+        "why": "Idle pool machines are not billed in DBUs."
+      },
+      {
+        "text": "Azure's price for the machines, with no DBUs",
+        "correct": true,
+        "why": "Right. A little money for a lot of start-up time."
+      },
+      {
+        "text": "Only DBUs, since the machines belong to Databricks",
+        "correct": false,
+        "why": "In classic compute the machines are yours, in your subscription."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgwe0b2t",
+    "version": 1,
+    "section": "compute",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job must finish by six in the morning, and the team wants Spot machines to save money. Where do they put them?",
+    "hint": "What does losing each machine cost?",
+    "choices": [
+      {
+        "text": "On the driver, which works least",
+        "correct": false,
+        "why": "Losing the driver loses the run."
+      },
+      {
+        "text": "Everywhere, since Spark reruns whatever is lost",
+        "correct": false,
+        "why": "It reruns tasks of lost workers, not a lost driver."
+      },
+      {
+        "text": "On workers only, with the driver on an ordinary machine",
+        "correct": true,
+        "why": "Right. A lost worker costs time; a lost driver costs the job."
+      },
+      {
+        "text": "Nowhere; Spot is not available to Databricks",
+        "correct": false,
+        "why": "Workers can be Azure Spot machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rt8kbcf",
+    "version": 1,
+    "section": "compute",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The setting that stops an all-purpose cluster after a number of idle minutes is called auto ___.",
+    "hint": "It ends the cluster.",
+    "blanks": [
+      {
+        "accept": [
+          "termination"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-25fgzzve",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five machines, each consuming an illustrative 1 DBU an hour, run 30 minutes a night for 31 nights on a job cluster. At an illustrative 0.30 USD per DBU and 0.20 USD per machine-hour, what is the month in USD, to two decimals?",
+    "hint": "Machine-hours × (DBU price + machine price).",
+    "value": 38.75,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-nkwm9mw3",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the all-purpose cluster that stops after 60 idle minutes cost four and a half times the job cluster, for the same work?",
+    "hint": "Two differences multiply.",
+    "choices": [
+      {
+        "text": "All-purpose machines are larger",
+        "correct": false,
+        "why": "The lesson used the same machines in both."
+      },
+      {
+        "text": "Three times the hours, each at a higher DBU rate",
+        "correct": true,
+        "why": "Right. An idle hour a night, and the all-purpose rate on every hour."
+      },
+      {
+        "text": "All-purpose clusters are billed for the whole month",
+        "correct": false,
+        "why": "Only the one never stopped was."
+      },
+      {
+        "text": "Auto termination adds a fee of its own",
+        "correct": false,
+        "why": "It saves money; it has no fee."
+      }
+    ]
+  },
+  {
+    "id": "ex-p55bf9vq",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs a few short jobs a night and pays for start-up minutes and an idle tail on each. What does serverless change in that bill?",
+    "hint": "What does serverless not bill?",
+    "choices": [
+      {
+        "text": "Nothing; serverless is the same compute at the same price",
+        "correct": false,
+        "why": "It bills differently: DBUs only, for the work."
+      },
+      {
+        "text": "It removes the DBUs and keeps the machine cost",
+        "correct": false,
+        "why": "The reverse: the DBUs include the machines."
+      },
+      {
+        "text": "It is free below a number of jobs a night",
+        "correct": false,
+        "why": "No such allowance is documented here."
+      },
+      {
+        "text": "It bills only the work, in DBUs at its own price",
+        "correct": true,
+        "why": "Right. Whether it is cheaper depends on the two prices."
+      }
+    ]
+  },
+  {
+    "id": "ex-krs0svyp",
+    "version": 1,
+    "section": "unity-catalog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `quitanda_prd.sales.orders`, what is `sales`?",
+    "hint": "The middle of three levels.",
+    "choices": [
+      {
+        "text": "The catalog",
+        "correct": false,
+        "why": "The catalog is `quitanda_prd`."
+      },
+      {
+        "text": "The schema",
+        "correct": true,
+        "why": "Right. Catalog, schema, table."
+      },
+      {
+        "text": "The metastore",
+        "correct": false,
+        "why": "The metastore has no part in the name."
+      },
+      {
+        "text": "The external location",
+        "correct": false,
+        "why": "Locations are paths, not parts of a table's name."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wb6kcjt",
+    "version": 1,
+    "section": "unity-catalog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody drops the external table `quitanda_prd.sales.orders`. What happens to its files in the lake?",
+    "hint": "Who owns an external table's files?",
+    "choices": [
+      {
+        "text": "They stay; only the name goes",
+        "correct": true,
+        "why": "Right. Dropping a managed table would delete its files."
+      },
+      {
+        "text": "They are deleted at once, with the table",
+        "correct": false,
+        "why": "That is a managed table."
+      },
+      {
+        "text": "They move to the metastore's storage",
+        "correct": false,
+        "why": "Nothing moves them."
+      },
+      {
+        "text": "They become unreadable until the table is restored",
+        "correct": false,
+        "why": "The files are untouched and readable by whoever may read the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-4s3mktnr",
+    "version": 1,
+    "section": "unity-catalog",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The analysts must read `quitanda_prd.sales.orders` and nothing else. Which grants do they need? Choose all that apply.",
+    "hint": "Each level has to let them in.",
+    "choices": [
+      {
+        "text": "`USE CATALOG` on `quitanda_prd`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`USE SCHEMA` on `quitanda_prd.sales`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`SELECT` on the table",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`SELECT` on the schema `quitanda_prd.sales`",
+        "correct": false,
+        "why": "That reaches every table in it, present and future: more than the orders."
+      },
+      {
+        "text": "A data role on the storage account",
+        "correct": false,
+        "why": "That reads the files around Unity Catalog, every column of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxe79d2b",
+    "version": 1,
+    "section": "unity-catalog",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda has granted carefully in Unity Catalog, and a partner's tool still reads the customers' tax numbers from the lake. What is the likeliest way in?",
+    "hint": "What does Unity Catalog never hear of?",
+    "choices": [
+      {
+        "text": "A bug in the column mask",
+        "correct": false,
+        "why": "Masks apply to every engine reading through Unity Catalog."
+      },
+      {
+        "text": "A key or SAS that reads the storage account directly",
+        "correct": true,
+        "why": "Right. A read around the catalogue sees every file; keys disabled close that door."
+      },
+      {
+        "text": "The metastore being in another region",
+        "correct": false,
+        "why": "Region has nothing to do with who may read."
+      },
+      {
+        "text": "A grant on the catalog given to the analysts",
+        "correct": false,
+        "why": "The partner is not an analyst; that grant does not reach them."
+      }
+    ]
+  },
+  {
+    "id": "ex-f81gagqp",
+    "version": 1,
+    "section": "unity-catalog",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An external location pairs a path in the lake with a storage ___, which wraps the access connector's identity.",
+    "hint": "The other object on the right of the figure.",
+    "blanks": [
+      {
+        "accept": [
+          "credential"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a6e2egjg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these from the outermost to the innermost.",
+    "hint": "A name has three parts, and something holds them all.",
+    "items": [
+      "Metastore",
+      "Catalog",
+      "Schema",
+      "Table"
+    ]
+  },
+  {
+    "id": "ex-v4ppqa6x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is billed by Azure, not by Databricks, when a classic job cluster runs?",
+    "hint": "The second line of a classic bill.",
+    "choices": [
+      {
+        "text": "The DBUs of the run",
+        "correct": false,
+        "why": "DBUs are Databricks' line."
+      },
+      {
+        "text": "The Unity Catalog grants",
+        "correct": false,
+        "why": "Grants are not billed."
+      },
+      {
+        "text": "The virtual machines",
+        "correct": true,
+        "why": "Right. Classic compute pays Azure for them."
+      },
+      {
+        "text": "The control plane's web application",
+        "correct": false,
+        "why": "It is part of what DBUs pay for; nobody bills it separately."
+      }
+    ]
+  }
+]

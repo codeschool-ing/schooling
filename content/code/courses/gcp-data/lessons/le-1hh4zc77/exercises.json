@@ -1,0 +1,641 @@
+[
+  {
+    "id": "ex-fz3h8jpp",
+    "version": 1,
+    "section": "the-estate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda attaches the bucket `quitanda-raw-prod` to a raw zone of a Dataplex lake. What happens to the objects in it?",
+    "hint": "Dataplex describes data; does it hold any?",
+    "choices": [
+      {
+        "text": "They are copied into storage the lake manages",
+        "correct": false,
+        "why": "Dataplex stores no data; the lake is a description over buckets and datasets that stay where they are."
+      },
+      {
+        "text": "Nothing: it stays the same bucket, in place",
+        "correct": true,
+        "why": "Right. An asset is a reference to a real bucket or dataset, and not a byte of it moves."
+      },
+      {
+        "text": "They are converted to Parquet, the curated format",
+        "correct": false,
+        "why": "Formats change only when a job rewrites the data; a raw zone holds data as it arrived."
+      },
+      {
+        "text": "They become readable only through Dataplex",
+        "correct": false,
+        "why": "IAM on the bucket still decides who reads it, zone or no zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw7x5963",
+    "version": 1,
+    "section": "the-estate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An analyst has `storage.objects.get` on `quitanda-curated-prod` through IAM, and the bucket is an asset of a curated zone the analyst was never granted. Can the analyst read the files with `gcloud storage cat`?",
+    "hint": "Does a zone replace IAM, or manage it?",
+    "choices": [
+      {
+        "text": "No, because the zone's grants take precedence over the bucket's",
+        "correct": false,
+        "why": "A zone has no permission system of its own that overrides IAM; it manages IAM bindings on its assets."
+      },
+      {
+        "text": "No, because files in a zone are reachable only through BigQuery",
+        "correct": false,
+        "why": "The files are ordinary objects, and Cloud Storage serves them to whoever IAM allows."
+      },
+      {
+        "text": "Yes, because IAM on the bucket still decides who reads it",
+        "correct": true,
+        "why": "Right. Dataplex manages bindings for you; it does not interpose itself between a reader and the bucket."
+      },
+      {
+        "text": "Yes, but only the files discovery has not catalogued yet",
+        "correct": false,
+        "why": "Discovery decides what appears as tables, not who may read objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrrwfvb2",
+    "version": 1,
+    "section": "the-estate",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of Quitanda's estate to the Dataplex concept it is.",
+    "hint": "From the outermost box to the real things inside it.",
+    "pairs": [
+      {
+        "left": "`sales`",
+        "right": "the lake"
+      },
+      {
+        "left": "where data lands as it arrived",
+        "right": "a raw zone"
+      },
+      {
+        "left": "where cleaned data held to a schema lives",
+        "right": "a curated zone"
+      },
+      {
+        "left": "the BigQuery dataset `planner-dev.curated`",
+        "right": "an asset"
+      }
+    ]
+  },
+  {
+    "id": "ex-1shabhrm",
+    "version": 1,
+    "section": "the-estate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The documentation you find says \"Data Catalog\", a colleague says \"Dataplex Universal Catalog\", and the pricing page says \"Knowledge Catalog\". What should you conclude?",
+    "hint": "Read the table of names in the section.",
+    "choices": [
+      {
+        "text": "They are three competing products to choose between",
+        "correct": false,
+        "why": "They are one line of descent; the older name is deprecated in favour of the newer."
+      },
+      {
+        "text": "Mostly one product, renamed as it grew, so check the date of what you read",
+        "correct": true,
+        "why": "Right. The names changed on Google's schedule, and the page read on 2026-10-30 says the SKUs still say Dataplex."
+      },
+      {
+        "text": "Only Knowledge Catalog exists, so the other pages are fabricated",
+        "correct": false,
+        "why": "The older names were real products; renaming does not erase their documentation."
+      },
+      {
+        "text": "Data Catalog is the newest, since it is the simplest name",
+        "correct": false,
+        "why": "It is the oldest of the three, and the one being retired."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8vnxw4e",
+    "version": 1,
+    "section": "catalog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda creates a new BigQuery table. What has to happen before it can be found in the catalog's search?",
+    "hint": "Where do entries for Google Cloud's own services come from?",
+    "choices": [
+      {
+        "text": "Somebody registers it as a custom entry",
+        "correct": false,
+        "why": "Custom entries are for things outside Google Cloud; BigQuery's are ingested."
+      },
+      {
+        "text": "Nothing; its entry appears there on its own",
+        "correct": true,
+        "why": "Right. Technical metadata from BigQuery is ingested automatically, into the system entry group `@bigquery`."
+      },
+      {
+        "text": "A discovery scan has to run over its dataset",
+        "correct": false,
+        "why": "Discovery reads files in buckets; a BigQuery table already has its metadata in BigQuery."
+      },
+      {
+        "text": "An aspect type has to be defined for it",
+        "correct": false,
+        "why": "Aspects add meaning to an entry; the entry exists without any."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3f8ksw7",
+    "version": 1,
+    "section": "catalog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda writes an `ownership` aspect on a table and leaves out `owner_team`, which the aspect type marks as required. What happens?",
+    "hint": "What is the difference between a structured aspect and a wiki page?",
+    "choices": [
+      {
+        "text": "The aspect is written, and a later scan flags it",
+        "correct": false,
+        "why": "Nothing waits for a scan; the type is checked when the aspect is written."
+      },
+      {
+        "text": "The aspect is written with an empty owner",
+        "correct": false,
+        "why": "A required field has no empty default; leaving it out is the error."
+      },
+      {
+        "text": "It is refused, and nothing reaches the catalog",
+        "correct": true,
+        "why": "Right. The aspect type is a schema, and a value that breaks it is refused, which is what keeps the metadata structured."
+      },
+      {
+        "text": "The table is hidden from search until it is fixed",
+        "correct": false,
+        "why": "Aspects describe an entry; a bad one is refused, it does not hide the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-7snwnrjw",
+    "version": 1,
+    "section": "catalog",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody edits the catalog entry of `curated.orders` so that its description says a column was dropped, and nothing else changes. What do BigQuery queries on the table do?",
+    "hint": "Where does BigQuery read a table's schema from?",
+    "choices": [
+      {
+        "text": "They fail on the column the description says is gone",
+        "correct": false,
+        "why": "BigQuery does not read the catalog to plan a query; the description changes nothing it does."
+      },
+      {
+        "text": "They run exactly as before",
+        "correct": true,
+        "why": "Right. The catalog is an index over BigQuery's own metadata, so a wrong description misleads people and breaks no query."
+      },
+      {
+        "text": "They return the column empty until the entry is corrected",
+        "correct": false,
+        "why": "The column's data is in BigQuery's storage, untouched by any catalog text."
+      },
+      {
+        "text": "They are refused until the schema and the entry agree",
+        "correct": false,
+        "why": "No check compares the two; that is why the catalog's accuracy is a matter of discipline."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfw8r2x7",
+    "version": 1,
+    "section": "catalog",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the older Data Catalog, a tag followed a tag template; in Dataplex's catalog the same structured metadata is an ___, and its template is an ___ type.",
+    "hint": "One word, the same in both blanks.",
+    "blanks": [
+      {
+        "accept": [
+          "aspect"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "aspect"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aj1cyegq",
+    "version": 1,
+    "section": "quality",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a data profile scan tell you that a data quality scan does not, and the other way round?",
+    "hint": "One describes, one judges.",
+    "choices": [
+      {
+        "text": "The profile describes each column; the quality scan passes or fails rules",
+        "correct": true,
+        "why": "Right. A profile reports nulls, distinct values and ranges; quality rules turn expectations into pass or fail."
+      },
+      {
+        "text": "The profile checks the schema; the quality scan checks the rows",
+        "correct": false,
+        "why": "Both look at the rows; the difference is between describing them and judging them."
+      },
+      {
+        "text": "The profile runs once; the quality scan only runs on a schedule",
+        "correct": false,
+        "why": "Either can run on demand or on a schedule."
+      },
+      {
+        "text": "The profile is free, and only the quality scan is billed",
+        "correct": false,
+        "why": "Both are billed as premium processing, by the DCU-hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-ae6v3r2q",
+    "version": 1,
+    "section": "quality",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rule's condition is true for 1,940 of 2,000 rows. What is the highest threshold, in percent, at which the rule still passes?",
+    "hint": "The rule passes when the share of passing rows reaches the threshold.",
+    "value": 97,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1kbjfg2b",
+    "version": 1,
+    "section": "quality",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `scan.py`, why did the range rule on `total_cents` count the order with no total as a failure?",
+    "hint": "What is `NULL BETWEEN 1 AND 500000`?",
+    "choices": [
+      {
+        "text": "Because DuckDB reads an empty field as zero",
+        "correct": false,
+        "why": "The empty field was read as null; the profile counted it as 5.0% null."
+      },
+      {
+        "text": "Because the range rule runs the non-null rule first",
+        "correct": false,
+        "why": "Each rule is evaluated on its own; there is no order between them."
+      },
+      {
+        "text": "A condition on a null is not true, and only true passes",
+        "correct": true,
+        "why": "Right. The comparison is neither true nor false, so the row does not count as passing, as Dataplex treats nulls unless a rule says to ignore them."
+      },
+      {
+        "text": "Because -500 and the null are the same row",
+        "correct": false,
+        "why": "They are two different orders, `o-10013` and `o-10004`."
+      }
+    ]
+  },
+  {
+    "id": "ex-mt671gs8",
+    "version": 1,
+    "section": "quality",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The phone rule passes every night at a threshold of 95%, and over three months the share of good numbers slides from 99% to 95.2%. What does the nightly pass or fail tell the team?",
+    "hint": "What does a threshold hide?",
+    "choices": [
+      {
+        "text": "That something is wrong, since a rule warns before it fails",
+        "correct": false,
+        "why": "A rule has two answers, pass and fail; it said pass every night."
+      },
+      {
+        "text": "Nothing; the decline shows only if the results are kept and compared",
+        "correct": true,
+        "why": "Right. The verdict hid a slide of almost four points, which is why scan results are kept and read as a series."
+      },
+      {
+        "text": "That the threshold is too strict and should be lowered",
+        "correct": false,
+        "why": "Lowering it would hide the decline for longer."
+      },
+      {
+        "text": "That the scan is broken, since the numbers keep changing",
+        "correct": false,
+        "why": "Changing numbers are the data changing; the scan reported them correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-4x4b1w7j",
+    "version": 1,
+    "section": "lineage",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The finance export for 1 October has wrong numbers. Which lineage question finds where they came from?",
+    "hint": "Follow the arrows backwards or forwards?",
+    "choices": [
+      {
+        "text": "Downstream from the export",
+        "correct": false,
+        "why": "Downstream from the export is what was made from it, and nothing was."
+      },
+      {
+        "text": "Upstream from the export",
+        "correct": true,
+        "why": "Right. `edges.py upstream` walked back through `daily_revenue` and `load_orders` to the raw CSV and the customers table."
+      },
+      {
+        "text": "Upstream from the raw orders file",
+        "correct": false,
+        "why": "The raw file has nothing upstream in this graph; it is where the walk ends."
+      },
+      {
+        "text": "A search of the catalog for \"finance\"",
+        "correct": false,
+        "why": "Search finds the export's entry; it does not say what it was made from."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk0zj5jy",
+    "version": 1,
+    "section": "lineage",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job reads three tables and writes two. Its completed run event becomes how many edges in `edges.py`'s graph?",
+    "hint": "Every pair of one input and one output is an edge.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5vad77fq",
+    "version": 1,
+    "section": "lineage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One job reports its output as `planner-dev.curated.orders` and the next reports its input as `planner-dev:curated.orders`, with a colon. What does the lineage graph show?",
+    "hint": "How do two events agree that they touched the same table?",
+    "choices": [
+      {
+        "text": "One table, because the service normalises the separator",
+        "correct": false,
+        "why": "Names are compared as written; nothing in the events says the two spellings mean one table."
+      },
+      {
+        "text": "An error, because the second name is invalid",
+        "correct": false,
+        "why": "Both are strings an event can carry; nothing refuses either."
+      },
+      {
+        "text": "Two disconnected nodes, and a break in the graph",
+        "correct": true,
+        "why": "Right. The name is the whole join, so the walk upstream from the second job stops at a table that seems to come from nowhere."
+      },
+      {
+        "text": "Both nodes, joined by an edge the service infers",
+        "correct": false,
+        "why": "No edge is inferred between two names; an edge comes only from a job's inputs and outputs."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pn71017",
+    "version": 1,
+    "section": "lineage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By the Dataplex pricing page, which of these is billed?",
+    "hint": "Who does the work of finding the links?",
+    "choices": [
+      {
+        "text": "Sending OpenLineage events with `ProcessOpenLineageRunEvent`",
+        "correct": false,
+        "why": "The page calls this custom lineage and says it is free."
+      },
+      {
+        "text": "Reading lineage back with the API's get and list methods",
+        "correct": false,
+        "why": "The page says retrieving lineage is free."
+      },
+      {
+        "text": "Automatic lineage parsing of BigQuery jobs",
+        "correct": true,
+        "why": "Right. Google spends compute reading the jobs to find the links, and bills it as premium processing in DCU-hours."
+      },
+      {
+        "text": "Reporting processes and runs from a custom client",
+        "correct": false,
+        "why": "The page says reporting process metadata is free."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjzccpgd",
+    "version": 1,
+    "section": "policy-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`phone` carries a policy tag with access control on, and an analyst without Fine-Grained Reader runs `SELECT * FROM curated.orders`. What happens?",
+    "hint": "Is the column hidden, or is the query refused?",
+    "choices": [
+      {
+        "text": "The query fails with an access error on `phone`",
+        "correct": true,
+        "why": "Right. Naming the column, which `*` does, is refused; `SELECT * EXCEPT (phone)` runs."
+      },
+      {
+        "text": "The query runs and `phone` comes back null",
+        "correct": false,
+        "why": "That is masking, which needs a data policy and the Masked Reader role; without it the query is refused."
+      },
+      {
+        "text": "The query runs without the `phone` column",
+        "correct": false,
+        "why": "BigQuery does not drop a column silently; the analyst has to leave it out."
+      },
+      {
+        "text": "The query runs, because `*` names no column by name",
+        "correct": false,
+        "why": "`*` names every column, `phone` included."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9p34e6p",
+    "version": 1,
+    "section": "policy-tags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Analysts are given the SHA-256 mask of `phone` so they can group orders by customer phone. Why is that not anonymisation?",
+    "hint": "What can anybody do with a list of every phone number in the city?",
+    "choices": [
+      {
+        "text": "Because SHA-256 can be decrypted with the right key",
+        "correct": false,
+        "why": "A hash has no key and cannot be decrypted; the weakness is elsewhere."
+      },
+      {
+        "text": "Because the mask is removed when the query is exported",
+        "correct": false,
+        "why": "The mask applies to what the query returns, exports included."
+      },
+      {
+        "text": "Because masked values are visible to Fine-Grained Readers",
+        "correct": false,
+        "why": "They see the real values by design; that is not what makes the hash weak."
+      },
+      {
+        "text": "Because anyone can hash every possible number and match them",
+        "correct": true,
+        "why": "Right. Phone numbers are few enough to hash them all, and a deterministic hash then maps straight back."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmcqd283",
+    "version": 1,
+    "section": "policy-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda has both an `ownership` aspect saying `contains_personal_data` on `curated.orders` and a policy tag on `phone`. What does each one do?",
+    "hint": "One is metadata, one is enforcement.",
+    "choices": [
+      {
+        "text": "The aspect tells people; the tag makes BigQuery refuse it",
+        "correct": true,
+        "why": "Right. The aspect is found in search; the tag is checked on every query."
+      },
+      {
+        "text": "Both make BigQuery refuse the column, so one is redundant",
+        "correct": false,
+        "why": "An aspect is metadata; no engine enforces it."
+      },
+      {
+        "text": "The aspect masks the column, and the tag documents it",
+        "correct": false,
+        "why": "Masking is a data policy on a policy tag; an aspect only describes."
+      },
+      {
+        "text": "The tag hides the table from search, and the aspect grants access",
+        "correct": false,
+        "why": "Neither does either; search follows IAM, and grants are IAM roles."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht15bhca",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question Quitanda asks to the part of this lesson that answers it.",
+    "hint": "Search, scan, lineage, policy.",
+    "pairs": [
+      {
+        "left": "Is there a table of deliveries, and who owns it?",
+        "right": "the catalog, with an aspect"
+      },
+      {
+        "left": "Did last night's load bring in duplicate order ids?",
+        "right": "a data quality scan"
+      },
+      {
+        "left": "Which exports used the bad customers table?",
+        "right": "lineage, downstream"
+      },
+      {
+        "left": "Who may read the phone numbers?",
+        "right": "a policy tag on the column"
+      }
+    ]
+  },
+  {
+    "id": "ex-ht2anrdn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson actually run, rather than take from Google's documentation? Choose every one it ran.",
+    "hint": "Two programs ran, and both were models.",
+    "choices": [
+      {
+        "text": "Four quality rules computed over twenty orders with DuckDB",
+        "correct": true,
+        "why": "Yes, `scan.py`, as a model of what a Dataplex rule computes."
+      },
+      {
+        "text": "An upstream walk over a graph built from OpenLineage events",
+        "correct": true,
+        "why": "Yes, `edges.py`, as a model of what the lineage service answers."
+      },
+      {
+        "text": "A lake with a raw and a curated zone",
+        "correct": false,
+        "why": "The `gcloud dataplex` commands were shown and not run; there is no emulator."
+      },
+      {
+        "text": "A query refused by a policy tag on `phone`",
+        "correct": false,
+        "why": "Policy tags were taught from the documentation; no BigQuery ran here."
+      },
+      {
+        "text": "An event sent to `processOpenLineageRunEvent`",
+        "correct": false,
+        "why": "The request was shown and not run; the events stayed in files."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdd88ewh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Last night's raw orders file was loaded twice. Put the steps of handling it in a sensible order.",
+    "hint": "Find the damage before repairing it, and prevent the next one last.",
+    "items": [
+      "Confirm the duplicates with a uniqueness rule on `order_id`",
+      "Walk the lineage downstream from the raw file",
+      "Rerun the jobs that made each affected table and export",
+      "Add the uniqueness rule to the nightly quality scan"
+    ]
+  }
+]

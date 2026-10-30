@@ -1,0 +1,604 @@
+[
+  {
+    "id": "ex-vn9eyr7v",
+    "version": 1,
+    "section": "two-clocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An order is placed at 19:04:20 and reaches Pub/Sub at 19:08:40. What is its event time?",
+    "hint": "One of the two times is a fact about the network.",
+    "choices": [
+      {
+        "text": "19:04:20",
+        "correct": true,
+        "why": "Right. The event time is when the order happened."
+      },
+      {
+        "text": "19:08:40, the moment Pub/Sub received it",
+        "correct": false,
+        "why": "That is its processing time, the one lesson 21's windows used."
+      },
+      {
+        "text": "The moment the pipeline's window fires",
+        "correct": false,
+        "why": "A window firing is the pipeline's doing; it is not a time of the order."
+      },
+      {
+        "text": "The difference, 4 minutes and 20 seconds",
+        "correct": false,
+        "why": "That is the delay between the two times, not either of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdmjkgej",
+    "version": 1,
+    "section": "two-clocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Windowed by arrival, Pinheiros shows 95.50 reais between 19:05 and 19:10; by placing time, 80.00. Which is the right answer to \"how much did Pinheiros order in those five minutes\"?",
+    "hint": "Ask what each window measured.",
+    "choices": [
+      {
+        "text": "95.50, because the money did arrive in that window",
+        "correct": false,
+        "why": "It arrived then, but `o-504` was ordered at 19:04:20, in the window before."
+      },
+      {
+        "text": "80.00, the window by placing time",
+        "correct": true,
+        "why": "Right. The other run answers how much reached Quitanda in those minutes."
+      },
+      {
+        "text": "Neither: windows always change totals",
+        "correct": false,
+        "why": "Both runs added every order once; only which window held each changed."
+      },
+      {
+        "text": "Their average, 87.75",
+        "correct": false,
+        "why": "An average of two different questions answers neither of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-eynqde4q",
+    "version": 1,
+    "section": "two-clocks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `late.py` replay the evening through a TestStream instead of publishing it to the Pub/Sub emulator?",
+    "hint": "Think about what decides the output of each.",
+    "choices": [
+      {
+        "text": "The DirectRunner cannot read Pub/Sub at all",
+        "correct": false,
+        "why": "Lesson 21 read Pub/Sub on it; the problem is what decides the result."
+      },
+      {
+        "text": "A TestStream runs much faster than the emulator",
+        "correct": false,
+        "why": "Speed is not the point; both finish in seconds."
+      },
+      {
+        "text": "Its timing is fixed in the program",
+        "correct": true,
+        "why": "Right: the arrival order, the clock and the watermark, so each run gives the same output. From Pub/Sub, the result depends on timing nobody controls."
+      },
+      {
+        "text": "Pub/Sub has no way to carry an event time",
+        "correct": false,
+        "why": "It can, in an attribute read with `timestamp_attribute`; the last section does it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewk56j1q",
+    "version": 1,
+    "section": "three-windows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which kind of window is made from the data, per key, rather than known in advance?",
+    "hint": "One kind closes after a gap.",
+    "choices": [
+      {
+        "text": "Fixed",
+        "correct": false,
+        "why": "Fixed windows are aligned to the clock: 19:00 to 19:05 exists before any order."
+      },
+      {
+        "text": "Sliding",
+        "correct": false,
+        "why": "Sliding windows also start at known times, every period."
+      },
+      {
+        "text": "Sessions",
+        "correct": true,
+        "why": "Right. A session grows while a key keeps sending and closes after the gap."
+      },
+      {
+        "text": "The global window",
+        "correct": false,
+        "why": "There is one global window for everything, known before any data."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmpb8xhm",
+    "version": 1,
+    "section": "three-windows",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sliding windows of one hour start every minute. In how many windows is each element placed?",
+    "hint": "Length divided by period.",
+    "value": 60,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pt33wnwm",
+    "version": 1,
+    "section": "three-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`c-02` ordered at 19:02:05 and 19:07:45, and got two sessions with a gap of five minutes. With a gap of six minutes, what would change?",
+    "hint": "Compare the gap with the distance between the two orders.",
+    "choices": [
+      {
+        "text": "Nothing: sessions never merge two orders of one customer",
+        "correct": false,
+        "why": "`c-17`'s first two orders merged into one session with the same five-minute gap."
+      },
+      {
+        "text": "The two orders would be one session, from 19:02:05 to 19:13:45",
+        "correct": true,
+        "why": "Right. They are 5 minutes 40 seconds apart, under six, and the session ends a gap after the last."
+      },
+      {
+        "text": "Each order would get a session six minutes long, overlapping",
+        "correct": false,
+        "why": "Overlapping sessions of one key merge; that is how sessions are built."
+      },
+      {
+        "text": "The second order would be dropped as late",
+        "correct": false,
+        "why": "Nothing here is late: both are in the batch from the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-bc80y543",
+    "version": 1,
+    "section": "three-windows",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question Quitanda asks to the window that answers it.",
+    "hint": "One question has no natural clock.",
+    "pairs": [
+      {
+        "left": "Orders per five minutes, for the evening report",
+        "right": "Fixed windows"
+      },
+      {
+        "left": "Orders in the last hour, refreshed every minute",
+        "right": "Sliding windows"
+      },
+      {
+        "left": "What one customer bought in one visit to the app",
+        "right": "Sessions"
+      },
+      {
+        "left": "Orders since midnight, refreshed every minute",
+        "right": "The global window with a repeated trigger"
+      }
+    ],
+    "right_distractors": [
+      "Processing-time windows of the publish time"
+    ]
+  },
+  {
+    "id": "ex-9th5m33e",
+    "version": 1,
+    "section": "watermarks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a watermark at 19:06:46 claim?",
+    "hint": "It is a statement about event time.",
+    "choices": [
+      {
+        "text": "That it is 19:06:46 on the wall clock",
+        "correct": false,
+        "why": "The watermark is in event time; on the replay's clock it was 19:07:46."
+      },
+      {
+        "text": "That nothing placed before 19:06:46 is still on its way",
+        "correct": true,
+        "why": "Right, and it is a guess: `o-504` proved it wrong."
+      },
+      {
+        "text": "That every window ending before 19:06:46 has been written to a sink",
+        "correct": false,
+        "why": "Windows fire when the watermark passes them; writing to a sink is a later step."
+      },
+      {
+        "text": "That the pipeline is 19 hours behind its input",
+        "correct": false,
+        "why": "Lag is the gap between the watermark and the present, which this number alone does not give."
+      }
+    ]
+  },
+  {
+    "id": "ex-0r4dxngh",
+    "version": 1,
+    "section": "watermarks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the default trigger and no allowed lateness, what happens to `o-504` in `late.py`?",
+    "hint": "Its window had fired before it arrived.",
+    "choices": [
+      {
+        "text": "It is added to the next window",
+        "correct": false,
+        "why": "The window is chosen by event time, 19:04:20, and that window is gone."
+      },
+      {
+        "text": "The pipeline stops with an error naming it",
+        "correct": false,
+        "why": "Nothing reports it; the run ends with a correct-looking table."
+      },
+      {
+        "text": "It is dropped, and nothing says so",
+        "correct": true,
+        "why": "Right. Pinheiros's first window stays at 128.00 instead of 151.50."
+      },
+      {
+        "text": "It waits until the window fires again",
+        "correct": false,
+        "why": "The default trigger fires a window once."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yhezkbm",
+    "version": 1,
+    "section": "watermarks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes a watermark ten minutes behind the latest arrival, so that no order of the evening is late. What does that cost?",
+    "hint": "A window closes when the watermark passes its end.",
+    "choices": [
+      {
+        "text": "Nothing: the same results, with none dropped",
+        "correct": false,
+        "why": "The results are complete, but later: that is the cost."
+      },
+      {
+        "text": "Every window comes out about ten minutes later",
+        "correct": true,
+        "why": "Right, and more state is held meanwhile. The 19:00 window would come out at about 19:15 instead of 19:06."
+      },
+      {
+        "text": "Orders placed in the last ten minutes are dropped",
+        "correct": false,
+        "why": "A watermark further behind calls less data late, not more."
+      },
+      {
+        "text": "Pub/Sub keeps every message for ten more minutes",
+        "correct": false,
+        "why": "The watermark is the pipeline's estimate; it changes nothing about the subscription."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbvet4md",
+    "version": 1,
+    "section": "watermarks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no allowed lateness, `late.py` dropped `o-504` (23.50), `o-507` (31.00) and `o-510` (8.00). How many reais are missing from its totals?",
+    "hint": "Add the three.",
+    "value": 62.5,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-mfg5asev",
+    "version": 1,
+    "section": "triggers-and-lateness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--lateness 300`, why is `o-507` still dropped?",
+    "hint": "Allowed lateness is measured against the watermark.",
+    "choices": [
+      {
+        "text": "Its window's state was gone before it arrived",
+        "correct": true,
+        "why": "Right: the state went when the watermark reached 19:10. The watermark reached 19:10:16 at 19:11:16; `o-507` came at 19:12:30."
+      },
+      {
+        "text": "`AfterCount(1)` fires only for the first late order",
+        "correct": false,
+        "why": "It fired for `o-504` and `o-510` both, one pane each."
+      },
+      {
+        "text": "Moema's windows do not accept late data",
+        "correct": false,
+        "why": "Lateness is a property of the window, the same for every key."
+      },
+      {
+        "text": "Five minutes is counted from when the order was placed",
+        "correct": false,
+        "why": "It is counted from the end of the window, in watermark time."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg0f0e4b",
+    "version": 1,
+    "section": "triggers-and-lateness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In accumulating mode, Pinheiros's 19:00 window emits 128.00 on time and then 151.50 late. What should a sink that writes one row per window and neighbourhood do with the second pane?",
+    "hint": "Each accumulating pane is the whole window so far.",
+    "choices": [
+      {
+        "text": "Add 151.50 to the 128.00 already there",
+        "correct": false,
+        "why": "That would count `o-502` twice: 151.50 already includes it."
+      },
+      {
+        "text": "Ignore it, because the on-time pane is final",
+        "correct": false,
+        "why": "The late pane is the corrected total; ignoring it keeps the wrong one."
+      },
+      {
+        "text": "Replace the row with 151.50",
+        "correct": true,
+        "why": "Right. The last pane is the answer, and replacing is safe to repeat."
+      },
+      {
+        "text": "Write a second row beside the first",
+        "correct": false,
+        "why": "Two rows for one window and neighbourhood leave a reader to guess which one counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9vs65gy",
+    "version": 1,
+    "section": "triggers-and-lateness",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In discarding mode, Moema's 19:00 window printed 45.90, then 9.90, then 0.00 on time. Which consumer reads these panes correctly?",
+    "hint": "Each discarding pane is only what is new since the last.",
+    "choices": [
+      {
+        "text": "One that keeps the latest pane per window",
+        "correct": false,
+        "why": "It would end with 0.00 for a window that holds 55.80."
+      },
+      {
+        "text": "One that keeps the largest pane per window",
+        "correct": false,
+        "why": "The largest here is 45.90, which misses `o-503`."
+      },
+      {
+        "text": "One that adds every pane of a window",
+        "correct": true,
+        "why": "Right: 45.90 + 9.90 + 0.00 = 55.80. A pane delivered twice would be counted twice, though."
+      },
+      {
+        "text": "One that keeps only the `ON_TIME` pane",
+        "correct": false,
+        "why": "That is the 0.00, the empty on-time pane."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxpqt7jr",
+    "version": 1,
+    "section": "triggers-and-lateness",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pane emitted before the watermark reaches the end of its window has the timing ___.",
+    "hint": "The three timings are printed in capitals by `late.py`.",
+    "blanks": [
+      {
+        "accept": [
+          "EARLY"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jmgmsh7y",
+    "version": 1,
+    "section": "on-dataflow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `ReadFromPubSub(timestamp_attribute='placed')` change?",
+    "hint": "Without it, the time comes from Pub/Sub.",
+    "choices": [
+      {
+        "text": "Event times come from the message itself",
+        "correct": true,
+        "why": "Right, instead of from the publish time. The publisher has to set it, because only the publisher knows when the order was placed."
+      },
+      {
+        "text": "Pub/Sub sorts the messages by `placed` before delivering them",
+        "correct": false,
+        "why": "Pub/Sub delivers in no such order; the attribute is for the pipeline."
+      },
+      {
+        "text": "Messages without the attribute are rejected by Pub/Sub",
+        "correct": false,
+        "why": "Pub/Sub does not read attributes; the pipeline does."
+      },
+      {
+        "text": "The window length is taken from the attribute",
+        "correct": false,
+        "why": "The window is set by `WindowInto`; the attribute only gives the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8xchadg",
+    "version": 1,
+    "section": "on-dataflow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the DirectRunner, `from_pubsub.py` kept three orders of ten from 15 October. On Dataflow, with the same ten orders waiting in a fresh subscription, what does the documentation lead you to expect?",
+    "hint": "Compare where each runner takes its watermark from.",
+    "choices": [
+      {
+        "text": "The same three orders, because Dataflow also drops old data",
+        "correct": false,
+        "why": "Dataflow does not compare event times with the wall clock; it estimates from the backlog."
+      },
+      {
+        "text": "An error, because the orders are two weeks old",
+        "correct": false,
+        "why": "Old event times are not an error anywhere in Beam."
+      },
+      {
+        "text": "All ten in their windows, from the backlog",
+        "correct": true,
+        "why": "Right: the watermark starts at about the oldest message waiting. Nothing in the backlog is late merely for being old."
+      },
+      {
+        "text": "None, until somebody drains the job",
+        "correct": false,
+        "why": "Draining fires open windows early; it is not needed for windows to fire."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfvghjxr",
+    "version": 1,
+    "section": "on-dataflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a long allowed lateness cost money on Dataflow?",
+    "hint": "Ask what the runner keeps until a window expires.",
+    "choices": [
+      {
+        "text": "Each late pane is billed as a separate job",
+        "correct": false,
+        "why": "Panes are outputs of one job, not jobs."
+      },
+      {
+        "text": "Every window's state is kept until the watermark passes its end plus the lateness",
+        "correct": true,
+        "why": "Right, and with Streaming Engine that state is part of what is billed."
+      },
+      {
+        "text": "Pub/Sub charges for each message kept beyond its deadline",
+        "correct": false,
+        "why": "Allowed lateness changes nothing in Pub/Sub; the state is the pipeline's."
+      },
+      {
+        "text": "Dataflow adds one worker per minute of lateness",
+        "correct": false,
+        "why": "Workers follow the backlog and how busy they are, not a lateness setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-jbtjbp4w",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to Pinheiros's 19:00 window in `late.py --lateness 300`.",
+    "hint": "The watermark moves first; the late order arrives after.",
+    "items": [
+      "`o-502` arrives and goes into the window",
+      "The watermark passes 19:05 and the window fires 128.00 on time",
+      "`o-504` arrives behind the watermark and the window fires 151.50 late",
+      "The watermark passes 19:10 and the window's state is thrown away"
+    ]
+  },
+  {
+    "id": "ex-a0n8vx7d",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these make a late order count in a fixed window? Choose all that apply.",
+    "hint": "Some act on the watermark, some on the window.",
+    "choices": [
+      {
+        "text": "An allowed lateness long enough to cover its delay",
+        "correct": true,
+        "why": "The window keeps its state, and a late trigger emits the correction."
+      },
+      {
+        "text": "A watermark that lags further behind the arrivals",
+        "correct": true,
+        "why": "The order is then not late at all, at the price of later results."
+      },
+      {
+        "text": "An early trigger every minute",
+        "correct": false,
+        "why": "Early panes come before the window ends; they do nothing for data after it."
+      },
+      {
+        "text": "Discarding mode instead of accumulating",
+        "correct": false,
+        "why": "The mode decides what a pane holds, not whether late data is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-befrjrh4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stream's totals for each night keep coming out a little below the nightly batch over the same events. What is the first thing to suspect?",
+    "hint": "Lesson 21 made the two comparable on purpose.",
+    "choices": [
+      {
+        "text": "Late data dropped behind the watermark, past the allowed lateness",
+        "correct": true,
+        "why": "Right. Dropping makes no noise, and the batch, with every event, shows the gap."
+      },
+      {
+        "text": "The batch counted some orders twice",
+        "correct": false,
+        "why": "The batch reads each line once; the same transforms run in both."
+      },
+      {
+        "text": "Floating-point rounding in the sum",
+        "correct": false,
+        "why": "The sums are integer cents until `Format`; rounding would not keep the stream below."
+      },
+      {
+        "text": "Pub/Sub deleted the messages after reading",
+        "correct": false,
+        "why": "Acknowledged messages are gone from the subscription, but they were counted when read."
+      }
+    ]
+  }
+]

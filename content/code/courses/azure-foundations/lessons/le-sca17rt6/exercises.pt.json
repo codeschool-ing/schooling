@@ -1,0 +1,411 @@
+{
+ "ex-akj4b6fx": {
+  "prompt": "O que uma identidade gerenciada elimina que um service principal com segredo tem?",
+  "hint": "Quem guarda a credencial?",
+  "choices": [
+   {
+    "text": "A necessidade de atribuição de papel",
+    "why": "Uma identidade sem papel não alcança nada; papéis continuam necessários."
+   },
+   {
+    "text": "Uma credencial que alguém precise guardar ou renovar",
+    "why": "Isso. O Azure a guarda e a renova."
+   },
+   {
+    "text": "O registro no Entra ID",
+    "why": "Uma identidade gerenciada é um service principal no diretório."
+   },
+   {
+    "text": "O access token",
+    "why": "O código continua usando um token; só nunca vê uma credencial."
+   }
+  ]
+ },
+ "ex-59zk74ac": {
+  "prompt": "O pipeline da loja roda nas máquinas do GitHub e precisa implantar no Azure. Ele pode usar uma identidade gerenciada?",
+  "hint": "Onde o código precisa rodar?",
+  "choices": [
+   {
+    "text": "Sim, uma atribuída pelo usuário, já que é um recurso próprio",
+    "why": "Ser um recurso não a deixa ser usada de fora do Azure."
+   },
+   {
+    "text": "Sim, depois de ligar o repositório à assinatura",
+    "why": "Nenhuma ligação transforma o GitHub num recurso do Azure."
+   },
+   {
+    "text": "Não: fora do Azure, a resposta é a federação",
+    "why": "Isso. Identidades gerenciadas servem código rodando em recursos do Azure."
+   },
+   {
+    "text": "Não: identidades gerenciadas servem só máquinas virtuais",
+    "why": "O App Service, o Functions, o Container Apps e o AKS também as usam."
+   }
+  ]
+ },
+ "ex-jzrm9rda": {
+  "prompt": "O web app `app-shop-prod` é apagado e recriado por uma implantação. O que acontece com os papéis da identidade atribuída pelo sistema?",
+  "hint": "O tempo de vida de quem ela segue?",
+  "choices": [
+   {
+    "text": "Sumiram com a identidade antiga",
+    "why": "Isso. A implantação precisa dá-los de novo."
+   },
+   {
+    "text": "Passam para o novo web app automaticamente",
+    "why": "O novo app tem uma identidade nova, um principal novo."
+   },
+   {
+    "text": "Ficam, presos ao nome da identidade antiga",
+    "why": "Papéis apontam para object ids, e o antigo foi apagado."
+   },
+   {
+    "text": "São restaurados do backup da assinatura",
+    "why": "Não existe backup assim de atribuições de papel."
+   }
+  ]
+ },
+ "ex-j2361qzc": {
+  "prompt": "Por que a loja dá os papéis ao `id-shop-app`, uma identidade atribuída pelo usuário?",
+  "hint": "Ela sobrevive aos apps.",
+  "choices": [
+   {
+    "text": "Porque identidades atribuídas pelo sistema não podem ter papéis",
+    "why": "Podem; só os perdem com o recurso."
+   },
+   {
+    "text": "Porque as atribuídas pelo usuário são gratuitas e as do sistema não",
+    "why": "Preço não é a diferença que a lição traça."
+   },
+   {
+    "text": "Porque ela entra com um certificado",
+    "why": "Nenhuma identidade gerenciada entrega certificado a ninguém."
+   },
+   {
+    "text": "Toda nova cópia do app já começa com os papéis",
+    "why": "Isso. Dados uma vez, mantidos entre reconstruções, divididos por muitos recursos."
+   }
+  ]
+ },
+ "ex-tj8v1k9a": {
+  "prompt": "No template compilado, `systemPrincipalId` é uma expressão `reference(...)` em vez de um GUID. Por quê?",
+  "hint": "Quando o GUID passa a existir?",
+  "choices": [
+   {
+    "text": "Saídas são sempre expressões em templates ARM",
+    "why": "Uma saída pode ser um valor simples; esta ainda não pode ser conhecida."
+   },
+   {
+    "text": "O Bicep esconde principal ids por segurança",
+    "why": "Um principal id não é segredo; ele ainda não existe."
+   },
+   {
+    "text": "O compilador não achou o web app",
+    "why": "Ele achou; a expressão o cita."
+   },
+   {
+    "text": "O Entra ID o gera ao criar a identidade",
+    "why": "Isso. O template só consegue dizer onde lê-lo depois."
+   }
+  ]
+ },
+ "ex-43xfj526": {
+  "prompt": "Quais destas afirmações valem para uma identidade atribuída pelo usuário? Marque todas as que se aplicam.",
+  "hint": "Compare as duas colunas da tabela.",
+  "choices": [
+   {
+    "text": "Pode receber papéis antes de qualquer recurso usá-la",
+    "why": "Isso."
+   },
+   {
+    "text": "Vários recursos podem compartilhá-la",
+    "why": "Isso: um principal, uma lista de papéis curta."
+   },
+   {
+    "text": "É apagada com o primeiro recurso que a usou",
+    "why": "Esse é o tipo atribuído pelo sistema."
+   },
+   {
+    "text": "É um recurso do tipo `userAssignedIdentities`",
+    "why": "Isso, como no `app.bicep`."
+   },
+   {
+    "text": "Funciona para código fora do Azure",
+    "why": "Nenhuma identidade gerenciada funciona; isso é federação."
+   }
+  ]
+ },
+ "ex-8b2nxvbg": {
+  "prompt": "Onde o código numa máquina virtual do Azure pede o token da identidade gerenciada?",
+  "hint": "Um endereço link-local.",
+  "choices": [
+   {
+    "text": "No serviço de metadados, `169.254.169.254`",
+    "why": "Isso. Só aquela máquina o alcança."
+   },
+   {
+    "text": "Em `login.microsoftonline.com`, com o segredo da máquina",
+    "why": "A máquina não guarda segredo; a plataforma faz login por ela."
+   },
+   {
+    "text": "Em `management.azure.com`",
+    "why": "É ali que o token é usado, não onde é obtido."
+   },
+   {
+    "text": "Num arquivo que a plataforma escreve no disco",
+    "why": "Isso é o workload identity no Kubernetes, não uma VM."
+   }
+  ]
+ },
+ "ex-mnbje1ek": {
+  "prompt": "Por que o serviço de metadados recusa um pedido sem o cabeçalho `Metadata: true`?",
+  "hint": "Pense num servidor enganado para buscar uma URL.",
+  "choices": [
+   {
+    "text": "Para separar pedidos da versão 2018 dos mais antigos",
+    "why": "Isso é trabalho do `api-version`."
+   },
+   {
+    "text": "Uma busca forçada por uma URL forjada não consegue acrescentá-lo",
+    "why": "Isso. Impede que um pedido que uma página induz o servidor a fazer alcance o token."
+   },
+   {
+    "text": "Porque HTTP simples precisa de um cabeçalho para ser seguro",
+    "why": "O pedido nunca sai do host; HTTP basta."
+   },
+   {
+    "text": "Para escolher qual identidade gerenciada responde",
+    "why": "Isso é o parâmetro `client_id`."
+   }
+  ]
+ },
+ "ex-t9h25p9z": {
+  "prompt": "O web app tem as duas identidades. O `id-shop-app` tem Storage Blob Data Reader na conta, mas as leituras são recusadas. O `AZURE_CLIENT_ID` ficou fora das configurações do app. O que está acontecendo?",
+  "hint": "Qual identidade responde a um pedido que não cita nenhuma?",
+  "choices": [
+   {
+    "text": "O papel leva um dia para valer",
+    "why": "Essa não é a explicação para onde a evidência aponta."
+   },
+   {
+    "text": "Identidades atribuídas pelo usuário não leem storage",
+    "why": "Leem, com o papel, como o `app.bicep` faz."
+   },
+   {
+    "text": "Entra a identidade do sistema, sem papel",
+    "why": "Isso. Confira o `oid` do token antes de culpar o papel."
+   },
+   {
+    "text": "A storage account recusa tokens do App Service",
+    "why": "Ela aceita qualquer token com o papel certo."
+   }
+  ]
+ },
+ "ex-0gee7e70": {
+  "prompt": "Por que uma identidade gerenciada é \"exatamente tão segura quanto a máquina a que está ligada\"?",
+  "hint": "A credencial não pode vazar. O que pode?",
+  "choices": [
+   {
+    "text": "Qualquer código rodando ali pode pedir um token",
+    "why": "Isso. Daí os papéis mais estreitos no escopo mais estreito."
+   },
+   {
+    "text": "Porque a máquina pode mudar os papéis da identidade",
+    "why": "Papéis são mudados no Azure, não a partir da máquina."
+   },
+   {
+    "text": "Porque o Entra ID confia no IP da máquina",
+    "why": "Nada no fluxo confia num endereço."
+   },
+   {
+    "text": "Porque a credencial fica no disco da máquina",
+    "why": "Não há credencial nenhuma na máquina."
+   }
+  ]
+ },
+ "ex-p9qyr2mb": {
+  "prompt": "Ligue cada parte do pedido de metadados ao que ela faz.",
+  "hint": "Cinco partes na tabela, quatro aqui.",
+  "pairs": [
+   {
+    "left": "`resource`",
+    "right": "para qual API é o token"
+   },
+   {
+    "left": "`client_id`",
+    "right": "qual identidade, quando há várias"
+   },
+   {
+    "left": "`Metadata: true`",
+    "right": "prova de que o pedido foi feito de propósito"
+   },
+   {
+    "left": "`api-version`",
+    "right": "qual versão da interface"
+   }
+  ],
+  "right_distractors": [
+   "o segredo da identidade"
+  ]
+ },
+ "ex-prsqx19r": {
+  "prompt": "O App Service dá o endereço do seu serviço de identidade na variável de ambiente `IDENTITY____`.",
+  "hint": "O par dela é `IDENTITY_HEADER`.",
+  "blanks": [
+   {
+    "accept": [
+     "ENDPOINT"
+    ]
+   }
+  ]
+ },
+ "ex-7cdq0ee0": {
+  "prompt": "O que a `DefaultAzureCredential` faz?",
+  "hint": "Uma lista.",
+  "choices": [
+   {
+    "text": "Entra como dono da assinatura por padrão",
+    "why": "Entra como a primeira credencial que achar."
+   },
+   {
+    "text": "Pede ao usuário que escolha uma credencial",
+    "why": "Escolhe pela ordem fixa, sem ninguém."
+   },
+   {
+    "text": "Cria uma identidade gerenciada quando não existe nenhuma",
+    "why": "Não cria nada; só procura."
+   },
+   {
+    "text": "Tenta uma lista fixa de credenciais em ordem",
+    "why": "Isso. A primeira que produz um token vence."
+   }
+  ]
+ },
+ "ex-xkvq5h16": {
+  "prompt": "Ponha estas credenciais na ordem em que a `DefaultAzureCredential` as tenta.",
+  "hint": "O laboratório imprimiu a lista.",
+  "items": [
+   "EnvironmentCredential",
+   "WorkloadIdentityCredential",
+   "ManagedIdentityCredential",
+   "AzureCliCredential"
+  ],
+  "trap": "A CLI vem depois da identidade gerenciada: no Azure a plataforma responde antes que o login de uma desenvolvedora possa."
+ },
+ "ex-6h7mdzy3": {
+  "prompt": "Com as três variáveis `AZURE_*` definidas, por que só a `EnvironmentCredential` foi tentada?",
+  "hint": "Indisponível e falhou são resultados diferentes.",
+  "choices": [
+   {
+    "text": "Porque as outras precisam de uma rede que o laboratório não tem",
+    "why": "A primeira execução tentou todas na mesma rede."
+   },
+   {
+    "text": "Uma credencial configurada que falha para a corrente",
+    "why": "Isso. Seguir adiante esconderia o erro atrás de outra identidade."
+   },
+   {
+    "text": "Porque as variáveis desligaram as outras",
+    "why": "Nada as desligou; a corrente parou."
+   },
+   {
+    "text": "Porque o segredo foi aceito e o tenant recusado",
+    "why": "O segredo nem foi mandado; a descoberta falhou antes."
+   }
+  ]
+ },
+ "ex-7r7wjy72": {
+  "prompt": "Uma imagem de contêiner montada por uma desenvolvedora traz um `AZURE_CLIENT_SECRET` velho e as duas parceiras dele. Em produção, num recurso com identidade gerenciada, o que a `DefaultAzureCredential` faz?",
+  "hint": "Qual credencial vem primeiro?",
+  "choices": [
+   {
+    "text": "Usa a identidade gerenciada, que sempre vence no Azure",
+    "why": "Ela é a terceira da lista; o ambiente vem primeiro."
+   },
+   {
+    "text": "Se recusa a começar até as variáveis serem removidas",
+    "why": "Nada confere isso; ela simplesmente as usa."
+   },
+   {
+    "text": "Entra como o service principal antigo, com os papéis dele",
+    "why": "Isso, se o segredo ainda funcionar. Nomeie a credencial que você quer em produção."
+   },
+   {
+    "text": "Tenta as duas e fica com a que tem mais papéis",
+    "why": "Para na primeira que responde."
+   }
+  ]
+ },
+ "ex-cg3jfq92": {
+  "prompt": "O que a lição recomenda para um código que roda só em produção, num recurso com identidade atribuída pelo usuário?",
+  "hint": "Uma linha no lugar da lista padrão.",
+  "choices": [
+   {
+    "text": "`DefaultAzureCredential`, já que se adapta a tudo",
+    "why": "Se adaptar é o perigo quando há uma credencial perdida."
+   },
+   {
+    "text": "`AzureCliCredential`, com `az login` rodado na inicialização",
+    "why": "Isso precisaria de uma credencial guardada para o login."
+   },
+   {
+    "text": "`ManagedIdentityCredential(client_id=...)`",
+    "why": "Isso. Não tem como cair em mais nada."
+   },
+   {
+    "text": "`EnvironmentCredential`, com o client id numa variável",
+    "why": "Essa precisa de segredo ou certificado, que é o que se evita."
+   }
+  ]
+ },
+ "ex-x11v6n7h": {
+  "prompt": "Quantas credenciais a `DefaultAzureCredential` listou como tentadas na primeira execução do laboratório?",
+  "hint": "Conte as linhas debaixo de *Attempted credentials*.",
+  "unit": "credenciais"
+ },
+ "ex-t4t2v1kk": {
+  "prompt": "Ponha em ordem os passos do web app da loja lendo uma imagem com o `id-shop-app`.",
+  "hint": "O papel é dado antes de qualquer coisa pedir um token.",
+  "items": [
+   "criar a identidade atribuída pelo usuário `id-shop-app`",
+   "dar a ela Storage Blob Data Reader na storage account",
+   "ligá-la ao web app e definir `AZURE_CLIENT_ID`",
+   "o código pede à plataforma um token citando esse client id",
+   "o código lê o blob com o token"
+  ],
+  "trap": "Uma identidade atribuída pelo usuário pode receber o papel antes de ser ligada, que é uma das vantagens dela."
+ },
+ "ex-zay5pc84": {
+  "prompt": "Uma equipe leva uma aplicação de uma máquina virtual para os laptops para depurar, com o mesmo código usando `DefaultAzureCredential`. Que identidade ela usa ali, e por que tudo bem?",
+  "hint": "Qual credencial responde num laptop?",
+  "choices": [
+   {
+    "text": "O `az login` dela, com os papéis dela",
+    "why": "Isso. O mesmo código entra como quem o roda, que é o propósito da classe."
+   },
+   {
+    "text": "A identidade gerenciada da VM, alcançada pela internet",
+    "why": "O serviço de metadados é link-local; um laptop não o alcança."
+   },
+   {
+    "text": "Nenhuma: o código precisa mudar para laptops",
+    "why": "Não mudar o código é para isso que a classe existe."
+   },
+   {
+    "text": "Uma cópia do segredo da identidade gerenciada",
+    "why": "Não existe esse segredo para copiar."
+   }
+  ]
+ },
+ "ex-q7qn4zy4": {
+  "prompt": "A claim ___ de um token guarda o object id do principal que fez login.",
+  "hint": "Três letras.",
+  "blanks": [
+   {
+    "accept": [
+     "oid"
+    ]
+   }
+  ]
+ }
+}

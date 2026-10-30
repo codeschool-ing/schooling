@@ -1,0 +1,531 @@
+[
+  {
+    "id": "ex-ve6xrfw4",
+    "version": 1,
+    "section": "the-classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Quitanda analyst opens a file kept in Archive. How long does the first byte take to arrive?",
+    "hint": "Compare the four classes on speed, not on price.",
+    "choices": [
+      {
+        "text": "Up to twelve hours, after a restore request",
+        "correct": false,
+        "why": "That is how some archive tiers elsewhere work. Cloud Storage has no restore step for a class: Archive is read directly."
+      },
+      {
+        "text": "Milliseconds, as in Standard",
+        "correct": true,
+        "why": "Right. All four classes have the same latency and throughput; Archive differs in price and minimum stay."
+      },
+      {
+        "text": "A few minutes, because the object is on slower disks",
+        "correct": false,
+        "why": "Nothing about the class makes the read slower; the difference is the retrieval fee of 0.05 USD a GiB."
+      },
+      {
+        "text": "It cannot be read until it is copied to Standard first",
+        "correct": false,
+        "why": "Archive objects are read like any other. Copying it would itself pay the retrieval fee and a rewrite."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jtjhb1x",
+    "version": 1,
+    "section": "the-classes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda writes 100 GiB to Coldline (0.007 USD per GiB-month, 90 days minimum) and deletes it after 30 days. Counting a month as 30 days, how many USD of storage is it billed in all?",
+    "hint": "It is billed for the minimum, not for the days it stayed.",
+    "value": 2.1,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-0wqyffh6",
+    "version": 1,
+    "section": "the-classes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each class to its minimum storage duration.",
+    "hint": "Each step colder roughly multiplies the stay.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "No minimum"
+      },
+      {
+        "left": "Nearline",
+        "right": "30 days"
+      },
+      {
+        "left": "Coldline",
+        "right": "90 days"
+      },
+      {
+        "left": "Archive",
+        "right": "365 days"
+      }
+    ],
+    "right_distractors": [
+      "180 days"
+    ]
+  },
+  {
+    "id": "ex-kjrryd7s",
+    "version": 1,
+    "section": "the-classes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's app writes one 4 KB event per tap into Archive, 50 million of them a month. Which cost grows fastest with that design?",
+    "hint": "Archive has no smallest billed size. Look at what is priced per request.",
+    "choices": [
+      {
+        "text": "The storage, because each 4 KB event is billed as 128 KiB",
+        "correct": false,
+        "why": "Cloud Storage has no minimum object size: a 4 KB object is billed as 4 KB."
+      },
+      {
+        "text": "The retrieval fee on writing them",
+        "correct": false,
+        "why": "The retrieval fee is charged on reads, copies and rewrites, not on the upload."
+      },
+      {
+        "text": "Class A operations, at 0.05 USD per 1,000 requests",
+        "correct": true,
+        "why": "Right: 2,500 USD a month just to write them, for data that weighs about 200 GB."
+      },
+      {
+        "text": "Nothing much, since Archive is the cheapest class",
+        "correct": false,
+        "why": "It is the cheapest to keep per GiB, and the dearest per request."
+      }
+    ]
+  },
+  {
+    "id": "ex-f413w7hh",
+    "version": 1,
+    "section": "on-upload",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An upload names no `--storage-class`. On Cloud Storage, which class does the object get?",
+    "hint": "The bucket has a setting for exactly this.",
+    "choices": [
+      {
+        "text": "The bucket's default class",
+        "correct": true,
+        "why": "Right, and a bucket created with no default has STANDARD."
+      },
+      {
+        "text": "Always STANDARD, whatever the bucket says",
+        "correct": false,
+        "why": "That is what fake-gcs-server does, ignoring the default; Cloud Storage uses the bucket's default class."
+      },
+      {
+        "text": "NEARLINE, as the cheapest class without a long minimum",
+        "correct": false,
+        "why": "Nothing picks a class by price; the bucket's default decides."
+      },
+      {
+        "text": "The class of the last object written to that prefix",
+        "correct": false,
+        "why": "Prefixes carry no settings; the bucket does."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1229hqm",
+    "version": 1,
+    "section": "on-upload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script uploads with `--storage-class=GLACIER`, and its tests against fake-gcs-server pass. What happens on Cloud Storage?",
+    "hint": "Look at what the emulator did with a name it does not know.",
+    "choices": [
+      {
+        "text": "The object is stored as ARCHIVE, the nearest class",
+        "correct": false,
+        "why": "Nothing translates names; Cloud Storage has no class called GLACIER and does not guess one."
+      },
+      {
+        "text": "The upload is refused, because GLACIER is not one of its classes",
+        "correct": true,
+        "why": "Right. The emulator stored the string as given, so the test proved nothing about the name."
+      },
+      {
+        "text": "The object is stored as STANDARD with a warning",
+        "correct": false,
+        "why": "Cloud Storage does not fall back silently; it refuses the request."
+      },
+      {
+        "text": "It works, since the emulator imitates Cloud Storage's checks",
+        "correct": false,
+        "why": "The emulator accepted a class Cloud Storage does not have, which is the point of the transcript."
+      }
+    ]
+  },
+  {
+    "id": "ex-4htvt8vw",
+    "version": 1,
+    "section": "on-upload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda changes a Nearline object to Archive with `gcloud storage objects update --storage-class=ARCHIVE` ten days after writing it. What does Cloud Storage bill for the change?",
+    "hint": "The flag triggers a rewrite.",
+    "choices": [
+      {
+        "text": "Nothing: a class change is a metadata edit",
+        "correct": false,
+        "why": "Its help says it triggers a rewrite of the object's data, which is a new object."
+      },
+      {
+        "text": "Only the difference in storage price between the two classes from that day on, prorated",
+        "correct": false,
+        "why": "That leaves out what the rewrite itself costs."
+      },
+      {
+        "text": "A Class A operation, a retrieval fee, and Nearline's 20 remaining days",
+        "correct": true,
+        "why": "Right. A rewrite reads the old object, writes a new one, and ends the old one's life early."
+      },
+      {
+        "text": "A Class B operation, because the object is read",
+        "correct": false,
+        "why": "A rewrite is a write, billed as Class A at the destination class's rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-eskh2sd7",
+    "version": 1,
+    "section": "on-upload",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `gcloud storage objects describe`, after `objects update --storage-class`, a different ___ number shows that a new object was written over the old one.",
+    "hint": "It is the number written after `#` in an object's full address.",
+    "blanks": [
+      {
+        "accept": [
+          "generation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bwbadmgv",
+    "version": 1,
+    "section": "reading-cold-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command restores an object stored in Archive so that it can be read?",
+    "hint": "Read the help of `gcloud storage restore` again.",
+    "choices": [
+      {
+        "text": "`gcloud storage restore`",
+        "correct": false,
+        "why": "That command restores soft-deleted objects, which is a different thing."
+      },
+      {
+        "text": "`gcloud storage objects update --storage-class=STANDARD`",
+        "correct": false,
+        "why": "That rewrites the object into Standard, paying the retrieval fee; it is not needed to read it."
+      },
+      {
+        "text": "None is needed; just read it",
+        "correct": true,
+        "why": "Right. `cat` or `cp` reads it at once, and the retrieval fee is charged on the bytes served."
+      },
+      {
+        "text": "`gcloud storage cp` with a restore tier",
+        "correct": false,
+        "why": "There are no restore tiers in Cloud Storage's classes."
+      }
+    ]
+  },
+  {
+    "id": "ex-anw8347n",
+    "version": 1,
+    "section": "reading-cold-data",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report reads 300 GiB from Coldline objects (retrieval 0.02 USD per GiB). Leaving out operations and network, what is the retrieval fee, in USD?",
+    "hint": "The fee is per GiB served.",
+    "value": 6,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-5jshr8rq",
+    "version": 1,
+    "section": "reading-cold-data",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program reads only the first 8 MB of each 100 MB Nearline object, and a download sometimes breaks halfway. On what is the retrieval fee charged?",
+    "hint": "The pricing page talks about the data accessed.",
+    "choices": [
+      {
+        "text": "On the bytes actually served",
+        "correct": true,
+        "why": "Right: 8 MB for the partial read, and whatever arrived before the break."
+      },
+      {
+        "text": "On the whole object, 100 MB, every time it is opened",
+        "correct": false,
+        "why": "The pricing page says the fee is based on the data accessed, not on the size of the object."
+      },
+      {
+        "text": "On nothing, since a partial read is a Class B operation only",
+        "correct": false,
+        "why": "The operation is charged as well; the fee still applies to the bytes read."
+      },
+      {
+        "text": "On the object's size, but only once a month",
+        "correct": false,
+        "why": "There is no monthly cap or charge per object; it is per byte served."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0g34qby",
+    "version": 1,
+    "section": "autoclass",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a bucket with Autoclass, what happens to an object that is read after 200 days in Coldline?",
+    "hint": "Autoclass follows how each object is used, in both directions.",
+    "choices": [
+      {
+        "text": "It stays in Coldline and pays the retrieval fee",
+        "correct": false,
+        "why": "Autoclass buckets pay no retrieval fees, and a read moves the object."
+      },
+      {
+        "text": "It moves back to Standard",
+        "correct": true,
+        "why": "Right. A read returns it to Standard, and it starts ageing again from there."
+      },
+      {
+        "text": "It moves on to Archive, the terminal class",
+        "correct": false,
+        "why": "Ageing only happens while an object is not read."
+      },
+      {
+        "text": "It is restored first and then read",
+        "correct": false,
+        "why": "No class in Cloud Storage needs a restore."
+      }
+    ]
+  },
+  {
+    "id": "ex-azh70dd2",
+    "version": 1,
+    "section": "autoclass",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's data lake bucket has Autoclass and 2 million objects of 50 MiB each, kept the whole month. At 0.0025 USD per 1,000 objects per 30 days, what is the month's management fee, in USD?",
+    "hint": "The fee is per object, whatever its size, once it is 128 KiB or more.",
+    "value": 5,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-wb1wwrte",
+    "version": 1,
+    "section": "autoclass",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's logs are written as one 20 KiB object per request. Why does Autoclass save nothing on them?",
+    "hint": "Look at the size below which Autoclass does nothing.",
+    "choices": [
+      {
+        "text": "Autoclass refuses buckets that hold small objects",
+        "correct": false,
+        "why": "It accepts them; it just leaves them where they are."
+      },
+      {
+        "text": "Objects under 128 KiB are not managed: they stay in Standard",
+        "correct": true,
+        "why": "Right. They pay no fee and never move; writing fewer, larger objects is the first fix."
+      },
+      {
+        "text": "The fee on each 20 KiB object costs more than the object's storage",
+        "correct": false,
+        "why": "Objects under 128 KiB are not charged the fee at all."
+      },
+      {
+        "text": "Logs are read too often in their first week to ever leave Standard",
+        "correct": false,
+        "why": "That may be true for a week; the reason here is the size, which keeps them out whatever the reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sbz3aen",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 0.007 USD per GiB-month, what does a tebibyte (1,024 GiB) cost to keep in Coldline for a year, in USD?",
+    "hint": "Volume times monthly price times twelve.",
+    "value": 86.02,
+    "tolerance": 0.02
+  },
+  {
+    "id": "ex-xznr76fw",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A tebibyte is kept a full year in São Paulo and read back whole about ten times. Which class does the lesson's arithmetic make cheapest?",
+    "hint": "Archive stops winning at 1.6 reads, Nearline only starts at 15.6.",
+    "choices": [
+      {
+        "text": "Archive",
+        "correct": false,
+        "why": "Archive stops being cheaper than Coldline at 1.6 full reads a year."
+      },
+      {
+        "text": "Nearline",
+        "correct": false,
+        "why": "Nearline only beats Coldline from 15.6 full reads a year."
+      },
+      {
+        "text": "Coldline",
+        "correct": true,
+        "why": "Right: from about 1.6 to 15.6 full reads a year, Coldline is the cheapest of the four."
+      },
+      {
+        "text": "Standard",
+        "correct": false,
+        "why": "Standard only wins above about 18 full reads a year."
+      }
+    ]
+  },
+  {
+    "id": "ex-nafjbav2",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda keeps a scratch tebibyte for 60 days and never reads it. Why is Archive, the cheapest line of the table, the wrong class for it?",
+    "hint": "The table assumes every object stays a full year.",
+    "choices": [
+      {
+        "text": "Archive objects cannot be deleted at all until their first year has passed",
+        "correct": false,
+        "why": "They can be deleted whenever you like; the bill is what follows the delete."
+      },
+      {
+        "text": "Archive bills a full 365 days, so 60 days cost 37.38 USD, not about 6",
+        "correct": true,
+        "why": "Right. Coldline, at 90 days minimum, bills 21.50 USD here, the cheapest of the four."
+      },
+      {
+        "text": "Reading it back from Archive would take longer than the 60 days allow",
+        "correct": false,
+        "why": "Nothing in Cloud Storage takes long to read, and this data is never read."
+      },
+      {
+        "text": "Archive is only offered in multi-regions",
+        "correct": false,
+        "why": "Archive exists in São Paulo, at 0.003 USD a GiB-month."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyz9y0q9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each kind of Quitanda data to the class that fits it.",
+    "hint": "Ask how often it is read and how long it is kept.",
+    "pairs": [
+      {
+        "left": "Today's orders, read by every report",
+        "right": "Standard"
+      },
+      {
+        "left": "Delivery photos read only when a customer disputes an order, kept two years",
+        "right": "Archive"
+      },
+      {
+        "left": "A monthly snapshot read by finance once or twice in the year after it is taken",
+        "right": "Coldline"
+      },
+      {
+        "left": "Backups restored for a test every few weeks and kept three months",
+        "right": "Nearline"
+      }
+    ],
+    "right_distractors": [
+      "Rapid storage"
+    ]
+  },
+  {
+    "id": "ex-0wwg9ejb",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the classes by the fee for reading a GiB back, cheapest first.",
+    "hint": "Standard charges nothing; the floor of the keeping price is the ceiling of this one.",
+    "items": [
+      "Standard",
+      "Nearline",
+      "Coldline",
+      "Archive"
+    ]
+  },
+  {
+    "id": "ex-je8vg4v9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Against fake-gcs-server, a test writes an object with `--storage-class=COLDLINE`, rewrites it to ARCHIVE, and checks the class. What does the test prove?",
+    "hint": "Look at what the emulator returned after the rewrite.",
+    "choices": [
+      {
+        "text": "That rewrites keep the class, since the emulator answered COLDLINE",
+        "correct": false,
+        "why": "The emulator answered STANDARD after every rewrite, whatever was asked."
+      },
+      {
+        "text": "That the request was well formed, and nothing about the stored class",
+        "correct": true,
+        "why": "Right. The emulator writes every rewritten object as Standard, so the class it reports is its own."
+      },
+      {
+        "text": "That Cloud Storage would refuse the rewrite inside the 90-day minimum",
+        "correct": false,
+        "why": "Cloud Storage allows it and bills the rest of the 90 days; the emulator bills nothing."
+      },
+      {
+        "text": "That the Archive retrieval fee was charged",
+        "correct": false,
+        "why": "Nothing is billed in the emulator, and the fee would be Coldline's anyway."
+      }
+    ]
+  }
+]

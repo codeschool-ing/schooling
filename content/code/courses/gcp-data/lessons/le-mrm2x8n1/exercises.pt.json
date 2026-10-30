@@ -1,0 +1,387 @@
+{
+  "ex-z1j3x598": {
+    "prompt": "Ligue cada parte do Airflow ao que ela faz.",
+    "hint": "Uma delas precisa estar acordada às três da manhã.",
+    "pairs": [
+      {
+        "left": "scheduler",
+        "right": "descobre quais tarefas estão na hora"
+      },
+      {
+        "left": "worker",
+        "right": "roda as tarefas"
+      },
+      {
+        "left": "banco de metadados",
+        "right": "guarda o estado de cada execução"
+      },
+      {
+        "left": "DAG processor",
+        "right": "lê os arquivos de DAG"
+      }
+    ],
+    "right_distractors": [
+      "roda o próprio job Spark"
+    ]
+  },
+  "ex-fpe59s7h": {
+    "prompt": "Num ambiente Composer 3, para onde vão os arquivos de DAG?",
+    "hint": "É a única parte que você enxerga.",
+    "choices": [
+      {
+        "text": "No disco do scheduler, copiados com scp",
+        "why": "As máquinas ficam num projeto do Google, longe da vista; você nunca entra nelas."
+      },
+      {
+        "text": "Na pasta dags/ do bucket do ambiente",
+        "why": "Isso: o bucket é o que você enxerga, e o scheduler lê a pasta a partir dele."
+      },
+      {
+        "text": "No banco Cloud SQL, como linhas",
+        "why": "O banco guarda o estado das execuções, não os arquivos que as descrevem."
+      },
+      {
+        "text": "No Artifact Registry, como imagem de contêiner montada a partir dos arquivos",
+        "why": "DAGs são arquivos Python comuns no bucket; nada é construído."
+      }
+    ]
+  },
+  "ex-1d4b33vr": {
+    "prompt": "O Python roda o quitanda_nightly.py de cima a baixo. O que aconteceu quando ele termina?",
+    "hint": "Um arquivo de DAG é uma descrição.",
+    "choices": [
+      {
+        "text": "Os quatro comandos rodaram, uma vez cada, na ordem das setas",
+        "why": "Nada rodou: o arquivo só cria operadores e setas para o scheduler ler."
+      },
+      {
+        "text": "Existe um DAG de quatro tarefas e três setas, e nada rodou ainda",
+        "why": "Isso: execuções e instâncias de tarefa são criadas depois, pelo scheduler ou pelo dags test."
+      },
+      {
+        "text": "Uma execução de hoje entrou na fila",
+        "why": "Pôr execuções na fila é trabalho do scheduler, e um DAG novo começa pausado."
+      },
+      {
+        "text": "{DAY} foi trocado pela data de ontem",
+        "why": "Templates são renderizados por execução, quando uma tarefa roda."
+      }
+    ]
+  },
+  "ex-ac1w35vq": {
+    "prompt": "No Composer, a tarefa export_orders vira um GCSObjectExistenceSensor. O que isso muda em quando o pipeline começa a trabalhar?",
+    "hint": "O que um sensor espera?",
+    "choices": [
+      {
+        "text": "Ele espera o arquivo da noite",
+        "why": "Isso: o sensor procura o objeto da noite até ele aparecer."
+      },
+      {
+        "text": "Nada, porque só o agendamento decide quando cada tarefa começa",
+        "why": "O agendamento cria a execução; o sensor então segura a próxima tarefa até o arquivo existir."
+      },
+      {
+        "text": "Ele mesmo escreve a exportação",
+        "why": "Um sensor só verifica; quem escreve a exportação é a loja."
+      },
+      {
+        "text": "Inicia o job Spark mais cedo",
+        "why": "Ele só pode atrasá-lo, nunca adiantá-lo em relação ao arquivo."
+      }
+    ]
+  },
+  "ex-5k3hd0rj": {
+    "prompt": "A variável de ambiente da opção `load_examples` da seção `[core]` do airflow.cfg é ___.",
+    "hint": "Dois sublinhados de cada lado da seção.",
+    "blanks": [
+      {
+        "accept": [
+          "AIRFLOW__CORE__LOAD_EXAMPLES"
+        ]
+      }
+    ]
+  },
+  "ex-538cmckp": {
+    "prompt": "Por que a aula põe o ambiente do Airflow no FIM do PATH, depois do ambiente do curso?",
+    "hint": "Qual python3 uma tarefa recebe?",
+    "choices": [
+      {
+        "text": "Para que python3 e spark-submit numa tarefa continuem sendo os da aula 23",
+        "why": "Isso: só o próprio airflow vem do segundo ambiente."
+      },
+      {
+        "text": "Porque o Airflow se recusa a iniciar quando o ambiente dele vem primeiro no caminho",
+        "why": "O Airflow não olha a posição dele no caminho."
+      },
+      {
+        "text": "Para tornar o duckdb do curso visível ao scheduler",
+        "why": "O scheduler não importa o duckdb; os comandos das tarefas importam, pelo python3."
+      },
+      {
+        "text": "Para evitar que o arquivo de constraints seja lido duas vezes",
+        "why": "O arquivo de constraints é lido uma vez, pelo pip, na instalação."
+      }
+    ]
+  },
+  "ex-3kbjx4kr": {
+    "prompt": "Um arquivo de DAG acabou de ser copiado para a pasta de DAGs. Por que o scheduler não vai rodá-lo sozinho?",
+    "hint": "Olhe a coluna que o dags list imprimiu.",
+    "choices": [
+      {
+        "text": "Ele precisa de um dags test antes",
+        "why": "O dags test é um jeito de rodá-lo à mão, não uma condição prévia."
+      },
+      {
+        "text": "Está pausado",
+        "why": "Isso: is_paused True, até alguém despausá-lo."
+      },
+      {
+        "text": "catchup=False impede todo agendamento de um DAG novo",
+        "why": "catchup=False só limita um início atrasado à execução mais recente."
+      },
+      {
+        "text": "A data de início está no futuro",
+        "why": "É 26 de outubro, antes de a captura ser feita."
+      }
+    ]
+  },
+  "ex-zdmvf5p6": {
+    "prompt": "Um time quer que o Composer não custe nada num mês em que nenhum pipeline roda. O que ele pode fazer?",
+    "hint": "Existe um estado parado?",
+    "choices": [
+      {
+        "text": "Pausar o ambiente",
+        "why": "Um ambiente não tem estado pausado; pausar um DAG para execuções, não a conta."
+      },
+      {
+        "text": "Pôr os workers em zero",
+        "why": "O scheduler, o banco e a infraestrutura continuam cobrando, e pelo menos um worker fica."
+      },
+      {
+        "text": "Salvar um snapshot e apagar o ambiente, depois recriá-lo",
+        "why": "Isso: apagar é o único jeito de parar de pagar, e o snapshot é como o histórico sobrevive."
+      },
+      {
+        "text": "Trocar para o Composer 2, que só cobra pelas horas em que há tarefas rodando",
+        "why": "O Composer 2 cobra uma taxa de ambiente toda hora, 0,56 para um small em São Paulo."
+      }
+    ]
+  },
+  "ex-snh8t90r": {
+    "prompt": "Um ambiente Composer 2 small custa 523,85 USD por mês ocioso. Vinte e cinco DAGs o dividem. Quanto custa cada DAG por mês, em USD, com duas casas?",
+    "hint": "O ambiente dividido pelos DAGs.",
+    "unit": "USD"
+  },
+  "ex-fpgkyv69": {
+    "prompt": "Por que a aula põe o preço do Composer 3 em 12 DCUs, enquanto o do Composer 2 sai de uma lista de componentes?",
+    "hint": "O que cada parte da página diz?",
+    "choices": [
+      {
+        "text": "Porque 12 DCUs é o mínimo que o Composer 3 permite",
+        "why": "A página não fixa mínimo nenhum; 12 é o exemplo dela."
+      },
+      {
+        "text": "Porque só o preset small do Composer 2 está detalhado na página, item por item",
+        "why": "Isso: as DCUs de um Composer 3 ocioso não estão na página, então o exemplo é usado e identificado."
+      },
+      {
+        "text": "Porque o Composer 3 cobra em milli DCUs, que não têm conversão possível",
+        "why": "Mil milli DCU-horas são uma DCU-hora; o programa converte num comentário."
+      },
+      {
+        "text": "Porque as duas gerações custam o mesmo",
+        "why": "O programa imprimiu 838.41 e 523.85."
+      }
+    ]
+  },
+  "ex-mhh0sc6j": {
+    "prompt": "Um job do Cloud Scheduler é criado com --schedule='0 3 * * *' e sem --time-zone. Quando ele dispara em São Paulo?",
+    "hint": "A ajuda imprimiu o padrão.",
+    "choices": [
+      {
+        "text": "Às 03:00",
+        "why": "Isso exige --time-zone=America/Sao_Paulo."
+      },
+      {
+        "text": "Às 06:00",
+        "why": "06:00 UTC são as três da manhã em São Paulo: isso é a conversão feita ao contrário."
+      },
+      {
+        "text": "À meia-noite",
+        "why": "Isso: o padrão é Etc/UTC, e 03:00 UTC é meia-noite em São Paulo."
+      },
+      {
+        "text": "Ele é recusado sem fuso horário",
+        "why": "A opção tem padrão, então o job é aceito."
+      }
+    ]
+  },
+  "ex-g3natqdq": {
+    "prompt": "No dia 3, alguém roda o workflow de novo à mão para refazer a noite do dia 1. O que ele processa?",
+    "hint": "De onde o pick_day tira a data?",
+    "choices": [
+      {
+        "text": "O dia 1, porque a execução lembra do agendamento",
+        "why": "Um workflow só sabe quando roda; ele não tem logical date."
+      },
+      {
+        "text": "O dia 2, o dia anterior ao momento em que roda",
+        "why": "Isso: sys.now() menos um dia, e é por isso que uma noite passada precisa receber o dia."
+      },
+      {
+        "text": "O dia 3, o dia em que roda",
+        "why": "O pick_day subtrai antes os segundos de um dia."
+      },
+      {
+        "text": "Nada: um workflow se recusa a rodar fora do agendamento",
+        "why": "Um workflow roda sempre que uma execução é iniciada; o Scheduler é só um jeito de iniciar."
+      }
+    ]
+  },
+  "ex-2rjpe4ap": {
+    "prompt": "Quais destas coisas a aula diz que faltam ao Workflows com Cloud Scheduler, em comparação com o Composer? Marque todas as que se aplicam.",
+    "hint": "Leia a tabela do fim da seção.",
+    "choices": [
+      {
+        "text": "Um comando de backfill para um intervalo de dias",
+        "why": "Sim: um dia passado é uma execução iniciada à mão."
+      },
+      {
+        "text": "Um intervalo de dados para cada execução",
+        "why": "Sim: o workflow tira o dia do relógio."
+      },
+      {
+        "text": "Um jeito de chamar a API do Dataproc",
+        "why": "O workflow a chama por um conector e espera o batch."
+      },
+      {
+        "text": "Um agendamento na forma cron de cinco campos",
+        "why": "O Cloud Scheduler usa a mesma forma de cinco campos do DAG."
+      }
+    ]
+  },
+  "ex-kgpezt3s": {
+    "prompt": "No Airflow 3, um DAG com schedule='0 3 * * *' roda às 03:00 do dia 30. Qual é o ds dele?",
+    "hint": "Qual timetable uma string cron significa no Airflow 3?",
+    "choices": [
+      {
+        "text": "2026-10-29, o dia que acabou de terminar",
+        "why": "Isso é o CronDataIntervalTimetable, a leitura que o Airflow 2 fazia da mesma string."
+      },
+      {
+        "text": "2026-10-30, a noite em que roda",
+        "why": "Isso: o CronTriggerTimetable dá à execução o momento em que dispara, e é por isso que o DAG diz ds_add(ds, -1)."
+      },
+      {
+        "text": "2026-10-31, o começo do próximo intervalo",
+        "why": "Nenhum dos dois timetables olha para o dia 31."
+      },
+      {
+        "text": "Depende de quando a tarefa termina",
+        "why": "O ds é fixado quando a execução é criada, terminem as tarefas quando terminarem."
+      }
+    ]
+  },
+  "ex-p30dz9p6": {
+    "prompt": "Um DAG clock_interval começa no dia 26 com catchup=True, e o scheduler o lê pela primeira vez às 19:00 do dia 30. Quantas execuções ele cria?",
+    "hint": "Uma execução começa quando o dia dela acaba.",
+    "unit": "execuções"
+  },
+  "ex-ckrr31x1": {
+    "prompt": "Quer-se um backfill das noites de 20 a 23, inclusive. Por que --to-date 2026-10-23 devolveu só três execuções?",
+    "hint": "Que momento uma data nomeia?",
+    "choices": [
+      {
+        "text": "O backfill pula a data mais nova de propósito",
+        "why": "Ele inclui o fim do intervalo; o intervalo é que acabou cedo demais."
+      },
+      {
+        "text": "O dia 23 já tinha rodado, e o --reprocess-behavior ficou no padrão none",
+        "why": "Não existia execução do dia 23; o dry run não listou nenhuma."
+      },
+      {
+        "text": "A data significa meia-noite UTC, seis horas antes da execução daquela noite",
+        "why": "Isso: a execução do dia 23 é às 06:00 UTC, depois do fim do intervalo."
+      },
+      {
+        "text": "--dry-run lista no máximo três execuções",
+        "why": "O dry run lista toda execução que o backfill criaria."
+      }
+    ]
+  },
+  "ex-5xsskfgd": {
+    "prompt": "Um DAG escrito para o Airflow 2 usa {{ ds }} como \"ontem\" e é levado sem mudança para o Airflow 3 com a mesma string cron. O que dá errado?",
+    "hint": "Compare as duas linhas do tempo da figura.",
+    "choices": [
+      {
+        "text": "Ele não é lido, porque o ds foi removido",
+        "why": "O ds existe no Airflow 3; o que mudou foi a data que ele guarda."
+      },
+      {
+        "text": "Processa um dia que mal começou",
+        "why": "Isso: no timetable de disparo, o ds é a noite da execução, com três horas."
+      },
+      {
+        "text": "Ele roda duas vezes por noite, uma por timetable",
+        "why": "Um DAG tem um timetable só; a string agora significa outro."
+      },
+      {
+        "text": "Nada, já que o Airflow 3 converte os DAGs antigos ao lê-los",
+        "why": "Nenhuma conversão acontece; a mesma string só é lida de outro jeito."
+      }
+    ]
+  },
+  "ex-dczmz1rn": {
+    "prompt": "Ordene o custo mensal de orquestração do único pipeline da Quitanda, do mais barato ao mais caro, como o programa imprimiu.",
+    "hint": "Um deles cabe nas franquias grátis.",
+    "items": [
+      "Workflows com Cloud Scheduler",
+      "Composer 2, small, ocioso",
+      "Composer 3 com 12 DCUs"
+    ]
+  },
+  "ex-mfymj0g2": {
+    "prompt": "Três times, trinta DAGs que dependem uns dos outros, e o hábito de rodar a semana passada de novo. Qual escolha a aula favorece?",
+    "hint": "O que cada opção faz com \"a execução do dia 22\"?",
+    "choices": [
+      {
+        "text": "Workflows, porque não custa nada entre execuções",
+        "why": "Verdade sobre a conta, e cada nova execução seria iniciada à mão com o dia passado junto."
+      },
+      {
+        "text": "Composer, cuja conta ociosa é dividida por trinta DAGs",
+        "why": "Isso: backfills, dependências e histórico são do Airflow, e 523,85 dividido por trinta dá cerca de 17 por DAG."
+      },
+      {
+        "text": "Só o Cloud Scheduler, com um job para cada um dos trinta DAGs",
+        "why": "O Scheduler inicia coisas; ele não tem dependências, novas tentativas nem histórico do trabalho."
+      },
+      {
+        "text": "Airflow num notebook, como no laboratório",
+        "why": "Nada continua rodando ali depois que o terminal fecha."
+      }
+    ]
+  },
+  "ex-pgmgch3s": {
+    "prompt": "Por que a aula faz cada passo receber a data como argumento, como o daily_orders.py recebe --dt?",
+    "hint": "O que muda quando um time passa do Workflows para o Composer?",
+    "choices": [
+      {
+        "text": "O Spark se recusa a ler uma partição sem receber a data",
+        "why": "O Spark lê o caminho que receber; o argumento é sobre quem decide a data."
+      },
+      {
+        "text": "Para só mudar quem inicia os jobs",
+        "why": "Isso: os jobs ficam, e o Airflow ou um workflow passa o dia para eles."
+      },
+      {
+        "text": "Isso deixa os jobs mais baratos de rodar",
+        "why": "O custo de um job são as máquinas e as horas; o argumento não muda nenhum dos dois."
+      },
+      {
+        "text": "O Composer exige que toda tarefa receba --dt",
+        "why": "O Composer não exige nada dos comandos que uma tarefa roda."
+      }
+    ]
+  }
+}

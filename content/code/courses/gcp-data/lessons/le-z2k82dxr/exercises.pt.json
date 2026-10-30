@@ -1,0 +1,402 @@
+{
+  "ex-38vjyzqh": {
+    "prompt": "Sob demanda, quanto custa `SELECT * FROM orders LIMIT 10` comparado com `SELECT * FROM orders`?",
+    "hint": "A página tem uma frase sobre `LIMIT`.",
+    "choices": [
+      {
+        "text": "Um décimo de centavo a menos",
+        "why": "Não há desconto por devolver menos linhas."
+      },
+      {
+        "text": "O mesmo",
+        "why": "Certo. As duas leem todas as colunas de todas as linhas."
+      },
+      {
+        "text": "Só os bytes das dez linhas devolvidas",
+        "why": "A conta segue o que foi lido, não o que foi devolvido."
+      },
+      {
+        "text": "Nada, porque resultados pequenos vêm do cache",
+        "why": "O cache responde a uma consulta já vista sobre tabelas sem mudança, seja qual for o tamanho."
+      }
+    ]
+  },
+  "ex-b464wkwr": {
+    "prompt": "Uma consulta lê 3.000.000 de bytes de `orders` e 200 bytes de `stores`. Quantos bytes a cobrança sob demanda cobra?",
+    "hint": "Cada tabela citada é cobrada por no mínimo 10 MB, e um MB são 2^20 bytes."
+  },
+  "ex-tchgm3ja": {
+    "prompt": "Um filtro de partição reduz uma consulta sobre os pedidos da Quitanda de 9.960.944 bytes para 130.872. O que acontece com a conta sob demanda?",
+    "hint": "Os dois números estão abaixo de um limiar.",
+    "choices": [
+      {
+        "text": "Cai por um fator de cerca de setenta e seis",
+        "why": "Cairia, sem o mínimo; as duas são cobradas como 10.485.760 bytes."
+      },
+      {
+        "text": "Sobe, porque um filtro é trabalho a mais para os slots",
+        "why": "Sob demanda cobra bytes, não trabalho."
+      },
+      {
+        "text": "Nada muda: as duas são cobradas pelo mínimo de 10 MB",
+        "why": "Certo. Ler menos que 10 MB não economiza nada."
+      },
+      {
+        "text": "Fica gratuita",
+        "why": "Só consultas que falham ou vêm do cache não custam nada."
+      }
+    ]
+  },
+  "ex-cd64b28c": {
+    "prompt": "Uma analista cancela um `SELECT *` sobre uma tabela de 2 TiB depois de quarenta segundos, quando já estava quase no fim. Quanto ela pode custar?",
+    "hint": "Cancelar não é reembolso.",
+    "choices": [
+      {
+        "text": "Nada, porque consultas canceladas são como as que falham",
+        "why": "Uma consulta que falha não custa nada; uma cancelada pode ser cobrada até o custo total."
+      },
+      {
+        "text": "Até o custo inteiro, 22,50 USD",
+        "why": "Certo. Uma consulta que já leu a tabela já foi cobrada por isso."
+      },
+      {
+        "text": "Quarenta segundos de tempo de slot",
+        "why": "Sob demanda não cobra tempo nenhum."
+      },
+      {
+        "text": "Exatamente o mínimo de 10 MB",
+        "why": "O mínimo é um piso, não o que uma consulta cancelada paga."
+      }
+    ]
+  },
+  "ex-j2vs2dvv": {
+    "prompt": "O que é uma slot-hora?",
+    "hint": "A página define um slot em duas palavras.",
+    "choices": [
+      {
+        "text": "Uma CPU virtual usada por uma hora",
+        "why": "Certo. A cobrança por capacidade cobra isso, leiam as consultas o que lerem."
+      },
+      {
+        "text": "Um TiB lido por uma consulta numa hora",
+        "why": "Isso mistura os dois modelos; slots não cobram bytes."
+      },
+      {
+        "text": "Uma hora em que uma reserva respondeu a pelo menos uma consulta",
+        "why": "Slots são cobrados por segundo e por slot, não por horas ocupadas."
+      },
+      {
+        "text": "Um nó de um cluster do BigQuery, alugado por uma hora",
+        "why": "O BigQuery não tem clusters nem nós para alugar."
+      }
+    ]
+  },
+  "ex-hnyv8q50": {
+    "prompt": "Ligue cada edição ao preço por slot-hora sem compromisso em southamerica-east1.",
+    "hint": "Um preço da direita é de compromisso.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "0,062 USD"
+      },
+      {
+        "left": "Enterprise",
+        "right": "0,093 USD"
+      },
+      {
+        "left": "Enterprise Plus",
+        "right": "0,155 USD"
+      }
+    ],
+    "right_distractors": [
+      "0,0744 USD"
+    ]
+  },
+  "ex-v6kbax9c": {
+    "prompt": "A Quitanda quer um compromisso de um ano na edição Standard para baixar o preço do slot. O que a página de preços diz?",
+    "hint": "Veja para quais edições os compromissos são vendidos.",
+    "choices": [
+      {
+        "text": "Tira um quinto, como no Enterprise",
+        "why": "Esse é o desconto de um ano do Enterprise; o Standard não tem compromissos."
+      },
+      {
+        "text": "Ele exige no mínimo 100 slots",
+        "why": "Compromissos começam em 50 slots, e não no Standard."
+      },
+      {
+        "text": "Compromissos são só para Enterprise e Enterprise Plus",
+        "why": "Certo. O Standard é sem compromisso e nada mais."
+      },
+      {
+        "text": "É o padrão depois de um mês de uso",
+        "why": "Nada vira compromisso sozinho; um compromisso é comprado."
+      }
+    ]
+  },
+  "ex-c51qy7jj": {
+    "prompt": "Um projeto não tem atribuição de reserva. Como as consultas dele são cobradas?",
+    "hint": "Uma reserva só chega a um projeto por meio de uma atribuição.",
+    "choices": [
+      {
+        "text": "Sob demanda",
+        "why": "Certo. Esse é o padrão de qualquer projeto."
+      },
+      {
+        "text": "Na maior reserva da organização",
+        "why": "Sem atribuição, nenhuma reserva o atende."
+      },
+      {
+        "text": "Pelos preços da edição Standard, por slot-hora",
+        "why": "Standard também é edição de reserva; sem nenhuma, o projeto paga por byte."
+      },
+      {
+        "text": "Elas são recusadas até que uma seja feita",
+        "why": "O BigQuery as roda sob demanda sem configuração nenhuma."
+      }
+    ]
+  },
+  "ex-fm6dw2mf": {
+    "prompt": "No modelo desta aula, uma consulta precisa de 10 slots por 6 segundos e chega sozinha, sem fluid scaling. Quantos slot-segundos são cobrados?",
+    "hint": "Arredonde os slots para cima até um passo de 50, e o tempo para cima até o mínimo."
+  },
+  "ex-hmvz486f": {
+    "prompt": "Por que o painel das lojas custou 250 vezes o trabalho numa reserva com autoscaling, e a transformação noturna nada a mais?",
+    "hint": "Compare cada carga com as duas regras de arredondamento.",
+    "choices": [
+      {
+        "text": "O painel rodou em Standard e a transformação em Enterprise",
+        "why": "Os dois foram cobrados pelos 0,093 do Enterprise."
+      },
+      {
+        "text": "As consultas dele eram pequenas e curtas, então os passos de 50 e o minuto dominaram",
+        "why": "Certo. 400 slots por dois minutos já é um passo inteiro e mais de um minuto."
+      },
+      {
+        "text": "A transformação rodou à noite, quando os slots são mais baratos",
+        "why": "A página não tem preço por horário."
+      },
+      {
+        "text": "Painéis são cobrados pelos bytes que leem",
+        "why": "Numa reserva nada é cobrado por bytes."
+      }
+    ]
+  },
+  "ex-5bms2abc": {
+    "prompt": "Quanto custa a baseline de uma reserva quando nenhuma consulta está rodando?",
+    "hint": "O autoscaler só acrescenta slots acima dela.",
+    "choices": [
+      {
+        "text": "Nada, já que o autoscaler a libera",
+        "why": "O autoscaler adiciona e remove só slots acima da baseline."
+      },
+      {
+        "text": "Os slots dela, toda hora, usados ou não",
+        "why": "Certo. A baseline é o piso pelo qual você paga."
+      },
+      {
+        "text": "Metade do preço, como capacidade ociosa",
+        "why": "Não há desconto por ociosidade; slots ociosos podem ser emprestados, não descontados."
+      },
+      {
+        "text": "O mínimo de um minuto, uma vez por dia",
+        "why": "O minuto vale para slots escalados; a baseline é paga o tempo todo."
+      }
+    ]
+  },
+  "ex-0pc34gsc": {
+    "prompt": "No preço sem compromisso do Enterprise Plus, quantas slot-horas um TiB de consultas pode usar antes de os slots custarem mais que sob demanda? Arredonde para um número inteiro.",
+    "hint": "11,25 dividido pelo preço da slot-hora.",
+    "unit": "slot-horas"
+  },
+  "ex-3j68knwn": {
+    "prompt": "Uma carga usa 300 slot-horas para cada TiB que lê. O que sai mais barato para ela?",
+    "hint": "Compare 300 com os empates: 181, 121 e 73.",
+    "choices": [
+      {
+        "text": "Standard, o slot mais barato",
+        "why": "Mesmo o empate do Standard é 181, abaixo de 300."
+      },
+      {
+        "text": "Sob demanda",
+        "why": "Certo. Ela precisa de mais computação por byte que o empate de qualquer edição."
+      },
+      {
+        "text": "Um compromisso Enterprise de três anos",
+        "why": "Um compromisso paga toda hora; só ganha com slots mantidos ocupados."
+      },
+      {
+        "text": "Enterprise Plus, pelo empate mais alto",
+        "why": "O empate dele é o mais baixo, 73, então ele perde antes."
+      }
+    ]
+  },
+  "ex-f8t1sxdh": {
+    "prompt": "Por que os dois compromissos de 50 slots perderam para todas as outras opções nas duas cargas da Quitanda?",
+    "hint": "Quantas slot-horas um compromisso compra num mês?",
+    "choices": [
+      {
+        "text": "Compromissos só valem para armazenamento",
+        "why": "A página diz que capacidade não cobre armazenamento nenhum."
+      },
+      {
+        "text": "Eles pagam 36.500 slot-horas por mês e as cargas usaram 600 e 2.500",
+        "why": "Certo. Um compromisso só ganha com slots que ficam ocupados."
+      },
+      {
+        "text": "O preço por slot-hora deles é maior que o sem compromisso",
+        "why": "É menor, 0,0744 e 0,0558 contra 0,093."
+      },
+      {
+        "text": "Não podem ser usados em São Paulo",
+        "why": "A página os precifica para southamerica-east1."
+      }
+    ]
+  },
+  "ex-5cbfwt60": {
+    "prompt": "Onde um projeto real encontra os bytes cobrados e o tempo de slot de cada consulta que rodou?",
+    "hint": "Uma view, uma linha por job.",
+    "choices": [
+      {
+        "text": "Em `INFORMATION_SCHEMA.TABLE_STORAGE`",
+        "why": "Essa view é sobre bytes guardados, aula 13."
+      },
+      {
+        "text": "No plano do DuckDB",
+        "why": "O DuckDB não tem slots e não cobra nada."
+      },
+      {
+        "text": "Em `INFORMATION_SCHEMA.JOBS`",
+        "why": "Certo. `total_bytes_billed` e `total_slot_ms`."
+      },
+      {
+        "text": "Só na fatura mensal, como total",
+        "why": "A fatura totaliza o que a view de jobs detalha."
+      }
+    ]
+  },
+  "ex-54hmnqat": {
+    "prompt": "O que o BigQuery faz com uma consulta que passaria a cota personalizada do projeto naquele dia?",
+    "hint": "Uma cota age antes da conta.",
+    "choices": [
+      {
+        "text": "Roda e manda um e-mail",
+        "why": "Isso é o que um orçamento do Cloud Billing faz, depois de o dinheiro gasto."
+      },
+      {
+        "text": "Recusa com um erro",
+        "why": "Certo. E a cota zera à meia-noite do horário do Pacífico."
+      },
+      {
+        "text": "Passa para uma reserva, se o projeto tiver uma disponível",
+        "why": "Uma cota não muda o modelo de preço de uma consulta."
+      },
+      {
+        "text": "Roda com menos slots, mais devagar",
+        "why": "Isso é o que o máximo de uma reserva faz."
+      }
+    ]
+  },
+  "ex-jjsryf33": {
+    "prompt": "Uma reserva tem teto `--autoscale_max_slots=200` e uma consulta precisa de 400 slots. O que acontece?",
+    "hint": "O máximo limita a velocidade além do custo.",
+    "choices": [
+      {
+        "text": "Ela falha, como uma consulta acima da cota",
+        "why": "Esse é o comportamento da cota; uma reserva a faz esperar."
+      },
+      {
+        "text": "A reserva passa de 200 só para essa consulta",
+        "why": "O máximo nunca é ultrapassado."
+      },
+      {
+        "text": "Ela roda em 200 slots e demora mais",
+        "why": "Certo. Mais lenta, nunca recusada."
+      },
+      {
+        "text": "Ela é mandada para sob demanda para terminar",
+        "why": "Um projeto atribuído a uma reserva não volta sozinho para sob demanda."
+      }
+    ]
+  },
+  "ex-3h3g6nd8": {
+    "prompt": "A Quitanda põe uma cota de projeto de 1 TiB por dia para as analistas. O dia mais pesado do mês passado leu 1,6 TiB. Que risco essa cota traz?",
+    "hint": "Uma cota não sabe qual consulta importa.",
+    "choices": [
+      {
+        "text": "Nada, já que o TiB gratuito cobre",
+        "why": "O TiB gratuito é do mês, não do dia, e não aumenta uma cota."
+      },
+      {
+        "text": "Uma conta acima de 11,25 USD naquele dia",
+        "why": "A cota é justamente o que mantém o dia abaixo disso."
+      },
+      {
+        "text": "Consultas legítimas falhando nos dias pesados, como se as próprias analistas tivessem causado uma pane",
+        "why": "Certo. Defina-a a partir de um dia pesado, com folga."
+      },
+      {
+        "text": "Consultas ficando lentas",
+        "why": "Lentidão é o máximo de uma reserva; uma cota recusa."
+      }
+    ]
+  },
+  "ex-jp09nbb7": {
+    "prompt": "Ponha a conta sob demanda de uma consulta na ordem em que as regras se aplicam.",
+    "hint": "O preço vem por último.",
+    "items": [
+      "Contar os bytes lógicos de cada coluna citada, em cada tabela",
+      "Elevar cada tabela a pelo menos 10 MB",
+      "Arredondar o total para cima até o próximo MB",
+      "Multiplicar por 11,25 USD por TiB"
+    ]
+  },
+  "ex-vrytbpjn": {
+    "prompt": "Quais destes números desta aula saíram de uma medição aqui, e não da página de preços, da documentação ou de uma suposição declarada? Escolha todas as que se aplicam.",
+    "hint": "Só o DuckDB mediu algo, na tabela da aula 13.",
+    "choices": [
+      {
+        "text": "`total_cents` tem 9.960.944 bytes na tabela inteira",
+        "why": "Sim. O DuckDB contou as linhas."
+      },
+      {
+        "text": "Um dia de `total_cents` tem 130.872 bytes",
+        "why": "Sim, a mesma consulta."
+      },
+      {
+        "text": "As analistas usam 600 slot-horas por mês",
+        "why": "Uma suposição declarada; nada aqui tem slots."
+      },
+      {
+        "text": "O autoscaler acrescenta slots em passos de 50",
+        "why": "Da documentação do Google, aplicada por um modelo."
+      },
+      {
+        "text": "Uma slot-hora Enterprise custa 0,093 USD",
+        "why": "A página de preços, lida em 2026-10-30."
+      }
+    ]
+  },
+  "ex-kzy9tmvh": {
+    "prompt": "Um time novo da Quitanda roda um painel de centenas de milhares de consultas minúsculas por mês. Que modelo serve melhor, pela conta desta aula?",
+    "hint": "Precifique as mesmas consultas dos dois jeitos: 10 MB cada, ou 50 slots por um minuto cada.",
+    "choices": [
+      {
+        "text": "Sob demanda: 100.000 cabem no TiB gratuito",
+        "why": "Certo. Em slots, o arredondamento multiplica o trabalho."
+      },
+      {
+        "text": "Uma reserva Enterprise com autoscaling",
+        "why": "Cada consulta pequena paga 50 slots e um minuto."
+      },
+      {
+        "text": "Um compromisso de 3 anos de 50 slots",
+        "why": "2.036,70 USD por mês por um trabalho que sob demanda dá de graça."
+      },
+      {
+        "text": "Enterprise Plus",
+        "why": "O slot mais caro, com o empate mais baixo."
+      }
+    ]
+  }
+}

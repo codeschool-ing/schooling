@@ -1,0 +1,228 @@
+{
+  "ex-s9nw8h28": {
+    "prompt": "O que é o emulador do Kusto, em relação a um workspace do Log Analytics?",
+    "hint": "Ele tem a linguagem e mais nada.",
+    "choices": [
+      {
+        "text": "Uma cópia local de um workspace, com tabelas e retenção",
+        "why": "Ele não tem as tabelas do Azure Monitor, nem retenção, nem cobrança."
+      },
+      {
+        "text": "O motor de consulta, sem nada do workspace em volta",
+        "why": "Certo. Toda consulta roda como rodaria num workspace, contra tabelas que você carrega."
+      },
+      {
+        "text": "Um simulador que devolve respostas gravadas",
+        "why": "Ele roda o motor de verdade; nada é gravado antes."
+      },
+      {
+        "text": "Um cliente que se conecta ao seu workspace no Azure",
+        "why": "Ele não se conecta a nada; é um servidor no seu computador."
+      }
+    ]
+  },
+  "ex-47493sk2": {
+    "prompt": "Você reiniciou o computador, o emulador voltou, e `AppRequests | count` diz que a tabela não existe. Por quê?",
+    "hint": "Onde o `volatile` a guardava?",
+    "choices": [
+      {
+        "text": "A imagem foi atualizada no reinício e perdeu os dados",
+        "why": "A tag é fixa; nada foi atualizado."
+      },
+      {
+        "text": "Tabelas expiram depois de 31 dias de retenção",
+        "why": "Essa é a retenção de um workspace; o emulador não tem."
+      },
+      {
+        "text": "Ele morava na memória, e a memória se foi",
+        "why": "Certo. Recrie o banco e carregue os arquivos .kql de novo; leva segundos."
+      },
+      {
+        "text": "O kql.py aponta para outro banco depois de reiniciar",
+        "why": "DATABASE é fixo no arquivo."
+      }
+    ]
+  },
+  "ex-3mdynvsr": {
+    "prompt": "Por que o `kql.py` descarta as linhas de comentário do começo antes de decidir para onde mandar o texto?",
+    "hint": "Como ele distingue um comando de uma consulta?",
+    "choices": [
+      {
+        "text": "O emulador cobra por comentários",
+        "why": "Nada no emulador é cobrado."
+      },
+      {
+        "text": "Um comentário acima de `.set-or-replace` esconderia o ponto",
+        "why": "Certo. Comandos vão para mgmt, consultas para query, e o ponto é como ele sabe."
+      },
+      {
+        "text": "O KQL não permite comentários",
+        "why": "Permite; `//` começa um."
+      },
+      {
+        "text": "Para manter nomes de arquivo fora dos logs do servidor",
+        "why": "Não é por isso; o motivo é o ponto."
+      }
+    ]
+  },
+  "ex-5sk5h8cn": {
+    "prompt": "Uma equipe em rg-shop precisa consultar os logs dos próprios recursos num workspace dividido com outras três equipes, e nada mais. O que faz isso funcionar?",
+    "hint": "De onde vem a permissão?",
+    "choices": [
+      {
+        "text": "Um workspace separado para cada equipe",
+        "why": "Funciona e custa mais; não é preciso para isso."
+      },
+      {
+        "text": "Leitura no workspace inteiro",
+        "why": "Isso mostraria as linhas de todas as equipes."
+      },
+      {
+        "text": "O papel deles em rg-shop",
+        "why": "Certo. Eles veem só as linhas dos recursos de rg-shop."
+      },
+      {
+        "text": "Um plano Basic para as tabelas deles",
+        "why": "Planos mudam custo e recursos, não quem lê."
+      }
+    ]
+  },
+  "ex-b71nhqnh": {
+    "prompt": "Ligue cada tipo de log ao plano de tabela que a lição daria a ele.",
+    "hint": "Com alerta, lido ao depurar, guardado para auditoria.",
+    "pairs": [
+      {
+        "left": "AppRequests, sobre a qual duas lições alertam",
+        "right": "Analytics"
+      },
+      {
+        "left": "A saída falante do console de um contêiner",
+        "right": "Basic"
+      },
+      {
+        "left": "Logs verbosos guardados só para uma auditoria rara",
+        "right": "Auxiliary"
+      }
+    ]
+  },
+  "ex-verxd3b8": {
+    "prompt": "Quantas linhas o `requests.kql` carregou em AppRequests?",
+    "hint": "A contagem na transcrição.",
+    "unit": "linhas"
+  },
+  "ex-97q858gv": {
+    "prompt": "Por que o `requests.kql` usa `hash()` em vez de uma função aleatória?",
+    "hint": "A mesma semana, em todo computador.",
+    "choices": [
+      {
+        "text": "Para toda carga produzir as mesmas linhas",
+        "why": "Certo. Os números das lições são então os números da sua tela."
+      },
+      {
+        "text": "O Kusto não tem função aleatória",
+        "why": "Ele tem rand(); o determinismo é o motivo para não usá-lo."
+      },
+      {
+        "text": "hash() deixa a tabela menor",
+        "why": "Ele não muda nada no tamanho."
+      },
+      {
+        "text": "Para esconder a identidade dos clientes reais",
+        "why": "Não há clientes reais; os dados são gerados."
+      }
+    ]
+  },
+  "ex-mtzmb1yz": {
+    "prompt": "O `.set-or-replace` respondeu OriginalSize 21.074.527 e ExtentSize 2.562.450. Qual fica mais perto do que um workspace cobra na ingestão, e por quê?",
+    "hint": "Cobrado como chega, ou como é guardado?",
+    "choices": [
+      {
+        "text": "ExtentSize, porque o que se paga é o armazenamento",
+        "why": "A ingestão é cobrada pelos dados como chegam, antes da compressão."
+      },
+      {
+        "text": "O primeiro: a cobrança conta os dados antes da compressão",
+        "why": "Certo. A compressão ajuda o motor, não a conta."
+      },
+      {
+        "text": "A média dos dois, que o workspace cobra",
+        "why": "Nenhuma média assim é cobrada."
+      },
+      {
+        "text": "Nenhum: workspaces cobram por linha",
+        "why": "Eles cobram por gigabyte."
+      }
+    ]
+  },
+  "ex-gnpzdg0x": {
+    "prompt": "Ao preço ilustrativo de 3 USD por GB, quanto custam por dia 0,35 GB de traces de debug, em USD?",
+    "hint": "Gigabytes vezes preço.",
+    "unit": "USD"
+  },
+  "ex-88gvv6pr": {
+    "prompt": "Num workspace real, onde você lê quantos gigabytes cada tabela ingeriu ontem?",
+    "hint": "Lá você não estima.",
+    "choices": [
+      {
+        "text": "estimate_data_size() sobre cada tabela",
+        "why": "Essa é a estimativa do emulador; um workspace registra o valor real."
+      },
+      {
+        "text": "O activity log do grupo de recursos",
+        "why": "Ele registra operações do plano de controle, não volumes de ingestão."
+      },
+      {
+        "text": "A tabela Usage",
+        "why": "Certo. Ela soma a ingestão por tabela por dia, e toda linha também traz _BilledSize."
+      },
+      {
+        "text": "O ExtentSize de cada tabela",
+        "why": "Isso é armazenamento comprimido, e não o que a ingestão cobra."
+      }
+    ]
+  },
+  "ex-sxf8s18p": {
+    "prompt": "A conta do workspace da loja dobra num mês. Nada novo foi implantado, mas um desenvolvedor subiu o nível de log de uma aplicação para debug. Onde está a decisão que resolve?",
+    "hint": "Custo de ingestão é uma decisão sobre quais logs existem.",
+    "choices": [
+      {
+        "text": "Retenção menor no workspace",
+        "why": "Retenção além dos dias incluídos é uma parte pequena; o custo são as chegadas."
+      },
+      {
+        "text": "Menos consultas na tabela de traces",
+        "why": "Consultas em tabelas Analytics não são cobradas."
+      },
+      {
+        "text": "Um nível de compromisso maior",
+        "why": "Isso baixa o preço por GB e continua pagando por logs que ninguém lê."
+      },
+      {
+        "text": "O nível de log configurado na aplicação",
+        "why": "Certo. Logs que nunca são escritos nunca são ingeridos."
+      }
+    ]
+  },
+  "ex-454z127p": {
+    "prompt": "Toda linha num workspace real traz uma coluna com o tamanho cobrado, chamada ___.",
+    "hint": "Começa com um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "_BilledSize"
+        ]
+      }
+    ]
+  },
+  "ex-dkpjpf2r": {
+    "prompt": "Ponha em ordem os passos para montar do zero o laboratório de KQL do curso.",
+    "hint": "Contêiner, cliente, banco, dados.",
+    "trap": "Carregar antes de criar o banco é o deslize: o `.set-or-replace` precisa do banco onde escreve.",
+    "items": [
+      "docker run da imagem fixada do emulador",
+      "Salvar o kql.py em ~/azure/kusto",
+      "Criar o banco volátil shop",
+      "Carregar o requests.kql"
+    ]
+  }
+}

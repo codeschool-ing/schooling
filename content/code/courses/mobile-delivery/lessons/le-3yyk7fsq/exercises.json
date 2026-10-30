@@ -1,0 +1,455 @@
+[
+  {
+    "id": "ex-rqk26mfr",
+    "version": 1,
+    "section": "what-minification-does",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each platform to the tool that rewrites its release build.",
+    "pairs": [
+      {
+        "left": "Android",
+        "right": "R8"
+      },
+      {
+        "left": "iOS",
+        "right": "the compiler and linker, stripping symbols"
+      },
+      {
+        "left": "React Native",
+        "right": "Metro or esbuild, then Hermes"
+      }
+    ],
+    "right_distractors": [
+      "bundletool"
+    ]
+  },
+  {
+    "id": "ex-d9cdfxb4",
+    "version": 1,
+    "section": "what-minification-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a release build's trace be shorter than the same crash in a debug build?",
+    "choices": [
+      {
+        "text": "Release builds catch some exceptions",
+        "correct": false,
+        "why": "The crash is the same crash."
+      },
+      {
+        "text": "Crash reporters cut traces to save space",
+        "correct": false,
+        "why": "The shortness came from the build, not the reporter."
+      },
+      {
+        "text": "Inlining removed a method's own frame",
+        "correct": true,
+        "why": "Right. Its code now lives inside its caller."
+      },
+      {
+        "text": "Renaming merges frames with the same short name",
+        "correct": false,
+        "why": "Renaming changes names, not the number of frames."
+      }
+    ]
+  },
+  {
+    "id": "ex-sz7smjpf",
+    "version": 1,
+    "section": "what-minification-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must the mapping come from the build that shipped, and not from a rebuild of the same commit?",
+    "choices": [
+      {
+        "text": "Each build picks its own names",
+        "correct": true,
+        "why": "Right. Two builds of one commit choose different names and inlining; only that build's file undoes that build."
+      },
+      {
+        "text": "The mapping holds the signing key",
+        "correct": false,
+        "why": "It holds names, never keys."
+      },
+      {
+        "text": "A rebuild has no mapping at all",
+        "correct": false,
+        "why": "It has one, of its own."
+      },
+      {
+        "text": "Rebuilds are refused by the stores",
+        "correct": false,
+        "why": "The question is about reading traces, not uploading."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p3dc56d",
+    "version": 1,
+    "section": "a-minified-javascript-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the minified bundle, every frame says line 1. What tells the frames apart?",
+    "choices": [
+      {
+        "text": "Nothing; a source map is needed even to tell them apart",
+        "correct": false,
+        "why": "The column already differs; the map says what it means."
+      },
+      {
+        "text": "The minified function name",
+        "correct": false,
+        "why": "The second frame had none."
+      },
+      {
+        "text": "The order of the lines in the trace",
+        "correct": false,
+        "why": "Order says who called whom, not where."
+      },
+      {
+        "text": "The column",
+        "correct": true,
+        "why": "Right. 75 and 161 in the lesson's trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-20zma2dh",
+    "version": 1,
+    "section": "a-minified-javascript-trace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`symbolicate.ts` subtracts 1 from the column before asking the source map. Why?",
+    "choices": [
+      {
+        "text": "To skip the opening bracket of the frame",
+        "correct": false,
+        "why": "The regex already removed the brackets."
+      },
+      {
+        "text": "Traces count columns from 1, the map from 0",
+        "correct": true,
+        "why": "Right. And 1 is added back when printing."
+      },
+      {
+        "text": "The bundle starts with an invisible character",
+        "correct": false,
+        "why": "It does not; the counting differs."
+      },
+      {
+        "text": "Node reports the column after the error",
+        "correct": false,
+        "why": "It reports the column of the error."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tvy08yq",
+    "version": 1,
+    "section": "a-minified-javascript-trace",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On your own computer, Node rewrites a minified trace through its source map at run time when started with `node --enable-___`.",
+    "blanks": [
+      {
+        "accept": [
+          "source-maps"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3t5p4qb1",
+    "version": 1,
+    "section": "a-minified-javascript-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a phone, why does Hermes not use the source map itself?",
+    "choices": [
+      {
+        "text": "Hermes cannot read JSON",
+        "correct": false,
+        "why": "It can; the map is simply not shipped."
+      },
+      {
+        "text": "The map stays on the build machine",
+        "correct": true,
+        "why": "Right. The server is where the two meet."
+      },
+      {
+        "text": "Source maps are forbidden by the stores",
+        "correct": false,
+        "why": "No such rule; shipping one would only add size."
+      },
+      {
+        "text": "Hermes symbolicates with a dSYM instead",
+        "correct": false,
+        "why": "A dSYM is for native iOS code."
+      }
+    ]
+  },
+  {
+    "id": "ex-xb9h9e4w",
+    "version": 1,
+    "section": "r8-and-retrace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `-keepattributes SourceFile,LineNumberTable` give the team?",
+    "choices": [
+      {
+        "text": "Unshrunk class names",
+        "correct": false,
+        "why": "Classes are still renamed."
+      },
+      {
+        "text": "A smaller jar",
+        "correct": false,
+        "why": "Keeping attributes makes it slightly larger."
+      },
+      {
+        "text": "Protection from reverse engineering of the app",
+        "correct": false,
+        "why": "It does the opposite of hiding."
+      },
+      {
+        "text": "Line numbers retrace maps back",
+        "correct": true,
+        "why": "Right. Without them no trace can say which line."
+      }
+    ]
+  },
+  {
+    "id": "ex-911sd6mh",
+    "version": 1,
+    "section": "r8-and-retrace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shrunk trace had one frame, `main` at line 7. Retrace printed two. Where did the second come from?",
+    "choices": [
+      {
+        "text": "From the mapping",
+        "correct": true,
+        "why": "Right. It records that totalFor was inlined, and keeps what the trace lost."
+      },
+      {
+        "text": "Retrace ran the unshrunk jar",
+        "correct": false,
+        "why": "It read two text files; it ran nothing."
+      },
+      {
+        "text": "Retrace guesses missing frames",
+        "correct": false,
+        "why": "It reads them from the mapping."
+      },
+      {
+        "text": "From Java's own debug information",
+        "correct": false,
+        "why": "The shrunk jar had lost that frame."
+      }
+    ]
+  },
+  {
+    "id": "ex-1x1x74ex",
+    "version": 1,
+    "section": "r8-and-retrace",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After retrace, at which line of `Week.java` is the bug?",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xab05jt4",
+    "version": 1,
+    "section": "r8-and-retrace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson's R8 demonstration use Java rather than Kotlin?",
+    "choices": [
+      {
+        "text": "R8 refuses Kotlin",
+        "correct": false,
+        "why": "R8 reads bytecode, whatever compiled it."
+      },
+      {
+        "text": "Java crashes are easier to read",
+        "correct": false,
+        "why": "The trace looks the same."
+      },
+      {
+        "text": "The JDK compiles it with nothing else installed",
+        "correct": true,
+        "why": "Right. Kotlin compiles to the same bytecode."
+      },
+      {
+        "text": "Android apps are written in Java",
+        "correct": false,
+        "why": "Most new ones are Kotlin; R8 does not care."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gk134w7",
+    "version": 1,
+    "section": "ios-and-the-dsym",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a dSYM prove it belongs to a given iOS binary?",
+    "choices": [
+      {
+        "text": "Both share a UUID from the linker",
+        "correct": true,
+        "why": "Right. Any other dSYM is refused."
+      },
+      {
+        "text": "By the version name inside it",
+        "correct": false,
+        "why": "Two builds of one version differ."
+      },
+      {
+        "text": "By the date it was made",
+        "correct": false,
+        "why": "Dates do not match builds."
+      },
+      {
+        "text": "By its file name, which Xcode sets to match",
+        "correct": false,
+        "why": "Names can be copied; the UUID cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-ya6d6qf9",
+    "version": 1,
+    "section": "ios-and-the-dsym",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A frame reads `0x0000000102f4a8c4 0x102f30000 + 108740`. If the same build loaded at `0x104a00000` on another phone, at which address would the same instruction be? Answer the offset added, in decimal.",
+    "value": 108740,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8vdgc4r1",
+    "version": 1,
+    "section": "ios-and-the-dsym",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An old guide says to download dSYMs from App Store Connect because Apple recompiles the app. What does the lesson say about that?",
+    "choices": [
+      {
+        "text": "It is still the only way to get them",
+        "correct": false,
+        "why": "Your own archive has them."
+      },
+      {
+        "text": "It applies only to React Native apps",
+        "correct": false,
+        "why": "It was about native iOS builds."
+      },
+      {
+        "text": "It was about bitcode, gone since Xcode 14",
+        "correct": true,
+        "why": "Right. Your build's dSYM now matches what Apple ships."
+      },
+      {
+        "text": "Apple deletes dSYMs after review",
+        "correct": false,
+        "why": "Nothing says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6ya03zf",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of reading an Android release crash in order.",
+    "items": [
+      "keep mapping.txt from the build that shipped",
+      "upload it with the release",
+      "a report arrives with short names",
+      "retrace it with that mapping",
+      "read the restored frames"
+    ]
+  },
+  {
+    "id": "ex-mv4trbf4",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these files must be kept from each release build? Choose every one.",
+    "choices": [
+      {
+        "text": "mapping.txt",
+        "correct": true,
+        "why": "Right, for Android."
+      },
+      {
+        "text": "the .dSYM",
+        "correct": true,
+        "why": "Right, for iOS."
+      },
+      {
+        "text": "the source map",
+        "correct": true,
+        "why": "Right, for the JavaScript bundle."
+      },
+      {
+        "text": "the debug keystore",
+        "why": "It signs nothing that ships."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j04cf8j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A retraced trace names methods that make no sense for the crash. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "Line numbers were kept in the release build",
+        "correct": false,
+        "why": "Keeping them is what makes retrace work."
+      },
+      {
+        "text": "The mapping came from another build",
+        "correct": true,
+        "why": "Right. Confident nonsense."
+      },
+      {
+        "text": "Retrace needs the internet",
+        "correct": false,
+        "why": "It reads two local files."
+      },
+      {
+        "text": "The app was not minified",
+        "correct": false,
+        "why": "Then there would be nothing to retrace."
+      }
+    ]
+  }
+]

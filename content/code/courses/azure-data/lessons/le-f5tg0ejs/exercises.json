@@ -1,0 +1,625 @@
+[
+  {
+    "id": "ex-8chgf71q",
+    "version": 1,
+    "section": "what-fabric-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of Fabric is created as a resource in an Azure subscription?",
+    "hint": "It is the part that has a size and a price per hour.",
+    "choices": [
+      {
+        "text": "The capacity, in a subscription and a region",
+        "correct": true,
+        "why": "Right. It is created in a subscription and a region, with a size from F2 to F2048; everything else lives inside Fabric."
+      },
+      {
+        "text": "Each workspace, with its members",
+        "correct": false,
+        "why": "A workspace is created inside Fabric and assigned to a capacity; Azure Resource Manager does not know it."
+      },
+      {
+        "text": "Every lakehouse and every warehouse",
+        "correct": false,
+        "why": "They are items inside a workspace, managed in the Fabric portal."
+      },
+      {
+        "text": "OneLake, once per region",
+        "correct": false,
+        "why": "OneLake comes with the tenant, one for all of it, and nobody provisions it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dem3aa3j",
+    "version": 1,
+    "section": "what-fabric-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda puts its development workspace and its production workspace on two separate capacities. What does that separate?",
+    "hint": "There is still one OneLake.",
+    "choices": [
+      {
+        "text": "The data: each capacity has a OneLake of its own, so development cannot read production",
+        "correct": false,
+        "why": "There is one OneLake per tenant, whatever the capacities; a shortcut can read across them."
+      },
+      {
+        "text": "The bill, and the noise one makes in the other",
+        "correct": true,
+        "why": "Right. A heavy notebook in development spends its own capacity and cannot throttle production's reports."
+      },
+      {
+        "text": "The sign-in: each capacity belongs to its own Entra ID tenant",
+        "correct": false,
+        "why": "Both capacities are in the same tenant; a tenant has one Fabric."
+      },
+      {
+        "text": "Nothing at all; a capacity is only a label on the bill",
+        "correct": false,
+        "why": "A capacity is the compute itself, and its size limits what runs on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fg4szy7m",
+    "version": 1,
+    "section": "what-fabric-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A platform team wants its whole Fabric setup declared with the `azurerm` provider for Terraform. What of it can `azurerm` declare?",
+    "hint": "Only one part of Fabric is an Azure resource.",
+    "choices": [
+      {
+        "text": "The capacity, the workspaces and the lakehouses",
+        "correct": false,
+        "why": "Workspaces and lakehouses are managed inside Fabric, not by Azure Resource Manager."
+      },
+      {
+        "text": "Nothing, since Fabric is not sold through Azure",
+        "correct": false,
+        "why": "The capacity is an Azure resource, and the lesson validates one."
+      },
+      {
+        "text": "The capacity, and nothing that lives in its workspaces",
+        "correct": true,
+        "why": "Right. `azurerm_fabric_capacity` is the one resource; what lives in the workspaces is outside `azurerm`."
+      },
+      {
+        "text": "Everything, if each item gets a resource group",
+        "correct": false,
+        "why": "Items have no resource group; they belong to a workspace."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpsmvyg8",
+    "version": 1,
+    "section": "capacity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At the lesson's illustrative 0.20 USD per CU-hour, what does an F8 cost for a 730-hour month running all the time, in USD?",
+    "hint": "CUs, times the price, times the hours.",
+    "value": 1168,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zyvn316k",
+    "version": 1,
+    "section": "capacity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's F32 capacity reaches interactive rejection every week, and it is decided to size up. What is the next size?",
+    "hint": "Look at the list the provider printed.",
+    "choices": [
+      {
+        "text": "F40",
+        "correct": false,
+        "why": "There is no F40: each size doubles the one before."
+      },
+      {
+        "text": "F48",
+        "correct": false,
+        "why": "There is no F48 either; the list goes F32, F64."
+      },
+      {
+        "text": "F64",
+        "correct": true,
+        "why": "Right. Growing is a step to twice the size, and twice the price."
+      },
+      {
+        "text": "F33",
+        "correct": false,
+        "why": "Sizes are not counted one CU at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-kk5ybrfq",
+    "version": 1,
+    "section": "capacity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A capacity has carried forward 90 minutes of future consumption. Somebody opens a report, and the nightly notebook starts. What happens to each?",
+    "hint": "Between 60 minutes and 24 hours.",
+    "choices": [
+      {
+        "text": "Both run, and the report's queries wait 20 seconds before they start",
+        "correct": false,
+        "why": "That is the interactive delay stage, from 10 to 60 minutes; 90 is past it."
+      },
+      {
+        "text": "The report is refused and the notebook runs",
+        "correct": true,
+        "why": "Right. From 60 minutes to 24 hours new interactive requests are rejected, and background work still runs."
+      },
+      {
+        "text": "The report and the notebook are both refused until the debt is paid",
+        "correct": false,
+        "why": "Background work is refused only past 24 hours of future consumption."
+      },
+      {
+        "text": "Neither the report nor the notebook notices; throttling starts at 24 hours",
+        "correct": false,
+        "why": "Throttling starts after 10 minutes; 24 hours is where background work is refused too."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bgm070p",
+    "version": 1,
+    "section": "capacity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An administrator pauses a throttled pay-as-you-go capacity to make the throttling stop. What does Microsoft's documentation say happens to the consumption it had carried forward?",
+    "hint": "Pausing stops the meter from now on.",
+    "choices": [
+      {
+        "text": "It is forgiven, which is why pausing is the documented remedy",
+        "correct": false,
+        "why": "Nothing is forgiven; work already done was consumption."
+      },
+      {
+        "text": "It is added to the bill at the moment the capacity is paused",
+        "correct": true,
+        "why": "Right. A capacity paused to escape throttling pays for what it had already spent."
+      },
+      {
+        "text": "It waits, and is paid back from idle time after the capacity resumes",
+        "correct": false,
+        "why": "The documentation says it is billed when the capacity is paused, not kept for later."
+      },
+      {
+        "text": "It moves to another capacity in the same tenant",
+        "correct": false,
+        "why": "Consumption belongs to the capacity that did the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-vq32gzhn",
+    "version": 1,
+    "section": "capacity",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fabric spreads the consumption of a background operation, such as a scheduled notebook, over ___ hours.",
+    "hint": "A whole day.",
+    "blanks": [
+      {
+        "accept": [
+          "24",
+          "twenty-four",
+          "twenty four"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b6r38npg",
+    "version": 1,
+    "section": "onelake",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "OneLake answers the ADLS Gen2 interface. Which of these can read Quitanda's lakehouse with nothing changed but the address and the sign-in? Choose all that apply.",
+    "hint": "Anything that already speaks ADLS Gen2 with an Entra ID identity.",
+    "choices": [
+      {
+        "text": "Spark, reading an `abfss://` path",
+        "correct": true,
+        "why": "Yes: the path names onelake.dfs.fabric.microsoft.com."
+      },
+      {
+        "text": "`azcopy`",
+        "correct": true,
+        "why": "Yes, with an Entra ID sign-in."
+      },
+      {
+        "text": "The Azure SDK for Python",
+        "correct": true,
+        "why": "Yes, through its Data Lake or blob client."
+      },
+      {
+        "text": "`az storage blob list` with the account key",
+        "correct": false,
+        "why": "OneLake has no account, so it has no account key; access is by identity."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5kdq7wq",
+    "version": 1,
+    "section": "onelake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's lakehouse has a shortcut to a partner's Amazon S3 bucket, and a notebook reads it every hour. What does the shortcut avoid, and what does it not?",
+    "hint": "Nothing is copied, so where does each read go?",
+    "choices": [
+      {
+        "text": "It avoids S3's requests and egress, since Fabric reads over Microsoft's own network",
+        "correct": false,
+        "why": "The bytes leave Amazon's cloud whatever network carries them, and Amazon charges for that."
+      },
+      {
+        "text": "It avoids a copy; each read is still a read from S3, with its requests and egress",
+        "correct": true,
+        "why": "Right. A shortcut points rather than copies, so the bill at the other end is still there."
+      },
+      {
+        "text": "It avoids nothing, since it is a copy into OneLake made on a schedule",
+        "correct": false,
+        "why": "That describes a pipeline, not a shortcut."
+      },
+      {
+        "text": "It avoids the credential, because Fabric reads S3 with the reader's own identity",
+        "correct": false,
+        "why": "A shortcut to S3 reaches it with a credential kept in a Fabric connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t0ny2hr",
+    "version": 1,
+    "section": "onelake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shortcut to Quitanda's exports uses a connection whose service principal may read the whole storage account, contracts included. Analysts may use the shortcut. What is wrong?",
+    "hint": "Whose rights does a read through the shortcut use?",
+    "choices": [
+      {
+        "text": "The credential reaches the contracts too, and so does any shortcut made with it",
+        "correct": true,
+        "why": "Right. A read through a shortcut uses the connection's rights, so that principal should read the exports folder and nothing more."
+      },
+      {
+        "text": "The analysts read through it with their own rights, so they get an error",
+        "correct": false,
+        "why": "A shortcut reaches the source with the connection's credential, not each reader's."
+      },
+      {
+        "text": "The shortcut copies the whole account, contracts included, into OneLake",
+        "correct": false,
+        "why": "A shortcut copies nothing."
+      },
+      {
+        "text": "Shortcuts accept only account keys, so the principal is ignored",
+        "correct": false,
+        "why": "A connection can use a service principal, among other credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-4mg8sapj",
+    "version": 1,
+    "section": "lakehouse-and-warehouse",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An analyst runs `INSERT INTO orders` through a lakehouse's SQL analytics endpoint. What happens?",
+    "hint": "Who owns a lakehouse's tables?",
+    "choices": [
+      {
+        "text": "The endpoint adds the row, as any T-SQL database would",
+        "correct": false,
+        "why": "The endpoint lets T-SQL read a lakehouse's tables, not write them."
+      },
+      {
+        "text": "It is refused, because that endpoint only reads",
+        "correct": true,
+        "why": "Right. The tables belong to Spark; a warehouse is where T-SQL writes."
+      },
+      {
+        "text": "It is turned into a Spark job, which adds the row a few minutes later",
+        "correct": false,
+        "why": "Nothing translates T-SQL writes into Spark."
+      },
+      {
+        "text": "The row goes to the `Files` area, as a CSV",
+        "correct": false,
+        "why": "`Files` is written by whoever puts files there, not by SQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd6n285p",
+    "version": 1,
+    "section": "lakehouse-and-warehouse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each night Quitanda loads the orders, their items and the day's summary, and a dashboard must never see a night half loaded. Which item gives that guarantee?",
+    "hint": "Three tables, one commit.",
+    "choices": [
+      {
+        "text": "A lakehouse, written by three Delta writes",
+        "correct": false,
+        "why": "Each Delta write commits on its own, so a reader can land between two of them."
+      },
+      {
+        "text": "A warehouse, loading all three in one transaction",
+        "correct": true,
+        "why": "Right. A warehouse has multi-table transactions: a reader sees all of the night or none of it."
+      },
+      {
+        "text": "A lakehouse's SQL analytics endpoint, with BEGIN and COMMIT",
+        "correct": false,
+        "why": "The endpoint is read-only, so it cannot load anything."
+      },
+      {
+        "text": "A shortcut to the database the shop writes to",
+        "correct": false,
+        "why": "A shortcut points at files, and the guarantee is about how they are written."
+      }
+    ]
+  },
+  {
+    "id": "ex-0k1sf1dn",
+    "version": 1,
+    "section": "lakehouse-and-warehouse",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Fabric item to what it is.",
+    "hint": "Two of them store the same format.",
+    "pairs": [
+      {
+        "left": "Lakehouse",
+        "right": "Delta tables written by Spark, beside a Files area"
+      },
+      {
+        "left": "Warehouse",
+        "right": "Delta tables owned by T-SQL, with multi-table transactions"
+      },
+      {
+        "left": "SQL analytics endpoint",
+        "right": "Read-only T-SQL over a lakehouse's tables"
+      },
+      {
+        "left": "Shortcut",
+        "right": "A folder that points at data kept elsewhere"
+      }
+    ],
+    "right_distractors": [
+      "A pool of servers you size in DWUs and pause"
+    ]
+  },
+  {
+    "id": "ex-cbfw5yk3",
+    "version": 1,
+    "section": "delta-in-a-container",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a reader of the Delta table know which Parquet files are the table?",
+    "hint": "It is not the folder listing.",
+    "choices": [
+      {
+        "text": "It lists the folder and reads every `.parquet` in it",
+        "correct": false,
+        "why": "A file in the folder that no commit names is not in the table."
+      },
+      {
+        "text": "From the footer of each Parquet file",
+        "correct": false,
+        "why": "A footer describes its own file; it says nothing about the table."
+      },
+      {
+        "text": "From the `add` actions in the commits of `_delta_log`",
+        "correct": true,
+        "why": "Right. The log is the table: each `add` names a file, with its size and statistics."
+      },
+      {
+        "text": "From the `protocol` action",
+        "correct": false,
+        "why": "`protocol` says which features a reader must understand, not which files there are."
+      }
+    ]
+  },
+  {
+    "id": "ex-skwvpxz4",
+    "version": 1,
+    "section": "delta-in-a-container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague uploads a Parquet file of extra orders into `Tables/orders` by hand, with no commit. What does `ask.py` count afterwards?",
+    "hint": "What reads the log, and what reads the folder?",
+    "choices": [
+      {
+        "text": "The same 98,727 orders",
+        "correct": true,
+        "why": "Right. No `add` names the file, so for every Delta reader it is not there."
+      },
+      {
+        "text": "98,727 plus the extra orders, from the next read on",
+        "correct": false,
+        "why": "That would be a reader listing the folder; `deltalake` reads the log."
+      },
+      {
+        "text": "Nothing: the table refuses to open while a stray file is in its folder",
+        "correct": false,
+        "why": "Readers ignore files the log does not name; they do not refuse the table."
+      },
+      {
+        "text": "The extra orders only, since the newest file wins",
+        "correct": false,
+        "why": "Delta has no rule about the newest file; only commits change the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmxdr4tp",
+    "version": 1,
+    "section": "delta-in-a-container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "DuckDB answered the question about payments without knowing the table was Delta. How?",
+    "hint": "Two libraries split the work.",
+    "choices": [
+      {
+        "text": "DuckDB reads the JSON in `_delta_log` by itself",
+        "correct": false,
+        "why": "In this program DuckDB never saw the log; it was given a dataset."
+      },
+      {
+        "text": "`deltalake` read the log and handed it the files as one dataset",
+        "correct": true,
+        "why": "Right. One library for the log, any engine for the files, which is why Fabric's engines share tables."
+      },
+      {
+        "text": "Azurite turned the Delta table into plain Parquet on the way out",
+        "correct": false,
+        "why": "Azurite stores blobs and knows nothing about Delta."
+      },
+      {
+        "text": "The table has one file, so no log was needed",
+        "correct": false,
+        "why": "The log was read whatever the number of files; that is how the file was found."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvgpxmc8",
+    "version": 1,
+    "section": "delta-in-a-container",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each file in `_delta_log` is one commit, and each line of that file is one ___, such as `add` or `metaData`.",
+    "hint": "The lesson lists four of them.",
+    "blanks": [
+      {
+        "accept": [
+          "action"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ws8ffdzb",
+    "version": 1,
+    "section": "direct-lake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does framing a Direct Lake semantic model do?",
+    "hint": "It is fast because of what it does not move.",
+    "choices": [
+      {
+        "text": "Reads every row of the table into the model, as an import refresh does",
+        "correct": false,
+        "why": "That is import mode; framing moves no data."
+      },
+      {
+        "text": "Sends one SQL query per visual",
+        "correct": false,
+        "why": "That is DirectQuery, which is where Direct Lake falls back to."
+      },
+      {
+        "text": "Points the model at the table's latest version",
+        "correct": true,
+        "why": "Right. It reads the newest commit of the log and copies no data, so it takes seconds."
+      },
+      {
+        "text": "Rewrites the table's Parquet files with V-Order",
+        "correct": false,
+        "why": "V-Order is applied when files are written, not by a report."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdkrp8e5",
+    "version": 1,
+    "section": "direct-lake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Direct Lake report on Quitanda's orders grew slow over a month, with no error anywhere. The job writing the table appends a small file every five minutes. What is the likely cause?",
+    "hint": "The guardrails count more than rows.",
+    "choices": [
+      {
+        "text": "The table passed a guardrail on files, and the model fell back to DirectQuery",
+        "correct": true,
+        "why": "Right. Thousands of small files reach the guardrails long before the rows do, and fallback is quiet."
+      },
+      {
+        "text": "Framing stopped, so the report is showing an old version",
+        "correct": false,
+        "why": "An old version would be stale, not slow."
+      },
+      {
+        "text": "The appended files carry V-Order, which slows reading",
+        "correct": false,
+        "why": "V-Order exists to make reading faster."
+      },
+      {
+        "text": "The capacity was paused overnight",
+        "correct": false,
+        "why": "A paused capacity runs nothing at all; the report would fail, not slow."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bvx0jq5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Fabric's throttling stages in the order a capacity meets them as its carried-forward consumption grows.",
+    "hint": "Ten minutes, an hour, a day.",
+    "items": [
+      "Overage protection: everything runs",
+      "Interactive delay: new interactive requests wait 20 seconds",
+      "Interactive rejection: new interactive requests are refused",
+      "Background rejection: every new request is refused"
+    ]
+  },
+  {
+    "id": "ex-k1kv3hgb",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A background job uses 32 CUs for 45 minutes. Spread over 24 hours, how many CUs does it take on average?",
+    "hint": "CU-seconds, divided by the 86,400 seconds of a day.",
+    "value": 1,
+    "tolerance": 0.01
+  }
+]

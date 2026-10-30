@@ -1,0 +1,271 @@
+{
+  "ex-nagqram9": {
+    "prompt": "Por que um client secret colado nas configurações do repositório é um problema mesmo quando os logs o mascaram?",
+    "hint": "O que vira quem tem a string?",
+    "choices": [
+      {
+        "text": "Mascarar deixa toda execução mais lenta",
+        "why": "Mascarar não custa nada perceptível; o problema é o que a string é."
+      },
+      {
+        "text": "Qualquer cópia dela é a identidade, de qualquer lugar, por meses",
+        "why": "Certo. É de vida longa e não está presa ao workflow a que se destinava."
+      },
+      {
+        "text": "O GitHub consegue ler os segredos e usá-los nos próprios deploys",
+        "why": "Esse não é o risco que a lição descreve; o risco é cada cópia, onde quer que tenha ido."
+      },
+      {
+        "text": "Segredos guardados no GitHub expiram depois de um dia",
+        "why": "Não expiram; um client secret vive até o próprio prazo, muitas vezes um ou dois anos."
+      }
+    ]
+  },
+  "ex-0vjknvcn": {
+    "prompt": "A equipe quer revogar o client secret usado nos deploys da loja. O que torna isso arriscado?",
+    "hint": "O que registra onde o segredo é usado?",
+    "choices": [
+      {
+        "text": "Revogar o segredo também apaga o app registration",
+        "why": "O registro fica; só aquela credencial sai."
+      },
+      {
+        "text": "O Azure leva uma semana para respeitar uma revogação",
+        "why": "A revogação vale logo para novos logins; a pergunta é quem entra com ela."
+      },
+      {
+        "text": "Nada registra quais workflows ou máquinas têm uma cópia",
+        "why": "Certo. Revogar é um palpite sobre o que vai quebrar."
+      },
+      {
+        "text": "Um segredo revogado ainda é aceito pela linha de comando",
+        "why": "O Entra ID o recusa; a linha de comando não tem voz nisso."
+      }
+    ]
+  },
+  "ex-abjc4d7b": {
+    "prompt": "Ponha em ordem os passos de um login federado a partir de um workflow do GitHub.",
+    "hint": "O GitHub assina primeiro; o Azure responde por último.",
+    "trap": "Pôr a conferência antes de o token existir é o deslize: não há o que comparar até o GitHub assinar um.",
+    "items": [
+      "A execução pede ao serviço de tokens do GitHub um token OIDC",
+      "O GitHub devolve um token que nomeia o repositório e o ambiente",
+      "A execução apresenta o token ao Microsoft Entra ID",
+      "O Entra ID confere emissor, subject e audiência com uma credencial federada",
+      "O Entra ID devolve um token do Azure para o service principal"
+    ]
+  },
+  "ex-6g1jrngv": {
+    "prompt": "O que o Entra ID precisa ter guardado antes para aceitar o token do GitHub?",
+    "hint": "Três fatos no app registration.",
+    "choices": [
+      {
+        "text": "Uma cópia da chave privada de assinatura do GitHub",
+        "why": "Ele precisa das chaves públicas do GitHub, que busca no emissor; ninguém compartilha chave privada."
+      },
+      {
+        "text": "Uma credencial federada: emissor, subject, audiência",
+        "why": "Certo. Isso é toda a confiança, e não guarda segredo."
+      },
+      {
+        "text": "Um client secret com prazo curto",
+        "why": "A federação não guarda segredo nenhum; esse é o ponto dela."
+      },
+      {
+        "text": "A faixa de IP dos runners, para deixar entrar as máquinas do GitHub",
+        "why": "Nada na troca confere endereço; a assinatura e o subject fazem o trabalho."
+      }
+    ]
+  },
+  "ex-ex7e9hz6": {
+    "prompt": "Para o token do GitHub, a audiência da credencial federada é api://AzureADToken___.",
+    "hint": "A última palavra da audiência que a documentação do Azure fixa.",
+    "blanks": [
+      {
+        "accept": [
+          "Exchange"
+        ]
+      }
+    ]
+  },
+  "ex-e986rkv8": {
+    "prompt": "Uma credencial confia em `repo:example-shop/shop-api:ref:refs/heads/main`. Semana que vem alguém acrescenta um workflow de lint na main. O que ele consegue fazer?",
+    "hint": "Em quem um subject de branch confia?",
+    "choices": [
+      {
+        "text": "Entrar como a identidade de deploy",
+        "why": "Certo. Todo job na main produz aquele subject, então o linter também é confiável."
+      },
+      {
+        "text": "Nada, porque a credencial nomeia o arquivo do workflow de deploy",
+        "why": "O subject padrão nomeia o repositório e a ref, não o arquivo do workflow."
+      },
+      {
+        "text": "Ler a assinatura, já que lint não precisa de papel de escrita",
+        "why": "Os papéis são da identidade, não do que o job pretende fazer."
+      },
+      {
+        "text": "Implantar quando um revisor aprovar o job de lint",
+        "why": "Revisores pertencem a ambientes, e esse job não declara nenhum."
+      }
+    ]
+  },
+  "ex-6dtg7a6v": {
+    "prompt": "O job de deploy declarava `environment: production`. Alguém remove essa linha, e o passo de login agora falha com AADSTS700213. Por quê?",
+    "hint": "O que decide o formato do subject?",
+    "choices": [
+      {
+        "text": "Remover o ambiente também remove o `id-token: write`",
+        "why": "As permissões são declaradas à parte; sem elas o pedido de token falharia antes, do lado do GitHub."
+      },
+      {
+        "text": "O subject virou o formato de branch, em que nenhuma credencial confia",
+        "why": "Certo. Sem ambiente o GitHub usa `ref:refs/heads/main`, e a comparação é exata."
+      },
+      {
+        "text": "O Entra ID recusa tokens de jobs sem ambiente",
+        "why": "Ele aceita qualquer subject que tenha credencial; este não tem."
+      },
+      {
+        "text": "O client id tem de ser guardado como segredo quando não há ambiente",
+        "why": "Os ids nunca são segredos, e onde ficam não muda o subject."
+      }
+    ]
+  },
+  "ex-pvpwy6w9": {
+    "prompt": "Os mantenedores de um repositório público querem que os pull requests rodem testes de integração no Azure. Qual desenho é seguro?",
+    "hint": "O código de quem o workflow de um pull request roda?",
+    "choices": [
+      {
+        "text": "Confiar em `pull_request` na identidade de produção, só leitura",
+        "why": "Só leitura não é inofensivo em produção, e está a uma mudança de papel de virar escrita."
+      },
+      {
+        "text": "Guardar um client secret só para os pull requests",
+        "why": "Um segredo de vida longa ao alcance de código de forks é o pior dos dois mundos."
+      },
+      {
+        "text": "Uma identidade separada, com papel de leitura num grupo de recursos separado",
+        "why": "Certo. Pull requests rodam código de qualquer um, então não ganham nada que alcance a produção."
+      },
+      {
+        "text": "Confiar em `ref:refs/heads/*` para cobrir todo branch",
+        "why": "Subjects não têm curingas; a comparação é exata."
+      }
+    ]
+  },
+  "ex-rjzmzbk8": {
+    "prompt": "Ligue cada job ao subject que o GitHub põe no token dele.",
+    "hint": "O ambiente, quando existe, ganha.",
+    "pairs": [
+      {
+        "left": "Um job que declara o ambiente production",
+        "right": "repo:example-shop/shop-api:environment:production"
+      },
+      {
+        "left": "Um push na main, sem ambiente",
+        "right": "repo:example-shop/shop-api:ref:refs/heads/main"
+      },
+      {
+        "left": "Um pull request",
+        "right": "repo:example-shop/shop-api:pull_request"
+      },
+      {
+        "left": "A tag v1.4.0, sem ambiente",
+        "right": "repo:example-shop/shop-api:ref:refs/tags/v1.4.0"
+      }
+    ]
+  },
+  "ex-b2mzt9ys": {
+    "prompt": "Qual linha deixa o job pedir um token OIDC ao GitHub?",
+    "hint": "É uma permissão.",
+    "choices": [
+      {
+        "text": "`environment: production`",
+        "why": "Isso muda o subject e acrescenta proteções; não concede o token."
+      },
+      {
+        "text": "`id-token: write`",
+        "why": "Certo. Sem isso a action de login falha antes de o Azure entrar."
+      },
+      {
+        "text": "`contents: read`",
+        "why": "Isso deixa o checkout ler o código."
+      },
+      {
+        "text": "`client-id: ${{ vars.AZURE_CLIENT_ID }}`",
+        "why": "Isso nomeia a identidade pela qual trocar o token; não obtém um token."
+      }
+    ]
+  },
+  "ex-ghcpwkbm": {
+    "prompt": "Alguém publica o client id, o tenant id e o subscription id da loja numa issue pública. O que um estranho faz com eles?",
+    "hint": "Eles nomeiam uma identidade ou a provam?",
+    "choices": [
+      {
+        "text": "Entrar como a identidade de qualquer máquina",
+        "why": "Entrar exige um token cujo subject bata; ids não provam nada."
+      },
+      {
+        "text": "Implantar no slot de staging, mas não em produção",
+        "why": "Nenhum dos dois: os ids não dão acesso a lugar nenhum."
+      },
+      {
+        "text": "Ler os recursos do grupo de recursos",
+        "why": "Ler também exige um token de uma identidade com papel."
+      },
+      {
+        "text": "Nada que entre",
+        "why": "Certo. Eles nomeiam a identidade; só um token assinado que bata a prova, e por isso ficam em `vars`."
+      }
+    ]
+  },
+  "ex-gbrkpb8r": {
+    "prompt": "Os deploys de staging e de produção da loja rodam no mesmo workflow, como dois jobs. Quantas credenciais federadas e identidades o desenho da lição usa?",
+    "hint": "Uma execução de staging comprometida não deve ter como entrar em produção.",
+    "choices": [
+      {
+        "text": "Uma identidade com uma credencial para o arquivo do workflow",
+        "why": "O subject padrão não nomeia arquivo, e uma identidade alcançaria os dois grupos de recursos."
+      },
+      {
+        "text": "Duas identidades, cada uma com uma credencial para o seu ambiente",
+        "why": "Certo. Cada uma confia num ambiente e tem papel num grupo de recursos."
+      },
+      {
+        "text": "Uma identidade com duas credenciais, uma por ambiente",
+        "why": "Os dois ambientes então entrariam como o mesmo principal, com os mesmos papéis."
+      },
+      {
+        "text": "Nenhuma: os jobs dividem o login do primeiro",
+        "why": "Cada job roda no seu runner e faz o seu login."
+      }
+    ]
+  },
+  "ex-bz9ejqas": {
+    "prompt": "Quais mudanças deixam o workflow de deploy da loja mais seguro? Marque todas as que se aplicam.",
+    "hint": "Papéis menores, subjects exatos, código fixado.",
+    "choices": [
+      {
+        "text": "Fixar o azure/login num commit em vez de numa tag",
+        "why": "Sim. Uma tag pode ser movida pelo dono; um commit não."
+      },
+      {
+        "text": "Exigir revisores no ambiente production",
+        "why": "Sim. Aí só execuções revisadas produzem o subject em que a credencial confia."
+      },
+      {
+        "text": "Mover o client id para `secrets`",
+        "why": "Não muda nada: o id nunca foi credencial."
+      },
+      {
+        "text": "Dar à identidade Contributor em rg-shop em vez de Owner na assinatura",
+        "why": "Sim. A federação tira o segredo, não as permissões."
+      },
+      {
+        "text": "Confiar também em `pull_request`, para testar deploys mais cedo",
+        "why": "Isso abre a produção para código de qualquer pull request."
+      }
+    ]
+  }
+}

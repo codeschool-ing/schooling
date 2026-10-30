@@ -1,0 +1,418 @@
+{
+ "ex-9qxs2deg": {
+  "prompt": "A bia é Owner de `shop-prod`. A *Allowed locations*, com o Brasil, está atribuída em `mg-shop` com `deny`. Ela pede uma máquina em `southcentralus`. O que acontece?",
+  "hint": "Política é sobre quem pede?",
+  "choices": [
+   {
+    "text": "É criada, porque Owner pode tudo na assinatura",
+    "why": "Owner é uma permissão. A política julga o recurso, seja quem for que peça."
+   },
+   {
+    "text": "É criada e marcada como não conforme",
+    "why": "Isso é `audit`. Esta atribuição usa `deny`."
+   },
+   {
+    "text": "É recusada",
+    "why": "Isso. A regra é sobre o Texas, não sobre a bia."
+   },
+   {
+    "text": "É criada em `brazilsouth` no lugar",
+    "why": "A política nunca leva um pedido para outra região."
+   }
+  ]
+ },
+ "ex-985gs1vd": {
+  "prompt": "Qual é a diferença entre uma definição de política e uma atribuição de política?",
+  "hint": "Uma diz o quê, a outra diz onde.",
+  "choices": [
+   {
+    "text": "Uma definição é nativa e uma atribuição é personalizada",
+    "why": "Definições e atribuições existem dos dois jeitos."
+   },
+   {
+    "text": "A definição é a regra; a atribuição a põe num escopo",
+    "why": "Isso. Uma definição pode ser atribuída muitas vezes com parâmetros diferentes."
+   },
+   {
+    "text": "Uma definição vale para recursos e uma atribuição para identidades",
+    "why": "Nenhuma vale para identidades; isso é o controle por papéis."
+   },
+   {
+    "text": "Uma atribuição é uma definição que já rodou uma vez",
+    "why": "Uma atribuição é um recurso próprio, não uma execução."
+   }
+  ]
+ },
+ "ex-a9196bfx": {
+  "prompt": "Por que o id da *Allowed locations*, `e56962a6-...`, é o mesmo em todo tenant?",
+  "hint": "Veja onde o id começa.",
+  "choices": [
+   {
+    "text": "Não é: o GUID muda por assinatura",
+    "why": "O GUID de uma nativa é fixo; por isso um template pode citá-lo."
+   },
+   {
+    "text": "Todo tenant a copia do GitHub ao ser criado",
+    "why": "O GitHub é onde ela é publicada, não de onde os tenants a tiram."
+   },
+   {
+    "text": "Ids de política são derivados do nome de exibição",
+    "why": "O nome é um GUID; nada é derivado do título."
+   },
+   {
+    "text": "É nativa, definida uma vez pela Microsoft acima de todo tenant",
+    "why": "Isso. O id começa em `/providers/`, sem assinatura."
+   }
+  ]
+ },
+ "ex-vg7rj1ch": {
+  "prompt": "A loja escreve uma definição personalizada sobre grupos de recursos e lhe dá `\"mode\": \"Indexed\"`. Ela é atribuída, reporta, e nenhum grupo de recursos é recusado. Por quê?",
+  "hint": "Para o que o `Indexed` olha?",
+  "choices": [
+   {
+    "text": "`Indexed` só vê tipos com tags e localização, e pula os grupos",
+    "why": "Isso. Uma regra sobre grupos precisa do modo `All`."
+   },
+   {
+    "text": "Grupos de recursos estão isentos de toda política",
+    "why": "A Microsoft entrega uma nativa para grupos de recursos, no modo `All`."
+   },
+   {
+    "text": "A atribuição precisa de uma identidade gerenciada",
+    "why": "Só `modify` e `deployIfNotExists` precisam."
+   },
+   {
+    "text": "Definições personalizadas não podem usar `deny`",
+    "why": "Podem; a da própria loja usa."
+   }
+  ]
+ },
+ "ex-f8pc35yp": {
+  "prompt": "Numa regra de política, `allOf` quer dizer que toda condição precisa valer, e `___` que pelo menos uma precisa.",
+  "hint": "Os dois combinam condições, como e/ou.",
+  "blanks": [
+   {
+    "accept": [
+     "anyOf"
+    ]
+   }
+  ]
+ },
+ "ex-39zas3p6": {
+  "prompt": "A *Allowed locations* está atribuída em `mg-shop`. Qual destas ela governa?",
+  "hint": "Uma atribuição vale no seu escopo e abaixo.",
+  "choices": [
+   {
+    "text": "Só recursos criados diretamente em `mg-shop`",
+    "why": "Recursos não são criados em grupos de gerenciamento; moram em assinaturas abaixo."
+   },
+   {
+    "text": "Só as assinaturas que existiam no dia da atribuição",
+    "why": "A assinatura do ano que vem debaixo de `mg-shop` também é governada."
+   },
+   {
+    "text": "O grupo raiz e tudo no tenant",
+    "why": "Ela alcança para baixo, nunca para cima."
+   },
+   {
+    "text": "Todo recurso em toda assinatura debaixo de `mg-shop`",
+    "why": "Isso. Inclusive os criados depois."
+   }
+  ]
+ },
+ "ex-gz8fm1cd": {
+  "prompt": "O dono de `shop-staging` não gosta de um deny atribuído em `mg-shop`. O que ele pode fazer de dentro da assinatura?",
+  "hint": "Algo abaixo pode desligar uma regra de cima?",
+  "choices": [
+   {
+    "text": "Atribuir a mesma definição com `disabled` na assinatura",
+    "why": "Isso acrescenta uma segunda atribuição; a primeira continua valendo."
+   },
+   {
+    "text": "Vê-la, e nada mais",
+    "why": "Isso. Uma saída se escreve na atribuição ou numa isenção, acima."
+   },
+   {
+    "text": "Apagar a atribuição, já que ela se aplica aos recursos dele",
+    "why": "A atribuição mora em `mg-shop`, fora do alcance dele."
+   },
+   {
+    "text": "Tirar a assinatura de `mg-shop`",
+    "why": "Mover uma assinatura entre grupos de gerenciamento não é decisão do dono da assinatura."
+   }
+  ]
+ },
+ "ex-f3ej43nv": {
+  "prompt": "Uma assinatura recusa tudo fora de `brazilsouth`; um grupo de recursos dentro dela recusa tudo fora de `brazilsoutheast`. Onde um recurso desse grupo pode ser criado?",
+  "hint": "Cada atribuição é avaliada sozinha.",
+  "choices": [
+   {
+    "text": "Em lugar nenhum",
+    "why": "Isso. O mais restritivo, somado: cada região falha numa das duas regras."
+   },
+   {
+    "text": "Em qualquer uma das duas regiões",
+    "why": "Cada região é recusada por uma das duas atribuições."
+   },
+   {
+    "text": "Em `brazilsoutheast`, porque a regra mais próxima vence",
+    "why": "Nenhuma regra vence; as duas valem."
+   },
+   {
+    "text": "Em `brazilsouth`, porque a regra da assinatura está mais acima",
+    "why": "Estar mais acima não sobrepõe; as duas são avaliadas."
+   }
+  ]
+ },
+ "ex-v67vn3g9": {
+  "prompt": "Por que o `policy.bicep` compilado guarda `[[parameters('effect')]` com dois colchetes?",
+  "hint": "Dois avaliadores leem esse texto.",
+  "choices": [
+   {
+    "text": "Um defeito do Bicep 0.48.1 que dobra o colchete",
+    "why": "É escape proposital, comportamento documentado."
+   },
+   {
+    "text": "Para o Resource Manager avaliá-lo duas vezes",
+    "why": "O Resource Manager não o avalia nenhuma vez; tira um colchete e guarda o texto."
+   },
+   {
+    "text": "Para o Resource Manager guardá-lo como texto e o Policy avaliá-lo",
+    "why": "Isso. Um colchete sai na implantação, e o Policy lê o resto toda vez que a regra roda."
+   },
+   {
+    "text": "Porque parâmetros de política precisam começar com dois colchetes",
+    "why": "Na definição guardada há um só, como na nativa."
+   }
+  ]
+ },
+ "ex-21mfrp8m": {
+  "prompt": "A atribuição de tag de ambiente da loja usa `enforcementMode: 'DoNotEnforce'`. O que isso dá à loja?",
+  "hint": "Como uma regra nova deve começar?",
+  "choices": [
+   {
+    "text": "Uma regra que vale só para recursos novos",
+    "why": "Todo deny vale só para pedidos novos; isto é sobre não recusar nada."
+   },
+   {
+    "text": "Um relatório do que a regra recusaria, sem recusar nada",
+    "why": "Isso. Avaliar primeiro, aplicar depois de entender o relatório."
+   },
+   {
+    "text": "Uma regra que o dono de cada assinatura pode desligar",
+    "why": "Nada abaixo pode desligar uma atribuição."
+   },
+   {
+    "text": "Uma atribuição mais barata, cobrada pela metade do preço de uma aplicada",
+    "why": "O modo de aplicação não tem nada a ver com cobrança."
+   }
+  ]
+ },
+ "ex-q8e1n8ba": {
+  "prompt": "No máximo quantos caracteres pode ter o nome de uma atribuição de política num grupo de gerenciamento?",
+  "hint": "`shop-environment-tag` o respeita com quatro de folga.",
+  "unit": "caracteres"
+ },
+ "ex-wda7z8jz": {
+  "prompt": "Ligue cada jeito de afrouxar uma política ao que ele é.",
+  "hint": "Dois são escritos na atribuição ou ao lado dela.",
+  "pairs": [
+   {
+    "left": "`notScopes`",
+    "right": "escopos que a atribuição pula"
+   },
+   {
+    "left": "uma isenção",
+    "right": "um escopo dispensado de uma atribuição, até uma data"
+   },
+   {
+    "left": "`DoNotEnforce`",
+    "right": "avaliar e reportar sem recusar"
+   }
+  ],
+  "right_distractors": [
+   "uma atribuição abaixo com `disabled`"
+  ]
+ },
+ "ex-hetkb3ez": {
+  "prompt": "Qual efeito deixa o recurso ser criado e o marca como não conforme?",
+  "hint": "A família de reportar.",
+  "choices": [
+   {
+    "text": "`deny`",
+    "why": "Esse recusa o pedido."
+   },
+   {
+    "text": "`modify`",
+    "why": "Esse muda o pedido antes de ser executado."
+   },
+   {
+    "text": "`disabled`",
+    "why": "Esse não faz nada."
+   },
+   {
+    "text": "`audit`",
+    "why": "Isso. Criado, e reportado."
+   }
+  ]
+ },
+ "ex-z6k7mamr": {
+  "prompt": "Ponha estes efeitos na ordem em que o Azure Policy os roda quando um pedido chega.",
+  "hint": "Uma regra desligada não custa nada; uma mudança pode tornar um deny desnecessário.",
+  "items": [
+   "`disabled`",
+   "`modify`",
+   "`deny`",
+   "`audit`"
+  ],
+  "trap": "`modify` vem antes de `deny`: um pedido que recebeu a tag faltante não deve depois ser recusado por não tê-la."
+ },
+ "ex-028f5b68": {
+  "prompt": "A nativa *Inherit a tag from the resource group if missing* cita o papel Contributor na regra. Quem recebe esse papel?",
+  "hint": "Um efeito que age precisa de alguém para agir.",
+  "choices": [
+   {
+    "text": "Quem cria o recurso",
+    "why": "As permissões de quem cria decidem se ele pode pedir, não o que o Policy pode mudar."
+   },
+   {
+    "text": "A equipe de suporte da Microsoft, para remediação",
+    "why": "Ninguém da Microsoft age nos seus recursos por causa de uma política."
+   },
+   {
+    "text": "A identidade gerenciada da atribuição",
+    "why": "Isso. O `modify` age como essa identidade, no escopo da atribuição."
+   },
+   {
+    "text": "Ninguém: uma nativa já tem toda permissão",
+    "why": "Uma nativa é uma definição; ela age por uma identidade como qualquer outra."
+   }
+  ]
+ },
+ "ex-2j8jpddx": {
+  "prompt": "A *Allowed locations* com `deny` é atribuída numa assinatura que já tem uma máquina no Texas. O que acontece com a máquina?",
+  "hint": "Quando um deny age?",
+  "choices": [
+   {
+    "text": "Continua rodando, marcada como não conforme",
+    "why": "Isso. Um deny age em pedidos; o que existe é reportado."
+   },
+   {
+    "text": "É apagada na próxima avaliação de 24 horas",
+    "why": "A avaliação reporta; nunca apaga."
+   },
+   {
+    "text": "É levada para `brazilsouth` por uma tarefa de remediação",
+    "why": "A remediação existe para `modify` e `deployIfNotExists`, e nenhum efeito realoca uma máquina."
+   },
+   {
+    "text": "É parada em até cinco minutos",
+    "why": "Cinco minutos é quando a atribuição passa a valer, e valer não para nada."
+   }
+  ]
+ },
+ "ex-ta09zzm7": {
+  "prompt": "O que é uma iniciativa no Azure Policy?",
+  "hint": "A API a chama de policy set definition.",
+  "choices": [
+   {
+    "text": "Uma tarefa de remediação iniciada à mão",
+    "why": "Isso é remediação, outra coisa."
+   },
+   {
+    "text": "Uma definição que roda antes de qualquer outra",
+    "why": "A ordem é decidida pelo efeito, não pelo agrupamento."
+   },
+   {
+    "text": "Um grupo de definições atribuído e reportado como um",
+    "why": "Isso. Os padrões regulatórios da Microsoft são iniciativas nativas."
+   },
+   {
+    "text": "Uma atribuição que vale para um tenant inteiro",
+    "why": "Escopo pertence a atribuições; uma iniciativa é um tipo de definição."
+   }
+  ]
+ },
+ "ex-whe3zgfn": {
+  "prompt": "As atribuições são avaliadas de novo uma vez a cada ___ horas no ciclo padrão.",
+  "hint": "Um dia.",
+  "blanks": [
+   {
+    "accept": [
+     "24",
+     "vinte e quatro"
+    ]
+   }
+  ]
+ },
+ "ex-7kfzy3bc": {
+  "prompt": "A loja quer que toda storage account nova tenha uma configuração de diagnóstico, criada automaticamente quando faltar. Qual efeito serve?",
+  "hint": "Um recurso relacionado implantado se estiver faltando.",
+  "choices": [
+   {
+    "text": "`auditIfNotExists`",
+    "why": "Esse reporta a configuração ausente e não cria nada."
+   },
+   {
+    "text": "`deployIfNotExists`",
+    "why": "Isso. Ele precisa da identidade gerenciada da atribuição e de um papel para isso."
+   },
+   {
+    "text": "`modify`",
+    "why": "O `modify` muda as propriedades do próprio pedido, como tags; não cria um segundo recurso."
+   },
+   {
+    "text": "`append`",
+    "why": "O `append` acrescenta campos ao pedido; não cria nada ao lado dele."
+   }
+  ]
+ },
+ "ex-zwmwsmr5": {
+  "prompt": "Quais destas coisas o laboratório mostrou sem conta do Azure? Marque todas as que se aplicam.",
+  "hint": "O que veio do GitHub e do Bicep, e o que foi recusado?",
+  "choices": [
+   {
+    "text": "A regra de uma definição nativa",
+    "why": "Isso. Lida da cópia do GitHub."
+   },
+   {
+    "text": "O template ARM de uma atribuição num grupo de gerenciamento",
+    "why": "Isso. O `az bicep build`."
+   },
+   {
+    "text": "Um deny recusando um recurso no Texas",
+    "why": "Isso precisa do Resource Manager; foi ensinado pela documentação."
+   },
+   {
+    "text": "O relatório de conformidade de `shop-prod`",
+    "why": "A conformidade mora no Azure; o pedido de varredura foi recusado."
+   },
+   {
+    "text": "O papel que uma nativa com `modify` pede",
+    "why": "Isso. O GUID do Contributor, na regra."
+   }
+  ]
+ },
+ "ex-s76y738x": {
+  "prompt": "Uma equipe quer máquinas de teste no Texas enquanto a produção fica no Brasil, as duas debaixo de `mg-shop`. Que mudança mantém honesta a *Allowed locations* em `mg-shop`?",
+  "hint": "A saída é escrita acima, não feita abaixo.",
+  "choices": [
+   {
+    "text": "Atribuir a *Allowed locations* de novo na assinatura de teste com o Texas na lista",
+    "why": "A atribuição de `mg-shop` continuaria recusando o Texas; as regras se somam."
+   },
+   {
+    "text": "Mudar a atribuição para `audit` para todo mundo",
+    "why": "Isso afrouxa a produção também, o que ninguém pediu."
+   },
+   {
+    "text": "Dar à equipe Owner em `mg-shop` para contornar",
+    "why": "Owner não contorna política."
+   },
+   {
+    "text": "Uma isenção para a assinatura de teste, com motivo e data de fim",
+    "why": "Isso. Escrita, visível, e expira; `notScopes` é o outro caminho honesto."
+   }
+  ]
+ }
+}

@@ -1,0 +1,619 @@
+[
+ {
+  "id": "ex-jcfpa0vf",
+  "version": 1,
+  "section": "vpn-gateway",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What must the subnet that holds a VPN gateway be called?",
+  "hint": "The name is how Azure finds it.",
+  "choices": [
+   {
+    "text": "`snet-gateway`, by the naming convention",
+    "correct": false,
+    "why": "A convention is ours; this name is Azure's rule, and a different one fails."
+   },
+   {
+    "text": "`vpng-shop`, the same as the gateway",
+    "correct": false,
+    "why": "The gateway's name is free; the subnet's is fixed."
+   },
+   {
+    "text": "Anything, as long as it is `/27` or larger",
+    "correct": false,
+    "why": "Size is a second rule; the name is the first."
+   },
+   {
+    "text": "`GatewaySubnet`, exactly",
+    "correct": true,
+    "why": "Right. Azure finds the subnet by that name."
+   }
+  ]
+ },
+ {
+  "id": "ex-anq7rj15",
+  "version": 1,
+  "section": "vpn-gateway",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the shop make `GatewaySubnet` a `/27` rather than the smallest size it could get away with?",
+  "hint": "Who else may need to live there later?",
+  "choices": [
+   {
+    "text": "Because each tunnel takes one address from the subnet",
+    "correct": false,
+    "why": "Tunnels use the gateway's public addresses, not the subnet's."
+   },
+   {
+    "text": "Because Azure charges less for a larger subnet",
+    "correct": false,
+    "why": "Subnets cost nothing at any size."
+   },
+   {
+    "text": "So an ExpressRoute gateway can share it later",
+    "correct": true,
+    "why": "Right. And growing a small one under a running gateway is a project."
+   },
+   {
+    "text": "So that virtual machines can be placed next to the gateway",
+    "correct": false,
+    "why": "Nothing else may live in `GatewaySubnet`."
+   }
+  ]
+ },
+ {
+  "id": "ex-feh19rba",
+  "version": 1,
+  "section": "vpn-gateway",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A gateway is in the default active-standby mode. Microsoft maintains the active instance. What do users of the tunnel notice?",
+  "hint": "Two instances, one carrying the tunnel.",
+  "choices": [
+   {
+    "text": "Nothing at all, since both instances carry the tunnel",
+    "correct": false,
+    "why": "That is active-active. By default only one does."
+   },
+   {
+    "text": "A brief interruption while the standby takes over",
+    "correct": true,
+    "why": "Right. Active-active removes most of it."
+   },
+   {
+    "text": "An outage of 45 minutes while the gateway is rebuilt",
+    "correct": false,
+    "why": "45 minutes is creating a gateway; failover is the standby taking over."
+   },
+   {
+    "text": "Traffic moves to ExpressRoute",
+    "correct": false,
+    "why": "The shop has no circuit in this design."
+   }
+  ]
+ },
+ {
+  "id": "ex-gh4qa46f",
+  "version": 1,
+  "section": "vpn-gateway",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With an active-active gateway and two firewalls in the office, each firewall connected to both instances, how many tunnels are up?",
+  "hint": "Two times two.",
+  "value": 4,
+  "tolerance": 0,
+  "unit": "tunnels"
+ },
+ {
+  "id": "ex-tpchn10b",
+  "version": 1,
+  "section": "vpn-gateway",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the Basic VPN gateway SKU for?",
+  "hint": "Microsoft's documentation says it outright.",
+  "choices": [
+   {
+    "text": "Trying things out",
+    "correct": true,
+    "why": "Right. Limited features, limited support, never production."
+   },
+   {
+    "text": "Active-active pairs on a budget",
+    "correct": false,
+    "why": "Basic supports neither active-active nor BGP."
+   },
+   {
+    "text": "Small offices in production",
+    "correct": false,
+    "why": "Microsoft says it should not be used for production at all."
+   },
+   {
+    "text": "Point-to-site connections only",
+    "correct": false,
+    "why": "It does site-to-site too; it is just small."
+   }
+  ]
+ },
+ {
+  "id": "ex-t6syjcjr",
+  "version": 1,
+  "section": "vpn-gateway",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Five administrators need to reach the hub network from home. Which kind of VPN fits?",
+  "hint": "One network to another, or one laptop?",
+  "choices": [
+   {
+    "text": "A site-to-site VPN to each home router",
+    "correct": false,
+    "why": "That would put five homes' networks into Azure's routing."
+   },
+   {
+    "text": "ExpressRoute with Microsoft peering",
+    "correct": false,
+    "why": "A circuit is for a building, and weeks to order."
+   },
+   {
+    "text": "None: VPN gateways accept only offices",
+    "correct": false,
+    "why": "Gateways accept single clients too."
+   },
+   {
+    "text": "Point-to-site, with a client on each laptop",
+    "correct": true,
+    "why": "Right. And sign-in can go through Entra ID."
+   }
+  ]
+ },
+ {
+  "id": "ex-1cf7kkbc",
+  "version": 1,
+  "section": "the-tunnel-in-bicep",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a site-to-site VPN, what does the local network gateway describe?",
+  "hint": "Azure's description of the other end.",
+  "choices": [
+   {
+    "text": "Azure's own gateway in `GatewaySubnet`",
+    "correct": false,
+    "why": "That is the virtual network gateway, `vpng-shop`."
+   },
+   {
+    "text": "The office's end of the tunnel",
+    "correct": true,
+    "why": "Right. `lgw-shop-office`, at `203.0.113.10`."
+   },
+   {
+    "text": "The tunnel and its shared key",
+    "correct": false,
+    "why": "That is the connection, `cn-shop-office`."
+   },
+   {
+    "text": "The DNS server the office uses",
+    "correct": false,
+    "why": "DNS is lesson 21's subject; this resource is about the far end of the tunnel."
+   }
+  ]
+ },
+ {
+  "id": "ex-4fa1ywzc",
+  "version": 1,
+  "section": "the-tunnel-in-bicep",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What did `@secure()` change in the compiled template?",
+  "hint": "Look at the type the parameter came out with.",
+  "choices": [
+   {
+    "text": "The parameter's type became `securestring`",
+    "correct": true,
+    "why": "Right. Resource Manager keeps its value out of the history and the logs."
+   },
+   {
+    "text": "Nothing: decorators are dropped by the compiler",
+    "correct": false,
+    "why": "This one became the parameter's type."
+   },
+   {
+    "text": "It encrypted the shared key inside the template",
+    "correct": false,
+    "why": "There is no key in the template to encrypt; it is given at deployment."
+   },
+   {
+    "text": "It made the parameter optional",
+    "correct": false,
+    "why": "It has no default, so it stays required."
+   }
+  ]
+ },
+ {
+  "id": "ex-xkw818bj",
+  "version": 1,
+  "section": "the-tunnel-in-bicep",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`leaky.bicep` wrote the shared key as a default value. What did the compiler do?",
+  "hint": "Was it an error or something milder?",
+  "choices": [
+   {
+    "text": "Refused to compile it",
+    "correct": false,
+    "why": "It compiled; the objection was a warning."
+   },
+   {
+    "text": "Removed the value from the template silently",
+    "correct": false,
+    "why": "It warned, and it changed nothing."
+   },
+   {
+    "text": "Compiled it, with a `secure-parameter-default` warning",
+    "correct": true,
+    "why": "Right. Nothing stops a deployment unless a pipeline treats warnings as failures."
+   },
+   {
+    "text": "Replaced the key with `newGuid()`",
+    "correct": false,
+    "why": "`newGuid()` is what the rule allows, not what the compiler writes for you."
+   }
+  ]
+ },
+ {
+  "id": "ex-4h34aabk",
+  "version": 1,
+  "section": "the-tunnel-in-bicep",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "With BGP on, why does the shop's local network gateway list `192.168.255.1/32` and not the office's `192.168.0.0/16`?",
+  "hint": "Who tells Azure about the office's networks?",
+  "choices": [
+   {
+    "text": "Because a local network gateway accepts only one address",
+    "correct": false,
+    "why": "It accepts a list; with BGP, one entry is all it needs."
+   },
+   {
+    "text": "The firewall announces its networks over BGP itself",
+    "correct": true,
+    "why": "Right. Azure needs only the route to the BGP session."
+   },
+   {
+    "text": "Because `192.168.0.0/16` overlaps the hub's range",
+    "correct": false,
+    "why": "The hub is `10.0.0.0/16`; nothing overlaps."
+   },
+   {
+    "text": "To keep the office's ranges secret from Azure",
+    "correct": false,
+    "why": "The firewall announces them over BGP anyway."
+   }
+  ]
+ },
+ {
+  "id": "ex-mxeqcefm",
+  "version": 1,
+  "section": "the-tunnel-in-bicep",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A Bicep resource marked `___` is named without being created, as the hub network is in `vpn.bicep`.",
+  "hint": "One word after the resource's type.",
+  "blanks": [
+   {
+    "accept": [
+     "existing"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-s0gshgyr",
+  "version": 1,
+  "section": "the-tunnel-in-bicep",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each resource of `vpn.bicep` to its part in the VPN.",
+  "hint": "Only one of them is the tunnel.",
+  "pairs": [
+   {
+    "left": "`vpng-shop`",
+    "right": "Azure's end of the tunnel"
+   },
+   {
+    "left": "`lgw-shop-office`",
+    "right": "Azure's description of the office's end"
+   },
+   {
+    "left": "`cn-shop-office`",
+    "right": "the tunnel, with its shared key"
+   },
+   {
+    "left": "`pip-vpng-shop-2`",
+    "right": "the second instance's public address"
+   }
+  ],
+  "right_distractors": [
+   "the office's private network"
+  ]
+ },
+ {
+  "id": "ex-dabjbp6s",
+  "version": 1,
+  "section": "expressroute",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does an ExpressRoute circuit travel over?",
+  "hint": "It never touches one thing.",
+  "choices": [
+   {
+    "text": "The public internet, in an encrypted tunnel",
+    "correct": false,
+    "why": "That is a VPN."
+   },
+   {
+    "text": "Microsoft's edge locations, like Front Door",
+    "correct": false,
+    "why": "Edge locations serve public HTTP traffic; a circuit meets Microsoft at a peering location."
+   },
+   {
+    "text": "A carrier's private network",
+    "correct": true,
+    "why": "Right. It never crosses the public internet."
+   },
+   {
+    "text": "The paired region's backbone",
+    "correct": false,
+    "why": "Pairing has nothing to do with how a company reaches Azure."
+   }
+  ]
+ },
+ {
+  "id": "ex-hkw56na1",
+  "version": 1,
+  "section": "expressroute",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is a circuit's service key, and how is it handled?",
+  "hint": "Microsoft's documentation says whether it is secret.",
+  "choices": [
+   {
+    "text": "A password the company keeps from the provider",
+    "correct": false,
+    "why": "The company gives it to the provider; that is its purpose."
+   },
+   {
+    "text": "A key that encrypts traffic on the circuit",
+    "correct": false,
+    "why": "The circuit is not encrypted by default, and the key encrypts nothing."
+   },
+   {
+    "text": "The BGP number of Microsoft's routers",
+    "correct": false,
+    "why": "BGP numbers are separate; the key identifies the circuit."
+   },
+   {
+    "text": "A GUID the company passes to the provider",
+    "correct": true,
+    "why": "Right. The only thing the three parties exchange, and not a secret."
+   }
+  ]
+ },
+ {
+  "id": "ex-n91rbmgc",
+  "version": 1,
+  "section": "expressroute",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The finance system in the office must reach `10.20.3.0/24` over the circuit. Which peering carries it?",
+  "hint": "Private addresses of your networks.",
+  "choices": [
+   {
+    "text": "Private peering",
+    "correct": true,
+    "why": "Right. It reaches the private addresses of your virtual networks."
+   },
+   {
+    "text": "Global Reach",
+    "correct": false,
+    "why": "The lesson does not use it; it links circuits to each other."
+   },
+   {
+    "text": "Neither: a circuit reaches only Microsoft 365",
+    "correct": false,
+    "why": "Private peering exists exactly for your networks."
+   },
+   {
+    "text": "Microsoft peering",
+    "correct": false,
+    "why": "That reaches Microsoft's public services, such as Microsoft 365."
+   }
+  ]
+ },
+ {
+  "id": "ex-2c89a6g4",
+  "version": 1,
+  "section": "expressroute",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A company's circuit has both connections ending on one router in its office. Microsoft's routers are both healthy. What has the company lost?",
+  "hint": "Where is the single point of failure now?",
+  "choices": [
+   {
+    "text": "Microsoft peering, which needs two routers",
+    "correct": false,
+    "why": "Peerings are unaffected by where the company ends its connections."
+   },
+   {
+    "text": "Nothing, since Microsoft's side is redundant",
+    "correct": false,
+    "why": "Redundancy is end to end; the company's end is now one device."
+   },
+   {
+    "text": "The redundancy: one router failing takes both connections down",
+    "correct": true,
+    "why": "Right. Microsoft's documentation says this compromises the circuit's design."
+   },
+   {
+    "text": "Half the bandwidth, permanently",
+    "correct": false,
+    "why": "Bandwidth is the circuit's, whatever router ends it."
+   }
+  ]
+ },
+ {
+  "id": "ex-jcbcmbj6",
+  "version": 1,
+  "section": "expressroute",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Is traffic on an ExpressRoute circuit encrypted?",
+  "hint": "Private is a statement about the path.",
+  "choices": [
+   {
+    "text": "Yes, by the carrier, on every circuit",
+    "correct": false,
+    "why": "Nothing encrypts it by default."
+   },
+   {
+    "text": "Not by default; IPsec or MACsec adds it",
+    "correct": true,
+    "why": "Right. Private keeps it off the internet, which is a different thing."
+   },
+   {
+    "text": "Yes, with the service key",
+    "correct": false,
+    "why": "The service key identifies the circuit and encrypts nothing."
+   },
+   {
+    "text": "No, and it cannot be",
+    "correct": false,
+    "why": "It can: IPsec through it, or MACsec on ExpressRoute Direct."
+   }
+  ]
+ },
+ {
+  "id": "ex-1sd94mr9",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of getting an ExpressRoute circuit working in order.",
+  "hint": "Azure first, the carrier in the middle, traffic last.",
+  "items": [
+   "create the circuit resource, naming provider, location and bandwidth",
+   "receive the service key from Azure",
+   "give the service key to the provider",
+   "the provider builds its side and the circuit becomes Provisioned",
+   "configure private peering and connect the gateway"
+  ],
+  "trap": "Nothing flows until the provider's step is done, and that step is measured in weeks."
+ },
+ {
+  "id": "ex-7ecpx4zg",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these protect the shop against losing the peering location in São Paulo? Choose all that apply.",
+  "hint": "A building can fail as a whole.",
+  "choices": [
+   {
+    "text": "A site-to-site VPN as a backup road",
+    "correct": true,
+    "why": "Right. It does not go through the peering location at all."
+   },
+   {
+    "text": "The circuit's secondary connection",
+    "correct": false,
+    "why": "It ends in the same building as the primary."
+   },
+   {
+    "text": "A second circuit at another peering location",
+    "correct": true,
+    "why": "Right. Campinas, say, with another carrier."
+   },
+   {
+    "text": "A larger bandwidth on the same circuit",
+    "correct": false,
+    "why": "More capacity in one building is still one building."
+   },
+   {
+    "text": "Making the gateway subnet `/26`",
+    "correct": false,
+    "why": "The subnet's size changes nothing outside Azure."
+   }
+  ]
+ },
+ {
+  "id": "ex-wpavj5v0",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The office adds a new network, `192.168.40.0/24`. The VPN uses BGP. What does somebody have to change on the Azure side?",
+  "hint": "Who announces the office's networks?",
+  "choices": [
+   {
+    "text": "Nothing: the firewall announces it over BGP",
+    "correct": true,
+    "why": "Right. That is what BGP removes: the second person typing the same range."
+   },
+   {
+    "text": "Create a second connection for the new range",
+    "correct": false,
+    "why": "One connection carries every network BGP announces."
+   },
+   {
+    "text": "Add the range to `lgw-shop-office`'s address space",
+    "correct": false,
+    "why": "That is how it works without BGP; with it, the firewall announces it."
+   },
+   {
+    "text": "Recreate the gateway with a larger SKU",
+    "correct": false,
+    "why": "A new range is a route, not a capacity problem."
+   }
+  ]
+ },
+ {
+  "id": "ex-g7x9q5sz",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A VPN gateway in Azure uses the BGP number ___ unless told otherwise.",
+  "hint": "Five digits, in the private range.",
+  "blanks": [
+   {
+    "accept": [
+     "65515"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]

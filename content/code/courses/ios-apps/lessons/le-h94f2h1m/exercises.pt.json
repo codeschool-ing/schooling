@@ -1,0 +1,430 @@
+{
+  "ex-q9p3pbcz": {
+    "prompt": "Por que o `PlannerModel` do planner pode ser compilado e rodado no Linux, quando as views dele não podem?",
+    "hint": "De que framework vem o `@Observable`?",
+    "choices": [
+      {
+        "text": "Porque é uma struct, e structs não precisam de framework",
+        "why": "Ele é uma classe, `final class PlannerModel`."
+      },
+      {
+        "text": "O Observation é do toolchain do Swift, não do SwiftUI",
+        "why": "Isso. Só as views precisam do SwiftUI, e portanto de um Mac."
+      },
+      {
+        "text": "O Linux tem uma cópia reduzida do SwiftUI que cobre modelos",
+        "why": "O SwiftUI não tem versão para Linux, reduzida ou não."
+      },
+      {
+        "text": "O `@MainActor` o deixa rodar sem um SDK da Apple",
+        "why": "O `@MainActor` trata de qual thread o chama, não de qual plataforma."
+      }
+    ]
+  },
+  "ex-b6a0adr3": {
+    "prompt": "O que o `@ObservationIgnored` faz com o `lastSaved`?",
+    "hint": "A última cena da seção 03.",
+    "choices": [
+      {
+        "text": "Torna a propriedade só de leitura",
+        "why": "O programa a escreve na última cena."
+      },
+      {
+        "text": "Impede que a propriedade seja salva em disco",
+        "why": "Nada no modelo salva em disco; o atributo trata de rastreamento."
+      },
+      {
+        "text": "Escritas nela não avisam view nenhuma",
+        "why": "Isso: defini-la não imprimiu nada, porque ela está fora do rastreamento."
+      },
+      {
+        "text": "Esconde a propriedade de outros módulos",
+        "why": "Isso é controle de acesso; ela continua `public`."
+      }
+    ]
+  },
+  "ex-07kn8d7v": {
+    "prompt": "Por que o total da semana é `public var week: WeekTotal { … }` em vez de uma propriedade armazenada atualizada a cada mudança?",
+    "hint": "A aula 6 seção 06.",
+    "choices": [
+      {
+        "text": "Calculado a partir de `plan` e `today`, ele não fica para trás",
+        "why": "Isso, e o Observation rastreia o que ele lê, então uma view que lê `week` é avisada quando qualquer um muda."
+      },
+      {
+        "text": "O `@Observable` não rastreia propriedades armazenadas de tipo struct",
+        "why": "Ele rastreia `plan`, uma struct, muito bem."
+      },
+      {
+        "text": "Propriedades calculadas são mais rápidas que armazenadas",
+        "why": "Elas recalculam a cada leitura; o ponto é correção."
+      },
+      {
+        "text": "O compilador proíbe propriedades armazenadas numa classe observável",
+        "why": "`plan` e `today` são armazenadas."
+      }
+    ]
+  },
+  "ex-xgc4ht1h": {
+    "prompt": "Quando o `today` avançou uma semana, quais duas telas da seção 03 foram avisadas?",
+    "hint": "Quais closures leram `today`, direto ou por `week`?",
+    "choices": [
+      {
+        "text": "CourseListView e Header",
+        "why": "A lista de cursos leu só títulos, que estão em `plan`."
+      },
+      {
+        "text": "CourseListView e WeekView",
+        "why": "A lista ficou de fora; ela não leu nada que mudou."
+      },
+      {
+        "text": "WeekView e Header",
+        "why": "Isso: o cabeçalho leu `today`, e `week` o lê também."
+      },
+      {
+        "text": "As três, já que `today` pertence ao modelo",
+        "why": "O Observation avisa quem leu a propriedade, não todo dono do objeto."
+      }
+    ]
+  },
+  "ex-ca5tcgz7": {
+    "prompt": "Marcar `s3` como feita avisou a `CourseListView`, que mostra só títulos de curso. Por quê?",
+    "hint": "O que a closure realmente leu no modelo?",
+    "choices": [
+      {
+        "text": "O Observation avisa toda view na tela de toda mudança",
+        "why": "O cabeçalho não foi avisado, então não é toda view."
+      },
+      {
+        "text": "Ela leu `model.plan`, e a mudança escreveu um `plan` novo",
+        "why": "Isso. `plan` é uma propriedade rastreada; uma sessão mudando dentro dele é uma escrita em `plan`."
+      },
+      {
+        "text": "Os títulos dos cursos são calculados a partir das sessões",
+        "why": "Eles ficam guardados em `courses`; nada os calcula."
+      },
+      {
+        "text": "O `markDone` chama `print`, que toda view observa",
+        "why": "O `markDone` não imprime nada; as linhas vêm do `onChange`."
+      }
+    ]
+  },
+  "ex-6e81naet": {
+    "prompt": "Na saída da seção 03, quantas telas foram avisadas quando o `lastSaved` foi definido?",
+    "hint": "Conte as linhas sob essa cena."
+  },
+  "ex-37gm5p9m": {
+    "prompt": "Na saída do programa, `WeekView` e `Header` saíram numa ordem. Em outra execução, poderiam sair na outra?",
+    "hint": "A seção 03 diz o que o Observation promete sobre ordem.",
+    "choices": [
+      {
+        "text": "Não: saem na ordem em que as closures foram registradas",
+        "why": "A saída já contradiz isso: `WeekView` foi registrada depois da lista, antes do cabeçalho, e mesmo assim saiu primeiro."
+      },
+      {
+        "text": "Sim: o Observation não ordena as views que avisa",
+        "why": "Isso, e por isso nada num app deve depender disso."
+      },
+      {
+        "text": "Não: a ordem alfabética decide",
+        "why": "Nada as ordena por nome."
+      },
+      {
+        "text": "Só se o programa for compilado em Release",
+        "why": "A configuração de build não tem nada com a ordem dos avisos."
+      }
+    ]
+  },
+  "ex-a1eqxv8n": {
+    "prompt": "Por que o `PlannerApp` guarda o modelo como `@State private var model = PlannerModel(…)`?",
+    "hint": "O `App` é uma struct, refeita quando o SwiftUI quer.",
+    "choices": [
+      {
+        "text": "Para o SwiftUI observar o objeto à procura de mudanças",
+        "why": "Observar é trabalho do Observation, em qualquer `body` que leia uma propriedade."
+      },
+      {
+        "text": "Para uma só instância durar além das cópias da struct",
+        "why": "Isso. Sem ele cada cópia criaria um modelo novo e perderia o plano."
+      },
+      {
+        "text": "Porque classes só podem ser guardadas em `@State`",
+        "why": "As views guardam o mesmo modelo numa `let` simples."
+      },
+      {
+        "text": "Para tornar o modelo privado à primeira tela do app",
+        "why": "Ele é passado ou posto no ambiente para todas as telas."
+      }
+    ]
+  },
+  "ex-396p9d70": {
+    "prompt": "A `CourseListView` recebe o modelo como `let model: PlannerModel`. Como ela é redesenhada quando o plano muda?",
+    "hint": "O que inscreve uma view?",
+    "choices": [
+      {
+        "text": "Não é; uma `let` nunca muda, então a tela também não",
+        "why": "A referência nunca muda; o objeto para o qual ela aponta muda, e o `body` o leu."
+      },
+      {
+        "text": "O pai passa um modelo novo depois de cada mudança",
+        "why": "Há um modelo pela vida da cena."
+      },
+      {
+        "text": "O `body` dela leu `model.plan`, e o Observation avisa o SwiftUI",
+        "why": "Isso: ler a propriedade é a inscrição, seja qual for o wrapper que guarda a referência."
+      },
+      {
+        "text": "Precisa de `@ObservedObject`, ou nunca é redesenhada",
+        "why": "Esse é o mecanismo antigo, para `ObservableObject`, seção 08."
+      }
+    ]
+  },
+  "ex-8y317xbc": {
+    "prompt": "Para fazer `$model.today` a partir de um modelo que recebeu, uma view o declara `@___ var model: PlannerModel`.",
+    "hint": "O wrapper que acrescenta um valor projetado e mais nada.",
+    "blanks": [
+      {
+        "accept": [
+          "Bindable"
+        ]
+      }
+    ]
+  },
+  "ex-qymhcjgd": {
+    "prompt": "O que o `@Bindable` acrescenta à referência de uma view para um modelo observável?",
+    "hint": "Ele não é dono nem observa.",
+    "choices": [
+      {
+        "text": "Posse, para o modelo sobreviver a um redesenho",
+        "why": "Isso é o `@State`."
+      },
+      {
+        "text": "Uma inscrição em toda propriedade do modelo",
+        "why": "A inscrição vem do `body` lendo propriedades."
+      },
+      {
+        "text": "A projeção `$`, para entregar bindings",
+        "why": "Isso: `$model.today` vira um `Binding<String>`."
+      },
+      {
+        "text": "Uma cópia do modelo que o campo de texto edita",
+        "why": "Nenhuma cópia: o binding escreve o `today` do modelo compartilhado."
+      }
+    ]
+  },
+  "ex-yyej46pm": {
+    "prompt": "A `WeekView` declara `@Environment(PlannerModel.self) private var model`, e um preview a mostra sem `.environment(model)`. O que a documentação da Apple diz que acontece?",
+    "hint": "Não é erro de compilação.",
+    "choices": [
+      {
+        "text": "O preview ganha um `PlannerModel()` padrão",
+        "why": "Nada faz um para você."
+      },
+      {
+        "text": "O build falha com um erro de ambiente ausente",
+        "why": "Compila; a falha é em tempo de execução."
+      },
+      {
+        "text": "A view mostra valores vazios até um modelo chegar",
+        "why": "Isso é o que pedir um opcional deixa você escrever por conta própria."
+      },
+      {
+        "text": "O SwiftUI lança uma exceção e o app para",
+        "why": "Isso; peça `PlannerModel?` onde o objeto pode faltar."
+      }
+    ]
+  },
+  "ex-t2175yh9": {
+    "prompt": "Uma `SessionRow` precisa de uma sessão e de mais nada do modelo. Qual o melhor jeito de lhe dar a sessão?",
+    "hint": "As duas regras da seção 06.",
+    "choices": [
+      {
+        "text": "Uma propriedade no inicializador, vinda direto do pai",
+        "why": "Isso: uma filha, um valor, visível onde a linha é feita."
+      },
+      {
+        "text": "`@Environment(PlannerModel.self)`, e procurar a sessão pelo id",
+        "why": "Funciona, e esconde de onde vêm os dados e obriga todo preview a fornecer o modelo."
+      },
+      {
+        "text": "Um `PlannerModel()` novo dentro da linha",
+        "why": "Isso é um segundo dono com um plano vazio."
+      },
+      {
+        "text": "Uma variável global que o app define na abertura",
+        "why": "Uma global é invisível para o SwiftUI e para as inscrições das views."
+      }
+    ]
+  },
+  "ex-xvtxpc8n": {
+    "prompt": "Ligue cada situação do planner ao que a view deve escrever.",
+    "hint": "Quem cria, quem muda, quão longe está quem lê.",
+    "pairs": [
+      {
+        "left": "`PlannerApp` cria o modelo compartilhado",
+        "right": "`@State private var model = PlannerModel(…)`"
+      },
+      {
+        "left": "`WeekView` lê o modelo, vários níveis abaixo",
+        "right": "`@Environment(PlannerModel.self) private var model`"
+      },
+      {
+        "left": "Uma linha muda uma sessão de que o pai é dono",
+        "right": "`@Binding var session: StudySession`"
+      },
+      {
+        "left": "Uma seção lembra se está aberta",
+        "right": "`@State private var expanded = false`"
+      }
+    ],
+    "right_distractors": [
+      "`@ObservedObject var model = PlannerModel()`"
+    ]
+  },
+  "ex-z2e1je5d": {
+    "prompt": "Por que a `SessionForm` guarda a sessão digitada pela metade no próprio `@State` em vez de escrever direto no modelo?",
+    "hint": "Quem mais precisa de uma sessão que ainda não foi salva?",
+    "choices": [
+      {
+        "text": "Campos de texto não se ligam a um modelo observável",
+        "why": "Podem, por `@Bindable`, seção 05."
+      },
+      {
+        "text": "Até ser salva ela não pertence a mais ninguém",
+        "why": "Isso; escrever cada tecla no plano mostraria uma sessão pela metade em todas as telas."
+      },
+      {
+        "text": "O modelo é só de leitura fora do `PlannerApp`",
+        "why": "A tela de detalhe chama `model.markDone` de fora dele."
+      },
+      {
+        "text": "O `@State` é mais rápido para digitar",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-mdjfwe66": {
+    "prompt": "Quais destes criam um segundo dono? Escolha todos os que se aplicam.",
+    "hint": "Dois planos num app.",
+    "choices": [
+      {
+        "text": "Uma tela de detalhe que copia o argumento `plan` para o próprio `@State`",
+        "why": "Sim: daí em diante o plano dela e o da lista são separados."
+      },
+      {
+        "text": "`@Bindable var model: PlannerModel` na tela da semana",
+        "why": "Não: guarda a referência compartilhada e acrescenta `$`."
+      },
+      {
+        "text": "`let model = PlannerModel(plan: Plan(), today: …)` dentro de uma view",
+        "why": "Sim: um modelo novo com plano vazio, não o do app."
+      },
+      {
+        "text": "`@Environment(PlannerModel.self)` em duas telas diferentes",
+        "why": "Não: as duas tiram o único modelo que o app pôs lá."
+      }
+    ]
+  },
+  "ex-x4ssczac": {
+    "prompt": "Com o antigo `ObservableObject`, quais views rodam o `body` de novo quando uma propriedade `@Published` muda?",
+    "hint": "A que uma view está inscrita lá?",
+    "choices": [
+      {
+        "text": "Só as que leram aquela propriedade",
+        "why": "Isso é o que o `@Observable` dá, como a seção 03 mediu."
+      },
+      {
+        "text": "Toda view que guarda o objeto",
+        "why": "Isso: o objeto anuncia uma mudança e todo dono redesenha, leia o que tiver lido."
+      },
+      {
+        "text": "Nenhuma até alguém chamar `objectWillChange` à mão",
+        "why": "O `@Published` o chama por você."
+      },
+      {
+        "text": "Só a view que criou o objeto",
+        "why": "As views que o receberam com `@ObservedObject` redesenham também."
+      }
+    ]
+  },
+  "ex-1r3e27sd": {
+    "prompt": "Uma view declara `@ObservedObject var model = OldPlannerModel()`. O que dá errado?",
+    "hint": "O `@ObservedObject` não guarda nada.",
+    "choices": [
+      {
+        "text": "Não compila, porque valor inicial não é permitido",
+        "why": "Compila, e é por isso que o erro sobrevive."
+      },
+      {
+        "text": "O modelo é compartilhado por toda tela por acidente",
+        "why": "O contrário: cada redesenho do pai faz outro."
+      },
+      {
+        "text": "A cada redesenho do pai nasce um modelo novo, sem o estado",
+        "why": "Isso: o `@StateObject` é o wrapper que cria e guarda."
+      },
+      {
+        "text": "O Combine se recusa a publicar a partir de uma view",
+        "why": "Publicar funciona; o objeto é que não vive muito."
+      }
+    ]
+  },
+  "ex-a8t5txe7": {
+    "prompt": "Ligue cada wrapper antigo à grafia do Observation.",
+    "hint": "A tabela da seção 08.",
+    "pairs": [
+      {
+        "left": "`@StateObject`",
+        "right": "`@State`"
+      },
+      {
+        "left": "`@EnvironmentObject`",
+        "right": "`@Environment(Model.self)`"
+      },
+      {
+        "left": "`.environmentObject(model)`",
+        "right": "`.environment(model)`"
+      },
+      {
+        "left": "`@ObservedObject`",
+        "right": "`let`, ou `@Bindable` para bindings"
+      }
+    ],
+    "right_distractors": [
+      "`@Published`"
+    ]
+  },
+  "ex-sf52hne5": {
+    "prompt": "Ponha em ordem o caminho de uma tecla no campo de texto da `WeekView`.",
+    "hint": "Do campo ao redesenho.",
+    "items": [
+      "O campo escreve em `$model.today`",
+      "O `today` do modelo é definido",
+      "O Observation chama o `onChange` de toda view que leu `today`",
+      "O SwiftUI roda o `body` dessas views de novo",
+      "A `WeekView` lê `model.week` da nova semana"
+    ]
+  },
+  "ex-jkyhedwz": {
+    "prompt": "Uma tela que lê qualquer parte de `model.plan` redesenha a cada mudança nele. Quando vale corrigir isso?",
+    "hint": "O último parágrafo da seção 03.",
+    "choices": [
+      {
+        "text": "Já, em todo app, porque todo redesenho a mais é um bug",
+        "why": "Para algumas dezenas de sessões ninguém vê o custo, e a simplicidade vale mais."
+      },
+      {
+        "text": "Quando uma tela medida está lenta, uma lista de milhares de linhas",
+        "why": "Isso: aí divida o estado em pedaços que cada tela lê em separado."
+      },
+      {
+        "text": "Nunca: o Observation já rastreia cada sessão separadamente",
+        "why": "Ele rastreia `plan` como uma propriedade só, como a segunda cena mostrou."
+      },
+      {
+        "text": "Só quando o modelo não é `@MainActor`",
+        "why": "O ator decide a thread, não o que é rastreado."
+      }
+    ]
+  }
+}

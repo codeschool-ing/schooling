@@ -1,0 +1,600 @@
+[
+  {
+    "id": "ex-p5hsnxz7",
+    "version": 1,
+    "section": "two-services",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda is creating its first Redis cache on Azure today. Which service?",
+    "hint": "One of the two has an announced retirement.",
+    "choices": [
+      {
+        "text": "Azure Cache for Redis, Premium, for clustering",
+        "correct": false,
+        "why": "A cache that is being retired is a migration scheduled on day one."
+      },
+      {
+        "text": "Azure Managed Redis, in a tier that fits the load",
+        "correct": true,
+        "why": "Right: Microsoft names it as the service to move to."
+      },
+      {
+        "text": "Azure Cache for Redis, Basic, to start cheap",
+        "correct": false,
+        "why": "Basic has no replica and no SLA, and the service is being retired."
+      },
+      {
+        "text": "A Cosmos DB container with a short time to live",
+        "correct": false,
+        "why": "That is a database with expiry, billed in request units, not a cache in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpqtyqvc",
+    "version": 1,
+    "section": "two-services",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Azure Cache for Redis tier to what it adds.",
+    "hint": "One description belongs to Azure Managed Redis.",
+    "pairs": [
+      {
+        "left": "Basic",
+        "right": "One node, no replica, no SLA"
+      },
+      {
+        "left": "Standard",
+        "right": "A primary and a replica, with failover"
+      },
+      {
+        "left": "Premium",
+        "right": "Clustering, persistence and geo-replication"
+      }
+    ],
+    "right_distractors": [
+      "Tiers named Balanced and Compute Optimized"
+    ]
+  },
+  {
+    "id": "ex-e598mqm8",
+    "version": 1,
+    "section": "two-services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform validate` accepted `sku_name = \"Balanced_B1\"` in `brazilsouth`. What does that prove?",
+    "hint": "What did validate read?",
+    "choices": [
+      {
+        "text": "That Azure offers that size in that region",
+        "correct": false,
+        "why": "Validate asks Azure nothing."
+      },
+      {
+        "text": "That the cache will be clustered with the OSS policy",
+        "correct": false,
+        "why": "That is a different line, and also only checked against a list."
+      },
+      {
+        "text": "Only that the name is in the provider's list",
+        "correct": true,
+        "why": "Right: the same list it printed for a wrong eviction policy."
+      },
+      {
+        "text": "That the cache has a replica of every shard",
+        "correct": false,
+        "why": "`high_availability_enabled` declares that; nothing created it."
+      }
+    ]
+  },
+  {
+    "id": "ex-25r1yz2w",
+    "version": 1,
+    "section": "two-services",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program connects to an Azure Cache for Redis on port 6379 and is refused. What is the likely reason?",
+    "hint": "One port is plain text.",
+    "choices": [
+      {
+        "text": "The cache is full and refuses new connections",
+        "correct": false,
+        "why": "A full cache refuses writes, not connections."
+      },
+      {
+        "text": "The plain-text port is off by default; TLS is on 6380",
+        "correct": true,
+        "why": "Right: connect on 6380 with TLS."
+      },
+      {
+        "text": "`CONFIG` is blocked, so the client cannot negotiate",
+        "correct": false,
+        "why": "Clients do not need `CONFIG` to connect."
+      },
+      {
+        "text": "Basic caches accept no connections from outside Azure",
+        "correct": false,
+        "why": "The tier does not decide this; the port does."
+      }
+    ]
+  },
+  {
+    "id": "ex-9g750sg2",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The local Redis reported `maxmemory` 0 and `noeviction`. What happens when it runs out of memory?",
+    "hint": "noeviction keeps everything.",
+    "choices": [
+      {
+        "text": "It evicts the least recently used keys",
+        "correct": false,
+        "why": "That is `allkeys-lru`."
+      },
+      {
+        "text": "It writes the oldest keys to disk",
+        "correct": false,
+        "why": "Redis does not page keys out; persistence is a separate feature."
+      },
+      {
+        "text": "It refuses writes",
+        "correct": true,
+        "why": "Right, once the machine's memory is used; 0 means no limit of its own."
+      },
+      {
+        "text": "It restarts empty",
+        "correct": false,
+        "why": "Nothing restarts; writes are refused with an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-grxz03qq",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can you not check a managed cache's eviction policy the way this section did?",
+    "hint": "Which command did the section use?",
+    "choices": [
+      {
+        "text": "The service blocks `CONFIG` on its caches",
+        "correct": true,
+        "why": "Right: the settings belong to the service; read them from its configuration."
+      },
+      {
+        "text": "Managed caches have no eviction policy",
+        "correct": false,
+        "why": "They have one; Azure Cache for Redis's default is `volatile-lru`."
+      },
+      {
+        "text": "`redis-cli` cannot reach a cache outside Docker",
+        "correct": false,
+        "why": "It can, with the address, the port and TLS."
+      },
+      {
+        "text": "The policy is only visible in the Azure invoice",
+        "correct": false,
+        "why": "It is a setting of the cache, not a billing line."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ee2fjsq",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the local Redis container teach you about Azure's services? Choose all that apply.",
+    "hint": "The engine, not the service.",
+    "choices": [
+      {
+        "text": "How a key with a time to live expires",
+        "correct": true,
+        "why": "Right: the engine's behaviour."
+      },
+      {
+        "text": "Which keys each eviction policy throws away",
+        "correct": true,
+        "why": "Right: also the engine's."
+      },
+      {
+        "text": "How long failover to a replica takes",
+        "correct": false,
+        "why": "There is no replica here; that is the service."
+      },
+      {
+        "text": "What a cache of a given size costs a month",
+        "correct": false,
+        "why": "Prices come from the price sheet, not from a container."
+      }
+    ]
+  },
+  {
+    "id": "ex-73wbn7g2",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order what `product()` in `cache.py` does on a miss.",
+    "hint": "The cache is asked first.",
+    "items": [
+      "`GET product:cafe-500g` from Redis, which answers nothing",
+      "Read the item from Cosmos DB",
+      "`SET` the copy with `EX 300`",
+      "Return it, saying it came from the database"
+    ]
+  },
+  {
+    "id": "ex-zfrf9xr1",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the first price change, what price in reais did the page show?",
+    "hint": "The cache was kept.",
+    "value": 24.9,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-yw7cdbtr",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a write delete the cached key rather than write the new value into it?",
+    "hint": "Two writers, racing.",
+    "choices": [
+      {
+        "text": "Redis cannot overwrite a key that has a time to live",
+        "correct": false,
+        "why": "It can; `SET` replaces the key and its expiry."
+      },
+      {
+        "text": "Deleting is cheaper in request units",
+        "correct": false,
+        "why": "Redis does not bill in request units."
+      },
+      {
+        "text": "Racing writers leave stale values; a delete costs one miss",
+        "correct": true,
+        "why": "Right: the next reader refills it from Cosmos DB."
+      },
+      {
+        "text": "The time to live would be reset to zero",
+        "correct": false,
+        "why": "A `SET` with `EX` sets a fresh one."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4ar8k0n",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every write now deletes its key. Why keep the 300-second time to live at all?",
+    "hint": "What if the delete never happens?",
+    "choices": [
+      {
+        "text": "Redis refuses keys with no expiry",
+        "correct": false,
+        "why": "It accepts them, and `volatile-lru` would then never evict them."
+      },
+      {
+        "text": "A failed delete leaves a stale copy behind",
+        "correct": true,
+        "why": "Right, and under `volatile-lru` it also makes the key evictable."
+      },
+      {
+        "text": "So that popular keys never miss",
+        "correct": false,
+        "why": "Expiry causes misses, it does not prevent them."
+      },
+      {
+        "text": "Cosmos DB requires its readers to cache for at most five minutes",
+        "correct": false,
+        "why": "No such rule exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k4hhaaq",
+    "version": 1,
+    "section": "eviction",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `volatile-lru` and no time to live on any key, how many of the 10,000 writes did `fill.py` get refused?",
+    "hint": "It behaved like noeviction.",
+    "value": 7013,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-cwyqgj8p",
+    "version": 1,
+    "section": "eviction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's catalogue cache holds only copies of Cosmos DB items, some written without a time to live. Which policy?",
+    "hint": "Which keys may go?",
+    "choices": [
+      {
+        "text": "`noeviction`, so nothing is lost",
+        "correct": false,
+        "why": "Nothing in it is lost if evicted; the database has it. Refusing writes is the failure."
+      },
+      {
+        "text": "`volatile-lru`, Azure Cache for Redis's default",
+        "correct": false,
+        "why": "Keys without a time to live could never be evicted, and the cache would fill and refuse."
+      },
+      {
+        "text": "`allkeys-lru`, evicting the least recently read",
+        "correct": true,
+        "why": "Right: any copy may go, the least recently read first."
+      },
+      {
+        "text": "`volatile-ttl`, to evict whatever expires soonest",
+        "correct": false,
+        "why": "Still only keys with a time to live."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3k34hff",
+    "version": 1,
+    "section": "eviction",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A policy whose name starts with `volatile-` may evict only keys that have a time to ___.",
+    "hint": "The English phrase the Portuguese keeps.",
+    "blanks": [
+      {
+        "accept": [
+          "live"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pjeae2g2",
+    "version": 1,
+    "section": "eviction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`allkeys-lru` reported 2,955 keys kept in one run and a few different in another. Why?",
+    "hint": "How does Redis pick a key to evict?",
+    "choices": [
+      {
+        "text": "Some writes were lost on the network",
+        "correct": false,
+        "why": "Every write was answered; none was refused."
+      },
+      {
+        "text": "It samples candidates rather than searching every key",
+        "correct": true,
+        "why": "Right: an approximation of least recently used, so counts move a little."
+      },
+      {
+        "text": "The 4 MB limit is enforced only once a second",
+        "correct": false,
+        "why": "It is checked as writes arrive."
+      },
+      {
+        "text": "Keys with the same value are stored once",
+        "correct": false,
+        "why": "Redis does not deduplicate values."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4v9ybsn",
+    "version": 1,
+    "section": "clustering",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many hash slots does a Redis cluster divide its keys into?",
+    "hint": "The last slot is 16383.",
+    "value": 16384,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2rj2fpeg",
+    "version": 1,
+    "section": "clustering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`MSET` of the two products was refused with `CROSSSLOT` on a one-node cluster. Why, when both slots were on the same machine?",
+    "hint": "Slots, not servers.",
+    "choices": [
+      {
+        "text": "The rule is about slots, so it holds however slots are placed",
+        "correct": true,
+        "why": "Right: 8271 and 5910 are two slots, and code must not depend on where they live."
+      },
+      {
+        "text": "The node had not finished taking the slots",
+        "correct": false,
+        "why": "It answered the cart keys' `MSET` with OK a moment later."
+      },
+      {
+        "text": "`MSET` is not allowed on a cluster at all",
+        "correct": false,
+        "why": "It is, for keys in one slot."
+      },
+      {
+        "text": "Product keys need the OSS policy",
+        "correct": false,
+        "why": "Policies belong to Azure Managed Redis; this was the engine."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8z7b8x1",
+    "version": 1,
+    "section": "clustering",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `{cart:c-7}:items`, only the part inside the braces is hashed. That part is called a hash ___.",
+    "hint": "It labels which keys go together.",
+    "blanks": [
+      {
+        "accept": [
+          "tag"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pd0h4133",
+    "version": 1,
+    "section": "clustering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer puts every key of the shop under the hash tag `{quitanda}` so that any `MSET` works. What goes wrong?",
+    "hint": "Where do all those keys live?",
+    "choices": [
+      {
+        "text": "Redis refuses a hash tag used by more than one key",
+        "correct": false,
+        "why": "Sharing is the point of a tag."
+      },
+      {
+        "text": "The keys are spread at random instead",
+        "correct": false,
+        "why": "They all hash to one slot."
+      },
+      {
+        "text": "Every key lands on one shard, a hot partition",
+        "correct": true,
+        "why": "Right: one slot, one shard, and the rest of the cluster idle."
+      },
+      {
+        "text": "`CROSSSLOT` errors become more frequent",
+        "correct": false,
+        "why": "They disappear, which is why it is tempting."
+      }
+    ]
+  },
+  {
+    "id": "ex-q62aaggq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under Azure Managed Redis's Enterprise clustering policy, how does a client see the shards?",
+    "hint": "Who routes?",
+    "choices": [
+      {
+        "text": "It connects to each shard and computes slots itself",
+        "correct": false,
+        "why": "That is the OSS policy."
+      },
+      {
+        "text": "Through one endpoint, and the service routes",
+        "correct": true,
+        "why": "Right: a client written for one server connects unchanged."
+      },
+      {
+        "text": "It does not: Enterprise caches have one shard",
+        "correct": false,
+        "why": "Azure Managed Redis is always sharded."
+      },
+      {
+        "text": "Through the hash tags it declares in advance",
+        "correct": false,
+        "why": "Tags are in key names; nothing is declared."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3qzmpyp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these say the catalogue cache is being used as more than a cache? Choose all that apply.",
+    "hint": "Could it be emptied tonight without loss?",
+    "choices": [
+      {
+        "text": "Persistence was switched on so that a restart is not empty",
+        "correct": true,
+        "why": "Right: a pure cache refills from Cosmos DB."
+      },
+      {
+        "text": "Some values exist only in Redis",
+        "correct": true,
+        "why": "Right: then it is the database."
+      },
+      {
+        "text": "The policy is `noeviction` so that nothing is ever dropped",
+        "correct": true,
+        "why": "Right: a cache that must not forget is not a cache."
+      },
+      {
+        "text": "Keys are written with a 300-second time to live",
+        "correct": false,
+        "why": "That is ordinary cache-aside."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k882jc1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's cart keeps `{cart:c-7}:items` and `{cart:c-7}:total` and updates both in one transaction. Why the braces?",
+    "hint": "Slot 9373.",
+    "choices": [
+      {
+        "text": "Braces make a key expire with its neighbours",
+        "correct": false,
+        "why": "Expiry is per key."
+      },
+      {
+        "text": "They encrypt the customer id",
+        "correct": false,
+        "why": "They change only what is hashed."
+      },
+      {
+        "text": "Both names hash to one slot",
+        "correct": true,
+        "why": "Right: commands over several keys need one slot."
+      },
+      {
+        "text": "Redis requires braces in every key name on a cluster",
+        "correct": false,
+        "why": "They are optional, and the product keys had none."
+      }
+    ]
+  }
+]

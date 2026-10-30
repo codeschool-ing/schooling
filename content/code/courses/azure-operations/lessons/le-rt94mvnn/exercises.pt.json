@@ -1,0 +1,270 @@
+{
+  "ex-9931v202": {
+    "prompt": "Ligue cada parte do OpenTelemetry ao que ela faz.",
+    "hint": "Quatro partes.",
+    "pairs": [
+      {
+        "left": "API",
+        "right": "O que o código da aplicação chama para iniciar um span"
+      },
+      {
+        "left": "SDK",
+        "right": "Amostra, agrupa e repassa os spans"
+      },
+      {
+        "left": "exportador",
+        "right": "Manda os spans a um backend"
+      },
+      {
+        "left": "convenções semânticas",
+        "right": "Nomes de atributo combinados como db.system"
+      }
+    ]
+  },
+  "ex-dfv6ces9": {
+    "prompt": "O que a distro OpenTelemetry do Azure Monitor acrescenta ao SDK puro do OpenTelemetry?",
+    "hint": "Conveniência, não um modelo diferente.",
+    "choices": [
+      {
+        "text": "Um formato próprio de span, que substitui de vez os spans do OpenTelemetry",
+        "why": "Ele mantém os spans do OpenTelemetry e os mapeia na exportação."
+      },
+      {
+        "text": "O exportador do Azure e a instrumentação automática, já ligados",
+        "why": "Certo. Uma chamada configura o que você montaria à mão."
+      },
+      {
+        "text": "A exigência de rodar junto o SDK antigo do Application Insights",
+        "why": "Ela substitui aquele SDK para trabalho novo."
+      },
+      {
+        "text": "Live metrics sem connection string",
+        "why": "Todo caminho até o Application Insights precisa da connection string."
+      }
+    ]
+  },
+  "ex-pzc9xnm4": {
+    "prompt": "Por que os spans CLIENT aparecem antes do span SERVER na transcrição?",
+    "hint": "Quando um span é exportado?",
+    "choices": [
+      {
+        "text": "O exportador de console ordena os spans por tipo",
+        "why": "Ele não ordena nada; imprime conforme os spans terminam."
+      },
+      {
+        "text": "As chamadas CLIENT começaram antes",
+        "why": "O span SERVER começou antes e as contém."
+      },
+      {
+        "text": "Cada um é impresso ao terminar",
+        "why": "Certo. O pai termina depois do último filho."
+      },
+      {
+        "text": "O SimpleSpanProcessor atrasa o pai de propósito",
+        "why": "Ele exporta cada span na hora em que termina."
+      }
+    ]
+  },
+  "ex-448tn7fz": {
+    "prompt": "O trace do checkout lento não tem span de `POST /v1/charges`. Qual parte do programa explica isso?",
+    "hint": "Siga a exceção.",
+    "choices": [
+      {
+        "text": "O insert_order lançou exceção, então o checkout nunca chamou o charge",
+        "why": "Certo. O except a capturou depois da gravação, pulando o pagamento."
+      },
+      {
+        "text": "O sampler descartou o span de pagamento",
+        "why": "Nenhum sampler está configurado; todo span é mantido."
+      },
+      {
+        "text": "Spans CLIENT que terminam em ERROR ficam de fora da exportação",
+        "why": "O INSERT orders foi exportado com ERROR."
+      },
+      {
+        "text": "O charge roda em outra thread e se perdeu",
+        "why": "Tudo roda numa thread só aqui."
+      }
+    ]
+  },
+  "ex-4c9jctbm": {
+    "prompt": "Por que um serviço real usa BatchSpanProcessor em vez de SimpleSpanProcessor?",
+    "hint": "Quem espera pelo exportador?",
+    "choices": [
+      {
+        "text": "O lote também amostra os spans que junta",
+        "why": "Amostragem é outra decisão, tomada antes do processamento."
+      },
+      {
+        "text": "Para um exportador lento nunca atrasar uma requisição",
+        "why": "Certo. Spans vão para uma fila e são mandados de uma thread em segundo plano."
+      },
+      {
+        "text": "O Simple só exporta para o console",
+        "why": "Ele funciona com qualquer exportador."
+      },
+      {
+        "text": "O Azure Monitor recusa spans mandados um a um",
+        "why": "O motivo é o caminho da requisição, não quem recebe."
+      }
+    ]
+  },
+  "ex-kpak79jm": {
+    "prompt": "Um span que atende uma requisição que chegou tem o tipo ___.",
+    "hint": "Em maiúsculas, como a transcrição imprime.",
+    "blanks": [
+      {
+        "accept": [
+          "SERVER"
+        ]
+      }
+    ]
+  },
+  "ex-qfc0x86h": {
+    "prompt": "Ligue cada item do OpenTelemetry ao lugar onde o exportador do Azure Monitor o põe.",
+    "hint": "Tipos viram tabelas; ids viram colunas.",
+    "pairs": [
+      {
+        "left": "um span SERVER",
+        "right": "Uma linha em AppRequests"
+      },
+      {
+        "left": "um span CLIENT",
+        "right": "Uma linha em AppDependencies"
+      },
+      {
+        "left": "o id do trace",
+        "right": "OperationId"
+      },
+      {
+        "left": "service.name",
+        "right": "AppRoleName"
+      }
+    ],
+    "right_distractors": [
+      "ItemCount, sempre 1"
+    ]
+  },
+  "ex-3418fchz": {
+    "prompt": "Um checkout passa pelo shop-api e depois por um serviço de pedidos. O que mantém as linhas dos dois serviços sob um OperationId?",
+    "hint": "O contexto do trace precisa viajar.",
+    "choices": [
+      {
+        "text": "Os dois serviços usarem a mesma connection string para enviar",
+        "why": "Isso decide onde as linhas caem, não como se juntam."
+      },
+      {
+        "text": "Os dois serviços dividirem um nome de papel",
+        "why": "Nomes de papel separam serviços; dividir um esconderia quem é quem."
+      },
+      {
+        "text": "O cabeçalho traceparent passado na chamada entre eles",
+        "why": "Certo. A instrumentação HTTP do OpenTelemetry o manda e o lê."
+      },
+      {
+        "text": "Um join por TimeGenerated no workspace, depois do fato",
+        "why": "Tempo não é identidade, como a lição 11 disse."
+      }
+    ]
+  },
+  "ex-42mv104z": {
+    "prompt": "Para mandar os spans do shop_trace.py ao Application Insights, quais linhas mudam?",
+    "hint": "Só um bloco sabe para onde a telemetria vai.",
+    "choices": [
+      {
+        "text": "Os atributos de todo span, renomeados para nomes do Azure",
+        "why": "Os atributos são convenções semânticas; o exportador os mapeia."
+      },
+      {
+        "text": "O bloco de preparação",
+        "why": "Certo. Tudo abaixo dele é neutro em relação a fornecedor."
+      },
+      {
+        "text": "Os tipos de span, de SERVER para REQUEST",
+        "why": "Não existe tipo REQUEST; SERVER mapeia para AppRequests."
+      },
+      {
+        "text": "Nenhuma; o exportador de console também manda para o Azure",
+        "why": "Ele imprime no terminal e em mais lugar nenhum."
+      }
+    ]
+  },
+  "ex-k0g6vvct": {
+    "prompt": "O que um estranho consegue fazer com a connection string do Application Insights da loja?",
+    "hint": "Enviar, ou ler?",
+    "choices": [
+      {
+        "text": "Ler cada requisição que a loja já registrou ali",
+        "why": "Ler exige uma identidade com papel no workspace."
+      },
+      {
+        "text": "Apagar o recurso do Application Insights",
+        "why": "Apagar é uma operação do Resource Manager com permissões próprias."
+      },
+      {
+        "text": "Mandar telemetria para ele, e aumentar a conta",
+        "why": "Certo. Ela autoriza ingestão, não leitura."
+      },
+      {
+        "text": "Nada, porque ela é cifrada",
+        "why": "Ela é texto puro; o que ela permite é ingestão."
+      }
+    ]
+  },
+  "ex-5h91snym": {
+    "prompt": "Uma equipe sai do Azure Monitor para outro backend por meio de um OpenTelemetry Collector. Qual é a maior parte do trabalho?",
+    "hint": "A instrumentação muda de lugar; o que não muda?",
+    "choices": [
+      {
+        "text": "Reinstrumentar cada serviço desde o começo",
+        "why": "Os spans são neutros e ficam como estão."
+      },
+      {
+        "text": "Trocar o exportador em cada serviço",
+        "why": "Com um collector, os serviços podem nem mudar."
+      },
+      {
+        "text": "Reescrever consultas, alertas e painéis",
+        "why": "Certo. KQL escrito contra a AppRequests não significa nada em outro lugar."
+      },
+      {
+        "text": "Converter os ids de trace para o formato novo",
+        "why": "Ids de trace são do OpenTelemetry e continuam válidos."
+      }
+    ]
+  },
+  "ex-xsqnkvqx": {
+    "prompt": "Ponha em ordem a vida do span de banco do checkout lento.",
+    "hint": "Começar, falhar, terminar, exportar.",
+    "trap": "Exportar o span SERVER antes do filho é o deslize: um pai termina depois dos filhos.",
+    "items": [
+      "O checkout abre o span SERVER",
+      "O insert_order abre um span CLIENT como filho dele",
+      "A chamada estoura o tempo e o status do span vira ERROR",
+      "O span CLIENT termina e é exportado",
+      "O span SERVER registra a exceção, termina e é exportado"
+    ]
+  },
+  "ex-dz1c9ekb": {
+    "prompt": "Quais destas coisas a lição rodou? Marque todas as que se aplicam.",
+    "hint": "O SDK e o console, sim; o Azure, não.",
+    "choices": [
+      {
+        "text": "Dois checkouts com trace impressos pelo exportador de console",
+        "why": "Sim. shop_trace.py."
+      },
+      {
+        "text": "configure_azure_monitor() com uma connection string",
+        "why": "Não. Não há recurso para nomear."
+      },
+      {
+        "text": "Spans chegando à AppRequests num workspace",
+        "why": "Não. As tabelas da lição 11 foram geradas, não exportadas."
+      },
+      {
+        "text": "Um span terminando em ERROR com uma exceção registrada",
+        "why": "Sim. O checkout lento."
+      }
+    ]
+  }
+}

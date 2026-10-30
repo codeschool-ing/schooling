@@ -1,0 +1,619 @@
+[
+  {
+    "id": "ex-z7y0b4zg",
+    "version": 1,
+    "section": "view-is-a-value",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a SwiftUI view, such as `CourseListView`?",
+    "hint": "It is a struct.",
+    "choices": [
+      {
+        "text": "An object that lives on the screen until it is removed",
+        "correct": false,
+        "why": "That is the picture from other toolkits; here nothing on the screen is yours to keep."
+      },
+      {
+        "text": "A small value describing part of the screen",
+        "correct": true,
+        "why": "Right: SwiftUI reads it and keeps the real thing elsewhere."
+      },
+      {
+        "text": "A pointer to the pixels SwiftUI drew",
+        "correct": false,
+        "why": "A view holds data and a body, no pixels."
+      },
+      {
+        "text": "A class SwiftUI subclasses for each screen",
+        "correct": false,
+        "why": "Views are structs; nothing subclasses them."
+      }
+    ]
+  },
+  {
+    "id": "ex-52jscj5t",
+    "version": 1,
+    "section": "view-is-a-value",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A view declares `var taps = 0` as a plain stored property and adds one on each tap. What does the person see?",
+    "hint": "When is the struct created again?",
+    "choices": [
+      {
+        "text": "The count, kept for as long as the app runs",
+        "correct": false,
+        "why": "A plain property lives only as long as that copy of the struct."
+      },
+      {
+        "text": "The count, but only on an iPad",
+        "correct": false,
+        "why": "The platform does not change what a struct remembers."
+      },
+      {
+        "text": "A count that is lost whenever the parent's body runs again",
+        "correct": true,
+        "why": "Right: the view is created again from scratch; what it must remember goes in `@State`, lesson 6."
+      },
+      {
+        "text": "A crash, because views are immutable",
+        "correct": false,
+        "why": "Nothing crashes. A struct method could not even assign it without `mutating`, but the point is the reset."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2z4559p",
+    "version": 1,
+    "section": "view-is-a-value",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is it fine that a list of fifty rows creates fifty view structs every time it is described?",
+    "hint": "What does creating one cost?",
+    "choices": [
+      {
+        "text": "A view is a few bytes of description, cheap to make",
+        "correct": true,
+        "why": "Right: the expensive objects stay with SwiftUI."
+      },
+      {
+        "text": "SwiftUI reuses the same fifty structs by reference, without copying them",
+        "correct": false,
+        "why": "Structs are values; there are no references to reuse."
+      },
+      {
+        "text": "Only the visible rows are ever created",
+        "correct": false,
+        "why": "That is a lazy container's behaviour, lesson 8, and not the reason here."
+      },
+      {
+        "text": "The compiler turns them into one view",
+        "correct": false,
+        "why": "The builder combines them into one value, but each is still made."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy6bf2w0",
+    "version": 1,
+    "section": "some-view",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `swift opaque.swift` refuse `header(short:)`?",
+    "hint": "Read the two notes under the error.",
+    "choices": [
+      {
+        "text": "`Card` has no `render()` for `Minutes`",
+        "correct": false,
+        "why": "`Minutes` implements `render()`; the conformance is fine."
+      },
+      {
+        "text": "`some Card` promised one type and the returns gave two",
+        "correct": true,
+        "why": "Right: `Minutes` on one path and `Title` on the other."
+      },
+      {
+        "text": "`some` is only allowed on a SwiftUI body",
+        "correct": false,
+        "why": "Opaque types are a Swift feature; this file has no SwiftUI."
+      },
+      {
+        "text": "A function with `if` cannot return a protocol",
+        "correct": false,
+        "why": "With one type on both paths it compiles, `if` and all."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pck3afk",
+    "version": 1,
+    "section": "some-view",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With what exit status did `swift opaque.swift; echo $?` end?",
+    "hint": "The last line of the capture.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0ewjzw60",
+    "version": 1,
+    "section": "some-view",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A body wraps each branch of an `if` in `AnyView` to make it compile. According to Apple's documentation, what happens each time the condition flips?",
+    "hint": "The wrapped type changes.",
+    "choices": [
+      {
+        "text": "Nothing, because `AnyView` has the same type whichever view it wraps",
+        "correct": false,
+        "why": "Its own type is the same; the documentation is about the wrapped type changing."
+      },
+      {
+        "text": "The old hierarchy is destroyed and a new one created",
+        "correct": true,
+        "why": "Right, which is the cost of hiding the structure SwiftUI compares by."
+      },
+      {
+        "text": "The compiler rejects the body as in `opaque.swift`",
+        "correct": false,
+        "why": "Type erasure is exactly what makes it compile."
+      },
+      {
+        "text": "SwiftUI caches both branches and swaps them",
+        "correct": false,
+        "why": "The documentation describes destroying and creating, not caching."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmkr9kej",
+    "version": 1,
+    "section": "body-runs-again",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should a view start downloading the courses, given that its body runs many times?",
+    "hint": "A modifier made for work that starts with a view.",
+    "choices": [
+      {
+        "text": "At the top of `body`, before the `List`",
+        "correct": false,
+        "why": "That would start a download every time the body runs."
+      },
+      {
+        "text": "In the view's `init`",
+        "correct": false,
+        "why": "The struct is created again often; init runs each time."
+      },
+      {
+        "text": "In a `.task` modifier",
+        "correct": true,
+        "why": "Right: lesson 12 uses it, and it is cancelled if the view goes away."
+      },
+      {
+        "text": "In a computed property the body reads",
+        "correct": false,
+        "why": "It runs whenever the body reads it, which is the same problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8rv9a7a",
+    "version": 1,
+    "section": "body-runs-again",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each change to the lesson that makes it ask a body again.",
+    "hint": "Section 04's table.",
+    "pairs": [
+      {
+        "left": "A value the parent passed in",
+        "right": "Lessons 2 and 8"
+      },
+      {
+        "left": "State the view owns",
+        "right": "Lesson 6"
+      },
+      {
+        "left": "A property of an observable model the body read",
+        "right": "Lesson 7"
+      }
+    ],
+    "right_distractors": [
+      "Lesson 21"
+    ]
+  },
+  {
+    "id": "ex-q51xb1zh",
+    "version": 1,
+    "section": "body-runs-again",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A body sorts the plan's thousand sessions by date every time it runs. What is the problem, and where does the sort belong?",
+    "hint": "How many times does a body run, and who decides?",
+    "choices": [
+      {
+        "text": "None: a body runs once, so the sort runs once",
+        "correct": false,
+        "why": "A body runs whenever its inputs may have changed."
+      },
+      {
+        "text": "It repeats on every run; sort where the data changes, or in the model",
+        "correct": true,
+        "why": "Right: SwiftUI decides how often the body runs, so the body must be cheap."
+      },
+      {
+        "text": "Sorting is not allowed in SwiftUI; use the server",
+        "correct": false,
+        "why": "Sorting is allowed anywhere; the issue is how often."
+      },
+      {
+        "text": "It changes the order of rows on screen, so move it to `.task`",
+        "correct": false,
+        "why": "`.task` is for asynchronous work that starts with a view, not for a derived order."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkgv5v77",
+    "version": 1,
+    "section": "counting-bodies",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`bodies.swift` drew four frames. How many times did the body run?",
+    "hint": "Count the lines that say `body run`.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qmr9r330",
+    "version": 1,
+    "section": "counting-bodies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the third frame of `bodies.swift` print `nothing to redo`?",
+    "hint": "What changed before it, and did the body read it?",
+    "choices": [
+      {
+        "text": "`notes` is not marked `@Observable`",
+        "correct": false,
+        "why": "The macro marks the class, and `notes` is observed like the others."
+      },
+      {
+        "text": "The second frame already drew the change",
+        "correct": false,
+        "why": "The change to `notes` happened after the second frame."
+      },
+      {
+        "text": "The body never read `notes`",
+        "correct": true,
+        "why": "Right: only a change to what was read calls `onChange`."
+      },
+      {
+        "text": "An empty string does not count as a change",
+        "correct": false,
+        "why": "`notes` went from empty to `bring the book`, which is a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tt6vp85",
+    "version": 1,
+    "section": "counting-bodies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `Screen.frame()`, suppose the body read `model.notes` only when `model.minutes > 55`. After `model.minutes = 60` and a frame, would a change to `notes` then run the body?",
+    "hint": "Tracking records what a run actually read.",
+    "choices": [
+      {
+        "text": "Yes, because that run read `notes`",
+        "correct": true,
+        "why": "Right: each run records its own reads, so the set changes with the data."
+      },
+      {
+        "text": "No, because the first run did not read `notes`",
+        "correct": false,
+        "why": "Tracking is redone on every run; the first run's set is gone."
+      },
+      {
+        "text": "No, because conditions inside a body are not tracked",
+        "correct": false,
+        "why": "Whatever the closure reads is tracked, conditions included."
+      },
+      {
+        "text": "Only if `notes` is read before `minutes`",
+        "correct": false,
+        "why": "Order does not matter; what is read is recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-nq79qk2p",
+    "version": 1,
+    "section": "counting-bodies",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The function that runs a closure and records every observable property it reads is `withObservation___`.",
+    "hint": "The word that means following something.",
+    "blanks": [
+      {
+        "accept": [
+          "Tracking"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j6yjxk2g",
+    "version": 1,
+    "section": "builders",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `card(title:minutes:done:)`, why does the second card have only two lines?",
+    "hint": "`done` was false.",
+    "choices": [
+      {
+        "text": "`buildBlock` drops the last line of every block",
+        "correct": false,
+        "why": "The first card kept all three lines."
+      },
+      {
+        "text": "The `if` was false, so `buildOptional` got `nil` and gave nothing",
+        "correct": true,
+        "why": "Right: an `if` with no `else` adds nothing when false."
+      },
+      {
+        "text": "Mobile Fundamentals has no minutes",
+        "correct": false,
+        "why": "It shows `40 min`; the missing line is `done`."
+      },
+      {
+        "text": "The builder runs the function twice and keeps the shorter result",
+        "correct": false,
+        "why": "The compiler rewrites the function once, before it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kkra4hc",
+    "version": 1,
+    "section": "builders",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each builder function to the code it handles.",
+    "hint": "Section 06's `LinesBuilder`.",
+    "pairs": [
+      {
+        "left": "`buildExpression`",
+        "right": "Each bare line, turned into a part"
+      },
+      {
+        "left": "`buildBlock`",
+        "right": "All the parts of a block, joined into one value"
+      },
+      {
+        "left": "`buildOptional`",
+        "right": "An `if` with no `else`"
+      },
+      {
+        "left": "`buildEither`",
+        "right": "The two branches of an `if`/`else`"
+      }
+    ],
+    "right_distractors": [
+      "A `for` loop over sessions"
+    ]
+  },
+  {
+    "id": "ex-zvk0nd65",
+    "version": 1,
+    "section": "builders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the rewriting of a builder function into `buildBlock` and `buildOptional` calls happen?",
+    "hint": "Nothing special happened at run time.",
+    "choices": [
+      {
+        "text": "Each time the function runs, by Swift's runtime",
+        "correct": false,
+        "why": "The runtime calls the builder's functions; it does not write them in."
+      },
+      {
+        "text": "At compile time",
+        "correct": true,
+        "why": "Right: the compiler rewrites the body before anything runs."
+      },
+      {
+        "text": "When SwiftUI first draws the view",
+        "correct": false,
+        "why": "`builder.swift` has no SwiftUI and was still rewritten."
+      },
+      {
+        "text": "Only in Xcode 27, with `ContentBuilder`",
+        "correct": false,
+        "why": "Result builders have worked this way since before Xcode 27, on Linux too."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6n20q77",
+    "version": 1,
+    "section": "conditional-views",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`branches.swift` printed the types of `row(done: true)` and `row(done: false)`. What did it show?",
+    "hint": "Both lines of the type are in the capture.",
+    "choices": [
+      {
+        "text": "`Pair<Text, Image>` and `Pair<Text, Text>`",
+        "correct": false,
+        "why": "Then `some Any` would have refused, as in section 03."
+      },
+      {
+        "text": "The same type twice",
+        "correct": true,
+        "why": "Right: `Pair<Text, Either<Image, Text>>`; the branch is in the value."
+      },
+      {
+        "text": "`Either<Image, Text>` alone, without the title",
+        "correct": false,
+        "why": "The title is the first slot of the `Pair`."
+      },
+      {
+        "text": "`Any`, because the return type is `some Any`",
+        "correct": false,
+        "why": "`type(of:)` prints the concrete type hidden behind `some`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrax3xwj",
+    "version": 1,
+    "section": "conditional-views",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`CourseDetailView` shows a note field inside `if done { … } else { … }`, the same field in both branches with a different colour. Someone types half a note and `done` flips. What happens, and what is the fix?",
+    "hint": "The two branches are two views.",
+    "choices": [
+      {
+        "text": "The text moves to the other field, since both are the same type",
+        "correct": false,
+        "why": "Same type in two slots is still two identities."
+      },
+      {
+        "text": "Nothing, because SwiftUI compares the fields by their text",
+        "correct": false,
+        "why": "Identity here comes from the slot, not from the content."
+      },
+      {
+        "text": "The half note is lost; use one field whose colour depends on `done`",
+        "correct": true,
+        "why": "Right: one view with a changing value keeps its identity."
+      },
+      {
+        "text": "The app crashes, since a text field cannot be destroyed while someone is typing in it",
+        "correct": false,
+        "why": "It is destroyed quietly, which is why the loss surprises."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhjk67p7",
+    "version": 1,
+    "section": "conditional-views",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Identity given by a view's position in the body's type is called ___ identity.",
+    "hint": "Lesson 8 sets explicit identity beside it.",
+    "blanks": [
+      {
+        "accept": [
+          "structural"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d4f030h7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps in the order `Screen.frame()` follows when the screen is dirty.",
+    "hint": "Section 05's fourth part.",
+    "items": [
+      "Check `dirty` and carry on",
+      "Set `dirty` to false",
+      "Run the body inside `withObservationTracking`",
+      "Count the run",
+      "Print what was drawn"
+    ]
+  },
+  {
+    "id": "ex-6xe27gqn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these ran on Linux for this lesson? Choose all that apply.",
+    "hint": "Single files with no SwiftUI.",
+    "choices": [
+      {
+        "text": "`builder.swift`",
+        "correct": true,
+        "why": "Yes: a result builder is plain Swift."
+      },
+      {
+        "text": "`bodies.swift`, with `import Observation`",
+        "correct": true,
+        "why": "Yes: Observation ships with Swift on Linux."
+      },
+      {
+        "text": "`MyView`, the documentation's `View` example",
+        "correct": false,
+        "why": "No: it imports SwiftUI."
+      },
+      {
+        "text": "A body counted by SwiftUI's own tracking",
+        "correct": false,
+        "why": "No: section 05 played SwiftUI's part by hand."
+      }
+    ]
+  },
+  {
+    "id": "ex-78tpkefz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A body returns `Text` when a list is empty and `List` otherwise, using `if`/`else`. Why does it compile when `header(short:)` did not?",
+    "hint": "What marks `body` and not `header`?",
+    "choices": [
+      {
+        "text": "`View` accepts two types in a body where `Card` accepts one",
+        "correct": false,
+        "why": "`some View` is one type, the same rule as `some Card`."
+      },
+      {
+        "text": "SwiftUI wraps every body in `AnyView` for you",
+        "correct": false,
+        "why": "No: that would throw away the structure SwiftUI compares by."
+      },
+      {
+        "text": "The body's builder turns the `if`/`else` into one type",
+        "correct": true,
+        "why": "Right, as `ShapeBuilder` did with `Either`."
+      },
+      {
+        "text": "`header` used `return`, and bodies are not allowed to",
+        "correct": false,
+        "why": "A body with one expression may use `return`; the difference is the builder."
+      }
+    ]
+  }
+]

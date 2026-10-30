@@ -1,0 +1,421 @@
+{
+  "ex-8chgf71q": {
+    "prompt": "Que parte do Fabric é criada como recurso numa assinatura do Azure?",
+    "hint": "É a parte que tem um tamanho e um preço por hora.",
+    "choices": [
+      {
+        "text": "A capacidade, numa assinatura e numa região",
+        "why": "Isso. Ela é criada numa assinatura e numa região, com um tamanho de F2 a F2048; todo o resto vive dentro do Fabric."
+      },
+      {
+        "text": "Cada workspace, com seus membros",
+        "why": "O workspace é criado dentro do Fabric e atribuído a uma capacidade; o Azure Resource Manager não o conhece."
+      },
+      {
+        "text": "Cada lakehouse e cada warehouse",
+        "why": "São itens dentro de um workspace, geridos no portal do Fabric."
+      },
+      {
+        "text": "O OneLake, criado uma vez em cada região do Azure",
+        "why": "O OneLake vem com o tenant, um para ele todo, e ninguém o provisiona."
+      }
+    ]
+  },
+  "ex-dem3aa3j": {
+    "prompt": "A Quitanda põe o workspace de desenvolvimento e o de produção em duas capacidades separadas. O que isso separa?",
+    "hint": "Continua havendo um só OneLake.",
+    "choices": [
+      {
+        "text": "Os dados: cada capacidade tem seu próprio OneLake, então o desenvolvimento não lê a produção",
+        "why": "Há um OneLake por tenant, sejam quais forem as capacidades; um atalho lê de um para o outro."
+      },
+      {
+        "text": "A conta, e o barulho que um faz no outro",
+        "why": "Isso. Um notebook pesado no desenvolvimento gasta a própria capacidade e não estrangula os relatórios da produção."
+      },
+      {
+        "text": "O login: cada capacidade pertence a um tenant do Entra ID próprio",
+        "why": "As duas capacidades estão no mesmo tenant; um tenant tem um só Fabric."
+      },
+      {
+        "text": "Nada; uma capacidade é só um rótulo na conta",
+        "why": "A capacidade é a própria computação, e o tamanho dela limita o que roda nela."
+      }
+    ]
+  },
+  "ex-fg4szy7m": {
+    "prompt": "Um time de plataforma quer toda a configuração do Fabric declarada com o provider `azurerm` do Terraform. O que dela o `azurerm` consegue declarar?",
+    "hint": "Só uma parte do Fabric é um recurso do Azure.",
+    "choices": [
+      {
+        "text": "A capacidade, os workspaces e os lakehouses",
+        "why": "Workspaces e lakehouses são geridos dentro do Fabric, não pelo Azure Resource Manager."
+      },
+      {
+        "text": "Nada, já que o Fabric não é vendido pelo Azure",
+        "why": "A capacidade é um recurso do Azure, e a lição valida uma."
+      },
+      {
+        "text": "A capacidade, e nada do que vive nos workspaces dela",
+        "why": "Isso. `azurerm_fabric_capacity` é o único recurso; o que vive nos workspaces fica fora do `azurerm`."
+      },
+      {
+        "text": "Tudo, se cada item ganhar um grupo de recursos",
+        "why": "Itens não têm grupo de recursos; eles pertencem a um workspace."
+      }
+    ]
+  },
+  "ex-rpsmvyg8": {
+    "prompt": "Ao preço ilustrativo da lição, 0,20 USD por CU-hora, quanto custa uma F8 num mês de 730 horas ligada o tempo todo, em USD?",
+    "hint": "CUs, vezes o preço, vezes as horas."
+  },
+  "ex-zyvn316k": {
+    "prompt": "A capacidade F32 da Quitanda chega à rejeição interativa toda semana, e decide-se aumentá-la. Qual é o próximo tamanho?",
+    "hint": "Olhe a lista que o provider imprimiu.",
+    "choices": [
+      {
+        "text": "F40",
+        "why": "Não existe F40: cada tamanho é o dobro do anterior."
+      },
+      {
+        "text": "F48",
+        "why": "Também não existe F48; a lista vai de F32 a F64."
+      },
+      {
+        "text": "F64",
+        "why": "Isso. Crescer é um passo para o dobro do tamanho, e do preço."
+      },
+      {
+        "text": "F33",
+        "why": "Os tamanhos não andam de uma em uma CU."
+      }
+    ]
+  },
+  "ex-kk5ybrfq": {
+    "prompt": "Uma capacidade acumulou 90 minutos de consumo futuro. Alguém abre um relatório, e o notebook da noite começa. O que acontece com cada um?",
+    "hint": "Entre 60 minutos e 24 horas.",
+    "choices": [
+      {
+        "text": "Os dois rodam, e as consultas do relatório esperam 20 segundos antes de começar",
+        "why": "Esse é o estágio de atraso interativo, de 10 a 60 minutos; 90 já passou dele."
+      },
+      {
+        "text": "O relatório é recusado e o notebook roda",
+        "why": "Isso. De 60 minutos a 24 horas os pedidos interativos novos são rejeitados, e o trabalho em segundo plano continua."
+      },
+      {
+        "text": "O relatório e o notebook são recusados até a dívida ser paga",
+        "why": "O segundo plano só é recusado acima de 24 horas de consumo futuro."
+      },
+      {
+        "text": "Nem o relatório nem o notebook percebem; o throttling começa em 24 horas",
+        "why": "O throttling começa depois de 10 minutos; 24 horas é onde o segundo plano também passa a ser recusado."
+      }
+    ]
+  },
+  "ex-3bgm070p": {
+    "prompt": "Um administrador pausa uma capacidade pay-as-you-go estrangulada para o throttling parar. O que a documentação da Microsoft diz que acontece com o consumo que ela tinha acumulado?",
+    "hint": "Pausar para o medidor daqui em diante.",
+    "choices": [
+      {
+        "text": "É perdoado, e por isso pausar é o remédio documentado",
+        "why": "Nada é perdoado; o trabalho já feito foi consumo."
+      },
+      {
+        "text": "Entra na conta no momento em que a capacidade é pausada",
+        "why": "Isso. Uma capacidade pausada para fugir do throttling paga pelo que já tinha gasto."
+      },
+      {
+        "text": "Fica esperando, e é pago com o tempo ocioso depois que a capacidade volta",
+        "why": "A documentação diz que ele é cobrado quando a capacidade é pausada, não guardado para depois."
+      },
+      {
+        "text": "Passa para outra capacidade do mesmo tenant",
+        "why": "O consumo pertence à capacidade que fez o trabalho."
+      }
+    ]
+  },
+  "ex-vq32gzhn": {
+    "prompt": "O Fabric espalha o consumo de uma operação em segundo plano, como um notebook agendado, por ___ horas.",
+    "hint": "Um dia inteiro.",
+    "blanks": [
+      {
+        "accept": [
+          "24",
+          "vinte e quatro"
+        ]
+      }
+    ]
+  },
+  "ex-b6r38npg": {
+    "prompt": "O OneLake responde à interface do ADLS Gen2. Quais destes leem o lakehouse da Quitanda mudando só o endereço e o login? Escolha todas as que se aplicam.",
+    "hint": "Qualquer coisa que já fale ADLS Gen2 com uma identidade do Entra ID.",
+    "choices": [
+      {
+        "text": "O Spark, lendo um caminho `abfss://`",
+        "why": "Sim: o caminho aponta para onelake.dfs.fabric.microsoft.com."
+      },
+      {
+        "text": "O `azcopy`",
+        "why": "Sim, com login do Entra ID."
+      },
+      {
+        "text": "O SDK do Azure para Python",
+        "why": "Sim, pelo cliente de Data Lake ou de blob."
+      },
+      {
+        "text": "O `az storage blob list` com a chave da conta",
+        "why": "O OneLake não tem conta, então não tem chave de conta; o acesso é por identidade."
+      }
+    ]
+  },
+  "ex-d5kdq7wq": {
+    "prompt": "O lakehouse da Quitanda tem um atalho para um bucket do Amazon S3 de um parceiro, e um notebook o lê de hora em hora. O que o atalho evita, e o que não evita?",
+    "hint": "Nada é copiado, então para onde vai cada leitura?",
+    "choices": [
+      {
+        "text": "Evita as requisições e a saída do S3, já que o Fabric lê pela rede da Microsoft",
+        "why": "Os bytes saem da nuvem da Amazon seja qual for a rede, e a Amazon cobra por isso."
+      },
+      {
+        "text": "Evita uma cópia; cada leitura continua sendo uma leitura do S3, com requisições e saída",
+        "why": "Isso. Um atalho aponta em vez de copiar, então a conta do outro lado continua lá."
+      },
+      {
+        "text": "Não evita nada, já que é uma cópia para o OneLake feita num agendamento",
+        "why": "Isso descreve um pipeline, não um atalho."
+      },
+      {
+        "text": "Evita a credencial, porque o Fabric lê o S3 com a identidade de quem lê",
+        "why": "Um atalho para o S3 chega a ele com uma credencial guardada numa conexão do Fabric."
+      }
+    ]
+  },
+  "ex-8t0ny2hr": {
+    "prompt": "Um atalho para os exports da Quitanda usa uma conexão cujo service principal pode ler a conta de armazenamento inteira, contratos incluídos. Os analistas podem usar o atalho. O que está errado?",
+    "hint": "Uma leitura pelo atalho usa os direitos de quem?",
+    "choices": [
+      {
+        "text": "A credencial alcança os contratos também, e qualquer atalho feito com ela também",
+        "why": "Isso. Uma leitura pelo atalho usa os direitos da conexão, então aquele principal devia ler a pasta dos exports e mais nada."
+      },
+      {
+        "text": "Os analistas leem com os próprios direitos, então recebem um erro",
+        "why": "Um atalho chega à origem com a credencial da conexão, não com a de cada leitor."
+      },
+      {
+        "text": "O atalho copia a conta inteira, contratos incluídos, para o OneLake",
+        "why": "Um atalho não copia nada."
+      },
+      {
+        "text": "Atalhos só aceitam chaves de conta, então o principal é ignorado",
+        "why": "Uma conexão pode usar um service principal, entre outras credenciais."
+      }
+    ]
+  },
+  "ex-4mg8sapj": {
+    "prompt": "Uma analista roda `INSERT INTO orders` pelo endpoint de análise SQL de um lakehouse. O que acontece?",
+    "hint": "Quem é dono das tabelas de um lakehouse?",
+    "choices": [
+      {
+        "text": "O endpoint insere a linha, como qualquer banco T-SQL faria",
+        "why": "O endpoint deixa o T-SQL ler as tabelas de um lakehouse, não escrever."
+      },
+      {
+        "text": "É recusado, porque esse endpoint só lê",
+        "why": "Isso. As tabelas pertencem ao Spark; o warehouse é onde o T-SQL escreve."
+      },
+      {
+        "text": "É transformado num job Spark, que insere a linha alguns minutos depois",
+        "why": "Nada traduz escritas em T-SQL para Spark."
+      },
+      {
+        "text": "A linha vai para a área `Files`, como CSV",
+        "why": "A `Files` é escrita por quem põe arquivos lá, não pelo SQL."
+      }
+    ]
+  },
+  "ex-zd6n285p": {
+    "prompt": "Toda noite a Quitanda carrega os pedidos, os itens e o resumo do dia, e um dashboard nunca pode ver uma noite carregada pela metade. Que item dá essa garantia?",
+    "hint": "Três tabelas, um commit.",
+    "choices": [
+      {
+        "text": "Um lakehouse, escrito com três escritas Delta",
+        "why": "Cada escrita Delta faz commit sozinha, então um leitor pode cair entre duas delas."
+      },
+      {
+        "text": "Um warehouse, carregando as três numa transação",
+        "why": "Isso. O warehouse tem transações entre tabelas: o leitor vê a noite inteira ou nada dela."
+      },
+      {
+        "text": "O endpoint de análise SQL de um lakehouse, com BEGIN e COMMIT",
+        "why": "O endpoint é só de leitura, então não carrega nada."
+      },
+      {
+        "text": "Um atalho para o banco em que a loja escreve",
+        "why": "Um atalho aponta para arquivos, e a garantia é sobre como eles são escritos."
+      }
+    ]
+  },
+  "ex-0k1sf1dn": {
+    "prompt": "Ligue cada item do Fabric ao que ele é.",
+    "hint": "Dois deles guardam o mesmo formato.",
+    "pairs": [
+      {
+        "left": "Lakehouse",
+        "right": "Tabelas Delta escritas pelo Spark, ao lado de uma área Files"
+      },
+      {
+        "left": "Warehouse",
+        "right": "Tabelas Delta de propriedade do T-SQL, com transações entre tabelas"
+      },
+      {
+        "left": "Endpoint de análise SQL",
+        "right": "T-SQL só de leitura sobre as tabelas de um lakehouse"
+      },
+      {
+        "left": "Atalho",
+        "right": "Uma pasta que aponta para dados guardados em outro lugar"
+      }
+    ],
+    "right_distractors": [
+      "Um pool de servidores dimensionado em DWUs e pausado"
+    ]
+  },
+  "ex-cbfw5yk3": {
+    "prompt": "Como um leitor da tabela Delta sabe quais arquivos Parquet são a tabela?",
+    "hint": "Não é a listagem da pasta.",
+    "choices": [
+      {
+        "text": "Lista a pasta e lê cada `.parquet` dela",
+        "why": "Um arquivo na pasta que nenhum commit nomeia não está na tabela."
+      },
+      {
+        "text": "Pelo rodapé de cada arquivo Parquet",
+        "why": "O rodapé descreve o próprio arquivo; não diz nada da tabela."
+      },
+      {
+        "text": "Pelas ações `add` nos commits do `_delta_log`",
+        "why": "Isso. O log é a tabela: cada `add` nomeia um arquivo, com tamanho e estatísticas."
+      },
+      {
+        "text": "Pela ação `protocol`",
+        "why": "`protocol` diz que recursos o leitor precisa entender, não que arquivos existem."
+      }
+    ]
+  },
+  "ex-skwvpxz4": {
+    "prompt": "Um colega sobe à mão um arquivo Parquet com pedidos extras para `Tables/orders`, sem commit. O que o `ask.py` conta depois?",
+    "hint": "O que lê o log, e o que lê a pasta?",
+    "choices": [
+      {
+        "text": "Os mesmos 98.727 pedidos",
+        "why": "Isso. Nenhum `add` nomeia o arquivo, então para todo leitor Delta ele não existe."
+      },
+      {
+        "text": "98.727 mais os pedidos extras, a partir da próxima leitura",
+        "why": "Isso seria um leitor listando a pasta; o `deltalake` lê o log."
+      },
+      {
+        "text": "Nada: a tabela se recusa a abrir enquanto houver um arquivo solto na pasta",
+        "why": "Os leitores ignoram arquivos que o log não nomeia; não recusam a tabela."
+      },
+      {
+        "text": "Só os pedidos extras, já que o arquivo mais novo vence",
+        "why": "O Delta não tem regra de arquivo mais novo; só commits mudam a tabela."
+      }
+    ]
+  },
+  "ex-rmxdr4tp": {
+    "prompt": "O DuckDB respondeu à pergunta sobre pagamentos sem saber que a tabela era Delta. Como?",
+    "hint": "Duas bibliotecas dividiram o trabalho.",
+    "choices": [
+      {
+        "text": "O DuckDB lê sozinho o JSON do `_delta_log`",
+        "why": "Neste programa o DuckDB nunca viu o log; ele recebeu um dataset."
+      },
+      {
+        "text": "O `deltalake` leu o log e entregou os arquivos como um dataset",
+        "why": "Isso. Uma biblioteca para o log, qualquer motor para os arquivos, e é por isso que os motores do Fabric compartilham tabelas."
+      },
+      {
+        "text": "O Azurite transformou a tabela Delta em Parquet comum na saída",
+        "why": "O Azurite guarda blobs e não sabe nada de Delta."
+      },
+      {
+        "text": "A tabela tem um arquivo, então nenhum log foi necessário",
+        "why": "O log foi lido seja qual for o número de arquivos; foi assim que o arquivo foi achado."
+      }
+    ]
+  },
+  "ex-pvgpxmc8": {
+    "prompt": "Cada arquivo do `_delta_log` é um commit, e cada linha desse arquivo é uma ___, como `add` ou `metaData`.",
+    "hint": "A lição lista quatro delas.",
+    "blanks": [
+      {
+        "accept": [
+          "ação",
+          "acao"
+        ]
+      }
+    ]
+  },
+  "ex-ws8ffdzb": {
+    "prompt": "O que faz o framing de um modelo semântico Direct Lake?",
+    "hint": "Ele é rápido por causa do que não move.",
+    "choices": [
+      {
+        "text": "Lê cada linha da tabela para o modelo, como faz o refresh de um import",
+        "why": "Isso é o modo import; o framing não move dados."
+      },
+      {
+        "text": "Manda uma consulta SQL por visual",
+        "why": "Isso é o DirectQuery, que é para onde o Direct Lake recua."
+      },
+      {
+        "text": "Aponta o modelo para a versão mais nova da tabela",
+        "why": "Isso. Ele lê o commit mais novo do log e não copia dados, então leva segundos."
+      },
+      {
+        "text": "Reescreve os arquivos Parquet da tabela com V-Order",
+        "why": "O V-Order é aplicado quando os arquivos são escritos, não por um relatório."
+      }
+    ]
+  },
+  "ex-zdkrp8e5": {
+    "prompt": "Um relatório Direct Lake sobre os pedidos da Quitanda ficou lento ao longo de um mês, sem erro nenhum. O job que escreve a tabela acrescenta um arquivo pequeno a cada cinco minutos. Qual é a causa provável?",
+    "hint": "Os limites contam mais do que linhas.",
+    "choices": [
+      {
+        "text": "A tabela passou de um limite de arquivos, e o modelo recuou para DirectQuery",
+        "why": "Isso. Milhares de arquivos pequenos chegam aos limites muito antes das linhas, e o recuo é silencioso."
+      },
+      {
+        "text": "O framing parou, então o relatório mostra uma versão antiga",
+        "why": "Uma versão antiga deixaria o relatório desatualizado, não lento."
+      },
+      {
+        "text": "Os arquivos acrescentados têm V-Order, que deixa a leitura lenta",
+        "why": "O V-Order existe para deixar a leitura mais rápida."
+      },
+      {
+        "text": "A capacidade foi pausada durante a noite",
+        "why": "Uma capacidade pausada não roda nada; o relatório falharia, não ficaria lento."
+      }
+    ]
+  },
+  "ex-8bvx0jq5": {
+    "prompt": "Ponha os estágios de throttling do Fabric na ordem em que uma capacidade os encontra conforme o consumo acumulado cresce.",
+    "hint": "Dez minutos, uma hora, um dia.",
+    "items": [
+      "Proteção de excesso: tudo roda",
+      "Atraso interativo: pedidos interativos novos esperam 20 segundos",
+      "Rejeição interativa: pedidos interativos novos são recusados",
+      "Rejeição em segundo plano: todo pedido novo é recusado"
+    ]
+  },
+  "ex-k1kv3hgb": {
+    "prompt": "Um job em segundo plano usa 32 CUs por 45 minutos. Espalhado por 24 horas, quantas CUs ele ocupa em média?",
+    "hint": "CU-segundos, divididos pelos 86.400 segundos de um dia."
+  }
+}

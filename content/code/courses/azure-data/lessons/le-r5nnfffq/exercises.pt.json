@@ -1,0 +1,416 @@
+{
+  "ex-jv7m661z": {
+    "prompt": "`az storage blob list --delimiter /` responde `exports/` para um contêiner que guarda três blobs. O que é `exports/`?",
+    "hint": "Pergunte se algo foi criado com esse nome.",
+    "choices": [
+      {
+        "text": "Um objeto de diretório que o Blob Storage criou no primeiro upload",
+        "why": "Esse objeto não existe; `az storage blob show` no prefixo respondeu `BlobNotFound`."
+      },
+      {
+        "text": "Um blob de zero bytes cujo nome termina em barra",
+        "why": "Nada nesta lição gravou um blob assim, e o prefixo apareceu mesmo assim."
+      },
+      {
+        "text": "Um grupo de nomes, calculado para essa listagem",
+        "why": "Isso. O serviço agrupou cada nome na primeira barra; apague os blobs e o grupo some."
+      },
+      {
+        "text": "Um segundo contêiner aninhado dentro de `orders-raw`",
+        "why": "Contêineres não se aninham; há um nível deles por conta."
+      }
+    ]
+  },
+  "ex-sd7zyc1s": {
+    "prompt": "Um programa lista `--prefix exports/2026/` e não recebe nada, embora os arquivos estejam lá. Os nomes começam com `Exports/2026/`. Por quê?",
+    "hint": "Como dois nomes são comparados?",
+    "choices": [
+      {
+        "text": "Nomes de blob diferenciam maiúsculas, então os prefixos são outros",
+        "why": "Isso. `EXPORTS/...` respondeu `exists: false` na lição pelo mesmo motivo."
+      },
+      {
+        "text": "Um prefixo só funciona junto com `--delimiter`",
+        "why": "O prefixo filtra sozinho; o delimitador só agrupa o que sobra."
+      },
+      {
+        "text": "A listagem precisa de um `*` no fim",
+        "why": "O prefixo é comparado literalmente desde o início do nome, sem curingas."
+      },
+      {
+        "text": "Listagens por prefixo ficam em cache alguns minutos depois de um upload",
+        "why": "Não há esse cache; a listagem lê os nomes atuais."
+      }
+    ]
+  },
+  "ex-dh2dbn12": {
+    "prompt": "A Quitanda quer ler um mês de exportações sem listar os nomes de todos os outros meses. Que forma de nomear faz isso?",
+    "hint": "A listagem percorre os nomes em ordem e filtra pelo começo do nome.",
+    "choices": [
+      {
+        "text": "`orders-2026-10-27.csv` na raiz, filtrando depois no programa",
+        "why": "Filtrar no programa significa listar todos os nomes antes."
+      },
+      {
+        "text": "`exports/c-17/orders-2026-10-27.csv`, agrupado por cliente",
+        "why": "O mês agora vem depois do cliente, então um mês fica espalhado sob o prefixo de cada cliente."
+      },
+      {
+        "text": "Qualquer um deles, com o mês guardado nos metadados de cada blob",
+        "why": "Metadados não podem ser pesquisados; achar o mês exige ler os metadados de cada blob."
+      },
+      {
+        "text": "`exports/2026/10/orders-2026-10-27.csv`",
+        "why": "Isso. `--prefix exports/2026/10/` pede ao serviço só aquele mês."
+      }
+    ]
+  },
+  "ex-5ztzjc8w": {
+    "prompt": "Ligue cada dado ao tipo de blob em que ele deve ficar.",
+    "hint": "Pergunte como cada um é escrito: inteiro, no fim ou em qualquer lugar.",
+    "pairs": [
+      {
+        "left": "A exportação noturna de pedidos, escrita uma vez",
+        "right": "block blob"
+      },
+      {
+        "left": "O log do serviço de checkout, uma linha por vez",
+        "right": "append blob"
+      },
+      {
+        "left": "O disco de uma máquina virtual",
+        "right": "page blob"
+      },
+      {
+        "left": "Um arquivo Parquet para os analistas",
+        "right": "block blob também"
+      }
+    ],
+    "right_distractors": [
+      "um contêiner"
+    ]
+  },
+  "ex-84qejyq5": {
+    "prompt": "Três blocos foram preparados para um blob novo e nada foi confirmado com commit. O que um leitor recebe?",
+    "hint": "O `blocks.py` perguntou `exists()` nesse momento.",
+    "choices": [
+      {
+        "text": "Os três blocos, na ordem em que foram preparados",
+        "why": "Blocos preparados ficam invisíveis até um commit nomeá-los."
+      },
+      {
+        "text": "Nada: o blob ainda não existe",
+        "why": "Isso. `exists before the commit: False`."
+      },
+      {
+        "text": "Só o primeiro bloco, até os outros serem confirmados",
+        "why": "Não há leitura parcial de blocos preparados."
+      },
+      {
+        "text": "Um erro dizendo que o blob está travado por um upload",
+        "why": "Preparar blocos não trava nada; o blob simplesmente não existe."
+      }
+    ]
+  },
+  "ex-4fxb2ney": {
+    "prompt": "O upload noturno de uma exportação de 2 GB cai depois de metade dos blocos. O que os analistas leem na manhã seguinte com aquele nome?",
+    "hint": "Qual requisição faz um block blob mudar?",
+    "choices": [
+      {
+        "text": "Metade do arquivo novo, seguida do fim do antigo",
+        "why": "Blocos nunca entram num blob legível sem commit."
+      },
+      {
+        "text": "A versão completa anterior, ou nada se não havia",
+        "why": "Isso. Sem o commit o blob não muda; os blocos preparados esperam sem ser vistos."
+      },
+      {
+        "text": "Metade do arquivo novo, e por isso exportações são conferidas pela contagem de linhas",
+        "why": "Contar linhas é uma boa conferência, mas não é metade do arquivo que eles leriam."
+      },
+      {
+        "text": "Um blob vazio de 2 GB cheio de zeros",
+        "why": "É assim que se lê uma página não escrita de um page blob, não um block blob."
+      }
+    ]
+  },
+  "ex-100s4hvc": {
+    "prompt": "Um arquivo de 646.670 bytes é enviado com `max_single_put_size` e `max_block_size` ambos em 256 KiB (262.144 bytes). Quantos blocos são confirmados?",
+    "hint": "Blocos cheios, depois um com o resto.",
+    "unit": "blocos"
+  },
+  "ex-8a9gmbgf": {
+    "prompt": "Um pedido corrigido muda uma linha no meio de uma exportação grande enviada em blocos. Qual é a forma correta mais barata de consertar o blob?",
+    "hint": "O `blocks.py` fez isso na última parte.",
+    "choices": [
+      {
+        "text": "Acrescentar a linha corrigida no fim e deixar os leitores ficarem com a última",
+        "why": "Block blob não aceita append, e os leitores veriam as duas linhas."
+      },
+      {
+        "text": "Enviar o arquivo inteiro de novo",
+        "why": "Funciona, e é o jeito mais caro: todos os blocos viajam de novo."
+      },
+      {
+        "text": "Escrever os bytes corrigidos no deslocamento deles",
+        "why": "Escrever num deslocamento é o que um page blob faz; block blob não tem essa operação."
+      },
+      {
+        "text": "Preparar de novo o bloco dessa linha com o mesmo id e fazer commit da mesma lista",
+        "why": "Isso. Só esse bloco viaja; o commit o troca e mantém o resto."
+      }
+    ]
+  },
+  "ex-6kp5zxgr": {
+    "prompt": "O log do checkout é um append blob. O que `az storage blob upload --overwrite` faz com ele?",
+    "hint": "A lição rodou isso e depois perguntou o tipo do blob.",
+    "choices": [
+      {
+        "text": "Troca-o por um block blob novo com o arquivo",
+        "why": "Isso. `BlockBlob`, 64 bytes, e o append seguinte falhou com `InvalidBlobType`."
+      },
+      {
+        "text": "Recusa, porque um append blob só aceita appends",
+        "why": "O tipo limita escritas dentro do blob, não a troca dele. O upload passou."
+      },
+      {
+        "text": "Acrescenta os bytes do arquivo no fim do log, depois das seis linhas que já estavam lá",
+        "why": "Upload não é append; as seis linhas do log sumiram depois."
+      },
+      {
+        "text": "Pede confirmação antes de trocar um log",
+        "why": "`--overwrite` já é a confirmação; nada mais é perguntado."
+      }
+    ]
+  },
+  "ex-dcjdw3c1": {
+    "prompt": "Um page blob é feito de páginas de ___ bytes, e o tamanho dele precisa ser múltiplo disso.",
+    "hint": "1.000 foi recusado e 1.024 foi aceito.",
+    "blanks": [
+      {
+        "accept": [
+          "512"
+        ]
+      }
+    ]
+  },
+  "ex-pyywcngt": {
+    "prompt": "O `pages.py` imprimiu `100 bytes refused before sending` com uma mensagem do Python em vez de um código de erro. Quem recusou?",
+    "hint": "Um código de erro volta de um serviço.",
+    "choices": [
+      {
+        "text": "O Azurite, que rejeita qualquer escrita abaixo de 512 bytes",
+        "why": "A requisição nem chegou ao Azurite; recusa do serviço vem com código."
+      },
+      {
+        "text": "O sistema operacional, porque 100 bytes é menos que um setor de disco",
+        "why": "Nenhum disco foi tocado; é uma chamada de rede que nunca aconteceu."
+      },
+      {
+        "text": "A biblioteca Python, que conferiu o alinhamento sozinha",
+        "why": "Isso. Ela lançou `ValueError` sem mandar nada."
+      },
+      {
+        "text": "O Docker, que limita o tamanho de uma requisição a um contêiner",
+        "why": "O Docker só encaminha a porta e não lê nada."
+      }
+    ]
+  },
+  "ex-4nngr51e": {
+    "prompt": "Os auditores da Quitanda querem o log do checkout guardado de forma que ninguém, nem os engenheiros da própria Quitanda, possa reescrevê-lo. Ser um append blob basta?",
+    "hint": "O que um upload com `--overwrite` fez?",
+    "choices": [
+      {
+        "text": "Sim, porque blocos já acrescentados não podem ser alterados",
+        "why": "Não um a um, mas o blob inteiro pode ser trocado ou apagado."
+      },
+      {
+        "text": "Sim, desde que só o programa de log tenha a chave da conta",
+        "why": "A exigência inclui os engenheiros da Quitanda, que conseguem a chave."
+      },
+      {
+        "text": "Não; deveria ser um page blob, já que páginas não podem ser apagadas",
+        "why": "Um page blob pode ser reescrito em qualquer deslocamento, o oposto do pedido."
+      },
+      {
+        "text": "Não; precisa de uma política de imutabilidade que recuse troca e exclusão",
+        "why": "Isso. A lição 5 trata dessas políticas."
+      }
+    ]
+  },
+  "ex-3ghz7ggz": {
+    "prompt": "Um programa grava os metadados `rows=2` e `source=shop` e depois chama a atualização de metadados só com `rows=3`. O que o blob carrega depois?",
+    "hint": "A lição rodou exatamente isso.",
+    "choices": [
+      {
+        "text": "`rows=3` e `source=shop`",
+        "why": "Isso seria uma mescla, e não existe operação de mescla."
+      },
+      {
+        "text": "`rows=2`, `rows=3` e `source=shop`, guardados como histórico",
+        "why": "Metadados não guardam histórico; cada nome tem um valor."
+      },
+      {
+        "text": "Só `rows=3`",
+        "why": "Isso. A atualização troca o conjunto inteiro."
+      },
+      {
+        "text": "Um erro `InvalidMetadata`, porque `rows` já existe",
+        "why": "O `InvalidMetadata` veio do hífen em `row-count`, não de um nome que já existia."
+      }
+    ]
+  },
+  "ex-0sahn7dy": {
+    "prompt": "Quais destas são verdadeiras sobre o ETag de um blob? Marque todas as que valem.",
+    "hint": "Compare o ETag antes e depois da atualização de metadados.",
+    "choices": [
+      {
+        "text": "Muda quando só os metadados mudam",
+        "why": "Sim; a lição imprimiu dois ETags diferentes em volta de uma atualização de metadados."
+      },
+      {
+        "text": "É o MD5 do conteúdo, em hexadecimal",
+        "why": "O MD5 é outra propriedade, `contentMd5`, em base64. O ETag é um carimbo opaco."
+      },
+      {
+        "text": "Passado a `--if-match`, torna uma escrita condicional",
+        "why": "Sim; é para isso que ele serve."
+      },
+      {
+        "text": "Dois blobs com os mesmos bytes têm o mesmo ETag",
+        "why": "Ele marca uma versão de um blob e não diz nada do conteúdo."
+      }
+    ]
+  },
+  "ex-8qm2ery2": {
+    "prompt": "Um motor de consulta lê um arquivo Parquet do Blob Storage e falha porque o arquivo informa `text/plain`. Que parte do blob está errada?",
+    "hint": "É um cabeçalho que quem enviou definiu, ou deixou a ferramenta adivinhar.",
+    "choices": [
+      {
+        "text": "Os metadados, que deveriam ter `format=parquet`",
+        "why": "Metadados nunca são interpretados pelo serviço nem por leitores que não conhecem seus nomes."
+      },
+      {
+        "text": "A propriedade content-type, definida ou adivinhada no upload",
+        "why": "Isso. A linha de comando adivinhou `text/csv` pela extensão `.csv`; quem enviou este arquivo deixou o palpite errado."
+      },
+      {
+        "text": "O tipo do blob, que deveria ser page em vez de block para dados binários como Parquet",
+        "why": "Arquivos binários são block blobs como qualquer outro arquivo."
+      },
+      {
+        "text": "O tier, porque blobs hot são servidos como texto",
+        "why": "O tier muda preço e disponibilidade, não o rótulo dos bytes."
+      }
+    ]
+  },
+  "ex-tgew22dz": {
+    "prompt": "A segunda cópia do `etag.py` é recusada. Que status HTTP volta?",
+    "hint": "Uma pré-condição falhou.",
+    "choices": [
+      {
+        "text": "412",
+        "why": "Isso. Pré-condição falhou, `ConditionNotMet`."
+      },
+      {
+        "text": "409",
+        "why": "409 é conflito, que o `BlobAlreadyExists` usa."
+      },
+      {
+        "text": "403",
+        "why": "403 é recusa de permissão, assunto da lição 6."
+      },
+      {
+        "text": "404",
+        "why": "O blob existe; o que falhou foi a condição."
+      }
+    ]
+  },
+  "ex-23rwfa3c": {
+    "prompt": "A escrita condicional de um programa é recusada com `ConditionNotMet`. O que ele deve fazer?",
+    "hint": "A recusa significa que alguém escreveu depois que você leu.",
+    "choices": [
+      {
+        "text": "Repetir a mesma escrita até passar",
+        "why": "Não vai passar: o ETag enviado está velho, e cada repetição é recusada igual."
+      },
+      {
+        "text": "Escrever de novo sem condição, já que os dados dele são os mais novos e o mais novo deve vencer",
+        "why": "Essa é a sobrescrita silenciosa que a condição estava ali para impedir."
+      },
+      {
+        "text": "Ler o blob de novo e decidir se a escrita ainda faz sentido",
+        "why": "Isso. No `etag.py`, a cópia B acharia o marcador já em `2026-10-30` e pararia."
+      },
+      {
+        "text": "Pegar um lease e escrever com ele",
+        "why": "O lease deixaria escrever, e apagaria o trabalho da outra cópia do mesmo jeito."
+      }
+    ]
+  },
+  "ex-f7ng4w22": {
+    "prompt": "Um job segura um lease de 60 segundos num blob de manifesto e cai. O que acontece com os outros escritores?",
+    "hint": "Um lease finito precisa ser renovado.",
+    "choices": [
+      {
+        "text": "São recusados com `LeaseIdMissing` até o lease vencer",
+        "why": "Isso. Ninguém renova, então depois dos 60 segundos o blob volta a aceitar escrita."
+      },
+      {
+        "text": "Podem escrever na hora, porque o lease acaba junto com o processo",
+        "why": "O serviço não vê o processo morrer; só vê o lease vencer."
+      },
+      {
+        "text": "São recusados para sempre, até alguém apagar o blob",
+        "why": "Isso seria um lease infinito; este dura 60 segundos."
+      },
+      {
+        "text": "São recusados com 412 `ConditionNotMet`",
+        "why": "Essa é a recusa do ETag; falta de lease tem código próprio."
+      }
+    ]
+  },
+  "ex-bnec46nq": {
+    "prompt": "Ponha em ordem os passos de uma atualização segura de um blob de marcador compartilhado.",
+    "hint": "Ler, decidir, escrever com condição, tratar a recusa.",
+    "items": [
+      "Ler o marcador e guardar o ETag dele",
+      "Decidir o valor novo a partir do que foi lido",
+      "Escrever com `If-Match` igual ao ETag guardado",
+      "Num 412, ler de novo e recomeçar"
+    ]
+  },
+  "ex-83m6r984": {
+    "prompt": "Qual destas escritas um block blob aceita?",
+    "hint": "Pense no que o `blocks.py` fez e no que falhou no log.",
+    "choices": [
+      {
+        "text": "Escrever 512 bytes no deslocamento 1024",
+        "why": "Essa é a escrita de um page blob."
+      },
+      {
+        "text": "Acrescentar um bloco no fim",
+        "why": "Recusado com `InvalidBlobType`, como o programa de log descobriu."
+      },
+      {
+        "text": "Mudar o tipo para append",
+        "why": "O tipo é fixado quando o blob é criado."
+      },
+      {
+        "text": "Um commit de uma lista de blocos nova",
+        "why": "Isso. É o único jeito de um block blob mudar."
+      }
+    ]
+  },
+  "ex-vz15d99a": {
+    "prompt": "Sem `--overwrite`, `az storage blob upload` recusa um blob existente com o código de erro ___.",
+    "hint": "Três palavras em inglês, juntas.",
+    "blanks": [
+      {
+        "accept": [
+          "BlobAlreadyExists"
+        ]
+      }
+    ]
+  }
+}

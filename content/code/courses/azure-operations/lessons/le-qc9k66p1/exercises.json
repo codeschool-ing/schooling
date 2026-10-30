@@ -1,0 +1,370 @@
+[
+  {
+    "id": "ex-79z18w0y",
+    "version": 1,
+    "section": "the-tables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lets a request's row and its dependencies' rows be put back together?",
+    "hint": "Every row produced for one request carries it.",
+    "choices": [
+      {
+        "text": "Their TimeGenerated values",
+        "correct": false,
+        "why": "Many requests share a second; time is not an identity."
+      },
+      {
+        "text": "OperationId",
+        "correct": true,
+        "why": "Right. Every row produced while serving one request carries the same value."
+      },
+      {
+        "text": "The Name of the request",
+        "correct": false,
+        "why": "Thousands of requests share a name."
+      },
+      {
+        "text": "AppRoleName",
+        "correct": false,
+        "why": "That names the service, which every row of shop-api shares."
+      }
+    ]
+  },
+  {
+    "id": "ex-7q73jfcy",
+    "version": 1,
+    "section": "the-tables",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Application Insights table to what one of its rows is.",
+    "hint": "One row per thing.",
+    "pairs": [
+      {
+        "left": "AppRequests",
+        "right": "A request the application served"
+      },
+      {
+        "left": "AppDependencies",
+        "right": "A call it made while serving one"
+      },
+      {
+        "left": "AppExceptions",
+        "right": "An exception it recorded"
+      },
+      {
+        "left": "AppTraces",
+        "right": "A log line the application wrote"
+      }
+    ],
+    "right_distractors": [
+      "A change made through Resource Manager"
+    ]
+  },
+  {
+    "id": "ex-26fz0sxh",
+    "version": 1,
+    "section": "the-tables",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the generated AppDependencies, a SQL call that timed out has the result code ___.",
+    "hint": "A negative number.",
+    "blanks": [
+      {
+        "accept": [
+          "-2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-km518tjf",
+    "version": 1,
+    "section": "one-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first failed checkout has no `POST /v1/charges` row. What does that absence tell you?",
+    "hint": "Where in the code is the payment step?",
+    "choices": [
+      {
+        "text": "The payment provider was down",
+        "correct": false,
+        "why": "A down provider would show a failed HTTP call, not none."
+      },
+      {
+        "text": "Sampling dropped the payment call",
+        "correct": false,
+        "why": "Sampling keeps or drops a whole operation, and this table is not sampled."
+      },
+      {
+        "text": "The code stopped before the payment step",
+        "correct": true,
+        "why": "Right. The order insert failed, so payment was never attempted."
+      },
+      {
+        "text": "The union lost rows from the second table",
+        "correct": false,
+        "why": "union keeps every row of both sides."
+      }
+    ]
+  },
+  {
+    "id": "ex-05c57jhx",
+    "version": 1,
+    "section": "one-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `toscalar()` do in one-request.kql?",
+    "hint": "The inner query returns one value.",
+    "choices": [
+      {
+        "text": "Converts OperationId to a number",
+        "correct": false,
+        "why": "It keeps the value's type; it turns a table into a constant."
+      },
+      {
+        "text": "Turns a one-value query into a constant for later lines",
+        "correct": true,
+        "why": "Right. let names it op, and both sides of the union filter on it."
+      },
+      {
+        "text": "Picks a random failed checkout",
+        "correct": false,
+        "why": "top 1 by TimeGenerated asc picks the first; nothing is random."
+      },
+      {
+        "text": "Runs the query once per row of the union",
+        "correct": false,
+        "why": "It runs once, before the union."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wnd2yft",
+    "version": 1,
+    "section": "the-cause",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "cause.kql found 103 failed requests, all with a SQL timeout. If it had found 80 with a timeout and 23 with healthy SQL calls, what would follow?",
+    "hint": "Does the explanation cover everything?",
+    "choices": [
+      {
+        "text": "The timeout is still the cause; 23 is noise",
+        "correct": false,
+        "why": "23 of 103 is not noise; it is a second question."
+      },
+      {
+        "text": "The timeout explains part; the 23 are the next question",
+        "correct": true,
+        "why": "Right. A partial explanation is named as partial."
+      },
+      {
+        "text": "The join is wrong and should be leftouter",
+        "correct": false,
+        "why": "The join kind decides which rows appear, not what causes failures."
+      },
+      {
+        "text": "The database was healthy all along",
+        "correct": false,
+        "why": "80 timeouts say otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgen9f9m",
+    "version": 1,
+    "section": "the-cause",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does cause.kql count `dcount(OperationId)` rather than `count()`?",
+    "hint": "A request can have more than one call.",
+    "choices": [
+      {
+        "text": "count() cannot follow a join",
+        "correct": false,
+        "why": "It can; it would count joined rows."
+      },
+      {
+        "text": "dcount is exact and count is an estimate",
+        "correct": false,
+        "why": "It is the other way round, and not the reason."
+      },
+      {
+        "text": "OperationId is a number, and count() needs strings",
+        "correct": false,
+        "why": "count() counts rows of any type."
+      },
+      {
+        "text": "So a request with two calls counts once",
+        "correct": true,
+        "why": "Right. The join makes one row per call; dcount counts requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-y79wsxvt",
+    "version": 1,
+    "section": "sampling-and-live",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 251056,
+    "tolerance": 0,
+    "prompt": "In the 25% sample, what does `sum(ItemCount)` estimate as the week's number of requests?",
+    "hint": "The requests column of the first query.",
+    "unit": "requests"
+  },
+  {
+    "id": "ex-vyfhs87x",
+    "version": 1,
+    "section": "sampling-and-live",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Over sampled data, which aggregation counts requests correctly?",
+    "hint": "Each row stands for ItemCount requests.",
+    "choices": [
+      {
+        "text": "count()",
+        "correct": false,
+        "why": "That counts rows, a quarter of the requests at 25%."
+      },
+      {
+        "text": "sum(ItemCount)",
+        "correct": true,
+        "why": "Right. Each row says how many it stands for."
+      },
+      {
+        "text": "dcount(OperationId)",
+        "correct": false,
+        "why": "Distinct operations in the sample are still only the sampled ones."
+      },
+      {
+        "text": "count() * 100",
+        "correct": false,
+        "why": "The rate is in ItemCount, not a fixed hundred."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xha2ef5",
+    "version": 1,
+    "section": "sampling-and-live",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the shop keep every failure and every checkout out of sampling?",
+    "hint": "What happens to a rare event in a 25% sample?",
+    "choices": [
+      {
+        "text": "Failures are cheaper to ingest than successes",
+        "correct": false,
+        "why": "A row costs the same whatever it says."
+      },
+      {
+        "text": "Sampling cannot be applied to POST requests",
+        "correct": false,
+        "why": "It applies to any request; the shop chooses not to."
+      },
+      {
+        "text": "Rare events are estimated badly, or vanish",
+        "correct": true,
+        "why": "Right. 346 failures were estimated as 340; a handful a day could disappear."
+      },
+      {
+        "text": "Live metrics needs them in the workspace",
+        "correct": false,
+        "why": "Live metrics does not read the workspace at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-sc4xvsxr",
+    "version": 1,
+    "section": "sampling-and-live",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During a slot swap, why watch live metrics instead of running a query?",
+    "hint": "What path does live data take?",
+    "choices": [
+      {
+        "text": "It streams per second, straight to the portal",
+        "correct": true,
+        "why": "Right. You see the failure rate move the second it moves."
+      },
+      {
+        "text": "It keeps a full year of history to compare against",
+        "correct": false,
+        "why": "It keeps nothing; close the page and the data is gone."
+      },
+      {
+        "text": "Queries are billed during a swap",
+        "correct": false,
+        "why": "Analytics queries are not billed at any time."
+      },
+      {
+        "text": "It shows the SQL text of every dependency",
+        "correct": false,
+        "why": "It shows rates and counts, not individual calls' text."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hdd6dtm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the investigation of Thursday's failures in the order this lesson did it.",
+    "hint": "One, then all, then the week.",
+    "items": [
+      "Pick the first failed checkout's OperationId",
+      "Read its request and dependency rows together",
+      "Join every failed request of the hour to its calls",
+      "Compare the SQL dependency's week, day by day"
+    ],
+    "trap": "Starting with the week is the slip: the totals say something changed, and only one request shows what."
+  },
+  {
+    "id": "ex-xk9ng6em",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab show with real queries? Choose all that apply.",
+    "hint": "Everything in tables, nothing that needs a running application.",
+    "choices": [
+      {
+        "text": "A request and its dependency joined by OperationId",
+        "correct": true,
+        "why": "Yes. one-request.kql."
+      },
+      {
+        "text": "count() going wrong on sampled data",
+        "correct": true,
+        "why": "Yes. The sampled table and sum(ItemCount)."
+      },
+      {
+        "text": "Live metrics during a swap",
+        "correct": false,
+        "why": "No. It needs a running application and the portal."
+      },
+      {
+        "text": "The portal's end-to-end transaction Gantt chart",
+        "correct": false,
+        "why": "No. The lesson ran the query that holds the same data."
+      }
+    ]
+  }
+]

@@ -1,0 +1,619 @@
+[
+  {
+    "id": "ex-gyma9fjr",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference in shape between a Pub/Sub message and a Cloud Tasks task?",
+    "hint": "\"This happened\" against \"do this\".",
+    "choices": [
+      {
+        "text": "A message is retried and a task is not",
+        "correct": false,
+        "why": "Both are retried."
+      },
+      {
+        "text": "A task is stored on disk and a message only in memory",
+        "correct": false,
+        "why": "Both are durable in the real services."
+      },
+      {
+        "text": "A message is news for any subscriber; a task is work for one handler",
+        "correct": true,
+        "why": "Right. A task is addressed and rate-limited."
+      },
+      {
+        "text": "A message can carry a body and a task cannot",
+        "correct": false,
+        "why": "A task carries headers and a body."
+      }
+    ]
+  },
+  {
+    "id": "ex-8f4rcj5y",
+    "version": 1,
+    "section": "queues",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each queue setting to the decision it holds.",
+    "hint": "How fast, how persistently.",
+    "pairs": [
+      {
+        "left": "max_dispatches_per_second",
+        "right": "How many tasks start each second"
+      },
+      {
+        "left": "max_concurrent_dispatches",
+        "right": "How many are in flight at once"
+      },
+      {
+        "left": "max_attempts",
+        "right": "How many tries before giving up"
+      },
+      {
+        "left": "min_backoff",
+        "right": "The first wait before a retry"
+      }
+    ],
+    "right_distractors": [
+      "Which region the handler lives in"
+    ]
+  },
+  {
+    "id": "ex-2qdgxs3g",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The mail provider accepts five messages a second. Why set max_dispatches_per_second to 5 and not 20?",
+    "hint": "What does the provider do with the other fifteen?",
+    "choices": [
+      {
+        "text": "Fifteen of every twenty would be refused",
+        "correct": true,
+        "why": "Right. The downstream limit sets the rate."
+      },
+      {
+        "text": "A higher rate is billed per dispatch",
+        "correct": false,
+        "why": "The rate itself costs nothing; the refusals cost retries."
+      },
+      {
+        "text": "Cloud Tasks caps every queue at 5 a second",
+        "correct": false,
+        "why": "Queues allow far more; the provider is the limit."
+      },
+      {
+        "text": "A lower rate makes each email arrive sooner",
+        "correct": false,
+        "why": "It makes the queue drain more slowly."
+      }
+    ]
+  },
+  {
+    "id": "ex-c94w8jbn",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What completes a task?",
+    "hint": "An HTTP answer.",
+    "choices": [
+      {
+        "text": "The handler deleting it from the queue",
+        "correct": false,
+        "why": "The handler never touches the queue."
+      },
+      {
+        "text": "Any answer at all, even a 503",
+        "correct": false,
+        "why": "A non-2xx answer is a failure."
+      },
+      {
+        "text": "The dispatch deadline passing",
+        "correct": false,
+        "why": "That is a failure too."
+      },
+      {
+        "text": "A 2xx answer from the handler",
+        "correct": true,
+        "why": "Right. Anything else waits and is tried again."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h1mmkvz",
+    "version": 1,
+    "section": "queues",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Within a queue, each task has a ___ that is unique, which the handler can use to recognise a duplicate.",
+    "hint": "The mailer stored it in a table.",
+    "blanks": [
+      {
+        "accept": [
+          "name"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-148wzefb",
+    "version": 1,
+    "section": "the-task-handler",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The same task reached the mailer twice. What did the second call send?",
+    "hint": "The table held its name.",
+    "choices": [
+      {
+        "text": "A second confirmation, marked as a retry",
+        "correct": false,
+        "why": "The terminal showed one confirmation."
+      },
+      {
+        "text": "Nothing, and it still answered 200",
+        "correct": true,
+        "why": "Right. Success stops the retries, and the table stopped the duplicate."
+      },
+      {
+        "text": "Nothing, with a 409 so the queue would drop it",
+        "correct": false,
+        "why": "It answered 200; a non-2xx would be retried."
+      },
+      {
+        "text": "A 503, because the provider was down",
+        "correct": false,
+        "why": "That was order 1043, not 1042."
+      }
+    ]
+  },
+  {
+    "id": "ex-nj382c0x",
+    "version": 1,
+    "section": "the-task-handler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the mailer answer 200 to a task it has already done, rather than an error?",
+    "hint": "What would the queue do with an error?",
+    "choices": [
+      {
+        "text": "Errors are billed and successes are free",
+        "correct": false,
+        "why": "Billing is not the reason."
+      },
+      {
+        "text": "An error would delete the queue",
+        "correct": false,
+        "why": "An error only marks the attempt failed."
+      },
+      {
+        "text": "The queue would retry finished work",
+        "correct": true,
+        "why": "Right. The work is done, so success is the true answer."
+      },
+      {
+        "text": "Cloud Tasks ignores the status code",
+        "correct": false,
+        "why": "The status is exactly what it reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-ajs49y5d",
+    "version": 1,
+    "section": "the-task-handler",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "X-CloudTasks-TaskRetryCount was 1 on the second delivery of order 1043. Which attempt number did the mailer print?",
+    "hint": "Retries are counted from zero.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "attempt"
+  },
+  {
+    "id": "ex-bfxbw1qs",
+    "version": 1,
+    "section": "the-task-handler",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The mailer checks the table, sends, then records the task. What failure can still send an email twice?",
+    "hint": "Look at the gap between two lines.",
+    "choices": [
+      {
+        "text": "A crash between sending and the insert",
+        "correct": true,
+        "why": "Right. The retry finds no record and sends again."
+      },
+      {
+        "text": "Two different tasks for two orders",
+        "correct": false,
+        "why": "Different orders should get different emails."
+      },
+      {
+        "text": "A 400 for a request with no task name",
+        "correct": false,
+        "why": "That sends nothing."
+      },
+      {
+        "text": "The provider answering slowly",
+        "correct": false,
+        "why": "Slowness alone does not duplicate."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5k7g69h",
+    "version": 1,
+    "section": "the-task-handler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Deployed, what should the mailer check instead of the X-CloudTasks-TaskName header to refuse strangers?",
+    "hint": "Anybody can type a header.",
+    "choices": [
+      {
+        "text": "The caller's IP address",
+        "correct": false,
+        "why": "Google's addresses are shared and change."
+      },
+      {
+        "text": "A password in the request body",
+        "correct": false,
+        "why": "A shared secret in every task is a secret in every log."
+      },
+      {
+        "text": "The X-CloudTasks-QueueName header as well",
+        "correct": false,
+        "why": "Another header is just as easy to type."
+      },
+      {
+        "text": "The identity token the queue attaches",
+        "correct": true,
+        "why": "Right. It proves who sent the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m10tvz2",
+    "version": 1,
+    "section": "retries-and-rates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With min_backoff 10s, max_backoff 300s and max_doublings 3, how long does the fourth retry wait, in seconds?",
+    "hint": "10, 20, 40, ...",
+    "value": 80,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-7e9ka24m",
+    "version": 1,
+    "section": "retries-and-rates",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue holds 1,800 tasks and dispatches at most 6 a second. How many seconds does it take to drain, at best?",
+    "hint": "Tasks divided by rate.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-7mkkrzcj",
+    "version": 1,
+    "section": "retries-and-rates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the sixth retry wait 240 seconds and not 320?",
+    "hint": "After three doublings the wait stops doubling.",
+    "choices": [
+      {
+        "text": "320 is above max_backoff",
+        "correct": false,
+        "why": "320 would be capped at 300, not 240."
+      },
+      {
+        "text": "After max_doublings it grows by a fixed 80 seconds",
+        "correct": true,
+        "why": "Right. 80, 160, 240, then the ceiling."
+      },
+      {
+        "text": "Cloud Tasks halves the wait after five retries to clear the backlog",
+        "correct": false,
+        "why": "No such halving."
+      },
+      {
+        "text": "The program rounds to the nearest minute",
+        "correct": false,
+        "why": "It does no rounding."
+      }
+    ]
+  },
+  {
+    "id": "ex-z97erejh",
+    "version": 1,
+    "section": "retries-and-rates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The mail provider's outages last about ten minutes, and the queue gives up 150 seconds after a first attempt. What is the honest fix?",
+    "hint": "The queue must outlast the outage.",
+    "choices": [
+      {
+        "text": "A higher max_dispatches_per_second",
+        "correct": false,
+        "why": "Faster dispatching fails faster."
+      },
+      {
+        "text": "Answering 200 during outages",
+        "correct": false,
+        "why": "Those emails would be lost as if sent."
+      },
+      {
+        "text": "More attempts or a longer max_backoff",
+        "correct": true,
+        "why": "Right. The retries must span longer than the outage."
+      },
+      {
+        "text": "A lower min_backoff, so retries start sooner",
+        "correct": false,
+        "why": "That shortens the span further."
+      }
+    ]
+  },
+  {
+    "id": "ex-66aev1y0",
+    "version": 1,
+    "section": "retries-and-rates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task names an order that has been deleted. What should the handler answer?",
+    "hint": "Will time fix it?",
+    "choices": [
+      {
+        "text": "A 2xx, after logging why",
+        "correct": true,
+        "why": "Right. Keep non-2xx for failures time can fix."
+      },
+      {
+        "text": "503, so the queue keeps trying",
+        "correct": false,
+        "why": "Every attempt will fail the same way."
+      },
+      {
+        "text": "500, so the error is visible",
+        "correct": false,
+        "why": "A 500 is retried like a 503."
+      },
+      {
+        "text": "No answer, letting the deadline pass",
+        "correct": false,
+        "why": "That is a failure, and is retried."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4weer21",
+    "version": 1,
+    "section": "retries-and-rates",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The setting that limits how many requests are in flight at once is max_concurrent____.",
+    "hint": "The other brake ends in per_second.",
+    "blanks": [
+      {
+        "accept": [
+          "dispatches"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8zs5kjmx",
+    "version": 1,
+    "section": "scheduler",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In cron, what does 10 3 * * * mean?",
+    "hint": "Minute first, then hour.",
+    "choices": [
+      {
+        "text": "03:10 on the tenth of every month",
+        "correct": false,
+        "why": "The third field, day of the month, is *."
+      },
+      {
+        "text": "10:03 every day",
+        "correct": false,
+        "why": "Minute comes first."
+      },
+      {
+        "text": "Every 10 minutes for 3 hours",
+        "correct": false,
+        "why": "That would be */10 in the minute field."
+      },
+      {
+        "text": "03:10 every day",
+        "correct": true,
+        "why": "Right. Minute 10 of hour 3, every day."
+      }
+    ]
+  },
+  {
+    "id": "ex-skefnaz7",
+    "version": 1,
+    "section": "scheduler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly job is created without time_zone. When does it run in São Paulo?",
+    "hint": "Scheduler reads it in UTC then.",
+    "choices": [
+      {
+        "text": "03:10, because the region is southamerica-east1",
+        "correct": false,
+        "why": "The region does not set the time zone."
+      },
+      {
+        "text": "00:10, since São Paulo is three hours behind UTC",
+        "correct": true,
+        "why": "Right. Name the zone, and the schedule means what it says."
+      },
+      {
+        "text": "06:10, three hours after UTC",
+        "correct": false,
+        "why": "São Paulo is behind UTC, not ahead."
+      },
+      {
+        "text": "It does not run until a zone is set",
+        "correct": false,
+        "why": "It runs, in UTC."
+      }
+    ]
+  },
+  {
+    "id": "ex-jn9fhba1",
+    "version": 1,
+    "section": "scheduler",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop has 7 Scheduler jobs on one billing account. With 3 free and 0.10 USD per job per 31 days, what do they cost per 31 days?",
+    "hint": "Only the jobs past the free three.",
+    "value": 0.4,
+    "tolerance": 0.001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-1s8c2nee",
+    "version": 1,
+    "section": "scheduler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job runs every minute and another once a month. How do their Scheduler prices compare?",
+    "hint": "The unit is the job.",
+    "choices": [
+      {
+        "text": "The first costs 43,200 times more",
+        "correct": false,
+        "why": "Runs are not billed."
+      },
+      {
+        "text": "The monthly one is free",
+        "correct": false,
+        "why": "Free jobs are the first three, whatever their frequency."
+      },
+      {
+        "text": "They cost the same",
+        "correct": true,
+        "why": "Right. Ten cents per job per 31 days, however often it fires."
+      },
+      {
+        "text": "The first is capped at one dollar",
+        "correct": false,
+        "why": "There is no per-run price to cap."
+      }
+    ]
+  },
+  {
+    "id": "ex-brxz2xyj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the nightly report from the clock to the last store's report.",
+    "hint": "Scheduler decides when, the queue how fast.",
+    "items": [
+      "Scheduler fires at 03:10 America/Sao_Paulo",
+      "A handler creates one task per store",
+      "The queue dispatches them at its rate",
+      "Each store's report is built, retried on its own if it fails"
+    ]
+  },
+  {
+    "id": "ex-8e6sr7qf",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which belong in the queue rather than in the handler's code? Choose all that apply.",
+    "hint": "The three decisions a queue owns.",
+    "choices": [
+      {
+        "text": "How many tasks start each second",
+        "correct": true,
+        "why": "Right; a rate limit."
+      },
+      {
+        "text": "How long to wait before a retry",
+        "correct": true,
+        "why": "Right; the retry config."
+      },
+      {
+        "text": "Whether a task was already done",
+        "correct": false,
+        "why": "Only the handler can know that."
+      },
+      {
+        "text": "Whether a failure is worth retrying",
+        "correct": false,
+        "why": "The handler decides with its answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxjxpfww",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sale brings 1,000 orders in a minute. Without a queue, the mailer would call the provider 1,000 times in that minute. What does the emails queue change for the provider?",
+    "hint": "Five a second.",
+    "choices": [
+      {
+        "text": "A steady five a second for about 200 seconds",
+        "correct": true,
+        "why": "Right. The queue absorbs the burst."
+      },
+      {
+        "text": "Nothing, the queue forwards the burst unchanged",
+        "correct": false,
+        "why": "The rate limit is exactly what it changes."
+      },
+      {
+        "text": "It sends them all, then retries the refusals",
+        "correct": false,
+        "why": "The queue never sends faster than its rate."
+      },
+      {
+        "text": "It drops all but five orders a second",
+        "correct": false,
+        "why": "Nothing is dropped; tasks wait their turn."
+      }
+    ]
+  }
+]

@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-j9rrs7ng",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda sends every click with `partition_key` set to the customer's id. What does that guarantee?",
+    "hint": "Think about where two clicks of one customer end up.",
+    "choices": [
+      {
+        "text": "Every partition receives the same share of clicks",
+        "correct": false,
+        "why": "The key spreads load only as well as the keys hash; in the lesson two of four customers shared partition 3."
+      },
+      {
+        "text": "Each shopper's taps share a partition and keep their order",
+        "correct": true,
+        "why": "Right. The hash of the key picks one partition, and a partition keeps the order of what was appended to it."
+      },
+      {
+        "text": "Clicks are read back in the order they happened across all customers",
+        "correct": false,
+        "why": "Order holds inside a partition and nowhere else; across customers on different partitions it is gone."
+      },
+      {
+        "text": "The producer is told which partition each click went to",
+        "correct": false,
+        "why": "`send_event` returned nothing; the lesson had to ask the hub to find out."
+      }
+    ]
+  },
+  {
+    "id": "ex-exp5v1td",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `send_clicks.py`, `partitions.py` reported partition 2 as `empty True`. Why?",
+    "hint": "Count the keys and the partitions.",
+    "choices": [
+      {
+        "text": "The emulator keeps one partition in reserve for failover",
+        "correct": false,
+        "why": "There is no reserve partition; every partition takes whatever keys hash to it."
+      },
+      {
+        "text": "Partition 2 is for the `fraud` consumer group",
+        "correct": false,
+        "why": "Consumer groups read every partition; partitions are not assigned to groups."
+      },
+      {
+        "text": "Its events expired before the program asked",
+        "correct": false,
+        "why": "Retention is a day or more, and nothing in the lesson waited that long."
+      },
+      {
+        "text": "Four keys hashed to three partitions",
+        "correct": true,
+        "why": "Right. `c-17` and `c-03` both hashed to partition 3, so one partition received none of the four keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-0b57aped",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A producer sends audit events that need no order at all. During a partition's maintenance, which way of sending keeps sends succeeding?",
+    "hint": "A key, or a named partition, has exactly one place to go.",
+    "choices": [
+      {
+        "text": "With no key and no partition",
+        "correct": true,
+        "why": "Right. The service then sends each event to a partition that is up; the price is that no order is kept, which these events do not need."
+      },
+      {
+        "text": "With the audit id as the partition key, so events spread evenly",
+        "correct": false,
+        "why": "Spread is not the problem; a keyed event has one partition to go to and waits or fails while it is down."
+      },
+      {
+        "text": "With `partition_id` naming a partition chosen at random",
+        "correct": false,
+        "why": "A named partition is one destination too; if it is the one under maintenance, the send waits or fails."
+      },
+      {
+        "text": "With a constant key, so they all share one partition",
+        "correct": false,
+        "why": "That ties every event to one partition, which is the worst case for both load and availability."
+      }
+    ]
+  },
+  {
+    "id": "ex-70rs7bes",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Standard event hub was created with 4 partitions, and Quitanda now wants 8. What does the documentation say?",
+    "hint": "The tier decides whether the count is fixed.",
+    "choices": [
+      {
+        "text": "It is fixed on Standard; growing it needs Premium, Dedicated or a new hub",
+        "correct": true,
+        "why": "Right. Premium and Dedicated allow an increase, never a decrease; Basic and Standard do not change it after creation."
+      },
+      {
+        "text": "It doubles itself when traffic grows, like auto-inflate",
+        "correct": false,
+        "why": "Auto-inflate raises throughput units, which are capacity, not partitions."
+      },
+      {
+        "text": "It is changed with one command, and every key stays on its partition",
+        "correct": false,
+        "why": "Even where an increase is allowed, keys move to other partitions and their order across the change is lost."
+      },
+      {
+        "text": "Partitions are per namespace, so adding a hub adds them",
+        "correct": false,
+        "why": "Partitions belong to an event hub; capacity belongs to the namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-24jhr58p",
+    "version": 1,
+    "section": "reading-a-partition",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`read_clicks.py` read the ten clicks with `$Default`, and a second run read the same ten again. Why were they still there?",
+    "hint": "What removes an event from a partition?",
+    "choices": [
+      {
+        "text": "A read removes nothing; retention does",
+        "correct": true,
+        "why": "Right. Retention is the only deletion; a reader only chooses a position."
+      },
+      {
+        "text": "The emulator does not delete read events, but Azure does",
+        "correct": false,
+        "why": "Azure behaves the same way here: a read leaves the event in place for every other reader."
+      },
+      {
+        "text": "The first run crashed before acknowledging them",
+        "correct": false,
+        "why": "There is no acknowledgement in Event Hubs; the reader keeps its own position."
+      },
+      {
+        "text": "`-1` tells the service to restore deleted events",
+        "correct": false,
+        "why": "`-1` means the oldest event the partition still keeps; nothing had been deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-78047g54",
+    "version": 1,
+    "section": "reading-a-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reader stores \"last sequence number read: 5\" once for the whole `clicks` hub. What is wrong with that?",
+    "hint": "Who numbers the events?",
+    "choices": [
+      {
+        "text": "Sequence numbers are reused after each checkpoint",
+        "correct": false,
+        "why": "A partition never reuses a sequence number; checkpoints do not touch the numbering."
+      },
+      {
+        "text": "Each partition numbers its own events, so 5 names a different event in each",
+        "correct": true,
+        "why": "Right. Sequence number 5 on partition 3 and on partition 0 are unrelated; a position is per partition."
+      },
+      {
+        "text": "It should store the offset, which is unique across the hub",
+        "correct": false,
+        "why": "Offsets are per partition too; both partitions 0 and 3 had an event at offset 144."
+      },
+      {
+        "text": "Nothing, if the hub has a single consumer group",
+        "correct": false,
+        "why": "The number of groups is beside the point; the numbering is per partition."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn0e6aby",
+    "version": 1,
+    "section": "reading-a-partition",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the `starting_position` that serves it.",
+    "hint": "One of them is a time rather than a position.",
+    "pairs": [
+      {
+        "left": "Reprocess everything the retention still keeps",
+        "right": "`\"-1\"`"
+      },
+      {
+        "left": "A live dashboard that ignores the past",
+        "right": "`\"@latest\"`"
+      },
+      {
+        "left": "Resume right after the last event handled",
+        "right": "a sequence number, not inclusive"
+      },
+      {
+        "left": "Replay since 09:00, after a bug fix",
+        "right": "a `datetime`"
+      }
+    ],
+    "right_distractors": [
+      "an offset of `0` for the whole hub"
+    ]
+  },
+  {
+    "id": "ex-yrv854b1",
+    "version": 1,
+    "section": "reading-a-partition",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's lake copy is stopped for nine days on a Standard hub whose retention is seven days. It restarts from its checkpoints. What happens?",
+    "hint": "What exists in the partition when it asks?",
+    "choices": [
+      {
+        "text": "It reads all nine days, because checkpoints protect unread events",
+        "correct": false,
+        "why": "A checkpoint is the reader's note; the service drops events at the end of the retention whether anybody read them or not."
+      },
+      {
+        "text": "The hub refuses to start the reader until an operator resets it",
+        "correct": false,
+        "why": "Nothing refuses: the reader starts and finds the oldest event the partition still keeps."
+      },
+      {
+        "text": "It loses the two oldest days for good, with no error",
+        "correct": true,
+        "why": "Right. Those events no longer exist; comparing the partition's first sequence number with the checkpoint is how a reader notices."
+      },
+      {
+        "text": "It reads the last seven days twice",
+        "correct": false,
+        "why": "Nothing is duplicated; the gap is at the start, not a repeat."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwy1ypx3",
+    "version": 1,
+    "section": "consumer-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda's fraud check and its lake copy both read `clicks`. Why does each get a consumer group of its own?",
+    "hint": "A group is a set of positions.",
+    "choices": [
+      {
+        "text": "So that each keeps its own position and sees every event",
+        "correct": true,
+        "why": "Right. Sharing a group would make them split partitions, and each would miss what the other read."
+      },
+      {
+        "text": "Because a group can only read two partitions",
+        "correct": false,
+        "why": "A group reads every partition of the hub."
+      },
+      {
+        "text": "So that the fraud check reads the events first and removes them",
+        "correct": false,
+        "why": "Reading removes nothing, in any group."
+      },
+      {
+        "text": "Because each group is billed separately and the lake copy is cheaper",
+        "correct": false,
+        "why": "Groups are not billed one by one; what readers cost is the outgoing traffic they cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yt41gzs",
+    "version": 1,
+    "section": "consumer-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`python read_clicks.py analytics` printed nothing, with no error, while the hub held ten clicks. What does the lesson take from it?",
+    "hint": "The emulator knows two groups.",
+    "choices": [
+      {
+        "text": "The group was created empty and starts at `@latest`",
+        "correct": false,
+        "why": "No group was created; a reader naming a group does not create it, on Azure or here."
+      },
+      {
+        "text": "A silent reader proves nothing; check the hub has events",
+        "correct": true,
+        "why": "Right. Azure refuses a group that does not exist; this emulator answered silence, which looks like a quiet hub."
+      },
+      {
+        "text": "`analytics` had already read the clicks earlier in the lesson",
+        "correct": false,
+        "why": "No reader used that group before, and reading would not have removed anything anyway."
+      },
+      {
+        "text": "Basic tier allows a single group",
+        "correct": false,
+        "why": "True of Basic on Azure, but the emulator has no tiers, and it did accept `fraud`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmx95vgm",
+    "version": 1,
+    "section": "consumer-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The fraud check runs as six copies in one consumer group on the four-partition `clicks` hub. What do the copies do?",
+    "hint": "Within a group, one reader per partition is the recommendation.",
+    "choices": [
+      {
+        "text": "Each reads every partition, so every click is checked six times",
+        "correct": false,
+        "why": "Copies in one group split the partitions; reading everything is what separate groups do."
+      },
+      {
+        "text": "The service adds two partitions so that each copy has one",
+        "correct": false,
+        "why": "The partition count is fixed at creation on Standard and is never changed by readers."
+      },
+      {
+        "text": "They share each partition, a sixth of its events each",
+        "correct": false,
+        "why": "A partition is not split between readers; a second reader on one partition receives every event of it."
+      },
+      {
+        "text": "Four read a partition each and two wait for one to free up",
+        "correct": true,
+        "why": "Right. The partition count is the ceiling on parallel readers in one group."
+      }
+    ]
+  },
+  {
+    "id": "ex-snqe9q0z",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a checkpoint live when a reader uses `BlobCheckpointStore`?",
+    "hint": "The lesson listed it with `az storage blob list`.",
+    "choices": [
+      {
+        "text": "In the event hub, beside the partition",
+        "correct": false,
+        "why": "Event Hubs does not remember readers' positions; the reader keeps them."
+      },
+      {
+        "text": "In a blob's metadata, one blob per partition and group",
+        "correct": true,
+        "why": "Right. `localhost/clicks/$default/checkpoint/3` carried the sequence number and offset in its metadata."
+      },
+      {
+        "text": "In memory, so a restart starts at `starting_position` again",
+        "correct": false,
+        "why": "The second run resumed after the checkpoint, which is the point of writing it to storage."
+      },
+      {
+        "text": "In the event itself, as a property set by the reader",
+        "correct": false,
+        "why": "Events cannot be changed after they are sent, and a reader writes nothing into the hub."
+      }
+    ]
+  },
+  {
+    "id": "ex-6r06xc5y",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`checkpointed.py` ran with `starting_position` `-1`, read ten clicks, and on its second run read only the ten new ones. Why did `-1` not start it from the beginning again?",
+    "hint": "Which wins when both exist?",
+    "choices": [
+      {
+        "text": "The first run deleted the clicks it had read",
+        "correct": false,
+        "why": "Nothing was deleted: `read_clicks.py` would still read all twenty."
+      },
+      {
+        "text": "`-1` means the end of the partition on a second run",
+        "correct": false,
+        "why": "`-1` always means the oldest event kept; it was simply not used."
+      },
+      {
+        "text": "Where a checkpoint exists, it wins",
+        "correct": true,
+        "why": "Right. `starting_position` applies only to a partition with no checkpoint; partition 3 continued at sequence number 6."
+      },
+      {
+        "text": "The service remembered the consumer group's last position",
+        "correct": false,
+        "why": "The service remembers nothing about readers; the blob in Azurite did."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvyf3mra",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's fraud check handles 600 clicks a second at the peak and checkpoints after every event. How many checkpoint writes to Blob Storage does it make in one peak hour?",
+    "hint": "One write per event.",
+    "value": 2160000,
+    "tolerance": 0,
+    "unit": "writes"
+  },
+  {
+    "id": "ex-yjw60gwk",
+    "version": 1,
+    "section": "capture",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Event Hubs Capture write into storage?",
+    "hint": "A row format that carries its schema.",
+    "choices": [
+      {
+        "text": "Avro files, a series per partition",
+        "correct": true,
+        "why": "Right. Each record holds one event's body untouched, beside its sequence number, offset and enqueued time."
+      },
+      {
+        "text": "Parquet files with one column per JSON field",
+        "correct": false,
+        "why": "Event Hubs never looks inside the body, so it could not split JSON into columns; converting is a later job."
+      },
+      {
+        "text": "One blob per event, named by its sequence number",
+        "correct": false,
+        "why": "One blob per event would be millions of tiny files; Capture batches by a window."
+      },
+      {
+        "text": "Delta tables",
+        "correct": false,
+        "why": "Delta is a table format the lake lessons write with other tools; Capture's output is Avro."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j814dh8",
+    "version": 1,
+    "section": "capture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform validate` accepted `interval_in_seconds = 30` in the Capture block. What does that tell you?",
+    "hint": "Where is the one-minute minimum enforced?",
+    "choices": [
+      {
+        "text": "Azure has lowered the minimum window to 30 seconds",
+        "correct": false,
+        "why": "The documented time window is 1 to 15 minutes; validate does not read Azure's documentation."
+      },
+      {
+        "text": "The rule is Azure's, checked at `apply`",
+        "correct": true,
+        "why": "Right. `validate` checks what the schema encodes, such as the list of `sku` values, and asks Azure nothing."
+      },
+      {
+        "text": "Capture rounds the value up to a minute on its own",
+        "correct": false,
+        "why": "Nothing in the lesson says so; the value would be sent to Azure as written."
+      },
+      {
+        "text": "The emulator would capture every 30 seconds",
+        "correct": false,
+        "why": "The emulator has no Capture at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4a99cz8",
+    "version": 1,
+    "section": "capture",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Dedicated namespace is not a `sku` of `azurerm_eventhub_namespace`: Dedicated capacity is a resource of its own, a ___, that namespaces are placed on.",
+    "hint": "The Terraform resource is `azurerm_eventhub_...`.",
+    "blanks": [
+      {
+        "accept": [
+          "cluster"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2x8y380t",
+    "version": 1,
+    "section": "tiers-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the Basic tier ruled out for Quitanda's `clicks` before price is mentioned?",
+    "hint": "Count the readers.",
+    "choices": [
+      {
+        "text": "Its retention of one day is too short for the lake copy",
+        "correct": false,
+        "why": "One day is what the lesson's own declaration uses, because Capture keeps the lasting copy."
+      },
+      {
+        "text": "One consumer group, for two readers",
+        "correct": true,
+        "why": "Right. With `$Default` alone, the fraud check and the lake copy could not each keep a position."
+      },
+      {
+        "text": "Basic hubs have no partitions, so no key could keep its clicks in order",
+        "correct": false,
+        "why": "Basic hubs have partitions, up to 32."
+      },
+      {
+        "text": "Basic events are limited to 64 KB",
+        "correct": false,
+        "why": "64 KB is the unit ingress events are counted in, not a tier's size limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-xz5pxgjr",
+    "version": 1,
+    "section": "tiers-and-price",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Standard namespace with auto-inflate went from 2 to 6 throughput units during a Friday promotion. On Monday nobody has touched it. What is it doing?",
+    "hint": "Auto-inflate moves in one direction.",
+    "choices": [
+      {
+        "text": "Running at 2 units again, because auto-inflate scales back at midnight",
+        "correct": false,
+        "why": "Auto-inflate does not lower units on its own; somebody or something has to."
+      },
+      {
+        "text": "Throttling, because the promotion used up the month's units",
+        "correct": false,
+        "why": "Units are a rate per second bought by the hour, not a monthly allowance."
+      },
+      {
+        "text": "Still at 6, billed for 6 every hour, Capture included",
+        "correct": true,
+        "why": "Right. The count stays high until lowered, and on Standard Capture is billed per unit too."
+      },
+      {
+        "text": "Moved to Premium, where units are processing units",
+        "correct": false,
+        "why": "Auto-inflate never changes the tier."
+      }
+    ]
+  },
+  {
+    "id": "ex-xckvscmp",
+    "version": 1,
+    "section": "tiers-and-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the lesson's illustrative 0.03 USD per throughput unit-hour and 0.10 USD per unit-hour for Capture, what do 3 units with Capture cost for a 730-hour month, in USD?",
+    "hint": "Both meters count unit-hours.",
+    "value": 284.7,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-y32gx79j",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to click 11 of the lesson, from the app to the second run of `checkpointed.py`.",
+    "hint": "The checkpoint is written after the event is handled.",
+    "items": [
+      "`send_clicks.py 11` sends it with the key `c-17`",
+      "The hash of `c-17` puts it on partition 3, as sequence number 6",
+      "The reader finds the checkpoint at sequence number 5 and starts after it",
+      "`on_event` handles the click",
+      "`update_checkpoint` records sequence number 6 in the blob"
+    ]
+  },
+  {
+    "id": "ex-jq0qmy81",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson see the emulator do as Azure would? Choose all that apply.",
+    "hint": "Separate what ran from what was only documented.",
+    "choices": [
+      {
+        "text": "Keep one key's events in one partition, in order",
+        "correct": true,
+        "why": "Right; every `c-17` click landed on partition 3 in the order sent."
+      },
+      {
+        "text": "Give two consumer groups the same events independently",
+        "correct": true,
+        "why": "Right; `$Default` and `fraud` each read all ten."
+      },
+      {
+        "text": "Refuse a consumer group that does not exist",
+        "correct": false,
+        "why": "The emulator answered silence for `analytics`; the refusal is Azure's, documented and not run."
+      },
+      {
+        "text": "Write Capture files into Azurite",
+        "correct": false,
+        "why": "The emulator has no Capture; only the Terraform declaration was checked."
+      },
+      {
+        "text": "Throttle a sender beyond one throughput unit",
+        "correct": false,
+        "why": "The emulator has no units and accepted everything as fast as Python sent it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7tv592n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new team wants the click stream for a recommendations model, read once a night. Which plan fits what this lesson taught?",
+    "hint": "Who already writes every click somewhere lasting?",
+    "choices": [
+      {
+        "text": "Read Capture's files in the lake",
+        "correct": true,
+        "why": "Right. A nightly reader needs history, which the hub drops after a day; Capture already wrote it."
+      },
+      {
+        "text": "Join the `fraud` consumer group so the hub sends nothing extra",
+        "correct": false,
+        "why": "Sharing a group would split partitions with the fraud check, and each would miss events."
+      },
+      {
+        "text": "Add a consumer group and read from `@latest` each night",
+        "correct": false,
+        "why": "`@latest` reads only what arrives after it starts, so a nightly run would see almost nothing of the day."
+      },
+      {
+        "text": "Raise retention to 90 days on the Standard hub",
+        "correct": false,
+        "why": "Standard allows seven days at most, and a hub is not meant to be anybody's history."
+      }
+    ]
+  }
+]

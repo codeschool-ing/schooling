@@ -1,0 +1,599 @@
+[
+  {
+    "id": "ex-38vjyzqh",
+    "version": 1,
+    "section": "on-demand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On demand, what does `SELECT * FROM orders LIMIT 10` cost compared with `SELECT * FROM orders`?",
+    "hint": "The page has a sentence about `LIMIT`.",
+    "choices": [
+      {
+        "text": "A tenth of a cent less",
+        "correct": false,
+        "why": "There is no discount for returning fewer rows."
+      },
+      {
+        "text": "The same",
+        "correct": true,
+        "why": "Right. Both read every column of every row."
+      },
+      {
+        "text": "Only the bytes of the ten rows returned",
+        "correct": false,
+        "why": "The bill follows what was read, not what was returned."
+      },
+      {
+        "text": "Nothing, because small results come from the cache",
+        "correct": false,
+        "why": "The cache answers a query seen before on unchanged tables, whatever its size."
+      }
+    ]
+  },
+  {
+    "id": "ex-b464wkwr",
+    "version": 1,
+    "section": "on-demand",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query reads 3,000,000 bytes from `orders` and 200 bytes from `stores`. How many bytes does on demand bill?",
+    "hint": "Each table referenced is billed for at least 10 MB, and a MB is 2^20 bytes.",
+    "value": 20971520,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-tchgm3ja",
+    "version": 1,
+    "section": "on-demand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partition filter cuts a query on Quitanda's orders from 9,960,944 bytes to 130,872. What happens to its on-demand bill?",
+    "hint": "Both numbers are under one threshold.",
+    "choices": [
+      {
+        "text": "It falls by a factor of about seventy-six",
+        "correct": false,
+        "why": "It would, without the minimum; both are billed as 10,485,760 bytes."
+      },
+      {
+        "text": "It rises, because a filter is extra work for the slots",
+        "correct": false,
+        "why": "On demand charges for bytes, not for work."
+      },
+      {
+        "text": "Nothing changes: both are billed at the 10 MB minimum",
+        "correct": true,
+        "why": "Right. Reading less than 10 MB saves nothing."
+      },
+      {
+        "text": "It becomes free",
+        "correct": false,
+        "why": "Only failed and cached queries cost nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd64b28c",
+    "version": 1,
+    "section": "on-demand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An analyst cancels a `SELECT *` over a 2 TiB table after forty seconds, when it has nearly finished. What may it cost?",
+    "hint": "Cancelling is not a refund.",
+    "choices": [
+      {
+        "text": "Nothing, because cancelled queries are like failed ones",
+        "correct": false,
+        "why": "A failed query costs nothing; a cancelled one may be charged up to its full cost."
+      },
+      {
+        "text": "Up to its full cost, 22.50 USD",
+        "correct": true,
+        "why": "Right. A query that has read the table has been billed for it."
+      },
+      {
+        "text": "Forty seconds of slot time",
+        "correct": false,
+        "why": "On demand does not bill time at all."
+      },
+      {
+        "text": "Exactly the 10 MB minimum",
+        "correct": false,
+        "why": "The minimum is a floor, not what a cancelled query pays."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2vs2dvv",
+    "version": 1,
+    "section": "editions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a slot-hour?",
+    "hint": "The page defines a slot in two words.",
+    "choices": [
+      {
+        "text": "One virtual CPU used for one hour",
+        "correct": true,
+        "why": "Right. Capacity pricing bills that, whatever the queries read."
+      },
+      {
+        "text": "A TiB read by one query in an hour",
+        "correct": false,
+        "why": "That mixes the two models; slots do not bill bytes."
+      },
+      {
+        "text": "An hour in which a reservation answered at least one query",
+        "correct": false,
+        "why": "Slots are billed by the second and by the slot, not by busy hours."
+      },
+      {
+        "text": "A node of a BigQuery cluster, rented for an hour",
+        "correct": false,
+        "why": "BigQuery has no clusters or nodes to rent."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnyv8q50",
+    "version": 1,
+    "section": "editions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each edition to its pay-as-you-go price per slot-hour in southamerica-east1.",
+    "hint": "One price on the right is a commitment.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "0.062 USD"
+      },
+      {
+        "left": "Enterprise",
+        "right": "0.093 USD"
+      },
+      {
+        "left": "Enterprise Plus",
+        "right": "0.155 USD"
+      }
+    ],
+    "right_distractors": [
+      "0.0744 USD"
+    ]
+  },
+  {
+    "id": "ex-v6kbax9c",
+    "version": 1,
+    "section": "editions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants a one-year commitment on Standard edition to cut its slot price. What does the pricing page say?",
+    "hint": "Read which editions commitments are sold for.",
+    "choices": [
+      {
+        "text": "It takes a fifth off, as for Enterprise",
+        "correct": false,
+        "why": "That is Enterprise's one-year discount; Standard has no commitments."
+      },
+      {
+        "text": "It needs at least 100 slots",
+        "correct": false,
+        "why": "Commitments start at 50 slots, and not on Standard."
+      },
+      {
+        "text": "Commitments are only for Enterprise and Enterprise Plus",
+        "correct": true,
+        "why": "Right. Standard is pay-as-you-go and nothing else."
+      },
+      {
+        "text": "It is the default after a month of use",
+        "correct": false,
+        "why": "Nothing becomes a commitment by itself; a commitment is bought."
+      }
+    ]
+  },
+  {
+    "id": "ex-c51qy7jj",
+    "version": 1,
+    "section": "editions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A project has no reservation assignment. How are its queries billed?",
+    "hint": "A reservation reaches a project only through an assignment.",
+    "choices": [
+      {
+        "text": "On demand",
+        "correct": true,
+        "why": "Right. That is the default for any project."
+      },
+      {
+        "text": "On the organisation's largest reservation",
+        "correct": false,
+        "why": "Without an assignment, no reservation serves it."
+      },
+      {
+        "text": "At Standard edition prices, per slot-hour",
+        "correct": false,
+        "why": "Standard is a reservation's edition too; with none, the project pays per byte."
+      },
+      {
+        "text": "They are refused until one is made",
+        "correct": false,
+        "why": "BigQuery runs them on demand without any setup."
+      }
+    ]
+  },
+  {
+    "id": "ex-fm6dw2mf",
+    "version": 1,
+    "section": "autoscaling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the model of this lesson, a query needs 10 slots for 6 seconds and arrives alone, without fluid scaling. How many slot-seconds is it billed?",
+    "hint": "Round the slots up to a step of 50, and the time up to the minimum.",
+    "value": 3000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hmvz486f",
+    "version": 1,
+    "section": "autoscaling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the store dashboard cost 250 times its work on an autoscaled reservation, and the nightly transformation nothing extra?",
+    "hint": "Compare each workload with the two rounding rules.",
+    "choices": [
+      {
+        "text": "The dashboard ran on Standard and the transformation on Enterprise",
+        "correct": false,
+        "why": "Both were priced at Enterprise's 0.093."
+      },
+      {
+        "text": "Its queries were small and short, so the steps of 50 and the minute dominated",
+        "correct": true,
+        "why": "Right. 400 slots for two minutes is already a whole step and over a minute."
+      },
+      {
+        "text": "The transformation ran at night, when slots are cheaper",
+        "correct": false,
+        "why": "The page has no time-of-day price."
+      },
+      {
+        "text": "Dashboards are billed by the bytes they read",
+        "correct": false,
+        "why": "On a reservation nothing is billed by bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bms2abc",
+    "version": 1,
+    "section": "autoscaling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a reservation's baseline cost when no query is running?",
+    "hint": "The autoscaler only adds slots above it.",
+    "choices": [
+      {
+        "text": "Nothing, since the autoscaler releases it",
+        "correct": false,
+        "why": "The autoscaler adds and removes only slots above the baseline."
+      },
+      {
+        "text": "Its slots, every hour, used or not",
+        "correct": true,
+        "why": "Right. The baseline is the floor you pay for."
+      },
+      {
+        "text": "Half price, as idle capacity",
+        "correct": false,
+        "why": "There is no idle discount; idle slots may be lent, not discounted."
+      },
+      {
+        "text": "The one-minute minimum, once a day",
+        "correct": false,
+        "why": "The minute applies to scaled slots; the baseline is paid for all the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pc34gsc",
+    "version": 1,
+    "section": "break-even",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the Enterprise Plus pay-as-you-go price, how many slot-hours can a TiB of queries use before slots cost more than on demand? Round to a whole number.",
+    "hint": "11.25 divided by the slot-hour price.",
+    "value": 73,
+    "tolerance": 0.5,
+    "unit": "slot-hours"
+  },
+  {
+    "id": "ex-3j68knwn",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A workload uses 300 slot-hours for every TiB it reads. Which is cheaper for it?",
+    "hint": "Compare 300 with the ties: 181, 121 and 73.",
+    "choices": [
+      {
+        "text": "Standard, the cheapest slot",
+        "correct": false,
+        "why": "Even Standard's tie is 181, below 300."
+      },
+      {
+        "text": "On demand",
+        "correct": true,
+        "why": "Right. It needs more compute per byte than any edition's tie."
+      },
+      {
+        "text": "A three-year Enterprise commitment",
+        "correct": false,
+        "why": "A commitment pays for every hour; it wins only on slots kept busy."
+      },
+      {
+        "text": "Enterprise Plus, for its higher tie",
+        "correct": false,
+        "why": "Its tie is the lowest, 73, so it loses soonest."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8t1sxdh",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did both 50-slot commitments lose to every other option for Quitanda's two workloads?",
+    "hint": "How many slot-hours does a commitment buy in a month?",
+    "choices": [
+      {
+        "text": "Commitments only apply to storage",
+        "correct": false,
+        "why": "The page says capacity does not cover storage at all."
+      },
+      {
+        "text": "They pay for 36,500 slot-hours a month and the workloads used 600 and 2,500",
+        "correct": true,
+        "why": "Right. A commitment wins only on slots that stay busy."
+      },
+      {
+        "text": "Their price per slot-hour is higher than pay-as-you-go",
+        "correct": false,
+        "why": "It is lower, 0.0744 and 0.0558 against 0.093."
+      },
+      {
+        "text": "They cannot be used in São Paulo",
+        "correct": false,
+        "why": "The page prices them for southamerica-east1."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cbfwt60",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a real project find the bytes billed and the slot time of each query it ran?",
+    "hint": "A view, one row per job.",
+    "choices": [
+      {
+        "text": "In `INFORMATION_SCHEMA.TABLE_STORAGE`",
+        "correct": false,
+        "why": "That view is about stored bytes, lesson 13."
+      },
+      {
+        "text": "In DuckDB's plan",
+        "correct": false,
+        "why": "DuckDB has no slots and bills nothing."
+      },
+      {
+        "text": "In `INFORMATION_SCHEMA.JOBS`",
+        "correct": true,
+        "why": "Right. `total_bytes_billed` and `total_slot_ms`."
+      },
+      {
+        "text": "Only on the monthly invoice, as a total",
+        "correct": false,
+        "why": "The invoice totals what the jobs view itemises."
+      }
+    ]
+  },
+  {
+    "id": "ex-54hmnqat",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does BigQuery do with a query that would take the project past its custom quota for the day?",
+    "hint": "A quota acts before the bill.",
+    "choices": [
+      {
+        "text": "Runs it and sends an e-mail",
+        "correct": false,
+        "why": "That is what a billing budget does, after the money is spent."
+      },
+      {
+        "text": "Refuses it with an error",
+        "correct": true,
+        "why": "Right. And the quota resets at midnight Pacific time."
+      },
+      {
+        "text": "Moves it to a reservation, if the project has one available",
+        "correct": false,
+        "why": "A quota does not change a query's pricing model."
+      },
+      {
+        "text": "Runs it on fewer slots, more slowly",
+        "correct": false,
+        "why": "That is what a reservation's maximum does."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjsryf33",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reservation is capped with `--autoscale_max_slots=200` and a query needs 400 slots. What happens?",
+    "hint": "The maximum caps speed as well as cost.",
+    "choices": [
+      {
+        "text": "It fails, like a query over its quota",
+        "correct": false,
+        "why": "That is the quota's behaviour; a reservation makes it wait."
+      },
+      {
+        "text": "The reservation goes over 200 for that one query",
+        "correct": false,
+        "why": "The maximum is never exceeded."
+      },
+      {
+        "text": "It runs on 200 slots and takes longer",
+        "correct": true,
+        "why": "Right. Slower, never refused."
+      },
+      {
+        "text": "It is sent to on demand to finish",
+        "correct": false,
+        "why": "A project assigned to a reservation does not fall back by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-3h3g6nd8",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda sets a project quota of 1 TiB a day for its analysts. Their busiest day last month read 1.6 TiB. What does this quota risk?",
+    "hint": "A quota does not know which query matters.",
+    "choices": [
+      {
+        "text": "Nothing, since the free TiB covers it",
+        "correct": false,
+        "why": "The free TiB is a month's, not a day's, and does not raise a quota."
+      },
+      {
+        "text": "A bill above 11.25 USD that day",
+        "correct": false,
+        "why": "The quota is precisely what keeps the day under that."
+      },
+      {
+        "text": "Legitimate queries failing on heavy days, as if the analysts had caused an outage themselves",
+        "correct": true,
+        "why": "Right. Set it from a heavy day, with room above."
+      },
+      {
+        "text": "Queries slowing down",
+        "correct": false,
+        "why": "Slowness is a reservation's maximum; a quota refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-jp09nbb7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the on-demand bill for one query in the order the rules apply.",
+    "hint": "The price comes last.",
+    "items": [
+      "Count the logical bytes of each referenced column, in each table",
+      "Raise each table to at least 10 MB",
+      "Round the total up to the next MB",
+      "Multiply by 11.25 USD per TiB"
+    ]
+  },
+  {
+    "id": "ex-vrytbpjn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these numbers in this lesson came out of a measurement here, rather than from the pricing page, the documentation or a stated assumption? Choose all that apply.",
+    "hint": "Only DuckDB measured anything, on lesson 13's table.",
+    "choices": [
+      {
+        "text": "`total_cents` is 9,960,944 bytes over the whole table",
+        "correct": true,
+        "why": "Yes. DuckDB counted the rows."
+      },
+      {
+        "text": "One day of `total_cents` is 130,872 bytes",
+        "correct": true,
+        "why": "Yes, the same query."
+      },
+      {
+        "text": "The analysts use 600 slot-hours a month",
+        "correct": false,
+        "why": "A stated assumption; nothing here has slots."
+      },
+      {
+        "text": "The autoscaler adds slots in steps of 50",
+        "correct": false,
+        "why": "From Google's documentation, applied by a model."
+      },
+      {
+        "text": "An Enterprise slot-hour is 0.093 USD",
+        "correct": false,
+        "why": "The pricing page, read on 2026-10-30."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzy9tmvh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new team at Quitanda runs a dashboard of hundreds of thousands of tiny queries a month. Which model fits it best, by this lesson's arithmetic?",
+    "hint": "Price the same queries both ways: 10 MB each, or 50 slots for a minute each.",
+    "choices": [
+      {
+        "text": "On demand: 100,000 fit in the free TiB",
+        "correct": true,
+        "why": "Right. On slots, the rounding multiplies the work."
+      },
+      {
+        "text": "An autoscaled Enterprise reservation",
+        "correct": false,
+        "why": "Each small query pays for 50 slots and a minute."
+      },
+      {
+        "text": "A 3-year commitment of 50 slots",
+        "correct": false,
+        "why": "2,036.70 USD a month for work on demand gives away."
+      },
+      {
+        "text": "Enterprise Plus",
+        "correct": false,
+        "why": "The dearest slot, with the lowest tie."
+      }
+    ]
+  }
+]

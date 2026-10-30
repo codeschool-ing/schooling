@@ -1,0 +1,423 @@
+{
+ "ex-hmq8x4dr": {
+  "prompt": "A `vnet-shop-prod` é movida de `rg-shop-prod` para `rg-shop-prod-network` na mesma assinatura. O que muda?",
+  "hint": "Leia o id antes e depois.",
+  "choices": [
+   {
+    "text": "A região dela, para a região do grupo de destino",
+    "why": "Um movimento nunca muda a região. A localização do grupo é só onde o registro dele mora."
+   },
+   {
+    "text": "Nada, desde que os dois grupos estejam numa assinatura",
+    "why": "Mesmo dentro de uma assinatura o grupo faz parte do id, então o id muda."
+   },
+   {
+    "text": "O espaço de endereços, renumerado na chegada",
+    "why": "Nada na rede em si muda. Os usuários dela não percebem nada."
+   },
+   {
+    "text": "O id de recurso",
+    "why": "Isso. O grupo no caminho é reescrito, e tudo o que guardava o caminho antigo também precisa ser."
+   }
+  ]
+ },
+ "ex-c2a3ya29": {
+  "prompt": "Enquanto um movimento de `rg-shop-prod` para `rg-shop-prod-network` roda, um pipeline tenta implantar uma aplicação web em `rg-shop-prod`. O que acontece com a implantação?",
+  "hint": "Os dois grupos ficam no mesmo estado durante um movimento.",
+  "choices": [
+   {
+    "text": "É recusada: os dois grupos estão travados",
+    "why": "Isso. Os recursos existentes continuam funcionando; nada em nenhum dos grupos pode ser criado ou mudado."
+   },
+   {
+    "text": "Entra numa fila e roda quando o movimento termina",
+    "why": "Nada a põe numa fila. O pedido é recusado, e o pipeline precisa tentar de novo."
+   },
+   {
+    "text": "Dá certo, já que a aplicação web não está sendo movida",
+    "why": "A trava é no grupo inteiro, não só nos recursos que estão sendo movidos."
+   },
+   {
+    "text": "Cai em `rg-shop-prod-network` no lugar",
+    "why": "Uma implantação vai para onde mira ou para lugar nenhum."
+   }
+  ]
+ },
+ "ex-7eqfjfav": {
+  "prompt": "A bia tinha o papel Contributor atribuído diretamente na `vnet-shop-prod`. A rede vai para outro grupo de recursos. O que acontece com a atribuição dela?",
+  "hint": "Uma atribuição no recurso viaja com ele?",
+  "choices": [
+   {
+    "text": "Vai junto com a rede",
+    "why": "Atribuições no recurso ficam para trás; esse é o comportamento documentado."
+   },
+   {
+    "text": "Fica para trás como órfã, e alguém precisa criá-la de novo",
+    "why": "Isso. O Azure acaba removendo a órfã; a nova é você quem cria."
+   },
+   {
+    "text": "É convertida numa atribuição no novo grupo",
+    "why": "Nada a converte, e uma concessão no grupo inteiro seria uma permissão muito mais ampla."
+   },
+   {
+    "text": "O movimento é recusado até a atribuição ser removida",
+    "why": "O movimento segue; a Microsoft só recomenda removê-la antes."
+   }
+  ]
+ },
+ "ex-e7x9mnwg": {
+  "prompt": "A loja move `shop-staging` de `mg-shop-nonprod` para `mg-shop-prod`. Qual afirmação é verdadeira no segundo em que termina?",
+  "hint": "O id de uma assinatura não cita o grupo de gerenciamento dela.",
+  "choices": [
+   {
+    "text": "Todo id de recurso em `shop-staging` mudou",
+    "why": "Ids de recurso citam a assinatura, nunca o grupo de gerenciamento dela."
+   },
+   {
+    "text": "Os recursos dela ficam travados até o movimento acabar",
+    "why": "Nada é travado quando uma assinatura muda de ramo."
+   },
+   {
+    "text": "Os recursos dela agora herdam as políticas de produção",
+    "why": "Isso. Nada é renomeado e nada se move; as regras que valem mudam na hora."
+   },
+   {
+    "text": "Os recursos de staging são levados para a região de produção",
+    "why": "Um grupo de gerenciamento não tem região, e nada é realocado."
+   }
+  ]
+ },
+ "ex-tnm0rbka": {
+  "prompt": "Um movimento entre grupos de recursos muda o id de um recurso e nunca a sua ___.",
+  "hint": "O Azure Resource Mover existe para mudar isso.",
+  "blanks": [
+   {
+    "accept": [
+     "região",
+     "localização"
+    ]
+   }
+  ]
+ },
+ "ex-1hd6e06w": {
+  "prompt": "De onde o `moves.py` tira as respostas?",
+  "hint": "Veja o `URL`.",
+  "choices": [
+   {
+    "text": "De uma página da documentação da Microsoft",
+    "why": "Isso. A mesma tabela que a documentação mostra, lida como Markdown."
+   },
+   {
+    "text": "De uma lista embutida na CLI do Azure",
+    "why": "A CLI não traz lista nenhuma assim."
+   },
+   {
+    "text": "Do Resource Manager, a quem pergunta sobre cada tipo",
+    "why": "Ele nunca fala com o Azure. Seria recusado aqui se falasse."
+   },
+   {
+    "text": "De um arquivo que o aluno escreve à mão",
+    "why": "Ele baixa a tabela toda vez que roda."
+   }
+  ]
+ },
+ "ex-0b6nvq3n": {
+  "prompt": "O `moves.py` informou `Microsoft.Network/loadBalancers` como `depends` para assinaturas. O que dizia a célula da tabela?",
+  "hint": "Uma célula pode trazer as duas palavras.",
+  "choices": [
+   {
+    "text": "Nada: balanceadores de carga não estão na tabela",
+    "why": "Um tipo ausente responde `?`, não `depends`."
+   },
+   {
+    "text": "Yes para o SKU Basic e No para o Standard",
+    "why": "Isso. As duas palavras numa célula é o que o programa chama de `depends`."
+   },
+   {
+    "text": "No, com um link para a orientação de rede",
+    "why": "Um No com link continua sendo só No depois que o link é retirado."
+   },
+   {
+    "text": "Que depende da região da assinatura",
+    "why": "A região não faz parte da regra; a versão do produto faz."
+   }
+  ]
+ },
+ "ex-ahhtqc0y": {
+  "prompt": "A loja quer o NAT gateway em `rg-shop-prod-network` em vez de `rg-shop-prod`. Pela tabela, qual é o caminho?",
+  "hint": "A linha do NAT gateway diz No duas vezes.",
+  "choices": [
+   {
+    "text": "Movê-lo com `az resource move`, já que dentro de uma assinatura sempre funciona",
+    "why": "A primeira coluna da tabela é exatamente o movimento dentro de uma assinatura, e diz No."
+   },
+   {
+    "text": "Mover a sub-rede a que ele está ligado, e ele vai junto",
+    "why": "Ele não é filho da sub-rede, e uma sub-rede também não se move sozinha."
+   },
+   {
+    "text": "Pedir ao suporte da Microsoft que o mova",
+    "why": "O suporte não move um tipo que a plataforma não move."
+   },
+   {
+    "text": "Criar um novo lá e apagar o antigo",
+    "why": "Isso. Um tipo que não se move é recriado, com uma troca curta de endereços de saída."
+   }
+  ]
+ },
+ "ex-g49nbwdr": {
+  "prompt": "A tabela diz Yes para mover `publicIPAddresses` entre assinaturas. Uma VM usa um IP público Standard. A loja pode mover a VM e o IP para `shop-shared`?",
+  "hint": "O que acrescenta a página para a qual a linha aponta?",
+  "choices": [
+   {
+    "text": "Sim: o Yes da tabela cobre isso",
+    "why": "A célula é o começo da resposta. A orientação de rede acrescenta a exceção."
+   },
+   {
+    "text": "Sim, desde que os dois estejam num grupo de recursos",
+    "why": "Isso é necessário para qualquer movimento entre assinaturas, e não basta aqui."
+   },
+   {
+    "text": "Não: a orientação apontada exclui esse caso",
+    "why": "Isso. Um Yes na tabela manda você ler a página apontada."
+   },
+   {
+    "text": "Só depois de passar o IP de Basic para Standard",
+    "why": "Standard é a versão que não atravessa; atualizar vai na direção errada."
+   }
+  ]
+ },
+ "ex-g1ac27np": {
+  "prompt": "No dia em que a lição a leu, quantos tipos de recurso a tabela de movimentos da Microsoft listava?",
+  "hint": "A primeira linha que o `moves.py` imprimiu.",
+  "unit": "tipos"
+ },
+ "ex-azc6q39r": {
+  "prompt": "Por que o `moves.py` passa para minúsculas os nomes de tipo que guarda e procura?",
+  "hint": "A lição 2 digitou um id sem cuidado.",
+  "choices": [
+   {
+    "text": "Porque o Azure ignora a caixa nos nomes de tipo",
+    "why": "Isso. `virtualNetworks` e `virtualnetworks` são um tipo só, então a busca os trata como um."
+   },
+   {
+    "text": "Para a saída ficar mais curta",
+    "why": "A caixa não muda o tamanho, e a saída imprime o nome como digitado."
+   },
+   {
+    "text": "Porque a tabela escreve todo tipo em maiúsculas",
+    "why": "A tabela os escreve em minúsculas, e as pessoas digitam de outro jeito."
+   },
+   {
+    "text": "Porque dicionários Python recusam maiúsculas",
+    "why": "Dicionários aceitam qualquer texto como chave."
+   }
+  ]
+ },
+ "ex-5pg6mhtv": {
+  "prompt": "O que o `validateMoveResources` faz?",
+  "hint": "É a conferência antes do movimento.",
+  "choices": [
+   {
+    "text": "Move os recursos e desfaz tudo se algo falhar",
+    "why": "Ele não move nada."
+   },
+   {
+    "text": "Lista os tipos que a assinatura pode guardar",
+    "why": "Isso é o registro de provider, outra pergunta."
+   },
+   {
+    "text": "Diz se o movimento daria certo",
+    "why": "Isso. O portal o roda antes de todo movimento."
+   },
+   {
+    "text": "Trava os dois grupos com antecedência",
+    "why": "A trava vem com o próprio movimento."
+   }
+  ]
+ },
+ "ex-yk2vk2qf": {
+  "prompt": "Uma rede é movida para `shop-shared`, que nunca teve uma rede. O movimento falha com *the subscription isn't registered for a resource type*. O que resolve?",
+  "hint": "Criar um recurso faz isso de passagem; um movimento não.",
+  "choices": [
+   {
+    "text": "Mover a rede para um novo grupo de recursos antes",
+    "why": "O grupo não é o problema; a assinatura de destino é."
+   },
+   {
+    "text": "Aumentar a cota de redes da assinatura",
+    "why": "Uma falha de cota diz isso; esta mensagem é sobre registro."
+   },
+   {
+    "text": "Fazer login no tenant de destino",
+    "why": "As duas assinaturas confiam no mesmo tenant, senão o movimento teria falhado antes."
+   },
+   {
+    "text": "Registrar o provider lá",
+    "why": "Isso. `az provider register --namespace Microsoft.Network` em `shop-shared`: o destino precisa estar registrado antes de guardar recursos do provider."
+   }
+  ]
+ },
+ "ex-xg69jr4b": {
+  "prompt": "Ponha em ordem os passos de mover para outra assinatura uma VM cuja rede está em outro grupo de recursos.",
+  "hint": "As dependências precisam dividir um grupo antes de atravessar.",
+  "items": [
+   "conferir os tipos na tabela de movimentos",
+   "mover a rede para o grupo da VM, dentro da assinatura de origem",
+   "validar o movimento com `validateMoveResources`",
+   "mover tudo o que está no grupo para o destino num pedido só",
+   "dividi-los em grupos de novo no destino"
+  ],
+  "trap": "A validação vem depois de juntar: ela confere o movimento que você vai fazer, com tudo já num grupo."
+ },
+ "ex-eafzcgmy": {
+  "prompt": "A `vnet-shop-prod` tem peering com o hub. O que a orientação de rede exige antes de ela se mover?",
+  "hint": "O assunto da lição 20 precisa ser desfeito.",
+  "choices": [
+   {
+    "text": "Nada: peerings vão junto com a rede como filhos",
+    "why": "A orientação diz que o peering precisa ser removido antes."
+   },
+   {
+    "text": "Remover o peering, mover, e refazê-lo",
+    "why": "Isso. As duas redes ficam desconectadas durante o movimento."
+   },
+   {
+    "text": "Mover a rede hub no mesmo pedido",
+    "why": "O hub fica; é o peering que precisa sair."
+   },
+   {
+    "text": "Converter o peering numa conexão VPN",
+    "why": "Nenhuma conversão assim faz parte de um movimento."
+   }
+  ]
+ },
+ "ex-h5q7d4dc": {
+  "prompt": "Quais destas coisas fazem um movimento falhar ou ser recusado, pela lista da Microsoft? Marque todas as que se aplicam.",
+  "hint": "Leia a tabela da seção como uma lista de falhas.",
+  "choices": [
+   {
+    "text": "Uma trava somente leitura no grupo de destino",
+    "why": "Isso. Uma trava em qualquer grupo ou assinatura a recusa."
+   },
+   {
+    "text": "As duas assinaturas confiando em tenants diferentes",
+    "why": "Isso. Isso é troca de diretório, não movimento."
+   },
+   {
+    "text": "Os grupos de origem e destino estarem em regiões diferentes",
+    "why": "A localização de um grupo é só a do registro dele; ela não impede um movimento."
+   },
+   {
+    "text": "Nenhuma cota sobrando no destino",
+    "why": "Isso. O que chega conta contra os limites do destino."
+   },
+   {
+    "text": "Um recurso com tags",
+    "why": "As tags viajam com o recurso e não impedem nada."
+   }
+  ]
+ },
+ "ex-bh6jac3e": {
+  "prompt": "A assinatura de uma startup foi aberta com a conta pessoal do fundador, e agora precisa entrar no tenant da empresa. Qual aviso da lição se aplica?",
+  "hint": "Isso é troca de diretório, não movimento.",
+  "choices": [
+   {
+    "text": "Todo id de recurso vai mudar e precisa ser atualizado",
+    "why": "A assinatura mantém o id; o que se perde é tudo o que estava preso ao tenant antigo."
+   },
+   {
+    "text": "Os recursos precisam ir para um grupo só antes",
+    "why": "Essa é a regra para mover recursos entre assinaturas, não para trocar o tenant de uma assinatura."
+   },
+   {
+    "text": "A assinatura precisa primeiro ir para o grupo de gerenciamento raiz",
+    "why": "Grupos de gerenciamento pertencem a um tenant e não participam da troca."
+   },
+   {
+    "text": "Atribuições de papel e identidades gerenciadas não sobrevivem",
+    "why": "Isso. Elas pertenciam ao tenant antigo, e precisam ser feitas de novo no novo."
+   }
+  ]
+ },
+ "ex-dn1rt5cg": {
+  "prompt": "Antes de uma assinatura de destino poder guardar redes, ela precisa estar ___ no namespace `Microsoft.Network`.",
+  "hint": "`az provider ...`",
+  "blanks": [
+   {
+    "accept": [
+     "registrada"
+    ]
+   }
+  ]
+ },
+ "ex-8j0242q7": {
+  "prompt": "Qual destes movimentos mantém todo id de recurso exatamente como era?",
+  "hint": "O que um id cita, e o que não cita?",
+  "choices": [
+   {
+    "text": "Uma rede para outro grupo de recursos",
+    "why": "O grupo está no id, então o id muda."
+   },
+   {
+    "text": "Uma assinatura para outro grupo de gerenciamento",
+    "why": "Isso. Ids nunca citam um grupo de gerenciamento."
+   },
+   {
+    "text": "Uma VM e as dependências para outra assinatura",
+    "why": "A assinatura também está no id."
+   },
+   {
+    "text": "Um key vault para um grupo em outra região",
+    "why": "A região do vault não muda, mas o grupo muda, e o grupo está no id."
+   }
+  ]
+ },
+ "ex-tex6d2s5": {
+  "prompt": "Ligue cada tipo de recurso da loja ao que a tabela de movimentos dizia dele no dia da gravação.",
+  "hint": "Dois dizem No duas vezes; um difere entre as colunas.",
+  "pairs": [
+   {
+    "left": "`virtualNetworks`",
+    "right": "vai para outro grupo e outra assinatura"
+   },
+   {
+    "left": "`bastionHosts`",
+    "right": "vai entre grupos, não entre assinaturas"
+   },
+   {
+    "left": "`azureFirewalls`",
+    "right": "não se move de jeito nenhum"
+   },
+   {
+    "left": "`loadBalancers`",
+    "right": "depende do SKU entre assinaturas"
+   }
+  ],
+  "right_distractors": [
+   "só vai para outra região"
+  ]
+ },
+ "ex-hakgy9bn": {
+  "prompt": "Um colega planeja mover todos os recursos de `rg-shop-prod` para um grupo em `southcentralus` \"para que façam failover para o Texas\". O que está errado no plano?",
+  "hint": "O que a localização de um grupo decide, e o que um movimento muda?",
+  "choices": [
+   {
+    "text": "Um movimento nunca muda onde um recurso roda",
+    "why": "Isso. Os recursos ficam em São Paulo; só o nome do grupo no id muda."
+   },
+   {
+    "text": "Grupos no Texas não podem guardar recursos do Brasil",
+    "why": "Podem: os recursos de um grupo podem estar em qualquer região."
+   },
+   {
+    "text": "Mover para uma região pareada precisa de aprovação da Microsoft",
+    "why": "Não existe aprovação, porque nenhuma realocação acontece."
+   },
+   {
+    "text": "O firewall e o NAT gateway ficariam em São Paulo",
+    "why": "Verdade sobre esses dois tipos, mas não é por isso que o plano falha: nada iria para o Texas."
+   }
+  ]
+ }
+}

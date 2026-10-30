@@ -1,0 +1,392 @@
+[
+  {
+    "id": "ex-nagqram9",
+    "version": 1,
+    "section": "the-stored-secret",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a client secret pasted into a repository's settings a problem even when the logs mask it?",
+    "hint": "What does whoever holds the string become?",
+    "choices": [
+      {
+        "text": "Masking slows every workflow run down",
+        "correct": false,
+        "why": "Masking costs nothing noticeable; the problem is what the string is."
+      },
+      {
+        "text": "Any copy of it is the identity, from anywhere, for months",
+        "correct": true,
+        "why": "Right. It is long-lived and not bound to the workflow it was meant for."
+      },
+      {
+        "text": "GitHub can read secrets and use them for its own deployments",
+        "correct": false,
+        "why": "That is not the risk this lesson describes; the risk is every copy, wherever it went."
+      },
+      {
+        "text": "Secrets stored in GitHub expire after one day",
+        "correct": false,
+        "why": "They do not; a client secret lives until its own expiry, often a year or two."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vjknvcn",
+    "version": 1,
+    "section": "the-stored-secret",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The team wants to revoke the client secret used by the shop's deployments. What makes that risky?",
+    "hint": "What records where the secret is used?",
+    "choices": [
+      {
+        "text": "Revoking a secret also deletes the app registration",
+        "correct": false,
+        "why": "The registration stays; only that credential goes."
+      },
+      {
+        "text": "Azure takes a week to honour a revocation",
+        "correct": false,
+        "why": "Revocation takes effect for new sign-ins quickly; the question is who signs in with it."
+      },
+      {
+        "text": "Nothing records which workflows or machines hold a copy",
+        "correct": true,
+        "why": "Right. Revoking is a guess about what breaks."
+      },
+      {
+        "text": "A revoked secret is still accepted by the command line",
+        "correct": false,
+        "why": "Entra ID refuses it; the command line has no say."
+      }
+    ]
+  },
+  {
+    "id": "ex-abjc4d7b",
+    "version": 1,
+    "section": "the-trust",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a federated sign-in from a GitHub workflow in order.",
+    "hint": "GitHub signs first; Azure answers last.",
+    "items": [
+      "The run asks GitHub's token service for an OIDC token",
+      "GitHub returns a token naming the repository and environment",
+      "The run presents the token to Microsoft Entra ID",
+      "Entra ID matches issuer, subject and audience to a federated credential",
+      "Entra ID returns an Azure token for the service principal"
+    ],
+    "trap": "Putting the match before the token exists is the slip: there is nothing to compare until GitHub has signed one."
+  },
+  {
+    "id": "ex-6g1jrngv",
+    "version": 1,
+    "section": "the-trust",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Entra ID need stored in advance to accept GitHub's token?",
+    "hint": "Three facts on the app registration.",
+    "choices": [
+      {
+        "text": "A copy of GitHub's private signing key",
+        "correct": false,
+        "why": "It needs GitHub's public keys, which it fetches from the issuer; nobody shares a private key."
+      },
+      {
+        "text": "A federated credential: issuer, subject, audience",
+        "correct": true,
+        "why": "Right. That is the whole of the trust, and it holds no secret."
+      },
+      {
+        "text": "A client secret with a short expiry",
+        "correct": false,
+        "why": "Federation stores no secret at all; that is its point."
+      },
+      {
+        "text": "The runner's IP range, so that just GitHub's machines get in",
+        "correct": false,
+        "why": "Nothing in the exchange checks an address; the signature and the subject do the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-ex7e9hz6",
+    "version": 1,
+    "section": "the-trust",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For GitHub's token, the federated credential's audience is api://AzureADToken___.",
+    "hint": "The last word of the audience Azure's documentation fixes.",
+    "blanks": [
+      {
+        "accept": [
+          "Exchange"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e986rkv8",
+    "version": 1,
+    "section": "the-subject",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A credential trusts `repo:example-shop/shop-api:ref:refs/heads/main`. Next week someone adds a linting workflow on main. What can it do?",
+    "hint": "Who does a branch subject trust?",
+    "choices": [
+      {
+        "text": "Sign in as the deploying identity",
+        "correct": true,
+        "why": "Right. Every job on main produces that subject, so the linter is trusted too."
+      },
+      {
+        "text": "Nothing, because the credential names the deploy workflow's file",
+        "correct": false,
+        "why": "The default subject names the repository and the ref, not the workflow file."
+      },
+      {
+        "text": "Read the subscription, since linting needs no write role",
+        "correct": false,
+        "why": "Roles belong to the identity, not to what a job intends to do."
+      },
+      {
+        "text": "Deploy once a reviewer approves the lint job",
+        "correct": false,
+        "why": "Reviewers belong to environments, and this job names none."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dtg7a6v",
+    "version": 1,
+    "section": "the-subject",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The deploy job used to name `environment: production`. Someone removes that line, and the login step now fails with AADSTS700213. Why?",
+    "hint": "What decides the subject's shape?",
+    "choices": [
+      {
+        "text": "Removing the environment also removes `id-token: write`",
+        "correct": false,
+        "why": "Permissions are declared separately; without them the token request would fail earlier, on GitHub's side."
+      },
+      {
+        "text": "The subject changed to the branch form, which no credential trusts",
+        "correct": true,
+        "why": "Right. Without an environment GitHub uses `ref:refs/heads/main`, and the match is exact."
+      },
+      {
+        "text": "Entra ID refuses tokens from jobs with no environment",
+        "correct": false,
+        "why": "It accepts any subject that has a credential; this one has none."
+      },
+      {
+        "text": "The client id must be stored as a secret when there is no environment",
+        "correct": false,
+        "why": "The ids are never secrets and their storage does not change the subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvpwy6w9",
+    "version": 1,
+    "section": "the-subject",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A public repository's maintainers want pull requests to run integration tests against Azure. Which design is safe?",
+    "hint": "Whose code does a pull request's workflow run?",
+    "choices": [
+      {
+        "text": "Trust `pull_request` on the production identity, read-only",
+        "correct": false,
+        "why": "Read-only is not harmless on production, and it is one role change from writable."
+      },
+      {
+        "text": "Store a client secret for pull requests only",
+        "correct": false,
+        "why": "A long-lived secret reachable by code from forks is the worst of both."
+      },
+      {
+        "text": "A separate identity with a reader role on a separate resource group",
+        "correct": true,
+        "why": "Right. Pull requests run anybody's code, so they get nothing that reaches production."
+      },
+      {
+        "text": "Trust `ref:refs/heads/*` so every branch is covered",
+        "correct": false,
+        "why": "Subjects have no wildcards; the comparison is exact."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjzmzbk8",
+    "version": 1,
+    "section": "the-subject",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each job to the subject GitHub puts in its token.",
+    "hint": "The environment, when there is one, wins.",
+    "pairs": [
+      {
+        "left": "A job naming environment production",
+        "right": "repo:example-shop/shop-api:environment:production"
+      },
+      {
+        "left": "A push to main, no environment",
+        "right": "repo:example-shop/shop-api:ref:refs/heads/main"
+      },
+      {
+        "left": "A pull request",
+        "right": "repo:example-shop/shop-api:pull_request"
+      },
+      {
+        "left": "The tag v1.4.0, no environment",
+        "right": "repo:example-shop/shop-api:ref:refs/tags/v1.4.0"
+      }
+    ]
+  },
+  {
+    "id": "ex-b2mzt9ys",
+    "version": 1,
+    "section": "the-workflow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which line lets the job ask GitHub for an OIDC token at all?",
+    "hint": "It is a permission.",
+    "choices": [
+      {
+        "text": "`environment: production`",
+        "correct": false,
+        "why": "That changes the subject and adds protections; it does not grant the token."
+      },
+      {
+        "text": "`id-token: write`",
+        "correct": true,
+        "why": "Right. Without it the login action fails before Azure is involved."
+      },
+      {
+        "text": "`contents: read`",
+        "correct": false,
+        "why": "That lets checkout read the code."
+      },
+      {
+        "text": "`client-id: ${{ vars.AZURE_CLIENT_ID }}`",
+        "correct": false,
+        "why": "That names the identity to exchange the token for; it does not obtain a token."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghcpwkbm",
+    "version": 1,
+    "section": "the-workflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Someone posts the shop's client id, tenant id and subscription id in a public issue. What can a stranger do with them?",
+    "hint": "Do they name an identity or prove one?",
+    "choices": [
+      {
+        "text": "Sign in as the identity from any machine",
+        "correct": false,
+        "why": "Signing in needs a token whose subject matches; ids prove nothing."
+      },
+      {
+        "text": "Deploy to the staging slot, but not production",
+        "correct": false,
+        "why": "Neither: the ids grant no access anywhere."
+      },
+      {
+        "text": "Read the resource group's resources",
+        "correct": false,
+        "why": "Reading also needs a token for an identity with a role."
+      },
+      {
+        "text": "Nothing that signs in",
+        "correct": true,
+        "why": "Right. They name the identity; only a matching signed token proves it, which is why they sit in `vars`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbrkpb8r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's staging deploys and production deploys run in the same workflow, as two jobs. How many federated credentials and identities does the lesson's design use?",
+    "hint": "A compromised staging run should have nothing to sign in as in production.",
+    "choices": [
+      {
+        "text": "One identity with one credential for the workflow's file",
+        "correct": false,
+        "why": "The default subject does not name a file, and one identity would reach both resource groups."
+      },
+      {
+        "text": "Two identities, each with one credential for its environment",
+        "correct": true,
+        "why": "Right. Each trusts one environment and holds a role on one resource group."
+      },
+      {
+        "text": "One identity with two credentials, one per environment",
+        "correct": false,
+        "why": "Both environments would then sign in as the same principal, with the same roles."
+      },
+      {
+        "text": "None: the jobs share the login of the first one",
+        "correct": false,
+        "why": "Each job runs on its own runner and signs in on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz9ejqas",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which changes make the shop's deploy workflow safer? Choose all that apply.",
+    "hint": "Smaller roles, exact subjects, pinned code.",
+    "choices": [
+      {
+        "text": "Pinning azure/login to a commit instead of a tag",
+        "correct": true,
+        "why": "Yes. A tag can be moved by its owner; a commit cannot."
+      },
+      {
+        "text": "Requiring reviewers on the production environment",
+        "correct": true,
+        "why": "Yes. Then only reviewed runs produce the subject the credential trusts."
+      },
+      {
+        "text": "Moving the client id into `secrets`",
+        "correct": false,
+        "why": "It changes nothing: the id was never a credential."
+      },
+      {
+        "text": "Giving the identity Contributor on rg-shop instead of Owner on the subscription",
+        "correct": true,
+        "why": "Yes. Federation removes the secret, not the permissions."
+      },
+      {
+        "text": "Trusting `pull_request` as well, so deploys are tested earlier",
+        "correct": false,
+        "why": "That opens production to code from any pull request."
+      }
+    ]
+  }
+]

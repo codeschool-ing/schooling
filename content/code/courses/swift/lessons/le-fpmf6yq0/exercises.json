@@ -1,0 +1,594 @@
+[
+  {
+    "id": "ex-tt0x2tz6",
+    "version": 1,
+    "section": "stored",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`var monday` holds a `StudySession` whose `course` is declared with `let`. What does `monday.course = \"Kotlin\"` do?",
+    "hint": "The instance is a `var`; the property is not.",
+    "choices": [
+      {
+        "text": "Changes the course, as `monday` is a `var`",
+        "correct": false,
+        "why": "A `let` property is fixed at initialisation whatever holds the instance."
+      },
+      {
+        "text": "It is refused at compile time",
+        "correct": true,
+        "why": "Right: `cannot assign to property: 'course' is a 'let' constant`."
+      },
+      {
+        "text": "Compiles, and crashes when the line runs",
+        "correct": false,
+        "why": "It never runs."
+      },
+      {
+        "text": "Creates a new session with the new course and keeps the old one",
+        "correct": false,
+        "why": "Assignment does not create instances."
+      }
+    ]
+  },
+  {
+    "id": "ex-akdtsh7f",
+    "version": 1,
+    "section": "stored",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`struct StudySession { let course: String; var minutes: Int; var done = false }`. Which call compiles?",
+    "hint": "A default value makes its argument optional.",
+    "choices": [
+      {
+        "text": "`StudySession(minutes: 45, course: \"Swift\")`",
+        "correct": false,
+        "why": "The memberwise arguments come in declaration order."
+      },
+      {
+        "text": "`StudySession(course: \"Swift\")`",
+        "correct": false,
+        "why": "`minutes` has no default, so it is required."
+      },
+      {
+        "text": "`StudySession(course: \"Swift\", minutes: 45)`",
+        "correct": true,
+        "why": "Right: `done` may be left out and takes `false`."
+      },
+      {
+        "text": "`StudySession(\"Swift\", 45)`",
+        "correct": false,
+        "why": "The memberwise initialiser has labels."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9nz5k0r",
+    "version": 1,
+    "section": "stored",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a `let` stored property of a struct be given a value by? Choose all that apply.",
+    "hint": "Once, when the instance is made.",
+    "choices": [
+      {
+        "text": "A default value in its declaration",
+        "correct": true,
+        "why": "Yes, and then it gets no initialiser argument."
+      },
+      {
+        "text": "A line in an `init`",
+        "correct": true,
+        "why": "Yes: the initialiser is where a constant is not yet fixed."
+      },
+      {
+        "text": "A `mutating` method",
+        "correct": false,
+        "why": "No: after initialisation a `let` property never changes."
+      },
+      {
+        "text": "A `didSet` observer",
+        "correct": false,
+        "why": "No: observers are for `var` properties."
+      }
+    ]
+  },
+  {
+    "id": "ex-eddyy3s7",
+    "version": 1,
+    "section": "computed",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Week(sessions: [45, 30])` with `goal = 300` and `remaining` computed as `max(goal - total, 0)`. After `week.sessions.append(60)`, what is `week.remaining`?",
+    "hint": "The total is recomputed on each read.",
+    "value": 165,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0n85ny5c",
+    "version": 1,
+    "section": "computed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var hours: Double { get { Double(minutes) / 60 } set { minutes = Int(newValue * 60) } }`. After `session.hours = 1.25`, where is the 1.25 kept?",
+    "hint": "A computed property stores nothing.",
+    "choices": [
+      {
+        "text": "In `hours`, beside `minutes`",
+        "correct": false,
+        "why": "`hours` has no storage at all."
+      },
+      {
+        "text": "Nowhere: `minutes` holds 75, and `hours` computes 1.25 again on each read",
+        "correct": true,
+        "why": "Right: the setter translated the value into the stored property."
+      },
+      {
+        "text": "In `newValue`, until the next assignment",
+        "correct": false,
+        "why": "`newValue` exists only while the setter runs."
+      },
+      {
+        "text": "Nowhere: computed properties cannot be assigned",
+        "correct": false,
+        "why": "This one has a `set`, so it can."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2cde8ks",
+    "version": 1,
+    "section": "computed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate stores `total` as a `var` and updates it in every method that adds a session. What failure does a computed `total` rule out?",
+    "choices": [
+      {
+        "text": "Reading `total` too often",
+        "correct": false,
+        "why": "A computed property is read as often as you like."
+      },
+      {
+        "text": "An overflow when the total passes `Int.max`",
+        "correct": false,
+        "why": "Both versions add the same numbers."
+      },
+      {
+        "text": "A total that disagrees with the sessions",
+        "correct": true,
+        "why": "Right: one forgotten update is enough, and a computed property has nothing to forget."
+      },
+      {
+        "text": "A struct that cannot be compared with `==`",
+        "correct": false,
+        "why": "Stored or computed, `Equatable` works the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwkevcan",
+    "version": 1,
+    "section": "observers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`var minutes: Int { didSet { … } }`. Does the observer run when `StudySession(minutes: 45)` is created?",
+    "hint": "What did `Observers.swift` print when the session was made?",
+    "choices": [
+      {
+        "text": "Yes, with `oldValue` 0",
+        "correct": false,
+        "why": "There is no old value during initialisation, and nothing printed."
+      },
+      {
+        "text": "Yes, but only `willSet`",
+        "correct": false,
+        "why": "Neither observer ran."
+      },
+      {
+        "text": "No",
+        "correct": true,
+        "why": "Right: observers run on assignments to an instance that already exists."
+      },
+      {
+        "text": "Only when the struct is held in a `var`",
+        "correct": false,
+        "why": "`session` was a `var`, and still nothing printed at creation."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pmfqwtb",
+    "version": 1,
+    "section": "observers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `didSet { if minutes > 600 { minutes = 600 } }`, what does `minutes` hold after `session.minutes = 900`?",
+    "value": 600,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a89e1ghn",
+    "version": 1,
+    "section": "observers",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `didSet`, the value the property held before the assignment is called `___`.",
+    "hint": "`willSet` gets the other one, `newValue`.",
+    "blanks": [
+      {
+        "accept": [
+          "oldValue"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rqr2xhwp",
+    "version": 1,
+    "section": "lazy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `lazy var summary` prints \"building the summary\" when its value is built. The program reads `summary` twice. How many times is that line printed?",
+    "choices": [
+      {
+        "text": "Twice, once per read",
+        "correct": false,
+        "why": "That is a computed property; a lazy one stores what it built."
+      },
+      {
+        "text": "Once, at the first read",
+        "correct": true,
+        "why": "Right: \"report made\" came first, then the line once."
+      },
+      {
+        "text": "Once, when the instance is created",
+        "correct": false,
+        "why": "It came after \"report made\", so creation did not build it."
+      },
+      {
+        "text": "Zero times, as `print` is not allowed in a property",
+        "correct": false,
+        "why": "The closure may do anything an ordinary one may."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tfgf49h",
+    "version": 1,
+    "section": "lazy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `let report = Report(…); print(report.summary)` refused when `summary` is `lazy` and `Report` is a struct?",
+    "hint": "The compiler called it a mutating getter.",
+    "choices": [
+      {
+        "text": "A lazy property is private to the type that declares it, so outside code cannot read it",
+        "correct": false,
+        "why": "Access control is lesson 17, and `lazy` changes nothing there."
+      },
+      {
+        "text": "Lazy properties exist only on classes",
+        "correct": false,
+        "why": "`Lazy.swift` used one on a struct held in a `var`."
+      },
+      {
+        "text": "`summary` has no type annotation",
+        "correct": false,
+        "why": "It has one, `String`."
+      },
+      {
+        "text": "The first read stores a value, which is a change a `let` struct forbids",
+        "correct": true,
+        "why": "Right: hold it in a `var`, or make the type a class."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxyzjvqg",
+    "version": 1,
+    "section": "lazy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these is the best fit for `lazy`?",
+    "hint": "Expensive, maybe never needed, and fixed once built.",
+    "choices": [
+      {
+        "text": "A formatter for a report screen many students never open",
+        "correct": true,
+        "why": "Right: built on first use, kept after, and not built for those who never ask."
+      },
+      {
+        "text": "A week's total that changes as sessions are added",
+        "correct": false,
+        "why": "A lazy value is built once and would go stale; that is a computed property."
+      },
+      {
+        "text": "The minutes of a session",
+        "correct": false,
+        "why": "Cheap and always needed: a stored property."
+      },
+      {
+        "text": "The weekly goal shared by all sessions",
+        "correct": false,
+        "why": "Shared by the type: a `static let`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdztpc6r",
+    "version": 1,
+    "section": "static",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The session type declares a constant with `static let`. How is it read?",
+    "choices": [
+      {
+        "text": "`monday.weeklyGoal`, through any instance",
+        "correct": false,
+        "why": "Refused: `static member 'weeklyGoal' cannot be used on instance`."
+      },
+      {
+        "text": "`StudySession.weeklyGoal`",
+        "correct": true,
+        "why": "Right, or `Self.weeklyGoal` inside the type."
+      },
+      {
+        "text": "`weeklyGoal`, from anywhere in the program",
+        "correct": false,
+        "why": "Inside an instance method even that was refused."
+      },
+      {
+        "text": "Only after an instance has been created",
+        "correct": false,
+        "why": "`Static.swift` printed it before any session existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffxvx2rp",
+    "version": 1,
+    "section": "static",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Static.swift`, `share()` divides a session's minutes by the weekly goal of 300. What does it return for 60 minutes?",
+    "value": 0.2,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-5v94e4e6",
+    "version": 1,
+    "section": "static",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Section 06 says a `static var` deserves care. Why?",
+    "hint": "What is it, really?",
+    "choices": [
+      {
+        "text": "It is recomputed on every read",
+        "correct": false,
+        "why": "It is stored, and initialised once."
+      },
+      {
+        "text": "Each instance gets its own copy",
+        "correct": false,
+        "why": "There is one for the whole type."
+      },
+      {
+        "text": "It is a global variable shared by the whole program",
+        "correct": true,
+        "why": "Right: any code may change it at any moment, which lesson 15's compiler refuses."
+      },
+      {
+        "text": "Its first read is slow",
+        "correct": false,
+        "why": "Speed is not the concern the section names."
+      }
+    ]
+  },
+  {
+    "id": "ex-4smx3g4z",
+    "version": 1,
+    "section": "initialisers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A class has `let owner` and `var goal: Int`, and its `init` sets only `owner`. What happens?",
+    "choices": [
+      {
+        "text": "`goal` starts at 0",
+        "correct": false,
+        "why": "Swift gives no implicit zero."
+      },
+      {
+        "text": "`goal` is `nil` until set",
+        "correct": false,
+        "why": "An `Int` is not optional, so it cannot be `nil`."
+      },
+      {
+        "text": "Refused: not all stored properties initialised",
+        "correct": true,
+        "why": "Right, with a note pointing at `self.goal`."
+      },
+      {
+        "text": "A crash the first time anything reads `goal` while the program runs",
+        "correct": false,
+        "why": "The compiler catches it first."
+      }
+    ]
+  },
+  {
+    "id": "ex-63m8k3dx",
+    "version": 1,
+    "section": "initialisers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where can you write a second `init` for a struct and keep the memberwise one?",
+    "choices": [
+      {
+        "text": "Inside the struct's braces, marked `convenience`",
+        "correct": false,
+        "why": "`convenience` is a class word, and inside the braces the memberwise one goes."
+      },
+      {
+        "text": "In an extension",
+        "correct": true,
+        "why": "Right: `Extra.swift` used both."
+      },
+      {
+        "text": "Nowhere; a struct has one or the other",
+        "correct": false,
+        "why": "`Extra.swift` had both."
+      },
+      {
+        "text": "In a separate file of the same program",
+        "correct": false,
+        "why": "The file does not matter; the extension does."
+      }
+    ]
+  },
+  {
+    "id": "ex-bn08v43a",
+    "version": 1,
+    "section": "initialisers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What type is `StudySession(course: \"Swift\", typed: \"45\")` when that initialiser is `init?`?",
+    "hint": "A failable initialiser.",
+    "choices": [
+      {
+        "text": "`StudySession`, as \"45\" is valid",
+        "correct": false,
+        "why": "The type does not depend on the argument."
+      },
+      {
+        "text": "`StudySession?`",
+        "correct": true,
+        "why": "Right: every call may give `nil`, so the type says so."
+      },
+      {
+        "text": "`Int?`",
+        "correct": false,
+        "why": "That is what `Int(typed)` gives inside it."
+      },
+      {
+        "text": "`Result<StudySession, Error>`",
+        "correct": false,
+        "why": "`Result` is lesson 12, and `init?` gives an optional."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbt9t325",
+    "version": 1,
+    "section": "initialisers",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An initialiser that hands the work to another initialiser of the same type, as `self.init(course:minutes:)` did, is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "delegating"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1fke0hzb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need of the planner to the kind of property that fits it.",
+    "hint": "The figure in section 05.",
+    "pairs": [
+      {
+        "left": "A week's total, always in step with its sessions",
+        "right": "computed"
+      },
+      {
+        "left": "Minutes that must never exceed 600 after a change",
+        "right": "observed with `didSet`"
+      },
+      {
+        "left": "A costly summary built only if somebody reads it",
+        "right": "`lazy`"
+      },
+      {
+        "left": "The goal shared by every session",
+        "right": "`static`"
+      }
+    ],
+    "right_distractors": [
+      "`mutating`"
+    ]
+  },
+  {
+    "id": "ex-dr1k1m5f",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`session.minutes = 900` on a property with both observers and a clamp to 600. Put what happens in order.",
+    "items": [
+      "`willSet` runs, with `newValue` 900",
+      "900 is stored",
+      "`didSet` runs and replaces it with 600",
+      "The next read returns 600"
+    ]
+  },
+  {
+    "id": "ex-15abcjpp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session must never exist with 0 minutes. Section 04's observer clamps changes. What does it miss, and what closes the gap?",
+    "hint": "When do observers not run?",
+    "choices": [
+      {
+        "text": "Reads; a computed property",
+        "correct": false,
+        "why": "Reads cannot make a value invalid."
+      },
+      {
+        "text": "Initialisation; an `init?` that refuses bad values",
+        "correct": true,
+        "why": "Right: observers skip the initialiser, and a failable one checks before the value exists."
+      },
+      {
+        "text": "Copies; a class instead of a struct",
+        "correct": false,
+        "why": "A copy carries an already valid value."
+      },
+      {
+        "text": "Nothing; the observer already covers every case a session can reach",
+        "correct": false,
+        "why": "`StudySession(minutes: 0)` runs no observer."
+      }
+    ]
+  }
+]

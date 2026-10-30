@@ -1,0 +1,377 @@
+{
+ "ex-wpfq6yax": {
+  "prompt": "Um NSG tem um allow para a porta 22 na prioridade 300 e um deny para a porta 22 na prioridade 200. O que acontece com uma conexão SSH?",
+  "hint": "Números menores são lidos primeiro.",
+  "choices": [
+   {
+    "text": "Negada, em 200",
+    "why": "Isso. O 200 é lido antes do 300, e a leitura para ali."
+   },
+   {
+    "text": "Permitida, já que um allow em qualquer ponto da lista ganha",
+    "why": "Um NSG é uma fila, não uma soma. O primeiro casamento decide."
+   },
+   {
+    "text": "Permitida, já que 300 é a prioridade maior",
+    "why": "O número menor é a prioridade maior."
+   },
+   {
+    "text": "Recusado pelo Azure, já que duas regras não podem dividir uma porta",
+    "why": "Duas regras podem dividir uma porta; não podem dividir prioridade e direção."
+   }
+  ]
+ },
+ "ex-v8aznr27": {
+  "prompt": "Qual é o maior número que uma regra sua pode usar como prioridade?",
+  "hint": "As padrão ficam bem acima.",
+  "unit": ""
+ },
+ "ex-skpdkdej": {
+  "prompt": "Qual regra padrão deixa um servidor web comprometido abrir uma conexão com o banco em qualquer porta?",
+  "hint": "As duas máquinas estão na mesma rede.",
+  "choices": [
+   {
+    "text": "`AllowInternetOutBound`",
+    "why": "Essa deixa as máquinas alcançarem a internet, não umas às outras."
+   },
+   {
+    "text": "`AllowAzureLoadBalancerInBound`",
+    "why": "Essa só admite as sondas de saúde do Azure."
+   },
+   {
+    "text": "`DenyAllInBound`, que só cobre a internet",
+    "why": "Cobre tudo, mas o 65000 é lido antes do 65500."
+   },
+   {
+    "text": "`AllowVnetInBound`",
+    "why": "Isso. Qualquer coisa da rede alcança qualquer coisa dela, em 65000."
+   }
+  ]
+ },
+ "ex-kter9g5y": {
+  "prompt": "Uma máquina tem um NSG na sub-rede e outro na interface de rede. Um pacote de entrada é permitido pelo da sub-rede e negado pelo da interface. O que acontece?",
+  "hint": "As duas listas são lidas.",
+  "choices": [
+   {
+    "text": "Passa, já que o NSG da sub-rede é lido primeiro",
+    "why": "Ser lido primeiro não o torna final: o da interface é lido em seguida."
+   },
+   {
+    "text": "Ele nunca chega à máquina",
+    "why": "Isso. Os dois precisam permitir; um deny em qualquer um o para."
+   },
+   {
+    "text": "O Azure recusa prender dois NSGs a uma máquina",
+    "why": "Ele permite, e a Microsoft desaconselha."
+   },
+   {
+    "text": "A regra de menor prioridade entre as duas decide",
+    "why": "Prioridades são comparadas dentro de um NSG, não entre dois."
+   }
+  ]
+ },
+ "ex-xkr5c1b0": {
+  "prompt": "Um NSG permite saída na 443. Por que ele não precisa de regra de entrada para as respostas?",
+  "hint": "O que o NSG lembra?",
+  "choices": [
+   {
+    "text": "As respostas vêm da tag `AzureLoadBalancer`",
+    "why": "As respostas vêm do servidor chamado."
+   },
+   {
+    "text": "A porta 443 está sempre aberta na entrada",
+    "why": "Nenhuma porta está aberta na entrada por padrão."
+   },
+   {
+    "text": "Ele tem estado: guarda um registro do fluxo",
+    "why": "Isso. Uma regra decide quem pode começar uma conversa."
+   },
+   {
+    "text": "O `AllowInternetOutBound` cobre as duas direções",
+    "why": "Cada regra tem uma direção."
+   }
+  ]
+ },
+ "ex-bqvrqymf": {
+  "prompt": "Para deixar um terceirizado de fora, a ana apaga a regra que permitia o SSH dele. Uma hora depois ele continua conectado. Por quê?",
+  "hint": "Que conexões uma regra governa?",
+  "choices": [
+   {
+    "text": "O SSH é isento das regras de NSG",
+    "why": "Nenhum protocolo é isento."
+   },
+   {
+    "text": "Apagar uma regra leva uma hora para se propagar",
+    "why": "A demora não é a explicação; fluxos abertos são mantidos."
+   },
+   {
+    "text": "O `AllowVnetInBound` o deixou entrar de novo",
+    "why": "Nada o deixou entrar de novo: ele nunca saiu."
+   },
+   {
+    "text": "Regras governam conexões novas, e a dele já estava aberta",
+    "why": "Isso. A próxima tentativa é recusada; a sessão aberta dura até terminar."
+   }
+  ]
+ },
+ "ex-2v9jbe7d": {
+  "prompt": "Ligue cada service tag ao que ela representa.",
+  "hint": "Uma delas é um único endereço.",
+  "pairs": [
+   {
+    "left": "`AzureLoadBalancer`",
+    "right": "o endereço de onde vêm as sondas de saúde do Azure"
+   },
+   {
+    "left": "`VirtualNetwork`",
+    "right": "a rede, os seus pares e escritórios ligados"
+   },
+   {
+    "left": "`Internet`",
+    "right": "o que está fora e é alcançável publicamente"
+   },
+   {
+    "left": "`Storage.BrazilSouth`",
+    "right": "os endereços do Azure Storage em São Paulo"
+   }
+  ],
+  "right_distractors": [
+   "os servidores web da loja"
+  ]
+ },
+ "ex-kvtf1ynh": {
+  "prompt": "O que é um application security group?",
+  "hint": "Ele é definido em algo que você constrói.",
+  "choices": [
+   {
+    "text": "Uma lista de endereços da Microsoft, mantida atualizada",
+    "why": "Isso é uma service tag."
+   },
+   {
+    "text": "Um segundo NSG que uma sub-rede herda",
+    "why": "Um ASG não tem regras próprias."
+   },
+   {
+    "text": "Um rótulo em interfaces de rede, usável numa regra",
+    "why": "Isso. A regra segue o papel, sejam quais forem os endereços."
+   },
+   {
+    "text": "Um grupo de usuários com permissão para mudar NSGs",
+    "why": "Ele agrupa interfaces, não pessoas; pessoas são a lição 9."
+   }
+  ]
+ },
+ "ex-8vb2zga2": {
+  "prompt": "Por que a loja escreve a regra da web para a aplicação com ASGs em vez dos endereços dos dois servidores web?",
+  "hint": "O que acontece no mês que vem?",
+  "choices": [
+   {
+    "text": "A regra continua certa quando servidores entram e saem",
+    "why": "Isso. A participação é definida em cada interface, não na regra."
+   },
+   {
+    "text": "Porque regras com ASG são avaliadas antes das regras com endereço",
+    "why": "Só a prioridade decide a ordem."
+   },
+   {
+    "text": "Porque regras de NSG não aceitam endereços isolados",
+    "why": "Aceitam endereços e intervalos."
+   },
+   {
+    "text": "Porque ASGs fazem a regra valer entre redes",
+    "why": "Um ASG fica preso a uma rede virtual."
+   }
+  ]
+ },
+ "ex-0hxyay9k": {
+  "prompt": "Por que as prioridades da loja são 100, 3900 e 4000, e não 100, 101 e 102?",
+  "hint": "Pense numa regra necessária numa emergência.",
+  "choices": [
+   {
+    "text": "O Azure exige intervalos de pelo menos cem",
+    "why": "Nenhum intervalo é exigido."
+   },
+   {
+    "text": "Sobra espaço para regras acrescentadas depois",
+    "why": "Isso. 150 ou 3950 ficam livres para o dia em que forem precisos."
+   },
+   {
+    "text": "Regras próximas são fundidas pelo Azure",
+    "why": "Regras nunca são fundidas."
+   },
+   {
+    "text": "Números maiores são mais baratos",
+    "why": "Prioridades não custam nada."
+   }
+  ]
+ },
+ "ex-5w1whh04": {
+  "prompt": "A service tag `___` representa o `168.63.129.16`, de onde vêm as sondas de saúde do Azure.",
+  "hint": "O nome diz qual serviço as manda.",
+  "blanks": [
+   {
+    "accept": [
+     "AzureLoadBalancer"
+    ]
+   }
+  ]
+ },
+ "ex-fktga5dr": {
+  "prompt": "O que é o `nsg.py`?",
+  "hint": "Leia as primeiras linhas dele.",
+  "choices": [
+   {
+    "text": "O IP flow verify do Azure, rodado localmente",
+    "why": "O IP flow verify precisa de uma máquina no Azure."
+   },
+   {
+    "text": "Um cliente que pede veredictos ao Network Watcher",
+    "why": "Ele não manda nada a lugar nenhum."
+   },
+   {
+    "text": "O modelo do curso das regras documentadas",
+    "why": "Isso. Um modelo lendo um template compilado, não uma resposta do Azure."
+   },
+   {
+    "text": "A implementação de referência da Microsoft para NSGs",
+    "why": "A Microsoft não publica programa assim."
+   }
+  ]
+ },
+ "ex-k1x833m6": {
+  "prompt": "No rascunho, o SSH do servidor web para a aplicação foi permitido. Por quê?",
+  "hint": "Veja o número da linha que casou.",
+  "choices": [
+   {
+    "text": "Pela padrão `AllowVnetInBound`, em 65000",
+    "why": "Isso. Uma regra que ninguém na loja escreveu."
+   },
+   {
+    "text": "Por nada: o modelo tem um defeito",
+    "why": "O modelo fez o que o Azure documenta."
+   },
+   {
+    "text": "Pelo `AllowWebToApp`, já que a origem era um servidor web",
+    "why": "Essa regra só cita a porta 8080; ela imprimiu um traço."
+   },
+   {
+    "text": "Pela `AllowAzureLoadBalancerInBound`",
+    "why": "A origem era um servidor web, não o endereço da sonda."
+   }
+  ]
+ },
+ "ex-xkdpb7ae": {
+  "prompt": "A loja acrescenta um deny em `VirtualNetwork` em 4000 e esquece a regra em 3900. O que a documentação diz que acontece com um balanceador de carga na frente da aplicação?",
+  "hint": "O endereço da sonda está dentro de `VirtualNetwork`?",
+  "choices": [
+   {
+    "text": "Nada, já que as sondas são isentas de NSGs",
+    "why": "Elas são permitidas por uma regra padrão, que o deny precede."
+   },
+   {
+    "text": "As sondas são negadas, e ele marca toda máquina como doente",
+    "why": "Isso. `VirtualNetwork` inclui o endereço do host, então o 65001 nunca tem a vez."
+   },
+   {
+    "text": "Só as sondas vindas da internet são bloqueadas",
+    "why": "As sondas vêm de `168.63.129.16`, não da internet."
+   },
+   {
+    "text": "O balanceador vai para outra sub-rede",
+    "why": "Nada se move; as sondas só falham."
+   }
+  ]
+ },
+ "ex-8ggxgqqk": {
+  "prompt": "Um servidor web não alcança um servidor de aplicação novo na 8080, embora o `AllowWebToApp` exista. O modelo diz *Deny* em 4000. O que conferir primeiro?",
+  "hint": "Que lado da regra cita um grupo?",
+  "choices": [
+   {
+    "text": "Se o NSG tem mais de três regras",
+    "why": "A contagem é irrelevante para este pacote."
+   },
+   {
+    "text": "Se a porta 8080 está acima das regras padrão",
+    "why": "Portas não têm posição; regras têm."
+   },
+   {
+    "text": "Se o deny em 4000 deveria estar em 50",
+    "why": "Isso negaria a camada web também."
+   },
+   {
+    "text": "Se a interface do servidor novo está no `asg-shop-app`",
+    "why": "Isso. A regra estava certa; faltava a participação."
+   }
+  ]
+ },
+ "ex-ng0g2tnx": {
+  "prompt": "Um pedido de `10.20.1.4` para `10.20.2.4` na porta 22 encontra o `nsg-shop-app`. Ponha as regras na ordem em que o modelo as lê.",
+  "hint": "A ordem é a prioridade, a menor primeiro.",
+  "items": [
+   "`AllowWebToApp`, 100",
+   "`AllowLoadBalancerProbe`, 3900",
+   "`DenyVnetInBound`, 4000"
+  ],
+  "trap": "A leitura para em 4000, que casa, então as padrão nunca são alcançadas."
+ },
+ "ex-76reaq3a": {
+  "prompt": "Quais destas coisas o conjunto padrão de regras permite? Marque todas as que se aplicam.",
+  "hint": "Seis regras, três por direção.",
+  "choices": [
+   {
+    "text": "Uma máquina alcançar outra da rede em qualquer porta",
+    "why": "Isso. `AllowVnetInBound` e `AllowVnetOutBound`."
+   },
+   {
+    "text": "A internet abrir uma conexão com uma máquina",
+    "why": "O `DenyAllInBound` recusa."
+   },
+   {
+    "text": "Uma máquina mandar dados para qualquer endereço da internet",
+    "why": "Isso. `AllowInternetOutBound`."
+   },
+   {
+    "text": "A sonda de saúde do Azure alcançar uma máquina",
+    "why": "Isso. `AllowAzureLoadBalancerInBound`."
+   },
+   {
+    "text": "Uma máquina de uma rede com peering ser recusada",
+    "why": "`VirtualNetwork` inclui redes com peering, então ela é permitida."
+   }
+  ]
+ },
+ "ex-1c38rr1a": {
+  "prompt": "Uma regra permite `Internet` para `asg-shop-app` na 443 na prioridade 100. Qual pacote ela NÃO deixa entrar?",
+  "hint": "O que o destino cita?",
+  "choices": [
+   {
+    "text": "Um cliente em Recife alcançando `10.20.2.4` na 443",
+    "why": "Esse casa origem, grupo e porta."
+   },
+   {
+    "text": "Um endereço público do Azure alcançando `10.20.2.4` na 443",
+    "why": "`Internet` inclui os endereços públicos do Azure."
+   },
+   {
+    "text": "Um cliente alcançando `10.20.2.5`, fora do grupo, na 443",
+    "why": "Isso. A regra só vale para interfaces no ASG."
+   },
+   {
+    "text": "Um segundo cliente alcançando `10.20.2.4` na 443",
+    "why": "Qualquer número de clientes casa."
+   }
+  ]
+ },
+ "ex-dvdg7a18": {
+  "prompt": "Na entrada, o NSG da ___ é lido antes do da interface.",
+  "hint": "A mais larga das duas ligações.",
+  "blanks": [
+   {
+    "accept": [
+     "sub-rede",
+     "subrede"
+    ]
+   }
+  ]
+ }
+}
