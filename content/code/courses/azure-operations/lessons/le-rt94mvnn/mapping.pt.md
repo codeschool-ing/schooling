@@ -1,0 +1,25 @@
+---
+title: Dos spans às tabelas da lição 11
+version: 1
+---
+
+**O exportador do Azure Monitor transforma cada span numa linha da tabela à qual o tipo dele pertence.** O mapa é da
+Microsoft, documentado com a distro:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"O mapa do OpenTelemetry para o Application Insights. Um span SERVER vira uma linha em AppRequests. Um span CLIENT vira uma linha em AppDependencies. Um evento de exceção num span vira uma linha em AppExceptions. O id do trace vira OperationId em todas, o id do span vira Id, e o id do span pai vira ParentId.\"><defs><marker id=\"ah-map\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"150\" y=\"25\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">OpenTelemetry</text><text x=\"560\" y=\"25\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">Application Insights</text><rect x=\"40\" y=\"45\" width=\"220\" height=\"40\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"150\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">SERVER span</text><rect x=\"40\" y=\"100\" width=\"220\" height=\"40\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"150\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">CLIENT span</text><rect x=\"40\" y=\"155\" width=\"220\" height=\"40\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"150\" y=\"175\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">evento de exceção</text><rect x=\"460\" y=\"45\" width=\"220\" height=\"40\" rx=\"6\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"570\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--phosphor)\">AppRequests</text><rect x=\"460\" y=\"100\" width=\"220\" height=\"40\" rx=\"6\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"570\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--phosphor)\">AppDependencies</text><rect x=\"460\" y=\"155\" width=\"220\" height=\"40\" rx=\"6\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"570\" y=\"175\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--phosphor)\">AppExceptions</text><path d=\"M260 65 L458 65\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ah-map)\"></path><path d=\"M260 120 L458 120\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ah-map)\"></path><path d=\"M260 175 L458 175\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ah-map)\"></path><text x=\"360\" y=\"225\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--amber)\">trace id → OperationId   span id → Id   parent → ParentId</text></svg>", "caption": "O exportador traduz; a forma do trace é mantida."}
+```
+
+Então as cinco linhas que você imprimiu teriam sido, num workspace, duas linhas em `AppRequests`, três em
+`AppDependencies` e uma em `AppExceptions`, todas levando o id do trace como `OperationId`. É o join em que a lição 11 se
+apoiou: **o `OperationId` não é invenção do Application Insights, é o id de trace do OpenTelemetry**, e é o mesmo em todo
+serviço que a requisição toca, desde que cada um passe o contexto do trace adiante. Por HTTP isso é o cabeçalho W3C
+`traceparent`, que a instrumentação HTTP do OpenTelemetry manda e lê sozinha.
+
+O status mapeia como se espera: um span com status `ERROR` vira uma linha com `Success` falso, e o código de resultado de
+um span de servidor HTTP vem de `http.response.status_code`. Atributos que não fazem parte do mapa são mantidos como
+**dimensões personalizadas**, consultáveis na coluna `Properties`. A amostragem, assunto da lição 11, é feita pelo SDK
+antes da exportação, e o exportador escreve a taxa de amostragem no `ItemCount`.
+
+O `service.name` do resource, aqui `shop-api`, vira o **nome do papel na nuvem**, `AppRoleName`, que é como um workspace com
+dez serviços separa as linhas deles e como o Application Insights desenha o mapa de qual serviço chama qual.

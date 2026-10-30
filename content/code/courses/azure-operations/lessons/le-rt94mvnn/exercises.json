@@ -1,0 +1,386 @@
+[
+  {
+    "id": "ex-9931v202",
+    "version": 1,
+    "section": "otel",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of OpenTelemetry to what it does.",
+    "hint": "Four parts.",
+    "pairs": [
+      {
+        "left": "API",
+        "right": "What application code calls to start a span"
+      },
+      {
+        "left": "SDK",
+        "right": "Samples, batches and hands spans on"
+      },
+      {
+        "left": "exporter",
+        "right": "Sends spans to a backend"
+      },
+      {
+        "left": "semantic conventions",
+        "right": "Agreed attribute names such as db.system"
+      }
+    ]
+  },
+  {
+    "id": "ex-dfv6ces9",
+    "version": 1,
+    "section": "otel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Azure Monitor's OpenTelemetry distro add to the plain OpenTelemetry SDK?",
+    "hint": "Convenience, not a different model.",
+    "choices": [
+      {
+        "text": "Its own span format, which replaces OpenTelemetry's spans entirely",
+        "correct": false,
+        "why": "It keeps OpenTelemetry's spans and maps them at export."
+      },
+      {
+        "text": "The Azure exporter and automatic instrumentation, wired together",
+        "correct": true,
+        "why": "Right. One call configures what you would otherwise assemble."
+      },
+      {
+        "text": "A requirement to run the old Application Insights SDK alongside it",
+        "correct": false,
+        "why": "It replaces that SDK for new work."
+      },
+      {
+        "text": "Live metrics without a connection string",
+        "correct": false,
+        "why": "Every route to Application Insights needs the connection string."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzc9xnm4",
+    "version": 1,
+    "section": "instrumenting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the CLIENT spans print before the SERVER span in the transcript?",
+    "hint": "When is a span exported?",
+    "choices": [
+      {
+        "text": "The console exporter sorts spans by kind",
+        "correct": false,
+        "why": "It sorts nothing; it prints as spans end."
+      },
+      {
+        "text": "The CLIENT calls started first",
+        "correct": false,
+        "why": "The SERVER span started first and contains them."
+      },
+      {
+        "text": "Each is printed as it ends",
+        "correct": true,
+        "why": "Right. The parent ends after its last child."
+      },
+      {
+        "text": "SimpleSpanProcessor delays the parent on purpose",
+        "correct": false,
+        "why": "It exports each span immediately on its end."
+      }
+    ]
+  },
+  {
+    "id": "ex-448tn7fz",
+    "version": 1,
+    "section": "instrumenting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The slow checkout's trace has no `POST /v1/charges` span. Which part of the program explains it?",
+    "hint": "Follow the exception.",
+    "choices": [
+      {
+        "text": "insert_order raised, so checkout never called charge",
+        "correct": true,
+        "why": "Right. The except clause caught it after the insert, skipping the payment."
+      },
+      {
+        "text": "The sampler dropped the payment span",
+        "correct": false,
+        "why": "No sampler is configured; every span is kept."
+      },
+      {
+        "text": "CLIENT spans that end in ERROR are left out of the export",
+        "correct": false,
+        "why": "INSERT orders was exported with ERROR."
+      },
+      {
+        "text": "charge runs in another thread and was lost",
+        "correct": false,
+        "why": "Everything runs in one thread here."
+      }
+    ]
+  },
+  {
+    "id": "ex-4c9jctbm",
+    "version": 1,
+    "section": "instrumenting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a real service use BatchSpanProcessor rather than SimpleSpanProcessor?",
+    "hint": "Who waits for the exporter?",
+    "choices": [
+      {
+        "text": "Batching also samples the spans it collects",
+        "correct": false,
+        "why": "Sampling is a separate decision, made before processing."
+      },
+      {
+        "text": "So a slow exporter never slows a request",
+        "correct": true,
+        "why": "Right. Spans are queued and sent from a background thread."
+      },
+      {
+        "text": "Simple exports only to the console",
+        "correct": false,
+        "why": "It works with any exporter."
+      },
+      {
+        "text": "Azure Monitor refuses spans sent one at a time",
+        "correct": false,
+        "why": "The reason is the request path, not the receiver."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpak79jm",
+    "version": 1,
+    "section": "instrumenting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A span that handles an incoming request has the kind ___.",
+    "hint": "In capitals, as the transcript prints it.",
+    "blanks": [
+      {
+        "accept": [
+          "SERVER"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qfc0x86h",
+    "version": 1,
+    "section": "mapping",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each OpenTelemetry item to where the Azure Monitor exporter puts it.",
+    "hint": "Kinds become tables; ids become columns.",
+    "pairs": [
+      {
+        "left": "a SERVER span",
+        "right": "A row in AppRequests"
+      },
+      {
+        "left": "a CLIENT span",
+        "right": "A row in AppDependencies"
+      },
+      {
+        "left": "the trace id",
+        "right": "OperationId"
+      },
+      {
+        "left": "service.name",
+        "right": "AppRoleName"
+      }
+    ],
+    "right_distractors": [
+      "ItemCount, always 1"
+    ]
+  },
+  {
+    "id": "ex-3418fchz",
+    "version": 1,
+    "section": "mapping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A checkout passes through shop-api and then an orders service. What keeps both services' rows under one OperationId?",
+    "hint": "The trace context has to travel.",
+    "choices": [
+      {
+        "text": "Both services using the same connection string to send",
+        "correct": false,
+        "why": "That decides where rows land, not how they join."
+      },
+      {
+        "text": "Both services sharing a cloud role name",
+        "correct": false,
+        "why": "Role names tell services apart; sharing one would hide which is which."
+      },
+      {
+        "text": "The traceparent header passed on the call between them",
+        "correct": true,
+        "why": "Right. OpenTelemetry's HTTP instrumentation sends and reads it."
+      },
+      {
+        "text": "A join on TimeGenerated in the workspace, after the fact",
+        "correct": false,
+        "why": "Time is not an identity, as lesson 11 said."
+      }
+    ]
+  },
+  {
+    "id": "ex-42mv104z",
+    "version": 1,
+    "section": "portability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To send shop_trace.py's spans to Application Insights, which lines change?",
+    "hint": "Only one block knows where telemetry goes.",
+    "choices": [
+      {
+        "text": "Every span's attributes, renamed to Azure's names",
+        "correct": false,
+        "why": "The attributes are semantic conventions; the exporter maps them."
+      },
+      {
+        "text": "The setup block",
+        "correct": true,
+        "why": "Right. Everything below it is vendor-neutral."
+      },
+      {
+        "text": "The span kinds, from SERVER to REQUEST",
+        "correct": false,
+        "why": "There is no REQUEST kind; SERVER maps to AppRequests."
+      },
+      {
+        "text": "None; the console exporter also sends to Azure",
+        "correct": false,
+        "why": "It prints to the terminal and nowhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0g6vvct",
+    "version": 1,
+    "section": "portability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can a stranger do with the shop's Application Insights connection string?",
+    "hint": "Send, or read?",
+    "choices": [
+      {
+        "text": "Read every request the shop recorded",
+        "correct": false,
+        "why": "Reading needs an identity with a role on the workspace."
+      },
+      {
+        "text": "Delete the Application Insights resource",
+        "correct": false,
+        "why": "Deletion is a Resource Manager operation with its own permissions."
+      },
+      {
+        "text": "Send telemetry to it, and raise the bill",
+        "correct": true,
+        "why": "Right. It authorises ingestion, not reading."
+      },
+      {
+        "text": "Nothing at all, because it is encrypted",
+        "correct": false,
+        "why": "It is plain text; what it allows is ingestion."
+      }
+    ]
+  },
+  {
+    "id": "ex-5h91snym",
+    "version": 1,
+    "section": "portability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves from Azure Monitor to another backend through an OpenTelemetry Collector. What is most of the work?",
+    "hint": "Instrumentation moves; what does not?",
+    "choices": [
+      {
+        "text": "Re-instrumenting every service from the start",
+        "correct": false,
+        "why": "The spans are vendor-neutral and stay as they are."
+      },
+      {
+        "text": "Changing the exporter in each service",
+        "correct": false,
+        "why": "With a collector, the services may not change at all."
+      },
+      {
+        "text": "Rewriting queries, alerts and dashboards",
+        "correct": true,
+        "why": "Right. KQL written against AppRequests means nothing elsewhere."
+      },
+      {
+        "text": "Converting trace ids to the new format",
+        "correct": false,
+        "why": "Trace ids are OpenTelemetry's and stay valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsqnkvqx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of the slow checkout's database span in order.",
+    "hint": "Start, fail, end, export.",
+    "items": [
+      "checkout opens the SERVER span",
+      "insert_order opens a CLIENT span as its child",
+      "The call times out and the span's status becomes ERROR",
+      "The CLIENT span ends and is exported",
+      "The SERVER span records the exception, ends and is exported"
+    ],
+    "trap": "Exporting the SERVER span before its child is the slip: a parent ends after its children."
+  },
+  {
+    "id": "ex-dz1c9ekb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson run? Choose all that apply.",
+    "hint": "The SDK and the console, yes; Azure, no.",
+    "choices": [
+      {
+        "text": "Two traced checkouts printed by the console exporter",
+        "correct": true,
+        "why": "Yes. shop_trace.py."
+      },
+      {
+        "text": "configure_azure_monitor() with a connection string",
+        "correct": false,
+        "why": "No. There is no resource to name."
+      },
+      {
+        "text": "Spans arriving in AppRequests in a workspace",
+        "correct": false,
+        "why": "No. Lesson 11's tables were generated, not exported."
+      },
+      {
+        "text": "A span ending in ERROR with an exception recorded",
+        "correct": true,
+        "why": "Yes. The slow checkout."
+      }
+    ]
+  }
+]
