@@ -1,0 +1,252 @@
+{
+  "ex-zsefece7": {
+    "prompt": "Qual parte do trabalho com Bicep precisa de uma assinatura do Azure?",
+    "hint": "O que o Resource Manager faz que o compilador não faz?",
+    "choices": [
+      {
+        "text": "Compilar um arquivo `.bicep` para JSON",
+        "why": "Isso roda no seu computador, como a lição mostra."
+      },
+      {
+        "text": "Rodar o linter sobre um arquivo",
+        "why": "O linter faz parte do mesmo programa local."
+      },
+      {
+        "text": "Implantar o template",
+        "why": "Certo. Implantar envia o JSON ao Resource Manager, que precisa de uma assinatura."
+      },
+      {
+        "text": "Descompilar um template ARM existente",
+        "why": "Descompilar lê um JSON local e não pergunta nada a ninguém."
+      }
+    ]
+  },
+  "ex-rrbjs3ap": {
+    "prompt": "Num template ARM, por que o contêiner também lista a conta de armazenamento em `dependsOn`?",
+    "hint": "Como o Resource Manager cria recursos cuja ordem ninguém indicou?",
+    "choices": [
+      {
+        "text": "Senão o ARM cria os dois em paralelo",
+        "why": "Certo. O ARM cria em paralelo a menos que o dependsOn ordene."
+      },
+      {
+        "text": "Porque o nome do contêiner não menciona a conta",
+        "why": "Menciona, na chamada format(); o ARM não deduz ordem disso."
+      },
+      {
+        "text": "Dá acesso ao contêiner",
+        "why": "O dependsOn ordena a criação; ele não concede nada."
+      },
+      {
+        "text": "É opcional, e só acelera o deploy",
+        "why": "Ele não acelera nada, e é necessário para dar certo."
+      }
+    ]
+  },
+  "ex-hb5mbxj8": {
+    "prompt": "Um template tem `\"name\": \"[paramaters('accountName')]\"`, com o nome da função errado. Quando isso é descoberto?",
+    "hint": "Para um leitor de JSON, o que é esse valor?",
+    "choices": [
+      {
+        "text": "Quando o arquivo é salvo, por qualquer editor de JSON",
+        "why": "É uma string JSON perfeitamente válida; um editor de JSON não tem o que dizer."
+      },
+      {
+        "text": "Quando o Resource Manager avalia a expressão",
+        "why": "Certo. A expressão mora dentro de uma string, onde o JSON não olha."
+      },
+      {
+        "text": "Nunca; o Resource Manager ignora funções desconhecidas",
+        "why": "Ele recusa o template quando avalia a chamada."
+      },
+      {
+        "text": "Quando o git faz o commit",
+        "why": "O git guarda bytes; não tem opinião sobre templates."
+      }
+    ]
+  },
+  "ex-q9d4r8zp": {
+    "prompt": "`bicep decompile` imprime um aviso de que descompilar é esforço sem garantia. O que fazer com o `.bicep` gerado?",
+    "hint": "É uma tradução ou um rascunho?",
+    "choices": [
+      {
+        "text": "Implantá-lo na hora; o aviso aparece sempre",
+        "why": "O aviso está lá porque a conversão não tem garantia."
+      },
+      {
+        "text": "Apagá-lo e escrever o arquivo à mão do zero",
+        "why": "Um arquivo descompilado é um ponto de partida útil; descartá-lo joga trabalho fora."
+      },
+      {
+        "text": "Lê-lo como ponto de partida, depois compilar e passar o linter",
+        "why": "Certo. Aqui saiu limpo, e você só sabe disso conferindo."
+      },
+      {
+        "text": "Convertê-lo de volta para JSON e comparar os dois à mão",
+        "why": "Compilar o converte de volta, mas o ponto é ler o Bicep."
+      }
+    ]
+  },
+  "ex-qb8g6msg": {
+    "prompt": "Ligue cada hábito do ARM ao que o substitui no Bicep.",
+    "hint": "Cada um é um erro que o Bicep remove.",
+    "pairs": [
+      {
+        "left": "dependsOn escrito à mão",
+        "right": "Uma referência simbólica implica a ordem"
+      },
+      {
+        "left": "Um nome filho montado com barras",
+        "right": "parent: e o nome curto"
+      },
+      {
+        "left": "reference(resourceId(...)) dentro de uma string",
+        "right": "account.properties.primaryEndpoints"
+      },
+      {
+        "left": "parameters('accountName')",
+        "right": "accountName"
+      }
+    ],
+    "right_distractors": [
+      "Um segundo serviço que implanta Bicep"
+    ]
+  },
+  "ex-a76rpy9k": {
+    "prompt": "Por que um deploy a partir de Bicep não precisa de permissão além da de um deploy ARM?",
+    "hint": "O que o Resource Manager recebe?",
+    "choices": [
+      {
+        "text": "O Bicep implanta com uma identidade própria embutida",
+        "why": "O Bicep não tem identidade; é um compilador na sua máquina."
+      },
+      {
+        "text": "Quem usa Bicep ganha papel",
+        "why": "Nenhum papel é concedido por usar uma linguagem."
+      },
+      {
+        "text": "Deploys a partir de Bicep pulam o Azure Policy",
+        "why": "O Policy vale para toda requisição ao Resource Manager, seja quem a escreveu."
+      },
+      {
+        "text": "O JSON compilado, um template ARM comum",
+        "why": "Certo. O Resource Manager nunca vê Bicep."
+      }
+    ]
+  },
+  "ex-g2bsezag": {
+    "prompt": "No JSON compilado de `shop.bicep`, quantos recursos têm um `dependsOn` que ninguém escreveu?",
+    "hint": "Conte os recursos que nomeiam um parent.",
+    "unit": "recursos"
+  },
+  "ex-edx0nxf3": {
+    "prompt": "`bicep build` compilou um arquivo com `sku: { name: 'Standard_LRSS' }` e não imprimiu nada. O que isso diz?",
+    "hint": "Como o nome do SKU está tipado no esquema que o Bicep tem?",
+    "choices": [
+      {
+        "text": "Que Standard_LRSS é um nome de SKU válido",
+        "why": "Não é; o Resource Manager vai recusá-lo no deploy."
+      },
+      {
+        "text": "No esquema, o tipo é string simples",
+        "why": "Certo. Compilar limpo é prova de forma, não de valores certos."
+      },
+      {
+        "text": "Que os avisos estão desligados",
+        "why": "O outro erro produziu um aviso na mesma execução."
+      },
+      {
+        "text": "Que quem confere SKUs é o linter, não o compilador",
+        "why": "Nenhum dos dois confere um valor que o esquema tipa como string simples."
+      }
+    ]
+  },
+  "ex-twp89ebg": {
+    "prompt": "Um passo de esteira roda `bicep build main.bicep` e passa. O log mostra um aviso BCP083 sobre uma propriedade que não existe. Por que o passo passou, e o que conserta isso?",
+    "hint": "Qual foi o código de saída?",
+    "choices": [
+      {
+        "text": "BCP083 é informativo; não há nada a consertar",
+        "why": "Ele nomeia uma propriedade que não existe; a saída sairia errada."
+      },
+      {
+        "text": "O passo rodou o linter, que nunca falha",
+        "why": "Ele rodou o build, e regras de lint podem ser promovidas a erro."
+      },
+      {
+        "text": "Um aviso sai com 0; faça avisos quebrarem o passo",
+        "why": "Certo. Uma esteira que só lê o código de saída entrega avisos."
+      },
+      {
+        "text": "O Bicep do agente é mais antigo que o do desenvolvedor",
+        "why": "O aviso apareceu, então a versão pegou; o problema é o que vem depois."
+      }
+    ]
+  },
+  "ex-g7eddppg": {
+    "prompt": "Por que uma saída com `listKeys()` é perigosa mesmo com o deploy dando certo?",
+    "hint": "Onde ficam guardadas as saídas de um deploy?",
+    "choices": [
+      {
+        "text": "O listKeys gira a chave a cada chamada",
+        "why": "Ele lê as chaves; não as gira."
+      },
+      {
+        "text": "A chave fica no histórico de deploys",
+        "why": "Certo. É disso que trata o outputs-should-not-contain-secrets."
+      },
+      {
+        "text": "Saídas têm limite de 24 caracteres, e a chave é cortada",
+        "why": "Não existe esse limite; a chave inteira estaria lá."
+      },
+      {
+        "text": "Faz o template falhar no segundo deploy",
+        "why": "Ele dá certo toda vez, e é isso que o torna fácil de não ver."
+      }
+    ]
+  },
+  "ex-2yccpng6": {
+    "prompt": "As regras de lint são ligadas, desligadas ou promovidas a erro num arquivo chamado ___ ao lado dos arquivos Bicep.",
+    "hint": "Um arquivo JSON cujo nome começa com bicep.",
+    "blanks": [
+      {
+        "accept": [
+          "bicepconfig.json"
+        ]
+      }
+    ]
+  },
+  "ex-jzerjwpg": {
+    "prompt": "`lint.bicep` escreveu o local como o literal `'brazilsouth'`, e o `bicep lint` não disse nada. Qual é a conclusão certa?",
+    "hint": "Existe uma regra para isso?",
+    "choices": [
+      {
+        "text": "Um local literal é boa prática no Bicep",
+        "why": "Um parâmetro ou resourceGroup().location é o conselho usual; o silêncio é questão de configuração."
+      },
+      {
+        "text": "O linter não enxerga literais de string",
+        "why": "Ele viu a chamada listKeys dentro de uma string no mesmo arquivo."
+      },
+      {
+        "text": "A regra fica desligada se o bicepconfig.json não a ligar",
+        "why": "Certo. Um linter é só as regras que mandaram ele rodar."
+      },
+      {
+        "text": "O Resource Manager reescreve o local no deploy",
+        "why": "Ele implanta onde o template mandar."
+      }
+    ]
+  },
+  "ex-d5mvsn0e": {
+    "prompt": "Ponha em ordem a vida do template de armazenamento da loja, de escrever até a conta existir.",
+    "hint": "Dois passos rodam no notebook, dois no Azure.",
+    "trap": "Achar que o Resource Manager lê o Bicep é o deslize: ele recebe só o JSON compilado.",
+    "items": [
+      "Escrever shop.bicep",
+      "bicep build escreve shop.json com o dependsOn preenchido",
+      "O Resource Manager recebe o JSON e confere política e permissões",
+      "A conta é criada, depois o serviço de blobs, depois o contêiner"
+    ]
+  }
+}

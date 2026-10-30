@@ -1,0 +1,264 @@
+{
+  "ex-rv7jv7gt": {
+    "prompt": "Por que a loja alerta sobre falhas de checkout com um alerta de pesquisa de log e não com um alerta de métrica?",
+    "hint": "Qual sinal sabe quais requisições falharam?",
+    "choices": [
+      {
+        "text": "Alertas de métrica não têm severidade",
+        "why": "Os dois tipos têm."
+      },
+      {
+        "text": "Só os logs sabem qual rota falhou",
+        "why": "Certo. Uma métrica de plataforma conta 5xx do app inteiro; a consulta isola o checkout."
+      },
+      {
+        "text": "Alertas de pesquisa de log disparam mais rápido que os de métrica",
+        "why": "O contrário: logs chegam em minutos, métricas são avaliadas a cada minuto."
+      },
+      {
+        "text": "Alertas de métrica são cobrados por requisição",
+        "why": "Regras são cobradas por regra e por frequência, não por requisição."
+      }
+    ]
+  },
+  "ex-a2n6qjmx": {
+    "prompt": "Ligue cada configuração de um alerta de pesquisa de log ao que ela decide.",
+    "hint": "Quatro configurações, quatro perguntas.",
+    "pairs": [
+      {
+        "left": "frequência de avaliação",
+        "right": "De quanto em quanto tempo a consulta roda"
+      },
+      {
+        "left": "tamanho da janela",
+        "right": "Quanto para trás cada execução olha"
+      },
+      {
+        "left": "períodos com falha",
+        "right": "Quantos sins seguidos antes de disparar"
+      },
+      {
+        "left": "autoMitigate",
+        "right": "Se ele se resolve sozinho"
+      }
+    ],
+    "right_distractors": [
+      "Quem recebe o e-mail"
+    ]
+  },
+  "ex-we3g72ch": {
+    "prompt": "Uma regra sem estado (sem autoMitigate) avalia a cada 5 minutos durante um incidente de 40 minutos. O que o plantão recebe?",
+    "hint": "Todo sim é um alerta novo.",
+    "choices": [
+      {
+        "text": "Um alerta, resolvido no fim",
+        "why": "Esse é o comportamento com estado."
+      },
+      {
+        "text": "Nada, até o incidente ter acabado",
+        "why": "Alertas disparam durante a condição, não depois."
+      },
+      {
+        "text": "Cerca de oito alertas, um por avaliação",
+        "why": "Certo. Por isso a loja liga o autoMitigate."
+      },
+      {
+        "text": "Um alerta por requisição que falhou na janela",
+        "why": "Alertas vêm das avaliações da consulta, não de cada linha."
+      }
+    ]
+  },
+  "ex-8wnv1sqt": {
+    "prompt": "Por que o checkout-failing exige `total >= 10`?",
+    "hint": "Pense em três checkouts às 03:00.",
+    "choices": [
+      {
+        "text": "Para uma madrugada calma não chamar ninguém",
+        "why": "Certo. Uma em três é 33% e não significa nada."
+      },
+      {
+        "text": "O Kusto recusa porcentagens sobre menos de dez linhas",
+        "why": "Ele calcula qualquer porcentagem; a guarda é escolha de desenho."
+      },
+      {
+        "text": "Alertas de pesquisa de log precisam de dez linhas para rodar",
+        "why": "Eles rodam sobre qualquer resultado, até nenhum."
+      },
+      {
+        "text": "Dez é o padrão de períodos com falha",
+        "why": "Períodos com falha contam avaliações, não requisições."
+      }
+    ]
+  },
+  "ex-p41hrb27": {
+    "prompt": "Segundo o evaluate.kql, quando o checkout-failing teria disparado, no horário de São Paulo?",
+    "hint": "A primeira janela a dizer sim terminou às 17:10 UTC.",
+    "choices": [
+      {
+        "text": "14:05, o momento em que o incidente começou",
+        "why": "A regra precisa que uma janela termine para enxergá-la."
+      },
+      {
+        "text": "14:10",
+        "why": "Certo. 17:10 UTC, e alguns minutos depois num workspace real, onde os logs chegam com atraso."
+      },
+      {
+        "text": "17:10, porque alertas usam o horário de São Paulo",
+        "why": "17:10 é UTC; São Paulo está três horas atrás."
+      },
+      {
+        "text": "14:55, quando se resolveu",
+        "why": "Essa é a resolução, não o disparo."
+      }
+    ]
+  },
+  "ex-fqhcxrfr": {
+    "prompt": "Na janela que termina às 17:25, que porcentagem dos checkouts falhou?",
+    "hint": "9 de 22, arredondado para o inteiro mais próximo.",
+    "unit": "%"
+  },
+  "ex-n0bypzey": {
+    "prompt": "Um colega propõe subir o limite de 5% para 50% para evitar ruído. O que a tabela de quinta diz que aconteceria?",
+    "hint": "Olhe a janela das 17:25.",
+    "choices": [
+      {
+        "text": "O alerta dispararia uma vez e se resolveria no fim",
+        "why": "17:25 estava em 41%, então ele se resolveria no meio do incidente."
+      },
+      {
+        "text": "Ele nunca dispararia durante o incidente de quinta",
+        "why": "A maioria das janelas passou de 60%."
+      },
+      {
+        "text": "Ele se resolveria às 17:25 e dispararia de novo às 17:30",
+        "why": "Certo. Um limite alto transforma um incidente em dois alertas."
+      },
+      {
+        "text": "Ele dispararia antes, às 17:05",
+        "why": "Um limite maior só dispara depois ou igual."
+      }
+    ]
+  },
+  "ex-n33mk7x6": {
+    "prompt": "Doze regras de alerta devem chamar o plantonista. O que o action group dá à equipe?",
+    "hint": "Conte as edições quando a escala muda.",
+    "choices": [
+      {
+        "text": "E-mails mais baratos",
+        "why": "Preço não é o motivo."
+      },
+      {
+        "text": "Avaliação mais rápida das doze regras",
+        "why": "Action groups agem depois do disparo; não avaliam."
+      },
+      {
+        "text": "Um lugar para mudar quem é chamado",
+        "why": "Certo. Doze regras nomeiam um grupo; uma edição muda todas."
+      },
+      {
+        "text": "Supressão automática de alertas à noite",
+        "why": "Esse é o trabalho de uma processing rule."
+      }
+    ]
+  },
+  "ex-b10s7rkm": {
+    "prompt": "O que `useCommonAlertSchema: true` muda para o webhook de chat da loja?",
+    "hint": "Alertas de métrica e de log chegam em que formato?",
+    "choices": [
+      {
+        "text": "Ele cifra o conteúdo",
+        "why": "O HTTPS o protege no caminho; o esquema é sobre a forma."
+      },
+      {
+        "text": "Todo tipo de alerta chega num formato JSON único",
+        "why": "Certo. O consumidor entende um formato em vez de vários."
+      },
+      {
+        "text": "Ele limita o webhook a alertas de severidade 0 e 1",
+        "why": "Filtrar severidade não é o que o esquema faz."
+      },
+      {
+        "text": "Ele transforma o webhook num e-mail",
+        "why": "Cada destinatário mantém o seu tipo."
+      }
+    ]
+  },
+  "ex-j2jr9g9k": {
+    "prompt": "Durante a manutenção planejada, por que a loja suprime notificações em vez de desativar o checkout-failing?",
+    "hint": "O que uma regra desativada registra?",
+    "choices": [
+      {
+        "text": "Regras desativadas continuam sendo cobradas",
+        "why": "Custo não é o argumento."
+      },
+      {
+        "text": "Regras não podem ser desativadas depois de implantadas",
+        "why": "Podem; `enabled: false` faz isso."
+      },
+      {
+        "text": "O alerta continua registrado",
+        "why": "Certo. Uma regra desativada não deixa rastro e é fácil de esquecer."
+      },
+      {
+        "text": "Processing rules chamam outra equipe no lugar",
+        "why": "Esta remove todos os action groups; não chama ninguém."
+      }
+    ]
+  },
+  "ex-5bevg4k9": {
+    "prompt": "A janela de manutenção foi escrita com timeZone UTC e as mesmas 02:00 às 04:00. O que acontece na noite?",
+    "hint": "02:00 UTC são que horas em São Paulo?",
+    "choices": [
+      {
+        "text": "Nada muda; o Azure converte para o horário local",
+        "why": "O horário é lido no fuso que ele nomeia."
+      },
+      {
+        "text": "Ele silencia das 23:00 à 01:00 e chama às 02:05",
+        "why": "Certo. A janela cai três horas antes no horário local."
+      },
+      {
+        "text": "A processing rule falha ao implantar",
+        "why": "UTC é um fuso válido; ela implanta e está errada."
+      },
+      {
+        "text": "Ela silencia das 05:00 às 07:00",
+        "why": "São Paulo está atrás de UTC, não à frente."
+      }
+    ]
+  },
+  "ex-b4s1r1mp": {
+    "prompt": "Ponha em ordem o que acontece às 17:10 UTC de quinta, do ponto de vista da regra.",
+    "hint": "Consulta, condição, alerta, processamento, destinatários.",
+    "trap": "Pôr o action group antes das processing rules é o deslize: elas ficam entre o alerta e os destinatários.",
+    "items": [
+      "A consulta roda sobre 17:05 a 17:10",
+      "Ela devolve uma linha, então a condição é cumprida",
+      "Um alerta de severidade 1 dispara",
+      "As processing rules são aplicadas a ele",
+      "O ag-shop-oncall manda e-mail e posta no chat"
+    ]
+  },
+  "ex-ksgpff3y": {
+    "prompt": "Quais destas coisas a lição executou de fato? Marque todas as que se aplicam.",
+    "hint": "Compilar e consultar, sim; disparar e enviar, não.",
+    "choices": [
+      {
+        "text": "Compilar a regra de alerta, o action group e a processing rule",
+        "why": "Sim. bicep build, os três."
+      },
+      {
+        "text": "A consulta da regra em cada janela de cinco minutos da quinta",
+        "why": "Sim. O evaluate.kql no emulador."
+      },
+      {
+        "text": "Um e-mail para oncall@example.com",
+        "why": "Não. Nada foi implantado, e example.com não pertence a ninguém."
+      },
+      {
+        "text": "Suprimir um alerta real durante a manutenção",
+        "why": "Não. Não havia alertas para suprimir."
+      }
+    ]
+  }
+}

@@ -1,0 +1,385 @@
+[
+  {
+    "id": "ex-2zfnf2b7",
+    "version": 1,
+    "section": "provider",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these Terraform commands ran fully in the lab, with no Azure credentials?",
+    "hint": "Which ones only read the files and the provider's schema?",
+    "choices": [
+      {
+        "text": "terraform plan",
+        "correct": false,
+        "why": "Plan asks Resource Manager what exists, and stopped at the sign-in."
+      },
+      {
+        "text": "terraform validate",
+        "correct": true,
+        "why": "Right. It checks the configuration against the provider's schema, locally."
+      },
+      {
+        "text": "terraform init with the azurerm backend",
+        "correct": false,
+        "why": "The backend needs the Storage API, and stopped at the sign-in too."
+      },
+      {
+        "text": "terraform apply",
+        "correct": false,
+        "why": "Apply changes Azure; nothing in the lab can."
+      }
+    ]
+  },
+  {
+    "id": "ex-n55mwqqz",
+    "version": 1,
+    "section": "provider",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why commit `.terraform.lock.hcl` and not `.terraform/`?",
+    "hint": "One is a record, the other is what it records.",
+    "choices": [
+      {
+        "text": "The lock file is small, and Git refuses directories",
+        "correct": false,
+        "why": "Git stores directories fine; the reason is what each one is."
+      },
+      {
+        "text": "`.terraform/` holds the state, which must stay private",
+        "correct": false,
+        "why": "The state is in the backend; `.terraform/` holds the downloaded provider."
+      },
+      {
+        "text": "The lock records versions and checksums; .terraform holds 254 MB of downloads",
+        "correct": true,
+        "why": "Right. Everyone installs the same bytes from the record, and nobody commits the bytes."
+      },
+      {
+        "text": "The lock file stops two people applying at once",
+        "correct": false,
+        "why": "That is the state lock, a lease in the backend; this file pins providers."
+      }
+    ]
+  },
+  {
+    "id": "ex-dscnpqsh",
+    "version": 1,
+    "section": "provider",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the azurerm provider require `subscription_id` since version 4?",
+    "hint": "What would it otherwise have to do?",
+    "choices": [
+      {
+        "text": "So it never guesses which subscription to change",
+        "correct": true,
+        "why": "Right. A default subscription is somebody's last `az account set`."
+      },
+      {
+        "text": "Because resource group names are unique per subscription",
+        "correct": false,
+        "why": "True, and not the reason the provider insists."
+      },
+      {
+        "text": "To bill Terraform's own usage to that subscription",
+        "correct": false,
+        "why": "Terraform is not billed by Azure."
+      },
+      {
+        "text": "Because OIDC tokens carry no tenant",
+        "correct": false,
+        "why": "The tenant comes separately; the subscription is a different question."
+      }
+    ]
+  },
+  {
+    "id": "ex-n183hqy4",
+    "version": 1,
+    "section": "credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading the lab's `terraform plan` error from the right, what is the first thing that failed?",
+    "hint": "The innermost cause is at the end.",
+    "choices": [
+      {
+        "text": "Building an authoriser for Resource Manager",
+        "correct": false,
+        "why": "That is the outermost failure, the consequence of the others."
+      },
+      {
+        "text": "Reaching the Terraform Registry",
+        "correct": false,
+        "why": "The provider was already installed by init."
+      },
+      {
+        "text": "The Azure command line had no sign-in",
+        "correct": true,
+        "why": "Right. `Please run 'az login'` is the innermost cause; everything else follows."
+      },
+      {
+        "text": "Parsing the subscription id",
+        "correct": false,
+        "why": "The id was accepted; the tenant could not be found."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq2xr7jy",
+    "version": 1,
+    "section": "credentials",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each place Terraform runs to the way it should sign in.",
+    "hint": "Three places, three mechanisms, none of them a stored secret.",
+    "pairs": [
+      {
+        "left": "Your laptop",
+        "right": "az login, as yourself"
+      },
+      {
+        "left": "A GitHub workflow",
+        "right": "OIDC with ARM_USE_OIDC"
+      },
+      {
+        "left": "A self-hosted agent VM in Azure",
+        "right": "A managed identity"
+      }
+    ],
+    "right_distractors": [
+      "A client secret in the provider block"
+    ]
+  },
+  {
+    "id": "ex-7z1v9dj4",
+    "version": 1,
+    "section": "state-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the shop keep the state account in `rg-tfstate`, managed by no Terraform configuration?",
+    "hint": "What could the shop's own configuration one day delete?",
+    "choices": [
+      {
+        "text": "Storage accounts cannot share a group with app resources",
+        "correct": false,
+        "why": "They can; the separation is a decision about risk."
+      },
+      {
+        "text": "So the configuration that might delete rg-shop never owns its own record",
+        "correct": true,
+        "why": "Right. A destroy cannot take the state with it."
+      },
+      {
+        "text": "To get a cheaper price for state blobs",
+        "correct": false,
+        "why": "Price is per account and data, not per resource group."
+      },
+      {
+        "text": "Because backends refuse accounts in other groups",
+        "correct": false,
+        "why": "The backend names any group you like."
+      }
+    ]
+  },
+  {
+    "id": "ex-wj64c4eq",
+    "version": 1,
+    "section": "state-account",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The backend block leaves out `use_azuread_auth`. What changes, and why does the shop care?",
+    "hint": "What does the backend use instead of your identity?",
+    "choices": [
+      {
+        "text": "Nothing; the backend always uses the signed-in identity",
+        "correct": false,
+        "why": "Without the setting it fetches the account key."
+      },
+      {
+        "text": "State becomes unencrypted at rest",
+        "correct": false,
+        "why": "Encryption at rest does not depend on how the backend authenticates."
+      },
+      {
+        "text": "Locking stops working",
+        "correct": false,
+        "why": "Leases work with either way of signing in."
+      },
+      {
+        "text": "It uses the account key, so key holders read every state",
+        "correct": true,
+        "why": "Right. State holds every value Terraform knows, so the shop turns key access off."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kpxt45r",
+    "version": 1,
+    "section": "state-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform plan` failed on the Resource Manager API and `terraform init` with the backend failed on the Storage API. What does the pair teach?",
+    "hint": "Two APIs, two roles.",
+    "choices": [
+      {
+        "text": "That the backend and the provider use different versions of Terraform",
+        "correct": false,
+        "why": "One Terraform binary ran both."
+      },
+      {
+        "text": "State and resources sit behind separate roles",
+        "correct": true,
+        "why": "Right. Storage Blob Data Contributor on the account, Contributor on the resource groups."
+      },
+      {
+        "text": "That Azurite answered one of them",
+        "correct": false,
+        "why": "Neither reached Azurite; the backend block names a real account."
+      },
+      {
+        "text": "That the lab's network blocks storage",
+        "correct": false,
+        "why": "Both stopped at the sign-in, before any network request to Azure."
+      }
+    ]
+  },
+  {
+    "id": "ex-54dx2ggw",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the azurerm backend's state lock?",
+    "hint": "A Blob Storage feature.",
+    "choices": [
+      {
+        "text": "A row in a separate locking table",
+        "correct": false,
+        "why": "No table is needed; that was the S3 backend's old design."
+      },
+      {
+        "text": "A file named terraform.lock next to the state",
+        "correct": false,
+        "why": "There is no second file; the claim is on the state blob itself."
+      },
+      {
+        "text": "A lease on the state blob",
+        "correct": true,
+        "why": "Right. While held, nobody else can take it or overwrite the blob."
+      },
+      {
+        "text": "A Resource Manager lock on the storage account",
+        "correct": false,
+        "why": "Those stop deletion of the account; they are lesson 7's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcjw15ax",
+    "version": 1,
+    "section": "locking",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Acquiring a lease on a blob that already has one fails with the error code Lease___.",
+    "hint": "Two words joined, after Lease.",
+    "blanks": [
+      {
+        "accept": [
+          "AlreadyPresent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-93d6d718",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline was cancelled during `terraform apply`, and the state is now locked. What does the shop do before running `terraform force-unlock`?",
+    "hint": "What does breaking a lease not check?",
+    "choices": [
+      {
+        "text": "Waits sixty seconds for the lease to expire",
+        "correct": false,
+        "why": "Terraform's lease has no time limit; it was infinite in the transcript."
+      },
+      {
+        "text": "Deletes the state blob and uploads a fresh one",
+        "correct": false,
+        "why": "That destroys the record; nothing about a lock calls for it."
+      },
+      {
+        "text": "Confirms the holder is really gone",
+        "correct": true,
+        "why": "Right. Breaking frees the blob whether or not somebody is still writing."
+      },
+      {
+        "text": "Adds force-unlock to the pipeline's retry step",
+        "correct": false,
+        "why": "That is exactly what the shop's rule forbids."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbjdtgvm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what the shop's pipeline does with Terraform in order.",
+    "hint": "Local checks first, then Azure, then the lock.",
+    "items": [
+      "terraform fmt -check and validate",
+      "Sign in with OIDC",
+      "init reaches the state blob",
+      "plan takes the lease, reads the state and the resources"
+    ],
+    "trap": "Signing in before the local checks is the slip: they need no identity and fail faster."
+  },
+  {
+    "id": "ex-2jxfs5rh",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these protect the shop's state? Choose all that apply.",
+    "hint": "Versions, separation, identity, the lease.",
+    "choices": [
+      {
+        "text": "Blob versioning on the state account",
+        "correct": true,
+        "why": "Yes. Lesson 7 restores from it."
+      },
+      {
+        "text": "Turning off key access on the account",
+        "correct": true,
+        "why": "Yes. Only identities with the data role can read it."
+      },
+      {
+        "text": "The lease taken during plan and apply",
+        "correct": true,
+        "why": "Yes. Two runs cannot write it at once."
+      },
+      {
+        "text": "Committing terraform.tfstate to the repository as a backup",
+        "correct": false,
+        "why": "No. It holds every value Terraform knows, sensitive ones included."
+      }
+    ]
+  }
+]

@@ -1,0 +1,305 @@
+[
+  {
+    "id": "ex-3hjxc385",
+    "version": 1,
+    "section": "the-public-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a private endpoint do to a service's public endpoint?",
+    "hint": "It adds a path.",
+    "choices": [
+      {
+        "text": "Removes it automatically",
+        "correct": false,
+        "why": "It stays until publicNetworkAccess is disabled."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Closing the public path is a separate setting."
+      },
+      {
+        "text": "Moves it behind Front Door",
+        "correct": false,
+        "why": "Front Door is a separate service, unrelated to private endpoints."
+      },
+      {
+        "text": "Restricts it to Azure subnets, like a service endpoint",
+        "correct": false,
+        "why": "That is what a service endpoint does; a private endpoint adds a private address."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjbx3jye",
+    "version": 1,
+    "section": "the-public-path",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of reaching a service to what happens to its public endpoint.",
+    "hint": "Only one adds a private address.",
+    "pairs": [
+      {
+        "left": "firewall rules",
+        "right": "Remains, filtered by address"
+      },
+      {
+        "left": "service endpoints",
+        "right": "Remains, filtered by subnet"
+      },
+      {
+        "left": "private endpoint",
+        "right": "Remains until you disable it"
+      }
+    ]
+  },
+  {
+    "id": "ex-bnt17g8q",
+    "version": 1,
+    "section": "private-endpoint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The endpoint exists and is approved, but an app in vnet-shop still reaches the SQL server's public address. Which resource is the likely gap?",
+    "hint": "Who answers the name inside the network?",
+    "choices": [
+      {
+        "text": "The private endpoint's network interface",
+        "correct": false,
+        "why": "It exists; the name just does not point at it."
+      },
+      {
+        "text": "A second SQL server",
+        "correct": false,
+        "why": "One server is enough; the issue is resolution."
+      },
+      {
+        "text": "The zone's link to the network",
+        "correct": true,
+        "why": "Right. Without it, nobody in the network uses the zone."
+      },
+      {
+        "text": "An NSG rule allowing port 1433",
+        "correct": false,
+        "why": "That is about traffic, not about which address the name returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd1tbtmw",
+    "version": 1,
+    "section": "private-endpoint",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the zone's name use `environment().suffixes.sqlServerHostname`?",
+    "hint": "Not every Azure cloud has the same suffix.",
+    "choices": [
+      {
+        "text": "So the same file works in other Azure clouds",
+        "correct": true,
+        "why": "Right. Sovereign clouds use different domain suffixes."
+      },
+      {
+        "text": "Zone names must be computed, never written",
+        "correct": false,
+        "why": "A literal name works in the public cloud; the function is for portability."
+      },
+      {
+        "text": "It hides the zone's name from the internet",
+        "correct": false,
+        "why": "Private zones are not public anyway; the name is not secret."
+      },
+      {
+        "text": "It makes the zone resolve public names too",
+        "correct": false,
+        "why": "The zone answers only its own records."
+      }
+    ]
+  },
+  {
+    "id": "ex-7a4fqd8t",
+    "version": 1,
+    "section": "private-endpoint",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a private endpoint to a SQL server, `groupIds` holds the value ___.",
+    "hint": "One word in camel case.",
+    "blanks": [
+      {
+        "accept": [
+          "sqlServer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xz771egm",
+    "version": 1,
+    "section": "dns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The private endpoint works from Azure VMs but not from the office over VPN. What is the likely fix?",
+    "hint": "Which DNS does the office ask?",
+    "choices": [
+      {
+        "text": "A second private endpoint for the office",
+        "correct": false,
+        "why": "One endpoint serves both; the office cannot resolve it."
+      },
+      {
+        "text": "Turning public network access back on",
+        "correct": false,
+        "why": "That reopens the door the lesson closed."
+      },
+      {
+        "text": "A larger VPN gateway",
+        "correct": false,
+        "why": "Bandwidth is not the problem; the name is."
+      },
+      {
+        "text": "A forwarder or DNS Private Resolver for privatelink domains",
+        "correct": true,
+        "why": "Right. On-premises queries must reach Azure's resolver."
+      }
+    ]
+  },
+  {
+    "id": "ex-stvzah85",
+    "version": 1,
+    "section": "dns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A connection to a private endpoint fails. What does the lesson test first?",
+    "hint": "A DNS question until proven otherwise.",
+    "choices": [
+      {
+        "text": "The SQL password",
+        "correct": false,
+        "why": "Authentication comes after the address is right."
+      },
+      {
+        "text": "Resolve the name from where the client runs",
+        "correct": true,
+        "why": "Right. Compare the answer with the endpoint's address."
+      },
+      {
+        "text": "Restart the SQL server",
+        "correct": false,
+        "why": "Nothing about a restart changes which address a name returns."
+      },
+      {
+        "text": "Recreate the private endpoint in another subnet",
+        "correct": false,
+        "why": "Before changing anything, find out what the name resolves to."
+      }
+    ]
+  },
+  {
+    "id": "ex-cv29n9gy",
+    "version": 1,
+    "section": "dns",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A custom DNS server in the network should forward to Azure's resolver at 168.63.129.___.",
+    "hint": "The last part of the address.",
+    "blanks": [
+      {
+        "accept": [
+          "16"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8r325n38",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the shop assign a `deny` policy instead of only setting publicNetworkAccess to Disabled?",
+    "hint": "Who will turn it back on?",
+    "choices": [
+      {
+        "text": "The property cannot be set in Bicep",
+        "correct": false,
+        "why": "It can; lesson 17's vault does."
+      },
+      {
+        "text": "So nobody quietly turns it back on",
+        "correct": true,
+        "why": "Right. The policy refuses the change at Resource Manager."
+      },
+      {
+        "text": "Policies are cheaper than private endpoints",
+        "correct": false,
+        "why": "They do different jobs; cost is not the reason."
+      },
+      {
+        "text": "A deny policy also creates the private endpoint",
+        "correct": false,
+        "why": "It refuses; it creates nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-a64j70ag",
+    "version": 1,
+    "section": "closing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the shop's steps for closing the SQL server's public path in order.",
+    "hint": "Private path first, policy last.",
+    "items": [
+      "Create the private endpoint, zone, link and zone group",
+      "Check the name resolves privately from the app's network",
+      "Set publicNetworkAccess to Disabled on existing servers",
+      "Assign the deny policy at the subscription"
+    ],
+    "trap": "Disabling public access before the private path resolves is the slip: the app loses its database."
+  },
+  {
+    "id": "ex-z2jzt16m",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true after the lesson's files are deployed? Choose all that apply.",
+    "hint": "Private path, one zone, one policy.",
+    "choices": [
+      {
+        "text": "The app's connection string does not change",
+        "correct": true,
+        "why": "Yes. The same name answers privately."
+      },
+      {
+        "text": "Existing public SQL servers are switched off by the policy",
+        "correct": false,
+        "why": "No. Deny stops new violations; existing ones show as non-compliant."
+      },
+      {
+        "text": "A new SQL server with public access is refused",
+        "correct": true,
+        "why": "Yes. By Resource Manager, whatever tool sent it."
+      },
+      {
+        "text": "The office resolves the private address with no further setup",
+        "correct": false,
+        "why": "No. It needs a forwarder or the DNS Private Resolver."
+      }
+    ]
+  }
+]

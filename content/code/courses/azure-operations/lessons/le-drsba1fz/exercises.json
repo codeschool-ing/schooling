@@ -1,0 +1,390 @@
+[
+  {
+    "id": "ex-50aksmgh",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main.bicep` calls `modules/state.bicep`. What does the compiled `main.json` contain at its top level?",
+    "hint": "Look at the first jq answer in this lesson.",
+    "choices": [
+      {
+        "text": "The three storage resources, flattened into one list",
+        "correct": false,
+        "why": "They are inside, one level down, in the nested template."
+      },
+      {
+        "text": "One nested deployment holding the module's template",
+        "correct": true,
+        "why": "Right. A module compiles to a Microsoft.Resources/deployments resource."
+      },
+      {
+        "text": "A link to the module file, fetched at deployment",
+        "correct": false,
+        "why": "Local modules are embedded; nothing is fetched from your disk later."
+      },
+      {
+        "text": "Nothing until the module is published to a registry",
+        "correct": false,
+        "why": "A local path compiles in place; a registry is one option, not a requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-45s61yrh",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two different modules in `main.bicep` are both given `name: 'storage'`. What goes wrong in the resource group?",
+    "hint": "What does a module's name name?",
+    "choices": [
+      {
+        "text": "Both storage accounts get the same name",
+        "correct": false,
+        "why": "Account names come from their own parameters, not from the module's name."
+      },
+      {
+        "text": "Bicep refuses to compile duplicate module names",
+        "correct": false,
+        "why": "The question is about what happens in Azure; the record is the problem."
+      },
+      {
+        "text": "One deployment record overwrites the other",
+        "correct": true,
+        "why": "Right. The name names a nested deployment, and two under one name share one record."
+      },
+      {
+        "text": "The second module is skipped as a duplicate",
+        "correct": false,
+        "why": "Nothing is skipped silently; the records collide."
+      }
+    ]
+  },
+  {
+    "id": "ex-r46bjg3j",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the shop build the account name with `uniqueString(resourceGroup().id)`?",
+    "hint": "It must be the same every time, and unlikely to be taken.",
+    "choices": [
+      {
+        "text": "It changes on every deployment, so old accounts are never reused",
+        "correct": false,
+        "why": "It is deterministic; a changing name would create a new account each time."
+      },
+      {
+        "text": "Stable per group, and unlikely to clash worldwide",
+        "correct": true,
+        "why": "Right. Storage account names are global, and the hash keeps the name fixed for the group."
+      },
+      {
+        "text": "Azure requires it for every storage account",
+        "correct": false,
+        "why": "It is a convention, not a requirement."
+      },
+      {
+        "text": "It encrypts the name so it cannot be read in logs",
+        "correct": false,
+        "why": "A hash is not encryption, and the name is not a secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-81erzatg",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main.wrong.bicepparam` sets `environment = 'production'` and an undeclared `region`. What does `bicep build-params` do?",
+    "hint": "Compare with the warning in lesson 4.",
+    "choices": [
+      {
+        "text": "Writes the file and warns about both",
+        "correct": false,
+        "why": "Both are errors here, and no file was written."
+      },
+      {
+        "text": "Ignores region and accepts production as a string",
+        "correct": false,
+        "why": "That is how the old JSON parameter files behaved; the bicepparam file is checked."
+      },
+      {
+        "text": "Refuses with two errors and exit status 1",
+        "correct": true,
+        "why": "Right. The file names its template, so both mistakes are checked against it."
+      },
+      {
+        "text": "Asks interactively for the right value",
+        "correct": false,
+        "why": "It is a compiler; it reports and stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvb5nwwz",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says `@secure()` means the password is safe everywhere. Using `db.parameters.json` from this lesson, what do you answer?",
+    "hint": "Read the last transcript.",
+    "choices": [
+      {
+        "text": "It protects the value inside Azure; the generated file holds it in plain text",
+        "correct": true,
+        "why": "Right. So a generated parameters file is never committed."
+      },
+      {
+        "text": "Agreed: the generated file stores it encrypted",
+        "correct": false,
+        "why": "The transcript shows the value in clear."
+      },
+      {
+        "text": "It is safe in the file, but not in the deployment history",
+        "correct": false,
+        "why": "The reverse: secure keeps it out of the history, and the file has it in clear."
+      },
+      {
+        "text": "It is safe as long as the variable name is secret",
+        "correct": false,
+        "why": "The name SHOP_DB_PASSWORD hides nothing; the value is the secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-3g5a791g",
+    "version": 1,
+    "section": "parameters",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `.bicepparam` file names the template it belongs to with the keyword ___.",
+    "hint": "Its first line.",
+    "blanks": [
+      {
+        "accept": [
+          "using"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x6axev9f",
+    "version": 1,
+    "section": "what-if",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each what-if change type to its meaning.",
+    "hint": "Six exist; four are here.",
+    "pairs": [
+      {
+        "left": "Create",
+        "right": "Not there yet, will be made"
+      },
+      {
+        "left": "Modify",
+        "right": "There, and some properties will change"
+      },
+      {
+        "left": "Ignore",
+        "right": "There, not in the template, left alone"
+      },
+      {
+        "left": "Deploy",
+        "right": "There, and what-if cannot tell what changes"
+      }
+    ],
+    "right_distractors": [
+      "Deleted because the file no longer names it"
+    ]
+  },
+  {
+    "id": "ex-dz8dtxbz",
+    "version": 1,
+    "section": "what-if",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What-if shows Modify on `minimumTlsVersion` of the state account, a property nobody changed in the file. What is the likely story?",
+    "hint": "Who else changes resources?",
+    "choices": [
+      {
+        "text": "What-if always lists every property",
+        "correct": false,
+        "why": "It lists those that would change, plus some known noise."
+      },
+      {
+        "text": "Somebody changed it by hand, and the deployment will undo that",
+        "correct": true,
+        "why": "Right. Modify on an untouched property is drift, worth reading before deploying."
+      },
+      {
+        "text": "The API version in the file is too old to set it",
+        "correct": false,
+        "why": "An old API version would fail to compile or ignore it, not show a change."
+      },
+      {
+        "text": "Bicep changed the value during compilation",
+        "correct": false,
+        "why": "The compiled JSON carries what the file says."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhd8aty4",
+    "version": 1,
+    "section": "what-if",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop deletes a Redis cache from `main.bicep` and redeploys normally. What-if had listed it as Ignore. What is true a month later?",
+    "hint": "What does incremental mode do to what it no longer sees?",
+    "choices": [
+      {
+        "text": "It was deleted at the redeploy",
+        "correct": false,
+        "why": "Incremental deployments never delete what the file stops mentioning."
+      },
+      {
+        "text": "Azure deleted it after 30 days without a deployment",
+        "correct": false,
+        "why": "Nothing expires resources for lack of deployments."
+      },
+      {
+        "text": "It was moved to a recycle bin",
+        "correct": false,
+        "why": "No such thing happens to an ignored resource."
+      },
+      {
+        "text": "It still runs, and is billed",
+        "correct": true,
+        "why": "Right. Ignore means left alone, which is what a stack with deleteResources changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-93jbq6cy",
+    "version": 1,
+    "section": "stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which stack setting stops somebody deleting the shop's app service plan from the portal?",
+    "hint": "It denies.",
+    "choices": [
+      {
+        "text": "--action-on-unmanage deleteResources",
+        "correct": false,
+        "why": "That decides what happens to resources leaving the file."
+      },
+      {
+        "text": "--deny-settings-mode denyDelete",
+        "correct": true,
+        "why": "Right. Deletion by any route outside the stack is refused."
+      },
+      {
+        "text": "--action-on-unmanage detachAll",
+        "correct": false,
+        "why": "Detaching stops managing; it protects nothing."
+      },
+      {
+        "text": "The stack's name",
+        "correct": false,
+        "why": "A name protects nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-42nrg143",
+    "version": 1,
+    "section": "stacks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the shop never use `deleteResources` on the resource group holding the Terraform state account?",
+    "hint": "What would a careless edit of the file then delete?",
+    "choices": [
+      {
+        "text": "Stacks cannot manage storage accounts",
+        "correct": false,
+        "why": "They can; the question is whether they should delete one."
+      },
+      {
+        "text": "deleteResources is slower than detachAll",
+        "correct": false,
+        "why": "Speed is not the concern."
+      },
+      {
+        "text": "A line removed by mistake would delete the state, which lesson 7 is about",
+        "correct": true,
+        "why": "Right. Where loss is unrecoverable, a deletion should never follow from an edit."
+      },
+      {
+        "text": "Terraform refuses to use an account a stack manages",
+        "correct": false,
+        "why": "Terraform does not know or care which tool created the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hb46dye",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the shop's path for a change to main.bicep in order.",
+    "hint": "Check locally, ask Azure, ask a person, then deploy.",
+    "items": [
+      "bicep build and lint, with warnings failing the step",
+      "bicep build-params for the environment",
+      "what-if against rg-shop",
+      "A person approves, reading the what-if",
+      "The stack deploys"
+    ],
+    "trap": "Running what-if before the local checks is the slip: Azure would be asked about a file that does not even compile."
+  },
+  {
+    "id": "ex-kgbgyh3m",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson run on your computer? Choose all that apply.",
+    "hint": "Anything that needs the real resource group was read.",
+    "choices": [
+      {
+        "text": "Compiling a module into a nested deployment",
+        "correct": true,
+        "why": "Yes. bicep build, locally."
+      },
+      {
+        "text": "Refusing a value @allowed does not permit",
+        "correct": true,
+        "why": "Yes. build-params checked it against the template."
+      },
+      {
+        "text": "A what-if against rg-shop",
+        "correct": false,
+        "why": "No. It needs Resource Manager and the real group."
+      },
+      {
+        "text": "Creating a deployment stack with denyDelete",
+        "correct": false,
+        "why": "No. A stack is a resource in a subscription."
+      }
+    ]
+  }
+]
