@@ -1,0 +1,745 @@
+[
+  {
+    "id": "ex-syrgm9vg",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the three tools does this course install from Ubuntu's own archive with `apt`?",
+    "hint": "Ubuntu packages one of them in a current version; the other two arrive as zip files.",
+    "choices": [
+      {
+        "text": "The Kotlin compiler, as the package `kotlin`",
+        "correct": false,
+        "why": "Ubuntu does not package a current Kotlin, which is why section 02 downloads the zip from the Kotlin project."
+      },
+      {
+        "text": "The JDK, as `openjdk-21-jdk-headless`",
+        "correct": true,
+        "why": "Right: the JDK comes from `apt`, and Kotlin and Gradle are unpacked into `~/.local/share`."
+      },
+      {
+        "text": "Gradle, as the package `gradle`, pinned to 9.8.2",
+        "correct": false,
+        "why": "Gradle 9.8.2 comes from `services.gradle.org` as a zip; Ubuntu's own `gradle` package is far older."
+      },
+      {
+        "text": "All three, in one `apt install` line",
+        "correct": false,
+        "why": "One `apt` line installs the JDK, `unzip` and `curl`; the other two tools are downloaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzgytc64",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `-headless` in `openjdk-21-jdk-headless` leave out?",
+    "hint": "Think about what a server, or this course, never does on screen.",
+    "choices": [
+      {
+        "text": "The compiler, so it runs programs and builds none",
+        "correct": false,
+        "why": "That is the difference between a `-jre` and a `-jdk` package, not what `-headless` means."
+      },
+      {
+        "text": "The JIT compiler, so programs run interpreted",
+        "correct": false,
+        "why": "A headless JVM compiles hot code to machine code exactly like the full one."
+      },
+      {
+        "text": "The libraries for drawing windows and graphics",
+        "correct": true,
+        "why": "Right: nothing in this course draws a window, and Android draws its own."
+      },
+      {
+        "text": "The documentation and the source of the standard library",
+        "correct": false,
+        "why": "Those are separate packages in Ubuntu (`-doc`, `-source`) and have nothing to do with `-headless`."
+      }
+    ]
+  },
+  {
+    "id": "ex-84htmqr8",
+    "version": 1,
+    "section": "the-lab",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before downloading, `apt` said how much disk the JDK, `unzip` and `curl` would take. How many megabytes?",
+    "hint": "The line starts with `After this operation`.",
+    "value": 321,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-h4ect9pm",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sha256sum -c` printed `kotlin-compiler-2.4.21.zip: OK`. What has it established?",
+    "hint": "It compared two things. Where did each come from?",
+    "choices": [
+      {
+        "text": "That the zip unpacks without errors",
+        "correct": false,
+        "why": "It never opens the zip; it hashes the bytes. A matching hash implies the bytes are the published ones, which is a stronger statement."
+      },
+      {
+        "text": "That the bytes on disk are the ones the project published",
+        "correct": true,
+        "why": "Right: it recomputed the checksum of the file and compared it with the one downloaded beside it."
+      },
+      {
+        "text": "That the compiler inside is compatible with Java 21",
+        "correct": false,
+        "why": "A checksum says nothing about compatibility; `kotlinc -version` is what found the JVM."
+      },
+      {
+        "text": "That GitHub's certificate was valid for the whole of the download",
+        "correct": false,
+        "why": "That is `curl`'s job, and it would have refused to download before `sha256sum` ran at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d3r2gv3",
+    "version": 1,
+    "section": "the-lab",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each command to what it does in this course.",
+    "hint": "Section 02 asks each of them what version it is.",
+    "pairs": [
+      {
+        "left": "`kotlinc`",
+        "right": "Compiles `.kt` files into classes or a jar"
+      },
+      {
+        "left": "`java`",
+        "right": "Starts a JVM and runs a jar"
+      },
+      {
+        "left": "`gradle`",
+        "right": "Builds whole projects, from lesson 14 on"
+      },
+      {
+        "left": "`javac`",
+        "right": "Compiles Java source, which this course does not write"
+      }
+    ],
+    "right_distractors": [
+      "Installs the Android SDK and an emulator"
+    ]
+  },
+  {
+    "id": "ex-beg33s4b",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A terminal answers `bash: line 1: kotlinc: command not found`, and `~/.local/share/kotlinc/bin/kotlinc -version` works. What is the cause?",
+    "hint": "The full path proves something about the file.",
+    "choices": [
+      {
+        "text": "The zip was damaged, and `kotlinc` is missing from the unpacked files",
+        "correct": false,
+        "why": "The full path ran the compiler, so the file is there and works."
+      },
+      {
+        "text": "Java is not installed, so the shell hides `kotlinc`",
+        "correct": false,
+        "why": "Without Java the script is found and then fails naming `java`, a different message."
+      },
+      {
+        "text": "The terminal read `~/.bashrc` before the line was there",
+        "correct": true,
+        "why": "Right: the terminal was open before `~/.bashrc` gained its line; `source ~/.bashrc` or a new terminal fixes it."
+      },
+      {
+        "text": "`kotlinc` needs `sudo` to run from a home directory",
+        "correct": false,
+        "why": "Nothing in this course runs the compiler as root, and the full path worked as ana."
+      }
+    ]
+  },
+  {
+    "id": "ex-emq9pbn4",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exit status does the shell give a command it cannot find?",
+    "hint": "`echo $?` printed it twice in this lesson.",
+    "value": 127,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jbweyfkb",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kotlinc -version` prints `/home/ana/.local/share/kotlinc/bin/kotlinc: line 102: java: command not found`. What does that tell you?",
+    "hint": "Which program does the message name, and who printed it?",
+    "choices": [
+      {
+        "text": "`kotlinc` was found and ran, and could not start a JVM",
+        "correct": true,
+        "why": "Right: the compiler is a script around a JVM, and the missing program is `java`. The fix is the JDK."
+      },
+      {
+        "text": "`kotlinc` is missing, and line 102 is where the shell searched",
+        "correct": false,
+        "why": "The message comes from inside `kotlinc`'s own script, so `kotlinc` was found."
+      },
+      {
+        "text": "The compiler needs Java 17 and found a newer one",
+        "correct": false,
+        "why": "No Java was found at all; a version mismatch would print a version."
+      },
+      {
+        "text": "`PATH` is missing `~/.local/share/kotlinc/bin`",
+        "correct": false,
+        "why": "Then `bash` would have said `kotlinc: command not found`, naming `kotlinc`."
+      }
+    ]
+  },
+  {
+    "id": "ex-117x3xd9",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A friend's download of the Gradle zip stopped at 90 MB, and they did not keep any checksum. What is the quickest sign the file is damaged?",
+    "hint": "Section 03 names two signs that need no checksum.",
+    "choices": [
+      {
+        "text": "The file name lacks `-bin`",
+        "correct": false,
+        "why": "A cut download keeps the name it was given; nothing about the name changes."
+      },
+      {
+        "text": "`gradle --version` prints an older version",
+        "correct": false,
+        "why": "A damaged zip cannot be unpacked, so there is no `gradle` to ask."
+      },
+      {
+        "text": "`ls -l` shows less than the zip's full 145 MB",
+        "correct": true,
+        "why": "Right: the size is the cheapest check, and `unzip` would then fail on the missing central directory."
+      },
+      {
+        "text": "`unzip` asks for the next disk of a multi-part archive",
+        "correct": false,
+        "why": "`unzip` mentions multi-part archives as one possible explanation, and asks for nothing; the size says it first."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kkx596y",
+    "version": 1,
+    "section": "first-program",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `hello.jar` 5.5 MB for a program of three lines?",
+    "hint": "What did `-include-runtime` put in it?",
+    "choices": [
+      {
+        "text": "It holds a copy of the JVM, so it runs without Java",
+        "correct": false,
+        "why": "A jar never carries a JVM; `java -jar` is what runs it."
+      },
+      {
+        "text": "It carries Kotlin's standard library",
+        "correct": true,
+        "why": "Right: without `-include-runtime` the same program was a jar of about a kilobyte."
+      },
+      {
+        "text": "`kotlinc` writes debugging information for every line of the program",
+        "correct": false,
+        "why": "Debug information for three lines is a few bytes; the small jar showed how little the program is."
+      },
+      {
+        "text": "The jar is compressed less than a zip",
+        "correct": false,
+        "why": "A jar is a zip, compressed the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-1awzn6j9",
+    "version": 1,
+    "section": "first-program",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The functions of `Hello.kt` that sit outside any class are compiled into a class called `___`.",
+    "hint": "`unzip -l` listed it.",
+    "blanks": [
+      {
+        "accept": [
+          "HelloKt",
+          "HelloKt.class"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pxt0ssfr",
+    "version": 1,
+    "section": "first-program",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`courses-small.jar` was compiled without `-include-runtime`. `java -jar` fails with `NoClassDefFoundError: kotlin/collections/CollectionsKt`, and `kotlin courses-small.jar` works. Why did `hello`'s small jar run with plain `java` while this one does not?",
+    "hint": "Where did the body of `println` end up?",
+    "choices": [
+      {
+        "text": "`println` is part of Java, and `listOf` is part of Kotlin",
+        "correct": false,
+        "why": "Both are Kotlin functions; `println` is inline, so its body was copied into `HelloKt`."
+      },
+      {
+        "text": "`println` is inline and was copied into the program, while `listOf` lives in the standard library",
+        "correct": true,
+        "why": "Right: an inline function leaves no call to the library behind, and `listOf` does."
+      },
+      {
+        "text": "The second jar was compiled for a newer JVM than the one installed",
+        "correct": false,
+        "why": "A version problem fails with `UnsupportedClassVersionError`, and both jars came from the same compiler."
+      },
+      {
+        "text": "`joinToString` needs `kotlin-reflect`",
+        "correct": false,
+        "why": "The missing class is `CollectionsKt`, part of the standard library, which `kotlin` adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6f4xkdt",
+    "version": 1,
+    "section": "first-program",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Typo.kt:3:5: error: unresolved reference 'printn'.` What does `3:5` give?",
+    "hint": "The first line of the file is the comment naming it.",
+    "choices": [
+      {
+        "text": "The error code and its severity",
+        "correct": false,
+        "why": "Kotlin's messages carry no numeric codes; the word `error` is the severity."
+      },
+      {
+        "text": "The line and the column where the unknown name starts",
+        "correct": true,
+        "why": "Right: line 3, column 5, which is where `printn` begins after four spaces of indentation."
+      },
+      {
+        "text": "Three errors found, five lines checked",
+        "correct": false,
+        "why": "There was one error, and the numbers are a position in the file."
+      },
+      {
+        "text": "The version of the compiler that refused to build the file",
+        "correct": false,
+        "why": "The version is what `kotlinc -version` prints; the message gives a place in the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zvbyq8w",
+    "version": 1,
+    "section": "val-and-var",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens when a program assigns a second value to a `val`?",
+    "hint": "`Reassign.kt` tried it.",
+    "choices": [
+      {
+        "text": "The program runs and keeps the first value",
+        "correct": false,
+        "why": "It never runs: the error is at compile time."
+      },
+      {
+        "text": "It throws an exception when that line runs",
+        "correct": false,
+        "why": "Kotlin catches this before anything runs, which is the point of `val`."
+      },
+      {
+        "text": "The compiler refuses: `'val' cannot be reassigned`",
+        "correct": true,
+        "why": "Right, and no jar is written."
+      },
+      {
+        "text": "The compiler warns, and quietly turns the name into a `var`",
+        "correct": false,
+        "why": "The compiler changes nothing on its own; you would make it a `var` yourself."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9xp9rar",
+    "version": 1,
+    "section": "val-and-var",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val sessions = mutableListOf(45, 30)` and then `sessions.add(60)`. What happens?",
+    "hint": "What does `val` fix: the name, or the object?",
+    "choices": [
+      {
+        "text": "A compile error, because `sessions` is a `val`",
+        "correct": false,
+        "why": "`val` forbids pointing the name elsewhere, not changing the list it points at."
+      },
+      {
+        "text": "The list grows to `[45, 30, 60]`",
+        "correct": true,
+        "why": "Right: the name still points at the same list, which is mutable."
+      },
+      {
+        "text": "A new list is made and `sessions` keeps the old two items",
+        "correct": false,
+        "why": "`add` changes the list in place and returns a `Boolean`; nothing new is made."
+      },
+      {
+        "text": "An exception at run time, since the list is frozen",
+        "correct": false,
+        "why": "`mutableListOf` makes a list that can change; a frozen one is a different type, lesson 5."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ztbwfpw",
+    "version": 1,
+    "section": "val-and-var",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habit does the section recommend?",
+    "hint": "The compiler is what makes the habit cheap.",
+    "choices": [
+      {
+        "text": "`var` for everything, then `val` once the program works",
+        "correct": false,
+        "why": "That is the habit most programmers arrive with, and it is the reverse of the advice."
+      },
+      {
+        "text": "`val` for numbers and `var` for objects",
+        "correct": false,
+        "why": "The choice depends on whether the name is pointed elsewhere, not on its type."
+      },
+      {
+        "text": "`val` first, and `var` where the compiler shows a name has to change",
+        "correct": true,
+        "why": "Right: the few `var`s left then mark the places where something changes."
+      },
+      {
+        "text": "`val` inside functions and `var` at the top of a file",
+        "correct": false,
+        "why": "Where a name is declared does not decide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0shhkgge",
+    "version": 1,
+    "section": "inference",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each value to the type the compiler infers for it.",
+    "hint": "`Types.kt` printed them.",
+    "pairs": [
+      {
+        "left": "`45`",
+        "right": "`Int`"
+      },
+      {
+        "left": "`3_000_000_000`",
+        "right": "`Long`"
+      },
+      {
+        "left": "`45 / 60.0`",
+        "right": "`Double`"
+      },
+      {
+        "left": "`\"Kotlin\"`",
+        "right": "`String`"
+      }
+    ],
+    "right_distractors": [
+      "`Float`"
+    ]
+  },
+  {
+    "id": "ex-zbrqtg1z",
+    "version": 1,
+    "section": "inference",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val minutes = 45`. What does `println(minutes / 60)` print?",
+    "hint": "Two `Int`s divide to an `Int`.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2qcy946d",
+    "version": 1,
+    "section": "inference",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val minutes: Int = 45` and then `val total: Long = minutes`. What does the compiler do?",
+    "hint": "Java would have accepted it.",
+    "choices": [
+      {
+        "text": "It widens the `Int` to a `Long`, as Java does",
+        "correct": false,
+        "why": "Kotlin does not widen a number for you, even when the value fits."
+      },
+      {
+        "text": "It refuses until you write `minutes.toLong()`",
+        "correct": true,
+        "why": "Right: `initializer type mismatch: expected 'Long', actual 'Int'`."
+      },
+      {
+        "text": "It compiles, and fails at run time with a `ClassCastException`",
+        "correct": false,
+        "why": "The mismatch is caught at compile time; nothing runs."
+      },
+      {
+        "text": "It infers `total` as `Int` and ignores the annotation",
+        "correct": false,
+        "why": "A declared type is checked, never ignored."
+      }
+    ]
+  },
+  {
+    "id": "ex-dydg89fg",
+    "version": 1,
+    "section": "inference",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You write `val total = 0` and later add `Long` values to it in a loop. Why does the section say to write the type here?",
+    "hint": "What does the literal `0` alone make?",
+    "choices": [
+      {
+        "text": "Inference does not work for a `var`",
+        "correct": false,
+        "why": "Inference works for `val` and `var` alike; the trouble is what it infers."
+      },
+      {
+        "text": "A name without a type is checked only at run time",
+        "correct": false,
+        "why": "Every name has a type at compile time, written or inferred."
+      },
+      {
+        "text": "`0` infers `Int`, and adding a `Long` to an `Int` name does not compile",
+        "correct": true,
+        "why": "Right: `val total: Long = 0` says what the literal cannot."
+      },
+      {
+        "text": "It makes the program faster",
+        "correct": false,
+        "why": "A declared and an inferred type compile to the same bytecode."
+      }
+    ]
+  },
+  {
+    "id": "ex-r7ze456z",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val course = \"Kotlin\"`. What does `println(\"$course.length\")` print?",
+    "hint": "Where does a name after `$` end?",
+    "choices": [
+      {
+        "text": "`6`",
+        "correct": false,
+        "why": "That needs braces: `${course.length}`."
+      },
+      {
+        "text": "`Kotlin.length`",
+        "correct": true,
+        "why": "Right: the template takes `course`, and `.length` is ordinary text after it."
+      },
+      {
+        "text": "A compile error, because `.length` is not allowed in a string",
+        "correct": false,
+        "why": "Any text is allowed; it simply is not part of the template."
+      },
+      {
+        "text": "`$course.length`, since templates need braces",
+        "correct": false,
+        "why": "A bare name works without braces, so `$course` is replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwstrpd5",
+    "version": 1,
+    "section": "templates",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A raw string opens and closes with three quotes, and `___()` removes the indentation its lines share.",
+    "hint": "`Report.kt` called it on the weekly report.",
+    "blanks": [
+      {
+        "accept": [
+          "trimIndent"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5yh6ewv5",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A line reads `course.uppercase()` on its own, and the next prints `course`. What does it print, if `course` was `\"kotlin\"`?",
+    "hint": "What does `uppercase()` do with the original?",
+    "choices": [
+      {
+        "text": "`kotlin`",
+        "correct": true,
+        "why": "Right: the call built `KOTLIN` as a new string and nothing kept it."
+      },
+      {
+        "text": "`KOTLIN`",
+        "correct": false,
+        "why": "A `String` never changes; the result was thrown away."
+      },
+      {
+        "text": "`Kotlin`",
+        "correct": false,
+        "why": "That is `replaceFirstChar`, and its result would also need keeping."
+      },
+      {
+        "text": "A compile error, as `course` is a `val`",
+        "correct": false,
+        "why": "`uppercase()` does not reassign `course`, so the `val` is not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3q7ajyy",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Kotlin, what does `a == b` compare when both are strings?",
+    "hint": "It is not the Java habit.",
+    "choices": [
+      {
+        "text": "Whether `a` and `b` are the same object in memory",
+        "correct": false,
+        "why": "That is `===` in Kotlin, and `==` in Java."
+      },
+      {
+        "text": "Their characters, by calling `equals`",
+        "correct": true,
+        "why": "Right: Kotlin's `==` calls `equals` for you."
+      },
+      {
+        "text": "Their lengths, then their first characters",
+        "correct": false,
+        "why": "Equality compares all the characters, not a summary."
+      },
+      {
+        "text": "Their characters ignoring case",
+        "correct": false,
+        "why": "That needs `equals(b, ignoreCase = true)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-z799qm6k",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of section 02 in the order Ana ran them.",
+    "hint": "Nothing can be unpacked before it is checked.",
+    "items": [
+      "`sudo apt install` the JDK, `unzip` and `curl`",
+      "`curl` the Kotlin zip and its checksum",
+      "`sha256sum -c` the Kotlin zip",
+      "`unzip` both zips into `~/.local/share`",
+      "append the `PATH` line to `~/.bashrc`"
+    ]
+  },
+  {
+    "id": "ex-9t5yr0mp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these programs fail to compile? Choose all that apply.",
+    "hint": "Two of the lesson's refusals are here, in new clothes.",
+    "choices": [
+      {
+        "text": "`val week = 44` then `week = 45`",
+        "correct": true,
+        "why": "Yes: a `val` cannot be reassigned."
+      },
+      {
+        "text": "`val list = mutableListOf(1)` then `list.add(2)`",
+        "correct": false,
+        "why": "No: the list changes, the name does not."
+      },
+      {
+        "text": "`val hours: Double = 2`",
+        "correct": true,
+        "why": "Yes: `2` is an `Int`, and Kotlin does not widen it; `2.0` compiles."
+      },
+      {
+        "text": "`var total = 0L` then `total += 45`",
+        "correct": false,
+        "why": "No: `0L` is a `Long`, and an `Int` literal added to a `Long` gives a `Long`."
+      }
+    ]
+  },
+  {
+    "id": "ex-275hnhs1",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val minutes = 135`. What does `\"${minutes % 60}\"` produce?",
+    "hint": "`%` is the remainder of whole-number division.",
+    "value": 15,
+    "tolerance": 0
+  }
+]

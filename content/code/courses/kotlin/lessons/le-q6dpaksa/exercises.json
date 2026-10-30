@@ -1,0 +1,592 @@
+[
+  {
+    "id": "ex-s53t5xtv",
+    "version": 1,
+    "section": "what-data-generates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two `data class Session` objects with the same values go into `setOf(a, b)`. What is its size?",
+    "hint": "Equal values, equal hash codes.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gwzv9439",
+    "version": 1,
+    "section": "what-data-generates",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each generated function to what it does.",
+    "hint": "The table in section 02.",
+    "pairs": [
+      {
+        "left": "`toString()`",
+        "right": "Prints the class and every property"
+      },
+      {
+        "left": "`equals()`",
+        "right": "Compares every property"
+      },
+      {
+        "left": "`copy()`",
+        "right": "Builds a new object with some properties changed"
+      },
+      {
+        "left": "`component2()`",
+        "right": "Returns the second property, for destructuring"
+      }
+    ],
+    "right_distractors": [
+      "Saves the object to disk"
+    ]
+  },
+  {
+    "id": "ex-2h2nvq1q",
+    "version": 1,
+    "section": "what-data-generates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should NOT be a data class?",
+    "hint": "Values, or a thing with an identity?",
+    "choices": [
+      {
+        "text": "A planned session: course, minutes, date",
+        "correct": false,
+        "why": "Two equal sessions are interchangeable: a value."
+      },
+      {
+        "text": "A tracker whose log changes",
+        "correct": true,
+        "why": "Right: two trackers with equal totals are still two trackers."
+      },
+      {
+        "text": "An amount of money in a currency",
+        "correct": false,
+        "why": "A value, equal when amount and currency are."
+      },
+      {
+        "text": "A date with year, month and day",
+        "correct": false,
+        "why": "A value."
+      }
+    ]
+  },
+  {
+    "id": "ex-mesqz8v4",
+    "version": 1,
+    "section": "what-data-generates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `data`, `a == b` was `false` for two sessions with the same values. Why?",
+    "hint": "Which `equals` ran?",
+    "choices": [
+      {
+        "text": "`==` compares hash codes, and those were random",
+        "correct": false,
+        "why": "`==` calls `equals`; hash codes are another function."
+      },
+      {
+        "text": "The two sessions had different `done` values",
+        "correct": false,
+        "why": "Both had the default, `false`."
+      },
+      {
+        "text": "`Object.equals` compares identity",
+        "correct": true,
+        "why": "Right: without `data`, `equals` is `===`."
+      },
+      {
+        "text": "`==` is not allowed on classes you wrote yourself",
+        "correct": false,
+        "why": "It compiled and ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-p52a41ny",
+    "version": 1,
+    "section": "equality",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val c = a`. What does `a === c` answer?",
+    "hint": "`c = a` copies the reference.",
+    "choices": [
+      {
+        "text": "`true`",
+        "correct": true,
+        "why": "Right: one object, two names."
+      },
+      {
+        "text": "`false`, since `c` is a copy of `a`",
+        "correct": false,
+        "why": "Nothing was copied but the reference."
+      },
+      {
+        "text": "`true` only for a data class",
+        "correct": false,
+        "why": "Identity does not depend on `data`."
+      },
+      {
+        "text": "A compile error: `===` needs two different names",
+        "correct": false,
+        "why": "`a === c` used two names, and compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-fd1k4x1m",
+    "version": 1,
+    "section": "equality",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val a: Session? = null`. What does `a == b` do when `b` is not null?",
+    "hint": "`a?.equals(b) ?: (b === null)`.",
+    "choices": [
+      {
+        "text": "Throws `NullPointerException`",
+        "correct": false,
+        "why": "That is Java's `a.equals(b)`."
+      },
+      {
+        "text": "Returns `false`",
+        "correct": true,
+        "why": "Right: null equals only null."
+      },
+      {
+        "text": "Does not compile without `?.`",
+        "correct": false,
+        "why": "`==` is null-safe by itself."
+      },
+      {
+        "text": "Returns `null`",
+        "correct": false,
+        "why": "`==` returns a `Boolean`, never `null`."
+      }
+    ]
+  },
+  {
+    "id": "ex-raa2vcc8",
+    "version": 1,
+    "section": "equality",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did `\"Kotlin\" === \"Kotlin\"` print `true` while a string built at run time compared `false`?",
+    "hint": "How many copies of a literal does the JVM keep?",
+    "choices": [
+      {
+        "text": "`===` compares characters for strings and identity for other types",
+        "correct": false,
+        "why": "`===` is identity for every type; the literals happened to be one object."
+      },
+      {
+        "text": "Both literals are one shared object; the built string is another",
+        "correct": true,
+        "why": "Right, which is why `===` on values is a bug that passes tests."
+      },
+      {
+        "text": "`lowercase()` changes the encoding",
+        "correct": false,
+        "why": "The characters were the same; `==` said `true`."
+      },
+      {
+        "text": "The comparison happened before the string was finished",
+        "correct": false,
+        "why": "The string was complete; it is a different object."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5h7y7sk",
+    "version": 1,
+    "section": "copy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val finished = planned.copy(done = true)`. What happens to `planned`?",
+    "hint": "A copy is a new object.",
+    "choices": [
+      {
+        "text": "It becomes done as well",
+        "correct": false,
+        "why": "`copy` leaves the original alone."
+      },
+      {
+        "text": "It is replaced by the copy",
+        "correct": false,
+        "why": "Both exist; nothing replaces anything."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: still `done=false`."
+      },
+      {
+        "text": "It throws, because its properties are `val`",
+        "correct": false,
+        "why": "`copy` never writes to the original."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc5tx9k3",
+    "version": 1,
+    "section": "copy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`w45 = w44.copy(label = \"week 45\")`, then `w45.minutes.add(60)`, where `minutes` is a `MutableList`. What does `w44.minutes` show?",
+    "hint": "What did `copy` copy?",
+    "choices": [
+      {
+        "text": "`[45, 30]`, untouched",
+        "correct": false,
+        "why": "Both weeks hold the same list."
+      },
+      {
+        "text": "`[45, 30, 60]`",
+        "correct": true,
+        "why": "Right: the copy is shallow."
+      },
+      {
+        "text": "`[60]`",
+        "correct": false,
+        "why": "The list kept its first two items."
+      },
+      {
+        "text": "A compile error, as `minutes` is a `val`",
+        "correct": false,
+        "why": "`val` fixes the reference; the list it names is mutable."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tnmhx96",
+    "version": 1,
+    "section": "copy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the section recommend to avoid the shallow-copy surprise?",
+    "hint": "Make the inside impossible to change in place.",
+    "choices": [
+      {
+        "text": "Call `copy` twice",
+        "correct": false,
+        "why": "Every copy shares the same list."
+      },
+      {
+        "text": "Hold a `List`, not a `MutableList`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Make `minutes` a `var` so each copy gets its own",
+        "correct": false,
+        "why": "`var` changes nothing about what `copy` copies."
+      },
+      {
+        "text": "Override `copy` with a deep version",
+        "correct": false,
+        "why": "A data class cannot declare its own `copy`; values that do not change avoid the need."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncazsv50",
+    "version": 1,
+    "section": "destructuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `val (course, minutes) = s` compile to?",
+    "hint": "One generated function per property.",
+    "choices": [
+      {
+        "text": "`s.course` and `s.minutes`",
+        "correct": false,
+        "why": "It goes by position, not by name."
+      },
+      {
+        "text": "`s.component1()` and `s.component2()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A copy of `s` split in two",
+        "correct": false,
+        "why": "No copy is made."
+      },
+      {
+        "text": "A `Pair` built from `s`",
+        "correct": false,
+        "why": "No pair is built."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1vjtt32",
+    "version": 1,
+    "section": "destructuring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`data class Note(val title: String, val course: String)` and `val (course, title) = Note(\"Read chapter 3\", \"Kotlin\")`. What is `course`?",
+    "hint": "Position, not name.",
+    "choices": [
+      {
+        "text": "`\"Kotlin\"`, matched by name",
+        "correct": false,
+        "why": "Destructuring ignores the names you write."
+      },
+      {
+        "text": "A compile error, as the names do not match",
+        "correct": false,
+        "why": "It compiled; both are `String`."
+      },
+      {
+        "text": "`\"Read chapter 3\"`",
+        "correct": true,
+        "why": "Right: it took the first property."
+      },
+      {
+        "text": "`null`",
+        "correct": false,
+        "why": "Both properties had values."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmb5n5tm",
+    "version": 1,
+    "section": "destructuring",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `val (___, m, done) = s`, the first property is skipped.",
+    "hint": "A single character.",
+    "blanks": [
+      {
+        "accept": [
+          "_"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bsm42ebk",
+    "version": 1,
+    "section": "data-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A data class declares `var note` in its body. Two sessions differ only in their notes. Are they equal?",
+    "hint": "Only the primary constructor counts.",
+    "choices": [
+      {
+        "text": "Yes",
+        "correct": true,
+        "why": "Right: `note` is not part of `equals`."
+      },
+      {
+        "text": "No, since the notes differ",
+        "correct": false,
+        "why": "The body property is invisible to `equals`."
+      },
+      {
+        "text": "Only if `note` is a `val`",
+        "correct": false,
+        "why": "`val` or `var`, the body is left out."
+      },
+      {
+        "text": "It does not compile: data classes have no body",
+        "correct": false,
+        "why": "`Body.kt` had one, and ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb8nxk2p",
+    "version": 1,
+    "section": "data-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why were two `Week(intArrayOf(45, 30))` not equal?",
+    "hint": "What is an array's `equals`?",
+    "choices": [
+      {
+        "text": "The arrays had different lengths",
+        "correct": false,
+        "why": "Same items, same length."
+      },
+      {
+        "text": "Data classes cannot hold arrays",
+        "correct": false,
+        "why": "It compiled and ran."
+      },
+      {
+        "text": "`IntArray` has no `equals` at all",
+        "correct": false,
+        "why": "It has one; it compares identity."
+      },
+      {
+        "text": "An array's `equals` is identity",
+        "correct": true,
+        "why": "Right: use a `List`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a35fzy50",
+    "version": 1,
+    "section": "data-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a data class not be `open`?",
+    "hint": "What would a subclass add?",
+    "choices": [
+      {
+        "text": "Data classes are final for speed",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Generated `equals` and `copy` would ignore a subclass's properties",
+        "correct": true,
+        "why": "Right: lesson 9's sealed hierarchy is the shape for that."
+      },
+      {
+        "text": "Java forbids subclassing generated classes",
+        "correct": false,
+        "why": "Nothing in Java forbids it."
+      },
+      {
+        "text": "Because they cannot implement interfaces",
+        "correct": false,
+        "why": "They can implement interfaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3tz6nhw",
+    "version": 1,
+    "section": "value-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `value class Minutes(val value: Int)` make the compiler refuse?",
+    "hint": "`MinutesWrong.kt`.",
+    "choices": [
+      {
+        "text": "Negative numbers in source code",
+        "correct": false,
+        "why": "The `init` check refuses those, at run time."
+      },
+      {
+        "text": "Adding two `Minutes` with `+`",
+        "correct": false,
+        "why": "`operator fun plus` made that work."
+      },
+      {
+        "text": "An `Int` where `Minutes` was expected",
+        "correct": true,
+        "why": "Right: seconds no longer fit."
+      },
+      {
+        "text": "Printing a `Minutes`",
+        "correct": false,
+        "why": "It printed `Minutes(value=75)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-86vafe9v",
+    "version": 1,
+    "section": "value-classes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `@JvmInline` say about a value class on the JVM?",
+    "hint": "The wrapper disappears where it can.",
+    "choices": [
+      {
+        "text": "Its methods are inlined like an `inline fun`",
+        "correct": false,
+        "why": "It is about the value's representation, not about functions."
+      },
+      {
+        "text": "It is replaced by its one value wherever possible",
+        "correct": true,
+        "why": "Right: a `Minutes` is an `int` in the compiled code."
+      },
+      {
+        "text": "It can only be used from Java",
+        "correct": false,
+        "why": "It is used from Kotlin throughout the section."
+      },
+      {
+        "text": "Its `init` block is skipped",
+        "correct": false,
+        "why": "`Minutes(-5)` was refused by `init`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcbwj1h6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`data class S(val c: String, val m: Int)`. Which comparisons are `true`? Choose all that apply.",
+    "hint": "`==` compares values; `===` compares objects.",
+    "choices": [
+      {
+        "text": "`S(\"K\", 1) == S(\"K\", 1)`",
+        "correct": true,
+        "why": "Yes: equal values."
+      },
+      {
+        "text": "`S(\"K\", 1) === S(\"K\", 1)`",
+        "correct": false,
+        "why": "No: two objects."
+      },
+      {
+        "text": "`S(\"K\", 1).copy(m = 2) == S(\"K\", 2)`",
+        "correct": true,
+        "why": "Yes: the copy has the same values."
+      },
+      {
+        "text": "`S(\"K\", 1) == S(\"k\", 1)`",
+        "correct": false,
+        "why": "No: `K` and `k` differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1eq5h83",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A session goes from planned to done. Put the planner's steps in order.",
+    "hint": "Values never change; new values replace them.",
+    "items": [
+      "`val planned = Session(\"Kotlin\", 45)`",
+      "`val done = planned.copy(done = true)`",
+      "hand `done` to whoever shows the week",
+      "the screen redraws with the new value"
+    ]
+  }
+]

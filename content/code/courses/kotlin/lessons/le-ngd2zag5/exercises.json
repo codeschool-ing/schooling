@@ -1,0 +1,623 @@
+[
+  {
+    "id": "ex-ny01fjg8",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is type inference never applied in a function declaration?",
+    "hint": "Callers the compiler has not seen yet.",
+    "choices": [
+      {
+        "text": "Parameters",
+        "correct": true,
+        "why": "Right: every parameter has its type written."
+      },
+      {
+        "text": "The return type of a single-expression body",
+        "correct": false,
+        "why": "That one can be inferred from the expression, as `isLong` showed."
+      },
+      {
+        "text": "`val`s declared inside the body",
+        "correct": false,
+        "why": "Inside the body, names are inferred exactly as in `main`."
+      },
+      {
+        "text": "Default values of parameters, which need their own type",
+        "correct": false,
+        "why": "A default takes the parameter's type; it does not carry a type of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjc8je49",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `fun total(minutes: List<Int>): Int`, a line says `minutes = listOf()`. What happens?",
+    "hint": "What kind of name is a parameter?",
+    "choices": [
+      {
+        "text": "It replaces the caller's list as well",
+        "correct": false,
+        "why": "Even where it compiled, it would rebind a local name; here it does not compile at all."
+      },
+      {
+        "text": "It works, and only this call sees an empty list",
+        "correct": false,
+        "why": "That would be true of a `var`; a parameter is not one."
+      },
+      {
+        "text": "It does not compile: a parameter is a `val`",
+        "correct": true,
+        "why": "Right: make a local `var` if you need one, as `sum` is."
+      },
+      {
+        "text": "It compiles with a warning about shadowing",
+        "correct": false,
+        "why": "Shadowing is declaring a new name; assigning to a parameter is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6p61krf",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fun hours(minutes: Int): Int` returns `minutes / 60` inside `if (minutes > 0)` and nothing else. Where does the compiler point?",
+    "hint": "`Hours.kt:6:1`.",
+    "choices": [
+      {
+        "text": "At the `if`, asking for an `else`",
+        "correct": false,
+        "why": "This `if` is a statement, so it needs no `else`; the function's end is what lacks a `return`."
+      },
+      {
+        "text": "At the closing brace, with `missing return statement`",
+        "correct": true,
+        "why": "Right: the path where `minutes` is zero or less ends there with nothing."
+      },
+      {
+        "text": "At the call in `main`, since 90 is positive",
+        "correct": false,
+        "why": "The compiler checks the function once, for every possible argument."
+      },
+      {
+        "text": "Nowhere: it returns 0 by default",
+        "correct": false,
+        "why": "Kotlin never makes up a return value."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcq1prab",
+    "version": 1,
+    "section": "declaring",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function declared directly in a file, outside any class, is called a ___-level function.",
+    "hint": "Where it lives in the file.",
+    "blanks": [
+      {
+        "accept": [
+          "top"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cmsw62s3",
+    "version": 1,
+    "section": "single-expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fun isLong(minutes: Int) = minutes >= 60`. What is the cost of leaving its return type out?",
+    "hint": "What decides the type, and what happens when that changes?",
+    "choices": [
+      {
+        "text": "It is checked only at run time",
+        "correct": false,
+        "why": "The type is inferred and checked at compile time like any other."
+      },
+      {
+        "text": "It returns `Any`, so callers must cast",
+        "correct": false,
+        "why": "It returns `Boolean`, inferred from `>=`."
+      },
+      {
+        "text": "Java callers cannot call a function whose type was inferred",
+        "correct": false,
+        "why": "The compiled method has a concrete return type; Java sees it like any other."
+      },
+      {
+        "text": "Editing the body changes the type for every caller",
+        "correct": true,
+        "why": "Right: write the type on a function other code depends on."
+      }
+    ]
+  },
+  {
+    "id": "ex-rg3yx6jb",
+    "version": 1,
+    "section": "single-expression",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `fun label(minutes: Int) = if (minutes >= 60) \"long\"` refused?",
+    "hint": "What is the value when the condition is false?",
+    "choices": [
+      {
+        "text": "A single-expression body cannot hold an `if`",
+        "correct": false,
+        "why": "`label` with an `else` is exactly that, and it compiles."
+      },
+      {
+        "text": "An `if` used as a value needs its `else`",
+        "correct": true,
+        "why": "Right: without one there is no value for the false case."
+      },
+      {
+        "text": "The return type must be written when there is an `if`",
+        "correct": false,
+        "why": "The type is inferred fine once both branches exist."
+      },
+      {
+        "text": "String literals need a `return` in front of them",
+        "correct": false,
+        "why": "An expression body has no `return` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-3grsk4r3",
+    "version": 1,
+    "section": "single-expression",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Kotlin has no ternary operator, because `___` with an `else` is already an expression.",
+    "hint": "`label` used it.",
+    "blanks": [
+      {
+        "accept": [
+          "if"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dhe3zj27",
+    "version": 1,
+    "section": "defaults-and-named",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe(course, minutes = 30, done = false, date = \"2026-11-02\")`. How do you set only `done` to `true`?",
+    "hint": "Positions cannot skip a parameter.",
+    "choices": [
+      {
+        "text": "`describe(\"Kotlin\", true)`",
+        "correct": false,
+        "why": "The second position is `minutes`, an `Int`, so `true` does not fit."
+      },
+      {
+        "text": "`describe(\"Kotlin\", , true)`",
+        "correct": false,
+        "why": "An empty slot is not Kotlin syntax."
+      },
+      {
+        "text": "`describe(\"Kotlin\", done = true)`",
+        "correct": true,
+        "why": "Right: the name skips `minutes` and leaves it at 30."
+      },
+      {
+        "text": "Write an overload `describeDone(course)`",
+        "correct": false,
+        "why": "That is the Java way the defaults replace."
+      }
+    ]
+  },
+  {
+    "id": "ex-nddqqysm",
+    "version": 1,
+    "section": "defaults-and-named",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`describe(\"Kotlin\", done = true)` printed a line. How many minutes did it show?",
+    "hint": "The default of the parameter that was skipped.",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4aev6gfj",
+    "version": 1,
+    "section": "defaults-and-named",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which argument does section 04 say to name first, as a matter of habit?",
+    "hint": "A reader cannot guess what it means.",
+    "choices": [
+      {
+        "text": "The first argument",
+        "correct": false,
+        "why": "The first is the one a reader most often knows from the function's name."
+      },
+      {
+        "text": "A `Boolean`",
+        "correct": true,
+        "why": "Right: `done = true` says what `true` alone does not."
+      },
+      {
+        "text": "Every `String`, so that the order stays free",
+        "correct": false,
+        "why": "A course name passed first reads perfectly well without a name."
+      },
+      {
+        "text": "Any argument longer than ten characters",
+        "correct": false,
+        "why": "Length is not what makes a value obscure."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3e45aap",
+    "version": 1,
+    "section": "defaults-and-named",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Java class calls a Kotlin function that has two default parameters. Without any annotation, what does Java see?",
+    "hint": "The JVM has no default arguments.",
+    "choices": [
+      {
+        "text": "Three overloads, one for each number of arguments",
+        "correct": false,
+        "why": "That is what `@JvmOverloads` asks for; without it there is one."
+      },
+      {
+        "text": "The defaults, applied automatically when Java leaves arguments out",
+        "correct": false,
+        "why": "Java cannot leave arguments out; there is nothing to apply them to."
+      },
+      {
+        "text": "One method that takes every parameter",
+        "correct": true,
+        "why": "Right: Java must pass them all unless the function carries `@JvmOverloads`."
+      },
+      {
+        "text": "Nothing; functions with defaults are invisible to Java",
+        "correct": false,
+        "why": "They are visible, with every parameter required."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t07x5dk",
+    "version": 1,
+    "section": "varargs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`week` is `intArrayOf(20, 25)`. What does `total(10, *week, 5)` return?",
+    "hint": "The spread puts both elements in the middle.",
+    "value": 60,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x533dgpf",
+    "version": 1,
+    "section": "varargs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `fun total(vararg minutes: Int)`, what is the type of `minutes`?",
+    "hint": "An array of plain `int` values on the JVM.",
+    "choices": [
+      {
+        "text": "`List<Int>`",
+        "correct": false,
+        "why": "A `vararg` is an array, not a list."
+      },
+      {
+        "text": "`Array<Int>`",
+        "correct": false,
+        "why": "That would box every number; `Int` gets the primitive array."
+      },
+      {
+        "text": "`IntArray`",
+        "correct": true,
+        "why": "Right: cheaper than a list of boxed `Integer`s."
+      },
+      {
+        "text": "`Int`, called once per value",
+        "correct": false,
+        "why": "The function runs once, with every value gathered into one array."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr8z9kkq",
+    "version": 1,
+    "section": "varargs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `*` mean in `total(*week)`?",
+    "hint": "It is not arithmetic.",
+    "choices": [
+      {
+        "text": "Pass the array's elements as separate arguments",
+        "correct": true,
+        "why": "Right: it unpacks the array into the argument list."
+      },
+      {
+        "text": "Pass a pointer to the array instead of a copy",
+        "correct": false,
+        "why": "Kotlin has no pointers; `*` here only unpacks."
+      },
+      {
+        "text": "Multiply each element by the next argument",
+        "correct": false,
+        "why": "There is no multiplication; the result was a plain sum."
+      },
+      {
+        "text": "Make the array mutable inside the function",
+        "correct": false,
+        "why": "Mutability is not what `*` is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-70e0bjkn",
+    "version": 1,
+    "section": "varargs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`fun log(vararg lines: String, prefix: String = \"> \")`. What does `log(\"planned\", \"done\", \"* \")` print?",
+    "hint": "Nothing marks where the lines stop.",
+    "choices": [
+      {
+        "text": "Two lines starting with `* `",
+        "correct": false,
+        "why": "Only `prefix = \"* \"` would do that."
+      },
+      {
+        "text": "Three lines starting with `> `, the last one being `> * `",
+        "correct": true,
+        "why": "Right: the third string is one more line, and the prefix keeps its default."
+      },
+      {
+        "text": "A compile error, as the third argument is ambiguous",
+        "correct": false,
+        "why": "It is not ambiguous to the compiler: positional values after a `vararg` all join it."
+      },
+      {
+        "text": "Two lines, and `* ` is ignored",
+        "correct": false,
+        "why": "Kotlin ignores no argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3xqhnbp",
+    "version": 1,
+    "section": "top-level-and-local",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Report.kt`, the local function `line` uses `course`. Where does `course` come from?",
+    "hint": "Nobody passed it.",
+    "choices": [
+      {
+        "text": "It is a parameter of `line`",
+        "correct": false,
+        "why": "`line` takes `label` and `value` only."
+      },
+      {
+        "text": "From a top-level `val` of the same file",
+        "correct": false,
+        "why": "There is none; it is `report`'s parameter."
+      },
+      {
+        "text": "From the function that declares `line`",
+        "correct": true,
+        "why": "Right: a local function reads its enclosing function's parameters and `val`s."
+      },
+      {
+        "text": "`main` passes it implicitly, through the call to `report`",
+        "correct": false,
+        "why": "`main` passes it to `report`; `line` reads it from `report`."
+      }
+    ]
+  },
+  {
+    "id": "ex-778p4q90",
+    "version": 1,
+    "section": "top-level-and-local",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`private fun format(…)` sits at the top of `Planner.kt`. Who can call it?",
+    "hint": "`Main.kt` tried.",
+    "choices": [
+      {
+        "text": "Any file compiled with it",
+        "correct": false,
+        "why": "That is the default without `private`."
+      },
+      {
+        "text": "Only code in `Planner.kt`",
+        "correct": true,
+        "why": "Right: the compiler refused the call from `Main.kt` by name."
+      },
+      {
+        "text": "Only `main`",
+        "correct": false,
+        "why": "`main` lives in `Main.kt`, which was refused."
+      },
+      {
+        "text": "Only functions declared below it in the file",
+        "correct": false,
+        "why": "Order in the file does not matter to Kotlin."
+      }
+    ]
+  },
+  {
+    "id": "ex-znbm51f3",
+    "version": 1,
+    "section": "unit-and-nothing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val result = log(\"planned 45 min\")`, where `log` has a block body and no return type. What does `println(result)` print?",
+    "hint": "`Unit` is a real value.",
+    "choices": [
+      {
+        "text": "`null`",
+        "correct": false,
+        "why": "`log` returns `Unit`, which is not `null`."
+      },
+      {
+        "text": "Nothing; it does not compile",
+        "correct": false,
+        "why": "Storing a `Unit` is allowed."
+      },
+      {
+        "text": "`kotlin.Unit`",
+        "correct": true,
+        "why": "Right: the name of the one value of `Unit`."
+      },
+      {
+        "text": "`void`",
+        "correct": false,
+        "why": "Kotlin has no `void`; `Unit` plays its part."
+      }
+    ]
+  },
+  {
+    "id": "ex-8psgtkw0",
+    "version": 1,
+    "section": "unit-and-nothing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `input.toIntOrNull() ?: fail(\"…\")` compile as an `Int`, when `fail` returns `Nothing`?",
+    "hint": "Nothing has no values at all.",
+    "choices": [
+      {
+        "text": "Because `Nothing` is converted to `0` by the elvis operator",
+        "correct": false,
+        "why": "There is no value to convert: `fail` never returns."
+      },
+      {
+        "text": "Because `fail` is inlined into the expression",
+        "correct": false,
+        "why": "Inlining has nothing to do with the type check."
+      },
+      {
+        "text": "Because `Nothing` and `Int` are the same type on the JVM",
+        "correct": false,
+        "why": "They are different types; `Nothing` fits under every type."
+      },
+      {
+        "text": "Because `Nothing` fits any type",
+        "correct": true,
+        "why": "Right: with no values, it can never be the wrong type."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vc9bmgv",
+    "version": 1,
+    "section": "unit-and-nothing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each function to what it gives back.",
+    "hint": "Two have no value; the others are what they say.",
+    "pairs": [
+      {
+        "left": "`fun log(m: String) { println(m) }`",
+        "right": "`Unit`"
+      },
+      {
+        "left": "`fun fail(m: String): Nothing = throw IllegalStateException(m)`",
+        "right": "`Nothing`"
+      },
+      {
+        "left": "`fun isLong(m: Int) = m >= 60`",
+        "right": "`Boolean`"
+      },
+      {
+        "left": "`fun hours(m: Int) = m / 60`",
+        "right": "`Int`"
+      }
+    ],
+    "right_distractors": [
+      "`Any?`"
+    ]
+  },
+  {
+    "id": "ex-17n1a9a2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`report(load(), format(now()))` is called. Put the steps in the order they happen.",
+    "hint": "Arguments first, left to right; an argument's own arguments before it.",
+    "items": [
+      "`load()` runs",
+      "`now()` runs",
+      "`format(…)` runs",
+      "`report(…)` starts its body"
+    ]
+  },
+  {
+    "id": "ex-x1ygj59r",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`fun plan(course: String, minutes: Int = 30, done: Boolean = false)`. Which calls compile? Choose all that apply.",
+    "hint": "Named arguments may be out of order; a positional one must still sit in its own place.",
+    "choices": [
+      {
+        "text": "`plan(\"Kotlin\")`",
+        "correct": true,
+        "why": "Yes: both defaults apply."
+      },
+      {
+        "text": "`plan(done = true, course = \"Kotlin\")`",
+        "correct": true,
+        "why": "Yes: all named, any order."
+      },
+      {
+        "text": "`plan(minutes = 45, \"Kotlin\")`",
+        "correct": false,
+        "why": "No: the positional `\"Kotlin\"` is out of its place, as in `Mixed.kt`."
+      },
+      {
+        "text": "`plan(\"Kotlin\", true)`",
+        "correct": false,
+        "why": "No: the second position is `minutes`, an `Int`."
+      }
+    ]
+  }
+]

@@ -1,0 +1,488 @@
+[
+  {
+    "id": "ex-te0a34tx",
+    "version": 1,
+    "section": "cold-streams",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val week = sessionLog()` returns a flow built with `flow { … }`. When does the block run?",
+    "hint": "`flow created, nothing read yet`.",
+    "choices": [
+      {
+        "text": "When `sessionLog()` is called",
+        "correct": false,
+        "why": "Nothing printed then."
+      },
+      {
+        "text": "When it is collected",
+        "correct": true,
+        "why": "Right: a cold flow."
+      },
+      {
+        "text": "In the background, as soon as the program starts running",
+        "correct": false,
+        "why": "Nothing runs until a collector asks."
+      },
+      {
+        "text": "Once, the first time it is collected",
+        "correct": false,
+        "why": "It ran again for the second collector."
+      }
+    ]
+  },
+  {
+    "id": "ex-a19j1v7x",
+    "version": 1,
+    "section": "cold-streams",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`FlowCold.kt` collected the same flow twice. How many times did it print `opening the log`?",
+    "hint": "Each collector gets its own run.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-t86e5m6f",
+    "version": 1,
+    "section": "cold-streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A line comes after `week.collect { … }`. When does it run?",
+    "hint": "`collect` suspends.",
+    "choices": [
+      {
+        "text": "Right away",
+        "correct": false,
+        "why": "`collect` returns only at the end."
+      },
+      {
+        "text": "After the first value",
+        "correct": false,
+        "why": "It waits for all of them."
+      },
+      {
+        "text": "When the flow has finished",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Never",
+        "correct": false,
+        "why": "For a finite flow, it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t8egk36",
+    "version": 1,
+    "section": "operators",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`listOf(45, 20, 60, 30, 90).asFlow().onEach { println(\"saw $it\") }.filter { it >= 30 }.take(2)`. Which values are seen?",
+    "hint": "`take` cancels the source when it has its two.",
+    "choices": [
+      {
+        "text": "All five",
+        "correct": false,
+        "why": "The source stopped after 60."
+      },
+      {
+        "text": "45, 20 and 60",
+        "correct": true,
+        "why": "Right: 30 and 90 were never emitted."
+      },
+      {
+        "text": "45 and 60",
+        "correct": false,
+        "why": "20 was seen, then filtered out."
+      },
+      {
+        "text": "45, 60 and 90, the values at least 30",
+        "correct": false,
+        "why": "take stopped at two."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7ta61km",
+    "version": 1,
+    "section": "operators",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What can the lambda of `map` on a flow do that the lambda of `map` on a sequence cannot?",
+    "hint": "Think about `loadDetails(it)`.",
+    "choices": [
+      {
+        "text": "Return a different type",
+        "correct": false,
+        "why": "Both can."
+      },
+      {
+        "text": "Run in parallel on several threads",
+        "correct": false,
+        "why": "Values still go one at a time."
+      },
+      {
+        "text": "Call a suspending function",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Skip values",
+        "correct": false,
+        "why": "That is `filter`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cj29wpe6",
+    "version": 1,
+    "section": "operators",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The general operator that may emit none, one or several values per input is `___`.",
+    "hint": "`map` and `filter` are built on it.",
+    "blanks": [
+      {
+        "accept": [
+          "transform"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pbqscnep",
+    "version": 1,
+    "section": "terminal",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each terminal operator to what it returns.",
+    "hint": "The table in section 04.",
+    "pairs": [
+      {
+        "left": "`toList()`",
+        "right": "Every value, in a list"
+      },
+      {
+        "left": "`first()`",
+        "right": "The first value, cancelling the rest"
+      },
+      {
+        "left": "`fold(0) { … }`",
+        "right": "One accumulated value"
+      },
+      {
+        "left": "`collect { … }`",
+        "right": "`Unit`, when the flow ends"
+      }
+    ],
+    "right_distractors": [
+      "A new flow"
+    ]
+  },
+  {
+    "id": "ex-ztqj4p6g",
+    "version": 1,
+    "section": "terminal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ticker.toList()` is called on a flow that emits every second forever. What happens?",
+    "hint": "`toList` waits for the end.",
+    "choices": [
+      {
+        "text": "It never returns",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It returns the values so far after one second",
+        "correct": false,
+        "why": "It waits for an end that never comes."
+      },
+      {
+        "text": "It throws `IllegalStateException` because the flow is infinite",
+        "correct": false,
+        "why": "Nothing detects that."
+      },
+      {
+        "text": "It returns an empty list",
+        "correct": false,
+        "why": "It keeps collecting."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h4tc95c",
+    "version": 1,
+    "section": "flow-on",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`flow { … }.map { … }.flowOn(Dispatchers.IO).collect { … }`. Where does the `collect` lambda run?",
+    "hint": "`flowOn` affects what is above it.",
+    "choices": [
+      {
+        "text": "On an IO worker",
+        "correct": false,
+        "why": "Only the `flow` block and `map` moved."
+      },
+      {
+        "text": "On the collector's own dispatcher",
+        "correct": true,
+        "why": "Right: `main` in the example."
+      },
+      {
+        "text": "On a new thread for each value",
+        "correct": false,
+        "why": "No thread is created per value."
+      },
+      {
+        "text": "Where the last value came from",
+        "correct": false,
+        "why": "The collector does not move."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsjap17r",
+    "version": 1,
+    "section": "flow-on",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `withContext(Dispatchers.IO) { emit(45) }` inside `flow { … }` refused at run time?",
+    "hint": "`Flow invariant is violated`.",
+    "choices": [
+      {
+        "text": "`emit` cannot be called inside `withContext` because `emit` is not a suspending function",
+        "correct": false,
+        "why": "`emit` is suspending; the rule is about where."
+      },
+      {
+        "text": "A flow must emit from the collector's coroutine",
+        "correct": true,
+        "why": "Right: use `flowOn`."
+      },
+      {
+        "text": "IO threads cannot produce `Int` values",
+        "correct": false,
+        "why": "Not a rule."
+      },
+      {
+        "text": "The compiler forgot to check it",
+        "correct": false,
+        "why": "It is a run-time rule by design."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww70az03",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The log emits 45 and 30, then throws. `onCompletion` sits before `catch`, which emits -1. What does `collect` receive?",
+    "hint": "`got 45`, `got 30`, …",
+    "choices": [
+      {
+        "text": "45 and 30, then the exception",
+        "correct": false,
+        "why": "`catch` handled it."
+      },
+      {
+        "text": "Only -1",
+        "correct": false,
+        "why": "The first two arrived before the failure."
+      },
+      {
+        "text": "45, 30 and -1",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, since a flow that fails emits nothing",
+        "correct": false,
+        "why": "Values before the failure arrive."
+      }
+    ]
+  },
+  {
+    "id": "ex-2728hh22",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An exception is thrown inside `collect`'s lambda. Does a `catch` placed before `collect` catch it?",
+    "hint": "Upstream only.",
+    "choices": [
+      {
+        "text": "Yes, `catch` handles the whole flow",
+        "correct": false,
+        "why": "It handles what is above it."
+      },
+      {
+        "text": "No",
+        "correct": true,
+        "why": "Right: it goes to the caller."
+      },
+      {
+        "text": "Only if the exception is an `IllegalStateException`",
+        "correct": false,
+        "why": "The type does not change the direction."
+      },
+      {
+        "text": "Only with `retry` added",
+        "correct": false,
+        "why": "`retry` is also upstream only."
+      }
+    ]
+  },
+  {
+    "id": "ex-858tc4gb",
+    "version": 1,
+    "section": "errors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`flakyServer()` fails until its third attempt, and is collected with `retry(3)`. How many attempts were printed?",
+    "hint": "It answered on one of them.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qvwga6g3",
+    "version": 1,
+    "section": "buffering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which operator fits a screen that shows only the current weekly total?",
+    "hint": "Only the latest value matters.",
+    "choices": [
+      {
+        "text": "`buffer()`",
+        "correct": false,
+        "why": "It keeps every value, including stale ones."
+      },
+      {
+        "text": "`conflate()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`take(1)`",
+        "correct": false,
+        "why": "That stops after the first total."
+      },
+      {
+        "text": "No operator: the plain flow already skips stale totals",
+        "correct": false,
+        "why": "The plain flow delivers every value, waiting for each."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgcggne6",
+    "version": 1,
+    "section": "buffering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Values every 100 ms, a collector taking 300 ms each, five values, no buffer. About how many milliseconds in total?",
+    "hint": "They take turns: 100 plus 300, five times.",
+    "value": 2000,
+    "tolerance": 100,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-gj204nvd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of `FlowOn.kt`'s chain in order, top to bottom.",
+    "hint": "Producer, transform, dispatcher, collector.",
+    "items": [
+      "`flow { … emit(line) }`",
+      "`.map { it.toInt() }`",
+      "`.flowOn(Dispatchers.IO)`",
+      "`.collect { … }`"
+    ]
+  },
+  {
+    "id": "ex-n8ze81kv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements about a flow built with `flow { … }` are true? Choose all that apply.",
+    "hint": "Cold, lazy, one value at a time.",
+    "choices": [
+      {
+        "text": "Defining it runs nothing",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Each collector runs the producer again",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Two collectors share one run of the producer",
+        "correct": false,
+        "why": "No: that is a hot flow, lesson 17."
+      },
+      {
+        "text": "`emit` may be called from any coroutine",
+        "correct": false,
+        "why": "No: only the collector's."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0q68h0x",
+    "version": 1,
+    "section": "flow-on",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To run a flow's producer on `Dispatchers.IO` without moving the collector, add `.___(Dispatchers.IO)` below it.",
+    "hint": "Section 05's title.",
+    "blanks": [
+      {
+        "accept": [
+          "flowOn"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bqq90d6a",
+    "version": 1,
+    "section": "terminal",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`flowOf(45, 30, 60).runningFold(0) { t, m -> t + m }.toList()`. How many numbers does the list hold?",
+    "hint": "It includes the starting value.",
+    "value": 4,
+    "tolerance": 0
+  }
+]

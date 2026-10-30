@@ -1,0 +1,575 @@
+[
+  {
+    "id": "ex-ry3cpy9c",
+    "version": 1,
+    "section": "interfaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`interface Store { fun load(): List<Int>; fun total(): Int = load().sum() }`. What must a class implementing `Store` write?",
+    "hint": "Which member has no body?",
+    "choices": [
+      {
+        "text": "Both `load` and `total`",
+        "correct": false,
+        "why": "`total` has a default."
+      },
+      {
+        "text": "`load`",
+        "correct": true,
+        "why": "Right; `total` may be kept or overridden."
+      },
+      {
+        "text": "`total`, because `load` is optional",
+        "correct": false,
+        "why": "It is the other way round."
+      },
+      {
+        "text": "Nothing; interfaces only document intent",
+        "correct": false,
+        "why": "`Broken.kt` was refused for leaving `load` out."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fmc951q",
+    "version": 1,
+    "section": "interfaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Kotlin require `override` on a member that fulfils an interface?",
+    "hint": "Think of a typo in the name.",
+    "choices": [
+      {
+        "text": "So the JVM can find the method faster",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Because interface members are private",
+        "correct": false,
+        "why": "They are public."
+      },
+      {
+        "text": "So a misspelt name is an error, not a second function",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is optional; the compiler adds it",
+        "correct": false,
+        "why": "It is required."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4vjphpf",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`class Session(val minutes: Int)` and then `class TimedSession(…) : Session(…)`. What happens?",
+    "hint": "What is a class by default?",
+    "choices": [
+      {
+        "text": "It does not compile",
+        "correct": true,
+        "why": "Right: `Session` is final; it needs `open`."
+      },
+      {
+        "text": "It compiles with a warning",
+        "correct": false,
+        "why": "It is an error."
+      },
+      {
+        "text": "It compiles, and `TimedSession` copies `Session`",
+        "correct": false,
+        "why": "Nothing is copied."
+      },
+      {
+        "text": "It compiles only in the same file",
+        "correct": false,
+        "why": "Same file, and refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5gcc3yq",
+    "version": 1,
+    "section": "inheritance",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each modifier on a member to what it means.",
+    "hint": "The table in section 03.",
+    "pairs": [
+      {
+        "left": "nothing",
+        "right": "Subclasses cannot replace it"
+      },
+      {
+        "left": "`open`",
+        "right": "Subclasses may replace it"
+      },
+      {
+        "left": "`abstract`",
+        "right": "Subclasses must provide it"
+      },
+      {
+        "left": "`override`",
+        "right": "Replaces a parent's member"
+      }
+    ],
+    "right_distractors": [
+      "Visible only to subclasses"
+    ]
+  },
+  {
+    "id": "ex-nz8krw62",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`show()` in `Reminder` calls `prefix()`. For an `ExamReminder`, which `prefix` runs?",
+    "hint": "`EXAM: Android on 2026-12-01`.",
+    "choices": [
+      {
+        "text": "`Reminder`'s, because `show` is declared there",
+        "correct": false,
+        "why": "An overridden member is picked by the object's real class."
+      },
+      {
+        "text": "`ExamReminder`'s",
+        "correct": true,
+        "why": "Right: chosen at run time."
+      },
+      {
+        "text": "Both, one after the other",
+        "correct": false,
+        "why": "One call, one implementation."
+      },
+      {
+        "text": "Neither: `show` is final, so it cannot call `open` members",
+        "correct": false,
+        "why": "A final member can call open ones; that is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpzh026m",
+    "version": 1,
+    "section": "class-delegation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `: MutableList<Int> by inner` generate?",
+    "hint": "About thirty methods.",
+    "choices": [
+      {
+        "text": "A copy of `inner`",
+        "correct": false,
+        "why": "Nothing is copied; calls are forwarded."
+      },
+      {
+        "text": "A subclass of `ArrayList`",
+        "correct": false,
+        "why": "No inheritance from a class happens."
+      },
+      {
+        "text": "A forwarding method per member not overridden",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing until a member is called",
+        "correct": false,
+        "why": "The methods are generated at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k1y4m6g",
+    "version": 1,
+    "section": "class-delegation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`println(log)` printed `LoggingList@4617c264` instead of `[45, 30]`. Why?",
+    "hint": "Is `toString` a member of `MutableList`?",
+    "choices": [
+      {
+        "text": "The inner list was empty",
+        "correct": false,
+        "why": "`size` was 2."
+      },
+      {
+        "text": "`toString` comes from `Any`, not the interface",
+        "correct": true,
+        "why": "Right: override it to forward it too."
+      },
+      {
+        "text": "`println` cannot print lists",
+        "correct": false,
+        "why": "It printed lists all course long."
+      },
+      {
+        "text": "The override of `add` broke the delegation",
+        "correct": false,
+        "why": "`size` and `sum` still worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-stn1ejdn",
+    "version": 1,
+    "section": "property-delegation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val goal by lazy { println(\"computing goal\"); 300 }` is read twice. How many times does `computing goal` print?",
+    "hint": "Computed once.",
+    "choices": [
+      {
+        "text": "Twice",
+        "correct": false,
+        "why": "The second read reuses the value."
+      },
+      {
+        "text": "Zero, as it was computed at construction",
+        "correct": false,
+        "why": "`created` printed before it."
+      },
+      {
+        "text": "Once",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Once per thread",
+        "correct": false,
+        "why": "By default it is guarded so it runs once overall."
+      }
+    ]
+  },
+  {
+    "id": "ex-sz87ga35",
+    "version": 1,
+    "section": "property-delegation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Delegates.observable(\"light\") { _, old, new -> … }` add to a `var`?",
+    "hint": "`theme: light -> dark`.",
+    "choices": [
+      {
+        "text": "A check that can refuse a value",
+        "correct": false,
+        "why": "That is `Delegates.vetoable`, or a custom setter."
+      },
+      {
+        "text": "A callback after each assignment, with old and new value",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lazy computation of the first value",
+        "correct": false,
+        "why": "That is `lazy`."
+      },
+      {
+        "text": "Thread safety for every read",
+        "correct": false,
+        "why": "Not what it is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-kj9521bg",
+    "version": 1,
+    "section": "property-delegation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`class Row(map: Map<String, Any?>) { val minutes: Int by map }`, built from a map with no `minutes` key. When does it fail?",
+    "hint": "The map is read by the getter.",
+    "choices": [
+      {
+        "text": "At compile time",
+        "correct": false,
+        "why": "The compiler cannot see the map's keys."
+      },
+      {
+        "text": "When `Row` is built",
+        "correct": false,
+        "why": "Nothing reads the map then."
+      },
+      {
+        "text": "When `minutes` is first read",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Never: it returns 0",
+        "correct": false,
+        "why": "Nothing invents a default."
+      }
+    ]
+  },
+  {
+    "id": "ex-vm6z1sqv",
+    "version": 1,
+    "section": "extension-functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `fun Int.asHours(): String`, what is `this`?",
+    "hint": "The receiver.",
+    "choices": [
+      {
+        "text": "The file the function is declared in",
+        "correct": false,
+        "why": "A file has no `this`."
+      },
+      {
+        "text": "The number it was called on",
+        "correct": true,
+        "why": "Right: `135.asHours()` makes `this` 135."
+      },
+      {
+        "text": "The `Int` class itself",
+        "correct": false,
+        "why": "It is the value, not the class."
+      },
+      {
+        "text": "Nothing; extensions have no `this`",
+        "correct": false,
+        "why": "`this / 60` used it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8kj8vaj",
+    "version": 1,
+    "section": "extension-functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`val r: Reminder = ExamReminder()`, with extensions `Reminder.kind()` and `ExamReminder.kind()`. What does `r.kind()` return?",
+    "hint": "Resolved at compile time.",
+    "choices": [
+      {
+        "text": "`exam reminder`, from the real class",
+        "correct": false,
+        "why": "That would be an overridden member."
+      },
+      {
+        "text": "`reminder`, from the declared type",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A compile error: the call is ambiguous",
+        "correct": false,
+        "why": "The declared type picks one."
+      },
+      {
+        "text": "Both strings, joined",
+        "correct": false,
+        "why": "One call, one function."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5a20xae",
+    "version": 1,
+    "section": "extension-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A class has `fun label() = \"member\"` and a file declares `fun Session.label() = \"extension\"`. What does `Session().label()` return?",
+    "hint": "Who wins?",
+    "choices": [
+      {
+        "text": "`extension`, the most recent declaration",
+        "correct": false,
+        "why": "Order of declaration is not the rule."
+      },
+      {
+        "text": "A compile error",
+        "correct": false,
+        "why": "It compiled, with a warning."
+      },
+      {
+        "text": "`member`",
+        "correct": true,
+        "why": "Right: a member always wins."
+      },
+      {
+        "text": "Whichever is in the same file as the call",
+        "correct": false,
+        "why": "A member beats every extension."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g12dctn",
+    "version": 1,
+    "section": "extension-properties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `val Int.bonus: Int = 5` refused?",
+    "hint": "Where would the 5 be stored?",
+    "choices": [
+      {
+        "text": "Extension properties must be `var`",
+        "correct": false,
+        "why": "`val List<Int>.total` compiled."
+      },
+      {
+        "text": "It has no backing field to hold a value",
+        "correct": true,
+        "why": "Right: use a getter."
+      },
+      {
+        "text": "`Int` is final",
+        "correct": false,
+        "why": "Extensions work on final types."
+      },
+      {
+        "text": "The name `bonus` is reserved",
+        "correct": false,
+        "why": "It is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zjrvkg2",
+    "version": 1,
+    "section": "extension-properties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An extension needs the class's private list to work. What does the section say?",
+    "hint": "What can an extension see?",
+    "choices": [
+      {
+        "text": "Mark the extension `internal`",
+        "correct": false,
+        "why": "`internal` does not open `private` members."
+      },
+      {
+        "text": "Use reflection",
+        "correct": false,
+        "why": "That is breaking the class's promise."
+      },
+      {
+        "text": "It should be a member",
+        "correct": true,
+        "why": "Right: extensions see only the public API."
+      },
+      {
+        "text": "Make the list public",
+        "correct": false,
+        "why": "That gives everybody what one function needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgcfgrdb",
+    "version": 1,
+    "section": "extension-properties",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val List<Int>.total get() = sum()`. What is `listOf(45, 90, 30).total`?",
+    "hint": "A computed property.",
+    "value": 165,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-fn89wk6e",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Both class delegation and delegated properties use the keyword `___`.",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "by"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h9dmmdxd",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the tool from this lesson.",
+    "hint": "One of each.",
+    "pairs": [
+      {
+        "left": "Several stores the week screen can use interchangeably",
+        "right": "An interface"
+      },
+      {
+        "left": "A list that logs additions",
+        "right": "Class delegation with `by`"
+      },
+      {
+        "left": "An expensive value computed on first read",
+        "right": "`by lazy`"
+      },
+      {
+        "left": "`135.asHours()` on a type you did not write",
+        "right": "An extension function"
+      }
+    ],
+    "right_distractors": [
+      "A `data object`"
+    ]
+  },
+  {
+    "id": "ex-md0zechg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these compile? Choose all that apply.",
+    "hint": "Final by default; no fields in extensions.",
+    "choices": [
+      {
+        "text": "`open class A; class B : A()`",
+        "correct": true,
+        "why": "Yes: `A` is open."
+      },
+      {
+        "text": "`class A; class B : A()`",
+        "correct": false,
+        "why": "No: `A` is final."
+      },
+      {
+        "text": "`val String.shout get() = uppercase() + \"!\"`",
+        "correct": true,
+        "why": "Yes: a computed extension property."
+      },
+      {
+        "text": "`var String.count: Int = 0`",
+        "correct": false,
+        "why": "No: an extension has no backing field."
+      }
+    ]
+  }
+]

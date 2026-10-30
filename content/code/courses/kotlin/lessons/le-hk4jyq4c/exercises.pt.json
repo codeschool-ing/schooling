@@ -1,0 +1,409 @@
+{
+  "ex-fhbn2p3f": {
+    "prompt": "`val week: List<Int> = listOf(45, 30, 60)` e depois `week.add(90)`. O que acontece?",
+    "hint": "Qual tipo de lista tem `add`?",
+    "choices": [
+      {
+        "text": "A lista cresce para quatro itens",
+        "why": "`List` não tem `add` para chamar."
+      },
+      {
+        "text": "Não compila: `List` não tem `add`",
+        "why": "Isso: `unresolved reference 'add' on receiver of type 'List<Int>'`."
+      },
+      {
+        "text": "Lança `UnsupportedOperationException` quando a linha roda",
+        "why": "É o que as listas não modificáveis do Java fazem; o Kotlin recusa na compilação."
+      },
+      {
+        "text": "Uma lista nova é devolvida e `week` fica igual",
+        "why": "O `add` nem existe em `List`; `week + 90` é que faria uma lista nova."
+      }
+    ]
+  },
+  "ex-e7p7avdr": {
+    "prompt": "`val log = mutableListOf(45, 30)`, `val view: List<Int> = log`, e depois `log.add(60)`. O que `println(view)` imprime?",
+    "hint": "Dois nomes, quantas listas?",
+    "choices": [
+      {
+        "text": "`[45, 30]`, porque `view` é somente leitura",
+        "why": "Somente leitura é uma propriedade do nome, não uma cópia congelada."
+      },
+      {
+        "text": "`[45, 30, 60]`",
+        "why": "Isso: uma lista, vista por dois tipos."
+      },
+      {
+        "text": "Um erro de compilação, já que `view` e `log` dividem uma lista",
+        "why": "Dividir é permitido; foi o que aconteceu."
+      },
+      {
+        "text": "`[60]`, os itens acrescentados depois de `view` existir",
+        "why": "O `view` mostra a lista inteira, itens antigos e novos."
+      }
+    ]
+  },
+  "ex-ww0zd8pc": {
+    "prompt": "O que a seção recomenda que uma função que monta uma lista devolva?",
+    "hint": "O `buildList` faz isso numa chamada.",
+    "choices": [
+      {
+        "text": "Uma `MutableList`, para quem chama acrescentar mais",
+        "why": "Isso dá a todo chamador um jeito de mudar dados que a função controla."
+      },
+      {
+        "text": "Um `Array`, que é mais barato",
+        "why": "Um array pode ser mudado por qualquer um que o segure."
+      },
+      {
+        "text": "Um `Set`, já que um conjunto não muda",
+        "why": "Um `Set` descarta repetições, o que muda os dados; e `MutableSet` também muda."
+      },
+      {
+        "text": "Uma `List`, montada a partir de uma `MutableList` privada",
+        "why": "Isso: mutável por dentro, somente leitura por fora."
+      }
+    ]
+  },
+  "ex-fsbpvf8e": {
+    "prompt": "O que o `filter` devolve?",
+    "hint": "`sessions` foi impresso de novo depois, sem mudança.",
+    "choices": [
+      {
+        "text": "Uma lista nova dos itens que passaram",
+        "why": "Isso, na ordem original."
+      },
+      {
+        "text": "A mesma lista com os itens reprovados removidos no lugar",
+        "why": "Nada é removido no lugar; a original fica intocada."
+      },
+      {
+        "text": "A quantidade de itens que passaram",
+        "why": "Isso é o `count`."
+      },
+      {
+        "text": "`true` se todo item passou no teste",
+        "why": "Isso é o `all`."
+      }
+    ]
+  },
+  "ex-f2zrv8dm": {
+    "prompt": "`sessions` é `Kotlin 45`, `Android 30`, `Kotlin 60`, `Go 20`. Quanto é `sessions.filter { it.first == \"Kotlin\" }.map { it.second }.sum()`?",
+    "hint": "As sessões de Kotlin, os minutos delas, o total."
+  },
+  "ex-x3bagqh3": {
+    "prompt": "Qual é o tipo de `sessions.mapNotNull { if (it.second >= 45) it.first else null }`?",
+    "hint": "Os `null` são descartados.",
+    "choices": [
+      {
+        "text": "`List<String?>`",
+        "why": "Isso seria o `map`; o `mapNotNull` remove os nulos e o `?`."
+      },
+      {
+        "text": "`List<String>`",
+        "why": "Isso."
+      },
+      {
+        "text": "`List<Pair<String, Int>>`",
+        "why": "A lambda devolve o nome do curso, uma `String`."
+      },
+      {
+        "text": "`String?`",
+        "why": "Ela devolve uma lista, um item por resultado não nulo."
+      }
+    ]
+  },
+  "ex-hs3njy83": {
+    "prompt": "Qual é a diferença entre `maxBy { it.second }` e `maxOf { it.second }`?",
+    "hint": "Um imprimiu `(Kotlin, 60)`.",
+    "choices": [
+      {
+        "text": "O `maxBy` é preguiçoso e o `maxOf` é ansioso",
+        "why": "As duas são funções ansiosas de lista."
+      },
+      {
+        "text": "O `maxOf` aceita empates e o `maxBy` não",
+        "why": "Empates não são a diferença; o que é devolvido é."
+      },
+      {
+        "text": "O `maxBy` dá o item, o `maxOf` o valor",
+        "why": "Isso: a sessão, contra o número de minutos dela."
+      },
+      {
+        "text": "Nenhuma: são dois nomes para a mesma função",
+        "why": "Os resultados delas têm tipos diferentes."
+      }
+    ]
+  },
+  "ex-bc7ax5np": {
+    "prompt": "Numa lista vazia, qual chamada lança exceção?",
+    "hint": "As que não têm resposta para o nada.",
+    "choices": [
+      {
+        "text": "`sumOf { it.second }`",
+        "why": "A soma de nada é 0."
+      },
+      {
+        "text": "`maxByOrNull { it.second }`",
+        "why": "Ela devolve `null`."
+      },
+      {
+        "text": "`maxBy { it.second }`",
+        "why": "Isso: `NoSuchElementException`."
+      },
+      {
+        "text": "`count { it.second > 0 }`",
+        "why": "Ela conta zero itens."
+      }
+    ]
+  },
+  "ex-m69m23y5": {
+    "prompt": "Ligue cada função à pergunta que ela responde.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "`any { … }`",
+        "right": "Algum item passa?"
+      },
+      {
+        "left": "`all { … }`",
+        "right": "Todos os itens passam?"
+      },
+      {
+        "left": "`distinct()`",
+        "right": "Quais itens existem, sem repetição?"
+      },
+      {
+        "left": "`take(2)`",
+        "right": "Quais são os dois primeiros itens?"
+      }
+    ],
+    "right_distractors": [
+      "Qual item vem por último depois de ordenar?"
+    ]
+  },
+  "ex-eefjz9bh": {
+    "prompt": "O que `sessions.groupBy { it.first }` devolve?",
+    "hint": "Toda sessão é mantida.",
+    "choices": [
+      {
+        "text": "Um mapa de cada curso para o total de minutos",
+        "why": "Isso precisa de um `mapValues` depois."
+      },
+      {
+        "text": "Uma lista de nomes de cursos sem repetição",
+        "why": "Isso é `map { it.first }.distinct()`."
+      },
+      {
+        "text": "Um mapa de cada curso para as sessões dele",
+        "why": "Isso: `{Kotlin=[…, …], Android=[…], Go=[…]}`."
+      },
+      {
+        "text": "Um mapa de cada curso para a última sessão",
+        "why": "Isso é o que o `associate` acaba tendo, perdendo as outras."
+      }
+    ]
+  },
+  "ex-4n6s0rh0": {
+    "prompt": "`sessions.associate { it.first to it.second }` imprimiu `Kotlin=60`, embora Kotlin tivesse 45 e 60. O que aconteceu com o 45?",
+    "hint": "Um mapa guarda um valor por chave.",
+    "choices": [
+      {
+        "text": "Foi somado ao 60 e depois dividido por dois",
+        "why": "O `associate` não faz aritmética."
+      },
+      {
+        "text": "A segunda entrada o substituiu, em silêncio",
+        "why": "Isso: uma chave repetida fica com o último valor."
+      },
+      {
+        "text": "Fica guardado sob uma segunda chave `Kotlin` escondida",
+        "why": "Não há chaves duplicadas num mapa, escondidas ou não."
+      },
+      {
+        "text": "O `associate` lançou exceção, e ela foi engolida",
+        "why": "Nada foi lançado; a substituição é o comportamento normal dele."
+      }
+    ]
+  },
+  "ex-w1gefbjd": {
+    "prompt": "O que o `partition` dá que o `filter` não dá?",
+    "hint": "`val (long, short) = …`.",
+    "choices": [
+      {
+        "text": "Uma contagem de cada metade",
+        "why": "Ele devolve as próprias listas."
+      },
+      {
+        "text": "Itens ordenados pelo resultado do teste",
+        "why": "A ordem dentro de cada metade é a original."
+      },
+      {
+        "text": "Um resultado preguiçoso calculado sob demanda",
+        "why": "O `partition` numa lista é ansioso."
+      },
+      {
+        "text": "Os itens que falharam, numa segunda lista",
+        "why": "Isso: as duas metades, num `Pair`."
+      }
+    ]
+  },
+  "ex-vha7gm1e": {
+    "prompt": "`listOf(45, 30, 60, 20).fold(0) { acc, m -> acc + m }`. Qual é o resultado?",
+    "hint": "É o `sum()` escrito por extenso."
+  },
+  "ex-tz8pzsde": {
+    "prompt": "Por que o `fold` é mais seguro que o `reduce` numa lista que pode estar vazia?",
+    "hint": "De onde cada um tira o valor inicial?",
+    "choices": [
+      {
+        "text": "O `fold` parte do valor que você deu, sem precisar de primeiro item",
+        "why": "Isso: o `reduce` usa o primeiro item, e uma lista vazia não tem."
+      },
+      {
+        "text": "O `fold` pula listas vazias e o `reduce` fica em laço para sempre",
+        "why": "O `reduce` lança exceção na hora; não fica em laço."
+      },
+      {
+        "text": "O `fold` pega exceções dentro da lambda",
+        "why": "Nenhum dos dois pega nada."
+      },
+      {
+        "text": "O `fold` é preguiçoso, então nunca chega à parte vazia",
+        "why": "O `fold` numa lista é ansioso."
+      }
+    ]
+  },
+  "ex-79pv1mk7": {
+    "prompt": "Quantos números `listOf(45, 30, 60, 20).runningFold(0) { acc, m -> acc + m }` contém?",
+    "hint": "Ele inclui o valor inicial."
+  },
+  "ex-w0ym9bz8": {
+    "prompt": "Uma sequência roda `filter`, depois `map`, depois `first()` sobre 45, 30, 60, 20, e o 45 passa no filtro. Quais lambdas rodam?",
+    "hint": "Item a item, e para quando a resposta é conhecida.",
+    "choices": [
+      {
+        "text": "O `filter` nos quatro, depois o `map` nos que passaram",
+        "why": "Essa é a ordem da lista."
+      },
+      {
+        "text": "`filter 45`, `map 45`",
+        "why": "Isso: duas chamadas, e os outros itens nunca são tocados."
+      },
+      {
+        "text": "O `map` nos quatro, depois o `filter`",
+        "why": "A ordem dos passos é a ordem escrita."
+      },
+      {
+        "text": "Nenhuma até o `toList()` ser chamado",
+        "why": "O `first()` também é uma operação terminal."
+      }
+    ]
+  },
+  "ex-tgc4t8xs": {
+    "prompt": "`minutes.asSequence().map { println(it); it * 2 }` está sozinho numa linha. O que imprime?",
+    "hint": "O que faz uma sequência trabalhar?",
+    "choices": [
+      {
+        "text": "Cada item, uma vez",
+        "why": "Isso precisa de uma operação terminal, como `toList()`."
+      },
+      {
+        "text": "Só o primeiro item",
+        "why": "Nada pediu nem o primeiro."
+      },
+      {
+        "text": "Um aviso do compilador sobre uma sequência não usada",
+        "why": "A seção diz que o compilador não avisa."
+      },
+      {
+        "text": "Nada, já que nenhuma operação terminal rodou",
+        "why": "Isso: sem operação terminal, nenhuma lambda roda."
+      }
+    ]
+  },
+  "ex-8yszfn21": {
+    "prompt": "Para uma lista de uma dúzia de sessões e uma corrente de dois passos, o que a seção recomenda?",
+    "hint": "Uma lista é o padrão.",
+    "choices": [
+      {
+        "text": "Uma sequência, que é mais rápida para qualquer tamanho",
+        "why": "Para algumas dezenas de itens, a maquinaria dela custa mais que as listas que economiza."
+      },
+      {
+        "text": "A lista, o padrão mais simples",
+        "why": "Isso: mais simples, mais fácil de depurar, e barata nesse tamanho."
+      },
+      {
+        "text": "Um array, para evitar encaixotamento",
+        "why": "A seção compara listas e sequências."
+      },
+      {
+        "text": "Um `Flow`",
+        "why": "O `Flow` é para valores que chegam ao longo do tempo, aula 16."
+      }
+    ]
+  },
+  "ex-hj14c0as": {
+    "prompt": "`goals` é um `Map<String, Int>`. Qual é o tipo de `goals[\"Swift\"]`?",
+    "hint": "Imprimiu `null`.",
+    "choices": [
+      {
+        "text": "`Int`",
+        "why": "A chave pode faltar, então a leitura é anulável."
+      },
+      {
+        "text": "`Int?`: a chave não é garantida",
+        "why": "Isso: um mapa não promete que uma chave existe."
+      },
+      {
+        "text": "`Pair<String, Int>`",
+        "why": "Ler pela chave dá só o valor."
+      },
+      {
+        "text": "`Boolean`",
+        "why": "Isso é `\"Swift\" in goals`."
+      }
+    ]
+  },
+  "ex-k8ar7vew": {
+    "prompt": "Quantos itens tem `setOf(\"Kotlin\", \"Android\", \"Kotlin\", \"Go\")`?",
+    "hint": "Um conjunto não aceita repetição."
+  },
+  "ex-r3dgdn52": {
+    "prompt": "Ponha os passos em ordem para obter o total de cada curso nas sessões de 30 minutos ou mais.",
+    "hint": "Filtre antes de agrupar, e some cada grupo por último.",
+    "items": [
+      "`sessions`",
+      "`.filter { it.second >= 30 }`",
+      "`.groupBy { it.first }`",
+      "`.mapValues { (_, list) -> list.sumOf { it.second } }`"
+    ]
+  },
+  "ex-2hnm58pg": {
+    "prompt": "Quais chamadas são seguras numa lista que pode estar vazia, devolvendo em vez de lançar exceção? Escolha todas as que se aplicam.",
+    "hint": "Somas e contagens têm resposta para o nada; extremos precisam de `OrNull`.",
+    "choices": [
+      {
+        "text": "`sumOf { it.second }`",
+        "why": "Sim: 0."
+      },
+      {
+        "text": "`first()`",
+        "why": "Não: `NoSuchElementException`."
+      },
+      {
+        "text": "`fold(0) { acc, s -> acc + s.second }`",
+        "why": "Sim: o valor inicial."
+      },
+      {
+        "text": "`minByOrNull { it.second }`",
+        "why": "Sim: `null`."
+      },
+      {
+        "text": "`reduce { a, b -> a }`",
+        "why": "Não: não há primeiro item para começar."
+      }
+    ]
+  }
+}

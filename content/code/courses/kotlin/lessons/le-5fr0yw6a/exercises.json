@@ -1,0 +1,594 @@
+[
+  {
+    "id": "ex-wz0q09gx",
+    "version": 1,
+    "section": "hot-and-cold",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Hot.kt` the value went 0, 45, 75 before the watcher started. What did the watcher see first?",
+    "hint": "The current value, not the history.",
+    "choices": [
+      {
+        "text": "0",
+        "correct": false,
+        "why": "That was replaced twice already."
+      },
+      {
+        "text": "75",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "45, then 75, replayed in order",
+        "correct": false,
+        "why": "A state flow keeps no history."
+      },
+      {
+        "text": "Nothing until the next change, 135",
+        "correct": false,
+        "why": "It got the current value at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-7aejnnk0",
+    "version": 1,
+    "section": "hot-and-cold",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The watcher was running while `minutes.value = 135` was set twice. How many lines did it print in total?",
+    "hint": "75 on arrival, then the changes.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-50xhsd1d",
+    "version": 1,
+    "section": "hot-and-cold",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `Hot.kt` have to cancel `watcher`?",
+    "hint": "Think about where a hot flow ends.",
+    "choices": [
+      {
+        "text": "Because a `MutableStateFlow` leaks memory if it is collected for longer than a second",
+        "correct": false,
+        "why": "No such limit."
+      },
+      {
+        "text": "To avoid the second 135",
+        "correct": false,
+        "why": "That was skipped as equal."
+      },
+      {
+        "text": "Its collection never ends",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because `runBlocking` refuses to start a second coroutine while one is collecting",
+        "correct": false,
+        "why": "It ran several."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvwgg67s",
+    "version": 1,
+    "section": "stateflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `State.kt` the screen takes 100 ms per value and the total moves 15, 30, 45, 60, 75 meanwhile. What does it draw?",
+    "hint": "A slow collector gets only the latest.",
+    "choices": [
+      {
+        "text": "All six values, each one 100 ms after the last",
+        "correct": false,
+        "why": "The values in between were never drawn."
+      },
+      {
+        "text": "0, then 75",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only 75",
+        "correct": false,
+        "why": "It drew the starting value first."
+      },
+      {
+        "text": "0, then 15",
+        "correct": false,
+        "why": "15 was out of date by then."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wmpc65c",
+    "version": 1,
+    "section": "stateflow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `MutableStateFlow` need an argument, as in `MutableStateFlow(0)`?",
+    "hint": "The first rule in the table.",
+    "choices": [
+      {
+        "text": "So that a screen drawn before anything loads still has a value to draw",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The argument is how many collectors it accepts",
+        "correct": false,
+        "why": "That is a value, not a count."
+      },
+      {
+        "text": "To pick the dispatcher it emits on",
+        "correct": false,
+        "why": "It takes a value."
+      },
+      {
+        "text": "It sets how many past values are kept for later",
+        "correct": false,
+        "why": "That is `replay`, on a shared flow."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rgaz5dq",
+    "version": 1,
+    "section": "stateflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `total.value` give that a cold flow has no way to give?",
+    "hint": "Without suspending.",
+    "choices": [
+      {
+        "text": "Every value it has ever held",
+        "correct": false,
+        "why": "It holds only one."
+      },
+      {
+        "text": "The next value, waiting until it arrives",
+        "correct": false,
+        "why": "It does not wait."
+      },
+      {
+        "text": "The number of collectors watching it right now",
+        "correct": false,
+        "why": "That is `subscriptionCount`."
+      },
+      {
+        "text": "The current value, read from any code without suspending at all",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ezde8yx",
+    "version": 1,
+    "section": "stateflow",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `StateFlow` behaves as if lesson 16's `___()` were already applied: a slow collector skips to the latest value.",
+    "hint": "Not `buffer`.",
+    "blanks": [
+      {
+        "accept": [
+          "conflate"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3vqq8zd6",
+    "version": 1,
+    "section": "backing-property",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why keep `_minutes` private and expose `minutes: StateFlow<Int>`?",
+    "hint": "Who may set the total.",
+    "choices": [
+      {
+        "text": "A private `MutableStateFlow` uses less memory than a public one",
+        "correct": false,
+        "why": "Visibility does not change size."
+      },
+      {
+        "text": "So that the class owning the total is the only code that changes it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Collectors of a public `MutableStateFlow` miss values",
+        "correct": false,
+        "why": "They would not."
+      },
+      {
+        "text": "The compiler refuses public mutable flows",
+        "correct": false,
+        "why": "It accepts them; the shape is a choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-krbcjgph",
+    "version": 1,
+    "section": "backing-property",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happened when `BackingWrite.kt` set `week.minutes.value = 0`?",
+    "hint": "`e:` is a compiler line.",
+    "choices": [
+      {
+        "text": "It ran and the total became 0",
+        "correct": false,
+        "why": "It never ran."
+      },
+      {
+        "text": "It threw `UnsupportedOperationException` when the line was reached at run time",
+        "correct": false,
+        "why": "Refused before running."
+      },
+      {
+        "text": "The compiler refused the assignment",
+        "correct": true,
+        "why": "Right: `'val' cannot be reassigned.`"
+      },
+      {
+        "text": "It compiled with a warning",
+        "correct": false,
+        "why": "It was an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-0eeav4yx",
+    "version": 1,
+    "section": "backing-property",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `asStateFlow()` add, over writing `val minutes: StateFlow<Int> = _minutes`?",
+    "hint": "Think about `as MutableStateFlow<Int>`.",
+    "choices": [
+      {
+        "text": "It makes the value thread safe, which a plain `StateFlow` type is not",
+        "correct": false,
+        "why": "The flow is already safe."
+      },
+      {
+        "text": "It copies the current value once and stops following changes",
+        "correct": false,
+        "why": "It follows every change."
+      },
+      {
+        "text": "A cast back no longer works",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing; it is only a style",
+        "correct": false,
+        "why": "It wraps the object."
+      }
+    ]
+  },
+  {
+    "id": "ex-gshgvchx",
+    "version": 1,
+    "section": "backing-property",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two threads run `_minutes.value += 30` at the same moment, starting from 45. What can the result be?",
+    "hint": "Read, then write, in two steps.",
+    "choices": [
+      {
+        "text": "Always 105",
+        "correct": false,
+        "why": "Both can read 45."
+      },
+      {
+        "text": "105, or 75 if both read 45 first",
+        "correct": true,
+        "why": "Right: one addition can be lost."
+      },
+      {
+        "text": "Always 75",
+        "correct": false,
+        "why": "They do not always collide."
+      },
+      {
+        "text": "An exception for the second writer",
+        "correct": false,
+        "why": "Nothing checks it; that is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-cj2sphh4",
+    "version": 1,
+    "section": "sharedflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`emit(\"session saved\")` is called twice in a row. How many times does the early screen print it?",
+    "hint": "A shared flow does not drop repeats.",
+    "choices": [
+      {
+        "text": "Once, since the second is equal",
+        "correct": false,
+        "why": "That is what a `StateFlow` would do."
+      },
+      {
+        "text": "Twice",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None, because a shared flow with no replay delivers nothing",
+        "correct": false,
+        "why": "Present collectors get every emission."
+      },
+      {
+        "text": "Three times",
+        "correct": false,
+        "why": "Two were emitted."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jqa932e",
+    "version": 1,
+    "section": "sharedflow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The late screen started collecting after both `session saved` messages. What did it print?",
+    "hint": "Replay is zero by default.",
+    "choices": [
+      {
+        "text": "Both `session saved` lines, then `goal reached`",
+        "correct": false,
+        "why": "It missed what came before it."
+      },
+      {
+        "text": "The last `session saved`",
+        "correct": false,
+        "why": "That needs `replay = 1`."
+      },
+      {
+        "text": "`goal reached`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "`goal reached` came after it arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7pcs86a",
+    "version": 1,
+    "section": "sharedflow",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing a screen observes to the type that fits it.",
+    "hint": "State, or an event that matters once.",
+    "pairs": [
+      {
+        "left": "The week's total",
+        "right": "`StateFlow<Int>`"
+      },
+      {
+        "left": "A \"session saved\" message",
+        "right": "`SharedFlow<String>`, no replay"
+      },
+      {
+        "left": "Whether loading is in progress",
+        "right": "`StateFlow<Boolean>`"
+      }
+    ],
+    "right_distractors": [
+      "`Flow<Int>` from `flow { … }`"
+    ]
+  },
+  {
+    "id": "ex-1eyemyb3",
+    "version": 1,
+    "section": "statein-sharein",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two screens collect `log.shareIn(this, SharingStarted.Eagerly, replay = 3)`. How many times is `opening the log` printed?",
+    "hint": "The producer is shared.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-h3m5p5s5",
+    "version": 1,
+    "section": "statein-sharein",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `SharingStarted` policy to when the producer runs.",
+    "hint": "The table in section 06.",
+    "pairs": [
+      {
+        "left": "`Eagerly`",
+        "right": "From the call, until the scope ends"
+      },
+      {
+        "left": "`Lazily`",
+        "right": "From the first collector, until the scope ends"
+      },
+      {
+        "left": "`WhileSubscribed(5000)`",
+        "right": "While collected, plus five seconds"
+      }
+    ],
+    "right_distractors": [
+      "Once per collector, from the start"
+    ]
+  },
+  {
+    "id": "ex-35p2z8m0",
+    "version": 1,
+    "section": "statein-sharein",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ShareIn.kt` ends with `coroutineContext.cancelChildren()`. What happens without it?",
+    "hint": "The sharing coroutine belongs to `runBlocking`'s scope.",
+    "choices": [
+      {
+        "text": "The program never finishes",
+        "correct": true,
+        "why": "Right: the collectors still wait."
+      },
+      {
+        "text": "The log is opened a second time when the first collector finishes reading it",
+        "correct": false,
+        "why": "Sharing runs it once."
+      },
+      {
+        "text": "Screen B misses the values",
+        "correct": false,
+        "why": "Both got them before."
+      },
+      {
+        "text": "Nothing changes, since `main` returning ends every coroutine started inside `runBlocking`",
+        "correct": false,
+        "why": "`runBlocking` waits for its children."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma0drxcn",
+    "version": 1,
+    "section": "state-holder",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`WeekModel.refresh` catches `IOException` and not `Exception`. Why?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "`Exception` cannot be caught inside `launch`",
+        "correct": false,
+        "why": "It can be."
+      },
+      {
+        "text": "Cancellation and bugs must pass through",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only `IOException` carries a message to show on the screen when loading fails",
+        "correct": false,
+        "why": "Every exception has `message`."
+      },
+      {
+        "text": "To make the sealed type exhaustive",
+        "correct": false,
+        "why": "Unrelated to the catch."
+      }
+    ]
+  },
+  {
+    "id": "ex-aq200sw9",
+    "version": 1,
+    "section": "state-holder",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the lines the screen printed in `WeekModel.kt` in order.",
+    "hint": "Loading, loaded, one session added.",
+    "items": [
+      "`loading…`",
+      "`2 sessions, 75 min`",
+      "`3 sessions, 135 min`"
+    ]
+  },
+  {
+    "id": "ex-g7ycqqq3",
+    "version": 1,
+    "section": "state-holder",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`model.add(60)` is called while the state is `WeekUi.Loading`. What happens?",
+    "hint": "Read `add`'s `else` branch.",
+    "choices": [
+      {
+        "text": "60 is kept and added once the week has finished loading",
+        "correct": false,
+        "why": "Nothing keeps it."
+      },
+      {
+        "text": "`IllegalStateException`",
+        "correct": false,
+        "why": "No exception; the state stays."
+      },
+      {
+        "text": "Nothing changes: `add` hands back the state it was given, since there is no week yet",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The state becomes `Loaded` with a single session of 60",
+        "correct": false,
+        "why": "There is no week to add to."
+      }
+    ]
+  },
+  {
+    "id": "ex-378w15tw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements are true of a `StateFlow`? Choose all that apply.",
+    "hint": "Three rules, and hot.",
+    "choices": [
+      {
+        "text": "It always holds a value",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Equal values are not emitted twice",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Each collector runs a producer of its own",
+        "correct": false,
+        "why": "No: that is a cold flow."
+      },
+      {
+        "text": "Collecting it ends when the last value is set",
+        "correct": false,
+        "why": "No: it never ends on its own."
+      }
+    ]
+  }
+]

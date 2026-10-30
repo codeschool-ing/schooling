@@ -1,0 +1,402 @@
+{
+  "ex-wz0q09gx": {
+    "prompt": "No `Hot.kt` o valor foi 0, 45, 75 antes de o observador começar. O que o observador viu primeiro?",
+    "hint": "O valor atual, não o histórico.",
+    "choices": [
+      {
+        "text": "0",
+        "why": "Ele já tinha sido substituído duas vezes."
+      },
+      {
+        "text": "75",
+        "why": "Isso."
+      },
+      {
+        "text": "45 e depois 75, repetidos em ordem",
+        "why": "Um state flow não guarda histórico."
+      },
+      {
+        "text": "Nada até a próxima mudança, 135",
+        "why": "Recebeu o valor atual na hora."
+      }
+    ]
+  },
+  "ex-7aejnnk0": {
+    "prompt": "O observador estava rodando enquanto `minutes.value = 135` foi definido duas vezes. Quantas linhas ele imprimiu no total?",
+    "hint": "75 ao chegar, depois as mudanças."
+  },
+  "ex-50xhsd1d": {
+    "prompt": "Por que o `Hot.kt` precisou cancelar o `watcher`?",
+    "hint": "Pense em onde um flow quente termina.",
+    "choices": [
+      {
+        "text": "Porque um `MutableStateFlow` vaza memória se for coletado por mais de um segundo",
+        "why": "Não há esse limite."
+      },
+      {
+        "text": "Para evitar o segundo 135",
+        "why": "Esse foi pulado por ser igual."
+      },
+      {
+        "text": "A coleta dele nunca termina",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o `runBlocking` recusa iniciar uma segunda corrotina enquanto uma coleta",
+        "why": "Ele rodou várias."
+      }
+    ]
+  },
+  "ex-tvwgg67s": {
+    "prompt": "No `State.kt` a tela leva 100 ms por valor e o total passa por 15, 30, 45, 60, 75 nesse tempo. O que ela desenha?",
+    "hint": "Um coletor lento recebe só o mais recente.",
+    "choices": [
+      {
+        "text": "Os seis valores, cada um 100 ms depois do anterior",
+        "why": "Os valores do meio nunca foram desenhados."
+      },
+      {
+        "text": "0, depois 75",
+        "why": "Isso."
+      },
+      {
+        "text": "Só 75",
+        "why": "Desenhou primeiro o valor inicial."
+      },
+      {
+        "text": "0, depois 15",
+        "why": "O 15 já estava velho."
+      }
+    ]
+  },
+  "ex-2wmpc65c": {
+    "prompt": "Por que o `MutableStateFlow` precisa de um argumento, como em `MutableStateFlow(0)`?",
+    "hint": "A primeira regra da tabela.",
+    "choices": [
+      {
+        "text": "Para uma tela desenhada antes de qualquer carregamento ainda ter um valor a desenhar",
+        "why": "Isso."
+      },
+      {
+        "text": "O argumento é quantos coletores ele aceita",
+        "why": "É um valor, não uma contagem."
+      },
+      {
+        "text": "Para escolher o dispatcher em que emite",
+        "why": "Ele recebe um valor."
+      },
+      {
+        "text": "Define quantos valores passados ficam guardados",
+        "why": "Isso é o `replay`, num shared flow."
+      }
+    ]
+  },
+  "ex-8rgaz5dq": {
+    "prompt": "O que o `total.value` dá que um flow frio não tem como dar?",
+    "hint": "Sem suspender.",
+    "choices": [
+      {
+        "text": "Todo valor que ele já teve",
+        "why": "Ele guarda só um."
+      },
+      {
+        "text": "O próximo valor, esperando ele chegar",
+        "why": "Ele não espera."
+      },
+      {
+        "text": "O número de coletores que o observam agora",
+        "why": "Isso é o `subscriptionCount`."
+      },
+      {
+        "text": "O valor atual, lido de qualquer código sem suspender nada",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-1ezde8yx": {
+    "prompt": "Um `StateFlow` se comporta como se o `___()` da aula 16 já estivesse aplicado: um coletor lento pula para o valor mais recente.",
+    "hint": "Não é o `buffer`.",
+    "blanks": [
+      {
+        "accept": [
+          "conflate"
+        ]
+      }
+    ]
+  },
+  "ex-3vqq8zd6": {
+    "prompt": "Por que manter `_minutes` privado e expor `minutes: StateFlow<Int>`?",
+    "hint": "Quem pode definir o total.",
+    "choices": [
+      {
+        "text": "Um `MutableStateFlow` privado gasta menos memória que um público",
+        "why": "A visibilidade não muda o tamanho."
+      },
+      {
+        "text": "Para a classe dona do total ser o único código que o muda",
+        "why": "Isso."
+      },
+      {
+        "text": "Coletores de um `MutableStateFlow` público perdem valores",
+        "why": "Não perderiam."
+      },
+      {
+        "text": "O compilador recusa flows mutáveis públicos",
+        "why": "Ele aceita; a forma é uma escolha."
+      }
+    ]
+  },
+  "ex-krbcjgph": {
+    "prompt": "O que aconteceu quando o `BackingWrite.kt` definiu `week.minutes.value = 0`?",
+    "hint": "`e:` é uma linha do compilador.",
+    "choices": [
+      {
+        "text": "Rodou e o total virou 0",
+        "why": "Nem rodou."
+      },
+      {
+        "text": "Lançou `UnsupportedOperationException` quando a linha foi alcançada na execução",
+        "why": "Recusado antes de rodar."
+      },
+      {
+        "text": "O compilador recusou a atribuição",
+        "why": "Isso: `'val' cannot be reassigned.`"
+      },
+      {
+        "text": "Compilou com um aviso",
+        "why": "Foi um erro."
+      }
+    ]
+  },
+  "ex-0eeav4yx": {
+    "prompt": "O que o `asStateFlow()` acrescenta, em relação a escrever `val minutes: StateFlow<Int> = _minutes`?",
+    "hint": "Pense em `as MutableStateFlow<Int>`.",
+    "choices": [
+      {
+        "text": "Torna o valor seguro entre threads, o que um tipo `StateFlow` simples não é",
+        "why": "O flow já é seguro."
+      },
+      {
+        "text": "Copia o valor atual uma vez e para de seguir mudanças",
+        "why": "Segue toda mudança."
+      },
+      {
+        "text": "Um cast de volta não funciona mais",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada; é só estilo",
+        "why": "Ele embrulha o objeto."
+      }
+    ]
+  },
+  "ex-gshgvchx": {
+    "prompt": "Duas threads rodam `_minutes.value += 30` no mesmo instante, a partir de 45. Qual pode ser o resultado?",
+    "hint": "Ler, depois escrever, em dois passos.",
+    "choices": [
+      {
+        "text": "Sempre 105",
+        "why": "As duas podem ler 45."
+      },
+      {
+        "text": "105, ou 75 se as duas lerem 45 antes",
+        "why": "Isso: uma soma pode se perder."
+      },
+      {
+        "text": "Sempre 75",
+        "why": "Elas nem sempre colidem."
+      },
+      {
+        "text": "Uma exceção para o segundo a escrever",
+        "why": "Nada verifica; esse é o problema."
+      }
+    ]
+  },
+  "ex-cj2sphh4": {
+    "prompt": "O `emit(\"session saved\")` é chamado duas vezes seguidas. Quantas vezes a tela que chegou cedo o imprime?",
+    "hint": "Um shared flow não descarta repetições.",
+    "choices": [
+      {
+        "text": "Uma, já que a segunda é igual",
+        "why": "Isso é o que um `StateFlow` faria."
+      },
+      {
+        "text": "Duas",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhuma, porque um shared flow sem replay não entrega nada",
+        "why": "Coletores presentes recebem toda emissão."
+      },
+      {
+        "text": "Três",
+        "why": "Foram emitidas duas."
+      }
+    ]
+  },
+  "ex-5jqa932e": {
+    "prompt": "A tela que chegou tarde começou a coletar depois das duas mensagens `session saved`. O que ela imprimiu?",
+    "hint": "O replay é zero por padrão.",
+    "choices": [
+      {
+        "text": "As duas linhas `session saved`, depois `goal reached`",
+        "why": "Perdeu o que veio antes dela."
+      },
+      {
+        "text": "O último `session saved`",
+        "why": "Isso precisa de `replay = 1`."
+      },
+      {
+        "text": "`goal reached`",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada",
+        "why": "O `goal reached` veio depois de ela chegar."
+      }
+    ]
+  },
+  "ex-q7pcs86a": {
+    "prompt": "Ligue cada coisa que uma tela observa ao tipo que serve.",
+    "hint": "Estado, ou um evento que importa uma vez.",
+    "pairs": [
+      {
+        "left": "O total da semana",
+        "right": "`StateFlow<Int>`"
+      },
+      {
+        "left": "Uma mensagem \"session saved\"",
+        "right": "`SharedFlow<String>`, sem replay"
+      },
+      {
+        "left": "Se há carregamento em andamento",
+        "right": "`StateFlow<Boolean>`"
+      }
+    ],
+    "right_distractors": [
+      "`Flow<Int>` de `flow { … }`"
+    ]
+  },
+  "ex-1eyemyb3": {
+    "prompt": "Duas telas coletam `log.shareIn(this, SharingStarted.Eagerly, replay = 3)`. Quantas vezes `opening the log` é impresso?",
+    "hint": "O produtor é dividido."
+  },
+  "ex-h3m5p5s5": {
+    "prompt": "Ligue cada política de `SharingStarted` a quando o produtor roda.",
+    "hint": "A tabela da seção 06.",
+    "pairs": [
+      {
+        "left": "`Eagerly`",
+        "right": "Desde a chamada, até o escopo acabar"
+      },
+      {
+        "left": "`Lazily`",
+        "right": "Desde o primeiro coletor, até o escopo acabar"
+      },
+      {
+        "left": "`WhileSubscribed(5000)`",
+        "right": "Enquanto coletado, mais cinco segundos"
+      }
+    ],
+    "right_distractors": [
+      "Uma vez por coletor, desde o começo"
+    ]
+  },
+  "ex-35p2z8m0": {
+    "prompt": "O `ShareIn.kt` termina com `coroutineContext.cancelChildren()`. O que acontece sem ele?",
+    "hint": "A corrotina da divisão pertence ao escopo do `runBlocking`.",
+    "choices": [
+      {
+        "text": "O programa nunca termina",
+        "why": "Isso: os coletores seguem esperando."
+      },
+      {
+        "text": "O registro é aberto de novo quando o primeiro coletor termina de lê-lo",
+        "why": "A divisão o roda uma vez."
+      },
+      {
+        "text": "A tela B perde os valores",
+        "why": "As duas os receberam antes."
+      },
+      {
+        "text": "Nada muda, já que o retorno do `main` encerra toda corrotina iniciada dentro do `runBlocking`",
+        "why": "O `runBlocking` espera os filhos."
+      }
+    ]
+  },
+  "ex-ma0drxcn": {
+    "prompt": "O `WeekModel.refresh` pega `IOException` e não `Exception`. Por quê?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "`Exception` não é pega dentro de `launch`",
+        "why": "Ela é."
+      },
+      {
+        "text": "Cancelamento e bugs precisam passar",
+        "why": "Isso."
+      },
+      {
+        "text": "Só `IOException` traz uma mensagem para mostrar na tela quando o carregamento falha",
+        "why": "Toda exceção tem `message`."
+      },
+      {
+        "text": "Para tornar o tipo selado exaustivo",
+        "why": "Sem relação com o catch."
+      }
+    ]
+  },
+  "ex-aq200sw9": {
+    "prompt": "Ponha em ordem as linhas que a tela imprimiu no `WeekModel.kt`.",
+    "hint": "Carregando, carregada, uma sessão acrescentada.",
+    "items": [
+      "`loading…`",
+      "`2 sessions, 75 min`",
+      "`3 sessions, 135 min`"
+    ]
+  },
+  "ex-g7ycqqq3": {
+    "prompt": "O `model.add(60)` é chamado enquanto o estado é `WeekUi.Loading`. O que acontece?",
+    "hint": "Leia o ramo `else` do `add`.",
+    "choices": [
+      {
+        "text": "O 60 é guardado e somado quando a semana terminar de carregar",
+        "why": "Nada o guarda."
+      },
+      {
+        "text": "`IllegalStateException`",
+        "why": "Nenhuma exceção; o estado fica."
+      },
+      {
+        "text": "Nada muda: o `add` devolve o estado que recebeu, já que ainda não há semana",
+        "why": "Isso."
+      },
+      {
+        "text": "O estado vira `Loaded` com uma única sessão de 60",
+        "why": "Não há semana a que acrescentar."
+      }
+    ]
+  },
+  "ex-378w15tw": {
+    "prompt": "Quais afirmações valem para um `StateFlow`? Escolha todas as que se aplicam.",
+    "hint": "Três regras, e quente.",
+    "choices": [
+      {
+        "text": "Sempre guarda um valor",
+        "why": "Sim."
+      },
+      {
+        "text": "Valores iguais não são emitidos duas vezes",
+        "why": "Sim."
+      },
+      {
+        "text": "Cada coletor roda um produtor próprio",
+        "why": "Não: isso é um flow frio."
+      },
+      {
+        "text": "A coleta termina quando o último valor é definido",
+        "why": "Não: ela nunca termina sozinha."
+      }
+    ]
+  }
+}

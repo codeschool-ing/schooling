@@ -1,0 +1,443 @@
+{
+  "ex-3w7mccqd": {
+    "prompt": "O que o compilador diz sobre `val course: String = null`?",
+    "hint": "`String` sem ponto de interrogação.",
+    "choices": [
+      {
+        "text": "Nada; `course` fica simplesmente vazio",
+        "why": "Uma string vazia é `\"\"`, um valor; `null` é a ausência de um, e uma `String` o recusa."
+      },
+      {
+        "text": "Recusa: null não pode ser valor de um tipo não nulo",
+        "why": "Isso: `null cannot be a value of a non-null type 'String'`, e nenhum jar é gerado."
+      },
+      {
+        "text": "Compila, e o programa quebra quando chega naquela linha",
+        "why": "A recusa é na compilação; este programa nem roda."
+      },
+      {
+        "text": "Infere `String?` no lugar",
+        "why": "Um tipo escrito é verificado, não trocado por outro."
+      }
+    ]
+  },
+  "ex-3jgke25w": {
+    "prompt": "`val note: String? = \"read chapter 3\"` e depois `println(note.length)`. Por que o compilador recusa, se a anotação está claramente lá?",
+    "hint": "Um tipo é uma promessa sobre o quê?",
+    "choices": [
+      {
+        "text": "Porque um literal de string é guardado como `null` até o primeiro uso",
+        "why": "O literal é um valor desde o início; nada é preguiçoso aqui."
+      },
+      {
+        "text": "`length` não existe em strings que vieram de um literal",
+        "why": "Toda `String` tem `length`; o problema é o `?`."
+      },
+      {
+        "text": "O tipo diz que ela poderia ser null, e um tipo vale para todo valor que permite",
+        "why": "Isso: o compilador raciocina a partir de `String?`, não deste valor específico."
+      },
+      {
+        "text": "Smart casts não funcionam em literais",
+        "why": "Nenhuma verificação foi escrita, então não havia de onde fazer smart cast."
+      }
+    ]
+  },
+  "ex-187c1fyf": {
+    "prompt": "Ligue cada jeito de responder ao `null` ao que ele faz.",
+    "hint": "A tabela no fim da seção 02.",
+    "pairs": [
+      {
+        "left": "`note?.length`",
+        "right": "Null se `note` for null, o comprimento caso contrário"
+      },
+      {
+        "left": "`note ?: \"none\"`",
+        "right": "Usa um substituto quando `note` é null"
+      },
+      {
+        "left": "`if (note != null) note.length`",
+        "right": "Trata `note` como `String` dentro da verificação"
+      },
+      {
+        "left": "`note!!.length`",
+        "right": "Lança `NullPointerException` se `note` for null"
+      }
+    ],
+    "right_distractors": [
+      "Converte `null` numa string vazia"
+    ]
+  },
+  "ex-aa7b625b": {
+    "prompt": "`name` é uma `String`. Qual linha compila sem mais nada escrito?",
+    "hint": "Um sentido é livre.",
+    "choices": [
+      {
+        "text": "`val maybe: String? = name`",
+        "why": "Isso: toda `String` é uma `String?`."
+      },
+      {
+        "text": "`val sure: String = maybe`, sendo `maybe` uma `String?`",
+        "why": "Esse sentido precisa de uma resposta para `null`: `?:`, uma verificação ou `!!`."
+      },
+      {
+        "text": "`val n: Int = maybe?.length`",
+        "why": "Uma chamada segura dá `Int?`, que não entra num `Int`."
+      },
+      {
+        "text": "`val n: Int = maybe.length`",
+        "why": "Um ponto simples numa `String?` é a recusa do `NoteLength.kt`."
+      }
+    ]
+  },
+  "ex-tadyvhyx": {
+    "prompt": "`note` é uma `String?`. Qual é o tipo de `note?.length`?",
+    "hint": "Um dos dois desfechos é `null`.",
+    "choices": [
+      {
+        "text": "`Int`",
+        "why": "Ele pode ser `null`, então não pode ser `Int`."
+      },
+      {
+        "text": "`Int?`",
+        "why": "Isso: uma chamada segura é sempre anulável."
+      },
+      {
+        "text": "`String?`",
+        "why": "`length` é um número; o `?` é o que a chamada segura acrescenta."
+      },
+      {
+        "text": "`Nothing?`",
+        "why": "`Nothing?` só guarda `null`, e isto guarda comprimentos também."
+      }
+    ]
+  },
+  "ex-kazmrry3": {
+    "prompt": "O `SafeCall.kt` imprimiu `14`, `null` e `0` para as três anotações. O que o `0` diz?",
+    "hint": "Olhe o terceiro item da lista.",
+    "choices": [
+      {
+        "text": "Que o `?.` transforma uma anotação ausente em comprimento zero",
+        "why": "A anotação ausente imprimiu `null`; o `?.` não inventa valor."
+      },
+      {
+        "text": "Que a terceira anotação é uma string vazia, que está presente",
+        "why": "Isso: `\"\"` é uma string de comprimento 0, e só `null` é ausência."
+      },
+      {
+        "text": "Que a lista tinha um terceiro elemento que o programa não conseguiu ler",
+        "why": "Um elemento ilegível não imprimiria algo tão arrumado quanto `0`; o elemento era `\"\"`."
+      },
+      {
+        "text": "Que o `for` conta a partir de zero",
+        "why": "O laço imprimiu comprimentos, não posições."
+      }
+    ]
+  },
+  "ex-sd0eppms": {
+    "prompt": "`second` é `null`. Em `second?.uppercase()?.length`, quantas funções de fato rodam?",
+    "hint": "Uma corrente para no primeiro null.",
+    "choices": [
+      {
+        "text": "As duas, com o `uppercase` devolvendo `null`",
+        "why": "O `uppercase` não é chamado sobre `null`; o primeiro `?.` interrompe."
+      },
+      {
+        "text": "Uma: o `uppercase` roda, e o `length` é pulado",
+        "why": "O `uppercase` precisaria de uma string para rodar, e não há."
+      },
+      {
+        "text": "Nenhuma: a corrente dá `null` no primeiro `?.`",
+        "why": "Isso: nada depois do primeiro valor ausente roda."
+      },
+      {
+        "text": "Nenhuma, e o programa lança exceção",
+        "why": "Uma chamada segura não lança exceção por um `null`; ela devolve `null`."
+      }
+    ]
+  },
+  "ex-m9cschk8": {
+    "prompt": "O que `minutesFrom(\"forty\")` devolve no `Elvis.kt`?",
+    "hint": "O `toIntOrNull()` não consegue ler, e então o `?:` responde."
+  },
+  "ex-kkwv0r2b": {
+    "prompt": "Em `val text = note ?: return \"no note\"`, qual é o tipo de `text` nas linhas seguintes?",
+    "hint": "O que precisa ser verdade para chegar à próxima linha?",
+    "choices": [
+      {
+        "text": "`String?`, igual a `note`",
+        "why": "O caso null saiu da função, então não chega à próxima linha."
+      },
+      {
+        "text": "`String`",
+        "why": "Isso: um `note` null retornou, então `text` nunca é null."
+      },
+      {
+        "text": "`Any`, porque os dois ramos têm tipos diferentes",
+        "why": "O `return` tem o tipo `Nothing`, que cabe em qualquer tipo, então o resultado é `String`."
+      },
+      {
+        "text": "`Unit`, porque o `return` não produz valor",
+        "why": "O valor vem de `note`; o lado do `return` não produz valor nenhum."
+      }
+    ]
+  },
+  "ex-4mr9a108": {
+    "prompt": "Os minutos de uma sessão vêm de texto, e o `minutesFrom` transforma `\"forty\"` em 0. O total da semana agora está errado sem mensagem. Qual lado direito tornaria esse erro visível?",
+    "hint": "A tabela da seção 04 tem três decisões.",
+    "choices": [
+      {
+        "text": "`?: 0`, como está",
+        "why": "Esse é o palpite silencioso que a pergunta descreve."
+      },
+      {
+        "text": "`?: -1`, para o total diminuir",
+        "why": "Um minuto negativo continua sendo um número errado silencioso no total."
+      },
+      {
+        "text": "`?: throw IllegalArgumentException(\"not a number: $input\")`",
+        "why": "Isso: um valor ausente que é um erro deve ser ouvido, com a entrada na mensagem."
+      },
+      {
+        "text": "`!!` depois do `toIntOrNull()`",
+        "why": "Ele para o programa, sem frase dizendo o que chegou."
+      }
+    ]
+  },
+  "ex-n002rtp6": {
+    "prompt": "`a?.length ?: 0 + 1` é lido como `a?.length ?: (0 + 1)`, porque o `?:` liga mais ___ que o `+`.",
+    "hint": "O operador pega os operandos por último.",
+    "blanks": [
+      {
+        "accept": [
+          "fraco",
+          "fracamente",
+          "frouxo"
+        ]
+      }
+    ]
+  },
+  "ex-jkzdb64k": {
+    "prompt": "No `SmartCast.kt`, por que `note.length` compila na última linha do `describe`?",
+    "hint": "O que acontecia quando `note` era `null`?",
+    "choices": [
+      {
+        "text": "Porque o `describe` declara `note` como `String`",
+        "why": "Ele declara `String?`; a verificação o tornou `String` dali em diante."
+      },
+      {
+        "text": "Porque um `note` null já retornou",
+        "why": "Isso: depois do retorno antecipado, só uma anotação presente chega."
+      },
+      {
+        "text": "Porque templates de string aceitam valores anuláveis",
+        "why": "Imprimir um null é aceito, mas `.length` é uma chamada sobre ele, que é o que precisa do cast."
+      },
+      {
+        "text": "Porque quem chama passa um literal",
+        "why": "A função é compilada uma vez, para todo chamador, incluindo `describe(null)`."
+      }
+    ]
+  },
+  "ex-dejefw3z": {
+    "prompt": "Por que `draft.note.length` é recusado depois de `if (draft.note != null)`, quando `note` é uma propriedade `var`?",
+    "hint": "A mensagem diz o que poderia acontecer no meio.",
+    "choices": [
+      {
+        "text": "Outra coisa poderia pôr a propriedade em `null` entre a verificação e o uso",
+        "why": "Isso: a verificação não prova nada sobre um valor que muda, então tire uma cópia `val`."
+      },
+      {
+        "text": "Smart casts funcionam em parâmetros e nunca em objetos",
+        "why": "Eles funcionam numa propriedade `val` de um objeto no mesmo módulo; é o `var` que impede."
+      },
+      {
+        "text": "A classe foi declarada no mesmo arquivo",
+        "why": "Estar no mesmo arquivo ajuda; não é o obstáculo."
+      },
+      {
+        "text": "O `!=` compara identidade, então a verificação não é confiável",
+        "why": "`!= null` é uma verificação de null comum, e é confiável no momento em que roda."
+      }
+    ]
+  },
+  "ex-n2nm4wbv": {
+    "prompt": "Para fazer smart cast de uma propriedade `var`, primeiro copie-a para um ___ local, e depois verifique a cópia.",
+    "hint": "O `DraftFixed.kt` faz isso numa linha.",
+    "blanks": [
+      {
+        "accept": [
+          "val"
+        ]
+      }
+    ]
+  },
+  "ex-qs5tb574": {
+    "prompt": "O que `input.toIntOrNull()!!` faz quando `input` é `\"forty\"`?",
+    "hint": "O `Bang.kt` rodou isso.",
+    "choices": [
+      {
+        "text": "Devolve 0",
+        "why": "Isso seria `?: 0`."
+      },
+      {
+        "text": "Recusa compilar, já que o resultado poderia ser null",
+        "why": "O `!!` é exatamente o que faz compilar."
+      },
+      {
+        "text": "Lança `NullPointerException` naquela linha",
+        "why": "Isso: `at BangKt.main(Bang.kt:4)`."
+      },
+      {
+        "text": "Devolve `null`, e o `println` imprime a palavra `null`",
+        "why": "O `!!` não devolve `null`; ele lança exceção."
+      }
+    ]
+  },
+  "ex-ssbpct68": {
+    "prompt": "O que `?: error(\"minutes must be a number, got '$input'\")` dá que o `!!` não dá?",
+    "hint": "Os dois param o programa.",
+    "choices": [
+      {
+        "text": "Mantém o programa rodando",
+        "why": "O `error` lança `IllegalStateException`, então o programa também para."
+      },
+      {
+        "text": "Uma mensagem dizendo o que era esperado e o que chegou",
+        "why": "Isso: quem lê o log descobre que a entrada era `forty`."
+      },
+      {
+        "text": "Um número de linha no stack trace, apontando a chamada que falhou",
+        "why": "O `!!` também deu número de linha: `Bang.kt:4`."
+      },
+      {
+        "text": "Um jar menor",
+        "why": "Os dois são poucos bytes de bytecode."
+      }
+    ]
+  },
+  "ex-x4dh6e3z": {
+    "prompt": "A seção 06 cita alguns usos honestos do `!!`. Quais destes estão entre eles? Escolha todos os que se aplicam.",
+    "hint": "O crash precisa ser a falha que você quer.",
+    "choices": [
+      {
+        "text": "Dentro de um teste",
+        "why": "Sim: um crash com número de linha é a falha que um teste quer."
+      },
+      {
+        "text": "Ler um valor que um usuário digitou num formulário",
+        "why": "Não: entrada digitada é exatamente onde ausência é normal."
+      },
+      {
+        "text": "Um programa que você vai jogar fora",
+        "why": "Sim: a maioria dos programas de um curso, poucos de um app."
+      },
+      {
+        "text": "Ler uma variável de ambiente pelo `System.getenv`",
+        "why": "Não: a seção 07 mostrou que é null sempre que a variável não está definida."
+      }
+    ]
+  },
+  "ex-h2ekran8": {
+    "prompt": "`val home = System.getenv(\"STUDY_HOME\")` e depois `home.length`. Por que isso compilou?",
+    "hint": "De onde vem o `getenv`?",
+    "choices": [
+      {
+        "text": "Porque variáveis de ambiente nunca são null no Linux",
+        "why": "A segunda execução mostrou o contrário: não definida dá `null`."
+      },
+      {
+        "text": "Porque `home` foi declarado como `String`",
+        "why": "Nenhum tipo foi escrito; ele foi inferido."
+      },
+      {
+        "text": "O `getenv` é Java: `home` tem tipo de plataforma",
+        "why": "Isso: uma `String!` é permitida dos dois jeitos, e falha como Java."
+      },
+      {
+        "text": "Porque `length` é uma propriedade segura em strings",
+        "why": "Nenhuma propriedade é segura sobre um null; o tipo de plataforma é o motivo de o compilador permitir."
+      }
+    ]
+  },
+  "ex-y7gck4wb": {
+    "prompt": "`val home: String = System.getenv(\"STUDY_HOME\")` com a variável não definida. Onde o programa falha?",
+    "hint": "O Kotlin insere algo naquela linha.",
+    "choices": [
+      {
+        "text": "Não compila, porque o `getenv` devolve null às vezes",
+        "why": "Um tipo de plataforma é aceito declarado de qualquer um dos dois jeitos, então compila."
+      },
+      {
+        "text": "Naquela mesma linha, com `getenv(...) must not be null`",
+        "why": "Isso: a verificação inserida falha na fronteira."
+      },
+      {
+        "text": "Na primeira linha que usa `home`",
+        "why": "Esse é o tipo de plataforma sem declaração; declarar `String` move a falha para a fronteira."
+      },
+      {
+        "text": "Em lugar nenhum: `home` vira uma string vazia",
+        "why": "O Kotlin não transforma `null` em `\"\"` por você."
+      }
+    ]
+  },
+  "ex-gwjd3ktb": {
+    "prompt": "Que hábito a seção 07 recomenda para todo valor que vem do Java?",
+    "hint": "Decida na fronteira.",
+    "choices": [
+      {
+        "text": "Pôr `!!` para um null falhar cedo",
+        "why": "Isso transforma a fronteira num crash sem frase."
+      },
+      {
+        "text": "Deixar inferido, exatamente como faria com um valor Kotlin",
+        "why": "A inferência dá o tipo de plataforma, que é o que não é verificado."
+      },
+      {
+        "text": "Envolver toda chamada Java em `try`",
+        "why": "Pegar o crash não é o mesmo que tornar a ausência parte do tipo."
+      },
+      {
+        "text": "Dar-lhe um tipo, anulável salvo garantia documentada",
+        "why": "Isso: aí o compilador volta a mandar."
+      }
+    ]
+  },
+  "ex-2r3106k7": {
+    "prompt": "Uma estudante digita um número de minutos. Ponha estas etapas na ordem em que o código do planejador deve tratá-las.",
+    "hint": "Do texto até um número que o total consegue usar.",
+    "items": [
+      "Ler o texto que a estudante digitou, uma `String`",
+      "O `toIntOrNull()` o transforma num `Int?`",
+      "O `?:` decide o que um número ausente significa",
+      "Somar o `Int` resultante ao total da semana"
+    ]
+  },
+  "ex-em0bzcc5": {
+    "prompt": "`val notes = listOf(\"plan\", null, \"review notes\")`. Quanto é `notes[2]?.length`?",
+    "hint": "As posições começam em 0, e um espaço é um caractere."
+  },
+  "ex-8rqcy4r5": {
+    "prompt": "`note` é um `val` local do tipo `String?`. Quais linhas compilam? Escolha todas as que se aplicam.",
+    "hint": "Cada uma precisa de uma resposta para null, ou de um resultado que continue anulável.",
+    "choices": [
+      {
+        "text": "`val n: Int? = note?.length`",
+        "why": "Sim: a chamada segura dá `Int?`."
+      },
+      {
+        "text": "`val n: Int = note?.length`",
+        "why": "Não: `Int?` não entra em `Int` sem `?:`."
+      },
+      {
+        "text": "`val n: Int = note?.length ?: 0`",
+        "why": "Sim: o operador elvis responde o caso null."
+      },
+      {
+        "text": "`val n = if (note != null) note.length else 0`",
+        "why": "Sim: um `val` local faz smart cast dentro da verificação."
+      }
+    ]
+  }
+}
