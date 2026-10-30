@@ -179,10 +179,10 @@ the total that `docker stats` prints after the slash cut away:
 
 ```
 ana@laptop:~/azure$ docker stats --no-stream --format '{{.Name}} {{.MemUsage}}' shop shop-dapr billing billing-dapr | cut -d/ -f1
-shop 14.02MiB 
-shop-dapr 23.85MiB 
-billing 13.98MiB 
-billing-dapr 23.96MiB 
+shop 14MiB 
+shop-dapr 22.72MiB 
+billing 13.96MiB 
+billing-dapr 22.06MiB 
 ```
 
 Each sidecar takes more memory than the program it serves. These are the laptop's numbers, for a
@@ -191,19 +191,39 @@ the sidecar takes in Container Apps, so do not carry them across. What does carr
 shape: **every replica of every Dapr-enabled app carries a second process**, and beside a small
 program it can be the larger of the two.
 
-Then the hop. The first loop asks the shop for `/healthz` directly, two hundred times, and prints
-the average; the second asks the shop's own sidecar to call the same page, which is Dapr's service
-invocation:
+Then the hop. This program asks each address it is given five hundred times and prints the
+median time. Save it as `~/azure/hop.py`:
+
+```python
+# hop.py
+import statistics
+import sys
+import time
+import urllib.request
+
+for url in sys.argv[1:]:
+    times = []
+    for _ in range(500):
+        start = time.perf_counter()
+        urllib.request.urlopen(url).read()
+        times.append((time.perf_counter() - start) * 1000)
+    print(f'{url}  median {statistics.median(times):.2f} ms')
+```
+
+It runs inside the shop's container, so it calls from the same `localhost` the shop's own code
+would. The first address is the shop's `/healthz`, directly; the second asks the shop's sidecar to
+call the same page, which is Dapr's service invocation:
 
 ```
-ana@laptop:~/azure$ for i in $(seq 200); do curl -s -o /dev/null -w '%{time_total}\n' localhost:8080/healthz; done | awk '{s += $1} END {printf "%.2f ms\n", s / NR * 1000}'
-3.07 ms
-ana@laptop:~/azure$ for i in $(seq 200); do curl -s -o /dev/null -w '%{time_total}\n' localhost:3500/v1.0/invoke/shop/method/healthz; done | awk '{s += $1} END {printf "%.2f ms\n", s / NR * 1000}'
-5.14 ms
+ana@laptop:~/azure$ docker exec -i shop python - http://localhost:8080/healthz http://localhost:3500/v1.0/invoke/shop/method/healthz < hop.py
+http://localhost:8080/healthz  median 1.17 ms
+http://localhost:3500/v1.0/invoke/shop/method/healthz  median 1.78 ms
 ```
 
-The difference is what one trip through a sidecar costs, on loopback, on this laptop; the numbers
-move between runs. Between two apps in Container Apps a service invocation passes through two
+The median rather than the mean, because one slow call on a busy laptop moves a mean and barely
+touches a median. **The call through the sidecar took 1.78 ms against 1.17 ms**, which is what
+one trip through a sidecar costs on loopback, on this laptop. The numbers move between runs; in every
+run made for this lesson the sidecar's was the slower. Between two apps in Container Apps a service invocation passes through two
 sidecars, the caller's and the callee's, and in return each call gets discovery by app id and
 encryption that Container Apps manages.
 
@@ -233,20 +253,4 @@ Before moving on, remove everything this lesson started:
 ana@laptop:~/azure$ docker rm -f shop shop-dapr billing billing-dapr audit audit-dapr redis servicebus mssql > /dev/null
 ana@laptop:~/azure$ docker network rm shop-net
 shop-net
-```
-
-```python
-# hop.py
-import statistics
-import sys
-import time
-import urllib.request
-
-for url in sys.argv[1:]:
-    times = []
-    for _ in range(500):
-        start = time.perf_counter()
-        urllib.request.urlopen(url).read()
-        times.append((time.perf_counter() - start) * 1000)
-    print(f'{url}  median {statistics.median(times):.2f} ms')
 ```

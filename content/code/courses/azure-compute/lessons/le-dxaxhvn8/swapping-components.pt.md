@@ -118,11 +118,6 @@ ana@laptop:~/azure$ docker rm -f shop-dapr billing-dapr audit-dapr > /dev/null
 ana@laptop:~/azure$ for app in shop billing audit; do docker run -d --name $app-dapr --network container:$app -v ~/azure/components-sb:/components daprio/daprd:1.17.16 ./daprd --app-id $app --app-port 8080 --resources-path /components > /dev/null; done
 ana@laptop:~/azure$ curl -s -w '%{http_code}\n' -X POST localhost:3500/v1.0/publish/pubsub/orders -H 'Content-Type: application/json' -d '{"id": 2, "item": "tea", "qty": 1}'
 204
-ana@laptop:~/azure$ docker logs billing
-{"order": {"id": 1, "item": "coffee", "qty": 2}, "from": "shop", "type": "com.dapr.event.sent"}
-ana@laptop:~/azure$ docker logs audit
-{"order": {"id": 1, "item": "coffee", "qty": 2}, "from": "shop", "type": "com.dapr.event.sent"}
-{"order": {"id": 2, "item": "tea", "qty": 1}, "from": "shop", "type": "com.dapr.event.sent"}
 ```
 
 `204`, e nenhuma linha do `subscriber.py` ou da publicação mudou. Essa é a metade da promessa que
@@ -134,10 +129,12 @@ Mais quatro pedidos, e depois o que cada assinante imprimiu desde que iniciou:
 
 ```
 ana@laptop:~/azure$ for id in 3 4 5 6; do curl -s -o /dev/null -X POST localhost:3500/v1.0/publish/pubsub/orders -H 'Content-Type: application/json' -d "{\"id\": $id}"; done
-ana@laptop:~/azure$ docker logs billing | tail -n +2
+ana@laptop:~/azure$ docker logs billing
+{"order": {"id": 1, "item": "coffee", "qty": 2}, "from": "shop", "type": "com.dapr.event.sent"}
 {"order": {"id": 3}, "from": "shop", "type": "com.dapr.event.sent"}
 {"order": {"id": 5}, "from": "shop", "type": "com.dapr.event.sent"}
-ana@laptop:~/azure$ docker logs audit | tail -n +2
+ana@laptop:~/azure$ docker logs audit
+{"order": {"id": 1, "item": "coffee", "qty": 2}, "from": "shop", "type": "com.dapr.event.sent"}
 {"order": {"id": 2, "item": "tea", "qty": 1}, "from": "shop", "type": "com.dapr.event.sent"}
 {"order": {"id": 4}, "from": "shop", "type": "com.dapr.event.sent"}
 {"order": {"id": 6}, "from": "shop", "type": "com.dapr.event.sent"}

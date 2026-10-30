@@ -71,6 +71,9 @@ ana@laptop:~/azure$ docker run -d --name shop-dapr --network container:shop -v ~
 ana@laptop:~/azure$ docker logs shop-dapr 2>&1 | grep -o 'msg="Component loaded[^"]*"'
 msg="Component loaded: pubsub (pubsub.redis/v1)"
 msg="Component loaded: statestore (state.redis/v1)"
+ana@laptop:~/azure$ docker logs shop | tail -n 2
+{"path": "/dapr/config", "status": "404", "version": "1.0"}
+{"path": "/dapr/subscribe", "status": "404", "version": "1.0"}
 ```
 
 Os dois componentes carregaram, e o log da loja tem uma linha que não tinha antes. Com um broker

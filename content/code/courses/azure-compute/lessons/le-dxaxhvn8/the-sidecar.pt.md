@@ -34,7 +34,7 @@ componentes, vazio por enquanto:
 
 ```
 ana@laptop:~/azure$ docker network create shop-net
-dc0988bc3a88f34a4e8df3501bc29707237071df7d88a74bf0aab22c6da3e994
+060c017201602ce5c37b560bd66b8f3156780a835e1b15d307272e55718e69f4
 ana@laptop:~/azure$ docker run -d --name shop --network shop-net -p 8080:8080 -p 3500:3500 shop:1.0 > /dev/null
 ana@laptop:~/azure$ mkdir components
 ana@laptop:~/azure$ docker run -d --name shop-dapr --network container:shop -v ~/azure/components:/components daprio/daprd:1.17.16 ./daprd --app-id shop --app-port 8080 --resources-path /components > /dev/null
@@ -58,7 +58,7 @@ ana@laptop:~/azure$ docker logs shop-dapr 2>&1 | grep -o 'msg="[^"]*"' | grep -E
 msg="app id: shop"
 msg="application protocol: http. waiting on port 8080.  This will block until the app is listening on that port."
 msg="application discovered on port 8080"
-msg="dapr initialized. Status: Running. Init Elapsed 9ms"
+msg="dapr initialized. Status: Running. Init Elapsed 15ms"
 ```
 
 Ele recebeu o app id `shop` e esperou até haver algo escutando na porta 8080 antes de se declarar
