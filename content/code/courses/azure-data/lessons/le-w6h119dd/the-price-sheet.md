@@ -27,16 +27,16 @@ answers in a file so that a second run asks nobody, and prints one line per mete
 course comes from reaches the internet through a proxy that only allows the addresses its owner
 listed, and `prices.azure.com` was not one of them on 30 October 2026. The program is shown because
 it is how you get today's prices, and it is written against the shape of the answer Microsoft
-documents; what the course cannot show is the answer itself, and if the first run on your computer
+documents. What the course cannot show is the answer itself: if the first run on your computer
 fails, the error is a real one this course never met.
 
 So **this course quotes no Azure price as Azure's.** Where a lesson needs a number to do arithmetic
 with, it writes a round one and says so: *"at an illustrative 0.02 USD per GB-month"* is an
 instruction to do the sum with that number, not a claim about what Azure charges. Run the sheet,
-read the real price, and do the same sum with it. The shape of the arithmetic is what lasts: prices
-move every few months, and the facts the lessons lean on (a tier's minimum days, which operations
-are charged, which transfers are free) move rarely, and are taken from Microsoft's documentation with
-the lesson saying so.
+read the real price, and do the same sum with it. The shape of the arithmetic is what lasts. Prices
+move every few months; the facts the lessons lean on (a tier's minimum days, which operations are
+charged, which transfers are free) move rarely, and the lessons take them from Microsoft's
+documentation and say so.
 
 ## Running it yourself
 
@@ -48,6 +48,6 @@ python prices.py Storage Hot LRS
 
 The first run takes a minute, because Storage alone has thousands of meters in a region. The output
 is one line per meter with its price, its unit and its date. **Read the unit before the price.** A
-storage line priced per `1 GB/Month` and an operations line priced per `10K` differ by a factor of
-ten thousand in what one unit means, and the commonest mistake with an Azure bill is multiplying a
-count of operations by a price meant for ten thousand of them.
+storage line is priced per `1 GB/Month`, and an operations line per `10K`, ten thousand operations.
+The commonest mistake with an Azure bill is multiplying a count of operations by a price meant for
+ten thousand of them.

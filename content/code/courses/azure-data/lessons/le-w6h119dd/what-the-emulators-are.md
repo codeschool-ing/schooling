@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Every emulator in this course is Microsoft's own, or the open-source engine Azure runs as a
-managed service**, and that is the good news: a blob Azurite stores, a document the Cosmos DB
+managed service**. That is the good news: a blob Azurite stores, a document the Cosmos DB
 emulator returns and an event the Event Hubs emulator delivers come back through the same
 protocol, the same libraries and the same command line as on Azure. Code that works against them
 needs a different connection string and nothing else to run against a real account.
@@ -26,7 +26,7 @@ the control plane, Azure Resource Manager, and no emulator anywhere answers it.
 | Azure Cache for Redis | Redis 8.2.2 | the engine | tiers, clustering across shards, patching |
 | Synapse, Fabric, Databricks, Data Factory, Stream Analytics, Purview | nothing | | everything |
 
-**The last row is six of the course's twenty-six lessons, and they are taught from Microsoft's
+**The last row is seven of the course's twenty-six lessons, and they are taught from Microsoft's
 documentation, marked as not run.** Where one of them works on a file format or an idea that runs on
 a laptop, such as Parquet, Delta Lake or a window over a stream, the lesson runs that part with an
 open tool and says plainly which tool did it. No section in this course shows an answer that looks
@@ -79,6 +79,6 @@ Azurite does the same with time. A blob moved to the archive tier on Azure takes
 to come back; on Azurite it is back the moment you ask, as lesson 4 shows. Neither emulator is wrong
 to do this. They are built for testing a program's logic, quickly, and they leave cost and time out
 on purpose. **This course points at every such place where it meets one**, under a heading that says
-so, and the rule for reading any transcript in it is the same: **a success here proves your command
+so. And the rule for reading any transcript in it is always the same: **a success here proves your command
 or your program is well formed, never that Azure would charge, wait or allow what the emulator
 did.**

@@ -3,9 +3,9 @@ title: The storage account: kind, performance and replication
 version: 1
 ---
 
-**Everything Azure stores as blobs, files, queues or tables lives inside a storage account**, and
-the account is where three decisions are made once for all of it: its kind, its performance tier and
-how many copies of each byte Azure keeps, and where. A container and a blob have no say in any of
+**Everything Azure stores as blobs, files, queues or tables lives inside a storage account.** Three
+decisions are made there once, for all of it: its kind, its performance tier, and how many copies of
+each byte Azure keeps and where. A container and a blob have no say in any of
 them. Choosing them wrong is not fatal, but two of the three can only be changed by moving the data to
 a new account.
 
@@ -57,8 +57,8 @@ geo-redundant options send a copy abroad.
 ```
 
 Quitanda's choice, and the one this course uses in its declarations, is **`StorageV2`, Standard,
-ZRS**: the order exports and the lake are reproducible from the shop's database, so losing a region
-is a disaster to recover from rather than a byte to keep at any price, and ZRS survives the loss of a
+ZRS**. The order exports and the lake can be rebuilt from the shop's database, so losing a region is
+a disaster to recover from rather than a byte to keep at any price. ZRS survives the loss of a
 datacentre without sending anything out of the country.
 
 ## What Azurite has instead of an account

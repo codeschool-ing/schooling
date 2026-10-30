@@ -28,8 +28,8 @@ assignment or a `JOIN` from the beginning.
 
 ## What is practised, and what is read
 
-**Every lesson that can be practised on your computer is**, against the emulators the section after
-next describes: Blob Storage, Cosmos DB, Event Hubs, and the database engines themselves. The
+**Every lesson that can be practised on your computer is**, against the emulators described three
+sections on: Blob Storage, Cosmos DB, Event Hubs, and the database engines themselves. The
 analytics services, Synapse, Fabric, Data Factory, Databricks, Stream Analytics and Purview, have no
 emulator of any kind, and a course that pretended otherwise would teach you a fake. Those lessons are
 taught from Microsoft's documentation and say so at the top. Where the idea underneath runs on a

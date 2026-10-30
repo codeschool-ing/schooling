@@ -59,7 +59,7 @@ at the next login, not in the terminal you typed it in. Log out and back in, and
 **A command reached a real Azure.** This is the one to recognise, because it is the only failure here
 that leaves your computer. Nothing in this course ever runs `az login`, and so nothing in it can
 touch a subscription. If you have used the Azure command line before, with a real account, the login
-is remembered in `~/.azure`, and a command that names a real account, such as
+is remembered in `~/.azure`. A command that names a real account, such as
 `az storage container list --account-name` followed by a name of yours, will use it. **Every
 storage command in this course takes its target from the connection string and names no account.**
 If you ever see an account name in an answer that is not `devstoreaccount1`, stop, and run `az logout`
