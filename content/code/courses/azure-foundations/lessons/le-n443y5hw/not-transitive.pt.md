@@ -36,7 +36,7 @@ o tráfego.
   que roda por hora, e duas travessias de peering para cada pacote; o ganho é um lugar que vê e julga
   tudo o que se move entre spokes.
 - **Deixar o Azure operar o hub.** O **Azure Virtual WAN** é um hub que a Microsoft opera, com
-  roteadores próprios, onde as redes ligadas se alcançam sem tabelas de rotas suas, e o **Azure
+  roteadores próprios, onde as redes ligadas se alcançam sem tabelas de rotas suas. O **Azure
   Virtual Network Manager** cria e mantém peerings entre muitas redes a partir de uma descrição, em
   malha ou hub-and-spoke, para que uma spoke nova entre no grupo certo sem ninguém escrever os peerings
   dela à mão. Os dois são serviços próprios, e este curso os cita para você reconhecê-los; não os

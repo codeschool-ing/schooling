@@ -71,8 +71,8 @@ presa a um endereço IP público Standard fica na sua assinatura, como a seção
 Uma assinatura também pode ser entregue a um **tenant diferente**, que é o que acontece quando uma
 empresa é comprada, ou quando uma assinatura aberta com a conta pessoal de alguém é trazida para o
 diretório da empresa. No portal isso se chama *change directory*. **Isso não é um movimento no sentido
-desta lição, e é muito mais destrutivo**: toda identidade em que a assinatura confiava pertencia ao
-tenant antigo, então a documentação da Microsoft avisa que as atribuições de papel, os papéis
+desta lição, e é muito mais destrutivo.** Toda identidade em que a assinatura confiava pertencia ao
+tenant antigo. Por isso a documentação da Microsoft avisa que as atribuições de papel, os papéis
 personalizados e as identidades gerenciadas da lição 8 não sobrevivem, e que recursos que guardam um
 id de tenant, como um key vault, precisam receber o novo.
 

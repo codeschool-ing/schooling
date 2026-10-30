@@ -16,9 +16,9 @@ rules you write, and it needs a licence, Microsoft Entra ID P1 or above, for the
 
 **Assignments** say whom and what the policy is about:
 
-- **users**: all users, chosen users or groups, or the holders of chosen **directory roles**, and
+- users: all users, chosen users or groups, or the holders of chosen **directory roles**, and
   the exclusions, which matter as much as the inclusions;
-- **target resources**: the applications being signed in to. *Windows Azure Service Management API*
+- target resources: the applications being signed in to. *Windows Azure Service Management API*
   is the one that matters in this course: Microsoft's documentation says a policy aimed at it covers
   Resource Manager and the Azure portal, and through them the CLI and PowerShell.
 

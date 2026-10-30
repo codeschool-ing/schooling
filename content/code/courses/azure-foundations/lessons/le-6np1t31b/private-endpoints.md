@@ -19,8 +19,8 @@ Three things make one up, and each is a property in the file below:
   says which of its services: `blob`, `file`, `queue`, `table`, `dfs`. A second service of the same
   account is a second private endpoint;
 - **the connection's approval.** An endpoint asks the resource's owner to accept it. When the
-  person creating it also has permission on the resource, the request is approved on the spot;
-  otherwise it waits in the state *Pending* until the owner approves it, which is how a partner's
+  person creating it also has permission on the resource, the request is approved on the spot.
+  Otherwise it waits in the state *Pending* until the owner approves it, which is how a partner's
   tenant can be given a private road to one of the shop's accounts without being given anything else.
 
 ## The endpoint and its zone, in Bicep

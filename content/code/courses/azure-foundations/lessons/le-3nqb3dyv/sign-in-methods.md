@@ -20,8 +20,8 @@ is explicit that no password is stored in clear text or in a form that can be re
 then needs nothing on the ground at all: the office can lose its power and its internet, and people
 working from home still sign in to Azure.
 
-Microsoft's documentation describes it as the method with the least effort to deploy and run, and it
-carries a benefit the other two do not have: with the hashes in the cloud, **Entra ID can tell a
+Microsoft's documentation describes it as the method with the least effort to deploy and run. It
+also carries a benefit the other two do not have: with the hashes in the cloud, **Entra ID can tell a
 company that one of its users' passwords has appeared in a leak**, and it needs those hashes for that
 report whichever sign-in method the company chose. Its weakness is timing: an account disabled on the
 ground is still enabled in the cloud until the next synchronisation carries the change.

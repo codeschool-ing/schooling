@@ -19,7 +19,7 @@ Três coisas o compõem, e cada uma é uma propriedade no arquivo abaixo:
   serviços dela: `blob`, `file`, `queue`, `table`, `dfs`. Um segundo serviço da mesma conta é um
   segundo private endpoint;
 - **a aprovação da conexão.** Um endpoint pede ao dono do recurso que o aceite. Quando quem o cria
-  também tem permissão no recurso, o pedido é aprovado na hora; senão ele espera no estado *Pending*
+  também tem permissão no recurso, o pedido é aprovado na hora. Senão ele espera no estado *Pending*
   até o dono aprová-lo, que é como o tenant de um parceiro pode receber um caminho privado até uma das
   contas da loja sem receber mais nada.
 

@@ -55,13 +55,13 @@ identidades de carga de trabalho, que não têm pessoa para responder a um aviso
 O PIM gerencia três tipos de papel, e vale mantê-los separados porque os dois primeiros moram em
 lugares diferentes:
 
-- **papéis de recursos do Azure**: os papéis da lição 9, Owner, Contributor e os demais, no escopo de
+- papéis de recursos do Azure: os papéis da lição 9, Owner, Contributor e os demais, no escopo de
   um grupo de gerenciamento, uma assinatura, um grupo de recursos ou um recurso. Eles são julgados
   pelo Resource Manager;
-- **papéis do Microsoft Entra**: os papéis do próprio diretório, como Global Administrator, User
+- papéis do Microsoft Entra: os papéis do próprio diretório, como Global Administrator, User
   Administrator e Privileged Role Administrator. Eles governam o tenant, não os recursos do Azure, e
   a lição 6 os apresentou;
-- **grupos**: a participação num grupo, ou a propriedade dele, tornada elegível. Um grupo que tem
+- grupos: a participação num grupo, ou a propriedade dele, tornada elegível. Um grupo que tem
   vários papéis vira uma coisa só a ativar.
 
 **Um papel do Entra alcança o Azure por conta própria, e vale conhecê-lo pelo nome.** Um Global

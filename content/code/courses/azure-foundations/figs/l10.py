@@ -16,7 +16,8 @@ def activation():
         'pedidas. No fim ele se desliga sozinho e ana volta a ser elegível. Abaixo da linha, cada passo '
         'é gravado no histórico de auditoria.'))
     y = 120
-    f.line(40, y, 690, y, stroke='--paper-dim')
+    f.line(171, y, 449, y, stroke='--paper-dim')
+    f.line(621, y, 690, y, stroke='--paper-dim')
     f.rect(40, y - 24, 130, 48, stroke='--wire', fill='--panel')
     f.text(105, y - 8, T('eligible', 'elegível'), size=10.5, weight='600')
     f.text(105, y + 10, T('no power yet', 'nenhum poder ainda'), size=9.5, fill='--paper-dim')

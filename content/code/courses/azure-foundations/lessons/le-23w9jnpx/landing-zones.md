@@ -62,6 +62,6 @@ None of it was run here: each step is a request to Resource Manager or to the bi
 Microsoft publishes **accelerators** for the platform landing zone, in Bicep and in Terraform, that
 deploy the CAF reference design with its policies. CAF's own advice is that most organisations start
 from one rather than writing their own. This course does the opposite on purpose, for the same reason
-a mechanic learns on an engine with the cover off: the next section builds the tree by hand, small
-enough to read, and an accelerator is then something you can recognise rather than something you
+a mechanic learns on an engine with the cover off. The next section builds the tree by hand, small
+enough to read. An accelerator is then something you can recognise rather than something you
 trust.

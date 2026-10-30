@@ -55,13 +55,13 @@ workload identities, which have no person to answer a prompt.
 PIM manages three kinds of role, and they are worth keeping apart because the first two live in
 different places:
 
-- **Azure resource roles**: lesson 9's roles, Owner, Contributor and the rest, at the scope of a
+- Azure resource roles: lesson 9's roles, Owner, Contributor and the rest, at the scope of a
   management group, a subscription, a resource group or a resource. They are judged by Resource
   Manager;
-- **Microsoft Entra roles**: the directory's own roles, such as Global Administrator, User
+- Microsoft Entra roles: the directory's own roles, such as Global Administrator, User
   Administrator and Privileged Role Administrator. They govern the tenant, not Azure's resources,
   and lesson 6 met them;
-- **groups**: membership of a group, or ownership of it, made eligible. A group that holds several
+- groups: membership of a group, or ownership of it, made eligible. A group that holds several
   roles becomes a single thing to activate.
 
 **One Entra role reaches into Azure on its own, and it is worth knowing by name.** A Global

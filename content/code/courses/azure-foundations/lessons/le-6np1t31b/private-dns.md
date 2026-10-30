@@ -35,7 +35,7 @@ every one the shop did not give an endpoint would stop resolving.
 ## The same pattern, in a name you can ask about
 
 The machine this course was recorded on resolves names through a resolver that only answers for the
-hosts it is allowed to reach, so a storage account's chain could not be shown here; a made-up account
+hosts it is allowed to reach, so a storage account's chain could not be shown here. A made-up account
 does not exist, and an existing one is not on that list. Microsoft's sign-in service is on it, and its
 public chain has the same shape:
 

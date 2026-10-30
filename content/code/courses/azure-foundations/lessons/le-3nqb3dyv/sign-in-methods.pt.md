@@ -20,8 +20,8 @@ explícita em que nenhuma senha é guardada em texto puro nem numa forma que pos
 então não precisa de nada no chão: o escritório pode perder a energia e a internet, e quem trabalha de
 casa continua entrando no Azure.
 
-A documentação da Microsoft o descreve como o método de menor esforço para implantar e manter, e ele
-traz um benefício que os outros dois não têm: com os hashes na nuvem, **o Entra ID consegue avisar uma
+A documentação da Microsoft o descreve como o método de menor esforço para implantar e manter. Ele
+também traz um benefício que os outros dois não têm: com os hashes na nuvem, **o Entra ID consegue avisar uma
 empresa de que a senha de um dos usuários dela apareceu num vazamento**, e ele precisa desses hashes para
 esse relatório seja qual for o método de login que a empresa escolheu. A fraqueza dele é o tempo: uma
 conta desativada no chão continua ativa na nuvem até a próxima sincronização levar a mudança.

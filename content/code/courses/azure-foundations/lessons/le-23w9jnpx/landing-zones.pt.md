@@ -64,6 +64,6 @@ serviço de cobrança.
 A Microsoft publica **aceleradores** para a platform landing zone, em Bicep e em Terraform, que
 implantam o desenho de referência do CAF com as suas políticas. O próprio conselho do CAF é que a
 maioria das organizações comece de um deles em vez de escrever o seu. Este curso faz o contrário de
-propósito, pelo mesmo motivo que um mecânico aprende num motor sem a tampa: a próxima seção monta a
-árvore à mão, pequena o bastante para ser lida, e um acelerador passa a ser algo que você reconhece em
-vez de algo em que confia.
+propósito, pelo mesmo motivo que um mecânico aprende num motor sem a tampa. A próxima seção monta a
+árvore à mão, pequena o bastante para ser lida. Um acelerador passa então a ser algo que você
+reconhece em vez de algo em que confia.

@@ -6,8 +6,8 @@ version: 1
 **Uma sub-rede é uma fatia do intervalo da VNet, e tudo o que recebe um endereço no Azure o recebe de
 uma sub-rede.** A interface de rede de uma máquina, um private endpoint, o front end privado de um
 balanceador de carga, um firewall: cada um é colocado numa sub-rede e pega um endereço dela. A
-sub-rede também é onde as duas próximas lições prendem as suas regras, um network security group na
-lição 17 e uma tabela de rotas na lição 18, então **uma sub-rede é a unidade de uma política**: coisas
+sub-rede também é onde as duas próximas lições prendem as suas regras: um network security group na
+lição 17, uma tabela de rotas na lição 18. Então **uma sub-rede é a unidade de uma política**. Coisas
 que precisam da mesma filtragem e das mesmas rotas dividem uma, e coisas que precisam de outras não.
 
 A loja corta a `vnet-shop-prod` por camada, que é o corte de onde a maioria dos desenhos parte:

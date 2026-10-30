@@ -116,7 +116,7 @@ ana@laptop:~/azure/rbac$ az bicep build --file assign.bicep --stdout | jq '.reso
 
 **The assignment's name is built from the three things it joins**: the scope, the principal and the
 role. That is the habit worth copying. A role assignment's name must also be a GUID, and Resource
-Manager refuses a second assignment of the same role to the same principal at the same scope; a
+Manager refuses a second assignment of the same role to the same principal at the same scope. A
 name derived from those three makes a repeated deployment land on the existing assignment instead
 of failing. A name such as `readers-of-rg-shop-prod` compiles without a complaint, because the
 compiler does not know the rule, and **Resource Manager would refuse it** when the deployment

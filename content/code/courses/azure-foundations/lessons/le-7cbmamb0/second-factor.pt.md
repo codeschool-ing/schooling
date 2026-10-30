@@ -35,8 +35,8 @@ que os substitui.
 
 ## MFA obrigatório para o Azure
 
-Desde 2024, um segundo fator não é só uma boa ideia para o Azure: **a Microsoft o impõe a todo usuário
-que faz login para gerenciar o Azure**, sejam quais forem as configurações do próprio tenant. A
+Desde 2024, **a Microsoft impõe um segundo fator a todo usuário que faz login para gerenciar o
+Azure**, sejam quais forem as configurações do próprio tenant. A
 documentação dela descreve duas fases:
 
 | fase | desde | aplicações | operações |

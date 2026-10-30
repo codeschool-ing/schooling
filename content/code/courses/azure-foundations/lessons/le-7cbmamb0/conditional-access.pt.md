@@ -17,9 +17,9 @@ que cobre.
 
 **As atribuições** dizem de quem e do que a política trata:
 
-- **usuários**: todos os usuários, usuários ou grupos escolhidos, ou quem tem **papéis do diretório**
+- usuários: todos os usuários, usuários ou grupos escolhidos, ou quem tem **papéis do diretório**
   escolhidos, e as exclusões, que importam tanto quanto as inclusões;
-- **recursos de destino**: as aplicações em que se faz login. *Windows Azure Service Management API* é
+- recursos de destino: as aplicações em que se faz login. *Windows Azure Service Management API* é
   a que importa neste curso: a documentação da Microsoft diz que uma política mirada nela cobre o
   Resource Manager e o portal do Azure, e por meio deles a CLI e o PowerShell.
 

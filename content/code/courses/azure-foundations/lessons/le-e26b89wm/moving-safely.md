@@ -71,8 +71,8 @@ to a Standard public IP address stays in its subscription, as the previous secti
 A subscription can also be handed to a **different tenant**, which is what happens when a company is
 bought, or when a subscription opened with somebody's personal account is brought into the company's
 directory. In the portal it is called *change directory*. **It is not a move in this lesson's sense,
-and it is far more destructive**: every identity the subscription trusted belonged to the old
-tenant, so Microsoft's documentation warns that the role assignments, the custom roles and the
+and it is far more destructive.** Every identity the subscription trusted belonged to the old
+tenant. So Microsoft's documentation warns that the role assignments, the custom roles and the
 managed identities of lesson 8 do not survive it, and that resources holding a tenant id, such as a
 key vault, have to be told the new one.
 

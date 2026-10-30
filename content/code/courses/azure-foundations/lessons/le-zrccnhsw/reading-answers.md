@@ -30,8 +30,8 @@ Each line is one **record**: a name, the class `IN`, a **type**, and the value. 
 address. The resolver followed the chain for you and printed every link. Read the names rather than
 the address: the first hop is `trafficmanager.net`, Azure Traffic Manager, then `azurefd.net`, Azure
 Front Door, then Microsoft's edge network. **Each of those is a service that chooses the next link at
-the moment you ask**, by where you are and what is healthy, which is why lesson 22 can build a global
-service out of DNS alone and why this exact chain will not be the one you get.
+the moment you ask**, by where you are and what is healthy. That is why lesson 22 can build a global
+service out of DNS alone, and why this exact chain will not be the one you get.
 
 `+noall +answer` keeps only the answer section; `+nottlid` leaves out the column dig normally prints
 between the name and `IN`: the **TTL**, the number of seconds a resolver may keep the record before

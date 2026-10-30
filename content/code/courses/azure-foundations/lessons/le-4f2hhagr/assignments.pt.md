@@ -116,7 +116,7 @@ ana@laptop:~/azure/rbac$ az bicep build --file assign.bicep --stdout | jq '.reso
 
 **O nome da atribuição é montado com as três coisas que ela junta**: o escopo, a entidade e o papel.
 Esse é o hábito que vale copiar. O nome de uma atribuição de papel também precisa ser um GUID, e o
-Resource Manager recusa uma segunda atribuição do mesmo papel à mesma entidade no mesmo escopo; um
+Resource Manager recusa uma segunda atribuição do mesmo papel à mesma entidade no mesmo escopo. Um
 nome derivado dessas três coisas faz uma implantação repetida cair na atribuição existente em vez de
 falhar. Um nome como `readers-of-rg-shop-prod` compila sem reclamação, porque o compilador não conhece
 a regra, e **o Resource Manager o recusaria** quando a implantação chegasse. Essa recusa não foi

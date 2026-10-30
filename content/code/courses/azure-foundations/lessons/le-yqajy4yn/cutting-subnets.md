@@ -6,9 +6,9 @@ version: 1
 **A subnet is a slice of the VNet's range, and everything that gets an address in Azure gets it
 from a subnet.** A machine's network interface, a private endpoint, a load balancer's private front
 end, a firewall: each is placed in one subnet and takes an address from it. The subnet is also where
-the next two lessons attach their rules, a network security group in lesson 17 and a route table in
-lesson 18, so **a subnet is the unit of a policy**: things that need the same filtering and the
-same routes share one, and things that need different ones do not.
+the next two lessons attach their rules: a network security group in lesson 17, a route table in
+lesson 18. So **a subnet is the unit of a policy**. Things that need the same filtering and the same
+routes share one, and things that need different ones do not.
 
 The shop cuts `vnet-shop-prod` by tier, which is the cut most designs start from:
 

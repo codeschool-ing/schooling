@@ -33,8 +33,8 @@ less protection than it had. The next section is what replaces them.
 
 ## Mandatory MFA for Azure
 
-Since 2024, a second factor is not only a good idea for Azure: **Microsoft enforces it for every
-user who signs in to manage Azure**, whatever the tenant's own settings. Its documentation describes
+Since 2024, **Microsoft has enforced a second factor for every user who signs in to manage Azure**,
+whatever the tenant's own settings. Its documentation describes
 two phases:
 
 | phase | from | applications | operations |

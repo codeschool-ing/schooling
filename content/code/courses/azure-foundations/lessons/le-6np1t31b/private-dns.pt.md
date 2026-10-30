@@ -35,7 +35,7 @@ deu endpoint pararia de resolver.
 ## O mesmo padrão, num nome que dá para perguntar
 
 A máquina onde este curso foi gravado resolve nomes por um resolvedor que só responde pelos hosts que
-ela tem permissão de alcançar, então a cadeia de uma storage account não pôde ser mostrada aqui; uma
+ela tem permissão de alcançar, então a cadeia de uma storage account não pôde ser mostrada aqui. Uma
 conta inventada não existe, e uma existente não está nessa lista. O serviço de login da Microsoft
 está, e a cadeia pública dele tem o mesmo formato:
 

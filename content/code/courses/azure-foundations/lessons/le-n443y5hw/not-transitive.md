@@ -36,7 +36,7 @@ see the traffic.
   firewall that runs by the hour, and two crossings of a peering for every packet; the gain is one
   place that sees and judges everything that moves between spokes.
 - **Let Azure run the hub.** **Azure Virtual WAN** is a hub Microsoft operates, with its own routers,
-  in which connected networks reach each other without route tables of your own, and **Azure Virtual
+  in which connected networks reach each other without route tables of your own. **Azure Virtual
   Network Manager** creates and keeps peerings across many networks from one description, mesh or
   hub-and-spoke, so that a new spoke joins the right group without anybody writing its peerings by
   hand. Both are services of their own, and this course names them so that you recognise them; it

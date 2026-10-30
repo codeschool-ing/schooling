@@ -30,7 +30,7 @@ que diz "este nome é outro nome; pergunte por aquele", e o último é um `A`, u
 resolvedor seguiu a cadeia por você e imprimiu cada elo. Leia os nomes em vez do endereço: o primeiro
 salto é `trafficmanager.net`, o Azure Traffic Manager, depois `azurefd.net`, o Azure Front Door,
 depois a rede de borda da Microsoft. **Cada um desses é um serviço que escolhe o próximo elo no
-momento em que você pergunta**, por onde você está e pelo que está saudável, e é por isso que a lição
+momento em que você pergunta**, por onde você está e pelo que está saudável. É por isso que a lição
 22 consegue montar um serviço global só com DNS e que esta cadeia exata não vai ser a que você recebe.
 
 `+noall +answer` deixa só a seção de resposta; `+nottlid` omite a coluna que o dig normalmente imprime
