@@ -135,18 +135,13 @@ wrong one here: type the eight lines and ask again.
 
 ```
 ana@laptop:~/gcp$ gcloud storage buckets list
-ERROR: (gcloud.storage.buckets.list) You do not currently have an active account selected.
-Please run:
+ERROR: gcloud crashed (ConnectionError): HTTPConnectionPool(host='localhost', port=4443): Max retries exceeded with url: /storage/v1/b?alt=json&maxResults=1000&project=planner-dev&projection=full (Caused by NewConnectionError("HTTPConnection(host='localhost', port=4443): Failed to establish a new connection: [Errno 111] Connection refused"))
 
-  $ gcloud auth login
+If you would like to report this issue, please run the following command:
+  gcloud feedback
 
-to obtain new credentials.
-
-If you have already logged in with a different account, run:
-
-  $ gcloud config set account ACCOUNT
-
-to select an already authenticated account to use.
+To check gcloud for common problems, please run the following command:
+  gcloud info --run-diagnostics
 ```
 
 `Connection refused` on 4443 is `gcs`, on 8085 is `pubsub`. `docker ps` lists what is running;
