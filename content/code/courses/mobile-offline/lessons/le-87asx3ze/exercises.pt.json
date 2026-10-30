@@ -1,0 +1,325 @@
+{
+  "ex-an1bky0e": {
+    "prompt": "Associe cada resposta ao que o cliente da aula faz com ela.",
+    "pairs": [
+      {
+        "left": "503 Service Unavailable",
+        "right": "espera e tenta de novo"
+      },
+      {
+        "left": "422 Unprocessable Entity",
+        "right": "para: o servidor leu e disse não"
+      },
+      {
+        "left": "429 Too Many Requests",
+        "right": "espera o que o Retry-After diz"
+      },
+      {
+        "left": "nenhuma resposta antes do tempo limite",
+        "right": "espera e tenta de novo, sem saber o que aconteceu"
+      }
+    ],
+    "right_distractors": [
+      "move a sessão para o cache"
+    ]
+  },
+  "ex-xgxve04a": {
+    "prompt": "Por que um 400 não é repetido pelo `retry.ts`?",
+    "choices": [
+      {
+        "text": "Um 400 quer dizer que o servidor está sobrecarregado",
+        "why": "Isso é o 503, ou o 429."
+      },
+      {
+        "text": "O servidor apaga a sessão depois de um 400, então não sobra nada para enviar",
+        "why": "O servidor não salvou nada; a requisição foi recusada."
+      },
+      {
+        "text": "A mesma requisição recebe a mesma resposta",
+        "why": "Isso. O servidor a leu, e nada mudou."
+      },
+      {
+        "text": "O fetch lança exceção num 400",
+        "why": "O fetch resolve com qualquer status; o código o lê."
+      }
+    ]
+  },
+  "ex-d8y11swf": {
+    "prompt": "Uma requisição recebe 401 porque o token de acesso venceu. O que a aula diz sobre repeti-la?",
+    "choices": [
+      {
+        "text": "Renovar o token e então enviar de novo",
+        "why": "Isso. Algo precisa mudar antes, por isso não é uma nova tentativa simples."
+      },
+      {
+        "text": "Movê-la para dead, para a pessoa",
+        "why": "A pessoa não pode fazer nada sobre um token vencido."
+      },
+      {
+        "text": "Descartá-la, já que a pessoa saiu da conta",
+        "why": "Vencido não é ter saído, e descartá-la perde a mudança."
+      },
+      {
+        "text": "Repetir com recuo, como um 503",
+        "why": "O mesmo token recebe o mesmo 401."
+      }
+    ]
+  },
+  "ex-0sjw1zfj": {
+    "prompt": "O que aconteceria sem o `AbortSignal.timeout` em cada tentativa?",
+    "choices": [
+      {
+        "text": "Os 503 seriam tratados como sucesso",
+        "why": "Os status são lidos do mesmo jeito em qualquer caso."
+      },
+      {
+        "text": "O Node se recusaria a enviar uma requisição que não tem prazo nenhum junto",
+        "why": "Ele envia; só não há prazo."
+      },
+      {
+        "text": "Toda requisição seria repetida duas vezes",
+        "why": "O tempo limite não decide quantas tentativas."
+      },
+      {
+        "text": "Um servidor que nunca responde prenderia a tentativa para sempre",
+        "why": "Isso. A conexão está aberta e nada encerra a espera."
+      }
+    ]
+  },
+  "ex-8e4b86s3": {
+    "prompt": "O que o jitter acrescenta ao recuo exponencial?",
+    "choices": [
+      {
+        "text": "Um limite no número de tentativas",
+        "why": "Isso é o TRIES; jitter é sobre quando."
+      },
+      {
+        "text": "Um ponto aleatório abaixo do teto",
+        "why": "Isso. O jitter total sorteia de zero até ele."
+      },
+      {
+        "text": "O dobro da espera a cada falha",
+        "why": "O dobrar é a parte exponencial."
+      },
+      {
+        "text": "Uma espera que o servidor escolhe e manda num cabeçalho",
+        "why": "Isso é o Retry-After."
+      }
+    ]
+  },
+  "ex-4qrqg0xv": {
+    "prompt": "Um servidor volta depois de um minuto fora do ar. Por que importa que os celulares que falharam usaram jitter?",
+    "choices": [
+      {
+        "text": "Cada celular gasta menos bateria, porque o rádio acorda menos vezes enquanto espera",
+        "why": "O ponto da aula é a carga do servidor."
+      },
+      {
+        "text": "Voltariam todos de uma vez",
+        "why": "Isso. Essa segunda queda é a manada."
+      },
+      {
+        "text": "O servidor consegue distinguir os celulares",
+        "why": "O jitter muda quando eles pedem, não quem eles são."
+      },
+      {
+        "text": "Tentativas com jitter nunca falham",
+        "why": "Falham do mesmo jeito; chegam espalhadas."
+      }
+    ]
+  },
+  "ex-3rb63y8r": {
+    "prompt": "Com BASE de 1000 ms e sem teto, quantos milissegundos tem o teto na tentativa 8?",
+    "unit": "ms"
+  },
+  "ex-dbfwyr2x": {
+    "prompt": "Um colega propõe `wait = ceiling` com 500 ms fixos somados em todo celular, 'para ninguém repetir na hora'. O que a tabela da aula prevê?",
+    "choices": [
+      {
+        "text": "Os celulares se espalham, já que 500 ms é um atraso",
+        "why": "O mesmo atraso para todos move o pico, não o espalha."
+      },
+      {
+        "text": "Menos requisições chegam ao servidor",
+        "why": "Chega o mesmo número; só o momento muda."
+      },
+      {
+        "text": "O teto para de funcionar",
+        "why": "O teto não é afetado."
+      },
+      {
+        "text": "Eles ainda chegam juntos, meio segundo depois",
+        "why": "Isso. Espalhar exige que cada celular escolha diferente."
+      }
+    ]
+  },
+  "ex-1t7khxtk": {
+    "prompt": "Depois de um 429 com `Retry-After: 2`, quanto o `retry.ts` esperou?",
+    "choices": [
+      {
+        "text": "2000 ms",
+        "why": "Isso. O número do servidor substituiu o da fórmula."
+      },
+      {
+        "text": "5000 ms, o teto",
+        "why": "O teto só limita o valor do cabeçalho."
+      },
+      {
+        "text": "2 ms, a primeira espera com jitter",
+        "why": "Foi isso que a fórmula sozinha escolheu com a semente 7."
+      },
+      {
+        "text": "Não esperou; um 429 não é repetido",
+        "why": "Um 429 é repetido, mais devagar."
+      }
+    ]
+  },
+  "ex-vvg00jb6": {
+    "prompt": "Por que o cliente mantém o teto mesmo quando o servidor manda `Retry-After`?",
+    "choices": [
+      {
+        "text": "O Retry-After é medido em minutos",
+        "why": "É em segundos, ou uma data."
+      },
+      {
+        "text": "Porque o cabeçalho é só uma sugestão que navegadores ignoram",
+        "why": "O cliente o respeita, abaixo do teto."
+      },
+      {
+        "text": "Para um engano do servidor não fechar a caixa de saída de um celular por um dia",
+        "why": "Isso. O cliente fica com o menor dos dois."
+      },
+      {
+        "text": "O teto faz o servidor responder mais rápido",
+        "why": "O teto só muda o cliente."
+      }
+    ]
+  },
+  "ex-23203670": {
+    "prompt": "Depois de cinco 503, o `retry.ts` desiste. Quais são verdade sobre a operação nesse momento? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "ela continua na caixa de saída",
+        "why": "Desistir não é apagar."
+      },
+      {
+        "text": "a próxima drenagem a recomeça da tentativa 1",
+        "why": "É o que o programa imprime."
+      },
+      {
+        "text": "ela está na tabela dead",
+        "why": "Um 503 não é a resposta do servidor sobre ela."
+      },
+      {
+        "text": "o servidor a salvou na quinta tentativa",
+        "why": "Toda tentativa recebeu 503."
+      }
+    ]
+  },
+  "ex-drgy1y0e": {
+    "prompt": "O cabeçalho que um servidor manda com um 429 ou um 503 para dizer quanto esperar é o ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Retry-After"
+        ]
+      }
+    ]
+  },
+  "ex-s7f098ay": {
+    "prompt": "O que o `drop` do servidor fez na execução da aula?",
+    "choices": [
+      {
+        "text": "Salvou e desligou",
+        "why": "Isso. O trabalho foi feito; a resposta se perdeu."
+      },
+      {
+        "text": "Recusou a sessão com um erro",
+        "why": "Ele não respondeu nada."
+      },
+      {
+        "text": "Jogou a requisição fora sem ler, e nada chegou à lista de sessões",
+        "why": "Aí haveria uma sessão só, a n1 da nova tentativa."
+      },
+      {
+        "text": "Esperou dois segundos e respondeu",
+        "why": "Isso é o Retry-After do 429."
+      }
+    ]
+  },
+  "ex-xw33txq1": {
+    "prompt": "Depois da execução com `drop`, quantos minutos de violão o servidor guarda para 23 de outubro?"
+  },
+  "ex-mbf6966v": {
+    "prompt": "Por que o cliente não consegue distinguir uma resposta perdida de uma requisição que nunca chegou?",
+    "choices": [
+      {
+        "text": "O fetch esconde a diferença de propósito",
+        "why": "Não há diferença para ele mostrar."
+      },
+      {
+        "text": "O servidor manda o mesmo código de erro para as duas",
+        "why": "Nos dois casos o cliente não recebe nada."
+      },
+      {
+        "text": "Nas duas, nada volta",
+        "why": "Isso. Silêncio é tudo o que ele tem."
+      },
+      {
+        "text": "O Node não guarda registro das requisições que enviou",
+        "why": "Um registro mostraria que enviou; não se chegou."
+      }
+    ]
+  },
+  "ex-7ampqyr1": {
+    "prompt": "Um planner nunca repete um POST, para evitar duplicatas. Uma aluna cria uma sessão num elevador e a resposta se perde. O que a aula diz que acontece?",
+    "choices": [
+      {
+        "text": "Nada de ruim: o servidor salvou, então o celular a marca como synced sozinho",
+        "why": "O celular não sabe disso."
+      },
+      {
+        "text": "Ela fica pending no celular, e o servidor nunca é perguntado de novo",
+        "why": "Isso. O pending da aula 7, para sempre."
+      },
+      {
+        "text": "O servidor percebe e manda a resposta depois",
+        "why": "O HTTP não tem como ele fazer isso."
+      },
+      {
+        "text": "A sessão vai para dead",
+        "why": "A dead é para um 4xx, e não houve resposta."
+      }
+    ]
+  },
+  "ex-nkcp6qgm": {
+    "prompt": "Ponha em ordem o que aconteceu na execução com `drop`.",
+    "items": [
+      "o cliente envia o primeiro POST",
+      "o servidor salva n1 e fecha a conexão",
+      "o cliente não vê resposta e espera",
+      "o segundo POST é salvo como n2 e o 201 chega"
+    ]
+  },
+  "ex-z7ypapxj": {
+    "prompt": "Qual mudança deixaria o servidor reconhecer o segundo POST da execução com `drop` como a mesma operação?",
+    "choices": [
+      {
+        "text": "Um tempo limite maior no cliente",
+        "why": "A resposta não foi lenta; ela nunca foi enviada."
+      },
+      {
+        "text": "Comparar o corpo com a última sessão salva",
+        "why": "Uma segunda sessão idêntica que a pessoa quis acrescentar seria recusada."
+      },
+      {
+        "text": "Jitter na nova tentativa",
+        "why": "O jitter muda quando, não o que o servidor reconhece."
+      },
+      {
+        "text": "Uma identidade que o cliente escolhe antes da primeira tentativa e manda em toda nova tentativa",
+        "why": "Isso. É a chave de idempotência da aula 10."
+      }
+    ]
+  }
+}

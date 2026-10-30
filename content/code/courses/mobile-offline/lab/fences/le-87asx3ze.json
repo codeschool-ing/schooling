@@ -1,0 +1,8 @@
+{
+ "schedule": "ana@dev:~/planner/retry$ node schedule.ts\nattempt  no jitter   phone 1   phone 2   phone 3\n       1      1000       627       734       720\n       2      2000         5       649        77\n       3      4000      2109      1141      1824\n       4      8000      7848      4303       599\n       5     16000     15494     14004     12208\n       6     32000      8995     20186     15397\n       7     60000     36770     29952     29203\n       8     60000     43244     21434      9708\n",
+ "retryafter": "ana@dev:~/planner/retry$ node retry.ts\nattempt 1: 429, waiting 2000 ms as Retry-After asks\nattempt 2: 201, saved as n1\n",
+ "giveup": "ana@dev:~/planner/retry$ node retry.ts\nattempt 1: 503, waiting 2 ms\nattempt 2: 503, waiting 24 ms\nattempt 3: 503, waiting 781 ms\nattempt 4: 503, waiting 1118 ms\nattempt 5: 503\ngiving up for now; the operation stays in the outbox\n",
+ "dropped": "ana@dev:~/planner/retry$ node retry.ts\nattempt 1: no answer, waiting 2 ms\nattempt 2: 201, saved as n2\nana@dev:~/planner/retry$ curl -s http://127.0.0.1:8009/sessions\n[{\"course\":\"guitar\",\"date\":\"2026-10-23\",\"minutes\":25,\"id\":\"n1\"},{\"course\":\"guitar\",\"date\":\"2026-10-23\",\"minutes\":25,\"id\":\"n2\"}]\n",
+ "droppedlog": "ana@dev:~/planner/retry$ node server.ts drop\nlistening on 8009\nPOST /sessions drop\nPOST /sessions ok\n",
+ "classify": "ana@dev:~/planner/retry$ node retry.ts\nattempt 1: 503, waiting 2 ms\nattempt 2: 503, waiting 24 ms\nattempt 3: 201, saved as n1\nana@dev:~/planner/retry$ node retry.ts\nattempt 1: 400, not retrying: minutes must be a number\n"
+}

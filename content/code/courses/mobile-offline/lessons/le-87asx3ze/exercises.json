@@ -1,0 +1,489 @@
+[
+  {
+    "id": "ex-an1bky0e",
+    "version": 1,
+    "section": "what-to-retry",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each answer to what the lesson's client does with it.",
+    "pairs": [
+      {
+        "left": "503 Service Unavailable",
+        "right": "waits, then tries again"
+      },
+      {
+        "left": "422 Unprocessable Entity",
+        "right": "stops: the server read it and said no"
+      },
+      {
+        "left": "429 Too Many Requests",
+        "right": "waits as long as Retry-After says"
+      },
+      {
+        "left": "no answer before the timeout",
+        "right": "waits, then tries again, not knowing what happened"
+      }
+    ],
+    "right_distractors": [
+      "moves the session to the cache"
+    ]
+  },
+  {
+    "id": "ex-xgxve04a",
+    "version": 1,
+    "section": "what-to-retry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a 400 not retried by `retry.ts`?",
+    "choices": [
+      {
+        "text": "A 400 means the server is overloaded",
+        "correct": false,
+        "why": "That is 503, or 429."
+      },
+      {
+        "text": "The server deletes the session after a 400, so there is nothing left to send",
+        "correct": false,
+        "why": "The server saved nothing; the request was refused."
+      },
+      {
+        "text": "The same request gets the same answer",
+        "correct": true,
+        "why": "Right. The server read it, and nothing has changed."
+      },
+      {
+        "text": "fetch throws on a 400",
+        "correct": false,
+        "why": "fetch resolves with any status; the code reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8y11swf",
+    "version": 1,
+    "section": "what-to-retry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request gets 401 because the access token expired. What does the lesson say about retrying it?",
+    "choices": [
+      {
+        "text": "Refresh the token, then send it again",
+        "correct": true,
+        "why": "Right. Something has to change first, which is why it is not a plain retry."
+      },
+      {
+        "text": "Move it to dead for the person",
+        "correct": false,
+        "why": "The person can do nothing about an expired token."
+      },
+      {
+        "text": "Drop it, since the person is signed out",
+        "correct": false,
+        "why": "Expired is not signed out, and dropping it loses the change."
+      },
+      {
+        "text": "Retry it with backoff, like a 503",
+        "correct": false,
+        "why": "The same token gets the same 401."
+      }
+    ]
+  },
+  {
+    "id": "ex-0sjw1zfj",
+    "version": 1,
+    "section": "what-to-retry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would happen without `AbortSignal.timeout` on each attempt?",
+    "choices": [
+      {
+        "text": "The 503s would be treated as successes",
+        "correct": false,
+        "why": "Statuses are read the same way either way."
+      },
+      {
+        "text": "Node would refuse to send a request that has no deadline attached to it",
+        "correct": false,
+        "why": "It sends it; there is just no deadline."
+      },
+      {
+        "text": "Every request would be retried twice",
+        "correct": false,
+        "why": "The timeout does not decide how many tries."
+      },
+      {
+        "text": "A server that never answers would hold the attempt for ever",
+        "correct": true,
+        "why": "Right. The connection is open and nothing ends the wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e4b86s3",
+    "version": 1,
+    "section": "backoff",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does jitter add to exponential backoff?",
+    "choices": [
+      {
+        "text": "A limit on the number of tries",
+        "correct": false,
+        "why": "That is TRIES; jitter is about when."
+      },
+      {
+        "text": "A random point below the ceiling",
+        "correct": true,
+        "why": "Right. Full jitter picks anywhere from zero to it."
+      },
+      {
+        "text": "A doubling of the wait on each failure",
+        "correct": false,
+        "why": "The doubling is the exponential part."
+      },
+      {
+        "text": "A wait the server chooses and sends in a header",
+        "correct": false,
+        "why": "That is Retry-After."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qrqg0xv",
+    "version": 1,
+    "section": "backoff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server comes back after a minute down. Why does it matter that the phones that failed used jitter?",
+    "choices": [
+      {
+        "text": "Each phone uses less battery, because the radio wakes fewer times while it is waiting",
+        "correct": false,
+        "why": "The lesson's point is the server's load."
+      },
+      {
+        "text": "They would all return at once",
+        "correct": true,
+        "why": "Right. That second outage is the thundering herd."
+      },
+      {
+        "text": "The server can tell the phones apart",
+        "correct": false,
+        "why": "Jitter changes when they ask, not who they are."
+      },
+      {
+        "text": "Retries with jitter never fail",
+        "correct": false,
+        "why": "They fail as often; they arrive spread out."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rb63y8r",
+    "version": 1,
+    "section": "backoff",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With BASE 1000 ms and no cap, how many milliseconds is the ceiling on attempt 8?",
+    "value": 128000,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-dbfwyr2x",
+    "version": 1,
+    "section": "backoff",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes `wait = ceiling` with a fixed 500 ms added to every phone, 'so nobody retries instantly'. What does the lesson's schedule predict?",
+    "choices": [
+      {
+        "text": "The phones spread out, since 500 ms is a delay",
+        "correct": false,
+        "why": "The same delay for everybody moves the spike, it does not spread it."
+      },
+      {
+        "text": "Fewer requests reach the server",
+        "correct": false,
+        "why": "The same number arrive; only the timing differs."
+      },
+      {
+        "text": "The cap stops working",
+        "correct": false,
+        "why": "The cap is unaffected."
+      },
+      {
+        "text": "They still arrive together, half a second later",
+        "correct": true,
+        "why": "Right. Spreading needs each phone to choose differently."
+      }
+    ]
+  },
+  {
+    "id": "ex-1t7khxtk",
+    "version": 1,
+    "section": "retry-after",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After a 429 with `Retry-After: 2`, how long did `retry.ts` wait?",
+    "choices": [
+      {
+        "text": "2000 ms",
+        "correct": true,
+        "why": "Right. The server's number replaced the formula's."
+      },
+      {
+        "text": "5000 ms, the cap",
+        "correct": false,
+        "why": "The cap only limits the header's value."
+      },
+      {
+        "text": "2 ms, the first jittered wait",
+        "correct": false,
+        "why": "That is what the formula alone chose with seed 7."
+      },
+      {
+        "text": "It did not wait; a 429 is not retried",
+        "correct": false,
+        "why": "A 429 is retried, more slowly."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvg00jb6",
+    "version": 1,
+    "section": "retry-after",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the client keep the cap even when the server sends `Retry-After`?",
+    "choices": [
+      {
+        "text": "Retry-After is measured in minutes",
+        "correct": false,
+        "why": "It is seconds, or a date."
+      },
+      {
+        "text": "Because the header is only a suggestion browsers ignore",
+        "correct": false,
+        "why": "The client honours it, under the cap."
+      },
+      {
+        "text": "So a server's mistake cannot close a phone's outbox for a day",
+        "correct": true,
+        "why": "Right. The client takes the smaller of the two."
+      },
+      {
+        "text": "The cap makes the server answer faster",
+        "correct": false,
+        "why": "The cap changes only the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-23203670",
+    "version": 1,
+    "section": "retry-after",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After five 503s, `retry.ts` gives up. Which are true of the operation then? Choose all that apply.",
+    "choices": [
+      {
+        "text": "it is still in the outbox",
+        "correct": true,
+        "why": "Giving up is not deleting."
+      },
+      {
+        "text": "the next drain starts it from attempt 1",
+        "correct": true,
+        "why": "That is what the program prints."
+      },
+      {
+        "text": "it is in the dead table",
+        "why": "A 503 is not the server's answer about it."
+      },
+      {
+        "text": "the server saved it on the fifth try",
+        "why": "Every try got a 503."
+      }
+    ]
+  },
+  {
+    "id": "ex-drgy1y0e",
+    "version": 1,
+    "section": "retry-after",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The header a server sends with a 429 or a 503 to say how long to wait is ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Retry-After"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s7f098ay",
+    "version": 1,
+    "section": "the-request-that-must-not-repeat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the server's `drop` do in the lesson's run?",
+    "choices": [
+      {
+        "text": "Saved it, then hung up",
+        "correct": true,
+        "why": "Right. The work was done; the answer was lost."
+      },
+      {
+        "text": "Refused the session with an error",
+        "correct": false,
+        "why": "It answered nothing."
+      },
+      {
+        "text": "Threw the request away unread, so nothing reached the list of sessions",
+        "correct": false,
+        "why": "Then there would have been one session, n1 from the retry."
+      },
+      {
+        "text": "Waited two seconds, then answered",
+        "correct": false,
+        "why": "That is the 429's Retry-After."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw33txq1",
+    "version": 1,
+    "section": "the-request-that-must-not-repeat",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the `drop` run, how many minutes of guitar does the server hold for 23 October?",
+    "value": 50,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mbf6966v",
+    "version": 1,
+    "section": "the-request-that-must-not-repeat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the client not tell a lost answer from a request that never arrived?",
+    "choices": [
+      {
+        "text": "fetch hides the difference on purpose",
+        "correct": false,
+        "why": "There is no difference for it to show."
+      },
+      {
+        "text": "The server sends the same error code for both",
+        "correct": false,
+        "why": "In both cases the client receives nothing at all."
+      },
+      {
+        "text": "In both, nothing comes back",
+        "correct": true,
+        "why": "Right. Silence is all it has."
+      },
+      {
+        "text": "Node keeps no log of requests it sent",
+        "correct": false,
+        "why": "A log would show it sent one; not whether it arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ampqyr1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner never retries a POST, to avoid duplicates. A student creates a session in a lift and the answer is lost. What does the lesson say follows?",
+    "choices": [
+      {
+        "text": "Nothing bad: the server saved it, so the phone marks it as synced on its own",
+        "correct": false,
+        "why": "The phone does not know that."
+      },
+      {
+        "text": "It stays pending on the phone, and the server is never asked again",
+        "correct": true,
+        "why": "Right. Lesson 7's pending, for ever."
+      },
+      {
+        "text": "The server notices and sends the answer later",
+        "correct": false,
+        "why": "HTTP has no way for it to do that."
+      },
+      {
+        "text": "The session is moved to dead",
+        "correct": false,
+        "why": "Dead is for a 4xx, and there was no answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkcp6qgm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened in the `drop` run.",
+    "items": [
+      "the client sends the first POST",
+      "the server saves n1 and closes the connection",
+      "the client sees no answer and waits",
+      "the second POST is saved as n2 and its 201 arrives"
+    ]
+  },
+  {
+    "id": "ex-z7ypapxj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which change would let the server recognise the second POST in the `drop` run as the same operation?",
+    "choices": [
+      {
+        "text": "A longer timeout on the client",
+        "correct": false,
+        "why": "The answer was not slow; it was never sent."
+      },
+      {
+        "text": "Comparing the body with the last session saved",
+        "correct": false,
+        "why": "A second identical session the person meant to add would be refused."
+      },
+      {
+        "text": "Jitter on the retry",
+        "correct": false,
+        "why": "Jitter changes when, not what the server can recognise."
+      },
+      {
+        "text": "An identity the client chooses before the first try and sends with every retry",
+        "correct": true,
+        "why": "Right. That is lesson 10's idempotency key."
+      }
+    ]
+  }
+]
