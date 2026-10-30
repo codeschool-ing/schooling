@@ -1,0 +1,489 @@
+[
+  {
+    "id": "ex-2v3dyaee",
+    "version": 1,
+    "section": "the-frame-budget",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At 120 Hz, how many milliseconds does each frame have? Answer to one decimal place.",
+    "value": 8.3,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-azme52cp",
+    "version": 1,
+    "section": "the-frame-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Android measure before it shows an \"App isn't responding\" dialog?",
+    "choices": [
+      {
+        "text": "A frame that took longer than 16.7 ms",
+        "correct": false,
+        "why": "A slow frame is dropped; nothing is reported to the person."
+      },
+      {
+        "text": "A disk read on the main thread",
+        "correct": false,
+        "why": "StrictMode reports that in a debug build; it is not an ANR."
+      },
+      {
+        "text": "An input event not handled within 5 seconds",
+        "correct": true,
+        "why": "Right. That is an ANR."
+      },
+      {
+        "text": "The battery level during a query",
+        "correct": false,
+        "why": "Battery has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-97ezpbtm",
+    "version": 1,
+    "section": "the-frame-budget",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each platform's signal to what it reacts to.",
+    "pairs": [
+      {
+        "left": "ANR",
+        "right": "input left unhandled for 5 seconds"
+      },
+      {
+        "left": "StrictMode",
+        "right": "a disk read on the main thread, in a debug build"
+      },
+      {
+        "left": "0x8badf00d",
+        "right": "the iOS watchdog ending a slow launch"
+      },
+      {
+        "left": "IllegalStateException from Room",
+        "right": "a query on the main thread"
+      }
+    ],
+    "right_distractors": [
+      "a frame drawn twice"
+    ]
+  },
+  {
+    "id": "ex-t5bshhvh",
+    "version": 1,
+    "section": "the-frame-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query takes 4 ms on the developer's phone. Why does the lesson still say the question is which thread waits for it?",
+    "choices": [
+      {
+        "text": "Old phones, more rows: 40 ms",
+        "correct": true,
+        "why": "Right. On a five-year-old phone with three years of sessions it takes ten times as long; the developer's phone is the best case."
+      },
+      {
+        "text": "Queries take longer the second time",
+        "correct": false,
+        "why": "Nothing in the lesson says so."
+      },
+      {
+        "text": "4 ms is already over the frame budget",
+        "correct": false,
+        "why": "It is under 16.7 ms; the problem is elsewhere."
+      },
+      {
+        "text": "The main thread is slower than the others",
+        "correct": false,
+        "why": "It is not slower; it is the one that draws."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1d59c68",
+    "version": 1,
+    "section": "blocking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does blocking.ts report that no frame was drawn while the query ran?",
+    "choices": [
+      {
+        "text": "Node only fires timers every 100 ms",
+        "correct": false,
+        "why": "The 100 ms is the delay before the query starts."
+      },
+      {
+        "text": "The timer was cleared before the query",
+        "correct": false,
+        "why": "It is cleared after."
+      },
+      {
+        "text": "The query was too fast to span a frame",
+        "correct": false,
+        "why": "It counts to three million so that it is slow anywhere."
+      },
+      {
+        "text": "A synchronous call holds the thread",
+        "correct": true,
+        "why": "Right. better-sqlite3 holds the only JavaScript thread until it returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-abj4szsy",
+    "version": 1,
+    "section": "blocking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does blocking.ts print \"none\" or \"at least one\" rather than the number of frames, or the time the query took?",
+    "choices": [
+      {
+        "text": "Node cannot measure time",
+        "correct": false,
+        "why": "It can; the choice is about what repeats."
+      },
+      {
+        "text": "Neither repeats across computers",
+        "correct": true,
+        "why": "Right. The transcript has to be the same on yours, and whether a frame was drawn does not depend on the machine."
+      },
+      {
+        "text": "The number is always zero",
+        "correct": false,
+        "why": "In the worker version it is not."
+      },
+      {
+        "text": "Frames are counted only on phones",
+        "correct": false,
+        "why": "The timer counts them here."
+      }
+    ]
+  },
+  {
+    "id": "ex-sc9a0vxq",
+    "version": 1,
+    "section": "blocking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team makes the slow query faster with an index, and leaves it on the main thread. What remains true, according to the lesson?",
+    "choices": [
+      {
+        "text": "Nothing; an indexed query cannot drop a frame",
+        "correct": false,
+        "why": "On a slow phone with a large file it still can."
+      },
+      {
+        "text": "It is still a disk read on the thread that draws",
+        "correct": true,
+        "why": "Right. Efficiency and where the work runs are separate questions."
+      },
+      {
+        "text": "Room would now allow it without allowMainThreadQueries",
+        "correct": false,
+        "why": "Room refuses main-thread queries whatever their plan."
+      },
+      {
+        "text": "The spinner will now turn",
+        "correct": false,
+        "why": "It is drawn by the same thread, which is busy for as long as the query runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7kn3qph",
+    "version": 1,
+    "section": "off-the-main-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does query-worker.ts open its own database connection instead of receiving the main thread's?",
+    "choices": [
+      {
+        "text": "Workers cannot import packages",
+        "correct": false,
+        "why": "It imports better-sqlite3 in its first line."
+      },
+      {
+        "text": "Two connections make the query twice as fast",
+        "correct": false,
+        "why": "The query takes as long either way."
+      },
+      {
+        "text": "The main thread's connection is read-only",
+        "correct": false,
+        "why": "Nothing in the lesson makes it read-only."
+      },
+      {
+        "text": "A connection belongs to the thread that opened it",
+        "correct": true,
+        "why": "Right. Threads share data only by messages here."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjsw61dm",
+    "version": 1,
+    "section": "off-the-main-thread",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In off-main.ts, what changed compared with blocking.ts?",
+    "choices": [
+      {
+        "text": "The thread that runs the query",
+        "correct": true,
+        "why": "Right. Everything else is identical."
+      },
+      {
+        "text": "The frames are 32 ms apart",
+        "correct": false,
+        "why": "16 ms in both."
+      },
+      {
+        "text": "The query counts to fewer rows",
+        "correct": false,
+        "why": "Three million in both."
+      },
+      {
+        "text": "The database is on disk instead of in memory",
+        "correct": false,
+        "why": "Both are in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn2s0mms",
+    "version": 1,
+    "section": "off-the-main-thread",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these keep a query off the main thread? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a suspend DAO function in Room",
+        "correct": true,
+        "why": "Room runs it on its own executors."
+      },
+      {
+        "text": "a method of a @ModelActor in SwiftData",
+        "correct": true,
+        "why": "The actor owns a context of its own."
+      },
+      {
+        "text": "getAllAsync in expo-sqlite",
+        "correct": true,
+        "why": "It runs on a native thread."
+      },
+      {
+        "text": "getAllSync in expo-sqlite",
+        "why": "That is blocking.ts again."
+      }
+    ]
+  },
+  {
+    "id": "ex-3f0bhm31",
+    "version": 1,
+    "section": "off-the-main-thread",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "While the worker writes a sync, the main thread reads the week. What does the lesson say keeps the read from seeing half a sync?",
+    "choices": [
+      {
+        "text": "The worker's messages arrive in order",
+        "correct": false,
+        "why": "Order of messages says nothing about what the database holds mid-write."
+      },
+      {
+        "text": "Running both on the main thread after all",
+        "correct": false,
+        "why": "That brings the frozen screen back."
+      },
+      {
+        "text": "Transactions, and WAL",
+        "correct": true,
+        "why": "Right. Transactions on both sides, with WAL letting one read while the other writes: the reader sees the last committed state."
+      },
+      {
+        "text": "Copying the database to the worker first",
+        "correct": false,
+        "why": "A copy is a second database, out of date as soon as it is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnp307nv",
+    "version": 1,
+    "section": "paging",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many index entries did the OFFSET query walk to return page 301, in the lesson's run?",
+    "value": 15050,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-m0c4qwzn",
+    "version": 1,
+    "section": "paging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the keyset query order by `(date, id)` rather than by `date` alone?",
+    "choices": [
+      {
+        "text": "Many sessions share a date, so date alone cannot say where a page ended",
+        "correct": true,
+        "why": "Right. No two rows share both."
+      },
+      {
+        "text": "SQLite cannot sort by one column",
+        "correct": false,
+        "why": "It can; the order would just not be unique."
+      },
+      {
+        "text": "The id makes the index smaller",
+        "correct": false,
+        "why": "It makes it larger, slightly."
+      },
+      {
+        "text": "Row values need two columns",
+        "correct": false,
+        "why": "The reason is uniqueness, not the syntax."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwtz1egt",
+    "version": 1,
+    "section": "paging",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A list that asks for the fifty rows after the last one shown is using ___ paging.",
+    "blanks": [
+      {
+        "accept": [
+          "keyset"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tn87h0m3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sync deletes one session dated before the page the person is reading, between page 301 and page 302. By OFFSET, what does page 302 do?",
+    "choices": [
+      {
+        "text": "Repeats the last row of page 301",
+        "correct": false,
+        "why": "That is what an inserted row does."
+      },
+      {
+        "text": "Shows the same rows as by keyset",
+        "correct": false,
+        "why": "Every row after the deletion has moved one place back."
+      },
+      {
+        "text": "Skips one row that is never shown",
+        "correct": true,
+        "why": "Right. The rows moved back one position, and the offset did not."
+      },
+      {
+        "text": "Fails, because an offset must point at an existing row",
+        "correct": false,
+        "why": "An offset is a count; it fails at nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyqkxtew",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens in off-main.ts.",
+    "items": [
+      "the screen timer starts counting frames",
+      "the main thread posts the query to the worker",
+      "the worker runs it while frames keep being drawn",
+      "the answer arrives as a message, and the timer stops"
+    ]
+  },
+  {
+    "id": "ex-63qzmfg4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A React Native planner moves its query to getAllAsync, and the history screen still takes two seconds to show. What does the lesson say is left to do?",
+    "choices": [
+      {
+        "text": "Go back to getAllSync, which is faster",
+        "correct": false,
+        "why": "It is the same query, and it would freeze the screen too."
+      },
+      {
+        "text": "Read one page at a time",
+        "correct": true,
+        "why": "Right. Off the main thread and less of it: the lesson does both."
+      },
+      {
+        "text": "Nothing; the screen no longer stutters",
+        "correct": false,
+        "why": "It no longer stutters, and the person still waits."
+      },
+      {
+        "text": "Add a second worker thread",
+        "correct": false,
+        "why": "Two threads do not make one large query smaller."
+      }
+    ]
+  },
+  {
+    "id": "ex-4r5ymz62",
+    "version": 1,
+    "section": "the-frame-budget",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In React Native, what keeps running while the JavaScript thread is busy?",
+    "choices": [
+      {
+        "text": "Touch handling",
+        "correct": false,
+        "why": "Touches queue up behind the busy thread."
+      },
+      {
+        "text": "Animations driven from JavaScript",
+        "correct": false,
+        "why": "Those freeze."
+      },
+      {
+        "text": "Every timer set with setInterval",
+        "correct": false,
+        "why": "Those run on the JavaScript thread and wait with it."
+      },
+      {
+        "text": "Native animations",
+        "correct": true,
+        "why": "Right. They run outside the JavaScript thread."
+      }
+    ]
+  }
+]

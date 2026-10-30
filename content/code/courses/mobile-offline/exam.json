@@ -1,0 +1,2753 @@
+[
+  {
+    "id": "ex-pg5j664j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An Android planner stores 22 MB of sessions and settings, and a 6 MB downloaded attachment in files/. What does Auto Backup upload?",
+    "choices": [
+      {
+        "text": "The 22 MB of sessions and settings, and the attachment is skipped for being large",
+        "correct": false,
+        "why": "Nothing is skipped for its size alone; the quota applies to the total."
+      },
+      {
+        "text": "The first 25 MB it finds",
+        "correct": false,
+        "why": "There is no partial backup."
+      },
+      {
+        "text": "Nothing, because the total is over the 25 MB quota",
+        "correct": true,
+        "why": "Right. Past the quota the backup is not made at all."
+      },
+      {
+        "text": "All 28 MB, compressed below the quota",
+        "correct": false,
+        "why": "The quota is not met by compressing; the backup is skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n6sgp2a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On iOS, a course's cover pictures are downloaded from the server. Which folder fits them?",
+    "choices": [
+      {
+        "text": "Library/Caches/",
+        "correct": true,
+        "why": "Right. Losing them costs a request, and the backup leaves them out."
+      },
+      {
+        "text": "Library/Application Support/",
+        "correct": false,
+        "why": "That is backed up, and the pictures can be fetched again."
+      },
+      {
+        "text": "Documents/, where the Files app shows them",
+        "correct": false,
+        "why": "Documents is for what the person made, and it is backed up."
+      },
+      {
+        "text": "Library/Preferences/",
+        "correct": false,
+        "why": "That is UserDefaults' property list."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3w77bv6",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each place to the platform folder it names.",
+    "pairs": [
+      {
+        "left": "Context.getNoBackupFilesDir()",
+        "right": "no_backup/ on Android"
+      },
+      {
+        "left": "Context.getCacheDir()",
+        "right": "cache/ on Android"
+      },
+      {
+        "left": "UserDefaults",
+        "right": "Library/Preferences/ on iOS"
+      },
+      {
+        "left": "Expo's document directory on iOS",
+        "right": "Documents/ on iOS"
+      }
+    ],
+    "right_distractors": [
+      "a folder every app on the phone shares"
+    ]
+  },
+  {
+    "id": "ex-f1g3f5b4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A planner keeps an identifier in no_backup/ that the server uses to recognise this device. A person restores the planner onto a new phone. What happens to it, and why is that what the app wants?",
+    "choices": [
+      {
+        "text": "The restore fails until it is deleted by hand",
+        "correct": false,
+        "why": "Nothing fails; the folder is skipped."
+      },
+      {
+        "text": "It is restored, so the server sees the same device as before",
+        "correct": false,
+        "why": "no_backup/ is left out of backup, which is the point of putting it there."
+      },
+      {
+        "text": "It is restored and then rewritten on the first sync",
+        "correct": false,
+        "why": "It never reaches the backup, so there is nothing to restore."
+      },
+      {
+        "text": "It stays behind; the new phone makes its own",
+        "correct": true,
+        "why": "Right. Two phones sharing one device identifier would look like one device to the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5mcxxfs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these belongs in key-value storage such as DataStore, UserDefaults or MMKV?",
+    "choices": [
+      {
+        "text": "Every study session the person has added",
+        "correct": false,
+        "why": "A list that grows is read whole on every launch there; it belongs in a database."
+      },
+      {
+        "text": "Whether the week starts on Monday or Sunday",
+        "correct": true,
+        "why": "Right. A small setting read at start-up is what these stores are for."
+      },
+      {
+        "text": "The password the person signs in with",
+        "correct": false,
+        "why": "A secret goes in the keystore or the keychain, never in a plain store."
+      },
+      {
+        "text": "A PDF of the course notes, encoded in base64",
+        "correct": false,
+        "why": "A large blob there is read on every launch and inflates the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-x62ghsve",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put in order the steps of a write that a crash cannot tear.",
+    "items": [
+      "write the whole new content to a temporary file beside the real one",
+      "flush the temporary file to the disk",
+      "rename the temporary file over the real one",
+      "read the real file and find either the old content or the new"
+    ]
+  },
+  {
+    "id": "ex-3zs7e7t5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A settings file is rewritten in place, and the phone's battery dies halfway through. What does the next launch find, and why does the rename approach avoid it?",
+    "choices": [
+      {
+        "text": "The old file, because the system undoes unfinished writes",
+        "correct": false,
+        "why": "A plain write is not undone; that is the reason for the rename."
+      },
+      {
+        "text": "Half a file; a rename replaces the whole file in one step",
+        "correct": true,
+        "why": "Right. The reader sees the old file or the new one, never a mixture."
+      },
+      {
+        "text": "The new file, because writes finish when power returns",
+        "correct": false,
+        "why": "Nothing finishes a write after the power is gone."
+      },
+      {
+        "text": "An empty file, which the app reads as default settings",
+        "correct": false,
+        "why": "It may be empty or cut anywhere; the point is that it is torn."
+      }
+    ]
+  },
+  {
+    "id": "ex-5kahpgvt",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each local database to what it is.",
+    "pairs": [
+      {
+        "left": "Room",
+        "right": "an Android library that generates SQLite code from annotated Kotlin"
+      },
+      {
+        "left": "SwiftData",
+        "right": "Apple's framework that persists Swift classes marked @Model"
+      },
+      {
+        "left": "Realm",
+        "right": "an object database with its own storage engine, not SQLite"
+      },
+      {
+        "left": "SQLite",
+        "right": "the embedded SQL engine both platforms ship"
+      }
+    ],
+    "right_distractors": [
+      "a server the phone connects to over the network"
+    ]
+  },
+  {
+    "id": "ex-e41rw1c9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "EXPLAIN QUERY PLAN for the week's sessions of one course prints SCAN sessions. What does adding an index on sessions(course, date) change?",
+    "choices": [
+      {
+        "text": "Nothing until the database is vacuumed",
+        "correct": false,
+        "why": "The planner uses a new index at once."
+      },
+      {
+        "text": "The sessions table is copied into the index",
+        "correct": false,
+        "why": "The index holds the two columns and a pointer to each row."
+      },
+      {
+        "text": "The query returns the rows in a different order",
+        "correct": false,
+        "why": "An index changes how rows are found, not what the query returns."
+      },
+      {
+        "text": "A SEARCH through the index",
+        "correct": true,
+        "why": "Right. The plan names the index instead of reading every row."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ew638hw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Inserting a thousand sessions one statement at a time is slow, and wrapping them in one transaction makes it fast. Why?",
+    "choices": [
+      {
+        "text": "One wait for the disk instead of a thousand",
+        "correct": true,
+        "why": "Right. The wait for the disk is paid once instead of a thousand times."
+      },
+      {
+        "text": "SQLite skips the checks inside a transaction",
+        "correct": false,
+        "why": "Constraints are checked either way."
+      },
+      {
+        "text": "The rows go to memory and are lost if the app crashes",
+        "correct": false,
+        "why": "A committed transaction is as durable as a single statement."
+      },
+      {
+        "text": "A transaction compresses the rows before writing them",
+        "correct": false,
+        "why": "Nothing is compressed."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5d476jd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "SQLite's write-ahead log is turned on with PRAGMA journal_mode = ___.",
+    "blanks": [
+      {
+        "accept": [
+          "WAL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1xm6a5ka",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the planner make a session's id on the device instead of using AUTOINCREMENT?",
+    "choices": [
+      {
+        "text": "AUTOINCREMENT is not available in SQLite on phones",
+        "correct": false,
+        "why": "It exists; it is the wrong tool for rows two devices create."
+      },
+      {
+        "text": "UUIDs are shorter and save space",
+        "correct": false,
+        "why": "They are longer; the gain is that they are unique without asking anyone."
+      },
+      {
+        "text": "Offline devices would each make the same numbers",
+        "correct": true,
+        "why": "Right. A random UUID made on the device collides with nobody's."
+      },
+      {
+        "text": "The id must be secret",
+        "correct": false,
+        "why": "An id is not a secret; it is an address."
+      }
+    ]
+  },
+  {
+    "id": "ex-1c6k3rkg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The planner stores each course's minutes for the week on the course row, so the list screen needs no SUM. What must every write of a session do now?",
+    "choices": [
+      {
+        "text": "Update the course's total in the same transaction",
+        "correct": true,
+        "why": "Right. Otherwise a crash between the two writes leaves them disagreeing."
+      },
+      {
+        "text": "Send the new total to the server first",
+        "correct": false,
+        "why": "The server is not involved in keeping a local copy right."
+      },
+      {
+        "text": "Nothing; the list recomputes the totals when it opens",
+        "correct": false,
+        "why": "Then the stored total is pointless; the list reads it rather than computing it."
+      },
+      {
+        "text": "Lock the course table until the week ends",
+        "correct": false,
+        "why": "Nothing needs to be locked beyond the transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-2tx7ph6c",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are reasons a phone holds less than the server does? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the device keeps one person's data, not everybody's",
+        "correct": true,
+        "why": "A device is one account's."
+      },
+      {
+        "text": "old sessions can be fetched on demand rather than kept",
+        "correct": true,
+        "why": "A window of time keeps it small."
+      },
+      {
+        "text": "SQLite on a phone is limited to one table",
+        "why": "SQLite on a phone has as many tables as anywhere."
+      },
+      {
+        "text": "the server refuses to send more than a week",
+        "why": "Nothing refuses; it is a choice the app makes."
+      }
+    ]
+  },
+  {
+    "id": "ex-7m7x4yd3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A phone runs version 1 of the planner's schema, and the person installs the update with version 4. What must the migration code do?",
+    "choices": [
+      {
+        "text": "Delete the database and download it again",
+        "correct": false,
+        "why": "That loses every change not yet synced."
+      },
+      {
+        "text": "Run step 4, which describes the final shape",
+        "correct": false,
+        "why": "Step 4 assumes version 3; on a version 1 database it fails or does the wrong thing."
+      },
+      {
+        "text": "Run steps 2, 3 and 4 in order, from user_version 1",
+        "correct": true,
+        "why": "Right. Each step takes the database from one version to the next."
+      },
+      {
+        "text": "Refuse to open until the person installs versions 2 and 3",
+        "correct": false,
+        "why": "Nobody can install old versions in order; the app has to take every path."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8seyz0y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A migration step adds a column, then fails while copying data, and it ran inside one transaction. What is on the disk afterwards?",
+    "choices": [
+      {
+        "text": "The new column and half the copied data",
+        "correct": false,
+        "why": "That is what happens without the transaction."
+      },
+      {
+        "text": "The database as it was before the step, at the old user_version",
+        "correct": true,
+        "why": "Right. The rollback undoes the column too, and the next launch can try again."
+      },
+      {
+        "text": "An empty database, because SQLite discards a file whose migration failed",
+        "correct": false,
+        "why": "Nothing is discarded; the rollback restores what was there."
+      },
+      {
+        "text": "The new column with no data, and user_version raised",
+        "correct": false,
+        "why": "The version is raised inside the same transaction, so it is undone too."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9et5cw7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why is Room's fallbackToDestructiveMigration dangerous for an offline-first app in particular?",
+    "choices": [
+      {
+        "text": "It makes every query slower",
+        "correct": false,
+        "why": "It changes nothing about speed."
+      },
+      {
+        "text": "Google Play rejects apps that use it",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "It runs on the main thread",
+        "correct": false,
+        "why": "Where it runs is not the danger; what it deletes is."
+      },
+      {
+        "text": "The unsynced changes go with it",
+        "correct": true,
+        "why": "Right. Data the server holds comes back; unsynced writes do not."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcwgqq60",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Match each platform to the way it declares a schema's version.",
+    "pairs": [
+      {
+        "left": "Room",
+        "right": "version in @Database, with Migration objects"
+      },
+      {
+        "left": "SwiftData",
+        "right": "VersionedSchema types and a SchemaMigrationPlan"
+      },
+      {
+        "left": "Realm",
+        "right": "schemaVersion in the configuration"
+      },
+      {
+        "left": "plain SQLite",
+        "right": "PRAGMA user_version"
+      }
+    ],
+    "right_distractors": [
+      "the app's version name in the store"
+    ]
+  },
+  {
+    "id": "ex-y5ynzy2n",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A planner's schema reached version 6. How many migration paths must its tests cover, one from each older version a phone could still be on (1 to 5)?",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-y46va94b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Why does the course run every example in Node rather than on Android or iOS?",
+    "choices": [
+      {
+        "text": "Node is faster than a phone",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Phones cannot run SQLite",
+        "correct": false,
+        "why": "Both platforms ship it."
+      },
+      {
+        "text": "All three share the problems",
+        "correct": true,
+        "why": "Right. The course comes after the fork, so it shows the ideas in a form all three can run."
+      },
+      {
+        "text": "The stores forbid offline storage",
+        "correct": false,
+        "why": "They forbid nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzwsyw94",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Node program saved in ~/notes imports better-sqlite3, which is installed in ~/planner. What happens?",
+    "choices": [
+      {
+        "text": "ERR_MODULE_NOT_FOUND",
+        "correct": true,
+        "why": "Right. ~/planner is neither beside ~/notes nor above it."
+      },
+      {
+        "text": "Node finds it, because packages are installed for the whole user",
+        "correct": false,
+        "why": "npm install puts packages in the folder's node_modules, not the user's."
+      },
+      {
+        "text": "A warning about the module type, and then it runs",
+        "correct": false,
+        "why": "That warning is about package.json's type line, not a missing package."
+      },
+      {
+        "text": "npm downloads it on the fly",
+        "correct": false,
+        "why": "Node does not call npm."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntv0mcxc",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Put in order what a well-written migration of the planner does when the app starts.",
+    "items": [
+      "read PRAGMA user_version",
+      "open a transaction",
+      "run every step above that version, in order",
+      "set user_version to the newest version",
+      "commit, and only then show the first screen"
+    ]
+  },
+  {
+    "id": "ex-ptcydp1y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A list of a person's 2,000 sessions is kept in UserDefaults as one array. What does the lesson on key-value storage say goes wrong?",
+    "choices": [
+      {
+        "text": "UserDefaults refuses arrays",
+        "correct": false,
+        "why": "It accepts them; the problem is size and access."
+      },
+      {
+        "text": "The array is lost on every update of the app",
+        "correct": false,
+        "why": "It survives updates; it is still the wrong place."
+      },
+      {
+        "text": "The sessions become visible to other apps",
+        "correct": false,
+        "why": "UserDefaults is inside the sandbox."
+      },
+      {
+        "text": "Every change rewrites the whole list",
+        "correct": true,
+        "why": "Right. A database reads and writes one row."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm24dw7m",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these change when the planner's data moves from memory into SQLite on the device? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the sessions survive the app being closed",
+        "correct": true,
+        "why": "That is what being on the disk means."
+      },
+      {
+        "text": "the screen can ask for one week without loading every session",
+        "correct": true,
+        "why": "A query reads what it asks for."
+      },
+      {
+        "text": "a change to the shape of the data now needs a migration",
+        "correct": true,
+        "why": "The old shape is on the disk of every phone."
+      },
+      {
+        "text": "the server no longer has to keep the data",
+        "why": "The device holds a copy of the person's data; the server still keeps it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qz1b508c",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A phone's screen refreshes 120 times a second. How many milliseconds does the app have to produce each frame? Answer to one decimal place.",
+    "value": 8.3,
+    "tolerance": 0.05,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-watmr0mj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A query that takes 300 ms runs on the main thread while the person scrolls the week. What do they see?",
+    "choices": [
+      {
+        "text": "Nothing, because SQLite answers from memory",
+        "correct": false,
+        "why": "300 ms is the measured time; where the data came from does not change it."
+      },
+      {
+        "text": "The list freezes for about eighteen frames at 60 Hz",
+        "correct": true,
+        "why": "Right. Nothing is drawn while the thread waits on the query."
+      },
+      {
+        "text": "An Application Not Responding dialog at once",
+        "correct": false,
+        "why": "Android waits five seconds of unhandled input before that."
+      },
+      {
+        "text": "The query is moved to another thread by the system",
+        "correct": false,
+        "why": "The system moves nothing; the app chooses where it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbee7qxe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "better-sqlite3 is synchronous. In Node, a timer is due during a long query. When does it fire?",
+    "choices": [
+      {
+        "text": "On time, because timers run on their own thread",
+        "correct": false,
+        "why": "Timers run on the event loop, the same thread as the query."
+      },
+      {
+        "text": "After the query returns, late",
+        "correct": true,
+        "why": "Right. The event loop cannot run the timer while the query holds it."
+      },
+      {
+        "text": "Never; the timer is cancelled",
+        "correct": false,
+        "why": "It is delayed, not cancelled."
+      },
+      {
+        "text": "Halfway through, pausing the query",
+        "correct": false,
+        "why": "A synchronous call is not paused for a timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1zw26tt",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each platform to how it keeps a database read off the main thread.",
+    "pairs": [
+      {
+        "left": "Room",
+        "right": "a suspend function or a Flow"
+      },
+      {
+        "left": "SwiftData",
+        "right": "a ModelActor with its own context"
+      },
+      {
+        "left": "expo-sqlite",
+        "right": "its asynchronous API, awaited from JavaScript"
+      },
+      {
+        "left": "Node",
+        "right": "a worker thread"
+      }
+    ],
+    "right_distractors": [
+      "a longer timeout on the main thread"
+    ]
+  },
+  {
+    "id": "ex-fkcx88gx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The planner pages a long history with LIMIT 20 OFFSET 2000. Why does keyset paging read less?",
+    "choices": [
+      {
+        "text": "OFFSET returns the wrong rows after an insert",
+        "correct": false,
+        "why": "That is a real problem too, but it is not about how much is read."
+      },
+      {
+        "text": "Keyset paging caches the previous page",
+        "correct": false,
+        "why": "It caches nothing; it starts from a value."
+      },
+      {
+        "text": "SQLite limits OFFSET to 1,000",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "OFFSET walks past every skipped row",
+        "correct": true,
+        "why": "Right. The cost of OFFSET grows with the page number."
+      }
+    ]
+  },
+  {
+    "id": "ex-b63ery9p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "In an offline-first planner, where does the week screen read its sessions from?",
+    "choices": [
+      {
+        "text": "From the local database, always",
+        "correct": true,
+        "why": "Right. The network only changes what is in the database."
+      },
+      {
+        "text": "From the server, falling back to the database when offline",
+        "correct": false,
+        "why": "That is online-first with a cache; the two disagree at the worst moment."
+      },
+      {
+        "text": "From whichever answered last",
+        "correct": false,
+        "why": "Then the screen depends on timing, which is the bug."
+      },
+      {
+        "text": "From memory, filled at start-up from the server",
+        "correct": false,
+        "why": "That loses everything on the next start offline."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3ksns3d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A session is added on a plane. What does the screen show at once, in an offline-first planner?",
+    "choices": [
+      {
+        "text": "A spinner until the network returns",
+        "correct": false,
+        "why": "Nothing waits on the network; the write is local."
+      },
+      {
+        "text": "An error asking the person to try later",
+        "correct": false,
+        "why": "The write succeeded locally; there is nothing to retry by hand."
+      },
+      {
+        "text": "The session, with a mark saying it has not reached the server",
+        "correct": true,
+        "why": "Right. The write is real now; the mark tells the truth about sync."
+      },
+      {
+        "text": "The session, with no mark, as if it were synced",
+        "correct": false,
+        "why": "Hiding the state makes the person trust what the server has not got."
+      }
+    ]
+  },
+  {
+    "id": "ex-csdw1ce6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A session's change is accepted locally and, an hour later, the server refuses it as invalid. What does the lesson say the planner owes the person?",
+    "choices": [
+      {
+        "text": "Mark it failed, and say why, on the session",
+        "correct": true,
+        "why": "Right. The error arrives after the fact, so it is shown where the change is."
+      },
+      {
+        "text": "Retry it until the server accepts",
+        "correct": false,
+        "why": "A refusal for invalid data is not fixed by repeating it."
+      },
+      {
+        "text": "Nothing: undo the change silently, since it was invalid",
+        "correct": false,
+        "why": "A change that disappears without a word is the worst outcome."
+      },
+      {
+        "text": "Delete the session from the device",
+        "correct": false,
+        "why": "That destroys what the person typed."
+      }
+    ]
+  },
+  {
+    "id": "ex-32prp1hn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why is the outbox row written in the same transaction as the change it describes?",
+    "choices": [
+      {
+        "text": "It makes the upload faster",
+        "correct": false,
+        "why": "Speed of the upload has nothing to do with it."
+      },
+      {
+        "text": "SQLite allows one write per transaction",
+        "correct": false,
+        "why": "A transaction holds as many writes as it needs."
+      },
+      {
+        "text": "A crash could separate them",
+        "correct": true,
+        "why": "Right. One transaction makes both happen or neither."
+      },
+      {
+        "text": "The server reads the transaction log",
+        "correct": false,
+        "why": "The server never sees the device's database."
+      }
+    ]
+  },
+  {
+    "id": "ex-47jghf4q",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put in order what the drain does with the outbox.",
+    "items": [
+      "take the oldest operation",
+      "send it to the server",
+      "on success, delete it from the outbox",
+      "take the next one, or stop at the first failure"
+    ]
+  },
+  {
+    "id": "ex-0mcf4pjs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The outbox holds create session s9, then update s9 minutes to 40, then delete s9, and none has been sent. What does coalescing send?",
+    "choices": [
+      {
+        "text": "A create with 40 minutes",
+        "correct": false,
+        "why": "The delete came last; the session should not exist."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "Right. A delete cancels a create the server never saw, and everything between."
+      },
+      {
+        "text": "A delete of s9",
+        "correct": false,
+        "why": "The server never heard of s9, so there is nothing to delete."
+      },
+      {
+        "text": "The three, in order",
+        "correct": false,
+        "why": "That works, but coalescing exists to avoid it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttdqkzxv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "One operation in the outbox is refused with 400 every time. The drain stops at the first failure. What happens, and what does the lesson do about it?",
+    "choices": [
+      {
+        "text": "It clears itself after an hour",
+        "correct": false,
+        "why": "A 400 does not change with time."
+      },
+      {
+        "text": "The server accepts it on the fifth try",
+        "correct": false,
+        "why": "A refusal for the content is the same on every try."
+      },
+      {
+        "text": "The drain skips it and the order of later operations does not matter",
+        "correct": false,
+        "why": "Order matters when operations depend on each other, which is why skipping is a decision."
+      },
+      {
+        "text": "The queue waits behind it until it is set aside",
+        "correct": true,
+        "why": "Right. A poison operation blocks the queue until it is taken out of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5h1ke15q",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these answers should the planner retry? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a connection that timed out",
+        "correct": true,
+        "why": "The network failed, which says nothing about the server."
+      },
+      {
+        "text": "503 Service Unavailable",
+        "correct": true,
+        "why": "The server says it cannot answer now."
+      },
+      {
+        "text": "429 Too Many Requests",
+        "correct": true,
+        "why": "Later, and as slowly as the server asks."
+      },
+      {
+        "text": "400 Bad Request",
+        "why": "The request is wrong; sending it again sends the same mistake."
+      },
+      {
+        "text": "403 Forbidden",
+        "why": "Being refused permission does not change by repeating."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg6j55bp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the planner add random jitter to its exponential backoff?",
+    "choices": [
+      {
+        "text": "To make the retries faster on average",
+        "correct": false,
+        "why": "Full jitter makes the average wait shorter, but that is not why it exists."
+      },
+      {
+        "text": "Because servers refuse requests at exact intervals",
+        "correct": false,
+        "why": "No server does that."
+      },
+      {
+        "text": "So the phones that failed together do not all retry together",
+        "correct": true,
+        "why": "Right. Without it, an outage ends with every phone arriving in the same second."
+      },
+      {
+        "text": "To hide the app's traffic from the network",
+        "correct": false,
+        "why": "It hides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t7gd536",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A backoff starts at 1 second and doubles each attempt, capped at 60 seconds. What is the ceiling of the wait before the eighth attempt (after seven failures), in seconds?",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-ntrde9kz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The server answers 429 with Retry-After: 120. The planner's own backoff says 4 seconds. When does it try again?",
+    "choices": [
+      {
+        "text": "In two minutes",
+        "correct": true,
+        "why": "Right. The server knows its load; the client does not."
+      },
+      {
+        "text": "In 124 seconds, the two added",
+        "correct": false,
+        "why": "Retry-After is the wait, not an extra on top of one."
+      },
+      {
+        "text": "In 4 seconds; the client's schedule decides",
+        "correct": false,
+        "why": "The server has said when it can take more; ignoring it earns another 429."
+      },
+      {
+        "text": "Not at all",
+        "correct": false,
+        "why": "429 is temporary by definition."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpp5xkqg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The planner sends POST /sessions, the server saves the session, and the response is lost on the way back. The planner retries. Without an idempotency key, what does the server hold?",
+    "choices": [
+      {
+        "text": "One session and an error",
+        "correct": false,
+        "why": "Nothing refused the second."
+      },
+      {
+        "text": "One session, since the server notices the repeat",
+        "correct": false,
+        "why": "Nothing lets it notice; that is what the key is for."
+      },
+      {
+        "text": "None, because the first request was lost",
+        "correct": false,
+        "why": "The request arrived; the response was lost."
+      },
+      {
+        "text": "Two sessions",
+        "correct": true,
+        "why": "Right. From the server's side the retry is a new request."
+      }
+    ]
+  },
+  {
+    "id": "ex-nk6j0jdn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Where does the planner make an operation's idempotency key, and when?",
+    "choices": [
+      {
+        "text": "On the server, when the request arrives",
+        "correct": false,
+        "why": "The server cannot tell a retry from a new request without a key the client sent."
+      },
+      {
+        "text": "On the device, once per operation",
+        "correct": true,
+        "why": "Right. Every attempt of that operation carries the same key."
+      },
+      {
+        "text": "On the device, fresh for every attempt",
+        "correct": false,
+        "why": "A new key per attempt makes every retry look new."
+      },
+      {
+        "text": "From the session's date and minutes",
+        "correct": false,
+        "why": "Two real sessions can share a date and a length."
+      }
+    ]
+  },
+  {
+    "id": "ex-1x1wtz87",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A request arrives with a key the server has stored, but its body is different from the first. What should the server do?",
+    "choices": [
+      {
+        "text": "Return the stored response, as for any repeat",
+        "correct": false,
+        "why": "The stored response answers a different request; returning it hides a client bug."
+      },
+      {
+        "text": "Refuse it",
+        "correct": true,
+        "why": "Right. A key names one operation; a different body is a misuse."
+      },
+      {
+        "text": "Apply the new body and overwrite the stored response",
+        "correct": false,
+        "why": "Then the key no longer protects anything."
+      },
+      {
+        "text": "Apply both and return both",
+        "correct": false,
+        "why": "That is the duplicate the key exists to prevent."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfpw37m1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why is PUT /sessions/{id}, with an id the device made, idempotent where POST /sessions is not?",
+    "choices": [
+      {
+        "text": "PUT requests are never retried by clients",
+        "correct": false,
+        "why": "They are retried; repeating one is harmless."
+      },
+      {
+        "text": "PUT is encrypted and POST is not",
+        "correct": false,
+        "why": "Both travel the same way."
+      },
+      {
+        "text": "Servers store PUT responses for 24 hours",
+        "correct": false,
+        "why": "That is what an idempotency key asks of a server; PUT needs nothing stored."
+      },
+      {
+        "text": "It states the result, not an action",
+        "correct": true,
+        "why": "Right. The second PUT leaves the same row; the second POST makes a new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zjx24pf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The header a client sends so the server can recognise a retried request is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Idempotency-Key"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-my3g3dd4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Two requests with the same idempotency key arrive at the same moment, before the first has finished. What does the server answer the second?",
+    "choices": [
+      {
+        "text": "409 Conflict, to be retried later",
+        "correct": true,
+        "why": "Right. The second must neither run nor pretend to have an answer."
+      },
+      {
+        "text": "The stored response, which does not exist yet",
+        "correct": false,
+        "why": "There is nothing stored to return while the first is still running."
+      },
+      {
+        "text": "It runs both, since neither has a stored response",
+        "correct": false,
+        "why": "That is the double charge the key was meant to stop."
+      },
+      {
+        "text": "200 with an empty body",
+        "correct": false,
+        "why": "A success that did nothing would lie to the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jzng6nt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the planner pull changes with a cursor the server issued rather than with the phone's last sync time?",
+    "choices": [
+      {
+        "text": "A cursor is shorter to send",
+        "correct": false,
+        "why": "Its size is not the point."
+      },
+      {
+        "text": "Servers cannot compare dates",
+        "correct": false,
+        "why": "They can; the date the phone sends is the problem."
+      },
+      {
+        "text": "The phone's clock lies",
+        "correct": true,
+        "why": "Right. A clock behind by minutes asks for the wrong changes; a sequence number does not."
+      },
+      {
+        "text": "The cursor encrypts the request",
+        "correct": false,
+        "why": "It encrypts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-xznrz81b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A phone's clock is five minutes behind. It asks for changes updated after its last sync, by its own clock. What goes wrong?",
+    "choices": [
+      {
+        "text": "It fetches some changes twice",
+        "correct": true,
+        "why": "Right. A clock behind asks from too early and repeats; a clock ahead would skip changes for good."
+      },
+      {
+        "text": "It misses every change made in those five minutes",
+        "correct": false,
+        "why": "Behind means it asks from too early, so it misses nothing; it repeats some."
+      },
+      {
+        "text": "Nothing; the server converts the time zone",
+        "correct": false,
+        "why": "A wrong clock is not a time zone; there is nothing to convert."
+      },
+      {
+        "text": "The server refuses the request",
+        "correct": false,
+        "why": "It accepts any time it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vy7hsr9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A session is deleted on the tablet. How does the phone learn of it through delta sync?",
+    "choices": [
+      {
+        "text": "The tablet sends the delete straight to the phone",
+        "correct": false,
+        "why": "The devices talk to the server, not to each other."
+      },
+      {
+        "text": "It notices the session is missing from the delta",
+        "correct": false,
+        "why": "A delta lists what changed; everything unchanged is missing from it too."
+      },
+      {
+        "text": "Through a tombstone",
+        "correct": true,
+        "why": "Right. A deleted row cannot be sent; a record that it was deleted can."
+      },
+      {
+        "text": "It doesn't until the next full resync",
+        "correct": false,
+        "why": "Tombstones exist so it does not have to wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-198axqer",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put in order one pull of delta sync.",
+    "items": [
+      "send the last cursor the server gave",
+      "receive the changes after it, and a new cursor",
+      "apply the changes and store the new cursor in one transaction",
+      "ask again if the server said there is more"
+    ]
+  },
+  {
+    "id": "ex-6gr73qbq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Why are the changes and the new cursor stored in the same transaction?",
+    "choices": [
+      {
+        "text": "Because a cursor is a row of the sessions table",
+        "correct": false,
+        "why": "It is kept apart; the transaction is what ties them."
+      },
+      {
+        "text": "A crash could leave one without the other",
+        "correct": true,
+        "why": "Right. The next pull would start after the lost changes and never fetch them."
+      },
+      {
+        "text": "To make the pull use fewer requests",
+        "correct": false,
+        "why": "It changes nothing about requests."
+      },
+      {
+        "text": "The server requires it",
+        "correct": false,
+        "why": "The server cannot see the device's transactions."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxy6g9yn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The server keeps tombstones for 30 days. A phone that has been off for 45 days asks for changes after its cursor. What should the server answer?",
+    "choices": [
+      {
+        "text": "The changes it still has",
+        "correct": false,
+        "why": "The deletes it no longer has would be missing, and the phone would keep them for good."
+      },
+      {
+        "text": "An empty list with a new cursor",
+        "correct": false,
+        "why": "That would tell the phone nothing changed, which is false."
+      },
+      {
+        "text": "500, because the cursor is unknown",
+        "correct": false,
+        "why": "It is not a server fault; it is a known, expected case."
+      },
+      {
+        "text": "410 Gone",
+        "correct": true,
+        "why": "Right. The cursor is older than what the server can answer for."
+      }
+    ]
+  },
+  {
+    "id": "ex-yddsnmya",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "During a full resync, the person has three changes in the outbox that the server has not seen. What does the lesson do with them?",
+    "choices": [
+      {
+        "text": "Deletes them, since the snapshot replaces the database",
+        "correct": false,
+        "why": "The snapshot replaces what the server has, not what the person did."
+      },
+      {
+        "text": "Sends them after the person confirms each one",
+        "correct": false,
+        "why": "They were already confirmed when she made them."
+      },
+      {
+        "text": "Keeps them, and replays them on the new database after the swap",
+        "correct": true,
+        "why": "Right. The outbox survives the resync and is drained as usual."
+      },
+      {
+        "text": "Sends them before downloading, and gives up if any fails",
+        "correct": false,
+        "why": "Sending first is reasonable; giving up on a failure loses the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-acrkdeg7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why is the snapshot downloaded into a new database file and then renamed over the old one?",
+    "choices": [
+      {
+        "text": "No reader sees half of each",
+        "correct": true,
+        "why": "Right. A download that fails leaves the old file untouched."
+      },
+      {
+        "text": "SQLite cannot hold two copies of a table",
+        "correct": false,
+        "why": "It can; the reason is what a reader sees during the download."
+      },
+      {
+        "text": "Renaming is faster than writing",
+        "correct": false,
+        "why": "Speed is a side effect, not the reason."
+      },
+      {
+        "text": "The old file is kept as a backup for ever",
+        "correct": false,
+        "why": "It is replaced by the rename."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gen90np",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are reasons to throw the local copy away and resync from scratch? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the cursor is older than the tombstones the server keeps",
+        "correct": true,
+        "why": "The deltas can no longer be trusted to be complete."
+      },
+      {
+        "text": "a different person signs in on the device",
+        "correct": true,
+        "why": "The local copy is somebody else's data."
+      },
+      {
+        "text": "the database file fails its integrity check",
+        "correct": true,
+        "why": "A corrupt copy cannot be patched by deltas."
+      },
+      {
+        "text": "the phone was offline for an hour",
+        "why": "An hour is what deltas are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyjg0cgg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The phone sets a session to 40 minutes and the tablet sets it to 25, both offline. The tablet syncs last. Under last write wins, what does the server keep?",
+    "choices": [
+      {
+        "text": "40, because it was made first",
+        "correct": false,
+        "why": "Under last write wins, first loses."
+      },
+      {
+        "text": "Both, flagged as a conflict",
+        "correct": false,
+        "why": "Last write wins never flags anything; that is its weakness."
+      },
+      {
+        "text": "The average, 32.5",
+        "correct": false,
+        "why": "Nothing averages."
+      },
+      {
+        "text": "The later timestamp",
+        "correct": true,
+        "why": "Right. And the 40 disappears with no trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-rspbra8h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Last write wins compares the devices' own timestamps. The phone's clock is an hour fast. What happens to the tablet's edits made in that hour?",
+    "choices": [
+      {
+        "text": "They win, because the server corrects clocks",
+        "correct": false,
+        "why": "Nothing corrects the stamps the phone wrote."
+      },
+      {
+        "text": "The phone's older edits beat them, because they look newer",
+        "correct": true,
+        "why": "Right. A fast clock wins every comparison it should lose."
+      },
+      {
+        "text": "Both are kept",
+        "correct": false,
+        "why": "Last write wins keeps one."
+      },
+      {
+        "text": "The sync fails with a clock error",
+        "correct": false,
+        "why": "It does not fail; it chooses wrongly and says nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vfftqep",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "For which of these is last write wins a sound choice?",
+    "choices": [
+      {
+        "text": "A count of sessions done, incremented on two devices",
+        "correct": false,
+        "why": "Two increments must both count; one would be thrown away."
+      },
+      {
+        "text": "The person's choice of light or dark theme",
+        "correct": true,
+        "why": "Right. The latest choice is the one they want, and losing the older one costs nothing."
+      },
+      {
+        "text": "A shared list of courses that two people add to",
+        "correct": false,
+        "why": "One person's additions would replace the other's."
+      },
+      {
+        "text": "A note two people edit at once",
+        "correct": false,
+        "why": "One person's text would vanish."
+      }
+    ]
+  },
+  {
+    "id": "ex-1e0dbrfp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The planner sends PUT with version 3, the version it read, and the server's row is at version 4. What does the server answer?",
+    "choices": [
+      {
+        "text": "200, and the row becomes version 5",
+        "correct": false,
+        "why": "That would overwrite a change the phone never saw."
+      },
+      {
+        "text": "412 with the row deleted",
+        "correct": false,
+        "why": "Nothing is deleted."
+      },
+      {
+        "text": "404, because version 3 no longer exists",
+        "correct": false,
+        "why": "The row exists; the version is out of date."
+      },
+      {
+        "text": "409 Conflict, because somebody changed the row since it was read",
+        "correct": true,
+        "why": "Right. The client must read version 4 and decide again."
+      }
+    ]
+  },
+  {
+    "id": "ex-afd7hhrk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Vector clocks {phone: 2, tablet: 1} and {phone: 1, tablet: 2}. What does comparing them say?",
+    "choices": [
+      {
+        "text": "They are concurrent: each has seen something the other has not",
+        "correct": true,
+        "why": "Right. Neither is greater in every entry, so neither happened after the other."
+      },
+      {
+        "text": "They are equal, since both sum to 3",
+        "correct": false,
+        "why": "Sums are not compared; each entry is."
+      },
+      {
+        "text": "The first is newer, because it is listed first",
+        "correct": false,
+        "why": "Order in the list means nothing."
+      },
+      {
+        "text": "The second is newer, because the tablet synced last",
+        "correct": false,
+        "why": "When it synced is not in the clock; what each device had seen is."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9g4a2my",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Base: 30 minutes, not done. The phone sets minutes to 45. The tablet marks it done. A field-by-field three-way merge gives what?",
+    "choices": [
+      {
+        "text": "45 minutes, not done; the phone wrote last",
+        "correct": false,
+        "why": "That is last write wins on the whole row."
+      },
+      {
+        "text": "30 minutes, done; the base wins where they disagree",
+        "correct": false,
+        "why": "The base is what both started from, not a winner."
+      },
+      {
+        "text": "45 minutes, done",
+        "correct": true,
+        "why": "Right. Each side changed a different field, so both changes survive."
+      },
+      {
+        "text": "A conflict for the person to settle",
+        "correct": false,
+        "why": "There is no conflict: no field was changed on both sides."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqs5c4hz",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A merge that compares both versions with the version they started from is called a ___-way merge.",
+    "blanks": [
+      {
+        "accept": [
+          "three",
+          "3"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vj9c9aq3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "When does the lesson say the planner should ask the person to settle a conflict?",
+    "choices": [
+      {
+        "text": "When one field changed on both sides",
+        "correct": true,
+        "why": "Right. That is the case where any automatic choice throws away somebody's intent."
+      },
+      {
+        "text": "Never; the server decides",
+        "correct": false,
+        "why": "Some conflicts have no rule that is right, and the person knows which edit they meant."
+      },
+      {
+        "text": "On every sync, so they stay in control",
+        "correct": false,
+        "why": "Asking about what the merge can settle trains people to tap without reading."
+      },
+      {
+        "text": "When the person has been offline for more than a day",
+        "correct": false,
+        "why": "Time offline is not what makes a conflict."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ybqs9kw",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each merge property of a CRDT to what it means.",
+    "pairs": [
+      {
+        "left": "commutative",
+        "right": "merging A into B gives what merging B into A gives"
+      },
+      {
+        "left": "associative",
+        "right": "the grouping of three merges does not matter"
+      },
+      {
+        "left": "idempotent",
+        "right": "merging the same state twice changes nothing"
+      }
+    ],
+    "right_distractors": [
+      "the newest write replaces the others"
+    ]
+  },
+  {
+    "id": "ex-xhvb826s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A G-counter of sessions done holds {phone: 3, tablet: 2}. The phone merges in {phone: 1, tablet: 4}. What is the merged state, and its value?",
+    "choices": [
+      {
+        "text": "{phone: 4, tablet: 6}, value 10",
+        "correct": false,
+        "why": "Adding the entries counts the same increments twice."
+      },
+      {
+        "text": "{phone: 1, tablet: 4}, value 5",
+        "correct": false,
+        "why": "That replaces the local state with the incoming one."
+      },
+      {
+        "text": "{phone: 3, tablet: 4}, value 7",
+        "correct": true,
+        "why": "Right. Merge takes the maximum of each entry; the value is their sum."
+      },
+      {
+        "text": "{phone: 3, tablet: 2}, value 5",
+        "correct": false,
+        "why": "That ignores what the tablet counted."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jqncman",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A G-counter merges {phone: 5, tablet: 1, laptop: 2} with {phone: 2, tablet: 3, laptop: 2}. What is the counter's value after the merge?",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qqs5cj91",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In an OR-set, the phone removes the course Guitar while the tablet, offline, adds Guitar again. After both merge, is Guitar in the set?",
+    "choices": [
+      {
+        "text": "No, removes always beat adds",
+        "correct": false,
+        "why": "That would be a different set, and it would lose the tablet's add."
+      },
+      {
+        "text": "Yes, the add it never saw survives",
+        "correct": true,
+        "why": "Right. The tablet's new add has a tag the phone never removed."
+      },
+      {
+        "text": "It depends on which device merged first",
+        "correct": false,
+        "why": "A CRDT gives the same result in any order."
+      },
+      {
+        "text": "It appears twice",
+        "correct": false,
+        "why": "A set holds an element once."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkbspjp7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "What does a CRDT library such as Yjs or Automerge cost an app, which a plain table of sessions does not?",
+    "choices": [
+      {
+        "text": "A server that runs the merge",
+        "correct": false,
+        "why": "Merges run on each device; that is the point."
+      },
+      {
+        "text": "Licences per device",
+        "correct": false,
+        "why": "Both are open-source libraries."
+      },
+      {
+        "text": "It stops the app from querying the data with SQL",
+        "correct": false,
+        "why": "It changes how the data is kept, but the app can still index what it needs elsewhere."
+      },
+      {
+        "text": "Metadata that keeps growing",
+        "correct": true,
+        "why": "Right. Merging without coordination needs to remember what each side did."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xzbc6qw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Two Yjs documents edit the same map offline. How do they converge?",
+    "choices": [
+      {
+        "text": "The server picks one document and sends it to both",
+        "correct": false,
+        "why": "No document is picked; both edits are merged."
+      },
+      {
+        "text": "The person merges them by hand",
+        "correct": false,
+        "why": "The library merges them."
+      },
+      {
+        "text": "Each applies the other's update",
+        "correct": true,
+        "why": "Right. encodeStateAsUpdate on one side, applyUpdate on the other, in either order."
+      },
+      {
+        "text": "They do not; Yjs needs both to be online",
+        "correct": false,
+        "why": "Offline edits are exactly what it handles."
+      }
+    ]
+  },
+  {
+    "id": "ex-4taxpevf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "What is the shortest repeat interval WorkManager allows for a periodic job, in minutes?",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-brd6kwe4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An iOS planner submits a BGAppRefreshTask request for every hour. What does it get?",
+    "choices": [
+      {
+        "text": "Runs when the system decides",
+        "correct": true,
+        "why": "Right. iOS weighs battery, network and how the person uses the app."
+      },
+      {
+        "text": "A run every hour, on the hour",
+        "correct": false,
+        "why": "The earliest begin date is a floor, not a schedule."
+      },
+      {
+        "text": "A refusal, because refresh tasks are for apps with an active audio session",
+        "correct": false,
+        "why": "Audio is a separate background mode."
+      },
+      {
+        "text": "Unlimited time while the phone is charging",
+        "correct": false,
+        "why": "That is closer to a processing task, and still not unlimited."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6ahw348",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A person force-quits the planner from the iOS app switcher. What happens to its scheduled background refresh?",
+    "choices": [
+      {
+        "text": "It runs as scheduled; force-quitting only closes the screen",
+        "correct": false,
+        "why": "iOS reads a force-quit as the person not wanting the app to run."
+      },
+      {
+        "text": "It runs once to save the data, then stops",
+        "correct": false,
+        "why": "There is no final run."
+      },
+      {
+        "text": "It moves to a background URLSession",
+        "correct": false,
+        "why": "Nothing moves on its own."
+      },
+      {
+        "text": "It does not run until the person opens the app again",
+        "correct": true,
+        "why": "Right. That is why the sync must also run when the app comes to the foreground."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkcd572m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the lesson's sync take a budget and save its cursor as it goes?",
+    "choices": [
+      {
+        "text": "To make each sync faster",
+        "correct": false,
+        "why": "The work is the same; it is split so it survives."
+      },
+      {
+        "text": "So an interrupted run picks up where it stopped",
+        "correct": true,
+        "why": "Right. Work finished before the stop is kept."
+      },
+      {
+        "text": "Because the server allows one request a minute",
+        "correct": false,
+        "why": "The budget is about the device's limits."
+      },
+      {
+        "text": "To save battery by syncing less data",
+        "correct": false,
+        "why": "All the data still syncs, over more runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-djeyfsph",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each mechanism to its platform.",
+    "pairs": [
+      {
+        "left": "WorkManager with a network constraint",
+        "right": "Android"
+      },
+      {
+        "left": "BGTaskScheduler",
+        "right": "iOS"
+      },
+      {
+        "left": "expo-background-task",
+        "right": "React Native with Expo"
+      }
+    ],
+    "right_distractors": [
+      "the browser's service worker"
+    ]
+  },
+  {
+    "id": "ex-kzkty5gn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The planner asks for a course's details with If-None-Match and the ETag it has. The server answers 304. What does the planner do?",
+    "choices": [
+      {
+        "text": "Deletes its copy, which the server says is wrong",
+        "correct": false,
+        "why": "304 says the copy is still right."
+      },
+      {
+        "text": "Keeps its copy and marks it fresh again",
+        "correct": true,
+        "why": "Right. Nothing was sent but the answer; the body it has is current."
+      },
+      {
+        "text": "Downloads it again without the header",
+        "correct": false,
+        "why": "That wastes the request 304 just saved."
+      },
+      {
+        "text": "Shows an error: 304 is a redirect",
+        "correct": false,
+        "why": "It is in the 3xx range, but it means not modified."
+      }
+    ]
+  },
+  {
+    "id": "ex-nbacfg4y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Stale-while-revalidate: the cached week is two hours past its expiry and the person opens it offline. What do they see?",
+    "choices": [
+      {
+        "text": "An empty screen until the network returns",
+        "correct": false,
+        "why": "That throws away a copy that is better than nothing."
+      },
+      {
+        "text": "An error saying the data expired",
+        "correct": false,
+        "why": "Expired means ask again, not refuse to show."
+      },
+      {
+        "text": "The copy, with no sign of its age",
+        "correct": false,
+        "why": "Showing it is right; hiding that it is old is not."
+      },
+      {
+        "text": "The stale copy, marked as old",
+        "correct": true,
+        "why": "Right. Show what is there, and refresh behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-288srgr3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An LRU cache bounded at 50 MB receives a 4 MB picture while holding 48 MB. Put its steps in order.",
+    "items": [
+      "see that 48 + 4 is over 50",
+      "evict the least recently used entries until it fits",
+      "store the new picture",
+      "record it as the most recently used"
+    ]
+  },
+  {
+    "id": "ex-0dqvzyy7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why must the planner never keep the only copy of anything in Library/Caches/ or cache/?",
+    "choices": [
+      {
+        "text": "The system clears them under pressure, without asking",
+        "correct": true,
+        "why": "Right. Whatever is there must be fetchable again."
+      },
+      {
+        "text": "Files there are encrypted with a key the app cannot read",
+        "correct": false,
+        "why": "The app reads them like any of its own."
+      },
+      {
+        "text": "Those folders are readable by other apps",
+        "correct": false,
+        "why": "They are inside the sandbox like the rest."
+      },
+      {
+        "text": "They are not counted in the app's storage",
+        "correct": false,
+        "why": "They are counted; the person sees them in the app's size."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6dhz1m4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the planner store an attachment as a file with its path in a row, rather than as a BLOB in SQLite?",
+    "choices": [
+      {
+        "text": "Files are encrypted and rows are not",
+        "correct": false,
+        "why": "Encryption is a separate decision, lesson 19's."
+      },
+      {
+        "text": "SQLite cannot store binary data",
+        "correct": false,
+        "why": "It can; the question is whether it should."
+      },
+      {
+        "text": "Blobs bloat the database",
+        "correct": true,
+        "why": "Right. The row keeps what the query needs; the bytes stay on the disk."
+      },
+      {
+        "text": "The server can read files but not rows",
+        "correct": false,
+        "why": "The server reads neither; it receives what the app sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qwa6at3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A download stopped at 3 MB of 8. What does the planner send to resume it, and what does a server that supports it answer?",
+    "choices": [
+      {
+        "text": "Range: bytes=3145728-; 206 Partial Content with the rest",
+        "correct": true,
+        "why": "Right. The offset is the size of the part on the disk."
+      },
+      {
+        "text": "The same request again; 200 with the whole file",
+        "correct": false,
+        "why": "That starts over and throws away 3 MB."
+      },
+      {
+        "text": "If-None-Match with the ETag; 304",
+        "correct": false,
+        "why": "That asks whether the whole thing changed, not for a part of it."
+      },
+      {
+        "text": "Content-Length: 5 MB; 201",
+        "correct": false,
+        "why": "That header describes a body the client sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-edxh0ty7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A download into the planner's files fails with ENOSPC halfway. What must the code make sure of before it reports the failure?",
+    "choices": [
+      {
+        "text": "That the row says the attachment is there, so the next launch can find the part",
+        "correct": false,
+        "why": "A row that claims a whole file over half a file is the defect."
+      },
+      {
+        "text": "That it retries at once, since space comes back by itself",
+        "correct": false,
+        "why": "A full disk is not a network blip; retrying at once fails the same way."
+      },
+      {
+        "text": "That no row points at the half-written file as if it were whole",
+        "correct": true,
+        "why": "Right. Write to a temporary name, and record the row only once the file is complete."
+      },
+      {
+        "text": "That the database is deleted to free space",
+        "correct": false,
+        "why": "That destroys the person's data to make room for a download."
+      }
+    ]
+  },
+  {
+    "id": "ex-nechxpcv",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these does a sweep for orphans find? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a file in attachments/ that no row names",
+        "correct": true,
+        "why": "It costs disk and nothing uses it."
+      },
+      {
+        "text": "a row naming a file that is not on the disk",
+        "correct": true,
+        "why": "The screen would show an attachment that cannot open."
+      },
+      {
+        "text": "a session with no attachment",
+        "why": "That is ordinary; most sessions have none."
+      },
+      {
+        "text": "a file in the cache that was used yesterday",
+        "why": "That is the cache working."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjv2n661",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these does encrypting the planner's data at rest protect against?",
+    "choices": [
+      {
+        "text": "Malware running inside the app while it is open",
+        "correct": false,
+        "why": "Code running as the app reads what the app reads."
+      },
+      {
+        "text": "A lost phone, read while locked",
+        "correct": true,
+        "why": "Right. Without the key, what is on the disk is noise."
+      },
+      {
+        "text": "A server that leaks the person's data",
+        "correct": false,
+        "why": "The server is a different copy, with its own protection."
+      },
+      {
+        "text": "The person forgetting their password",
+        "correct": false,
+        "why": "Encryption makes that worse, not better."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5ffwgy5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The planner encrypts two notes with AES-256-GCM, the same key and the same nonce. What has gone wrong?",
+    "choices": [
+      {
+        "text": "Nothing; a nonce is only checked when decrypting",
+        "correct": false,
+        "why": "Reuse breaks the encryption itself, not a check."
+      },
+      {
+        "text": "Decryption fails for the second note",
+        "correct": false,
+        "why": "Both decrypt; that is why the mistake goes unnoticed."
+      },
+      {
+        "text": "The notes become twice as large",
+        "correct": false,
+        "why": "Size does not change."
+      },
+      {
+        "text": "It leaks and allows forgeries",
+        "correct": true,
+        "why": "Right. Each encryption under a key needs a fresh nonce."
+      }
+    ]
+  },
+  {
+    "id": "ex-40eyppzq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A byte of an encrypted note is changed on the disk. What happens when the planner decrypts it with AES-GCM?",
+    "choices": [
+      {
+        "text": "The note comes back with one wrong letter",
+        "correct": false,
+        "why": "GCM does not hand back altered text."
+      },
+      {
+        "text": "It decrypts, and a warning is logged",
+        "correct": false,
+        "why": "There is no partial success."
+      },
+      {
+        "text": "Decryption fails",
+        "correct": true,
+        "why": "Right. Tampering is detected rather than decrypted."
+      },
+      {
+        "text": "The key is rotated",
+        "correct": false,
+        "why": "Nothing rotates on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-crxf34tr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Why does the lesson wrap the data key with a key kept in the Keystore or Keychain, rather than store the data key beside the data?",
+    "choices": [
+      {
+        "text": "A copy would carry its own key",
+        "correct": true,
+        "why": "Right. The disk holds the data key only in wrapped form."
+      },
+      {
+        "text": "A wrapped key encrypts faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "The Keystore requires it",
+        "correct": false,
+        "why": "It requires nothing; it is the safer arrangement."
+      },
+      {
+        "text": "So the server can decrypt the data",
+        "correct": false,
+        "why": "The server never sees either key."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6ty1gjq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What should a biometric unlock of the planner's notes actually do?",
+    "choices": [
+      {
+        "text": "Set a flag in preferences that the notes may be shown",
+        "correct": false,
+        "why": "A flag can be flipped without the finger; the notes are still readable."
+      },
+      {
+        "text": "Send the fingerprint to the server to be checked",
+        "correct": false,
+        "why": "The biometric never leaves the device."
+      },
+      {
+        "text": "Store the fingerprint image in the keychain",
+        "correct": false,
+        "why": "The app never receives the fingerprint."
+      },
+      {
+        "text": "Release a key from the secure hardware that decrypts the notes",
+        "correct": true,
+        "why": "Right. Without the biometric there is no key, so there is nothing to bypass."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzp9n1fv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On iOS, a file protected with the class NSFileProtection___ cannot be read while the device is locked.",
+    "blanks": [
+      {
+        "accept": [
+          "Complete"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2rhrzjdx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The planner's JavaScript bundle contains an API key for a paid service. Who can read it?",
+    "choices": [
+      {
+        "text": "Nobody, since the bundle is minified",
+        "correct": false,
+        "why": "Minifying renames variables; the key stays a plain string."
+      },
+      {
+        "text": "Anybody who installs the app",
+        "correct": true,
+        "why": "Right. A secret shipped to every device is not a secret; a server should hold it."
+      },
+      {
+        "text": "Only someone who breaks the store's encryption",
+        "correct": false,
+        "why": "The installed app is on the person's device, readable to them."
+      },
+      {
+        "text": "Google and Apple, nobody else",
+        "correct": false,
+        "why": "The file is on every phone that installed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tscdnzhz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Where does the planner keep its refresh token, and what does signing out do to it?",
+    "choices": [
+      {
+        "text": "In preferences, and signing out leaves it for the next sign-in",
+        "correct": false,
+        "why": "Preferences are plain files, and a token left behind signs the next person in."
+      },
+      {
+        "text": "In the keystore, wiped at sign-out",
+        "correct": true,
+        "why": "Right. Signing out must leave nothing that signs anybody in."
+      },
+      {
+        "text": "In the database beside the sessions, kept after sign-out",
+        "correct": false,
+        "why": "A token in the database goes into its backups and stays."
+      },
+      {
+        "text": "Nowhere; the password is stored instead",
+        "correct": false,
+        "why": "Storing the password is worse in every way."
+      }
+    ]
+  },
+  {
+    "id": "ex-62z3fv3n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A crash log uploaded by the planner contains the person's e-mail address. Which principle of the last lesson did it break?",
+    "choices": [
+      {
+        "text": "Encryption at rest, because logs are not encrypted",
+        "correct": false,
+        "why": "Encrypting the log would still send the address away."
+      },
+      {
+        "text": "Backup rules, because logs go into the backup",
+        "correct": false,
+        "why": "Where the log is kept is secondary to what it carries."
+      },
+      {
+        "text": "Idempotency, because the log may be uploaded twice",
+        "correct": false,
+        "why": "Duplicates are not the problem; the content is."
+      },
+      {
+        "text": "Keep less: a log has no need of who the person is",
+        "correct": true,
+        "why": "Right. Data that is not collected cannot leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-nbz4x566",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each store requirement to what it is.",
+    "pairs": [
+      {
+        "left": "Data safety",
+        "right": "Google Play's form about what an app collects and shares"
+      },
+      {
+        "left": "App Privacy details",
+        "right": "the labels on an App Store page about the data an app uses"
+      },
+      {
+        "left": "PrivacyInfo.xcprivacy",
+        "right": "Apple's privacy manifest, with the reasons for certain APIs"
+      }
+    ],
+    "right_distractors": [
+      "a file the server sends at sign-in"
+    ]
+  },
+  {
+    "id": "ex-k1sctx42",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A React Native planner opens its database with expo-sqlite. On Android, where does the file end up?",
+    "choices": [
+      {
+        "text": "Inside the app's private storage, where the platform keeps its databases",
+        "correct": true,
+        "why": "Right. The library asks the platform; the file is in the sandbox like a Kotlin app's."
+      },
+      {
+        "text": "In a JavaScript heap kept in memory",
+        "correct": false,
+        "why": "A database in memory would be gone at the next launch."
+      },
+      {
+        "text": "On the SD card",
+        "correct": false,
+        "why": "Shared storage is not where a private database goes."
+      },
+      {
+        "text": "In Expo's servers",
+        "correct": false,
+        "why": "The database is on the device."
+      }
+    ]
+  },
+  {
+    "id": "ex-8p1bgpdf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The week screen loads page 1 of 20 sessions, a new session is inserted at the top, and page 2 is loaded with OFFSET 20. What does the person see?",
+    "choices": [
+      {
+        "text": "Page 2 as it would have been",
+        "correct": false,
+        "why": "Every row moved down by one, so the offset now points one row earlier in the old order."
+      },
+      {
+        "text": "An error, since the table changed",
+        "correct": false,
+        "why": "Nothing errors; the result is quietly wrong."
+      },
+      {
+        "text": "A row it already showed, repeated",
+        "correct": true,
+        "why": "Right. Every row moved down one place, so the last of page 1 comes back; keyset paging, which continues after the last row seen, does not repeat it."
+      },
+      {
+        "text": "The new session twice",
+        "correct": false,
+        "why": "The new session is on page 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-f54c3161",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The planner drains its outbox in the order the operations were made. Why not send them all at once, in parallel?",
+    "choices": [
+      {
+        "text": "An update could arrive before the create it depends on",
+        "correct": true,
+        "why": "Right. Order is part of what the outbox records."
+      },
+      {
+        "text": "It would use more battery",
+        "correct": false,
+        "why": "That may be true and is not the reason."
+      },
+      {
+        "text": "Servers accept one connection per device",
+        "correct": false,
+        "why": "They accept many; the order is the issue."
+      },
+      {
+        "text": "SQLite cannot read the outbox twice",
+        "correct": false,
+        "why": "It can read it as often as it likes."
+      }
+    ]
+  },
+  {
+    "id": "ex-txg6hch7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "For which of these is a CRDT the wrong tool, according to the lesson on CRDT libraries?",
+    "choices": [
+      {
+        "text": "A shared note two people edit offline",
+        "correct": false,
+        "why": "That is the case CRDTs were made for."
+      },
+      {
+        "text": "A counter incremented on several devices",
+        "correct": false,
+        "why": "A G-counter handles exactly that."
+      },
+      {
+        "text": "A booking that must not be given to two people, where somebody has to say no",
+        "correct": true,
+        "why": "Right. A CRDT accepts every concurrent change; a rule that refuses one needs a single authority."
+      },
+      {
+        "text": "A set of course tags added on two devices",
+        "correct": false,
+        "why": "An OR-set handles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ttn001h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of the three kinds of local data is a course the person has chosen to keep for a flight?",
+    "choices": [
+      {
+        "text": "Cache, which the system may clear",
+        "correct": false,
+        "why": "Then it could be gone at the moment the person needs it."
+      },
+      {
+        "text": "Pinned: kept until the person unpins it, out of the reach of eviction",
+        "correct": true,
+        "why": "Right. The person asked for it, so no size limit may evict it."
+      },
+      {
+        "text": "The source of truth",
+        "correct": false,
+        "why": "The server holds the course; the device holds a copy on request."
+      },
+      {
+        "text": "Temporary files",
+        "correct": false,
+        "why": "tmp/ is cleared when the app is not running."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9knrb1g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Before downloading a 200 MB course pack, the planner checks free space. Why, if the write would fail anyway with ENOSPC?",
+    "choices": [
+      {
+        "text": "ENOSPC is not reported on phones",
+        "correct": false,
+        "why": "It is; the check is about what happens before it."
+      },
+      {
+        "text": "To make the download faster",
+        "correct": false,
+        "why": "It changes nothing about speed."
+      },
+      {
+        "text": "The store requires it",
+        "correct": false,
+        "why": "No store does."
+      },
+      {
+        "text": "To refuse before spending the data plan and filling the disk",
+        "correct": true,
+        "why": "Right. Failing at 199 MB costs the download and leaves a full disk behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-kn0fe9gg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A different person signs in on a phone where the planner holds the previous person's sessions. What must happen before the new person sees a screen?",
+    "choices": [
+      {
+        "text": "Nothing; the server filters by account",
+        "correct": false,
+        "why": "The local copy is not filtered by the server; it is on the disk."
+      },
+      {
+        "text": "The old sessions are hidden behind a flag",
+        "correct": false,
+        "why": "Hidden is still on the device, and still readable."
+      },
+      {
+        "text": "The previous person's data and tokens are wiped, and the new account syncs from scratch",
+        "correct": true,
+        "why": "Right. Lessons 12 and 20 both end here: a full resync, after a wipe."
+      },
+      {
+        "text": "The new person is asked which sessions to keep",
+        "correct": false,
+        "why": "They are somebody else's sessions."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5fpy0t4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does Apple's privacy manifest ask an app to declare about certain APIs, such as the one that reads the free disk space?",
+    "choices": [
+      {
+        "text": "The approved reason the app uses them",
+        "correct": true,
+        "why": "Right. Each required-reason API is listed with one of Apple's reason codes."
+      },
+      {
+        "text": "How many times a day the app calls them",
+        "correct": false,
+        "why": "Frequency is not asked for."
+      },
+      {
+        "text": "The server that receives the result",
+        "correct": false,
+        "why": "That belongs to the data the app collects, not to these APIs."
+      },
+      {
+        "text": "Nothing; it lists only the app's name",
+        "correct": false,
+        "why": "It lists the reasons, which is the point."
+      }
+    ]
+  }
+]

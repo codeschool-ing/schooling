@@ -1,0 +1,508 @@
+[
+  {
+    "id": "ex-gvpdcjve",
+    "version": 1,
+    "section": "what-kv-is-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a setting that belongs in key-value storage?",
+    "choices": [
+      {
+        "text": "the access token the server issued",
+        "correct": false,
+        "why": "A secret goes in the Keystore or the Keychain."
+      },
+      {
+        "text": "the list of study sessions",
+        "correct": false,
+        "why": "That grows with use; it belongs in the database."
+      },
+      {
+        "text": "the day the week starts on",
+        "correct": true,
+        "why": "Right. One name, one small value, read at launch."
+      },
+      {
+        "text": "a course's cover picture, encoded as a string",
+        "correct": false,
+        "why": "Large data goes in a file in the sandbox."
+      }
+    ]
+  },
+  {
+    "id": "ex-v54zpkan",
+    "version": 1,
+    "section": "what-kv-is-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do DataStore, UserDefaults, Async Storage and MMKV have in common, according to the lesson?",
+    "choices": [
+      {
+        "text": "The whole set lives in one file, read and rewritten whole",
+        "correct": true,
+        "why": "Right, which is why they suit ten settings and not a thousand sessions."
+      },
+      {
+        "text": "Each one is a small SQL database with a simpler interface",
+        "correct": false,
+        "why": "None of them runs queries; they map names to values."
+      },
+      {
+        "text": "They are asynchronous",
+        "correct": false,
+        "why": "UserDefaults and MMKV answer synchronously; the table in the lesson says so."
+      },
+      {
+        "text": "They encrypt what they store",
+        "correct": false,
+        "why": "They write plain files in the sandbox, which is why secrets stay out."
+      }
+    ]
+  },
+  {
+    "id": "ex-a90vga4v",
+    "version": 1,
+    "section": "what-kv-is-for",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each store to how a read reaches the app.",
+    "pairs": [
+      {
+        "left": "DataStore",
+        "right": "a Flow, off the main thread"
+      },
+      {
+        "left": "Async Storage",
+        "right": "a promise"
+      },
+      {
+        "left": "MMKV",
+        "right": "synchronously, from mapped memory"
+      },
+      {
+        "left": "UserDefaults",
+        "right": "synchronously, from a property list held in memory"
+      }
+    ],
+    "right_distractors": [
+      "a query planned by SQLite"
+    ]
+  },
+  {
+    "id": "ex-000wrqxp",
+    "version": 1,
+    "section": "a-kv-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`load` in kv.ts finds a file that does not parse. Why does it let the error through instead of returning {}?",
+    "choices": [
+      {
+        "text": "Because JSON.parse cannot be wrapped in try",
+        "correct": false,
+        "why": "It can; the choice is deliberate."
+      },
+      {
+        "text": "To make the app crash, which is the safest outcome",
+        "correct": false,
+        "why": "The caller decides what to do; crashing is one possible choice, not the point."
+      },
+      {
+        "text": "A missing file raises the same error, so they are handled together",
+        "correct": false,
+        "why": "A missing file returns an empty store; the two are different answers."
+      },
+      {
+        "text": "{} would reset the settings silently",
+        "correct": true,
+        "why": "Right. A damaged file is something going wrong, and the caller should know."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzrbsjn6",
+    "version": 1,
+    "section": "a-kv-store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A version of `save` writes the temporary file and renames it, but leaves out `fsyncSync`. What can a power cut leave behind?",
+    "choices": [
+      {
+        "text": "Two files called settings.json",
+        "correct": false,
+        "why": "A folder holds one file per name."
+      },
+      {
+        "text": "The new name on a file whose data never reached the disk",
+        "correct": true,
+        "why": "Right. The rename can be written before the data it points at."
+      },
+      {
+        "text": "The old settings, because a rename waits for the data anyway",
+        "correct": false,
+        "why": "It does not wait; that is what fsync is there to force."
+      },
+      {
+        "text": "A temporary file the next save will refuse to overwrite",
+        "correct": false,
+        "why": "The next save opens it with \"w\" and writes over it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zaybzcm",
+    "version": 1,
+    "section": "a-kv-store",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `node settings.ts set dailyGoal 45`, what does `node settings.ts get dailyGoal` print?",
+    "choices": [
+      {
+        "text": "\"45\", in quotes, as a string",
+        "correct": false,
+        "why": "set turns anything numeric into a number."
+      },
+      {
+        "text": "45",
+        "correct": true,
+        "why": "Right. It is stored as the number 45."
+      },
+      {
+        "text": "(no dailyGoal)",
+        "correct": false,
+        "why": "The value was saved before it was read."
+      },
+      {
+        "text": "saved 41 bytes",
+        "correct": false,
+        "why": "That is what set prints, not get."
+      }
+    ]
+  },
+  {
+    "id": "ex-0br5n7wp",
+    "version": 1,
+    "section": "the-torn-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the window in which a write can be torn larger than the time it takes to write the bytes you changed?",
+    "choices": [
+      {
+        "text": "Because the disk writes one setting at a time",
+        "correct": false,
+        "why": "The disk knows nothing of settings; it writes bytes."
+      },
+      {
+        "text": "Because JSON is slow to produce",
+        "correct": false,
+        "why": "Speed is not the issue; the empty file is."
+      },
+      {
+        "text": "Because the app writes the file twice, once to check it",
+        "correct": false,
+        "why": "kv.ts writes it once."
+      },
+      {
+        "text": "Opening with \"w\" empties the file before any byte is written",
+        "correct": true,
+        "why": "Right. From that instant the only copy on disk is incomplete."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4rkyvxt",
+    "version": 1,
+    "section": "the-torn-write",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's run, how many bytes of torn.json had been written when the in-place save stopped?",
+    "value": 31,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n592j6wn",
+    "version": 1,
+    "section": "the-torn-write",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team writes the temporary file to the phone's SD card and renames it into the app's internal storage. What has it lost?",
+    "choices": [
+      {
+        "text": "Atomicity: it becomes a copy and a delete",
+        "correct": true,
+        "why": "Right. That is why the temporary file goes beside the real one."
+      },
+      {
+        "text": "Nothing; a rename is the same step on any disk",
+        "correct": false,
+        "why": "Across two disks it is not one."
+      },
+      {
+        "text": "The backup, because the SD card is left out of it",
+        "correct": false,
+        "why": "Possibly true, and not what breaks the save."
+      },
+      {
+        "text": "The fsync, which does not work on SD cards",
+        "correct": false,
+        "why": "fsync works there; the problem is the move between disks."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrsjnamd",
+    "version": 1,
+    "section": "the-torn-write",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Renaming a file over another on the same disk is ___: a reader finds the old version or the new one, never half.",
+    "blanks": [
+      {
+        "accept": [
+          "atomic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-06rdw3cd",
+    "version": 1,
+    "section": "what-not-to-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In grow.ts the file holds 95.6 KB after 1,000 sessions. Why did getting there write 46.70 MB?",
+    "choices": [
+      {
+        "text": "JSON stores numbers as text, which takes about five hundred times the space",
+        "correct": false,
+        "why": "The file itself is 95.6 KB; the size of the encoding is not the cause."
+      },
+      {
+        "text": "fsync doubles every write",
+        "correct": false,
+        "why": "fsync pushes the same bytes to disk; it does not write them twice."
+      },
+      {
+        "text": "Each save rewrote every earlier session",
+        "correct": true,
+        "why": "Right. One tap's cost grows with the history."
+      },
+      {
+        "text": "The temporary files were never deleted",
+        "correct": false,
+        "why": "Each one was renamed over the real file."
+      }
+    ]
+  },
+  {
+    "id": "ex-jd6t4qd9",
+    "version": 1,
+    "section": "what-not-to-store",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these go somewhere other than key-value storage? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a refresh token",
+        "correct": true,
+        "why": "A secret: the Keystore or the Keychain."
+      },
+      {
+        "text": "the notes the person wrote for each session",
+        "correct": true,
+        "why": "They grow with use: the database."
+      },
+      {
+        "text": "whether onboarding was shown",
+        "why": "One flag that never grows: a setting."
+      },
+      {
+        "text": "the language the person picked",
+        "why": "One small value read at launch: a setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxb9w7yd",
+    "version": 1,
+    "section": "what-not-to-store",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the lesson's test for whether something is a setting?",
+    "choices": [
+      {
+        "text": "Whether the key count grows with use",
+        "correct": true,
+        "why": "Right. If it grows with use, it is not a setting."
+      },
+      {
+        "text": "Whether the server also has a copy",
+        "correct": false,
+        "why": "Where else it lives does not decide where it lives here."
+      },
+      {
+        "text": "Whether it is read at launch",
+        "correct": false,
+        "why": "A key-value store reads everything at launch; that is the cost, not the test."
+      },
+      {
+        "text": "Whether it fits in under a kilobyte today",
+        "correct": false,
+        "why": "Today's size says nothing about next year's."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmvnfpka",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A React Native planner stores each session's notes in MMKV under the key `notes:<session id>`, because MMKV is fast. A year later, what has gone wrong?",
+    "choices": [
+      {
+        "text": "MMKV reached its maximum of one thousand keys",
+        "correct": false,
+        "why": "No such maximum is the problem; the shape of the data is."
+      },
+      {
+        "text": "The notes were encrypted and the key was lost",
+        "correct": false,
+        "why": "Nothing in the setup encrypts them."
+      },
+      {
+        "text": "The keys grow with use, all held in memory",
+        "correct": true,
+        "why": "Right. Being fast does not change what belongs there."
+      },
+      {
+        "text": "Async Storage overwrote them",
+        "correct": false,
+        "why": "The two stores keep separate files."
+      }
+    ]
+  },
+  {
+    "id": "ex-3trk3n6p",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of kv.ts's `save` in the order it does them.",
+    "items": [
+      "serialise the settings to JSON",
+      "write them to settings.json.tmp",
+      "fsync the temporary file",
+      "rename it over settings.json"
+    ]
+  },
+  {
+    "id": "ex-6t6b663b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `node torn.ts rename` stops halfway, what does the next launch read?",
+    "choices": [
+      {
+        "text": "The new settings, completed from the temporary file",
+        "correct": false,
+        "why": "Nothing reads the temporary file; it is half written."
+      },
+      {
+        "text": "The old settings, whole",
+        "correct": true,
+        "why": "Right. torn.json was never opened for writing."
+      },
+      {
+        "text": "An empty store, because the file was emptied",
+        "correct": false,
+        "why": "The file emptied was torn.json.tmp, not torn.json."
+      },
+      {
+        "text": "A parse error at position 31",
+        "correct": false,
+        "why": "That is the in-place run."
+      }
+    ]
+  },
+  {
+    "id": "ex-5thdwz31",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Android app keeps its refresh token in DataStore, which writes atomically. Which problem from the lesson remains?",
+    "choices": [
+      {
+        "text": "The torn write, because DataStore writes in place",
+        "correct": false,
+        "why": "DataStore writes a temporary file and renames it."
+      },
+      {
+        "text": "The quadratic cost of grow.ts",
+        "correct": false,
+        "why": "One token does not grow with use."
+      },
+      {
+        "text": "The read blocks the main thread",
+        "correct": false,
+        "why": "DataStore reads through a Flow, off the main thread."
+      },
+      {
+        "text": "It is a plain file in the sandbox, in the backup",
+        "correct": true,
+        "why": "Right. Atomic is not secret; the token belongs in the Keystore."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q9akdpn",
+    "version": 1,
+    "section": "what-kv-is-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does SwiftUI's `@AppStorage` read and write?",
+    "choices": [
+      {
+        "text": "A SwiftData model",
+        "correct": false,
+        "why": "SwiftData is a database; @AppStorage is not part of it."
+      },
+      {
+        "text": "The Keychain",
+        "correct": false,
+        "why": "The Keychain holds secrets and has an API of its own."
+      },
+      {
+        "text": "UserDefaults, through a property wrapper",
+        "correct": true,
+        "why": "Right. It is the same store with a wrapper around it."
+      },
+      {
+        "text": "A file in Library/Caches/",
+        "correct": false,
+        "why": "A setting in the cache could be purged."
+      }
+    ]
+  }
+]

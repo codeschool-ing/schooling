@@ -1,0 +1,491 @@
+[
+  {
+    "id": "ex-cyhrjjzr",
+    "version": 1,
+    "section": "pulling-everything",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the second `pull.ts all` cost, with nothing changed on the server?",
+    "choices": [
+      {
+        "text": "The device skipped it, having pulled moments before",
+        "correct": false,
+        "why": "pull.ts all always asks for everything."
+      },
+      {
+        "text": "28 bytes",
+        "correct": false,
+        "why": "That is a delta pull with nothing new."
+      },
+      {
+        "text": "The same 217,837 bytes as the first",
+        "correct": true,
+        "why": "Right. The cost follows the data, not the change."
+      },
+      {
+        "text": "Half, because the second response is compressed by the server",
+        "correct": false,
+        "why": "Nothing here compresses; the bytes were identical."
+      }
+    ]
+  },
+  {
+    "id": "ex-gewjga1k",
+    "version": 1,
+    "section": "pulling-everything",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can replacing the local copy with everything only run when the outbox is empty?",
+    "choices": [
+      {
+        "text": "It would throw away changes the server has not seen",
+        "correct": true,
+        "why": "Right. Lesson 12 shows a full download that keeps them."
+      },
+      {
+        "text": "SQLite cannot delete and insert in one transaction",
+        "correct": false,
+        "why": "It can; pull.ts does both."
+      },
+      {
+        "text": "The server refuses downloads while there are uploads",
+        "correct": false,
+        "why": "The server knows nothing of the outbox."
+      },
+      {
+        "text": "The cursor would be lost",
+        "correct": false,
+        "why": "The cursor is not the problem; the device's own changes are."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtd5yb78",
+    "version": 1,
+    "section": "the-cursor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the planner's cursor?",
+    "choices": [
+      {
+        "text": "The time of the device's last sync",
+        "correct": false,
+        "why": "That is the timestamp design the lesson replaces."
+      },
+      {
+        "text": "The id of the last session the person opened on the device",
+        "correct": false,
+        "why": "It is a position in the server's history, not on a screen."
+      },
+      {
+        "text": "A count of rows on the device",
+        "correct": false,
+        "why": "After the delete, the device had 5 rows and cursor 7."
+      },
+      {
+        "text": "The last write it read",
+        "correct": true,
+        "why": "Right, handed out by the server and given back to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g94nzfvg",
+    "version": 1,
+    "section": "the-cursor",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes did a delta pull with nothing new receive in the lesson's run?",
+    "value": 28,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-myvy3mmx",
+    "version": 1,
+    "section": "the-cursor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `pull.ts` save the rows and the new cursor in one transaction?",
+    "choices": [
+      {
+        "text": "Transactions make the pull smaller",
+        "correct": false,
+        "why": "Size is decided by the server's answer."
+      },
+      {
+        "text": "A crash could skip them",
+        "correct": true,
+        "why": "Right: a cursor saved without its rows skips them for ever, while rows without the cursor are merely fetched twice."
+      },
+      {
+        "text": "The server requires it",
+        "correct": false,
+        "why": "The server cannot see the device's transactions."
+      },
+      {
+        "text": "To stop two drains at once",
+        "correct": false,
+        "why": "That is lesson 8's lock, a different problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3xgw6z0",
+    "version": 1,
+    "section": "the-cursor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer notices the cursor is a number and makes the app send `cursor - 100` 'to be safe'. What does the lesson say?",
+    "choices": [
+      {
+        "text": "Fine: it only refetches a hundred rows",
+        "correct": false,
+        "why": "It works here and breaks the day the server's cursor stops being a number."
+      },
+      {
+        "text": "The device must store and return it, never compute with it",
+        "correct": true,
+        "why": "Right. The cursor is opaque by contract."
+      },
+      {
+        "text": "It is the overlap repair, and the lesson recommends it",
+        "correct": false,
+        "why": "The overlap is for time windows, which have no server-made order."
+      },
+      {
+        "text": "The server will answer 410",
+        "correct": false,
+        "why": "410 is for a cursor older than the history kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bj4215e",
+    "version": 1,
+    "section": "timestamps-and-clocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `clocks.ts`, why did the timestamp query return nothing?",
+    "choices": [
+      {
+        "text": "Phone B's write failed",
+        "correct": false,
+        "why": "The cursor query returned it, so it was written."
+      },
+      {
+        "text": "The server sorts timestamps alphabetically, and that order is wrong for times",
+        "correct": false,
+        "why": "ISO times sort correctly as text; the stamp itself was early."
+      },
+      {
+        "text": "A asked too soon",
+        "correct": false,
+        "why": "It asked at 10:10, after the write."
+      },
+      {
+        "text": "B stamped it 09:55, before A's 10:00 bookmark",
+        "correct": true,
+        "why": "Right. Written after, stamped before."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmv7shs8",
+    "version": 1,
+    "section": "timestamps-and-clocks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A back end offers only `updated_at`. Which repair does the lesson put first?",
+    "choices": [
+      {
+        "text": "Have the server write it on arrival",
+        "correct": true,
+        "why": "Right. One clock, one machine's error."
+      },
+      {
+        "text": "Ask the person to check their phone's clock before syncing",
+        "correct": false,
+        "why": "A sync cannot depend on that."
+      },
+      {
+        "text": "Overlap the window by a few minutes each time",
+        "correct": false,
+        "why": "That is the second repair: it survives small skew."
+      },
+      {
+        "text": "Use the phone's clock, but in UTC",
+        "correct": false,
+        "why": "A slow clock is slow in every zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-peqva4v2",
+    "version": 1,
+    "section": "timestamps-and-clocks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these leave a phone's clock wrong, according to the lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the person setting it by hand to cheat a game",
+        "correct": true,
+        "why": "One of the lesson's cases."
+      },
+      {
+        "text": "a week switched off",
+        "correct": true,
+        "why": "It drifts."
+      },
+      {
+        "text": "a tablet with the wrong zone",
+        "correct": true,
+        "why": "One of the lesson's cases."
+      },
+      {
+        "text": "using a cursor to sync",
+        "why": "A cursor never reads the phone's clock."
+      }
+    ]
+  },
+  {
+    "id": "ex-8pbvhh5b",
+    "version": 1,
+    "section": "timestamps-and-clocks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cursor is decided in one place, the ___, in the order the writes arrived.",
+    "blanks": [
+      {
+        "accept": [
+          "server"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nnq62t4y",
+    "version": 1,
+    "section": "deletes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a tombstone in this lesson?",
+    "choices": [
+      {
+        "text": "A row the device forgot to send",
+        "correct": false,
+        "why": "That is a pending row."
+      },
+      {
+        "text": "An operation the server refused",
+        "correct": false,
+        "why": "That is lesson 8's dead operation."
+      },
+      {
+        "text": "A deleted row kept as a numbered write",
+        "correct": true,
+        "why": "Right, so a delta can carry the delete."
+      },
+      {
+        "text": "A backup of a session kept in case the person wants it back later",
+        "correct": false,
+        "why": "It records the delete; it is not there to undo it."
+      }
+    ]
+  },
+  {
+    "id": "ex-54nxd8tp",
+    "version": 1,
+    "section": "deletes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without tombstones, what happens to s3 on a device that pulled it before it was deleted elsewhere?",
+    "choices": [
+      {
+        "text": "It stays",
+        "correct": true,
+        "why": "Right, and a later send brings it back to life. Its 20 minutes stay in the week, too."
+      },
+      {
+        "text": "The server sends a push to remove it",
+        "correct": false,
+        "why": "Nothing here pushes."
+      },
+      {
+        "text": "It disappears at the next delta pull",
+        "correct": false,
+        "why": "No question can return a row that is gone."
+      },
+      {
+        "text": "The device crashes on the next pull",
+        "correct": false,
+        "why": "Nothing fails, which is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-2193q6z1",
+    "version": 1,
+    "section": "deletes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the delete of s3, how many bytes did the device's delta pull receive?",
+    "value": 154,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-k4149ja7",
+    "version": 1,
+    "section": "deletes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a server not keep tombstones only until every device has pulled past them?",
+    "choices": [
+      {
+        "text": "Tombstones are too large to keep",
+        "correct": false,
+        "why": "Each is one row; the question is how long."
+      },
+      {
+        "text": "Devices refuse old tombstones",
+        "correct": false,
+        "why": "pull.ts applies any it receives."
+      },
+      {
+        "text": "It cannot know about a phone in a drawer",
+        "correct": true,
+        "why": "Right, so it keeps a fixed window and lesson 12 handles the rest."
+      },
+      {
+        "text": "SQLite caps a table at a million rows",
+        "correct": false,
+        "why": "It does not, and that is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfzc75t6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened in the deletes run.",
+    "items": [
+      "the device pulls the six sessions, cursor 6",
+      "another phone deletes s3, write 7",
+      "the timestamp query answers an empty list",
+      "the cursor pull receives the tombstone and leaves 5 sessions"
+    ]
+  },
+  {
+    "id": "ex-fqy017ky",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each design to the change it loses.",
+    "pairs": [
+      {
+        "left": "comparing the phones' own timestamps",
+        "right": "a write stamped by a slow clock"
+      },
+      {
+        "left": "deleting rows outright on the server",
+        "right": "a delete made on another device"
+      },
+      {
+        "left": "saving the cursor before the rows",
+        "right": "the rows of a pull interrupted halfway"
+      },
+      {
+        "left": "replacing everything with the outbox full",
+        "right": "this device's own unsent change"
+      }
+    ],
+    "right_distractors": [
+      "a row written after the last pull and fetched by cursor"
+    ]
+  },
+  {
+    "id": "ex-bz9977we",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A tablet that last synced 120 days ago comes back, and the server keeps tombstones for 90 days. What can a delta pull not tell it?",
+    "choices": [
+      {
+        "text": "Which sessions were created since",
+        "correct": false,
+        "why": "Live rows are still in the history."
+      },
+      {
+        "text": "The deletes older than 90 days",
+        "correct": true,
+        "why": "Right. Their tombstones are gone, so it needs a full resync."
+      },
+      {
+        "text": "Its own cursor, which the server erased along with the tombstones",
+        "correct": false,
+        "why": "The cursor is on the tablet."
+      },
+      {
+        "text": "Nothing: deltas work after any absence",
+        "correct": false,
+        "why": "They work back to the oldest history kept, no further."
+      }
+    ]
+  },
+  {
+    "id": "ex-59f015zx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two phones of the same person sync a week apart against the same server. What does the server keep per phone?",
+    "choices": [
+      {
+        "text": "Each phone's cursor",
+        "correct": false,
+        "why": "The cursor lives on the phone and is sent back."
+      },
+      {
+        "text": "A copy of the rows each phone has",
+        "correct": false,
+        "why": "It keeps one history for both."
+      },
+      {
+        "text": "The time each phone last synced",
+        "correct": false,
+        "why": "Time is not what the server orders by."
+      },
+      {
+        "text": "Nothing per phone; one history for both",
+        "correct": true,
+        "why": "Right. Each phone keeps its own place in it."
+      }
+    ]
+  }
+]

@@ -1,0 +1,479 @@
+[
+  {
+    "id": "ex-vmntzdma",
+    "version": 1,
+    "section": "when-deltas-fail",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which status did the lesson's server answer to a cursor older than its history?",
+    "choices": [
+      {
+        "text": "404 Not Found",
+        "correct": false,
+        "why": "404 says the thing was never there; 410 says it was and is gone."
+      },
+      {
+        "text": "409 Conflict, because the cursor disagrees with the server's own one",
+        "correct": false,
+        "why": "Nothing conflicts; the history is simply gone."
+      },
+      {
+        "text": "410 Gone",
+        "correct": true,
+        "why": "Right: it existed, and will not again."
+      },
+      {
+        "text": "200 with the changes it still had",
+        "correct": false,
+        "why": "That would leave s3 on the phone for ever."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhbepq9h",
+    "version": 1,
+    "section": "when-deltas-fail",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to how the lesson says it is detected.",
+    "pairs": [
+      {
+        "left": "a cursor older than the history kept",
+        "right": "the server answers 410"
+      },
+      {
+        "left": "a damaged local file",
+        "right": "PRAGMA integrity_check fails"
+      },
+      {
+        "left": "a new app version reading data differently",
+        "right": "the stored schema version differs"
+      },
+      {
+        "left": "another person signs in",
+        "right": "the account id changes"
+      }
+    ],
+    "right_distractors": [
+      "the clock jumps forward"
+    ]
+  },
+  {
+    "id": "ex-r1t2c2q4",
+    "version": 1,
+    "section": "when-deltas-fail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is answering 410 better than answering with the changes the server still has?",
+    "choices": [
+      {
+        "text": "It would hide missed deletes",
+        "correct": true,
+        "why": "Right: a partial answer leaves deletes the phone will not learn of, with no sign anything was missed. The 410 makes the limit visible."
+      },
+      {
+        "text": "It saves the server's disk",
+        "correct": false,
+        "why": "The disk was saved when the tombstones went."
+      },
+      {
+        "text": "It is faster to send",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Phones cannot parse partial answers",
+        "correct": false,
+        "why": "They parse them fine, and wrongly trust them."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqtgmnm7",
+    "version": 1,
+    "section": "the-snapshot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `resync.ts` write a second file instead of deleting and inserting rows in the live database?",
+    "choices": [
+      {
+        "text": "To keep a backup of the old file",
+        "correct": false,
+        "why": "The old file is replaced, not kept."
+      },
+      {
+        "text": "SQLite cannot delete many rows",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "The snapshot is in another format",
+        "correct": false,
+        "why": "It is JSON, read into the same tables."
+      },
+      {
+        "text": "A crash halfway would leave a planner with half its sessions",
+        "correct": true,
+        "why": "Right, and a transaction held across the download would block every other write."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn84b7v3",
+    "version": 1,
+    "section": "the-snapshot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes the swap safe to watch from the screens?",
+    "choices": [
+      {
+        "text": "A progress bar",
+        "correct": false,
+        "why": "A bar shows the wait; it makes nothing safe."
+      },
+      {
+        "text": "One rename, which is atomic",
+        "correct": true,
+        "why": "Right: the old file or the new one, never a mixture."
+      },
+      {
+        "text": "A lock on the server",
+        "correct": false,
+        "why": "The swap happens on the device."
+      },
+      {
+        "text": "Copying the file byte by byte over the old one",
+        "correct": false,
+        "why": "A copy can be seen halfway."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmt458tv",
+    "version": 1,
+    "section": "the-snapshot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An app keeps its database in WAL mode and renames only `planner.db` during a resync. What does the lesson warn of?",
+    "choices": [
+      {
+        "text": "Nothing; WAL makes the rename faster",
+        "correct": false,
+        "why": "WAL adds a second file, which is the danger."
+      },
+      {
+        "text": "Recent writes left in planner.db-wal, behind or applied to the wrong file",
+        "correct": true,
+        "why": "Right. Checkpoint and close before the swap."
+      },
+      {
+        "text": "The rename fails on a phone",
+        "correct": false,
+        "why": "It works; what it leaves behind is the problem."
+      },
+      {
+        "text": "The cursor is lost",
+        "correct": false,
+        "why": "The cursor is in the new file's meta table."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3r2tr71",
+    "version": 1,
+    "section": "the-snapshot",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `resync.ts` in order.",
+    "items": [
+      "fetch the snapshot",
+      "write it into planner.db.next",
+      "copy and apply the pending outbox",
+      "close both files",
+      "rename the new file over the old"
+    ]
+  },
+  {
+    "id": "ex-026jjqrf",
+    "version": 1,
+    "section": "keeping-pending-work",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the resync with `s9` pending, what did `show` print beside s9?",
+    "choices": [
+      {
+        "text": "Nothing: it was gone",
+        "correct": false,
+        "why": "It was carried over."
+      },
+      {
+        "text": "deleted",
+        "correct": false,
+        "why": "Only s3 was deleted."
+      },
+      {
+        "text": "saved, since the resync sent it to the server",
+        "correct": false,
+        "why": "A resync downloads; the next drain sends."
+      },
+      {
+        "text": "waiting to send",
+        "correct": true,
+        "why": "Right. Its outbox row came across."
+      }
+    ]
+  },
+  {
+    "id": "ex-dps93e7c",
+    "version": 1,
+    "section": "keeping-pending-work",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the outbox rows copied with their `seq`?",
+    "choices": [
+      {
+        "text": "To keep their order",
+        "correct": true,
+        "why": "Right. Lesson 8's rules depend on order."
+      },
+      {
+        "text": "To make the new file smaller",
+        "correct": false,
+        "why": "Size is not it."
+      },
+      {
+        "text": "AUTOINCREMENT refuses other values",
+        "correct": false,
+        "why": "It accepts explicit ones."
+      },
+      {
+        "text": "The server reads seq",
+        "correct": false,
+        "why": "seq never leaves the device."
+      }
+    ]
+  },
+  {
+    "id": "ex-f48m6a9m",
+    "version": 1,
+    "section": "keeping-pending-work",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "While away, the person lengthened s5 and another phone deleted s5. After the resync, the snapshot has no s5 and the outbox has an update to it. What does the lesson say the resync must do?",
+    "choices": [
+      {
+        "text": "Drop the update, since the server's data wins",
+        "correct": false,
+        "why": "That throws away the person's edit in silence."
+      },
+      {
+        "text": "Send a delete to the server too",
+        "correct": false,
+        "why": "It was already deleted there."
+      },
+      {
+        "text": "Keep the operation, and not hide the conflict",
+        "correct": true,
+        "why": "Right. Settling it is lessons 13 to 15."
+      },
+      {
+        "text": "Refuse to finish the resync until the network is better",
+        "correct": false,
+        "why": "The network has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7p9njgy",
+    "version": 1,
+    "section": "keeping-pending-work",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are true of the resync in the pending run? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the snapshot held five sessions",
+        "correct": true,
+        "why": "s3 was deleted on the server."
+      },
+      {
+        "text": "one pending operation was carried over",
+        "correct": true,
+        "why": "The create of s9."
+      },
+      {
+        "text": "s9 reached the server",
+        "why": "Nothing was sent; it is still waiting."
+      },
+      {
+        "text": "the cursor stayed at 6",
+        "why": "It moved to 7, the snapshot's."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y3shx7r",
+    "version": 1,
+    "section": "the-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes was the snapshot of 2005 sessions in the lesson's run?",
+    "value": 155594,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-rsx5gjbe",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a resync the cheaper option, by the lesson's rule?",
+    "choices": [
+      {
+        "text": "When the changes would outweigh the data, or are unknown",
+        "correct": true,
+        "why": "Right. The 410 is the second case."
+      },
+      {
+        "text": "Whenever the network is Wi-Fi",
+        "correct": false,
+        "why": "The type of network does not change the arithmetic."
+      },
+      {
+        "text": "Once a day, at night, when the phone is charging on Wi-Fi",
+        "correct": false,
+        "why": "A schedule is not the criterion."
+      },
+      {
+        "text": "When the outbox is long and the person has waited a while",
+        "correct": false,
+        "why": "The outbox is kept either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmh46f6f",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to keep tombstones for 7 days to save disk. What does the lesson's measurement say they are trading?",
+    "choices": [
+      {
+        "text": "Nothing: phones always sync within a week",
+        "correct": false,
+        "why": "A phone in a drawer does not."
+      },
+      {
+        "text": "Slower deltas for every phone",
+        "correct": false,
+        "why": "Deltas are as cheap as before."
+      },
+      {
+        "text": "A few rows per delete, against a full download for each phone left outside",
+        "correct": true,
+        "why": "Right. Each one costs about a thousand times a delta."
+      },
+      {
+        "text": "More conflicts",
+        "correct": false,
+        "why": "Conflicts come from concurrent edits, not from the window."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr8gbycq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A resync is interrupted after `planner.db.next` is half written and before the rename. The app opens again. What does it find?",
+    "choices": [
+      {
+        "text": "Half of the snapshot on the screen",
+        "correct": false,
+        "why": "The screens read planner.db, which was never touched."
+      },
+      {
+        "text": "The previous copy, intact",
+        "correct": true,
+        "why": "Right, plus a leftover the next resync removes. Nothing read the half-written file."
+      },
+      {
+        "text": "An empty planner",
+        "correct": false,
+        "why": "The old file is intact."
+      },
+      {
+        "text": "A corrupted planner.db",
+        "correct": false,
+        "why": "Only the .next file was being written."
+      }
+    ]
+  },
+  {
+    "id": "ex-c46hzzde",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A different person signs in on a shared tablet. Which step from this lesson applies, and why?",
+    "choices": [
+      {
+        "text": "A delta pull, since the server keeps a single history for both accounts",
+        "correct": false,
+        "why": "The cursor and rows are the other person's."
+      },
+      {
+        "text": "A 410 from the server",
+        "correct": false,
+        "why": "The device detects this case itself, by the account id."
+      },
+      {
+        "text": "Nothing: the account changes only the screen",
+        "correct": false,
+        "why": "It changes whose data is on the device."
+      },
+      {
+        "text": "A resync, without carrying the outbox",
+        "correct": true,
+        "why": "Right. The pending work belongs to the person who left, and must not be sent as the new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-08he5nkd",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A resync downloads into a second file and makes it the database with one atomic ___.",
+    "blanks": [
+      {
+        "accept": [
+          "rename"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,342 @@
+{
+  "ex-pjgd5n14": {
+    "prompt": "Na execução da aula sem chave, por que o cartão foi cobrado duas vezes?",
+    "choices": [
+      {
+        "text": "A pessoa tocou em Comprar duas vezes",
+        "why": "O buy.ts rodou uma vez."
+      },
+      {
+        "text": "O servidor cobra toda compra duas vezes de propósito, uma para testar o cartão e outra para tirar o dinheiro",
+        "why": "Ele acrescenta uma compra por requisição."
+      },
+      {
+        "text": "A resposta se perdeu e a nova tentativa cobrou de novo",
+        "why": "Isso. O servidor não tinha como saber que era uma nova tentativa."
+      },
+      {
+        "text": "O tempo limite era curto demais para um pagamento terminar",
+        "why": "A resposta não foi lenta; ela foi destruída."
+      }
+    ]
+  },
+  "ex-g325y0te": {
+    "prompt": "Qual linha descreve uma operação idempotente?",
+    "choices": [
+      {
+        "text": "Fazê-la duas vezes tem o efeito de fazê-la uma",
+        "why": "Isso. A chave faz um POST se comportar assim."
+      },
+      {
+        "text": "Uma que o servidor responde em menos de um segundo",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "Uma enviada com POST",
+        "why": "POST é justamente o método que não é idempotente por definição."
+      },
+      {
+        "text": "Uma que não falha",
+        "why": "Falhar não tem nada a ver."
+      }
+    ]
+  },
+  "ex-4097k8m7": {
+    "prompt": "Como o curso descreve *The Idempotency-Key HTTP Header Field*?",
+    "choices": [
+      {
+        "text": "Um recurso do navegador",
+        "why": "É um contrato entre cliente e servidor, não um comportamento do navegador."
+      },
+      {
+        "text": "Parte do HTTP desde 1999",
+        "why": "Ele é recente e ainda é rascunho."
+      },
+      {
+        "text": "Um cabeçalho privado da API da Stripe",
+        "why": "A Stripe o usa, muitas APIs o copiaram, e o IETF o rascunhou."
+      },
+      {
+        "text": "Um rascunho do IETF, ainda não uma RFC",
+        "why": "Isso, e é citado como tal."
+      }
+    ]
+  },
+  "ex-kpv9t8tb": {
+    "prompt": "Onde o `buy.ts` chama `randomUUID()`, e por que ali?",
+    "choices": [
+      {
+        "text": "Dentro do laço, para cada tentativa ser nova",
+        "why": "Uma chave nova por tentativa faz o servidor ver uma compra nova."
+      },
+      {
+        "text": "Antes do laço, uma vez",
+        "why": "Isso, para toda nova tentativa levá-la. A chave nomeia a operação, não a requisição."
+      },
+      {
+        "text": "No servidor, quando a compra é cobrada",
+        "why": "Só o aparelho sabe que uma nova tentativa é uma nova tentativa."
+      },
+      {
+        "text": "Ele faz hash do corpo, para compras iguais dividirem a chave",
+        "why": "Duas compras iguais podem ser ambas desejadas."
+      }
+    ]
+  },
+  "ex-snnyk26f": {
+    "prompt": "Um create foi enviado uma vez e a resposta se perdeu. A compactação então dobra um update dentro dele e a drenagem reenvia com a mesma chave. O que acontece no servidor da aula?",
+    "choices": [
+      {
+        "text": "O servidor aplica o update",
+        "why": "O corpo difere do guardado sob aquela chave."
+      },
+      {
+        "text": "É recusado com 422, já que a chave foi usada com outro corpo",
+        "why": "Isso, e é por isso que nada se dobra numa operação já tentada."
+      },
+      {
+        "text": "Uma segunda sessão é criada",
+        "why": "A chave existe; o servidor não refaz o trabalho."
+      },
+      {
+        "text": "A resposta antiga volta e nada está errado",
+        "why": "Esse é o servidor que não compara corpos, e ali o update se perde."
+      }
+    ]
+  },
+  "ex-nxrh5csr": {
+    "prompt": "O cabeçalho que o servidor da aula lê para reconhecer uma nova tentativa é o ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Idempotency-Key"
+        ]
+      }
+    ]
+  },
+  "ex-myjexf1n": {
+    "prompt": "Por que a chave mora na linha da caixa de saída?",
+    "choices": [
+      {
+        "text": "O servidor a lê dali",
+        "why": "O servidor nunca vê o banco do aparelho."
+      },
+      {
+        "text": "O SQLite deixa UUIDs mais rápidos",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para manter os dados do pagamento privados",
+        "why": "A chave não carrega dado de pagamento."
+      },
+      {
+        "text": "Para um processo novo, depois de o app ser encerrado, ler a mesma chave",
+        "why": "Isso. Uma chave só na memória morre com o app."
+      }
+    ]
+  },
+  "ex-r09ds0qn": {
+    "prompt": "Associe cada caso ao que o servidor da aula respondeu.",
+    "pairs": [
+      {
+        "left": "k-1 de novo, mesmo corpo",
+        "right": "201 repetido, p1"
+      },
+      {
+        "left": "k-1 de novo, outro curso",
+        "right": "422"
+      },
+      {
+        "left": "k-1 de bia",
+        "right": "201, uma compra nova"
+      },
+      {
+        "left": "k-2 enquanto a primeira k-2 cobra",
+        "right": "409"
+      }
+    ],
+    "right_distractors": [
+      "404"
+    ]
+  },
+  "ex-60xhqke2": {
+    "prompt": "Por que o servidor compara uma impressão digital do corpo e não só a chave?",
+    "choices": [
+      {
+        "text": "Senão uma chave reusada recebe a compra errada",
+        "why": "Isso. O pedido de violão ouviria que Estatística foi comprada."
+      },
+      {
+        "text": "Para verificar vírus no corpo antes de a compra ser cobrada",
+        "why": "Nada aqui procura isso."
+      },
+      {
+        "text": "O hash do corpo deixa a resposta mais rápida de calcular e enviar",
+        "why": "É sobre correção, não velocidade."
+      },
+      {
+        "text": "A chave sozinha poderia ser adivinhada por quem viu uma requisição anterior",
+        "why": "122 bits aleatórios não se adivinham; o risco é um erro do cliente."
+      }
+    ]
+  },
+  "ex-tfkkzrfk": {
+    "prompt": "Um celular segura uma compra na caixa de saída por dois dias e a repete num servidor que guarda chaves por 24 horas. O que acontece?",
+    "choices": [
+      {
+        "text": "O servidor repete a resposta guardada",
+        "why": "Ele não tem mais nenhuma."
+      },
+      {
+        "text": "O servidor recusa com 422",
+        "why": "Ele não lembra da chave."
+      },
+      {
+        "text": "A chave parece nova e o cartão é cobrado de novo",
+        "why": "Isso. A janela precisa durar mais que a caixa de saída."
+      },
+      {
+        "text": "O celular se recusa a mandar uma chave com mais de um dia",
+        "why": "Nada no celular confere a idade da chave."
+      }
+    ]
+  },
+  "ex-mm4s7yvp": {
+    "prompt": "Ao contrário da maioria das respostas 4xx, por que vale repetir o 409?",
+    "choices": [
+      {
+        "text": "Num instante a chave guarda uma resposta pronta, e a nova tentativa a recebe",
+        "why": "Isso. A corrida acaba; a resposta fica."
+      },
+      {
+        "text": "O 409 é um erro do servidor, como um 503, então a regra da aula 9 vale para ele",
+        "why": "É um 4xx; o motivo para repeti-lo é particular."
+      },
+      {
+        "text": "A primeira requisição falhou e a chave foi liberada para uma nova tentativa qualquer",
+        "why": "Ela deu certo, um segundo depois."
+      },
+      {
+        "text": "A chave é apagada depois de um 409",
+        "why": "Ela é mantida e preenchida."
+      }
+    ]
+  },
+  "ex-y12a7e5x": {
+    "prompt": "Por quantas horas o servidor da aula guarda uma resposta sob a chave dela?"
+  },
+  "ex-8h5b7nfx": {
+    "prompt": "Quais métodos HTTP são definidos como idempotentes?",
+    "choices": [
+      {
+        "text": "POST e PUT",
+        "why": "POST não é."
+      },
+      {
+        "text": "POST e DELETE",
+        "why": "POST não é."
+      },
+      {
+        "text": "PUT e DELETE",
+        "why": "Isso, e o código do servidor precisa cumprir a promessa."
+      },
+      {
+        "text": "O GET sozinho",
+        "why": "O GET é seguro e idempotente, mas PUT e DELETE também são idempotentes."
+      }
+    ]
+  },
+  "ex-3mvns4sy": {
+    "prompt": "Depois de dois `PUT /sessions/s7` idênticos, quantas sessões o servidor guardava?",
+    "choices": [
+      {
+        "text": "Duas, uma por requisição",
+        "why": "O caminho nomeia a linha, então a segunda escreveu sobre a primeira."
+      },
+      {
+        "text": "Uma",
+        "why": "Isso. Os mesmos bytes sobre eles mesmos."
+      },
+      {
+        "text": "Zero: o segundo PUT cancelou o primeiro",
+        "why": "Um PUT guarda; não cancela."
+      },
+      {
+        "text": "Recusou a segunda com 409",
+        "why": "Não há chave nem nada a recusar."
+      }
+    ]
+  },
+  "ex-w5rx31cw": {
+    "prompt": "Quais destes ainda precisam de chave de idempotência mesmo com um id criado no cliente? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "um PUT que também manda um e-mail de confirmação",
+        "why": "A linha é idempotente; o efeito colateral não."
+      },
+      {
+        "text": "cobrar um cartão por um curso",
+        "why": "O efeito está na processadora."
+      },
+      {
+        "text": "somar 25 minutos ao total da semana",
+        "why": "Um incremento, dito duas vezes, soma duas."
+      },
+      {
+        "text": "guardar a sessão s7 como 25 minutos de violão",
+        "why": "Isso diz o resultado inteiro; o PUT basta."
+      }
+    ]
+  },
+  "ex-1ydz2g22": {
+    "prompt": "Uma equipe acrescenta chaves mas cria uma nova a cada vez que a drenagem repete. O `drop` da aula 9 acontece. O que o servidor faz?",
+    "choices": [
+      {
+        "text": "Repete a primeira resposta",
+        "why": "A nova tentativa leva uma chave que ele nunca viu."
+      },
+      {
+        "text": "Recusa a nova tentativa com 422",
+        "why": "Uma chave nova não é uma chave reusada."
+      },
+      {
+        "text": "Responde 409, já que duas chaves para uma compra chegam quase juntas",
+        "why": "Elas chegam uma depois da outra, e são diferentes."
+      },
+      {
+        "text": "Faz o trabalho de novo, como se não houvesse chave",
+        "why": "Isso. Uma chave por requisição é nenhuma chave."
+      }
+    ]
+  },
+  "ex-eznwp5f9": {
+    "prompt": "Ponha em ordem o que aconteceu na execução `buy.ts key`.",
+    "items": [
+      "a chave é criada, antes de qualquer requisição",
+      "o primeiro POST cobra p1 e a resposta se perde",
+      "a nova tentativa leva a mesma chave",
+      "o servidor repete p1 e não cobra nada"
+    ]
+  },
+  "ex-hqv3z9mm": {
+    "prompt": "O planner cria sessões com `PUT /sessions/<id>`, usando ids como s7. Dois celulares da mesma pessoa criam, cada um, a sétima sessão offline. Para o que a aula aponta?",
+    "choices": [
+      {
+        "text": "O servidor responde 409",
+        "why": "Este servidor guarda o que receber por PUT."
+      },
+      {
+        "text": "Tudo bem: PUT é idempotente, então as duas sessões ficam",
+        "why": "Idempotente quer dizer que a segunda substitui a primeira, o que aqui perde uma."
+      },
+      {
+        "text": "Os dois escolhem s7, e um sobrescreve o outro",
+        "why": "Isso. A idempotência natural precisa de ids que ninguém mais vai escolher, que são os ids aleatórios da aula 4."
+      },
+      {
+        "text": "Uma chave de idempotência resolve",
+        "why": "As duas operações são diferentes mesmo; uma chave não as uniria."
+      }
+    ]
+  }
+}

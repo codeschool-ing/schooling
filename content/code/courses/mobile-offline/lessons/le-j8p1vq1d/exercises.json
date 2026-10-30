@@ -1,0 +1,508 @@
+[
+  {
+    "id": "ex-r8emk7pj",
+    "version": 1,
+    "section": "user-version",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `PRAGMA user_version` in a new SQLite file?",
+    "choices": [
+      {
+        "text": "The SQLite version, such as 3.53.4",
+        "correct": false,
+        "why": "That is sqlite_version(); user_version is the app's own number."
+      },
+      {
+        "text": "1, the first version of any schema",
+        "correct": false,
+        "why": "Version 1 exists once step 1 has run."
+      },
+      {
+        "text": "0",
+        "correct": true,
+        "why": "Right. SQLite never changes it on its own; migrate() sets it."
+      },
+      {
+        "text": "The date the file was created",
+        "correct": false,
+        "why": "It is an integer the app writes, not a date."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjdzcf6m",
+    "version": 1,
+    "section": "user-version",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Version 3 of the planner shipped with a mistake in its step. What does the lesson say to do?",
+    "choices": [
+      {
+        "text": "Leave step 3 alone and fix it in a new step 5",
+        "correct": true,
+        "why": "Right. A shipped step is never edited."
+      },
+      {
+        "text": "Edit step 3 so new installs get it right",
+        "correct": false,
+        "why": "Some phone is still at version 2 and will run step 3; it must be the one that shipped."
+      },
+      {
+        "text": "Delete step 3 and renumber the rest",
+        "correct": false,
+        "why": "Renumbering breaks every phone's version number."
+      },
+      {
+        "text": "Set user_version back to 2 on every phone",
+        "correct": false,
+        "why": "The schema would then disagree with the number."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0629eke",
+    "version": 1,
+    "section": "user-version",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the planner's four schema steps in the order they shipped.",
+    "items": [
+      "create courses and sessions",
+      "add notes to sessions",
+      "add synced, defaulting to 1",
+      "replace done with done_at"
+    ]
+  },
+  {
+    "id": "ex-z3q8x2vs",
+    "version": 1,
+    "section": "user-version",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do rows that existed before step 3 get `synced = 1`?",
+    "choices": [
+      {
+        "text": "Because SQLite fills new columns with 1",
+        "correct": false,
+        "why": "It fills them with the declared default, which the step chose."
+      },
+      {
+        "text": "So that lesson 4's window prunes nothing",
+        "correct": false,
+        "why": "It is the opposite: synced rows are the ones the window may prune."
+      },
+      {
+        "text": "To make the index of step 4 smaller",
+        "correct": false,
+        "why": "A side effect, not the reason."
+      },
+      {
+        "text": "They were all on the server already",
+        "correct": true,
+        "why": "Right. Before step 3 nothing was written offline."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4y82893",
+    "version": 1,
+    "section": "every-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does paths.ts print the rows as well as comparing the schema?",
+    "choices": [
+      {
+        "text": "The schema comparison is slow",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Right tables with lost ticks would pass a schema check",
+        "correct": true,
+        "why": "Right. s2 has to arrive with done_at set."
+      },
+      {
+        "text": "sqlite_schema leaves out the columns",
+        "correct": false,
+        "why": "It has the SQL that made each table, columns included."
+      },
+      {
+        "text": "To show the UUIDs from lesson 4",
+        "correct": false,
+        "why": "These sessions have text ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydat3ppe",
+    "version": 1,
+    "section": "every-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "naive.ts runs only the last step. From version 1 it fails with `no such column: synced`. What state is that database left in?",
+    "choices": [
+      {
+        "text": "Version 1, untouched, since the step failed",
+        "correct": false,
+        "why": "exec ran the statements before the failing one."
+      },
+      {
+        "text": "Neither: part of step 4 applied to a version 1 file",
+        "correct": true,
+        "why": "Right. No version of the app knows that shape."
+      },
+      {
+        "text": "Version 4, with no index",
+        "correct": false,
+        "why": "user_version was never set to 4, and step 2 and 3 never ran."
+      },
+      {
+        "text": "Empty, because SQLite deletes a file it cannot migrate",
+        "correct": false,
+        "why": "SQLite deletes nothing on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyzhbt7v",
+    "version": 1,
+    "section": "every-path",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From which versions did naive.ts fail? Choose all that apply.",
+    "choices": [
+      {
+        "text": "v1",
+        "correct": true,
+        "why": "Step 3 never ran there."
+      },
+      {
+        "text": "v2",
+        "correct": true,
+        "why": "Step 3 never ran there either."
+      },
+      {
+        "text": "v3",
+        "why": "From v3 the last step is the only one missing."
+      },
+      {
+        "text": "a new install",
+        "why": "naive.ts tests only phones that had shipped versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-knnz2pwm",
+    "version": 1,
+    "section": "every-path",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Room's helper for testing a migration from an old version is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "MigrationTestHelper"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xm68bb3x",
+    "version": 1,
+    "section": "the-migration-that-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Statement by statement, step 5 renamed `notes` and then failed. Why does the second launch fail differently?",
+    "choices": [
+      {
+        "text": "The disk filled up between launches",
+        "correct": false,
+        "why": "Nothing about the disk changed."
+      },
+      {
+        "text": "user_version had moved to 5",
+        "correct": false,
+        "why": "It still says 4; that is half the problem."
+      },
+      {
+        "text": "SQLite locks a table after a failed ALTER",
+        "correct": false,
+        "why": "There is no such lock."
+      },
+      {
+        "text": "No notes column is left to rename",
+        "correct": true,
+        "why": "Right. The rename stayed, the version did not move, so step 5 starts again on a changed table."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w010k7a",
+    "version": 1,
+    "section": "the-migration-that-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a transaction, both launches still fail. What does the lesson say is different?",
+    "choices": [
+      {
+        "text": "The file is exactly version 4",
+        "correct": true,
+        "why": "Right, so a fixed step 5 migrates it. A failure that changes nothing is a bug, not data loss."
+      },
+      {
+        "text": "The app opens, with the reminder column missing",
+        "correct": false,
+        "why": "It still fails at launch."
+      },
+      {
+        "text": "SQLite adds the column with a NULL default",
+        "correct": false,
+        "why": "It refuses it, in both modes."
+      },
+      {
+        "text": "The rows are moved to a backup table",
+        "correct": false,
+        "why": "Nothing moves them; the rollback leaves them where they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-53ktjfm1",
+    "version": 1,
+    "section": "the-migration-that-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these SQLite statements does a migration's transaction roll back, if a later statement fails?",
+    "choices": [
+      {
+        "text": "INSERT and UPDATE, but not ALTER TABLE",
+        "correct": false,
+        "why": "That is true of some databases, and not of SQLite."
+      },
+      {
+        "text": "ALTER TABLE, but only before the first COMMIT of the day",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "ALTER TABLE, CREATE and DROP, like any other statement",
+        "correct": true,
+        "why": "Right. SQLite's schema changes are transactional."
+      },
+      {
+        "text": "None; a schema change commits at once",
+        "correct": false,
+        "why": "In SQLite it does not; the broken.ts transaction run shows notes back."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkmajvxs",
+    "version": 1,
+    "section": "the-migration-that-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the lesson say the app should not do when a migration fails?",
+    "choices": [
+      {
+        "text": "Delete the database",
+        "correct": true,
+        "why": "Right. That makes the error disappear and the data with it."
+      },
+      {
+        "text": "Report the from and to versions",
+        "correct": false,
+        "why": "That is the first thing worth doing."
+      },
+      {
+        "text": "Keep a copy of the old file",
+        "correct": false,
+        "why": "The lesson recommends it."
+      },
+      {
+        "text": "Tell the person their data is safe and an update will fix it",
+        "correct": false,
+        "why": "Something true is better than a blank screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-dstpkx2w",
+    "version": 1,
+    "section": "platforms",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each library to how it declares a migration.",
+    "pairs": [
+      {
+        "left": "Room",
+        "right": "a Migration from one number to the next"
+      },
+      {
+        "left": "SwiftData",
+        "right": "a SchemaMigrationPlan of stages"
+      },
+      {
+        "left": "Realm",
+        "right": "a schemaVersion and a migration block"
+      },
+      {
+        "left": "expo-sqlite",
+        "right": "PRAGMA user_version and the app's own steps"
+      }
+    ],
+    "right_distractors": [
+      "a column renamed by the store at upload"
+    ]
+  },
+  {
+    "id": "ex-e4gr8d12",
+    "version": 1,
+    "section": "platforms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Room finds no migration path and the builder has `fallbackToDestructiveMigration()`. What happens to sessions marked `synced = 0`?",
+    "choices": [
+      {
+        "text": "Room sends them first, then rebuilds",
+        "correct": false,
+        "why": "Room knows nothing of the outbox or of synced."
+      },
+      {
+        "text": "They are kept, because Room skips unsynced rows",
+        "correct": false,
+        "why": "The fallback drops every table."
+      },
+      {
+        "text": "Every table is dropped, and their rows go with them",
+        "correct": true,
+        "why": "Right, and nothing anywhere holds a copy."
+      },
+      {
+        "text": "They move to a table called fallback",
+        "correct": false,
+        "why": "There is no such table."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4va3w3s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An app truly cannot migrate an old database. In what order does the lesson say to recover?",
+    "choices": [
+      {
+        "text": "Rebuild empty, then ask the person to type their sessions again",
+        "correct": false,
+        "why": "The unsent rows can still be read and delivered."
+      },
+      {
+        "text": "Send the unsent rows, then rebuild and fill it from the server",
+        "correct": true,
+        "why": "Right. The reverse of what the destructive fallback does."
+      },
+      {
+        "text": "Rebuild, then fill it from the server",
+        "correct": false,
+        "why": "The server lacks what was never sent; that comes first."
+      },
+      {
+        "text": "Copy the file to the server and let it migrate there",
+        "correct": false,
+        "why": "The server has its own schema and no use for the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zwmcw4r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new install opens version 4 of the app. Which steps does `migrate(db)` run?",
+    "choices": [
+      {
+        "text": "Only step 4",
+        "correct": false,
+        "why": "The file is at version 0, not 3."
+      },
+      {
+        "text": "None; a new install creates the latest schema directly",
+        "correct": false,
+        "why": "The lesson's design uses the same function for both, on purpose."
+      },
+      {
+        "text": "Steps 1 and 4",
+        "correct": false,
+        "why": "Every step between runs too."
+      },
+      {
+        "text": "All four, from an empty file",
+        "correct": true,
+        "why": "Right. A new install and an old phone end in the same place by the same code."
+      }
+    ]
+  },
+  {
+    "id": "ex-z87tzwrh",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many schema steps does migrations.ts list?",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-40bk3cxr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A SwiftData app adds a property that cannot be inferred, a value computed from two old ones. Which stage does the lesson's listing point to?",
+    "choices": [
+      {
+        "text": "A lightweight stage",
+        "correct": false,
+        "why": "Lightweight covers what Core Data can infer, such as an added property with a default."
+      },
+      {
+        "text": "deleteRealmIfMigrationNeeded",
+        "correct": false,
+        "why": "That is Realm's, and it deletes the data."
+      },
+      {
+        "text": "A custom stage of the plan",
+        "correct": true,
+        "why": "Right. It runs code before and after the change."
+      },
+      {
+        "text": "An AutoMigration",
+        "correct": false,
+        "why": "That is Room's."
+      }
+    ]
+  }
+]
