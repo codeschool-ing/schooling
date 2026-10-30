@@ -91,6 +91,6 @@ ana@dev:~/planner/secrets$ grep -c 'tips_live_' dist/app.js
 0
 ```
 
-That is not only hiding the key. The server can now refuse a person who is not signed in, count
+Moving the key buys more than hiding it. The server can now refuse a person who is not signed in, count
 requests per account, and change the key without a new release in the store. The next section
 writes it, with the tokens that tell it who is asking.

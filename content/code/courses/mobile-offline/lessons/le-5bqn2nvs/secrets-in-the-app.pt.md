@@ -67,9 +67,7 @@ tips_live_4f9c2a7e1b6d83a0
 
 **O código nunca usou `tipsApiKey`, e ela foi junto mesmo assim.** Um empacotador embute a
 configuração que recebe, então uma chave em qualquer lugar do que o build lê está no pacote. O mesmo
-vale para os campos do `BuildConfig` e as strings de recurso do Android, o `Info.plist` de um app
-iOS e as variáveis de ambiente que o Expo embute no build com nomes começando por `EXPO_PUBLIC_`,
-que a documentação dele diz com todas as letras que ficam visíveis no app. Codificar a chave em
+vale para os campos do `BuildConfig` e as strings de recurso do Android, o `Info.plist` de um app iOS e as variáveis de ambiente que o Expo embute no build com nomes começando por `EXPO_PUBLIC_`. A documentação do Expo diz com todas as letras que essas ficam visíveis no app. Codificar a chave em
 base64 ou parti-la em duas muda o comando que alguém digita para achá-la, e mais nada.
 
 ## A correção é um servidor que guarda a chave
@@ -91,6 +89,6 @@ ana@dev:~/planner/secrets$ grep -c 'tips_live_' dist/app.js
 0
 ```
 
-Isso não é só esconder a chave. O servidor agora pode recusar quem não entrou na conta, contar
+Mover a chave rende mais do que escondê-la. O servidor agora pode recusar quem não entrou na conta, contar
 requisições por conta e trocar a chave sem uma nova versão na loja. A próxima seção o escreve, com
 os tokens que dizem a ele quem está pedindo.

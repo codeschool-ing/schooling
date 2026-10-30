@@ -73,7 +73,7 @@ pronta e a nova tentativa a recebe.
 Vinte e quatro horas é o tempo que um celular tem para voltar com a nova tentativa. Um celular
 offline por dois dias repetindo uma compra chega depois de o servidor ter esquecido a chave, e é
 cobrado de novo. A Stripe remove chaves depois de pelo menos 24 horas; o servidor de um planner pode
-guardá-las por mais tempo, porque uma entrada tem algumas centenas de bytes, e **a janela deve ser
+guardá-las por mais tempo, porque uma entrada tem algumas centenas de bytes. E **a janela deve ser
 maior que o tempo mais longo em que uma caixa de saída pode segurar uma operação**. A aula 12 é o
 outro lado dessa frase: o que o aparelho faz quando ficou fora mais tempo do que o servidor lembra.
 

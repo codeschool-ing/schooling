@@ -16,8 +16,7 @@ colide é pega quando chega.
 ## Um servidor que confere a versão
 
 O servidor abaixo guarda uma sessão, `s3`, na versão 1. O `GET` a devolve; o `PUT` só aceita uma
-cópia nova se ela citar a versão que o servidor tem, e responde **409 Conflict** se não, com a linha
-atual no corpo para o aparelho não precisar de uma segunda requisição para ver o que mudou. Crie a
+cópia nova se ela citar a versão que o servidor tem, e responde **409 Conflict** se não. A resposta traz a linha atual no corpo, para o aparelho não precisar de uma segunda requisição para ver o que mudou. Crie a
 pasta `~/planner/versions` e salve isto nela como `server.ts`:
 
 ```typescript

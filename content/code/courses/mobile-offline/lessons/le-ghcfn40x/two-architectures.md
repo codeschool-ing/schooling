@@ -30,9 +30,7 @@ shows it at once, because the list was drawn from that database to begin with. *
 server is a separate step that happens afterwards**, when there is a network, and the row carries
 a mark saying whether that step has happened yet.
 
-What offline-first costs is everything this course from lesson 8 to lesson 15 is about. The device
-and the server each hold a copy, so somebody has to carry changes from one to the other (an
-outbox, lesson 8), survive the network failing halfway (lessons 9 and 10), learn what changed on
+What offline-first costs is everything this course from lesson 8 to lesson 15 is about. The device and the server each hold a copy, so somebody has to do four jobs. Carry changes from one to the other (an outbox, lesson 8), survive the network failing halfway (lessons 9 and 10), learn what changed on
 the other side (lessons 11 and 12), and decide what happens when both sides changed the same thing
 (lessons 13 to 15).
 

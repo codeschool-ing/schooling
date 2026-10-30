@@ -116,7 +116,7 @@ antes de a caixa de saída saber**, que é o pior momento que existe: o trabalho
 registro dele não. A execução seguinte então mandou `k6` de novo, e o servidor, achando a chave já
 recebida, a ignorou. Sem a chave, o planner teria agora `s4` marcada como feita duas vezes, ou, para
 uma operação que acrescenta uma sessão, duas sessões. O programa fez o papel do sistema mandando a
-si mesmo um `SIGKILL`, o sinal que nem o Android nem o iOS deixam um app capturar, e `137` é o status
+si mesmo um `SIGKILL`, o sinal que nem o Android nem o iOS deixam um app capturar. O `137` é o status
 que um shell informa para um processo que morreu disso, embaixo da linha `Killed` do próprio shell
 com o ID do processo, que vai ser outro na sua máquina. Nada no programa teve chance de arrumar a
 casa, e nada precisava.

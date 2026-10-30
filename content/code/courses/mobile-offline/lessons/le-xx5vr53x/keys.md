@@ -55,9 +55,6 @@ Storing it there is what makes it survive the app being killed between two tries
 in a new process, reads the same key back.
 
 **And it changes lesson 8's coalescing in one place.** Folding an update into a create is safe only
-if the create has never been sent. If it was sent and its answer lost, the server may have saved it
-under its key; resending a different body under the same key is refused by a server that compares
-bodies, and on one that does not, answered with the old saved answer while the update is silently
-dropped. So an operation that has been tried at least once is never folded
+if the create has never been sent. If it was sent and its answer lost, the server may have saved it under its key. A server that compares bodies then refuses a different body under the same key. One that does not answers with the old saved answer, and the update is silently dropped. So an operation that has been tried at least once is never folded
 into, and a column such as `tried` on the outbox row is how the drain and the compaction agree on
 it.

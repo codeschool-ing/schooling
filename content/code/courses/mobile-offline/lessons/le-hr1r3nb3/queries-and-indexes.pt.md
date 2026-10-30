@@ -96,7 +96,7 @@ trabalho que a consulta custa a cada visita à tela, e ele cresce com o históri
 em que `course` é `statistics` e a data está dentro da semana, e lê só essas.
 
 A segunda consulta não mudou. Um índice em `(course, date)` é ordenado primeiro pelo curso, então
-ele ajuda uma consulta que cita um curso e não ajuda uma que não cita, do mesmo jeito que uma lista
+ele ajuda uma consulta que cita um curso e não ajuda uma que não cita. É do mesmo jeito que uma lista
 telefônica ordenada por sobrenome não ajuda a achar todo mundo que se chama Ana. A tela da semana
 precisou de um índice próprio, em `date`, e aí ela também virou um `SEARCH`.
 

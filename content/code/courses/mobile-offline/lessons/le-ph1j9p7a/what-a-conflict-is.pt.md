@@ -19,8 +19,7 @@ O celular pega sinal às 11:00 e manda a sua.
 ```
 
 Cada aparelho fez exatamente o que a aula 7 pede de um app offline-first: gravou localmente e disse
-à Ana que a mudança estava salva. A caixa de saída da aula 8 entregou cada escrita uma vez, a chave
-de idempotência da aula 10 garantiu que uma nova tentativa não a entregasse duas, e a sincronização
+à Ana que a mudança estava salva. A caixa de saída da aula 8 entregou cada escrita uma vez. A chave de idempotência da aula 10 garantiu que uma nova tentativa não a entregasse duas, e a sincronização
 por delta da aula 11 vai levar a cada aparelho a linha do outro depois. **Nenhuma dessas peças
 percebe que as duas escritas discordam.** Elas movem operações; não as comparam.
 

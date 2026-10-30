@@ -45,7 +45,7 @@ skip them for ever, and rows saved without their cursor are only fetched twice.
 ## What the cursor is not
 
 The cursor is opaque to the device. Here it is a number, and the device must still not do arithmetic
-on it, compare it with another server's, or make one up; a server is free to change it to a string
+on it, compare it with another server's, or make one up. A server is free to change it to a string
 that encodes a shard and a position, and many real ones do. **The device stores what it was given
 and sends it back.**
 

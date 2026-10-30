@@ -45,7 +45,7 @@ as pularia para sempre, e linhas salvas sem o cursor só são buscadas duas veze
 ## O que o cursor não é
 
 O cursor é opaco para o aparelho. Aqui ele é um número, e mesmo assim o aparelho não deve fazer
-contas com ele, compará-lo com o de outro servidor ou inventar um; um servidor é livre para trocá-lo
+contas com ele, compará-lo com o de outro servidor ou inventar um. Um servidor é livre para trocá-lo
 por uma string que codifica uma partição e uma posição, e muitos de verdade fazem isso. **O aparelho
 guarda o que recebeu e devolve.**
 

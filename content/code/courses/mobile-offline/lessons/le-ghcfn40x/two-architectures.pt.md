@@ -29,9 +29,7 @@ porque a lista foi desenhada a partir desse banco desde o começo. **Enviá-la a
 separada que acontece depois**, quando houver rede, e a linha carrega uma marca dizendo se essa
 etapa já aconteceu.
 
-O que o offline-first custa é tudo de que este curso trata da aula 8 à aula 15. O aparelho e o
-servidor guardam cada um uma cópia, então alguém precisa levar as mudanças de um para o outro (uma
-caixa de saída, aula 8), sobreviver à rede caindo no meio (aulas 9 e 10), saber o que mudou do
+O que o offline-first custa é tudo de que este curso trata da aula 8 à aula 15. O aparelho e o servidor guardam cada um uma cópia, então alguém precisa fazer quatro trabalhos. Levar as mudanças de um para o outro (uma caixa de saída, aula 8), sobreviver à rede caindo no meio (aulas 9 e 10), saber o que mudou do
 outro lado (aulas 11 e 12) e decidir o que acontece quando os dois lados mudaram a mesma coisa
 (aulas 13 a 15).
 

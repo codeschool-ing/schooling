@@ -56,9 +56,6 @@ Guardá-la ali é o que a faz sobreviver ao app ser encerrado entre duas tentati
 drenagem, num processo novo, lê a mesma chave de volta.
 
 **E isso muda a coalescência da aula 8 num ponto.** Dobrar um update dentro de um create só é seguro
-se o create nunca foi enviado. Se ele foi enviado e a resposta se perdeu, o servidor pode tê-lo
-guardado sob a chave dele; reenviar um corpo diferente sob a mesma chave é recusado por um servidor
-que compara corpos, e num que não compara, respondido com a resposta antiga guardada enquanto o
-update some em silêncio. Então uma operação que já foi tentada pelo menos uma vez nunca recebe outra
+se o create nunca foi enviado. Se ele foi enviado e a resposta se perdeu, o servidor pode tê-lo guardado sob a chave dele. Um servidor que compara corpos recusa então um corpo diferente sob a mesma chave. Um que não compara responde com a resposta antiga guardada, e o update some em silêncio. Então uma operação que já foi tentada pelo menos uma vez nunca recebe outra
 dobrada dentro dela, e uma coluna como `tried` na linha da caixa de saída é como a drenagem e a
 compactação concordam sobre isso.

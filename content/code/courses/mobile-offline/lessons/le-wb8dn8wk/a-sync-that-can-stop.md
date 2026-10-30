@@ -114,9 +114,7 @@ Read the second and third runs together. **The kill came after `k6` had reached 
 before the outbox knew**, which is the worst moment there is: the work was done and the record of
 it was not. The next run therefore sent `k6` again, and the server, finding the key already
 received, ignored it. Without the key, the planner would now hold `s4` marked done twice, or, for
-an operation that adds a session, two sessions. The program played the system by sending itself `SIGKILL`, the
-signal neither Android nor iOS lets an app catch, and `137` is the status a shell reports for a
-process that died of it, under the shell's own `Killed` line with the process ID, which will differ
+an operation that adds a session, two sessions. The program played the system by sending itself `SIGKILL`, the signal neither Android nor iOS lets an app catch. `137` is the status a shell reports for a process that died of it, under the shell's own `Killed` line with the process ID, which will differ
 on your machine. Nothing in the program got a chance to clean up, and nothing needed to.
 
 The pull side never had to be redone at all: each page moved the cursor, and the next run started

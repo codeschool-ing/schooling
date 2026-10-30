@@ -10,8 +10,7 @@ câmera, a bateria acaba. O app não ganha chance de terminar. O que o arquivo t
 
 Dá vontade de achar que a janela é curta demais para importar. Um arquivo de configurações é
 gravado em bem menos de um milissegundo. Mas apps salvam com frequência, celulares são mortos com
-frequência, e alguns milhões de instalações multiplicam uma chance pequena num fluxo constante de
-gente que abre o app e encontra as configurações perdidas, ou o app quebrando ao abrir porque o
+frequência, e alguns milhões de instalações multiplicam uma chance pequena num fluxo constante de gente. Essa gente abre o app e encontra as configurações perdidas, ou o app quebrando ao abrir porque o
 arquivo não se interpreta mais.
 
 ## Medido, parando de propósito
