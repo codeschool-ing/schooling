@@ -27,9 +27,9 @@ os dois frameworks de teste e o gerenciador de pacotes funcionam no Linux exatam
 
 O que não existe no Linux é **a plataforma da Apple**: o Xcode, o simulador do iOS, o SwiftUI e o
 UIKit. Três lições encontram esse muro, e cada uma diz isso onde acontece. A caça a um vazamento de
-memória da lição 11 descreve o grafo de memória que o Xcode desenha e faz a busca com as ferramentas
-do próprio compilador; a lição 16 mostra como o SwiftUI usa property wrappers e result builders
-construindo versões pequenas dos dois, já que o SwiftUI não está lá para ser importado; e a lição 20
+memória da lição 11 descreve o grafo de memória que o Xcode desenha, e faz a busca com as ferramentas
+do próprio compilador. A lição 16 mostra como o SwiftUI usa property wrappers e result builders
+construindo versões pequenas dos dois, já que o SwiftUI não está lá para ser importado. A lição 20
 descreve o que muda num Mac sem rodá-lo. Nada nessas três é transcrição de algo que não rodou.
 
 O curso depois deste no caminho, `ios-apps`, constrói o planner de estudos como app de iPhone, e esse
@@ -63,8 +63,8 @@ O `apt` imprime algumas centenas de linhas enquanto trabalha. O `grep` guarda as
 quanto custa e cinco das linhas que dizem o que chegou, para você comparar a sua tela com esta.
 **Na sua máquina, digite o comando sem o pipe e sem o `-y`**, para que o `apt` pare e pergunte antes
 de baixar qualquer coisa. A lista é longa porque o compilador é construído sobre o LLVM e liga os
-programas com as ferramentas do próprio sistema: o `binutils` é o linker, o `libc6-dev` e os dois
-pacotes `-13-dev` são as bibliotecas de C e C++ que todo programa Swift no Linux acaba chamando, e o
+programas com as ferramentas do próprio sistema. O `binutils` é o linker; o `libc6-dev` e os dois
+pacotes `-13-dev` são as bibliotecas de C e C++ que todo programa Swift no Linux acaba chamando; e o
 `git` é com o que o gerenciador de pacotes busca dependências na lição 19.
 
 Depois, o toolchain em si. Crie um diretório para o download, baixe o arquivo e a assinatura

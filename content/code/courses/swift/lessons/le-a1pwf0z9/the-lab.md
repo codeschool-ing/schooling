@@ -27,10 +27,10 @@ both test frameworks and the package manager all work on Linux exactly as they d
 
 What does not exist on Linux is **Apple's platform**: Xcode, the iOS simulator, SwiftUI and UIKit.
 Three lessons meet that wall, and each says so where it does. Lesson 11's search for a memory leak
-describes the memory graph that Xcode draws and does the search with the compiler's own tools
-instead; lesson 16 shows how SwiftUI uses property wrappers and result builders by building small
-versions of both, since SwiftUI itself is not there to import; and lesson 20 describes what changes
-on a Mac without running it. Nothing in those three is a transcript of something that was not run.
+describes the memory graph that Xcode draws, and does the search with the compiler's own tools
+instead. Lesson 16 shows how SwiftUI uses property wrappers and result builders by building small
+versions of both, since SwiftUI itself is not there to import. Lesson 20 describes what changes on a
+Mac without running it. Nothing in those three is a transcript of something that was not run.
 
 The course after this one on the path, `ios-apps`, builds the study planner as an iPhone app, and
 that course needs a Mac with Xcode from its first lesson. **The wall falls between the two
@@ -63,8 +63,8 @@ Setting up git (1:2.43.0-1ubuntu7.4) ...
 five of the lines that say what arrived, so you can compare your screen with this one. **On your
 own machine, type the command without the pipe and without `-y`**, so that `apt` stops and asks
 before it downloads anything. The list is long because the compiler is built on LLVM and links
-programs with the system's own tools: `binutils` is the linker, `libc6-dev` and the two `-13-dev`
-packages are the C and C++ libraries every Swift program on Linux ends up calling, and `git` is what
+programs with the system's own tools. `binutils` is the linker; `libc6-dev` and the two `-13-dev`
+packages are the C and C++ libraries every Swift program on Linux ends up calling; and `git` is what
 the package manager fetches dependencies with in lesson 19.
 
 Then the toolchain itself. Make a directory for the download, fetch the archive and the signature
