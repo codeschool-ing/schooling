@@ -1,0 +1,286 @@
+{
+ "ex-95d222hr": {
+  "prompt": "O repositório da loja foi criado em `us-central1` por engano, e os serviços rodam em São Paulo. O que é preciso para corrigir?",
+  "hint": "Que propriedades de um repositório podem mudar depois de criado?",
+  "choices": [
+   {
+    "text": "Atualizar a localização do repositório com gcloud",
+    "why": "A localização é fixa na criação; nenhum comando a move."
+   },
+   {
+    "text": "Repositório novo, uma cópia, e todo deploy trocado",
+    "why": "Certo. A região faz parte do endereço, então o endereço muda junto."
+   },
+   {
+    "text": "Nada: imagens são globais depois de enviadas",
+    "why": "Um repositório vive numa localização, e pulls de outro lugar pagam a transferência."
+   },
+   {
+    "text": "Renomear o repositório para incluir a região",
+    "why": "O nome também é fixo, e um nome não é uma localização."
+   }
+  ]
+ },
+ "ex-pch6etvm": {
+  "prompt": "Builds falham de vez em quando porque o Docker Hub recusa pulls anônimos da imagem base. Que tipo de repositório resolve isso dentro do seu projeto?",
+  "hint": "Um cache na frente de outro registro.",
+  "choices": [
+   {
+    "text": "Um repositório padrão",
+    "why": "Um padrão guarda o que você envia; ele não busca nada do Docker Hub."
+   },
+   {
+    "text": "Um repositório virtual",
+    "why": "Um virtual fica na frente de outros repositórios que você já tem; ele não faz cache sozinho."
+   },
+   {
+    "text": "Um remoto",
+    "why": "Certo. Só o primeiro pull de cada imagem vai ao Docker Hub; o resto vem do seu cache."
+   },
+   {
+    "text": "Um repositório numa multirregião como us",
+    "why": "Uma multirregião muda onde as imagens ficam, não de onde elas vêm."
+   }
+  ]
+ },
+ "ex-4vdcshbk": {
+  "prompt": "A conta de execução da API recebeu `roles/artifactregistry.reader` no projeto em vez de no `shop`. O que isso permite que não deveria?",
+  "hint": "Um papel num nível acima vale para tudo abaixo dele.",
+  "choices": [
+   {
+    "text": "Enviar imagens para o shop",
+    "why": "Reader nunca envia, onde quer que seja concedido."
+   },
+   {
+    "text": "Apagar o repositório",
+    "why": "Apagar precisa de um papel de admin, não de reader."
+   },
+   {
+    "text": "Baixar cada imagem de cada repositório do projeto",
+    "why": "Certo. Inclusive imagens de outros times, que carregam o código deles."
+   },
+   {
+    "text": "Nada a mais: reader no projeto e no repositório são o mesmo",
+    "why": "Diferem no alcance: um repositório contra todos."
+   }
+  ]
+ },
+ "ex-3pk5v5zr": {
+  "prompt": "Você envia um build novo com a tag `v1`, que já apontava para uma imagem mais antiga. O que um registro sem tags imutáveis faz?",
+  "hint": "Olhe os dois digests na transcrição.",
+  "choices": [
+   {
+    "text": "Recusa o envio",
+    "why": "Só um repositório com tags imutáveis recusa; o local aceitou."
+   },
+   {
+    "text": "Move a v1 para a imagem nova, em silêncio",
+    "why": "Certo. Uma tag, um digest novo, e nenhuma mensagem."
+   },
+   {
+    "text": "Guarda as duas imagens sob v1 e serve a mais antiga",
+    "why": "Uma tag aponta para exatamente uma imagem por vez."
+   },
+   {
+    "text": "Renomeia a imagem antiga para v1-1 e dá v1 à nova",
+    "why": "Nenhum registro inventa tags; a imagem antiga só fica sem tag."
+   }
+  ]
+ },
+ "ex-jw7xhb5p": {
+  "prompt": "Depois do segundo envio de `v1`, a primeira imagem ainda pode ser executada?",
+  "hint": "A tag saiu dela. Ela foi apagada?",
+  "choices": [
+   {
+    "text": "Não: o envio a substituiu no registro",
+    "why": "Enviar move uma tag; não apaga imagem nenhuma."
+   },
+   {
+    "text": "Só da máquina que a construiu, pelo cache local dela",
+    "why": "A transcrição removeu a cópia local e a baixou de volta do registro."
+   },
+   {
+    "text": "Sim, baixando a v1 com --previous",
+    "why": "Essa opção não existe; a tag só sabe para onde aponta agora."
+   },
+   {
+    "text": "Sim, pelo digest, até algo apagá-la",
+    "why": "Certo. Ela está sem tag, que é o que uma política de limpeza procura."
+   }
+  ]
+ },
+ "ex-kjr7je40": {
+  "prompt": "O script de inicialização de uma máquina do Compute Engine roda `docker run …/shop/api:latest`. Ela reinicia depois de um envio para `latest`. O que ela roda?",
+  "hint": "Quem resolveu a tag, e quando?",
+  "choices": [
+   {
+    "text": "A imagem nova, para onde quer que latest aponte quando ela baixa",
+    "why": "Certo. Nada registrou um digest, então o reboot é um deploy que ninguém escolheu."
+   },
+   {
+    "text": "A imagem que rodava antes do reboot, de que o Docker se lembra",
+    "why": "docker run com tag baixa só se faltar; com pull novo, pega a nova. O script não fixou nada."
+   },
+   {
+    "text": "A imagem da revisão, como faz o Cloud Run",
+    "why": "Revisões são do Cloud Run; um script de inicialização não tem nenhuma."
+   },
+   {
+    "text": "Nada: o Docker recusa latest num servidor",
+    "why": "latest é uma tag comum; nada a recusa."
+   }
+  ]
+ },
+ "ex-59v27mz3": {
+  "prompt": "Ligue cada lugar ao que ele deve nomear.",
+  "hint": "Uma pessoa lê um, uma máquina roda o outro.",
+  "pairs": [
+   {
+    "left": "o envio do build",
+    "right": "uma tag do commit"
+   },
+   {
+    "left": "um release ou um manifesto",
+    "right": "o digest"
+   },
+   {
+    "left": "uma conversa no time",
+    "right": "a tag"
+   }
+  ],
+  "right_distractors": [
+   "a região do repositório"
+  ]
+ },
+ "ex-t2phrbqv": {
+  "prompt": "As tags imutáveis foram ligadas no `shop`. O build ainda envia `:latest` depois de `:$SHORT_SHA`. O que acontece no segundo build?",
+  "hint": "Que tags a configuração cobre?",
+  "choices": [
+   {
+    "text": "Funciona: latest é exceção",
+    "why": "Nenhuma tag é exceção, latest inclusive."
+   },
+   {
+    "text": "O envio de latest é recusado",
+    "why": "Certo. Mover latest é mover uma tag, que o repositório agora recusa."
+   },
+   {
+    "text": "Os dois envios são recusados, porque a imagem já existe",
+    "why": "A tag do commit é nova a cada vez, então é aceita."
+   },
+   {
+    "text": "latest é movida e um aviso é registrado no Cloud Logging",
+    "why": "Imutabilidade recusa; não avisa e move mesmo assim."
+   }
+  ]
+ },
+ "ex-q1ssx2eb": {
+  "prompt": "Uma política de limpeza apaga imagens com tag mais velhas que 90 dias, sem regra `Keep`. A API roda uma imagem há quatro meses sem deploy. Qual é o risco?",
+  "hint": "Uma política sabe o que está rodando?",
+  "choices": [
+   {
+    "text": "Nenhum: uma imagem em execução nunca é apagada",
+    "why": "A política conhece tags e idades, não deploys."
+   },
+   {
+    "text": "O contêiner em execução para na hora",
+    "why": "Um contêiner em execução mantém sua cópia; a falha espera o próximo pull."
+   },
+   {
+    "text": "A imagem é apagada e o próximo restart não consegue baixá-la",
+    "why": "Certo. Por isso a loja guarda as últimas dez versões."
+   },
+   {
+    "text": "A política se recusa a rodar até existir uma regra Keep",
+    "why": "Nada exige uma regra Keep; isso é tarefa de quem escreve."
+   }
+  ]
+ },
+ "ex-38zv4hw3": {
+  "prompt": "Um repositório guarda 60,5 GiB o mês inteiro. A 0,10 USD por GiB-mês depois do primeiro 0,5 GiB grátis, quanto é a conta de armazenamento do mês?",
+  "hint": "Tire o meio gibibyte grátis primeiro.",
+  "unit": "USD"
+ },
+ "ex-41tbk5d9": {
+  "prompt": "A opção que faz `set-cleanup-policies` relatar o que apagaria, sem apagar nada, é `--___`.",
+  "hint": "Duas palavras unidas por hífen.",
+  "blanks": [
+   {
+    "accept": [
+     "dry-run"
+    ]
+   }
+  ]
+ },
+ "ex-hsqpwk6p": {
+  "prompt": "Uma imagem estava limpa quando foi enviada na segunda. Na quinta ela mostra um achado crítico, e ninguém mexeu nela. Por quê?",
+  "hint": "A varredura continua depois do envio.",
+  "choices": [
+   {
+    "text": "Alguém enviou por cima do digest dela",
+    "why": "Um digest não pode apontar para outra imagem."
+   },
+   {
+    "text": "Um alerta novo foi publicado, e a imagem foi varrida de novo",
+    "why": "Certo. Por 30 dias os achados seguem os alertas, não a imagem."
+   },
+   {
+    "text": "A primeira varredura não tinha terminado",
+    "why": "O resultado de segunda estava completo; o de quinta é sobre um alerta mais novo."
+   },
+   {
+    "text": "A varredura executa a imagem e achou a falha em tempo de execução",
+    "why": "O Artifact Analysis lê versões de pacotes; ele nunca executa a imagem."
+   }
+  ]
+ },
+ "ex-g8qy8999": {
+  "prompt": "Em qual achado a loja age primeiro?",
+  "hint": "Algo que dá para fazer, em algo que roda.",
+  "choices": [
+   {
+    "text": "Um CVE crítico sem versão corrigida, numa imagem que ninguém usa em deploy",
+    "why": "Sem correção e sem cópia rodando: não há o que fazer nem o que perder ainda."
+   },
+   {
+    "text": "O achado com a maior nota CVSS",
+    "why": "A severidade efetiva da distribuição diz mais, e uma correção importa tanto quanto."
+   },
+   {
+    "text": "Um achado alto com versão corrigida, na imagem que a API roda",
+    "why": "Certo. A correção existe e importa; quase sempre uma imagem base mais nova."
+   },
+   {
+    "text": "Um achado baixo no app.py",
+    "why": "A varredura lê pacotes, não o seu próprio arquivo de código."
+   }
+  ]
+ },
+ "ex-kmg45fhz": {
+  "prompt": "A 0,26 USD por varredura, quanto custam 200 envios por mês em varredura?",
+  "hint": "Uma varredura por envio.",
+  "unit": "USD"
+ },
+ "ex-q0hda4v2": {
+  "prompt": "Um time quer que a varredura impeça uma imagem vulnerável de chegar à produção. O que falta se eles só ligarem a varredura?",
+  "hint": "Um relatório recusa alguma coisa?",
+  "choices": [
+   {
+    "text": "Um repositório remoto na frente do Docker Hub",
+    "why": "Isso é sobre de onde vêm as imagens base, não sobre recusar um deploy."
+   },
+   {
+    "text": "Tags imutáveis",
+    "why": "Elas impedem tags de mudar; uma imagem vulnerável com tag nova é aceita."
+   },
+   {
+    "text": "Uma verificação no deploy que a recuse",
+    "why": "Certo. A varredura relata; a política de admissão da lição 4 é o que recusa."
+   },
+   {
+    "text": "Nada: um achado crítico bloqueia pulls da imagem",
+    "why": "Achados não bloqueiam nada; a imagem baixa como antes."
+   }
+  ]
+ }
+}

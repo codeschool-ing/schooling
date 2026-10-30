@@ -1,0 +1,426 @@
+[
+ {
+  "id": "ex-95d222hr",
+  "version": 1,
+  "section": "repositories",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop's repository was created in `us-central1` by mistake, and the services run in São Paulo. What does fixing it take?",
+  "hint": "Which properties of a repository can change after it is created?",
+  "choices": [
+   {
+    "text": "Updating the repository's location with gcloud",
+    "correct": false,
+    "why": "The location is fixed at creation; there is no command that moves it."
+   },
+   {
+    "text": "A new repository, a copy, and every deployment changed",
+    "correct": true,
+    "why": "Right. The region is part of the address, so the address changes with it."
+   },
+   {
+    "text": "Nothing: images are global once pushed",
+    "correct": false,
+    "why": "A repository lives in one location, and pulls from elsewhere pay for the transfer."
+   },
+   {
+    "text": "Renaming the repository to include the region",
+    "correct": false,
+    "why": "The name is fixed too, and a name is not a location."
+   }
+  ]
+ },
+ {
+  "id": "ex-pch6etvm",
+  "version": 1,
+  "section": "repositories",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Builds fail now and then because Docker Hub refuses anonymous pulls of the base image. Which kind of repository addresses that inside your project?",
+  "hint": "A cache in front of another registry.",
+  "choices": [
+   {
+    "text": "A standard repository",
+    "correct": false,
+    "why": "A standard one stores what you push; it fetches nothing from Docker Hub."
+   },
+   {
+    "text": "A virtual repository",
+    "correct": false,
+    "why": "A virtual one fronts other repositories you already have; it caches nothing itself."
+   },
+   {
+    "text": "A remote one",
+    "correct": true,
+    "why": "Right. Only the first pull of each image goes to Docker Hub; the rest come from your cache."
+   },
+   {
+    "text": "A repository in a multi-region such as us",
+    "correct": false,
+    "why": "A multi-region changes where images are stored, not where they come from."
+   }
+  ]
+ },
+ {
+  "id": "ex-4vdcshbk",
+  "version": 1,
+  "section": "repositories",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The API's runtime account was given `roles/artifactregistry.reader` on the project rather than on `shop`. What does that allow that it should not?",
+  "hint": "A role on a parent applies to everything under it.",
+  "choices": [
+   {
+    "text": "Pushing images to shop",
+    "correct": false,
+    "why": "Reader never pushes, wherever it is granted."
+   },
+   {
+    "text": "Deleting the repository",
+    "correct": false,
+    "why": "Deletion needs an admin role, not reader."
+   },
+   {
+    "text": "Pulling every image in every repository of the project",
+    "correct": true,
+    "why": "Right. Including other teams' images, which carry their code."
+   },
+   {
+    "text": "Nothing more: reader on the project and on the repository are the same",
+    "correct": false,
+    "why": "They differ in reach: one repository against all of them."
+   }
+  ]
+ },
+ {
+  "id": "ex-3pk5v5zr",
+  "version": 1,
+  "section": "tags-and-digests",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "You push a new build under the tag `v1`, which already pointed at an older image. What does a registry without immutable tags do?",
+  "hint": "Look at the two digests in the transcript.",
+  "choices": [
+   {
+    "text": "Refuses the push",
+    "correct": false,
+    "why": "Only an immutable-tags repository refuses; the local one accepted it."
+   },
+   {
+    "text": "Moves v1 to the new image, silently",
+    "correct": true,
+    "why": "Right. One tag, a new digest, and no message."
+   },
+   {
+    "text": "Keeps both images under v1 and serves the older one",
+    "correct": false,
+    "why": "A tag points at exactly one image at a time."
+   },
+   {
+    "text": "Renames the old image to v1-1 and gives the new one v1",
+    "correct": false,
+    "why": "No registry invents tags; the old image is simply left untagged."
+   }
+  ]
+ },
+ {
+  "id": "ex-jw7xhb5p",
+  "version": 1,
+  "section": "tags-and-digests",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the second push of `v1`, can the first image still be run?",
+  "hint": "The tag left it. Is it deleted?",
+  "choices": [
+   {
+    "text": "No: the push replaced it in the registry",
+    "correct": false,
+    "why": "Pushing moves a tag; it deletes no image."
+   },
+   {
+    "text": "Only from the machine that built it, out of its local cache",
+    "correct": false,
+    "why": "The transcript removed the local copy and pulled it back from the registry."
+   },
+   {
+    "text": "Yes, by pulling v1 with --previous",
+    "correct": false,
+    "why": "There is no such option; the tag knows only where it points now."
+   },
+   {
+    "text": "Yes, by its digest, until something deletes it",
+    "correct": true,
+    "why": "Right. It is untagged, which is what a cleanup policy looks for."
+   }
+  ]
+ },
+ {
+  "id": "ex-kjr7je40",
+  "version": 1,
+  "section": "tags-and-digests",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Compute Engine machine's startup script runs `docker run …/shop/api:latest`. It reboots after a push to `latest`. What does it run?",
+  "hint": "Who resolved the tag, and when?",
+  "choices": [
+   {
+    "text": "The new image, whatever latest points at when it pulls",
+    "correct": true,
+    "why": "Right. Nothing recorded a digest, so the reboot is a deploy nobody chose."
+   },
+   {
+    "text": "The image it ran before the reboot, which Docker remembers",
+    "correct": false,
+    "why": "docker run with a tag pulls only if missing; with a fresh pull policy, it gets the new one. The script did not pin anything."
+   },
+   {
+    "text": "The image from the revision, as Cloud Run does",
+    "correct": false,
+    "why": "Revisions are Cloud Run's; a startup script has none."
+   },
+   {
+    "text": "Nothing: Docker refuses latest on a server",
+    "correct": false,
+    "why": "latest is an ordinary tag; nothing refuses it."
+   }
+  ]
+ },
+ {
+  "id": "ex-59v27mz3",
+  "version": 1,
+  "section": "tags-and-digests",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each place to what it should name.",
+  "hint": "A person reads one, a machine runs the other.",
+  "pairs": [
+   {
+    "left": "the build's push",
+    "right": "a tag from the commit"
+   },
+   {
+    "left": "a release or a manifest",
+    "right": "the digest"
+   },
+   {
+    "left": "a conversation in the team",
+    "right": "the tag"
+   }
+  ],
+  "right_distractors": [
+   "the repository's region"
+  ]
+ },
+ {
+  "id": "ex-t2phrbqv",
+  "version": 1,
+  "section": "immutable",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Immutable tags are turned on for `shop`. The build still pushes `:latest` after `:$SHORT_SHA`. What happens on the second build?",
+  "hint": "Which tags does the setting cover?",
+  "choices": [
+   {
+    "text": "It succeeds: latest is exempt",
+    "correct": false,
+    "why": "No tag is exempt, latest included."
+   },
+   {
+    "text": "The push of latest is refused",
+    "correct": true,
+    "why": "Right. Moving latest is moving a tag, which the repository now refuses."
+   },
+   {
+    "text": "Both pushes are refused, because the image already exists",
+    "correct": false,
+    "why": "The commit tag is new each time, so it is accepted."
+   },
+   {
+    "text": "latest is moved and a warning is logged in Cloud Logging",
+    "correct": false,
+    "why": "Immutability refuses; it does not warn and move anyway."
+   }
+  ]
+ },
+ {
+  "id": "ex-q1ssx2eb",
+  "version": 1,
+  "section": "immutable",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A cleanup policy deletes tagged images older than 90 days, with no `Keep` rule. The API has run one image for four months without a deploy. What is the risk?",
+  "hint": "Does a policy know what is running?",
+  "choices": [
+   {
+    "text": "None: a running image is never deleted",
+    "correct": false,
+    "why": "The policy knows tags and ages, not deployments."
+   },
+   {
+    "text": "The running container stops at once",
+    "correct": false,
+    "why": "A running container keeps its copy; the failure waits for the next pull."
+   },
+   {
+    "text": "The image is deleted and the next restart cannot pull it",
+    "correct": true,
+    "why": "Right. Which is why the shop keeps its last ten versions."
+   },
+   {
+    "text": "The policy refuses to run until a Keep rule exists",
+    "correct": false,
+    "why": "Nothing requires a Keep rule; that is the author's job."
+   }
+  ]
+ },
+ {
+  "id": "ex-38zv4hw3",
+  "version": 1,
+  "section": "immutable",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 6,
+  "tolerance": 0.05,
+  "prompt": "A repository holds 60.5 GiB all month. At 0.10 USD per GiB-month after the first 0.5 GiB free, what is the month's storage bill?",
+  "hint": "Subtract the free half gibibyte first.",
+  "unit": "USD"
+ },
+ {
+  "id": "ex-41tbk5d9",
+  "version": 1,
+  "section": "immutable",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The flag that makes `set-cleanup-policies` report what it would delete, deleting nothing, is `--___`.",
+  "hint": "Two words joined by a hyphen.",
+  "blanks": [
+   {
+    "accept": [
+     "dry-run"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-hsqpwk6p",
+  "version": 1,
+  "section": "scanning",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "An image was clean when it was pushed on Monday. On Thursday it shows a critical finding, and nobody touched it. Why?",
+  "hint": "Scanning keeps going after the push.",
+  "choices": [
+   {
+    "text": "Somebody pushed over its digest",
+    "correct": false,
+    "why": "A digest cannot point at another image."
+   },
+   {
+    "text": "A new advisory was published, and the image was re-scanned",
+    "correct": true,
+    "why": "Right. For 30 days the findings follow the advisories, not the image."
+   },
+   {
+    "text": "The first scan had not finished",
+    "correct": false,
+    "why": "Monday's result was complete; Thursday's is about a newer advisory."
+   },
+   {
+    "text": "Scanning runs the image and found the flaw at run time",
+    "correct": false,
+    "why": "Artifact Analysis reads package versions; it never runs the image."
+   }
+  ]
+ },
+ {
+  "id": "ex-g8qy8999",
+  "version": 1,
+  "section": "scanning",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which finding does the shop act on first?",
+  "hint": "Something you can do, in something that runs.",
+  "choices": [
+   {
+    "text": "A critical CVE with no fixed version, in an image nobody deploys",
+    "correct": false,
+    "why": "No fix and no running copy: there is nothing to do and nothing at stake yet."
+   },
+   {
+    "text": "The finding with the highest CVSS score",
+    "correct": false,
+    "why": "The effective severity for the distribution says more, and a fix matters as much."
+   },
+   {
+    "text": "A high finding with a fixed version, in the image the API runs",
+    "correct": true,
+    "why": "Right. A fix exists and it matters; usually a newer base image."
+   },
+   {
+    "text": "A low finding in app.py",
+    "correct": false,
+    "why": "Scanning reads packages, not your own source file."
+   }
+  ]
+ },
+ {
+  "id": "ex-kmg45fhz",
+  "version": 1,
+  "section": "scanning",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 52,
+  "tolerance": 0.01,
+  "prompt": "At 0.26 USD per scan, what do 200 pushes a month cost in scanning?",
+  "hint": "One scan per push.",
+  "unit": "USD"
+ },
+ {
+  "id": "ex-q0hda4v2",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team wants scanning to stop a vulnerable image from reaching production. What is missing if they only turn scanning on?",
+  "hint": "Does a report refuse anything?",
+  "choices": [
+   {
+    "text": "A remote repository in front of Docker Hub",
+    "correct": false,
+    "why": "That is about where base images come from, not about refusing a deployment."
+   },
+   {
+    "text": "Immutable tags",
+    "correct": false,
+    "why": "They stop tags moving; a vulnerable image with a fresh tag is accepted."
+   },
+   {
+    "text": "A check at deploy time that refuses it",
+    "correct": true,
+    "why": "Right. Scanning reports; lesson 4's admission policy is what refuses."
+   },
+   {
+    "text": "Nothing: a critical finding blocks pulls of the image",
+    "correct": false,
+    "why": "Findings block nothing; the image pulls as before."
+   }
+  ]
+ }
+]
