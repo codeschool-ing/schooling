@@ -50,10 +50,10 @@ Current stack trace:
 ## O try? guarda o sucesso e larga o motivo
 
 `try? parseMinutes("forty")` dá um `Int?`: o número quando a chamada dá certo, `nil` quando ela lança,
-e o erro em si é descartado. O `print(maybe as Any)` imprime `nil` sem o aviso que a lição 1 encontrou,
+e o erro em si é descartado. O `print(maybe as Any)` imprime `nil` sem o aviso que a aula 1 encontrou,
 porque o `as Any` diz que o opcional é intencional.
 
-**Ele serve onde o motivo não importa.** O `compactMap` (lição 4) guarda os valores que não são `nil`,
+**Ele serve onde o motivo não importa.** O `compactMap` (aula 4) guarda os valores que não são `nil`,
 então `typed.compactMap { try? parseMinutes($0) }` lê uma lista de durações digitadas e guarda as que
 são números: 45, 30 e 60, 135 minutos, deixando de fora `"forty"` e a string vazia. Isso está certo
 para um total rápido. Está errado para um formulário, em que a estudante precisa saber qual campo não
@@ -64,7 +64,7 @@ era número, e só o erro sabe.
 O `try!` diz que a chamada não pode falhar ali, e **se falhar, o programa para**. O
 `try! parseMinutes("90")` deu 90. O `try! parseMinutes(typed[1])` leu `"forty"`, e o processo terminou
 com `'try!' expression unexpectedly raised an error`, citando o arquivo, a linha 18, e o erro. É o
-desempacotamento forçado da lição 2 de novo, para erros, e merece a mesma desconfiança: honesto para
+desempacotamento forçado da aula 2 de novo, para erros, e merece a mesma desconfiança: honesto para
 um valor escrito no próprio programa, como `"90"`, e uma quebra esperando o dia em que o valor vier de
 outro lugar.
 

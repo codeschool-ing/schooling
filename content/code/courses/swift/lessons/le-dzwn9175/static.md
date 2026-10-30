@@ -10,9 +10,9 @@ directory each time it starts. That is fine on the machine that built it, and it
 for a server, a container image or a tool you hand to somebody else.
 
 The answer on Linux is the **static Linux SDK**. A Swift SDK is a bundle of libraries and settings
-for building for a target other than the machine you are on, and this one targets Linux itself,
-with everything linked into the executable: the Swift runtime, Foundation, and **musl**, a small C
-library written to be linked statically, in place of Ubuntu's `glibc`. swift.org publishes one per
+for building for a target other than the machine you are on. This one targets Linux itself, with
+everything linked into the executable: the Swift runtime, Foundation, and **musl**, a small C library
+written to be linked statically, in place of Ubuntu's `glibc`. swift.org publishes one per
 release, next to the toolchain, with a checksum.
 
 ## Installing the SDK

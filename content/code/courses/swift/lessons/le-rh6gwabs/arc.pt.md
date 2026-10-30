@@ -10,12 +10,12 @@ Reference Counting, ARC: o compilador escreve os incrementos e decrementos por v
 onde uma referência é tomada ou largada, e o runtime faz a conta enquanto o programa roda.
 
 Vale para instâncias de classe, e para as closures da seção 06. Structs, enums, números e strings
-são valores, copiados em vez de compartilhados (lição 5), então não há o que contar neles. Esta lição
+são valores, copiados em vez de compartilhados (aula 5), então não há o que contar neles. Esta aula
 é sobre classes por isso, e toda classe nela imprime algo no seu `deinit`, o código que roda quando
 um objeto é liberado.
 
 ```schooling-example
-{"language": "swift", "file": "Arc.swift", "parts": [{"code": "// Arc.swift\nfinal class StudySession {\n    let minutes: Int\n    init(minutes: Int) {\n        self.minutes = minutes\n        print(\"session of \\(minutes) created\")\n    }\n    deinit { print(\"session of \\(minutes) freed\") }\n}", "note": "Uma classe, porque só instâncias de classe são contadas. O `deinit` é o código que o Swift roda na saída, logo antes de devolver a memória, e imprimir nele é como esta lição observa um objeto ir embora."}, {"code": "var first: StudySession? = StudySession(minutes: 45)\nprint(\"alone:\", isKnownUniquelyReferenced(&first))\nvar second = first\nprint(\"shared:\", isKnownUniquelyReferenced(&first))", "note": "O `isKnownUniquelyReferenced` responde se exatamente uma referência forte segura o objeto. Depois de `var second = first` há dois nomes e uma sessão, então a resposta vira `false`. Nada foi copiado: a lição 5 mostrou que atribuir uma instância de classe a compartilha."}, {"code": "first = nil\nprint(\"first is nil, second still holds it\")\nsecond = nil\nprint(\"both are nil\")", "note": "Pôr um nome em `nil` solta o objeto. O primeiro `nil` leva a contagem de dois para um e nada acontece; o segundo a leva a zero, e o `deinit` roda nessa linha, antes do próximo `print`."}, {"code": "do {\n    let inside = StudySession(minutes: 30)\n    print(\"inside the block: \\(inside.minutes) minutes\")\n}\nprint(\"after the block\")", "note": "Um nome também solta quando sai de escopo. `inside` só existe entre as chaves do `do`, então a sessão de 30 minutos é liberada na chave que fecha, sem ninguém escrever `nil`."}]}
+{"language": "swift", "file": "Arc.swift", "parts": [{"code": "// Arc.swift\nfinal class StudySession {\n    let minutes: Int\n    init(minutes: Int) {\n        self.minutes = minutes\n        print(\"session of \\(minutes) created\")\n    }\n    deinit { print(\"session of \\(minutes) freed\") }\n}", "note": "Uma classe, porque só instâncias de classe são contadas. O `deinit` é o código que o Swift roda na saída, logo antes de devolver a memória, e imprimir nele é como esta aula observa um objeto ir embora."}, {"code": "var first: StudySession? = StudySession(minutes: 45)\nprint(\"alone:\", isKnownUniquelyReferenced(&first))\nvar second = first\nprint(\"shared:\", isKnownUniquelyReferenced(&first))", "note": "O `isKnownUniquelyReferenced` responde se exatamente uma referência forte segura o objeto. Depois de `var second = first` há dois nomes e uma sessão, então a resposta vira `false`. Nada foi copiado: a aula 5 mostrou que atribuir uma instância de classe a compartilha."}, {"code": "first = nil\nprint(\"first is nil, second still holds it\")\nsecond = nil\nprint(\"both are nil\")", "note": "Pôr um nome em `nil` solta o objeto. O primeiro `nil` leva a contagem de dois para um e nada acontece; o segundo a leva a zero, e o `deinit` roda nessa linha, antes do próximo `print`."}, {"code": "do {\n    let inside = StudySession(minutes: 30)\n    print(\"inside the block: \\(inside.minutes) minutes\")\n}\nprint(\"after the block\")", "note": "Um nome também solta quando sai de escopo. `inside` só existe entre as chaves do `do`, então a sessão de 30 minutos é liberada na chave que fecha, sem ninguém escrever `nil`."}]}
 ```
 
 ```
@@ -45,7 +45,7 @@ chave que fecha o bloco.
 
 O Swift não deixa você ler o número em si; o `isKnownUniquelyReferenced` só diz se ele é um. **Isso
 basta, porque a contagem nunca é a pergunta.** A pergunta é sempre a que as impressões respondem:
-este objeto ainda está seguro, e por quem? O resto desta lição trata dos casos em que a resposta
+este objeto ainda está seguro, e por quem? O resto desta aula trata dos casos em que a resposta
 surpreende quem escreveu o código.
 
 O ARC é **determinístico**. O mesmo programa libera os mesmos objetos nas mesmas linhas, a cada

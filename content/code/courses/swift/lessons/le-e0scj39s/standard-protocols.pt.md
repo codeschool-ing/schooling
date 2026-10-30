@@ -91,7 +91,7 @@ biblioteca padrão que poderiam ter servido, uma por protocolo, e a última dela
 requisito. A nota a ler é a que aponta para a linha 8: **a propriedade armazenada `note` é o que
 impede a síntese.**
 
-`Note` é uma classe sem `==`, e a lição 5 explica por que duas instâncias de classe não têm um
+`Note` é uma classe sem `==`, e a aula 5 explica por que duas instâncias de classe não têm um
 significado óbvio para "igual". A correção é fazer `Note` conformar, ou escrever você mesmo o `==` da
 sessão e dizer o que igualdade significa para ela, por exemplo os mesmos minutos e o mesmo texto.
 
@@ -100,4 +100,4 @@ sessão e dizer o que igualdade significa para ela, por exemplo os mesmos minuto
 O `==` sintetizado é um bom padrão e nem sempre a resposta certa. Duas sessões com o mesmo curso e os
 mesmos minutos, em dias diferentes, são iguais para ele. **Se um tipo tem identidade, como um `id`,
 a igualdade pode ser sobre isso e mais nada**, e aí você escreve `==` e `hash(into:)`, usando as mesmas
-propriedades nos dois; valores iguais precisam ter o mesmo hash, ou um `Set` perde a conta deles.
+propriedades nos dois. Valores iguais precisam ter o mesmo hash, ou um `Set` perde a conta deles.

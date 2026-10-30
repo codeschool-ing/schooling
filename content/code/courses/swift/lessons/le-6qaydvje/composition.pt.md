@@ -63,16 +63,16 @@ O total é 105, e os minutos do simulado contaram. Compare as partes com a seç�
   engano, e não há `0` minutos para herdar. Uma prova naquele array é erro de compilação, que é
   exatamente onde o total errado deveria estar.
 - **`MockExam` lista o que é**, e o compilador cobra tudo. Deixar `minutes` de fora daria o "does not
-  conform" da lição 8, não um zero silencioso.
+  conform" da aula 8, não um zero silencioso.
 - **Os tipos são structs.** Nenhum `init` precisou chamar `super.init`, e cada valor ganha o
-  inicializador por membros da lição 6 e a semântica de valor da lição 5.
+  inicializador por membros da aula 6 e a semântica de valor da aula 5.
 
 ## &: um tipo que é várias coisas
 
 `Titled & Graded` é uma **composição de protocolos**: um tipo que conforma aos dois. O `report` recebe
-`some Titled & Graded`, o atalho genérico da lição 9, então aceita um `Exam` e um `MockExam` e recusa
+`some Titled & Graded`, o atalho genérico da aula 9, então aceita um `Exam` e um `MockExam` e recusa
 uma `StudySession`. Uma composição usada com frequência pode ganhar nome, `typealias Assessed = Titled
-& Graded`, e a biblioteca padrão faz o mesmo: `Codable`, assunto da lição 13, é `Encodable &
+& Graded`, e a biblioteca padrão faz o mesmo: `Codable`, assunto da aula 13, é `Encodable &
 Decodable`.
 
 ## Pequeno quer dizer pequeno

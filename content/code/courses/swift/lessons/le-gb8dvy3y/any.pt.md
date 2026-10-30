@@ -3,7 +3,7 @@ title: any, e quanto custa a caixa
 version: 1
 ---
 
-A lição 8 pôs cursos e sessões num array como `[any Describable]`, e a seção 06 mandou o caso misto
+A aula 8 pôs cursos e sessões num array como `[any Describable]`, e a seção 06 mandou o caso misto
 para cá. **`any Protocolo` é um existencial: um valor cujo tipo concreto é decidido enquanto o
 programa roda, guardado numa caixa que também lembra qual é esse tipo.** `some` é um tipo que quem
 chama não conhece; `any` é uma caixa que pode guardar um tipo diferente a cada vez.
@@ -38,7 +38,7 @@ Optionals
 
 Um `Int` tem 8 bytes e uma `String` 16, então cada struct tem 24. Um `any Describable` tem **40
 bytes**, guarde o que guardar: um espaço de três palavras para o valor, uma palavra dizendo que tipo
-está dentro e uma apontando para a tabela de conformidade desse tipo, da lição 8, que é como
+está dentro e uma apontando para a tabela de conformidade desse tipo, da aula 8, que é como
 `item.title` acha a propriedade certa. Um valor grande demais para o espaço é guardado em outro lugar,
 e o espaço guarda um ponteiro para ele.
 
@@ -48,7 +48,7 @@ e o espaço guarda um ponteiro para ele.
 
 ## O que um any não consegue fazer
 
-A caixa esconde o tipo, e com ele tudo o que depende do tipo. O `Describable` da lição 8 não tem tipo
+A caixa esconde o tipo, e com ele tudo o que depende do tipo. O `Describable` da aula 8 não tem tipo
 associado, então nada se perdeu. O `Store` da seção 05 tem um, e um repositório dentro de uma caixa
 não sabe mais o que aceita:
 
@@ -98,5 +98,5 @@ no lugar: **uma restrição genérica**, como o `fill<S: Store>` da seção 05, 
 a lista mista do planner é exatamente o caso dele; é uma caixa com uma consulta a cada chamada, e um
 genérico que conhece o tipo não tem nenhuma das duas. O Swift 6 pede que você escreva a palavra `any`
 por isso, para o custo ficar visível onde é pago. Código de antes dessa regra escrevia
-`[Describable]`, que ainda compila hoje, e a lição 15 é onde os modos de linguagem que apertam regras
+`[Describable]`, que ainda compila hoje, e a aula 15 é onde os modos de linguagem que apertam regras
 como esta são explicados.

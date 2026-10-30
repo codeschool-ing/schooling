@@ -74,7 +74,7 @@ ana@vm:~/sw/l18/planner$ swift test --show-codecov-path
 
 O arquivo JSON é para ferramentas. O `llvm-cov` do toolchain lê os dados brutos ao lado dele e
 imprime uma tabela; `-ignore-filename-regex=Tests` deixa de fora os arquivos de teste, e as quatro
-opções `-show-…=false` tiram as colunas sobre ramos e regiões, de que esta lição não precisa:
+opções `-show-…=false` tiram as colunas sobre ramos e regiões, de que esta aula não precisa:
 
 ```
 ana@vm:~/sw/l18/planner$ llvm-cov report .build/debug/PlannerCoreTests.so -instr-profile=.build/debug/codecov/default.profdata -ignore-filename-regex=Tests -show-region-summary=false -show-branch-summary=false -show-instantiation-summary=false -show-mcdc-summary=false

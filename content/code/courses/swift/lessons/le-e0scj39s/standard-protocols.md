@@ -99,5 +99,5 @@ yourself and say what equality means for it, for example the same minutes and th
 The synthesised `==` is a good default and not always the right answer. Two sessions with the same
 course and the same minutes, on different days, are equal to it. **If a type has an identity, such
 as an `id`, equality may be about that and nothing else**, and then you write `==` and `hash(into:)`
-yourself, using the same properties in both; values that are equal must hash the same, or a `Set`
+yourself, using the same properties in both. Values that are equal must hash the same, or a `Set`
 loses track of them.

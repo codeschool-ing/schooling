@@ -78,5 +78,5 @@ retornaria. Preguiçoso, é uma descrição, e o `prefix(4)` pega quatro valores
 calculados de fato.
 
 **Use `lazy` quando você para cedo ou a entrada é grande**, e deixe de fora no resto: para um array
-curto usado inteiro, ele só acrescenta um passo e um tipo menos óbvio. O `some Sequence` da lição 9 é
+curto usado inteiro, ele só acrescenta um passo e um tipo menos óbvio. O `some Sequence` da aula 9 é
 a ferramenta para esconder esse tipo quando uma função devolve um.

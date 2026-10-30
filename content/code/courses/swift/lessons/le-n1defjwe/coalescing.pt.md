@@ -30,7 +30,7 @@ Optional(0)
 nil
 ```
 
-O `String(describing:)` imprime um opcional como ele é, sem o aviso da lição 1, e é por isso que está
+O `String(describing:)` imprime um opcional como ele é, sem o aviso da aula 1, e é por isso que está
 aqui. As três linhas são os três resultados que vale distinguir: **um comprimento, `nil` para a
 anotação que falta e `0` para a vazia.**
 

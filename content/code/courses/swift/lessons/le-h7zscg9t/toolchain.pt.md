@@ -7,7 +7,7 @@ Três números de versão se encontram em todo build Swift, e é fácil confundi
 parecem. **A versão do toolchain** é o compilador que você instalou, 6.4.2. **A versão de
 ferramentas** é a primeira linha de um manifesto, o toolchain mais antigo com que o pacote diz
 compilar. **O modo de linguagem** é o conjunto de regras que o compilador aplica ao fonte, Swift 5 ou
-Swift 6, e é o que muda o rigor das verificações de concorrência da lição 15.
+Swift 6, e é o que muda o rigor das verificações de concorrência da aula 15.
 
 ```
 ana@vm:~/sw/l19/planner$ swift --version
@@ -50,10 +50,10 @@ por elas. As contagens são quantos comandos do compilador levaram a flag, e dif
 refez uma quantidade diferente de trabalho; o que importa é que, dentro de cada build, todos
 concordaram. Note também que o `--set` manteve a segunda linha, o comentário com o nome do arquivo.
 
-Era assim que o `swiftc` e o `swift Hello.swift` da lição 1 se comportavam: **um arquivo compilado
-sozinho fica no modo Swift 5**, a menos que se passe `-swift-version 6`, e a lição 15 passou. Um
+Era assim que o `swiftc` e o `swift Hello.swift` da aula 1 se comportavam: **um arquivo compilado
+sozinho fica no modo Swift 5**, a menos que se passe `-swift-version 6`, e a aula 15 passou. Um
 pacote também pode escolher um modo por target com `swiftSettings: [.swiftLanguageMode(.v5)]`, que é
-como um projeto grande passa para o Swift 6 um módulo de cada vez, e o `ApproachableConcurrency` que o
+como um projeto grande passa para o Swift 6 um módulo de cada vez. O `ApproachableConcurrency` que o
 `init` escreveu na seção 02 é uma das **funcionalidades futuras**, regras isoladas de um modo futuro
 ligadas mais cedo.
 
@@ -70,7 +70,7 @@ ana@vm:~/sw/l19/planner$ du -sh .build ~/.cache/org.swift.swiftpm
 O diretório `usr/bin` guarda 60 programas, e um punhado é o que você usa: `swift` e `swiftc`, os
 drivers; `swift-build`, a quem o `swift build` entrega o trabalho; `lldb`, o depurador;
 `sourcekit-lsp`, o servidor de linguagem que dá a um editor autocompletar e erros enquanto você
-digita; `docc`, que gera documentação a partir de comentários; e `llvm-cov`, que a lição 18 usou. O
+digita; `docc`, que gera documentação a partir de comentários; e `llvm-cov`, que a aula 18 usou. O
 `clang` também está lá, porque um pacote Swift pode conter targets em C e o Swift chama C
 diretamente.
 
@@ -81,14 +81,14 @@ para que um segundo projeto que dependa do `swift-argument-parser` não o baixe 
 
 ## Trocando de toolchain, e o swiftly
 
-Um toolchain é um diretório, e a lição 1 pôs este no `PATH` à mão. Para experimentar outra versão, ou
+Um toolchain é um diretório, e a aula 1 pôs este no `PATH` à mão. Para experimentar outra versão, ou
 um snapshot da próxima, os mesmos passos o desempacotam ao lado do primeiro e apontam o `PATH` para
 ele. **O `swiftly` é a ferramenta do swift.org exatamente para isso**: baixa um toolchain, o verifica
-e alterna entre os instalados com `swiftly use`, e um projeto pode dizer a versão que espera num
+e alterna entre os instalados com `swiftly use`. Um projeto pode dizer a versão que espera num
 arquivo chamado `.swift-version`, que o `swiftly` então segue quando você trabalha dentro dele. O
-swiftly não foi usado para gravar este curso, pelo motivo que a lição 1 deu: um arquivo fixado e uma
+swiftly não foi usado para gravar este curso, pelo motivo que a aula 1 deu: um arquivo fixado e uma
 assinatura que você mesmo confere tornam cada versão das transcrições uma linha que dá para ler. Os
 comandos dele estão na página de instalação do swift.org.
 
 Num Mac, o toolchain chega dentro do Xcode, e o `xcode-select` escolhe de que Xcode vem o toolchain
-que a linha de comando usa; a lição 20 diz o que mais um Mac acrescenta.
+que a linha de comando usa; a aula 20 diz o que mais um Mac acrescenta.

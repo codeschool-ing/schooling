@@ -3,12 +3,12 @@ title: Uma corrida de dados, e um total errado
 version: 1
 ---
 
-A lição 14 rodou trabalho lado a lado e toda resposta saiu certa, porque cada tarefa ficava nos
+A aula 14 rodou trabalho lado a lado e toda resposta saiu certa, porque cada tarefa ficava nos
 próprios dados. **Uma corrida de dados é duas threads mexendo na mesma memória ao mesmo tempo, com
 pelo menos uma delas escrevendo.** Em geral ela não quebra o programa nem se anuncia: produz um número
 errado por uma quantidade que muda a cada execução.
 
-Aqui está o total semanal do planner, uma classe da lição 5 com um `var`, somado por oito tarefas ao
+Aqui está o total semanal do planner, uma classe da aula 5 com um `var`, somado por oito tarefas ao
 mesmo tempo, cem mil minutos cada uma:
 
 ```swift
@@ -57,7 +57,7 @@ terça e falhar na quinta, e nada na saída aponta a linha responsável.
 
 ## O mesmo arquivo em Swift 6
 
-A lição 1 mediu que o `swiftc` compila no **modo de linguagem Swift 5** a menos que se diga outra
+A aula 1 mediu que o `swiftc` compila no **modo de linguagem Swift 5** a menos que se diga outra
 coisa, e nesse modo o compilador verifica muito pouco sobre concorrência. O `-swift-version 6` liga o
 modo Swift 6, e o modo Swift 6 trata uma corrida de dados como erro:
 
@@ -78,7 +78,7 @@ Race.swift:11:19: error: passing closure as a 'sending' parameter risks causing 
 [#SendingClosureRisksDataRace]: <https://docs.swift.org/compiler/documentation/diagnostics/sending-closure-risks-data-race>
 ```
 
-O erro está no vocabulário do resto desta lição, e vale lê-lo devagar. O `addTask` recebe a closure
+O erro está no vocabulário do resto desta aula, e vale lê-lo devagar. O `addTask` recebe a closure
 como parâmetro **`sending`**: a closure sai do contexto atual e roda concorrentemente com ele. A nota
 diz por que isso é inseguro aqui: a closure **captura `week`**, que o código fora da closure também
 alcança. Dois lugares alcançam um mesmo `WeekTotal`, e `WeekTotal` tem um `var` e nenhuma proteção.

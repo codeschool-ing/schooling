@@ -64,7 +64,7 @@ sessão também.
 
 Uma referência fraca precisa poder virar `nil` sozinha, num momento que nenhuma linha do seu código
 escolheu. Então ela tem de ser opcional, e tem de ser `var`: `weak let course: Course` não compila.
-Todo uso passa então pelas ferramentas de opcionais da lição 2, `?.`, `if let`, `guard let`, e esse é
+Todo uso passa então pelas ferramentas de opcionais da aula 2, `?.`, `if let`, `guard let`, e esse é
 o ponto. **Código que segue uma referência fraca precisa dizer o que acontece quando o outro objeto
 já foi.**
 

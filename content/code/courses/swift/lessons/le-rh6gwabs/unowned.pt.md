@@ -54,7 +54,7 @@ O primeiro `print` funciona: o curso existe, e `session.course.name` o lê sem `
 `swift = nil` larga a única referência forte, e o curso é liberado, como diz o `deinit` dele. **O
 segundo `print` lê uma referência unowned para um objeto que já foi, e o runtime encerra o programa**
 com uma mensagem que diz exatamente isso, `Attempted to read an unowned reference but object … was
-already destroyed`, seguida do stack trace de onde aconteceu: primeiro quadros do runtime do Swift,
+already destroyed`. Em seguida vem o stack trace de onde aconteceu: primeiro quadros do runtime do Swift,
 depois o próprio `unowned`, o programa que leu a referência.
 
 O `SWIFT_BACKTRACE=enable=no` antes do comando desliga o relatório completo de quebra do Swift, que no

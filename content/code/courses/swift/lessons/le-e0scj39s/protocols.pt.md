@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um planner mostra cursos e sessões de estudo na mesma lista, e cada um precisa de uma linha de texto
-para isso. Os dois tipos não têm mais nada em comum: um curso tem lições, uma sessão tem minutos.
+para isso. Os dois tipos não têm mais nada em comum: um curso tem aulas, uma sessão tem minutos.
 **Um protocolo nomeia o que um conjunto de tipos promete oferecer, e não diz nada sobre como cada um
 oferece.** É uma lista de requisitos, e um tipo que os cumpre **conforma** ao protocolo.
 
@@ -60,8 +60,8 @@ nomearia a superclasse. O compilador então confere a promessa, e a seção 03 m
 
 `printAll` recebe `[any Describable]`: um array cujos elementos podem ser de qualquer tipo, desde que
 cada um conforme. Dentro do laço o código só sabe o que o protocolo promete, então `item.summary()`
-compila e `item.lessons` não compilaria, porque nem toda coisa descritível tem lições. A palavra
-`any` marca um valor cujo tipo concreto só é conhecido enquanto o programa roda; a lição 9 diz quanto
+compila e `item.lessons` não compilaria, porque nem toda coisa descritível tem aulas. A palavra
+`any` marca um valor cujo tipo concreto só é conhecido enquanto o programa roda; a aula 9 diz quanto
 isso custa e quando escrever `some` no lugar.
 
 ## O que um protocolo não é
@@ -70,5 +70,5 @@ Um protocolo **não tem armazenamento** próprio e não pode ser criado: `Descri
 nada, porque não há nada para criar. Essa é a primeira diferença em relação a uma superclasse, que é
 um tipo com campos e corpo. Structs e enums não herdam de jeito nenhum, então para eles um protocolo
 é o único jeito de ser tratado como parte de uma família, e é por isso que a biblioteca padrão do
-Swift é construída com protocolos e não com hierarquias de classes. A lição 10 transforma essa
+Swift é construída com protocolos e não com hierarquias de classes. A aula 10 transforma essa
 observação num jeito de projetar.

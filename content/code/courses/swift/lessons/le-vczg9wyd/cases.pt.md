@@ -42,14 +42,14 @@ de fora e só o ponto é escrito, e é por isso que código Swift é cheio de fo
 **Um raw value é uma segunda identidade para cada caso, de um tipo que você escolhe.** O `: String`
 depois do nome do enum dá uma string a cada caso, e sem nada escrito a string é o próprio nome do
 caso. O `: Int` dá números, e depois de `easy = 1` cada caso seguinte pega o próximo. O raw value é o
-que você grava num arquivo ou manda pela rede, e a lição 13 faz exatamente isso.
+que você grava num arquivo ou manda pela rede, e a aula 13 faz exatamente isso.
 
 **Voltar de um raw value pode falhar**, então `Weekday(rawValue:)` devolve um opcional: `"friday"`
 achou o seu caso, e `"Friday"`, com maiúscula, não achou nenhum e deu `nil`. É o mesmo inicializador
-que pode falhar que a lição 6 escreveu à mão, e este quem escreve é o compilador. O `as Any` cala o
-aviso que a lição 1 encontrou ao imprimir um opcional; a saída ainda mostra o embrulho
+que pode falhar que a aula 6 escreveu à mão, e este quem escreve é o compilador. O `as Any` cala o
+aviso que a aula 1 encontrou ao imprimir um opcional; a saída ainda mostra o embrulho
 `Optional(…)`, com o nome completo do tipo dentro, `cases.Weekday`, prefixado pelo módulo como a
-lição 5 viu nas classes.
+aula 5 viu nas classes.
 
 O `CaseIterable` pede ao compilador o `allCases`, um array com todos os casos na ordem em que foram
 escritos. É assim que uma tela lista os sete dias sem ninguém digitá-los duas vezes.

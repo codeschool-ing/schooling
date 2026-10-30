@@ -55,7 +55,7 @@ zerou também os do segundo.
 
 `monday`, `tuesday` e `week` são todos `let`, e o programa mudou minutos por cada um deles. Não é
 contradição. **Para uma classe, `let` prende a referência, não a instância**: `monday` vai sempre
-apontar para a mesma sessão, e as propriedades `var` dessa sessão ainda podem mudar. A lição 1 disse
+apontar para a mesma sessão, e as propriedades `var` dessa sessão ainda podem mudar. A aula 1 disse
 que `let` e imutabilidade coincidem para números e textos; para uma classe elas se separam.
 `monday = StudySession(course: "Kotlin", minutes: 30)` seria recusado, porque isso muda a referência.
 

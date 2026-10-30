@@ -30,7 +30,7 @@ ana@vm:~/sw/l08$ swift Hours.swift
 
 `Int` pertence à biblioteca padrão, e o planner acabou de lhe dar uma propriedade. Dentro da
 extensão, `self` é o inteiro a que a propriedade foi pedida, então `300.asHours` se lê como uma frase
-e não precisa de uma função auxiliar com um nome para lembrar. O `reduce(0, +)` da lição 3 soma a
+e não precisa de uma função auxiliar com um nome para lembrar. O `reduce(0, +)` da aula 3 soma a
 semana.
 
 ## O que uma extensão não pode acrescentar

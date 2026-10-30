@@ -36,7 +36,7 @@ o curso junto com os minutos, como estas fazem com uma tupla, e quem chama põe 
 Toda tarefa do grupo é uma tarefa filha. O `withTaskGroup` não retorna até todas terminarem, então um
 grupo abandonado cedo, com resultados ainda não lidos, espera o resto antes de retornar, e um grupo
 não consegue vazar trabalho como o `Forgotten.swift` vazou. Se a closure lança um erro, ou a tarefa que
-a roda é cancelada, o grupo cancela toda filha que ainda está rodando. A lição 18 usa um grupo para
+a roda é cancelada, o grupo cancela toda filha que ainda está rodando. A aula 18 usa um grupo para
 testar vários pedidos de uma vez.
 
 Existe uma variante que lança, `withThrowingTaskGroup`, cujas filhas podem lançar erros. O

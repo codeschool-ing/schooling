@@ -50,7 +50,7 @@ que essa faixa promete e de como ela é fixada.
 {"language": "swift", "file": "Sources/plan/Plan.swift", "parts": [
 {"code": "import ArgumentParser\nimport PlannerCore", "note": "Dois imports: o produto da dependência e a própria biblioteca do pacote."},
 {"code": "@main\nstruct Plan: ParsableCommand {\n    static let configuration = CommandConfiguration(\n        abstract: \"Add up a week of study sessions.\"\n    )", "note": "O comando é um tipo que se conforma a `ParsableCommand`, marcado com `@main` como na seção 02. O `abstract` vira a primeira linha da página de ajuda."},
-{"code": "    @Option(help: \"Minutes the week should reach.\")\n    var goal = 300\n\n    @Argument(help: \"The minutes of each session.\")\n    var minutes: [Int]", "note": "Cada entrada é uma propriedade com um property wrapper da lição 16. `@Option` é um `--goal` com nome, e com seu padrão; `@Argument` é posicional, e um `[Int]` junta todo número dado. O parser converte cada palavra para o tipo da propriedade, ou a recusa."},
+{"code": "    @Option(help: \"Minutes the week should reach.\")\n    var goal = 300\n\n    @Argument(help: \"The minutes of each session.\")\n    var minutes: [Int]", "note": "Cada entrada é uma propriedade com um property wrapper da aula 16. `@Option` é um `--goal` com nome, e com seu padrão; `@Argument` é posicional, e um `[Int]` junta todo número dado. O parser converte cada palavra para o tipo da propriedade, ou a recusa."},
 {"code": "    func run() {\n        var week = Week(goal: goal)\n        for session in minutes {\n            week.add(session)\n        }\n        print(\"\\(week.total) of \\(week.goal) minutes\")\n    }\n}", "note": "O `run()` é chamado depois que tudo foi lido, com todas as propriedades já preenchidas."}
 ]}
 ```
@@ -104,7 +104,7 @@ Usage: plan [--goal <goal>] <minutes> ...
 
 O parser fez três trabalhos que ninguém escreveu: converteu três palavras num `[Int]`, escreveu uma
 página de ajuda a partir dos nomes das propriedades e das strings `help:`, e recusou `forty` com uma
-mensagem que nomeia o argumento, saindo depois com **64**, o status convencional para um comando
+mensagem que nomeia o argumento. Depois saiu com **64**, o status convencional para um comando
 usado errado, para que um script que chama o `plan` distinga um erro de digitação de uma quebra.
 
 ## Quanto custa uma dependência

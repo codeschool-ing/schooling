@@ -110,6 +110,6 @@ Optional(45)
 
 O programa rodou e imprimiu `Optional(45)`, não `45`, depois de um aviso sobre a mesma linha. O
 `Int(typed)` não devolve um `Int`. Devolve um `Int?`, um **opcional**: ou um número, ou nada, e o
-aviso é o compilador apontando que você imprimiu o embrulho em vez do número. A lição 2 é sobre esse
+aviso é o compilador apontando que você imprimiu o embrulho em vez do número. A aula 2 é sobre esse
 tipo: o que o `?` quer dizer, os quatro jeitos de tirar o número de dentro e o único jeito que
 quebra.

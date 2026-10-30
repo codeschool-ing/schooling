@@ -36,11 +36,11 @@ stopped: CancellationError()
 O `task.cancel()` foi chamado aos 100 milissegundos, enquanto `loadMinutes` dormia. **O `Task.sleep`
 confere a marca, e quando ela está ligada ele para de dormir e lança `CancellationError`.** Por isso o
 `Task.sleep` é uma função que lança erros, e por isso `loadMinutes` agora é `async throws`: o erro sobe
-como qualquer outro erro da lição 12, até o `catch`. "loaded" nunca foi impresso.
+como qualquer outro erro da aula 12, até o `catch`. "loaded" nunca foi impresso.
 
 ## O `try?` que engoliu o cancelamento
 
-Todas as seções anteriores desta lição escreveram `try? await Task.sleep(…)`, e isso era inofensivo
+Todas as seções anteriores desta aula escreveram `try? await Task.sleep(…)`, e isso era inofensivo
 enquanto nada cancelava nada. Quando algo cancela, o `try?` transforma o cancelamento em `nil` e a
 função segue em frente. Aqui está um laço que soma cinco cursos, uma espera por curso, escrito dos dois
 jeitos:
@@ -101,7 +101,7 @@ result: failure(Swift.CancellationError())
 nos 250 milissegundos antes do cancelamento. Depois dele, todo `Task.sleep` lançou na hora, o `try?`
 descartou cada erro, e o laço correu pelos três últimos e devolveu os 270 completos como se nada
 tivesse acontecido. A versão cuidadosa deixou o erro subir: parou depois dos mesmos dois cursos, e o
-`result` dela, um `Result` da lição 12, carrega o `CancellationError`.
+`result` dela, um `Result` da aula 12, carrega o `CancellationError`.
 
 ## Cooperativo, então é trabalho do seu código
 

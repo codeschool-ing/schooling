@@ -48,13 +48,13 @@ que de outro jeito não veria, e a própria propriedade guarda o outro.
 **O `didSet` pode atribuir à propriedade de novo**, e essa atribuição não dispara os observadores uma
 segunda vez. O 900 foi guardado, o `didSet` o trocou por 600, e a linha que ele imprimiu já mostra o
 valor limitado. É assim que um observador mantém uma propriedade dentro de uma faixa, um padrão que
-a lição 16 transforma num wrapper reutilizável.
+a aula 16 transforma num wrapper reutilizável.
 
 ## Para que serve um observador num app
 
 Num iPhone, uma tela precisa redesenhar quando os dados por baixo dela mudam, e o jeito mais antigo de
 arranjar isso é um observador na propriedade que chama a tela. O SwiftUI faz isso por você, com
-property wrappers construídos sobre a mesma ideia, e a lição 16 os olha de fora. **Um observador não
+property wrappers construídos sobre a mesma ideia, e a aula 16 os olha de fora. **Um observador não
 é uma propriedade computada**: o valor continua armazenado, e o observador só acrescenta código em
 volta das mudanças. Uma propriedade não pode ser computada e observada ao mesmo tempo, já que o
 próprio setter de uma propriedade computada já é o lugar desse código.

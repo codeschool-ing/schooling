@@ -66,7 +66,7 @@ Três operações vêm com ele:
 ## Result ou throws
 
 Antes de o Swift ter `async`/`await`, uma função que terminava depois chamava uma closure com um
-`Result`, e a maior parte do código iOS mais antigo ainda faz isso. As funções `async` da lição 14
+`Result`, e a maior parte do código iOS mais antigo ainda faz isso. As funções `async` da aula 14
 lançam em vez disso, e **em código novo, `throws` é o padrão**: o compilador obriga quem chama a lidar
 com ele, coisa que um `Result` esquecido numa variável não faz. O `Result` continua sendo a ferramenta
 certa onde uma falha é dado, guardado para depois, como num array de desfechos ou num valor que uma

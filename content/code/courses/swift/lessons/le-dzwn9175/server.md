@@ -5,7 +5,7 @@ version: 1
 
 Swift on a server is not a curiosity. Apple runs Swift services in production, and the community
 maintains the networking library underneath most of them, **SwiftNIO**, and two web frameworks built
-on it, **Vapor** and **Hummingbird**. A study planner on a phone eventually talks to a server that
+on it, Vapor and Hummingbird. A study planner on a phone eventually talks to a server that
 stores the sessions, and that server can be written in the language the app is written in.
 
 This section builds the smallest useful one with Hummingbird 2: two routes, `/week` and

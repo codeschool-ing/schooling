@@ -33,20 +33,20 @@ ana@vm:~/sw/l20$ swift sdk list
 No Swift SDKs are currently installed.
 ```
 
-O primeiro comando é a verificação da lição 1, igual depois de dezenove lições. O segundo busca a
+O primeiro comando é a verificação da aula 1, igual depois de dezenove aulas. O segundo busca a
 lista de versões e imprime as plataformas publicadas para a 6.4.2. O terceiro pergunta quais
 **Swift SDKs** estão instalados, e a resposta é nenhum, por enquanto. Leia a lista do meio em três
 grupos.
 
 | grupo | o que é | neste curso |
 |---|---|---|
-| **Linux e Windows** | um toolchain completo para cada sistema citado: compilador, biblioteca padrão, Foundation, gerenciador de pacotes e executores de teste | Ubuntu 24.04, lições 1 a 20 |
+| **Linux e Windows** | um toolchain completo para cada sistema citado: compilador, biblioteca padrão, Foundation, gerenciador de pacotes e executores de teste | Ubuntu 24.04, aulas 1 a 20 |
 | **Static SDK, Wasm SDK, Android SDK** | não são toolchains, e sim pacotes que deixam um toolchain de Linux ou de Mac compilar para outro alvo | o SDK estático, seção 05 |
 | **As plataformas da Apple** | fora da lista: iOS, iPadOS, macOS, watchOS, tvOS e visionOS recebem o Swift dentro do Xcode | descritas na seção 06, não rodadas |
 
 ## O que a lista diz e o que não diz
 
-**Todas essas plataformas rodam a mesma linguagem**: o código das lições 1 a 19 compila em todas.
+**Todas essas plataformas rodam a mesma linguagem**: o código das aulas 1 a 19 compila em todas.
 O que muda entre elas são as bibliotecas acima da linguagem, assunto da seção 03, e o jeito como um
 programa é empacotado e iniciado.
 
@@ -58,7 +58,7 @@ continuam em Kotlin, e este curso não compila para ele. Nenhum dos dois foi rod
 
 Há também o **Embedded Swift**, um modo restrito do mesmo compilador para microcontroladores com
 poucos kilobytes de memória, que deixa de fora as partes da linguagem que precisam de um runtime,
-como os existenciais `any` da lição 9. É uma configuração do compilador e não uma entrada da lista, e
+como os existenciais `any` da aula 9. É uma configuração do compilador e não uma entrada da lista, e
 aparece aqui para a palavra não pegar você de surpresa.
 
 ## Onde o curso está

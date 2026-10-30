@@ -11,7 +11,7 @@ volta à resposta quando ela chega.
 
 Durante a maior parte da vida do Swift, "voltar à resposta" significou um **completion handler**:
 você passava à função uma closure, e a função a chamava depois, de onde quer que a resposta
-aparecesse. A lição 3 mostrou closures que são guardadas depois que a chamada retorna, marcadas com
+aparecesse. A aula 3 mostrou closures que são guardadas depois que a chamada retorna, marcadas com
 `@escaping`; um completion handler é exatamente isso. Aqui está o planner carregando um curso e
 depois as sessões dele, escrito desse jeito:
 
@@ -68,10 +68,10 @@ O código funciona, e três coisas nele pioram à medida que o programa cresce:
 - **Nada obriga você a chamar a closure.** Uma função com um `return` antecipado num caminho de erro
   que esquece o `completion(…)` compila, e quem chamou espera para sempre.
 - **Os erros não têm para onde ir.** Uma closure não consegue lançar um erro para quem chamou e já
-  retornou, então todo handler ganha um segundo parâmetro para o erro, ou um `Result`, que a lição 12
+  retornou, então todo handler ganha um segundo parâmetro para o erro, ou um `Result`, que a aula 12
   apresentou.
 
 O Swift 5.5 trouxe um jeito de escrever o mesmo programa como uma sequência de linhas comuns, em que
 o compilador, e não você, cuida do que acontece quando a resposta chega. A seção 03 é esse programa.
-Os completion handlers não sumiram: bibliotecas mais antigas ainda os oferecem, e a lição 15 encontra
+Os completion handlers não sumiram: bibliotecas mais antigas ainda os oferecem, e a aula 15 encontra
 o `Dispatch` de novo.

@@ -102,4 +102,4 @@ Duas linhas trocaram de lugar. Os minutos agora são **reservados** antes de gra
 reserva vê 20 livres e é recusada. Qual dos dois cursos ganha depende de qual chamada chegou primeiro
 ao ator, e isso pode mudar na sua máquina; o que não pode mais acontecer é os dois ganharem. Um
 planner de verdade também devolveria os minutos se a gravação falhasse, que é o tratamento de erros da
-lição 12 dentro de um método de ator, e a mesma regra vale para ele: decida, depois aguarde.
+aula 12 dentro de um método de ator, e a mesma regra vale para ele: decida, depois aguarde.

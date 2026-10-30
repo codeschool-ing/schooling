@@ -36,7 +36,7 @@ Missing.swift:7:8: error: type 'StudySession' does not conform to protocol 'Desc
  9 |     var minutes: Int
 ```
 
-A mensagem vem em duas metades, como a lição 1 mostrou que a maioria vem. O `error` está na struct:
+A mensagem vem em duas metades, como a aula 1 mostrou que a maioria vem. O `error` está na struct:
 ela não conforma. A `note` acima dele aponta para dentro do protocolo, para o requisito que ninguém
 cumpriu, com o tipo completo, `() -> String`. A segunda nota, "add stubs for conformance", é o que um
 editor oferece como correção de um clique que escreve métodos vazios para você; o compilador
@@ -81,7 +81,7 @@ Ana's planner
 
 `Level` cumpre `var title: String { get }` com uma propriedade **calculada**, o que é permitido
 porque o requisito só pedia para lê-la. `Planner` é uma classe, e uma classe cumpre os requisitos do
-mesmo jeito; o `final` diz que nada herda dela, ponto a que a lição 10 volta. O array guarda um caso
+mesmo jeito; o `final` diz que nada herda dela, ponto a que a aula 10 volta. O array guarda um caso
 de enum e uma instância de classe lado a lado, porque o que eles compartilham é o protocolo.
 
 ## Vários protocolos de uma vez

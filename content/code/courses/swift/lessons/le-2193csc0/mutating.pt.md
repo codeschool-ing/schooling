@@ -94,7 +94,7 @@ Frozen.swift:13:8: error: cannot use mutating member on immutable value: 'frozen
 uma struct `let` não muda de jeito nenhum, nem por uma propriedade nem por um método. É a garantia
 que a seção 05 disse que uma classe não consegue dar, e o `mutating` é o que a torna verificável. O
 `total` não é mutating e funciona num `let` como num `var`. O `reduce(0, +)` soma os minutos, e a
-lição 4 o explicou.
+aula 4 o explicou.
 
 Uma classe não tem `mutating`. Os métodos dela sempre podem mudar suas propriedades, e é por isso que
 `let` numa classe só prende a referência. A palavra é o sinal visível da diferença: **ler

@@ -42,7 +42,7 @@ PlannerCore/Week.swift:11: Assertion failed: a session lasts at least a minute
 ```
 
 O build de debug parou na asserção e disse o arquivo, a linha e a mensagem, antes do relatório de
-quebra que a lição 1 conheceu; o `head -3` guarda o começo dele. Agora o build de release, do mesmo
+quebra que a aula 1 conheceu; o `head -3` guarda o começo dele. Agora o build de release, do mesmo
 fonte:
 
 ```
@@ -58,7 +58,7 @@ uma condição que precisa valer também no programa distribuído, o Swift tem o
 fica nos builds de release, e o `fatalError`, que sempre para. A regra prática é sobre quem errou:
 **`assert` para as suposições do seu próprio código, `precondition` para o que um chamador passa.**
 Uma semana que recebe zero de uma linha de comando é do segundo tipo, e este `assert` é a ferramenta
-errada para ela, o que vale um exercício no fim da lição.
+errada para ela, o que vale um exercício no fim da aula.
 
 O release também levou mais tempo para compilar: 23,6 segundos, contra 5,8 do build de debug antes
 dele. A comparação não é bem justa, e saber disso também vale: o build de debug tinha só um arquivo

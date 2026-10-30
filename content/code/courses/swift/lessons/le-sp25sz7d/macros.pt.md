@@ -9,7 +9,7 @@ escreveu**: um pequeno programa que o compilador roda enquanto compila o seu, qu
 seu código e devolve código novo para acrescentar a ele. Você usa uma com `#nome(…)` numa expressão, ou
 `@Nome` numa declaração.
 
-Este curso já encontrou uma de passagem. O `#expect`, que a lição 18 usa em todo teste, é uma macro.
+Este curso já encontrou uma de passagem. O `#expect`, que a aula 18 usa em todo teste, é uma macro.
 No `ios-apps` a mais importante é a `@Observable`, que transforma uma classe num modelo que o SwiftUI
 observa à procura de mudanças. O SwiftUI não está aqui, e **a `@Observable` está**: ela vive no módulo
 `Observation`, que vem com o toolchain também no Linux.

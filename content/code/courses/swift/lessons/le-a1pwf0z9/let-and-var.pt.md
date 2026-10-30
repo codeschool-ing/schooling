@@ -94,16 +94,16 @@ colchetes tem uma.
 
 O aviso aparece aqui e não apareceu no `Week.swift` porque o compilador verifica os nomes dentro de
 uma função desse jeito, onde consegue ver todos os usos. Um nome no nível de cima de um arquivo é
-visível para o resto do programa, e o compilador não tenta. A lição 3 é sobre funções.
+visível para o resto do programa, e o compilador não tenta. A aula 3 é sobre funções.
 
 **Por que a preferência importa.** Um `let` é uma promessa a quem lê: o que esse valor era na linha
 2, ainda é. Quando você lê cem linhas depois que `goal` vale 300, não precisa procurar uma linha que
-o mudou. Num app, em que um valor pode ser lido por várias partes do código ao mesmo tempo, a lição
+o mudou. Num app, em que um valor pode ser lido por várias partes do código ao mesmo tempo, a aula
 15 mostra que um valor que ninguém pode mudar é também um valor que ninguém pode mudar na hora
 errada. **Escreva `let` por padrão, e troque para `var` quando o compilador ou o programa pedir.**
 
 ## let não congela tudo
 
 O `let` prende o nome a um valor. O que isso significa para uma lista ou um registro depende de o
-valor ser de um tipo de valor ou de um tipo de referência, que é o assunto da lição 5. Para os
-números e textos desta lição, as duas ideias coincidem: um número `let` não muda de jeito nenhum.
+valor ser de um tipo de valor ou de um tipo de referência, que é o assunto da aula 5. Para os
+números e textos desta aula, as duas ideias coincidem: um número `let` não muda de jeito nenhum.

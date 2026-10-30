@@ -4,7 +4,7 @@ version: 1
 ---
 
 O `MemoryStore` da seção 05 fez as vezes de um servidor real. Um substituto assim é um **dublê de
-teste**, como o dublê que leva o tombo no lugar do ator, e o protocolo da lição 10 é o que o tornou
+teste**, como o dublê que leva o tombo no lugar do ator, e o protocolo da aula 10 é o que o tornou
 possível: o `Syncer` pede `any SessionStore`, e qualquer coisa que se conforme serve. Um dublê é
 como um teste alcança os casos que um servidor real só produziria num dia ruim.
 
@@ -17,7 +17,7 @@ como um teste alcança os casos que um servidor real só produziria num dia ruim
 Os nomes vêm do livro de Gerard Meszaros sobre padrões de teste e são usados com folga; o que
 importa é o que cada um deixa um teste fazer.
 
-| dublê | o que faz | nesta lição |
+| dublê | o que faz | nesta aula |
 |---|---|---|
 | **fake** | funciona, de um jeito mais simples que o real | `MemoryStore`, um array no lugar de um servidor |
 | **stub** | dá uma resposta fixa, ou uma falha fixa | `OfflineStore` abaixo, que sempre lança erro |
@@ -116,10 +116,10 @@ O segundo teste passa, e vale dizer em palavras o que ele fixa: quando o store f
 sessão, o `sync` para ali, **a primeira sessão já está salva, e a terceira nem foi tentada**. Nada no
 `Syncer` diz isso num comentário, e antes deste teste ninguém tinha decidido se esse era o
 comportamento desejado. É razoável, porque salvar uma sessão duas vezes seria pior que salvá-la
-tarde, e as lições 9 e 10 do `mobile-offline` tratam de repetir uma sincronização dessas com
+tarde, e as aulas 9 e 10 do `mobile-offline` tratam de repetir uma sincronização dessas com
 segurança. O teste agora prende o código a isso: se alguém reescrever o `sync` para continuar depois
 de uma falha, é este teste que vai avisar.
 
 **Um dublê deve ser tão pequeno quanto o teste precisa.** O `OfflineStore` tem uma linha de
 comportamento. Dublês que ganham lógica própria, defeitos próprios e testes próprios são sinal de que
-o protocolo pede demais, que é a pergunta da lição 10 sobre costuras voltando pelo outro lado.
+o protocolo pede demais, que é a pergunta da aula 10 sobre costuras voltando pelo outro lado.

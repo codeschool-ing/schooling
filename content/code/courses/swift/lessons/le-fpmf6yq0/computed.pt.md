@@ -47,7 +47,7 @@ e escrevê-lo.
 
 ## Propriedade ou método?
 
-`total` poderia muito bem ser `func total() -> Int`, e a lição 5 o escreveu assim. A convenção das
+`total` poderia muito bem ser `func total() -> Int`, e a aula 5 o escreveu assim. A convenção das
 diretrizes de API do próprio Swift é que uma propriedade se lê como um fato sobre o valor e é barata;
 um método se lê como uma ação, e pode custar algo ou receber argumentos. **Faça uma propriedade quando
 quem chama não deveria precisar saber que ela é computada.** O total dos minutos de uma semana é um

@@ -42,7 +42,7 @@ fixada.
 
 A seção 06 descobriu que escrever um `init` dentro de uma struct remove o que o compilador escreve.
 **Um inicializador escrito numa extensão o mantém.** Uma extensão acrescenta a um tipo de fora das
-chaves principais dele, e a lição 8 é sobre elas; aqui ela é só um lugar para pôr uma segunda
+chaves principais dele, e a aula 8 é sobre elas; aqui ela é só um lugar para pôr uma segunda
 entrada:
 
 ```swift
@@ -73,7 +73,7 @@ num lugar só. Um inicializador que chama outro do mesmo tipo se chama **delegan
 
 Uma sessão construída a partir do texto que uma estudante digitou pode não ter minutos válidos.
 **`init?` é um inicializador que pode devolver `nil`**, e o que ele cria é um opcional, exatamente
-como `Int("45")` deu um `Int?` na lição 1:
+como `Int("45")` deu um `Int?` na aula 1:
 
 ```swift
 // Failable.swift
@@ -98,7 +98,7 @@ ana@vm:~/sw/l06$ swift Failable.swift
 45 -1 -1
 ```
 
-`guard … else { return nil }` é a saída antecipada da lição 2, e o `return nil` é a falha. A
+`guard … else { return nil }` é a saída antecipada da aula 2, e o `return nil` é a falha. A
 verificação que o observador da seção 04 não conseguia fazer na inicialização é feita aqui, antes de
 o valor existir. **Um inicializador que falha é como um tipo se recusa a existir num estado
 inválido**: o código que recebe uma `StudySession` sabe que os minutos dela estão entre 1 e 600,

@@ -4,7 +4,7 @@ version: 1
 ---
 
 A seção 04 acrescentou membros a um tipo. **Uma extensão de um protocolo acrescenta membros a todo
-tipo que conforma a ele**, e quando um desses membros tem o mesmo nome e tipo de um requisito, ele
+tipo que conforma a ele**. Quando um desses membros tem o mesmo nome e tipo de um requisito, ele
 vira a **implementação padrão**: um tipo que conforma e não escreve nada para aquele requisito fica
 com o padrão, e um que escreve o seu fica com o seu.
 
@@ -20,7 +20,7 @@ foi declarado em nenhuma das structs, e as duas respondem a ele.
 
 Um padrão é escrito uma vez para tipos que ele nunca viu, então **só pode usar o que o protocolo
 garante**: aqui, `title` e `minutes`. Pedir `self.lessons` dentro da extensão não compilaria, porque
-nada promete que todo tipo `Timed` tem lições. Essa restrição é o que deixa um bom padrão pequeno:
+nada promete que todo tipo `Timed` tem aulas. Essa restrição é o que deixa um bom padrão pequeno:
 uma frase montada com os requisitos, uma verificação sobre eles, um cálculo com eles.
 
 ## Padrões com condição
@@ -28,7 +28,7 @@ uma frase montada com os requisitos, uma verificação sobre eles, um cálculo c
 Uma extensão pode se limitar a alguns dos tipos que conformam com uma cláusula `where`, como
 `extension Timed where Self: Equatable`, e seus membros então só existem nos tipos que cumprem as
 duas coisas. A biblioteca padrão usa isso em toda parte: `contains(_:)` só existe num array quando
-os elementos são `Equatable`, porque comparar precisa de `==`. A lição 9 escreve restrições desse
+os elementos são `Equatable`, porque comparar precisa de `==`. A aula 9 escreve restrições desse
 tipo para genéricos.
 
 ## Requisito ou não

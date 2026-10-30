@@ -16,7 +16,7 @@ O artigo dá três motivos para usar uma classe em vez disso:
   de um app leem;
 - **quando o Objective-C precisa chamá-lo**, porque os frameworks mais antigos da Apple só entendem
   classes. Isso é assunto do `ios-apps`, não deste curso;
-- **quando herança é o modelo certo**, o que a lição 10 argumenta ser mais raro do que parece.
+- **quando herança é o modelo certo**, o que a aula 10 argumenta ser mais raro do que parece.
 
 ## Um de cada, juntos
 
@@ -65,6 +65,6 @@ escrever o valor de volta, e esse é o momento que quem lê consegue ver. `\.min
 jeito de nomear uma propriedade, e `map(\.minutes)` a lê de cada sessão.
 
 Esse formato, **valores para os dados e uma referência para o lugar onde eles moram**, é o formato
-sobre o qual os apps em SwiftUI são construídos, e o `ios-apps` o constrói. A lição 15 troca o
+sobre o qual os apps em SwiftUI são construídos, e o `ios-apps` o constrói. A aula 15 troca o
 `PlannerStore` de classe para ator, porque uma instância compartilhada que duas tarefas mudam ao
-mesmo tempo tem um problema que esta lição ainda não encontrou.
+mesmo tempo tem um problema que esta aula ainda não encontrou.

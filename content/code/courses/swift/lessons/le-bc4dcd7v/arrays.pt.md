@@ -40,7 +40,7 @@ true nil Optional(15)
 O `append` acrescenta um item no fim e o `+=` acrescenta um array inteiro. `insert(_:at:)` e
 `remove(at:)` trabalham por posição, e o `remove` devolve o que tirou. O `enumerated()` dá cada item
 junto com seu índice, como um par que o laço separa em dois nomes. **`first` e `last` são opcionais**,
-porque um array vazio não tem nenhum dos dois, e é a lição 2 chegando a um lugar que você vai
+porque um array vazio não tem nenhum dos dois, e é a aula 2 chegando a um lugar que você vai
 encontrar todo dia.
 
 ## Um índice que não existe
@@ -62,7 +62,7 @@ Swift/ContiguousArrayBuffer.swift:695: Fatal error: Index out of range
 *** Signal 4: Backtracing from 0x7fdd0f3731ef... done ***
 ```
 
-**Ler além do fim para o programa**, com o mesmo tipo de relatório do estouro da lição 1, e a primeira
+**Ler além do fim para o programa**, com o mesmo tipo de relatório do estouro da aula 1, e a primeira
 linha diz por quê. Ela cita um arquivo da biblioteca padrão em vez do seu, porque é lá que a
 verificação mora; a linha sua que pediu está mais abaixo no relatório completo. É o resultado certo:
 em C, a mesma linha lê qualquer memória que estiver ali, e o programa segue com um número que ninguém
@@ -71,7 +71,7 @@ antes, ou use `first` e `last`, que fazem a pergunta por você.
 
 ## Um array let é um array fixo
 
-A lição 1 disse que o que o `let` significa para uma lista ficaria para a lição 5. Eis a metade de que
+A aula 1 disse que o que o `let` significa para uma lista ficaria para a aula 5. Eis a metade de que
 você precisa agora:
 
 ```swift
@@ -94,6 +94,6 @@ LetArray.swift:3:10: error: cannot use mutating member on immutable value: 'sess
 ```
 
 O `append` é um membro **mutante**: ele muda o array em que é chamado, e um array `let` não pode ser
-mudado de jeito nenhum, nem com um acréscimo no fim. A nota oferece a correção. A lição 5 explica por
+mudado de jeito nenhum, nem com um acréscimo no fim. A nota oferece a correção. A aula 5 explica por
 que um array se comporta como um número aqui, e não como um objeto que outra parte do código poderia
 mudar pelas suas costas, que é o motivo mais profundo.

@@ -9,7 +9,7 @@ de um pacote Swift é um módulo próprio. **O nível padrão, `internal`, para 
 seção 02 nunca encontrou essa borda, porque os dois arquivos foram para um programa só. Esta seção
 divide o planner em dois módulos e vê a borda aparecer.
 
-A lição 19 trata de pacotes a fundo. Por ora, um pacote é um diretório com um `Package.swift` que o
+A aula 19 trata de pacotes a fundo. Por ora, um pacote é um diretório com um `Package.swift` que o
 descreve e um diretório `Sources` com um subdiretório por módulo. Este tem dois: uma biblioteca,
 `PlannerCore`, que guarda os tipos do planner, e um executável, `plan`, que os usa.
 

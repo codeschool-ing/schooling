@@ -4,9 +4,9 @@ version: 1
 ---
 
 Section 04 added members to one type. **An extension of a protocol adds members to every type that
-conforms to it**, and when one of those members has the same name and type as a requirement, it
-becomes the **default implementation**: a conforming type that writes nothing for that requirement
-gets the default, and one that writes its own keeps its own.
+conforms to it**. When one of those members has the same name and type as a requirement, it becomes
+the **default implementation**: a conforming type that writes nothing for that requirement gets the
+default, and one that writes its own keeps its own.
 
 ```schooling-example
 {"language": "swift", "file": "Defaults.swift", "parts": [{"code": "// Defaults.swift\nprotocol Timed {\n    var title: String { get }\n    var minutes: Int { get }\n    func summary() -> String\n}", "note": "Two properties and a method. Nothing here says how `summary()` is written, so every conforming type would have to write one."}, {"code": "extension Timed {\n    func summary() -> String { \"\\(title), \\(minutes) min\" }\n    var isLong: Bool { minutes >= 60 }\n}", "note": "A protocol extension. `summary()` gets a default body built only from the two requirements, and `isLong` is a new member every conforming type receives for free."}, {"code": "struct StudySession: Timed {\n    var title: String\n    var minutes: Int\n}", "note": "Meets the two properties and writes no `summary()` at all: the default fills the requirement."}, {"code": "struct Exam: Timed {\n    var title: String\n    var minutes: Int\n    func summary() -> String { \"EXAM \\(title) (\\(minutes) min)\" }\n}", "note": "Writes its own `summary()`, which replaces the default for this type alone."}, {"code": "let week: [any Timed] = [\n    StudySession(title: \"Optionals\", minutes: 45),\n    Exam(title: \"Swift basics\", minutes: 90),\n]\nfor item in week {\n    print(item.summary(), item.isLong)\n}", "note": "Through `any Timed`, each element answers with its own type's `summary()`, default or not."}], "output": "Optionals, 45 min false\nEXAM Swift basics (90 min) true"}

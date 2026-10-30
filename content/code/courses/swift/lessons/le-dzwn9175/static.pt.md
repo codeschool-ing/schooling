@@ -3,14 +3,14 @@ title: Um binário que não precisa de toolchain
 version: 1
 ---
 
-A lição 1 compilou o `hello` num arquivo de 17 KB e avisou que ele não iniciaria numa máquina sem o
+A aula 1 compilou o `hello` num arquivo de 17 KB e avisou que ele não iniciaria numa máquina sem o
 toolchain. Todo executável gerado até aqui tem a mesma propriedade: **ele é ligado dinamicamente ao
 runtime do Swift**, a `libswiftCore.so` e as vizinhas, e as encontra no diretório do toolchain cada
 vez que inicia. Isso vai bem na máquina que o gerou, e é o formato errado para um servidor, uma
 imagem de contêiner ou uma ferramenta que você entrega a outra pessoa.
 
 A resposta no Linux é o **SDK estático de Linux**. Um Swift SDK é um pacote de bibliotecas e
-configurações para compilar para um alvo diferente da máquina em que você está, e este tem como alvo
+configurações para compilar para um alvo diferente da máquina em que você está. Este tem como alvo
 o próprio Linux, com tudo ligado dentro do executável: o runtime do Swift, a Foundation e a **musl**,
 uma biblioteca C pequena escrita para ser ligada estaticamente, no lugar da `glibc` do Ubuntu. O
 swift.org publica um por versão, ao lado do toolchain, com um checksum.
@@ -42,7 +42,7 @@ print("\(total) of \(goal) minutes in \(minutes.count) sessions")
 
 `CommandLine.arguments` é a lista de palavras com que o programa foi iniciado, primeiro o caminho
 dele mesmo, então o `dropFirst()` pula esse e o `compactMap` guarda as palavras que são números, como
-a lição 2 fez com `Int?`. O programa não importa nada, nem a Foundation.
+a aula 2 fez com `Int?`. O programa não importa nada, nem a Foundation.
 
 O `swift sdk install` recebe a URL e o checksum que o swift.org lista para esta versão, baixa o
 pacote, recusa-o se o checksum for diferente e o desempacota em `~/.swiftpm`. Enquanto baixa, ele
@@ -61,7 +61,7 @@ ana@vm:~/sw/l20/week$ swift sdk list
 swift-6.4.2-RELEASE_static-linux-0.1.0
 ```
 
-O pacote tem cerca de 285 MB. **O checksum é a mesma conferência da assinatura da lição 1**, em outra
+O pacote tem cerca de 285 MB. **O checksum é a mesma conferência da assinatura da aula 1**, em outra
 forma: um SHA-256 do arquivo, que o swift.org publica na página de instalação e na lista de versões
 que a seção 02 leu. Um SDK estático tem de bater exatamente com o toolchain, 6.4.2 com 6.4.2, e é por
 isso que a versão está no nome dele.
@@ -105,7 +105,7 @@ o runtime do Swift e a biblioteca C sobre a qual ele roda.
 
 ## Numa máquina sem Swift
 
-A prova é um computador que nunca viu Swift. A máquina abaixo é o Ubuntu 24.04 da lição 1 antes de
+A prova é um computador que nunca viu Swift. A máquina abaixo é o Ubuntu 24.04 da aula 1 antes de
 qualquer instalação: sem toolchain, sem a linha do `apt`. Os dois binários foram copiados para o
 diretório pessoal da Ana lá, como o `scp` os colocaria num servidor:
 
@@ -120,7 +120,7 @@ ana@vm:~$ ./week-static 45 30 60
 ```
 
 O `which swift` não imprime nada, porque não há Swift. O binário dinâmico falha antes da primeira
-linha, com a mesma mensagem do **carregador dinâmico** que a seção 03 da lição 1 encontrou, citando a
+linha, com a mesma mensagem do **carregador dinâmico** que a seção 03 da aula 1 encontrou, citando a
 `libswiftCore.so`. O estático roda e imprime a semana. **Copie um arquivo, e ele roda.** Esse é todo o
 motivo de compilar assim: uma imagem de contêiner construída `FROM scratch` com um arquivo dentro, uma
 ferramenta que um colega pode baixar, um servidor sem nada instalado.

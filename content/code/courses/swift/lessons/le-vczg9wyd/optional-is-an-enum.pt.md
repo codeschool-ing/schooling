@@ -3,9 +3,9 @@ title: Um opcional é um enum
 version: 1
 ---
 
-A lição 2 tratou o `Int?` como um tipo à parte, com sintaxe própria: `if let`, `??`, `!`. **Por baixo
+A aula 2 tratou o `Int?` como um tipo à parte, com sintaxe própria: `if let`, `??`, `!`. **Por baixo
 da sintaxe, `Int?` é `Optional<Int>`, um enum da biblioteca padrão com dois casos**: `.none`, que é o
-que `nil` quer dizer, e `.some(Int)`, que carrega o valor. Tudo o que a lição 2 mostrou é açúcar para
+que `nil` quer dizer, e `.some(Int)`, que carrega o valor. Tudo o que a aula 2 mostrou é açúcar para
 padrões sobre esse enum, e o enum puro continua lá para ser usado:
 
 ```swift
@@ -55,8 +55,8 @@ compilador o embrulha em `.some` para você, a única conversão que o Swift faz
 
 ## Por que isso importa
 
-Isso explica toda regra que a lição 2 precisou enunciar. Uma função que recebe um `Int` não pode
+Isso explica toda regra que a aula 2 precisou enunciar. Uma função que recebe um `Int` não pode
 receber um `Int?`, porque são tipos diferentes: um é um número e o outro é um enum que pode guardar
 um. O `!` é "suponha `.some` e quebre no `.none`". O `??` é um switch com um padrão para o `.none`.
-**Não existe null especial no Swift**, só mais um enum, e toda ferramenta que esta lição lhe deu para
+**Não existe null especial no Swift**, só mais um enum, e toda ferramenta que esta aula lhe deu para
 enums funciona nele.

@@ -3,7 +3,7 @@ title: O que o swift package init cria
 version: 1
 ---
 
-As lições 17 e 18 usaram pacotes e falaram pouco deles. Um **pacote** é um diretório com um
+As aulas 17 e 18 usaram pacotes e falaram pouco deles. Um **pacote** é um diretório com um
 `Package.swift` no topo, o **manifesto**, e os arquivos-fonte nos lugares que o manifesto espera. É a
 unidade que o Swift compila, testa e compartilha: toda biblioteca que você vai acrescentar a um
 projeto chega como um, e o app de iOS do `ios-apps` também guarda o modelo num. O **Swift Package
@@ -73,9 +73,9 @@ linguagem em que os targets são compilados. Abaixo dela, o manifesto é um prog
 
 Dois **targets**: um executável chamado `hello`, cujos fontes estão em `Sources/hello`, e um target
 de testes `helloTests` em `Tests/helloTests` que depende dele. Um target é um módulo, a unidade de
-acesso da lição 17. Os `swiftSettings` ligam o `ApproachableConcurrency`, uma **funcionalidade
+acesso da aula 17. Os `swiftSettings` ligam o `ApproachableConcurrency`, uma **funcionalidade
 futura**: uma mudança na linguagem que um modo futuro tornará padrão, ligada mais cedo para este
-target. O modelo do toolchain 6.4 a acrescenta a todo pacote novo; a lição 15 trata do que ela muda.
+target. O modelo do toolchain 6.4 a acrescenta a todo pacote novo; a aula 15 trata do que ela muda.
 
 ## O programa, e rodá-lo
 
@@ -95,7 +95,7 @@ struct hello {
 ```
 
 O `@main` marca o tipo cujo `main()` estático é onde o programa começa. É o segundo jeito de dizer
-onde um programa começa, ao lado das instruções de nível superior no `main.swift` da lição 1: um
+onde um programa começa, ao lado das instruções de nível superior no `main.swift` da aula 1: um
 target tem um ou outro, e um arquivo chamado `main.swift` não pode conter também um tipo `@main`. O
 `swift run` compila o pacote e roda o executável:
 
@@ -116,4 +116,4 @@ O `swift run` compila primeiro, então as linhas de progresso e o `Build complet
 saudação. **Os dois avisos de `safeExec` vêm do próprio `swift run`**, logo antes de passar a vez ao
 programa: ele tenta devolver todo sinal ao padrão, e o Linux reserva os sinais 32 e 33 para a
 biblioteca de threads, que recusa. Eles não dizem nada sobre o seu programa, e não aparecem quando
-você roda o executável diretamente, como todas as outras seções desta lição fazem.
+você roda o executável diretamente, como todas as outras seções desta aula fazem.

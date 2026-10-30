@@ -139,5 +139,5 @@ pacote é `PlannerCore`. **Dê a um módulo o nome do que ele contém como um to
 nome do que cada um é.**
 
 A biblioteca padrão é um módulo como qualquer outro, chamado `Swift`. `Swift.print` e `Swift.max`
-são os nomes completos de funções que você usa desde a lição 1, e escrevê-los por extenso é como um
+são os nomes completos de funções que você usa desde a aula 1, e escrevê-los por extenso é como um
 tipo que tem um método `max` próprio chama o global.

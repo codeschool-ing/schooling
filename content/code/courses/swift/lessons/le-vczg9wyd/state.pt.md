@@ -72,4 +72,4 @@ exatamente o aviso que a seção 04 descreveu. Um caso novo de `Status` ainda é
 switch só sobre `Status` liste os casos, como uma tela que mostra cada estado, e esse switch é onde o
 caso novo ganha significado.
 
-Esse é o formato que o `ios-apps` dá a uma sessão na tela, e o formato que a lição 13 grava em JSON.
+Esse é o formato que o `ios-apps` dá a uma sessão na tela, e o formato que a aula 13 grava em JSON.

@@ -33,14 +33,14 @@ O desempacotamento da linha 4 encontrou `nil`, e o programa parou com um **erro 
 e a linha, e por quê, `Unexpectedly found nil while unwrapping an Optional value`. O `head -5` guarda
 essa linha e o começo do relatório da quebra; o relatório completo segue por umas cinquenta linhas.
 
-**Falta uma linha nessa saída, e isso é uma lição por si.** O `print(good + 1)` rodou, e o `46` nunca
+**Falta uma linha nessa saída, e isso é uma aula por si.** O `print(good + 1)` rodou, e o `46` nunca
 apareceu. Quando a saída vai para um pipe em vez de direto para um terminal, o programa junta o que
 imprime num buffer e o escreve em pedaços grandes, e uma quebra encerra o processo antes de o buffer
 ser escrito. O último comando roda o `./bang` através do `script`, que o faz acreditar que está
 imprimindo num terminal, e o `tr` tira os retornos de carro que um terminal acrescenta: agora o `46`
 está lá, acima do erro. **Saída que falta antes de uma quebra não prova que a linha não rodou.**
 
-É o mesmo tipo de parada do estouro da lição 1, e pelo mesmo motivo. Um programa que seguisse em
+É o mesmo tipo de parada do estouro da aula 1, e pelo mesmo motivo. Um programa que seguisse em
 frente teria um `bad` sem número dentro, e toda linha depois estaria adivinhando.
 
 ## Quando o ! é honesto
@@ -49,7 +49,7 @@ O `!` não é proibido. É uma afirmação, e algumas afirmações são verdadei
 
 - um valor que o próprio programa acabou de montar, `URL(string: "https://swift.org")!`, em que o
   texto é fixo e correto;
-- um teste, em que uma quebra com número de linha é exatamente a falha que você quer (lição 18);
+- um teste, em que uma quebra com número de linha é exatamente a falha que você quer (aula 18);
 - um programa curto que você vai jogar fora.
 
 **O que ele nunca serve é para entrada**: qualquer coisa que uma estudante digitou, um arquivo lido, a

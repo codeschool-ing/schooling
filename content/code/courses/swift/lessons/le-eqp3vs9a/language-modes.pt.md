@@ -3,7 +3,7 @@ title: Modos de linguagem, e como ligar as verificações
 version: 1
 ---
 
-Tudo o que esta lição recusou, recusou no **modo de linguagem Swift 6**. O mesmo compilador tem um
+Tudo o que esta aula recusou, recusou no **modo de linguagem Swift 6**. O mesmo compilador tem um
 **modo Swift 5**, e a seção 02 mostrou quanto isso custa: o `Race.swift` compilou sem uma palavra e
 contou errado. **O modo de linguagem é uma configuração do compilador, não uma versão dele.** O Swift
 6.4.2 compila os dois, e qual vale é decidido por módulo.
@@ -21,7 +21,7 @@ um módulo por vez.
 
 ## Um pacote decide por você
 
-A lição 19 é sobre pacotes; aqui está o menor deles, com o código do `Race.swift` como `main.swift`.
+A aula 19 é sobre pacotes; aqui está o menor deles, com o código do `Race.swift` como `main.swift`.
 O manifesto declara tools version 6.0:
 
 ```swift
@@ -105,11 +105,11 @@ expected 800000, got 719980
 
 Compila, roda, e erra de novo. **O `.swiftLanguageMode(.v5)` é uma dívida escrita**: um target que
 diz que ainda não foi verificado. Passá-lo para Swift 6 significa remover a linha e consertar o que o
-compilador então apontar, que é o trabalho que esta lição vem mostrando.
+compilador então apontar, que é o trabalho que esta aula vem mostrando.
 
 ## O que o `swift package init` liga
 
-O `swift package init`, o comando com que a lição 19 começa todo pacote, escreve um manifesto próprio,
+O `swift package init`, o comando com que a aula 19 começa todo pacote, escreve um manifesto próprio,
 e ele traz uma configuração a mais que os manifestos acima:
 
 ```
@@ -145,5 +145,5 @@ features faz.
 
 **O que fazer com tudo isso.** Escreva código novo no modo Swift 6, que um pacote em tools version 6
 ou mais lhe dá sem pedir. Mantenha o `-swift-version 6` na linha de comando quando experimentar um
-programa concorrente com o `swiftc`. E leia um erro de concorrência do Swift 6 como esta lição leu:
+programa concorrente com o `swiftc`. E leia um erro de concorrência do Swift 6 como esta aula leu:
 ele diz o que atravessa, de onde para onde, e o que mais ainda o alcança.

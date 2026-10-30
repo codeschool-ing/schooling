@@ -3,7 +3,7 @@ title: Três jeitos de ter o Swift
 version: 1
 ---
 
-Da seção 04 desta lição até o fim da lição 20, este curso pede que você digite programas, compile-os
+Da seção 04 desta aula até o fim da aula 20, este curso pede que você digite programas, compile-os
 e leia o que volta. Para isso você precisa de uma coisa: **o toolchain do Swift**, que é o
 compilador, a biblioteca padrão, o gerenciador de pacotes e os executores de testes, distribuídos
 juntos num único arquivo. A plataforma não lhe dá máquina nenhuma onde digitar, então a primeira
@@ -20,20 +20,20 @@ próprio computador ou uma máquina virtual rodando nele.
 
 ## O que este curso pode e não pode mostrar
 
-**Todo programa destas vinte lições roda no Linux, e você pode reproduzir cada transcrição.** O
+**Todo programa destas vinte aulas roda no Linux, e você pode reproduzir cada transcrição.** O
 Swift é a linguagem da Apple, e é também um projeto de código aberto que publica o mesmo compilador
 para Linux e Windows. Opcionais, structs, protocolos, genéricos, `Codable`, `async`/`await`, atores,
 os dois frameworks de teste e o gerenciador de pacotes funcionam no Linux exatamente como num Mac.
 
 O que não existe no Linux é **a plataforma da Apple**: o Xcode, o simulador do iOS, o SwiftUI e o
-UIKit. Três lições encontram esse muro, e cada uma diz isso onde acontece. A caça a um vazamento de
-memória da lição 11 descreve o grafo de memória que o Xcode desenha, e faz a busca com as ferramentas
-do próprio compilador. A lição 16 mostra como o SwiftUI usa property wrappers e result builders
-construindo versões pequenas dos dois, já que o SwiftUI não está lá para ser importado. A lição 20
+UIKit. Três aulas encontram esse muro, e cada uma diz isso onde acontece. A caça a um vazamento de
+memória da aula 11 descreve o grafo de memória que o Xcode desenha, e faz a busca com as ferramentas
+do próprio compilador. A aula 16 mostra como o SwiftUI usa property wrappers e result builders
+construindo versões pequenas dos dois, já que o SwiftUI não está lá para ser importado. A aula 20
 descreve o que muda num Mac sem rodá-lo. Nada nessas três é transcrição de algo que não rodou.
 
 O curso depois deste no caminho, `ios-apps`, constrói o planner de estudos como app de iPhone, e esse
-curso precisa de um Mac com Xcode desde a primeira lição. **O muro cai entre os dois cursos**, e este
+curso precisa de um Mac com Xcode desde a primeira aula. **O muro cai entre os dois cursos**, e este
 fica inteiro do lado em que você pratica em qualquer computador.
 
 ## Instalado: o caminho recomendado
@@ -65,7 +65,7 @@ quanto custa e cinco das linhas que dizem o que chegou, para você comparar a su
 de baixar qualquer coisa. A lista é longa porque o compilador é construído sobre o LLVM e liga os
 programas com as ferramentas do próprio sistema. O `binutils` é o linker; o `libc6-dev` e os dois
 pacotes `-13-dev` são as bibliotecas de C e C++ que todo programa Swift no Linux acaba chamando; e o
-`git` é com o que o gerenciador de pacotes busca dependências na lição 19.
+`git` é com o que o gerenciador de pacotes busca dependências na aula 19.
 
 Depois, o toolchain em si. Crie um diretório para o download, baixe o arquivo e a assinatura
 publicada ao lado dele, e confira um contra o outro antes de desempacotar qualquer coisa:
@@ -152,7 +152,7 @@ O `which` mostra que `swift` e `swiftc` vêm do diretório que você acabou de d
 outro lugar da máquina.
 
 A página de instalação do próprio swift.org oferece uma ferramenta chamada `swiftly`, que baixa um
-toolchain e mantém vários lado a lado. É um bom jeito de instalar o Swift e a lição 19 volta a ela.
+toolchain e mantém vários lado a lado. É um bom jeito de instalar o Swift e a aula 19 volta a ela.
 O curso fixa o arquivo em vez disso porque a versão e a conferência da assinatura viram linhas que
 você consegue ler, e o resultado é o mesmo toolchain num diretório diferente.
 
@@ -170,7 +170,7 @@ instalado lá. Toda transcrição então bate com o que você vê, prompt inclu�
 
 Nenhum dos dois comandos foi rodado para este curso, porque a máquina de gravação era ela mesma um
 contêiner e não consegue iniciar outro. Os números do segundo são uma recomendação, não uma medida: o
-toolchain desempacota para cerca de 3,5 GB, um build de pacote na lição 19 acrescenta algumas
+toolchain desempacota para cerca de 3,5 GB, um build de pacote na aula 19 acrescenta algumas
 centenas de megabytes de cache, e quatro gigabytes de memória evitam que o compilador use swap. Uma
 máquina virtual prende a memória enquanto roda, então pare-a com `multipass stop swift` quando
 terminar.
@@ -178,8 +178,8 @@ terminar.
 **Num Mac você também pode dispensar a máquina virtual.** Instalar o Xcode, ou só as Command Line
 Tools, lhe dá um compilador Swift, e o swift.org publica um pacote para macOS da mesma versão. Todo
 programa deste curso roda então no próprio Mac. O que muda é tudo em volta dos programas: caminhos, a
-saída do `file` na seção 04 e algumas linhas da saída do gerenciador de pacotes. A lição 20 trata do
-que mais muda, e nada disso toca as lições 1 a 19.
+saída do `file` na seção 04 e algumas linhas da saída do gerenciador de pacotes. A aula 20 trata do
+que mais muda, e nada disso toca as aulas 1 a 19.
 
 ## Online
 

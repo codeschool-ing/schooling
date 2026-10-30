@@ -8,14 +8,14 @@ A biblioteca padrão é a mesma em toda plataforma: `Int`, `String`, `Array`, op
 dela, e não é uma biblioteca só em todo lugar.** Num Mac ela é a da Apple, parte do sistema
 operacional. No Linux e no Windows é a **swift-corelibs-foundation**, de código aberto, refeita nas
 versões recentes sobre um núcleo comum escrito em Swift, e distribuída dentro do toolchain que você
-desempacotou na lição 1.
+desempacotou na aula 1.
 
 Para quase tudo o que este curso usou, as duas concordam. `JSONEncoder`, `Date`,
-`ISO8601DateFormatter`, `ProcessInfo` e `URL` funcionaram no Ubuntu nas lições 13 e 14. Três
+`ISO8601DateFormatter`, `ProcessInfo` e `URL` funcionaram no Ubuntu nas aulas 13 e 14. Três
 diferenças valem a pena conhecer antes que elas surpreendam você:
 
 - **A rede mora num módulo separado no Linux**, o `FoundationNetworking`, porque é construída sobre a
-  `libcurl`, e é por isso que a linha do `apt` da lição 1 instalou o `libcurl4-openssl-dev`. Num Mac,
+  `libcurl`, e é por isso que a linha do `apt` da aula 1 instalou o `libcurl4-openssl-dev`. Num Mac,
   o `URLSession` simplesmente faz parte da Foundation.
 - **Os outros frameworks da Apple não existem lá.** SwiftUI, UIKit, Combine, Core Data e SwiftData
   são da Apple e só vêm com os sistemas da Apple.

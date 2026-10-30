@@ -54,8 +54,8 @@ The first `print` works: the course exists, and `session.course.name` reads it w
 `swift = nil` drops the only strong reference, and the course is freed, as its `deinit` says. **The
 second `print` reads an unowned reference to an object that is gone, and the runtime ends the
 program** with a message that says exactly that, `Attempted to read an unowned reference but object
-… was already destroyed`, followed by the stack trace of where it happened: frames in the Swift
-runtime first, then `unowned` itself, the program that read the reference.
+… was already destroyed`. A stack trace of where it happened follows: frames in the Swift runtime
+first, then `unowned` itself, the program that read the reference.
 
 `SWIFT_BACKTRACE=enable=no` before the command turns off Swift's full crash report, which on Linux runs
 to some fifty lines of registers and memory, and keeps the short stack trace you see. It changes the

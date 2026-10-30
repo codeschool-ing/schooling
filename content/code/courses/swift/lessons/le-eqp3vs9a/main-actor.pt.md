@@ -11,7 +11,7 @@ nele exatamente como `minutes` ficava isolado no `WeekTotal`.
 
 O SwiftUI e o UIKit marcam as views e os view controllers com `@MainActor`, então o compilador impede
 você de atualizar a tela a partir de uma tarefa em segundo plano. Nenhum dos dois frameworks existe no
-Linux, e esta lição não os roda. O que ela pode rodar é a regra em si, numa classe própria fazendo o
+Linux, e esta aula não os roda. O que ela pode rodar é a regra em si, numa classe própria fazendo o
 papel de uma tela:
 
 ```swift
@@ -96,7 +96,7 @@ mencionaram, e por isso `let screen = WeekScreen()` no nível de cima não preci
 
 ## Uma Task herda o seu ator, e uma tarefa destacada não
 
-A lição 14 prometeu uma diferença entre `Task { … }` e `Task.detached { … }`. Aqui está ela, num
+A aula 14 prometeu uma diferença entre `Task { … }` e `Task.detached { … }`. Aqui está ela, num
 tratador de botão que roda no ator principal, como os tratadores rodam:
 
 ```swift

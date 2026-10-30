@@ -95,8 +95,8 @@ Note: Some test targets reported failures:
 
 **A falha imprime a expressão e depois o valor de cada parte dela**: `week.progress == 15` foi falso
 porque `week.progress` era `0`. Nada no teste pediu essa segunda linha; o `#expect` é uma **macro**,
-que a lição 16 descreveu de fora, e na compilação ela reescreveu a comparação em código que registra
-os dois lados. A causa é a divisão inteira da lição 1: `45 / 300` é 0, e 0 vezes 100 continua 0.
+que a aula 16 descreveu de fora, e na compilação ela reescreveu a comparação em código que registra
+os dois lados. A causa é a divisão inteira da aula 1: `45 / 300` é 0, e 0 vezes 100 continua 0.
 
 Os símbolos no começo de cada linha são do framework: `◇` um teste ou suíte que começou, `✔` um que
 passou, `✘` um que falhou, e `↳` um detalhe da linha de cima. Os testes rodaram **em paralelo**, que

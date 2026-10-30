@@ -105,7 +105,7 @@ Usage: plan [--goal <goal>] <minutes> ...
 
 The parser did three jobs nobody wrote: it converted three words into an `[Int]`, wrote a help page
 from the property names and the `help:` strings, and refused `forty` with a message that names the
-argument, then exited with **64**, the conventional status for a command used wrongly, so a script
+argument. It then exited with **64**, the conventional status for a command used wrongly, so a script
 calling `plan` can tell a typo from a crash.
 
 ## What a dependency costs

@@ -4,7 +4,7 @@ version: 1
 ---
 
 O planner imprime um relatório da semana: um título, uma linha por curso, e uma linha de parabéns
-quando a meta é atingida. Escrito com os arrays da lição 4, é um `var lines` e um `append` em cada
+quando a meta é atingida. Escrito com os arrays da aula 4, é um `var lines` e um `append` em cada
 linha. **Um result builder deixa o relatório ser escrito como o que ele diz**, uma linha de texto por
 linha de código.
 

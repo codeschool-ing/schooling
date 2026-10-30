@@ -6,7 +6,7 @@ version: 1
 Todo programa até aqui usou tipos que outra pessoa escreveu: `Int`, `String`, `Double`. O Swift lhe
 dá duas palavras-chave para escrever o seu próprio tipo com campos armazenados, `struct` e `class`,
 e **as duas parecem quase idênticas na página**. A diferença é o que acontece quando um valor é
-atribuído, passado ou guardado, e o resto desta lição é essa diferença. Esta seção mostra o que cada
+atribuído, passado ou guardado, e o resto desta aula é essa diferença. Esta seção mostra o que cada
 uma pede de você antes de você conseguir criar uma.
 
 Uma sessão de estudo tem um curso e um número de minutos. Aqui está ela escrita dos dois jeitos, lado
@@ -74,9 +74,9 @@ kindsfixed.SessionRef
 ```
 
 `self.course = course` atribui o parâmetro `course` à propriedade de mesmo nome; `self` é a instância
-sendo construída, e a lição 6 tem mais a dizer sobre inicializadores. `final` diz que nenhuma outra
+sendo construída, e a aula 6 tem mais a dizer sobre inicializadores. `final` diz que nenhuma outra
 classe pode herdar desta, o que é o padrão certo para uma classe que ninguém desenhou para ser
-estendida; a lição 10 é sobre herança e sobre quando ela vale a pena.
+estendida; a aula 10 é sobre herança e sobre quando ela vale a pena.
 
 As duas linhas do `print` também diferem. **Uma struct imprime o seu conteúdo**, campo a campo,
 porque o Swift consegue descrever um valor pelo que há nele. Uma classe imprime só o nome, prefixado
@@ -93,7 +93,7 @@ de saída, porque o que identifica uma instância não é o conteúdo, e sim qua
 | mudar uma propriedade a partir de um método | o método precisa ser `mutating` | sempre permitido |
 | herança | nenhuma | uma superclasse, a menos que seja `final` |
 | `===`, "é a mesma instância?" | não existe | existe |
-| `deinit`, código que roda quando ela some | nenhum | sim, lição 11 |
+| `deinit`, código que roda quando ela some | nenhum | sim, aula 11 |
 
 A maior parte da biblioteca padrão está do lado esquerdo. `Int`, `String`, `Array`, `Dictionary` e
 `Optional` são todos structs ou enums, assim como a maioria dos tipos que você vai escrever na camada

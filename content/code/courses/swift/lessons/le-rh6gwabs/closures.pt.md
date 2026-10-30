@@ -4,7 +4,7 @@ version: 1
 ---
 
 Uma closure que usa um nome de fora dela o **captura**: mantém o valor, ou a referência, vivo enquanto
-a própria closure estiver viva (lição 3). Quando a closure é guardada numa propriedade de uma classe
+a própria closure estiver viva (aula 3). Quando a closure é guardada numa propriedade de uma classe
 e usa `self`, isso é um laço de dois: o objeto segura a closure, e a closure segura o objeto. **É o
 ciclo de retenção mais comum em código Swift, porque nada na linha que o cria parece uma
 referência.**
@@ -73,4 +73,4 @@ O compilador ajuda numa metade disso. Dentro de uma closure guardada para depois
 Uma closure passada para `map`, `filter` ou `sorted` roda durante a chamada e some quando a chamada
 retorna; ela **não escapa**, e pode usar `self` à vontade, sem `self.`, porque não sobrevive à linha.
 Só uma closure guardada, numa propriedade, num array, num timer ou numa tarefa, pode entrar num ciclo.
-O `Task { }` da lição 14 é uma dessas, e a mesma lista de captura funciona lá.
+O `Task { }` da aula 14 é uma dessas, e a mesma lista de captura funciona lá.

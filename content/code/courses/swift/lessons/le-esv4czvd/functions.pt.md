@@ -3,7 +3,7 @@ title: Funções, e o que elas devolvem
 version: 1
 ---
 
-A lição 2 já chamou funções com nomes como `minutes(from:)`. Uma **função** é um trecho de código com
+A aula 2 já chamou funções com nomes como `minutes(from:)`. Uma **função** é um trecho de código com
 nome, com parâmetros que entram e, se ela disser, um valor que sai. O tipo dela está escrito na
 primeira linha, e o compilador cobra esse tipo de toda chamada e de todo `return`.
 
@@ -23,7 +23,7 @@ O total é 135 minutos, ou 2,25 horas, e contra uma meta de 300 sobram 165. Trê
 valem guardar. **O tipo do resultado faz parte da promessa**: `weekTotal` diz `-> Int`, então todo
 caminho por dentro dela precisa terminar num `Int`. **Um corpo de uma expressão só devolve o valor
 dela**, e é por isso que `hours` não tem `return`. E **uma tupla é como uma função devolve duas
-coisas** sem um tipo inventado para isso; a lição 5 mostra quando é hora de inventar um.
+coisas** sem um tipo inventado para isso; a aula 5 mostra quando é hora de inventar um.
 
 ## O compilador confere as duas pontas
 
@@ -71,4 +71,4 @@ Quando descartar é mesmo a intenção, `_ = weekTotal([45])` diz isso e cala o 
 O `print` não devolve nada, nem uma função que só relata. Deixe de fora a parte `->` e o tipo do
 resultado da função é `Void`, uma tupla vazia, `()`. Você verá `Void` escrito por extenso em tipos de
 função na seção 06. Uma função assim ainda pode usar `return` para sair antes, sem nada depois da
-palavra, que é como o `guard` da lição 2 saiu de uma função que não tinha valor a dar.
+palavra, que é como o `guard` da aula 2 saiu de uma função que não tinha valor a dar.

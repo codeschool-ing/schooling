@@ -6,7 +6,7 @@ version: 1
 Um **target** é um módulo que o pacote compila. Um **produto** é o que o pacote oferece para fora: um
 executável que alguém pode rodar, ou uma biblioteca de que outro pacote pode depender, cada um feito
 de um ou mais targets. **Targets são como você organiza o seu código; produtos são o que você promete
-aos outros**, e o pacote `report` da lição 17 só conseguiu importar o `PlannerCore` porque o planner
+aos outros**, e o pacote `report` da aula 17 só conseguiu importar o `PlannerCore` porque o planner
 o declarou como produto.
 
 O planner ganha um manifesto escrito à mão, com os dois tipos:
@@ -31,7 +31,7 @@ let package = Package(
 
 A versão de ferramentas é 6.2 e não a 6.4 que o `init` escreveu, o que deixa qualquer pessoa com um
 toolchain Swift 6.2 ou mais novo compilar o pacote; nada nele precisa de 6.4. A biblioteca é a
-semana da lição 17, e o executável lê minutos da linha de comando:
+semana da aula 17, e o executável lê minutos da linha de comando:
 
 ```swift
 // Sources/PlannerCore/Week.swift
@@ -144,6 +144,6 @@ sozinho; ele existe para outros targets e outros pacotes ligarem.
 
 Um target é o tamanho certo para a maioria dos programas pequenos. Divida quando duas partes têm
 públicos diferentes: o modelo que o app de iOS e a ferramenta de linha de comando vão usar é um
-target, e cada programa em cima dele é outro. **A divisão também é uma fronteira**, e a lição 17
+target, e cada programa em cima dele é outro. **A divisão também é uma fronteira**, e a aula 17
 mostrou quanto custa: tudo o que o segundo target usa precisa ser `public` ou `package` no primeiro.
 Uma divisão que obriga metade de um target a virar pública estava no lugar errado.

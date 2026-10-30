@@ -37,7 +37,7 @@ false true
 **O `: Equatable` depois do nome da struct foi tudo o que bastou para ganhar o `==`.** Ele declara
 que a struct segue o protocolo `Equatable` da biblioteca padrão, e quando toda propriedade armazenada
 é ela mesma comparável, o compilador escreve a comparação: iguais quando toda propriedade é igual. A
-lição 8 é sobre protocolos; por ora, leia `: Equatable` como "valores deste tipo podem ser
+aula 8 é sobre protocolos; por ora, leia `: Equatable` como "valores deste tipo podem ser
 comparados".
 
 Na classe, `x` e `y` guardam o mesmo número de minutos e ainda assim são duas instâncias, então o
@@ -67,5 +67,5 @@ NoEquals.swift:8:9: error: binary operator '==' cannot be applied to two 'Sessio
 
 O compilador não vai adivinhar o que igualdade quer dizer para uma classe, porque para uma classe a
 resposta honesta é uma decisão: duas contas com o mesmo nome são pessoas diferentes. Você pode tornar
-uma classe `Equatable` e escrever o `==` você mesmo, como mostra a lição 8. **Para uma struct o
+uma classe `Equatable` e escrever o `==` você mesmo, como mostra a aula 8. **Para uma struct o
 palpite está certo, e isso é parte do motivo de structs serem o padrão para dados.**

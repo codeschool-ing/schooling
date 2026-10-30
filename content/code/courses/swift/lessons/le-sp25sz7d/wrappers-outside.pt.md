@@ -5,7 +5,7 @@ version: 1
 
 A primeira tela de SwiftUI que alguém escreve tem uma linha como esta. Ela aparece aqui como a
 documentação da Apple a mostra, e **não é rodada neste curso**: o SwiftUI é um dos frameworks da Apple
-e não existe no Linux, o que a lição 1 disse e a lição 20 retoma.
+e não existe no Linux, o que a aula 1 disse e a aula 20 retoma.
 
 ```swift
 struct TimerView: View {
@@ -18,7 +18,7 @@ struct TimerView: View {
 ```
 
 `@State` na frente de `var minutes`, e `$minutes` mais abaixo: duas sintaxes que este curso ainda não
-viu. **`@State` é um property wrapper**, e `$minutes` é o valor que ele **projeta**. Nenhum dos dois é
+viu. **`@State` é um property wrapper**, e `$minutes` é o valor que ele projeta. Nenhum dos dois é
 exclusivo do SwiftUI. Os dois são recursos da linguagem, e vale entendê-los de fora antes de usá-los
 todo dia no `ios-apps`, porque um property wrapper muda o que ler e escrever uma propriedade faz, e
 nada no lugar em que você a lê avisa isso.
@@ -26,7 +26,7 @@ nada no lugar em que você a lê avisa isso.
 ## A repetição que um wrapper elimina
 
 Comece por um problema que o planner tem de verdade. Os minutos de uma sessão de estudo precisam ficar
-entre 0 e 600, e a meta da semana também, e uma pausa também. A lição 6 lhe deu as ferramentas para
+entre 0 e 600, e a meta da semana também, e uma pausa também. A aula 6 lhe deu as ferramentas para
 fazer isso à mão: uma propriedade armazenada privada e uma computada na frente dela.
 
 ```swift

@@ -34,7 +34,7 @@ total 75
 ```
 
 `for typed in entries` roda o corpo uma vez para cada string do array, com `typed` valendo cada uma
-por vez; a lição 4 é sobre arrays. Dentro do `if`, `total += minutes` compila porque `minutes` é um
+por vez; a aula 4 é sobre arrays. Dentro do `if`, `total += minutes` compila porque `minutes` é um
 `Int`. Escreva `total += Int(typed)` no lugar e o compilador recusa, pelo motivo que a seção 02 deu:
 um `Int?` não tem `+=` com um `Int`.
 
@@ -99,5 +99,5 @@ cannot read 645-600
 
 As condições são lidas da esquerda para a direita, e cada uma pode usar os nomes desempacotados antes
 dela: `to > from` compara dois `Int` porque os dois `let` já deram certo. A primeira que falha manda o
-`if` inteiro para o `else`. A função recebe os rótulos `start:` e `end:` na chamada, que a lição 3
+`if` inteiro para o `else`. A função recebe os rótulos `start:` e `end:` na chamada, que a aula 3
 explica.

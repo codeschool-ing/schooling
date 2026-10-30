@@ -79,5 +79,5 @@ garantida de terminar antes que essa função retorne. As seções 05 e 06 criam
 garantia é o que deixa o compilador cancelá-las e esperá-las por você.
 
 Existe também `Task.detached { … }`, que inicia uma tarefa que não herda nada do código que a criou.
-Você raramente vai precisar dela, e a lição 15 mostra a única coisa que uma `Task` comum herda e que
+Você raramente vai precisar dela, e a aula 15 mostra a única coisa que uma `Task` comum herda e que
 faz a diferença: o ator em que ela foi iniciada.

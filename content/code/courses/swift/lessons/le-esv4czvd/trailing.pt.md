@@ -45,8 +45,8 @@ não devolve nada, que é o que uma ação é.
 
 **Leia uma trailing closure como o último argumento**, não como um bloco que roda na hora. Se ela roda
 agora, duas vezes, depois ou nunca, quem decide é a função que a recebeu. O `repeatTwice` a roda duas
-vezes. O `map`, o `filter` e o `sorted` da lição 4 recebem closures escritas exatamente assim, e é
-naquela lição que a forma se paga.
+vezes. O `map`, o `filter` e o `sorted` da aula 4 recebem closures escritas exatamente assim, e é
+naquela aula que a forma se paga.
 
 ## Mais de uma
 
@@ -81,6 +81,6 @@ failed: no sessions for Kotlin
 ```
 
 A forma, uma closure para o sucesso e uma para a falha, é a que o código de rede mais antigo usava antes
-de existir `async`/`await`, e a lição 14 parte dela. É também exatamente como os botões e as listas do
+de existir `async`/`await`, e a aula 14 parte dela. É também exatamente como os botões e as listas do
 SwiftUI são escritos no `ios-apps`: `Button("Add") { … }` é uma chamada cujo último argumento é uma
 trailing closure.

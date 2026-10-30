@@ -5,7 +5,7 @@ version: 1
 
 **Um property wrapper é um tipo marcado com `@propertyWrapper` que tem uma propriedade chamada
 `wrappedValue`.** Esse é o contrato inteiro. Todo o resto, o que ele guarda, o que confere e como é
-inicializado, é Swift comum das lições 5 e 6:
+inicializado, é Swift comum das aulas 5 e 6:
 
 ```schooling-example
 {"language": "swift", "file": "Clamped.swift", "parts": [{"code": "@propertyWrapper\nstruct Clamped {\n    private var value: Int\n    let range: ClosedRange<Int>", "note": "**O `@propertyWrapper` torna o tipo utilizável depois de um `@`.** O que ele guarda é com ele: aqui, o valor e a faixa em que ele precisa ficar."}, {"code": "    init(wrappedValue: Int, _ range: ClosedRange<Int>) {\n        self.range = range\n        self.value = min(max(wrappedValue, range.lowerBound), range.upperBound)\n    }", "note": "O inicializador que o compilador chama. **O `wrappedValue:` recebe o valor inicial da propriedade**, o `= 45` lá embaixo, e o outro parâmetro é o que estiver entre parênteses depois do `@Clamped`."}, {"code": "    var wrappedValue: Int {\n        get { value }\n        set { value = min(max(newValue, range.lowerBound), range.upperBound) }\n    }\n}", "note": "O único membro obrigatório. Toda leitura de uma propriedade com wrapper chama este getter e toda escrita chama este setter, então **a regra mora aqui, uma vez**."}, {"code": "struct StudySession {\n    @Clamped(0...600) var minutes = 45\n    @Clamped(0...1200) var weeklyGoal = 300\n}", "note": "Duas propriedades, duas faixas, uma regra. Cada `@Clamped(…)` cria a sua própria instância de `Clamped`."}, {"code": "var session = StudySession()\nsession.minutes = 900\nsession.weeklyGoal = 2000\nprint(session.minutes, session.weeklyGoal)\nsession.minutes = -5\nprint(session.minutes)", "note": "Quem chama lê e escreve `minutes` como um `Int` comum. Nada no lugar da chamada mostra que há um wrapper, e isso é a conveniência e o risco ao mesmo tempo."}]}
@@ -77,7 +77,7 @@ Storage.swift:28:15: error: '_minutes' is inaccessible due to 'private' protecti
 
 **Um erro, e é sobre a linha 28, fora do tipo.** O `describe()` lê `_minutes.range` na linha 22, dentro
 do tipo, e o compilador não teve nada a dizer. A última linha pede a mesma coisa de fora e é recusada,
-com o motivo no vocabulário da lição 17: `_minutes` é **inacessível por causa do nível de proteção
+com o motivo no vocabulário da aula 17: `_minutes` é **inacessível por causa do nível de proteção
 `private`**, e a nota aponta de volta para a linha do `@Clamped` que o declarou. Apague a linha 28 e o
 programa imprime a frase que o `describe()` monta.
 

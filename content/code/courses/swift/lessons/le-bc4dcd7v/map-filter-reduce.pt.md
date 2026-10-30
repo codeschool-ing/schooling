@@ -6,12 +6,12 @@ version: 1
 A maioria dos laços sobre uma coleção faz um de três trabalhos: transformar cada item em outra coisa,
 guardar os itens que passam num teste, ou combinar todos os itens num valor só. **O Swift tem um
 método para cada um: `map`, `filter` e `reduce`**, e cada um recebe uma closure, escrita como as
-trailing closures da lição 3.
+trailing closures da aula 3.
 
 Uma semana de sessões, cada uma uma tupla com um curso, uma duração e se foi feita:
 
 ```schooling-example
-{"language": "swift", "file": "Transform.swift", "parts": [{"code": "// Transform.swift\nlet week: [(course: String, minutes: Int, done: Bool)] = [\n    (\"Swift\", 45, true),\n    (\"Kotlin\", 30, false),\n    (\"Swift\", 60, true),\n    (\"SQL\", 20, true),\n]", "note": "Quatro sessões, cada uma uma tupla com partes nomeadas. A lição 5 troca a tupla por um tipo próprio; para estes três métodos a tupla basta."}, {"code": "let hours = week.map { Double($0.minutes) / 60 }\nprint(hours)", "note": "`map`: um resultado por item, na mesma ordem. A closure transforma uma sessão na duração dela em horas."}, {"code": "let pending = week.filter { !$0.done }\nprint(pending.map { $0.course })", "note": "`filter`: os itens para os quais a closure diz `true`. O `!` se lê \"não\", então isto guarda as sessões ainda não feitas."}, {"code": "let planned = week.reduce(0) { $0 + $1.minutes }\nprint(planned)", "note": "`reduce`: um valor a partir de todos. Começa em 0 e soma os minutos de cada sessão; a parte abaixo da saída o mostra devagar."}, {"code": "let studied = week.filter { $0.done }.map { $0.minutes }.reduce(0, +)\nprint(studied)", "note": "Os três numa cadeia, lidos da esquerda para a direita: as sessões feitas, os minutos delas, a soma."}]}
+{"language": "swift", "file": "Transform.swift", "parts": [{"code": "// Transform.swift\nlet week: [(course: String, minutes: Int, done: Bool)] = [\n    (\"Swift\", 45, true),\n    (\"Kotlin\", 30, false),\n    (\"Swift\", 60, true),\n    (\"SQL\", 20, true),\n]", "note": "Quatro sessões, cada uma uma tupla com partes nomeadas. A aula 5 troca a tupla por um tipo próprio; para estes três métodos a tupla basta."}, {"code": "let hours = week.map { Double($0.minutes) / 60 }\nprint(hours)", "note": "`map`: um resultado por item, na mesma ordem. A closure transforma uma sessão na duração dela em horas."}, {"code": "let pending = week.filter { !$0.done }\nprint(pending.map { $0.course })", "note": "`filter`: os itens para os quais a closure diz `true`. O `!` se lê \"não\", então isto guarda as sessões ainda não feitas."}, {"code": "let planned = week.reduce(0) { $0 + $1.minutes }\nprint(planned)", "note": "`reduce`: um valor a partir de todos. Começa em 0 e soma os minutos de cada sessão; a parte abaixo da saída o mostra devagar."}, {"code": "let studied = week.filter { $0.done }.map { $0.minutes }.reduce(0, +)\nprint(studied)", "note": "Os três numa cadeia, lidos da esquerda para a direita: as sessões feitas, os minutos delas, a soma."}]}
 ```
 
 ```
@@ -62,6 +62,6 @@ pode ser passado no lugar de uma closure porque o operador é ele mesmo uma fun�
 
 ## compactMap, de novo
 
-A lição 2 encontrou o `compactMap`: um `map` cuja closure devolve um opcional, guardando só os valores
+A aula 2 encontrou o `compactMap`: um `map` cuja closure devolve um opcional, guardando só os valores
 que existem. Com `map` e `filter` nomeados, ele se lê como o que é, **map e depois filtrar fora os
 `nil`**, numa passada só.

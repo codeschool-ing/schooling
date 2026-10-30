@@ -10,7 +10,7 @@ below and no screenshot, on purpose.
 
 ## The same toolchain, and more around it
 
-On a Mac, Swift arrives with **Xcode**, Apple's IDE, or with the smaller **Command Line Tools**. Both
+On a Mac, Swift arrives with **Xcode**, Apple's IDE, or with the smaller Command Line Tools. Both
 put `swift` and `swiftc` on the `PATH`, and every command of this course works there as written:
 `swift Hello.swift`, `swift build`, `swift test`, `swift package init`. The differences you would see
 are the ones lesson 1 listed: paths, the target line of `swift --version`, which on a recent Mac starts
@@ -44,7 +44,7 @@ is a simulator on your own screen to develop against, and that is the part `ios-
 ## What carries over unchanged
 
 **Every concept of these twenty lessons**, which is the point of having learned them first. An iPhone
-app's models are structs and enums; its screens are SwiftUI views, which are structs conforming to a
-protocol, built by a result builder and holding state in property wrappers; its network calls are
-`async` functions returning `Codable` values; its UI runs on the `@MainActor` of lesson 15; and its
-tests are the XCTest and Swift Testing of lesson 18. Section 07 maps them one by one.
+app's models are structs and enums. Its screens are SwiftUI views: structs conforming to a protocol,
+built by a result builder and holding state in property wrappers. Its network calls are `async`
+functions returning `Codable` values, its UI runs on the `@MainActor` of lesson 15, and its tests are
+the XCTest and Swift Testing of lesson 18. Section 07 maps them one by one.

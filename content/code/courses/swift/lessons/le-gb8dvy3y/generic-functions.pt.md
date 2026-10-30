@@ -35,8 +35,8 @@ O `<T>` depois do nome declara um **parâmetro de tipo** chamado `T`. Dentro da 
 um tipo, o mesmo em todo lugar em que aparece, então os elementos do array e os dois valores
 devolvidos têm o mesmo tipo. Na primeira chamada `T` é `Int`, porque `minutes` é um `[Int]`; na
 segunda é `String`. Ninguém escreveu nenhum dos dois: **o compilador infere o parâmetro de tipo a
-partir dos argumentos**, do jeito que a lição 1 mostrou ele inferir o tipo de um `let`. A terceira
-chamada passa um array vazio de `Double`, e a função devolve `nil`, como diz o `guard` da lição 2.
+partir dos argumentos**, do jeito que a aula 1 mostrou ele inferir o tipo de um `let`. A terceira
+chamada passa um array vazio de `Double`, e a função devolve `nil`, como diz o `guard` da aula 2.
 
 `T` é só uma convenção. A biblioteca padrão escreve `Element` para o que uma coleção guarda e
 `Value` para o que um dicionário mapeia, e um nome que diz para que serve o tipo se lê melhor que uma
@@ -46,7 +46,7 @@ letra quando há mais de um.
 
 Um marcador não é "qualquer tipo, decidido na execução". Cada chamada é verificada com o tipo real,
 então `let n: Int = firstAndLast(courses)!.first` é recusado, já que o `T` dessa chamada é `String`.
-**A segurança da lição 1 sobrevive**: um corpo, e cada uso dele com tipo exato.
+**A segurança da aula 1 sobrevive**: um corpo, e cada uso dele com tipo exato.
 
 ## O que um marcador não sabe
 

@@ -59,7 +59,7 @@ NoLabels.swift:5:4: error: missing argument labels 'minutes:to:' in call
 O compilador nomeia os rótulos que queria. Isso diz mais do que parece: **no Swift os rótulos fazem
 parte da identidade da função.** O nome completo desta função é `add(minutes:to:)`, que é como a
 documentação e o compilador se referem a ela, e duas funções chamadas `add` com rótulos diferentes são
-duas funções diferentes. O `minutes(from:)` da lição 2 foi escrito assim de propósito.
+duas funções diferentes. O `minutes(from:)` da aula 2 foi escrito assim de propósito.
 
 ## Escolhendo rótulos
 

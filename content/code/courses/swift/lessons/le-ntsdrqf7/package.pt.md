@@ -122,7 +122,7 @@ Antes do Swift 5.9 o único jeito de compartilhar código entre dois módulos de
 muitas vezes com um comentário pedindo que não chamassem. **`package` transforma esse comentário numa
 regra que o compilador faz cumprir.** Serve para ajudantes de teste compartilhados entre targets, um
 logger comum e o encanamento entre uma biblioteca e a ferramenta de linha de comando ao lado dela,
-que é exatamente o formato que o pacote da lição 19 toma.
+que é exatamente o formato que o pacote da aula 19 toma.
 
 Isso completa os seis níveis, e uma regra os mantém juntos: **nada pode ser usado de mais longe do
 que as coisas que ele menciona**. Um membro de um tipo `internal` nunca é usável fora do módulo,

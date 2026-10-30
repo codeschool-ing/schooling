@@ -70,5 +70,5 @@ eliminam:
 - um membro só na extensão é um **auxiliar** construído a partir dos requisitos, e nenhum tipo que
   conforma deve declarar um com o mesmo nome.
 
-A lição 10 constrói projetos inteiros com extensões de protocolo, e esta regra é o que os mantém
+A aula 10 constrói projetos inteiros com extensões de protocolo, e esta regra é o que os mantém
 previsíveis.

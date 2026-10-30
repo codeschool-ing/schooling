@@ -3,9 +3,9 @@ title: Protocolos com um tipo em aberto
 version: 1
 ---
 
-Os protocolos da lição 8 nomeavam cada tipo por inteiro: `title` é uma `String`, `summary()` devolve
+Os protocolos da aula 8 nomeavam cada tipo por inteiro: `title` é uma `String`, `summary()` devolve
 uma `String`. Alguns protocolos não conseguem. O planner guarda sessões num repositório, guarda
-cursos em outro, e um teste da lição 18 vai querer um repositório de números simples; as operações
+cursos em outro, e um teste da aula 18 vai querer um repositório de números simples; as operações
 são as mesmas e o tipo da coisa guardada muda. **Um tipo associado é um parâmetro de tipo que pertence
 a um protocolo**, e cada tipo que conforma decide qual é.
 
@@ -63,7 +63,7 @@ uma `CourseList` guarda strings e nada mais.
 O `fill` é genérico sobre qualquer repositório, `S: Store`, e o segundo parâmetro é `[S.Item]`: um
 array do que quer que aquele repositório guarde. Leia a assinatura como uma frase, "para qualquer
 repositório, um array dos itens dele", e as chamadas se verificam sozinhas. Passar cursos para
-`sessions` seria recusado, porque o `SessionStore.Item` é `StudySession`. O `inout` e o `&` da lição
+`sessions` seria recusado, porque o `SessionStore.Item` é `StudySession`. O `inout` e o `&` da aula
 3 deixam o `fill` mudar o repositório que recebeu; o `if !all.contains(item)` é o motivo de a
 `CourseList` ter guardado `"Swift"` uma vez só.
 

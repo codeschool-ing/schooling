@@ -92,6 +92,6 @@ seção 06 trata do que isso significa.
 ## Quanto custa
 
 Cada `await` a um ator é uma suspensão possível, e o `Actor.swift` fez 800.000 delas por execução. É
-o preço da proteção, e é por isso que um contador é um mau uso de um ator: um ator vale a pena quando
+o preço da proteção, e é por isso que um contador é um mau uso de um ator. Um ator vale a pena quando
 protege estado que várias partes do programa dividem, como o cache de cursos de um planner ou a
 conexão com um servidor, e cada chamada faz uma quantidade de trabalho que conta.

@@ -9,7 +9,7 @@ um tipo cujos valores podem ser divididos com segurança entre código concorren
 decide a maior parte disso por você a partir do que o tipo é feito.
 
 **Um tipo de valor feito de partes `Sendable` já é `Sendable`.** Um `struct` de `String`s e `Int`s é
-copiado quando é passado, como a lição 5 mostrou, então a tarefa recebe uma cópia que ninguém mais
+copiado quando é passado, como a aula 5 mostrou, então a tarefa recebe uma cópia que ninguém mais
 alcança. Uma classe com um `var` é o contrário: passá-la entrega uma referência ao mesmo objeto, e os
 dois lados podem escrever. Este programa manda um de cada para uma tarefa destacada:
 
@@ -119,7 +119,7 @@ dono por vez: `start` até a tarefa ser criada, a tarefa depois.
 
 Um tipo dividido de verdade, seguro por várias tarefas ao mesmo tempo, tem de ser ele mesmo
 `Sendable`. Para um `struct` ou um `enum` o compilador infere isso dentro de um módulo; um tipo tornado
-`public` para outros módulos, que é o assunto da lição 17, escreve `: Sendable` para que a promessa
+`public` para outros módulos, que é o assunto da aula 17, escreve `: Sendable` para que a promessa
 faça parte da interface dele. Uma classe só pode declará-lo quando é `final` e toda propriedade
 armazenada é um `let` de um tipo `Sendable`, para que nada nela possa mudar depois de criada:
 
@@ -153,4 +153,4 @@ Troque `var goal` por `let goal` e compila. Uma classe cujo estado precisa mesmo
 classe protege o próprio estado, com um lock por exemplo, e o compilador acredita. Bibliotecas
 anteriores ao Swift 6 o usam em tipos que tornaram seguros à mão. No seu código, todo `@unchecked` é
 um lugar em que o compilador parou de olhar e uma corrida pode voltar, então trate-o como trata o `!`
-da lição 2.
+da aula 2.

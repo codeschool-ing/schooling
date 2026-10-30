@@ -3,8 +3,8 @@ title: Propriedades armazenadas
 version: 1
 ---
 
-Os tipos da lição 5 guardavam os dados em **propriedades armazenadas**: um nome e um tipo dentro das
-chaves do tipo, com espaço reservado para elas em toda instância. Esta lição é sobre as quatro outras
+Os tipos da aula 5 guardavam os dados em **propriedades armazenadas**: um nome e um tipo dentro das
+chaves do tipo, com espaço reservado para elas em toda instância. Esta aula é sobre as quatro outras
 coisas que uma propriedade pode ser, e começa fixando a comum, porque dois detalhes dela decidem para
 que servem as outras.
 
@@ -67,6 +67,6 @@ com valor padrão não ganha argumento nenhum, já que nada poderia lhe dar outr
 ## Onde mora o armazenamento
 
 Uma propriedade armazenada de uma struct faz parte do valor: copie a struct e você copia a
-propriedade, como a lição 5 mediu. Uma propriedade armazenada de uma classe mora na única instância
-no heap. Nada mais na declaração muda, e **todo tipo de propriedade desta lição existe nas duas**,
+propriedade, como a aula 5 mediu. Uma propriedade armazenada de uma classe mora na única instância
+no heap. Nada mais na declaração muda, e **todo tipo de propriedade desta aula existe nas duas**,
 com uma exceção nomeada na seção 05.

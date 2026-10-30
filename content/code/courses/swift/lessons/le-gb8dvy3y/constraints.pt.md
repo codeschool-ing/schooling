@@ -64,7 +64,7 @@ NotComparable.swift:8:7: error: global function 'largest' requires that 'Note' c
 
 **O erro nomeia o requisito e o tipo que não o cumpre**, e a nota mostra o que `T` foi inferido como.
 Uma restrição é um contrato com dois lados: a função pode usar `>`, e quem chama precisa trazer um
-tipo que o tenha. A conformidade a `Comparable` da lição 8 é como um tipo do planner entra.
+tipo que o tenha. A conformidade a `Comparable` da aula 8 é como um tipo do planner entra.
 
 ## where, para contratos mais longos
 
@@ -93,5 +93,5 @@ ana@vm:~/sw/l09$ swift WeekTotal.swift
 `C: Collection` deixa a função percorrer o argumento; a cláusula `where` acrescenta que o `Element`
 da coleção precisa ser `Int`. `Element` é um **tipo associado** de `Collection`, um tipo que cada
 coleção decide para si, e a seção 05 escreve um protocolo com um deles. Uma cláusula `where` pode ter
-várias condições separadas por vírgulas, e é também como as extensões condicionais da lição 8 foram
+várias condições separadas por vírgulas, e é também como as extensões condicionais da aula 8 foram
 escritas.

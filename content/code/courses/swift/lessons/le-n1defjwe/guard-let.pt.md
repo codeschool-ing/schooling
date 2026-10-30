@@ -67,7 +67,7 @@ FallThrough.swift:5:5: error: 'guard' body must not fall through, consider using
 7 | }
 ```
 
-`return` é uma saída de uma função, e a mensagem cita `throw` como a outra, que a lição 12 explica.
+`return` é uma saída de uma função, e a mensagem cita `throw` como a outra, que a aula 12 explica.
 Dentro de um laço, `continue` e `break` também contam. **O que não conta é imprimir uma mensagem e
 seguir em frente**, porque aí `value` seria usado abaixo sem valor nenhum dentro, que é justamente o
 bug que o `guard` existe para impedir.

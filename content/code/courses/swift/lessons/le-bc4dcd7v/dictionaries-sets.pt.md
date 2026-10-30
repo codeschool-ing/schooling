@@ -35,7 +35,7 @@ Swift 180
 ```
 
 O tipo é `[String: Int]`: chaves de um tipo, valores de outro. **Ler pela chave dá um opcional**, já
-que a chave pode não estar lá, e `"Rust"` não estava. O `?? 0` é a resposta da lição 2. A forma com
+que a chave pode não estar lá, e `"Rust"` não estava. O `?? 0` é a resposta da aula 2. A forma com
 `default:` é a que se usa para um total acumulado: lê 0 para uma chave que falta, soma e guarda o
 resultado, então `"Go"` chegou com 20 sem ser criado antes. Atribuir `nil` remove uma chave.
 

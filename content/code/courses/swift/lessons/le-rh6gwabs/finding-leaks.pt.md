@@ -21,7 +21,7 @@ partir da documentação da Apple para o Xcode.
   instrumento Leaks confere a memória de tempos em tempos e lista as alocações para as quais nada
   alcançável aponta, com um desenho do ciclo e o código que alocou cada objeto.
 
-O `ios-apps` usa os dois num app de verdade. O que eles mostram é a mesma coisa que esta lição
+O `ios-apps` usa os dois num app de verdade. O que eles mostram é a mesma coisa que esta aula
 mostra com o `deinit`: quais objetos estão vivos e não deveriam estar.
 
 ## No Linux: a verificação de vazamento do address sanitizer

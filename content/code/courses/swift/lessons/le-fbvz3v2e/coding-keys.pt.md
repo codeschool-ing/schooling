@@ -39,7 +39,7 @@ ana@vm:~/sw/l13$ swift Keys.swift
 {"study_minutes":45,"is_done":true}
 ```
 
-O `CodingKeys` é um enum com raw value `String` (lição 7) que conforma a `CodingKey`. **Cada caso é uma
+O `CodingKeys` é um enum com raw value `String` (aula 7) que conforma a `CodingKey`. **Cada caso é uma
 propriedade, e o raw value dele é a chave no JSON.** Os dois sentidos o usam: as sessões foram
 decodificadas de `study_minutes` e `is_done`, e codificar uma de volta escreve os nomes do servidor, não
 os do Swift. O JSON no programa é uma string crua, `#"…"#`, em que as aspas dispensam barra invertida.

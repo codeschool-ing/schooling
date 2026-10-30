@@ -53,7 +53,7 @@ different amount of work; what matters is that within each build they all agreed
 That is how lesson 1's `swiftc` and `swift Hello.swift` behaved: **a file compiled on its own is in
 Swift 5 mode** unless `-swift-version 6` is given, and lesson 15 gave it. A package can also choose a
 mode per target with `swiftSettings: [.swiftLanguageMode(.v5)]`, which is how a large project moves
-to Swift 6 one module at a time, and the `ApproachableConcurrency` setting that `init` wrote in
+to Swift 6 one module at a time. The `ApproachableConcurrency` setting that `init` wrote in
 section 02 is one of the **upcoming features**, single rules of a future mode turned on early.
 
 ## What the toolchain holds
@@ -82,7 +82,7 @@ project that depends on `swift-argument-parser` does not download it again.
 A toolchain is a directory, and lesson 1 put this one on `PATH` by hand. To try another release, or
 a snapshot of the next one, the same steps unpack it beside the first and point `PATH` at it.
 **`swiftly` is swift.org's tool for exactly that**: it downloads a toolchain, verifies it, and
-switches between installed ones with `swiftly use`, and a project can name the version it expects
+switches between installed ones with `swiftly use`. A project can name the version it expects
 in a file called `.swift-version`, which `swiftly` then follows when you work inside it. swiftly was
 not used to record this course, for the reason lesson 1 gave: a pinned archive and a signature you
 check yourself make every version in the transcripts a line you can read. Its commands are shown on

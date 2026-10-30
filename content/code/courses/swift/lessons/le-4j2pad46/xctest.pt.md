@@ -8,9 +8,9 @@ sair**. Quando a afirmação é falsa, o teste falha, aponta a linha e diz o que
 os testes depois de cada mudança e um erro aparece minutos depois de você cometê-lo, numa função de
 que você se lembra de ter escrito, e não semanas depois na tela de uma estudante.
 
-O Swift tem dois frameworks de teste, e os dois vêm dentro do toolchain que a lição 1 instalou. O
+O Swift tem dois frameworks de teste, e os dois vêm dentro do toolchain que a aula 1 instalou. O
 **XCTest** é o mais antigo, dos tempos do Objective-C, e ainda está em todo projeto iOS que você vai
-abrir. O **Swift Testing** chegou em 2024 e é o assunto da seção 03. Esta lição escreve os mesmos
+abrir. O **Swift Testing** chegou em 2024 e é o assunto da seção 03. Esta aula escreve os mesmos
 testes nos dois, para você conseguir ler qualquer um quando o encontrar.
 
 ## Um pacote com um target de testes
@@ -71,7 +71,7 @@ public struct Week: Sendable {
 
 ```schooling-example
 {"language": "swift", "file": "Tests/PlannerCoreTests/WeekXCTests.swift", "parts": [
-{"code": "import XCTest\n@testable import PlannerCore", "note": "O `@testable` deixa os testes enxergarem os nomes `internal` do módulo além dos públicos. Os níveis de acesso da lição 17 continuam valendo para todo outro importador."},
+{"code": "import XCTest\n@testable import PlannerCore", "note": "O `@testable` deixa os testes enxergarem os nomes `internal` do módulo além dos públicos. Os níveis de acesso da aula 17 continuam valendo para todo outro importador."},
 {"code": "final class WeekXCTests: XCTestCase {", "note": "Uma suíte de XCTest é uma classe que herda de `XCTestCase`. O executor a encontra procurando subclasses."},
 {"code": "    func testTotalCountsOnlyDoneSessions() {\n        var week = Week()\n        week.add(StudySession(course: \"swift\", minutes: 45, done: true))\n        week.add(StudySession(course: \"swift\", minutes: 30))\n        XCTAssertEqual(week.total, 45)\n    }", "note": "Um teste é um método cujo nome começa com `test`, que não recebe nada e não devolve nada. Monte uma semana, aja sobre ela e afirme: o `XCTAssertEqual` compara dois valores e reprova o teste se forem diferentes."},
 {"code": "    func testRemainingNeverGoesBelowZero() {\n        var week = Week(goal: 60)\n        week.add(StudySession(course: \"swift\", minutes: 90, done: true))\n        XCTAssertEqual(week.remaining, 0)\n    }\n}", "note": "O segundo afirma uma regra que o código nunca recebeu: uma estudante que estuda mais que a meta tem zero minutos restantes, não um número negativo."}

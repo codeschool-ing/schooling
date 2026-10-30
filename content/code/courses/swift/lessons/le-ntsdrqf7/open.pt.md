@@ -8,7 +8,7 @@ sobrescrever os métodos dela, e isso surpreende quem vem de uma linguagem em qu
 visível pode ser estendida. **No Swift, estender uma classe de fora do módulo dela é uma permissão
 separada, e ela se chama `open`.**
 
-A biblioteca do planner ganha um lembrete, uma classe porque a lição 10 guardou a herança para
+A biblioteca do planner ganha um lembrete, uma classe porque a aula 10 guardou a herança para
 exatamente este tipo de coisa, um comportamento padrão que outro código pode refinar:
 
 ```swift

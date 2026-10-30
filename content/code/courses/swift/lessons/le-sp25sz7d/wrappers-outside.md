@@ -18,7 +18,7 @@ struct TimerView: View {
 ```
 
 `@State` in front of `var minutes`, and `$minutes` further down: two pieces of syntax this course has
-not met. **`@State` is a property wrapper**, and `$minutes` is the value it **projects**. Neither is
+not met. **`@State` is a property wrapper**, and `$minutes` is the value it projects. Neither is
 special to SwiftUI. Both are features of the language, and they are worth understanding from the
 outside before you use them every day in `ios-apps`, because a property wrapper changes what reading
 and writing a property does, and nothing at the place you read it says so.

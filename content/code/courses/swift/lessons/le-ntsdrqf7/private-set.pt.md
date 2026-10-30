@@ -107,6 +107,6 @@ enquanto outros módulos só leem, o que serve a um valor que vários tipos da b
 juntos.
 
 **`private(set)` não é imutabilidade.** O valor ainda muda; muda só onde o tipo decide. Uma
-propriedade `let` não muda de jeito nenhum depois que o inicializador a define, como a lição 6
+propriedade `let` não muda de jeito nenhum depois que o inicializador a define, como a aula 6
 mostrou. Escolha `let` quando o valor é fixo durante a vida da instância, e `private(set) var`
 quando ele se move sob as regras do próprio tipo.

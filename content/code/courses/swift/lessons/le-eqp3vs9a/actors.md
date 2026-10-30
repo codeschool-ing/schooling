@@ -92,6 +92,6 @@ program runs on it; section 06 is about what that means.
 ## What it costs
 
 Each `await` to an actor is a possible suspension, and `Actor.swift` made 800,000 of them per run.
-That is the price of the protection, and it is why a counter is a poor use of one: an actor earns its
+That is the price of the protection, and it is why a counter is a poor use of one. An actor earns its
 place when it guards state that several parts of a program share, such as a planner's cache of
 courses or the connection to a server, and each call does a meaningful amount of work.

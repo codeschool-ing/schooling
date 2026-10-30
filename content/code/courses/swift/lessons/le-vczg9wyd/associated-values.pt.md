@@ -52,7 +52,7 @@ número de páginas a uma constante nova, `pages`, para o corpo daquele caso. O 
 que o código não precisa, o total de exercícios aqui. A estimativa, três minutos por página e quatro
 por exercício, dá 36 + 20 + 28 = 84.
 
-`plan.map(minutes(for:))` passa a própria função para o `map`, do jeito que a lição 3 passou funções
+`plan.map(minutes(for:))` passa a própria função para o `map`, do jeito que a aula 3 passou funções
 como valores.
 
 ## Raw ou associado, não os dois
@@ -62,5 +62,5 @@ sempre `"friday"`. Um valor associado é escolhido cada vez que um valor é cria
 minutos, outro 45. **Um enum pode ter um tipo ou o outro, nunca os dois**, porque um caso com dados
 presos não pode ser também uma única string constante.
 
-Esse é o formato que a lição 2 chamou de a verdade sobre os opcionais, e a seção 06 volta a ele: um
+Esse é o formato que a aula 2 chamou de a verdade sobre os opcionais, e a seção 06 volta a ele: um
 `Int?` é um enum com dois casos, um dos quais carrega um `Int`.

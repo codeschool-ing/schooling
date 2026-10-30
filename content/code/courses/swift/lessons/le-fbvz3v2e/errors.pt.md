@@ -66,7 +66,7 @@ topo do documento até a falha, e a pequena função `path` no fim do programa a
 `[0].sessions[1]`: o primeiro curso, a segunda sessão dele. Num arquivo com duzentas sessões, esse
 caminho é a diferença entre achar o registro ruim e ler o arquivo no olho.
 
-Cada `catch` usa os padrões da lição 12, com `let` amarrando os valores que o caso carrega, e o `catch`
+Cada `catch` usa os padrões da aula 12, com `let` amarrando os valores que o caso carrega, e o `catch`
 final trata o resto, já que o `decode` é declarado com `throws` puro.
 
 ## Falhe alto, na borda

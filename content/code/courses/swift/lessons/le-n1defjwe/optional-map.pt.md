@@ -41,7 +41,7 @@ um `Int?` de volta a cada vez, e **junta os valores descartando os `nil`**. O re
 um array de `Int` simples.
 
 As chaves `{ Int($0) }` são uma closure, uma pequena função escrita no lugar, com `$0` valendo cada
-item. A lição 3 explica closures e esse `$0` direito, e a lição 4 é sobre `map`, `filter` e os
+item. A aula 3 explica closures e esse `$0` direito, e a aula 4 é sobre `map`, `filter` e os
 parentes deles em arrays. Por enquanto basta reconhecer o `compactMap` como "converta cada um, guarde
 os que deram certo", que é o laço da seção 03 numa linha.
 

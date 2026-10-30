@@ -74,11 +74,11 @@ ana@vm:~/sw/l13$ cat planner.json; echo
 ```
 
 O `import Foundation` traz o `JSONEncoder` e o `JSONDecoder`, que não fazem parte da biblioteca
-padrão; no Linux, o toolchain traz o seu próprio Foundation (a lição 20 trata do que ele tem e do que
+padrão; no Linux, o toolchain traz o seu próprio Foundation (a aula 20 trata do que ele tem e do que
 não tem). O `encoder.encode(planner)` devolve **`Data`**, um buffer de bytes, que é o que um arquivo ou
 uma requisição de rede guarda; o `String(decoding:as:)` lê esses bytes como texto UTF-8 para o `print`
 poder mostrá-los. O encoder pode lançar, se um valor não puder ser representado, então a chamada leva
-`try` (lição 12), e no nível de cima de um script não é preciso mais nada.
+`try` (aula 12), e no nível de cima de um script não é preciso mais nada.
 
 A primeira linha é JSON **compacto**, 118 bytes sem espaços, que é o que vai pela rede. Depois, duas
 opções de formatação: `.prettyPrinted` quebra linhas e indenta, e `.sortedKeys` escreve as chaves de

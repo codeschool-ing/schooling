@@ -20,7 +20,7 @@ var body: some View {
 
 Olhe o que está dentro das chaves do `VStack`: três valores `Text` em linhas próprias, e um `if` com um
 quarto. **Nada é devolvido, nada é acrescentado, e nenhuma vírgula os separa.** Numa closure comum da
-lição 3, essas linhas criariam três valores e jogariam cada um fora. Aqui elas viram o conteúdo da
+aula 3, essas linhas criariam três valores e jogariam cada um fora. Aqui elas viram o conteúdo da
 pilha, porque o parâmetro do `VStack` é marcado com um **result builder**: um atributo que manda o
 compilador recolher o valor de cada linha do bloco e combiná-los num só.
 

@@ -5,12 +5,12 @@ version: 1
 
 Swift num servidor não é curiosidade. A Apple roda serviços em Swift em produção, e a comunidade
 mantém a biblioteca de rede por baixo da maioria deles, o **SwiftNIO**, e dois frameworks web
-construídos sobre ela, o **Vapor** e o **Hummingbird**. Um planner de estudos num celular acaba
+construídos sobre ela, o Vapor e o Hummingbird. Um planner de estudos num celular acaba
 falando com um servidor que guarda as sessões, e esse servidor pode ser escrito na mesma linguagem do
 app.
 
 Esta seção constrói o menor servidor útil com o Hummingbird 2: duas rotas, `/week` e `/sessions`,
-respondendo com texto e com JSON. É um pacote, como a lição 19 ensinou, com uma dependência buscada
+respondendo com texto e com JSON. É um pacote, como a aula 19 ensinou, com uma dependência buscada
 no GitHub. Crie um diretório `server` e dois arquivos dentro dele:
 
 ```swift
@@ -39,10 +39,10 @@ isso. No Linux ela é ignorada, porque não há API de Linux mais antiga a exclu
 ```schooling-example
 {"language": "swift", "file": "Sources/PlannerServer/main.swift", "parts": [
  {"code": "// Sources/PlannerServer/main.swift\nimport Hummingbird", "note": "Um import. O Hummingbird traz o SwiftNIO e os tipos de HTTP com ele."},
- {"code": "struct Session: ResponseCodable {\n    let course: String\n    let date: String\n    let minutes: Int\n}", "note": "`ResponseCodable` é `Codable` mais a promessa do Hummingbird de mandar o valor como JSON. A lição 13 fez o resto do trabalho: o compilador escreve a codificação."},
+ {"code": "struct Session: ResponseCodable {\n    let course: String\n    let date: String\n    let minutes: Int\n}", "note": "`ResponseCodable` é `Codable` mais a promessa do Hummingbird de mandar o valor como JSON. A aula 13 fez o resto do trabalho: o compilador escreve a codificação."},
  {"code": "let sessions = [\n    Session(course: \"Swift\", date: \"2026-11-02\", minutes: 45),\n    Session(course: \"Swift\", date: \"2026-11-03\", minutes: 30),\n    Session(course: \"SQL\", date: \"2026-11-04\", minutes: 60),\n]", "note": "Três sessões guardadas na memória. Um servidor de verdade as leria de um banco de dados; este mantém o exemplo num arquivo só."},
- {"code": "let router = Router()\nrouter.get(\"sessions\") { _, _ in sessions }\nrouter.get(\"week\") { _, _ in \"\\(sessions.map(\\.minutes).reduce(0, +)) of 300 minutes\\n\" }", "note": "Uma rota é um caminho e uma closure, com a closure no fim da chamada da lição 3. A closure recebe a requisição e um contexto, ignorados aqui com `_`, e devolve o que puder virar resposta: um array de `Session` vira JSON, uma `String` vira texto."},
- {"code": "let app = Application(router: router, configuration: .init(address: .hostname(\"127.0.0.1\", port: 8090)))\ntry await app.runService()", "note": "Escutar na porta 8090 só desta máquina, e rodar até ser parado. O `runService` é `async` e `throws`, então é chamado com `try await` no nível de cima do `main.swift`, como a lição 14 permitiu."}
+ {"code": "let router = Router()\nrouter.get(\"sessions\") { _, _ in sessions }\nrouter.get(\"week\") { _, _ in \"\\(sessions.map(\\.minutes).reduce(0, +)) of 300 minutes\\n\" }", "note": "Uma rota é um caminho e uma closure, com a closure no fim da chamada da aula 3. A closure recebe a requisição e um contexto, ignorados aqui com `_`, e devolve o que puder virar resposta: um array de `Session` vira JSON, uma `String` vira texto."},
+ {"code": "let app = Application(router: router, configuration: .init(address: .hostname(\"127.0.0.1\", port: 8090)))\ntry await app.runService()", "note": "Escutar na porta 8090 só desta máquina, e rodar até ser parado. O `runService` é `async` e `throws`, então é chamado com `try await` no nível de cima do `main.swift`, como a aula 14 permitiu."}
 ]}
 ```
 
@@ -98,14 +98,14 @@ cabeçalhos que o `curl -i` pede para ver: status `200 OK`, um `Content-Type` de
 tamanho de 19 bytes. A segunda devolve as três sessões em JSON, e a ordem das chaves dentro de cada
 objeto não é a ordem das propriedades da struct, e nem foi a mesma de uma execução do servidor
 para a outra. Objetos JSON não têm ordem, o `JSONEncoder` não
-promete uma, e a lição 13 mostrou o `.sortedKeys` para o dia em que a ordem importar a uma pessoa. A
+promete uma, e a aula 13 mostrou o `.sortedKeys` para o dia em que a ordem importar a uma pessoa. A
 terceira pede um caminho que nenhuma rota trata e recebe **`404 Not Found` com corpo vazio**, que o
 Hummingbird manda sem uma linha de código sua.
 
 ## O outro lado do fio
 
 A mesma linguagem pode ser o cliente. Este script pede as sessões ao servidor com `URLSession`, a API
-que um app de iPhone usa, e as decodifica com a metade `Decodable` da lição 13:
+que um app de iPhone usa, e as decodifica com a metade `Decodable` da aula 13:
 
 ```swift
 // Client.swift
@@ -139,9 +139,9 @@ HTTP 200, 3 sessions
 ```
 
 **A struct é declarada duas vezes**, uma de cada lado, e nada confere que as duas concordam. Uma
-propriedade renomeada no servidor vira um `keyNotFound` no cliente, como a lição 13 mostrou.
+propriedade renomeada no servidor vira um `keyNotFound` no cliente, como a aula 13 mostrou.
 Compartilhar uma definição é para isso que serve um pacote: um target de biblioteca com os modelos,
-do qual dependem o servidor e o app. A lição 19 construiu exatamente esse formato, com o
+do qual dependem o servidor e o app. A aula 19 construiu exatamente esse formato, com o
 `PlannerCore`.
 
 Pare o servidor com Ctrl+C no terminal dele.

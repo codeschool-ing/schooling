@@ -47,7 +47,7 @@ Param.swift:7:21: error: left side of mutating operator isn't mutable: 'session'
 tipo. Para uma struct, isso é também a única coisa que ela poderia mudar: o valor de quem chamou foi
 copiado na entrada, então mudar a cópia não chegaria até quem chamou de qualquer forma. A função do
 `Copies.swift` diz o que quer dizer: constrói um valor novo e o devolve, e quem chamou decide o que
-fazer com ele. O `inout` da lição 3 é o outro caminho, e o `&` no ponto da chamada está lá para tornar
+fazer com ele. O `inout` da aula 3 é o outro caminho, e o `&` no ponto da chamada está lá para tornar
 a exceção visível.
 
 ## Por que copiar é o padrão
@@ -55,7 +55,7 @@ a exceção visível.
 Um valor que ninguém mais pode mudar é um valor sobre o qual você raciocina localmente. Quando
 `monday` vale 45 minutos numa linha, nada em outro ponto do programa pode torná-lo 60 pelas suas
 costas, porque nada em outro ponto o guarda. **Todo bug do tipo "alguém mudou os meus dados" é
-impossível para uma struct**, e é essa a propriedade em que a lição 15 se apoia quando duas tarefas
+impossível para uma struct**, e é essa a propriedade em que a aula 15 se apoia quando duas tarefas
 rodam ao mesmo tempo.
 
 A preocupação óbvia é o custo: copiar um array de mil sessões a cada atribuição parece caro. A seção

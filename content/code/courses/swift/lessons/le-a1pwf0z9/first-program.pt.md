@@ -3,7 +3,7 @@ title: O primeiro programa, rodado de dois jeitos
 version: 1
 ---
 
-Um programa Swift é um arquivo de texto terminado em `.swift`. Crie um diretório para esta lição,
+Um programa Swift é um arquivo de texto terminado em `.swift`. Crie um diretório para esta aula,
 `~/sw/l01`, abra um arquivo chamado `Hello.swift` em qualquer editor de texto e digite estas quatro
 linhas:
 
@@ -22,7 +22,7 @@ avalia o que está entre os parênteses e põe o resultado no texto.
 
 Não há função `main`, nem classe, nem import. Um arquivo de instruções é um programa inteiro, e as
 instruções rodam de cima para baixo. Isso é uma propriedade de um arquivo rodado sozinho; os pacotes
-da lição 19 põem a mesma regra num único arquivo, `main.swift`, e em nenhum outro.
+da aula 19 põem a mesma regra num único arquivo, `main.swift`, e em nenhum outro.
 
 ## Dois comandos, um compilador
 
@@ -56,13 +56,13 @@ sobre o LLVM, transforma o fonte em instruções para o processador à sua frent
 O executável é pequeno porque não está sozinho. Ele é "dynamically linked", então pega emprestados o
 runtime e a biblioteca padrão do Swift do diretório `usr/lib/swift/linux` do toolchain toda vez que
 inicia. Copie o `hello` para uma máquina sem o toolchain e ele não inicia, que é o problema que a
-lição 20 resolve com um build estático.
+aula 20 resolve com um build estático.
 
 ## O que digitar, toda vez
 
 Daqui em diante todo programa chega do mesmo jeito: um bloco cuja primeira linha dá o nome do
 arquivo, e então um bloco de terminal mostrando o comando e o que voltou. **Digite o programa você
-mesmo em vez de colar**, nas primeiras lições; muito do que o Swift ensina no começo é a reação do
+mesmo em vez de colar**, nas primeiras aulas; muito do que o Swift ensina no começo é a reação do
 compilador a um erro de digitação, e você verá mais delas digitando.
 
 O prompt no começo de cada comando, `ana@vm:~/sw/l01$`, é o da Ana: o nome de usuário dela, o nome da

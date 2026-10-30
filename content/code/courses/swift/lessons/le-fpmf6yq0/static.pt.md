@@ -67,5 +67,5 @@ StaticSelf.swift:6:34: error: static member 'weeklyGoal' cannot be used on insta
 lê, e o Swift garante que isso acontece uma vez só mesmo quando duas threads a leem ao mesmo tempo.
 Isso faz de um `static let` o lugar natural para uma constante compartilhada pelo programa inteiro, e
 é o motivo de um `static var` pedir cuidado. Um `static var` é uma variável global com o nome de um
-tipo, e a lição 15 mostra o compilador do Swift 6 recusando exatamente esse tipo de estado
+tipo, e a aula 15 mostra o compilador do Swift 6 recusando exatamente esse tipo de estado
 compartilhado e mutável.

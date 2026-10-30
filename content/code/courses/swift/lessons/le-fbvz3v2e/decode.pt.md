@@ -37,7 +37,7 @@ Kotlin: 0 sessions, 0 minutes done
 
 O programa lê o `planner.json` que a seção 01 gravou, no mesmo diretório, e recebe de volta dois
 cursos com suas sessões, como valores Swift de verdade: `course.sessions.filter(\.done)` guarda as
-sessões cujo `done` é `true`, e o `map(\.minutes)` pega os minutos delas (lição 4). O curso de Swift tem
+sessões cujo `done` é `true`, e o `map(\.minutes)` pega os minutos delas (aula 4). O curso de Swift tem
 duas sessões e 45 minutos feitos; Kotlin não tem nenhuma.
 
 `[Course].self` é como o Swift escreve **o próprio tipo como valor**, a coisa pedida, em vez de um

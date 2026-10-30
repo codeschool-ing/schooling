@@ -72,7 +72,7 @@ compilar e nada quebrou. `MockExam` herdou `minutes` de `StudyItem`, onde vale `
 - **O segundo pai é copiado.** `MockExam` declara `length` de novo, porque o código que trata da
   duração vive em `StudySession` e uma classe não herda de duas classes.
 - **O compilador não ajuda.** Sobrescrever é opcional, então uma subclasse que esquece é um programa
-  correto com um número errado dentro, o pior tipo de defeito: o estouro da lição 1 pelo menos parava
+  correto com um número errado dentro, o pior tipo de defeito: o estouro da aula 1 pelo menos parava
   o programa.
 
 Hierarquias também só crescem para baixo. Uma leitura sem minutos e sem nota ganha os dois mesmo
@@ -83,5 +83,5 @@ onde todo item responde a ela, tenha prazo ou não.
 
 A árvore perguntou "o que um simulado **é**?", e essa pergunta tem uma resposta por classe. A
 alternativa pergunta "o que ele **sabe fazer**?": ele toma tempo, e tem nota. São duas capacidades,
-independentes uma da outra, e a lição 8 já tem a ferramenta para uma capacidade. A seção 03 reconstrói
+independentes uma da outra, e a aula 8 já tem a ferramenta para uma capacidade. A seção 03 reconstrói
 o planner com ela.

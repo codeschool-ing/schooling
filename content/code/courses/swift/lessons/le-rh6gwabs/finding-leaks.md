@@ -65,7 +65,7 @@ ana@vm:~/sw/l11$ ./weak-asan 2>&1 | grep -c "leak of"
 0
 ```
 
-No leak report, so `grep -c` counts zero lines of one. **A sanitized build is slower and larger**, so it is a
+No leak report, so `grep -c` counts zero lines of one. **A sanitised build is slower and larger**, so it is a
 build for looking, not for shipping.
 
 One thing the sanitizer does that you must know before trusting its output: the program's own

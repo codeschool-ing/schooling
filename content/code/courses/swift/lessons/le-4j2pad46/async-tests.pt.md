@@ -4,7 +4,7 @@ version: 1
 ---
 
 A maior parte do trabalho de um planner real espera por algo: um servidor, um disco, outra tarefa.
-A lição 14 escreveu essa espera com `async` e `await`, e **o teste de código assíncrono é um teste
+A aula 14 escreveu essa espera com `async` e `await`, e **o teste de código assíncrono é um teste
 assíncrono**: marque a função de teste como `async`, use `await` na chamada, e o framework espera
 junto. Sem callbacks, sem dormir "o suficiente" e sem teste que passa porque terminou antes do
 trabalho.
@@ -12,7 +12,7 @@ trabalho.
 ## Algo para sincronizar
 
 A biblioteca ganha a peça que envia as sessões concluídas de uma semana para algum lugar. Para onde
-elas vão é um protocolo, a costura da lição 10, então a biblioteca não sabe se é um servidor, um
+elas vão é um protocolo, a costura da aula 10, então a biblioteca não sabe se é um servidor, um
 arquivo ou um teste:
 
 ```swift
@@ -50,7 +50,7 @@ quantas salvou. Ele suspende em cada `await`, e um teste precisa segui-lo até l
 ```schooling-example
 {"language": "swift", "file": "Tests/PlannerCoreTests/SyncerTests.swift", "parts": [
 {"code": "import Testing\n@testable import PlannerCore", "note": "O mesmo framework; nada a mais é importado para código assíncrono."},
-{"code": "actor MemoryStore: SessionStore {\n    private(set) var saved: [StudySession] = []\n\n    func save(_ sessions: [StudySession]) async throws {\n        saved += sessions\n    }\n}", "note": "Um store que guarda na memória o que recebe. É um `actor` porque o `sync` o chama de uma tarefa e o teste o lê depois, e a lição 15 explica por que estado mutável compartilhado mora num."},
+{"code": "actor MemoryStore: SessionStore {\n    private(set) var saved: [StudySession] = []\n\n    func save(_ sessions: [StudySession]) async throws {\n        saved += sessions\n    }\n}", "note": "Um store que guarda na memória o que recebe. É um `actor` porque o `sync` o chama de uma tarefa e o teste o lê depois, e a aula 15 explica por que estado mutável compartilhado mora num."},
 {"code": "@Suite struct SyncerTests {\n    @Test func savesOnlyDoneSessions() async throws {\n        var week = Week()\n        week.add(StudySession(course: \"swift\", minutes: 45, done: true))\n        week.add(StudySession(course: \"swift\", minutes: 30))\n        week.add(StudySession(course: \"kotlin\", minutes: 60, done: true))\n        let store = MemoryStore()\n        let count = try await Syncer(store: store).sync(week)\n        #expect(count == 2)\n        #expect(await store.saved.map(\\.course) == [\"swift\", \"kotlin\"])\n    }", "note": "`async throws` no teste, `try await` na chamada. Ler o `saved` do ator é atravessar para dentro dele, então a expectativa também precisa de `await`, e o `#expect` o aceita."},
 {"code": "    @Test func reportsEachSavedSession() async throws {\n        var week = Week()\n        week.add(StudySession(course: \"swift\", minutes: 45, done: true))\n        week.add(StudySession(course: \"kotlin\", minutes: 60, done: true))\n        let syncer = Syncer(store: MemoryStore())\n        try await confirmation(expectedCount: 2) { saved in\n            _ = try await syncer.sync(week) { _ in saved() }\n        }\n    }\n}", "note": "Uma **confirmação** verifica que algo acontece, e quantas vezes: o teste falha a menos que `saved()` seja chamado exatamente duas vezes antes de o bloco retornar. É como se testa um callback, um evento ou uma notificação, que não têm valor de retorno para o `#expect`."}
 ]}
