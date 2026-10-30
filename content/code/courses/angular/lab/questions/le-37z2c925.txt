@@ -1,0 +1,241 @@
+# Lesson 3: standalone components, and NgModule code
+
+@ a-component quiz easy #ex-jvws4e19
+? Which field of `@Component` decides the tag you write in a template to use the component?
+?? Qual campo do `@Component` decide a tag que você escreve num template para usar o componente?
+- `templateUrl`, which names the file the tag comes from :: That names the component's own template, not the tag other templates write.
+-- `templateUrl`, que dá o nome do arquivo de onde vem a tag :: Ele nomeia o template do próprio componente, não a tag que outros templates escrevem.
++ `selector` :: Right. `app-week-summary` is written as `<app-week-summary />`.
+++ `selector` :: Isso. `app-week-summary` vira `<app-week-summary />`.
+- The class name, lower-cased and hyphenated :: The CLI derives both from what you typed, but Angular reads the selector.
+-- O nome da classe, em minúsculas e com hífens :: A CLI deriva os dois do que você digitou, mas o Angular lê o seletor.
+- `imports`, whose first entry is the component itself :: `imports` lists what the template uses, never the component itself.
+-- `imports`, cuja primeira entrada é o próprio componente :: O `imports` lista o que o template usa, nunca o próprio componente.
+
+@ a-component quiz medium #ex-v3rw16wr
+? `week-summary.css` says `p { font-weight: 600; }`. Which paragraphs on the page become bold?
+?? O `week-summary.css` diz `p { font-weight: 600; }`. Quais parágrafos da página ficam em negrito?
+- Every `<p>` on the page, because CSS is global :: Angular rewrote the rule to `p[_ngcontent-…]`, so it is not global.
+-- Todo `<p>` da página, porque CSS é global :: O Angular reescreveu a regra para `p[_ngcontent-…]`, então ela não é global.
++ Only those inside `WeekSummary`'s own template, nowhere else :: Right. They carry the `_ngcontent-` attribute the rewritten rule asks for.
+++ Só os de dentro do próprio template do `WeekSummary`, mais nenhum :: Isso. Eles têm o atributo `_ngcontent-` que a regra reescrita pede.
+- Those in `WeekSummary` and in every component it contains :: A child component's elements carry the child's own attribute, not the parent's.
+-- Os do `WeekSummary` e de todo componente que ele contém :: Os elementos de um componente filho têm o atributo do filho, não o do pai.
+- None, until the rule is also written in `styles.css` :: The rule applied; `look --styles` showed it in the page's stylesheets.
+-- Nenhum, até a regra também ser escrita no `styles.css` :: A regra foi aplicada; o `look --styles` a mostrou nas folhas de estilo da página.
+
+@ a-component cloze medium #ex-neb3wd5t
+? Angular's rewriting of a component's styles so that they apply to its own template only is called view ___.
+?? A reescrita que o Angular faz dos estilos de um componente para que valham só no próprio template se chama view ___.
+= encapsulation
+== encapsulation | encapsulamento
+
+@ a-component quiz medium #ex-xert7jnb
+? A component in a codebase written in 2023 says `standalone: true`. One written in 2026 says nothing about it. What is the difference between them?
+?? Um componente de um código escrito em 2023 diz `standalone: true`. Um escrito em 2026 não diz nada. Qual é a diferença entre eles?
++ None: standalone became the default in Angular 19 :: Right. The line was needed before 19 and is redundant after.
+++ Nenhuma: standalone virou o padrão no Angular 19 :: Isso. A linha era necessária antes do 19 e é redundante depois.
+- The 2026 one belongs to a module, since it does not say standalone :: That was true before 19. Today a module-based component says `standalone: false`.
+-- O de 2026 pertence a um módulo, já que não diz standalone :: Isso valia antes do 19. Hoje um componente de módulo diz `standalone: false`.
+- The 2023 one cannot be used by a 2026 application :: Standalone components from 2023 work in today's applications.
+-- O de 2023 não pode ser usado por uma aplicação de 2026 :: Componentes standalone de 2023 funcionam nas aplicações de hoje.
+- The 2026 one has no template :: Standalone and templates are unrelated.
+-- O de 2026 não tem template :: Standalone e templates não têm relação.
+
+@ imports quiz medium #ex-df9n7xfs
+? `npx ng build` failed with `NG8001: 'app-week-summary' is not a known element`, in `week.html`. Where does the fix go?
+?? O `npx ng build` falhou com `NG8001: 'app-week-summary' is not a known element`, no `week.html`. Onde vai o conserto?
+- In `WeekSummary`, which should export itself :: A standalone component has nothing to export; the one using it imports it.
+-- No `WeekSummary`, que devia se exportar :: Um componente standalone não tem o que exportar; quem o usa é quem o importa.
+- In `app.ts`, because `App` is the root :: `App`'s imports serve `App`'s template, and the tag is in `Week`'s.
+-- No `app.ts`, porque o `App` é a raiz :: Os imports do `App` servem o template do `App`, e a tag está no do `Week`.
++ In `week.ts`, in the `imports` list of the `Week` decorator :: Right. The component that owns the template imports what it uses.
+++ No `week.ts`, na lista `imports` do decorator do `Week` :: Isso. O componente dono do template importa o que usa.
+- In `angular.json`, which lists the project's components :: `angular.json` does not list components.
+-- No `angular.json`, que lista os componentes do projeto :: O `angular.json` não lista componentes.
+
+@ imports quiz hard #ex-rzazkaxq
+? A component's class calls a function from `dates.ts` in a method, and its template never mentions it. Where must the function be imported?
+?? A classe de um componente chama uma função de `dates.ts` num método, e o template nunca a menciona. Onde a função precisa ser importada?
+- In the decorator's `imports`, so Angular can find it :: The decorator's list is for the template, and the template does not use the function.
+-- No `imports` do decorator, para o Angular achá-la :: A lista do decorator é para o template, e o template não usa a função.
++ Only in an `import` line at the top of the file :: Right. Code in the class is TypeScript, and TypeScript's own `import` is enough.
+++ Só numa linha `import` no topo do arquivo :: Isso. O código da classe é TypeScript, e o `import` do próprio TypeScript basta.
+- In both, as with a component :: A component is used by the template, which is why it needs both. A function used only in code does not.
+-- Nos dois, como um componente :: Um componente é usado pelo template, por isso precisa dos dois. Uma função usada só no código, não.
+- In `app.config.ts`, as a provider :: Providers are for things to be injected; lesson 10 is about them.
+-- No `app.config.ts`, como provider :: Providers são para coisas a injetar; a aula 10 trata deles.
+
+@ imports matching medium #ex-ty8v4y2b
+? Match what a template uses with how it appears in the template.
+?? Associe o que um template usa com o jeito como aparece no template.
+< a component :: as an element, `<app-week-summary />`
+<< um componente :: como elemento, `<app-week-summary />`
+< a directive :: as an attribute, `routerLink`
+<< uma diretiva :: como atributo, `routerLink`
+< a pipe :: after a `|` in an expression
+<< um pipe :: depois de um `|` numa expressão
+x as a provider in `app.config.ts`
+xx como provider no `app.config.ts`
+
+@ ngmodule-code quiz medium #ex-57ewftx6
+? In a module-based application, what decides which components a template may use?
+?? Numa aplicação baseada em módulos, o que decide quais componentes um template pode usar?
+- The component's own `imports` :: In that model a component has no list of its own.
+-- O `imports` do próprio componente :: Nesse modelo um componente não tem lista própria.
++ The module that declares the component :: Right. Its declarations and the exports of its imports are the scope.
+++ O módulo que declara o componente :: Isso. As declarações dele e os exports dos imports dele formam o escopo.
+- `angular.json`, which lists the modules :: `angular.json` names files and builders.
+-- O `angular.json`, que lista os módulos :: O `angular.json` nomeia arquivos e builders.
+- Whichever module bootstraps the application :: Each component's scope is its own declaring module's, not the root's.
+-- O módulo que inicia a aplicação :: O escopo de cada componente é o do módulo que o declara, não o da raiz.
+
+@ ngmodule-code matching medium #ex-2sbzctae
+? Match each field of `@NgModule` with what it lists.
+?? Associe cada campo do `@NgModule` com o que ele lista.
+< `declarations` :: the pieces that belong to this module
+<< `declarations` :: as peças que pertencem a este módulo
+< `imports` :: modules whose exported pieces its templates may use
+<< `imports` :: módulos cujas peças exportadas os templates dele podem usar
+< `exports` :: what other modules may use from this one
+<< `exports` :: o que outros módulos podem usar deste
+< `bootstrap` :: the component drawn at start-up
+<< `bootstrap` :: o componente desenhado na inicialização
+x the routes of the application
+xx as rotas da aplicação
+
+@ ngmodule-code quiz hard #ex-xmg2ky7r
+? A colleague's `SharedModule` declares forty buttons and pipes and exports them all, and thirty feature modules import it. What does the lesson say this costs?
+?? O `SharedModule` de uma colega declara quarenta botões e pipes e exporta todos, e trinta módulos de funcionalidade o importam. Qual é o custo, segundo a aula?
+- Each import makes a copy of the forty pieces in the bundle :: The bundle carries each piece once; the cost is not in bytes.
+-- Cada import faz uma cópia das quarenta peças no bundle :: O bundle leva cada peça uma vez; o custo não está em bytes.
+- The build fails past a fixed number of exports :: There is no such limit.
+-- O build falha passando de um número fixo de exports :: Não existe esse limite.
+- Nothing; it is the recommended pattern today :: The lesson presents it as the cost standalone was introduced to remove.
+-- Nada; é o padrão recomendado hoje :: A aula o apresenta como o custo que o standalone veio remover.
++ No component shows what it really depends on :: Right. Every component may use all forty, so none of them says which it uses.
+++ Nenhum componente mostra de que realmente depende :: Isso. Todo componente pode usar os quarenta, então nenhum diz quais usa.
+
+@ migrating ordering medium #ex-cjr4y63w
+? Put the three modes of the standalone migration in the order the lesson runs them.
+?? Coloque os três modos da migração standalone na ordem em que a aula os roda.
+> `convert-to-standalone`
+>> `convert-to-standalone`
+> `prune-ng-modules`
+>> `prune-ng-modules`
+> `standalone-bootstrap`
+>> `standalone-bootstrap`
+
+@ migrating quiz medium #ex-68dfywja
+? After `convert-to-standalone`, `SessionList` moved from `declarations` to `imports` in `AppModule`. What does that show?
+?? Depois do `convert-to-standalone`, o `SessionList` saiu de `declarations` e foi para `imports` no `AppModule`. O que isso mostra?
++ Modules import standalone components too :: Right. That is one of the two bridges that let a migration go one file at a time.
+++ Módulos também importam componentes standalone :: Isso. É uma das duas pontes que deixam uma migração ir um arquivo por vez.
+- The migration made a mistake that the next step undoes :: The application built and ran with that arrangement.
+-- A migração errou, e o passo seguinte desfaz :: A aplicação compilou e rodou desse jeito.
+- `SessionList` became a module :: It is still a component; standalone components can sit in a module's `imports`.
+-- O `SessionList` virou um módulo :: Ele continua sendo um componente; componentes standalone podem ficar nos `imports` de um módulo.
+- `declarations` only accepts the root component :: It accepts any component that belongs to the module.
+-- O `declarations` só aceita o componente raiz :: Ele aceita qualquer componente que pertença ao módulo.
+
+@ migrating quiz medium #ex-8bdy5ksc
+? Why was `App` not converted by the first step?
+?? Por que o `App` não foi convertido no primeiro passo?
+- Its template is too large to migrate :: Template size plays no part in the migration.
+-- O template dele é grande demais para migrar :: O tamanho do template não tem papel na migração.
+- The migration only converts generated components :: It converted `SessionList`, and would convert hand-written ones too.
+-- A migração só converte componentes gerados :: Ela converteu o `SessionList`, e converteria os escritos à mão também.
++ It is the component the module bootstraps, and that is step 3's work :: Right. `standalone-bootstrap` converted it and deleted `AppModule`.
+++ Ele é o componente que o módulo inicia, e isso é trabalho do passo 3 :: Isso. O `standalone-bootstrap` o converteu e apagou o `AppModule`.
+- `App` was already standalone :: It said `standalone: false` until step 3.
+-- O `App` já era standalone :: Ele dizia `standalone: false` até o passo 3.
+
+@ migrating quiz hard #ex-d3s8enjk
+? After the three steps, `main.ts` provides `importProvidersFrom(BrowserModule, AppRoutingModule)`. What would you do with it?
+?? Depois dos três passos, o `main.ts` fornece `importProvidersFrom(BrowserModule, AppRoutingModule)`. O que você faria com isso?
+- Leave it: the migration is the reference for how code should look :: The lesson says a migration keeps the app running and the tidying is yours.
+-- Deixaria: a migração é a referência de como o código deve ficar :: A aula diz que uma migração mantém o app rodando e a arrumação é sua.
+- Delete the line, because standalone apps need no providers :: The router still has to be provided somehow.
+-- Apagaria a linha, porque apps standalone não precisam de providers :: O router ainda precisa ser fornecido de algum jeito.
++ Replace it with `provideRouter(routes)`, and drop `BrowserModule` :: Right. That is the shape the planner's `app.config.ts` already has.
+++ Trocaria por `provideRouter(routes)`, e tiraria o `BrowserModule` :: Isso. É o formato que o `app.config.ts` do planner já tem.
+- Move it into every component's `imports` :: Component imports are for templates; providers go to the application.
+-- Moveria para o `imports` de cada componente :: Os imports de componente são para templates; providers vão para a aplicação.
+
+@ mixing quiz medium #ex-2pvaqb5t
+? A library you need ships only an NgModule, `ChartsModule`, which exports a `<chart>` component. How does a standalone component use `<chart>`?
+?? Uma biblioteca de que você precisa traz só um NgModule, `ChartsModule`, que exporta um componente `<chart>`. Como um componente standalone usa `<chart>`?
+- It cannot, until the library ships a standalone version :: Modules work in a standalone component's `imports`.
+-- Não pode, até a biblioteca trazer uma versão standalone :: Módulos funcionam nos `imports` de um componente standalone.
++ It puts `ChartsModule` in its own `imports` :: Right. The template may then use everything the module exports.
+++ Ele põe o `ChartsModule` no próprio `imports` :: Isso. O template pode então usar tudo o que o módulo exporta.
+- It wraps the module in `importProvidersFrom` in `app.config.ts` :: That takes a module's providers, not the components it exports.
+-- Ele envolve o módulo em `importProvidersFrom` no `app.config.ts` :: Isso pega os providers de um módulo, não os componentes que ele exporta.
+- It declares `ChartsModule` with `standalone: false` :: `standalone` is a property of components, not a way of using modules.
+-- Ele declara o `ChartsModule` com `standalone: false` :: `standalone` é uma propriedade de componentes, não um jeito de usar módulos.
+
+@ mixing matching medium #ex-0fp7pzf1
+? Match what a module-based application imports with what a standalone application provides instead.
+?? Associe o que uma aplicação baseada em módulos importa com o que uma aplicação standalone fornece no lugar.
+< `RouterModule.forRoot(routes)` :: `provideRouter(routes)`
+<< `RouterModule.forRoot(routes)` :: `provideRouter(routes)`
+< `HttpClientModule` :: `provideHttpClient()`
+<< `HttpClientModule` :: `provideHttpClient()`
+< a library module with no such function :: `importProvidersFrom(TheModule)`
+<< um módulo de biblioteca sem função equivalente :: `importProvidersFrom(OModulo)`
+x `bootstrapModule(AppModule)`
+xx `bootstrapModule(AppModule)`
+
+@ mixing quiz hard #ex-pj0hf0zk
+? In a codebase half-way through its migration, a template fails with `NG8001` for `<app-badge>`. The component that owns the template says `standalone: false`. Where do you look first?
+?? Num código no meio da migração, um template falha com `NG8001` para `<app-badge>`. O componente dono do template diz `standalone: false`. Onde você olha primeiro?
+- In that component's `imports` :: A component with `standalone: false` has no template scope of its own.
+-- No `imports` desse componente :: Um componente com `standalone: false` não tem escopo de template próprio.
+- In `app.config.ts`, for a missing provider :: An unknown element is a template-scope problem, not a provider one.
+-- No `app.config.ts`, atrás de um provider que falta :: Um elemento desconhecido é problema de escopo de template, não de provider.
+- In `angular.json`, whose list of components may be out of date :: There is no such list.
+-- No `angular.json`, cuja lista de componentes pode estar desatualizada :: Essa lista não existe.
++ In the module that declares it, and whether that module imports something exporting `app-badge` :: Right. In the old model, the module is the scope.
+++ No módulo que o declara, e se esse módulo importa algo que exporta `app-badge` :: Isso. No modelo antigo, o módulo é o escopo.
+
+@ planner-shell quiz easy #ex-jf32cd1p
+? `look --a11y body` listed two headings and a paragraph. What did it list for the components themselves?
+?? O `look --a11y body` listou dois títulos e um parágrafo. O que ele listou para os próprios componentes?
+- One group per component, named by its selector :: The tree had no entry for any component.
+-- Um grupo por componente, com o nome do seletor :: A árvore não tinha entrada para componente nenhum.
++ Nothing :: Right. A component's tag carries no role, so a screen reader hears only what is inside.
+++ Nada :: Isso. A tag de um componente não tem papel, então um leitor de tela ouve só o que está dentro.
+- A region for `App` only, because it is the root :: `App` drew a heading, and the tree shows only that.
+-- Uma região só para o `App`, por ser a raiz :: O `App` desenhou um título, e a árvore mostra só isso.
+- A warning that custom elements are not accessible :: No warning; custom elements are simply transparent.
+-- Um aviso de que elementos personalizados não são acessíveis :: Nenhum aviso; elementos personalizados simplesmente são transparentes.
+
+@ planner-shell numeric easy #ex-kgmksp53
+? How many tests did `ng test` run, in total, at the end of this lesson?
+?? Quantos testes o `ng test` rodou, ao todo, no fim desta aula?
+= 4
+== 4
+
+@ planner-shell quiz medium #ex-0tnq5wz4
+? A test creates `App` with `TestBed.createComponent(App)`. Which components does it build?
+?? Um teste cria o `App` com `TestBed.createComponent(App)`. Quais componentes ele constrói?
+- Only `App`, with empty placeholders for the others :: Unless you replace them on purpose, the real components are built.
+-- Só o `App`, com marcadores vazios no lugar dos outros :: A não ser que você os troque de propósito, os componentes reais são construídos.
+- `App` and `Week`, but not `WeekSummary`, which is two levels down :: Depth does not matter; each template builds what it uses.
+-- O `App` e o `Week`, mas não o `WeekSummary`, que está dois níveis abaixo :: A profundidade não importa; cada template constrói o que usa.
++ All three: `App`, `Week` and `WeekSummary`, each one real :: Right. `App`'s template uses `Week`, whose template uses `WeekSummary`.
+++ Os três: `App`, `Week` e `WeekSummary`, cada um de verdade :: Isso. O template do `App` usa o `Week`, cujo template usa o `WeekSummary`.
+- Every component in the project, generated or not :: Only those reached through the templates.
+-- Todo componente do projeto, gerado ou não :: Só os alcançados pelos templates.
+
+@ drill quiz medium #ex-yt6cc1xg
+? You generate `CourseCard` and write `<app-course-card />` in `week.html`. Before you build, what else is needed?
+?? Você gera o `CourseCard` e escreve `<app-course-card />` no `week.html`. Antes do build, o que mais é preciso?
+- Add `CourseCard` to `App`'s imports, since `App` is the root :: The tag is in `Week`'s template, so `Week` imports it.
+-- Acrescentar o `CourseCard` aos imports do `App`, já que o `App` é a raiz :: A tag está no template do `Week`, então é o `Week` que importa.
++ `CourseCard` added to the `imports` of `Week` :: Right. And the TypeScript `import` line at the top of `week.ts`.
+++ O `CourseCard` acrescentado ao `imports` do `Week` :: Isso. E a linha `import` do TypeScript no topo do `week.ts`.
+- Declare `CourseCard` in an NgModule :: The planner has no modules; standalone components need none.
+-- Declarar o `CourseCard` num NgModule :: O planner não tem módulos; componentes standalone não precisam de nenhum.
+- Nothing; the CLI adds it to every template that uses it :: The CLI only updates a module in module-based projects.
+-- Nada; a CLI o acrescenta a todo template que o usa :: A CLI só atualiza um módulo em projetos baseados em módulos.

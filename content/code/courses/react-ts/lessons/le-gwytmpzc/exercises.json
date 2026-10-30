@@ -1,0 +1,634 @@
+[
+  {
+    "id": "ex-tm7w8kb1",
+    "version": 1,
+    "section": "state-is-a-snapshot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a click handler, `setMonday('2026-10-26')` runs and the next line logs `monday`. What does it print?",
+    "hint": "`monday` is this render's constant.",
+    "choices": [
+      {
+        "text": "`2026-10-26`, the value just set",
+        "correct": false,
+        "why": "The setter schedules the next render; it does not change the constant you hold."
+      },
+      {
+        "text": "`undefined`, because state is being updated at that moment",
+        "correct": false,
+        "why": "The variable keeps its value for the whole render; there is no in-between."
+      },
+      {
+        "text": "The old value",
+        "correct": true,
+        "why": "Right. The new value arrives in the next render."
+      },
+      {
+        "text": "An error saying state was read after it was set",
+        "correct": false,
+        "why": "Reading it is allowed; it is simply the snapshot."
+      }
+    ]
+  },
+  {
+    "id": "ex-54ch701f",
+    "version": 1,
+    "section": "state-is-a-snapshot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TwoWeeks` called `setMonday(addDays(monday, 7))` twice. Why did the week move by one?",
+    "hint": "What did each call compute its value from?",
+    "choices": [
+      {
+        "text": "React ignores a second setter call in one event",
+        "correct": false,
+        "why": "Both calls were applied; they asked for the same value."
+      },
+      {
+        "text": "Strict mode undid one of them",
+        "correct": false,
+        "why": "Strict mode does not undo setter calls."
+      },
+      {
+        "text": "Both computed the 26th from the same snapshot",
+        "correct": true,
+        "why": "Right. Asking twice for the 26th is asking once."
+      },
+      {
+        "text": "`addDays` returned the same day twice because of time zones",
+        "correct": false,
+        "why": "`addDays` worked; it was given the same input twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ebcs923",
+    "version": 1,
+    "section": "state-is-a-snapshot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler calls three different setters. How many times does the component render because of that click?",
+    "hint": "The section names the behaviour.",
+    "choices": [
+      {
+        "text": "Once, after all three are applied",
+        "correct": true,
+        "why": "Right. That is batching."
+      },
+      {
+        "text": "Three, one per setter",
+        "correct": false,
+        "why": "Calls in one event are collected and applied together."
+      },
+      {
+        "text": "None until the next click",
+        "correct": false,
+        "why": "It renders right after the event."
+      },
+      {
+        "text": "Twice, because strict mode is on",
+        "correct": false,
+        "why": "Strict mode doubles the call, not the number of renders the event causes."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwk7qspb",
+    "version": 1,
+    "section": "state-is-a-snapshot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the planner write `useState(() => mondayOf(today()))` and not `useState(mondayOf(today()))`?",
+    "hint": "When is the initial value used?",
+    "choices": [
+      {
+        "text": "The second form is a type error",
+        "correct": false,
+        "why": "Both compile; they differ in when the date is computed."
+      },
+      {
+        "text": "So the week updates at midnight",
+        "correct": false,
+        "why": "Neither form updates by itself."
+      },
+      {
+        "text": "Functions are faster than strings",
+        "correct": false,
+        "why": "The value is a string either way."
+      },
+      {
+        "text": "So the date is worked out once",
+        "correct": true,
+        "why": "Right. React calls the function once."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpjss2tf",
+    "version": 1,
+    "section": "updater-functions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With two updater functions, which day of November did the week reach after one click?",
+    "hint": "Two weeks after Monday 19 October.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-va282ywy",
+    "version": 1,
+    "section": "updater-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the updater form, the log after both calls still said `2026-10-19`. Why?",
+    "hint": "Who saw the intermediate value?",
+    "choices": [
+      {
+        "text": "The updater functions had not run yet",
+        "correct": false,
+        "why": "Whether or not they had, `monday` is this render's constant and never changes."
+      },
+      {
+        "text": "The updater form does not work inside handlers",
+        "correct": false,
+        "why": "It worked: the week moved two weeks."
+      },
+      {
+        "text": "The log is printed before the click",
+        "correct": false,
+        "why": "It is printed inside the handler, after both calls."
+      },
+      {
+        "text": "`monday` is the snapshot; the queue saw the new values",
+        "correct": true,
+        "why": "Right. The 26th existed only between the two functions."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkxcktfv",
+    "version": 1,
+    "section": "updater-functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A counter's button runs `setCount(count + 1)` and a timer that fired in the same moment runs `setCount(count + 1)` too, both from the same render. What fixes it so both count?",
+    "hint": "The new value depends on the old one.",
+    "choices": [
+      {
+        "text": "Calling `setCount(count + 2)` in the button and nothing in the timer",
+        "correct": false,
+        "why": "That counts two whenever the button is pressed, timer or not."
+      },
+      {
+        "text": "Storing `count` in a variable outside the component",
+        "correct": false,
+        "why": "React would not render when it changed."
+      },
+      {
+        "text": "`setCount((c) => c + 1)` in both",
+        "correct": true,
+        "why": "Right. Each function receives what the last returned."
+      },
+      {
+        "text": "Turning strict mode off",
+        "correct": false,
+        "why": "Strict mode is not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ma2c7sz",
+    "version": 1,
+    "section": "derived-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After \"Next week\", the broken `WeekSummary` showed \"Week of 26 Oct 2026\" and \"80 of 195\". Why the old totals?",
+    "hint": "When is an initial value used?",
+    "choices": [
+      {
+        "text": "The totals were copied into state once and never recomputed",
+        "correct": true,
+        "why": "Right. An initial value is used on the first render only."
+      },
+      {
+        "text": "The new sessions had not loaded yet",
+        "correct": false,
+        "why": "Nothing loads; the sessions were in the props."
+      },
+      {
+        "text": "`minutes` caches its results",
+        "correct": false,
+        "why": "`minutes` is a plain sum, computed every time it is called."
+      },
+      {
+        "text": "React skipped rendering `WeekSummary`",
+        "correct": false,
+        "why": "It rendered: the week line changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzrsg5vy",
+    "version": 1,
+    "section": "derived-state",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sort each value of the planner: stored as state, or computed while rendering.",
+    "hint": "Ask what would set it.",
+    "pairs": [
+      {
+        "left": "Which week the user chose",
+        "right": "Stored"
+      },
+      {
+        "left": "The minutes done this week",
+        "right": "Computed"
+      },
+      {
+        "left": "Whether session s2 is done",
+        "right": "Stored, inside `sessions`"
+      },
+      {
+        "left": "The open course's name",
+        "right": "Computed from `openId`"
+      }
+    ],
+    "right_distractors": [
+      "Fetched from the server"
+    ]
+  },
+  {
+    "id": "ex-k34v95bc",
+    "version": 1,
+    "section": "derived-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen shows a search box and the courses whose names match it. Which should be state?",
+    "hint": "One of them the user sets; the other follows from it.",
+    "choices": [
+      {
+        "text": "The matching courses, so they are ready when the screen renders",
+        "correct": false,
+        "why": "They follow from the text and the courses, and a copy would go stale."
+      },
+      {
+        "text": "Both, kept in step with an extra function",
+        "correct": false,
+        "why": "That is the copy the section warns against, with the job of keeping it in step."
+      },
+      {
+        "text": "Neither: read the box's value from the DOM",
+        "correct": false,
+        "why": "React would not render when the text changed."
+      },
+      {
+        "text": "The text typed",
+        "correct": true,
+        "why": "Right. The list is a filter computed from it each render."
+      }
+    ]
+  },
+  {
+    "id": "ex-98fmng36",
+    "version": 1,
+    "section": "the-second-screen",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do `openId` and `sessions` live in `App`?",
+    "hint": "Who reads them?",
+    "choices": [
+      {
+        "text": "A component's state has to be declared in the root of the app",
+        "correct": false,
+        "why": "Any component can hold state; `Probe` did in lesson 3."
+      },
+      {
+        "text": "`CourseScreen` cannot have state",
+        "correct": false,
+        "why": "It can; it would just hide it from the first screen."
+      },
+      {
+        "text": "Both screens read them, and `App` is above both",
+        "correct": true,
+        "why": "Right. State goes in the closest common parent of its readers."
+      },
+      {
+        "text": "`App` renders less often than its children",
+        "correct": false,
+        "why": "Placement is about who reads the state, not render counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-86t58w4k",
+    "version": 1,
+    "section": "the-second-screen",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Moving state to the closest shared parent of the components that read it is called lifting state ___.",
+    "hint": "A direction.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t76zx7yj",
+    "version": 1,
+    "section": "the-second-screen",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `openId` need its type written, `useState<string | null>(null)`?",
+    "hint": "What would TypeScript infer from `null` alone?",
+    "choices": [
+      {
+        "text": "From `null` it would infer a type that cannot later hold an id",
+        "correct": true,
+        "why": "Right. The annotation says it holds a string or nothing."
+      },
+      {
+        "text": "Because `null` is not allowed in state",
+        "correct": false,
+        "why": "It is allowed, and here it means no course is open."
+      },
+      {
+        "text": "Because Vite requires generic arguments",
+        "correct": false,
+        "why": "Vite removes types and never reads them."
+      },
+      {
+        "text": "To make the second screen render first",
+        "correct": false,
+        "why": "Types do not affect rendering order."
+      }
+    ]
+  },
+  {
+    "id": "ex-bj98tq2a",
+    "version": 1,
+    "section": "the-second-screen",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After ticking the Statistics session of 21 October, how many minutes did the summary say were done?",
+    "hint": "80 before, plus the session just done.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-g6k7anw4",
+    "version": 1,
+    "section": "the-second-screen",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`CourseScreen` writes `[...sessions].sort(…)`. What goes wrong with `sessions.sort(…)`?",
+    "hint": "Who owns the array?",
+    "choices": [
+      {
+        "text": "`sort` returns `undefined`",
+        "correct": false,
+        "why": "It returns the sorted array; the trouble is that it is the same array."
+      },
+      {
+        "text": "It sorts `App`'s state in place, from inside a child",
+        "correct": true,
+        "why": "Right. A child would be changing data it was given."
+      },
+      {
+        "text": "Strings cannot be compared with `localeCompare`",
+        "correct": false,
+        "why": "They can, and these sort correctly."
+      },
+      {
+        "text": "Nothing: both are the same",
+        "correct": false,
+        "why": "One sorts a copy, the other sorts the original."
+      }
+    ]
+  },
+  {
+    "id": "ex-bq04wfmv",
+    "version": 1,
+    "section": "replace-dont-mutate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does React decide that new state differs from old?",
+    "hint": "For objects, one question.",
+    "choices": [
+      {
+        "text": "It compares every field, recursively",
+        "correct": false,
+        "why": "It never looks inside; that is why mutation hides."
+      },
+      {
+        "text": "It serialises both to JSON and compares the strings",
+        "correct": false,
+        "why": "Far too slow, and not what it does."
+      },
+      {
+        "text": "It asks the browser whether the page changed",
+        "correct": false,
+        "why": "The page is the result of the comparison, not the input."
+      },
+      {
+        "text": "`Object.is` on the two values",
+        "correct": true,
+        "why": "Right. For an object: is it the same object?"
+      }
+    ]
+  },
+  {
+    "id": "ex-5pq2r7pc",
+    "version": 1,
+    "section": "replace-dont-mutate",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without strict mode, put what happened after the mutating `toggleDone` in order.",
+    "hint": "The data changed before anything showed it.",
+    "items": [
+      "The checkbox is clicked",
+      "`session.done` becomes true inside the same array",
+      "React sees the same array and skips the render",
+      "\"Back to courses\" causes a render",
+      "The summary shows 120"
+    ]
+  },
+  {
+    "id": "ex-d9symc2q",
+    "version": 1,
+    "section": "replace-dont-mutate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under strict mode, the mutating `toggleDone` left the total at 80. Why?",
+    "hint": "How many times does strict mode run an updater?",
+    "choices": [
+      {
+        "text": "It ran the updater twice, and it flipped `done` back",
+        "correct": true,
+        "why": "Right. A pure updater gives the same answer twice; this one undid itself."
+      },
+      {
+        "text": "Strict mode refuses state that mutates",
+        "correct": false,
+        "why": "It refuses nothing; it repeated the function."
+      },
+      {
+        "text": "The click did not reach the checkbox",
+        "correct": false,
+        "why": "It reached it; without strict mode the total became 120."
+      },
+      {
+        "text": "80 was cached by `WeekSummary`",
+        "correct": false,
+        "why": "`WeekSummary` computes its totals every render."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1xvr29w",
+    "version": 1,
+    "section": "replace-dont-mutate",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each change to the way that gives React a new array.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "Add `s`",
+        "right": "`[...all, s]`"
+      },
+      {
+        "left": "Remove the one with `id`",
+        "right": "`all.filter((x) => x.id !== id)`"
+      },
+      {
+        "left": "Sort by date",
+        "right": "`[...all].sort(byDate)`"
+      }
+    ],
+    "right_distractors": [
+      "`all.push(s)`",
+      "`all.sort(byDate)`"
+    ]
+  },
+  {
+    "id": "ex-xjre4ng3",
+    "version": 1,
+    "section": "replace-dont-mutate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `all.map((s) => (s.id === id ? { ...s, done: !s.done } : s))`, which session objects are new?",
+    "hint": "Look at what the function returns for the others.",
+    "choices": [
+      {
+        "text": "Every one of them",
+        "correct": false,
+        "why": "The others are returned as they were, the same objects."
+      },
+      {
+        "text": "None of them: `map` reuses the array",
+        "correct": false,
+        "why": "`map` returns a new array, and the matching session is a new object."
+      },
+      {
+        "text": "The one whose id matches",
+        "correct": true,
+        "why": "Right. Five are reused and one is copied with a field replaced."
+      },
+      {
+        "text": "The sessions of the open course",
+        "correct": false,
+        "why": "Only the toggled one."
+      }
+    ]
+  },
+  {
+    "id": "ex-3re7zv9g",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these lines are safe updates of `sessions` state? Choose every one.",
+    "hint": "Safe means a new array, and the old one untouched.",
+    "choices": [
+      {
+        "text": "`setSessions((all) => [...all, s])`",
+        "correct": true,
+        "why": "Safe."
+      },
+      {
+        "text": "`setSessions((all) => { all.push(s); return all })`",
+        "correct": false,
+        "why": "Unsafe: same array, changed in place."
+      },
+      {
+        "text": "`setSessions((all) => all.filter((x) => !x.done))`",
+        "correct": true,
+        "why": "Safe."
+      },
+      {
+        "text": "`setSessions((all) => all.toSorted(byDate))`",
+        "correct": true,
+        "why": "Safe: `toSorted` returns a new array."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpfkvz7k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ticking a session on the second screen changed the totals on the first. What made the first screen update?",
+    "hint": "Nobody told `WeekSummary` anything.",
+    "choices": [
+      {
+        "text": "`CourseScreen` called `WeekSummary` directly",
+        "correct": false,
+        "why": "Components do not call each other."
+      },
+      {
+        "text": "`WeekSummary` stores the totals and `toggleDone` updates them too",
+        "correct": false,
+        "why": "The totals are not stored anywhere."
+      },
+      {
+        "text": "Its totals are computed from `sessions` on every render",
+        "correct": true,
+        "why": "Right. New state, new render, new sums."
+      },
+      {
+        "text": "The page reloaded on \"Back to courses\"",
+        "correct": false,
+        "why": "Nothing reloaded; `openId` became `null`."
+      }
+    ]
+  }
+]

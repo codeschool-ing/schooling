@@ -1,0 +1,375 @@
+{
+ "ex-x26g3bc4": {
+  "prompt": "O `WeekSummary` declara `readonly planned = input.required<number>()`. O que acontece se um template escrever `<app-week-summary />` sem `[planned]`?",
+  "choices": [
+   {
+    "text": "O resumo mostra `undefined minutes planned`",
+    "why": "É isso que o `.required` existe para impedir."
+   },
+   {
+    "text": "O build falha",
+    "why": "Isso. Um input obrigatório precisa ser ligado onde o componente é usado."
+   },
+   {
+    "text": "O `planned` cai para 0",
+    "why": "Só o `input(0)`, com valor padrão, cai para um valor; um obrigatório não tem nenhum."
+   },
+   {
+    "text": "O resumo carrega o número do arquivo sozinho",
+    "why": "O resumo não sabe mais do arquivo."
+   }
+  ]
+ },
+ "ex-fq81de0p": {
+  "prompt": "Depois que a semana passou os números como inputs, quantas requisições de `/courses.json` a página fez?",
+  "choices": [
+   {
+    "text": "Duas, uma por componente, como na aula 6",
+    "why": "O resumo parou de carregar o arquivo."
+   },
+   {
+    "text": "Uma",
+    "why": "Isso. Só a semana carrega agora."
+   },
+   {
+    "text": "Nenhuma, porque inputs são preenchidos na hora do build",
+    "why": "Inputs são definidos com a página rodando; a semana ainda precisou carregar."
+   },
+   {
+    "text": "Três, uma por cartão de curso",
+    "why": "Os cartões recebem o curso; eles não carregam nada."
+   }
+  ]
+ },
+ "ex-dq15b8ep": {
+  "prompt": "Por que os inputs são `readonly` mas não `protected`?",
+  "choices": [
+   {
+    "text": "O `protected` os esconderia do próprio template do componente",
+    "why": "O próprio template lê campos `protected` sem problema."
+   },
+   {
+    "text": "Signals não podem ser `protected`",
+    "why": "Podem; os computed do planner são."
+   },
+   {
+    "text": "O template do pai os define, então são públicos",
+    "why": "Isso. Eles fazem parte da face do componente para quem o usa."
+   },
+   {
+    "text": "`readonly` e `protected` não podem ser combinados",
+    "why": "O planner os combina em quase todo campo."
+   }
+  ]
+ },
+ "ex-0abh64zp": {
+  "prompt": "Um pai passa um valor ao input de um filho escrevendo o nome do input, na tag do filho, entre ___.",
+  "blanks": [
+   {
+    "accept": [
+     "colchetes"
+    ]
+   }
+  ]
+ },
+ "ex-q48rkf7x": {
+  "prompt": "`<app-course-page courseId=\"javascript\" />` não tem colchetes. O que o `courseId` recebe?",
+  "choices": [
+   {
+    "text": "O texto `javascript`",
+    "why": "Isso. Sem colchetes, o valor é uma string simples."
+   },
+   {
+    "text": "O valor de um campo chamado `javascript`",
+    "why": "Isso é o que `[courseId]=\"javascript\"` leria, e esse campo não existe."
+   },
+   {
+    "text": "Nada até o router defini-lo na aula 17",
+    "why": "O atributo o define agora; o router assume depois."
+   },
+   {
+    "text": "Um erro de build, porque inputs precisam de colchetes",
+    "why": "Colchetes são para expressões; uma string constante não precisa."
+   }
+  ]
+ },
+ "ex-b38zxvyj": {
+  "prompt": "No estado de erro, por que o template precisa conferir `data.error()` antes de ler `course()`?",
+  "choices": [
+   {
+    "text": "O `course()` devolve `undefined` nesse estado, o que esconde o erro",
+    "why": "Ele não devolve `undefined`: ler o valor lança um erro."
+   },
+   {
+    "text": "Porque o `value()` lança erro quando o resource falhou",
+    "why": "Isso. O teste do App falhou exatamente assim antes de o ramo ser acrescentado."
+   },
+   {
+    "text": "Porque os ramos do `@if` precisam estar em ordem alfabética",
+    "why": "A ordem importa pelo sentido, não pelo alfabeto."
+   },
+   {
+    "text": "Porque o `error()` reinicia o resource",
+    "why": "Ler o `error()` não muda nada."
+   }
+  ]
+ },
+ "ex-fs1kjbdn": {
+  "prompt": "O `sessions` usa `.filter(…).sort(…)` no array do resource. Por que isso não quebra a regra da aula 6 sobre mudar o valor de um signal no lugar?",
+  "choices": [
+   {
+    "text": "O `sort` nunca muda o array em que é chamado",
+    "why": "Muda; é por isso que a ordem das chamadas importa."
+   },
+   {
+    "text": "O `filter` devolve um array novo, e o `sort` reordena esse",
+    "why": "Isso. O array do resource fica intacto."
+   },
+   {
+    "text": "Arrays dentro de um resource são congelados pelo Angular",
+    "why": "O Angular não congela nada; o código é que precisa evitar."
+   },
+   {
+    "text": "Um computed pode mudar o que lê",
+    "why": "Um computed não deve mudar nada do que lê."
+   }
+  ]
+ },
+ "ex-wcsvdz2h": {
+  "prompt": "Em `(toggled)=\"toggle($event.id, $event.done)\"` no `<app-session-list>`, o que é o `$event`?",
+  "choices": [
+   {
+    "text": "O evento `change` do DOM do checkbox",
+    "why": "Esse evento ficou dentro da linha; a lista emitiu o próprio valor."
+   },
+   {
+    "text": "O objeto da sessão que foi marcada",
+    "why": "A lista emitiu um id e um booleano, não a sessão."
+   },
+   {
+    "text": "O valor que a lista passou ao `emit`",
+    "why": "Isso. Para o output de um componente, o `$event` é o que foi emitido."
+   },
+   {
+    "text": "Uma cópia dos inputs da lista",
+    "why": "Inputs não sobem de volta."
+   }
+  ]
+ },
+ "ex-9b4wb2qw": {
+  "prompt": "Por que o `SessionRow` emite `toggled` em vez de definir `session().done = true` ele mesmo?",
+  "choices": [
+   {
+    "text": "Um input não pode ser lido dentro de um handler de evento",
+    "why": "O handler o lê; o ponto é quem muda os dados."
+   },
+   {
+    "text": "O `done` é um campo privado do `Session`",
+    "why": "O `Session` é uma interface com campos públicos."
+   },
+   {
+    "text": "Os dados pertencem à página, que decide",
+    "why": "Isso. A linha informa; o dono muda, com um valor novo."
+   },
+   {
+    "text": "Emitir é mais rápido que atribuir",
+    "why": "Velocidade não é o motivo."
+   }
+  ]
+ },
+ "ex-z07cacns": {
+  "prompt": "Depois que a sessão do dia 24 foi marcada na página do curso, a semana continuou dizendo `90 done`. Por quê?",
+  "choices": [
+   {
+    "text": "A semana só recalcula uma vez por dia",
+    "why": "Ela recalcula quando os próprios dados mudam, e os dela não mudaram."
+   },
+   {
+    "text": "O OnPush impediu a semana de ser conferida",
+    "why": "O OnPush pula o que nada marcou, e nada mudou os dados da semana."
+   },
+   {
+    "text": "A semana tem a própria cópia dos dados",
+    "why": "Isso. Dois donos de uma verdade; a aula 11 dá aos dados um único dono."
+   },
+   {
+    "text": "A mudança só foi salva no servidor",
+    "why": "Ainda não há servidor; a mudança ficou no resource da página."
+   }
+  ]
+ },
+ "ex-by74567j": {
+  "prompt": "Associe cada declaração ao que ela faz.",
+  "pairs": [
+   {
+    "left": "`input.required<Session>()`",
+    "right": "dados que o pai precisa passar"
+   },
+   {
+    "left": "`output<boolean>()`",
+    "right": "notícias que o componente anuncia para cima"
+   },
+   {
+    "left": "`model(30)`",
+    "right": "um valor passado para baixo que o filho pode mudar"
+   },
+   {
+    "left": "`viewChild.required('note')`",
+    "right": "um elemento do próprio template do componente"
+   }
+  ],
+  "right_distractors": [
+   "um valor calculado a partir de outros signals"
+  ]
+ },
+ "ex-vke1yb7a": {
+  "prompt": "`[(value)]=\"minutes\"` no stepper é abreviação de quê?",
+  "choices": [
+   {
+    "text": "Só `[value]=\"minutes()\"`, lido duas vezes",
+    "why": "Isso só passaria o valor para baixo."
+   },
+   {
+    "text": "`[value]=\"minutes()\"` mais `(valueChange)=\"minutes.set($event)\"`",
+    "why": "Isso. O `model` declara o output `valueChange` para você."
+   },
+   {
+    "text": "`(value)=\"minutes\"`, só um output",
+    "why": "O valor também desce; essa é a primeira metade."
+   },
+   {
+    "text": "Um `@let` que copia `minutes`",
+    "why": "O `@let` é só de leitura e local ao template."
+   }
+  ]
+ },
+ "ex-ynr64zqj": {
+  "prompt": "O `minutes` do bench começou em 45. Quanto guardava depois de dois cliques em `5 more`?"
+ },
+ "ex-2r47tq3z": {
+  "prompt": "Por que a aula não usa `model()` para o `done` de uma sessão no planner?",
+  "choices": [
+   {
+    "text": "O `model` só funciona com números",
+    "why": "Funciona com qualquer tipo."
+   },
+   {
+    "text": "Checkboxes não podem ter binding nos dois sentidos",
+    "why": "Podem; o motivo é a posse."
+   },
+   {
+    "text": "O `model` está obsoleto no Angular 21",
+    "why": "Ele é atual."
+   },
+   {
+    "text": "A linha mudaria os dados do dono pelas costas dele",
+    "why": "Isso. O `model` é para o valor de um controle; dados que pertencem a alguém ganham um input e um output."
+   }
+  ]
+ },
+ "ex-njjd51my": {
+  "prompt": "O panel tem `<ng-content select=\"h2\" />` antes de `<ng-content />`. A semana escreve o `<h2>` primeiro de qualquer jeito. O que aconteceria se a semana escrevesse o `<h2>` por último?",
+  "choices": [
+   {
+    "text": "O título apareceria por último",
+    "why": "É o slot do panel que decide onde o `<h2>` vai, não a ordem do pai."
+   },
+   {
+    "text": "O título ainda apareceria primeiro",
+    "why": "Isso. O `select=\"h2\"` o pega onde quer que o pai o tenha escrito."
+   },
+   {
+    "text": "O título apareceria duas vezes",
+    "why": "Cada elemento vai para um slot só."
+   },
+   {
+    "text": "O build falharia, porque slots exigem ordem",
+    "why": "A ordem no pai é livre."
+   }
+  ]
+ },
+ "ex-jsas868n": {
+  "prompt": "A folha de estilo de quem estiliza o `<h2>` projetado dentro do panel?",
+  "choices": [
+   {
+    "text": "A da semana",
+    "why": "Isso. O conteúdo projetado pertence ao pai que o escreveu."
+   },
+   {
+    "text": "A do panel, já que o título fica dentro da seção dele",
+    "why": "Os estilos do panel só alcançam os elementos do próprio template."
+   },
+   {
+    "text": "As duas, misturadas",
+    "why": "Cada elemento carrega o atributo de um componente."
+   },
+   {
+    "text": "Nenhuma: conteúdo projetado fica sem estilo",
+    "why": "Os estilos do pai se aplicam a ele normalmente."
+   }
+  ]
+ },
+ "ex-mzdtj6dk": {
+  "prompt": "O `viewChild.required<ElementRef<HTMLInputElement>>('note')` devolve o quê?",
+  "choices": [
+   {
+    "text": "O próprio elemento input, como campo comum",
+    "why": "Ele devolve um signal, com um invólucro cujo `nativeElement` é o elemento."
+   },
+   {
+    "text": "Um signal com um `ElementRef`",
+    "why": "Isso. O `.nativeElement` é o input."
+   },
+   {
+    "text": "O texto digitado no input",
+    "why": "Ele dá o elemento; o texto é o `value` dele."
+   },
+   {
+    "text": "Uma lista de todo elemento chamado `note` na página",
+    "why": "Ele procura no próprio template, e devolve um."
+   }
+  ]
+ },
+ "ex-4z5yf0cn": {
+  "prompt": "Depois que o input obrigatório entrou, o teste gerado do `WeekSummary` falhou com `NG0950`. O que consertou?",
+  "choices": [
+   {
+    "text": "Tornar os inputs opcionais para o teste passar",
+    "why": "Isso enfraquece o componente para agradar ao teste."
+   },
+   {
+    "text": "Apagar o teste",
+    "why": "A aula 24 escreve testes melhores; apagar este não conserta nada."
+   },
+   {
+    "text": "`fixture.componentRef.setInput` para os dois",
+    "why": "Isso. Um teste é um pai e precisa fornecer o que é obrigatório."
+   },
+   {
+    "text": "Rodar o teste com `--watch`",
+    "why": "Observar reroda a mesma falha."
+   }
+  ]
+ },
+ "ex-yzgt12h8": {
+  "prompt": "Um novo componente `SessionBadge` mostra os minutos de uma sessão e, quando clicado, pede para apagá-la. De que declarações ele precisa?",
+  "choices": [
+   {
+    "text": "Um `model` para a sessão, para poder apagá-la",
+    "why": "Apagar é trabalho do dono; o badge informa."
+   },
+   {
+    "text": "Um `viewChild` para a lista do pai",
+    "why": "Um filho nunca alcança o pai."
+   },
+   {
+    "text": "Um input para a sessão e um output para o pedido",
+    "why": "Isso. Dados para baixo, notícias para cima."
+   },
+   {
+    "text": "Dois outputs, um para os minutos e um para o clique",
+    "why": "Os minutos descem; só o pedido sobe."
+   }
+  ]
+ }
+}

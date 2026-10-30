@@ -1,0 +1,200 @@
+# lib.sh: what every captures.sh in this course types with. Sourced, not run.
+#
+# A capture prints blocks, each headed "##### NAME". lab/fill.py pastes each
+# block into the fence of the lesson whose typed lines are the same, so a
+# transcript in a lesson is always what the last run printed.
+
+COURSE=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+LAB_SH=$COURSE/lab.sh
+STATE=/tmp/anglab
+SNAP=/var/tmp/anglab-snapshots
+install -d -o ana -g ana -m 755 $STATE 2>/dev/null || true
+install -d -m 755 $SNAP
+
+block() { printf '##### %s\n' "$1"; }
+
+# session DIR 'command' ...: one terminal, opened fresh in DIR, with each
+# command typed into it. The prompt is printed as bash would draw it.
+session() {
+  local dir=$1 script c
+  shift
+  # $? is kept from one command to the next, so `echo $?` answers about the
+  # command before it and not about the printf that drew the prompt.
+  script="cd $dir; __rc=0"
+  # The clock server_today set, for the commands typed here too: `ng test`
+  # runs the specs in Node, and a spec that reads the real date is a spec
+  # whose answer depends on the day the course was recorded.
+  [ -n "${SERVER_TODAY:-}" ] && script+="; export LAB_TODAY=$SERVER_TODAY NODE_OPTIONS=--import=file://$STATE/clock.mjs"
+  for c in "$@"; do
+    script+=$'\n'"printf 'ana@dev:%s\$ %s\\n' \"\$(dirs +0)\" $(printf '%q' "$c")"$'\n'"(exit \$__rc); $c 2>&1; __rc=\$?"
+  done
+  bash "$LAB_SH" script "$script" 2>&1 || true
+}
+
+# quiet DIR 'command': run something as ana and show nothing, for the steps
+# a lesson has already shown (or says it does not show).
+quiet() { bash "$LAB_SH" script "cd $1; $2" >/dev/null 2>&1 || true; }
+
+# shown MD NAME DEST [N]: take the file NAME out of the lesson MD and save it,
+# as ana, at DEST. The lesson shows it whole; this is the same text.
+shown() {
+  local text
+  text=$(python3 "$COURSE/lab/shown.py" "$1" "$2" ${4:-}) || { echo "shown: $2 is not in $1" >&2; exit 1; }
+  bash "$LAB_SH" script "mkdir -p \"\$(dirname $3)\" && cat > $3" <<<"$text"
+}
+# save SECTION PATH [N]: the file PATH of the planner, as SECTION.md of the
+# lesson being captured shows it, saved where the student saves it.
+save() {
+  [ -n "${SAVE_MARK:-}" ] || SAVE_MARK=$(builds)
+  shown "$PWD/$1.md" "$2" "~/planner/$2" "${3:-}"
+}
+# builds: how many builds the dev server has finished, well or badly.
+builds() { local n; n=$(grep -cE 'bundle generation (complete|failed)' $STATE/serve.log 2>/dev/null); echo "${n:-0}"; }
+# flush: the dev server hands the error of a failed build to the first page
+# that connects after it, even once a later build has succeeded. The
+# student's own tab, open through all of it, is that page; a quiet look
+# stands in for it, so the next look a lesson shows opens the page as it is.
+FLUSHED=0
+fails() { local n; n=$(grep -c 'bundle generation failed' $STATE/serve.log 2>/dev/null); echo "${n:-0}"; }
+flush() {
+  [ "$(fails)" -gt "$FLUSHED" ] || return 0
+  # the last build failed: the error is the page's own, not a stale one
+  grep -E 'bundle generation (complete|failed)' $STATE/serve.log | tail -1 | grep -q failed && return 0
+  quiet '~/planner' 'look http://localhost:4200/'
+  FLUSHED=$(fails)
+}
+# settled: until the dev server's log has been still for two seconds, so a
+# second build a save set off (it happens) is over before a page is opened.
+settled() {
+  local before after
+  while :; do
+    before=$(wc -c < $STATE/serve.log); sleep 2; after=$(wc -c < $STATE/serve.log)
+    [ "$before" = "$after" ] && return 0
+  done
+}
+# rebuilt: after one or more saves, until the dev server has finished the
+# build they caused (a fixed sleep was once too short, and the page a capture
+# opened still carried the error of the build before).
+rebuilt() {
+  local mark=${SAVE_MARK:-0}
+  SAVE_MARK=
+  for _ in $(seq 300); do
+    if [ "$(builds)" -gt "$mark" ]; then settled; flush; return 0; fi
+    sleep 0.1
+  done
+  echo "rebuilt: the dev server finished no build after the save" >&2
+}
+
+# bg NAME DIR 'command': start a program in "a second terminal", as ana. What
+# it prints goes to a log that bg_show prints with the prompt it was typed at.
+bg() {
+  local name=$1 dir=$2 cmd=$3 env=""
+  printf '%s\n%s\n' "$dir" "$cmd" > $STATE/$name.cmd
+  [ -n "${SERVER_TODAY:-}" ] && env="LAB_TODAY=$SERVER_TODAY NODE_OPTIONS=--import=file://$STATE/clock.mjs "
+  bash "$LAB_SH" script "cd $dir; ${env}setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
+}
+# NODE'S CLOCK. `look --today` sets the browser's; from lesson 23 a page is
+# first drawn by Node, and lesson 10's first spec reads the date in Node, so
+# `new Date()` there would be the recording computer's day. server_today DATE:
+# every program bg starts after it, and every command session types, believes
+# the day is DATE, from 09:00 on and moving as a clock does, the morning the
+# browser is given. Node reads the module before the program, so nothing in a transcript
+# shows it, and the commands printed are the ones the student types.
+server_today() {
+  SERVER_TODAY=$1
+  cat > $STATE/clock.mjs <<'JS'
+const Real = Date;
+const start = Real.now();
+const shift = new Real(`${process.env.LAB_TODAY}T09:00:00`).getTime() - start;
+const now = () => Real.now() + shift;
+// a function rather than a class, so `Date()` without `new` still answers
+function LabDate(...args) {
+  if (!new.target) return new Real(now()).toString();
+  return args.length === 0 ? new Real(now()) : new Real(...args);
+}
+LabDate.prototype = Real.prototype;
+LabDate.now = now;
+LabDate.parse = Real.parse;
+LabDate.UTC = Real.UTC;
+globalThis.Date = LabDate;
+JS
+  chown ana: $STATE/clock.mjs 2>/dev/null || true
+}
+# bg_show NAME: that terminal as it stands, prompt first.
+bg_show() {
+  local dir cmd
+  { read -r dir; read -r cmd; } < $STATE/$1.cmd
+  printf 'ana@dev:%s$ %s\n' "$dir" "$cmd"
+  cat $STATE/$1.log
+}
+# bg_stop NAME [SIGNAL]: what Ctrl-C (INT) would do, and wait for it.
+bg_stop() {
+  local pid
+  pid=$(cat $STATE/$1.pid 2>/dev/null) || return 0
+  kill -"${2:-INT}" -- -"$pid" 2>/dev/null || true
+  for _ in $(seq 50); do kill -0 -- -"$pid" 2>/dev/null || { rm -f $STATE/$1.pid; return 0; }; sleep 0.1; done
+  kill -KILL -- -"$pid" 2>/dev/null || true
+  rm -f $STATE/$1.pid
+}
+
+# wait_port PORT: until something answers on 127.0.0.1:PORT.
+wait_port() {
+  for _ in $(seq 600); do
+    (exec 3<>/dev/tcp/127.0.0.1/$1) 2>/dev/null && return 0
+    sleep 0.1
+  done
+  echo "wait_port: nothing answered on $1" >&2
+}
+# wait_log NAME TEXT: until the program in that terminal has printed TEXT.
+wait_log() {
+  for _ in $(seq 600); do
+    grep -qF -- "$2" $STATE/$1.log 2>/dev/null && return 0
+    sleep 0.1
+  done
+  echo "wait_log: $1 never printed $2" >&2
+}
+
+# serve: `ng serve` in a second terminal, until the first build is done.
+serve() {
+  # A fresh dev server writes a fresh log, so a build count taken before it
+  # means nothing after it: a save waiting for its build starts counting here.
+  SAVE_MARK=
+  bg serve '~/planner' 'npx ng serve'
+  wait_log serve 'Watch mode enabled'
+  sleep 0.5
+  if grep -q 'Local:' $STATE/serve.log; then wait_port 4200; fi
+  return 0
+}
+
+# THE PROJECT, from lesson to lesson. restore LESSON puts ~/planner back as
+# the captures of LESSON left it; snapshot LESSON saves it. node_modules stays
+# where it is and is reinstalled only when the lockfile says it has to be.
+snapshot() {
+  rm -rf "$SNAP/$1" && mkdir -p "$SNAP/$1"
+  tar -C /home/ana -cf "$SNAP/$1/planner.tar" --exclude=planner/node_modules \
+    --exclude=planner/dist --exclude=planner/.angular planner
+}
+restore() {
+  [ -f "$SNAP/$1/planner.tar" ] || { echo "restore: no snapshot of $1; capture it first" >&2; exit 1; }
+  local lock=""
+  [ -f /home/ana/planner/package-lock.json ] && lock=$(sha1sum < /home/ana/planner/package-lock.json)
+  find /home/ana/planner -mindepth 1 -maxdepth 1 ! -name node_modules -exec rm -rf {} + 2>/dev/null || true
+  tar -C /home/ana -xf "$SNAP/$1/planner.tar"
+  chown -R ana: /home/ana/planner
+  if [ "$lock" != "$(sha1sum < /home/ana/planner/package-lock.json)" ] || [ ! -d /home/ana/planner/node_modules ]; then
+    quiet '~/planner' 'npm ci'
+  fi
+}
+
+# look ARGS: the line a student types, typed into ~/planner.
+look() { session '~/planner' "look $*"; }
+
+# cap DIR 'command' ...: one fence's transcript, in a block of its own. The
+# block is named by a counter: fill.py finds a fence by what was typed, never
+# by the name.
+CAPN=0
+cap() { CAPN=$((CAPN + 1)); block "t$CAPN"; session "$@"; }
+# cap_look ARGS: the same for one look.
+cap_look() { CAPN=$((CAPN + 1)); block "t$CAPN"; look "$@"; }
+# cap_bg NAME: the same for a second terminal, as it stands.
+cap_bg() { CAPN=$((CAPN + 1)); block "t$CAPN"; bg_show "$1"; }

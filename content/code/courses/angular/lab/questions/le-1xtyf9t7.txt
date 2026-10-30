@@ -1,0 +1,219 @@
+# Lesson 7: change detection
+
+@ what-it-does quiz easy #ex-34zw7xjm
+? What does Angular do during change detection?
+?? O que o Angular faz durante a detecção de mudanças?
+- It reloads the component's data from the server :: Loading is the resource's or the service's job; the walk only reads the classes.
+-- Recarrega os dados do componente do servidor :: Carregar é trabalho do resource ou do serviço; a passada só lê as classes.
++ Re-reads every template, then fixes the DOM :: Right. It walks the tree and compares.
+++ Relê os templates e corrige o DOM :: Isso. Ele percorre a árvore e compara.
+- It recompiles the templates that changed on disk :: That is the dev server rebuilding, not change detection.
+-- Recompila os templates que mudaram em disco :: Isso é o servidor de desenvolvimento reconstruindo, não detecção de mudanças.
+- It destroys and recreates every component :: Components survive a walk; only the DOM values that differ are touched.
+-- Destrói e recria todo componente :: Os componentes sobrevivem a uma passada; só os valores do DOM que diferem são tocados.
+
+@ what-it-does quiz medium #ex-ttm6vx05
+? `label()` was called again after a click on a button whose handler does nothing. Why?
+?? O `label()` foi chamado de novo depois de um clique num botão cujo handler não faz nada. Por quê?
+- The click changed `label`'s return value for this one time :: It returns the same text every time.
+-- O clique mudou o valor que `label` devolve, só desta vez :: Ele devolve sempre o mesmo texto.
+- `look` reloaded the page after it clicked the button :: The page loaded once; the extra calls came from walks.
+-- O `look` recarregou a página depois de clicar no botão :: A página carregou uma vez; as chamadas a mais vieram de passadas.
++ Events schedule walks, and methods are asked again :: Right. Angular cannot know a method's answer without calling it.
+++ Eventos agendam passadas, e métodos são consultados de novo :: Isso. O Angular não sabe a resposta de um método sem chamá-lo.
+- Methods in templates are run on a timer by Angular :: There is no timer; walks happen when something schedules them.
+-- Métodos em templates são rodados num timer pelo Angular :: Não há timer; as passadas acontecem quando algo as agenda.
+
+@ what-it-does quiz medium #ex-keb86t4m
+? In development mode, why does Angular walk the tree twice in a row?
+?? Em modo de desenvolvimento, por que o Angular percorre a árvore duas vezes seguidas?
++ To check nothing changed between the walks :: Right. A difference is the `NG0100` error.
+++ Para conferir que nada mudou entre as passadas :: Isso. Uma diferença é o erro `NG0100`.
+- Because the first walk only reads and the second one writes the DOM :: Each walk does both; the second only compares.
+-- Porque a primeira passada só lê e a segunda escreve o DOM :: Cada passada faz as duas coisas; a segunda só compara.
+- To warm up the cache before production :: Development builds are not a warm-up for production ones.
+-- Para aquecer o cache antes da produção :: Builds de desenvolvimento não aquecem os de produção.
+- Because zone.js is loaded twice :: The planner has no zone.js, and the second walk happened anyway.
+-- Porque o zone.js é carregado duas vezes :: O planner não tem zone.js, e a segunda passada aconteceu mesmo assim.
+
+@ zone-js quiz medium #ex-bpqjedrt
+? Under zone.js, the default component's plain field showed 1 after its timer. What told Angular to walk?
+?? Com o zone.js, o campo comum do componente padrão mostrou 1 depois do timer. O que disse ao Angular para percorrer a árvore?
+- The field, which notifies Angular when assigned :: A plain field notifies nobody; that is a signal's job.
+-- O campo, que avisa o Angular quando recebe um valor :: Um campo comum não avisa ninguém; isso é trabalho de um signal.
++ zone.js's own `setTimeout` :: Right. It had replaced the browser's timer with one that tells Angular.
+++ O `setTimeout` do próprio zone.js :: Isso. Ele tinha trocado o timer do navegador por um que avisa o Angular.
+- The browser, which redraws the page every second :: The browser draws the DOM; it knows nothing of the class's fields.
+-- O navegador, que redesenha a página a cada segundo :: O navegador desenha o DOM; ele não sabe nada dos campos da classe.
+- `look`, which clicks the page while it waits :: `--wait` only waits.
+-- O `look`, que clica na página enquanto espera :: O `--wait` só espera.
+
+@ zone-js quiz hard #ex-40hy3yem
+? Which cost of zone.js does the lesson name?
+?? Que custo do zone.js a aula aponta?
+- It cannot run in Chromium, only in older browsers :: It ran in Chromium in this very lesson.
+-- Ele não roda no Chromium, só em navegadores antigos :: Ele rodou no Chromium nesta mesma aula.
+- It makes every field in every component a signal :: It changes nothing about fields; it wraps the browser's asynchronous functions.
+-- Ele transforma todo campo de todo componente num signal :: Ele não muda nada nos campos; ele envolve as funções assíncronas do navegador.
+- It forbids OnPush in any component :: OnPush was designed for zone.js applications.
+-- Ele proíbe o OnPush em qualquer componente :: O OnPush foi pensado para aplicações com zone.js.
++ Extra code, and walks after everything :: Right. Whether anything changed or not.
+++ Código a mais, e passadas depois de tudo :: Isso. Tenha algo mudado ou não.
+
+@ zone-js quiz medium #ex-9axtmwvt
+? Lesson 2's first install counted two vulnerabilities. Why did `npm audit` find none here?
+?? A primeira instalação da aula 2 contou duas vulnerabilidades. Por que o `npm audit` não achou nenhuma aqui?
+- zone.js replaced the vulnerable library :: zone.js has nothing to do with the build.
+-- O zone.js substituiu a biblioteca vulnerável :: O zone.js não tem nada a ver com o build.
+- `npm audit` reads only new packages :: It reads the whole lockfile.
+-- O `npm audit` só lê pacotes novos :: Ele lê o lockfile inteiro.
++ Lesson 2's `ng update` took the fixed build :: Right. `@angular/build` 21.2.29 carries it.
+++ O `ng update` da aula 2 trouxe a correção :: Isso. O `@angular/build` 21.2.29 a traz.
+- The advisories were withdrawn :: They stand; the fixed version is installed.
+-- Os alertas foram retirados :: Continuam valendo; a versão corrigida é que está instalada.
+
+@ onpush quiz medium #ex-rfkxyqf8
+? Under zone.js, the OnPush component's plain field stayed 0 after its timer. Why?
+?? Com o zone.js, o campo comum do componente OnPush ficou 0 depois do timer. Por quê?
+- zone.js does not patch timers inside OnPush components :: The same timer triggered a walk; the walk skipped the component.
+-- O zone.js não envolve timers de componentes OnPush :: O mesmo timer disparou uma passada; a passada pulou o componente.
++ Nothing marked it, so the walk skipped it :: Right. A timer setting a plain field is not one of the things that mark.
+++ Nada o marcou, então a passada o pulou :: Isso. Um timer definindo um campo comum não é uma das coisas que marcam.
+- OnPush components are only checked once, at creation :: They are checked whenever marked; this one never was.
+-- Componentes OnPush só são conferidos uma vez, na criação :: Eles são conferidos sempre que marcados; este nunca foi.
+- The timer threw an error inside the OnPush component :: There was no error; the value simply was not read again.
+-- O timer lançou um erro dentro do componente OnPush :: Não houve erro; o valor só não foi lido de novo.
+
+@ onpush multiple-choice medium #ex-zk4bnjh3
+? Which of these mark an OnPush component so the next walk visits it? Choose all that apply.
+?? Quais destes marcam um componente OnPush para a próxima passada visitá-lo? Escolha todos os que se aplicam.
++ A signal its template reads changes :: Right.
+++ Um signal que o template dele lê muda :: Isso.
++ A `(click)` bound in its template fires :: Right.
+++ Um `(click)` ligado no template dele dispara :: Isso.
+- A plain field changes in a timer :: That is exactly what stayed 0.
+-- Um campo comum muda num timer :: Foi exatamente isso que ficou em 0.
++ `markForCheck()` is called :: Right. The escape hatch older code is full of.
+++ O `markForCheck()` é chamado :: Isso. A saída de emergência de que o código antigo está cheio.
+- An array it received is changed in place :: Same identity, so no change by OnPush's rule.
+-- Um array que ele recebeu é alterado no lugar :: Mesma identidade, então nenhuma mudança pela regra do OnPush.
+
+@ onpush quiz hard #ex-s8fwaa81
+? A parent passes `sessions` to an OnPush child, then pushes a session into the same array. Why does the child not update?
+?? Um pai passa `sessions` a um filho OnPush, depois dá push numa sessão do mesmo array. Por que o filho não atualiza?
+- OnPush children ignore inputs :: They react to an input that changes to a new value.
+-- Filhos OnPush ignoram inputs :: Eles reagem a um input que muda para um valor novo.
++ Same array, so by identity no change :: Right. The same rule as a signal's `Object.is`, from lesson 6.
+++ Mesmo array, então pela identidade nada mudou :: Isso. A mesma regra do `Object.is` de um signal, da aula 6.
+- `push` is not allowed on arrays passed as inputs :: It is allowed, and that is the trap.
+-- O `push` não é permitido em arrays passados como inputs :: É permitido, e essa é a armadilha.
+- The parent must call `markForCheck()` on itself :: Marking the parent does not change the child's input.
+-- O pai precisa chamar `markForCheck()` em si mesmo :: Marcar o pai não muda o input do filho.
+
+@ zoneless quiz medium #ex-rdad881a
+? Without zone.js, which line of the bench still showed 1?
+?? Sem o zone.js, qual linha do bench ainda mostrou 1?
+- `default, plain field` :: Nothing told Angular the plain field changed.
+-- `default, plain field` :: Nada disse ao Angular que o campo comum mudou.
+- `OnPush, plain field` :: It stayed 0 under zone.js already.
+-- `OnPush, plain field` :: Ele já ficava 0 com o zone.js.
++ `OnPush, signal` :: Right. Setting the signal marked its component and scheduled a walk.
+++ `OnPush, signal` :: Isso. Definir o signal marcou o componente dele e agendou uma passada.
+- None of them, until the page was reloaded :: The signal line updated without a reload.
+-- Nenhuma, até a página ser recarregada :: A linha do signal atualizou sem recarregar.
+
+@ zoneless quiz hard #ex-2j4h56ma
+? Moving an old application to zoneless, which failure does the lesson warn is silent?
+?? Ao levar uma aplicação antiga para zoneless, que falha a aula alerta ser silenciosa?
+- The build failing on every plain field :: The build has no opinion on plain fields.
+-- O build falhando em todo campo comum :: O build não tem opinião sobre campos comuns.
+- An error in the console on every timer :: Nothing is logged; that is the problem.
+-- Um erro no console a cada timer :: Nada é registrado; esse é o problema.
++ Fields set asynchronously going stale :: Right. They show their old value until something else triggers a walk.
+++ Campos definidos de forma assíncrona ficando velhos :: Isso. Eles mostram o valor antigo até algo disparar uma passada.
+- Tests passing that used to fail :: The lesson's concern is the screen, not the test results.
+-- Testes passando que antes falhavam :: A preocupação da aula é a tela, não o resultado dos testes.
+
+@ zoneless matching medium #ex-ybzxmpsm
+? Match each event with whether it schedules a walk in a zoneless application.
+?? Associe cada evento a se ele agenda ou não uma passada numa aplicação zoneless.
+< a `(click)` handler finishes :: schedules a walk
+<< um handler de `(click)` termina :: agenda uma passada
+< a signal read by a template is set :: marks the component and schedules a walk
+<< um signal lido por um template é definido :: marca o componente e agenda uma passada
+< a `setTimeout` assigns a plain field :: schedules nothing
+<< um `setTimeout` atribui a um campo comum :: não agenda nada
+< a `resource` finishes loading :: its value signal changes and schedules a walk
+<< um `resource` termina de carregar :: o signal do valor muda e agenda uma passada
+x the mouse moves over the page
+xx o mouse se move sobre a página
+
+@ zoneless cloze easy #ex-kw2wkyyv
+? Since Angular 21, a new project created with `ng new` uses no ___ at all.
+?? Desde o Angular 21, um projeto novo criado com `ng new` não usa ___ nenhum.
+= zone.js | zonejs | zone
+== zone.js | zonejs | zone
+
+@ expression-changed quiz medium #ex-0w5e17n8
+? `{{ now() }}`, where `now()` returns `Date.now()`, produced `NG0100`. Why is that a bug and not a false alarm?
+?? `{{ now() }}`, em que `now()` devolve `Date.now()`, produziu `NG0100`. Por que isso é um bug e não um alarme falso?
+- The clock cannot be read from inside an Angular template :: It can; reading it on every walk is the problem.
+-- O relógio não pode ser lido de dentro de um template Angular :: Pode; lê-lo a cada passada é o problema.
+- `Date.now()` is too slow to be called from a template :: Speed is not the issue; changing answers are.
+-- O `Date.now()` é lento demais para ser chamado num template :: Velocidade não é a questão; respostas que mudam são.
++ The screen shows one answer while the state holds another :: Right. Screen and state disagree, and production would not say so.
+++ A tela mostra uma resposta enquanto o estado guarda outra :: Isso. Tela e estado discordam, e a produção não diria nada.
+- Development mode adds random delays between the two walks :: There is no added delay; the two walks are milliseconds apart.
+-- O modo de desenvolvimento acrescenta atrasos aleatórios entre as passadas :: Não há atraso acrescentado; as duas passadas ficam a milissegundos uma da outra.
+
+@ expression-changed cloze easy #ex-g13atweq
+? The error Angular's development mode reports when a template expression gives a different answer on the second walk is NG___.
+?? O erro que o modo de desenvolvimento do Angular relata quando uma expressão de template dá outra resposta na segunda passada é NG___.
+= 0100
+== 0100
+
+@ expression-changed quiz medium #ex-y2setqkn
+? Where did the `NG0100` error appear?
+?? Onde o erro `NG0100` apareceu?
++ Only in the console, in development mode :: Right. The page drew the first value and carried on.
+++ Só no console, em modo de desenvolvimento :: Isso. A página desenhou o primeiro valor e seguiu em frente.
+- On the page, in place of the paragraph :: The paragraph showed a number.
+-- Na página, no lugar do parágrafo :: O parágrafo mostrou um número.
+- In `ng build`'s output, as a template error :: The build cannot know what a method returns at run time.
+-- Na saída do `ng build`, como erro de template :: O build não tem como saber o que um método devolve em tempo de execução.
+- In production as well, as a warning :: Production skips the second walk entirely.
+-- Em produção também, como aviso :: A produção pula a segunda passada por completo.
+
+@ choosing quiz medium #ex-1y1y4s6p
+? What did `ng config projects.planner.schematics.@schematics/angular:component.changeDetection OnPush` change?
+?? O que o `ng config projects.planner.schematics.@schematics/angular:component.changeDetection OnPush` mudou?
+- Every existing component became OnPush :: Existing files were edited by hand in this lesson; the command touches `angular.json` only.
+-- Todo componente existente virou OnPush :: Os arquivos existentes foram editados à mão nesta aula; o comando só mexe no `angular.json`.
++ The default for components `ng generate` writes :: Right. New components start with OnPush.
+++ O padrão dos componentes que o `ng generate` escreve :: Isso. Componentes novos já nascem com OnPush.
+- Angular's change detection for the whole application :: Change detection is configured per component, and the app was already zoneless.
+-- A detecção de mudanças da aplicação inteira :: A detecção de mudanças é configurada por componente, e o app já era zoneless.
+- The TypeScript compiler's strictness :: That is `tsconfig.json`, unrelated.
+-- O rigor do compilador TypeScript :: Isso é o `tsconfig.json`, sem relação.
+
+@ choosing ordering medium #ex-b86mv98m
+? Put the steps of moving an old zone.js application to zoneless in the order the lesson gives.
+?? Coloque os passos de levar uma aplicação antiga com zone.js para zoneless na ordem que a aula dá.
+> make components OnPush one at a time, fixing what goes stale
+>> tornar os componentes OnPush um por vez, consertando o que fica velho
+> replace `provideZoneChangeDetection` and remove zone.js
+>> trocar o `provideZoneChangeDetection` e remover o zone.js
+> run every test and look at every screen
+>> rodar todos os testes e olhar todas as telas
+
+@ drill quiz hard #ex-s856ytax
+? A library calls your callback when a file finishes uploading, and your component sets `this.progress = 100` there. In the zoneless planner, what do you write instead?
+?? Uma biblioteca chama o seu callback quando um arquivo termina de subir, e o seu componente define `this.progress = 100` ali. No planner zoneless, o que você escreve no lugar?
+- The same line, followed by `setTimeout(() => {})` to trigger a walk :: An empty timer schedules nothing without zone.js.
+-- A mesma linha, seguida de `setTimeout(() => {})` para disparar uma passada :: Um timer vazio não agenda nada sem zone.js.
+- `import 'zone.js'` at the top of the component :: That would bring back the whole cost to fix one field.
+-- `import 'zone.js'` no topo do componente :: Isso traria de volta o custo inteiro para consertar um campo.
++ `this.progress.set(100)`, with `progress` a signal :: Right. The signal marks the component and schedules the walk.
+++ `this.progress.set(100)`, com `progress` sendo um signal :: Isso. O signal marca o componente e agenda a passada.
+- Nothing: callbacks from libraries always trigger a walk :: Only what Angular trusts triggers a walk; a library's callback is not on the list.
+-- Nada: callbacks de bibliotecas sempre disparam uma passada :: Só o que o Angular confia dispara uma passada; o callback de uma biblioteca não está na lista.

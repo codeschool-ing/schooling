@@ -1,0 +1,225 @@
+# Lesson 5: control flow
+
+@ at-if quiz easy #ex-c9yzffwf
+? While `done >= planned` is false, what happens to the paragraph inside the `@if` block?
+?? Enquanto `done >= planned` é falso, o que acontece com o parágrafo dentro do bloco `@if`?
+- It stays in the page, hidden with `display: none` :: That is what `[hidden]` would do. `@if` takes it out of the page.
+-- Ele fica na página, escondido com `display: none` :: Isso é o que o `[hidden]` faria. O `@if` o tira da página.
++ It does not exist in the page :: Right. `--html` showed only the `@else` paragraph.
+++ Ele não existe na página :: Isso. O `--html` mostrou só o parágrafo do `@else`.
+- It is drawn empty, as a placeholder for later :: Nothing is drawn; there is only a comment marking the place.
+-- Ele é desenhado vazio, como marcador para depois :: Nada é desenhado; só há um comentário marcando o lugar.
+- It is drawn and then removed after the first check :: It is never drawn while the condition is false.
+-- Ele é desenhado e depois removido após a primeira conferência :: Ele nunca é desenhado enquanto a condição é falsa.
+
+@ at-if quiz medium #ex-k4vh2xqq
+? `look --html` showed `<!--container-->` in the summary's HTML. What is it?
+?? O `look --html` mostrou `<!--container-->` no HTML do resumo. O que é isso?
+- An element Angular wraps every block in :: It is a comment, not an element, and nothing is drawn for it.
+-- Um elemento em que o Angular envolve todo bloco :: É um comentário, não um elemento, e nada é desenhado para ele.
++ A comment marking where a block's content goes :: Right. It is Angular's bookmark, and the browser ignores it.
+++ Um comentário marcando onde vai o conteúdo de um bloco :: Isso. É o marcador do Angular, e o navegador o ignora.
+- The `@else` branch, drawn empty :: The `@else` branch was drawn as a paragraph with text.
+-- O ramo `@else`, desenhado vazio :: O ramo `@else` foi desenhado como um parágrafo com texto.
+- A leftover of the HTML comment that names the file :: The build drops those; this one is Angular's own.
+-- Uma sobra do comentário HTML que dá nome ao arquivo :: O build tira esses; este é do próprio Angular.
+
+@ at-if quiz hard #ex-4z66xbva
+? In `@if (next(); as session) { … }`, why can the block read `session.minutes` without the compiler complaining?
+?? Em `@if (next(); as session) { … }`, por que o bloco pode ler `session.minutes` sem o compilador reclamar?
+- `as` converts the value to `any` :: `as` here names the value; it does not change its type to `any`.
+-- O `as` converte o valor para `any` :: Aqui o `as` dá nome ao valor; ele não muda o tipo para `any`.
+- Templates are not type-checked inside blocks :: They are, which is why the narrowing matters.
+-- Templates não têm os tipos conferidos dentro de blocos :: Têm, e é por isso que o estreitamento importa.
++ Inside the block, `session` is narrowed to not missing :: Right. As `if (next)` narrowed it in TypeScript.
+++ Dentro do bloco, `session` está estreitado para não ausente :: Isso. Como o `if (next)` o estreitou no TypeScript.
+- `next()` never returns `undefined` :: If it could not, the `@if` would be pointless; it may return nothing.
+-- `next()` nunca devolve `undefined` :: Se não pudesse, o `@if` não teria sentido; ele pode devolver nada.
+
+@ at-for quiz easy #ex-236jt44x
+? What happens if you write `@for (course of courses) { … }` with no `track`?
+?? O que acontece se você escrever `@for (course of courses) { … }` sem `track`?
++ The template does not compile :: Right. `track` is required.
+++ O template não compila :: Isso. O `track` é obrigatório.
+- Angular tracks by `$index` for you :: There is no default; leaving it out is an error.
+-- O Angular rastreia por `$index` para você :: Não há padrão; deixá-lo de fora é um erro.
+- Angular tracks by the item itself, like the old `*ngFor` :: That was the old directive's behaviour; `@for` refuses instead.
+-- O Angular rastreia pelo próprio item, como o antigo `*ngFor` :: Esse era o comportamento da diretiva antiga; o `@for` recusa.
+- It works, with a warning in the console :: It fails at build time, not at run time.
+-- Funciona, com um aviso no console :: Ele falha na hora do build, não em tempo de execução.
+
+@ at-for quiz medium #ex-670dwf01
+? Why does the week's course list have an `@empty` block?
+?? Por que a lista de cursos da semana tem um bloco `@empty`?
+- `@for` requires one, as it requires `track` :: Only `track` is required.
+-- O `@for` exige um, como exige o `track` :: Só o `track` é obrigatório.
+- To show a loading message while the courses arrive :: `@empty` is drawn when the list has no items, which is not the same as loading.
+-- Para mostrar uma mensagem de carregamento enquanto os cursos chegam :: O `@empty` é desenhado quando a lista não tem itens, o que não é o mesmo que carregar.
++ So a list with no items still says something :: Right. Every list starts empty, and that state is the one most often forgotten.
+++ Para uma lista sem itens ainda dizer alguma coisa :: Isso. Toda lista começa vazia, e esse é o estado mais esquecido.
+- To stop the `<ul>` being empty, which is invalid HTML :: The lesson's reason is the person reading, not validity.
+-- Para o `<ul>` não ficar vazio, o que seria HTML inválido :: O motivo da aula é a pessoa lendo, não a validade.
+
+@ at-for matching easy #ex-m5mrga3p
+? Match each name `@for` offers with what it is.
+?? Associe cada nome que o `@for` oferece ao que ele é.
+< `$index` :: the item's position, from 0
+<< `$index` :: a posição do item, a partir de 0
+< `$count` :: how many items there are
+<< `$count` :: quantos itens existem
+< `$first` :: whether this is the first item
+<< `$first` :: se este é o primeiro item
+< `$even` :: whether the position is even
+<< `$even` :: se a posição é par
+x the item's id
+xx o id do item
+
+@ tracking quiz medium #ex-pgxjqas9
+? After `Reverse`, the 25 typed into the Git row of the list tracked by position appeared next to HTML and CSS. Why?
+?? Depois do `Reverse`, o 25 digitado na linha do Git da lista rastreada por posição apareceu ao lado de HTML and CSS. Por quê?
+- The reverse shuffled the inputs' values on purpose :: Nothing touched the values; the rows' DOM stayed where it was.
+-- O reverse embaralhou os valores dos campos de propósito :: Nada mexeu nos valores; o DOM das linhas ficou onde estava.
++ Position 2 still existed, so Angular kept that row's DOM and only changed its text :: Right. The key was the position, and positions do not move.
+++ A posição 2 continuava existindo, então o Angular manteve o DOM daquela linha e só trocou o texto :: Isso. A chave era a posição, e posições não se movem.
+- `$index` is computed after the list is drawn :: When it is computed is not the issue; what it identifies is.
+-- O `$index` é calculado depois que a lista é desenhada :: Quando ele é calculado não é o problema; o que ele identifica é.
+- jsdom does not keep input values :: This ran in Chromium, and the other list kept its value correctly.
+-- O jsdom não guarda valores de campos :: Isto rodou no Chromium, e a outra lista manteve o valor certo.
+
+@ tracking quiz hard #ex-hbak3cff
+? A list of sessions is rebuilt from every server answer, with new objects each time. Which track key keeps what the user typed attached to the right session?
+?? Uma lista de sessões é reconstruída a cada resposta do servidor, com objetos novos a cada vez. Que chave de track mantém o que o usuário digitou preso à sessão certa?
+- `track session`, the object itself :: Every answer brings new objects, so none is recognised and every row is drawn again.
+-- `track session`, o próprio objeto :: Toda resposta traz objetos novos, então nenhum é reconhecido e toda linha é desenhada de novo.
+- `track $index` :: Positions survive a rebuild, but a reorder moves the data under them.
+-- `track $index` :: Posições sobrevivem a uma reconstrução, mas um reordenamento move os dados por baixo delas.
++ `track session.id` :: Right. The id survives the rebuild and identifies the session.
+++ `track session.id` :: Isso. O id sobrevive à reconstrução e identifica a sessão.
+- `track session.date`, since a date is unique :: Two sessions can share a date, and a date can be edited.
+-- `track session.date`, já que uma data é única :: Duas sessões podem ter a mesma data, e uma data pode ser editada.
+
+@ tracking quiz medium #ex-z9axf2h0
+? In the list tracked by `course.id`, what did Angular do with the Git row when the list was reversed?
+?? Na lista rastreada por `course.id`, o que o Angular fez com a linha do Git quando a lista foi invertida?
+- Drew a new row for Git at the top and deleted the old one :: Then the 25 would have been lost; it moved with the row.
+-- Desenhou uma linha nova para o Git no topo e apagou a antiga :: Aí o 25 teria se perdido; ele foi junto com a linha.
+- Left it in place and changed its text to HTML and CSS :: That is what happened in the list tracked by position.
+-- Deixou no lugar e trocou o texto para HTML and CSS :: Isso foi o que aconteceu na lista rastreada por posição.
++ Moved its existing DOM, field and all, to the top :: Right. It found the key `git` again.
+++ Moveu o DOM que já existia, com o campo e tudo, para o topo :: Isso. Ele achou a chave `git` de novo.
+- Nothing until the page was reloaded :: The look ran in one page load, and the row moved.
+-- Nada até a página ser recarregada :: O look rodou num só carregamento, e a linha se moveu.
+
+@ at-switch quiz medium #ex-3p8acs5y
+? `status` is `'done'`. Which of these `@case` lines matches it?
+?? `status` é `'done'`. Qual destas linhas `@case` combina com ele?
+- `@case ('Done')` :: Matching uses `===`, and case matters.
+-- `@case ('Done')` :: A comparação usa `===`, e maiúsculas importam.
++ `@case ('done')` :: Right. Exactly equal, with `===`.
+++ `@case ('done')` :: Isso. Exatamente igual, com `===`.
+- `@case (done)` :: Without quotes it reads a field called `done`, not the string.
+-- `@case (done)` :: Sem aspas ele lê um campo chamado `done`, não a string.
+- `@case ('done' || 'missed')` :: That expression evaluates to `'done'` and would match by accident, and it reads as two cases.
+-- `@case ('done' || 'missed')` :: Essa expressão dá `'done'` e combinaria por acaso, e se lê como dois casos.
+
+@ at-switch quiz hard #ex-8h4en4nd
+? With `@default never;`, the build failed with `Type '"planned"' is not assignable to type 'never'`. What was the compiler telling you?
+?? Com `@default never;`, o build falhou com `Type '"planned"' is not assignable to type 'never'`. O que o compilador dizia?
+- That `'planned'` is not a valid status :: It is valid; the type `Status` lists it.
+-- Que `'planned'` não é um status válido :: É válido; o tipo `Status` o lista.
+- That `never` cannot be used in templates :: It can; that is how the check works.
+-- Que `never` não pode ser usado em templates :: Pode; é assim que a conferência funciona.
++ A status the type allows has no case :: Right. Every value of `Status` needs its own case once the default says `never`.
+++ Um status que o tipo permite não tem case :: Isso. Todo valor de `Status` precisa do próprio case quando o default diz `never`.
+- That `status` was never set :: It was set to `'missed'`; the check is about the cases, not the value.
+-- Que `status` nunca foi definido :: Ele foi definido como `'missed'`; a conferência é sobre os cases, não sobre o valor.
+
+@ at-switch cloze medium #ex-drkvnsjc
+? To make a `@switch` fail the build when a value of its type has no case, its default is written `@default ___;`.
+?? Para um `@switch` derrubar o build quando um valor do tipo não tem case, o default se escreve `@default ___;`.
+= never
+== never
+
+@ at-let quiz medium #ex-3c5s8t4v
+? Which of these may the template do with `@let left = planned - done;`?
+?? O que o template pode fazer com `@let left = planned - done;`?
+- Assign to it in an event binding, `(click)="left = 0"` :: `@let` is read-only, even in an event binding.
+-- Atribuir num event binding, `(click)="left = 0"` :: O `@let` é só de leitura, mesmo num event binding.
+- Read it in a paragraph above the `@let` line :: It is visible only after its line.
+-- Lê-lo num parágrafo acima da linha do `@let` :: Ele só é visível depois da sua linha.
++ Read it in an `@if` below it :: Right. It is visible after its line and inside the blocks that follow.
+++ Lê-lo num `@if` abaixo dele :: Isso. Ele é visível depois da sua linha e dentro dos blocos seguintes.
+- Read it from the class as `this.left` :: It belongs to the template; the class does not see it.
+-- Lê-lo na classe como `this.left` :: Ele pertence ao template; a classe não o enxerga.
+
+@ at-let quiz medium #ex-3q5w6qpk
+? `planned` changes from 165 to 200 while the page is open. What is `left` the next time the template is checked?
+?? `planned` muda de 165 para 200 com a página aberta. Quanto vale `left` na próxima vez que o template for conferido?
+- 75, because `@let` is computed once :: It is recomputed on every check.
+-- 75, porque o `@let` é calculado uma vez :: Ele é recalculado a cada conferência.
++ 110 :: Right. It is recomputed from the values it reads.
+++ 110 :: Isso. Ele é recalculado a partir dos valores que lê.
+- An error, because `@let` cannot follow a changing value :: It follows it; it is never stale.
+-- Um erro, porque o `@let` não consegue acompanhar um valor que muda :: Ele acompanha; nunca fica desatualizado.
+- 200, the new value of `planned` :: `left` is `planned - done`, so 200 minus 90.
+-- 200, o novo valor de `planned` :: `left` é `planned - done`, então 200 menos 90.
+
+@ at-let quiz hard #ex-4kbx1kqc
+? A value is needed by the template and by a method of the class, and it takes some work to compute. Where does the lesson say it belongs?
+?? Um valor é usado pelo template e por um método da classe, e dá algum trabalho calcular. Onde a aula diz que ele deve ficar?
+- In a `@let`, because templates are faster :: The class cannot read a `@let`.
+-- Num `@let`, porque templates são mais rápidos :: A classe não lê um `@let`.
+- In two `@let` lines, one per use :: The method would still not see it.
+-- Em duas linhas `@let`, uma por uso :: O método continuaria sem vê-lo.
++ In the class, as a `computed` from lesson 6 :: Right. Where the class can use it and a test can check it.
+++ Na classe, como um `computed` da aula 6 :: Isso. Onde a classe pode usá-lo e um teste pode conferi-lo.
+- In the HTML file, as a comment :: A comment computes nothing.
+-- No arquivo HTML, como comentário :: Um comentário não calcula nada.
+
+@ old-directives quiz medium #ex-23t3d9r6
+? Why did the old `*ngIf` need a separate `<ng-template #none>` for its `else`?
+?? Por que o antigo `*ngIf` precisava de um `<ng-template #none>` separado para o `else`?
++ The `else` had to be a template the directive could draw or not :: Right. The `*` wraps an element in a template, and the else needed one too.
+++ O `else` tinha de ser um template que a diretiva desenhasse ou não :: Isso. O `*` envolve um elemento num template, e o else também precisava de um.
+- `*ngIf` could not hold more than one element :: That limit was real, but it is not why `else` was separate.
+-- O `*ngIf` não conseguia conter mais de um elemento :: Esse limite existia, mas não é por isso que o `else` ficava separado.
+- The old compiler read templates from the bottom up :: Templates were never read that way.
+-- O compilador antigo lia templates de baixo para cima :: Templates nunca foram lidos assim.
+- To make the template faster to draw :: It was a consequence of the syntax, not an optimisation.
+-- Para o template desenhar mais rápido :: Era consequência da sintaxe, não uma otimização.
+
+@ old-directives quiz medium #ex-n3734f35
+? The control-flow migration turned `trackBy: byId` into `track byId(i, course)`. What does the lesson suggest doing with that?
+?? A migração de controle de fluxo transformou `trackBy: byId` em `track byId(i, course)`. O que a aula sugere fazer com isso?
+- Nothing: the migration's output is the recommended form :: The lesson calls it correct and not what anybody would write today.
+-- Nada: a saída da migração é a forma recomendada :: A aula a chama de correta e diferente do que alguém escreveria hoje.
+- Revert it, because `@for` cannot call a method in its track :: It can, and the migrated template worked.
+-- Desfazer, porque o `@for` não chama método no track :: Chama, e o template migrado funcionou.
++ Write `track course.id` and delete the method :: Right. The same key, without the indirection.
+++ Escrever `track course.id` e apagar o método :: Isso. A mesma chave, sem a volta.
+- Add `NgFor` back to the imports so both forms work :: The new form needs no import, and nothing uses `NgFor` any more.
+-- Pôr o `NgFor` de volta nos imports para as duas formas funcionarem :: A forma nova não precisa de import, e nada usa mais o `NgFor`.
+
+@ old-directives ordering medium #ex-73d1b036
+? Put the steps the lesson took to migrate the bench in order.
+?? Coloque em ordem os passos que a aula seguiu para migrar o bench.
+> write the template with `*ngIf` and `*ngFor`, and check it works
+>> escrever o template com `*ngIf` e `*ngFor`, e conferir que funciona
+> commit, so the migration's edits stand alone
+>> fazer commit, para as edições da migração ficarem sozinhas
+> run `ng generate @angular/core:control-flow`
+>> rodar `ng generate @angular/core:control-flow`
+> read `git diff`
+>> ler o `git diff`
+
+@ drill quiz medium #ex-r4werhn6
+? A template must show `No sessions this week` when a list is empty and each session otherwise. Which construct does it with one block?
+?? Um template precisa mostrar `No sessions this week` quando uma lista está vazia e cada sessão no caso contrário. Que construção faz isso num bloco só?
+- `@if (list.length) { … } @else { … }` around an `@for` :: That works, with two constructs where one suffices.
+-- `@if (list.length) { … } @else { … }` em volta de um `@for` :: Funciona, com duas construções onde uma basta.
++ `@for` with an `@empty` :: Right. The empty case belongs to the loop.
+++ `@for` com um `@empty` :: Isso. O caso vazio pertence ao laço.
+- `@switch (list.length)` with a case for 0 :: A switch on a count would need a case per number.
+-- `@switch (list.length)` com um case para 0 :: Um switch numa contagem precisaria de um case por número.
+- `@let empty = true;` :: `@let` names a value; it does not repeat anything.
+-- `@let empty = true;` :: O `@let` dá nome a um valor; ele não repete nada.

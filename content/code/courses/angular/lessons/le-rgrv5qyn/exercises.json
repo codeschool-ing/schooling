@@ -1,0 +1,509 @@
+[
+ {
+  "id": "ex-twkrw3jf",
+  "version": 1,
+  "section": "the-hooks",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put these hooks in the order the bench logged them when `Life` was created.",
+  "items": [
+   "`constructor`",
+   "`ngOnChanges`",
+   "`ngOnInit`",
+   "`ngAfterViewInit`"
+  ]
+ },
+ {
+  "id": "ex-13jkghm9",
+  "version": 1,
+  "section": "the-hooks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After `Rename`, which hooks ran again?",
+  "choices": [
+   {
+    "text": "Every hook from `constructor` to `ngAfterViewChecked`, all over again",
+    "correct": false,
+    "why": "The component was not created again; only the per-check hooks ran."
+   },
+   {
+    "text": "`ngOnChanges`, `ngDoCheck` and the two `...Checked` hooks",
+    "correct": true,
+    "why": "Right. The `Init` hooks run once."
+   },
+   {
+    "text": "Only `ngOnChanges`",
+    "correct": false,
+    "why": "The check that followed also ran `ngDoCheck` and the two `...Checked` hooks."
+   },
+   {
+    "text": "`ngOnInit`, because an input changed",
+    "correct": false,
+    "why": "`ngOnInit` runs once, after the first `ngOnChanges`."
+   }
+  ]
+ },
+ {
+  "id": "ex-brpkv0ck",
+  "version": 1,
+  "section": "the-hooks",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why does the lesson warn about code in `ngDoCheck` and the `...Checked` hooks?",
+  "choices": [
+   {
+    "text": "They run before the component's inputs are set",
+    "correct": false,
+    "why": "They run on every check, inputs set or not."
+   },
+   {
+    "text": "They were removed from Angular in version 21",
+    "correct": false,
+    "why": "They exist and ran on the bench."
+   },
+   {
+    "text": "They run on every check, whatever its cause",
+    "correct": true,
+    "why": "Right. In a zone.js default component, after every event anywhere."
+   },
+   {
+    "text": "They cannot read signals, so they go stale",
+    "correct": false,
+    "why": "They can; the concern is how often they run."
+   }
+  ]
+ },
+ {
+  "id": "ex-7z88kz4z",
+  "version": 1,
+  "section": "the-hooks",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each hook with the moment it marks.",
+  "pairs": [
+   {
+    "left": "`ngOnChanges`",
+    "right": "an input was set or changed"
+   },
+   {
+    "left": "`ngOnInit`",
+    "right": "once, after the inputs were first set"
+   },
+   {
+    "left": "`ngAfterViewInit`",
+    "right": "once, after the component's own template was drawn"
+   },
+   {
+    "left": "`ngOnDestroy`",
+    "right": "once, when the component is removed"
+   }
+  ],
+  "right_distractors": [
+   "every time the browser repaints"
+  ]
+ },
+ {
+  "id": "ex-06cepqy3",
+  "version": 1,
+  "section": "constructor-or-init",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Reading a required signal input in the constructor stopped the build with which error?",
+  "choices": [
+   {
+    "text": "`NG0950`, at run time",
+    "correct": false,
+    "why": "That is the run-time error lesson 8's test met; here the compiler caught it first."
+   },
+   {
+    "text": "`NG8118`",
+    "correct": true,
+    "why": "Right. The compiler saw a required input read where it cannot have a value yet."
+   },
+   {
+    "text": "`TS2551`, a misspelt name",
+    "correct": false,
+    "why": "The name was right; the timing was wrong."
+   },
+   {
+    "text": "`NG0100`, a value changing between checks",
+    "correct": false,
+    "why": "That is lesson 7's error, about checks, not construction."
+   }
+  ]
+ },
+ {
+  "id": "ex-58b5vh1c",
+  "version": 1,
+  "section": "constructor-or-init",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does a `computed` that reads an input work even when it is declared as a field?",
+  "choices": [
+   {
+    "text": "It reads nothing until someone reads it",
+    "correct": true,
+    "why": "Right. By then the input is set."
+   },
+   {
+    "text": "Fields are initialised after `ngOnInit`",
+    "correct": false,
+    "why": "Fields are initialised during construction, before any hook."
+   },
+   {
+    "text": "Angular delays every field until the inputs are set",
+    "correct": false,
+    "why": "Only the computed's own work is delayed, because it is lazy."
+   },
+   {
+    "text": "A computed copies the input's default value",
+    "correct": false,
+    "why": "It reads the input when asked; it copies nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-n947th3p",
+  "version": 1,
+  "section": "constructor-or-init",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these is still a fair reason to write `ngOnInit` in new code?",
+  "choices": [
+   {
+    "text": "To read an input into a field once, for the template",
+    "correct": false,
+    "why": "A `computed` does that and stays in step with the input."
+   },
+   {
+    "text": "To call `inject()`",
+    "correct": false,
+    "why": "`inject()` belongs in field initialisers or the constructor."
+   },
+   {
+    "text": "A one-off act that needs the inputs",
+    "correct": true,
+    "why": "Right. An effect would repeat it whenever the input changed."
+   },
+   {
+    "text": "To clean up a timer",
+    "correct": false,
+    "why": "Cleaning up is `DestroyRef`'s job."
+   }
+  ]
+ },
+ {
+  "id": "ex-3a1r0z66",
+  "version": 1,
+  "section": "changes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "An old component has `@Input() minutes = 0`, a field `hours`, and `ngOnChanges` that sets `hours`. What replaces the hook and the field with signal inputs?",
+  "choices": [
+   {
+    "text": "An `effect` that sets an `hours` signal",
+    "correct": false,
+    "why": "That is the copy-into-a-signal mistake lesson 6 warned about."
+   },
+   {
+    "text": "`hours = computed(() => this.minutes() / 60)`",
+    "correct": true,
+    "why": "Right. It follows the input with nothing to keep in step."
+   },
+   {
+    "text": "`ngOnInit`, which runs when the input changes",
+    "correct": false,
+    "why": "`ngOnInit` runs once."
+   },
+   {
+    "text": "A `@let` in the template",
+    "correct": false,
+    "why": "The class would lose the value, and the question is about the class."
+   }
+  ]
+ },
+ {
+  "id": "ex-xma17ba3",
+  "version": 1,
+  "section": "changes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `ngOnChanges` receive?",
+  "choices": [
+   {
+    "text": "Only the new values, without the old ones",
+    "correct": false,
+    "why": "It receives each change's previous and current value."
+   },
+   {
+    "text": "Nothing at all; the hook reads the inputs itself",
+    "correct": false,
+    "why": "It receives a `SimpleChanges` object."
+   },
+   {
+    "text": "A `SimpleChanges`, one entry per changed input",
+    "correct": true,
+    "why": "Right. With `previousValue`, `currentValue` and `firstChange`."
+   },
+   {
+    "text": "The whole component, before and after",
+    "correct": false,
+    "why": "It receives the inputs that changed, not the component."
+   }
+  ]
+ },
+ {
+  "id": "ex-68hk056r",
+  "version": 1,
+  "section": "destroy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After `Remove`, the clock without `DestroyRef` kept logging `tick`. Why?",
+  "choices": [
+   {
+    "text": "The `@if` hides components rather than destroying them",
+    "correct": false,
+    "why": "`@if` destroyed it; `ngOnDestroy` would have run."
+   },
+   {
+    "text": "Angular never knew about the interval",
+    "correct": true,
+    "why": "Right. It was started with a browser API, so stopping it was the component's job."
+   },
+   {
+    "text": "Signals keep their component alive",
+    "correct": false,
+    "why": "The interval did, by holding a reference to it."
+   },
+   {
+    "text": "`look` reloaded the page",
+    "correct": false,
+    "why": "The page stayed loaded; the leak is inside it."
+   }
+  ]
+ },
+ {
+  "id": "ex-ep25446p",
+  "version": 1,
+  "section": "destroy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does the planner need to clean up by hand when a component goes?",
+  "choices": [
+   {
+    "text": "A `resource` request still running when it goes",
+    "correct": false,
+    "why": "A resource ends with its component on its own."
+   },
+   {
+    "text": "An `effect`, created in the constructor",
+    "correct": false,
+    "why": "Effects stop with the component that created them."
+   },
+   {
+    "text": "A listener added with `window.addEventListener`",
+    "correct": true,
+    "why": "Right. A browser API, so the component stops it."
+   },
+   {
+    "text": "A `computed` that reads the session list",
+    "correct": false,
+    "why": "A computed holds no resource that outlives it."
+   }
+  ]
+ },
+ {
+  "id": "ex-dcy1nxby",
+  "version": 1,
+  "section": "destroy",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Inside a component, `inject(___).onDestroy(...)` registers what to run when the component is destroyed.",
+  "blanks": [
+   {
+    "accept": [
+     "DestroyRef"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-9bn58sr3",
+  "version": 1,
+  "section": "after-render",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the constructor, `document.querySelector('app-bench p')` found nothing. In `afterNextRender`, the paragraph was 18 pixels tall. What changed in between?",
+  "choices": [
+   {
+    "text": "The browser loaded the stylesheet",
+    "correct": false,
+    "why": "The paragraph did not exist at all in the constructor, styled or not."
+   },
+   {
+    "text": "Angular drew the template into the DOM",
+    "correct": true,
+    "why": "Right. `afterNextRender` runs after that write."
+   },
+   {
+    "text": "The `viewChild` query found the paragraph",
+    "correct": false,
+    "why": "The query found it because it now existed, which is the real change."
+   },
+   {
+    "text": "The component was checked twice in development mode",
+    "correct": false,
+    "why": "The second check changes nothing in the DOM."
+   }
+  ]
+ },
+ {
+  "id": "ex-hzwezb9b",
+  "version": 1,
+  "section": "after-render",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why should reading `offsetHeight` not be done in a `computed` or a template?",
+  "choices": [
+   {
+    "text": "`offsetHeight` is not available in Angular",
+    "correct": false,
+    "why": "It is a DOM property, available once the element exists."
+   },
+   {
+    "text": "Computed signals cannot return numbers",
+    "correct": false,
+    "why": "They return anything."
+   },
+   {
+    "text": "It forces a layout during a check",
+    "correct": true,
+    "why": "Right. Layout belongs after rendering, which is what `afterNextRender` is for."
+   },
+   {
+    "text": "It runs only on the server",
+    "correct": false,
+    "why": "It runs only in the browser."
+   }
+  ]
+ },
+ {
+  "id": "ex-vhdqr39s",
+  "version": 1,
+  "section": "after-render",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In which situation does lesson 23 make `afterNextRender` matter more?",
+  "choices": [
+   {
+    "text": "When the page has no stylesheet loaded yet",
+    "correct": false,
+    "why": "Styles are not the issue; the server is."
+   },
+   {
+    "text": "When the page is first drawn on a server",
+    "correct": true,
+    "why": "Right. There is no layout or focus there, and it runs only in the browser."
+   },
+   {
+    "text": "When every component in the tree is OnPush",
+    "correct": false,
+    "why": "OnPush does not change when rendering happens."
+   },
+   {
+    "text": "When tests run in jsdom",
+    "correct": false,
+    "why": "Lesson 23 is about server-side rendering, not tests."
+   }
+  ]
+ },
+ {
+  "id": "ex-5jcz3r2c",
+  "version": 1,
+  "section": "which-you-need",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each job with the tool the lesson recommends for new code.",
+  "pairs": [
+   {
+    "left": "react to an input changing",
+    "right": "a `computed`"
+   },
+   {
+    "left": "clean up a timer",
+    "right": "`DestroyRef.onDestroy`"
+   },
+   {
+    "left": "focus an element once it is drawn",
+    "right": "`afterNextRender`"
+   },
+   {
+    "left": "use projected content",
+    "right": "`contentChild()`"
+   }
+  ],
+  "right_distractors": [
+   "`ngDoCheck`"
+  ]
+ },
+ {
+  "id": "ex-xmt0cvxv",
+  "version": 1,
+  "section": "which-you-need",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many lifecycle hooks does the planner have at the end of this lesson?",
+  "value": 0,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-v668s30v",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An old component subscribes to a timer in `ngOnInit` and unsubscribes in `ngOnDestroy`, forty lines apart. What does the lesson suggest instead?",
+  "choices": [
+   {
+    "text": "Moving both into `ngAfterViewInit`",
+    "correct": false,
+    "why": "The view is not involved, and the distance remains."
+   },
+   {
+    "text": "Letting the timer run, since Angular stops it",
+    "correct": false,
+    "why": "Angular does not know about timers started with browser APIs."
+   },
+   {
+    "text": "Start it in the constructor and register its stop with `DestroyRef` beside it",
+    "correct": true,
+    "why": "Right. Setup and cleanup in one place."
+   },
+   {
+    "text": "An `effect` that restarts it on every change",
+    "correct": false,
+    "why": "The timer has no signal to follow; an effect adds nothing."
+   }
+  ]
+ }
+]

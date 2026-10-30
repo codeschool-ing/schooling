@@ -805,6 +805,12 @@ var allowedOutsideTheFont = map[rune]string{
 		"follows it, and a capture is pasted byte for byte",
 	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
 		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
+	// Capacitor's `cap` command times every step, and a step under a millisecond is
+	// printed in microseconds with the Greek letter rather than the micro sign.
+	'\u03bc': "Capacitor's `cap` command ends the line of a step that took under a millisecond " +
+		"with it (`✔ copy android in 463.66μs`). The interface declares no Greek for the mono " +
+		"face. It is the last character on its line, so nothing is aligned to what follows it, " +
+		"and which steps take under a millisecond changes from one run to the next",
 	// Vite's own tools. `npm create vite` draws its steps on a rail of box-drawing
 	// characters, which the terminal cut carries, with a diamond on each step it
 	// reports; and the dev server opens each address it prints with an arrow.
@@ -840,6 +846,10 @@ var allowedOutsideTheFont = map[rune]string{
 		"a fraction of a cell; the alternative is a table that is not the one the build printed",
 	'\u25d0': "`next build` marks a partially prerendered route with it, in the same table and " +
 		"legend as U+25CB, with the same consequence. IBM Plex Mono has no U+25D0 at all",
+	// And Next.js's own banner, which opens `next dev`, `next build` and `next start`.
+	'\u25b2': "Next.js opens the first line of `next dev`, `next build` and `next start` with it " +
+		"(`▲ Next.js 16.4.3`). IBM Plex Mono has no U+25B2 at all. It opens a line and nothing is " +
+		"aligned to what follows it",
 }
 
 // coverage is the set of code points the interface declares a face for.

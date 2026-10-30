@@ -1,0 +1,479 @@
+{
+ "ex-wjcqnq60": {
+  "prompt": "O `ng new` parou com `Cannot read properties of null (reading 'edgesOut')`. O que estava errado?",
+  "choices": [
+   {
+    "text": "Um arquivo que o `ng new` escreveu tinha um erro de sintaxe que o npm não leu",
+    "why": "Todos os arquivos foram escritos, e nada neles foi lido pela etapa que quebrou."
+   },
+   {
+    "text": "Um defeito do próprio npm 10.9.4",
+    "why": "Isso. Ele tropeça numa cadeia de dependências peer opcionais; o npm 11 não."
+   },
+   {
+    "text": "O registro estava inalcançável, e o npm relatou isso mal",
+    "why": "Uma falha de rede tem os próprios códigos, `ECONNREFUSED` e afins, e a lista de pacotes já tinha sido baixada."
+   },
+   {
+    "text": "O Angular 21 não suporta npm, só pnpm",
+    "why": "O próprio campo `packageManager` do projeto diz npm."
+   }
+  ]
+ },
+ "ex-cvxcm9ge": {
+  "prompt": "O `legacy-peer-deps=true` impede o npm de instalar dependências peer por conta própria. Por que isso é seguro neste projeto?",
+  "choices": [
+   {
+    "text": "Dependências peer só são usadas pelos testes, nunca pela aplicação",
+    "why": "Algumas são necessárias em tempo de execução; o ponto é que este projeto as lista."
+   },
+   {
+    "text": "O npm 10.9.4 não suporta dependências peer",
+    "why": "Suporta; ele quebrou ao resolvê-las."
+   },
+   {
+    "text": "Porque o `save-exact` instala as peers no lugar delas",
+    "why": "O `save-exact` decide como uma versão é anotada, não o que é instalado."
+   },
+   {
+    "text": "Todo pacote de que o projeto precisa já está no `package.json` dele",
+    "why": "Isso. Sem nada para o npm acrescentar, a configuração só pula a etapa que quebra."
+   }
+  ]
+ },
+ "ex-ebt5w03z": {
+  "prompt": "No `package.json`, o que `\"@angular/core\": \"^21.2.0\"` permite que `\"21.2.25\"` não permite?",
+  "choices": [
+   {
+    "text": "Qualquer 21 mais novo",
+    "why": "Isso. Duas instalações com uma semana de diferença podem receber código diferente."
+   },
+   {
+    "text": "Qualquer versão mais velha, até a 21.0.0, se a mais nova falhar",
+    "why": "O npm nunca recua para uma versão mais velha."
+   },
+   {
+    "text": "A versão 22, quando for lançada",
+    "why": "O acento circunflexo para antes do próximo major."
+   },
+   {
+    "text": "Nada: o npm trata os dois igual desde a versão 7",
+    "why": "São faixas diferentes, e o npm as trata de modo diferente."
+   }
+  ]
+ },
+ "ex-pcfxj798": {
+  "prompt": "Uma colega clona o planner num segundo computador. Que comando dá a ela exatamente o `node_modules` que você tem?",
+  "choices": [
+   {
+    "text": "`npm install`, que lê o `package.json` e pega o mais novo que combina",
+    "why": "Com versões exatas no `package.json` ele pegaria essas, mas os pacotes que elas trazem ainda seriam escolhidos naquele dia."
+   },
+   {
+    "text": "`npm ci`, que o reconstrói a partir do `package-lock.json`",
+    "why": "Isso. O lockfile lista todo pacote, direto ou não."
+   },
+   {
+    "text": "`npx ng new planner`, rodado de novo na mesma pasta",
+    "why": "Isso escreveria um projeto novo por cima do antigo."
+   },
+   {
+    "text": "Só o `git clone`, já que o `node_modules` está no repositório",
+    "why": "O `.gitignore` deixa o `node_modules` fora do repositório."
+   }
+  ]
+ },
+ "ex-pwqghxde": {
+  "prompt": "Quantos megabytes o `du -sh node_modules` informou para o projeto novo?"
+ },
+ "ex-686kajf4": {
+  "prompt": "Associe cada arquivo ao que ele faz.",
+  "pairs": [
+   {
+    "left": "`angular.json`",
+    "right": "o que `ng build`, `ng serve` e `ng test` fazem"
+   },
+   {
+    "left": "`src/main.ts`",
+    "right": "o primeiro código que roda, que inicia a aplicação"
+   },
+   {
+    "left": "`src/app/app.config.ts`",
+    "right": "os providers que a aplicação pode receber"
+   },
+   {
+    "left": "`src/index.html`",
+    "right": "a única página que o navegador pede"
+   }
+  ],
+  "right_distractors": [
+   "a lista de endereços que o router conhece"
+  ]
+ },
+ "ex-xspw2b4h": {
+  "prompt": "O `src/index.html` contém `<app-root></app-root>`. De onde vem o nome `app-root`?",
+  "choices": [
+   {
+    "text": "É um elemento HTML que todo navegador conhece",
+    "why": "Nenhum navegador conhece esse elemento; ele não quer dizer nada até o Angular desenhar ali."
+   },
+   {
+    "text": "Do `angular.json`, que dá nome ao elemento raiz da página",
+    "why": "O `angular.json` nomeia arquivos e builders, não elementos."
+   },
+   {
+    "text": "Do `selector` do componente raiz, o `App`",
+    "why": "Isso. O `bootstrapApplication(App, ...)` desenha o `App` onde o seletor dele aparece."
+   },
+   {
+    "text": "Do nome do projeto, `planner`, com o prefixo",
+    "why": "Isso daria `app-planner`; o nome é o do seletor."
+   }
+  ]
+ },
+ "ex-6b9yd2n4": {
+  "prompt": "Uma página fica em branco no navegador, e o terminal mostra um build bem-sucedido. O código de qual arquivo teria dito o motivo, e onde?",
+  "choices": [
+   {
+    "text": "O `src/main.ts`, cujo `catch` imprime o erro no console do navegador",
+    "why": "Isso. Um build pode dar certo e a inicialização ainda falhar; o console é o primeiro lugar a olhar."
+   },
+   {
+    "text": "O `angular.json`, que escreve erros de inicialização no terminal do servidor de desenvolvimento",
+    "why": "O servidor de desenvolvimento relata erros de build; uma falha no navegador é relatada no navegador."
+   },
+   {
+    "text": "O `app.spec.ts`, cujo segundo teste falha quando a página está em branco",
+    "why": "Um teste roda no jsdom quando você roda o `ng test`, não quando uma página abre."
+   },
+   {
+    "text": "O `src/index.html`, que mostra uma mensagem dentro do `<app-root>`",
+    "why": "Ele não mostra nada ali; o elemento fica vazio até o Angular desenhar."
+   }
+  ]
+ },
+ "ex-e92pf6a7": {
+  "prompt": "Você salva o `public/courses.json` com o `ng serve` rodando, e o `curl` em `/courses.json` devolve o começo do `index.html`. Por quê?",
+  "choices": [
+   {
+    "text": "O JSON tem um erro de sintaxe, então o servidor manda a página no lugar",
+    "why": "O mesmo arquivo foi servido certo depois de reiniciar."
+   },
+   {
+    "text": "Ele lê o `public/` quando inicia, e responde endereços desconhecidos com o `index.html`",
+    "why": "Isso. Reinicie e o arquivo aparece."
+   },
+   {
+    "text": "O `curl` pede HTML se você não disser que quer JSON",
+    "why": "O servidor decide pelo caminho, e o caminho foi o mesmo nas duas vezes."
+   },
+   {
+    "text": "Arquivos em `public/` só são servidos pelo `ng build`",
+    "why": "Os dois comandos copiam o `public/`; o servidor de desenvolvimento só precisava reiniciar."
+   }
+  ]
+ },
+ "ex-x5j9868m": {
+  "prompt": "Depois que você salvou o `app.html`, o servidor de desenvolvimento imprimiu `Component update sent to client(s)`. O que aconteceu na página aberta?",
+  "choices": [
+   {
+    "text": "Ela recarregou do zero, perdendo o estado que tinha",
+    "why": "O ponto da mensagem é justamente que ela não recarregou."
+   },
+   {
+    "text": "Nada até você apertar F5",
+    "why": "A atualização chega sozinha à página, pela conexão do servidor de desenvolvimento."
+   },
+   {
+    "text": "Ela trocou o template novo no lugar, sem recarregar",
+    "why": "Isso. Só o componente alterado foi reconstruído e enviado."
+   },
+   {
+    "text": "Ela mostrou um aviso pedindo para você aceitar a mudança",
+    "why": "Não há aviso; a mudança simplesmente aparece."
+   }
+  ]
+ },
+ "ex-aag1rtdw": {
+  "prompt": "O `ps` listou a memória residente do servidor de desenvolvimento em kilobytes. Arredondando para a centena de megabytes mais próxima, quantos megabytes são?",
+  "hint": "A primeira linha, `ng serve (planner)`."
+ },
+ "ex-855xbr1n": {
+  "prompt": "Por que o `look` imprime `[vite] connecting...` contra o servidor de desenvolvimento, e não contra os arquivos do build?",
+  "choices": [
+   {
+    "text": "O Vite é o servidor web de produção, e o servidor de desenvolvimento o imita",
+    "why": "É o contrário: o Vite é a base do servidor de desenvolvimento."
+   },
+   {
+    "text": "O `look` se conecta ao Vite para ler o texto da página",
+    "why": "O `look` lê a página pelo Chromium; a mensagem é o console da própria página."
+   },
+   {
+    "text": "É a conexão de recarregamento ao vivo do servidor de desenvolvimento, que um build de produção não tem",
+    "why": "Isso. O build de produção também tira a mensagem do modo de desenvolvimento."
+   },
+   {
+    "text": "O build de produção também imprime, mas só depois do primeiro clique",
+    "why": "O build de produção não imprimiu nada no console."
+   }
+  ]
+ },
+ "ex-3d2kn51w": {
+  "prompt": "O `npx ng generate component week-summary` escreveu uma classe. Como ela se chama?",
+  "choices": [
+   {
+    "text": "`WeekSummaryComponent`",
+    "why": "Esse é o nome antigo, do guia de estilo de 2016. Este projeto usa o novo."
+   },
+   {
+    "text": "`WeekSummary`",
+    "why": "Isso. O seletor é `app-week-summary` e os arquivos são `week-summary.*`."
+   },
+   {
+    "text": "`AppWeekSummary`",
+    "why": "O prefixo `app` vai no seletor, não na classe."
+   },
+   {
+    "text": "`week-summary`",
+    "why": "Esse é o nome do arquivo e da pasta; nome de classe não pode ter hífen."
+   }
+  ]
+ },
+ "ex-rgcwb4na": {
+  "prompt": "Por que todo seletor que a CLI gera começa com `app-`?",
+  "choices": [
+   {
+    "text": "Os navegadores só desenham elementos personalizados cujo nome começa com `app-`",
+    "why": "Um elemento personalizado precisa de um hífen em algum lugar; o prefixo é uma convenção do Angular, definida pelo `ng new`."
+   },
+   {
+    "text": "Para evitar colisão com outros elementos",
+    "why": "Isso. É o prefixo do projeto, escolhido quando o projeto foi criado."
+   },
+   {
+    "text": "Porque `app` é o nome do componente raiz",
+    "why": "A raiz é o `App`, e o prefixo seria `app` qualquer que fosse o nome dela."
+   },
+   {
+    "text": "Ele marca o componente como standalone",
+    "why": "Standalone é uma propriedade do decorator, e não tem a ver com o seletor."
+   }
+  ]
+ },
+ "ex-frp7z32d": {
+  "prompt": "Para ver os arquivos que um schematic escreveria sem escrevê-los, acrescente a opção `--___`.",
+  "blanks": [
+   {
+    "accept": [
+     "dry-run"
+    ]
+   }
+  ]
+ },
+ "ex-bk8m7g6k": {
+  "prompt": "O build de produção chamou o script de `main-J4WVDBNH.js`. O que decide os oito caracteres depois de `main-`?",
+  "choices": [
+   {
+    "text": "A data e a hora do build, para dois builds nunca terem o mesmo nome",
+    "why": "Dois builds do mesmo código recebem o mesmo nome."
+   },
+   {
+    "text": "Um valor aleatório escolhido a cada build, para driblar caches",
+    "why": "Nada aleatório: o nome precisa ser reproduzível para o cache funcionar."
+   },
+   {
+    "text": "Os bytes do próprio arquivo",
+    "why": "Isso. Mude uma linha e o nome muda, então um arquivo antigo em cache nunca é confundido com o novo."
+   },
+   {
+    "text": "A versão do `package.json`, codificada",
+    "why": "Todo build da versão 0.0.0 teria então o mesmo nome."
+   }
+  ]
+ },
+ "ex-8jm5q7zs": {
+  "prompt": "O servidor do Python mandou a página 404 dele para `/courses/git`. O que um host de aplicação Angular precisa fazer com um endereço assim?",
+  "choices": [
+   {
+    "text": "Redirecioná-lo para `/`, para a aplicação começar na primeira tela",
+    "why": "A aplicação nunca veria o endereço que a pessoa pediu."
+   },
+   {
+    "text": "Devolver 404, como faz, e deixar o navegador tentar de novo",
+    "why": "Um navegador não tenta de novo um 404, e a aplicação nunca carrega."
+   },
+   {
+    "text": "Gerar um arquivo por endereço antes, o que o `ng build` não faz",
+    "why": "Servir o `index.html` basta; a pré-renderização da aula 23 é outro assunto."
+   },
+   {
+    "text": "Respondê-lo com o `index.html` e deixar o código rotear",
+    "why": "Isso. O servidor de desenvolvimento já faz isso, e todo serviço de hospedagem tem uma configuração para isso."
+   }
+  ]
+ },
+ "ex-ceaq6z5b": {
+  "prompt": "Quantos kilobytes o build de produção estimou que atravessariam a rede nos arquivos iniciais do planner?"
+ },
+ "ex-85w03kan": {
+  "prompt": "Um budget `initial` tem `maximumWarning: '500kB'` e `maximumError: '1MB'`. Os arquivos iniciais chegam a 700 kB. O que acontece?",
+  "choices": [
+   {
+    "text": "O build dá certo e avisa",
+    "why": "Isso. Passou do aviso e ficou abaixo do erro."
+   },
+   {
+    "text": "O build falha, porque 700 kB passa do primeiro limite",
+    "why": "Só o `maximumError` derruba um build."
+   },
+   {
+    "text": "Nada, porque budgets só são conferidos pelo `ng serve`",
+    "why": "Budgets pertencem à configuração de build de produção."
+   },
+   {
+    "text": "A CLI divide o arquivo em dois para ficar abaixo de 500 kB",
+    "why": "A CLI informa tamanhos; ela não reorganiza o código para cumpri-los."
+   }
+  ]
+ },
+ "ex-4abc0mqe": {
+  "prompt": "O teste `should render title` falhou com `Expected: \"Hello, planner\"` e `Received: \"Study planner\"`. Quem estava errado?",
+  "choices": [
+   {
+    "text": "O template, que devia ter mantido o título de boas-vindas",
+    "why": "O título foi mudado de propósito; o teste descrevia a página antiga."
+   },
+   {
+    "text": "O teste, que ainda esperava a página que o `ng new` escreveu",
+    "why": "Isso. Um teste falhando é uma discordância, e aqui a página era o lado desejado."
+   },
+   {
+    "text": "O jsdom, que não consegue ler títulos",
+    "why": "O jsdom leu o título; o valor que recebeu está no relatório."
+   },
+   {
+    "text": "O Vitest, porque o `toContain` não funciona com texto",
+    "why": "O `toContain` funciona com strings; ele comparou e achou uma diferença."
+   }
+  ]
+ },
+ "ex-w9tgt63z": {
+  "prompt": "Por que as transcrições rodam `ng test --watch=false`?",
+  "choices": [
+   {
+    "text": "O modo watch só funciona num navegador de desktop",
+    "why": "O modo watch funciona em qualquer lugar; ele só nunca termina."
+   },
+   {
+    "text": "Para o comando terminar, coisa de que uma transcrição precisa",
+    "why": "Isso. Enquanto você trabalha, deixá-lo observando é o jeito útil."
+   },
+   {
+    "text": "Porque o modo watch pula os testes que falharam antes",
+    "why": "O modo watch reroda os testes afetados; ele não pula nada."
+   },
+   {
+    "text": "Sem ele, o `ng test` roda o servidor de desenvolvimento",
+    "why": "Ele roda os testes de qualquer jeito; a opção só decide se ele fica."
+   }
+  ]
+ },
+ "ex-n5sxy865": {
+  "prompt": "O `ng update @angular/core@22 @angular/cli@22` respondeu primeiro `Repository is not clean`. Por que ele insiste num repositório limpo?",
+  "choices": [
+   {
+    "text": "Porque ele faz push para o remoto depois de atualizar",
+    "why": "Ele nunca faz push de nada."
+   },
+   {
+    "text": "Porque os arquivos não commitados seriam apagados pela atualização",
+    "why": "Ele não apaga nada; ele edita."
+   },
+   {
+    "text": "Para o próximo diff mostrar só as migrações",
+    "why": "Isso. Aí você consegue ler exatamente o que a atualização mudou."
+   },
+   {
+    "text": "O git é como ele baixa a versão nova",
+    "why": "Os pacotes vêm do registro do npm."
+   }
+  ]
+ },
+ "ex-1bxacmay": {
+  "prompt": "Coloque em ordem o que acontece quando você roda `ng update @angular/core@22 @angular/cli@22` num repositório limpo com um Node novo o bastante.",
+  "items": [
+   "ele confere se o repositório não tem mudanças não commitadas",
+   "ele instala uma cópia temporária da CLI da versão 22",
+   "essa cópia confere a versão do Node",
+   "os pacotes vão para o 22 e as migrações editam o seu código"
+  ]
+ },
+ "ex-vqdf93rt": {
+  "prompt": "O seu time quer o Angular 22. Segundo esta aula, onde é feita a primeira mudança?",
+  "choices": [
+   {
+    "text": "No `package.json`, editando as versões à mão para 22",
+    "why": "Versões editadas à mão pulam as migrações, e a CLI 22 ainda recusaria o Node."
+   },
+   {
+    "text": "No Node da trilha, que precisa chegar ao 22.22.3",
+    "why": "Isso. A CLI recusa antes de mudar qualquer coisa, então o projeto não consegue ir primeiro."
+   },
+   {
+    "text": "No `angular.json`, cujos nomes de builder carregam a versão",
+    "why": "Os builders não têm versão no nome."
+   },
+   {
+    "text": "No `.npmrc`, tirando o `legacy-peer-deps`",
+    "why": "Essa configuração é sobre o defeito do npm, não sobre a versão do Angular."
+   }
+  ]
+ },
+ "ex-09eydc0y": {
+  "prompt": "Quais destes arquivos pertencem ao repositório git do planner? Escolha todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "`package-lock.json`",
+    "why": "Isso. É a partir dele que o `npm ci` reconstrói."
+   },
+   {
+    "text": "`.npmrc`",
+    "why": "Isso. Sem ele, o próximo `npm install` quebra de novo."
+   },
+   {
+    "text": "`node_modules/`",
+    "why": "Ele sempre pode ser reconstruído, e o `.gitignore` o deixa de fora."
+   },
+   {
+    "text": "`dist/`",
+    "why": "A saída do build é refeita a partir do código; o `.gitignore` a deixa de fora."
+   },
+   {
+    "text": "`public/courses.json`",
+    "why": "Isso. Ele é código-fonte: os dados do planner."
+   }
+  ]
+ },
+ "ex-rc9zspg4": {
+  "prompt": "Você quer saber se a sua mudança quebrou algo, e depois vê-la num navegador. Que par de comandos, em que ordem?",
+  "choices": [
+   {
+    "text": "`ng build`, depois `ng update`",
+    "why": "Nenhum dos dois diz se o comportamento quebrou, e o `ng update` muda versões."
+   },
+   {
+    "text": "`ng generate`, depois `ng serve`",
+    "why": "O `ng generate` escreve arquivos novos; ele não confere nada."
+   },
+   {
+    "text": "`ng test`, depois `ng serve`",
+    "why": "Isso. Os testes respondem a primeira pergunta, e o servidor de desenvolvimento a segunda."
+   },
+   {
+    "text": "`ng serve`, depois `ng new`",
+    "why": "O `ng new` começa outro projeto."
+   }
+  ]
+ }
+}

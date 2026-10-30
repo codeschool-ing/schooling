@@ -1,0 +1,219 @@
+# Lesson 8: component communication
+
+@ inputs quiz easy #ex-x26g3bc4
+? `WeekSummary` declares `readonly planned = input.required<number>()`. What happens if a template writes `<app-week-summary />` without `[planned]`?
+?? O `WeekSummary` declara `readonly planned = input.required<number>()`. O que acontece se um template escrever `<app-week-summary />` sem `[planned]`?
+- The summary shows `undefined minutes planned` :: That is what `.required` exists to prevent.
+-- O resumo mostra `undefined minutes planned` :: É isso que o `.required` existe para impedir.
++ The build fails :: Right. A required input must be bound where the component is used.
+++ O build falha :: Isso. Um input obrigatório precisa ser ligado onde o componente é usado.
+- `planned` falls back to 0 :: Only `input(0)`, with a default, falls back; a required one has none.
+-- O `planned` cai para 0 :: Só o `input(0)`, com valor padrão, cai para um valor; um obrigatório não tem nenhum.
+- The summary loads the number from the file itself :: The summary no longer knows about the file.
+-- O resumo carrega o número do arquivo sozinho :: O resumo não sabe mais do arquivo.
+
+@ inputs quiz medium #ex-fq81de0p
+? After the week passed its numbers down as inputs, how many requests for `/courses.json` did the page make?
+?? Depois que a semana passou os números como inputs, quantas requisições de `/courses.json` a página fez?
+- Two, one per component, as in lesson 6 :: The summary stopped loading the file.
+-- Duas, uma por componente, como na aula 6 :: O resumo parou de carregar o arquivo.
++ One :: Right. Only the week loads it now.
+++ Uma :: Isso. Só a semana carrega agora.
+- None, because inputs are filled at build time :: Inputs are set while the page runs; the week still had to load.
+-- Nenhuma, porque inputs são preenchidos na hora do build :: Inputs são definidos com a página rodando; a semana ainda precisou carregar.
+- Three, one per course card :: The cards receive their course; they load nothing.
+-- Três, uma por cartão de curso :: Os cartões recebem o curso; eles não carregam nada.
+
+@ inputs quiz medium #ex-dq15b8ep
+? Why are the inputs `readonly` but not `protected`?
+?? Por que os inputs são `readonly` mas não `protected`?
+- `protected` would hide them from the component's own template :: The own template reads `protected` fields fine.
+-- O `protected` os esconderia do próprio template do componente :: O próprio template lê campos `protected` sem problema.
+- Signals cannot be `protected` :: They can; the planner's computed signals are.
+-- Signals não podem ser `protected` :: Podem; os computed do planner são.
++ The parent's template sets them, so they are public :: Right. They are part of the component's face to its users.
+++ O template do pai os define, então são públicos :: Isso. Eles fazem parte da face do componente para quem o usa.
+- `readonly` and `protected` cannot be combined :: The planner combines them on almost every field.
+-- `readonly` e `protected` não podem ser combinados :: O planner os combina em quase todo campo.
+
+@ inputs cloze medium #ex-0abh64zp
+? A parent passes a value to a child's input by writing the input's name, in the child's tag, inside square ___.
+?? Um pai passa um valor ao input de um filho escrevendo o nome do input, na tag do filho, entre ___.
+= brackets
+== colchetes
+
+@ the-course-page quiz medium #ex-q48rkf7x
+? `<app-course-page courseId="javascript" />` has no brackets. What does `courseId` receive?
+?? `<app-course-page courseId="javascript" />` não tem colchetes. O que o `courseId` recebe?
++ The text `javascript` :: Right. Without brackets, the value is a plain string.
+++ O texto `javascript` :: Isso. Sem colchetes, o valor é uma string simples.
+- The value of a field called `javascript` :: That is what `[courseId]="javascript"` would read, and there is no such field.
+-- O valor de um campo chamado `javascript` :: Isso é o que `[courseId]="javascript"` leria, e esse campo não existe.
+- Nothing until the router sets it in lesson 17 :: The attribute sets it now; the router takes over later.
+-- Nada até o router defini-lo na aula 17 :: O atributo o define agora; o router assume depois.
+- A build error, because inputs need brackets :: Brackets are for expressions; a constant string needs none.
+-- Um erro de build, porque inputs precisam de colchetes :: Colchetes são para expressões; uma string constante não precisa.
+
+@ the-course-page quiz hard #ex-b38zxvyj
+? In the error state, why must the template check `data.error()` before reading `course()`?
+?? No estado de erro, por que o template precisa conferir `data.error()` antes de ler `course()`?
+- `course()` returns `undefined` in that state, which hides the error :: It does not return `undefined`: reading the value throws.
+-- O `course()` devolve `undefined` nesse estado, o que esconde o erro :: Ele não devolve `undefined`: ler o valor lança um erro.
++ Because `value()` throws when the resource failed :: Right. The test of the App failed exactly this way before the branch was added.
+++ Porque o `value()` lança erro quando o resource falhou :: Isso. O teste do App falhou exatamente assim antes de o ramo ser acrescentado.
+- Because `@if` branches must be in alphabetical order :: Order matters for meaning, not alphabet.
+-- Porque os ramos do `@if` precisam estar em ordem alfabética :: A ordem importa pelo sentido, não pelo alfabeto.
+- Because `error()` resets the resource :: Reading `error()` changes nothing.
+-- Porque o `error()` reinicia o resource :: Ler o `error()` não muda nada.
+
+@ the-course-page quiz medium #ex-fs1kjbdn
+? `sessions` uses `.filter(…).sort(…)` on the resource's array. Why does that not break lesson 6's rule about changing a signal's value in place?
+?? O `sessions` usa `.filter(…).sort(…)` no array do resource. Por que isso não quebra a regra da aula 6 sobre mudar o valor de um signal no lugar?
+- `sort` never changes the array it is called on :: It does; that is why the order of calls matters.
+-- O `sort` nunca muda o array em que é chamado :: Muda; é por isso que a ordem das chamadas importa.
++ `filter` returns a new array, and `sort` reorders that one :: Right. The array in the resource is untouched.
+++ O `filter` devolve um array novo, e o `sort` reordena esse :: Isso. O array do resource fica intacto.
+- Arrays inside a resource are frozen by Angular :: Angular freezes nothing; the code has to avoid it.
+-- Arrays dentro de um resource são congelados pelo Angular :: O Angular não congela nada; o código é que precisa evitar.
+- A computed may change what it reads :: A computed must not change anything it reads.
+-- Um computed pode mudar o que lê :: Um computed não deve mudar nada do que lê.
+
+@ outputs quiz medium #ex-wcsvdz2h
+? In `(toggled)="toggle($event.id, $event.done)"` on `<app-session-list>`, what is `$event`?
+?? Em `(toggled)="toggle($event.id, $event.done)"` no `<app-session-list>`, o que é o `$event`?
+- The DOM `change` event of the checkbox :: That event stayed inside the row; the list emitted its own value.
+-- O evento `change` do DOM do checkbox :: Esse evento ficou dentro da linha; a lista emitiu o próprio valor.
+- The session object that was ticked :: The list emitted an id and a boolean, not the session.
+-- O objeto da sessão que foi marcada :: A lista emitiu um id e um booleano, não a sessão.
++ The value the list passed to `emit` :: Right. For a component's output, `$event` is whatever was emitted.
+++ O valor que a lista passou ao `emit` :: Isso. Para o output de um componente, o `$event` é o que foi emitido.
+- A copy of the list's inputs :: Inputs do not travel back up.
+-- Uma cópia dos inputs da lista :: Inputs não sobem de volta.
+
+@ outputs quiz hard #ex-9b4wb2qw
+? Why does `SessionRow` emit `toggled` instead of setting `session().done = true` itself?
+?? Por que o `SessionRow` emite `toggled` em vez de definir `session().done = true` ele mesmo?
+- An input cannot be read inside an event handler :: The handler reads it; the point is who changes the data.
+-- Um input não pode ser lido dentro de um handler de evento :: O handler o lê; o ponto é quem muda os dados.
+- `done` is a private field of `Session` :: `Session` is an interface with public fields.
+-- O `done` é um campo privado do `Session` :: O `Session` é uma interface com campos públicos.
++ The data belongs to the page, which decides :: Right. The row reports; the owner changes, with a new value.
+++ Os dados pertencem à página, que decide :: Isso. A linha informa; o dono muda, com um valor novo.
+- Emitting is faster than assigning :: Speed is not the reason.
+-- Emitir é mais rápido que atribuir :: Velocidade não é o motivo.
+
+@ outputs quiz medium #ex-z07cacns
+? After the 24th's session was ticked on the course page, the week still said `90 done`. Why?
+?? Depois que a sessão do dia 24 foi marcada na página do curso, a semana continuou dizendo `90 done`. Por quê?
+- The week only recomputes once a day :: It recomputes when its own data changes, and its data did not.
+-- A semana só recalcula uma vez por dia :: Ela recalcula quando os próprios dados mudam, e os dela não mudaram.
+- OnPush stopped the week from being checked :: OnPush skips what nothing marked, and nothing changed the week's data.
+-- O OnPush impediu a semana de ser conferida :: O OnPush pula o que nada marcou, e nada mudou os dados da semana.
++ The week has its own copy of the data :: Right. Two owners of one truth; lesson 11 gives the data a single owner.
+++ A semana tem a própria cópia dos dados :: Isso. Dois donos de uma verdade; a aula 11 dá aos dados um único dono.
+- The change was only saved to the server :: There is no server yet; the change lived in the page's resource.
+-- A mudança só foi salva no servidor :: Ainda não há servidor; a mudança ficou no resource da página.
+
+@ outputs matching medium #ex-by74567j
+? Match each declaration with what it is for.
+?? Associe cada declaração ao que ela faz.
+< `input.required<Session>()` :: data the parent must hand down
+<< `input.required<Session>()` :: dados que o pai precisa passar
+< `output<boolean>()` :: news the component announces upwards
+<< `output<boolean>()` :: notícias que o componente anuncia para cima
+< `model(30)` :: a value passed down that the child may change
+<< `model(30)` :: um valor passado para baixo que o filho pode mudar
+< `viewChild.required('note')` :: an element of the component's own template
+<< `viewChild.required('note')` :: um elemento do próprio template do componente
+x a value worked out from other signals
+xx um valor calculado a partir de outros signals
+
+@ model quiz medium #ex-vke1yb7a
+? `[(value)]="minutes"` on the stepper is shorthand for what?
+?? `[(value)]="minutes"` no stepper é abreviação de quê?
+- `[value]="minutes()"` alone, read twice :: That would only pass the value down.
+-- Só `[value]="minutes()"`, lido duas vezes :: Isso só passaria o valor para baixo.
++ `[value]="minutes()"` plus `(valueChange)="minutes.set($event)"` :: Right. `model` declares the `valueChange` output for you.
+++ `[value]="minutes()"` mais `(valueChange)="minutes.set($event)"` :: Isso. O `model` declara o output `valueChange` para você.
+- `(value)="minutes"`, an output only :: The value also goes down; that is the first half.
+-- `(value)="minutes"`, só um output :: O valor também desce; essa é a primeira metade.
+- A `@let` that copies `minutes` :: `@let` is read-only and local to the template.
+-- Um `@let` que copia `minutes` :: O `@let` é só de leitura e local ao template.
+
+@ model numeric easy #ex-ynr64zqj
+? The bench's `minutes` started at 45. What did it hold after two clicks on `5 more`?
+?? O `minutes` do bench começou em 45. Quanto guardava depois de dois cliques em `5 more`?
+= 55
+== 55
+
+@ model quiz hard #ex-2r47tq3z
+? Why does the lesson not use `model()` for a session's `done` in the planner?
+?? Por que a aula não usa `model()` para o `done` de uma sessão no planner?
+- `model` only works with numbers :: It works with any type.
+-- O `model` só funciona com números :: Funciona com qualquer tipo.
+- Checkboxes cannot be bound two ways :: They can; the reason is ownership.
+-- Checkboxes não podem ter binding nos dois sentidos :: Podem; o motivo é a posse.
+- `model` is deprecated in Angular 21 :: It is current.
+-- O `model` está obsoleto no Angular 21 :: Ele é atual.
++ The row would change the owner's data behind its back :: Right. `model` is for a control's value; data that belongs to somebody gets an input and an output.
+++ A linha mudaria os dados do dono pelas costas dele :: Isso. O `model` é para o valor de um controle; dados que pertencem a alguém ganham um input e um output.
+
+@ projection quiz medium #ex-njjd51my
+? The panel has `<ng-content select="h2" />` before `<ng-content />`. The week writes its `<h2>` first anyway. What would happen if the week wrote the `<h2>` last?
+?? O panel tem `<ng-content select="h2" />` antes de `<ng-content />`. A semana escreve o `<h2>` primeiro de qualquer jeito. O que aconteceria se a semana escrevesse o `<h2>` por último?
+- The heading would appear last :: The panel's slot decides where the `<h2>` goes, not the parent's order.
+-- O título apareceria por último :: É o slot do panel que decide onde o `<h2>` vai, não a ordem do pai.
++ The heading would still appear first :: Right. `select="h2"` takes it wherever the parent wrote it.
+++ O título ainda apareceria primeiro :: Isso. O `select="h2"` o pega onde quer que o pai o tenha escrito.
+- The heading would appear twice :: Each element goes to one slot only.
+-- O título apareceria duas vezes :: Cada elemento vai para um slot só.
+- The build would fail, because slots require order :: Order in the parent is free.
+-- O build falharia, porque slots exigem ordem :: A ordem no pai é livre.
+
+@ projection quiz hard #ex-jsas868n
+? Whose stylesheet styles the projected `<h2>` inside the panel?
+?? A folha de estilo de quem estiliza o `<h2>` projetado dentro do panel?
++ The week's :: Right. Projected content belongs to the parent that wrote it.
+++ A da semana :: Isso. O conteúdo projetado pertence ao pai que o escreveu.
+- The panel's, since the heading sits inside its section :: The panel's styles reach only its own template's elements.
+-- A do panel, já que o título fica dentro da seção dele :: Os estilos do panel só alcançam os elementos do próprio template.
+- Both, merged :: Each element carries one component's attribute.
+-- As duas, misturadas :: Cada elemento carrega o atributo de um componente.
+- Neither: projected content is unstyled :: The parent's styles apply to it as usual.
+-- Nenhuma: conteúdo projetado fica sem estilo :: Os estilos do pai se aplicam a ele normalmente.
+
+@ queries quiz medium #ex-mzdtj6dk
+? `viewChild.required<ElementRef<HTMLInputElement>>('note')` returns what?
+?? O `viewChild.required<ElementRef<HTMLInputElement>>('note')` devolve o quê?
+- The input element itself, as a plain field :: It returns a signal, holding a wrapper whose `nativeElement` is the element.
+-- O próprio elemento input, como campo comum :: Ele devolve um signal, com um invólucro cujo `nativeElement` é o elemento.
++ A signal holding an `ElementRef` :: Right. `.nativeElement` is the input.
+++ Um signal com um `ElementRef` :: Isso. O `.nativeElement` é o input.
+- The text typed into the input :: It gives the element; the text is its `value`.
+-- O texto digitado no input :: Ele dá o elemento; o texto é o `value` dele.
+- A list of every element named `note` on the page :: It looks in its own template, and returns one.
+-- Uma lista de todo elemento chamado `note` na página :: Ele procura no próprio template, e devolve um.
+
+@ queries quiz medium #ex-4z5yf0cn
+? After the required input was added, the generated `WeekSummary` test failed with `NG0950`. What fixed it?
+?? Depois que o input obrigatório entrou, o teste gerado do `WeekSummary` falhou com `NG0950`. O que consertou?
+- Making the inputs optional so the test passes :: That weakens the component to suit the test.
+-- Tornar os inputs opcionais para o teste passar :: Isso enfraquece o componente para agradar ao teste.
+- Deleting the test :: Lesson 24 writes better tests; deleting this one fixes nothing.
+-- Apagar o teste :: A aula 24 escreve testes melhores; apagar este não conserta nada.
++ `fixture.componentRef.setInput` for both :: Right. A test is a parent and must provide what is required.
+++ `fixture.componentRef.setInput` para os dois :: Isso. Um teste é um pai e precisa fornecer o que é obrigatório.
+- Running the test with `--watch` :: Watching reruns the same failure.
+-- Rodar o teste com `--watch` :: Observar reroda a mesma falha.
+
+@ drill quiz medium #ex-yzgt12h8
+? A new `SessionBadge` component shows a session's minutes and, when clicked, asks to delete it. Which declarations does it need?
+?? Um novo componente `SessionBadge` mostra os minutos de uma sessão e, quando clicado, pede para apagá-la. De que declarações ele precisa?
+- A `model` for the session, so it can delete it :: Deleting is the owner's job; the badge reports.
+-- Um `model` para a sessão, para poder apagá-la :: Apagar é trabalho do dono; o badge informa.
+- A `viewChild` to the parent's list :: A child never reaches up into its parent.
+-- Um `viewChild` para a lista do pai :: Um filho nunca alcança o pai.
++ An input for the session and an output for the request :: Right. Data down, news up.
+++ Um input para a sessão e um output para o pedido :: Isso. Dados para baixo, notícias para cima.
+- Two outputs, one for the minutes and one for the click :: The minutes come down; only the request goes up.
+-- Dois outputs, um para os minutos e um para o clique :: Os minutos descem; só o pedido sobe.

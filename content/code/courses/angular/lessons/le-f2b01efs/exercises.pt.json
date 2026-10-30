@@ -1,0 +1,423 @@
+{
+ "ex-hcwgc7r8": {
+  "prompt": "O que o `inject(Greeter)` num campo de um componente faz?",
+  "choices": [
+   {
+    "text": "Cria um `Greeter` novo com `new`, toda vez que o campo é lido",
+    "why": "O campo é definido uma vez, e a instância vem de um injetor, não de um `new` no componente."
+   },
+   {
+    "text": "Pede um a um injetor e guarda a resposta",
+    "why": "Isso. O componente nunca o constrói."
+   },
+   {
+    "text": "Importa o arquivo onde o `Greeter` está escrito",
+    "why": "A linha `import` faz isso; o `inject` pede uma instância em tempo de execução."
+   },
+   {
+    "text": "Registra o `Greeter` para outros componentes poderem usar",
+    "why": "Registrar é o que um provider faz; o `inject` só pede."
+   }
+  ]
+ },
+ "ex-dn2b0c23": {
+  "prompt": "O `Greeter` estava marcado com `@Injectable()` sem nada dentro dos parênteses, e o bench pediu um. O que aconteceu?",
+  "choices": [
+   {
+    "text": "O bench mostrou um parágrafo vazio",
+    "why": "Nada da aplicação depois do título apareceu."
+   },
+   {
+    "text": "O build falhou antes de a página carregar",
+    "why": "O build passou; o erro veio quando a página rodou."
+   },
+   {
+    "text": "`NG0201`: nenhum injetor tinha receita, e o app parou no título",
+    "why": "Isso. `@Injectable()` sozinho diz que o Angular pode construí-lo, não onde."
+   },
+   {
+    "text": "O Angular construiu um mesmo assim, já que a classe estava marcada",
+    "why": "A marca não é uma receita; nenhum injetor foi avisado."
+   }
+  ]
+ },
+ "ex-84jpdszc": {
+  "prompt": "`@Injectable({ providedIn: '___' })` faz uma instância para a aplicação inteira, na primeira vez que é pedida.",
+  "blanks": [
+   {
+    "accept": [
+     "root"
+    ]
+   }
+  ]
+ },
+ "ex-vcfc3kah": {
+  "prompt": "Código mais antigo escreve `constructor(private readonly greeter: Greeter) {}`. Comparado com `inject(Greeter)` num campo, o que é diferente?",
+  "choices": [
+   {
+    "text": "O parâmetro recebe um `Greeter` novo por componente; o `inject` compartilha um",
+    "why": "Os dois perguntam ao mesmo injetor e recebem a mesma resposta."
+   },
+   {
+    "text": "Nada na resposta; o `inject` também funciona fora dos parâmetros de um construtor",
+    "why": "Isso. Mesma pergunta, mesmo injetor."
+   },
+   {
+    "text": "A forma com parâmetro não é mais permitida no Angular 21",
+    "why": "Ela ainda funciona e você vai ler bastante dela."
+   },
+   {
+    "text": "A forma com parâmetro pula o injetor e chama `new`",
+    "why": "O Angular lê o tipo e pergunta ao injetor."
+   }
+  ]
+ },
+ "ex-xxgrj8s6": {
+  "prompt": "Associe cada chave de provider ao que o injetor responde.",
+  "pairs": [
+   {
+    "left": "`useClass`",
+    "right": "uma instância dessa classe, feita uma vez"
+   },
+   {
+    "left": "`useValue`",
+    "right": "esse valor, exatamente como escrito"
+   },
+   {
+    "left": "`useFactory`",
+    "right": "o que uma função retorna"
+   },
+   {
+    "left": "`useExisting`",
+    "right": "o que outro token já responde"
+   }
+  ],
+  "right_distractors": [
+   "uma instância nova a cada pedido"
+  ]
+ },
+ "ex-0f87we6z": {
+  "prompt": "O `Greeter` tinha `providedIn: 'root'`, e o `app.config.ts` listava `{ provide: Greeter, useClass: LoudGreeter }`. O que o bench mostrou?",
+  "choices": [
+   {
+    "text": "`Hello, Ana`, porque a receita da própria classe vem primeiro",
+    "why": "O provider listado vence; o da própria classe é o padrão."
+   },
+   {
+    "text": "`HELLO, ANA!`",
+    "why": "Isso. O bench pediu `Greeter` e recebeu um `LoudGreeter`."
+   },
+   {
+    "text": "Um erro, já que duas receitas para um token conflitam",
+    "why": "Uma entrada na lista sobrepondo um padrão é o caso normal."
+   },
+   {
+    "text": "As duas saudações, uma depois da outra",
+    "why": "Um token, uma resposta."
+   }
+  ]
+ },
+ "ex-qxh7azs0": {
+  "prompt": "O que o `provideRouter(routes)` no `app.config.ts` põe na lista?",
+  "choices": [
+   {
+    "text": "O array de rotas, usado como token",
+    "why": "As rotas são um argumento; o que volta são providers."
+   },
+   {
+    "text": "Um componente que desenha o router",
+    "why": "Uma lista de providers guarda receitas, não componentes para desenhar."
+   },
+   {
+    "text": "Vários providers para as classes do router",
+    "why": "Isso. Uma função `provide...` os reúne sob um nome."
+   },
+   {
+    "text": "Uma configuração que liga a tag `<router-outlet>`",
+    "why": "A tag vem do `RouterOutlet` nos `imports` de um componente."
+   }
+  ]
+ },
+ "ex-26aypxbh": {
+  "prompt": "A lista de providers `providers: [Greeter]` é a forma curta de `{ provide: Greeter, ___: Greeter }`.",
+  "blanks": [
+   {
+    "accept": [
+     "useClass"
+    ]
+   }
+  ]
+ },
+ "ex-92bf7xw0": {
+  "prompt": "Por que o planner precisa de `InjectionToken` para hoje, em vez de `inject(Date)`?",
+  "choices": [
+   {
+    "text": "`inject(Date)` pede a classe, não um dia",
+    "why": "Isso. Um token representa um valor que não é uma classe."
+   },
+   {
+    "text": "`Date` não pode ser importado num componente Angular",
+    "why": "É um global da linguagem; nada impede que você o use."
+   },
+   {
+    "text": "Um `InjectionToken` lê o relógio com mais precisão",
+    "why": "Ele não lê nada; a factory dele chama `new Date()`, o mesmo relógio."
+   },
+   {
+    "text": "Tokens são as únicas coisas que um teste pode sobrepor",
+    "why": "Um teste pode sobrepor um token de classe do mesmo jeito."
+   }
+  ]
+ },
+ "ex-wkxsrmgr": {
+  "prompt": "O planner fica aberto de domingo à noite até segunda de manhã. Qual semana ele conta na segunda?",
+  "choices": [
+   {
+    "text": "A semana nova, porque o `TODAY` lê o relógio sempre que é injetado",
+    "why": "A factory roda uma vez, na primeira vez, e a resposta é guardada."
+   },
+   {
+    "text": "A velha, até a página ser carregada de novo",
+    "why": "Isso. O `TODAY` é o momento em que foi pedido pela primeira vez."
+   },
+   {
+    "text": "Nenhuma: o `Week` lança um erro quando a data muda",
+    "why": "Nada observa a data, então nada lança."
+   },
+   {
+    "text": "A nova, porque o `--today` move o relógio",
+    "why": "O `--today` só existe no `look`, para as transcrições."
+   }
+  ]
+ },
+ "ex-zx0wab4f": {
+  "prompt": "O primeiro `week.spec.ts` esperava a semana de 26 de outubro e falhou. Por que o segundo passou, no mesmo dia?",
+  "choices": [
+   {
+    "text": "Ele esperou os dados antes de ler a página",
+    "why": "Nenhuma versão carregou os dados; o intervalo não precisa deles."
+   },
+   {
+    "text": "Ele adiantou o relógio do computador em cinco dias antes",
+    "why": "Nada mexeu no relógio."
+   },
+   {
+    "text": "O `TestBed` lê datas do `courses.json`",
+    "why": "O teste nunca chegou ao `courses.json`."
+   },
+   {
+    "text": "Ele deu ao `TODAY` um `useValue` nos providers do teste",
+    "why": "Isso. A receita do teste vence a factory do token."
+   }
+  ]
+ },
+ "ex-anzth1ct": {
+  "prompt": "Com o `TODAY` em quarta, 28 de outubro de 2026, em que dia de outubro começa a semana que o planner conta?"
+ },
+ "ex-q63ss9jg": {
+  "prompt": "O `Tally` tinha `providedIn: 'root'` e nenhum componente o listava. Um clique em `Add to first`: o que os dois contadores mostraram?",
+  "choices": [
+   {
+    "text": "first: 1, second: 0",
+    "why": "Essa é a versão em que cada contador lista o `Tally` nos próprios `providers`."
+   },
+   {
+    "text": "first: 1, second: 1",
+    "why": "Isso. As duas perguntas chegaram à raiz, que fez um `Tally`."
+   },
+   {
+    "text": "first: 2, second: 0",
+    "why": "Um clique soma um, a um tally compartilhado."
+   },
+   {
+    "text": "Um `NG0201`, já que nenhum componente o fornecia",
+    "why": "A raiz tinha a receita do `providedIn`."
+   }
+  ]
+ },
+ "ex-zsabw650": {
+  "prompt": "Coloque os injetores na ordem em que o `inject(Tally)` num `Counter` os pergunta, do primeiro ao último.",
+  "items": [
+   "o do próprio `Counter`",
+   "o do `Bench`",
+   "o injetor raiz",
+   "o injetor da plataforma",
+   "`NullInjector`"
+  ]
+ },
+ "ex-227mb24p": {
+  "prompt": "Um serviço está listado nos `providers` de um componente. Quanto tempo vive a instância que ele faz?",
+  "choices": [
+   {
+    "text": "Enquanto a aplicação durar, como qualquer serviço",
+    "why": "Isso é um provider da raiz; a lista de um componente faz um por componente."
+   },
+   {
+    "text": "Até a próxima detecção de mudanças",
+    "why": "A detecção de mudanças não faz nem destrói instâncias."
+   },
+   {
+    "text": "Enquanto esse componente durar",
+    "why": "Isso. É feita com ele e vai embora quando ele é destruído."
+   },
+   {
+    "text": "Até alguém pedir um na raiz",
+    "why": "A receita da raiz é separada e não a substitui."
+   }
+  ]
+ },
+ "ex-3crfeb1y": {
+  "prompt": "Por que uma instância na raiz vai resolver a discordância entre o `Week` e o `CoursePage`?",
+  "choices": [
+   {
+    "text": "Serviços da raiz carregam dados mais rápido",
+    "why": "Velocidade não é o problema; duas cópias são."
+   },
+   {
+    "text": "Desliga o segundo fetch do `courses.json` no servidor de desenvolvimento",
+    "why": "O servidor responde o que pedirem; a mudança está em quem pede."
+   },
+   {
+    "text": "As duas telas recebem a mesma instância, então há uma cópia dos dados",
+    "why": "Isso. Um toggle numa é visto pela outra."
+   },
+   {
+    "text": "O `providedIn: 'root'` deixa os dados somente leitura",
+    "why": "Ele decide quem compartilha a instância, não se ela muda."
+   }
+  ]
+ },
+ "ex-1thnbys0": {
+  "prompt": "Associe cada opção do `inject` ao que ela muda.",
+  "pairs": [
+   {
+    "left": "`optional: true`",
+    "right": "ninguém respondendo dá `null`"
+   },
+   {
+    "left": "`self: true`",
+    "right": "só o injetor do próprio componente é perguntado"
+   },
+   {
+    "left": "`skipSelf: true`",
+    "right": "a pergunta começa no pai"
+   },
+   {
+    "left": "`host: true`",
+    "right": "a pergunta para no componente hospedeiro"
+   }
+  ],
+  "right_distractors": [
+   "a instância é feita de novo a cada leitura"
+  ]
+ },
+ "ex-hp1rf1nw": {
+  "prompt": "Depois de um clique em `Add to first` e um em `Add to second`, cada contador mostrou `1, all: 2`. De onde veio o `all`?",
+  "choices": [
+   {
+    "text": "Do bench, que somou os números dos dois contadores",
+    "why": "O bench não tem tally próprio."
+   },
+   {
+    "text": "Do `Tally` da raiz, alcançado com `skipSelf`",
+    "why": "Isso. Pulando o próprio injetor, cada contador achou o compartilhado."
+   },
+   {
+    "text": "Do `NOTE`, que ninguém fornecia",
+    "why": "O `NOTE` era `null`, e a página mostrou `no note`."
+   },
+   {
+    "text": "De um segundo `providers: [Tally]` no bench",
+    "why": "O bench não tem lista de `providers` nesta versão."
+   }
+  ]
+ },
+ "ex-4r9s059x": {
+  "prompt": "Um `NG0201` aparece para um serviço que deveria sempre existir. Por que a aula desaconselha `optional: true` aí?",
+  "choices": [
+   {
+    "text": "É mais lento que uma injeção normal",
+    "why": "Velocidade não é o argumento."
+   },
+   {
+    "text": "Só funciona em tokens, não em classes",
+    "why": "Funciona nos dois."
+   },
+   {
+    "text": "Troca um erro claro agora por um `null` achado depois",
+    "why": "Isso. O provider que falta é o bug a corrigir."
+   },
+   {
+    "text": "Faz o componente pular o próprio injetor",
+    "why": "Isso é o `skipSelf`."
+   }
+  ]
+ },
+ "ex-4ejegzm1": {
+  "prompt": "O `report()` chamava `inject(Tally)` quando o botão era clicado. O que aconteceu?",
+  "choices": [
+   {
+    "text": "`NG0203`: àquela altura nada estava sendo construído, então não havia injetor a perguntar",
+    "why": "Isso. Um método roda muito depois da construção."
+   },
+   {
+    "text": "`NG0201`: ninguém fornecia o `Tally`",
+    "why": "O `Tally` tinha `providedIn: 'root'`; o problema era o momento."
+   },
+   {
+    "text": "A contagem foi registrada como 0, como na versão corrigida",
+    "why": "O registro só apareceu quando o `inject` foi para um campo."
+   },
+   {
+    "text": "O build recusou o arquivo",
+    "why": "Compilou; o erro veio no clique."
+   }
+  ]
+ },
+ "ex-4ehnbnm5": {
+  "prompt": "Onde o `inject()` pode ser chamado? Escolha todo lugar que funciona.",
+  "choices": [
+   {
+    "text": "No inicializador de um campo",
+    "why": "Isso. Campos são definidos enquanto a classe é construída."
+   },
+   {
+    "text": "No construtor",
+    "why": "Isso."
+   },
+   {
+    "text": "Numa função comum chamada de um campo",
+    "why": "Isso. O que importa é quando ela roda."
+   },
+   {
+    "text": "Num handler de clique",
+    "why": "Isso roda depois da construção: `NG0203`."
+   },
+   {
+    "text": "Num `setTimeout` iniciado pelo construtor",
+    "why": "O callback roda depois, fora do contexto."
+   }
+  ]
+ },
+ "ex-9dsehead": {
+  "prompt": "Um componente lê o `localStorage` direto para achar o tema do usuário, e o teste dele não consegue definir um. O que esta aula sugere?",
+  "choices": [
+   {
+    "text": "Limpar o `localStorage` antes de todo teste, para cada um começar do zero",
+    "why": "Isso dá a todo teste o mesmo tema, não o que ele quer."
+   },
+   {
+    "text": "Um token com uma factory que o lê, sobreposto no teste",
+    "why": "Isso. O componente pede; o teste decide a resposta."
+   },
+   {
+    "text": "Marcar o componente com `@Injectable()`",
+    "why": "Componentes já são construídos por injetores; o problema é o que ele lê."
+   },
+   {
+    "text": "Mover a leitura para o `ngOnInit`",
+    "why": "Mais tarde continua sendo o mesmo global, ainda não definível."
+   }
+  ]
+ }
+}

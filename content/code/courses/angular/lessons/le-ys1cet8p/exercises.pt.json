@@ -1,0 +1,381 @@
+{
+ "ex-fvgc9kmj": {
+  "prompt": "No bench, o `subscribed` foi registrado depois do `before subscribe`. O que isso mostra?",
+  "choices": [
+   {
+    "text": "O console reordena mensagens do mesmo componente",
+    "why": "O console imprime na ordem em que as coisas rodaram."
+   },
+   {
+    "text": "Criar um Observable não roda nada; assinar roda",
+    "why": "Isso. Ele é preguiçoso."
+   },
+   {
+    "text": "O Observable esperou o Angular terminar de iniciar",
+    "why": "Ele esperou o `subscribe`, que veio logo depois."
+   },
+   {
+    "text": "`new Observable` é assíncrono, como uma Promise",
+    "why": "O `got 1` chegou antes de o `subscribe` retornar."
+   }
+  ]
+ },
+ "ex-4drwn7c5": {
+  "prompt": "O bench assinou duas vezes um mesmo `http.get('/api/planner')`. Contando o do store, quantos pedidos de `/api/planner` a página fez?"
+ },
+ "ex-ghvyxb7c": {
+  "prompt": "Por que duas assinaturas de um mesmo `http.get(...)` mandaram dois pedidos?",
+  "choices": [
+   {
+    "text": "O `HttpClient` manda todo pedido duas vezes por segurança",
+    "why": "Um assinante, um pedido."
+   },
+   {
+    "text": "O proxy duplica pedidos para a API",
+    "why": "O log da API bateu com a lista de rede da página."
+   },
+   {
+    "text": "Ele é frio: cada assinante roda a função de novo",
+    "why": "Isso. No `HttpClient`, a função manda o pedido."
+   },
+   {
+    "text": "A primeira assinatura falhou, e a segunda tentou de novo",
+    "why": "As duas responderam 200."
+   }
+  ]
+ },
+ "ex-ksdttrkz": {
+  "prompt": "Associe cada um ao que ele dá.",
+  "pairs": [
+   {
+    "left": "uma `Promise`",
+    "right": "um valor ou um erro, iniciada na hora"
+   },
+   {
+    "left": "um `signal`",
+    "right": "o valor de agora, sempre presente"
+   },
+   {
+    "left": "um `Observable`",
+    "right": "valores ao longo do tempo, a partir da assinatura"
+   }
+  ],
+  "right_distractors": [
+   "um valor escrito uma vez no build"
+  ]
+ },
+ "ex-qv9vbkw4": {
+  "prompt": "`interval(100).pipe(map(n => n * 10), filter(n => n % 20 === 0), take(3))`: quais valores foram registrados?",
+  "choices": [
+   {
+    "text": "0, 10 e 20",
+    "why": "O `filter` descartou o 10."
+   },
+   {
+    "text": "0, 20 e 40",
+    "why": "Isso. O `take` contou só o que o `filter` deixou passar."
+   },
+   {
+    "text": "0, 1 e 2",
+    "why": "O `map` multiplicou cada um por dez antes."
+   },
+   {
+    "text": "0, 20, 40, 60 e assim por diante, para sempre",
+    "why": "O `take(3)` terminou a cadeia."
+   }
+  ]
+ },
+ "ex-3pxgyw23": {
+  "prompt": "O que parou o `interval(100)`, que sozinho conta para sempre?",
+  "choices": [
+   {
+    "text": "O componente foi destruído",
+    "why": "O bench ficou na página."
+   },
+   {
+    "text": "O `filter` descartou os valores depois do 40",
+    "why": "O `filter` deixa passar todo múltiplo de 20."
+   },
+   {
+    "text": "O `take(3)`, ao terminar a cadeia",
+    "why": "Isso. Terminar a ponta de uma cadeia encerra o que a alimenta."
+   },
+   {
+    "text": "O `look` fechou a página depois de um segundo",
+    "why": "A cadeia terminou bem antes; `ticks done` foi registrado."
+   }
+  ]
+ },
+ "ex-k84senp1": {
+  "prompt": "Associe cada operador a onde ele vale a pena.",
+  "pairs": [
+   {
+    "left": "`debounceTime`",
+    "right": "uma caixa de busca, para nem toda tecla mandar um pedido"
+   },
+   {
+    "left": "`catchError`",
+    "right": "um valor de reserva em vez de uma tela quebrada"
+   },
+   {
+    "left": "`tap`",
+    "right": "uma linha de log no meio de uma cadeia"
+   },
+   {
+    "left": "`distinctUntilChanged`",
+    "right": "não fazer a mesma pergunta duas vezes seguidas"
+   }
+  ],
+  "right_distractors": [
+   "transformar um signal num template"
+  ]
+ },
+ "ex-4rc32d2g": {
+  "prompt": "Sem o `debounceTime`, digitar `Jav` mandou quantos pedidos do bench?",
+  "choices": [
+   {
+    "text": "Um, para `Jav`",
+    "why": "Isso precisou da pausa que o `debounceTime` acrescenta."
+   },
+   {
+    "text": "Três, um por letra",
+    "why": "A busca vazia do começo também mandou um."
+   },
+   {
+    "text": "Quatro: a busca vazia, `J`, `Ja` e `Jav`",
+    "why": "Isso. Um por valor que a busca teve."
+   },
+   {
+    "text": "Nenhum até a caixa perder o foco",
+    "why": "Cada evento `input` definia o signal na hora."
+   }
+  ]
+ },
+ "ex-dmfnkggx": {
+  "prompt": "O que o `debounceTime(300)` faz com os valores da busca?",
+  "choices": [
+   {
+    "text": "Repassa um após 300 ms sem outro mais novo",
+    "why": "Isso. Uma rajada de teclas vira um valor."
+   },
+   {
+    "text": "Atrasa todo valor em 300 ms e repassa todos",
+    "why": "Isso é o `delay`; o `debounceTime` descarta os ultrapassados."
+   },
+   {
+    "text": "Cancela qualquer pedido mais lento que 300 ms",
+    "why": "Ele age sobre os valores antes de existir pedido."
+   },
+   {
+    "text": "Deixa passar um valor a cada 300 ms",
+    "why": "Isso está mais perto do `throttleTime`."
+   }
+  ]
+ },
+ "ex-8ttemqvv": {
+  "prompt": "Numa rede lenta, a resposta para `Ja` chega depois da resposta para `Jav`. Qual operador mantém a tela certa?",
+  "choices": [
+   {
+    "text": "O `mergeMap`, que guarda toda resposta",
+    "why": "Ele mostraria os resultados de `Ja` sob uma caixa que diz `Jav`."
+   },
+   {
+    "text": "O `concatMap`, que os mantém em ordem",
+    "why": "Ele esperaria toda resposta velha, e mostraria cada uma por vez."
+   },
+   {
+    "text": "O `switchMap`, que cancela",
+    "why": "Isso. Uma resposta velha não chega, porque não foi guardada."
+   },
+   {
+    "text": "O `exhaustMap`, que ignora valores novos enquanto ocupado",
+    "why": "Ele descartaria o `Jav` e mostraria `Ja`."
+   }
+  ]
+ },
+ "ex-h79jxqxe": {
+  "prompt": "Associe cada operador ao que ele faz quando chega um valor novo com um pedido ainda em andamento.",
+  "pairs": [
+   {
+    "left": "`switchMap`",
+    "right": "cancela o pedido velho, começa o novo"
+   },
+   {
+    "left": "`mergeMap`",
+    "right": "começa o novo e mantém os dois"
+   },
+   {
+    "left": "`concatMap`",
+    "right": "espera o velho, depois começa"
+   },
+   {
+    "left": "`exhaustMap`",
+    "right": "ignora o valor novo até terminar"
+   }
+  ],
+  "right_distractors": [
+   "manda os dois valores num pedido só"
+  ]
+ },
+ "ex-z8m7grsq": {
+  "prompt": "O que o `toSignal(observable)` faz quanto a cancelar a assinatura?",
+  "choices": [
+   {
+    "text": "Nada; chame `unsubscribe` no `ngOnDestroy`",
+    "why": "Ele faz isso por você."
+   },
+   {
+    "text": "Cancela quando o componente ou serviço dele é destruído",
+    "why": "Isso. É por isso que precisa de um contexto de injeção."
+   },
+   {
+    "text": "Cancela depois do primeiro valor",
+    "why": "Ele guarda o último valor enquanto existir."
+   },
+   {
+    "text": "Nunca assina até o template lê-lo",
+    "why": "Ele assina na hora."
+   }
+  ]
+ },
+ "ex-vg28s41m": {
+  "prompt": "Um template escreve `{{ left$ | async }}` duas vezes. O que acontece?",
+  "choices": [
+   {
+    "text": "Uma assinatura, compartilhada pelas duas",
+    "why": "Cada pipe assina sozinho."
+   },
+   {
+    "text": "Um erro de build: um Observable, um `async`",
+    "why": "Compila."
+   },
+   {
+    "text": "O segundo não mostra nada até o primeiro terminar",
+    "why": "Os dois mostram o valor quando o pedido deles responde."
+   },
+   {
+    "text": "Duas assinaturas, e como é frio, dois pedidos",
+    "why": "Isso. `@if (left$ | async; as left)` assina uma vez."
+   }
+  ]
+ },
+ "ex-rex9dczc": {
+  "prompt": "Dentro de um construtor, `.pipe(___())` termina uma assinatura quando o componente é destruído.",
+  "blanks": [
+   {
+    "accept": [
+     "takeUntilDestroyed"
+    ]
+   }
+  ]
+ },
+ "ex-mzq9hdwk": {
+  "prompt": "O store só tenta de novo um `PATCH` que falhou quando `transient(error)` é verdadeiro. Por que não num 400?",
+  "choices": [
+   {
+    "text": "Um 400 quer dizer que a API está reiniciando",
+    "why": "Um 400 é a API recusando o corpo."
+   },
+   {
+    "text": "Falha do mesmo jeito toda vez",
+    "why": "Isso. Tentar de novo uma recusa é ruído."
+   },
+   {
+    "text": "O `retry` não consegue ver o código de status",
+    "why": "A função `delay` recebe o erro, com status e tudo."
+   },
+   {
+    "text": "Um 400 é repetido pelo navegador sozinho",
+    "why": "O navegador não repete nada num 400."
+   }
+  ]
+ },
+ "ex-jgedh1gj": {
+  "prompt": "Na rodada com retry, o primeiro `PATCH` recebeu um 500. O que aconteceu em seguida?",
+  "choices": [
+   {
+    "text": "A caixa desmarcou e a mensagem apareceu",
+    "why": "Isso acontece quando as tentativas acabam."
+   },
+   {
+    "text": "A página recarregou o planner da API",
+    "why": "Só o `PATCH` foi mandado de novo."
+   },
+   {
+    "text": "Foi mandado de novo dois segundos depois, e salvo",
+    "why": "Isso. A caixa ficou marcada."
+   },
+   {
+    "text": "Nada: o `retry` espera a próxima marcação",
+    "why": "Ele mandou o mesmo pedido de novo sozinho."
+   }
+  ]
+ },
+ "ex-9rfvsd45": {
+  "prompt": "Por que o `POST` da aula 14 que acrescenta uma sessão não vai tentar de novo?",
+  "choices": [
+   {
+    "text": "Um `POST` não pode passar pelo `retry`",
+    "why": "Qualquer Observable pode."
+   },
+   {
+    "text": "A API recusa um segundo `POST` da mesma página",
+    "why": "Ela aceita todo válido."
+   },
+   {
+    "text": "Acrescentar uma sessão nunca falha",
+    "why": "Falha com um campo ruim, e com a API fora do ar."
+   },
+   {
+    "text": "Uma resposta perdida viraria uma segunda sessão",
+    "why": "Isso. Só se repete o que é seguro fazer duas vezes."
+   }
+  ]
+ },
+ "ex-pp59v8cx": {
+  "prompt": "Quais destes pedem RxJS em vez de um signal? Escolha todos.",
+  "choices": [
+   {
+    "text": "Esperar uma pausa na digitação",
+    "why": "Isso. `debounceTime`."
+   },
+   {
+    "text": "Ficar só com o mais novo de pedidos sobrepostos",
+    "why": "Isso. `switchMap`."
+   },
+   {
+    "text": "Guardar se um painel está aberto",
+    "why": "Um `signal` guarda isso."
+   },
+   {
+    "text": "O total da semana, calculado das sessões",
+    "why": "Um `computed` calcula isso."
+   },
+   {
+    "text": "Tentar um pedido de novo dois segundos depois",
+    "why": "Isso. `retry` com um `delay`."
+   }
+  ]
+ },
+ "ex-j6ef872g": {
+  "prompt": "Um código antigo guarda o curso selecionado num `BehaviorSubject` e todo template o lê com `| async`. Você vai mudar uma tela. O que a aula sugere?",
+  "choices": [
+   {
+    "text": "Reescrever toda tela para signals antes",
+    "why": "Nada obriga a reescrever código que funciona."
+   },
+   {
+    "text": "Deixar como está, já que signals e Observables não se encontram",
+    "why": "`toSignal` e `toObservable` existem para fazê-los se encontrar."
+   },
+   {
+    "text": "Ler com `toSignal` na tela que você muda",
+    "why": "Isso. Os dois tipos se encontram na borda do que você mexeu."
+   },
+   {
+    "text": "Assinar no construtor, sem limpeza",
+    "why": "Esse é o vazamento que o `toSignal` evita."
+   }
+  ]
+ }
+}

@@ -1,0 +1,403 @@
+{
+ "ex-jvws4e19": {
+  "prompt": "Qual campo do `@Component` decide a tag que você escreve num template para usar o componente?",
+  "choices": [
+   {
+    "text": "`templateUrl`, que dá o nome do arquivo de onde vem a tag",
+    "why": "Ele nomeia o template do próprio componente, não a tag que outros templates escrevem."
+   },
+   {
+    "text": "`selector`",
+    "why": "Isso. `app-week-summary` vira `<app-week-summary />`."
+   },
+   {
+    "text": "O nome da classe, em minúsculas e com hífens",
+    "why": "A CLI deriva os dois do que você digitou, mas o Angular lê o seletor."
+   },
+   {
+    "text": "`imports`, cuja primeira entrada é o próprio componente",
+    "why": "O `imports` lista o que o template usa, nunca o próprio componente."
+   }
+  ]
+ },
+ "ex-v3rw16wr": {
+  "prompt": "O `week-summary.css` diz `p { font-weight: 600; }`. Quais parágrafos da página ficam em negrito?",
+  "choices": [
+   {
+    "text": "Todo `<p>` da página, porque CSS é global",
+    "why": "O Angular reescreveu a regra para `p[_ngcontent-…]`, então ela não é global."
+   },
+   {
+    "text": "Só os de dentro do próprio template do `WeekSummary`, mais nenhum",
+    "why": "Isso. Eles têm o atributo `_ngcontent-` que a regra reescrita pede."
+   },
+   {
+    "text": "Os do `WeekSummary` e de todo componente que ele contém",
+    "why": "Os elementos de um componente filho têm o atributo do filho, não o do pai."
+   },
+   {
+    "text": "Nenhum, até a regra também ser escrita no `styles.css`",
+    "why": "A regra foi aplicada; o `look --styles` a mostrou nas folhas de estilo da página."
+   }
+  ]
+ },
+ "ex-neb3wd5t": {
+  "prompt": "A reescrita que o Angular faz dos estilos de um componente para que valham só no próprio template se chama view ___.",
+  "blanks": [
+   {
+    "accept": [
+     "encapsulation",
+     "encapsulamento"
+    ]
+   }
+  ]
+ },
+ "ex-xert7jnb": {
+  "prompt": "Um componente de um código escrito em 2023 diz `standalone: true`. Um escrito em 2026 não diz nada. Qual é a diferença entre eles?",
+  "choices": [
+   {
+    "text": "Nenhuma: standalone virou o padrão no Angular 19",
+    "why": "Isso. A linha era necessária antes do 19 e é redundante depois."
+   },
+   {
+    "text": "O de 2026 pertence a um módulo, já que não diz standalone",
+    "why": "Isso valia antes do 19. Hoje um componente de módulo diz `standalone: false`."
+   },
+   {
+    "text": "O de 2023 não pode ser usado por uma aplicação de 2026",
+    "why": "Componentes standalone de 2023 funcionam nas aplicações de hoje."
+   },
+   {
+    "text": "O de 2026 não tem template",
+    "why": "Standalone e templates não têm relação."
+   }
+  ]
+ },
+ "ex-df9n7xfs": {
+  "prompt": "O `npx ng build` falhou com `NG8001: 'app-week-summary' is not a known element`, no `week.html`. Onde vai o conserto?",
+  "choices": [
+   {
+    "text": "No `WeekSummary`, que devia se exportar",
+    "why": "Um componente standalone não tem o que exportar; quem o usa é quem o importa."
+   },
+   {
+    "text": "No `app.ts`, porque o `App` é a raiz",
+    "why": "Os imports do `App` servem o template do `App`, e a tag está no do `Week`."
+   },
+   {
+    "text": "No `week.ts`, na lista `imports` do decorator do `Week`",
+    "why": "Isso. O componente dono do template importa o que usa."
+   },
+   {
+    "text": "No `angular.json`, que lista os componentes do projeto",
+    "why": "O `angular.json` não lista componentes."
+   }
+  ]
+ },
+ "ex-rzazkaxq": {
+  "prompt": "A classe de um componente chama uma função de `dates.ts` num método, e o template nunca a menciona. Onde a função precisa ser importada?",
+  "choices": [
+   {
+    "text": "No `imports` do decorator, para o Angular achá-la",
+    "why": "A lista do decorator é para o template, e o template não usa a função."
+   },
+   {
+    "text": "Só numa linha `import` no topo do arquivo",
+    "why": "Isso. O código da classe é TypeScript, e o `import` do próprio TypeScript basta."
+   },
+   {
+    "text": "Nos dois, como um componente",
+    "why": "Um componente é usado pelo template, por isso precisa dos dois. Uma função usada só no código, não."
+   },
+   {
+    "text": "No `app.config.ts`, como provider",
+    "why": "Providers são para coisas a injetar; a aula 10 trata deles."
+   }
+  ]
+ },
+ "ex-ty8v4y2b": {
+  "prompt": "Associe o que um template usa com o jeito como aparece no template.",
+  "pairs": [
+   {
+    "left": "um componente",
+    "right": "como elemento, `<app-week-summary />`"
+   },
+   {
+    "left": "uma diretiva",
+    "right": "como atributo, `routerLink`"
+   },
+   {
+    "left": "um pipe",
+    "right": "depois de um `|` numa expressão"
+   }
+  ],
+  "right_distractors": [
+   "como provider no `app.config.ts`"
+  ]
+ },
+ "ex-57ewftx6": {
+  "prompt": "Numa aplicação baseada em módulos, o que decide quais componentes um template pode usar?",
+  "choices": [
+   {
+    "text": "O `imports` do próprio componente",
+    "why": "Nesse modelo um componente não tem lista própria."
+   },
+   {
+    "text": "O módulo que declara o componente",
+    "why": "Isso. As declarações dele e os exports dos imports dele formam o escopo."
+   },
+   {
+    "text": "O `angular.json`, que lista os módulos",
+    "why": "O `angular.json` nomeia arquivos e builders."
+   },
+   {
+    "text": "O módulo que inicia a aplicação",
+    "why": "O escopo de cada componente é o do módulo que o declara, não o da raiz."
+   }
+  ]
+ },
+ "ex-2sbzctae": {
+  "prompt": "Associe cada campo do `@NgModule` com o que ele lista.",
+  "pairs": [
+   {
+    "left": "`declarations`",
+    "right": "as peças que pertencem a este módulo"
+   },
+   {
+    "left": "`imports`",
+    "right": "módulos cujas peças exportadas os templates dele podem usar"
+   },
+   {
+    "left": "`exports`",
+    "right": "o que outros módulos podem usar deste"
+   },
+   {
+    "left": "`bootstrap`",
+    "right": "o componente desenhado na inicialização"
+   }
+  ],
+  "right_distractors": [
+   "as rotas da aplicação"
+  ]
+ },
+ "ex-xmg2ky7r": {
+  "prompt": "O `SharedModule` de uma colega declara quarenta botões e pipes e exporta todos, e trinta módulos de funcionalidade o importam. Qual é o custo, segundo a aula?",
+  "choices": [
+   {
+    "text": "Cada import faz uma cópia das quarenta peças no bundle",
+    "why": "O bundle leva cada peça uma vez; o custo não está em bytes."
+   },
+   {
+    "text": "O build falha passando de um número fixo de exports",
+    "why": "Não existe esse limite."
+   },
+   {
+    "text": "Nada; é o padrão recomendado hoje",
+    "why": "A aula o apresenta como o custo que o standalone veio remover."
+   },
+   {
+    "text": "Nenhum componente mostra de que realmente depende",
+    "why": "Isso. Todo componente pode usar os quarenta, então nenhum diz quais usa."
+   }
+  ]
+ },
+ "ex-cjr4y63w": {
+  "prompt": "Coloque os três modos da migração standalone na ordem em que a aula os roda.",
+  "items": [
+   "`convert-to-standalone`",
+   "`prune-ng-modules`",
+   "`standalone-bootstrap`"
+  ]
+ },
+ "ex-68dfywja": {
+  "prompt": "Depois do `convert-to-standalone`, o `SessionList` saiu de `declarations` e foi para `imports` no `AppModule`. O que isso mostra?",
+  "choices": [
+   {
+    "text": "Módulos também importam componentes standalone",
+    "why": "Isso. É uma das duas pontes que deixam uma migração ir um arquivo por vez."
+   },
+   {
+    "text": "A migração errou, e o passo seguinte desfaz",
+    "why": "A aplicação compilou e rodou desse jeito."
+   },
+   {
+    "text": "O `SessionList` virou um módulo",
+    "why": "Ele continua sendo um componente; componentes standalone podem ficar nos `imports` de um módulo."
+   },
+   {
+    "text": "O `declarations` só aceita o componente raiz",
+    "why": "Ele aceita qualquer componente que pertença ao módulo."
+   }
+  ]
+ },
+ "ex-8bdy5ksc": {
+  "prompt": "Por que o `App` não foi convertido no primeiro passo?",
+  "choices": [
+   {
+    "text": "O template dele é grande demais para migrar",
+    "why": "O tamanho do template não tem papel na migração."
+   },
+   {
+    "text": "A migração só converte componentes gerados",
+    "why": "Ela converteu o `SessionList`, e converteria os escritos à mão também."
+   },
+   {
+    "text": "Ele é o componente que o módulo inicia, e isso é trabalho do passo 3",
+    "why": "Isso. O `standalone-bootstrap` o converteu e apagou o `AppModule`."
+   },
+   {
+    "text": "O `App` já era standalone",
+    "why": "Ele dizia `standalone: false` até o passo 3."
+   }
+  ]
+ },
+ "ex-d3s8enjk": {
+  "prompt": "Depois dos três passos, o `main.ts` fornece `importProvidersFrom(BrowserModule, AppRoutingModule)`. O que você faria com isso?",
+  "choices": [
+   {
+    "text": "Deixaria: a migração é a referência de como o código deve ficar",
+    "why": "A aula diz que uma migração mantém o app rodando e a arrumação é sua."
+   },
+   {
+    "text": "Apagaria a linha, porque apps standalone não precisam de providers",
+    "why": "O router ainda precisa ser fornecido de algum jeito."
+   },
+   {
+    "text": "Trocaria por `provideRouter(routes)`, e tiraria o `BrowserModule`",
+    "why": "Isso. É o formato que o `app.config.ts` do planner já tem."
+   },
+   {
+    "text": "Moveria para o `imports` de cada componente",
+    "why": "Os imports de componente são para templates; providers vão para a aplicação."
+   }
+  ]
+ },
+ "ex-2pvaqb5t": {
+  "prompt": "Uma biblioteca de que você precisa traz só um NgModule, `ChartsModule`, que exporta um componente `<chart>`. Como um componente standalone usa `<chart>`?",
+  "choices": [
+   {
+    "text": "Não pode, até a biblioteca trazer uma versão standalone",
+    "why": "Módulos funcionam nos `imports` de um componente standalone."
+   },
+   {
+    "text": "Ele põe o `ChartsModule` no próprio `imports`",
+    "why": "Isso. O template pode então usar tudo o que o módulo exporta."
+   },
+   {
+    "text": "Ele envolve o módulo em `importProvidersFrom` no `app.config.ts`",
+    "why": "Isso pega os providers de um módulo, não os componentes que ele exporta."
+   },
+   {
+    "text": "Ele declara o `ChartsModule` com `standalone: false`",
+    "why": "`standalone` é uma propriedade de componentes, não um jeito de usar módulos."
+   }
+  ]
+ },
+ "ex-0fp7pzf1": {
+  "prompt": "Associe o que uma aplicação baseada em módulos importa com o que uma aplicação standalone fornece no lugar.",
+  "pairs": [
+   {
+    "left": "`RouterModule.forRoot(routes)`",
+    "right": "`provideRouter(routes)`"
+   },
+   {
+    "left": "`HttpClientModule`",
+    "right": "`provideHttpClient()`"
+   },
+   {
+    "left": "um módulo de biblioteca sem função equivalente",
+    "right": "`importProvidersFrom(OModulo)`"
+   }
+  ],
+  "right_distractors": [
+   "`bootstrapModule(AppModule)`"
+  ]
+ },
+ "ex-pj0hf0zk": {
+  "prompt": "Num código no meio da migração, um template falha com `NG8001` para `<app-badge>`. O componente dono do template diz `standalone: false`. Onde você olha primeiro?",
+  "choices": [
+   {
+    "text": "No `imports` desse componente",
+    "why": "Um componente com `standalone: false` não tem escopo de template próprio."
+   },
+   {
+    "text": "No `app.config.ts`, atrás de um provider que falta",
+    "why": "Um elemento desconhecido é problema de escopo de template, não de provider."
+   },
+   {
+    "text": "No `angular.json`, cuja lista de componentes pode estar desatualizada",
+    "why": "Essa lista não existe."
+   },
+   {
+    "text": "No módulo que o declara, e se esse módulo importa algo que exporta `app-badge`",
+    "why": "Isso. No modelo antigo, o módulo é o escopo."
+   }
+  ]
+ },
+ "ex-jf32cd1p": {
+  "prompt": "O `look --a11y body` listou dois títulos e um parágrafo. O que ele listou para os próprios componentes?",
+  "choices": [
+   {
+    "text": "Um grupo por componente, com o nome do seletor",
+    "why": "A árvore não tinha entrada para componente nenhum."
+   },
+   {
+    "text": "Nada",
+    "why": "Isso. A tag de um componente não tem papel, então um leitor de tela ouve só o que está dentro."
+   },
+   {
+    "text": "Uma região só para o `App`, por ser a raiz",
+    "why": "O `App` desenhou um título, e a árvore mostra só isso."
+   },
+   {
+    "text": "Um aviso de que elementos personalizados não são acessíveis",
+    "why": "Nenhum aviso; elementos personalizados simplesmente são transparentes."
+   }
+  ]
+ },
+ "ex-kgmksp53": {
+  "prompt": "Quantos testes o `ng test` rodou, ao todo, no fim desta aula?"
+ },
+ "ex-0tnq5wz4": {
+  "prompt": "Um teste cria o `App` com `TestBed.createComponent(App)`. Quais componentes ele constrói?",
+  "choices": [
+   {
+    "text": "Só o `App`, com marcadores vazios no lugar dos outros",
+    "why": "A não ser que você os troque de propósito, os componentes reais são construídos."
+   },
+   {
+    "text": "O `App` e o `Week`, mas não o `WeekSummary`, que está dois níveis abaixo",
+    "why": "A profundidade não importa; cada template constrói o que usa."
+   },
+   {
+    "text": "Os três: `App`, `Week` e `WeekSummary`, cada um de verdade",
+    "why": "Isso. O template do `App` usa o `Week`, cujo template usa o `WeekSummary`."
+   },
+   {
+    "text": "Todo componente do projeto, gerado ou não",
+    "why": "Só os alcançados pelos templates."
+   }
+  ]
+ },
+ "ex-yt6cc1xg": {
+  "prompt": "Você gera o `CourseCard` e escreve `<app-course-card />` no `week.html`. Antes do build, o que mais é preciso?",
+  "choices": [
+   {
+    "text": "Acrescentar o `CourseCard` aos imports do `App`, já que o `App` é a raiz",
+    "why": "A tag está no template do `Week`, então é o `Week` que importa."
+   },
+   {
+    "text": "O `CourseCard` acrescentado ao `imports` do `Week`",
+    "why": "Isso. E a linha `import` do TypeScript no topo do `week.ts`."
+   },
+   {
+    "text": "Declarar o `CourseCard` num NgModule",
+    "why": "O planner não tem módulos; componentes standalone não precisam de nenhum."
+   },
+   {
+    "text": "Nada; a CLI o acrescenta a todo template que o usa",
+    "why": "A CLI só atualiza um módulo em projetos baseados em módulos."
+   }
+  ]
+ }
+}

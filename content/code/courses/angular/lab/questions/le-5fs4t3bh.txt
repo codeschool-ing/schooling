@@ -1,0 +1,227 @@
+# Lesson 18: guards, lazy loading, preloading
+
+@ guards quiz easy #ex-1d0tjryh
+? What may a `canActivate` guard return?
+?? O que um guard `canActivate` pode retornar?
+- Only `true` or `false` :: It may also redirect, and may answer later.
+-- Só `true` ou `false` :: Ele também pode redirecionar, e responder depois.
++ A boolean, a redirect, or either later :: Right. A Promise or an Observable of one is fine.
+++ Um booleano, um redirecionamento, ou isso depois :: Isso. Uma Promise ou um Observable de um serve.
+- The component to draw instead :: It redirects to an address; the routes pick components.
+-- O componente a desenhar no lugar :: Ele redireciona para um endereço; as rotas escolhem componentes.
+- A list of the routes the person may see :: It answers about one navigation.
+-- Uma lista das rotas que a pessoa pode ver :: Ele responde sobre uma navegação.
+
+@ guards quiz medium #ex-qg90vsmm
+? `/courses/rust` now shows "Nothing here" but the address bar still says `/courses/rust`. Why?
+?? `/courses/rust` agora mostra "Nothing here", mas a barra de endereço ainda diz `/courses/rust`. Por quê?
+- The `**` route matched `/courses/rust` first :: `courses/:courseId` matched; the guard redirected.
+-- A rota `**` casou com `/courses/rust` antes :: `courses/:courseId` casou; o guard redirecionou.
++ The redirect used `skipLocationChange` :: Right. The not-found page, under the address typed.
+++ O redirecionamento usou `skipLocationChange` :: Isso. A página de não encontrado, sob o endereço digitado.
+- The browser refused to change the address :: The router chose not to.
+-- O navegador se recusou a mudar o endereço :: O router escolheu não mudar.
+- `CoursePage` drew the not-found page itself :: The guard stopped `CoursePage` from being drawn.
+-- O `CoursePage` desenhou a página de não encontrado sozinho :: O guard impediu o `CoursePage` de ser desenhado.
+
+@ guards quiz medium #ex-f9fhegs3
+? When the data cannot be loaded, `courseExists` answers `true`. Why?
+?? Quando os dados não podem ser carregados, o `courseExists` responde `true`. Por quê?
+- So the store can retry the request :: The guard does not retry anything.
+-- Para o store poder tentar o pedido de novo :: O guard não tenta nada de novo.
+- Every course exists while loading fails :: Nothing is known about any course then.
+-- Todo curso existe enquanto o carregamento falha :: Nada se sabe de curso nenhum nessa hora.
++ The course page says "could not be loaded" better :: Right. "Not found" would be wrong.
+++ A página do curso diz "could not be loaded" melhor :: Isso. "Não encontrado" estaria errado.
+- Guards cannot see errors :: It reads `store.error()`.
+-- Guards não conseguem ver erros :: Ele lê `store.error()`.
+
+@ guards quiz hard #ex-wt67ye2k
+? A guard keeps people who are not signed in away from `/admin`. What does it protect?
+?? Um guard mantém quem não entrou longe de `/admin`. O que ele protege?
++ Nothing: the server must refuse the data itself :: Right. A guard is a courtesy in the interface.
+++ Nada: o servidor tem de recusar os dados ele mesmo :: Isso. Um guard é uma cortesia na interface.
+- The admin data, since the page cannot be opened :: The data comes from an API anybody can call.
+-- Os dados de admin, já que a página não pode ser aberta :: Os dados vêm de uma API que qualquer um pode chamar.
+- The admin page's code, which is never sent :: Without `canMatch` on a lazy route, it is sent.
+-- O código da página de admin, que nunca é mandado :: Sem `canMatch` numa rota lazy, ele é mandado.
+- The session cookie :: A guard does not touch cookies.
+-- O cookie de sessão :: Um guard não mexe em cookies.
+
+@ guards matching medium #ex-v6xs9ph2
+? Match each guard with when the router asks it.
+?? Associe cada guard a quando o router o pergunta.
+< `canMatch` :: before the route is considered, and before a lazy part loads
+<< `canMatch` :: antes de a rota ser considerada, e antes de uma parte lazy carregar
+< `canActivate` :: before the route's component is drawn
+<< `canActivate` :: antes de o componente da rota ser desenhado
+< `canActivateChild` :: before any child of the route is drawn
+<< `canActivateChild` :: antes de qualquer filho da rota ser desenhado
+< `canDeactivate` :: before the page is left
+<< `canDeactivate` :: antes de a página ser deixada
+x after the server answers
+xx depois de o servidor responder
+
+@ leaving quiz medium #ex-8yy3astb
+? What does the `unsavedWork` guard ask the component?
+?? O que o guard `unsavedWork` pergunta ao componente?
+- For its form, to check it :: It knows nothing about forms.
+-- O formulário dele, para conferir :: Ele não sabe nada de formulários.
++ `hasUnsavedWork()` :: Right. Any component can implement it.
+++ `hasUnsavedWork()` :: Isso. Qualquer componente pode implementá-lo.
+- Whether the server has the session :: The server is not asked.
+-- Se o servidor tem a sessão :: O servidor não é perguntado.
+- For permission to close the tab :: Closing the tab is not a router navigation.
+-- Permissão para fechar a aba :: Fechar a aba não é uma navegação do router.
+
+@ leaving quiz medium #ex-ffd5htw4
+? After a successful add, why does the form call `markAsPristine()` before navigating?
+?? Depois de um envio bem-sucedido, por que o formulário chama `markAsPristine()` antes de navegar?
+- To clear the inputs for the next session :: The form is destroyed on the way out.
+-- Para limpar os inputs para a próxima sessão :: O formulário é destruído na saída.
+- Because `navigate` refuses a dirty form :: The router knows nothing about forms.
+-- Porque o `navigate` recusa um formulário sujo :: O router não sabe nada de formulários.
++ Its own guard would ask otherwise :: Right. Nothing is unsaved any more.
+++ O próprio guard dele perguntaria :: Isso. Não há mais nada não salvo.
+- To stop the async validator :: It has finished by then.
+-- Para parar o validador assíncrono :: Ele já terminou nessa hora.
+
+@ leaving quiz medium #ex-kaw671jf
+? Somebody closes the tab with the form half filled. Does `canDeactivate` ask?
+?? Alguém fecha a aba com o formulário pela metade. O `canDeactivate` pergunta?
+- Yes, with the same `confirm` :: The router is not involved in closing a tab.
+-- Sim, com o mesmo `confirm` :: O router não participa de fechar uma aba.
+- Yes, but without the message :: It is not asked at all.
+-- Sim, mas sem a mensagem :: Ele nem é perguntado.
++ No; only `beforeunload` is told :: Right. And the browser shows its own sentence there.
+++ Não; só o `beforeunload` fica sabendo :: Isso. E o navegador mostra a própria frase ali.
+- No, the form is saved automatically :: Nothing saves a half-filled form.
+-- Não, o formulário é salvo automaticamente :: Nada salva um formulário pela metade.
+
+@ lazy-loading quiz medium #ex-6d3wmvte
+? What made `CoursePage` leave the `main` file?
+?? O que fez o `CoursePage` sair do arquivo `main`?
+- Marking it `lazy: true` in its decorator :: There is no such option.
+-- Marcá-lo com `lazy: true` no decorator :: Não existe essa opção.
++ Nothing in `app.routes.ts` imports it any more :: Right. Only the `import()` function reaches it.
+++ Nada no `app.routes.ts` o importa mais :: Isso. Só a função `import()` chega a ele.
+- Moving it into a new folder :: Folders do not decide bundles.
+-- Movê-lo para uma pasta nova :: Pastas não decidem bundles.
+- `withPreloading` :: Preloading came later, and loads lazy chunks early.
+-- O `withPreloading` :: O preloading veio depois, e carrega chunks lazy cedo.
+
+@ lazy-loading quiz medium #ex-bq9fpy64
+? After lazy loading, the build listed a large chunk named `-` among the initial files. What is it?
+?? Depois do lazy loading, o build listou um chunk grande chamado `-` entre os arquivos iniciais. O que é?
+- The course area :: That is the lazy `courses-routes` chunk.
+-- A área do curso :: Esse é o chunk lazy `courses-routes`.
+- A copy of `main` :: `main` is listed on its own.
+-- Uma cópia do `main` :: O `main` aparece sozinho.
++ Code both halves share, Angular among it :: Right. Loaded once, used by both.
+++ Código que as duas metades compartilham, o Angular entre ele :: Isso. Carregado uma vez, usado pelas duas.
+- The styles :: The styles file is listed separately, and empty.
+-- Os estilos :: O arquivo de estilos aparece separado, e vazio.
+
+@ lazy-loading cloze medium #ex-p0gj9xjc
+? A route loads a file of routes with `___: () => import('./courses.routes').then((m) => m.courseRoutes)`.
+?? Uma rota carrega um arquivo de rotas com `___: () => import('./courses.routes').then((m) => m.courseRoutes)`.
+= loadChildren
+== loadChildren
+
+@ route-providers quiz hard #ex-hwt2bf3p
+? The probe was provided on the course area's route. From Git to the week to JavaScript, how many probes were made?
+?? O probe foi fornecido na rota da área do curso. Do Git para a semana para o JavaScript, quantos probes foram feitos?
+- Two, one per course :: Parameters do not make new route injectors.
+-- Dois, um por curso :: Parâmetros não fazem injetores de rota novos.
++ One, never destroyed :: Right. The route's injector lives as long as the application.
+++ Um, nunca destruído :: Isso. O injetor da rota vive tanto quanto a aplicação.
+- Two, since leaving for the week destroyed the first :: Nothing was destroyed.
+-- Dois, já que sair para a semana destruiu o primeiro :: Nada foi destruído.
+- None, because route providers need `providedIn` :: `@Injectable()` is enough for a providers list.
+-- Nenhum, porque providers de rota precisam de `providedIn` :: O `@Injectable()` basta para uma lista de providers.
+
+@ route-providers matching medium #ex-hwk9xn02
+? Match where a service is provided with how many instances there are.
+?? Associe onde um serviço é fornecido a quantas instâncias existem.
+< `providedIn: 'root'` :: one for the application
+<< `providedIn: 'root'` :: uma para a aplicação
+< a route's `providers` :: one for that route, every visit and every parameter
+<< os `providers` de uma rota :: uma para essa rota, toda visita e todo parâmetro
+< a component's `providers` :: one per component instance
+<< os `providers` de um componente :: uma por instância do componente
+x one per HTTP request
+xx uma por pedido HTTP
+
+@ preloading quiz medium #ex-n8qyynhr
+? What does `withPreloading(PreloadAllModules)` change for the first page?
+?? O que o `withPreloading(PreloadAllModules)` muda na primeira página?
+- It waits for every lazy chunk before drawing :: It draws first, then fetches.
+-- Espera todo chunk lazy antes de desenhar :: Ele desenha primeiro, depois busca.
++ Lazy chunks are fetched after it is drawn :: Right. The first click finds the code there.
+++ Chunks lazy são buscados depois que ela é desenhada :: Isso. O primeiro clique acha o código lá.
+- It puts the lazy routes back into `main` :: The build still splits them.
+-- Põe as rotas lazy de volta no `main` :: O build ainda as separa.
+- Nothing until somebody hovers a link :: That would be a custom strategy.
+-- Nada até alguém passar o mouse sobre um link :: Isso seria uma estratégia própria.
+
+@ preloading quiz medium #ex-00b19fb5
+? Why might an application with fifty lazy areas not use `PreloadAllModules`?
+?? Por que uma aplicação com cinquenta áreas lazy poderia não usar o `PreloadAllModules`?
+- Preloading fails with more than ten chunks :: There is no such limit.
+-- O preloading falha com mais de dez chunks :: Não existe esse limite.
++ It downloads code most people never use :: Right. On their data plan.
+++ Ele baixa código que a maioria nunca usa :: Isso. No pacote de dados delas.
+- Lazy areas cannot be preloaded :: They can; that is the strategy's job.
+-- Áreas lazy não podem ser pré-carregadas :: Podem; esse é o trabalho da estratégia.
+- It slows the first page down :: It starts after the first page is drawn.
+-- Deixa a primeira página mais lenta :: Começa depois que a primeira página é desenhada.
+
+@ defer quiz medium #ex-kbrfq9r1
+? In the dev server with HMR on, what did `@defer` do?
+?? No servidor de desenvolvimento com HMR ligado, o que o `@defer` fez?
+- It refused to build :: It built, with a warning.
+-- Recusou-se a compilar :: Compilou, com um aviso.
++ Loaded the deferred code at once, warning `NG0751` :: Right. The build still splits it.
+++ Carregou o código adiado de uma vez, avisando `NG0751` :: Isso. O build ainda o separa.
+- It never showed the chart :: The chart showed on the click.
+-- Nunca mostrou o gráfico :: O gráfico apareceu no clique.
+- It drew the chart without a click :: The placeholder showed until the click.
+-- Desenhou o gráfico sem clique :: O placeholder apareceu até o clique.
+
+@ defer matching medium #ex-fc0fd7v2
+? Match each `@defer` trigger with when it fetches the block.
+?? Associe cada gatilho do `@defer` a quando ele busca o bloco.
+< `on interaction(show)` :: when `show` is clicked or a key is pressed on it
+<< `on interaction(show)` :: quando o `show` é clicado ou uma tecla é apertada nele
+< `on viewport` :: when the block scrolls into view
+<< `on viewport` :: quando o bloco entra na área visível
+< `on idle` :: when the browser has nothing else to do
+<< `on idle` :: quando o navegador não tem mais nada a fazer
+< `when ready()` :: when a condition becomes true
+<< `when ready()` :: quando uma condição fica verdadeira
+x when the server sends it
+xx quando o servidor o manda
+
+@ defer quiz easy #ex-a58rsm3j
+? What shows in a `@defer` block's place before its trigger?
+?? O que aparece no lugar de um bloco `@defer` antes do gatilho?
+- Nothing, ever :: `@placeholder` shows.
+-- Nada, nunca :: O `@placeholder` aparece.
+- `@loading` :: That shows while the chunk is on its way.
+-- O `@loading` :: Esse aparece enquanto o chunk está a caminho.
++ The `@placeholder` :: Right. The bench's said the chart loads when asked for.
+++ O `@placeholder` :: Isso. O do bench dizia que o gráfico carrega quando pedido.
+- An error, since the component is not loaded :: The placeholder is there for exactly that time.
+-- Um erro, já que o componente não está carregado :: O placeholder existe exatamente para esse tempo.
+
+@ drill quiz hard #ex-6kamaw8z
+? A reports area is used by a tenth of the people, and its code is half the bundle. What does the lesson suggest?
+?? Uma área de relatórios é usada por um décimo das pessoas, e o código dela é metade do bundle. O que a aula sugere?
+- `@defer` around every report :: The area is a set of routes; `loadChildren` fits it.
+-- `@defer` em volta de todo relatório :: A área é um conjunto de rotas; o `loadChildren` serve para ela.
++ `loadChildren`, and preload only routes marked for it :: Right. Most people never download it.
+++ `loadChildren`, e pré-carregar só rotas marcadas para isso :: Isso. A maioria nunca o baixa.
+- `PreloadAllModules`, so it is always ready :: Then everybody downloads it.
+-- `PreloadAllModules`, para estar sempre pronto :: Aí todo mundo o baixa.
+- A `canActivate` guard to keep the code out :: A guard runs after the code has loaded.
+-- Um guard `canActivate` para deixar o código de fora :: Um guard roda depois de o código carregar.

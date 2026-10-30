@@ -1,0 +1,231 @@
+# Lesson 15: validators
+
+@ built-in quiz easy #ex-za7hhjaj
+? What does a validator return for a valid value?
+?? O que um validador retorna para um valor válido?
+- `true` :: `true` would be read as an error object; valid is `null`.
+-- `true` :: `true` seria lido como um objeto de erro; válido é `null`.
++ `null` :: Right. Anything else names what is wrong.
+++ `null` :: Isso. Qualquer outra coisa diz o que está errado.
+- An empty string :: Validators answer with an object or `null`.
+-- Uma string vazia :: Validadores respondem com um objeto ou `null`.
+- The value itself, unchanged :: A validator judges the value; it does not pass it on.
+-- O próprio valor, sem mudança :: Um validador julga o valor; não o repassa.
+
+@ built-in quiz medium #ex-9kzdrk6y
+? With `Validators.min(5)` and the value 2, what did `errors` hold?
+?? Com `Validators.min(5)` e o valor 2, o que o `errors` guardava?
++ `{"min":{"min":5,"actual":2}}` :: Right. The key names the validator; the object says why.
+++ `{"min":{"min":5,"actual":2}}` :: Isso. A chave nomeia o validador; o objeto diz por quê.
+- `{"invalid":true}` :: Each validator adds its own key.
+-- `{"invalid":true}` :: Cada validador acrescenta a própria chave.
+- `"At least 5 minutes."` :: That sentence is the form's, written from the key.
+-- `"At least 5 minutes."` :: Essa frase é do formulário, escrita a partir da chave.
+- `null`, since 2 is a number :: 2 is below the minimum.
+-- `null`, já que 2 é um número :: 2 está abaixo do mínimo.
+
+@ built-in quiz medium #ex-06kw1c3z
+? The minutes were fine and the date was empty. What was the group's status?
+?? Os minutos estavam certos e a data vazia. Qual era o status do grupo?
+- `VALID`, since minutes is the field with validators :: The date was `required` too.
+-- `VALID`, já que minutos é o campo com validadores :: A data também era `required`.
+- `PENDING` :: Nothing asynchronous was running.
+-- `PENDING` :: Nada assíncrono estava rodando.
++ `INVALID` :: Right. A group is invalid if any control in it is.
+++ `INVALID` :: Isso. Um grupo é inválido se qualquer controle nele for.
+- `DISABLED` :: Nothing was disabled.
+-- `DISABLED` :: Nada estava desabilitado.
+
+@ built-in quiz medium #ex-w28fmt5c
+? Why does the form not rely on the browser's own validation bubbles?
+?? Por que o formulário não confia nos balões de validação do próprio navegador?
+- Angular's validators are faster :: Speed is not the reason.
+-- Os validadores do Angular são mais rápidos :: Velocidade não é o motivo.
++ They look and sound different everywhere :: Right. Angular adds `novalidate` and the form shows its own messages.
+++ Mudam de cara e de som em todo lugar :: Isso. O Angular acrescenta `novalidate` e o formulário mostra as próprias mensagens.
+- Browsers have no validation for number fields :: They do; Angular turns it off.
+-- Navegadores não têm validação para campos numéricos :: Têm; o Angular a desliga.
+- They would send the form to the server first :: They block a submission; they send nothing.
+-- Eles mandariam o formulário ao servidor antes :: Eles bloqueiam um envio; não mandam nada.
+
+@ messages quiz medium #ex-zty356gy
+? When does a field's message appear in this form?
+?? Quando a mensagem de um campo aparece neste formulário?
+- As soon as the value is invalid, while typing :: That shows a message at the first digit, which is noise.
+-- Assim que o valor fica inválido, durante a digitação :: Isso mostra uma mensagem no primeiro dígito, o que é ruído.
++ Once the field is left, or on submit :: Right. `touched`, or `submitted()`.
+++ Quando o campo é deixado, ou no envio :: Isso. `touched`, ou `submitted()`.
+- Only after the server refuses the form :: The form now checks before anything is sent.
+-- Só depois que o servidor recusa o formulário :: O formulário agora confere antes de mandar qualquer coisa.
+- When the field gets the focus :: Focus alone says nothing about the value.
+-- Quando o campo recebe o foco :: Foco sozinho não diz nada sobre o valor.
+
+@ messages quiz medium #ex-x2qk5x98
+? What does `aria-describedby` on the input add?
+?? O que o `aria-describedby` no input acrescenta?
+- A tooltip with the message :: It draws nothing.
+-- Uma dica flutuante com a mensagem :: Ele não desenha nada.
+- The red border around an invalid field :: Styling comes from CSS, not from ARIA.
+-- A borda vermelha em volta de um campo inválido :: Estilo vem do CSS, não do ARIA.
++ The message, read with the field :: Right. `--a11y` showed it as the field's description.
+++ A mensagem, lida junto com o campo :: Isso. O `--a11y` a mostrou como a descrição do campo.
+- A check that the message's id exists :: It points at the id; it checks nothing.
+-- Uma conferência de que o id da mensagem existe :: Ele aponta para o id; não confere nada.
+
+@ messages quiz hard #ex-7pc1thhy
+? Why does `focusFirstProblem` read the controls instead of looking for `input.ng-invalid` on the page?
+?? Por que o `focusFirstProblem` lê os controles em vez de procurar `input.ng-invalid` na página?
+- `ng-invalid` is not a class Angular adds :: Angular adds it; the problem is when.
+-- `ng-invalid` não é uma classe que o Angular acrescenta :: O Angular a acrescenta; o problema é quando.
+- Reading the page is not allowed in a component :: It reads the page to focus the input.
+-- Ler a página não é permitido num componente :: Ele lê a página para focar o input.
++ The page's classes are not updated yet :: Right. The controls are already up to date.
+++ As classes da página ainda não mudaram :: Isso. Os controles já estão atualizados.
+- Controls know about focus; inputs do not :: Inputs are what take the focus.
+-- Controles sabem de foco; inputs não :: Inputs são o que recebe o foco.
+
+@ messages multiple-choice medium #ex-xphgwtjx
+? What did the form do when submitted empty? Choose every one.
+?? O que o formulário fez quando enviado vazio? Escolha todos.
++ It sent nothing :: Right.
+++ Não mandou nada :: Isso.
++ It showed the date's message :: Right. `submitted()` made it show.
+++ Mostrou a mensagem da data :: Isso. O `submitted()` a fez aparecer.
++ It moved the focus to the date :: Right. The first field that needed attention.
+++ Moveu o foco para a data :: Isso. O primeiro campo que precisava de atenção.
+- It disabled the Add button :: The button stays usable; pressing it shows what is wrong.
+-- Desabilitou o botão Add :: O botão continua usável; apertá-lo mostra o que está errado.
+- It cleared the minutes :: The minutes stayed at 30.
+-- Limpou os minutos :: Os minutos ficaram em 30.
+
+@ custom quiz medium #ex-vkq54txe
+? `notBefore(day)` is a function that returns a validator. Why not a validator directly?
+?? O `notBefore(day)` é uma função que retorna um validador. Por que não um validador direto?
+- Validators may not be exported :: `distinctDates` is exported as it is.
+-- Validadores não podem ser exportados :: O `distinctDates` é exportado como está.
++ The validator needs a setting, the day :: Right. Like `Validators.min(5)`.
+++ O validador precisa de uma configuração, o dia :: Isso. Como o `Validators.min(5)`.
+- Angular calls a factory once per keystroke :: Angular calls the validator it is given; the factory ran once.
+-- O Angular chama uma factory a cada tecla :: O Angular chama o validador que recebeu; a factory rodou uma vez.
+- It makes the validator asynchronous :: It returns a plain synchronous one.
+-- Isso torna o validador assíncrono :: Ele retorna um síncrono comum.
+
+@ custom quiz medium #ex-2nxr1f7h
+? Why may `notBefore` compare dates with `<` on their strings?
+?? Por que o `notBefore` pode comparar datas com `<` nas strings delas?
+- JavaScript converts date strings to `Date` before comparing :: It compares them as strings.
+-- O JavaScript converte strings de data em `Date` antes de comparar :: Ele as compara como strings.
+- It cannot; the lesson's comparison is wrong after 2026 :: It holds for any four-digit year.
+-- Não pode; a comparação da aula erra depois de 2026 :: Vale para qualquer ano de quatro dígitos.
++ `YYYY-MM-DD` sorts like the dates it names :: Right. String order is date order.
+++ `YYYY-MM-DD` se ordena como as datas que nomeia :: Isso. A ordem das strings é a ordem das datas.
+- The date input stores a number :: It stores a string.
+-- O input de data guarda um número :: Ele guarda uma string.
+
+@ custom quiz hard #ex-8e8rsak3
+? Why is `distinctDates` on the array and not on each date control?
+?? Por que o `distinctDates` fica no array e não em cada controle de data?
+- A date control cannot have more than one validator :: Each already has two.
+-- Um controle de data não pode ter mais de um validador :: Cada um já tem dois.
++ The array sees the dates together :: Right. A rule about two values belongs where both are.
+++ O array vê as datas juntas :: Isso. Uma regra sobre dois valores fica onde os dois estão.
+- So that both dates are marked invalid :: Neither was marked invalid; the pair was.
+-- Para as duas datas serem marcadas inválidas :: Nenhuma foi marcada inválida; o par foi.
+- Array validators run on the server :: Every validator here runs in the browser.
+-- Validadores de array rodam no servidor :: Todo validador aqui roda no navegador.
+
+@ custom cloze easy #ex-3ccn5wzb
+? A validator that finds nothing wrong returns ___.
+?? Um validador que não acha nada errado retorna ___.
+= null
+== null
+
+@ async quiz medium #ex-6yjzvf4p
+? What is a control's status while its asynchronous validator is waiting?
+?? Qual é o status de um controle enquanto o validador assíncrono dele espera?
+- `INVALID`, until the answer clears it :: It is neither valid nor invalid yet.
+-- `INVALID`, até a resposta liberá-lo :: Ele ainda não é nem válido nem inválido.
+- `VALID`, until the answer says otherwise :: It is neither yet.
+-- `VALID`, até a resposta dizer o contrário :: Ele ainda não é nenhum dos dois.
++ `PENDING` :: Right. `submit` waits for it to end.
+++ `PENDING` :: Isso. O `submit` espera ele terminar.
+- `DISABLED` :: The control can still be typed in.
+-- `DISABLED` :: Ainda dá para digitar no controle.
+
+@ async quiz medium #ex-yj7zkey4
+? What does `updateOn: 'blur'` change for the date control?
+?? O que o `updateOn: 'blur'` muda para o controle de data?
++ The value arrives when the field is left :: Right. Not once per key.
+++ O valor chega quando o campo é deixado :: Isso. Não uma vez por tecla.
+- It validates on the server instead of the browser :: The validator runs in the browser and asks the server.
+-- Valida no servidor em vez do navegador :: O validador roda no navegador e pergunta ao servidor.
+- It stops the field from being submitted with Enter :: A submit still takes every field's value.
+-- Impede o campo de ser enviado com Enter :: Um envio ainda pega o valor de todo campo.
+- It skips the synchronous validators :: Those still run, and first.
+-- Pula os validadores síncronos :: Esses ainda rodam, e primeiro.
+
+@ async quiz hard #ex-vhrn56sf
+? An empty date is left. Does the asynchronous validator ask the server?
+?? Uma data vazia é deixada. O validador assíncrono pergunta ao servidor?
+- Yes, every time the field is left :: Not when a synchronous validator already failed.
+-- Sim, toda vez que o campo é deixado :: Não quando um validador síncrono já falhou.
++ No: `required` fails first :: Right. A missing date costs no request.
+++ Não: o `required` falha antes :: Isso. Uma data faltando não custa pedido.
+- Yes, but its answer is ignored :: No request is sent at all.
+-- Sim, mas a resposta é ignorada :: Nenhum pedido é mandado.
+- No, because `updateOn: 'blur'` skips empty values :: `updateOn` decides when, not whether.
+-- Não, porque o `updateOn: 'blur'` pula valores vazios :: O `updateOn` decide quando, não se.
+
+@ async numeric medium #ex-ckaqq6aq
+? Submitting the 24th, a taken day, how many requests for `/api/planner` did the page make in all?
+?? Enviando o dia 24, um dia ocupado, quantos pedidos de `/api/planner` a página fez no total?
+= 2
+== 2
+
+@ server-last quiz medium #ex-t5cfraj3
+? The form checks the minutes. Why does the server check them again?
+?? O formulário confere os minutos. Por que o servidor os confere de novo?
+- The form's check can be wrong about numbers :: It is right; it is just not the only way in.
+-- A conferência do formulário pode errar com números :: Ela está certa; só não é a única entrada.
+- The server's check is faster :: Speed is not the reason.
+-- A conferência do servidor é mais rápida :: Velocidade não é o motivo.
++ A request can come from anything, `curl` included :: Right. The server's check decides what is stored.
+++ Um pedido pode vir de qualquer coisa, `curl` inclusive :: Isso. A conferência do servidor decide o que é guardado.
+- The form sends the minutes as text :: It sends a number; the question is who else sends.
+-- O formulário manda os minutos como texto :: Ele manda um número; a questão é quem mais manda.
+
+@ server-last matching medium #ex-e3ra5nn2
+? Match each check with what it is for.
+?? Associe cada conferência ao que ela serve.
+< a validator in the form :: a mistake fixed where it was made, before a round trip
+<< um validador no formulário :: um erro corrigido onde foi feito, antes de uma ida e volta
+< the server's check :: what is stored
+<< a conferência do servidor :: o que é guardado
+< the asynchronous check :: advice from data the browser does not have
+<< a conferência assíncrona :: um aviso a partir de dados que o navegador não tem
+x the look of the submit button
+xx a aparência do botão de enviar
+
+@ server-last quiz hard #ex-9tj52kcw
+? Why does `startAgain` now keep the first date control instead of clearing the array?
+?? Por que o `startAgain` agora mantém o primeiro controle de data em vez de limpar o array?
+- `clear()` was removed in Angular 21 :: It exists, and lesson 14 used it.
+-- O `clear()` foi removido no Angular 21 :: Ele existe, e a aula 14 o usou.
+- The new control would lose its validators :: `dateControl()` gives every new one the same.
+-- O controle novo perderia os validadores :: O `dateControl()` dá a todo novo os mesmos.
++ The input on the page stays, instead of being made again :: Right. `track date` keeps it while its control is the same.
+++ O input na página fica, em vez de ser feito de novo :: Isso. O `track date` o mantém enquanto o controle for o mesmo.
+- The server needs the same control to accept the next `POST` :: The server never sees controls.
+-- O servidor precisa do mesmo controle para aceitar o próximo `POST` :: O servidor nunca vê controles.
+
+@ drill quiz hard #ex-fyty5jew
+? A sign-up form must refuse a username already taken. Where does that rule belong?
+?? Um formulário de cadastro precisa recusar um nome de usuário já usado. Onde essa regra fica?
+- Only in an async validator in the form :: Two people can ask for the same name a second apart.
+-- Só num validador assíncrono no formulário :: Duas pessoas podem pedir o mesmo nome com um segundo de diferença.
+- Only in a synchronous validator, with a list of names in the code :: The list is on the server and changes.
+-- Só num validador síncrono, com uma lista de nomes no código :: A lista está no servidor e muda.
++ On the server, with an async check as advice :: Right. The data keeps the rule; the form helps the person.
+++ No servidor, com uma conferência assíncrona como aviso :: Isso. Os dados mantêm a regra; o formulário ajuda a pessoa.
+- Nowhere: the server will pick a free name itself :: The person asked for a particular name.
+-- Em lugar nenhum: o servidor escolhe um nome livre sozinho :: A pessoa pediu um nome em particular.

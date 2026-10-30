@@ -1,0 +1,514 @@
+[
+ {
+  "id": "ex-8v68yfph",
+  "version": 1,
+  "section": "two-copies",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Before the store, why did ticking a session on the course page leave the week's total unchanged?",
+  "choices": [
+   {
+    "text": "The checkbox's `change` event never reached `CoursePage`",
+    "correct": false,
+    "why": "It did: the course page's copy changed."
+   },
+   {
+    "text": "Each component had its own resource and its own copy",
+    "correct": true,
+    "why": "Right. The tick changed only `CoursePage`'s."
+   },
+   {
+    "text": "`Week` is OnPush, and OnPush ignores clicks elsewhere",
+    "correct": false,
+    "why": "A signal both read would have updated it; there was none."
+   },
+   {
+    "text": "The dev server cached the first answer to `courses.json`",
+    "correct": false,
+    "why": "Both requests were answered; each copy was its own."
+   }
+  ]
+ },
+ {
+  "id": "ex-yw3qb534",
+  "version": 1,
+  "section": "two-copies",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Before the store, how many requests for `/courses.json` did one load of the page make?",
+  "value": 2,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-rmbkm52z",
+  "version": 1,
+  "section": "a-service",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What makes `PlannerStore` a service, as far as Angular is concerned?",
+  "choices": [
+   {
+    "text": "It extends Angular's `Service` base class, as the CLI writes it",
+    "correct": false,
+    "why": "There is no such class; it extends nothing."
+   },
+   {
+    "text": "Its name ends with `Store`",
+    "correct": false,
+    "why": "The name is for people; Angular reads none of it."
+   },
+   {
+    "text": "Nothing special: an injectable class with no template",
+    "correct": true,
+    "why": "Right. Everything in it is lesson 10."
+   },
+   {
+    "text": "It was created by `ng generate service`",
+    "correct": false,
+    "why": "The CLI only wrote a file; a class written by hand is the same."
+   }
+  ]
+ },
+ {
+  "id": "ex-nnjx2cnw",
+  "version": 1,
+  "section": "a-service",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the store write `this.data.hasValue() ? this.data.value().courses : []` rather than `this.data.value()?.courses ?? []`?",
+  "choices": [
+   {
+    "text": "`?.` does not work inside a `computed`",
+    "correct": false,
+    "why": "It works anywhere a TypeScript expression does."
+   },
+   {
+    "text": "`value()` throws in the error state",
+    "correct": true,
+    "why": "Right. The check comes first, so the computed never throws."
+   },
+   {
+    "text": "`hasValue()` starts the request if it has not started",
+    "correct": false,
+    "why": "It only reads the state; the resource started on its own."
+   },
+   {
+    "text": "`hasValue()` is faster than reading the value",
+    "correct": false,
+    "why": "Speed is not the reason."
+   }
+  ]
+ },
+ {
+  "id": "ex-f9cvr5h3",
+  "version": 1,
+  "section": "a-service",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The CLI command that wrote `planner-store.ts` was `npx ng generate ___ planner-store`.",
+  "blanks": [
+   {
+    "accept": [
+     "service"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-shbd5w4b",
+  "version": 1,
+  "section": "using-it",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After both components injected the store, the tick showed 140 minutes done. What carried the change to `Week`?",
+  "choices": [
+   {
+    "text": "`CoursePage` emitted an output that `Week` listened to",
+    "correct": false,
+    "why": "Neither knows the other exists."
+   },
+   {
+    "text": "The store reloaded `courses.json` after the toggle",
+    "correct": false,
+    "why": "There was one request, before the tick."
+   },
+   {
+    "text": "Change detection ran over the whole page because of the click",
+    "correct": false,
+    "why": "The page is zoneless and OnPush; a click alone redraws nothing."
+   },
+   {
+    "text": "`Week`'s `totals` read the store's `sessions` signal, which changed",
+    "correct": true,
+    "why": "Right. One signal, read by both."
+   }
+  ]
+ },
+ {
+  "id": "ex-48fcapbs",
+  "version": 1,
+  "section": "using-it",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The components declare `protected readonly store = inject(PlannerStore)`. Why `protected` and not `private`?",
+  "choices": [
+   {
+    "text": "The templates read `store`",
+    "correct": true,
+    "why": "Right. A template reaches `protected` members, not `private` ones."
+   },
+   {
+    "text": "`private` fields cannot hold an injected value",
+    "correct": false,
+    "why": "They can; `PlannerStore` keeps its resource in one."
+   },
+   {
+    "text": "`protected` lets subclasses replace the store",
+    "correct": false,
+    "why": "Nothing here subclasses a component."
+   },
+   {
+    "text": "`private` would give each component its own store",
+    "correct": false,
+    "why": "Visibility has nothing to do with which injector answers."
+   }
+  ]
+ },
+ {
+  "id": "ex-nhh7rv0k",
+  "version": 1,
+  "section": "read-only",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`this.store.sessions.set([])` stopped the build. What did the error say?",
+  "choices": [
+   {
+    "text": "`NG0201`: no provider for `Session[]`",
+    "correct": false,
+    "why": "It was a TypeScript error at build time, not an injection error."
+   },
+   {
+    "text": "`TS2339`: `set` does not exist on `Signal<Session[]>`",
+    "correct": true,
+    "why": "Right. A computed is a read-only signal."
+   },
+   {
+    "text": "`TS2341`: `sessions` is private",
+    "correct": false,
+    "why": "That error was about `data`; `sessions` is public."
+   },
+   {
+    "text": "Nothing: it compiled, and cleared the list on the page",
+    "correct": false,
+    "why": "The compiler refused both lines."
+   }
+  ]
+ },
+ {
+  "id": "ex-xgf7x7ff",
+  "version": 1,
+  "section": "read-only",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these keep a component from changing the store's data behind its back? Choose every one that does.",
+  "choices": [
+   {
+    "text": "The resource is `private`",
+    "correct": true,
+    "why": "Right. Only the store's own methods reach it."
+   },
+   {
+    "text": "`courses` and `sessions` are `computed`, with no `set`",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "The store is `providedIn: 'root'`",
+    "correct": false,
+    "why": "That decides who shares it, not who may write to it."
+   },
+   {
+    "text": "The components are OnPush",
+    "correct": false,
+    "why": "Change detection does not guard data."
+   },
+   {
+    "text": "Changes go through a named method, `toggle`",
+    "correct": true,
+    "why": "Right. The one place that changes a session."
+   }
+  ]
+ },
+ {
+  "id": "ex-4vem2kx2",
+  "version": 1,
+  "section": "read-only",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "For state in a plain writable signal, `this.state.___()` hands out a signal that reads it and cannot write it.",
+  "blanks": [
+   {
+    "accept": [
+     "asReadonly"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-57nd75yn",
+  "version": 1,
+  "section": "what-belongs",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did the week's totals move into the store while the rows stayed in `Week`?",
+  "choices": [
+   {
+    "text": "The rows need a template of their own, and a service has none",
+    "correct": false,
+    "why": "The rows are a `computed`, which a service can hold."
+   },
+   {
+    "text": "One holds for any screen; the other suits one",
+    "correct": true,
+    "why": "Right. Facts move, a screen's choices stay."
+   },
+   {
+    "text": "The totals were slow to compute in a component",
+    "correct": false,
+    "why": "Speed did not come into it."
+   },
+   {
+    "text": "A store may not hold more than four computed values",
+    "correct": false,
+    "why": "There is no such limit."
+   }
+  ]
+ },
+ {
+  "id": "ex-m9thyrk4",
+  "version": 1,
+  "section": "what-belongs",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "After the move, `Week` no longer injects `TODAY`, yet the week test that provides `TODAY` still passed. Why?",
+  "choices": [
+   {
+    "text": "The test was skipped because it no longer matched",
+    "correct": false,
+    "why": "Five tests ran and passed."
+   },
+   {
+    "text": "`Week` still reads `new Date()` as a fallback",
+    "correct": false,
+    "why": "`Week` reads no date at all now."
+   },
+   {
+    "text": "The store asked the test's injector, and the test's `useValue` answered",
+    "correct": true,
+    "why": "Right. Whoever asks, the injector answers."
+   },
+   {
+    "text": "The test checks only that `Week` can be created",
+    "correct": false,
+    "why": "It checks the range of the week of 28 October."
+   }
+  ]
+ },
+ {
+  "id": "ex-b0fjcr76",
+  "version": 1,
+  "section": "what-belongs",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`minutesThisWeek(courseId)` is a method, not a `computed`. Does a `computed` that calls it update when a session changes?",
+  "choices": [
+   {
+    "text": "No, only signals are ever tracked by a `computed`, never methods",
+    "correct": false,
+    "why": "What is tracked is the read of `sessions()` inside the method."
+   },
+   {
+    "text": "Yes: `sessions()` is read while the `computed` runs",
+    "correct": true,
+    "why": "Right. Tracking follows the reads, wherever they are written."
+   },
+   {
+    "text": "Only if the method is marked `@Injectable`",
+    "correct": false,
+    "why": "That decorator is for classes, and tracking does not need it."
+   },
+   {
+    "text": "Only once, the first time it is called",
+    "correct": false,
+    "why": "It updates every time a session it read changes."
+   }
+  ]
+ },
+ {
+  "id": "ex-vq5k2gcd",
+  "version": 1,
+  "section": "scope",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`CoursePage` was given `providers: [PlannerStore]`. What did the tick show?",
+  "choices": [
+   {
+    "text": "An `NG0201`, as two providers clash",
+    "correct": false,
+    "why": "A component provider over a root one is normal, and silent."
+   },
+   {
+    "text": "140 done, as before",
+    "correct": false,
+    "why": "The week kept its own store's copy."
+   },
+   {
+    "text": "Two requests, and 90 done: a second store with a second copy",
+    "correct": true,
+    "why": "Right. `CoursePage`'s question stopped at its own injector."
+   },
+   {
+    "text": "A build error, since `PlannerStore` is already `providedIn: 'root'`",
+    "correct": false,
+    "why": "Nothing failed to compile."
+   }
+  ]
+ },
+ {
+  "id": "ex-7jgw6228",
+  "version": 1,
+  "section": "scope",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each kind of state with where to provide its service.",
+  "pairs": [
+   {
+    "left": "shared by every screen of the application",
+    "right": "`providedIn: 'root'`"
+   },
+   {
+    "left": "separate for each instance of one component",
+    "right": "that component's `providers`"
+   },
+   {
+    "left": "one area's, loaded with a group of routes",
+    "right": "a route's `providers`"
+   }
+  ],
+  "right_distractors": [
+   "the `imports` of the component that uses it"
+  ]
+ },
+ {
+  "id": "ex-2jz7v6z7",
+  "version": 1,
+  "section": "scope",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Where is a per-component service the right choice?",
+  "choices": [
+   {
+    "text": "For the planner's sessions, so each screen is independent",
+    "correct": false,
+    "why": "Independent copies are this lesson's defect."
+   },
+   {
+    "text": "For the half-filled fields of a form shown several times on a page",
+    "correct": true,
+    "why": "Right. Each copy is meant to be separate and to go with its form."
+   },
+   {
+    "text": "For anything that is loaded from a server",
+    "correct": false,
+    "why": "Where data comes from does not decide who shares it."
+   },
+   {
+    "text": "Whenever the service is used by one component today",
+    "correct": false,
+    "why": "Today's single user says nothing about the state's scope."
+   }
+  ]
+ },
+ {
+  "id": "ex-7c7jm6d1",
+  "version": 1,
+  "section": "scope",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "How can you tell, reading the code, whether a service is really shared?",
+  "choices": [
+   {
+    "text": "By the word `Store` or `Service` in its name",
+    "correct": false,
+    "why": "Names say nothing about where it is provided."
+   },
+   {
+    "text": "By `@Injectable()` on the class",
+    "correct": false,
+    "why": "That only lets Angular build it."
+   },
+   {
+    "text": "By whether its methods change signals",
+    "correct": false,
+    "why": "That is about state, not scope."
+   },
+   {
+    "text": "By `providedIn` and every `providers:` list that names it",
+    "correct": true,
+    "why": "Right. Whoever writes the provider decides the scope."
+   }
+  ]
+ },
+ {
+  "id": "ex-6v1hc7x7",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A new screen needs the number of sessions still to do this week. Where should it be computed?",
+  "choices": [
+   {
+    "text": "In `PlannerStore`, as a computed of its own",
+    "correct": true,
+    "why": "Right. It is a fact about the planner, the same for any screen."
+   },
+   {
+    "text": "In the new screen's component, with its own `resource`",
+    "correct": false,
+    "why": "That would be a third copy of the data."
+   },
+   {
+    "text": "In `Week`, which already counts the week",
+    "correct": false,
+    "why": "`Week` no longer counts it; the store does."
+   },
+   {
+    "text": "In `planner.ts`, read by the template directly",
+    "correct": false,
+    "why": "A template can only read what its component exposes."
+   }
+  ]
+ }
+]
