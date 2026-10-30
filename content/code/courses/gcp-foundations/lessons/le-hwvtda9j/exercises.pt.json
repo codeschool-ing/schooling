@@ -1,0 +1,313 @@
+{
+  "ex-b8czzw72": {
+    "prompt": "O dono de um projeto tenta criar uma chave de conta de serviço, e uma política da organização proíbe chaves. O que acontece?",
+    "hint": "Qual dos dois decide o que pode ser feito, por quem quer que seja?",
+    "choices": [
+      {
+        "text": "Funciona, já que o Owner está acima de toda política",
+        "why": "O IAM decide quem; a política decide o quê. O Owner continua sendo um quem."
+      },
+      {
+        "text": "É recusado, qualquer que seja o papel do dono",
+        "why": "Isso. Uma barreira que um papel poderoso pudesse pular não seria barreira."
+      },
+      {
+        "text": "Funciona e a chave é apagada pela política uma hora depois",
+        "why": "Uma política recusa na criação. Ela nunca apaga nada depois."
+      },
+      {
+        "text": "Funciona se o dono tiver também `roles/iam.serviceAccountKeyAdmin`",
+        "why": "Nenhum papel levanta uma restrição. Só mudar a política levanta."
+      }
+    ]
+  },
+  "ex-j41z157e": {
+    "prompt": "Qual a diferença entre uma restrição e uma política da organização?",
+    "hint": "Uma é definida pelo Google; a outra é anexada por você.",
+    "choices": [
+      {
+        "text": "São dois nomes para o mesmo objeto",
+        "why": "São dois objetos: a regra, e a regra aplicada com um valor."
+      },
+      {
+        "text": "Uma política é um grupo de restrições vendido como pacote",
+        "why": "Uma política define exatamente uma restrição num nó."
+      },
+      {
+        "text": "Uma restrição vale para o IAM e uma política para redes",
+        "why": "As duas valem onde estiver o assunto da restrição, IAM e redes entre muitos."
+      },
+      {
+        "text": "Uma restrição é uma regra; uma política a põe num nó",
+        "why": "Isso. O `gcp.resourceLocations` não faz nada até uma política lhe dar valores em algum ponto da árvore."
+      }
+    ]
+  },
+  "ex-qevfvxhn": {
+    "prompt": "Ligue cada tipo de restrição a um exemplo dele.",
+    "hint": "Liga ou desliga; uma lista; uma condição.",
+    "pairs": [
+      {
+        "left": "booleana",
+        "right": "`compute.requireOsLogin`"
+      },
+      {
+        "left": "lista",
+        "right": "`gcp.resourceLocations`"
+      },
+      {
+        "left": "personalizada",
+        "right": "uma condição em CEL sobre os campos de uma regra de firewall"
+      }
+    ],
+    "right_distractors": [
+      "um papel concedido numa pasta"
+    ]
+  },
+  "ex-gp49rkh8": {
+    "prompt": "Uma política de local que só permite a América do Sul é aplicada na segunda. Um disco criado em Iowa no ano passado continua lá na terça. Por quê?",
+    "hint": "Quando uma política é conferida?",
+    "choices": [
+      {
+        "text": "Ela é conferida na criação, não depois",
+        "why": "Isso. Ligar uma é o momento de procurar o que ela teria recusado."
+      },
+      {
+        "text": "Políticas levam uma semana para se propagar",
+        "why": "Elas valem em minutos, e mesmo assim nunca tocam no que já existe."
+      },
+      {
+        "text": "Discos são isentos de políticas de local",
+        "why": "Um disco novo em Iowa seria recusado. O antigo é anterior à política."
+      },
+      {
+        "text": "O projeto do disco sobrepõe a política da organização",
+        "why": "Nada diz que o projeto escreveu uma política. O motivo é a data."
+      }
+    ]
+  },
+  "ex-fb8r9jgh": {
+    "prompt": "`in:southamerica-locations` é um ___ de valores, que nomeia de uma vez toda região e zona da América do Sul.",
+    "hint": "Valores, reunidos.",
+    "blanks": [
+      {
+        "accept": [
+          "grupo"
+        ]
+      }
+    ]
+  },
+  "ex-0d0a25qp": {
+    "prompt": "Por que o papel de definir políticas da organização fica separado do Owner e na organização?",
+    "hint": "O que o dono de um projeto faria com ele?",
+    "choices": [
+      {
+        "text": "Porque políticas são cobradas da organização",
+        "why": "Políticas não custam nada. A separação é sobre quem decide."
+      },
+      {
+        "text": "Porque o Owner não pode ser concedido numa pasta",
+        "why": "O Owner pode ser concedido numa pasta. Isso não tem relação com políticas."
+      },
+      {
+        "text": "Para os donos de projeto não poderem sobrepor as barreiras",
+        "why": "Isso. Se os donos escrevessem as próprias políticas, toda barreira estaria a uma sobreposição de sumir."
+      },
+      {
+        "text": "Porque uma política precisa da conta de faturamento da organização",
+        "why": "Políticas não têm nada a ver com faturamento."
+      }
+    ]
+  },
+  "ex-rchey7ha": {
+    "prompt": "A organização permite `in:southamerica-locations` e `in:us-locations`. Uma pasta põe `in:southamerica-east1-locations` com `inherit_from_parent = true`. Onde os projetos dela podem criar recursos?",
+    "hint": "Herdar uma lista de permissão a mescla.",
+    "choices": [
+      {
+        "text": "Só em São Paulo",
+        "why": "Isso exigiria que a pasta substituísse, não herdasse."
+      },
+      {
+        "text": "Em lugar nenhum, já que os dois valores conflitam",
+        "why": "Valores permitidos se mesclam sem conflito; a união é a resposta."
+      },
+      {
+        "text": "Na América do Sul ou nos EUA",
+        "why": "Isso. O valor da pasta é somado ao do pai, então nada ficou mais restrito."
+      },
+      {
+        "text": "Só nos Estados Unidos, o último valor do pai",
+        "why": "A ordem não significa nada aqui. A lista mesclada guarda todo valor."
+      }
+    ]
+  },
+  "ex-ymhxzzk4": {
+    "prompt": "A organização liga a booleana `compute.requireOsLogin`. Um projeto a desliga. Qual a política efetiva do projeto?",
+    "hint": "Uma booleana não tem o que mesclar.",
+    "choices": [
+      {
+        "text": "Desligada: vale a política mais próxima",
+        "why": "Isso. É por isso que definir políticas é um papel na organização e em nenhum outro lugar."
+      },
+      {
+        "text": "Ligada: a organização sempre vence",
+        "why": "Numa booleana, a política do nó mais próximo é a resposta."
+      },
+      {
+        "text": "As duas, mescladas num dry run",
+        "why": "Dry run é uma política separada que alguém escreve; nada vira uma por conflito."
+      },
+      {
+        "text": "Indefinida até alguém fazer reset",
+        "why": "A resposta é bem definida: a política mais próxima."
+      }
+    ]
+  },
+  "ex-tbgqb34r": {
+    "prompt": "O que faz `reset = true` na política de uma pasta?",
+    "hint": "De volta ao valor de quem?",
+    "choices": [
+      {
+        "text": "Apaga a política da organização",
+        "why": "Muda a resposta da pasta para baixo, e não toca em nada acima."
+      },
+      {
+        "text": "Relê a política do pai",
+        "why": "Isso é herança simples. O reset ignora o pai."
+      },
+      {
+        "text": "Remove todo recurso que viole a política",
+        "why": "Políticas nunca removem recursos, reset inclusive."
+      },
+      {
+        "text": "Volta ao padrão da restrição, o do Google",
+        "why": "Isso. Como se nenhuma política existisse acima da pasta."
+      }
+    ]
+  },
+  "ex-betfjn26": {
+    "prompt": "Uma equipe quer proibir chaves de conta de serviço mas teme quebrar um job noturno de que ninguém lembra. O que o Google recomenda?",
+    "hint": "Há um jeito de ver recusas sem recusar.",
+    "choices": [
+      {
+        "text": "Aplicar numa sexta e reverter se alguém reclamar",
+        "why": "Isso acha o job quebrando-o. Um dry run o acha sem a interrupção."
+      },
+      {
+        "text": "Um dry run, lendo depois o que ele teria recusado",
+        "why": "Isso. Uma semana de violações nomeia o job, e a equipe o corrige antes de aplicar."
+      },
+      {
+        "text": "Aplicar, já que políticas não são retroativas e a chave do job fica",
+        "why": "As chaves existentes ficam, mas um job que cria chaves passaria a falhar. O medo é razoável."
+      },
+      {
+        "text": "Dar Owner à conta do job para a política pulá-la",
+        "why": "Nenhum papel levanta uma restrição, e Owner num job é um segundo problema."
+      }
+    ]
+  },
+  "ex-j2x19ajj": {
+    "prompt": "Ponha os passos de introduzir uma barreira arriscada na ordem que o Google recomenda.",
+    "hint": "Observe antes de bloquear.",
+    "items": [
+      "escrever a política como dry run",
+      "ler as violações no log de auditoria",
+      "corrigir ou isentar o que merecer",
+      "aplicar a política"
+    ],
+    "trap": "Aplicar antes de ler as violações é o deslize: o dry run só serve se alguém olhar o que ele achou."
+  },
+  "ex-brt94hqh": {
+    "prompt": "Por que o `policies.tf` escreve `inherit_from_parent = false` na produção, se false é o padrão?",
+    "hint": "Um padrão é invisível; uma linha escrita é uma decisão na página.",
+    "choices": [
+      {
+        "text": "Para deixar a decisão à vista de quem ler depois",
+        "why": "Isso. Quem a pusesse como true teria de apagar antes uma linha deliberada."
+      },
+      {
+        "text": "Sem ela, o Terraform recusaria a política",
+        "why": "O provider aceita a política sem a linha; o plano seria o mesmo."
+      },
+      {
+        "text": "Sem ela, a pasta se mesclaria com a organização",
+        "why": "False é o padrão, então omiti-la também substitui. A linha documenta, não muda."
+      },
+      {
+        "text": "Ela torna a política um dry run",
+        "why": "Um dry run é o `dry_run_spec`, outro bloco."
+      }
+    ]
+  },
+  "ex-a38ss7c5": {
+    "prompt": "O que o `terraform show -json plan.bin` imprime?",
+    "hint": "O arquivo foi escrito pelo `plan -out`.",
+    "choices": [
+      {
+        "text": "As políticas como o Google as guarda hoje",
+        "why": "Nada aqui perguntou ao Google. O arquivo é o plano do próprio Terraform."
+      },
+      {
+        "text": "A política efetiva de todo projeto",
+        "why": "Políticas efetivas são calculadas pelo serviço do Google, que nenhum plano consulta."
+      },
+      {
+        "text": "O plano salvo, como JSON",
+        "why": "Isso. O `jq` então escolhe os campos que valem a leitura."
+      },
+      {
+        "text": "O log de auditoria do dry run",
+        "why": "Violações caem nos logs de auditoria do Google, depois de um apply. Um plano não tem nenhuma."
+      }
+    ]
+  },
+  "ex-z2qmfpcy": {
+    "prompt": "O plano do `policies.tf` passa. Aplicado numa organização real por alguém que só tem Owner no `planner-dev`, o que acontece?",
+    "hint": "Onde precisa estar o papel de definir políticas?",
+    "choices": [
+      {
+        "text": "As três políticas são criadas, já que o plano passou",
+        "why": "Um plano confere a descrição, nunca os papéis de quem pede."
+      },
+      {
+        "text": "Recusado: é preciso `roles/orgpolicy.policyAdmin` na organização",
+        "why": "Isso. Owner de um projeto não concede nada na organização, e o plano não podia ver isso."
+      },
+      {
+        "text": "Só a política no `planner-dev` é criada",
+        "why": "Nenhuma das três está no `planner-dev`; estão na organização e numa pasta."
+      },
+      {
+        "text": "O dry run é criado e as outras duas são recusadas",
+        "why": "Um dry run é uma política como as outras e precisa do mesmo papel."
+      }
+    ]
+  },
+  "ex-an1a1c5n": {
+    "prompt": "Quantas políticas da organização o plano do `policies.tf` adiciona?",
+    "hint": "Uma por bloco de recurso."
+  },
+  "ex-6retqc18": {
+    "prompt": "Os dados dos clientes precisam ficar no Brasil. A organização permite a América do Sul e os Estados Unidos. Uma pasta nova `customer-data` deve permitir só São Paulo. Que política na pasta faz isso?",
+    "hint": "Numa lista de permissão, o que herdar faz?",
+    "choices": [
+      {
+        "text": "Uma lista própria, herdando da organização",
+        "why": "Herdar somaria São Paulo à lista do pai e manteria os Estados Unidos."
+      },
+      {
+        "text": "Um `reset`, para valer o padrão do Google",
+        "why": "O padrão do Google para locais permite todo lugar, o oposto da intenção."
+      },
+      {
+        "text": "Nenhuma política, e um rótulo `residency=br` em cada projeto",
+        "why": "Um rótulo não decide nada, e qualquer um que edite o projeto pode mudá-lo."
+      },
+      {
+        "text": "Uma lista própria, sem herdar",
+        "why": "Isso. Substituir faz de São Paulo a resposta inteira da pasta para baixo."
+      }
+    ]
+  }
+}
