@@ -1,0 +1,714 @@
+[
+  {
+    "id": "ex-vagpz9va",
+    "version": 1,
+    "section": "state-triggers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A button adds 25 to `var minutes = 0` declared in a composable. What does the screen show after one click?",
+    "hint": "Can Compose see a plain variable change?",
+    "choices": [
+      {
+        "text": "25 min",
+        "correct": false,
+        "why": "The variable is 25, and nothing told Compose to run again."
+      },
+      {
+        "text": "0 min",
+        "correct": true,
+        "why": "Right: the test printed `a plain var after one click: 0 min`."
+      },
+      {
+        "text": "A crash, since a composable cannot hold a `var`",
+        "correct": false,
+        "why": "It compiles and runs; it just never updates."
+      },
+      {
+        "text": "Nothing until the phone is turned",
+        "correct": false,
+        "why": "Turning rebuilds from 0 again."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwyw94me",
+    "version": 1,
+    "section": "state-triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var minutes by mutableIntStateOf(0)` without `remember` also shows 0 after a click. Why, if Compose did see the write?",
+    "hint": "What does running again do to the first line?",
+    "choices": [
+      {
+        "text": "The write is ignored because it happened inside `onClick`",
+        "correct": false,
+        "why": "Writes from event handlers are exactly how state normally changes."
+      },
+      {
+        "text": "The recomposition created a new state object holding 0",
+        "correct": true,
+        "why": "Right: the 25 went into the object the next run threw away."
+      },
+      {
+        "text": "`mutableIntStateOf` only works with `Long`",
+        "correct": false,
+        "why": "It is the `Int` version; `mutableLongStateOf` is the `Long` one."
+      },
+      {
+        "text": "`waitForIdle` reset the value",
+        "correct": false,
+        "why": "It only waits for Compose to finish reacting."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gvw5m9n",
+    "version": 1,
+    "section": "state-triggers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For a `Long`, the specialised state function is `mutable___StateOf`.",
+    "hint": "Like `mutableIntStateOf`, for another type.",
+    "blanks": [
+      {
+        "accept": [
+          "Long"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bmpt9f5s",
+    "version": 1,
+    "section": "state-triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do this lesson's tests import `createComposeRule` from the `v2` package?",
+    "hint": "Read the compiler's warning about the other one.",
+    "choices": [
+      {
+        "text": "The other one is deprecated, and `v2` queues coroutines as Kotlin's test tools do",
+        "correct": true,
+        "why": "Right: that is also why the tests call `waitForIdle`."
+      },
+      {
+        "text": "Only `v2` works with Robolectric",
+        "correct": false,
+        "why": "Lessons 2 and 3 ran the other one on Robolectric."
+      },
+      {
+        "text": "`v2` is needed for `rememberSaveable`",
+        "correct": false,
+        "why": "The rule is about scheduling, not about saving."
+      },
+      {
+        "text": "`v2` takes screenshots",
+        "correct": false,
+        "why": "Roborazzi takes the screenshots."
+      }
+    ]
+  },
+  {
+    "id": "ex-4s04pbvn",
+    "version": 1,
+    "section": "remember",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `remember` keep its value?",
+    "hint": "Lesson 3 drew it.",
+    "choices": [
+      {
+        "text": "In the activity's saved `Bundle`",
+        "correct": false,
+        "why": "That is `rememberSaveable`."
+      },
+      {
+        "text": "In a static field shared by every call to the function",
+        "correct": false,
+        "why": "Each call site has its own value."
+      },
+      {
+        "text": "In the composition, in its caller's node",
+        "correct": true,
+        "why": "Right: it lives as long as that node."
+      },
+      {
+        "text": "In the `ViewModel`",
+        "correct": false,
+        "why": "A `ViewModel` is lesson 10's place, and `remember` does not use it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hd3y89d",
+    "version": 1,
+    "section": "remember",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A remembered value is built from `course.name`, with no key. The screen is then given another course. What does it show?",
+    "hint": "Did `remember` have a reason to run again?",
+    "choices": [
+      {
+        "text": "The new course's value, since the parameter changed",
+        "correct": false,
+        "why": "Without a key, `remember` keeps the first result."
+      },
+      {
+        "text": "The first course's value",
+        "correct": true,
+        "why": "Right: `remember(course.id) { … }` would run again for each course."
+      },
+      {
+        "text": "An empty value, as the node is reset",
+        "correct": false,
+        "why": "The node stays; only a key or leaving resets it."
+      },
+      {
+        "text": "A compile error asking for a key",
+        "correct": false,
+        "why": "Keys are optional; forgetting one is a silent bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejx3p14k",
+    "version": 1,
+    "section": "remember",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An `if` stops calling a composable that remembered a value, then calls it again a second later. What does the composable see?",
+    "hint": "The value lives as long as the node.",
+    "choices": [
+      {
+        "text": "Its old value, because the same function was called",
+        "correct": false,
+        "why": "Same function, new node: the old node was removed."
+      },
+      {
+        "text": "A fresh value: `remember` runs its lambda again",
+        "correct": true,
+        "why": "Right: leaving the composition removed the node and its values."
+      },
+      {
+        "text": "The value from the `Bundle`",
+        "correct": false,
+        "why": "`remember` never writes to the `Bundle`."
+      },
+      {
+        "text": "An exception for reading a removed node",
+        "correct": false,
+        "why": "A new node is created; nothing reads the old one."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2ax5qtp",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After two clicks and a rotation, what did the two counters show?",
+    "hint": "One of them was saved.",
+    "choices": [
+      {
+        "text": "`remember: 0 min` and `rememberSaveable: 50 min`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`remember: 50 min` and `rememberSaveable: 50 min`",
+        "correct": false,
+        "why": "That was before the turn."
+      },
+      {
+        "text": "`remember: 50 min` and `rememberSaveable: 0 min`",
+        "correct": false,
+        "why": "The other way round: `remember` went with the composition."
+      },
+      {
+        "text": "`remember: 0 min` and `rememberSaveable: 0 min`",
+        "correct": false,
+        "why": "The saveable one came back from the `Bundle`."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3b63jnm",
+    "version": 1,
+    "section": "rotation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many minutes did the `rememberSaveable` counter show after the rotation?",
+    "hint": "Two clicks of 25.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-cgcqpdh3",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the `remember` counter go back to 0 on rotation?",
+    "hint": "What did lesson 2's rotation destroy?",
+    "choices": [
+      {
+        "text": "The rotation reset every state object to its initial value",
+        "correct": false,
+        "why": "The saveable one was not reset."
+      },
+      {
+        "text": "The activity, and the composition that held the value",
+        "correct": true,
+        "why": "Right: the new composition ran the lambda again."
+      },
+      {
+        "text": "The button's click was lost",
+        "correct": false,
+        "why": "Both clicks counted: both showed 50 before."
+      },
+      {
+        "text": "`recreate()` kills the process",
+        "correct": false,
+        "why": "It recreates the activity in the same process."
+      }
+    ]
+  },
+  {
+    "id": "ex-t18etmgv",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The system kills the planner in the background while the minutes picker shows 40, held in `rememberSaveable`. The user returns. What do they see?",
+    "hint": "The same `Bundle` crosses process death.",
+    "choices": [
+      {
+        "text": "25, the initial value",
+        "correct": false,
+        "why": "That would be `remember`, which dies with the process."
+      },
+      {
+        "text": "The launcher's home screen",
+        "correct": false,
+        "why": "The task is restored with its saved state."
+      },
+      {
+        "text": "40",
+        "correct": true,
+        "why": "Right, as Google documents; not run on a device here, and emulated in section 05."
+      },
+      {
+        "text": "40 only if a `ViewModel` held it as well",
+        "correct": false,
+        "why": "A `ViewModel` dies with the process; the `Bundle` is what survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-cevtgapy",
+    "version": 1,
+    "section": "savers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `rememberSaveable { mutableStateOf(Draft(\"kotlin\", 45)) }` fail to save?",
+    "hint": "Read the message.",
+    "choices": [
+      {
+        "text": "A data class cannot be stored in a `Bundle` as it is",
+        "correct": true,
+        "why": "Right: the message asked for a custom `Saver`."
+      },
+      {
+        "text": "`mutableStateOf` cannot hold a data class",
+        "correct": false,
+        "why": "It holds anything; saving is the problem."
+      },
+      {
+        "text": "`StateRestorationTester` needs an activity",
+        "correct": false,
+        "why": "It runs without one, which is its point."
+      },
+      {
+        "text": "The draft's `minutes` was too large",
+        "correct": false,
+        "why": "45 is tiny; the type is the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3v1x87f",
+    "version": 1,
+    "section": "savers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a `listSaver` for `Draft` have to provide?",
+    "hint": "Two directions.",
+    "choices": [
+      {
+        "text": "A `save` that turns the draft into a list a `Bundle` holds, and a `restore` that rebuilds it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `Parcelable` implementation",
+        "correct": false,
+        "why": "That is the other way, `@Parcelize`, with no `Saver`."
+      },
+      {
+        "text": "A key that changes when the draft changes",
+        "correct": false,
+        "why": "Keys belong to `remember`; a `Saver` converts."
+      },
+      {
+        "text": "A database table for the draft",
+        "correct": false,
+        "why": "A `Saver` writes to the `Bundle`, not a database."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncpbe8rn",
+    "version": 1,
+    "section": "savers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody wants to keep every session the student ever entered in `rememberSaveable` with a `Saver`. What does section 05 say?",
+    "hint": "Think of the size.",
+    "choices": [
+      {
+        "text": "That works, since a `Saver` can convert any list",
+        "correct": false,
+        "why": "It converts; it does not make the `Bundle` bigger."
+      },
+      {
+        "text": "It belongs in a database",
+        "correct": true,
+        "why": "Right: it is not a draft, and the `Bundle` should stay under 50 kB."
+      },
+      {
+        "text": "Use `remember` instead, which has no limit",
+        "correct": false,
+        "why": "`remember` loses everything on rotation."
+      },
+      {
+        "text": "Use `@Parcelize` to make it fit",
+        "correct": false,
+        "why": "Another encoding does not shrink the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z483n9a",
+    "version": 1,
+    "section": "hoisting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `MinutesPicker(minutes, onMinutesChange)`, who changes the number?",
+    "hint": "The picker can only ask.",
+    "choices": [
+      {
+        "text": "The picker, through its own `remember`",
+        "correct": false,
+        "why": "It holds no state of its own."
+      },
+      {
+        "text": "The caller that owns the state",
+        "correct": true,
+        "why": "Right: `NewSession` accepts the request in `{ minutes = it }`."
+      },
+      {
+        "text": "Compose, automatically, when the button is pressed",
+        "correct": false,
+        "why": "Compose only redraws; somebody has to write the state."
+      },
+      {
+        "text": "The activity, through `onSaveInstanceState`",
+        "correct": false,
+        "why": "Saving is not changing."
+      }
+    ]
+  },
+  {
+    "id": "ex-hf415f8f",
+    "version": 1,
+    "section": "hoisting",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The new session started at 25 minutes and the test pressed `5 min more` twice. What did the owner show?",
+    "hint": "`Planned: … min`.",
+    "value": 35,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-amj7bzeb",
+    "version": 1,
+    "section": "hoisting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where should the minutes' state be hoisted to?",
+    "hint": "Every reader and writer, and no higher.",
+    "choices": [
+      {
+        "text": "To `MainActivity`, so every screen can read it",
+        "correct": false,
+        "why": "It would work and make every screen recompose when the picker moved."
+      },
+      {
+        "text": "Into the picker, so it is self-contained",
+        "correct": false,
+        "why": "Then the summary line could not read it."
+      },
+      {
+        "text": "To `NewSession`, the lowest composable above all its readers and writers",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To a global `object`",
+        "correct": false,
+        "why": "A global is not watched by Compose and dies with the process."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4sg54jm",
+    "version": 1,
+    "section": "hoisting",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the hoisted picker to its job.",
+    "hint": "State down, events up.",
+    "pairs": [
+      {
+        "left": "`minutes: Int`",
+        "right": "The value coming down"
+      },
+      {
+        "left": "`onMinutesChange: (Int) -> Unit`",
+        "right": "The request going up"
+      },
+      {
+        "left": "`rememberSaveable` in `NewSession`",
+        "right": "The owner's copy, which survives rotation"
+      }
+    ],
+    "right_distractors": [
+      "A second copy kept inside the picker"
+    ]
+  },
+  {
+    "id": "ex-v3kcc0sg",
+    "version": 1,
+    "section": "where-state-lives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which place keeps a value through rotation but loses it when the process dies?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "`rememberSaveable`",
+        "correct": false,
+        "why": "It survives process death through the `Bundle`."
+      },
+      {
+        "text": "A `ViewModel`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A database",
+        "correct": false,
+        "why": "It survives both."
+      },
+      {
+        "text": "`remember`",
+        "correct": false,
+        "why": "It loses the value at the rotation already."
+      }
+    ]
+  },
+  {
+    "id": "ex-6999xd6d",
+    "version": 1,
+    "section": "where-state-lives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which value of the planner belongs in `rememberSaveable`?",
+    "hint": "What only the user's fingers produced.",
+    "choices": [
+      {
+        "text": "The list of all courses",
+        "correct": false,
+        "why": "A database holds it and can load it again."
+      },
+      {
+        "text": "A week of finished sessions",
+        "correct": false,
+        "why": "That is the student's work: a database."
+      },
+      {
+        "text": "Minutes picked for a new session",
+        "correct": true,
+        "why": "Right: small, typed by the user, nothing else can rebuild it."
+      },
+      {
+        "text": "The progress of a button's animation",
+        "correct": false,
+        "why": "Losing it costs nothing: `remember`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1r4bpsf3",
+    "version": 1,
+    "section": "where-state-lives",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the four places from the shortest-lived value to the longest-lived.",
+    "hint": "The bars in the figure.",
+    "items": [
+      "`remember`",
+      "a `ViewModel`",
+      "`rememberSaveable`",
+      "a database"
+    ]
+  },
+  {
+    "id": "ex-spz8x5zj",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A form keeps a course name being typed. Which of these keep it through a rotation? Choose all that apply.",
+    "hint": "The rotation destroys the activity and its composition.",
+    "choices": [
+      {
+        "text": "`var name by rememberSaveable { mutableStateOf(\"\") }`",
+        "correct": true,
+        "why": "Yes: a `String` goes in the `Bundle`."
+      },
+      {
+        "text": "`var name by remember { mutableStateOf(\"\") }`",
+        "correct": false,
+        "why": "No: the composition goes."
+      },
+      {
+        "text": "`var name = \"\"` in the composable",
+        "correct": false,
+        "why": "No, and it never even updates."
+      },
+      {
+        "text": "A `ViewModel` field the form reads",
+        "correct": true,
+        "why": "Yes: the `ViewModel` survives rotation, lesson 10."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydqc8q63",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test passes with `remember` but users report the counter resets when they switch the phone to dark mode. What explains it?",
+    "hint": "Lesson 2: what is a configuration change?",
+    "choices": [
+      {
+        "text": "Dark mode is a configuration change, so the activity is rebuilt like on rotation",
+        "correct": true,
+        "why": "Right: `rememberSaveable` fixes both."
+      },
+      {
+        "text": "Dark mode clears the `Bundle`",
+        "correct": false,
+        "why": "The `Bundle` is what would have kept the value."
+      },
+      {
+        "text": "Material 3 resets state when colours change",
+        "correct": false,
+        "why": "Colours do not touch state; the rebuild does."
+      },
+      {
+        "text": "The test ran on the light theme only",
+        "correct": false,
+        "why": "The theme is not the cause; the rebuild is."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aq5whb7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to a `rememberSaveable` value during a rotation in order.",
+    "hint": "Saved before the old one goes, read when the new one arrives.",
+    "items": [
+      "the old activity's state is written into the `Bundle`",
+      "the old activity and its composition are destroyed",
+      "the new activity's `onCreate` receives the `Bundle`",
+      "the new composition reaches `rememberSaveable` and gets the saved value"
+    ]
+  },
+  {
+    "id": "ex-e1yhfg1v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line fixes the bug of a counter that shows 0 after every click?",
+    "hint": "It needs a watched value and a place to keep it.",
+    "choices": [
+      {
+        "text": "`var minutes = 0`",
+        "correct": false,
+        "why": "Compose cannot see it change."
+      },
+      {
+        "text": "`var minutes by mutableIntStateOf(0)`",
+        "correct": false,
+        "why": "Seen, and recreated on each run."
+      },
+      {
+        "text": "`var minutes by remember { mutableIntStateOf(0) }`",
+        "correct": true,
+        "why": "Right: watched, and kept across runs."
+      },
+      {
+        "text": "`val minutes = remember { 0 }`",
+        "correct": false,
+        "why": "Kept, but a plain `Int` cannot be changed or watched."
+      }
+    ]
+  }
+]
