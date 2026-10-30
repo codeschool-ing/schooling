@@ -21,10 +21,10 @@ passwords for their own people. So:
 ```
 
 Three properties are worth knowing. An administrative unit **cannot contain another one**: they are
-flat. A user may be in several. And a **restricted management** administrative unit goes further,
-by stopping administrators whose role covers the whole tenant from changing its members, so that
-only those given a role on the unit itself can; it is how a company protects its executives'
-accounts from its own helpdesk.
+flat. A user may be in several. And a **restricted management** administrative unit goes further:
+administrators whose role covers the whole tenant can no longer change its members, and only those
+given a role on the unit itself can. It is how a company protects its executives' accounts from its
+own helpdesk.
 
 ## Two kinds of role, which share nothing
 

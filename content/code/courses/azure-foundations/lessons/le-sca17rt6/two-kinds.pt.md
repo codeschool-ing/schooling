@@ -6,7 +6,7 @@ version: 1
 **Uma identidade gerenciada é um service principal que o Azure cria para um recurso, guarda a
 credencial dele e a renova sozinho.** A lição 7 subiu uma escada de um segredo até uma credencial
 federada, e uma identidade gerenciada é o mesmo degrau do topo com o outro lado preenchido pelo
-Azure: o programa rodando num recurso do Azure pede um token, e ninguém, o programa incluído, nunca vê
+Azure. O programa rodando num recurso do Azure pede um token. Ninguém, o programa incluído, chega a ver
 uma credencial. **Não há nada para guardar, nada para renovar e nada para vazar.**
 
 Isso só funciona para código rodando **no Azure**, num recurso que tem suporte: uma máquina virtual,

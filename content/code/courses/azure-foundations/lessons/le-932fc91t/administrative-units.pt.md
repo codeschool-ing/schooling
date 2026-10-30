@@ -24,9 +24,9 @@ senhas do próprio pessoal. Então:
 
 Três propriedades valem a pena saber. Uma unidade administrativa **não pode conter outra**: elas são
 planas. Um usuário pode estar em várias. E uma unidade administrativa de **gerenciamento restrito**
-vai além, impedindo que administradores cujo papel cobre o tenant inteiro mudem os membros dela, de
-modo que só quem recebeu um papel na própria unidade consegue; é assim que uma empresa protege as
-contas dos seus executivos do próprio suporte.
+vai além: administradores cujo papel cobre o tenant inteiro deixam de poder mudar os membros dela, e
+só quem recebeu um papel na própria unidade consegue. É assim que uma empresa protege as contas dos
+seus executivos do próprio suporte.
 
 ## Dois tipos de papel, que não têm nada em comum
 

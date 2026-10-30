@@ -5,8 +5,8 @@ version: 1
 
 **A managed identity is a service principal that Azure creates for a resource, holds the credential
 of, and rotates by itself.** Lesson 7 climbed a ladder from a secret to a federated credential, and a
-managed identity is the same top rung with the other side filled in by Azure: the program running on
-an Azure resource asks for a token, and nobody, the program included, ever sees a credential. **There
+managed identity is the same top rung with the other side filled in by Azure. The program running on
+an Azure resource asks for a token. Nobody, the program included, ever sees a credential. **There
 is nothing to store, nothing to renew and nothing to leak.**
 
 It only works for code running **on Azure**, in a resource that supports it: a virtual machine, an App
