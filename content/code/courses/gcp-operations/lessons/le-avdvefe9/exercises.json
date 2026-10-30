@@ -1,0 +1,428 @@
+[
+ {
+  "id": "ex-ehhygdvx",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does Binary Authorization check when Cloud Run is asked to run an image?",
+  "hint": "It decides nothing about safety itself.",
+  "choices": [
+   {
+    "text": "That the image has no critical vulnerability",
+    "correct": false,
+    "why": "It reads no scan; a signature may stand for one, but the check is the signature."
+   },
+   {
+    "text": "Signatures by the required attestors over that exact digest",
+    "correct": true,
+    "why": "Right. Signatures over one digest, and nothing else."
+   },
+   {
+    "text": "That the image's labels name an approved team",
+    "correct": false,
+    "why": "Labels are not read; anybody can write a label."
+   },
+   {
+    "text": "That the tag matches a release in Cloud Deploy",
+    "correct": false,
+    "why": "Binary Authorization knows nothing of Cloud Deploy's releases."
+   }
+  ]
+ },
+ {
+  "id": "ex-98zgb2bz",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A team wants to know which running images their new policy would refuse, before refusing any. Which setting?",
+  "hint": "Audit without blocking.",
+  "choices": [
+   {
+    "text": "evaluationMode: ALWAYS_ALLOW",
+    "correct": false,
+    "why": "That allows everything and evaluates nothing, so it reports nothing."
+   },
+   {
+    "text": "enforcementMode: DRYRUN_AUDIT_LOG_ONLY",
+    "correct": true,
+    "why": "Right. It writes what would have been refused and refuses nothing."
+   },
+   {
+    "text": "globalPolicyEvaluationMode: ENABLE",
+    "correct": false,
+    "why": "That exempts Google's system images; it has nothing to do with dry run."
+   },
+   {
+    "text": "evaluationMode: ALWAYS_DENY for a week",
+    "correct": false,
+    "why": "That refuses every deployment, the opposite of a rehearsal."
+   }
+  ]
+ },
+ {
+  "id": "ex-c4g31853",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop's policy requires attestations. A developer deploys a new Cloud Run service without `--binary-authorization`, with an unsigned image. What happens, and what closes the gap?",
+  "hint": "Where is the policy consulted?",
+  "choices": [
+   {
+    "text": "Refused: a project policy applies to every service",
+    "correct": false,
+    "why": "Cloud Run consults it only on services where it is turned on."
+   },
+   {
+    "text": "Refused, unless the developer uses break-glass",
+    "correct": false,
+    "why": "There is nothing to break: the service never asked the policy."
+   },
+   {
+    "text": "It runs; an org-wide constraint closes the gap",
+    "correct": true,
+    "why": "Right. The constraint makes the flag compulsory for every service."
+   },
+   {
+    "text": "It runs, and continuous validation stops it within the hour",
+    "correct": false,
+    "why": "Continuous validation is GKE's, and it reports rather than stops."
+   }
+  ]
+ },
+ {
+  "id": "ex-jby61kw5",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "At 3 a.m. an unsigned hotfix is deployed with break-glass. What makes that acceptable?",
+  "hint": "Is it hidden?",
+  "choices": [
+   {
+    "text": "Break-glass images are scanned before they run",
+    "correct": false,
+    "why": "Break-glass skips the policy; nothing extra is checked."
+   },
+   {
+    "text": "Break-glass works only for an owner of the project",
+    "correct": false,
+    "why": "Whoever can deploy can annotate a deployment; what matters is the record."
+   },
+   {
+    "text": "The audit log records it, and somebody reviews it in the morning",
+    "correct": true,
+    "why": "Right. The door exists, and opening it leaves a record."
+   },
+   {
+    "text": "Break-glass deployments expire after one hour",
+    "correct": false,
+    "why": "They do not expire; the image runs until somebody replaces it."
+   }
+  ]
+ },
+ {
+  "id": "ex-rewgn0cy",
+  "version": 1,
+  "section": "signing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What exactly did `cosign sign` sign?",
+  "hint": "Look at what the command named.",
+  "choices": [
+   {
+    "text": "The tag a1b2c3d",
+    "correct": false,
+    "why": "The command named a digest; the tag is only how a person found it."
+   },
+   {
+    "text": "The source code in api/",
+    "correct": false,
+    "why": "cosign never saw the source; it signs an image in a registry."
+   },
+   {
+    "text": "One image digest",
+    "correct": true,
+    "why": "Right. And the payload printed by verify names it."
+   },
+   {
+    "text": "Every image in the repository shop/api",
+    "correct": false,
+    "why": "A signature covers one digest, no more."
+   }
+  ]
+ },
+ {
+  "id": "ex-ygrghqgz",
+  "version": 1,
+  "section": "signing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the signed image was replaced under the same tag, `cosign verify` on the tag said \"no signatures found\". Why?",
+  "hint": "What did cosign resolve the tag to?",
+  "choices": [
+   {
+    "text": "Its new digest was never signed",
+    "correct": true,
+    "why": "Right. The old signature is still there, over the old digest."
+   },
+   {
+    "text": "Pushing again deleted the signature",
+    "correct": false,
+    "why": "The .sig artifact is untouched; it is about another digest."
+   },
+   {
+    "text": "The key pair expired when the image changed",
+    "correct": false,
+    "why": "Keys do not expire with images."
+   },
+   {
+    "text": "Verification by tag is not supported",
+    "correct": false,
+    "why": "It is supported: cosign resolves the tag and checks that digest."
+   }
+  ]
+ },
+ {
+  "id": "ex-vvs6vdab",
+  "version": 1,
+  "section": "signing",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "In this lab the private key is a file with an empty password. Where does a real signing key belong, and why?",
+  "hint": "Whoever holds it can attest.",
+  "choices": [
+   {
+    "text": "In the repository, so the build can read it",
+    "correct": false,
+    "why": "Then everybody who can read the repository can sign anything."
+   },
+   {
+    "text": "On the laptop of the person who approves releases",
+    "correct": false,
+    "why": "A laptop is copied, lost and shared; and the signature would no longer stand for the build."
+   },
+   {
+    "text": "In an environment variable of the build",
+    "correct": false,
+    "why": "It would appear in the build's configuration and in anything that prints its environment."
+   },
+   {
+    "text": "In Cloud KMS, used by name",
+    "correct": true,
+    "why": "Right. The private half never leaves Google, and only granted accounts can sign."
+   }
+  ]
+ },
+ {
+  "id": "ex-9bhw0zdt",
+  "version": 1,
+  "section": "signing",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "cosign stores a signature in the registry beside the image, under a tag made of the digest and the suffix `.___`.",
+  "hint": "Three letters, in the tags list.",
+  "blanks": [
+   {
+    "accept": [
+     "sig"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-vwhd9pzj",
+  "version": 1,
+  "section": "pipeline",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the shop have two attestors rather than one key the build uses for everything?",
+  "hint": "A signature is worth the decision behind it.",
+  "choices": [
+   {
+    "text": "Binary Authorization requires at least two",
+    "correct": false,
+    "why": "One attestor is allowed; the reason is what each one means."
+   },
+   {
+    "text": "Each signature stands for one decision",
+    "correct": true,
+    "why": "Right. A build that signed everything would sign a vulnerable image too."
+   },
+   {
+    "text": "Two keys make each signature twice as hard to forge",
+    "correct": false,
+    "why": "Each signature is as strong as its own key; the point is what they assert."
+   },
+   {
+    "text": "One is for GKE and one for Cloud Run",
+    "correct": false,
+    "why": "Both platforms read the same policy and both attestors."
+   }
+  ]
+ },
+ {
+  "id": "ex-1chcshgs",
+  "version": 1,
+  "section": "pipeline",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`scan_gate.py` exits with 1 for an image with a fixable critical finding. What stops that image reaching production?",
+  "hint": "Follow the exit status, then the policy.",
+  "choices": [
+   {
+    "text": "Artifact Registry refuses to serve it",
+    "correct": false,
+    "why": "The registry serves it as before; findings block nothing."
+   },
+   {
+    "text": "scan_gate.py deletes the image",
+    "correct": false,
+    "why": "It only exits; nothing in it touches the registry."
+   },
+   {
+    "text": "No scan-passed attestation is ever made",
+    "correct": true,
+    "why": "Right. The exit stops the signing, and the missing signature stops the deployment."
+   },
+   {
+    "text": "Cloud Deploy notices the failed build and skips the release",
+    "correct": false,
+    "why": "Cloud Deploy reads no build results; the refusal is Binary Authorization's."
+   }
+  ]
+ },
+ {
+  "id": "ex-dav7pb7r",
+  "version": 1,
+  "section": "pipeline",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An engineer is granted `roles/cloudkms.signerVerifier` on the `scan-passed` key \"to help debug\". What does that change?",
+  "hint": "The policy checks a signature, not the hand that made it.",
+  "choices": [
+   {
+    "text": "Nothing: only the build's account appears in the policy",
+    "correct": false,
+    "why": "The policy names an attestor, i.e. a key; it names no account."
+   },
+   {
+    "text": "They can read the private key and copy it",
+    "correct": false,
+    "why": "KMS never releases the private half; but signing with it is enough."
+   },
+   {
+    "text": "They can approve Cloud Deploy rollouts",
+    "correct": false,
+    "why": "That needs clouddeploy.approver, a different role."
+   },
+   {
+    "text": "They can attest any image as scanned",
+    "correct": true,
+    "why": "Right. Only the key's audit log would show who signed."
+   }
+  ]
+ },
+ {
+  "id": "ex-1dkd7yg5",
+  "version": 1,
+  "section": "pipeline",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "An image admitted on Monday gets a critical finding on Thursday. What does GKE's continuous validation do?",
+  "hint": "Report or stop?",
+  "choices": [
+   {
+    "text": "Writes a log entry saying the pod would be refused now",
+    "correct": true,
+    "why": "Right. Stopping a service is left to a person, from the report."
+   },
+   {
+    "text": "Evicts the pod at once",
+    "correct": false,
+    "why": "It reports and does not stop anything."
+   },
+   {
+    "text": "Re-signs the image if the scan passes again",
+    "correct": false,
+    "why": "It signs nothing; signing is the build's."
+   },
+   {
+    "text": "Nothing: admission is checked only once",
+    "correct": false,
+    "why": "That is what happens without continuous validation, which is why it exists."
+   }
+  ]
+ },
+ {
+  "id": "ex-kgh4ph5j",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the life of the shop's image in order, from build to admission.",
+  "hint": "A signature comes after the decision it stands for.",
+  "items": [
+   "The tests pass and the image is pushed",
+   "The build signs as built-by-cloud-build",
+   "The scan finishes on the digest",
+   "The scan gate signs as scan-passed",
+   "Cloud Run checks both attestations and admits it"
+  ],
+  "trap": "Signing scan-passed before the scan finishes is the slip: the signature would assert something nobody had checked."
+ },
+ {
+  "id": "ex-t4t88vz5",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these would a policy requiring both attestations refuse? Choose all that apply.",
+  "hint": "Missing signature, or signature over another digest.",
+  "choices": [
+   {
+    "text": "An image pushed over a signed tag",
+    "correct": true,
+    "why": "Yes. Its digest has no attestation."
+   },
+   {
+    "text": "An image built on a laptop and pushed by hand",
+    "correct": true,
+    "why": "Yes. Nobody with the keys signed it."
+   },
+   {
+    "text": "A signed image deployed with break-glass",
+    "correct": false,
+    "why": "No. Break-glass admits it, and it was signed anyway."
+   },
+   {
+    "text": "An image the build signed whose scan gate failed",
+    "correct": true,
+    "why": "Yes. It has one attestation of the two."
+   },
+   {
+    "text": "An image with both attestations and a low finding",
+    "correct": false,
+    "why": "No. Both signatures are there; the policy reads nothing else."
+   }
+  ]
+ }
+]
