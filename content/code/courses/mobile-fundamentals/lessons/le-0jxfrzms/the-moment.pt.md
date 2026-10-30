@@ -1,0 +1,63 @@
+---
+title: Pedir no momento em que a pessoa entende por quê
+version: 1
+---
+
+**Como uma recusa pode ser final, o momento em que um app pede faz parte do design, não é um detalhe do
+código.** O lugar tentador é a primeira abertura: pedir tudo de uma vez e acabar logo com isso. É também
+o pior lugar. A pessoa ainda não viu uma única tela do app, o diálogo nomeia uma permissão sem nenhum
+motivo à vista, e "não" é a resposta segura para uma pergunta que você não entende. No iOS esse não já
+é final; no Android ele gasta metade do que o app vai ter.
+
+**Peça quando a pessoa fizer a coisa que precisa disso.** No planner, é o momento em que a aluna toca
+em "lembrar" numa sessão de estudo. A pergunta agora se explica sozinha: ela pediu um lembrete, e um
+lembrete é uma notificação. A documentação do Android sobre pedir permissões diz a regra com todas as
+letras: pedir "só quando precisam do acesso a um recurso específico", porque senão "você pode, sem
+querer, perder a possibilidade de pedir as permissões de novo".
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 396\" role=\"img\" data-fig=\"l12-flow\" aria-label=\"O fluxo de pedir a permissão de lembrete. A aluna toca em lembrar. Se a permissão está concedida, o planner lembra. Se foi recusada de vez, o planner planeja sem lembretes e oferece os Ajustes. Senão, se a chamada de justificativa do Android devolve true, o planner primeiro mostra a própria explicação; depois aparece o diálogo do sistema. Um sim faz o planner lembrar; um não faz ele planejar sem lembretes.\"><defs><marker id=\"l12-flow-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l12-flow-ah-paper-dim\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker><marker id=\"l12-flow-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"250\" y=\"10\" width=\"220\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--paper)\" stroke-width=\"1.4\"></rect><text x=\"360.0\" y=\"25.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">a aluna toca em “lembrar”</text><rect x=\"300\" y=\"62\" width=\"120\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"></rect><text x=\"360.0\" y=\"75.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">já</text><text x=\"360.0\" y=\"88.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">concedida?</text><path d=\"M360 40 L360 62\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-paper-dim)\"></path><rect x=\"560\" y=\"62\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"625.0\" y=\"82.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">lembrar</text><path d=\"M420 82 L560 82\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-phosphor)\"></path><text x=\"490\" y=\"74\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sim</text><rect x=\"300\" y=\"132\" width=\"120\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"></rect><text x=\"360.0\" y=\"145.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">recusada</text><text x=\"360.0\" y=\"158.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">de vez?</text><path d=\"M360 102 L360 132\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-paper-dim)\"></path><text x=\"372\" y=\"117\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">não</text><rect x=\"530\" y=\"132\" width=\"180\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"620.0\" y=\"146.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">planejar sem lembretes;</text><text x=\"620.0\" y=\"158.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">oferecer os Ajustes</text><path d=\"M420 152 L530 152\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-amber)\"></path><text x=\"475\" y=\"144\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sim</text><rect x=\"290\" y=\"202\" width=\"140\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"></rect><text x=\"360.0\" y=\"215.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Android: rationale</text><text x=\"360.0\" y=\"228.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">devolve true?</text><path d=\"M360 172 L360 202\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-paper-dim)\"></path><text x=\"372\" y=\"187\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">não</text><rect x=\"40\" y=\"202\" width=\"150\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"115.0\" y=\"215.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a explicação do</text><text x=\"115.0\" y=\"228.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">próprio planner</text><path d=\"M290 222 L190 222\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-paper-dim)\"></path><text x=\"240\" y=\"214\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sim</text><rect x=\"300\" y=\"274\" width=\"120\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"360.0\" y=\"287.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o diálogo</text><text x=\"360.0\" y=\"300.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">do sistema</text><path d=\"M360 242 L360 274\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-paper-dim)\"></path><text x=\"372\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">não</text><path d=\"M115 242 L115 294 L300 294\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-paper-dim)\"></path><rect x=\"560\" y=\"274\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"625.0\" y=\"294.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">lembrar</text><path d=\"M420 294 L560 294\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-phosphor)\"></path><text x=\"490\" y=\"286\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sim</text><rect x=\"295\" y=\"344\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"360.0\" y=\"358.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">planejar sem</text><text x=\"360.0\" y=\"370.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">lembretes</text><path d=\"M360 314 L360 344\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l12-flow-ah-amber)\"></path><text x=\"372\" y=\"329\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">não</text></svg>", "caption": "O diálogo é o último passo, e só chega a ele quem acabou de pedir a coisa que ele protege.", "same": ["Android: rationale"]}
+```
+
+## Explicar antes do diálogo, numa tela sua
+
+**O diálogo do sistema é curto e igual para todo app; a explicação é do app.** O fluxo acima mostra
+onde ela entra. Antes do diálogo, quando o motivo não fica óbvio pelo que a pessoa acabou de tocar, o
+app mostra uma tela ou uma folha sua: para que serve a permissão, com as palavras do app, e um botão que
+leva ao diálogo do sistema. No Android, um `true` de `shouldShowRequestPermissionRationale()` é o
+sistema dizendo que essa explicação agora é devida. No iOS não há esse sinal e há um único diálogo,
+então a explicação, se for necessária, vem antes do primeiro pedido.
+
+**A explicação nunca deve imitar o diálogo do sistema.** Ela é uma tela do app, diz isso, e o botão
+dela leva ao diálogo de verdade, onde a pessoa decide. Uma tela que se parece com a do sistema e
+registra "sim" sozinha é um truque aplicado à pessoa, seja o que for que o app ganhe com ele.
+
+**A permissão de notificação do Android 13 faz do momento uma escolha do app.** A documentação diz que
+um app que tem como alvo o Android 13 ou mais novo "tem controle total sobre quando o diálogo de
+permissão é exibido". Um app que ainda tem como alvo uma versão mais antiga recebe o diálogo quando o
+sistema escolhe, o que para a maioria dos apps é na abertura, o pior momento acima. Essa diferença é um
+dos motivos discretos para manter atualizada a versão-alvo de um app.
+
+## Depois de um não
+
+**Uma permissão recusada desliga um recurso, não o app.** A documentação do Android sobre lidar com a
+negação pede o que uma pessoa pediria: manter funcionando tudo o que não precisa da permissão, mostrar
+o vazio onde o recurso estaria, dizer especificamente qual recurso falta, e não bloquear a tela com um
+aviso. O planner sem notificações planeja sessões, marca sessões como feitas e soma a semana
+exatamente como antes; o botão "lembrar" diz que os lembretes estão desligados.
+
+**E não fique pedindo.** A mesma página avisa que "insistir para a pessoa reconsiderar não respeita" a
+escolha dela. Depois do não final, a única coisa útil que o app pode oferecer é um caminho até os
+Ajustes do sistema, no momento em que a pessoa chega de novo ao recurso, com uma frase dizendo o que
+ligar. As duas plataformas fazem disso uma chamada só: no iOS, abrir `UIApplication.openSettingsURLString`
+mostra a página do próprio app nos Ajustes, e no Android um intent abre a tela de detalhes do app. A
+pessoa decide lá, e o app confere a permissão de novo na próxima vez que precisar dela, porque só o
+sistema sabe o que ela escolheu.
+
+| momento | o que o planner faz |
+|---|---|
+| primeira abertura | não pede nada |
+| a aluna toca em "lembrar" | pede, e o toque é a explicação |
+| Android, depois de um não | mostra a própria explicação, e pede mais uma vez |
+| depois do não final | planeja sem lembretes, e oferece os Ajustes quando "lembrar" é tocado |
+| a pessoa a liga nos Ajustes | encontra a permissão concedida na próxima conferência, e lembra |
