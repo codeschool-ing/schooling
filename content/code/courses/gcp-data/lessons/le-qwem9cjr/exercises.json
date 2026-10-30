@@ -1,0 +1,625 @@
+[
+  {
+    "id": "ex-za5xwdak",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda's cache could run on Memorystore for Valkey. Why does this lesson practise on the Redis server Ubuntu packages?",
+    "hint": "What does Valkey answer to?",
+    "choices": [
+      {
+        "text": "Valkey cannot be installed outside Google Cloud",
+        "correct": false,
+        "why": "Valkey is open source and runs anywhere; the reason is that nothing needs changing between the two."
+      },
+      {
+        "text": "Valkey speaks the Redis protocol, so the same client and commands work on both",
+        "correct": true,
+        "why": "Right. A program written against one runs against the other, which is why `SET`, `EXPIRE` and eviction carry over."
+      },
+      {
+        "text": "The Google Cloud command line contains a Redis server the lesson reuses",
+        "correct": false,
+        "why": "There is no emulator for Memorystore at all; the server is Ubuntu's package."
+      },
+      {
+        "text": "Redis is free, and Valkey is billed by the node-hour",
+        "correct": false,
+        "why": "Both are free software; what is billed is Google running the machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk2gskkc",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Memorystore for Redis Standard-tier instance of 10 GiB in São Paulo, at $0.103 per GiB-hour, runs for 730 hours. How many dollars is that? Give two decimal places.",
+    "hint": "The tier price is per gibibyte of provisioned capacity, per hour.",
+    "value": 751.9,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-w8hc54n2",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda needs about 4 GiB of cache in Basic tier. By the São Paulo prices, what does provisioning 5 GiB instead do to the monthly bill?",
+    "hint": "Which capacity tier does each size fall into?",
+    "choices": [
+      {
+        "text": "It lowers it, because 5 GiB falls in M2 at a lower price per GiB",
+        "correct": true,
+        "why": "Right. 4 × 0.087 × 730 is 254.04 and 5 × 0.054 × 730 is 197.10: a gibibyte more, 56.94 dollars less."
+      },
+      {
+        "text": "It raises it by a quarter, one GiB more out of four",
+        "correct": false,
+        "why": "That would hold if the price per GiB were flat; it falls from M1 to M2."
+      },
+      {
+        "text": "Nothing, since the bill follows the memory the keys use",
+        "correct": false,
+        "why": "Memorystore bills provisioned capacity, used or not."
+      },
+      {
+        "text": "It raises it, because a larger tier carries a minimum charge",
+        "correct": false,
+        "why": "There is no minimum on the page; the larger tier is cheaper per gibibyte."
+      }
+    ]
+  },
+  {
+    "id": "ex-72kwdvgr",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Memorystore product to the way it is billed.",
+    "hint": "One is billed by the gibibyte, two by the node, one by the processor and memory.",
+    "pairs": [
+      {
+        "left": "Memorystore for Redis",
+        "right": "GiB of provisioned capacity, by tier"
+      },
+      {
+        "left": "Memorystore for Valkey",
+        "right": "Nodes of a chosen type, per hour"
+      },
+      {
+        "left": "Memorystore for Memcached",
+        "right": "vCPU-hours plus GiB-hours of memory"
+      },
+      {
+        "left": "Standard tier, compared with Basic",
+        "right": "A higher price per GiB, for a replica"
+      }
+    ]
+  },
+  {
+    "id": "ex-t3de29h6",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`redis-cli TTL product:p-101` answers `(integer) -2`. What does that mean?",
+    "hint": "Compare it with the key `visits`, which answered `-1`.",
+    "choices": [
+      {
+        "text": "The key never expires",
+        "correct": false,
+        "why": "That is `-1`, which the key `visits` answered."
+      },
+      {
+        "text": "The key expires in two seconds",
+        "correct": false,
+        "why": "A time left is a positive number; negative numbers are the two special answers."
+      },
+      {
+        "text": "There is no such key, for example because it expired",
+        "correct": true,
+        "why": "Right. After `sleep 6` the key had gone, `GET` answered `(nil)` and `TTL` answered `-2`."
+      },
+      {
+        "text": "The key expired two seconds ago and is still readable",
+        "correct": false,
+        "why": "An expired key is gone for every reader; `GET` answered `(nil)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-79h01hmp",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`redis-cli SET product:p-101 '{...}' ___ 300` stores the value with a time to live of five minutes.",
+    "hint": "The option is two letters, and `ex=` is its name in the Python client.",
+    "blanks": [
+      {
+        "accept": [
+          "EX"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0ga0d83y",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson run `sudo systemctl disable --now redis-server` straight after installing the package?",
+    "hint": "What did the package start on its own?",
+    "choices": [
+      {
+        "text": "The package started a Redis service of its own, which would also start at every boot",
+        "correct": true,
+        "why": "Right. Stopping it means nothing runs unless you start it, like the emulators."
+      },
+      {
+        "text": "The packaged service writes to disk, and a cache must keep nothing",
+        "correct": false,
+        "why": "Persistence is turned off by the flags you start Redis with; that is not why the service is stopped."
+      },
+      {
+        "text": "Otherwise `redis-cli` would connect to Memorystore",
+        "correct": false,
+        "why": "`redis-cli` connects to `127.0.0.1:6379` unless told otherwise; a Memorystore instance has only a private address in a VPC."
+      },
+      {
+        "text": "The packaged service refuses connections from Python",
+        "correct": false,
+        "why": "Any client on the same machine can connect to it; the reason is that it runs when you did not start it."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7atymsb",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the messages of a cache-aside read that misses in order.",
+    "hint": "The cache never talks to the database.",
+    "items": [
+      "The program sends `GET product:p-101` to the cache",
+      "The cache answers nil: the key is not there",
+      "The program runs the `SELECT` against the database",
+      "The program writes the answer with `SET ... EX 300`"
+    ]
+  },
+  {
+    "id": "ex-ckyhbcja",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly import changed `p-101` to 1390 directly in the database, and the page still shows 1290. With no change to the import, what makes the page right?",
+    "hint": "The cache did not hear about the change.",
+    "choices": [
+      {
+        "text": "Restarting `catalog.py`, which holds the price in a variable",
+        "correct": false,
+        "why": "The program runs once per command and keeps nothing; the old price is in Redis."
+      },
+      {
+        "text": "Reading the page again, since a hit refreshes the key from the database",
+        "correct": false,
+        "why": "A hit returns what the cache holds and reads nothing from the database; that is what a hit is."
+      },
+      {
+        "text": "Nothing until the key's time to live runs out",
+        "correct": true,
+        "why": "Right. The TTL is the backstop: with 300 seconds, the page is wrong for at most five minutes."
+      },
+      {
+        "text": "Redis notices the `UPDATE` and drops the key",
+        "correct": false,
+        "why": "Redis and the database never talk to each other; nobody told the cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqx0wba0",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `set_price` delete the cached key rather than write 1390 into it?",
+    "hint": "Think of two writers changing the same price at almost the same moment.",
+    "choices": [
+      {
+        "text": "Writing the value would restart its time to live, so the copy would live too long",
+        "correct": false,
+        "why": "A fresh copy with a fresh TTL is harmless; the danger is the older value winning."
+      },
+      {
+        "text": "Racing writers leave the older value behind; a delete leaves nothing",
+        "correct": true,
+        "why": "Right. After a delete, the next reader fetches whatever the database holds."
+      },
+      {
+        "text": "`DEL` is cheaper for Redis than `SET`",
+        "correct": false,
+        "why": "Both are tiny; the choice is about correctness, not speed."
+      },
+      {
+        "text": "Redis refuses `SET` on a key that already has a TTL",
+        "correct": false,
+        "why": "`SET` replaces a key whatever it had, as `catalog.py` does on every miss."
+      }
+    ]
+  },
+  {
+    "id": "ex-70z8m49y",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The cache holds `p-101` at 1290. Which of these reads still goes to the database?",
+    "hint": "Which one decides money?",
+    "choices": [
+      {
+        "text": "The photo and name on the product page",
+        "correct": false,
+        "why": "Harmless a few minutes old, which is what a cache is for."
+      },
+      {
+        "text": "The price charged at checkout",
+        "correct": true,
+        "why": "Right. Charging a stale price is a bug with a refund attached."
+      },
+      {
+        "text": "The price shown in a list of search results",
+        "correct": false,
+        "why": "A page of results is a display, and the lesson caches exactly that; the charge is where the database decides."
+      },
+      {
+        "text": "The list of categories in the menu",
+        "correct": false,
+        "why": "Read all day and changed rarely: a good thing to cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-pa69qfts",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Redis is at its `maxmemory` with the policy `noeviction`. What happens to a new `SET`?",
+    "hint": "Read the name of the policy literally.",
+    "choices": [
+      {
+        "text": "It is accepted, and the least recently used key is evicted",
+        "correct": false,
+        "why": "That is `allkeys-lru`."
+      },
+      {
+        "text": "It is refused with an OOM error, and every existing key stays",
+        "correct": true,
+        "why": "Right. `fill.py` counted 2,134 refusals, and `redis-cli` printed the error for a product's price."
+      },
+      {
+        "text": "It is accepted, and the oldest keys are written to disk to make room",
+        "correct": false,
+        "why": "Redis does not move keys to disk to make room; this server was even started with persistence off."
+      },
+      {
+        "text": "It is accepted, and Redis grows past the limit",
+        "correct": false,
+        "why": "The limit is enforced; that is what the 2 MB demonstration showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cjmqfse",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program writes keys with no time to live into a Memorystore for Redis instance left at its default policy, until it is full. What happens next?",
+    "hint": "The default policy is `volatile-lru`, and the lesson ran it on the filler keys.",
+    "choices": [
+      {
+        "text": "The least recently used keys are evicted, whatever their expiry",
+        "correct": false,
+        "why": "That is `allkeys-lru`; `volatile-lru` considers only keys that carry a TTL."
+      },
+      {
+        "text": "Memorystore adds capacity to make room",
+        "correct": false,
+        "why": "An instance has the capacity you provisioned; raising it is your decision, and your bill."
+      },
+      {
+        "text": "Writes are refused, because no key is eligible for eviction",
+        "correct": true,
+        "why": "Right. Locally, all 1,000 writes were refused under `volatile-lru`, exactly as under `noeviction`."
+      },
+      {
+        "text": "Memorystore gives each key a default TTL and expires the oldest",
+        "correct": false,
+        "why": "No TTL is added for you; a key without one stays until it is deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-f29mh9bm",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are login sessions a poor fit for a cache running `allkeys-lru`?",
+    "hint": "What does the database have of a session?",
+    "choices": [
+      {
+        "text": "Session values are too large for Redis",
+        "correct": false,
+        "why": "A session is a small value; size is not the problem."
+      },
+      {
+        "text": "`allkeys-lru` refuses keys that carry a TTL",
+        "correct": false,
+        "why": "It accepts any key and evicts any key; that is the trouble."
+      },
+      {
+        "text": "Sessions change too often for a cache to keep up with",
+        "correct": false,
+        "why": "Redis handles frequent writes well; what it does at its limit is the issue."
+      },
+      {
+        "text": "A session is the original, and the cache is allowed to evict it, logging the user out",
+        "correct": true,
+        "why": "Right. There is no copy to fall back on, unlike a product page."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjey4t7t",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `herd.py`, why is the lock written with `ex=10` as well as `nx=True`?",
+    "hint": "Imagine the request holding the lock crashes.",
+    "choices": [
+      {
+        "text": "So that the page itself expires after ten seconds",
+        "correct": false,
+        "why": "The page is written with `ex=300`; `ex=10` belongs to the lock."
+      },
+      {
+        "text": "So that a request that dies holding it cannot block the others for ever",
+        "correct": true,
+        "why": "Right. After ten seconds the lock key is gone and another request can take it."
+      },
+      {
+        "text": "Because `nx=True` is refused without an expiry",
+        "correct": false,
+        "why": "`nx=True` works on its own; the expiry is a choice made for safety."
+      },
+      {
+        "text": "So that ten requests at a time can hold it",
+        "correct": false,
+        "why": "Exactly one request wins `nx=True`; the number is seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q9zqbme",
+    "version": 1,
+    "section": "replicas-and-failover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The local replica answered `(error) READONLY` to a `SET`. What rule was it protecting?",
+    "hint": "How many writers does a key have?",
+    "choices": [
+      {
+        "text": "A replica stores only keys that carry a TTL",
+        "correct": false,
+        "why": "It had copied every key; the refusal was about who writes."
+      },
+      {
+        "text": "Every key has one writer, the primary",
+        "correct": true,
+        "why": "Right. Writes go to the primary and reach the replica by replication; a replica that took writes of its own would disagree with it."
+      },
+      {
+        "text": "A replica accepts writes only after five seconds",
+        "correct": false,
+        "why": "Five seconds is the wait before the first copy, not a rule about writes."
+      },
+      {
+        "text": "Writes to a replica need a password in protected mode",
+        "correct": false,
+        "why": "Protected mode is about connections from other machines; this was a role, not a password."
+      }
+    ]
+  },
+  {
+    "id": "ex-50f2mcn6",
+    "version": 1,
+    "section": "replicas-and-failover",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `REPLICAOF NO ONE`, the promoted server took writes, but a program still pointed at port 6379 kept failing. What does Memorystore's Standard tier do that the hand failover did not?",
+    "hint": "What does the program connect to?",
+    "choices": [
+      {
+        "text": "It moves the primary endpoint to the promoted node",
+        "correct": true,
+        "why": "Right. The address the program uses stays the same and follows the promotion; locally nothing moved port 6379."
+      },
+      {
+        "text": "It replays the writes the old primary had not sent",
+        "correct": false,
+        "why": "Replication is asynchronous, and a write in that gap is lost on Memorystore as well."
+      },
+      {
+        "text": "It keeps the open connections alive across the failover",
+        "correct": false,
+        "why": "A failover breaks open connections there too; the client has to reconnect."
+      },
+      {
+        "text": "It promotes the replica before the primary fails",
+        "correct": false,
+        "why": "A promotion follows a failure, or a failover somebody asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4vqv0gz",
+    "version": 1,
+    "section": "replicas-and-failover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Memorystore for Valkey or Redis Cluster, how does the client know which shard holds `product:p-101`?",
+    "hint": "There are 16,384 of something.",
+    "choices": [
+      {
+        "text": "It sends every command to one endpoint, which passes it on to the right shard",
+        "correct": false,
+        "why": "That is the picture of cluster mode disabled, where one primary holds everything."
+      },
+      {
+        "text": "It hashes the key to a slot, and each slot belongs to one shard",
+        "correct": true,
+        "why": "Right. The client computes the slot and sends the command straight to the shard that owns it."
+      },
+      {
+        "text": "It tries the shards in turn until one has the key",
+        "correct": false,
+        "why": "A miss would then cost a request per shard; the slot makes it one request."
+      },
+      {
+        "text": "Shards are filled in turn, so it looks the key up in a directory",
+        "correct": false,
+        "why": "There is no directory of keys; the slot is computed from the key itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fq78s1e",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to its cause.",
+    "hint": "Each one was produced in this lesson or described by it.",
+    "pairs": [
+      {
+        "left": "The page shows yesterday's price",
+        "right": "A writer changed the database without deleting the key"
+      },
+      {
+        "left": "Writes fail with an OOM error",
+        "right": "The cache is full and its policy evicts nothing it holds"
+      },
+      {
+        "left": "Users are logged out at random",
+        "right": "Sessions live in a cache that evicts"
+      },
+      {
+        "left": "The database spikes when one key expires",
+        "right": "Every request that misses runs the same query"
+      }
+    ],
+    "right_distractors": [
+      "The instance is in the Basic tier"
+    ]
+  },
+  {
+    "id": "ex-rv2njkhm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which set of choices fits a cache of product pages that can always be rebuilt from the database?",
+    "hint": "Everything in it is a copy.",
+    "choices": [
+      {
+        "text": "`noeviction`, no TTL, and writes going to the cache before the database",
+        "correct": false,
+        "why": "That makes the cache the original and lets it fill until it refuses."
+      },
+      {
+        "text": "`allkeys-lru`, a TTL on every key, and a delete on every write",
+        "correct": true,
+        "why": "Right. Forgetting is harmless, the TTL bounds staleness, and the delete keeps writers honest."
+      },
+      {
+        "text": "`volatile-lru`, no TTL, and the new value written into the cache on every change",
+        "correct": false,
+        "why": "With no TTL, `volatile-lru` has nothing to evict and refuses writes when full."
+      },
+      {
+        "text": "`allkeys-lru`, no TTL, and nothing done on writes",
+        "correct": false,
+        "why": "A changed price would then stay wrong until the key happened to be evicted."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsz0arq9",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson actually run, rather than take from Google's documentation? Choose all that apply.",
+    "hint": "The real cache was the local Redis.",
+    "choices": [
+      {
+        "text": "Evictions under `allkeys-lru` at a 2 MB limit",
+        "correct": true,
+        "why": "Yes, 3,039 of them, on the local Redis."
+      },
+      {
+        "text": "Fifty simultaneous requests making one database read behind a lock",
+        "correct": true,
+        "why": "Yes, with `herd.py lock`."
+      },
+      {
+        "text": "A replica promoted after its primary stopped",
+        "correct": true,
+        "why": "Yes, by hand with `REPLICAOF NO ONE`, on the local Redis 7.0."
+      },
+      {
+        "text": "Memorystore's default `volatile-lru` policy",
+        "correct": false,
+        "why": "The policy was run locally; that Memorystore uses it by default comes from the documentation."
+      },
+      {
+        "text": "A Standard-tier instance moving its endpoint",
+        "correct": false,
+        "why": "No Memorystore instance exists in this course; the endpoint moving is from the documentation."
+      }
+    ]
+  }
+]
