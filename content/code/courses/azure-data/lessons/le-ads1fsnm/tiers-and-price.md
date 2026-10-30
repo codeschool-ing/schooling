@@ -54,8 +54,8 @@ size of the events and the number of readers rather than on a fixed per-second n
 same address, so a program written for Apache Kafka can send to and read from an event hub by
 changing its configuration and not its code. The event hub plays the part of a Kafka topic, the
 partitions are the topic's partitions, and the consumer groups are Kafka's consumer groups. Quitanda
-has no Kafka programs, and the emulator in this lab is reached over AMQP only, so this lesson does no
-more than name the door; it matters to a company moving an existing Kafka system onto Azure without
+has no Kafka programs, and this course does not use the protocol: the lab publishes only the
+emulator's AMQP port, 5672, so this lesson does no more than name the door; it matters to a company moving an existing Kafka system onto Azure without
 rewriting it.
 
 ## What Quitanda's clicks would cost

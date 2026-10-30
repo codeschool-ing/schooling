@@ -56,8 +56,8 @@ segundo.
 mesmo endereço, então um programa escrito para o Apache Kafka pode enviar para um event hub e ler
 dele mudando a configuração e não o código. O event hub faz o papel de um tópico do Kafka, as
 partições são as partições do tópico, e os grupos de consumidores são os grupos de consumidores do
-Kafka. A Quitanda não tem programas Kafka, e o emulador deste laboratório só é alcançado por AMQP,
-então esta lição não faz mais do que apontar a porta; ela importa para uma empresa que leva um
+Kafka. A Quitanda não tem programas Kafka, e este curso não usa o protocolo: o laboratório publica só
+a porta AMQP do emulador, a 5672, então esta lição não faz mais do que apontar a porta; ela importa para uma empresa que leva um
 sistema Kafka existente para o Azure sem reescrevê-lo.
 
 ## Quanto custariam os cliques da Quitanda

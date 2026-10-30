@@ -96,8 +96,8 @@ Dedicated. The emulator's configuration file sets none, and nothing in this less
 to see an event expire, so expiry was not run.
 
 Two consequences decide designs. A reader that falls further behind than the retention loses events
-for good, with no error, because the events it would have asked for no longer exist; the oldest
-sequence number a partition reports moves forward as old events expire, and a reader comparing it
-with its own checkpoint is the one that notices. And **an event hub is not a store**: seven days is
+for good, with no error, because the events it would have asked for no longer exist. The oldest
+sequence number a partition reports moves forward as old events expire, and a reader that compares
+it with its own checkpoint is the one that notices. And **an event hub is not a store**: seven days is
 long enough to recover from a bad weekend and too short to be anybody's history. History goes into
 storage, which is what Capture, three sections on, is for.

@@ -91,7 +91,7 @@ Dedicated. O arquivo de configuração do emulador não define nenhum, e nada ne
 bastante para ver um evento expirar, então a expiração não foi executada.
 
 Duas consequências decidem projetos. Um leitor que fica mais atrasado que a retenção perde eventos
-para sempre, sem erro nenhum, porque os eventos que ele pediria não existem mais; o número de
+para sempre, sem erro nenhum, porque os eventos que ele pediria não existem mais. O número de
 sequência mais antigo que uma partição informa anda para a frente à medida que eventos velhos
 expiram, e é o leitor que compara esse número com o próprio checkpoint que percebe. E **um event hub
 não é um armazenamento**: sete dias bastam para se recuperar de um fim de semana ruim e são pouco
