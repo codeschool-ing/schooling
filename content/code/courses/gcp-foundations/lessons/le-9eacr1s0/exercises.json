@@ -1,0 +1,457 @@
+[
+  {
+    "id": "ex-yg3rkxq4",
+    "version": 1,
+    "section": "people",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which principal grants a role to every member of a team, as the team changes?",
+    "hint": "Joining and leaving happen in the directory.",
+    "choices": [
+      {
+        "text": "`user:planner-devs@example.com`",
+        "correct": false,
+        "why": "`user:` names one account. A group's address with the wrong prefix names nobody useful."
+      },
+      {
+        "text": "`group:planner-devs@example.com`",
+        "correct": true,
+        "why": "Right. Membership is read at the moment of the request, so the policy never has to change."
+      },
+      {
+        "text": "`domain:example.com`",
+        "correct": false,
+        "why": "That is every account in the company, not the team."
+      },
+      {
+        "text": "`allAuthenticatedUsers`",
+        "correct": false,
+        "why": "That is every Google account in the world."
+      }
+    ]
+  },
+  {
+    "id": "ex-afe2xqmr",
+    "version": 1,
+    "section": "people",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `allAuthenticatedUsers` mean?",
+    "hint": "Authenticated by whom?",
+    "choices": [
+      {
+        "text": "Every account in the company's own domain",
+        "correct": false,
+        "why": "That is `domain:example.com`. This one has no domain in it."
+      },
+      {
+        "text": "Every principal that already holds a role in the project",
+        "correct": false,
+        "why": "It is not limited to the project. It reaches beyond the company altogether."
+      },
+      {
+        "text": "Service accounts only, since people sign in differently",
+        "correct": false,
+        "why": "People and programs alike are included, as long as they hold a Google identity."
+      },
+      {
+        "text": "Any Google account in the world, a new Gmail one included",
+        "correct": true,
+        "why": "Right. It sounds careful and is not: signing in is all it asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-8c88nq9c",
+    "version": 1,
+    "section": "people",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A developer leaves. With roles granted to groups, what has to change?",
+    "hint": "Where does membership live?",
+    "choices": [
+      {
+        "text": "Only their membership of the groups, in the directory",
+        "correct": true,
+        "why": "Right. Every role ends with it, and no IAM policy is touched."
+      },
+      {
+        "text": "Every policy that names one of those groups",
+        "correct": false,
+        "why": "The policies name the group, which still exists; only who is in it changed."
+      },
+      {
+        "text": "The groups themselves, which must be deleted and recreated",
+        "correct": false,
+        "why": "The group outlives any of its members. Deleting it would end everybody's roles."
+      },
+      {
+        "text": "Nothing until the account is deleted in Google Cloud",
+        "correct": false,
+        "why": "Accounts live in the directory, not in Google Cloud."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dkg0vny",
+    "version": 1,
+    "section": "people",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague tries to grant `user:ana.personal@gmail.com` a role in production and is refused, though they hold the right role. What refused it?",
+    "hint": "Lesson 4 has a guardrail about whose accounts may be granted roles.",
+    "choices": [
+      {
+        "text": "Gmail accounts cannot hold Google Cloud roles",
+        "correct": false,
+        "why": "They can, in an estate with no such guardrail. This one has one."
+      },
+      {
+        "text": "The directory, which suspended Ana's personal account",
+        "correct": false,
+        "why": "A company's directory does not hold personal Gmail accounts at all."
+      },
+      {
+        "text": "A domain restriction, from lesson 4",
+        "correct": true,
+        "why": "Right. `iam.allowedPolicyMemberDomains` refuses any account outside the listed domains."
+      },
+      {
+        "text": "The production folder's location policy",
+        "correct": false,
+        "why": "A location policy is about places, not people."
+      }
+    ]
+  },
+  {
+    "id": "ex-h35m9qex",
+    "version": 1,
+    "section": "machines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `serviceAccount:reports@planner-dev.iam.gserviceaccount.com`?",
+    "hint": "Read the address from the right.",
+    "choices": [
+      {
+        "text": "The default Compute Engine account",
+        "correct": false,
+        "why": "That one is named after the project number, at `developer.gserviceaccount.com`."
+      },
+      {
+        "text": "Pub/Sub's service agent",
+        "correct": false,
+        "why": "A service agent's name starts with `service-` and the project number."
+      },
+      {
+        "text": "An account somebody created in `planner-dev`",
+        "correct": true,
+        "why": "Right. NAME@PROJECT_ID.iam.gserviceaccount.com is the form of the ones you create."
+      },
+      {
+        "text": "A person whose address ends in `gserviceaccount.com`",
+        "correct": false,
+        "why": "Nobody signs in as a person at that domain; it is where service accounts live."
+      }
+    ]
+  },
+  {
+    "id": "ex-mr3kcr9k",
+    "version": 1,
+    "section": "machines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why one service account per workload, rather than one shared by the reports job and the website?",
+    "hint": "What does a shared account hold?",
+    "choices": [
+      {
+        "text": "Each would hold the other's roles",
+        "correct": true,
+        "why": "Right. Separate accounts keep each workload's roles, and its blast radius, its own."
+      },
+      {
+        "text": "A service account can only be attached to one machine",
+        "correct": false,
+        "why": "One account can be attached to many machines. That is exactly the risk."
+      },
+      {
+        "text": "Google bills each service account separately",
+        "correct": false,
+        "why": "Service accounts cost nothing; the reason is about permissions."
+      },
+      {
+        "text": "Quotas are counted per service account",
+        "correct": false,
+        "why": "Quotas are counted per project, mostly. The reason is the roles."
+      }
+    ]
+  },
+  {
+    "id": "ex-9fda63x3",
+    "version": 1,
+    "section": "machines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an organisation created in 2021, a machine was created without naming a service account. What does it run as, and what was the risk?",
+    "hint": "2021 is before secure by default.",
+    "choices": [
+      {
+        "text": "No account at all, so it cannot call any API",
+        "correct": false,
+        "why": "A machine with no account named gets the default one."
+      },
+      {
+        "text": "Pub/Sub's service agent, with Pub/Sub roles only",
+        "correct": false,
+        "why": "Service agents act for Google's services, never as a machine's identity."
+      },
+      {
+        "text": "The account of whoever created it",
+        "correct": false,
+        "why": "A machine never runs as a person."
+      },
+      {
+        "text": "The default account, holding Editor",
+        "correct": true,
+        "why": "Right. Older organisations granted it Editor automatically, so every such machine could edit everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-wjfme8yg",
+    "version": 1,
+    "section": "machines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policy contains `deleted:serviceAccount:reports@planner-dev.iam.gserviceaccount.com?uid=104729...`. A new account named `reports` is created in the same project. Does it hold the old roles?",
+    "hint": "What is the `uid` for?",
+    "choices": [
+      {
+        "text": "Yes: the name matches, and IAM grants by name",
+        "correct": false,
+        "why": "That is exactly what the `deleted:` rewrite and the uid exist to prevent."
+      },
+      {
+        "text": "No: the grant is pinned to the old account's uid",
+        "correct": true,
+        "why": "Right. The uid stops an old grant from coming back to life under a reused name."
+      },
+      {
+        "text": "Yes, but only for thirty days",
+        "correct": false,
+        "why": "There is no grace period; the new account starts with nothing."
+      },
+      {
+        "text": "It cannot be created while the deleted entry exists",
+        "correct": false,
+        "why": "The name can be reused. Only the old grants stay with the old account."
+      }
+    ]
+  },
+  {
+    "id": "ex-45kpsc66",
+    "version": 1,
+    "section": "machines",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each service account to who created it.",
+    "hint": "Look at the domain after the `@`.",
+    "pairs": [
+      {
+        "left": "`reports@planner-dev.iam.gserviceaccount.com`",
+        "right": "a person on the team"
+      },
+      {
+        "left": "`415104041262-compute@developer.gserviceaccount.com`",
+        "right": "Compute Engine, when the API was enabled"
+      },
+      {
+        "left": "`service-415104041262@gcp-sa-pubsub.iam.gserviceaccount.com`",
+        "right": "Pub/Sub, for its own work in the project"
+      }
+    ],
+    "right_distractors": [
+      "the organisation's billing account"
+    ]
+  },
+  {
+    "id": "ex-e0bdxe8g",
+    "version": 1,
+    "section": "outside-identities",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between a workforce pool and a workload pool?",
+    "hint": "People and programs.",
+    "choices": [
+      {
+        "text": "Workforce is for people, workload is for programs",
+        "correct": true,
+        "why": "Right. A workforce pool lives on the organisation; a workload pool lives in a project."
+      },
+      {
+        "text": "Workforce is for Google accounts, workload for service accounts",
+        "correct": false,
+        "why": "Both pools are for identities from outside Google, which is the point of federation."
+      },
+      {
+        "text": "They are the same pool in two consoles",
+        "correct": false,
+        "why": "They are two different resources, at two different levels of the tree."
+      },
+      {
+        "text": "Workload pools are paid and workforce pools are free",
+        "correct": false,
+        "why": "The difference is who the identities are, not the price."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dkjhyck",
+    "version": 1,
+    "section": "outside-identities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform validate` refused `member = \"ana@example.com\"`. Why?",
+    "hint": "What does an address alone not say?",
+    "choices": [
+      {
+        "text": "`example.com` is not a real domain",
+        "correct": false,
+        "why": "The provider cannot know which domains are real; it checked only the form."
+      },
+      {
+        "text": "Viewer cannot be granted on a project",
+        "correct": false,
+        "why": "With `user:` in front, the same grant planned without complaint."
+      },
+      {
+        "text": "It has no prefix, and IAM never guesses the kind",
+        "correct": true,
+        "why": "Right. It could be a person or a group, and IAM will not guess."
+      },
+      {
+        "text": "Google refused the placeholder token",
+        "correct": false,
+        "why": "`validate` sends nothing to Google."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3aazxhm",
+    "version": 1,
+    "section": "outside-identities",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which principal grants a role to every CI job whose token says it came from the repository `example/planner`, and to no other?",
+    "hint": "A set, chosen by an attribute of the token.",
+    "choices": [
+      {
+        "text": "`principal://.../workloadIdentityPools/ci-pool/subject/example/planner`",
+        "correct": false,
+        "why": "`principal://` names one subject, and a subject is a single job's identity, not a repository."
+      },
+      {
+        "text": "`principalSet://.../workloadIdentityPools/ci-pool/attribute.repository/example/planner`",
+        "correct": true,
+        "why": "Right. A principalSet picks every identity of the pool whose attribute has that value."
+      },
+      {
+        "text": "`group:example/planner`",
+        "correct": false,
+        "why": "`group:` names a Google group by address. A repository is not one."
+      },
+      {
+        "text": "`serviceAccount:example-planner@planner-dev.iam.gserviceaccount.com`",
+        "correct": false,
+        "why": "That is a service account inside Google Cloud, not the outside jobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hfk89yp",
+    "version": 1,
+    "section": "outside-identities",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`grants.tf` uses `for_each` over a map of principals. How many grants does the plan add?",
+    "hint": "One per entry of the map.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-dj9jphww",
+    "version": 1,
+    "section": "outside-identities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan for the five grants passes. Why would every one of them still be refused if applied?",
+    "hint": "A plan checks form. What does Google check?",
+    "choices": [
+      {
+        "text": "Viewer may not be granted to five principals at once",
+        "correct": false,
+        "why": "A role may be granted to any number of principals."
+      },
+      {
+        "text": "`for_each` resources are applied one per day",
+        "correct": false,
+        "why": "Terraform applies them together, in one run."
+      },
+      {
+        "text": "A project may not grant roles to a domain",
+        "correct": false,
+        "why": "`domain:` is a valid principal on a project."
+      },
+      {
+        "text": "Google checks a principal exists, and these do not",
+        "correct": true,
+        "why": "Right. The provider checks how a principal is written; Google checks that it is real."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2kxbebf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner team needs: the developers to read production, the reports job to read one bucket, and GitHub Actions in `example/planner` to deploy. Which principals fit, in that order?",
+    "hint": "A group, a service account, a set from a pool.",
+    "choices": [
+      {
+        "text": "`user:` for each developer, `serviceAccount:`, `group:`",
+        "correct": false,
+        "why": "Grants per person rot when people leave, and a CI system is not a Google group."
+      },
+      {
+        "text": "`domain:`, `allAuthenticatedUsers`, `serviceAccount:`",
+        "correct": false,
+        "why": "`domain:` is the whole company, and `allAuthenticatedUsers` for a job is a public grant."
+      },
+      {
+        "text": "`group:`, the default Compute Engine account, a downloaded key",
+        "correct": false,
+        "why": "The default account is shared by every machine, and a key is a credential, not a principal."
+      },
+      {
+        "text": "`group:`, `serviceAccount:`, `principalSet://`",
+        "correct": true,
+        "why": "Right. A group for the people, an account of its own for the job, and a pool's set for the outside CI."
+      }
+    ]
+  }
+]
