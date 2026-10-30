@@ -1,0 +1,403 @@
+[
+ {
+  "id": "ex-57qyx9gg",
+  "version": 1,
+  "section": "envelope",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In envelope encryption, what does Cloud KMS encrypt?",
+  "hint": "A few bytes per object.",
+  "choices": [
+   {
+    "text": "The bucket's metadata",
+    "correct": false,
+    "why": "Metadata is not what envelope encryption is about."
+   },
+   {
+    "text": "The data itself, object by object",
+    "correct": false,
+    "why": "The data is encrypted locally with a DEK."
+   },
+   {
+    "text": "Each object's data key",
+    "correct": true,
+    "why": "Right. It wraps DEKs; the data never reaches it."
+   },
+   {
+    "text": "Passwords stored in Secret Manager",
+    "correct": false,
+    "why": "A different service, lesson 17."
+   }
+  ]
+ },
+ {
+  "id": "ex-q43tn5hf",
+  "version": 1,
+  "section": "envelope",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is stored beside the ciphertext in `order-1001.json`?",
+  "hint": "Never the plain DEK.",
+  "choices": [
+   {
+    "text": "A hash of the plain text",
+    "correct": false,
+    "why": "Not stored; and it would leak information."
+   },
+   {
+    "text": "The KEK itself",
+    "correct": false,
+    "why": "The KEK would then be wherever the data is."
+   },
+   {
+    "text": "The wrapped DEK and the KEK version",
+    "correct": true,
+    "why": "Right. Enough to ask for an unwrap, nothing more."
+   },
+   {
+    "text": "The DEK, so it can be decrypted quickly",
+    "correct": false,
+    "why": "The plain DEK is never stored."
+   }
+  ]
+ },
+ {
+  "id": "ex-tg12qed3",
+  "version": 1,
+  "section": "envelope",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After a rotation, why does order-1001 still decrypt?",
+  "hint": "Was anything re-encrypted?",
+  "choices": [
+   {
+    "text": "Decryption ignores the version",
+    "correct": false,
+    "why": "It reads the version from the file and uses it."
+   },
+   {
+    "text": "Rotation re-encrypted it under version 2",
+    "correct": false,
+    "why": "Nothing was re-encrypted."
+   },
+   {
+    "text": "Version 1 still exists and wrapped its DEK",
+    "correct": true,
+    "why": "Right. Rotation adds a version; it removes none."
+   },
+   {
+    "text": "The DEK was cached in memory",
+    "correct": false,
+    "why": "Each run is a new process; nothing is cached."
+   }
+  ]
+ },
+ {
+  "id": "ex-vfhhmtfa",
+  "version": 1,
+  "section": "envelope",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Version 1 is destroyed. The ciphertext of order-1001 is still on disk. What is it now?",
+  "hint": "Who can unwrap its DEK?",
+  "choices": [
+   {
+    "text": "Unreadable noise, for everybody",
+    "correct": true,
+    "why": "Right. Data made unrecoverable without touching it."
+   },
+   {
+    "text": "Readable by Google support, on request",
+    "correct": false,
+    "why": "A destroyed version is gone for Google too."
+   },
+   {
+    "text": "Readable once the file is restored from backup",
+    "correct": false,
+    "why": "The backup has the same ciphertext and the same missing key."
+   },
+   {
+    "text": "Readable with version 2",
+    "correct": false,
+    "why": "Version 2 never wrapped that DEK."
+   }
+  ]
+ },
+ {
+  "id": "ex-w6ce2d11",
+  "version": 1,
+  "section": "keys",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A São Paulo bucket is to use CMEK. Where must the key be?",
+  "hint": "Same location as the data.",
+  "choices": [
+   {
+    "text": "Anywhere, as long as the IAM is right",
+    "correct": false,
+    "why": "Location matters as much as IAM."
+   },
+   {
+    "text": "In southamerica-east1",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "In the us multi-region, where KMS runs",
+    "correct": false,
+    "why": "KMS runs in many locations."
+   },
+   {
+    "text": "In global, so every region can use it",
+    "correct": false,
+    "why": "A global key does not serve a regional bucket's CMEK."
+   }
+  ]
+ },
+ {
+  "id": "ex-4s6fm1wf",
+  "version": 1,
+  "section": "keys",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Every write to the CMEK bucket fails after it is created. What is the likeliest missing piece?",
+  "hint": "Who wraps the objects' keys?",
+  "choices": [
+   {
+    "text": "The Cloud Storage service agent's role on the key",
+    "correct": true,
+    "why": "Right. Without encrypterDecrypter it cannot wrap."
+   },
+   {
+    "text": "versioning on the bucket",
+    "correct": false,
+    "why": "Writes do not depend on versioning."
+   },
+   {
+    "text": "prevent_destroy on the key",
+    "correct": false,
+    "why": "That is a Terraform guard, not a permission."
+   },
+   {
+    "text": "An HSM protection level",
+    "correct": false,
+    "why": "Software keys work for CMEK."
+   }
+  ]
+ },
+ {
+  "id": "ex-mzxkzey5",
+  "version": 1,
+  "section": "keys",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did the KMS plan stop with `401 Invalid Credentials` when earlier plans did not?",
+  "hint": "What is read during a plan?",
+  "choices": [
+   {
+    "text": "KMS resources always need a real token",
+    "correct": false,
+    "why": "The key ring and key were proposed fine."
+   },
+   {
+    "text": "A data source must ask Google at plan time",
+    "correct": true,
+    "why": "Right. Resources are only proposed; data sources are read."
+   },
+   {
+    "text": "The configuration was invalid",
+    "correct": false,
+    "why": "validate said it was valid."
+   },
+   {
+    "text": "The fake token expired",
+    "correct": false,
+    "why": "It was never valid to begin with."
+   }
+  ]
+ },
+ {
+  "id": "ex-th6b26y9",
+  "version": 1,
+  "section": "keys",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `prevent_destroy = true` stop?",
+  "hint": "Terraform's own plan.",
+  "choices": [
+   {
+    "text": "Automatic rotation",
+    "correct": false,
+    "why": "Rotation is unaffected."
+   },
+   {
+    "text": "Anybody destroying the key in the console",
+    "correct": false,
+    "why": "It binds Terraform only."
+   },
+   {
+    "text": "Disabling the key",
+    "correct": false,
+    "why": "Disabling is a different operation."
+   },
+   {
+    "text": "Terraform planning the key's destruction",
+    "correct": true,
+    "why": "Right. Which would schedule every version for destruction."
+   }
+  ]
+ },
+ {
+  "id": "ex-re25rxrg",
+  "version": 1,
+  "section": "lifecycle",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A version is scheduled for destruction with the default period. What can still happen?",
+  "hint": "Thirty days.",
+  "choices": [
+   {
+    "text": "It keeps encrypting new data until the end",
+    "correct": false,
+    "why": "Scheduled versions are disabled."
+   },
+   {
+    "text": "Nothing: it is destroyed at once",
+    "correct": false,
+    "why": "Destruction waits for the scheduled period."
+   },
+   {
+    "text": "It is free during the period",
+    "correct": false,
+    "why": "Scheduled versions are active and billed."
+   },
+   {
+    "text": "Cancelling it, within the window",
+    "correct": true,
+    "why": "Right. restore leaves it disabled."
+   }
+  ]
+ },
+ {
+  "id": "ex-5hvdwc1x",
+  "version": 1,
+  "section": "lifecycle",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "value": 0.24,
+  "tolerance": 0.005,
+  "prompt": "A software key rotated quarterly has four active versions after a year. At 0.06 USD per version a month, what does it cost a month?",
+  "hint": "Four versions.",
+  "unit": "USD"
+ },
+ {
+  "id": "ex-z51dxkc1",
+  "version": 1,
+  "section": "lifecycle",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A bucket was written for two years under a key rotated quarterly. Somebody wants to destroy the old versions to tidy up. What happens?",
+  "hint": "Every version still wraps some objects.",
+  "choices": [
+   {
+    "text": "Objects written under them become unreadable",
+    "correct": true,
+    "why": "Right. Never destroy an old version to tidy up."
+   },
+   {
+    "text": "Cloud Storage re-encrypts the objects first",
+    "correct": false,
+    "why": "Nothing re-encrypts automatically."
+   },
+   {
+    "text": "Nothing: only the primary version matters",
+    "correct": false,
+    "why": "Old objects are read through old versions."
+   },
+   {
+    "text": "The bucket's encryption falls back to Google's keys",
+    "correct": false,
+    "why": "There is no fallback for data already written."
+   }
+  ]
+ },
+ {
+  "id": "ex-1w1zeakp",
+  "version": 1,
+  "section": "lifecycle",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put a key version's states in the order it passes through them, from creation.",
+  "hint": "The last cannot be undone.",
+  "items": [
+   "Enabled",
+   "Disabled",
+   "Scheduled for destruction",
+   "Destroyed"
+  ],
+  "trap": "Destroyed before scheduled is the slip: destruction always waits out the scheduled period."
+ },
+ {
+  "id": "ex-6kx55aeq",
+  "version": 1,
+  "section": "keys",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Encryption with a key in your own Cloud KMS, used by a Google service, is called customer-managed encryption, or ___.",
+  "hint": "Four capital letters.",
+  "blanks": [
+   {
+    "accept": [
+     "CMEK"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-styv6mst",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these happened on your computer in this lesson? Choose all that apply.",
+  "hint": "Files stood for Cloud KMS.",
+  "choices": [
+   {
+    "text": "Two orders encrypted under two key versions",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "An order made unreadable by deleting a version",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "A key ring created in Cloud KMS",
+    "correct": false,
+    "why": "No. Only planned."
+   },
+   {
+    "text": "A 30-day destruction countdown",
+    "correct": false,
+    "why": "No. The file was deleted at once."
+   }
+  ]
+ }
+]

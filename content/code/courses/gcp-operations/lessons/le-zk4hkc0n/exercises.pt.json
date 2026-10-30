@@ -1,0 +1,269 @@
+{
+ "ex-c9xq647w": {
+  "prompt": "No checkout.py, que linha decide para onde os spans vão?",
+  "hint": "Só uma nomeia um destino.",
+  "choices": [
+   {
+    "text": "tracer.start_as_current_span(\"POST /orders\")",
+    "why": "Isso cria um span; não diz nada sobre para onde ele vai."
+   },
+   {
+    "text": "O endpoint do OTLPSpanExporter",
+    "why": "Certo. E nomeia o Collector, não o Google."
+   },
+   {
+    "text": "Resource.create com service.name",
+    "why": "Isso diz o que produziu os dados."
+   },
+   {
+    "text": "provider.shutdown()",
+    "why": "Isso esvazia o lote antes de sair."
+   }
+  ]
+ },
+ "ex-7cq8p3p9": {
+  "prompt": "Um script curto termina e os spans nunca chegam ao Collector. Que linha provavelmente falta?",
+  "hint": "O exportador envia em lotes.",
+  "choices": [
+   {
+    "text": "trace.set_tracer_provider(provider)",
+    "why": "Sem ela nenhum span seria registrado, outro sintoma."
+   },
+   {
+    "text": "O atributo service.version",
+    "why": "Um atributo ausente não impede a exportação."
+   },
+   {
+    "text": "provider.shutdown()",
+    "why": "Certo. O último lote só sai quando o provider é encerrado."
+   },
+   {
+    "text": "Um time.sleep em cada span",
+    "why": "Os sleeps representam trabalho; não são necessários para exportar."
+   }
+  ]
+ },
+ "ex-xjpqrmej": {
+  "prompt": "Por que os três spans internos compartilham o trace id de `POST /orders`?",
+  "hint": "Olhe os blocos with.",
+  "choices": [
+   {
+    "text": "Foram iniciados dentro do bloco with dele, como filhos",
+    "why": "Certo. O aninhamento os torna um trace."
+   },
+   {
+    "text": "O Collector junta spans que chegam juntos",
+    "why": "Os ids são definidos pelo SDK antes da exportação."
+   },
+   {
+    "text": "Eles têm o mesmo service.name",
+    "why": "Todo span de um serviço compartilha isso; traces são separados."
+   },
+   {
+    "text": "Eles rodaram em menos de um segundo",
+    "why": "O tempo não junta spans."
+   }
+  ]
+ },
+ "ex-rbrc0de5": {
+  "prompt": "Na saída de debug do Collector, por que `POST /orders` aparece por último?",
+  "hint": "Quando um span termina?",
+  "choices": [
+   {
+    "text": "Os spans são ordenados alfabeticamente",
+    "why": "'charge' viria antes de 'load'."
+   },
+   {
+    "text": "O pai é enviado num segundo lote",
+    "why": "Os quatro estavam num lote."
+   },
+   {
+    "text": "O log lista spans ao terminarem, e o pai termina por último",
+    "why": "Certo. Ele termina quando o último filho terminou."
+   },
+   {
+    "text": "Foi o span mais lento",
+    "why": "A ordem é sobre término, não duração."
+   }
+  ]
+ },
+ "ex-ek7eavd1": {
+  "prompt": "Um atributo de span carrega o e-mail de um cliente. Onde é o lugar mais barato para tirá-lo de todo serviço?",
+  "hint": "Um arquivo, todo serviço.",
+  "choices": [
+   {
+    "text": "No código de cada serviço",
+    "why": "Correto mas repetido por serviço, e fácil de esquecer um."
+   },
+   {
+    "text": "Num processor attributes no Collector",
+    "why": "Certo. Uma mudança cobre todo serviço que envia para ele."
+   },
+   {
+    "text": "No Cloud Trace, depois de guardado",
+    "why": "Aí o dado pessoal já foi guardado."
+   },
+   {
+    "text": "No timeout do processor batch",
+    "why": "Lotes mudam tempo, não conteúdo."
+   }
+  ]
+ },
+ "ex-392m2yeb": {
+  "prompt": "Ligue cada parte de um pipeline do Collector ao que ela faz.",
+  "hint": "Entrada, passagem, saída.",
+  "pairs": [
+   {
+    "left": "receiver",
+    "right": "por onde os dados entram"
+   },
+   {
+    "left": "processor",
+    "right": "o que acontece com eles no caminho"
+   },
+   {
+    "left": "exporter",
+    "right": "para onde eles vão"
+   }
+  ],
+  "right_distractors": [
+   "que código os produziu"
+  ]
+ },
+ "ex-h633939w": {
+  "prompt": "Para mandar os spans da loja ao Cloud Trace em vez do log de debug, o que muda?",
+  "hint": "O código continua mandando OTLP para localhost.",
+  "choices": [
+   {
+    "text": "O exportador do checkout.py",
+    "why": "O código fica intacto; esse é o ponto."
+   },
+   {
+    "text": "O exportador do Collector, no arquivo dele",
+    "why": "Certo. debug vira googlecloud."
+   },
+   {
+    "text": "A versão do SDK do OpenTelemetry",
+    "why": "A versão é irrelevante para o destino."
+   },
+   {
+    "text": "Os atributos de cada span",
+    "why": "Os atributos viajam sem mudança."
+   }
+  ]
+ },
+ "ex-06q4ag2z": {
+  "prompt": "O `otelcol-contrib validate` sai com 0 no collector-gcp.yaml. O que isso prova?",
+  "hint": "Ele nunca iniciou o exportador.",
+  "choices": [
+   {
+    "text": "Que o Google aceitou um span de teste",
+    "why": "Nada foi enviado; o Collector não foi iniciado."
+   },
+   {
+    "text": "Que a conta de serviço tem cloudtrace.agent",
+    "why": "Nenhuma credencial foi verificada."
+   },
+   {
+    "text": "Que todo componente e chave são conhecidos",
+    "why": "Certo. Uma chave errada falha, como projectt falhou."
+   },
+   {
+    "text": "Que os traces vão aparecer no Cloud Trace em um minuto",
+    "why": "Validação não diz nada sobre entrega."
+   }
+  ]
+ },
+ "ex-09xj57n2": {
+  "prompt": "Um time muda do Cloud Trace para outro fornecedor. O que precisa ser refeito?",
+  "hint": "O que está escrito contra o Cloud Monitoring?",
+  "choices": [
+   {
+    "text": "A instrumentação em todo serviço",
+    "why": "É isso que o OpenTelemetry mantém portável."
+   },
+   {
+    "text": "Nada",
+    "why": "O trabalho do lado do fornecedor não se move."
+   },
+   {
+    "text": "Painéis, políticas de alerta e SLOs",
+    "why": "Certo. A instrumentação vai junto; eles ficam."
+   },
+   {
+    "text": "As convenções semânticas dos atributos",
+    "why": "Elas são as mesmas em todo lugar."
+   }
+  ]
+ },
+ "ex-xpkezyas": {
+  "prompt": "No Cloud Run, como o exportador googlecloud se autentica?",
+  "hint": "A ordem de credenciais da lição 5.",
+  "choices": [
+   {
+    "text": "Com um arquivo de chave montado no sidecar",
+    "why": "Uma chave é o último recurso e não é necessária."
+   },
+   {
+    "text": "Como a conta de serviço, pelo servidor de metadados",
+    "why": "Certo. Com roles/cloudtrace.agent."
+   },
+   {
+    "text": "Com as application default credentials de quem desenvolveu",
+    "why": "Elas vivem num laptop."
+   },
+   {
+    "text": "Não precisa de autenticação dentro do Google",
+    "why": "Toda chamada é autenticada, como alguma identidade."
+   }
+  ]
+ },
+ "ex-g62dt6j4": {
+  "prompt": "O exportador do Collector que escreve o que recebe no próprio log se chama `___`.",
+  "hint": "Cinco letras.",
+  "blanks": [
+   {
+    "accept": [
+     "debug"
+    ]
+   }
+  ]
+ },
+ "ex-64ah95nf": {
+  "prompt": "Quantos spans o Collector recebeu para o checkout?",
+  "hint": "Conte as linhas depois de ScopeTraces."
+ },
+ "ex-t9eq5qdh": {
+  "prompt": "Ponha em ordem a viagem de um span, do código ao Cloud Trace.",
+  "hint": "Código, SDK, Collector, Google.",
+  "items": [
+   "O código termina um span",
+   "O processor de lote do SDK o envia por OTLP",
+   "O receiver do Collector o aceita",
+   "O exportador googlecloud o escreve no Cloud Trace"
+  ],
+  "trap": "Exportar antes de o receiver aceitar é o deslize: o pipeline do Collector roda os receivers primeiro."
+ },
+ "ex-6gyt3kez": {
+  "prompt": "Quais destes rodaram de verdade no seu computador nesta lição? Escolha todos os que se aplicam.",
+  "hint": "Tudo o que era local foi real.",
+  "choices": [
+   {
+    "text": "Um checkout rastreado produzindo quatro spans",
+    "why": "Sim."
+   },
+   {
+    "text": "Um Collector recebendo-os por OTLP",
+    "why": "Sim."
+   },
+   {
+    "text": "O exportador googlecloud enviando ao Cloud Trace",
+    "why": "Não. Ele só foi validado."
+   },
+   {
+    "text": "A validação da configuração do Google",
+    "why": "Sim."
+   }
+  ]
+ }
+}

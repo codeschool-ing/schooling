@@ -1,0 +1,353 @@
+[
+ {
+  "id": "ex-d565nrrw",
+  "version": 1,
+  "section": "perimeter",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a service perimeter decide that IAM does not?",
+  "hint": "Who versus where.",
+  "choices": [
+   {
+    "text": "How much an API call costs",
+    "correct": false,
+    "why": "Perimeters say nothing about price."
+   },
+   {
+    "text": "Origins and destinations",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "Which roles a service account holds",
+    "correct": false,
+    "why": "That is IAM."
+   },
+   {
+    "text": "Which images may run",
+    "correct": false,
+    "why": "That is Binary Authorization."
+   }
+  ]
+ },
+ {
+  "id": "ex-57pa11pj",
+  "version": 1,
+  "section": "perimeter",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A stolen token with the right role is used from another country to read an export. What happens with the perimeter enforced?",
+  "hint": "Outside, and no access level.",
+  "choices": [
+   {
+    "text": "Allowed, and logged as a violation",
+    "correct": false,
+    "why": "That is dry run, not enforcement."
+   },
+   {
+    "text": "Allowed: IAM says yes",
+    "correct": false,
+    "why": "The perimeter refuses whatever IAM says."
+   },
+   {
+    "text": "Refused: outside, no access level matches",
+    "correct": true,
+    "why": "Right. The third row of the table."
+   },
+   {
+    "text": "Refused only for BigQuery, not for Cloud Storage",
+    "correct": false,
+    "why": "Both are restricted."
+   }
+  ]
+ },
+ {
+  "id": "ex-3q83z5by",
+  "version": 1,
+  "section": "perimeter",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A script inside the project, with every permission, copies exports to a bucket in an unknown project. What stops it?",
+  "hint": "Data leaving.",
+  "choices": [
+   {
+    "text": "The access level for the office",
+    "correct": false,
+    "why": "Access levels admit requests; egress rules let data out."
+   },
+   {
+    "text": "Nothing: it is inside the perimeter",
+    "correct": false,
+    "why": "Inside callers still cannot send data out."
+   },
+   {
+    "text": "IAM, because the unknown bucket refuses it",
+    "correct": false,
+    "why": "The thief's bucket would happily accept."
+   },
+   {
+    "text": "No egress rule allows data out to that project",
+    "correct": true,
+    "why": "Right. Exfiltration is the fourth row."
+   }
+  ]
+ },
+ {
+  "id": "ex-5h53d26n",
+  "version": 1,
+  "section": "perimeter",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the egress rule name one identity, one project and one method?",
+  "hint": "Each rule is a path out.",
+  "choices": [
+   {
+    "text": "Rules accept no wildcards at all",
+    "correct": false,
+    "why": "Some fields accept broad values; the point is not to use them."
+   },
+   {
+    "text": "Because the partner's project is in another region",
+    "correct": false,
+    "why": "Regions are not the concern of an egress rule."
+   },
+   {
+    "text": "To keep the perimeter free of charge",
+    "correct": false,
+    "why": "It is free either way."
+   },
+   {
+    "text": "So the hole is the size of one job",
+    "correct": true,
+    "why": "Right. Never *."
+   }
+  ]
+ },
+ {
+  "id": "ex-sa0ekz31",
+  "version": 1,
+  "section": "perimeter",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Who can create the access policy that holds perimeters?",
+  "hint": "It lives above projects.",
+  "choices": [
+   {
+    "text": "The service account of the API",
+    "correct": false,
+    "why": "It is a member of the perimeter, not its author."
+   },
+   {
+    "text": "Somebody with an organisation-level role",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "Nobody: Google creates it",
+    "correct": false,
+    "why": "It is created like any other resource, by an organisation admin."
+   },
+   {
+    "text": "Any project owner",
+    "correct": false,
+    "why": "A project owner cannot act on the organisation."
+   }
+  ]
+ },
+ {
+  "id": "ex-8qk8wxca",
+  "version": 1,
+  "section": "dry-run",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In dry run, what happens to a request the perimeter would refuse?",
+  "hint": "Logged, not refused.",
+  "choices": [
+   {
+    "text": "It is held for approval",
+    "correct": false,
+    "why": "Nothing waits for a person."
+   },
+   {
+    "text": "It is silently dropped",
+    "correct": false,
+    "why": "Dry run refuses nothing."
+   },
+   {
+    "text": "Allowed and logged",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "It is refused with 403",
+    "correct": false,
+    "why": "That is enforcement."
+   }
+  ]
+ },
+ {
+  "id": "ex-7f4zxya6",
+  "version": 1,
+  "section": "dry-run",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A dry-run violation shows a nightly job in another project reading the exports, legitimately. What do you do?",
+  "hint": "Make the legitimate request explicit.",
+  "choices": [
+   {
+    "text": "Remove Cloud Storage from the restricted services",
+    "correct": false,
+    "why": "That removes the protection for everybody."
+   },
+   {
+    "text": "Enforce anyway; the job will adapt",
+    "correct": false,
+    "why": "It will break, and somebody will find out the hard way."
+   },
+   {
+    "text": "Write a narrow ingress rule for it",
+    "correct": true,
+    "why": "Right. Narrow, explicit, reviewed."
+   },
+   {
+    "text": "Open an incident",
+    "correct": false,
+    "why": "It is legitimate; incidents are for what nobody can explain."
+   }
+  ]
+ },
+ {
+  "id": "ex-68279dfh",
+  "version": 1,
+  "section": "dry-run",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Somebody reports \"permission denied, but I have the role\" after enforcement. What do you ask for first?",
+  "hint": "IAM or perimeter?",
+  "choices": [
+   {
+    "text": "A screenshot of the IAM page",
+    "correct": false,
+    "why": "They already say they have the role."
+   },
+   {
+    "text": "Which browser they use",
+    "correct": false,
+    "why": "Irrelevant to which control refused."
+   },
+   {
+    "text": "The error's unique id",
+    "correct": true,
+    "why": "Right. The audit log names the rule that refused."
+   },
+   {
+    "text": "Their password",
+    "correct": false,
+    "why": "Never ask for a password, and it would not help."
+   }
+  ]
+ },
+ {
+  "id": "ex-f0rqdxb3",
+  "version": 1,
+  "section": "dry-run",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the introduction of the perimeter in order.",
+  "hint": "Watch, adjust, enforce.",
+  "items": [
+   "Write the perimeter in spec, in dry run",
+   "Read a week of dry-run violations",
+   "Add access levels and rules for the legitimate ones",
+   "Move the configuration to status, enforced"
+  ],
+  "trap": "Enforcing before reading is the slip: the legitimate jobs find out by breaking."
+ },
+ {
+  "id": "ex-5s5zcjks",
+  "version": 1,
+  "section": "perimeter",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each part of the configuration to what it is.",
+  "hint": "Container, condition, line.",
+  "pairs": [
+   {
+    "left": "access policy",
+    "right": "the organisation's container for perimeters"
+   },
+   {
+    "left": "access level",
+    "right": "a named condition on a request's origin"
+   },
+   {
+    "left": "service perimeter",
+    "right": "a line around projects and restricted services"
+   }
+  ],
+  "right_distractors": [
+   "a key that wraps data keys"
+  ]
+ },
+ {
+  "id": "ex-6aenf1x4",
+  "version": 1,
+  "section": "dry-run",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The Terraform block holding the perimeter's dry-run configuration is `___`.",
+  "hint": "Four letters; status is the enforced one.",
+  "blanks": [
+   {
+    "accept": [
+     "spec"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-4be125e8",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does the perimeter allow? Choose all that apply.",
+  "hint": "Inside, the access level, and the one egress rule.",
+  "choices": [
+   {
+    "text": "The API reading an export from Cloud Run in the project",
+    "correct": true,
+    "why": "Yes, inside."
+   },
+   {
+    "text": "A person at the office downloading an export",
+    "correct": true,
+    "why": "Yes, the access level."
+   },
+   {
+    "text": "A copy to an unknown project's bucket",
+    "correct": false,
+    "why": "No, exfiltration."
+   },
+   {
+    "text": "The export job writing to the partner's bucket",
+    "correct": true,
+    "why": "Yes, the egress rule."
+   }
+  ]
+ }
+]

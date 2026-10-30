@@ -1,0 +1,293 @@
+{
+ "ex-ehhygdvx": {
+  "prompt": "O que o Binary Authorization verifica quando o Cloud Run é chamado a rodar uma imagem?",
+  "hint": "Ele não decide nada sobre segurança sozinho.",
+  "choices": [
+   {
+    "text": "Que a imagem não tem vulnerabilidade crítica",
+    "why": "Ele não lê varredura; uma assinatura pode representar uma, mas a verificação é a assinatura."
+   },
+   {
+    "text": "Assinaturas dos atestadores exigidos sobre aquele digest exato",
+    "why": "Certo. Assinaturas sobre um digest, e nada mais."
+   },
+   {
+    "text": "Que os rótulos da imagem nomeiam um time aprovado",
+    "why": "Rótulos não são lidos; qualquer um escreve um rótulo."
+   },
+   {
+    "text": "Que a tag corresponde a um release no Cloud Deploy",
+    "why": "O Binary Authorization não sabe nada dos releases do Cloud Deploy."
+   }
+  ]
+ },
+ "ex-98zgb2bz": {
+  "prompt": "Um time quer saber que imagens em execução a nova política recusaria, antes de recusar alguma. Que configuração?",
+  "hint": "Auditar sem bloquear.",
+  "choices": [
+   {
+    "text": "evaluationMode: ALWAYS_ALLOW",
+    "why": "Isso permite tudo e não avalia nada, então não relata nada."
+   },
+   {
+    "text": "enforcementMode: DRYRUN_AUDIT_LOG_ONLY",
+    "why": "Certo. Escreve o que teria sido recusado e não recusa nada."
+   },
+   {
+    "text": "globalPolicyEvaluationMode: ENABLE",
+    "why": "Isso isenta as imagens de sistema do Google; não tem nada a ver com teste."
+   },
+   {
+    "text": "evaluationMode: ALWAYS_DENY por uma semana",
+    "why": "Isso recusa todo deploy, o contrário de um ensaio."
+   }
+  ]
+ },
+ "ex-c4g31853": {
+  "prompt": "A política da loja exige atestados. Uma pessoa faz deploy de um serviço novo do Cloud Run sem `--binary-authorization`, com uma imagem sem assinatura. O que acontece, e o que fecha a brecha?",
+  "hint": "Onde a política é consultada?",
+  "choices": [
+   {
+    "text": "Recusado: uma política de projeto vale para todo serviço",
+    "why": "O Cloud Run só a consulta nos serviços em que ela está ligada."
+   },
+   {
+    "text": "Recusado, a não ser que a pessoa use break-glass",
+    "why": "Não há o que quebrar: o serviço nunca consultou a política."
+   },
+   {
+    "text": "Roda; uma restrição na organização inteira fecha a brecha",
+    "why": "Certo. A restrição torna a opção obrigatória para todo serviço."
+   },
+   {
+    "text": "Roda, e a validação contínua o para dentro de uma hora",
+    "why": "A validação contínua é do GKE, e relata em vez de parar."
+   }
+  ]
+ },
+ "ex-jby61kw5": {
+  "prompt": "Às 3 da manhã um hotfix sem assinatura vai para deploy com break-glass. O que torna isso aceitável?",
+  "hint": "Fica escondido?",
+  "choices": [
+   {
+    "text": "Imagens com break-glass são varridas antes de rodar",
+    "why": "O break-glass pula a política; nada a mais é verificado."
+   },
+   {
+    "text": "O break-glass só funciona para um owner do projeto",
+    "why": "Quem pode fazer deploy pode anotar um deploy; o que importa é o registro."
+   },
+   {
+    "text": "O log de auditoria o registra, e alguém o revisa de manhã",
+    "why": "Certo. A porta existe, e abri-la deixa um registro."
+   },
+   {
+    "text": "Deploys com break-glass expiram depois de uma hora",
+    "why": "Eles não expiram; a imagem roda até alguém substituí-la."
+   }
+  ]
+ },
+ "ex-rewgn0cy": {
+  "prompt": "O que exatamente o `cosign sign` assinou?",
+  "hint": "Olhe o que o comando nomeou.",
+  "choices": [
+   {
+    "text": "A tag a1b2c3d",
+    "why": "O comando nomeou um digest; a tag é só como uma pessoa o achou."
+   },
+   {
+    "text": "O código-fonte em api/",
+    "why": "O cosign nunca viu o código; ele assina uma imagem num registro."
+   },
+   {
+    "text": "Um digest de imagem",
+    "why": "Certo. E o payload impresso pelo verify o nomeia."
+   },
+   {
+    "text": "Toda imagem do repositório shop/api",
+    "why": "Uma assinatura cobre um digest, não mais."
+   }
+  ]
+ },
+ "ex-ygrghqgz": {
+  "prompt": "Depois que a imagem assinada foi substituída sob a mesma tag, `cosign verify` na tag disse \"no signatures found\". Por quê?",
+  "hint": "Para o que o cosign resolveu a tag?",
+  "choices": [
+   {
+    "text": "O digest novo nunca foi assinado",
+    "why": "Certo. A assinatura antiga continua lá, sobre o digest antigo."
+   },
+   {
+    "text": "Enviar de novo apagou a assinatura",
+    "why": "O artefato .sig está intacto; ele é sobre outro digest."
+   },
+   {
+    "text": "O par de chaves expirou quando a imagem mudou",
+    "why": "Chaves não expiram com imagens."
+   },
+   {
+    "text": "Verificação por tag não é suportada",
+    "why": "É suportada: o cosign resolve a tag e verifica aquele digest."
+   }
+  ]
+ },
+ "ex-vvs6vdab": {
+  "prompt": "Neste laboratório a chave privada é um arquivo com senha vazia. Onde fica uma chave de assinatura de verdade, e por quê?",
+  "hint": "Quem a tem pode atestar.",
+  "choices": [
+   {
+    "text": "No repositório, para o build poder lê-la",
+    "why": "Aí todo mundo que lê o repositório assina qualquer coisa."
+   },
+   {
+    "text": "No laptop da pessoa que aprova releases",
+    "why": "Um laptop é copiado, perdido e compartilhado; e a assinatura deixaria de representar o build."
+   },
+   {
+    "text": "Numa variável de ambiente do build",
+    "why": "Ela apareceria na configuração do build e em tudo o que imprime o ambiente."
+   },
+   {
+    "text": "No Cloud KMS, usada pelo nome",
+    "why": "Certo. A metade privada nunca sai do Google, e só contas autorizadas assinam."
+   }
+  ]
+ },
+ "ex-9bhw0zdt": {
+  "prompt": "O cosign guarda uma assinatura no registro ao lado da imagem, numa tag feita do digest e do sufixo `.___`.",
+  "hint": "Três letras, na lista de tags.",
+  "blanks": [
+   {
+    "accept": [
+     "sig"
+    ]
+   }
+  ]
+ },
+ "ex-vwhd9pzj": {
+  "prompt": "Por que a loja tem dois atestadores em vez de uma chave que o build usa para tudo?",
+  "hint": "Uma assinatura vale a decisão por trás dela.",
+  "choices": [
+   {
+    "text": "O Binary Authorization exige pelo menos dois",
+    "why": "Um atestador é permitido; o motivo é o que cada um significa."
+   },
+   {
+    "text": "Cada assinatura vale por uma decisão",
+    "why": "Certo. Um build que assinasse tudo assinaria uma imagem vulnerável também."
+   },
+   {
+    "text": "Duas chaves tornam cada assinatura duas vezes mais difícil de forjar",
+    "why": "Cada assinatura é tão forte quanto a própria chave; o ponto é o que afirmam."
+   },
+   {
+    "text": "Uma é para o GKE e outra para o Cloud Run",
+    "why": "As duas plataformas leem a mesma política e os dois atestadores."
+   }
+  ]
+ },
+ "ex-1chcshgs": {
+  "prompt": "O `scan_gate.py` sai com 1 para uma imagem com achado crítico corrigível. O que impede essa imagem de chegar à produção?",
+  "hint": "Siga o status de saída, depois a política.",
+  "choices": [
+   {
+    "text": "O Artifact Registry se recusa a servi-la",
+    "why": "O registro a serve como antes; achados não bloqueiam nada."
+   },
+   {
+    "text": "O scan_gate.py apaga a imagem",
+    "why": "Ele só sai; nada nele mexe no registro."
+   },
+   {
+    "text": "Nenhum atestado scan-passed chega a existir",
+    "why": "Certo. A saída impede a assinatura, e a assinatura ausente impede o deploy."
+   },
+   {
+    "text": "O Cloud Deploy percebe o build que falhou e pula o release",
+    "why": "O Cloud Deploy não lê resultados de build; a recusa é do Binary Authorization."
+   }
+  ]
+ },
+ "ex-dav7pb7r": {
+  "prompt": "Uma pessoa recebe `roles/cloudkms.signerVerifier` na chave `scan-passed` \"para ajudar a depurar\". O que isso muda?",
+  "hint": "A política verifica uma assinatura, não a mão que a fez.",
+  "choices": [
+   {
+    "text": "Nada: só a conta do build aparece na política",
+    "why": "A política nomeia um atestador, ou seja uma chave; não nomeia conta."
+   },
+   {
+    "text": "A pessoa pode ler a chave privada e copiá-la",
+    "why": "O KMS nunca libera a metade privada; mas assinar com ela basta."
+   },
+   {
+    "text": "A pessoa pode aprovar rollouts do Cloud Deploy",
+    "why": "Isso precisa de clouddeploy.approver, outro papel."
+   },
+   {
+    "text": "Pode atestar qualquer imagem como varrida",
+    "why": "Certo. Só o log de auditoria da chave mostraria quem assinou."
+   }
+  ]
+ },
+ "ex-1dkd7yg5": {
+  "prompt": "Uma imagem admitida na segunda ganha um achado crítico na quinta. O que a validação contínua do GKE faz?",
+  "hint": "Relatar ou parar?",
+  "choices": [
+   {
+    "text": "Escreve no log que o pod seria recusado agora",
+    "why": "Certo. Parar um serviço fica com uma pessoa, a partir do relatório."
+   },
+   {
+    "text": "Expulsa o pod na hora",
+    "why": "Ela relata e não para nada."
+   },
+   {
+    "text": "Assina a imagem de novo se a varredura passar outra vez",
+    "why": "Ela não assina nada; assinar é do build."
+   },
+   {
+    "text": "Nada: a admissão só é verificada uma vez",
+    "why": "É o que acontece sem validação contínua, por isso ela existe."
+   }
+  ]
+ },
+ "ex-kgh4ph5j": {
+  "prompt": "Ponha em ordem a vida da imagem da loja, do build à admissão.",
+  "hint": "Uma assinatura vem depois da decisão que ela representa.",
+  "items": [
+   "Os testes passam e a imagem é enviada",
+   "O build assina como built-by-cloud-build",
+   "A varredura termina no digest",
+   "A barreira de varredura assina como scan-passed",
+   "O Cloud Run verifica os dois atestados e a admite"
+  ],
+  "trap": "Assinar scan-passed antes de a varredura terminar é o deslize: a assinatura afirmaria algo que ninguém verificou."
+ },
+ "ex-t4t88vz5": {
+  "prompt": "Quais destes uma política que exige os dois atestados recusaria? Escolha todos os que se aplicam.",
+  "hint": "Assinatura ausente, ou assinatura sobre outro digest.",
+  "choices": [
+   {
+    "text": "Uma imagem enviada por cima de uma tag assinada",
+    "why": "Sim. O digest dela não tem atestado."
+   },
+   {
+    "text": "Uma imagem construída num laptop e enviada à mão",
+    "why": "Sim. Ninguém com as chaves a assinou."
+   },
+   {
+    "text": "Uma imagem assinada com deploy via break-glass",
+    "why": "Não. O break-glass a admite, e ela estava assinada de qualquer jeito."
+   },
+   {
+    "text": "Uma imagem que o build assinou cuja barreira de varredura falhou",
+    "why": "Sim. Ela tem um atestado dos dois."
+   },
+   {
+    "text": "Uma imagem com os dois atestados e um achado baixo",
+    "why": "Não. As duas assinaturas estão lá; a política não lê mais nada."
+   }
+  ]
+ }
+}

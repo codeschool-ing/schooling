@@ -1,0 +1,398 @@
+[
+ {
+  "id": "ex-xjzb4rwv",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In what order does Cloud Armor evaluate a policy's rules?",
+  "hint": "The first that matches decides.",
+  "choices": [
+   {
+    "text": "In the order they are written in the file",
+    "correct": false,
+    "why": "The file order means nothing; the plan even reordered them."
+   },
+   {
+    "text": "From the lowest priority number up",
+    "correct": true,
+    "why": "Right. 1000, then 2000, then the default."
+   },
+   {
+    "text": "All rules, and the strictest action wins",
+    "correct": false,
+    "why": "Evaluation stops at the first match."
+   },
+   {
+    "text": "Deny rules first, then allow rules",
+    "correct": false,
+    "why": "Priority decides, not the action."
+   }
+  ]
+ },
+ {
+  "id": "ex-xt74fs3j",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A new WAF rule has `preview = true`. What happens to a request it matches?",
+  "hint": "Logged, not refused.",
+  "choices": [
+   {
+    "text": "It is refused with 403",
+    "correct": false,
+    "why": "That is the rule without preview."
+   },
+   {
+    "text": "It is held until somebody reviews it",
+    "correct": false,
+    "why": "Nothing waits for a person."
+   },
+   {
+    "text": "It passes, and the verdict is logged",
+    "correct": true,
+    "why": "Right. A week of that shows the false positives."
+   },
+   {
+    "text": "It is rate limited instead",
+    "correct": false,
+    "why": "Preview has nothing to do with rate limiting."
+   }
+  ]
+ },
+ {
+  "id": "ex-ezwmrm0d",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`deny(418)` passes `terraform validate` and `terraform plan`. What happens on apply against Google?",
+  "hint": "Whose rule is it about which codes are allowed?",
+  "choices": [
+   {
+    "text": "It works: the plan proved it",
+    "correct": false,
+    "why": "The plan proves the schema, which says only \"string\"."
+   },
+   {
+    "text": "Cloud Armor quietly uses 403 instead",
+    "correct": false,
+    "why": "It refuses rather than substitutes."
+   },
+   {
+    "text": "Google refuses it: deny takes 403, 404 or 502",
+    "correct": true,
+    "why": "Right. Found at apply, or by reading the documentation."
+   },
+   {
+    "text": "The rule is created in preview automatically",
+    "correct": false,
+    "why": "Preview is only what you set."
+   }
+  ]
+ },
+ {
+  "id": "ex-w6eh8z9k",
+  "version": 1,
+  "section": "policy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why can a Cloud Run service bypass the shop's Cloud Armor policy?",
+  "hint": "Where is the policy attached?",
+  "choices": [
+   {
+    "text": "It is reachable at its own run.app address",
+    "correct": true,
+    "why": "Right. The policy sits on the load balancer, not on the service."
+   },
+   {
+    "text": "Cloud Armor does not support HTTPS",
+    "correct": false,
+    "why": "It does; HTTPS is the normal case."
+   },
+   {
+    "text": "Rules apply only to Compute Engine",
+    "correct": false,
+    "why": "They apply to the load balancer's backends, Cloud Run included."
+   },
+   {
+    "text": "The default rule allows everything",
+    "correct": false,
+    "why": "That rule is inside the policy; bypassing means never reaching it."
+   }
+  ]
+ },
+ {
+  "id": "ex-7dxwmrvg",
+  "version": 1,
+  "section": "rate-limiting",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `rate_based_ban` with `ban_duration_sec = 600` do to a client over the threshold?",
+  "hint": "Throttle versus ban.",
+  "choices": [
+   {
+    "text": "Refuses only the requests above sixty a minute",
+    "correct": false,
+    "why": "That is throttle; a ban refuses everything for a while."
+   },
+   {
+    "text": "Refuses all its requests for ten minutes",
+    "correct": true,
+    "why": "Right. With 429."
+   },
+   {
+    "text": "Blocks its address permanently",
+    "correct": false,
+    "why": "The ban lasts ban_duration_sec."
+   },
+   {
+    "text": "Sends it a CAPTCHA",
+    "correct": false,
+    "why": "That is bot management, a different feature."
+   }
+  ]
+ },
+ {
+  "id": "ex-2yb9gty1",
+  "version": 1,
+  "section": "rate-limiting",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A shop that sells to companies limits checkout per IP. What goes wrong?",
+  "hint": "Who shares an address?",
+  "choices": [
+   {
+    "text": "Nothing: every buyer has their own address",
+    "correct": false,
+    "why": "Employees of a company share its outbound address."
+   },
+   {
+    "text": "IPv6 addresses cannot be rate limited",
+    "correct": false,
+    "why": "They can."
+   },
+   {
+    "text": "Employees share one address's limit",
+    "correct": true,
+    "why": "Right. The key should be the session or account there."
+   },
+   {
+    "text": "The limit counts only the first request",
+    "correct": false,
+    "why": "It counts every request in the interval."
+   }
+  ]
+ },
+ {
+  "id": "ex-hvcsmmhf",
+  "version": 1,
+  "section": "rate-limiting",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is the shop's checkout rate limit mainly for?",
+  "hint": "Stolen cards.",
+  "choices": [
+   {
+    "text": "Stopping network floods",
+    "correct": false,
+    "why": "Google's edge absorbs those before Cloud Armor."
+   },
+   {
+    "text": "Card testing",
+    "correct": true,
+    "why": "Right. A script trying thousands of stolen cards."
+   },
+   {
+    "text": "Saving Cloud Run instances",
+    "correct": false,
+    "why": "A side effect at most."
+   },
+   {
+    "text": "Hiding prices from competitors",
+    "correct": false,
+    "why": "The rule is only on /checkout."
+   }
+  ]
+ },
+ {
+  "id": "ex-4f9s1g1f",
+  "version": 1,
+  "section": "ddos-and-cost",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 17,
+  "tolerance": 0.5,
+  "prompt": "One policy (5 USD), three rules (1 USD each) and 12 million requests at 0.75 USD per million. What is the month, roughly?",
+  "hint": "8 plus 9.",
+  "unit": "USD"
+ },
+ {
+  "id": "ex-sykdjx4f",
+  "version": 1,
+  "section": "ddos-and-cost",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A flood of a million well-formed `GET /products` a minute arrives. What stops it?",
+  "hint": "It looks like real requests.",
+  "choices": [
+   {
+    "text": "Google's edge, which drops it as invalid",
+    "correct": false,
+    "why": "The requests are valid HTTP; the edge passes them."
+   },
+   {
+    "text": "A rule that counts and refuses",
+    "correct": true,
+    "why": "Right. Layer 7 needs a rule."
+   },
+   {
+    "text": "The uptime check",
+    "correct": false,
+    "why": "It notices; it stops nothing."
+   },
+   {
+    "text": "Binary Authorization",
+    "correct": false,
+    "why": "It decides which images run, not which requests arrive."
+   }
+  ]
+ },
+ {
+  "id": "ex-96mx75vb",
+  "version": 1,
+  "section": "ddos-and-cost",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "During an attack, 100 million requests are refused by the Standard-tier policy. Are they billed?",
+  "hint": "Evaluated is billed.",
+  "choices": [
+   {
+    "text": "No: refused requests are free",
+    "correct": false,
+    "why": "Every evaluated request is billed, refused or not."
+   },
+   {
+    "text": "Yes, about 75 USD",
+    "correct": true,
+    "why": "Right. Enterprise includes requests and offers bill protection."
+   },
+   {
+    "text": "Only if adaptive protection was on",
+    "correct": false,
+    "why": "That is an Enterprise feature; billing is per request regardless."
+   },
+   {
+    "text": "Yes, 7,500 USD",
+    "correct": false,
+    "why": "A hundred times too much: 0.75 USD per million."
+   }
+  ]
+ },
+ {
+  "id": "ex-ga6ymppj",
+  "version": 1,
+  "section": "policy",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A rule evaluated and logged but not enforced is in ___ mode.",
+  "hint": "Seven letters.",
+  "blanks": [
+   {
+    "accept": [
+     "preview"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-fy1y9309",
+  "version": 1,
+  "section": "rate-limiting",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each rate-limit key to its risk.",
+  "hint": "One risk is not about a key.",
+  "pairs": [
+   {
+    "left": "IP",
+    "right": "an office behind one address shares the limit"
+   },
+   {
+    "left": "HTTP_HEADER",
+    "right": "clients without the header share one empty key"
+   },
+   {
+    "left": "HTTP_COOKIE",
+    "right": "the client sets and changes the value"
+   }
+  ],
+  "right_distractors": [
+   "the policy costs 5 USD a month"
+  ]
+ },
+ {
+  "id": "ex-r9ejbrx7",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the safe introduction of a WAF rule in order.",
+  "hint": "Watch before you block.",
+  "items": [
+   "Add the rule with preview on",
+   "Read a week of preview verdicts in the request log",
+   "Lower the sensitivity or add exceptions for false positives",
+   "Turn preview off"
+  ],
+  "trap": "Turning preview off before reading the log is the slip: legitimate requests get refused first."
+ },
+ {
+  "id": "ex-8mnr7k9s",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these are Cloud Armor Enterprise features rather than Standard? Choose all that apply.",
+  "hint": "Standard has everything this lesson configured.",
+  "choices": [
+   {
+    "text": "Adaptive protection",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "Rate-based bans",
+    "correct": false,
+    "why": "No. Standard has them."
+   },
+   {
+    "text": "Google's DDoS response team during an attack",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "Preconfigured WAF rules",
+    "correct": false,
+    "why": "No. Standard has them."
+   }
+  ]
+ }
+]

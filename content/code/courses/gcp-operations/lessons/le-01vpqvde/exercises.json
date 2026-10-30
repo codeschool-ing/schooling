@@ -1,0 +1,474 @@
+[
+ {
+  "id": "ex-xvbggyfn",
+  "version": 1,
+  "section": "environment",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A new terminal answers `gcloud storage buckets list` with \"You do not currently have an active account selected\". What is the fix in this course?",
+  "hint": "Which lines did that terminal never receive?",
+  "choices": [
+   {
+    "text": "Run gcloud auth login",
+    "correct": false,
+    "why": "That is the advice for somebody with an account; here there is no account to log in to."
+   },
+   {
+    "text": "Type the eight export lines in that terminal",
+    "correct": true,
+    "why": "Right. The variables live in one terminal; without them gcloud looks for a login."
+   },
+   {
+    "text": "Restart the gcs container, which has stopped",
+    "correct": false,
+    "why": "A stopped emulator gives Connection refused on its port, not a missing account."
+   },
+   {
+    "text": "Reinstall gcloud 591.0.0",
+    "correct": false,
+    "why": "gcloud answered, so it is installed; it only lacked the variables."
+   }
+  ]
+ },
+ {
+  "id": "ex-cpv3q2h3",
+  "version": 1,
+  "section": "environment",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "You stopped both emulators last night and started them again this morning. What is left of yesterday's buckets and topics?",
+  "hint": "Where do they keep what they are told?",
+  "choices": [
+   {
+    "text": "The buckets, which fake-gcs-server writes to disk",
+    "correct": false,
+    "why": "It was started with -backend memory, so it writes nothing to disk."
+   },
+   {
+    "text": "Both, kept in ~/gcp/venv",
+    "correct": false,
+    "why": "The virtual environment holds Python packages, not anything an emulator was told."
+   },
+   {
+    "text": "Nothing",
+    "correct": true,
+    "why": "Right. Both keep everything in memory, and the containers were started with --rm."
+   },
+   {
+    "text": "The topics, which Google's emulator keeps in the project planner-dev",
+    "correct": false,
+    "why": "planner-dev is a name the emulator accepts, not a place that stores anything."
+   }
+  ]
+ },
+ {
+  "id": "ex-sg2kbm36",
+  "version": 1,
+  "section": "emulators",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`terraform plan` prints a monitoring alert policy with no error, on your computer. What does that prove?",
+  "hint": "Who computed the plan, and who was asked?",
+  "choices": [
+   {
+    "text": "That Google would accept the policy",
+    "correct": false,
+    "why": "Nobody at Google was asked; the plan is computed locally by the provider."
+   },
+   {
+    "text": "That the configuration is well formed for the provider",
+    "correct": true,
+    "why": "Right. The provider knows every argument; whether Google accepts it, or what it costs, is unknown."
+   },
+   {
+    "text": "That the alert will fire when the metric crosses its threshold",
+    "correct": false,
+    "why": "Nothing evaluates an alert on your computer; that is taught from the documentation."
+   },
+   {
+    "text": "That your account may create it",
+    "correct": false,
+    "why": "There is no account, and no IAM answers locally."
+   }
+  ]
+ },
+ {
+  "id": "ex-46w11c0y",
+  "version": 1,
+  "section": "emulators",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these happen for real on your computer in this course? Choose all that apply.",
+  "hint": "Containers, emulators and local programs, yes; Google's control plane, no.",
+  "choices": [
+   {
+    "text": "A build step's container running the tests",
+    "correct": true,
+    "why": "Yes. A step is a container, and Docker runs it."
+   },
+   {
+    "text": "A message published to a Pub/Sub topic and received",
+    "correct": true,
+    "why": "Yes. Google's Pub/Sub emulator answers on port 8085."
+   },
+   {
+    "text": "A Cloud Build trigger firing on a push",
+    "correct": false,
+    "why": "No. Nothing imitates Cloud Build; triggers are read from the documentation."
+   },
+   {
+    "text": "Cloud Armor blocking a request",
+    "correct": false,
+    "why": "No. No emulator enforces a security policy."
+   },
+   {
+    "text": "Terraform's state written to a bucket and locked",
+    "correct": true,
+    "why": "Yes. The gcs backend works against fake-gcs-server, lock included."
+   }
+  ]
+ },
+ {
+  "id": "ex-m2pw8v37",
+  "version": 1,
+  "section": "emulators",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Where does every price in this course come from?",
+  "hint": "The emulators know none.",
+  "choices": [
+   {
+    "text": "From the emulators' billing endpoint",
+    "correct": false,
+    "why": "The emulators have no billing at all."
+   },
+   {
+    "text": "From an estimate the course made from similar services elsewhere",
+    "correct": false,
+    "why": "No estimate is invented; each price is read from a page with its date."
+   },
+   {
+    "text": "Google's public pricing pages, dated",
+    "correct": true,
+    "why": "Right. A list price on a date, with no discount, credit or tax in it."
+   },
+   {
+    "text": "From the bill of a real project",
+    "correct": false,
+    "why": "There is no real project in this course."
+   }
+  ]
+ },
+ {
+  "id": "ex-6zztfp9n",
+  "version": 1,
+  "section": "the-build",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The first step of a build runs `pip install requests` in the Python image. The second step, in the same image, imports `requests` and fails. Why?",
+  "hint": "What passes from one step to the next?",
+  "choices": [
+   {
+    "text": "Each step starts from its own image; only /workspace is shared",
+    "correct": true,
+    "why": "Right. The package went into the first container's site-packages, which died with it."
+   },
+   {
+    "text": "pip needs the network, which steps do not have",
+    "correct": false,
+    "why": "Steps do have the network; the install worked, in a container that then ended."
+   },
+   {
+    "text": "The steps ran in parallel, so the install had not finished yet when the import ran",
+    "correct": false,
+    "why": "Steps run in order unless waitFor says otherwise, and the second started after the first exited."
+   },
+   {
+    "text": "The second step needs dir: api to find the package",
+    "correct": false,
+    "why": "dir changes the starting directory, not where Python looks for installed packages."
+   }
+  ]
+ },
+ {
+  "id": "ex-37wjpzzj",
+  "version": 1,
+  "section": "the-build",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What makes Cloud Build stop a build after a step?",
+  "hint": "The tests' result reaches Cloud Build in one number.",
+  "choices": [
+   {
+    "text": "The word FAILED in the step's output",
+    "correct": false,
+    "why": "Cloud Build does not read the output; a step printing FAILED and exiting 0 passes."
+   },
+   {
+    "text": "A test report written to /workspace",
+    "correct": false,
+    "why": "Files in /workspace are for later steps; they decide nothing."
+   },
+   {
+    "text": "A step that writes anything to standard error, which Cloud Build treats as a failure",
+    "correct": false,
+    "why": "Many tools write progress to standard error; it is not a failure."
+   },
+   {
+    "text": "An exit status other than 0",
+    "correct": true,
+    "why": "Right. That is the only gate a build has."
+   }
+  ]
+ },
+ {
+  "id": "ex-n9baccyf",
+  "version": 1,
+  "section": "the-build",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A step builds the image `southamerica-east1-docker.pkg.dev/planner-dev/shop/api:abc1234`, every step succeeds, and the image is not in the registry afterwards. What is the likeliest cause?",
+  "hint": "What does Cloud Build do once every step has succeeded?",
+  "choices": [
+   {
+    "text": "The build's service account lacks the logging option",
+    "correct": false,
+    "why": "Without it the build is refused before any step runs, so no step would have succeeded."
+   },
+   {
+    "text": "The image is not in the build file's images list",
+    "correct": true,
+    "why": "Right. An image nobody lists is thrown away with the machine."
+   },
+   {
+    "text": "The tag abc1234 is too short for the registry",
+    "correct": false,
+    "why": "Seven characters is exactly what $SHORT_SHA produces, and the registry accepts it."
+   },
+   {
+    "text": "Docker images cannot be built inside a step",
+    "correct": false,
+    "why": "The cloud-builders/docker image exists for exactly that, with the machine's daemon."
+   }
+  ]
+ },
+ {
+  "id": "ex-2en9chcv",
+  "version": 1,
+  "section": "triggers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A trigger has `includedFiles: [\"docs/**\"]` by mistake, where `api/**` was meant. A developer merges a change to `api/app.py`. What happens?",
+  "hint": "Which paths did the commit change, and which does the trigger watch?",
+  "choices": [
+   {
+    "text": "The build runs, because main always builds",
+    "correct": false,
+    "why": "The branch matched, but the paths did not, and both must match."
+   },
+   {
+    "text": "Nothing builds, and nothing reports it",
+    "correct": true,
+    "why": "Right. That is the expensive failure: silence, not an error."
+   },
+   {
+    "text": "Cloud Build rejects the trigger when it is created",
+    "correct": false,
+    "why": "docs/** is a valid glob; nothing tells Cloud Build it is the wrong one."
+   },
+   {
+    "text": "The build fails with an error naming the path",
+    "correct": false,
+    "why": "No build starts, so there is no build to fail."
+   }
+  ]
+ },
+ {
+  "id": "ex-vff3d4f5",
+  "version": 1,
+  "section": "triggers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A step's args are `[\"-c\", \"echo $HOME\"]`. What does Cloud Build do with it?",
+  "hint": "Who sees the dollar sign first, the shell or Cloud Build?",
+  "choices": [
+   {
+    "text": "Prints the home directory of the step's user",
+    "correct": false,
+    "why": "That needs $$HOME, so that the shell receives $HOME."
+   },
+   {
+    "text": "Prints an empty line",
+    "correct": false,
+    "why": "Cloud Build does not silently replace an unknown substitution with nothing."
+   },
+   {
+    "text": "Refuses the build: HOME is not a substitution it knows",
+    "correct": true,
+    "why": "Right. Unknown substitutions are an error unless ALLOW_LOOSE is set."
+   },
+   {
+    "text": "Prints the literal text $HOME",
+    "correct": false,
+    "why": "Cloud Build reads the dollar sign as a substitution before the shell sees it."
+   }
+  ]
+ },
+ {
+  "id": "ex-xwxawp89",
+  "version": 1,
+  "section": "triggers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A pull request trigger builds every pull request, including from forks, with no comment required. Why is that a risk?",
+  "hint": "Whose code runs, and as whom?",
+  "choices": [
+   {
+    "text": "The build minutes of forks are billed twice",
+    "correct": false,
+    "why": "Minutes are billed once; the risk is what the code can do."
+   },
+   {
+    "text": "A fork cannot read the substitutions",
+    "correct": false,
+    "why": "Substitutions are filled in either way; that is not the danger."
+   },
+   {
+    "text": "Builds from forks always fail, wasting a run",
+    "correct": false,
+    "why": "They succeed perfectly well, which is the problem."
+   },
+   {
+    "text": "A stranger's code runs as the build's service account",
+    "correct": true,
+    "why": "Right. Requiring /gcbrun from a collaborator is the line between running tests and running anything."
+   }
+  ]
+ },
+ {
+  "id": "ex-hn4n2j6z",
+  "version": 1,
+  "section": "triggers",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A user-defined substitution, such as the one naming the shop's region, begins with an ___.",
+  "hint": "One character, before the capitals.",
+  "blanks": [
+   {
+    "accept": [
+     "underscore",
+     "_"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-av3msxsf",
+  "version": 1,
+  "section": "cache",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop's image builds in 40 seconds on a laptop and in 4 minutes on Cloud Build. What is the likeliest reason?",
+  "hint": "What did the laptop have from the build before?",
+  "choices": [
+   {
+    "text": "Cloud Build starts with no layer cache",
+    "correct": true,
+    "why": "Right. Every build is a fresh machine, so every instruction runs again."
+   },
+   {
+    "text": "Cloud Build machines are slower than any laptop",
+    "correct": false,
+    "why": "The default machine is comparable; the work it does is what differs."
+   },
+   {
+    "text": "The time spent waiting in the queue is counted as part of the build",
+    "correct": false,
+    "why": "Queue time is neither built nor billed; the build itself is slower."
+   },
+   {
+    "text": "Cloud Build compresses every layer twice before pushing it",
+    "correct": false,
+    "why": "Nothing like that happens; the missing cache is the difference."
+   }
+  ]
+ },
+ {
+  "id": "ex-rc3fsgf8",
+  "version": 1,
+  "section": "cache",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Dockerfile copies the whole repository, then runs `pip install -r requirements.txt`, then sets the command. Which change helps every build after a code-only commit, with or without a cache in the registry?",
+  "hint": "Which layer changes when only the code changes?",
+  "choices": [
+   {
+    "text": "Switching the build to e2-highcpu-32",
+    "correct": false,
+    "why": "A bigger machine runs the same install faster and costs ten times more a minute; the install still runs."
+   },
+   {
+    "text": "Copying requirements.txt and installing before copying the code",
+    "correct": true,
+    "why": "Right. A code change then leaves the install layer untouched and reusable."
+   },
+   {
+    "text": "Adding --no-cache to the build",
+    "correct": false,
+    "why": "That forbids reusing any layer, the opposite of what is wanted."
+   },
+   {
+    "text": "Moving pip install to its own step in cloudbuild.yaml",
+    "correct": false,
+    "why": "A step's installs vanish with its container; the image would not have the packages."
+   }
+  ]
+ },
+ {
+  "id": "ex-5qt3mn56",
+  "version": 1,
+  "section": "cache",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 2.04,
+  "tolerance": 0.01,
+  "prompt": "A build runs 8 minutes on e2-standard-2 at 0.006 USD a minute, 560 times in a month. What does the month cost after the 2,500 free build minutes?",
+  "hint": "Total minutes, less 2,500, times the price.",
+  "unit": "USD"
+ },
+ {
+  "id": "ex-9jd80n75",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what happens to the shop's code, from a merge to `main` until the image is in the registry, in order.",
+  "hint": "The trigger reads the file before anything runs.",
+  "items": [
+   "The trigger matches the branch and the changed paths",
+   "Cloud Build fills in the substitutions",
+   "The test step runs in the Python image",
+   "The build step builds the image",
+   "The image in the images list is pushed"
+  ],
+  "trap": "Pushing before the tests is the slip: images is pushed only once every step has succeeded."
+ }
+]

@@ -1,0 +1,378 @@
+[
+ {
+  "id": "ex-w87dwsq3",
+  "version": 1,
+  "section": "config-connector",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Somebody deletes the shop's bucket by hand, and Config Connector manages it. What happens?",
+  "hint": "The controller never stops watching.",
+  "choices": [
+   {
+    "text": "Nothing until somebody runs kubectl apply again",
+    "correct": false,
+    "why": "That is Terraform's behaviour; the controller acts on its own."
+   },
+   {
+    "text": "The controller creates it again",
+    "correct": true,
+    "why": "Right. The object still says it should exist."
+   },
+   {
+    "text": "The object in the cluster is deleted to match the bucket",
+    "correct": false,
+    "why": "The object is the desired state; reality is made to match it, not the reverse."
+   },
+   {
+    "text": "A plan is written for a person to approve",
+    "correct": false,
+    "why": "Config Connector has no plan step."
+   }
+  ]
+ },
+ {
+  "id": "ex-6204bk5h",
+  "version": 1,
+  "section": "config-connector",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is RBAC on a Config Connector namespace effectively Google Cloud IAM?",
+  "hint": "Who creates the resource, with which permissions?",
+  "choices": [
+   {
+    "text": "Kubernetes copies its roles into IAM",
+    "correct": false,
+    "why": "Nothing is copied; the effect comes from the controller's account."
+   },
+   {
+    "text": "Google reads RBAC to decide every API call",
+    "correct": false,
+    "why": "Google decides by the controller's service account, not by RBAC."
+   },
+   {
+    "text": "Objects there act with the controller's account",
+    "correct": true,
+    "why": "Right. Creating an object is creating a resource with its permissions."
+   },
+   {
+    "text": "Namespaces and projects are the same object",
+    "correct": false,
+    "why": "They are different things in different systems."
+   }
+  ]
+ },
+ {
+  "id": "ex-e0e72c0h",
+  "version": 1,
+  "section": "config-connector",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A namespace full of Config Connector objects is deleted by mistake. What decides whether the buckets survive?",
+  "hint": "An annotation on each object.",
+  "choices": [
+   {
+    "text": "Whether each object carried the abandon deletion policy",
+    "correct": true,
+    "why": "Right. Without it, deleting the object deletes the resource."
+   },
+   {
+    "text": "Whether the buckets had versioning",
+    "correct": false,
+    "why": "Versioning keeps object versions, not the bucket itself."
+   },
+   {
+    "text": "Nothing: Google refuses to delete a bucket that has objects",
+    "correct": false,
+    "why": "The controller deletes what it owns, contents and all."
+   },
+   {
+    "text": "Whether a Terraform state still lists them",
+    "correct": false,
+    "why": "Terraform plays no part in what the controller deletes."
+   }
+  ]
+ },
+ {
+  "id": "ex-x1gd44sw",
+  "version": 1,
+  "section": "infra-manager",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does Infrastructure Manager take off the team's hands, compared with running Terraform in their own pipeline?",
+  "hint": "Lesson 6's questions.",
+  "choices": [
+   {
+    "text": "Writing the configuration",
+    "correct": false,
+    "why": "The configuration is the same HCL, written by the team."
+   },
+   {
+    "text": "Keeping, locking and versioning the state",
+    "correct": true,
+    "why": "Right. Google keeps the state per deployment."
+   },
+   {
+    "text": "Correcting changes made by hand between applies",
+    "correct": false,
+    "why": "It does not correct drift; Config Connector does."
+   },
+   {
+    "text": "Reading the plan",
+    "correct": false,
+    "why": "The preview still has to be read by a person."
+   }
+  ]
+ },
+ {
+  "id": "ex-mkv3ra02",
+  "version": 1,
+  "section": "infra-manager",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Whose identity does an Infrastructure Manager deployment act with when it applies?",
+  "hint": "Nobody's laptop is involved.",
+  "choices": [
+   {
+    "text": "The identity of whoever ran the last gcloud command",
+    "correct": false,
+    "why": "That person started it; the deployment acts as its own account."
+   },
+   {
+    "text": "The project's default compute account",
+    "correct": false,
+    "why": "The deployment names a service account of its own."
+   },
+   {
+    "text": "The service account named on the deployment",
+    "correct": true,
+    "why": "Right. Lesson 5's impersonation, made permanent."
+   },
+   {
+    "text": "Google's own infrastructure account, with every permission",
+    "correct": false,
+    "why": "No deployment gets unlimited permissions; it gets its account's."
+   }
+  ]
+ },
+ {
+  "id": "ex-g6asqjew",
+  "version": 1,
+  "section": "infra-manager",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A configuration that destroys a bucket by mistake is applied through Infrastructure Manager instead of a laptop. What is different?",
+  "hint": "Does the runner change what Terraform does?",
+  "choices": [
+   {
+    "text": "Infrastructure Manager refuses destructive plans",
+    "correct": false,
+    "why": "It applies what Terraform plans, destruction included."
+   },
+   {
+    "text": "The bucket is moved to a recycle bin for 30 days",
+    "correct": false,
+    "why": "There is no such bin for buckets in this flow."
+   },
+   {
+    "text": "The bucket is still destroyed; the revision records it",
+    "correct": true,
+    "why": "Right. The record is better; the outcome is the same."
+   },
+   {
+    "text": "The destroy waits for Google support to approve it",
+    "correct": false,
+    "why": "Nobody at Google reviews your plans."
+   }
+  ]
+ },
+ {
+  "id": "ex-ecs0nb2m",
+  "version": 1,
+  "section": "choosing",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each tool to what happens to a change made by hand.",
+  "hint": "One undoes it; two wait.",
+  "pairs": [
+   {
+    "left": "Config Connector",
+    "right": "it is undone"
+   },
+   {
+    "left": "Infrastructure Manager",
+    "right": "it stays until the next revision"
+   },
+   {
+    "left": "Terraform run by you",
+    "right": "it stays until the next plan shows it"
+   }
+  ],
+  "right_distractors": [
+   "it is copied into the state"
+  ]
+ },
+ {
+  "id": "ex-jbe2jyaq",
+  "version": 1,
+  "section": "choosing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A team runs AWS and Google Cloud, and wants one tool and one review flow. Which fits?",
+  "hint": "Which of the three speaks more than one cloud?",
+  "choices": [
+   {
+    "text": "Config Connector",
+    "correct": false,
+    "why": "Google only."
+   },
+   {
+    "text": "Infrastructure Manager",
+    "correct": false,
+    "why": "It runs Terraform, but only for Google Cloud."
+   },
+   {
+    "text": "Terraform, run by their own pipeline",
+    "correct": true,
+    "why": "Right. One tool, providers for both."
+   },
+   {
+    "text": "Both platform tools, one per cloud",
+    "correct": false,
+    "why": "That is two tools, which is what they wanted to avoid."
+   }
+  ]
+ },
+ {
+  "id": "ex-ygf4b3r1",
+  "version": 1,
+  "section": "choosing",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A bucket is declared in both Terraform and Config Connector. What does each apply look like?",
+  "hint": "Two owners.",
+  "choices": [
+   {
+    "text": "The second tool refuses: the bucket has an owner",
+    "correct": false,
+    "why": "Neither checks for another owner."
+   },
+   {
+    "text": "Like it worked, while each undoes the other",
+    "correct": true,
+    "why": "Right. Pick one owner per resource."
+   },
+   {
+    "text": "They merge their settings into one bucket",
+    "correct": false,
+    "why": "Nothing merges; each writes its own."
+   },
+   {
+    "text": "Google creates a second bucket with a suffix",
+    "correct": false,
+    "why": "Names are unique; nothing invents a suffix."
+   }
+  ]
+ },
+ {
+  "id": "ex-dc8kd5nd",
+  "version": 1,
+  "section": "choosing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the shop not use Config Connector?",
+  "hint": "Where does the shop run?",
+  "choices": [
+   {
+    "text": "It cannot describe Cloud Storage buckets",
+    "correct": false,
+    "why": "It can; the lesson's first file is one."
+   },
+   {
+    "text": "It costs more per bucket than Terraform",
+    "correct": false,
+    "why": "There is no per-bucket price; the cluster is the cost."
+   },
+   {
+    "text": "It has no cluster to run it in",
+    "correct": true,
+    "why": "Right. A cluster just to hold descriptions is not worth it."
+   },
+   {
+    "text": "It does not support versioning on buckets",
+    "correct": false,
+    "why": "The example enables versioning."
+   }
+  ]
+ },
+ {
+  "id": "ex-9s829d4d",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Put the move of a bucket from Terraform to Config Connector in a safe order.",
+  "hint": "One owner at every moment.",
+  "items": [
+   "Write the StorageBucket object with the same settings",
+   "terraform state rm the bucket",
+   "Remove the resource block from the Terraform files",
+   "kubectl apply the object so the controller adopts it"
+  ],
+  "trap": "Applying the object before state rm is the slip: for a while the bucket has two owners."
+ },
+ {
+  "id": "ex-b25vavvs",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does Config Connector have that Terraform run by a pipeline does not? Choose all that apply.",
+  "hint": "Think of drift and of state.",
+  "choices": [
+   {
+    "text": "Correcting drift on its own",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "A plan before every change",
+    "correct": false,
+    "why": "No. That is Terraform's, not Config Connector's."
+   },
+   {
+    "text": "No state file to protect",
+    "correct": true,
+    "why": "Yes. The objects are the desired state."
+   },
+   {
+    "text": "Providers for other clouds",
+    "correct": false,
+    "why": "No. It is Google only."
+   }
+  ]
+ },
+ {
+  "id": "ex-zayz1w38",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "value": 3,
+  "tolerance": 0,
+  "prompt": "How many ways of describing the shop's bucket does the comparison table set side by side?",
+  "hint": "Count the columns after the first."
+ }
+]

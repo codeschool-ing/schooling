@@ -1,0 +1,422 @@
+[
+ {
+  "id": "ex-fcaetqgs",
+  "version": 1,
+  "section": "provider",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A `google_storage_bucket` sets no `project`. Where is it created?",
+  "hint": "Look at the provider block.",
+  "choices": [
+   {
+    "text": "In the project gcloud is configured for",
+    "correct": false,
+    "why": "Terraform reads the provider block, not gcloud's configuration, when project is set there."
+   },
+   {
+    "text": "In the provider's project",
+    "correct": true,
+    "why": "Right. The provider's project is the default for every resource that does not name its own."
+   },
+   {
+    "text": "In a new project Terraform creates for the configuration, named after the directory",
+    "correct": false,
+    "why": "Terraform creates nothing it was not told to create."
+   },
+   {
+    "text": "Nowhere: project is required on every resource",
+    "correct": false,
+    "why": "It is optional on the resource precisely because the provider supplies it."
+   }
+  ]
+ },
+ {
+  "id": "ex-cm0k72pt",
+  "version": 1,
+  "section": "provider",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is `.terraform.lock.hcl` committed with the code?",
+  "hint": "A provider is a program.",
+  "choices": [
+   {
+    "text": "It holds the state, so others can see what exists",
+    "correct": false,
+    "why": "State is a different file entirely; the lock file holds no resources."
+   },
+   {
+    "text": "It stores the access token for the team",
+    "correct": false,
+    "why": "No credential is ever written there."
+   },
+   {
+    "text": "So everybody runs the same provider, by checksum",
+    "correct": true,
+    "why": "Right. A different provider can change what plan means."
+   },
+   {
+    "text": "It stops two people applying at once",
+    "correct": false,
+    "why": "That is the state lock, lesson 6, not this file."
+   }
+  ]
+ },
+ {
+  "id": "ex-wn36e34y",
+  "version": 1,
+  "section": "provider",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What do `default_labels` in the provider block do?",
+  "hint": "Nothing is written per resource.",
+  "choices": [
+   {
+    "text": "Label every resource it creates that takes labels",
+    "correct": true,
+    "why": "Right. The cheapest way to give every resource an owner."
+   },
+   {
+    "text": "Label only the resources that already declare labels of their own",
+    "correct": false,
+    "why": "They apply to every resource that accepts labels, declared or not."
+   },
+   {
+    "text": "Label the project itself",
+    "correct": false,
+    "why": "The project is not created here; resources in it are labelled."
+   },
+   {
+    "text": "Filter which resources Terraform may manage",
+    "correct": false,
+    "why": "Labels decide nothing about what Terraform manages."
+   }
+  ]
+ },
+ {
+  "id": "ex-mrsy640j",
+  "version": 1,
+  "section": "credentials",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the places the google provider looks for credentials in the order it tries them.",
+  "hint": "First match wins, from the most explicit to the machine's own.",
+  "items": [
+   "An access token in GOOGLE_OAUTH_ACCESS_TOKEN",
+   "A file named by GOOGLE_APPLICATION_CREDENTIALS",
+   "Application Default Credentials from gcloud",
+   "The metadata server of the machine"
+  ],
+  "trap": "Putting the metadata server first is the slip: an explicit token or file always wins over the machine."
+ },
+ {
+  "id": "ex-v1q1w60j",
+  "version": 1,
+  "section": "credentials",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`terraform plan` on a new laptop stops with \"could not find default credentials\". What is the right fix for a person with a Google account?",
+  "hint": "Which of the four places belongs to a person on a laptop?",
+  "choices": [
+   {
+    "text": "Download a service account key and set GOOGLE_APPLICATION_CREDENTIALS",
+    "correct": false,
+    "why": "A key file is the last resort, a long-lived secret on a laptop."
+   },
+   {
+    "text": "gcloud auth application-default login",
+    "correct": true,
+    "why": "Right. The person's own short-lived login, refreshed by gcloud."
+   },
+   {
+    "text": "Write the key into the provider's credentials argument",
+    "correct": false,
+    "why": "Then the key is in the repository, and outlives every rotation."
+   },
+   {
+    "text": "Set GOOGLE_OAUTH_ACCESS_TOKEN=fake",
+    "correct": false,
+    "why": "That works only against the emulator; Google refuses it."
+   }
+  ]
+ },
+ {
+  "id": "ex-vmqqwxqv",
+  "version": 1,
+  "section": "credentials",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Terraform runs in a Cloud Build step. Where should its credentials come from?",
+  "hint": "Nothing stored anywhere.",
+  "choices": [
+   {
+    "text": "A key file uploaded to the build's workspace",
+    "correct": false,
+    "why": "A key would have to be stored somewhere the build can read it, and so can others."
+   },
+   {
+    "text": "An access token pasted into the trigger's substitutions",
+    "correct": false,
+    "why": "A token expires in an hour and is visible in the trigger's settings."
+   },
+   {
+    "text": "The developer's Application Default Credentials",
+    "correct": false,
+    "why": "Those live on a laptop, not on a build machine."
+   },
+   {
+    "text": "The metadata server",
+    "correct": true,
+    "why": "Right. The build's own service account, with nothing stored."
+   }
+  ]
+ },
+ {
+  "id": "ex-skm5ywbb",
+  "version": 1,
+  "section": "credentials",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "With `impersonate_service_account` set, what does the person running Terraform need on the production project?",
+  "hint": "Their own credentials are used for one thing only.",
+  "choices": [
+   {
+    "text": "Owner, since Terraform changes everything",
+    "correct": false,
+    "why": "The service account holds the permissions; the person holds almost none."
+   },
+   {
+    "text": "Token Creator on that one service account",
+    "correct": true,
+    "why": "Right. Nothing on the project itself; taking that role away removes their access."
+   },
+   {
+    "text": "Editor on the project and Token Creator on the account",
+    "correct": false,
+    "why": "Editor is exactly what impersonation exists to avoid giving."
+   },
+   {
+    "text": "A key for the service account on their laptop",
+    "correct": false,
+    "why": "Impersonation needs no key at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-taqxkn24",
+  "version": 1,
+  "section": "apply",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the apply, `gcloud` shows the bucket in `US-CENTRAL1` with no labels. Why?",
+  "hint": "What does fake-gcs-server keep?",
+  "choices": [
+   {
+    "text": "default_labels apply only on the second apply",
+    "correct": false,
+    "why": "They apply on the first; the plan showed them."
+   },
+   {
+    "text": "The token fake is refused for labels",
+    "correct": false,
+    "why": "Nothing checked the token; the emulator just did not keep them."
+   },
+   {
+    "text": "The emulator keeps neither, and answers defaults",
+    "correct": true,
+    "why": "Right. Accepted is not the same as done; Google would have kept both."
+   },
+   {
+    "text": "A bucket's location is always US-CENTRAL1 until it is moved",
+    "correct": false,
+    "why": "A location is set at creation and can never be moved."
+   }
+  ]
+ },
+ {
+  "id": "ex-tf77r6jv",
+  "version": 1,
+  "section": "apply",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A plan shows `location = \"US\" -> \"SOUTHAMERICA-EAST1\" # forces replacement` on a bucket full of data. What would applying it do against Google?",
+  "hint": "Can a location be changed in place?",
+  "choices": [
+   {
+    "text": "Move the bucket and its objects to São Paulo",
+    "correct": false,
+    "why": "Nothing moves a bucket; the provider can only destroy and recreate it."
+   },
+   {
+    "text": "Change the location label and leave the data where it is",
+    "correct": false,
+    "why": "Location is not a label; it is where the data physically lives."
+   },
+   {
+    "text": "Delete the bucket, with its objects, and make an empty one",
+    "correct": true,
+    "why": "Right. The line that deserves the slowest reading in any plan."
+   },
+   {
+    "text": "Nothing: Google refuses location changes",
+    "correct": false,
+    "why": "Google refuses the change in place, which is exactly why the provider replaces."
+   }
+  ]
+ },
+ {
+  "id": "ex-bnw5t3qb",
+  "version": 1,
+  "section": "apply",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Creating a Cloud Run service in a new project fails with `SERVICE_DISABLED`, though the caller is an owner. What is missing?",
+  "hint": "Permissions are not the problem.",
+  "choices": [
+   {
+    "text": "The run.googleapis.com API is off",
+    "correct": true,
+    "why": "Right. APIs start off; a google_project_service turns it on."
+   },
+   {
+    "text": "A billing account with a budget",
+    "correct": false,
+    "why": "A missing billing account gives a different error; budgets refuse nothing."
+   },
+   {
+    "text": "The roles/run.admin role, which owner does not include",
+    "correct": false,
+    "why": "Owner includes it; the API being off is the issue."
+   },
+   {
+    "text": "A region in the provider block",
+    "correct": false,
+    "why": "A missing region gives a different, explicit error."
+   }
+  ]
+ },
+ {
+  "id": "ex-1d888x63",
+  "version": 1,
+  "section": "apply",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why does the shop set `disable_on_destroy = false` on its `google_project_service` resources?",
+  "hint": "Who else uses the API?",
+  "choices": [
+   {
+    "text": "So that destroy runs faster",
+    "correct": false,
+    "why": "Speed is not the reason; the side effect is."
+   },
+   {
+    "text": "Because Google charges for turning an API off",
+    "correct": false,
+    "why": "Turning one off costs nothing in money."
+   },
+   {
+    "text": "Because disabled APIs cannot be enabled again",
+    "correct": false,
+    "why": "They can; the damage is what stops in between."
+   },
+   {
+    "text": "So tearing this down leaves the API on for everyone else",
+    "correct": true,
+    "why": "Right. Services this configuration never created would stop too."
+   }
+  ]
+ },
+ {
+  "id": "ex-ee0fe8dv",
+  "version": 1,
+  "section": "credentials",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To act as a service account without a key, the provider argument is `___` (one word with underscores).",
+  "hint": "It starts with impersonate.",
+  "blanks": [
+   {
+    "accept": [
+     "impersonate_service_account"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-46p5qbaf",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these belong in the shop's Terraform repository? Choose all that apply.",
+  "hint": "Code and the lock, yes; secrets and caches, no.",
+  "choices": [
+   {
+    "text": "main.tf",
+    "correct": true,
+    "why": "Yes, the configuration."
+   },
+   {
+    "text": ".terraform.lock.hcl",
+    "correct": true,
+    "why": "Yes, so everyone runs the same provider."
+   },
+   {
+    "text": ".terraform/, the downloaded provider",
+    "correct": false,
+    "why": "No. init downloads it again from the lock."
+   },
+   {
+    "text": "A service account key file",
+    "correct": false,
+    "why": "No. Never a key in a repository."
+   }
+  ]
+ },
+ {
+  "id": "ex-f2hf3cc4",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A configuration manages buckets in `planner-dev` and `planner-prod` with one provider block whose `project` is `planner-dev`. One prod bucket forgot its `project` argument. What happens?",
+  "hint": "The default fills in what is not written.",
+  "choices": [
+   {
+    "text": "The plan fails because the bucket's project is ambiguous",
+    "correct": false,
+    "why": "Nothing is ambiguous to Terraform: the default applies."
+   },
+   {
+    "text": "It is created in planner-dev, quietly",
+    "correct": true,
+    "why": "Right. Which is why such a configuration names the project on every resource or uses aliases."
+   },
+   {
+    "text": "Terraform guesses planner-prod from the bucket's name",
+    "correct": false,
+    "why": "Names mean nothing to the provider."
+   },
+   {
+    "text": "It is created in both projects",
+    "correct": false,
+    "why": "One resource is one object in one project."
+   }
+  ]
+ }
+]

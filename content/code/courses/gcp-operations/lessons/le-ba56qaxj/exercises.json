@@ -1,0 +1,401 @@
+[
+ {
+  "id": "ex-w68z7swb",
+  "version": 1,
+  "section": "error-reporting",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does Error Reporting need to see an exception?",
+  "hint": "One entry.",
+  "choices": [
+   {
+    "text": "An agent installed in the container",
+    "correct": false,
+    "why": "Nothing is installed; it reads Cloud Logging."
+   },
+   {
+    "text": "An ERROR entry with the stack trace inside it",
+    "correct": true,
+    "why": "Right. One entry, severity ERROR or worse."
+   },
+   {
+    "text": "A metric named error_count",
+    "correct": false,
+    "why": "It reads log entries, not metrics."
+   },
+   {
+    "text": "Twenty text lines, one per frame",
+    "correct": false,
+    "why": "Split lines are exactly what it cannot group."
+   }
+  ]
+ },
+ {
+  "id": "ex-f4pbd66a",
+  "version": 1,
+  "section": "error-reporting",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Two KeyErrors for different products share one stack. How does Error Reporting show them?",
+  "hint": "It groups by stack, not by message value.",
+  "choices": [
+   {
+    "text": "As two groups, one per product",
+    "correct": false,
+    "why": "The values differ; the stack does not."
+   },
+   {
+    "text": "As one group with two occurrences",
+    "correct": true,
+    "why": "Right. One bug, counted twice."
+   },
+   {
+    "text": "Not at all, since KeyError is not an error",
+    "correct": false,
+    "why": "Any exception with a stack trace counts."
+   },
+   {
+    "text": "As one group per minute",
+    "correct": false,
+    "why": "Groups do not split by time."
+   }
+  ]
+ },
+ {
+  "id": "ex-te7vbazz",
+  "version": 1,
+  "section": "error-reporting",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An error group went from 3 occurrences an hour to 3,000. What does Error Reporting send?",
+  "hint": "When does it notify?",
+  "choices": [
+   {
+    "text": "A notification for each new occurrence",
+    "correct": false,
+    "why": "That would be thousands; it notifies once per new group."
+   },
+   {
+    "text": "An alert when the rate crosses a threshold",
+    "correct": false,
+    "why": "It has no rate threshold; that is a counter's job."
+   },
+   {
+    "text": "Nothing more: the group is not new",
+    "correct": true,
+    "why": "Right. A rate alert needs lessons 10 and 14."
+   },
+   {
+    "text": "A daily digest with the new count",
+    "correct": false,
+    "why": "No such digest is part of it."
+   }
+  ]
+ },
+ {
+  "id": "ex-r5sf7eht",
+  "version": 1,
+  "section": "error-reporting",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the entry carry `serviceContext` with a version?",
+  "hint": "A release can move a line.",
+  "choices": [
+   {
+    "text": "To show which version first reported a group",
+    "correct": true,
+    "why": "Right. A new release can start a new group for the same bug."
+   },
+   {
+    "text": "Because entries without it are rejected",
+    "correct": false,
+    "why": "It is optional; it makes the groups readable."
+   },
+   {
+    "text": "To route the entry to a log bucket",
+    "correct": false,
+    "why": "Routing is the sink's filter."
+   },
+   {
+    "text": "To raise the entry's severity",
+    "correct": false,
+    "why": "Severity comes from the severity field."
+   }
+  ]
+ },
+ {
+  "id": "ex-zkmhzvkf",
+  "version": 1,
+  "section": "trace",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What carries a trace from one service to the next?",
+  "hint": "A header.",
+  "choices": [
+   {
+    "text": "Cloud Logging, which joins entries by time",
+    "correct": false,
+    "why": "Time does not join a trace; an id does."
+   },
+   {
+    "text": "The traceparent header",
+    "correct": true,
+    "why": "Right. A service that drops it breaks the trace."
+   },
+   {
+    "text": "The service account of each service",
+    "correct": false,
+    "why": "Identities do not carry traces."
+   },
+   {
+    "text": "A shared database table of request ids",
+    "correct": false,
+    "why": "No table is needed; the id travels with the request."
+   }
+  ]
+ },
+ {
+  "id": "ex-gammjrzd",
+  "version": 1,
+  "section": "trace",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A trace of the checkout stops at the payment service, and a separate trace starts there. Likeliest cause?",
+  "hint": "What should the caller have passed on?",
+  "choices": [
+   {
+    "text": "The payment service has sampling turned off",
+    "correct": false,
+    "why": "Then there would be no second trace at all."
+   },
+   {
+    "text": "The header was not forwarded",
+    "correct": true,
+    "why": "Right. The commonest reason a trace stops at a boundary."
+   },
+   {
+    "text": "Cloud Trace limits a trace to one service",
+    "correct": false,
+    "why": "Traces cross services; that is their point."
+   },
+   {
+    "text": "The payment service writes no logs",
+    "correct": false,
+    "why": "Logs and traces are separate; logs do not join spans."
+   }
+  ]
+ },
+ {
+  "id": "ex-kknwwr4t",
+  "version": 1,
+  "section": "trace",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does the last field of `traceparent`, `01`, say?",
+  "hint": "A decision made once, at the start.",
+  "choices": [
+   {
+    "text": "The trace's version",
+    "correct": false,
+    "why": "The version is the first field, 00."
+   },
+   {
+    "text": "That it is the first span",
+    "correct": false,
+    "why": "Span position is not in the header."
+   },
+   {
+    "text": "That the request is sampled",
+    "correct": true,
+    "why": "Right. Every later service respects it, so a trace is whole or absent."
+   },
+   {
+    "text": "The number of services so far",
+    "correct": false,
+    "why": "The header does not count hops."
+   }
+  ]
+ },
+ {
+  "id": "ex-fjd8e0yy",
+  "version": 1,
+  "section": "trace",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 0.9,
+  "tolerance": 0.02,
+  "prompt": "A service produces 7 million spans a month. At 0.20 USD per million after 2.5 million free, what does Cloud Trace cost?",
+  "hint": "Millions above the allowance, times the price.",
+  "unit": "USD"
+ },
+ {
+  "id": "ex-rt55tn72",
+  "version": 1,
+  "section": "profiler",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In a flame graph, where do you look first?",
+  "hint": "Width, not height.",
+  "choices": [
+   {
+    "text": "At the tallest tower",
+    "correct": false,
+    "why": "Height is call depth; it can cost little."
+   },
+   {
+    "text": "At a wide bar near the top",
+    "correct": true,
+    "why": "Right. One function that costs a lot by itself."
+   },
+   {
+    "text": "At the bottom bar, which is always the widest",
+    "correct": false,
+    "why": "It is the program's entry, wide by definition, and says nothing."
+   },
+   {
+    "text": "At the bar with the longest name",
+    "correct": false,
+    "why": "Names carry no cost."
+   }
+  ]
+ },
+ {
+  "id": "ex-z2q5sa42",
+  "version": 1,
+  "section": "profiler",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A release made the API 30% slower, and nobody knows why. Which comparison is quickest?",
+  "hint": "service_version.",
+  "choices": [
+   {
+    "text": "Reading the whole diff of the release",
+    "correct": false,
+    "why": "Possible, and much slower than a comparison."
+   },
+   {
+    "text": "Two traces of slow requests",
+    "correct": false,
+    "why": "Traces show where in the request, not which function."
+   },
+   {
+    "text": "Profiler, version against version",
+    "correct": true,
+    "why": "Right. One bar that grew."
+   },
+   {
+    "text": "The Error Reporting groups of both versions",
+    "correct": false,
+    "why": "Slowness is not an error."
+   }
+  ]
+ },
+ {
+  "id": "ex-p94rw2mx",
+  "version": 1,
+  "section": "profiler",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each question to the tool that answers it.",
+  "hint": "One tool notices; three investigate.",
+  "pairs": [
+   {
+    "left": "Which error is new?",
+    "right": "Error Reporting"
+   },
+   {
+    "left": "Where did this slow request spend its time?",
+    "right": "Cloud Trace"
+   },
+   {
+    "left": "What does the process spend its CPU on?",
+    "right": "Cloud Profiler"
+   },
+   {
+    "left": "Is it worse than usual right now?",
+    "right": "a metric and an alert"
+   }
+  ],
+  "right_distractors": [
+   "a log sink"
+  ]
+ },
+ {
+  "id": "ex-2vzarjqs",
+  "version": 1,
+  "section": "error-reporting",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The field naming the service and its version on a reported error is `___`.",
+  "hint": "camelCase, two words.",
+  "blanks": [
+   {
+    "accept": [
+     "serviceContext"
+    ],
+    "ignore_case": false,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-d73jqq8g",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the investigation of a slow checkout in the order the lesson suggests.",
+  "hint": "Notice, then the request, then the function.",
+  "items": [
+   "An alert on p99 latency fires",
+   "A slow request's trace shows the API's own span is long",
+   "Profiler shows which function took the CPU"
+  ],
+  "trap": "Starting with the profiler is the slip: without the trace, nobody knows which service to profile."
+ },
+ {
+  "id": "ex-txp6z4wg",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does the shop's code have to do for the three tools to work? Choose all that apply.",
+  "hint": "Small things in the code.",
+  "choices": [
+   {
+    "text": "Write a stack trace inside one ERROR entry",
+    "correct": true,
+    "why": "Yes, for Error Reporting."
+   },
+   {
+    "text": "Forward the trace header on outgoing calls",
+    "correct": true,
+    "why": "Yes, for Cloud Trace."
+   },
+   {
+    "text": "Run its own collector of stack traces",
+    "correct": false,
+    "why": "No. Error Reporting reads Cloud Logging."
+   },
+   {
+    "text": "Start the Profiler agent at start-up",
+    "correct": true,
+    "why": "Yes, for Cloud Profiler."
+   }
+  ]
+ }
+]
