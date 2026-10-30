@@ -14,34 +14,37 @@ hand a stock one its instructions at first boot. This section does both, and say
 None of this was run in this course, because each step needs a machine in a subscription. It is
 Microsoft's documented sequence for a Linux machine, and every command is one you would type.
 
-1. Create a machine from a Marketplace image and configure it: install the packages, write the
-   configuration, put the application in place at a known version.
-2. Deprovision it from inside. Over SSH, on the machine itself:
+Step 1. Create a machine from a Marketplace image and configure it: install the packages, write the
+configuration, put the application in place at a known version.
 
-   ```sh
-   sudo waagent -deprovision+user
-   ```
+Step 2. Deprovision it from inside. Over SSH, on the machine itself:
 
-   `waagent` is the Azure Linux Agent, which every Marketplace Linux image carries. This deletes
-   what makes the machine one particular machine: the agent's provisioning data, files such as the
-   SSH host keys, and the last user account the platform created. **It cannot be undone**, and the
-   documentation says to run it only on a machine you are about to capture. Plain `-deprovision`
-   keeps that user.
-3. Tell Azure it is generalised. The machine is still running; stop it, then mark it:
+```sh
+sudo waagent -deprovision+user
+```
 
-   ```sh
-   az vm deallocate --resource-group shop-rg --name shop-build
-   az vm generalize --resource-group shop-rg --name shop-build
-   ```
+`waagent` is the Azure Linux Agent, which every Marketplace Linux image carries. This deletes
+what makes the machine one particular machine: the agent's provisioning data, files such as the
+SSH host keys, and the last user account the platform created. **It cannot be undone**, and the
+documentation says to run it only on a machine you are about to capture. Plain `-deprovision`
+keeps that user.
 
-   From then on the machine cannot be started again. It exists only to be copied.
-4. Capture it, as one of the two kinds of image of your own from the first section. A gallery
-   image version is `az sig image-version create ... --virtual-machine <the machine's id>`, which
-   the next section declares in Bicep instead. A managed image is one command:
+Step 3. Tell Azure it is generalised. The machine is still running; stop it, then mark it:
 
-   ```sh
-   az image create --resource-group shop-rg --name shop-web-2026-10-30 --source shop-build
-   ```
+```sh
+az vm deallocate --resource-group shop-rg --name shop-build
+az vm generalize --resource-group shop-rg --name shop-build
+```
+
+From then on the machine cannot be started again. It exists only to be copied.
+
+Step 4. Capture it, as one of the two kinds of image of your own from the first section. A gallery
+image version is `az sig image-version create ... --virtual-machine <the machine's id>`, which
+the next section declares in Bicep instead. A managed image is one command:
+
+```sh
+az image create --resource-group shop-rg --name shop-web-2026-10-30 --source shop-build
+```
 
 **Prefer the gallery, and Microsoft's documentation says so too.** A managed image can only be made
 from a generalised machine, can only create machines in its own region, cannot be shared with

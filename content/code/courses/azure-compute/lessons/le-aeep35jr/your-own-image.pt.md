@@ -15,34 +15,37 @@ diz quando cada um ganha.
 Nada disto foi rodado neste curso, porque cada passo precisa de uma máquina numa assinatura. É a
 sequência documentada pela Microsoft para uma máquina Linux, e cada comando é um que você digitaria.
 
-1. Crie uma máquina a partir de uma imagem do Marketplace e configure: instale os pacotes,
-   escreva a configuração, ponha a aplicação no lugar numa versão conhecida.
-2. Desprovisione por dentro. Por SSH, na própria máquina:
+Passo 1. Crie uma máquina a partir de uma imagem do Marketplace e configure: instale os pacotes,
+escreva a configuração, ponha a aplicação no lugar numa versão conhecida.
 
-   ```sh
-   sudo waagent -deprovision+user
-   ```
+Passo 2. Desprovisione por dentro. Por SSH, na própria máquina:
 
-   O `waagent` é o Azure Linux Agent, que toda imagem Linux do Marketplace traz. Isto apaga o que faz
-   da máquina uma máquina específica: os dados de provisionamento do agente, arquivos como as chaves
-   de host do SSH, e a última conta de usuário que a plataforma criou. **Não tem volta**, e a
-   documentação manda rodar só numa máquina que você está prestes a capturar. O `-deprovision`
-   simples mantém esse usuário.
-3. Avise o Azure que ela está generalizada. A máquina ainda está rodando; pare e marque:
+```sh
+sudo waagent -deprovision+user
+```
 
-   ```sh
-   az vm deallocate --resource-group shop-rg --name shop-build
-   az vm generalize --resource-group shop-rg --name shop-build
-   ```
+O `waagent` é o Azure Linux Agent, que toda imagem Linux do Marketplace traz. Isto apaga o que faz
+da máquina uma máquina específica: os dados de provisionamento do agente, arquivos como as chaves
+de host do SSH, e a última conta de usuário que a plataforma criou. **Não tem volta**, e a
+documentação manda rodar só numa máquina que você está prestes a capturar. O `-deprovision`
+simples mantém esse usuário.
 
-   Daí em diante a máquina não pode mais ser iniciada. Ela só existe para ser copiada.
-4. Capture, como um dos dois tipos de imagem sua da primeira seção. Uma versão de imagem de
-   galeria é `az sig image-version create ... --virtual-machine <o id da máquina>`, que a próxima
-   seção declara em Bicep. Uma imagem gerenciada é um comando só:
+Passo 3. Avise o Azure que ela está generalizada. A máquina ainda está rodando; pare e marque:
 
-   ```sh
-   az image create --resource-group shop-rg --name shop-web-2026-10-30 --source shop-build
-   ```
+```sh
+az vm deallocate --resource-group shop-rg --name shop-build
+az vm generalize --resource-group shop-rg --name shop-build
+```
+
+Daí em diante a máquina não pode mais ser iniciada. Ela só existe para ser copiada.
+
+Passo 4. Capture, como um dos dois tipos de imagem sua da primeira seção. Uma versão de imagem de
+galeria é `az sig image-version create ... --virtual-machine <o id da máquina>`, que a próxima
+seção declara em Bicep. Uma imagem gerenciada é um comando só:
+
+```sh
+az image create --resource-group shop-rg --name shop-web-2026-10-30 --source shop-build
+```
 
 **Prefira a galeria, e a documentação da Microsoft diz o mesmo.** Uma imagem gerenciada só pode ser
 feita a partir de uma máquina generalizada, só cria máquinas na própria região, não pode ser
