@@ -1,0 +1,408 @@
+{
+  "ex-vn9eyr7v": {
+    "prompt": "Um pedido é feito às 19:04:20 e chega ao Pub/Sub às 19:08:40. Qual é o horário do evento?",
+    "hint": "Um dos dois horários é um fato sobre a rede.",
+    "choices": [
+      {
+        "text": "19:04:20",
+        "why": "Isso. O horário do evento é quando o pedido aconteceu."
+      },
+      {
+        "text": "19:08:40, o momento em que o Pub/Sub o recebeu",
+        "why": "Esse é o horário de processamento, o que as janelas da aula 21 usaram."
+      },
+      {
+        "text": "O momento em que a janela do pipeline dispara",
+        "why": "O disparo de uma janela é obra do pipeline; não é um horário do pedido."
+      },
+      {
+        "text": "A diferença, 4 minutos e 20 segundos",
+        "why": "Esse é o atraso entre os dois horários, não um deles."
+      }
+    ]
+  },
+  "ex-cdmjkgej": {
+    "prompt": "Com janelas pela chegada, Pinheiros mostra 95,50 reais entre 19:05 e 19:10; pelo horário do pedido, 80,00. Qual é a resposta certa para \"quanto Pinheiros pediu nesses cinco minutos\"?",
+    "hint": "Pergunte o que cada janela mediu.",
+    "choices": [
+      {
+        "text": "95,50, porque o dinheiro de fato chegou nessa janela",
+        "why": "Chegou nessa hora, mas o `o-504` foi pedido às 19:04:20, na janela anterior."
+      },
+      {
+        "text": "80,00, contando pelo momento da compra",
+        "why": "Isso. A outra execução responde quanto chegou à Quitanda nesses minutos."
+      },
+      {
+        "text": "Nenhuma: janelas sempre mudam os totais",
+        "why": "As duas execuções somaram cada pedido uma vez; só mudou a janela de cada um."
+      },
+      {
+        "text": "A média das duas, 87,75",
+        "why": "A média de duas perguntas diferentes não responde nenhuma delas."
+      }
+    ]
+  },
+  "ex-eynqde4q": {
+    "prompt": "Por que o `late.py` reproduz a noite por um TestStream em vez de publicá-la no emulador do Pub/Sub?",
+    "hint": "Pense no que decide a saída de cada um.",
+    "choices": [
+      {
+        "text": "O DirectRunner não consegue ler o Pub/Sub",
+        "why": "A aula 21 leu o Pub/Sub nele; o problema é o que decide o resultado."
+      },
+      {
+        "text": "Um TestStream roda bem mais rápido que o emulador",
+        "why": "Velocidade não é a questão; os dois terminam em segundos."
+      },
+      {
+        "text": "O tempo dele fica fixo no programa",
+        "why": "Isso: a ordem de chegada, o relógio e a marca d'água, então cada execução dá a mesma saída. Pelo Pub/Sub, o resultado depende de tempos que ninguém controla."
+      },
+      {
+        "text": "O Pub/Sub não tem como levar um horário de evento",
+        "why": "Carrega, num atributo lido com `timestamp_attribute`; a última seção faz isso."
+      }
+    ]
+  },
+  "ex-ewk56j1q": {
+    "prompt": "Que tipo de janela é feita a partir dos dados, por chave, em vez de conhecida de antemão?",
+    "hint": "Um tipo fecha depois de um intervalo.",
+    "choices": [
+      {
+        "text": "Fixa",
+        "why": "Janelas fixas são alinhadas ao relógio: 19:00 a 19:05 existe antes de qualquer pedido."
+      },
+      {
+        "text": "Deslizante",
+        "why": "Janelas deslizantes também começam em horários conhecidos, a cada período."
+      },
+      {
+        "text": "Sessões",
+        "why": "Isso. Uma sessão cresce enquanto uma chave continua mandando e fecha depois do intervalo."
+      },
+      {
+        "text": "A janela global",
+        "why": "Há uma janela global para tudo, conhecida antes de qualquer dado."
+      }
+    ]
+  },
+  "ex-gmpb8xhm": {
+    "prompt": "Janelas deslizantes de uma hora começam a cada minuto. Em quantas janelas cada elemento é posto?",
+    "hint": "Comprimento dividido pelo período."
+  },
+  "ex-pt33wnwm": {
+    "prompt": "O `c-02` pediu às 19:02:05 e às 19:07:45, e ficou com duas sessões com intervalo de cinco minutos. Com intervalo de seis minutos, o que mudaria?",
+    "hint": "Compare o intervalo com a distância entre os dois pedidos.",
+    "choices": [
+      {
+        "text": "Nada: sessões nunca juntam dois pedidos de um cliente",
+        "why": "Os dois primeiros pedidos do `c-17` viraram uma sessão com o mesmo intervalo de cinco minutos."
+      },
+      {
+        "text": "Os dois pedidos seriam uma sessão, das 19:02:05 às 19:13:45",
+        "why": "Isso. Estão a 5 minutos e 40 segundos um do outro, menos de seis, e a sessão termina um intervalo depois do último."
+      },
+      {
+        "text": "Cada pedido ganharia uma sessão de seis minutos, sobrepostas",
+        "why": "Sessões sobrepostas de uma chave se juntam; é assim que sessões são montadas."
+      },
+      {
+        "text": "O segundo pedido seria descartado como atrasado",
+        "why": "Nada aqui está atrasado: os dois estão no lote desde o começo."
+      }
+    ]
+  },
+  "ex-bc80y543": {
+    "prompt": "Ligue cada pergunta da Quitanda à janela que a responde.",
+    "hint": "Uma pergunta não tem relógio natural.",
+    "pairs": [
+      {
+        "left": "Pedidos a cada cinco minutos, para o relatório da noite",
+        "right": "Janelas fixas"
+      },
+      {
+        "left": "Pedidos da última hora, atualizados a cada minuto",
+        "right": "Janelas deslizantes"
+      },
+      {
+        "left": "O que um cliente comprou numa visita ao aplicativo",
+        "right": "Sessões"
+      },
+      {
+        "left": "Pedidos desde a meia-noite, atualizados a cada minuto",
+        "right": "A janela global com um gatilho repetido"
+      }
+    ],
+    "right_distractors": [
+      "Janelas de tempo de processamento pelo horário de publicação"
+    ]
+  },
+  "ex-9th5m33e": {
+    "prompt": "O que afirma uma marca d'água em 19:06:46?",
+    "hint": "É uma afirmação sobre o horário do evento.",
+    "choices": [
+      {
+        "text": "Que são 19:06:46 no relógio da parede",
+        "why": "A marca d'água está no horário do evento; no relógio da reprodução eram 19:07:46."
+      },
+      {
+        "text": "Que nada feito antes das 19:06:46 ainda está a caminho",
+        "why": "Isso, e é um palpite: o `o-504` mostrou que estava errado."
+      },
+      {
+        "text": "Que toda janela que termina antes das 19:06:46 foi gravada num destino",
+        "why": "As janelas disparam quando a marca d'água passa por elas; gravar no destino é um passo posterior."
+      },
+      {
+        "text": "Que o pipeline está 19 horas atrás da entrada",
+        "why": "O atraso é a distância entre a marca d'água e o presente, que esse número sozinho não dá."
+      }
+    ]
+  },
+  "ex-0r4dxngh": {
+    "prompt": "Com o gatilho padrão e sem atraso permitido, o que acontece com o `o-504` no `late.py`?",
+    "hint": "A janela dele tinha disparado antes de ele chegar.",
+    "choices": [
+      {
+        "text": "Entra na janela seguinte",
+        "why": "A janela é escolhida pelo horário do evento, 19:04:20, e essa janela já se foi."
+      },
+      {
+        "text": "O pipeline para com um erro que o cita",
+        "why": "Nada o relata; a execução termina com uma tabela de aparência correta."
+      },
+      {
+        "text": "É descartado, e nada avisa",
+        "why": "Isso. A primeira janela de Pinheiros fica em 128,00 em vez de 151,50."
+      },
+      {
+        "text": "Espera até a janela disparar de novo",
+        "why": "O gatilho padrão dispara uma janela uma vez só."
+      }
+    ]
+  },
+  "ex-3yhezkbm": {
+    "prompt": "Um colega propõe uma marca d'água dez minutos atrás da última chegada, para nenhum pedido da noite atrasar. Quanto isso custa?",
+    "hint": "Uma janela fecha quando a marca d'água passa o fim dela.",
+    "choices": [
+      {
+        "text": "Nada: os mesmos resultados, sem nenhum descartado",
+        "why": "Os resultados ficam completos, mas mais tarde: esse é o custo."
+      },
+      {
+        "text": "Cada janela sai uns dez minutos mais tarde que antes",
+        "why": "Isso, e mais estado fica guardado nesse meio-tempo. A janela das 19:00 sairia por volta das 19:15 em vez das 19:06."
+      },
+      {
+        "text": "Os pedidos feitos nos últimos dez minutos são descartados",
+        "why": "Uma marca d'água mais atrás chama menos dados de atrasados, não mais."
+      },
+      {
+        "text": "O Pub/Sub guarda cada mensagem por mais dez minutos",
+        "why": "A marca d'água é a estimativa do pipeline; não muda nada na assinatura."
+      }
+    ]
+  },
+  "ex-zbvet4md": {
+    "prompt": "Sem atraso permitido, o `late.py` descartou `o-504` (23,50), `o-507` (31,00) e `o-510` (8,00). Quantos reais faltam nos totais dele?",
+    "hint": "Some os três."
+  },
+  "ex-mfg5asev": {
+    "prompt": "Com `--lateness 300`, por que o `o-507` continua descartado?",
+    "hint": "O atraso permitido é medido contra a marca d'água.",
+    "choices": [
+      {
+        "text": "O estado da janela dele sumiu antes de ele chegar",
+        "why": "Isso: o estado se foi quando a marca d'água chegou às 19:10. A marca d'água chegou a 19:10:16 às 19:11:16; o `o-507` veio às 19:12:30."
+      },
+      {
+        "text": "`AfterCount(1)` só dispara para o primeiro pedido atrasado",
+        "why": "Disparou para o `o-504` e para o `o-510`, um painel cada."
+      },
+      {
+        "text": "As janelas de Moema não aceitam dados atrasados",
+        "why": "O atraso permitido é uma propriedade da janela, igual para toda chave."
+      },
+      {
+        "text": "Os cinco minutos contam a partir do pedido",
+        "why": "Contam a partir do fim da janela, no tempo da marca d'água."
+      }
+    ]
+  },
+  "ex-vg0f0e4b": {
+    "prompt": "No modo acumulativo, a janela das 19:00 de Pinheiros emite 128,00 no horário e depois 151,50 atrasado. O que um destino que grava uma linha por janela e bairro deve fazer com o segundo painel?",
+    "hint": "Cada painel acumulativo é a janela inteira até ali.",
+    "choices": [
+      {
+        "text": "Somar 151,50 aos 128,00 que já estão lá",
+        "why": "Isso contaria o `o-502` duas vezes: 151,50 já o inclui."
+      },
+      {
+        "text": "Ignorar, porque o painel no horário é o final",
+        "why": "O painel atrasado é o total corrigido; ignorá-lo mantém o errado."
+      },
+      {
+        "text": "Substituir a linha por 151,50",
+        "why": "Isso. O último painel é a resposta, e substituir é seguro de repetir."
+      },
+      {
+        "text": "Gravar uma segunda linha ao lado da primeira",
+        "why": "Duas linhas para uma janela e um bairro deixam quem lê adivinhando qual vale."
+      }
+    ]
+  },
+  "ex-a9vs65gy": {
+    "prompt": "No modo de descarte, a janela das 19:00 de Moema imprimiu 45,90, depois 9,90, depois 0,00 no horário. Que consumidor lê esses painéis corretamente?",
+    "hint": "Cada painel de descarte é só o que é novo desde o anterior.",
+    "choices": [
+      {
+        "text": "Um que guarda o painel mais recente por janela",
+        "why": "Terminaria com 0,00 para uma janela que tem 55,80."
+      },
+      {
+        "text": "Um que guarda o maior painel por janela",
+        "why": "O maior aqui é 45,90, que deixa o `o-503` de fora."
+      },
+      {
+        "text": "Um que soma tudo o que chegou para ela",
+        "why": "Isso: 45,90 + 9,90 + 0,00 = 55,80. Mas um painel entregue duas vezes seria somado duas vezes."
+      },
+      {
+        "text": "Um que guarda só o painel `ON_TIME`",
+        "why": "Esse é o 0,00, o painel no horário que veio vazio."
+      }
+    ]
+  },
+  "ex-sxpqt7jr": {
+    "prompt": "Um painel emitido antes de a marca d'água chegar ao fim da janela tem o momento ___.",
+    "hint": "Os três momentos são impressos em maiúsculas pelo `late.py`.",
+    "blanks": [
+      {
+        "accept": [
+          "EARLY"
+        ]
+      }
+    ]
+  },
+  "ex-jmgmsh7y": {
+    "prompt": "O que `ReadFromPubSub(timestamp_attribute='placed')` muda?",
+    "hint": "Sem isso, o horário vem do Pub/Sub.",
+    "choices": [
+      {
+        "text": "O horário do evento vem da própria mensagem",
+        "why": "Isso, do atributo `placed`, em vez do horário de publicação. Quem publica tem de definir, porque só quem publica sabe quando o pedido foi feito."
+      },
+      {
+        "text": "O Pub/Sub ordena as mensagens por `placed` antes de entregar",
+        "why": "O Pub/Sub não entrega nessa ordem; o atributo é para o pipeline."
+      },
+      {
+        "text": "Mensagens sem o atributo são recusadas pelo Pub/Sub",
+        "why": "O Pub/Sub não lê atributos; o pipeline lê."
+      },
+      {
+        "text": "O comprimento da janela vem do atributo",
+        "why": "A janela é definida pelo `WindowInto`; o atributo só dá o horário."
+      }
+    ]
+  },
+  "ex-r8xchadg": {
+    "prompt": "No DirectRunner, o `from_pubsub.py` ficou com três pedidos de dez de 15 de outubro. No Dataflow, com os mesmos dez pedidos esperando numa assinatura nova, o que a documentação faz esperar?",
+    "hint": "Compare de onde cada runner tira a marca d'água.",
+    "choices": [
+      {
+        "text": "Os mesmos três pedidos, porque o Dataflow também descarta dados velhos",
+        "why": "O Dataflow não compara horários de evento com o relógio da parede; estima pelo acúmulo."
+      },
+      {
+        "text": "Um erro, porque os pedidos têm duas semanas",
+        "why": "Horários de evento antigos não são erro em lugar nenhum do Beam."
+      },
+      {
+        "text": "Os dez nas suas janelas, pelo acúmulo",
+        "why": "Isso: a marca d'água começa por volta da mensagem mais antiga à espera. Nada no acúmulo está atrasado só por ser antigo."
+      },
+      {
+        "text": "Nenhum, até alguém drenar o job",
+        "why": "Drenar dispara as janelas abertas antes da hora; não é preciso para as janelas dispararem."
+      }
+    ]
+  },
+  "ex-wfvghjxr": {
+    "prompt": "Por que um atraso permitido longo custa dinheiro no Dataflow?",
+    "hint": "Pergunte o que o runner guarda até a janela expirar.",
+    "choices": [
+      {
+        "text": "Cada painel atrasado é cobrado como um job separado",
+        "why": "Painéis são saídas de um job, não jobs."
+      },
+      {
+        "text": "O estado de cada janela fica guardado até a marca d'água passar o fim dela mais o atraso",
+        "why": "Isso, e com Streaming Engine esse estado entra na cobrança."
+      },
+      {
+        "text": "O Pub/Sub cobra por mensagem guardada além do prazo",
+        "why": "O atraso permitido não muda nada no Pub/Sub; o estado é do pipeline."
+      },
+      {
+        "text": "O Dataflow acrescenta um worker por minuto de atraso",
+        "why": "Os workers acompanham o acúmulo e quão ocupados estão, não um ajuste de atraso."
+      }
+    ]
+  },
+  "ex-jbtjbp4w": {
+    "prompt": "Ponha em ordem o que acontece com a janela das 19:00 de Pinheiros no `late.py --lateness 300`.",
+    "hint": "A marca d'água anda primeiro; o pedido atrasado chega depois.",
+    "items": [
+      "O `o-502` chega e entra na janela",
+      "A marca d'água passa das 19:05 e a janela dispara 128,00 no horário",
+      "O `o-504` chega atrás da marca d'água e a janela dispara 151,50 atrasado",
+      "A marca d'água passa das 19:10 e o estado da janela é jogado fora"
+    ]
+  },
+  "ex-a0n8vx7d": {
+    "prompt": "Quais destes fazem um pedido atrasado contar numa janela fixa? Marque todas as que se aplicam.",
+    "hint": "Uns agem na marca d'água, outros na janela.",
+    "choices": [
+      {
+        "text": "Um atraso permitido longo o bastante para cobrir a demora dele",
+        "why": "A janela guarda o estado, e um gatilho atrasado emite a correção."
+      },
+      {
+        "text": "Uma marca d'água que fica mais atrás das chegadas",
+        "why": "Aí o pedido nem está atrasado, ao preço de resultados mais tardios."
+      },
+      {
+        "text": "Um gatilho antecipado a cada minuto",
+        "why": "Painéis antecipados vêm antes do fim da janela; não fazem nada pelos dados depois dele."
+      },
+      {
+        "text": "O modo de descarte em vez do acumulativo",
+        "why": "O modo decide o que um painel contém, não se o dado atrasado fica."
+      }
+    ]
+  },
+  "ex-befrjrh4": {
+    "prompt": "Os totais de cada noite de um fluxo saem sempre um pouco abaixo do lote noturno sobre os mesmos eventos. Qual é a primeira coisa a suspeitar?",
+    "hint": "A aula 21 deixou os dois comparáveis de propósito.",
+    "choices": [
+      {
+        "text": "Dados atrasados descartados atrás da marca d'água, além do atraso permitido",
+        "why": "Isso. O descarte não faz barulho, e o lote, com todos os eventos, mostra a diferença."
+      },
+      {
+        "text": "O lote contou alguns pedidos duas vezes",
+        "why": "O lote lê cada linha uma vez; as mesmas transformações rodam nos dois."
+      },
+      {
+        "text": "Arredondamento de ponto flutuante na soma",
+        "why": "As somas são centavos inteiros até o `Format`; arredondamento não deixaria o fluxo sempre abaixo."
+      },
+      {
+        "text": "O Pub/Sub apagou as mensagens depois da leitura",
+        "why": "Mensagens confirmadas saem da assinatura, mas foram contadas ao serem lidas."
+      }
+    ]
+  }
+}
