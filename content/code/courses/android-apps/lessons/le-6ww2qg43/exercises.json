@@ -1,0 +1,707 @@
+[
+  {
+    "id": "ex-en5tnt50",
+    "version": 1,
+    "section": "functions-that-draw",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the return type of `CourseRow`?",
+    "hint": "It emits instead of returning.",
+    "choices": [
+      {
+        "text": "`Unit`",
+        "correct": true,
+        "why": "Right: a composable that emits returns nothing; it adds nodes to the composition."
+      },
+      {
+        "text": "`View`",
+        "correct": false,
+        "why": "Compose emits nodes, not views; `View` is the old system."
+      },
+      {
+        "text": "`Column`, the layout it creates",
+        "correct": false,
+        "why": "`Column` is called, not returned; its node is emitted."
+      },
+      {
+        "text": "A `Composable` object that Compose draws later",
+        "correct": false,
+        "why": "There is no such object; the function's calls are the description."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9n840z2",
+    "version": 1,
+    "section": "functions-that-draw",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`summary(course): String` calls `CourseRow` and the build fails. What is the right fix?",
+    "hint": "Does `summary` draw anything?",
+    "choices": [
+      {
+        "text": "Mark `summary` as `@Composable`",
+        "correct": false,
+        "why": "It would compile and make a function that computes a string callable only during composition."
+      },
+      {
+        "text": "Take the `CourseRow` call out",
+        "correct": true,
+        "why": "Right: a function that computes stays plain, and a composable calls it, never the other way round."
+      },
+      {
+        "text": "Wrap the call in `setContent { }`",
+        "correct": false,
+        "why": "`setContent` belongs to an activity, and `summary` is not one."
+      },
+      {
+        "text": "Pass a `Composer` argument by hand",
+        "correct": false,
+        "why": "The composer is added by the compiler plugin; it is not something you pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8k0rp5r",
+    "version": 1,
+    "section": "functions-that-draw",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `stringResource` named in camelCase while `CourseRow` is in PascalCase, although both are composables?",
+    "hint": "One of them gives you something back.",
+    "choices": [
+      {
+        "text": "`stringResource` is not a composable",
+        "correct": false,
+        "why": "It is: it reads the current configuration, which needs composition."
+      },
+      {
+        "text": "PascalCase is for composables in Material only",
+        "correct": false,
+        "why": "`CourseRow` is the planner's own and follows the same rule."
+      },
+      {
+        "text": "It returns a value instead of emitting",
+        "correct": true,
+        "why": "Right: emitters read as nouns, value-returners as ordinary functions."
+      },
+      {
+        "text": "camelCase marks a composable that may be skipped",
+        "correct": false,
+        "why": "Naming has no effect on skipping; it is a convention for readers."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk4ppbpx",
+    "version": 1,
+    "section": "functions-that-draw",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The compiler plugin gives every composable a hidden extra parameter, the ___, through which it reaches the tree.",
+    "hint": "A noun from the verb to compose.",
+    "blanks": [
+      {
+        "accept": [
+          "composer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pbj1hnq2",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes `CourseRow` stateless?",
+    "hint": "Where does its data come from?",
+    "choices": [
+      {
+        "text": "Everything it shows arrives as a parameter",
+        "correct": true,
+        "why": "Right: data in, a description out."
+      },
+      {
+        "text": "It has no `@Composable` annotation",
+        "correct": false,
+        "why": "It has it; stateless is about where data comes from."
+      },
+      {
+        "text": "It is never recomposed",
+        "correct": false,
+        "why": "It recomposes whenever its parameters change."
+      },
+      {
+        "text": "It is declared in the `data` package with the model",
+        "correct": false,
+        "why": "It is in `ui`; the package is not what makes it stateless."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tje13dh",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Compose's own components, which optional parameter comes first by convention?",
+    "hint": "Lesson 6 is about it.",
+    "choices": [
+      {
+        "text": "`enabled: Boolean = true`",
+        "correct": false,
+        "why": "It comes after the modifier in `Button`."
+      },
+      {
+        "text": "`content`, the slot",
+        "correct": false,
+        "why": "The slot goes last, so it can be written in braces."
+      },
+      {
+        "text": "`modifier: Modifier = Modifier`",
+        "correct": true,
+        "why": "Right: it lets the caller decide size, padding and position."
+      },
+      {
+        "text": "`onClick`",
+        "correct": false,
+        "why": "`onClick` is required, with no default, and comes before."
+      }
+    ]
+  },
+  {
+    "id": "ex-65mw8xtc",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate rewrites `CourseRow(courseId: String)` so that the row loads its own course from the database. What does the planner lose first?",
+    "hint": "Section 04 is next.",
+    "choices": [
+      {
+        "text": "Nothing at all: the call site gets shorter and every screen looks the same",
+        "correct": false,
+        "why": "The call is shorter, and every listed advantage is gone."
+      },
+      {
+        "text": "Previewing or testing the row with no database behind it",
+        "correct": true,
+        "why": "Right: a stateless row can be shown with any data; this one needs the real source."
+      },
+      {
+        "text": "Recomposition, which only works with parameters",
+        "correct": false,
+        "why": "A composable recomposes whatever it reads; the loss is elsewhere."
+      },
+      {
+        "text": "Translation, since ids cannot be translated",
+        "correct": false,
+        "why": "The name would still come from the course; translation is untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-rg390yzn",
+    "version": 1,
+    "section": "parameters",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of `Button`'s parameter list to why it sits where it does.",
+    "hint": "Required, layout, the rest, content.",
+    "pairs": [
+      {
+        "left": "`onClick`",
+        "right": "Required, so it comes first with no default"
+      },
+      {
+        "left": "`modifier`",
+        "right": "The caller's say over size and position"
+      },
+      {
+        "left": "`content`",
+        "right": "Last, so it can be written in braces after the call"
+      }
+    ],
+    "right_distractors": [
+      "Read from the activity's saved `Bundle`"
+    ]
+  },
+  {
+    "id": "ex-r4n5zyn3",
+    "version": 1,
+    "section": "previews",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command rendered the planner's previews to PNG files?",
+    "hint": "It belongs to the Android CLI.",
+    "choices": [
+      {
+        "text": "`./gradlew recordRoborazziDebug`",
+        "correct": false,
+        "why": "That records screenshots from tests, as lesson 2 did; previews went through the CLI."
+      },
+      {
+        "text": "`android preview render`",
+        "correct": true,
+        "why": "Right, with `--fqn` naming each preview and `-o` the output directory."
+      },
+      {
+        "text": "`adb shell screencap`",
+        "correct": false,
+        "why": "That needs a device, which the recording machine did not have."
+      },
+      {
+        "text": "`./gradlew assembleDebug`",
+        "correct": false,
+        "why": "It builds an APK and renders nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t8twe14",
+    "version": 1,
+    "section": "previews",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson keep a second preview with `fontScale = 1.5f`?",
+    "hint": "Who sets that on a phone?",
+    "choices": [
+      {
+        "text": "To test that the strings are translated",
+        "correct": false,
+        "why": "Translation is a locale, not a font scale."
+      },
+      {
+        "text": "Because a preview at 1.0 renders blurry",
+        "correct": false,
+        "why": "The first preview rendered cleanly."
+      },
+      {
+        "text": "It is what a phone does when its owner chooses larger text",
+        "correct": true,
+        "why": "Right: many people use the setting, and the row must grow with it."
+      },
+      {
+        "text": "Android Studio requires two previews per file",
+        "correct": false,
+        "why": "There is no such requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfaamy13",
+    "version": 1,
+    "section": "previews",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`file` measured the normal preview at 249 by 105 pixels. How many pixels wide was the one at `fontScale = 1.5f`?",
+    "hint": "About one and a half times.",
+    "value": 373,
+    "tolerance": 0,
+    "unit": "px"
+  },
+  {
+    "id": "ex-28a0gnrm",
+    "version": 1,
+    "section": "previews",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A preview of a screen comes out as an empty box, while the app shows the screen fine. Which cause fits section 04 best?",
+    "hint": "What does a preview NOT start?",
+    "choices": [
+      {
+        "text": "It loads its own data, which nothing supplies there",
+        "correct": true,
+        "why": "Right: a preview runs the composable only, with no activity, `ViewModel` or network."
+      },
+      {
+        "text": "Previews ignore `MaterialTheme`",
+        "correct": false,
+        "why": "The planner's previews used it and drew its typography."
+      },
+      {
+        "text": "The preview has `showBackground = true`",
+        "correct": false,
+        "why": "That only paints a background behind the content."
+      },
+      {
+        "text": "The composable is in a file without any other preview functions",
+        "correct": false,
+        "why": "One preview per file is enough to render."
+      }
+    ]
+  },
+  {
+    "id": "ex-782ymzqs",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `PlannerCard(title, content)`, what does the line `content()` do?",
+    "hint": "It is a call.",
+    "choices": [
+      {
+        "text": "Returns the caller's composables as a list",
+        "correct": false,
+        "why": "Nothing is returned; the lambda emits."
+      },
+      {
+        "text": "Runs the caller's lambda, which emits inside the card's column",
+        "correct": true,
+        "why": "Right: the rows land after the title, inside the frame."
+      },
+      {
+        "text": "Draws the card's background",
+        "correct": false,
+        "why": "`Card` draws the background; `content()` adds the caller's part."
+      },
+      {
+        "text": "Schedules the content for the next frame",
+        "correct": false,
+        "why": "It runs now, during composition."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj1egz4w",
+    "version": 1,
+    "section": "slots",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many slots does `Scaffold` have, by the lesson's count?",
+    "hint": "Bars, a host, a button and the content.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-egsjpf10",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Should `CourseRow` take a slot for the course's name instead of a `Course`?",
+    "hint": "Who should decide how the name is drawn?",
+    "choices": [
+      {
+        "text": "Yes: slots are always more flexible than data",
+        "correct": false,
+        "why": "Flexibility here means every caller draws the name differently."
+      },
+      {
+        "text": "Yes, because a slot recomposes less",
+        "correct": false,
+        "why": "The choice is about who decides content, not about recomposition."
+      },
+      {
+        "text": "No, until two real callers need different content there",
+        "correct": true,
+        "why": "Right: pass data the component knows how to show; make a slot when callers truly differ."
+      },
+      {
+        "text": "No, because slots cannot hold `Text`",
+        "correct": false,
+        "why": "A slot can hold any composable, `Text` included."
+      }
+    ]
+  },
+  {
+    "id": "ex-c70ae7n4",
+    "version": 1,
+    "section": "the-composition",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`CourseRow` is called twice in `PlannerCardPreview`. How many `CourseRow` nodes are in the composition?",
+    "hint": "The tree mirrors the calls.",
+    "choices": [
+      {
+        "text": "One, shared by both calls",
+        "correct": false,
+        "why": "Each call is its own node with its own position."
+      },
+      {
+        "text": "Two",
+        "correct": true,
+        "why": "Right: one per call, each with its own parameters."
+      },
+      {
+        "text": "None: only `Text` nodes are kept",
+        "correct": false,
+        "why": "Every composable call is a node; only some of them draw."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk460v8a",
+    "version": 1,
+    "section": "the-composition",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the three things Compose does to show a frame in order.",
+    "hint": "Section 06 names them.",
+    "items": [
+      "composition: run the composables and record the tree",
+      "layout: measure and place each node",
+      "drawing: paint the nodes that draw"
+    ]
+  },
+  {
+    "id": "ex-sg465a9g",
+    "version": 1,
+    "section": "the-composition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A value read by one `Text` deep in the tree changes. What does Compose run again?",
+    "hint": "Not the whole tree.",
+    "choices": [
+      {
+        "text": "Everything from `setContent` down",
+        "correct": false,
+        "why": "Compose does not rebuild from the top."
+      },
+      {
+        "text": "The activity's `onCreate`",
+        "correct": false,
+        "why": "Recomposition happens inside the composition, not in the activity."
+      },
+      {
+        "text": "The composables that read the value, compared against the tree",
+        "correct": true,
+        "why": "Right: that is recomposition, lesson 5's subject."
+      },
+      {
+        "text": "Only the drawing step, since text is pixels",
+        "correct": false,
+        "why": "A new value can change what is emitted, so composition runs for the readers."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nzt3xxq",
+    "version": 1,
+    "section": "side-effects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the test changed the minutes three times, how many entries did the `opened` list hold?",
+    "hint": "The first composition counts too.",
+    "choices": [
+      {
+        "text": "1",
+        "correct": false,
+        "why": "That is what the line was meant to record, and not what it did."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "The first composition ran the body too."
+      },
+      {
+        "text": "4",
+        "correct": true,
+        "why": "Right: one composition and three recompositions."
+      },
+      {
+        "text": "120",
+        "correct": false,
+        "why": "120 was the minutes on screen, which were right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vghyshyt",
+    "version": 1,
+    "section": "side-effects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner must load a course's sessions once when its screen appears. Where does that work go?",
+    "hint": "Compose runs one thing once and cancels it when the composable leaves.",
+    "choices": [
+      {
+        "text": "In the composable's body, before the first `Text`",
+        "correct": false,
+        "why": "The body runs on every recomposition, so it would load again and again."
+      },
+      {
+        "text": "In a `LaunchedEffect`",
+        "correct": true,
+        "why": "Right, and lesson 11 uses it; lesson 10 moves the loading itself into a `ViewModel`."
+      },
+      {
+        "text": "In the preview function",
+        "correct": false,
+        "why": "A preview never runs in the app."
+      },
+      {
+        "text": "In `onClick` of the first row",
+        "correct": false,
+        "why": "That runs when somebody taps, not when the screen appears."
+      }
+    ]
+  },
+  {
+    "id": "ex-s51mk253",
+    "version": 1,
+    "section": "side-effects",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are safe in the body of a composable? Choose all that apply.",
+    "hint": "Does running it ten times change anything outside the screen?",
+    "choices": [
+      {
+        "text": "Formatting the minutes as text from a parameter",
+        "correct": true,
+        "why": "Yes: it depends only on the input and changes nothing."
+      },
+      {
+        "text": "Appending to a list of screen views",
+        "correct": false,
+        "why": "No: section 07's bug."
+      },
+      {
+        "text": "Calling a composable for each course in a list parameter",
+        "correct": true,
+        "why": "Yes: that is describing the screen."
+      },
+      {
+        "text": "Saving the current course to a file",
+        "correct": false,
+        "why": "No: it would write on every recomposition."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5h1p8pz",
+    "version": 1,
+    "section": "side-effects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the screen show the right total, 120, while the list was wrong?",
+    "hint": "Which of the two lines describes?",
+    "choices": [
+      {
+        "text": "Describing again with new data is what recomposition is for; appending is not describing",
+        "correct": true,
+        "why": "Right: the `Text` was replaced each time, the list only grew."
+      },
+      {
+        "text": "The list is printed before the last recomposition",
+        "correct": false,
+        "why": "`waitForIdle` let every recomposition finish first."
+      },
+      {
+        "text": "`Text` is skipped, and `opened` is not",
+        "correct": false,
+        "why": "`WeekTotal` ran four times, and `Text` with it."
+      },
+      {
+        "text": "The test reads `minutes` from a different thread",
+        "correct": false,
+        "why": "Threads are not the issue; the side effect is."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgtvfvka",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps to see a new composable without a phone in order.",
+    "hint": "The CLI needs a preview to find.",
+    "items": [
+      "write the composable with its data as parameters",
+      "add a `@Preview` function that calls it with sample data",
+      "`android preview list` to find its full name",
+      "`android preview render --fqn` that name"
+    ]
+  },
+  {
+    "id": "ex-ersp10qy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A composable shows a list of sessions and also sends an analytics event `sessions_viewed` in its body. Users scroll and add sessions. What do the analytics show?",
+    "hint": "When does the body run?",
+    "choices": [
+      {
+        "text": "One event per visit, as intended",
+        "correct": false,
+        "why": "The body runs on every recomposition, not once per visit."
+      },
+      {
+        "text": "No events, since composables cannot call network code",
+        "correct": false,
+        "why": "Nothing stops the call; that is the problem."
+      },
+      {
+        "text": "Many more events than visits",
+        "correct": true,
+        "why": "Right: every change it reads reruns the body and sends another."
+      },
+      {
+        "text": "Exactly one event per session added",
+        "correct": false,
+        "why": "Additions are one cause among several; nothing makes it exactly one."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsk2m0pb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change lets `PlannerCard` hold the week's summary, a course's sessions and a list of reminders without learning about any of them?",
+    "hint": "It is already in its signature.",
+    "choices": [
+      {
+        "text": "A `content: @Composable () -> Unit` slot",
+        "correct": true,
+        "why": "Right: the card owns the frame, the caller what goes in it."
+      },
+      {
+        "text": "A `type` parameter with one branch per kind of card",
+        "correct": false,
+        "why": "Then the card would have to learn about every kind."
+      },
+      {
+        "text": "Three separate card composables",
+        "correct": false,
+        "why": "That repeats the frame three times instead of sharing it."
+      },
+      {
+        "text": "Making the title a slot too",
+        "correct": false,
+        "why": "The title is data the card knows how to show."
+      }
+    ]
+  }
+]
