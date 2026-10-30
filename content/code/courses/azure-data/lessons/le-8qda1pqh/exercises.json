@@ -1,0 +1,630 @@
+[
+  {
+    "id": "ex-gjbjpqnh",
+    "version": 1,
+    "section": "data-flows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What runs a mapping data flow?",
+    "hint": "Nobody writes its code.",
+    "choices": [
+      {
+        "text": "The copy activity's integration runtime, row by row",
+        "correct": false,
+        "why": "A copy does not transform; a data flow runs as a Spark job."
+      },
+      {
+        "text": "A Spark cluster the runtime starts",
+        "correct": true,
+        "why": "Right. The boxes are turned into Spark by the service."
+      },
+      {
+        "text": "The database it writes to, as stored procedures",
+        "correct": false,
+        "why": "Nothing is pushed into the sink as procedures."
+      },
+      {
+        "text": "Power Query, inside the factory",
+        "correct": false,
+        "why": "That is Fabric's Dataflow Gen2, a different thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbrqba16",
+    "version": 1,
+    "section": "data-flows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team moving from Data Factory to Fabric plans to bring its mapping data flows across as Dataflow Gen2. What should it expect?",
+    "hint": "Similar boxes, different engine.",
+    "choices": [
+      {
+        "text": "An import button that converts each data flow as it is",
+        "correct": false,
+        "why": "Dataflow Gen2 is Power Query; there is no like-for-like conversion."
+      },
+      {
+        "text": "To rebuild them in Power Query",
+        "correct": true,
+        "why": "Right. Pipelines move more easily than data flows."
+      },
+      {
+        "text": "Nothing to change, since both run on the same Spark",
+        "correct": false,
+        "why": "Dataflow Gen2 does not run mapping data flow scripts."
+      },
+      {
+        "text": "To keep them in Data Factory, since Fabric has no transformations",
+        "correct": false,
+        "why": "Fabric has notebooks and Dataflow Gen2."
+      }
+    ]
+  },
+  {
+    "id": "ex-y72jr8c1",
+    "version": 1,
+    "section": "data-flows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which data flow box keeps one row per order when the shop resent some of them?",
+    "hint": "Grouping by the order's id.",
+    "choices": [
+      {
+        "text": "Derived column",
+        "correct": false,
+        "why": "It computes columns; it does not merge rows."
+      },
+      {
+        "text": "Aggregate, grouped by the order",
+        "correct": true,
+        "why": "Right. One group per order, keeping the first of each."
+      },
+      {
+        "text": "Conditional split",
+        "correct": false,
+        "why": "It sends rows down different paths; duplicates go down the same one."
+      },
+      {
+        "text": "Alter row, set to delete",
+        "correct": false,
+        "why": "Alter row marks rows for a database sink; it does not find duplicates."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zkv2zjz",
+    "version": 1,
+    "section": "notebooks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a notebook give that a mapping data flow does not? Choose all that apply.",
+    "hint": "Think of what a program has.",
+    "choices": [
+      {
+        "text": "Rules that can be tested on four rows, on a laptop",
+        "correct": true,
+        "why": "Yes, as `test_clean.py` does."
+      },
+      {
+        "text": "Any library the cluster can install",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A diff written by a person, reviewed line by line",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A cluster that nobody has to choose or size",
+        "correct": false,
+        "why": "That is the data flow's advantage; a notebook runs on a pool or cluster somebody picked."
+      },
+      {
+        "text": "Running on Spark",
+        "correct": false,
+        "why": "Both run on Spark."
+      }
+    ]
+  },
+  {
+    "id": "ex-frmmyv4a",
+    "version": 1,
+    "section": "notebooks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An analyst commits yesterday's notebook to Git with its cell outputs. What is the risk?",
+    "hint": "What do the outputs show?",
+    "choices": [
+      {
+        "text": "The notebook stops running, since outputs are read-only",
+        "correct": false,
+        "why": "Outputs do not stop a notebook from running."
+      },
+      {
+        "text": "Git refuses files larger than one cell",
+        "correct": false,
+        "why": "Git takes the file; that is the problem."
+      },
+      {
+        "text": "Rows of data, perhaps customers', are now in the repository",
+        "correct": true,
+        "why": "Right. Clearing outputs before committing is the habit that prevents it."
+      },
+      {
+        "text": "Spark reruns the outputs instead of the code at night",
+        "correct": false,
+        "why": "A job runs the code; outputs are just text in the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1jwvrbv",
+    "version": 1,
+    "section": "notebooks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A notebook cleans the night perfectly when its author runs the cells by hand, in order, choosing the date in the second cell. What makes it a job that can run at three in the morning?",
+    "hint": "Who chooses the date at three in the morning?",
+    "choices": [
+      {
+        "text": "Running it on a larger cluster",
+        "correct": false,
+        "why": "Size does not choose a date."
+      },
+      {
+        "text": "A date parameter in the first cell",
+        "correct": true,
+        "why": "Right. The same contract as the pipeline parameter `day` in lesson 19."
+      },
+      {
+        "text": "Converting it into a mapping data flow",
+        "correct": false,
+        "why": "A data flow needs the same parameter; converting adds nothing here."
+      },
+      {
+        "text": "Saving its outputs, so that the job can reuse them",
+        "correct": false,
+        "why": "A job runs the code again; old outputs are yesterday's."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8ze2q5w",
+    "version": 1,
+    "section": "the-same-transform",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `clean.py` read every column of the export as text?",
+    "hint": "Look at how the shop writes a total.",
+    "choices": [
+      {
+        "text": "Its totals, like `42,87`, are not numbers yet",
+        "correct": true,
+        "why": "Right. The query turns text into types by rules the code states."
+      },
+      {
+        "text": "Because the Parquet file it writes stores every column only as text",
+        "correct": false,
+        "why": "Parquet stores types; the result has integers."
+      },
+      {
+        "text": "DuckDB cannot read numbers out of a CSV file at all",
+        "correct": false,
+        "why": "It can; the point is this CSV's numbers."
+      },
+      {
+        "text": "Azurite returns blobs as strings",
+        "correct": false,
+        "why": "It returns bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg3f1rba",
+    "version": 1,
+    "section": "the-same-transform",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The night's export had 2,972 rows and `clean.py` wrote 2,921 orders. How many rows were duplicates?",
+    "hint": "Subtract.",
+    "value": 51,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1sj227mx",
+    "version": 1,
+    "section": "the-same-transform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`clean.py` was run twice for the same day, and `curated` still holds one file. What made the second run harmless?",
+    "hint": "Where does it write, and how?",
+    "choices": [
+      {
+        "text": "DuckDB's `DISTINCT ON`, which removes the first run's rows",
+        "correct": false,
+        "why": "It removes duplicates within one run's input; it never sees the first run's output."
+      },
+      {
+        "text": "It writes to a fixed name for the day, replacing what is there",
+        "correct": true,
+        "why": "Right. `overwrite=True` on one name per day."
+      },
+      {
+        "text": "Azurite refuses a second blob in the same folder",
+        "correct": false,
+        "why": "A container holds any number of blobs under one prefix."
+      },
+      {
+        "text": "The export was deleted after the first run",
+        "correct": false,
+        "why": "The second run read it again."
+      }
+    ]
+  },
+  {
+    "id": "ex-8j5m821g",
+    "version": 1,
+    "section": "the-same-transform",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`clean.py` stores each total as an integer number of ___, the only safe way to keep money.",
+    "hint": "A hundredth of a real.",
+    "blanks": [
+      {
+        "accept": [
+          "cents",
+          "cent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mtbjc9pm",
+    "version": 1,
+    "section": "testing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Removing the comma from `42,87` instead of turning it into a point gives the right total for every row of the real export. Which row of the test catches it?",
+    "hint": "Which total has one decimal digit?",
+    "choices": [
+      {
+        "text": "`42,87`, which becomes 4287 cents either way",
+        "correct": false,
+        "why": "Exactly: two digits hide the mistake."
+      },
+      {
+        "text": "`9,5`, which becomes 95 reais instead of 9.50",
+        "correct": true,
+        "why": "Right. The shop always writes two digits, so only a test with one finds it."
+      },
+      {
+        "text": "The order sent twice",
+        "correct": false,
+        "why": "That row tests deduplication."
+      },
+      {
+        "text": "None of them, since the test checks only the order ids",
+        "correct": false,
+        "why": "It checks four rules, the totals among them."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzj2n9zr",
+    "version": 1,
+    "section": "testing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a data flow's debug session give, and what does it not?",
+    "hint": "Looking is not checking.",
+    "choices": [
+      {
+        "text": "A test suite that reruns on every change, at no cost",
+        "correct": false,
+        "why": "It reruns nothing on its own, and the cluster is billed."
+      },
+      {
+        "text": "Row previews; never a check that fails a change",
+        "correct": true,
+        "why": "Right. Good for looking at data, and billed while it runs."
+      },
+      {
+        "text": "Nothing; debug only shows the script",
+        "correct": false,
+        "why": "It shows rows after each box."
+      },
+      {
+        "text": "A local copy of the data flow for a laptop",
+        "correct": false,
+        "why": "There is no local run of a data flow."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpx7pfyq",
+    "version": 1,
+    "section": "testing-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team writes notebooks, and still cannot test them. Their notebook reads the raw files, cleans and writes in one long cell. What should change?",
+    "hint": "Look at how `clean.py` is cut.",
+    "choices": [
+      {
+        "text": "Move to mapping data flows, which test themselves",
+        "correct": false,
+        "why": "They do not; testing them needs a cluster."
+      },
+      {
+        "text": "Run the cell twice and compare the outputs",
+        "correct": false,
+        "why": "That checks repeatability, not the rules."
+      },
+      {
+        "text": "Add more comments to the cell",
+        "correct": false,
+        "why": "Comments check nothing."
+      },
+      {
+        "text": "Put the rules in functions and keep storage at the edge",
+        "correct": true,
+        "why": "Right. Then the rules can be fed four rows with no storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh0vynzv",
+    "version": 1,
+    "section": "the-clock",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `time_to_live_min = 10` on the data flows runtime do?",
+    "hint": "It is about the cluster after a run.",
+    "choices": [
+      {
+        "text": "Keeps the cluster, billed, for ten minutes after a run",
+        "correct": true,
+        "why": "Right. The idle minutes are billed at the same rate as the work."
+      },
+      {
+        "text": "Stops any data flow that is still running after ten minutes",
+        "correct": false,
+        "why": "That would be a timeout; this is the opposite."
+      },
+      {
+        "text": "Starts the cluster ten minutes before the trigger",
+        "correct": false,
+        "why": "Nothing starts a cluster ahead of time."
+      },
+      {
+        "text": "Deletes the data flow's output after ten minutes",
+        "correct": false,
+        "why": "It concerns the cluster, not the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aaaby6q",
+    "version": 1,
+    "section": "the-clock",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A data flow runs on 8 cores: a cold start the lesson takes as 5 minutes, then 3 minutes of work. How many vCore-hours is that run billed, to two decimals?",
+    "hint": "Cores × minutes / 60.",
+    "value": 1.07,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-1sjwk3kw",
+    "version": 1,
+    "section": "the-clock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's night has two data flows, the second starting the moment the first ends. Why did ten minutes of time to live make it dearer?",
+    "hint": "Compare what was saved with what was added.",
+    "choices": [
+      {
+        "text": "Time to live doubles the price per vCore-hour",
+        "correct": false,
+        "why": "The rate is the same; the minutes changed."
+      },
+      {
+        "text": "One start saved, ten idle minutes paid",
+        "correct": true,
+        "why": "Right. 21 billed minutes against 16."
+      },
+      {
+        "text": "A warm cluster works more slowly than a fresh one",
+        "correct": false,
+        "why": "The work took three minutes in both arrangements."
+      },
+      {
+        "text": "Both flows started their own cluster anyway",
+        "correct": false,
+        "why": "The second found the first one's cluster warm."
+      }
+    ]
+  },
+  {
+    "id": "ex-pr2dkd5s",
+    "version": 1,
+    "section": "the-clock",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The smallest cluster the provider accepts for a data flow runtime has ___ cores.",
+    "hint": "The first number of the list `validate` printed.",
+    "blanks": [
+      {
+        "accept": [
+          "8",
+          "eight"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-se51gwcy",
+    "version": 1,
+    "section": "when-each-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team of analysts who know SQL and Data Factory, and no Python, must join and aggregate tidy tables every night. What fits best?",
+    "hint": "Who will look after it for three years?",
+    "choices": [
+      {
+        "text": "Mapping data flows",
+        "correct": true,
+        "why": "Right. The people can build and change them, and the work is what the boxes do well."
+      },
+      {
+        "text": "Notebooks, since code is always better",
+        "correct": false,
+        "why": "Code nobody on the team can read is not better."
+      },
+      {
+        "text": "A self-hosted integration runtime",
+        "correct": false,
+        "why": "That is where a copy runs, not how a transformation is written."
+      },
+      {
+        "text": "Fabric's Dataflow Gen2 inside Data Factory",
+        "correct": false,
+        "why": "Dataflow Gen2 lives in Fabric, not in Data Factory."
+      }
+    ]
+  },
+  {
+    "id": "ex-t215qen3",
+    "version": 1,
+    "section": "when-each-wins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's night is about 3,000 rows. A colleague wants a Spark cluster for it from day one, \"to be ready\". What does the lesson's arithmetic say?",
+    "hint": "How long did `clean.py` need, and how long does a cluster take to start?",
+    "choices": [
+      {
+        "text": "Spark is cheaper at every size, so start there",
+        "correct": false,
+        "why": "At this size the start-up alone is more than the work."
+      },
+      {
+        "text": "A cluster is needed for anything written to Parquet",
+        "correct": false,
+        "why": "`clean.py` wrote Parquet from one process."
+      },
+      {
+        "text": "At this size the cluster mostly starts, not works",
+        "correct": true,
+        "why": "Right. Spark's moment is when the data stops fitting one machine or one night."
+      },
+      {
+        "text": "Notebooks need Spark, so the choice is already made",
+        "correct": false,
+        "why": "Fabric runs Python notebooks with no Spark session."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpd2epzj",
+    "version": 1,
+    "section": "when-each-wins",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the tool the lesson would choose.",
+    "hint": "Ask who maintains it, and what it needs.",
+    "pairs": [
+      {
+        "left": "SQL analysts, tidy tables, no Python",
+        "right": "A mapping data flow"
+      },
+      {
+        "left": "Rules that grow and need tests",
+        "right": "A notebook with the rules in functions"
+      },
+      {
+        "left": "Three thousand rows a night",
+        "right": "One process, no cluster"
+      },
+      {
+        "left": "An SSIS package written years ago",
+        "right": "The Azure-SSIS integration runtime"
+      }
+    ],
+    "right_distractors": [
+      "Fabric's Dataflow Gen2, imported from Data Factory"
+    ]
+  },
+  {
+    "id": "ex-6nge1dna",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `clean.py` in the order it runs them.",
+    "hint": "Read, clean, write.",
+    "items": [
+      "Download `raw/orders/<day>.csv` from the container",
+      "Read every column as text",
+      "Keep one row per order and convert the payment and the total",
+      "Replace `curated/orders/dt=<day>/orders.parquet`"
+    ]
+  },
+  {
+    "id": "ex-0ybyhhjh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where would the rules of `clean.py` live if Quitanda chose a notebook in Fabric?",
+    "hint": "The same Spark, written as code.",
+    "choices": [
+      {
+        "text": "In Fabric's Dataflow Gen2, which notebooks call",
+        "correct": false,
+        "why": "Notebooks hold their own code."
+      },
+      {
+        "text": "In the lakehouse's SQL analytics endpoint",
+        "correct": false,
+        "why": "That endpoint is read-only, lesson 17."
+      },
+      {
+        "text": "In the notebook's own functions, writing Delta",
+        "correct": true,
+        "why": "Right. Same rules, read from `abfss://`, written as Delta."
+      },
+      {
+        "text": "In a mapping data flow script stored beside the notebook",
+        "correct": false,
+        "why": "Fabric has no mapping data flows."
+      }
+    ]
+  }
+]
