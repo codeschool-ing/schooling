@@ -1,0 +1,653 @@
+[
+  {
+    "id": "ex-7rmvdx4h",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of a Bigtable table has to exist before a row can write to it?",
+    "hint": "Look at what `cbt set` refused.",
+    "choices": [
+      {
+        "text": "Every column qualifier the rows will carry",
+        "correct": false,
+        "why": "Qualifiers are written with the data; c-18's `o-10004` was never declared."
+      },
+      {
+        "text": "The column family",
+        "correct": true,
+        "why": "Right. A family is declared on the table, and a write to `x:note` was refused because `x` did not exist."
+      },
+      {
+        "text": "The type of each value, string or integer",
+        "correct": false,
+        "why": "There are no types: every value is bytes."
+      },
+      {
+        "text": "The range of row keys the table will hold",
+        "correct": false,
+        "why": "Row keys are never declared; any string of bytes is a valid key."
+      }
+    ]
+  },
+  {
+    "id": "ex-gy8hwxty",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "c-18 has the columns `o:o-10004` and `o:o-10005` and c-17 has neither. What does the table store for c-17's missing order columns?",
+    "hint": "Bigtable is called sparse for a reason.",
+    "choices": [
+      {
+        "text": "An empty cell for each, so that the rows line up",
+        "correct": false,
+        "why": "Rows do not line up; each one is its own map, and nothing is stored to make them match."
+      },
+      {
+        "text": "A null marker in the family `o`",
+        "correct": false,
+        "why": "There is no null in Bigtable. An absent column is simply absent."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "Right. A column a row does not have costs nothing, which is what lets a qualifier be named after an order id."
+      },
+      {
+        "text": "One empty version per column, until the policy collects it",
+        "correct": false,
+        "why": "No version is written for a column nobody wrote, so there is nothing for a policy to collect."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyr0b8at",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `cbt set customers c-18 o:o-10004=4290`, what is in the cell?",
+    "hint": "Every value in Bigtable is the same kind of thing.",
+    "choices": [
+      {
+        "text": "A 64-bit integer, because the value is all digits",
+        "correct": false,
+        "why": "`cbt` does not guess types. A program that wants an integer writes a fixed-width one itself."
+      },
+      {
+        "text": "The characters 4, 2, 9 and 0, as bytes",
+        "correct": true,
+        "why": "Right. Values, row keys and qualifiers are all bytes, and `cbt set` writes what it was given as a string."
+      },
+      {
+        "text": "A number the server will add to on the next write",
+        "correct": false,
+        "why": "That is an aggregate family, a different kind of family; `o` is a plain one."
+      },
+      {
+        "text": "A string, with its type recorded beside it in the family",
+        "correct": false,
+        "why": "A family records a garbage collection policy, not a type for its values."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5pedrxz",
+    "version": 1,
+    "section": "the-model",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does one write to Bigtable guarantee? Choose every one that it does.",
+    "hint": "Atomicity in Bigtable stops at the edge of a row.",
+    "choices": [
+      {
+        "text": "Every cell it sets in that one row is applied together, or none is",
+        "correct": true,
+        "why": "Yes. A write to one row is atomic however many cells it touches."
+      },
+      {
+        "text": "A row key nobody wrote before is created by the write",
+        "correct": true,
+        "why": "Yes. A row exists as soon as it has a cell; there is no insert step."
+      },
+      {
+        "text": "Two rows sent in one `bulk_mutate_rows` succeed or fail together",
+        "correct": false,
+        "why": "Each row in a batch is applied on its own, and failures are reported per row."
+      },
+      {
+        "text": "An index on a new column is updated in the same step",
+        "correct": false,
+        "why": "There are no secondary indexes; the row key is the only one."
+      },
+      {
+        "text": "The write is refused if its qualifier is new to the table",
+        "correct": false,
+        "why": "New qualifiers are the normal case; only an unknown family is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nn5ybce",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A family has no garbage collection policy. What happens to the older versions of a column?",
+    "hint": "The policy is what removes them.",
+    "choices": [
+      {
+        "text": "Only the newest is kept, and each write replaces it",
+        "correct": false,
+        "why": "That is a relational `UPDATE`. In Bigtable a write adds a cell above the old ones."
+      },
+      {
+        "text": "They are kept until something deletes them",
+        "correct": true,
+        "why": "Right. Without a policy nothing is collected, and the family grows with every write."
+      },
+      {
+        "text": "They expire after thirty days, the default",
+        "correct": false,
+        "why": "There is no default age; `ls` showed an empty policy for `p` and `o`."
+      },
+      {
+        "text": "They are merged into one cell at the next compaction",
+        "correct": false,
+        "why": "Compaction is when collection happens, and with no policy there is nothing to collect."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cq854zc",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The policy is `maxage=30d or maxversions=2` and today is 30 October. A column has one cell, written on 29 August. What does garbage collection do with it?",
+    "hint": "An age rule does not ask how many versions there are.",
+    "choices": [
+      {
+        "text": "Keeps it, because it is the only version",
+        "correct": false,
+        "why": "That is what took Ana's name: the age rule is applied to every cell, the only one included."
+      },
+      {
+        "text": "Deletes it, because it is older than thirty days",
+        "correct": true,
+        "why": "Right. With `or`, either rule condemns a cell, and 62 days is past 30."
+      },
+      {
+        "text": "Keeps it until a third version is written",
+        "correct": false,
+        "why": "The version rule would keep it, but with `or` the age rule alone is enough to delete it."
+      },
+      {
+        "text": "Deletes it only if the rules had been joined with `and`",
+        "correct": false,
+        "why": "With `and`, a cell must be condemned by both; this one is the newest version, so `and` would keep it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba70cbx6",
+    "version": 1,
+    "section": "versions",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A family has the policy `maxage=30d and maxversions=2`, an intersection. On 30 October one column holds cells dated 15 October, 14 October, 12 October and 21 September. How many cells survive garbage collection?",
+    "hint": "With `and`, a cell goes only when it is beyond the second version AND older than thirty days.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z886k0hv",
+    "version": 1,
+    "section": "versions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program that writes a cell's timestamp in milliseconds, where Bigtable expects ___, stores the cell in January 1970.",
+    "hint": "Count the digits in `1788000000000000`.",
+    "blanks": [
+      {
+        "accept": [
+          "microseconds",
+          "microsecond",
+          "micros"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0yyn3g0p",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A family keeps `maxversions=1`, yet the program that shows a customer's current district still reads with `cells-per-column=1`. Why?",
+    "hint": "When does collection happen?",
+    "choices": [
+      {
+        "text": "Without the filter the read is refused",
+        "correct": false,
+        "why": "Reads without a filter are accepted; the first `lookup` of the section returned every version."
+      },
+      {
+        "text": "Collection is late, and condemned cells still come back",
+        "correct": true,
+        "why": "Right. A read can return cells the policy has already condemned, and the filter is what guarantees one version."
+      },
+      {
+        "text": "The filter is what makes the read cheaper on the bill",
+        "correct": false,
+        "why": "Bigtable bills nodes by the hour, not reads; the filter changes what comes back."
+      },
+      {
+        "text": "It tells Bigtable to collect the garbage before it reads",
+        "correct": false,
+        "why": "No read triggers collection; it happens in the background on its own schedule."
+      }
+    ]
+  },
+  {
+    "id": "ex-4swtwyea",
+    "version": 1,
+    "section": "row-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the click key put a `#` between the customer and the time?",
+    "hint": "Think about two thousand customers and a prefix.",
+    "choices": [
+      {
+        "text": "Because Bigtable splits a key into fields at `#`",
+        "correct": false,
+        "why": "Bigtable knows nothing about `#`; the key is one string of bytes and the separator is a convention."
+      },
+      {
+        "text": "So that `prefix=c-17` no longer matches c-170 too",
+        "correct": true,
+        "why": "Right. `prefix=c-17` returned 497 rows from 111 customers, and `prefix=c-17#` the six that were c-17's."
+      },
+      {
+        "text": "So that each customer's rows sort after the customer table",
+        "correct": false,
+        "why": "The clicks table has no other kind of row; the separator is about prefixes."
+      },
+      {
+        "text": "Because a row key may not hold two numbers side by side",
+        "correct": false,
+        "why": "A row key may hold any bytes at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-js9ae4y5",
+    "version": 1,
+    "section": "row-keys",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the fifteen rows of \"Loading it\", how many rows does `cbt read clicks start=c-17#8207812900000 end=c-18#` return?",
+    "hint": "List the keys in order, start where the start would sort, and stop before `c-18#`.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2g0w83tm",
+    "version": 1,
+    "section": "row-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Support wants c-17's checkout events, newest first, and nothing else, as one contiguous read. Which key does it, and what does it cost?",
+    "hint": "A field moved into the key decides which rows sit together.",
+    "choices": [
+      {
+        "text": "`c-17#checkout#<reversed time>`, and C1 then needs one read per screen",
+        "correct": true,
+        "why": "Right. Promoting the screen groups a customer's checkouts, and the latest events of all screens are no longer one run."
+      },
+      {
+        "text": "A family per screen, and every other read stays the same",
+        "correct": false,
+        "why": "Families divide the columns inside a row; they do not choose which rows are adjacent."
+      },
+      {
+        "text": "The same key with a `regex` on the screen, at no cost",
+        "correct": false,
+        "why": "A filter reads the whole range it is given; it decides what comes back, not what is read."
+      },
+      {
+        "text": "The customer id reversed, so that checkouts sort first",
+        "correct": false,
+        "why": "Reversing the id changes where a customer's rows sit, not which of them are checkouts."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkkeqs26",
+    "version": 1,
+    "section": "row-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`prefix=c-17#` saw 6 rows and `regex='c-17#.*'` saw 8,999, and both returned the same 6. What explains the difference?",
+    "hint": "Which of the two told the server where to start?",
+    "choices": [
+      {
+        "text": "The regex also matched c-170 to c-179, and dropped them",
+        "correct": false,
+        "why": "`c-17#` cannot match `c-170#…`; the regex matched the same six rows."
+      },
+      {
+        "text": "The emulator keeps a cache for prefix reads",
+        "correct": false,
+        "why": "Both reads went to the same in-memory table; the difference is in what was read."
+      },
+      {
+        "text": "A regex is a filter over the range read, and no range was given",
+        "correct": true,
+        "why": "Right. With no start, end or prefix the range is the whole table, and the filter ran over every row."
+      },
+      {
+        "text": "The regex read every version of every cell as well",
+        "correct": false,
+        "why": "The cell counts are twice the row counts in both reads, one version of two columns each."
+      }
+    ]
+  },
+  {
+    "id": "ex-sn5gcgms",
+    "version": 1,
+    "section": "hotspots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does reversing the timestamp of a time-first key not remove the hot spot?",
+    "hint": "Where does the newest key sort when the time is reversed?",
+    "choices": [
+      {
+        "text": "Reversed keys are hashed, and so they collide",
+        "correct": false,
+        "why": "Nothing is hashed; the key is compared byte by byte, reversed or not."
+      },
+      {
+        "text": "Bigtable cannot split a tablet that holds reversed keys",
+        "correct": false,
+        "why": "Bigtable splits any tablet; the problem is that the hot point keeps moving with the clock."
+      },
+      {
+        "text": "Every new key is the smallest, so all writes go to the first tablet",
+        "correct": true,
+        "why": "Right. The model sent all 1,000 to tablet 0; the hot spot moved from the end to the start."
+      },
+      {
+        "text": "Reversed keys are longer and fill each tablet faster",
+        "correct": false,
+        "why": "They are the same 13 digits."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2sw1dtn",
+    "version": 1,
+    "section": "hotspots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table's key is time first. The cluster sits at its autoscaling maximum of 6 nodes and the write rate will not rise. What will raising the maximum to 12 do?",
+    "hint": "How many tablets are receiving the writes?",
+    "choices": [
+      {
+        "text": "Double the write rate, since writes spread over the nodes",
+        "correct": false,
+        "why": "Writes spread by key range, and every new key is in one range."
+      },
+      {
+        "text": "Little: every new write still goes to the one last tablet",
+        "correct": true,
+        "why": "Right. A tablet is served by one node at a time, so more nodes add capacity nothing uses."
+      },
+      {
+        "text": "Spread the hot tablet's rows over the six new nodes",
+        "correct": false,
+        "why": "A split leaves the newest key in one tablet; the old rows spread and the writes do not."
+      },
+      {
+        "text": "Make Bigtable add a salt to the keys on its own",
+        "correct": false,
+        "why": "Bigtable never changes a key; the key is the program's."
+      }
+    ]
+  },
+  {
+    "id": "ex-hezymkkw",
+    "version": 1,
+    "section": "hotspots",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each key design to where the model put one minute of new clicks.",
+    "hint": "Ask where the newest key sorts in each design.",
+    "pairs": [
+      {
+        "left": "time first",
+        "right": "all in the last tablet"
+      },
+      {
+        "left": "reversed time first",
+        "right": "all in the first tablet"
+      },
+      {
+        "left": "customer first",
+        "right": "spread over every tablet"
+      },
+      {
+        "left": "salted time first",
+        "right": "at the newest end of each bucket"
+      }
+    ]
+  },
+  {
+    "id": "ex-6nc31wdh",
+    "version": 1,
+    "section": "hotspots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson's salt come from a hash of the customer id rather than from a random digit?",
+    "hint": "Think about the reader, not the writer.",
+    "choices": [
+      {
+        "text": "So the reader knows which bucket holds each customer",
+        "correct": true,
+        "why": "Right. c-17 is always in bucket 8, so C1 stays one prefix read; a random salt would mean reading all ten."
+      },
+      {
+        "text": "Because a random digit would send every write to one bucket",
+        "correct": false,
+        "why": "A random digit spreads writes at least as well; the cost of it falls on the reads."
+      },
+      {
+        "text": "Because Bigtable refuses keys that start with a random number",
+        "correct": false,
+        "why": "Bigtable accepts any bytes as a key."
+      },
+      {
+        "text": "So that every bucket comes out with exactly the same load",
+        "correct": false,
+        "why": "The model's buckets were uneven, 0 to 200 a tablet; a hash spreads, it does not equalise."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3d61f24",
+    "version": 1,
+    "section": "nodes-and-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three Enterprise nodes in São Paulo at $0.98 per node-hour for 730 hours, plus a second cluster of three nodes in another zone of the same region. What is the month's node bill, in dollars?",
+    "hint": "Replication between clusters in one region is not charged; the nodes are.",
+    "value": 4292.4,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-ztfn75ca",
+    "version": 1,
+    "section": "nodes-and-bill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Bigtable cluster serves no request all weekend. What do its nodes cost for those hours?",
+    "hint": "Read the pricing page's sentence about usage.",
+    "choices": [
+      {
+        "text": "Nothing, since no request was made",
+        "correct": false,
+        "why": "That is a per-request service like Firestore; Bigtable bills nodes that exist."
+      },
+      {
+        "text": "The same as any other hour",
+        "correct": true,
+        "why": "Right. Nodes are billed each hour they exist, in the page's words regardless of node usage."
+      },
+      {
+        "text": "Half, at a reduced rate for an idle node",
+        "correct": false,
+        "why": "There is no idle rate on the page."
+      },
+      {
+        "text": "Only the storage, because idle nodes are paused",
+        "correct": false,
+        "why": "Bigtable never pauses a node on its own; a node removed is a node changed by you or by autoscaling."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j0sh5x0",
+    "version": 1,
+    "section": "nodes-and-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does autoscaling arrive late for a promotion that starts at 18:00 sharp?",
+    "hint": "What has to happen before a new node helps?",
+    "choices": [
+      {
+        "text": "It runs only once an hour, on the billing boundary",
+        "correct": false,
+        "why": "It reacts to the CPU target continuously; the hour is how nodes are billed, not when they are added."
+      },
+      {
+        "text": "It waits for the storage target before adding nodes",
+        "correct": false,
+        "why": "The CPU target alone is enough to add nodes."
+      },
+      {
+        "text": "New nodes help only once tablets move onto them",
+        "correct": true,
+        "why": "Right. The documentation warns of up to about twenty minutes under load, so the minimum is raised before the event."
+      },
+      {
+        "text": "It cannot add a node while the cluster is busy",
+        "correct": false,
+        "why": "Busy is exactly when it adds them; the delay is in the node becoming useful."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctq3xypv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of designing the click table in the order this lesson takes them.",
+    "hint": "The table is not the first step, and neither is the key.",
+    "items": [
+      "Write the questions with their inputs and sizes",
+      "Choose which field goes first in the row key",
+      "Fix the separator and the width of each part",
+      "Create the table, with its families and their policies",
+      "Load rows and read each question as a prefix or a range"
+    ]
+  },
+  {
+    "id": "ex-p69d5txd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monitoring table holds one row per sensor per minute, and its main read is every sensor in the last ten minutes. Which key fits?",
+    "hint": "The main read starts from a time, not from a sensor, and writes must not pile up at one end.",
+    "choices": [
+      {
+        "text": "The sensor, then the reversed time, read with one prefix",
+        "correct": false,
+        "why": "That serves one sensor's history; every sensor at once would be a read of the whole table."
+      },
+      {
+        "text": "The time, then the sensor, with more nodes added",
+        "correct": false,
+        "why": "Every write lands at the end of the table, and more nodes serve tablets nobody writes to."
+      },
+      {
+        "text": "A salt from the sensor, then the time, read as one range per bucket",
+        "correct": true,
+        "why": "Right. The reads stay ranges of time, and the writes go to as many places as there are buckets."
+      },
+      {
+        "text": "A hash of the whole key, read with a regex filter",
+        "correct": false,
+        "why": "Hashing the whole key loses the order, so the read becomes a scan with a filter."
+      }
+    ]
+  },
+  {
+    "id": "ex-23atbnry",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One table must keep each click for ninety days and each customer's name for as long as the account exists. How are its families arranged?",
+    "hint": "A policy belongs to a family, and it is applied to every cell in it.",
+    "choices": [
+      {
+        "text": "One family with `maxage=90d or maxversions=1`",
+        "correct": false,
+        "why": "The age rule would delete every name ninety days after it was written, as it took Ana's."
+      },
+      {
+        "text": "Two: clicks under `maxage=90d`, names under `maxversions=1`",
+        "correct": true,
+        "why": "Right. The name's family has no age rule, so its one version stays; the clicks expire on their own."
+      },
+      {
+        "text": "One family with no policy, and a job that deletes old clicks",
+        "correct": false,
+        "why": "That works and turns retention into a program somebody has to keep running; a policy does it on its own."
+      },
+      {
+        "text": "Two families, both under `maxage=90d`",
+        "correct": false,
+        "why": "Then the names expire too; the family that holds them must carry no age rule."
+      }
+    ]
+  }
+]
