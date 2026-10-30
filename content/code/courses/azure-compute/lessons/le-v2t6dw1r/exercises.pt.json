@@ -1,0 +1,426 @@
+{
+  "ex-ammy801d": {
+    "prompt": "Seis máquinas da API de pedidos estão num conjunto com dois domínios de falha e cinco domínios de atualização. A fonte de energia de um rack falha. O que a loja perde?",
+    "hint": "Um rack é uma linha na figura, não uma coluna.",
+    "choices": [
+      {
+        "text": "Uma máquina, aquela cujo domínio de atualização estava na vez de reiniciar",
+        "why": "Isso descreve a manutenção planejada, que leva um domínio de atualização. Uma falha de energia não é planejada e leva um domínio de falha."
+      },
+      {
+        "text": "As máquinas daquele domínio de falha, três das seis",
+        "why": "Certo. Um domínio de falha é o hardware que divide uma fonte de energia e um switch, então as suas máquinas caem juntas, e o outro domínio de falha continua respondendo."
+      },
+      {
+        "text": "Nada, porque o Azure move as seis para outro rack antes de a energia cair",
+        "why": "Uma fonte que queima não avisa. A migração ao vivo tira uma máquina de um host que ainda está rodando, não de um rack que já ficou sem energia."
+      },
+      {
+        "text": "As seis, já que um conjunto de disponibilidade mora num só rack",
+        "why": "O conjunto existe para espalhar as máquinas por domínios de falha, que são a energia e a rede de racks diferentes."
+      }
+    ]
+  },
+  "ex-yaj7kysm": {
+    "prompt": "Um conjunto tem cinco domínios de atualização. Doze máquinas são criadas nele, uma depois da outra. Quantas máquinas ficam no domínio de atualização da primeira, contando a primeira?",
+    "hint": "A sexta vai com a primeira, a sétima com a segunda.",
+    "unit": "máquinas"
+  },
+  "ex-pebzjm6y": {
+    "prompt": "`shop-web-1` roda sozinha há um mês. Agora a equipe quer colocá-la em `shop-avset`. O que isso exige?",
+    "hint": "Releia a descrição do SDK para `availabilitySet`.",
+    "choices": [
+      {
+        "text": "Acrescentar `availabilitySet` ao arquivo da máquina em execução e implantá-lo de novo",
+        "why": "A propriedade só é aceita quando a máquina é criada. Uma máquina existente não pode ser acrescentada a um conjunto."
+      },
+      {
+        "text": "Desalocá-la primeiro, e então definir a propriedade e iniciá-la",
+        "why": "Desalocar não reabre a escolha. É também o passo que pode pôr duas máquinas de um conjunto num só domínio de falha."
+      },
+      {
+        "text": "Uma máquina nova, criada no conjunto",
+        "why": "Certo. Uma máquina entra num conjunto quando é criada ou nunca, então o caminho é uma máquina nova lá dentro."
+      },
+      {
+        "text": "Aumentar a contagem de domínios de falha do conjunto para que haja lugar para ela",
+        "why": "As contagens ficam fixas depois que o conjunto existe, e não limitam quantas máquinas cabem nele."
+      }
+    ]
+  },
+  "ex-xwe482xk": {
+    "prompt": "Em Bicep, um conjunto de disponibilidade gerenciado, o tipo que guarda máquinas com discos gerenciados, é declarado com o nome de `sku` ___.",
+    "hint": "É a palavra para discos que acompanham o domínio de falha da sua máquina.",
+    "blanks": [
+      {
+        "accept": [
+          "Aligned"
+        ]
+      }
+    ]
+  },
+  "ex-6f7b6km4": {
+    "prompt": "Ponha em ordem o que acontece com um conjunto durante uma manutenção planejada que precisa de reinicialização.",
+    "hint": "O aviso vem primeiro; os domínios de atualização vêm por último.",
+    "items": [
+      "O Azure anuncia a manutenção",
+      "Na fase de autoatendimento, você mesmo pode iniciá-la numa máquina",
+      "Começa a fase agendada, e o Azure a inicia",
+      "Um domínio de atualização é reiniciado",
+      "Esse domínio de atualização tem 30 minutos para se recuperar antes que o próximo comece"
+    ],
+    "trap": "Os 30 minutos vêm depois de uma reinicialização, não antes: são o tempo que um domínio reiniciado tem para se recuperar."
+  },
+  "ex-z0ngqn9w": {
+    "prompt": "As duas máquinas da loja são criadas em Brazil South sem `zones` nenhuma. O que é verdade sobre elas?",
+    "hint": "Regional não é o mesmo que em toda parte.",
+    "choices": [
+      {
+        "text": "Cada uma se espalha pelas três zonas, como um endereço com redundância de zona",
+        "why": "Uma máquina nunca é espalhada pelo Azure. Sem zonas ela é regional: colocada numa zona que ele não informa."
+      },
+      {
+        "text": "Elas vão para as zonas 1 e 2, uma em cada, porque são duas",
+        "why": "Nada distribui máquinas regionais por zonas em ordem, e nada informa em que zona caíram."
+      },
+      {
+        "text": "O Azure põe cada uma numa zona que não informa, e nada impede que as duas dividam uma",
+        "why": "Certo. Uma máquina regional está numa zona que ninguém lhe diz, então nada mantém duas delas separadas, e uma falha em qualquer zona derruba a que estiver nela."
+      },
+      {
+        "text": "Elas não podem ser criadas, porque uma região com zonas exige uma",
+        "why": "Máquinas regionais são permitidas numa região com zonas; só não têm uma zona escolhida por você."
+      }
+    ]
+  },
+  "ex-10dze4mc": {
+    "prompt": "Ligue cada declaração ao que ela dá à loja.",
+    "hint": "Zonal, com redundância de zona, regional, e uma combinação.",
+    "pairs": [
+      {
+        "left": "`zones: ['1']` numa máquina virtual",
+        "right": "Presa a uma zona, e fora sempre que essa zona estiver"
+      },
+      {
+        "left": "`zones: ['1', '2', '3']` num IP público Standard",
+        "right": "Espalhado pelo Azure, sobrevivendo à perda de qualquer zona"
+      },
+      {
+        "left": "Nenhuma `zones` numa máquina virtual",
+        "right": "Numa zona da região que ninguém informa"
+      },
+      {
+        "left": "`zones: ['1']` e `availabilitySet` numa máquina",
+        "right": "Compila sem aviso, e é um par que o Azure não aceita"
+      }
+    ],
+    "right_distractors": [
+      "Copiado pelo Azure para o par da região"
+    ]
+  },
+  "ex-r0814c44": {
+    "prompt": "A assinatura da loja e a da equipe financeira põem cada uma uma máquina na zona `1` de Brazil South, para mantê-las juntas. O que elas de fato arranjaram?",
+    "hint": "Quem decide que prédio `1` quer dizer?",
+    "choices": [
+      {
+        "text": "Duas máquinas num prédio, já que a zona 1 é a mesma para todo cliente",
+        "why": "Os números de zona são lógicos. Os de cada assinatura são mapeados para zonas físicas, e o mapeamento é devolvido por assinatura."
+      },
+      {
+        "text": "Nada certo: cada assinatura mapeia a sua zona `1` por conta própria",
+        "why": "Certo. A lista de locais traz `logicalZone` e `physicalZone` por assinatura, e só lendo os dois mapeamentos se sabe se as duas máquinas dividem um prédio."
+      },
+      {
+        "text": "Dois prédios diferentes, porque o Azure mantém as assinaturas separadas",
+        "why": "Nada promete isso também. Duas assinaturas podem mapear os seus números para a mesma zona física."
+      },
+      {
+        "text": "Um prédio, mas só enquanto as duas implantações usarem a mesma versão da API",
+        "why": "A versão da API decide que propriedades um template pode usar, não onde fica uma zona."
+      }
+    ]
+  },
+  "ex-fetfgrbq": {
+    "prompt": "O scale set da lição 4 tem seis instâncias, duas por zona, e o equilíbrio padrão. A zona 2 apaga e o autoscale acrescenta duas instâncias. Para onde elas vão?",
+    "hint": "O padrão é o melhor esforço.",
+    "choices": [
+      {
+        "text": "Para lugar nenhum até a zona 2 voltar, já que o aumento desequilibraria o conjunto",
+        "why": "Esse é o equilíbrio estrito, que bloqueia a operação que desequilibraria o conjunto. O padrão é o melhor esforço."
+      },
+      {
+        "text": "Para a zona 2, para que cada zona mantenha a mesma contagem",
+        "why": "A zona 2 está apagada; nada pode ser criado lá até ela voltar."
+      },
+      {
+        "text": "Para o par da região, que assume enquanto uma zona está fora",
+        "why": "Um scale set mora numa região. Nada move as suas instâncias para outra."
+      },
+      {
+        "text": "Para as zonas 1 e 3, com o desequilíbrio aceito enquanto a zona 2 está fora",
+        "why": "Certo. O melhor esforço continua escalando nas zonas que funcionam e aceita o desequilíbrio enquanto uma zona está fora; operações de escala posteriores restauram o equilíbrio."
+      }
+    ]
+  },
+  "ex-b0zs0tff": {
+    "prompt": "Sobre quais destes o compilador Bicep avisou nas cópias erradas desta lição? Escolha todas as que se aplicam.",
+    "hint": "Ele conhece tipos, não limites nem combinações.",
+    "choices": [
+      {
+        "text": "Uma zona escrita como o número `1` em vez da string `'1'`",
+        "why": "Pego: uma zona é uma string, e cada número da lista gerou um aviso."
+      },
+      {
+        "text": "Uma máquina posta na zona `'4'` de uma região com três zonas",
+        "why": "Passou: `'4'` é uma string, e o tipo não sabe quantas zonas uma região tem."
+      },
+      {
+        "text": "Uma contagem de domínios de atualização escrita como o texto `'5'`",
+        "why": "Pego: a propriedade tem tipo de número, então texto gerou BCP036."
+      },
+      {
+        "text": "Uma máquina com uma zona e um conjunto de disponibilidade ao mesmo tempo",
+        "why": "Passou: cada propriedade é válida sozinha, e a regra contra o par está na documentação."
+      },
+      {
+        "text": "Quatro domínios de falha num conjunto de disponibilidade",
+        "why": "Passou: quatro é um número. O limite de três está na documentação da Microsoft, não no tipo."
+      }
+    ]
+  },
+  "ex-0ga8gcvs": {
+    "prompt": "O contrato mede uma máquina virtual ao longo de 30 dias. Quantos minutos de indisponibilidade uma promessa de 99,95% permite nesse período?",
+    "hint": "43.200 minutos vezes o que sobra.",
+    "unit": "minutos"
+  },
+  "ex-27jbwx5t": {
+    "prompt": "Um pedido passa pelo load balancer Standard (99,99%), depois pelas máquinas em várias zonas (99,99%), depois por um banco de dados com promessa de 99,9%. Qual a disponibilidade da corrente, em porcentagem, com duas casas decimais?",
+    "hint": "Em série, multiplique as frações.",
+    "unit": "%"
+  },
+  "ex-6ksa2g5e": {
+    "prompt": "Duas cópias de um serviço ficam disponíveis cada uma 99% do tempo, e nunca falham pelo mesmo motivo. Quantos minutos em 30 dias as duas ficam fora ao mesmo tempo?",
+    "hint": "Cada uma fica fora 0,01 do tempo; as duas juntas, o produto.",
+    "unit": "minutos"
+  },
+  "ex-cr2vsyj6": {
+    "prompt": "A fórmula em paralelo dá a duas máquinas de 99,9% uma disponibilidade de 99,9999%. Por que o contrato promete a um par num conjunto de disponibilidade só 99,95%?",
+    "hint": "Leia a premissa da fórmula.",
+    "choices": [
+      {
+        "text": "Porque soma a indisponibilidade das duas máquinas em vez de multiplicar as chances",
+        "why": "Somar não é nenhuma das regras. O contrato conta um minuto como fora quando nenhuma máquina do conjunto responde."
+      },
+      {
+        "text": "Ela supõe falhas sem causa comum, e as duas ainda dividem um datacenter",
+        "why": "Certo. Domínios de falha separam racks, não prédios, então as cópias mantêm falhas em comum, e o contrato não supõe o contrário."
+      },
+      {
+        "text": "Porque 99,95% é um número por máquina, então o par inteiro tem a promessa de mais",
+        "why": "Os 99,95% são do conjunto inteiro, duas ou mais máquinas medidas juntas."
+      },
+      {
+        "text": "A fórmula em paralelo é para partes em série, não para cópias",
+        "why": "É o contrário: multiplicar disponibilidades é para partes em série; a fórmula em paralelo é para cópias."
+      }
+    ]
+  },
+  "ex-jvr289g9": {
+    "prompt": "Uma das duas máquinas zonais da loja fica fora um dia inteiro, e a outra responde o tempo todo. Quanta indisponibilidade esse dia acrescenta pela definição do contrato para máquinas em várias zonas?",
+    "hint": "Quando um minuto está fora para um grupo de máquinas?",
+    "choices": [
+      {
+        "text": "1.440 minutos, o dia inteiro",
+        "why": "Isso valeria para uma máquina sozinha. Em várias zonas, um minuto só conta quando nenhuma máquina na região responde."
+      },
+      {
+        "text": "720 minutos, já que uma máquina de duas estava fora",
+        "why": "O contrato não conta uma fração das máquinas; ele pergunta se alguma delas tinha conectividade."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Certo. Indisponibilidade em várias zonas é um minuto sem conectividade com nenhuma máquina na região, e a outra respondeu o dia todo."
+      },
+      {
+        "text": "Depende de a máquina que falhou ter discos Premium SSD",
+        "why": "O tipo de disco decide a porcentagem de uma máquina sozinha. Para máquinas em várias zonas ele não muda o que conta como fora."
+      }
+    ]
+  },
+  "ex-mst2f7b1": {
+    "prompt": "A API de pedidos roda em três zonas. A qual destas falhas esse arranjo não sobrevive?",
+    "hint": "Procure o que toda cópia tem em comum.",
+    "choices": [
+      {
+        "text": "Uma falha de refrigeração num dos datacenters da região, durando uma tarde",
+        "why": "É exatamente a isso que zonas sobrevivem: as outras duas zonas têm refrigeração própria."
+      },
+      {
+        "text": "Uma versão que cai na inicialização, distribuída a toda instância",
+        "why": "Certo. Toda cópia roda a mesma imagem, então uma versão que a quebra a quebra nas três zonas; um rolling upgrade com health checks é o que limita isso."
+      },
+      {
+        "text": "Um rack perdendo a energia",
+        "why": "Um rack é menor que uma zona; as instâncias de outros racks e zonas continuam respondendo."
+      },
+      {
+        "text": "Uma manutenção que reinicia as máquinas da região, zona depois de zona",
+        "why": "A manutenção é sequenciada zona por zona, então as zonas não são tocadas todas no mesmo instante."
+      }
+    ]
+  },
+  "ex-t99mf4vk": {
+    "prompt": "Por que uma máquina só em Premium SSD é um lugar razoável para o relatório noturno de vendas da loja, quando a API de pedidos ganha três zonas?",
+    "hint": "Pergunte quanto custa um relatório atrasado.",
+    "choices": [
+      {
+        "text": "O trabalho dele aceita atraso: uma falha às duas atrasa um relatório que ninguém lê antes da manhã",
+        "why": "Certo. A proteção é escolhida pelo custo da falha, e aqui o custo é um relatório atrasado."
+      },
+      {
+        "text": "Uma máquina só em Premium SSD tem a mesma promessa que duas máquinas em várias zonas",
+        "why": "Uma máquina em Premium SSD tem a promessa de 99,9%; duas em várias zonas, de 99,99%. O relatório não precisa da diferença."
+      },
+      {
+        "text": "Relatórios não podem rodar em mais de uma máquina",
+        "why": "Nada impede; só custaria uma segunda máquina para um trabalho que pode esperar."
+      },
+      {
+        "text": "As horas da noite ficam fora da medição do SLA",
+        "why": "O contrato mede todo minuto dos 30 dias; nada na hora muda isso."
+      }
+    ]
+  },
+  "ex-vsbwd6z4": {
+    "prompt": "Ligue cada falha ao que mantém a loja funcionando durante ela.",
+    "hint": "Cada resposta é o tamanho logo acima da falha.",
+    "pairs": [
+      {
+        "left": "Uma região",
+        "right": "Uma cópia numa segunda região"
+      },
+      {
+        "left": "Uma versão ruim",
+        "right": "Um rolling upgrade que para quando os health checks falham"
+      },
+      {
+        "left": "Uma zona, para os dados de uma máquina",
+        "right": "Um disco ZRS, com uma cópia em cada uma de três zonas"
+      },
+      {
+        "left": "A energia de um rack",
+        "right": "Um segundo domínio de falha"
+      }
+    ],
+    "right_distractors": [
+      "Um grupo de posicionamento por proximidade"
+    ]
+  },
+  "ex-2114mbbz": {
+    "prompt": "Uma equipe numa região com zonas roda duas máquinas de banco de dados que replicam de forma síncrona, e toda escrita espera pela outra máquina. Que arranjo combina com o que ela pede?",
+    "hint": "Pese a latência contra o tamanho da falha a que se sobrevive.",
+    "choices": [
+      {
+        "text": "Duas zonas, porque 99,99% é a maior promessa que esta lição cita para máquinas virtuais",
+        "why": "Sobrevive a mais, e toda escrita paga a ida e volta entre zonas, que esta equipe quer evitar."
+      },
+      {
+        "text": "Um grupo de posicionamento por proximidade abrangendo as três zonas da região",
+        "why": "Um grupo de posicionamento por proximidade fica preso a um datacenter; ele não abrange zonas."
+      },
+      {
+        "text": "Um conjunto de disponibilidade, aceitando que uma falha de datacenter leve as duas",
+        "why": "Certo. O conjunto espalha o par por racks e o mantém perto, e um grupo de posicionamento por proximidade o deixaria ainda mais perto; a troca é que nenhum dos dois sobrevive ao prédio."
+      },
+      {
+        "text": "Uma máquina com um disco ZRS",
+        "why": "Um disco ZRS mantém os dados numa falha de zona, mas uma máquina só não é réplica nenhuma."
+      }
+    ]
+  },
+  "ex-07sm8xgk": {
+    "prompt": "A loja decide guardar uma cópia dos seus pedidos na região que forma par com Brazil South. O que a página da Microsoft sobre regiões diz que importa para essa cópia?",
+    "hint": "Pares mantêm os dados numa geografia, com uma exceção.",
+    "choices": [
+      {
+        "text": "A cópia fica dentro do Brasil, como todo par mantém os dados na sua geografia",
+        "why": "Brazil South é a exceção declarada a essa regra."
+      },
+      {
+        "text": "O par é outra zona de Brazil South",
+        "why": "Um par é uma segunda região. Zonas ficam dentro de uma região."
+      },
+      {
+        "text": "Ela sai do Brasil: o par de Brazil South fica fora da sua geografia",
+        "why": "Certo. A página de regiões cita Brazil South como a exceção, então uma cópia guardada no par está fora do país."
+      },
+      {
+        "text": "A cópia fica coberta pela promessa de 99,99% de máquinas em várias zonas",
+        "why": "Essa promessa é sobre máquinas em várias zonas dentro de uma região. Uma segunda região fica fora dela."
+      }
+    ]
+  },
+  "ex-ssmzhchb": {
+    "prompt": "Uma cópia de `shop-avset.bicep` com `platformFaultDomainCount: 4` compila sem aviso. O que esse silêncio diz?",
+    "hint": "O que o compilador sabe sobre a propriedade?",
+    "choices": [
+      {
+        "text": "Que Brazil South tem quatro domínios de falha de disco",
+        "why": "Regiões têm dois ou três domínios de falha de disco, e o compilador não sabe nada de região nenhuma."
+      },
+      {
+        "text": "Que o compilador o reduz à maior contagem que a região permite",
+        "why": "O template leva o número como foi escrito; nada o reescreve."
+      },
+      {
+        "text": "Que 4 é um número, e o limite de três não está no tipo",
+        "why": "Certo. O tipo confere que é um número e nada mais; o limite está na documentação, e o Resource Manager recusaria o valor na implantação."
+      },
+      {
+        "text": "Que um scale set Flexible o aceitaria, então um conjunto também aceita",
+        "why": "Os dois são recursos diferentes, com limites documentados diferentes, e nenhum limite está no tipo."
+      }
+    ]
+  },
+  "ex-awwaeyx9": {
+    "prompt": "Uma máquina só em Standard SSD (99,5%) fica atrás do load balancer Standard (99,99%). Quantos minutos de indisponibilidade em 30 dias as duas promessas somam, com uma casa decimal?",
+    "hint": "Multiplique as duas, e depois tome o resto de 43.200 minutos.",
+    "unit": "minutos"
+  },
+  "ex-m78ybfbd": {
+    "prompt": "Uma máquina virtual declarada sem a propriedade `zones`, numa região que tem zonas, é chamada de máquina ___: o Azure a põe numa zona que não informa.",
+    "hint": "Nem zonal, nem com redundância de zona.",
+    "blanks": [
+      {
+        "accept": [
+          "regional",
+          "não zonal",
+          "nao zonal",
+          "não-zonal"
+        ]
+      }
+    ]
+  },
+  "ex-gbnb5nj2": {
+    "prompt": "Num período de 30 dias, a API de pedidos em várias zonas teve 30 minutos em que nenhuma máquina na região respondeu. O que o contrato dá à loja?",
+    "hint": "Transforme 30 minutos numa porcentagem primeiro, e depois leia a tabela de créditos.",
+    "choices": [
+      {
+        "text": "Nada, já que 30 minutos estão dentro da folga",
+        "why": "A 99,99% a folga é de 4,32 minutos. Trinta minutos dão cerca de 99,93%, abaixo da promessa."
+      },
+      {
+        "text": "Um crédito de 10% nas tarifas dessas máquinas no período, depois de reclamar em até 60 dias",
+        "why": "Certo. 99,93% fica abaixo de 99,99% e acima de 99%, então o crédito é de 10%, e só mediante reclamação feita em até 60 dias."
+      },
+      {
+        "text": "Um crédito de 25%, pago automaticamente",
+        "why": "25% é para abaixo de 99%, e nenhum crédito é automático: a loja tem de reclamá-lo."
+      },
+      {
+        "text": "O reembolso do que os 30 minutos das máquinas da loja custaram, com uma explicação da causa",
+        "why": "Um crédito é uma porcentagem das tarifas do período, não o custo dos minutos, e o contrato não promete explicação nenhuma."
+      }
+    ]
+  }
+}

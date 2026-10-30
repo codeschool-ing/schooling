@@ -1,0 +1,415 @@
+{
+  "ex-w3m8d6mb": {
+    "prompt": "Quando o `viewModelScope` é cancelado?",
+    "hint": "Ele vive exatamente tanto quanto o dono.",
+    "choices": [
+      {
+        "text": "A cada rotação do celular",
+        "why": "Uma rotação mantém o ViewModel, então mantém o escopo dele também."
+      },
+      {
+        "text": "Quando é descartado, em `onCleared()`",
+        "why": "Isso: o `CancelTest` limpou o store e a escrita foi cancelada."
+      },
+      {
+        "text": "Quando a activity para",
+        "why": "Parar muda o que a tela coleta, não o escopo do ViewModel."
+      },
+      {
+        "text": "Nunca: ele vive tanto quanto o processo",
+        "why": "Isso descreve o `GlobalScope`, que a seção 02 chama de imagem errada."
+      }
+    ]
+  },
+  "ex-nh60kybv": {
+    "prompt": "Por que o `SlowStore` relança a `CancellationException` que captura?",
+    "hint": "O cancelamento é cooperativo.",
+    "choices": [
+      {
+        "text": "Porque o Kotlin se recusa a compilar um catch que a engula",
+        "why": "Compila; engoli-la é um bug que o compilador não vê."
+      },
+      {
+        "text": "Para a corrotina parar de verdade",
+        "why": "Isso: uma corrotina que a engole segue como se nada tivesse sido pedido."
+      },
+      {
+        "text": "Para o teste imprimir `write completed` depois",
+        "why": "O relançamento é justamente o que impede `write completed` de aparecer."
+      },
+      {
+        "text": "Porque o `delay` precisa dela para recomeçar",
+        "why": "Um `delay` cancelado não recomeça."
+      }
+    ]
+  },
+  "ex-6b1mgex7": {
+    "prompt": "O estudante aperta **Add** e fecha o app na hora. Por que o `viewModelScope` pode ser o lugar errado para essa escrita?",
+    "hint": "O que acontece com o escopo quando a tela vai embora de vez?",
+    "choices": [
+      {
+        "text": "Uma escrita inacabada morre com o ViewModel",
+        "why": "Isso: trabalho que precisa sobreviver à tela vai para o WorkManager, aula 18."
+      },
+      {
+        "text": "O `viewModelScope` roda numa thread de fundo lenta demais",
+        "why": "Ele roda em `Main`; a questão não é velocidade, é tempo de vida."
+      },
+      {
+        "text": "A escrita rodaria duas vezes, uma por activity",
+        "why": "Um ViewModel a lança uma vez, façam as activities o que fizerem."
+      },
+      {
+        "text": "Fechar o app mantém o escopo vivo por uma hora",
+        "why": "Fechar descarta o ViewModel e cancela o escopo."
+      }
+    ]
+  },
+  "ex-j53fvyqf": {
+    "prompt": "Por que o `initialValue` é `WeekUiState(loading = true)` e não uma lista vazia?",
+    "hint": "O que uma lista vazia diria ao estudante?",
+    "choices": [
+      {
+        "text": "Uma lista vazia afirmaria algo falso",
+        "why": "Isso: carregando é o primeiro estado honesto."
+      },
+      {
+        "text": "O `stateIn` recusa uma lista vazia",
+        "why": "Ele aceita qualquer valor do tipo."
+      },
+      {
+        "text": "Um estado de carregamento faz o `combine` rodar mais rápido",
+        "why": "O valor inicial não afeta a velocidade."
+      },
+      {
+        "text": "Porque o `SavedStateHandle` precisa de um booleano",
+        "why": "O handle guarda o rascunho; `loading` não está nele."
+      }
+    ]
+  },
+  "ex-t5406gxq": {
+    "prompt": "Ligue cada política de `started` a quando o store é coletado.",
+    "hint": "A tabela da seção 03.",
+    "pairs": [
+      {
+        "left": "`Eagerly`",
+        "right": "Da criação do ViewModel até o fim dele"
+      },
+      {
+        "left": "`Lazily`",
+        "right": "Do primeiro coletor até o fim do ViewModel"
+      },
+      {
+        "left": "`WhileSubscribed(5_000)`",
+        "right": "Enquanto coletado, e cinco segundos depois"
+      }
+    ],
+    "right_distractors": [
+      "Só enquanto a activity está em resumed"
+    ]
+  },
+  "ex-p2zs86s0": {
+    "prompt": "Depois da reescrita desta aula, como uma sessão nova chega a `state` depois que o `onAdd` roda?",
+    "hint": "Nenhuma função monta mais o estado à mão.",
+    "choices": [
+      {
+        "text": "O `onAdd` chama `_state.update` com a lista nova",
+        "why": "Isso era a aula 10; agora não há `_state`."
+      },
+      {
+        "text": "O store emite, e o `combine` acompanha",
+        "why": "Isso: um caminho só para toda mudança, venha de quem vier."
+      },
+      {
+        "text": "A tela a adiciona à própria cópia da lista",
+        "why": "A tela não guarda cópia; esse é o fluxo em uma direção da aula 10."
+      },
+      {
+        "text": "O channel a entrega ao estado",
+        "why": "O channel leva o evento do snackbar, não a sessão."
+      }
+    ]
+  },
+  "ex-fch24zz2": {
+    "prompt": "`saved.___(DRAFT, \"\")` transforma uma chave do `SavedStateHandle` num `StateFlow`.",
+    "hint": "O nome diz o que ele devolve.",
+    "blanks": [
+      {
+        "accept": [
+          "getStateFlow"
+        ]
+      }
+    ]
+  },
+  "ex-hkdrjk4s": {
+    "prompt": "No `SubscriptionTest`, quantos coletores o store tinha quatro segundos depois de a activity parar?",
+    "hint": "A carência é de cinco segundos."
+  },
+  "ex-typ8kaq5": {
+    "prompt": "O que o `collectAsStateWithLifecycle()` faz que o `collectAsState()` não faz?",
+    "hint": "Aperte o botão de início.",
+    "choices": [
+      {
+        "text": "Para de coletar abaixo de `STARTED`",
+        "why": "Isso: o `collectAsState` coleta enquanto o composable está composto, parado ou não."
+      },
+      {
+        "text": "Mantém o último valor depois da morte do processo",
+        "why": "Nenhum dos dois sobrevive ao processo; isso é trabalho do `SavedStateHandle`."
+      },
+      {
+        "text": "Coleta numa thread de fundo",
+        "why": "Os dois coletam na thread principal para a composição."
+      },
+      {
+        "text": "Converte um fluxo frio num quente",
+        "why": "Isso é o `stateIn`, no ViewModel."
+      }
+    ]
+  },
+  "ex-k700tsm6": {
+    "prompt": "Alguém troca `WhileSubscribed(5_000)` por `WhileSubscribed(0)`. O que muda a cada rotação?",
+    "hint": "Durante uma rotação, por um instante, ninguém coleta.",
+    "choices": [
+      {
+        "text": "Nada, porque o ViewModel sobrevive à rotação",
+        "why": "O ViewModel sobrevive, mas a origem dele para no instante em que o último coletor sai."
+      },
+      {
+        "text": "A origem recomeça a cada vez",
+        "why": "Isso: a carência é o que deixa uma rotação passar sem isso."
+      },
+      {
+        "text": "A tela continua coletando em segundo plano",
+        "why": "A coleta em segundo plano é decidida pelo `collectAsStateWithLifecycle`, que não mudou."
+      },
+      {
+        "text": "O estado se perde e mostra carregando de vez",
+        "why": "Ele recomeça com o coletor novo e carrega de novo."
+      }
+    ]
+  },
+  "ex-7xykv7d9": {
+    "prompt": "Por que um composable não deve chamar `viewModel.events.collect` direto no corpo?",
+    "hint": "Com que frequência um corpo roda?",
+    "choices": [
+      {
+        "text": "O corpo roda a cada recomposição, reiniciando a coleta",
+        "why": "Isso: trabalho começa num `LaunchedEffect` ou a partir de um callback."
+      },
+      {
+        "text": "Porque `collect` não é permitido num `Flow` de eventos",
+        "why": "É permitido; a questão é onde."
+      },
+      {
+        "text": "Porque eventos precisam ser coletados na activity",
+        "why": "A rota os coleta, num `LaunchedEffect`."
+      },
+      {
+        "text": "Porque o snackbar não pode ser mostrado pelo Compose",
+        "why": "O planner o mostra pelo Compose, por meio do `SnackbarHostState`."
+      }
+    ]
+  },
+  "ex-s9wc93df": {
+    "prompt": "Tocar no total mostra \"That is 2 h 40 min\" num snackbar. Por que ele é lançado com `rememberCoroutineScope` e não `LaunchedEffect`?",
+    "hint": "Quem decide quando começa?",
+    "choices": [
+      {
+        "text": "Porque o `LaunchedEffect` não pode chamar `showSnackbar`",
+        "why": "Pode, e o coletor de eventos faz exatamente isso."
+      },
+      {
+        "text": "Um toque o inicia: é um callback, não a tela",
+        "why": "Isso: um callback lança no escopo lembrado."
+      },
+      {
+        "text": "Porque o ViewModel não pode saber de horas",
+        "why": "É verdade que a tela faz a conversão, mas não é por isso que o escopo muda."
+      },
+      {
+        "text": "Porque o `rememberCoroutineScope` sobrevive à rotação",
+        "why": "Ele é cancelado quando o composable sai da composição."
+      }
+    ]
+  },
+  "ex-q3xadgzt": {
+    "prompt": "Ponha em ordem a vida do `LaunchedEffect(viewModel)` da `WeekRoute`.",
+    "hint": "Ele pertence a estar na tela.",
+    "items": [
+      "a `WeekRoute` entra na composição",
+      "a corrotina do efeito começa a coletar `events`",
+      "chega um evento `Added` e um snackbar aparece",
+      "a `WeekRoute` sai da composição e a corrotina é cancelada"
+    ]
+  },
+  "ex-r0aqq40k": {
+    "prompt": "Se \"Added 45 min\" fosse um campo `message` no `WeekUiState`, o que aconteceria na rotação seguinte?",
+    "hint": "A tela nova lê o estado desde o começo.",
+    "choices": [
+      {
+        "text": "Nada, a rotação não mexe no estado",
+        "why": "Exatamente: o estado é mantido, mensagem incluída, e a tela nova o desenha."
+      },
+      {
+        "text": "O snackbar apareceria de novo",
+        "why": "Isso, a menos que a tela avise que mostrou e o ViewModel limpe."
+      },
+      {
+        "text": "A mensagem se perderia",
+        "why": "O estado sobrevive à rotação; o problema é mostrá-lo duas vezes."
+      },
+      {
+        "text": "O app não compilaria",
+        "why": "Compila; o bug é de comportamento."
+      }
+    ]
+  },
+  "ex-0ze5sxsg": {
+    "prompt": "Por que o planner usa `Channel(Channel.BUFFERED)` e não um `MutableSharedFlow` sem replay para os eventos?",
+    "hint": "O que acontece com um evento enviado sem ninguém ouvindo?",
+    "choices": [
+      {
+        "text": "Um channel é mais rápido para objetos pequenos",
+        "why": "O argumento não é velocidade, é entrega."
+      },
+      {
+        "text": "Um shared flow não carrega uma sealed interface",
+        "why": "Ele carrega qualquer tipo."
+      },
+      {
+        "text": "O channel guarda o evento até chegar um receptor",
+        "why": "Isso: durante uma rotação não há coletor por um instante, e o shared flow o descartaria."
+      },
+      {
+        "text": "Só um channel pode ser coletado num `LaunchedEffect`",
+        "why": "Qualquer fluxo pode ser coletado ali."
+      }
+    ]
+  },
+  "ex-6prgemjq": {
+    "prompt": "Um salvamento falha e o estudante precisa ver por quê antes de tentar de novo. Seguindo esta aula, para onde vai esse erro?",
+    "hint": "Mensagens que são só informação seguem um caminho; esta não é uma delas.",
+    "choices": [
+      {
+        "text": "Para o channel, como \"Added 45 min\"",
+        "why": "O channel pode perder um evento num caso estreito, o que só é aceitável para informação."
+      },
+      {
+        "text": "No estado da tela, até ter sido visto",
+        "why": "Isso: o que precisa ser visto vai no estado, como o guia do Google defende."
+      },
+      {
+        "text": "Para um log, já que a tela não mostra erros",
+        "why": "A tela mostra qualquer coisa que o estado traga."
+      },
+      {
+        "text": "Só para o `SavedStateHandle`",
+        "why": "O handle serve para sobreviver ao processo, não para mostrar coisas."
+      }
+    ]
+  },
+  "ex-pxznvwpe": {
+    "prompt": "Por que os testes de ViewModel desta aula chamam `Dispatchers.setMain`?",
+    "hint": "Qual dispatcher o `viewModelScope` usa?",
+    "choices": [
+      {
+        "text": "A JVM não tem o looper principal do Android",
+        "why": "Isso: o `viewModelScope` roda em `Main`, que o teste troca por um dispatcher de teste."
+      },
+      {
+        "text": "Para os testes rodarem em várias threads ao mesmo tempo",
+        "why": "Um dispatcher de teste roda numa thread, em tempo virtual."
+      },
+      {
+        "text": "Porque o `runTest` se recusa a começar sem ele",
+        "why": "O `runTest` começa bem; quem falharia é o `onAdd`."
+      },
+      {
+        "text": "Para ter o looper do Robolectric",
+        "why": "Estes testes não usam Robolectric nenhum."
+      }
+    ]
+  },
+  "ex-tav3vjp5": {
+    "prompt": "Em `withNobodyCollectingTheStateStaysLoading`, uma sessão é adicionada e `state.value.loading` continua verdadeiro. Por quê?",
+    "hint": "O que inicia a origem?",
+    "choices": [
+      {
+        "text": "A escrita foi cancelada",
+        "why": "Nada a cancelou; o store tem a sessão."
+      },
+      {
+        "text": "O `UnconfinedTestDispatcher` nunca roda `launch`",
+        "why": "Ele os roda na hora; o store foi escrito."
+      },
+      {
+        "text": "Ninguém coletou `state`, então o `WhileSubscribed` nunca iniciou a origem",
+        "why": "Isso: o segundo teste começa um coletor no `backgroundScope` antes."
+      },
+      {
+        "text": "`loading` só vira falso num aparelho",
+        "why": "O segundo teste o tornou falso na JVM."
+      }
+    ]
+  },
+  "ex-7qdnjsjx": {
+    "prompt": "Quantos testes a execução inteira desta aula rodou, nas quatro classes de teste?",
+    "hint": "Some os `tests=` de cada suíte."
+  },
+  "ex-rf2wgkp4": {
+    "prompt": "Um coletor iniciado no `___` do `runTest` é cancelado sozinho quando o teste termina.",
+    "hint": "O segundo teste da seção 07.",
+    "blanks": [
+      {
+        "accept": [
+          "backgroundScope"
+        ]
+      }
+    ]
+  },
+  "ex-f5d9zk17": {
+    "prompt": "Quais destes iniciam uma corrotina num lugar que esta aula aprova? Escolha todos os que se aplicam.",
+    "hint": "O escopo do ViewModel, um efeito ou um callback.",
+    "choices": [
+      {
+        "text": "`viewModelScope.launch { store.add(…) }` no `onAdd`",
+        "why": "Sim: termina com o ViewModel."
+      },
+      {
+        "text": "`GlobalScope.launch` no `onClick` de um botão",
+        "why": "Não: sobrevive à tela e a tudo a que pertencia."
+      },
+      {
+        "text": "`LaunchedEffect(viewModel) { viewModel.events.collect { … } }`",
+        "why": "Sim: começa e termina com o composable."
+      },
+      {
+        "text": "`runBlocking { store.add(…) }` no corpo de um composable",
+        "why": "Não: bloqueia a thread principal a cada recomposição."
+      }
+    ]
+  },
+  "ex-z4yqqvwr": {
+    "prompt": "Uma tela mostra dados ao vivo de um fluxo da rede. O estudante abre outro app por dois minutos. Com a montagem desta aula, o que a rede está fazendo nesses dois minutos?",
+    "hint": "Dois mecanismos, cinco segundos.",
+    "choices": [
+      {
+        "text": "Parada, depois dos cinco primeiros segundos",
+        "why": "Isso: o `collectAsStateWithLifecycle` para na hora e o `WhileSubscribed(5_000)` cinco segundos depois."
+      },
+      {
+        "text": "Ainda buscando, porque o ViewModel está vivo",
+        "why": "Estar vivo não é coletar; o `WhileSubscribed` para a origem."
+      },
+      {
+        "text": "Buscando por dois minutos e depois parando",
+        "why": "A carência é de cinco segundos, não o tempo fora."
+      },
+      {
+        "text": "Nada, porque o processo sempre é morto",
+        "why": "O processo pode muito bem sobreviver dois minutos; quem para o trabalho é o ciclo de vida."
+      }
+    ]
+  }
+}

@@ -1,0 +1,664 @@
+[
+  {
+    "id": "ex-cg44hy6n",
+    "version": 1,
+    "section": "why-room",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Room add on top of the SQLite every Android phone already has?",
+    "hint": "Where is a mistake in a query found?",
+    "choices": [
+      {
+        "text": "A faster storage engine than SQLite",
+        "correct": false,
+        "why": "Room stores everything in SQLite; it replaces the API, not the engine."
+      },
+      {
+        "text": "SQL checked at build time",
+        "correct": true,
+        "why": "Right: KSP reads every query and a typo fails the build."
+      },
+      {
+        "text": "Synchronisation of the tables with a server",
+        "correct": false,
+        "why": "Room knows nothing about servers; lesson 16 puts the network next to it."
+      },
+      {
+        "text": "Encryption of the database file",
+        "correct": false,
+        "why": "Room does not encrypt; the file is protected by the app's private storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejpvjvwm",
+    "version": 1,
+    "section": "why-room",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Room annotation to what the planner uses it for.",
+    "hint": "The table in section 02.",
+    "pairs": [
+      {
+        "left": "`@Entity`",
+        "right": "`SessionEntity`, one row per session"
+      },
+      {
+        "left": "`@Dao`",
+        "right": "`SessionDao`, the queries"
+      },
+      {
+        "left": "`@Database`",
+        "right": "`PlannerDatabase`, which hands out the DAOs"
+      }
+    ],
+    "right_distractors": [
+      "`StudySession`, the model the screens read"
+    ]
+  },
+  {
+    "id": "ex-9mx5zjt2",
+    "version": 1,
+    "section": "why-room",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the build file add the schemas to the `debug` source set rather than to `test`?",
+    "hint": "Whose assets does Robolectric read?",
+    "choices": [
+      {
+        "text": "Because release builds need the schemas to migrate",
+        "correct": false,
+        "why": "A migration runs the `Migration` code; the JSON files are only read by the test helper."
+      },
+      {
+        "text": "Because `test` has no assets in AGP 9",
+        "correct": false,
+        "why": "The `test` line compiled; the helper simply did not find the files there."
+      },
+      {
+        "text": "Robolectric reads the debug assets",
+        "correct": true,
+        "why": "Right: with `test` the helper threw `Cannot find the schema file in the assets folder`."
+      },
+      {
+        "text": "So that Room can export them while the app runs",
+        "correct": false,
+        "why": "Room exports schemas at build time, into `schemaDirectory`."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e6tdy6a",
+    "version": 1,
+    "section": "entities",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A session is inserted with `id = 0`. What id does it get?",
+    "hint": "`autoGenerate = true`.",
+    "choices": [
+      {
+        "text": "0, as written",
+        "correct": false,
+        "why": "With `autoGenerate`, 0 means \"not set\" and SQLite picks the number."
+      },
+      {
+        "text": "The next number, returned by the insert",
+        "correct": true,
+        "why": "Right: the first insert of `DaoTest` returned 1."
+      },
+      {
+        "text": "A random `Long`, to avoid collisions",
+        "correct": false,
+        "why": "SQLite counts up; it does not draw numbers at random."
+      },
+      {
+        "text": "None: the insert fails until an id is given",
+        "correct": false,
+        "why": "The default of 0 is exactly what lets the insert proceed."
+      }
+    ]
+  },
+  {
+    "id": "ex-07rc72mh",
+    "version": 1,
+    "section": "entities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The course `sql` is deleted. What happens to its sessions, with the entity as written?",
+    "hint": "Read the `onDelete` of the foreign key.",
+    "choices": [
+      {
+        "text": "They stay, pointing at a course that no longer exists",
+        "correct": false,
+        "why": "That is what a table with no foreign key would allow, and what the key exists to prevent."
+      },
+      {
+        "text": "The delete is refused while sessions exist",
+        "correct": false,
+        "why": "That would be `RESTRICT`; the entity says `CASCADE`."
+      },
+      {
+        "text": "They are deleted with it",
+        "correct": true,
+        "why": "Right: `ForeignKey.CASCADE` deletes the child rows."
+      },
+      {
+        "text": "Their `course_id` becomes `NULL`",
+        "correct": false,
+        "why": "That would be `SET_NULL`, and `course_id` is `NOT NULL` anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-831s1fdf",
+    "version": 1,
+    "section": "entities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `SessionEntity` declare `Index(\"course_id\")`?",
+    "hint": "Two questions the app asks, and one delete.",
+    "choices": [
+      {
+        "text": "Without it, every delete of a course scans the whole sessions table",
+        "correct": true,
+        "why": "Right, and the same index serves the sessions of one course."
+      },
+      {
+        "text": "SQLite requires an index on every `TEXT` column",
+        "correct": false,
+        "why": "`date` and `name` are `TEXT` too; no such rule exists."
+      },
+      {
+        "text": "An index makes the column unique",
+        "correct": false,
+        "why": "Only `unique = true` does that; many sessions share a course."
+      },
+      {
+        "text": "Room cannot write the foreign key otherwise",
+        "correct": false,
+        "why": "Room writes the key and only warns about the missing index."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7ppmxgr",
+    "version": 1,
+    "section": "type-converters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the converter store a `LocalDate` as ISO text like `2026-10-27`?",
+    "hint": "Think of `ORDER BY` and of a person opening the file.",
+    "choices": [
+      {
+        "text": "SQLite rejects integer dates",
+        "correct": false,
+        "why": "SQLite would store a number of days happily; it is the reader who loses."
+      },
+      {
+        "text": "It sorts in date order and reads as a date",
+        "correct": true,
+        "why": "Right: `ORDER BY` and `BETWEEN` work on the column, and nobody has to decode `20388`."
+      },
+      {
+        "text": "Text takes fewer bytes than a number",
+        "correct": false,
+        "why": "It takes a few more; the section calls that the cost."
+      },
+      {
+        "text": "Room only allows converters that return `String`",
+        "correct": false,
+        "why": "A converter may return any type SQLite has, `Long` included."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrx2ywaf",
+    "version": 1,
+    "section": "type-converters",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The database names its converters once with the annotation `@___(Converters::class)`.",
+    "hint": "Plural, on `PlannerDatabase`.",
+    "blanks": [
+      {
+        "accept": [
+          "TypeConverters"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tnrkk6sg",
+    "version": 1,
+    "section": "type-converters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the file `app/schemas/com.example.planner.data.PlannerDatabase/1.json` come from?",
+    "hint": "Nobody typed it.",
+    "choices": [
+      {
+        "text": "Room writes it at build time, into `schemaDirectory`",
+        "correct": true,
+        "why": "Right: one JSON per version, which belongs in version control."
+      },
+      {
+        "text": "The first run of the app on a phone",
+        "correct": false,
+        "why": "It appeared after `assembleDebug`, with no phone involved."
+      },
+      {
+        "text": "`MigrationTestHelper`, when a test runs",
+        "correct": false,
+        "why": "The helper reads these files; it does not write them."
+      },
+      {
+        "text": "Gradle downloads it from Google's repository",
+        "correct": false,
+        "why": "It describes your own tables, which no repository has."
+      }
+    ]
+  },
+  {
+    "id": "ex-82hsx0vy",
+    "version": 1,
+    "section": "daos",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A query says `FROM session` where the table is `sessions`. When is the mistake found?",
+    "hint": "Section 05 tried it.",
+    "choices": [
+      {
+        "text": "When the screen using the query first opens",
+        "correct": false,
+        "why": "That is SQLite's own API; Room moves it earlier."
+      },
+      {
+        "text": "During the build, as `no such table: session`",
+        "correct": true,
+        "why": "Right: KSP checked the query against the schema and the build failed."
+      },
+      {
+        "text": "Only when a migration runs",
+        "correct": false,
+        "why": "No migration was involved; the table name was simply wrong."
+      },
+      {
+        "text": "Never: SQLite creates the missing table",
+        "correct": false,
+        "why": "SQLite never creates a table because a query mentions it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4bgb5vx",
+    "version": 1,
+    "section": "daos",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `minutesBetween` say `COALESCE(SUM(minutes), 0)` rather than `SUM(minutes)`?",
+    "hint": "What is the sum of no rows in SQL?",
+    "choices": [
+      {
+        "text": "Because `SUM` of no rows is `NULL`",
+        "correct": true,
+        "why": "Right: an empty week should total 0, and the `Flow<Int>` cannot carry `NULL`."
+      },
+      {
+        "text": "`SUM` ignores rows whose `done` is 0",
+        "correct": false,
+        "why": "`SUM` adds every row the `WHERE` keeps; `done` is not part of it."
+      },
+      {
+        "text": "To round the total to whole minutes",
+        "correct": false,
+        "why": "`minutes` is already an integer, and `COALESCE` rounds nothing."
+      },
+      {
+        "text": "Room refuses an aggregate without a fallback",
+        "correct": false,
+        "why": "Room accepts `SUM`; the fallback is about the empty case."
+      }
+    ]
+  },
+  {
+    "id": "ex-tw809f72",
+    "version": 1,
+    "section": "daos",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`DaoTest` inserts a session for course `rust`, which is not in `courses`. What stops it?",
+    "hint": "The exception's name says which layer.",
+    "choices": [
+      {
+        "text": "Room, comparing the id with the DAO's queries at compile time",
+        "correct": false,
+        "why": "Ids are values at run time; the build cannot know them."
+      },
+      {
+        "text": "The mapping function `toEntity()`",
+        "correct": false,
+        "why": "The test built the entity directly; no mapping ran."
+      },
+      {
+        "text": "SQLite's foreign key, as `SQLiteConstraintException`",
+        "correct": true,
+        "why": "Right: `FOREIGN KEY constraint failed`, from the database itself."
+      },
+      {
+        "text": "Nothing: the session is stored and hidden",
+        "correct": false,
+        "why": "The insert threw; nothing was stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-a682nhty",
+    "version": 1,
+    "section": "daos",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `DaoTest`, what id did the first inserted session receive?",
+    "hint": "`new id:` in the output.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-aqd1szyc",
+    "version": 1,
+    "section": "flow-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marking a session done changes no `minutes`, yet the week's `Flow` emitted 135 again. Why?",
+    "hint": "What does Room track: tables or rows?",
+    "choices": [
+      {
+        "text": "The test's channel duplicated the last value",
+        "correct": false,
+        "why": "The channel only passes on what the `Flow` sent."
+      },
+      {
+        "text": "Invalidation is per table",
+        "correct": true,
+        "why": "Right, so equal values can arrive twice in a row."
+      },
+      {
+        "text": "`markDone` also rewrites the `minutes` column",
+        "correct": false,
+        "why": "Its SQL is `SET done = 1`, nothing else."
+      },
+      {
+        "text": "`SUM` counts done sessions twice",
+        "correct": false,
+        "why": "The total stayed 135, which counts each session once."
+      }
+    ]
+  },
+  {
+    "id": "ex-eva3hcx6",
+    "version": 1,
+    "section": "flow-queries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many values did the week's `Flow` emit in `FlowTest`, the first one included?",
+    "hint": "One before any write, then one per write.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bwgcqsep",
+    "version": 1,
+    "section": "flow-queries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen collects `forCourse(\"android\")` and redraws a long list on every emission. What does the lesson suggest?",
+    "hint": "Equal emissions are possible.",
+    "choices": [
+      {
+        "text": "Replace the `Flow` with a `suspend` read on a timer",
+        "correct": false,
+        "why": "That gives up the automatic refresh, which is the point of the `Flow`."
+      },
+      {
+        "text": "Put `distinctUntilChanged()` in front of the collection",
+        "correct": true,
+        "why": "Right: a write to another course's row reruns the query and returns an equal list."
+      },
+      {
+        "text": "Move the sessions of each course to a table of their own",
+        "correct": false,
+        "why": "That multiplies tables and migrations to save a comparison."
+      },
+      {
+        "text": "Turn off invalidation for that DAO",
+        "correct": false,
+        "why": "There is no such switch; invalidation is how the `Flow` works."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr3mf7ax",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Version 2 of the app adds a column, and nobody wrote a migration. What happens on a phone that had version 1?",
+    "hint": "The `noMigration` test.",
+    "choices": [
+      {
+        "text": "Room adds the column by itself",
+        "correct": false,
+        "why": "Only an `AutoMigration` you declare does that."
+      },
+      {
+        "text": "A crash at the first query",
+        "correct": true,
+        "why": "Right: Room refuses to open the file."
+      },
+      {
+        "text": "The old rows are deleted and the app starts empty",
+        "correct": false,
+        "why": "That happens only if you ask for `fallbackToDestructiveMigration()`."
+      },
+      {
+        "text": "The app keeps using version 1 of the schema",
+        "correct": false,
+        "why": "The code is version 2; there is no running in the old schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-natfanb0",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration adds `note TEXT NOT NULL DEFAULT ''` while the entity says `note: String?`. It runs without an error. Why is it still wrong?",
+    "hint": "Compare the migrated table with schema 2.",
+    "choices": [
+      {
+        "text": "The table no longer matches what Room expects",
+        "correct": true,
+        "why": "Right: `runMigrationsAndValidate` refused with `Migration didn't properly handle: sessions`."
+      },
+      {
+        "text": "`ALTER TABLE` cannot add a column with a default",
+        "correct": false,
+        "why": "It can, and it did; the column's definition is what differs."
+      },
+      {
+        "text": "It deletes the rows that had no note",
+        "correct": false,
+        "why": "The default fills those rows; nothing is deleted."
+      },
+      {
+        "text": "Migrations may not contain SQL",
+        "correct": false,
+        "why": "The correct migration is one line of SQL too."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8vf0b1v",
+    "version": 1,
+    "section": "migrations",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of `MigrationTest.oneToTwo`.",
+    "hint": "An old database first, then the code under test.",
+    "items": [
+      "`helper.createDatabase(name, 1)`",
+      "insert a course and a session with plain SQL",
+      "`runMigrationsAndValidate(name, 2, true, MIGRATION_1_2)`",
+      "read the migrated row back"
+    ]
+  },
+  {
+    "id": "ex-tzkzv7qc",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `fallbackToDestructiveMigration()` the wrong cure for the planner?",
+    "hint": "What does the database hold?",
+    "choices": [
+      {
+        "text": "It is deprecated and no longer compiles",
+        "correct": false,
+        "why": "The section names it as an option that exists; the objection is what it does."
+      },
+      {
+        "text": "It erases their history",
+        "correct": true,
+        "why": "Right: fine for a cache, not for data only the phone has."
+      },
+      {
+        "text": "It runs every migration twice",
+        "correct": false,
+        "why": "It runs none; it rebuilds the database empty."
+      },
+      {
+        "text": "It needs the schema files on the phone",
+        "correct": false,
+        "why": "The schema files are only read by the test helper."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sda0xa1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these changes to `SessionEntity` need a migration when version 3 ships? Choose all that apply.",
+    "hint": "Anything that changes the table on disk.",
+    "choices": [
+      {
+        "text": "Adding `val rating: Int? = null`",
+        "correct": true,
+        "why": "Yes: a new column has to be added to the existing table."
+      },
+      {
+        "text": "Renaming the function `toDomain()`",
+        "correct": false,
+        "why": "No: a Kotlin function is not part of the table."
+      },
+      {
+        "text": "Adding `Index(\"done\")`",
+        "correct": true,
+        "why": "Yes: an index is part of the schema, and the schema JSON records it."
+      },
+      {
+        "text": "Changing the SQL of `markDone` in the DAO",
+        "correct": false,
+        "why": "No: a query reads the table and changes nothing about its shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3kcx15b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new screen shows the sessions of one course and must update when a session is added. Which DAO method fits?",
+    "hint": "Which return type answers again?",
+    "choices": [
+      {
+        "text": "`suspend fun forCourse(id: String): List<SessionEntity>`",
+        "correct": false,
+        "why": "It answers once; the screen would need to ask again after each insert."
+      },
+      {
+        "text": "`fun forCourse(id: String): Flow<List<SessionEntity>>`",
+        "correct": true,
+        "why": "Right: Room reruns it after every write to `sessions`."
+      },
+      {
+        "text": "`@Insert suspend fun forCourse(id: String)`",
+        "correct": false,
+        "why": "`@Insert` writes rows; it reads nothing."
+      },
+      {
+        "text": "`fun forCourse(id: String): Int`",
+        "correct": false,
+        "why": "A count is not the list, and a blocking call cannot run on the main thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2b0q7ek",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Version 2 shipped with `MIGRATION_1_2`. Version 3 adds another column with `MIGRATION_2_3`. A phone still on version 1 updates straight to 3. What does Room do?",
+    "hint": "Migrations are steps.",
+    "choices": [
+      {
+        "text": "Runs 1 to 2 and then 2 to 3, if both are added to the builder",
+        "correct": true,
+        "why": "Right: Room chains the migrations it has into a path from the file's version to the code's."
+      },
+      {
+        "text": "Refuses, because there is no `MIGRATION_1_3`",
+        "correct": false,
+        "why": "A direct migration is allowed but not required; a chain of steps is a valid path."
+      },
+      {
+        "text": "Runs only `MIGRATION_2_3`",
+        "correct": false,
+        "why": "The file is at version 1, so the step from 1 to 2 has to run first."
+      },
+      {
+        "text": "Deletes the database, as a jump of two versions is too far",
+        "correct": false,
+        "why": "Distance does not matter; only a missing step does."
+      }
+    ]
+  }
+]

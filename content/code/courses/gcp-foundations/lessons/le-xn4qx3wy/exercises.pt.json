@@ -1,0 +1,337 @@
+{
+  "ex-k6t0b7nc": {
+    "prompt": "O destino de um pacote casa com `0.0.0.0/0` e `10.11.0.0/20`. Que rota o leva?",
+    "hint": "Mais específica primeiro.",
+    "choices": [
+      {
+        "text": "A /0, com a prioridade menor",
+        "why": "A prioridade só ordena rotas com o mesmo destino."
+      },
+      {
+        "text": "A /20, a mais específica",
+        "why": "Isso. O prefixo mais longo ganha antes de a prioridade ser olhada."
+      },
+      {
+        "text": "As duas, dividindo o tráfego",
+        "why": "Só destinos iguais com prioridade igual dividem."
+      },
+      {
+        "text": "A criada primeiro",
+        "why": "A ordem de criação não tem papel."
+      }
+    ]
+  },
+  "ex-8mmyktyd": {
+    "prompt": "`office-primary` e `office-backup` vão as duas para 192.168.0.0/16, em 100 e 200. Por que duas?",
+    "hint": "O que acontece se a primeira sumir?",
+    "choices": [
+      {
+        "text": "Elas dividem o tráfego ao meio",
+        "why": "Prioridades diferentes não dividem; iguais dividiriam."
+      },
+      {
+        "text": "Uma é de entrada, outra de saída",
+        "why": "Rotas são para pacotes saindo de máquinas."
+      },
+      {
+        "text": "O Google exige duas rotas por VPN",
+        "why": "É o desenho do planner para falhas."
+      },
+      {
+        "text": "A reserva assume sozinha",
+        "why": "Isso. Sem a primária, a próxima prioridade é a melhor."
+      }
+    ]
+  },
+  "ex-depkzf4s": {
+    "prompt": "O que é o gateway padrão de internet?",
+    "hint": "Não é uma máquina.",
+    "choices": [
+      {
+        "text": "O caminho de saída da rede",
+        "why": "Isso. Uma rota apontando para ele deixa pacotes saírem para endereços de fora."
+      },
+      {
+        "text": "Uma máquina que o Google roda em cada região",
+        "why": "Não há nada para rodar nem dimensionar."
+      },
+      {
+        "text": "O gateway do Cloud NAT",
+        "why": "O NAT traduz pacotes que saem por ele."
+      },
+      {
+        "text": "O segundo endereço da sub-rede",
+        "why": "Esse é o gateway da sub-rede, dentro da rede."
+      }
+    ]
+  },
+  "ex-0be17wxf": {
+    "prompt": "Depois que a rota padrão foi tirada, por que 199.36.153.9 ainda era alcançável?",
+    "hint": "Leia a tabela.",
+    "choices": [
+      {
+        "text": "Endereços do Google nunca precisam de rotas",
+        "why": "Sem essa rota ele seria descartado como o 8.8.8.8."
+      },
+      {
+        "text": "Ele pertence a uma sub-rede",
+        "why": "Nenhuma sub-rede do planner o contém."
+      },
+      {
+        "text": "Uma rota própria /30 para ele ficou",
+        "why": "Isso. A private-googleapis manda essa faixa ao gateway padrão de internet."
+      },
+      {
+        "text": "O Cloud NAT responde por ele",
+        "why": "Nenhum NAT estava envolvido, e o NAT precisa da rota padrão de todo jeito."
+      }
+    ]
+  },
+  "ex-avc0g3bz": {
+    "prompt": "Quantos endereços tem cada faixa privada de API do Google, como 199.36.153.8/30?",
+    "hint": "Um /30.",
+    "unit": "endereços"
+  },
+  "ex-v3xaasb3": {
+    "prompt": "Rotas dinâmicas são aprendidas por BGP por um Cloud ___.",
+    "hint": "Ele também guarda o Cloud NAT.",
+    "blanks": [
+      {
+        "accept": [
+          "Router"
+        ]
+      }
+    ]
+  },
+  "ex-z0exrb4z": {
+    "prompt": "O que uma máquina atrás do Cloud NAT, sem endereço externo, pode fazer?",
+    "hint": "Sair, e nunca entrar.",
+    "choices": [
+      {
+        "text": "Aceitar conexões no endereço do NAT",
+        "why": "O NAT não dá caminho de entrada."
+      },
+      {
+        "text": "Alcançar os gateways NAT de outras regiões",
+        "why": "Um NAT serve a própria região."
+      },
+      {
+        "text": "Iniciar conexões para a internet",
+        "why": "Isso. Respostas voltam; conexões iniciadas de fora não."
+      },
+      {
+        "text": "Nada até ter um endereço público",
+        "why": "O NAT é o que a deixa sair sem um."
+      }
+    ]
+  },
+  "ex-6baz4dks": {
+    "prompt": "As máquinas do planner em Santiago não alcançam a internet, embora o NAT de São Paulo funcione. Por quê?",
+    "hint": "Onde o NAT mora?",
+    "choices": [
+      {
+        "text": "Cada região precisa do seu NAT",
+        "why": "Isso. O router e o NAT foram escritos para southamerica-east1."
+      },
+      {
+        "text": "O NAT só serve a primeira sub-rede criada",
+        "why": "Ele foi configurado para todas as sub-redes da região."
+      },
+      {
+        "text": "As máquinas de Santiago precisam de endereços externos",
+        "why": "Um NAT em Santiago dispensaria isso."
+      },
+      {
+        "text": "A rota padrão é regional",
+        "why": "Rotas são globais, como a rede."
+      }
+    ]
+  },
+  "ex-9eznen2t": {
+    "prompt": "Por que a produção do planner não tem Cloud NAT?",
+    "hint": "O que a produção apagou?",
+    "choices": [
+      {
+        "text": "NAT não é permitido em pastas de produção",
+        "why": "Não há essa regra; é o desenho do planner."
+      },
+      {
+        "text": "O NAT abriria portas de entrada",
+        "why": "O NAT é só de saída."
+      },
+      {
+        "text": "Todas as máquinas de produção têm endereços externos",
+        "why": "Elas não têm nenhum; esse é o ponto."
+      },
+      {
+        "text": "Ela não tem rota padrão para o NAT usar",
+        "why": "Isso. O NAT traduz pacotes que saem pela rota do gateway padrão de internet."
+      }
+    ]
+  },
+  "ex-g9db576c": {
+    "prompt": "Quando o planner escolhe `MANUAL_ONLY` em vez de `AUTO_ONLY` para os endereços do NAT?",
+    "hint": "A lista de um parceiro.",
+    "choices": [
+      {
+        "text": "Quando o NAT serve mais de 32 máquinas",
+        "why": "Isso muda o preço, não a escolha de endereços."
+      },
+      {
+        "text": "Para a lista de um parceiro",
+        "why": "Isso. Endereços reservados vão para a lista do parceiro."
+      },
+      {
+        "text": "Sempre que o log está ligado",
+        "why": "Log e endereçamento não têm relação."
+      },
+      {
+        "text": "Para o NAT aceitar conexões de entrada",
+        "why": "O NAT não aceita nenhuma, quaisquer que sejam os endereços."
+      }
+    ]
+  },
+  "ex-k7qhs097": {
+    "prompt": "Aos preços lidos em 30 de outubro de 2026, quanto custa um gateway NAT para 10 máquinas num mês de 730 horas, só as horas do gateway, em dólares?",
+    "hint": "0,0014 por máquina-hora.",
+    "unit": "dólares"
+  },
+  "ex-8gfe4gf1": {
+    "prompt": "A linha de NAT de um projeto pequeno de repente é a maior da fatura, com as mesmas dez máquinas. Qual a causa mais provável?",
+    "hint": "Que parte cresce?",
+    "choices": [
+      {
+        "text": "Os dados que ele processa",
+        "why": "Isso. O processamento é cobrado por GiB, e cresce com o tráfego, não com as máquinas."
+      },
+      {
+        "text": "O preço por hora do gateway subiu",
+        "why": "Ele é por máquina, e as máquinas não mudaram."
+      },
+      {
+        "text": "O log de erros",
+        "why": "Log só de erros registra pouco."
+      },
+      {
+        "text": "As sessões BGP do router",
+        "why": "Este router não tem nenhuma."
+      }
+    ]
+  },
+  "ex-500pkm1t": {
+    "prompt": "Onde o Private Google Access é ligado?",
+    "hint": "Uma linha de um arquivo.",
+    "choices": [
+      {
+        "text": "Na rede, para toda região",
+        "why": "É por sub-rede."
+      },
+      {
+        "text": "Em cada máquina",
+        "why": "Máquinas herdam da sub-rede."
+      },
+      {
+        "text": "Numa sub-rede, para as máquinas dela",
+        "why": "Isso. `private_ip_google_access = true`, para as máquinas daquela sub-rede."
+      },
+      {
+        "text": "Na organização",
+        "why": "É uma configuração de rede, não uma política."
+      }
+    ]
+  },
+  "ex-phrpct5v": {
+    "prompt": "Para que serve o `restricted.googleapis.com`?",
+    "hint": "Um perímetro.",
+    "choices": [
+      {
+        "text": "Toda API do Google, com latência menor",
+        "why": "Isso está mais perto do private.googleapis.com, e latência não é o ponto."
+      },
+      {
+        "text": "APIs que um perímetro protege",
+        "why": "Isso. Para um perímetro em volta dos dados de um projeto não poder ser contornado."
+      },
+      {
+        "text": "APIs para máquinas com endereços externos",
+        "why": "Essas alcançam os endereços públicos de todo jeito."
+      },
+      {
+        "text": "Só a API de faturamento do Google",
+        "why": "Ela cobre um conjunto de APIs, não uma."
+      }
+    ]
+  },
+  "ex-zt4j49dr": {
+    "prompt": "Uma máquina numa sub-rede com Private Google Access alcança o `storage.googleapis.com` e é recusada. O que a recusou?",
+    "hint": "Ela chegou lá.",
+    "choices": [
+      {
+        "text": "Uma regra de firewall de entrada faltando",
+        "why": "A máquina iniciou a conexão; a saída é permitida."
+      },
+      {
+        "text": "O Cloud NAT",
+        "why": "O NAT não é necessário para as APIs do Google aqui."
+      },
+      {
+        "text": "A rota padrão",
+        "why": "O pacote chegou ao Storage, então a rota funcionou."
+      },
+      {
+        "text": "O IAM, por falta de papel",
+        "why": "Isso. O Private Google Access alcança a API; ele não dá permissão."
+      }
+    ]
+  },
+  "ex-2e9b9pbq": {
+    "prompt": "Ligue cada nome à faixa para a qual ele resolve.",
+    "hint": "O getent respondeu.",
+    "pairs": [
+      {
+        "left": "private.googleapis.com",
+        "right": "199.36.153.8/30"
+      },
+      {
+        "left": "restricted.googleapis.com",
+        "right": "199.36.153.4/30"
+      }
+    ],
+    "right_distractors": [
+      "169.254.169.254/32"
+    ]
+  },
+  "ex-3hcr7ysa": {
+    "prompt": "Ponha em ordem os passos de tirar a produção da internet sem perder as APIs do Google.",
+    "hint": "A saída vai por último.",
+    "items": [
+      "pôr uma rota para 199.36.153.8/30",
+      "ligar o Private Google Access na sub-rede",
+      "uma zona DNS privada manda *.googleapis.com para lá",
+      "apagar a rota padrão"
+    ],
+    "trap": "Apagar a rota padrão primeiro é o deslize: até a rota /30 existir, as máquinas perdem as APIs do Google junto com a internet."
+  },
+  "ex-38xs5ecv": {
+    "prompt": "Uma máquina de staging sem endereço externo precisa baixar pacotes da internet e escrever no Cloud Storage. Do que a rede dela precisa?",
+    "hint": "Dois destinos.",
+    "choices": [
+      {
+        "text": "Só o Private Google Access",
+        "why": "Isso alcança as APIs do Google, não os espelhos de pacotes."
+      },
+      {
+        "text": "Uma regra de entrada de 0.0.0.0/0",
+        "why": "Nada precisa entrar sem ser chamado."
+      },
+      {
+        "text": "Uma rota para 199.36.153.4/30 e nenhuma rota padrão",
+        "why": "Isso alcança só as APIs restritas, e nenhuma internet."
+      },
+      {
+        "text": "Rota padrão e Cloud NAT; o Storage também é alcançável",
+        "why": "Isso. O NAT cobre os dois, e o Private Google Access cobriria o Storage sem ele."
+      }
+    ]
+  }
+}

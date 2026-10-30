@@ -1,0 +1,661 @@
+[
+  {
+    "id": "ex-m1673wq1",
+    "version": 1,
+    "section": "orchestrator-and-activities",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the shop's app, which function decides that `charge` runs after `reserve_stock` and before `ship`?",
+    "choices": [
+      {
+        "text": "`start_order`, because it passes the order in",
+        "correct": false,
+        "why": "The client function starts the instance and answers; it says nothing about the steps."
+      },
+      {
+        "text": "`order_flow`, the orchestrator",
+        "correct": true,
+        "why": "Yes: the order of its `yield`s is the order of the steps."
+      },
+      {
+        "text": "`reserve_stock`, by returning before the others",
+        "correct": false,
+        "why": "An activity does one step and never knows what comes after it."
+      },
+      {
+        "text": "The extension bundle, from the order of the functions in the file",
+        "correct": false,
+        "why": "The bundle carries the extension; the order of the steps is in the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-zj54nb7s",
+    "version": 1,
+    "section": "orchestrator-and-activities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the laptop the first order was answered with HTTP 500, and the host's log blamed the webhooks. What was missing?",
+    "hint": "The log line named a setting.",
+    "choices": [
+      {
+        "text": "The package `azure-functions-durable` in the image",
+        "correct": false,
+        "why": "It was installed; without it the file would not have loaded and the host would have found no functions."
+      },
+      {
+        "text": "A key, because the route asks for `FUNCTION` level",
+        "correct": false,
+        "why": "`DFApp` was given `ANONYMOUS`, so the route asks for no key."
+      },
+      {
+        "text": "`WEBSITE_HOSTNAME`, a setting Azure gives every app it runs",
+        "correct": true,
+        "why": "Yes: the client needs it to write the status addresses, and a container on a laptop has to be given it."
+      },
+      {
+        "text": "The History table, which Azurite only creates on the first order",
+        "correct": false,
+        "why": "The task hub's tables are the extension's business, and their absence is not what the log named."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mr4s78z",
+    "version": 1,
+    "section": "orchestrator-and-activities",
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each part of the shop's Durable Functions app with what it does.",
+    "hint": "One description belongs to nothing in this lesson.",
+    "pairs": [
+      {
+        "left": "`start_order`",
+        "right": "starts an instance and answers with its addresses"
+      },
+      {
+        "left": "`order_flow`",
+        "right": "says which steps run, and in what order"
+      },
+      {
+        "left": "`reserve_stock`",
+        "right": "does one step of the work"
+      },
+      {
+        "left": "`TestHubName`",
+        "right": "holds the state of every instance of the app"
+      }
+    ],
+    "right_distractors": [
+      "turns the decorators into a `function.json` per function"
+    ],
+    "drillable": true
+  },
+  {
+    "id": "ex-ex3z90e7",
+    "version": 1,
+    "section": "orchestrator-and-activities",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop uses the order number as the instance id. Which of these are true on this host? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A second start for an order still `Pending` is refused",
+        "correct": true,
+        "why": "Yes: the second POST for A-1002 got a 500 saying the instance already exists."
+      },
+      {
+        "text": "A start for an order that has completed runs it again from the beginning",
+        "correct": true,
+        "why": "Yes: `NonRunningStates` may be started over, and A-1002 ran a second time."
+      },
+      {
+        "text": "The id makes the activities safe to run twice",
+        "correct": false,
+        "why": "It guards only while the instance runs; activities still have to be written to be repeated."
+      },
+      {
+        "text": "Two instances in the task hub can share an id if their inputs differ",
+        "correct": false,
+        "why": "An id is unique within the task hub whatever the input."
+      },
+      {
+        "text": "The status address carries the id in its path",
+        "correct": true,
+        "why": "Yes: `.../instances/A-1001?...`."
+      }
+    ]
+  },
+  {
+    "id": "ex-g42bktem",
+    "version": 1,
+    "section": "orchestrator-and-activities",
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The client function answered 202 at once, and its ___ header carried the address to poll, with `Retry-After` beside it.",
+    "hint": "An HTTP header that says where something is.",
+    "blanks": [
+      {
+        "accept": [
+          "Location"
+        ],
+        "ignore_case": true
+      }
+    ],
+    "drillable": true
+  },
+  {
+    "id": "ex-d1dmvar9",
+    "version": 1,
+    "section": "replay",
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An orchestrator calls five activities one after another, each with its own `yield`, and then returns. How many times does the orchestrator function run for one instance?",
+    "hint": "A-1001 had three activities.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "runs",
+    "drillable": true
+  },
+  {
+    "id": "ex-gfzb3dep",
+    "version": 1,
+    "section": "replay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the two clocks in the log line, `now` changed on every run for A-1003 and `context` did not. Why?",
+    "choices": [
+      {
+        "text": "It is read from the history, so a replay gets the first run's time",
+        "correct": true,
+        "why": "Yes, and that is what makes it safe to decide anything from."
+      },
+      {
+        "text": "`context` is the time the container started",
+        "correct": false,
+        "why": "The container had been up for a while; the value was the time of the first run of A-1003."
+      },
+      {
+        "text": "`datetime.now()` is cached by the worker between runs",
+        "correct": false,
+        "why": "It is the one that moved; nothing cached it."
+      },
+      {
+        "text": "The orchestrator ran only once and logged four lines",
+        "correct": false,
+        "why": "Four runs: the first had `replaying=False` and the other three `True`."
+      }
+    ]
+  },
+  {
+    "id": "ex-khndvagc",
+    "version": 1,
+    "section": "replay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants a random discount code for each order, chosen inside the orchestration and used in a later step. Where should the code be made?",
+    "choices": [
+      {
+        "text": "In the orchestrator, with `random.choice` seeded by `datetime.now()`",
+        "correct": false,
+        "why": "A seed from the clock differs on every replay, so every replay picks a different code."
+      },
+      {
+        "text": "In the orchestrator, with `uuid.uuid4()`",
+        "correct": false,
+        "why": "A new value on every replay; the documentation points to `context.new_guid()` instead."
+      },
+      {
+        "text": "In an activity, whose result the history keeps",
+        "correct": true,
+        "why": "Yes: replays read the stored result instead of running it again."
+      },
+      {
+        "text": "In an environment variable the orchestrator reads",
+        "correct": false,
+        "why": "One value for every order, and one that can change between replays."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yr33pjm",
+    "version": 1,
+    "section": "replay",
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put in order the four rows the first run of `order_flow` added to A-1001's history.",
+    "items": [
+      "`OrchestratorStarted`",
+      "`ExecutionStarted`, with the input",
+      "`TaskScheduled` for `reserve_stock`",
+      "`OrchestratorCompleted`"
+    ],
+    "trap": "Putting `ExecutionStarted` first: every run, the first included, opens with `OrchestratorStarted`.",
+    "drillable": true
+  },
+  {
+    "id": "ex-dv33q7q6",
+    "version": 1,
+    "section": "replay",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team wants to move a running app's task hub from the Azure Storage provider to the Durable Task Scheduler. What does the documentation say?",
+    "choices": [
+      {
+        "text": "Data cannot be migrated between providers: create a new app on the new provider",
+        "correct": true,
+        "why": "Yes, in a note on the providers page."
+      },
+      {
+        "text": "Change `storageProvider` in `host.json` and the instances move on the next start",
+        "correct": false,
+        "why": "The setting chooses a backend for new state; nothing copies the old one across."
+      },
+      {
+        "text": "Export the History table and import it into the scheduler's dashboard",
+        "correct": false,
+        "why": "No such import exists; the dashboard shows the scheduler's own instances."
+      },
+      {
+        "text": "Rewrite the orchestrators, because the scheduler needs a different API",
+        "correct": false,
+        "why": "The documentation says existing apps use the scheduler with no code changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgpanh2m",
+    "version": 1,
+    "section": "fan-out-fan-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What in `order_flow` made the six reservations of A-1005 run at the same time?",
+    "choices": [
+      {
+        "text": "One `yield` on `task_all` over tasks made without `yield`",
+        "correct": true,
+        "why": "Yes: the tasks are scheduled together in one checkpoint and awaited once."
+      },
+      {
+        "text": "A thread per line, which `task_all` starts behind the scenes",
+        "correct": false,
+        "why": "No thread anywhere: the activities run in the host, not in the orchestrator."
+      },
+      {
+        "text": "Declaring the orchestrator with `async def`",
+        "correct": false,
+        "why": "Forbidden: a Python orchestrator is a generator."
+      },
+      {
+        "text": "A setting in `host.json` that runs activities in parallel",
+        "correct": false,
+        "why": "The file was lesson 15's, unchanged; the code alone did it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jaq5snd3",
+    "version": 1,
+    "section": "fan-out-fan-in",
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "An order of 100 lines runs on one host with 4 processors and the default of 10 activities per processor. Each `reserve_line` takes 1 second. Ignoring the time between activities, how many seconds at least do the reservations take?",
+    "hint": "Count the waves.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "seconds",
+    "drillable": true
+  },
+  {
+    "id": "ex-5gw28k4y",
+    "version": 1,
+    "section": "fan-out-fan-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a plan that has added a second instance of the app, where can the activities of one fan-out run?",
+    "choices": [
+      {
+        "text": "Only on the instance that holds the orchestrator's control queue",
+        "correct": false,
+        "why": "That is the orchestrator; activities are stateless."
+      },
+      {
+        "text": "On either instance, since both compete for the work-item queue",
+        "correct": true,
+        "why": "Yes, which is how a fan-out uses the instances a plan adds."
+      },
+      {
+        "text": "On whichever instance received the HTTP request",
+        "correct": false,
+        "why": "The request only started the instance; the work goes through the queue."
+      },
+      {
+        "text": "On a third instance kept for activities",
+        "correct": false,
+        "why": "There is no such instance; every instance of the app runs both kinds."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj7dc278",
+    "version": 1,
+    "section": "fan-out-fan-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One of the six `reserve_line` calls of an order raises an exception. What does the documentation say happens to `yield context.task_all(tasks)`?",
+    "choices": [
+      {
+        "text": "It returns five results, with `None` in place of the one that failed",
+        "correct": false,
+        "why": "It does not return partial results."
+      },
+      {
+        "text": "It retries the failed call by itself until it succeeds",
+        "correct": false,
+        "why": "Retries happen only with `call_activity_with_retry` and a `RetryOptions`."
+      },
+      {
+        "text": "It fails at the first error, which `try` and `except` catch",
+        "correct": true,
+        "why": "Yes; uncaught, the instance ends `Failed`."
+      },
+      {
+        "text": "The other five are cancelled and their stock released",
+        "correct": false,
+        "why": "Nothing undoes their work; any compensation is the orchestrator's to write."
+      }
+    ]
+  },
+  {
+    "id": "ex-87be6wzq",
+    "version": 1,
+    "section": "fan-out-fan-in",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job fans out to 20,000 items in one orchestration, and every replay has become slow. Which are among the documentation's answers? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Split the work into sub-orchestrations, each with its own history",
+        "correct": true,
+        "why": "Yes: each child replays only its own rows."
+      },
+      {
+        "text": "Have activities return a reference to a blob rather than the data",
+        "correct": true,
+        "why": "Yes: what an activity returns is stored and read back on every replay."
+      },
+      {
+        "text": "Raise `partitionCount` to 64",
+        "correct": false,
+        "why": "Sixteen is the most, and partitions do not shorten a history."
+      },
+      {
+        "text": "Run the loop over the items in a thread inside the orchestrator",
+        "correct": false,
+        "why": "An orchestrator may do no work and no input or output of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5gr23qq",
+    "version": 1,
+    "section": "timers-and-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Suppose `order_flow` left out `timeout.cancel()`. A-1007 is paid one second into its ten-minute window. What does its status say a minute later?",
+    "choices": [
+      {
+        "text": "`Completed`, because the payment won the race",
+        "correct": false,
+        "why": "The documentation says an instance is not marked `Completed` while a timer it created is pending."
+      },
+      {
+        "text": "`Failed`, because a timer was left behind",
+        "correct": false,
+        "why": "Leaving one is not an error; it only delays the end."
+      },
+      {
+        "text": "`expired`, because the timer fires later",
+        "correct": false,
+        "why": "`task_any` already returned the payment; the branch for the timer never runs."
+      },
+      {
+        "text": "`Running`, until the timer fires",
+        "correct": true,
+        "why": "Yes, which is why the code cancels the loser."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrbjrrbn",
+    "version": 1,
+    "section": "timers-and-events",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The payment for A-1009 was raised after the customer's cancellation had terminated it. What did the management API answer?",
+    "choices": [
+      {
+        "text": "202 Accepted, and the event was kept for later",
+        "correct": false,
+        "why": "A buffered event is for an instance that will still wait; this one had finished."
+      },
+      {
+        "text": "404 Not Found",
+        "correct": false,
+        "why": "The instance exists, terminated; 404 is for an id the hub does not have."
+      },
+      {
+        "text": "410 Gone",
+        "correct": true,
+        "why": "Yes: the documentation's answer for an instance that has completed or failed."
+      },
+      {
+        "text": "400 Bad Request, because the body was not JSON",
+        "correct": false,
+        "why": "The body was JSON with a JSON content type."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t1zgf5c",
+    "version": 1,
+    "section": "timers-and-events",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A-1011 waited for payment, a new version of the code was deployed, and the payment then made it fail. What did the failure compare?",
+    "choices": [
+      {
+        "text": "The new image's id with the id of the image that started the instance",
+        "correct": false,
+        "why": "Nothing compares images; the restart with the same image worked."
+      },
+      {
+        "text": "The step the new code asked for with the one in the history",
+        "correct": true,
+        "why": "Yes: a timer in the history, an activity in the replay."
+      },
+      {
+        "text": "The host id, which a new container would change if it were not fixed",
+        "correct": false,
+        "why": "It was fixed with `AzureFunctionsWebHost__hostid`, which is why the address still worked."
+      },
+      {
+        "text": "The event's body with the input that `charge` expects to receive",
+        "correct": false,
+        "why": "The code never reached `charge`; the replay failed before it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mqtq7n9",
+    "version": 1,
+    "section": "timers-and-events",
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In Python a single durable timer can last at most ___ days, so a longer wait is a loop of shorter timers.",
+    "hint": "Less than a week.",
+    "blanks": [
+      {
+        "accept": [
+          "six",
+          "6"
+        ],
+        "ignore_case": true
+      }
+    ],
+    "drillable": true
+  },
+  {
+    "id": "ex-s6mkzkvx",
+    "version": 1,
+    "section": "timers-and-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A webhook from the bank sometimes delivers the same payment confirmation twice. With the event raised for each delivery, what must hold?",
+    "choices": [
+      {
+        "text": "Nothing: the extension drops the second event because the names match",
+        "correct": false,
+        "why": "The documentation says events are delivered at least once, duplicates included."
+      },
+      {
+        "text": "The orchestrator must use `async def` to await only the first",
+        "correct": false,
+        "why": "An orchestrator is never a coroutine."
+      },
+      {
+        "text": "Handling a confirmation must be safe to repeat",
+        "correct": true,
+        "why": "Yes: the documentation recommends exactly that for at-least-once delivery."
+      },
+      {
+        "text": "The bank must be given the terminate address instead",
+        "correct": false,
+        "why": "Terminating ends the instance; it is not a way to pay."
+      }
+    ]
+  },
+  {
+    "id": "ex-9eh6ew6a",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put in order what a client sees when it starts an order and follows the asynchronous HTTP pattern to the end.",
+    "items": [
+      "`POST /api/orders` answers 202 with a `Location` header",
+      "Polling `Location` answers 202 while the instance runs",
+      "Polling `Location` answers 200 when the instance has finished",
+      "The body of that answer carries `output`"
+    ],
+    "trap": "Expecting the output in the first answer: the client function returns before any step has run.",
+    "drillable": true
+  },
+  {
+    "id": "ex-03tw2awh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Instances of `order_flow` are waiting for payments. Which of these changes is breaking for them?",
+    "choices": [
+      {
+        "text": "Changing the text of the log line at the top of the orchestrator",
+        "correct": false,
+        "why": "A log line is not a request; replays make the same calls."
+      },
+      {
+        "text": "Making `ship` sleep two seconds instead of one",
+        "correct": false,
+        "why": "Inside an activity, and activities have no replay."
+      },
+      {
+        "text": "Adding an unrelated HTTP function to the app",
+        "correct": false,
+        "why": "It changes no orchestrator."
+      },
+      {
+        "text": "Calling a new activity before the wait for payment",
+        "correct": true,
+        "why": "Yes: exactly what made A-1011 fail."
+      }
+    ]
+  },
+  {
+    "id": "ex-5amz9eck",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each storage provider with where it keeps a task hub.",
+    "hint": "One place belongs to no provider the documentation lists.",
+    "pairs": [
+      {
+        "left": "Azure Storage",
+        "right": "tables, queues and blobs in a storage account you own"
+      },
+      {
+        "left": "Durable Task Scheduler",
+        "right": "a managed Azure resource reached over gRPC"
+      },
+      {
+        "left": "Netherite",
+        "right": "Event Hubs and page blobs, with support ending in 2028"
+      },
+      {
+        "left": "MSSQL",
+        "right": "a SQL Server database, which can run with no Azure at all"
+      }
+    ],
+    "right_distractors": [
+      "containers in a Cosmos DB account"
+    ],
+    "drillable": true
+  },
+  {
+    "id": "ex-6eqeth5g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A-1010 was waiting when the container restarted, and the payment raised afterwards completed it. What carried it across the restart?",
+    "choices": [
+      {
+        "text": "The Python worker, which kept the generator paused in memory",
+        "correct": false,
+        "why": "The worker was restarted with the container; nothing in memory survived."
+      },
+      {
+        "text": "Docker, which saves a container's processes on restart",
+        "correct": false,
+        "why": "`docker restart` stops the processes and starts them again from nothing."
+      },
+      {
+        "text": "The instance's row and history in the task hub, which the new host read",
+        "correct": true,
+        "why": "Yes: the state was in Azurite all along."
+      },
+      {
+        "text": "The timer, which was paused for the length of the restart",
+        "correct": false,
+        "why": "A timer is a message with a time on it; it does not pause."
+      }
+    ]
+  }
+]

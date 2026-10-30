@@ -1,0 +1,498 @@
+[
+  {
+    "id": "ex-22rf7j7p",
+    "version": 1,
+    "section": "properties-and-configurations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a gcloud configuration?",
+    "hint": "A set.",
+    "choices": [
+      {
+        "text": "A stored login for one account",
+        "correct": false,
+        "why": "Credentials are stored apart from configurations."
+      },
+      {
+        "text": "A named set of properties",
+        "correct": true,
+        "why": "Right. Project, region, account and the rest, under one name."
+      },
+      {
+        "text": "A project's settings, kept by Google",
+        "correct": false,
+        "why": "It is a file on the machine running gcloud."
+      },
+      {
+        "text": "A Terraform provider block",
+        "correct": false,
+        "why": "Terraform has its own configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4cr3v14",
+    "version": 1,
+    "section": "properties-and-configurations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`prod` holds `planner-prod`, and the variable `CLOUDSDK_CORE_PROJECT=planner-staging` is set. Which project does `gcloud config get project --configuration=prod` print?",
+    "hint": "A variable beats a configuration.",
+    "choices": [
+      {
+        "text": "planner-prod, named by the flag",
+        "correct": false,
+        "why": "The flag chose the configuration; the variable still overrides its property."
+      },
+      {
+        "text": "planner-dev, from the active configuration",
+        "correct": false,
+        "why": "The active configuration was not used."
+      },
+      {
+        "text": "An error, since two values conflict",
+        "correct": false,
+        "why": "There is an order, not a conflict."
+      },
+      {
+        "text": "The variable's value",
+        "correct": true,
+        "why": "Right. The environment variable is more specific than any configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs5gja20",
+    "version": 1,
+    "section": "properties-and-configurations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner use `CLOUDSDK_ACTIVE_CONFIG_NAME=prod` rather than `gcloud config configurations activate prod`?",
+    "hint": "Every other terminal.",
+    "choices": [
+      {
+        "text": "It changes one terminal, not all of them",
+        "correct": true,
+        "why": "Right. Activating would switch every other terminal to production too."
+      },
+      {
+        "text": "Activating needs an administrator",
+        "correct": false,
+        "why": "Anyone can activate a configuration of their own."
+      },
+      {
+        "text": "The variable also logs in",
+        "correct": false,
+        "why": "It chooses a configuration and nothing else."
+      },
+      {
+        "text": "Activated configurations expire after an hour",
+        "correct": false,
+        "why": "They stay active until changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-837ms49v",
+    "version": 1,
+    "section": "properties-and-configurations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did `gcloud config configurations create prod` write the new configuration in this lab?",
+    "hint": "Lesson 1's CLOUDSDK_CONFIG.",
+    "choices": [
+      {
+        "text": "In the project planner-prod",
+        "correct": false,
+        "why": "Configurations are local files."
+      },
+      {
+        "text": "In ~/.config/gcloud",
+        "correct": false,
+        "why": "That is the default, which the lab's variable moved."
+      },
+      {
+        "text": "In ~/gcp/gcloud/configurations",
+        "correct": true,
+        "why": "Right. As config_prod, beside config_default."
+      },
+      {
+        "text": "In Terraform's state",
+        "correct": false,
+        "why": "gcloud keeps no Terraform state."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkfphkpy",
+    "version": 1,
+    "section": "properties-and-configurations",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The environment variable for the property `core/project` is CLOUDSDK_CORE____.",
+    "hint": "Section, then name.",
+    "blanks": [
+      {
+        "accept": [
+          "PROJECT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2ftmcmey",
+    "version": 1,
+    "section": "more-than-one-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`gcloud pubsub topics list --configuration=prod` stopped with *You do not currently have an active account selected*. Why?",
+    "hint": "What does prod hold?",
+    "choices": [
+      {
+        "text": "Google refused the request",
+        "correct": false,
+        "why": "No request was made; it stopped first."
+      },
+      {
+        "text": "The emulator does not know planner-prod",
+        "correct": false,
+        "why": "prod has no override to the emulator."
+      },
+      {
+        "text": "prod has no account and no token",
+        "correct": true,
+        "why": "Right. A new configuration holds only what it is given."
+      },
+      {
+        "text": "Only the active configuration may list",
+        "correct": false,
+        "why": "Any configuration may run any command."
+      }
+    ]
+  },
+  {
+    "id": "ex-vswkmncy",
+    "version": 1,
+    "section": "more-than-one-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `auth/impersonate_service_account` set in `prod`, which service refused the lab's placeholder token?",
+    "hint": "Before Pub/Sub was asked.",
+    "choices": [
+      {
+        "text": "iamcredentials, before Pub/Sub",
+        "correct": true,
+        "why": "Right. GenerateAccessToken refused, so no Pub/Sub request was made."
+      },
+      {
+        "text": "Pub/Sub, listing the topics",
+        "correct": false,
+        "why": "The call never got that far."
+      },
+      {
+        "text": "Cloud Resource Manager",
+        "correct": false,
+        "why": "The error names iamcredentials.googleapis.com."
+      },
+      {
+        "text": "The emulator",
+        "correct": false,
+        "why": "prod sends nothing to the emulator."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4f4yst9",
+    "version": 1,
+    "section": "more-than-one-account",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With impersonation working for real, what would the audit log of a production change show?",
+    "hint": "Two identities.",
+    "choices": [
+      {
+        "text": "Only deployer@, hiding the person",
+        "correct": false,
+        "why": "The delegation is recorded too."
+      },
+      {
+        "text": "Only the engineer's own account",
+        "correct": false,
+        "why": "The call was made as deployer@."
+      },
+      {
+        "text": "Nothing, since gcloud made the call",
+        "correct": false,
+        "why": "gcloud is a client; the identities are recorded."
+      },
+      {
+        "text": "Both, the account and the person",
+        "correct": true,
+        "why": "Right. deployer@ acted; the engineer's account is recorded as the one that impersonated it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv1bzt6v",
+    "version": 1,
+    "section": "more-than-one-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An engineer has a work account and a break-glass account. How does gcloud keep them apart?",
+    "hint": "Credentials and configurations are apart.",
+    "choices": [
+      {
+        "text": "A separate gcloud installation for each",
+        "correct": false,
+        "why": "One installation holds many credentials."
+      },
+      {
+        "text": "By core/account per configuration",
+        "correct": true,
+        "why": "Right. core/account in a configuration says which stored credential it uses."
+      },
+      {
+        "text": "It cannot; only one account at a time",
+        "correct": false,
+        "why": "Several credentials can be stored at once."
+      },
+      {
+        "text": "By project: each project has its own login",
+        "correct": false,
+        "why": "Accounts are not stored per project."
+      }
+    ]
+  },
+  {
+    "id": "ex-80xnrwkm",
+    "version": 1,
+    "section": "more-than-one-account",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What are the application default credentials that `gcloud auth application-default login` stores for?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "Programs, not gcloud itself",
+        "correct": true,
+        "why": "Right. Client libraries find them; gcloud uses its own credentials."
+      },
+      {
+        "text": "gcloud's own commands",
+        "correct": false,
+        "why": "gcloud keeps its credentials apart."
+      },
+      {
+        "text": "The Cloud Console",
+        "correct": false,
+        "why": "The console signs in through the browser."
+      },
+      {
+        "text": "Terraform state encryption",
+        "correct": false,
+        "why": "They are credentials, not keys for state."
+      }
+    ]
+  },
+  {
+    "id": "ex-98wsg0js",
+    "version": 1,
+    "section": "format-and-filter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `name.basename()` do in `--format=\"table(name.basename(), labels.team)\"`?",
+    "hint": "A transform.",
+    "choices": [
+      {
+        "text": "Sorts the table by name",
+        "correct": false,
+        "why": "Sorting is --sort-by."
+      },
+      {
+        "text": "Filters out topics with no name",
+        "correct": false,
+        "why": "Filtering is --filter."
+      },
+      {
+        "text": "Keeps the part after the last slash",
+        "correct": true,
+        "why": "Right. projects/planner-dev/topics/orders becomes orders."
+      },
+      {
+        "text": "Prints the project of each topic",
+        "correct": false,
+        "why": "That would be another part of the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-fh5g8ekj",
+    "version": 1,
+    "section": "format-and-filter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which flag lists the topics that carry no `team` label at all?",
+    "hint": "Has, negated.",
+    "choices": [
+      {
+        "text": "--filter=\"labels.team=\"",
+        "correct": false,
+        "why": "That compares with an empty value, not absence."
+      },
+      {
+        "text": "--filter=\"NOT labels.team:*\"",
+        "correct": true,
+        "why": "Right. `:*` means has the field, and NOT turns it round."
+      },
+      {
+        "text": "--format=\"value(labels.team)\"",
+        "correct": false,
+        "why": "A format shapes output; it removes no rows."
+      },
+      {
+        "text": "--limit=0",
+        "correct": false,
+        "why": "That limits the count, not the content."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s22wy4t",
+    "version": 1,
+    "section": "format-and-filter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a script that parses gcloud's default table fragile?",
+    "hint": "Whose choice is the table?",
+    "choices": [
+      {
+        "text": "Tables are slower to print",
+        "correct": false,
+        "why": "Speed is not the problem."
+      },
+      {
+        "text": "Tables omit labels",
+        "correct": false,
+        "why": "A table can show labels when asked."
+      },
+      {
+        "text": "Tables are only printed in English",
+        "correct": false,
+        "why": "Language is not what breaks scripts here."
+      },
+      {
+        "text": "Its layout is not a contract",
+        "correct": true,
+        "why": "Right. The default is somebody else's display; a format the script names is its contract."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9rqnb9b",
+    "version": 1,
+    "section": "format-and-filter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `--filter` on a list command whose API cannot filter by that field still returns the right topics. What did it cost?",
+    "hint": "Where was it applied?",
+    "choices": [
+      {
+        "text": "Nothing; every API filters every field",
+        "correct": false,
+        "why": "Not every API does, which is why gcloud filters too."
+      },
+      {
+        "text": "An extra charge per filtered row",
+        "correct": false,
+        "why": "Filtering is not billed per row."
+      },
+      {
+        "text": "It returned a page of results only",
+        "correct": false,
+        "why": "gcloud pages through the list."
+      },
+      {
+        "text": "Fetching the whole list",
+        "correct": true,
+        "why": "Right. gcloud sends the API what it filters, and applies the rest itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kyqks5g",
+    "version": 1,
+    "section": "format-and-filter",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many topics did `--filter=\"labels.team=planner\"` return?",
+    "hint": "orders and invoices.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qdt4g6bv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the places gcloud looks for a property in order, the first one that wins at the top.",
+    "hint": "Most specific first.",
+    "items": [
+      "a flag on the command",
+      "an environment variable",
+      "the configuration it runs with",
+      "nothing: it asks or refuses"
+    ],
+    "trap": "Putting the configuration above the variable is the slip: CLOUDSDK_CORE_PROJECT overrides any configuration, which is how one command is pointed elsewhere without editing one."
+  },
+  {
+    "id": "ex-y75py8z0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner wants a script to delete every topic in `planner-dev` with no team label, and to be safe if gcloud's table changes. Which pipeline fits?",
+    "hint": "value(), not the table.",
+    "choices": [
+      {
+        "text": "Parse the default table with awk for empty TEAM cells",
+        "correct": false,
+        "why": "That breaks the day the table gains a column."
+      },
+      {
+        "text": "A filter, value(name), and a delete loop",
+        "correct": true,
+        "why": "Right. The filter chooses the rows and value(name) gives one name per line."
+      },
+      {
+        "text": "Delete all topics and recreate the labelled ones",
+        "correct": false,
+        "why": "That destroys what it meant to keep."
+      },
+      {
+        "text": "Use --format=json and delete the first result",
+        "correct": false,
+        "why": "The first result is not the unlabelled one."
+      }
+    ]
+  }
+]

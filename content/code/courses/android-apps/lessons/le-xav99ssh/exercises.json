@@ -1,0 +1,630 @@
+[
+  {
+    "id": "ex-ge2dqrt3",
+    "version": 1,
+    "section": "the-wire",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson read the JSON into a `SessionDto` instead of straight into `StudySession`?",
+    "hint": "Which of the two changes when the server changes?",
+    "choices": [
+      {
+        "text": "So a server change stops at the DTO",
+        "correct": true,
+        "why": "Right: the screens read the model, and only the DTO and `toDomain()` know the wire."
+      },
+      {
+        "text": "Because a data class cannot carry `@Serializable`",
+        "correct": false,
+        "why": "`SessionDto` is itself a data class with `@Serializable`."
+      },
+      {
+        "text": "Because Retrofit refuses to return a domain model",
+        "correct": false,
+        "why": "Retrofit returns whatever the converter can read; the split is a design choice, not a rule of the library."
+      },
+      {
+        "text": "To make the JSON smaller on the wire",
+        "correct": false,
+        "why": "The DTO is a Kotlin class; it changes nothing about the bytes the server sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-etzt3khq",
+    "version": 1,
+    "section": "the-wire",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each mismatch between the JSON and the model to the tool the lesson uses for it.",
+    "hint": "Sections 03, 04 and 05.",
+    "pairs": [
+      {
+        "left": "`course_id` against `courseId`",
+        "right": "`@SerialName`"
+      },
+      {
+        "left": "a date sent as text",
+        "right": "`LocalDateSerializer`"
+      },
+      {
+        "left": "a key the app has never seen",
+        "right": "`ignoreUnknownKeys`"
+      }
+    ],
+    "right_distractors": [
+      "`encodeDefaults`"
+    ]
+  },
+  {
+    "id": "ex-yapht81f",
+    "version": 1,
+    "section": "kotlinx-serialization",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The serialization plugin is removed from the build file. What happens to `Json.decodeFromString<SessionDto>(text)`?",
+    "hint": "The annotation alone writes nothing.",
+    "choices": [
+      {
+        "text": "The build fails because `@Serializable` is unknown without the plugin",
+        "correct": false,
+        "why": "The annotation comes from the library, which is still a dependency, so it compiles."
+      },
+      {
+        "text": "It compiles, then fails at run time: no serializer found",
+        "correct": true,
+        "why": "Right: no serializer was generated, and the call looks for one at run time."
+      },
+      {
+        "text": "It falls back to reflection, more slowly",
+        "correct": false,
+        "why": "kotlinx.serialization has no reflection fallback; that is Moshi's other mode."
+      },
+      {
+        "text": "It returns an empty `SessionDto`",
+        "correct": false,
+        "why": "There is no empty value to return; `id` and `minutes` have no defaults."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz2w86jt",
+    "version": 1,
+    "section": "kotlinx-serialization",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The round trip decoded `\"done\": false` and wrote the object back. Why is `done` missing from the output?",
+    "hint": "Compare the value with the one in the class.",
+    "choices": [
+      {
+        "text": "`false` is never written by JSON libraries",
+        "correct": false,
+        "why": "`false` is a valid JSON value and is written when asked to be."
+      },
+      {
+        "text": "A `Boolean` property is skipped unless annotated",
+        "correct": false,
+        "why": "The type does not matter; the default does."
+      },
+      {
+        "text": "It equals the default, and defaults are omitted",
+        "correct": true,
+        "why": "Right: `done` defaults to `false`, so the encoder omitted it."
+      },
+      {
+        "text": "The test printed the DTO before the field was read",
+        "correct": false,
+        "why": "The first line shows `done=false`, read correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xn7jp3z",
+    "version": 1,
+    "section": "kotlinx-serialization",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The plugin generates a nested class called `SessionDto$$___` that reads and writes each field.",
+    "hint": "`find` listed three class files.",
+    "blanks": [
+      {
+        "accept": [
+          "serializer"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pmsdyfm8",
+    "version": 1,
+    "section": "when-the-server-changes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the default `Json`, the server adds a key `room` to a session. What does the app get?",
+    "hint": "The first strict line.",
+    "choices": [
+      {
+        "text": "The session, with `room` dropped",
+        "correct": false,
+        "why": "That is what `ignoreUnknownKeys = true` gives, not the default."
+      },
+      {
+        "text": "A `JsonDecodingException` naming the unknown key",
+        "correct": true,
+        "why": "Right: the default refuses the whole session at `Encountered an unknown key 'room'`."
+      },
+      {
+        "text": "A `MissingFieldException`",
+        "correct": false,
+        "why": "Nothing is missing; something extra arrived."
+      },
+      {
+        "text": "The session, with `room` kept in a map of extras",
+        "correct": false,
+        "why": "A DTO has no place for keys it does not declare."
+      }
+    ]
+  },
+  {
+    "id": "ex-468vjtx7",
+    "version": 1,
+    "section": "when-the-server-changes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server starts sending `\"done\": null` and `\"minutes\": null`. With `coerceInputValues = true`, what does the app get?",
+    "hint": "Coercion needs a default to coerce to.",
+    "choices": [
+      {
+        "text": "A session with `done = false` and `minutes = 0`",
+        "correct": false,
+        "why": "`minutes` has no default, and the library does not invent zero."
+      },
+      {
+        "text": "A session with both fields `null`",
+        "correct": false,
+        "why": "Both properties are non-null types; neither can hold `null`."
+      },
+      {
+        "text": "An error, as `minutes` has no default",
+        "correct": true,
+        "why": "Right: coercion turned `done` into `false` in the third test and left `minutes` failing."
+      },
+      {
+        "text": "The session, because `coerceInputValues` also ignores unknown keys",
+        "correct": false,
+        "why": "The two settings are independent, and neither key here is unknown."
+      }
+    ]
+  },
+  {
+    "id": "ex-g65g8sqx",
+    "version": 1,
+    "section": "when-the-server-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson put every setting in one shared `plannerJson` instead of writing `Json { ... }` where it is needed?",
+    "hint": "Two instances, two sets of rules.",
+    "choices": [
+      {
+        "text": "Building a `Json` is slow enough to matter on every screen",
+        "correct": false,
+        "why": "The lesson's argument is consistency, not speed."
+      },
+      {
+        "text": "So that every part of the app reads JSON by the same rules",
+        "correct": true,
+        "why": "Right: two instances built separately disagree, about unknown keys for example."
+      },
+      {
+        "text": "Retrofit accepts only a top-level `val` as a converter",
+        "correct": false,
+        "why": "Any `Json` instance can make a converter."
+      },
+      {
+        "text": "`ignoreUnknownKeys` can be set once per process",
+        "correct": false,
+        "why": "Every instance carries its own settings; that is the problem the shared one avoids."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy2m7vnn",
+    "version": 1,
+    "section": "when-the-server-changes",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the payloads of `ServerChangesTest` from the one the default `Json` reads to the one no setting in the lesson rescues.",
+    "hint": "One works with no setting, one needs `ignoreUnknownKeys`, one is a lost cause.",
+    "items": [
+      "no `done`",
+      "an extra `room` key",
+      "no `minutes`"
+    ]
+  },
+  {
+    "id": "ex-vzfba9nr",
+    "version": 1,
+    "section": "dates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the build fail when `SessionDto.date` became a `LocalDate`?",
+    "hint": "Whose type is `LocalDate`?",
+    "choices": [
+      {
+        "text": "`LocalDate` needs Android 26, above the module's minimum",
+        "correct": false,
+        "why": "`minSdk` is 26, and the error was about serializers, not API levels."
+      },
+      {
+        "text": "The plugin has no serializer for Java's `LocalDate`",
+        "correct": true,
+        "why": "Right: `Serializer was not found for type 'LocalDate'`, at the file and line."
+      },
+      {
+        "text": "A data class cannot hold a `java.time` value",
+        "correct": false,
+        "why": "`StudySession` holds one already."
+      },
+      {
+        "text": "JSON has no date type, so dates cannot be read",
+        "correct": false,
+        "why": "A date travels as a string, which the serializer of this section reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6tmbpj6",
+    "version": 1,
+    "section": "dates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The server sends `\"date\": \"27/10/2026\"`. What does `LocalDateSerializer` do with it?",
+    "hint": "`LocalDate.parse` accepts one form.",
+    "choices": [
+      {
+        "text": "Reads it as 27 October, guessing the order",
+        "correct": false,
+        "why": "Nothing guesses: `LocalDate.parse` takes ISO 8601 only."
+      },
+      {
+        "text": "Stores the text unchanged in `date`",
+        "correct": false,
+        "why": "`date` is a `LocalDate`; there is no text to store."
+      },
+      {
+        "text": "Fails at index 0",
+        "correct": true,
+        "why": "Right: a malformed date is an error, never a wrong date."
+      },
+      {
+        "text": "Uses today's date instead",
+        "correct": false,
+        "why": "A silent substitute is exactly what the serializer avoids."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2rh17vr",
+    "version": 1,
+    "section": "kotlinx-serialization",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many class files did `find` list for `SessionDto` once the plugin had compiled it?",
+    "hint": "The class, its companion and one more.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-237y904m",
+    "version": 1,
+    "section": "dates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Today `toDomain()` copies five fields one to one. When does it earn its place?",
+    "hint": "Imagine the server renaming a field.",
+    "choices": [
+      {
+        "text": "Only once the app has two screens",
+        "correct": false,
+        "why": "The number of screens is not what changes the mapping."
+      },
+      {
+        "text": "When the wire and the model stop matching",
+        "correct": true,
+        "why": "Right: the DTO and this function change, and nothing else does."
+      },
+      {
+        "text": "Never; it should be deleted until it does something",
+        "correct": false,
+        "why": "Deleting it puts the DTO back into every screen, which is what section 02 avoids."
+      },
+      {
+        "text": "When Moshi replaces kotlinx.serialization in the app",
+        "correct": false,
+        "why": "A library swap changes the DTO's annotations, not the mapping's purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyx2pqm1",
+    "version": 1,
+    "section": "moshi",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which default differs between Moshi and kotlinx.serialization in this lesson's tests?",
+    "hint": "Three of the four payloads gave the same answer.",
+    "choices": [
+      {
+        "text": "A missing field with no default",
+        "correct": false,
+        "why": "Both libraries refuse it: `MissingFieldException` and `Required value 'minutes' missing`."
+      },
+      {
+        "text": "A key the class does not declare",
+        "correct": true,
+        "why": "Right: Moshi ignores `room` by default and kotlinx.serialization refuses it."
+      },
+      {
+        "text": "A `null` for an `Int`",
+        "correct": false,
+        "why": "Both refuse it, each in its own words."
+      },
+      {
+        "text": "A missing field that has a default",
+        "correct": false,
+        "why": "Both took `done = false`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ff0h7ng0",
+    "version": 1,
+    "section": "moshi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `ksp(libs.moshi.codegen)` add to the build?",
+    "hint": "Look in `app/build/generated/ksp`.",
+    "choices": [
+      {
+        "text": "A generator that writes the adapter at build time",
+        "correct": true,
+        "why": "Right: the adapter is ordinary Kotlin in the build directory."
+      },
+      {
+        "text": "Moshi's runtime library to the app",
+        "correct": false,
+        "why": "That is `implementation(libs.moshi)`; `ksp(...)` only runs at build time."
+      },
+      {
+        "text": "A reflection fallback for classes without `@JsonClass`",
+        "correct": false,
+        "why": "Reflection is a separate artifact, `moshi-kotlin`, which this lesson does not use."
+      },
+      {
+        "text": "The compiler plugin that `@Serializable` needs",
+        "correct": false,
+        "why": "That is the serialization plugin in `plugins { }`, a different tool."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccsj3ynt",
+    "version": 1,
+    "section": "moshi",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kotlinx.serialization piece to its Moshi counterpart.",
+    "hint": "The table at the end of section 06.",
+    "pairs": [
+      {
+        "left": "`@SerialName(\"course_id\")`",
+        "right": "`@Json(name = \"course_id\")`"
+      },
+      {
+        "left": "`@Serializable`",
+        "right": "`@JsonClass(generateAdapter = true)`"
+      },
+      {
+        "left": "`KSerializer<LocalDate>`",
+        "right": "an object with `@ToJson` and `@FromJson`"
+      }
+    ],
+    "right_distractors": [
+      "`Moshi.Builder().build()`"
+    ]
+  },
+  {
+    "id": "ex-sq85rbqe",
+    "version": 1,
+    "section": "the-converter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The converter test passed and printed `Method isLoggable in android.util.Log not mocked`. Where did the exception come from?",
+    "hint": "A unit test compiles against a stub of Android.",
+    "choices": [
+      {
+        "text": "A bug in the planner's `PlannerApi`",
+        "correct": false,
+        "why": "The stack trace starts in OkHttp's platform detection, before any planner code ran."
+      },
+      {
+        "text": "A stub `Log` method that throws in unit tests",
+        "correct": true,
+        "why": "Right: `isReturnDefaultValues = true` makes those stubs return defaults instead."
+      },
+      {
+        "text": "MockWebServer cannot run without an emulator",
+        "correct": false,
+        "why": "It ran and answered: the test printed both sessions."
+      },
+      {
+        "text": "The `room` key made the converter log a warning",
+        "correct": false,
+        "why": "`plannerJson` ignores `room` silently; the trace is from OkHttp starting up."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjh25m2v",
+    "version": 1,
+    "section": "the-converter",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The test's two sessions add up to how many minutes?",
+    "hint": "45 and 90.",
+    "value": 135,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-p8p2g67p",
+    "version": 1,
+    "section": "the-converter",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The line that stops stub methods throwing in a unit test is `unitTests.___ = true`.",
+    "hint": "Section 07's second build file.",
+    "blanks": [
+      {
+        "accept": [
+          "isReturnDefaultValues"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-djyjgs0r",
+    "version": 1,
+    "section": "the-converter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate builds the Retrofit converter from a fresh `Json` instead of `plannerJson`. The server adds a key. What breaks?",
+    "hint": "Which settings does a fresh `Json` have?",
+    "choices": [
+      {
+        "text": "Nothing, since Retrofit ignores unknown keys itself",
+        "correct": false,
+        "why": "Retrofit hands the body to the converter and applies no rules of its own."
+      },
+      {
+        "text": "Only the tests, since phones use a different converter",
+        "correct": false,
+        "why": "The converter is the same code on a phone and in a test."
+      },
+      {
+        "text": "Every request whose response carries the new key",
+        "correct": true,
+        "why": "Right: the default `Json` refuses unknown keys, so each such response becomes an exception."
+      },
+      {
+        "text": "The build, at compile time",
+        "correct": false,
+        "why": "A key in a response is unknown until the response arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-eb4cc1s1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would make a `StudySession` reach the screen with a wrong value, silently? Choose all that apply.",
+    "hint": "An exception is loud; a guess is not.",
+    "choices": [
+      {
+        "text": "A `LocalDate` serializer that returns today's date when parsing fails",
+        "correct": true,
+        "why": "Yes: the week's total would count the session in the wrong week, and nothing would say so."
+      },
+      {
+        "text": "A DTO with no default for `minutes`",
+        "correct": false,
+        "why": "No: a missing `minutes` throws, which is loud."
+      },
+      {
+        "text": "A DTO declaring `val minutes: Int = 0`",
+        "correct": true,
+        "why": "Yes: a session the server sent without a length would show zero minutes."
+      },
+      {
+        "text": "`ignoreUnknownKeys = true`",
+        "correct": false,
+        "why": "No: it drops keys the app does not use, and every value the app reads is still checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-a344348r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The server renames `course_id` to `courseId`. With the lesson's code, what is the least change, and where?",
+    "hint": "Which annotation carries the server's name?",
+    "choices": [
+      {
+        "text": "Remove `@SerialName(\"course_id\")` from `SessionDto`",
+        "correct": true,
+        "why": "Right: the Kotlin name now matches the wire, and the model and screens do not move."
+      },
+      {
+        "text": "Rename `StudySession.courseId`",
+        "correct": false,
+        "why": "The model already says `courseId`, and it should not follow the server anyway."
+      },
+      {
+        "text": "Set `ignoreUnknownKeys = false`",
+        "correct": false,
+        "why": "That would make the app stricter and fix nothing; `course_id` would then be missing."
+      },
+      {
+        "text": "Change `toDomain()` to read the new name",
+        "correct": false,
+        "why": "`toDomain()` reads the DTO's Kotlin property, which keeps its name."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz683sss",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps a response goes through, from the network to the screen.",
+    "hint": "The converter comes before any Kotlin object exists.",
+    "items": [
+      "OkHttp receives the bytes of the body",
+      "the converter decodes them with `plannerJson`",
+      "`PlannerApi.sessions()` returns `List<SessionDto>`",
+      "`toDomain()` turns each DTO into a `StudySession`"
+    ]
+  }
+]

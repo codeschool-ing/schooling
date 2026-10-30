@@ -1,0 +1,667 @@
+[
+  {
+    "id": "ex-xrg0tywv",
+    "version": 1,
+    "section": "environment-and-app",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's order API and its nightly report job are put in one Container Apps environment. Which of these do they share because of it? Choose all that apply.",
+    "hint": "An environment is a boundary; think about what a boundary is drawn around.",
+    "choices": [
+      {
+        "text": "A virtual network",
+        "correct": true,
+        "why": "Apps and jobs in one environment share its network, which is why they can call each other inside it."
+      },
+      {
+        "text": "One revision history, so a new report image is a revision of the shop",
+        "correct": false,
+        "why": "Revisions belong to one app; the report job has none of the shop's."
+      },
+      {
+        "text": "A log destination",
+        "correct": true,
+        "why": "Everything in the environment writes to the same place, a Log Analytics workspace by default."
+      },
+      {
+        "text": "The shop's scale rule, applied to the report as well",
+        "correct": false,
+        "why": "A scale rule is in one app's template and counts only that app's work."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9mv4bbe",
+    "version": 1,
+    "section": "environment-and-app",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop needs scale to zero now and may one day need a Dedicated profile for a heavier service. Which environment should it be given?",
+    "hint": "One of the two kinds is labelled legacy.",
+    "choices": [
+      {
+        "text": "A Consumption-only environment, since only that kind scales to zero",
+        "correct": false,
+        "why": "Both kinds have the Consumption profile and scale to zero; Consumption-only is the legacy kind and has no Dedicated profiles."
+      },
+      {
+        "text": "A workload profiles environment",
+        "correct": true,
+        "why": "It is the default, every one comes with the Consumption profile, and Dedicated profiles can be added to it later."
+      },
+      {
+        "text": "Two environments, one per profile, joined by peering",
+        "correct": false,
+        "why": "Different profiles can sit in one workload profiles environment; splitting them buys nothing here."
+      },
+      {
+        "text": "A Dedicated profile from the start, to avoid moving later",
+        "correct": false,
+        "why": "A Dedicated profile is billed per node whether or not the shop is busy, and Dedicated profiles cannot scale to zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqztn2c7",
+    "version": 1,
+    "section": "environment-and-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's app has external ingress with `targetPort: 8080`. On which port does a customer's phone reach it?",
+    "hint": "`targetPort` describes the container, not the caller.",
+    "choices": [
+      {
+        "text": "8080, the port named in the ingress",
+        "correct": false,
+        "why": "8080 is where ingress delivers requests inside, to the container. Callers never see it."
+      },
+      {
+        "text": "443, with port 80 redirected to it by default",
+        "correct": true,
+        "why": "HTTP ingress answers on 443 under its own name and, unless told otherwise, redirects 80 to HTTPS."
+      },
+      {
+        "text": "Whatever port Azure assigns to the environment that day",
+        "correct": false,
+        "why": "The ingress ports are fixed: 80 and 443."
+      },
+      {
+        "text": "80 only, because TLS ends at the container",
+        "correct": false,
+        "why": "TLS is terminated at the ingress, not in the shop, and 443 is the port that serves."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cgx9wqf",
+    "version": 1,
+    "section": "environment-and-app",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The finance export runs as a container app in an environment created with `--internal-only`. Its ingress is set to external. Who can reach it?",
+    "hint": "Two settings: the environment's boundary and the app's place relative to it.",
+    "choices": [
+      {
+        "text": "Anybody on the internet, since external ingress publishes the app to the world",
+        "correct": false,
+        "why": "External publishes the app at the environment's edge, and an internal environment has no public endpoint."
+      },
+      {
+        "text": "Only other apps in the same environment",
+        "correct": false,
+        "why": "That is internal ingress. External ingress puts the app on the environment's internal load balancer as well."
+      },
+      {
+        "text": "Nobody, because the two settings contradict each other",
+        "correct": false,
+        "why": "They do not contradict: it is Microsoft's documented way to keep an app off the internet but on the network."
+      },
+      {
+        "text": "Clients in the connected virtual network, and apps in the environment",
+        "correct": true,
+        "why": "An internal environment answers only on a load balancer inside the network, and external ingress publishes the app there."
+      }
+    ]
+  },
+  {
+    "id": "ex-79m2aj31",
+    "version": 1,
+    "section": "environment-and-app",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A subnet given to a workload profiles environment has to be delegated to `Microsoft.App/___`.",
+    "hint": "The plural of the resource this section's first half is about.",
+    "blanks": [
+      {
+        "accept": [
+          "environments"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t88sjjwk",
+    "version": 1,
+    "section": "scale-rules",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the last 15 seconds, 1,500 requests reached a revision with an HTTP scale rule. What concurrency does Container Apps compute for it?",
+    "hint": "The documentation divides a count over a window by the window's length.",
+    "value": 100,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gg86v5jp",
+    "version": 1,
+    "section": "scale-rules",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A queue rule asks for one replica per 5 messages, with `maxReplicas` 20. One replica is running when 50 messages arrive. How many replicas does the next scaling step bring it to?",
+    "hint": "The step is `min(maxReplicaCount, desiredReplicas, max(4, 2*currentReplicaCount))`.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2nd04jwk",
+    "version": 1,
+    "section": "scale-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A background worker has ingress switched off, no scale rule of its own and `minReplicas: 0`. What happens to it?",
+    "hint": "With no rule, a default applies. Ask what that default counts.",
+    "choices": [
+      {
+        "text": "It runs one replica for ever, because zero needs a rule",
+        "correct": false,
+        "why": "With no rule the default HTTP rule applies, and its minimum is 0."
+      },
+      {
+        "text": "It scales to zero, and nothing will ever start it again",
+        "correct": true,
+        "why": "The default rule counts HTTP requests, and with no ingress none can arrive."
+      },
+      {
+        "text": "It is refused at deployment as an invalid app",
+        "correct": false,
+        "why": "Nothing refuses it; it deploys, goes idle, and stays idle, which is why the documentation warns."
+      },
+      {
+        "text": "It scales on processor load, the fallback for apps without ingress",
+        "correct": false,
+        "why": "There is no such fallback. The default is HTTP, 0 to 10."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdgv27af",
+    "version": 1,
+    "section": "scale-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report service is given a single custom rule on CPU load, with `minReplicas: 0`. Why will it never sit at zero replicas and still wake up?",
+    "hint": "Think about what is measured when nothing is running.",
+    "choices": [
+      {
+        "text": "KEDA's CPU scaler does not reach zero alone",
+        "correct": true,
+        "why": "With no replica running there is no processor load to read, so KEDA allows zero only alongside a scaler of another kind."
+      },
+      {
+        "text": "CPU rules require multiple revision mode, which keeps one replica",
+        "correct": false,
+        "why": "Revision mode has nothing to do with it; the scaler itself is the limit."
+      },
+      {
+        "text": "A minimum of 0 is refused for every custom rule",
+        "correct": false,
+        "why": "Custom rules on a queue scale to zero routinely; the documented limit is specific to CPU and memory."
+      },
+      {
+        "text": "The cool-down period of 300 seconds never ends under load",
+        "correct": false,
+        "why": "The cool-down applies when the last replica goes; the problem is starting again, not stopping."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wqdgdq2",
+    "version": 1,
+    "section": "scale-rules",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting of the shop's scale block to what it decides.",
+    "hint": "Two are limits, two are timings.",
+    "pairs": [
+      {
+        "left": "`minReplicas: 0`",
+        "right": "no usage charges while the revision is idle"
+      },
+      {
+        "left": "`maxReplicas: 10`",
+        "right": "the ceiling for one revision, not for the whole app"
+      },
+      {
+        "left": "`pollingInterval: 30`",
+        "right": "how often KEDA asks an event source, unused by HTTP rules"
+      },
+      {
+        "left": "`cooldownPeriod: 300`",
+        "right": "the wait after the last event before the last replica goes"
+      }
+    ],
+    "right_distractors": [
+      "how long a request may take before the ingress gives up"
+    ]
+  },
+  {
+    "id": "ex-vbwj21az",
+    "version": 1,
+    "section": "revisions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's app is in single revision mode. Which of these changes creates a new revision? Choose all that apply.",
+    "hint": "Ask whether the change is inside `template` or inside `configuration`.",
+    "choices": [
+      {
+        "text": "`SHOP_VERSION` set to `1.1`, same image",
+        "correct": true,
+        "why": "Environment variables are part of the container, in the template."
+      },
+      {
+        "text": "A new value for the registry password secret",
+        "correct": false,
+        "why": "Secrets are application-scope; running revisions keep the old value until restarted."
+      },
+      {
+        "text": "`concurrentRequests` raised from 50 to 80",
+        "correct": true,
+        "why": "Scale rules live in the template, so a new rule is a new revision."
+      },
+      {
+        "text": "Ingress switched from external to internal",
+        "correct": false,
+        "why": "Ingress is configuration and applies to every revision at once."
+      },
+      {
+        "text": "A revision suffix of `v1-2`",
+        "correct": true,
+        "why": "The suffix is part of the template, and naming one is itself a revision-scope change."
+      }
+    ]
+  },
+  {
+    "id": "ex-xv0nnfz0",
+    "version": 1,
+    "section": "revisions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's registry password is rotated and the secret updated. An hour later the running revision still uses the old password. Why?",
+    "hint": "A secret belongs to the app; a revision read it once.",
+    "choices": [
+      {
+        "text": "Secrets take an hour to replicate across the environment",
+        "correct": false,
+        "why": "There is no replication delay; the value is already in the app's configuration."
+      },
+      {
+        "text": "The update made a new revision that has no traffic yet",
+        "correct": false,
+        "why": "A secret change is application-scope and makes no revision at all."
+      },
+      {
+        "text": "It read the secret when it started, and keeps that value",
+        "correct": true,
+        "why": "It sees the new value only when it is restarted or replaced by a new revision."
+      },
+      {
+        "text": "The password must be changed in the template instead",
+        "correct": false,
+        "why": "Secrets are defined in configuration; the template only refers to them by name."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn1we9ja",
+    "version": 1,
+    "section": "revisions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In single revision mode, a new revision of the shop never passes its readiness probe. What do customers see?",
+    "hint": "Traffic moves only when something has happened.",
+    "choices": [
+      {
+        "text": "The old revision, which keeps all the traffic",
+        "correct": true,
+        "why": "Traffic switches only once the new revision is ready, so a failed update leaves the old one serving."
+      },
+      {
+        "text": "Errors until somebody rolls back by hand",
+        "correct": false,
+        "why": "There is nothing to roll back: the traffic never left the old revision."
+      },
+      {
+        "text": "Nine in ten on the old revision, one in ten on the new",
+        "correct": false,
+        "why": "Single mode does not split traffic; that is multiple mode with weights."
+      },
+      {
+        "text": "Nothing, because the old revision was deprovisioned first",
+        "correct": false,
+        "why": "The old revision is deprovisioned only after the new one is ready."
+      }
+    ]
+  },
+  {
+    "id": "ex-087ts7sc",
+    "version": 1,
+    "section": "revisions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A revision is an ___ snapshot of what an app runs: it is never changed, only replaced.",
+    "hint": "The word for something that cannot be modified after it is made.",
+    "blanks": [
+      {
+        "accept": [
+          "immutable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jrs898z9",
+    "version": 1,
+    "section": "revisions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the laptop, an order sent to the container for 1.0 did not appear in 1.1's list. With one revision and `maxReplicas: 10` in Azure, what would the same code do?",
+    "hint": "Ask where `ORDERS` lives.",
+    "choices": [
+      {
+        "text": "Keep one list, because replicas of one revision share memory",
+        "correct": false,
+        "why": "Replicas are separate processes, each with its own memory."
+      },
+      {
+        "text": "Lose orders between replicas, since each one keeps its own list in memory",
+        "correct": true,
+        "why": "An order sent to one replica is missing from the next one's answer; state has to live outside the container."
+      },
+      {
+        "text": "Refuse to scale above one replica while it holds state",
+        "correct": false,
+        "why": "Nothing in Container Apps inspects a process for state; it scales as the rule says."
+      },
+      {
+        "text": "Keep one list as long as session affinity is switched on",
+        "correct": false,
+        "why": "Affinity sends one client to one replica, but a second customer on another replica still sees another list."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9rhq82b",
+    "version": 1,
+    "section": "traffic-splitting",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the shop's canary in order.",
+    "hint": "Nobody but the developers sees the new revision until the second step.",
+    "items": [
+      "Deploy `shop--v1-1` beside `shop--v1-0` with the label `canary` and a weight of 0",
+      "Test it on the label's address",
+      "Set the weights to 90 and 10, and compare the two revisions",
+      "Move to 50 and 50, then to 0 and 100",
+      "Deactivate `shop--v1-0` once going back is no longer needed"
+    ],
+    "trap": "Deactivating the old revision as soon as it reaches 0 removes the one-command way back."
+  },
+  {
+    "id": "ex-m402mbk4",
+    "version": 1,
+    "section": "traffic-splitting",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During the 90/10 split both revisions are active, and each has the shop's scale block with `maxReplicas: 10`. What is the most replicas the app can run at once?",
+    "hint": "The limits are counted per revision.",
+    "value": 20,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-t8pqkbk8",
+    "version": 1,
+    "section": "traffic-splitting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The developers want to try `shop--v1-1` in the real environment before any customer reaches it. What does that take?",
+    "hint": "One mechanism ignores the weights entirely.",
+    "choices": [
+      {
+        "text": "A weight of 1, the smallest a revision can be given",
+        "correct": false,
+        "why": "Even 1 percent sends real customers there, which is what they wanted to avoid."
+      },
+      {
+        "text": "A second environment holding a copy of the app",
+        "correct": false,
+        "why": "That tests another environment, not this one, and the label makes it unnecessary."
+      },
+      {
+        "text": "A label on it, and its own address, at a weight of 0",
+        "correct": true,
+        "why": "A label's address reaches its revision whatever the weights say, including 0."
+      },
+      {
+        "text": "Single revision mode, which tests a revision before switching",
+        "correct": false,
+        "why": "Single mode tests readiness probes, not people, and then moves all the traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hegdyq1",
+    "version": 1,
+    "section": "traffic-splitting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The 90/10 split has been on for a minute. Twenty requests arrived and the canary received none. What does that show?",
+    "hint": "Work out how often none out of twenty happens when everything is right.",
+    "choices": [
+      {
+        "text": "The split is broken, since two were expected",
+        "correct": false,
+        "why": "Two is an expectation, not a promise; none happens about one time in eight."
+      },
+      {
+        "text": "The canary is failing its probes and was taken out",
+        "correct": false,
+        "why": "Nothing here suggests a failure; this is what a small sample does."
+      },
+      {
+        "text": "The weights were silently rounded down to zero",
+        "correct": false,
+        "why": "Nothing rounds a weight; the canary's share is exactly what the file says."
+      },
+      {
+        "text": "Little: none of 20 happens 12% of the time",
+        "correct": true,
+        "why": "0.9 to the power 20 is 0.122, so twenty requests are too few to judge anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7c272qg",
+    "version": 1,
+    "section": "traffic-splitting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a blue/green release do that a canary does not?",
+    "hint": "Compare who uses the new revision at each moment.",
+    "choices": [
+      {
+        "text": "It gives the new revision a share of real customers, rising in steps",
+        "correct": false,
+        "why": "That is the canary: it trusts a few customers at a time."
+      },
+      {
+        "text": "It moves every customer at once, after testing on the label",
+        "correct": true,
+        "why": "The weight goes from 0 to 100 in one change; rolling back is the same change reversed."
+      },
+      {
+        "text": "It needs single revision mode, where labels do not exist",
+        "correct": false,
+        "why": "Blue/green relies on labels and weights, which are multiple-mode tools."
+      },
+      {
+        "text": "It keeps both revisions at 50 percent until one is chosen",
+        "correct": false,
+        "why": "That is an A/B test, not blue/green."
+      }
+    ]
+  },
+  {
+    "id": "ex-133v58t0",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these mistakes in `shop-app.bicep` does the compiler report? Choose all that apply.",
+    "hint": "The compiler knows types and property names, not relations between values.",
+    "choices": [
+      {
+        "text": "`targetPort: '8080'`, a port written as text",
+        "correct": true,
+        "why": "BCP036: an `int` was expected."
+      },
+      {
+        "text": "`minReplicas: 5` with `maxReplicas: 0`",
+        "correct": false,
+        "why": "Both are whole numbers; the compiler never compares one with the other."
+      },
+      {
+        "text": "`concurrentRequests: 50`, a number in `metadata`",
+        "correct": true,
+        "why": "BCP036: metadata values are typed as text."
+      },
+      {
+        "text": "Weights of 90 and 20",
+        "correct": false,
+        "why": "The compiler does not add weights up; only Azure would refuse 110."
+      },
+      {
+        "text": "`activeRevisionsMode: 'Multi'`",
+        "correct": false,
+        "why": "The property is typed as any text, so a misspelling compiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ghdq9n0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bicep build` prints nothing for a file whose revision suffix is `v1.1`. What should you conclude?",
+    "hint": "Separate what the compiler checks from what Azure checks.",
+    "choices": [
+      {
+        "text": "Nothing yet; only Azure checks the characters",
+        "correct": true,
+        "why": "A dot is not allowed in a suffix, and nothing before Azure says so: check the rules yourself."
+      },
+      {
+        "text": "The suffix is valid, since the build had no warnings",
+        "correct": false,
+        "why": "A suffix is typed as text; the compiler checks nothing about its characters."
+      },
+      {
+        "text": "The CLI would catch it before contacting Azure",
+        "correct": false,
+        "why": "Without an account `az containerapp update` stopped at the login, before any check."
+      },
+      {
+        "text": "Dots are turned into dashes when the revision is named",
+        "correct": false,
+        "why": "Nothing rewrites a suffix; the template carries `v1.1` as written."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxepe4wj",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly report should start at 23:30 in São Paulo, three hours behind. As a scheduled job, its cron expression is `30 ___ * * *`.",
+    "hint": "Scheduled jobs read cron in UTC.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "02"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wtcxp4sv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The nightly sales report runs for twenty minutes and exits. In Container Apps, what is it?",
+    "hint": "One of the two kinds of resource stops on purpose.",
+    "choices": [
+      {
+        "text": "A container app with `minReplicas: 0`, woken by a request",
+        "correct": false,
+        "why": "An app is restarted when it exits; the report would run again and again."
+      },
+      {
+        "text": "A revision of the shop, with traffic weight 0",
+        "correct": false,
+        "why": "A revision runs the shop's template; the report is a different program."
+      },
+      {
+        "text": "A Container Apps job, with the Schedule trigger",
+        "correct": true,
+        "why": "A job runs, finishes and stops, and a schedule starts one execution a night."
+      },
+      {
+        "text": "A container app with a queue rule and `maxReplicas: 1`",
+        "correct": false,
+        "why": "Scaling on a queue keeps an app serving; the report has nothing to serve."
+      }
+    ]
+  }
+]

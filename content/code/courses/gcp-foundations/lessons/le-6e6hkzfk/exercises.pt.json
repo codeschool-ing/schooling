@@ -1,0 +1,303 @@
+{
+  "ex-ee3r2f2m": {
+    "prompt": "Onde o Google Cloud guarda a lista das pessoas de uma empresa?",
+    "hint": "Ele confia em outro.",
+    "choices": [
+      {
+        "text": "Na política do IAM de cada projeto",
+        "why": "Políticas nomeiam principals; não guardam contas."
+      },
+      {
+        "text": "Em lugar nenhum",
+        "why": "Isso. O Cloud Identity ou o Workspace guarda as contas; o Google Cloud confia nelas."
+      },
+      {
+        "text": "Na conta de faturamento",
+        "why": "Uma conta de faturamento paga; não guarda pessoas."
+      },
+      {
+        "text": "Na política da organização `iam.allowedPolicyMemberDomains`",
+        "why": "Essa política restringe domínios; não lista ninguém."
+      }
+    ]
+  },
+  "ex-rx615nca": {
+    "prompt": "O que cria o nó da organização no topo da árvore de uma empresa?",
+    "hint": "Começa com um registro de DNS.",
+    "choices": [
+      {
+        "text": "Criar o primeiro projeto com um cartão da empresa",
+        "why": "Um projeto sem organização continua sem, com cartão ou sem."
+      },
+      {
+        "text": "Rodar `gcloud organizations create`",
+        "why": "Nenhum comando assim cria uma; o domínio cria."
+      },
+      {
+        "text": "Vincular uma conta de faturamento a uma pasta",
+        "why": "Pastas só existem sob uma organização, e o faturamento se vincula a projetos."
+      },
+      {
+        "text": "Verificar o domínio que a empresa possui",
+        "why": "Isso. Verificado o domínio, o Google cria a organização para ele."
+      }
+    ]
+  },
+  "ex-33v8fbsj": {
+    "prompt": "Por que a lição chama as contas de super administrador de chaves do ambiente inteiro, se elas não têm papel no IAM?",
+    "hint": "O que um administrador do diretório pode fazer com qualquer conta?",
+    "choices": [
+      {
+        "text": "Elas controlam a conta do Owner",
+        "why": "Isso. Tomar a conta do Owner é tomar o que o Owner tem."
+      },
+      {
+        "text": "Elas são Owner de todo projeto automaticamente",
+        "why": "Elas não têm papel no IAM. O poder vem das contas que controlam."
+      },
+      {
+        "text": "Elas pagam a fatura de todo projeto",
+        "why": "O faturamento é separado do diretório."
+      },
+      {
+        "text": "Elas podem levantar qualquer política da organização",
+        "why": "Isso exige o papel de administrador de políticas, que é IAM."
+      }
+    ]
+  },
+  "ex-1hzvqrc3": {
+    "prompt": "Um terceirizado sai. O diretório suspende a conta dele. O que acontece com os papéis concedidos a ela no Google Cloud?",
+    "hint": "Quem decide se a conta pode entrar?",
+    "choices": [
+      {
+        "text": "Continuam funcionando até cada política ser editada",
+        "why": "Editar as políticas é arrumação; a suspensão já encerrou o acesso."
+      },
+      {
+        "text": "Passam para o gestor do terceirizado",
+        "why": "Papéis nunca passam de um principal a outro sozinhos."
+      },
+      {
+        "text": "Param de funcionar na hora",
+        "why": "Isso. Uma conta suspensa não entra, então nenhuma concessão a ela pode ser usada."
+      },
+      {
+        "text": "São apagados depois de trinta dias",
+        "why": "Esse relógio não existe; o acesso termina com a suspensão."
+      }
+    ]
+  },
+  "ex-ngxca6qg": {
+    "prompt": "Ligue cada produto ao que ele dá a uma empresa.",
+    "hint": "Dois dão contas, um acrescenta ferramentas de escritório.",
+    "pairs": [
+      {
+        "left": "Cloud Identity Free",
+        "right": "contas e grupos, sem custo"
+      },
+      {
+        "left": "Cloud Identity Premium",
+        "right": "o mesmo, mais gestão de dispositivos"
+      },
+      {
+        "left": "Google Workspace",
+        "right": "o mesmo, mais Gmail e Drive"
+      }
+    ],
+    "right_distractors": [
+      "papéis em todo projeto"
+    ]
+  },
+  "ex-txrc4wy1": {
+    "prompt": "No `groups.tf`, quem é o pai do grupo `planner-oncall`?",
+    "hint": "Grupos pertencem à empresa.",
+    "choices": [
+      {
+        "text": "O projeto `planner-dev`",
+        "why": "Grupos moram no diretório, não em projetos."
+      },
+      {
+        "text": "A pasta `production`",
+        "why": "Pastas guardam projetos, nunca grupos."
+      },
+      {
+        "text": "O diretório, `customers/C01abcd23`",
+        "why": "Isso. Um grupo pertence ao diretório, e por isso sobrevive a qualquer projeto."
+      },
+      {
+        "text": "A conta de faturamento da organização",
+        "why": "O faturamento não tem nada a ver com grupos."
+      }
+    ]
+  },
+  "ex-hf47n540": {
+    "prompt": "O nome de exibição do grupo muda de `planner on-call` para `Planner on-call rota`. O que acontece com as concessões do IAM que o nomeiam?",
+    "hint": "As políticas nomeiam o grupo por quê?",
+    "choices": [
+      {
+        "text": "Nada; o que vale é o endereço",
+        "why": "Isso. O `group:planner-oncall@example.com` é o id; o nome de exibição é um rótulo."
+      },
+      {
+        "text": "Todas quebram até serem atualizadas",
+        "why": "Isso aconteceria se o endereço mudasse, não o nome de exibição."
+      },
+      {
+        "text": "Passam para um grupo novo com o nome novo",
+        "why": "Nenhum grupo novo é criado por uma renomeação."
+      },
+      {
+        "text": "Expiram depois de trinta dias",
+        "why": "Concessões não expiram por uma renomeação."
+      }
+    ]
+  },
+  "ex-f3k7vmz3": {
+    "prompt": "Um Owner de projeto quer aplicar o `groups.tf` e se pôr no `break-glass`. Por que o Owner não deveria bastar?",
+    "hint": "De quem é a API do Cloud Identity?",
+    "choices": [
+      {
+        "text": "O Owner não pode rodar o Terraform",
+        "why": "O Terraform é um cliente; qualquer um pode rodá-lo. A questão é o que a API permite."
+      },
+      {
+        "text": "Grupos só podem ser criados no console",
+        "why": "A API do Cloud Identity os cria, e é isso que o arquivo usa."
+      },
+      {
+        "text": "`break-glass` é um nome reservado",
+        "why": "Nada o reserva; a proteção é quem pode mudar participações."
+      },
+      {
+        "text": "Exige um papel do diretório, não do IAM",
+        "why": "Isso. Mantê-la separada impede donos de projeto de se promoverem a grupos de emergência."
+      }
+    ]
+  },
+  "ex-ej6np7f8": {
+    "prompt": "Quantos recursos o plano do `groups.tf` adiciona?",
+    "hint": "Um grupo e uma participação."
+  },
+  "ex-fyfdvv5r": {
+    "prompt": "Em que sentido o Google Cloud Directory Sync copia usuários e grupos?",
+    "hint": "Que diretório continua sendo a fonte da verdade?",
+    "choices": [
+      {
+        "text": "Do Cloud Identity para o diretório da empresa",
+        "why": "Isso faria da cópia do Google a verdade, o oposto da intenção."
+      },
+      {
+        "text": "Para o Cloud Identity, num sentido só",
+        "why": "Isso. Num sentido só, para o diretório da empresa continuar sendo a verdade."
+      },
+      {
+        "text": "Nos dois sentidos, mesclando mudanças",
+        "why": "O GCDS é de mão única de propósito."
+      },
+      {
+        "text": "Direto para as políticas do IAM",
+        "why": "Ele copia objetos do diretório; nunca toca no IAM."
+      }
+    ]
+  },
+  "ex-6zh86b27": {
+    "prompt": "Com sincronização mais single sign-on pelo Entra ID, quem confere a senha da Ana?",
+    "hint": "O single sign-on manda o login para algum lugar.",
+    "choices": [
+      {
+        "text": "O Entra ID",
+        "why": "Isso. O Google vê `ana@example.com` como sempre e nunca vê a senha."
+      },
+      {
+        "text": "O Google, com uma senha copiada",
+        "why": "O single sign-on é exatamente o que mantém a senha no provedor da empresa."
+      },
+      {
+        "text": "Ninguém; single sign-on dispensa senha",
+        "why": "Alguém ainda a confere, uma vez, no provedor de identidade."
+      },
+      {
+        "text": "O Owner do projeto, aprovando o login",
+        "why": "Nenhuma pessoa aprova logins."
+      }
+    ]
+  },
+  "ex-qy4z97zh": {
+    "prompt": "Uma empresa quer o Google Cloud e nada mais do Google, e recusa uma segunda cópia do seu diretório. Que arranjo serve?",
+    "hint": "Cópia nenhuma.",
+    "choices": [
+      {
+        "text": "GCDS com single sign-on",
+        "why": "Isso copia toda conta para o Cloud Identity, a cópia que a empresa recusa."
+      },
+      {
+        "text": "Contas pessoais do Gmail para todo mundo",
+        "why": "Essas pertencem às pessoas, não à empresa, e ninguém consegue suspendê-las."
+      },
+      {
+        "text": "Workforce identity federation",
+        "why": "Isso. Um pool de workforce confia direto no provedor da empresa, e nenhuma conta é copiada."
+      },
+      {
+        "text": "Uma conta de serviço por pessoa",
+        "why": "Contas de serviço são para programas, e não têm senha para entrar."
+      }
+    ]
+  },
+  "ex-dzc08msb": {
+    "prompt": "Antes de escolher um pool de workforce para pessoas, o que uma equipe deve ler?",
+    "hint": "Identidades federadas não são aceitas em todo lugar.",
+    "choices": [
+      {
+        "text": "A lista de preços do Cloud Identity Premium",
+        "why": "Um pool de workforce substitui contas do Cloud Identity; o preço delas não é a questão."
+      },
+      {
+        "text": "Que produtos aceitam pessoas federadas",
+        "why": "Isso. Alguns produtos, quase todos da família do Workspace, não as aceitam."
+      },
+      {
+        "text": "A política de local da organização",
+        "why": "Locais restringem recursos, não quem pode entrar."
+      },
+      {
+        "text": "A lista de providers do registro do Terraform",
+        "why": "O Terraform suporta pools bem; os limites estão nos produtos do Google."
+      }
+    ]
+  },
+  "ex-a09dr9ar": {
+    "prompt": "Ponha em ordem os passos da Ana entrando com sincronização mais single sign-on.",
+    "hint": "A senha vai para a empresa, a identidade para o Google.",
+    "items": [
+      "a Ana abre o console do Google Cloud",
+      "o Google a manda para o Entra ID",
+      "o Entra ID confere a senha e o segundo fator",
+      "o Entra ID diz ao Google quem ela é",
+      "o Google Cloud a trata como `ana@example.com`"
+    ],
+    "trap": "Pôr a conferência da senha antes de o Google mandá-la embora é o deslize: ela só chega ao Entra ID porque o Google a redirecionou."
+  },
+  "ex-knqbwxd1": {
+    "prompt": "A empresa do planner entra com o Entra ID e pretende adotar o Google Workspace no ano que vem. Que arranjo evita uma migração depois?",
+    "hint": "O Workspace precisa de contas de um tipo específico.",
+    "choices": [
+      {
+        "text": "Um pool de workforce agora, e o Workspace por cima",
+        "why": "O Workspace não roda sobre identidades federadas; essa é a migração."
+      },
+      {
+        "text": "Contas pessoais do Gmail até o Workspace chegar",
+        "why": "Essas teriam de ser trocadas depois, e ninguém as suspende enquanto isso."
+      },
+      {
+        "text": "Nenhum diretório até o ano que vem",
+        "why": "Sem um não há organização, e toda lição até aqui precisou dela."
+      },
+      {
+        "text": "Sincronizar, com single sign-on por cima",
+        "why": "Isso. O Workspace precisa de contas do Cloud Identity, então criá-las agora evita mudar depois."
+      }
+    ]
+  }
+}

@@ -1,0 +1,660 @@
+[
+  {
+    "id": "ex-wyh8453m",
+    "version": 1,
+    "section": "the-workflow-definition",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the portal, somebody drags a new step into a workflow in the designer and saves. What did they change?",
+    "hint": "The section calls the designer a view of something.",
+    "choices": [
+      {
+        "text": "A drawing that the service turns into a definition each time a run starts",
+        "correct": false,
+        "why": "Nothing is regenerated per run. The definition is the thing saved, and the drawing is made from it."
+      },
+      {
+        "text": "The workflow definition, a JSON document",
+        "correct": true,
+        "why": "Yes. The designer edits the document, and the code view shows the same document as text."
+      },
+      {
+        "text": "A Bicep file kept by the portal beside the workflow",
+        "correct": false,
+        "why": "Bicep is how this lesson writes the resource. The portal keeps no Bicep; it compiles to the same JSON."
+      },
+      {
+        "text": "A program in C# that the designer generates and compiles",
+        "correct": false,
+        "why": "There is no generated program. Azure runs the definition as it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrf3rh9d",
+    "version": 1,
+    "section": "the-workflow-definition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Get_orders` fails on every retry one morning. `Any_orders` has `\"runAfter\": {\"Get_orders\": [\"Succeeded\"]}`. What happens to `Any_orders`?",
+    "hint": "An action whose predecessor ended in a status it did not list does not run.",
+    "choices": [
+      {
+        "text": "It runs, with an empty body from `Get_orders`, and takes the else branch",
+        "correct": false,
+        "why": "It would need `Failed` in its `runAfter` to run at all; it never evaluates its expression."
+      },
+      {
+        "text": "It waits until the next morning's run, when `Get_orders` succeeds",
+        "correct": false,
+        "why": "Each run is separate. Nothing carries over from one morning to the next."
+      },
+      {
+        "text": "It is marked `Skipped`, and the run ends `Failed`",
+        "correct": true,
+        "why": "Yes. The engine marks the failed action's successors `Skipped`, and a branch that ends in failure fails the run."
+      },
+      {
+        "text": "It is retried with the same policy as `Get_orders`",
+        "correct": false,
+        "why": "A retry policy belongs to the action that has one; `Any_orders` was never attempted."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg8hggcn",
+    "version": 1,
+    "section": "the-workflow-definition",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An alert action should run only when `Get_orders` has failed. It names `Get_orders` with the status `Failed` in its `___` property.",
+    "hint": "The same property gives every action in the lesson its place in the run.",
+    "blanks": [
+      {
+        "accept": [
+          "runAfter",
+          "run after"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nver6x90",
+    "version": 1,
+    "section": "the-workflow-definition",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's run, which of these reached a compiled template exactly as written? Choose all that apply.",
+    "hint": "Look for which builds printed nothing and which printed an error.",
+    "choices": [
+      {
+        "text": "A `runAfter` naming `Get_order`, an action that does not exist",
+        "correct": true,
+        "why": "Yes: `typo.bicep` compiled with no warning. The definition's contents are not checked."
+      },
+      {
+        "text": "The function name `lenght`, in both expressions that used it",
+        "correct": true,
+        "why": "Yes: `grep -c` found it on two lines of `lenght.json`."
+      },
+      {
+        "text": "The string `\"no orders to send\"` written in double quotes",
+        "correct": false,
+        "why": "That one was refused: three errors, exit status 1, and no `quotes.json` at all."
+      },
+      {
+        "text": "The `\\'` inside each expression",
+        "correct": false,
+        "why": "The backslashes are Bicep's escaping and are gone in the template, where a quote is a plain `'`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zg2y5rxe",
+    "version": 1,
+    "section": "the-workflow-definition",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer adds a top-level action `Archive` to the definition with `\"runAfter\": {}`, and leaves `Get_orders` as it is. When does `Archive` run?",
+    "hint": "Two actions now have the same, empty, `runAfter`.",
+    "choices": [
+      {
+        "text": "After `Any_orders`, because it was added below it in the file",
+        "correct": false,
+        "why": "Position in the file decides nothing: the actions are keys of an object."
+      },
+      {
+        "text": "Before `Get_orders`, which then waits for it",
+        "correct": false,
+        "why": "`Get_orders` waits for nothing but the trigger; its own `runAfter` did not change."
+      },
+      {
+        "text": "As soon as the trigger fires, alongside `Get_orders`",
+        "correct": true,
+        "why": "Yes. An empty `runAfter` means after the trigger, and two actions with nothing to wait for both start then."
+      },
+      {
+        "text": "Never, because only one action in a definition may have an empty `runAfter`",
+        "correct": false,
+        "why": "Nothing in the language says so; the true branch of `Any_orders` has its own action with an empty one."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzwck9cn",
+    "version": 1,
+    "section": "connectors-and-triggers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The morning export sends its mail through the Office 365 Outlook connector, a managed one. Where is the connection to finance's mailbox, in a Consumption workflow?",
+    "hint": "`outlook.json` holds it.",
+    "choices": [
+      {
+        "text": "Inside the definition, in the action's `inputs`",
+        "correct": false,
+        "why": "The action only names it, through `@parameters('$connections')`; the connection is elsewhere."
+      },
+      {
+        "text": "In a resource of its own, of type `Microsoft.Web/connections`",
+        "correct": true,
+        "why": "Yes. An API connection is a separate Azure resource, in the same resource group and region as the workflow."
+      },
+      {
+        "text": "In the Bicep parameter file, as a password",
+        "correct": false,
+        "why": "Office 365 signs in with Entra ID. The service keeps tokens, not a password, and nothing of it is in a file."
+      },
+      {
+        "text": "In a `connections.json` file beside the workflow",
+        "correct": false,
+        "why": "That file belongs to built-in connections in a Standard logic app, not to a managed connector in Consumption."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3tb0jrc",
+    "version": 1,
+    "section": "connectors-and-triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`outlook.json` contains `[subscriptionResourceId(...)]` and `daily-orders.json` contains `@body('Get_orders')`. When is each one evaluated?",
+    "hint": "One belongs to Resource Manager, the other to the workflow.",
+    "choices": [
+      {
+        "text": "Both by the Bicep compiler, when it writes the template",
+        "correct": false,
+        "why": "The compiler wrote both into the template as text; it evaluated neither."
+      },
+      {
+        "text": "Both by Resource Manager, at deployment",
+        "correct": false,
+        "why": "Resource Manager evaluates the brackets and passes the `@` strings through untouched."
+      },
+      {
+        "text": "The `@` one once at deployment, the bracketed one on every run",
+        "correct": false,
+        "why": "That is the right pair of moments, given to the wrong expressions."
+      },
+      {
+        "text": "The bracketed one once at deployment, the `@` one on every run",
+        "correct": true,
+        "why": "Yes. ARM expressions are resolved by Resource Manager; workflow expressions by Logic Apps, each time a run reaches them."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxa47k90",
+    "version": 1,
+    "section": "connectors-and-triggers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Consumption workflow starts from a polling trigger that checks a mailbox every 5 minutes, all day, and finds a new message twice. How many trigger checks are billed that day?",
+    "hint": "A check that finds nothing is billed like one that finds something.",
+    "value": 288,
+    "tolerance": 0,
+    "unit": "checks"
+  },
+  {
+    "id": "ex-gd8tqwha",
+    "version": 1,
+    "section": "connectors-and-triggers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need of the shop with the part of a workflow that meets it.",
+    "hint": "One item on the right meets none of them.",
+    "pairs": [
+      {
+        "left": "start at six every morning, São Paulo time",
+        "right": "a Recurrence trigger with `schedule` and `timeZone`"
+      },
+      {
+        "left": "start the moment the warehouse system posts a shipment",
+        "right": "the Request trigger's callback URL"
+      },
+      {
+        "left": "notice new files on a supplier's FTP server",
+        "right": "a polling trigger"
+      },
+      {
+        "left": "survive the API answering 429 for a minute",
+        "right": "a retry policy on the HTTP action"
+      }
+    ],
+    "right_distractors": [
+      "a Compose action"
+    ]
+  },
+  {
+    "id": "ex-b0extzf8",
+    "version": 1,
+    "section": "connectors-and-triggers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Months after it was set up, the morning email stops. In the run history `Get_orders` succeeded and `Send_export` failed with an authorisation error. The person who set up the workflow left the company last week. What is the likely cause?",
+    "hint": "Somebody signed in once, when the connection was made.",
+    "choices": [
+      {
+        "text": "The connection needs authorising again",
+        "correct": true,
+        "why": "Yes. It keeps tokens for whoever signed in, and they went with that person's account; the email stops until somebody authorises the connection again."
+      },
+      {
+        "text": "The Outlook connector throttled the workflow",
+        "correct": false,
+        "why": "Throttling answers 429 and is retried by the policy; it is not an authorisation error."
+      },
+      {
+        "text": "The Recurrence trigger lost its time zone",
+        "correct": false,
+        "why": "The run started and `Get_orders` succeeded, so the trigger did its part."
+      },
+      {
+        "text": "The definition still refers to the old `$connections` value",
+        "correct": false,
+        "why": "The definition names the connection by its resource id, which did not change when the person left."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwxr2gzp",
+    "version": 1,
+    "section": "consumption-and-standard",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `standard.bicep` declare to get a Standard logic app?",
+    "hint": "`jq` printed two resources and their kind.",
+    "choices": [
+      {
+        "text": "A `Microsoft.Logic/workflows` resource with a larger `sku`",
+        "correct": false,
+        "why": "That is Consumption's type, and it has no tier to raise: Standard is a different resource."
+      },
+      {
+        "text": "A function app with a Logic Apps setting in `host.json`",
+        "correct": false,
+        "why": "A Standard logic app is on the Functions runtime, but the file declares a plan and a site, with no `host.json`."
+      },
+      {
+        "text": "A `WS1` plan and a `Microsoft.Web/sites` of kind `functionapp,workflowapp`",
+        "correct": true,
+        "why": "Yes. It is declared the way a web app is: a plan of the Workflow Standard tier and a site on it."
+      },
+      {
+        "text": "A container image of the Logic Apps runtime, and a Container App",
+        "correct": false,
+        "why": "Nothing in the file is a container; the runtime comes with the site."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfdkrfk7",
+    "version": 1,
+    "section": "consumption-and-standard",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a Consumption workflow, a `foreach` loop goes over 50 orders with two actions inside. How many executions does that loop bill?",
+    "hint": "The documentation's example: 10 items with one action is 11.",
+    "value": 101,
+    "tolerance": 0,
+    "unit": "executions"
+  },
+  {
+    "id": "ex-sf1sh2re",
+    "version": 1,
+    "section": "consumption-and-standard",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Tuesday's email was empty. Put the steps of finding out why in order.",
+    "hint": "Start from the list of runs and finish with the evidence.",
+    "items": [
+      "open the workflow's run history",
+      "pick Tuesday's 06:00 run",
+      "see that `No_orders` ran and the true branch was `Skipped`",
+      "open `Get_orders` and read the output it received",
+      "find that the API answered with an empty array"
+    ],
+    "trap": "Which branch ran comes before why: the history shows `Skipped` on the branch first, and the HTTP output explains it."
+  },
+  {
+    "id": "ex-6kmdb06z",
+    "version": 1,
+    "section": "consumption-and-standard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Could the morning export be a stateless workflow in a Standard logic app, to make it cheaper?",
+    "hint": "Look at how it starts.",
+    "choices": [
+      {
+        "text": "Yes, because the run lasts well under the five minutes a stateless run is given",
+        "correct": false,
+        "why": "The duration fits, but the trigger does not."
+      },
+      {
+        "text": "No: it would need a push trigger, and Recurrence is not one",
+        "correct": true,
+        "why": "Yes. The documentation says the Recurrence trigger is available only for stateful workflows."
+      },
+      {
+        "text": "No, because stateless workflows cannot call HTTP endpoints",
+        "correct": false,
+        "why": "They can; what they do not do is poll a `202 Accepted` for the result."
+      },
+      {
+        "text": "Yes, and its run history would be kept for 90 days as well",
+        "correct": false,
+        "why": "A stateless workflow keeps its run details in memory, so there is no history unless it is turned on."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bc1mzrw",
+    "version": 1,
+    "section": "consumption-and-standard",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Monday's run failed in `Export`. On Tuesday you fix the definition, deploy it and resubmit Monday's run from the portal. What does the resubmitted run execute?",
+    "hint": "The documentation lists what a resubmission keeps from the original.",
+    "choices": [
+      {
+        "text": "The fixed definition, with Monday's inputs",
+        "correct": false,
+        "why": "That is what most people expect, and the documentation says otherwise."
+      },
+      {
+        "text": "The fixed definition, with a fresh call to the shop's API",
+        "correct": false,
+        "why": "A resubmission reuses the original run's inputs, and its definition too."
+      },
+      {
+        "text": "Nothing: a failed run cannot be resubmitted",
+        "correct": false,
+        "why": "A finished run, `Failed` included, can be resubmitted in a stateful workflow."
+      },
+      {
+        "text": "Monday's version of the definition, with Monday's inputs",
+        "correct": true,
+        "why": "Yes. The rerun uses the workflow version of the original run, even after an update, so the fix is tested by a new run."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhxjmr4q",
+    "version": 1,
+    "section": "when-code-wins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this course, what can a laptop check about the Consumption workflow in `daily-orders.bicep`?",
+    "hint": "Think of what the misspelt copies showed.",
+    "choices": [
+      {
+        "text": "That every `runAfter` names an action that exists",
+        "correct": false,
+        "why": "`typo.bicep` named one that does not, and compiled clean."
+      },
+      {
+        "text": "The resource, and nothing inside the definition",
+        "correct": true,
+        "why": "Yes. The compiler checks the resource's properties; the definition is a value of any shape to it."
+      },
+      {
+        "text": "That the expressions call functions that exist",
+        "correct": false,
+        "why": "`lenght` reached the template twice."
+      },
+      {
+        "text": "A whole run, against a local copy of the Logic Apps runtime",
+        "correct": false,
+        "why": "Only Standard has a local runtime, through Visual Studio Code, and this course does not use it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj166htk",
+    "version": 1,
+    "section": "when-code-wins",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Consumption workflow writes one line for each order: a `foreach` over the orders with three actions inside. On a day of 1,500 orders, how many executions does the loop bill in that run?",
+    "hint": "Items times actions, plus the loop.",
+    "value": 4501,
+    "tolerance": 0,
+    "unit": "executions"
+  },
+  {
+    "id": "ex-gxf9285a",
+    "version": 1,
+    "section": "when-code-wins",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To try a run without calling the shop's API, an action can be marked to return a mock output instead. The definition keeps those mock outputs under the top-level key `___`.",
+    "hint": "It sits beside `triggers`, `actions` and `parameters`, and its name says the outputs do not change.",
+    "blanks": [
+      {
+        "accept": [
+          "staticResults",
+          "static results"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9sp7fx6h",
+    "version": 1,
+    "section": "when-code-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A workflow and a function are used together. Which division of the work does the lesson describe as common?",
+    "hint": "Each side keeps what it is good at.",
+    "choices": [
+      {
+        "text": "The function runs the schedule and calls the workflow for every record",
+        "correct": false,
+        "why": "That puts the loop on the side that bills per step, which is the arrangement to avoid."
+      },
+      {
+        "text": "The workflow does the logic and the function only sends the email",
+        "correct": false,
+        "why": "Sending mail is what a connector already does; that is the half the workflow is for."
+      },
+      {
+        "text": "A function does the looping step; the workflow keeps the rest",
+        "correct": true,
+        "why": "Yes. The workflow keeps the schedule, the connectors and the history; its Function action calls the function, and a step that would cost thousands of executions is one call."
+      },
+      {
+        "text": "Each runs the whole job, and the cheaper one is kept after a month",
+        "correct": false,
+        "why": "Running a job twice for a month is a comparison, not a division of work."
+      }
+    ]
+  },
+  {
+    "id": "ex-wc4vs2zy",
+    "version": 1,
+    "section": "when-code-wins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each night the shop wants loyalty points worked out for 40,000 customers, with rules the developers change every month and want tested before release. Which fits?",
+    "hint": "Count the steps, and ask whose logic it is.",
+    "choices": [
+      {
+        "text": "A Consumption workflow with a `foreach` over the customers",
+        "correct": false,
+        "why": "Tens of thousands of iterations billed per action, and rules that cannot be tested on a laptop."
+      },
+      {
+        "text": "A stateless Standard workflow, to avoid storing history",
+        "correct": false,
+        "why": "A stateless workflow cannot start on a schedule, and 40,000 records exceed its `foreach` default of 100 items."
+      },
+      {
+        "text": "Code: a timer-triggered function, or Durable Functions",
+        "correct": true,
+        "why": "Yes. The steps are the shop's own logic, the volume is large, and the rules need tests: all three point at code."
+      },
+      {
+        "text": "A Consumption workflow that sends each customer to the HTTP action of a second workflow",
+        "correct": false,
+        "why": "That doubles the workflows and still bills every customer as several executions."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkycf3w5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job with what the lesson would run it on.",
+    "hint": "One item on the right fits none of the jobs.",
+    "pairs": [
+      {
+        "left": "a CSV of the orders mailed to finance each morning",
+        "right": "a Consumption workflow"
+      },
+      {
+        "left": "a workflow that must reach a database inside a VNet",
+        "right": "a Standard logic app"
+      },
+      {
+        "left": "an order process with the shop's own rules, tested in CI",
+        "right": "Durable Functions"
+      },
+      {
+        "left": "the shop's order API, answering requests",
+        "right": "a container"
+      }
+    ],
+    "right_distractors": [
+      "a stateless workflow with a Recurrence trigger"
+    ]
+  },
+  {
+    "id": "ex-0vc3zqsk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A definition gives `Summary` the `runAfter` `{\"Export\": [\"Failed\"]}`. On a morning when `Export` succeeds, what happens to `Summary`?",
+    "hint": "`runAfter` lists the statuses that let an action run.",
+    "choices": [
+      {
+        "text": "It runs, because `Export` finished",
+        "correct": false,
+        "why": "Finishing is not enough: the status has to be one of those listed."
+      },
+      {
+        "text": "It does not run: `Succeeded` is not in its list",
+        "correct": true,
+        "why": "Yes. Only `Failed` lets it run, which is the shape of an alert rather than of a summary."
+      },
+      {
+        "text": "It runs before `Export`, to be ready if it fails",
+        "correct": false,
+        "why": "`runAfter` only ever makes an action wait; it never moves one earlier."
+      },
+      {
+        "text": "`bicep build` refuses the file, since `Failed` is not a status",
+        "correct": false,
+        "why": "`Failed` is one of the four statuses, and the compiler does not read the definition anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-b928tngm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 06:00 the shop's API is down for 90 seconds. `Get_orders` has the lesson's retry policy: fixed, 3 retries, one minute apart. Put what happens in order.",
+    "hint": "The API is back between the first retry and the second.",
+    "items": [
+      "`Every_morning` fires",
+      "the first call of `Get_orders` gets a 503",
+      "a minute later, the first retry gets a 503",
+      "a minute after that, the second retry gets the orders",
+      "`Any_orders` evaluates its expression",
+      "`Export` builds the CSV"
+    ],
+    "trap": "The third retry never happens: the second one succeeded, so `Get_orders` is billed as three executions, not four."
+  },
+  {
+    "id": "ex-py35kzjn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`bicep build daily-orders.bicep` printed nothing and wrote `daily-orders.json`. What does that establish?",
+    "hint": "Separate the resource from the workflow inside it.",
+    "choices": [
+      {
+        "text": "That the workflow will run correctly once deployed",
+        "correct": false,
+        "why": "Nothing in the definition was checked, so the compile says nothing about a run."
+      },
+      {
+        "text": "That Azure has accepted the template",
+        "correct": false,
+        "why": "Nothing was sent to Azure; the compile happened on the laptop, with no subscription."
+      },
+      {
+        "text": "That the resource fits the published type for its API version",
+        "correct": true,
+        "why": "Yes, and only that: `definition` is any value to the compiler, as the misspelt copies showed."
+      },
+      {
+        "text": "That every expression parses, though not that its functions exist",
+        "correct": false,
+        "why": "The expressions are strings to the compiler; it parsed none of them."
+      }
+    ]
+  }
+]

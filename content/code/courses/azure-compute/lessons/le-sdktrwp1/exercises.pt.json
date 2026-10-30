@@ -1,0 +1,446 @@
+{
+  "ex-xrg0tywv": {
+    "prompt": "A API de pedidos da loja e o job do relatório noturno ficam num só ambiente do Container Apps. O que eles compartilham por causa disso? Marque todas as que valem.",
+    "hint": "Um ambiente é uma fronteira; pense no que fica dentro dela.",
+    "choices": [
+      {
+        "text": "Uma rede virtual",
+        "why": "Apps e jobs de um ambiente compartilham a rede dele, e é por isso que conseguem chamar uns aos outros lá dentro."
+      },
+      {
+        "text": "Um só histórico de revisões, de modo que uma imagem nova do relatório vira revisão da loja",
+        "why": "Revisões pertencem a um app; o job do relatório não tem nenhuma das da loja."
+      },
+      {
+        "text": "Um destino de logs",
+        "why": "Tudo no ambiente escreve no mesmo lugar, por padrão um workspace do Log Analytics."
+      },
+      {
+        "text": "A regra de escala da loja, aplicada também ao relatório",
+        "why": "Uma regra de escala fica no template de um app e conta só o trabalho dele."
+      }
+    ]
+  },
+  "ex-t9mv4bbe": {
+    "prompt": "A loja precisa escalar até zero agora e um dia pode precisar de um perfil Dedicated para um serviço mais pesado. Que ambiente ela deve receber?",
+    "hint": "Um dos dois tipos é marcado como legado.",
+    "choices": [
+      {
+        "text": "Um ambiente Consumption-only, já que só esse tipo escala até zero",
+        "why": "Os dois tipos têm o perfil Consumption e escalam até zero; o Consumption-only é o tipo legado e não tem perfis Dedicated."
+      },
+      {
+        "text": "Um ambiente de workload profiles",
+        "why": "É o padrão, todo ambiente desses vem com o perfil Consumption, e perfis Dedicated podem ser somados depois."
+      },
+      {
+        "text": "Dois ambientes, um por perfil, ligados por peering",
+        "why": "Perfis diferentes cabem num só ambiente de workload profiles; separar não compra nada aqui."
+      },
+      {
+        "text": "Um perfil Dedicated desde o início, para não ter de mudar depois",
+        "why": "Um perfil Dedicated é cobrado por nó, com a loja ocupada ou não, e perfis Dedicated não escalam até zero."
+      }
+    ]
+  },
+  "ex-hqztn2c7": {
+    "prompt": "O app da loja tem ingress externo com `targetPort: 8080`. Em que porta o celular de um cliente chega até ele?",
+    "hint": "O `targetPort` descreve o contêiner, não quem chama.",
+    "choices": [
+      {
+        "text": "8080, a porta escrita no ingress",
+        "why": "8080 é onde o ingress entrega as requisições, lá dentro, ao contêiner. Quem chama nunca a vê."
+      },
+      {
+        "text": "443, e a 80 redireciona para ela por padrão",
+        "why": "O ingress HTTP atende na 443, com um nome próprio, e, salvo instrução contrária, redireciona a 80 para HTTPS."
+      },
+      {
+        "text": "A porta que o Azure atribuir ao ambiente naquele dia",
+        "why": "As portas do ingress são fixas: 80 e 443."
+      },
+      {
+        "text": "Só a 80, porque o TLS termina no contêiner",
+        "why": "O TLS termina no ingress, não na loja, e a 443 é a porta que serve."
+      }
+    ]
+  },
+  "ex-5cgx9wqf": {
+    "prompt": "A exportação financeira roda como container app num ambiente criado com `--internal-only`. O ingress dela está como externo. Quem consegue alcançá-la?",
+    "hint": "Duas configurações: a fronteira do ambiente e o lugar do app em relação a ela.",
+    "choices": [
+      {
+        "text": "Qualquer pessoa na internet, já que o ingress externo publica o app para o mundo",
+        "why": "Externo publica o app na borda do ambiente, e um ambiente interno não tem endpoint público."
+      },
+      {
+        "text": "Só outros apps do mesmo ambiente",
+        "why": "Isso é o ingress interno. O ingress externo põe o app também no balanceador interno do ambiente."
+      },
+      {
+        "text": "Ninguém, porque as duas configurações se contradizem",
+        "why": "Não se contradizem: é o jeito documentado pela Microsoft de deixar um app fora da internet e dentro da rede."
+      },
+      {
+        "text": "Clientes na rede virtual ligada a ele, e os apps do ambiente",
+        "why": "Um ambiente interno só atende num balanceador dentro da rede, e o ingress externo publica o app ali."
+      }
+    ]
+  },
+  "ex-79m2aj31": {
+    "prompt": "Uma sub-rede entregue a um ambiente de workload profiles precisa ser delegada a `Microsoft.App/___`.",
+    "hint": "O plural do recurso de que trata a primeira metade da seção, como o Azure escreve.",
+    "blanks": [
+      {
+        "accept": [
+          "environments"
+        ]
+      }
+    ]
+  },
+  "ex-t88sjjwk": {
+    "prompt": "Nos últimos 15 segundos, 1.500 requisições chegaram a uma revisão com regra de escala HTTP. Que concorrência o Container Apps calcula para ela?",
+    "hint": "A documentação divide uma contagem numa janela pela duração da janela."
+  },
+  "ex-gg86v5jp": {
+    "prompt": "Uma regra de fila pede uma réplica a cada 5 mensagens, com `maxReplicas` 20. Há uma réplica rodando quando chegam 50 mensagens. A quantas réplicas o próximo passo de escala a leva?",
+    "hint": "O passo é `min(maxReplicaCount, desiredReplicas, max(4, 2*currentReplicaCount))`."
+  },
+  "ex-2nd04jwk": {
+    "prompt": "Um worker em segundo plano tem o ingress desligado, nenhuma regra de escala própria e `minReplicas: 0`. O que acontece com ele?",
+    "hint": "Sem regra, vale um padrão. Pergunte o que esse padrão conta.",
+    "choices": [
+      {
+        "text": "Roda uma réplica para sempre, porque zero exige uma regra",
+        "why": "Sem regra vale a regra HTTP padrão, e o mínimo dela é 0."
+      },
+      {
+        "text": "Escala até zero, e nada mais vai iniciá-lo",
+        "why": "A regra padrão conta requisições HTTP, e sem ingress nenhuma consegue chegar."
+      },
+      {
+        "text": "É recusado na implantação como app inválido",
+        "why": "Nada o recusa; ele é implantado, fica ocioso e continua ocioso, e é por isso que a documentação alerta."
+      },
+      {
+        "text": "Escala pela carga de processador, o recurso para apps sem ingress",
+        "why": "Esse recurso não existe. O padrão é HTTP, de 0 a 10."
+      }
+    ]
+  },
+  "ex-bdgv27af": {
+    "prompt": "Um serviço de relatórios recebe uma única regra personalizada de carga de CPU, com `minReplicas: 0`. Por que ele nunca vai ficar em zero réplicas e ainda assim acordar?",
+    "hint": "Pense no que se mede quando nada está rodando.",
+    "choices": [
+      {
+        "text": "O scaler de CPU do KEDA não chega a zero sozinho",
+        "why": "Sem réplica rodando não há carga de processador para ler, então o KEDA só permite zero ao lado de um scaler de outro tipo."
+      },
+      {
+        "text": "Regras de CPU exigem o modo de várias revisões, que mantém uma réplica",
+        "why": "O modo de revisão não tem nada a ver; o limite está no próprio scaler."
+      },
+      {
+        "text": "Um mínimo de 0 é recusado em toda regra personalizada",
+        "why": "Regras personalizadas de fila escalam até zero o tempo todo; o limite documentado é próprio de CPU e memória."
+      },
+      {
+        "text": "O período de cool-down de 300 segundos nunca termina sob carga",
+        "why": "O cool-down vale quando sai a última réplica; o problema é voltar a iniciar, não parar."
+      }
+    ]
+  },
+  "ex-9wqdgdq2": {
+    "prompt": "Ligue cada configuração do bloco de escala da loja ao que ela decide.",
+    "hint": "Duas são limites, duas são tempos.",
+    "pairs": [
+      {
+        "left": "`minReplicas: 0`",
+        "right": "nenhuma cobrança de uso enquanto a revisão está ociosa"
+      },
+      {
+        "left": "`maxReplicas: 10`",
+        "right": "o teto de uma revisão, não do app inteiro"
+      },
+      {
+        "left": "`pollingInterval: 30`",
+        "right": "de quanto em quanto tempo o KEDA consulta uma fonte de eventos, sem uso em regras HTTP"
+      },
+      {
+        "left": "`cooldownPeriod: 300`",
+        "right": "a espera depois do último evento antes de sair a última réplica"
+      }
+    ],
+    "right_distractors": [
+      "quanto tempo uma requisição pode levar antes de o ingress desistir"
+    ]
+  },
+  "ex-vbwj21az": {
+    "prompt": "O app da loja está no modo de revisão única. Quais destas mudanças criam uma revisão nova? Marque todas as que valem.",
+    "hint": "Pergunte se a mudança está dentro de `template` ou dentro de `configuration`.",
+    "choices": [
+      {
+        "text": "`SHOP_VERSION` passando a `1.1`, com a mesma imagem",
+        "why": "Variáveis de ambiente fazem parte do contêiner, no template."
+      },
+      {
+        "text": "Um valor novo para o segredo da senha do registro",
+        "why": "Segredos são do escopo da aplicação; revisões em execução ficam com o valor antigo até reiniciar."
+      },
+      {
+        "text": "`concurrentRequests` subindo de 50 para 80",
+        "why": "Regras de escala ficam no template, então uma regra nova é uma revisão nova."
+      },
+      {
+        "text": "O ingress trocado de externo para interno",
+        "why": "O ingress é configuração e vale para todas as revisões ao mesmo tempo."
+      },
+      {
+        "text": "Um sufixo de revisão `v1-2`",
+        "why": "O sufixo faz parte do template, e dar um nome já é uma mudança de escopo de revisão."
+      }
+    ]
+  },
+  "ex-xv0nnfz0": {
+    "prompt": "A senha do registro da loja é trocada e o segredo atualizado. Uma hora depois a revisão em execução ainda usa a senha antiga. Por quê?",
+    "hint": "Um segredo pertence ao app; uma revisão o leu uma vez.",
+    "choices": [
+      {
+        "text": "Segredos levam uma hora para se replicar pelo ambiente",
+        "why": "Não há atraso de replicação; o valor já está na configuração do app."
+      },
+      {
+        "text": "A atualização criou uma revisão nova que ainda não tem tráfego",
+        "why": "Mudar um segredo é do escopo da aplicação e não cria revisão nenhuma."
+      },
+      {
+        "text": "Ela leu o segredo ao iniciar e continua com aquele valor",
+        "why": "Ela só vê o valor novo quando é reiniciada ou substituída por uma revisão nova."
+      },
+      {
+        "text": "A senha tem de ser trocada no template",
+        "why": "Segredos são definidos na configuração; o template só se refere a eles pelo nome."
+      }
+    ]
+  },
+  "ex-rn1we9ja": {
+    "prompt": "No modo de revisão única, uma revisão nova da loja nunca passa no probe de prontidão. O que os clientes veem?",
+    "hint": "O tráfego só se move quando algo aconteceu.",
+    "choices": [
+      {
+        "text": "A revisão antiga, que fica com todo o tráfego",
+        "why": "O tráfego só muda quando a revisão nova está pronta, então uma atualização com falha deixa a antiga servindo."
+      },
+      {
+        "text": "Erros até alguém fazer o rollback à mão",
+        "why": "Não há o que reverter: o tráfego nunca saiu da revisão antiga."
+      },
+      {
+        "text": "Nove em dez na revisão antiga, um em dez na nova",
+        "why": "O modo único não divide tráfego; isso é o modo de várias revisões com pesos."
+      },
+      {
+        "text": "Nada, porque a revisão antiga foi desprovisionada antes",
+        "why": "A revisão antiga só é desprovisionada depois que a nova está pronta."
+      }
+    ]
+  },
+  "ex-087ts7sc": {
+    "prompt": "Uma revisão é um retrato ___ do que um app roda: nunca é alterada, só substituída.",
+    "hint": "A palavra para algo que não pode ser modificado depois de feito.",
+    "blanks": [
+      {
+        "accept": [
+          "imutável",
+          "imutavel"
+        ]
+      }
+    ]
+  },
+  "ex-jrs898z9": {
+    "prompt": "No laptop, um pedido enviado ao contêiner da 1.0 não apareceu na lista da 1.1. Com uma revisão só e `maxReplicas: 10` no Azure, o que o mesmo código faria?",
+    "hint": "Pergunte onde mora o `ORDERS`.",
+    "choices": [
+      {
+        "text": "Manteria uma lista só, porque réplicas de uma revisão compartilham memória",
+        "why": "Réplicas são processos separados, cada um com a sua memória."
+      },
+      {
+        "text": "Perderia pedidos entre réplicas, já que cada uma guarda a própria lista na memória",
+        "why": "Um pedido enviado a uma réplica falta na resposta da seguinte; o estado tem de morar fora do contêiner."
+      },
+      {
+        "text": "Recusaria escalar acima de uma réplica enquanto guarda estado",
+        "why": "Nada no Container Apps inspeciona um processo atrás de estado; ele escala como a regra manda."
+      },
+      {
+        "text": "Manteria uma lista só enquanto a afinidade de sessão estivesse ligada",
+        "why": "A afinidade manda um cliente para uma réplica, mas um segundo cliente em outra réplica vê outra lista."
+      }
+    ]
+  },
+  "ex-c9rhq82b": {
+    "prompt": "Ponha em ordem os passos do canário da loja.",
+    "hint": "Ninguém além dos desenvolvedores vê a revisão nova até o segundo passo.",
+    "items": [
+      "Implantar `shop--v1-1` ao lado de `shop--v1-0` com o rótulo `canary` e peso 0",
+      "Testá-la no endereço do rótulo",
+      "Pôr os pesos em 90 e 10, e comparar as duas revisões",
+      "Passar a 50 e 50, depois a 0 e 100",
+      "Desativar `shop--v1-0` quando voltar atrás já não for preciso"
+    ],
+    "trap": "Desativar a revisão antiga assim que ela chega a 0 tira o caminho de volta com um comando só."
+  },
+  "ex-m402mbk4": {
+    "prompt": "Durante a divisão 90/10 as duas revisões estão ativas, e cada uma tem o bloco de escala da loja com `maxReplicas: 10`. Quantas réplicas, no máximo, o app consegue rodar ao mesmo tempo?",
+    "hint": "Os limites são contados por revisão."
+  },
+  "ex-t8pqkbk8": {
+    "prompt": "Os desenvolvedores querem experimentar a `shop--v1-1` no ambiente de verdade antes que qualquer cliente chegue a ela. O que isso exige?",
+    "hint": "Um dos mecanismos ignora os pesos por completo.",
+    "choices": [
+      {
+        "text": "Um peso de 1, o menor que uma revisão pode receber",
+        "why": "Mesmo 1 por cento manda clientes de verdade para lá, que é o que eles queriam evitar."
+      },
+      {
+        "text": "Um segundo ambiente com uma cópia do app",
+        "why": "Isso testa outro ambiente, não este, e o rótulo torna isso desnecessário."
+      },
+      {
+        "text": "Um rótulo nela, e o endereço dele, com peso 0",
+        "why": "O endereço de um rótulo chega à revisão dele sejam quais forem os pesos, inclusive 0."
+      },
+      {
+        "text": "O modo de revisão única, que testa uma revisão antes de trocar",
+        "why": "O modo único testa probes de prontidão, não pessoas, e depois move todo o tráfego."
+      }
+    ]
+  },
+  "ex-8hegdyq1": {
+    "prompt": "A divisão 90/10 está ligada há um minuto. Chegaram vinte requisições e o canário não recebeu nenhuma. O que isso mostra?",
+    "hint": "Calcule com que frequência nenhuma em vinte acontece quando está tudo certo.",
+    "choices": [
+      {
+        "text": "A divisão está quebrada, já que se esperavam duas",
+        "why": "Duas é uma expectativa, não uma promessa; nenhuma acontece mais ou menos uma vez em oito."
+      },
+      {
+        "text": "O canário está falhando nos probes e foi tirado do ar",
+        "why": "Nada aqui sugere falha; é o que uma amostra pequena faz."
+      },
+      {
+        "text": "Os pesos foram arredondados para zero sem aviso",
+        "why": "Nada arredonda um peso; a parte do canário é exatamente a que o arquivo diz."
+      },
+      {
+        "text": "Pouco: nenhuma em 20 acontece 12% das vezes",
+        "why": "0,9 elevado a 20 dá 0,122, então vinte requisições são poucas para julgar qualquer coisa."
+      }
+    ]
+  },
+  "ex-k7c272qg": {
+    "prompt": "O que uma liberação blue/green faz que um canário não faz?",
+    "hint": "Compare quem usa a revisão nova em cada momento.",
+    "choices": [
+      {
+        "text": "Dá à revisão nova uma parte dos clientes reais, que sobe em passos",
+        "why": "Isso é o canário: ele confia em poucos clientes de cada vez."
+      },
+      {
+        "text": "Move todos os clientes de uma vez, após testar no rótulo",
+        "why": "O peso vai de 0 a 100 numa mudança só; voltar atrás é a mesma mudança ao contrário."
+      },
+      {
+        "text": "Exige o modo de revisão única, em que rótulos não existem",
+        "why": "O blue/green se apoia em rótulos e pesos, que são ferramentas do modo de várias revisões."
+      },
+      {
+        "text": "Mantém as duas revisões em 50 por cento até escolher uma",
+        "why": "Isso é um teste A/B, não blue/green."
+      }
+    ]
+  },
+  "ex-133v58t0": {
+    "prompt": "Quais destes erros no `shop-app.bicep` o compilador acusa? Marque todas as que valem.",
+    "hint": "O compilador conhece tipos e nomes de propriedades, não relações entre valores.",
+    "choices": [
+      {
+        "text": "`targetPort: '8080'`, uma porta escrita como texto",
+        "why": "BCP036: era esperado um `int`."
+      },
+      {
+        "text": "`minReplicas: 5` com `maxReplicas: 0`",
+        "why": "Os dois são números inteiros; o compilador nunca compara um com o outro."
+      },
+      {
+        "text": "`concurrentRequests: 50`, um número em `metadata`",
+        "why": "BCP036: os valores de metadata são tipados como texto."
+      },
+      {
+        "text": "Pesos de 90 e 20",
+        "why": "O compilador não soma pesos; só o Azure recusaria 110."
+      },
+      {
+        "text": "`activeRevisionsMode: 'Multi'`",
+        "why": "A propriedade é tipada como qualquer texto, então um erro de grafia compila."
+      }
+    ]
+  },
+  "ex-7ghdq9n0": {
+    "prompt": "O `bicep build` não imprime nada para um arquivo cujo sufixo de revisão é `v1.1`. O que você deve concluir?",
+    "hint": "Separe o que o compilador verifica do que o Azure verifica.",
+    "choices": [
+      {
+        "text": "Nada ainda; só o Azure verifica os caracteres",
+        "why": "Ponto não é permitido num sufixo, e nada antes do Azure diz isso: confira as regras você mesmo."
+      },
+      {
+        "text": "O sufixo é válido, já que o build não teve avisos",
+        "why": "Um sufixo é tipado como texto; o compilador não verifica nada sobre os caracteres dele."
+      },
+      {
+        "text": "A CLI o pegaria antes de falar com o Azure",
+        "why": "Sem conta, o `az containerapp update` parou no login, antes de qualquer verificação."
+      },
+      {
+        "text": "Pontos viram traços quando a revisão recebe o nome",
+        "why": "Nada reescreve um sufixo; o template leva `v1.1` como foi escrito."
+      }
+    ]
+  },
+  "ex-kxepe4wj": {
+    "prompt": "O relatório noturno deve começar às 23:30 em São Paulo, três horas atrás. Como job agendado, a expressão cron dele é `30 ___ * * *`.",
+    "hint": "Jobs agendados leem o cron em UTC.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "02"
+        ]
+      }
+    ]
+  },
+  "ex-wtcxp4sv": {
+    "prompt": "O relatório de vendas noturno roda por vinte minutos e termina. No Container Apps, o que ele é?",
+    "hint": "Um dos dois tipos de recurso para de propósito.",
+    "choices": [
+      {
+        "text": "Um container app com `minReplicas: 0`, acordado por uma requisição",
+        "why": "Um app é reiniciado quando termina; o relatório rodaria de novo e de novo."
+      },
+      {
+        "text": "Uma revisão da loja, com peso de tráfego 0",
+        "why": "Uma revisão roda o template da loja; o relatório é outro programa."
+      },
+      {
+        "text": "Um job do Container Apps, com o gatilho Schedule",
+        "why": "Um job roda, termina e para, e um agendamento inicia uma execução por noite."
+      },
+      {
+        "text": "Um container app com regra de fila e `maxReplicas: 1`",
+        "why": "Escalar por fila mantém um app servindo; o relatório não tem o que servir."
+      }
+    ]
+  }
+}

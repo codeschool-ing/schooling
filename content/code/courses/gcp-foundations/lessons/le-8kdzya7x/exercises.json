@@ -1,0 +1,493 @@
+[
+  {
+    "id": "ex-y9marqpr",
+    "version": 1,
+    "section": "allow-policies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In an allow policy, what does one binding hold?",
+    "hint": "One of these per role.",
+    "choices": [
+      {
+        "text": "One principal and every role it holds",
+        "correct": false,
+        "why": "The policy is organised by role, not by principal."
+      },
+      {
+        "text": "A role and its principals",
+        "correct": true,
+        "why": "Right. A role appears once, with every principal that holds it."
+      },
+      {
+        "text": "One permission and the resource it applies to",
+        "correct": false,
+        "why": "Bindings name roles; permissions live inside the roles."
+      },
+      {
+        "text": "A deny rule and its exceptions",
+        "correct": false,
+        "why": "That is a deny policy, a separate kind of policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmgz0w5s",
+    "version": 1,
+    "section": "allow-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `gcloud ... add-iam-policy-binding` start by calling `getIamPolicy`?",
+    "hint": "Is there a call that adds one member?",
+    "choices": [
+      {
+        "text": "To check the caller is an Owner",
+        "correct": false,
+        "why": "Permission is checked by Google on the write. The read is for the policy itself."
+      },
+      {
+        "text": "Because the emulator demands it",
+        "correct": false,
+        "why": "The CLI does the same against Google. The emulator just cannot answer the read."
+      },
+      {
+        "text": "To back the policy up before changing it",
+        "correct": false,
+        "why": "Nothing is kept. The copy it reads is the copy it edits and writes back."
+      },
+      {
+        "text": "No call exists that adds one member",
+        "correct": true,
+        "why": "Right. There is no add-one-member call; the CLI does read, modify, write in one command."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehzzn4bc",
+    "version": 1,
+    "section": "allow-policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two administrators read a project's policy at the same moment, each adds a member and writes back. What stops the second write from erasing the first one's change?",
+    "hint": "A field in the policy says which version a copy was read at.",
+    "choices": [
+      {
+        "text": "The etag the copy was read at",
+        "correct": true,
+        "why": "Right. The second client reads again and retries, and both members end up in the policy."
+      },
+      {
+        "text": "The version field, which must be 3",
+        "correct": false,
+        "why": "Version 3 is about conditions. It does nothing for two writers."
+      },
+      {
+        "text": "Nothing; the last write wins",
+        "correct": false,
+        "why": "That is what would happen without the etag, or with a client that drops it."
+      },
+      {
+        "text": "IAM locks the policy while somebody reads it",
+        "correct": false,
+        "why": "There is no lock. The etag detects the conflict at write time instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-hr9s4pwd",
+    "version": 1,
+    "section": "allow-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The on-call group needs Pub/Sub editor during tonight's incident, and nobody trusts themselves to remember to remove it. What does IAM offer?",
+    "hint": "A binding can say when it applies.",
+    "choices": [
+      {
+        "text": "A deny policy that starts tomorrow",
+        "correct": false,
+        "why": "Deny policies have no start date; a condition on the grant is the tool."
+      },
+      {
+        "text": "A custom role that expires",
+        "correct": false,
+        "why": "Roles do not expire. The binding's condition does the timing."
+      },
+      {
+        "text": "A condition on `request.time`",
+        "correct": true,
+        "why": "Right. A temporary grant ends without anybody touching it again."
+      },
+      {
+        "text": "Granting Owner, which can be revoked from the console",
+        "correct": false,
+        "why": "Owner is far more than the incident needs, and revoking it is the remembering nobody trusted."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3sxprmn",
+    "version": 1,
+    "section": "allow-policies",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A policy with a condition in any binding must be sent as version ___, or the conditions are dropped.",
+    "hint": "A single digit.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "three"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yeb597tq",
+    "version": 1,
+    "section": "allow-policies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The emulator answered `getIamPolicy` with `501 UNIMPLEMENTED`. What does that mean?",
+    "hint": "Lesson 1's banner said something about IAM.",
+    "choices": [
+      {
+        "text": "The network between the CLI and the emulator failed",
+        "correct": false,
+        "why": "The CLI's sentence about connectivity is a guess. The emulator answered clearly."
+      },
+      {
+        "text": "The topic has no policy yet",
+        "correct": false,
+        "why": "Every topic has a policy, empty or not. The method itself is missing."
+      },
+      {
+        "text": "The emulator has no IAM methods",
+        "correct": true,
+        "why": "Right. IAM integration is disabled in the emulator, and it says so in its own way."
+      },
+      {
+        "text": "The placeholder token lacks the role to read policies",
+        "correct": false,
+        "why": "The emulator ignores the token; a permission refusal would be 403."
+      }
+    ]
+  },
+  {
+    "id": "ex-8px9njy7",
+    "version": 1,
+    "section": "authoritative-or-additive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `google_project_iam_binding` for `roles/viewer` lists two groups. Last month somebody granted Viewer to Ana by hand. What does the next apply do to Ana?",
+    "hint": "The binding owns the whole role.",
+    "choices": [
+      {
+        "text": "Removes her from Viewer",
+        "correct": true,
+        "why": "Right. `_binding` is authoritative for the role: its members are exactly the file's."
+      },
+      {
+        "text": "Leaves her, since she was added outside Terraform",
+        "correct": false,
+        "why": "That is how `_member` behaves. `_binding` sets the list exactly."
+      },
+      {
+        "text": "Adds her to the file",
+        "correct": false,
+        "why": "Terraform never writes your files."
+      },
+      {
+        "text": "Fails, because the policy changed outside Terraform",
+        "correct": false,
+        "why": "It succeeds, and that is the problem: it quietly removes her."
+      }
+    ]
+  },
+  {
+    "id": "ex-4f2yc0he",
+    "version": 1,
+    "section": "authoritative-or-additive",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Google's provider documentation warn against `google_project_iam_policy` in capital letters?",
+    "hint": "It owns more than one role.",
+    "choices": [
+      {
+        "text": "It is slower than the other two",
+        "correct": false,
+        "why": "Speed is not the danger. Removing every binding the file forgot is."
+      },
+      {
+        "text": "It cannot carry conditions",
+        "correct": false,
+        "why": "It can. The warning is about what it removes."
+      },
+      {
+        "text": "It is deprecated and will be removed",
+        "correct": false,
+        "why": "It is supported. It is simply the most dangerous of the three."
+      },
+      {
+        "text": "It owns the owners, so a file that omits them removes them",
+        "correct": true,
+        "why": "Right. With the owners gone, so are the people who could put them back."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg1ern0e",
+    "version": 1,
+    "section": "authoritative-or-additive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A project's Terraform has both a `google_project_iam_binding` and a `google_project_iam_member` for Viewer. What happens over successive applies?",
+    "hint": "One adds, the other sets exactly.",
+    "choices": [
+      {
+        "text": "The member is merged into the binding",
+        "correct": false,
+        "why": "Terraform merges nothing across resources. Each one enforces its own idea."
+      },
+      {
+        "text": "They fight, and the plan never settles",
+        "correct": true,
+        "why": "Right. The member adds a principal the binding removes, on every run."
+      },
+      {
+        "text": "Terraform refuses the configuration at validate",
+        "correct": false,
+        "why": "Validation sees two valid resources; the conflict only shows at apply."
+      },
+      {
+        "text": "The binding wins once and the conflict ends",
+        "correct": false,
+        "why": "The member puts its principal back on the next apply, so it never ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9bktj0g",
+    "version": 1,
+    "section": "authoritative-or-additive",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Terraform resource to what it owns.",
+    "hint": "From the whole policy down to one grant.",
+    "pairs": [
+      {
+        "left": "`google_project_iam_policy`",
+        "right": "the whole policy"
+      },
+      {
+        "left": "`google_project_iam_binding`",
+        "right": "one role and its member list"
+      },
+      {
+        "left": "`google_project_iam_member`",
+        "right": "one principal in one role"
+      }
+    ],
+    "right_distractors": [
+      "the billing account"
+    ]
+  },
+  {
+    "id": "ex-pdvgh8rb",
+    "version": 1,
+    "section": "authoritative-or-additive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Owner on production should be exactly the two members of the break-glass group, and anything added by hand should disappear. Which resource fits?",
+    "hint": "Authoritative for one role.",
+    "choices": [
+      {
+        "text": "`google_project_iam_binding`",
+        "correct": true,
+        "why": "Right. It sets the role's members exactly, and removes what was added by hand on the next apply."
+      },
+      {
+        "text": "`google_project_iam_member`",
+        "correct": false,
+        "why": "Additive: it would leave the hand-made grants in place."
+      },
+      {
+        "text": "`google_project_iam_policy`",
+        "correct": false,
+        "why": "That owns every role, not just Owner, and is the one to avoid."
+      },
+      {
+        "text": "`google_iam_deny_policy`",
+        "correct": false,
+        "why": "A deny refuses permissions; it does not decide who holds Owner."
+      }
+    ]
+  },
+  {
+    "id": "ex-wyme0y11",
+    "version": 1,
+    "section": "deny-and-inheritance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The organisation grants Viewer to a group. Can a project's allow policy take that grant away from its projects?",
+    "hint": "What can an allow policy contain?",
+    "choices": [
+      {
+        "text": "Yes, by leaving the group out of its own policy",
+        "correct": false,
+        "why": "Leaving it out changes nothing; the inherited grant still applies."
+      },
+      {
+        "text": "Yes, with a binding whose members are empty",
+        "correct": false,
+        "why": "An empty binding grants nothing and removes nothing inherited."
+      },
+      {
+        "text": "No: allow policies only add",
+        "correct": true,
+        "why": "Right. Taking a grant away lower down is what a deny policy is for."
+      },
+      {
+        "text": "Yes, with an organisation policy on the project",
+        "correct": false,
+        "why": "Organisation policies constrain what may be done, not who holds a role."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1kkeym6",
+    "version": 1,
+    "section": "deny-and-inheritance",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of evaluating a request in Google's order.",
+    "hint": "Refusals first.",
+    "items": [
+      "read the deny policies, organisation to resource",
+      "read the allow policies, organisation to resource",
+      "refuse if nothing granted the permission"
+    ],
+    "trap": "Reading the allow policies first is the slip: a deny would then be overridden by any grant, which is exactly what it exists to prevent."
+  },
+  {
+    "id": "ex-3629sd7j",
+    "version": 1,
+    "section": "deny-and-inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a deny rule, how is the permission to delete a topic written?",
+    "hint": "With the service's address in front.",
+    "choices": [
+      {
+        "text": "`pubsub.topics.delete`",
+        "correct": false,
+        "why": "That is the form roles use. A deny rule wants the service's address too."
+      },
+      {
+        "text": "`pubsub.googleapis.com/topics.delete`",
+        "correct": true,
+        "why": "Right. Deny policies write permissions with the service's domain first."
+      },
+      {
+        "text": "`roles/pubsub.editor`",
+        "correct": false,
+        "why": "A deny names permissions, not roles."
+      },
+      {
+        "text": "`//pubsub.googleapis.com/topics/delete`",
+        "correct": false,
+        "why": "That is shaped like a full resource name, not a permission."
+      }
+    ]
+  },
+  {
+    "id": "ex-es59wf0j",
+    "version": 1,
+    "section": "deny-and-inheritance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The deny policy refuses project deletion to `principalSet://goog/public:all`, with the break-glass group as an exception. An Owner who is not in that group tries to delete `planner-prod`. What happens, and why?",
+    "hint": "Which is read first, and does Owner matter to it?",
+    "choices": [
+      {
+        "text": "Allowed: Owner outranks a deny policy",
+        "correct": false,
+        "why": "No role outranks a deny. That is the point of having one."
+      },
+      {
+        "text": "Allowed: a deny on a project cannot stop its own deletion",
+        "correct": false,
+        "why": "It can; `projects.delete` is in the list of permissions a deny supports."
+      },
+      {
+        "text": "Refused: Owners may not delete projects",
+        "correct": false,
+        "why": "Owner holds `projects.delete`. Here the deny is what refuses."
+      },
+      {
+        "text": "Refused, as the deny is read first",
+        "correct": true,
+        "why": "Right. The Owner is in `public:all` and not in the exception, so the deny refuses before any allow is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyw8ccec",
+    "version": 1,
+    "section": "deny-and-inheritance",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`deny.tf` together with `iam.tf` makes the plan add how many resources?",
+    "hint": "Two from the first file, one from the second.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-twkfx7kh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An auditor finds Ana holds Editor on `planner-prod` through a grant on the organisation from two years ago. The team wants her to keep Viewer there and lose every write. What is the right fix?",
+    "hint": "Where does the grant live?",
+    "choices": [
+      {
+        "text": "Leave out Editor in `planner-prod`'s own policy",
+        "correct": false,
+        "why": "It was never in that policy. The organisation's grant still reaches the project."
+      },
+      {
+        "text": "Grant her Viewer on `planner-prod`, which replaces Editor",
+        "correct": false,
+        "why": "Grants add up. She would hold both."
+      },
+      {
+        "text": "Deny every permission to her on the organisation",
+        "correct": false,
+        "why": "That would take away the Viewer the team wants her to keep, everywhere."
+      },
+      {
+        "text": "Fix it on the organisation, where it was made",
+        "correct": true,
+        "why": "Right. An inherited grant is fixed where it was made; nothing lower down can subtract it."
+      }
+    ]
+  }
+]

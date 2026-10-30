@@ -1,0 +1,296 @@
+{
+  "ex-mb1pj0yz": {
+    "prompt": "O que um workload manda ao Security Token Service do Google na troca?",
+    "hint": "Algo que ele já tem, vindo de fora.",
+    "choices": [
+      {
+        "text": "Uma chave de conta de serviço que ele baixou uma vez",
+        "why": "A ideia toda da federação é que nenhuma chave exista."
+      },
+      {
+        "text": "O token assinado do provedor de fora",
+        "why": "Isso. O STS o confere contra o provider do pool e devolve um token federado."
+      },
+      {
+        "text": "A senha da conta do GitHub que iniciou o job",
+        "why": "Senhas nunca atravessam. O que se apresenta é o token assinado do job."
+      },
+      {
+        "text": "Um token de acesso do Google da noite anterior",
+        "why": "Um token do Google é o que ele tenta obter, e o de ontem expirou."
+      }
+    ]
+  },
+  "ex-way7x2tx": {
+    "prompt": "O que `attribute.repository = assertion.repository` no mapeamento de um provider faz?",
+    "hint": "Transforma uma afirmação em algo que o IAM pode selecionar.",
+    "choices": [
+      {
+        "text": "Recusa tokens de outros repositórios",
+        "why": "Recusar é trabalho da condição. Um mapeamento só nomeia coisas."
+      },
+      {
+        "text": "Cria uma conta de serviço com o nome do repositório",
+        "why": "Nenhuma conta é criada; atributos são rótulos em identidades federadas."
+      },
+      {
+        "text": "Manda o código do repositório ao Google",
+        "why": "Só as afirmações do token atravessam, nunca código."
+      },
+      {
+        "text": "Dá a uma afirmação do token um nome que o IAM lê",
+        "why": "Isso. Um `principalSet://` pode então escolher toda identidade de um repositório."
+      }
+    ]
+  },
+  "ex-fh4gcd7j": {
+    "prompt": "Um provider confia no emissor do GitHub e não tem condição de atributo. Por que isso é perigoso?",
+    "hint": "De quem são os tokens que esse emissor assina?",
+    "choices": [
+      {
+        "text": "Tokens de estranhos também passam",
+        "why": "Isso. Só os papéis que por acaso batessem ficariam entre o workflow de um estranho e o seu projeto."
+      },
+      {
+        "text": "Os tokens do GitHub duram uma semana sem condição",
+        "why": "A vida deles é de minutos de todo jeito. O perigo é de quem os tokens são aceitos."
+      },
+      {
+        "text": "A troca então pula a conferência da assinatura",
+        "why": "A assinatura é conferida de qualquer jeito. O token de um estranho é assinado perfeitamente."
+      },
+      {
+        "text": "O pool para de funcionar depois de trinta dias",
+        "why": "Pools não expiram. A questão é quem entra."
+      }
+    ]
+  },
+  "ex-ptxbfzbt": {
+    "prompt": "Ponha os passos da troca em ordem.",
+    "hint": "Primeiro o de fora, por último as APIs do Google.",
+    "items": [
+      "o provedor de fora assina um token para o job",
+      "o STS o confere e devolve um token federado",
+      "o IAM Credentials o troca pelo token da conta de serviço",
+      "o job chama as APIs do Google"
+    ],
+    "trap": "Pôr o IAM Credentials antes do STS é o deslize: personificar exige uma credencial do Google, e o token federado é a primeira que o job tem."
+  },
+  "ex-bvj8zyb4": {
+    "prompt": "Por que o `terraform validate` recusou `workload_identity_pool_id = \"ci\"`?",
+    "hint": "Conte os caracteres.",
+    "choices": [
+      {
+        "text": "Ids de pool não podem ser minúsculos",
+        "why": "Eles precisam ser minúsculos. O problema é o tamanho."
+      },
+      {
+        "text": "`ci` é reservado pelo Google",
+        "why": "Nada é reservado; o `ci-pool` foi aceito logo depois."
+      },
+      {
+        "text": "Tem menos de quatro caracteres",
+        "why": "Isso. Um id de pool tem de quatro a trinta e dois."
+      },
+      {
+        "text": "Um pool precisa de um provider no mesmo arquivo",
+        "why": "Um pool sozinho é válido; o que foi recusado foi o id."
+      }
+    ]
+  },
+  "ex-69vvg7kh": {
+    "prompt": "Que papel deixa identidades de um pool agirem como a conta de serviço deployer?",
+    "hint": "Não é o Token Creator da lição 8.",
+    "choices": [
+      {
+        "text": "`roles/owner` no projeto",
+        "why": "Demais, e nem menciona o deployer."
+      },
+      {
+        "text": "`roles/iam.serviceAccountKeyAdmin`",
+        "why": "Esse gerencia chaves, que a federação existe para evitar."
+      },
+      {
+        "text": "`roles/iam.workloadIdentityUser`, no deployer",
+        "why": "Isso. Ele é concedido na conta, ao conjunto de identidades do pool."
+      },
+      {
+        "text": "`roles/viewer` no pool",
+        "why": "O Viewer lê o pool; não deixa ninguém agir como nada."
+      }
+    ]
+  },
+  "ex-amdwkbxm": {
+    "prompt": "A concessão nomeia `principalSet://.../attribute.repository/example/planner`. Que jobs podem agir como o deployer?",
+    "hint": "O conjunto é escolhido só pelo repositório.",
+    "choices": [
+      {
+        "text": "Qualquer job desse repositório, seja qual for a branch",
+        "why": "Isso. A branch de um pull request também bate; restringir à main exige condição ou concessão mais estrita."
+      },
+      {
+        "text": "Só jobs na `main`",
+        "why": "Nada nesse conjunto fala de branch. Essa era a tranca que faltava."
+      },
+      {
+        "text": "Qualquer job da organização `example`",
+        "why": "A condição admite a organização; a concessão a estreita a um repositório."
+      },
+      {
+        "text": "Nenhum job, até uma chave ser acrescentada",
+        "why": "Nenhuma chave é necessária; o token federado basta."
+      }
+    ]
+  },
+  "ex-t2zbxx3f": {
+    "prompt": "Quantas trancas ficam entre o workflow de um estranho no GitHub e o deployer no `pool.tf`?",
+    "hint": "Uma no provider, uma na conta.",
+    "choices": [
+      {
+        "text": "Uma: o emissor, já que o GitHub assina o token",
+        "why": "O GitHub assina os tokens de estranhos também. O emissor não é uma tranca."
+      },
+      {
+        "text": "Nenhuma: qualquer um no GitHub pode agir como o deployer",
+        "why": "A condição e a concessão precisam bater, e o token de um estranho não bate com nenhuma."
+      },
+      {
+        "text": "Três: emissor, condição e uma chave",
+        "why": "Não há chave na federação."
+      },
+      {
+        "text": "Duas, uma de cada lado",
+        "why": "Isso. A condição só admite `example`, e a concessão só nomeia `example/planner`."
+      }
+    ]
+  },
+  "ex-q6c2d8b7": {
+    "prompt": "Qual o maior número de caracteres que um id de pool de identidade de workload pode ter?",
+    "hint": "Quatro é o menor.",
+    "unit": "caracteres"
+  },
+  "ex-sehx85pk": {
+    "prompt": "Por que um arquivo de configuração de credencial pode ficar num repositório e um arquivo de chave não?",
+    "hint": "O que cada um guarda?",
+    "choices": [
+      {
+        "text": "Ele é criptografado pelo gcloud",
+        "why": "Nada é criptografado; o arquivo é JSON simples sem segredo nenhum."
+      },
+      {
+        "text": "Ele diz onde o token está, não o que ele é",
+        "why": "Isso. Ele não guarda segredo; o token só aparece quando o workload roda."
+      },
+      {
+        "text": "Ele expira depois de uma hora",
+        "why": "Os tokens expiram; o arquivo é configuração e não expira."
+      },
+      {
+        "text": "O Google o apaga se for publicado",
+        "why": "Ninguém o apaga, e não haveria o que temer se fosse lido."
+      }
+    ]
+  },
+  "ex-bndwd04z": {
+    "prompt": "Ligue cada campo do `credentials.json` ao passo que ele descreve.",
+    "hint": "Siga a troca.",
+    "pairs": [
+      {
+        "left": "`credential_source.file`",
+        "right": "onde o token de fora vai estar"
+      },
+      {
+        "left": "`token_url`",
+        "right": "o Security Token Service"
+      },
+      {
+        "left": "`audience`",
+        "right": "o pool e o provider a que se apresenta"
+      },
+      {
+        "left": "`service_account_impersonation_url`",
+        "right": "a troca pelo token do deployer"
+      }
+    ],
+    "right_distractors": [
+      "a chave privada da conta"
+    ]
+  },
+  "ex-724a2vns": {
+    "prompt": "No laboratório, `gcloud iam workload-identity-pools create-cred-config` funcionou apesar de o pool não existir. Por quê?",
+    "hint": "Ele perguntou algo ao Google?",
+    "choices": [
+      {
+        "text": "Ele não pergunta nada ao Google",
+        "why": "Isso. O arquivo só registra nomes e endereços; conferi-los acontece na hora da troca."
+      },
+      {
+        "text": "O emulador respondeu pelo pool",
+        "why": "O emulador é só Pub/Sub."
+      },
+      {
+        "text": "O Google cria o pool no primeiro uso",
+        "why": "Nada cria o pool a não ser um pedido ao IAM, que nunca foi enviado."
+      },
+      {
+        "text": "O token placeholder foi aceito para este comando",
+        "why": "Nenhum token foi enviado; o comando é local."
+      }
+    ]
+  },
+  "ex-9e1c99rw": {
+    "prompt": "O STS respondeu `invalid_target` à troca do laboratório. O que ele estava recusando?",
+    "hint": "Ele nem chegou ao token.",
+    "choices": [
+      {
+        "text": "O texto `not-a-real-token`, como assinatura ruim",
+        "why": "Com um pool real, essa seria a recusa. Aqui a audiência falhou antes."
+      },
+      {
+        "text": "A credencial do Google que faltava",
+        "why": "O STS é chamado sem uma; ele emite a primeira."
+      },
+      {
+        "text": "A audiência: nenhum pool assim foi achado",
+        "why": "Isso. O pool num projeto inventado não foi achado, então o token nem foi lido."
+      },
+      {
+        "text": "A condição em `repository_owner`",
+        "why": "A condição só é lida depois de achar um pool e um token válido."
+      }
+    ]
+  },
+  "ex-6cs0wv50": {
+    "prompt": "Um arquivo de configuração de credencial para federação diz `type: ___`, onde um arquivo de chave diria `service_account`.",
+    "hint": "Duas palavras ligadas por sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "external_account"
+        ]
+      }
+    ]
+  },
+  "ex-290emsqk": {
+    "prompt": "Um workflow do `example/planner` faz deploy da `main`, e colaboradores de fora abrem pull requests de branches próprias do mesmo repositório. O que garante que só a `main` age como o deployer?",
+    "hint": "O repositório sozinho bate com toda branch.",
+    "choices": [
+      {
+        "text": "A condição de organização que já está no `pool.tf`",
+        "why": "Ela admite todo repositório de `example`, branches inclusive."
+      },
+      {
+        "text": "Nomear a ref também na condição",
+        "why": "Isso. Um conjunto escolhido pelo repositório bate com branches de pull request também; a ref fecha isso."
+      },
+      {
+        "text": "Uma chave guardada só nos segredos da `main`",
+        "why": "Isso traz de volta a chave que a federação tirou."
+      },
+      {
+        "text": "Encurtar a vida do token para um minuto",
+        "why": "Um minuto basta para o job de um pull request fazer deploy."
+      }
+    ]
+  }
+}

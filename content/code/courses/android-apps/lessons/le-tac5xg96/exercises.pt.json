@@ -1,0 +1,386 @@
+{
+  "ex-39gsvc35": {
+    "prompt": "Por que o `CourseCard` passa `contentDescription = null` ao `AsyncImage`?",
+    "hint": "O que a capa acrescenta que o texto não diz?",
+    "choices": [
+      {
+        "text": "O Coil o preenche a partir da URL",
+        "why": "Nada gera uma descrição."
+      },
+      {
+        "text": "É decoração",
+        "why": "Isso: um leitor de tela a pula."
+      },
+      {
+        "text": "Uma imagem da rede não pode ter uma",
+        "why": "Qualquer imagem pode; esta não precisa."
+      },
+      {
+        "text": "Economiza memória",
+        "why": "Uma string não custa nada perto de um bitmap."
+      }
+    ]
+  },
+  "ex-8114b4vb": {
+    "prompt": "Ligue cada painter do `AsyncImage` a quando ele é desenhado.",
+    "hint": "A seção 05 desenhou os três.",
+    "pairs": [
+      {
+        "left": "`placeholder`",
+        "right": "enquanto a imagem carrega"
+      },
+      {
+        "left": "`error`",
+        "right": "quando o carregamento falhou"
+      },
+      {
+        "left": "`fallback`",
+        "right": "quando o model é `null`"
+      }
+    ],
+    "right_distractors": [
+      "quando a imagem é grande demais para a memória"
+    ]
+  },
+  "ex-kav2jce0": {
+    "prompt": "Que tarefa o `AsyncImage` faz e um simples `BitmapFactory.decodeStream` nos bytes da rede não faria?",
+    "hint": "Tamanho, caches, cancelamento.",
+    "choices": [
+      {
+        "text": "Transformar bytes PNG em pixels",
+        "why": "Os dois decodificam; a diferença é o tamanho e o que vem depois."
+      },
+      {
+        "text": "Ler JPEG além de PNG",
+        "why": "O `BitmapFactory` lê os dois."
+      },
+      {
+        "text": "Baixar por HTTPS",
+        "why": "Baixar é a parte do OkHttp, usada por qualquer um."
+      },
+      {
+        "text": "Decodificar no tamanho desenhado",
+        "why": "Isso, e guardá-la em cache e cancelá-la com o composable."
+      }
+    ]
+  },
+  "ex-x540vpm4": {
+    "prompt": "Quantos bytes ocupa um bitmap de 4000 × 3000 em `ARGB_8888`?",
+    "hint": "Quatro bytes por pixel.",
+    "unit": "bytes"
+  },
+  "ex-d5j610z4": {
+    "prompt": "O PNG da capa tinha 53.279 bytes e o bitmap 48.000.000. Por que tanta diferença?",
+    "hint": "O que uma tela desenha?",
+    "choices": [
+      {
+        "text": "Decodificar desfaz a compressão",
+        "why": "Isso: o bitmap depende dos pixels, não do arquivo."
+      },
+      {
+        "text": "O Coil acrescenta uma cópia para cada cache",
+        "why": "O número é o tamanho de um bitmap só."
+      },
+      {
+        "text": "O Robolectric infla bitmaps",
+        "why": "Largura × altura × 4 é o mesmo num celular."
+      },
+      {
+        "text": "Arquivos PNG são guardados a um quarto do tamanho",
+        "why": "A compressão depende do conteúdo; esta cor única comprimiu muito mais."
+      }
+    ]
+  },
+  "ex-vgnk3p10": {
+    "prompt": "A capa foi pedida em 720 × 400 e voltou em 533 × 400. Por quê?",
+    "hint": "O original é 4:3.",
+    "choices": [
+      {
+        "text": "O cache em memória estava cheio",
+        "why": "O cache não redimensiona o que recebe."
+      },
+      {
+        "text": "A tela do Robolectric tem 533 pixels de largura",
+        "why": "O teste pediu um tamanho explícito."
+      },
+      {
+        "text": "Mantém as proporções",
+        "why": "Isso: 4:3 numa altura de 400 dá 533 de largura."
+      },
+      {
+        "text": "PNG não guarda larguras acima de 533",
+        "why": "O original tinha 4000 de largura."
+      }
+    ]
+  },
+  "ex-hxvgre49": {
+    "prompt": "Onde uma imagem tem mais chance de ser decodificada em tamanho cheio num app Compose?",
+    "hint": "O `AsyncImage` pede o tamanho em que foi medido.",
+    "choices": [
+      {
+        "text": "Num `AsyncImage` dentro de um cartão de 120 dp",
+        "why": "O tamanho limitado é o que ele pede."
+      },
+      {
+        "text": "Uma notificação carregada sem tamanho",
+        "why": "Isso: nada mediu um espaço para ela."
+      },
+      {
+        "text": "No cache em disco",
+        "why": "O disco guarda bytes, não bitmaps."
+      },
+      {
+        "text": "No placeholder",
+        "why": "Um placeholder é um painter, não a imagem."
+      }
+    ]
+  },
+  "ex-tfn6hnhp": {
+    "prompt": "Sob o Robolectric, o carregador precisa de `imageDecoderEnabled(___)` para decodificar.",
+    "hint": "Num celular você deixa a linha de fora.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ]
+      }
+    ]
+  },
+  "ex-tbg97rwb": {
+    "prompt": "Ordene os lugares onde o Coil procura uma capa, do primeiro ao último.",
+    "hint": "O mais barato primeiro.",
+    "items": [
+      "o cache em memória",
+      "o cache em disco",
+      "a rede"
+    ]
+  },
+  "ex-95peavmj": {
+    "prompt": "Depois que o cache em memória foi limpo, de onde veio o quarto carregamento da capa?",
+    "hint": "O servidor contou uma requisição.",
+    "choices": [
+      {
+        "text": "`NETWORK`",
+        "why": "O servidor recebeu uma requisição no total."
+      },
+      {
+        "text": "`MEMORY_CACHE`",
+        "why": "O cache em memória tinha acabado de ser limpo."
+      },
+      {
+        "text": "Falhou",
+        "why": "O teste imprimiu uma origem para cada carregamento."
+      },
+      {
+        "text": "`DISK`",
+        "why": "Isso: lido e decodificado de novo, não baixado."
+      }
+    ]
+  },
+  "ex-9s7vbbbg": {
+    "prompt": "As capas nunca parecem vir do cache em disco. O que a aula manda conferir primeiro?",
+    "hint": "Quem mais tem voz?",
+    "choices": [
+      {
+        "text": "Os cabeçalhos de cache",
+        "why": "Isso: o fetcher de rede do Coil os respeita."
+      },
+      {
+        "text": "A porcentagem do cache em memória",
+        "why": "O cache em memória não tem nada a ver com escritas em disco."
+      },
+      {
+        "text": "Se o app tem a permissão `INTERNET`",
+        "why": "Sem ela nada carregaria."
+      },
+      {
+        "text": "O `contentScale`",
+        "why": "Ele muda como a imagem é desenhada, não onde é guardada."
+      }
+    ]
+  },
+  "ex-nam2gzna": {
+    "prompt": "Por que o planner põe o cache em disco no `cacheDir` e não no `filesDir`?",
+    "hint": "O que o Android pode fazer com um deles?",
+    "choices": [
+      {
+        "text": "O `filesDir` é só leitura",
+        "why": "Apps escrevem no `filesDir` o tempo todo."
+      },
+      {
+        "text": "O Coil recusa qualquer outro diretório",
+        "why": "O diretório é um parâmetro."
+      },
+      {
+        "text": "O Android esvazia o `cacheDir` primeiro quando falta espaço",
+        "why": "Isso."
+      },
+      {
+        "text": "O `cacheDir` é compartilhado com outros apps",
+        "why": "Ele é privado do app."
+      }
+    ]
+  },
+  "ex-xbx7c12c": {
+    "prompt": "No `CacheTest`, quantas requisições o servidor recebeu para quatro carregamentos?",
+    "hint": "`requests:` na saída."
+  },
+  "ex-w89t6ev1": {
+    "prompt": "Por que os quatro cartões da captura têm a mesma altura?",
+    "hint": "O que dimensiona a faixa?",
+    "choices": [
+      {
+        "text": "O motor falso devolve imagens de um tamanho só",
+        "why": "Os cartões que falharam ou não têm capa não têm imagem nenhuma."
+      },
+      {
+        "text": "O modificador dimensiona a faixa",
+        "why": "Isso: nada se mexe quando uma capa chega."
+      },
+      {
+        "text": "O Roborazzi corta todo cartão",
+        "why": "O Roborazzi salva o que foi desenhado."
+      },
+      {
+        "text": "Um `Card` tem altura fixa",
+        "why": "Um `Card` se ajusta ao conteúdo."
+      }
+    ]
+  },
+  "ex-qjvg7b3j": {
+    "prompt": "Por que o teste de captura usa `FakeImageLoaderEngine` em vez de um MockWebServer?",
+    "hint": "Uma captura tem de ser igual toda vez.",
+    "choices": [
+      {
+        "text": "O MockWebServer não serve imagens",
+        "why": "As seções 03 e 04 serviram PNGs por ele."
+      },
+      {
+        "text": "O Roborazzi exige",
+        "why": "O Roborazzi captura o que estiver na tela."
+      },
+      {
+        "text": "Decodifica mais rápido que o Coil",
+        "why": "Ele substitui o carregamento, não a velocidade de decodificação."
+      },
+      {
+        "text": "Responde a cada URL na hora",
+        "why": "Isso, inclusive um carregamento que nunca termina."
+      }
+    ]
+  },
+  "ex-r35f09fq": {
+    "prompt": "Uma faixa vermelha sozinha marca uma capa que falhou. Quem perde informação?",
+    "hint": "As regras da aula 7.",
+    "choices": [
+      {
+        "text": "Alguém que não distingue vermelho de cinza",
+        "why": "Isso: acrescente um ícone ou uma linha de texto."
+      },
+      {
+        "text": "Ninguém, já que o nome do cartão continua ali",
+        "why": "O nome diz qual curso, não que a capa falhou."
+      },
+      {
+        "text": "Só quem usa modo escuro",
+        "why": "O problema é a cor como único sinal, em qualquer tema."
+      },
+      {
+        "text": "O leitor de tela, que lê a cor",
+        "why": "Um leitor de tela não lê cor nenhuma."
+      }
+    ]
+  },
+  "ex-zjbr6p4y": {
+    "prompt": "Em tamanho cheio, o cache em memória guardou 0 de 40 capas. Por quê?",
+    "hint": "Compare um bitmap com o limite.",
+    "choices": [
+      {
+        "text": "O cache em disco estava desligado",
+        "why": "Isso afeta o disco, não a memória."
+      },
+      {
+        "text": "O servidor falhou nos pedidos sem tamanho",
+        "why": "Todo pedido foi atendido."
+      },
+      {
+        "text": "Cada bitmap era maior que o cache",
+        "why": "Isso: 48.000.000 bytes contra um limite de 3.355.443."
+      },
+      {
+        "text": "O Coil nunca guarda imagens sem tamanho",
+        "why": "Guardaria, se coubessem; os 852.800 bytes da seção 04 couberam."
+      }
+    ]
+  },
+  "ex-8qggfgy5": {
+    "prompt": "Com um limite de 3.355.443 bytes, quantas capas de 852.800 bytes cabem ao mesmo tempo?",
+    "hint": "A rodada dimensionada guardou 2.558.400 bytes."
+  },
+  "ex-18g4713z": {
+    "prompt": "Por que a `CourseList` dá um `key` ao `items`?",
+    "hint": "Insira um curso no topo.",
+    "choices": [
+      {
+        "text": "O Coil o usa como chave de cache",
+        "why": "O Coil usa como chave os dados e o tamanho do pedido."
+      },
+      {
+        "text": "Para o estado de cada cartão, capa carregada inclusive, seguir o curso",
+        "why": "Isso, e não a posição."
+      },
+      {
+        "text": "Uma `LazyColumn` não compila sem ele",
+        "why": "O key é opcional."
+      },
+      {
+        "text": "Ele ordena os cursos por id",
+        "why": "A lista mantém a ordem que recebeu."
+      }
+    ]
+  },
+  "ex-0bj1zwb1": {
+    "prompt": "Quais destes reduzem a memória que uma lista de capas ocupa? Escolha todos os que se aplicam.",
+    "hint": "Memória são pixels.",
+    "choices": [
+      {
+        "text": "Decodificar cada capa no tamanho do cartão",
+        "why": "Sim: 852.800 bytes em vez de 48.000.000."
+      },
+      {
+        "text": "Um cache em disco maior",
+        "why": "Disco não é memória."
+      },
+      {
+        "text": "Um cache em memória com limite, descartando o menos usado",
+        "why": "Sim: o cache nunca passa do limite."
+      },
+      {
+        "text": "Servir arquivos PNG menores no mesmo tamanho em pixels",
+        "why": "O bitmap depende dos pixels, não do arquivo."
+      }
+    ]
+  },
+  "ex-7d8v71q2": {
+    "prompt": "Um estudante joga a lista de cursos trinta cartões para baixo num segundo. O que acontece com as capas dos cartões que passaram voando?",
+    "hint": "Um pedido pertence ao tempo de vida do composable.",
+    "choices": [
+      {
+        "text": "As trinta terminam de baixar e decodificar assim mesmo",
+        "why": "Isso gastaria a rede e a memória que a seção 06 quer poupar."
+      },
+      {
+        "text": "São decodificadas em tamanho cheio por segurança",
+        "why": "Nada muda o tamanho pedido."
+      },
+      {
+        "text": "A lista espera cada capa antes de seguir rolando",
+        "why": "Carregar nunca bloqueia a thread principal."
+      },
+      {
+        "text": "São cancelados",
+        "why": "Isso: o `AsyncImage` faz isso sozinho."
+      }
+    ]
+  }
+}

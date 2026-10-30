@@ -1,0 +1,465 @@
+{
+  "ex-m6zaxqz9": {
+    "prompt": "O que é uma máquina virtual Spot, comparada com uma regular do mesmo tamanho?",
+    "hint": "Mesmas imagens, mesmo hardware, mesmos discos.",
+    "choices": [
+      {
+        "text": "Uma fatia menor de um host, com menos vCPUs garantidas do que o tamanho promete",
+        "why": "Isso lembra mais a família B da lição 1. Uma máquina Spot tem todas as vCPUs do tamanho dela, enquanto roda."
+      },
+      {
+        "text": "A mesma máquina em capacidade que o Azure não está usando, sem prioridade para mantê-la",
+        "why": "Certo. Imagens, hardware, discos e desempenho são os mesmos; o que muda é que o Azure toma a capacidade de volta quando uma máquina regular precisa dela."
+      },
+      {
+        "text": "Uma máquina em hardware antigo que o Azure está aposentando, vendida barato",
+        "why": "O guia da Microsoft diz que o Spot roda no mesmo hardware das máquinas regulares. O barato é a prioridade, não o equipamento."
+      },
+      {
+        "text": "Uma máquina regular com SLA de 99% em vez do mais alto",
+        "why": "Não há SLA nenhum para Spot, de porcentagem nenhuma."
+      }
+    ]
+  },
+  "ex-tyk10q34": {
+    "prompt": "A loja quer economizar no servidor de staging, um `Standard_B2s_v2`, declarando-o com `priority: 'Spot'`. O que a documentação diz disso?",
+    "hint": "Olhe a lista de restrições.",
+    "choices": [
+      {
+        "text": "Funciona, e um tamanho burstable recebe o maior desconto",
+        "why": "A série B é a única família que as páginas de Spot citam como não suportada."
+      },
+      {
+        "text": "Funciona, mas os créditos param de acumular enquanto a máquina é Spot",
+        "why": "A documentação não descreve regra assim, porque a pergunta nem surge: tamanhos B não podem ser Spot."
+      },
+      {
+        "text": "É recusado só em `brazilsouth`, onde o Spot não é oferecido",
+        "why": "O Spot é oferecido em toda região exceto no Azure operado pela 21Vianet; o que o exclui é o tamanho."
+      },
+      {
+        "text": "Não é possível: tamanhos da série B não são suportados para Spot",
+        "why": "Certo. A série B e os tamanhos promocionais ficam de fora, então o servidor de staging precisaria de um tamanho D para ser Spot."
+      }
+    ]
+  },
+  "ex-qbsq8p3k": {
+    "prompt": "`priority: 'spot'`, em minúsculas, compilou sem aviso. O que esse silêncio diz?",
+    "hint": "O compilador mostrou o tipo de `priority` quando recebeu um número.",
+    "choices": [
+      {
+        "text": "Que o Azure aceita a grafia em minúsculas, já que o compilador confere os valores com os tipos do Azure",
+        "why": "Ele confere com o tipo que tem, e para `priority` esse tipo é qualquer string. Ele não comparou o valor com nada."
+      },
+      {
+        "text": "Nada sobre o Azure: o tipo de `priority` é qualquer string, então não havia lista com que conferir",
+        "why": "Certo. Se o Resource Manager aceita `spot` é o serviço de computação que decide; copie `Spot` da lista da CLI."
+      },
+      {
+        "text": "Que o compilador corrigiu a caixa, já que o template mostra `Spot`",
+        "why": "O template mostrou `\"spot\"`, exatamente como foi escrito. O compilador não muda nada."
+      },
+      {
+        "text": "Que o aviso só aparece na implantação, quando a assinatura é conhecida",
+        "why": "O compilador avisa na compilação ou não avisa; ele mostrou um aviso para o número no mesmo lugar."
+      }
+    ]
+  },
+  "ex-ntmebgcs": {
+    "prompt": "A uma tarifa regular ilustrativa de 0,20 USD por hora, e supondo para a conta um desconto Spot de 60%, quanto custam 300 horas Spot, em USD?",
+    "hint": "Você paga 40% da tarifa regular.",
+    "unit": "USD"
+  },
+  "ex-vdth83xs": {
+    "prompt": "A máquina do relatório da loja já existe como máquina regular. Alguém acrescenta `priority: 'Spot'` ao arquivo dela e implanta de novo. O que deve esperar?",
+    "hint": "Quando o Spot é decidido?",
+    "choices": [
+      {
+        "text": "A máquina é convertida no próximo reinício, e cobrada como Spot a partir daí",
+        "why": "O FAQ da documentação diz que definir Spot só é suportado na criação; uma máquina existente não é convertida."
+      },
+      {
+        "text": "Uma recusa: o Spot só é definido na criação, então isso pede uma máquina nova",
+        "why": "Certo. A lista de erros tem até um código para uma prioridade aplicada a uma máquina criada sem uma, `VMPriorityCannotBeApplied`."
+      },
+      {
+        "text": "Uma máquina Spot ao lado da regular, com o mesmo nome e um sufixo",
+        "why": "Uma implantação nunca inventa uma segunda máquina com nome novo; ela atualiza a que nomeia."
+      },
+      {
+        "text": "Nada, porque a prioridade só é lida pela CLI e não pelo Bicep",
+        "why": "O template levou `\"priority\": \"Spot\"`; o Resource Manager a lê como qualquer outra propriedade."
+      }
+    ]
+  },
+  "ex-jct26gzf": {
+    "prompt": "O que `maxPrice: -1` decide para uma máquina Spot?",
+    "hint": "O portal chama isso de tipo de despejo.",
+    "choices": [
+      {
+        "text": "Que a máquina só é despejada por capacidade, e nunca cobrada acima do preço padrão",
+        "why": "Certo. O preço deixa de ser motivo para despejá-la, e a documentação diz que você paga o preço Spot ou o padrão, o que for menor."
+      },
+      {
+        "text": "Que ela nunca é despejada, ao custo de pagar o preço padrão",
+        "why": "A capacidade sempre pode levar uma máquina Spot; -1 tira só o motivo de preço."
+      },
+      {
+        "text": "Que não há máximo, então o preço por hora pode passar do preço padrão",
+        "why": "A documentação é explícita: você nunca é cobrado acima do preço padrão."
+      },
+      {
+        "text": "Que o máximo é escolhido pelo Azure a cada hora a partir do preço atual",
+        "why": "Ninguém escolhe um máximo; -1 quer dizer que não há nenhum para fins de despejo."
+      }
+    ]
+  },
+  "ex-jjwj0xc1": {
+    "prompt": "Associe cada parte da máquina ao que um despejo deixa dela, em cada política.",
+    "hint": "Uma política mantém a máquina; a outra não mantém nada.",
+    "pairs": [
+      {
+        "left": "Deallocate: os discos",
+        "right": "Mantidos, e ainda cobrados"
+      },
+      {
+        "left": "Deallocate: os núcleos",
+        "right": "Ainda contados na cota Spot"
+      },
+      {
+        "left": "Delete: os discos",
+        "right": "Apagados junto com a máquina"
+      },
+      {
+        "left": "Delete: a substituta",
+        "right": "Criada por algo de fora, de qualquer tamanho, em qualquer zona"
+      }
+    ],
+    "right_distractors": [
+      "Reiniciada pelo Azure assim que a capacidade volta"
+    ]
+  },
+  "ex-yt89gfmp": {
+    "prompt": "`maxPrice: 0.05` fez o compilador mostrar cinco erros e não gravar template nenhum. Qual é o jeito de escrever esse máximo em Bicep?",
+    "hint": "O Bicep só tem inteiros.",
+    "choices": [
+      {
+        "text": "`maxPrice: '0.05'`, como texto, que o Resource Manager converte",
+        "why": "Texto é o que o aviso recusou para `'-1'`: o tipo quer um número."
+      },
+      {
+        "text": "`maxPrice: 5`, já que a propriedade é em centavos",
+        "why": "O máximo é em dólares americanos por hora; 5 seriam cinco dólares."
+      },
+      {
+        "text": "`maxPrice: json('0.05')`, que vira o número 0.05 quando o arquivo é implantado",
+        "why": "Certo. Compilou sem aviso, e o template leva `[json('0.05')]` para o Resource Manager avaliar."
+      },
+      {
+        "text": "`maxPrice: 0,05`, com a vírgula que o Bicep usa para decimais",
+        "why": "O Bicep não tem números decimais em notação nenhuma; uma vírgula separa itens."
+      }
+    ]
+  },
+  "ex-dsrdmbq2": {
+    "prompt": "Uma máquina Spot com máximo de 0,04 USD por hora foi despejada quando o preço Spot subiu para 0,05. No dia seguinte o preço está em 0,03. O que acontece com a máquina?",
+    "hint": "Olhe as últimas linhas da tabela da documentação.",
+    "choices": [
+      {
+        "text": "Ela reinicia sozinha, já que o preço voltou a ficar abaixo do máximo",
+        "why": "A documentação diz que a máquina não é reiniciada automaticamente depois de um despejo por preço."
+      },
+      {
+        "text": "Ela reinicia sozinha, mas é cobrada pelo máximo de 0,04",
+        "why": "Nada a reinicia, e você nunca paga o seu máximo, só o preço atual."
+      },
+      {
+        "text": "Fica parada até alguém iniciá-la, e então é cobrada pelo preço Spot atual",
+        "why": "Certo. Um despejo por preço não é desfeito quando o preço cai; reiniciar é com você."
+      },
+      {
+        "text": "É apagada, porque um despejo por preço ignora a política de despejo",
+        "why": "A política de despejo decide o que sobra, seja qual for o motivo do despejo."
+      }
+    ]
+  },
+  "ex-t7rc8y0b": {
+    "prompt": "Quais destas valem para uma máquina Spot despejada com `Deallocate`? Marque todas as que se aplicam.",
+    "hint": "Pense no que ainda está lá, e em quem paga por isso.",
+    "choices": [
+      {
+        "text": "Os discos são mantidos e cobrados enquanto ela espera",
+        "why": "A documentação diz que o armazenamento dos discos continua sendo cobrado."
+      },
+      {
+        "text": "Os núcleos dela ainda contam na cota da assinatura",
+        "why": "Máquinas desalocadas contam na cota, o que pode bloquear as próprias substitutas."
+      },
+      {
+        "text": "Não há garantia de que um reinício dê certo",
+        "why": "A capacidade volta quando volta; a documentação diz que não há garantia de que a alocação dê certo."
+      },
+      {
+        "text": "Ela pode ser reiniciada em outra zona que tenha espaço",
+        "why": "Uma máquina desalocada fica na região e na zona dela; mudar de lugar é o que o Delete e uma máquina nova dão."
+      },
+      {
+        "text": "O Azure a reinicia sozinho quando a capacidade volta",
+        "why": "Nada a reinicia; algo que você constrói tem de continuar tentando, ou o try and restore de um scale set para instâncias de um conjunto."
+      }
+    ]
+  },
+  "ex-eqygsjz4": {
+    "prompt": "No documento do Scheduled Events, o tipo de evento que anuncia um despejo Spot é ___.",
+    "hint": "O aviso mínimo dele é de 30 segundos.",
+    "blanks": [
+      {
+        "accept": [
+          "Preempt"
+        ]
+      }
+    ]
+  },
+  "ex-cvaqhk04": {
+    "prompt": "Ponha em ordem o ouvinte da máquina do relatório, do boot ao despejo.",
+    "hint": "Ele pergunta muito antes de qualquer coisa acontecer.",
+    "items": [
+      "Consultar o endpoint do Scheduled Events no boot, e a cada segundo depois",
+      "Ver um DocumentIncarnation novo com um Preempt que nomeia esta máquina",
+      "Mandar SIGTERM, para que o relatório grave um checkpoint e saia",
+      "Fazer POST de um corpo StartRequests nomeando o evento",
+      "O Azure despeja a máquina, no NotBefore ou antes"
+    ],
+    "trap": "Esperar para iniciar o ouvinte até desconfiar de um problema: a primeira resposta pode levar dois minutos."
+  },
+  "ex-11xpftyf": {
+    "prompt": "Por que o ouvinte começa no boot, e não quando as métricas da máquina sugerem que um despejo vem aí?",
+    "hint": "O que liga o Scheduled Events?",
+    "choices": [
+      {
+        "text": "Porque o Azure só manda o Preempt para ouvintes que se registraram no boot",
+        "why": "Ninguém se registra. A máquina pergunta, e o serviço responde a quem pergunta com o cabeçalho."
+      },
+      {
+        "text": "A primeira requisição o liga, e essa resposta leva até dois minutos",
+        "why": "Certo. Trinta segundos de aviso não servem para um ouvinte cuja primeira resposta ainda está a caminho."
+      },
+      {
+        "text": "Porque as métricas ficam no Azure Monitor, que uma máquina não consegue ler",
+        "why": "Não há métricas que prevejam um despejo; não é por isso que o ouvinte começa cedo."
+      },
+      {
+        "text": "Porque um ouvinte iniciado depois usa uma api-version mais antiga",
+        "why": "A versão é a que a requisição nomeia, a qualquer momento."
+      }
+    ]
+  },
+  "ex-0b893171": {
+    "prompt": "O ouvinte quebra antes de confirmar um Preempt. O que acontece com o despejo?",
+    "hint": "O que uma confirmação muda?",
+    "choices": [
+      {
+        "text": "É adiado até a máquina confirmar, demore o quanto demorar",
+        "why": "Um evento não espera consentimento; a documentação diz que ele segue no NotBefore."
+      },
+      {
+        "text": "É cancelado, e um Preempt novo chega um minuto depois",
+        "why": "Nada cancela um despejo porque a máquina ficou calada."
+      },
+      {
+        "text": "Vira um Delete, diga a política o que disser",
+        "why": "A política de despejo é fixada na máquina; o ouvinte não tem papel nela."
+      },
+      {
+        "text": "Segue no NotBefore, como seguiria de qualquer jeito",
+        "why": "Certo. Confirmar só deixa o Azure seguir antes; o silêncio nunca alonga a janela."
+      }
+    ]
+  },
+  "ex-a7jmtsme": {
+    "prompt": "Um ouvinte em cada instância de um scale set drena o worker dela em qualquer Preempt que veja, sem ler `Resources`. Uma instância Spot está sendo despejada. O que dá errado?",
+    "hint": "Quem recebe os eventos de um placement group?",
+    "choices": [
+      {
+        "text": "Nada: cada instância só recebe os próprios eventos",
+        "why": "A documentação diz que os eventos de toda máquina de um placement group de scale set são entregues a todas elas."
+      },
+      {
+        "text": "Todas param os seus workers, enquanto só uma máquina está saindo",
+        "why": "Certo. A correção é a verificação que o `spot-watch.py` faz: agir só quando o nome desta máquina está em `Resources`."
+      },
+      {
+        "text": "A instância despejada nunca vê o próprio evento, porque outra o confirmou antes",
+        "why": "Toda instância pode ler o evento; a confirmação não o esconde."
+      },
+      {
+        "text": "O scale set recusa as confirmações e o despejo atrasa",
+        "why": "O serviço responde 200 a qualquer id de evento válido, mesmo um já confirmado."
+      }
+    ]
+  },
+  "ex-ryea2t04": {
+    "prompt": "Um scale set Flexible tem `baseRegularPriorityCount: 2` e `regularPriorityPercentageAboveBase: 25`. Com capacidade 12, quantas instâncias dele são Spot, arredondando como os exemplos da documentação?",
+    "hint": "Tire a base, divida o resto, e arredonde a parcela regular para baixo.",
+    "unit": "instâncias"
+  },
+  "ex-26mze2s4": {
+    "prompt": "`orchestrationMode: 'Uniform'` ao lado de um `priorityMixPolicy` compilou sem aviso. O que concluir?",
+    "hint": "O que o compilador confere, e o que não confere?",
+    "choices": [
+      {
+        "text": "Que scale sets Uniform agora suportam a mistura, já que o tipo deixa um conjunto Uniform levar uma",
+        "why": "A documentação diz com todas as letras que a mistura só funciona com Flexible; o tipo não sabe nada dessa regra."
+      },
+      {
+        "text": "Nada a favor: o compilador confere cada propriedade sozinha, e a mistura precisa de Flexible",
+        "why": "Certo. As regras que amarram propriedades umas às outras estão na documentação e na resposta do Azure a uma implantação."
+      },
+      {
+        "text": "Que a mistura será aplicada depois que o conjunto for convertido para Flexible",
+        "why": "O modo de orquestração é escolhido uma vez, quando o conjunto é criado, como disse a lição 4."
+      },
+      {
+        "text": "Que um aviso aparece quando um único placement group é definido",
+        "why": "Nenhum aviso depende disso; o compilador nem comparou as duas propriedades."
+      }
+    ]
+  },
+  "ex-1kgya3qk": {
+    "prompt": "A configuração de autoscale da lição 4 é apontada para os workers Spot da loja, que têm o try and restore ligado. O que acontece com o try and restore?",
+    "hint": "Quem é dono da contagem?",
+    "choices": [
+      {
+        "text": "Ele restaura primeiro as instâncias despejadas, e o autoscale acrescenta as que ainda faltarem",
+        "why": "Os dois não dividem a contagem; a documentação diz que um desliga o outro."
+      },
+      {
+        "text": "Continua ligado, mas só para instâncias despejadas por preço",
+        "why": "Ele só restaura instâncias despejadas por capacidade, e aqui está desligado de vez."
+      },
+      {
+        "text": "Fica desligado: a contagem passa a ser movida pelas regras de autoscale",
+        "why": "Certo. E a documentação aconselha Delete para um conjunto Spot com autoscale, para que instâncias despejadas não segurem discos e cota."
+      },
+      {
+        "text": "Ele sobe o mínimo do autoscale para a contagem restaurada",
+        "why": "Nada muda o perfil de autoscale; ele fica como a lição 4 o escreveu."
+      }
+    ]
+  },
+  "ex-wk6d7qyt": {
+    "prompt": "A API de pedidos precisa de três máquinas para responder e roda em até doze no horário de pico. Como ela deve usar o Spot?",
+    "hint": "Para que serve o mínimo?",
+    "choices": [
+      {
+        "text": "De jeito nenhum, porque uma API de produção é importante demais para o Spot",
+        "why": "A importância não é o teste; o que custa um despejo é, e acima do mínimo custa pouco."
+      },
+      {
+        "text": "As doze em Spot, espalhadas por três zonas para que um despejo leve poucas",
+        "why": "Despejos Spot podem levar muitas de uma vez, e aí a API para de responder; o mínimo tem de ser regular."
+      },
+      {
+        "text": "Uma base de três máquinas regulares, e Spot só acima dela",
+        "why": "Certo. Uma mistura de prioridades com `baseRegularPriorityCount: 3` mantém a API respondendo na noite em que toda instância Spot vai embora."
+      },
+      {
+        "text": "Três máquinas Spot com `maxPrice: -1`, que nunca são despejadas",
+        "why": "`-1` tira só o motivo de preço; a capacidade ainda pode levar todas elas."
+      }
+    ]
+  },
+  "ex-rcd0yx5y": {
+    "prompt": "A uma taxa de despejo ilustrativa de 20% por hora, qual a chance, em porcentagem, de um job de três horas numa máquina Spot terminar sem despejo nenhum?",
+    "hint": "Cada hora passa sem despejo 80% das vezes.",
+    "unit": "por cento"
+  },
+  "ex-rzsm8q5f": {
+    "prompt": "O relatório noturno não grava checkpoints e tem de ficar pronto até as 07:00. Em Spot ele economiza todo mês e perde o prazo em cerca de uma noite a cada seis. Que mudança torna o Spot seguro para ele?",
+    "hint": "O que um despejo joga fora?",
+    "choices": [
+      {
+        "text": "Definir `maxPrice: -1`, para que o relatório nunca seja despejado",
+        "why": "`-1` tira só o motivo de preço; os despejos por capacidade, os da conta, continuam."
+      },
+      {
+        "text": "Gravar um checkpoint no Blob Storage a cada meia hora, e mais um no SIGTERM",
+        "why": "Certo. Um despejo passa a custar uns 25 minutos em vez de recomeçar do zero, e o prazo se mantém."
+      },
+      {
+        "text": "Mudar a política de despejo para Delete, para que a substituta comece mais rápido",
+        "why": "Um reinício mais rápido não traz de volta duas horas de trabalho perdido."
+      },
+      {
+        "text": "Consultar o Scheduled Events dez vezes por segundo para ter mais aviso",
+        "why": "O aviso é de no máximo trinta segundos, pergunte quantas vezes perguntar, e o serviço limita uma máquina a cinco requisições por segundo."
+      }
+    ]
+  },
+  "ex-jbjb39zx": {
+    "prompt": "No portal, alguém escolheu o tipo de despejo *Price or capacity* com máximo de 0,06 USD por hora. Como essa escolha é escrita num arquivo Bicep?",
+    "hint": "A API não tem propriedade com o nome da escolha do portal.",
+    "choices": [
+      {
+        "text": "`evictionType: 'PriceOrCapacity'` ao lado de `evictionPolicy`",
+        "why": "O compilador recusou `evictionType`: não é propriedade de uma máquina virtual."
+      },
+      {
+        "text": "`evictionPolicy: 'Price'`, com o máximo escrito em `billingProfile` logo abaixo",
+        "why": "A política é Deallocate ou Delete, o que sobra depois, não o motivo do despejo."
+      },
+      {
+        "text": "`priority: 'Spot'` sozinho, já que o despejo por preço é o que uma máquina Spot faz por padrão",
+        "why": "A capacidade é o único motivo sempre presente; o preço só existe com um máximo."
+      },
+      {
+        "text": "`billingProfile: { maxPrice: json('0.06') }`, um número em vez de -1",
+        "why": "Certo. O tipo de despejo é o valor de `maxPrice`, e um decimal precisa de `json` no Bicep."
+      }
+    ]
+  },
+  "ex-7h60kjxm": {
+    "prompt": "Uma equipe quer que cada worker Spot num scale set tenha vários minutos para drenar antes de ser levado. Que aviso a documentação oferece?",
+    "hint": "Olhe o aviso mínimo de cada tipo de evento, e o que uma instância Spot pode ativar.",
+    "choices": [
+      {
+        "text": "Uma notificação Terminate de 5 a 15 minutos, definida uma vez no modelo do scale set",
+        "why": "Notificações Terminate existem para instâncias de scale set, e a documentação diz que não podem ser ativadas nas Spot."
+      },
+      {
+        "text": "Um evento Redeploy com dez minutos de aviso antes de cada despejo",
+        "why": "Redeploy é uma mudança para outro host, não um despejo; um despejo Spot é um Preempt."
+      },
+      {
+        "text": "No máximo trinta segundos, pelo evento Preempt, em regime de melhor esforço",
+        "why": "Certo. Nada o alonga, então os workers têm de poder parar nesse tempo ou sem aviso nenhum."
+      },
+      {
+        "text": "Tempo ilimitado, enquanto a máquina ainda não tiver confirmado o evento",
+        "why": "O evento segue no NotBefore, a máquina tendo confirmado ou não."
+      }
+    ]
+  },
+  "ex-mdkmr5z0": {
+    "prompt": "Dez workers Spot `D2s_v5`, fora de qualquer scale set, foram despejados com `Deallocate`. A automação que cria as substitutas agora falha, e a cota Spot ilustrativa é de 20 vCPUs. Por quê, e o que teria evitado isso?",
+    "hint": "O que máquinas desalocadas ainda seguram?",
+    "choices": [
+      {
+        "text": "As 20 vCPUs delas ainda contam na cota Spot; `Delete` as teria liberado",
+        "why": "Certo. Máquinas desalocadas contam na cota, então as substitutas não podem ser criadas até as antigas sumirem ou reiniciarem."
+      },
+      {
+        "text": "O preço Spot subiu; `maxPrice: -1` teria evitado isso",
+        "why": "Um preço acima do máximo barra uma criação com um erro próprio, e essas máquinas nem tinham problema de máximo."
+      },
+      {
+        "text": "A região não tem cota Spot nenhuma; um pedido de cota regular resolve",
+        "why": "A cota existia e estava em uso; a cota Spot é um conjunto separado, aumentado pelo pedido de sempre."
+      },
+      {
+        "text": "Os nomes estão ocupados; um scale set teria gerado nomes novos",
+        "why": "Nada na documentação liga essa falha a nomes; as máquinas desalocadas estão segurando os núcleos."
+      }
+    ]
+  }
+}

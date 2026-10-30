@@ -1,0 +1,342 @@
+{
+  "ex-10qfzmqx": {
+    "prompt": "Onde a exportação do Cloud Billing escreve a fatura?",
+    "hint": "O cliente é dono dele.",
+    "choices": [
+      {
+        "text": "Num arquivo CSV mandado por e-mail todo mês",
+        "why": "A exportação é uma tabela que cresce, não um arquivo."
+      },
+      {
+        "text": "Num dataset do BigQuery",
+        "why": "Isso. Toda linha da fatura vira linhas ali, e qualquer pergunta sobre custo vira uma consulta."
+      },
+      {
+        "text": "Nos logs de auditoria do projeto",
+        "why": "Logs de auditoria registram quem fez o quê, não quanto custou."
+      },
+      {
+        "text": "Num tópico do Pub/Sub da conta de faturamento",
+        "why": "É ali que um orçamento pode publicar, lição 12."
+      }
+    ]
+  },
+  "ex-bz04642h": {
+    "prompt": "Que parte de montar a exportação de faturamento pode ser escrita em Terraform?",
+    "hint": "Duas coisas, por duas pessoas.",
+    "choices": [
+      {
+        "text": "A própria exportação, com um recurso próprio",
+        "why": "Não há recurso de Terraform nem comando gcloud para ela."
+      },
+      {
+        "text": "As duas, num recurso só",
+        "why": "A exportação só é ligada no console."
+      },
+      {
+        "text": "Nenhuma; as duas são só no console",
+        "why": "O dataset é um recurso comum."
+      },
+      {
+        "text": "O dataset em que ela escreve",
+        "why": "Isso. Ligar a exportação é feito no console, por alguém com um papel de faturamento."
+      }
+    ]
+  },
+  "ex-0svz7kdf": {
+    "prompt": "Por que o plano recusou `dataset_id = \"billing-export\"`?",
+    "hint": "Leia o erro.",
+    "choices": [
+      {
+        "text": "Um id de dataset não aceita hífens",
+        "why": "Isso. Letras, números e sublinhados, e o provider conferiu antes de perguntar a alguém."
+      },
+      {
+        "text": "O nome já estava em uso no BigQuery",
+        "why": "O plano não perguntou nada ao BigQuery."
+      },
+      {
+        "text": "O projeto planner-logs não existe",
+        "why": "O erro nomeia o id do dataset, não o projeto."
+      },
+      {
+        "text": "A localização não é suportada",
+        "why": "O arquivo corrigido manteve a mesma localização e planejou."
+      }
+    ]
+  },
+  "ex-qf7f2qzy": {
+    "prompt": "Por que o grupo de finanças recebe `roles/bigquery.dataViewer` no dataset e não no `planner-logs`?",
+    "hint": "O que mais há no projeto?",
+    "choices": [
+      {
+        "text": "Papéis de dataset são mais baratos que de projeto",
+        "why": "Papéis não custam nada."
+      },
+      {
+        "text": "Papéis do BigQuery não podem ser dados num projeto",
+        "why": "Podem; só alcançariam longe demais."
+      },
+      {
+        "text": "No projeto, abriria tudo o que está guardado ali",
+        "why": "Isso. Um papel vai na menor coisa que resolve."
+      },
+      {
+        "text": "A exportação precisa do papel no dataset para escrever",
+        "why": "Este papel é para pessoas lendo, não para a exportação."
+      }
+    ]
+  },
+  "ex-0jcvjn9f": {
+    "prompt": "O planner liga a exportação em novembro de 2026 e em dezembro lhe pedem o custo de cada equipe em agosto. O que as consultas desta lição respondem?",
+    "hint": "Quando a exportação começa?",
+    "choices": [
+      {
+        "text": "Tudo, já que a exportação copia o histórico da conta",
+        "why": "A lição diz para não contar com histórico de antes de ela ser ligada."
+      },
+      {
+        "text": "O total de agosto, mas não por equipe",
+        "why": "As linhas de agosto não estão no dataset de jeito nenhum."
+      },
+      {
+        "text": "Nada: essas linhas nunca foram escritas",
+        "why": "Isso. O momento mais barato de ligá-la é o dia em que a conta de faturamento é aberta."
+      },
+      {
+        "text": "Tudo, depois de mudar a localização do dataset",
+        "why": "A localização é definida uma vez, e não tem nada a ver com histórico."
+      }
+    ]
+  },
+  "ex-mwhdt56g": {
+    "prompt": "No nome da tabela da exportação, cada hífen do id da conta de faturamento vira ___.",
+    "hint": "Olhe gcp_billing_export_v1_012345_6789AB_CDEF01.",
+    "blanks": [
+      {
+        "accept": [
+          "um sublinhado",
+          "sublinhado",
+          "_"
+        ]
+      }
+    ]
+  },
+  "ex-cr5pb9kq": {
+    "prompt": "De onde vêm os números do mês de linhas de faturamento do laboratório?",
+    "hint": "O laboratório não tem fatura.",
+    "choices": [
+      {
+        "text": "O make_export.py os inventa",
+        "why": "Isso. O que é real é a forma das linhas e o que as consultas fazem com elas."
+      },
+      {
+        "text": "O DuckDB os baixa do Google",
+        "why": "Nada na lição chega ao Google."
+      },
+      {
+        "text": "O emulador os registra",
+        "why": "O emulador é só Pub/Sub, e não cobra nada."
+      },
+      {
+        "text": "Uma amostra pública da fatura real do planner",
+        "why": "O planner é a empresa inventada do curso."
+      }
+    ]
+  },
+  "ex-6esw2ns0": {
+    "prompt": "Por que não há uma coluna `labels.team` para agrupar?",
+    "hint": "Olhe o tipo de `labels`.",
+    "choices": [
+      {
+        "text": "A exportação descarta os rótulos",
+        "why": "Eles estão na linha, como lista."
+      },
+      {
+        "text": "Rótulos são um struct lido com ponto",
+        "why": "`project` e `sku` são structs; `labels` é um array deles."
+      },
+      {
+        "text": "O DuckDB não lê colunas aninhadas",
+        "why": "Ele leu `service.description` com um ponto."
+      },
+      {
+        "text": "Rótulos são uma lista por linha",
+        "why": "Isso. A lista de uma linha tem uma entrada `team` ou nenhuma, e ela é procurada dentro da lista."
+      }
+    ]
+  },
+  "ex-1sbm1n5t": {
+    "prompt": "A coluna `cost` da exportação é `FLOAT64`. O que a lição faz a respeito?",
+    "hint": "Quando o total é arredondado?",
+    "choices": [
+      {
+        "text": "Converte cada linha em centavos inteiros antes",
+        "why": "Isso é arredondar linha a linha, o que aumenta o erro."
+      },
+      {
+        "text": "Arredonda os totais no fim, nunca linha a linha",
+        "why": "Isso. Arredondar cada linha antes aumentaria o erro de fração de centavo, não o tiraria."
+      },
+      {
+        "text": "Nada; floats são exatos para dinheiro",
+        "why": "Uma soma de valores de ponto flutuante pode errar por uma fração de centavo."
+      },
+      {
+        "text": "Lê a fatura em vez da exportação",
+        "why": "A lição consulta a exportação."
+      }
+    ]
+  },
+  "ex-y7c1gjdj": {
+    "prompt": "Quantas linhas o `make_export.py` escreveu para outubro?",
+    "hint": "Sete linhas por dia."
+  },
+  "ex-85xsx480": {
+    "prompt": "O `month.sql` informou 469,05 dólares. Por que não é isso que a fatura cobra?",
+    "hint": "Que coluna ele somou?",
+    "choices": [
+      {
+        "text": "Ele soma o custo e deixa os créditos de fora",
+        "why": "Isso. Créditos são uma lista própria em cada linha, e o `net.sql` os subtrai."
+      },
+      {
+        "text": "Ele conta o 31 de outubro duas vezes",
+        "why": "São 31 dias e sete linhas cada: 217 linhas."
+      },
+      {
+        "text": "Está em reais, não em dólares",
+        "why": "Toda linha diz `USD`."
+      },
+      {
+        "text": "Inclui imposto que a fatura deixa de fora",
+        "why": "As linhas não têm imposto."
+      }
+    ]
+  },
+  "ex-avvz8cv2": {
+    "prompt": "Na resposta do `net.sql`, quantos dólares de créditos o Compute Engine recebeu? Dê o valor como número positivo.",
+    "hint": "A coluna de créditos, sem o sinal.",
+    "unit": "dólares"
+  },
+  "ex-qh4xe6db": {
+    "prompt": "Por que os créditos de uma linha são somados dentro dela antes de serem somados entre linhas?",
+    "hint": "Cada linha guarda uma lista.",
+    "choices": [
+      {
+        "text": "Créditos já são totais do mês",
+        "why": "Eles são por linha, como os custos."
+      },
+      {
+        "text": "O BigQuery proíbe somar uma coluna duas vezes",
+        "why": "Não há essa regra; a lista é o motivo."
+      },
+      {
+        "text": "Cada linha tem a sua própria lista de créditos",
+        "why": "Isso. Uma pequena consulta sobre a lista da linha dá um número por linha, e esses números se somam."
+      },
+      {
+        "text": "Deixa a consulta mais barata",
+        "why": "Ela lê os mesmos bytes de qualquer jeito."
+      }
+    ]
+  },
+  "ex-7dbz2qvc": {
+    "prompt": "O `forgotten.sql` achou dezesseis dólares de núcleos N2 no `planner-dev` sem rótulo. Que máquina era?",
+    "hint": "A exportação padrão não tem nomes de recursos.",
+    "choices": [
+      {
+        "text": "A nomeada no SKU",
+        "why": "Um SKU nomeia o que o Google vende, não a máquina de um cliente."
+      },
+      {
+        "text": "A consulta não sabe dizer",
+        "why": "Isso. A exportação detalhada ou uma olhada nas instâncias do planner-dev diria."
+      },
+      {
+        "text": "A máquina do Pub/Sub da equipe de dados",
+        "why": "Pub/Sub é um serviço próprio, e aquela linha leva `team=data`."
+      },
+      {
+        "text": "Uma máquina do planner-prod cobrada no dev",
+        "why": "O projeto da linha é onde o custo pertence."
+      }
+    ]
+  },
+  "ex-bpe5cqx2": {
+    "prompt": "Um relatório rodado contra a exportação real, sem cláusula `WHERE`, mostra um total várias vezes maior que a fatura deste mês. Qual a causa mais provável?",
+    "hint": "A exportação guarda todo mês.",
+    "choices": [
+      {
+        "text": "Deixou os créditos de fora",
+        "why": "Créditos são uma fração de um mês, não várias vezes ele."
+      },
+      {
+        "text": "Os floats do BigQuery o inflaram",
+        "why": "Erros de ponto flutuante são frações de centavo."
+      },
+      {
+        "text": "A exportação detalhada duplicou cada linha",
+        "why": "As duas exportações são tabelas separadas."
+      },
+      {
+        "text": "Ele somou todos os meses da tabela",
+        "why": "Isso. Filtre por `invoice.month`; isso também mantém baixos os bytes lidos, e o preço da consulta."
+      }
+    ]
+  },
+  "ex-8q1m2f3f": {
+    "prompt": "Ligue cada grafia do DuckDB à do BigQuery.",
+    "hint": "Três diferenças.",
+    "pairs": [
+      {
+        "left": "coalesce(x, 0)",
+        "right": "IFNULL(x, 0)"
+      },
+      {
+        "left": "unnest(credits) AS t(c)",
+        "right": "UNNEST(credits) AS c"
+      },
+      {
+        "left": "len(labels)",
+        "right": "ARRAY_LENGTH(labels)"
+      }
+    ],
+    "right_distractors": [
+      "labels.team"
+    ]
+  },
+  "ex-xr0qwg1s": {
+    "prompt": "Ponha em ordem os passos do nada até uma consulta sobre o custo do mês passado.",
+    "hint": "O dataset vem antes da exportação.",
+    "items": [
+      "criar um dataset no planner-logs",
+      "ligar a exportação no console",
+      "esperar enquanto um mês de linhas chega",
+      "consultar com um WHERE em invoice.month"
+    ],
+    "trap": "Ligar a exportação primeiro é o deslize: ela escreve num dataset, que tem de existir para ela nomear."
+  },
+  "ex-7ym3e72x": {
+    "prompt": "A líder de finanças do planner pede os totais por equipe do mês passado, líquidos de créditos, todo mês. Que consulta isso pede que esta lição não escreveu?",
+    "hint": "Junte duas delas.",
+    "choices": [
+      {
+        "text": "forgotten.sql com todo rótulo em vez de nenhum",
+        "why": "Isso listaria linhas com rótulo, ainda brutas."
+      },
+      {
+        "text": "month.sql rodado uma vez por equipe",
+        "why": "O month.sql não tem equipe e deixa os créditos de fora."
+      },
+      {
+        "text": "Nenhuma; a tabela de custos do console basta",
+        "why": "O ponto da lição é que a exportação responde o que a tabela não responde."
+      },
+      {
+        "text": "teams.sql com os créditos do net.sql e um filtro de mês",
+        "why": "Isso. Agrupar pelo rótulo team, somar os créditos por linha e filtrar por `invoice.month`."
+      }
+    ]
+  }
+}

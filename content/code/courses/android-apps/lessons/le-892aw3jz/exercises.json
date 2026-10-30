@@ -1,0 +1,615 @@
+[
+  {
+    "id": "ex-grj9rgdw",
+    "version": 1,
+    "section": "single-source",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the planner's single source of truth, where does the week screen read its sessions from?",
+    "hint": "One of the two stores is always there.",
+    "choices": [
+      {
+        "text": "Room only",
+        "correct": true,
+        "why": "Right: the network only writes into Room."
+      },
+      {
+        "text": "The server, with Room as a fallback when offline",
+        "correct": false,
+        "why": "That is the two-source design the section starts by rejecting."
+      },
+      {
+        "text": "Whichever answered most recently",
+        "correct": false,
+        "why": "Then every question about the screen has two halves."
+      },
+      {
+        "text": "The repository's in-memory list",
+        "correct": false,
+        "why": "The repository holds no list; `week()` returns Room's `Flow`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgfjgcgc",
+    "version": 1,
+    "section": "single-source",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a session fetched by `refresh()` reach a screen already collecting `week()`?",
+    "hint": "Lesson 15, section 06.",
+    "choices": [
+      {
+        "text": "`refresh()` returns the sessions and the screen adds them to its list",
+        "correct": false,
+        "why": "`refresh()` returns only a count inside a `Result`."
+      },
+      {
+        "text": "The write into Room makes the `Flow` run its query again",
+        "correct": true,
+        "why": "Right: one road, through the database."
+      },
+      {
+        "text": "The screen must call `week()` again after each refresh",
+        "correct": false,
+        "why": "The `Flow` it already holds answers again by itself."
+      },
+      {
+        "text": "Retrofit pushes it to every collector",
+        "correct": false,
+        "why": "Retrofit knows nothing about collectors."
+      }
+    ]
+  },
+  {
+    "id": "ex-kfwyx5qd",
+    "version": 1,
+    "section": "the-repository",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `SessionRepository` receive its DAO and API through the constructor?",
+    "hint": "Look at how each test builds it.",
+    "choices": [
+      {
+        "text": "So a test hands it an in-memory database and its own server",
+        "correct": true,
+        "why": "Right, and section 07 passes fakes the same way."
+      },
+      {
+        "text": "Room requires DAOs to be passed in",
+        "correct": false,
+        "why": "Room hands DAOs out; it does not require anyone to receive them."
+      },
+      {
+        "text": "To make the class a singleton",
+        "correct": false,
+        "why": "Constructor parameters do not make anything a singleton."
+      },
+      {
+        "text": "Because Kotlin forbids `val` fields set inside a class",
+        "correct": false,
+        "why": "Kotlin allows them; the choice is about testing."
+      }
+    ]
+  },
+  {
+    "id": "ex-g37cnjkh",
+    "version": 1,
+    "section": "the-repository",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`refresh()` catches `IOException` and `HttpException` and nothing else. What happens to a `SerializationException` from a malformed response?",
+    "hint": "Which failures does the section call ordinary?",
+    "choices": [
+      {
+        "text": "It becomes a `Result.failure`",
+        "correct": false,
+        "why": "Only the two named exceptions are turned into a `Result`."
+      },
+      {
+        "text": "It is thrown to the caller, loudly",
+        "correct": true,
+        "why": "Right: a malformed response is a bug to see, not a network condition to absorb."
+      },
+      {
+        "text": "Room rolls back and the screen goes empty",
+        "correct": false,
+        "why": "Nothing was written yet, and Room's rows are untouched."
+      },
+      {
+        "text": "Retrofit retries the request",
+        "correct": false,
+        "why": "Retrofit does not retry on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9wt4472",
+    "version": 1,
+    "section": "the-repository",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A row the user added on the phone and the server does not have yet is stored with `___ = false`.",
+    "hint": "The new column of section 03.",
+    "blanks": [
+      {
+        "accept": [
+          "synced"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s5q8n3ek",
+    "version": 1,
+    "section": "cache-and-refresh",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`refreshIfStale()` returned `null` at 12:05. What did that mean?",
+    "hint": "It is not a failure.",
+    "choices": [
+      {
+        "text": "The refresh failed quietly",
+        "correct": false,
+        "why": "A failure is `Result.failure`; `null` is something else."
+      },
+      {
+        "text": "The server answered with no sessions",
+        "correct": false,
+        "why": "No request was made at 12:05."
+      },
+      {
+        "text": "Not needed",
+        "correct": true,
+        "why": "Right: the data was five minutes old, under `maxAge`."
+      },
+      {
+        "text": "The clock was not set",
+        "correct": false,
+        "why": "The test set it; the decision used it."
+      }
+    ]
+  },
+  {
+    "id": "ex-37qaaem6",
+    "version": 1,
+    "section": "cache-and-refresh",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Across 12:00, 12:05 and 12:20, how many requests did the server receive?",
+    "hint": "The last line of `RefreshTest`.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kk2bdr5g",
+    "version": 1,
+    "section": "cache-and-refresh",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The system kills the planner's process and the student opens it again two minutes later. What does `refreshIfStale()` do?",
+    "hint": "Where does `lastRefresh` live?",
+    "choices": [
+      {
+        "text": "Returns `null`, since the data is two minutes old",
+        "correct": false,
+        "why": "The new process does not know when the old one refreshed."
+      },
+      {
+        "text": "Refreshes at once, because `lastRefresh` was in memory",
+        "correct": true,
+        "why": "Right: the safe direction to be wrong in; keep it in a table to avoid it."
+      },
+      {
+        "text": "Fails, because Room lost the sessions",
+        "correct": false,
+        "why": "Room is a file; the sessions survive the process."
+      },
+      {
+        "text": "Waits fifteen minutes before the first request",
+        "correct": false,
+        "why": "With no recorded refresh, the rule says ask now."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9f0nba8",
+    "version": 1,
+    "section": "when-the-network-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the exception the repository receives.",
+    "hint": "An answer with an error, or no answer.",
+    "pairs": [
+      {
+        "left": "the server answers 503",
+        "right": "`HttpException`"
+      },
+      {
+        "left": "nothing listens on the port",
+        "right": "`ConnectException`"
+      },
+      {
+        "left": "the response is not valid JSON",
+        "right": "`SerializationException`"
+      }
+    ],
+    "right_distractors": [
+      "`SQLiteConstraintException`"
+    ]
+  },
+  {
+    "id": "ex-6x9tqxyn",
+    "version": 1,
+    "section": "when-the-network-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After two failed refreshes in `OfflineTest`, what did the week still contain?",
+    "hint": "What does a failed refresh write?",
+    "choices": [
+      {
+        "text": "Nothing: a failure clears the cache",
+        "correct": false,
+        "why": "Nothing in `refresh()` deletes rows."
+      },
+      {
+        "text": "The session from the first refresh",
+        "correct": true,
+        "why": "Right: a failure changes a message, not the data."
+      },
+      {
+        "text": "A placeholder session marked as an error",
+        "correct": false,
+        "why": "The repository never writes errors into Room."
+      },
+      {
+        "text": "Both sessions the server would have sent",
+        "correct": false,
+        "why": "The server sent one session, once."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bjyjs9f",
+    "version": 1,
+    "section": "when-the-network-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A ViewModel receives `Result.failure` from `refreshIfStale()`. Which response does the lesson recommend?",
+    "hint": "Two common mistakes both look like working code.",
+    "choices": [
+      {
+        "text": "Clear the list until a refresh succeeds",
+        "correct": false,
+        "why": "That turns a slow network into lost data on screen."
+      },
+      {
+        "text": "Ignore it, since the data is still there",
+        "correct": false,
+        "why": "Then the user trusts a week that may be stale."
+      },
+      {
+        "text": "Keep the list and show a line saying the server did not answer",
+        "correct": true,
+        "why": "Right: both the data and the failure reach the screen."
+      },
+      {
+        "text": "Retry in a loop until the server answers",
+        "correct": false,
+        "why": "A tight loop drains the battery; retries with backoff are `mobile-offline`'s lesson 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-8q79vvd2",
+    "version": 1,
+    "section": "local-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The student adds a session while the server answers 503. When does it appear in the week?",
+    "hint": "Where does `add()` write first?",
+    "choices": [
+      {
+        "text": "At once",
+        "correct": true,
+        "why": "Right: Room first, marked unsynced."
+      },
+      {
+        "text": "When the server recovers",
+        "correct": false,
+        "why": "That is the wrong design the section starts with."
+      },
+      {
+        "text": "After the next `refresh()`",
+        "correct": false,
+        "why": "The refresh brings the server's rows; this one is already local."
+      },
+      {
+        "text": "Never: the 503 discards it",
+        "correct": false,
+        "why": "A failed send leaves the row where it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytskz26r",
+    "version": 1,
+    "section": "local-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which session ids did `WriteTest` leave waiting to be sent?",
+    "hint": "The first `POST` met a 503.",
+    "choices": [
+      {
+        "text": "`[1]`",
+        "correct": true,
+        "why": "Right: session 2's `POST` was answered."
+      },
+      {
+        "text": "`[1, 2]`",
+        "correct": false,
+        "why": "Session 2 was sent and marked synced."
+      },
+      {
+        "text": "`[2]`",
+        "correct": false,
+        "why": "It was the first `POST` that failed."
+      },
+      {
+        "text": "`[]`",
+        "correct": false,
+        "why": "Nothing retried session 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-6d3zxtzp",
+    "version": 1,
+    "section": "local-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student marks session 7 done offline, and the next refresh brings the server's copy with `done: false`. With this lesson's code, what does the week show?",
+    "hint": "What does `upsertAll` do with an id that exists?",
+    "choices": [
+      {
+        "text": "Done, because local changes win",
+        "correct": false,
+        "why": "Nothing in this code prefers the local copy."
+      },
+      {
+        "text": "Not done: the server's copy overwrote the local one",
+        "correct": true,
+        "why": "Right, the problem section 04 named and `mobile-offline` solves."
+      },
+      {
+        "text": "Both copies, side by side",
+        "correct": false,
+        "why": "One id, one row."
+      },
+      {
+        "text": "An error, as the ids collide",
+        "correct": false,
+        "why": "`@Upsert` replaces; it does not fail on an existing id."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9q072ha",
+    "version": 1,
+    "section": "local-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which tool does the lesson name for sending unsynced rows later, even after the phone restarts?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "A coroutine in `viewModelScope`",
+        "correct": false,
+        "why": "It dies with the screen, let alone a restart."
+      },
+      {
+        "text": "WorkManager",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `Flow` from Room",
+        "correct": false,
+        "why": "A `Flow` reads; it sends nothing anywhere."
+      },
+      {
+        "text": "A second `refresh()` call",
+        "correct": false,
+        "why": "`refresh()` downloads; it never sends local rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-k12ya3sq",
+    "version": 1,
+    "section": "testing-with-fakes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes `FakeSessionDao` a fake rather than a mock?",
+    "hint": "Does it work?",
+    "choices": [
+      {
+        "text": "It works, with a small in-memory implementation",
+        "correct": true,
+        "why": "Right: a mock records calls and is told what to return."
+      },
+      {
+        "text": "It is generated by Room",
+        "correct": false,
+        "why": "It is hand-written in the test folder."
+      },
+      {
+        "text": "It runs only under Robolectric",
+        "correct": false,
+        "why": "Its test runs on the plain JVM."
+      },
+      {
+        "text": "It records the order of calls",
+        "correct": false,
+        "why": "That is what a mock does."
+      }
+    ]
+  },
+  {
+    "id": "ex-b124c5c9",
+    "version": 1,
+    "section": "testing-with-fakes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fake DAO's `between()` returns `flowOf(rows.values.toList())`, built once. Which test would wrongly pass?",
+    "hint": "Real Room answers again after a write.",
+    "choices": [
+      {
+        "text": "A test that the screen updates after an add",
+        "correct": false,
+        "why": "That one would fail with this fake, which is the honest outcome."
+      },
+      {
+        "text": "A test that only reads the first emission, while the real screen depends on later ones",
+        "correct": true,
+        "why": "Right: the fake hides the property the screen relies on."
+      },
+      {
+        "text": "A test of the SQL in `between`",
+        "correct": false,
+        "why": "No fake tests SQL; that is what the Room tests are for."
+      },
+      {
+        "text": "Every test, because `flowOf` never emits",
+        "correct": false,
+        "why": "`flowOf` emits its values once."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qdh1bhm",
+    "version": 1,
+    "section": "testing-with-fakes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the kind of test that answers it.",
+    "hint": "The section's last paragraph.",
+    "pairs": [
+      {
+        "left": "Does my SQL return the week in date order?",
+        "right": "Room in memory, under Robolectric"
+      },
+      {
+        "left": "Does my error mapping turn a 503 into a failure?",
+        "right": "MockWebServer"
+      },
+      {
+        "left": "Does the screen show an offline add?",
+        "right": "Fakes, on the plain JVM"
+      }
+    ],
+    "right_distractors": [
+      "An instrumented test on a phone"
+    ]
+  },
+  {
+    "id": "ex-zfyx6aev",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happens inside `add()` when the server is reachable.",
+    "hint": "Room first.",
+    "items": [
+      "insert the row with `synced = false`",
+      "the week's `Flow` emits it",
+      "`POST` it to the server",
+      "`markSynced(id)`"
+    ]
+  },
+  {
+    "id": "ex-e0hc0qk2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these break the single source of truth? Choose all that apply.",
+    "hint": "Does a screen read anything that is not Room?",
+    "choices": [
+      {
+        "text": "A screen that shows `api.sessions()` directly when online",
+        "correct": true,
+        "why": "Yes: the screen now reads the network."
+      },
+      {
+        "text": "`refresh()` writing the server's sessions into Room",
+        "correct": false,
+        "why": "No: that is the one road the rule allows."
+      },
+      {
+        "text": "A ViewModel keeping its own copy of the list and adding new sessions to it",
+        "correct": true,
+        "why": "Yes: two lists that can disagree."
+      },
+      {
+        "text": "`add()` writing to Room before sending",
+        "correct": false,
+        "why": "No: it is local-first, and the screen still reads Room."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6gmve0a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `refresh()` return a `Result<Int>` and not the list of sessions?",
+    "hint": "How does data reach the screen?",
+    "choices": [
+      {
+        "text": "Lists cannot be returned from a `suspend` function",
+        "correct": false,
+        "why": "`api.sessions()` returns one."
+      },
+      {
+        "text": "Because data reaches the screen only through Room",
+        "correct": true,
+        "why": "Right: returning the list would invite a second road."
+      },
+      {
+        "text": "To save memory",
+        "correct": false,
+        "why": "The list is in memory either way, briefly."
+      },
+      {
+        "text": "`Result` is required by Retrofit",
+        "correct": false,
+        "why": "Retrofit throws; the repository chose `Result`."
+      }
+    ]
+  }
+]

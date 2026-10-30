@@ -1,0 +1,420 @@
+{
+  "ex-k05v9ex1": {
+    "prompt": "A loja vai começar um function app Python serverless novo em 2026. Para que plano a documentação da Microsoft a aponta?",
+    "choices": [
+      {
+        "text": "O plano Consumption, em Linux",
+        "why": "O Consumption em Linux aparece como aposentado na tabela de hospedagem, não recebe versões novas de linguagem, e a opção se aposenta em 30 de setembro de 2028."
+      },
+      {
+        "text": "O plano Flex Consumption",
+        "why": "A documentação o chama de plano serverless recomendado, e Python só roda em Linux, onde ele é a opção serverless que resta."
+      },
+      {
+        "text": "O plano Consumption, em Windows",
+        "why": "O Consumption em Windows continua disponível, mas Python não é suportado em Windows no Azure Functions."
+      },
+      {
+        "text": "Um plano Premium sem instâncias always ready",
+        "why": "Um plano Premium sempre tem pelo menos uma instância cobrada, então nunca é serverless no sentido de pagar por execução."
+      }
+    ]
+  },
+  "ex-30hj9vx2": {
+    "prompt": "Relacione cada plano com o que ele cobra, como a documentação descreve.",
+    "pairs": [
+      {
+        "left": "Flex Consumption",
+        "right": "execuções e memória durante a execução, mais as instâncias always ready"
+      },
+      {
+        "left": "Premium",
+        "right": "os núcleos e a memória de toda instância alocada, sem cobrança por execução"
+      },
+      {
+        "left": "Dedicado",
+        "right": "o plano do App Service, quantos apps ele tiver"
+      },
+      {
+        "left": "Consumption (legado)",
+        "right": "execuções, e memória vezes tempo de execução, sem nada mantido pronto"
+      }
+    ],
+    "right_distractors": [
+      "o tempo de CPU de cada pedido, qualquer que seja a memória"
+    ]
+  },
+  "ex-vm2bjagz": {
+    "prompt": "`take_order` está num app Flex Consumption cujo timeout no `host.json` é ilimitado. O pedido de um cliente leva seis minutos para ser calculado. O que o cliente recebe?",
+    "choices": [
+      {
+        "text": "A resposta depois de seis minutos, já que nada limita o timeout",
+        "why": "A função pode continuar rodando, mas quem chamou está atrás de um balanceador cujo timeout ocioso é de 230 segundos."
+      },
+      {
+        "text": "Nenhuma resposta: uma função HTTP tem 230 segundos, diga o timeout o que disser",
+        "why": "A documentação dá 230 segundos como o máximo para uma função com trigger HTTP responder, por causa do balanceador na frente."
+      },
+      {
+        "text": "Uma recusa quando o app começa, porque ilimitado não é permitido no Flex",
+        "why": "Ilimitado é permitido no Flex Consumption; o limite que pega aqui é o do HTTP."
+      },
+      {
+        "text": "A resposta depois de cinco minutos, o padrão do Consumption",
+        "why": "Cinco minutos é o padrão do plano Consumption legado; este app está no Flex, cujo padrão é 30."
+      }
+    ]
+  },
+  "ex-dckfenhv": {
+    "prompt": "O `flex.bicep` compilou sem aviso com `instanceMemoryMB: 1024` e `maximumInstanceCount: 2000`. O que isso diz a você? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Os tipos de recurso dizem que as duas propriedades são números, e os dois valores são números",
+        "why": "É só isso que o compilador confere aqui: o tipo, não quais números o serviço oferece."
+      },
+      {
+        "text": "O Azure oferece instâncias de 1.024 MB no Flex Consumption",
+        "why": "A documentação lista 512, 2.048 e 4.096 MB; o compilador não perguntou."
+      },
+      {
+        "text": "No laptop ainda não se sabe se o Azure aceita o arquivo",
+        "why": "Só o serviço responde isso, e nada aqui mandou o template para ele."
+      },
+      {
+        "text": "O teto de 1.000 instâncias vale só para o Premium",
+        "why": "1.000 é o máximo do próprio Flex Consumption por grupo de funções; o compilador simplesmente não sabe disso."
+      },
+      {
+        "text": "Compilar limpo não prova que os valores são permitidos",
+        "why": "A documentação descarta os dois valores, e o compilador os deixou passar assim mesmo."
+      }
+    ]
+  },
+  "ex-jxgr7tcd": {
+    "prompt": "No Flex Consumption, uma rajada de recibos se acumula na fila `orders`. O que acontece com as instâncias que respondem `take_order`?",
+    "choices": [
+      {
+        "text": "Ficam como estão: `make_receipt` escala em instâncias próprias",
+        "why": "O Flex escala cada função sozinha, menos os grupos HTTP, blob via Event Grid e Durable, então a função de fila ganha instâncias separadas."
+      },
+      {
+        "text": "Crescem também, porque todas as funções de um app escalam juntas",
+        "why": "É assim que o Consumption e o Premium escalam, por app; o Flex escala por função."
+      },
+      {
+        "text": "São divididas com `make_receipt` até o grupo HTTP encher",
+        "why": "O grupo HTTP só tem funções HTTP; um trigger de fila fica num grupo só dele."
+      },
+      {
+        "text": "Diminuem, para liberar a cota regional para a fila",
+        "why": "A cota regional limita o total; ela não tira instâncias de um grupo para dar a outro."
+      }
+    ]
+  },
+  "ex-1eqc6qnm": {
+    "prompt": "Ponha em ordem o que um pedido a frio para `take_order` espera, do primeiro passo até a resposta.",
+    "items": [
+      "A plataforma acha uma instância e entrega o app a ela",
+      "O host do Functions começa e lê o `host.json`",
+      "O host inicia o worker Python",
+      "O worker importa o `function_app.py`",
+      "O host entrega o pedido a `take_order`"
+    ],
+    "trap": "Pôr a importação antes do worker: quem importa o arquivo é o worker, então ele tem de existir antes."
+  },
+  "ex-ksgg8kv1": {
+    "prompt": "No plano Consumption legado, um pedido cai num placeholder pré-aquecido. O que ele ainda espera?",
+    "choices": [
+      {
+        "text": "Nada: um placeholder é uma instância mantida pronta para o app",
+        "why": "Um placeholder é genérico; ele só vira o seu app quando o pedido chega, então o seu arquivo ainda não foi carregado."
+      },
+      {
+        "text": "O host e o worker começando, como em qualquer partida a frio",
+        "why": "Isso é justamente o que o placeholder já tem rodando, pela descrição da documentação."
+      },
+      {
+        "text": "A importação do `function_app.py`, e depois a chamada",
+        "why": "O host e o worker estão rodando, mas o placeholder não tinha como conhecer o seu arquivo, então a importação continua paga."
+      },
+      {
+        "text": "Só o download do pacote, porque o Consumption não tem worker",
+        "why": "Todo plano roda um worker de linguagem ao lado do host; o placeholder já tem um iniciado."
+      }
+    ]
+  },
+  "ex-g5fdevfe": {
+    "prompt": "Num plano Premium, uma função do app é chamada em cada instância nova durante a escala, antes de a instância receber tráfego, para abrir conexões cedo. O trigger dela é o trigger de ___.",
+    "blanks": [
+      {
+        "accept": [
+          "warmup",
+          "warm-up",
+          "aquecimento"
+        ]
+      }
+    ]
+  },
+  "ex-z3hkq489": {
+    "prompt": "A loja põe o relatório de vendas noturno no mesmo function app que `take_order`, e o relatório importa uma biblioteca grande de dados no topo do `function_app.py`. Quem paga essa importação?",
+    "choices": [
+      {
+        "text": "Só o relatório, uma vez por noite quando o timer dele dispara",
+        "why": "A importação roda quando o worker carrega o arquivo, em toda instância nova, seja qual for a função para a qual a instância existe."
+      },
+      {
+        "text": "Toda partida a frio do app, inclusive as de `take_order`",
+        "why": "Um app é um arquivo importado uma vez por instância, então as partidas a frio da API de pedidos carregam a biblioteca do relatório."
+      },
+      {
+        "text": "Ninguém, porque o Flex Consumption importa cada função separadamente",
+        "why": "O Flex escala funções em instâncias separadas, mas cada instância ainda importa o `function_app.py` inteiro."
+      },
+      {
+        "text": "Só os pedidos quentes, que reimportam a biblioteca toda vez",
+        "why": "O Python guarda um módulo depois de importado; o custo está na importação, que é a partida a frio."
+      }
+    ]
+  },
+  "ex-fmbr8qqg": {
+    "prompt": "A orientação da Microsoft diz para criar clientes no nível do módulo em Python. O que isso faz com a partida a frio?",
+    "choices": [
+      {
+        "text": "Encurta, porque o cliente é criado antes de a instância existir",
+        "why": "O nível do módulo roda durante a importação, na instância; faz parte da partida a frio."
+      },
+      {
+        "text": "Alonga um pouco, para que toda chamada quente reaproveite o cliente",
+        "why": "O cliente é criado uma vez na importação, e cada pedido quente usa a conexão em vez de abrir uma."
+      },
+      {
+        "text": "Nada, já que os clientes são criados pelo host e não pelo worker",
+        "why": "Um cliente que o seu código cria é do seu código; só os bindings são do host."
+      },
+      {
+        "text": "Elimina, porque um cliente no nível do módulo mantém a instância quente",
+        "why": "Nada no seu código decide se a plataforma mantém uma instância; isso é do plano."
+      }
+    ]
+  },
+  "ex-9mde2fc6": {
+    "prompt": "O `first200` contou umas quarenta respostas `000` antes do primeiro `200`. O que `000` quer dizer ali?",
+    "choices": [
+      {
+        "text": "Nenhuma resposta HTTP: nada escutava na 7071 ainda",
+        "why": "`000` é o código do `curl` para nenhuma resposta HTTP; nada escutava na 7071 até o host ficar pronto."
+      },
+      {
+        "text": "A função rodou e devolveu um corpo vazio",
+        "why": "Uma função que rodou daria um status de verdade, 200 ou 500; `000` é nenhuma resposta."
+      },
+      {
+        "text": "O host respondeu que ainda estava começando",
+        "why": "Um host respondendo mandaria um status HTTP de verdade; no laptop ele não mandou nada até ficar pronto."
+      },
+      {
+        "text": "O Azurite recusou a conexão de storage do host",
+        "why": "Isso apareceria no log do host, não como o status do `curl` para um pedido ao app."
+      }
+    ]
+  },
+  "ex-e97qfpsz": {
+    "prompt": "Por que cada execução do `first200` começa com `docker rm -f cold`?",
+    "choices": [
+      {
+        "text": "Para limpar o lease do Azurite, que senão bloquearia o host",
+        "why": "O lease está no Azurite, que continua rodando; cada contêiner novo pega um lease próprio."
+      },
+      {
+        "text": "Para cada medida começar sem instância: uma partida a frio",
+        "why": "Um contêiner que já está rodando é uma instância quente; removê-lo faz o próximo `docker run` começar do nada."
+      },
+      {
+        "text": "Porque o Docker não publica a porta 7071 duas vezes no mesmo minuto",
+        "why": "A porta é liberada quando o contêiner é removido; não há espera. Dois contêineres rodando é que colidiriam."
+      },
+      {
+        "text": "Para apagar a imagem, de modo que o build também seja medido",
+        "why": "`docker rm` remove um contêiner, não uma imagem; o build é feito uma vez, antes das execuções."
+      }
+    ]
+  },
+  "ex-r81z47bj": {
+    "prompt": "O `shopfn:slow` dorme 8 segundos na importação. No log do laptop, a primeira linha do script de início veio 12,43 s antes de `Initializing Host`, contra 5,09 s do `shopfn:1`. Quantos segundos a mais são, com duas casas decimais?",
+    "hint": "Um pouco menos que o sono: parte de uma importação curta se esconde atrás do início do próprio host."
+  },
+  "ex-63sshsdy": {
+    "prompt": "Com `--cpus 0.25`, a mesma imagem levou umas três vezes mais até o primeiro 200 do que com um processador inteiro. O que isso sugere sobre uma instância Flex Consumption de 512 MB?",
+    "choices": [
+      {
+        "text": "Nada, porque o Flex dá o mesmo processador a todo tamanho",
+        "why": "A documentação junta 512 MB com um quarto de núcleo e 2.048 MB com um; memória e processador vêm juntos."
+      },
+      {
+        "text": "Uma partida a frio mais longa, com um quarto de núcleo",
+        "why": "Iniciar o host é computação, e o análogo do laptop ficou mais lento conforme o processador encolheu; o número do próprio Azure não foi medido."
+      },
+      {
+        "text": "Ela será recusada para Python, que precisa de um núcleo inteiro",
+        "why": "Nada na documentação liga o Python a um tamanho; os três são oferecidos."
+      },
+      {
+        "text": "A partida a frio dela é três vezes mais longa no Azure, exatamente",
+        "why": "A razão do laptop é do laptop; ela sugere uma direção, não o número do Azure."
+      }
+    ]
+  },
+  "ex-mveepw3r": {
+    "prompt": "No log com horário, passam uns cinco segundos entre a primeira linha do script de início e `Initializing Host`. Qual destas conclusões é justa?",
+    "choices": [
+      {
+        "text": "A partida a frio deste app no Azure leva uns cinco segundos",
+        "why": "Esses são números do laptop; os passos da plataforma do Azure, e os placeholders dele, não foram medidos."
+      },
+      {
+        "text": "A própria função é lenta, e deveria ser reescrita",
+        "why": "Depois de pronta, `take_order` respondeu em milissegundos; os segundos se gastam antes de qualquer função rodar."
+      },
+      {
+        "text": "No laptop, a maior parte da espera vem antes de o host registrar qualquer coisa do app",
+        "why": "O tempo da própria função é pequeno perto disso; é essa a forma que o laptop mostra, e só a forma se transfere."
+      },
+      {
+        "text": "O Azurite demora a responder, e uma conta de storage de verdade eliminaria isso",
+        "why": "Nada no log aponta para o storage; o intervalo vem antes de o host sequer inicializar."
+      }
+    ]
+  },
+  "ex-xk2e1h33": {
+    "prompt": "Com as taxas ilustrativas do `plans.py`, um pedido numa instância de 2 GB cobrada por 1 segundo custa 0,0000524 USD. Quantos pedidos por mês custam o mesmo que a instância sempre ligada a 150 USD? Arredonde para o milhar mais próximo."
+  },
+  "ex-wx3w9qjp": {
+    "prompt": "Mantenha as taxas do `plans.py`, mas ponha a API de pedidos numa instância de 512 MB, que é 0,5 GB, ainda cobrada 1 segundo por pedido. Quanto custa um pedido, em USD?",
+    "hint": "0,5 GB × 1 s × 0,000026, mais a parte da execução nos 0,40 por milhão."
+  },
+  "ex-53j048sq": {
+    "prompt": "A API de pedidos da loja recebe uns 400.000 pedidos por mês, cerca de 0,15 por segundo, a maior parte de dia. Com as taxas ilustrativas do `plans.py`, o que manter uma instância sempre ligada compra para ela?",
+    "choices": [
+      {
+        "text": "Uma conta menor, já que a loja está acima do ponto de equilíbrio",
+        "why": "O ponto de equilíbrio é cerca de 1,09 por segundo; a 0,15 por segundo, sob demanda custa uns 21 USD contra 150."
+      },
+      {
+        "text": "Nada: sob demanda já não tem partida a frio nesse ritmo",
+        "why": "De noite o app fica ocioso por minutos seguidos, e o próximo pedido encontra uma partida a frio."
+      },
+      {
+        "text": "O fim das partidas a frio da manhã, pela maior parte dos 150 USD",
+        "why": "Sob demanda custa uns 21 USD aqui, então a instância é uns 129 USD por mês gastos em latência, não economizados."
+      },
+      {
+        "text": "Um limite maior de instâncias, que sob demanda fica em uma",
+        "why": "O Flex sob demanda escala até a contagem máxima de instâncias, 100 por padrão; nada o limita a uma."
+      }
+    ]
+  },
+  "ex-m7cxyfpv": {
+    "prompt": "O exemplo de custo da Microsoft roda 40 pedidos por segundo, 10 de cada vez, em instâncias Flex de 2 GB. Por que o caso limitado por E/S sai uns 0,25 USD por hora e o limitado por CPU uns 1,93?",
+    "choices": [
+      {
+        "text": "No Flex o tempo de CPU é cobrado e a espera não",
+        "why": "A documentação cobra a memória enquanto uma instância executa; a CPU não aparece no medidor."
+      },
+      {
+        "text": "O app limitado por CPU paga uma taxa maior por GB-segundo",
+        "why": "Os dois casos usam a mesma taxa suposta, 0,000026 por GB-segundo."
+      },
+      {
+        "text": "Os pedidos limitados por E/S são menos, então menos execuções são cobradas",
+        "why": "Os dois rodam as mesmas 144.000 execuções por hora, 0,0576 USD do total."
+      },
+      {
+        "text": "Dez pedidos dividem uma instância ativa em vez de manter dez ativas",
+        "why": "O medidor conta a memória das instâncias ativas, então uma instância ocupada custa um décimo de dez ocupadas pelo mesmo trabalho."
+      }
+    ]
+  },
+  "ex-5w831se2": {
+    "prompt": "Suponha que a cota gratuita fosse de 100.000 GB-s por mês, um número inventado para esta pergunta. Com 2 GB cobrados por 1 segundo por pedido, em quantos pedidos por mês a cota sobe o ponto de equilíbrio?",
+    "hint": "Cada pedido usa 2 GB-s da cota antes de custar alguma coisa."
+  },
+  "ex-qt3xxynr": {
+    "prompt": "Que plano responde um pedido sem partida a frio e também escala a zero quando ninguém chama?",
+    "choices": [
+      {
+        "text": "O Premium, com as instâncias pré-aquecidas",
+        "why": "O Premium sempre mantém pelo menos uma instância cobrada; nunca escala a zero."
+      },
+      {
+        "text": "O Dedicado, com Always On",
+        "why": "O Always On mantém o host rodando nas instâncias do plano, o contrário de escalar a zero."
+      },
+      {
+        "text": "O Flex Consumption, com uma instância always ready em cada grupo",
+        "why": "Uma instância always ready nunca é tirada, então o grupo não vai a zero enquanto tiver uma."
+      },
+      {
+        "text": "Nenhum: uma instância mantida pronta é uma instância mantida",
+        "why": "Tirar a partida a frio quer dizer que algo está rodando antes do pedido, e é disso que escalar a zero abre mão."
+      }
+    ]
+  },
+  "ex-1mceafnv": {
+    "prompt": "Relacione cada configuração com o plano a que ela pertence.",
+    "pairs": [
+      {
+        "left": "`--always-ready-instances http=1`",
+        "right": "Flex Consumption"
+      },
+      {
+        "left": "`--sku EP1 --max-burst 10`",
+        "right": "Premium"
+      },
+      {
+        "left": "Always On",
+        "right": "Dedicado"
+      },
+      {
+        "left": "`--min-replicas 1`",
+        "right": "Container Apps"
+      }
+    ],
+    "right_distractors": [
+      "Consumption (legado)"
+    ]
+  },
+  "ex-x1525m10": {
+    "prompt": "Um plano chamado `P1V2` escala à mão ou por regras de autoscale e nunca por eventos, porque apesar da letra ele não é Elastic Premium, e sim um plano ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Dedicado",
+          "Dedicated",
+          "do App Service",
+          "App Service"
+        ]
+      }
+    ]
+  },
+  "ex-43zs6ehw": {
+    "prompt": "A exportação financeira roda uma vez por noite, disparada por fila, e leva quatro minutos. Sob demanda, com as taxas do `plans.py`, qual é o argumento para pagar uma instância sempre ligada para ela?",
+    "choices": [
+      {
+        "text": "A partida a frio dela atrasa um cliente, então a prontidão vale o preço",
+        "why": "Um trigger de fila não tem ninguém esperando; alguns segundos de início somam alguns segundos a um arquivo lido de manhã."
+      },
+      {
+        "text": "Ela passa do limite de cinco minutos e precisa do Premium",
+        "why": "Quatro minutos está abaixo do padrão de todo plano, e o padrão do Flex é 30 minutos de qualquer jeito."
+      },
+      {
+        "text": "Quase nenhum: ninguém espera, e ela cobra minutos por noite",
+        "why": "Quatro minutos de uma instância de 2 GB dão uns 0,012 USD por noite com essas taxas; a prontidão não compra nada que alguém veja."
+      },
+      {
+        "text": "Sob demanda não roda trigger de fila sem uma instância mantida",
+        "why": "O Flex escala triggers de fila a partir de zero, por eventos; nada precisa ser mantido."
+      }
+    ]
+  }
+}

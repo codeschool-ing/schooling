@@ -1,0 +1,503 @@
+[
+  {
+    "id": "ex-k6t0b7nc",
+    "version": 1,
+    "section": "routes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A packet's destination matches `0.0.0.0/0` and `10.11.0.0/20`. Which route takes it?",
+    "hint": "Most specific first.",
+    "choices": [
+      {
+        "text": "The /0, with its lower priority",
+        "correct": false,
+        "why": "Priority only orders routes with the same destination."
+      },
+      {
+        "text": "The /20, the more specific",
+        "correct": true,
+        "why": "Right. The longer prefix wins before priority is looked at."
+      },
+      {
+        "text": "Both, sharing the traffic",
+        "correct": false,
+        "why": "Only equal destinations at equal priority share."
+      },
+      {
+        "text": "The one created first",
+        "correct": false,
+        "why": "Creation order plays no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mmyktyd",
+    "version": 1,
+    "section": "routes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`office-primary` and `office-backup` both go to 192.168.0.0/16, at 100 and 200. Why two?",
+    "hint": "What happens if the first disappears?",
+    "choices": [
+      {
+        "text": "They split the traffic in half",
+        "correct": false,
+        "why": "Different priorities do not share; equal ones would."
+      },
+      {
+        "text": "One is for ingress, one for egress",
+        "correct": false,
+        "why": "Routes are for packets leaving machines."
+      },
+      {
+        "text": "Google requires two routes per VPN",
+        "correct": false,
+        "why": "It is the planner's design for failure."
+      },
+      {
+        "text": "The backup takes over by itself",
+        "correct": true,
+        "why": "Right. With the primary gone, the next priority is the best match."
+      }
+    ]
+  },
+  {
+    "id": "ex-depkzf4s",
+    "version": 1,
+    "section": "routes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the default internet gateway?",
+    "hint": "Not a machine.",
+    "choices": [
+      {
+        "text": "The network's way out",
+        "correct": true,
+        "why": "Right. A route pointing at it lets packets leave towards outside addresses."
+      },
+      {
+        "text": "A machine Google runs in each region",
+        "correct": false,
+        "why": "There is nothing to run or size."
+      },
+      {
+        "text": "The Cloud NAT gateway",
+        "correct": false,
+        "why": "NAT translates packets that leave by it."
+      },
+      {
+        "text": "The subnet's second address",
+        "correct": false,
+        "why": "That is the subnet's gateway, inside the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-0be17wxf",
+    "version": 1,
+    "section": "routes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the default route was removed, why could 199.36.153.9 still be reached?",
+    "hint": "Read the table.",
+    "choices": [
+      {
+        "text": "Google addresses never need routes",
+        "correct": false,
+        "why": "Without that route it would be dropped like 8.8.8.8."
+      },
+      {
+        "text": "It belongs to a subnet",
+        "correct": false,
+        "why": "No subnet of the planner holds it."
+      },
+      {
+        "text": "A custom /30 route for it remained",
+        "correct": true,
+        "why": "Right. private-googleapis sends that range to the default internet gateway."
+      },
+      {
+        "text": "Cloud NAT answers for it",
+        "correct": false,
+        "why": "No NAT was involved, and NAT needs the default route anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-avc0g3bz",
+    "version": 1,
+    "section": "routes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many addresses does each of Google's private API ranges, such as 199.36.153.8/30, hold?",
+    "hint": "A /30.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-v3xaasb3",
+    "version": 1,
+    "section": "routes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Dynamic routes are learned over BGP by a Cloud ___.",
+    "hint": "It also holds Cloud NAT.",
+    "blanks": [
+      {
+        "accept": [
+          "Router"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z0exrb4z",
+    "version": 1,
+    "section": "cloud-nat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can a machine behind Cloud NAT, with no external address, do?",
+    "hint": "Out, and never in.",
+    "choices": [
+      {
+        "text": "Accept connections on its NAT address",
+        "correct": false,
+        "why": "NAT gives no inbound path."
+      },
+      {
+        "text": "Reach other regions' NAT gateways",
+        "correct": false,
+        "why": "A NAT serves its own region."
+      },
+      {
+        "text": "Start connections to the internet",
+        "correct": true,
+        "why": "Right. Replies come back; connections started from outside do not."
+      },
+      {
+        "text": "Nothing until it has a public address",
+        "correct": false,
+        "why": "NAT is what lets it reach out without one."
+      }
+    ]
+  },
+  {
+    "id": "ex-6baz4dks",
+    "version": 1,
+    "section": "cloud-nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner's machines in Santiago cannot reach the internet, though São Paulo's NAT works. Why?",
+    "hint": "Where does NAT live?",
+    "choices": [
+      {
+        "text": "Each region needs its own NAT",
+        "correct": true,
+        "why": "Right. The router and NAT were written for southamerica-east1."
+      },
+      {
+        "text": "NAT only serves the first subnet created",
+        "correct": false,
+        "why": "It was set to all subnets of its region."
+      },
+      {
+        "text": "Santiago's machines need external addresses",
+        "correct": false,
+        "why": "A NAT in Santiago would do without them."
+      },
+      {
+        "text": "The default route is regional",
+        "correct": false,
+        "why": "Routes are global, like the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-9eznen2t",
+    "version": 1,
+    "section": "cloud-nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner's production have no Cloud NAT?",
+    "hint": "What did production delete?",
+    "choices": [
+      {
+        "text": "NAT is not allowed in production folders",
+        "correct": false,
+        "why": "No such rule; it is the planner's design."
+      },
+      {
+        "text": "NAT would open inbound ports",
+        "correct": false,
+        "why": "NAT is outbound only."
+      },
+      {
+        "text": "Production machines all have external addresses",
+        "correct": false,
+        "why": "They have none; that is the point."
+      },
+      {
+        "text": "It has no default route for NAT to use",
+        "correct": true,
+        "why": "Right. NAT translates packets leaving by the default internet gateway route."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9db576c",
+    "version": 1,
+    "section": "cloud-nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the planner choose `MANUAL_ONLY` over `AUTO_ONLY` for its NAT addresses?",
+    "hint": "A partner's list.",
+    "choices": [
+      {
+        "text": "When the NAT serves more than 32 machines",
+        "correct": false,
+        "why": "That changes the price, not the choice of addresses."
+      },
+      {
+        "text": "For a partner's allow list",
+        "correct": true,
+        "why": "Right. Reserved addresses go on the partner's list."
+      },
+      {
+        "text": "Whenever logging is enabled",
+        "correct": false,
+        "why": "Logging and addressing are unrelated."
+      },
+      {
+        "text": "To make NAT accept inbound connections",
+        "correct": false,
+        "why": "NAT accepts none, whatever its addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7qhs097",
+    "version": 1,
+    "section": "cloud-nat",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the prices read on 30 October 2026, what does a NAT gateway cost for 10 machines over a 730-hour month, gateway hours only, in dollars?",
+    "hint": "0.0014 per machine-hour.",
+    "value": 10.22,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-8gfe4gf1",
+    "version": 1,
+    "section": "cloud-nat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A small project's NAT line is suddenly the biggest on the bill, with the same ten machines. What is the likeliest cause?",
+    "hint": "Which part grows?",
+    "choices": [
+      {
+        "text": "The data it processes",
+        "correct": true,
+        "why": "Right. Processing is billed per GiB, and it grows with traffic, not with machines."
+      },
+      {
+        "text": "The gateway's hourly price rose",
+        "correct": false,
+        "why": "It is per machine, and the machines did not change."
+      },
+      {
+        "text": "Logging of errors",
+        "correct": false,
+        "why": "Errors-only logging records little."
+      },
+      {
+        "text": "The router's BGP sessions",
+        "correct": false,
+        "why": "This router has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-500pkm1t",
+    "version": 1,
+    "section": "private-google-access",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is Private Google Access switched on?",
+    "hint": "One line of a file.",
+    "choices": [
+      {
+        "text": "On the network, for every region",
+        "correct": false,
+        "why": "It is per subnet."
+      },
+      {
+        "text": "On each machine",
+        "correct": false,
+        "why": "Machines inherit it from their subnet."
+      },
+      {
+        "text": "On a subnet, for its machines",
+        "correct": true,
+        "why": "Right. `private_ip_google_access = true`, for that subnet's machines."
+      },
+      {
+        "text": "On the organisation",
+        "correct": false,
+        "why": "It is a network setting, not a policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-phrpct5v",
+    "version": 1,
+    "section": "private-google-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `restricted.googleapis.com` for?",
+    "hint": "A perimeter.",
+    "choices": [
+      {
+        "text": "Every Google API, at lower latency",
+        "correct": false,
+        "why": "That is closer to private.googleapis.com, and latency is not the point."
+      },
+      {
+        "text": "APIs a perimeter protects",
+        "correct": true,
+        "why": "Right. So a perimeter around a project's data cannot be stepped around."
+      },
+      {
+        "text": "APIs for machines with external addresses",
+        "correct": false,
+        "why": "Those reach the public addresses anyway."
+      },
+      {
+        "text": "Google's billing API only",
+        "correct": false,
+        "why": "It covers a set of APIs, not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-zt4j49dr",
+    "version": 1,
+    "section": "private-google-access",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A machine in a subnet with Private Google Access reaches `storage.googleapis.com` and is refused. What refused it?",
+    "hint": "It got there.",
+    "choices": [
+      {
+        "text": "A missing ingress firewall rule",
+        "correct": false,
+        "why": "The machine started the connection; egress is allowed."
+      },
+      {
+        "text": "Cloud NAT",
+        "correct": false,
+        "why": "NAT is not needed for Google's APIs here."
+      },
+      {
+        "text": "The default route",
+        "correct": false,
+        "why": "The packet reached Storage, so the route worked."
+      },
+      {
+        "text": "IAM, for want of a role",
+        "correct": true,
+        "why": "Right. Private Google Access reaches the API; it grants no permission."
+      }
+    ]
+  },
+  {
+    "id": "ex-2e9b9pbq",
+    "version": 1,
+    "section": "private-google-access",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each name to the range it resolves to.",
+    "hint": "getent answered.",
+    "pairs": [
+      {
+        "left": "private.googleapis.com",
+        "right": "199.36.153.8/30"
+      },
+      {
+        "left": "restricted.googleapis.com",
+        "right": "199.36.153.4/30"
+      }
+    ],
+    "right_distractors": [
+      "169.254.169.254/32"
+    ]
+  },
+  {
+    "id": "ex-3hcr7ysa",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of taking production off the internet without losing Google's APIs in order.",
+    "hint": "The way out goes last.",
+    "items": [
+      "add a route for 199.36.153.8/30",
+      "switch on Private Google Access on the subnet",
+      "a private DNS zone sends *.googleapis.com there",
+      "delete the default route"
+    ],
+    "trap": "Deleting the default route first is the slip: until the /30 route exists, the machines lose Google's APIs along with the internet."
+  },
+  {
+    "id": "ex-38xs5ecv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A staging machine with no external address must download packages from the internet and write to Cloud Storage. What does its network need?",
+    "hint": "Two destinations.",
+    "choices": [
+      {
+        "text": "Private Google Access alone",
+        "correct": false,
+        "why": "That reaches Google's APIs, not the package mirrors."
+      },
+      {
+        "text": "An ingress rule from 0.0.0.0/0",
+        "correct": false,
+        "why": "Nothing has to come in uninvited."
+      },
+      {
+        "text": "A route for 199.36.153.4/30 and no default route",
+        "correct": false,
+        "why": "That reaches only restricted APIs, and no internet."
+      },
+      {
+        "text": "A default route and Cloud NAT; Storage is reachable too",
+        "correct": true,
+        "why": "Right. NAT covers both, and Private Google Access would cover Storage without it."
+      }
+    ]
+  }
+]

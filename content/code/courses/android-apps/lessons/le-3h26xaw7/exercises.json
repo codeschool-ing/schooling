@@ -1,0 +1,690 @@
+[
+  {
+    "id": "ex-eadwrpvj",
+    "version": 1,
+    "section": "three-gates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Android 15, the planner calls `notify` without holding `POST_NOTIFICATIONS`. What does the student see, according to Google's documentation?",
+    "hint": "The first two gates fail in silence.",
+    "choices": [
+      {
+        "text": "Nothing, and the app gets no error",
+        "correct": true,
+        "why": "Right: the notification is dropped silently, which is why the app checks first."
+      },
+      {
+        "text": "A crash with a `SecurityException` in the app",
+        "correct": false,
+        "why": "Nothing is thrown; that silence is the problem."
+      },
+      {
+        "text": "The permission dialog, shown automatically by the system",
+        "correct": false,
+        "why": "For an app targeting 33 or later, asking is the app's job."
+      },
+      {
+        "text": "The notification, but without sound",
+        "correct": false,
+        "why": "Sound is the channel's importance; without the permission nothing arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6t79dw6",
+    "version": 1,
+    "section": "three-gates",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the gates in the order Android applies them to a notification the planner posts.",
+    "hint": "The figure of section 02, left to right.",
+    "items": [
+      "on Android 13 and later, `POST_NOTIFICATIONS` granted",
+      "the app's notifications on in settings",
+      "the channel's importance decides how it arrives"
+    ]
+  },
+  {
+    "id": "ex-hyy8xmfs",
+    "version": 1,
+    "section": "three-gates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can't this course show a screenshot of the planner's notification in the shade?",
+    "hint": "Who draws the shade?",
+    "choices": [
+      {
+        "text": "Roborazzi only captures dark mode",
+        "correct": false,
+        "why": "It captures whatever a composable draws, in either theme."
+      },
+      {
+        "text": "The permission was never granted in the tests",
+        "correct": false,
+        "why": "Section 04's test granted it and the notification was posted."
+      },
+      {
+        "text": "Notifications are encrypted until shown",
+        "correct": false,
+        "why": "Robolectric reads every field of them in the tests."
+      },
+      {
+        "text": "The shade is the system's, not the app's",
+        "correct": true,
+        "why": "Right: tests can ask what was posted, not photograph the system's screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv2ssqed",
+    "version": 1,
+    "section": "channels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens to a notification on Android 8.0 or later that names a channel id the app never created?",
+    "hint": "API 26 made channels compulsory.",
+    "choices": [
+      {
+        "text": "The system creates the channel with default importance",
+        "correct": false,
+        "why": "Only the app creates channels."
+      },
+      {
+        "text": "It goes to a channel called `miscellaneous`",
+        "correct": false,
+        "why": "That fallback does not exist for apps targeting 26 or later."
+      },
+      {
+        "text": "The build fails with a missing-resource error",
+        "correct": false,
+        "why": "Channel ids are strings checked at run time, not resources."
+      },
+      {
+        "text": "It is not shown",
+        "correct": true,
+        "why": "Right: a notification must belong to an existing channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-grjxmcrf",
+    "version": 1,
+    "section": "channels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner shipped its channel with importance 2. A new release creates the same channel id with importance 3. What do existing students get?",
+    "hint": "After creation, importance belongs to the student.",
+    "choices": [
+      {
+        "text": "Importance 3, because the new code wins",
+        "correct": false,
+        "why": "The system ignores the importance of an existing channel."
+      },
+      {
+        "text": "Still 2",
+        "correct": true,
+        "why": "Right: only the name and description are updated; a new id is the way out."
+      },
+      {
+        "text": "A dialog asking whether to accept the change",
+        "correct": false,
+        "why": "There is no such dialog."
+      },
+      {
+        "text": "The channel is deleted and recreated at 3",
+        "correct": false,
+        "why": "Nothing deletes it unless the app does so explicitly."
+      }
+    ]
+  },
+  {
+    "id": "ex-2b4w5mm7",
+    "version": 1,
+    "section": "channels",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What importance number did the channel test print for the planner's `reminders` channel?",
+    "hint": "It is `IMPORTANCE_DEFAULT`.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8qyeyxzw",
+    "version": 1,
+    "section": "channels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner call `createChannels` in `PlannerApp.onCreate`, every time the process starts?",
+    "hint": "What does creating an existing channel change?",
+    "choices": [
+      {
+        "text": "The system requires channels to be registered on every start",
+        "correct": false,
+        "why": "Once is enough for the system; repeating is the app's convenience."
+      },
+      {
+        "text": "To reset the importance the student changed",
+        "correct": false,
+        "why": "It cannot: the student's choice wins."
+      },
+      {
+        "text": "Channels are deleted each time the app closes",
+        "correct": false,
+        "why": "Channels persist until the app deletes them or is uninstalled."
+      },
+      {
+        "text": "Repeating it is harmless",
+        "correct": true,
+        "why": "Right: an existing channel keeps the student's settings; only name and description refresh."
+      }
+    ]
+  },
+  {
+    "id": "ex-fntc9egw",
+    "version": 1,
+    "section": "building-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A colleague uses the full-colour launcher icon as the notification's small icon. What appears in the status bar?",
+    "hint": "The system draws it in one colour from its shape.",
+    "choices": [
+      {
+        "text": "A solid square",
+        "correct": true,
+        "why": "Right: every non-transparent pixel becomes the same colour."
+      },
+      {
+        "text": "Nothing, because the build rejects colour icons for notifications",
+        "correct": false,
+        "why": "The build accepts it; the result is just wrong."
+      },
+      {
+        "text": "The app name in text",
+        "correct": false,
+        "why": "The status bar shows an icon, not the name."
+      },
+      {
+        "text": "The launcher icon, scaled down",
+        "correct": false,
+        "why": "The colours are discarded; only the shape is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ce6cv1w",
+    "version": 1,
+    "section": "building-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`showReminder` returns `true` or `false`. Why does it not simply return what `notify` returns?",
+    "hint": "Look at `notify`'s signature.",
+    "choices": [
+      {
+        "text": "`notify` returns `Unit`, so it cannot say whether anything was shown",
+        "correct": true,
+        "why": "Right: the answer has to come from checking first."
+      },
+      {
+        "text": "`notify` throws when nothing is shown, and catching it is slow",
+        "correct": false,
+        "why": "It throws nothing; it is silent."
+      },
+      {
+        "text": "`notify` returns an id that is always positive",
+        "correct": false,
+        "why": "It returns nothing at all."
+      },
+      {
+        "text": "Returning booleans is required by lint",
+        "correct": false,
+        "why": "Lint has no such rule; this is the app's design."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ck3crhn",
+    "version": 1,
+    "section": "building-one",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The notification removes itself from the shade when tapped because the builder calls `set___(true)`.",
+    "hint": "Section 04's builder, near the end.",
+    "blanks": [
+      {
+        "accept": [
+          "AutoCancel"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5jfp1xmd",
+    "version": 1,
+    "section": "building-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the title built with `getString(R.string.reminder_title, courseName)` rather than `\"$courseName today\"`?",
+    "hint": "Which phone reads which language?",
+    "choices": [
+      {
+        "text": "Notifications refuse text that did not come from `strings.xml`",
+        "correct": false,
+        "why": "Any `CharSequence` is accepted."
+      },
+      {
+        "text": "`courseName` could contain a `$`",
+        "correct": false,
+        "why": "A template inserts the value safely either way."
+      },
+      {
+        "text": "String templates are slower than resources",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "Resources are translated; code is not",
+        "correct": true,
+        "why": "Right: lesson 1 section 07's rule, applied to a notification."
+      }
+    ]
+  },
+  {
+    "id": "ex-fspj5f9x",
+    "version": 1,
+    "section": "the-permission",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner's manifest declares `POST_NOTIFICATIONS`. On Android 15, does that let it post?",
+    "hint": "Necessary, and not sufficient.",
+    "choices": [
+      {
+        "text": "No: the student still has to grant it in a dialog",
+        "correct": true,
+        "why": "Right: the declaration only makes the permission askable."
+      },
+      {
+        "text": "Yes, once Play Store review approves it",
+        "correct": false,
+        "why": "The store does not grant runtime permissions."
+      },
+      {
+        "text": "No, it is reserved for system apps",
+        "correct": false,
+        "why": "Any app can ask for it."
+      },
+      {
+        "text": "Yes, declaring is granting",
+        "correct": false,
+        "why": "That was true of install-time permissions, not of this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-sz5f41pv",
+    "version": 1,
+    "section": "the-permission",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation from section 05 to what `canNotify` answered.",
+    "hint": "Two of them are `false` for different reasons.",
+    "pairs": [
+      {
+        "left": "API 35, not granted",
+        "right": "false, and the app can still ask"
+      },
+      {
+        "left": "API 35, granted, switched off in settings",
+        "right": "false, and asking again is not possible"
+      },
+      {
+        "left": "API 32, never asked",
+        "right": "true, because the permission does not exist there"
+      }
+    ],
+    "right_distractors": [
+      "true, because the manifest declares it"
+    ]
+  },
+  {
+    "id": "ex-eem9z6xc",
+    "version": 1,
+    "section": "the-permission",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In Robolectric, a test that calls `notify` without the permission on API 35 sees one notification posted. What should you conclude?",
+    "hint": "A stand-in is not the rule.",
+    "choices": [
+      {
+        "text": "That `targetSdk` must be lowered to 32",
+        "correct": false,
+        "why": "Lowering it would hide the problem from the test and from nobody else."
+      },
+      {
+        "text": "That Android 15 lets apps post without asking",
+        "correct": false,
+        "why": "Google's documentation says the opposite; Robolectric simply does not enforce it."
+      },
+      {
+        "text": "Robolectric does not enforce it",
+        "correct": true,
+        "why": "Right: a test of code that skipped the check would pass, and students would see nothing."
+      },
+      {
+        "text": "That `@SuppressLint` grants the permission",
+        "correct": false,
+        "why": "It silences a warning and changes nothing at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-z14wph5e",
+    "version": 1,
+    "section": "the-permission",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `canNotify` test `Build.VERSION.SDK_INT >= 33` before checking the permission?",
+    "hint": "Below 33 the permission is not defined.",
+    "choices": [
+      {
+        "text": "So that lint stops warning about `notify`",
+        "correct": false,
+        "why": "The `@SuppressLint` handles the warning."
+      },
+      {
+        "text": "To make the app refuse to run on Android 12",
+        "correct": false,
+        "why": "It runs, and posts, on Android 12."
+      },
+      {
+        "text": "To state in code that older phones need no permission",
+        "correct": true,
+        "why": "Right: the planner then does not depend on what `checkSelfPermission` answers for an undefined permission."
+      },
+      {
+        "text": "Because `checkSelfPermission` crashes below 33",
+        "correct": false,
+        "why": "It answered without crashing in the Android 12 test."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp99xr7g",
+    "version": 1,
+    "section": "the-tap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens on Android 12 or later if the planner creates its `PendingIntent` with neither `FLAG_IMMUTABLE` nor `FLAG_MUTABLE`?",
+    "hint": "The system insists on one.",
+    "choices": [
+      {
+        "text": "It throws an `IllegalArgumentException`",
+        "correct": true,
+        "why": "Right: since Android 12 every `PendingIntent` must say which it is."
+      },
+      {
+        "text": "The tap does nothing",
+        "correct": false,
+        "why": "It never gets that far; creation fails."
+      },
+      {
+        "text": "Lint fails the build",
+        "correct": false,
+        "why": "The failure is at run time."
+      },
+      {
+        "text": "It defaults to mutable",
+        "correct": false,
+        "why": "There is no default any more; the call fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4er7xfj",
+    "version": 1,
+    "section": "the-tap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague gives every reminder's `PendingIntent` request code 0, with `FLAG_UPDATE_CURRENT`. Reminders for Kotlin and SQL are both in the shade. What does tapping Kotlin's do?",
+    "hint": "Two intents that differ only in extras are the same `PendingIntent`.",
+    "choices": [
+      {
+        "text": "Opens Kotlin, as intended",
+        "correct": false,
+        "why": "Both share one `PendingIntent`, updated by the last post."
+      },
+      {
+        "text": "Opens the course posted last, SQL",
+        "correct": true,
+        "why": "Right: the extras were updated to SQL's, for both notifications."
+      },
+      {
+        "text": "Crashes, because two notifications share an intent",
+        "correct": false,
+        "why": "Sharing is allowed; it is just wrong here."
+      },
+      {
+        "text": "Opens nothing until the app restarts",
+        "correct": false,
+        "why": "The tap works; it opens the wrong course."
+      }
+    ]
+  },
+  {
+    "id": "ex-7bakfw6h",
+    "version": 1,
+    "section": "the-tap",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ReplaceTest` posted three reminders for two courses. How many notifications were in the shade?",
+    "hint": "The same id replaces.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-688369rv",
+    "version": 1,
+    "section": "the-tap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `courseId.hashCode()` a convenient notification id and not a guaranteed one?",
+    "hint": "Different strings, same number.",
+    "choices": [
+      {
+        "text": "Notification ids must be below 1000",
+        "correct": false,
+        "why": "Any `Int` is accepted."
+      },
+      {
+        "text": "A negative hash code is refused by `notify`",
+        "correct": false,
+        "why": "Negative ids work."
+      },
+      {
+        "text": "Hash codes change on every run",
+        "correct": false,
+        "why": "A `String`'s `hashCode` is fixed by its characters."
+      },
+      {
+        "text": "Two ids could share one",
+        "correct": true,
+        "why": "Right: with three courses the risk is negligible; with thousands, a real integer id is safer."
+      }
+    ]
+  },
+  {
+    "id": "ex-wq2xhehj",
+    "version": 1,
+    "section": "on-a-phone",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do most students ever read the name and description you gave the planner's channel?",
+    "hint": "Section 07 says which screen to check them on.",
+    "choices": [
+      {
+        "text": "In the app's notification settings",
+        "correct": true,
+        "why": "Right: that is where the student turns a channel up, down or off."
+      },
+      {
+        "text": "In the Play Store listing",
+        "correct": false,
+        "why": "Channels are not listed there."
+      },
+      {
+        "text": "In the permission dialog",
+        "correct": false,
+        "why": "The dialog names the app, not its channels."
+      },
+      {
+        "text": "In the notification itself",
+        "correct": false,
+        "why": "The notification shows the title and text, not the channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycw4h22w",
+    "version": 1,
+    "section": "on-a-phone",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The student's phone is in Do Not Disturb when the planner posts a reminder on its default-importance channel. What should the planner do about it?",
+    "hint": "Section 07 calls the behaviour correct.",
+    "choices": [
+      {
+        "text": "Raise the channel to high importance so it breaks through",
+        "correct": false,
+        "why": "Apps cannot raise an existing channel, and should not try here."
+      },
+      {
+        "text": "Nothing: a silent reminder in the shade is right",
+        "correct": true,
+        "why": "Right: a study reminder should not interrupt somebody who asked not to be."
+      },
+      {
+        "text": "Post it again every minute until it is seen",
+        "correct": false,
+        "why": "That replaces the same notification and teaches the student to switch the channel off."
+      },
+      {
+        "text": "Ask for a Do Not Disturb permission at start-up",
+        "correct": false,
+        "why": "Overriding the student's choice is exactly what section 07 rejects."
+      }
+    ]
+  },
+  {
+    "id": "ex-psyv884z",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these make a posted reminder fail to reach the student, with no error in the app? Choose all that apply.",
+    "hint": "Three gates, and one of them is the channel.",
+    "choices": [
+      {
+        "text": "The phone is in Do Not Disturb",
+        "correct": false,
+        "why": "No: it still reaches the shade, silently."
+      },
+      {
+        "text": "Android 14, permission never granted",
+        "correct": true,
+        "why": "Yes: the first gate."
+      },
+      {
+        "text": "The student switched the `reminders` channel off",
+        "correct": true,
+        "why": "Yes: importance none blocks it."
+      },
+      {
+        "text": "Android 11, nothing ever asked",
+        "correct": false,
+        "why": "No: before Android 13 there is no permission to hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5xmk859",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the reminder to what it is for.",
+    "hint": "Sections 04 and 06.",
+    "pairs": [
+      {
+        "left": "`setSmallIcon`",
+        "right": "The silhouette drawn in the status bar"
+      },
+      {
+        "left": "`setContentIntent`",
+        "right": "What a tap fires, later, on the app's behalf"
+      },
+      {
+        "left": "the id passed to `notify`",
+        "right": "Which existing notification a new post replaces"
+      }
+    ],
+    "right_distractors": [
+      "Which permission the dialog asks for"
+    ]
+  },
+  {
+    "id": "ex-qtcfcyjy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`canNotify` returns `false` on an Android 15 phone. Before deciding to ask for the permission, what else must the planner find out?",
+    "hint": "`false` has two causes.",
+    "choices": [
+      {
+        "text": "Whether the channel has been created yet",
+        "correct": false,
+        "why": "`canNotify` does not look at channels."
+      },
+      {
+        "text": "Whether the phone is in Do Not Disturb",
+        "correct": false,
+        "why": "Do Not Disturb does not make `canNotify` false."
+      },
+      {
+        "text": "Whether `targetSdk` is 36",
+        "correct": false,
+        "why": "That is fixed at build time and the same on every phone."
+      },
+      {
+        "text": "Which of `false`'s two causes applies",
+        "correct": true,
+        "why": "Right: only the first can be asked for; the second is the student's decision in settings."
+      }
+    ]
+  }
+]

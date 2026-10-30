@@ -1,0 +1,452 @@
+{
+  "ex-r9wdcee9": {
+    "prompt": "O que o Azure implanta, configura e escala como uma unidade só?",
+    "choices": [
+      {
+        "text": "Cada função sozinha, então `take_order` escala separada de `make_receipt`",
+        "why": "É a imagem que o nome sugere. Toda função de um app divide com as outras a implantação, as configurações e o plano."
+      },
+      {
+        "text": "O function app, com todas as funções dentro",
+        "why": "A documentação chama o app de unidade de implantação e de gerenciamento: as funções dele são implantadas, configuradas e escaladas juntas."
+      },
+      {
+        "text": "O worker Python, iniciado uma vez por pedido",
+        "why": "O worker é um processo que o host inicia ao lado de si e mantém; não é a unidade que o Azure implanta."
+      },
+      {
+        "text": "A conta de storage indicada por `AzureWebJobsStorage`",
+        "why": "O app precisa dessa conta, mas ela é um recurso à parte; não é o que é implantado e escalado."
+      }
+    ]
+  },
+  "ex-30md43y1": {
+    "prompt": "`make_receipt` grava um recibo no storage de blobs. Que processo abre a conexão com a conta de storage?",
+    "choices": [
+      {
+        "text": "O worker Python, pela biblioteca `azure-functions` que ele importa",
+        "why": "Essa biblioteca tem decoradores e tipos, e nenhum cliente de storage. O worker nunca fala com o storage."
+      },
+      {
+        "text": "O Azurite, que busca o valor no worker",
+        "why": "O Azurite é a conta de storage aqui; ele responde a pedidos e não busca nada."
+      },
+      {
+        "text": "O host do Functions, com o valor que o worker devolve",
+        "why": "O worker devolve o que a função passou ao `set()`, e o host faz a gravação. Toda entrada e saída passa pelo host."
+      },
+      {
+        "text": "A própria `make_receipt`, com a `ShopStorage`",
+        "why": "A função nunca lê essa configuração; o binding a nomeia e o host a usa."
+      }
+    ]
+  },
+  "ex-nxnsjrzf": {
+    "prompt": "Relacione cada arquivo do app com o que ele guarda.",
+    "pairs": [
+      {
+        "left": "`function_app.py`",
+        "right": "as funções, com triggers e bindings como decoradores"
+      },
+      {
+        "left": "`host.json`",
+        "right": "configurações do host para todas as funções, e o bundle de extensões"
+      },
+      {
+        "left": "`requirements.txt`",
+        "right": "os pacotes Python que o build instala"
+      },
+      {
+        "left": "`Dockerfile`",
+        "right": "a imagem base com o host, e para onde o app é copiado"
+      }
+    ],
+    "right_distractors": [
+      "as configurações de aplicativo, como `AzureWebJobsStorage`",
+      "o próprio host do Functions, como pacote Python"
+    ]
+  },
+  "ex-gnhzbgm7": {
+    "prompt": "Um app tem uma função HTTP e nada no código dele toca o storage. Por que ele ainda precisa de `AzureWebJobsStorage`?",
+    "choices": [
+      {
+        "text": "Não precisa: só os bindings de storage leem essa configuração",
+        "why": "O próprio host precisa dela, e a documentação diz que o app não começa sem ela."
+      },
+      {
+        "text": "O trigger HTTP guarda o corpo de todo pedido num blob",
+        "why": "Nada no laboratório gravou um corpo de pedido em lugar nenhum; o host gravou só o blob de lock."
+      },
+      {
+        "text": "O Azure cobra o app pela conta de storage dele",
+        "why": "A cobrança não tem nada a ver com a configuração; é onde o host guarda o próprio estado."
+      },
+      {
+        "text": "O host guarda ali o próprio estado: leases, chaves",
+        "why": "Leases para o que roda uma vez só, as chaves das funções HTTP e o controle dos triggers: o laboratório mostrou o lease tomado antes de qualquer função rodar."
+      }
+    ]
+  },
+  "ex-8zqnd9y9": {
+    "prompt": "A produção precisa que a extensão de filas desista depois de três tentativas, o laptop fica com cinco, e os dois rodam a mesma imagem. O que a produção configura?",
+    "choices": [
+      {
+        "text": "`AzureFunctionsJobHost__extensions__queues__maxDequeueCount=3`",
+        "why": "Uma configuração com o nome de um caminho do `host.json`, ligado por dois sublinhados, substitui esse valor sem um build novo."
+      },
+      {
+        "text": "Um argumento no decorador do trigger de fila, `max_dequeue_count=3`",
+        "why": "Isso mudaria o código e a imagem, que precisam continuar iguais; o valor é uma configuração do host."
+      },
+      {
+        "text": "Um segundo `host.json` na imagem, escolhido por uma variável de ambiente",
+        "why": "O host lê um `host.json` só. O mecanismo de substituição existe justamente para o arquivo não precisar mudar."
+      },
+      {
+        "text": "`;maxDequeueCount=3` no fim da string de conexão da conta de storage",
+        "why": "Uma string de conexão diz como chegar a uma conta; a extensão de filas não lê o comportamento dela ali."
+      }
+    ]
+  },
+  "ex-b4expak1": {
+    "prompt": "`storage.sh` contém a chave de conta `Eby8vdM0…`. Pôr o arquivo no repositório da loja é um vazamento?",
+    "choices": [
+      {
+        "text": "Sim: com ela qualquer um lê o storage da loja no Azure",
+        "why": "A chave é a chave de desenvolvimento do Azurite; pertence ao emulador e não abre nada da loja."
+      },
+      {
+        "text": "Não, porque o Azurite ignora chaves e aceita qualquer pedido",
+        "why": "O Azurite confere a chave; é por isso que as strings a levam. Ela é inofensiva por ser pública, não por ser ignorada."
+      },
+      {
+        "text": "Só se outros usuários além de ana puderem ler o arquivo",
+        "why": "Permissões de arquivo não importam para uma chave que a Microsoft publica."
+      },
+      {
+        "text": "Não: é a chave publicada do Azurite, a mesma em toda cópia",
+        "why": "A Microsoft a imprime na documentação, e as strings do arquivo apontam para o emulador e para nenhum outro lugar."
+      }
+    ]
+  },
+  "ex-hmj8j2w8": {
+    "prompt": "Por que o `storage.sh` tem duas strings de conexão para um Azurite só?",
+    "choices": [
+      {
+        "text": "O app e o terminal usam endereços diferentes",
+        "why": "Dentro da rede Docker o endereço é `azurite`; o seu terminal alcança as portas publicadas no laptop."
+      },
+      {
+        "text": "Uma é para blobs e a outra para filas",
+        "why": "Cada string nomeia os três serviços; elas só diferem no endereço."
+      },
+      {
+        "text": "O host precisa de uma chave só de leitura e o `az` de uma que grave",
+        "why": "As duas strings levam a mesma conta e a mesma chave."
+      },
+      {
+        "text": "O app fala HTTPS com o storage, e o CLI fala HTTP puro",
+        "why": "As duas strings dizem `DefaultEndpointsProtocol=http`."
+      }
+    ]
+  },
+  "ex-qdsfp44a": {
+    "prompt": "Dentro do contêiner, o `ps` mostrou o host e um segundo processo que importa o `function_app.py` e roda uma função quando o host manda uma chamada: o ___ Python da linguagem.",
+    "blanks": [
+      {
+        "accept": [
+          "worker"
+        ]
+      }
+    ]
+  },
+  "ex-4va7vwxb": {
+    "prompt": "Logo depois de o app começar, antes de qualquer pedido, `azure-webjobs-hosts` já tinha um blob. Para que ele servia?",
+    "choices": [
+      {
+        "text": "Uma cópia do `function_app.py`, para outras instâncias carregarem",
+        "why": "O código está na imagem. O blob era `locks/…/host`, que não guarda código."
+      },
+      {
+        "text": "A chave que protege `take_order`",
+        "why": "`take_order` é anônima e não pede chave; o blob era um lock."
+      },
+      {
+        "text": "Um lease, para as instâncias combinarem o que roda uma vez",
+        "why": "`locks/<id do host>/host` fica com o lease de um host; no Azure é assim que um timer roda numa instância só."
+      },
+      {
+        "text": "O primeiro recibo, gravado quando o host começou",
+        "why": "Ainda não havia pedido, e os recibos vão para `receipts`, a partir da segunda versão."
+      }
+    ]
+  },
+  "ex-nhmggpzf": {
+    "prompt": "A loja quer a imagem construída nesta aula num plano Flex Consumption. O que acontece?",
+    "choices": [
+      {
+        "text": "Roda depois de configurar `WEBSITES_PORT` para 80",
+        "why": "A porta não é o problema, e 80 já é o padrão. O Flex Consumption não aceita contêiner nenhum."
+      },
+      {
+        "text": "O plano a recusa: ele aceita código, não imagens",
+        "why": "A tabela de hospedagem lista contêineres no Premium, no Dedicado e no Container Apps; Flex Consumption e Consumption aceitam código."
+      },
+      {
+        "text": "Roda, com partidas a frio mais longas que no Premium",
+        "why": "Partidas a frio são da aula 16; aqui o plano recusa um contêiner antes de qualquer coisa começar."
+      },
+      {
+        "text": "Roda se `--image` nomear o Container Registry em vez do Docker Hub",
+        "why": "O registro não muda o que o plano aceita."
+      }
+    ]
+  },
+  "ex-f6sperp4": {
+    "prompt": "Com as configurações de fila que o host imprimiu, quantas vezes `make_receipt` roda para um pedido cujo produto não tem preço, antes de a mensagem estar em `orders-poison`?",
+    "hint": "A primeira tentativa conta.",
+    "unit": "execuções"
+  },
+  "ex-q4djf02y": {
+    "prompt": "Ponha em ordem o que aconteceu com o pedido A-1002, do pedido HTTP até a fila poison.",
+    "items": [
+      "`take_order` chama `set()` na saída para a fila e retorna",
+      "O host grava a mensagem em `orders`",
+      "Uma consulta encontra a mensagem e o host roda `make_receipt`",
+      "`make_receipt` levanta `KeyError`, e a mensagem fica visível de novo na hora",
+      "Depois da quinta falha o host move a mensagem para `orders-poison`"
+    ],
+    "trap": "Pôr a gravação na fila antes de a resposta estar pronta: o host grava o que a função passou ao `set()` depois que ela retorna."
+  },
+  "ex-3gcyx5ze": {
+    "prompt": "A primeira versão de `take_order` recebeu o corpo `hello` e levantou uma exceção. O que aconteceu em seguida?",
+    "choices": [
+      {
+        "text": "O host respondeu 500 e nada foi tentado de novo",
+        "why": "Um trigger HTTP responde a alguém que está esperando; a falha é a resposta dele, e tentar de novo é decisão dele."
+      },
+      {
+        "text": "O host rodou a função mais quatro vezes e depois desistiu",
+        "why": "Cinco tentativas são do trigger de fila. O pedido HTTP acabou depois de uma."
+      },
+      {
+        "text": "O pedido foi movido para uma fila poison de HTTP",
+        "why": "Essa fila não existe; fila poison é coisa de trigger de fila."
+      },
+      {
+        "text": "Quem chamou recebeu 400 com o traceback no corpo",
+        "why": "O corpo veio vazio e o código foi 500; o traceback foi só para o log. Um 400 veio depois, da conferência da segunda versão."
+      }
+    ]
+  },
+  "ex-xw62bfdy": {
+    "prompt": "Um banco de dados de que `make_receipt` depende reinicia por vinte segundos, e os pedidos que chegam nesse meio-tempo falham. Com os padrões, onde esses pedidos vão parar?",
+    "choices": [
+      {
+        "text": "Em `orders`, esperando o banco responder de novo",
+        "why": "Com `VisibilityTimeout` em zero uma mensagem que falhou é tentada de novo na hora, então nada espera o banco."
+      },
+      {
+        "text": "Em `orders-poison`, com as cinco tentativas gastas durante o reinício",
+        "why": "Cinco tentativas em rajada cabem em vinte segundos. Um `visibilityTimeout` no `host.json` as espaçaria para além da queda."
+      },
+      {
+        "text": "Em lugar nenhum: o host descarta a mensagem depois da quinta falha",
+        "why": "O host a move para a fila poison; ela é guardada, não descartada."
+      },
+      {
+        "text": "De volta a quem chamou, que recebe um 500 para cada um",
+        "why": "Quem chamou recebeu 202 quando o pedido entrou na fila; um trigger de fila não responde a ninguém."
+      }
+    ]
+  },
+  "ex-74zngy0f": {
+    "prompt": "O que faz `make_receipt` rodar quando uma mensagem chega em `orders`?",
+    "choices": [
+      {
+        "text": "O Azurite empurra cada mensagem nova para a URL da função",
+        "why": "Nada empurra uma mensagem de fila. O serviço de storage só responde quando perguntam."
+      },
+      {
+        "text": "`take_order` a chama depois de gravar a mensagem",
+        "why": "As duas funções nunca se chamam; a fila está entre elas."
+      },
+      {
+        "text": "Um laço que o decorador põe em volta da função",
+        "why": "O decorador só declara o trigger; o laço é do host, fora do seu código."
+      },
+      {
+        "text": "O host consulta a fila e a roda para cada mensagem",
+        "why": "Ele volta a olhar mais cedo depois de achar algo e mais tarde depois de uma consulta vazia, até um minuto por padrão."
+      }
+    ]
+  },
+  "ex-kg926pt2": {
+    "prompt": "Quais destas coisas o host fez por `make_receipt`, sem nenhuma linha da função fazê-la? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Apagar a mensagem de `orders` depois de um sucesso",
+        "why": "O trigger de fila apaga uma mensagem quando a função retorna normalmente."
+      },
+      {
+        "text": "Gravar `receipts/A-1001.json`",
+        "why": "A função só chamou `set()`; o binding de saída para blob gravou o blob."
+      },
+      {
+        "text": "Mover A-1002 para `orders-poison`",
+        "why": "O host contou as tentativas e moveu a mensagem depois da quinta."
+      },
+      {
+        "text": "Calcular 2 × 2990 centavos",
+        "why": "Essa é uma linha da própria função, `PRICES[order['sku']] * order['qty']`."
+      },
+      {
+        "text": "Registrar a linha `order A-1001, attempt 1`",
+        "why": "A função escreveu isso com `logging.info`; o host só levou a linha para o log."
+      }
+    ]
+  },
+  "ex-dr6qwrz4": {
+    "prompt": "O caminho da saída para blob é `receipts/{order}.json`, e uma mensagem em `orders` diz `{\"order\": \"A-2002\", \"sku\": \"cap\", \"qty\": 3}`. Que blob uma execução bem-sucedida grava?",
+    "choices": [
+      {
+        "text": "`receipts/{order}.json`, com as chaves",
+        "why": "As chaves marcam uma expressão de binding; o host as preenche a partir da mensagem."
+      },
+      {
+        "text": "Um blob com o nome do id da mensagem na fila",
+        "why": "O id é metadado da mensagem; o caminho nomeia o campo `order` do corpo dela."
+      },
+      {
+        "text": "`receipts/A-2002.json`",
+        "why": "A mensagem é JSON, então `{order}` é trocado pelo campo `order` dela."
+      },
+      {
+        "text": "Um nome lido de uma configuração de aplicativo chamada `order`",
+        "why": "Isso seria `%order%`, entre sinais de porcentagem. As chaves leem o conteúdo do trigger."
+      }
+    ]
+  },
+  "ex-55hbswd0": {
+    "prompt": "Um programa que não seja `take_order` e ponha pedidos na fila para `make_receipt` precisa mandar cada mensagem em ___, a menos que o `host.json` configure `messageEncoding` como `none`.",
+    "blanks": [
+      {
+        "accept": [
+          "base64",
+          "base 64",
+          "base-64"
+        ]
+      }
+    ]
+  },
+  "ex-yk14vhj7": {
+    "prompt": "O bloco `extensionBundle` é apagado do `host.json`. O que acontece com `take_order`, cujo trigger é HTTP e nativo do host?",
+    "choices": [
+      {
+        "text": "Continua respondendo, porque HTTP não precisa de extensão",
+        "why": "O trigger dela não precisa, mas a saída para a fila precisa, e uma função é carregada com todos os bindings ou não é."
+      },
+      {
+        "text": "Responde 202 e não grava nada na fila, sem avisar",
+        "why": "Nada é pulado em silêncio: o host recusou a função e registrou que `queue` não está registrado."
+      },
+      {
+        "text": "O host se recusa a começar e o contêiner sai",
+        "why": "O host começou e tomou o lease; recusou só as duas funções."
+      },
+      {
+        "text": "Fica em erro, a rota nunca é mapeada, e os pedidos recebem 404",
+        "why": "O host a recusou por causa da saída para a fila, então `POST /api/orders` não chegou a nada."
+      }
+    ]
+  },
+  "ex-aac6y2z0": {
+    "prompt": "Em `@app.queue_output(…, connection='ShopStorage')`, o que é `ShopStorage`?",
+    "choices": [
+      {
+        "text": "Uma string de conexão, escrita no próprio código",
+        "why": "O código não guarda segredo. A string está numa configuração com esse nome."
+      },
+      {
+        "text": "O nome de uma configuração, ou um prefixo",
+        "why": "No laptop a configuração guarda uma string de conexão; no Azure, configurações `ShopStorage__…` descrevem uma conexão por identidade."
+      },
+      {
+        "text": "O nome da conta de storage no Azure",
+        "why": "A conta no exemplo de identidade é `shopdata`; `ShopStorage` é só o nome da configuração."
+      },
+      {
+        "text": "A identidade gerenciada com que o host se autentica",
+        "why": "A identidade pertence ao function app; a configuração diz qual conexão usar."
+      }
+    ]
+  },
+  "ex-t9fz1xha": {
+    "prompt": "No plano Consumption, com o `batchSize` padrão de 16 e o `newBatchThreshold` documentado de N × `batchSize` / 2 com N = 1, quantas mensagens uma função com trigger de fila pode estar processando ao mesmo tempo numa instância?",
+    "hint": "Um lote novo é buscado quando a quantidade em andamento cai até o limite.",
+    "unit": "mensagens"
+  },
+  "ex-kdna8pp6": {
+    "prompt": "No Azure a loja troca a `ShopStorage` de uma chave para a identidade gerenciada do app. O que muda?",
+    "choices": [
+      {
+        "text": "Configurações `ShopStorage__…` para serviços e credencial, e papéis",
+        "why": "As URIs dos serviços mais `__credential=managedidentity`, e os papéis de que cada binding precisa, sem mudar o código."
+      },
+      {
+        "text": "`connection='ShopStorage'` vira `connection='ManagedIdentity'` no código",
+        "why": "O código continua nomeando a mesma configuração; mudam as configurações, não o decorador."
+      },
+      {
+        "text": "Só `AzureWebJobsStorage__accountName`, que os bindings seguem",
+        "why": "Isso cobre a conexão do host. Com identidades, a documentação pede uma conexão separada para os bindings."
+      },
+      {
+        "text": "O client id da identidade vai para o `host.json`",
+        "why": "Conexões são configurações de aplicativo, não valores do `host.json`."
+      }
+    ]
+  },
+  "ex-cgp8m380": {
+    "prompt": "`make_receipt` deveria tratar um pedido de produto desconhecido sem gastar cinco tentativas com ele. Que mudança faz isso?",
+    "choices": [
+      {
+        "text": "Pôr `maxDequeueCount` em 1 para o app inteiro",
+        "why": "Isso também tira as novas tentativas de que uma falha passageira, como um banco reiniciando, precisa."
+      },
+      {
+        "text": "Capturar o `KeyError` e levantar um `ValueError` em vez dele",
+        "why": "Qualquer exceção é falha para o host; a mensagem é tentada cinco vezes do mesmo jeito."
+      },
+      {
+        "text": "Conferir o produto, registrar o motivo e retornar sem erro",
+        "why": "Retornar normalmente apaga a mensagem, e o log diz o motivo. As novas tentativas ficam para as falhas que passam."
+      },
+      {
+        "text": "Pôr `visibilityTimeout` em uma hora",
+        "why": "As cinco tentativas continuam acontecendo, com uma hora entre elas, e o produto continua desconhecido em todas."
+      }
+    ]
+  },
+  "ex-x4028f0w": {
+    "prompt": "Por que esta aula chama os bindings de ponto principal do Azure Functions, em vez de chamar o SDK de storage em `make_receipt`?",
+    "choices": [
+      {
+        "text": "Os bindings rodam mais rápido que as mesmas chamadas feitas com o SDK",
+        "why": "Nada na aula mediu velocidade; o argumento é sobre quem faz o trabalho e onde ele é configurado."
+      },
+      {
+        "text": "O host faz as leituras, as gravações e as novas tentativas, ajustadas por configuração",
+        "why": "Consultar, apagar, tentar de novo, a fila poison e a gravação são do host, ajustados em configurações, e o host sabe o que cada função espera."
+      },
+      {
+        "text": "O Functions recusa código que importa um SDK do Azure",
+        "why": "A documentação diz o contrário: uma gravação que o binding não expressa é feita com o SDK."
+      },
+      {
+        "text": "Código escrito com bindings roda sem mudança em qualquer nuvem",
+        "why": "Os decoradores nomeiam serviços do Azure; é o aprisionamento que a aula 22 põe na balança."
+      }
+    ]
+  }
+}

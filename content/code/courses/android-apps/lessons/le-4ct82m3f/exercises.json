@@ -1,0 +1,684 @@
+[
+  {
+    "id": "ex-vc7vrht5",
+    "version": 1,
+    "section": "the-api",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Retrofit write for you from the `PlannerApi` interface?",
+    "hint": "One function per endpoint, annotated.",
+    "choices": [
+      {
+        "text": "The server that answers the requests",
+        "correct": false,
+        "why": "Retrofit is a client; the server is somebody else's, or MockWebServer in tests."
+      },
+      {
+        "text": "The code that builds each request and reads each response",
+        "correct": true,
+        "why": "Right: OkHttp then sends the bytes."
+      },
+      {
+        "text": "The database tables for the sessions",
+        "correct": false,
+        "why": "That is Room, lesson 15."
+      },
+      {
+        "text": "The token the server expects",
+        "correct": false,
+        "why": "The token comes from the app, through an interceptor."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj6rk4vf",
+    "version": 1,
+    "section": "the-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The base URL is `https://api.example.com/v1/` and a function is annotated `@GET(\"/courses\")`, with a leading slash. Which address is requested?",
+    "hint": "A relative link starting with a slash.",
+    "choices": [
+      {
+        "text": "`https://api.example.com/v1/courses`",
+        "correct": false,
+        "why": "That is what `courses` without the slash gives."
+      },
+      {
+        "text": "`https://api.example.com/courses`",
+        "correct": true,
+        "why": "Right: the leading slash throws away `v1/`, as in a browser."
+      },
+      {
+        "text": "Retrofit refuses the annotation at build time",
+        "correct": false,
+        "why": "It is valid; it just resolves to another address."
+      },
+      {
+        "text": "`https://api.example.com/v1//courses`",
+        "correct": false,
+        "why": "URLs are resolved, not concatenated."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehpx0bad",
+    "version": 1,
+    "section": "the-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson keep `SessionDto` separate from `StudySession`?",
+    "hint": "One is the JSON's shape.",
+    "choices": [
+      {
+        "text": "Retrofit cannot return a class with a `LocalDate`",
+        "correct": false,
+        "why": "A converter could handle it; lesson 14 does. The reason is independence."
+      },
+      {
+        "text": "So each side changes alone",
+        "correct": true,
+        "why": "Right: a renamed server field changes one class."
+      },
+      {
+        "text": "Because `data class` cannot be `@Serializable`",
+        "correct": false,
+        "why": "The DTOs are serializable data classes."
+      },
+      {
+        "text": "To use less memory on the phone",
+        "correct": false,
+        "why": "Two classes do not save memory; that is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-x949qhmb",
+    "version": 1,
+    "section": "first-call",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `server.takeRequest()` give the test?",
+    "hint": "The server side of the conversation.",
+    "choices": [
+      {
+        "text": "The parsed list of courses",
+        "correct": false,
+        "why": "That is what the client returned; `takeRequest` is the other end."
+      },
+      {
+        "text": "The request as it arrived: method, path, headers, body",
+        "correct": true,
+        "why": "Right: so the request itself is held to the contract."
+      },
+      {
+        "text": "The next response in the queue",
+        "correct": false,
+        "why": "Responses are enqueued; requests are taken."
+      },
+      {
+        "text": "A copy of the OkHttp client",
+        "correct": false,
+        "why": "The server knows nothing about the client object."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yeqkhs5",
+    "version": 1,
+    "section": "first-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The POST's answer had no `done` field, yet the test printed `done=false`. Where did the value come from?",
+    "hint": "Look at `SessionDto`.",
+    "choices": [
+      {
+        "text": "From the default `= false` in `SessionDto`",
+        "correct": true,
+        "why": "Right: a missing field takes the declared default."
+      },
+      {
+        "text": "The server added it on the way back",
+        "correct": false,
+        "why": "The server sent exactly the enqueued body, without `done`."
+      },
+      {
+        "text": "OkHttp fills missing booleans with false",
+        "correct": false,
+        "why": "OkHttp moves bytes; it knows nothing of the JSON's fields."
+      },
+      {
+        "text": "From `NewSessionDto`, which the request carried",
+        "correct": false,
+        "why": "`NewSessionDto` has no `done` field at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4rh1v48",
+    "version": 1,
+    "section": "first-call",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The test checked that the request carried the header `Authorization: ___ test-token`.",
+    "hint": "The scheme name before the token.",
+    "blanks": [
+      {
+        "accept": [
+          "Bearer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hj68swg5",
+    "version": 1,
+    "section": "errors",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each situation to what `apiCall` returns.",
+    "hint": "Answer, refusal, no answer.",
+    "pairs": [
+      {
+        "left": "the server answers 200 with a list",
+        "right": "`Ok`"
+      },
+      {
+        "left": "the server answers 404",
+        "right": "`Refused`"
+      },
+      {
+        "left": "the connection drops three times",
+        "right": "`Unreachable`"
+      }
+    ],
+    "right_distractors": [
+      "`Cancelled`"
+    ]
+  },
+  {
+    "id": "ex-h1h1mxjd",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `apiCall` catch `HttpException` and `IOException` but not `Exception`?",
+    "hint": "Two things must pass through.",
+    "choices": [
+      {
+        "text": "Catching `Exception` is refused by the Kotlin compiler",
+        "correct": false,
+        "why": "It compiles; it would just be wrong."
+      },
+      {
+        "text": "So cancellation and real bugs pass through",
+        "correct": true,
+        "why": "Right: a cancelled call must cancel, and a bug must crash where you see it."
+      },
+      {
+        "text": "Because Retrofit only throws those two",
+        "correct": false,
+        "why": "It can throw others, a bug among them, and those must not be hidden."
+      },
+      {
+        "text": "To keep the response body for the screen",
+        "correct": false,
+        "why": "`Refused` keeps only the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-t58na2ng",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner shows \"Something went wrong\" for every failure. What has it thrown away?",
+    "hint": "One is something to tell, one is something to try again.",
+    "choices": [
+      {
+        "text": "Nothing, since the student cannot fix either",
+        "correct": false,
+        "why": "The student can wait for a connection, and cannot fix a refusal; the words should say which."
+      },
+      {
+        "text": "The HTTP method of the failed request",
+        "correct": false,
+        "why": "The method matters to retries, not to the message."
+      },
+      {
+        "text": "Whether to tell the student or to try again",
+        "correct": true,
+        "why": "Right: refused and unreachable call for different actions."
+      },
+      {
+        "text": "The token, which the error contains",
+        "correct": false,
+        "why": "No error here carries the token."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez69xh84",
+    "version": 1,
+    "section": "errors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `ApiResultTest.noAnswer`, how many attempts did the server count before the call became `Unreachable`?",
+    "hint": "`maxAttempts`.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6nzqvy1c",
+    "version": 1,
+    "section": "timeouts-and-retries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which OkHttp timeout bounds the whole call, retries included?",
+    "hint": "The one set to 30 seconds.",
+    "choices": [
+      {
+        "text": "`readTimeout`",
+        "correct": false,
+        "why": "It limits the wait between two pieces of the response."
+      },
+      {
+        "text": "`connectTimeout`",
+        "correct": false,
+        "why": "It limits opening a connection."
+      },
+      {
+        "text": "`callTimeout`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`writeTimeout`",
+        "correct": false,
+        "why": "It limits the wait between two pieces of the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j0k8br6",
+    "version": 1,
+    "section": "timeouts-and-retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server sends one byte every nine seconds for two minutes. With only `readTimeout` at 10 s, what happens?",
+    "hint": "Between two pieces, not the whole.",
+    "choices": [
+      {
+        "text": "It times out after ten seconds",
+        "correct": false,
+        "why": "No gap reaches ten seconds, so it never trips."
+      },
+      {
+        "text": "The student waits the full two minutes",
+        "correct": true,
+        "why": "Right: only `callTimeout` bounds the whole call."
+      },
+      {
+        "text": "OkHttp retries it three times",
+        "correct": false,
+        "why": "Nothing failed, so nothing is retried."
+      },
+      {
+        "text": "The connection is refused",
+        "correct": false,
+        "why": "It was accepted; it is just slow."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9tvxj2x",
+    "version": 1,
+    "section": "timeouts-and-retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `POST` adding a session times out. Why does `RetryInterceptor` not send it again?",
+    "hint": "What may have happened on the server?",
+    "choices": [
+      {
+        "text": "OkHttp forbids sending a body twice",
+        "correct": false,
+        "why": "It allows it; the interceptor decides not to."
+      },
+      {
+        "text": "It was perhaps saved, and only the answer lost",
+        "correct": true,
+        "why": "Right: a second send would save it twice."
+      },
+      {
+        "text": "A `POST` cannot time out",
+        "correct": false,
+        "why": "Any call can time out."
+      },
+      {
+        "text": "Because the token expires after one attempt",
+        "correct": false,
+        "why": "The token is reused; that is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7wp95s3",
+    "version": 1,
+    "section": "timeouts-and-retries",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `GET` loses its connection twice and then succeeds. Put what `RetryInterceptor` does in order.",
+    "hint": "200 ms, then double.",
+    "items": [
+      "proceed, and catch an `IOException`",
+      "sleep 200 ms",
+      "proceed again, and catch another `IOException`",
+      "sleep 400 ms",
+      "proceed a third time and return the response"
+    ]
+  },
+  {
+    "id": "ex-gbksys4c",
+    "version": 1,
+    "section": "timeouts-and-retries",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `RetryTest` POST case, how many attempts reached the server?",
+    "hint": "The printed line ends with it.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rb8s6qar",
+    "version": 1,
+    "section": "interceptors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the token passed to `AuthInterceptor` as a function and not a string?",
+    "hint": "Sign in, refresh, sign out.",
+    "choices": [
+      {
+        "text": "The token changes",
+        "correct": true,
+        "why": "Right: each request reads the current one, or none."
+      },
+      {
+        "text": "Because OkHttp requires every interceptor parameter to be a lambda",
+        "correct": false,
+        "why": "OkHttp requires nothing of the constructor."
+      },
+      {
+        "text": "To hide the token from the logging interceptor",
+        "correct": false,
+        "why": "`redactHeader` does that."
+      },
+      {
+        "text": "So the token is encrypted in memory",
+        "correct": false,
+        "why": "A function encrypts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mch7hm0t",
+    "version": 1,
+    "section": "interceptors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the log show for the `Authorization` header?",
+    "hint": "`redactHeader`.",
+    "choices": [
+      {
+        "text": "Nothing: the line was removed",
+        "correct": false,
+        "why": "The line is there, with its value hidden."
+      },
+      {
+        "text": "`Bearer s3cr3t-t0ken`",
+        "correct": false,
+        "why": "That would be the leak the lesson prevents."
+      },
+      {
+        "text": "`Authorization: ██`",
+        "correct": true,
+        "why": "Right: the header exists and its value does not reach the log."
+      },
+      {
+        "text": "A hash of the token",
+        "correct": false,
+        "why": "No hash is logged; the value is replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-xng6gv8h",
+    "version": 1,
+    "section": "interceptors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone moves the logging interceptor before `AuthInterceptor`. What do the logs show from then on?",
+    "hint": "Each interceptor sees the request after the ones to its left.",
+    "choices": [
+      {
+        "text": "Requests with no `Authorization` header",
+        "correct": true,
+        "why": "Right: a log that lies about what was sent."
+      },
+      {
+        "text": "The token in clear text",
+        "correct": false,
+        "why": "The header does not exist yet at that point, redacted or not."
+      },
+      {
+        "text": "Each request three times",
+        "correct": false,
+        "why": "Retries happen after the logger, so it sees one call."
+      },
+      {
+        "text": "Nothing changes",
+        "correct": false,
+        "why": "Order changes what each interceptor sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv9ze581",
+    "version": 1,
+    "section": "interceptors",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside an interceptor, `chain.___(request)` passes the request on and returns the response.",
+    "hint": "It appears in all three interceptors.",
+    "blanks": [
+      {
+        "accept": [
+          "proceed"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dkzdz656",
+    "version": 1,
+    "section": "the-manifest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner's manifest never declared `INTERNET`, yet the merged manifest had it. Where did it come from?",
+    "hint": "The merger report names the source.",
+    "choices": [
+      {
+        "text": "AGP adds it to every app",
+        "correct": false,
+        "why": "The report named a library, not the plugin."
+      },
+      {
+        "text": "`okhttp-android`'s own manifest",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Robolectric, for the tests",
+        "correct": false,
+        "why": "Robolectric is a test dependency and never reaches the app's manifest."
+      },
+      {
+        "text": "`targetSdk` 36 grants it implicitly",
+        "correct": false,
+        "why": "No SDK level grants a permission by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-9agy199j",
+    "version": 1,
+    "section": "the-manifest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson put the cleartext exception in `src/debug/`?",
+    "hint": "Which builds take part?",
+    "choices": [
+      {
+        "text": "Because `res/xml` is only allowed in debug",
+        "correct": false,
+        "why": "Any source set may have `res/xml`."
+      },
+      {
+        "text": "It stays out of release builds",
+        "correct": true,
+        "why": "Right: only the debug build merges it."
+      },
+      {
+        "text": "Because the emulator only runs debug builds",
+        "correct": false,
+        "why": "An emulator runs any build."
+      },
+      {
+        "text": "To make the release APK smaller",
+        "correct": false,
+        "why": "A small XML file is not about size."
+      }
+    ]
+  },
+  {
+    "id": "ex-0amg2y8c",
+    "version": 1,
+    "section": "the-manifest",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `android:usesCleartextTraffic=\"true\"` allow that the lesson's network security configuration does not?",
+    "hint": "Which addresses, which builds?",
+    "choices": [
+      {
+        "text": "Plain HTTP to every address, in release builds too",
+        "correct": true,
+        "why": "Right: the configuration names one address, in debug only."
+      },
+      {
+        "text": "HTTPS to the emulator's host",
+        "correct": false,
+        "why": "HTTPS was never blocked."
+      },
+      {
+        "text": "Requests without the `INTERNET` permission",
+        "correct": false,
+        "why": "Nothing removes the need for `INTERNET`."
+      },
+      {
+        "text": "Nothing more: they are equivalent",
+        "correct": false,
+        "why": "The attribute is far broader."
+      }
+    ]
+  },
+  {
+    "id": "ex-yeny0jrp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these requests may `RetryInterceptor` send a second time? Choose all that apply.",
+    "hint": "Method, and kind of failure.",
+    "choices": [
+      {
+        "text": "`GET courses` whose connection dropped",
+        "correct": true,
+        "why": "Yes: a GET after an `IOException`."
+      },
+      {
+        "text": "`GET courses/chemistry/sessions` answered with 404",
+        "correct": false,
+        "why": "No: an answer is not retried."
+      },
+      {
+        "text": "`POST courses/android/sessions` that timed out",
+        "correct": false,
+        "why": "No: a write is never repeated."
+      },
+      {
+        "text": "`GET courses` that timed out on reading",
+        "correct": true,
+        "why": "Yes: `SocketTimeoutException` is an `IOException`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzsmryd3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test checks only `assertEquals(3, courses.size)`. Which bug does it miss that `takeRequest()` would catch?",
+    "hint": "MockWebServer answers whatever path is asked.",
+    "choices": [
+      {
+        "text": "A wrong path, such as `/v1/course`",
+        "correct": true,
+        "why": "Right: the queued answer comes back whatever the path."
+      },
+      {
+        "text": "A wrong number of courses in the JSON",
+        "correct": false,
+        "why": "The size assertion catches that."
+      },
+      {
+        "text": "A course name with an accent",
+        "correct": false,
+        "why": "Neither check is about names."
+      },
+      {
+        "text": "A server slower than ten seconds",
+        "correct": false,
+        "why": "That fails with a timeout either way."
+      }
+    ]
+  }
+]
