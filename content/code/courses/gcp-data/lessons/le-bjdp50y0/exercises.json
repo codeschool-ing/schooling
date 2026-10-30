@@ -1,0 +1,631 @@
+[
+  {
+    "id": "ex-5k206tyd",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A consumer acks a message and then does the work. It crashes between the two. What happens to that message?",
+    "hint": "Does Pub/Sub still have it?",
+    "choices": [
+      {
+        "text": "It is processed twice",
+        "correct": false,
+        "why": "That is the other order: work first, then ack."
+      },
+      {
+        "text": "It is lost: Pub/Sub forgot it at the ack",
+        "correct": true,
+        "why": "Right: at most once. Nothing is done twice, and this message is never processed."
+      },
+      {
+        "text": "Pub/Sub notices the crash and delivers it again",
+        "correct": false,
+        "why": "After the ack Pub/Sub has nothing left to deliver; it knows nothing of the consumer's work."
+      },
+      {
+        "text": "It is processed exactly once",
+        "correct": false,
+        "why": "No ordering of the two steps gives that; here the work never happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqgtqv0k",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"exactly once\" not a third way of ordering the work and the ack?",
+    "hint": "The two writes go to different systems.",
+    "choices": [
+      {
+        "text": "Because the ack has to come first",
+        "correct": false,
+        "why": "It can come in either order; that is what the two guarantees are."
+      },
+      {
+        "text": "Because it needs a faster network",
+        "correct": false,
+        "why": "Speed makes the window smaller and never closes it."
+      },
+      {
+        "text": "No single write covers both",
+        "correct": true,
+        "why": "Right: a crash between them either loses or repeats. Exactly once is built from atomic writes or idempotent work, end to end."
+      },
+      {
+        "text": "Because Pub/Sub forbids it in its terms of use",
+        "correct": false,
+        "why": "It is a matter of two separate writes, not of a rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yhepzgz",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is at least once the default for everything Quitanda counts?",
+    "hint": "Which of the two failures can be repaired afterwards?",
+    "choices": [
+      {
+        "text": "It is cheaper to run than at most once",
+        "correct": false,
+        "why": "Both cost the same to run; they differ in what a crash does."
+      },
+      {
+        "text": "Pub/Sub removes the duplicates on its own",
+        "correct": false,
+        "why": "It does not, and the lesson's replay showed the totals going wrong without a dedupe."
+      },
+      {
+        "text": "It is the one that loses nothing",
+        "correct": true,
+        "why": "Right: duplicates can be removed afterwards, lost messages cannot. At most once fits only data that may be lost."
+      },
+      {
+        "text": "It keeps messages in order",
+        "correct": false,
+        "why": "Order is a separate problem, solved by an ordering key."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd2x0v2b",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A publisher sends `o-301` twice because the first answer was lost. Which key tells the two messages apart from two real payments?",
+    "hint": "The two copies got different message ids.",
+    "choices": [
+      {
+        "text": "The message id Pub/Sub assigned",
+        "correct": false,
+        "why": "The copy got a new id, 2 against 1, so to Pub/Sub they are two events."
+      },
+      {
+        "text": "The publish time of each message",
+        "correct": false,
+        "why": "Each copy has its own publish time, and two real payments a second apart would too."
+      },
+      {
+        "text": "The order id in the data",
+        "correct": true,
+        "why": "Right: an order is paid once, so a second message for the same order is a duplicate."
+      },
+      {
+        "text": "The ack id of the delivery",
+        "correct": false,
+        "why": "An ack id names one delivery to a subscriber, and is new on every delivery."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4y52hzk",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson, a second `gcloud pubsub subscriptions pull` right after the first took about ten seconds and returned the same two messages. Why?",
+    "hint": "What had happened to them in the first pull?",
+    "choices": [
+      {
+        "text": "Their ten-second deadline ran out",
+        "correct": true,
+        "why": "Right: the same message ids came back under new ack ids 3 and 4."
+      },
+      {
+        "text": "The emulator was slow to answer the first time",
+        "correct": false,
+        "why": "It was already running; the wait was the deadline, the same length as `ackDeadlineSeconds`."
+      },
+      {
+        "text": "The publisher sent the two messages again",
+        "correct": false,
+        "why": "Nothing was published between the pulls, and the ids were the same."
+      },
+      {
+        "text": "The first pull had acked them already",
+        "correct": false,
+        "why": "It printed ack ids without acking; an acked message is not delivered again."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhrx8bv6",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer of an ordered subscription needs 25 seconds per message and is written with unary pulls, on a 10-second deadline. What should it do?",
+    "hint": "Unary pulls have nobody extending their leases.",
+    "choices": [
+      {
+        "text": "Ack before doing the work",
+        "correct": false,
+        "why": "That stops the redelivery by making the consumer at most once, which loses a message on every crash."
+      },
+      {
+        "text": "Nothing, since an ordered subscription waits for the consumer",
+        "correct": false,
+        "why": "Order does not extend a deadline; an expired one redelivers the message and the key's later ones."
+      },
+      {
+        "text": "Lower the retention of the subscription",
+        "correct": false,
+        "why": "Retention decides how long a message is kept, not how long a consumer holds it."
+      },
+      {
+        "text": "Extend the deadline while it works",
+        "correct": true,
+        "why": "Right: that is what the streaming client does on its own; in the lesson, sixty seconds kept the messages away for twenty."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6tbnx79",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these put the same payment into a consumer's hands twice? Choose all that apply.",
+    "hint": "Five places were named, and two things that look like duplicates and are not.",
+    "choices": [
+      {
+        "text": "A publisher that retries after a lost answer",
+        "correct": true,
+        "why": "Right; the topic holds both copies, with two ids."
+      },
+      {
+        "text": "A consumer that dies before its ack",
+        "correct": true,
+        "why": "Right; the messages come back once the deadline runs out."
+      },
+      {
+        "text": "A push endpoint that answers 503",
+        "correct": true,
+        "why": "Right; message 17 of lesson 19 arrived three times."
+      },
+      {
+        "text": "Two customers paying the same amount on the same day",
+        "correct": false,
+        "why": "Those are two real events, not a duplicate."
+      },
+      {
+        "text": "Two events of one order delivered out of order",
+        "correct": false,
+        "why": "That is an ordering problem; each event arrived once."
+      }
+    ]
+  },
+  {
+    "id": "ex-06g2e3cg",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`totals.py plain 4` crashed, and the restart straight after it found no messages at all. Why?",
+    "hint": "Who held the seven messages at that moment?",
+    "choices": [
+      {
+        "text": "The crash had acknowledged them",
+        "correct": false,
+        "why": "The crash came before the ack; ten seconds later all seven were delivered again."
+      },
+      {
+        "text": "They were still lent to the dead process",
+        "correct": true,
+        "why": "Right: Pub/Sub cannot tell a dead consumer from a slow one, so it waits out the deadline."
+      },
+      {
+        "text": "The snapshot had removed them from the subscription",
+        "correct": false,
+        "why": "A snapshot removes nothing; it records a position to seek back to."
+      },
+      {
+        "text": "SQLite locked the subscription",
+        "correct": false,
+        "why": "The database knows nothing about Pub/Sub."
+      }
+    ]
+  },
+  {
+    "id": "ex-5z0cm1vr",
+    "version": 1,
+    "section": "the-replay",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `plain` mode, `o-301` (4,590), `o-303` (990, published twice) and `o-306` (7,200) are `c-17`'s payments. The first run added four messages before crashing, the second added all seven. What total did `c-17` end with, in cents?",
+    "hint": "`o-301` was added twice, and each copy of `o-303` twice.",
+    "value": 20340,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-ks5mzs1v",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the dedupe by message id, `c-17` came out at 13,770 instead of 12,780. What slipped through?",
+    "hint": "Which duplicate kept its message id, and which got a new one?",
+    "choices": [
+      {
+        "text": "The redelivery after the crash",
+        "correct": false,
+        "why": "That one was caught: ids 3 to 6 were refused on the second run."
+      },
+      {
+        "text": "The publisher's second `o-303`",
+        "correct": true,
+        "why": "Right: 13,770 is 12,780 plus a second 990."
+      },
+      {
+        "text": "The payment of `c-05`",
+        "correct": false,
+        "why": "`c-05` was right in every run; its total is 2,350."
+      },
+      {
+        "text": "A message the snapshot did not hold",
+        "correct": false,
+        "why": "The snapshot held all seven; the run read seven."
+      }
+    ]
+  },
+  {
+    "id": "ex-n245ena5",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`totals.py` records the order id in `processed` and adds to the total inside one `with db:` transaction. What goes wrong if the two are committed separately, the key first?",
+    "hint": "Put a crash between the two commits.",
+    "choices": [
+      {
+        "text": "The order is recorded and never counted",
+        "correct": true,
+        "why": "Right: on the redelivery the key is already there, so the payment is skipped for good."
+      },
+      {
+        "text": "Nothing, since the redelivery repairs it",
+        "correct": false,
+        "why": "The redelivery meets the recorded key and skips the payment; nothing repairs it."
+      },
+      {
+        "text": "SQLite refuses two commits for one message",
+        "correct": false,
+        "why": "SQLite commits whatever it is asked; the gap is the consumer's design."
+      },
+      {
+        "text": "The order is counted twice",
+        "correct": false,
+        "why": "That is the gap in the other order, the total first and the key second."
+      }
+    ]
+  },
+  {
+    "id": "ex-n368j4jy",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sink.py put c-09 500` was run twice. What does the row hold?",
+    "hint": "An upsert sets, an increment adds.",
+    "choices": [
+      {
+        "text": "500",
+        "correct": true,
+        "why": "Right: the second write replaced 500 with 500."
+      },
+      {
+        "text": "1000",
+        "correct": false,
+        "why": "That is `add` twice, the write that is not idempotent."
+      },
+      {
+        "text": "An error, since the key exists",
+        "correct": false,
+        "why": "`ON CONFLICT ... DO UPDATE` turns the clash into an update."
+      },
+      {
+        "text": "Two rows of 500",
+        "correct": false,
+        "why": "`customer_id` is the primary key, so there is one row."
+      }
+    ]
+  },
+  {
+    "id": "ex-0sxzpnm4",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an upsert not suit Quitanda's payments stream as it is?",
+    "hint": "What does each event carry: a state or a change?",
+    "choices": [
+      {
+        "text": "SQLite has no upsert",
+        "correct": false,
+        "why": "It has one; `sink.py put` is it."
+      },
+      {
+        "text": "Upserts are slower than inserts, and the stream is busy",
+        "correct": false,
+        "why": "Speed is not the obstacle; the content of the event is."
+      },
+      {
+        "text": "A payment is a change, not the new balance",
+        "correct": true,
+        "why": "Right: to upsert, the publisher would have to send the balance itself, which it does not know."
+      },
+      {
+        "text": "An upsert loses the order id",
+        "correct": false,
+        "why": "The key of the row decides what is kept, and an order id fits in a row like anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-337fx389",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer writes each pulled batch to Cloud Storage under the SHA-256 of the batch. Why does a redelivery from Pub/Sub still leave the same payment in two objects?",
+    "hint": "Does a redelivery rebuild the same batch?",
+    "choices": [
+      {
+        "text": "The hash is different on every run",
+        "correct": false,
+        "why": "SHA-256 of the same bytes is the same; the lesson's two copies landed on one name."
+      },
+      {
+        "text": "A redelivery groups the messages differently",
+        "correct": true,
+        "why": "Right: a subscription has no positions to batch by, so the content name changes with the grouping."
+      },
+      {
+        "text": "fake-gcs-server never overwrites an existing object",
+        "correct": false,
+        "why": "It did: the second copy replaced the first under one name."
+      },
+      {
+        "text": "Cloud Storage refuses to overwrite objects",
+        "correct": false,
+        "why": "An overwrite is silent and final, as lesson 1 warned; that is what made the content name work."
+      }
+    ]
+  },
+  {
+    "id": "ex-mv4as87n",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the exactly-once subscription do that the ordinary one did not?",
+    "hint": "Both redelivered message 10.",
+    "choices": [
+      {
+        "text": "Refused the ack with the expired ack id",
+        "correct": true,
+        "why": "Right, with `EXACTLY_ONCE_ACKID_FAILURE`; the ordinary one accepted it and said nothing."
+      },
+      {
+        "text": "Did not redeliver after the deadline",
+        "correct": false,
+        "why": "It redelivered just the same; the promise is about no redelivery before the deadline, and none after a successful ack."
+      },
+      {
+        "text": "Removed the publisher's second copy",
+        "correct": false,
+        "why": "Ids 11 and 12 were both delivered."
+      },
+      {
+        "text": "Delivered in order",
+        "correct": false,
+        "why": "Order is the ordering key's business, a different setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtavd4sq",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does exactly-once delivery cover?",
+    "hint": "Read the promise in `gcloud`'s help: it is about one message id.",
+    "choices": [
+      {
+        "text": "A publisher's retry that stored a payment twice",
+        "correct": false,
+        "why": "The copies have two ids, and both were delivered."
+      },
+      {
+        "text": "A push endpoint that answered 503",
+        "correct": false,
+        "why": "Push subscriptions do not offer exactly-once delivery."
+      },
+      {
+        "text": "A consumer that adds a payment and dies before it acks",
+        "correct": false,
+        "why": "The redelivery comes after the deadline, and the work is repeated; the effect is still the consumer's."
+      },
+      {
+        "text": "A message acked with success, on a pull subscription in one region",
+        "correct": true,
+        "why": "Right: that message is not delivered to the subscription again."
+      }
+    ]
+  },
+  {
+    "id": "ex-knj1xqmx",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An order's status events sometimes arrive out of order, and a `delivered` must never be overwritten by a late `packed`. What does the sink need?",
+    "hint": "The dedupe tests existence; this test compares.",
+    "choices": [
+      {
+        "text": "Exactly-once delivery on the subscription",
+        "correct": false,
+        "why": "It prevents redelivery of one id and does nothing about the order of two different messages."
+      },
+      {
+        "text": "A dedupe table keyed by order id",
+        "correct": false,
+        "why": "That would refuse every event of the order after the first, `delivered` included."
+      },
+      {
+        "text": "A version from the publisher, and a write applied only if newer",
+        "correct": true,
+        "why": "Right: `UPDATE ... WHERE version < ?` keeps the newest status whatever order they arrive in."
+      },
+      {
+        "text": "A longer ack deadline",
+        "correct": false,
+        "why": "A deadline is about one delivery; it does not order two messages."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnpthcv5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each source of duplicates to what catches it.",
+    "hint": "One of them keeps its message id.",
+    "pairs": [
+      {
+        "left": "A publisher's retry",
+        "right": "An idempotency key in the data"
+      },
+      {
+        "left": "A redelivery after the deadline",
+        "right": "A dedupe on the message id"
+      },
+      {
+        "left": "A replay with seek into an upsert",
+        "right": "Nothing more: the sink is idempotent"
+      },
+      {
+        "left": "A Cloud Storage subscription writing twice",
+        "right": "A dedupe when the lake is compacted"
+      }
+    ],
+    "right_distractors": [
+      "A longer topic retention"
+    ]
+  },
+  {
+    "id": "ex-m8bx30kf",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `totals.py by-order-id` does with one pulled batch.",
+    "hint": "The ack is last, once per batch.",
+    "items": [
+      "Pull up to ten messages from `totals`",
+      "Parse each message's order id, customer and amount",
+      "In one transaction, insert the order id and add the amount",
+      "If the insert breaks the primary key, report a duplicate and add nothing",
+      "Acknowledge the whole batch"
+    ]
+  },
+  {
+    "id": "ex-3kje2wjf",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A write is ___ when repeating it leaves the same result as doing it once.",
+    "hint": "The word the lesson's title ends on, almost.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yrnvkenv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes switching on exactly-once delivery on `totals` and removing the `processed` table. Which run of the lesson shows the totals would then go wrong?",
+    "hint": "Which duplicate does exactly-once delivery not see?",
+    "choices": [
+      {
+        "text": "The by-message-id run, where the publisher's second `o-303` was added",
+        "correct": true,
+        "why": "Right: two ids for one payment, and exactly-once delivery delivered both copies in its own section too."
+      },
+      {
+        "text": "The run of `sink.py put`",
+        "correct": false,
+        "why": "That sink is idempotent; it has nothing to do with `totals`."
+      },
+      {
+        "text": "None; exactly-once delivery covers every duplicate",
+        "correct": false,
+        "why": "It covers the redelivery of one id, and the lesson showed two ids delivered."
+      },
+      {
+        "text": "The push test of lesson 19",
+        "correct": false,
+        "why": "Push does not offer exactly-once delivery at all, and `totals` is a pull subscription."
+      }
+    ]
+  }
+]

@@ -1,0 +1,383 @@
+[
+  {
+    "id": "ex-fmjs1yd3",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the shop put its approval on the environment shop-production rather than in the pipeline's YAML?",
+    "hint": "Who can delete a line of YAML?",
+    "choices": [
+      {
+        "text": "Approvals in YAML are not supported by Azure Pipelines",
+        "correct": false,
+        "why": "The point is not support; it is who controls the protection."
+      },
+      {
+        "text": "So every pipeline that targets it waits",
+        "correct": true,
+        "why": "Right. A check on the environment cannot be removed by editing one pipeline."
+      },
+      {
+        "text": "Environment approvals are cheaper per parallel job",
+        "correct": false,
+        "why": "Checks are not billed per job; the reason is control."
+      },
+      {
+        "text": "Because the environment is where the agents run",
+        "correct": false,
+        "why": "Agents come from a pool; the environment is the target."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0x5pd4y",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deployment reaches shop-production on a Tuesday at 10:00. The approval was granted, but an Azure Monitor alert fired on rg-shop five minutes ago. What happens?",
+    "hint": "Is one passing check enough?",
+    "choices": [
+      {
+        "text": "It starts, because a person approved it",
+        "correct": false,
+        "why": "An approval is one of the checks; the job waits for every one."
+      },
+      {
+        "text": "It waits until the alerts gate passes",
+        "correct": true,
+        "why": "Right. Every check has to pass, and the gate is re-evaluated until it passes or times out."
+      },
+      {
+        "text": "It starts in the staging slot and stops before the swap",
+        "correct": false,
+        "why": "Checks run before the job starts; nothing is deployed while one is failing."
+      },
+      {
+        "text": "It is cancelled and has to be queued again tomorrow",
+        "correct": false,
+        "why": "The gate waits and re-evaluates; it fails only at its time-out."
+      }
+    ]
+  },
+  {
+    "id": "ex-mn8wt4dh",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the useful approval setting the lesson recommends, and why?",
+    "hint": "Whose eyes does an approval add?",
+    "choices": [
+      {
+        "text": "Allowing any project member, so deployments are never blocked",
+        "correct": false,
+        "why": "Then the author can approve, and the approval adds no second person."
+      },
+      {
+        "text": "An approval that never times out",
+        "correct": false,
+        "why": "A waiting approval should fail eventually; a deployment nobody approved should not linger."
+      },
+      {
+        "text": "Refusing the person who queued the run",
+        "correct": true,
+        "why": "Right. Otherwise an approval is a delay rather than a second pair of eyes."
+      },
+      {
+        "text": "Requiring three approvers on every environment",
+        "correct": false,
+        "why": "The count is a choice per environment; what matters most is who is excluded."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtespgjm",
+    "version": 1,
+    "section": "checks",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each check on shop-production to what it protects against.",
+    "hint": "One protection each.",
+    "pairs": [
+      {
+        "left": "Approval",
+        "right": "A change nobody but its author looked at"
+      },
+      {
+        "left": "Business hours",
+        "right": "A deployment when nobody is around to watch"
+      },
+      {
+        "left": "Query Azure Monitor alerts",
+        "right": "Deploying into an incident already under way"
+      },
+      {
+        "left": "Exclusive lock",
+        "right": "Two runs racing into the same slot"
+      }
+    ],
+    "right_distractors": [
+      "A build that fails its unit tests"
+    ]
+  },
+  {
+    "id": "ex-k65dh5k3",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does App Service do before it switches routing in a swap?",
+    "hint": "Where does the cold start happen?",
+    "choices": [
+      {
+        "text": "Starts staging's processes with production's settings and waits until they answer",
+        "correct": true,
+        "why": "Right. The warm-up happens before any customer request reaches the new version."
+      },
+      {
+        "text": "Copies the production database into the staging slot",
+        "correct": false,
+        "why": "A swap never touches data."
+      },
+      {
+        "text": "Rebuilds the image from the commit",
+        "correct": false,
+        "why": "Nothing is rebuilt; the slot already runs the new version."
+      },
+      {
+        "text": "Asks the pipeline's approvers again",
+        "correct": false,
+        "why": "Approvals belong to the pipeline's environment, before the deployment; the swap does not consult them."
+      }
+    ]
+  },
+  {
+    "id": "ex-xs1jejpb",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a swap, production starts writing orders into the staging database. What was missing?",
+    "hint": "Which settings travel with the code?",
+    "choices": [
+      {
+        "text": "Swap with preview",
+        "correct": false,
+        "why": "Preview lets you test before completing; it would have shown the problem, not prevented it."
+      },
+      {
+        "text": "Marking DB_CONNECTION as slot-specific",
+        "correct": true,
+        "why": "Right. A sticky setting stays with its slot; an ordinary one travels with the code."
+      },
+      {
+        "text": "A health check path on the staging slot",
+        "correct": false,
+        "why": "Health checks decide when processes are ready, not which database they use."
+      },
+      {
+        "text": "Auto swap, which would have swapped both slots at once",
+        "correct": false,
+        "why": "Auto swap is the same swap with nobody looking; it carries settings the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pvdt7e7",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the shop not turn on auto swap for production?",
+    "hint": "What moment does it remove?",
+    "choices": [
+      {
+        "text": "Auto swap skips the warm-up",
+        "correct": false,
+        "why": "It warms up like any swap."
+      },
+      {
+        "text": "Auto swap works only in the Free tier",
+        "correct": false,
+        "why": "It is a feature of plans that have slots."
+      },
+      {
+        "text": "It also swaps the sticky settings",
+        "correct": false,
+        "why": "Sticky settings stay with their slot in every swap."
+      },
+      {
+        "text": "Nobody looks before it swaps",
+        "correct": true,
+        "why": "Right. Every deployment to staging goes straight to production."
+      }
+    ]
+  },
+  {
+    "id": "ex-nc55760w",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Production misbehaves ten minutes after a swap. What is the fastest way back to the previous version?",
+    "hint": "Where is the previous version now?",
+    "choices": [
+      {
+        "text": "Re-run the previous pipeline run to rebuild and redeploy it",
+        "correct": false,
+        "why": "That works, and takes as long as a build and deployment."
+      },
+      {
+        "text": "Swap again",
+        "correct": true,
+        "why": "Right. Staging holds the previous version, already warm."
+      },
+      {
+        "text": "Restore the app from last night's backup",
+        "correct": false,
+        "why": "A backup restores more than the code and takes longer than a swap."
+      },
+      {
+        "text": "Wait for the diagnosis, then deploy a fix forward",
+        "correct": false,
+        "why": "The shop's rule is to swap back first and investigate second."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfgncgdr",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Release 42 renamed `delivery_slot` to `delivery_window` in one migration. Production fails, and the team swaps back to 41. What happens?",
+    "hint": "Did the swap touch the table?",
+    "choices": [
+      {
+        "text": "41 runs normally, because the swap restored the old schema",
+        "correct": false,
+        "why": "A swap exchanges code and configuration, never data."
+      },
+      {
+        "text": "The swap is refused while a migration is pending",
+        "correct": false,
+        "why": "App Service knows nothing about the database's migrations."
+      },
+      {
+        "text": "41 queries a column that no longer exists, and fails too",
+        "correct": true,
+        "why": "Right. That is why changes to shared data are split into expand and contract."
+      },
+      {
+        "text": "Both columns exist, so either version works",
+        "correct": false,
+        "why": "That would be expand-then-contract; a rename in one step leaves one column."
+      }
+    ]
+  },
+  {
+    "id": "ex-qet25s21",
+    "version": 1,
+    "section": "rollback",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the expand-and-contract change to the orders table in order.",
+    "hint": "Add, use both, then remove.",
+    "items": [
+      "Add delivery_window, nullable",
+      "Release 42 writes both columns",
+      "Wait until nobody will swap back to 41",
+      "Release 43 drops delivery_slot"
+    ],
+    "trap": "Dropping the old column in the same release as adding the new one is the slip: the swap back then meets a column that is gone."
+  },
+  {
+    "id": "ex-r84hrc9a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's App Service plan has no slots in its tier, and they want this lesson's pattern. What is the honest answer?",
+    "hint": "Does the pattern exist without slots?",
+    "choices": [
+      {
+        "text": "Use swap with preview, which needs no slot",
+        "correct": false,
+        "why": "Preview is a kind of swap, and a swap needs a slot."
+      },
+      {
+        "text": "Deploy twice to production, once to warm it up",
+        "correct": false,
+        "why": "The first deployment already lands on customers."
+      },
+      {
+        "text": "Move to a tier with slots, or deploy in place",
+        "correct": true,
+        "why": "Right. Slots depend on the plan's tier; checking that first is part of the design."
+      },
+      {
+        "text": "Create a second resource group and swap between them",
+        "correct": false,
+        "why": "A swap is between slots of one app, not between resource groups."
+      }
+    ]
+  },
+  {
+    "id": "ex-7h78a3mw",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 15,
+    "tolerance": 0,
+    "prompt": "The shop's rule watches `POST /checkout` for a fixed window after each swap before it calls the release good. How many minutes is that window?",
+    "hint": "It is in the rollback section.",
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-7p608eer",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a swap back to the previous version undo? Choose all that apply.",
+    "hint": "Code and configuration, yes; data, no.",
+    "choices": [
+      {
+        "text": "A bug in the new code",
+        "correct": true,
+        "why": "Yes. The previous code is what runs after the swap."
+      },
+      {
+        "text": "A wrong app setting that travelled with the new version",
+        "correct": true,
+        "why": "Yes. Ordinary settings travel with the code, both ways."
+      },
+      {
+        "text": "Rows the new version wrote in a new format",
+        "correct": false,
+        "why": "No. Data stays as the new version left it."
+      },
+      {
+        "text": "A column the new version's migration dropped",
+        "correct": false,
+        "why": "No. That is exactly what expand and contract exists for."
+      }
+    ]
+  }
+]

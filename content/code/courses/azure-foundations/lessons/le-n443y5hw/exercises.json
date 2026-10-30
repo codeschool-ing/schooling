@@ -1,0 +1,568 @@
+[
+ {
+  "id": "ex-xhjvat4j",
+  "version": 1,
+  "section": "peering",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Ana creates the peering from `vnet-shop-prod` to the hub, and nobody creates the hub's side. What state is it in?",
+  "hint": "A peering is two resources.",
+  "choices": [
+   {
+    "text": "*Initiated*, until the other half exists",
+    "correct": true,
+    "why": "Right. Both turn *Connected* when the partner appears."
+   },
+   {
+    "text": "*Connected*, one way only",
+    "correct": false,
+    "why": "No half works alone; there is no one-way peering."
+   },
+   {
+    "text": "*Failed*, because the hub is in another subscription",
+    "correct": false,
+    "why": "Peering across subscriptions is allowed; it needs both owners."
+   },
+   {
+    "text": "*Pending*, waiting for Microsoft's approval",
+    "correct": false,
+    "why": "Microsoft approves nothing here. The other owner creates their half."
+   }
+  ]
+ },
+ {
+  "id": "ex-0mv8wg1h",
+  "version": 1,
+  "section": "peering",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each peering setting to what it says on the side where it is set.",
+  "hint": "Two of them are a lend and a borrow.",
+  "pairs": [
+   {
+    "left": "`allowGatewayTransit`",
+    "right": "this network lends its gateway"
+   },
+   {
+    "left": "`useRemoteGateways`",
+    "right": "this network uses the remote network's gateway"
+   },
+   {
+    "left": "`allowForwardedTraffic`",
+    "right": "this network accepts packets forwarded from elsewhere"
+   },
+   {
+    "left": "`allowVirtualNetworkAccess`",
+    "right": "the remote machines may reach this network"
+   }
+  ],
+  "right_distractors": [
+   "the peering crosses regions"
+  ]
+ },
+ {
+  "id": "ex-958a16m1",
+  "version": 1,
+  "section": "peering",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does Azure refuse to peer two networks whose ranges overlap?",
+  "hint": "Think of one packet to a shared address.",
+  "choices": [
+   {
+    "text": "Because overlapping ranges cost more to carry",
+    "correct": false,
+    "why": "Price has nothing to do with it; the packet would be lost."
+   },
+   {
+    "text": "Because only ranges of the same size can be peered",
+    "correct": false,
+    "why": "Sizes may differ freely; staging and the office do."
+   },
+   {
+    "text": "Because overlap is only allowed inside one subscription",
+    "correct": false,
+    "why": "No subscription makes overlapping peers possible."
+   },
+   {
+    "text": "Because a packet to a shared address would have two places to go",
+    "correct": true,
+    "why": "Right. Azure refuses rather than guess."
+   }
+  ]
+ },
+ {
+  "id": "ex-v0bqzvxv",
+  "version": 1,
+  "section": "peering",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`overlap.py` reported `prod 10.20.0.0/16 and dev 10.20.128.0/17`. Somebody suggests peering `dev` only with the hub, never with `prod`. Why does that fail as well?",
+  "hint": "What would the hub then hold?",
+  "choices": [
+   {
+    "text": "It works, since overlap matters between direct peers",
+    "correct": false,
+    "why": "The hub is a direct peer of both, which is the problem."
+   },
+   {
+    "text": "A `/17` cannot be peered with a `/16`",
+    "correct": false,
+    "why": "Sizes do not matter; overlap does."
+   },
+   {
+    "text": "The hub would hold two routes to the same addresses",
+    "correct": true,
+    "why": "Right. `prod` is already peered to the hub, so `dev` collides there."
+   },
+   {
+    "text": "The hub refuses networks from another environment",
+    "correct": false,
+    "why": "Environments are a convention; Azure checks the ranges."
+   }
+  ]
+ },
+ {
+  "id": "ex-68b82xe2",
+  "version": 1,
+  "section": "peering",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many addresses does `10.20.128.0/17` hold?",
+  "hint": "Fifteen bits are left for addresses.",
+  "value": 32768,
+  "tolerance": 0,
+  "unit": "addresses"
+ },
+ {
+  "id": "ex-vtp77fz0",
+  "version": 1,
+  "section": "peering",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A gigabyte goes from `vnet-shop-prod` to the hub over a peering in the same region. How is it billed?",
+  "hint": "Unlike data arriving from the internet.",
+  "choices": [
+   {
+    "text": "Not at all, since both are in `brazilsouth`",
+    "correct": false,
+    "why": "Peered data is billed even inside a region."
+   },
+   {
+    "text": "Twice: leaving, then arriving",
+    "correct": true,
+    "why": "Right. Both directions are charged per gigabyte."
+   },
+   {
+    "text": "Once, by the subscription that sent it",
+    "correct": false,
+    "why": "Arrival is billed too."
+   },
+   {
+    "text": "As internet egress, at the region's tier",
+    "correct": false,
+    "why": "Peering has meters of its own; it is not internet traffic."
+   }
+  ]
+ },
+ {
+  "id": "ex-mj0fgabf",
+  "version": 1,
+  "section": "not-transitive",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Production and staging are each peered with the hub, and with nothing else. Can a machine in production reach one in staging?",
+  "hint": "What does production learn from its peering?",
+  "choices": [
+   {
+    "text": "Yes, through the hub",
+    "correct": false,
+    "why": "The hub is not a device; nothing in it forwards between peerings."
+   },
+   {
+    "text": "No: there is no route between them",
+    "correct": true,
+    "why": "Right. It learns the hub's range and nothing further."
+   },
+   {
+    "text": "Yes, if both are in the same region",
+    "correct": false,
+    "why": "Region does not change what a peering passes on."
+   },
+   {
+    "text": "For traffic answering a request from staging, yes",
+    "correct": false,
+    "why": "There is no route in either direction."
+   }
+  ]
+ },
+ {
+  "id": "ex-tskr8n7n",
+  "version": 1,
+  "section": "not-transitive",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Six networks are to be fully meshed, every one peered with every other. How many peerings is that?",
+  "hint": "n × (n − 1) / 2.",
+  "value": 15,
+  "tolerance": 0,
+  "unit": "peerings"
+ },
+ {
+  "id": "ex-fztmrrac",
+  "version": 1,
+  "section": "not-transitive",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop routes spoke-to-spoke traffic through a firewall in the hub. What must the destination spoke's side of its peering allow?",
+  "hint": "The packet did not start in the hub.",
+  "choices": [
+   {
+    "text": "`allowGatewayTransit`",
+    "correct": false,
+    "why": "That lends a gateway; it says nothing about forwarded packets."
+   },
+   {
+    "text": "`useRemoteGateways`",
+    "correct": false,
+    "why": "That borrows the hub's gateway for the office."
+   },
+   {
+    "text": "`allowForwardedTraffic`",
+    "correct": true,
+    "why": "Right. The firewall passes on a packet from another spoke, and this accepts it."
+   },
+   {
+    "text": "Nothing: peered traffic is accepted as it comes",
+    "correct": false,
+    "why": "Traffic that started elsewhere needs this switch."
+   }
+  ]
+ },
+ {
+  "id": "ex-e2tfw877",
+  "version": 1,
+  "section": "not-transitive",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop's staging team asks for a direct peering to production \"to make testing easier\". What does the lesson weigh against it?",
+  "hint": "Why are the two environments separate subscriptions?",
+  "choices": [
+   {
+    "text": "A mistake in one would reach the other, unseen by the firewall",
+    "correct": true,
+    "why": "Right. Non-transitivity is the default the shop wants."
+   },
+   {
+    "text": "Direct peerings between spokes are not supported",
+    "correct": false,
+    "why": "They are supported; it is a mesh."
+   },
+   {
+    "text": "The peering would cost more than a firewall",
+    "correct": false,
+    "why": "A direct peering is the cheaper road; the objection is not money."
+   },
+   {
+    "text": "Staging's range overlaps production's",
+    "correct": false,
+    "why": "`overlap.py` found staging clear of every other network."
+   }
+  ]
+ },
+ {
+  "id": "ex-89xgg5fx",
+  "version": 1,
+  "section": "not-transitive",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these let two spokes reach each other? Choose all that apply.",
+  "hint": "Three ways across.",
+  "choices": [
+   {
+    "text": "A direct peering between them",
+    "correct": true,
+    "why": "Right. The mesh, one pair at a time."
+   },
+   {
+    "text": "A firewall in the hub and route tables in the spokes",
+    "correct": true,
+    "why": "Right. Lesson 18 builds both."
+   },
+   {
+    "text": "Azure Virtual WAN",
+    "correct": true,
+    "why": "Right. A hub Microsoft runs, with routers of its own."
+   },
+   {
+    "text": "Setting `allowGatewayTransit` on the hub",
+    "correct": false,
+    "why": "That lends the office gateway; it routes nothing between spokes."
+   },
+   {
+    "text": "Peering both spokes with the same hub",
+    "correct": false,
+    "why": "That is the situation in which they cannot reach each other."
+   }
+  ]
+ },
+ {
+  "id": "ex-09wbe2e3",
+  "version": 1,
+  "section": "not-transitive",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In a machine's effective routes, a range learned from a directly joined network shows the next hop type `VNet___`.",
+  "hint": "The feature's own name.",
+  "blanks": [
+   {
+    "accept": [
+     "Peering"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-znaj0thd",
+  "version": 1,
+  "section": "hub-and-spoke",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of these belongs in the shop's hub rather than in a spoke?",
+  "hint": "There should be one of it for everybody.",
+  "choices": [
+   {
+    "text": "The production database",
+    "correct": false,
+    "why": "A workload lives in its own spoke."
+   },
+   {
+    "text": "Staging's application servers",
+    "correct": false,
+    "why": "Those are staging's workload, in its spoke."
+   },
+   {
+    "text": "A copy of each spoke's private DNS records",
+    "correct": false,
+    "why": "Zones are linked to networks, not copied into them."
+   },
+   {
+    "text": "The gateway to the office, one for every spoke",
+    "correct": true,
+    "why": "Right. One gateway, lent to every spoke by gateway transit."
+   }
+  ]
+ },
+ {
+  "id": "ex-c55w2mdd",
+  "version": 1,
+  "section": "hub-and-spoke",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`peering.bicep` compiled into a peering and a `Microsoft.Resources/deployments`. What is the second one?",
+  "hint": "Where is the module aimed?",
+  "choices": [
+   {
+    "text": "A record of the build, kept by Bicep",
+    "correct": false,
+    "why": "Bicep keeps no record; it is part of the template."
+   },
+   {
+    "text": "A deployment that moves the hub into `shop-prod`",
+    "correct": false,
+    "why": "Nothing moves; the hub stays in `shop-shared`."
+   },
+   {
+    "text": "A second copy of the spoke's peering, for safety",
+    "correct": false,
+    "why": "It carries the hub's half, not a copy."
+   },
+   {
+    "text": "A nested deployment, run in `shop-shared`",
+    "correct": true,
+    "why": "Right. A module aimed elsewhere becomes a template inside the template."
+   }
+  ]
+ },
+ {
+  "id": "ex-4nnm8gjv",
+  "version": 1,
+  "section": "hub-and-spoke",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Somebody sets `allowGatewayTransit` and `useRemoteGateways` both to true on the hub's side and runs `az bicep build`. What happens?",
+  "hint": "Each is a valid boolean on its own.",
+  "choices": [
+   {
+    "text": "The build fails with an error about the pair",
+    "correct": false,
+    "why": "The compiler checks types, not this combination."
+   },
+   {
+    "text": "It compiles, and Azure would refuse it on arrival",
+    "correct": true,
+    "why": "Right. A mistake of values, which only Azure judges."
+   },
+   {
+    "text": "The linter warns and renames one of them",
+    "correct": false,
+    "why": "The linter renames nothing."
+   },
+   {
+    "text": "The build silently drops the second setting",
+    "correct": false,
+    "why": "Nothing is dropped; the template carries both."
+   }
+  ]
+ },
+ {
+  "id": "ex-c5v0r2kz",
+  "version": 1,
+  "section": "hub-and-spoke",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "How does the Terraform configuration reach two subscriptions?",
+  "hint": "Look at the two `provider` blocks.",
+  "choices": [
+   {
+    "text": "By putting both peerings in one resource",
+    "correct": false,
+    "why": "Each half is its own `azurerm_virtual_network_peering`."
+   },
+   {
+    "text": "A module with a `scope`, as in Bicep",
+    "correct": false,
+    "why": "That is Bicep's way; Terraform uses provider aliases."
+   },
+   {
+    "text": "Two providers, one aliased",
+    "correct": true,
+    "why": "Right. The hub's peering says `provider = azurerm.shared`."
+   },
+   {
+    "text": "Terraform works in one subscription per run",
+    "correct": false,
+    "why": "Aliases let one run reach several."
+   }
+  ]
+ },
+ {
+  "id": "ex-bm8ya5gd",
+  "version": 1,
+  "section": "hub-and-spoke",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The VPN or ExpressRoute device for the office must sit in a subnet named `___Subnet`.",
+  "hint": "The firewall's is `AzureFirewallSubnet`.",
+  "blanks": [
+   {
+    "accept": [
+     "Gateway"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-gd2k6bjh",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the path of a packet from production to staging, under the shop's design, in order.",
+  "hint": "It goes up and comes down.",
+  "items": [
+   "a machine in `vnet-shop-prod` sends to `10.30.1.5`",
+   "the spoke's route table sends staging's range to the firewall",
+   "the packet crosses the peering into the hub",
+   "the firewall decides whether it may pass",
+   "it crosses the hub's peering into `vnet-shop-staging`"
+  ],
+  "trap": "Without the route table the packet would have no route at all, and never reach the hub."
+ },
+ {
+  "id": "ex-a6ag0617",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A new spoke `vnet-shop-dev` is planned. Which range fits the shop's plan?",
+  "hint": "Check it against hub, prod, staging and the office.",
+  "choices": [
+   {
+    "text": "`10.40.0.0/16`",
+    "correct": true,
+    "why": "Right. It meets none of the four."
+   },
+   {
+    "text": "`10.0.0.0/16`",
+    "correct": false,
+    "why": "That is the hub's range."
+   },
+   {
+    "text": "`192.168.10.0/24`",
+    "correct": false,
+    "why": "That is inside the office's range."
+   },
+   {
+    "text": "`10.20.128.0/17`",
+    "correct": false,
+    "why": "That is inside production's range, as `overlap.py` showed."
+   }
+  ]
+ },
+ {
+  "id": "ex-djx0369k",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A machine in staging cannot reach the office, though the hub's VPN gateway works for production. Staging's peering has `useRemoteGateways` off. What fixes it?",
+  "hint": "Who lends and who borrows?",
+  "choices": [
+   {
+    "text": "Switch on `allowGatewayTransit` on staging's side",
+    "correct": false,
+    "why": "That would make staging the lender, and it has nothing to lend."
+   },
+   {
+    "text": "Peer staging directly with the office network",
+    "correct": false,
+    "why": "The office is not a virtual network; it is reached through the gateway."
+   },
+   {
+    "text": "Give staging a second gateway of its own",
+    "correct": false,
+    "why": "That works and pays for a gateway the hub already lends."
+   },
+   {
+    "text": "Switch on `useRemoteGateways` on staging's side",
+    "correct": true,
+    "why": "Right. The hub lends; staging has to say it borrows."
+   }
+  ]
+ }
+]

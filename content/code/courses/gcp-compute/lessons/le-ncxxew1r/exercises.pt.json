@@ -1,0 +1,431 @@
+{
+  "ex-cyf0avgh": {
+    "prompt": "Cinco máquinas rodam a 70% de CPU cada e a meta é 50%. Que tamanho o autoscaler recomenda?",
+    "hint": "Trabalho total dividido pela meta, arredondado para cima.",
+    "unit": "máquinas"
+  },
+  "ex-edeaz9zw": {
+    "prompt": "O que uma meta de CPU de 60% compra em comparação com 90%?",
+    "hint": "Para que servem os outros 40%?",
+    "choices": [
+      {
+        "text": "Um grupo mais barato, já que a 60% são precisas menos máquinas",
+        "why": "Uma meta menor precisa de mais máquinas para o mesmo trabalho."
+      },
+      {
+        "text": "Um processador mais rápido para cada máquina do grupo",
+        "why": "A meta não muda o tipo de máquina."
+      },
+      {
+        "text": "Folga para um pico enquanto máquinas novas sobem",
+        "why": "Isso. 90% é mais barato e não deixa folga."
+      },
+      {
+        "text": "Menos falhas na verificação de saúde",
+        "why": "Verificações de saúde são outra coisa."
+      }
+    ]
+  },
+  "ex-yarzw5x7": {
+    "prompt": "Por que o grupo em autoscale/main.tf não tem target_size?",
+    "hint": "Quem define o tamanho depois que um autoscaler é ligado?",
+    "choices": [
+      {
+        "text": "O autoscaler é que define o tamanho",
+        "why": "Isso. Só um dos dois pode ser dono do tamanho."
+      },
+      {
+        "text": "Grupos regionais não aceitam target_size",
+        "why": "O grupo regional da lição 4 tinha."
+      },
+      {
+        "text": "target_size é substituído por max_replicas",
+        "why": "max_replicas é um teto, não um tamanho."
+      },
+      {
+        "text": "O plan falha quando os dois estão presentes",
+        "why": "O plan aceitaria os dois; o conflito aparece depois."
+      }
+    ]
+  },
+  "ex-hky1b8sv": {
+    "prompt": "O ___ é a configuração que impede um bug de levar o grupo a cem máquinas; no Terraform é max_replicas.",
+    "hint": "O oposto de um piso.",
+    "blanks": [
+      {
+        "accept": [
+          "máximo",
+          "maximo",
+          "teto"
+        ]
+      }
+    ]
+  },
+  "ex-0vvka7xq": {
+    "prompt": "cpu_utilization { target = 1.5 } planeja sem erro. O que a ajuda do gcloud diz sobre isso?",
+    "hint": "A faixa na descrição da opção.",
+    "choices": [
+      {
+        "text": "Que 1,5 significa 150% e serve para máquinas com rajada",
+        "why": "A faixa é de 0,0 a 1,0."
+      },
+      {
+        "text": "Que a meta é em vCPUs, então 1,5 é uma e meia",
+        "why": "É uma fração de utilização."
+      },
+      {
+        "text": "Nada: a ajuda não traz faixa para essa opção",
+        "why": "Ela diz de 0,0 a 1,0."
+      },
+      {
+        "text": "A meta vai de 0,0 a 1,0, então o Compute Engine recusa",
+        "why": "Isso. O plan não verifica a faixa."
+      }
+    ]
+  },
+  "ex-j4b2kgjt": {
+    "prompt": "Que sinal serve a um worker de fotos que esvazia uma assinatura do Pub/Sub?",
+    "hint": "Meça o trabalho esperando.",
+    "choices": [
+      {
+        "text": "Utilização de CPU, como no grupo web",
+        "why": "Uma fila pode crescer com a CPU baixa."
+      },
+      {
+        "text": "Mensagens não entregues por máquina",
+        "why": "Isso. Escala antes de alguém esperar."
+      },
+      {
+        "text": "Utilização de balanceamento",
+        "why": "Um worker que puxa de uma fila não tem balanceador na frente."
+      },
+      {
+        "text": "Uma agenda diária das nove às seis",
+        "why": "Envios de fotos não seguem horário comercial."
+      }
+    ]
+  },
+  "ex-x6jeg268": {
+    "prompt": "Com single_instance_assignment = 50, quantos workers um acúmulo de 730 mensagens pede?",
+    "hint": "Divida e arredonde para cima.",
+    "unit": "workers"
+  },
+  "ex-6e9jqmjm": {
+    "prompt": "Por que o autoscaler de fotos pode ter min_replicas = 0 quando o web mantém 3?",
+    "hint": "O que significa uma fila vazia?",
+    "choices": [
+      {
+        "text": "Autoscalers por métrica ignoram min_replicas",
+        "why": "Respeitam; o 0 foi escolhido."
+      },
+      {
+        "text": "Workers são mais baratos que máquinas web, então zero é permitido",
+        "why": "Preço não é o que permite zero."
+      },
+      {
+        "text": "Com a fila vazia não há trabalho, e ninguém espera por um worker",
+        "why": "Isso. Um grupo web precisa responder ao primeiro visitante na hora."
+      },
+      {
+        "text": "O Pub/Sub mantém um worker rodando de graça",
+        "why": "O Pub/Sub não roda máquinas."
+      }
+    ]
+  },
+  "ex-ntz8a9yj": {
+    "prompt": "Um autoscaler segue CPU e uma métrica própria. A métrica trava num valor alto e velho. O que acontece?",
+    "hint": "Qual recomendação vence?",
+    "choices": [
+      {
+        "text": "O grupo fica perto do máximo até alguém notar",
+        "why": "Isso. Vence a maior recomendação."
+      },
+      {
+        "text": "O sinal de CPU vence, já que a CPU é medida ao vivo",
+        "why": "Nenhum sinal vence outro; vence o maior tamanho."
+      },
+      {
+        "text": "O autoscaler tira a média dos dois e fica no meio",
+        "why": "Ele pega o maior, não a média."
+      },
+      {
+        "text": "O autoscaler desliga a métrica depois de dez minutos",
+        "why": "Nada a desliga sozinho."
+      }
+    ]
+  },
+  "ex-tc7j0j37": {
+    "prompt": "Quando vários sinais dão tamanhos diferentes, o autoscaler usa o ___ deles.",
+    "hint": "A direção segura.",
+    "blanks": [
+      {
+        "accept": [
+          "maior",
+          "máximo",
+          "maximo"
+        ]
+      }
+    ]
+  },
+  "ex-q7cs026j": {
+    "prompt": "O que uma agenda com min_required_replicas = 6 faz durante a janela?",
+    "hint": "Um piso ou um tamanho?",
+    "choices": [
+      {
+        "text": "Mantém o grupo em exatamente seis",
+        "why": "A CPU ainda pode acrescentar mais."
+      },
+      {
+        "text": "Soma seis ao que a regra de CPU quiser",
+        "why": "É um piso, não uma soma."
+      },
+      {
+        "text": "Remove máquinas acima de seis para economizar",
+        "why": "Uma agenda nunca deixa o grupo menor."
+      },
+      {
+        "text": "Mantém pelo menos seis",
+        "why": "Isso. Sobe o mínimo durante a janela."
+      }
+    ]
+  },
+  "ex-ez0hk5te": {
+    "prompt": "Por que a agenda dos dias úteis começa às oito se o tráfego sobe às nove?",
+    "hint": "O que acontece entre a criação e o serviço?",
+    "choices": [
+      {
+        "text": "O cron não consegue expressar nove horas em São Paulo",
+        "why": "Consegue; a hora é uma escolha."
+      },
+      {
+        "text": "Máquinas novas precisam de tempo para subir e passar nas verificações",
+        "why": "Isso. Elas devem estar servindo quando a subida chegar."
+      },
+      {
+        "text": "Agendas sempre disparam uma hora atrasadas",
+        "why": "Disparam quando escrito."
+      },
+      {
+        "text": "Máquinas são mais baratas antes das nove",
+        "why": "Os preços não mudam por hora."
+      }
+    ]
+  },
+  "ex-twypax3f": {
+    "prompt": "O agendamento de snapshots da lição 3 era em UTC. O que time_zone = \"America/Sao_Paulo\" faz aqui?",
+    "hint": "Como a linha cron é lida?",
+    "choices": [
+      {
+        "text": "Move as máquinas para São Paulo durante a janela",
+        "why": "O lugar é do grupo, não da agenda."
+      },
+      {
+        "text": "Converte a agenda para UTC antes de salvar",
+        "why": "O fuso é guardado e usado como escrito."
+      },
+      {
+        "text": "A linha cron é lida no horário de São Paulo",
+        "why": "Isso. Oito continua oito no relógio da própria loja."
+      },
+      {
+        "text": "É enfeite; o autoscaler sempre usa UTC",
+        "why": "Ele decide como a expressão é lida."
+      }
+    ]
+  },
+  "ex-nwtw4143": {
+    "prompt": "Uma agenda sobe o piso de 3 para 5 máquinas e2-standard-2 (0,06701142 USD por hora) por 8 horas em cada um de 20 dias úteis. No máximo, quanto custam as extras, em USD, com centavos?",
+    "hint": "Duas máquinas extras, 160 horas cada.",
+    "unit": "USD"
+  },
+  "ex-559w7z8s": {
+    "prompt": "A agenda da Black Friday usa 0 0 27 11 *. O que a equipe precisa lembrar no ano seguinte?",
+    "hint": "A promoção cai na mesma data todo ano?",
+    "choices": [
+      {
+        "text": "Dispara todo 27 de novembro; mude depois da promoção",
+        "why": "Isso. Uma promoção de data móvel precisa de agenda escrita a cada ano."
+      },
+      {
+        "text": "Renovar a agenda, que expira depois de disparar uma vez",
+        "why": "Uma agenda cron se repete; esse é o problema."
+      },
+      {
+        "text": "Nada: a linha dispara na Black Friday todo ano",
+        "why": "Ela dispara em 27 de novembro todo ano, seja qual for o dia da promoção."
+      },
+      {
+        "text": "Passar para UTC para disparar à meia-noite",
+        "why": "O horário de São Paulo é o que faz ser meia-noite na loja."
+      }
+    ]
+  },
+  "ex-kr0eht78": {
+    "prompt": "O que o período de inicialização, cooldown_period no Terraform, diz ao autoscaler?",
+    "hint": "Os números de uma máquina nova enganam por um tempo.",
+    "choices": [
+      {
+        "text": "Quanto esperar entre dois passos de redução",
+        "why": "Isso é a janela do controle de redução."
+      },
+      {
+        "text": "Quanto uma máquina pode rodar antes de ser substituída",
+        "why": "Nada substitui uma máquina pela idade aqui."
+      },
+      {
+        "text": "Quanto o grupo pausa depois de uma verificação falha",
+        "why": "Verificações têm seus próprios limites."
+      },
+      {
+        "text": "Por quanto tempo ignorar os números de uma máquina nova",
+        "why": "Isso. A CPU de inicialização não é carga real."
+      }
+    ]
+  },
+  "ex-1mbxyf5s": {
+    "prompt": "Um grupo com 12 máquinas tem controle de redução de no máximo 3 máquinas a cada 10 minutos. A carga pede 3. Quantos minutos no mínimo até o grupo chegar a 3?",
+    "hint": "Nove máquinas a remover, três por janela.",
+    "unit": "minutos"
+  },
+  "ex-6tya625n": {
+    "prompt": "Um grupo novo, criado ontem, recebe predictive_method = \"OPTIMIZE_AVAILABILITY\". O que a equipe deve esperar nesta semana?",
+    "hint": "Do que a previsão aprende?",
+    "choices": [
+      {
+        "text": "Máquinas ligadas um dia antes de cada subida",
+        "why": "Ainda não tem histórico para prever."
+      },
+      {
+        "text": "Nenhuma previsão por uns três dias",
+        "why": "Isso. A previsão aprende com o passado do próprio grupo."
+      },
+      {
+        "text": "Uma recusa, já que previsão precisa de balanceador",
+        "why": "Funciona sobre o sinal de CPU."
+      },
+      {
+        "text": "A meta de CPU ignorada em favor da previsão",
+        "why": "A meta continua valendo; a previsão acrescenta máquinas antes."
+      }
+    ]
+  },
+  "ex-vfmqkvb2": {
+    "prompt": "O período de inicialização está em 10 segundos para máquinas que levam 3 minutos para iniciar. O que dá errado?",
+    "hint": "O que o autoscaler lê depois de 10 segundos?",
+    "choices": [
+      {
+        "text": "As máquinas são apagadas pelo autohealing",
+        "why": "Isso é o atraso inicial da verificação, outra configuração."
+      },
+      {
+        "text": "Nada: um período menor só deixa o escalonamento mais rápido",
+        "why": "Faz o autoscaler ler trabalho de inicialização como carga."
+      },
+      {
+        "text": "A CPU de partida parece carga e soma máquinas",
+        "why": "Isso. Ponha o tempo de início medido."
+      },
+      {
+        "text": "A agenda dispara dez segundos antes",
+        "why": "Agendas não leem essa configuração."
+      }
+    ]
+  },
+  "ex-sknqaf00": {
+    "prompt": "Antes de reduzir, o autoscaler usa a maior recomendação dos últimos dez minutos; esse é o período de ___.",
+    "hint": "Ele espera a carga assentar.",
+    "blanks": [
+      {
+        "accept": [
+          "estabilização",
+          "estabilizacao"
+        ]
+      }
+    ]
+  },
+  "ex-06dpddvz": {
+    "prompt": "Ordene pelo quanto cada um age antes da carga, do mais adiantado ao que só reage.",
+    "hint": "Uma pessoa escrevendo uma data é quem mais sabe.",
+    "items": [
+      "Uma agenda para uma promoção conhecida",
+      "Autoscaling preditivo",
+      "Um sinal de tamanho de fila",
+      "Uma meta de CPU"
+    ],
+    "trap": "Uma fila mede trabalho esperando, então age antes de a CPU subir; mas ainda espera o trabalho chegar, ao contrário de uma previsão."
+  },
+  "ex-m9qf3n6w": {
+    "prompt": "Ligue cada configuração ao problema que ela resolve.",
+    "hint": "Piso, teto, partida, descida.",
+    "pairs": [
+      {
+        "left": "min_replicas",
+        "right": "Uma noite calma deixando uma zona sem máquina"
+      },
+      {
+        "left": "max_replicas",
+        "right": "Um bug levando o grupo a cem máquinas"
+      },
+      {
+        "left": "cooldown_period",
+        "right": "CPU de inicialização lida como carga real"
+      },
+      {
+        "left": "scale_in_control",
+        "right": "Carga que cai e volta logo"
+      }
+    ],
+    "right_distractors": [
+      "Máquinas com imagens diferentes"
+    ]
+  },
+  "ex-tn0zp5be": {
+    "prompt": "O grupo web escala por CPU, mas no almoço os usuários esperam e a CPU fica em 30%: cada requisição espera o banco. O que deve mudar primeiro?",
+    "hint": "Mais máquinas web esperariam o mesmo banco.",
+    "choices": [
+      {
+        "text": "Olhar o banco, já que o gargalo não é o grupo",
+        "why": "Isso. Nenhuma configuração de autoscaling do grupo web resolve isso."
+      },
+      {
+        "text": "Baixar a meta de CPU para 20% para ligar mais máquinas",
+        "why": "Mais máquinas web aumentam a carga no gargalo."
+      },
+      {
+        "text": "Acrescentar autoscaling preditivo para a subida do almoço",
+        "why": "Prever mais máquinas web não ajuda um banco lento."
+      },
+      {
+        "text": "Trocar para utilização de balanceamento",
+        "why": "Escalaria o grupo web, em cima do mesmo banco lento."
+      }
+    ]
+  },
+  "ex-317cc455": {
+    "prompt": "Três máquinas a 40%, 50% e 60% de CPU, meta 0,5. Que tamanho o recommend.py imprime?",
+    "hint": "1,5 máquina de trabalho.",
+    "unit": "máquinas"
+  },
+  "ex-jacqp4g5": {
+    "prompt": "O que este laboratório consegue mostrar do autoscaler, e o que não?",
+    "hint": "Não há grupo rodando.",
+    "choices": [
+      {
+        "text": "Consegue mostrar o grupo crescendo num teste de carga",
+        "why": "Não há grupo para crescer."
+      },
+      {
+        "text": "Não consegue mostrar nada, já que o autoscaler é remoto",
+        "why": "A política e a conta rodam aqui."
+      },
+      {
+        "text": "Só as agendas, já que são cron",
+        "why": "As agendas são planejadas como o resto; nenhuma dispara aqui."
+      },
+      {
+        "text": "A política e a conta, não o escalonamento",
+        "why": "Isso. O plan mostra a política; o recommend.py mostra a regra."
+      }
+    ]
+  }
+}

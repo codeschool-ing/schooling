@@ -1,0 +1,618 @@
+[
+  {
+    "id": "ex-gtrkgp9y",
+    "version": 1,
+    "section": "external-tables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A file is deleted from the bucket behind an external table. What does the next query see?",
+    "hint": "Nothing was loaded.",
+    "choices": [
+      {
+        "text": "The table without that file's rows",
+        "correct": true,
+        "why": "Right. The files are read when the query runs."
+      },
+      {
+        "text": "The rows as they were at the last load",
+        "correct": false,
+        "why": "There is no load; an external table keeps no copy."
+      },
+      {
+        "text": "An error until the table is recreated",
+        "correct": false,
+        "why": "The wildcard simply matches one file fewer."
+      },
+      {
+        "text": "The rows, from time travel",
+        "correct": false,
+        "why": "Time travel is for BigQuery's own storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-afdfwjkd",
+    "version": 1,
+    "section": "external-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which option makes an external table with Hive partitions refuse a query that does not filter on `dt`?",
+    "hint": "The external version of lesson 15's guardrail.",
+    "choices": [
+      {
+        "text": "`require_partition_filter`",
+        "correct": false,
+        "why": "That is the native table's option."
+      },
+      {
+        "text": "`require_hive_partition_filter`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`hive_partition_uri_prefix`",
+        "correct": false,
+        "why": "That says where the partition values start in the path."
+      },
+      {
+        "text": "`max_staleness`",
+        "correct": false,
+        "why": "That is the metadata cache of a BigLake table."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9er5t4y",
+    "version": 1,
+    "section": "external-tables",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does an external table give up, compared with a native one? Choose all that apply.",
+    "hint": "BigQuery does not arrange the files.",
+    "choices": [
+      {
+        "text": "Clustering",
+        "correct": true,
+        "why": "Yes. The writer decides the layout."
+      },
+      {
+        "text": "Long-term storage pricing",
+        "correct": true,
+        "why": "Yes. The page excludes external data sources."
+      },
+      {
+        "text": "Partition pruning on `dt`",
+        "correct": false,
+        "why": "Hive partitions prune by name."
+      },
+      {
+        "text": "Standard SQL",
+        "correct": false,
+        "why": "The same GoogleSQL queries it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4r5ehny",
+    "version": 1,
+    "section": "external-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On demand, how is a query on an external Parquet table billed?",
+    "hint": "The same rate as any query.",
+    "choices": [
+      {
+        "text": "Per TiB, by the columns read",
+        "correct": true,
+        "why": "Right. 11.25 USD per TiB in São Paulo."
+      },
+      {
+        "text": "By the size of the whole bucket",
+        "correct": false,
+        "why": "Only what the query reads counts."
+      },
+      {
+        "text": "Free, since BigQuery stores nothing",
+        "correct": false,
+        "why": "Storage and queries are separate bills."
+      },
+      {
+        "text": "Per object opened",
+        "correct": false,
+        "why": "Requests are Cloud Storage's line; BigQuery bills bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-797h92zg",
+    "version": 1,
+    "section": "reading-back",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `external.py` fetch nothing from the 31 August objects when asked for September?",
+    "hint": "Where is the date?",
+    "choices": [
+      {
+        "text": "Their names fall outside the range",
+        "correct": true,
+        "why": "Right. Hive pruning, by name."
+      },
+      {
+        "text": "Their footers said August, so they were dropped",
+        "correct": false,
+        "why": "No footer of theirs was read."
+      },
+      {
+        "text": "The emulator refused them",
+        "correct": false,
+        "why": "It answered every request it got."
+      },
+      {
+        "text": "They were in another bucket",
+        "correct": false,
+        "why": "All sixty are under the same prefix."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pz1m2cz",
+    "version": 1,
+    "section": "reading-back",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For September, `external.py` made 87 range requests over 29 files. How many requests is that per file?",
+    "hint": "One for the footer, and one per column chunk.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z1zesdec",
+    "version": 1,
+    "section": "reading-back",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading every column of one day fetched 499,423 bytes of a 435,738-byte file. Why more than the file?",
+    "hint": "What did the reader ask for first?",
+    "choices": [
+      {
+        "text": "The emulator adds headers to every response",
+        "correct": false,
+        "why": "The count is of body bytes asked for and returned."
+      },
+      {
+        "text": "It fetched the footer, then the whole file again",
+        "correct": true,
+        "why": "Right. The footer crossed the network twice."
+      },
+      {
+        "text": "Parquet decompresses on the server",
+        "correct": false,
+        "why": "The bytes come compressed, as stored."
+      },
+      {
+        "text": "`dt` was fetched as a column",
+        "correct": false,
+        "why": "`dt` came from the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpbw1trs",
+    "version": 1,
+    "section": "reading-back",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does this lesson's reader tell you about BigQuery's own reads of an external table?",
+    "hint": "Properties of the format, against properties of a reader.",
+    "choices": [
+      {
+        "text": "Exactly how many requests BigQuery makes",
+        "correct": false,
+        "why": "That is BigQuery's reader's choice, and not documented as a number."
+      },
+      {
+        "text": "The bytes BigQuery would bill",
+        "correct": false,
+        "why": "That is lesson 16's arithmetic, by type, not the bytes fetched."
+      },
+      {
+        "text": "The work any Parquet reader must do: list, read footers, fetch chunks",
+        "correct": true,
+        "why": "Right. The shape, not BigQuery's numbers."
+      },
+      {
+        "text": "Nothing, since the emulator is not Cloud Storage",
+        "correct": false,
+        "why": "Ranged reads and footers behave the same against either."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmxyg8s2",
+    "version": 1,
+    "section": "biglake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a BigLake table, which identity reads the files in the bucket?",
+    "hint": "A connection has an account of its own.",
+    "choices": [
+      {
+        "text": "The analyst running the query",
+        "correct": false,
+        "why": "That is a plain external table."
+      },
+      {
+        "text": "The connection's service account",
+        "correct": true,
+        "why": "Right. The analyst is granted the table only."
+      },
+      {
+        "text": "Any account in the project",
+        "correct": false,
+        "why": "Only the account granted on the bucket."
+      },
+      {
+        "text": "Nobody: BigLake copies the files",
+        "correct": false,
+        "why": "BigLake reads in place; it copies nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nshq2c79",
+    "version": 1,
+    "section": "biglake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a BigLake table enforce column-level security when a plain external table cannot?",
+    "hint": "Who could read around the rule?",
+    "choices": [
+      {
+        "text": "Because BigLake files are encrypted",
+        "correct": false,
+        "why": "Encryption is not what decides here."
+      },
+      {
+        "text": "Its users cannot reach the files at all",
+        "correct": true,
+        "why": "Right. Only the connection reads the bucket."
+      },
+      {
+        "text": "Because it is a native table",
+        "correct": false,
+        "why": "It is external; the files stay in the bucket."
+      },
+      {
+        "text": "Because the metadata cache hides the column",
+        "correct": false,
+        "why": "The cache holds file lists and statistics, not permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yrzdyn8",
+    "version": 1,
+    "section": "biglake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A BigLake table has `max_staleness = INTERVAL 4 HOUR`. A file is written at 09:00 and the cache was refreshed at 08:00. What may a 09:30 query that uses the cache miss?",
+    "hint": "The cache holds the list of files.",
+    "choices": [
+      {
+        "text": "Nothing, since the file is in the bucket",
+        "correct": false,
+        "why": "The cached list predates it."
+      },
+      {
+        "text": "The new file's rows",
+        "correct": true,
+        "why": "Right. That is the price of the cache."
+      },
+      {
+        "text": "Every file, since the cache expired",
+        "correct": false,
+        "why": "It is ninety minutes old, within four hours."
+      },
+      {
+        "text": "The columns added since 08:00",
+        "correct": false,
+        "why": "No column was added in the example."
+      }
+    ]
+  },
+  {
+    "id": "ex-896x2dby",
+    "version": 1,
+    "section": "objects-and-iceberg",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a row of an object table?",
+    "hint": "The contents are not in the table.",
+    "choices": [
+      {
+        "text": "One object's metadata",
+        "correct": true,
+        "why": "Right. An inventory you can query."
+      },
+      {
+        "text": "One row read out of a CSV object",
+        "correct": false,
+        "why": "That is an external table over CSV."
+      },
+      {
+        "text": "One byte range of an object",
+        "correct": false,
+        "why": "Ranges are how a reader fetches, not rows."
+      },
+      {
+        "text": "One version of an Iceberg table",
+        "correct": false,
+        "why": "Iceberg versions live in its metadata files."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c2acmzy",
+    "version": 1,
+    "section": "objects-and-iceberg",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Iceberg add to a folder of Parquet files?",
+    "hint": "Several engines, one table, changes.",
+    "choices": [
+      {
+        "text": "Compression the files did not have before",
+        "correct": false,
+        "why": "The data files are still Parquet, compressed the same way."
+      },
+      {
+        "text": "Metadata listing each version's files",
+        "correct": true,
+        "why": "Right. Updates, deletes and schema changes become safe."
+      },
+      {
+        "text": "A copy of the table inside BigQuery",
+        "correct": false,
+        "why": "The files stay in the bucket."
+      },
+      {
+        "text": "A cheaper storage class",
+        "correct": false,
+        "why": "Storage class is Cloud Storage's, unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckgbzdpe",
+    "version": 1,
+    "section": "objects-and-iceberg",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does this lesson say Quitanda does not need Iceberg for its orders yet?",
+    "hint": "What happens to an order once written?",
+    "choices": [
+      {
+        "text": "Iceberg is not available in São Paulo",
+        "correct": false,
+        "why": "The lesson makes no such claim."
+      },
+      {
+        "text": "Its orders never change once written",
+        "correct": true,
+        "why": "Right. Changes in a shared lake are the day it is needed."
+      },
+      {
+        "text": "Iceberg cannot be partitioned by date",
+        "correct": false,
+        "why": "Partitioning is not the reason given."
+      },
+      {
+        "text": "BigQuery cannot read Iceberg",
+        "correct": false,
+        "why": "It can read and even manage Iceberg tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfevc73t",
+    "version": 1,
+    "section": "the-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "2,048 GiB of Parquet sit in a Standard bucket in São Paulo for a month. What do they cost, in USD?",
+    "hint": "0.035 USD per GiB-month.",
+    "value": 71.68,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-tyb4bqbs",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An external table's files have not been written for two years. What rate does the Standard bucket charge for them?",
+    "hint": "Long-term is a BigQuery rate.",
+    "choices": [
+      {
+        "text": "The same 0.035 USD per GiB-month",
+        "correct": true,
+        "why": "Right. Only a life-cycle rule would move them."
+      },
+      {
+        "text": "Half, as long-term storage",
+        "correct": false,
+        "why": "The page excludes external data sources from it."
+      },
+      {
+        "text": "Nearline's 0.02, automatically",
+        "correct": false,
+        "why": "Nothing moves a class without a rule or Autoclass."
+      },
+      {
+        "text": "Nothing, if nobody queries them",
+        "correct": false,
+        "why": "Storage is billed whether read or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-9r3qfex8",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's orders are rewritten as one file per hour instead of per day. Which line of an external table's bill grows, for the same answer?",
+    "hint": "Requests are counted per file opened.",
+    "choices": [
+      {
+        "text": "The storage",
+        "correct": false,
+        "why": "The bytes stored barely change."
+      },
+      {
+        "text": "The bytes billed per TiB",
+        "correct": false,
+        "why": "The columns and rows read are the same."
+      },
+      {
+        "text": "The Cloud Storage requests",
+        "correct": true,
+        "why": "Right. Sixteen times the files, sixteen times the footers."
+      },
+      {
+        "text": "The network between regions",
+        "correct": false,
+        "why": "Same region, no transfer charge."
+      }
+    ]
+  },
+  {
+    "id": "ex-51f0gpam",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of table to what it is for.",
+    "hint": "One right-hand option describes a native table.",
+    "pairs": [
+      {
+        "left": "External table",
+        "right": "Files read in place, with the reader's own access to the bucket"
+      },
+      {
+        "left": "BigLake table",
+        "right": "Files read in place through a connection, with row and column security"
+      },
+      {
+        "left": "Object table",
+        "right": "One row per object's metadata, for pictures and documents"
+      },
+      {
+        "left": "Iceberg table",
+        "right": "Files several engines change safely, version by version"
+      }
+    ],
+    "right_distractors": [
+      "Data loaded into BigQuery's own storage, with long-term pricing"
+    ]
+  },
+  {
+    "id": "ex-q7zampdq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what a reader of an external Parquet table does in order.",
+    "hint": "Pruning happens before any file is opened.",
+    "items": [
+      "List the objects under the prefix",
+      "Skip the objects whose `dt=` the filter rules out",
+      "Read the footer of each remaining file",
+      "Fetch only the column chunks the query names"
+    ]
+  },
+  {
+    "id": "ex-5b9sct0w",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these numbers were measured in this lesson? Choose all that apply.",
+    "hint": "The emulator and the reader ran; BigQuery did not.",
+    "choices": [
+      {
+        "text": "87 range requests for September's two columns",
+        "correct": true,
+        "why": "Yes, counted by `external.py`."
+      },
+      {
+        "text": "A day's object is 435,738 bytes",
+        "correct": true,
+        "why": "Yes, listed by `gcloud storage ls -l`."
+      },
+      {
+        "text": "Class B operations cost 0.0004 USD per thousand",
+        "correct": false,
+        "why": "From Cloud Storage's pricing page."
+      },
+      {
+        "text": "A BigLake cache refreshes on BigQuery's own schedule",
+        "correct": false,
+        "why": "From the documentation; no cache exists here."
+      }
+    ]
+  },
+  {
+    "id": "ex-hr3ymdq0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's dashboards read the orders every hour, and nothing else reads them. External table or native?",
+    "hint": "Who is the main reader, and how long will the history sit?",
+    "choices": [
+      {
+        "text": "External, to avoid any storage in BigQuery",
+        "correct": false,
+        "why": "The storage savings fade, and clustering and long-term pricing are lost."
+      },
+      {
+        "text": "BigLake, for the metadata cache",
+        "correct": false,
+        "why": "No other engine shares the files, so its advantage is unused."
+      },
+      {
+        "text": "Native, partitioned and clustered",
+        "correct": true,
+        "why": "Right. The warehouse is the main reader."
+      },
+      {
+        "text": "An object table, one row per file",
+        "correct": false,
+        "why": "That lists files; it does not read orders."
+      }
+    ]
+  }
+]

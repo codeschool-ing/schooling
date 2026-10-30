@@ -1,0 +1,418 @@
+{
+  "ex-fy3cx8vf": {
+    "prompt": "A cobrança e o analytics precisam, os dois, de todo evento de pagamento. Como eles são montados?",
+    "hint": "Onde uma mensagem espera até alguém cuidar dela?",
+    "choices": [
+      {
+        "text": "Duas assinaturas num tópico",
+        "why": "Isso: cada assinatura recebe a própria cópia e guarda o próprio registro do que foi confirmado."
+      },
+      {
+        "text": "Uma assinatura de onde os dois serviços leem",
+        "why": "Leitores que dividem uma assinatura dividem as mensagens: cada mensagem vai para um deles, e cada serviço veria mais ou menos a metade."
+      },
+      {
+        "text": "Dois tópicos, com o app publicando cada evento em cada um",
+        "why": "Funciona e dobra o trabalho do publicador à toa; o espalhamento é para isso que as assinaturas servem."
+      },
+      {
+        "text": "Um tópico lido direto pelos dois, sem assinatura",
+        "why": "Um tópico não guarda nada para um leitor; mensagens só são lidas de uma assinatura."
+      }
+    ]
+  },
+  "ex-gqn3hsty": {
+    "prompt": "`analytics` foi puxada com `--auto-ack` e voltou vazia na segunda vez. Por que `billing` ainda recebeu os pagamentos?",
+    "hint": "De onde um ack tira uma mensagem?",
+    "choices": [
+      {
+        "text": "Billing foi puxada primeiro",
+        "why": "Foi puxada em segundo, e a ordem dos pulls não importa aqui."
+      },
+      {
+        "text": "O filtro em billing fez o Pub/Sub guardar uma cópia separada dos pagamentos",
+        "why": "Toda assinatura guarda a própria cópia, com filtro ou sem; o filtro só decide quais mensagens ela recebe."
+      },
+      {
+        "text": "Um ack tira a mensagem daquela assinatura e de nenhuma outra",
+        "why": "Isso: o ack em analytics deixou as cópias de billing intactas."
+      },
+      {
+        "text": "O emulador ignora acks",
+        "why": "Ele os respeitou: o segundo pull de analytics veio vazio."
+      }
+    ]
+  },
+  "ex-7727q5c1": {
+    "prompt": "A cobrança deve receber só pagamentos, e os detalhes do pagamento estão dentro do corpo JSON. Por que o `events.py` também mandou `type` como atributo?",
+    "hint": "O que o Pub/Sub lê de uma mensagem, e o que ele deixa quieto?",
+    "choices": [
+      {
+        "text": "Atributos saem mais baratos que dados na conta",
+        "why": "A página de preços conta os atributos no tamanho de uma mensagem, como os dados."
+      },
+      {
+        "text": "Um filtro lê atributos e nunca o corpo",
+        "why": "Isso: o Pub/Sub não interpreta `data`, então aquilo por que um filtro seleciona precisa ser atributo."
+      },
+      {
+        "text": "O corpo é criptografado, e a assinatura não consegue lê-lo",
+        "why": "O corpo são bytes que o Pub/Sub nunca interpreta; criptografia não tem nada a ver com filtros."
+      },
+      {
+        "text": "O gcloud imprime só atributos na tabela",
+        "why": "Ele imprime os dados também; o formato escolhido na aula é que os deixou de fora."
+      }
+    ]
+  },
+  "ex-v7zy6brx": {
+    "prompt": "Uma checagem de fraude é acrescentada uma semana depois do lançamento, como assinatura nova em `app-events`, que não tem retenção no tópico. O que ela recebe no primeiro pull?",
+    "hint": "Quando uma assinatura começa a receber?",
+    "choices": [
+      {
+        "text": "Os últimos sete dias de eventos, a retenção padrão",
+        "why": "Sete dias é quanto uma assinatura guarda as próprias mensagens sem ack; esta ainda não tem nenhuma."
+      },
+      {
+        "text": "Só os eventos publicados depois de ela ser criada",
+        "why": "Isso: o tópico não guardou nada para ela, e o primeiro pull dela na aula voltou vazio."
+      },
+      {
+        "text": "Todo evento que as outras assinaturas não confirmaram",
+        "why": "Os backlogs são delas; uma assinatura nova não herda nada disso."
+      },
+      {
+        "text": "Um erro, porque o tópico já tem assinantes",
+        "why": "Um tópico aceita qualquer número de assinaturas; a criação deu certo."
+      }
+    ]
+  },
+  "ex-7ezj9hv9": {
+    "prompt": "Um endpoint de push responde `503`. O que o Pub/Sub faz com a mensagem?",
+    "hint": "O receptor da aula respondeu 503 duas vezes.",
+    "choices": [
+      {
+        "text": "Trata como nack e manda de novo",
+        "why": "Isso: a mensagem 17 chegou três vezes, até um 204 confirmá-la."
+      },
+      {
+        "text": "Move para o tópico de dead letter na hora",
+        "why": "Um tópico de dead letter só recebe uma mensagem depois do número configurado de tentativas, cinco no mínimo."
+      },
+      {
+        "text": "Descarta, já que o endpoint disse estar indisponível",
+        "why": "Descartar num erro perderia mensagens; qualquer resposta que não seja 2xx é um nack."
+      },
+      {
+        "text": "Troca a assinatura para pull",
+        "why": "O tipo de assinatura só muda quando alguém muda a configuração dela."
+      }
+    ]
+  },
+  "ex-qcpk5rap": {
+    "prompt": "O `subscriber.py` recebeu seis dos oito eventos novos, e faltou a mensagem 10. Por quê?",
+    "hint": "O que aconteceu com a mensagem 10 logo antes de o programa começar?",
+    "choices": [
+      {
+        "text": "O filtro a tirou",
+        "why": "`analytics` não tem filtro; recebe tudo."
+      },
+      {
+        "text": "Estava emprestada ao pull anterior do gcloud, e o prazo dela não tinha acabado",
+        "why": "Isso: uma mensagem puxada fica fora de alcance até receber ack ou ter o prazo esgotado; ela voltou numa seção seguinte."
+      },
+      {
+        "text": "O streaming pull pula mensagens que um pull unário já viu",
+        "why": "Essa regra não existe; a mensagem 10 foi entregue depois, ao mesmo programa."
+      },
+      {
+        "text": "O comando de ack a confirmou",
+        "why": "O ack nomeou só o ack id da mensagem 9."
+      }
+    ]
+  },
+  "ex-3p1vsxst": {
+    "prompt": "Um callback do cliente Python passa 40 segundos numa mensagem, numa assinatura cujo prazo de ack é 10 segundos. O que acontece?",
+    "hint": "O que a biblioteca faz enquanto um callback ainda roda?",
+    "choices": [
+      {
+        "text": "A mensagem é entregue de novo depois de 10 segundos",
+        "why": "É o que acontece com um pull do gcloud, que ninguém estende; a biblioteca cliente mantém o empréstimo vivo."
+      },
+      {
+        "text": "O callback é morto aos 10 segundos",
+        "why": "A biblioteca não interrompe um callback; prazos são da mensagem, não da thread."
+      },
+      {
+        "text": "A biblioteca estende o prazo enquanto o callback roda",
+        "why": "Isso: por padrão ela continua estendendo por até uma hora, então um callback lento não causa nova entrega e um processo morto causa."
+      },
+      {
+        "text": "O Pub/Sub sobe o prazo de ack da assinatura para 40 segundos",
+        "why": "A configuração da assinatura não muda; a biblioteca estende o empréstimo daquela mensagem."
+      }
+    ]
+  },
+  "ex-a5sj43v6": {
+    "prompt": "Eventos de status de pedido precisam manter a ordem por cliente. Qual deve ser a chave de ordenação?",
+    "hint": "A menor coisa cujos eventos precisam ficar em ordem.",
+    "choices": [
+      {
+        "text": "O id do cliente",
+        "why": "Isso: os eventos de cada cliente mantêm a ordem, e os clientes ficam livres uns dos outros."
+      },
+      {
+        "text": "A loja",
+        "why": "Três lojas dão três chaves, e todo cliente de uma loja espera atrás de todos os outros."
+      },
+      {
+        "text": "Uma constante como `orders`",
+        "why": "Uma chave é uma faixa: o tópico inteiro ficaria ordenado e limitado à vazão de uma chave só."
+      },
+      {
+        "text": "O id da mensagem",
+        "why": "Uma chave única por mensagem não ordena nada, porque duas mensagens nunca a compartilham."
+      }
+    ]
+  },
+  "ex-6fw7g3f9": {
+    "prompt": "O `redeliver.py` deu nack em `o-102 placed` na assinatura ordenada. No Google, o que o leitor recebe em seguida para a chave `c-02`?",
+    "hint": "O que o emulador fez é a outra metade da figura da aula.",
+    "choices": [
+      {
+        "text": "`o-102 packed`, depois `o-102 delivered`, depois `o-102 placed`",
+        "why": "Foi o que o emulador entregou, e isso quebra a ordem que a assinatura pediu."
+      },
+      {
+        "text": "Só `o-102 packed`; a mensagem com nack vai para o tópico de dead letter",
+        "why": "Um nack é uma tentativa; dead letter precisa do número configurado, cinco no mínimo."
+      },
+      {
+        "text": "`o-102 placed` de novo, depois `o-102 packed`",
+        "why": "Isso: o serviço entrega de novo a mensagem com nack e todas as seguintes da chave, em ordem, mesmo as já confirmadas."
+      },
+      {
+        "text": "Mais nada daquela chave até uma pessoa intervir",
+        "why": "A chave retoma com a nova entrega; não é preciso pessoa nenhuma."
+      }
+    ]
+  },
+  "ex-s4fxsdeh": {
+    "prompt": "A publicação de uma mensagem com chave de ordenação `c-17` falha depois das novas tentativas da biblioteca. O que acontece com a próxima publicação com `c-17`?",
+    "hint": "O que aconteceria com a ordem se a próxima mensagem passasse?",
+    "choices": [
+      {
+        "text": "Ela é enviada, e a mensagem que falhou é tentada de novo atrás dela",
+        "why": "Aí a mensagem posterior passaria na frente da anterior, exatamente o que a ordenação existe para impedir."
+      },
+      {
+        "text": "Falha na hora, até o programa chamar `resume_publish` para a chave",
+        "why": "Isso: o cliente pausa a chave para que nada passe na frente da mensagem que não foi, e o programa decide o que fazer."
+      },
+      {
+        "text": "Ela é publicada sem chave de ordenação",
+        "why": "A biblioteca não tira chaves; ela pausa a chave."
+      },
+      {
+        "text": "Toda chave do publicador é pausada",
+        "why": "Só a chave cuja publicação falhou é pausada; as outras seguem."
+      }
+    ]
+  },
+  "ex-dh4rfr4t": {
+    "prompt": "Por que o worker de cobrança deu nack no pagamento `\"23,50\"` em vez de dar ack e seguir?",
+    "hint": "O que um ack teria feito com o pagamento?",
+    "choices": [
+      {
+        "text": "Um ack teria perdido o pagamento em silêncio",
+        "why": "Isso: o nack pede a mensagem de novo, e o tópico de dead letter depois a guarda para uma pessoa olhar."
+      },
+      {
+        "text": "Nack é mais rápido que ack",
+        "why": "Velocidade não é a questão; o que cada um faz com a mensagem é."
+      },
+      {
+        "text": "O emulador recusa acks de mensagens com erro",
+        "why": "O Pub/Sub nunca olha dentro dos dados, então não sabe nada do erro."
+      },
+      {
+        "text": "Acks só são permitidos depois de uma escrita bem-sucedida no banco",
+        "why": "O Pub/Sub não faz ideia do que o consumidor grava; a ordem entre trabalho e ack é escolha do consumidor."
+      }
+    ]
+  },
+  "ex-1sx36j32": {
+    "prompt": "Qual é o menor número máximo de tentativas de entrega que uma política de dead letter aceita?",
+    "hint": "O `gcloud` recusou 3 antes de mandar qualquer coisa.",
+    "unit": "tentativas"
+  },
+  "ex-9c81xgg3": {
+    "prompt": "Depois de um `seek --time` para dez minutos antes, `analytics` reprocessou onze mensagens, e nenhuma dos ids 1 a 9. Por que não essas?",
+    "hint": "Quando elas foram confirmadas, e o que a assinatura guardava então?",
+    "choices": [
+      {
+        "text": "Eram mais velhas que dez minutos",
+        "why": "Todas foram publicadas nos últimos dez minutos da execução; a idade não foi o motivo."
+      },
+      {
+        "text": "O seek reprocessa só mensagens que nunca foram entregues",
+        "why": "O seek para um horário marca como sem ack as mensagens guardadas, entregues ou não; as onze já tinham sido entregues."
+      },
+      {
+        "text": "Foram confirmadas antes de `--retain-acked-messages` ser ligado, e nada as guardou",
+        "why": "Isso: uma mensagem confirmada some da assinatura, a não ser que a retenção de confirmadas, ou a do tópico, a guarde."
+      },
+      {
+        "text": "O filtro de billing as tirou",
+        "why": "O filtro é de billing; a assinatura do seek foi analytics."
+      }
+    ]
+  },
+  "ex-535m6m29": {
+    "prompt": "Três assinaturas em `app-events` precisam, cada uma, reprocessar até uma semana. Qual configuração guarda esse histórico mais barato?",
+    "hint": "Quantas cópias cada opção guarda?",
+    "choices": [
+      {
+        "text": "`--retain-acked-messages` com sete dias em cada assinatura",
+        "why": "Isso guarda uma cópia por assinatura, três ao todo, cada uma cobrada como armazenamento."
+      },
+      {
+        "text": "Retenção de sete dias no tópico",
+        "why": "Isso: o tópico guarda uma cópia e toda assinatura ligada faz seek nela."
+      },
+      {
+        "text": "Um snapshot de cada assinatura todo dia",
+        "why": "Um snapshot dura no máximo sete dias e cada um é cobrado pelo que guarda; serve a uma mudança planejada, não a uma semana corrida."
+      },
+      {
+        "text": "Um prazo de ack mais longo",
+        "why": "O prazo de ack é de uma entrega, medido em segundos; não guarda histórico."
+      }
+    ]
+  },
+  "ex-5nndnzra": {
+    "prompt": "Uma assinatura foi criada com `--min-retry-delay=20s`. Depois de um nack, o emulador entregou a mensagem de novo em menos de um segundo. O que esse teste diz sobre a política de nova tentativa no Google?",
+    "hint": "De que lado da linha entre aplicado e ignorado isto fica?",
+    "choices": [
+      {
+        "text": "A política está quebrada e não deve ser usada",
+        "why": "O emulador a ignorou; isso não diz nada sobre o serviço, que documenta a espera."
+      },
+      {
+        "text": "Ela funciona só em assinaturas de push",
+        "why": "Uma política de nova tentativa vale também para pull; nada na execução era sobre push."
+      },
+      {
+        "text": "Que ela espera cerca de um segundo",
+        "why": "O segundo foi a velocidade do próprio emulador, não uma leitura da política."
+      },
+      {
+        "text": "Nada: ela foi guardada e não aplicada",
+        "why": "Isso: o Google documenta uma espera entre os dois limites, e este laboratório não consegue mostrá-la."
+      }
+    ]
+  },
+  "ex-8gpec91v": {
+    "prompt": "Um tópico recebe 1 TiB num mês e tem três assinaturas, nenhuma filtrada. A US$ 40 por TiB e ignorando os 10 GiB grátis, quanto dá a conta de vazão, em USD?",
+    "hint": "Vazão é a publicação mais uma entrega por assinatura.",
+    "unit": "USD"
+  },
+  "ex-8nfr3gwd": {
+    "prompt": "A cobrança recebe dois eventos em oito por um filtro em `app-events`. O que muda na conta se a cobrança for para um tópico só dela, alimentado só com pagamentos?",
+    "hint": "Como mensagens filtradas são cobradas?",
+    "choices": [
+      {
+        "text": "Nada, já que um filtro já tira os outros eventos",
+        "why": "Um filtro os tira da entrega e não da conta: o Pub/Sub os confirma sozinho e cobra a vazão."
+      },
+      {
+        "text": "Sobe a conta, porque um segundo tópico é cobrado por hora",
+        "why": "O Pub/Sub não cobra taxa por tópico; cobra bytes."
+      },
+      {
+        "text": "Tira a cobrança de entrega dos seis eventos em oito que a cobrança não queria",
+        "why": "Isso: cerca de um terço da linha de vazão na conta da aula, ao preço de o app publicar os pagamentos duas vezes."
+      },
+      {
+        "text": "Tira o mínimo de 1 KB por requisição",
+        "why": "O mínimo vale para toda requisição em todo tópico."
+      }
+    ]
+  },
+  "ex-7wt5a3d8": {
+    "prompt": "Ligue cada problema à configuração do Pub/Sub que o resolve.",
+    "hint": "Uma configuração guarda histórico, uma tira uma mensagem do caminho, uma seleciona, uma ordena.",
+    "pairs": [
+      {
+        "left": "Um pagamento que ninguém consegue ler fica voltando",
+        "right": "Um tópico de dead letter"
+      },
+      {
+        "left": "A cobrança quer pagamentos e mais nada",
+        "right": "Um filtro de mensagens"
+      },
+      {
+        "left": "As mudanças de status de um cliente precisam chegar em ordem",
+        "right": "Uma chave de ordenação"
+      },
+      {
+        "left": "Um bug descoberto na segunda pede o fim de semana de novo",
+        "right": "Retenção, e depois seek"
+      }
+    ],
+    "right_distractors": [
+      "Um prazo de ack mais longo"
+    ]
+  },
+  "ex-pvjf9tta": {
+    "prompt": "Ponha em ordem o que aconteceu com o pagamento `\"23,50\"` na aula.",
+    "hint": "A assinatura de dead letter é lida por último.",
+    "items": [
+      "O app o publica em `app-events`",
+      "O filtro o deixa entrar em `billing`",
+      "O worker de cobrança não consegue interpretá-lo e dá nack",
+      "Depois da quinta tentativa, o Pub/Sub o publica em `app-events-dead`",
+      "Um pull de `billing-dead` o mostra com os atributos que dizem de onde ele veio"
+    ]
+  },
+  "ex-h92v6vqn": {
+    "prompt": "Quais destas coisas o emulador fez como o Google documenta? Marque todas as que valem.",
+    "hint": "Separe o que rodou como o serviço roda do que ele aceitou e ignorou.",
+    "choices": [
+      {
+        "text": "Encaminhar uma mensagem ao tópico de dead letter depois de cinco tentativas",
+        "why": "Isso, com os nomes de atributo do próprio serviço."
+      },
+      {
+        "text": "Entregar uma mensagem ordenada com nack antes das seguintes da chave",
+        "why": "Ele entregou `o-102 packed` primeiro."
+      },
+      {
+        "text": "Tentar de novo uma requisição de push que recebeu 503",
+        "why": "Isso, com o mesmo id de mensagem a cada vez."
+      },
+      {
+        "text": "Apagar uma mensagem depois que a retenção passou",
+        "why": "A mensagem ainda estava lá onze minutos depois de uma retenção de dez."
+      },
+      {
+        "text": "Dar à cobrança só as mensagens filtradas",
+        "why": "Isso: billing recebeu os ids 4 e 7 e mais nada."
+      }
+    ]
+  },
+  "ex-kpvk2564": {
+    "prompt": "Uma mensagem fica numa assinatura até o leitor mandar um ___ para ela.",
+    "hint": "O `--auto-ack` manda por você.",
+    "blanks": [
+      {
+        "accept": [
+          "ack",
+          "acknowledgement",
+          "acknowledgment",
+          "confirmação"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,459 @@
+{
+  "ex-j9rrs7ng": {
+    "prompt": "A Quitanda envia cada clique com `partition_key` igual ao id do cliente. O que isso garante?",
+    "hint": "Pense em onde dois cliques de um cliente vão parar.",
+    "choices": [
+      {
+        "text": "Toda partição recebe a mesma parcela de cliques",
+        "why": "A chave espalha a carga só na medida em que as chaves se espalham pelo hash; na lição, dois de quatro clientes dividiram a partição 3."
+      },
+      {
+        "text": "Os toques de cada pessoa dividem uma partição e mantêm a ordem",
+        "why": "Isso. O hash da chave escolhe uma partição, e a partição mantém a ordem do que foi acrescentado a ela."
+      },
+      {
+        "text": "Os cliques são lidos de volta na ordem em que aconteceram entre todos os clientes",
+        "why": "A ordem vale dentro de uma partição e em nenhum outro lugar; entre clientes em partições diferentes ela some."
+      },
+      {
+        "text": "O produtor fica sabendo para qual partição cada clique foi",
+        "why": "O `send_event` não devolveu nada; a lição teve de perguntar ao hub para descobrir."
+      }
+    ]
+  },
+  "ex-exp5v1td": {
+    "prompt": "Depois do `send_clicks.py`, o `partitions.py` mostrou a partição 2 como `empty True`. Por quê?",
+    "hint": "Conte as chaves e as partições.",
+    "choices": [
+      {
+        "text": "O emulador guarda uma partição de reserva para failover",
+        "why": "Não existe partição de reserva; cada partição recebe as chaves que caem nela pelo hash."
+      },
+      {
+        "text": "A partição 2 é do grupo de consumidores `fraud`",
+        "why": "Grupos de consumidores leem todas as partições; partições não são atribuídas a grupos."
+      },
+      {
+        "text": "Os eventos dela expiraram antes de o programa perguntar",
+        "why": "A retenção é de um dia ou mais, e nada na lição esperou tanto."
+      },
+      {
+        "text": "Quatro chaves caíram em três partições",
+        "why": "Isso. `c-17` e `c-03` caíram ambos na partição 3, então uma partição não recebeu nenhuma das quatro chaves."
+      }
+    ]
+  },
+  "ex-0b57aped": {
+    "prompt": "Um produtor envia eventos de auditoria que não precisam de ordem nenhuma. Durante a manutenção de uma partição, qual forma de envio mantém os envios dando certo?",
+    "hint": "Uma chave, ou uma partição nomeada, tem exatamente um lugar para ir.",
+    "choices": [
+      {
+        "text": "Sem chave e sem partição",
+        "why": "Isso. O serviço então manda cada evento para uma partição que está de pé; o preço é não manter ordem, de que esses eventos não precisam."
+      },
+      {
+        "text": "Com o id de auditoria como chave de partição, para os eventos se espalharem por igual",
+        "why": "Espalhar não é o problema; um evento com chave tem uma partição para ir, e espera ou falha enquanto ela está fora."
+      },
+      {
+        "text": "Com `partition_id` nomeando uma partição escolhida ao acaso",
+        "why": "Uma partição nomeada também é um destino só; se for a que está em manutenção, o envio espera ou falha."
+      },
+      {
+        "text": "Com uma chave constante, para todos dividirem uma partição",
+        "why": "Isso amarra todos os eventos a uma partição, o pior caso tanto para a carga quanto para a disponibilidade."
+      }
+    ]
+  },
+  "ex-70rs7bes": {
+    "prompt": "Um event hub Standard foi criado com 4 partições, e a Quitanda agora quer 8. O que diz a documentação?",
+    "hint": "A camada decide se o número é fixo.",
+    "choices": [
+      {
+        "text": "No Standard ele é fixo; para crescer é preciso Premium, Dedicated ou um hub novo",
+        "why": "Isso. Premium e Dedicated permitem aumentar, nunca diminuir; Basic e Standard não o mudam depois da criação."
+      },
+      {
+        "text": "Ele dobra sozinho quando o tráfego cresce, como o auto-inflate",
+        "why": "O auto-inflate sobe unidades de taxa de transferência, que são capacidade, não partições."
+      },
+      {
+        "text": "Muda com um comando, e cada chave fica na sua partição",
+        "why": "Mesmo onde aumentar é permitido, as chaves mudam de partição e a ordem delas na mudança se perde."
+      },
+      {
+        "text": "Partições são por namespace, então criar um hub as acrescenta",
+        "why": "Partições pertencem a um event hub; a capacidade pertence ao namespace."
+      }
+    ]
+  },
+  "ex-24jhr58p": {
+    "prompt": "O `read_clicks.py` leu os dez cliques com o `$Default`, e uma segunda execução leu os mesmos dez de novo. Por que eles continuavam lá?",
+    "hint": "O que remove um evento de uma partição?",
+    "choices": [
+      {
+        "text": "Ler não remove nada; a retenção remove",
+        "why": "Isso. A retenção é a única exclusão; o leitor só escolhe uma posição."
+      },
+      {
+        "text": "O emulador não apaga eventos lidos, mas o Azure apaga",
+        "why": "O Azure se comporta do mesmo jeito aqui: uma leitura deixa o evento no lugar para todos os outros leitores."
+      },
+      {
+        "text": "A primeira execução caiu antes de confirmá-los",
+        "why": "Não existe confirmação no Event Hubs; o leitor guarda a própria posição."
+      },
+      {
+        "text": "`-1` manda o serviço restaurar eventos apagados",
+        "why": "`-1` quer dizer o evento mais antigo que a partição ainda guarda; nada tinha sido apagado."
+      }
+    ]
+  },
+  "ex-78047g54": {
+    "prompt": "Um leitor guarda \"último número de sequência lido: 5\" uma vez para o hub `clicks` inteiro. O que há de errado nisso?",
+    "hint": "Quem numera os eventos?",
+    "choices": [
+      {
+        "text": "Números de sequência são reaproveitados depois de cada checkpoint",
+        "why": "Uma partição não reaproveita número de sequência; checkpoints não mexem na numeração."
+      },
+      {
+        "text": "Cada partição numera os próprios eventos, então 5 nomeia um evento diferente em cada uma",
+        "why": "Isso. O número 5 na partição 3 e na partição 0 não têm relação; uma posição é por partição."
+      },
+      {
+        "text": "Deveria guardar o offset, que é único no hub inteiro",
+        "why": "Offsets também são por partição; as partições 0 e 3 tinham um evento no offset 144."
+      },
+      {
+        "text": "Nada, se o hub tiver um grupo de consumidores só",
+        "why": "O número de grupos não vem ao caso; a numeração é por partição."
+      }
+    ]
+  },
+  "ex-hn0e6aby": {
+    "prompt": "Ligue cada necessidade ao `starting_position` que a atende.",
+    "hint": "Um deles é uma hora, e não uma posição.",
+    "pairs": [
+      {
+        "left": "Reprocessar tudo o que a retenção ainda guarda",
+        "right": "`\"-1\"`"
+      },
+      {
+        "left": "Um painel ao vivo que ignora o passado",
+        "right": "`\"@latest\"`"
+      },
+      {
+        "left": "Retomar logo depois do último evento tratado",
+        "right": "um número de sequência, não inclusivo"
+      },
+      {
+        "left": "Reprocessar desde as 9h, depois de corrigir um bug",
+        "right": "um `datetime`"
+      }
+    ],
+    "right_distractors": [
+      "um offset `0` para o hub inteiro"
+    ]
+  },
+  "ex-yrv854b1": {
+    "prompt": "A cópia para o lake da Quitanda fica parada nove dias num hub Standard com retenção de sete dias. Ela reinicia a partir dos checkpoints. O que acontece?",
+    "hint": "O que existe na partição quando ela pergunta?",
+    "choices": [
+      {
+        "text": "Lê os nove dias inteiros, porque checkpoints protegem eventos não lidos",
+        "why": "Um checkpoint é a anotação do leitor; o serviço descarta eventos no fim da retenção, lidos ou não."
+      },
+      {
+        "text": "O hub se recusa a iniciar o leitor até um operador resetá-lo",
+        "why": "Nada é recusado: o leitor começa e encontra o evento mais antigo que a partição ainda guarda."
+      },
+      {
+        "text": "Perde para sempre os dois dias mais antigos, sem erro",
+        "why": "Isso. Esses eventos não existem mais; comparar o primeiro número de sequência da partição com o checkpoint é como um leitor percebe."
+      },
+      {
+        "text": "Lê duas vezes os últimos sete dias",
+        "why": "Nada é duplicado; o buraco está no começo, não é uma repetição."
+      }
+    ]
+  },
+  "ex-qwy1ypx3": {
+    "prompt": "A checagem de fraude e a cópia para o lake da Quitanda leem `clicks`. Por que cada uma ganha um grupo de consumidores próprio?",
+    "hint": "Um grupo é um conjunto de posições.",
+    "choices": [
+      {
+        "text": "Para que cada uma guarde a própria posição e veja todos os eventos",
+        "why": "Isso. Dividir um grupo faria as duas repartirem as partições, e cada uma perderia o que a outra leu."
+      },
+      {
+        "text": "Porque um grupo só consegue ler duas partições",
+        "why": "Um grupo lê todas as partições do hub."
+      },
+      {
+        "text": "Para que a checagem de fraude leia os eventos primeiro e os remova",
+        "why": "Ler não remove nada, em grupo nenhum."
+      },
+      {
+        "text": "Porque cada grupo é cobrado à parte e a cópia para o lake é mais barata",
+        "why": "Grupos não são cobrados um a um; o que os leitores custam é o tráfego de saída que causam."
+      }
+    ]
+  },
+  "ex-8yt41gzs": {
+    "prompt": "`python read_clicks.py analytics` não imprimiu nada, sem erro, com o hub guardando dez cliques. O que a lição tira disso?",
+    "hint": "O emulador conhece dois grupos.",
+    "choices": [
+      {
+        "text": "O grupo foi criado vazio e começa em `@latest`",
+        "why": "Nenhum grupo foi criado; um leitor que nomeia um grupo não o cria, nem no Azure nem aqui."
+      },
+      {
+        "text": "Um leitor calado não prova nada; confira se o hub tem eventos",
+        "why": "Isso. O Azure recusa um grupo que não existe; este emulador respondeu com silêncio, que parece um hub sem tráfego."
+      },
+      {
+        "text": "O `analytics` já tinha lido os cliques antes na lição",
+        "why": "Nenhum leitor usou esse grupo antes, e ler não teria removido nada de qualquer forma."
+      },
+      {
+        "text": "A camada Basic permite um grupo só",
+        "why": "Vale para o Basic no Azure, mas o emulador não tem camadas, e aceitou o `fraud`."
+      }
+    ]
+  },
+  "ex-zmx95vgm": {
+    "prompt": "A checagem de fraude roda como seis cópias num grupo de consumidores, no hub `clicks` de quatro partições. O que as cópias fazem?",
+    "hint": "Dentro de um grupo, a recomendação é um leitor por partição.",
+    "choices": [
+      {
+        "text": "Cada uma lê todas as partições, então cada clique é checado seis vezes",
+        "why": "Cópias num grupo repartem as partições; ler tudo é o que grupos separados fazem."
+      },
+      {
+        "text": "O serviço acrescenta duas partições para cada cópia ter uma",
+        "why": "O número de partições é fixado na criação no Standard e não é mudado por leitores."
+      },
+      {
+        "text": "Elas dividem cada partição, um sexto dos eventos para cada",
+        "why": "Uma partição não é dividida entre leitores; um segundo leitor numa partição recebe todos os eventos dela."
+      },
+      {
+        "text": "Quatro leem uma partição cada e duas esperam alguma ficar livre",
+        "why": "Isso. O número de partições é o teto de leitores em paralelo num grupo."
+      }
+    ]
+  },
+  "ex-snqe9q0z": {
+    "prompt": "Onde fica um checkpoint quando um leitor usa o `BlobCheckpointStore`?",
+    "hint": "A lição o listou com `az storage blob list`.",
+    "choices": [
+      {
+        "text": "No event hub, ao lado da partição",
+        "why": "O Event Hubs não lembra as posições dos leitores; o leitor as guarda."
+      },
+      {
+        "text": "Nos metadados de um blob, um blob por partição e grupo",
+        "why": "Isso. `localhost/clicks/$default/checkpoint/3` levava o número de sequência e o offset nos metadados."
+      },
+      {
+        "text": "Na memória, então um reinício volta ao `starting_position`",
+        "why": "A segunda execução retomou depois do checkpoint, que é o motivo de gravá-lo no armazenamento."
+      },
+      {
+        "text": "No próprio evento, como uma propriedade definida pelo leitor",
+        "why": "Eventos não podem ser mudados depois de enviados, e um leitor não grava nada no hub."
+      }
+    ]
+  },
+  "ex-6r06xc5y": {
+    "prompt": "O `checkpointed.py` rodou com `starting_position` `-1`, leu dez cliques e, na segunda execução, leu só os dez novos. Por que o `-1` não o fez começar do início de novo?",
+    "hint": "Qual ganha quando os dois existem?",
+    "choices": [
+      {
+        "text": "A primeira execução apagou os cliques que tinha lido",
+        "why": "Nada foi apagado: o `read_clicks.py` ainda leria os vinte."
+      },
+      {
+        "text": "`-1` quer dizer o fim da partição numa segunda execução",
+        "why": "`-1` sempre quer dizer o evento mais antigo guardado; ele só não foi usado."
+      },
+      {
+        "text": "Onde já existe um checkpoint, é ele que ganha",
+        "why": "Isso. O `starting_position` vale só para uma partição sem checkpoint; a partição 3 continuou no número de sequência 6."
+      },
+      {
+        "text": "O serviço lembrou a última posição do grupo de consumidores",
+        "why": "O serviço não lembra nada sobre leitores; quem lembrou foi o blob no Azurite."
+      }
+    ]
+  },
+  "ex-jvyf3mra": {
+    "prompt": "A checagem de fraude da Quitanda trata 600 cliques por segundo no pico e faz checkpoint depois de cada evento. Quantas escritas de checkpoint no Blob Storage ela faz numa hora de pico?",
+    "hint": "Uma escrita por evento.",
+    "unit": "escritas"
+  },
+  "ex-yjw60gwk": {
+    "prompt": "O que o Capture do Event Hubs grava no armazenamento?",
+    "hint": "Um formato de linhas que leva o próprio esquema.",
+    "choices": [
+      {
+        "text": "Arquivos Avro, uma série por partição",
+        "why": "Isso. Cada registro guarda o corpo de um evento intocado, ao lado do número de sequência, do offset e do enqueued time."
+      },
+      {
+        "text": "Arquivos Parquet com uma coluna por campo do JSON",
+        "why": "O Event Hubs nunca olha dentro do corpo, então não teria como separar o JSON em colunas; converter é um job posterior."
+      },
+      {
+        "text": "Um blob por evento, nomeado pelo número de sequência",
+        "why": "Um blob por evento seriam milhões de arquivos minúsculos; o Capture agrupa por janela."
+      },
+      {
+        "text": "Tabelas Delta",
+        "why": "Delta é um formato de tabela que as lições do lake escrevem com outras ferramentas; a saída do Capture é Avro."
+      }
+    ]
+  },
+  "ex-4j814dh8": {
+    "prompt": "O `terraform validate` aceitou `interval_in_seconds = 30` no bloco do Capture. O que isso diz?",
+    "hint": "Onde o mínimo de um minuto é aplicado?",
+    "choices": [
+      {
+        "text": "O Azure baixou a janela mínima para 30 segundos",
+        "why": "A janela documentada é de 1 a 15 minutos; o validate não lê a documentação do Azure."
+      },
+      {
+        "text": "A regra é do Azure, conferida no `apply`",
+        "why": "Isso. O `validate` confere o que o esquema codifica, como a lista de valores de `sku`, e não pergunta nada ao Azure."
+      },
+      {
+        "text": "O Capture arredonda o valor para um minuto por conta própria",
+        "why": "Nada na lição diz isso; o valor seria mandado ao Azure como escrito."
+      },
+      {
+        "text": "O emulador faria o Capture a cada 30 segundos",
+        "why": "O emulador não tem Capture nenhum."
+      }
+    ]
+  },
+  "ex-t4a99cz8": {
+    "prompt": "Um namespace Dedicated não é um `sku` de `azurerm_eventhub_namespace`: a capacidade Dedicated é um recurso próprio, um ___, onde os namespaces são colocados.",
+    "hint": "O recurso do Terraform é `azurerm_eventhub_...`.",
+    "blanks": [
+      {
+        "accept": [
+          "cluster"
+        ]
+      }
+    ]
+  },
+  "ex-2x8y380t": {
+    "prompt": "Por que a camada Basic sai da lista para o `clicks` da Quitanda antes de falar de preço?",
+    "hint": "Conte os leitores.",
+    "choices": [
+      {
+        "text": "A retenção de um dia é curta demais para a cópia para o lake",
+        "why": "Um dia é o que a própria declaração da lição usa, porque o Capture guarda a cópia que fica."
+      },
+      {
+        "text": "Um grupo de consumidores, para dois leitores",
+        "why": "Isso. Com o `$Default` sozinho, a checagem de fraude e a cópia para o lake não poderiam guardar uma posição cada."
+      },
+      {
+        "text": "Hubs Basic não têm partições, então nenhuma chave manteria os cliques em ordem",
+        "why": "Hubs Basic têm partições, até 32."
+      },
+      {
+        "text": "Eventos do Basic são limitados a 64 KB",
+        "why": "64 KB é a unidade em que eventos de entrada são contados, não um limite de tamanho de camada."
+      }
+    ]
+  },
+  "ex-xz5pxgjr": {
+    "prompt": "Um namespace Standard com auto-inflate passou de 2 para 6 unidades de taxa de transferência numa promoção de sexta. Na segunda ninguém mexeu nele. O que ele está fazendo?",
+    "hint": "O auto-inflate anda numa direção só.",
+    "choices": [
+      {
+        "text": "Rodando de novo com 2 unidades, porque o auto-inflate volta à meia-noite",
+        "why": "O auto-inflate não baixa unidades por conta própria; alguém ou alguma coisa tem de baixar."
+      },
+      {
+        "text": "Limitando requisições, porque a promoção gastou as unidades do mês",
+        "why": "Unidades são uma taxa por segundo compradas por hora, não uma franquia mensal."
+      },
+      {
+        "text": "Ainda em 6, cobrado por 6 a cada hora, Capture incluído",
+        "why": "Isso. O número fica alto até ser baixado, e no Standard o Capture também é cobrado por unidade."
+      },
+      {
+        "text": "Mudou para Premium, onde as unidades são de processamento",
+        "why": "O auto-inflate não muda a camada."
+      }
+    ]
+  },
+  "ex-xckvscmp": {
+    "prompt": "Aos preços ilustrativos da lição, 0,03 USD por unidade-hora e 0,10 USD por unidade-hora para o Capture, quanto custam 3 unidades com Capture num mês de 730 horas, em USD?",
+    "hint": "Os dois medidores contam unidades-hora.",
+    "unit": "USD"
+  },
+  "ex-y32gx79j": {
+    "prompt": "Ponha em ordem o que acontece com o clique 11 da lição, do app até a segunda execução do `checkpointed.py`.",
+    "hint": "O checkpoint é gravado depois que o evento é tratado.",
+    "items": [
+      "`send_clicks.py 11` o envia com a chave `c-17`",
+      "O hash de `c-17` o põe na partição 3, como número de sequência 6",
+      "O leitor encontra o checkpoint no número de sequência 5 e começa depois dele",
+      "O `on_event` trata o clique",
+      "O `update_checkpoint` registra o número de sequência 6 no blob"
+    ]
+  },
+  "ex-jq0qmy81": {
+    "prompt": "Quais destas coisas a lição viu o emulador fazer como o Azure faria? Marque todas as que se aplicam.",
+    "hint": "Separe o que rodou do que só foi documentado.",
+    "choices": [
+      {
+        "text": "Manter os eventos de uma chave numa partição, em ordem",
+        "why": "Isso; todo clique de `c-17` caiu na partição 3 na ordem de envio."
+      },
+      {
+        "text": "Dar os mesmos eventos a dois grupos de consumidores, de forma independente",
+        "why": "Isso; `$Default` e `fraud` leram os dez, cada um."
+      },
+      {
+        "text": "Recusar um grupo de consumidores que não existe",
+        "why": "O emulador respondeu com silêncio para `analytics`; a recusa é do Azure, documentada e não executada."
+      },
+      {
+        "text": "Gravar arquivos do Capture no Azurite",
+        "why": "O emulador não tem Capture; só a declaração do Terraform foi conferida."
+      },
+      {
+        "text": "Limitar um remetente acima de uma unidade de taxa de transferência",
+        "why": "O emulador não tem unidades e aceitou tudo tão rápido quanto o Python enviou."
+      }
+    ]
+  },
+  "ex-z7tv592n": {
+    "prompt": "Uma equipe nova quer o stream de cliques para um modelo de recomendações, lido uma vez por noite. Qual plano combina com o que esta lição ensinou?",
+    "hint": "Quem já grava cada clique num lugar que dura?",
+    "choices": [
+      {
+        "text": "Ler os arquivos do Capture no lake",
+        "why": "Isso. Um leitor noturno precisa de histórico, que o hub descarta depois de um dia; o Capture já o gravou."
+      },
+      {
+        "text": "Entrar no grupo `fraud` para o hub não mandar nada a mais",
+        "why": "Dividir o grupo repartiria as partições com a checagem de fraude, e cada um perderia eventos."
+      },
+      {
+        "text": "Criar um grupo de consumidores e ler a partir de `@latest` toda noite",
+        "why": "`@latest` lê só o que chega depois de começar, então uma execução noturna veria quase nada do dia."
+      },
+      {
+        "text": "Subir a retenção para 90 dias no hub Standard",
+        "why": "O Standard permite no máximo sete dias, e um hub não serve de histórico para ninguém."
+      }
+    ]
+  }
+}

@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-rawj1hze",
+    "version": 1,
+    "section": "what-hns-changes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is Azure Data Lake Storage Gen2?",
+    "hint": "Count the products involved.",
+    "choices": [
+      {
+        "text": "A separate service with its own accounts and its own price list",
+        "correct": false,
+        "why": "That describes the first Data Lake Store, which Microsoft retired."
+      },
+      {
+        "text": "A new address for the same flat blobs, with nothing else changed",
+        "correct": false,
+        "why": "The address is one part; directories, atomic renames and lists are the rest."
+      },
+      {
+        "text": "A storage account with the hierarchical namespace switched on",
+        "correct": true,
+        "why": "Right. Same account, same containers and tiers; directories become real."
+      },
+      {
+        "text": "A Spark cluster that keeps its files in Blob Storage",
+        "correct": false,
+        "why": "It runs no computation; engines like Spark read from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0dsz2kvq",
+    "version": 1,
+    "section": "what-hns-changes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `abfss://lake@stquitandalakeprd.dfs.core.windows.net/raw/`, the part before the `@` names the ___ system.",
+    "hint": "The Data Lake word for a container.",
+    "blanks": [
+      {
+        "accept": [
+          "file"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ahyagb9b",
+    "version": 1,
+    "section": "what-hns-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an atomic directory rename matter to a Spark job?",
+    "hint": "How does the job finish its work?",
+    "choices": [
+      {
+        "text": "It commits by renaming its output into place, safely",
+        "correct": true,
+        "why": "Right. On a flat namespace that rename is a copy of every file, and can stop halfway."
+      },
+      {
+        "text": "It lets the job read its input faster, because directories are cached by the engine",
+        "correct": false,
+        "why": "A rename moves nothing a reader reads faster."
+      },
+      {
+        "text": "Spark refuses to start on an account without one",
+        "correct": false,
+        "why": "Spark can use the blob endpoint too; what it loses is the safe commit."
+      },
+      {
+        "text": "Renaming is free on a hierarchical namespace and billed otherwise",
+        "correct": false,
+        "why": "The lesson counted operations, not a free tier; the point is one operation against thousands, done safely."
+      }
+    ]
+  },
+  {
+    "id": "ex-xc5ewv5j",
+    "version": 1,
+    "section": "what-hns-changes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A copy program written for flat accounts lists an account with the hierarchical namespace through the blob endpoint and copies 1,040 blobs where 1,000 files were expected. The likeliest reason?",
+    "hint": "What does a directory look like through the blob interface?",
+    "choices": [
+      {
+        "text": "Forty files were written twice by the copy",
+        "correct": false,
+        "why": "Writing a name twice leaves one blob, not two."
+      },
+      {
+        "text": "The listing returned forty versions of earlier files",
+        "correct": false,
+        "why": "A plain listing does not include versions unless asked."
+      },
+      {
+        "text": "Azure counts each 4 MiB block as a separate blob in a listing",
+        "correct": false,
+        "why": "A listing names blobs, never their blocks."
+      },
+      {
+        "text": "Directories, listed as empty blobs marked `hdi_isfolder=true`",
+        "correct": true,
+        "why": "Right. They are markers for directories, harmless once recognised."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8d9ygjg",
+    "version": 1,
+    "section": "renaming-on-a-flat-namespace",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rename.py` moves a prefix of 2,500 blobs on a flat namespace in one run. How many requests does it count? A listing page holds up to 5,000 names.",
+    "hint": "One page, then two requests per blob.",
+    "value": 5001,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-e0a6hzkm",
+    "version": 1,
+    "section": "renaming-on-a-flat-namespace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rename.py` stopped after 400 of 1,000 blobs. What did a job reading the old prefix at that moment see?",
+    "hint": "Count under each prefix.",
+    "choices": [
+      {
+        "text": "All 1,000 files, because nothing is deleted until the rename finishes",
+        "correct": false,
+        "why": "Each blob is deleted right after its copy; there is no finish to wait for."
+      },
+      {
+        "text": "600, with 400 already under the new prefix",
+        "correct": true,
+        "why": "Right. The listings printed 600 and 400."
+      },
+      {
+        "text": "An error saying the prefix is being moved",
+        "correct": false,
+        "why": "Nothing in Blob Storage knows a move is in progress."
+      },
+      {
+        "text": "No files, because the prefix is locked during a move",
+        "correct": false,
+        "why": "There is no lock on a prefix; it is not a thing that exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ggbjyb1",
+    "version": 1,
+    "section": "renaming-on-a-flat-namespace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `rename.py` check `copy_status` before deleting the source?",
+    "hint": "A copy is started, not always finished.",
+    "choices": [
+      {
+        "text": "Deleting a blob while it is being copied is refused by the service, and the check avoids that error",
+        "correct": false,
+        "why": "The danger is the opposite: the delete is accepted."
+      },
+      {
+        "text": "A copy still `pending` when the call returns would lose its data if the source were deleted then",
+        "correct": true,
+        "why": "Right. Azurite answered `success` every time; a program cannot assume that."
+      },
+      {
+        "text": "It makes the rename faster by skipping every blob whose copy already exists at the new name",
+        "correct": false,
+        "why": "The status describes this copy, not whether the target existed."
+      },
+      {
+        "text": "The status counts as a request, and the counter needs it",
+        "correct": false,
+        "why": "The status comes back in the copy's own answer; no extra request is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-mx1x67f6",
+    "version": 1,
+    "section": "renaming-on-a-flat-namespace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's lake has to stay on a flat account for another year. Which design avoids renaming a day's directory at all?",
+    "hint": "Two roads were named: avoid the rename, or never touch the files.",
+    "choices": [
+      {
+        "text": "Rename at night, when no job reads the lake and nobody sees the half-moved state",
+        "correct": false,
+        "why": "It still costs two requests per file, and a failure still leaves two halves."
+      },
+      {
+        "text": "Use bigger blocks, so each copy is a single request",
+        "correct": false,
+        "why": "Each copy is already one request; block size does not change the count."
+      },
+      {
+        "text": "Copy with more threads so the window is shorter",
+        "correct": false,
+        "why": "A shorter window is still a window, and the count is the same."
+      },
+      {
+        "text": "Final names from the start, plus a manifest",
+        "correct": true,
+        "why": "Right. Nothing is renamed, and the manifest switches readers with one conditional write."
+      }
+    ]
+  },
+  {
+    "id": "ex-amemapj1",
+    "version": 1,
+    "section": "the-dfs-endpoint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`az storage fs create -n lake2` succeeded against Azurite. What does that prove?",
+    "hint": "What is a file system, on the blob side?",
+    "choices": [
+      {
+        "text": "Nothing beyond a container: it was created through the blob endpoint",
+        "correct": true,
+        "why": "Right. `lake2` appeared in the container list beside `lake`."
+      },
+      {
+        "text": "That Azurite supports the hierarchical namespace, but only for containers created after the account",
+        "correct": false,
+        "why": "The next command, a directory, failed with `ERROR: None`."
+      },
+      {
+        "text": "That the command line fell back to a local folder",
+        "correct": false,
+        "why": "The container list came from Azurite, not from disk."
+      },
+      {
+        "text": "That the account is now upgraded to Data Lake Storage",
+        "correct": false,
+        "why": "An upgrade is a control-plane operation no emulator answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkkmf3xs",
+    "version": 1,
+    "section": "the-dfs-endpoint",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did Azurite answer to `PUT .../lake2/raw?resource=directory`?",
+    "hint": "The command line printed `ErrorCode:None` for the same request.",
+    "choices": [
+      {
+        "text": "`201 Created`, with the directory as a zero-length blob",
+        "correct": false,
+        "why": "Nothing was created; the listing would have shown it."
+      },
+      {
+        "text": "`404 Not Found`, because `lake2` did not exist yet",
+        "correct": false,
+        "why": "`lake2` existed; the command before made it."
+      },
+      {
+        "text": "A bare `400 Bad Request`, empty body",
+        "correct": true,
+        "why": "Right, which is why the command line had no code to print."
+      },
+      {
+        "text": "`501 Not Implemented`, naming the Data Lake operation",
+        "correct": false,
+        "why": "That would be the helpful refusal; Azurite gave a bare 400."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqyxw27g",
+    "version": 1,
+    "section": "the-dfs-endpoint",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did `terraform validate` check in `~/azure/tf/lake`? Choose all that apply.",
+    "hint": "It reads files and the provider's schema, and asks Azure nothing.",
+    "choices": [
+      {
+        "text": "That `is_hns_enabled` is a boolean",
+        "correct": true,
+        "why": "Yes; a string there is a type error."
+      },
+      {
+        "text": "That a path's `resource` is `directory`",
+        "correct": true,
+        "why": "Yes; `file` was refused with the list of accepted values."
+      },
+      {
+        "text": "That the name `stquitandalakeprd` is free in Azure",
+        "correct": false,
+        "why": "Only Azure knows that, at creation."
+      },
+      {
+        "text": "That the analysts' group id exists in Microsoft Entra ID",
+        "correct": false,
+        "why": "The id in the lesson is made up, and validate accepted it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yh49q8dm",
+    "version": 1,
+    "section": "acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An analyst has `r` on `curated/orders/2026/10.parquet` and no entry on the directories above it. Can they read the file?",
+    "hint": "What does `x` mean on a directory?",
+    "choices": [
+      {
+        "text": "Yes; `r` on the file is what a read needs, whatever the directories above say",
+        "correct": false,
+        "why": "It is half of what it needs; the path has to be passable too."
+      },
+      {
+        "text": "Yes, if `other` has `r` on the container",
+        "correct": false,
+        "why": "`r` on a directory lists it; passing through needs `x`."
+      },
+      {
+        "text": "No; files cannot carry their own entries",
+        "correct": false,
+        "why": "Files and directories both carry lists."
+      },
+      {
+        "text": "No, not without `x` on each directory above",
+        "correct": true,
+        "why": "Right. `x` on every directory on the way, `r` on the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-frrftc21",
+    "version": 1,
+    "section": "acls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The analysts' group is added to the default list of `curated/` today. Yesterday's 10,000 files in it are still unreadable to them. Why?",
+    "hint": "When is a default list copied?",
+    "choices": [
+      {
+        "text": "Changes to access lists take up to a day to reach every file below a directory",
+        "correct": false,
+        "why": "Nothing propagates at all; the old files were never going to change."
+      },
+      {
+        "text": "The default list only applies to directories, never files",
+        "correct": false,
+        "why": "New files inside start with a copy of it too."
+      },
+      {
+        "text": "Default lists are copied once, at creation",
+        "correct": true,
+        "why": "Right. A recursive update is what changes existing items."
+      },
+      {
+        "text": "A role on the account denies them, and roles are checked first",
+        "correct": false,
+        "why": "Roles grant, they do not deny; and a role would affect today's files as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e86vrp7",
+    "version": 1,
+    "section": "acls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An engineer holds Storage Blob Data Contributor on the whole lake account. The list on `raw/` gives her group `r-x` only. Can she write in `raw/`?",
+    "hint": "Which layer is checked first, and what happens when it says yes?",
+    "choices": [
+      {
+        "text": "No; the list is more specific, so it wins",
+        "correct": false,
+        "why": "Specific does not win here; the role is checked first and grants."
+      },
+      {
+        "text": "Yes; the role grants it, so the list is not consulted",
+        "correct": true,
+        "why": "Right. A role assigned too broadly cannot be narrowed by a list."
+      },
+      {
+        "text": "Only after the default list of `raw/` is updated",
+        "correct": false,
+        "why": "The default list decides what new children start with, not who writes."
+      },
+      {
+        "text": "Only files she owns, as on Linux",
+        "correct": false,
+        "why": "Ownership is part of the lists, which were not consulted."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtrmf81y",
+    "version": 1,
+    "section": "acls",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each entry of an access control list to what it means.",
+    "hint": "Four entry types, as the provider listed them.",
+    "pairs": [
+      {
+        "left": "`user` with an id",
+        "right": "one named person or service principal"
+      },
+      {
+        "left": "`group` with an id",
+        "right": "a named group from Microsoft Entra ID"
+      },
+      {
+        "left": "`mask`",
+        "right": "the most any named entry may have"
+      },
+      {
+        "left": "`other`",
+        "right": "everybody else who reached the item"
+      }
+    ],
+    "right_distractors": [
+      "the account's shared key"
+    ]
+  },
+  {
+    "id": "ex-9t4cje05",
+    "version": 1,
+    "section": "trade-offs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda switched the hierarchical namespace on for an account and regrets it. What can it do?",
+    "hint": "The documentation names one direction only.",
+    "choices": [
+      {
+        "text": "Move the data to a new account",
+        "correct": true,
+        "why": "Right, like a change of kind or performance tier in lesson 1."
+      },
+      {
+        "text": "Switch it off in the account's settings",
+        "correct": false,
+        "why": "Once on, it stays on."
+      },
+      {
+        "text": "Run the upgrade in reverse",
+        "correct": false,
+        "why": "The upgrade goes from flat to hierarchical and has no reverse."
+      },
+      {
+        "text": "Create the containers again inside the same account",
+        "correct": false,
+        "why": "The setting belongs to the account, not to its containers."
+      }
+    ]
+  },
+  {
+    "id": "ex-hz7rssww",
+    "version": 1,
+    "section": "trade-offs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Quitanda keep the shop's exports on the flat account rather than in the lake?",
+    "hint": "What does each account need that the other does not?",
+    "choices": [
+      {
+        "text": "Flat accounts can store a gigabyte for less",
+        "correct": false,
+        "why": "The lesson argued from features, not from a price difference."
+      },
+      {
+        "text": "The lake cannot hold CSV files",
+        "correct": false,
+        "why": "A file is a file; the format does not matter to the namespace."
+      },
+      {
+        "text": "They gain nothing from it and could lose a protection feature",
+        "correct": true,
+        "why": "Right. Nothing the namespace adds is used there, and something it may lack is."
+      },
+      {
+        "text": "Azurite cannot emulate the lake",
+        "correct": false,
+        "why": "True of the lab, and no reason for a design on Azure."
+      }
+    ]
+  },
+  {
+    "id": "ex-whqnrem8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `rename.py` does for each blob in order.",
+    "hint": "The source goes last.",
+    "items": [
+      "List the names under the old prefix",
+      "Start a copy to the new name",
+      "Check that the copy's status is `success`",
+      "Delete the source blob"
+    ]
+  },
+  {
+    "id": "ex-1w5kpz1f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which operation needs the Data Lake endpoint, and so fails on Azurite?",
+    "hint": "Which one needs a directory to exist?",
+    "choices": [
+      {
+        "text": "Setting an access control list on the directory `raw/`",
+        "correct": true,
+        "why": "Right. Lists exist only with directories."
+      },
+      {
+        "text": "Creating a container called `lake2`",
+        "correct": false,
+        "why": "That went through the blob endpoint and worked."
+      },
+      {
+        "text": "Listing blobs under a prefix",
+        "correct": false,
+        "why": "A blob endpoint operation; the rename program did it a thousand times."
+      },
+      {
+        "text": "Copying a blob to a new name",
+        "correct": false,
+        "why": "Also the blob endpoint, and it worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb8x62yr",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Terraform, the attribute of `azurerm_storage_account` that switches the hierarchical namespace on is `___`.",
+    "hint": "Three letters for the namespace, between `is` and `enabled`.",
+    "blanks": [
+      {
+        "accept": [
+          "is_hns_enabled"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

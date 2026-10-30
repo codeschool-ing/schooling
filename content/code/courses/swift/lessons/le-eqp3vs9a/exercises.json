@@ -1,0 +1,629 @@
+[
+  {
+    "id": "ex-gpymknwk",
+    "version": 1,
+    "section": "data-race",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a data race?",
+    "choices": [
+      {
+        "text": "Two tasks finishing in a different order on each run",
+        "correct": false,
+        "why": "That is ordinary concurrency; lesson 14's group did it and was correct."
+      },
+      {
+        "text": "Two threads touching the same memory at once, one of them writing",
+        "correct": true,
+        "why": "Right: and the result depends on how their steps interleave."
+      },
+      {
+        "text": "A task that never finishes",
+        "correct": false,
+        "why": "That is a hang, not a race."
+      },
+      {
+        "text": "An `async` call without `await`",
+        "correct": false,
+        "why": "That is a compile error with a different message."
+      }
+    ]
+  },
+  {
+    "id": "ex-0c9bt5ez",
+    "version": 1,
+    "section": "data-race",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Race.swift` printed 677275, then 800000 twice. What does the two right answers tell you?",
+    "hint": "Section 02's worst thing about a race.",
+    "choices": [
+      {
+        "text": "The race fixed itself once the tasks warmed up",
+        "correct": false,
+        "why": "Nothing changed; the interleaving happened to be harmless."
+      },
+      {
+        "text": "The class is safe, and the first run hit a bug in Swift",
+        "correct": false,
+        "why": "The class has an unprotected `var` written from several threads."
+      },
+      {
+        "text": "Nothing: a racy program is right by luck",
+        "correct": true,
+        "why": "Right: a passing run proves nothing about the next one."
+      },
+      {
+        "text": "That eight tasks are too many for four cores",
+        "correct": false,
+        "why": "The count of tasks is not the bug; the shared `var` is."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9c7m0nt",
+    "version": 1,
+    "section": "data-race",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`minutes += m` looks like one step. How many steps is it, in section 02's account?",
+    "hint": "Read, …",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5b3g8c9z",
+    "version": 1,
+    "section": "data-race",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`swiftc` checks very little about concurrency unless you pass `-swift-version ___`.",
+    "blanks": [
+      {
+        "accept": [
+          "6"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-grbj202g",
+    "version": 1,
+    "section": "actors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an actor guarantee about its state?",
+    "choices": [
+      {
+        "text": "It is copied for each caller, like a struct",
+        "correct": false,
+        "why": "An actor is a reference type; everybody holds the same one."
+      },
+      {
+        "text": "Only its own code touches it, one call at a time",
+        "correct": true,
+        "why": "Right: callers send requests and the actor runs them in turn."
+      },
+      {
+        "text": "It can never change after `init`",
+        "correct": false,
+        "why": "`minutes` changed 800,000 times a run."
+      },
+      {
+        "text": "Its methods each run on a separate thread, reserved for the actor",
+        "correct": false,
+        "why": "No thread is promised; one call at a time is."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6h476z1",
+    "version": 1,
+    "section": "actors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From outside an actor, `week.minutes = 0`. What does the compiler say?",
+    "hint": "Calls and writes are treated differently.",
+    "choices": [
+      {
+        "text": "Add `await` in front of it",
+        "correct": false,
+        "why": "`await` fixes a call; a write from outside is refused whatever you write."
+      },
+      {
+        "text": "Refused outright",
+        "correct": true,
+        "why": "Right: ask the actor through a method such as `reset()`."
+      },
+      {
+        "text": "Nothing; actor properties are public",
+        "correct": false,
+        "why": "Isolation is not access control; lesson 17 is."
+      },
+      {
+        "text": "A warning in Swift 6 mode",
+        "correct": false,
+        "why": "It is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-jggm2pa0",
+    "version": 1,
+    "section": "actors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Inside the actor's own `add`, `minutes += m` has no `await`. Why is none needed there?",
+    "choices": [
+      {
+        "text": "`+=` is a single machine step",
+        "correct": false,
+        "why": "Section 02 showed it is three."
+      },
+      {
+        "text": "Integers are `Sendable`",
+        "correct": false,
+        "why": "True, and not the reason; the question is who is running."
+      },
+      {
+        "text": "That code already runs on the actor",
+        "correct": true,
+        "why": "Right: the `await` marks a crossing of the boundary, and there is none."
+      },
+      {
+        "text": "The compiler skips checks inside methods of an `actor` type",
+        "correct": false,
+        "why": "It checks them; there is simply nothing to cross."
+      }
+    ]
+  },
+  {
+    "id": "ex-dctkk3gm",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Booking.swift`, both bookings passed `free >= 80` with 100 free. Why?",
+    "hint": "What happens at an `await` inside an actor?",
+    "choices": [
+      {
+        "text": "A data race on `free`",
+        "correct": false,
+        "why": "Every access to `free` happened on the actor, one at a time."
+      },
+      {
+        "text": "Each call gave the actor up at its `await`, before subtracting",
+        "correct": true,
+        "why": "Right: the second check ran in the gap the first left open."
+      },
+      {
+        "text": "`guard` is not checked on actors",
+        "correct": false,
+        "why": "It was checked, twice, and saw 100 both times."
+      },
+      {
+        "text": "`async let` copies the actor",
+        "correct": false,
+        "why": "Both calls reached the same actor; it is a reference."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6ahzsg0",
+    "version": 1,
+    "section": "isolation",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Another call running on an actor while a first one is suspended at an `await` is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "reentrancy",
+          "re-entrancy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rz8j1ew1",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cache actor checks `if cache[id] == nil`, then `await`s a download, then stores it. Two requests for the same id arrive together. What does section 04 predict?",
+    "hint": "Check, await, act.",
+    "choices": [
+      {
+        "text": "The actor runs the second request after the first finishes completely",
+        "correct": false,
+        "why": "Only between awaits; the download is an await."
+      },
+      {
+        "text": "A compile error in Swift 6 mode",
+        "correct": false,
+        "why": "Booking.swift compiled in that mode; this is a logic bug."
+      },
+      {
+        "text": "Both see nil and both download",
+        "correct": true,
+        "why": "Right: the same shape as the double booking."
+      },
+      {
+        "text": "A crash when the second store overwrites the first",
+        "correct": false,
+        "why": "Overwriting a dictionary entry is legal; the waste is silent."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8nx95n4",
+    "version": 1,
+    "section": "isolation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put `Reserved.swift`'s `book` in the order its lines run.",
+    "hint": "Decide, then await.",
+    "items": [
+      "Check that `free >= minutes`",
+      "Subtract the minutes from `free`",
+      "`await saveToServer(course)`",
+      "Print the booking and return `true`"
+    ]
+  },
+  {
+    "id": "ex-0mk44x6f",
+    "version": 1,
+    "section": "sendable",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is `Sendable` with nothing written?",
+    "choices": [
+      {
+        "text": "A `String` + `Int` struct",
+        "correct": true,
+        "why": "Right: a value type of `Sendable` parts; it is copied when passed."
+      },
+      {
+        "text": "A class with one `var note`",
+        "correct": false,
+        "why": "Two holders could write the same object."
+      },
+      {
+        "text": "A closure that captures a class instance",
+        "correct": false,
+        "why": "That was exactly what `Sendables.swift` was refused for."
+      },
+      {
+        "text": "A non-final class with only `let`s",
+        "correct": false,
+        "why": "A class must also be `final` to declare it."
+      }
+    ]
+  },
+  {
+    "id": "ex-20s90zr8",
+    "version": 1,
+    "section": "sendable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Handover.swift` passes the same non-`Sendable` `Draft` into a detached task, and compiles. What changed from `Sendables.swift`?",
+    "choices": [
+      {
+        "text": "`Draft` became `final`",
+        "correct": false,
+        "why": "It was `final` in both."
+      },
+      {
+        "text": "The task is no longer detached",
+        "correct": false,
+        "why": "Both programs use `Task.detached`."
+      },
+      {
+        "text": "Nothing touches `draft` after it is sent",
+        "correct": true,
+        "why": "Right: region-based isolation allows a real hand-over."
+      },
+      {
+        "text": "It was compiled in Swift 5 mode",
+        "correct": false,
+        "why": "Both were compiled with `-swift-version 6`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tfw9gr1",
+    "version": 1,
+    "section": "sendable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`final class Course: Sendable { let name: String; var goal: Int }`. Why is it refused?",
+    "choices": [
+      {
+        "text": "A class can never be `Sendable`",
+        "correct": false,
+        "why": "A final class of `let`s can."
+      },
+      {
+        "text": "`goal` is a mutable stored property",
+        "correct": true,
+        "why": "Right: shared and writable is what `Sendable` forbids in a class."
+      },
+      {
+        "text": "`String` is not `Sendable`",
+        "correct": false,
+        "why": "It is."
+      },
+      {
+        "text": "A `Sendable` class needs an `init` with no parameters",
+        "correct": false,
+        "why": "Any `init` will do."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdznvy0d",
+    "version": 1,
+    "section": "sendable",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shared `Course` must change its goal while several tasks hold it. Which are sound designs? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Make `Course` an actor",
+        "correct": true,
+        "why": "Yes: shared, changing state is what an actor is for."
+      },
+      {
+        "text": "Make it a struct and send copies",
+        "correct": true,
+        "why": "Yes: each task then has its own value."
+      },
+      {
+        "text": "Mark it `@unchecked Sendable` and change `goal` freely",
+        "correct": false,
+        "why": "No: that silences the check without protecting anything."
+      },
+      {
+        "text": "Compile the module in Swift 5 mode",
+        "correct": false,
+        "why": "No: the race stays, unreported."
+      }
+    ]
+  },
+  {
+    "id": "ex-06qmrsgx",
+    "version": 1,
+    "section": "main-actor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are SwiftUI's views marked `@MainActor`?",
+    "choices": [
+      {
+        "text": "They run faster when every view is kept on the main thread",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "So that they are `Sendable`",
+        "correct": false,
+        "why": "Isolation and `Sendable` are different promises."
+      },
+      {
+        "text": "Only the main thread is allowed to touch the interface",
+        "correct": true,
+        "why": "Right: and the compiler now holds code to that."
+      },
+      {
+        "text": "Linux requires it",
+        "correct": false,
+        "why": "SwiftUI is not on Linux at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4dt33jc",
+    "version": 1,
+    "section": "main-actor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Inherit.swift`, which task is refused for setting `screen.title`?",
+    "hint": "What does each kind inherit?",
+    "choices": [
+      {
+        "text": "Both",
+        "correct": false,
+        "why": "The plain `Task` compiled."
+      },
+      {
+        "text": "Only `Task.detached`",
+        "correct": true,
+        "why": "Right: it inherits no actor, so it is nonisolated."
+      },
+      {
+        "text": "Only the plain `Task`",
+        "correct": false,
+        "why": "It inherits the main actor from `buttonTapped`."
+      },
+      {
+        "text": "Neither, since `buttonTapped` is `@MainActor`",
+        "correct": false,
+        "why": "A detached task does not run on the actor of its creator."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5sq9xdc",
+    "version": 1,
+    "section": "main-actor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen update loads data for two seconds and then sets a label. Where should each part run?",
+    "hint": "Section 06's shape of nearly every update.",
+    "choices": [
+      {
+        "text": "Both on the main actor, so that the order is clear",
+        "correct": false,
+        "why": "Loading on the main actor holds up drawing for no reason."
+      },
+      {
+        "text": "Both in a detached task",
+        "correct": false,
+        "why": "Setting the label there is refused."
+      },
+      {
+        "text": "The load away from it, the label on it",
+        "correct": true,
+        "why": "Right: the main actor is free during the `await`."
+      },
+      {
+        "text": "The label first, then the load",
+        "correct": false,
+        "why": "The label needs what the load returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsxbz198",
+    "version": 1,
+    "section": "language-modes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of compiling to the language mode it gets, unless told otherwise.",
+    "pairs": [
+      {
+        "left": "`swiftc Race.swift`",
+        "right": "Swift 5"
+      },
+      {
+        "left": "`swiftc -swift-version 6 Race.swift`",
+        "right": "Swift 6"
+      },
+      {
+        "left": "A package at tools version 6.0",
+        "right": "Swift 6, every target"
+      },
+      {
+        "left": "A 6.0 target with `.swiftLanguageMode(.v5)`",
+        "right": "Swift 5, that target"
+      }
+    ],
+    "right_distractors": [
+      "Swift 4"
+    ]
+  },
+  {
+    "id": "ex-3hyzq2mx",
+    "version": 1,
+    "section": "language-modes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `.enableUpcomingFeature(\"ApproachableConcurrency\")` in a fresh manifest do?",
+    "choices": [
+      {
+        "text": "Switches off the Swift 6 data-race checks",
+        "correct": false,
+        "why": "A race is still an error with it."
+      },
+      {
+        "text": "Adopts some planned defaults early",
+        "correct": true,
+        "why": "Right: a bundle of upcoming features from Swift 6.2 that needs fewer annotations on one actor."
+      },
+      {
+        "text": "Moves the target to Swift 5 mode",
+        "correct": false,
+        "why": "That is `.swiftLanguageMode(.v5)`."
+      },
+      {
+        "text": "Downloads a newer compiler for that target",
+        "correct": false,
+        "why": "A manifest setting cannot change the toolchain."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qmp1sp6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves a module to Swift 6 mode and gets forty concurrency errors. Which response matches this lesson?",
+    "choices": [
+      {
+        "text": "Mark every class `@unchecked Sendable` so it builds",
+        "correct": false,
+        "why": "That stops the compiler looking, and the races stay."
+      },
+      {
+        "text": "Read each one for what crosses and who else reaches it, and fix those",
+        "correct": true,
+        "why": "Right: each error names a place a race can happen."
+      },
+      {
+        "text": "Ignore them: a test suite that passes is proof enough",
+        "correct": false,
+        "why": "`Race.swift` passed two runs of three."
+      },
+      {
+        "text": "Wrap every method in `Task.detached`",
+        "correct": false,
+        "why": "That removes isolation rather than adding it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r81pt7jp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tool to the problem it solves.",
+    "pairs": [
+      {
+        "left": "`actor`",
+        "right": "Shared state written by several tasks"
+      },
+      {
+        "left": "`Sendable`",
+        "right": "What may cross between tasks"
+      },
+      {
+        "left": "`@MainActor`",
+        "right": "Code that touches the interface"
+      },
+      {
+        "left": "`-swift-version 6`",
+        "right": "Turning the checks on with `swiftc`"
+      }
+    ],
+    "right_distractors": [
+      "Running two loads at once"
+    ]
+  }
+]

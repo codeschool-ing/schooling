@@ -1,0 +1,552 @@
+[
+  {
+    "id": "ex-q81t69te",
+    "version": 1,
+    "section": "four-meters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which class does `objects.list` fall in on Cloud Storage's pricing page?",
+    "hint": "Listing reads names, and the page still does not file it with reading.",
+    "choices": [
+      {
+        "text": "Class B, with every other request that only reads",
+        "correct": false,
+        "why": "It only reads, and the page still files it with the writes."
+      },
+      {
+        "text": "Class A, at 0.005 a thousand",
+        "correct": true,
+        "why": "Right. Listing objects and listing buckets are both Class A."
+      },
+      {
+        "text": "Free, like deleting",
+        "correct": false,
+        "why": "Deleting is free; listing is not."
+      },
+      {
+        "text": "Billed per GiB of names returned",
+        "correct": false,
+        "why": "An operation is priced per request, whatever it returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-3r4pfhhr",
+    "version": 1,
+    "section": "four-meters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 0.035 USD per GiB-month and 0.0004 USD per 1,000 Class B operations, how many Class B operations cost the same as storing 1 GiB for a month?",
+    "hint": "Divide the storage price by the price of one operation.",
+    "value": 87500,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-ej33f5xs",
+    "version": 1,
+    "section": "four-meters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these prices on the storage pricing page change when the bucket moves from `us-east1` to `southamerica-east1`?",
+    "hint": "Look at which tables the page prints per region.",
+    "choices": [
+      {
+        "text": "Storage, operations and retrieval, since the whole page is regional",
+        "correct": false,
+        "why": "Only one of the three tables is printed per region."
+      },
+      {
+        "text": "The operation prices, but not the storage",
+        "correct": false,
+        "why": "It is the other way round."
+      },
+      {
+        "text": "The storage price per GiB-month",
+        "correct": true,
+        "why": "Right. Operations and retrieval have one table for every single-region bucket."
+      },
+      {
+        "text": "None of them; Cloud Storage has one price everywhere",
+        "correct": false,
+        "why": "Storage is printed per region: 0.035 in São Paulo."
+      }
+    ]
+  },
+  {
+    "id": "ex-143jsrte",
+    "version": 1,
+    "section": "four-meters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request to read an object comes back 404. What does the pricing page say it costs?",
+    "hint": "There is a note under the table of classes.",
+    "choices": [
+      {
+        "text": "A Class B operation, since a read is generally Class B",
+        "correct": false,
+        "why": "It was a read that failed; the note covers exactly this."
+      },
+      {
+        "text": "Generally nothing; a 4xx is not charged, except a website bucket's 404 page",
+        "correct": true,
+        "why": "Right. Failed requests are generally free."
+      },
+      {
+        "text": "A Class A operation, the price of an error",
+        "correct": false,
+        "why": "There is no class for errors."
+      },
+      {
+        "text": "Double, a read plus the error",
+        "correct": false,
+        "why": "Nothing on the page charges twice for one request."
+      }
+    ]
+  },
+  {
+    "id": "ex-tg1fyyw4",
+    "version": 1,
+    "section": "small-objects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Twenty files are copied with one `gcloud storage cp taps/*.json gs://…/`. How many `objects.insert` does the emulator log?",
+    "hint": "One command, and count the objects.",
+    "choices": [
+      {
+        "text": "One, since it was one command",
+        "correct": false,
+        "why": "A command can make many requests; the log counted them."
+      },
+      {
+        "text": "Twenty, one per tap that was sent",
+        "correct": true,
+        "why": "Right. Each object is its own insert, a Class A each."
+      },
+      {
+        "text": "Forty, one per file and one per check",
+        "correct": false,
+        "why": "The forty were `getStorageLayout`, not inserts."
+      },
+      {
+        "text": "Two, the packed file and its listing",
+        "correct": false,
+        "why": "That was the packed run."
+      }
+    ]
+  },
+  {
+    "id": "ex-6my479tf",
+    "version": 1,
+    "section": "small-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The emulator answered 40 `buckets.getStorageLayout` requests with 404. On a real bucket, what would they be?",
+    "hint": "The emulator does not implement the method; Cloud Storage does.",
+    "choices": [
+      {
+        "text": "Answered with 200 and billed as Class B",
+        "correct": true,
+        "why": "Right. The pricing page lists `getStorageLayout` in Class B."
+      },
+      {
+        "text": "Still 404, since the bucket has no hierarchical namespace",
+        "correct": false,
+        "why": "The method answers for every bucket; a flat one says it is flat."
+      },
+      {
+        "text": "Free, being a question about the bucket and not about an object",
+        "correct": false,
+        "why": "Bucket `get`s are Class B like object ones."
+      },
+      {
+        "text": "Class A, because they come before a write",
+        "correct": false,
+        "why": "The class follows the method, not what comes next."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwdvssdx",
+    "version": 1,
+    "section": "small-objects",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dashboard reads 2,000,000 objects once a day for 30 days at 0.0004 USD per 1,000 Class B operations. How many USD do the reads cost?",
+    "hint": "Sixty million reads.",
+    "value": 24,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-cebchfwb",
+    "version": 1,
+    "section": "small-objects",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these produce many small objects? Choose all that apply.",
+    "hint": "The lesson names three sources and one cure.",
+    "choices": [
+      {
+        "text": "A stream writer flushing whatever arrived in the last few seconds",
+        "correct": true,
+        "why": "Yes: a file per flush."
+      },
+      {
+        "text": "A prefix per hour per customer",
+        "correct": true,
+        "why": "Yes: partitions too fine for the data."
+      },
+      {
+        "text": "One object per tap in the app",
+        "correct": true,
+        "why": "Yes: convenient to write and ruinous to read."
+      },
+      {
+        "text": "A nightly job that joins the day's objects with `objects.compose`",
+        "correct": false,
+        "why": "That is a cure, not a cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-yd0r31qp",
+    "version": 1,
+    "section": "to-the-internet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A bucket in `southamerica-east1` serves its first GiB of the month to customers in Brazil. What does the transfer cost?",
+    "hint": "Check where the free allowance applies.",
+    "choices": [
+      {
+        "text": "Nothing, the first 100 GB of every month are free",
+        "correct": false,
+        "why": "The Always Free allowance applies to three US regions only."
+      },
+      {
+        "text": "0.12 USD, the worldwide price",
+        "correct": true,
+        "why": "Right. Brazil is in the worldwide band, and the allowance does not reach São Paulo."
+      },
+      {
+        "text": "0.19 USD, the Premium Tier price for São Paulo",
+        "correct": false,
+        "why": "That is a virtual machine's table, not the bucket's."
+      },
+      {
+        "text": "0.035 USD, the storage price",
+        "correct": false,
+        "why": "Transfer has its own meter."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvyqtthz",
+    "version": 1,
+    "section": "to-the-internet",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Using Cloud Storage's internet tiers (0.12 USD per GiB for the first 10,240 GiB, 0.11 for the next 143,360), what does sending 15,360 GiB in one month cost, in USD?",
+    "hint": "10,240 at the first price, the rest at the second.",
+    "value": 1792,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-3kfeka77",
+    "version": 1,
+    "section": "to-the-internet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Behind Cloud CDN, the `reads.py` line for the images shows requests going UP from 21.47 to 41.34. Why?",
+    "hint": "Count what every download becomes.",
+    "choices": [
+      {
+        "text": "The bucket answers more reads, since the cache asks twice",
+        "correct": false,
+        "why": "The bucket answers fewer: only the misses."
+      },
+      {
+        "text": "Every download is a cache lookup, at 0.0075 per 10,000",
+        "correct": true,
+        "why": "Right. 53.7 million lookups are 40.27, more than the bucket's own reads cost."
+      },
+      {
+        "text": "Cloud CDN bills its fills as Class A",
+        "correct": false,
+        "why": "Cache fill is billed per GiB, in the transfer column."
+      },
+      {
+        "text": "The program counts each download twice by mistake",
+        "correct": false,
+        "why": "It counts the misses once and the lookups once; both are real charges."
+      }
+    ]
+  },
+  {
+    "id": "ex-vs7kpab7",
+    "version": 1,
+    "section": "to-the-internet",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the 1,615.32 of the Cloud CDN line a floor rather than the month's cost?",
+    "hint": "Something sits between the cache and the bucket.",
+    "choices": [
+      {
+        "text": "Because cache fill is not counted",
+        "correct": false,
+        "why": "It is counted: 1 TiB at 0.02, 20.48."
+      },
+      {
+        "text": "Because the external Application Load Balancer that serves the bucket has charges of its own, left out",
+        "correct": true,
+        "why": "Right. The label says so, and its prices are on the network pricing page."
+      },
+      {
+        "text": "Because Cloud CDN has a minimum monthly fee",
+        "correct": false,
+        "why": "The CDN page prints no minimum."
+      },
+      {
+        "text": "Because the storage of the images doubles at the edge",
+        "correct": false,
+        "why": "Cached copies are not billed as Cloud Storage storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-rd960a79",
+    "version": 1,
+    "section": "inside-google-cloud",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Dataproc cluster in `southamerica-east1-c` reads 3 TiB from a bucket in `southamerica-east1`. What is the transfer charge?",
+    "hint": "Zones of one region are one location.",
+    "choices": [
+      {
+        "text": "0.01 a GiB, for crossing a zone",
+        "correct": false,
+        "why": "That is between two machines; for a bucket, zones do not count."
+      },
+      {
+        "text": "0.14 a GiB, from Latin America",
+        "correct": false,
+        "why": "That is for another region."
+      },
+      {
+        "text": "Nothing; only the operations are billed",
+        "correct": true,
+        "why": "Right. Same location is free."
+      },
+      {
+        "text": "0.12 a GiB, as if it went to the internet",
+        "correct": false,
+        "why": "It never left Google Cloud."
+      }
+    ]
+  },
+  {
+    "id": "ex-rme72fky",
+    "version": 1,
+    "section": "inside-google-cloud",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Private Google ___ lets machines with no external address reach Cloud Storage without going through Cloud NAT, so the 0.045 a GiB of NAT processing disappears.",
+    "hint": "Two words in the setting's name; the blank is the second.",
+    "blanks": [
+      {
+        "accept": [
+          "Access"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hmxmk941",
+    "version": 1,
+    "section": "inside-google-cloud",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bucket in São Paulo is read by machines in `southamerica-west1` (Santiago) and in `us-central1` (Iowa). How do the two transfer prices compare?",
+    "hint": "Read the Latin America row of the matrix.",
+    "choices": [
+      {
+        "text": "Santiago is cheaper, being on the same continent",
+        "correct": false,
+        "why": "A North American bucket gets that discount; a Latin American one does not."
+      },
+      {
+        "text": "Iowa is cheaper, being where Google's network is densest",
+        "correct": false,
+        "why": "Every cell of the row is the same."
+      },
+      {
+        "text": "Both are 0.14 a GiB",
+        "correct": true,
+        "why": "Right. Every destination from a Latin American bucket costs 0.14."
+      },
+      {
+        "text": "Both are free, being inside Google Cloud",
+        "correct": false,
+        "why": "Only the same location is free."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h65ce63",
+    "version": 1,
+    "section": "requester-pays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a Requester Pays bucket, which charge stays with the bucket's owner?",
+    "hint": "One meter is about keeping, not using.",
+    "choices": [
+      {
+        "text": "The operations",
+        "correct": false,
+        "why": "The requester pays for those."
+      },
+      {
+        "text": "The network transfer",
+        "correct": false,
+        "why": "The requester pays for that too."
+      },
+      {
+        "text": "Storage, the keeping of the data",
+        "correct": true,
+        "why": "Right. The owner keeps paying to keep the data; reading it moves to the reader."
+      },
+      {
+        "text": "Nothing: every line moves to the requester",
+        "correct": false,
+        "why": "Storage, and early deletion, stay with the owner."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6bhv492",
+    "version": 1,
+    "section": "requester-pays",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`gcloud storage cat --billing-project=planner-dev …` sent no `X-Goog-User-Project` header in this lab. What explains it?",
+    "hint": "Look at what the lab told `gcloud` about credentials.",
+    "choices": [
+      {
+        "text": "The emulator strips the header before logging",
+        "correct": false,
+        "why": "The count was taken from `gcloud`'s own `--log-http`, before the emulator."
+      },
+      {
+        "text": "`gcloud` adds that header beside the credentials, and this lab sends none",
+        "correct": true,
+        "why": "Right. `CLOUDSDK_AUTH_DISABLE_CREDENTIALS` turns both off."
+      },
+      {
+        "text": "`--billing-project` is ignored by `gcloud storage`",
+        "correct": false,
+        "why": "It is a flag every `gcloud` command takes."
+      },
+      {
+        "text": "The bucket was not Requester Pays, so `gcloud` saw no need",
+        "correct": false,
+        "why": "`gcloud` sends it whatever the bucket's setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-tefd92d0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each route of a byte out of a bucket in `southamerica-east1` to its price per GiB.",
+    "hint": "One of them is free, and one is a machine's price, not a bucket's.",
+    "pairs": [
+      {
+        "left": "To customers in Brazil, first 10 TiB",
+        "right": "0.12"
+      },
+      {
+        "left": "To a machine in the same region",
+        "right": "0.00"
+      },
+      {
+        "left": "To a bucket in `us-east1`",
+        "right": "0.14"
+      },
+      {
+        "left": "Through Cloud NAT to the bucket next door",
+        "right": "0.045"
+      }
+    ],
+    "right_distractors": [
+      "0.035"
+    ]
+  },
+  {
+    "id": "ex-hkk3mf3q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order these monthly costs from the `reads.py` table, largest first.",
+    "hint": "Transfer, then requests, then storage.",
+    "items": [
+      "The images' transfer to the internet",
+      "The taps' requests, read daily",
+      "The images' storage",
+      "The taps' storage"
+    ]
+  },
+  {
+    "id": "ex-ayrnncn5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's taps cost 34.57 a month, almost all requests. Which change cuts the most?",
+    "hint": "Look at what the requests are counting.",
+    "choices": [
+      {
+        "text": "Moving the taps to Nearline, which stores for less",
+        "correct": false,
+        "why": "Nearline's operations cost more, and there is a retrieval fee on every read."
+      },
+      {
+        "text": "Writing them as 64 MiB files, or composing them nightly",
+        "correct": true,
+        "why": "Right. 123 objects instead of 2 million: 0.27 a month."
+      },
+      {
+        "text": "Reading them with the Python client instead of `gcloud`",
+        "correct": false,
+        "why": "Each object is still one read, whatever the client."
+      },
+      {
+        "text": "Putting Cloud CDN in front of the bucket",
+        "correct": false,
+        "why": "The dashboard is inside Google Cloud; a cache for viewers does not help it."
+      }
+    ]
+  }
+]

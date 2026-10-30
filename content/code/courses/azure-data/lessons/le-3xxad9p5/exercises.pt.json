@@ -1,0 +1,379 @@
+{
+  "ex-yctb21g8": {
+    "prompt": "Dois itens do contêiner `orders` se chamam `o-1001`. Como isso é possível?",
+    "hint": "Olhe o `customerId` deles.",
+    "choices": [
+      {
+        "text": "Um `id` só é único dentro de um valor da chave de partição",
+        "why": "Isso: a identidade é o par."
+      },
+      {
+        "text": "O emulador não confere `id`s, e o Azure recusaria o segundo",
+        "why": "O emulador recusou uma duplicata de verdade com 409."
+      },
+      {
+        "text": "O `upsert_item` renomeou o segundo em silêncio",
+        "why": "Os dois mantiveram o `id`; diferem no cliente."
+      },
+      {
+        "text": "`id`s são únicos por banco, e estes estão em dois",
+        "why": "Um banco, um contêiner."
+      }
+    ]
+  },
+  "ex-5bkk5yje": {
+    "prompt": "Do que uma leitura pontual, `read_item`, precisa para achar um pedido?",
+    "hint": "As duas metades da identidade.",
+    "choices": [
+      {
+        "text": "Só o `id`",
+        "why": "Dois itens podem compartilhá-lo."
+      },
+      {
+        "text": "O `_rid` que o serviço atribuiu",
+        "why": "Esse é interno; a leitura do `model.py` usou `id` e chave."
+      },
+      {
+        "text": "Uma consulta com `enable_cross_partition_query`",
+        "why": "Isso é consulta, não leitura pontual."
+      },
+      {
+        "text": "O `id` junto com o valor da chave de partição",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-20y3xeme": {
+    "prompt": "Que status HTTP o emulador respondeu para um item de 2,1 MB?",
+    "hint": "Payload Too Large."
+  },
+  "ex-gmbah8sj": {
+    "prompt": "A Quitanda quer que cada pedido guarde uma lista de todo evento da vida dele, acrescentada para sempre. O que vai acontecer?",
+    "hint": "Um item tem teto.",
+    "choices": [
+      {
+        "text": "Um pedido em algum momento passa de 2 MB e a próxima escrita falha",
+        "why": "Isso: uma lista sem limite dentro de um item é um desenho que falha numa escrita."
+      },
+      {
+        "text": "O Cosmos DB move a lista para um segundo item quando ela enche",
+        "why": "Nada divide um item por você."
+      },
+      {
+        "text": "A partição lógica chega a 20 GB no primeiro ano",
+        "why": "Os eventos de um pedido estão longe de 20 GB; o limite do item vem antes."
+      },
+      {
+        "text": "Nada; itens não têm limite de tamanho",
+        "why": "O emulador recusou 2,1 MB com 413."
+      }
+    ]
+  },
+  "ex-20zt3g8r": {
+    "prompt": "O que é uma partição lógica?",
+    "hint": "Você a escolhe ao escolher a chave.",
+    "choices": [
+      {
+        "text": "Um pedaço do armazenamento e da computação do Azure",
+        "why": "Isso é partição física."
+      },
+      {
+        "text": "Uma faixa do hash, dividida conforme o contêiner cresce",
+        "why": "Uma partição lógica nunca é dividida."
+      },
+      {
+        "text": "Todo item que compartilha um valor da chave de partição",
+        "why": "Isso."
+      },
+      {
+        "text": "Um contêiner dentro de um banco",
+        "why": "Um contêiner guarda muitas partições lógicas."
+      }
+    ]
+  },
+  "ex-zzdcp12y": {
+    "prompt": "No máximo quantos GB uma partição lógica pode guardar, segundo a documentação?",
+    "hint": "Ela nunca é dividida, então tem um limite rígido."
+  },
+  "ex-0gb176sf": {
+    "prompt": "Um contêiner tem 40.000 RU/s em quatro partições físicas. Metade de todas as escritas leva um valor de chave só. Quantos RU/s essas escritas podem usar no máximo?",
+    "hint": "Um valor mora numa partição física, e a vazão é dividida por igual."
+  },
+  "ex-q5xp38qb": {
+    "prompt": "Um contêiner sofre throttling toda noite enquanto o uso médio fica abaixo de um terço do que ele paga. Qual a causa mais provável?",
+    "hint": "Média entre partições, limites por partição.",
+    "choices": [
+      {
+        "text": "Pouca vazão, comprada para a média",
+        "why": "A média diz que sobra vazão; ela está no lugar errado."
+      },
+      {
+        "text": "Os itens passam de 2 MB",
+        "why": "Isso falha escritas com 413, não com throttling."
+      },
+      {
+        "text": "Partições físicas demais, cada uma com pouco a fazer",
+        "why": "Partições ociosas não causam throttling na ocupada; a parte da ocupada causa."
+      },
+      {
+        "text": "Uma partição quente",
+        "why": "Isso: um valor de chave leva a carga da noite."
+      }
+    ]
+  },
+  "ex-qydfqsn6": {
+    "prompt": "O `reads.py` mostrou 1 RU para toda leitura. O que isso diz sobre os preços do Azure?",
+    "hint": "A lição 1 encontrou este número.",
+    "choices": [
+      {
+        "text": "Que as três leituras custam o mesmo no Azure",
+        "why": "No Azure elas diferem; o 1 do emulador é um marcador."
+      },
+      {
+        "text": "Que consultas são de graça abaixo de mil itens",
+        "why": "Nada aqui mediu preço."
+      },
+      {
+        "text": "Nada: o emulador cobra 1 por tudo",
+        "why": "Isso; a lição 13 ensina as unidades reais pela documentação."
+      },
+      {
+        "text": "Que uma leitura pontual custa o mesmo que escrever um item",
+        "why": "Nenhuma escrita foi medida."
+      }
+    ]
+  },
+  "ex-fcdmepbk": {
+    "prompt": "Por que a consulta entre partições levou uma requisição aqui, quando no Azure levaria mais?",
+    "hint": "Leia a última linha da saída.",
+    "choices": [
+      {
+        "text": "A biblioteca juntou as partições numa requisição",
+        "why": "Ela manda uma por partição; havia uma."
+      },
+      {
+        "text": "O emulador tem uma única partição física",
+        "why": "Isso: `feed ranges in the container: 1`."
+      },
+      {
+        "text": "O `enable_cross_partition_query` desfaz o espalhamento",
+        "why": "Ele só permite que a consulta seja enviada."
+      },
+      {
+        "text": "A consulta só casou com 40 itens",
+        "why": "O espalhamento segue as partições, não o tamanho do resultado."
+      }
+    ]
+  },
+  "ex-zby45r74": {
+    "prompt": "No Azure, ordene estas leituras dos mesmos dados da mais barata à mais cara.",
+    "hint": "Quanto mais o motor tem de fazer e visitar, mais caro.",
+    "items": [
+      "Uma leitura pontual por `id` e chave",
+      "Uma consulta que nomeia o valor da chave",
+      "Uma consulta por outro campo, entre partições"
+    ]
+  },
+  "ex-0q3bfjkv": {
+    "prompt": "A biblioteca Python se recusa a enviar uma consulta que visita todas as partições a não ser que a chamada ponha a opção ___ em `True`.",
+    "hint": "Quatro palavras unidas por sublinhados, como o `reads.py` escreveu.",
+    "blanks": [
+      {
+        "accept": [
+          "enable_cross_partition_query"
+        ]
+      }
+    ]
+  },
+  "ex-62fwzzzg": {
+    "prompt": "`/placedDate` teve 365 valores de 274 pedidos cada. Por que ainda é uma chave ruim para pedidos?",
+    "hint": "Olhe a coluna da hora quente.",
+    "choices": [
+      {
+        "text": "Toda escrita da noite cai na data de hoje",
+        "why": "Isso: 100% da noite num valor só."
+      },
+      {
+        "text": "As partições passam de 20 GB dentro do ano",
+        "why": "274 pedidos por dia é pouco."
+      },
+      {
+        "text": "Datas não podem ser chave de partição no Cosmos DB",
+        "why": "Qualquer caminho de string pode."
+      },
+      {
+        "text": "Valores demais, o que desperdiça partições físicas",
+        "why": "365 valores é pouco, não muito."
+      }
+    ]
+  },
+  "ex-18szbbgz": {
+    "prompt": "Além dos três valores, o que torna `/status` errado como chave de partição de um jeito que a tabela não mostra?",
+    "hint": "O que acontece com um pedido entre `paid` e `delivered`?",
+    "choices": [
+      {
+        "text": "Strings de status são curtas demais para um bom hash",
+        "why": "O hash não liga para o tamanho."
+      },
+      {
+        "text": "Consultas por status são recusadas no Cosmos DB",
+        "why": "São permitidas; entre partições se o status não for a chave."
+      },
+      {
+        "text": "Ele muda durante a vida do pedido, e levar um item para outra chave é apagá-lo e escrevê-lo de novo",
+        "why": "Isso: um delete e uma escrita nova toda vez."
+      },
+      {
+        "text": "O status não é único, e uma chave precisa ser",
+        "why": "A chave é feita para repetir; o que é único dentro dela é o `id`."
+      }
+    ]
+  },
+  "ex-c7nhk4pw": {
+    "prompt": "A cerca de 1 KB por pedido, aproximadamente quantos milhões de pedidos enchem os 20 GB de uma partição lógica? Use 1 GB = 1.000.000 KB.",
+    "hint": "Vinte gigabytes de kilobytes."
+  },
+  "ex-jbapnmva": {
+    "prompt": "O `rekey.py` pediu ao emulador para mudar a chave de partição para `/placedDate`. O que aconteceu?",
+    "hint": "Compare `before` e `after`.",
+    "choices": [
+      {
+        "text": "O emulador recusou com um erro",
+        "why": "Ele voltou sem erro."
+      },
+      {
+        "text": "A chave mudou, e os itens foram redistribuídos",
+        "why": "O `after` ainda dizia `/customerId`."
+      },
+      {
+        "text": "Respondeu sucesso e manteve `/customerId`",
+        "why": "Isso: um sucesso que não fez nada."
+      },
+      {
+        "text": "Um contêiner novo foi criado ao lado do antigo",
+        "why": "Nenhum contêiner foi criado; o antigo não mudou."
+      }
+    ]
+  },
+  "ex-bntzydw0": {
+    "prompt": "Com a chave `/customerId` e depois `/orderMonth`, o que uma leitura pontual precisa nomear?",
+    "hint": "O `hier.py` disse.",
+    "choices": [
+      {
+        "text": "O `id` e o cliente",
+        "why": "Isso é um prefixo, suficiente para uma consulta e não para leitura pontual."
+      },
+      {
+        "text": "O `id`, o cliente e o mês",
+        "why": "Isso: todos os níveis."
+      },
+      {
+        "text": "Só o mês, já que é o nível mais fundo",
+        "why": "Um nível não pode ser nomeado sem os de cima."
+      },
+      {
+        "text": "Só o `id`, já que a chave é hierárquica",
+        "why": "A hierarquia aumenta o que uma leitura precisa nomear."
+      }
+    ]
+  },
+  "ex-2nsrsnnt": {
+    "prompt": "No máximo quantos níveis uma chave de partição hierárquica pode ter?",
+    "hint": "A primeira frase da seção."
+  },
+  "ex-hj10cd8w": {
+    "prompt": "Quando uma chave hierárquica vale o custo, em vez de um `/customerId` simples?",
+    "hint": "Que problema o segundo nível resolve?",
+    "choices": [
+      {
+        "text": "Quando um cliente estoura uma partição lógica",
+        "why": "Isso."
+      },
+      {
+        "text": "Sempre que um contêiner tem mais de um tipo de item",
+        "why": "Essa é uma questão de desenho, não de tamanho."
+      },
+      {
+        "text": "Quando as consultas precisam ordenar por mês",
+        "why": "Ordenar é o `ORDER BY` de uma consulta, não uma chave."
+      },
+      {
+        "text": "Quando o emulador tem uma única partição física",
+        "why": "A forma do emulador não diz nada sobre a necessidade no Azure."
+      }
+    ]
+  },
+  "ex-fx0afdhq": {
+    "prompt": "Ligue cada chave candidata para pedidos ao veredito dela no `spread.py`.",
+    "hint": "Um veredito à direita não serve para nenhuma.",
+    "pairs": [
+      {
+        "left": "/id",
+        "right": "espalha perfeitamente, não responde pergunta de cliente"
+      },
+      {
+        "left": "/customerId",
+        "right": "responde a pergunta do app numa partição"
+      },
+      {
+        "left": "/placedDate",
+        "right": "todas as escritas da noite num valor"
+      },
+      {
+        "left": "/status",
+        "right": "três valores, um com quase tudo"
+      }
+    ],
+    "right_distractors": [
+      "mais de 2 MB por item"
+    ]
+  },
+  "ex-zf91y2pv": {
+    "prompt": "Quais destes o emulador mostrou fielmente? Escolha todos os que se aplicam.",
+    "hint": "Dois dos cinco são simplificações dele.",
+    "choices": [
+      {
+        "text": "Um `id` único por valor de chave de partição",
+        "why": "Sim: dois `o-1001`, e um 409 para um terceiro."
+      },
+      {
+        "text": "O teto de 2 MB por item",
+        "why": "Sim: 413."
+      },
+      {
+        "text": "Chaves hierárquicas e consultas por prefixo",
+        "why": "Sim: `MultiHash` aceito."
+      },
+      {
+        "text": "O preço de uma consulta entre partições",
+        "why": "Ele cobrou 1 por tudo."
+      },
+      {
+        "text": "A recusa de mudar uma chave de partição",
+        "why": "Ele respondeu sucesso e manteve a chave antiga."
+      }
+    ]
+  },
+  "ex-hgcnt881": {
+    "prompt": "O app da Quitanda também precisa de uma tela com todo pedido feito na última hora, para o armazém. Com `/customerId` como chave, quanto essa tela custa?",
+    "hint": "Que partições guardam os pedidos da última hora?",
+    "choices": [
+      {
+        "text": "Uma consulta numa partição, já que a hora é recente",
+        "why": "Pedidos recentes estão espalhados por milhares de clientes."
+      },
+      {
+        "text": "Uma leitura pontual por pedido",
+        "why": "A tela não conhece os `id`s de antemão."
+      },
+      {
+        "text": "Nada a mais: o Cosmos DB indexa a data",
+        "why": "Um índice ajuda dentro de cada partição; a consulta continua visitando todas."
+      },
+      {
+        "text": "Uma consulta entre partições, mais cara conforme o contêiner se divide",
+        "why": "Isso; uma segunda pergunta, mais rara, paga pela chave escolhida para a primeira."
+      }
+    ]
+  }
+}

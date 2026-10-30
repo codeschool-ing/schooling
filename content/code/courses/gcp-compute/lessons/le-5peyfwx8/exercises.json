@@ -1,0 +1,641 @@
+[
+  {
+    "id": "ex-9rfpfwjt",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Cloud Run service deploys and passes its health check, then hangs on its first query to a database at 10.20.0.3. What is missing?",
+    "hint": "Where does the instance run, and where is the database?",
+    "choices": [
+      {
+        "text": "A firewall rule allowing port 5432 from the internet",
+        "correct": false,
+        "why": "Opening the database to the internet is the opposite of the fix, and the instance still has no private route."
+      },
+      {
+        "text": "A route from the instance into the VPC",
+        "correct": true,
+        "why": "Right. The instance runs on Google's network, which has no route into yours until the revision is given one."
+      },
+      {
+        "text": "A larger instance size, because the query timed out",
+        "correct": false,
+        "why": "The connection never opened; size has nothing to do with a missing route."
+      },
+      {
+        "text": "The roles/run.invoker role on the database",
+        "correct": false,
+        "why": "That role is about who may call a Cloud Run service, not about reaching a database."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmt3109j",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where is the VPC access of a Cloud Run service configured?",
+    "hint": "Which part of a service can be split between two versions?",
+    "choices": [
+      {
+        "text": "On the project, for every service at once",
+        "correct": false,
+        "why": "Each service decides, and within it each revision."
+      },
+      {
+        "text": "On the VPC, by listing the services allowed in",
+        "correct": false,
+        "why": "The VPC does not list Cloud Run services; the revision names the network."
+      },
+      {
+        "text": "In the revision template, so each revision carries its own",
+        "correct": true,
+        "why": "Right. A new revision can move from a connector to direct egress, and traffic can be split between them."
+      },
+      {
+        "text": "In the container image, through an environment variable",
+        "correct": false,
+        "why": "An environment variable can carry an address, not a route."
+      }
+    ]
+  },
+  {
+    "id": "ex-26xayd16",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The orders service now reaches 10.20.0.3. What does that give it on the database?",
+    "hint": "A private address is a route.",
+    "choices": [
+      {
+        "text": "Read access, because traffic from inside the VPC is trusted",
+        "correct": false,
+        "why": "Being inside grants no database permission."
+      },
+      {
+        "text": "Whatever its service account is allowed on the project",
+        "correct": false,
+        "why": "Project roles do not log in to PostgreSQL by themselves."
+      },
+      {
+        "text": "Full access, until a firewall rule says otherwise",
+        "correct": false,
+        "why": "A firewall decides reachability, not database rights."
+      },
+      {
+        "text": "Nothing yet: it still needs a database login",
+        "correct": true,
+        "why": "Right. A private address is a route, not a permission: a database user or IAM authentication is still needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpf3pvyg",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each mechanism to what it puts in the VPC.",
+    "hint": "One puts the instance itself there.",
+    "pairs": [
+      {
+        "left": "Direct VPC egress",
+        "right": "An address for each instance, in a subnet you choose"
+      },
+      {
+        "left": "Serverless VPC Access connector",
+        "right": "A few small machines in a /28 that forward the traffic"
+      },
+      {
+        "left": "Cloud NAT",
+        "right": "A way out of the VPC to the internet from a reserved address"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the database inside Google's network"
+    ]
+  },
+  {
+    "id": "ex-fyp2c4kg",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without VPC access, a connection from Cloud Run to a private address does not fail at once: it ___ out.",
+    "hint": "What happens when nothing ever answers?",
+    "blanks": [
+      {
+        "accept": [
+          "times"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1qtaykpf",
+    "version": 1,
+    "section": "direct-vpc-egress",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does direct VPC egress add to the bill, apart from the traffic itself?",
+    "hint": "Is anything running in between?",
+    "choices": [
+      {
+        "text": "A connector's e2-micro machines, at least two",
+        "correct": false,
+        "why": "That is the connector's cost; direct egress has no machines."
+      },
+      {
+        "text": "Nothing: no machines run in between",
+        "correct": true,
+        "why": "Right. Each instance is in the subnet itself, so there is nothing to bill by the hour."
+      },
+      {
+        "text": "A fee per subnet address, charged each hour",
+        "correct": false,
+        "why": "Addresses in your subnet are not billed one by one."
+      },
+      {
+        "text": "A Cloud NAT gateway, which it creates for you",
+        "correct": false,
+        "why": "Nothing creates a NAT for you; it is needed only for ALL_TRAFFIC to the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3rdyt87",
+    "version": 1,
+    "section": "direct-vpc-egress",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a traffic burst, a service with direct egress stops adding instances and requests queue, while the service's own maximum is far away. What is the likeliest cause?",
+    "hint": "What does every running instance hold?",
+    "choices": [
+      {
+        "text": "The connector reached max_instances and did not scale further",
+        "correct": false,
+        "why": "With direct egress there is no connector."
+      },
+      {
+        "text": "PRIVATE_RANGES_ONLY throttles new instances to protect the VPC",
+        "correct": false,
+        "why": "The egress setting chooses routes; it limits nothing."
+      },
+      {
+        "text": "The subnet has run out of free addresses",
+        "correct": true,
+        "why": "Right. New instances cannot start without an address, and old ones release theirs only some time after stopping."
+      },
+      {
+        "text": "The database refuses more than a fixed number of connections",
+        "correct": false,
+        "why": "That would fail queries, not stop instances from starting."
+      }
+    ]
+  },
+  {
+    "id": "ex-g05mazxr",
+    "version": 1,
+    "section": "direct-vpc-egress",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Google reserves four addresses in every subnet. How many are left for instances in the /26 shop-run?",
+    "hint": "A /26 has 2 to the power of 6 addresses.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-5w6zm2ga",
+    "version": 1,
+    "section": "direct-vpc-egress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "terraform plan accepted network = \"shop\" and subnetwork = \"shop-run\". What has been checked?",
+    "hint": "Who knows which subnets exist?",
+    "choices": [
+      {
+        "text": "Only that the block is shaped the way the provider expects",
+        "correct": true,
+        "why": "Right. Cloud Run checks existence, region and free addresses when it creates the revision."
+      },
+      {
+        "text": "That the subnet exists in southamerica-east1",
+        "correct": false,
+        "why": "The plan asked nobody; the lab has no network at all."
+      },
+      {
+        "text": "That the subnet has room for the maximum instance count",
+        "correct": false,
+        "why": "Nothing in the plan counts addresses."
+      },
+      {
+        "text": "That the database at 10.20.0.3 answers on port 5432",
+        "correct": false,
+        "why": "The address is only an environment variable to Terraform."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnkzx0dn",
+    "version": 1,
+    "section": "direct-vpc-egress",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the revision template, the block that holds network_interfaces is called vpc____.",
+    "hint": "The same block also holds egress.",
+    "blanks": [
+      {
+        "accept": [
+          "access"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h8s6y1kc",
+    "version": 1,
+    "section": "connectors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A connector keeps min_instances = 2 of e2-micro, at 6.11 USD a month each. What is its floor for a year?",
+    "hint": "Two machines, twelve months.",
+    "value": 146.64,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-hvzj6npt",
+    "version": 1,
+    "section": "connectors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a burst, a connector is still running its three instances at three in the morning. Why?",
+    "hint": "It grows under load. What does it do afterwards?",
+    "choices": [
+      {
+        "text": "min_instances was raised to 3 by the burst",
+        "correct": false,
+        "why": "Nothing rewrites min_instances."
+      },
+      {
+        "text": "Cloud Run keeps idle instances warm through the connector",
+        "correct": false,
+        "why": "Cloud Run's idle instances do not hold connector machines up."
+      },
+      {
+        "text": "A connector scales out under load and does not scale back in by itself",
+        "correct": true,
+        "why": "Right. It can stay at its maximum until somebody notices, and it is billed all the while."
+      },
+      {
+        "text": "The /28 range needs three machines to stay routable",
+        "correct": false,
+        "why": "The range is reserved either way; machines do not keep it routable."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz8x9x58",
+    "version": 1,
+    "section": "connectors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A revision has both connector = google_vpc_access_connector.shop.id and a network_interfaces block, and terraform plan is clean. What does that clean plan mean?",
+    "hint": "What does Terraform know about the connector's id before it exists?",
+    "choices": [
+      {
+        "text": "That Cloud Run accepts both mechanisms on one revision",
+        "correct": false,
+        "why": "It does not; with a literal id the provider itself refuses the pair."
+      },
+      {
+        "text": "That the network_interfaces block is ignored when a connector is set",
+        "correct": false,
+        "why": "Nothing ignores it; the rule is that they conflict."
+      },
+      {
+        "text": "Only that the rule could not be checked yet",
+        "correct": true,
+        "why": "Right. The refusal would come from Cloud Run when the revision is created."
+      },
+      {
+        "text": "That the connector will be created first and then removed",
+        "correct": false,
+        "why": "The plan says 2 to add and nothing about removal."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfkk5evg",
+    "version": 1,
+    "section": "connectors",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which of these situations is a connector still a reasonable choice? Choose all that apply.",
+    "hint": "Think of address space and of what was built around the connector.",
+    "choices": [
+      {
+        "text": "A firewall rule admits 10.8.0.0/28 and nothing else",
+        "correct": true,
+        "why": "Right; the fixed range is what the network was built around."
+      },
+      {
+        "text": "The network team will give a /28 and no room for a larger subnet",
+        "correct": true,
+        "why": "Right; direct egress needs addresses for every instance."
+      },
+      {
+        "text": "The service must not pay anything at night",
+        "correct": false,
+        "why": "A connector has a floor billed all night."
+      },
+      {
+        "text": "The service is new and the subnet is empty",
+        "correct": false,
+        "why": "That is the case direct egress is recommended for."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7sk08zz",
+    "version": 1,
+    "section": "connectors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A connector's ip_cidr_range is a /___ of its own, sixteen addresses.",
+    "hint": "Two to the power of four is sixteen.",
+    "blanks": [
+      {
+        "accept": [
+          "28"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r3af9tjg",
+    "version": 1,
+    "section": "ingress-and-egress",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which setting decides who may send requests to a Cloud Run service?",
+    "hint": "One is about callers, the other about the service's own connections.",
+    "choices": [
+      {
+        "text": "Egress, on the vpc_access block",
+        "correct": false,
+        "why": "Egress is where outbound connections go."
+      },
+      {
+        "text": "The subnet the instances take addresses from",
+        "correct": false,
+        "why": "That is part of egress."
+      },
+      {
+        "text": "Ingress, set on the service as a whole",
+        "correct": true,
+        "why": "Right; IAM's invoker role is the identity half of the same question."
+      },
+      {
+        "text": "The connector's machine type",
+        "correct": false,
+        "why": "A connector carries outbound traffic only."
+      }
+    ]
+  },
+  {
+    "id": "ex-apk974tk",
+    "version": 1,
+    "section": "ingress-and-egress",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "orders is set to INGRESS_TRAFFIC_INTERNAL_ONLY. Calls from web, another Cloud Run service with no VPC access, are refused. Why?",
+    "hint": "How does a call from web leave web?",
+    "choices": [
+      {
+        "text": "web lacks roles/run.invoker on orders",
+        "correct": false,
+        "why": "That would be an identity refusal; here the network setting refuses first."
+      },
+      {
+        "text": "Its calls do not leave through the VPC",
+        "correct": true,
+        "why": "Right. They arrive over Google's network, so they are not internal; give web direct egress and they arrive from inside."
+      },
+      {
+        "text": "Two Cloud Run services can never call each other",
+        "correct": false,
+        "why": "They can; the call has to count as internal."
+      },
+      {
+        "text": "INGRESS_TRAFFIC_INTERNAL_ONLY accepts only Compute Engine callers",
+        "correct": false,
+        "why": "It accepts anything arriving from the VPC, including Cloud Run with egress."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgdnshqh",
+    "version": 1,
+    "section": "ingress-and-egress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner's API admits one fixed IP address. What does the calling service need?",
+    "hint": "Where does traffic go with ALL_TRAFFIC, and how does it leave?",
+    "choices": [
+      {
+        "text": "PRIVATE_RANGES_ONLY, so its public calls keep one address",
+        "correct": false,
+        "why": "With that value public calls leave from Cloud Run's shared addresses."
+      },
+      {
+        "text": "A connector, whose machines keep their public addresses",
+        "correct": false,
+        "why": "A connector forwards into the VPC; the way out is still the VPC's."
+      },
+      {
+        "text": "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER with a static address",
+        "correct": false,
+        "why": "Ingress is about calls in, not calls out."
+      },
+      {
+        "text": "ALL_TRAFFIC into the VPC, and Cloud NAT with a reserved address",
+        "correct": true,
+        "why": "Right. Every outbound request then leaves from that address."
+      }
+    ]
+  },
+  {
+    "id": "ex-1km6xx1h",
+    "version": 1,
+    "section": "ingress-and-egress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A revision switches from PRIVATE_RANGES_ONLY to ALL_TRAFFIC in a VPC with no Cloud NAT. What breaks?",
+    "hint": "Where does a call to a public address go now?",
+    "choices": [
+      {
+        "text": "The private database, because public and private now share one route",
+        "correct": false,
+        "why": "Private addresses are reached exactly as before."
+      },
+      {
+        "text": "Calls to the internet, which now follow the VPC's routes and find no way out",
+        "correct": true,
+        "why": "Right. ALL_TRAFFIC sends everything into the VPC; the internet needs NAT from there."
+      },
+      {
+        "text": "Incoming requests, because ingress follows egress",
+        "correct": false,
+        "why": "Changing egress never changes ingress."
+      },
+      {
+        "text": "Nothing: Cloud Run adds a NAT automatically",
+        "correct": false,
+        "why": "Nothing adds a NAT for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0zsxpfh",
+    "version": 1,
+    "section": "ingress-and-egress",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ingress is a network check; the identity check on who may call a service is IAM's roles/run.___ role.",
+    "hint": "The role that lets a caller invoke.",
+    "blanks": [
+      {
+        "accept": [
+          "invoker"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eztas20t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of giving the orders service access to its private database in a sensible order.",
+    "hint": "The address space comes before anything uses it.",
+    "items": [
+      "Set aside a subnet for Cloud Run, sized for the maximum instances",
+      "Add vpc_access with network_interfaces to the revision template",
+      "Deploy the new revision with egress PRIVATE_RANGES_ONLY",
+      "Give the service a database user or IAM authentication"
+    ],
+    "trap": "The database identity comes last only in the sense that the route must exist first; skipping it leaves a reachable database that refuses every login."
+  },
+  {
+    "id": "ex-122eqwfc",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A connector with min_instances = 2 and max_instances = 5 of e2-micro (6.11 USD a month each) got stuck at its maximum after a burst. How much more a month does it cost than at its floor?",
+    "hint": "Three extra machines.",
+    "value": 18.33,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-wvam59cw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop locks orders to INGRESS_TRAFFIC_INTERNAL_ONLY and keeps roles/run.invoker for web only. Which single change would let an attacker on the internet call orders?",
+    "hint": "Both checks have to fail.",
+    "choices": [
+      {
+        "text": "Setting the ingress of orders to INGRESS_TRAFFIC_ALL",
+        "correct": false,
+        "why": "The attacker still lacks the invoker role, so IAM refuses."
+      },
+      {
+        "text": "Granting roles/run.invoker on orders to allUsers",
+        "correct": false,
+        "why": "Ingress still refuses traffic from the internet."
+      },
+      {
+        "text": "Switching the egress of orders to ALL_TRAFFIC everywhere",
+        "correct": false,
+        "why": "Egress never changes who may call in."
+      },
+      {
+        "text": "No single one of these; it takes both of the first two",
+        "correct": true,
+        "why": "Right. Network and identity are separate checks, and each holds on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-adn1rydx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab actually check for lesson 12's Terraform files? Choose all that apply.",
+    "hint": "Everything that runs is on your laptop.",
+    "choices": [
+      {
+        "text": "That ingress and egress values are among the accepted ones",
+        "correct": true,
+        "why": "Right; the provider refused INTERNAL and PRIVATE_ONLY."
+      },
+      {
+        "text": "That a literal connector id conflicts with network_interfaces",
+        "correct": true,
+        "why": "Right; both blocks were named in both errors."
+      },
+      {
+        "text": "That the subnet shop-run has free addresses",
+        "correct": false,
+        "why": "Only Cloud Run can know that."
+      },
+      {
+        "text": "That the database answers from inside the VPC",
+        "correct": false,
+        "why": "No database and no VPC exist in the lab."
+      }
+    ]
+  }
+]

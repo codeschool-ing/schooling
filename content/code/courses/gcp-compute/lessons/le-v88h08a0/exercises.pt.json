@@ -1,0 +1,409 @@
+{
+  "ex-gyma9fjr": {
+    "prompt": "Qual é a diferença de formato entre uma mensagem do Pub/Sub e uma tarefa do Cloud Tasks?",
+    "hint": "\"Isto aconteceu\" contra \"faça isto\".",
+    "choices": [
+      {
+        "text": "Uma mensagem é repetida e uma tarefa não",
+        "why": "As duas são repetidas."
+      },
+      {
+        "text": "Uma tarefa fica em disco e uma mensagem só na memória",
+        "why": "As duas são duráveis nos serviços reais."
+      },
+      {
+        "text": "Uma mensagem é notícia para assinantes; uma tarefa é trabalho de um handler",
+        "why": "Isso. Uma tarefa tem endereço e ritmo."
+      },
+      {
+        "text": "Uma mensagem pode levar um corpo e uma tarefa não",
+        "why": "Uma tarefa leva cabeçalhos e corpo."
+      }
+    ]
+  },
+  "ex-8f4rcj5y": {
+    "prompt": "Ligue cada configuração da fila à decisão que ela guarda.",
+    "hint": "Com que velocidade, com que persistência.",
+    "pairs": [
+      {
+        "left": "max_dispatches_per_second",
+        "right": "Quantas tarefas começam por segundo"
+      },
+      {
+        "left": "max_concurrent_dispatches",
+        "right": "Quantas ficam em andamento ao mesmo tempo"
+      },
+      {
+        "left": "max_attempts",
+        "right": "Quantas tentativas antes de desistir"
+      },
+      {
+        "left": "min_backoff",
+        "right": "A primeira espera antes de repetir"
+      }
+    ],
+    "right_distractors": [
+      "Em que região o handler mora"
+    ]
+  },
+  "ex-2qdgxs3g": {
+    "prompt": "O provedor de e-mail aceita cinco mensagens por segundo. Por que pôr max_dispatches_per_second em 5 e não 20?",
+    "hint": "O que o provedor faz com as outras quinze?",
+    "choices": [
+      {
+        "text": "Quinze de cada vinte seriam recusadas",
+        "why": "Isso. O limite de quem recebe define o ritmo."
+      },
+      {
+        "text": "Um ritmo maior é cobrado por despacho",
+        "why": "O ritmo em si não custa nada; as recusas custam repetições."
+      },
+      {
+        "text": "O Cloud Tasks limita toda fila a 5 por segundo",
+        "why": "As filas permitem muito mais; o limite é o provedor."
+      },
+      {
+        "text": "Um ritmo menor faz cada e-mail chegar antes",
+        "why": "Faz a fila esvaziar mais devagar."
+      }
+    ]
+  },
+  "ex-c94w8jbn": {
+    "prompt": "O que conclui uma tarefa?",
+    "hint": "Uma resposta HTTP.",
+    "choices": [
+      {
+        "text": "O handler apagá-la da fila",
+        "why": "O handler nunca mexe na fila."
+      },
+      {
+        "text": "Qualquer resposta, até um 503",
+        "why": "Uma resposta não 2xx é falha."
+      },
+      {
+        "text": "O prazo de despacho passar",
+        "why": "Isso também é falha."
+      },
+      {
+        "text": "Um 2xx do handler",
+        "why": "Isso. O resto espera e é tentado de novo."
+      }
+    ]
+  },
+  "ex-0h1mmkvz": {
+    "prompt": "Dentro de uma fila, cada tarefa tem um ___ único, que o handler pode usar para reconhecer uma duplicata.",
+    "hint": "O mailer o guardou numa tabela.",
+    "blanks": [
+      {
+        "accept": [
+          "nome"
+        ]
+      }
+    ]
+  },
+  "ex-148wzefb": {
+    "prompt": "A mesma tarefa chegou duas vezes ao mailer. O que a segunda chamada mandou?",
+    "hint": "A tabela guardava o nome.",
+    "choices": [
+      {
+        "text": "Uma segunda confirmação, marcada como repetição",
+        "why": "O terminal mostrou uma confirmação."
+      },
+      {
+        "text": "Nada, e ainda respondeu 200",
+        "why": "Isso. O sucesso encerra as repetições, e a tabela segurou a duplicata."
+      },
+      {
+        "text": "Nada, com um 409 para a fila descartar",
+        "why": "Respondeu 200; um não 2xx seria repetido."
+      },
+      {
+        "text": "Um 503, porque o provedor estava fora",
+        "why": "Isso foi o pedido 1043, não o 1042."
+      }
+    ]
+  },
+  "ex-nj382c0x": {
+    "prompt": "Por que o mailer responde 200 a uma tarefa que já fez, em vez de um erro?",
+    "hint": "O que a fila faria com um erro?",
+    "choices": [
+      {
+        "text": "Erros são cobrados e sucessos não",
+        "why": "Cobrança não é o motivo."
+      },
+      {
+        "text": "Um erro apagaria a fila",
+        "why": "Um erro só marca a tentativa como falha."
+      },
+      {
+        "text": "A fila refaria o trabalho já feito",
+        "why": "Isso. O trabalho está feito, então sucesso é a resposta verdadeira."
+      },
+      {
+        "text": "O Cloud Tasks ignora o status",
+        "why": "O status é exatamente o que ele lê."
+      }
+    ]
+  },
+  "ex-ajs49y5d": {
+    "prompt": "O X-CloudTasks-TaskRetryCount era 1 na segunda entrega do pedido 1043. Que número de tentativa o mailer imprimiu?",
+    "hint": "As repetições são contadas a partir de zero.",
+    "unit": "tentativa"
+  },
+  "ex-bfxbw1qs": {
+    "prompt": "O mailer consulta a tabela, manda e depois registra a tarefa. Que falha ainda pode mandar um e-mail duas vezes?",
+    "hint": "Olhe o intervalo entre duas linhas.",
+    "choices": [
+      {
+        "text": "Uma queda entre o envio e o insert",
+        "why": "Isso. A repetição não acha registro e manda de novo."
+      },
+      {
+        "text": "Duas tarefas diferentes para dois pedidos",
+        "why": "Pedidos diferentes devem receber e-mails diferentes."
+      },
+      {
+        "text": "Um 400 para uma requisição sem nome de tarefa",
+        "why": "Isso não manda nada."
+      },
+      {
+        "text": "O provedor respondendo devagar",
+        "why": "Lentidão sozinha não duplica."
+      }
+    ]
+  },
+  "ex-z5k7g69h": {
+    "prompt": "Publicado, o que o mailer deve verificar em vez do cabeçalho X-CloudTasks-TaskName para recusar estranhos?",
+    "hint": "Qualquer um digita um cabeçalho.",
+    "choices": [
+      {
+        "text": "O endereço IP de quem chama",
+        "why": "Os endereços do Google são compartilhados e mudam."
+      },
+      {
+        "text": "Uma senha no corpo da requisição",
+        "why": "Um segredo em toda tarefa é um segredo em todo log."
+      },
+      {
+        "text": "O cabeçalho X-CloudTasks-QueueName também",
+        "why": "Outro cabeçalho é tão fácil de digitar quanto."
+      },
+      {
+        "text": "O token de identidade que a fila anexa",
+        "why": "Isso. Ele prova quem mandou a requisição."
+      }
+    ]
+  },
+  "ex-0m10tvz2": {
+    "prompt": "Com min_backoff 10s, max_backoff 300s e max_doublings 3, quanto espera a quarta repetição, em segundos?",
+    "hint": "10, 20, 40, ...",
+    "unit": "segundos"
+  },
+  "ex-7e9ka24m": {
+    "prompt": "Uma fila tem 1.800 tarefas e despacha no máximo 6 por segundo. Quantos segundos leva para esvaziar, no melhor caso?",
+    "hint": "Tarefas divididas pelo ritmo.",
+    "unit": "segundos"
+  },
+  "ex-7mkkrzcj": {
+    "prompt": "Por que a sexta repetição espera 240 segundos e não 320?",
+    "hint": "Depois de três dobras a espera para de dobrar.",
+    "choices": [
+      {
+        "text": "320 passa do max_backoff",
+        "why": "320 seria cortado em 300, não em 240."
+      },
+      {
+        "text": "Depois de max_doublings ela cresce 80 segundos fixos",
+        "why": "Isso. 80, 160, 240, depois o teto."
+      },
+      {
+        "text": "O Cloud Tasks corta a espera pela metade depois de cinco repetições",
+        "why": "Não existe esse corte."
+      },
+      {
+        "text": "O programa arredonda para o minuto mais próximo",
+        "why": "Ele não arredonda nada."
+      }
+    ]
+  },
+  "ex-z97erejh": {
+    "prompt": "As quedas do provedor de e-mail duram uns dez minutos, e a fila desiste 150 segundos depois da primeira tentativa. Qual é a correção honesta?",
+    "hint": "A fila precisa durar mais que a queda.",
+    "choices": [
+      {
+        "text": "Um max_dispatches_per_second maior",
+        "why": "Despachar mais rápido falha mais rápido."
+      },
+      {
+        "text": "Responder 200 durante as quedas",
+        "why": "Esses e-mails se perderiam como se tivessem ido."
+      },
+      {
+        "text": "Mais tentativas ou um max_backoff maior",
+        "why": "Isso. As repetições precisam cobrir mais que a queda."
+      },
+      {
+        "text": "Um min_backoff menor, para repetir antes",
+        "why": "Isso encurta ainda mais o intervalo."
+      }
+    ]
+  },
+  "ex-66aev1y0": {
+    "prompt": "Uma tarefa cita um pedido que foi apagado. O que o handler deve responder?",
+    "hint": "O tempo vai resolver?",
+    "choices": [
+      {
+        "text": "Um 2xx, com o motivo no log",
+        "why": "Isso. Guarde o não 2xx para falhas que o tempo resolve."
+      },
+      {
+        "text": "503, para a fila continuar tentando",
+        "why": "Toda tentativa vai falhar igual."
+      },
+      {
+        "text": "500, para o erro ficar visível",
+        "why": "Um 500 é repetido como um 503."
+      },
+      {
+        "text": "Nenhuma resposta, deixando o prazo passar",
+        "why": "Isso é falha, e é repetido."
+      }
+    ]
+  },
+  "ex-y4weer21": {
+    "prompt": "A configuração que limita quantas requisições ficam em andamento ao mesmo tempo é max_concurrent____.",
+    "hint": "O outro freio termina em per_second.",
+    "blanks": [
+      {
+        "accept": [
+          "dispatches"
+        ]
+      }
+    ]
+  },
+  "ex-8zs5kjmx": {
+    "prompt": "No cron, o que quer dizer 10 3 * * *?",
+    "hint": "Minuto primeiro, depois hora.",
+    "choices": [
+      {
+        "text": "03:10 no dia dez de todo mês",
+        "why": "O terceiro campo, dia do mês, é *."
+      },
+      {
+        "text": "10:03 todo dia",
+        "why": "O minuto vem primeiro."
+      },
+      {
+        "text": "A cada 10 minutos por 3 horas",
+        "why": "Isso seria */10 no campo de minuto."
+      },
+      {
+        "text": "03:10 todo dia",
+        "why": "Isso. Minuto 10 da hora 3, todo dia."
+      }
+    ]
+  },
+  "ex-skefnaz7": {
+    "prompt": "O job noturno é criado sem time_zone. Quando ele roda em São Paulo?",
+    "hint": "O Scheduler o lê em UTC nesse caso.",
+    "choices": [
+      {
+        "text": "03:10, porque a região é southamerica-east1",
+        "why": "A região não define o fuso."
+      },
+      {
+        "text": "00:10, já que São Paulo fica três horas atrás do UTC",
+        "why": "Isso. Dê o fuso, e o horário quer dizer o que diz."
+      },
+      {
+        "text": "06:10, três horas depois do UTC",
+        "why": "São Paulo está atrás do UTC, não à frente."
+      },
+      {
+        "text": "Não roda até um fuso ser definido",
+        "why": "Roda, em UTC."
+      }
+    ]
+  },
+  "ex-jn9fhba1": {
+    "prompt": "A loja tem 7 jobs do Scheduler numa conta de faturamento. Com 3 gratuitos e 0,10 USD por job a cada 31 dias, quanto custam a cada 31 dias?",
+    "hint": "Só os jobs além dos três gratuitos.",
+    "unit": "USD"
+  },
+  "ex-1s8c2nee": {
+    "prompt": "Um job roda a cada minuto e outro uma vez por mês. Como os preços de Scheduler deles se comparam?",
+    "hint": "A unidade é o job.",
+    "choices": [
+      {
+        "text": "O primeiro custa 43.200 vezes mais",
+        "why": "Execuções não são cobradas."
+      },
+      {
+        "text": "O mensal é gratuito",
+        "why": "Os gratuitos são os três primeiros, seja qual for a frequência."
+      },
+      {
+        "text": "Custam o mesmo",
+        "why": "Isso. Dez centavos por job a cada 31 dias, por mais que dispare."
+      },
+      {
+        "text": "O primeiro tem teto de um dólar",
+        "why": "Não há preço por execução para limitar."
+      }
+    ]
+  },
+  "ex-brxz2xyj": {
+    "prompt": "Ordene o relatório noturno, do relógio até o relatório da última loja.",
+    "hint": "O Scheduler decide quando, a fila com que velocidade.",
+    "items": [
+      "O Scheduler dispara às 03:10 America/Sao_Paulo",
+      "Um handler cria uma tarefa por loja",
+      "A fila as despacha no seu ritmo",
+      "O relatório de cada loja é montado, repetido sozinho se falhar"
+    ]
+  },
+  "ex-8e6sr7qf": {
+    "prompt": "Quais pertencem à fila e não ao código do handler? Escolha todas as que se aplicam.",
+    "hint": "As três decisões que uma fila tem.",
+    "choices": [
+      {
+        "text": "Quantas tarefas começam por segundo",
+        "why": "Isso; um limite de ritmo."
+      },
+      {
+        "text": "Quanto esperar antes de repetir",
+        "why": "Isso; a configuração de repetição."
+      },
+      {
+        "text": "Se uma tarefa já foi feita",
+        "why": "Só o handler pode saber isso."
+      },
+      {
+        "text": "Se uma falha vale ser repetida",
+        "why": "O handler decide com a resposta."
+      }
+    ]
+  },
+  "ex-sxjxpfww": {
+    "prompt": "Uma promoção traz 1.000 pedidos num minuto. Sem fila, o mailer chamaria o provedor 1.000 vezes nesse minuto. O que a fila emails muda para o provedor?",
+    "hint": "Cinco por segundo.",
+    "choices": [
+      {
+        "text": "Cinco por segundo constantes por uns 200 segundos",
+        "why": "Isso. A fila absorve o pico."
+      },
+      {
+        "text": "Nada, a fila repassa o pico sem mudança",
+        "why": "O limite de ritmo é justamente o que muda."
+      },
+      {
+        "text": "Manda todos, depois repete as recusas",
+        "why": "A fila nunca manda mais rápido que o ritmo."
+      },
+      {
+        "text": "Descarta tudo além de cinco pedidos por segundo",
+        "why": "Nada é descartado; as tarefas esperam a vez."
+      }
+    ]
+  }
+}

@@ -1,0 +1,623 @@
+[
+  {
+    "id": "ex-2855z17h",
+    "version": 1,
+    "section": "signed-urls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is a V4 signed URL's signature computed?",
+    "hint": "Think about what `sign.py` sent before it printed.",
+    "choices": [
+      {
+        "text": "On Cloud Storage, which records it in a list of issued links",
+        "correct": false,
+        "why": "Nothing is recorded anywhere; the service only verifies a signature when the URL is used."
+      },
+      {
+        "text": "On the signer's computer, from the private key",
+        "correct": true,
+        "why": "Right. Making a URL sends no request, which is why a URL for a missing object was signed without complaint."
+      },
+      {
+        "text": "On Google's IAM service, every time",
+        "correct": false,
+        "why": "Only when signing by impersonation; with a key file it is purely local."
+      },
+      {
+        "text": "In the browser of whoever opens the link",
+        "correct": false,
+        "why": "The reader only presents the URL; it cannot sign anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjt0q74k",
+    "version": 1,
+    "section": "signed-urls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A signed URL for an invoice is pasted into a supplier chat. What does anybody reading the chat learn?",
+    "hint": "Look at the `X-Goog-Credential` parameter.",
+    "choices": [
+      {
+        "text": "The service account's private key",
+        "correct": false,
+        "why": "The key never leaves the signer; only the signature does."
+      },
+      {
+        "text": "Nothing, since the URL is encrypted",
+        "correct": false,
+        "why": "Nothing in it is encrypted; the parameters are plain text."
+      },
+      {
+        "text": "The signer, and a working link",
+        "correct": true,
+        "why": "Right: they learn which service account signed it, and can download the invoice until it expires. The URL is the permission, and the signer's identity is written in it."
+      },
+      {
+        "text": "The supplier's password",
+        "correct": false,
+        "why": "A signed URL carries no password of anybody's."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8e0jn9s",
+    "version": 1,
+    "section": "signed-urls",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the longest a V4 signed URL may be valid for, in seconds?",
+    "hint": "The library refused 604,801.",
+    "value": 604800,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wkax7kp1",
+    "version": 1,
+    "section": "signed-urls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab, a URL valid for one second was used three seconds later and the report came back. What does that show about Cloud Storage?",
+    "hint": "Who answered the request?",
+    "choices": [
+      {
+        "text": "Cloud Storage allows a grace period after expiry",
+        "correct": false,
+        "why": "The request never reached Cloud Storage; the emulator answered it."
+      },
+      {
+        "text": "Nothing about Cloud Storage",
+        "correct": true,
+        "why": "Right: fake-gcs-server reads no signature, so the lab cannot test expiry. It also served a tampered URL and one with no signature at all."
+      },
+      {
+        "text": "That `X-Goog-Expires` is counted in minutes",
+        "correct": false,
+        "why": "It is in seconds, as `300` for five minutes showed."
+      },
+      {
+        "text": "That the library rounds a short expiry up to a minute",
+        "correct": false,
+        "why": "The URL said `X-Goog-Expires=1`; nothing rounded it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyjgj2en",
+    "version": 1,
+    "section": "signed-urls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service account that signed hundreds of week-long URLs has its key leaked. What makes every URL it signed stop working?",
+    "hint": "Cloud Storage checks the signer at the moment of use.",
+    "choices": [
+      {
+        "text": "Waiting seven days",
+        "correct": false,
+        "why": "That works, but only after a week of exposure."
+      },
+      {
+        "text": "Deleting the key",
+        "correct": true,
+        "why": "Right, or removing the account's read permission. Each URL is verified against a key and a signer's permissions that no longer exist."
+      },
+      {
+        "text": "Changing the object's storage class",
+        "correct": false,
+        "why": "The class has nothing to do with who may read."
+      },
+      {
+        "text": "Turning on public access prevention",
+        "correct": false,
+        "why": "A signed URL is not public access, so prevention does not stop it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rnhje84",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who is `allAuthenticatedUsers` in a Cloud Storage grant?",
+    "hint": "Its name made it sound safe.",
+    "choices": [
+      {
+        "text": "Anybody signed in to any Google account",
+        "correct": true,
+        "why": "Right: not Quitanda's users, everybody with a Google account."
+      },
+      {
+        "text": "Every user of Quitanda's organisation",
+        "correct": false,
+        "why": "That is what people assumed, and it is wrong."
+      },
+      {
+        "text": "Service accounts of the same project",
+        "correct": false,
+        "why": "Those are named one by one, or through a role on the project."
+      },
+      {
+        "text": "Anybody on the internet, signed in or not",
+        "correct": false,
+        "why": "That is `allUsers`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jf8bb077",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does uniform bucket-level access change on a bucket?",
+    "hint": "Two permission systems, one switched off.",
+    "choices": [
+      {
+        "text": "It turns ACLs off",
+        "correct": true,
+        "why": "Right: IAM is left as the only place access is granted, and it is needed for IAM conditions on the bucket."
+      },
+      {
+        "text": "It makes every object public",
+        "correct": false,
+        "why": "It grants nothing to anybody."
+      },
+      {
+        "text": "It copies the bucket's ACL onto every object",
+        "correct": false,
+        "why": "That was a way of working before it; uniform access ignores ACLs."
+      },
+      {
+        "text": "It encrypts objects with one key",
+        "correct": false,
+        "why": "Encryption is a different setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-8p0d9wp4",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Against fake-gcs-server, `gcloud storage buckets get-iam-policy` on a bucket that exists answers `404`. Why?",
+    "hint": "The emulator implements objects, not every API.",
+    "choices": [
+      {
+        "text": "The bucket name is wrong",
+        "correct": false,
+        "why": "The bucket had just been created and listed."
+      },
+      {
+        "text": "The emulator has no IAM",
+        "correct": true,
+        "why": "Right: the request finds nothing to answer it. Nothing about IAM can be practised against it."
+      },
+      {
+        "text": "The project has no owner",
+        "correct": false,
+        "why": "gcloud sends no credentials here, and the emulator checks none."
+      },
+      {
+        "text": "Uniform bucket-level access hides the policy",
+        "correct": false,
+        "why": "Uniform access makes IAM the only system; it hides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh2xbp1a",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab, a `curl` with no credentials read a report that no grant had made public. What does a successful anonymous read from the emulator tell you about the same object on Cloud Storage?",
+    "hint": "The emulator checks no credentials on any request.",
+    "choices": [
+      {
+        "text": "That it is public there too",
+        "correct": false,
+        "why": "The emulator serves private objects to anybody, so its answer says nothing."
+      },
+      {
+        "text": "That its ACL grants READER to allUsers",
+        "correct": false,
+        "why": "The report had no such ACL; the emulator served it anyway."
+      },
+      {
+        "text": "That public access prevention is off",
+        "correct": false,
+        "why": "The emulator does not keep that setting, on or off."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The only test of whether an object is public is an anonymous request to the real service."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfnr3dnm",
+    "version": 1,
+    "section": "public-access-prevention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket already has `allUsers` granted `roles/storage.objectViewer`, and public access prevention is then set to `enforced`. What happens to the grant?",
+    "hint": "Enforced does two things.",
+    "choices": [
+      {
+        "text": "Nothing, because prevention only refuses new grants",
+        "correct": false,
+        "why": "It also makes existing public grants stop working."
+      },
+      {
+        "text": "It stays in the policy and grants nothing",
+        "correct": true,
+        "why": "Right, which is why switching prevention on closes a leak at once."
+      },
+      {
+        "text": "It is deleted from the policy",
+        "correct": false,
+        "why": "The grant stays written; it just has no effect."
+      },
+      {
+        "text": "It is changed to `allAuthenticatedUsers`",
+        "correct": false,
+        "why": "That would still be public; prevention neutralises both."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ea9n3z8",
+    "version": 1,
+    "section": "public-access-prevention",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Google Cloud CLI 591.0.0, which form sets public access prevention to `enforced` on a bucket?",
+    "hint": "The form with `=enforced` was refused.",
+    "choices": [
+      {
+        "text": "`--public-access-prevention=enforced`",
+        "correct": false,
+        "why": "This version refuses it: `ignored explicit argument 'enforced'`."
+      },
+      {
+        "text": "`--pap=on`",
+        "correct": false,
+        "why": "The flag takes no value at all."
+      },
+      {
+        "text": "`--public-access-prevention` alone",
+        "correct": true,
+        "why": "Right; `--no-public-access-prevention` sets `inherited`."
+      },
+      {
+        "text": "`--uniform-bucket-level-access`",
+        "correct": false,
+        "why": "That is a different setting, which turns ACLs off."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ae1cdnj",
+    "version": 1,
+    "section": "public-access-prevention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bucket reports public access prevention `inherited`. Is it protected?",
+    "hint": "Inherited from what?",
+    "choices": [
+      {
+        "text": "Yes, inherited always means enforced",
+        "correct": false,
+        "why": "It means the bucket follows its organisation; there may be nothing to follow."
+      },
+      {
+        "text": "No, inherited means off",
+        "correct": false,
+        "why": "It can be protected, if a policy above enforces prevention."
+      },
+      {
+        "text": "Only with a policy above it",
+        "correct": true,
+        "why": "Right: an organisation policy that enforces the constraint, and the bucket alone cannot say whether one does."
+      },
+      {
+        "text": "Only if it also has uniform access",
+        "correct": false,
+        "why": "Uniform access turns ACLs off; it does not block grants to allUsers through IAM."
+      }
+    ]
+  },
+  {
+    "id": "ex-68kjrh0g",
+    "version": 1,
+    "section": "defender-policies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each organisation policy constraint to what it prevents.",
+    "hint": "Two are about storage, two about IAM.",
+    "pairs": [
+      {
+        "left": "storage.publicAccessPrevention",
+        "right": "A bucket readable by allUsers"
+      },
+      {
+        "left": "storage.uniformBucketLevelAccess",
+        "right": "Access granted object by object through ACLs"
+      },
+      {
+        "left": "iam.allowedPolicyMemberDomains",
+        "right": "A grant to a principal outside the organisation's domains"
+      },
+      {
+        "left": "iam.disableServiceAccountKeyCreation",
+        "right": "A downloaded key signing URLs"
+      }
+    ],
+    "right_distractors": [
+      "An object deleted before its retention period"
+    ]
+  },
+  {
+    "id": "ex-66ya7rpy",
+    "version": 1,
+    "section": "defender-policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is an organisation policy a stronger defence than setting public access prevention on each bucket?",
+    "hint": "Think about next year's bucket.",
+    "choices": [
+      {
+        "text": "It is cheaper per bucket",
+        "correct": false,
+        "why": "Neither has a price; the difference is who has to remember."
+      },
+      {
+        "text": "It also encrypts the buckets",
+        "correct": false,
+        "why": "Encryption is unrelated."
+      },
+      {
+        "text": "It covers buckets not yet created",
+        "correct": true,
+        "why": "Right, in projects nobody has heard of yet. A bucket setting protects that bucket; a constraint protects every bucket below it."
+      },
+      {
+        "text": "It cannot be overridden anywhere below it",
+        "correct": false,
+        "why": "It can be overridden on a folder or project, which is why overrides are reviewed first."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bg4dq4v",
+    "version": 1,
+    "section": "defender-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `iam.disableServiceAccountKeyCreation` enforced, how does Quitanda still sign URLs for suppliers?",
+    "hint": "There is a way to sign with no key file on any disk.",
+    "choices": [
+      {
+        "text": "It cannot sign URLs any more",
+        "correct": false,
+        "why": "Signing by impersonation needs no downloaded key."
+      },
+      {
+        "text": "With a key created before the constraint",
+        "correct": false,
+        "why": "That key would still be a downloaded key, the thing the constraint is there to end."
+      },
+      {
+        "text": "By making the invoices bucket public",
+        "correct": false,
+        "why": "That is the leak this lesson is about."
+      },
+      {
+        "text": "By impersonation, 12 hours at most",
+        "correct": true,
+        "why": "Right: with `--impersonate-service-account`, Google's IAM credentials service signs, and no private key leaves Google."
+      }
+    ]
+  },
+  {
+    "id": "ex-fasmkrdp",
+    "version": 1,
+    "section": "the-bucket-that-leaked",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket was public for a month. Which record tells Quitanda who actually read the objects?",
+    "hint": "Some logs are on only if somebody turned them on before.",
+    "choices": [
+      {
+        "text": "Admin Activity audit logs",
+        "correct": false,
+        "why": "They record who changed the bucket's settings or IAM, not who read objects."
+      },
+      {
+        "text": "Data Access or usage logs, if on before",
+        "correct": true,
+        "why": "Right; and for public objects the documentation points to usage logs, since audit logs do not record those requests."
+      },
+      {
+        "text": "Cloud Asset Inventory",
+        "correct": false,
+        "why": "It shows what is open now, not who walked through."
+      },
+      {
+        "text": "Security Command Center findings for the bucket",
+        "correct": false,
+        "why": "A finding says a bucket is public, not who read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkxkbmf7",
+    "version": 1,
+    "section": "the-bucket-that-leaked",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order Quitanda's protections from the broadest net to the narrowest.",
+    "hint": "The organisation first, the single URL last.",
+    "items": [
+      "Organisation policy constraints",
+      "Public access prevention and uniform access on each bucket",
+      "IAM grants narrowed by a condition",
+      "Short signed URLs signed by impersonation"
+    ]
+  },
+  {
+    "id": "ex-b63zedpw",
+    "version": 1,
+    "section": "the-bucket-that-leaked",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the one check of whether an object is public that the lesson says is worth trusting?",
+    "hint": "It checks the result, not the settings.",
+    "choices": [
+      {
+        "text": "Reading the bucket's IAM policy",
+        "correct": false,
+        "why": "It misses ACLs and settings above the bucket."
+      },
+      {
+        "text": "An anonymous request from outside",
+        "correct": true,
+        "why": "Right, expecting a refusal. Against the emulator it cannot fail, which is why it belongs to the real service."
+      },
+      {
+        "text": "Listing the bucket with gcloud",
+        "correct": false,
+        "why": "A listing made with your credentials says nothing about strangers."
+      },
+      {
+        "text": "Checking that the bucket name is hard to guess",
+        "correct": false,
+        "why": "A name is not a permission."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnyya30r",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each way a bucket leaked to the protection that would have stopped it.",
+    "hint": "One protection per shape.",
+    "pairs": [
+      {
+        "left": "A grant of objectViewer to allUsers on the bucket",
+        "right": "Public access prevention"
+      },
+      {
+        "left": "Objects written with --predefined-acl=publicRead",
+        "right": "Uniform bucket-level access"
+      },
+      {
+        "left": "A grant to allAuthenticatedUsers meant for colleagues",
+        "right": "iam.allowedPolicyMemberDomains"
+      },
+      {
+        "left": "A service account key committed to a repository",
+        "right": "iam.disableServiceAccountKeyCreation"
+      }
+    ],
+    "right_distractors": [
+      "Object versioning"
+    ]
+  },
+  {
+    "id": "ex-jbt5rk9j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A supplier needs one invoice today. Which is the narrowest way to give it?",
+    "hint": "Narrow in time and in what it reaches.",
+    "choices": [
+      {
+        "text": "Grant the supplier's Google account objectViewer on the bucket",
+        "correct": false,
+        "why": "That reaches every invoice, for as long as the grant lasts."
+      },
+      {
+        "text": "A signed URL valid for minutes",
+        "correct": true,
+        "why": "Right, for that object, signed by impersonation: one object, one request, a short life and no key file."
+      },
+      {
+        "text": "Make the invoice public until the supplier confirms",
+        "correct": false,
+        "why": "Public is anybody, and confirming is a step somebody forgets."
+      },
+      {
+        "text": "A signed URL valid for seven days, to be safe",
+        "correct": false,
+        "why": "Seven days is the longest allowed, and the longest a leaked link works."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d11hnzy",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The special principal that means anybody on the internet, signed in or not, is written `___` in an IAM binding or an ACL.",
+    "hint": "Its sibling covers every signed-in Google account.",
+    "blanks": [
+      {
+        "accept": [
+          "allUsers"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

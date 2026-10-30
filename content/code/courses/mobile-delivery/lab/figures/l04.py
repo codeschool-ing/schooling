@@ -1,0 +1,25 @@
+"""Lesson 4: the listing check."""
+P = [
+    ("// listing.ts: check a store listing kept as files against each store's limits\nimport { readdirSync, readFileSync, existsSync } from \"node:fs\";\nimport { join } from \"node:path\";\n\ntype Limit = [number, \"chars\" | \"bytes\"];\nconst LIMITS: Record<string, Record<string, Limit>> = {\n  ios: { \"name.txt\": [30, \"chars\"], \"subtitle.txt\": [30, \"chars\"], \"keywords.txt\": [100, \"bytes\"], \"description.txt\": [4000, \"chars\"] },\n  android: { \"title.txt\": [30, \"chars\"], \"short_description.txt\": [80, \"chars\"], \"full_description.txt\": [4000, \"chars\"] },\n};",
+     "The limits from section \"What the store page holds\", one table per store. Only Apple's keywords are counted in bytes.",
+     "Os limites da seção \"O que a página da loja guarda\", uma tabela por loja. Só as palavras-chave da Apple são contadas em bytes."),
+    ("let problems = 0;\nconst report = (where: string, what: string, detail: string, ok: boolean) => {\n  if (!ok) problems++;\n  console.log(`${where.padEnd(14)} ${what.padEnd(22)} ${detail.padEnd(16)} ${ok ? \"ok\" : \"OVER\"}`);\n};",
+     "One line per check, and a count of the failures for the exit status.",
+     "Uma linha por checagem, e uma contagem das falhas para o status de saída."),
+    ("function size(text: string, unit: \"chars\" | \"bytes\"): number {\n  return unit === \"bytes\" ? Buffer.byteLength(text, \"utf8\") : [...text].length;\n}",
+     "`[...text].length` counts characters as a person sees them; `.length` alone would count UTF-16 units and get an emoji wrong.",
+     "`[...text].length` conta caracteres como uma pessoa os vê; `.length` sozinho contaria unidades UTF-16 e erraria um emoji."),
+    ("function pngSize(file: string): [number, number] {\n  const b = readFileSync(file);\n  return [b.readUInt32BE(16), b.readUInt32BE(20)];\n}",
+     "A PNG's width and height sit at bytes 16 and 20 of the file, in its first chunk.",
+     "A largura e a altura de um PNG ficam nos bytes 16 e 20 do arquivo, no primeiro bloco dele."),
+    ("for (const store of Object.keys(LIMITS)) {\n  for (const lang of readdirSync(join(\"listing\", store)).sort()) {\n    const dir = join(\"listing\", store, lang);\n    const where = `${store}/${lang}`;\n    for (const [file, [max, unit]] of Object.entries(LIMITS[store])) {\n      if (!existsSync(join(dir, file))) continue;\n      const text = readFileSync(join(dir, file), \"utf8\").replace(/\\n$/, \"\");\n      const n = size(text, unit);\n      report(where, file, `${n}/${max} ${unit}`, n <= max);\n    }",
+     "Every field of every language, against its store's limit. The newline that ends the file is not part of the field.",
+     "Todo campo de todo idioma, contra o limite da loja dele. A quebra de linha que fecha o arquivo não faz parte do campo."),
+    ("    if (store === \"ios\" && existsSync(join(dir, \"keywords.txt\"))) {\n      const name = readFileSync(join(dir, \"name.txt\"), \"utf8\").toLowerCase().split(/\\W+/u);\n      for (const word of readFileSync(join(dir, \"keywords.txt\"), \"utf8\").trim().split(\",\")) {\n        if (word.length <= 2 || word !== word.trim() || name.includes(word.toLowerCase())) {\n          report(where, `keyword \"${word}\"`, \"short, spaced or in the name\", false);\n        }\n      }\n    }",
+     "Apple's three keyword rules: longer than two characters, no stray spaces, and no word the name already has.",
+     "As três regras de palavra-chave da Apple: mais de dois caracteres, sem espaços sobrando, e nenhuma palavra que o nome já tem."),
+    ("    const shots = join(dir, \"screenshots\");\n    for (const png of existsSync(shots) ? readdirSync(shots).sort() : []) {\n      const [w, h] = pngSize(join(shots, png));\n      const ok = store === \"ios\"\n        ? [\"1320x2868\", \"1290x2796\"].includes(`${w}x${h}`)\n        : Math.min(w, h) >= 320 && Math.max(w, h) <= 3840 && Math.max(w, h) <= 2 * Math.min(w, h);\n      report(where, png, `${w}x${h}`, ok);\n    }\n  }\n}\nprocess.exitCode = problems ? 1 : 0;",
+     "Apple takes exact sizes for the large iPhone; Google takes a range and a shape. A pipeline reads the exit status.",
+     "A Apple aceita tamanhos exatos para o iPhone grande; o Google aceita uma faixa e um formato. Um pipeline lê o status de saída."),
+]
+EXAMPLES = {"the-listing-as-files": [{"language": "typescript", "file": "listing.ts", "parts": P}]}

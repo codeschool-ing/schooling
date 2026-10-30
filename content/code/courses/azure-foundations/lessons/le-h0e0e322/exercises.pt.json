@@ -1,0 +1,372 @@
+{
+ "ex-w0bnfdtp": {
+  "prompt": "Uma máquina na `snet-app` manda um pacote para `10.20.3.4`, na `snet-data`. Sem tabela de rotas presa, qual rota o leva?",
+  "hint": "O intervalo da própria rede é uma rota de sistema.",
+  "choices": [
+   {
+    "text": "`0.0.0.0/0` para a internet, já que nenhuma rota o cita",
+    "why": "Existe uma rota de sistema para `10.20.0.0/16`, e ela é mais longa."
+   },
+   {
+    "text": "`10.0.0.0/8`, que o descarta",
+    "why": "Essa rota é mais curta que o `/16` da rede."
+   },
+   {
+    "text": "`10.20.0.0/16`, para a rede virtual",
+    "why": "Isso. O intervalo da própria rede fica dentro dela."
+   },
+   {
+    "text": "Nenhuma até alguém escrever uma",
+    "why": "As rotas de sistema existem desde o começo."
+   }
+  ]
+ },
+ "ex-cxvr96zc": {
+  "prompt": "Um erro de digitação manda tráfego da `snet-app` para `10.99.0.1`, em rede nenhuma. Sem tabela de rotas, o que acontece com ele?",
+  "hint": "Qual rota de sistema é a mais longa que o contém?",
+  "choices": [
+   {
+    "text": "Vai para a internet pelo `0.0.0.0/0`",
+    "why": "O `10.0.0.0/8` é mais longo, e o próximo salto dele é `None`."
+   },
+   {
+    "text": "É descartado pela rota `None` de `10.0.0.0/8`",
+    "why": "Isso. Intervalos privados não reivindicados são descartados dentro do Azure."
+   },
+   {
+    "text": "É entregue ao gateway em `10.20.2.1`",
+    "why": "Esse endereço é a porta da sub-rede, não destino de intervalos desconhecidos."
+   },
+   {
+    "text": "O Azure pergunta ao escritório se o endereço é dele",
+    "why": "Nada pergunta a ninguém; as rotas decidem."
+   }
+  ]
+ },
+ "ex-zm97vgxz": {
+  "prompt": "Duas rotas contêm `10.30.1.4`: `10.0.0.0/8` e `10.30.0.0/16`. Qual é o tamanho do prefixo da que o Azure escolhe?",
+  "hint": "Prefixo mais longo primeiro.",
+  "unit": "bits"
+ },
+ "ex-zcfx9cxx": {
+  "prompt": "Uma rota definida pelo usuário e uma rota de sistema têm as duas o prefixo `0.0.0.0/0`. Qual é usada?",
+  "hint": "Os prefixos empatam, então a origem decide.",
+  "choices": [
+   {
+    "text": "A que você escreveu",
+    "why": "Isso. É assim que a rota padrão é substituída."
+   },
+   {
+    "text": "As duas, alternando pacote a pacote",
+    "why": "O Azure escolhe uma rota por destino."
+   },
+   {
+    "text": "A que foi criada por último",
+    "why": "A hora de criação não tem papel nenhum."
+   },
+   {
+    "text": "A rota de sistema, já que as rotas do próprio Azure vêm primeiro",
+    "why": "No empate de prefixo, a rota do usuário vence a de sistema."
+   }
+  ]
+ },
+ "ex-pcdv765k": {
+  "prompt": "O escritório anuncia `10.20.2.0/24` por BGP, um prefixo mais longo dentro do intervalo da produção. O tráfego da produção para `10.20.2.4` vai para o escritório?",
+  "hint": "A lição cita uma exceção ao prefixo mais longo.",
+  "choices": [
+   {
+    "text": "Sim: um `/24` vence o `/16` da rede",
+    "why": "Isso valeria para a maioria das rotas, e não para a da própria rede."
+   },
+   {
+    "text": "O pacote é descartado por conflito",
+    "why": "Nenhum conflito descarta nada; uma rota tem preferência."
+   },
+   {
+    "text": "Sim, porque rotas BGP sempre vencem as de sistema",
+    "why": "O BGP só vence rotas de sistema com prefixos iguais, e não para o intervalo da própria rede."
+   },
+   {
+    "text": "Não: a rota de sistema da própria rede tem preferência",
+    "why": "Isso. Rotas da rede, dos pares e de service endpoints vencem rotas BGP mais específicas."
+   }
+  ]
+ },
+ "ex-14h6kn7z": {
+  "prompt": "Uma rota cujo próximo salto é `___` descarta o pacote.",
+  "hint": "A palavra que o Azure imprime para lugar nenhum.",
+  "blanks": [
+   {
+    "accept": [
+     "None"
+    ]
+   }
+  ]
+ },
+ "ex-zcypfq0x": {
+  "prompt": "O que uma tabela de rotas faz antes de ser presa a uma sub-rede?",
+  "hint": "Como um NSG.",
+  "choices": [
+   {
+    "text": "É presa automaticamente à sub-rede padrão",
+    "why": "Não há sub-rede padrão, e nada a prende por você."
+   },
+   {
+    "text": "Vale para toda sub-rede da sua região",
+    "why": "Uma tabela vale para as sub-redes a que está presa e nenhuma outra."
+   },
+   {
+    "text": "Substitui as rotas de sistema da rede inteira",
+    "why": "Ela nunca substitui todas; sobrepõe nos prefixos que coincidem."
+   },
+   {
+    "text": "Nada",
+    "why": "Isso. As rotas dela só se juntam às de uma sub-rede depois de presa."
+   }
+  ]
+ },
+ "ex-zhh54a1n": {
+  "prompt": "Ligue cada tipo de próximo salto ao destino do pacote.",
+  "hint": "Um deles o descarta.",
+  "pairs": [
+   {
+    "left": "`VirtualAppliance`",
+    "right": "para um endereço privado que você cita, como um firewall"
+   },
+   {
+    "left": "`VirtualNetworkGateway`",
+    "right": "para o gateway de VPN ou de ExpressRoute da rede"
+   },
+   {
+    "left": "`None`",
+    "right": "para lugar nenhum"
+   },
+   {
+    "left": "`Internet`",
+    "right": "direto para fora, de propósito"
+   }
+  ],
+  "right_distractors": [
+   "para a região pareada"
+  ]
+ },
+ "ex-gbts7b3a": {
+  "prompt": "Por que a `rt-shop-prod` define `disableBgpRoutePropagation: true`?",
+  "hint": "O que um prefixo mais longo vindo do escritório faria?",
+  "choices": [
+   {
+    "text": "Para as rotas da tabela terem efeito",
+    "why": "Elas têm efeito de qualquer jeito."
+   },
+   {
+    "text": "Para nenhuma rota aprendida do escritório contornar o firewall",
+    "why": "Isso. Um `/24` vindo do gateway venceria o `/16` da tabela."
+   },
+   {
+    "text": "Porque o BGP não é suportado em `brazilsouth`",
+    "why": "O BGP funciona lá; a lição 23 o usa."
+   },
+   {
+    "text": "Para o firewall não anunciar a produção ao escritório",
+    "why": "Ela governa o que chega a estas sub-redes, não o que é anunciado."
+   }
+  ]
+ },
+ "ex-vcq8gc57": {
+  "prompt": "Com a `rt-shop-prod` presa, para onde vai um pacote da `snet-app` para a `snet-web`?",
+  "hint": "A tabela tem uma rota mais longa que a da rede?",
+  "choices": [
+   {
+    "text": "Para o firewall, como todo o resto",
+    "why": "A rota de sistema `/16` é mais longa que o `/0` da tabela."
+   },
+   {
+    "text": "Para o escritório, por `192.168.0.0/16`",
+    "why": "`10.20.1.x` não está nesse intervalo."
+   },
+   {
+    "text": "Direto para a `snet-web`",
+    "why": "Isso. O tráfego dentro da produção fica local por desenho, filtrado pelos NSGs."
+   },
+   {
+    "text": "Para lugar nenhum: a tabela remove as rotas locais",
+    "why": "Uma tabela acrescenta rotas e decide empates; não remove nada."
+   }
+  ]
+ },
+ "ex-z7x72djr": {
+  "prompt": "Uma máquina da produção ganha um endereço público próprio. Os pedidos chegam, mas nenhuma resposta alcança o cliente. Qual é a causa provável?",
+  "hint": "Por onde sai a resposta?",
+  "choices": [
+   {
+    "text": "A resposta segue o `0.0.0.0/0` até um firewall que nunca viu o pedido",
+    "why": "Isso. Depois que o tráfego sai por um firewall, a entrada também tem de passar por ele."
+   },
+   {
+    "text": "Endereços públicos não funcionam em sub-redes privadas",
+    "why": "Um endereço público é justamente a saída explícita que uma sub-rede privada pede."
+   },
+   {
+    "text": "O gateway do escritório responde no lugar dela",
+    "why": "O escritório não tem papel neste caminho."
+   },
+   {
+    "text": "O NSG proíbe respostas para a internet",
+    "why": "Um NSG tem estado e deixa as respostas passarem."
+   }
+  ]
+ },
+ "ex-5kzhcddj": {
+  "prompt": "O que um Azure Firewall novo, sem regras, deixa passar?",
+  "hint": "O oposto dos padrões de um NSG.",
+  "choices": [
+   {
+    "text": "Tudo o que está dentro da rede, como o `AllowVnetInBound`",
+    "why": "Esse é o padrão de um NSG. O firewall não tem nenhum."
+   },
+   {
+    "text": "Nada",
+    "why": "Isso. Ele nega até uma regra dizer o contrário."
+   },
+   {
+    "text": "Só HTTPS de saída",
+    "why": "Nem isso, até uma regra permitir."
+   },
+   {
+    "text": "O que a inteligência de ameaças da Microsoft aprovar",
+    "why": "A inteligência de ameaças só acrescenta recusas."
+   }
+  ]
+ },
+ "ex-txtgnmsr": {
+  "prompt": "Ponha os três tipos de regra de firewall na ordem em que o Azure Firewall os processa.",
+  "hint": "A ordem é fixa, sejam quais forem as prioridades.",
+  "items": [
+   "regras DNAT",
+   "regras de rede",
+   "regras de aplicação"
+  ],
+  "trap": "As prioridades só ordenam grupos e coleções dentro de cada tipo."
+ },
+ "ex-qfwcpcn7": {
+  "prompt": "Por que a loja permite o provedor de pagamento com uma regra de aplicação citando `api.payments.example` em vez de uma regra de NSG com os endereços dele?",
+  "hint": "O que um NSG conhece?",
+  "choices": [
+   {
+    "text": "O firewall é mais barato que um NSG para uma regra",
+    "why": "NSGs são gratuitos; o firewall é a parte mais cara da rede."
+   },
+   {
+    "text": "NSGs não filtram tráfego de saída",
+    "why": "Filtram; o NSG da lição 17 filtra."
+   },
+   {
+    "text": "Regras de aplicação descriptografam os pagamentos para conferi-los",
+    "why": "A camada Standard lê o nome sem descriptografar nada."
+   },
+   {
+    "text": "Os endereços dele mudam, e um NSG só conhece endereços",
+    "why": "Isso. O firewall lê o nome na abertura da conversa HTTPS."
+   }
+  ]
+ },
+ "ex-4szzcac4": {
+  "prompt": "Uma empresa força todo o tráfego de internet a passar pelo escritório, com o Azure Firewall no hub. Qual destas coisas para de funcionar?",
+  "hint": "As respostas sairiam por outro caminho.",
+  "choices": [
+   {
+    "text": "Regras de rede entre spokes",
+    "why": "O tráfego entre spokes não envolve o caminho da internet."
+   },
+   {
+    "text": "Regras de aplicação que casam nomes",
+    "why": "Essas continuam funcionando; o firewall ainda vê os nomes."
+   },
+   {
+    "text": "O DNAT de entrada",
+    "why": "Isso. Os pedidos chegariam ao firewall e as respostas sairiam pelo escritório."
+   },
+   {
+    "text": "O gerenciamento do próprio firewall",
+    "why": "Ele continua funcionando pela `AzureFirewallManagementSubnet`."
+   }
+  ]
+ },
+ "ex-q8eyrje9": {
+  "prompt": "O forced tunnelling com o Azure Firewall precisa de uma segunda sub-rede, `AzureFirewall___Subnet`, de pelo menos um `/26`.",
+  "hint": "Ela carrega o tráfego de gerenciamento do próprio firewall.",
+  "blanks": [
+   {
+    "accept": [
+     "Management"
+    ]
+   }
+  ]
+ },
+ "ex-ap6qnpgw": {
+  "prompt": "A produção manda `0.0.0.0/0` para o firewall. Para onde vai um pacote destinado ao próprio endereço do firewall, `10.0.1.4`?",
+  "hint": "Qual rota que casa é a mais longa?",
+  "choices": [
+   {
+    "text": "Direto pelo peering, por `10.0.0.0/16`",
+    "why": "Isso. O prefixo mais longo vence."
+   },
+   {
+    "text": "Para o firewall pelo `0.0.0.0/0`, o que é um laço",
+    "why": "O `/16` do peering é mais longo, então não se forma laço."
+   },
+   {
+    "text": "É descartado pelo `10.0.0.0/8`",
+    "why": "O `/16` do peering é mais longo que o `/8`."
+   },
+   {
+    "text": "Para o escritório, dono de todos os endereços `10.`",
+    "why": "O escritório é `192.168.0.0/16`."
+   }
+  ]
+ },
+ "ex-kby3c7g6": {
+  "prompt": "Quais destes lugares para uma tabela de rotas a lição desaconselha? Marque todos os que se aplicam.",
+  "hint": "Duas sub-redes com nomes que o Azure escolheu.",
+  "choices": [
+   {
+    "text": "`0.0.0.0/0` para o firewall na `AzureFirewallSubnet`",
+    "why": "Isso. O firewall mandaria o próprio tráfego para si."
+   },
+   {
+    "text": "`0.0.0.0/0` na `GatewaySubnet`",
+    "why": "Isso. Isso pode parar o gateway."
+   },
+   {
+    "text": "`0.0.0.0/0` para o firewall na `snet-app`",
+    "why": "Esse é o desenho da loja."
+   },
+   {
+    "text": "Uma tabela presa a três sub-redes",
+    "why": "Uma tabela pode servir a muitas sub-redes."
+   }
+  ]
+ },
+ "ex-wcgrpsfa": {
+  "prompt": "Depois de a lição 20 fazer o peering da produção com o hub, a bia remove a `office-via-firewall` da `rt-shop-prod` mas deixa a propagação desligada. Para onde vai o tráfego para `192.168.10.5`?",
+  "hint": "Que rotas sobram que o contêm?",
+  "choices": [
+   {
+    "text": "Para o escritório pelo gateway, por BGP",
+    "why": "A propagação está desligada, então nenhuma rota BGP chega à sub-rede."
+   },
+   {
+    "text": "Para o firewall pelo `0.0.0.0/0`",
+    "why": "A rota de sistema `192.168.0.0/16` é mais longa."
+   },
+   {
+    "text": "Para a internet",
+    "why": "Uma rota mais longa casa antes."
+   },
+   {
+    "text": "Lugar nenhum: a rota de sistema `None` de `192.168.0.0/16` o descarta",
+    "why": "Isso. O `/16` vence o `/0` do usuário, e o próximo salto dele é `None`."
+   }
+  ]
+ }
+}

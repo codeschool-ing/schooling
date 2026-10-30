@@ -1,0 +1,432 @@
+{
+ "ex-rg3smwe2": {
+  "prompt": "A qual endereço chega todo pedido para criar, mudar ou apagar um recurso do Azure, qualquer que seja a ferramenta que o mandou?",
+  "hint": "A lição 1 o leu no `az cloud show`.",
+  "choices": [
+   {
+    "text": "`login.microsoftonline.com`",
+    "why": "É de lá que vem o token, o passo anterior."
+   },
+   {
+    "text": "`management.azure.com`",
+    "why": "Isso. O Azure Resource Manager."
+   },
+   {
+    "text": "`portal.azure.com`",
+    "why": "O portal é um cliente; ele também chama o Resource Manager."
+   },
+   {
+    "text": "`core.windows.net`",
+    "why": "Esse é o final do endereço do plano de dados de uma storage account."
+   }
+  ]
+ },
+ "ex-96dtrq9c": {
+  "prompt": "Ponha os quatro passos de um pedido em ordem.",
+  "hint": "O token vem antes de qualquer coisa chegar ao Resource Manager.",
+  "items": [
+   "o cliente obtém um token do Microsoft Entra ID",
+   "o cliente manda o pedido ao Resource Manager com o token",
+   "o Resource Manager confere token, papel, políticas, travas e limites",
+   "o Resource Manager entrega o pedido ao resource provider"
+  ],
+  "trap": "O provider faz o trabalho por último, e só depois que toda conferência passou."
+ },
+ "ex-md5sstq4": {
+  "prompt": "O laboratório pediu um token ao Entra ID e recebeu `AADSTS90002`. O que esse código quer dizer?",
+  "hint": "Leia a primeira frase que a lição guardou.",
+  "choices": [
+   {
+    "text": "O segredo do cliente estava errado",
+    "why": "O Entra ID nem chegou ao segredo; parou no tenant."
+   },
+   {
+    "text": "O escopo `management.azure.com/.default` não é permitido",
+    "why": "Esse é o escopo usual para o Resource Manager."
+   },
+   {
+    "text": "A máquina não tem permissão para alcançar o Entra ID",
+    "why": "O Entra ID respondeu; a recusa é dele."
+   },
+   {
+    "text": "O tenant do endereço não existe",
+    "why": "Isso. `Tenant ... not found`."
+   }
+  ]
+ },
+ "ex-j086a4j6": {
+  "prompt": "Na saída filtrada do `--debug` do `az group list`, o que a CLI fez antes de parar?",
+  "hint": "Leia as três linhas em ordem.",
+  "choices": [
+   {
+    "text": "Mandou um GET ao Resource Manager e foi recusada com 401",
+    "why": "Nenhum pedido foi mandado; a parada veio antes do token."
+   },
+   {
+    "text": "Pediu um token ao Entra ID e foi recusada",
+    "why": "Sem login guardado, não havia por quem pedir um token."
+   },
+   {
+    "text": "Montou um cliente para o Resource Manager e não achou login",
+    "why": "Isso. `ResourceManagementClient`, depois `Please run 'az login'`."
+   },
+   {
+    "text": "Não achou o comando `group list`",
+    "why": "`Command table: group list` é a linha em que ela o achou."
+   }
+  ]
+ },
+ "ex-hgzkf6a9": {
+  "prompt": "Uma equipe argumenta que implantar com Terraform em vez do portal vai contornar uma Azure Policy que nega IPs públicos. O que a lição diz?",
+  "hint": "Onde uma política é julgada?",
+  "choices": [
+   {
+    "text": "Falha exatamente como falharia pelo portal",
+    "why": "Isso. O Resource Manager julga o pedido de todo cliente; os passos 2 a 4 são comuns a toda porta."
+   },
+   {
+    "text": "Funciona se o plano for aprovado antes",
+    "why": "Uma aprovação no Terraform não quer dizer nada para o Resource Manager."
+   },
+   {
+    "text": "Funciona, porque o Terraform chama os providers diretamente",
+    "why": "Nenhum cliente chama um provider diretamente; o Resource Manager fica na frente de todos."
+   },
+   {
+    "text": "Falha, porque o Terraform não cria IPs públicos",
+    "why": "Cria sim; a recusa é da política, não do Terraform."
+   }
+  ]
+ },
+ "ex-5epnjdbm": {
+  "prompt": "Um cliente pede ao Entra ID um token para o Resource Manager com o escopo `https://management.azure.com/.___`.",
+  "hint": "A palavra em inglês para o que vale quando nada mais é escolhido.",
+  "blanks": [
+   {
+    "accept": [
+     "default"
+    ]
+   }
+  ]
+ },
+ "ex-k43qva46": {
+  "prompt": "Qual método HTTP cria um recurso, ou o substitui pelo corpo enviado?",
+  "hint": "Ele é idempotente.",
+  "choices": [
+   {
+    "text": "`POST`",
+    "why": "O Resource Manager usa `POST` para ações como reiniciar, não para criar recursos."
+   },
+   {
+    "text": "`PATCH`",
+    "why": "O `PATCH` muda só os campos enviados, como as tags."
+   },
+   {
+    "text": "`GET`",
+    "why": "O `GET` lê e não muda nada."
+   },
+   {
+    "text": "`PUT`",
+    "why": "Isso. Mandá-lo duas vezes deixa o recurso como mandá-lo uma vez."
+   }
+  ]
+ },
+ "ex-yp8yky48": {
+  "prompt": "Por que o `PUT` ser idempotente é a propriedade em que a lição 26 se apoia?",
+  "hint": "O que acontece se um arquivo for aplicado duas vezes?",
+  "choices": [
+   {
+    "text": "Deixa uma implantação pular as conferências de permissão",
+    "why": "Todo `PUT` é conferido como qualquer outro pedido."
+   },
+   {
+    "text": "Faz cada implantação ser mais rápida que a anterior",
+    "why": "Idempotência é sobre o resultado, não o tempo."
+   },
+   {
+    "text": "Aplicar um arquivo duas vezes dá o mesmo resultado",
+    "why": "Isso. É o que deixa o Bicep e o Terraform descreverem um ambiente inteiro."
+   },
+   {
+    "text": "Apaga o que o corpo não cita",
+    "why": "Isso é o modo completo, outra coisa, na lição 26."
+   }
+  ]
+ },
+ "ex-mkq1vjxk": {
+  "prompt": "O `request.py` imprimiu um `PUT` completo para a rede mas não para a sub-rede. Por quê?",
+  "hint": "Olhe o `name` da sub-rede no template.",
+  "choices": [
+   {
+    "text": "O nome dela é uma expressão",
+    "why": "Isso. `[format(...)]`, que o programa se recusou a adivinhar."
+   },
+   {
+    "text": "A sub-rede não tem `location`, então não tem corpo",
+    "why": "Um recurso filho fica no lugar do pai; o corpo dele ainda tem `properties`."
+   },
+   {
+    "text": "Sub-redes não podem ser criadas pela API REST",
+    "why": "Podem; uma sub-rede é um recurso filho com URL própria."
+   },
+   {
+    "text": "O Bicep esqueceu de compilá-la",
+    "why": "Ela está no template, com um `dependsOn` citando a rede."
+   }
+  ]
+ },
+ "ex-8q1wz2xm": {
+  "prompt": "Um pipeline manda o `PUT` da sub-rede antes do da rede, em paralelo para ganhar tempo. O que a lição prevê?",
+  "hint": "O que é um recurso filho sem o pai?",
+  "choices": [
+   {
+    "text": "Os dois dão certo, já que o Resource Manager os enfileira",
+    "why": "A ordem por `dependsOn` acontece dentro de uma implantação, não entre pedidos separados."
+   },
+   {
+    "text": "A sub-rede é recusada, porque o pai ainda não existe",
+    "why": "Isso. Essa ordem é o que o `dependsOn` dá a uma implantação."
+   },
+   {
+    "text": "A rede é criada já com a sub-rede dentro",
+    "why": "Dois pedidos separados não se juntam."
+   },
+   {
+    "text": "A sub-rede é criada numa rede padrão",
+    "why": "Não existe rede padrão no Azure onde cair."
+   }
+  ]
+ },
+ "ex-123p1a13": {
+  "prompt": "Um arquivo cita `Microsoft.Network/virtualNetworks@2099-01-01`. O que o `az bicep build` fez?",
+  "hint": "Foi um erro ou um aviso?",
+  "choices": [
+   {
+    "text": "Avisou, e compilou mesmo assim",
+    "why": "Isso. Se a versão existe é pergunta do Resource Manager."
+   },
+   {
+    "text": "Trocou pela versão mais recente que conhecia",
+    "why": "O template mantém a versão escrita."
+   },
+   {
+    "text": "Recusou compilar, com um erro",
+    "why": "Compilou; o `BCP081` é um aviso."
+   },
+   {
+    "text": "Perguntou ao Resource Manager se essa versão existe",
+    "why": "Compilar não manda nada a lugar nenhum."
+   }
+  ]
+ },
+ "ex-35jrx31h": {
+  "prompt": "Ligue cada método HTTP ao que ele faz no Resource Manager.",
+  "hint": "Um muda só os campos enviados.",
+  "pairs": [
+   {
+    "left": "`GET`",
+    "right": "lê um recurso ou lista uma coleção"
+   },
+   {
+    "left": "`PUT`",
+    "right": "cria ou substitui pelo corpo enviado"
+   },
+   {
+    "left": "`PATCH`",
+    "right": "muda só os campos enviados"
+   },
+   {
+    "left": "`DELETE`",
+    "right": "remove o recurso"
+   }
+  ],
+  "right_distractors": [
+   "registra um resource provider"
+  ]
+ },
+ "ex-x9vg44hj": {
+  "prompt": "Um pedido para criar um VPN gateway é respondido na hora com 201 e um cabeçalho `Azure-AsyncOperation`. O que o cliente deve fazer?",
+  "hint": "Quando a operação terminou?",
+  "choices": [
+   {
+    "text": "Informar sucesso: 201 quer dizer que o gateway existe",
+    "why": "Aqui o 201 começa uma operação longa; o estado ainda não é final."
+   },
+   {
+    "text": "Mandar o mesmo `PUT` de novo a cada segundo até voltar 200",
+    "why": "Isso gasta tokens de escrita e consulta a coisa errada."
+   },
+   {
+    "text": "Consultar aquele endereço após `Retry-After` segundos",
+    "why": "Isso. Até o estado dizer `Succeeded`, `Failed` ou `Canceled`."
+   },
+   {
+    "text": "Pedir um novo token ao Entra ID",
+    "why": "O token não é o problema; a operação ainda está rodando."
+   }
+  ]
+ },
+ "ex-x5ep3rab": {
+  "prompt": "A data depois do `@` num tipo de recurso Bicep vira o parâmetro `api-___` da URL.",
+  "hint": "Ele nomeia uma versão.",
+  "blanks": [
+   {
+    "accept": [
+     "version"
+    ]
+   }
+  ]
+ },
+ "ex-z83m519m": {
+  "prompt": "Uma implantação falha com `MissingSubscriptionRegistration`. O que está faltando?",
+  "hint": "Algo precisa estar registrado na assinatura.",
+  "choices": [
+   {
+    "text": "Uma atribuição de papel para a identidade que implanta",
+    "why": "A falta de papel é `AuthorizationFailed`, outro erro."
+   },
+   {
+    "text": "A ligação da assinatura com um grupo de gerenciamento",
+    "why": "Uma assinatura pode ficar debaixo da raiz e implantar normalmente."
+   },
+   {
+    "text": "Um orçamento para a assinatura",
+    "why": "Orçamentos nunca bloqueiam uma implantação."
+   },
+   {
+    "text": "O registro do resource provider na assinatura",
+    "why": "Isso. O `az provider register --namespace ...` resolve."
+   }
+  ]
+ },
+ "ex-rgevshn1": {
+  "prompt": "Por que a documentação da Microsoft aconselha registrar só os resource providers que você usa?",
+  "hint": "Pense numa credencial roubada.",
+  "choices": [
+   {
+    "text": "Cada provider registrado é cobrado por mês",
+    "why": "O registro não custa nada; os recursos custam."
+   },
+   {
+    "text": "Um intruso não usa um provider não registrado",
+    "why": "Isso, e o registro pode acrescentar aplicações da Microsoft ao tenant."
+   },
+   {
+    "text": "Providers não registrados recebem atualizações mais rápido",
+    "why": "O registro não tem nada a ver com atualizações."
+   },
+   {
+    "text": "Uma assinatura pode registrar no máximo dez providers",
+    "why": "Esse limite não existe na lição."
+   }
+  ]
+ },
+ "ex-qxcnxa6v": {
+  "prompt": "Um script acabou de esvaziar o balde de leituras da assinatura. Pelos números da Microsoft, quantas leituras ele pode fazer nos próximos 4 segundos sem ser limitado?",
+  "hint": "A reposição é de 25 por segundo.",
+  "unit": "leituras"
+ },
+ "ex-6y7m4n5r": {
+  "prompt": "Um pedido recebe 429 e `Retry-After: 6`. O que a lição diz que um script deve fazer?",
+  "hint": "O que acontece com um pedido mandado cedo demais?",
+  "choices": [
+   {
+    "text": "Tentar de novo na hora, já que 429 é um erro temporário",
+    "why": "Um pedido antes do tempo é recusado de novo, e gasta outro token."
+   },
+   {
+    "text": "Fazer login de novo, já que o token expirou",
+    "why": "Um token expirado dá 401, não 429."
+   },
+   {
+    "text": "Trocar para outra assinatura para continuar",
+    "why": "Isso espalha um erro, não o corrige."
+   },
+   {
+    "text": "Esperar seis segundos antes do próximo pedido",
+    "why": "Isso, e ler os cabeçalhos de limite para desacelerar antes de acontecer."
+   }
+  ]
+ },
+ "ex-rp9dext0": {
+  "prompt": "Quais destas são operações do plano de dados? Marque todas as que se aplicam.",
+  "hint": "Usar um recurso, não administrá-lo.",
+  "choices": [
+   {
+    "text": "Ler um blob em `shopassets.blob.core.windows.net`",
+    "why": "Isso. Quem responde é o serviço de storage, não o Resource Manager."
+   },
+   {
+    "text": "Mudar a replicação de uma storage account",
+    "why": "Isso configura o recurso: plano de controle."
+   },
+   {
+    "text": "Entrar numa máquina virtual por SSH",
+    "why": "Isso. Usar a máquina, não administrá-la."
+   },
+   {
+    "text": "Ler um segredo em `kv-shop-prod.vault.azure.net`",
+    "why": "Isso. O próprio cofre responde."
+   },
+   {
+    "text": "Criar um key vault",
+    "why": "Criar passa pelo `management.azure.com`."
+   }
+  ]
+ },
+ "ex-k6w0nz0n": {
+  "prompt": "A lição 19 fecha `shopassets.blob.core.windows.net` para a internet com um private endpoint. De um notebook fora da rede, a ana ainda consegue mudar a replicação da conta?",
+  "hint": "Qual plano as regras de rede fecham, e de qual plano é a replicação?",
+  "choices": [
+   {
+    "text": "Sim, pelo `management.azure.com`",
+    "why": "Isso. As regras de rede valem para o plano de dados; administrar continua passando pelo Resource Manager."
+   },
+   {
+    "text": "Não, o private endpoint fecha todo endereço da conta",
+    "why": "Ele fecha o endereço do plano de dados, não o Resource Manager."
+   },
+   {
+    "text": "Só pelo Cloud Shell, que está dentro do Azure",
+    "why": "O plano de controle não se importa com onde o cliente está."
+   },
+   {
+    "text": "Só depois de ler um blob para provar acesso",
+    "why": "Acesso ao plano de dados não dá direitos no plano de controle, nem o contrário."
+   }
+  ]
+ },
+ "ex-jzh3ezzr": {
+  "prompt": "Em `PUT https://management.azure.com/subscriptions/bbbbcccc-1111-dddd-2222-eeee3333ffff/resourceGroups/rg-shop-prod/providers/Microsoft.Network/virtualNetworks/vnet-shop-prod?api-version=2024-05-01`, qual peça diz quais propriedades o corpo pode levar?",
+  "hint": "É uma data.",
+  "choices": [
+   {
+    "text": "`Microsoft.Network`",
+    "why": "Esse nomeia o provider que trata o pedido."
+   },
+   {
+    "text": "`api-version=2024-05-01`",
+    "why": "Isso. A versão é o contrato do corpo."
+   },
+   {
+    "text": "`rg-shop-prod`",
+    "why": "Esse é para onde o recurso vai."
+   },
+   {
+    "text": "`PUT`",
+    "why": "O método diz o que fazer, não o que o corpo contém."
+   }
+  ]
+ },
+ "ex-0ty6512m": {
+  "prompt": "Passado o limite de pedidos, o Resource Manager responde com o status HTTP ___.",
+  "hint": "Too Many Requests.",
+  "blanks": [
+   {
+    "accept": [
+     "429"
+    ]
+   }
+  ]
+ }
+}

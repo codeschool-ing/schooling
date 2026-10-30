@@ -1,0 +1,405 @@
+{
+ "ex-3a7z54zr": {
+  "prompt": "Na resposta para `portal.azure.com`, o que uma linha `CNAME` diz?",
+  "hint": "Não é um endereço.",
+  "choices": [
+   {
+    "text": "O endereço deste nome, em IPv4",
+    "why": "Isso é um registro `A`, a última linha."
+   },
+   {
+    "text": "O servidor que responde pela zona",
+    "why": "Isso é um registro `NS`."
+   },
+   {
+    "text": "Este nome é outro nome; pergunte por aquele",
+    "why": "Isso. O resolvedor seguiu cada um por você."
+   },
+   {
+    "text": "Por quanto tempo a resposta pode ser guardada",
+    "why": "Isso é o TTL, uma coluna de todo registro."
+   }
+  ]
+ },
+ "ex-7xqswrst": {
+  "prompt": "Por que o `dig` da lição usa `+nottlid`?",
+  "hint": "O que muda a cada segundo?",
+  "choices": [
+   {
+    "text": "Porque os TTLs são secretos",
+    "why": "Nada num TTL é secreto; o dig o imprime por padrão."
+   },
+   {
+    "text": "Para o resolvedor pular o cache",
+    "why": "Só muda o que é impresso, não como a pergunta é feita."
+   },
+   {
+    "text": "Porque registros do Azure DNS não têm TTL",
+    "why": "Todo registro tem um; o `public.bicep` os define."
+   },
+   {
+    "text": "O TTL muda a cada segundo",
+    "why": "Isso. A coluna está lá na sua máquina sem a opção."
+   }
+  ]
+ },
+ "ex-rnksxcn6": {
+  "prompt": "Você roda o `dig portal.azure.com` da lição e recebe uma cadeia diferente da transcrição. O que isso mais provavelmente quer dizer?",
+  "hint": "Olhe as zonas dos dois primeiros elos.",
+  "choices": [
+   {
+    "text": "Escolheram outro caminho",
+    "why": "Isso. Eles escolhem o próximo elo no momento da pergunta."
+   },
+   {
+    "text": "O seu resolvedor está quebrado",
+    "why": "Uma cadeia diferente é o resultado esperado, não uma falha."
+   },
+   {
+    "text": "O portal saiu do Azure",
+    "why": "Os elos ainda citam serviços do Azure; só a escolha difere."
+   },
+   {
+    "text": "A transcrição foi escrita à mão",
+    "why": "Ela foi capturada; a cadeia muda entre execuções, como a própria seção avisa."
+   }
+  ]
+ },
+ "ex-sb25w4q9": {
+  "prompt": "Ligue cada tipo de registro ao que ele guarda.",
+  "hint": "Um deles guarda um nome, nunca um endereço, para e-mail.",
+  "pairs": [
+   {
+    "left": "`A`",
+    "right": "um endereço IPv4"
+   },
+   {
+    "left": "`MX`",
+    "right": "o nome de um servidor de e-mail e uma preferência"
+   },
+   {
+    "left": "`NS`",
+    "right": "os servidores de nomes de uma zona"
+   },
+   {
+    "left": "`TXT`",
+    "right": "texto livre, como uma prova de posse"
+   }
+  ],
+  "right_distractors": [
+   "o número de série da zona"
+  ]
+ },
+ "ex-6418st8b": {
+  "prompt": "Por que o topo de uma zona, o próprio `shop.example`, não pode ser um CNAME?",
+  "hint": "Que registros o topo já precisa ter?",
+  "choices": [
+   {
+    "text": "O Azure DNS não aceita registros CNAME",
+    "why": "O `www` do `public.bicep` é um."
+   },
+   {
+    "text": "Um CNAME não pode dividir o nome",
+    "why": "Isso. É o problema que os registros alias resolvem."
+   },
+   {
+    "text": "Um CNAME no topo apontaria para si mesmo",
+    "why": "Ele poderia apontar para qualquer lugar; a regra é sobre dividir o nome."
+   },
+   {
+    "text": "O registrador proíbe, não o DNS",
+    "why": "É uma regra do próprio DNS."
+   }
+  ]
+ },
+ "ex-8a3w3yay": {
+  "prompt": "A loja criou a zona `shop.example` no Azure DNS mas não mudou nada no registrador. Quem recebe respostas da zona?",
+  "hint": "O que diz à internet onde a zona está?",
+  "choices": [
+   {
+    "text": "Todo mundo, assim que a zona existe",
+    "why": "Sem a delegação, nenhum resolvedor é mandado ao Azure."
+   },
+   {
+    "text": "Quem pergunta direto ao Azure",
+    "why": "Isso. A delegação no registrador é o que manda a internet para lá."
+   },
+   {
+    "text": "Só as redes virtuais ligadas a ela",
+    "why": "Links são de zonas privadas."
+   },
+   {
+    "text": "Ninguém, até a Microsoft aprovar o domínio",
+    "why": "A Microsoft não aprova nada; os registros NS do registrador decidem."
+   }
+  ]
+ },
+ "ex-zqe37fp9": {
+  "prompt": "Quantos servidores de nomes o Azure atribui a uma zona pública?",
+  "hint": "Um por domínio de topo da lista.",
+  "unit": "servidores de nomes"
+ },
+ "ex-dvq5627m": {
+  "prompt": "Por que a saída compilada `nameServers` é uma expressão em vez de uma lista de nomes?",
+  "hint": "Quando os servidores são escolhidos?",
+  "choices": [
+   {
+    "text": "Porque o Bicep esconde os nomes até a implantação, por segurança",
+    "why": "Nada é escondido; os nomes ainda não existem."
+   },
+   {
+    "text": "Porque os quatro servidores são os mesmos para toda zona",
+    "why": "Os números mudam de zona para zona."
+   },
+   {
+    "text": "Porque uma zona privada não tem servidores de nomes",
+    "why": "O `public.bicep` é uma zona pública."
+   },
+   {
+    "text": "Porque o Azure os escolhe quando a zona é criada",
+    "why": "Isso. Ninguém os conhece antes, nem o compilador."
+   }
+  ]
+ },
+ "ex-1epn6tx9": {
+  "prompt": "`dig NS shop.example +short` lista dois dos quatro servidores de nomes do Azure. Qual é o estado da delegação?",
+  "hint": "Funciona, e quão bem?",
+  "choices": [
+   {
+    "text": "Funcionando, e com metade da resistência que devia ter",
+    "why": "Isso. Escreva os quatro no registrador."
+   },
+   {
+    "text": "Quebrada: nenhum resolvedor vai alcançar a zona",
+    "why": "Dois servidores certos bastam para responder."
+   },
+   {
+    "text": "Correta: o Azure responde com dois por vez",
+    "why": "O Azure deu quatro, e o pai deve citar todos."
+   },
+   {
+    "text": "Pendente até os outros dois serem aprovados",
+    "why": "Não há nada a aprovar; o registrador lista o que recebeu."
+   }
+  ]
+ },
+ "ex-9n7v6fbb": {
+  "prompt": "A loja apaga o `pip-shop-web`. A zona tem um alias `A` em `@` apontando para ele, e um `A` comum antigo em `old` com o mesmo endereço digitado à mão. Qual vira um registro pendurado?",
+  "hint": "Qual registro sabe que o recurso sumiu?",
+  "choices": [
+   {
+    "text": "O alias em `@`",
+    "why": "Um alias segue o recurso e não responde nada quando ele some."
+   },
+   {
+    "text": "Os dois, até o TTL acabar",
+    "why": "O alias para de responder; só o digitado continua."
+   },
+   {
+    "text": "O `A` comum em `old`",
+    "why": "Isso. Ele continua apontando para um endereço que agora pode ser de outra pessoa."
+   },
+   {
+    "text": "Nenhum: o Azure apaga registros que citam um endereço apagado",
+    "why": "O Azure não tem como saber que um endereço digitado era daquele recurso."
+   }
+  ]
+ },
+ "ex-4kgb7w0j": {
+  "prompt": "Para onde um conjunto de registros alias do Azure DNS pode apontar? Marque todas as que se aplicam.",
+  "hint": "Quatro tipos de alvo são citados.",
+  "choices": [
+   {
+    "text": "Um recurso de endereço IP público",
+    "why": "Isso. O `pip-shop-web` do arquivo."
+   },
+   {
+    "text": "Um perfil do Traffic Manager",
+    "why": "Isso. A lição 22 monta um."
+   },
+   {
+    "text": "O endereço privado de uma máquina virtual",
+    "why": "Endereços privados vão em zonas privadas."
+   },
+   {
+    "text": "Outro conjunto de registros da mesma zona",
+    "why": "Isso."
+   },
+   {
+    "text": "Uma zona em outro provedor de DNS",
+    "why": "Um alias aponta para recursos do Azure."
+   }
+  ]
+ },
+ "ex-w2e53nvj": {
+  "prompt": "No nome de um conjunto de registros, `___` representa o topo da zona.",
+  "hint": "Um caractere.",
+  "blanks": [
+   {
+    "accept": [
+     "@"
+    ]
+   }
+  ]
+ },
+ "ex-5pjxacgg": {
+  "prompt": "Quem pode fazer uma pergunta à zona privada `shop.internal`?",
+  "hint": "O que faz um link de rede virtual?",
+  "choices": [
+   {
+    "text": "Qualquer um que conheça os servidores de nomes do Azure",
+    "why": "Esses servem zonas públicas. Zonas privadas não têm servidores públicos."
+   },
+   {
+    "text": "Toda rede da mesma assinatura",
+    "why": "Uma assinatura não concede nada; o link concede."
+   },
+   {
+    "text": "Máquinas das redes virtuais ligadas a ela",
+    "why": "Isso. Pelo `168.63.129.16`."
+   },
+   {
+    "text": "O escritório, pela VPN, sem mais configuração",
+    "why": "O escritório precisa de um encaminhador para o Private Resolver."
+   }
+  ]
+ },
+ "ex-a6vxzrhg": {
+  "prompt": "O que o `registrationEnabled: true` do link faz?",
+  "hint": "Ninguém mantém uma lista.",
+  "choices": [
+   {
+    "text": "As máquinas registram os próprios nomes",
+    "why": "Isso. Uma zona de registro por rede."
+   },
+   {
+    "text": "Private endpoints registram os endereços na zona",
+    "why": "Os registros deles vêm dos zone groups, como na lição 19."
+   },
+   {
+    "text": "A zona é registrada num registrador público",
+    "why": "Uma zona privada não tem nada a ver com registradores."
+   },
+   {
+    "text": "A rede pode resolver nomes da zona",
+    "why": "Qualquer link deixa resolver; o registro é o extra."
+   }
+  ]
+ },
+ "ex-w3xvy7f5": {
+  "prompt": "A loja cria uma zona privada `shop.example` só com `api`, ligada à `vnet-shop-prod`. O que acontece com `www.shop.example` para as máquinas dessa rede?",
+  "hint": "Uma zona privada cai para a pública?",
+  "choices": [
+   {
+    "text": "Resolve pela zona pública como antes",
+    "why": "Uma zona privada não cai para a pública."
+   },
+   {
+    "text": "Resolve para o endereço do `api`",
+    "why": "Nada liga o `www` ao `api`."
+   },
+   {
+    "text": "Resolve só depois que o TTL do registro público acaba",
+    "why": "Esperar não muda nada; a zona privada responde primeiro."
+   },
+   {
+    "text": "Deixa de resolver ali, embora resolva da internet",
+    "why": "Isso. A zona privada responde \"esse nome não existe\"."
+   }
+  ]
+ },
+ "ex-3kz7pt4b": {
+  "prompt": "Qual metade do Private Resolver deixa os notebooks do escritório resolverem `db.shop.internal`?",
+  "hint": "Em que sentido a pergunta viaja?",
+  "choices": [
+   {
+    "text": "O outbound endpoint, com um conjunto de regras",
+    "why": "Esse manda as perguntas do Azure para o escritório."
+   },
+   {
+    "text": "O inbound endpoint",
+    "why": "Isso. Com um encaminhador condicional para `shop.internal`."
+   },
+   {
+    "text": "Um link da zona privada para a rede do escritório",
+    "why": "Links ligam zonas só a redes virtuais."
+   },
+   {
+    "text": "Nenhuma: o escritório usa o `168.63.129.16` direto",
+    "why": "Esse endereço só responde dentro do Azure."
+   }
+  ]
+ },
+ "ex-zwz0hczx": {
+  "prompt": "Uma regra como \"perguntas sobre `corp.shop.example` vão para `192.168.1.10`\" pertence a um ___ de encaminhamento no outbound endpoint.",
+  "hint": "Um conjunto de regras tem um nome.",
+  "blanks": [
+   {
+    "accept": [
+     "ruleset",
+     "conjunto de regras"
+    ]
+   }
+  ]
+ },
+ "ex-3y3xysgc": {
+  "prompt": "Ponha os passos de levar o `shop.example` para o Azure DNS na ordem segura.",
+  "hint": "O registrador muda por último.",
+  "items": [
+   "criar a zona no Azure DNS",
+   "copiar todos os registros para a zona nova",
+   "perguntar direto aos servidores novos com `dig @<servidor>`",
+   "escrever os quatro servidores de nomes no registrador",
+   "esperar os registros NS antigos do pai expirarem"
+  ],
+  "trap": "Mudar o registrador primeiro manda a internet para uma zona ainda vazia."
+ },
+ "ex-208vvz4f": {
+  "prompt": "Uma máquina na `vnet-shop-staging` não resolve `db.shop.internal`, embora uma na `vnet-shop-prod` resolva. O que conferir primeiro?",
+  "hint": "A quem a zona responde?",
+  "choices": [
+   {
+    "text": "O TTL do registro",
+    "why": "O TTL decide o cache, não quem pode perguntar."
+   },
+   {
+    "text": "Se a zona tem um link com a `vnet-shop-staging`",
+    "why": "Isso. O arquivo só ligou a produção."
+   },
+   {
+    "text": "Os quatro servidores de nomes da zona",
+    "why": "Zonas privadas não são perguntadas por servidores de nomes."
+   },
+   {
+    "text": "Se a staging tem o registro ligado",
+    "why": "O registro escreve nomes; resolver só precisa de um link."
+   }
+  ]
+ },
+ "ex-fxdk35xb": {
+  "prompt": "Quais destas coisas o laboratório de fato fez nesta lição? Marque todas as que se aplicam.",
+  "hint": "Veja o que tem transcrição.",
+  "choices": [
+   {
+    "text": "Leu uma cadeia inteira de CNAME do DNS público",
+    "why": "Isso. `dig portal.azure.com`."
+   },
+   {
+    "text": "Compilou uma zona pública com um registro alias",
+    "why": "Isso. O `public.bicep`."
+   },
+   {
+    "text": "Listou os servidores de nomes de uma zona delegada com `dig NS`",
+    "why": "O resolvedor da máquina de gravação deixou perguntas NS sem resposta."
+   },
+   {
+    "text": "Resolveu `db.shop.internal` por uma zona privada",
+    "why": "Zonas privadas só respondem dentro do Azure."
+   },
+   {
+    "text": "Compilou uma zona privada com registro automático",
+    "why": "Isso. O `private.bicep`."
+   }
+  ]
+ }
+}

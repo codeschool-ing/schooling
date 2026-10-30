@@ -1,0 +1,389 @@
+{
+  "ex-tjhage89": {
+    "prompt": "Em `firstAndLast(minutes)`, com `minutes: [Int]`, quem decide que `T` é `Int`?",
+    "choices": [
+      {
+        "text": "Quem chama, escrevendo `firstAndLast<Int>`",
+        "why": "Ninguém escreveu isso; uma função genérica não é chamada assim."
+      },
+      {
+        "text": "O compilador, a partir do argumento",
+        "why": "Isso: ele infere o parâmetro de tipo a partir de `[Int]`, na compilação."
+      },
+      {
+        "text": "O programa, quando olha o primeiro elemento na execução",
+        "why": "Nada sobre `T` é decidido na execução."
+      },
+      {
+        "text": "Ninguém: `T` fica desconhecido",
+        "why": "Cada chamada tem um `T` exato, e é verificada com ele."
+      }
+    ]
+  },
+  "ex-2kyv0ape": {
+    "prompt": "Por que `item > best!` não compila dentro de `func largest<T>(_ items: [T])`?",
+    "hint": "O que o corpo pode supor sobre `T`?",
+    "choices": [
+      {
+        "text": "`best!` pode ser `nil`",
+        "why": "Isso seria uma quebra na execução, não este erro."
+      },
+      {
+        "text": "`>` só funciona com `Int`",
+        "why": "Strings e doubles também têm `>`; o problema são os tipos que não têm nenhum."
+      },
+      {
+        "text": "Alguns tipos não têm `>`, e `T` pode ser qualquer tipo",
+        "why": "Isso: um `T` sem restrição só permite o que todo tipo sabe fazer."
+      },
+      {
+        "text": "Um laço `for … where` não pode comparar valores",
+        "why": "Pode; a versão da seção 03 compila com o mesmo laço."
+      }
+    ]
+  },
+  "ex-d53gj2cs": {
+    "prompt": "Em `func firstAndLast<T>(_ items: [T])`, `T` se chama ___ de tipo.",
+    "hint": "A seção 02 pôs o termo em negrito.",
+    "blanks": [
+      {
+        "accept": [
+          "parâmetro",
+          "parametro"
+        ]
+      }
+    ]
+  },
+  "ex-nv9vz4ap": {
+    "prompt": "O que `<T: Comparable>` acrescenta ao `largest`?",
+    "choices": [
+      {
+        "text": "Converte todo argumento num número comparável",
+        "why": "Nada é convertido; strings continuam strings."
+      },
+      {
+        "text": "Só entram tipos com `>`, e o corpo o usa",
+        "why": "Isso: um contrato com dois lados."
+      },
+      {
+        "text": "Ordena o array antes",
+        "why": "Uma restrição não roda código."
+      },
+      {
+        "text": "Deixa `T` ser decidido na execução",
+        "why": "`T` continua fixo em cada chamada, na compilação."
+      }
+    ]
+  },
+  "ex-3tft1d7g": {
+    "prompt": "`largest([Note(), Note()])`, em que `Note` é uma classe sem `Comparable`. Onde o compilador põe o erro?",
+    "hint": "A restrição mudou a verificação de lugar.",
+    "choices": [
+      {
+        "text": "No corpo, no `>`",
+        "why": "O corpo compila; todo tipo admitido tem `>`."
+      },
+      {
+        "text": "Em lugar nenhum: quebra quando a linha roda",
+        "why": "Restrições são verificadas na compilação."
+      },
+      {
+        "text": "Na chamada",
+        "why": "Isso: `requires that 'Note' conform to 'Comparable'`, com uma nota dizendo que `T` era `Note`."
+      },
+      {
+        "text": "Na declaração de `class Note`, pedindo `==`",
+        "why": "O erro é sobre `Comparable`, e é relatado onde o tipo encontra a função."
+      }
+    ]
+  },
+  "ex-43d6cjgd": {
+    "prompt": "O que `weekTotal(1...4)` devolve?",
+    "hint": "Um intervalo fechado é uma coleção de `Int`."
+  },
+  "ex-atcgvf70": {
+    "prompt": "`[Int]` é um jeito mais curto de escrever que tipo?",
+    "choices": [
+      {
+        "text": "`Stack<Int>`",
+        "why": "`Stack` é a struct que esta seção escreveu, não a da biblioteca padrão."
+      },
+      {
+        "text": "`Array<Int>`",
+        "why": "Isso: `Array<Element>` com `Element` igual a `Int`."
+      },
+      {
+        "text": "`Collection<Int>`, um protocolo",
+        "why": "Um array conforma a `Collection`; o tipo em si é `Array`."
+      },
+      {
+        "text": "`Optional<Int>`",
+        "why": "Esse é o `Int?`."
+      }
+    ]
+  },
+  "ex-6gh9jn83": {
+    "prompt": "Por que `Stack<String>` não tem `sum`?",
+    "hint": "Veja onde a condição está.",
+    "choices": [
+      {
+        "text": "`sum` foi declarado `private`",
+        "why": "Não foi; só `items` é privado."
+      },
+      {
+        "text": "Strings não podem ser empilhadas",
+        "why": "`undo` é uma pilha de strings e funciona."
+      },
+      {
+        "text": "Um tipo genérico não pode ter propriedades calculadas",
+        "why": "`top` e `isEmpty` são calculadas e existem em toda pilha."
+      },
+      {
+        "text": "Ele vive numa extensão `where Element: Numeric`",
+        "why": "Isso: o membro só existe em pilhas de números."
+      }
+    ]
+  },
+  "ex-z65mw9bf": {
+    "prompt": "Um colega escreve `struct Stack<Element: Numeric>` para o `sum` funcionar. O que isso custou?",
+    "hint": "Restrinja o mais tarde possível.",
+    "choices": [
+      {
+        "text": "A lista de desfazer não compila mais",
+        "why": "Isso: a condição agora vale para o tipo inteiro, não para um membro."
+      },
+      {
+        "text": "Velocidade, porque um genérico restrito vai para uma caixa",
+        "why": "Genéricos com tipo conhecido não vão para caixa; o `any` vai."
+      },
+      {
+        "text": "Nada; as duas declarações querem dizer o mesmo",
+        "why": "Elas diferem em quais pilhas podem existir."
+      },
+      {
+        "text": "`pop()` deixa de devolver um opcional",
+        "why": "A restrição não mexe no `pop()`."
+      }
+    ]
+  },
+  "ex-cbxpkmdg": {
+    "prompt": "`SessionStore` nunca escreve `typealias Item`. Como o compilador sabe o `Item` dela?",
+    "choices": [
+      {
+        "text": "O padrão é `Any`",
+        "why": "Não existe esse padrão."
+      },
+      {
+        "text": "Pelos tipos que `add` e `all` usam",
+        "why": "Isso: os tipos dos requisitos o definem, e precisam concordar."
+      },
+      {
+        "text": "Pelo primeiro item acrescentado na execução",
+        "why": "Ele é fixado quando o tipo conforma."
+      },
+      {
+        "text": "Não sabe; o build falha",
+        "why": "Compilou e rodou."
+      }
+    ]
+  },
+  "ex-t2aqvcnd": {
+    "prompt": "Em `func fill<S: Store>(_ store: inout S, with items: [S.Item])`, o que `[S.Item]` garante?",
+    "choices": [
+      {
+        "text": "Que os itens estão ordenados",
+        "why": "Nada sobre ordem é dito."
+      },
+      {
+        "text": "Que `S` é uma `SessionStore`",
+        "why": "`S` pode ser qualquer repositório, uma `CourseList` também."
+      },
+      {
+        "text": "Que o array guarda exatamente o que aquele repositório aceita",
+        "why": "Isso: cursos para uma `CourseList`, sessões para uma `SessionStore`."
+      },
+      {
+        "text": "Que nenhum item é acrescentado duas vezes",
+        "why": "Isso é o `add` da própria `CourseList`, não a assinatura."
+      }
+    ]
+  },
+  "ex-d1haftx2": {
+    "prompt": "Depois de `fill(&courses, with: [\"Swift\", \"Kotlin\", \"Swift\"])`, quantos cursos a `CourseList` guarda?"
+  },
+  "ex-kyws4z95": {
+    "prompt": "O que `-> some Sequence<Int>` promete a quem chama?",
+    "choices": [
+      {
+        "text": "Um tipo de sequência diferente a cada chamada",
+        "why": "`some` é um tipo, fixado pela função."
+      },
+      {
+        "text": "Um `Array<Int>`",
+        "why": "O tipo real era uma sequência de filtro preguiçosa."
+      },
+      {
+        "text": "Um tipo a percorrer, com inteiros",
+        "why": "Isso: quem chama sabe o protocolo e o elemento, não o nome do tipo."
+      },
+      {
+        "text": "Uma caixa de 40 bytes guardando qualquer sequência",
+        "why": "Isso é o `any`; o `some` não vai para caixa."
+      }
+    ]
+  },
+  "ex-gqnpn09x": {
+    "prompt": "`pick(_:)` devolve um `Course` num caminho e uma `StudySession` em outro, declarado `-> some Describable`. O que acontece?",
+    "choices": [
+      {
+        "text": "Compila; os dois conformam",
+        "why": "Conformar não basta: `some` é um tipo só."
+      },
+      {
+        "text": "Erro nomeando os dois tipos",
+        "why": "Isso: duas notas, uma por return."
+      },
+      {
+        "text": "Compila e põe o resultado numa caixa",
+        "why": "Pôr na caixa é o que o `any` faria, se você o escrevesse."
+      },
+      {
+        "text": "Devolve o tipo que vier primeiro",
+        "why": "O compilador não escolhe por você."
+      }
+    ]
+  },
+  "ex-nm1zt4ha": {
+    "prompt": "`func show(_ item: some Describable)` quer dizer o mesmo que `func show<T: ___>(_ item: T)`.",
+    "hint": "O protocolo nomeado depois do `some`.",
+    "blanks": [
+      {
+        "accept": [
+          "Describable"
+        ]
+      }
+    ]
+  },
+  "ex-fcvjqpes": {
+    "prompt": "Quantos bytes `MemoryLayout<any Describable>.size` imprimiu?"
+  },
+  "ex-jgfypeen": {
+    "prompt": "O que há numa caixa `any Describable`, além do espaço para o valor?",
+    "hint": "Duas palavras.",
+    "choices": [
+      {
+        "text": "O tipo dele e a tabela",
+        "why": "Isso: é assim que `item.title` acha a propriedade certa."
+      },
+      {
+        "text": "Uma cópia do código-fonte",
+        "why": "Nada do fonte sobrevive à compilação."
+      },
+      {
+        "text": "Uma contagem de quantos arrays a compartilham",
+        "why": "Contagens de referência são de classes, aula 11."
+      },
+      {
+        "text": "Uma trava de threads",
+        "why": "Nenhuma trava está envolvida."
+      }
+    ]
+  },
+  "ex-yw31zem1": {
+    "prompt": "`var store: any Store = Minutes()` e depois `store.add(30)`. Por que a chamada é recusada?",
+    "hint": "O que a caixa esconde?",
+    "choices": [
+      {
+        "text": "`Minutes` não tem método `add`",
+        "why": "Tem um, que recebe um `Int`."
+      },
+      {
+        "text": "Valores `var` não podem ir para caixa",
+        "why": "A declaração compilou; só a chamada falhou."
+      },
+      {
+        "text": "A caixa esconde o `Item`, então nada diz que 30 é aceitável",
+        "why": "Isso: o repositório lá dentro poderia ser de strings; uma restrição genérica mantém o tipo conhecido."
+      },
+      {
+        "text": "`any` só é permitido em arrays",
+        "why": "É permitido em qualquer variável."
+      }
+    ]
+  },
+  "ex-qk726d16": {
+    "prompt": "A tela de lista do planner mostra cursos e sessões misturados. Que tipo serve para o array dela?",
+    "choices": [
+      {
+        "text": "`some Describable`",
+        "why": "`some` é um tipo só, e a lista tem dois."
+      },
+      {
+        "text": "`[any Describable]`",
+        "why": "Isso: valores misturados são exatamente o caso do `any`."
+      },
+      {
+        "text": "`[Course]`, convertendo cada sessão",
+        "why": "O Swift não converte uma struct em outra."
+      },
+      {
+        "text": "Um `[T]` genérico com `T: Describable`",
+        "why": "`T` é um tipo por uso, então não guarda os dois."
+      }
+    ]
+  },
+  "ex-p134nf4g": {
+    "prompt": "Ligue cada grafia ao que ela quer dizer.",
+    "pairs": [
+      {
+        "left": "`func f<T>(_ x: T)`",
+        "right": "Qualquer tipo, fixo por chamada"
+      },
+      {
+        "left": "`func f<T: Comparable>(_ x: T)`",
+        "right": "Qualquer tipo que tenha `<`"
+      },
+      {
+        "left": "`func f() -> some Sequence<Int>`",
+        "right": "Um tipo escondido, escolhido pela função"
+      },
+      {
+        "left": "`var x: any Describable`",
+        "right": "Uma caixa cujo conteúdo pode mudar de tipo"
+      }
+    ],
+    "right_distractors": [
+      "Um tipo decidido pelo primeiro valor guardado"
+    ]
+  },
+  "ex-cef576c7": {
+    "prompt": "Ordene do que o compilador mais sabe sobre o tipo numa chamada ao que menos sabe.",
+    "items": [
+      "Um tipo concreto, `Course`",
+      "Um genérico `T: Describable`, fixo por chamada",
+      "Uma caixa `any Describable`"
+    ]
+  },
+  "ex-hsqhvsq1": {
+    "prompt": "Uma função guarda numa propriedade o repositório que receber, e depois repositórios de tipos de item diferentes podem substituí-lo. Que declaração serve para a propriedade?",
+    "hint": "O tipo muda enquanto o programa roda.",
+    "choices": [
+      {
+        "text": "`var current: some Store`",
+        "why": "`some` é um tipo para sempre."
+      },
+      {
+        "text": "`var current: Store<Int>`",
+        "why": "`Store` é um protocolo com tipo associado, não uma struct genérica, e os tipos de item variam."
+      },
+      {
+        "text": "`var current: any Store`",
+        "why": "Isso, com o custo que a seção 07 mostrou: o `add` não pode mais ser chamado por ela."
+      },
+      {
+        "text": "`var current: [Store.Item]`",
+        "why": "`Store.Item` não nomeia um tipo só."
+      }
+    ]
+  }
+}

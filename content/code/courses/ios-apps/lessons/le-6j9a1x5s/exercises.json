@@ -1,0 +1,637 @@
+[
+  {
+    "id": "ex-a27vjwp0",
+    "version": 1,
+    "section": "swift-testing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`WeekTests` is a `struct` with a stored `plan`. What does each test start from?",
+    "hint": "Swift Testing makes a new instance per test.",
+    "choices": [
+      {
+        "text": "Whatever the previous test left in `plan`",
+        "correct": false,
+        "why": "Each test gets its own instance, so nothing leaks between them."
+      },
+      {
+        "text": "A new copy of that plan for every test",
+        "correct": true,
+        "why": "Right: a new struct per test, and the property is the fixture."
+      },
+      {
+        "text": "An empty plan, until `setUp()` fills it",
+        "correct": false,
+        "why": "`setUp()` is XCTest's; Swift Testing uses the struct itself."
+      },
+      {
+        "text": "The plan from `week/main.swift`",
+        "correct": false,
+        "why": "The test target does not run the `week` program."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zce35bf",
+    "version": 1,
+    "section": "swift-testing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When should a test use `#require` rather than `#expect`?",
+    "hint": "One stops the test, the other records and carries on.",
+    "choices": [
+      {
+        "text": "Always, since stopping early is faster",
+        "correct": false,
+        "why": "Stopping hides the other expectations that also failed."
+      },
+      {
+        "text": "When the rest would be meaningless",
+        "correct": true,
+        "why": "Right: `try #require(plan.sessions.first)` ends cleanly on an empty plan."
+      },
+      {
+        "text": "Only inside an XCTest test case",
+        "correct": false,
+        "why": "`#require` is Swift Testing's; XCTest has its own functions."
+      },
+      {
+        "text": "When comparing two strings rather than two numbers",
+        "correct": false,
+        "why": "The type does not decide; whether to go on does."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqthmk2j",
+    "version": 1,
+    "section": "swift-testing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `countsOnlyTheWeekOfToday`, why are 110 minutes planned and not 155?",
+    "hint": "Which Monday does `s3` belong to?",
+    "choices": [
+      {
+        "text": "`s3` is not done, so it is left out",
+        "correct": false,
+        "why": "Planned counts done and not done alike; `s2` is not done and counts."
+      },
+      {
+        "text": "A suite caps each total at 110",
+        "correct": false,
+        "why": "Nothing caps a total; the dates decide."
+      },
+      {
+        "text": "`s3`, on the 26th, is next week",
+        "correct": true,
+        "why": "Right: 50 + 60 is this week's, and 45 belongs to the week of the 26th."
+      },
+      {
+        "text": "Only sessions on or before today count",
+        "correct": false,
+        "why": "`s2` is on the 23rd, after today, and counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-re0r650b",
+    "version": 1,
+    "section": "swift-testing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests did `swift test --filter WeekTests` run?",
+    "hint": "The last line of the run.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wp7ty9ke",
+    "version": 1,
+    "section": "parameterised",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are New Year's Day, the day after a leap day and a Sunday the arguments of the second test?",
+    "hint": "Where does calendar code break?",
+    "choices": [
+      {
+        "text": "They are boundaries, where calendar bugs live",
+        "correct": true,
+        "why": "Right: a year, a month and a week each end there."
+      },
+      {
+        "text": "They are the days the planner's users study most",
+        "correct": false,
+        "why": "Nothing in the course measures that; they are chosen for the arithmetic."
+      },
+      {
+        "text": "Swift Testing allows only three pairs per test",
+        "correct": false,
+        "why": "The first test has seven arguments."
+      },
+      {
+        "text": "The formula is only wrong on those three days",
+        "correct": false,
+        "why": "The broken formula failed on every day it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc3wm5wg",
+    "version": 1,
+    "section": "parameterised",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `(weekday + 6) % 7`, what did `mondayOf(\"2026-11-01\")`, a Sunday, return?",
+    "hint": "Sunday is 1; work out (1 + 6) % 7.",
+    "choices": [
+      {
+        "text": "`2026-10-26`, the right Monday",
+        "correct": false,
+        "why": "That is what the test expected, and did not get."
+      },
+      {
+        "text": "`2026-10-25`, one day too far back",
+        "correct": false,
+        "why": "That is what most days did; the Sunday went the other way."
+      },
+      {
+        "text": "`2026-11-01`, itself",
+        "correct": true,
+        "why": "Right: `back` became 0, so the Sunday counted as its own Monday."
+      },
+      {
+        "text": "Nothing: the test crashed",
+        "correct": false,
+        "why": "It returned a value; the `↳` lines printed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-23f27xzj",
+    "version": 1,
+    "section": "parameterised",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the formula broken, how many issues did the boundary test, `crossing`, record?",
+    "hint": "Count the `✘ … recorded an issue` lines, or read the summary.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mwwep88w",
+    "version": 1,
+    "section": "parameterised",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`@Test(arguments:)` runs the function once per element, and the report calls each run a test ___.",
+    "hint": "`with 7 test …`",
+    "blanks": [
+      {
+        "accept": [
+          "case"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xbgq39kw",
+    "version": 1,
+    "section": "async-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `loadWeek` take `some PlanSource` rather than a server client?",
+    "hint": "What does the test hand it?",
+    "choices": [
+      {
+        "text": "Because a protocol makes the code run faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "So that a test hands it a source it controls",
+        "correct": true,
+        "why": "Right: a fixed plan, or a source that fails every time."
+      },
+      {
+        "text": "Because servers are not allowed in Swift packages",
+        "correct": false,
+        "why": "Lesson 12 talks to a server from a package."
+      },
+      {
+        "text": "`some` makes the function work without `await`",
+        "correct": false,
+        "why": "It is still `async`; `some` is about the type."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q8gahhj",
+    "version": 1,
+    "section": "async-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the `await` go when expecting an async function to throw?",
+    "hint": "The closure inside the macro is async.",
+    "choices": [
+      {
+        "text": "Nowhere: `#expect(throws:)` waits on its own",
+        "correct": false,
+        "why": "The test has to await the macro, because its closure is async."
+      },
+      {
+        "text": "Only inside the closure, before `loadWeek`",
+        "correct": false,
+        "why": "It is inside too, and the macro itself also needs one."
+      },
+      {
+        "text": "In front of the macro, and before the call inside it",
+        "correct": true,
+        "why": "Right: `await #expect(throws:) { try await … }`."
+      },
+      {
+        "text": "After the closure, as `#expect(...) await`",
+        "correct": false,
+        "why": "`await` always comes before what it waits for."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb8bjxc9",
+    "version": 1,
+    "section": "async-tests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`aFailedLoadIsPassedOn` checks that the error reaches the caller unchanged. Why is that test the one usually missing?",
+    "hint": "A real server fails only on a bad day.",
+    "choices": [
+      {
+        "text": "Errors cannot be compared in Swift Testing",
+        "correct": false,
+        "why": "`Offline` is `Equatable`, and the test compares it."
+      },
+      {
+        "text": "Async functions cannot throw on Linux",
+        "correct": false,
+        "why": "It threw on Linux, and the test passed."
+      },
+      {
+        "text": "Without a fake, the failure path is hard to reach",
+        "correct": true,
+        "why": "Right, and the error screen depends on it."
+      },
+      {
+        "text": "The happy path covers the error path as well",
+        "correct": false,
+        "why": "Coverage in section 08 shows the opposite kind of gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjjcwhm1",
+    "version": 1,
+    "section": "xctest",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of XCTest to its Swift Testing counterpart.",
+    "hint": "The table in section 05.",
+    "pairs": [
+      {
+        "left": "`func testSomething()` in an `XCTestCase`",
+        "right": "A function marked `@Test`"
+      },
+      {
+        "left": "`XCTAssertEqual(a, b)`",
+        "right": "`#expect(a == b)`"
+      },
+      {
+        "left": "`setUp()`",
+        "right": "The suite's `init` or stored properties"
+      },
+      {
+        "left": "`XCTAssertThrowsError`",
+        "right": "`#expect(throws:)`"
+      }
+    ],
+    "right_distractors": [
+      "`#Preview`"
+    ]
+  },
+  {
+    "id": "ex-d7a677zx",
+    "version": 1,
+    "section": "xctest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which tests in a new Xcode project have to stay XCTest?",
+    "hint": "Swift Testing does not drive an interface.",
+    "choices": [
+      {
+        "text": "Every unit test, since Xcode cannot run Swift Testing",
+        "correct": false,
+        "why": "Xcode runs both frameworks."
+      },
+      {
+        "text": "The UI tests",
+        "correct": true,
+        "why": "Right: they are `XCUIApplication`, which is XCTest."
+      },
+      {
+        "text": "Tests of async functions",
+        "correct": false,
+        "why": "Section 04's async tests are Swift Testing."
+      },
+      {
+        "text": "Tests that compare strings",
+        "correct": false,
+        "why": "`#expect` compares strings like anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qd81b3z",
+    "version": 1,
+    "section": "ui-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does `AddSessionUITests` find the *Add session* button?",
+    "hint": "It sees only what accessibility exposes.",
+    "choices": [
+      {
+        "text": "By its position on the screen",
+        "correct": false,
+        "why": "Positions change with the device; the test uses labels."
+      },
+      {
+        "text": "By calling the view's code directly",
+        "correct": false,
+        "why": "A UI test runs in another process and cannot see the code."
+      },
+      {
+        "text": "By its accessibility label or ID",
+        "correct": true,
+        "why": "Right: the label lesson 19 wrote, or an identifier."
+      },
+      {
+        "text": "By the variable name in `SessionForm`",
+        "correct": false,
+        "why": "Variable names do not exist outside the compiled app."
+      }
+    ]
+  },
+  {
+    "id": "ex-wt29rjq8",
+    "version": 1,
+    "section": "ui-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why `waitForExistence(timeout:)` rather than a fixed sleep before the assertion?",
+    "hint": "A slow machine and a fast one.",
+    "choices": [
+      {
+        "text": "It returns when the element appears, and fails after the timeout",
+        "correct": true,
+        "why": "Right: no wasted time on a fast machine, no false failure on a slow one."
+      },
+      {
+        "text": "A sleep is not allowed in XCTest",
+        "correct": false,
+        "why": "It is allowed; it is just the wrong tool."
+      },
+      {
+        "text": "It makes the app load faster",
+        "correct": false,
+        "why": "Waiting does not change the app's speed."
+      },
+      {
+        "text": "It restarts the app when the element is missing",
+        "correct": false,
+        "why": "It returns false; the assertion fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-0b4qadm4",
+    "version": 1,
+    "section": "ui-tests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A UI test passes on your Mac and fails on a colleague's with the same code. Which section 06 advice most likely fixes it?",
+    "hint": "What state was each simulator holding?",
+    "choices": [
+      {
+        "text": "`continueAfterFailure = false`",
+        "correct": false,
+        "why": "That clarifies a failure; it does not remove its cause."
+      },
+      {
+        "text": "Start from a known state with a launch argument",
+        "correct": true,
+        "why": "Right: each simulator held a different plan from earlier runs."
+      },
+      {
+        "text": "More UI tests, to cover the difference",
+        "correct": false,
+        "why": "More tests with the same flaw fail the same way."
+      },
+      {
+        "text": "Moving the test into the package",
+        "correct": false,
+        "why": "A UI test needs the app; the package has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-7874px0y",
+    "version": 1,
+    "section": "previews",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which preview is the section's advice to write first?",
+    "hint": "The awkward states.",
+    "choices": [
+      {
+        "text": "An ordinary week, 180 planned and 120 done",
+        "correct": false,
+        "why": "The ordinary week looks fine by construction."
+      },
+      {
+        "text": "A week with no sessions planned at all yet",
+        "correct": true,
+        "why": "Right: `planned: 0` is where a progress bar can divide by zero."
+      },
+      {
+        "text": "The app's whole first screen, with a live server",
+        "correct": false,
+        "why": "A preview that needs the whole app is a warning sign."
+      },
+      {
+        "text": "None: previews are optional decoration",
+        "correct": false,
+        "why": "They are the fastest way to look at hard states."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewtpxrad",
+    "version": 1,
+    "section": "previews",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between a preview and a test?",
+    "hint": "One can fail.",
+    "choices": [
+      {
+        "text": "Previews run on Linux, tests do not",
+        "correct": false,
+        "why": "The opposite: the tests ran on Linux, previews need Xcode."
+      },
+      {
+        "text": "A preview is looked at and never fails",
+        "correct": true,
+        "why": "Right: it shows what to fix; a test keeps it fixed."
+      },
+      {
+        "text": "A preview checks the arithmetic, a test the layout",
+        "correct": false,
+        "why": "A preview checks nothing; it draws."
+      },
+      {
+        "text": "None: `#Preview` is a kind of `@Test`",
+        "correct": false,
+        "why": "They are separate macros for separate jobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-am2bm3qm",
+    "version": 1,
+    "section": "what-to-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Coverage showed lines 51 and 52 of `Plan.swift` never ran in a test. What do they say?",
+    "hint": "The end of `add`.",
+    "choices": [
+      {
+        "text": "That `add` is dead code to be deleted",
+        "correct": false,
+        "why": "`week/main.swift` runs it; the gap is a missing test."
+      },
+      {
+        "text": "No test adds a valid session and checks it",
+        "correct": true,
+        "why": "Right: the success path is untested, a missing test with a name."
+      },
+      {
+        "text": "That the line count is wrong on Linux",
+        "correct": false,
+        "why": "The count is right: every test of `add` expects a refusal."
+      },
+      {
+        "text": "That the package needs 100% before release",
+        "correct": false,
+        "why": "Coverage is a map, not a target."
+      }
+    ]
+  },
+  {
+    "id": "ex-cetcmfr7",
+    "version": 1,
+    "section": "what-to-test",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bug is reported: a session on a Sunday shows in the wrong week. Put the work in order.",
+    "hint": "Test first, then fix.",
+    "items": [
+      "Write a test with that Sunday that fails",
+      "Run it and watch it fail",
+      "Fix `mondayOf`",
+      "Run every test and watch them pass",
+      "Add the cases beside it as arguments"
+    ]
+  },
+  {
+    "id": "ex-pcxr5ec7",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these ran on the Linux machine for this lesson? Choose all that apply.",
+    "hint": "Anything under `Tests/PlannerCoreTests/`.",
+    "choices": [
+      {
+        "text": "`LegacyTests`, in XCTest",
+        "correct": true,
+        "why": "Yes: XCTest runs on Linux too."
+      },
+      {
+        "text": "`AddSessionUITests`",
+        "correct": false,
+        "why": "No: it needs the app and a simulator."
+      },
+      {
+        "text": "The coverage report from `llvm-cov`",
+        "correct": true,
+        "why": "Yes: the toolchain ships it."
+      },
+      {
+        "text": "The `#Preview` of an empty week",
+        "correct": false,
+        "why": "No: previews need Xcode's canvas."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0xjs996",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should a test of the week's arithmetic live?",
+    "hint": "Fast, and on any computer.",
+    "choices": [
+      {
+        "text": "A UI test that reads the total off the screen",
+        "correct": false,
+        "why": "It would check a sum slowly, and only on a Mac."
+      },
+      {
+        "text": "A preview, with the total in its name",
+        "correct": false,
+        "why": "A preview never fails."
+      },
+      {
+        "text": "The package's tests",
+        "correct": true,
+        "why": "Right: where the rule lives, run by `swift test` anywhere."
+      },
+      {
+        "text": "`week/main.swift`, checked by eye",
+        "correct": false,
+        "why": "A program read by eye is a check you repeat yourself."
+      }
+    ]
+  }
+]

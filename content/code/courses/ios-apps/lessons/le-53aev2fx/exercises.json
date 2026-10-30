@@ -1,0 +1,637 @@
+[
+  {
+    "id": "ex-vbtebadm",
+    "version": 1,
+    "section": "async-image",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `.resizable()` go when you use `AsyncImage(url:content:placeholder:)`?",
+    "hint": "`resizable` belongs to one type.",
+    "choices": [
+      {
+        "text": "On `AsyncImage` itself, before `.frame`",
+        "correct": false,
+        "why": "`AsyncImage` is not an `Image`; Apple's documentation says the modifier cannot go there."
+      },
+      {
+        "text": "On the `Image` the content closure receives",
+        "correct": true,
+        "why": "Right: the closure hands you the loaded image to modify."
+      },
+      {
+        "text": "On the placeholder, which then sizes the image",
+        "correct": false,
+        "why": "The placeholder is drawn only while loading."
+      },
+      {
+        "text": "Nowhere: `AsyncImage` resizes to its frame by itself",
+        "correct": false,
+        "why": "Without `resizable` the picture is drawn at its own pixel size and cropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3f35eaw",
+    "version": 1,
+    "section": "async-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On iOS 17, does `AsyncImage` promise to keep a cover it has already downloaded?",
+    "hint": "Apple's documentation dates the caching to a later iOS.",
+    "choices": [
+      {
+        "text": "Yes, in a memory cache shared by every `AsyncImage`",
+        "correct": false,
+        "why": "No such cache is promised on iOS 17."
+      },
+      {
+        "text": "Yes, on disk, for as long as the app is installed",
+        "correct": false,
+        "why": "Nothing promises that either."
+      },
+      {
+        "text": "No; iOS 27 is where HTTP caching is documented",
+        "correct": true,
+        "why": "Right, which is why section 06 builds a cache the app controls."
+      },
+      {
+        "text": "No, and it downloads every cover twice on purpose",
+        "correct": false,
+        "why": "It may download again; nothing does it twice on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pgrbt94",
+    "version": 1,
+    "section": "phases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cover's download fails, and the placeholder is an `Image` that does not load either. What does the person see?",
+    "hint": "Apple's documentation describes this exact case.",
+    "choices": [
+      {
+        "text": "Nothing, and no error is reported",
+        "correct": true,
+        "why": "Right: which is why the phase form, with a `failure` case, exists."
+      },
+      {
+        "text": "A red error symbol drawn by SwiftUI",
+        "correct": false,
+        "why": "SwiftUI draws nothing of its own here."
+      },
+      {
+        "text": "An alert saying the image could not be loaded",
+        "correct": false,
+        "why": "`AsyncImage` never shows an alert."
+      },
+      {
+        "text": "The last cover that loaded in that row",
+        "correct": false,
+        "why": "Nothing keeps an old picture in its place."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymq2mfh0",
+    "version": 1,
+    "section": "phases",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each case of `AsyncImagePhase` to what the planner draws.",
+    "hint": "Section 03's `switch`.",
+    "pairs": [
+      {
+        "left": "`.empty`",
+        "right": "A `ProgressView`"
+      },
+      {
+        "left": "`.success(let image)`",
+        "right": "The image, resizable and filled"
+      },
+      {
+        "left": "`.failure`",
+        "right": "A photo symbol, labelled for VoiceOver"
+      },
+      {
+        "left": "`@unknown default`",
+        "right": "`Color.clear`"
+      }
+    ],
+    "right_distractors": [
+      "An alert with a retry button"
+    ]
+  },
+  {
+    "id": "ex-04xhd5df",
+    "version": 1,
+    "section": "phases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the `switch` over `AsyncImagePhase` need `@unknown default`, when lesson 12's `switch` over `Loadable` had none?",
+    "hint": "Who may add a case, and should it break your build?",
+    "choices": [
+      {
+        "text": "Because `AsyncImagePhase` has more than three cases",
+        "correct": false,
+        "why": "It has three today, like `Loadable`."
+      },
+      {
+        "text": "Because SwiftUI views require a default in every `switch`",
+        "correct": false,
+        "why": "No such rule; `CourseListView` switched without one."
+      },
+      {
+        "text": "Apple adds cases in later versions; in your own enum a new case should fail the build",
+        "correct": true,
+        "why": "Right: the two `switch`es face opposite ways."
+      },
+      {
+        "text": "Because `Loadable` is generic and `AsyncImagePhase` is not",
+        "correct": false,
+        "why": "Generics have nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-26m7fa8q",
+    "version": 1,
+    "section": "memory-sums",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes does a 1200 by 800 cover take once decoded?",
+    "hint": "Width times height times four.",
+    "value": 3840000,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-1p353xcb",
+    "version": 1,
+    "section": "memory-sums",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The photograph downloaded as 40,614 bytes. Why did it decode to 48,771,072?",
+    "hint": "What does decoding produce?",
+    "choices": [
+      {
+        "text": "The PNG was corrupted and decoded wrongly",
+        "correct": false,
+        "why": "Its header was read correctly: 4032 by 3024."
+      },
+      {
+        "text": "The server sent it uncompressed",
+        "correct": false,
+        "why": "It arrived as 40,614 bytes, compressed."
+      },
+      {
+        "text": "Four bytes for each of 4032 x 3024 pixels",
+        "correct": true,
+        "why": "Right: memory follows the pixels, not the file."
+      },
+      {
+        "text": "Swift keeps ten copies of every image it decodes",
+        "correct": false,
+        "why": "One copy; it is simply large."
+      }
+    ]
+  },
+  {
+    "id": "ex-063xmey2",
+    "version": 1,
+    "section": "memory-sums",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An 80-point square on a 3x screen: how many pixels wide is it?",
+    "hint": "Points times scale.",
+    "value": 240,
+    "tolerance": 0,
+    "unit": "pixels"
+  },
+  {
+    "id": "ex-5rnbnfpa",
+    "version": 1,
+    "section": "memory-sums",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A real photograph of the same 4032 by 3024 size compresses to 3 MB rather than 40 KB. What happens to its decoded size?",
+    "hint": "What does the decoded size depend on?",
+    "choices": [
+      {
+        "text": "It grows about seventy times, with the file",
+        "correct": false,
+        "why": "The file's size does not enter the arithmetic."
+      },
+      {
+        "text": "Nothing: still 48,771,072 bytes",
+        "correct": true,
+        "why": "Right: same pixels, same memory."
+      },
+      {
+        "text": "It shrinks, because the detail compresses into fewer pixels",
+        "correct": false,
+        "why": "The pixel count is in the header and does not change."
+      },
+      {
+        "text": "It cannot be known without decoding it",
+        "correct": false,
+        "why": "The header says width and height, and that is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8ekra1k",
+    "version": 1,
+    "section": "memory-sums",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pngSize` reads the width and height from the PNG's first chunk, called ___, without decoding the picture.",
+    "hint": "Four capital letters, in the bytes the function compares.",
+    "blanks": [
+      {
+        "accept": [
+          "IHDR"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-acgh816z",
+    "version": 1,
+    "section": "downsampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does downsampling with ImageIO change?",
+    "hint": "Same file.",
+    "choices": [
+      {
+        "text": "The file the server sends",
+        "correct": false,
+        "why": "The download is identical."
+      },
+      {
+        "text": "How many pixels are decoded",
+        "correct": true,
+        "why": "Right: only the ones the screen needs."
+      },
+      {
+        "text": "How the frame scales the picture when it draws",
+        "correct": false,
+        "why": "That is what `AsyncImage` does, after decoding everything."
+      },
+      {
+        "text": "The colour depth, from four bytes a pixel to one",
+        "correct": false,
+        "why": "Each pixel still takes four bytes; there are fewer of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-vycamd3h",
+    "version": 1,
+    "section": "downsampling",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each ImageIO option to what it does.",
+    "hint": "Section 05 explains each.",
+    "pairs": [
+      {
+        "left": "`kCGImageSourceShouldCache: false`",
+        "right": "Do not decode the whole image when opening it"
+      },
+      {
+        "left": "`kCGImageSourceThumbnailMaxPixelSize`",
+        "right": "The longer side of the result, in pixels"
+      },
+      {
+        "left": "`kCGImageSourceShouldCacheImmediately`",
+        "right": "Decode now, on the calling thread"
+      },
+      {
+        "left": "`kCGImageSourceCreateThumbnailWithTransform`",
+        "right": "Apply the photograph's orientation"
+      }
+    ],
+    "right_distractors": [
+      "Compress the result as JPEG"
+    ]
+  },
+  {
+    "id": "ex-ybrt0acc",
+    "version": 1,
+    "section": "downsampling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the downsampling run where the download ran, and not when the row draws?",
+    "hint": "Where does drawing happen?",
+    "choices": [
+      {
+        "text": "ImageIO cannot be called from SwiftUI files",
+        "correct": false,
+        "why": "It can be called from anywhere; where it runs is the question."
+      },
+      {
+        "text": "Because the download keeps the file open",
+        "correct": false,
+        "why": "The data is in memory; no file is open."
+      },
+      {
+        "text": "Decoding a big photograph on the main actor drops frames while the list scrolls",
+        "correct": true,
+        "why": "Right: CPU work belongs off the main actor, and only the small result crosses."
+      },
+      {
+        "text": "Downsampling needs the network to be available",
+        "correct": false,
+        "why": "It works on bytes already downloaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xkpfmq0",
+    "version": 1,
+    "section": "the-cache",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ten rows asked for three covers at once, and `covers` printed `3 downloads`. What prevented the other seven?",
+    "hint": "They all asked before any download had finished.",
+    "choices": [
+      {
+        "text": "`NSCache`, which had the covers already",
+        "correct": false,
+        "why": "Nothing was cached yet when they asked; the downloads were still running."
+      },
+      {
+        "text": "The `inFlight` dictionary",
+        "correct": true,
+        "why": "Right: later rows awaited the download already under way."
+      },
+      {
+        "text": "`URLSession`, which merges identical requests",
+        "correct": false,
+        "why": "It sends what it is given."
+      },
+      {
+        "text": "The server, which refused repeated requests with 304",
+        "correct": false,
+        "why": "The server answered every request it got; only three were sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hbxw2a0",
+    "version": 1,
+    "section": "the-cache",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why are `inFlight` and `downloads` updated before the first `await` in `data(for:)`?",
+    "hint": "An actor runs one method at a time only between suspensions.",
+    "choices": [
+      {
+        "text": "So no other caller sees an empty slot and starts a second download",
+        "correct": true,
+        "why": "Right: at an `await` another call runs in between, and by then the slot is taken."
+      },
+      {
+        "text": "Because the compiler refuses an assignment after `await`",
+        "correct": false,
+        "why": "It allows them; the order is a choice."
+      },
+      {
+        "text": "To make the counter match the server's log",
+        "correct": false,
+        "why": "The order matters for correctness, not for logs."
+      },
+      {
+        "text": "Because `NSCache` must be written to first",
+        "correct": false,
+        "why": "The cache is written after the download."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s3pn5v6",
+    "version": 1,
+    "section": "the-cache",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a 50 MB limit, what did the cache keep once all three covers had been downloaded?",
+    "hint": "The photograph alone costs 48,771,072.",
+    "choices": [
+      {
+        "text": "All three",
+        "correct": false,
+        "why": "Together they passed the limit."
+      },
+      {
+        "text": "The two covers, since they are cheaper",
+        "correct": false,
+        "why": "It went the other way."
+      },
+      {
+        "text": "The photograph only",
+        "correct": true,
+        "why": "Right: the one picture the list least needed at full size."
+      },
+      {
+        "text": "Nothing, because the limit was passed",
+        "correct": false,
+        "why": "It evicted until it fitted."
+      }
+    ]
+  },
+  {
+    "id": "ex-3p2j5511",
+    "version": 1,
+    "section": "the-cache",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which cache keeps responses on disk according to the server's HTTP headers?",
+    "hint": "Bytes, not pictures.",
+    "choices": [
+      {
+        "text": "`NSCache`",
+        "correct": false,
+        "why": "That is memory only, and holds what you give it."
+      },
+      {
+        "text": "`URLCache`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`ImageCache`",
+        "correct": false,
+        "why": "The planner's cache is in memory and decides by cost."
+      },
+      {
+        "text": "`UserDefaults`",
+        "correct": false,
+        "why": "That stores small preferences, not responses."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj4aar7x",
+    "version": 1,
+    "section": "lists-of-images",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `images: ImageCache` passed into `CourseRow` instead of created inside it?",
+    "hint": "How many rows share it?",
+    "choices": [
+      {
+        "text": "Because actors cannot be created inside a view",
+        "correct": false,
+        "why": "They can; it would just cache nothing useful."
+      },
+      {
+        "text": "A cache per row would share nothing",
+        "correct": true,
+        "why": "Right: every row has to see the same downloads and pictures."
+      },
+      {
+        "text": "To make the row testable on Linux",
+        "correct": false,
+        "why": "The row is SwiftUI; it does not run on Linux either way."
+      },
+      {
+        "text": "Because `List` destroys anything a row creates",
+        "correct": false,
+        "why": "That is part of it, but the reason is sharing."
+      }
+    ]
+  },
+  {
+    "id": "ex-47fr6800",
+    "version": 1,
+    "section": "lists-of-images",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A row scrolls away while its cover downloads. `task(id:)` is cancelled. What happens to the download?",
+    "hint": "Whose task is the download?",
+    "choices": [
+      {
+        "text": "It stops, and the next row asking starts again",
+        "correct": false,
+        "why": "The download belongs to the cache, not to the row."
+      },
+      {
+        "text": "It carries on in the cache's own `Task`, and is kept",
+        "correct": true,
+        "why": "Right: only the row's waiting stops; the picture is ready if it scrolls back."
+      },
+      {
+        "text": "It is restarted at a lower priority",
+        "correct": false,
+        "why": "Nothing restarts it."
+      },
+      {
+        "text": "`URLSession` pauses it until the row reappears",
+        "correct": false,
+        "why": "Nothing pauses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n6fc7m1",
+    "version": 1,
+    "section": "lists-of-images",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens when a cover's row first appears in order.",
+    "hint": "Cache, download, shrink, draw.",
+    "items": [
+      "The row's `task` asks the shared cache",
+      "The cache starts the one download for that URL",
+      "The bytes are downsampled to the row's pixels",
+      "The small picture is assigned and drawn"
+    ]
+  },
+  {
+    "id": "ex-8mj78mhk",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these ran on the Linux machine? Choose all that apply.",
+    "hint": "Plain Swift and Python ran; Apple's frameworks did not.",
+    "choices": [
+      {
+        "text": "`make_covers.py` and the image server",
+        "correct": true,
+        "why": "Yes: section 04."
+      },
+      {
+        "text": "`ImageCache` with ten rows at once",
+        "correct": true,
+        "why": "Yes: section 06."
+      },
+      {
+        "text": "`downsample` with ImageIO",
+        "correct": false,
+        "why": "No: ImageIO is in Apple's SDKs."
+      },
+      {
+        "text": "`CourseCover` and its phases",
+        "correct": false,
+        "why": "No: SwiftUI, not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3t0v96q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A list shows 30 covers, each from a 12-megapixel photo, at 80 points on a 3x screen. Roughly how much memory do the decoded thumbnails take, against full-size decoding?",
+    "hint": "230,400 bytes against 48,771,072, thirty times each.",
+    "choices": [
+      {
+        "text": "About 7 MB against about 140 MB",
+        "correct": false,
+        "why": "The thumbnails are right; full size is 30 x 48.8 MB, far more than 140."
+      },
+      {
+        "text": "About 7 MB against about 1.5 GB",
+        "correct": true,
+        "why": "Right: 30 x 230,400 is 6.9 MB, and 30 x 48,771,072 is 1.46 GB."
+      },
+      {
+        "text": "About 1.2 MB against about 1.2 MB, since the files are the same",
+        "correct": false,
+        "why": "Memory follows pixels, not files."
+      },
+      {
+        "text": "About 70 MB against about 700 MB",
+        "correct": false,
+        "why": "Work it through: neither number fits."
+      }
+    ]
+  }
+]

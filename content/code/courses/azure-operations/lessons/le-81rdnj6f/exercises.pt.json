@@ -1,0 +1,249 @@
+{
+  "ex-r2nb5rjr": {
+    "prompt": "Uma equipe cria um App Service e, uma semana depois, quer os logs HTTP da terça passada. Ela nunca configurou nada. O que consegue?",
+    "hint": "Qual sinal é guardado sem ninguém pedir?",
+    "choices": [
+      {
+        "text": "Os logs HTTP, do workspace padrão",
+        "why": "Não há encaminhamento padrão; logs de recurso são descartados sem uma configuração."
+      },
+      {
+        "text": "Só as métricas de plataforma",
+        "why": "Certo. Métricas ficam 93 dias sem configuração; os logs se foram."
+      },
+      {
+        "text": "Os logs HTTP, se ligarem uma configuração agora",
+        "why": "Uma configuração encaminha daqui para frente; nada anterior é recuperado."
+      },
+      {
+        "text": "Nada, até existir um workspace",
+        "why": "Métricas existem sem workspace nenhum."
+      }
+    ]
+  },
+  "ex-vp9zrqg8": {
+    "prompt": "Ligue cada sinal ao jeito como ele chega a um workspace do Log Analytics.",
+    "hint": "Um deles precisa de um agente.",
+    "pairs": [
+      {
+        "left": "Os logs HTTP de um App Service",
+        "right": "Um diagnostic setting no app"
+      },
+      {
+        "left": "Quem apagou um grupo de recursos",
+        "right": "Um diagnostic setting no activity log da assinatura"
+      },
+      {
+        "left": "O syslog de dentro de uma VM",
+        "right": "O Azure Monitor Agent e uma data collection rule"
+      },
+      {
+        "left": "Métricas de plataforma, para cruzar com logs",
+        "right": "AllMetrics num diagnostic setting"
+      }
+    ]
+  },
+  "ex-7h7s39f7": {
+    "prompt": "Por quantos dias o Azure Monitor guarda métricas de plataforma sem nada configurado?",
+    "hint": "Cerca de três meses.",
+    "unit": "dias"
+  },
+  "ex-qn3v47ay": {
+    "prompt": "A média de `HttpResponseTime` num minuto é 180 ms. O que dá para concluir sobre os clientes daquele minuto?",
+    "hint": "Quais minutos dão a mesma média?",
+    "choices": [
+      {
+        "text": "Cada um foi atendido em cerca de 180 ms",
+        "why": "Algumas requisições de quatro segundos entre rápidas dão a mesma média."
+      },
+      {
+        "text": "Metade foi mais rápida que 180 ms",
+        "why": "Essa é a mediana, que a média não fornece."
+      },
+      {
+        "text": "Muito pouco sobre os lentos",
+        "why": "Certo. A média esconde a cauda, e por isso a loja calcula percentis a partir dos logs."
+      },
+      {
+        "text": "Que nenhum esperou mais de 180 ms",
+        "why": "Isso seria o máximo, outra agregação."
+      }
+    ]
+  },
+  "ex-a8tv2t96": {
+    "prompt": "O `Http5xx` sobe no plano do App Service da loja. O que dividi-lo por instância diz que o total não diz?",
+    "hint": "Uma dimensão transforma uma linha em várias.",
+    "choices": [
+      {
+        "text": "Se uma instância produz todos eles",
+        "why": "Certo. Uma instância ruim isolada parece um problema geral no total."
+      },
+      {
+        "text": "Qual cliente recebeu cada erro",
+        "why": "Métricas nunca identificam uma requisição ou um cliente."
+      },
+      {
+        "text": "O percentil 95 dos erros",
+        "why": "Uma contagem não tem percentil, e dividir não acrescenta um."
+      },
+      {
+        "text": "Qual linha de código lançou a exceção",
+        "why": "Isso está em logs e traces, não numa métrica."
+      }
+    ]
+  },
+  "ex-4b0g0jjb": {
+    "prompt": "Por que a loja declara o diagnostic setting em Bicep em vez de clicá-lo no portal?",
+    "hint": "Quem vai saber que ele existe?",
+    "choices": [
+      {
+        "text": "O portal não cria diagnostic settings",
+        "why": "Cria; a questão é onde a decisão fica registrada."
+      },
+      {
+        "text": "Configurações criadas em Bicep são gratuitas",
+        "why": "A ingestão custa o mesmo, seja quem criou a configuração."
+      },
+      {
+        "text": "Para a decisão morar num arquivo revisado ao lado do app",
+        "why": "Certo. Um clique não deixa registro que alguém leia."
+      },
+      {
+        "text": "Para os logs ficarem 93 dias em vez de 30",
+        "why": "Retenção é configuração do workspace, assunto da lição 9."
+      }
+    ]
+  },
+  "ex-az3vs93g": {
+    "prompt": "`typo.bicep` encaminha uma categoria `AppServiceHttpLog` que não existe, e compila com código de saída 0. Onde isso é pego?",
+    "hint": "Para o Bicep, a categoria é uma string.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum; a configuração implanta e não encaminha nada",
+        "why": "O Resource Manager recusa categorias desconhecidas em vez de aceitá-las em silêncio."
+      },
+      {
+        "text": "Pelo linter, que conhece toda categoria",
+        "why": "O linter não levantou nada; categorias não estão nos tipos do Bicep."
+      },
+      {
+        "text": "No deploy, pelo Resource Manager",
+        "why": "Certo. Achado no estágio de deploy, não no build."
+      },
+      {
+        "text": "No workspace, que descarta a tabela",
+        "why": "Nada chega ao workspace vindo de uma configuração recusada."
+      }
+    ]
+  },
+  "ex-j1131hm2": {
+    "prompt": "Definir `logAnalyticsDestinationType` como ___ manda cada categoria para uma tabela própria em vez da AzureDiagnostics.",
+    "hint": "Uma palavra, o valor no arquivo da loja.",
+    "blanks": [
+      {
+        "accept": [
+          "Dedicated"
+        ]
+      }
+    ]
+  },
+  "ex-etdf2e2n": {
+    "prompt": "Na regra da loja, o que o `transformKql` faz com uma mensagem de syslog sobre `healthz`?",
+    "hint": "Ele roda antes de o registro ser guardado.",
+    "choices": [
+      {
+        "text": "Guarda numa tabela mais barata",
+        "why": "Ele filtra; nada é redirecionado."
+      },
+      {
+        "text": "Descarta antes da ingestão",
+        "why": "Certo. Linhas que uma transformação descarta nunca são ingeridas."
+      },
+      {
+        "text": "Mascara a palavra healthz",
+        "why": "O where tira a linha; o project-away tira uma coluna."
+      },
+      {
+        "text": "Marca como debug e guarda",
+        "why": "Nada na transformação define um nível."
+      }
+    ]
+  },
+  "ex-8a4g8j9v": {
+    "prompt": "A regra compila e implanta, e o workspace continua sem receber nada das VMs de trabalho. Qual é a peça que provavelmente falta?",
+    "hint": "Uma regra diz o que coletar; o que nomeia as máquinas?",
+    "choices": [
+      {
+        "text": "Um diagnostic setting em cada VM",
+        "why": "Diagnostic settings encaminham logs de plataforma; dados de dentro vêm pelo agente."
+      },
+      {
+        "text": "A transformação, que descarta tudo",
+        "why": "Ela descarta só mensagens de health check."
+      },
+      {
+        "text": "Um aviso do Bicep que foi ignorado",
+        "why": "Compilou sem aviso; isto é sobre o deploy."
+      },
+      {
+        "text": "Uma associação a cada VM, e o agente nela",
+        "why": "Certo. Uma regra não faz nada até ser associada a máquinas rodando o agente."
+      }
+    ]
+  },
+  "ex-gtdemxhg": {
+    "prompt": "O que a data collection rule da loja já deixa de fora? Marque todas as que se aplicam.",
+    "hint": "Leia os níveis de log e a transformação.",
+    "choices": [
+      {
+        "text": "Mensagens de syslog no nível Info",
+        "why": "Sim. Só Warning para cima é coletado."
+      },
+      {
+        "text": "A coluna HostIP",
+        "why": "Sim. O project-away a remove antes de guardar."
+      },
+      {
+        "text": "Amostras de CPU entre 9:00 e 17:00",
+        "why": "Não. Contadores são amostrados a cada 60 segundos, o dia todo."
+      },
+      {
+        "text": "Avisos sobre requisições de health check",
+        "why": "Sim. O where as descarta."
+      }
+    ]
+  },
+  "ex-96fnxxcc": {
+    "prompt": "Ponha em ordem o caminho de um aviso de syslog de uma VM de trabalho até uma linha no workspace.",
+    "hint": "Máquina primeiro, armazenamento por último.",
+    "trap": "Pôr a transformação depois do armazenamento é o deslize: ela roda antes, e por isso linhas descartadas não custam nada para guardar.",
+    "items": [
+      "O log de sistema da VM registra o aviso",
+      "O agente o lê, como diz a regra associada",
+      "O transformKql roda sobre o registro",
+      "A linha é guardada, e cobrada, no workspace"
+    ]
+  },
+  "ex-1ztw0h7y": {
+    "prompt": "Durante um incidente, a equipe precisa saber quais requisições de clientes falharam entre 14:05 e 14:47. Qual sinal responde?",
+    "hint": "Qual deles nomeia uma requisição?",
+    "choices": [
+      {
+        "text": "Métricas de plataforma, divididas por instância",
+        "why": "Métricas contam requisições; nunca nomeiam uma."
+      },
+      {
+        "text": "O activity log",
+        "why": "Ele registra operações do plano de controle, não requisições de clientes."
+      },
+      {
+        "text": "Logs de requisição encaminhados ao workspace",
+        "why": "Certo. Logs nomeiam cada requisição, se foram encaminhados antes do incidente."
+      },
+      {
+        "text": "Os contadores de desempenho da data collection rule",
+        "why": "Esses são CPU e memória de dentro das VMs."
+      }
+    ]
+  }
+}

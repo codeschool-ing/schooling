@@ -1,0 +1,663 @@
+[
+  {
+    "id": "ex-xxqmb6f6",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A reader writes its checkpoint and then does the work. A crash falls between the two. What happened to the event?",
+    "hint": "Where does the restarted reader begin?",
+    "choices": [
+      {
+        "text": "It is lost, never handled: at most once",
+        "correct": true,
+        "why": "Right. The restart begins after the new checkpoint, and the work was never done."
+      },
+      {
+        "text": "It is handled twice, because the checkpoint was written before the crash",
+        "correct": false,
+        "why": "A checkpoint written first moves the restart past the event, so it is not handled again."
+      },
+      {
+        "text": "It is handled exactly once, because the service notices the crash",
+        "correct": false,
+        "why": "Event Hubs keeps no record of readers; it notices nothing."
+      },
+      {
+        "text": "It goes to a dead-letter queue",
+        "correct": false,
+        "why": "Event Hubs has no dead-letter queue; the event simply stays in the partition until retention ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwfeswhn",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is at least once the default of the Event Hubs libraries and Microsoft's examples?",
+    "hint": "Compare what each guarantee risks.",
+    "choices": [
+      {
+        "text": "It is the cheapest, because it writes fewer checkpoints",
+        "correct": false,
+        "why": "The order of the two steps, not their number, sets the guarantee."
+      },
+      {
+        "text": "It loses nothing; the sink handles repeats",
+        "correct": true,
+        "why": "Right. At most once loses events; at least once repeats them, which a sink can be built to absorb."
+      },
+      {
+        "text": "Because the service deletes events once they are checkpointed",
+        "correct": false,
+        "why": "Retention is the only deletion; checkpoints do not touch the hub."
+      },
+      {
+        "text": "Because exactly once needs Premium",
+        "correct": false,
+        "why": "No tier switches exactly once on; it is earned by the sink."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qsc4zn3",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Stream Analytics document about delivering rows to its outputs?",
+    "hint": "Processing and delivery are stated separately.",
+    "choices": [
+      {
+        "text": "Exactly once to every output",
+        "correct": false,
+        "why": "Exactly once is stated for processing inside the job; delivery is at least once."
+      },
+      {
+        "text": "At most once, so that a dashboard never double-counts",
+        "correct": false,
+        "why": "That would lose rows; the documented promise is the other way."
+      },
+      {
+        "text": "At least once, retrying a refused write",
+        "correct": true,
+        "why": "Right. A row can reach its SQL table twice after a failure, and the table's key makes that harmless."
+      },
+      {
+        "text": "Nothing; delivery is left to the output's own service",
+        "correct": false,
+        "why": "The documentation does state it: at least once."
+      }
+    ]
+  },
+  {
+    "id": "ex-x95av8tb",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Doing the work first and writing the checkpoint after it gives the guarantee called at ___ once.",
+    "hint": "Nothing is lost, something may repeat.",
+    "blanks": [
+      {
+        "accept": [
+          "least"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3v2q6k35",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pay.py` sent `o-303` twice. What did the event hub store?",
+    "hint": "Does the service compare events?",
+    "choices": [
+      {
+        "text": "One event, because the second had the same body",
+        "correct": false,
+        "why": "The service never looks inside an event and compares nothing."
+      },
+      {
+        "text": "Two events with two sequence numbers",
+        "correct": true,
+        "why": "Right: seven events for six payments."
+      },
+      {
+        "text": "One event, and the second send failed with a conflict",
+        "correct": false,
+        "why": "Nothing refused the second send; it printed like the others."
+      },
+      {
+        "text": "Two events with the same sequence number",
+        "correct": false,
+        "why": "Every event in a partition gets its own number; the copies are 2 and 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-jkj29sxb",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda redeploys its fraud check, restarting its three copies one by one. No copy crashes. Can events still be handled twice?",
+    "hint": "What does a new owner of a partition start from?",
+    "choices": [
+      {
+        "text": "No, because a clean restart writes a final checkpoint",
+        "correct": false,
+        "why": "Moving a partition happens while copies run; the new owner starts from the last checkpoint, which may be behind."
+      },
+      {
+        "text": "No, because duplicates come only from producers",
+        "correct": false,
+        "why": "Producers are one of four sources; rebalancing is another."
+      },
+      {
+        "text": "Yes, from each moved partition's last checkpoint",
+        "correct": true,
+        "why": "Right. What the old owner handled after that checkpoint is handled again."
+      },
+      {
+        "text": "Yes, but only on the Basic tier",
+        "correct": false,
+        "why": "Load balancing works the same on every tier."
+      }
+    ]
+  },
+  {
+    "id": "ex-206mz54e",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reader removes any payment whose customer and amount match one seen in the last hour. `c-17` pays 990 for two different orders that evening. What happens?",
+    "hint": "What makes two events the same?",
+    "choices": [
+      {
+        "text": "A real payment is deleted",
+        "correct": true,
+        "why": "Right. Identity comes from the order id, never from a resemblance between contents."
+      },
+      {
+        "text": "Both are kept, because their sequence numbers differ",
+        "correct": false,
+        "why": "This reader compares customer and amount, not sequence numbers, so it removes the second."
+      },
+      {
+        "text": "Both are kept, because the hour has not passed",
+        "correct": false,
+        "why": "Within the hour is exactly when this rule removes one."
+      },
+      {
+        "text": "The service refuses the second payment at send time",
+        "correct": false,
+        "why": "The service compares nothing; both are stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zmqmdg3",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's shop gives each send a fresh random id, including the resend of a payment whose answer was lost. What can a reader downstream do with the two copies?",
+    "hint": "Which id would tell them apart?",
+    "choices": [
+      {
+        "text": "Drop the one with the higher sequence number",
+        "correct": false,
+        "why": "It has no way to know the two belong together."
+      },
+      {
+        "text": "Use the ids to merge them",
+        "correct": false,
+        "why": "The ids differ, so they say the opposite: two events."
+      },
+      {
+        "text": "Nothing reliable: they look like two orders",
+        "correct": true,
+        "why": "Right. The order id, decided when the order was placed, is what the resend should carry."
+      },
+      {
+        "text": "Ask Event Hubs which one was the retry",
+        "correct": false,
+        "why": "The service does not know either; it stored two events."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7khb2aw",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`totals.py add 5` checkpointed at sequence number 2 and crashed after 4. Where did the second run start?",
+    "hint": "The checkpoint is the reader's note.",
+    "choices": [
+      {
+        "text": "At sequence number 5, after the last event handled",
+        "correct": false,
+        "why": "Nothing recorded that 3 and 4 were handled; the note said 2."
+      },
+      {
+        "text": "At 0, because a crash resets the reader",
+        "correct": false,
+        "why": "The checkpoint survived the crash in Azurite, so the reader resumed from it."
+      },
+      {
+        "text": "At 3",
+        "correct": true,
+        "why": "Right. It started after the checkpoint, and so handled 3 and 4 again."
+      },
+      {
+        "text": "At the latest event, because `starting_position` is `-1`",
+        "correct": false,
+        "why": "`-1` is the oldest event, and it only applies where there is no checkpoint."
+      }
+    ]
+  },
+  {
+    "id": "ex-7777afm5",
+    "version": 1,
+    "section": "the-replay",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the `add` runs, `c-17`'s total was 14,760 cents. The correct total is 12,780. By how many cents was it wrong?",
+    "hint": "Two extra copies of one payment.",
+    "value": 1980,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-p0nm321z",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `c-02`'s total right after the `add` runs, when `c-05`'s was doubled?",
+    "hint": "Which sequence numbers were replayed?",
+    "choices": [
+      {
+        "text": "`c-02` pays by card, which the reader treats separately",
+        "correct": false,
+        "why": "The reader treats every payment the same way."
+      },
+      {
+        "text": "None of `c-02`'s payments fell between the checkpoint and the crash",
+        "correct": true,
+        "why": "Right. Only 3 and 4 were replayed, `o-303` and `o-304`."
+      },
+      {
+        "text": "The reader noticed `c-02`'s duplicates and skipped them",
+        "correct": false,
+        "why": "The `add` reader detects nothing."
+      },
+      {
+        "text": "`c-02` lives on another partition",
+        "correct": false,
+        "why": "Every payment went to partition 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnst5xng",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes checkpointing after every event to fix the totals. What would remain wrong?",
+    "hint": "There were two sources of duplicates.",
+    "choices": [
+      {
+        "text": "Nothing; every replay would be gone",
+        "correct": false,
+        "why": "A crash between the work and the checkpoint still replays one event, and the producer's duplicate is untouched."
+      },
+      {
+        "text": "The producer's retry, and one-event replays",
+        "correct": true,
+        "why": "Right. The window shrinks to one event, and the retry is two events any reader handles twice."
+      },
+      {
+        "text": "Only the checkpoint bill, which would grow",
+        "correct": false,
+        "why": "It would grow, and the totals would still be wrong."
+      },
+      {
+        "text": "The totals of customers on other partitions",
+        "correct": false,
+        "why": "All payments were on partition 0; the issue is not where they live."
+      }
+    ]
+  },
+  {
+    "id": "ex-9khv3xnc",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these writes is idempotent?",
+    "hint": "Do it twice and compare with once.",
+    "choices": [
+      {
+        "text": "Add 990 to `c-17`'s total",
+        "correct": false,
+        "why": "Twice adds 1,980."
+      },
+      {
+        "text": "Append a line to a log blob",
+        "correct": false,
+        "why": "Twice leaves two lines."
+      },
+      {
+        "text": "Write 990 to the blob named `o-303`",
+        "correct": true,
+        "why": "Right. Written twice, it still says 990."
+      },
+      {
+        "text": "Increase a counter of checkouts by one",
+        "correct": false,
+        "why": "An increment is the shape no replay survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mdpbe2c",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `upsert` mode the replay handled sequence numbers 3 and 4 again. Why were the totals right?",
+    "hint": "What did each write do to the blobs?",
+    "choices": [
+      {
+        "text": "The reader recognised the duplicates and skipped them",
+        "correct": false,
+        "why": "Nothing was skipped; every line says written."
+      },
+      {
+        "text": "Repeats rewrote the same order blob with the same content",
+        "correct": true,
+        "why": "Right, including the producer's second `o-303`; totals are summed from one blob per order."
+      },
+      {
+        "text": "Azurite refused the second write with `BlobAlreadyExists`",
+        "correct": false,
+        "why": "The program writes with overwrite; the refusal was a separate command with `--if-none-match '*'`."
+      },
+      {
+        "text": "The crash happened after the checkpoint this time",
+        "correct": false,
+        "why": "The crash and the checkpoint were in the same places as in `add` mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-hg4jww44",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each sink to the write that makes a duplicate harmless there.",
+    "hint": "Each one keys by the order id or by the content.",
+    "pairs": [
+      {
+        "left": "Azure SQL Database",
+        "right": "an insert keyed by the order id"
+      },
+      {
+        "left": "Cosmos DB",
+        "right": "an upsert of a document whose `id` is the order id"
+      },
+      {
+        "left": "a lake of files",
+        "right": "a file named by the sequence numbers it holds"
+      },
+      {
+        "left": "Blob Storage, keeping the first copy",
+        "right": "a create with `If-None-Match: *`"
+      }
+    ],
+    "right_distractors": [
+      "a file named by the time it was written"
+    ]
+  },
+  {
+    "id": "ex-c093zpr4",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A record is sent, corrected and sent again with the same id. The sink refuses a second write with `If-None-Match: *`. Which copy ends up stored?",
+    "hint": "Refusing keeps one end, overwriting the other.",
+    "choices": [
+      {
+        "text": "The corrected one, because it arrived last",
+        "correct": false,
+        "why": "That is what an overwrite keeps; a refusal keeps what was there."
+      },
+      {
+        "text": "Both, under the same name",
+        "correct": false,
+        "why": "One name holds one blob."
+      },
+      {
+        "text": "Neither, because the conflict deletes the blob",
+        "correct": false,
+        "why": "The refusal changes nothing that is stored."
+      },
+      {
+        "text": "The first, uncorrected one",
+        "correct": true,
+        "why": "Right. For a record that is corrected after it is sent, choosing refusal is choosing the first copy as the truth."
+      }
+    ]
+  },
+  {
+    "id": "ex-jq5q0v9x",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `guard` mode, `c-17` came out at 13,770 instead of 12,780. Why?",
+    "hint": "What does a watermark of sequence numbers compare?",
+    "choices": [
+      {
+        "text": "The replay of 3 and 4 was not caught",
+        "correct": false,
+        "why": "It was: both lines say skipped."
+      },
+      {
+        "text": "The producer's retry has its own sequence number, so it counted as new",
+        "correct": true,
+        "why": "Right. The watermark catches what the reader repeats, not what the producer repeated."
+      },
+      {
+        "text": "The state blob was written apart from the totals",
+        "correct": false,
+        "why": "Totals and sequence number are in one blob, one upload."
+      },
+      {
+        "text": "`o-306` was skipped by mistake",
+        "correct": false,
+        "why": "Sequence number 6 was added; the error is 990, the size of `o-303`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj4e5nq2",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reader keeps its totals in one blob and its last sequence number in a second blob, written right after. What can a crash do?",
+    "hint": "Two writes again.",
+    "choices": [
+      {
+        "text": "Nothing, because the second write is only milliseconds later",
+        "correct": false,
+        "why": "A crash can land in any gap, however short."
+      },
+      {
+        "text": "Lose the totals, but never the sequence number",
+        "correct": false,
+        "why": "The totals are written first, so they are the ones that survive a crash between the two."
+      },
+      {
+        "text": "Leave totals ahead of the stored number",
+        "correct": true,
+        "why": "Right. The replay then adds it again: the same problem, one level down."
+      },
+      {
+        "text": "Make the watermark apply to every partition at once",
+        "correct": false,
+        "why": "A watermark is per partition however it is stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-98vctaqk",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does Stream Analytics' exactly-once promise stop?",
+    "hint": "Processing and delivery.",
+    "choices": [
+      {
+        "text": "At the job's edge: delivery to outputs is at least once",
+        "correct": true,
+        "why": "Right. The output's key or an upsert makes the rest harmless."
+      },
+      {
+        "text": "Nowhere; it covers the SQL table too",
+        "correct": false,
+        "why": "The documentation states delivery to outputs as at least once."
+      },
+      {
+        "text": "At the event hub, which delivers each event once",
+        "correct": false,
+        "why": "Event Hubs delivers at least once."
+      },
+      {
+        "text": "At the producer, which the job can make idempotent",
+        "correct": false,
+        "why": "A job reads; it has no say over how the producer sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-xp3yvnsy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened to `o-304` in the `add` runs.",
+    "hint": "The checkpoint was before it.",
+    "items": [
+      "`pay.py` sends it, as sequence number 4",
+      "The first run writes a checkpoint at 2",
+      "The first run adds it to `c-05`'s total",
+      "The first run crashes",
+      "The second run starts after 2 and adds it again"
+    ]
+  },
+  {
+    "id": "ex-4zta1v7f",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a duplicate harmless rather than prevent it? Choose all that apply.",
+    "hint": "Duplicates will happen; what absorbs them?",
+    "choices": [
+      {
+        "text": "Writing each payment under its order id",
+        "correct": true,
+        "why": "Right; the replay and the retry rewrote the same blobs."
+      },
+      {
+        "text": "Storing state and last sequence number in one write",
+        "correct": true,
+        "why": "Right, for the reader's own replays."
+      },
+      {
+        "text": "Checkpointing after every event",
+        "correct": false,
+        "why": "It shrinks the window; a duplicate that still arrives is counted."
+      },
+      {
+        "text": "Keeping totals as increments",
+        "correct": false,
+        "why": "Increments are the shape no replay survives."
+      },
+      {
+        "text": "Choosing the Premium tier",
+        "correct": false,
+        "why": "No tier changes delivery from at least once."
+      }
+    ]
+  },
+  {
+    "id": "ex-27frkvpj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda adds a Stream Analytics job that writes checkout counts per minute to a SQL table. Which table design keeps a retried write harmless?",
+    "hint": "What identifies one row of output?",
+    "choices": [
+      {
+        "text": "An identity column as the primary key",
+        "correct": false,
+        "why": "Each retry gets a new identity value and inserts a second row."
+      },
+      {
+        "text": "No key, and a nightly job that deletes duplicate rows",
+        "correct": false,
+        "why": "Until the night, the screen shows the doubled count."
+      },
+      {
+        "text": "A primary key on the window's end time, so a retry is refused or merged",
+        "correct": true,
+        "why": "Right. One row per window is the identity of the output, as the order id is of a payment."
+      },
+      {
+        "text": "A larger out-of-order tolerance",
+        "correct": false,
+        "why": "Tolerance decides lateness, not what happens when a write is retried."
+      }
+    ]
+  }
+]

@@ -1,0 +1,433 @@
+{
+  "ex-1bff6p8k": {
+    "prompt": "O que o BigQuery pede que você dimensione antes de rodar uma consulta?",
+    "hint": "Compare com a instância do Cloud SQL da aula 6.",
+    "choices": [
+      {
+        "text": "Um número de nós e um tipo de nó",
+        "why": "Isso é um cluster, e o BigQuery não tem nenhum: nem instância, nem tipo de nó."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. O armazenamento cresce conforme as linhas são escritas e a computação recebe slots por consulta."
+      },
+      {
+        "text": "O disco do dataset, em GiB",
+        "why": "Não há disco a provisionar; você paga pelo que as tabelas guardam."
+      },
+      {
+        "text": "Quantos slots cada consulta vai usar",
+        "why": "Sob demanda, o BigQuery decide isso por consulta, até 2.000 compartilhados pelo projeto."
+      }
+    ]
+  },
+  "ex-7c690cpe": {
+    "prompt": "Uma analista no projeto `quitanda-analytics` consulta `planner-dev.quitanda.orders`. Qual projeto paga pela consulta?",
+    "hint": "Uma consulta é um job, e um job pertence a alguém.",
+    "choices": [
+      {
+        "text": "`planner-dev`, porque é o dono da tabela",
+        "why": "O dono paga para guardar; a página de preços diz que o dono não é cobrado quando o dado é lido."
+      },
+      {
+        "text": "Os dois, metade cada",
+        "why": "Não há divisão: um job, um projeto cobrado."
+      },
+      {
+        "text": "O da própria analista",
+        "why": "Certo. A computação vai para o projeto de quem lê e o armazenamento para o do dono."
+      },
+      {
+        "text": "Nenhum, desde que os dois estejam na mesma organização",
+        "why": "Estar na mesma organização não torna uma consulta gratuita."
+      }
+    ]
+  },
+  "ex-3h2xdgkc": {
+    "prompt": "O que acontece entre dois estágios de uma consulta do BigQuery, como um estágio de leitura e uma soma por loja?",
+    "hint": "O segundo estágio precisa de todas as linhas de uma loja num lugar só.",
+    "choices": [
+      {
+        "text": "Passam por um shuffle até os slots seguintes, por chave",
+        "why": "Certo. Esse é o shuffle, e a aula 16 o lê no grafo de execução."
+      },
+      {
+        "text": "A tabela é copiada para uma máquina maior",
+        "why": "Nada é copiado para uma máquina; os slots leem o armazenamento pela rede."
+      },
+      {
+        "text": "Cada slot escreve uma tabela temporária que o próximo carrega",
+        "why": "Não há carga entre estágios; as linhas passam por uma camada de memória."
+      },
+      {
+        "text": "Nada: um slot roda a consulta inteira",
+        "why": "Um estágio que lê uma tabela grande é dividido entre muitos slots ao mesmo tempo."
+      }
+    ]
+  },
+  "ex-j559513p": {
+    "prompt": "Quais destas são decisões de quem usa o BigQuery que mudam a fatura? Escolha todas as que se aplicam.",
+    "hint": "O BigQuery deixa de fora várias coisas que um warehouse com cluster pede.",
+    "choices": [
+      {
+        "text": "Como uma tabela é particionada",
+        "why": "Sim. Aula 15."
+      },
+      {
+        "text": "Como uma tabela é clusterizada",
+        "why": "Sim. A aula 15 também."
+      },
+      {
+        "text": "Qual coluna distribui as linhas entre os nós",
+        "why": "Nenhuma tabela mora numa máquina específica, então não há chave de distribuição."
+      },
+      {
+        "text": "Quando fazer vacuum de uma tabela",
+        "why": "O armazenamento é o Google que arruma; não há vacuum para agendar."
+      },
+      {
+        "text": "Quais colunas uma consulta cita",
+        "why": "Sim. A computação lê só essas colunas, e sob demanda você paga pelo que ela lê."
+      }
+    ]
+  },
+  "ex-pn9epfvq": {
+    "prompt": "Por que este curso roda o SQL do BigQuery no DuckDB e não num emulador?",
+    "hint": "Pense no que o Google publica, e no que esta aula trata.",
+    "choices": [
+      {
+        "text": "O DuckDB é o motor de código aberto do BigQuery",
+        "why": "São projetos sem relação; o SQL do DuckDB segue o PostgreSQL."
+      },
+      {
+        "text": "O emulador do BigQuery precisa de conta paga",
+        "why": "Não existe emulador do BigQuery do Google, pago ou gratuito."
+      },
+      {
+        "text": "O Google não publica emulador do BigQuery",
+        "why": "Certo. Um laboratório com as linhas certas e a conta errada ensinaria a metade errada."
+      },
+      {
+        "text": "O `bq` era antigo demais para falar com um emulador",
+        "why": "O `bq` recusou por falta de conta; não há nada com que ele fale."
+      }
+    ]
+  },
+  "ex-mnfj2tw0": {
+    "prompt": "Quais destas coisas o DuckDB mede de verdade nestas aulas? Escolha todas as que se aplicam.",
+    "hint": "O DuckDB é gratuito, roda nos seus núcleos e não escreve Capacitor.",
+    "choices": [
+      {
+        "text": "As linhas que uma consulta devolve",
+        "why": "Sim. O SQL roda de verdade sobre os mesmos arquivos."
+      },
+      {
+        "text": "Quais pastas um filtro em `dt` pula",
+        "why": "Sim. Ele lê a data dos nomes de pasta `dt=` e as poda."
+      },
+      {
+        "text": "Os dólares que o BigQuery cobraria",
+        "why": "O DuckDB não custa nada; a conta é calculada a partir da documentação do Google."
+      },
+      {
+        "text": "As slot-horas que uma consulta usaria",
+        "why": "O DuckDB roda nos núcleos do seu laptop; o tempo dele não diz nada sobre slots."
+      },
+      {
+        "text": "Os bytes físicos de uma tabela no BigQuery",
+        "why": "Esses são do Capacitor; o tamanho do Parquet é só uma pista."
+      }
+    ]
+  },
+  "ex-kwrbztc7": {
+    "prompt": "Uma consulta leva 0,3 segundo no DuckDB sobre os pedidos da Quitanda. O que isso diz sobre a mesma consulta no BigQuery?",
+    "hint": "Uma roda num laptop e a outra nos slots que recebe.",
+    "choices": [
+      {
+        "text": "Ela vai usar cerca de 0,3 slot-segundo",
+        "why": "O tempo de slot depende de quantos slots o BigQuery der, o que o DuckDB não sabe."
+      },
+      {
+        "text": "Nada sobre os slots nem sobre a conta",
+        "why": "Certo. As linhas batem; o custo é calculado à parte."
+      },
+      {
+        "text": "Ela vai custar menos de um centavo",
+        "why": "Sob demanda a conta segue os bytes lidos, não o tempo, e tem um mínimo."
+      },
+      {
+        "text": "Ela vai ser mais lenta no BigQuery",
+        "why": "Nada medido aqui permite dizer isso, num sentido ou no outro."
+      }
+    ]
+  },
+  "ex-mpsra6fz": {
+    "prompt": "Por que o `make_orders.py` usa a semente `random.Random(13)`?",
+    "hint": "Pense nos números das transcrições.",
+    "choices": [
+      {
+        "text": "Para que o BigQuery aceite os arquivos",
+        "why": "O BigQuery não se importa com como os valores foram escolhidos."
+      },
+      {
+        "text": "Para toda execução escrever os mesmos pedidos",
+        "why": "Certo. O tempo muda; as linhas não."
+      },
+      {
+        "text": "Para o programa rodar mais rápido",
+        "why": "Uma semente fixa as escolhas; não as acelera."
+      },
+      {
+        "text": "Para dar a cada dia o mesmo número de pedidos",
+        "why": "`WEEKDAY` e o fator aleatório ainda variam os dias; a semente só os repete."
+      }
+    ]
+  },
+  "ex-ccbkrq9c": {
+    "prompt": "Depois do `bq load` dos arquivos Parquet de `gs://quitanda-curated-prod/orders/` para uma tabela, o que acontece com os objetos no bucket?",
+    "hint": "A carga copia; alguma coisa arruma depois?",
+    "choices": [
+      {
+        "text": "Eles são movidos para o BigQuery e o bucket fica vazio",
+        "why": "Uma carga lê os arquivos; não os remove."
+      },
+      {
+        "text": "Eles viram armazenamento de longo prazo depois da carga",
+        "why": "Longo prazo é uma tarifa do BigQuery para tabelas; não se aplica a objetos do Cloud Storage."
+      },
+      {
+        "text": "Ficam, e passam a ser cobrados duas vezes",
+        "why": "Certo. Nada os apaga por você."
+      },
+      {
+        "text": "Eles são apagados depois de sete dias de time travel",
+        "why": "Time travel é sobre versões passadas de uma tabela, não sobre os arquivos de origem."
+      }
+    ]
+  },
+  "ex-3sqgx5gk": {
+    "prompt": "Uma pasta chamada `dt=2026-08-01` segue a convenção chamada particionamento ___, da qual o DuckDB e o BigQuery tiram uma coluna.",
+    "hint": "O nome de um projeto da Apache.",
+    "blanks": [
+      {
+        "accept": [
+          "Hive"
+        ]
+      }
+    ]
+  },
+  "ex-qm2x55qz": {
+    "prompt": "Quantos bytes lógicos o BigQuery conta para o valor `STRING` `'Butantã'`?",
+    "hint": "Dois bytes, mais o comprimento em UTF-8, não em caracteres.",
+    "choices": [
+      {
+        "text": "7",
+        "why": "Esse é o comprimento em caracteres, sem os 2 bytes de acréscimo."
+      },
+      {
+        "text": "9",
+        "why": "Isso é 2 + 7: conta o `ã` como um byte, e em UTF-8 ele tem dois."
+      },
+      {
+        "text": "10",
+        "why": "Certo. 8 bytes UTF-8 mais 2."
+      },
+      {
+        "text": "8",
+        "why": "Esse é o comprimento em UTF-8, sem os 2 bytes que o BigQuery soma."
+      }
+    ]
+  },
+  "ex-x5twqppf": {
+    "prompt": "Uma tabela tem 2.000.000 de linhas e três colunas: um `INT64`, um `DATE` e um `BOOL`, nenhum nulo. Qual o tamanho lógico dela, em bytes?",
+    "hint": "8 + 8 + 1 bytes por linha."
+  },
+  "ex-pskef5az": {
+    "prompt": "Metade dos valores de uma coluna `STRING` é `NULL`. O que esses valores somam ao tamanho lógico da coluna?",
+    "hint": "A documentação tem uma linha para `NULL`.",
+    "choices": [
+      {
+        "text": "2 bytes cada, o acréscimo de uma string",
+        "why": "Os 2 bytes pertencem a um valor; um `NULL` não tem nenhum."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Um `NULL` de qualquer tipo conta 0 byte."
+      },
+      {
+        "text": "O comprimento médio da outra metade",
+        "why": "Nada é imputado; um `NULL` conta como 0."
+      },
+      {
+        "text": "8 bytes cada, como um valor de largura fixa",
+        "why": "Mesmo um `INT64` que é `NULL` conta 0 byte."
+      }
+    ]
+  },
+  "ex-n63mx3sz": {
+    "prompt": "Os 99.177.572 bytes lógicos da Quitanda cabem em 32.451.790 bytes de Parquet. O que essa razão de 3,06 diz sobre os bytes físicos do BigQuery para a mesma tabela?",
+    "hint": "Parquet e Capacitor são dois formatos.",
+    "choices": [
+      {
+        "text": "Eles são 32.451.790 bytes, já que os dois formatos são colunares",
+        "why": "Os dois são colunares e comprimidos, e ainda assim são formatos diferentes."
+      },
+      {
+        "text": "Bytes físicos são iguais aos lógicos até a tabela virar longo prazo",
+        "why": "Longo prazo muda a tarifa, não o tamanho."
+      },
+      {
+        "text": "Eles vão ser exatamente um terço dos bytes lógicos",
+        "why": "Nada aqui mede a compressão do BigQuery, então nenhum número exato decorre disso."
+      },
+      {
+        "text": "Só que essas colunas comprimem bem; o número mesmo está em `INFORMATION_SCHEMA.TABLE_STORAGE`",
+        "why": "Certo. A razão do Parquet é uma pista, e a real é informada por tabela."
+      }
+    ]
+  },
+  "ex-8w4vxmjs": {
+    "prompt": "Uma partição de `orders` não recebe escrita há 91 dias, e as analistas a consultam toda manhã. Que tarifa ela paga?",
+    "hint": "Confira a lista da página do que zera o relógio.",
+    "choices": [
+      {
+        "text": "Longo prazo",
+        "why": "Certo. Consultar não zera os 90 dias."
+      },
+      {
+        "text": "Ativo, porque é lida todo dia",
+        "why": "Leituras não contam como modificação."
+      },
+      {
+        "text": "Ativo nas horas em que está sendo lida",
+        "why": "A tarifa segue as escritas, nunca as leituras."
+      },
+      {
+        "text": "Nenhuma: uma partição consultada é cobrada como computação",
+        "why": "A consulta é cobrada como computação; a partição continua guardada e cobrada como armazenamento."
+      }
+    ]
+  },
+  "ex-4bncg3t2": {
+    "prompt": "Na cobrança lógica em southamerica-east1, quanto custam 2.048 GiB num mês se tudo for longo prazo? Dê em USD com duas casas decimais.",
+    "hint": "0,016 USD por GiB-mês.",
+    "unit": "USD"
+  },
+  "ex-kgrxpedj": {
+    "prompt": "Nas tarifas ativas, a cobrança física só é mais barata que a lógica quando o dado comprime mais do que quanto?",
+    "hint": "Divida uma tarifa pela outra.",
+    "choices": [
+      {
+        "text": "2,19 para um",
+        "why": "Esse é o cruzamento do longo prazo, 0,035 ÷ 0,016."
+      },
+      {
+        "text": "3,04 para um",
+        "why": "Certo. 0,07 ÷ 0,023."
+      },
+      {
+        "text": "Qualquer compressão, já que os bytes físicos são menos",
+        "why": "Menos bytes a três vezes a tarifa: a razão tem de vencer a da tarifa."
+      },
+      {
+        "text": "2 para um",
+        "why": "A 2 para um, 0,07 ÷ 2 ainda fica acima de 0,023."
+      }
+    ]
+  },
+  "ex-wv1h715q": {
+    "prompt": "A Quitanda reescreve os últimos 30 dias de uma tabela grande toda noite para corrigir pedidos atrasados. Contra qual modelo de cobrança de armazenamento esse hábito pesa?",
+    "hint": "Para onde vão os bytes substituídos, e quem paga por eles?",
+    "choices": [
+      {
+        "text": "O físico: os bytes substituídos são cobrados como time travel e fail-safe",
+        "why": "Certo. Na cobrança lógica o mesmo histórico não custa nada."
+      },
+      {
+        "text": "O lógico, porque o dado reescrito é contado duas vezes",
+        "why": "A cobrança lógica não cobra time travel nem fail-safe."
+      },
+      {
+        "text": "Nenhum: reescritas só afetam a conta de consultas",
+        "why": "Elas também zeram o relógio de 90 dias e guardam bytes antigos para time travel."
+      },
+      {
+        "text": "O longo prazo, que uma reescrita desliga na tabela inteira e em cada partição dela, toda noite",
+        "why": "Longo prazo é uma tarifa, não um modelo; e numa tabela particionada só as partições reescritas voltam a ativo."
+      }
+    ]
+  },
+  "ex-5yxsrvb3": {
+    "prompt": "Ligue cada medidor do BigQuery ao que ele conta.",
+    "hint": "Uma das opções da direita não é cobrada.",
+    "pairs": [
+      {
+        "left": "armazenamento, lógico",
+        "right": "Os bytes sem compressão de cada valor, por tipo, por GiB-mês"
+      },
+      {
+        "left": "armazenamento, físico",
+        "right": "Os bytes comprimidos guardados, time travel e fail-safe incluídos"
+      },
+      {
+        "left": "computação, sob demanda",
+        "right": "Os bytes lógicos das colunas que uma consulta lê, por TiB"
+      },
+      {
+        "left": "computação, capacidade",
+        "right": "Os slots reservados, por slot-hora"
+      }
+    ],
+    "right_distractors": [
+      "Uma carga em lote a partir do Cloud Storage"
+    ]
+  },
+  "ex-r8r9wzge": {
+    "prompt": "A tabela inteira de pedidos da Quitanda tem 0,092 GiB e é consultada centenas de vezes por dia. Onde está o custo dela?",
+    "hint": "Compare com o armazenamento gratuito de cada mês.",
+    "choices": [
+      {
+        "text": "No armazenamento, porque é consultada com tanta frequência",
+        "why": "O armazenamento não depende de quantas vezes uma tabela é lida."
+      },
+      {
+        "text": "Nas consultas: o armazenamento cabe nos 10 GiB gratuitos",
+        "why": "Certo. Guardar esses pedidos é gratuito; lê-los é a conta."
+      },
+      {
+        "text": "No time travel, já que é particionada por dia",
+        "why": "Particionar não tem relação com a cobrança de time travel, que só a cobrança física tem."
+      },
+      {
+        "text": "Em lugar nenhum: tabelas abaixo de 1 TiB são de consulta gratuita",
+        "why": "O TiB gratuito é por mês de consultas, não por tabela."
+      }
+    ]
+  },
+  "ex-bs3j626j": {
+    "prompt": "Quais destes números desta aula foram medidos, e não tirados da documentação do Google ou calculados a partir dela? Escolha todas as que se aplicam.",
+    "hint": "Duas coisas rodaram: o DuckDB e o fake-gcs-server.",
+    "choices": [
+      {
+        "text": "A tabela tem 1.245.118 linhas",
+        "why": "Sim. O DuckDB as contou."
+      },
+      {
+        "text": "Os arquivos Parquet têm 32.451.790 bytes",
+        "why": "Sim. O `du` e o emulador imprimiram isso."
+      },
+      {
+        "text": "Uma `STRING` custa 2 bytes mais o comprimento UTF-8",
+        "why": "Essa é a regra documentada; o DuckDB só a aplicou."
+      },
+      {
+        "text": "A cobrança física custaria 13,14 USD por mês por 1 TiB, nove décimos em longo prazo",
+        "why": "Calculado pelas tarifas da página, a uma razão que ninguém mediu."
+      },
+      {
+        "text": "O time travel dura sete dias por padrão",
+        "why": "Da documentação do Google; nada aqui guarda versão passada."
+      }
+    ]
+  }
+}

@@ -1,0 +1,555 @@
+[
+  {
+    "id": "ex-1xwtak6n",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an AlloyDB primary write to the storage layer?",
+    "hint": "Think of what makes a commit durable.",
+    "choices": [
+      {
+        "text": "Log records only",
+        "correct": true,
+        "why": "Right. The log processing service builds the data blocks from them."
+      },
+      {
+        "text": "Data pages, after each checkpoint",
+        "correct": false,
+        "why": "That is a PostgreSQL server on its own disk; AlloyDB's primary writes no pages."
+      },
+      {
+        "text": "Both the log and the pages, to a disk in its own zone",
+        "correct": false,
+        "why": "The primary owns no disk; the storage is regional and shared."
+      },
+      {
+        "text": "Whole rows, which the read pool then indexes",
+        "correct": false,
+        "why": "Nothing is indexed by the read pool; it reads the same blocks the primary does."
+      }
+    ]
+  },
+  {
+    "id": "ex-f67gah1a",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda adds a third node to its AlloyDB read pool. What happens to the storage line of the bill?",
+    "hint": "Who owns the storage?",
+    "choices": [
+      {
+        "text": "It grows by the size of the database, for the new copy",
+        "correct": false,
+        "why": "That is a Cloud SQL replica, which keeps a full copy of its own."
+      },
+      {
+        "text": "It grows by the new node's cache",
+        "correct": false,
+        "why": "The cache is part of the node's machine, billed as vCPUs and memory, not storage."
+      },
+      {
+        "text": "Nothing; the cluster's storage is billed once",
+        "correct": true,
+        "why": "Right. The pricing page says storage costs do not change when read nodes are added."
+      },
+      {
+        "text": "It doubles, because reads are billed per GiB scanned",
+        "correct": false,
+        "why": "AlloyDB has no charge per read or per GiB scanned."
+      }
+    ]
+  },
+  {
+    "id": "ex-96f07h4f",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's write load grows beyond what the largest AlloyDB machine can absorb, while reads stay flat. What is the next step?",
+    "hint": "Count the writers in a cluster.",
+    "choices": [
+      {
+        "text": "Add read pool nodes until the writes fit",
+        "correct": false,
+        "why": "Read nodes take only reads; every write still goes through the one primary."
+      },
+      {
+        "text": "Spread writes over many machines, as Spanner does",
+        "correct": true,
+        "why": "Right. AlloyDB has exactly one writer, and that is the line where Spanner begins."
+      },
+      {
+        "text": "Turn on the columnar engine on the primary",
+        "correct": false,
+        "why": "The columnar engine speeds up analytical reads and adds work to writes."
+      },
+      {
+        "text": "Add a second primary in another zone",
+        "correct": false,
+        "why": "A regional primary's second node is a standby that serves nothing until a failover."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg0rb9gq",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a remote storage layer not make every AlloyDB query slower?",
+    "hint": "Count the places a page can be found before the storage service.",
+    "choices": [
+      {
+        "text": "Two caches per node: memory and local storage",
+        "correct": true,
+        "why": "Right. The storage service is reached only when both miss."
+      },
+      {
+        "text": "The storage layer is in the same machine as the primary",
+        "correct": false,
+        "why": "It is a regional service, spread over the zones, outside the nodes."
+      },
+      {
+        "text": "Queries are answered from the log, never from pages",
+        "correct": false,
+        "why": "Queries read pages; the log is what the pages are built from."
+      },
+      {
+        "text": "Read pool nodes copy the whole database at start-up",
+        "correct": false,
+        "why": "Read nodes hold no copy; they read blocks on demand."
+      }
+    ]
+  },
+  {
+    "id": "ex-k088b9bs",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `--availability-type` gives an AlloyDB primary a standby in another zone?",
+    "hint": "The other value is one zone.",
+    "choices": [
+      {
+        "text": "`ZONAL`",
+        "correct": false,
+        "why": "One node in one zone, with no automatic failover."
+      },
+      {
+        "text": "`REGIONAL`",
+        "correct": true,
+        "why": "Right. Two nodes in two zones, both billed."
+      },
+      {
+        "text": "`READ_POOL`",
+        "correct": false,
+        "why": "That is a value of `--instance-type`, for an instance that takes only reads."
+      },
+      {
+        "text": "`MULTI_REGIONAL`",
+        "correct": false,
+        "why": "No such value; a copy in another region is a secondary cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-4t191t5z",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `--cpu-count=16` and no machine type, how many GiB of memory does an AlloyDB node have?",
+    "hint": "N2 high-memory: 8 GiB per vCPU.",
+    "value": 128,
+    "tolerance": 0,
+    "unit": "GiB"
+  },
+  {
+    "id": "ex-bzgrhw4v",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants its read pool to survive the loss of one zone. What is the smallest pool that can?",
+    "hint": "The help says what a pool of one can be.",
+    "choices": [
+      {
+        "text": "One node, regional",
+        "correct": false,
+        "why": "A read pool of size 1 can only be zonal."
+      },
+      {
+        "text": "Two nodes, placed in two zones",
+        "correct": true,
+        "why": "Right. A pool of two or more nodes spreads them over zones."
+      },
+      {
+        "text": "Three nodes, one per zone, which is the minimum for a quorum",
+        "correct": false,
+        "why": "There is no quorum among read nodes; two is enough to span zones."
+      },
+      {
+        "text": "Any size, because the storage layer is regional",
+        "correct": false,
+        "why": "The storage survives a zone; a node in the lost zone does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-21df0nya",
+    "version": 1,
+    "section": "columnar-engine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the plain PostgreSQL of this lesson, why did October's revenue by district read every page of `orders`?",
+    "hint": "Where are October's rows?",
+    "choices": [
+      {
+        "text": "The filter on `day` was applied after the aggregate",
+        "correct": false,
+        "why": "The filter ran in the scan, and removed rows rather than pages."
+      },
+      {
+        "text": "Whole rows are read, and October's are everywhere",
+        "correct": true,
+        "why": "Right. Every page has to be opened to find them, address and notes included."
+      },
+      {
+        "text": "`SET max_parallel_workers_per_gather = 0` disables indexes",
+        "correct": false,
+        "why": "It keeps the query to one process; there was no index on `day` to use."
+      },
+      {
+        "text": "The columnar engine was off",
+        "correct": false,
+        "why": "There is no columnar engine on plain PostgreSQL at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wskm75e",
+    "version": 1,
+    "section": "columnar-engine",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which Quitanda query gains least from AlloyDB's columnar engine?",
+    "hint": "Many rows and few columns is its shape.",
+    "choices": [
+      {
+        "text": "Revenue by district for the whole year",
+        "correct": false,
+        "why": "Many rows, three columns: exactly what it is for."
+      },
+      {
+        "text": "The number of cancelled orders per month",
+        "correct": false,
+        "why": "Many rows, two columns."
+      },
+      {
+        "text": "One customer's order by its primary key, every column",
+        "correct": true,
+        "why": "Right. One row by its index is what a row store already does in a handful of buffers."
+      },
+      {
+        "text": "The average total of orders delivered to Mooca",
+        "correct": false,
+        "why": "Many rows, three columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-72hx6trm",
+    "version": 1,
+    "section": "columnar-engine",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The full table was 51,658 pages and the three-column table 11,840. How many times fewer pages did the narrow scan read? One decimal place.",
+    "hint": "Divide the larger by the smaller.",
+    "value": 4.4,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-0krdsdfa",
+    "version": 1,
+    "section": "columnar-engine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda turns on the columnar engine only on the analysts' read pool. What does that buy?",
+    "hint": "The flag is per instance.",
+    "choices": [
+      {
+        "text": "The checkout's primary never gives memory to a column store",
+        "correct": true,
+        "why": "Right. The column store competes for memory, so it lives where the reports run."
+      },
+      {
+        "text": "The column store stops costing anything",
+        "correct": false,
+        "why": "Its memory is the pool's memory, billed with the nodes."
+      },
+      {
+        "text": "The primary's writes stop reaching the column store",
+        "correct": false,
+        "why": "Changes reach the column store wherever it lives; AlloyDB keeps it up to date."
+      },
+      {
+        "text": "Reports may now use `google_columnar_engine_add` on PostgreSQL",
+        "correct": false,
+        "why": "The function exists only on AlloyDB."
+      }
+    ]
+  },
+  {
+    "id": "ex-3w97wfm9",
+    "version": 1,
+    "section": "where-it-fits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What changes in an application that moves from Cloud SQL for PostgreSQL to AlloyDB?",
+    "hint": "Both run the same engine.",
+    "choices": [
+      {
+        "text": "The schema, because primary keys decide placement",
+        "correct": false,
+        "why": "That is Spanner, whose keys decide where rows live."
+      },
+      {
+        "text": "The connection string",
+        "correct": true,
+        "why": "Right. AlloyDB is PostgreSQL; the move is the closest of the steps."
+      },
+      {
+        "text": "Every query, to the GoogleSQL dialect",
+        "correct": false,
+        "why": "AlloyDB speaks PostgreSQL; GoogleSQL is one of Spanner's dialects."
+      },
+      {
+        "text": "The driver, for a proprietary protocol",
+        "correct": false,
+        "why": "AlloyDB uses PostgreSQL's drivers and protocol."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbr3vaze",
+    "version": 1,
+    "section": "where-it-fits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does this lab practise on plain PostgreSQL rather than AlloyDB Omni?",
+    "hint": "What is Omni missing that the lesson is about?",
+    "choices": [
+      {
+        "text": "Omni is not published for Linux",
+        "correct": false,
+        "why": "Google publishes it as a container image for Linux, Docker and Kubernetes."
+      },
+      {
+        "text": "Omni has no columnar engine, which is what this lesson measures",
+        "correct": false,
+        "why": "The columnar engine is inside Omni."
+      },
+      {
+        "text": "Omni keeps data on its own disks, with no shared storage",
+        "correct": true,
+        "why": "Right. The part that sets AlloyDB apart is the part Omni leaves out."
+      },
+      {
+        "text": "Omni needs an AlloyDB cluster to connect to",
+        "correct": false,
+        "why": "Omni runs on its own, with no cluster behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3cv7h9d",
+    "version": 1,
+    "section": "where-it-fits",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each product to how its reads grow.",
+    "hint": "One of them grows writes the same way.",
+    "pairs": [
+      {
+        "left": "Cloud SQL",
+        "right": "Read replicas, each with a full copy"
+      },
+      {
+        "left": "AlloyDB",
+        "right": "Read pool nodes reading one shared storage"
+      },
+      {
+        "left": "Spanner",
+        "right": "More nodes, which serve reads and writes by key range"
+      }
+    ],
+    "right_distractors": [
+      "A bigger standby"
+    ]
+  },
+  {
+    "id": "ex-cbg4sh8q",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is NOT a line on an AlloyDB bill?",
+    "hint": "Three things are billed.",
+    "choices": [
+      {
+        "text": "vCPUs and memory of every node",
+        "correct": false,
+        "why": "Billed per vCPU-hour and per GiB-hour."
+      },
+      {
+        "text": "Storage the cluster holds",
+        "correct": false,
+        "why": "Billed per GiB-month of what is used."
+      },
+      {
+        "text": "I/O requests to the storage layer",
+        "correct": true,
+        "why": "Right. AlloyDB has no charge per read or per write."
+      },
+      {
+        "text": "Backup storage",
+        "correct": false,
+        "why": "Billed per GiB-month at the backup rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxxqjf2w",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At São Paulo's list prices, what does one AlloyDB node of 8 vCPUs and 64 GiB cost for 730 hours, in USD to the cent?",
+    "hint": "(8 × 0.1051 + 64 × 0.01781) × 730",
+    "value": 1445.87,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-dt6vm68w",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's shape grows from two read machines to four, on both products, with the data unchanged. What happens to the amount of data at which AlloyDB's bill meets Cloud SQL's?",
+    "hint": "Each reader adds compute on both sides, and a disk on one.",
+    "choices": [
+      {
+        "text": "It stays at about 4,370 GiB, because the line depends on how much data there is and on nothing else",
+        "correct": false,
+        "why": "The line is a compute difference over a storage difference per GiB, and both move."
+      },
+      {
+        "text": "It falls, to about 3,380 GiB",
+        "correct": true,
+        "why": "Right. Each reader widens the compute gap by about 593 a month, and adds 0.255 a GiB to Cloud SQL's storage: (6 × 1,445.87 − 1,704.70 − 4 × 852.64) / (1.53 − 0.476909)."
+      },
+      {
+        "text": "It rises, because each AlloyDB read node costs about 593 a month more than a replica",
+        "correct": false,
+        "why": "It does, but each replica also brings a full disk, and past about 2,330 GiB that disk costs more than the 593."
+      },
+      {
+        "text": "It cannot be computed without a free trial",
+        "correct": false,
+        "why": "It is arithmetic on the pricing pages, like the 4,370."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w7f1k4m",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of building Quitanda's AlloyDB orders database in order.",
+    "hint": "The cluster owns the storage before any machine exists.",
+    "items": [
+      "`gcloud alloydb clusters create`, with the network and continuous backup",
+      "The `PRIMARY` instance, `REGIONAL`, 8 vCPUs",
+      "A `READ_POOL` of two nodes for the shop",
+      "The columnar engine flag on a second read pool for the analysts"
+    ]
+  },
+  {
+    "id": "ex-8ms0mv22",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these follow from AlloyDB's shared storage layer? Choose all that apply.",
+    "hint": "Think of what a read node no longer needs.",
+    "choices": [
+      {
+        "text": "A read node adds no storage to the bill",
+        "correct": true,
+        "why": "Yes; there is one storage layer per cluster."
+      },
+      {
+        "text": "A new read node has no copy to build before it serves",
+        "correct": true,
+        "why": "Yes; it reads the blocks that are already there."
+      },
+      {
+        "text": "Storage is billed by what is used rather than by a size chosen in advance",
+        "correct": true,
+        "why": "Yes; the storage scales up and down by itself."
+      },
+      {
+        "text": "Writes can go to any node of a read pool",
+        "correct": false,
+        "why": "Every write goes through the one primary."
+      },
+      {
+        "text": "A `DELETE` without a `WHERE` can be undone from a read node",
+        "correct": false,
+        "why": "The read node reads the same storage and sees the delete at once; continuous backup undoes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcsevea7",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "AlloyDB keeps the log for a recovery window, so a cluster can be restored to any moment inside it. That feature is continuous ___.",
+    "hint": "It is turned on with `--enable-continuous-…`.",
+    "blanks": [
+      {
+        "accept": [
+          "backup"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,596 @@
+[
+  {
+    "id": "ex-smmvyyww",
+    "version": 1,
+    "section": "request-units",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which operation does Microsoft fix at exactly one request unit?",
+    "hint": "The cheapest thing Cosmos DB does.",
+    "choices": [
+      {
+        "text": "A write of a 1 KB item",
+        "correct": false,
+        "why": "A write costs more than a read of the same item."
+      },
+      {
+        "text": "A point read of a 1 KB item",
+        "correct": true,
+        "why": "Right: the point read is the anchor of the whole scale."
+      },
+      {
+        "text": "A query that returns one 1 KB item",
+        "correct": false,
+        "why": "A query has its own cost, and usually more than a point read of the same item."
+      },
+      {
+        "text": "Any request of up to 1 KB, read or write",
+        "correct": false,
+        "why": "Size is one factor among several; the kind of operation is another."
+      }
+    ]
+  },
+  {
+    "id": "ex-nk2n546j",
+    "version": 1,
+    "section": "request-units",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these raise the request units of an operation? Choose all that apply.",
+    "hint": "One of them changes nothing about the work.",
+    "choices": [
+      {
+        "text": "A larger item",
+        "correct": true,
+        "why": "Right: more bytes to read, write and index."
+      },
+      {
+        "text": "More indexed properties, on a write",
+        "correct": true,
+        "why": "Right: every indexed property is work on every write."
+      },
+      {
+        "text": "A query that does not name its partition key",
+        "correct": true,
+        "why": "Right: it is sent to every physical partition."
+      },
+      {
+        "text": "Running the same query a second time",
+        "correct": false,
+        "why": "The charge is deterministic: the same operation on the same data costs the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-856fn0d7",
+    "version": 1,
+    "section": "request-units",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every answer from Cosmos DB says what the operation cost in the header `x-ms-request-___`.",
+    "hint": "What the operation was billed.",
+    "blanks": [
+      {
+        "accept": [
+          "charge"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t59ztpf8",
+    "version": 1,
+    "section": "request-units",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`charges.py` reported 1 for a 9 KB write and for a query across partitions. What do you do with those numbers?",
+    "hint": "What did the emulator say for everything else?",
+    "choices": [
+      {
+        "text": "Use them as a lower bound for the estimate",
+        "correct": false,
+        "why": "They bound nothing: the emulator reports the same 1 for everything."
+      },
+      {
+        "text": "Multiply them by the size in KB to get Azure's figure",
+        "correct": false,
+        "why": "There is no published formula, and a placeholder times anything is still a placeholder."
+      },
+      {
+        "text": "Nothing: measure the charges on a real account instead",
+        "correct": true,
+        "why": "Right: the header is in the right place and holds a placeholder."
+      },
+      {
+        "text": "Trust them for writes and not for queries",
+        "correct": false,
+        "why": "Writes are just as flat: 1 KB and 9 KB both came back as 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5qex2kt",
+    "version": 1,
+    "section": "three-ways-to-pay",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each way of paying to what it bills.",
+    "hint": "One description belongs to none of them.",
+    "pairs": [
+      {
+        "left": "Manual throughput",
+        "right": "The RU/s set, every hour"
+      },
+      {
+        "left": "Autoscale",
+        "right": "Each hour's highest RU/s, never below a tenth of the maximum"
+      },
+      {
+        "left": "Serverless",
+        "right": "The request units consumed, per million"
+      }
+    ],
+    "right_distractors": [
+      "The bytes returned to the client"
+    ]
+  },
+  {
+    "id": "ex-xvkne5bw",
+    "version": 1,
+    "section": "three-ways-to-pay",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An autoscale container has a maximum of 4,000 RU/s. What is the lowest level it is billed at in an hour, in RU/s?",
+    "hint": "A tenth of the ceiling.",
+    "value": 400,
+    "tolerance": 0,
+    "unit": "RU/s"
+  },
+  {
+    "id": "ex-f316ajvs",
+    "version": 1,
+    "section": "three-ways-to-pay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Autoscale costs 1.5 times manual per RU/s. Below what average share of its maximum must its hours be billed for it to be cheaper?",
+    "hint": "Manual pays for the maximum every hour.",
+    "choices": [
+      {
+        "text": "One half",
+        "correct": false,
+        "why": "At one half autoscale costs 0.75 of manual, but the break-even is higher."
+      },
+      {
+        "text": "Two thirds",
+        "correct": true,
+        "why": "Right: 1.5 times two thirds is one, the price of manual."
+      },
+      {
+        "text": "One tenth",
+        "correct": false,
+        "why": "A tenth is the floor it never goes below, not the break-even."
+      },
+      {
+        "text": "Fifteen per cent",
+        "correct": false,
+        "why": "That confuses the factor 1.5 with a share."
+      }
+    ]
+  },
+  {
+    "id": "ex-rst9b6rq",
+    "version": 1,
+    "section": "three-ways-to-pay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`modes.py` asked for a container at 100 RU/s and the emulator created it and reported 100. What would Azure have done?",
+    "hint": "What is the manual minimum?",
+    "choices": [
+      {
+        "text": "Refused it: manual throughput starts at 400 RU/s",
+        "correct": true,
+        "why": "Right, and the emulator also answered every container with the last one's offer."
+      },
+      {
+        "text": "Created it at 100, since throughput moves in steps of 100",
+        "correct": false,
+        "why": "The steps are of 100 above a minimum of 400."
+      },
+      {
+        "text": "Created it as serverless, which has no minimum",
+        "correct": false,
+        "why": "Serverless is chosen for the account, not given to a container that asked for too little."
+      },
+      {
+        "text": "Created it with autoscale up to 1,000 RU/s",
+        "correct": false,
+        "why": "Nothing converts a manual request into autoscale."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrmacnw8",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did autoscale cost less than a quarter of manual in `sizing.py`?",
+    "hint": "Look at the last line it printed.",
+    "choices": [
+      {
+        "text": "Because autoscale has a lower price per RU/s",
+        "correct": false,
+        "why": "It has a higher one, 1.5 times."
+      },
+      {
+        "text": "Because autoscale ignores the promotion hour",
+        "correct": false,
+        "why": "It bills that hour at 2,700, like manual does."
+      },
+      {
+        "text": "Its hours averaged 14% of the maximum",
+        "correct": true,
+        "why": "Right: one busy hour and twenty-three quiet ones."
+      },
+      {
+        "text": "Because serverless set a ceiling on it",
+        "correct": false,
+        "why": "The three are priced independently."
+      }
+    ]
+  },
+  {
+    "id": "ex-qe5wagy6",
+    "version": 1,
+    "section": "sizing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the illustrative prices, below what share of the time, in per cent to the nearest whole number, must reserved capacity be busy for serverless to be cheaper than manual?",
+    "hint": "0.008 dollars for an hour of 100 RU/s against 360,000 units at 0.25 per million.",
+    "value": 9,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-6fmnt13w",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's load becomes 300 orders a second around the clock. Which way of paying wins now, and why?",
+    "hint": "What share of its maximum is autoscale billed at?",
+    "choices": [
+      {
+        "text": "Manual, by the same arithmetic",
+        "correct": true,
+        "why": "Right: autoscale is billed at its maximum every hour at 1.5 times the price, 233.28 against 155.52."
+      },
+      {
+        "text": "Autoscale, because it always follows the load",
+        "correct": false,
+        "why": "There is nothing to follow: the load is flat at the peak."
+      },
+      {
+        "text": "Serverless, because the units are consumed anyway",
+        "correct": false,
+        "why": "Consumed units cost far more than reserved ones that are used: 1,749.60."
+      },
+      {
+        "text": "They cost the same once the load is steady",
+        "correct": false,
+        "why": "The price per unit still differs by 1.5 times."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9ab5rbr",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which numbers in `sizing.py` should be replaced first, before any price?",
+    "hint": "They were called assumptions.",
+    "choices": [
+      {
+        "text": "The number of days in the month",
+        "correct": false,
+        "why": "Thirty is arithmetic, not a guess about Cosmos DB."
+      },
+      {
+        "text": "The request charges and the order counts",
+        "correct": true,
+        "why": "Right: measure the first on an account and take the second from the shop's records."
+      },
+      {
+        "text": "The rounding of every amount up to hundreds of RU/s",
+        "correct": false,
+        "why": "That is how throughput is set and billed."
+      },
+      {
+        "text": "The minimum of 400 RU/s",
+        "correct": false,
+        "why": "That is documented, not assumed."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2s435s9",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A request needs more request units than its second has left. What does Cosmos DB answer?",
+    "hint": "Too many.",
+    "choices": [
+      {
+        "text": "It queues the request until the next second and answers 200",
+        "correct": false,
+        "why": "Nothing is queued; the request is refused and the client waits."
+      },
+      {
+        "text": "429, with `x-ms-retry-after-ms`",
+        "correct": true,
+        "why": "Right: nothing is written, and the header says how long to wait."
+      },
+      {
+        "text": "503, and the container scales up",
+        "correct": false,
+        "why": "Manual throughput never changes itself."
+      },
+      {
+        "text": "It serves it and bills the extra units at a higher rate",
+        "correct": false,
+        "why": "There is no overdraft: the budget is per second."
+      }
+    ]
+  },
+  {
+    "id": "ex-mrm5kccb",
+    "version": 1,
+    "section": "throttling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container is provisioned at 30,000 RU/s over three physical partitions. How many RU/s can every item with one partition key get at most?",
+    "hint": "One key lives in one physical partition.",
+    "value": 10000,
+    "tolerance": 0,
+    "unit": "RU/s"
+  },
+  {
+    "id": "ex-qmszk0y7",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Normalized RU Consumption sits at 100% while the container uses a fifth of its throughput. What is the fix?",
+    "hint": "Which partition is at 100%?",
+    "choices": [
+      {
+        "text": "Double the container's throughput",
+        "correct": false,
+        "why": "The hot key stays in one partition; the others get more to leave idle."
+      },
+      {
+        "text": "Raise the library's retry count",
+        "correct": false,
+        "why": "More retries spend more units the partition does not have."
+      },
+      {
+        "text": "Switch the container to serverless",
+        "correct": false,
+        "why": "Serverless is chosen per account, and the one-key ceiling holds there too."
+      },
+      {
+        "text": "A partition key that spreads the load",
+        "correct": true,
+        "why": "Right: one partition at its budget and the rest idle is a hot partition."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf815dt6",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`flood.py` wrote 2,000 orders to a 400 RU/s container in 12.8 seconds with no retries. What does that show?",
+    "hint": "Who was asked?",
+    "choices": [
+      {
+        "text": "That 400 RU/s carries 156 writes a second",
+        "correct": false,
+        "why": "At the illustrative 6 RU a write it carries about 66."
+      },
+      {
+        "text": "Only how fast the program and the laptop are",
+        "correct": true,
+        "why": "Right: the emulator never throttles."
+      },
+      {
+        "text": "That the library absorbed the throttling",
+        "correct": false,
+        "why": "It reported zero throttled attempts for every write."
+      },
+      {
+        "text": "That writes are not counted against throughput",
+        "correct": false,
+        "why": "They are, and cost more than reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhaxz2zc",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Left at its defaults, how does the Python library 4.17.1 handle a 429?",
+    "hint": "Ask the library, as the section did.",
+    "choices": [
+      {
+        "text": "It raises it at once, for the program to decide",
+        "correct": false,
+        "why": "It retries first; the program hears only about the ones that outlast that."
+      },
+      {
+        "text": "It retries forever, waiting one second each time",
+        "correct": false,
+        "why": "There is a limit, and no fixed interval by default."
+      },
+      {
+        "text": "9 retries, 30 seconds, waits as asked",
+        "correct": true,
+        "why": "Right: 9, 30 and no fixed interval, from `RetryOptions`."
+      },
+      {
+        "text": "It retries 3 times within 5 seconds",
+        "correct": false,
+        "why": "Those are the numbers `writer.py` chose, not the defaults."
+      }
+    ]
+  },
+  {
+    "id": "ex-jksftqw3",
+    "version": 1,
+    "section": "retries",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to a throttled write in `writer.py`, from the first answer.",
+    "hint": "The program hears about it last.",
+    "items": [
+      "Cosmos DB answers 429 with `x-ms-retry-after-ms`",
+      "The library waits the time the header asked for",
+      "The library sends the write again, up to three times",
+      "The retries or the five seconds run out",
+      "`save` catches `CosmosHttpResponseError` and reports the wait"
+    ]
+  },
+  {
+    "id": "ex-kx068dqe",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A third of a container's requests are throttled. Why is raising the retry count the wrong fix?",
+    "hint": "What does a retry spend?",
+    "choices": [
+      {
+        "text": "Retries spend units too",
+        "correct": true,
+        "why": "Right: the load grows and latency climbs; the fix is capacity, the key or less work."
+      },
+      {
+        "text": "Because Azure caps retries at nine",
+        "correct": false,
+        "why": "Nine is the library's default, and it is configurable."
+      },
+      {
+        "text": "Because retries turn reads into writes",
+        "correct": false,
+        "why": "A retried read is still a read."
+      },
+      {
+        "text": "Because a retried request costs nothing and hides the problem",
+        "correct": false,
+        "why": "It hides the problem, but it is charged like any other request."
+      }
+    ]
+  },
+  {
+    "id": "ex-206w7nxt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda adds a container of delivery receipts, written once per order and read a few hundred times a day in total. Which way of paying, at the illustrative prices?",
+    "hint": "How busy would 400 reserved RU/s be?",
+    "choices": [
+      {
+        "text": "Manual at 400 RU/s, the cheapest setting",
+        "correct": false,
+        "why": "Reserved all day and busy far less than 9% of it."
+      },
+      {
+        "text": "Autoscale up to 1,000 RU/s, since it scales down at night",
+        "correct": false,
+        "why": "It never goes below 100 billed, still mostly idle."
+      },
+      {
+        "text": "Serverless, on an account created for it",
+        "correct": true,
+        "why": "Right: busy well under 9% of the time, and serverless is chosen for the whole account."
+      },
+      {
+        "text": "Whichever the emulator reports as cheapest",
+        "correct": false,
+        "why": "The emulator reports a placeholder charge and the wrong container's offer."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcb3f16x",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At an illustrative 6 RU a write, about how many writes a second does a 400 RU/s container carry? Round down.",
+    "hint": "400 divided by 6.",
+    "value": 66,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6069kheg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which did the emulator do in this lesson that Azure would not? Choose all that apply.",
+    "hint": "One is the library, not the emulator.",
+    "choices": [
+      {
+        "text": "Charge 1 for a write of 9 KB",
+        "correct": true,
+        "why": "Right: a placeholder."
+      },
+      {
+        "text": "Accept a container at 100 RU/s",
+        "correct": true,
+        "why": "Right: the manual minimum is 400."
+      },
+      {
+        "text": "Take 2,000 writes in 12.8 seconds at 400 RU/s without a 429",
+        "correct": true,
+        "why": "Right: it never throttles."
+      },
+      {
+        "text": "Retry a throttled request nine times by default",
+        "correct": false,
+        "why": "That is the library's policy, and it would apply on Azure too."
+      }
+    ]
+  }
+]

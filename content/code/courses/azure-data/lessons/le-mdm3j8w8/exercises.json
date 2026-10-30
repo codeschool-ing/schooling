@@ -1,0 +1,605 @@
+[
+  {
+    "id": "ex-qdesc2r5",
+    "version": 1,
+    "section": "flexible-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which compute tier is a `MO_Standard_E4ds_v5` flexible server?",
+    "hint": "The prefix says it.",
+    "choices": [
+      {
+        "text": "Burstable",
+        "correct": false,
+        "why": "That is `B_`."
+      },
+      {
+        "text": "General Purpose",
+        "correct": false,
+        "why": "That is `GP_`, on D-series machines."
+      },
+      {
+        "text": "Memory Optimized",
+        "correct": true,
+        "why": "Right: `MO_`, on E-series machines."
+      },
+      {
+        "text": "Business Critical",
+        "correct": false,
+        "why": "That is a tier of Azure SQL, lesson 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-caq4rcmy",
+    "version": 1,
+    "section": "flexible-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda gave its PostgreSQL server 512 GB and uses 60. What can it do about the bill for the storage?",
+    "hint": "Storage grows and does not shrink.",
+    "choices": [
+      {
+        "text": "Shrink it to 128 GB in place",
+        "correct": false,
+        "why": "Provisioned storage cannot be made smaller."
+      },
+      {
+        "text": "Nothing in place: a smaller server and a copy",
+        "correct": true,
+        "why": "Right, which is why the size is chosen for next year."
+      },
+      {
+        "text": "Turn on autogrow, which also shrinks the disk",
+        "correct": false,
+        "why": "Autogrow only grows."
+      },
+      {
+        "text": "Stop the server, which stops the storage charge too",
+        "correct": false,
+        "why": "Stopping stops the compute; storage is still billed."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1mdp3dd",
+    "version": 1,
+    "section": "flexible-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For how many days can a flexible server stay stopped before Azure starts it again, according to the documentation?",
+    "hint": "A week.",
+    "value": 7,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-59a4y5d3",
+    "version": 1,
+    "section": "flexible-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sku_name = \"Standard_D2ds_v5\"` was refused. What was missing?",
+    "hint": "Compare it with the declared name.",
+    "choices": [
+      {
+        "text": "The tier in front, as in `GP_Standard_D2ds_v5`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The number of vCores at the end",
+        "correct": false,
+        "why": "The `2` in `D2ds` is already the size."
+      },
+      {
+        "text": "A region, since sizes differ per region",
+        "correct": false,
+        "why": "Region is the `location` argument."
+      },
+      {
+        "text": "Lowercase letters throughout",
+        "correct": false,
+        "why": "Case was not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-05vewc9h",
+    "version": 1,
+    "section": "the-engine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a flexible server, what is the administrator login Azure creates?",
+    "hint": "Not the role the container's `postgres` is.",
+    "choices": [
+      {
+        "text": "A superuser, like `postgres` in the container",
+        "correct": false,
+        "why": "It is not a superuser."
+      },
+      {
+        "text": "A member of `azure_pg_admin`",
+        "correct": true,
+        "why": "Right: it can create databases, roles and allowed extensions, and nothing a superuser alone can."
+      },
+      {
+        "text": "A user with access to one database only, chosen at creation",
+        "correct": false,
+        "why": "It can create databases."
+      },
+      {
+        "text": "An Entra ID identity, with no password",
+        "correct": false,
+        "why": "Entra ID sign-in exists, and the declared login has a password."
+      }
+    ]
+  },
+  {
+    "id": "ex-78440pdj",
+    "version": 1,
+    "section": "the-engine",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The plan said `Buffers: shared hit=15 read=3`. What would a second run of the same query most likely say?",
+    "hint": "Where did the three pages go after they were read?",
+    "choices": [
+      {
+        "text": "`shared read=18`, since every run reads from disk",
+        "correct": false,
+        "why": "Pages read once stay in `shared_buffers`."
+      },
+      {
+        "text": "`shared hit=18`, all of it from the cache",
+        "correct": true,
+        "why": "Right: the three pages read are now cached."
+      },
+      {
+        "text": "`shared hit=15 read=3` again, since the plan is the same",
+        "correct": false,
+        "why": "The plan is the same; the cache is not."
+      },
+      {
+        "text": "Nothing, because the result is cached and the query is skipped",
+        "correct": false,
+        "why": "PostgreSQL caches pages, not results."
+      }
+    ]
+  },
+  {
+    "id": "ex-833zzc3j",
+    "version": 1,
+    "section": "the-engine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who applies minor versions, such as 17.5 to 17.6, on a flexible server?",
+    "hint": "A major version is the other case.",
+    "choices": [
+      {
+        "text": "You, by starting the upgrade after testing",
+        "correct": false,
+        "why": "That is a major upgrade, 17 to 18."
+      },
+      {
+        "text": "Azure, in a maintenance window of your choosing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nobody: the version is fixed for the server's life",
+        "correct": false,
+        "why": "Minor versions move."
+      },
+      {
+        "text": "The PostgreSQL community, directly on the server",
+        "correct": false,
+        "why": "The community publishes releases; Azure applies them."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxtz3424",
+    "version": 1,
+    "section": "server-parameters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pg_settings`, what does a `context` of `postmaster` mean?",
+    "hint": "`shared_buffers` had it.",
+    "choices": [
+      {
+        "text": "Any session may change it for itself",
+        "correct": false,
+        "why": "That is `user`, as `work_mem`."
+      },
+      {
+        "text": "An administrator may change it while the server runs",
+        "correct": false,
+        "why": "That is `superuser`."
+      },
+      {
+        "text": "It is read once, when the server starts",
+        "correct": true,
+        "why": "Right: a restart applies it."
+      },
+      {
+        "text": "It is set by Azure and cannot be read",
+        "correct": false,
+        "why": "The container has no Azure, and it read it fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-wntmb7qc",
+    "version": 1,
+    "section": "server-parameters",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps that made `pg_stat_statements` answer in the container.",
+    "hint": "The view refused once, between the first two.",
+    "items": [
+      "CREATE EXTENSION pg_stat_statements",
+      "ALTER SYSTEM SET shared_preload_libraries",
+      "SELECT pg_reload_conf()",
+      "docker compose restart postgres",
+      "SELECT ... FROM pg_stat_statements"
+    ]
+  },
+  {
+    "id": "ex-brr6ta9w",
+    "version": 1,
+    "section": "server-parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `pg_reload_conf()`, `pending_restart` said `t`. What did that mean?",
+    "hint": "Look at the `setting` column beside it.",
+    "choices": [
+      {
+        "text": "The new value was applied, and a restart would undo it",
+        "correct": false,
+        "why": "The setting was still empty."
+      },
+      {
+        "text": "The value is written and read, and waits for the next start",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The server was restarting at that moment",
+        "correct": false,
+        "why": "It answered the query; it was running."
+      },
+      {
+        "text": "The reload failed and has to be repeated",
+        "correct": false,
+        "why": "`pg_reload_conf()` answered `t`."
+      }
+    ]
+  },
+  {
+    "id": "ex-32z6dzeg",
+    "version": 1,
+    "section": "server-parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a flexible server, how does an administrator get `pg_stat_statements` answering?",
+    "hint": "The container's way is not available there.",
+    "choices": [
+      {
+        "text": "`ALTER SYSTEM`, then a restart, as in the container",
+        "correct": false,
+        "why": "`ALTER SYSTEM` needs a superuser, and the administrator is not one."
+      },
+      {
+        "text": "Editing `postgresql.conf` over SSH",
+        "correct": false,
+        "why": "There is no shell on the machine."
+      },
+      {
+        "text": "`CREATE EXTENSION` alone, since Azure preloads every library",
+        "correct": false,
+        "why": "A library still has to be in the static parameter."
+      },
+      {
+        "text": "The server parameter, a restart, and the extension allowed",
+        "correct": true,
+        "why": "Right: `shared_preload_libraries`, then `azure.extensions` before `CREATE EXTENSION`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nctydb4t",
+    "version": 1,
+    "section": "server-parameters",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a flexible server, an extension has to be listed in the server parameter `azure.___` before `CREATE EXTENSION` accepts it.",
+    "hint": "The plural of what is being created.",
+    "blanks": [
+      {
+        "accept": [
+          "extensions"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vfj5p7f0",
+    "version": 1,
+    "section": "high-availability",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which copy protects against a `DELETE` without a `WHERE`?",
+    "hint": "Both live copies receive the mistake.",
+    "choices": [
+      {
+        "text": "The high-availability standby",
+        "correct": false,
+        "why": "It receives the delete before the commit returns."
+      },
+      {
+        "text": "A read replica",
+        "correct": false,
+        "why": "It replays the delete a moment later."
+      },
+      {
+        "text": "A point-in-time restore to a minute before",
+        "correct": true,
+        "why": "Right, into a new server."
+      },
+      {
+        "text": "The geo-redundant standby in the paired region",
+        "correct": false,
+        "why": "There is no such standby; geo-redundancy is for backups."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hc17ngm",
+    "version": 1,
+    "section": "high-availability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's analysts run heavy reports at nine. Where should they point them?",
+    "hint": "Only one of the copies answers queries.",
+    "choices": [
+      {
+        "text": "The high-availability standby, which sits idle anyway",
+        "correct": false,
+        "why": "The standby answers no queries."
+      },
+      {
+        "text": "A read replica, accepting that it runs a moment behind",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The primary, through PgBouncer on 6432",
+        "correct": false,
+        "why": "That pools connections; the reports still load the primary."
+      },
+      {
+        "text": "A server restored every morning from the backups",
+        "correct": false,
+        "why": "Possible, slower and stale by a day; the replica is the designed answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-87xkwbbx",
+    "version": 1,
+    "section": "high-availability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The declaration with `B_Standard_B1ms` and a `high_availability` block passed `validate`. What happens at creation?",
+    "hint": "A limit of the cheapest tier.",
+    "choices": [
+      {
+        "text": "It is created, with the standby on a General Purpose machine",
+        "correct": false,
+        "why": "Azure does not move a tier for you."
+      },
+      {
+        "text": "It is created without the standby, silently",
+        "correct": false,
+        "why": "The documented rule is a refusal."
+      },
+      {
+        "text": "Azure refuses: high availability is not on Burstable",
+        "correct": true,
+        "why": "Right, a rule between two values that only Azure checks."
+      },
+      {
+        "text": "Terraform refuses it at `apply`, before calling Azure",
+        "correct": false,
+        "why": "The provider accepted the pair in `validate`; the refusal comes from Azure."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwsanc96",
+    "version": 1,
+    "section": "high-availability",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the longest backup retention, in days, the provider accepts for a PostgreSQL flexible server?",
+    "hint": "Its range starts at 7.",
+    "value": 35,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rh2925sz",
+    "version": 1,
+    "section": "pgbouncer-and-mysql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an application change to use the built-in PgBouncer?",
+    "hint": "Same server, another door.",
+    "choices": [
+      {
+        "text": "Its driver, to a PgBouncer client library",
+        "correct": false,
+        "why": "PgBouncer speaks PostgreSQL's protocol."
+      },
+      {
+        "text": "The port, 6432 instead of 5432",
+        "correct": true,
+        "why": "Right, once `pgbouncer.enabled` is on."
+      },
+      {
+        "text": "The server name, to a separate pooler resource",
+        "correct": false,
+        "why": "It runs on the same machine as the engine."
+      },
+      {
+        "text": "Its SQL, to transaction blocks only",
+        "correct": false,
+        "why": "Nothing changes in the SQL, though session state needs checking."
+      }
+    ]
+  },
+  {
+    "id": "ex-ny4f3tw7",
+    "version": 1,
+    "section": "pgbouncer-and-mysql",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the Burstable tier of a PostgreSQL flexible server lack? Choose all that apply.",
+    "hint": "This lesson met two limits.",
+    "choices": [
+      {
+        "text": "High availability",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The built-in PgBouncer",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Point-in-time restore",
+        "correct": false,
+        "why": "Every tier has the backups."
+      },
+      {
+        "text": "Server parameters",
+        "correct": false,
+        "why": "Every server has them."
+      }
+    ]
+  },
+  {
+    "id": "ex-wv3vkch5",
+    "version": 1,
+    "section": "pgbouncer-and-mysql",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new application has no engine chosen yet. Which line of the comparison table favours the open-source engines?",
+    "hint": "Something two columns carry and two do not.",
+    "choices": [
+      {
+        "text": "The engine is always current",
+        "correct": false,
+        "why": "That is the SQL Server services' line."
+      },
+      {
+        "text": "They rent an instance",
+        "correct": false,
+        "why": "They rent a server; the instance is Managed Instance's."
+      },
+      {
+        "text": "No licence in the price",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Their floor is a few DTUs",
+        "correct": false,
+        "why": "DTUs belong to Azure SQL Database."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgp26rj1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each copy of a flexible server with what it is for.",
+    "hint": "One description on the right belongs to none of them.",
+    "pairs": [
+      {
+        "left": "High-availability standby",
+        "right": "a failed machine or zone, with nothing committed lost"
+      },
+      {
+        "left": "Read replica",
+        "right": "reports that may be a moment old"
+      },
+      {
+        "left": "Point-in-time restore",
+        "right": "a mistake, undone into a new server"
+      },
+      {
+        "left": "Geo-redundant backup",
+        "right": "a region lost, restored in its pair"
+      }
+    ],
+    "right_distractors": [
+      "fewer connections to the engine"
+    ]
+  },
+  {
+    "id": "ex-eydwvc0x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's catalogue runs on a vendor's application that speaks only MySQL, is mostly idle, and is written once a night. Which purchase fits?",
+    "hint": "The engine decides first.",
+    "choices": [
+      {
+        "text": "MySQL flexible server on a Burstable size",
+        "correct": true,
+        "why": "Right: the engine is given and the load is light."
+      },
+      {
+        "text": "Azure SQL Database serverless, which pauses at night",
+        "correct": false,
+        "why": "The application speaks only MySQL."
+      },
+      {
+        "text": "PostgreSQL flexible server, Memory Optimized, with high availability",
+        "correct": false,
+        "why": "Wrong engine, and far more than the load needs."
+      },
+      {
+        "text": "A Managed Instance, for the vendor's certification",
+        "correct": false,
+        "why": "The vendor certified MySQL, not SQL Server."
+      }
+    ]
+  }
+]

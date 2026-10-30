@@ -1,0 +1,385 @@
+[
+  {
+    "id": "ex-18z8y4yt",
+    "version": 1,
+    "section": "the-pipe",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `take 3` the wrong way to find the first three failures of the incident?",
+    "hint": "What order does take promise?",
+    "choices": [
+      {
+        "text": "It returns the last three rows instead",
+        "correct": false,
+        "why": "It promises no order at all, first or last."
+      },
+      {
+        "text": "It returns any three",
+        "correct": true,
+        "why": "Right. `top 3 by TimeGenerated asc` sorts first."
+      },
+      {
+        "text": "It cannot be combined with where",
+        "correct": false,
+        "why": "The first query in this lesson combines them."
+      },
+      {
+        "text": "It only works on tables with fewer than a thousand rows",
+        "correct": false,
+        "why": "It works on any table, which is why it is used to peek."
+      }
+    ]
+  },
+  {
+    "id": "ex-52r71638",
+    "version": 1,
+    "section": "the-pipe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The emulator answers `General_BadRequest` to your query. What is the lesson's first move?",
+    "hint": "The emulator does not say which name is wrong.",
+    "choices": [
+      {
+        "text": "Restart the emulator, since the error is generic",
+        "correct": false,
+        "why": "A restart loses the tables and fixes no query."
+      },
+      {
+        "text": "Reload requests.kql in case the table is damaged",
+        "correct": false,
+        "why": "The table is fine; the query names something it does not have."
+      },
+      {
+        "text": "Check the names against `getschema`",
+        "correct": true,
+        "why": "Right. A misspelt column is the commonest cause, and getschema lists the real ones."
+      },
+      {
+        "text": "Switch every == to =~",
+        "correct": false,
+        "why": "That changes case-sensitivity of comparisons, not names."
+      }
+    ]
+  },
+  {
+    "id": "ex-zw56c3e3",
+    "version": 1,
+    "section": "the-pipe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague filters `where TimeGenerated between (datetime(2026-10-15 14:00) .. 1h)` to see the incident, which started at 14:05 São Paulo time. What do they get?",
+    "hint": "In which time zone is TimeGenerated?",
+    "choices": [
+      {
+        "text": "The incident, because the emulator converts to local time",
+        "correct": false,
+        "why": "Nothing converts the filter; timestamps are UTC."
+      },
+      {
+        "text": "An hour three hours before it",
+        "correct": true,
+        "why": "Right. 14:00 UTC is 11:00 in São Paulo; convert for the reader, not for the filter."
+      },
+      {
+        "text": "An error, because between needs two datetimes",
+        "correct": false,
+        "why": "A duration as the end is allowed."
+      },
+      {
+        "text": "The incident shifted by three minutes",
+        "correct": false,
+        "why": "The offset is three hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-n18k9pva",
+    "version": 1,
+    "section": "summarize",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `thursday.kql` write `100.0 * failed / requests` and not `100 * failed / requests`?",
+    "hint": "What type do two counts divide into?",
+    "choices": [
+      {
+        "text": "100.0 is rounded to two places",
+        "correct": false,
+        "why": "Rounding is done by round(); the decimal point changes the type."
+      },
+      {
+        "text": "KQL refuses integer multiplication",
+        "correct": false,
+        "why": "It multiplies integers happily."
+      },
+      {
+        "text": "So the division is real, not integer",
+        "correct": true,
+        "why": "Right. With integers, 109 * 100 / 4193 truncates."
+      },
+      {
+        "text": "To express the answer as a fraction of one",
+        "correct": false,
+        "why": "Multiplying by 100 expresses it as a percentage."
+      }
+    ]
+  },
+  {
+    "id": "ex-77b8nysc",
+    "version": 1,
+    "section": "summarize",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 2.6,
+    "tolerance": 0.01,
+    "prompt": "On Thursday, what percentage of checkout requests failed?",
+    "hint": "thursday.kql's failed_pct.",
+    "unit": "%"
+  },
+  {
+    "id": "ex-p9fx5932",
+    "version": 1,
+    "section": "summarize",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "All four routes have p95 of 150 ms. What does the p99 column add?",
+    "hint": "Where do the routes separate?",
+    "choices": [
+      {
+        "text": "Nothing: p95 already describes the slow requests",
+        "correct": false,
+        "why": "Three routes hide a near-second tail beyond the 95th percentile."
+      },
+      {
+        "text": "That a slow tail sits past it in three routes",
+        "correct": true,
+        "why": "Right. The tail shows only past the 95th percentile here."
+      },
+      {
+        "text": "That checkout's average is wrong",
+        "correct": false,
+        "why": "The average is computed correctly; it just hides the tail."
+      },
+      {
+        "text": "That the incident is included in GET /products",
+        "correct": false,
+        "why": "The incident touched checkout only."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj9ed8c4",
+    "version": 1,
+    "section": "time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `window.kql`, the 17:00 bin shows 9 failures out of 37. Why not the full two in three?",
+    "hint": "When did the incident start inside that bin?",
+    "choices": [
+      {
+        "text": "The emulator samples rows inside a bin",
+        "correct": false,
+        "why": "Every row is counted."
+      },
+      {
+        "text": "Failures are counted at the end of the bin",
+        "correct": false,
+        "why": "Rows are counted where they fall, all through the bin."
+      },
+      {
+        "text": "The incident began at 17:05, halfway through",
+        "correct": true,
+        "why": "Right. The bin mixes five normal minutes with five failing ones."
+      },
+      {
+        "text": "Ten-minute bins average the failure rate",
+        "correct": false,
+        "why": "countif counts; it does not average."
+      }
+    ]
+  },
+  {
+    "id": "ex-6a4kyggs",
+    "version": 1,
+    "section": "time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service starts answering 500 in 20 ms instead of failing slowly. Which of window.kql's columns moves, and which way?",
+    "hint": "A fast error is still an error.",
+    "choices": [
+      {
+        "text": "Both rise together, as on Thursday",
+        "correct": false,
+        "why": "They rose together because Thursday's failures were timeouts."
+      },
+      {
+        "text": "failed rises; p95 stays low",
+        "correct": true,
+        "why": "Right. Fast errors pull latency down, which is why both signals are watched."
+      },
+      {
+        "text": "p95 rises; failed stays flat",
+        "correct": false,
+        "why": "A 500 is a failure whatever its speed."
+      },
+      {
+        "text": "Neither, because 20 ms is under the bin size",
+        "correct": false,
+        "why": "Bin size is about time grouping, not request duration."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fmd6r9h",
+    "version": 1,
+    "section": "time",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Unlike summarize by bin(), the operator ___ fills empty time slots with a default value instead of leaving them out.",
+    "hint": "Lesson 25 uses it; it has a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "make-series"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-scw3d1w7",
+    "version": 1,
+    "section": "join-and-parse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does owners.kql say `kind=leftouter` explicitly?",
+    "hint": "What is KQL's default join?",
+    "choices": [
+      {
+        "text": "KQL refuses a join without a kind",
+        "correct": false,
+        "why": "It accepts one and uses its own default."
+      },
+      {
+        "text": "leftouter is faster than every other kind of join in KQL",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "So a route with no owner stays in the answer",
+        "correct": true,
+        "why": "Right. And the default kind is not the inner join people expect, so naming it avoids a surprise."
+      },
+      {
+        "text": "To join on two columns instead of one",
+        "correct": false,
+        "why": "The columns are named by `on`, not by kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv6r34x4",
+    "version": 1,
+    "section": "join-and-parse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The weekly report shows catalogue with 135 failures and payments with 130. What does this lesson conclude?",
+    "hint": "How were the failures spread in time?",
+    "choices": [
+      {
+        "text": "Catalogue had the worse week",
+        "correct": false,
+        "why": "Its failures were spread thin over seven days."
+      },
+      {
+        "text": "The two teams had an equally bad week",
+        "correct": false,
+        "why": "Similar totals, very different experiences for customers."
+      },
+      {
+        "text": "Payments had the incident, hidden by the total",
+        "correct": true,
+        "why": "Right. Almost all of payments' failures fell in 42 minutes; a total answers how many, not how bad."
+      },
+      {
+        "text": "The join double-counted payments",
+        "correct": false,
+        "why": "Each route appears once on the right; nothing doubled."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pkx2htr",
+    "version": 1,
+    "section": "join-and-parse",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of owners.kql's main query in the order they run.",
+    "hint": "Filter, count, attach, choose columns.",
+    "items": [
+      "AppRequests",
+      "where not(Success)",
+      "summarize failed = count() by Name",
+      "join kind=leftouter owners on Name",
+      "project Team, Name, failed"
+    ],
+    "trap": "Joining before summarizing is the slip: it works, and attaches a team to a quarter of a million rows instead of four."
+  },
+  {
+    "id": "ex-xsqrbs57",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 103,
+    "tolerance": 0,
+    "prompt": "How many slow failed checkouts did the `local` query count in Thursday's incident?",
+    "hint": "The failures column.",
+    "unit": "failures"
+  },
+  {
+    "id": "ex-0ed4fzxh",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does KQL do in this lesson exactly as a Log Analytics workspace would? Choose all that apply.",
+    "hint": "The language is the same; the editor and the charts are not.",
+    "choices": [
+      {
+        "text": "Computing a 99th percentile with percentile()",
+        "correct": true,
+        "why": "Yes. Same engine, same function."
+      },
+      {
+        "text": "Grouping by bin(TimeGenerated, 10m)",
+        "correct": true,
+        "why": "Yes. Identical."
+      },
+      {
+        "text": "Naming the misspelt column in an error",
+        "correct": false,
+        "why": "No. The emulator answers General_BadRequest; a workspace names the column."
+      },
+      {
+        "text": "Drawing render timechart as a chart",
+        "correct": false,
+        "why": "No. The emulator returns tables; a workspace draws them."
+      }
+    ]
+  }
+]

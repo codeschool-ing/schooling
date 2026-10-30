@@ -1,0 +1,252 @@
+{
+  "ex-79z18w0y": {
+    "prompt": "O que deixa a linha de uma requisição e as linhas das suas dependências serem remontadas?",
+    "hint": "Toda linha produzida para uma requisição o leva.",
+    "choices": [
+      {
+        "text": "Os valores de TimeGenerated",
+        "why": "Muitas requisições dividem um segundo; tempo não é identidade."
+      },
+      {
+        "text": "OperationId",
+        "why": "Certo. Toda linha produzida ao atender uma requisição leva o mesmo valor."
+      },
+      {
+        "text": "O Name da requisição",
+        "why": "Milhares de requisições dividem um nome."
+      },
+      {
+        "text": "AppRoleName",
+        "why": "Isso nomeia o serviço, que toda linha do shop-api divide."
+      }
+    ]
+  },
+  "ex-7q73jfcy": {
+    "prompt": "Ligue cada tabela do Application Insights ao que é uma linha dela.",
+    "hint": "Uma linha por coisa.",
+    "pairs": [
+      {
+        "left": "AppRequests",
+        "right": "Uma requisição que a aplicação atendeu"
+      },
+      {
+        "left": "AppDependencies",
+        "right": "Uma chamada que ela fez ao atender uma"
+      },
+      {
+        "left": "AppExceptions",
+        "right": "Uma exceção que ela registrou"
+      },
+      {
+        "left": "AppTraces",
+        "right": "Uma linha de log que a aplicação escreveu"
+      }
+    ],
+    "right_distractors": [
+      "Uma mudança feita pelo Resource Manager"
+    ]
+  },
+  "ex-26fz0sxh": {
+    "prompt": "Na AppDependencies gerada, uma chamada SQL que estourou o tempo tem o código de resultado ___.",
+    "hint": "Um número negativo.",
+    "blanks": [
+      {
+        "accept": [
+          "-2"
+        ]
+      }
+    ]
+  },
+  "ex-km518tjf": {
+    "prompt": "O primeiro checkout que falhou não tem linha de `POST /v1/charges`. O que essa ausência diz?",
+    "hint": "Onde no código fica a etapa de pagamento?",
+    "choices": [
+      {
+        "text": "O provedor de pagamentos estava fora",
+        "why": "Um provedor fora apareceria como chamada HTTP que falhou, não como nenhuma."
+      },
+      {
+        "text": "A amostragem descartou a chamada de pagamento",
+        "why": "A amostragem mantém ou descarta a operação inteira, e esta tabela não é amostrada."
+      },
+      {
+        "text": "O código parou antes da etapa de pagamento",
+        "why": "Certo. A gravação do pedido falhou, então o pagamento nunca foi tentado."
+      },
+      {
+        "text": "O union perdeu linhas da segunda tabela",
+        "why": "O union mantém toda linha dos dois lados."
+      }
+    ]
+  },
+  "ex-05c57jhx": {
+    "prompt": "O que o `toscalar()` faz no one-request.kql?",
+    "hint": "A consulta de dentro devolve um valor.",
+    "choices": [
+      {
+        "text": "Converte o OperationId em número",
+        "why": "Ele mantém o tipo do valor; ele transforma uma tabela numa constante."
+      },
+      {
+        "text": "Transforma uma consulta de um valor numa constante para as linhas seguintes",
+        "why": "Certo. O let a chama de op, e os dois lados do union filtram por ela."
+      },
+      {
+        "text": "Escolhe um checkout que falhou ao acaso",
+        "why": "O top 1 by TimeGenerated asc pega o primeiro; nada é aleatório."
+      },
+      {
+        "text": "Roda a consulta uma vez por linha do union",
+        "why": "Roda uma vez, antes do union."
+      }
+    ]
+  },
+  "ex-6wnd2yft": {
+    "prompt": "O cause.kql achou 103 requisições que falharam, todas com timeout no SQL. Se tivesse achado 80 com timeout e 23 com chamadas SQL saudáveis, o que viria?",
+    "hint": "A explicação cobre tudo?",
+    "choices": [
+      {
+        "text": "O timeout continua sendo a causa; 23 é ruído",
+        "why": "23 de 103 não é ruído; é uma segunda pergunta."
+      },
+      {
+        "text": "O timeout explica uma parte; as 23 são a próxima pergunta",
+        "why": "Certo. Uma explicação parcial é dita parcial."
+      },
+      {
+        "text": "O join está errado e deveria ser leftouter",
+        "why": "O tipo de join decide quais linhas aparecem, não o que causa falhas."
+      },
+      {
+        "text": "O banco estava saudável o tempo todo",
+        "why": "80 timeouts dizem o contrário."
+      }
+    ]
+  },
+  "ex-hgen9f9m": {
+    "prompt": "Por que o cause.kql conta `dcount(OperationId)` e não `count()`?",
+    "hint": "Uma requisição pode ter mais de uma chamada.",
+    "choices": [
+      {
+        "text": "count() não pode vir depois de um join",
+        "why": "Pode; ele contaria as linhas juntadas."
+      },
+      {
+        "text": "dcount é exato e count é estimativa",
+        "why": "É o contrário, e não é o motivo."
+      },
+      {
+        "text": "OperationId é número, e count() precisa de strings",
+        "why": "count() conta linhas de qualquer tipo."
+      },
+      {
+        "text": "Para contar cada requisição uma vez",
+        "why": "Certo. O join faz uma linha por chamada; o dcount conta requisições."
+      }
+    ]
+  },
+  "ex-y79wsxvt": {
+    "prompt": "Na amostra de 25%, quanto o `sum(ItemCount)` estima como número de requisições da semana?",
+    "hint": "A coluna requests da primeira consulta.",
+    "unit": "requisições"
+  },
+  "ex-vyfhs87x": {
+    "prompt": "Sobre dados amostrados, qual agregação conta requisições corretamente?",
+    "hint": "Cada linha vale por ItemCount requisições.",
+    "choices": [
+      {
+        "text": "count()",
+        "why": "Isso conta linhas, um quarto das requisições a 25%."
+      },
+      {
+        "text": "sum(ItemCount)",
+        "why": "Certo. Cada linha diz por quantas vale."
+      },
+      {
+        "text": "dcount(OperationId)",
+        "why": "Operações distintas na amostra continuam sendo só as amostradas."
+      },
+      {
+        "text": "count() * 100",
+        "why": "A taxa está no ItemCount, não num cem fixo."
+      }
+    ]
+  },
+  "ex-6xha2ef5": {
+    "prompt": "Por que a loja deixa toda falha e todo checkout fora da amostragem?",
+    "hint": "O que acontece com um evento raro numa amostra de 25%?",
+    "choices": [
+      {
+        "text": "Falhas são mais baratas de ingerir que sucessos",
+        "why": "Uma linha custa o mesmo, diga o que disser."
+      },
+      {
+        "text": "Amostragem não se aplica a requisições POST",
+        "why": "Ela se aplica a qualquer requisição; a loja escolhe não aplicar."
+      },
+      {
+        "text": "Eventos raros são mal estimados, ou somem",
+        "why": "Certo. 346 falhas foram estimadas em 340; um punhado por dia poderia sumir."
+      },
+      {
+        "text": "O live metrics precisa delas no workspace",
+        "why": "O live metrics nem lê o workspace."
+      }
+    ]
+  },
+  "ex-sc4xvsxr": {
+    "prompt": "Durante uma troca de slot, por que olhar o live metrics em vez de rodar uma consulta?",
+    "hint": "Que caminho o dado ao vivo faz?",
+    "choices": [
+      {
+        "text": "Transmite por segundo, direto ao portal",
+        "why": "Certo. Você vê a taxa de falha se mexer no segundo em que se mexe."
+      },
+      {
+        "text": "Ele guarda um ano de histórico para comparar",
+        "why": "Ele não guarda nada; fechou a página, os dados se foram."
+      },
+      {
+        "text": "Consultas são cobradas durante uma troca",
+        "why": "Consultas Analytics não são cobradas em momento nenhum."
+      },
+      {
+        "text": "Ele mostra o texto SQL de toda dependência",
+        "why": "Ele mostra taxas e contagens, não o texto de cada chamada."
+      }
+    ]
+  },
+  "ex-6hdd6dtm": {
+    "prompt": "Ponha a investigação das falhas de quinta na ordem em que esta lição a fez.",
+    "hint": "Uma, depois todas, depois a semana.",
+    "trap": "Começar pela semana é o deslize: os totais dizem que algo mudou, e só uma requisição mostra o quê.",
+    "items": [
+      "Pegar o OperationId do primeiro checkout que falhou",
+      "Ler juntas as linhas de requisição e de dependência dele",
+      "Juntar cada requisição que falhou na hora às suas chamadas",
+      "Comparar a semana da dependência SQL, dia a dia"
+    ]
+  },
+  "ex-xk9ng6em": {
+    "prompt": "Quais destas coisas o laboratório mostrou com consultas reais? Marque todas as que se aplicam.",
+    "hint": "Tudo em tabelas, nada que precise de uma aplicação rodando.",
+    "choices": [
+      {
+        "text": "Uma requisição e a dependência dela juntadas por OperationId",
+        "why": "Sim. one-request.kql."
+      },
+      {
+        "text": "count() errando em dados amostrados",
+        "why": "Sim. A tabela amostrada e o sum(ItemCount)."
+      },
+      {
+        "text": "O live metrics durante uma troca",
+        "why": "Não. Precisa de uma aplicação rodando e do portal."
+      },
+      {
+        "text": "O gráfico de Gantt da transação de ponta a ponta no portal",
+        "why": "Não. A lição rodou a consulta que tem os mesmos dados."
+      }
+    ]
+  }
+}

@@ -1,0 +1,612 @@
+[
+  {
+    "id": "ex-jv7m661z",
+    "version": 1,
+    "section": "containers-and-blobs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`az storage blob list --delimiter /` answers `exports/` for a container that holds three blobs. What is `exports/`?",
+    "hint": "Ask whether anything was ever created under that name.",
+    "choices": [
+      {
+        "text": "A directory object Blob Storage made when the first blob was uploaded",
+        "correct": false,
+        "why": "No such object exists; `az storage blob show` on the prefix answered `BlobNotFound`."
+      },
+      {
+        "text": "A zero-byte blob whose name ends in a slash",
+        "correct": false,
+        "why": "Nothing in this lesson wrote one, and the prefix appeared anyway."
+      },
+      {
+        "text": "A group of names, computed for this listing",
+        "correct": true,
+        "why": "Right. The service grouped every name at its first slash; delete the blobs and the group is gone."
+      },
+      {
+        "text": "A second container nested inside `orders-raw`",
+        "correct": false,
+        "why": "Containers do not nest; there is one level of them per account."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd7zyc1s",
+    "version": 1,
+    "section": "containers-and-blobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program lists `--prefix exports/2026/` and gets nothing, although the files are there. Their names start with `Exports/2026/`. Why?",
+    "hint": "How are two names compared?",
+    "choices": [
+      {
+        "text": "Blob names are case-sensitive, so the two prefixes differ",
+        "correct": true,
+        "why": "Right. `EXPORTS/...` answered `exists: false` in the lesson for the same reason."
+      },
+      {
+        "text": "A prefix only works together with `--delimiter`",
+        "correct": false,
+        "why": "A prefix filters on its own; the delimiter only groups what is left."
+      },
+      {
+        "text": "The listing needs a trailing `*` to match",
+        "correct": false,
+        "why": "A prefix is matched literally from the start of the name, with no wildcards."
+      },
+      {
+        "text": "Listings by prefix are cached for a few minutes after an upload",
+        "correct": false,
+        "why": "There is no such cache; a listing reads the current names."
+      }
+    ]
+  },
+  {
+    "id": "ex-dh2dbn12",
+    "version": 1,
+    "section": "containers-and-blobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants to read one month of exports without listing the names of every other month. Which naming does that?",
+    "hint": "A listing walks names in order and filters on the start of the name.",
+    "choices": [
+      {
+        "text": "`orders-2026-10-27.csv` at the root, then filter in the program",
+        "correct": false,
+        "why": "Filtering in the program means listing every name first."
+      },
+      {
+        "text": "`exports/c-17/orders-2026-10-27.csv`, grouped by customer",
+        "correct": false,
+        "why": "The month is now after the customer, so one month is spread under every customer's prefix."
+      },
+      {
+        "text": "Any of them, with the month stored in each blob's metadata",
+        "correct": false,
+        "why": "Metadata cannot be searched; finding it means reading every blob's metadata."
+      },
+      {
+        "text": "`exports/2026/10/orders-2026-10-27.csv`",
+        "correct": true,
+        "why": "Right. `--prefix exports/2026/10/` asks the service for that month alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ztzjc8w",
+    "version": 1,
+    "section": "containers-and-blobs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of data to the blob type it belongs in.",
+    "hint": "Ask how each one is written: whole, at the end, or anywhere.",
+    "pairs": [
+      {
+        "left": "The nightly orders export, written once",
+        "right": "block blob"
+      },
+      {
+        "left": "The checkout service's log, a line at a time",
+        "right": "append blob"
+      },
+      {
+        "left": "A virtual machine's disk",
+        "right": "page blob"
+      },
+      {
+        "left": "A Parquet file for the analysts",
+        "right": "block blob, too"
+      }
+    ],
+    "right_distractors": [
+      "a container"
+    ]
+  },
+  {
+    "id": "ex-84qejyq5",
+    "version": 1,
+    "section": "block-blobs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three blocks have been staged for a new blob and nothing has been committed. What does a reader get?",
+    "hint": "`blocks.py` asked `exists()` at that moment.",
+    "choices": [
+      {
+        "text": "The three blocks, in the order they were staged",
+        "correct": false,
+        "why": "Staged blocks are invisible to readers until a commit names them."
+      },
+      {
+        "text": "Nothing: the blob does not exist yet",
+        "correct": true,
+        "why": "Right. `exists before the commit: False`."
+      },
+      {
+        "text": "The first block only, until the others are confirmed",
+        "correct": false,
+        "why": "There is no partial read of staged blocks."
+      },
+      {
+        "text": "An error saying the blob is locked by an upload",
+        "correct": false,
+        "why": "Staging takes no lock; the blob is simply absent."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fxb2ney",
+    "version": 1,
+    "section": "block-blobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly upload of a 2 GB export crashes after half of its blocks. What do the analysts read the next morning under that name?",
+    "hint": "Which request makes a block blob change?",
+    "choices": [
+      {
+        "text": "Half of the new file, followed by the end of the old one",
+        "correct": false,
+        "why": "Blocks are never mixed into a readable blob without a commit."
+      },
+      {
+        "text": "The previous complete version, or nothing if there was none",
+        "correct": true,
+        "why": "Right. Without the commit the blob is unchanged; the staged blocks wait unseen."
+      },
+      {
+        "text": "Half of the new file, which is why exports are checked by row count",
+        "correct": false,
+        "why": "A row count is a fine check, but half a file is not what they would read."
+      },
+      {
+        "text": "An empty blob of 2 GB filled with zeros",
+        "correct": false,
+        "why": "That is how an unwritten page of a page blob reads, not a block blob."
+      }
+    ]
+  },
+  {
+    "id": "ex-100s4hvc",
+    "version": 1,
+    "section": "block-blobs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file of 646,670 bytes is uploaded with `max_single_put_size` and `max_block_size` both set to 256 KiB (262,144 bytes). How many blocks are committed?",
+    "hint": "Full blocks, then one with the remainder.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "blocks"
+  },
+  {
+    "id": "ex-8a9gmbgf",
+    "version": 1,
+    "section": "block-blobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A corrected order changes one line in the middle of a large export that was uploaded in blocks. What is the cheapest correct way to fix the blob?",
+    "hint": "`blocks.py` did this in its last part.",
+    "choices": [
+      {
+        "text": "Append the corrected line at the end and let readers keep the last one",
+        "correct": false,
+        "why": "A block blob does not take appends, and readers would see both lines."
+      },
+      {
+        "text": "Upload the whole file again",
+        "correct": false,
+        "why": "Correct, and the most expensive way: every block travels again."
+      },
+      {
+        "text": "Write the corrected bytes at their offset",
+        "correct": false,
+        "why": "Writing at an offset is what a page blob does; a block blob has no such operation."
+      },
+      {
+        "text": "Stage the block holding that line again under its id, then commit the same list",
+        "correct": true,
+        "why": "Right. Only that block travels; the commit swaps it in and keeps the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kp5zxgr",
+    "version": 1,
+    "section": "append-and-page-blobs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The checkout log is an append blob. What does `az storage blob upload --overwrite` do to it?",
+    "hint": "The lesson ran it and then asked for the blob's type.",
+    "choices": [
+      {
+        "text": "Replaces it with a new block blob holding the file",
+        "correct": true,
+        "why": "Right. `BlockBlob`, 64 bytes, and the next append failed with `InvalidBlobType`."
+      },
+      {
+        "text": "Refuses, because an append blob only accepts appends",
+        "correct": false,
+        "why": "The type limits writes into the blob, not replacing it. The upload succeeded."
+      },
+      {
+        "text": "Appends the file's bytes at the end of the log, after the six lines already there",
+        "correct": false,
+        "why": "An upload is not an append; the six log lines were gone afterwards."
+      },
+      {
+        "text": "Asks for confirmation before replacing a log",
+        "correct": false,
+        "why": "`--overwrite` is the confirmation; nothing else is asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcjdw3c1",
+    "version": 1,
+    "section": "append-and-page-blobs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A page blob is made of pages of ___ bytes, and its size must be a multiple of that.",
+    "hint": "1,000 was refused and 1,024 was accepted.",
+    "blanks": [
+      {
+        "accept": [
+          "512"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pyywcngt",
+    "version": 1,
+    "section": "append-and-page-blobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pages.py` printed `100 bytes refused before sending` with a Python message rather than an error code. Who refused?",
+    "hint": "An error code comes back from a service.",
+    "choices": [
+      {
+        "text": "Azurite, which rejects any write under 512 bytes",
+        "correct": false,
+        "why": "The request never reached Azurite; a service refusal carries a code."
+      },
+      {
+        "text": "The operating system, because 100 bytes is below a disk sector",
+        "correct": false,
+        "why": "No disk was touched; this is a network call that was never made."
+      },
+      {
+        "text": "The Python library, which checked the alignment itself",
+        "correct": true,
+        "why": "Right. It raised `ValueError` without sending anything."
+      },
+      {
+        "text": "Docker, which limits the size of a request to a container",
+        "correct": false,
+        "why": "Docker forwards the port and reads nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nngr51e",
+    "version": 1,
+    "section": "append-and-page-blobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's auditors want the checkout log kept so that nobody, Quitanda's own engineers included, can rewrite it. Is making it an append blob enough?",
+    "hint": "What did one upload with `--overwrite` do?",
+    "choices": [
+      {
+        "text": "Yes, because blocks already appended cannot be modified",
+        "correct": false,
+        "why": "Not modified one by one, but the blob as a whole can be replaced or deleted."
+      },
+      {
+        "text": "Yes, as long as only the logging program has the account key",
+        "correct": false,
+        "why": "The requirement includes Quitanda's own engineers, who can obtain the key."
+      },
+      {
+        "text": "No; it should be a page blob, since pages cannot be deleted",
+        "correct": false,
+        "why": "A page blob is rewritable at any offset, the opposite of what is asked."
+      },
+      {
+        "text": "No; it needs an immutability policy that refuses overwrite and delete",
+        "correct": true,
+        "why": "Right. Lesson 5 covers those policies."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ghz7ggz",
+    "version": 1,
+    "section": "properties-and-metadata",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program sets metadata `rows=2` and `source=shop`, then later calls metadata update with only `rows=3`. What does the blob carry afterwards?",
+    "hint": "The lesson ran exactly this.",
+    "choices": [
+      {
+        "text": "`rows=3` and `source=shop`",
+        "correct": false,
+        "why": "That would be a merge, and there is no merge operation."
+      },
+      {
+        "text": "`rows=2`, `rows=3` and `source=shop`, kept as a history of values",
+        "correct": false,
+        "why": "Metadata keeps no history; each name has one value."
+      },
+      {
+        "text": "`rows=3` alone",
+        "correct": true,
+        "why": "Right. The update replaces the whole set."
+      },
+      {
+        "text": "An `InvalidMetadata` error, since `rows` already exists",
+        "correct": false,
+        "why": "`InvalidMetadata` came from the hyphen in `row-count`, not from an existing name."
+      }
+    ]
+  },
+  {
+    "id": "ex-0sahn7dy",
+    "version": 1,
+    "section": "properties-and-metadata",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of a blob's ETag? Choose all that apply.",
+    "hint": "Compare the ETag before and after the metadata update.",
+    "choices": [
+      {
+        "text": "It changes when only the metadata changes",
+        "correct": true,
+        "why": "Yes; the lesson printed two different ETags around one metadata update."
+      },
+      {
+        "text": "It is the MD5 of the content, in hexadecimal",
+        "correct": false,
+        "why": "The MD5 is a separate property, `contentMd5`, in base64. The ETag is an opaque stamp."
+      },
+      {
+        "text": "Given to `--if-match`, it makes a write conditional",
+        "correct": true,
+        "why": "Yes; that is the only thing it is for."
+      },
+      {
+        "text": "Two blobs with the same bytes have the same ETag",
+        "correct": false,
+        "why": "It stamps a version of one blob and says nothing about content."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qm2ery2",
+    "version": 1,
+    "section": "properties-and-metadata",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query engine reads a Parquet file from Blob Storage and fails because the file reports `text/plain`. Which part of the blob is wrong?",
+    "hint": "It is a header the uploader set, or let the tool guess.",
+    "choices": [
+      {
+        "text": "Its metadata, which should carry `format=parquet`",
+        "correct": false,
+        "why": "Metadata is never interpreted by the service or by readers that do not know your names."
+      },
+      {
+        "text": "Its content-type property, set or guessed at upload",
+        "correct": true,
+        "why": "Right. The command line guessed `text/csv` from `.csv`; whoever uploaded this file let it be guessed wrong."
+      },
+      {
+        "text": "Its blob type, which should be page rather than block for binary data such as Parquet",
+        "correct": false,
+        "why": "Binary files are block blobs like any other file."
+      },
+      {
+        "text": "Its tier, because hot blobs are served as text",
+        "correct": false,
+        "why": "A tier changes price and availability, not how bytes are labelled."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgew22dz",
+    "version": 1,
+    "section": "conditional-writes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`etag.py`'s second copy is refused. Which HTTP status comes back?",
+    "hint": "A precondition failed.",
+    "choices": [
+      {
+        "text": "412",
+        "correct": true,
+        "why": "Right. Precondition failed, `ConditionNotMet`."
+      },
+      {
+        "text": "409",
+        "correct": false,
+        "why": "409 is a conflict, which `BlobAlreadyExists` uses."
+      },
+      {
+        "text": "403",
+        "correct": false,
+        "why": "403 is a refusal of permission, which is lesson 6."
+      },
+      {
+        "text": "404",
+        "correct": false,
+        "why": "The blob exists; it is the condition that failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-23rwfa3c",
+    "version": 1,
+    "section": "conditional-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program's conditional write is refused with `ConditionNotMet`. What should it do?",
+    "hint": "The refusal means somebody wrote since you read.",
+    "choices": [
+      {
+        "text": "Retry the same write until it succeeds",
+        "correct": false,
+        "why": "It never will: the ETag it sends is stale, so every retry is refused the same way."
+      },
+      {
+        "text": "Write again without the condition, since its data is the newest and the newest should win",
+        "correct": false,
+        "why": "That is the silent overwrite the condition was there to prevent."
+      },
+      {
+        "text": "Read the blob again and decide whether its write still makes sense",
+        "correct": true,
+        "why": "Right. In `etag.py`, copy B would find the marker already at `2026-10-30` and stop."
+      },
+      {
+        "text": "Acquire a lease and write with it",
+        "correct": false,
+        "why": "A lease would let it write, and would overwrite the other copy's work just the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7ng4w22",
+    "version": 1,
+    "section": "conditional-writes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job holds a 60-second lease on a manifest blob and crashes. What happens to other writers?",
+    "hint": "A finite lease has to be renewed.",
+    "choices": [
+      {
+        "text": "They are refused with `LeaseIdMissing` until the lease runs out",
+        "correct": true,
+        "why": "Right. Nobody renews it, so after its 60 seconds the blob is writable again."
+      },
+      {
+        "text": "They can write at once, because the lease ends with the process",
+        "correct": false,
+        "why": "The service cannot see the process die; it only sees the lease expire."
+      },
+      {
+        "text": "They are refused for good, until somebody deletes the blob",
+        "correct": false,
+        "why": "That would be an infinite lease; this one lasts 60 seconds."
+      },
+      {
+        "text": "They are refused with 412 `ConditionNotMet`",
+        "correct": false,
+        "why": "That is the ETag refusal; a missing lease id has its own code."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnec46nq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a safe update to a shared marker blob in order.",
+    "hint": "Read, decide, write with a condition, handle the refusal.",
+    "items": [
+      "Read the marker and keep its ETag",
+      "Decide the new value from what was read",
+      "Write with `If-Match` set to the kept ETag",
+      "On a 412, read again and start over"
+    ]
+  },
+  {
+    "id": "ex-83m6r984",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these writes can a block blob accept?",
+    "hint": "Think of what `blocks.py` did, and what failed on the log.",
+    "choices": [
+      {
+        "text": "Writing 512 bytes at offset 1024",
+        "correct": false,
+        "why": "That is a page blob's write."
+      },
+      {
+        "text": "Appending a block at the end",
+        "correct": false,
+        "why": "Refused with `InvalidBlobType`, as the logger found."
+      },
+      {
+        "text": "Changing its type to append",
+        "correct": false,
+        "why": "The type is fixed when the blob is created."
+      },
+      {
+        "text": "A commit of a new block list",
+        "correct": true,
+        "why": "Right. That is the only way a block blob changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-vz15d99a",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without `--overwrite`, `az storage blob upload` refuses an existing blob with the error code ___.",
+    "hint": "Three English words run together.",
+    "blanks": [
+      {
+        "accept": [
+          "BlobAlreadyExists"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

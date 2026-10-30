@@ -1,0 +1,40 @@
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ex import Q, N, C, O, M
+
+T, F = True, False
+qs = [
+Q("ex-a91bxc63", "the-membership", "medium",
+  ("An organisation enrols in the Apple Developer Program. What does Apple's enrolment page ask it for that an individual does not need?", "Uma organização se inscreve no Apple Developer Program. O que a página de inscrição da Apple pede a ela que uma pessoa física não precisa?"),
+  ("Dun & Bradstreet.", "Dun & Bradstreet."),
+  [(F, ("A Mac registered to the company", "Um Mac registrado em nome da empresa"), ("No hardware is asked for at enrolment.", "Nenhum hardware é pedido na inscrição.")),
+   (T, ("A D-U-N-S number", "Um número D-U-N-S"), ("Right, with legal entity status and a website on its domain.", "Isso, com a pessoa jurídica e um site no domínio dela.")),
+   (F, ("A first app ready for review", "Um primeiro app pronto para revisão"), ("Enrolment comes before any app.", "A inscrição vem antes de qualquer app.")),
+   (F, ("A fee waiver request", "Um pedido de isenção da taxa"), ("A waiver is optional and only for some organisations.", "A isenção é opcional e só para algumas organizações."))], drill=False),
+Q("ex-05vvz1t9", "why-sign", "medium",
+  ("Which of the three signing pieces says which devices may run a development build?", "Qual das três peças da assinatura diz quais aparelhos podem rodar um build de desenvolvimento?"),
+  ("Not the certificate.", "Não é o certificado."),
+  [(F, ("The certificate", "O certificado"), ("It says who signed.", "Ele diz quem assinou.")),
+   (T, ("The provisioning profile", "O perfil de provisionamento"), ("Right: it lists the registered devices.", "Isso: ele lista os aparelhos registrados.")),
+   (F, ("The entitlements", "Os entitlements"), ("They say what the app wants to do.", "Eles dizem o que o app quer fazer.")),
+   (F, ("`Info.plist`", "`Info.plist`"), ("It describes the app, not where it may run.", "Ele descreve o app, não onde ele pode rodar."))], drill=False),
+Q("ex-3qnfnkhk", "certificates", "hard",
+  ("A colleague emails a teammate the team's distribution certificate with its private key. What does the course say should happen?", "Um colega manda por e-mail a um colega de time o certificado de distribuição com a chave privada. O que o curso diz que deve acontecer?"),
+  ("The key is the only secret.", "A chave é o único segredo."),
+  [(F, ("Nothing: the teammate is in the same organisation", "Nada: o colega é da mesma organização"), ("An emailed key has left the controlled path.", "Uma chave por e-mail saiu do caminho controlado.")),
+   (F, ("Change the Apple Account password", "Trocar a senha da Apple Account"), ("The password does not protect a key already copied.", "A senha não protege uma chave já copiada.")),
+   (T, ("Share through Xcode's accounts, and revoke one that was exposed", "Dividir pelas contas do Xcode, e revogar a que vazou"), ("Right: anyone holding the key can sign as the team.", "Isso: quem tem a chave assina como o time.")),
+   (F, ("Make a second distribution certificate for the teammate", "Fazer um segundo certificado de distribuição para o colega"), ("A team has one of each distribution type.", "Um time tem um de cada tipo de distribuição."))], drill=False),
+N("ex-xk20zray", "the-request", "easy",
+  ("How many bits long was the RSA key that `openssl genrsa` made in section 05?", "Quantos bits tinha a chave RSA que o `openssl genrsa` fez na seção 05?"),
+  ("`Public-Key:`.", "`Public-Key:`."),
+  2048, 0, None, drill=False),
+O("ex-maznz7hd", "the-archive", "medium",
+  ("Put the steps from code to upload in order.", "Ponha em ordem os passos do código ao envio."),
+  ("Archive, then distribute.", "Arquivar, depois distribuir."),
+  [("Raise `CFBundleVersion`", "Subir o `CFBundleVersion`"),
+   ("Choose Any iOS Device", "Escolher Any iOS Device"),
+   ("Product, Archive, in Release", "Product, Archive, em Release"),
+   ("Distribute App from the Organizer", "Distribute App pelo Organizer"),
+   ("Upload to App Store Connect", "Enviar ao App Store Connect")], drill=False),
+]

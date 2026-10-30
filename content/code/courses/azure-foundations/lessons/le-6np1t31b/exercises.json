@@ -1,0 +1,624 @@
+[
+ {
+  "id": "ex-b9khbqr5",
+  "version": 1,
+  "section": "three-roads",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The shop's application in `snet-app` opens `stshopprod.blob.core.windows.net` and nobody has built any other road. How do its packets reach the account?",
+  "hint": "Where does a platform service live?",
+  "choices": [
+   {
+    "text": "Directly, because the account is in the same subscription as the network",
+    "correct": false,
+    "why": "Sharing a subscription puts nothing inside the network. The account lives on Microsoft's side."
+   },
+   {
+    "text": "Nowhere: a subnet cannot reach a storage account until peered with it",
+    "correct": false,
+    "why": "Peering joins two virtual networks; an account is not a network."
+   },
+   {
+    "text": "Through a private endpoint Azure creates on first use",
+    "correct": false,
+    "why": "Nothing is created for you; a private endpoint is a resource somebody declares."
+   },
+   {
+    "text": "To its public endpoint, like any client on the internet",
+    "correct": true,
+    "why": "Right. Without a service or private endpoint, the public road is the only one."
+   }
+  ]
+ },
+ {
+  "id": "ex-8vxvm6b2",
+  "version": 1,
+  "section": "three-roads",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After a service endpoint for `Microsoft.Storage` is switched on in `snet-app`, which address does the application connect to?",
+  "hint": "Which road keeps the account's public door?",
+  "choices": [
+   {
+    "text": "A private address from `snet-app`",
+    "correct": false,
+    "why": "A service endpoint gives the account no address in your network; that is a private endpoint."
+   },
+   {
+    "text": "`10.20.4.4`, in `snet-pe`",
+    "correct": false,
+    "why": "That is the private endpoint of the next section, a different road."
+   },
+   {
+    "text": "The account's public address, reached over the backbone",
+    "correct": true,
+    "why": "Right. What changes is that the traffic carries the subnet's identity."
+   },
+   {
+    "text": "Azure's resolver, `168.63.129.16`, which relays it",
+    "correct": false,
+    "why": "That address answers DNS; it does not carry storage traffic."
+   }
+  ]
+ },
+ {
+  "id": "ex-2yrt0awv",
+  "version": 1,
+  "section": "three-roads",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Code running in `snet-app` is compromised, and the subnet has a service endpoint for storage with no policy. What can the attacker's copy of the shop's data now reach that the shop did not intend?",
+  "hint": "A service endpoint opens a road to a service, not to an account.",
+  "choices": [
+   {
+    "text": "Any storage account in the region, theirs included",
+    "correct": true,
+    "why": "Right. Without a service endpoint policy, the road leads to every account of that service."
+   },
+   {
+    "text": "Nothing: the account's firewall allows only `snet-app`",
+    "correct": false,
+    "why": "That firewall protects the shop's account. The attacker writes to an account of their own."
+   },
+   {
+    "text": "Only accounts in other tenants that approved the subnet",
+    "correct": false,
+    "why": "Approval belongs to private endpoints. A service endpoint asks nobody."
+   },
+   {
+    "text": "The office network, through the VPN",
+    "correct": false,
+    "why": "The service endpoint concerns traffic to Azure services, not to the office."
+   }
+  ]
+ },
+ {
+  "id": "ex-765x6n9f",
+  "version": 1,
+  "section": "three-roads",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why would deploying `se.bicep` leave `snet-app` without its network security group?",
+  "hint": "What does the file say about the subnet, and what does it leave out?",
+  "choices": [
+   {
+    "text": "Service endpoints and network security groups cannot coexist",
+    "correct": false,
+    "why": "They coexist on any subnet. The problem is what this file mentions."
+   },
+   {
+    "text": "The file redeclares the subnet without one",
+    "correct": true,
+    "why": "Right. A declaration replaces what an earlier one said; declare a subnet once, beside its network."
+   },
+   {
+    "text": "Bicep removes properties it cannot validate",
+    "correct": false,
+    "why": "The compiler removes nothing; it compiled what the file says."
+   },
+   {
+    "text": "`existing` deletes the network's other subnets",
+    "correct": false,
+    "why": "`existing` only refers to the network. It changes nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-b5fry3pb",
+  "version": 1,
+  "section": "three-roads",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does a service endpoint NOT give you? Choose all that apply.",
+  "hint": "Three limits are listed in the section.",
+  "choices": [
+   {
+    "text": "Access from a peered network",
+    "correct": true,
+    "why": "Right. It works only for traffic starting in that subnet."
+   },
+   {
+    "text": "A way to switch off the account's public endpoint",
+    "correct": true,
+    "why": "Right. The service keeps answering on its public address."
+   },
+   {
+    "text": "A firewall rule on the account naming the subnet",
+    "correct": false,
+    "why": "That is exactly what it gives: `virtualNetworkRules`."
+   },
+   {
+    "text": "Access from the office over a VPN",
+    "correct": true,
+    "why": "Right. Traffic from the office did not start in the subnet."
+   },
+   {
+    "text": "Traffic that carries the subnet's identity",
+    "correct": false,
+    "why": "That is the point of it."
+   }
+  ]
+ },
+ {
+  "id": "ex-8gm5vzbx",
+  "version": 1,
+  "section": "private-endpoints",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is a private endpoint, physically?",
+  "hint": "It takes an address from a subnet.",
+  "choices": [
+   {
+    "text": "A copy of the storage account placed in your region",
+    "correct": false,
+    "why": "The data stays where it is; nothing is copied."
+   },
+   {
+    "text": "A route that sends the account's public address through your firewall",
+    "correct": false,
+    "why": "A route changes where packets go; a private endpoint gives the account an address of yours."
+   },
+   {
+    "text": "A virtual machine that proxies requests to the account",
+    "correct": false,
+    "why": "There is no machine to manage: it is an interface, run by Azure."
+   },
+   {
+    "text": "A network interface in your subnet, standing for one service",
+    "correct": true,
+    "why": "Right. Private Link connects that interface to the service on Microsoft's side."
+   }
+  ]
+ },
+ {
+  "id": "ex-sfws324a",
+  "version": 1,
+  "section": "private-endpoints",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The first private endpoint placed in `snet-pe`, `10.20.4.0/24`, receives `10.20.4.x`. What is x?",
+  "hint": "Azure keeps the first four addresses of every subnet.",
+  "value": 4,
+  "tolerance": 0,
+  "unit": ""
+ },
+ {
+  "id": "ex-nd41n0j6",
+  "version": 1,
+  "section": "private-endpoints",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop wants a private road to both the blob and the file service of `stshopprod`. How many private endpoints does it need?",
+  "hint": "Look at `groupIds`.",
+  "choices": [
+   {
+    "text": "One, since both services belong to one account",
+    "correct": false,
+    "why": "An endpoint stands for one sub-resource of the account."
+   },
+   {
+    "text": "Two, one per sub-resource",
+    "correct": true,
+    "why": "Right. And each has its own zone: `privatelink.blob...` and `privatelink.file...`."
+   },
+   {
+    "text": "One per subnet that wants to reach them",
+    "correct": false,
+    "why": "One endpoint serves every network that can route to it and resolves its name."
+   },
+   {
+    "text": "None: a service endpoint covers both",
+    "correct": false,
+    "why": "A service endpoint is the other road, and it keeps the public door."
+   }
+  ]
+ },
+ {
+  "id": "ex-pfkpfnz0",
+  "version": 1,
+  "section": "private-endpoints",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A partner creates a private endpoint to one of the shop's accounts from their own tenant. What state is the connection in until somebody at the shop acts?",
+  "hint": "Who has permission on the account?",
+  "choices": [
+   {
+    "text": "*Pending*, waiting for the owner to approve it",
+    "correct": true,
+    "why": "Right. Which is how a partner gets one private road and nothing else."
+   },
+   {
+    "text": "Rejected, because cross-tenant endpoints are forbidden",
+    "correct": false,
+    "why": "Cross-tenant endpoints are allowed; they wait for the owner."
+   },
+   {
+    "text": "Approved, because private endpoints never need approval",
+    "correct": false,
+    "why": "Approval is automatic only when the creator has permission on the resource."
+   },
+   {
+    "text": "Disconnected, until the partner peers the two networks",
+    "correct": false,
+    "why": "No peering is involved; Private Link connects the interface to the service."
+   }
+  ]
+ },
+ {
+  "id": "ex-ab6h8hv9",
+  "version": 1,
+  "section": "private-endpoints",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `pe.bicep` name its zone with `environment().suffixes.storage` instead of writing `core.windows.net`?",
+  "hint": "What did the linter say about the hand-written version?",
+  "choices": [
+   {
+    "text": "Because a literal name fails to compile",
+    "correct": false,
+    "why": "`hard.bicep` compiled; the linter warned."
+   },
+   {
+    "text": "Because private zones may not contain dots",
+    "correct": false,
+    "why": "The zone's name is full of dots either way."
+   },
+   {
+    "text": "To keep working in sovereign clouds",
+    "correct": true,
+    "why": "Right. Each cloud has its own storage suffix; `no-hardcoded-env-urls` guards it."
+   },
+   {
+    "text": "Because Bicep charges less for expressions than for strings",
+    "correct": false,
+    "why": "Nothing is charged for a template's contents."
+   }
+  ]
+ },
+ {
+  "id": "ex-w5r6ktjt",
+  "version": 1,
+  "section": "private-endpoints",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each resource in `pe.bicep` to what it does.",
+  "hint": "Five resources, and only two are the endpoint.",
+  "pairs": [
+   {
+    "left": "the private endpoint",
+    "right": "an interface in `snet-pe` for the blob service"
+   },
+   {
+    "left": "the virtual network link",
+    "right": "lets `vnet-shop-prod` see the zone"
+   },
+   {
+    "left": "the zone group",
+    "right": "writes the endpoint's address into the zone"
+   },
+   {
+    "left": "`publicNetworkAccess: 'Disabled'`",
+    "right": "closes the account's public road"
+   }
+  ],
+  "right_distractors": [
+   "gives the account a public address"
+  ]
+ },
+ {
+  "id": "ex-qgmst3pc",
+  "version": 1,
+  "section": "private-endpoints",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The subnet property `privateEndpoint___Policies` makes filters and routes apply to private endpoints.",
+  "hint": "Lessons 17 and 18 are about these.",
+  "blanks": [
+   {
+    "accept": [
+     "Network"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-gz03sc4g",
+  "version": 1,
+  "section": "private-dns",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What name does the application use after the private endpoint exists?",
+  "hint": "The certificate carries one name.",
+  "choices": [
+   {
+    "text": "The same `stshopprod.blob.core.windows.net` as before",
+    "correct": true,
+    "why": "Right. Only the answer to the name changes."
+   },
+   {
+    "text": "`stshopprod.privatelink.blob.core.windows.net`, written into its settings",
+    "correct": false,
+    "why": "That is the middle link of the chain; the certificate does not carry it."
+   },
+   {
+    "text": "The address `10.20.4.4`, typed instead of a name",
+    "correct": false,
+    "why": "Connecting by address would fail the certificate check."
+   },
+   {
+    "text": "A new name Azure assigns to the endpoint",
+    "correct": false,
+    "why": "No new name is given to the application to use."
+   }
+  ]
+ },
+ {
+  "id": "ex-4ajdv867",
+  "version": 1,
+  "section": "private-dns",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is the shop's private zone called `privatelink.blob.core.windows.net` and not `blob.core.windows.net`?",
+  "hint": "What would a zone called `blob.core.windows.net` answer for?",
+  "choices": [
+   {
+    "text": "Because Azure reserves `blob.core.windows.net` for the public DNS",
+    "correct": false,
+    "why": "The reason is what the zone would answer for, not a reservation."
+   },
+   {
+    "text": "So it answers only the middle link, leaving other accounts public",
+    "correct": true,
+    "why": "Right. A `blob.core.windows.net` zone would break every account without an endpoint."
+   },
+   {
+    "text": "Because a private zone's name must start with `privatelink`",
+    "correct": false,
+    "why": "`shop.internal`, in lesson 21, is a private zone too."
+   },
+   {
+    "text": "Because the certificate names the `privatelink` host",
+    "correct": false,
+    "why": "The certificate names the account's ordinary host."
+   }
+  ]
+ },
+ {
+  "id": "ex-vns7a0rf",
+  "version": 1,
+  "section": "private-dns",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A developer on the office VPN runs `dig stshopprod.blob.core.windows.net` and gets a public address, while a VM in `vnet-shop-prod` gets `10.20.4.4`. What is missing?",
+  "hint": "Who answered the laptop's question?",
+  "choices": [
+   {
+    "text": "A second private endpoint for the office",
+    "correct": false,
+    "why": "One endpoint serves the office too, once its name resolves there."
+   },
+   {
+    "text": "A service endpoint on the VPN gateway's subnet",
+    "correct": false,
+    "why": "A service endpoint does not change any DNS answer."
+   },
+   {
+    "text": "Nothing: the office is meant to use the public road",
+    "correct": false,
+    "why": "With public access disabled, the public road leads to a refusal."
+   },
+   {
+    "text": "A conditional forwarder from the office DNS into Azure",
+    "correct": true,
+    "why": "Right. The laptop asks the office DNS, which asked the internet."
+   }
+  ]
+ },
+ {
+  "id": "ex-vgnj5ntv",
+  "version": 1,
+  "section": "private-dns",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the captured chain of `login.microsoftonline.com`, which link shows the Private Link pattern?",
+  "hint": "Look for a zone name.",
+  "choices": [
+   {
+    "text": "The first, `login.mso.msidentity.com`",
+    "correct": false,
+    "why": "That is an ordinary alias; nothing private can take it over."
+   },
+   {
+    "text": "The last one, which changed between runs",
+    "correct": false,
+    "why": "That link spreads sign-ins across places; lesson 22 is about it."
+   },
+   {
+    "text": "`ak.privatelink.msidentity.com`, the second of the three",
+    "correct": true,
+    "why": "Right. A network with a private zone of that name could answer it differently."
+   },
+   {
+    "text": "None: Private Link does not appear in public DNS",
+    "correct": false,
+    "why": "It does: the `privatelink` link is in the public chain on purpose."
+   }
+  ]
+ },
+ {
+  "id": "ex-3d3zhas0",
+  "version": 1,
+  "section": "private-dns",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Inside a virtual network, Azure's own resolver answers at the address `168.63.129.___`.",
+  "hint": "The same address every network uses.",
+  "blanks": [
+   {
+    "accept": [
+     "16"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-w9cy9577",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A VM in `vnet-shop-staging` resolves the account's name to its public address, though `vnet-shop-prod` gets `10.20.4.4`. Both use Azure's resolver. What is the likeliest cause?",
+  "hint": "Which networks does the zone answer?",
+  "choices": [
+   {
+    "text": "The account's public access was switched back on",
+    "correct": false,
+    "why": "That changes whether the public address answers, not what the name resolves to."
+   },
+   {
+    "text": "Staging subscriptions cannot use private endpoints",
+    "correct": false,
+    "why": "Nothing about a subscription's name restricts the feature."
+   },
+   {
+    "text": "The zone group wrote the wrong address",
+    "correct": false,
+    "why": "Production gets the right one from the same zone."
+   },
+   {
+    "text": "The zone has no link to `vnet-shop-staging`",
+    "correct": true,
+    "why": "Right. A zone answers only the networks linked to it."
+   }
+  ]
+ },
+ {
+  "id": "ex-tv6t4zte",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of the private road in the order a request from `snet-app` takes them.",
+  "hint": "The name is resolved before any packet is sent.",
+  "items": [
+   "the application asks for `stshopprod.blob.core.windows.net`",
+   "the chain reaches `stshopprod.privatelink.blob.core.windows.net`",
+   "the linked private zone answers `10.20.4.4`",
+   "the packets go to the interface in `snet-pe`",
+   "Private Link carries them to the account's blob service"
+  ],
+  "trap": "Every failure in the section is a break between the second and third steps."
+ },
+ {
+  "id": "ex-07jasy24",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop disables public access on `stshopprod` before creating its private endpoint. What happens to the application in `snet-app`, which has a service endpoint?",
+  "hint": "Which road ends at the public endpoint?",
+  "choices": [
+   {
+    "text": "Nothing, since the service endpoint bypasses the public endpoint",
+    "correct": false,
+    "why": "It does not bypass it; it reaches it over the backbone."
+   },
+   {
+    "text": "It loses access until the private endpoint exists",
+    "correct": true,
+    "why": "Right. Roads 1 and 2 end at the public endpoint, and that is what was closed."
+   },
+   {
+    "text": "It switches to the private road on its own",
+    "correct": false,
+    "why": "There is no private road until the endpoint and its DNS exist."
+   },
+   {
+    "text": "It keeps access, but only for reading",
+    "correct": false,
+    "why": "Disabling public access does not distinguish reads from writes."
+   }
+  ]
+ },
+ {
+  "id": "ex-bpvg0cjd",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did the lab actually do in this lesson? Choose all that apply.",
+  "hint": "Look at what has a transcript.",
+  "choices": [
+   {
+    "text": "Compiled a private endpoint, its zone, link and zone group",
+    "correct": true,
+    "why": "Right. `az bicep build` on `pe.bicep`."
+   },
+   {
+    "text": "Resolved a storage account's name to `10.20.4.4`",
+    "correct": false,
+    "why": "That needs a real endpoint and a network inside Azure; it was taught, not run."
+   },
+   {
+    "text": "Asked the public DNS for a Microsoft name's chain",
+    "correct": true,
+    "why": "Right. `dig login.microsoftonline.com`."
+   },
+   {
+    "text": "Ran Bicep's linter over a hand-written zone name",
+    "correct": true,
+    "why": "Right. `no-hardcoded-env-urls`."
+   },
+   {
+    "text": "Approved a pending private endpoint connection",
+    "correct": false,
+    "why": "Approval is a request to Resource Manager; nothing was sent."
+   }
+  ]
+ }
+]

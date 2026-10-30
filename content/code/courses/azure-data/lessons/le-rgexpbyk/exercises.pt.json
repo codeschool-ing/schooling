@@ -1,0 +1,354 @@
+{
+  "ex-k0p2s2f6": {
+    "prompt": "Como a página de banda da Microsoft cobra dados que entram no Azure vindos da internet?",
+    "hint": "Pense em por que uma conta enche barato e esvazia caro.",
+    "choices": [
+      {
+        "text": "Por GB, na mesma tarifa dos dados que saem",
+        "why": "Sair é cobrado; chegar não."
+      },
+      {
+        "text": "De graça, mas as escritas são cobradas",
+        "why": "Isso. Bytes que entram são de graça, e as requisições que entram não."
+      },
+      {
+        "text": "Por GB, mas só em contas com replicação geo-redundante",
+        "why": "A georreplicação é uma transferência para a região par, outra linha."
+      },
+      {
+        "text": "Por GB, numa tarifa menor que a de saída",
+        "why": "Não existe tarifa de entrada nenhuma."
+      }
+    ]
+  },
+  "ex-zxfxpr8m": {
+    "prompt": "Ler 1 GB do nível cool é cobrado em quais medidores?",
+    "hint": "O hot paga um deles; o cool paga um segundo na mesma leitura.",
+    "choices": [
+      {
+        "text": "Só operações de leitura, igual ao hot",
+        "why": "O cool soma uma cobrança por GB lido de volta."
+      },
+      {
+        "text": "Só recuperação de dados, já que operações de leitura são cobrança do nível hot",
+        "why": "Todo nível cobra operações; o cool cobra mais por cada uma."
+      },
+      {
+        "text": "Operações de leitura, e recuperação de dados por GB",
+        "why": "Isso: duas cobranças na mesma leitura."
+      },
+      {
+        "text": "Banda, porque os bytes saem do nível",
+        "why": "Banda é byte saindo da região, não de um nível."
+      }
+    ]
+  },
+  "ex-2tt4xwpj": {
+    "prompt": "A ilustrativos 0,02 USD por GB-mês e 0,004 USD por 10.000 operações de leitura, quantas leituras custam o mesmo que guardar 1 GB no hot por um mês?",
+    "hint": "Divida os dois preços e multiplique pelos 10.000 a que o preço de leitura se refere."
+  },
+  "ex-qdgmswj7": {
+    "prompt": "Na tabela da Microsoft, de que classe de operação é uma requisição `List Blobs`?",
+    "hint": "Listar tem uma linha só sua.",
+    "choices": [
+      {
+        "text": "Uma operação de leitura, já que uma listagem apenas lê nomes",
+        "why": "Ela lê, e mesmo assim não tem preço de leitura."
+      },
+      {
+        "text": "Nenhuma: listar é de graça",
+        "why": "Só bytes que entram são de graça."
+      },
+      {
+        "text": "Operações de listar e criar contêiner, numa linha própria",
+        "why": "Isso, uma linha própria, sem preço de leitura."
+      },
+      {
+        "text": "Uma cobrança por GB de nomes devolvidos",
+        "why": "Uma operação tem preço por operação, seja o que for que devolva."
+      }
+    ]
+  },
+  "ex-gk0wwb4v": {
+    "prompt": "O `count.py` escreveu 6.000 toques como um blob cada e depois os mesmos toques como um blob. Quantas requisições `Put Blob` cada um levou?",
+    "hint": "Leia a segunda e a terceira linhas da saída.",
+    "choices": [
+      {
+        "text": "6.000 e 1",
+        "why": "Isso: os mesmos bytes, seis mil vezes as escritas."
+      },
+      {
+        "text": "1 e 1, porque a biblioteca junta escritas pequenas numa requisição",
+        "why": "Nada as juntou; cada upload_blob foi uma requisição."
+      },
+      {
+        "text": "6.000 e 6.000, já que uma requisição carrega uma linha",
+        "why": "O blob único de linhas foi numa só requisição."
+      },
+      {
+        "text": "6.000 e 2, o segundo em dois blocos",
+        "why": "Um blob tão pequeno é um Put Blob; os blocos começam acima de 64 MiB."
+      }
+    ]
+  },
+  "ex-1weyt68v": {
+    "prompt": "Um contêiner tem 12.500 blobs sob um prefixo. Quantas requisições `List Blobs` leva listar todos os nomes?",
+    "hint": "Uma página tem no máximo 5.000 nomes."
+  },
+  "ex-7h55jg1f": {
+    "prompt": "Enviar 80 MiB com os padrões da biblioteca levou 21 requisições. Por quê?",
+    "hint": "Compare com o envio de 64 MiB da figura.",
+    "choices": [
+      {
+        "text": "O Azure recusa qualquer requisição única maior que 4 MiB",
+        "why": "Um blob de 64 MiB foi num só Put Blob."
+      },
+      {
+        "text": "Acima de 64 MiB a biblioteca envia 20 blocos de 4 MiB e uma lista que os confirma",
+        "why": "Isso: max_single_put_size e max_block_size nos padrões."
+      },
+      {
+        "text": "O Azurite divide blobs grandes, e o Azure os aceita inteiros",
+        "why": "Quem divide é o cliente; o mesmo programa mandaria as mesmas requisições ao Azure."
+      },
+      {
+        "text": "Uma requisição a cada 4 MiB é como a conta conta, e o gancho mostra a conta",
+        "why": "O gancho conta requisições saindo do programa; não sabe nada de conta."
+      }
+    ]
+  },
+  "ex-32g4rz7c": {
+    "prompt": "Um painel lê 6.000 blobs pequenos de toques toda manhã. Que mudança corta o número de operações que ele envia?",
+    "hint": "Nenhuma opção do cliente muda como os dados foram cortados.",
+    "choices": [
+      {
+        "text": "Aumentar o `max_single_get_size`",
+        "why": "Cada blob já é um Get Blob; o tamanho só importa acima de 32 MiB."
+      },
+      {
+        "text": "Ler em oito threads em vez de uma",
+        "why": "Threads deixam mais rápido; a contagem é a mesma."
+      },
+      {
+        "text": "Escrever os toques como um blob por dia",
+        "why": "Isso: um Get Blob em vez de 6.000."
+      },
+      {
+        "text": "Listar com 10.000 nomes por página",
+        "why": "Uma página tem no máximo 5.000, e a listagem não era o custo."
+      }
+    ]
+  },
+  "ex-6betp1fq": {
+    "prompt": "O `count.py` vê toda requisição porque passa a sua função ao cliente como a opção ___.",
+    "hint": "Ela é chamada logo antes de cada requisição ser enviada.",
+    "blanks": [
+      {
+        "accept": [
+          "raw_request_hook"
+        ]
+      }
+    ]
+  },
+  "ex-yk8vk4vg": {
+    "prompt": "No `costs.py`, por que a linha do cool sai mais cara que a do hot para os mesmos toques?",
+    "hint": "Os toques são lidos toda manhã.",
+    "choices": [
+      {
+        "text": "O mínimo de 30 dias do cool é cobrado de novo em cada blob, todo mês",
+        "why": "Os toques ficam o mês todo; não há exclusão antecipada."
+      },
+      {
+        "text": "O cool cobra mais por operação, e por GB lido",
+        "why": "Isso: o armazenamento cai pela metade e tudo o que é tocado cresce."
+      },
+      {
+        "text": "Blobs no cool precisam ser reidratados antes de serem lidos",
+        "why": "Isso é o archive; um blob no cool é lido direto."
+      },
+      {
+        "text": "O cool guarda cada blob como 64 KB",
+        "why": "Nada no programa arredonda um blob para cima."
+      }
+    ]
+  },
+  "ex-xb8e47yt": {
+    "prompt": "A ilustrativos 0,05 USD por 10.000 operações de escrita, quanto custa escrever 2.000.000 de blobs, em USD?",
+    "hint": "Duzentas vezes dez mil."
+  },
+  "ex-jzw7pzgq": {
+    "prompt": "Quais destes produzem muitos blobs pequenos? Escolha todos os que se aplicam.",
+    "hint": "A seção nomeia três origens.",
+    "choices": [
+      {
+        "text": "Um gravador de stream salvando o que chegou nos últimos segundos",
+        "why": "Sim: um arquivo por descarga."
+      },
+      {
+        "text": "Uma pasta por hora por cliente",
+        "why": "Sim: partições finas demais para os dados."
+      },
+      {
+        "text": "Um blob por evento do app",
+        "why": "Sim: cômodo de escrever e ruinoso de ler."
+      },
+      {
+        "text": "Um job noturno juntando o dia em arquivos de 64 MiB",
+        "why": "Isso é a cura, não a causa."
+      }
+    ]
+  },
+  "ex-rejd7vtm": {
+    "prompt": "O `costs.py` lê cada arquivo de 64 MiB em nove requisições. De onde vem o nove?",
+    "hint": "O `count.py` leu 80 MiB em treze.",
+    "choices": [
+      {
+        "text": "O Azure limita uma leitura a 8 MiB, então 64 MiB levam oito leituras e uma checagem",
+        "why": "A primeira leitura da biblioteca levou 32 MiB."
+      },
+      {
+        "text": "Um `List Blobs` para achar o arquivo e depois oito leituras de 8 MiB",
+        "why": "A listagem é contada à parte, uma vez por dia."
+      },
+      {
+        "text": "Os primeiros 32 MiB numa requisição, depois 8 faixas de 4 MiB",
+        "why": "Isso: 1 + 32 / 4."
+      },
+      {
+        "text": "O arquivo foi escrito em nove blocos e é lido de volta do mesmo jeito",
+        "why": "Um blob de 64 MiB sobe num só Put Blob, e a leitura não segue os blocos."
+      }
+    ]
+  },
+  "ex-353ekxv3": {
+    "prompt": "A ilustrativos 0,10 USD por GB além dos 100 GB gratuitos do mês, quanto custa mandar 5.120 GB para a internet num mês, em USD?",
+    "hint": "Tire primeiro a parte gratuita."
+  },
+  "ex-ykhkpj42": {
+    "prompt": "Para as imagens atrás de uma rede de entrega de conteúdo, por que o `costs.py` imprime traços em transferência e total?",
+    "hint": "Alguém ainda entrega os bytes a quem vê.",
+    "choices": [
+      {
+        "text": "A transferência atrás de uma rede de entrega é de graça",
+        "why": "A rede cobra a entrega; só não está neste programa."
+      },
+      {
+        "text": "A conta não envia nada quando a rede está na frente",
+        "why": "Um download em vinte ainda chega à conta."
+      },
+      {
+        "text": "O Azurite não tem rede de entrega, então a linha nunca rodou",
+        "why": "O `costs.py` não usa emulador; é aritmética."
+      },
+      {
+        "text": "O preço da rede não está no programa",
+        "why": "Isso, e nela também está se o trecho da conta até ela é cobrado."
+      }
+    ]
+  },
+  "ex-2dre6akh": {
+    "prompt": "Um parceiro copia 5 TB da conta da Quitanda para outra região, com um token SAS que a Quitanda emitiu. Na conta de quem cai a transferência?",
+    "hint": "Procure uma configuração que mude a conta de lugar.",
+    "choices": [
+      {
+        "text": "Da Quitanda: nada no Blob Storage cobra quem lê",
+        "why": "Isso: o dono paga, seja quem for que leia."
+      },
+      {
+        "text": "Do parceiro, porque um token SAS identifica quem lê",
+        "why": "Um token SAS dá acesso; não diz nada de cobrança."
+      },
+      {
+        "text": "De ninguém: leituras feitas com token SAS são de graça",
+        "why": "Operações e transferência são cobradas seja como for que a requisição foi autorizada."
+      },
+      {
+        "text": "Do parceiro, desde que o token expire no mesmo dia",
+        "why": "A expiração limita quanto tempo a porta fica aberta, não quem paga."
+      }
+    ]
+  },
+  "ex-enjcpdr5": {
+    "prompt": "Um job noturno numa sub-rede privada com NAT gateway lê 2 TB por mês de uma conta na mesma região. Que mudança tira a cobrança por GB sem custo?",
+    "hint": "Um dos dois caminhos que evitam o gateway é de graça.",
+    "choices": [
+      {
+        "text": "Um private endpoint para a conta",
+        "why": "Ele tira a cobrança do gateway e põe a sua, por GB nos dois sentidos."
+      },
+      {
+        "text": "Um service endpoint para `Microsoft.Storage` na sub-rede",
+        "why": "Isso: o tráfego sai do gateway e nada substitui a cobrança."
+      },
+      {
+        "text": "Mudar a conta de ZRS para LRS",
+        "why": "A redundância muda a capacidade, não o que o gateway processa."
+      },
+      {
+        "text": "Pôr uma rede de entrega de conteúdo na frente da conta",
+        "why": "Isso é para quem vê pela internet, não para um job na mesma região."
+      }
+    ]
+  },
+  "ex-hrtz4sf9": {
+    "prompt": "Que linha uma conta em GRS paga que a mesma conta em ZRS não paga?",
+    "hint": "Para onde vão as cópias extras?",
+    "choices": [
+      {
+        "text": "Recuperação de dados, por GB lido de volta",
+        "why": "Recuperação é dos níveis mais frios."
+      },
+      {
+        "text": "Uma cobrança pelo tráfego entre as três zonas do ZRS",
+        "why": "As cópias do ZRS são pagas no preço de capacidade."
+      },
+      {
+        "text": "Transferência de georreplicação, por GB copiado",
+        "why": "Isso: toda escrita é copiada para a região par."
+      },
+      {
+        "text": "Nenhuma: as duas custam o mesmo",
+        "why": "A segunda região é uma transferência, e é cobrada."
+      }
+    ]
+  },
+  "ex-030ss7ff": {
+    "prompt": "Ligue cada caminho de um byte ao que as páginas de preços da Microsoft cobram por ele.",
+    "hint": "Um deles é de graça, e uma cobrança à direita não é de caminho nenhum.",
+    "pairs": [
+      {
+        "left": "Mesma região, por um service endpoint",
+        "right": "sem cobrança"
+      },
+      {
+        "left": "Mesma região, por um NAT gateway",
+        "right": "por GB processado, mais um preço por hora"
+      },
+      {
+        "left": "Para a região par, em GRS",
+        "right": "transferência de georreplicação, por GB"
+      },
+      {
+        "left": "Para a internet",
+        "right": "100 GB por mês de graça, depois por GB"
+      }
+    ],
+    "right_distractors": [
+      "por 10.000 operações"
+    ]
+  },
+  "ex-w5mbcgd3": {
+    "prompt": "Ordene estes totais mensais da tabela do `costs.py`, do maior para o menor.",
+    "hint": "Transferência, depois cool, depois hot, depois empacotado.",
+    "items": [
+      "500 GB de imagens com 20 TB de saída",
+      "Os toques um blob cada, no cool",
+      "Os toques um blob cada, no hot",
+      "Os toques em 123 arquivos de 64 MiB"
+    ]
+  },
+  "ex-qvf2swz1": {
+    "prompt": "A ilustrativos 0,08 USD por GB entre regiões, quanto custa copiar 5.120 GB de `brazilsouth` para `eastus` uma vez, em USD?",
+    "hint": "Nenhuma franquia gratuita vale entre regiões nas contas desta lição."
+  }
+}

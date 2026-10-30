@@ -1,0 +1,432 @@
+{
+  "ex-0cmzkky1": {
+    "prompt": "Onde rodam as máquinas virtuais de um cluster clássico do Databricks?",
+    "hint": "Quem paga o Azure por elas?",
+    "choices": [
+      {
+        "text": "Na conta do Databricks no Azure, ao lado do plano de controle",
+        "why": "É ali que rodam o plano de controle e a computação serverless."
+      },
+      {
+        "text": "Na sua assinatura",
+        "why": "Isso. Num grupo de recursos gerenciado, ou em sub-redes da sua rede, cobradas de você pelo Azure."
+      },
+      {
+        "text": "Dentro da conta de armazenamento que guarda o lago",
+        "why": "Uma conta de armazenamento guarda dados, não máquinas."
+      },
+      {
+        "text": "Em qualquer região que o Databricks escolher naquela noite",
+        "why": "Clusters rodam na região do workspace."
+      }
+    ]
+  },
+  "ex-11whffvc": {
+    "prompt": "Uma engenheira tenta aumentar o disco de uma das máquinas do cluster no grupo de recursos gerenciado do workspace, e o Azure recusa, embora ela seja dona da assinatura. Por quê?",
+    "hint": "Quem gerencia esse grupo?",
+    "choices": [
+      {
+        "text": "Falta ao papel dela uma permissão para discos",
+        "why": "Uma dona tem toda permissão que um papel do Azure pode dar."
+      },
+      {
+        "text": "A máquina está ligada, e discos só mudam com ela parada",
+        "why": "A recusa é sobre quem pode mudar, não quando."
+      },
+      {
+        "text": "Uma deny assignment protege o que o Databricks gerencia, inclusive dos donos",
+        "why": "Isso. Uma máquina consertada à mão é um cluster que falha sem motivo visível."
+      },
+      {
+        "text": "O grupo de recursos gerenciado pertence a outro tenant",
+        "why": "Ele está na assinatura dela, e no tenant dela."
+      }
+    ]
+  },
+  "ex-ndxeswh6": {
+    "prompt": "Um ano depois de criar o workspace, a Quitanda decide que os clusters devem rodar dentro da própria rede virtual, sem endereços públicos. O que isso exige?",
+    "hint": "Quando a VNet injection é decidida?",
+    "choices": [
+      {
+        "text": "Acrescentar duas sub-redes às configurações do workspace existente",
+        "why": "A injeção não pode ser acrescentada a um workspace depois de criado."
+      },
+      {
+        "text": "Um workspace novo, criado já injetado, e o trabalho levado para ele",
+        "why": "Isso. A VNet injection é decidida na criação, e por isso a declaração a tem desde o início."
+      },
+      {
+        "text": "Um peering entre a rede gerenciada e a da Quitanda",
+        "why": "Um peering conecta redes; as máquinas continuam com endereços públicos."
+      },
+      {
+        "text": "Mudar o workspace para o tier trial",
+        "why": "O tier muda preços e recursos, não a rede."
+      }
+    ]
+  },
+  "ex-yh5ffs5k": {
+    "prompt": "O Unity Catalog exige um workspace no tier ___.",
+    "hint": "Um entre `standard`, `premium` e `trial`.",
+    "blanks": [
+      {
+        "accept": [
+          "premium"
+        ]
+      }
+    ]
+  },
+  "ex-yr0r8jtg": {
+    "prompt": "Para que serve o `azurerm_databricks_access_connector` na declaração?",
+    "hint": "Ele guarda uma coisa.",
+    "choices": [
+      {
+        "text": "Ele conecta as duas sub-redes do workspace entre si",
+        "why": "Sub-redes de uma rede já se alcançam."
+      },
+      {
+        "text": "Guarda uma identidade gerenciada que o Unity Catalog usa para chegar ao lago",
+        "why": "Isso. Nenhuma chave de armazenamento é entregue ao Databricks."
+      },
+      {
+        "text": "Ele guarda o token com que o provider do próprio Databricks no Terraform entra",
+        "why": "Ele guarda uma identidade para o armazenamento, não um token para a API."
+      },
+      {
+        "text": "Ele dá aos clusters um endereço público para o plano de controle",
+        "why": "`no_public_ip = true` diz o contrário."
+      }
+    ]
+  },
+  "ex-ern2dkkt": {
+    "prompt": "O `terraform validate` aceitou o workspace. Qual destes ainda pode falhar quando o arquivo for aplicado numa assinatura?",
+    "hint": "O que só o Azure pode saber?",
+    "choices": [
+      {
+        "text": "Um tier escrito `gold`",
+        "why": "Esse o validate já recusou."
+      },
+      {
+        "text": "Sub-redes pequenas demais para as máquinas, ou um nome já usado",
+        "why": "Isso. Essas são conferências do Azure, no `apply`."
+      },
+      {
+        "text": "Um arquivo não disposto como o `terraform fmt` o faria",
+        "why": "A disposição nunca faz um apply falhar; o `fmt -check` já passou."
+      },
+      {
+        "text": "`no_public_ip` escrito como texto",
+        "why": "Um tipo errado é recusado pelo validate."
+      }
+    ]
+  },
+  "ex-knbdkr0f": {
+    "prompt": "Um time quer clusters, jobs e grants declarados no Terraform também. Por que o arquivo desta lição não consegue guardá-los?",
+    "hint": "Que API conhece um cluster?",
+    "choices": [
+      {
+        "text": "O provider do Databricks os declara; o `azurerm` não os alcança",
+        "why": "Isso. Dois providers: `azurerm` para o workspace, `databricks/databricks` para o que está dentro."
+      },
+      {
+        "text": "Clusters não podem ser declarados em ferramenta nenhuma, só clicados no portal",
+        "why": "O provider do Databricks os declara."
+      },
+      {
+        "text": "Eles deixariam o arquivo longo demais para o validate",
+        "why": "O tamanho não é o problema."
+      },
+      {
+        "text": "Grants pertencem ao Entra ID, não ao workspace",
+        "why": "Os grants do Unity Catalog ficam com o Databricks."
+      }
+    ]
+  },
+  "ex-46a3nf7q": {
+    "prompt": "Ligue cada tipo de computação do Databricks ao que ele serve.",
+    "hint": "Quem usa, e por quanto tempo?",
+    "pairs": [
+      {
+        "left": "Cluster all-purpose",
+        "right": "Notebooks em que pessoas trabalham, compartilhado"
+      },
+      {
+        "left": "Cluster de job",
+        "right": "Uma execução de um job, depois encerrado"
+      },
+      {
+        "left": "SQL warehouse",
+        "right": "SQL de analistas e ferramentas de BI"
+      },
+      {
+        "left": "Computação serverless",
+        "right": "Computação quente na conta do Databricks, cobrada só em DBUs"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia entre duas contas de armazenamento"
+    ]
+  },
+  "ex-8pmwy9n1": {
+    "prompt": "Onde o notebook de limpeza noturno da Quitanda deve rodar?",
+    "hint": "Ninguém está ligado a ele às três da manhã.",
+    "choices": [
+      {
+        "text": "No cluster all-purpose que as analistas usam de dia",
+        "why": "Isso paga a tarifa all-purpose e divide o cluster com pessoas."
+      },
+      {
+        "text": "Num cluster de job criado para a execução",
+        "why": "Isso. Ele existe pela meia hora de que precisa, à tarifa de jobs."
+      },
+      {
+        "text": "Num SQL warehouse, já que as regras são SQL",
+        "why": "Um warehouse serve consultas; um job de notebook roda em cluster ou serverless."
+      },
+      {
+        "text": "Num pool, sem cluster nenhum",
+        "why": "Um pool empresta máquinas a clusters; ele não roda nada."
+      }
+    ]
+  },
+  "ex-qytm452y": {
+    "prompt": "Quanto custa um pool de máquinas ociosas, segundo a documentação do Databricks?",
+    "hint": "Duas contas, e só uma delas para.",
+    "choices": [
+      {
+        "text": "Nada, até um cluster pegar uma máquina",
+        "why": "O Azure continua cobrando as máquinas ociosas."
+      },
+      {
+        "text": "DBUs e máquinas, como se rodassem um cluster",
+        "why": "Máquinas ociosas do pool não são cobradas em DBUs."
+      },
+      {
+        "text": "O preço do Azure pelas máquinas, sem DBUs",
+        "why": "Isso. Pouco dinheiro por muito tempo de partida."
+      },
+      {
+        "text": "Só DBUs, já que as máquinas pertencem ao Databricks",
+        "why": "Na computação clássica as máquinas são suas, na sua assinatura."
+      }
+    ]
+  },
+  "ex-bgwe0b2t": {
+    "prompt": "Um job precisa terminar até as seis da manhã, e o time quer máquinas Spot para economizar. Onde ele as põe?",
+    "hint": "Quanto custa perder cada máquina?",
+    "choices": [
+      {
+        "text": "No driver, que trabalha menos",
+        "why": "Perder o driver perde a execução."
+      },
+      {
+        "text": "Em todo lugar, já que o Spark reexecuta o que se perde",
+        "why": "Ele reexecuta tarefas de workers perdidos, não um driver perdido."
+      },
+      {
+        "text": "Só nos workers, com o driver numa máquina comum",
+        "why": "Isso. Um worker perdido custa tempo; um driver perdido custa o job."
+      },
+      {
+        "text": "Em lugar nenhum; Spot não existe para o Databricks",
+        "why": "Workers podem ser máquinas Spot do Azure."
+      }
+    ]
+  },
+  "ex-9rt8kbcf": {
+    "prompt": "A configuração que para um cluster all-purpose depois de alguns minutos ocioso se chama auto ___.",
+    "hint": "Ela encerra o cluster.",
+    "blanks": [
+      {
+        "accept": [
+          "termination",
+          "terminação",
+          "terminacao"
+        ]
+      }
+    ]
+  },
+  "ex-25fgzzve": {
+    "prompt": "Cinco máquinas, cada uma consumindo 1 DBU por hora (ilustrativo), rodam 30 minutos por noite durante 31 noites num cluster de job. A 0,30 USD por DBU e 0,20 USD por máquina-hora, ilustrativos, quanto dá o mês em USD, com duas casas?",
+    "hint": "Máquina-horas × (preço da DBU + preço da máquina)."
+  },
+  "ex-nkwm9mw3": {
+    "prompt": "Por que o cluster all-purpose que para depois de 60 minutos ocioso custou quatro vezes e meia o cluster de job, pelo mesmo trabalho?",
+    "hint": "Duas diferenças se multiplicam.",
+    "choices": [
+      {
+        "text": "As máquinas all-purpose são maiores",
+        "why": "A lição usou as mesmas máquinas nos dois."
+      },
+      {
+        "text": "O triplo de horas, cada uma a uma tarifa de DBU maior",
+        "why": "Isso. Uma hora ociosa por noite, e a tarifa all-purpose em toda hora."
+      },
+      {
+        "text": "Clusters all-purpose são cobrados pelo mês inteiro",
+        "why": "Só o que nunca parou foi."
+      },
+      {
+        "text": "A auto termination tem uma taxa própria",
+        "why": "Ela economiza; não tem taxa."
+      }
+    ]
+  },
+  "ex-p55bf9vq": {
+    "prompt": "Um time roda alguns jobs curtos por noite e paga minutos de partida e uma sobra ociosa em cada um. O que o serverless muda nessa conta?",
+    "hint": "O que o serverless não cobra?",
+    "choices": [
+      {
+        "text": "Nada; serverless é a mesma computação ao mesmo preço",
+        "why": "Cobra diferente: só DBUs, pelo trabalho."
+      },
+      {
+        "text": "Remove as DBUs e mantém o custo das máquinas",
+        "why": "O contrário: as DBUs incluem as máquinas."
+      },
+      {
+        "text": "É grátis abaixo de um número de jobs por noite",
+        "why": "Nenhuma franquia assim é documentada aqui."
+      },
+      {
+        "text": "Cobra só o trabalho, em DBUs a preço próprio",
+        "why": "Isso. Se sai mais barato depende dos dois preços."
+      }
+    ]
+  },
+  "ex-krs0svyp": {
+    "prompt": "Em `quitanda_prd.sales.orders`, o que é `sales`?",
+    "hint": "O meio de três níveis.",
+    "choices": [
+      {
+        "text": "O catálogo",
+        "why": "O catálogo é `quitanda_prd`."
+      },
+      {
+        "text": "O schema",
+        "why": "Isso. Catálogo, schema, tabela."
+      },
+      {
+        "text": "O metastore",
+        "why": "O metastore não faz parte do nome."
+      },
+      {
+        "text": "A external location",
+        "why": "Locations são caminhos, não partes do nome de uma tabela."
+      }
+    ]
+  },
+  "ex-1wb6kcjt": {
+    "prompt": "Alguém dá drop na tabela externa `quitanda_prd.sales.orders`. O que acontece com os arquivos dela no lago?",
+    "hint": "De quem são os arquivos de uma tabela externa?",
+    "choices": [
+      {
+        "text": "Ficam; só o nome vai embora",
+        "why": "Isso. Dar drop numa tabela gerenciada apagaria os arquivos."
+      },
+      {
+        "text": "São apagados na hora, com a tabela",
+        "why": "Isso é uma tabela gerenciada."
+      },
+      {
+        "text": "Vão para o armazenamento do metastore",
+        "why": "Nada os move."
+      },
+      {
+        "text": "Ficam ilegíveis até a tabela ser restaurada",
+        "why": "Os arquivos ficam intactos e legíveis para quem pode ler o caminho."
+      }
+    ]
+  },
+  "ex-4s3mktnr": {
+    "prompt": "As analistas precisam ler `quitanda_prd.sales.orders` e nada mais. De quais grants elas precisam? Escolha todas as que se aplicam.",
+    "hint": "Cada nível precisa deixá-las entrar.",
+    "choices": [
+      {
+        "text": "`USE CATALOG` em `quitanda_prd`",
+        "why": "Sim."
+      },
+      {
+        "text": "`USE SCHEMA` em `quitanda_prd.sales`",
+        "why": "Sim."
+      },
+      {
+        "text": "`SELECT` na tabela",
+        "why": "Sim."
+      },
+      {
+        "text": "`SELECT` no schema `quitanda_prd.sales`",
+        "why": "Isso alcança toda tabela dele, presente e futura: mais que os pedidos."
+      },
+      {
+        "text": "Um papel de dados na conta de armazenamento",
+        "why": "Isso lê os arquivos por fora do Unity Catalog, todas as colunas."
+      }
+    ]
+  },
+  "ex-hxe79d2b": {
+    "prompt": "A Quitanda concedeu com cuidado no Unity Catalog, e a ferramenta de um parceiro ainda lê os CPFs dos clientes no lago. Qual é a entrada mais provável?",
+    "hint": "Do que o Unity Catalog nunca fica sabendo?",
+    "choices": [
+      {
+        "text": "Um defeito na máscara de coluna",
+        "why": "Máscaras valem para todo motor que lê pelo Unity Catalog."
+      },
+      {
+        "text": "Uma chave ou SAS que lê a conta de armazenamento direto",
+        "why": "Isso. Uma leitura por fora do catálogo vê todo arquivo; chaves desligadas fecham essa porta."
+      },
+      {
+        "text": "O metastore estar em outra região",
+        "why": "A região não tem nada a ver com quem pode ler."
+      },
+      {
+        "text": "Um grant no catálogo dado às analistas",
+        "why": "O parceiro não é analista; esse grant não o alcança."
+      }
+    ]
+  },
+  "ex-f81gagqp": {
+    "prompt": "Uma external location junta um caminho no lago a uma storage ___, que embrulha a identidade do access connector.",
+    "hint": "O outro objeto à direita da figura.",
+    "blanks": [
+      {
+        "accept": [
+          "credential"
+        ]
+      }
+    ]
+  },
+  "ex-a6e2egjg": {
+    "prompt": "Ponha estes do mais externo ao mais interno.",
+    "hint": "Um nome tem três partes, e algo guarda todas.",
+    "items": [
+      "Metastore",
+      "Catálogo",
+      "Schema",
+      "Tabela"
+    ]
+  },
+  "ex-v4ppqa6x": {
+    "prompt": "Qual destes é cobrado pelo Azure, e não pelo Databricks, quando um cluster de job clássico roda?",
+    "hint": "A segunda linha de uma conta clássica.",
+    "choices": [
+      {
+        "text": "As DBUs da execução",
+        "why": "DBUs são a linha do Databricks."
+      },
+      {
+        "text": "Os grants do Unity Catalog",
+        "why": "Grants não são cobrados."
+      },
+      {
+        "text": "As máquinas virtuais",
+        "why": "Isso. A computação clássica paga o Azure por elas."
+      },
+      {
+        "text": "A aplicação web do plano de controle",
+        "why": "Ela faz parte do que as DBUs pagam; ninguém a cobra à parte."
+      }
+    ]
+  }
+}

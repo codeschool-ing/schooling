@@ -1,0 +1,718 @@
+[
+  {
+    "id": "ex-pfdgb83n",
+    "version": 1,
+    "section": "model-macro",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can this course not run SwiftData on its recording machine?",
+    "hint": "Where does SwiftData ship?",
+    "choices": [
+      {
+        "text": "It needs a paid developer membership",
+        "correct": false,
+        "why": "SwiftData is free in Xcode; the problem is where it exists."
+      },
+      {
+        "text": "Only Apple's SDKs have it",
+        "correct": true,
+        "why": "Right: section 05 shows the compiler saying `no such module`."
+      },
+      {
+        "text": "It needs a network connection to Apple's servers",
+        "correct": false,
+        "why": "It stores on the device; iCloud sync is optional."
+      },
+      {
+        "text": "Linux has no SQLite library",
+        "correct": false,
+        "why": "Linux has SQLite; the missing piece is the framework itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-0w4rmg44",
+    "version": 1,
+    "section": "model-macro",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `@Model` macro add to `SessionRecord` when the app is built?",
+    "hint": "Two protocols, according to Apple's documentation.",
+    "choices": [
+      {
+        "text": "`Codable` and `Hashable`",
+        "correct": false,
+        "why": "Neither is what the documentation names."
+      },
+      {
+        "text": "`PersistentModel` and `Observable`",
+        "correct": true,
+        "why": "Right: storage, and the observation SwiftUI already watches."
+      },
+      {
+        "text": "`Identifiable` and `Sendable` only",
+        "correct": false,
+        "why": "The two the documentation leads with are `PersistentModel` and `Observable`."
+      },
+      {
+        "text": "A `save()` method on each record",
+        "correct": false,
+        "why": "Saving is the context's, not the record's."
+      }
+    ]
+  },
+  {
+    "id": "ex-1smqxmzg",
+    "version": 1,
+    "section": "model-macro",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the planner not put `@Model` on lesson 1's `StudySession`?",
+    "hint": "Two reasons: what `@Model` attaches to, and where the package builds.",
+    "choices": [
+      {
+        "text": "`@Model` cannot store a `String` date",
+        "correct": false,
+        "why": "It stores `String`; the records keep the day as text."
+      },
+      {
+        "text": "A struct would sync to iCloud by itself, uninvited",
+        "correct": false,
+        "why": "Nothing syncs unless the app is configured to."
+      },
+      {
+        "text": "It is a struct, and SwiftData would stop the package building on Linux",
+        "correct": true,
+        "why": "Right: the values stay portable and testable, and the records are the app's."
+      },
+      {
+        "text": "Apple forbids `@Model` in any Swift package, whatever platforms it lists",
+        "correct": false,
+        "why": "A package for Apple platforms may use it; this one also builds on Linux."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bjy31rb",
+    "version": 1,
+    "section": "model-macro",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which identifier of a session is sent to the planner's server?",
+    "hint": "One means something outside this store.",
+    "choices": [
+      {
+        "text": "`sessionID`, the planner's own id",
+        "correct": true,
+        "why": "Right: the same id on every platform and every phone."
+      },
+      {
+        "text": "`persistentModelID`, assigned by SwiftData",
+        "correct": false,
+        "why": "It means nothing outside this store, and differs on a second phone."
+      },
+      {
+        "text": "The row number in the SQLite file",
+        "correct": false,
+        "why": "Nothing in the planner reads the file's rows."
+      },
+      {
+        "text": "A new UUID made at the moment of sending",
+        "correct": false,
+        "why": "Then the same session would arrive twice under two ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwbwf19n",
+    "version": 1,
+    "section": "container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `.modelContainer(for: [CourseRecord.self, SessionRecord.self])` put in the scene's environment?",
+    "hint": "It is what `@Query` depends on.",
+    "choices": [
+      {
+        "text": "A list of every record, fetched at launch",
+        "correct": false,
+        "why": "Fetching is each query's job, when its view appears."
+      },
+      {
+        "text": "A model context for that container",
+        "correct": true,
+        "why": "Right: `@Query` and `@Environment(\\.modelContext)` find it there."
+      },
+      {
+        "text": "An undo manager, switched on",
+        "correct": false,
+        "why": "Undo is off unless `isUndoEnabled: true` is passed."
+      },
+      {
+        "text": "The path of the store's file",
+        "correct": false,
+        "why": "The file is the container's business; screens never see it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c739pm70",
+    "version": 1,
+    "section": "container",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which store should a preview use, so it never writes sample sessions into the student's plan?",
+    "hint": "One that lasts only as long as the process.",
+    "choices": [
+      {
+        "text": "The app's own store, emptied after each preview",
+        "correct": false,
+        "why": "Emptying it would delete the student's real plan too."
+      },
+      {
+        "text": "A copy of the store, made at launch",
+        "correct": false,
+        "why": "A copy still lives on disk and drifts from what tests expect."
+      },
+      {
+        "text": "An in-memory one, `inMemory: true`",
+        "correct": true,
+        "why": "Right: gone when the process ends, for previews and tests."
+      },
+      {
+        "text": "A store in an App Group, shared with the widget",
+        "correct": false,
+        "why": "That is for sharing real data, the opposite of a preview's need."
+      }
+    ]
+  },
+  {
+    "id": "ex-3epz3n51",
+    "version": 1,
+    "section": "container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`context.insert(record)` runs and no save has happened yet. Does the new session appear in a `@Query` list?",
+    "hint": "What does a query read?",
+    "choices": [
+      {
+        "text": "Yes: queries read the context",
+        "correct": true,
+        "why": "Right; the save decides when it reaches the disk."
+      },
+      {
+        "text": "No, not until `save()` is called",
+        "correct": false,
+        "why": "The query sees inserts in the context at once."
+      },
+      {
+        "text": "Only after the app is relaunched",
+        "correct": false,
+        "why": "Nothing about an insert waits for a relaunch."
+      },
+      {
+        "text": "Only if the view calls `refresh()`",
+        "correct": false,
+        "why": "A query has no `refresh()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3c1m96gb",
+    "version": 1,
+    "section": "query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`CourseDetailView` builds its `@Query` in `init`. Why not in the property's own declaration?",
+    "hint": "The filter depends on the course the view was given.",
+    "choices": [
+      {
+        "text": "`@Query` cannot take a filter in a declaration, only in an initialiser",
+        "correct": false,
+        "why": "It can, as long as the filter needs nothing from the view."
+      },
+      {
+        "text": "A wrapper's arguments cannot read the view's other properties",
+        "correct": true,
+        "why": "Right: the course's id is known only in `init`."
+      },
+      {
+        "text": "A query in `init` runs faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "So the query runs once and never updates",
+        "correct": false,
+        "why": "It still updates as the context changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-36hvx9m2",
+    "version": 1,
+    "section": "query",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `#Predicate` produce, that a closure passed to `filter` would not?",
+    "hint": "It is a macro.",
+    "choices": [
+      {
+        "text": "Faster Swift code, compiled with optimisations by the macro",
+        "correct": false,
+        "why": "The point is not speed in Swift but where the filtering happens."
+      },
+      {
+        "text": "A query that runs on a background thread instead of the main one",
+        "correct": false,
+        "why": "Threads are not what the macro is about."
+      },
+      {
+        "text": "A description of the condition, for a store to evaluate",
+        "correct": true,
+        "why": "Right, which is why it accepts only what can be described that way."
+      },
+      {
+        "text": "A predicate that also sorts the result",
+        "correct": false,
+        "why": "Sorting is a separate argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-gek905j2",
+    "version": 1,
+    "section": "query",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match what the student does to the code that does it.",
+    "hint": "The query follows the context.",
+    "pairs": [
+      {
+        "left": "adds a session",
+        "right": "`context.insert(record)`"
+      },
+      {
+        "left": "marks one done",
+        "right": "`record.done = true`"
+      },
+      {
+        "left": "swipes one away",
+        "right": "`context.delete(record)`"
+      },
+      {
+        "left": "opens a course",
+        "right": "a `@Query` with that course's predicate"
+      }
+    ],
+    "right_distractors": [
+      "`query.refresh()`"
+    ]
+  },
+  {
+    "id": "ex-9kq1dfkz",
+    "version": 1,
+    "section": "what-runs-here",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Linux, `import SwiftData` fails with the error `no such ___ 'SwiftData'`.",
+    "hint": "Read the capture.",
+    "blanks": [
+      {
+        "accept": [
+          "module"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nwvge78x",
+    "version": 1,
+    "section": "what-runs-here",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do `#Predicate` and `SortDescriptor` run on the course's Linux machine when SwiftData does not?",
+    "hint": "Which framework are they in?",
+    "choices": [
+      {
+        "text": "The lab installs a Linux port of SwiftData",
+        "correct": false,
+        "why": "There is none; the capture shows the import failing."
+      },
+      {
+        "text": "They are Foundation's, not SwiftData's",
+        "correct": true,
+        "why": "Right: the query is built from them, and they are not SwiftData's."
+      },
+      {
+        "text": "They are compiled to JavaScript on Linux",
+        "correct": false,
+        "why": "Swift compiles to native code on Linux."
+      },
+      {
+        "text": "Linux evaluates them by asking a Mac on the network",
+        "correct": false,
+        "why": "Nothing in the lab talks to a Mac."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjnqtjfn",
+    "version": 1,
+    "section": "what-runs-here",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `query` program sorts the mobile course's sessions latest first. Put the ids in the order it printed them.",
+    "hint": "Dates 27, 22 and 20 October.",
+    "items": [
+      "`s4`",
+      "`s5`",
+      "`s2`"
+    ]
+  },
+  {
+    "id": "ex-n9kzb896",
+    "version": 1,
+    "section": "what-runs-here",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`#Predicate<StudySession> { mondayOf($0.date) == \"2026-10-19\" }` is refused. What is the fix the section gives?",
+    "hint": "Compute in ordinary Swift first, then compare stored text.",
+    "choices": [
+      {
+        "text": "Mark `mondayOf` as `@Predicate` so that the macro accepts the call",
+        "correct": false,
+        "why": "No such marking exists; a store cannot run your function."
+      },
+      {
+        "text": "Filter every session in Swift after fetching them all",
+        "correct": false,
+        "why": "It works, and it gives up what the predicate is for."
+      },
+      {
+        "text": "Compare `date` with the week's two days, worked out beforehand",
+        "correct": true,
+        "why": "Right: two string comparisons, as the third line of the output did."
+      },
+      {
+        "text": "Store each session's Monday as a `Date` instead",
+        "correct": false,
+        "why": "A `Date` brings back the time-zone problem lesson 1 avoided."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6zst0dd",
+    "version": 1,
+    "section": "relationships",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the inverse declared, what happens when the code sets `record.course = course`?",
+    "hint": "The two sides are one fact.",
+    "choices": [
+      {
+        "text": "The session appears in `course.sessions` with no `append`",
+        "correct": true,
+        "why": "Right: SwiftData keeps both sides of the relationship in step."
+      },
+      {
+        "text": "Nothing until `course.sessions.append(record)` is also called",
+        "correct": false,
+        "why": "With an inverse there is one relationship, not two to keep in step."
+      },
+      {
+        "text": "The session is copied into the course, as a value inside it",
+        "correct": false,
+        "why": "Records are classes, referred to, not copied."
+      },
+      {
+        "text": "The course is saved to disk immediately",
+        "correct": false,
+        "why": "Saving is the context's, at its own moments."
+      }
+    ]
+  },
+  {
+    "id": "ex-077bpqze",
+    "version": 1,
+    "section": "relationships",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the default delete rule, a course is deleted. What happens to its sessions?",
+    "hint": "The default loses nothing.",
+    "choices": [
+      {
+        "text": "They are deleted with it",
+        "correct": false,
+        "why": "That is `.cascade`, which the planner chooses."
+      },
+      {
+        "text": "The deletion is refused",
+        "correct": false,
+        "why": "That is `.deny`."
+      },
+      {
+        "text": "They stay, with `course` set to `nil`",
+        "correct": true,
+        "why": "Right: `.nullify`, which leaves sessions no screen of the planner shows."
+      },
+      {
+        "text": "They move to the next course in the list",
+        "correct": false,
+        "why": "No rule reassigns them."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfjc0v08",
+    "version": 1,
+    "section": "relationships",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each delete rule to what deleting a course does.",
+    "hint": "Four rules in Apple's documentation.",
+    "pairs": [
+      {
+        "left": "`.nullify`",
+        "right": "its sessions stay, with no course"
+      },
+      {
+        "left": "`.cascade`",
+        "right": "its sessions are deleted too"
+      },
+      {
+        "left": "`.deny`",
+        "right": "refused while it has sessions"
+      },
+      {
+        "left": "`.noAction`",
+        "right": "its sessions still point at it"
+      }
+    ],
+    "right_distractors": [
+      "its sessions are archived for a year"
+    ]
+  },
+  {
+    "id": "ex-kb85zz85",
+    "version": 1,
+    "section": "saving-undo",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a SwiftUI app with `.modelContainer(for:)`, does the main context save by itself?",
+    "hint": "SwiftData sets one property for the main context.",
+    "choices": [
+      {
+        "text": "No, every change needs an explicit `save()`",
+        "correct": false,
+        "why": "Autosave is on for the main context."
+      },
+      {
+        "text": "Yes: `autosaveEnabled` is on there",
+        "correct": true,
+        "why": "Right; a context you create yourself starts with it off."
+      },
+      {
+        "text": "Only when the app goes to the background",
+        "correct": false,
+        "why": "It saves after changes and at lifecycle moments, not only then."
+      },
+      {
+        "text": "Only if undo is enabled",
+        "correct": false,
+        "why": "Undo and autosave are separate settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-42g4mpr1",
+    "version": 1,
+    "section": "saving-undo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner's save before a sync use `do`/`catch` and not `try?`?",
+    "hint": "What would the student see if the save failed?",
+    "choices": [
+      {
+        "text": "`try?` is not allowed on a method that throws",
+        "correct": false,
+        "why": "It is allowed; it turns the error into nothing."
+      },
+      {
+        "text": "`do`/`catch` makes the save faster",
+        "correct": false,
+        "why": "Error handling does not change speed."
+      },
+      {
+        "text": "A failed save must reach the screen, not vanish",
+        "correct": true,
+        "why": "Right: otherwise the student learns next week that nothing was stored."
+      },
+      {
+        "text": "SwiftData retries a save that was caught",
+        "correct": false,
+        "why": "Nothing retries it by itself; the screen shows the error."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnmppj6k",
+    "version": 1,
+    "section": "saving-undo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson offer when a student deletes a whole course?",
+    "hint": "Deleting a course cascades to its sessions.",
+    "choices": [
+      {
+        "text": "Nothing: deleting is final, by design",
+        "correct": false,
+        "why": "The lesson argues for Undo."
+      },
+      {
+        "text": "Undo only, with no confirmation",
+        "correct": false,
+        "why": "That is what a single session gets."
+      },
+      {
+        "text": "A confirmation, and Undo afterwards",
+        "correct": true,
+        "why": "Right: a bigger loss gets both."
+      },
+      {
+        "text": "A confirmation that has to be typed",
+        "correct": false,
+        "why": "Nothing that heavy is proposed."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx48612w",
+    "version": 1,
+    "section": "migration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Version 2 renames `length` to `minutes` without `originalName`. What happens on a phone with version 1's store?",
+    "hint": "A rename without a name for the old one looks like two changes.",
+    "choices": [
+      {
+        "text": "The store refuses to open and the app crashes",
+        "correct": false,
+        "why": "It opens: the danger is that nothing fails."
+      },
+      {
+        "text": "It opens, and every session's minutes are lost",
+        "correct": true,
+        "why": "Right: one property removed, another added, and no error."
+      },
+      {
+        "text": "SwiftData guesses the rename from the type, `Int`",
+        "correct": false,
+        "why": "No guess is documented; `originalName` is how it is told."
+      },
+      {
+        "text": "The old column is kept beside the new one",
+        "correct": false,
+        "why": "The property was removed from the schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-fk00h4zy",
+    "version": 1,
+    "section": "migration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Version 2 adds `@Attribute(.unique)` to `sessionID`. Why is its stage `custom` rather than `lightweight`?",
+    "hint": "What might an old store already contain?",
+    "choices": [
+      {
+        "text": "Every stage that touches `@Attribute` must be custom, whatever it changes",
+        "correct": false,
+        "why": "The reason is the data, not the macro."
+      },
+      {
+        "text": "A lightweight stage cannot change a property that holds a `String`",
+        "correct": false,
+        "why": "The type does not change here."
+      },
+      {
+        "text": "Old duplicates must go first, in `willMigrate`",
+        "correct": true,
+        "why": "Right: a unique constraint cannot be added over two equal ids."
+      },
+      {
+        "text": "Custom stages run faster on large stores",
+        "correct": false,
+        "why": "They run code of yours, which is not faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x3r1ea0",
+    "version": 1,
+    "section": "migration",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many delete rules does Apple's documentation list for a relationship?",
+    "hint": "The table in section 06.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z01d982r",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these were run for this lesson on the course's machine? Choose all that apply.",
+    "hint": "Only Foundation and the compiler's refusal.",
+    "choices": [
+      {
+        "text": "A `#Predicate` evaluated against `StudySession` values",
+        "correct": true,
+        "why": "Yes: section 05's `query` program."
+      },
+      {
+        "text": "A `@Query` refreshing a list after an insert",
+        "correct": false,
+        "why": "No: that needs SwiftData and SwiftUI."
+      },
+      {
+        "text": "`swift swiftdata.swift`, refused with `no such module`",
+        "correct": true,
+        "why": "Yes: the wall, captured."
+      },
+      {
+        "text": "A custom migration stage removing duplicates",
+        "correct": false,
+        "why": "No: it is SwiftData, read from the documentation."
+      }
+    ]
+  }
+]

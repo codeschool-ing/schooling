@@ -1,0 +1,437 @@
+{
+  "ex-zc3m8dc5": {
+    "prompt": "No SwiftUI, a que uma animação se prende?",
+    "hint": "Não é algo que você inicia, como um cronômetro.",
+    "choices": [
+      {
+        "text": "Uma view, que a toca quando aparece",
+        "why": "Aparecer é uma transição; uma animação vai junto de uma mudança de estado."
+      },
+      {
+        "text": "Uma mudança de estado, dizendo como a tela chega até ela",
+        "why": "Isso: o estado muda de uma vez, e a animação é como a tela acompanha."
+      },
+      {
+        "text": "Um cronômetro que a view liga e desliga no body, uma vez por quadro",
+        "why": "Nada no body liga um cronômetro; ele roda uma vez com o valor novo."
+      },
+      {
+        "text": "A taxa de atualização da tela",
+        "why": "A taxa decide quantos quadros são desenhados, não o que é animado."
+      }
+    ]
+  },
+  "ex-ezmv12zs": {
+    "prompt": "A `WeekBar` tem `.animation(.easeInOut, value: fraction)`. O telefone gira e a barra é redesenhada mais larga. O que acontece?",
+    "hint": "Qual valor o modificador vigia?",
+    "choices": [
+      {
+        "text": "A barra vai suavemente para a nova largura em 0,35 segundo",
+        "why": "Isso é o que o obsoleto `animation(_:)` sem valor faria."
+      },
+      {
+        "text": "Ela salta direto para o tamanho certo, já que `fraction` não mudou",
+        "why": "Isso: a animação está presa a `fraction` e a mais nada."
+      },
+      {
+        "text": "A fração é recalculada e anima a partir do zero",
+        "why": "A fração é a mesma antes e depois; nada começa do zero."
+      },
+      {
+        "text": "O SwiftUI se recusa a girar uma view com animação",
+        "why": "Nada é recusado; o modificador só não se aplica."
+      }
+    ]
+  },
+  "ex-zm94zctq": {
+    "prompt": "Um toque roda `withAnimation(.easeOut) { markDone(id) }`. Quais views animam?",
+    "hint": "A animação vai na transação.",
+    "choices": [
+      {
+        "text": "Só o botão que foi tocado",
+        "why": "O botão é onde a mudança começou, não a única coisa que ela muda."
+      },
+      {
+        "text": "Só views com um modificador `animation(_:value:)`",
+        "why": "Essas animam sozinhas; o `withAnimation` alcança views sem ele."
+      },
+      {
+        "text": "Toda view cuja aparência a mudança afeta",
+        "why": "Isso: a linha, a barra e o total se mexem juntos."
+      },
+      {
+        "text": "Nenhuma até o próximo quadro pedir",
+        "why": "A animação é posta para esta mudança, na hora."
+      }
+    ]
+  },
+  "ex-0r7hv7b4": {
+    "prompt": "Ligue cada forma de animar ao lugar onde ela é escrita.",
+    "hint": "Uma na view, uma em volta da mudança.",
+    "pairs": [
+      {
+        "left": "`animation(_:value:)`",
+        "right": "Na view que se mexe"
+      },
+      {
+        "left": "`withAnimation(_:_:)`",
+        "right": "Em volta do código que muda o estado"
+      },
+      {
+        "left": "`.transition(_:)`",
+        "right": "Numa view que é inserida ou removida"
+      },
+      {
+        "left": "`animatableData`",
+        "right": "Dentro de uma forma cujo número o SwiftUI interpola"
+      }
+    ],
+    "right_distractors": [
+      "No `Info.plist`, numa chave de animação"
+    ]
+  },
+  "ex-q4aatxdr": {
+    "prompt": "Enquanto a barra da semana anima de dois terços a cheia, quantas vezes o body dela roda?",
+    "hint": "Quem calcula os quadros do meio?",
+    "choices": [
+      {
+        "text": "21 vezes, uma por quadro a 60 Hz",
+        "why": "Essa é a contagem de quadros, mas o SwiftUI os interpola sem o seu body."
+      },
+      {
+        "text": "Uma vez, com o valor novo",
+        "why": "Isso: o SwiftUI interpola a largura que sabe animar."
+      },
+      {
+        "text": "Duas, uma no começo e uma no fim",
+        "why": "O body já rodou para o valor antigo; a mudança o roda mais uma vez."
+      },
+      {
+        "text": "Nenhuma: a animação pula o body",
+        "why": "O estado mudou, então o body roda, uma vez."
+      }
+    ]
+  },
+  "ex-wpcmzw04": {
+    "prompt": "O `ProgressRing` é um `Shape` sem a propriedade `animatableData`. Dentro de um `withAnimation`, `fraction` vai de 0.5 a 1. O que o anel faz?",
+    "hint": "O que o `animatableData` padrão devolve?",
+    "choices": [
+      {
+        "text": "Cresce suave, porque o `Shape` anima as propriedades guardadas",
+        "why": "Não sem ser avisado: o dado animável padrão é vazio."
+      },
+      {
+        "text": "Não compila até o `animatableData` ser escrito",
+        "why": "Há um padrão, então compila; só não anima nada."
+      },
+      {
+        "text": "Ele pula de metade para cheio",
+        "why": "Isso: `EmptyAnimatableData` quer dizer que o SwiftUI não tem o que interpolar."
+      },
+      {
+        "text": "Esmaece o anel pela metade e faz surgir o cheio",
+        "why": "Esmaecer é para uma view trocada; o anel é a mesma view, redesenhada."
+      }
+    ]
+  },
+  "ex-5e0wmaem": {
+    "prompt": "O total da semana muda de `\"120 min\"` para `\"150 min\"` dentro de uma animação. O que acontece com o `Text` por padrão?",
+    "hint": "Uma string não tem nada entre dois valores.",
+    "choices": [
+      {
+        "text": "Ele esmaece do texto antigo para o novo",
+        "why": "Isso; `.contentTransition(.numericText())` pede dígitos que rolam."
+      },
+      {
+        "text": "Os dígitos contam 121, 122 e assim até 150",
+        "why": "O SwiftUI não lê a string como número."
+      },
+      {
+        "text": "Ele não muda enquanto uma animação roda",
+        "why": "Ele muda; a questão é como fica enquanto muda."
+      },
+      {
+        "text": "Ele desliza a partir da borda final",
+        "why": "Isso seria uma transição `.move`, que nada pediu aqui."
+      }
+    ]
+  },
+  "ex-nkw3qefm": {
+    "prompt": "O SwiftUI interpola valores e faz transição de ___: uma view que começa ou deixa de existir vai para uma transição.",
+    "hint": "A aula 3 a definiu.",
+    "blanks": [
+      {
+        "accept": [
+          "identidades",
+          "identidade"
+        ]
+      }
+    ]
+  },
+  "ex-m59j1j4j": {
+    "prompt": "Segundo a captura, quanto uma curva ease-out andou em 0,10 segundo de uma animação de 0,35? Dê o progresso de 0 a 1.",
+    "hint": "Leia a linha 0.10, coluna ease-out."
+  },
+  "ex-z6p8ffqb": {
+    "prompt": "Qual curva combina com um painel que chega porque alguém tocou?",
+    "hint": "Ele deve responder na hora.",
+    "choices": [
+      {
+        "text": "Ease-in, lento no começo e rápido no fim",
+        "why": "Lento no começo é uma demora que a pessoa sente depois de tocar."
+      },
+      {
+        "text": "Ease-out, rápido no começo",
+        "why": "Isso: em 0,10 s ele está em 0.426 onde o ease-in está em 0.119."
+      },
+      {
+        "text": "Linear, a mesma velocidade o tempo todo",
+        "why": "Funciona, e começa e para de um tranco; o ease-out responde mais rápido."
+      },
+      {
+        "text": "Nenhuma: um painel que chega não deveria animar",
+        "why": "Chegar é exatamente o que uma animação curta explica."
+      }
+    ]
+  },
+  "ex-e8545c1v": {
+    "prompt": "Desde o iOS 17, `withAnimation { }` sem argumento usa o `Animation.default`. O que ainda é verdade em 0,35 segundo?",
+    "hint": "O padrão virou uma mola com resposta de 0,55.",
+    "choices": [
+      {
+        "text": "Ela terminou, como toda animação da duração padrão",
+        "why": "0,35 s é o padrão das curvas de tempo; uma mola não tem duração."
+      },
+      {
+        "text": "Ela ainda está se acomodando, antes do fim",
+        "why": "Isso: o modelo chega a 0.942 em 0,40 s e 0.986 em 0,55 s."
+      },
+      {
+        "text": "Ela passou do ponto e está voltando",
+        "why": "Uma fração de amortecimento de 1,0 quer dizer sem quique, então nunca passa."
+      },
+      {
+        "text": "Ela nem começou, já que molas esperam a resposta",
+        "why": "Ela começa na hora e sobe mais rápido no início."
+      }
+    ]
+  },
+  "ex-wvv1n5pw": {
+    "prompt": "Quantos quadros uma animação de 0,35 segundo tem numa tela de 120 Hz, segundo a captura?",
+    "hint": "A última linha."
+  },
+  "ex-43adt4zp": {
+    "prompt": "Por que o `progress(at:)` procura por bissecção em vez de calcular a curva direto a partir do tempo?",
+    "hint": "A curva é definida por um parâmetro, não por x.",
+    "choices": [
+      {
+        "text": "O Swift não tem operador de potência",
+        "why": "As potências são escritas como produtos aqui; não é esse o motivo."
+      },
+      {
+        "text": "A bissecção é mais rápida que qualquer fórmula",
+        "why": "Ela é escolhida por ser simples e segura, não pela velocidade."
+      },
+      {
+        "text": "O tempo é o x de um ponto achado por `s`, então é preciso achar o `s` desse x",
+        "why": "Isso: achar o `s` em que x é o tempo, e responder o y desse ponto."
+      },
+      {
+        "text": "O SwiftUI exige isso, para que os números do pacote batam exatamente com os quadros dele",
+        "why": "O pacote não tem nada a ver com o SwiftUI; é aritmética."
+      }
+    ]
+  },
+  "ex-fhth15z0": {
+    "prompt": "Um rótulo tem `.transition(.move(edge: .bottom))` mas aparece num quadro, sem movimento. O que falta?",
+    "hint": "Uma transição diz como, não quando nem com que velocidade.",
+    "choices": [
+      {
+        "text": "Uma animação na mudança que o insere",
+        "why": "Isso: uma transição sem animação na transação não faz nada."
+      },
+      {
+        "text": "Um `.combined(with: .opacity)` junto do move",
+        "why": "Isso muda como fica ao se mover; ainda precisa de uma animação para se mover."
+      },
+      {
+        "text": "Um `@Namespace` compartilhado com o rótulo",
+        "why": "Um namespace é para geometria correspondente, seção 06."
+      },
+      {
+        "text": "`animatableData` no rótulo",
+        "why": "Isso é para interpolar números de uma forma, não para inserir uma view."
+      }
+    ]
+  },
+  "ex-aw01g4mw": {
+    "prompt": "Qual transição deixa uma linha nova chegar pelo topo e uma apagada sair esmaecendo?",
+    "hint": "Um jeito de entrar, outro de sair.",
+    "choices": [
+      {
+        "text": "`.move(edge: .top).combined(with: .opacity)`",
+        "why": "Isso faz as duas coisas na entrada e as duas na saída."
+      },
+      {
+        "text": "`.slide`",
+        "why": "Ele entra pela borda inicial e sai pela final."
+      },
+      {
+        "text": "`.asymmetric(insertion: .move(edge: .top), removal: .opacity)`",
+        "why": "Isso: inserção e remoção ganham cada uma a sua."
+      },
+      {
+        "text": "`.scale`",
+        "why": "Isso cresce do nada e encolhe até o nada."
+      }
+    ]
+  },
+  "ex-8etddqpq": {
+    "prompt": "Uma lista anima uma remoção e uma inserção toda vez que os minutos de uma sessão são editados. Qual a causa provável?",
+    "hint": "O que diz a uma lista que uma linha é a mesma linha?",
+    "choices": [
+      {
+        "text": "A edição não está dentro de um `withAnimation`",
+        "why": "Sem animação nada animaria."
+      },
+      {
+        "text": "A lista precisa de `.transition(.identity)` em cada linha",
+        "why": "A lista decide as animações das linhas; a causa é a identidade."
+      },
+      {
+        "text": "A identidade das linhas muda com a edição, e a lista vê uma linha nova",
+        "why": "Isso, como num id derivado do conteúdo: o `id` estável da aula 8 resolve."
+      },
+      {
+        "text": "Listas não animam uma edição no lugar, então toda edição aparece como uma troca",
+        "why": "Uma linha com a mesma identidade é atualizada no lugar e seus valores mudam."
+      }
+    ]
+  },
+  "ex-tdnzwq1z": {
+    "prompt": "O que o `matchedGeometryEffect` liga entre as duas views?",
+    "hint": "A documentação da Apple separa geometria de desenho.",
+    "choices": [
+      {
+        "text": "As cores e fontes delas, além dos quadros",
+        "why": "O desenho fica para a transição de cada view."
+      },
+      {
+        "text": "Os quadros, e uma parece ir para o lugar da outra",
+        "why": "Isso: só a geometria; cada view ainda esmaece com a própria transição."
+      },
+      {
+        "text": "O estado delas, e mudar uma muda a outra",
+        "why": "Este modificador não compartilha estado."
+      },
+      {
+        "text": "A identidade, e o SwiftUI vê uma view só",
+        "why": "Elas continuam duas views; os quadros é que são interpolados."
+      }
+    ]
+  },
+  "ex-q9f5jeck": {
+    "prompt": "Um bug escolhe dois dias e duas cápsulas são desenhadas com o mesmo id, ambas como fonte. O que a documentação diz que acontece?",
+    "hint": "Ela pede exatamente uma fonte por grupo.",
+    "choices": [
+      {
+        "text": "O SwiftUI fica com a primeira e ignora a segunda",
+        "why": "Nenhuma regra escolhe a primeira; a documentação chama de indefinido."
+      },
+      {
+        "text": "O build falha com um erro de id duplicado",
+        "why": "Nada confere isso em tempo de compilação."
+      },
+      {
+        "text": "O resultado é indefinido",
+        "why": "Isso, e é por isso que `selected` guarda um dia e nunca dois."
+      },
+      {
+        "text": "As duas cápsulas deslizam para o meio dos dois dias",
+        "why": "Não há regra de média na documentação."
+      }
+    ]
+  },
+  "ex-4kgf12f0": {
+    "prompt": "Ponha em ordem o deslize do seletor de dia, do toque à cápsula embaixo do novo dia.",
+    "hint": "Toque, mudança, remover e inserir, interpolar.",
+    "items": [
+      "O estudante toca no botão de outro dia",
+      "`withAnimation(.spring)` põe `selected` naquele dia",
+      "O body roda e desenha a cápsula só embaixo do novo dia",
+      "O SwiftUI vê uma \"selection\" removida e uma inserida",
+      "Ele interpola o quadro do dia antigo ao novo"
+    ]
+  },
+  "ex-nm7ty4wy": {
+    "prompt": "O que a documentação da Apple diz que uma interface deve fazer quando `accessibilityReduceMotion` é verdadeiro?",
+    "hint": "É sobre um tipo de animação.",
+    "choices": [
+      {
+        "text": "Tirar toda animação e toda transição",
+        "why": "Ele pede evitar as grandes; a resposta visual pode ficar."
+      },
+      {
+        "text": "Evitar animações grandes, sobretudo as que simulam 3D",
+        "why": "Isso: nas palavras dela, \"especialmente as que simulam a terceira dimensão\"."
+      },
+      {
+        "text": "Deixar toda animação na metade da velocidade",
+        "why": "Movimento mais lento ainda é movimento."
+      },
+      {
+        "text": "Mostrar um aviso antes de animar",
+        "why": "Nada na documentação pede um aviso."
+      }
+    ]
+  },
+  "ex-0x9fhw0x": {
+    "prompt": "Com Reduzir Movimento ligado, por que o planner mantém a animação da barra da semana?",
+    "hint": "Com qual movimento o ajuste se preocupa?",
+    "choices": [
+      {
+        "text": "O ajuste não vale para formas",
+        "why": "Ele vale para qualquer movimento; a barra fica por escolha."
+      },
+      {
+        "text": "Porque tirá-la quebraria os testes do pacote no Linux, que a conferem",
+        "why": "Os testes do pacote não sabem nada de animação."
+      },
+      {
+        "text": "Ela cresce no lugar e confirma o toque, sem atravessar a tela",
+        "why": "Isso: tirar movimento não é tirar resposta."
+      },
+      {
+        "text": "O sistema a anima seja o que for que o app peça",
+        "why": "Isso vale para a sheet do sistema, não para a barra do app."
+      }
+    ]
+  },
+  "ex-akjsd912": {
+    "prompt": "Quais destes fariam o planner não animar nada quando a barra muda? Escolha todos os que se aplicam.",
+    "hint": "Uma animação precisa de uma mudança e de um jeito de ir.",
+    "choices": [
+      {
+        "text": "`withAnimation(nil) { markDone(id) }` sem `animation(_:value:)` na barra",
+        "why": "Sim: uma mudança sem animação, e nada na barra para pôr uma."
+      },
+      {
+        "text": "`.animation(.easeInOut, value: fraction)` na barra, qualquer toque",
+        "why": "Não: isso anima a barra sempre que a fração muda."
+      },
+      {
+        "text": "Desenhar a barra como um `Shape` sem `animatableData`",
+        "why": "Sim: a forma não tem o que interpolar, então pula."
+      },
+      {
+        "text": "Rodar numa tela de 120 Hz em vez de 60",
+        "why": "Não: isso desenha o dobro de quadros da mesma animação."
+      }
+    ]
+  },
+  "ex-fpwezvxe": {
+    "prompt": "A barra da semana vai de 120 de 180 minutos para todos os 180 com ease-in-out. Quantos por cento cheia ela está em 0,175 segundo, segundo a captura?",
+    "hint": "Metade do tempo, e o ease-in-out é simétrico.",
+    "unit": "%"
+  }
+}

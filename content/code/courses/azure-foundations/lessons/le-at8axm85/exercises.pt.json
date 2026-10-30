@@ -1,0 +1,422 @@
+{
+ "ex-jcfpa0vf": {
+  "prompt": "Como precisa se chamar a sub-rede que guarda um VPN gateway?",
+  "hint": "O nome é como o Azure a encontra.",
+  "choices": [
+   {
+    "text": "`snet-gateway`, pela convenção de nomes",
+    "why": "Uma convenção é nossa; este nome é regra do Azure, e outro falha."
+   },
+   {
+    "text": "`vpng-shop`, igual ao gateway",
+    "why": "O nome do gateway é livre; o da sub-rede é fixo."
+   },
+   {
+    "text": "Qualquer coisa, desde que seja `/27` ou maior",
+    "why": "O tamanho é uma segunda regra; o nome é a primeira."
+   },
+   {
+    "text": "`GatewaySubnet`, exatamente",
+    "why": "Isso. O Azure acha a sub-rede por esse nome."
+   }
+  ]
+ },
+ "ex-anq7rj15": {
+  "prompt": "Por que a loja faz a `GatewaySubnet` `/27` em vez do menor tamanho com que daria para passar?",
+  "hint": "Quem mais pode precisar morar ali depois?",
+  "choices": [
+   {
+    "text": "Porque cada túnel ocupa um endereço da sub-rede",
+    "why": "Os túneis usam os endereços públicos do gateway, não os da sub-rede."
+   },
+   {
+    "text": "Porque o Azure cobra menos por uma sub-rede maior",
+    "why": "Sub-redes não custam nada em tamanho nenhum."
+   },
+   {
+    "text": "Para um ExpressRoute gateway poder dividi-la depois",
+    "why": "Isso. E aumentar uma pequena debaixo de um gateway rodando é um projeto."
+   },
+   {
+    "text": "Para máquinas virtuais poderem ficar ao lado do gateway",
+    "why": "Nada mais pode morar na `GatewaySubnet`."
+   }
+  ]
+ },
+ "ex-feh19rba": {
+  "prompt": "Um gateway está no modo padrão active-standby. A Microsoft faz manutenção na instância ativa. O que os usuários do túnel percebem?",
+  "hint": "Duas instâncias, uma carregando o túnel.",
+  "choices": [
+   {
+    "text": "Nada, já que as duas instâncias carregam o túnel",
+    "why": "Isso é active-active. Por padrão só uma carrega."
+   },
+   {
+    "text": "Uma interrupção breve enquanto a reserva assume",
+    "why": "Isso. O active-active remove a maior parte dela."
+   },
+   {
+    "text": "Uma queda de 45 minutos enquanto o gateway é refeito",
+    "why": "45 minutos é criar um gateway; o failover é a reserva assumindo."
+   },
+   {
+    "text": "O tráfego vai para o ExpressRoute",
+    "why": "A loja não tem circuito neste desenho."
+   }
+  ]
+ },
+ "ex-gh4qa46f": {
+  "prompt": "Com um gateway active-active e dois firewalls no escritório, cada firewall ligado às duas instâncias, quantos túneis ficam de pé?",
+  "hint": "Dois vezes dois.",
+  "unit": "túneis"
+ },
+ "ex-tpchn10b": {
+  "prompt": "Para que serve o SKU Basic do VPN gateway?",
+  "hint": "A documentação da Microsoft diz isso com todas as letras.",
+  "choices": [
+   {
+    "text": "Experimentar",
+    "why": "Isso. Recursos limitados, suporte limitado, nunca produção."
+   },
+   {
+    "text": "Pares active-active com pouco dinheiro",
+    "why": "O Basic não suporta active-active nem BGP."
+   },
+   {
+    "text": "Escritórios pequenos em produção",
+    "why": "A Microsoft diz que ele não deve ser usado em produção."
+   },
+   {
+    "text": "Só conexões ponto a site",
+    "why": "Ele faz site a site também; só é pequeno."
+   }
+  ]
+ },
+ "ex-t6syjcjr": {
+  "prompt": "Cinco administradores precisam alcançar a rede hub de casa. Que tipo de VPN serve?",
+  "hint": "Uma rede com outra, ou um notebook?",
+  "choices": [
+   {
+    "text": "Uma VPN site a site até o roteador de cada casa",
+    "why": "Isso poria as redes de cinco casas no roteamento do Azure."
+   },
+   {
+    "text": "ExpressRoute com Microsoft peering",
+    "why": "Um circuito é para um prédio, e semanas para contratar."
+   },
+   {
+    "text": "Nenhuma: VPN gateways só aceitam escritórios",
+    "why": "Gateways aceitam clientes sozinhos também."
+   },
+   {
+    "text": "Ponto a site, com um cliente em cada notebook",
+    "why": "Isso. E o login pode passar pelo Entra ID."
+   }
+  ]
+ },
+ "ex-1cf7kkbc": {
+  "prompt": "Numa VPN site a site, o que o local network gateway descreve?",
+  "hint": "A descrição, pelo Azure, da outra ponta.",
+  "choices": [
+   {
+    "text": "O próprio gateway do Azure na `GatewaySubnet`",
+    "why": "Esse é o virtual network gateway, `vpng-shop`."
+   },
+   {
+    "text": "A ponta do escritório: o endereço do firewall e os dados de BGP",
+    "why": "Isso. O `lgw-shop-office`, em `203.0.113.10`."
+   },
+   {
+    "text": "O túnel e a chave compartilhada",
+    "why": "Essa é a conexão, `cn-shop-office`."
+   },
+   {
+    "text": "O servidor DNS que o escritório usa",
+    "why": "DNS é o assunto da lição 21; este recurso é sobre a ponta de lá do túnel."
+   }
+  ]
+ },
+ "ex-4fa1ywzc": {
+  "prompt": "O que o `@secure()` mudou no template compilado?",
+  "hint": "Veja o tipo com que o parâmetro saiu.",
+  "choices": [
+   {
+    "text": "O tipo do parâmetro virou `securestring`",
+    "why": "Isso. O Resource Manager mantém o valor fora do histórico e dos logs."
+   },
+   {
+    "text": "Nada: o compilador descarta os decoradores",
+    "why": "Este virou o tipo do parâmetro."
+   },
+   {
+    "text": "Criptografou a chave compartilhada dentro do template",
+    "why": "Não há chave no template para criptografar; ela é dada na implantação."
+   },
+   {
+    "text": "Tornou o parâmetro opcional",
+    "why": "Ele não tem padrão, então continua obrigatório."
+   }
+  ]
+ },
+ "ex-xkw818bj": {
+  "prompt": "O `leaky.bicep` escreveu a chave compartilhada como valor padrão. O que o compilador fez?",
+  "hint": "Foi um erro ou algo mais brando?",
+  "choices": [
+   {
+    "text": "Recusou compilar",
+    "why": "Compilou; a objeção foi um aviso."
+   },
+   {
+    "text": "Tirou o valor do template sem avisar",
+    "why": "Ele avisou, e não mudou nada."
+   },
+   {
+    "text": "Compilou, com um aviso `secure-parameter-default`",
+    "why": "Isso. Nada impede uma implantação a não ser que um pipeline trate avisos como falhas."
+   },
+   {
+    "text": "Trocou a chave por `newGuid()`",
+    "why": "`newGuid()` é o que a regra permite, não o que o compilador escreve por você."
+   }
+  ]
+ },
+ "ex-4h34aabk": {
+  "prompt": "Com o BGP ligado, por que o local network gateway da loja lista `192.168.255.1/32` e não o `192.168.0.0/16` do escritório?",
+  "hint": "Quem conta ao Azure quais são as redes do escritório?",
+  "choices": [
+   {
+    "text": "Porque um local network gateway só aceita um endereço",
+    "why": "Ele aceita uma lista; com BGP, uma entrada é tudo de que precisa."
+   },
+   {
+    "text": "O próprio firewall anuncia as suas redes pelo BGP",
+    "why": "Isso. O Azure só precisa da rota até a sessão BGP."
+   },
+   {
+    "text": "Porque `192.168.0.0/16` se sobrepõe à faixa do hub",
+    "why": "O hub é `10.0.0.0/16`; nada se sobrepõe."
+   },
+   {
+    "text": "Para esconder do Azure as faixas do escritório",
+    "why": "O firewall as anuncia pelo BGP de qualquer jeito."
+   }
+  ]
+ },
+ "ex-mxeqcefm": {
+  "prompt": "Um recurso Bicep marcado `___` é citado sem ser criado, como a rede hub em `vpn.bicep`.",
+  "hint": "Uma palavra depois do tipo do recurso.",
+  "blanks": [
+   {
+    "accept": [
+     "existing"
+    ]
+   }
+  ]
+ },
+ "ex-s0gshgyr": {
+  "prompt": "Ligue cada recurso do `vpn.bicep` ao seu papel na VPN.",
+  "hint": "Só um deles é o túnel.",
+  "pairs": [
+   {
+    "left": "`vpng-shop`",
+    "right": "a ponta do Azure no túnel"
+   },
+   {
+    "left": "`lgw-shop-office`",
+    "right": "a descrição, pelo Azure, da ponta do escritório"
+   },
+   {
+    "left": "`cn-shop-office`",
+    "right": "o túnel, com a chave compartilhada"
+   },
+   {
+    "left": "`pip-vpng-shop-2`",
+    "right": "o endereço público da segunda instância"
+   }
+  ],
+  "right_distractors": [
+   "a rede privada do escritório"
+  ]
+ },
+ "ex-dabjbp6s": {
+  "prompt": "Por onde passa um circuito ExpressRoute?",
+  "hint": "Ele nunca encosta numa coisa.",
+  "choices": [
+   {
+    "text": "A internet pública, num túnel criptografado",
+    "why": "Isso é uma VPN."
+   },
+   {
+    "text": "As localidades de borda da Microsoft, como o Front Door",
+    "why": "As localidades de borda servem tráfego HTTP público; um circuito encontra a Microsoft numa localidade de peering."
+   },
+   {
+    "text": "A rede privada de uma operadora, até uma localidade de peering",
+    "why": "Isso. Ele nunca atravessa a internet pública."
+   },
+   {
+    "text": "O backbone da região pareada",
+    "why": "O pareamento não tem nada a ver com como uma empresa chega ao Azure."
+   }
+  ]
+ },
+ "ex-hkw56na1": {
+  "prompt": "O que é a service key de um circuito, e como ela é tratada?",
+  "hint": "A documentação da Microsoft diz se ela é secreta.",
+  "choices": [
+   {
+    "text": "Uma senha que a empresa esconde do provedor",
+    "why": "A empresa a entrega ao provedor; é para isso que ela existe."
+   },
+   {
+    "text": "Uma chave que criptografa o tráfego do circuito",
+    "why": "O circuito não é criptografado por padrão, e a chave não criptografa nada."
+   },
+   {
+    "text": "O número BGP dos roteadores da Microsoft",
+    "why": "Números BGP são outra coisa; a chave identifica o circuito."
+   },
+   {
+    "text": "Um GUID que a empresa repassa ao provedor",
+    "why": "Isso. A única coisa que as três partes trocam, e não é segredo."
+   }
+  ]
+ },
+ "ex-n91rbmgc": {
+  "prompt": "O sistema financeiro do escritório precisa alcançar `10.20.3.0/24` pelo circuito. Qual peering o leva?",
+  "hint": "Endereços privados das suas redes.",
+  "choices": [
+   {
+    "text": "Private peering",
+    "why": "Isso. Ele alcança os endereços privados das suas redes virtuais."
+   },
+   {
+    "text": "Global Reach",
+    "why": "A lição não o usa; ele liga circuitos entre si."
+   },
+   {
+    "text": "Nenhum: um circuito só alcança o Microsoft 365",
+    "why": "O private peering existe justamente para as suas redes."
+   },
+   {
+    "text": "Microsoft peering",
+    "why": "Esse alcança os serviços públicos da Microsoft, como o Microsoft 365."
+   }
+  ]
+ },
+ "ex-2c89a6g4": {
+  "prompt": "O circuito de uma empresa tem as duas conexões terminando num roteador só no escritório. Os roteadores da Microsoft estão saudáveis. O que a empresa perdeu?",
+  "hint": "Onde está o ponto único de falha agora?",
+  "choices": [
+   {
+    "text": "O Microsoft peering, que precisa de dois roteadores",
+    "why": "Os peerings não dependem de onde a empresa termina as conexões."
+   },
+   {
+    "text": "Nada, já que o lado da Microsoft é redundante",
+    "why": "Redundância é de ponta a ponta; a ponta da empresa agora é um aparelho."
+   },
+   {
+    "text": "A redundância: um roteador que falha derruba as duas conexões",
+    "why": "Isso. A documentação da Microsoft diz que isso compromete o desenho do circuito."
+   },
+   {
+    "text": "Metade da largura de banda, para sempre",
+    "why": "A largura de banda é do circuito, seja qual for o roteador."
+   }
+  ]
+ },
+ "ex-jcbcmbj6": {
+  "prompt": "O tráfego num circuito ExpressRoute é criptografado?",
+  "hint": "Privado é uma afirmação sobre o caminho.",
+  "choices": [
+   {
+    "text": "Sim, pela operadora, em todo circuito",
+    "why": "Nada o criptografa por padrão."
+   },
+   {
+    "text": "Não por padrão; IPsec ou MACsec acrescentam",
+    "why": "Isso. Privado o mantém fora da internet, o que é outra coisa."
+   },
+   {
+    "text": "Sim, com a service key",
+    "why": "A service key identifica o circuito e não criptografa nada."
+   },
+   {
+    "text": "Não, e não pode ser",
+    "why": "Pode: IPsec por dentro dele, ou MACsec no ExpressRoute Direct."
+   }
+  ]
+ },
+ "ex-1sd94mr9": {
+  "prompt": "Ponha em ordem os passos para um circuito ExpressRoute funcionar.",
+  "hint": "O Azure primeiro, a operadora no meio, o tráfego por último.",
+  "items": [
+   "criar o recurso do circuito, citando provedor, localidade e largura de banda",
+   "receber a service key do Azure",
+   "entregar a service key ao provedor",
+   "o provedor monta o lado dele e o circuito fica Provisioned",
+   "configurar o private peering e ligar o gateway"
+  ],
+  "trap": "Nada passa até o passo do provedor terminar, e esse passo se mede em semanas."
+ },
+ "ex-7ecpx4zg": {
+  "prompt": "Quais destas coisas protegem a loja contra perder a localidade de peering de São Paulo? Marque todas as que se aplicam.",
+  "hint": "Um prédio pode falhar inteiro.",
+  "choices": [
+   {
+    "text": "Uma VPN site a site como caminho de reserva",
+    "why": "Isso. Ela nem passa pela localidade de peering."
+   },
+   {
+    "text": "A conexão secundária do circuito",
+    "why": "Ela termina no mesmo prédio que a primária."
+   },
+   {
+    "text": "Um segundo circuito em outra localidade de peering",
+    "why": "Isso. Campinas, por exemplo, com outra operadora."
+   },
+   {
+    "text": "Uma largura de banda maior no mesmo circuito",
+    "why": "Mais capacidade num prédio continua sendo um prédio."
+   },
+   {
+    "text": "Fazer a sub-rede do gateway `/26`",
+    "why": "O tamanho da sub-rede não muda nada fora do Azure."
+   }
+  ]
+ },
+ "ex-wpavj5v0": {
+  "prompt": "O escritório acrescenta uma rede nova, `192.168.40.0/24`. A VPN usa BGP. O que alguém precisa mudar do lado do Azure?",
+  "hint": "Quem anuncia as redes do escritório?",
+  "choices": [
+   {
+    "text": "Nada: o firewall a anuncia pelo BGP",
+    "why": "Isso. É isso que o BGP remove: a segunda pessoa digitando a mesma faixa."
+   },
+   {
+    "text": "Criar uma segunda conexão para a faixa nova",
+    "why": "Uma conexão leva toda rede que o BGP anunciar."
+   },
+   {
+    "text": "Acrescentar a faixa ao espaço de endereços do `lgw-shop-office`",
+    "why": "É assim que funciona sem BGP; com ele, o firewall a anuncia."
+   },
+   {
+    "text": "Recriar o gateway com um SKU maior",
+    "why": "Uma faixa nova é uma rota, não um problema de capacidade."
+   }
+  ]
+ },
+ "ex-g7x9q5sz": {
+  "prompt": "Um VPN gateway no Azure usa o número BGP ___ a não ser que mandem outro.",
+  "hint": "Cinco dígitos, na faixa privada.",
+  "blanks": [
+   {
+    "accept": [
+     "65515"
+    ]
+   }
+  ]
+ }
+}
