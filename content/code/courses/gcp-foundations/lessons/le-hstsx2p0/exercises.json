@@ -1,0 +1,475 @@
+[
+  {
+    "id": "ex-h947vz86",
+    "version": 1,
+    "section": "what-a-service-account-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which role on a service account lets its holder create a machine that runs as the account?",
+    "hint": "Attaching, not borrowing.",
+    "choices": [
+      {
+        "text": "`roles/iam.serviceAccountTokenCreator`",
+        "correct": false,
+        "why": "That one is for impersonation: asking for a token in the account's name."
+      },
+      {
+        "text": "`roles/iam.serviceAccountUser`",
+        "correct": true,
+        "why": "Right. It allows attaching the account to what its holder creates."
+      },
+      {
+        "text": "`roles/iam.serviceAccountAdmin`",
+        "correct": false,
+        "why": "Admin creates and manages accounts; attaching one is the user role's job."
+      },
+      {
+        "text": "`roles/compute.viewer`",
+        "correct": false,
+        "why": "A viewer creates nothing, machines included."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ppqh31m",
+    "version": 1,
+    "section": "what-a-service-account-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer has no role on `planner-prod`, but holds `serviceAccountUser` on a production service account that holds Editor there. What can the developer do in production?",
+    "hint": "Acting as the account is holding its roles.",
+    "choices": [
+      {
+        "text": "Nothing, because the developer holds no role on the project",
+        "correct": false,
+        "why": "The account's roles are the developer's, in effect, through the attach."
+      },
+      {
+        "text": "Read the account's settings and nothing more",
+        "correct": false,
+        "why": "`serviceAccountUser` is far more than read: it is acting as the account."
+      },
+      {
+        "text": "Grant Editor to others",
+        "correct": false,
+        "why": "Editor cannot grant roles; that is Owner's addition."
+      },
+      {
+        "text": "Whatever Editor allows",
+        "correct": true,
+        "why": "Right. This is the commonest way a narrow IAM design leaks."
+      }
+    ]
+  },
+  {
+    "id": "ex-836nm9xh",
+    "version": 1,
+    "section": "what-a-service-account-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should `serviceAccountUser` be granted on one service account rather than on the project?",
+    "hint": "On the project it reaches every account in it.",
+    "choices": [
+      {
+        "text": "It would cover every account in the project",
+        "correct": true,
+        "why": "Right. Somebody deploying one function could run as any account, Editor-holding defaults included."
+      },
+      {
+        "text": "It cannot be granted on a project",
+        "correct": false,
+        "why": "It can, and that is the problem the question is about."
+      },
+      {
+        "text": "A project-wide grant expires after a day",
+        "correct": false,
+        "why": "Grants do not expire unless a condition says so."
+      },
+      {
+        "text": "Accounts ignore grants made on the project",
+        "correct": false,
+        "why": "They honour them, inherited like any other grant."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf1se277",
+    "version": 1,
+    "section": "what-a-service-account-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Code on a machine with an attached service account calls Pub/Sub. Where does its token come from?",
+    "hint": "An address only the machine can reach.",
+    "choices": [
+      {
+        "text": "A key file installed with the machine",
+        "correct": false,
+        "why": "No key is involved with an attached account."
+      },
+      {
+        "text": "The developer's own credentials, copied in",
+        "correct": false,
+        "why": "The machine runs as the account, not as a person."
+      },
+      {
+        "text": "The metadata server, at `169.254.169.254`",
+        "correct": true,
+        "why": "Right. It hands out a token of about an hour, renewed on demand, and no key exists."
+      },
+      {
+        "text": "The emulator, which issues tokens",
+        "correct": false,
+        "why": "The emulator issues nothing; it ignores tokens altogether."
+      }
+    ]
+  },
+  {
+    "id": "ex-91cdj79x",
+    "version": 1,
+    "section": "impersonation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Google API does impersonation call to get a token in a service account's name?",
+    "hint": "The refusal in the lab named it.",
+    "choices": [
+      {
+        "text": "Pub/Sub, which accepts any service account",
+        "correct": false,
+        "why": "The Pub/Sub call never happened: the token request came first and was refused."
+      },
+      {
+        "text": "The Resource Manager, `getProject`",
+        "correct": false,
+        "why": "That reads a project. Tokens come from IAM Credentials."
+      },
+      {
+        "text": "IAM Credentials, `generateAccessToken`",
+        "correct": true,
+        "why": "Right. `iamcredentials.googleapis.com` is the whole of impersonation."
+      },
+      {
+        "text": "The metadata server on the laptop",
+        "correct": false,
+        "why": "A laptop has no metadata server; that is a Google Cloud machine's."
+      }
+    ]
+  },
+  {
+    "id": "ex-hvw8pfw8",
+    "version": 1,
+    "section": "impersonation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `gcloud pubsub topics list --impersonate-service-account=...` was refused, though Pub/Sub points at the emulator. Why did it reach Google at all?",
+    "hint": "What does gcloud need before the Pub/Sub call?",
+    "choices": [
+      {
+        "text": "It asks Google for the borrowed token first",
+        "correct": true,
+        "why": "Right. Only IAM Credentials can mint the token, and no emulator answers it."
+      },
+      {
+        "text": "The override was removed by the flag",
+        "correct": false,
+        "why": "The override stays. It just was never used, because the token came first."
+      },
+      {
+        "text": "The emulator forwards impersonated calls to Google",
+        "correct": false,
+        "why": "The emulator forwards nothing; the request never reached it."
+      },
+      {
+        "text": "Impersonation is only allowed against real APIs",
+        "correct": false,
+        "why": "No such rule. The token simply has to come from Google."
+      }
+    ]
+  },
+  {
+    "id": "ex-wemjssc3",
+    "version": 1,
+    "section": "impersonation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, at most how many seconds does an impersonated token last?",
+    "hint": "An hour.",
+    "value": 3600,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-05j1n7ht",
+    "version": 1,
+    "section": "impersonation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A token from impersonation is pasted by mistake into a public chat. Why is that less serious than pasting a key?",
+    "hint": "Compare how long each works.",
+    "choices": [
+      {
+        "text": "Tokens grant no roles, only identity",
+        "correct": false,
+        "why": "A token carries every role of the account while it lasts."
+      },
+      {
+        "text": "Google rejects tokens used from a second address",
+        "correct": false,
+        "why": "No such check exists. The expiry is what limits the damage."
+      },
+      {
+        "text": "A token reaches only the emulator",
+        "correct": false,
+        "why": "A real token works against Google's real APIs."
+      },
+      {
+        "text": "It expires within the hour",
+        "correct": true,
+        "why": "Right. A key works until somebody deletes it; a token stops on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-reg6ea98",
+    "version": 1,
+    "section": "impersonation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`deployer.tf` grants `serviceAccountTokenCreator` with `google_service_account_iam_member` rather than on the project. What does that limit?",
+    "hint": "On what resource is the grant?",
+    "choices": [
+      {
+        "text": "The deployer may act only during on-call hours",
+        "correct": false,
+        "why": "Nothing in the grant mentions time; a condition would."
+      },
+      {
+        "text": "The on-call group may borrow the deployer and no other account",
+        "correct": true,
+        "why": "Right. The grant sits on one account, which is the rule from the first section."
+      },
+      {
+        "text": "The group may create keys for the deployer",
+        "correct": false,
+        "why": "Token Creator mints short-lived tokens, not keys."
+      },
+      {
+        "text": "The deployer may impersonate the group",
+        "correct": false,
+        "why": "A group cannot be impersonated. The arrow points the other way."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdge3xtp",
+    "version": 1,
+    "section": "impersonation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the deployer's `email` known in the plan, before anything is created?",
+    "hint": "What is it built from?",
+    "choices": [
+      {
+        "text": "It is built from the account id and the project id",
+        "correct": true,
+        "why": "Right. `deployer@planner-dev.iam.gserviceaccount.com` follows from both."
+      },
+      {
+        "text": "The provider asked Google for it",
+        "correct": false,
+        "why": "A plan asked Google nothing."
+      },
+      {
+        "text": "Google reserves emails a day in advance",
+        "correct": false,
+        "why": "No reservation is involved; the address follows from names you chose."
+      },
+      {
+        "text": "Every service account shares one email",
+        "correct": false,
+        "why": "Each account has its own, which is what makes it a principal."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz78y0vs",
+    "version": 1,
+    "section": "keys",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of proving you are a service account to how long its credential works.",
+    "hint": "One has no end at all.",
+    "pairs": [
+      {
+        "left": "attached account",
+        "right": "about an hour, renewed"
+      },
+      {
+        "left": "impersonation",
+        "right": "an hour, or up to twelve"
+      },
+      {
+        "left": "downloaded key",
+        "right": "until somebody deletes it"
+      }
+    ],
+    "right_distractors": [
+      "until the next deploy"
+    ]
+  },
+  {
+    "id": "ex-36sfq56d",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A key for a service account has leaked. What is the first thing to do?",
+    "hint": "Every copy works until one thing happens.",
+    "choices": [
+      {
+        "text": "Read the audit logs to see what it did",
+        "correct": false,
+        "why": "That comes second. Until the key is deleted, it keeps working for whoever has it."
+      },
+      {
+        "text": "Rotate the account's password",
+        "correct": false,
+        "why": "A service account has no password."
+      },
+      {
+        "text": "Delete the key",
+        "correct": true,
+        "why": "Right. Deleting it ends every copy at once, and the logs are still there afterwards."
+      },
+      {
+        "text": "Remove the repository the key was found in",
+        "correct": false,
+        "why": "Copies may already exist elsewhere. Only deleting the key stops them."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wgstf19",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A GitHub Actions workflow deploys to Google Cloud. Which credential does the lesson recommend instead of a key in a CI variable?",
+    "hint": "The job already carries a signed token from GitHub.",
+    "choices": [
+      {
+        "text": "A key with an expiry of a year",
+        "correct": false,
+        "why": "Still a key, and a year is a long time for a copy to work."
+      },
+      {
+        "text": "Workload Identity Federation, lesson 9",
+        "correct": true,
+        "why": "Right. The outside token is traded for a Google one, with no key at all."
+      },
+      {
+        "text": "An attached account on the GitHub runner",
+        "correct": false,
+        "why": "Attaching works for machines inside Google Cloud; a GitHub runner is outside."
+      },
+      {
+        "text": "The developer's own credentials, stored as a secret",
+        "correct": false,
+        "why": "That trades one long-lived secret for a worse one, a person's."
+      }
+    ]
+  },
+  {
+    "id": "ex-qt50378x",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A third-party appliance accepts only a key file. Which control makes rotation stop being optional?",
+    "hint": "A policy can give keys a lifetime.",
+    "choices": [
+      {
+        "text": "A reminder in the team's calendar",
+        "correct": false,
+        "why": "A reminder is exactly the optional the question wants to avoid."
+      },
+      {
+        "text": "Granting the appliance Owner, so it can rotate its own key",
+        "correct": false,
+        "why": "That makes the appliance able to do anything, and rotates nothing."
+      },
+      {
+        "text": "Storing the key in the repository next to the code",
+        "correct": false,
+        "why": "That is how keys leak. It forces no rotation."
+      },
+      {
+        "text": "`iam.serviceAccountKeyExpiryHours`, which makes keys stop working",
+        "correct": true,
+        "why": "Right. A key that expires has to be replaced, so rotation happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps5q8cza",
+    "version": 1,
+    "section": "keys",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of rotating an unavoidable key in order.",
+    "hint": "The old key goes last, and only after a check.",
+    "items": [
+      "create the new key",
+      "deploy it where the old one was used",
+      "confirm the old key is no longer used",
+      "delete the old key"
+    ],
+    "trap": "Deleting the old key before confirming nothing uses it is the slip: the appliance stops on the spot, and the outage is the rotation's."
+  },
+  {
+    "id": "ex-73w0xa89",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A data engineer runs a nightly script on their laptop as `reports@planner-dev.iam.gserviceaccount.com`, using a key file in their home directory. What should replace the key?",
+    "hint": "A person running something as an account.",
+    "choices": [
+      {
+        "text": "A second key, so the first can be rotated",
+        "correct": false,
+        "why": "Two keys are two leaks waiting. The person can impersonate instead."
+      },
+      {
+        "text": "Editor for the engineer on the project",
+        "correct": false,
+        "why": "That gives the person far more than the script needs, and the account is no longer used."
+      },
+      {
+        "text": "An attached account on the laptop",
+        "correct": false,
+        "why": "A laptop is outside Google Cloud and has no metadata server."
+      },
+      {
+        "text": "Impersonation: Token Creator on `reports` for the engineer",
+        "correct": true,
+        "why": "Right. The engineer signs in as themselves and borrows the account for an hour each night."
+      }
+    ]
+  }
+]

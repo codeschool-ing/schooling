@@ -1,0 +1,325 @@
+{
+  "ex-h947vz86": {
+    "prompt": "Que papel numa conta de serviço deixa quem o tem criar uma máquina que roda como a conta?",
+    "hint": "Anexar, não pegar emprestado.",
+    "choices": [
+      {
+        "text": "`roles/iam.serviceAccountTokenCreator`",
+        "why": "Esse é para personificação: pedir um token em nome da conta."
+      },
+      {
+        "text": "`roles/iam.serviceAccountUser`",
+        "why": "Isso. Ele permite anexar a conta ao que quem o tem cria."
+      },
+      {
+        "text": "`roles/iam.serviceAccountAdmin`",
+        "why": "O admin cria e gerencia contas; anexar uma é trabalho do papel user."
+      },
+      {
+        "text": "`roles/compute.viewer`",
+        "why": "Um viewer não cria nada, máquinas inclusive."
+      }
+    ]
+  },
+  "ex-1ppqh31m": {
+    "prompt": "Um desenvolvedor não tem papel no `planner-prod`, mas tem `serviceAccountUser` numa conta de serviço da produção que tem Editor lá. O que o desenvolvedor consegue fazer na produção?",
+    "hint": "Agir como a conta é ter os papéis dela.",
+    "choices": [
+      {
+        "text": "Nada, porque o desenvolvedor não tem papel no projeto",
+        "why": "Os papéis da conta passam a ser do desenvolvedor, na prática, pelo anexo."
+      },
+      {
+        "text": "Ler as configurações da conta e nada mais",
+        "why": "O `serviceAccountUser` é muito mais que ler: é agir como a conta."
+      },
+      {
+        "text": "Conceder Editor a outros",
+        "why": "O Editor não concede papéis; isso é o que o Owner acrescenta."
+      },
+      {
+        "text": "O que o Editor permitir",
+        "why": "Isso. É o jeito mais comum de um desenho estreito de IAM vazar."
+      }
+    ]
+  },
+  "ex-836nm9xh": {
+    "prompt": "Por que o `serviceAccountUser` deve ser concedido numa conta de serviço em vez de no projeto?",
+    "hint": "No projeto ele alcança toda conta dele.",
+    "choices": [
+      {
+        "text": "Ele cobriria toda conta do projeto",
+        "why": "Isso. Quem faz o deploy de uma função poderia rodar como qualquer conta, as padrão com Editor inclusive."
+      },
+      {
+        "text": "Ele não pode ser concedido num projeto",
+        "why": "Pode, e esse é o problema de que a pergunta trata."
+      },
+      {
+        "text": "Uma concessão no projeto inteiro expira depois de um dia",
+        "why": "Concessões não expiram a não ser que uma condição diga."
+      },
+      {
+        "text": "As contas ignoram concessões feitas no projeto",
+        "why": "Elas as respeitam, herdadas como qualquer outra concessão."
+      }
+    ]
+  },
+  "ex-nf1se277": {
+    "prompt": "Um código numa máquina com uma conta de serviço anexada chama o Pub/Sub. De onde vem o token dele?",
+    "hint": "Um endereço que só a máquina alcança.",
+    "choices": [
+      {
+        "text": "Um arquivo de chave instalado com a máquina",
+        "why": "Nenhuma chave entra numa conta anexada."
+      },
+      {
+        "text": "As credenciais do próprio desenvolvedor, copiadas",
+        "why": "A máquina roda como a conta, não como uma pessoa."
+      },
+      {
+        "text": "O servidor de metadados, em `169.254.169.254`",
+        "why": "Isso. Ele entrega um token de cerca de uma hora, renovado sob demanda, e nenhuma chave existe."
+      },
+      {
+        "text": "O emulador, que emite tokens",
+        "why": "O emulador não emite nada; ele ignora tokens por completo."
+      }
+    ]
+  },
+  "ex-91cdj79x": {
+    "prompt": "Que API do Google a personificação chama para obter um token em nome de uma conta de serviço?",
+    "hint": "A recusa no laboratório a nomeou.",
+    "choices": [
+      {
+        "text": "O Pub/Sub, que aceita qualquer conta de serviço",
+        "why": "A chamada ao Pub/Sub nem aconteceu: o pedido de token veio antes e foi recusado."
+      },
+      {
+        "text": "O Resource Manager, `getProject`",
+        "why": "Esse lê um projeto. Tokens vêm do IAM Credentials."
+      },
+      {
+        "text": "IAM Credentials, `generateAccessToken`",
+        "why": "Isso. O `iamcredentials.googleapis.com` é a personificação inteira."
+      },
+      {
+        "text": "O servidor de metadados no notebook",
+        "why": "Um notebook não tem servidor de metadados; isso é de uma máquina do Google Cloud."
+      }
+    ]
+  },
+  "ex-hvw8pfw8": {
+    "prompt": "No laboratório, `gcloud pubsub topics list --impersonate-service-account=...` foi recusado, embora o Pub/Sub aponte para o emulador. Por que chegou ao Google?",
+    "hint": "Do que o gcloud precisa antes da chamada ao Pub/Sub?",
+    "choices": [
+      {
+        "text": "Ele pede primeiro o token emprestado ao Google",
+        "why": "Isso. Só o IAM Credentials emite o token, e nenhum emulador responde por ele."
+      },
+      {
+        "text": "O override foi removido pela flag",
+        "why": "O override continua. Só não foi usado, porque o token vinha antes."
+      },
+      {
+        "text": "O emulador encaminha chamadas personificadas ao Google",
+        "why": "O emulador não encaminha nada; o pedido nem chegou a ele."
+      },
+      {
+        "text": "A personificação só é permitida contra APIs reais",
+        "why": "Não existe essa regra. O token só precisa vir do Google."
+      }
+    ]
+  },
+  "ex-wemjssc3": {
+    "prompt": "Por padrão, no máximo quantos segundos dura um token personificado?",
+    "hint": "Uma hora.",
+    "unit": "segundos"
+  },
+  "ex-05j1n7ht": {
+    "prompt": "Um token de personificação é colado por engano num chat público. Por que isso é menos grave do que colar uma chave?",
+    "hint": "Compare quanto tempo cada um funciona.",
+    "choices": [
+      {
+        "text": "Tokens não concedem papéis, só identidade",
+        "why": "Um token leva todo papel da conta enquanto dura."
+      },
+      {
+        "text": "O Google rejeita tokens usados de um segundo endereço",
+        "why": "Essa verificação não existe. A validade é o que limita o estrago."
+      },
+      {
+        "text": "Um token só alcança o emulador",
+        "why": "Um token real funciona contra as APIs reais do Google."
+      },
+      {
+        "text": "Ele expira dentro da hora",
+        "why": "Isso. Uma chave funciona até alguém apagá-la; um token para sozinho."
+      }
+    ]
+  },
+  "ex-reg6ea98": {
+    "prompt": "O `deployer.tf` concede `serviceAccountTokenCreator` com `google_service_account_iam_member` em vez de no projeto. O que isso limita?",
+    "hint": "Em que recurso está a concessão?",
+    "choices": [
+      {
+        "text": "O deployer só pode agir no horário de plantão",
+        "why": "Nada na concessão fala de horário; uma condição falaria."
+      },
+      {
+        "text": "O grupo de plantão pode pegar o deployer e nenhuma outra conta",
+        "why": "Isso. A concessão fica numa conta, a regra da primeira seção."
+      },
+      {
+        "text": "O grupo pode criar chaves para o deployer",
+        "why": "O Token Creator emite tokens de vida curta, não chaves."
+      },
+      {
+        "text": "O deployer pode personificar o grupo",
+        "why": "Um grupo não pode ser personificado. A seta aponta para o outro lado."
+      }
+    ]
+  },
+  "ex-mdge3xtp": {
+    "prompt": "Por que o `email` do deployer é conhecido no plano, antes de qualquer coisa ser criada?",
+    "hint": "Do que ele é feito?",
+    "choices": [
+      {
+        "text": "Ele é feito do id da conta e do id do projeto",
+        "why": "Isso. O `deployer@planner-dev.iam.gserviceaccount.com` decorre dos dois."
+      },
+      {
+        "text": "O provider o pediu ao Google",
+        "why": "Um plano não perguntou nada ao Google."
+      },
+      {
+        "text": "O Google reserva e-mails com um dia de antecedência",
+        "why": "Não há reserva envolvida; o endereço decorre de nomes que você escolheu."
+      },
+      {
+        "text": "Toda conta de serviço divide um e-mail",
+        "why": "Cada conta tem o seu, que é o que faz dela um principal."
+      }
+    ]
+  },
+  "ex-rz78y0vs": {
+    "prompt": "Ligue cada jeito de provar que você é uma conta de serviço a quanto tempo a credencial dele funciona.",
+    "hint": "Um não tem fim nenhum.",
+    "pairs": [
+      {
+        "left": "conta anexada",
+        "right": "cerca de uma hora, renovada"
+      },
+      {
+        "left": "personificação",
+        "right": "uma hora, ou até doze"
+      },
+      {
+        "left": "chave baixada",
+        "right": "até alguém apagá-la"
+      }
+    ],
+    "right_distractors": [
+      "até o próximo deploy"
+    ]
+  },
+  "ex-36sfq56d": {
+    "prompt": "Uma chave de conta de serviço vazou. Qual é a primeira coisa a fazer?",
+    "hint": "Toda cópia funciona até uma coisa acontecer.",
+    "choices": [
+      {
+        "text": "Ler os logs de auditoria para ver o que ela fez",
+        "why": "Isso vem em segundo. Até a chave ser apagada, ela continua funcionando para quem a tem."
+      },
+      {
+        "text": "Trocar a senha da conta",
+        "why": "Uma conta de serviço não tem senha."
+      },
+      {
+        "text": "Apagar a chave",
+        "why": "Isso. Apagá-la encerra toda cópia de uma vez, e os logs continuam lá depois."
+      },
+      {
+        "text": "Remover o repositório onde a chave foi achada",
+        "why": "Cópias podem já existir em outro lugar. Só apagar a chave as para."
+      }
+    ]
+  },
+  "ex-6wgstf19": {
+    "prompt": "Um workflow do GitHub Actions faz deploy no Google Cloud. Que credencial a lição recomenda em vez de uma chave numa variável de CI?",
+    "hint": "O job já leva um token assinado pelo GitHub.",
+    "choices": [
+      {
+        "text": "Uma chave com validade de um ano",
+        "why": "Continua sendo uma chave, e um ano é muito tempo para uma cópia funcionar."
+      },
+      {
+        "text": "Workload Identity Federation, lição 9",
+        "why": "Isso. O token de fora é trocado por um do Google, sem chave nenhuma."
+      },
+      {
+        "text": "Uma conta anexada no runner do GitHub",
+        "why": "Anexar funciona para máquinas dentro do Google Cloud; um runner do GitHub fica fora."
+      },
+      {
+        "text": "As credenciais do próprio desenvolvedor, guardadas como segredo",
+        "why": "Isso troca um segredo duradouro por um pior, o de uma pessoa."
+      }
+    ]
+  },
+  "ex-qt50378x": {
+    "prompt": "Um appliance de terceiros só aceita arquivo de chave. Que controle faz a rotação deixar de ser opcional?",
+    "hint": "Uma política pode dar validade às chaves.",
+    "choices": [
+      {
+        "text": "Um lembrete no calendário da equipe",
+        "why": "Um lembrete é exatamente o opcional que a pergunta quer evitar."
+      },
+      {
+        "text": "Dar Owner ao appliance, para ele girar a própria chave",
+        "why": "Isso deixa o appliance fazer qualquer coisa, e não gira nada."
+      },
+      {
+        "text": "Guardar a chave no repositório junto do código",
+        "why": "É assim que chaves vazam. Não força rotação nenhuma."
+      },
+      {
+        "text": "`iam.serviceAccountKeyExpiryHours`, que faz as chaves pararem de funcionar",
+        "why": "Isso. Uma chave que expira precisa ser trocada, então a rotação acontece."
+      }
+    ]
+  },
+  "ex-ps5q8cza": {
+    "prompt": "Ponha os passos de girar uma chave inevitável em ordem.",
+    "hint": "A chave antiga sai por último, e só depois de uma conferência.",
+    "items": [
+      "criar a chave nova",
+      "implantá-la onde a antiga era usada",
+      "confirmar que a antiga não é mais usada",
+      "apagar a chave antiga"
+    ],
+    "trap": "Apagar a chave antiga antes de confirmar que nada a usa é o deslize: o appliance para na hora, e a pane é da rotação."
+  },
+  "ex-73w0xa89": {
+    "prompt": "Um engenheiro de dados roda um script noturno no notebook como `reports@planner-dev.iam.gserviceaccount.com`, usando um arquivo de chave no diretório pessoal. O que deveria substituir a chave?",
+    "hint": "Uma pessoa rodando algo como uma conta.",
+    "choices": [
+      {
+        "text": "Uma segunda chave, para a primeira poder ser girada",
+        "why": "Duas chaves são dois vazamentos esperando. A pessoa pode personificar em vez disso."
+      },
+      {
+        "text": "Editor para o engenheiro no projeto",
+        "why": "Isso dá à pessoa muito mais do que o script precisa, e a conta deixa de ser usada."
+      },
+      {
+        "text": "Uma conta anexada no notebook",
+        "why": "Um notebook fica fora do Google Cloud e não tem servidor de metadados."
+      },
+      {
+        "text": "Personificação: Token Creator no `reports` para o engenheiro",
+        "why": "Isso. O engenheiro entra como ele mesmo e pega a conta emprestada por uma hora toda noite."
+      }
+    ]
+  }
+}
