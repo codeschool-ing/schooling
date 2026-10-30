@@ -1,0 +1,699 @@
+[
+  {
+    "id": "ex-52e6fh9j",
+    "version": 1,
+    "section": "plans-and-the-web-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's plan is a `P1v3` with two instances. The developers put their small admin site on the same plan. What happens to what the plan costs?",
+    "hint": "Ask what the bill on a dedicated tier is counted in.",
+    "choices": [
+      {
+        "text": "A third instance is added for the admin site",
+        "correct": false,
+        "why": "An app brings no machines with it; it runs on the plan's instances, which stay at two."
+      },
+      {
+        "text": "Nothing: the admin site runs on the same two instances",
+        "correct": true,
+        "why": "On a dedicated tier each instance is charged, whatever and however much runs on it; the cost of the second app is the capacity it takes."
+      },
+      {
+        "text": "The admin site is charged per request on top of the plan",
+        "correct": false,
+        "why": "There is no per-request charge on an App Service plan; that is closer to the Consumption profile of lesson 8."
+      },
+      {
+        "text": "It doubles, because each app is charged for the instances it runs on",
+        "correct": false,
+        "why": "That would be true if apps were billed; it is the instances that are, once each."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv4bk3zq",
+    "version": 1,
+    "section": "plans-and-the-web-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy of the shop's file loses the line `reserved: true` and compiles with no warning. What has changed in what Azure would build?",
+    "hint": "The compiler checked types. Read what the REST API says the property means, and its default.",
+    "choices": [
+      {
+        "text": "Nothing, because `kind: 'linux'` already makes the plan a Linux one",
+        "correct": false,
+        "why": "The plan's operating system is decided by `reserved`; `kind` on its own does not make the plan Linux."
+      },
+      {
+        "text": "Nothing that matters, or the compiler would have warned",
+        "correct": false,
+        "why": "The compiler warns about types and names. A property left out that has a default is a valid file that means something else."
+      },
+      {
+        "text": "The plan would be a Windows plan, since `reserved` defaults to false",
+        "correct": true,
+        "why": "The REST API describes `reserved` as true for a Linux plan and false otherwise, with false as its default."
+      },
+      {
+        "text": "The plan stays Linux, and the site switches to a built-in Python runtime",
+        "correct": false,
+        "why": "Nothing in the file asks for a built-in runtime; the image is still named in `linuxFxVersion`, and the plan is the part that changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc1tgv5r",
+    "version": 1,
+    "section": "plans-and-the-web-app",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plan of three instances carries two apps, and one of them has a staging slot. Per-app scaling is off. How many app copies, slots included, are running across the plan's instances?",
+    "hint": "A slot is an app on the same machines, and every app runs on every instance.",
+    "value": 9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8hah3367",
+    "version": 1,
+    "section": "plans-and-the-web-app",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Linux, the shop's site names its image as `linuxFxVersion: '___|shopregistry.azurecr.io/shop:1.0'`.",
+    "hint": "The word in front of the vertical bar names the kind of thing the string describes.",
+    "blanks": [
+      {
+        "accept": [
+          "DOCKER"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5d4xx29y",
+    "version": 1,
+    "section": "plans-and-the-web-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is true of the app setting `WEBSITES_PORT` in the shop's file?",
+    "hint": "Two of Microsoft's pages describe the default differently, and one of them says where the setting goes.",
+    "choices": [
+      {
+        "text": "It is how the shop's code learns which port to listen on",
+        "correct": false,
+        "why": "The setting is read by the platform and is not passed to the container; the shop reads `PORT`, set in its Dockerfile."
+      },
+      {
+        "text": "It opens a second port beside 80, so the shop answers on both",
+        "correct": false,
+        "why": "App Service sends HTTP to one port of a container; the setting says which one, and adds none."
+      },
+      {
+        "text": "It is the port the health check uses to reach `/healthz`",
+        "correct": false,
+        "why": "The health check asks a path on the app; the port the platform routes to is the same for every request."
+      },
+      {
+        "text": "It states 8080 so the file does not rely on port detection",
+        "correct": true,
+        "why": "One page says App Service tries 80 and 8080, another that it assumes 80; naming the port removes the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-800dtt9k",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SHOP_ENV` decides whether the shop calls the real payment gateway or its sandbox. Suppose it were NOT listed in `slotConfigNames`. What would production run after `staging` is swapped in?",
+    "hint": "Without the mark, a setting is part of what moves with the content.",
+    "choices": [
+      {
+        "text": "The new version, paying into the test gateway",
+        "correct": true,
+        "why": "An app setting that is not sticky travels with the content, so staging's value arrives in production with the new version."
+      },
+      {
+        "text": "The new code with `SHOP_ENV=production`, because the gateway setting stays in its slot",
+        "correct": false,
+        "why": "That is what a sticky setting does. An unmarked one moves."
+      },
+      {
+        "text": "Nothing new: the swap refuses to start while the two values differ",
+        "correct": false,
+        "why": "A swap does not compare settings before it starts; different values are the normal case."
+      },
+      {
+        "text": "The old code, because a swap without sticky settings only exchanges them",
+        "correct": false,
+        "why": "A swap always exchanges the content; settings are the part that may or may not go with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2r1sv5a",
+    "version": 1,
+    "section": "slots",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During a swap of `staging` into `production`, which of these stay with the production slot? Choose all that apply.",
+    "hint": "What stays is the slot's identity: its addresses, who it is and what it may reach.",
+    "choices": [
+      {
+        "text": "Its custom domain names",
+        "correct": true,
+        "why": "Custom domains are in the list of what is not swapped; production's address stays production's."
+      },
+      {
+        "text": "An app setting with no sticky mark",
+        "correct": false,
+        "why": "App settings follow the content unless they are listed as sticky."
+      },
+      {
+        "text": "Its managed identity",
+        "correct": true,
+        "why": "Managed identities stay with the slot, so the arriving code uses production's identity from the switch on."
+      },
+      {
+        "text": "The image named in `linuxFxVersion`",
+        "correct": false,
+        "why": "The image is the content; moving it is what the swap is for."
+      },
+      {
+        "text": "A setting named in `slotConfigNames`",
+        "correct": true,
+        "why": "That list is the declaration that a setting stays with its slot."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpvhp9wx",
+    "version": 1,
+    "section": "slots",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it does to the shop's app.",
+    "hint": "One copies configuration, one marks it, one shares traffic and one undoes a pause.",
+    "pairs": [
+      {
+        "left": "`az webapp deployment slot create --slot staging --configuration-source shop-sp`",
+        "right": "a new slot with production's settings and no content"
+      },
+      {
+        "left": "`az webapp config appsettings set --slot staging --slot-settings SHOP_ENV=staging`",
+        "right": "a setting that stays with its slot in a swap"
+      },
+      {
+        "left": "`az webapp traffic-routing set --distribution staging=10`",
+        "right": "a tenth of the visitors at production's address sent to staging"
+      },
+      {
+        "left": "`az webapp deployment slot swap --slot staging --action reset`",
+        "right": "a swap with preview cancelled, staging's settings put back"
+      }
+    ],
+    "right_distractors": [
+      "staging's files copied over production's"
+    ]
+  },
+  {
+    "id": "ex-hbv7taq2",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the plan changed to `B1`, the shop's file still compiles with no warning, slot and all. Why did the compiler let it through?",
+    "hint": "Where does the rule live, and where does the slot live?",
+    "choices": [
+      {
+        "text": "Basic allows one slot, so the file is valid as written",
+        "correct": false,
+        "why": "The limits page lists no slots for Free or Basic; slots begin at Standard."
+      },
+      {
+        "text": "Each resource is checked against its own type, and the tier rule spans two of them",
+        "correct": true,
+        "why": "The plan's `sku` and the slot are separate resources; no type says a slot needs a plan of a certain tier, so Azure is the one that refuses."
+      },
+      {
+        "text": "Child resources such as slots are not type-checked by Bicep",
+        "correct": false,
+        "why": "The same compiler caught two mistakes in `slotConfigNames`, which is a child resource too."
+      },
+      {
+        "text": "A slot on Basic is created stopped, which is a valid state",
+        "correct": false,
+        "why": "Basic has no slots to create, stopped or running."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hxaknge",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An app on a Premium v3 plan has eight deployment slots. To save money the team tries to move the plan to Standard. What happens?",
+    "hint": "The slot count is a limit of the target tier, and the documentation says what it does to a scale-down.",
+    "choices": [
+      {
+        "text": "Standard has no slots, so all eight have to be deleted first",
+        "correct": false,
+        "why": "Standard allows five slots per app; it is Free and Basic that have none."
+      },
+      {
+        "text": "The newest three slots are deleted to fit, and the rest keep running",
+        "correct": false,
+        "why": "App Service does not choose slots to delete for you; the change is refused instead."
+      },
+      {
+        "text": "The change is refused until the app has five slots or fewer",
+        "correct": true,
+        "why": "The documentation's own example: an app with more than five slots cannot scale down to Standard, which supports five."
+      },
+      {
+        "text": "All eight keep running, but only five of them can be swapped",
+        "correct": false,
+        "why": "There is no such half state; the tier's limit is on how many slots exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-gss5b430",
+    "version": 1,
+    "section": "swap-with-warm-up",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of swapping `staging` into `production` in order.",
+    "hint": "Everything until the switch happens to staging.",
+    "items": [
+      "Apply production's sticky settings to every staging instance, which restarts them",
+      "Wait for every staging instance to finish restarting",
+      "Send a warm-up request to each staging instance",
+      "Switch the routing between the two slots",
+      "Restart the old content, now in staging, with staging's settings"
+    ],
+    "trap": "Switching the routing before the warm-up is exactly the downtime the swap exists to avoid."
+  },
+  {
+    "id": "ex-964cyykc",
+    "version": 1,
+    "section": "swap-with-warm-up",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The staging slot runs the slow-starting shop, which answers 503 on every path for its first seconds. No warm-up setting is configured. What does the swap's warm-up step do with the first 503?",
+    "hint": "Read what the documentation says counts as warmed up when nothing is configured.",
+    "choices": [
+      {
+        "text": "Counts the instance as warm, since any HTTP response counts",
+        "correct": true,
+        "why": "With no status list, an instance that returns any HTTP response is considered warmed up, and a 503 is a response."
+      },
+      {
+        "text": "Waits up to 90 seconds for the root path to return 200",
+        "correct": false,
+        "why": "The 90 seconds are how long it waits for an answer; with no list, any answer ends the wait."
+      },
+      {
+        "text": "Stops the swap, because 503 is an error status",
+        "correct": false,
+        "why": "A 503 stops the swap only when a status list exists and leaves 503 out."
+      },
+      {
+        "text": "Asks five more times, then switches the routing whatever it heard",
+        "correct": false,
+        "why": "The five retries are for requests that time out, and a 503 is not a timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-kevfmvy5",
+    "version": 1,
+    "section": "swap-with-warm-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WEBSITE_SWAP_WARMUP_PING_STATUSES` is `200`, and at the warm-up step one staging instance answers 503. What follows?",
+    "hint": "Two different settings take a status list, and they react to a miss differently.",
+    "choices": [
+      {
+        "text": "The swap keeps asking that instance until it answers 200",
+        "correct": false,
+        "why": "Asking again until a listed status arrives is what `WEBSITE_WARMUP_STATUSES` does at a container's start, not the swap's list."
+      },
+      {
+        "text": "The routing switches, and the health check removes that instance afterwards",
+        "correct": false,
+        "why": "The routing switches only when every instance is warm; a failed warm-up never reaches the switch."
+      },
+      {
+        "text": "The swap stops, and production goes on serving the old version",
+        "correct": true,
+        "why": "A status not in the list stops the warm-up and the swap, and production was never touched."
+      },
+      {
+        "text": "Production is restarted so that the instance can be freed",
+        "correct": false,
+        "why": "Nothing in a swap restarts production's instances before the switch."
+      }
+    ]
+  },
+  {
+    "id": "ex-4m9ft1j2",
+    "version": 1,
+    "section": "swap-with-warm-up",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's plan is scaled to six instances and five of them fail the health check. `WEBSITE_HEALTHCHECK_MAXUNHEALTHYWORKERPERCENT` is at its default. How many instances are taken out of the load balancer?",
+    "hint": "By default no more than half of the instances are excluded.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jgep5vbd",
+    "version": 1,
+    "section": "swap-with-warm-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The team adds `autoSwapSlotName: 'production'` to the shop's staging slot, so that every push swaps itself in. The file compiles. What do they get?",
+    "hint": "Check where the documentation says auto swap is supported, and what kind of app the shop is.",
+    "choices": [
+      {
+        "text": "Auto swap, once Always On is set on the slot",
+        "correct": false,
+        "why": "Always On is already set in the file, and it is not the condition; the kind of app is."
+      },
+      {
+        "text": "A swap on every push that skips the warm-up step",
+        "correct": false,
+        "why": "Auto swap, where it exists, swaps after the warm-up; but the shop does not get it at all."
+      },
+      {
+        "text": "Auto swap only after the plan moves to Premium",
+        "correct": false,
+        "why": "The tier is not the obstacle; Standard and above have slots and swaps."
+      },
+      {
+        "text": "Nothing: auto swap is unsupported for Linux and containers",
+        "correct": true,
+        "why": "The documentation says auto swap is not supported in web apps on Linux or Web App for Containers, and the compiler cannot know which kind of app it is on."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cc0h66k",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nobody orders from the shop between midnight and seven. Which of these costs nothing during those hours?",
+    "hint": "Look for the one with a minimum of none.",
+    "choices": [
+      {
+        "text": "An App Service plan on Standard with autoscale down to one instance",
+        "correct": false,
+        "why": "Autoscale moves the count, but a plan never has none; its last instance is billed all night."
+      },
+      {
+        "text": "A Container App revision with a minimum of zero replicas, idle all night",
+        "correct": true,
+        "why": "With no replicas running there is nothing to bill for usage, which is lesson 8's scale to zero."
+      },
+      {
+        "text": "An AKS cluster on the Free tier with its nodes running",
+        "correct": false,
+        "why": "The Free tier makes the control plane free; the nodes are virtual machines and are billed as such."
+      },
+      {
+        "text": "A Premium v3 plan using automatic scaling",
+        "correct": false,
+        "why": "Automatic scaling adds and removes instances on HTTP load, and keeps prewarmed ones besides; it does not reach zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-yk4bkcdj",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The developers want to load-test staging without taking capacity from production. What does that cost them?",
+    "hint": "Ask where a slot runs, and what a swap needs.",
+    "choices": [
+      {
+        "text": "Another plan, and with it the loss of the swap",
+        "correct": true,
+        "why": "A slot runs on the plan's instances; separate machines mean a separate app, and a swap is between slots of one app."
+      },
+      {
+        "text": "Nothing, since a staging slot runs on instances apart from production's",
+        "correct": false,
+        "why": "A slot runs on the same instances as production, which is why a load test against it is a load test against production's machines."
+      },
+      {
+        "text": "Turning off Always On in the staging slot during the test",
+        "correct": false,
+        "why": "Always On keeps an app loaded; it does not move the slot's work to other machines."
+      },
+      {
+        "text": "Marking the load test's settings as sticky",
+        "correct": false,
+        "why": "Stickiness decides what moves in a swap, not where a slot's code runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-673fb0wt",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the shop's workloads is the wrong shape for an App Service plan?",
+    "hint": "A plan bills its instances whether anything is happening or not.",
+    "choices": [
+      {
+        "text": "The order API, with customers through the day",
+        "correct": false,
+        "why": "Steady traffic in one time zone is what a plan of fixed instances fits."
+      },
+      {
+        "text": "The admin site the three developers use",
+        "correct": false,
+        "why": "A small site sharing a plan already paid for costs only the capacity it takes."
+      },
+      {
+        "text": "The nightly sales report, which runs ten minutes and exits",
+        "correct": true,
+        "why": "A job that runs minutes a night would pay for a plan all day; a container group or a Container Apps job fits it."
+      },
+      {
+        "text": "A customer-facing release once a week, tested first at a second address",
+        "correct": false,
+        "why": "That is a slot and a swap, which is what the plan's Standard tier and above provide."
+      }
+    ]
+  },
+  {
+    "id": "ex-spmgfqj5",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does App Service give the shop without the team building it? Choose all that apply.",
+    "hint": "Three are features of the platform; two belong to the other services.",
+    "choices": [
+      {
+        "text": "Slots, and a swap that warms the new version first",
+        "correct": true,
+        "why": "Built into Standard and above, at no extra charge."
+      },
+      {
+        "text": "Scale to zero on a dedicated tier at night",
+        "correct": false,
+        "why": "A plan never has no instances; scale to zero is Container Apps, lesson 8."
+      },
+      {
+        "text": "Custom domains with free managed certificates",
+        "correct": true,
+        "why": "Managed certificates are listed from the Basic tier up."
+      },
+      {
+        "text": "Built-in sign-in for the app's users",
+        "correct": true,
+        "why": "App Service authentication is a platform feature, with nothing to write in the app."
+      },
+      {
+        "text": "A Kubernetes API to install operators into",
+        "correct": false,
+        "why": "There is no Kubernetes API on App Service; that is AKS, lesson 11."
+      }
+    ]
+  },
+  {
+    "id": "ex-hp0r7j4j",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop has split into five services that call each other; one scales on the length of a queue, and all of them are quiet at night. Where does it fit best?",
+    "hint": "Weigh the idle row and how each service scales on its own events.",
+    "choices": [
+      {
+        "text": "One App Service plan carrying the five as apps",
+        "correct": false,
+        "why": "They would share machines and scale together, with no scale on a queue of their own and the plan billed all night."
+      },
+      {
+        "text": "Five container groups, one per service",
+        "correct": false,
+        "why": "Container groups keep no count of copies and add none under load; scaling on a queue would be yours to build."
+      },
+      {
+        "text": "Container Apps: five apps in one environment, each with its scale rule",
+        "correct": true,
+        "why": "One network for the calls, a scale rule per app including a queue, and a minimum of zero for the quiet hours."
+      },
+      {
+        "text": "AKS on the Free tier, because its control plane costs nothing",
+        "correct": false,
+        "why": "The control plane is free there, but the nodes run and are billed through the night, and the cluster is the team's to operate."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nw6k05e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the lowest App Service tier that has both deployment slots and autoscale?",
+    "hint": "Both features begin at the same row of the limits table.",
+    "choices": [
+      {
+        "text": "Basic",
+        "correct": false,
+        "why": "Basic has dedicated machines and manual scale-out, but no slots and no autoscale."
+      },
+      {
+        "text": "Free",
+        "correct": false,
+        "why": "Free runs on shared machines, with one instance and neither feature."
+      },
+      {
+        "text": "Standard",
+        "correct": true,
+        "why": "Standard is where five slots per app and autoscale both begin."
+      },
+      {
+        "text": "Premium v3",
+        "correct": false,
+        "why": "Premium v3 has both, and more slots, but it is not the lowest tier that does."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdtbf937",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To run the new code in staging with production's settings, and stop there until somebody has tested it, run `az webapp deployment slot swap --slot staging --action ___`.",
+    "hint": "The CLI's help names three actions: one starts the pause, one completes, one cancels.",
+    "blanks": [
+      {
+        "accept": [
+          "preview"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ywts3b4r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ten minutes after swapping `shop:1.1` into production, orders start failing. Nobody has deployed to staging since. What is the quickest way back?",
+    "hint": "After a swap, where is the version production was running?",
+    "choices": [
+      {
+        "text": "Deploy `shop:1.0` to production again and wait for it to restart",
+        "correct": false,
+        "why": "That restarts production in place, the break the slot exists to avoid, when the old version is already sitting warm in staging."
+      },
+      {
+        "text": "Swap the same two slots again",
+        "correct": true,
+        "why": "Staging holds the previous production content after the swap, so the same swap restores it, warmed, with production answering throughout."
+      },
+      {
+        "text": "Send 100 percent of production's traffic to staging with traffic routing",
+        "correct": false,
+        "why": "After the swap staging is the old version, so this works for visitors, but it leaves production's slot running the broken code and every pinned cookie to unwind."
+      },
+      {
+        "text": "Run the swap with `--action reset`",
+        "correct": false,
+        "why": "`reset` cancels a swap with preview that is still paused; this one finished ten minutes ago."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mnrywc6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's file points `WEBSITE_WARMUP_PATH`, `WEBSITE_SWAP_WARMUP_PING_PATH` and `healthCheckPath` all at `/healthz`. What does that buy?",
+    "hint": "Three readers, at three moments, asking one thing.",
+    "choices": [
+      {
+        "text": "App Service requires the three to name the same path",
+        "correct": false,
+        "why": "Each has its own default and nothing requires them to agree; agreeing is a choice the file makes."
+      },
+      {
+        "text": "The root path `/` is closed to platform requests, so another path is needed",
+        "correct": false,
+        "why": "The default warm-up for a swap is `/` itself; nothing closes it."
+      },
+      {
+        "text": "Start-up, swap and the check every minute all ask one question: is this instance ready to serve?",
+        "correct": true,
+        "why": "One endpoint that answers 200 only when the shop is ready is read at container start, before the switch and every minute after it."
+      },
+      {
+        "text": "It makes the health check skip instances that are still warming",
+        "correct": false,
+        "why": "The health check asks every instance; an instance still warming answers 503 and counts as a failure until it is ready."
+      }
+    ]
+  }
+]

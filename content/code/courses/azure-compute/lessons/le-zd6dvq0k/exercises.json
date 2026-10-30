@@ -1,0 +1,675 @@
+[
+  {
+    "id": "ex-darr9vwv",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On AKS, which of these runs on machines Microsoft operates rather than in your subscription?",
+    "hint": "The half the tier pays for.",
+    "choices": [
+      {
+        "text": "kube-proxy, one pod on every node",
+        "correct": false,
+        "why": "It runs on your nodes, beside your pods, like the DaemonSets kind showed on every worker."
+      },
+      {
+        "text": "The scale set behind the system pool",
+        "correct": false,
+        "why": "It is in the node resource group of your subscription, billed as virtual machines."
+      },
+      {
+        "text": "CoreDNS, which the system pool exists for",
+        "correct": false,
+        "why": "CoreDNS is a system pod, and system pods run on your system pool, on your machines."
+      },
+      {
+        "text": "etcd",
+        "correct": true,
+        "why": "Right. etcd, the API server, the scheduler and the controllers are the control plane, and none of them is on a node you can list."
+      }
+    ]
+  },
+  {
+    "id": "ex-nj8r87bg",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a cluster on the Free tier lack, compared with one on Standard?",
+    "hint": "Every AKS feature is on every tier.",
+    "choices": [
+      {
+        "text": "A financially backed uptime SLA for the API server",
+        "correct": true,
+        "why": "Right. Free has every feature and a best-effort control plane, with no money behind the promise."
+      },
+      {
+        "text": "Availability zones for its node pools",
+        "correct": false,
+        "why": "Zones are a property of the pools, and the tier does not decide them."
+      },
+      {
+        "text": "Node pools in user mode",
+        "correct": false,
+        "why": "A user pool exists on every tier; the mode is not something the tier sells."
+      },
+      {
+        "text": "More than 10 nodes",
+        "correct": false,
+        "why": "Ten is the recommended ceiling; the documented limit on Free is 1,000 nodes."
+      }
+    ]
+  },
+  {
+    "id": "ex-vp6d1w9c",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Standard cluster with availability zones has an uptime SLA of 99.95% on its API server. Over a month of 730 hours, how many minutes may the API server be unreachable without the promise being broken?",
+    "hint": "0.05% of 730 hours, in minutes.",
+    "value": 21.9,
+    "tolerance": 0.1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-jqyaes0g",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can the kind cluster of this lesson NOT reproduce? Choose all that apply.",
+    "hint": "kind is the Kubernetes AKS runs, and nothing Microsoft adds.",
+    "choices": [
+      {
+        "text": "A node pool as one object with a scale set behind it",
+        "correct": true,
+        "why": "kind starts Docker containers; nothing groups them into a pool that can be resized or upgraded as one."
+      },
+      {
+        "text": "A drain refused by a PodDisruptionBudget",
+        "correct": false,
+        "why": "That is Kubernetes, and the lab ran it: the API server refused the evictions the budget did not allow."
+      },
+      {
+        "text": "The orchestration of a surge upgrade",
+        "correct": true,
+        "why": "Adding the surge node and reimaging the old one are AKS's; the lab stood a cordoned node in for the surge node."
+      },
+      {
+        "text": "A node with the CriticalAddonsOnly taint",
+        "correct": false,
+        "why": "A taint is a field on a node object, and kubectl put it on shop-worker."
+      },
+      {
+        "text": "A maintenance configuration",
+        "correct": true,
+        "why": "There is no AKS resource provider in the lab to read one; the Bicep compiler checked its shape and nothing ran it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ge2d8qm",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Standard cluster has all its nodes in zone 1. Zone 1 fails for an hour, every pod is down, and the API server keeps answering. What did the uptime SLA promise here?",
+    "hint": "Read what the SLA is about.",
+    "choices": [
+      {
+        "text": "Nothing was broken, because the shop's pods count as part of the control plane",
+        "correct": false,
+        "why": "Pods are workloads on your nodes; the SLA does not count them at all."
+      },
+      {
+        "text": "That Microsoft moves the nodes to another zone within the hour",
+        "correct": false,
+        "why": "Nothing in the SLA moves nodes; spreading them over zones is declared on the pool."
+      },
+      {
+        "text": "Only the control plane being reachable, which held, so it was kept",
+        "correct": true,
+        "why": "Right. The SLA is about the API server and nothing else, and the nodes' zones are your decision."
+      },
+      {
+        "text": "A credit for the hour, since the cluster was down",
+        "correct": false,
+        "why": "The cluster's API server was up. What was down was yours to spread."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe9eyq98",
+    "version": 1,
+    "section": "node-pools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What keeps the shop's pods off the system pool of an AKS cluster?",
+    "hint": "A preference is not a refusal.",
+    "choices": [
+      {
+        "text": "The label kubernetes.azure.com/mode=system on its nodes",
+        "correct": false,
+        "why": "AKS prefers system pods there because of it, and it refuses nothing to anybody."
+      },
+      {
+        "text": "The taint CriticalAddonsOnly=true:NoSchedule",
+        "correct": true,
+        "why": "Right. Only pods that tolerate it are scheduled there, and the system pods do while the shop does not."
+      },
+      {
+        "text": "The pool's mode, which AKS checks against each pod's namespace",
+        "correct": false,
+        "why": "The mode is a property of the pool and nothing compares it with a namespace."
+      },
+      {
+        "text": "Its VM size, which is too small for user workloads",
+        "correct": false,
+        "why": "A system pool is at least 4 vCPUs and 4 GB, which is room enough for the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzvydp9a",
+    "version": 1,
+    "section": "node-pools",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each thing written on a node to what it says.",
+    "hint": "Two labels AKS writes, one taint, and one that only kind has.",
+    "pairs": [
+      {
+        "left": "kubernetes.azure.com/agentpool",
+        "right": "The name of the pool the node belongs to"
+      },
+      {
+        "left": "kubernetes.azure.com/mode",
+        "right": "Whether the pool is a system or a user pool"
+      },
+      {
+        "left": "CriticalAddonsOnly=true:NoSchedule",
+        "right": "Only pods that tolerate it are scheduled here"
+      },
+      {
+        "left": "node-role.kubernetes.io/control-plane",
+        "right": "kind's control-plane node, which AKS never shows you"
+      }
+    ],
+    "right_distractors": [
+      "The virtual machine size of the node"
+    ]
+  },
+  {
+    "id": "ex-5cdpfhge",
+    "version": 1,
+    "section": "node-pools",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The system pods tolerate the taint ___=true:NoSchedule, which is why a dedicated system pool still runs them and nothing else.",
+    "hint": "Its name says who it is for.",
+    "blanks": [
+      {
+        "accept": [
+          "CriticalAddonsOnly"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pnq1f58h",
+    "version": 1,
+    "section": "node-pools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team wants Spot capacity for the shop's nightly sales report. Where can it go?",
+    "hint": "Lesson 5's evictions, and the system pool's restrictions.",
+    "choices": [
+      {
+        "text": "In the system pool, set to Spot, to save on the nodes that are always on",
+        "correct": false,
+        "why": "A system pool cannot run on Spot; an eviction there would take CoreDNS with it."
+      },
+      {
+        "text": "In any pool, since Spot is chosen per pod",
+        "correct": false,
+        "why": "Spot is a property of the scale set behind a pool, so every node in it is Spot or none is."
+      },
+      {
+        "text": "Nowhere: AKS clusters cannot use Spot",
+        "correct": false,
+        "why": "They can, in user pools."
+      },
+      {
+        "text": "In a user pool of its own, with scaleSetPriority set to Spot",
+        "correct": true,
+        "why": "Right. Spot pools must be user pools, and a pool of its own keeps the shop's API on regular capacity."
+      }
+    ]
+  },
+  {
+    "id": "ex-8f5520z1",
+    "version": 1,
+    "section": "node-pools",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "slip.bicep had a pool named shop-apps, mode: 'system' and maxPods: 300, and the compiler printed one warning, for the name. What does its silence about the other two tell you?",
+    "hint": "What does a type that admits any string say about a string?",
+    "choices": [
+      {
+        "text": "Nothing: the documented maximum of 250 pods, and whether system is accepted for System, are the service's to decide",
+        "correct": true,
+        "why": "Right. Silence is no verdict, and the documentation is where the 250 is written."
+      },
+      {
+        "text": "That both are valid, since the compiler checks against Azure's own types",
+        "correct": false,
+        "why": "It checks against the types, and these types admit any string for the mode and set no ceiling on maxPods."
+      },
+      {
+        "text": "That Azure will lower maxPods to 250 and capitalise the mode on its own",
+        "correct": false,
+        "why": "Nothing in the lesson says so, and a laptop cannot find out what the service would do."
+      },
+      {
+        "text": "That the name warning stopped the compiler before it read the rest",
+        "correct": false,
+        "why": "A warning stops nothing; the template was written, and a missing check is not a skipped one."
+      }
+    ]
+  },
+  {
+    "id": "ex-11brckye",
+    "version": 1,
+    "section": "upgrades",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps AKS takes to upgrade one node pool with surge in order.",
+    "hint": "Capacity first, removal last.",
+    "items": [
+      "Add the surge nodes maxSurge asks for",
+      "Cordon and drain an old node, as the disruption budgets allow",
+      "Wait for the soak duration",
+      "Reimage the drained node at the new version",
+      "Remove the surge nodes once every node is upgraded"
+    ],
+    "trap": "The surge node comes first: it is what gives the evicted pods somewhere to go."
+  },
+  {
+    "id": "ex-mm5g4y2v",
+    "version": 1,
+    "section": "upgrades",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pool of 10 nodes has maxSurge set to 33%. How many surge nodes does AKS add at a time?",
+    "hint": "A percentage of the node count, rounded up.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-fkdpj7eb",
+    "version": 1,
+    "section": "upgrades",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, drain asked for all three shop pods at once and two were refused with \"would violate the pod's disruption budget\". Why did all three end up evicted anyway?",
+    "hint": "What changed between one retry and the next?",
+    "choices": [
+      {
+        "text": "drain overrode the budget after its third refusal",
+        "correct": false,
+        "why": "drain never overrides a budget; it asks again every five seconds until it is allowed or its timeout runs out."
+      },
+      {
+        "text": "Uncordoning shop-worker3 raised minAvailable for the duration of the drain",
+        "correct": false,
+        "why": "Uncordoning changes where pods may go, and nothing in the budget."
+      },
+      {
+        "text": "Every retry waited until a replacement was ready on the other node",
+        "correct": true,
+        "why": "Right. Three ready pods with two required allows one at a time, so the evictions were paced by the replacements."
+      },
+      {
+        "text": "The readiness probe failed, so the pods no longer counted",
+        "correct": false,
+        "why": "A pod that is not ready counts against the budget, not for it; the probes passed throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e21p44w",
+    "version": 1,
+    "section": "upgrades",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cluster outside long-term support runs 1.35 and has to reach 1.37. How does it get there?",
+    "hint": "Minor versions, and skipping.",
+    "choices": [
+      {
+        "text": "In one upgrade, since both versions are inside N-2",
+        "correct": false,
+        "why": "Being supported does not make a jump allowed; outside LTS no minor version may be skipped."
+      },
+      {
+        "text": "By upgrading the node pools to 1.37 first, then the control plane",
+        "correct": false,
+        "why": "Pools follow the control plane and may lag it; they never lead it."
+      },
+      {
+        "text": "Only by creating a new cluster on 1.37",
+        "correct": false,
+        "why": "An upgrade in place works, one minor version at a time."
+      },
+      {
+        "text": "In two upgrades, to 1.36 and then to 1.37",
+        "correct": true,
+        "why": "Right. One minor version at a time, control plane first each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdchkzg9",
+    "version": 1,
+    "section": "upgrades",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During an AKS upgrade, a budget of three of three blocks the drain of one node of the pool apps, which has undrainableNodeBehavior: Cordon. What happens? Choose all that apply.",
+    "hint": "Read what aks.bicep chose, and what a platform-initiated upgrade does.",
+    "choices": [
+      {
+        "text": "AKS lowers the budget to two of three and drains the node",
+        "correct": false,
+        "why": "AKS never edits your budget; only a forced or platform-initiated upgrade passes over it."
+      },
+      {
+        "text": "The node is left cordoned and labelled kubernetes.azure.com/upgrade-status=Quarantined",
+        "correct": true,
+        "why": "That is what Cordon does with a node it cannot drain."
+      },
+      {
+        "text": "The whole upgrade is rolled back to the previous version",
+        "correct": false,
+        "why": "Nothing rolls back on its own, and a control plane upgrade cannot be rolled back at all."
+      },
+      {
+        "text": "The rest of the pool carries on being upgraded",
+        "correct": true,
+        "why": "Quarantining one node is what lets the others continue."
+      },
+      {
+        "text": "The blocked node stays on the old version until somebody deals with it",
+        "correct": true,
+        "why": "The quarantined node is yours to resolve: fix the budget, then the node."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6qdsq5d",
+    "version": 1,
+    "section": "upgrades",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pool on Azure CNI has 10 nodes, maxSurge of 1 and maxPods of 30. Microsoft gives the addresses an upgrade needs as (nodes + maxSurge) × (1 + maxPods). How many addresses must the subnet have free for this pool?",
+    "hint": "One address per node, and one per pod it may run.",
+    "value": 341,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-1drd2b4g",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster runs 1.36.2 with upgradeChannel set to stable. Available are 1.35.9, 1.36.6, 1.37.1 and 1.37.3, and 1.37 is the newest minor. What does the channel move it to?",
+    "hint": "stable is the latest patch of N-1.",
+    "choices": [
+      {
+        "text": "1.37.3",
+        "correct": false,
+        "why": "That is the latest patch of N, which is where rapid goes."
+      },
+      {
+        "text": "1.36.6",
+        "correct": true,
+        "why": "Right. N is 1.37, so N-1 is 1.36, and its latest patch is 1.36.6."
+      },
+      {
+        "text": "1.37.1",
+        "correct": false,
+        "why": "stable does not take the first patch of a newer minor; it stays one minor behind the newest."
+      },
+      {
+        "text": "Nowhere, since 1.36 is already supported",
+        "correct": false,
+        "why": "stable moves the patch too: 1.36.2 is behind 1.36.6."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyg0h046",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A window has startTime 02:00 and utcOffset -03:00. At what hour does it start in UTC? Answer with the hour only.",
+    "hint": "Local time minus the offset.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kbm5ypvv",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each maintenance configuration to what it schedules.",
+    "hint": "Two follow a channel; one follows AKS's own releases.",
+    "pairs": [
+      {
+        "left": "default",
+        "right": "AKS's weekly releases of control plane components and system add-ons"
+      },
+      {
+        "left": "aksManagedAutoUpgradeSchedule",
+        "right": "The Kubernetes upgrades the upgradeChannel decides on"
+      },
+      {
+        "left": "aksManagedNodeOSUpgradeSchedule",
+        "right": "The node images the nodeOSUpgradeChannel decides on"
+      }
+    ],
+    "right_distractors": [
+      "Azure's platform maintenance on the hosts under the scale sets"
+    ]
+  },
+  {
+    "id": "ex-75e3kp6t",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A window runs from 08:00 to 12:00. A node pool upgrade starts at 11:50 and is still running at 12:15. What does AKS do?",
+    "hint": "The window bounds one end of the work.",
+    "choices": [
+      {
+        "text": "Lets it run to the end, and begins nothing new after noon",
+        "correct": true,
+        "why": "Right. A window bounds when work starts, not when it ends."
+      },
+      {
+        "text": "Stops the upgrade at 12:00 and resumes it in the next window",
+        "correct": false,
+        "why": "Work in flight is not stopped at the end of a window."
+      },
+      {
+        "text": "Rolls the pool back, since it ran outside the window",
+        "correct": false,
+        "why": "Nothing rolls back for running late."
+      },
+      {
+        "text": "Lets it finish and then upgrades the next pool straight away",
+        "correct": false,
+        "why": "Once the window has closed, nothing new starts until the next one."
+      }
+    ]
+  },
+  {
+    "id": "ex-yz0he2zz",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cluster has an aksManagedAutoUpgradeSchedule window every Sunday and upgradeChannel set to none. What happens on Sunday?",
+    "hint": "A window says when, not what.",
+    "choices": [
+      {
+        "text": "AKS upgrades it to the latest patch, since a window enables patching",
+        "correct": false,
+        "why": "Enabling planned maintenance does not enable automatic upgrades."
+      },
+      {
+        "text": "AKS refuses the window, because none and a window cannot coexist",
+        "correct": false,
+        "why": "Both are accepted; they simply do nothing together."
+      },
+      {
+        "text": "Nothing upgrades its Kubernetes version, because no channel asks for one",
+        "correct": true,
+        "why": "Right. The window is an appointment, and with none nobody keeps it."
+      },
+      {
+        "text": "The window moves the cluster to stable on its own",
+        "correct": false,
+        "why": "A window never changes the channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjkrp826",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these slips did the Bicep compiler warn about in this lesson? Choose all that apply.",
+    "hint": "Ranges and patterns are in the types; enumerations of strings often are not.",
+    "choices": [
+      {
+        "text": "durationHours: 2 in a maintenance window",
+        "correct": true,
+        "why": "The type has a minimum of 4."
+      },
+      {
+        "text": "utcOffset: '-3:00'",
+        "correct": true,
+        "why": "The type carries the pattern of a sign and two digits each side of the colon."
+      },
+      {
+        "text": "dayOfWeek: 'Sun'",
+        "correct": false,
+        "why": "It passed: the type of dayOfWeek is any string, and the seven names are the service's rule."
+      },
+      {
+        "text": "nodeSoakDurationInMinutes: 45",
+        "correct": true,
+        "why": "The type's maximum is 30."
+      },
+      {
+        "text": "drainTimeoutInMinutes: 2",
+        "correct": false,
+        "why": "It passed: the type allows 1 to 1,440, and the documented minimum of 5 is the service's."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5a9p29w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The pool apps has three nodes, each nearly full, maxSurge 0 and maxUnavailable 1, and the shop has three replicas with minAvailable: 2. What is most likely to stall its upgrade?",
+    "hint": "No surge means the room comes from the nodes that are left.",
+    "choices": [
+      {
+        "text": "The system pool's taint, which none of the shop's pods tolerate",
+        "correct": false,
+        "why": "The taint keeps the shop off the system pool, which was never where its pods could go."
+      },
+      {
+        "text": "maxUnavailable, which a user pool is not allowed to use at all",
+        "correct": false,
+        "why": "It is the system pool that cannot use maxUnavailable."
+      },
+      {
+        "text": "The soak duration, which defaults to thirty minutes for each node",
+        "correct": false,
+        "why": "The default soak is 0; 30 is its maximum."
+      },
+      {
+        "text": "Replacements stuck Pending, so the budget allows nothing more",
+        "correct": true,
+        "why": "Right. Without a surge node the evicted pods need room on two full nodes, and until they are ready the budget refuses the next eviction."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nex8dpn",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cluster outside long-term support is on 1.34 and has to reach 1.37. How many control plane upgrades does that take?",
+    "hint": "One per minor version.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "upgrades"
+  },
+  {
+    "id": "ex-m9y8pvkb",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "kubectl ___ marks a node unschedulable and moves none of its pods; drain does that first, and then evicts them.",
+    "hint": "The first half of a drain.",
+    "blanks": [
+      {
+        "accept": [
+          "cordon"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

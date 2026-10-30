@@ -1,0 +1,446 @@
+{
+  "ex-wyh8453m": {
+    "prompt": "No portal, alguém arrasta um passo novo para um workflow no designer e salva. O que essa pessoa mudou?",
+    "hint": "A seção chama o designer de vista de alguma coisa.",
+    "choices": [
+      {
+        "text": "Um desenho que o serviço transforma em definição a cada execução",
+        "why": "Nada é regerado por execução. A definição é o que se salva, e o desenho é feito a partir dela."
+      },
+      {
+        "text": "A definição do workflow, um documento JSON",
+        "why": "Isso. O designer edita o documento, e a code view mostra o mesmo documento como texto."
+      },
+      {
+        "text": "Um arquivo Bicep que o portal guarda ao lado do workflow",
+        "why": "Bicep é como esta lição escreve o recurso. O portal não guarda Bicep; ele compila para o mesmo JSON."
+      },
+      {
+        "text": "Um programa em C# que o designer gera e compila",
+        "why": "Não há programa gerado. O Azure executa a definição como ela está."
+      }
+    ]
+  },
+  "ex-wrf3rh9d": {
+    "prompt": "Numa manhã, `Get_orders` falha em todos os retries. `Any_orders` tem `\"runAfter\": {\"Get_orders\": [\"Succeeded\"]}`. O que acontece com `Any_orders`?",
+    "hint": "Uma ação cujo antecessor terminou num status que ela não listou não roda.",
+    "choices": [
+      {
+        "text": "Roda, com o corpo vazio de `Get_orders`, e vai para o ramo else",
+        "why": "Precisaria de `Failed` no seu `runAfter` para rodar; ela nem avalia a expressão."
+      },
+      {
+        "text": "Espera até a execução da manhã seguinte, quando `Get_orders` tiver sucesso",
+        "why": "Cada execução é separada. Nada passa de uma manhã para a outra."
+      },
+      {
+        "text": "É marcada `Skipped`, e a execução termina `Failed`",
+        "why": "Isso. O motor marca os sucessores da ação que falhou como `Skipped`, e um ramo que termina em falha faz a execução falhar."
+      },
+      {
+        "text": "É tentada de novo com a mesma política de `Get_orders`",
+        "why": "Uma política de retry pertence à ação que a tem; `Any_orders` nem chegou a ser tentada."
+      }
+    ]
+  },
+  "ex-vg8hggcn": {
+    "prompt": "Uma ação de alerta deve rodar só quando `Get_orders` falhou. Ela nomeia `Get_orders` com o status `Failed` na sua propriedade `___`.",
+    "hint": "A mesma propriedade dá a cada ação da lição o seu lugar na execução.",
+    "blanks": [
+      {
+        "accept": [
+          "runAfter",
+          "run after"
+        ]
+      }
+    ]
+  },
+  "ex-nver6x90": {
+    "prompt": "Na execução da lição, quais destes chegaram a um template compilado exatamente como escritos? Marque todos os que se aplicam.",
+    "hint": "Veja quais builds não imprimiram nada e qual imprimiu um erro.",
+    "choices": [
+      {
+        "text": "Um `runAfter` que nomeia `Get_order`, uma ação que não existe",
+        "why": "Sim: `typo.bicep` compilou sem aviso. O conteúdo da definição não é verificado."
+      },
+      {
+        "text": "O nome de função `lenght`, nas duas expressões que o usavam",
+        "why": "Sim: o `grep -c` achou o nome em duas linhas de `lenght.json`."
+      },
+      {
+        "text": "A string `\"no orders to send\"` escrita com aspas duplas",
+        "why": "Essa foi recusada: três erros, status de saída 1, e nenhum `quotes.json`."
+      },
+      {
+        "text": "O `\\'` dentro de cada expressão",
+        "why": "As barras são o escape do Bicep e somem no template, onde a aspa é um `'` simples."
+      }
+    ]
+  },
+  "ex-zg2y5rxe": {
+    "prompt": "Um desenvolvedor acrescenta à definição uma ação de primeiro nível `Archive` com `\"runAfter\": {}`, e deixa `Get_orders` como está. Quando `Archive` roda?",
+    "hint": "Agora duas ações têm o mesmo `runAfter`, vazio.",
+    "choices": [
+      {
+        "text": "Depois de `Any_orders`, porque foi acrescentada abaixo dela no arquivo",
+        "why": "A posição no arquivo não decide nada: as ações são chaves de um objeto."
+      },
+      {
+        "text": "Antes de `Get_orders`, que então espera por ela",
+        "why": "`Get_orders` não espera nada além do trigger; o `runAfter` dela não mudou."
+      },
+      {
+        "text": "Assim que o trigger dispara, junto com `Get_orders`",
+        "why": "Isso. Um `runAfter` vazio quer dizer depois do trigger, e duas ações sem nada para esperar começam ambas nessa hora."
+      },
+      {
+        "text": "Nunca, porque só uma ação numa definição pode ter `runAfter` vazio",
+        "why": "Nada na linguagem diz isso; o ramo verdadeiro de `Any_orders` tem a sua própria ação com um vazio."
+      }
+    ]
+  },
+  "ex-yzwck9cn": {
+    "prompt": "A exportação da manhã envia o e-mail pelo conector Office 365 Outlook, que é gerenciado. Onde fica a conexão com a caixa de correio do financeiro, num workflow Consumption?",
+    "hint": "O `outlook.json` a contém.",
+    "choices": [
+      {
+        "text": "Dentro da definição, nos `inputs` da ação",
+        "why": "A ação só o nomeia, por meio de `@parameters('$connections')`; a conexão fica em outro lugar."
+      },
+      {
+        "text": "Num recurso próprio, do tipo `Microsoft.Web/connections`",
+        "why": "Isso. Uma API connection é um recurso separado do Azure, no mesmo grupo de recursos e região do workflow."
+      },
+      {
+        "text": "No arquivo de parâmetros do Bicep, como senha",
+        "why": "O Office 365 entra pelo Entra ID. O serviço guarda tokens, não senha, e nada disso fica num arquivo."
+      },
+      {
+        "text": "Num arquivo `connections.json` ao lado do workflow",
+        "why": "Esse arquivo é das conexões built-in de um logic app Standard, não de um conector gerenciado no Consumption."
+      }
+    ]
+  },
+  "ex-x3tb0jrc": {
+    "prompt": "O `outlook.json` contém `[subscriptionResourceId(...)]` e o `daily-orders.json` contém `@body('Get_orders')`. Quando cada uma é avaliada?",
+    "hint": "Uma é do Resource Manager, a outra é do workflow.",
+    "choices": [
+      {
+        "text": "As duas pelo compilador Bicep, quando ele escreve o template",
+        "why": "O compilador escreveu as duas no template como texto; não avaliou nenhuma."
+      },
+      {
+        "text": "As duas pelo Resource Manager, no deploy",
+        "why": "O Resource Manager avalia os colchetes e deixa passar as strings com `@` intactas."
+      },
+      {
+        "text": "A com `@` uma vez no deploy, a de colchetes a cada execução",
+        "why": "Esse é o par certo de momentos, dado às expressões erradas."
+      },
+      {
+        "text": "A de colchetes uma vez no deploy, a com `@` a cada execução",
+        "why": "Isso. Expressões ARM são resolvidas pelo Resource Manager; expressões do workflow pelo Logic Apps, cada vez que uma execução chega nelas."
+      }
+    ]
+  },
+  "ex-rxa47k90": {
+    "prompt": "Um workflow Consumption começa por um trigger de polling que verifica uma caixa de correio a cada 5 minutos, o dia todo, e acha uma mensagem nova duas vezes. Quantas verificações do trigger são cobradas nesse dia?",
+    "hint": "Uma verificação que não acha nada é cobrada como uma que acha.",
+    "unit": "verificações"
+  },
+  "ex-gd8tqwha": {
+    "prompt": "Ligue cada necessidade da loja à parte de um workflow que a atende.",
+    "hint": "Um item à direita não atende nenhuma delas.",
+    "pairs": [
+      {
+        "left": "começar às seis toda manhã, horário de São Paulo",
+        "right": "um trigger Recurrence com `schedule` e `timeZone`"
+      },
+      {
+        "left": "começar no instante em que o sistema do depósito posta um envio",
+        "right": "a URL de callback do trigger Request"
+      },
+      {
+        "left": "perceber arquivos novos no servidor FTP de um fornecedor",
+        "right": "um trigger de polling"
+      },
+      {
+        "left": "sobreviver à API respondendo 429 por um minuto",
+        "right": "uma política de retry na ação HTTP"
+      }
+    ],
+    "right_distractors": [
+      "uma ação Compose"
+    ]
+  },
+  "ex-b0extzf8": {
+    "prompt": "Meses depois de configurado, o e-mail da manhã para. No histórico, `Get_orders` teve sucesso e `Send_export` falhou com um erro de autorização. A pessoa que configurou o workflow saiu da empresa na semana passada. Qual é a causa provável?",
+    "hint": "Alguém entrou uma vez, quando a conexão foi criada.",
+    "choices": [
+      {
+        "text": "A conexão precisa ser autorizada de novo",
+        "why": "Isso. Ela guarda tokens de quem entrou, e eles foram junto com a conta dessa pessoa; o e-mail para até alguém autorizar a conexão de novo."
+      },
+      {
+        "text": "O conector do Outlook aplicou throttling no workflow",
+        "why": "Throttling responde 429 e é tentado de novo pela política; não é um erro de autorização."
+      },
+      {
+        "text": "O trigger Recurrence perdeu o fuso horário",
+        "why": "A execução começou e `Get_orders` teve sucesso, então o trigger fez a sua parte."
+      },
+      {
+        "text": "A definição ainda se refere ao valor antigo de `$connections`",
+        "why": "A definição nomeia a conexão pelo id do recurso, que não mudou quando a pessoa saiu."
+      }
+    ]
+  },
+  "ex-cwxr2gzp": {
+    "prompt": "O que o `standard.bicep` declara para ter um logic app Standard?",
+    "hint": "O `jq` imprimiu dois recursos e o kind deles.",
+    "choices": [
+      {
+        "text": "Um recurso `Microsoft.Logic/workflows` com um `sku` maior",
+        "why": "Esse é o tipo do Consumption, e ele não tem tier para subir: o Standard é outro recurso."
+      },
+      {
+        "text": "Uma function app com uma configuração de Logic Apps no `host.json`",
+        "why": "Um logic app Standard roda no runtime do Functions, mas o arquivo declara um plano e um site, sem `host.json`."
+      },
+      {
+        "text": "Um plano `WS1` e um `Microsoft.Web/sites` do kind `functionapp,workflowapp`",
+        "why": "Isso. Ele é declarado como uma web app: um plano do tier Workflow Standard e um site nele."
+      },
+      {
+        "text": "Uma imagem de contêiner do runtime do Logic Apps, e uma Container App",
+        "why": "Nada no arquivo é contêiner; o runtime vem com o site."
+      }
+    ]
+  },
+  "ex-zfdkrfk7": {
+    "prompt": "Num workflow Consumption, um laço `foreach` passa por 50 pedidos com duas ações dentro. Quantas execuções esse laço cobra?",
+    "hint": "O exemplo da documentação: 10 itens com uma ação dá 11.",
+    "unit": "execuções"
+  },
+  "ex-sf1sh2re": {
+    "prompt": "O e-mail de terça veio vazio. Ponha em ordem os passos para descobrir por quê.",
+    "hint": "Comece pela lista de execuções e termine na evidência.",
+    "items": [
+      "abrir o histórico de execuções do workflow",
+      "escolher a execução de terça às 06:00",
+      "ver que `No_orders` rodou e o ramo verdadeiro ficou `Skipped`",
+      "abrir `Get_orders` e ler a saída que ela recebeu",
+      "descobrir que a API respondeu com um array vazio"
+    ],
+    "trap": "Qual ramo rodou vem antes do porquê: o histórico mostra `Skipped` no ramo primeiro, e a saída do HTTP explica."
+  },
+  "ex-6kmdb06z": {
+    "prompt": "A exportação da manhã poderia ser um workflow stateless num logic app Standard, para ficar mais barata?",
+    "hint": "Veja como ela começa.",
+    "choices": [
+      {
+        "text": "Sim, porque a execução dura bem menos que os cinco minutos dados a uma execução stateless",
+        "why": "A duração cabe, mas o trigger não."
+      },
+      {
+        "text": "Não: precisaria de um trigger de push, e Recurrence não é um",
+        "why": "Isso. A documentação diz que o trigger Recurrence só existe para workflows stateful."
+      },
+      {
+        "text": "Não, porque workflows stateless não podem chamar endpoints HTTP",
+        "why": "Podem; o que não fazem é consultar um `202 Accepted` para saber o resultado."
+      },
+      {
+        "text": "Sim, e o histórico de execuções também ficaria guardado por 90 dias",
+        "why": "Um workflow stateless mantém os detalhes da execução em memória, então não há histórico a menos que seja ligado."
+      }
+    ]
+  },
+  "ex-9bc1mzrw": {
+    "prompt": "A execução de segunda falhou em `Export`. Na terça você corrige a definição, faz o deploy e reenvia a execução de segunda pelo portal. O que a execução reenviada executa?",
+    "hint": "A documentação lista o que um reenvio mantém do original.",
+    "choices": [
+      {
+        "text": "A definição corrigida, com as entradas de segunda",
+        "why": "É o que a maioria espera, e a documentação diz outra coisa."
+      },
+      {
+        "text": "A definição corrigida, com uma chamada nova à API da loja",
+        "why": "Um reenvio reaproveita as entradas da execução original, e a definição dela também."
+      },
+      {
+        "text": "Nada: uma execução que falhou não pode ser reenviada",
+        "why": "Uma execução terminada, `Failed` incluída, pode ser reenviada num workflow stateful."
+      },
+      {
+        "text": "A versão de segunda da definição, com as entradas de segunda",
+        "why": "Isso. A nova execução usa a versão do workflow da execução original, mesmo depois de uma atualização, então a correção se testa com uma execução nova."
+      }
+    ]
+  },
+  "ex-rhxjmr4q": {
+    "prompt": "Neste curso, o que um laptop consegue verificar do workflow Consumption em `daily-orders.bicep`?",
+    "hint": "Pense no que as cópias com erro de digitação mostraram.",
+    "choices": [
+      {
+        "text": "Que todo `runAfter` nomeia uma ação que existe",
+        "why": "O `typo.bicep` nomeou uma que não existe, e compilou limpo."
+      },
+      {
+        "text": "O recurso que envolve a definição, e nada dentro dela",
+        "why": "Isso. O compilador verifica as propriedades do recurso; a definição é, para ele, um valor de qualquer forma."
+      },
+      {
+        "text": "Que as expressões chamam funções que existem",
+        "why": "`lenght` chegou ao template duas vezes."
+      },
+      {
+        "text": "Uma execução inteira, contra uma cópia local do runtime do Logic Apps",
+        "why": "Só o Standard tem runtime local, pelo Visual Studio Code, e este curso não o usa."
+      }
+    ]
+  },
+  "ex-yj166htk": {
+    "prompt": "Um workflow Consumption escreve uma linha para cada pedido: um `foreach` sobre os pedidos com três ações dentro. Num dia de 1.500 pedidos, quantas execuções o laço cobra nessa execução?",
+    "hint": "Itens vezes ações, mais o laço.",
+    "unit": "execuções"
+  },
+  "ex-gxf9285a": {
+    "prompt": "Para testar uma execução sem chamar a API da loja, uma ação pode ser marcada para devolver uma saída simulada no lugar. A definição guarda essas saídas simuladas sob a chave de primeiro nível `___`.",
+    "hint": "Ela fica ao lado de `triggers`, `actions` e `parameters`, e o nome diz que as saídas não mudam.",
+    "blanks": [
+      {
+        "accept": [
+          "staticResults",
+          "static results"
+        ]
+      }
+    ]
+  },
+  "ex-9sp7fx6h": {
+    "prompt": "Um workflow e uma função são usados juntos. Que divisão do trabalho a lição descreve como comum?",
+    "hint": "Cada lado fica com aquilo em que é bom.",
+    "choices": [
+      {
+        "text": "A função cuida do agendamento e chama o workflow para cada registro",
+        "why": "Isso põe o laço no lado que cobra por passo, que é o arranjo a evitar."
+      },
+      {
+        "text": "O workflow faz a lógica e a função só manda o e-mail",
+        "why": "Mandar e-mail é o que um conector já faz; é a metade para a qual o workflow existe."
+      },
+      {
+        "text": "Uma função faz o passo com laço; o workflow fica com o resto",
+        "why": "Isso. O workflow fica com o agendamento, os conectores e o histórico; a ação Function dele chama a função, e um passo que custaria milhares de execuções vira uma chamada."
+      },
+      {
+        "text": "Os dois rodam o trabalho inteiro, e fica o mais barato depois de um mês",
+        "why": "Rodar o trabalho duas vezes por um mês é uma comparação, não uma divisão do trabalho."
+      }
+    ]
+  },
+  "ex-wc4vs2zy": {
+    "prompt": "Toda noite a loja quer calcular pontos de fidelidade para 40.000 clientes, com regras que os desenvolvedores mudam todo mês e querem testar antes de publicar. O que se encaixa?",
+    "hint": "Conte os passos, e pergunte de quem é a lógica.",
+    "choices": [
+      {
+        "text": "Um workflow Consumption com um `foreach` sobre os clientes",
+        "why": "Dezenas de milhares de iterações cobradas por ação, e regras que não se testam num laptop."
+      },
+      {
+        "text": "Um workflow Standard stateless, para não guardar histórico",
+        "why": "Um workflow stateless não começa por agenda, e 40.000 registros passam do padrão de 100 itens do `foreach` dele."
+      },
+      {
+        "text": "Código: uma função com timer trigger, ou Durable Functions",
+        "why": "Isso. Os passos são lógica da própria loja, o volume é grande, e as regras precisam de testes: os três apontam para código."
+      },
+      {
+        "text": "Um workflow Consumption que manda cada cliente para a ação HTTP de um segundo workflow",
+        "why": "Isso dobra os workflows e ainda cobra cada cliente como várias execuções."
+      }
+    ]
+  },
+  "ex-tkycf3w5": {
+    "prompt": "Ligue cada trabalho ao que a lição usaria para rodá-lo.",
+    "hint": "Um item à direita não serve para nenhum dos trabalhos.",
+    "pairs": [
+      {
+        "left": "um CSV dos pedidos enviado ao financeiro toda manhã",
+        "right": "um workflow Consumption"
+      },
+      {
+        "left": "um workflow que precisa chegar a um banco dentro de uma VNet",
+        "right": "um logic app Standard"
+      },
+      {
+        "left": "um processo de pedido com regras da própria loja, testado no CI",
+        "right": "Durable Functions"
+      },
+      {
+        "left": "a API de pedidos da loja, respondendo requisições",
+        "right": "um contêiner"
+      }
+    ],
+    "right_distractors": [
+      "um workflow stateless com trigger Recurrence"
+    ]
+  },
+  "ex-0vc3zqsk": {
+    "prompt": "Uma definição dá a `Summary` o `runAfter` `{\"Export\": [\"Failed\"]}`. Numa manhã em que `Export` tem sucesso, o que acontece com `Summary`?",
+    "hint": "O `runAfter` lista os status que deixam uma ação rodar.",
+    "choices": [
+      {
+        "text": "Roda, porque `Export` terminou",
+        "why": "Terminar não basta: o status tem que ser um dos listados."
+      },
+      {
+        "text": "Não roda: `Succeeded` não está na lista dela",
+        "why": "Isso. Só `Failed` a deixa rodar, que é a forma de um alerta e não de um resumo."
+      },
+      {
+        "text": "Roda antes de `Export`, para estar pronta se ela falhar",
+        "why": "O `runAfter` só faz uma ação esperar; nunca a adianta."
+      },
+      {
+        "text": "O `bicep build` recusa o arquivo, já que `Failed` não é um status",
+        "why": "`Failed` é um dos quatro status, e o compilador nem lê a definição."
+      }
+    ]
+  },
+  "ex-b928tngm": {
+    "prompt": "Às 06:00 a API da loja está fora do ar por 90 segundos. `Get_orders` tem a política de retry da lição: fixa, 3 retries, um minuto entre eles. Ponha em ordem o que acontece.",
+    "hint": "A API volta entre o primeiro retry e o segundo.",
+    "items": [
+      "`Every_morning` dispara",
+      "a primeira chamada de `Get_orders` recebe um 503",
+      "um minuto depois, o primeiro retry recebe um 503",
+      "um minuto depois disso, o segundo retry recebe os pedidos",
+      "`Any_orders` avalia a sua expressão",
+      "`Export` monta o CSV"
+    ],
+    "trap": "O terceiro retry não acontece: o segundo teve sucesso, então `Get_orders` é cobrada como três execuções, não quatro."
+  },
+  "ex-py35kzjn": {
+    "prompt": "O `bicep build daily-orders.bicep` não imprimiu nada e escreveu `daily-orders.json`. O que isso estabelece?",
+    "hint": "Separe o recurso do workflow que está dentro dele.",
+    "choices": [
+      {
+        "text": "Que o workflow vai rodar direito depois do deploy",
+        "why": "Nada na definição foi verificado, então a compilação não diz nada sobre uma execução."
+      },
+      {
+        "text": "Que o Azure aceitou o template",
+        "why": "Nada foi enviado ao Azure; a compilação aconteceu no laptop, sem assinatura."
+      },
+      {
+        "text": "Que o recurso bate com o tipo publicado para a sua versão de API",
+        "why": "Sim, e só isso: `definition` é qualquer valor para o compilador, como as cópias com erro mostraram."
+      },
+      {
+        "text": "Que toda expressão é sintaticamente válida, embora não que as funções existam",
+        "why": "As expressões são strings para o compilador; ele não analisou nenhuma."
+      }
+    ]
+  }
+}

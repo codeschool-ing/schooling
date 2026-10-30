@@ -1,0 +1,452 @@
+{
+  "ex-9h51zc0g": {
+    "prompt": "O scale set da loja tem `capacity: 3` e nenhuma configuração de autoscale. No almoço a CPU média chega a 95% e fica lá. O que o scale set faz?",
+    "hint": "Que recurso move o número?",
+    "choices": [
+      {
+        "text": "Acrescenta instâncias até o máximo escrito no perfil dele",
+        "why": "O perfil de um scale set não tem máximo. O mínimo e o máximo são de uma configuração de autoscale, e aqui não há nenhuma."
+      },
+      {
+        "text": "Acrescenta uma instância por zona, já que o conjunto abrange três zonas",
+        "why": "As zonas dizem onde as instâncias podem ficar, não quando deve haver mais delas."
+      },
+      {
+        "text": "Pede ao load balancer que inicie instâncias novas no backend pool",
+        "why": "O load balancer manda tráfego para o pool; ele nunca cria instâncias."
+      },
+      {
+        "text": "Mantém três: não há nada que mude a contagem",
+        "why": "Certo. O scale set guarda um modelo e um número; uma configuração de autoscale, um recurso separado, é o que move o número."
+      }
+    ]
+  },
+  "ex-rmw7mzya": {
+    "prompt": "A política de upgrade é Manual. Alguém muda `sku.name` no arquivo de `Standard_D2s_v5` para `Standard_D4s_v5` e implanta de novo. No dia seguinte o autoscale acrescenta uma instância. O que está rodando?",
+    "hint": "Um modelo descreve as instâncias que ainda não foram feitas.",
+    "choices": [
+      {
+        "text": "Quatro instâncias D4s_v5, já que uma implantação substitui todas as instâncias",
+        "why": "Uma implantação muda o modelo. Com a política Manual as instâncias em execução ficam como estavam."
+      },
+      {
+        "text": "Quatro instâncias D2s_v5, já que o tamanho é fixado quando o conjunto é criado",
+        "why": "O tamanho faz parte do modelo e pode mudar; o que é fixado na criação é o modo de orquestração."
+      },
+      {
+        "text": "Três instâncias D2s_v5 e uma D4s_v5",
+        "why": "Certo. As três que existiam foram feitas com o modelo antigo e o Manual as deixa em paz; a nova é feita com o modelo atual."
+      },
+      {
+        "text": "Nada de novo, porque a implantação é recusada até as instâncias antigas serem apagadas",
+        "why": "Mudar o modelo de um conjunto em execução é permitido. O que acontece com as instâncias antigas é decisão da política de upgrade."
+      }
+    ]
+  },
+  "ex-12vzhs8r": {
+    "prompt": "Um conjunto que abrange zonas, com a política de redução `OldestVM`, tem três instâncias na zona 1, uma na zona 2 e uma na zona 3. A instância mais antiga de todas é a da zona 2. O autoscale remove uma. Qual sai?",
+    "hint": "O que as três políticas fazem antes de aplicar a própria regra?",
+    "choices": [
+      {
+        "text": "A mais antiga das três instâncias da zona 1",
+        "why": "Certo. Toda política equilibra as zonas primeiro, apagando da zona mais cheia; OldestVM então escolhe a instância mais antiga dentro dessa zona."
+      },
+      {
+        "text": "A instância da zona 2, porque é a mais antiga",
+        "why": "OldestVM escolhe a mais antiga só depois de equilibrar as zonas. Remover a única instância da zona 2 deixaria o conjunto menos equilibrado."
+      },
+      {
+        "text": "A instância com o maior instance id na zona 1",
+        "why": "Esse é o último passo da política Default. Este conjunto usa OldestVM, que escolhe pela idade dentro da zona."
+      },
+      {
+        "text": "Nenhuma, porque um conjunto em três zonas não pode reduzir abaixo de uma instância por zona",
+        "why": "Nada proíbe isso; há cinco instâncias e o conjunto pode ir para quatro. O equilíbrio decide que zona perde uma."
+      }
+    ]
+  },
+  "ex-h4ev0twx": {
+    "prompt": "A instância que roda o relatório noturno de vendas tem `protectFromScaleIn`. Um rolling upgrade do scale set começa à meia-noite. O que acontece com essa instância?",
+    "hint": "Duas forças de proteção, e só uma delas cobre operações sobre o conjunto inteiro.",
+    "choices": [
+      {
+        "text": "É pulada, porque uma instância protegida fica fora de toda operação",
+        "why": "A proteção contra redução cobre a redução do autoscale e nada mais; uma operação iniciada no scale set ainda chega a ela."
+      },
+      {
+        "text": "O upgrade inteiro é recusado enquanto houver uma instância protegida",
+        "why": "A proteção é por instância e nunca bloqueia uma operação sobre o conjunto como um todo."
+      },
+      {
+        "text": "É apagada e recriada, porque a proteção se perde quando o modelo muda",
+        "why": "A proteção é posta na instância, não no modelo, e um upgrade não a remove."
+      },
+      {
+        "text": "É atualizada com as outras: só `protectFromScaleSetActions` afasta um upgrade",
+        "why": "Certo. A proteção mais forte cobre operações sobre o conjunto inteiro, como um upgrade ou um reimage; a mais fraca só impede que o autoscale a escolha."
+      }
+    ]
+  },
+  "ex-n6gh5ej3": {
+    "prompt": "No template compilado, um recurso declarado com `existing` não aparece como recurso. Ele vira uma expressão ___, que o Resource Manager resolve na implantação.",
+    "hint": "Olhe o id da sub-rede na transcrição.",
+    "blanks": [
+      {
+        "accept": [
+          "resourceId",
+          "resourceId()"
+        ]
+      }
+    ]
+  },
+  "ex-f299ccsa": {
+    "prompt": "Uma equipe criou um scale set Uniform no ano passado e agora quer que as instâncias sejam máquinas virtuais comuns, com backup pelo Azure Backup. O que ela faz?",
+    "hint": "Quando o modo de orquestração é escolhido?",
+    "choices": [
+      {
+        "text": "Muda `orchestrationMode` para `Flexible` e implanta o arquivo de novo",
+        "why": "O modo é definido quando o scale set é criado e não pode ser mudado depois; a implantação não o converte."
+      },
+      {
+        "text": "Roda um rolling upgrade, que passa cada instância para o modo novo",
+        "why": "Um upgrade alinha as instâncias com o modelo, e o modo não é algo que uma mudança de modelo altere."
+      },
+      {
+        "text": "Cria um scale set novo, no modo Flexible, e leva a carga para lá",
+        "why": "Certo. O modo é fixado na criação, então o caminho para o Flexible é um conjunto novo."
+      },
+      {
+        "text": "Nada, já que instâncias Uniform têm backup como qualquer máquina virtual",
+        "why": "A comparação da Microsoft lista o Azure Backup como não suportado para instâncias Uniform."
+      }
+    ]
+  },
+  "ex-a8b5d8k5": {
+    "prompt": "Ligue cada configuração ao que ela faz.",
+    "hint": "Espalhar, um grupo de 100, uma lista de tamanhos, uma escolha feita uma vez.",
+    "pairs": [
+      {
+        "left": "`platformFaultDomainCount: 1`",
+        "right": "Espalhar as instâncias por tantos domínios de falha quanto o Azure conseguir"
+      },
+      {
+        "left": "`singlePlacementGroup: true` no Uniform",
+        "right": "Manter o conjunto num grupo de no máximo 100 instâncias"
+      },
+      {
+        "left": "`sku.name: 'Mix'`",
+        "right": "Deixar o Azure escolher entre até cinco tamanhos listados"
+      },
+      {
+        "left": "`orchestrationMode`",
+        "right": "Decidir, uma vez e na criação, que tipo de recurso uma instância é"
+      }
+    ],
+    "right_distractors": [
+      "Pôr todas as instâncias no mesmo domínio de falha"
+    ]
+  },
+  "ex-aen6v2zr": {
+    "prompt": "`orchestrationMode: 'Flex'` compilou sem aviso. Por quê?",
+    "hint": "Como a propriedade é tipada na definição da Microsoft?",
+    "choices": [
+      {
+        "text": "O tipo é um dos dois modos ou qualquer string, e `Flex` passa",
+        "why": "Certo. O tipo publicado termina em `| string`, e o Bicep confere o tipo, não quais strings o serviço aceita."
+      },
+      {
+        "text": "O compilador aceita qualquer prefixo de um valor permitido",
+        "why": "O Bicep não compara prefixos. Ele compara o valor com o tipo, e este tipo admite qualquer string."
+      },
+      {
+        "text": "`Flex` é uma forma curta aceita, que o Azure expande para `Flexible`",
+        "why": "Nada do que foi lido para esta lição documenta uma forma curta; a ajuda do CLI lista exatamente `Flexible` e `Uniform`."
+      },
+      {
+        "text": "Avisos sobre modos ficam desligados a menos que se rode `bicep lint`",
+        "why": "Foi o `bicep build` que acusou a propriedade com erro de grafia no mesmo arquivo; não há chave separada para modos."
+      }
+    ]
+  },
+  "ex-78tpj0q0": {
+    "prompt": "Quais destas são verdadeiras sobre uma instância do scale set Flexible da loja? Marque todas as que se aplicam.",
+    "hint": "É uma máquina virtual comum que pertence a um conjunto.",
+    "choices": [
+      {
+        "text": "O tipo de recurso dela é `Microsoft.Compute/virtualMachines`",
+        "why": "É isso que uma instância de um conjunto Flexible é."
+      },
+      {
+        "text": "Ela pode ter tags próprias",
+        "why": "Tags funcionam nela como em qualquer máquina virtual; a comparação da Microsoft lista tags como não suportadas só para instâncias Uniform."
+      },
+      {
+        "text": "Ela é endereçada como `virtualMachineScaleSets/virtualMachines/0`",
+        "why": "Esse recurso filho numerado é como um conjunto Uniform guarda as instâncias."
+      },
+      {
+        "text": "A saúde dela pode vir da sonda do load balancer em vez da extensão",
+        "why": "O Flexible aceita só a extensão Application Health; a sonda é a alternativa do Uniform."
+      },
+      {
+        "text": "Ela chega à internet sem nenhum caminho de saída configurado para ela",
+        "why": "Um conjunto Flexible não tem acesso de saída padrão; algo como um NAT gateway tem de fornecê-lo."
+      }
+    ]
+  },
+  "ex-jeyhm2g9": {
+    "prompt": "Uma cópia do arquivo da loja põe `platformFaultDomainCount: 3` mantendo `zones: ['1', '2', '3']`. Compila sem aviso. O que se pode dizer dela?",
+    "hint": "Quais valores documentados um conjunto Flexible com zonas tem, e onde essa regra está escrita?",
+    "choices": [
+      {
+        "text": "Está correta: três zonas e três domínios de falha combinam um a um",
+        "why": "Zonas e domínios de falha são espalhamentos separados. Para um conjunto Flexible que usa zonas o valor documentado é só 1."
+      },
+      {
+        "text": "Quebra uma regra documentada que o serviço guarda e o tipo não",
+        "why": "Certo. Os valores documentados são 1, 2 ou 3 para um conjunto Flexible regional e 1 com zonas; essa regra vive na documentação do serviço, não no tipo."
+      },
+      {
+        "text": "Está errada para o compilador também, que só a acusa com `bicep lint`",
+        "why": "O tipo é um número e 3 é um número; nenhuma regra sobre zonas está no tipo para algum comando acusar."
+      },
+      {
+        "text": "Espalhar fixo em três é o padrão para zonas, então escrever isso não muda nada",
+        "why": "O padrão do Flexible é 1, o espalhamento máximo; 3 é espalhamento fixo e só é documentado para conjuntos regionais."
+      }
+    ]
+  },
+  "ex-pmdhepem": {
+    "prompt": "Toda amostra de um minuto marca 40 até as 12:00 e 90 a partir das 12:01. A regra tira a média de uma janela de 10 minutos e dispara quando a média é `GreaterThan` 70. Quantos minutos depois das 12:00 a janela dispara a regra pela primeira vez?",
+    "hint": "Cada minuto troca um 40 por um 90. O que acontece em exatamente 70?",
+    "unit": "minutos"
+  },
+  "ex-p564fsc8": {
+    "prompt": "No almoço da lição, a regra disparou às 12:07 e as instâncias novas servem a partir das 12:10, depois disso cada amostra é 54; as amostras das 12:01 às 12:09 foram 90. Com um cooldown de cinco minutos, quanto marca a janela de dez minutos às 12:12?",
+    "hint": "A janela que termina às 12:12 começa às 12:03."
+  },
+  "ex-eyy3ztqw": {
+    "prompt": "Ponha em ordem o que acontece entre a CPU das instâncias e uma ação de escala, na regra de aumento da loja.",
+    "hint": "Primeiro entre as instâncias, depois ao longo do tempo.",
+    "items": [
+      "A cada minuto, a CPU das instâncias vira uma amostra pela média (`statistic`)",
+      "As últimas dez amostras viram um número pela média (`timeAggregation`)",
+      "Esse número é comparado com 70 (`operator`, `threshold`)",
+      "Duas instâncias são acrescentadas (`scaleAction`)",
+      "A regra espera dez minutos antes de poder agir de novo (`cooldown`)"
+    ],
+    "trap": "`statistic` e `timeAggregation` são fáceis de trocar: o primeiro combina as instâncias dentro de um minuto, o segundo combina os minutos da janela."
+  },
+  "ex-42nwd6fs": {
+    "prompt": "Um perfil tem duas regras de redução: CPU abaixo de 30% e memória abaixo de 50%. A CPU marca 25% e a memória 55%. O que o autoscale faz?",
+    "hint": "Aumenta com qualquer uma, reduz só com todas.",
+    "choices": [
+      {
+        "text": "Remove uma instância, porque a regra de CPU disparou",
+        "why": "Uma regra de redução disparando não basta; uma redução precisa que todas as regras de redução disparem."
+      },
+      {
+        "text": "Nada, porque a regra de memória não disparou",
+        "why": "Certo. O autoscale só reduz quando todas as regras de redução concordam, então a regra de memória segura a contagem."
+      },
+      {
+        "text": "Remove duas instâncias, uma para cada regra",
+        "why": "As regras não são somadas, e aqui só uma delas disparou."
+      },
+      {
+        "text": "Aumenta, porque a memória está acima do limite dela",
+        "why": "Memória acima de 50% quer dizer que a regra de redução não disparou; não é uma regra de aumento a menos que se escreva uma."
+      }
+    ]
+  },
+  "ex-3f4gxbg8": {
+    "prompt": "Regras: acrescentar uma acima de 50% de CPU, remover uma abaixo de 40%. Duas instâncias ficam em 37,5% de média por uma janela inteira, 75 pontos percentuais entre elas. O que o autoscale faz?",
+    "hint": "Calcule a média na contagem menor antes de remover qualquer coisa.",
+    "choices": [
+      {
+        "text": "Remove uma instância, já que a média de 37,5% está abaixo de 40%",
+        "why": "A regra dispara, mas o autoscale confere uma redução antes: com uma instância a média seria 75%, acima de 50, então a redução é pulada."
+      },
+      {
+        "text": "Remove uma e a acrescenta de volta na execução seguinte",
+        "why": "Esse vaivém é o flapping, e a conferência antes de toda redução existe para evitá-lo."
+      },
+      {
+        "text": "Mantém duas: com uma só, 75% dispararia a regra de aumento",
+        "why": "Certo. O autoscale estima a métrica na contagem menor antes de reduzir, e pula uma redução que causaria a ação oposta."
+      },
+      {
+        "text": "Acrescenta uma instância, já que o total de 75 está acima de 50",
+        "why": "A regra compara a média entre as instâncias, 37,5%, não o total."
+      }
+    ]
+  },
+  "ex-k9fwn70t": {
+    "prompt": "Um rolling upgrade passa por 10 instâncias com `maxBatchInstancePercent: 20` e `pauseTimeBetweenBatches: 'PT2M'`. Quantos minutos de pausas ele acrescenta, além dos próprios lotes?",
+    "hint": "Lotes de dois; uma pausa fica entre dois lotes.",
+    "unit": "minutos"
+  },
+  "ex-w2hq51en": {
+    "prompt": "Uma cópia do arquivo põe o `requestPath` da extensão de saúde em `/health`. Compila sem aviso. Implantada, o que vem depois?",
+    "hint": "A transcrição pediu esse caminho à loja.",
+    "choices": [
+      {
+        "text": "A extensão volta para `/healthz` depois do primeiro 404",
+        "why": "A extensão pergunta o caminho que recebeu e nada mais; não há volta."
+      },
+      {
+        "text": "Toda instância fica doente, os upgrades param e os reparos as trocam",
+        "why": "Certo. A loja responde 404 ali, e a saúde binária conta qualquer coisa que não seja 200 como doente, então o conjunto trata máquinas sãs como quebradas."
+      },
+      {
+        "text": "Nada, porque a saúde só importa durante um upgrade",
+        "why": "Os reparos automáticos leem a mesma saúde o tempo todo, então agem desde as primeiras sondas."
+      },
+      {
+        "text": "O Resource Manager recusa a implantação, já que `/health` não existe",
+        "why": "O Resource Manager não tem como saber que caminhos a aplicação dentro da imagem responde; a extensão descobre quando roda."
+      }
+    ]
+  },
+  "ex-z3b9rkn5": {
+    "prompt": "Alguém muda `typeHandlerVersion` de `1.0` para `2.0`, pelos estados extras que a saúde rica oferece. O `/healthz` da loja continua respondendo `{\"status\": \"ok\"}` com 200. Que estado as instâncias informam?",
+    "hint": "A saúde rica lê o corpo além do código de status.",
+    "choices": [
+      {
+        "text": "Healthy, já que a resposta continua sendo 200",
+        "why": "Isso é a saúde binária. A saúde rica quer `ApplicationHealthState` no corpo, e um 2xx sem ele não conta como saudável."
+      },
+      {
+        "text": "Unhealthy na hora, já que a saúde rica trata todo 2xx como falha",
+        "why": "Um 2xx é o que a saúde rica espera; é o campo que falta no corpo que deixa o estado Unknown em vez de Healthy."
+      },
+      {
+        "text": "O compilador recusa a versão `2.0` para uma sonda HTTP",
+        "why": "A versão é uma string no tipo e `2.0` compila; o desencontro é entre a extensão e a aplicação."
+      },
+      {
+        "text": "Initializing até o fim do período de carência, e depois Unknown",
+        "why": "Certo. A instância começa em Initializing; sem um `ApplicationHealthState` válido ela nunca se declara saudável, e quando o período acaba fica Unknown, que os reparos tratam como doente."
+      }
+    ]
+  },
+  "ex-k8qqgzxx": {
+    "prompt": "Um scale set foi criado sem nenhum `upgradePolicy`. Uma referência de imagem nova é escrita no modelo dele. O que acontece com as instâncias em execução?",
+    "hint": "Que modo você ganha sem dizer nada?",
+    "choices": [
+      {
+        "text": "São atualizadas em lotes de 20%",
+        "why": "Lotes são o modo Rolling; um conjunto que não nomeia política está em Manual."
+      },
+      {
+        "text": "Podem ser todas atualizadas de uma vez, já que nenhuma ordem foi pedida",
+        "why": "Esse é o modo Automatic, que tem de ser escolhido."
+      },
+      {
+        "text": "São reimaged uma a uma pelos reparos automáticos",
+        "why": "Os reparos agem sobre instâncias doentes, não sobre um modelo mudado."
+      },
+      {
+        "text": "Nada, até alguém atualizá-las à mão",
+        "why": "Certo. O modo padrão é Manual: o modelo muda, as instâncias novas o usam e as existentes esperam."
+      }
+    ]
+  },
+  "ex-gw67mqff": {
+    "prompt": "O conjunto da loja tem 12 instâncias e 3 delas se declaram doentes no mesmo momento. Os reparos automáticos estão ligados, com a ação padrão. O que acontece?",
+    "hint": "Menos de 20 instâncias.",
+    "choices": [
+      {
+        "text": "Uma por vez, cada uma trocada por uma instância nova do modelo",
+        "why": "Certo. Um conjunto com menos de 20 é reparado uma instância por vez, e Replace, o padrão, cria uma instância nova a partir do modelo."
+      },
+      {
+        "text": "As três são substituídas juntas, num lote de 25%",
+        "why": "Os reparos nunca pegam mais de 5% de uma vez, e abaixo de 20 instâncias vão uma por uma."
+      },
+      {
+        "text": "São reiniciadas uma por vez, mantendo os discos",
+        "why": "Restart é uma ação de reparo que se escolhe; o padrão é Replace."
+      },
+      {
+        "text": "Nada, até o período de carência de 30 minutos passar para o conjunto inteiro",
+        "why": "O período de carência corre por instância, depois de uma mudança nessa instância, não para o conjunto todo."
+      }
+    ]
+  },
+  "ex-mvd9t4xy": {
+    "prompt": "À noite as cinco instâncias da loja carregam 120 pontos percentuais de CPU entre elas. A regra de redução remove uma quando a média de dez minutos fica abaixo de 30. Em quantas instâncias o conjunto se acomoda?",
+    "hint": "Divida de novo depois de cada remoção, e leia o operador.",
+    "unit": "instâncias"
+  },
+  "ex-7064qrep": {
+    "prompt": "Quais destes erros o `bicep build` acusou nesta lição? Marque todos os que se aplicam.",
+    "hint": "Um nome que ele não conhece, ou um tipo que ele não esperava.",
+    "choices": [
+      {
+        "text": "`singlePlacmentGroup`, com uma letra faltando",
+        "why": "BCP089, com a grafia certa sugerida."
+      },
+      {
+        "text": "`cooldown: 10`, um número onde cabe uma duração",
+        "why": "BCP036: esperava-se uma string, acusada onde `cpuRules` é usada."
+      },
+      {
+        "text": "`orchestrationMode: 'Flex'`",
+        "why": "O tipo admite qualquer string, então compilou sem aviso."
+      },
+      {
+        "text": "`timeWindow: 'PT2M'`, abaixo dos cinco minutos da API",
+        "why": "Uma duração bem formada; o intervalo está na descrição da API, não no tipo."
+      },
+      {
+        "text": "Um mínimo de 13 contra um máximo de 12",
+        "why": "Os dois são strings para o compilador, que não os compara."
+      }
+    ]
+  },
+  "ex-faj33p9q": {
+    "prompt": "A regra de uma equipe tira a média de uma janela de 15 minutos, e a imagem dela leva 4 minutos para subir e servir. Ela quer um cooldown de aumento que impeça a regra de agir uma segunda vez sobre minutos de antes da própria primeira ação. Qual é o mais curto que consegue?",
+    "hint": "A janela tem de ficar livre dos minutos antigos, e as instâncias novas não servem na hora.",
+    "choices": [
+      {
+        "text": "Uns 19 minutos: a janela mais o boot",
+        "why": "Certo. Só então a janela guarda apenas minutos em que as instâncias acrescentadas estavam servindo."
+      },
+      {
+        "text": "5 minutos, o valor do exemplo da Microsoft",
+        "why": "Depois de 5 minutos a maior parte de uma janela de 15 minutos ainda é de antes da ação."
+      },
+      {
+        "text": "15 minutos, o comprimento da janela",
+        "why": "Isso tira da janela os minutos de antes da ação, mas 4 deles são minutos em que as instâncias novas ainda subiam e a carga antiga não mudou."
+      },
+      {
+        "text": "4 minutos, o tempo de boot",
+        "why": "Subir faz parte, mas a janela ainda lembra 11 minutos de antes."
+      }
+    ]
+  },
+  "ex-q9hs4c6r": {
+    "prompt": "A loja quer seis instâncias da meia-noite da Black Friday até o fim do sábado, e as regras de sempre no resto do ano. Que parte da configuração de autoscale faz isso?",
+    "hint": "Um tipo de perfil tem começo e fim.",
+    "choices": [
+      {
+        "text": "Um perfil de recorrência às sextas, a partir das 00:00",
+        "why": "Uma recorrência se repete toda semana; a loja teria seis em toda sexta do ano."
+      },
+      {
+        "text": "Uma segunda configuração de autoscale no mesmo scale set para esses dois dias",
+        "why": "Um recurso tem uma configuração de autoscale; as datas vão nos perfis dentro dela."
+      },
+      {
+        "text": "Um perfil de data fixa com mínimo 6",
+        "why": "Certo. Perfis de data fixa são avaliados primeiro e só valem entre o começo e o fim; o perfil padrão cobre todos os outros dias."
+      },
+      {
+        "text": "`capacity.default: '6'` no perfil padrão",
+        "why": "A capacidade padrão só é usada quando a métrica não pode ser lida; ela não define um piso para uma data."
+      }
+    ]
+  }
+}

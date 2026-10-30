@@ -1,0 +1,433 @@
+{
+  "ex-t2zk7mx8": {
+    "prompt": "Dos quatro números que se leem num perfil de requisições, qual a conta do Flex Consumption acompanha, com o tamanho da instância e a duração cobrada fixos?",
+    "hint": "Sob demanda, o Flex cobra memória durante a execução e as próprias execuções.",
+    "choices": [
+      {
+        "text": "O volume",
+        "why": "Isso. Cada requisição é cobrada nos mesmos GB-segundos e numa execução, então a conta é o volume vezes um preço por requisição."
+      },
+      {
+        "text": "A hora de pico",
+        "why": "O pico dimensiona máquinas, réplicas e nós. O Functions soma instâncias conforme as requisições chegam e não paga nenhuma adiantado."
+      },
+      {
+        "text": "O número de horas ociosas",
+        "why": "Uma hora ociosa não custa nada a uma função, então é onde o Functions ganha, mas não é ela que faz a conta."
+      },
+      {
+        "text": "A hora em que o tráfego começa",
+        "why": "Uma função custa o mesmo às 03:00 e às 15:00."
+      }
+    ]
+  },
+  "ex-njfa38ny": {
+    "prompt": "Um serviço recebe 20 requisições por segundo durante 12 horas por dia e nenhuma nas outras 12. No mês médio de 730 horas (30,42 dias), quantas requisições são, em milhões, com duas casas decimais?",
+    "hint": "Requisições por dia, depois vezes 730 / 24.",
+    "unit": "milhões de requisições"
+  },
+  "ex-cr9t71p7": {
+    "prompt": "A API da loja é em Python. No pico da noite, de 80 requisições por segundo, cada uma levando 100 ms, quantas instâncias do Flex Consumption ela ocupa com a concorrência HTTP padrão, e por quê?",
+    "hint": "Requisições em andamento são a taxa vezes a duração; depois pergunte quantas cada instância aceita.",
+    "choices": [
+      {
+        "text": "Uma, porque uma instância de 2.048 MB aceita 16 requisições ao mesmo tempo",
+        "why": "16 é o padrão de uma instância de 2.048 MB em outras linguagens. A documentação da Microsoft põe apps Python em uma."
+      },
+      {
+        "text": "Oito: 80 × 0,1 s estão em andamento, uma por instância",
+        "why": "Isso. A concorrência é a taxa vezes a duração, e um app Python aceita uma requisição HTTP por instância por padrão."
+      },
+      {
+        "text": "Oitenta, uma para cada requisição que chega num segundo",
+        "why": "Uma requisição dura um décimo de segundo, então as oitenta de um segundo não estão todas em andamento juntas."
+      },
+      {
+        "text": "Duas, o piso que o programa mantém para toda opção",
+        "why": "`LEAST` vale para máquinas, réplicas e nós. O Functions sob demanda não mantém piso."
+      }
+    ]
+  },
+  "ex-7hgpvvv1": {
+    "prompt": "O número de requisições em andamento ao mesmo tempo é a taxa de requisições multiplicada pela ___ delas.",
+    "hint": "60 por segundo a 100 ms cada são seis de uma vez.",
+    "blanks": [
+      {
+        "accept": [
+          "duração",
+          "duração média",
+          "latência"
+        ]
+      }
+    ]
+  },
+  "ex-mc0sf0rm": {
+    "prompt": "Relacione cada número lido num perfil de requisições à parte da conta que ele move.",
+    "hint": "Que medidor ou que decisão de dimensionamento cada um alimenta?",
+    "pairs": [
+      {
+        "left": "o volume",
+        "right": "as execuções do Functions, e a cobrança por requisição do Container Apps"
+      },
+      {
+        "left": "o pico",
+        "right": "quantas máquinas, réplicas ou nós precisam rodar"
+      },
+      {
+        "left": "as horas ociosas",
+        "right": "onde uma réplica paga a tarifa ociosa, ou nada em zero"
+      },
+      {
+        "left": "a duração",
+        "right": "os GB-segundos, e quais timeouts se aplicam"
+      }
+    ],
+    "right_distractors": [
+      "a alíquota de imposto da região"
+    ]
+  },
+  "ex-jzgr327s": {
+    "prompt": "Na tabela do `compare.py`, duas máquinas virtuais custam 146,00, o plano do App Service 219,00 e o AKS 511,00 em todas as linhas, de 0,13 milhão de requisições a 1.051 milhões. Por quê?",
+    "hint": "Pelo que essas três cobram, e algum perfil precisa de mais?",
+    "choices": [
+      {
+        "text": "O programa tem um bug e ignora o perfil para elas",
+        "why": "Ele as dimensiona hora a hora com `copies`; os perfis só nunca pedem mais que o piso."
+      },
+      {
+        "text": "Reservas são aplicadas a elas automaticamente",
+        "why": "Nenhum desconto está no arquivo; o programa usa tarifas pré-pagas por uso nas três."
+      },
+      {
+        "text": "Cada uma é um número fixo de máquinas pago por hora, e nenhum perfil passa do piso",
+        "why": "Isso. Até o busy cabe exato em duas `D2s_v5`, então a conta não se move com o tráfego."
+      },
+      {
+        "text": "As tarifas delas são documentadas pela Microsoft, ao contrário das outras",
+        "why": "Toda tarifa no `rates.json` é ilustrativa; só as cotas do Container Apps são documentadas."
+      }
+    ]
+  },
+  "ex-ykyarp6e": {
+    "prompt": "O perfil webhook, uma chamada a cada vinte segundos o dia todo, custa 6,89 USD no Functions e 58,75 no Container Apps. O que faz a diferença?",
+    "hint": "Conte as horas ociosas, depois pense no que cada medidor conta.",
+    "choices": [
+      {
+        "text": "O Container Apps cobra por toda requisição, e o Functions não",
+        "why": "Os dois primeiros milhões de requisições do mês no Container Apps são grátis, e o webhook faz 0,13 milhão."
+      },
+      {
+        "text": "O Functions tem cotas gratuitas maiores que o Container Apps",
+        "why": "O programa deixa as cotas do Functions em zero; a diferença existe sem elas."
+      },
+      {
+        "text": "Uma réplica não consegue atender uma requisição que chega a cada vinte segundos",
+        "why": "Consegue, com folga; o problema é que ela é paga no intervalo."
+      },
+      {
+        "text": "Nenhuma hora é ociosa, então as réplicas cobram como ativas o mês todo",
+        "why": "Isso. Uma chamada em cada hora mantém as réplicas ativas; o Flex paga 131.400 segundos e mais nada."
+      }
+    ]
+  },
+  "ex-tnth7de1": {
+    "prompt": "Com `CA_MIN` em 0, quais linhas da coluna do Container Apps caíram porque as horas sem requisição agora não custam nada? Escolha todas as que se aplicam.",
+    "hint": "Algumas linhas caíram por outro motivo: perderam a segunda réplica.",
+    "choices": [
+      {
+        "text": "nightly, de 15,82 para 0,43",
+        "why": "Isso. As 22 horas em silêncio não custam nada, e as duas movimentadas cabem nas cotas."
+      },
+      {
+        "text": "steady, de 89,49 para 57,95",
+        "why": "O steady não tem hora em silêncio. Caiu porque 30 por segundo só precisa de uma réplica quando não há piso de duas."
+      },
+      {
+        "text": "office, de 52,04 para 42,18",
+        "why": "Isso. As quinze horas em silêncio passaram da tarifa ociosa para nada."
+      },
+      {
+        "text": "webhook, de 58,75 para 27,22",
+        "why": "Ele nunca chega a zero: uma chamada a cada vinte segundos mantém uma réplica de pé. Perdeu a segunda réplica, não as horas ociosas."
+      },
+      {
+        "text": "busy, que caiu junto com os outros",
+        "why": "O busy não se mexeu: 667,65 nas duas vezes, porque oito réplicas rodam o dia todo de qualquer jeito."
+      }
+    ]
+  },
+  "ex-5v8v3hjx": {
+    "prompt": "Nas tarifas do arquivo, 0,000026 USD por GB-segundo e 0,40 USD por milhão de execuções, com cada requisição cobrada como um segundo, quantos milhões de requisições por mês fazem uma instância Flex de 512 MB custar o que duas máquinas virtuais custam, 146,00 USD? Duas casas decimais.",
+    "hint": "Uma requisição custa 0,5 GB-segundo mais uma execução; divida 146 por isso.",
+    "unit": "milhões de requisições"
+  },
+  "ex-35qkr8fk": {
+    "prompt": "Qual destes o `compare.py` deixa de fora, de modo que um resultado apertado entre duas máquinas virtuais e o Container Apps pende mais para o Container Apps do que a tabela mostra?",
+    "hint": "Qual dos dois precisa de algo na frente que o outro já traz?",
+    "choices": [
+      {
+        "text": "As cotas gratuitas do Container Apps",
+        "why": "Elas estão no programa, tiradas dos segundos ativos."
+      },
+      {
+        "text": "Reservas, que uma carga estável recompensa",
+        "why": "Essas favoreceriam as máquinas, não o Container Apps."
+      },
+      {
+        "text": "Os 300 segundos que o Container Apps espera antes de remover réplicas",
+        "why": "Isso faz réplicas reais rodarem um pouco mais do que o programa conta, o que soma do lado do Container Apps."
+      },
+      {
+        "text": "O balanceador ou gateway que as máquinas precisam na frente",
+        "why": "Isso. O Container Apps já vem com o próprio ingress, e duas máquinas precisam de um balanceador ou de um Application Gateway que não está no arquivo."
+      }
+    ]
+  },
+  "ex-c5ndm3z6": {
+    "prompt": "Duas cópias de `shop:1.0` rodam nas portas 8081 e 8082. Um pedido enviado à 8081 aparece na lista dela, e a 8082 responde `[]`. Por quê?",
+    "hint": "Onde o `app.py` guarda os pedidos?",
+    "choices": [
+      {
+        "text": "Cada processo guarda a própria lista `ORDERS` na memória",
+        "why": "Isso. Nada é compartilhado entre processos, e é por isso também que o reinício esvaziou o primeiro."
+      },
+      {
+        "text": "O segundo contêiner ainda não tinha iniciado",
+        "why": "Ele respondeu, com uma lista vazia; um contêiner que não tivesse iniciado não responderia nada."
+      },
+      {
+        "text": "O pedido foi gravado no disco do primeiro contêiner",
+        "why": "O `app.py` não grava nada em disco; a lista é uma variável Python."
+      },
+      {
+        "text": "O Docker isola as duas redes, então o pedido não conseguiu chegar à 8082",
+        "why": "O pedido nunca foi enviado à 8082. Nada na loja repassa um pedido para outra cópia."
+      }
+    ]
+  },
+  "ex-btx6y9zj": {
+    "prompt": "A exportação financeira do mês leva cinco minutos enquanto a página espera. Que mudança a deixa rodar atrás do Container Apps, do App Service ou do Functions?",
+    "hint": "Dois dos três limites não são o timeout que você configura.",
+    "choices": [
+      {
+        "text": "Torná-la um job que o financeiro busca quando ficar pronto",
+        "why": "Isso. Nada espera numa requisição aberta, então o limite de nenhuma porta de entrada se aplica."
+      },
+      {
+        "text": "Pôr o `functionTimeout` do `host.json` em dez minutos",
+        "why": "Uma função HTTP continua com 230 segundos para responder, diga o timeout o que disser."
+      },
+      {
+        "text": "Movê-la para o App Service, que não tem limite por requisição",
+        "why": "Os mesmos 230 segundos valem, o tempo ocioso do balanceador na frente."
+      },
+      {
+        "text": "Mantê-la no Container Apps, cujo ingress espera mais de cinco minutos",
+        "why": "A documentação do ingress dá 240 segundos, que cinco minutos ultrapassam."
+      }
+    ]
+  },
+  "ex-89j0bzad": {
+    "prompt": "Ponha em ordem o que acontece quando a exportação do mês vira um job, do financeiro apertando o botão até o arquivo na mão deles.",
+    "items": [
+      "A página põe uma mensagem numa fila do Service Bus e responde na hora",
+      "A mensagem inicia um job do Container Apps disparado por eventos",
+      "O job gera o arquivo e o grava no armazenamento",
+      "O financeiro busca o arquivo quando a página diz que ele está pronto"
+    ],
+    "trap": "Iniciar o job antes de a mensagem existir: um job disparado por eventos é iniciado pela mensagem, então a fila vem primeiro."
+  },
+  "ex-n9crk33w": {
+    "prompt": "A loja mantém um pool de 20 conexões ao banco por processo. Levada para o Flex Consumption como app Python, por que o banco é o primeiro a cair numa rajada?",
+    "hint": "Conte processos, não requisições.",
+    "choices": [
+      {
+        "text": "O Functions fecha toda conexão depois de cada requisição",
+        "why": "Conexões podem ser mantidas por um cliente criado fora do handler; o problema é o número de instâncias."
+      },
+      {
+        "text": "O Flex Consumption não alcança um banco numa rede virtual",
+        "why": "Alcança: a integração com rede virtual é um dos acréscimos do Flex sobre o antigo Consumption."
+      },
+      {
+        "text": "O limite de 230 segundos segura as conexões abertas por tempo demais",
+        "why": "O limite é sobre responder uma requisição; ele não diz nada sobre quantas conexões existem."
+      },
+      {
+        "text": "Cada requisição em andamento é uma instância com o próprio pool",
+        "why": "Isso. Uma requisição HTTP por instância por padrão quer dizer que uma rajada até 100 instâncias são 100 pools."
+      }
+    ]
+  },
+  "ex-pqaagxm5": {
+    "prompt": "Destes movimentos, qual pede menos do código da loja?",
+    "hint": "Quais dois destinos rodam a mesma imagem?",
+    "choices": [
+      {
+        "text": "Do Container Apps para o Functions no Flex",
+        "why": "O servidor web tem de virar handlers no `function_app.py`, o movimento mais caro da tabela."
+      },
+      {
+        "text": "De uma máquina virtual para duas, atrás de um balanceador",
+        "why": "O código roda sem mudar, mas os pedidos na memória ainda precisam ir para um banco antes."
+      },
+      {
+        "text": "Do Container Apps para o AKS",
+        "why": "Isso. A mesma `shop:1.0` roda nos dois; o movimento é manifests novos em volta dela."
+      },
+      {
+        "text": "De uma máquina virtual para o Container Apps",
+        "why": "Pede a mesma ausência de estado que os outros pedem, mais a imagem, que a loja por acaso já tem."
+      }
+    ]
+  },
+  "ex-kx0gg71h": {
+    "prompt": "O perfil da loja tem pico de 80 requisições por segundo. Por que esse pico quase não custa nada a mais no Container Apps?",
+    "hint": "Quantas réplicas 80 pedem, e quantas rodam de qualquer jeito?",
+    "choices": [
+      {
+        "text": "O pico dura só duas horas, que são grátis",
+        "why": "Nada numa hora da noite é grátis; as cotas são um total mensal."
+      },
+      {
+        "text": "80 pedem duas réplicas de 50, e duas rodam de qualquer jeito",
+        "why": "Isso. Só quatro horas passam do que uma réplica aguenta, e o piso já as cobre."
+      },
+      {
+        "text": "O Container Apps não cobra pelas requisições do pico",
+        "why": "Ele cobra as requisições além de dois milhões no mês, chegue quando chegar."
+      },
+      {
+        "text": "Escalar para cima é mais rápido que escalar para baixo",
+        "why": "Verdade no KEDA, e não muda nada na conta do programa."
+      }
+    ]
+  },
+  "ex-e8kapr5r": {
+    "prompt": "Nas tarifas ativas do arquivo, 0,00002 USD por vCPU-segundo e 0,000002 por GiB-segundo, quanto custa por mês um relatório noturno como job do Container Apps de 2 vCPUs e 4 GiB que roda 12 minutos por noite, em 30,42 noites, com as cotas já gastas? USD, duas casas decimais.",
+    "hint": "720 segundos por noite, vezes as noites, vezes cada recurso e sua tarifa.",
+    "unit": "USD"
+  },
+  "ex-4jsdcm7j": {
+    "prompt": "O mesmo perfil da loja com noites em silêncio custa 69,34 USD no Container Apps em vez de 85,81. O que pagava a diferença de 16,47?",
+    "hint": "Compare os dois perfis hora a hora.",
+    "choices": [
+      {
+        "text": "A cobrança por requisição sobre o que o fio de tráfego envia",
+        "why": "O fio são 1,75 milhão de requisições por mês; a 0,40 por milhão isso dá menos de um dólar."
+      },
+      {
+        "text": "Duas réplicas mantidas na tarifa ativa a noite toda",
+        "why": "Isso. O fio de 2 por segundo mantém as duas réplicas fora da tarifa ociosa a noite toda."
+      },
+      {
+        "text": "Uma terceira réplica que o fio de tráfego inicia toda noite",
+        "why": "Duas requisições por segundo cabem numa réplica; o piso é dois e continua dois."
+      },
+      {
+        "text": "Partidas a frio que o fio provoca",
+        "why": "Com mínimo de dois, nada parte a frio; e uma partida a frio não está na conta do programa."
+      }
+    ]
+  },
+  "ex-tn7gnpaz": {
+    "prompt": "Uma decisão como a da loja só está terminada quando nomeia os números que a fariam ser ___.",
+    "hint": "Tráfego três vezes o de hoje é um deles.",
+    "blanks": [
+      {
+        "accept": [
+          "reaberta",
+          "revista",
+          "mudada",
+          "revertida",
+          "revisada"
+        ]
+      }
+    ]
+  },
+  "ex-nqfe8m2k": {
+    "prompt": "Com três vezes o tráfego de hoje, duas máquinas virtuais custam 146,00 e o Container Apps 159,92. O que isso diz à loja?",
+    "hint": "Uma diferença de 10% em tarifas ilustrativas é um veredito?",
+    "choices": [
+      {
+        "text": "Mudar para máquinas virtuais agora, antes de o tráfego crescer",
+        "why": "Hoje o Container Apps é 60,19 mais barato; o cruzamento é um gatilho a acompanhar, não uma data."
+      },
+      {
+        "text": "Que o Container Apps para de escalar acima de 240 requisições por segundo",
+        "why": "Ele escala para cinco réplicas ali; o programa as precifica, e foi assim que o total cresceu."
+      },
+      {
+        "text": "Que crescer perto desse tamanho reabre a decisão, e as tarifas reais têm de resolvê-la",
+        "why": "Isso. Dentro de 20% é empate mesmo com tarifas reais, e estas são ilustrativas; é onde precificar máquinas direito."
+      },
+      {
+        "text": "Que as cotas gratuitas acabam nesse volume",
+        "why": "As cotas já são gastas pelo tráfego de hoje; triplicá-lo soma réplicas e requisições."
+      }
+    ]
+  },
+  "ex-2dnd5ad3": {
+    "prompt": "Relacione cada carga da loja, e o webhook da seção 02, ao lugar onde esta lição a roda.",
+    "hint": "Pense em quem espera, quanto tempo o trabalho roda e com que frequência é chamado.",
+    "pairs": [
+      {
+        "left": "a API de pedidos",
+        "right": "um Container App com mínimo de duas réplicas"
+      },
+      {
+        "left": "o relatório noturno de vendas",
+        "right": "um job agendado do Container Apps"
+      },
+      {
+        "left": "a exportação financeira do mês",
+        "right": "um job disparado por eventos a partir de uma fila"
+      },
+      {
+        "left": "o perfil webhook",
+        "right": "uma função no Flex Consumption"
+      }
+    ],
+    "right_distractors": [
+      "um cluster AKS no tier Standard"
+    ]
+  },
+  "ex-6a7yec7c": {
+    "prompt": "Ponha o método da lição em ordem, do tráfego até a decisão.",
+    "items": [
+      "Anotar o tráfego como 24 taxas por hora",
+      "Ler o volume, o pico, as horas ociosas e a duração",
+      "Precificar o perfil de cinco jeitos com as tarifas num arquivo",
+      "Conferir os limites e o que o código supõe",
+      "Escrever a decisão com o que a reabriria"
+    ],
+    "trap": "Precificar antes de ler o perfil: o programa precisa do perfil como entrada, então os números vêm primeiro."
+  },
+  "ex-xddyepwq": {
+    "prompt": "Nas tarifas ativas do arquivo, 0,00002 USD por vCPU-segundo e 0,000002 por GiB-segundo, quanto custa uma réplica do Container Apps de 0,5 vCPU e 1 GiB ativa por um mês inteiro de 730 horas, antes de qualquer cota gratuita? USD, duas casas decimais.",
+    "hint": "730 × 3.600 segundos, vezes 0,5 vCPU numa tarifa e 1 GiB na outra.",
+    "unit": "USD"
+  },
+  "ex-7m9kvv6w": {
+    "prompt": "Uma nova página interna de estoque segue o perfil office, é escrita em Python, e ninguém se importa com uma primeira resposta lenta de manhã. A equipe conhece contêineres. O que combina melhor com ela, pelo método desta lição?",
+    "hint": "Quinze horas em silêncio, ninguém esperando, e uma imagem que a equipe sabe construir.",
+    "choices": [
+      {
+        "text": "Container Apps, com escala a zero",
+        "why": "Isso. 42,18 na rodada com zero, as horas em silêncio de graça, e a partida a frio cai em ninguém que se importe."
+      },
+      {
+        "text": "Duas máquinas virtuais, o movimento mais simples",
+        "why": "146,00 por mês para uma ferramenta em silêncio quinze horas por dia, mais o sistema operacional para cuidar."
+      },
+      {
+        "text": "Functions no Flex, já que não paga nada parado",
+        "why": "Parado é grátis, mas 59,13 milhões de requisições a um segundo cobrado cada custam 3.098,41 nas tarifas do arquivo."
+      },
+      {
+        "text": "Um cluster AKS pequeno no tier Free",
+        "why": "Três nós ainda rodam a noite toda, e o cluster é mais uma coisa para operar por causa de uma página."
+      }
+    ]
+  }
+}

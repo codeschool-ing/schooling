@@ -1,0 +1,667 @@
+[
+  {
+    "id": "ex-yxcngptb",
+    "version": 1,
+    "section": "what-automatic-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Microsoft's comparison of AKS Automatic and Standard, what does a feature marked preconfigured mean?",
+    "hint": "Three words sort every feature; this is the strictest.",
+    "choices": [
+      {
+        "text": "Set up for you when the cluster is created, and yours to change afterwards",
+        "correct": false,
+        "why": "That is the word default, such as the planned maintenance window."
+      },
+      {
+        "text": "On, with no way to switch it off or change its settings",
+        "correct": true,
+        "why": "Right. The upgrade channel stable and the Standard tier are two of them on Automatic."
+      },
+      {
+        "text": "Available on the cluster but off until you configure it",
+        "correct": false,
+        "why": "That is optional, the state of most features on Standard."
+      },
+      {
+        "text": "Present on Automatic and absent from Standard altogether",
+        "correct": false,
+        "why": "Most preconfigured features exist on Standard as options; what differs is whether you may change them."
+      }
+    ]
+  },
+  {
+    "id": "ex-21tnp940",
+    "version": 1,
+    "section": "what-automatic-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 11's system pool was three Standard_D4s_v5 in your node resource group. On an Automatic cluster with managed system node pools, where do the system nodes run?",
+    "hint": "Whose subscription, and whose bill.",
+    "choices": [
+      {
+        "text": "In your node resource group, billed to you as before",
+        "correct": false,
+        "why": "That was Standard. Managed system node pools move them out of your subscription."
+      },
+      {
+        "text": "In your subscription, inside a locked resource group you cannot list",
+        "correct": false,
+        "why": "The node resource group is locked, but it holds your nodes; the system nodes are not in your subscription."
+      },
+      {
+        "text": "On the API server's machines, paid for by the tier",
+        "correct": false,
+        "why": "They are nodes of their own, apart from the control plane, and the documentation ties their cost to no tier."
+      },
+      {
+        "text": "In AKS's own subscriptions, and not charged to yours at all",
+        "correct": true,
+        "why": "Right. AKS creates, scales and upgrades them there, and you track no quota for them."
+      }
+    ]
+  },
+  {
+    "id": "ex-02k5d3qb",
+    "version": 1,
+    "section": "what-automatic-is",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Automatic's pod readiness SLA says 99.9% of qualifying pod readiness operations complete within five minutes. In a month with 5,000 such operations, how many may take longer without the promise being broken?",
+    "hint": "0.1% of the operations.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "pods"
+  },
+  {
+    "id": "ex-wynh0t1d",
+    "version": 1,
+    "section": "what-automatic-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is preconfigured on an Automatic cluster, so that you cannot change it?",
+    "hint": "Three are defaults or options; one is locked.",
+    "choices": [
+      {
+        "text": "The managed virtual network on Azure CNI Overlay with Cilium",
+        "correct": false,
+        "why": "A default: a virtual network of your own is the option."
+      },
+      {
+        "text": "The cluster upgrade channel, stable, following minor version N-1",
+        "correct": true,
+        "why": "Right. The cluster follows the latest patch of N-1 and you cannot pick another channel."
+      },
+      {
+        "text": "A planned maintenance window for the upgrades",
+        "correct": false,
+        "why": "A default you may set and change, which is how you decide when the channel's upgrades start."
+      },
+      {
+        "text": "Managed Prometheus collecting the cluster's metrics",
+        "correct": false,
+        "why": "A default when the cluster is created from the CLI or the portal, not a locked setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-x755ch0h",
+    "version": 1,
+    "section": "what-automatic-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "slip.bicep compiled with tier: 'Free' and name: 'automatic' and warned only about the string 'true'. What does the silence about the tier tell Ana?",
+    "hint": "What did the compiler have to compare the value against?",
+    "choices": [
+      {
+        "text": "That an Automatic cluster may run on the Free tier",
+        "correct": false,
+        "why": "The documentation says the tier is preconfigured as Standard; the compiler knows nothing of that rule."
+      },
+      {
+        "text": "That sku.tier takes any string, and the service decides",
+        "correct": true,
+        "why": "Right. A wider type means a silent compile; whether Azure refuses or corrects it is only known on a subscription."
+      },
+      {
+        "text": "That Bicep rewrote Free to Standard in the template it wrote",
+        "correct": false,
+        "why": "The compiler copies the value as written; it never changes a property's value."
+      },
+      {
+        "text": "That the deployment will fail with the same BCP036 warning",
+        "correct": false,
+        "why": "BCP036 was about the boolean, and a deployment is answered by Resource Manager, not by the compiler."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyyhr7tq",
+    "version": 1,
+    "section": "node-auto-provisioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does node auto-provisioning read to decide which virtual machine size to create?",
+    "hint": "It starts from the pods, not from a pool.",
+    "choices": [
+      {
+        "text": "The vmSize of the pool it has been asked to grow",
+        "correct": false,
+        "why": "That is the cluster autoscaler's input; NAP has no fixed size to grow."
+      },
+      {
+        "text": "The requests of the pods the scheduler left Pending",
+        "correct": true,
+        "why": "Right. The pending pods' requests, intersected with what the NodePools allow."
+      },
+      {
+        "text": "The CPU the running nodes used over the last hour",
+        "correct": false,
+        "why": "Usage is not what scheduling or NAP counts; requests are."
+      },
+      {
+        "text": "A size chosen once when the cluster was created",
+        "correct": false,
+        "why": "There is no such size on Automatic; that is what the NodePool's range replaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-s381pd5m",
+    "version": 1,
+    "section": "node-auto-provisioning",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each object to what it says.",
+    "hint": "Two you write, one NAP writes, and one that adds a type to the API server.",
+    "pairs": [
+      {
+        "left": "NodePool",
+        "right": "Which machines may be created, and when they may be removed"
+      },
+      {
+        "left": "AKSNodeClass",
+        "right": "The Azure half of a node: image family, OS disk, maxPods"
+      },
+      {
+        "left": "NodeClaim",
+        "right": "NAP's record of one node it asked Azure for"
+      },
+      {
+        "left": "CustomResourceDefinition",
+        "right": "Adds a new kind of object to the API server"
+      }
+    ],
+    "right_distractors": [
+      "The scale set behind a pool of one fixed size"
+    ]
+  },
+  {
+    "id": "ex-e1g85aj1",
+    "version": 1,
+    "section": "node-auto-provisioning",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A NodePool owns 12 nodes and has one budget of nodes: \"30%\". One node is already being deleted and none is unready. How many more nodes may Karpenter disrupt now?",
+    "hint": "The percentage of the node count, rounded up, minus the nodes deleting and the nodes not ready.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-xxabqa4q",
+    "version": 1,
+    "section": "node-auto-provisioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first dry run of slips.yaml named two problems and said some validation rules were not checked. Why did the agentpool key only show up on the second run?",
+    "hint": "Read the last line of the first answer.",
+    "choices": [
+      {
+        "text": "The API server reports at most two errors for any one object",
+        "correct": false,
+        "why": "It reported every structural error it found; the count was a coincidence of the slips."
+      },
+      {
+        "text": "kubectl stops reading the file at the first field refused",
+        "correct": false,
+        "why": "kubectl sends the whole object; the server refused two fields far apart in it."
+      },
+      {
+        "text": "The key is allowed until a node exists to carry the label",
+        "correct": false,
+        "why": "It was refused on the second run with no node anywhere, so the rule does not wait for nodes."
+      },
+      {
+        "text": "Expression rules run only once the structural checks pass",
+        "correct": true,
+        "why": "Right. The value list and the pattern failed first, so the CEL rule on label domains was skipped until they passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc3tzznp",
+    "version": 1,
+    "section": "node-auto-provisioning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A NodePool requires karpenter.azure.com/sku-family In [Dpls_v6], and the API server accepts it. On AKS, what happens to a pod that only this pool could serve?",
+    "hint": "Accepted by the definition is not the same as matching a machine.",
+    "choices": [
+      {
+        "text": "NAP creates a Dpls_v6 machine, since that series exists",
+        "correct": false,
+        "why": "Dpls_v6 is a series, matched by the sku-series key; no machine reports it as its family."
+      },
+      {
+        "text": "It stays Pending, because no machine reports that family",
+        "correct": true,
+        "why": "Right. The CRD checks that the key is allowed, not that its values name anything."
+      },
+      {
+        "text": "NAP reads the first letter and creates a D-series machine",
+        "correct": false,
+        "why": "Values are compared whole; nothing in Karpenter guesses at a family from a series."
+      },
+      {
+        "text": "Karpenter marks the pool invalid and stops scaling the cluster",
+        "correct": false,
+        "why": "The pool is valid as far as any check goes; it simply matches nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3grj8ve",
+    "version": 1,
+    "section": "deployment-safeguards",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On an Automatic cluster, what can you change about the deployment safeguards?",
+    "hint": "One thing, and it is about where they apply.",
+    "choices": [
+      {
+        "text": "Their level, from Enforce down to Warn",
+        "correct": false,
+        "why": "That is the one change Automatic refuses; it is possible on Standard."
+      },
+      {
+        "text": "Which of the rules are switched on",
+        "correct": false,
+        "why": "The safeguards are all or nothing, on every SKU."
+      },
+      {
+        "text": "Which namespaces they leave alone",
+        "correct": true,
+        "why": "Right. Excluding a namespace is the only way round them on Automatic."
+      },
+      {
+        "text": "The default requests the mutator writes",
+        "correct": false,
+        "why": "500m and 2048Mi are fixed in the mutator; you avoid them by writing your own requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqxmjas4",
+    "version": 1,
+    "section": "deployment-safeguards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "kind accepted hurried.yaml and its pod ran. Which QoS class did Kubernetes give it, and why?",
+    "hint": "The class is computed from the resources section.",
+    "choices": [
+      {
+        "text": "Burstable, because it declared a port but no limits",
+        "correct": false,
+        "why": "Burstable needs at least one request or limit; a port has nothing to do with the class."
+      },
+      {
+        "text": "BestEffort, because no container asked for or was limited to anything",
+        "correct": true,
+        "why": "Right. No requests and no limits is the definition of BestEffort, the first class evicted under pressure."
+      },
+      {
+        "text": "Guaranteed, because nothing else competed with it on the node it ran on",
+        "correct": false,
+        "why": "Guaranteed needs requests equal to limits on every container; the neighbours do not count."
+      },
+      {
+        "text": "None: a class is assigned by the safeguards, which kind lacks",
+        "correct": false,
+        "why": "The class is Kubernetes's own, and the transcript printed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjqtapw1",
+    "version": 1,
+    "section": "deployment-safeguards",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the tag latest and no pull policy in the manifest, the API server defaults imagePullPolicy to ___.",
+    "hint": "The dry run printed it.",
+    "blanks": [
+      {
+        "accept": [
+          "Always"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f6qnk06k",
+    "version": 1,
+    "section": "deployment-safeguards",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six replicas of a container with no resources section are created on an Automatic cluster. After the mutator, how many GiB of memory do they request in all?",
+    "hint": "The mutator's default memory request, times the replicas.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "GiB"
+  },
+  {
+    "id": "ex-1qhw84jr",
+    "version": 1,
+    "section": "deployment-safeguards",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the Enforce level refuse rather than mutate? Choose all that apply.",
+    "hint": "Two rules have a mutator; the others can only say no.",
+    "choices": [
+      {
+        "text": "A container with no liveness probe",
+        "correct": true,
+        "why": "The probes rule has no mutator: it refuses, naming the missing probe."
+      },
+      {
+        "text": "The image shop:latest",
+        "correct": true,
+        "why": "Refused, with the message asking for an explicit, versioned tag."
+      },
+      {
+        "text": "A container with no resource requests",
+        "correct": false,
+        "why": "Mutated: the mutator writes 500m and 2048Mi as requests and limits."
+      },
+      {
+        "text": "Three replicas with no anti-affinity or spread constraint",
+        "correct": false,
+        "why": "Mutated: anti-affinity and a topology spread constraint are added."
+      },
+      {
+        "text": "kubectl taint on one node",
+        "correct": true,
+        "why": "Refused: nodes are tainted by pool, never one at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgr062rv",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a development cluster on Automatic not save money by being stopped every evening?",
+    "hint": "One of the preconfigured pieces forbids it.",
+    "choices": [
+      {
+        "text": "Stopping is refused on every Standard-tier cluster",
+        "correct": false,
+        "why": "A Standard cluster on the base SKU can be stopped; the tier is not the reason."
+      },
+      {
+        "text": "The managed system nodes would keep running and billing",
+        "correct": false,
+        "why": "Their machines are not charged to your subscription, stopped or not."
+      },
+      {
+        "text": "Node auto-provisioning refuses the stop operation outright",
+        "correct": true,
+        "why": "Right. It is on the documentation's list of NAP's limitations, and NAP is preconfigured."
+      },
+      {
+        "text": "The pod readiness SLA requires the cluster to be running",
+        "correct": false,
+        "why": "An SLA is a promise about the service, and it never forbids an operation."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvfca0ab",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop wants the Dapr extension on AKS, to bring lesson 9's sidecars into a cluster. What does that decide?",
+    "hint": "Read the documentation's list of unsupported extensions.",
+    "choices": [
+      {
+        "text": "Automatic, with Dapr's namespace excluded from the safeguards",
+        "correct": false,
+        "why": "Exclusion is about policy; the extension itself is not supported on Automatic."
+      },
+      {
+        "text": "Standard: Automatic does not support that extension",
+        "correct": true,
+        "why": "Right. Dapr and Azure Machine Learning are the two extensions the documentation lists as unsupported."
+      },
+      {
+        "text": "Automatic, since KEDA comes preconfigured and Dapr builds on it",
+        "correct": false,
+        "why": "Dapr does not build on KEDA, and KEDA being on says nothing about the extension."
+      },
+      {
+        "text": "Either, provided the cluster is in brazilsouth",
+        "correct": false,
+        "why": "The region decides whether Automatic exists there, not which extensions it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx0dejha",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving shop-auto from Automatic to Standard in order.",
+    "hint": "The cluster needs somewhere to run its system pods before it stops being Automatic.",
+    "items": [
+      "Add a system node pool of your own, in System mode",
+      "Update the cluster's SKU to base",
+      "Check with az aks show that the SKU is now base",
+      "List the node pools and find your system pool among them"
+    ],
+    "trap": "The pool comes first: a Standard cluster runs its system pods on your machines, and there must be some."
+  },
+  {
+    "id": "ex-8ymbxsq0",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Automatic, what decides the size, and so the price, of the machines the shop's pods land on?",
+    "hint": "Where the vmSize of lesson 11 went.",
+    "choices": [
+      {
+        "text": "The vmSize of a user pool called apps",
+        "correct": false,
+        "why": "There is no such pool on Automatic; NAP creates nodes with no pool size behind them."
+      },
+      {
+        "text": "The node size that comes with the Standard tier",
+        "correct": false,
+        "why": "The tier is about the control plane's promise; it fixes no node size."
+      },
+      {
+        "text": "What each container requests, within the NodePools' range",
+        "correct": true,
+        "why": "Right. NAP sizes machines from requests, so whoever writes the Deployment chooses the bill."
+      },
+      {
+        "text": "What the pods used last week, as the image cleaner reports it",
+        "correct": false,
+        "why": "The image cleaner removes unused images; it measures nothing about pods."
+      }
+    ]
+  },
+  {
+    "id": "ex-twvwrsf4",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these teams has a reason to choose Standard over Automatic?",
+    "hint": "Look for a need that no preconfigured setting can meet.",
+    "choices": [
+      {
+        "text": "Three developers who want no node pools or channels to own",
+        "correct": false,
+        "why": "That is the team Automatic is for."
+      },
+      {
+        "text": "A shop in brazilsouth that wants an uptime SLA on the API server",
+        "correct": false,
+        "why": "brazilsouth is on the list of regions, and the SLA comes preconfigured."
+      },
+      {
+        "text": "A team that needs one Kubernetes version for two years",
+        "correct": true,
+        "why": "Right. Long-term support needs the Premium tier, and Automatic is preconfigured on Standard."
+      },
+      {
+        "text": "A team that wants node sizes chosen from what its pods request",
+        "correct": false,
+        "why": "That is node auto-provisioning, which Automatic gives you."
+      }
+    ]
+  },
+  {
+    "id": "ex-jagqanv6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these slips did something in this lesson's lab catch before anything was stored? Choose all that apply.",
+    "hint": "Two checkers ran: the Bicep compiler and the API server with the NodePool CRD.",
+    "choices": [
+      {
+        "text": "enabled: 'true' in automatic.bicep",
+        "correct": true,
+        "why": "BCP036: the property expected a boolean."
+      },
+      {
+        "text": "tier: 'Free' in automatic.bicep",
+        "correct": false,
+        "why": "It compiled in silence: the type of sku.tier takes any string."
+      },
+      {
+        "text": "consolidationPolicy: WhenUnderutilized in a NodePool",
+        "correct": true,
+        "why": "The CRD lists the three values it supports, and this is not one."
+      },
+      {
+        "text": "sku-family: Dpls_v6 in a NodePool",
+        "correct": false,
+        "why": "Accepted: the key is allowed, and its values are not checked."
+      },
+      {
+        "text": "a budget of nodes: \"120%\"",
+        "correct": true,
+        "why": "The CRD's pattern allows at most 100%."
+      },
+      {
+        "text": "image: shop:latest in a pod",
+        "correct": false,
+        "why": "kind stored it and ran it; only a safeguard would have refused it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbrkn707",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Gatekeeper fails open. Which of these can therefore happen on an Automatic cluster?",
+    "hint": "Fails open means: when in doubt, admit.",
+    "choices": [
+      {
+        "text": "A compliant Deployment refused because the webhook was slow",
+        "correct": false,
+        "why": "That would be failing closed, which Gatekeeper avoids so a slow policy service blocks nothing."
+      },
+      {
+        "text": "Every deployment held until the policy service answers again",
+        "correct": false,
+        "why": "Holding requests is the opposite of failing open."
+      },
+      {
+        "text": "A Deployment with no probes, admitted while nobody was checking",
+        "correct": true,
+        "why": "Right. The check is skipped and the object admitted, so a noncompliant workload can be in the cluster."
+      },
+      {
+        "text": "The mutator writing requests while the probe rule alone is skipped",
+        "correct": false,
+        "why": "Mutation and validation are both admission calls; an unanswered webhook skips the check, not half of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-35t4deb8",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's NodePool has limits of cpu: \"64\". If every node NAP creates for it has 16 vCPUs, how many such nodes can the pool hold at once?",
+    "hint": "The limit counts all the pool's nodes together.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-6jmvh69j",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pod that consolidation must leave where it is carries the annotation karpenter.sh/___: \"true\".",
+    "hint": "Three words joined by hyphens.",
+    "blanks": [
+      {
+        "accept": [
+          "do-not-disrupt"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

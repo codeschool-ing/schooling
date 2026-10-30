@@ -1,0 +1,466 @@
+{
+  "ex-xhe9rpb5": {
+    "prompt": "Em `secret.yaml`, o client secret aparece como `bm90LWEtcmVhbC1zZWNyZXQ=`. Contra o que essa codificação o protege?",
+    "hint": "A seção o transformou de volta em palavras com um comando.",
+    "choices": [
+      {
+        "text": "Contra uma olhada por cima do ombro, e nada mais",
+        "why": "Base64 é uma codificação sem chave: `base64 -d` a desfaz em qualquer máquina Linux, como a captura fez."
+      },
+      {
+        "text": "Contra quem não tem a chave de criptografia do cluster",
+        "why": "Não existe chave em base64. Criptografar o etcd é outra configuração, e não faz nada pelas cópias num repositório ou num log."
+      },
+      {
+        "text": "Contra quem não pode fazer `get secrets` no namespace",
+        "why": "Isso é o RBAC do Kubernetes sobre a cópia do cluster, não a codificação; o arquivo no repositório não tem RBAC nenhum."
+      },
+      {
+        "text": "Contra o uso de fora do tenant",
+        "why": "O Entra ID aceita um client secret válido de qualquer lugar que o alcance; a codificação não tem papel nisso."
+      }
+    ]
+  },
+  "ex-9k0v83ym": {
+    "prompt": "Segundo a ajuda de `az ad sp create-for-rbac` capturada na seção, por quantos anos um client secret vale quando ninguém escolhe?",
+    "hint": "Leia o `Default:` na linha depois de `--years`.",
+    "unit": "anos"
+  },
+  "ex-pm3v8fkf": {
+    "prompt": "Onde acaba um client secret colocado em `secret.yaml`? Escolha todos os lugares que a seção cita.",
+    "choices": [
+      {
+        "text": "No repositório e em cada clone dele, se o arquivo foi commitado",
+        "why": "O Git guarda cada versão commitada, então apagar o arquivo depois deixa o segredo no histórico."
+      },
+      {
+        "text": "Em cada pod que monta o Secret",
+        "why": "Ser montado é o propósito do Secret, então cada pod desses tem o segredo no seu ambiente."
+      },
+      {
+        "text": "Num log de CI que imprimiu o ambiente",
+        "why": "Uma das cópias acidentais que a seção lista, e das mais difíceis de achar depois."
+      },
+      {
+        "text": "Na identidade gerenciada, que o guarda para expirá-lo",
+        "why": "Uma identidade gerenciada não tem client secret nenhum; o segredo pertence a um registro de aplicativo, que guarda só os metadados e a data de fim."
+      },
+      {
+        "text": "Na credencial federada da service account",
+        "why": "Uma credencial federada guarda um emissor, um sujeito e um público, e nenhum segredo de tipo algum."
+      }
+    ]
+  },
+  "ex-3d4yxeq8": {
+    "prompt": "Para evitar um segredo, uma equipe dá `Storage Blob Data Contributor` no contêiner de recibos à identidade do kubelet do cluster. O que ela concedeu de fato?",
+    "hint": "Pense em quem alcança o Instance Metadata Service a partir de um pod.",
+    "choices": [
+      {
+        "text": "Escrita nos recibos só para os pods da API de pedidos",
+        "why": "A identidade do kubelet pertence aos nós, não a uma carga de trabalho; nada na concessão cita a API de pedidos."
+      },
+      {
+        "text": "Escrita nos recibos para todo pod naqueles nós",
+        "why": "Por padrão todo pod num cluster AKS alcança o serviço de metadados, e por ele as identidades que o nó carrega."
+      },
+      {
+        "text": "Nada, porque uma identidade de kubelet não recebe papéis do Azure",
+        "why": "Recebe, e o tempo todo: puxar de um registry é uma atribuição de papel exatamente nessa identidade."
+      },
+      {
+        "text": "Escrita para o kubelet, que nenhum pod consegue usar",
+        "why": "O kubelet não é o único processo que pode perguntar ao serviço de metadados; qualquer pod que não esteja bloqueado pode."
+      }
+    ]
+  },
+  "ex-535km76h": {
+    "prompt": "Cansada de quedas quando segredos expiram, uma equipe cria todo client secret novo com `--end-date 2299-12-31`. O que ela trocou?",
+    "hint": "A seção cita duas maneiras de um segredo falhar. Qual delas sumiu, e qual ficou pior?",
+    "choices": [
+      {
+        "text": "Nada: o Entra ID continua rotacionando o segredo sozinho, uma vez por ano, sem que ninguém peça",
+        "why": "O Entra ID não rotaciona nada; um client secret vale até a data de fim ou até alguém apagá-lo."
+      },
+      {
+        "text": "Quedas planejadas por quedas inesperadas, já que uma data longe é recusada",
+        "why": "A ajuda oferece essa mesma data como exemplo, e o comando a aceita."
+      },
+      {
+        "text": "Uma queda numa data conhecida por uma senha que vale enquanto existir uma cópia",
+        "why": "A queda da expiração acabou, e cada cópia listada na seção agora vale por séculos."
+      },
+      {
+        "text": "Uma rotação manual por uma feita pelo webhook de workload identity",
+        "why": "O webhook nunca toca em client secrets; ele injeta um token projetado e quatro variáveis."
+      }
+    ]
+  },
+  "ex-kpyz87cv": {
+    "prompt": "No AKS, a service account `orders` tem a anotação `azure.workload.identity/client-id`, e um pod que a usa não tem o rótulo `azure.workload.identity/use`. O que o webhook acrescenta a esse pod?",
+    "hint": "A documentação chama o rótulo de obrigatório.",
+    "choices": [
+      {
+        "text": "As quatro variáveis, mas nenhum volume de token",
+        "why": "O webhook não divide o trabalho assim; ele altera por inteiro um pod com o rótulo e deixa os outros em paz."
+      },
+      {
+        "text": "Tudo, já que é a anotação que ele lê",
+        "why": "A anotação fornece o client id, mas o webhook só age sobre pods que têm o rótulo."
+      },
+      {
+        "text": "Nada: só pods com o rótulo são alterados",
+        "why": "A documentação da Microsoft diz que só pods com o rótulo são alterados, diga o que disser a service account."
+      },
+      {
+        "text": "Um token para o público do API server, no lugar",
+        "why": "Todo pod recebe esse token do próprio Kubernetes, com ou sem webhook; não é o que o webhook acrescenta."
+      }
+    ]
+  },
+  "ex-4vc4shyd": {
+    "prompt": "Complete o público do volume projetado em `orders.yaml`, aquele para o qual a credencial federada será escrita: `audience: api://___`",
+    "hint": "Ele descreve para que serve o token: ser trocado no Entra ID.",
+    "blanks": [
+      {
+        "accept": [
+          "AzureADTokenExchange"
+        ]
+      }
+    ]
+  },
+  "ex-t6eeaszh": {
+    "prompt": "`decode.py` imprimiu `sub: system:serviceaccount:shop:orders` a partir do token. Por que isso não prova nada sobre qual pod escreveu o arquivo?",
+    "hint": "Olhe a última linha que o programa imprimiu.",
+    "choices": [
+      {
+        "text": "Porque ninguém conferiu a assinatura sobre essas claims",
+        "why": "Qualquer um escreve essas claims; só a assinatura, conferida com a chave pública do emissor, as liga ao cluster."
+      },
+      {
+        "text": "Porque `sub` é criptografado e o programa mostrou um palpite",
+        "why": "Nada no token é criptografado; as claims são JSON codificado, e é por isso que o programa conseguiu imprimi-las."
+      },
+      {
+        "text": "Porque o kind escreve um `sub` falso que o AKS corrigiria",
+        "why": "O `sub` veio do próprio API server do kind e é a service account de verdade; o AKS escreveria a mesma string."
+      },
+      {
+        "text": "Porque o token foi copiado para o laptop, o que o altera",
+        "why": "Copiar um token não muda nada nele; o problema é que ninguém conferiu quem o fez."
+      }
+    ]
+  },
+  "ex-8hy4h6va": {
+    "prompt": "Um token projetado tem `expirationSeconds: 3600`. Seguindo a regra da documentação do Kubernetes, quantos minutos depois de emitido o kubelet pede um novo?",
+    "hint": "80% da duração, a não ser que o token passe antes de 24 horas.",
+    "unit": "minutos"
+  },
+  "ex-gb9z3x78": {
+    "prompt": "O pod tem dois tokens com o mesmo `iss`, o mesmo `sub` e o mesmo `kid`. Que claim permite ao Entra ID recusar aquele que o Kubernetes monta para o API server?",
+    "hint": "Compare os dois tokens decodificados linha a linha.",
+    "choices": [
+      {
+        "text": "`exp`, porque o token do API server dura um ano",
+        "why": "Essa duração é a extensão do kind, e o AKS a desliga; um token com a duração certa e o público errado continua recusado."
+      },
+      {
+        "text": "`kid`, porque cada público é assinado com uma chave própria",
+        "why": "A captura mostrou o mesmo `kid` nos dois: uma chave do cluster assina todos."
+      },
+      {
+        "text": "`kubernetes.io`, porque ele cita o pod e não a identidade",
+        "why": "Os dois tokens trazem o mesmo bloco `kubernetes.io`, e o Entra ID não o compara com nada."
+      },
+      {
+        "text": "`aud`, que cita o API server em vez do Entra ID",
+        "why": "A credencial federada cita um público, e um token para outro não corresponde a registro nenhum."
+      }
+    ]
+  },
+  "ex-psw0yb83": {
+    "prompt": "O que guarda uma credencial de identidade federada na identidade gerenciada `shop-orders`?",
+    "choices": [
+      {
+        "text": "Um certificado que o cluster apresenta ao entrar",
+        "why": "Não há certificado, e o cluster nunca entra em nada; o Entra ID lê as chaves que o emissor publica."
+      },
+      {
+        "text": "Um emissor, um sujeito e uma lista de públicos",
+        "why": "Três strings, comparadas com o `iss`, o `sub` e o `aud` do token, e nenhum segredo de tipo algum."
+      },
+      {
+        "text": "As chaves públicas de assinatura do cluster, copiadas na criação",
+        "why": "O Entra ID busca as chaves no emissor quando precisa delas, e por isso uma rotação de chaves não exige mudar a credencial."
+      },
+      {
+        "text": "Um client secret que expira junto com o token projetado",
+        "why": "Não há segredo nela; evitar um é o propósito da federação."
+      }
+    ]
+  },
+  "ex-y55w077s": {
+    "prompt": "Associe cada mudança feita em `identity.bicep` ao que aconteceu ao compilar, ou aconteceria depois.",
+    "pairs": [
+      {
+        "left": "`audiences:` escrito como `audience:`",
+        "right": "aviso BCP089, com o nome certo sugerido"
+      },
+      {
+        "left": "o sujeito escrito como `system:serviceaccounts:shop:orders`",
+        "right": "compila; o Entra ID não acha registro correspondente"
+      },
+      {
+        "left": "o `enabled` do emissor OIDC posto em `false`",
+        "right": "compila; não há chaves publicadas para o Entra ID buscar"
+      },
+      {
+        "left": "o `enabled` da workload identity escrito como `'true'`",
+        "right": "aviso BCP036, uma string onde cabe um bool"
+      }
+    ],
+    "right_distractors": [
+      "compila; o Entra ID acrescenta sozinho o s que falta",
+      "o template não chega a ser escrito"
+    ]
+  },
+  "ex-s608paf5": {
+    "prompt": "Suponha que o laboratório tivesse um tenant de verdade, e uma credencial federada citasse o emissor do kind, `https://kubernetes.default.svc.cluster.local`. Por que o Entra ID ainda recusaria o token do pod?",
+    "hint": "Olhe onde o documento de descoberta diz que estão as chaves.",
+    "choices": [
+      {
+        "text": "Porque o kind assina com RS256, que o Entra ID não aceita",
+        "why": "RS256 é o único algoritmo que a documentação do Entra ID dá como suportado nessa troca."
+      },
+      {
+        "text": "Porque o público do token está errado para o Entra ID",
+        "why": "O volume projetado pediu `api://AzureADTokenExchange`, o público que uma credencial espera."
+      },
+      {
+        "text": "Porque um sujeito num cluster kind tem outro formato",
+        "why": "O `sub` é `system:serviceaccount:shop:orders`, o mesmo formato que o AKS escreve."
+      },
+      {
+        "text": "Porque ele não alcança o emissor para buscar as chaves",
+        "why": "O nome só resolve dentro de um cluster e o conjunto de chaves está num endereço privado do Docker, então a assinatura nunca pode ser conferida."
+      }
+    ]
+  },
+  "ex-hcj5g5xp": {
+    "prompt": "`shop-orders` já tem credenciais federadas para a service account `orders` em 7 clusters e para uma service account `reports` em 5 deles. Dentro do máximo documentado, em quantos clusters a mais `orders` pode ser confiada?",
+    "hint": "Cada credencial é uma service account num cluster, e o máximo documentado é por identidade gerenciada.",
+    "unit": "clusters"
+  },
+  "ex-2t154d4n": {
+    "prompt": "Um template declara três credenciais federadas em `shop-orders` num loop, e algumas implantações falham com HTTP 409 enquanto outras dão certo. Qual é a correção?",
+    "hint": "A documentação descreve essa falha para uma identidade-pai, e não para várias.",
+    "choices": [
+      {
+        "text": "Esperar alguns minutos entre implantações pela propagação",
+        "why": "A propagação atrasa o primeiro pedido de token; ela não faz a criação em si conflitar."
+      },
+      {
+        "text": "Dar a cada credencial um público diferente",
+        "why": "O público não tem relação com um 409: o conflito vem de escritas simultâneas numa identidade."
+      },
+      {
+        "text": "Criá-las em sequência, cada uma dependendo da anterior",
+        "why": "Criar ao mesmo tempo sob uma identidade é recusado com 409; o remédio da documentação é uma ordem sequencial."
+      },
+      {
+        "text": "Pôr cada credencial na identidade de outro cluster",
+        "why": "Mudá-las para outras identidades evita o conflito, mas a API de pedidos passaria a ter três identidades em vez de uma."
+      }
+    ]
+  },
+  "ex-yx763hsz": {
+    "prompt": "Ponha a troca na ordem em que acontece no Azure, a partir da primeira chamada da API de pedidos ao Blob Storage.",
+    "items": [
+      "O SDK lê AZURE_FEDERATED_TOKEN_FILE e abre o token",
+      "O SDK envia o token ao Entra ID como client_assertion",
+      "O Entra ID busca as chaves públicas do emissor",
+      "O Entra ID confere a assinatura, depois a credencial federada",
+      "O Entra ID devolve um token de acesso com expires_in",
+      "O SDK grava o recibo com um cabeçalho Authorization: Bearer"
+    ],
+    "trap": "Comparar o sujeito antes de conferir a assinatura: nenhuma claim merece crédito até que a assinatura sobre todas elas seja verificada."
+  },
+  "ex-j9y656wa": {
+    "prompt": "Depois da mudança para workload identity, um pod ainda monta o Secret antigo `orders-entra` ao lado do token novo. Que credencial o `DefaultAzureCredential` usa?",
+    "hint": "A seção dá o começo da lista dele para Python.",
+    "choices": [
+      {
+        "text": "O token, porque a workload identity sempre tem precedência",
+        "why": "A workload identity é a segunda da lista; a credencial de ambiente é tentada antes."
+      },
+      {
+        "text": "Nenhuma: ele se recusa a escolher quando há as duas",
+        "why": "Ele não recusa; usa a primeira credencial da lista que tem o que precisa."
+      },
+      {
+        "text": "A que foi montada por último no pod",
+        "why": "A ordem é fixada pela biblioteca, não pela ordem das montagens."
+      },
+      {
+        "text": "O client secret: a credencial de ambiente vem primeiro",
+        "why": "Com `AZURE_CLIENT_ID`, `AZURE_TENANT_ID` e `AZURE_CLIENT_SECRET` presentes, a primeira credencial da lista entra com o segredo."
+      }
+    ]
+  },
+  "ex-tm6v214h": {
+    "prompt": "No pedido de token, o que vai como `client_assertion`?",
+    "choices": [
+      {
+        "text": "O token de service account projetado, como está no arquivo",
+        "why": "O conteúdo do arquivo vai como asserção, e é por isso que o pedido lê `AZURE_FEDERATED_TOKEN_FILE`."
+      },
+      {
+        "text": "Um JWT que o SDK assina com a chave privada da identidade gerenciada",
+        "why": "Uma identidade gerenciada não entrega chave privada ao pod; a asserção é o token que o Kubernetes assinou."
+      },
+      {
+        "text": "O client id de `shop-orders`, codificado como JWT",
+        "why": "O client id viaja em `client_id`, um campo separado."
+      },
+      {
+        "text": "Um token de acesso do Instance Metadata Service",
+        "why": "A workload identity não usa o serviço de metadados; esse é o fluxo de identidade gerenciada."
+      }
+    ]
+  },
+  "ex-tbwpvedh": {
+    "prompt": "Uma credencial federada foi criada há um minuto. O primeiro pedido de token falha com `AADSTS70021`, e o mesmo pod consegue alguns minutos depois sem nada mudar. O que aconteceu?",
+    "hint": "As documentações do AKS e do Entra ID citam uma demora depois de acrescentar uma credencial.",
+    "choices": [
+      {
+        "text": "O sujeito estava errado e o Entra ID o corrigiu",
+        "why": "O Entra ID nunca corrige um sujeito; um errado falha todas as vezes, não só na primeira."
+      },
+      {
+        "text": "A credencial ainda não tinha se propagado, e a correção é tentar de novo após uma breve espera",
+        "why": "A documentação descreve exatamente essa janela e recomenda uma breve espera e novas tentativas."
+      },
+      {
+        "text": "O token projetado tinha expirado e o kubelet o renovou",
+        "why": "O token de um pod novo dura uma hora; e um token expirado não é o que `AADSTS70021` descreve."
+      },
+      {
+        "text": "A atribuição de papel ainda não tinha valido",
+        "why": "Um papel que falta é recusado pela conta de armazenamento depois que um token sai, não pelo Entra ID na troca."
+      }
+    ]
+  },
+  "ex-98cwfdsc": {
+    "prompt": "Quais destes o Entra ID confere antes de emitir o token de acesso? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "A assinatura do token, com uma chave do conjunto de chaves do emissor",
+        "why": "A primeira conferência: sem ela, nenhuma das claims merece crédito."
+      },
+      {
+        "text": "Que `iss`, `sub` e `aud` correspondem a uma credencial federada da identidade",
+        "why": "Comparados por inteiro, diferenciando maiúsculas, com as três strings de uma credencial."
+      },
+      {
+        "text": "Que o token não passou do seu `exp`",
+        "why": "Um token expirado é recusado, e é por isso que o kubelet mantém o arquivo fresco."
+      },
+      {
+        "text": "Que o endereço do pod está dentro da rede virtual do cluster",
+        "why": "A troca é decidida pelo token, não pelo lugar de onde veio o pedido."
+      },
+      {
+        "text": "Que o uid de pod em `kubernetes.io` ainda existe",
+        "why": "O Entra ID não vê os objetos do cluster; essa conferência só o API server do cluster faz."
+      }
+    ]
+  },
+  "ex-y9ret1s7": {
+    "prompt": "Associe cada variável que o webhook acrescenta ao que ela diz ao SDK.",
+    "pairs": [
+      {
+        "left": "AZURE_CLIENT_ID",
+        "right": "qual identidade gerenciada assumir"
+      },
+      {
+        "left": "AZURE_TENANT_ID",
+        "right": "a qual diretório perguntar"
+      },
+      {
+        "left": "AZURE_FEDERATED_TOKEN_FILE",
+        "right": "onde está o token projetado"
+      },
+      {
+        "left": "AZURE_AUTHORITY_HOST",
+        "right": "o endereço do endpoint de entrada"
+      }
+    ],
+    "right_distractors": [
+      "o client secret a enviar",
+      "a conta de armazenamento em que gravar"
+    ]
+  },
+  "ex-r7q7a08n": {
+    "prompt": "A anotação em `orders` foi trocada pelo client id de uma identidade nova há uma hora, e os pods em execução ainda agem como a antiga. Do que eles precisam?",
+    "choices": [
+      {
+        "text": "De um reinício, já que o webhook só age quando um pod é criado",
+        "why": "A documentação diz que uma anotação alterada só vale depois que o pod reinicia."
+      },
+      {
+        "text": "De uma credencial federada nova na identidade antiga",
+        "why": "A identidade antiga é a que eles devem deixar de usar; nada nela precisa mudar."
+      },
+      {
+        "text": "De uma rotação de chaves com `az aks oidc-issuer rotate-signing-keys`",
+        "why": "A rotação muda as chaves de assinatura do cluster, não qual identidade as variáveis de um pod citam."
+      },
+      {
+        "text": "De nada além de esperar o kubelet renovar o token",
+        "why": "Um token renovado traz o mesmo público e o mesmo sujeito, e as variáveis no pod não mudam."
+      }
+    ]
+  },
+  "ex-drpf5h7z": {
+    "prompt": "Para poupar trabalho, uma equipe escreve uma credencial federada com o sujeito `system:serviceaccount:shop:*`, querendo dizer toda service account em `shop`. A que ela corresponde?",
+    "hint": "Leia o que a ajuda da linha de comando diz sobre como o sujeito é comparado.",
+    "choices": [
+      {
+        "text": "A toda service account do namespace `shop`",
+        "why": "O sujeito é comparado de forma exata, então o asterisco é um caractere, não um padrão."
+      },
+      {
+        "text": "A token nenhum, já que nenhuma service account se chama `*`",
+        "why": "A comparação exata o torna um sujeito literal; a expressão de correspondência de claims, em preview, é o jeito separado de escrever um padrão."
+      },
+      {
+        "text": "Só à primeira service account criada em `shop`",
+        "why": "Não existe noção de ordem na comparação; a string tem de ser igual ao `sub` do token."
+      },
+      {
+        "text": "A toda service account, mas só para o público padrão",
+        "why": "O público é comparado à parte e não muda como o sujeito é lido."
+      }
+    ]
+  },
+  "ex-130qwkmn": {
+    "prompt": "Das três respostas comparadas no fim da aula, qual não deixa nada guardado e só pode ser usada por uma service account num cluster?",
+    "choices": [
+      {
+        "text": "Um client secret num Secret do Kubernetes",
+        "why": "O segredo fica guardado em cada cópia e funciona para quem tiver uma."
+      },
+      {
+        "text": "A identidade do kubelet",
+        "why": "Nada fica guardado, mas todo pod no nó pode usá-la."
+      },
+      {
+        "text": "A workload identity",
+        "why": "O token é feito para uma service account, e a credencial confia só nela, num cluster."
+      },
+      {
+        "text": "A identidade gerenciada por pod",
+        "why": "Descontinuada desde 2022, e não é uma das três da tabela; ela também passava pelo serviço de metadados do nó."
+      }
+    ]
+  }
+}

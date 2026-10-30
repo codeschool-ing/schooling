@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-9h51zc0g",
+    "version": 1,
+    "section": "the-scale-set",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop's scale set has `capacity: 3` and no autoscale setting. At lunchtime its average CPU reaches 95% and stays there. What does the scale set do?",
+    "hint": "Which resource moves the number?",
+    "choices": [
+      {
+        "text": "Adds instances up to the maximum written in its profile",
+        "correct": false,
+        "why": "A scale set's profile has no maximum. The minimum and maximum belong to an autoscale setting, and there is none here."
+      },
+      {
+        "text": "Adds one instance per zone, since the set spans three zones",
+        "correct": false,
+        "why": "Zones say where instances may go, not when there should be more of them."
+      },
+      {
+        "text": "Asks the load balancer to start new instances in the backend pool",
+        "correct": false,
+        "why": "The load balancer sends traffic to the pool; it never creates instances."
+      },
+      {
+        "text": "Keeps three: nothing is there to change the count",
+        "correct": true,
+        "why": "Right. The scale set holds a model and a number; an autoscale setting, a separate resource, is what moves the number."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmw7mzya",
+    "version": 1,
+    "section": "the-scale-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The upgrade policy is Manual. Somebody changes `sku.name` in the file from `Standard_D2s_v5` to `Standard_D4s_v5` and deploys it again. The next day autoscale adds one instance. What is running?",
+    "hint": "A model describes the instances that have not been made yet.",
+    "choices": [
+      {
+        "text": "Four D4s_v5 instances, since a deployment replaces every instance",
+        "correct": false,
+        "why": "A deployment changes the model. With a Manual policy the running instances are left as they were."
+      },
+      {
+        "text": "Four D2s_v5 instances, since the size is fixed when the set is created",
+        "correct": false,
+        "why": "The size is part of the model and can change; it is the orchestration mode that is fixed at creation."
+      },
+      {
+        "text": "Three D2s_v5 instances and one D4s_v5",
+        "correct": true,
+        "why": "Right. The three that existed were made from the old model and Manual leaves them alone; the new one is made from the current model."
+      },
+      {
+        "text": "Nothing new, because the deployment is refused until the old instances are deleted",
+        "correct": false,
+        "why": "Changing the model of a running set is allowed. What happens to the old instances is the upgrade policy's decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-12vzhs8r",
+    "version": 1,
+    "section": "the-scale-set",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A zone-spanning set with the `OldestVM` scale-in policy has three instances in zone 1, one in zone 2 and one in zone 3. The oldest instance of all is the one in zone 2. Autoscale removes one. Which goes?",
+    "hint": "What do all three policies do before applying their own rule?",
+    "choices": [
+      {
+        "text": "The oldest of the three instances in zone 1",
+        "correct": true,
+        "why": "Right. Every policy balances across zones first, by deleting from the fullest zone; OldestVM then picks the oldest instance within that zone."
+      },
+      {
+        "text": "The instance in zone 2, because it is the oldest",
+        "correct": false,
+        "why": "OldestVM chooses the oldest only after balancing across zones. Removing zone 2's only instance would make the set less balanced."
+      },
+      {
+        "text": "The instance with the highest instance id in zone 1",
+        "correct": false,
+        "why": "That is the Default policy's last step. This set names OldestVM, which picks by age within the zone."
+      },
+      {
+        "text": "None, because a set spanning three zones may not scale in below one instance per zone",
+        "correct": false,
+        "why": "Nothing forbids it; there are five instances and the set can go to four. Balance decides which zone loses one."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4ev0twx",
+    "version": 1,
+    "section": "the-scale-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The instance running the nightly sales report has `protectFromScaleIn` set. A rolling upgrade of the scale set starts at midnight. What happens to that instance?",
+    "hint": "Two strengths of protection, and only one of them covers operations on the whole set.",
+    "choices": [
+      {
+        "text": "It is skipped, because a protected instance is left out of every operation",
+        "correct": false,
+        "why": "Scale-in protection covers autoscale's scale-in and nothing else; an operation started on the scale set still reaches it."
+      },
+      {
+        "text": "The whole upgrade is refused while any instance is protected",
+        "correct": false,
+        "why": "Protection is per instance and never blocks an operation on the set as a whole."
+      },
+      {
+        "text": "It is deleted and recreated, because protection is lost when the model changes",
+        "correct": false,
+        "why": "Protection is set on the instance, not the model, and an upgrade does not remove it."
+      },
+      {
+        "text": "It is upgraded: only `protectFromScaleSetActions` keeps an upgrade off",
+        "correct": true,
+        "why": "Right. The stronger protection covers operations on the whole set, such as an upgrade or a reimage; the weaker one only keeps autoscale from choosing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6gh5ej3",
+    "version": 1,
+    "section": "the-scale-set",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the compiled template, a resource declared with `existing` does not appear as a resource. It becomes a ___ expression, which Resource Manager works out at deployment.",
+    "hint": "Look at the subnet's id in the transcript.",
+    "blanks": [
+      {
+        "accept": [
+          "resourceId",
+          "resourceId()"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f299ccsa",
+    "version": 1,
+    "section": "flexible-and-uniform",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team created a Uniform scale set last year and now wants its instances to be ordinary virtual machines they can back up with Azure Backup. What do they do?",
+    "hint": "When is the orchestration mode chosen?",
+    "choices": [
+      {
+        "text": "Change `orchestrationMode` to `Flexible` and deploy the file again",
+        "correct": false,
+        "why": "The mode is set when the scale set is created and cannot be changed afterwards; the deployment cannot convert it."
+      },
+      {
+        "text": "Run a rolling upgrade, which moves each instance to the new mode",
+        "correct": false,
+        "why": "An upgrade brings instances into line with the model, and the mode is not something a model change can alter."
+      },
+      {
+        "text": "Create a new scale set in Flexible mode and move the workload to it",
+        "correct": true,
+        "why": "Right. The mode is fixed at creation, so the way to Flexible is a new set."
+      },
+      {
+        "text": "Nothing, since Uniform instances are backed up like any virtual machine",
+        "correct": false,
+        "why": "Microsoft's comparison lists Azure Backup as not supported for Uniform instances."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8b5d8k5",
+    "version": 1,
+    "section": "flexible-and-uniform",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to what it does.",
+    "hint": "Spreading, a group of 100, a list of sizes, a choice made once.",
+    "pairs": [
+      {
+        "left": "`platformFaultDomainCount: 1`",
+        "right": "Spread the instances over as many fault domains as Azure can"
+      },
+      {
+        "left": "`singlePlacementGroup: true` in Uniform",
+        "right": "Keep the set in one group of at most 100 instances"
+      },
+      {
+        "left": "`sku.name: 'Mix'`",
+        "right": "Let Azure choose among up to five listed sizes"
+      },
+      {
+        "left": "`orchestrationMode`",
+        "right": "Decide, once and at creation, what kind of resource an instance is"
+      }
+    ],
+    "right_distractors": [
+      "Put every instance in the same fault domain"
+    ]
+  },
+  {
+    "id": "ex-aen6v2zr",
+    "version": 1,
+    "section": "flexible-and-uniform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orchestrationMode: 'Flex'` compiled with no warning. Why?",
+    "hint": "How is the property typed in Microsoft's definition?",
+    "choices": [
+      {
+        "text": "Its type is two modes or any string, so `Flex` passes",
+        "correct": true,
+        "why": "Right. The published type ends in `| string`, and Bicep checks the type, not which strings the service accepts."
+      },
+      {
+        "text": "The compiler accepts any prefix of an allowed value",
+        "correct": false,
+        "why": "Bicep does no prefix matching. It compares the value with the type, and this type admits any string."
+      },
+      {
+        "text": "`Flex` is an accepted short form that Azure expands to `Flexible`",
+        "correct": false,
+        "why": "Nothing read for this lesson documents a short form; the CLI's help lists exactly `Flexible` and `Uniform`."
+      },
+      {
+        "text": "Warnings about modes are switched off unless `bicep lint` is run",
+        "correct": false,
+        "why": "`bicep build` is what reported the misspelt property in the same file; there is no separate switch for modes."
+      }
+    ]
+  },
+  {
+    "id": "ex-78tpj0q0",
+    "version": 1,
+    "section": "flexible-and-uniform",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of an instance in the shop's Flexible scale set? Choose all that apply.",
+    "hint": "It is an ordinary virtual machine that belongs to a set.",
+    "choices": [
+      {
+        "text": "Its resource type is `Microsoft.Compute/virtualMachines`",
+        "correct": true,
+        "why": "That is what an instance of a Flexible set is."
+      },
+      {
+        "text": "It can carry tags of its own",
+        "correct": true,
+        "why": "Tags work on it as on any virtual machine; Microsoft's comparison lists tagging as unsupported only for Uniform instances."
+      },
+      {
+        "text": "It is addressed as `virtualMachineScaleSets/virtualMachines/0`",
+        "correct": false,
+        "why": "That numbered child resource is how a Uniform set holds its instances."
+      },
+      {
+        "text": "Its health can come from the load balancer's probe instead of the extension",
+        "correct": false,
+        "why": "Flexible accepts only the Application Health extension; the probe is the Uniform alternative."
+      },
+      {
+        "text": "It reaches the internet with no outbound path set up for it",
+        "correct": false,
+        "why": "A Flexible set has no default outbound access; something such as a NAT gateway has to provide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jeyhm2g9",
+    "version": 1,
+    "section": "flexible-and-uniform",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A copy of the shop's file sets `platformFaultDomainCount: 3` while keeping `zones: ['1', '2', '3']`. It compiles with no warning. What can be said about it?",
+    "hint": "Which documented values does a Flexible set with zones have, and where is that rule written?",
+    "choices": [
+      {
+        "text": "It is correct: three zones and three fault domains match one to one",
+        "correct": false,
+        "why": "Zones and fault domains are separate spreads. For a Flexible set that uses zones the documented value is only 1."
+      },
+      {
+        "text": "It breaks a documented rule that the service holds and the type does not",
+        "correct": true,
+        "why": "Right. The documented values are 1, 2 or 3 for a regional Flexible set and 1 with zones; that rule lives in the service's documentation, not in the type."
+      },
+      {
+        "text": "It is wrong for the compiler too, which reports it only under `bicep lint`",
+        "correct": false,
+        "why": "The type is a number and 3 is a number; no rule about zones is in the type for any command to report."
+      },
+      {
+        "text": "Fixed spreading over three is the default for zones, so writing it changes nothing",
+        "correct": false,
+        "why": "The Flexible default is 1, max spreading; 3 is fixed spreading and is documented only for regional sets."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmdhepem",
+    "version": 1,
+    "section": "autoscale-rules",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every one-minute sample reads 40 until 12:00 and 90 from 12:01. The rule averages a 10-minute window and fires when the average is `GreaterThan` 70. How many minutes after 12:00 does the window first fire the rule?",
+    "hint": "Each minute replaces a 40 with a 90. What happens at exactly 70?",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-p564fsc8",
+    "version": 1,
+    "section": "autoscale-rules",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lesson's lunchtime, the rule fired at 12:07 and the new instances serve from 12:10, after which each sample is 54; samples from 12:01 to 12:09 were 90. With a five-minute cooldown, what does the ten-minute window read at 12:12?",
+    "hint": "The window ending at 12:12 starts at 12:03.",
+    "value": 79.2,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-eyy3ztqw",
+    "version": 1,
+    "section": "autoscale-rules",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens between the instances' CPU and a scale action, for the shop's scale-out rule.",
+    "hint": "Across the instances first, then across time.",
+    "items": [
+      "Each minute, the instances' CPU is averaged into one sample (`statistic`)",
+      "The last ten samples are averaged into one number (`timeAggregation`)",
+      "That number is compared with 70 (`operator`, `threshold`)",
+      "Two instances are added (`scaleAction`)",
+      "The rule waits ten minutes before it may act again (`cooldown`)"
+    ],
+    "trap": "`statistic` and `timeAggregation` are easy to swap: the first combines the instances inside one minute, the second combines the minutes of the window."
+  },
+  {
+    "id": "ex-42nwd6fs",
+    "version": 1,
+    "section": "autoscale-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A profile has two scale-in rules: CPU below 30% and memory below 50%. CPU reads 25% and memory 55%. What does autoscale do?",
+    "hint": "Out on any, in on all.",
+    "choices": [
+      {
+        "text": "Removes one instance, because the CPU rule fired",
+        "correct": false,
+        "why": "One scale-in rule firing is not enough; a scale-in needs every scale-in rule to fire."
+      },
+      {
+        "text": "Nothing, because the memory rule did not fire",
+        "correct": true,
+        "why": "Right. Autoscale scales in only when all the scale-in rules agree, so the memory rule holds the count."
+      },
+      {
+        "text": "Removes two instances, one for each rule",
+        "correct": false,
+        "why": "Rules are not added together, and here only one of them fired anyway."
+      },
+      {
+        "text": "Scales out, because memory is above its threshold",
+        "correct": false,
+        "why": "Memory above 50% means the scale-in rule did not fire; it is not a scale-out rule unless one is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-3f4gxbg8",
+    "version": 1,
+    "section": "autoscale-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Rules: add one above 50% CPU, remove one below 40%. Two instances average 37.5% for a whole window, 75 percentage points between them. What does autoscale do?",
+    "hint": "Work out the average at the smaller count before removing anything.",
+    "choices": [
+      {
+        "text": "Removes one instance, since an average of 37.5% is below 40%",
+        "correct": false,
+        "why": "The rule fires, but autoscale checks a scale-in first: at one instance the average would be 75%, above 50, so the scale-in is skipped."
+      },
+      {
+        "text": "Removes one, and then adds it back on the next run",
+        "correct": false,
+        "why": "That loop is flapping, and the check before every scale-in exists to prevent it."
+      },
+      {
+        "text": "Keeps two: at one, 75% would fire the scale-out rule",
+        "correct": true,
+        "why": "Right. Autoscale estimates the metric at the smaller count before scaling in, and skips a scale-in that would cause the opposite action."
+      },
+      {
+        "text": "Adds one instance, since the total of 75 is above 50",
+        "correct": false,
+        "why": "The rule compares the average over the instances, 37.5%, not the total."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9fwn70t",
+    "version": 1,
+    "section": "upgrades-and-health",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A rolling upgrade runs over 10 instances with `maxBatchInstancePercent: 20` and `pauseTimeBetweenBatches: 'PT2M'`. How many minutes of pauses does it add, besides the batches themselves?",
+    "hint": "Batches of two; a pause sits between two batches.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-w2hq51en",
+    "version": 1,
+    "section": "upgrades-and-health",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy of the file sets the health extension's `requestPath` to `/health`. It compiles cleanly. Deployed, what follows?",
+    "hint": "The transcript asked the shop for that path.",
+    "choices": [
+      {
+        "text": "The extension falls back to `/healthz` after the first 404",
+        "correct": false,
+        "why": "The extension asks the path it was given and nothing else; there is no fallback."
+      },
+      {
+        "text": "Every instance is unhealthy, so upgrades stop and repairs replace them",
+        "correct": true,
+        "why": "Right. The shop answers 404 there, and binary health counts anything but 200 as unhealthy, so the set treats healthy machines as broken."
+      },
+      {
+        "text": "Nothing, because health only matters during an upgrade",
+        "correct": false,
+        "why": "Automatic repairs read the same health continuously, so they act from the first probes."
+      },
+      {
+        "text": "Resource Manager refuses the deployment, since `/health` does not exist",
+        "correct": false,
+        "why": "Resource Manager cannot know what paths the application inside the image answers; the extension finds out once it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3b9rkn5",
+    "version": 1,
+    "section": "upgrades-and-health",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody changes `typeHandlerVersion` from `1.0` to `2.0`, for the extra states rich health offers. The shop's `/healthz` still answers `{\"status\": \"ok\"}` with a 200. What state do the instances report?",
+    "hint": "Rich health reads the body as well as the status code.",
+    "choices": [
+      {
+        "text": "Healthy, since the answer is still a 200",
+        "correct": false,
+        "why": "That is binary health. Rich health wants `ApplicationHealthState` in the body, and a 2xx without it does not count as healthy."
+      },
+      {
+        "text": "Unhealthy at once, since rich health treats every 2xx as a failure",
+        "correct": false,
+        "why": "A 2xx is what rich health expects; it is the missing field in the body that makes the state Unknown rather than Healthy."
+      },
+      {
+        "text": "The compiler refuses version `2.0` for an HTTP probe",
+        "correct": false,
+        "why": "The version is a string in the type and `2.0` compiles; the mismatch is between the extension and the application."
+      },
+      {
+        "text": "Initializing, until the grace period ends, and then Unknown",
+        "correct": true,
+        "why": "Right. The instance starts in Initializing; with no valid `ApplicationHealthState` it never reports healthy, and when the grace period runs out it is Unknown, which repairs treat as unhealthy."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8qqgzxx",
+    "version": 1,
+    "section": "upgrades-and-health",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A scale set was created with no `upgradePolicy` at all. A new image reference is written into its model. What happens to the running instances?",
+    "hint": "Which mode do you get by saying nothing?",
+    "choices": [
+      {
+        "text": "They are upgraded in batches of 20%",
+        "correct": false,
+        "why": "Batches are Rolling mode; a set that names no policy is in Manual."
+      },
+      {
+        "text": "They may all be updated at once, since no order was asked for",
+        "correct": false,
+        "why": "That is Automatic mode, which has to be chosen."
+      },
+      {
+        "text": "They are reimaged one at a time by automatic repairs",
+        "correct": false,
+        "why": "Repairs act on unhealthy instances, not on a changed model."
+      },
+      {
+        "text": "Nothing, until somebody upgrades them by hand",
+        "correct": true,
+        "why": "Right. The default mode is Manual: the model changes, new instances use it, and existing ones wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw67mqff",
+    "version": 1,
+    "section": "upgrades-and-health",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's set has 12 instances and 3 of them report unhealthy at the same moment. Automatic repairs are on, with the default action. What happens?",
+    "hint": "Fewer than 20 instances.",
+    "choices": [
+      {
+        "text": "One at a time, each replaced by a new instance from the model",
+        "correct": true,
+        "why": "Right. A set of fewer than 20 is repaired an instance at a time, and Replace, the default, creates a new instance from the model."
+      },
+      {
+        "text": "All three are replaced together, as a batch of 25%",
+        "correct": false,
+        "why": "Repairs never take more than 5% at once, and below 20 instances they go one at a time."
+      },
+      {
+        "text": "They are restarted one at a time, keeping their disks",
+        "correct": false,
+        "why": "Restart is a repair action you choose; the default is Replace."
+      },
+      {
+        "text": "Nothing, until the grace period of 30 minutes has passed for the whole set",
+        "correct": false,
+        "why": "The grace period runs per instance after a change to that instance, not for the set as a whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvd9t4xy",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At night the shop's five instances carry 120 percentage points of CPU between them. The scale-in rule removes one when the ten-minute average is below 30. How many instances does the set settle at?",
+    "hint": "Divide again after each removal, and read the operator.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "ex-7064qrep",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these mistakes did `bicep build` report in this lesson? Choose all that apply.",
+    "hint": "A name it does not know, or a type it did not expect.",
+    "choices": [
+      {
+        "text": "`singlePlacmentGroup`, with a letter missing",
+        "correct": true,
+        "why": "BCP089, with the right spelling suggested."
+      },
+      {
+        "text": "`cooldown: 10`, a number where a duration belongs",
+        "correct": true,
+        "why": "BCP036: a string was expected, reported where `cpuRules` is used."
+      },
+      {
+        "text": "`orchestrationMode: 'Flex'`",
+        "correct": false,
+        "why": "The type admits any string, so it compiled cleanly."
+      },
+      {
+        "text": "`timeWindow: 'PT2M'`, below the API's five minutes",
+        "correct": false,
+        "why": "A well-formed duration; the range is in the API's description, not the type."
+      },
+      {
+        "text": "A minimum of 13 against a maximum of 12",
+        "correct": false,
+        "why": "Both are strings to the compiler, which does not compare them."
+      }
+    ]
+  },
+  {
+    "id": "ex-faj33p9q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's rule averages a 15-minute window, and their image takes 4 minutes to boot and serve. They want a scale-out cooldown that keeps the rule from acting a second time on minutes from before its own first action. Which is the shortest that does?",
+    "hint": "The window has to be clear of the old minutes, and the new instances are not serving at once.",
+    "choices": [
+      {
+        "text": "About 19 minutes: the window plus the boot",
+        "correct": true,
+        "why": "Right. Only then does the window hold nothing but minutes when the added instances were serving."
+      },
+      {
+        "text": "5 minutes, the value in Microsoft's example",
+        "correct": false,
+        "why": "After 5 minutes most of a 15-minute window is still the minutes before the action."
+      },
+      {
+        "text": "15 minutes, the length of the window",
+        "correct": false,
+        "why": "That clears the window of minutes from before the action, but 4 of them are minutes when the new instances were still booting and the old load was unchanged."
+      },
+      {
+        "text": "4 minutes, the boot time",
+        "correct": false,
+        "why": "Booting is part of it, but the window still remembers 11 minutes from before."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9hs4c6r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop wants six instances from midnight on Black Friday until the end of Saturday, and its usual rules the rest of the year. Which part of the autoscale setting does that?",
+    "hint": "One kind of profile has a start and an end.",
+    "choices": [
+      {
+        "text": "A recurrence profile on Fridays, from 00:00",
+        "correct": false,
+        "why": "A recurrence repeats every week; the shop would have six every Friday of the year."
+      },
+      {
+        "text": "A second autoscale setting on the same scale set for those two days",
+        "correct": false,
+        "why": "A resource has one autoscale setting; the profiles inside it are where dates go."
+      },
+      {
+        "text": "A fixed-date profile with a minimum of 6",
+        "correct": true,
+        "why": "Right. Fixed-date profiles are evaluated first and apply only between their start and end; the default profile covers every other day."
+      },
+      {
+        "text": "`capacity.default: '6'` in the default profile",
+        "correct": false,
+        "why": "The default capacity is used only when the metric cannot be read; it does not set a floor for a date."
+      }
+    ]
+  }
+]

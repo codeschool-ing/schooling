@@ -1,0 +1,687 @@
+[
+  {
+    "id": "ex-xhe9rpb5",
+    "version": 1,
+    "section": "the-static-secret",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `secret.yaml`, the client secret is written as `bm90LWEtcmVhbC1zZWNyZXQ=`. What does that encoding protect it from?",
+    "hint": "The section turned it back into words with one command.",
+    "choices": [
+      {
+        "text": "A glance over somebody's shoulder, and nothing more",
+        "correct": true,
+        "why": "Base64 is an encoding with no key: `base64 -d` reverses it on any Linux machine, as the capture did."
+      },
+      {
+        "text": "Anyone without the cluster's encryption key",
+        "correct": false,
+        "why": "There is no key in base64. Encryption of etcd is a separate setting, and it does nothing about the copies in a repository or a log."
+      },
+      {
+        "text": "Anyone not allowed to `get secrets` in the namespace",
+        "correct": false,
+        "why": "That is Kubernetes RBAC on the cluster's copy, not the encoding; the file in the repository has no RBAC at all."
+      },
+      {
+        "text": "Being used from outside the tenant",
+        "correct": false,
+        "why": "Entra ID accepts a valid client secret from anywhere that can reach it; the encoding plays no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k0v83ym",
+    "version": 1,
+    "section": "the-static-secret",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to the help of `az ad sp create-for-rbac` captured in the section, for how many years is a client secret valid when nobody chooses?",
+    "hint": "Read the `Default:` on the line after `--years`.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "years"
+  },
+  {
+    "id": "ex-pm3v8fkf",
+    "version": 1,
+    "section": "the-static-secret",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a client secret placed in `secret.yaml` end up? Choose every place the section names.",
+    "choices": [
+      {
+        "text": "In the repository and every clone of it, if the file was committed",
+        "correct": true,
+        "why": "Git keeps every committed version, so deleting the file later leaves the secret in history."
+      },
+      {
+        "text": "In every pod that mounts the Secret",
+        "correct": true,
+        "why": "Mounting it is the purpose of the Secret, so each such pod holds the secret in its environment."
+      },
+      {
+        "text": "In a CI log that printed the environment",
+        "correct": true,
+        "why": "One of the accidental copies the section lists, and among the hardest to find afterwards."
+      },
+      {
+        "text": "In the managed identity, which keeps it to expire it",
+        "correct": false,
+        "why": "A managed identity has no client secret at all; the secret belongs to an application registration, which records only its metadata and end date."
+      },
+      {
+        "text": "In the federated credential of the service account",
+        "correct": false,
+        "why": "A federated credential holds an issuer, a subject and an audience, and no secret of any kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d4yxeq8",
+    "version": 1,
+    "section": "the-static-secret",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To avoid a secret, a team grants `Storage Blob Data Contributor` on the receipts container to the cluster's kubelet identity. What did they actually grant?",
+    "hint": "Think about who can reach the Instance Metadata Service from a pod.",
+    "choices": [
+      {
+        "text": "Write access to the receipts for the order API's pods alone",
+        "correct": false,
+        "why": "The kubelet identity belongs to the nodes, not to any one workload; nothing in the grant names the order API."
+      },
+      {
+        "text": "Write access to the receipts for every pod on those nodes",
+        "correct": true,
+        "why": "By default every pod in an AKS cluster can reach the metadata service, and through it the identities the node carries."
+      },
+      {
+        "text": "Nothing, because a kubelet identity cannot hold Azure roles",
+        "correct": false,
+        "why": "It holds roles routinely: pulling from a registry is a role assignment on exactly this identity."
+      },
+      {
+        "text": "Write access for the kubelet, which no pod can use",
+        "correct": false,
+        "why": "The kubelet is not the only process that can ask the metadata service; any pod not blocked from it can."
+      }
+    ]
+  },
+  {
+    "id": "ex-535km76h",
+    "version": 1,
+    "section": "the-static-secret",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tired of outages when secrets expire, a team creates every new client secret with `--end-date 2299-12-31`. What have they traded?",
+    "hint": "The section names two ways a secret fails. Which one did they remove, and which one did they make worse?",
+    "choices": [
+      {
+        "text": "Nothing: Entra ID still rotates the secret on its own, once a year, without being asked",
+        "correct": false,
+        "why": "Entra ID rotates nothing; a client secret is valid until its end date or until somebody deletes it."
+      },
+      {
+        "text": "Planned outages for unplanned ones, since a far date is refused",
+        "correct": false,
+        "why": "The help offers that very date as an example, and the command accepts it."
+      },
+      {
+        "text": "An outage on a known date for a password that works as long as any copy survives",
+        "correct": true,
+        "why": "The expiry outage is gone, and every copy listed in the section now stays valid for centuries."
+      },
+      {
+        "text": "A rotation by hand for one done by the workload identity webhook",
+        "correct": false,
+        "why": "The webhook never touches client secrets; it injects a projected token and four variables."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpyz87cv",
+    "version": 1,
+    "section": "the-projected-token",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On AKS, the service account `orders` carries the `azure.workload.identity/client-id` annotation, and a pod using it has no `azure.workload.identity/use` label. What does the webhook add to that pod?",
+    "hint": "The documentation calls the label required.",
+    "choices": [
+      {
+        "text": "The four variables, but no token volume",
+        "correct": false,
+        "why": "The webhook does not split its work that way; it mutates a labelled pod fully and leaves others alone."
+      },
+      {
+        "text": "Everything, since the annotation is what it reads",
+        "correct": false,
+        "why": "The annotation supplies the client id, but the webhook only acts on pods carrying the label."
+      },
+      {
+        "text": "Nothing: only labelled pods are mutated",
+        "correct": true,
+        "why": "Microsoft's documentation says only pods with the label are mutated, whatever their service account says."
+      },
+      {
+        "text": "A token for the API server's audience instead",
+        "correct": false,
+        "why": "Every pod gets that token from Kubernetes itself, with or without the webhook; it is not what the webhook adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vc4shyd",
+    "version": 1,
+    "section": "the-projected-token",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the audience of the projected volume in `orders.yaml`, the one the federated credential will be written for: `audience: api://___`",
+    "hint": "It describes what the token is for: exchanging it at Entra ID.",
+    "blanks": [
+      {
+        "accept": [
+          "AzureADTokenExchange"
+        ],
+        "ignore_case": false
+      }
+    ]
+  },
+  {
+    "id": "ex-t6eeaszh",
+    "version": 1,
+    "section": "the-projected-token",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`decode.py` printed `sub: system:serviceaccount:shop:orders` from the token. Why does that prove nothing about which pod wrote the file?",
+    "hint": "Look at the last line the program printed.",
+    "choices": [
+      {
+        "text": "Because nobody checked the signature over those claims",
+        "correct": true,
+        "why": "Anybody can write those claims; only the signature, checked with the issuer's public key, ties them to the cluster."
+      },
+      {
+        "text": "Because `sub` is encrypted and the program showed a guess",
+        "correct": false,
+        "why": "Nothing in the token is encrypted; the claims are encoded JSON, which is why the program could print them."
+      },
+      {
+        "text": "Because kind writes a fake `sub` that AKS would correct",
+        "correct": false,
+        "why": "The `sub` came from kind's own API server and is the real service account; AKS would write the same string."
+      },
+      {
+        "text": "Because the token was copied to the laptop, which changes it",
+        "correct": false,
+        "why": "Copying a token changes nothing in it; the problem is that nobody checked who made it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hy4h6va",
+    "version": 1,
+    "section": "the-projected-token",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A projected token has `expirationSeconds: 3600`. Following the rule in the Kubernetes documentation, how many minutes after it was issued does the kubelet ask for a new one?",
+    "hint": "80% of the lifetime, unless the token is older than 24 hours first.",
+    "value": 48,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-gb9z3x78",
+    "version": 1,
+    "section": "the-projected-token",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The pod holds two tokens with the same `iss`, the same `sub` and the same `kid`. Which claim lets Entra ID refuse the one Kubernetes mounts for the API server?",
+    "hint": "Compare the two decoded tokens line by line.",
+    "choices": [
+      {
+        "text": "`exp`, because the API server's token lasts a year",
+        "correct": false,
+        "why": "That lifetime is kind's extension and AKS turns it off; a token of the right lifetime with the wrong audience is still refused."
+      },
+      {
+        "text": "`kid`, because each audience is signed with its own key",
+        "correct": false,
+        "why": "The capture showed the same `kid` on both: one cluster key signs them all."
+      },
+      {
+        "text": "`kubernetes.io`, because it names the pod rather than the identity",
+        "correct": false,
+        "why": "Both tokens carry the same `kubernetes.io` block, and Entra ID does not compare it with anything."
+      },
+      {
+        "text": "`aud`, which names the API server instead of Entra ID",
+        "correct": true,
+        "why": "The federated credential names an audience, and a token for another one matches no record."
+      }
+    ]
+  },
+  {
+    "id": "ex-psw0yb83",
+    "version": 1,
+    "section": "federated-credentials",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a federated identity credential on the managed identity `shop-orders` hold?",
+    "choices": [
+      {
+        "text": "A certificate that the cluster presents when it signs in",
+        "correct": false,
+        "why": "No certificate is involved and the cluster never signs in; Entra ID reads the issuer's published keys instead."
+      },
+      {
+        "text": "An issuer, a subject and a list of audiences",
+        "correct": true,
+        "why": "Three strings, compared with the token's `iss`, `sub` and `aud`, and no secret of any kind."
+      },
+      {
+        "text": "The cluster's public signing keys, copied at creation",
+        "correct": false,
+        "why": "Entra ID fetches the keys from the issuer when it needs them, which is why a key rotation needs no change to the credential."
+      },
+      {
+        "text": "A client secret that expires with the projected token",
+        "correct": false,
+        "why": "There is no secret in it; avoiding one is the point of federation."
+      }
+    ]
+  },
+  {
+    "id": "ex-y55w077s",
+    "version": 1,
+    "section": "federated-credentials",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each change made to `identity.bicep` with what happened when it was compiled, or would happen afterwards.",
+    "pairs": [
+      {
+        "left": "`audiences:` written as `audience:`",
+        "right": "warning BCP089, with the right name suggested"
+      },
+      {
+        "left": "the subject written as `system:serviceaccounts:shop:orders`",
+        "right": "compiles; Entra ID finds no matching record"
+      },
+      {
+        "left": "the OIDC issuer's `enabled` set to `false`",
+        "right": "compiles; no published keys for Entra ID to fetch"
+      },
+      {
+        "left": "workload identity's `enabled` written as `'true'`",
+        "right": "warning BCP036, a string where a bool belongs"
+      }
+    ],
+    "right_distractors": [
+      "compiles; Entra ID adds the missing s itself",
+      "the template is not written at all"
+    ]
+  },
+  {
+    "id": "ex-s608paf5",
+    "version": 1,
+    "section": "federated-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Suppose the lab had a real tenant, and a federated credential named kind's issuer `https://kubernetes.default.svc.cluster.local`. Why would Entra ID still refuse the pod's token?",
+    "hint": "Look at where the discovery document says the keys are.",
+    "choices": [
+      {
+        "text": "Because kind signs with RS256, which Entra ID does not accept",
+        "correct": false,
+        "why": "RS256 is the one algorithm Entra ID's documentation says is supported for this exchange."
+      },
+      {
+        "text": "Because the token's audience is wrong for Entra ID",
+        "correct": false,
+        "why": "The projected volume asked for `api://AzureADTokenExchange`, the audience a credential expects."
+      },
+      {
+        "text": "Because a subject in a kind cluster has a different format",
+        "correct": false,
+        "why": "The `sub` is `system:serviceaccount:shop:orders`, the same format AKS writes."
+      },
+      {
+        "text": "Because it cannot reach the issuer to fetch the keys",
+        "correct": true,
+        "why": "The name only resolves inside a cluster and the key set sits at a private Docker address, so the signature can never be checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcj5g5xp",
+    "version": 1,
+    "section": "federated-credentials",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`shop-orders` already has federated credentials for the `orders` service account in 7 clusters and for a `reports` service account in 5 of them. Within the documented maximum, in how many more clusters can `orders` be trusted?",
+    "hint": "Each credential is one service account in one cluster, and the documented maximum is per managed identity.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "clusters"
+  },
+  {
+    "id": "ex-2t154d4n",
+    "version": 1,
+    "section": "federated-credentials",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A template declares three federated credentials on `shop-orders` in a loop, and some deployments fail with HTTP 409 while others succeed. What is the fix?",
+    "hint": "The documentation describes this failure for one parent identity and not for several.",
+    "choices": [
+      {
+        "text": "Wait a few minutes between deployments for propagation",
+        "correct": false,
+        "why": "Propagation delays the first token request; it does not make the creation itself conflict."
+      },
+      {
+        "text": "Give each credential a different audience",
+        "correct": false,
+        "why": "The audience has no bearing on a 409: the conflict comes from concurrent writes to one identity."
+      },
+      {
+        "text": "Create them in sequence, each depending on the last",
+        "correct": true,
+        "why": "Concurrent creation under one identity is refused with 409; the documentation's remedy is a sequential order."
+      },
+      {
+        "text": "Put each credential on a different cluster's identity",
+        "correct": false,
+        "why": "Moving them to other identities avoids the conflict, but the order API would then have three identities instead of one."
+      }
+    ]
+  },
+  {
+    "id": "ex-yx763hsz",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the exchange in the order it happens on Azure, from the order API's first call to Blob Storage.",
+    "items": [
+      "The SDK reads AZURE_FEDERATED_TOKEN_FILE and opens the token",
+      "The SDK sends the token to Entra ID as client_assertion",
+      "Entra ID fetches the issuer's public keys",
+      "Entra ID checks the signature, then the federated credential",
+      "Entra ID returns an access token with expires_in",
+      "The SDK writes the receipt with an Authorization: Bearer header"
+    ],
+    "trap": "Comparing the subject before checking the signature: no claim can be believed until the signature over all of them is verified."
+  },
+  {
+    "id": "ex-j9y656wa",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After moving to workload identity, a pod still mounts the old `orders-entra` Secret beside the new token. Which credential does `DefaultAzureCredential` use?",
+    "hint": "The section gives the start of its list for Python.",
+    "choices": [
+      {
+        "text": "The token, because workload identity always takes precedence",
+        "correct": false,
+        "why": "Workload identity is second in the list; the environment credential is tried first."
+      },
+      {
+        "text": "Neither: it refuses to choose when both are present",
+        "correct": false,
+        "why": "It does not refuse; it uses the first credential in its list that has what it needs."
+      },
+      {
+        "text": "Whichever was mounted last into the pod",
+        "correct": false,
+        "why": "The order is fixed by the library, not by the order of mounts."
+      },
+      {
+        "text": "The client secret: the environment credential comes first",
+        "correct": true,
+        "why": "With `AZURE_CLIENT_ID`, `AZURE_TENANT_ID` and `AZURE_CLIENT_SECRET` present, the first credential in the list signs in with the secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-tm6v214h",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the token request, what is sent as `client_assertion`?",
+    "choices": [
+      {
+        "text": "The projected service account token, as it is in the file",
+        "correct": true,
+        "why": "The file's contents go as the assertion, which is why the request reads `AZURE_FEDERATED_TOKEN_FILE`."
+      },
+      {
+        "text": "A JWT the SDK signs with the managed identity's private key",
+        "correct": false,
+        "why": "A managed identity hands the pod no private key; the assertion is the token Kubernetes signed."
+      },
+      {
+        "text": "The client id of `shop-orders`, encoded as a JWT",
+        "correct": false,
+        "why": "The client id travels in `client_id`, a separate field."
+      },
+      {
+        "text": "An access token from the Instance Metadata Service",
+        "correct": false,
+        "why": "Workload identity does not use the metadata service at all; that is the managed identity flow."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbwpvedh",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A federated credential was created a minute ago. The first token request fails with `AADSTS70021`, and the same pod succeeds a few minutes later with nothing changed. What happened?",
+    "hint": "Both the AKS and the Entra ID documentation mention a delay after adding a credential.",
+    "choices": [
+      {
+        "text": "The subject was wrong and Entra ID corrected it",
+        "correct": false,
+        "why": "Entra ID never corrects a subject; a wrong one fails every time, not only the first."
+      },
+      {
+        "text": "The credential had not yet propagated, so retries with a short wait are the fix",
+        "correct": true,
+        "why": "The documentation describes exactly this window and recommends a short wait and retries."
+      },
+      {
+        "text": "The projected token had expired and the kubelet renewed it",
+        "correct": false,
+        "why": "A fresh pod's token lasts an hour; and an expired token is not what `AADSTS70021` describes."
+      },
+      {
+        "text": "The role assignment had not taken effect yet",
+        "correct": false,
+        "why": "A missing role is refused by the storage account after a token is issued, not by Entra ID at the exchange."
+      }
+    ]
+  },
+  {
+    "id": "ex-98cwfdsc",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does Entra ID check before it issues the access token? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The token's signature, with a key from the issuer's key set",
+        "correct": true,
+        "why": "The first check: without it, none of the claims can be believed."
+      },
+      {
+        "text": "That `iss`, `sub` and `aud` match a federated credential on the identity",
+        "correct": true,
+        "why": "Compared case-sensitively and in full with the three strings of a credential."
+      },
+      {
+        "text": "That the token is not past its `exp`",
+        "correct": true,
+        "why": "An expired token is refused, which is why the kubelet keeps the file fresh."
+      },
+      {
+        "text": "That the pod's address is inside the cluster's virtual network",
+        "correct": false,
+        "why": "The exchange is decided by the token, not by where the request came from."
+      },
+      {
+        "text": "That the token's `kubernetes.io` pod uid still exists",
+        "correct": false,
+        "why": "Entra ID cannot see the cluster's objects; that check is one only the cluster's API server makes."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9ret1s7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each variable the webhook adds with what it tells the SDK.",
+    "pairs": [
+      {
+        "left": "AZURE_CLIENT_ID",
+        "right": "which managed identity to become"
+      },
+      {
+        "left": "AZURE_TENANT_ID",
+        "right": "which directory to ask"
+      },
+      {
+        "left": "AZURE_FEDERATED_TOKEN_FILE",
+        "right": "where the projected token is"
+      },
+      {
+        "left": "AZURE_AUTHORITY_HOST",
+        "right": "the address of the sign-in endpoint"
+      }
+    ],
+    "right_distractors": [
+      "the client secret to send",
+      "the storage account to write to"
+    ]
+  },
+  {
+    "id": "ex-r7q7a08n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The annotation on `orders` was changed to a new identity's client id an hour ago, and the running pods still act as the old one. What do they need?",
+    "choices": [
+      {
+        "text": "A restart, since the webhook only acts when a pod is created",
+        "correct": true,
+        "why": "The documentation says a changed annotation takes effect only after the pod is restarted."
+      },
+      {
+        "text": "A new federated credential on the old identity",
+        "correct": false,
+        "why": "The old identity is the one they should stop using; nothing on it needs changing."
+      },
+      {
+        "text": "A key rotation with `az aks oidc-issuer rotate-signing-keys`",
+        "correct": false,
+        "why": "Rotation changes the cluster's signing keys, not which identity a pod's variables name."
+      },
+      {
+        "text": "Nothing more than waiting for the kubelet to refresh the token",
+        "correct": false,
+        "why": "A refreshed token carries the same audience and subject, and the variables in the pod do not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-drpf5h7z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save work, a team writes one federated credential with the subject `system:serviceaccount:shop:*`, meaning every service account in `shop`. What does it match?",
+    "hint": "Read what the command line's help says about how the subject is compared.",
+    "choices": [
+      {
+        "text": "Every service account in the namespace `shop`",
+        "correct": false,
+        "why": "The subject is compared exactly, so the asterisk is a character, not a pattern."
+      },
+      {
+        "text": "No token at all, since no service account is called `*`",
+        "correct": true,
+        "why": "Exact matching makes it a literal subject; the preview claims matching expression is the separate way to write a pattern."
+      },
+      {
+        "text": "Only the first service account created in `shop`",
+        "correct": false,
+        "why": "There is no notion of order in the comparison; the string has to equal the token's `sub`."
+      },
+      {
+        "text": "Every service account, but only for the default audience",
+        "correct": false,
+        "why": "The audience is compared separately and does not change how the subject is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-130qwkmn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the three answers compared at the end of the lesson, which one leaves nothing stored and lets only one service account in one cluster use it?",
+    "choices": [
+      {
+        "text": "A client secret in a Kubernetes Secret",
+        "correct": false,
+        "why": "The secret is stored in every copy and works for anybody holding one."
+      },
+      {
+        "text": "The kubelet identity",
+        "correct": false,
+        "why": "Nothing is stored, but every pod on the node can use it."
+      },
+      {
+        "text": "Workload identity",
+        "correct": true,
+        "why": "The token is made for one service account, and the credential trusts only that one in one cluster."
+      },
+      {
+        "text": "Pod-managed identity",
+        "correct": false,
+        "why": "Deprecated since 2022, and not one of the table's three; it also ran through the node's metadata service."
+      }
+    ]
+  }
+]

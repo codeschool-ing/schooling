@@ -1,0 +1,473 @@
+{
+  "ex-52e6fh9j": {
+    "prompt": "O plano da loja é um `P1v3` com duas instâncias. Os desenvolvedores põem o pequeno site administrativo deles no mesmo plano. O que acontece com o custo do plano?",
+    "hint": "Pergunte em que unidade se conta a conta de um tier dedicado.",
+    "choices": [
+      {
+        "text": "Uma terceira instância é somada para o site administrativo",
+        "why": "Um app não traz máquinas consigo; ele roda nas instâncias do plano, que continuam duas."
+      },
+      {
+        "text": "Nada: ele divide as duas máquinas que já existem",
+        "why": "Num tier dedicado cada instância é cobrada, rode o que rodar nela; o custo do segundo app é a capacidade que ele ocupa."
+      },
+      {
+        "text": "O site administrativo é cobrado por requisição além do plano",
+        "why": "Não existe cobrança por requisição num plano do App Service; isso lembra mais o perfil Consumption da lição 8."
+      },
+      {
+        "text": "Ela dobra, porque cada app é cobrado pelas instâncias em que roda",
+        "why": "Isso valeria se os apps fossem cobrados; o que é cobrado são as instâncias, uma vez cada."
+      }
+    ]
+  },
+  "ex-tv4bk3zq": {
+    "prompt": "Uma cópia do arquivo da loja perde a linha `reserved: true` e compila sem nenhum aviso. O que mudou no que o Azure construiria?",
+    "hint": "O compilador conferiu tipos. Leia o que a API REST diz que a propriedade significa, e o padrão dela.",
+    "choices": [
+      {
+        "text": "Nada, porque `kind: 'linux'` já faz do plano um plano Linux",
+        "why": "O sistema operacional do plano é decidido por `reserved`; `kind` sozinho não faz o plano ser Linux."
+      },
+      {
+        "text": "Nada que importe, ou o compilador teria avisado",
+        "why": "O compilador avisa sobre tipos e nomes. Uma propriedade omitida que tem valor padrão é um arquivo válido que quer dizer outra coisa."
+      },
+      {
+        "text": "O plano seria um plano Windows, já que `reserved` tem false como padrão",
+        "why": "A API REST descreve `reserved` como true para um plano Linux e false caso contrário, com false como padrão."
+      },
+      {
+        "text": "O plano continua Linux, e o site passa para um runtime Python embutido",
+        "why": "Nada no arquivo pede um runtime embutido; a imagem continua em `linuxFxVersion`, e o que mudou foi o plano."
+      }
+    ]
+  },
+  "ex-kc1tgv5r": {
+    "prompt": "Um plano de três instâncias carrega dois apps, e um deles tem um slot de staging. O escalonamento por app está desligado. Quantas cópias de app, contando os slots, estão rodando nas instâncias do plano?",
+    "hint": "Um slot é um app nas mesmas máquinas, e todo app roda em toda instância."
+  },
+  "ex-8hah3367": {
+    "prompt": "No Linux, o site da loja nomeia a imagem dele como `linuxFxVersion: '___|shopregistry.azurecr.io/shop:1.0'`.",
+    "hint": "A palavra antes da barra vertical diz que tipo de coisa a string descreve.",
+    "blanks": [
+      {
+        "accept": [
+          "DOCKER"
+        ]
+      }
+    ]
+  },
+  "ex-5d4xx29y": {
+    "prompt": "Qual destas é verdadeira sobre a configuração de app `WEBSITES_PORT` no arquivo da loja?",
+    "hint": "Duas páginas da Microsoft descrevem o padrão de modos diferentes, e uma delas diz para onde a configuração vai.",
+    "choices": [
+      {
+        "text": "É como o código da loja descobre em que porta escutar",
+        "why": "A configuração é lida pela plataforma e não é passada ao contêiner; a loja lê `PORT`, definido no Dockerfile dela."
+      },
+      {
+        "text": "Abre uma segunda porta além da 80, para a loja responder nas duas",
+        "why": "O App Service manda HTTP para uma porta do contêiner; a configuração diz qual, e não acrescenta nenhuma."
+      },
+      {
+        "text": "É a porta que o health check usa para chegar a `/healthz`",
+        "why": "O health check pede um caminho do app; a porta para a qual a plataforma roteia é a mesma para toda requisição."
+      },
+      {
+        "text": "Declara 8080 para que o arquivo não dependa da detecção de porta",
+        "why": "Uma página diz que o App Service tenta 80 e 8080, outra que ele presume 80; nomear a porta tira a dúvida."
+      }
+    ]
+  },
+  "ex-800dtt9k": {
+    "prompt": "`SHOP_ENV` decide se a loja chama o gateway de pagamento real ou o sandbox dele. Suponha que ele NÃO estivesse em `slotConfigNames`. O que a produção rodaria depois do swap do `staging`?",
+    "hint": "Sem a marca, uma configuração faz parte do que se move com o conteúdo.",
+    "choices": [
+      {
+        "text": "A versão nova, pagando no gateway de teste",
+        "why": "Uma configuração de app que não é fixa viaja com o conteúdo, então o valor do staging chega à produção com a versão nova."
+      },
+      {
+        "text": "O código novo com `SHOP_ENV=production`, porque a configuração do gateway fica no slot dela",
+        "why": "É isso que uma configuração fixa faz. Uma sem marca se move."
+      },
+      {
+        "text": "Nada novo: o swap se recusa a começar enquanto os dois valores diferem",
+        "why": "Um swap não compara configurações antes de começar; valores diferentes são o caso normal."
+      },
+      {
+        "text": "O código antigo, porque um swap sem configurações fixas só troca as configurações",
+        "why": "Um swap sempre troca o conteúdo; as configurações são a parte que vai junto ou não."
+      }
+    ]
+  },
+  "ex-j2r1sv5a": {
+    "prompt": "Durante um swap do `staging` para `production`, quais destes ficam com o slot de produção? Marque todas as que valem.",
+    "hint": "O que fica é a identidade do slot: os endereços dele, quem ele é e o que ele pode alcançar.",
+    "choices": [
+      {
+        "text": "Os nomes de domínio personalizados dele",
+        "why": "Domínios personalizados estão na lista do que não é trocado; o endereço da produção continua da produção."
+      },
+      {
+        "text": "Uma configuração de app sem marca de fixa",
+        "why": "Configurações de app seguem o conteúdo, a não ser que estejam listadas como fixas."
+      },
+      {
+        "text": "A identidade gerenciada dele",
+        "why": "Identidades gerenciadas ficam com o slot, então o código que chega usa a identidade da produção desde a troca."
+      },
+      {
+        "text": "A imagem nomeada em `linuxFxVersion`",
+        "why": "A imagem é o conteúdo; movê-la é a razão de existir do swap."
+      },
+      {
+        "text": "Uma configuração nomeada em `slotConfigNames`",
+        "why": "Essa lista é a declaração de que uma configuração fica no slot dela."
+      }
+    ]
+  },
+  "ex-gpvhp9wx": {
+    "prompt": "Ligue cada comando ao que ele faz com o app da loja.",
+    "hint": "Um copia configuração, um marca, um divide tráfego e um desfaz uma pausa.",
+    "pairs": [
+      {
+        "left": "`az webapp deployment slot create --slot staging --configuration-source shop-sp`",
+        "right": "um slot novo com as configurações da produção e sem conteúdo"
+      },
+      {
+        "left": "`az webapp config appsettings set --slot staging --slot-settings SHOP_ENV=staging`",
+        "right": "uma configuração que fica no slot dela num swap"
+      },
+      {
+        "left": "`az webapp traffic-routing set --distribution staging=10`",
+        "right": "um décimo dos visitantes no endereço da produção mandado para o staging"
+      },
+      {
+        "left": "`az webapp deployment slot swap --slot staging --action reset`",
+        "right": "um swap com prévia cancelado, as configurações do staging de volta"
+      }
+    ],
+    "right_distractors": [
+      "os arquivos do staging copiados por cima dos da produção"
+    ]
+  },
+  "ex-hbv7taq2": {
+    "prompt": "Com o plano trocado para `B1`, o arquivo da loja ainda compila sem aviso, com slot e tudo. Por que o compilador deixou passar?",
+    "hint": "Onde mora a regra, e onde mora o slot?",
+    "choices": [
+      {
+        "text": "O Basic permite um slot, então o arquivo é válido como está",
+        "why": "A página de limites não lista slots para Free nem Basic; os slots começam no Standard."
+      },
+      {
+        "text": "Cada recurso é conferido contra o próprio tipo, e a regra do tier envolve dois deles",
+        "why": "O `sku` do plano e o slot são recursos separados; nenhum tipo diz que um slot precisa de um plano de certo tier, então quem recusa é o Azure."
+      },
+      {
+        "text": "Recursos filhos como slots não são conferidos pelo Bicep",
+        "why": "O mesmo compilador pegou dois erros em `slotConfigNames`, que também é um recurso filho."
+      },
+      {
+        "text": "Um slot no Basic é criado parado, o que é um estado válido",
+        "why": "O Basic não tem slots para criar, parados ou rodando."
+      }
+    ]
+  },
+  "ex-0hxaknge": {
+    "prompt": "Um app num plano Premium v3 tem oito slots de implantação. Para economizar, a equipe tenta passar o plano para Standard. O que acontece?",
+    "hint": "O número de slots é um limite do tier de destino, e a documentação diz o que ele faz com uma redução.",
+    "choices": [
+      {
+        "text": "O Standard não tem slots, então os oito precisam ser apagados antes",
+        "why": "O Standard permite cinco slots por app; quem não tem nenhum são o Free e o Basic."
+      },
+      {
+        "text": "Os três slots mais novos são apagados para caber, e os outros continuam rodando",
+        "why": "O App Service não escolhe slots para apagar por você; a mudança é recusada."
+      },
+      {
+        "text": "A mudança é recusada até o app ter cinco slots ou menos",
+        "why": "O exemplo da própria documentação: um app com mais de cinco slots não desce para o Standard, que suporta cinco."
+      },
+      {
+        "text": "Os oito continuam rodando, mas só cinco podem ser trocados",
+        "why": "Não existe esse meio-termo; o limite do tier é sobre quantos slots existem."
+      }
+    ]
+  },
+  "ex-gss5b430": {
+    "prompt": "Ponha em ordem os passos de um swap do `staging` para `production`.",
+    "hint": "Tudo até a troca acontece no staging.",
+    "items": [
+      "Aplicar as configurações fixas da produção a toda instância do staging, o que as reinicia",
+      "Esperar toda instância do staging terminar de reiniciar",
+      "Mandar uma requisição de aquecimento a cada instância do staging",
+      "Trocar o roteamento entre os dois slots",
+      "Reiniciar o conteúdo antigo, agora no staging, com as configurações do staging"
+    ],
+    "trap": "Trocar o roteamento antes do aquecimento é justamente a indisponibilidade que o swap existe para evitar."
+  },
+  "ex-964cyykc": {
+    "prompt": "O slot de staging roda a loja de partida lenta, que responde 503 em todo caminho nos primeiros segundos. Nenhuma configuração de aquecimento foi feita. O que o passo de aquecimento do swap faz com o primeiro 503?",
+    "hint": "Leia o que a documentação diz que conta como aquecido quando nada foi configurado.",
+    "choices": [
+      {
+        "text": "Conta a instância como aquecida, já que qualquer resposta HTTP vale",
+        "why": "Sem lista de status, uma instância que devolve qualquer resposta HTTP é considerada aquecida, e um 503 é uma resposta."
+      },
+      {
+        "text": "Espera até 90 segundos o caminho raiz devolver 200",
+        "why": "Os 90 segundos são quanto ele espera por uma resposta; sem lista, qualquer resposta encerra a espera."
+      },
+      {
+        "text": "Para o swap, porque 503 é um status de erro",
+        "why": "Um 503 só para o swap quando existe uma lista de status que deixa o 503 de fora."
+      },
+      {
+        "text": "Pergunta mais cinco vezes e troca o roteamento, ouça o que ouvir",
+        "why": "As cinco novas tentativas são para requisições que estouram o tempo, e um 503 não estoura."
+      }
+    ]
+  },
+  "ex-kevfmvy5": {
+    "prompt": "`WEBSITE_SWAP_WARMUP_PING_STATUSES` é `200`, e no passo de aquecimento uma instância do staging responde 503. O que vem a seguir?",
+    "hint": "Duas configurações diferentes recebem uma lista de status, e elas reagem de modos diferentes a uma falha.",
+    "choices": [
+      {
+        "text": "O swap continua perguntando àquela instância até ela responder 200",
+        "why": "Perguntar de novo até chegar um status da lista é o que `WEBSITE_WARMUP_STATUSES` faz na partida de um contêiner, não a lista do swap."
+      },
+      {
+        "text": "O roteamento troca, e o health check tira aquela instância depois",
+        "why": "O roteamento só troca quando toda instância está aquecida; um aquecimento que falhou não chega à troca."
+      },
+      {
+        "text": "O swap para, e a produção segue servindo a versão antiga",
+        "why": "Um status fora da lista para o aquecimento e o swap, e a produção nunca foi tocada."
+      },
+      {
+        "text": "A produção é reiniciada para que a instância seja liberada",
+        "why": "Nada num swap reinicia as instâncias da produção antes da troca."
+      }
+    ]
+  },
+  "ex-4m9ft1j2": {
+    "prompt": "O plano da loja está em seis instâncias e cinco delas falham no health check. `WEBSITE_HEALTHCHECK_MAXUNHEALTHYWORKERPERCENT` está no padrão. Quantas instâncias saem do balanceador de carga?",
+    "hint": "Por padrão, não mais que metade das instâncias é excluída."
+  },
+  "ex-jgep5vbd": {
+    "prompt": "A equipe acrescenta `autoSwapSlotName: 'production'` ao slot de staging da loja, para que todo push troque sozinho. O arquivo compila. O que eles ganham?",
+    "hint": "Veja onde a documentação diz que o auto swap é suportado, e que tipo de app a loja é.",
+    "choices": [
+      {
+        "text": "Auto swap, assim que o Always On for ligado no slot",
+        "why": "O Always On já está ligado no arquivo, e não é ele a condição; o tipo de app é."
+      },
+      {
+        "text": "Um swap a cada push que pula o passo de aquecimento",
+        "why": "O auto swap, onde existe, troca depois do aquecimento; mas a loja não o recebe de jeito nenhum."
+      },
+      {
+        "text": "Auto swap só depois de o plano passar para Premium",
+        "why": "O tier não é o obstáculo; do Standard para cima há slots e swaps."
+      },
+      {
+        "text": "Nada: auto swap não é suportado em Linux e contêineres",
+        "why": "A documentação diz que o auto swap não é suportado em web apps no Linux nem em Web App for Containers, e o compilador não tem como saber em que tipo de app está."
+      }
+    ]
+  },
+  "ex-9cc0h66k": {
+    "prompt": "Ninguém faz pedidos na loja entre a meia-noite e as sete. Qual destes não custa nada nessas horas?",
+    "hint": "Procure o que tem mínimo de nenhum.",
+    "choices": [
+      {
+        "text": "Um plano do App Service no Standard com autoscale descendo a uma instância",
+        "why": "O autoscale move a contagem, mas um plano nunca fica sem nenhuma; a última instância é cobrada a noite toda."
+      },
+      {
+        "text": "Uma revisão do Container Apps com mínimo de zero réplicas, ociosa a noite toda",
+        "why": "Sem réplicas rodando não há uso a cobrar, que é o escalar até zero da lição 8."
+      },
+      {
+        "text": "Um cluster AKS no tier Free com os nós rodando",
+        "why": "O tier Free torna o plano de controle gratuito; os nós são máquinas virtuais e são cobrados como tal."
+      },
+      {
+        "text": "Um plano Premium v3 com escalonamento automático",
+        "why": "O escalonamento automático soma e tira instâncias conforme a carga HTTP, e ainda mantém instâncias pré-aquecidas; ele não chega a zero."
+      }
+    ]
+  },
+  "ex-yk4bkcdj": {
+    "prompt": "Os desenvolvedores querem um teste de carga no staging sem tirar capacidade da produção. Quanto isso custa a eles?",
+    "hint": "Pergunte onde um slot roda, e do que um swap precisa.",
+    "choices": [
+      {
+        "text": "Outro plano, e com ele a perda do swap",
+        "why": "Um slot roda nas instâncias do plano; máquinas separadas são um app separado, e um swap é entre slots de um mesmo app."
+      },
+      {
+        "text": "Nada, já que um slot de staging roda em instâncias separadas das da produção",
+        "why": "Um slot roda nas mesmas instâncias da produção, e é por isso que um teste de carga nele é um teste nas máquinas da produção."
+      },
+      {
+        "text": "Desligar o Always On no slot de staging durante o teste",
+        "why": "O Always On mantém um app carregado; ele não leva o trabalho do slot para outras máquinas."
+      },
+      {
+        "text": "Marcar as configurações do teste de carga como fixas",
+        "why": "Ser fixa decide o que se move num swap, não onde o código de um slot roda."
+      }
+    ]
+  },
+  "ex-673fb0wt": {
+    "prompt": "Qual das cargas da loja tem o formato errado para um plano do App Service?",
+    "hint": "Um plano cobra as instâncias com ou sem atividade.",
+    "choices": [
+      {
+        "text": "A API de pedidos, com clientes o dia todo",
+        "why": "Tráfego constante num fuso horário é o que um plano de instâncias fixas atende."
+      },
+      {
+        "text": "O site administrativo que os três desenvolvedores usam",
+        "why": "Um site pequeno dividindo um plano já pago custa só a capacidade que ocupa."
+      },
+      {
+        "text": "O relatório noturno de vendas, que roda dez minutos e sai",
+        "why": "Um job que roda minutos por noite pagaria um plano o dia todo; um grupo de contêineres ou um job do Container Apps serve melhor."
+      },
+      {
+        "text": "Uma versão para clientes por semana, testada antes num segundo endereço",
+        "why": "Isso é um slot e um swap, o que o tier Standard do plano e os acima oferecem."
+      }
+    ]
+  },
+  "ex-spmgfqj5": {
+    "prompt": "Quais destes o App Service dá à loja sem que a equipe precise construir? Marque todas as que valem.",
+    "hint": "Três são recursos da plataforma; dois pertencem aos outros serviços.",
+    "choices": [
+      {
+        "text": "Slots, e um swap que aquece a versão nova antes",
+        "why": "Embutidos do Standard para cima, sem custo extra."
+      },
+      {
+        "text": "Escalar até zero num tier dedicado à noite",
+        "why": "Um plano nunca fica sem instâncias; escalar até zero é o Container Apps, lição 8."
+      },
+      {
+        "text": "Domínios personalizados com certificados gerenciados gratuitos",
+        "why": "Certificados gerenciados aparecem do tier Basic para cima."
+      },
+      {
+        "text": "Login embutido para os usuários do app",
+        "why": "A autenticação do App Service é um recurso da plataforma, sem nada a escrever no app."
+      },
+      {
+        "text": "Uma API do Kubernetes para instalar operadores",
+        "why": "Não existe API do Kubernetes no App Service; isso é o AKS, lição 11."
+      }
+    ]
+  },
+  "ex-hp0r7j4j": {
+    "prompt": "A loja se dividiu em cinco serviços que chamam uns aos outros; um escala pelo tamanho de uma fila, e todos ficam quietos à noite. Onde ela se encaixa melhor?",
+    "hint": "Pese a linha do ocioso e como cada serviço escala pelos próprios eventos.",
+    "choices": [
+      {
+        "text": "Um plano do App Service carregando os cinco como apps",
+        "why": "Eles dividiriam máquinas e escalariam juntos, sem escalar pela própria fila e com o plano cobrado a noite toda."
+      },
+      {
+        "text": "Cinco grupos de contêineres, um por serviço",
+        "why": "Grupos de contêineres não guardam contagem de cópias nem somam nenhuma sob carga; escalar por fila ficaria por sua conta."
+      },
+      {
+        "text": "Container Apps, com cinco apps num só ambiente",
+        "why": "Uma rede para as chamadas, uma regra de escala por app, inclusive de fila, e mínimo de zero para as horas quietas."
+      },
+      {
+        "text": "AKS no tier Free, porque o plano de controle dele não custa nada",
+        "why": "Ali o plano de controle é gratuito, mas os nós rodam e são cobrados a noite toda, e o cluster fica para a equipe operar."
+      }
+    ]
+  },
+  "ex-3nw6k05e": {
+    "prompt": "Qual é o tier mais baixo do App Service que tem slots de implantação e autoscale?",
+    "hint": "Os dois recursos começam na mesma linha da tabela de limites.",
+    "choices": [
+      {
+        "text": "Basic",
+        "why": "O Basic tem máquinas dedicadas e escala manual, mas nem slots nem autoscale."
+      },
+      {
+        "text": "Free",
+        "why": "O Free roda em máquinas compartilhadas, com uma instância e nenhum dos dois recursos."
+      },
+      {
+        "text": "Standard",
+        "why": "O Standard é onde começam os cinco slots por app e o autoscale."
+      },
+      {
+        "text": "Premium v3",
+        "why": "O Premium v3 tem os dois, e mais slots, mas não é o tier mais baixo que os tem."
+      }
+    ]
+  },
+  "ex-jdtbf937": {
+    "prompt": "Para rodar o código novo no staging com as configurações da produção, e parar ali até alguém testar, rode `az webapp deployment slot swap --slot staging --action ___`.",
+    "hint": "A ajuda da CLI nomeia três ações: uma começa a pausa, uma completa, uma cancela.",
+    "blanks": [
+      {
+        "accept": [
+          "preview"
+        ]
+      }
+    ]
+  },
+  "ex-ywts3b4r": {
+    "prompt": "Dez minutos depois do swap de `shop:1.1` para a produção, os pedidos começam a falhar. Ninguém implantou no staging desde então. Qual é o caminho de volta mais rápido?",
+    "hint": "Depois de um swap, onde está a versão que a produção rodava?",
+    "choices": [
+      {
+        "text": "Implantar `shop:1.0` na produção de novo e esperar reiniciar",
+        "why": "Isso reinicia a produção no lugar, a interrupção que o slot existe para evitar, quando a versão antiga já está aquecida no staging."
+      },
+      {
+        "text": "Fazer o swap dos mesmos dois slots de novo",
+        "why": "O staging guarda o conteúdo anterior da produção depois do swap, então o mesmo swap o devolve, aquecido, com a produção respondendo o tempo todo."
+      },
+      {
+        "text": "Mandar 100 por cento do tráfego da produção para o staging com o roteamento",
+        "why": "Depois do swap o staging é a versão antiga, então isso funciona para os visitantes, mas deixa o slot de produção rodando o código quebrado e cada cookie fixado para desfazer."
+      },
+      {
+        "text": "Rodar o swap com `--action reset`",
+        "why": "`reset` cancela um swap com prévia que ainda está pausado; este terminou dez minutos atrás."
+      }
+    ]
+  },
+  "ex-3mnrywc6": {
+    "prompt": "O arquivo da loja aponta `WEBSITE_WARMUP_PATH`, `WEBSITE_SWAP_WARMUP_PING_PATH` e `healthCheckPath` todos para `/healthz`. O que isso compra?",
+    "hint": "Três leitores, em três momentos, perguntando uma coisa só.",
+    "choices": [
+      {
+        "text": "O App Service exige que os três nomeiem o mesmo caminho",
+        "why": "Cada um tem seu padrão e nada exige que concordem; concordar é uma escolha do arquivo."
+      },
+      {
+        "text": "O caminho raiz `/` é fechado para requisições da plataforma, então outro caminho é preciso",
+        "why": "O aquecimento padrão de um swap é o próprio `/`; nada o fecha."
+      },
+      {
+        "text": "A partida, o swap e a checagem a cada minuto fazem uma pergunta só: esta instância consegue servir?",
+        "why": "Um endpoint que só responde 200 com a loja pronta é lido na partida do contêiner, antes da troca e a cada minuto depois dela."
+      },
+      {
+        "text": "Faz o health check pular instâncias que ainda estão aquecendo",
+        "why": "O health check pergunta a toda instância; uma instância ainda aquecendo responde 503 e conta como falha até ficar pronta."
+      }
+    ]
+  }
+}

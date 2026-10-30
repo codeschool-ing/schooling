@@ -1,0 +1,683 @@
+[
+  {
+    "id": "ex-8bkgh4ed",
+    "version": 1,
+    "section": "container-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You run `az container create` with one image and nothing else unusual. What does Azure create?",
+    "hint": "Think about which resource is named, billed and deleted.",
+    "choices": [
+      {
+        "text": "A virtual machine of yours, sized to the image, that runs it",
+        "correct": false,
+        "why": "There is no machine of yours: the host is Microsoft's and you never see it."
+      },
+      {
+        "text": "A container group holding one container",
+        "correct": true,
+        "why": "The group is the top-level resource, and a group of one is the common case."
+      },
+      {
+        "text": "A single container, with no group, since a group needs two",
+        "correct": false,
+        "why": "A group of one container is still a group; every setting belongs to it or to its container."
+      },
+      {
+        "text": "A pod in an AKS cluster that Azure manages for you",
+        "correct": false,
+        "why": "Container Instances has no cluster around the group; AKS is lesson 11."
+      }
+    ]
+  },
+  {
+    "id": "ex-24qr1tzt",
+    "version": 1,
+    "section": "container-groups",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop and a monitoring sidecar run in one container group. Which of these do the two containers share? Choose all that apply.",
+    "hint": "Four things are shared; the list has three of them.",
+    "choices": [
+      {
+        "text": "The host they are placed on",
+        "correct": true,
+        "why": "The containers of a group are scheduled on one machine."
+      },
+      {
+        "text": "A public IP address each, so either can be called directly",
+        "correct": false,
+        "why": "The group has one address; the containers behind it are told apart by port."
+      },
+      {
+        "text": "`localhost`, on any port, opened or not",
+        "correct": true,
+        "why": "That is how the sidecar reaches `localhost:8080/healthz` without an address of its own."
+      },
+      {
+        "text": "A separate bill per container, by its own running time",
+        "correct": false,
+        "why": "The group is billed as one, for what its containers request, while any of them runs."
+      },
+      {
+        "text": "A lifecycle: they start, stop and restart together",
+        "correct": true,
+        "why": "Restarting or updating the group restarts every container in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qr5at9ns",
+    "version": 1,
+    "section": "container-groups",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Linux container group has three containers, requesting 1.5 GB, 0.5 GB and 1 GB of memory, and none sets a limit. How many gigabytes of memory is the group allocated?",
+    "hint": "The group's allocation is built from its containers' requests.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-xqskf1a0",
+    "version": 1,
+    "section": "container-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The report job must be reachable from the office over a VPN, and the team also wants it on a public DNS name. Can one container group do both?",
+    "hint": "Read the rules that come with a group in a virtual network.",
+    "choices": [
+      {
+        "text": "Yes, once the subnet has been delegated to Container Instances",
+        "correct": false,
+        "why": "Delegation is what lets a group into the subnet at all; it adds no public face."
+      },
+      {
+        "text": "Yes, if the DNS label is added after the group is in the subnet",
+        "correct": false,
+        "why": "The CLI refuses `--dns-name-label` with `--vnet`, and Azure's own rule is the same: no label in a virtual network."
+      },
+      {
+        "text": "No: a group in a virtual network gets no public address and no DNS label",
+        "correct": true,
+        "why": "It is one or the other. A public face for a private group comes from something in front of it."
+      },
+      {
+        "text": "Yes, as long as the NAT gateway has a public IP address",
+        "correct": false,
+        "why": "The NAT gateway carries the group's outgoing connections; nothing comes in through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvq4xn7h",
+    "version": 1,
+    "section": "container-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner's system calls the shop's group at its public IP address, which they copied into their configuration. What will go wrong, and what should they use?",
+    "hint": "What does Microsoft say about the address when a group restarts?",
+    "choices": [
+      {
+        "text": "Nothing: the address belongs to the group until the group is deleted",
+        "correct": false,
+        "why": "It is released on deletion, and it can also change when the group restarts."
+      },
+      {
+        "text": "It is not fixed across restarts; they should use the DNS label",
+        "correct": true,
+        "why": "The label, `shop-sp.brazilsouth.azurecontainer.io`, is the stable half."
+      },
+      {
+        "text": "Every group in the region shares the address; they need to add the port",
+        "correct": false,
+        "why": "A group's public address is its own; the port was needed anyway."
+      },
+      {
+        "text": "The address is rotated daily, so they should look it up again every morning",
+        "correct": false,
+        "why": "There is no schedule. It may change on a restart, which is why nothing should hold it."
+      }
+    ]
+  },
+  {
+    "id": "ex-myghmxzw",
+    "version": 1,
+    "section": "the-shop-at-home",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `app.py` listen on `0.0.0.0` rather than `127.0.0.1`?",
+    "hint": "Where does a request published with `-p 8080:8080` arrive from, as the container sees it?",
+    "choices": [
+      {
+        "text": "`0.0.0.0` puts the shop on the internet; `127.0.0.1` keeps it on the laptop",
+        "correct": false,
+        "why": "Binding to every interface inside the container exposes nothing by itself; publishing a port does that."
+      },
+      {
+        "text": "`ThreadingHTTPServer` refuses `127.0.0.1` when it runs as `nobody`",
+        "correct": false,
+        "why": "Any user may listen on the loopback address; the problem is who can reach it."
+      },
+      {
+        "text": "A server on `127.0.0.1` inside a container cannot be reached from outside it",
+        "correct": true,
+        "why": "Requests arrive on the container's network interface, and the loopback address is not on it."
+      },
+      {
+        "text": "Docker rewrites `127.0.0.1` to the host's address, so both would work",
+        "correct": false,
+        "why": "Docker rewrites nothing in the program; the second call in the sidecar transcript shows what a separate `localhost` means."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx0qp9k9",
+    "version": 1,
+    "section": "the-shop-at-home",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `docker run`, started without `--network container:shop`, asked `http://localhost:8080/healthz` and got `Connection refused`. Why?",
+    "hint": "Whose `localhost` was it?",
+    "choices": [
+      {
+        "text": "Its `localhost` was its own, and nothing was listening on 8080 there",
+        "correct": true,
+        "why": "Without the flag it has a network of its own; with it, it shares the shop's, as a group does."
+      },
+      {
+        "text": "The shop accepts connections only from containers of another image",
+        "correct": false,
+        "why": "Both containers used `shop:1.0`, and the first call was answered."
+      },
+      {
+        "text": "The shop was still answering the first call and turned the second away",
+        "correct": false,
+        "why": "`ThreadingHTTPServer` answers each request on its own thread; nothing was queued."
+      },
+      {
+        "text": "`USER nobody` may not open network connections inside a container",
+        "correct": false,
+        "why": "The first call ran as `nobody` too, and it was answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh5q28ke",
+    "version": 1,
+    "section": "the-shop-at-home",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Docker's flag `--network ___:shop` starts a new one inside the network of the running `shop`, the arrangement a group gives its members.",
+    "hint": "The word Docker uses for what it runs.",
+    "blanks": [
+      {
+        "accept": [
+          "container"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gmcgcazx",
+    "version": 1,
+    "section": "the-shop-at-home",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of running the shop on your laptop in order.",
+    "hint": "Files, then an image, then a container, then traffic, then what it wrote.",
+    "items": [
+      "Save `app.py` and the `Dockerfile` in `~/azure/shop`",
+      "Build the image with `docker build --tag shop:1.0 shop`",
+      "Start it with `docker run -d --name shop -p 8080:8080 shop:1.0`",
+      "Call `curl localhost:8080/version`",
+      "Read the request's line with `docker logs shop`"
+    ],
+    "trap": "The log line for a request exists only after the request; `docker logs` before any `curl` shows only the line printed on starting."
+  },
+  {
+    "id": "ex-kwc0xwj8",
+    "version": 1,
+    "section": "the-shop-at-home",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer builds `shop:1.0` on a Mac with Apple silicon, pushes it, and the container group in Azure fails to start. What is the most likely cause?",
+    "hint": "Which processors does Container Instances run images for?",
+    "choices": [
+      {
+        "text": "`python:3.12-slim` is not one of the base images Azure allows",
+        "correct": false,
+        "why": "Any image in a registry Azure can reach may be used; nothing restricts the base."
+      },
+      {
+        "text": "The image is `arm64` only, and Container Instances runs x64 images",
+        "correct": true,
+        "why": "Build it with `--platform linux/amd64`; Microsoft says an `arm64`-only image may fail to start."
+      },
+      {
+        "text": "Container Instances refuses an image whose `Dockerfile` says `USER nobody`",
+        "correct": false,
+        "why": "Running as a user other than root is allowed; only an Azure Files mount needs root."
+      },
+      {
+        "text": "Port 8080 is one of the ports Container Instances reserves for itself",
+        "correct": false,
+        "why": "The reserved list includes 22 and 3389 and does not include 8080."
+      }
+    ]
+  },
+  {
+    "id": "ex-8m78y2xm",
+    "version": 1,
+    "section": "sizes-and-restart",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague creates the shop's group with `--image`, `--ip-address Public` and `--dns-name-label shop-sp`, and no other flags. It runs, and nobody can reach it. Why?",
+    "hint": "Read the default of one flag in the help text.",
+    "choices": [
+      {
+        "text": "Without `--cpu` and `--memory` the group starts with no resources at all",
+        "correct": false,
+        "why": "The group ran; a group too small to run would not be shown running."
+      },
+      {
+        "text": "A DNS label takes a day to be published, so the name is not answering yet",
+        "correct": false,
+        "why": "Nothing in the documentation describes a delay like that, and the IP address would not answer either."
+      },
+      {
+        "text": "A public group needs a load balancer before any traffic reaches it",
+        "correct": false,
+        "why": "A public group is reached directly at its address; a load balancer is for several groups."
+      },
+      {
+        "text": "With no `--ports`, the CLI opens port 80, and the shop listens on 8080",
+        "correct": true,
+        "why": "The help says `Default: [80]`. The group answers nobody on 80 and has 8080 closed."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f3x7d7a",
+    "version": 1,
+    "section": "sizes-and-restart",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each workload to the restart policy that fits it.",
+    "hint": "Ask what should happen after a clean exit, and after a failed one.",
+    "pairs": [
+      {
+        "left": "The order API, which should never stop",
+        "right": "Always"
+      },
+      {
+        "left": "The nightly report, retried if it crashes, finished once it succeeds",
+        "right": "OnFailure"
+      },
+      {
+        "left": "A job that must not start again after it succeeded",
+        "right": "Never"
+      }
+    ],
+    "right_distractors": [
+      "OnFailure, capped at three retries"
+    ]
+  },
+  {
+    "id": "ex-0n4yznc6",
+    "version": 1,
+    "section": "sizes-and-restart",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Bicep file with `restartPolicy: 'OnFaliure'` compiled with no warning, and the same word given to `az container create` was refused. What do the two answers tell you?",
+    "hint": "Which of the two carries its own list of allowed values?",
+    "choices": [
+      {
+        "text": "The compiler corrected the spelling in the template, so the file is safe",
+        "correct": false,
+        "why": "`jq` read `OnFaliure` back out of `typo.json`; nothing was corrected."
+      },
+      {
+        "text": "The CLI is out of date, and API version `2025-09-01` added the word",
+        "correct": false,
+        "why": "No such policy exists; the three are `Always`, `OnFailure` and `Never`."
+      },
+      {
+        "text": "Azure treats an unknown policy as `Always`, so the group will still run",
+        "correct": false,
+        "why": "Nothing in the documentation says what Azure does with it; only a deployment would show."
+      },
+      {
+        "text": "The compiler accepts any text there, so that value is yours to check",
+        "correct": true,
+        "why": "Its types allow the three words and any other text; the CLI checks its own list."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kchv869",
+    "version": 1,
+    "section": "sizes-and-restart",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A group has two containers, each requesting 1 CPU. One of them runs heavier work and is given a CPU limit. What is the highest limit, in CPUs, it may be given?",
+    "hint": "A limit can reach as far as what the whole group was allocated.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "CPUs"
+  },
+  {
+    "id": "ex-wes700mv",
+    "version": 1,
+    "section": "sizes-and-restart",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The report's group was created with `Always` by mistake, and every night it starts the report again as soon as it finishes. How is it changed to `OnFailure`?",
+    "hint": "Some properties of a group cannot be updated in place.",
+    "choices": [
+      {
+        "text": "Delete the group and create it again with `OnFailure`",
+        "correct": true,
+        "why": "The restart policy is one of the properties that need the group deleted first, with CPU, memory, the OS type, the network profile and the zone."
+      },
+      {
+        "text": "Run the create again with `--restart-policy OnFailure`, and the containers restart in place",
+        "correct": false,
+        "why": "That is how an updatable property changes; the restart policy is not one of them."
+      },
+      {
+        "text": "Run `az container restart` with the new policy, which applies from the next start",
+        "correct": false,
+        "why": "A restart re-runs the group with the configuration it has; it takes no new policy."
+      },
+      {
+        "text": "Stop the group, change the policy, and start it again, keeping its address",
+        "correct": false,
+        "why": "A stopped group cannot be edited into another policy, and its address was never guaranteed anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssbggqgs",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the shop's workloads fits a container group worst?",
+    "hint": "Which one has customers waiting on it all day, through every deployment?",
+    "choices": [
+      {
+        "text": "The nightly sales report",
+        "correct": false,
+        "why": "A job that runs, writes a file and exits is the case Container Instances is best at."
+      },
+      {
+        "text": "The order API",
+        "correct": true,
+        "why": "It needs copies under load and updates without a break, and a group has neither."
+      },
+      {
+        "text": "The monthly finance export",
+        "correct": false,
+        "why": "Another job: started, finished, billed for its minutes."
+      },
+      {
+        "text": "A developer's test run for a pull request",
+        "correct": false,
+        "why": "A container that runs the tests and stops is the build-agent case Microsoft names."
+      }
+    ]
+  },
+  {
+    "id": "ex-33fmnpd9",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a single container group NOT give you on its own? Choose all that apply.",
+    "hint": "Three things an orchestrator does are missing.",
+    "choices": [
+      {
+        "text": "A second copy started when the first is busy",
+        "correct": true,
+        "why": "A group keeps no count; more groups are yours to create."
+      },
+      {
+        "text": "A job that stops being billed once it has finished",
+        "correct": false,
+        "why": "With `OnFailure` or `Never`, a finished group stops, and so does its meter."
+      },
+      {
+        "text": "A new version deployed with no break in service",
+        "correct": true,
+        "why": "An update restarts every container in place, and nobody answers meanwhile."
+      },
+      {
+        "text": "One address in front of several copies of the shop",
+        "correct": true,
+        "why": "A group has no load balancer of its own; Microsoft documents adding a Standard Load Balancer in a virtual network."
+      },
+      {
+        "text": "A sidecar that reaches the shop on `localhost`",
+        "correct": false,
+        "why": "That is exactly what a group gives its containers."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwa0hw6c",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The report's image is built like the shop's, with `USER nobody`, and it mounts an Azure Files share for its output. What does Microsoft's documentation say about that combination?",
+    "hint": "The documentation puts one condition on the user inside the container.",
+    "choices": [
+      {
+        "text": "An Azure Files mount requires the container to run as root",
+        "correct": true,
+        "why": "So the report's image cannot run as `nobody`, and that is a trade to make knowingly."
+      },
+      {
+        "text": "It works only if the group is in a virtual network",
+        "correct": false,
+        "why": "A share can be mounted by a public group too; a virtual network adds a service endpoint requirement, not this."
+      },
+      {
+        "text": "The share can be mounted only read-only by a user other than root",
+        "correct": false,
+        "why": "Read-only is a setting of the mount, not a consequence of the user."
+      },
+      {
+        "text": "Azure Files can be mounted only into Windows containers",
+        "correct": false,
+        "why": "The reverse: volume mounts, Azure Files included, are Linux only."
+      }
+    ]
+  },
+  {
+    "id": "ex-keh2zf9h",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An AKS cluster has a virtual node backed by Container Instances. A pod is scheduled onto it. What runs where?",
+    "hint": "Which of the two is the orchestrator here?",
+    "choices": [
+      {
+        "text": "Container Instances takes over scheduling for the whole cluster",
+        "correct": false,
+        "why": "Kubernetes still schedules; the virtual node is one more place it can put a pod."
+      },
+      {
+        "text": "Azure adds a virtual machine to the cluster faster than the autoscaler would",
+        "correct": false,
+        "why": "No virtual machine is added; that is the wait the virtual node avoids."
+      },
+      {
+        "text": "The pod runs as a container group in Container Instances, placed there by Kubernetes",
+        "correct": true,
+        "why": "The node registers with unlimited capacity, and its pods run as groups billed by the second."
+      },
+      {
+        "text": "The pod runs on the AKS nodes, and Container Instances only holds its image",
+        "correct": false,
+        "why": "Images live in a registry; the pod itself runs in Container Instances."
+      }
+    ]
+  },
+  {
+    "id": "ex-3txw6ec9",
+    "version": 1,
+    "section": "what-it-is-for",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "NGroups keeps a declared number of container groups, each made from one template called a container group ___.",
+    "hint": "The word for a template of settings that many groups are made from.",
+    "blanks": [
+      {
+        "accept": [
+          "profile"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7vxbn3e4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Bicep file declares a Spot container group in `brazilsouth`, and it compiles without a warning. What does Microsoft's documentation say about deploying it?",
+    "hint": "The compiler knows types. What does it not know?",
+    "choices": [
+      {
+        "text": "Spot is a preview offered in East US 2, West Europe and West US only",
+        "correct": true,
+        "why": "The compiler checks types, not where a feature is offered."
+      },
+      {
+        "text": "It deploys, with the eviction policy set to delete unless another is chosen",
+        "correct": false,
+        "why": "Spot groups have no eviction policy to choose; an evicted group is restarted by Azure."
+      },
+      {
+        "text": "It deploys, and receives a public address as soon as capacity is found",
+        "correct": false,
+        "why": "A Spot group gets no public address at all in this preview."
+      },
+      {
+        "text": "It deploys in São Paulo, and Spot is just a lower priority there",
+        "correct": false,
+        "why": "The documentation lists three regions, and São Paulo is not one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-98jgvv1h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The report's group failed last Tuesday and has been stopped since. Somebody wants its full log from that night. What will they find?",
+    "hint": "Look at what is kept for a running group and for a stopped one.",
+    "choices": [
+      {
+        "text": "The whole log, kept for 30 days after the group has stopped",
+        "correct": false,
+        "why": "No such retention is documented; a stopped group keeps far less."
+      },
+      {
+        "text": "Nothing at all, because a stopped group's log is deleted with it",
+        "correct": false,
+        "why": "Something is kept, but only 16 KB or 1,000 lines of it."
+      },
+      {
+        "text": "At most 16 KB or 1,000 lines, unless it went to Log Analytics",
+        "correct": true,
+        "why": "A running group keeps 4 MB and a stopped one less; a workspace keeps the rest."
+      },
+      {
+        "text": "The log of each restart, in a separate file per attempt",
+        "correct": false,
+        "why": "No per-attempt files are described; the group's log is small and bounded."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0rarhd9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly report runs in a group with `OnFailure`, crashes once and then succeeds. Put what happens in order.",
+    "hint": "The meter starts before the program does.",
+    "items": [
+      "The first image starts downloading, and the meter starts",
+      "The report runs and exits with code 1",
+      "The container is started again",
+      "The report writes its file and exits with code 0",
+      "The group shows as Terminated, and the meter stops"
+    ],
+    "trap": "Exit code 0 is the end under `OnFailure`; nothing restarts the container after that."
+  },
+  {
+    "id": "ex-warc6aag",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop runs in one container group. You deploy `shop:1.1` by running the create again with the new image. What do customers see?",
+    "hint": "How does an update treat the containers of a group?",
+    "choices": [
+      {
+        "text": "Nothing: Azure starts 1.1 beside 1.0 and moves the traffic once it is healthy",
+        "correct": false,
+        "why": "That is a rolling update, and a single group has none."
+      },
+      {
+        "text": "Nothing, because an update applies only to the next restart",
+        "correct": false,
+        "why": "An update restarts the containers at once."
+      },
+      {
+        "text": "A refusal, because the image is a property that cannot be updated",
+        "correct": false,
+        "why": "The image can be updated in place; CPU, memory and the restart policy cannot."
+      },
+      {
+        "text": "A break while every container restarts in place, with nothing else answering",
+        "correct": true,
+        "why": "One group, no second copy, and an update restarts all its containers."
+      }
+    ]
+  }
+]
