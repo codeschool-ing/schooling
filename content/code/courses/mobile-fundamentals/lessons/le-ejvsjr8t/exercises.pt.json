@@ -1,0 +1,486 @@
+{
+  "ex-1k49pppk": {
+    "prompt": "Em que thread um app Android recebe um toque num dos seus botões?",
+    "choices": [
+      {
+        "text": "O núcleo de processador que estiver livre no momento",
+        "why": "Núcleos livres não recebem os eventos do app. Vários núcleos ajudam só quando o próprio app entrega trabalho a outras threads."
+      },
+      {
+        "text": "Uma thread que o sistema cria para cada toque",
+        "why": "Nenhuma thread é criada por toque; o toque entra na fila da thread principal, como a documentação descreve passo a passo."
+      },
+      {
+        "text": "A thread principal, a mesma que desenha a tela",
+        "why": "Isso. O Android a chama de UI thread exatamente por isso: os toques chegam nela e o desenho acontece nela."
+      },
+      {
+        "text": "Uma thread de fundo, para que o desenho nunca seja interrompido",
+        "why": "Essa é a organização que as pessoas imaginam, e é o contrário da real: entrada e desenho dividem uma thread."
+      }
+    ]
+  },
+  "ex-1wz2amg6": {
+    "prompt": "A documentação do Android dá duas regras para o modelo de uma thread só. Qual é o par?",
+    "choices": [
+      {
+        "text": "Não bloqueie a thread; mexa no kit só a partir dela",
+        "why": "Isso. A primeira manda o trabalho lento embora, a segunda faz o resultado voltar."
+      },
+      {
+        "text": "Use uma thread por tela, e feche-a quando a tela fechar",
+        "why": "Telas não ganham threads próprias; toda tela é desenhada pela única thread principal."
+      },
+      {
+        "text": "Rode todo trabalho na UI thread; mantenha cada função curta",
+        "why": "Funções curtas ajudam, mas disco e rede podem bloquear numa chamada curta. O trabalho lento precisa sair da thread."
+      },
+      {
+        "text": "Desenhe a partir de um worker; leia a entrada na thread principal",
+        "why": "Desenhar a partir de um worker é exatamente o que a segunda regra proíbe, porque o kit não é thread-safe."
+      }
+    ]
+  },
+  "ex-b8s34x94": {
+    "prompt": "Num app React Native, a thread de JavaScript fica ocupada por meio segundo. O que continua funcionando nesse tempo?",
+    "choices": [
+      {
+        "text": "Um botão cuja aparência pressionada é definida em JavaScript",
+        "why": "Esse toque espera a thread de JavaScript, então o botão para de responder, o exemplo da própria documentação."
+      },
+      {
+        "text": "Timers definidos com setTimeout",
+        "why": "Os timers rodam na mesma thread de JavaScript e esperam por ela como tudo o mais ali."
+      },
+      {
+        "text": "Nada, já que o app inteiro roda numa thread",
+        "why": "Um app React Native tem duas threads que importam, e a principal nativa não é a ocupada aqui."
+      },
+      {
+        "text": "Rolar uma ScrollView",
+        "why": "Isso. A rolagem acontece na thread principal nativa, que está livre."
+      }
+    ]
+  },
+  "ex-16gpry41": {
+    "prompt": "Por que um programa Node.js pode fazer o papel da thread principal de um celular no experimento desta aula?",
+    "choices": [
+      {
+        "text": "Porque o Node.js usa o mesmo motor gráfico do Android",
+        "why": "O Node.js não desenha nada. O modelo é sobre o laço, não sobre gráficos."
+      },
+      {
+        "text": "O laço roda uma função por vez, então uma longa para os timers",
+        "why": "Isso. Essa propriedade vale exatamente; o resto de um celular não."
+      },
+      {
+        "text": "Porque o Node.js mede quadros exatamente como uma tela mede",
+        "why": "Os timers dele oscilam, como a execução idle mostra; a aula diz com todas as letras que é um modelo."
+      },
+      {
+        "text": "Porque os celulares rodam JavaScript na thread principal, como o Node.js",
+        "why": "Apps nativos rodam Kotlin ou Swift ali; só o formato do laço é compartilhado."
+      }
+    ]
+  },
+  "ex-pyskvdpp": {
+    "prompt": "A tela de um celular se atualiza 120 vezes por segundo. Quantos milissegundos um quadro recebe? Responda com duas casas decimais.",
+    "unit": "ms"
+  },
+  "ex-d9nt2wnk": {
+    "prompt": "O trabalho de um quadro passa 1 ms do espaço de 16,67 ms. Segundo a documentação do Android, o que o usuário vê?",
+    "choices": [
+      {
+        "text": "O quadro, exibido 1 ms atrasado",
+        "why": "Essa é a imagem comum e a documentação a contradiz: um quadro atrasado não aparece atrasado."
+      },
+      {
+        "text": "A imagem anterior outra vez; o desenho novo é descartado",
+        "why": "Isso. Perder o espaço por qualquer margem perde o quadro."
+      },
+      {
+        "text": "Uma tela em branco até o trabalho acabar",
+        "why": "A tela mantém a última imagem que tinha; nada fica em branco."
+      },
+      {
+        "text": "A caixa de ANR",
+        "why": "Um ANR exige 5 segundos sem responder à entrada, não 1 ms."
+      }
+    ]
+  },
+  "ex-rqrmgsqg": {
+    "prompt": "Associe quanto tempo um quadro levou ao nome que a documentação do Android dá.",
+    "pairs": [
+      {
+        "left": "40 ms",
+        "right": "um quadro lento"
+      },
+      {
+        "left": "1,5 s",
+        "right": "um quadro congelado"
+      },
+      {
+        "left": "6 s sem responder a um toque",
+        "right": "um ANR"
+      },
+      {
+        "left": "10 ms a 60 Hz",
+        "right": "no prazo"
+      }
+    ],
+    "right_distractors": [
+      "um encerramento pelo watchdog"
+    ]
+  },
+  "ex-f00z0ra7": {
+    "prompt": "O trabalho de uma animação leva 12 ms por quadro e roda liso num celular de 60 Hz. Num de 120 Hz, sem mudar nada, o que acontece?",
+    "choices": [
+      {
+        "text": "Ela roda duas vezes mais lisa, porque a tela é mais rápida",
+        "why": "Uma tela mais rápida pede com mais frequência, o que deixa cada quadro com menos tempo, não mais."
+      },
+      {
+        "text": "O sistema baixa a tela para 60 Hz para esse app",
+        "why": "A aula não descreve nenhum resgate desses; ela diz que os quadros são descartados."
+      },
+      {
+        "text": "Nada muda; o orçamento é de 16 ms em todo celular",
+        "why": "16 ms é o orçamento só a 60 Hz. O orçamento é 1000 dividido pela taxa de atualização."
+      },
+      {
+        "text": "Ela perde espaços: 12 ms passa do orçamento de 8,33 ms",
+        "why": "Isso. Código que cabe a 60 Hz pode perder todo espaço a 120 Hz."
+      }
+    ]
+  },
+  "ex-w4sd372b": {
+    "prompt": "Qual quadro pode levar mais de 16 ms sem ser um defeito, segundo a mesma página do Android?",
+    "choices": [
+      {
+        "text": "O primeiro quadro de uma tela nova",
+        "why": "Isso. A tela precisa ser montada e posicionada antes de ser desenhada."
+      },
+      {
+        "text": "O último quadro antes de o app ir para o fundo",
+        "why": "A página não cita exceção nenhuma assim."
+      },
+      {
+        "text": "Qualquer quadro durante uma rolagem",
+        "why": "A rolagem é exatamente onde um quadro lento aparece como tranco."
+      },
+      {
+        "text": "Todo quadro numa tela de 120 Hz",
+        "why": "Uma tela de 120 Hz dá menos tempo, 8,33 ms, não uma isenção."
+      }
+    ]
+  },
+  "ex-85nkbjhq": {
+    "prompt": "Quais destas coisas, feitas na thread principal, podem custar quadros ao planner? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Interpretar um ano de sessões baixado como um documento JSON",
+        "why": "Calcular: o parser lê cada caractere antes de retornar."
+      },
+      {
+        "text": "Ler o plano salvo de um arquivo",
+        "why": "Esperar: o armazenamento responde no tempo dele enquanto a thread não faz nada."
+      },
+      {
+        "text": "Buscar a lista de cursos num servidor",
+        "why": "Esperar, e do tipo mais longo: uma rede pode levar segundos ou nunca responder."
+      },
+      {
+        "text": "Marcar uma sessão como feita num plano de cinco sessões",
+        "why": "Copiar uma lista de cinco leva muito menos que um quadro; o que importa é o tamanho do trabalho."
+      }
+    ]
+  },
+  "ex-ddntt7c1": {
+    "prompt": "Por que uma chamada de rede na thread principal é um problema mesmo com o processador parado enquanto ela espera?",
+    "choices": [
+      {
+        "text": "Porque o rádio usa o processador enquanto espera",
+        "why": "O processador está mesmo parado. O custo é a thread, não o processador."
+      },
+      {
+        "text": "É um problema só no iOS",
+        "why": "O Android lança NetworkOnMainThreadException por isso; as duas plataformas tratam como falha."
+      },
+      {
+        "text": "Enquanto espera, o laço não gira, então nenhum quadro sai",
+        "why": "Isso. Esperar segura a thread exatamente como calcular."
+      },
+      {
+        "text": "Porque um pedido feito na thread principal é enviado duas vezes",
+        "why": "Nada na thread repete o pedido."
+      }
+    ]
+  },
+  "ex-sh686h8z": {
+    "prompt": "Associe cada sinal à plataforma ou ferramenta de onde ele vem.",
+    "pairs": [
+      {
+        "left": "NetworkOnMainThreadException",
+        "right": "Android, quando uma conexão de rede é aberta na thread principal"
+      },
+      {
+        "left": "StrictMode",
+        "right": "Android, uma ferramenta de desenvolvimento para acesso acidental a disco e rede"
+      },
+      {
+        "left": "0x8badf00d",
+        "right": "iOS, o código de um encerramento pelo watchdog"
+      },
+      {
+        "left": "a caixa de ANR",
+        "right": "Android, sem resposta à entrada em 5 segundos"
+      }
+    ],
+    "right_distractors": [
+      "React Native, uma thread de JavaScript ocupada por um quadro"
+    ]
+  },
+  "ex-qxr86w0j": {
+    "prompt": "Um app iOS segura a thread principal tempo demais. O que o usuário vê?",
+    "choices": [
+      {
+        "text": "O app é encerrado pelo watchdog e some",
+        "why": "Isso. O relatório de falha então traz o código 0x8badf00d."
+      },
+      {
+        "text": "Uma caixa perguntando se espera ou fecha o app",
+        "why": "Essa é a caixa de ANR do Android. O iOS não tem nenhuma."
+      },
+      {
+        "text": "Um aviso na barra de status",
+        "why": "Não existe esse aviso; o watchdog encerra o app."
+      },
+      {
+        "text": "Nada; o iOS leva o trabalho para outra thread pelo app",
+        "why": "Nenhum sistema muda o trabalho do app de lugar por ele. Isso é tarefa de quem desenvolve, e as próximas seções mostram como."
+      }
+    ]
+  },
+  "ex-naa23gwq": {
+    "prompt": "No Android, um ANR é disparado quando o app não responde a um toque ou a uma tecla em ___ segundos.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "cinco"
+        ]
+      }
+    ]
+  },
+  "ex-q039abmj": {
+    "prompt": "Uma tela React Native interpreta uma resposta grande com JSON.parse dentro de um tratador de toque. Um aluno diz que tudo bem porque o fetch é assíncrono. O que há de errado nisso?",
+    "choices": [
+      {
+        "text": "O JSON.parse roda na thread principal nativa, então a rolagem congela",
+        "why": "Ele roda na thread de JavaScript; a rolagem nativa continua."
+      },
+      {
+        "text": "Nada; código assíncrono não pode bloquear uma thread",
+        "why": "Qualquer passo síncrono dentro de código assíncrono ainda roda até o fim na sua thread."
+      },
+      {
+        "text": "A espera é assíncrona; a interpretação é síncrona e roda na thread de JavaScript",
+        "why": "Isso. O fetch libera a thread enquanto a rede responde, e o JSON.parse a segura até terminar."
+      },
+      {
+        "text": "O fetch é síncrono no React Native",
+        "why": "O fetch não segura a thread enquanto espera; o problema é a interpretação."
+      }
+    ]
+  },
+  "ex-vafmvmzv": {
+    "prompt": "Na execução main da aula, quantos quadros se perderam enquanto a ordenação rodava na thread do relógio?"
+  },
+  "ex-ksxdag7m": {
+    "prompt": "Nas execuções capturadas, a ordenação levou 554 ms na thread principal e 470 ms no worker. O que a aula conclui disso?",
+    "choices": [
+      {
+        "text": "Workers ordenam mais rápido, então mudar o trabalho de lugar o acelera",
+        "why": "A aula diz que a diferença não importa: o trabalho é o mesmo, e os números variam a cada execução."
+      },
+      {
+        "text": "O trabalho levou mais ou menos o mesmo; mudou qual thread esperou",
+        "why": "Isso. Com o worker, o relógio desenhou um quadro em cada espaço."
+      },
+      {
+        "text": "A thread principal é mais lenta que um worker para ordenar",
+        "why": "Uma execução numa máquina não mostra isso, e a aula não afirma isso."
+      },
+      {
+        "text": "Os números provam que o programa tem um defeito",
+        "why": "Os tempos variam entre execuções; isso é esperado, e a aula diz isso."
+      }
+    ]
+  },
+  "ex-yqx4rzh2": {
+    "prompt": "Por que o frames.ts cria as sessões a partir de uma semente fixa em vez de Math.random?",
+    "choices": [
+      {
+        "text": "Math.random não é permitido num worker",
+        "why": "Ele é permitido ali. O motivo é a repetibilidade."
+      },
+      {
+        "text": "Para deixar a ordenação mais rápida nas duas threads",
+        "why": "A semente muda quais dados são ordenados, não a velocidade."
+      },
+      {
+        "text": "Porque a remoção de tipos recusa Math.random",
+        "why": "A remoção de tipos só tira os tipos; ela recusa enums e namespaces, não funções."
+      },
+      {
+        "text": "Para as duas ordenarem a mesma lista",
+        "why": "Isso. O worker cria a própria cópia, e a semente a mantém igual à da thread principal."
+      }
+    ]
+  },
+  "ex-3a8mqjya": {
+    "prompt": "Você roda node frames.ts main no seu notebook e obtém 41 quadros perdidos em vez de 33. O que isso diz?",
+    "choices": [
+      {
+        "text": "Que o seu arquivo é diferente do da aula",
+        "why": "O mesmo arquivo dá tempos diferentes em outra máquina e em outra execução."
+      },
+      {
+        "text": "Que o Node.js que você roda é da versão errada",
+        "why": "Uma versão errada nem roda o arquivo, como a aula 1 mostra; ela não muda uma contagem."
+      },
+      {
+        "text": "Que a ordenação demorou mais; o formato é o mesmo",
+        "why": "Isso. Os tempos variam por máquina e execução; o que vale é que a main perde quadros e a worker não."
+      },
+      {
+        "text": "Que a execução com worker também vai perder quadros",
+        "why": "A execução com worker deixa a thread do relógio livre seja qual for a velocidade da máquina."
+      }
+    ]
+  },
+  "ex-mpbxm81d": {
+    "prompt": "Ponha em ordem os três passos de tirar trabalho da thread principal.",
+    "items": [
+      "Entregar o trabalho lento a outra thread",
+      "Seguir desenhando quadros na thread principal enquanto ele roda",
+      "Trazer o resultado de volta à thread principal e mostrá-lo"
+    ]
+  },
+  "ex-j3xrg0zn": {
+    "prompt": "Associe cada dispatcher do Kotlin ao trabalho que a documentação do Android dá a ele.",
+    "pairs": [
+      {
+        "left": "Dispatchers.Main",
+        "right": "a interface e trabalho rápido"
+      },
+      {
+        "left": "Dispatchers.IO",
+        "right": "disco e rede"
+      },
+      {
+        "left": "Dispatchers.Default",
+        "right": "ordenar uma lista, interpretar JSON"
+      }
+    ],
+    "right_distractors": [
+      "desenhar views a partir de uma thread de fundo"
+    ]
+  },
+  "ex-rjb06bfc": {
+    "prompt": "No trecho em Swift, o que o @MainActor em refresh() garante?",
+    "choices": [
+      {
+        "text": "Que week muda na thread principal",
+        "why": "Isso. Quem chama está no main actor, então o resultado chega ali."
+      },
+      {
+        "text": "Que a ordenação roda na thread principal",
+        "why": "A ordenação está dentro do Task.detached, que não pertence a nenhum ator; esse é o ponto."
+      },
+      {
+        "text": "Que a função termina dentro de um quadro",
+        "why": "Nenhuma anotação promete uma duração; ela diz onde o código roda."
+      },
+      {
+        "text": "Que o trabalho roda numa thread nova criada para ele",
+        "why": "@MainActor quer dizer a thread principal, o contrário de uma nova."
+      }
+    ]
+  },
+  "ex-svp8qs21": {
+    "prompt": "Uma thread de trabalho em Kotlin termina a ordenação e põe a lista na tela direto daquela thread. Que regra ela quebra?",
+    "choices": [
+      {
+        "text": "Não bloqueie a UI thread",
+        "why": "Ela deixou a UI thread livre; essa metade estava certa."
+      },
+      {
+        "text": "Use Dispatchers.IO para toda tarefa de fundo",
+        "why": "Não existe essa regra; o Default serve para uma ordenação."
+      },
+      {
+        "text": "Nenhuma; o kit aceita mudanças de qualquer thread",
+        "why": "A documentação do Android diz que o kit não é thread-safe."
+      },
+      {
+        "text": "Não mexa na interface fora da UI thread",
+        "why": "Isso. O resultado precisa voltar à thread principal antes: o terceiro passo."
+      }
+    ]
+  },
+  "ex-fgp7vjhe": {
+    "prompt": "A visão da semana do planner trava ao abrir num celular com um histórico longo. A ordenação roda dentro da função que desenha a lista. Qual é a primeira mudança?",
+    "choices": [
+      {
+        "text": "Baixar a taxa de atualização da tela para 60 Hz",
+        "why": "Um orçamento maior esconde o custo num celular; o trabalho continua na thread que desenha."
+      },
+      {
+        "text": "Ordenar uma vez, fora da thread principal",
+        "why": "Isso. Ela sai da função de desenho e para de se repetir a cada desenho, o próprio exemplo do guia de ANR do Android."
+      },
+      {
+        "text": "Mostrar a caixa de ANR mais cedo",
+        "why": "O app não mostra essa caixa; o sistema mostra, e ela é a falha, não uma correção."
+      },
+      {
+        "text": "Ligar o StrictMode no build de produção",
+        "why": "O StrictMode encontra disco e rede na thread principal durante o desenvolvimento; ele não muda uma ordenação de lugar."
+      }
+    ]
+  },
+  "ex-0ze1rz3p": {
+    "prompt": "Qual destes é um bom motivo para rodar um trabalho na thread principal?",
+    "choices": [
+      {
+        "text": "É um pedido de rede, e a resposta é necessária na tela",
+        "why": "A resposta pode voltar à thread principal; a espera não pode acontecer ali."
+      },
+      {
+        "text": "Ele muda uma view, e é rápido",
+        "why": "Isso. Mexer na interface é tarefa da thread principal, e trabalho rápido cabe no quadro."
+      },
+      {
+        "text": "Ele roda uma vez por dia",
+        "why": "Um quadro perdido uma vez por dia continua perdido, e uma espera longa ainda gera um ANR."
+      },
+      {
+        "text": "O celular tem vários núcleos, então a thread principal nunca enche",
+        "why": "Os núcleos não dividem o trabalho da thread principal; ela é uma thread seja qual for o processador."
+      }
+    ]
+  },
+  "ex-e2zznwee": {
+    "prompt": "Um quadro que perde o seu espaço por um único milissegundo não aparece atrasado; o Android o ___ inteiro.",
+    "blanks": [
+      {
+        "accept": [
+          "descarta",
+          "pula",
+          "derruba"
+        ]
+      }
+    ]
+  }
+}
