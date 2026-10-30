@@ -120,7 +120,7 @@ ana@laptop:~/gcp$ docker inspect -f '{{.State.ExitCode}}' plain-worker
 **Exit code 143 is 128 plus 15, the number of `SIGTERM`**: the program was killed by the signal the
 moment it arrived, in the middle of whatever it was doing, and nothing was saved. `--init` is there
 because a process running as the first one in a container ignores `SIGTERM` unless it handles it,
-which would have hidden the difference; on a virtual machine your service is never the first
+which would have hidden the difference. On a virtual machine your service is never the first
 process, so this run is the honest picture of an unprepared service on a preempted Spot machine.
 
 This is an imitation of the signal, not of a preemption. It shows what your program does with the
