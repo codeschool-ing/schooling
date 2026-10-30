@@ -68,5 +68,5 @@ def imds():
     f.text(490, 140, T('2, 3 the platform signs in', '2, 3 a plataforma faz login'), size=9.5, fill='--paper-dim')
     f.arrow([(135, 121), (135, 205), (519, 205)], stroke='--phosphor', width=1.4)
     f.text(330, 196, T('5 the call, with the token', '5 a chamada, com o token'), size=9.5, fill='--phosphor')
-    return f, T('The credential stays on the platform\'s side of the line; only a token crosses it.',
-                'A credencial fica do lado da plataforma; só um token atravessa a linha.')
+    return f, T('The credential stays with the platform; only a token reaches the application.',
+                'A credencial fica com a plataforma; só um token chega à aplicação.')

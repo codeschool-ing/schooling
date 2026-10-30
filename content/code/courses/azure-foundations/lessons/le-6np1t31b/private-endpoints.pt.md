@@ -161,6 +161,10 @@ Duas configurações em volta dele passam despercebidas com facilidade:
 - **Private Link service**, a outra metade do nome. É o mesmo mecanismo apontado para o outro lado: um
   serviço seu atrás de um load balancer Standard, oferecido a outras redes e a outros tenants como algo
   para o qual eles podem criar private endpoints. A lição 22 tem o load balancer.
+- **O Front Door Premium**, a entrada global da lição 22, usa o mesmo mecanismo para alcançar as suas
+  origens: ele se liga a uma origem pelo Private Link, uma conexão que o dono da origem aprova como
+  qualquer outra, então uma aplicação web ou uma storage account atrás dele pode manter o acesso
+  público desligado e ainda ser servida ao mundo pela borda.
 
 **Nada aqui foi criado**, e o endereço `10.20.4.4` é o que as regras do Azure dizem que o primeiro
 endpoint daquela sub-rede recebe, não um que este laboratório recebeu.

@@ -33,7 +33,7 @@ oferece três dos seus oito. A conta é curta e fácil de errar com pressa, ent�
 por um programa. Salve isto como `~/azure/vnet/plan.py`:
 
 ```schooling-example
-{"language": "python", "file": "plan.py", "parts": [{"code": "#!/usr/bin/env python3\n\"\"\"plan.py VNET NAME=RANGE ...: check a subnet plan against a VNet, counting addresses Azure's way.\"\"\"\nimport ipaddress\nimport sys\n\nRESERVED = 5\n\n\n", "note": "Só a biblioteca padrão. `RESERVED` é o número de endereços que o Azure tira de **toda** sub-rede, seja qual for o tamanho: os quatro primeiros e o último."}, {"code": "def subnet(vnet, arg, taken):\n    name, _, text = arg.partition('=')\n    try:\n        net = ipaddress.ip_network(text)\n    except ValueError as e:\n        return f'{name}: refused, {e}'\n", "note": "O `ip_network` recusa um intervalo que não começa na sua própria fronteira, como `10.20.5.0/23`, e diz isso. O Azure também o recusa."}, {"code": "    if not net.subnet_of(vnet):\n        return f'{name}: refused, {net} is not inside {vnet}'\n    for other, used in taken:\n        if net.overlaps(used):\n            return f'{name}: refused, {net} overlaps {other} ({used})'\n    if net.prefixlen > 29:\n        return f'{name}: refused, /{net.prefixlen} is smaller than the /29 Azure allows'\n", "note": "As três regras que o Azure aplica a uma sub-rede: dentro do intervalo da rede, sem se sobrepor a nenhuma outra sub-rede, e não menor que um `/29`, oito endereços dos quais três são utilizáveis."}, {"code": "    taken.append((name, net))\n    first, last = net.network_address + 4, net.broadcast_address - 1\n    return f'{name:<20}{str(net):<16}{str(first):<15}{str(last):<15}{net.num_addresses - RESERVED:>6}'\n\n\n", "note": "O primeiro endereço que uma máquina pode receber é o quinto do intervalo, e o último é o anterior ao fim. O que se imprime é o que sobra para usar."}, {"code": "def main():\n    vnet = ipaddress.ip_network(sys.argv[1])\n    taken = []\n    print(f'{\"subnet\":<20}{\"range\":<16}{\"first usable\":<15}{\"last usable\":<15}{\"usable\":>6}')\n    for arg in sys.argv[2:]:\n        print(subnet(vnet, arg, taken))\n    left = vnet.num_addresses - sum(n.num_addresses for _, n in taken)\n    print(f'{vnet} holds {vnet.num_addresses} addresses; {left} are in no subnet yet')\n\n\nmain()\n", "note": "Uma linha por sub-rede, na ordem dada, e uma última linha com o que resta da rede para as sub-redes em que ninguém pensou ainda."}]}
+{"language": "python", "file": "plan.py", "parts": [{"code": "#!/usr/bin/env python3\n\"\"\"plan.py VNET NAME=RANGE ...: check a subnet plan against a VNet, counting addresses Azure's way.\"\"\"\nimport ipaddress\nimport sys\n\nRESERVED = 5\n\n\n", "note": "Só a biblioteca padrão. `RESERVED` é o número de endereços que o Azure tira de **toda** sub-rede, seja qual for o tamanho: os quatro primeiros e o último."}, {"code": "def subnet(vnet, arg, taken):\n    name, _, text = arg.partition('=')\n    try:\n        net = ipaddress.ip_network(text)\n    except ValueError as e:\n        return f'{name}: refused, {e}'\n", "note": "O `ip_network` recusa um intervalo que não começa na sua própria fronteira, como `10.20.7.0/23`, e diz isso. O Azure também o recusa."}, {"code": "    if not net.subnet_of(vnet):\n        return f'{name}: refused, {net} is not inside {vnet}'\n    for other, used in taken:\n        if net.overlaps(used):\n            return f'{name}: refused, {net} overlaps {other} ({used})'\n    if net.prefixlen > 29:\n        return f'{name}: refused, /{net.prefixlen} is smaller than the /29 Azure allows'\n", "note": "As três regras que o Azure aplica a uma sub-rede: dentro do intervalo da rede, sem se sobrepor a nenhuma outra sub-rede, e não menor que um `/29`, oito endereços dos quais três são utilizáveis."}, {"code": "    taken.append((name, net))\n    first, last = net.network_address + 4, net.broadcast_address - 1\n    return f'{name:<20}{str(net):<16}{str(first):<15}{str(last):<15}{net.num_addresses - RESERVED:>6}'\n\n\n", "note": "O primeiro endereço que uma máquina pode receber é o quinto do intervalo, e o último é o anterior ao fim. O que se imprime é o que sobra para usar."}, {"code": "def main():\n    vnet = ipaddress.ip_network(sys.argv[1])\n    taken = []\n    print(f'{\"subnet\":<20}{\"range\":<16}{\"first usable\":<15}{\"last usable\":<15}{\"usable\":>6}')\n    for arg in sys.argv[2:]:\n        print(subnet(vnet, arg, taken))\n    left = vnet.num_addresses - sum(n.num_addresses for _, n in taken)\n    print(f'{vnet} holds {vnet.num_addresses} addresses; {left} are in no subnet yet')\n\n\nmain()\n", "note": "Uma linha por sub-rede, na ordem dada, e uma última linha com o que resta da rede para as sub-redes em que ninguém pensou ainda."}]}
 ```
 
 Dê a ele o intervalo de produção e as quatro camadas:
@@ -52,22 +52,23 @@ snet-pe             10.20.4.0/24    10.20.4.4      10.20.4.254       251
 redimensionada enquanto está vazia, então a hora barata de deixar espaço é agora: os 64.512 endereços
 que sobram são onde vão entrar uma quinta camada, uma camada web maior ou um serviço que exige uma
 sub-rede só dele. O intervalo `10.20.0.0/24` também fica sem uso de propósito, para que a primeira
-sub-rede que ninguém planejou tenha uma casa óbvia.
+sub-rede que ninguém planejou tenha uma casa óbvia, e a lição 22 pega o seguinte, `10.20.5.0/24`, como
+`snet-agw` para o Application Gateway da loja.
 
 Depois, um plano com quatro erros, do tipo que cada um já cometeu uma vez com pressa:
 
 ```
-ana@laptop:~/azure/vnet$ python3 plan.py 10.20.0.0/16 snet-web=10.20.1.0/24 snet-cache=10.20.1.128/25 snet-jobs=10.20.5.0/23 snet-tiny=10.20.9.0/30 snet-batch=10.30.0.0/24
+ana@laptop:~/azure/vnet$ python3 plan.py 10.20.0.0/16 snet-web=10.20.1.0/24 snet-cache=10.20.1.128/25 snet-jobs=10.20.7.0/23 snet-tiny=10.20.9.0/30 snet-batch=10.30.0.0/24
 subnet              range           first usable   last usable    usable
 snet-web            10.20.1.0/24    10.20.1.4      10.20.1.254       251
 snet-cache: refused, 10.20.1.128/25 overlaps snet-web (10.20.1.0/24)
-snet-jobs: refused, 10.20.5.0/23 has host bits set
+snet-jobs: refused, 10.20.7.0/23 has host bits set
 snet-tiny: refused, /30 is smaller than the /29 Azure allows
 snet-batch: refused, 10.30.0.0/24 is not inside 10.20.0.0/16
 10.20.0.0/16 holds 65536 addresses; 65280 are in no subnet yet
 ```
 
-A `snet-cache` cai dentro da `snet-web`. `10.20.5.0/23` não começa onde um `/23` pode começar, que é
+A `snet-cache` cai dentro da `snet-web`. `10.20.7.0/23` não começa onde um `/23` pode começar, que é
 num terceiro número par. Um `/30` está abaixo do mínimo do Azure. E `10.30.0.0/24` é o intervalo de
 staging, fora desta rede. **O próprio Azure também recusaria cada um destes**, no momento de criar a
 sub-rede; o programa diz isso antes de alguém perguntar.

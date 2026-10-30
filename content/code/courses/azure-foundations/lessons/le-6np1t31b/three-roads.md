@@ -29,6 +29,11 @@ There are three roads, and this lesson is about the difference between them:
   packets never leave the virtual network's address space, and the account's public endpoint can be
   switched off entirely.
 
+**Leaving the internet is not encryption.** A private endpoint changes where the packets travel and
+who can reach the door; it does not change what is in them. The connection to the account is still
+HTTPS, and must be: a private road keeps strangers off it, and TLS keeps whoever is on it from reading
+what passes. Lesson 22 meets the same distinction at the edge.
+
 ## A service endpoint, in Bicep
 
 The lesson works in its own directory:

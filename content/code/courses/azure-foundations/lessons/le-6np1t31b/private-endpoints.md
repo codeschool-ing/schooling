@@ -161,6 +161,10 @@ Two settings around it are easy to miss:
 - **Private Link service**, the other half of the name. It is the same mechanism pointed the other
   way: a service of your own behind a Standard load balancer, offered to other networks and other
   tenants as something they can make private endpoints to. Lesson 22 has the load balancer.
+- **Front Door Premium**, the global entrance of lesson 22, uses the same mechanism to reach its
+  origins: it connects to an origin through Private Link, a connection the origin's owner approves
+  like any other, so a web application or a storage account behind it can keep its public access off
+  and still be served to the world through the edge.
 
 **Nothing here was created**, and the address `10.20.4.4` is the one Azure's rules say the first
 endpoint in that subnet receives, not one this lab was given.

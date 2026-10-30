@@ -179,8 +179,8 @@ resource "azurerm_resource_group" "prod" {
 ```
 
 O Terraform não tem `targetScope`: cada tipo de recurso sabe o próprio escopo, e a associação entre
-uma assinatura e um grupo de gerenciamento é um recurso à parte. O `init` busca o provider, na
-primeira vez no registro da HashiCorp e depois no cache que o `env.sh` configurou; o `validate` confere
+uma assinatura e um grupo de gerenciamento é um recurso à parte. O `init` busca o provider no
+registro da HashiCorp e o guarda no cache que o `env.sh` configurou, ligado a este diretório; o `validate` confere
 cada bloco contra o esquema do provider; e o `plan` é onde ele perguntaria ao Azure o que existe:
 
 ```

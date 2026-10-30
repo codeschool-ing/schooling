@@ -177,8 +177,8 @@ resource "azurerm_resource_group" "prod" {
 ```
 
 Terraform has no `targetScope`: each resource type knows its own scope, and the association between
-a subscription and a management group is a resource of its own. `init` fetches the provider, the
-first time from HashiCorp's registry and afterwards from the cache `env.sh` set up; `validate`
+a subscription and a management group is a resource of its own. `init` fetches the provider from
+HashiCorp's registry and keeps it in the cache `env.sh` set up, linked into this directory; `validate`
 checks every block against the provider's schema; and `plan` is where it would ask Azure what
 exists:
 

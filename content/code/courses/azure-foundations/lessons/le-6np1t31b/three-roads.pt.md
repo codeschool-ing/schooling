@@ -30,6 +30,11 @@ Há três caminhos, e esta lição é sobre a diferença entre eles:
   saem do espaço de endereços da rede virtual, e o endpoint público da conta pode ser desligado por
   completo.
 
+**Sair da internet não é criptografia.** Um private endpoint muda por onde os pacotes viajam e quem
+alcança a porta; não muda o que vai dentro deles. A conexão com a conta continua sendo HTTPS, e precisa
+ser: um caminho privado mantém estranhos fora dele, e o TLS impede quem está nele de ler o que passa. A
+lição 22 encontra a mesma distinção na borda.
+
 ## Um service endpoint, em Bicep
 
 A lição trabalha num diretório próprio:

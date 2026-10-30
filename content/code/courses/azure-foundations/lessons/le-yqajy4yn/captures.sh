@@ -42,7 +42,7 @@ example "$HERE/cutting-subnets.md" plan.py > plan.py || exit 1
 block plan-prod
 run 'python3 plan.py 10.20.0.0/16 snet-web=10.20.1.0/24 snet-app=10.20.2.0/24 snet-data=10.20.3.0/24 snet-pe=10.20.4.0/24'
 block plan-wrong
-run 'python3 plan.py 10.20.0.0/16 snet-web=10.20.1.0/24 snet-cache=10.20.1.128/25 snet-jobs=10.20.5.0/23 snet-tiny=10.20.9.0/30 snet-batch=10.30.0.0/24'
+run 'python3 plan.py 10.20.0.0/16 snet-web=10.20.1.0/24 snet-cache=10.20.1.128/25 snet-jobs=10.20.7.0/23 snet-tiny=10.20.9.0/30 snet-batch=10.30.0.0/24'
 block plan-hub
 run 'python3 plan.py 10.0.0.0/16 AzureFirewallSubnet=10.0.1.0/26 AzureBastionSubnet=10.0.2.0/26 GatewaySubnet=10.0.255.0/27'
 
