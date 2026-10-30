@@ -35,6 +35,6 @@ Because SwiftUI decides how often a body runs, the body cannot have opinions abo
   its parent's.
 
 Nothing in this section was run for the course. The three inputs are the ones Apple's documentation
-for `State`, `Binding` and `Observable` describes, read on 30 October 2026; how often SwiftUI reads a
-body in a given app is something only a run on a Mac would show, and the course does not quote a
-number for it.
+for `State`, `Binding` and `Observable` describes, read on 30 October 2026. How often SwiftUI reads a
+body in a given app is something only a run on a Mac would show, and the course quotes no number for
+it.
