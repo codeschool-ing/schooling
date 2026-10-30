@@ -53,6 +53,8 @@ block groups
 run "python3 ask.py \"SELECT row_group_id, stats_min_value AS min_store, stats_max_value AS max_store FROM parquet_metadata('warehouse/orders_by_store/dt=2026-09-29/*.parquet') WHERE path_in_schema = 'store_id' ORDER BY row_group_id\""
 run "python3 ask.py \"SELECT CASE WHEN file_name LIKE '%by_store%' THEN 'by store' ELSE 'by time' END AS layout, count(*) AS row_groups, count(*) FILTER (WHERE stats_min_value::INT <= 7 AND stats_max_value::INT >= 7) AS may_hold_store_7 FROM parquet_metadata(['warehouse/orders_by_time/dt=2026-09-29/data_0.parquet', 'warehouse/orders_by_store/dt=2026-09-29/data_0.parquet']) WHERE path_in_schema = 'store_id' GROUP BY layout ORDER BY layout\""
 
+run "python3 ask.py \"SELECT row_group_id, stats_min_value AS min_store, stats_max_value AS max_store FROM parquet_metadata('warehouse/orders_by_time/dt=2026-09-29/*.parquet') WHERE path_in_schema = 'store_id' ORDER BY row_group_id\""
+
 example "$L/the-bill.md" layout_bill.py layout_bill.py || exit 1
 block bill
 run 'python3 layout_bill.py 1'

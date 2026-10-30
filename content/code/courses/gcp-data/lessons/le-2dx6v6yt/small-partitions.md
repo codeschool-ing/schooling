@@ -46,13 +46,13 @@ sits under `warehouse/`, `ask.py` can query it by name with no change:
 ana@laptop:~/gcp$ time python3 relayout.py
 three layouts written
 
-real	0m3.282s
-user	0m4.028s
-sys	0m0.785s
+real	0m3.015s
+user	0m5.273s
+sys	0m0.792s
 ana@laptop:~/gcp$ for t in orders orders_by_hour orders_by_time orders_by_store; do echo "$t $(find warehouse/$t -name "*.parquet" | wc -l) files, $(du -sb warehouse/$t | cut -f1) bytes"; done
 orders 60 files, 32451790 bytes
-orders_by_hour 966 files, 29812350 bytes
-orders_by_time 60 files, 28598105 bytes
+orders_by_hour 965 files, 29810085 bytes
+orders_by_time 60 files, 28598226 bytes
 orders_by_store 60 files, 29304897 bytes
 ```
 
@@ -69,9 +69,9 @@ both with `EXPLAIN ANALYZE`, which runs the query and reports how long it took:
 
 ```
 ana@laptop:~/gcp$ python3 ask.py "EXPLAIN ANALYZE SELECT district, sum(total_cents) FROM orders GROUP BY district" | grep 'Total Time'
-││              Total Time: 0.0285s             ││
+││              Total Time: 0.0232s             ││
 ana@laptop:~/gcp$ python3 ask.py "EXPLAIN ANALYZE SELECT district, sum(total_cents) FROM orders_by_hour GROUP BY district" | grep 'Total Time'
-││              Total Time: 0.164s              ││
+││              Total Time: 0.141s              ││
 ```
 
 **The hourly layout took several times as long for the same rows.** Each file has to be found,
