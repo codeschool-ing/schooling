@@ -1,0 +1,318 @@
+{
+  "ex-te0a34tx": {
+    "prompt": "`val week = sessionLog()` devolve um flow montado com `flow { … }`. Quando o bloco roda?",
+    "hint": "`flow created, nothing read yet`.",
+    "choices": [
+      {
+        "text": "Quando `sessionLog()` é chamada",
+        "why": "Nada foi impresso nesse momento."
+      },
+      {
+        "text": "Quando é coletado",
+        "why": "Isso: um flow frio."
+      },
+      {
+        "text": "Em segundo plano, assim que o programa começa a rodar",
+        "why": "Nada roda até um coletor pedir."
+      },
+      {
+        "text": "Uma vez, na primeira coleta",
+        "why": "Rodou de novo para o segundo coletor."
+      }
+    ]
+  },
+  "ex-a19j1v7x": {
+    "prompt": "O `FlowCold.kt` coletou o mesmo flow duas vezes. Quantas vezes imprimiu `opening the log`?",
+    "hint": "Cada coletor ganha a própria execução."
+  },
+  "ex-t86e5m6f": {
+    "prompt": "Uma linha vem depois de `week.collect { … }`. Quando ela roda?",
+    "hint": "O `collect` suspende.",
+    "choices": [
+      {
+        "text": "Na hora",
+        "why": "O `collect` só retorna no fim."
+      },
+      {
+        "text": "Depois do primeiro valor",
+        "why": "Ele espera todos."
+      },
+      {
+        "text": "Quando o flow termina de vez",
+        "why": "Isso."
+      },
+      {
+        "text": "Nunca",
+        "why": "Para um flow finito, roda."
+      }
+    ]
+  },
+  "ex-3t8egk36": {
+    "prompt": "`listOf(45, 20, 60, 30, 90).asFlow().onEach { println(\"saw $it\") }.filter { it >= 30 }.take(2)`. Quais valores são vistos?",
+    "hint": "O `take` cancela a fonte quando tem os dois.",
+    "choices": [
+      {
+        "text": "Os cinco",
+        "why": "A fonte parou depois do 60."
+      },
+      {
+        "text": "45, 20 e 60",
+        "why": "Isso: 30 e 90 nem foram emitidos."
+      },
+      {
+        "text": "45 e 60",
+        "why": "O 20 foi visto, e depois filtrado."
+      },
+      {
+        "text": "45, 60 e 90, os valores de pelo menos 30",
+        "why": "O take parou em dois."
+      }
+    ]
+  },
+  "ex-j7ta61km": {
+    "prompt": "O que a lambda do `map` num flow faz que a lambda do `map` numa sequência não faz?",
+    "hint": "Pense em `loadDetails(it)`.",
+    "choices": [
+      {
+        "text": "Devolver outro tipo",
+        "why": "As duas fazem."
+      },
+      {
+        "text": "Rodar em paralelo",
+        "why": "Os valores ainda vão um por vez."
+      },
+      {
+        "text": "Chamar uma função suspensa",
+        "why": "Isso."
+      },
+      {
+        "text": "Pular valores",
+        "why": "Isso é o `filter`."
+      }
+    ]
+  },
+  "ex-cj29wpe6": {
+    "prompt": "O operador geral que pode emitir nenhum, um ou vários valores por entrada é o `___`.",
+    "hint": "O `map` e o `filter` são feitos com ele.",
+    "blanks": [
+      {
+        "accept": [
+          "transform"
+        ]
+      }
+    ]
+  },
+  "ex-pbqscnep": {
+    "prompt": "Ligue cada operador terminal ao que ele devolve.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "`toList()`",
+        "right": "Todo valor, numa lista"
+      },
+      {
+        "left": "`first()`",
+        "right": "O primeiro valor, cancelando o resto"
+      },
+      {
+        "left": "`fold(0) { … }`",
+        "right": "Um valor acumulado"
+      },
+      {
+        "left": "`collect { … }`",
+        "right": "`Unit`, quando o flow termina"
+      }
+    ],
+    "right_distractors": [
+      "Um flow novo"
+    ]
+  },
+  "ex-ztqj4p6g": {
+    "prompt": "`ticker.toList()` é chamado num flow que emite a cada segundo para sempre. O que acontece?",
+    "hint": "O `toList` espera o fim.",
+    "choices": [
+      {
+        "text": "Nunca retorna",
+        "why": "Isso."
+      },
+      {
+        "text": "Devolve os valores até ali depois de um segundo",
+        "why": "Espera um fim que nunca chega."
+      },
+      {
+        "text": "Lança `IllegalStateException` porque o flow é infinito",
+        "why": "Nada detecta isso."
+      },
+      {
+        "text": "Devolve uma lista vazia",
+        "why": "Segue coletando."
+      }
+    ]
+  },
+  "ex-8h4tc95c": {
+    "prompt": "`flow { … }.map { … }.flowOn(Dispatchers.IO).collect { … }`. Onde roda a lambda do `collect`?",
+    "hint": "O `flowOn` afeta o que está acima dele.",
+    "choices": [
+      {
+        "text": "Num trabalhador de IO",
+        "why": "Só o bloco `flow` e o `map` mudaram."
+      },
+      {
+        "text": "No dispatcher do próprio coletor",
+        "why": "Isso: `main` no exemplo."
+      },
+      {
+        "text": "Numa thread nova para cada valor",
+        "why": "Nenhuma thread é criada por valor."
+      },
+      {
+        "text": "Onde o último valor nasceu",
+        "why": "O coletor não se move."
+      }
+    ]
+  },
+  "ex-vsjap17r": {
+    "prompt": "Por que `withContext(Dispatchers.IO) { emit(45) }` dentro de `flow { … }` é recusado em tempo de execução?",
+    "hint": "`Flow invariant is violated`.",
+    "choices": [
+      {
+        "text": "O `emit` não é chamado dentro de `withContext` porque o `emit` não é uma função suspensa",
+        "why": "O `emit` é suspenso; a regra é sobre onde."
+      },
+      {
+        "text": "Um flow precisa emitir da coroutine do coletor",
+        "why": "Isso: use `flowOn`."
+      },
+      {
+        "text": "Threads de IO não produzem valores `Int`",
+        "why": "Não é regra."
+      },
+      {
+        "text": "O compilador esqueceu de verificar",
+        "why": "É uma regra de execução por desenho."
+      }
+    ]
+  },
+  "ex-ww70az03": {
+    "prompt": "O registro emite 45 e 30, e depois lança exceção. O `onCompletion` vem antes do `catch`, que emite -1. O que o `collect` recebe?",
+    "hint": "`got 45`, `got 30`, …",
+    "choices": [
+      {
+        "text": "45 e 30, depois a exceção",
+        "why": "O `catch` a tratou."
+      },
+      {
+        "text": "Só -1",
+        "why": "Os dois primeiros chegaram antes da falha."
+      },
+      {
+        "text": "45, 30 e -1",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, já que um flow que falha não emite nada",
+        "why": "Valores anteriores à falha chegam."
+      }
+    ]
+  },
+  "ex-2728hh22": {
+    "prompt": "Uma exceção é lançada dentro da lambda do `collect`. Um `catch` posto antes do `collect` a pega?",
+    "hint": "Só para cima.",
+    "choices": [
+      {
+        "text": "Sim, o `catch` trata o flow inteiro",
+        "why": "Ele trata o que está acima dele."
+      },
+      {
+        "text": "Não",
+        "why": "Isso: vai para quem chamou."
+      },
+      {
+        "text": "Só se a exceção for `IllegalStateException`",
+        "why": "O tipo não muda a direção."
+      },
+      {
+        "text": "Só com um `retry` acrescentado",
+        "why": "O `retry` também é só para cima."
+      }
+    ]
+  },
+  "ex-858tc4gb": {
+    "prompt": "O `flakyServer()` falha até a terceira tentativa, e é coletado com `retry(3)`. Quantas tentativas foram impressas?",
+    "hint": "Ele respondeu numa delas."
+  },
+  "ex-qvwga6g3": {
+    "prompt": "Qual operador serve a uma tela que mostra só o total semanal atual?",
+    "hint": "Só o valor mais recente importa.",
+    "choices": [
+      {
+        "text": "`buffer()`",
+        "why": "Ele guarda todo valor, inclusive os velhos."
+      },
+      {
+        "text": "`conflate()`",
+        "why": "Isso."
+      },
+      {
+        "text": "`take(1)`",
+        "why": "Esse para depois do primeiro total."
+      },
+      {
+        "text": "Nenhum: o flow simples já pula totais velhos",
+        "why": "O flow simples entrega todo valor, esperando cada um."
+      }
+    ]
+  },
+  "ex-rgcggne6": {
+    "prompt": "Valores a cada 100 ms, um coletor levando 300 ms cada, cinco valores, sem buffer. Cerca de quantos milissegundos no total?",
+    "hint": "Eles se revezam: 100 mais 300, cinco vezes.",
+    "unit": "ms"
+  },
+  "ex-gj204nvd": {
+    "prompt": "Ponha as partes da corrente do `FlowOn.kt` em ordem, de cima para baixo.",
+    "hint": "Produtor, transformação, dispatcher, coletor.",
+    "items": [
+      "`flow { … emit(line) }`",
+      "`.map { it.toInt() }`",
+      "`.flowOn(Dispatchers.IO)`",
+      "`.collect { … }`"
+    ]
+  },
+  "ex-n8ze81kv": {
+    "prompt": "Quais afirmações sobre um flow montado com `flow { … }` são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Frio, preguiçoso, um valor por vez.",
+    "choices": [
+      {
+        "text": "Defini-lo não roda nada",
+        "why": "Sim."
+      },
+      {
+        "text": "Cada coletor roda o produtor de novo",
+        "why": "Sim."
+      },
+      {
+        "text": "Dois coletores dividem uma execução do produtor",
+        "why": "Não: isso é um flow quente, lição 17."
+      },
+      {
+        "text": "O `emit` pode ser chamado de qualquer corrotina",
+        "why": "Não: só da do coletor."
+      }
+    ]
+  },
+  "ex-f0q68h0x": {
+    "prompt": "Para rodar o produtor de um flow no `Dispatchers.IO` sem mover o coletor, acrescente `.___(Dispatchers.IO)` abaixo dele.",
+    "hint": "O título da seção 05.",
+    "blanks": [
+      {
+        "accept": [
+          "flowOn"
+        ]
+      }
+    ]
+  },
+  "ex-bqq90d6a": {
+    "prompt": "`flowOf(45, 30, 60).runningFold(0) { t, m -> t + m }.toList()`. Quantos números a lista tem?",
+    "hint": "Ela inclui o valor inicial."
+  }
+}
