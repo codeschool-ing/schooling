@@ -1,0 +1,299 @@
+[
+  {
+    "id": "ex-dsnvmkwc",
+    "version": 1,
+    "section": "infrastructure",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each attack to who stops it in the shop's design.",
+    "hint": "Layer 3 and 4, or layer 7?",
+    "pairs": [
+      {
+        "left": "A SYN flood against a public IP",
+        "right": "Azure's DDoS protection"
+      },
+      {
+        "left": "Thousands of valid requests to the search page",
+        "right": "The WAF's rate limit and caching"
+      },
+      {
+        "left": "A UDP reflection flood",
+        "right": "The edge, before the region"
+      }
+    ]
+  },
+  {
+    "id": "ex-9rr6qhh3",
+    "version": 1,
+    "section": "infrastructure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a flood still take down a small application protected only by infrastructure protection?",
+    "hint": "Whose limits is it tuned to?",
+    "choices": [
+      {
+        "text": "Infrastructure protection is off by default",
+        "correct": false,
+        "why": "It is on for every public IP, with nothing to configure."
+      },
+      {
+        "text": "It is tuned to volumes that hurt Azure",
+        "correct": true,
+        "why": "Right. A flood far below that can still exhaust one shop."
+      },
+      {
+        "text": "It only covers IPv6 addresses",
+        "correct": false,
+        "why": "It covers public IPs generally."
+      },
+      {
+        "text": "It only protects against layer 7 attacks",
+        "correct": false,
+        "why": "Layer 7 is the WAF's job; this works at layers 3 and 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcnhc3c3",
+    "version": 1,
+    "section": "plans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does DDoS Network Protection include that IP Protection does not?",
+    "hint": "Two services beyond detection.",
+    "choices": [
+      {
+        "text": "Adaptive tuning to your own traffic",
+        "correct": false,
+        "why": "Both tiers tune to your traffic."
+      },
+      {
+        "text": "Telemetry, alerts and mitigation reports",
+        "correct": false,
+        "why": "Both tiers provide them."
+      },
+      {
+        "text": "Rapid response and cost protection",
+        "correct": true,
+        "why": "Right. Those come only with the plan."
+      },
+      {
+        "text": "Protection for layer 7 attacks",
+        "correct": false,
+        "why": "Neither tier covers layer 7; that is the WAF."
+      }
+    ]
+  },
+  {
+    "id": "ex-va4hz633",
+    "version": 1,
+    "section": "plans",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A DDoS protection plan is linked to virtual ___, and every public IP in them is covered.",
+    "hint": "The thing a subnet lives in.",
+    "blanks": [
+      {
+        "accept": [
+          "networks"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r4b8nwnw",
+    "version": 1,
+    "section": "perimeter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's Front Door has a strict WAF, but the app's azurewebsites.net address answers anybody. What does that mean?",
+    "hint": "Can the edge be skipped?",
+    "choices": [
+      {
+        "text": "Nothing; Front Door still filters every request",
+        "correct": false,
+        "why": "Requests sent straight to the app never pass through it."
+      },
+      {
+        "text": "Anybody can skip the edge",
+        "correct": true,
+        "why": "Right. The app must accept only Front Door."
+      },
+      {
+        "text": "The WAF automatically extends to the app's address",
+        "correct": false,
+        "why": "A WAF applies where it is attached, at the edge."
+      },
+      {
+        "text": "DDoS IP Protection covers the gap",
+        "correct": false,
+        "why": "It does not filter layer 7, and the app's address is not a public IP in a VNet."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwcb9aks",
+    "version": 1,
+    "section": "perimeter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does App Service know a request really came through the shop's own Front Door?",
+    "hint": "Service tag, and one header.",
+    "choices": [
+      {
+        "text": "By the client's country",
+        "correct": false,
+        "why": "Country says nothing about the path."
+      },
+      {
+        "text": "By a password in the URL",
+        "correct": false,
+        "why": "No such thing; it uses a tag and a header."
+      },
+      {
+        "text": "By the AzureFrontDoor.Backend tag alone",
+        "correct": false,
+        "why": "Any customer's Front Door uses that tag; the id narrows it."
+      },
+      {
+        "text": "The service tag plus the X-Azure-FDID header",
+        "correct": true,
+        "why": "Right. The header carries the shop's own Front Door id."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzjd7ca5",
+    "version": 1,
+    "section": "perimeter",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the shop's perimeter layers in order, from the internet inwards.",
+    "hint": "Edge first, private last.",
+    "items": [
+      "Front Door and its WAF",
+      "App Service accepting only Front Door",
+      "Network security groups in the virtual network",
+      "Private endpoints for SQL and Key Vault"
+    ],
+    "trap": "Putting the private endpoints first is the slip: they are the centre, with nothing public left to reach."
+  },
+  {
+    "id": "ex-x67qte5k",
+    "version": 1,
+    "section": "deciding",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 15,
+    "tolerance": 0,
+    "prompt": "At the illustrative prices, 3,000 USD a month for the plan and 200 USD per protected IP, at how many IPs do the two cost the same?",
+    "hint": "Divide.",
+    "unit": "IPs"
+  },
+  {
+    "id": "ex-ryvn99k9",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the shop buy neither paid plan today?",
+    "hint": "Which public IPs would be protected?",
+    "choices": [
+      {
+        "text": "The plans do not exist in brazilsouth",
+        "correct": false,
+        "why": "Availability is not the reason given."
+      },
+      {
+        "text": "Front Door makes DDoS attacks impossible",
+        "correct": false,
+        "why": "It absorbs them at the edge; impossible is not the claim."
+      },
+      {
+        "text": "No customer path uses those IPs",
+        "correct": true,
+        "why": "Right. Customers enter through Front Door; the condition to revisit is written down."
+      },
+      {
+        "text": "Cost protection already covers any outage",
+        "correct": false,
+        "why": "Cost protection comes with the plan it is not buying."
+      }
+    ]
+  },
+  {
+    "id": "ex-zctqz797",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What event would make the shop revisit the decision?",
+    "hint": "It is written down with the decision.",
+    "choices": [
+      {
+        "text": "A new month starting",
+        "correct": false,
+        "why": "The decision depends on the design, not the calendar."
+      },
+      {
+        "text": "A public Application Gateway in brazilsouth",
+        "correct": true,
+        "why": "Right. Then customers would reach a regional public IP."
+      },
+      {
+        "text": "A rise in WAF blocks",
+        "correct": false,
+        "why": "That is layer 7, a different layer."
+      },
+      {
+        "text": "The secure score dropping below 80%",
+        "correct": false,
+        "why": "Posture is a different question."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpk4yzmx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements are true of this lesson? Choose all that apply.",
+    "hint": "Read, not run; arithmetic, not prices.",
+    "choices": [
+      {
+        "text": "No DDoS plan was created",
+        "correct": true,
+        "why": "Yes. It needs a subscription."
+      },
+      {
+        "text": "The prices used are illustrative",
+        "correct": true,
+        "why": "Yes. The price list was out of reach."
+      },
+      {
+        "text": "Layer 7 floods are stopped by DDoS IP Protection",
+        "correct": false,
+        "why": "No. Layer 7 is the WAF's job."
+      },
+      {
+        "text": "The app must refuse traffic that skipped Front Door",
+        "correct": true,
+        "why": "Yes. Otherwise the edge is optional."
+      }
+    ]
+  }
+]
