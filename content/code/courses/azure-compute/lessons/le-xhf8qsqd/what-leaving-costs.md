@@ -4,9 +4,8 @@ version: 1
 ---
 
 "How locked in are we?" has no answer. **"What would leaving cost, in person-days and in money?"
-has one**, and it can be estimated on the first day, when it is cheapest to change. The estimate
-has four lines, and each comes from something you can count: the components that would be
-rewritten, the data that would be carried out, the people who would have to learn another
+has one**, and it can be estimated on the first day, when it is cheapest to change. The estimate has four lines, and each comes from something you can count.
+They are the components that would be rewritten, the data that would be carried out, the people who would have to learn another
 platform, and the months of running both while the move happens.
 
 **Every figure in this section's example is invented**: the person-days, the gigabytes, the rate
@@ -16,9 +15,8 @@ them is Azure's price or anybody's measurement. The method is the part to keep.
 ## The rewrite, component by component
 
 Start with the code and the files around it. The question is not how big the system is but how
-much of it touches Azure, and the honest unit is one component at a time. For the shop after
-lesson 21's decision, that is the image, the Container App and its two jobs, the Service Bus
-queue for the finance export, the identity that connects them, the database and the file share,
+much of it touches Azure, and the honest unit is one component at a time. For the shop after lesson 21's decision, the list starts with the image, the Container App and its
+two jobs, and the Service Bus queue for the finance export. Then come the identity that connects them, the database and the file share,
 the Bicep that declares it all, and what the team watches it with.
 
 A short program holds that list, scores each line in person-days, and adds them up by kind of

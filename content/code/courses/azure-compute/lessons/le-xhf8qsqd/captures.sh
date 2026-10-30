@@ -57,6 +57,9 @@ from_lesson "$HERE/portable-seams.md" shop-pod.yaml > shop-pod.yaml
 from_example "$HERE/what-leaving-costs.md" exitcost.py > exitcost.py
 
 # portable-seams
+block store
+run "docker info --format '{{.DriverStatus}}'"
+
 block build
 run 'docker build --quiet --tag shop:1.0 shop'
 run "docker image inspect shop:1.0 --format '{{.Id}}'"

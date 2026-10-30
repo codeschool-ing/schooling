@@ -19,25 +19,51 @@ the question each time is the same: is it still the same image?
 Build it from lesson 7's `app.py` and `Dockerfile`, in `~/azure/shop`, and ask Docker what it
 built:
 
-CAP:build
+```
+ana@laptop:~/azure$ docker build --quiet --tag shop:1.0 shop
+sha256:25d8715c3057e69a6df3afaa336cd1ebbf4ae8ab7ff392bfad00fbfeb55d4382
+ana@laptop:~/azure$ docker image inspect shop:1.0 --format '{{.Id}}'
+sha256:25d8715c3057e69a6df3afaa336cd1ebbf4ae8ab7ff392bfad00fbfeb55d4382
+ana@laptop:~/azure$ docker build --quiet --tag shop:again shop
+sha256:0f51deba6e7940a87457019be876e963767de91583025a226f0b9fa16ce1a9eb
+ana@laptop:~/azure$ docker image rm shop:again
+Untagged: shop:again
+Deleted: sha256:0f51deba6e7940a87457019be876e963767de91583025a226f0b9fa16ce1a9eb
+```
 
-That long `sha256:` is the image's **digest**: a hash of the image's own description, which names
-every layer by its hash in turn. Lesson 10 met it in a registry. Change one byte of `app.py` and
-the digest changes; leave everything alone and it does not. Yours differs from this one, because
-your base image is not byte for byte this machine's, and it stays the same through the three runs
-below.
+The same `sha256:` twice: that is the image's **digest**. It is a hash of the document that
+describes the image, which names every layer by its own hash in turn. A change of one byte anywhere gives a new digest, and lesson 10 met the same kind of name in a registry. It names one build
+rather than one set of files. The same two files, built again a moment later as `shop:again`, came
+out under a different digest. Yours will differ from both, and what matters is that one build
+keeps one digest through the three runs below. The second build was removed because nothing needs
+it.
 
 First, plain Docker, as lesson 7 ran it. `docker inspect` says which image the running container
 was made from:
 
-CAP:docker
+```
+ana@laptop:~/azure$ docker run -d --name shop -p 8080:8080 shop:1.0 > /dev/null
+ana@laptop:~/azure$ curl -s -w '\n' localhost:8080/version
+{"version": "1.0", "host": "48c72c33cffa", "up_s": 0.6}
+ana@laptop:~/azure$ docker inspect shop --format '{{.Image}}'
+sha256:25d8715c3057e69a6df3afaa336cd1ebbf4ae8ab7ff392bfad00fbfeb55d4382
+ana@laptop:~/azure$ docker rm -f shop > /dev/null
+```
 
 Second, beside a Dapr sidecar, as lesson 9 ran it. The shop starts with the sidecar's port 3500
 published as well, the sidecar joins its network, and the request goes to Dapr, which calls the
 shop's `/version` on its behalf. No component files this time, because service invocation needs
 none:
 
-CAP:dapr
+```
+ana@laptop:~/azure$ docker run -d --name shop -p 8080:8080 -p 3500:3500 shop:1.0 > /dev/null
+ana@laptop:~/azure$ docker run -d --name shop-dapr --network container:shop daprio/daprd:1.17.16 ./daprd --app-id shop --app-port 8080 > /dev/null
+ana@laptop:~/azure$ curl -s -w '\n' localhost:3500/v1.0/invoke/shop/method/version
+{"version": "1.0", "host": "6c1d643d6eb9", "up_s": 2.9}
+ana@laptop:~/azure$ docker inspect shop --format '{{.Image}}'
+sha256:25d8715c3057e69a6df3afaa336cd1ebbf4ae8ab7ff392bfad00fbfeb55d4382
+ana@laptop:~/azure$ docker rm -f shop shop-dapr > /dev/null
+```
 
 Third, as a pod, as lesson 11 ran it. A cluster of one control plane and one worker is enough.
 Save this as `~/azure/cluster.yaml`; the two patches near the top are needed on a machine with
@@ -84,12 +110,63 @@ spec:
       periodSeconds: 2
 ```
 
-CAP:kind
+Create the cluster, give it the image and start the pod. Nothing publishes the pod's port on the
+laptop, so `kubectl exec` asks the shop from inside its own container. Then ask where the pod ran
+and what it ran, from Kubernetes and from the node itself. A kind node is a container called
+`shop-worker`, and `ctr` is the command-line client of the containerd inside it, whose warning
+about this machine's cgroup v1 is sent to `/dev/null`:
 
-CAP:digest-sentence
+```
+ana@laptop:~/azure$ kind create cluster --name shop --config cluster.yaml --quiet
+ana@laptop:~/azure$ kind load docker-image shop:1.0 --name shop
+Image: "shop:1.0" with ID "sha256:25d8715c3057e69a6df3afaa336cd1ebbf4ae8ab7ff392bfad00fbfeb55d4382" not yet present on node "shop-worker", loading...
+Image: "shop:1.0" with ID "sha256:25d8715c3057e69a6df3afaa336cd1ebbf4ae8ab7ff392bfad00fbfeb55d4382" not yet present on node "shop-control-plane", loading...
+ana@laptop:~/azure$ kubectl apply -f shop-pod.yaml
+pod/shop created
+ana@laptop:~/azure$ kubectl wait --for=condition=Ready pod/shop --timeout=120s
+pod/shop condition met
+ana@laptop:~/azure$ kubectl exec shop -- python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8080/version').read().decode())"
+{"version": "1.0", "host": "shop", "up_s": 0.7}
+ana@laptop:~/azure$ kubectl get pod shop -o jsonpath='{.spec.nodeName} {.status.containerStatuses[0].image}{"\n"}'
+shop-worker docker.io/library/shop:1.0
+ana@laptop:~/azure$ kubectl get pod shop -o jsonpath='{.status.containerStatuses[0].imageID}{"\n"}'
+docker.io/library/import-2026-10-30@sha256:d17c4f32994b3474c254b9a18234b8f4301749c9f817f937f48049e982b947ff
+ana@laptop:~/azure$ docker exec shop-worker ctr -n k8s.io images ls name==docker.io/library/shop:1.0 2> /dev/null | awk '{print $1, $3}'
+REF DIGEST
+docker.io/library/shop:1.0 sha256:25d8715c3057e69a6df3afaa336cd1ebbf4ae8ab7ff392bfad00fbfeb55d4382
+ana@laptop:~/azure$ kind delete cluster --name shop
+Deleting cluster "shop" ...
+Deleted nodes: ["shop-worker" "shop-control-plane"]
+```
+
+Three runtimes, and version `1.0` from `/version` each time. The host name and the seconds up
+changed, because they belong to the container or the pod. **And the same digest each time.** `docker inspect` gave it for
+the two Docker runs. For the pod, `kind load` printed it as it copied the image to both nodes, and
+the worker's containerd, asked for `shop:1.0`, holds the image under that digest. Kubernetes' own
+`imageID` field shows something else here: a reference starting `import-` with the day's date,
+which is a name made up during the import for the archive `kind load` sent, not for the image in
+it. When the two seem to disagree, ask the runtime what it holds, as the last command did.
+
+One caution for your own run. This machine's Docker keeps its images in containerd:
+
+```
+ana@laptop:~/azure$ docker info --format '{{.DriverStatus}}'
+[[driver-type io.containerd.snapshotter.v1]]
+```
+
+A Docker with the older image store prints the hash of the image's configuration as its id
+instead, and the node's list will not match it character for character. The image is still one
+image; the two are hashes of two different documents about it.
+
+None of the three runs needed a change to `app.py` or the `Dockerfile`, and neither did the four
+Azure services that lessons 7, 8, 11 and 18 described. **What changed each time was the file
+around the image**: a `docker run` line, a sidecar beside it, a pod manifest, and in Azure a
+container group, a Container App, a Deployment and a web app. Those files are the part of compute
+lock-in that remains, and each is a few dozen lines. The last command deleted the cluster, and each
+Docker run ended with `docker rm -f`.
 
 ```schooling-figure
-FIGURE-SEAMS
+{"svg": "<svg viewBox=\"0 0 720 310\" role=\"img\" aria-label=\"The image shop:1.0, with one digest, in the middle. On the left, three ways it ran on the laptop in this section: plain Docker, beside a Dapr sidecar, and as a pod in kind. On the right, four Azure services that run it, not run here: Container Instances from shop-aci.yaml in lesson 7, Container Apps as Microsoft.App/containerApps in lesson 8, AKS from shop.yaml in lesson 11, and App Service as Microsoft.Web/sites in lesson 18. A note says the image moves unchanged and the file around it is what stays behind.\"><defs><marker id=\"l22-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><text x=\"120\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper-dim)\">on the laptop, run here</text><text x=\"600\" y=\"14\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper-dim)\">in Azure, not run here</text><rect x=\"285\" y=\"115\" width=\"150\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"360\" y=\"136\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">shop:1.0</text><text x=\"360\" y=\"156\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">one digest</text><rect x=\"20\" y=\"40\" width=\"200\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"120\" y=\"57\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">plain Docker</text><text x=\"120\" y=\"74\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">docker run</text><path d=\"M283 145 L222 65\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l22-ah)\"></path><rect x=\"20\" y=\"115\" width=\"200\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"120\" y=\"132\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">beside a Dapr sidecar</text><text x=\"120\" y=\"149\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">daprd</text><path d=\"M283 145 L222 140\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l22-ah)\"></path><rect x=\"20\" y=\"190\" width=\"200\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"120\" y=\"207\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a pod in kind</text><text x=\"120\" y=\"224\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">shop-pod.yaml</text><path d=\"M283 145 L222 215\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l22-ah)\"></path><rect x=\"500\" y=\"25\" width=\"200\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"600\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Container Instances, lesson 7</text><text x=\"600\" y=\"59\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">shop-aci.yaml</text><path d=\"M437 145 L498 50\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l22-ah)\"></path><rect x=\"500\" y=\"90\" width=\"200\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"600\" y=\"107\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Container Apps, lesson 8</text><text x=\"600\" y=\"124\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Microsoft.App/containerApps</text><path d=\"M437 145 L498 115\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l22-ah)\"></path><rect x=\"500\" y=\"155\" width=\"200\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"600\" y=\"172\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">AKS, lesson 11</text><text x=\"600\" y=\"189\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">shop.yaml</text><path d=\"M437 145 L498 180\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l22-ah)\"></path><rect x=\"500\" y=\"220\" width=\"200\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"600\" y=\"237\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">App Service, lesson 18</text><text x=\"600\" y=\"254\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Microsoft.Web/sites</text><path d=\"M437 145 L498 245\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l22-ah)\"></path><text x=\"360\" y=\"296\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">the image moves unchanged; the file around it is what each platform reads, and what stays behind</text></svg>", "caption": "One image, seven ways to run it. Moving between them rewrites the file around the image, a few dozen lines, and never touches the image."}
 ```
 
 ## Seams worth having

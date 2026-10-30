@@ -4,8 +4,8 @@ version: 1
 ---
 
 "O quanto estamos presos?" não tem resposta. **"Quanto custaria sair, em pessoas-dia e em
-dinheiro?" tem**, e pode ser estimado no primeiro dia, quando mudar é mais barato. A estimativa tem
-quatro linhas, e cada uma vem de algo que dá para contar: os componentes que seriam reescritos, os
+dinheiro?" tem**, e pode ser estimado no primeiro dia, quando mudar é mais barato. A estimativa tem quatro linhas, e cada uma vem de algo que dá para contar.
+São os componentes que seriam reescritos, os
 dados que seriam levados para fora, as pessoas que teriam de aprender outra plataforma e os meses
 rodando as duas enquanto a mudança acontece.
 
@@ -16,9 +16,8 @@ preço do Azure nem medição de ninguém. O método é a parte a guardar.
 ## A reescrita, componente por componente
 
 Comece pelo código e pelos arquivos em volta dele. A pergunta não é o tamanho do sistema, e sim o
-quanto dele toca o Azure, e a unidade honesta é um componente por vez. Para a loja depois da
-decisão da aula 21, isso é a imagem, o Container App e seus dois jobs, a fila do Service Bus da
-exportação financeira, a identidade que os conecta, o banco e o compartilhamento de arquivos, o
+quanto dele toca o Azure, e a unidade honesta é um componente por vez. Para a loja depois da decisão da aula 21, a lista começa pela imagem, pelo Container App e seus
+dois jobs e pela fila do Service Bus da exportação financeira. Depois vêm a identidade que os conecta, o banco e o compartilhamento de arquivos, o
 Bicep que declara tudo e aquilo com que a equipe observa o sistema.
 
 Um programa curto guarda essa lista, dá a cada linha uma nota em pessoas-dia e as soma por tipo de

@@ -118,14 +118,14 @@ run 'docker run -d --name shopfn --network functions -p 8080:80 -e AzureWebJobsS
 fresh
 
 block order
-run "curl -s -D - -o a1001.json -XPOST localhost:8080/api/orders -d '{\"order\": \"A-1001\", \"sku\": \"mug\", \"qty\": 2}'"
+run "curl -s -D - -o a1001.json -XPOST localhost:8080/api/orders -d '{\"order\": \"A-1001\", \"sku\": \"mug\", \"qty\": 2}' | grep -E '^(HTTP|Location|Retry-After)' | sed -E 's/&code[^&[:space:]]*//'"
 run 'STATUS=$(jq -r .statusQueryGetUri a1001.json)'
 run 'for i in $(seq 30); do curl -s "$STATUS" | jq -r .runtimeStatus; sleep 1; done | uniq -c'
 until_status "$STATUS" '.runtimeStatus == "Completed"'
 
 block keys
 run "jq -r 'keys[]' a1001.json"
-run 'echo "$STATUS"'
+run 'echo "$STATUS" | sed -E "s/&code[^&]*//"'
 
 block done
 run 'curl -s "$STATUS" | jq .'
@@ -191,7 +191,7 @@ run "python3 -c \"import json; print(json.dumps({'order': 'A-1006', 'lines': [{'
 run 'S6=$(curl -s -XPOST localhost:8080/api/orders -d @a1006.json | jq -r .statusQueryGetUri)'
 until_status "$S6" '.runtimeStatus == "Completed"'
 run "curl -s \"\$S6\" | jq -c '.output | {reserve_s, lines: (.reserved | length)}'"
-run "docker logs -t shopfn 2>&1 | grep \"A-1006: Function 'reserve_line (Activity)' started\" | cut -c12-19 | uniq -c"
+run "docker logs -t shopfn 2>&1 | grep \"A-1006: Function 'reserve_line (Activity)' started\" | awk -F'[T:Z]' '{s = \$2 * 3600 + \$3 * 60 + \$4; if (NR == 1) first = s; print int(s - first)}' | uniq -c"
 run "docker logs shopfn 2>&1 | grep -m1 -o '\"maxConcurrentActivityFunctions\":[0-9]*'"
 run 'docker exec shopfn nproc'
 run "az storage entity query -t TestHubNameHistory --filter \"PartitionKey eq 'A-1006'\" --query 'length(items)'"

@@ -12,8 +12,7 @@ get out of each part of it, and what would reopen it.
 ## An architecture decision record
 
 The usual form is an *architecture decision record*, a short file kept in the repository beside
-the code it decides, numbered, and never edited after it is accepted: a decision that changes gets
-a new record that supersedes the old one. Most teams write them in Markdown. This one is YAML, so
+the code it decides, numbered, and never edited after it is accepted. A decision that changes gets a new record that supersedes the old one. Most teams write them in Markdown. This one is YAML, so
 a script can read its fields as well as a person, and it records the choice lesson 21 made for the
 shop:
 
