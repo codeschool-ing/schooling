@@ -25,7 +25,7 @@ screenshot command takes the pictures.
 
 ## The words
 
-- **Name and subtitle**: guideline 2.3.7 says that "app names must be limited to 30 characters",
+- **The name and the subtitle.** Guideline 2.3.7 says that "app names must be limited to 30 characters",
   and the name has to be free in that language (section 02).
 - **Description**: what the app does, plainly. Guideline 2.3.7 asks that metadata not be stuffed with
   terms for search; keywords have a field of their own.
