@@ -1,0 +1,258 @@
+{
+ "ex-w87dwsq3": {
+  "prompt": "Alguém apaga o bucket da loja à mão, e o Config Connector o gerencia. O que acontece?",
+  "hint": "O controlador nunca para de observar.",
+  "choices": [
+   {
+    "text": "Nada até alguém rodar kubectl apply de novo",
+    "why": "Esse é o comportamento do Terraform; o controlador age sozinho."
+   },
+   {
+    "text": "O controlador o cria de novo",
+    "why": "Certo. O objeto ainda diz que ele deve existir."
+   },
+   {
+    "text": "O objeto no cluster é apagado para combinar com o bucket",
+    "why": "O objeto é o estado desejado; a realidade é que se ajusta a ele, não o contrário."
+   },
+   {
+    "text": "Um plano é escrito para uma pessoa aprovar",
+    "why": "O Config Connector não tem etapa de plano."
+   }
+  ]
+ },
+ "ex-6204bk5h": {
+  "prompt": "Por que o RBAC num namespace do Config Connector é na prática IAM do Google Cloud?",
+  "hint": "Quem cria o recurso, com que permissões?",
+  "choices": [
+   {
+    "text": "O Kubernetes copia os papéis dele para o IAM",
+    "why": "Nada é copiado; o efeito vem da conta do controlador."
+   },
+   {
+    "text": "O Google lê o RBAC para decidir cada chamada de API",
+    "why": "O Google decide pela conta de serviço do controlador, não pelo RBAC."
+   },
+   {
+    "text": "Objetos ali agem com a conta do controlador",
+    "why": "Certo. Criar um objeto é criar um recurso com as permissões dela."
+   },
+   {
+    "text": "Namespaces e projetos são o mesmo objeto",
+    "why": "São coisas diferentes em sistemas diferentes."
+   }
+  ]
+ },
+ "ex-e0e72c0h": {
+  "prompt": "Um namespace cheio de objetos do Config Connector é apagado por engano. O que decide se os buckets sobrevivem?",
+  "hint": "Uma anotação em cada objeto.",
+  "choices": [
+   {
+    "text": "Se cada objeto tinha a política de exclusão abandon",
+    "why": "Certo. Sem ela, apagar o objeto apaga o recurso."
+   },
+   {
+    "text": "Se os buckets tinham versionamento",
+    "why": "Versionamento guarda versões de objetos, não o bucket."
+   },
+   {
+    "text": "Nada: o Google se recusa a apagar um bucket com objetos",
+    "why": "O controlador apaga o que é dele, conteúdo e tudo."
+   },
+   {
+    "text": "Se um estado do Terraform ainda os lista",
+    "why": "O Terraform não participa do que o controlador apaga."
+   }
+  ]
+ },
+ "ex-x1gd44sw": {
+  "prompt": "O que o Infrastructure Manager tira das mãos do time, comparado a rodar o Terraform na própria esteira?",
+  "hint": "As perguntas da lição 6.",
+  "choices": [
+   {
+    "text": "Escrever a configuração",
+    "why": "A configuração é o mesmo HCL, escrito pelo time."
+   },
+   {
+    "text": "Guardar, travar e versionar o estado",
+    "why": "Certo. O Google guarda o estado por deployment."
+   },
+   {
+    "text": "Corrigir mudanças feitas à mão entre applies",
+    "why": "Ele não corrige drift; o Config Connector corrige."
+   },
+   {
+    "text": "Ler o plano",
+    "why": "A prévia ainda precisa ser lida por uma pessoa."
+   }
+  ]
+ },
+ "ex-mkv3ra02": {
+  "prompt": "Com a identidade de quem um deployment do Infrastructure Manager age quando aplica?",
+  "hint": "Nenhum laptop está envolvido.",
+  "choices": [
+   {
+    "text": "A identidade de quem rodou o último comando gcloud",
+    "why": "Essa pessoa o iniciou; o deployment age como a própria conta."
+   },
+   {
+    "text": "A conta padrão de compute do projeto",
+    "why": "O deployment nomeia uma conta de serviço própria."
+   },
+   {
+    "text": "A conta de serviço nomeada no deployment",
+    "why": "Certo. A personificação da lição 5, tornada permanente."
+   },
+   {
+    "text": "A conta de infraestrutura do próprio Google, com toda permissão",
+    "why": "Nenhum deployment ganha permissões ilimitadas; ganha as da conta dele."
+   }
+  ]
+ },
+ "ex-g6asqjew": {
+  "prompt": "Uma configuração que destrói um bucket por engano é aplicada pelo Infrastructure Manager em vez de um laptop. O que muda?",
+  "hint": "Quem executa muda o que o Terraform faz?",
+  "choices": [
+   {
+    "text": "O Infrastructure Manager recusa planos destrutivos",
+    "why": "Ele aplica o que o Terraform planeja, destruição inclusive."
+   },
+   {
+    "text": "O bucket vai para uma lixeira por 30 dias",
+    "why": "Não existe essa lixeira para buckets nesse fluxo."
+   },
+   {
+    "text": "O bucket é destruído do mesmo jeito; a revisão registra",
+    "why": "Certo. O registro é melhor; o resultado é o mesmo."
+   },
+   {
+    "text": "A destruição espera aprovação do suporte do Google",
+    "why": "Ninguém no Google revisa seus planos."
+   }
+  ]
+ },
+ "ex-ecs0nb2m": {
+  "prompt": "Ligue cada ferramenta ao que acontece com uma mudança feita à mão.",
+  "hint": "Uma desfaz; duas esperam.",
+  "pairs": [
+   {
+    "left": "Config Connector",
+    "right": "ela é desfeita"
+   },
+   {
+    "left": "Infrastructure Manager",
+    "right": "ela fica até a próxima revisão"
+   },
+   {
+    "left": "Terraform rodado por você",
+    "right": "ela fica até o próximo plano mostrá-la"
+   }
+  ],
+  "right_distractors": [
+   "ela é copiada para o estado"
+  ]
+ },
+ "ex-jbe2jyaq": {
+  "prompt": "Um time roda AWS e Google Cloud, e quer uma ferramenta e um fluxo de revisão. Qual serve?",
+  "hint": "Qual dos três fala mais de uma nuvem?",
+  "choices": [
+   {
+    "text": "Config Connector",
+    "why": "Só Google."
+   },
+   {
+    "text": "Infrastructure Manager",
+    "why": "Ele roda Terraform, mas só para o Google Cloud."
+   },
+   {
+    "text": "Terraform, rodado pela própria esteira",
+    "why": "Certo. Uma ferramenta, providers para as duas."
+   },
+   {
+    "text": "As duas ferramentas da plataforma, uma por nuvem",
+    "why": "Isso são duas ferramentas, o que queriam evitar."
+   }
+  ]
+ },
+ "ex-ygf4b3r1": {
+  "prompt": "Um bucket está declarado no Terraform e no Config Connector. Como fica cada apply?",
+  "hint": "Dois donos.",
+  "choices": [
+   {
+    "text": "A segunda ferramenta recusa: o bucket tem dono",
+    "why": "Nenhuma verifica outro dono."
+   },
+   {
+    "text": "Como se funcionasse, enquanto cada uma desfaz a outra",
+    "why": "Certo. Escolha um dono por recurso."
+   },
+   {
+    "text": "Elas juntam as configurações num bucket",
+    "why": "Nada se junta; cada uma escreve a sua."
+   },
+   {
+    "text": "O Google cria um segundo bucket com sufixo",
+    "why": "Nomes são únicos; nada inventa sufixo."
+   }
+  ]
+ },
+ "ex-dc8kd5nd": {
+  "prompt": "Por que a loja não usa o Config Connector?",
+  "hint": "Onde a loja roda?",
+  "choices": [
+   {
+    "text": "Ele não consegue descrever buckets do Cloud Storage",
+    "why": "Consegue; o primeiro arquivo da lição é um."
+   },
+   {
+    "text": "Custa mais por bucket que o Terraform",
+    "why": "Não há preço por bucket; o custo é o cluster."
+   },
+   {
+    "text": "Não tem cluster onde rodá-lo",
+    "why": "Certo. Um cluster só para guardar descrições não compensa."
+   },
+   {
+    "text": "Ele não suporta versionamento em buckets",
+    "why": "O exemplo liga o versionamento."
+   }
+  ]
+ },
+ "ex-9s829d4d": {
+  "prompt": "Ponha a mudança de um bucket do Terraform para o Config Connector numa ordem segura.",
+  "hint": "Um dono a cada momento.",
+  "items": [
+   "Escrever o objeto StorageBucket com as mesmas configurações",
+   "terraform state rm do bucket",
+   "Tirar o bloco do recurso dos arquivos do Terraform",
+   "kubectl apply do objeto para o controlador adotá-lo"
+  ],
+  "trap": "Aplicar o objeto antes do state rm é o deslize: por um tempo o bucket tem dois donos."
+ },
+ "ex-b25vavvs": {
+  "prompt": "Quais destes o Config Connector tem e o Terraform rodado numa esteira não tem? Escolha todos os que se aplicam.",
+  "hint": "Pense em drift e em estado.",
+  "choices": [
+   {
+    "text": "Corrigir drift sozinho",
+    "why": "Sim."
+   },
+   {
+    "text": "Um plano antes de cada mudança",
+    "why": "Não. Isso é do Terraform, não do Config Connector."
+   },
+   {
+    "text": "Nenhum arquivo de estado para proteger",
+    "why": "Sim. Os objetos são o estado desejado."
+   },
+   {
+    "text": "Providers para outras nuvens",
+    "why": "Não. Só Google."
+   }
+  ]
+ },
+ "ex-zayz1w38": {
+  "prompt": "Quantas formas de descrever o bucket da loja a tabela de comparação põe lado a lado?",
+  "hint": "Conte as colunas depois da primeira."
+ }
+}
