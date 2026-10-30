@@ -1,0 +1,438 @@
+{
+  "ex-fz3h8jpp": {
+    "prompt": "A Quitanda anexa o bucket `quitanda-raw-prod` a uma zona raw de um lake do Dataplex. O que acontece com os objetos dele?",
+    "hint": "O Dataplex descreve dados; ele guarda algum?",
+    "choices": [
+      {
+        "text": "São copiados para um armazenamento que o lake administra",
+        "why": "O Dataplex não guarda dado; o lake é uma descrição sobre buckets e datasets que ficam onde estão."
+      },
+      {
+        "text": "Nada: o bucket continua o mesmo, onde estava",
+        "why": "Isso. Um asset é uma referência a um bucket ou dataset de verdade, e nenhum byte dele se move."
+      },
+      {
+        "text": "São convertidos para Parquet, o formato curated",
+        "why": "Formatos só mudam quando um job reescreve os dados; uma zona raw guarda os dados como chegaram."
+      },
+      {
+        "text": "Passam a ser lidos só através do Dataplex",
+        "why": "O IAM do bucket continua decidindo quem o lê, com zona ou sem zona."
+      }
+    ]
+  },
+  "ex-hw7x5963": {
+    "prompt": "Uma analista tem `storage.objects.get` em `quitanda-curated-prod` pelo IAM, e o bucket é asset de uma zona curated a que ela nunca recebeu acesso. Ela consegue ler os arquivos com `gcloud storage cat`?",
+    "hint": "Uma zona substitui o IAM, ou o administra?",
+    "choices": [
+      {
+        "text": "Não, porque os acessos da zona têm precedência sobre os do bucket",
+        "why": "Uma zona não tem sistema de permissão próprio que passe por cima do IAM; ela administra vínculos do IAM nos assets."
+      },
+      {
+        "text": "Não, porque arquivos numa zona só são acessíveis pelo BigQuery",
+        "why": "Os arquivos são objetos comuns, e o Cloud Storage os entrega a quem o IAM permite."
+      },
+      {
+        "text": "Sim, porque o IAM do bucket continua decidindo quem o lê",
+        "why": "Isso. O Dataplex administra vínculos por você; ele não se põe entre um leitor e o bucket."
+      },
+      {
+        "text": "Sim, mas só os arquivos que a descoberta ainda não catalogou",
+        "why": "A descoberta decide o que aparece como tabela, não quem pode ler objetos."
+      }
+    ]
+  },
+  "ex-yrrwfvb2": {
+    "prompt": "Ligue cada parte do acervo da Quitanda ao conceito do Dataplex que ela é.",
+    "hint": "Da caixa mais de fora às coisas de verdade dentro dela.",
+    "pairs": [
+      {
+        "left": "`sales`",
+        "right": "o lake"
+      },
+      {
+        "left": "onde os dados chegam como vieram",
+        "right": "uma zona raw"
+      },
+      {
+        "left": "onde moram os dados limpos, presos a um esquema",
+        "right": "uma zona curated"
+      },
+      {
+        "left": "o dataset do BigQuery `planner-dev.curated`",
+        "right": "um asset"
+      }
+    ]
+  },
+  "ex-1shabhrm": {
+    "prompt": "A documentação que você acha diz \"Data Catalog\", um colega diz \"Dataplex Universal Catalog\", e a página de preços diz \"Knowledge Catalog\". O que concluir?",
+    "hint": "Leia a tabela de nomes da seção.",
+    "choices": [
+      {
+        "text": "São três produtos concorrentes entre os quais escolher",
+        "why": "São uma linha de descendência só; o nome mais antigo foi descontinuado em favor do mais novo."
+      },
+      {
+        "text": "No essencial, um produto renomeado conforme cresceu, então confira a data do que lê",
+        "why": "Isso. Os nomes mudaram no calendário do Google, e a página lida em 2026-10-30 diz que os SKUs continuam com o nome Dataplex."
+      },
+      {
+        "text": "Só o Knowledge Catalog existe, então as outras páginas são inventadas",
+        "why": "Os nomes antigos foram produtos reais; renomear não apaga a documentação deles."
+      },
+      {
+        "text": "O Data Catalog é o mais novo, por ter o nome mais simples",
+        "why": "É o mais antigo dos três, e o que está sendo aposentado."
+      }
+    ]
+  },
+  "ex-e8vnxw4e": {
+    "prompt": "A Quitanda cria uma tabela nova no BigQuery. O que precisa acontecer antes que ela apareça na busca do catálogo?",
+    "hint": "De onde vêm as entradas dos próprios serviços do Google Cloud?",
+    "choices": [
+      {
+        "text": "Alguém a registra como uma entrada personalizada",
+        "why": "Entradas personalizadas são para coisas fora do Google Cloud; as do BigQuery são ingeridas."
+      },
+      {
+        "text": "Nada; a entrada dela aparece sozinha no grupo `@bigquery`",
+        "why": "Isso. Os metadados técnicos do BigQuery são ingeridos automaticamente, no grupo de sistema `@bigquery`."
+      },
+      {
+        "text": "Uma varredura de descoberta precisa rodar sobre o dataset",
+        "why": "A descoberta lê arquivos em buckets; uma tabela do BigQuery já tem os metadados no BigQuery."
+      },
+      {
+        "text": "Um tipo de aspecto precisa ser definido para ela",
+        "why": "Aspectos acrescentam significado a uma entrada; a entrada existe sem nenhum."
+      }
+    ]
+  },
+  "ex-w3f8ksw7": {
+    "prompt": "A Quitanda grava um aspecto `ownership` numa tabela e deixa de fora `owner_team`, que o tipo de aspecto marca como obrigatório. O que acontece?",
+    "hint": "Qual a diferença entre um aspecto estruturado e uma página de wiki?",
+    "choices": [
+      {
+        "text": "O aspecto é gravado, e uma varredura depois o aponta",
+        "why": "Nada espera por varredura; o tipo é conferido quando o aspecto é gravado."
+      },
+      {
+        "text": "O aspecto é gravado com o dono vazio",
+        "why": "Um campo obrigatório não tem vazio padrão; deixá-lo de fora é o erro."
+      },
+      {
+        "text": "O aspecto é recusado no momento em que é gravado",
+        "why": "Isso. O tipo de aspecto é um esquema, e um valor que o quebra é recusado, que é o que mantém os metadados estruturados."
+      },
+      {
+        "text": "A tabela some da busca até ser corrigida",
+        "why": "Aspectos descrevem uma entrada; um aspecto ruim é recusado, ele não esconde a tabela."
+      }
+    ]
+  },
+  "ex-7snwnrjw": {
+    "prompt": "Alguém edita a entrada de `curated.orders` no catálogo para que a descrição diga que uma coluna foi removida, e nada mais muda. O que as consultas do BigQuery na tabela fazem?",
+    "hint": "De onde o BigQuery lê o esquema de uma tabela?",
+    "choices": [
+      {
+        "text": "Falham na coluna que a descrição diz que sumiu",
+        "why": "O BigQuery não lê o catálogo para planejar uma consulta; a descrição não muda nada do que ele faz."
+      },
+      {
+        "text": "Rodam exatamente como antes",
+        "why": "Isso. O catálogo é um índice sobre os metadados do próprio BigQuery, então uma descrição errada engana pessoas e não quebra consulta nenhuma."
+      },
+      {
+        "text": "Devolvem a coluna vazia até a entrada ser corrigida",
+        "why": "Os dados da coluna estão no armazenamento do BigQuery, intocados por qualquer texto do catálogo."
+      },
+      {
+        "text": "São recusadas até o esquema e a entrada concordarem",
+        "why": "Nada compara os dois; é por isso que a precisão do catálogo é questão de disciplina."
+      }
+    ]
+  },
+  "ex-yfw8r2x7": {
+    "prompt": "No antigo Data Catalog, uma tag seguia um modelo de tag; no catálogo do Dataplex o mesmo metadado estruturado é um ___, e o modelo dele é um tipo de ___.",
+    "hint": "Uma palavra, a mesma nas duas lacunas.",
+    "blanks": [
+      {
+        "accept": [
+          "aspecto",
+          "aspect"
+        ]
+      },
+      {
+        "accept": [
+          "aspecto",
+          "aspect"
+        ]
+      }
+    ]
+  },
+  "ex-aj1cyegq": {
+    "prompt": "O que uma varredura de perfil diz que uma varredura de qualidade não diz, e o contrário?",
+    "hint": "Uma descreve, a outra julga.",
+    "choices": [
+      {
+        "text": "O perfil descreve cada coluna; a qualidade aprova ou reprova regras",
+        "why": "Isso. Um perfil informa nulos, valores distintos e faixas; regras de qualidade transformam expectativas em aprovado ou reprovado."
+      },
+      {
+        "text": "O perfil confere o esquema; a qualidade confere as linhas",
+        "why": "As duas olham as linhas; a diferença está entre descrevê-las e julgá-las."
+      },
+      {
+        "text": "O perfil roda uma vez; a qualidade só roda agendada",
+        "why": "As duas podem rodar sob demanda ou agendadas."
+      },
+      {
+        "text": "O perfil é grátis, e só a qualidade é cobrada",
+        "why": "As duas são cobradas como processamento premium, por DCU-hora."
+      }
+    ]
+  },
+  "ex-ae6v3r2q": {
+    "prompt": "A condição de uma regra é verdadeira em 1.940 de 2.000 linhas. Qual é o maior limite, em porcentagem, com que a regra ainda passa?",
+    "hint": "A regra passa quando a fatia de linhas aprovadas alcança o limite."
+  },
+  "ex-1kbjfg2b": {
+    "prompt": "No `scan.py`, por que a regra de faixa sobre `total_cents` contou o pedido sem total como falha?",
+    "hint": "Quanto é `NULL BETWEEN 1 AND 500000`?",
+    "choices": [
+      {
+        "text": "Porque o DuckDB lê um campo vazio como zero",
+        "why": "O campo vazio foi lido como nulo; o perfil o contou como 5,0% nulo."
+      },
+      {
+        "text": "Porque a regra de faixa roda antes a regra de não nulo",
+        "why": "Cada regra é avaliada sozinha; não há ordem entre elas."
+      },
+      {
+        "text": "Uma condição sobre um nulo não é verdadeira, e só verdadeiro passa",
+        "why": "Isso. A comparação não é verdadeira nem falsa, então a linha não conta como aprovada, como o Dataplex trata nulos a não ser que a regra mande ignorá-los."
+      },
+      {
+        "text": "Porque -500 e o nulo são a mesma linha",
+        "why": "São dois pedidos diferentes, `o-10013` e `o-10004`."
+      }
+    ]
+  },
+  "ex-mt671gs8": {
+    "prompt": "A regra do telefone passa toda noite com limite de 95%, e em três meses a fatia de números bons desliza de 99% para 95,2%. O que o aprovado ou reprovado de cada noite diz ao time?",
+    "hint": "O que um limite esconde?",
+    "choices": [
+      {
+        "text": "Que algo está errado, já que uma regra avisa antes de reprovar",
+        "why": "Uma regra tem duas respostas, aprovado e reprovado; ela disse aprovado toda noite."
+      },
+      {
+        "text": "Nada; o declínio só aparece se os resultados forem guardados e comparados",
+        "why": "Isso. O veredito escondeu uma queda de quase quatro pontos, e é por isso que os resultados são guardados e lidos como série."
+      },
+      {
+        "text": "Que o limite é rigoroso demais e deve baixar",
+        "why": "Baixá-lo esconderia o declínio por mais tempo."
+      },
+      {
+        "text": "Que a varredura está quebrada, já que os números mudam",
+        "why": "Números que mudam são os dados mudando; a varredura os informou corretamente."
+      }
+    ]
+  },
+  "ex-4x4b1w7j": {
+    "prompt": "A exportação de finanças de 1º de outubro está com números errados. Que pergunta de linhagem acha de onde eles vieram?",
+    "hint": "Seguir as setas para trás ou para a frente?",
+    "choices": [
+      {
+        "text": "A jusante da exportação",
+        "why": "A jusante da exportação é o que foi feito a partir dela, e nada foi."
+      },
+      {
+        "text": "A montante da exportação",
+        "why": "Isso. O `edges.py upstream` voltou por `daily_revenue` e `load_orders` até o CSV bruto e a tabela de clientes."
+      },
+      {
+        "text": "A montante do arquivo bruto de pedidos",
+        "why": "O arquivo bruto não tem nada a montante neste grafo; é onde a busca termina."
+      },
+      {
+        "text": "Uma busca por \"finance\" no catálogo",
+        "why": "A busca acha a entrada da exportação; não diz de que ela foi feita."
+      }
+    ]
+  },
+  "ex-rk0zj5jy": {
+    "prompt": "Um job lê três tabelas e escreve duas. O evento da execução concluída vira quantas arestas no grafo do `edges.py`?",
+    "hint": "Cada par de uma entrada e uma saída é uma aresta."
+  },
+  "ex-5vad77fq": {
+    "prompt": "Um job informa a saída como `planner-dev.curated.orders` e o seguinte informa a entrada como `planner-dev:curated.orders`, com dois-pontos. O que o grafo de linhagem mostra?",
+    "hint": "Como dois eventos concordam que mexeram na mesma tabela?",
+    "choices": [
+      {
+        "text": "Uma tabela só, porque o serviço normaliza o separador",
+        "why": "Os nomes são comparados como estão escritos; nada nos eventos diz que as duas grafias são uma tabela."
+      },
+      {
+        "text": "Um erro, porque o segundo nome é inválido",
+        "why": "Os dois são strings que um evento pode levar; nada recusa nenhum deles."
+      },
+      {
+        "text": "Dois nós desconectados, e uma quebra no grafo",
+        "why": "Isso. O nome é a junção inteira, então a busca a montante do segundo job para numa tabela que parece vir do nada."
+      },
+      {
+        "text": "Os dois nós, ligados por uma aresta que o serviço deduz",
+        "why": "Nenhuma aresta é deduzida entre dois nomes; uma aresta só vem das entradas e saídas de um job."
+      }
+    ]
+  },
+  "ex-4pn71017": {
+    "prompt": "Pela página de preços do Dataplex, qual destas coisas é cobrada?",
+    "hint": "Quem faz o trabalho de achar as ligações?",
+    "choices": [
+      {
+        "text": "Mandar eventos OpenLineage com `ProcessOpenLineageRunEvent`",
+        "why": "A página chama isso de linhagem personalizada e diz que é grátis."
+      },
+      {
+        "text": "Ler a linhagem de volta com os métodos get e list da API",
+        "why": "A página diz que consultar a linhagem é grátis."
+      },
+      {
+        "text": "A análise automática de linhagem dos jobs do BigQuery",
+        "why": "Isso. O Google gasta computação lendo os jobs para achar as ligações, e cobra como processamento premium em DCU-hora."
+      },
+      {
+        "text": "Informar processos e execuções a partir de um cliente próprio",
+        "why": "A página diz que informar os metadados do processo é grátis."
+      }
+    ]
+  },
+  "ex-mjzccpgd": {
+    "prompt": "`phone` tem uma policy tag com controle de acesso ligado, e uma analista sem Fine-Grained Reader roda `SELECT * FROM curated.orders`. O que acontece?",
+    "hint": "A coluna é escondida, ou a consulta é recusada?",
+    "choices": [
+      {
+        "text": "A consulta falha com erro de acesso em `phone`",
+        "why": "Isso. Nomear a coluna, o que o `*` faz, é recusado; `SELECT * EXCEPT (phone)` roda."
+      },
+      {
+        "text": "A consulta roda e `phone` volta nulo",
+        "why": "Isso é mascaramento, que precisa de uma política de dados e do papel Masked Reader; sem ele a consulta é recusada."
+      },
+      {
+        "text": "A consulta roda sem a coluna `phone`",
+        "why": "O BigQuery não some com uma coluna em silêncio; a analista precisa deixá-la de fora."
+      },
+      {
+        "text": "A consulta roda, porque `*` não nomeia coluna nenhuma",
+        "why": "`*` nomeia todas as colunas, `phone` inclusive."
+      }
+    ]
+  },
+  "ex-f9p34e6p": {
+    "prompt": "As analistas recebem a máscara SHA-256 de `phone` para agrupar pedidos pelo telefone do cliente. Por que isso não é anonimização?",
+    "hint": "O que qualquer pessoa pode fazer com uma lista de todos os telefones da cidade?",
+    "choices": [
+      {
+        "text": "Porque o SHA-256 pode ser decifrado com a chave certa",
+        "why": "Um hash não tem chave e não se decifra; a fraqueza está em outro lugar."
+      },
+      {
+        "text": "Porque a máscara sai quando a consulta é exportada",
+        "why": "A máscara vale para o que a consulta devolve, exportações inclusive."
+      },
+      {
+        "text": "Porque valores mascarados ficam visíveis para Fine-Grained Readers",
+        "why": "Eles veem os valores reais por projeto; não é isso que enfraquece o hash."
+      },
+      {
+        "text": "Porque qualquer um pode aplicar o hash a todo número possível e casar",
+        "why": "Isso. Telefones são poucos o bastante para fazer o hash de todos, e um hash determinístico então volta direto ao número."
+      }
+    ]
+  },
+  "ex-bmcqd283": {
+    "prompt": "A Quitanda tem um aspecto `ownership` dizendo `contains_personal_data` em `curated.orders` e uma policy tag em `phone`. O que cada um faz?",
+    "hint": "Um é metadado, o outro é imposição.",
+    "choices": [
+      {
+        "text": "O aspecto informa; a tag faz o BigQuery recusar a coluna",
+        "why": "Isso. O aspecto aparece na busca; a tag é conferida em toda consulta."
+      },
+      {
+        "text": "Os dois fazem o BigQuery recusar a coluna, então um sobra",
+        "why": "Um aspecto é metadado; nenhum motor o impõe."
+      },
+      {
+        "text": "O aspecto mascara a coluna, e a tag a documenta",
+        "why": "Mascaramento é uma política de dados numa policy tag; um aspecto só descreve."
+      },
+      {
+        "text": "A tag esconde a tabela da busca, e o aspecto dá acesso",
+        "why": "Nenhum dos dois faz isso; a busca segue o IAM, e acessos são papéis do IAM."
+      }
+    ]
+  },
+  "ex-ht15bhca": {
+    "prompt": "Ligue cada pergunta da Quitanda à parte desta aula que a responde.",
+    "hint": "Busca, varredura, linhagem, política.",
+    "pairs": [
+      {
+        "left": "Existe uma tabela de entregas, e de quem ela é?",
+        "right": "o catálogo, com um aspecto"
+      },
+      {
+        "left": "A carga de ontem trouxe ids de pedido duplicados?",
+        "right": "uma varredura de qualidade"
+      },
+      {
+        "left": "Quais exportações usaram a tabela de clientes ruim?",
+        "right": "linhagem, a jusante"
+      },
+      {
+        "left": "Quem pode ler os telefones?",
+        "right": "uma policy tag na coluna"
+      }
+    ]
+  },
+  "ex-ht2anrdn": {
+    "prompt": "Quais destas coisas esta aula realmente rodou, em vez de tirar da documentação do Google? Escolha todas as que ela rodou.",
+    "hint": "Dois programas rodaram, e os dois eram modelos.",
+    "choices": [
+      {
+        "text": "Quatro regras de qualidade calculadas sobre vinte pedidos com o DuckDB",
+        "why": "Sim, o `scan.py`, como modelo do que uma regra do Dataplex calcula."
+      },
+      {
+        "text": "Uma busca a montante num grafo montado a partir de eventos OpenLineage",
+        "why": "Sim, o `edges.py`, como modelo do que o serviço de linhagem responde."
+      },
+      {
+        "text": "Um lake com uma zona raw e uma curated",
+        "why": "Os comandos `gcloud dataplex` foram mostrados e não executados; não há emulador."
+      },
+      {
+        "text": "Uma consulta recusada por uma policy tag em `phone`",
+        "why": "As policy tags foram ensinadas a partir da documentação; nenhum BigQuery rodou aqui."
+      },
+      {
+        "text": "Um evento mandado para `processOpenLineageRunEvent`",
+        "why": "A requisição foi mostrada e não executada; os eventos ficaram em arquivos."
+      }
+    ]
+  },
+  "ex-kdd88ewh": {
+    "prompt": "O arquivo bruto de pedidos de ontem foi carregado duas vezes. Ponha os passos para lidar com isso numa ordem sensata.",
+    "hint": "Ache o estrago antes de consertá-lo, e evite o próximo por último.",
+    "items": [
+      "Confirmar as duplicatas com uma regra de unicidade em `order_id`",
+      "Percorrer a linhagem a jusante a partir do arquivo bruto",
+      "Rodar de novo os jobs que fizeram cada tabela e exportação afetada",
+      "Pôr a regra de unicidade na varredura de qualidade noturna"
+    ]
+  }
+}
