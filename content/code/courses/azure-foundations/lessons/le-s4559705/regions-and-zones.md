@@ -65,9 +65,9 @@ subject; and **`availabilityZoneMappings`**, which says where this subscription'
 ## Availability zones
 
 **An availability zone is one or more datacentres inside a region, with its own power, its own
-cooling and its own network**, close enough to the other zones for a round trip of a couple of
-milliseconds and far enough that a fire, a flood or a failed substation takes out one zone and not
-two. `brazilsouth` has three. `brazilsoutheast` has none, and is a region Microsoft opens only to
+cooling and its own network.** The zones are close enough to each other for a round trip of a couple
+of milliseconds, and far enough apart that a fire, a flood or a failed substation takes out one zone
+and not two. `brazilsouth` has three. `brazilsoutheast` has none, and is a region Microsoft opens only to
 customers who need a second region inside Brazil, for recovery or for law.
 
 A resource meets zones in one of three ways, and every resource's documentation says which:

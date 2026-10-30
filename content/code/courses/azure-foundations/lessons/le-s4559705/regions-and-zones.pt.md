@@ -66,9 +66,9 @@ e **`availabilityZoneMappings`**, que diz onde as zonas desta assinatura realmen
 ## Zonas de disponibilidade
 
 **Uma zona de disponibilidade é um ou mais datacenters dentro de uma região, com energia, refrigeração
-e rede próprias**, perto o bastante das outras zonas para uma ida e volta de um par de milissegundos
-e longe o bastante para que um incêndio, uma enchente ou uma subestação com defeito derrube uma zona e
-não duas. A `brazilsouth` tem três. A `brazilsoutheast` não tem nenhuma, e é uma região que a
+e rede próprias.** As zonas ficam perto o bastante umas das outras para uma ida e volta de um par de
+milissegundos, e longe o bastante para que um incêndio, uma enchente ou uma subestação com defeito
+derrube uma zona e não duas. A `brazilsouth` tem três. A `brazilsoutheast` não tem nenhuma, e é uma região que a
 Microsoft só abre para clientes que precisam de uma segunda região dentro do Brasil, por recuperação
 ou por lei.
 
