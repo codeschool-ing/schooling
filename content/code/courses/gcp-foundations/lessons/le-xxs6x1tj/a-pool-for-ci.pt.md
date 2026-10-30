@@ -61,7 +61,7 @@ resource "google_iam_workload_identity_pool_provider" "github" {
   attribute_condition = "assertion.repository_owner == 'example'"
 }
 
-# The second lock: only the planner repository, on main, may act as the deployer.
+# The second lock: only the planner repository may act as the deployer.
 resource "google_service_account_iam_member" "ci_acts_as_deployer" {
   service_account_id = "projects/planner-dev/serviceAccounts/deployer@planner-dev.iam.gserviceaccount.com"
   role               = "roles/iam.workloadIdentityUser"
