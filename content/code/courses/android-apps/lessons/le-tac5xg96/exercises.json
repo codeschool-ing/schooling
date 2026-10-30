@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-39gsvc35",
+    "version": 1,
+    "section": "async-image",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `CourseCard` pass `contentDescription = null` to its `AsyncImage`?",
+    "hint": "What does the cover add that the text does not?",
+    "choices": [
+      {
+        "text": "Coil fills it in from the URL",
+        "correct": false,
+        "why": "Nothing generates a description."
+      },
+      {
+        "text": "It is decoration",
+        "correct": true,
+        "why": "Right: a screen reader skips it."
+      },
+      {
+        "text": "A network image cannot have one",
+        "correct": false,
+        "why": "Any image can; this one does not need it."
+      },
+      {
+        "text": "It saves memory",
+        "correct": false,
+        "why": "A string costs nothing next to a bitmap."
+      }
+    ]
+  },
+  {
+    "id": "ex-8114b4vb",
+    "version": 1,
+    "section": "async-image",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each `AsyncImage` painter to when it is drawn.",
+    "hint": "Section 05 drew all three.",
+    "pairs": [
+      {
+        "left": "`placeholder`",
+        "right": "while the image loads"
+      },
+      {
+        "left": "`error`",
+        "right": "when the load failed"
+      },
+      {
+        "left": "`fallback`",
+        "right": "when the model is `null`"
+      }
+    ],
+    "right_distractors": [
+      "when the image is too large for memory"
+    ]
+  },
+  {
+    "id": "ex-kav2jce0",
+    "version": 1,
+    "section": "async-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which job does `AsyncImage` do that a plain `BitmapFactory.decodeStream` on the network bytes would not?",
+    "hint": "Size, caches, cancellation.",
+    "choices": [
+      {
+        "text": "Turn PNG bytes into pixels",
+        "correct": false,
+        "why": "Both decode; the difference is how big and what happens after."
+      },
+      {
+        "text": "Read JPEG as well as PNG",
+        "correct": false,
+        "why": "`BitmapFactory` reads both."
+      },
+      {
+        "text": "Download over HTTPS",
+        "correct": false,
+        "why": "Downloading is OkHttp's part, used by either."
+      },
+      {
+        "text": "Decode at the size drawn",
+        "correct": true,
+        "why": "Right, and cache it and cancel it with the composable."
+      }
+    ]
+  },
+  {
+    "id": "ex-x540vpm4",
+    "version": 1,
+    "section": "bitmap-memory",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes does a 4000 × 3000 bitmap in `ARGB_8888` take?",
+    "hint": "Four bytes a pixel.",
+    "value": 48000000,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-d5j610z4",
+    "version": 1,
+    "section": "bitmap-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cover's PNG was 53,279 bytes and its bitmap 48,000,000. Why so different?",
+    "hint": "What does a screen draw?",
+    "choices": [
+      {
+        "text": "Decoding undoes the compression",
+        "correct": true,
+        "why": "Right: the bitmap depends on pixels, not on the file."
+      },
+      {
+        "text": "Coil adds a copy for each cache",
+        "correct": false,
+        "why": "The figure is one bitmap's own size."
+      },
+      {
+        "text": "Robolectric inflates bitmaps",
+        "correct": false,
+        "why": "Width × height × 4 is the same on a phone."
+      },
+      {
+        "text": "PNG files are stored at a quarter of their size",
+        "correct": false,
+        "why": "Compression depends on content; this flat colour compressed far more."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgnk3p10",
+    "version": 1,
+    "section": "bitmap-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cover was asked for at 720 × 400 and came back 533 × 400. Why?",
+    "hint": "The original is 4:3.",
+    "choices": [
+      {
+        "text": "The memory cache was full",
+        "correct": false,
+        "why": "The cache does not resize what it is given."
+      },
+      {
+        "text": "Robolectric's screen is 533 pixels wide",
+        "correct": false,
+        "why": "The test asked for an explicit size."
+      },
+      {
+        "text": "It keeps the proportions",
+        "correct": true,
+        "why": "Right: 4:3 at a height of 400 is 533 wide."
+      },
+      {
+        "text": "PNG cannot store widths above 533",
+        "correct": false,
+        "why": "The original was 4000 wide."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxvgre49",
+    "version": 1,
+    "section": "bitmap-memory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where is an image most likely to be decoded at full size in a Compose app?",
+    "hint": "`AsyncImage` asks for the size it was measured into.",
+    "choices": [
+      {
+        "text": "In an `AsyncImage` inside a 120 dp card",
+        "correct": false,
+        "why": "Its bounded size is what it requests."
+      },
+      {
+        "text": "A notification loaded with no size",
+        "correct": true,
+        "why": "Right: nothing measured a space for it."
+      },
+      {
+        "text": "In the disk cache",
+        "correct": false,
+        "why": "The disk holds bytes, not bitmaps."
+      },
+      {
+        "text": "In the placeholder",
+        "correct": false,
+        "why": "A placeholder is a painter, not the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfn6hnhp",
+    "version": 1,
+    "section": "bitmap-memory",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under Robolectric, the image loader needs `imageDecoderEnabled(___)` to decode at all.",
+    "hint": "On a phone you leave the line out.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tbg97rwb",
+    "version": 1,
+    "section": "caches",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the places Coil looks for a cover, from the first to the last.",
+    "hint": "The cheapest first.",
+    "items": [
+      "the memory cache",
+      "the disk cache",
+      "the network"
+    ]
+  },
+  {
+    "id": "ex-95peavmj",
+    "version": 1,
+    "section": "caches",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the memory cache was cleared, where did the fourth load of the cover come from?",
+    "hint": "The server counted one request.",
+    "choices": [
+      {
+        "text": "`NETWORK`",
+        "correct": false,
+        "why": "The server received one request in total."
+      },
+      {
+        "text": "`MEMORY_CACHE`",
+        "correct": false,
+        "why": "The memory cache had just been cleared."
+      },
+      {
+        "text": "It failed",
+        "correct": false,
+        "why": "The test printed a data source for every load."
+      },
+      {
+        "text": "`DISK`",
+        "correct": true,
+        "why": "Right: read and decoded again, not downloaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s7vbbbg",
+    "version": 1,
+    "section": "caches",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Covers never seem to come from the disk cache. What does the lesson tell you to check first?",
+    "hint": "Who else has a say?",
+    "choices": [
+      {
+        "text": "The caching headers",
+        "correct": true,
+        "why": "Right: Coil's network fetcher respects them."
+      },
+      {
+        "text": "The memory cache's percentage",
+        "correct": false,
+        "why": "The memory cache has nothing to do with disk writes."
+      },
+      {
+        "text": "Whether the app holds the `INTERNET` permission",
+        "correct": false,
+        "why": "Without it nothing would load at all."
+      },
+      {
+        "text": "The `contentScale`",
+        "correct": false,
+        "why": "It changes how the image is drawn, not where it is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-nam2gzna",
+    "version": 1,
+    "section": "caches",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the planner put its disk cache in `cacheDir` and not in `filesDir`?",
+    "hint": "What may Android do to one of them?",
+    "choices": [
+      {
+        "text": "`filesDir` is read-only",
+        "correct": false,
+        "why": "Apps write to `filesDir` all the time."
+      },
+      {
+        "text": "Coil refuses any other directory",
+        "correct": false,
+        "why": "The directory is a parameter."
+      },
+      {
+        "text": "Android empties `cacheDir` first when space runs short",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`cacheDir` is shared with other apps",
+        "correct": false,
+        "why": "It is private to the app."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbx7c12c",
+    "version": 1,
+    "section": "caches",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `CacheTest`, how many requests did the server receive for four loads?",
+    "hint": "`requests:` in the output.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-w89t6ev1",
+    "version": 1,
+    "section": "states",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are all four cards in the screenshot the same height?",
+    "hint": "What sizes the strip?",
+    "choices": [
+      {
+        "text": "The fake engine returns images of one size",
+        "correct": false,
+        "why": "The failed and missing cards have no image at all."
+      },
+      {
+        "text": "The modifier sizes the strip",
+        "correct": true,
+        "why": "Right: nothing moves when a cover arrives."
+      },
+      {
+        "text": "Roborazzi crops every card",
+        "correct": false,
+        "why": "Roborazzi saves what was drawn."
+      },
+      {
+        "text": "A `Card` has a fixed height",
+        "correct": false,
+        "why": "A `Card` wraps its content."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjvg7b3j",
+    "version": 1,
+    "section": "states",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the screenshot test use `FakeImageLoaderEngine` instead of a MockWebServer?",
+    "hint": "A screenshot has to be the same every time.",
+    "choices": [
+      {
+        "text": "MockWebServer cannot serve images",
+        "correct": false,
+        "why": "Sections 03 and 04 served PNGs from it."
+      },
+      {
+        "text": "Roborazzi requires it",
+        "correct": false,
+        "why": "Roborazzi captures whatever is on screen."
+      },
+      {
+        "text": "It decodes faster than Coil",
+        "correct": false,
+        "why": "It replaces the loading, not the decoding speed."
+      },
+      {
+        "text": "It answers each URL at once",
+        "correct": true,
+        "why": "Right, including a load that never finishes."
+      }
+    ]
+  },
+  {
+    "id": "ex-r35f09fq",
+    "version": 1,
+    "section": "states",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A red strip alone marks a failed cover. Who loses information?",
+    "hint": "Lesson 7's rules.",
+    "choices": [
+      {
+        "text": "Somebody who cannot tell red from grey",
+        "correct": true,
+        "why": "Right: add an icon or a line of text."
+      },
+      {
+        "text": "Nobody, as the card name is still there",
+        "correct": false,
+        "why": "The name says which course, not that its cover failed."
+      },
+      {
+        "text": "Only users of dark mode",
+        "correct": false,
+        "why": "The problem is colour as the only signal, in either theme."
+      },
+      {
+        "text": "The screen reader, which reads the colour",
+        "correct": false,
+        "why": "A screen reader reads no colour at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjbr6p4y",
+    "version": 1,
+    "section": "lists",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At full size, the memory cache held 0 of 40 covers. Why?",
+    "hint": "Compare one bitmap with the limit.",
+    "choices": [
+      {
+        "text": "The disk cache was turned off",
+        "correct": false,
+        "why": "That affects disk, not memory."
+      },
+      {
+        "text": "The server failed for unsized requests",
+        "correct": false,
+        "why": "Every request was served."
+      },
+      {
+        "text": "Each bitmap was bigger than the cache",
+        "correct": true,
+        "why": "Right: 48,000,000 bytes against a limit of 3,355,443."
+      },
+      {
+        "text": "Coil never caches unsized images",
+        "correct": false,
+        "why": "It would, if they fitted; section 04's 852,800 bytes did."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qggfgy5",
+    "version": 1,
+    "section": "lists",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a memory limit of 3,355,443 bytes, how many covers of 852,800 bytes fit at once?",
+    "hint": "The sized run held 2,558,400 bytes.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-18g4713z",
+    "version": 1,
+    "section": "lists",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `CourseList` give `items` a `key`?",
+    "hint": "Insert a course at the top.",
+    "choices": [
+      {
+        "text": "Coil uses it as the cache key",
+        "correct": false,
+        "why": "Coil keys by the request's data and size."
+      },
+      {
+        "text": "So each card's state, its loaded cover included, follows the course",
+        "correct": true,
+        "why": "Right, and not the position."
+      },
+      {
+        "text": "A `LazyColumn` will not compile without it",
+        "correct": false,
+        "why": "The key is optional."
+      },
+      {
+        "text": "It sorts the courses by id",
+        "correct": false,
+        "why": "The list keeps the order it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bj1zwb1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these reduce the memory a list of covers takes? Choose all that apply.",
+    "hint": "Memory is pixels.",
+    "choices": [
+      {
+        "text": "Decoding each cover at the size of its card",
+        "correct": true,
+        "why": "Yes: 852,800 bytes instead of 48,000,000."
+      },
+      {
+        "text": "A larger disk cache",
+        "correct": false,
+        "why": "Disk is not memory."
+      },
+      {
+        "text": "A memory cache with a limit, evicting the least recently used",
+        "correct": true,
+        "why": "Yes: the cache never grows past its limit."
+      },
+      {
+        "text": "Serving smaller PNG files at the same pixel size",
+        "correct": false,
+        "why": "The bitmap depends on pixels, not on the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-7d8v71q2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student flings the course list past thirty cards in a second. What happens to the covers of the cards that flew past?",
+    "hint": "A request belongs to the composable's lifetime.",
+    "choices": [
+      {
+        "text": "All thirty finish downloading and decoding anyway",
+        "correct": false,
+        "why": "That would spend the network and memory section 06 is about saving."
+      },
+      {
+        "text": "They are decoded at full size to be safe",
+        "correct": false,
+        "why": "Nothing changes the requested size."
+      },
+      {
+        "text": "The list waits for each cover before scrolling on",
+        "correct": false,
+        "why": "Loading never blocks the main thread."
+      },
+      {
+        "text": "They are cancelled",
+        "correct": true,
+        "why": "Right: `AsyncImage` does it by itself."
+      }
+    ]
+  }
+]
