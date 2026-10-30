@@ -21,6 +21,5 @@ Thursday.**
    has a number.
 
 For the shop, the decisions came out as: snapshot and delete the two disks, delete `pip-test` and
-`asp-shop-old` after their owners agreed, resize `vm-shop-batch` from eight vCPUs to two through the
-pipeline, and put `vm-reports` on a start-and-stop schedule with Hybrid Benefit switched on, from lesson 22.
+`asp-shop-old` after their owners agreed, resize `vm-shop-batch` from eight vCPUs to two through the pipeline. And `vm-reports` goes on a start-and-stop schedule with Hybrid Benefit switched on, from lesson 22.
 None of these changes was made, because none of these resources exists outside this course.

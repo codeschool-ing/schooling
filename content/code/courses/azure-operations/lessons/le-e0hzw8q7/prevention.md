@@ -14,8 +14,7 @@ against a different way of losing the file, and each is a setting rather than a 
 | **key access off**, data role for two identities | anybody who can list keys reading or writing state |
 | **its own resource group**, `rg-tfstate` | a `destroy` of the application taking its own record with it |
 
-The third is a **management lock**, a Resource Manager feature distinct from the lease of lesson 6: a
-lease guards one blob's content for the length of an `apply`, while a lock guards a resource from deletion
+The third is a **management lock**, a Resource Manager feature distinct from the lease of lesson 6. A lease guards one blob's content for the length of an `apply`; a lock guards a resource from deletion
 until somebody with the right role removes the lock. Even an Owner has to remove it first, which is the
 point: deleting the state account becomes two deliberate acts instead of one careless one.
 

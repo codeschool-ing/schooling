@@ -36,6 +36,5 @@ o número que as pessoas pegam, e é o errado: um compromisso de três ficaria p
 o mesmo que o piso aqui; num uso com mais picos, o percentil 10 é medida mais segura que o mínimo, que uma única hora calma fora do
 comum consegue puxar para baixo.
 
-Os dados que esta lição gera são um mês. Uma decisão real usa mais tempo, três meses pelo menos, para uma baixa sazonal entrar, e
-pergunta se a carga vai existir pelo prazo inteiro: um compromisso de três anos em algo que vai ser substituído na próxima
+Os dados que esta lição gera são um mês. Uma decisão real usa mais tempo, três meses pelo menos, para uma baixa sazonal entrar. Também pergunta se a carga vai existir pelo prazo inteiro: um compromisso de três anos em algo que vai ser substituído na próxima
 primavera é uma conta por algo desligado.

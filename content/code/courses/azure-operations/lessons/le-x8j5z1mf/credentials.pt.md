@@ -42,6 +42,6 @@ export ARM_USE_OIDC=true          # exchange the pipeline's token; no secret
 A última linha da tabela é a que se evita, por todos os motivos que a lição 2 deu. **Um segredo escrito no bloco do
 provider é um segredo no repositório**, e o repositório sobrevive a toda rotação.
 
-A identidade decide o que o Terraform consegue mudar, então vale a mesma regra de qualquer esteira: a identidade que
+A identidade decide o que o Terraform consegue mudar, então vale a mesma regra de qualquer esteira. A identidade que
 planeja pull requests só precisa ler, e a que aplica a `main` ganha Contributor nos grupos de recursos que gerencia,
 não Owner na assinatura.

@@ -18,7 +18,7 @@ TimeGenerated         Caller             ActivityStatusValue  sku  before
 
 One deletion, a test storage account in `rg-test-ana`, by `ana`, on Saturday evening. The second query
 answers the question lesson 15 needed: everything that happened to the database, in order, with the SKU
-before and after, read out of `Properties` with `tostring()`, because a dynamic value has to be given a
+before and after, read out of `Properties` with `tostring()`. A dynamic value has to be given a
 type before it can be compared or displayed as text.
 
 The second question: *what has each identity been doing?*

@@ -101,5 +101,5 @@ quarenta minutos.
 
 Duas coisas que o emulador não mostra. Num workspace, os logs levam alguns minutos para chegar, então a regra real vê cada
 janela com atraso, e um alerta real dispara alguns minutos depois do que esta tabela diz. E a avaliação das 17:25 lembra por
-que o limite é baixo: 9 falhas em 22 ainda eram 41%, bem acima de 5%, e um limite em 50% teria resolvido o alerta no meio do
+que o limite é baixo: 9 falhas em 22 ainda eram 41%, bem acima de 5%. Um limite em 50% teria resolvido o alerta no meio do
 incidente e disparado de novo cinco minutos depois.

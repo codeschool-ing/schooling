@@ -22,9 +22,7 @@ Application Insights query view the same field is called `operation_Id`; the wor
 `OperationId`.)
 
 Lesson 9 loaded `AppRequests`. This lesson adds `AppDependencies`, generated from it the same way and
-saying so: every write request makes one SQL call, every checkout also calls the payment provider, and the
-checkouts of Thursday's incident made SQL calls that took three seconds, failing with `-2`, which is the
-code .NET's SQL client reports for a timeout. Save it as `dependencies.kql` beside the other files:
+saying so: every write request makes one SQL call, every checkout also calls the payment provider. The checkouts of Thursday's incident made SQL calls that took three seconds and failed with `-2`, the code .NET's SQL client reports for a timeout. Save it as `dependencies.kql` beside the other files:
 
 ```kql
 // dependencies.kql: the calls each write request made, in the shape of AppDependencies

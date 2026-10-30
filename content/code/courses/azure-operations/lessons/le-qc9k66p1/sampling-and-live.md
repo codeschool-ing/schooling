@@ -26,8 +26,7 @@ AppRequests
 
 `count()` on the sample says 62,764 requests; `sum(ItemCount)` says 251,056, close to the true 249,717.
 **Every count over sampled data is `sum(ItemCount)`, never `count()`.** The failures show the other side
-of sampling: 346 in all became 85 rows standing for 340, an estimate within 2% here, and for a rare
-event, a handful a day, the estimate can be badly off or a failure can vanish from the sample altogether.
+of sampling: 346 in all became 85 rows standing for 340, an estimate within 2% here. For a rare event, a handful a day, the estimate can be badly off or a failure can vanish from the sample altogether.
 That is why the shop samples its successful `GET /products` requests and keeps every failure and every
 checkout: ingestion sampling rules and the SDK's settings can exclude telemetry types from sampling.
 

@@ -16,5 +16,5 @@ version: 1
    um boato, e o próximo é mais fácil de defender quando o último tem um número.
 
 Para a loja, as decisões saíram assim: snapshot e deleção dos dois discos, deleção do `pip-test` e do `asp-shop-old` depois que os donos
-concordaram, `vm-shop-batch` de oito vCPUs para duas pela esteira, e a `vm-reports` num horário de liga e desliga com o Hybrid Benefit
+concordaram, `vm-shop-batch` de oito vCPUs para duas pela esteira. E a `vm-reports` vai para um horário de liga e desliga com o Hybrid Benefit
 ligado, da lição 22. Nenhuma dessas mudanças foi feita, porque nenhum desses recursos existe fora deste curso.

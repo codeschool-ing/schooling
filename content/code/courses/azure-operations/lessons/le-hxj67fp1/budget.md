@@ -4,9 +4,7 @@ version: 1
 ---
 
 **A service level objective is a target for an indicator over a period**: 99.5% of checkouts available,
-measured over the week. The number is the shop's choice, and a good one is neither the best the service
-has ever done nor a wish: it is the level below which customers start to notice and leave, which for a
-shop is a business question asked with data.
+measured over the week. The number is the shop's choice, and a good one is neither the best the service has ever done nor a wish. It is the level below which customers start to notice and leave, and for a shop that is a business question asked with data.
 
 **The error budget is what the objective allows to fail.** At 99.5% of 29,863 checkouts, the week allows
 149 failed ones. That allowance is what makes the objective useful, because it turns an argument about

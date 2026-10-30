@@ -25,8 +25,7 @@ operations, so a request with two calls is counted once.
 **103 failed requests, every one of them with a SQL call that timed out.** None of the failures in that
 hour involved the payment provider, and none was a failed request with a healthy SQL call. That is the
 cause, stated as a count rather than an impression. The second query widens to the week, and teaches something
-about percentiles on the way: **the SQL dependency's daily 95th percentile hardly moved**, 61 ms on Thursday
-against 60 on the other days, because 103 slow calls among 8,872 are barely more than one in a hundred. The
+about percentiles on the way: **the SQL dependency's daily 95th percentile hardly moved**, 61 ms on Thursday against 60 on the other days. Thursday's 103 slow calls among 8,872 are barely more than one in a hundred. The
 failures column is the one that sees Thursday. Lesson 15 asks what changed at 14:02 that afternoon.
 
 The method is the one to keep: **start from the symptom table, join to the cause table on the operation,

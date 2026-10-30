@@ -14,7 +14,7 @@ teams' logs; the reservation of lesson 22 covers whatever matching VMs run. Thre
 - **split them by measured use**: the workspace's cost by each team's share of ingestion, which the
   `Usage` table of lesson 9 measures per table, and each table belongs to one team's resources.
 
-**Cost Management's cost allocation rules** do the second and third inside the bill: a rule takes the cost
+**Cost Management's cost allocation rules** do the second and third inside the bill. A rule takes the cost
 of named sources, such as a subscription, a resource group or a tag, and distributes it to targets in
 proportion to their own cost, to fixed percentages, or evenly. The allocated cost then appears in the
 targets' views as if they had spent it. Rules are set up at the billing scope and were **not run** here;

@@ -20,8 +20,7 @@ valor, então uma requisição e tudo o que ela fez podem ser remontados. (Na vi
 Insights o mesmo campo se chama `operation_Id`; as tabelas do workspace o escrevem `OperationId`.)
 
 A lição 9 carregou a `AppRequests`. Esta lição acrescenta a `AppDependencies`, gerada a partir dela do mesmo jeito e
-dizendo isso: toda requisição de escrita faz uma chamada SQL, todo checkout também chama o provedor de pagamentos, e os
-checkouts do incidente de quinta fizeram chamadas SQL que levaram três segundos, falhando com `-2`, que é o código que o
+dizendo isso: toda requisição de escrita faz uma chamada SQL, todo checkout também chama o provedor de pagamentos. Os checkouts do incidente de quinta fizeram chamadas SQL que levaram três segundos e falharam com `-2`, o código que o
 cliente SQL do .NET informa para um timeout. Salve como `dependencies.kql` ao lado dos outros arquivos:
 
 ```kql

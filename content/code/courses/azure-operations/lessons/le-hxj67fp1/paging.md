@@ -62,7 +62,7 @@ evaluated             long_burn  short_burn  page
 ```
 
 `range` makes one row per evaluation, and the join with a constant key `k` pairs each evaluation with
-every checkout so that each can count its own windows; it is a brute-force way to evaluate a rule at many
+every checkout so that each can count its own windows. It is a brute-force way to evaluate a rule at many
 moments, fine for a week of data and not how the real alert runs. **Read the `page` column against the
 two burn columns.** The short window crossed 14.4 at 17:10, and the long one only at 17:15, so the page
 came at 17:15, five minutes later than lesson 12's simple rule: the price of not paging on blips. At
@@ -72,5 +72,5 @@ pushed the short window to 17.4 and the long one stayed at 4.6: no page, which i
 window exists to ignore.
 
 To put it into production, the query of the last evaluation becomes the query of a log search alert, as
-in lesson 12, evaluated every five minutes; a second rule with a six-hour window and a lower threshold,
+in lesson 12, evaluated every five minutes. A second rule with a six-hour window and a lower threshold,
 sent as a ticket rather than a page, catches the slow burns this one ignores.

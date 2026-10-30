@@ -62,7 +62,7 @@ evaluated             long_burn  short_burn  page
 ```
 
 `range` faz uma linha por avaliação, e o join com uma chave constante `k` junta cada avaliação a todo checkout para cada uma
-contar as próprias janelas; é um jeito de força bruta de avaliar uma regra em muitos momentos, bom para uma semana de dados e
+contar as próprias janelas. É um jeito de força bruta de avaliar uma regra em muitos momentos, bom para uma semana de dados e
 não como o alerta real roda. **Leia a coluna `page` contra as duas colunas de queima.** A janela curta passou de 14,4 às 17:10,
 e a longa só às 17:15, então a chamada veio às 17:15, cinco minutos depois da regra simples da lição 12: o preço de não chamar
 por soluços. Às 17:55 a janela curta caiu a zero enquanto a longa ainda estava perto de 97, e a chamada parou: o incidente
@@ -70,5 +70,5 @@ acabou, e ninguém precisa ser acordado pela memória da hora. Às 18:45 uma ún
 ficou em 4,6: sem chamada, que é exatamente o soluço que a janela longa existe para ignorar.
 
 Para ir para produção, a consulta da última avaliação vira a consulta de um alerta de pesquisa de log, como na lição 12,
-avaliado a cada cinco minutos; uma segunda regra com janela de seis horas e limite mais baixo, mandada como chamado na fila e
+avaliado a cada cinco minutos. Uma segunda regra com janela de seis horas e limite mais baixo, mandada como chamado na fila e
 não como ligação, pega as queimas lentas que esta ignora.

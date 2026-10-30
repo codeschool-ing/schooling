@@ -102,6 +102,5 @@ on its own. One alert, one resolution, for a forty-minute incident.
 
 Two things the emulator cannot show. In a workspace, logs take a few minutes to arrive, so the real rule
 sees each window late, and a real alert fires a few minutes after this table says. And the evaluation at
-17:25 is a reminder of why the threshold is low: 9 failures in 22 was still 41%, well over 5%, and a
-threshold at 50% would have resolved the alert in the middle of the incident and fired it again five
+17:25 is a reminder of why the threshold is low: 9 failures in 22 was still 41%, well over 5%. A threshold at 50% would have resolved the alert in the middle of the incident and fired it again five
 minutes later.

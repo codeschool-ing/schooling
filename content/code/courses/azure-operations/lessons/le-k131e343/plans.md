@@ -28,5 +28,5 @@ practised without it is the reasoning: how a score is computed, and which recomm
 
 Turning on every plan everywhere is the easy decision and an expensive one. The shop turns on Defender for
 the services that hold its data and face the internet, App Service, SQL and Key Vault, in production
-only, and leaves development on the free tier; lesson 22 has the habit of pricing such a decision before
+only, and leaves development on the free tier. Lesson 22 has the habit of pricing such a decision before
 making it.

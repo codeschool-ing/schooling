@@ -27,7 +27,7 @@ AppRequests
 
 ```
 
-`kind=leftouter` mantém toda rota do lado esquerdo mesmo que o direito não tenha dono para ela, e é o tipo a usar quando
+`kind=leftouter` mantém toda rota do lado esquerdo mesmo que o direito não tenha dono para ela. É o tipo a usar quando
 o lado direito é uma tabela de consulta: uma rota que alguém esqueceu de acrescentar apareceria com equipe vazia, em vez
 de sumir da resposta. O tipo de join padrão no KQL não é o inner join que a maioria espera; ele remove chaves duplicadas
 do lado esquerdo antes. **Diga o tipo sempre.**

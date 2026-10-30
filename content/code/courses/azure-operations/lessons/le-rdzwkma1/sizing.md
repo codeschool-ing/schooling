@@ -38,6 +38,5 @@ three would sit partly unused in 480 hours of the month. The median says the sam
 spikier usage the 10th percentile is the safer measure than the minimum, which one unusual quiet hour can
 pull down.
 
-The data this lesson generates is a month. A real decision uses longer, three months at least, so that a
-seasonal low is in it, and it asks whether the workload will exist for the length of the term: a
+The data this lesson generates is a month. A real decision uses longer, three months at least, so that a seasonal low is in it. It also asks whether the workload will exist for the length of the term: a
 three-year commitment on something being replaced next spring is a bill for something switched off.

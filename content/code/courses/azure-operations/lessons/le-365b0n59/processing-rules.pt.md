@@ -37,7 +37,7 @@ No domingo, 25 de outubro, entre 02:00 e 04:00 em São Paulo, o banco SQL da loj
 checkout vai falhar. Sem esta regra, o `checkout-failing` chama o plantonista às 02:05 por algo que todo mundo sabia que ia
 acontecer. Com ela, **o alerta continua disparando e sendo registrado**; só a notificação é removida. Essa diferença é o
 motivo para suprimir aqui em vez de desativar a regra de alerta: uma regra desativada não registra nada, então se outra coisa
-quebrar durante a janela não fica rastro, e uma regra desativada para manutenção é uma regra que alguém esquece de reativar.
+quebrar durante a janela não fica rastro. E uma regra desativada para manutenção é uma regra que alguém esquece de reativar.
 
 O horário recebe um nome de fuso do Windows, `E. South America Standard Time`, que é o de São Paulo. Errar o fuso é o erro
 clássico aqui: uma janela escrita em UTC silencia das 23:00 à 01:00 e chama todo mundo às 02:05.

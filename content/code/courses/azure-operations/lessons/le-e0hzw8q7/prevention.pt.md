@@ -14,8 +14,7 @@ contra um jeito diferente de perder o arquivo, e cada uma é uma configuração,
 | **acesso por chave desligado**, papel de dados para duas identidades | quem lista chaves ler ou escrever o estado |
 | **um grupo de recursos próprio**, `rg-tfstate` | um `destroy` da aplicação levar o próprio registro junto |
 
-A terceira é um **lock de gerenciamento**, um recurso do Resource Manager diferente do lease da lição 6: um lease
-guarda o conteúdo de um blob enquanto dura um `apply`, e um lock guarda um recurso contra deleção até alguém com o papel
+A terceira é um **lock de gerenciamento**, um recurso do Resource Manager diferente do lease da lição 6. Um lease guarda o conteúdo de um blob enquanto dura um `apply`; um lock guarda um recurso contra deleção até alguém com o papel
 certo removê-lo. Até um Owner precisa removê-lo antes, e esse é o ponto: apagar a conta de estado vira dois atos
 deliberados em vez de um descuidado.
 

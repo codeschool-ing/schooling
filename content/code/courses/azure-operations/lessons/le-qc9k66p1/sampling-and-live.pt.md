@@ -25,7 +25,7 @@ AppRequests
 
 O `count()` na amostra diz 62.764 requisições; o `sum(ItemCount)` diz 251.056, perto das 249.717 verdadeiras. **Toda
 contagem sobre dados amostrados é `sum(ItemCount)`, nunca `count()`.** As falhas mostram o outro lado da amostragem: 346 no
-total viraram 85 linhas valendo por 340, uma estimativa a 2% aqui, e para um evento raro, um punhado por dia, a
+total viraram 85 linhas valendo por 340, uma estimativa a 2% aqui. Para um evento raro, um punhado por dia, a
 estimativa pode errar feio ou uma falha pode sumir da amostra. Por isso a loja amostra os `GET /products` que deram certo e
 guarda toda falha e todo checkout: regras de amostragem na ingestão e as configurações do SDK conseguem tirar tipos de
 telemetria da amostragem.

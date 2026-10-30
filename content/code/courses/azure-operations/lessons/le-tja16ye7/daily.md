@@ -58,5 +58,5 @@ own decomposition, and here the higher level was absorbed into it rather than si
 only as good as the shape of change it is built to see, and the shape here is a sustained step.
 
 Cost Management offers **anomaly alerts** on a subscription, which run Microsoft's own model over the daily
-cost and e-mail when it finds something; they were not run here, and they deserve the same test before
+cost and e-mail when it finds something. They were not run here, and they deserve the same test before
 you rely on them: does it flag the change you care about, in your data?

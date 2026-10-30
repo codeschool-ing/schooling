@@ -18,7 +18,7 @@ TimeGenerated         Caller             ActivityStatusValue  sku  before
 
 Uma deleção, uma conta de armazenamento de teste em `rg-test-ana`, por `ana`, no sábado à noite. A segunda consulta responde a
 pergunta de que a lição 15 precisou: tudo o que aconteceu com o banco, em ordem, com o SKU antes e depois, lido das `Properties`
-com `tostring()`, porque um valor dinâmico precisa ganhar um tipo antes de ser comparado ou exibido como texto.
+com `tostring()`. Um valor dinâmico precisa ganhar um tipo antes de ser comparado ou exibido como texto.
 
 A segunda pergunta: *o que cada identidade anda fazendo?*
 

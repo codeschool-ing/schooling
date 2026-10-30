@@ -38,7 +38,7 @@ maintenance, and checkout will fail. Without this rule, `checkout-failing` pages
 02:05 for something everybody knew would happen. With it, **the alert still fires and is still recorded**;
 only the notification is removed. That distinction is the reason to suppress here rather than by
 disabling the alert rule: a disabled rule records nothing, so if something else breaks during the window
-there is no trace of it, and a rule disabled for maintenance is a rule somebody forgets to enable again.
+there is no trace of it. And a rule disabled for maintenance is a rule somebody forgets to enable again.
 
 The schedule takes a Windows time-zone name, `E. South America Standard Time`, which is São Paulo's.
 Getting the zone wrong is the classic mistake here: a window written in UTC silences 23:00 to 01:00 and

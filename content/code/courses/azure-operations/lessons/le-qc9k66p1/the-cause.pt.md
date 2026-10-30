@@ -25,7 +25,7 @@ então uma requisição com duas chamadas conta uma vez.
 **103 requisições que falharam, todas com uma chamada SQL que estourou o tempo.** Nenhuma falha daquela hora envolveu o
 provedor de pagamentos, e nenhuma foi uma requisição que falhou com uma chamada SQL saudável. Essa é a causa, dita como
 contagem e não como impressão. A segunda consulta amplia para a semana, e ensina algo sobre percentis no caminho: **o percentil 95
-diário da dependência SQL quase não se mexeu**, 61 ms na quinta contra 60 nos outros dias, porque 103 chamadas lentas
+diário da dependência SQL quase não se mexeu**, 61 ms na quinta contra 60 nos outros dias. As 103 chamadas lentas de quinta
 entre 8.872 são pouco mais de uma em cem. A coluna de falhas é a que enxerga a quinta. A lição 15 pergunta o que mudou às
 14:02 daquela tarde.
 

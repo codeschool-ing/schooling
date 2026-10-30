@@ -56,5 +56,5 @@ cada dia contra a decomposição da própria série, e aqui o nível mais alto f
 quanto a forma de mudança que ele foi feito para ver, e a forma aqui é um degrau que se mantém.
 
 O Cost Management oferece **alertas de anomalia** numa assinatura, que rodam o modelo da própria Microsoft sobre o custo diário e mandam
-e-mail quando acham algo; eles não foram executados aqui, e merecem o mesmo teste antes de você confiar neles: eles marcam a mudança que
+e-mail quando acham algo. Eles não foram executados aqui, e merecem o mesmo teste antes de você confiar neles: eles marcam a mudança que
 importa para você, nos seus dados?

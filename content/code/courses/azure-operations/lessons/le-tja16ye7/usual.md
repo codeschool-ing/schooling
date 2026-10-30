@@ -5,7 +5,7 @@ version: 1
 
 **The shop's daily check compares each day with the median of the fourteen days before it**, and flags a
 day more than 5% above. The median rather than the average, so that one strange day does not move the
-baseline; fourteen days, so that a weekly pattern is inside the window; 5%, because the shop's daily noise
+baseline. Fourteen days, so that a weekly pattern is inside the window. And 5%, because the shop's daily noise
 is a fraction of that, which the first eight days of October show.
 
 ```kql

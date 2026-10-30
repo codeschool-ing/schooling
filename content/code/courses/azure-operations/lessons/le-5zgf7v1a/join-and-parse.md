@@ -27,8 +27,7 @@ AppRequests
 
 ```
 
-`kind=leftouter` keeps every route from the left side even if the right has no owner for it, which is
-the kind to reach for when the right side is a lookup: a route somebody forgot to add would then show an
+`kind=leftouter` keeps every route from the left side even if the right has no owner for it. It is the kind to reach for when the right side is a lookup: a route somebody forgot to add would then show an
 empty team rather than disappear from the answer. The default join kind in KQL is not the inner join
 most people expect; it removes duplicate keys from the left side first. **Say the kind every time.**
 

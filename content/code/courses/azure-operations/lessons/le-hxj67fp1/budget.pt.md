@@ -4,8 +4,7 @@ version: 1
 ---
 
 **Um objetivo de nível de serviço é uma meta para um indicador num período**: 99,5% dos checkouts disponíveis, medidos na
-semana. O número é escolha da loja, e um bom não é nem o melhor que o serviço já fez nem um desejo: é o nível abaixo do qual
-os clientes começam a perceber e a ir embora, que para uma loja é uma pergunta de negócio feita com dados.
+semana. O número é escolha da loja, e um bom não é nem o melhor que o serviço já fez nem um desejo. É o nível abaixo do qual os clientes começam a perceber e a ir embora, e para uma loja isso é uma pergunta de negócio feita com dados.
 
 **O orçamento de erro é o que o objetivo deixa falhar.** A 99,5% de 29.863 checkouts, a semana permite 149 com falha. Essa
 permissão é o que torna o objetivo útil, porque transforma uma discussão sobre risco em aritmética:

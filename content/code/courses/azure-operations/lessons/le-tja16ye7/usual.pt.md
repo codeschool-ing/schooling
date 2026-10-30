@@ -4,7 +4,7 @@ version: 1
 ---
 
 **A verificação diária da loja compara cada dia com a mediana dos catorze dias anteriores**, e marca um dia mais de 5% acima. A mediana, e
-não a média, para um dia estranho não mexer na linha de base; catorze dias, para um padrão semanal caber na janela; 5%, porque o ruído
+não a média, para um dia estranho não mexer na linha de base. Catorze dias, para um padrão semanal caber na janela. E 5%, porque o ruído
 diário da loja é uma fração disso, como mostram os oito primeiros dias de outubro.
 
 ```kql

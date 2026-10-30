@@ -42,6 +42,5 @@ export ARM_USE_OIDC=true          # exchange the pipeline's token; no secret
 The last row of the table is the one to avoid, for every reason lesson 2 gave. **A secret written into
 the provider block is a secret in the repository**, and the repository outlives every rotation.
 
-The identity decides what Terraform can change, so the same rule applies as for any pipeline: the
-identity that plans pull requests needs only to read, and the one that applies `main` gets Contributor
+The identity decides what Terraform can change, so the same rule applies as for any pipeline. The identity that plans pull requests needs only to read, and the one that applies `main` gets Contributor
 on the resource groups it manages, not Owner on the subscription.

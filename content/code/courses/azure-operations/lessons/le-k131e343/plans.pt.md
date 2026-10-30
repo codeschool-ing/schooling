@@ -25,5 +25,5 @@ veio do Defender, e os exemplos são escritos pelo curso e dizem isso. O que dá
 pontuação é calculada, e qual recomendação vem primeiro.
 
 Ligar todo plano em todo lugar é a decisão fácil e uma cara. A loja liga o Defender nos serviços que guardam dados e dão para
-a internet, App Service, SQL e Key Vault, só em produção, e deixa desenvolvimento na faixa gratuita; a lição 22 tem o hábito
+a internet, App Service, SQL e Key Vault, só em produção, e deixa desenvolvimento na faixa gratuita. A lição 22 tem o hábito
 de pôr preço numa decisão dessas antes de tomá-la.
