@@ -1,0 +1,461 @@
+[
+  {
+    "id": "ex-b8czzw72",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A project's owner tries to create a service account key, and an organisation policy forbids keys. What happens?",
+    "hint": "Which of the two decides what may be done at all?",
+    "choices": [
+      {
+        "text": "It succeeds, as Owner outranks every policy",
+        "correct": false,
+        "why": "IAM decides who; the policy decides what. Owner is still a who."
+      },
+      {
+        "text": "It is refused, whatever the owner's role",
+        "correct": true,
+        "why": "Right. A guardrail that a powerful role could step over would not be a guardrail."
+      },
+      {
+        "text": "It succeeds and the key is deleted by the policy an hour later",
+        "correct": false,
+        "why": "A policy refuses at creation. It never deletes anything afterwards."
+      },
+      {
+        "text": "It succeeds if the owner holds `roles/iam.serviceAccountKeyAdmin` too",
+        "correct": false,
+        "why": "No role lifts a constraint. Only changing the policy does."
+      }
+    ]
+  },
+  {
+    "id": "ex-j41z157e",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between a constraint and an organisation policy?",
+    "hint": "One is defined by Google; the other is attached by you.",
+    "choices": [
+      {
+        "text": "They are two names for the same object",
+        "correct": false,
+        "why": "They are two objects: the rule, and the rule applied with a value."
+      },
+      {
+        "text": "A policy is a group of constraints sold as a bundle",
+        "correct": false,
+        "why": "A policy sets exactly one constraint on one node."
+      },
+      {
+        "text": "A constraint applies to IAM and a policy to networks",
+        "correct": false,
+        "why": "Both apply wherever the constraint's subject is, IAM and networks among many."
+      },
+      {
+        "text": "A constraint is a rule; a policy sets it on a node",
+        "correct": true,
+        "why": "Right. `gcp.resourceLocations` does nothing until a policy gives it values somewhere in the tree."
+      }
+    ]
+  },
+  {
+    "id": "ex-qevfvxhn",
+    "version": 1,
+    "section": "constraints",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of constraint to an example of it.",
+    "hint": "On or off; a list; a condition.",
+    "pairs": [
+      {
+        "left": "boolean",
+        "right": "`compute.requireOsLogin`"
+      },
+      {
+        "left": "list",
+        "right": "`gcp.resourceLocations`"
+      },
+      {
+        "left": "custom",
+        "right": "a CEL condition on a firewall rule's fields"
+      }
+    ],
+    "right_distractors": [
+      "a role granted on a folder"
+    ]
+  },
+  {
+    "id": "ex-gp49rkh8",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A location policy allowing only South America is enforced on Monday. A disk created in Iowa last year is still there on Tuesday. Why?",
+    "hint": "When is a policy checked?",
+    "choices": [
+      {
+        "text": "It is checked at creation, not afterwards",
+        "correct": true,
+        "why": "Right. Turning one on is the moment to look for what it would have refused."
+      },
+      {
+        "text": "Policies take a week to propagate",
+        "correct": false,
+        "why": "They take effect within minutes, and still never touch what already exists."
+      },
+      {
+        "text": "Disks are exempt from location policies",
+        "correct": false,
+        "why": "A new disk in Iowa would be refused. The old one predates the policy."
+      },
+      {
+        "text": "The disk's project overrides the organisation's policy",
+        "correct": false,
+        "why": "Nothing says the project wrote a policy. The reason is the date."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb8r9jgh",
+    "version": 1,
+    "section": "constraints",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`in:southamerica-locations` is a value ___, which names every region and zone in South America at once.",
+    "hint": "Values, gathered.",
+    "blanks": [
+      {
+        "accept": [
+          "group"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0d0a25qp",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the role to set organisation policies kept separate from Owner and held on the organisation?",
+    "hint": "What would a project owner do with it?",
+    "choices": [
+      {
+        "text": "Because policies are billed to the organisation",
+        "correct": false,
+        "why": "Policies cost nothing. The separation is about who decides."
+      },
+      {
+        "text": "Because Owner cannot be granted on a folder",
+        "correct": false,
+        "why": "Owner can be granted on a folder. That is unrelated to policies."
+      },
+      {
+        "text": "So owners cannot override the guardrails",
+        "correct": true,
+        "why": "Right. If owners wrote their own policies, every guardrail would be one override away from gone."
+      },
+      {
+        "text": "Because a policy needs the organisation's billing account",
+        "correct": false,
+        "why": "Policies have nothing to do with billing."
+      }
+    ]
+  },
+  {
+    "id": "ex-rchey7ha",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The organisation allows `in:southamerica-locations` and `in:us-locations`. A folder sets `in:southamerica-east1-locations` with `inherit_from_parent = true`. Where may its projects create resources?",
+    "hint": "Inheriting an allow list merges it.",
+    "choices": [
+      {
+        "text": "In São Paulo only",
+        "correct": false,
+        "why": "That would need the folder to replace, not inherit."
+      },
+      {
+        "text": "Nowhere, as the two values conflict",
+        "correct": false,
+        "why": "Allowed values merge without conflict; the union is the answer."
+      },
+      {
+        "text": "In South America or the United States",
+        "correct": true,
+        "why": "Right. The folder's value is added to the parent's, so nothing became stricter."
+      },
+      {
+        "text": "In the United States only, the parent's last value",
+        "correct": false,
+        "why": "Order means nothing here. The merged list holds every value."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymhxzzk4",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The organisation sets the boolean `compute.requireOsLogin` on. A project sets it off. What is the project's effective policy?",
+    "hint": "A boolean has nothing to merge.",
+    "choices": [
+      {
+        "text": "Off: the nearest policy wins",
+        "correct": true,
+        "why": "Right. Which is why setting policies is a role on the organisation and nowhere else."
+      },
+      {
+        "text": "On: the organisation always wins",
+        "correct": false,
+        "why": "For a boolean, the closest node's policy is the answer."
+      },
+      {
+        "text": "Both, merged into a dry run",
+        "correct": false,
+        "why": "Dry run is a separate policy somebody writes; nothing turns into one by conflict."
+      },
+      {
+        "text": "Undefined until somebody resets it",
+        "correct": false,
+        "why": "The answer is well defined: the nearer policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbgqb34r",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `reset = true` on a folder's policy do?",
+    "hint": "Back to whose value?",
+    "choices": [
+      {
+        "text": "It deletes the policy on the organisation",
+        "correct": false,
+        "why": "It changes the answer for the folder and below, and touches nothing above."
+      },
+      {
+        "text": "It re-reads the parent's policy",
+        "correct": false,
+        "why": "That is plain inheritance. Reset ignores the parent."
+      },
+      {
+        "text": "It removes every resource that breaks the policy",
+        "correct": false,
+        "why": "Policies never remove resources, reset included."
+      },
+      {
+        "text": "It returns to the constraint's default, Google's",
+        "correct": true,
+        "why": "Right. As if no policy existed above the folder."
+      }
+    ]
+  },
+  {
+    "id": "ex-betfjn26",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to forbid service account keys but fears it will break a nightly job nobody remembers. What does Google recommend?",
+    "hint": "There is a way to see refusals without refusing.",
+    "choices": [
+      {
+        "text": "Enforce it on a Friday and revert if somebody complains",
+        "correct": false,
+        "why": "That finds the job by breaking it. A dry run finds it without the outage."
+      },
+      {
+        "text": "A dry run, then read the audit log of what it would have refused",
+        "correct": true,
+        "why": "Right. A week of violations names the job, and the team fixes it before enforcing."
+      },
+      {
+        "text": "Enforce it, since policies are not retroactive and the job's key stays",
+        "correct": false,
+        "why": "Existing keys stay, but a job that creates keys would start failing. The fear is reasonable."
+      },
+      {
+        "text": "Grant the job's account Owner so the policy skips it",
+        "correct": false,
+        "why": "No role lifts a constraint, and Owner on a job is a second problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2x19ajj",
+    "version": 1,
+    "section": "inheritance",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of introducing a risky guardrail in the order Google recommends.",
+    "hint": "Watch before you block.",
+    "items": [
+      "write the policy as a dry run",
+      "read the violations in the audit log",
+      "fix or exempt what deserves it",
+      "enforce the policy"
+    ],
+    "trap": "Enforcing before reading the violations is the slip: the dry run is only useful if somebody looks at what it found."
+  },
+  {
+    "id": "ex-brt94hqh",
+    "version": 1,
+    "section": "guardrails-for-planner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `policies.tf` write `inherit_from_parent = false` on production when false is the default?",
+    "hint": "A default is invisible; a written line is a decision on the page.",
+    "choices": [
+      {
+        "text": "To make the decision visible to whoever reads it next",
+        "correct": true,
+        "why": "Right. Somebody setting it to true would have to delete a deliberate line first."
+      },
+      {
+        "text": "Without it, Terraform would refuse the policy",
+        "correct": false,
+        "why": "The provider accepts the policy without the line; the plan would be the same."
+      },
+      {
+        "text": "Without it, the folder would merge with the organisation",
+        "correct": false,
+        "why": "False is the default, so leaving it out also replaces. The line documents, it does not change."
+      },
+      {
+        "text": "It makes the policy a dry run",
+        "correct": false,
+        "why": "A dry run is `dry_run_spec`, a different block."
+      }
+    ]
+  },
+  {
+    "id": "ex-a38ss7c5",
+    "version": 1,
+    "section": "guardrails-for-planner",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `terraform show -json plan.bin` print?",
+    "hint": "The file was written by `plan -out`.",
+    "choices": [
+      {
+        "text": "The policies as Google holds them today",
+        "correct": false,
+        "why": "Nothing here asked Google. The file is Terraform's own plan."
+      },
+      {
+        "text": "The effective policy of every project",
+        "correct": false,
+        "why": "Effective policies are computed by Google's service, which no plan consults."
+      },
+      {
+        "text": "The saved plan, as JSON",
+        "correct": true,
+        "why": "Right. `jq` then picks the fields worth reading out of it."
+      },
+      {
+        "text": "The audit log of the dry run",
+        "correct": false,
+        "why": "Violations land in Google's audit logs, after an apply. A plan has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2qmfpcy",
+    "version": 1,
+    "section": "guardrails-for-planner",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The plan for `policies.tf` passes. Applied in a real organisation by somebody holding only Owner on `planner-dev`, what happens?",
+    "hint": "Where must the role to set policies be held?",
+    "choices": [
+      {
+        "text": "The three policies are created, since the plan passed",
+        "correct": false,
+        "why": "A plan checks the description, never the caller's roles."
+      },
+      {
+        "text": "Refused: it takes `roles/orgpolicy.policyAdmin` on the organisation",
+        "correct": true,
+        "why": "Right. Owner of one project grants nothing on the organisation, and the plan could not see that."
+      },
+      {
+        "text": "Only the policy on `planner-dev` is created",
+        "correct": false,
+        "why": "None of the three is on `planner-dev`; they are on the organisation and a folder."
+      },
+      {
+        "text": "The dry run is created and the other two are refused",
+        "correct": false,
+        "why": "A dry run is a policy like the others and needs the same role."
+      }
+    ]
+  },
+  {
+    "id": "ex-an1a1c5n",
+    "version": 1,
+    "section": "guardrails-for-planner",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many organisation policies does the plan for `policies.tf` add?",
+    "hint": "One per resource block.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6retqc18",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customers' data must stay in Brazil. The organisation allows South America and the United States. A new folder `customer-data` should allow only São Paulo. Which policy on the folder does it?",
+    "hint": "For an allow list, what does inheriting do?",
+    "choices": [
+      {
+        "text": "Its own list, inheriting from the organisation",
+        "correct": false,
+        "why": "Inheriting would add São Paulo to the parent's list and keep the United States."
+      },
+      {
+        "text": "A `reset`, so Google's default applies",
+        "correct": false,
+        "why": "Google's default for locations allows everywhere, the opposite of the intention."
+      },
+      {
+        "text": "No policy, and a label `residency=br` on each project",
+        "correct": false,
+        "why": "A label decides nothing, and anybody who edits the project can change it."
+      },
+      {
+        "text": "Its own list, not inheriting",
+        "correct": true,
+        "why": "Right. Replacing makes São Paulo the whole answer for the folder and below."
+      }
+    ]
+  }
+]

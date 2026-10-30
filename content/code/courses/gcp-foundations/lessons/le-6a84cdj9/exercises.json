@@ -1,0 +1,508 @@
+[
+  {
+    "id": "ex-e7yjzvv9",
+    "version": 1,
+    "section": "rest-underneath",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What HTTP method did `gcloud pubsub topics create orders` use, according to `--log-http`?",
+    "hint": "Read the method line.",
+    "choices": [
+      {
+        "text": "POST, to /v1/topics",
+        "correct": false,
+        "why": "The log shows PUT to the topic's name."
+      },
+      {
+        "text": "PUT, to the topic's name as an address",
+        "correct": true,
+        "why": "Right. The address is the resource's name under /v1/."
+      },
+      {
+        "text": "GET, with the name in the query",
+        "correct": false,
+        "why": "GET reads; it does not create."
+      },
+      {
+        "text": "A gRPC call with no HTTP method",
+        "correct": false,
+        "why": "gcloud used REST here, and logged it."
+      }
+    ]
+  },
+  {
+    "id": "ex-34s4m9rh",
+    "version": 1,
+    "section": "rest-underneath",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the gcloud request go to `localhost:8085` instead of `pubsub.googleapis.com`?",
+    "hint": "Lesson 1's properties.",
+    "choices": [
+      {
+        "text": "PUBSUB_EMULATOR_HOST sets gcloud's address",
+        "correct": false,
+        "why": "That variable is for the client libraries."
+      },
+      {
+        "text": "gcloud always tries localhost first",
+        "correct": false,
+        "why": "It goes where its properties say."
+      },
+      {
+        "text": "Google redirected it",
+        "correct": false,
+        "why": "Nothing reached Google."
+      },
+      {
+        "text": "An endpoint override property",
+        "correct": true,
+        "why": "Right. Without it, the same request would go to Google."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwj7ggbj",
+    "version": 1,
+    "section": "rest-underneath",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The subscription came back with `ackDeadlineSeconds` and `messageRetentionDuration`, though the request sent neither. Why?",
+    "hint": "Defaults.",
+    "choices": [
+      {
+        "text": "The API fills in what was not said",
+        "correct": true,
+        "why": "Right. The same thing Terraform shows as known after apply."
+      },
+      {
+        "text": "curl adds them",
+        "correct": false,
+        "why": "curl sent exactly the body written."
+      },
+      {
+        "text": "They were copied from the topic",
+        "correct": false,
+        "why": "Topics have no ack deadline."
+      },
+      {
+        "text": "The emulator invents them for tests",
+        "correct": false,
+        "why": "Google's API returns its defaults the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5f7g1hs",
+    "version": 1,
+    "section": "rest-underneath",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Google's 401 named the method `google.pubsub.v1.Publisher.ListTopics`, though `curl` called a REST address. What does that say?",
+    "hint": "Two doors to one service.",
+    "choices": [
+      {
+        "text": "curl secretly used gRPC",
+        "correct": false,
+        "why": "curl sent an HTTP GET."
+      },
+      {
+        "text": "The request reached the wrong service",
+        "correct": false,
+        "why": "The service named is pubsub.googleapis.com."
+      },
+      {
+        "text": "Both reach one method",
+        "correct": true,
+        "why": "Right. The REST address maps to the gRPC method, and the error names it."
+      },
+      {
+        "text": "The method name is part of the token",
+        "correct": false,
+        "why": "The token is the word placeholder."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ea9j1kw",
+    "version": 1,
+    "section": "rest-underneath",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "gcloud prints every request and response it exchanges when given the flag `--log-___`.",
+    "hint": "The protocol.",
+    "blanks": [
+      {
+        "accept": [
+          "http"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2kft7m8h",
+    "version": 1,
+    "section": "client-libraries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `publisher.publish(...)` return a future rather than a message id?",
+    "hint": "It does not wait.",
+    "choices": [
+      {
+        "text": "Pub/Sub assigns ids a day later",
+        "correct": false,
+        "why": "Ids come back with the publish."
+      },
+      {
+        "text": "The emulator has no ids",
+        "correct": false,
+        "why": "It returned 1, 2 and 3."
+      },
+      {
+        "text": "Sending happens later",
+        "correct": true,
+        "why": "Right. The id arrives when the future resolves."
+      },
+      {
+        "text": "Futures are required by gRPC",
+        "correct": false,
+        "why": "It is the library's choice, for speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nhcjfra",
+    "version": 1,
+    "section": "client-libraries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The messages were published with the library and read with `curl`. What does that show?",
+    "hint": "One service.",
+    "choices": [
+      {
+        "text": "Both are clients of the same API",
+        "correct": true,
+        "why": "Right. Neither side knows which the other used."
+      },
+      {
+        "text": "The library stores messages locally",
+        "correct": false,
+        "why": "curl read them from the emulator."
+      },
+      {
+        "text": "curl can only read what curl sent",
+        "correct": false,
+        "why": "It read what the library sent."
+      },
+      {
+        "text": "gRPC and REST share one port by accident",
+        "correct": false,
+        "why": "The point is the service, not the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-n44v94xs",
+    "version": 1,
+    "section": "client-libraries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the `curl` pull pipe the data through jq's `@base64d`?",
+    "hint": "How does JSON carry bytes?",
+    "choices": [
+      {
+        "text": "The emulator encrypts messages",
+        "correct": false,
+        "why": "base64 is an encoding, not encryption."
+      },
+      {
+        "text": "publish.py encoded them twice",
+        "correct": false,
+        "why": "It sent plain bytes; the API encoded them."
+      },
+      {
+        "text": "jq cannot print plain text",
+        "correct": false,
+        "why": "It can; the field was base64."
+      },
+      {
+        "text": "Bytes travel as base64",
+        "correct": true,
+        "why": "Right. Bytes travel in JSON as base64 text."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqbhfh1w",
+    "version": 1,
+    "section": "client-libraries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A list call returns more items than one response holds. What does a program using `curl` have to do that the client library does for it?",
+    "hint": "Read the table.",
+    "choices": [
+      {
+        "text": "Retry the call with a larger limit",
+        "correct": false,
+        "why": "Limits are capped; pages are the answer."
+      },
+      {
+        "text": "Follow nextPageToken to the end",
+        "correct": true,
+        "why": "Right. The library's results are a loop that fetches pages as it goes."
+      },
+      {
+        "text": "Switch to gRPC",
+        "correct": false,
+        "why": "gRPC pages too."
+      },
+      {
+        "text": "Nothing; the API returns everything",
+        "correct": false,
+        "why": "That is what pagination exists to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-yf3mcc5t",
+    "version": 1,
+    "section": "client-libraries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many messages did `publish.py` publish?",
+    "hint": "1001 to 1003.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ygv4evy1",
+    "version": 1,
+    "section": "client-libraries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing the client library adds to what it saves the program from.",
+    "hint": "From the table.",
+    "pairs": [
+      {
+        "left": "retries",
+        "right": "handling a 503 by hand"
+      },
+      {
+        "left": "batching",
+        "right": "one request per message"
+      },
+      {
+        "left": "pagination",
+        "right": "following nextPageToken"
+      },
+      {
+        "left": "credentials",
+        "right": "writing the Authorization header"
+      }
+    ],
+    "right_distractors": [
+      "choosing the region"
+    ]
+  },
+  {
+    "id": "ex-5khvxjmv",
+    "version": 1,
+    "section": "credentials-the-library-finds",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the places Application Default Credentials look in order.",
+    "hint": "Variable first.",
+    "items": [
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "the file gcloud auth application-default login writes",
+      "the metadata server"
+    ],
+    "trap": "Putting the metadata server first is the slip: a variable set on a Google Cloud machine overrides the attached account, which is how a program is pointed elsewhere on purpose."
+  },
+  {
+    "id": "ex-p4fk4hqk",
+    "version": 1,
+    "section": "credentials-the-library-finds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `publish.py` need no credential against the emulator?",
+    "hint": "What does the library do with PUBSUB_EMULATOR_HOST?",
+    "choices": [
+      {
+        "text": "Nothing is checked on that side",
+        "correct": true,
+        "why": "Right. The emulator checks none."
+      },
+      {
+        "text": "It used the placeholder token",
+        "correct": false,
+        "why": "That token is gcloud's, not the library's."
+      },
+      {
+        "text": "It used lesson 9's file",
+        "correct": false,
+        "why": "Only when the variable named it."
+      },
+      {
+        "text": "It asked the metadata server",
+        "correct": false,
+        "why": "There is none on a laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-4w46tqtj",
+    "version": 1,
+    "section": "credentials-the-library-finds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `PUBSUB_EMULATOR_HOST`, `publish.py` raised `DefaultCredentialsError`. What does that mean?",
+    "hint": "All three places.",
+    "choices": [
+      {
+        "text": "Google refused the request",
+        "correct": false,
+        "why": "No request was made."
+      },
+      {
+        "text": "The topic does not exist on Google",
+        "correct": false,
+        "why": "The library stopped before asking."
+      },
+      {
+        "text": "None of the three answered",
+        "correct": true,
+        "why": "Right. No variable, no ADC file, no metadata server."
+      },
+      {
+        "text": "Python lacks the library",
+        "correct": false,
+        "why": "It imported it and ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dmvsdm1",
+    "version": 1,
+    "section": "credentials-the-library-finds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With lesson 9's file in `GOOGLE_APPLICATION_CREDENTIALS`, the library stopped at `/tmp/github-token`. What would happen in a GitHub Actions job?",
+    "hint": "The file exists there.",
+    "choices": [
+      {
+        "text": "It needs a service account key as well",
+        "correct": false,
+        "why": "Federation replaces the key."
+      },
+      {
+        "text": "It publishes as deployer@",
+        "correct": true,
+        "why": "Right. With no key anywhere."
+      },
+      {
+        "text": "It publishes as the GitHub user",
+        "correct": false,
+        "why": "The exchange ends in deployer@'s token."
+      },
+      {
+        "text": "It fails the same way",
+        "correct": false,
+        "why": "The token file exists in the job."
+      }
+    ]
+  },
+  {
+    "id": "ex-81r1189c",
+    "version": 1,
+    "section": "credentials-the-library-finds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`google.auth.default()` returned the project `None` for the federation file. What should a program do?",
+    "hint": "A federated identity carries none.",
+    "choices": [
+      {
+        "text": "Fail, since it has no project",
+        "correct": false,
+        "why": "It names one and carries on."
+      },
+      {
+        "text": "Read the project from the token",
+        "correct": false,
+        "why": "The token does not carry it."
+      },
+      {
+        "text": "Use the gcloud active configuration's",
+        "correct": false,
+        "why": "A CI job has no gcloud configuration to rely on."
+      },
+      {
+        "text": "Name its own project explicitly",
+        "correct": true,
+        "why": "Right. As publish.py does with planner-dev."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm5dtxj8",
+    "version": 1,
+    "section": "credentials-the-library-finds",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At what address does a program on Google Cloud reach the metadata server?",
+    "hint": "Its last octet.",
+    "value": 254,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wvx4b45q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner's reports job runs on a laptop for development, in GitHub Actions for tests and on Cloud Run in production, from the same code. How should its credentials be arranged?",
+    "hint": "Where it runs decides.",
+    "choices": [
+      {
+        "text": "One service account key in all three",
+        "correct": false,
+        "why": "That is lesson 8's last resort, copied three times."
+      },
+      {
+        "text": "A credential file path in the code",
+        "correct": false,
+        "why": "The code should name none."
+      },
+      {
+        "text": "The emulator variable in production",
+        "correct": false,
+        "why": "That sends no credentials to Google, which refuses."
+      },
+      {
+        "text": "ADC everywhere, a source per place",
+        "correct": true,
+        "why": "Right. The person's ADC file, a federation file, and the attached service account."
+      }
+    ]
+  }
+]

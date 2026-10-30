@@ -1,0 +1,340 @@
+{
+  "ex-yrg24h0f": {
+    "prompt": "Qual é o escopo de uma rede VPC no Google Cloud?",
+    "hint": "Leia o endereço dela.",
+    "choices": [
+      {
+        "text": "Uma região",
+        "why": "Esse é o escopo de uma sub-rede."
+      },
+      {
+        "text": "Global, por todas as regiões",
+        "why": "Isso. Uma rede abrange todas as regiões; as sub-redes é que são regionais."
+      },
+      {
+        "text": "Uma zona",
+        "why": "Esse é o escopo de uma máquina."
+      },
+      {
+        "text": "Uma pasta da organização",
+        "why": "Uma rede pertence a um projeto, e abrange regiões."
+      }
+    ]
+  },
+  "ex-y6rzjbme": {
+    "prompt": "O planner espalha três máquinas pelas zonas a, b e c de São Paulo. Quantas sub-redes isso exige?",
+    "hint": "Uma sub-rede é regional.",
+    "choices": [
+      {
+        "text": "Três, uma por zona",
+        "why": "Zonas nunca precisam de faixas próprias."
+      },
+      {
+        "text": "Duas, para a faixa primária e a secundária",
+        "why": "Uma faixa secundária vive na mesma sub-rede."
+      },
+      {
+        "text": "Nenhuma; máquinas pegam a faixa da rede",
+        "why": "Uma rede não tem faixa própria."
+      },
+      {
+        "text": "Uma, pelas três zonas",
+        "why": "Isso. Uma sub-rede cobre todas as zonas da região dela."
+      }
+    ]
+  },
+  "ex-n4tf5tf1": {
+    "prompt": "Uma máquina em São Paulo manda para uma em Santiago, na mesma rede. O que tem de ser construído entre elas?",
+    "hint": "A rede é global.",
+    "choices": [
+      {
+        "text": "Nada, mas o tráfego é cobrado",
+        "why": "Isso. Elas conversam em endereços internos; a travessia é cobrada pelos preços da lição 1."
+      },
+      {
+        "text": "Um peering entre as duas regiões",
+        "why": "Peering junta duas redes, não duas regiões de uma."
+      },
+      {
+        "text": "Um túnel VPN",
+        "why": "Uma VPN alcança fora da rede."
+      },
+      {
+        "text": "Um gateway NAT em cada região",
+        "why": "NAT é para alcançar a internet, lição 17."
+      }
+    ]
+  },
+  "ex-cv5ec1e6": {
+    "prompt": "O que o `gcloud compute networks create planner` faz quando nenhum modo de sub-rede é dado?",
+    "hint": "A ajuda dele diz.",
+    "choices": [
+      {
+        "text": "Uma rede em modo personalizado sem sub-redes",
+        "why": "Isso pede `--subnet-mode=custom`."
+      },
+      {
+        "text": "Uma rede legada com uma faixa",
+        "why": "Legada está obsoleta e nunca é o padrão."
+      },
+      {
+        "text": "Uma rede em modo automático",
+        "why": "Isso. `If not specified, defaults to AUTO`, e o provider do Terraform supõe o mesmo."
+      },
+      {
+        "text": "Nada; o modo é obrigatório",
+        "why": "A opção é opcional."
+      }
+    ]
+  },
+  "ex-268wrkp3": {
+    "prompt": "Por que o `gcloud compute networks create planner --subnet-mode=custom` foi recusado?",
+    "hint": "Quem respondeu?",
+    "choices": [
+      {
+        "text": "O nome planner já estava em uso",
+        "why": "A recusa é sobre autenticação."
+      },
+      {
+        "text": "O modo personalizado exige uma sub-rede no mesmo comando",
+        "why": "Sub-redes são criadas à parte."
+      },
+      {
+        "text": "O Compute Engine não recebeu credencial válida",
+        "why": "Isso. O laboratório não tem nenhuma, então o Google recusa antes de ler o pedido."
+      },
+      {
+        "text": "O emulador não suporta redes",
+        "why": "O pedido foi ao Google, não ao emulador."
+      }
+    ]
+  },
+  "ex-nryrvzs2": {
+    "prompt": "Por que duas redes em modo automático nunca podem ser unidas por peering ou VPN?",
+    "hint": "De onde vêm as faixas delas?",
+    "choices": [
+      {
+        "text": "Todas elas têm as mesmas faixas",
+        "why": "Isso. Toda rede em modo automático corta as sub-redes de 10.128.0.0/9."
+      },
+      {
+        "text": "Redes em modo automático não têm rotas",
+        "why": "Elas têm rotas como qualquer rede."
+      },
+      {
+        "text": "Peering exige roteamento global",
+        "why": "O modo de roteamento não é o que impede."
+      },
+      {
+        "text": "O Google proíbe para redes que ele criou",
+        "why": "O obstáculo é aritmético: os mesmos endereços dos dois lados."
+      }
+    ]
+  },
+  "ex-3m6c7wzt": {
+    "prompt": "O que converter uma rede de modo automático para personalizado resolve?",
+    "hint": "As faixas ficam.",
+    "choices": [
+      {
+        "text": "As faixas dela são renumeradas",
+        "why": "A conversão mantém as faixas."
+      },
+      {
+        "text": "Ela pode depois ser convertida de volta quando preciso",
+        "why": "Modo personalizado nunca volta a ser automático."
+      },
+      {
+        "text": "Ela remove as regras de firewall padrão",
+        "why": "Regras de firewall são recursos separados."
+      },
+      {
+        "text": "Regiões novas param de ganhar sub-redes",
+        "why": "Isso. Sub-redes sem uso podem então ser apagadas, mas a sobreposição com outras redes automáticas fica."
+      }
+    ]
+  },
+  "ex-gj7nr0mh": {
+    "prompt": "Como o planner garante que os projetos novos dele comecem sem rede nenhuma?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Apagando a `default` depois de cada projeto feito",
+        "why": "Isso funciona uma vez e depende de alguém lembrar."
+      },
+      {
+        "text": "Uma restrição booleana na organização",
+        "why": "Isso. `compute.skipDefaultNetworkCreation` impede que a rede padrão seja feita."
+      },
+      {
+        "text": "Uma regra de firewall que nega tudo",
+        "why": "A rede continuaria existindo."
+      },
+      {
+        "text": "Criando projetos com gcloud em vez do console",
+        "why": "Os dois fazem a rede padrão a menos que a restrição diga outra coisa."
+      }
+    ]
+  },
+  "ex-v2e5k12j": {
+    "prompt": "O plano recusou `name = \"Planner_Santiago\"` e `ip_cidr_range = \"10.11.0.0/33\"`. Quem recusou?",
+    "hint": "Nada foi perguntado ao Google.",
+    "choices": [
+      {
+        "text": "O provider, no laptop",
+        "why": "Isso. Os dois são conferidos antes de qualquer pedido."
+      },
+      {
+        "text": "O Compute Engine",
+        "why": "Um plano com token de mentira não pergunta nada ao Compute Engine aqui."
+      },
+      {
+        "text": "A política da organização",
+        "why": "Nenhuma política foi lida."
+      },
+      {
+        "text": "O emulador",
+        "why": "O emulador é só Pub/Sub."
+      }
+    ]
+  },
+  "ex-s7vdm8wx": {
+    "prompt": "Toda rede em modo automático tira as sub-redes do bloco 10.128.0.0/___.",
+    "hint": "Metade de 10.0.0.0/8.",
+    "blanks": [
+      {
+        "accept": [
+          "9"
+        ]
+      }
+    ]
+  },
+  "ex-k71heh84": {
+    "prompt": "Quantos endereços uma sub-rede `/24` deixa para máquinas no Google Cloud?",
+    "hint": "O Google guarda quatro.",
+    "unit": "endereços"
+  },
+  "ex-26httczx": {
+    "prompt": "Que mudança pode ser feita na faixa primária de uma sub-rede depois que ela existe?",
+    "hint": "expand-ip-range.",
+    "choices": [
+      {
+        "text": "Torná-la menor",
+        "why": "Uma faixa primária nunca encolhe."
+      },
+      {
+        "text": "Movê-la para outro bloco",
+        "why": "Isso é uma sub-rede nova."
+      },
+      {
+        "text": "Torná-la maior, no espaço livre ao lado",
+        "why": "Isso. O novo comprimento de prefixo tem de ser menor, e os endereços ao lado livres."
+      },
+      {
+        "text": "Qualquer uma destas, enquanto nenhuma máquina a usa",
+        "why": "Só a expansão existe."
+      }
+    ]
+  },
+  "ex-41tn6aaw": {
+    "prompt": "Uma sub-rede de staging com `10.10.8.0/21` foi posta ao lado da `10.10.0.0/20` de São Paulo, e o plano disse `4 to add`. O que acontece no apply?",
+    "hint": "O provider não confere sobreposição.",
+    "choices": [
+      {
+        "text": "As quatro são criadas e dividem os endereços",
+        "why": "Duas sub-redes de uma rede não podem se sobrepor."
+      },
+      {
+        "text": "O Google recusa a staging, depois de o resto ser feito",
+        "why": "Isso. A sobreposição é conferida pelo Google quando a sub-rede é criada."
+      },
+      {
+        "text": "O Terraform encolhe a faixa de staging para caber",
+        "why": "O Terraform manda o que está escrito."
+      },
+      {
+        "text": "Nada é criado, já que o plano estava errado",
+        "why": "O plano era válido até onde ele via; os outros dão certo primeiro."
+      }
+    ]
+  },
+  "ex-v7tvy3j8": {
+    "prompt": "Por que o `ranges.py` sai com 1 quando acha uma sobreposição?",
+    "hint": "Pense num pipeline.",
+    "choices": [
+      {
+        "text": "O Python exige isso depois de imprimir um aviso",
+        "why": "É escolha do programa."
+      },
+      {
+        "text": "Para apagar a sub-rede sobreposta",
+        "why": "Ele não cria nem apaga nada."
+      },
+      {
+        "text": "Porque as faixas são CIDR inválido",
+        "why": "Faixas inválidas falham antes, no ip_network."
+      },
+      {
+        "text": "Para parar o apply que vem depois",
+        "why": "Isso. Um status de saída de falha para o próximo passo de um pipeline."
+      }
+    ]
+  },
+  "ex-a4a9e2np": {
+    "prompt": "Ligue cada um dos quatro endereços guardados pelo Google em 10.10.0.0/20 à função dele.",
+    "hint": "Primeiro, segundo, penúltimo, último.",
+    "pairs": [
+      {
+        "left": "10.10.0.0",
+        "right": "a própria rede"
+      },
+      {
+        "left": "10.10.0.1",
+        "right": "o gateway da sub-rede"
+      },
+      {
+        "left": "10.10.15.254",
+        "right": "guardado para uso futuro do Google"
+      },
+      {
+        "left": "10.10.15.255",
+        "right": "broadcast"
+      }
+    ],
+    "right_distractors": [
+      "a primeira máquina"
+    ]
+  },
+  "ex-jkfj13ws": {
+    "prompt": "O planner vai unir a rede dele a um escritório em 192.168.0.0/16 e à rede em modo automático de um parceiro. Que plano para São Paulo é seguro para os dois?",
+    "hint": "Evite dois blocos.",
+    "choices": [
+      {
+        "text": "10.158.0.0/20",
+        "why": "Ela está dentro de 10.128.0.0/9, onde vive toda rede automática."
+      },
+      {
+        "text": "192.168.16.0/20",
+        "why": "Ela está dentro da faixa do escritório."
+      },
+      {
+        "text": "10.200.0.0/20",
+        "why": "10.200 fica entre 10.128 e 10.255: dentro do bloco automático."
+      },
+      {
+        "text": "10.10.0.0/20",
+        "why": "Isso. Ela fica fora de 192.168.0.0/16 e de 10.128.0.0/9."
+      }
+    ]
+  },
+  "ex-c1rd0cyj": {
+    "prompt": "Ponha em ordem os passos de acrescentar uma sub-rede com segurança.",
+    "hint": "Aritmética primeiro.",
+    "items": [
+      "escolher um /20 do /16 da rede",
+      "conferi-lo com o ranges.py",
+      "escrever a sub-rede em Terraform e planejar",
+      "aplicar"
+    ],
+    "trap": "Planejar antes de conferir é o deslize: o plano sai limpo quaisquer que sejam as faixas, então não prova nada sobre sobreposição."
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "ex-yg3rkxq4": {
+    "prompt": "Que principal concede um papel a todo membro de uma equipe, à medida que a equipe muda?",
+    "hint": "Entrar e sair acontecem no diretório.",
+    "choices": [
+      {
+        "text": "`user:planner-devs@example.com`",
+        "why": "`user:` nomeia uma conta. O endereço de um grupo com o prefixo errado não nomeia ninguém útil."
+      },
+      {
+        "text": "`group:planner-devs@example.com`",
+        "why": "Isso. A participação é lida no momento do pedido, então a política nunca precisa mudar."
+      },
+      {
+        "text": "`domain:example.com`",
+        "why": "Isso é toda conta da empresa, não a equipe."
+      },
+      {
+        "text": "`allAuthenticatedUsers`",
+        "why": "Isso é toda conta Google do mundo."
+      }
+    ]
+  },
+  "ex-afe2xqmr": {
+    "prompt": "O que `allAuthenticatedUsers` quer dizer?",
+    "hint": "Autenticado por quem?",
+    "choices": [
+      {
+        "text": "As contas do domínio da própria empresa",
+        "why": "Isso é o `domain:example.com`. Este não tem domínio nenhum."
+      },
+      {
+        "text": "Os principals que já têm papel no projeto",
+        "why": "Ele não se limita ao projeto. Vai além da empresa inteira."
+      },
+      {
+        "text": "As contas de serviço, já que pessoas entram de outro jeito",
+        "why": "Pessoas e programas são incluídos, desde que tenham uma identidade Google."
+      },
+      {
+        "text": "Qualquer conta Google do mundo, um Gmail novo inclusive",
+        "why": "Isso. Soa cuidadoso e não é: entrar numa conta é tudo que ele pede."
+      }
+    ]
+  },
+  "ex-8c88nq9c": {
+    "prompt": "Um desenvolvedor sai. Com os papéis concedidos a grupos, o que precisa mudar?",
+    "hint": "Onde mora a participação?",
+    "choices": [
+      {
+        "text": "Só a participação dele nos grupos, no diretório",
+        "why": "Isso. Todo papel termina com ela, e nenhuma política do IAM é tocada."
+      },
+      {
+        "text": "Toda política que nomeia um desses grupos",
+        "why": "As políticas nomeiam o grupo, que continua existindo; só quem está nele mudou."
+      },
+      {
+        "text": "Os próprios grupos, que precisam ser apagados e recriados",
+        "why": "O grupo sobrevive a qualquer membro. Apagá-lo terminaria os papéis de todo mundo."
+      },
+      {
+        "text": "Nada até a conta ser apagada no Google Cloud",
+        "why": "As contas moram no diretório, não no Google Cloud."
+      }
+    ]
+  },
+  "ex-5dkg0vny": {
+    "prompt": "Um colega tenta conceder um papel a `user:ana.personal@gmail.com` na produção e é recusado, apesar de ter o papel certo. O que recusou?",
+    "hint": "A lição 4 tem uma barreira sobre que contas podem receber papéis.",
+    "choices": [
+      {
+        "text": "Contas do Gmail não podem ter papéis no Google Cloud",
+        "why": "Podem, num ambiente sem essa barreira. Este tem uma."
+      },
+      {
+        "text": "O diretório, que suspendeu a conta pessoal da Ana",
+        "why": "O diretório de uma empresa nem guarda contas pessoais do Gmail."
+      },
+      {
+        "text": "Uma restrição de domínio, da lição 4",
+        "why": "Isso. O `iam.allowedPolicyMemberDomains` recusa qualquer conta fora dos domínios listados."
+      },
+      {
+        "text": "A política de local da pasta de produção",
+        "why": "Uma política de local é sobre lugares, não pessoas."
+      }
+    ]
+  },
+  "ex-h35m9qex": {
+    "prompt": "O que é `serviceAccount:reports@planner-dev.iam.gserviceaccount.com`?",
+    "hint": "Leia o endereço da direita para a esquerda.",
+    "choices": [
+      {
+        "text": "A conta padrão do Compute Engine",
+        "why": "Essa leva o número do projeto, em `developer.gserviceaccount.com`."
+      },
+      {
+        "text": "O agente de serviço do Pub/Sub",
+        "why": "O nome de um agente de serviço começa com `service-` e o número do projeto."
+      },
+      {
+        "text": "Uma conta que alguém criou no `planner-dev`",
+        "why": "Isso. NOME@ID_DO_PROJETO.iam.gserviceaccount.com é a forma das que você cria."
+      },
+      {
+        "text": "Uma pessoa cujo endereço termina em `gserviceaccount.com`",
+        "why": "Ninguém entra como pessoa nesse domínio; é onde moram as contas de serviço."
+      }
+    ]
+  },
+  "ex-mr3kcr9k": {
+    "prompt": "Por que uma conta de serviço por workload, em vez de uma dividida pelo job de relatórios e pelo site?",
+    "hint": "O que uma conta compartilhada carrega?",
+    "choices": [
+      {
+        "text": "Cada um teria todos os papéis do outro",
+        "why": "Isso. Contas separadas mantêm os papéis de cada workload, e o estrago possível, só dele."
+      },
+      {
+        "text": "Uma conta de serviço só pode ser anexada a uma máquina",
+        "why": "Uma conta pode ser anexada a muitas máquinas. Esse é justamente o risco."
+      },
+      {
+        "text": "O Google cobra cada conta de serviço separadamente",
+        "why": "Contas de serviço não custam nada; o motivo é de permissões."
+      },
+      {
+        "text": "As cotas são contadas por conta de serviço",
+        "why": "As cotas são contadas por projeto, em geral. O motivo são os papéis."
+      }
+    ]
+  },
+  "ex-9fda63x3": {
+    "prompt": "Numa organização criada em 2021, uma máquina foi criada sem nomear conta de serviço. Ela roda como quem, e qual era o risco?",
+    "hint": "2021 é antes do seguro por padrão.",
+    "choices": [
+      {
+        "text": "Conta nenhuma, então não chama API nenhuma",
+        "why": "Uma máquina sem conta nomeada ganha a padrão."
+      },
+      {
+        "text": "O agente de serviço do Pub/Sub, só com papéis do Pub/Sub",
+        "why": "Agentes de serviço agem pelos serviços do Google, nunca como identidade de uma máquina."
+      },
+      {
+        "text": "A conta de quem a criou",
+        "why": "Uma máquina nunca roda como uma pessoa."
+      },
+      {
+        "text": "A conta padrão, com Editor",
+        "why": "Isso. Organizações antigas lhe davam Editor automaticamente, então toda máquina assim podia editar tudo."
+      }
+    ]
+  },
+  "ex-wjfme8yg": {
+    "prompt": "Uma política contém `deleted:serviceAccount:reports@planner-dev.iam.gserviceaccount.com?uid=104729...`. Uma conta nova chamada `reports` é criada no mesmo projeto. Ela tem os papéis antigos?",
+    "hint": "Para que serve o `uid`?",
+    "choices": [
+      {
+        "text": "Sim: o nome bate, e o IAM concede por nome",
+        "why": "É exatamente isso que a reescrita `deleted:` e o uid existem para impedir."
+      },
+      {
+        "text": "Não: a concessão está presa ao uid da conta antiga",
+        "why": "Isso. O uid impede que uma concessão antiga volte à vida sob um nome reaproveitado."
+      },
+      {
+        "text": "Sim, mas só por trinta dias",
+        "why": "Não há período de carência; a conta nova começa sem nada."
+      },
+      {
+        "text": "Ela não pode ser criada enquanto a entrada apagada existir",
+        "why": "O nome pode ser reaproveitado. Só as concessões antigas ficam com a conta antiga."
+      }
+    ]
+  },
+  "ex-45kpsc66": {
+    "prompt": "Ligue cada conta de serviço a quem a criou.",
+    "hint": "Olhe o domínio depois do `@`.",
+    "pairs": [
+      {
+        "left": "`reports@planner-dev.iam.gserviceaccount.com`",
+        "right": "uma pessoa da equipe"
+      },
+      {
+        "left": "`415104041262-compute@developer.gserviceaccount.com`",
+        "right": "o Compute Engine, quando a API foi habilitada"
+      },
+      {
+        "left": "`service-415104041262@gcp-sa-pubsub.iam.gserviceaccount.com`",
+        "right": "o Pub/Sub, para o próprio trabalho no projeto"
+      }
+    ],
+    "right_distractors": [
+      "a conta de faturamento da organização"
+    ]
+  },
+  "ex-e0bdxe8g": {
+    "prompt": "Qual a diferença entre um pool de workforce e um pool de workload?",
+    "hint": "Pessoas e programas.",
+    "choices": [
+      {
+        "text": "Workforce é para pessoas, workload é para programas",
+        "why": "Isso. Um pool de workforce mora na organização; um pool de workload mora num projeto."
+      },
+      {
+        "text": "Workforce é para contas Google, workload para contas de serviço",
+        "why": "Os dois pools são para identidades de fora do Google, que é a ideia da federação."
+      },
+      {
+        "text": "São o mesmo pool em dois consoles",
+        "why": "São dois recursos diferentes, em dois níveis diferentes da árvore."
+      },
+      {
+        "text": "Pools de workload são pagos e os de workforce são grátis",
+        "why": "A diferença é quem são as identidades, não o preço."
+      }
+    ]
+  },
+  "ex-2dkjhyck": {
+    "prompt": "O `terraform validate` recusou `member = \"ana@example.com\"`. Por quê?",
+    "hint": "O que um endereço sozinho não diz?",
+    "choices": [
+      {
+        "text": "`example.com` não é um domínio real",
+        "why": "O provider não sabe que domínios são reais; ele conferiu só a forma."
+      },
+      {
+        "text": "O Viewer não pode ser concedido num projeto",
+        "why": "Com `user:` na frente, a mesma concessão foi planejada sem reclamação."
+      },
+      {
+        "text": "Não tem prefixo, e o IAM nunca adivinha o tipo",
+        "why": "Isso. Poderia ser uma pessoa ou um grupo, e o IAM não adivinha."
+      },
+      {
+        "text": "O Google recusou o token placeholder",
+        "why": "O `validate` não manda nada ao Google."
+      }
+    ]
+  },
+  "ex-f3aazxhm": {
+    "prompt": "Que principal concede um papel a todo job de CI cujo token diz que veio do repositório `example/planner`, e a nenhum outro?",
+    "hint": "Um conjunto, escolhido por um atributo do token.",
+    "choices": [
+      {
+        "text": "`principal://.../workloadIdentityPools/ci-pool/subject/example/planner`",
+        "why": "`principal://` nomeia um subject, e um subject é a identidade de um único job, não um repositório."
+      },
+      {
+        "text": "`principalSet://.../workloadIdentityPools/ci-pool/attribute.repository/example/planner`",
+        "why": "Isso. Um principalSet escolhe toda identidade do pool cujo atributo tem esse valor."
+      },
+      {
+        "text": "`group:example/planner`",
+        "why": "`group:` nomeia um grupo do Google por endereço. Um repositório não é um."
+      },
+      {
+        "text": "`serviceAccount:example-planner@planner-dev.iam.gserviceaccount.com`",
+        "why": "Essa é uma conta de serviço dentro do Google Cloud, não os jobs de fora."
+      }
+    ]
+  },
+  "ex-3hfk89yp": {
+    "prompt": "O `grants.tf` usa `for_each` sobre um mapa de principals. Quantas concessões o plano adiciona?",
+    "hint": "Uma por entrada do mapa."
+  },
+  "ex-dj9jphww": {
+    "prompt": "O plano das cinco concessões passa. Por que toda uma delas ainda seria recusada se aplicada?",
+    "hint": "Um plano confere a forma. O que o Google confere?",
+    "choices": [
+      {
+        "text": "O Viewer não pode ser concedido a cinco principals de uma vez",
+        "why": "Um papel pode ser concedido a qualquer número de principals."
+      },
+      {
+        "text": "Recursos com `for_each` são aplicados um por dia",
+        "why": "O Terraform os aplica juntos, numa execução."
+      },
+      {
+        "text": "Um projeto não pode conceder papéis a um domínio",
+        "why": "`domain:` é um principal válido num projeto."
+      },
+      {
+        "text": "O Google confere se um principal existe, e estes não existem",
+        "why": "Isso. O provider confere como um principal é escrito; o Google confere se ele é real."
+      }
+    ]
+  },
+  "ex-v2kxbebf": {
+    "prompt": "A equipe do planner precisa de: os desenvolvedores lendo a produção, o job de relatórios lendo um bucket, e o GitHub Actions do `example/planner` fazendo deploy. Que principals servem, nessa ordem?",
+    "hint": "Um grupo, uma conta de serviço, um conjunto de um pool.",
+    "choices": [
+      {
+        "text": "`user:` para cada desenvolvedor, `serviceAccount:`, `group:`",
+        "why": "Concessões por pessoa apodrecem quando pessoas saem, e um sistema de CI não é um grupo do Google."
+      },
+      {
+        "text": "`domain:`, `allAuthenticatedUsers`, `serviceAccount:`",
+        "why": "`domain:` é a empresa inteira, e `allAuthenticatedUsers` para um job é uma concessão pública."
+      },
+      {
+        "text": "`group:`, a conta padrão do Compute Engine, uma chave baixada",
+        "why": "A conta padrão é dividida por toda máquina, e uma chave é uma credencial, não um principal."
+      },
+      {
+        "text": "`group:`, `serviceAccount:`, `principalSet://`",
+        "why": "Isso. Um grupo para as pessoas, uma conta só dele para o job, e o conjunto de um pool para o CI de fora."
+      }
+    ]
+  }
+}

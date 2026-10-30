@@ -1,0 +1,507 @@
+[
+  {
+    "id": "ex-1fv09x9c",
+    "version": 1,
+    "section": "the-family",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an Application Load Balancer understand that a Network Load Balancer does not?",
+    "hint": "Inside the connection.",
+    "choices": [
+      {
+        "text": "UDP",
+        "correct": false,
+        "why": "UDP is a Network Load Balancer's, not an Application one's."
+      },
+      {
+        "text": "HTTP: hosts, paths, headers",
+        "correct": true,
+        "why": "Right. A Network Load Balancer sees connections and nothing inside them."
+      },
+      {
+        "text": "Internal addresses",
+        "correct": false,
+        "why": "Both families have internal members."
+      },
+      {
+        "text": "Several regions at once",
+        "correct": false,
+        "why": "Global and regional is a separate question."
+      }
+    ]
+  },
+  {
+    "id": "ex-r00ab1t8",
+    "version": 1,
+    "section": "the-family",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backend must see each client's real address in the packets it receives. Which kind of load balancer fits?",
+    "hint": "Proxies replace it.",
+    "choices": [
+      {
+        "text": "A proxy Network Load Balancer",
+        "correct": false,
+        "why": "A proxy opens a new connection from itself."
+      },
+      {
+        "text": "A global external Application Load Balancer",
+        "correct": false,
+        "why": "It passes the address in a header, not in the packet."
+      },
+      {
+        "text": "Any, as long as it is internal",
+        "correct": false,
+        "why": "Internal proxies replace the address too."
+      },
+      {
+        "text": "A passthrough Network Load Balancer",
+        "correct": true,
+        "why": "Right. It hands the client's own packets to the backend."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6400p59",
+    "version": 1,
+    "section": "the-family",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is there no DNS trick needed to send a customer in Lisbon to a nearby edge of the planner's global load balancer?",
+    "hint": "One address, announced everywhere.",
+    "choices": [
+      {
+        "text": "Anycast, one IP at every edge",
+        "correct": true,
+        "why": "Right. The customer reaches the nearest edge, and Google's network does the rest."
+      },
+      {
+        "text": "Cloud DNS answers per country",
+        "correct": false,
+        "why": "There is one answer, the same address."
+      },
+      {
+        "text": "The backends are in Lisbon",
+        "correct": false,
+        "why": "They are in São Paulo; the edge is near the customer."
+      },
+      {
+        "text": "Cloud CDN redirects the request",
+        "correct": false,
+        "why": "CDN caches; it does not choose the edge."
+      }
+    ]
+  },
+  {
+    "id": "ex-kx2brwv5",
+    "version": 1,
+    "section": "the-family",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From which ranges do Google's load balancer health checks arrive?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "35.235.240.0/20",
+        "correct": false,
+        "why": "That is Identity-Aware Proxy's range."
+      },
+      {
+        "text": "199.36.153.8/30",
+        "correct": false,
+        "why": "That is private.googleapis.com."
+      },
+      {
+        "text": "35.191.0.0/16 and 130.211.0.0/22",
+        "correct": true,
+        "why": "Right. A firewall rule must let them reach the backends."
+      },
+      {
+        "text": "The backends' own subnet",
+        "correct": false,
+        "why": "Health checks come from Google, outside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bdtvkp4",
+    "version": 1,
+    "section": "the-family",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A global external Application Load Balancer ends TLS at Google's ___.",
+    "hint": "Near the customer.",
+    "blanks": [
+      {
+        "accept": [
+          "edge"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zq6nyp5z",
+    "version": 1,
+    "section": "the-chain",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the links of an Application Load Balancer in the order a request travels them.",
+    "hint": "From the address to the machine.",
+    "items": [
+      "forwarding rule",
+      "target HTTPS proxy",
+      "URL map",
+      "backend service",
+      "backends"
+    ],
+    "trap": "Putting the URL map before the proxy is the slip: the path cannot be read until TLS has been ended, which is the proxy's job."
+  },
+  {
+    "id": "ex-7bpmq7ne",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `terraform graph`, the URL map needs both backend services. What does that say about creation?",
+    "hint": "needs means first.",
+    "choices": [
+      {
+        "text": "The URL map is made first, then filled in",
+        "correct": false,
+        "why": "It names the backend services, so they must exist."
+      },
+      {
+        "text": "They are made at the same moment",
+        "correct": false,
+        "why": "A reference orders them."
+      },
+      {
+        "text": "Those two are created first",
+        "correct": true,
+        "why": "Right. The chain is created backwards, from the backends to the forwarding rule."
+      },
+      {
+        "text": "Nothing; graph shows requests, not creation",
+        "correct": false,
+        "why": "Terraform's graph is its order of work."
+      }
+    ]
+  },
+  {
+    "id": "ex-14hwd8z1",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Google-managed certificate for `planner.example.com` has stayed in `PROVISIONING` for a day. What is the likeliest cause?",
+    "hint": "How does Google prove control?",
+    "choices": [
+      {
+        "text": "DNS does not point at it yet",
+        "correct": true,
+        "why": "Right. Google proves control by reaching the load balancer at that name."
+      },
+      {
+        "text": "Managed certificates take a week",
+        "correct": false,
+        "why": "About an hour, once DNS is right."
+      },
+      {
+        "text": "The URL map has no path rule for /",
+        "correct": false,
+        "why": "The default service covers /."
+      },
+      {
+        "text": "The health check fails",
+        "correct": false,
+        "why": "Health checks concern backends, not certificates."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rm491m0",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a backend service with `EXTERNAL_MANAGED` not be used behind a forwarding rule with `EXTERNAL`?",
+    "hint": "Two generations.",
+    "choices": [
+      {
+        "text": "EXTERNAL is for regional balancers",
+        "correct": false,
+        "why": "Both are global external schemes."
+      },
+      {
+        "text": "EXTERNAL_MANAGED needs a static address",
+        "correct": false,
+        "why": "Address type is not what separates them."
+      },
+      {
+        "text": "The provider does not support EXTERNAL",
+        "correct": false,
+        "why": "It supports both."
+      },
+      {
+        "text": "Classic and current never mix",
+        "correct": true,
+        "why": "Right. EXTERNAL is the classic one; a chain is one or the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1s8hg5h",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request for `planner.example.com/api/tasks` arrives. Which backend service answers?",
+    "hint": "Read the path rule.",
+    "choices": [
+      {
+        "text": "planner-web, the default service",
+        "correct": false,
+        "why": "The default is for paths no rule matches."
+      },
+      {
+        "text": "planner-api, by its path rule",
+        "correct": true,
+        "why": "Right. /api/* matches, and the path rule names the api service."
+      },
+      {
+        "text": "Both, alternating",
+        "correct": false,
+        "why": "One backend service per request."
+      },
+      {
+        "text": "Neither; the host does not match",
+        "correct": false,
+        "why": "The host rule names planner.example.com."
+      }
+    ]
+  },
+  {
+    "id": "ex-xkgcp5mj",
+    "version": 1,
+    "section": "the-chain",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many resources did the plan of `lb.tf` add?",
+    "hint": "Count them.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zwstm665",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner sends files to the planner over SFTP from the internet. Which load balancer fits?",
+    "hint": "Not HTTP.",
+    "choices": [
+      {
+        "text": "An external proxy Network Load Balancer",
+        "correct": true,
+        "why": "Right. TCP from the internet, and nothing about HTTP to read."
+      },
+      {
+        "text": "A global external Application Load Balancer",
+        "correct": false,
+        "why": "It reads HTTP, and SFTP is not HTTP."
+      },
+      {
+        "text": "A regional internal Application Load Balancer",
+        "correct": false,
+        "why": "Internal means nobody outside reaches it."
+      },
+      {
+        "text": "No load balancer; a firewall rule is enough",
+        "correct": false,
+        "why": "A rule filters; it does not spread connections over backends."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8frp7tq",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first regional internal Application Load Balancer in São Paulo refuses to be created. What is the usual reason?",
+    "hint": "Envoy needs addresses.",
+    "choices": [
+      {
+        "text": "Internal balancers must be global",
+        "correct": false,
+        "why": "There are regional internal ones; this is one."
+      },
+      {
+        "text": "The health check port is 8080",
+        "correct": false,
+        "why": "Any port works."
+      },
+      {
+        "text": "No proxy-only subnet in the region",
+        "correct": true,
+        "why": "Right. Regional Envoy balancers need a range set aside for Google's proxies."
+      },
+      {
+        "text": "A certificate is missing",
+        "correct": false,
+        "why": "Internal HTTP needs none."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xzqjpxk",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At 0.025 dollars an hour, what does one forwarding rule cost over a 730-hour month, in dollars?",
+    "hint": "Hours times price.",
+    "value": 18.25,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-dy43ztzk",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner adds an HTTP rule on port 80, to redirect to HTTPS, beside its HTTPS rule. What happens to the forwarding rule charge?",
+    "hint": "The first five.",
+    "choices": [
+      {
+        "text": "It doubles to 0.05 an hour",
+        "correct": false,
+        "why": "The first five are priced together."
+      },
+      {
+        "text": "Nothing changes",
+        "correct": true,
+        "why": "Right. The page's own example: one rule and three rules are both 0.025 an hour."
+      },
+      {
+        "text": "It rises by 0.01 an hour",
+        "correct": false,
+        "why": "That is the price of a sixth rule and beyond."
+      },
+      {
+        "text": "Port 80 rules are free",
+        "correct": false,
+        "why": "Ports do not change the price."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtxfsden",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does Cloud CDN lower the load balancer's processing charge?",
+    "hint": "Where is a cached response served from?",
+    "choices": [
+      {
+        "text": "It compresses every response",
+        "correct": false,
+        "why": "The charge is avoided, not shrunk."
+      },
+      {
+        "text": "It is included in the forwarding rule price",
+        "correct": false,
+        "why": "CDN has prices of its own."
+      },
+      {
+        "text": "It moves processing to a cheaper region",
+        "correct": false,
+        "why": "The cache is at the edge, not in a region."
+      },
+      {
+        "text": "Cached responses never pass through it",
+        "correct": true,
+        "why": "Right. They are served from the edge and billed as CDN egress instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkadpcgt",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of the planner's cases to its load balancer.",
+    "hint": "Read the deciding fact.",
+    "pairs": [
+      {
+        "left": "the public website",
+        "right": "global external Application"
+      },
+      {
+        "left": "an internal database pool",
+        "right": "internal passthrough Network"
+      },
+      {
+        "left": "a game server on UDP",
+        "right": "external passthrough Network"
+      }
+    ],
+    "right_distractors": [
+      "internal proxy Application, global"
+    ]
+  },
+  {
+    "id": "ex-xf1gze3w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customers see `502` from the planner's site, and every backend is marked unhealthy, right after a firewall change. What is the first thing to check?",
+    "hint": "Who checks health?",
+    "choices": [
+      {
+        "text": "The certificate's state",
+        "correct": false,
+        "why": "A certificate problem fails the handshake, not health checks."
+      },
+      {
+        "text": "The URL map's path rules",
+        "correct": false,
+        "why": "Routing does not mark backends unhealthy."
+      },
+      {
+        "text": "The forwarding rule's port",
+        "correct": false,
+        "why": "Requests arrive; the 502 is behind the proxy."
+      },
+      {
+        "text": "The health check ranges",
+        "correct": true,
+        "why": "Right. Without them every backend fails at once."
+      }
+    ]
+  }
+]

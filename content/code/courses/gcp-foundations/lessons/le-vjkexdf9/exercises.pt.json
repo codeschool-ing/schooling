@@ -1,0 +1,341 @@
+{
+  "ex-e5a9jgcz": {
+    "prompt": "Por que um gateway HA VPN tem duas interfaces?",
+    "hint": "Uma pode falhar.",
+    "choices": [
+      {
+        "text": "Uma para entrada e outra para saída",
+        "why": "Cada túnel leva os dois sentidos."
+      },
+      {
+        "text": "Para sobreviver à queda de uma",
+        "why": "Isso. Um túnel de cada é o desenho para o qual o Google oferece 99,99%."
+      },
+      {
+        "text": "Uma por região que ele serve",
+        "why": "O gateway está numa região."
+      },
+      {
+        "text": "Uma para IPv4 e outra para IPv6",
+        "why": "As duas são sobre disponibilidade, não famílias de endereço."
+      }
+    ]
+  },
+  "ex-ehkzax7k": {
+    "prompt": "Como a rede do planner aprende a faixa do escritório, 192.168.0.0/16, pelo HA VPN?",
+    "hint": "Sem rotas à mão.",
+    "choices": [
+      {
+        "text": "Uma rota estática escrita por túnel",
+        "why": "O HA VPN não aceita rotas estáticas."
+      },
+      {
+        "text": "O gateway VPN lê as sub-redes do escritório",
+        "why": "O gateway criptografa; o router troca rotas."
+      },
+      {
+        "text": "O Cloud DNS a encaminha",
+        "why": "DNS é nomes, não rotas."
+      },
+      {
+        "text": "O Cloud Router a aprende por BGP",
+        "why": "Isso. Ela aparece como rota dinâmica, e é retirada se o túnel cair."
+      }
+    ]
+  },
+  "ex-c5bqmhzk": {
+    "prompt": "Uma rota aprendida pelo router em São Paulo tem de ser usável por máquinas em Santiago. O que garante isso?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "O modo de roteamento global",
+        "why": "Isso. O modo regional manteria rotas dinâmicas na região do router."
+      },
+      {
+        "text": "Um segundo HA VPN em Santiago",
+        "why": "Isso funciona e não é necessário para isto."
+      },
+      {
+        "text": "Peering entre as duas regiões",
+        "why": "Regiões de uma rede não precisam de peering."
+      },
+      {
+        "text": "Exportar rotas personalizadas",
+        "why": "Essa opção é do peering."
+      }
+    ]
+  },
+  "ex-jvw6pkkz": {
+    "prompt": "Por que o plano se recusou a rodar até o `TF_VAR_shared_secret` ser definido?",
+    "hint": "O arquivo não tem segredo.",
+    "choices": [
+      {
+        "text": "O Google rejeitou a chave vazia",
+        "why": "O plano não perguntou nada ao Google."
+      },
+      {
+        "text": "Variáveis sensíveis são sempre recusadas",
+        "why": "Elas são aceitas e escondidas na tela."
+      },
+      {
+        "text": "Ela não tem valor padrão",
+        "why": "Isso. O segredo vem de fora do arquivo, aqui uma variável de ambiente."
+      },
+      {
+        "text": "Os túneis precisam de IKE versão 1",
+        "why": "O arquivo pede IKEv2, e esse não era o erro."
+      }
+    ]
+  },
+  "ex-q0da8t8x": {
+    "prompt": "O plano mostra `shared_secret = (sensitive value)`. Onde o segredo ainda pode ser lido depois de um apply?",
+    "hint": "Sensível não é secreto.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum; o Terraform o descarta",
+        "why": "Ele é escrito no estado como qualquer atributo."
+      },
+      {
+        "text": "Na saída do plano na tela",
+        "why": "É exatamente ali que ele é escondido."
+      },
+      {
+        "text": "No arquivo de estado do Terraform",
+        "why": "Isso. A menos que se use o shared_secret_wo, só de escrita, o estado o guarda."
+      },
+      {
+        "text": "No endereço público do roteador do escritório",
+        "why": "Endereços não levam segredos."
+      }
+    ]
+  },
+  "ex-qmm1c0kb": {
+    "prompt": "Por que `asn = 100` foi recusado para o Cloud Router?",
+    "hint": "Leia as faixas.",
+    "choices": [
+      {
+        "text": "Não é um ASN privado",
+        "why": "Isso. 64512 a 65534, ou 4200000000 a 4294967294."
+      },
+      {
+        "text": "É igual ao ASN do escritório",
+        "why": "O escritório usa 65010."
+      },
+      {
+        "text": "ASNs têm de ser pares",
+        "why": "Não há essa regra."
+      },
+      {
+        "text": "O router ainda não tem interfaces",
+        "why": "A conferência é só sobre o número."
+      }
+    ]
+  },
+  "ex-93z5z6vm": {
+    "prompt": "As sessões BGP dentro dos túneis usam endereços da faixa link-local 169.254.0.0/___.",
+    "hint": "Dezesseis bits.",
+    "blanks": [
+      {
+        "accept": [
+          "16"
+        ]
+      }
+    ]
+  },
+  "ex-8y38tz10": {
+    "prompt": "O que o Cloud Interconnect substitui entre o datacenter e o Google?",
+    "hint": "Uma estrada, não um túnel.",
+    "choices": [
+      {
+        "text": "O Cloud Router",
+        "why": "O Interconnect usa um Cloud Router, pelo attachment de VLAN."
+      },
+      {
+        "text": "A rede VPC",
+        "why": "A rede fica; a estrada até ela muda."
+      },
+      {
+        "text": "BGP",
+        "why": "O router ainda fala BGP pelo attachment."
+      },
+      {
+        "text": "A internet pública",
+        "why": "Isso. O tráfego não atravessa a internet pública de jeito nenhum."
+      }
+    ]
+  },
+  "ex-7seppt6a": {
+    "prompt": "O planner não tem equipamento em nenhuma instalação de colocation do Google. Que Interconnect ele pode usar?",
+    "hint": "Por outra pessoa.",
+    "choices": [
+      {
+        "text": "Dedicated Interconnect, a partir do escritório",
+        "why": "Dedicated é um cabo numa instalação de colocation."
+      },
+      {
+        "text": "Partner Interconnect",
+        "why": "Isso. O provedor já está conectado ao Google."
+      },
+      {
+        "text": "Cross-Cloud Interconnect",
+        "why": "Isso une o Google a outra nuvem."
+      },
+      {
+        "text": "Nenhum até mudar o datacenter",
+        "why": "O Partner Interconnect existe exatamente para isto."
+      }
+    ]
+  },
+  "ex-0mjgcffz": {
+    "prompt": "A equipe de segurança exige que os dados de clientes no Dedicated Interconnect do planner sejam criptografados. Que opções servem?",
+    "hint": "Privado não é criptografado.",
+    "choices": [
+      {
+        "text": "MACsec, ou HA VPN sobre o Interconnect",
+        "why": "Isso. Um criptografa quadros no enlace; o outro roda IPsec pelo attachment."
+      },
+      {
+        "text": "Nada; um circuito já é criptografado",
+        "why": "Um circuito é privado, o que é outra coisa."
+      },
+      {
+        "text": "Uma regra de firewall no attachment",
+        "why": "Firewalls filtram; não criptografam."
+      },
+      {
+        "text": "O Private Google Access",
+        "why": "Isso alcança as APIs do Google; não criptografa nada."
+      }
+    ]
+  },
+  "ex-hzxh83c1": {
+    "prompt": "Qual a primeira coisa a saber sobre o Interconnect quando o cronograma de um projeto depende dele?",
+    "hint": "Metade dele é física.",
+    "choices": [
+      {
+        "text": "Precisa de uma rede VPC nova",
+        "why": "Ele se prende a uma existente."
+      },
+      {
+        "text": "Não consegue levar BGP",
+        "why": "Leva, pelo Cloud Router."
+      },
+      {
+        "text": "Leva semanas de prazo",
+        "why": "Isso. Uma conexão é pedida, autorizada e cabeada antes de qualquer Terraform importar."
+      },
+      {
+        "text": "É limitado a 50 Mbps no começo",
+        "why": "A capacidade é escolhida ao pedir."
+      }
+    ]
+  },
+  "ex-2ggzsryz": {
+    "prompt": "Ligue cada peça ao trabalho dela.",
+    "hint": "Do cabo às rotas.",
+    "pairs": [
+      {
+        "left": "conexão Dedicated",
+        "right": "o circuito físico"
+      },
+      {
+        "left": "attachment de VLAN",
+        "right": "prende a conexão a um router numa região"
+      },
+      {
+        "left": "Cloud Router",
+        "right": "troca rotas por BGP"
+      }
+    ],
+    "right_distractors": [
+      "criptografa todo pacote"
+    ]
+  },
+  "ex-e9pmvy91": {
+    "prompt": "Quanto custa um túnel HA VPN num mês de 730 horas, a 0,05 dólar por hora, em dólares?",
+    "hint": "Horas vezes preço.",
+    "unit": "dólares"
+  },
+  "ex-c2kgmkgk": {
+    "prompt": "Quantos minutos por mês, num mês de 30 dias, a disponibilidade de 99,9% ainda permite de queda? Dê uma casa decimal.",
+    "hint": "Um milésimo de 43.200 minutos.",
+    "unit": "minutos"
+  },
+  "ex-3yg7pykr": {
+    "prompt": "O que justifica mudar o planner de HA VPN para Interconnect, segundo a lição?",
+    "hint": "Não o nove a mais.",
+    "choices": [
+      {
+        "text": "Chegar a 99,99% de disponibilidade",
+        "why": "O HA VPN já chega lá."
+      },
+      {
+        "text": "Banda, ou o preço de transferência",
+        "why": "Isso. O HA VPN já dá 99,99%."
+      },
+      {
+        "text": "Dispensar o BGP",
+        "why": "O Interconnect também usa BGP."
+      },
+      {
+        "text": "Evitar um Cloud Router",
+        "why": "Os dois precisam de um."
+      }
+    ]
+  },
+  "ex-nsnxhgzy": {
+    "prompt": "O planner considera uma única conexão Interconnect de 10 Gbps para economizar. Que disponibilidade esse desenho atinge, pela tabela da lição?",
+    "hint": "Todo desenho da tabela é um par.",
+    "choices": [
+      {
+        "text": "99,9%",
+        "why": "Isso exige duas conexões em domínios de disponibilidade de borda diferentes."
+      },
+      {
+        "text": "99,99%",
+        "why": "Isso exige dois pares em duas cidades."
+      },
+      {
+        "text": "100%, já que um circuito não tem internet",
+        "why": "Um cabo pode ser cortado como qualquer outro."
+      },
+      {
+        "text": "Nenhuma que a tabela ofereça",
+        "why": "Isso. Até 99,9% exige duas conexões numa cidade."
+      }
+    ]
+  },
+  "ex-hahjysep": {
+    "prompt": "Ponha em ordem os passos de subir o HA VPN do planner.",
+    "hint": "Pontas primeiro, depois túneis, depois rotas.",
+    "items": [
+      "o gateway HA VPN e o gateway externo do escritório",
+      "o Cloud Router com o ASN dele",
+      "dois túneis, um por interface",
+      "uma interface do router e um par BGP por túnel"
+    ],
+    "trap": "Criar os pares BGP antes dos túneis é o deslize: cada par fica numa interface presa a um túnel, então o túnel tem de existir antes."
+  },
+  "ex-5wsyvsd5": {
+    "prompt": "Um dos dois túneis do planner cai à noite. O que as máquinas em São Paulo percebem?",
+    "hint": "O BGP retira.",
+    "choices": [
+      {
+        "text": "O escritório fica inalcançável até de manhã",
+        "why": "Isso seria um desenho com um túnel."
+      },
+      {
+        "text": "Metade dos pacotes é descartada",
+        "why": "Rotas são retiradas; nada é mandado por muito tempo a um túnel morto."
+      },
+      {
+        "text": "Alguém tem de editar uma rota estática",
+        "why": "Não há nenhuma; as rotas são dinâmicas."
+      },
+      {
+        "text": "Pouco: o tráfego passa para o outro túnel",
+        "why": "Isso. As rotas do túnel que caiu são retiradas e o que resta leva tudo."
+      }
+    ]
+  }
+}

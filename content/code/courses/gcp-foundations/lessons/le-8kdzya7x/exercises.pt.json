@@ -1,0 +1,336 @@
+{
+  "ex-y9marqpr": {
+    "prompt": "Numa política de permissão, o que uma vinculação guarda?",
+    "hint": "Uma destas por papel.",
+    "choices": [
+      {
+        "text": "Um principal e todo papel que ele tem",
+        "why": "A política é organizada por papel, não por principal."
+      },
+      {
+        "text": "Um papel e os seus principals",
+        "why": "Isso. Um papel aparece uma vez, com todo principal que o tem."
+      },
+      {
+        "text": "Uma permissão e o recurso a que ela se aplica",
+        "why": "Vinculações nomeiam papéis; as permissões moram dentro dos papéis."
+      },
+      {
+        "text": "Uma regra de negação e as exceções dela",
+        "why": "Isso é uma política de negação, outro tipo de política."
+      }
+    ]
+  },
+  "ex-wmgz0w5s": {
+    "prompt": "Por que o `gcloud ... add-iam-policy-binding` começa chamando `getIamPolicy`?",
+    "hint": "Existe uma chamada que acrescenta um membro?",
+    "choices": [
+      {
+        "text": "Para conferir se quem pede é Owner",
+        "why": "A permissão é conferida pelo Google na gravação. A leitura é pela própria política."
+      },
+      {
+        "text": "Porque o emulador exige",
+        "why": "A CLI faz o mesmo contra o Google. O emulador só não consegue responder a leitura."
+      },
+      {
+        "text": "Para fazer backup da política antes de mudá-la",
+        "why": "Nada é guardado. A cópia que ele lê é a cópia que edita e grava de volta."
+      },
+      {
+        "text": "Não existe chamada que acrescente um membro",
+        "why": "Isso. Não existe chamada de acrescentar um membro; a CLI faz ler, mudar, gravar num comando."
+      }
+    ]
+  },
+  "ex-ehzzn4bc": {
+    "prompt": "Dois administradores leem a política de um projeto no mesmo instante, cada um acrescenta um membro e grava de volta. O que impede a segunda gravação de apagar a mudança da primeira?",
+    "hint": "Um campo da política diz em que versão uma cópia foi lida.",
+    "choices": [
+      {
+        "text": "O etag com que a cópia de cada um foi lida",
+        "why": "Isso. O segundo cliente lê de novo e tenta outra vez, e os dois membros ficam na política."
+      },
+      {
+        "text": "O campo version, que precisa ser 3",
+        "why": "A versão 3 é sobre condições. Não faz nada por dois escritores."
+      },
+      {
+        "text": "Nada; a última gravação vence",
+        "why": "Isso é o que aconteceria sem o etag, ou com um cliente que o descarta."
+      },
+      {
+        "text": "O IAM trava a política enquanto alguém a lê",
+        "why": "Não há trava. O etag detecta o conflito na hora da gravação."
+      }
+    ]
+  },
+  "ex-hr9s4pwd": {
+    "prompt": "O grupo de plantão precisa de editor do Pub/Sub durante o incidente de hoje, e ninguém confia que vai lembrar de remover. O que o IAM oferece?",
+    "hint": "Uma vinculação pode dizer quando vale.",
+    "choices": [
+      {
+        "text": "Uma política de negação que começa amanhã",
+        "why": "Políticas de negação não têm data de início; uma condição na concessão é a ferramenta."
+      },
+      {
+        "text": "Um papel personalizado que expira",
+        "why": "Papéis não expiram. A condição da vinculação faz o controle do tempo."
+      },
+      {
+        "text": "Uma condição em `request.time` na concessão",
+        "why": "Isso. Uma concessão temporária termina sem ninguém mexer nela de novo."
+      },
+      {
+        "text": "Conceder Owner, que pode ser revogado no console",
+        "why": "Owner é muito mais do que o incidente precisa, e revogá-lo é o lembrar em que ninguém confiou."
+      }
+    ]
+  },
+  "ex-j3sxprmn": {
+    "prompt": "Uma política com condição em alguma vinculação precisa ser enviada na versão ___, ou as condições são descartadas.",
+    "hint": "Um único dígito.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "três",
+          "tres"
+        ]
+      }
+    ]
+  },
+  "ex-yeb597tq": {
+    "prompt": "O emulador respondeu `getIamPolicy` com `501 UNIMPLEMENTED`. O que isso quer dizer?",
+    "hint": "O banner da lição 1 disse algo sobre o IAM.",
+    "choices": [
+      {
+        "text": "A rede entre a CLI e o emulador falhou",
+        "why": "A frase da CLI sobre conectividade é um palpite. O emulador respondeu com clareza."
+      },
+      {
+        "text": "O tópico ainda não tem política",
+        "why": "Todo tópico tem uma política, vazia ou não. O que falta é o próprio método."
+      },
+      {
+        "text": "O emulador não tem métodos de IAM",
+        "why": "Isso. A integração com o IAM está desligada no emulador, e ele diz isso do seu jeito."
+      },
+      {
+        "text": "O token placeholder não tem o papel de ler políticas",
+        "why": "O emulador ignora o token; uma recusa de permissão seria 403."
+      }
+    ]
+  },
+  "ex-8px9njy7": {
+    "prompt": "Um `google_project_iam_binding` para `roles/viewer` lista dois grupos. No mês passado alguém concedeu Viewer à Ana à mão. O que o próximo apply faz com a Ana?",
+    "hint": "A vinculação é dona do papel inteiro.",
+    "choices": [
+      {
+        "text": "Tira a Ana do Viewer",
+        "why": "Isso. O `_binding` é autoritativo para o papel: os membros dele são exatamente os do arquivo."
+      },
+      {
+        "text": "Mantém a Ana, já que ela entrou fora do Terraform",
+        "why": "É assim que o `_member` se comporta. O `_binding` define a lista exatamente."
+      },
+      {
+        "text": "Acrescenta a Ana ao arquivo",
+        "why": "O Terraform nunca escreve os seus arquivos."
+      },
+      {
+        "text": "Falha, porque a política mudou fora do Terraform",
+        "why": "Ele funciona, e esse é o problema: tira a Ana em silêncio."
+      }
+    ]
+  },
+  "ex-4f2yc0he": {
+    "prompt": "Por que a documentação do provider do Google alerta contra o `google_project_iam_policy` em letras maiúsculas?",
+    "hint": "Ele é dono de mais de um papel.",
+    "choices": [
+      {
+        "text": "Ele é mais lento que os outros dois",
+        "why": "Velocidade não é o perigo. Remover toda vinculação que o arquivo esqueceu é."
+      },
+      {
+        "text": "Ele não aceita condições",
+        "why": "Aceita. O alerta é sobre o que ele remove."
+      },
+      {
+        "text": "Ele está obsoleto e vai ser removido",
+        "why": "Ele é suportado. Só é o mais perigoso dos três."
+      },
+      {
+        "text": "Ele é dono dos owners, então um arquivo que os omite os remove",
+        "why": "Isso. Sem os owners, vão junto as pessoas que poderiam recolocá-los."
+      }
+    ]
+  },
+  "ex-vg1ern0e": {
+    "prompt": "O Terraform de um projeto tem um `google_project_iam_binding` e um `google_project_iam_member` para Viewer. O que acontece em applies sucessivos?",
+    "hint": "Um acrescenta, o outro define exatamente.",
+    "choices": [
+      {
+        "text": "O member é mesclado no binding",
+        "why": "O Terraform não mescla nada entre recursos. Cada um impõe a sua ideia."
+      },
+      {
+        "text": "Eles brigam, e o plano nunca se acomoda",
+        "why": "Isso. O member acrescenta um principal que o binding remove, a cada execução."
+      },
+      {
+        "text": "O Terraform recusa a configuração no validate",
+        "why": "A validação vê dois recursos válidos; o conflito só aparece no apply."
+      },
+      {
+        "text": "O binding vence uma vez e o conflito termina",
+        "why": "O member recoloca o principal no apply seguinte, então nunca termina."
+      }
+    ]
+  },
+  "ex-k9bktj0g": {
+    "prompt": "Ligue cada recurso do Terraform ao que ele possui.",
+    "hint": "Da política inteira até uma concessão.",
+    "pairs": [
+      {
+        "left": "`google_project_iam_policy`",
+        "right": "a política inteira"
+      },
+      {
+        "left": "`google_project_iam_binding`",
+        "right": "um papel e a lista de membros dele"
+      },
+      {
+        "left": "`google_project_iam_member`",
+        "right": "um principal num papel"
+      }
+    ],
+    "right_distractors": [
+      "a conta de faturamento"
+    ]
+  },
+  "ex-pdvgh8rb": {
+    "prompt": "O Owner da produção deve ser exatamente os dois membros do grupo de emergência, e qualquer coisa acrescentada à mão deve sumir. Que recurso serve?",
+    "hint": "Autoritativo para um papel.",
+    "choices": [
+      {
+        "text": "`google_project_iam_binding`",
+        "why": "Isso. Ele define os membros do papel exatamente, e remove o que foi posto à mão no apply seguinte."
+      },
+      {
+        "text": "`google_project_iam_member`",
+        "why": "Aditivo: deixaria as concessões feitas à mão no lugar."
+      },
+      {
+        "text": "`google_project_iam_policy`",
+        "why": "Esse é dono de todo papel, não só do Owner, e é o que se evita."
+      },
+      {
+        "text": "`google_iam_deny_policy`",
+        "why": "Uma negação recusa permissões; não decide quem tem Owner."
+      }
+    ]
+  },
+  "ex-wyme0y11": {
+    "prompt": "A organização concede Viewer a um grupo. A política de permissão de um projeto pode tirar essa concessão dos projetos?",
+    "hint": "O que uma política de permissão pode conter?",
+    "choices": [
+      {
+        "text": "Sim, deixando o grupo fora da própria política",
+        "why": "Deixá-lo de fora não muda nada; a concessão herdada continua valendo."
+      },
+      {
+        "text": "Sim, com uma vinculação de membros vazios",
+        "why": "Uma vinculação vazia não concede nada nem remove nada herdado."
+      },
+      {
+        "text": "Não: permissões só acrescentam",
+        "why": "Isso. Tirar uma concessão mais abaixo é para isso que existe a política de negação."
+      },
+      {
+        "text": "Sim, com uma política da organização no projeto",
+        "why": "Políticas da organização restringem o que pode ser feito, não quem tem um papel."
+      }
+    ]
+  },
+  "ex-d1kkeym6": {
+    "prompt": "Ponha os passos de avaliar um pedido na ordem do Google.",
+    "hint": "As recusas primeiro.",
+    "items": [
+      "ler as negações, da organização ao recurso",
+      "ler as permissões, da organização ao recurso",
+      "recusar se nada concedeu a permissão"
+    ],
+    "trap": "Ler as permissões primeiro é o deslize: uma negação seria então sobreposta por qualquer concessão, que é exatamente o que ela existe para impedir."
+  },
+  "ex-3629sd7j": {
+    "prompt": "Numa regra de negação, como se escreve a permissão de apagar um tópico?",
+    "hint": "Com o endereço do serviço na frente.",
+    "choices": [
+      {
+        "text": "`pubsub.topics.delete`",
+        "why": "Essa é a forma que os papéis usam. Uma regra de negação quer o endereço do serviço também."
+      },
+      {
+        "text": "`pubsub.googleapis.com/topics.delete`",
+        "why": "Isso. Políticas de negação escrevem permissões com o domínio do serviço primeiro."
+      },
+      {
+        "text": "`roles/pubsub.editor`",
+        "why": "Uma negação nomeia permissões, não papéis."
+      },
+      {
+        "text": "`//pubsub.googleapis.com/topics/delete`",
+        "why": "Isso tem forma de nome completo de recurso, não de permissão."
+      }
+    ]
+  },
+  "ex-es59wf0j": {
+    "prompt": "A política de negação recusa a exclusão de projeto a `principalSet://goog/public:all`, com o grupo de emergência como exceção. Um Owner que não está nesse grupo tenta apagar o `planner-prod`. O que acontece, e por quê?",
+    "hint": "Qual é lido primeiro, e o Owner importa para ele?",
+    "choices": [
+      {
+        "text": "Permitido: o Owner está acima de uma política de negação",
+        "why": "Nenhum papel está acima de uma negação. É para isso que ela existe."
+      },
+      {
+        "text": "Permitido: uma negação num projeto não impede a própria exclusão",
+        "why": "Impede; o `projects.delete` está na lista de permissões que uma negação aceita."
+      },
+      {
+        "text": "Recusado: Owners não podem apagar projetos",
+        "why": "O Owner tem `projects.delete`. Aqui é a negação que recusa."
+      },
+      {
+        "text": "Recusado, porque a negação é lida antes",
+        "why": "Isso. O Owner está em `public:all` e não na exceção, então a negação recusa antes de qualquer permissão ser lida."
+      }
+    ]
+  },
+  "ex-vyw8ccec": {
+    "prompt": "O `deny.tf` junto com o `iam.tf` faz o plano adicionar quantos recursos?",
+    "hint": "Dois do primeiro arquivo, um do segundo."
+  },
+  "ex-twkfx7kh": {
+    "prompt": "Uma auditoria descobre que a Ana tem Editor no `planner-prod` por uma concessão na organização de dois anos atrás. A equipe quer que ela mantenha Viewer ali e perca toda escrita. Qual a correção certa?",
+    "hint": "Onde a concessão mora?",
+    "choices": [
+      {
+        "text": "Deixar o Editor de fora da política do próprio `planner-prod`",
+        "why": "Ele nunca esteve nessa política. A concessão da organização continua alcançando o projeto."
+      },
+      {
+        "text": "Conceder Viewer a ela no `planner-prod`, que substitui o Editor",
+        "why": "Concessões se somam. Ela teria os dois."
+      },
+      {
+        "text": "Negar a ela toda permissão na organização",
+        "why": "Isso tiraria o Viewer que a equipe quer que ela mantenha, em todo lugar."
+      },
+      {
+        "text": "Corrigir na organização, onde ela foi feita",
+        "why": "Isso. Uma concessão herdada se corrige onde foi feita; nada mais abaixo consegue subtraí-la."
+      }
+    ]
+  }
+}

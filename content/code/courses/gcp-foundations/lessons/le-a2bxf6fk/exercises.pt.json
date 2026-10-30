@@ -1,0 +1,341 @@
+{
+  "ex-1fv09x9c": {
+    "prompt": "O que um Application Load Balancer entende que um Network Load Balancer não entende?",
+    "hint": "Dentro da conexão.",
+    "choices": [
+      {
+        "text": "UDP",
+        "why": "UDP é de Network Load Balancer, não de Application."
+      },
+      {
+        "text": "HTTP: hosts, caminhos, cabeçalhos",
+        "why": "Isso. Um Network Load Balancer vê conexões e nada dentro delas."
+      },
+      {
+        "text": "Endereços internos",
+        "why": "As duas famílias têm membros internos."
+      },
+      {
+        "text": "Várias regiões ao mesmo tempo",
+        "why": "Global e regional é outra pergunta."
+      }
+    ]
+  },
+  "ex-r00ab1t8": {
+    "prompt": "Um backend precisa ver o endereço real de cada cliente nos pacotes que recebe. Que tipo de balanceador serve?",
+    "hint": "Proxies o substituem.",
+    "choices": [
+      {
+        "text": "Um Network Load Balancer proxy",
+        "why": "Um proxy abre uma conexão nova a partir de si."
+      },
+      {
+        "text": "Um Application Load Balancer externo global",
+        "why": "Ele passa o endereço num cabeçalho, não no pacote."
+      },
+      {
+        "text": "Qualquer um, desde que interno",
+        "why": "Proxies internos também substituem o endereço."
+      },
+      {
+        "text": "Um Network Load Balancer passthrough",
+        "why": "Isso. Ele entrega os próprios pacotes do cliente ao backend."
+      }
+    ]
+  },
+  "ex-d6400p59": {
+    "prompt": "Por que não é preciso truque de DNS para mandar um cliente em Lisboa a uma borda próxima do balanceador global do planner?",
+    "hint": "Um endereço, anunciado em todo lugar.",
+    "choices": [
+      {
+        "text": "Anycast, um IP em toda borda",
+        "why": "Isso. O cliente alcança a borda mais próxima, e a rede do Google faz o resto."
+      },
+      {
+        "text": "O Cloud DNS responde por país",
+        "why": "Há uma resposta, o mesmo endereço."
+      },
+      {
+        "text": "Os backends estão em Lisboa",
+        "why": "Eles estão em São Paulo; a borda é que fica perto do cliente."
+      },
+      {
+        "text": "O Cloud CDN redireciona o pedido",
+        "why": "O CDN guarda em cache; não escolhe a borda."
+      }
+    ]
+  },
+  "ex-kx2brwv5": {
+    "prompt": "De que faixas chegam as verificações de saúde dos balanceadores do Google?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "35.235.240.0/20",
+        "why": "Essa é a faixa do Identity-Aware Proxy."
+      },
+      {
+        "text": "199.36.153.8/30",
+        "why": "Essa é o private.googleapis.com."
+      },
+      {
+        "text": "35.191.0.0/16 e 130.211.0.0/22",
+        "why": "Isso. Uma regra de firewall tem de deixá-las alcançar os backends."
+      },
+      {
+        "text": "A própria sub-rede dos backends",
+        "why": "As verificações vêm do Google, de fora dela."
+      }
+    ]
+  },
+  "ex-1bdtvkp4": {
+    "prompt": "Um Application Load Balancer externo global termina o TLS na ___ do Google.",
+    "hint": "Perto do cliente.",
+    "blanks": [
+      {
+        "accept": [
+          "borda"
+        ]
+      }
+    ]
+  },
+  "ex-zq6nyp5z": {
+    "prompt": "Ponha os elos de um Application Load Balancer na ordem em que um pedido os percorre.",
+    "hint": "Do endereço à máquina.",
+    "items": [
+      "regra de encaminhamento",
+      "proxy HTTPS de destino",
+      "mapa de URL",
+      "serviço de backend",
+      "backends"
+    ],
+    "trap": "Pôr o mapa de URL antes do proxy é o deslize: o caminho não pode ser lido antes de o TLS ser terminado, que é o trabalho do proxy."
+  },
+  "ex-7bpmq7ne": {
+    "prompt": "No `terraform graph`, o mapa de URL precisa dos dois serviços de backend. O que isso diz sobre a criação?",
+    "hint": "Precisa significa antes.",
+    "choices": [
+      {
+        "text": "O mapa é feito primeiro e preenchido depois",
+        "why": "Ele nomeia os serviços de backend, então eles precisam existir."
+      },
+      {
+        "text": "São feitos no mesmo momento",
+        "why": "Uma referência os ordena."
+      },
+      {
+        "text": "Aqueles dois são criados antes",
+        "why": "Isso. A cadeia é criada ao contrário, dos backends até a regra de encaminhamento."
+      },
+      {
+        "text": "Nada; o graph mostra pedidos, não criação",
+        "why": "O graph do Terraform é a ordem de trabalho dele."
+      }
+    ]
+  },
+  "ex-14hwd8z1": {
+    "prompt": "Um certificado gerenciado pelo Google para `planner.example.com` ficou em `PROVISIONING` por um dia. Qual a causa mais provável?",
+    "hint": "Como o Google prova o controle?",
+    "choices": [
+      {
+        "text": "O DNS ainda não aponta para ele",
+        "why": "Isso. O Google prova o controle alcançando o balanceador por aquele nome."
+      },
+      {
+        "text": "Certificados gerenciados levam uma semana",
+        "why": "Cerca de uma hora, quando o DNS está certo."
+      },
+      {
+        "text": "O mapa de URL não tem regra de caminho para /",
+        "why": "O serviço padrão cobre /."
+      },
+      {
+        "text": "A verificação de saúde falha",
+        "why": "Verificações de saúde dizem respeito a backends, não a certificados."
+      }
+    ]
+  },
+  "ex-0rm491m0": {
+    "prompt": "Por que um serviço de backend com `EXTERNAL_MANAGED` não pode ser usado atrás de uma regra de encaminhamento com `EXTERNAL`?",
+    "hint": "Duas gerações.",
+    "choices": [
+      {
+        "text": "EXTERNAL é para balanceadores regionais",
+        "why": "Os dois são esquemas externos globais."
+      },
+      {
+        "text": "EXTERNAL_MANAGED exige endereço estático",
+        "why": "O tipo de endereço não é o que os separa."
+      },
+      {
+        "text": "O provider não suporta EXTERNAL",
+        "why": "Ele suporta os dois."
+      },
+      {
+        "text": "Clássico e atual nunca se misturam",
+        "why": "Isso. EXTERNAL é o clássico; uma cadeia é um ou o outro."
+      }
+    ]
+  },
+  "ex-g1s8hg5h": {
+    "prompt": "Chega um pedido para `planner.example.com/api/tasks`. Que serviço de backend responde?",
+    "hint": "Leia a regra de caminho.",
+    "choices": [
+      {
+        "text": "planner-web, o serviço padrão",
+        "why": "O padrão é para caminhos que nenhuma regra casa."
+      },
+      {
+        "text": "planner-api, pela regra de caminho",
+        "why": "Isso. /api/* casa, e a regra de caminho nomeia o serviço api."
+      },
+      {
+        "text": "Os dois, alternando",
+        "why": "Um serviço de backend por pedido."
+      },
+      {
+        "text": "Nenhum; o host não casa",
+        "why": "A regra de host nomeia planner.example.com."
+      }
+    ]
+  },
+  "ex-xkgcp5mj": {
+    "prompt": "Quantos recursos o plano do `lb.tf` acrescentou?",
+    "hint": "Conte."
+  },
+  "ex-zwstm665": {
+    "prompt": "Um parceiro manda arquivos ao planner por SFTP da internet. Que balanceador serve?",
+    "hint": "Não é HTTP.",
+    "choices": [
+      {
+        "text": "Um Network Load Balancer proxy externo",
+        "why": "Isso. TCP da internet, e nada de HTTP para ler."
+      },
+      {
+        "text": "Um Application Load Balancer externo global",
+        "why": "Ele lê HTTP, e SFTP não é HTTP."
+      },
+      {
+        "text": "Um Application Load Balancer interno regional",
+        "why": "Interno significa que ninguém de fora o alcança."
+      },
+      {
+        "text": "Nenhum balanceador; uma regra de firewall basta",
+        "why": "Uma regra filtra; não espalha conexões pelos backends."
+      }
+    ]
+  },
+  "ex-g8frp7tq": {
+    "prompt": "O primeiro Application Load Balancer interno regional em São Paulo se recusa a ser criado. Qual o motivo de costume?",
+    "hint": "O Envoy precisa de endereços.",
+    "choices": [
+      {
+        "text": "Balanceadores internos têm de ser globais",
+        "why": "Há internos regionais; este é um."
+      },
+      {
+        "text": "A porta da verificação de saúde é 8080",
+        "why": "Qualquer porta funciona."
+      },
+      {
+        "text": "Nenhuma sub-rede só de proxy na região",
+        "why": "Isso. Balanceadores regionais com Envoy precisam de uma faixa reservada para os proxies do Google."
+      },
+      {
+        "text": "Falta um certificado",
+        "why": "HTTP interno não precisa de nenhum."
+      }
+    ]
+  },
+  "ex-0xzqjpxk": {
+    "prompt": "A 0,025 dólar por hora, quanto custa uma regra de encaminhamento num mês de 730 horas, em dólares?",
+    "hint": "Horas vezes preço.",
+    "unit": "dólares"
+  },
+  "ex-dy43ztzk": {
+    "prompt": "O planner acrescenta uma regra HTTP na porta 80, para redirecionar a HTTPS, ao lado da regra HTTPS. O que acontece com a cobrança de regras de encaminhamento?",
+    "hint": "As cinco primeiras.",
+    "choices": [
+      {
+        "text": "Dobra para 0,05 por hora",
+        "why": "As cinco primeiras têm preço conjunto."
+      },
+      {
+        "text": "Nada muda",
+        "why": "Isso. O próprio exemplo da página: uma regra e três regras custam 0,025 por hora."
+      },
+      {
+        "text": "Sobe 0,01 por hora",
+        "why": "Esse é o preço da sexta regra em diante."
+      },
+      {
+        "text": "Regras na porta 80 são grátis",
+        "why": "Portas não mudam o preço."
+      }
+    ]
+  },
+  "ex-jtxfsden": {
+    "prompt": "Como o Cloud CDN baixa a cobrança de processamento do balanceador?",
+    "hint": "De onde vem uma resposta em cache?",
+    "choices": [
+      {
+        "text": "Ela comprime toda resposta",
+        "why": "A cobrança é evitada, não diminuída."
+      },
+      {
+        "text": "Está incluída no preço da regra",
+        "why": "O CDN tem preços próprios."
+      },
+      {
+        "text": "Ela move o processamento para uma região mais barata",
+        "why": "O cache fica na borda, não numa região."
+      },
+      {
+        "text": "Respostas em cache nunca passam por ele",
+        "why": "Isso. Elas saem da borda e são cobradas como saída de CDN."
+      }
+    ]
+  },
+  "ex-mkadpcgt": {
+    "prompt": "Ligue cada caso do planner ao seu balanceador.",
+    "hint": "Leia o fato decisivo.",
+    "pairs": [
+      {
+        "left": "o site público",
+        "right": "Application externo global"
+      },
+      {
+        "left": "um pool interno de bancos",
+        "right": "Network passthrough interno"
+      },
+      {
+        "left": "um servidor de jogo em UDP",
+        "right": "Network passthrough externo"
+      }
+    ],
+    "right_distractors": [
+      "Application proxy interno, global"
+    ]
+  },
+  "ex-xf1gze3w": {
+    "prompt": "Clientes veem `502` no site do planner, e todo backend está marcado como não saudável, logo depois de uma mudança de firewall. Qual a primeira coisa a conferir?",
+    "hint": "Quem confere a saúde?",
+    "choices": [
+      {
+        "text": "O estado do certificado",
+        "why": "Um problema de certificado falha o handshake, não as verificações."
+      },
+      {
+        "text": "As regras de caminho do mapa",
+        "why": "O roteamento não marca backends como não saudáveis."
+      },
+      {
+        "text": "A porta da regra de encaminhamento",
+        "why": "Os pedidos chegam; o 502 está atrás do proxy."
+      },
+      {
+        "text": "As faixas da verificação",
+        "why": "Isso. Sem elas todo backend falha de uma vez."
+      }
+    ]
+  }
+}

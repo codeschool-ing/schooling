@@ -1,0 +1,525 @@
+[
+  {
+    "id": "ex-2mc379qt",
+    "version": 1,
+    "section": "rules-and-priority",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is a VPC firewall rule enforced?",
+    "hint": "There is no box to size.",
+    "choices": [
+      {
+        "text": "At an appliance at the edge of the network",
+        "correct": false,
+        "why": "There is no appliance; the rule is part of the network."
+      },
+      {
+        "text": "At each machine's interface",
+        "correct": true,
+        "why": "Right. Two machines in one subnet are filtered from each other as from the internet."
+      },
+      {
+        "text": "At the subnet's gateway address",
+        "correct": false,
+        "why": "Traffic inside a subnet would then go unfiltered, and it does not."
+      },
+      {
+        "text": "At the organisation's root node",
+        "correct": false,
+        "why": "Firewall policies can be attached there; enforcement is at the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-avt5cack",
+    "version": 1,
+    "section": "rules-and-priority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two rules match a packet: an allow at priority 500 and a deny at priority 1000. What happens?",
+    "hint": "Lower is read first.",
+    "choices": [
+      {
+        "text": "It is denied, since deny always wins",
+        "correct": false,
+        "why": "Deny wins only at the same priority."
+      },
+      {
+        "text": "It is denied, since 1000 is higher",
+        "correct": false,
+        "why": "The lower number is read first."
+      },
+      {
+        "text": "Google refuses to create the second rule",
+        "correct": false,
+        "why": "Rules at different priorities coexist."
+      },
+      {
+        "text": "It is allowed, by the rule at 500",
+        "correct": true,
+        "why": "Right. 500 is read before 1000, and the first match decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-018zvdcg",
+    "version": 1,
+    "section": "rules-and-priority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An allow and a deny for the same packet are both at priority 1000. Which decides?",
+    "hint": "A tie has one direction.",
+    "choices": [
+      {
+        "text": "The deny, at a tie",
+        "correct": true,
+        "why": "Right. At the same priority, deny wins."
+      },
+      {
+        "text": "The allow, as the more specific one",
+        "correct": false,
+        "why": "Specificity is not part of the order."
+      },
+      {
+        "text": "Whichever was created first",
+        "correct": false,
+        "why": "Creation order is not part of it either."
+      },
+      {
+        "text": "Neither; the implied rule decides",
+        "correct": false,
+        "why": "The implied rule is only read when nothing above matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-nze36c8d",
+    "version": 1,
+    "section": "rules-and-priority",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A custom mode network has no rules at all. Can one of its machines reach another on port 22?",
+    "hint": "What sits at 65535?",
+    "choices": [
+      {
+        "text": "Yes, traffic inside a network is free",
+        "correct": false,
+        "why": "That was the default network's extra rule, not a property of networks."
+      },
+      {
+        "text": "Yes, the implied rule allows SSH",
+        "correct": false,
+        "why": "The implied ingress rule denies."
+      },
+      {
+        "text": "No: the implied rule denies all ingress",
+        "correct": true,
+        "why": "Right. Even traffic between its own machines needs a rule to be allowed in."
+      },
+      {
+        "text": "Only from the same zone",
+        "correct": false,
+        "why": "Zones do not change firewall rules."
+      }
+    ]
+  },
+  {
+    "id": "ex-adgzkd7p",
+    "version": 1,
+    "section": "rules-and-priority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner not use the default network?",
+    "hint": "Read its rules at 65534.",
+    "choices": [
+      {
+        "text": "It has no firewall rules",
+        "correct": false,
+        "why": "It has four."
+      },
+      {
+        "text": "It cannot have custom rules added",
+        "correct": false,
+        "why": "Rules can be added to any network."
+      },
+      {
+        "text": "It allows SSH, RDP and ping from anywhere",
+        "correct": true,
+        "why": "Right. Those three rules open every machine in it to the internet."
+      },
+      {
+        "text": "It denies egress",
+        "correct": false,
+        "why": "The implied egress rule allows."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gqhwmvd",
+    "version": 1,
+    "section": "rules-and-priority",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A project administrator writes a priority 0 allow for SSH from anywhere into production. The planner's security team had already decided no SSH from the internet into production. Where must that decision live to hold?",
+    "hint": "Above the network.",
+    "choices": [
+      {
+        "text": "A firewall policy on the folder",
+        "correct": true,
+        "why": "Right. Policies on the tree are evaluated before the network's own rules."
+      },
+      {
+        "text": "A deny at priority 0 in the same network",
+        "correct": false,
+        "why": "The administrator can delete it; it is their network."
+      },
+      {
+        "text": "The implied deny rule",
+        "correct": false,
+        "why": "It sits at 65535, below everything."
+      },
+      {
+        "text": "A budget on production",
+        "correct": false,
+        "why": "Budgets see money, not packets."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwvq59pe",
+    "version": 1,
+    "section": "targets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a network tag widen a rule more easily than a service account can?",
+    "hint": "Who can put each on a machine?",
+    "choices": [
+      {
+        "text": "Tags apply to every network in the project",
+        "correct": false,
+        "why": "A rule's tag applies in its own network."
+      },
+      {
+        "text": "Tags are inherited from the folder",
+        "correct": false,
+        "why": "Network tags are on machines, not on the tree."
+      },
+      {
+        "text": "Service accounts cannot be targets",
+        "correct": false,
+        "why": "They can, and the planner uses them."
+      },
+      {
+        "text": "Anyone who edits the machine adds tags",
+        "correct": true,
+        "why": "Right. Attaching an account needs a role on the account itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttsaa36v",
+    "version": 1,
+    "section": "targets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `priority = 70000` refused?",
+    "hint": "The range of a priority.",
+    "choices": [
+      {
+        "text": "The implied rule already uses it",
+        "correct": false,
+        "why": "The implied rules are at 65535."
+      },
+      {
+        "text": "Priorities stop at 65535",
+        "correct": true,
+        "why": "Right. The provider checks the range before asking Google."
+      },
+      {
+        "text": "The network has a rule at that priority",
+        "correct": false,
+        "why": "The plan asked nothing about the network."
+      },
+      {
+        "text": "Priorities must be multiples of 100",
+        "correct": false,
+        "why": "Any number from 0 to 65535 is accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9dytwt1",
+    "version": 1,
+    "section": "targets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan reported `source_tags` conflicting with `target_service_accounts`. What is the fix?",
+    "hint": "One way of naming per rule.",
+    "choices": [
+      {
+        "text": "Name the web machines by their account",
+        "correct": true,
+        "why": "Right. A rule names machines by tags or by accounts, never both."
+      },
+      {
+        "text": "Split it into two rules at the same priority",
+        "correct": false,
+        "why": "Each would still need a source and a target named the same way."
+      },
+      {
+        "text": "Add `direction = \"INGRESS\"`",
+        "correct": false,
+        "why": "The direction was not the conflict."
+      },
+      {
+        "text": "Replace the tag with the web machines' addresses",
+        "correct": false,
+        "why": "That works, and breaks the first time a machine is replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-wk6n1c8d",
+    "version": 1,
+    "section": "targets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the corrected plan, `direction` was *known after apply*. Why?",
+    "hint": "The file did not say one.",
+    "choices": [
+      {
+        "text": "Terraform cannot plan directions",
+        "correct": false,
+        "why": "It plans one when the file states it."
+      },
+      {
+        "text": "The rule is both ingress and egress",
+        "correct": false,
+        "why": "A rule has one direction."
+      },
+      {
+        "text": "Google fills in INGRESS at creation",
+        "correct": true,
+        "why": "Right. The direction is set by the API when the file leaves it out."
+      },
+      {
+        "text": "The network does not exist yet",
+        "correct": false,
+        "why": "The priority was known though the network was not."
+      }
+    ]
+  },
+  {
+    "id": "ex-3z48tf9f",
+    "version": 1,
+    "section": "targets",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A firewall rule with no priority written gets priority ___.",
+    "hint": "The plan showed it.",
+    "blanks": [
+      {
+        "accept": [
+          "1000"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gh424ccs",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the planner's `rules.json` have no rule saying *deny everything else*?",
+    "hint": "What refused the stranger?",
+    "choices": [
+      {
+        "text": "JSON cannot express a deny",
+        "correct": false,
+        "why": "The last rule is a deny."
+      },
+      {
+        "text": "The implied deny ingress already does it",
+        "correct": true,
+        "why": "Right. Anything no rule allows in is refused at 65535."
+      },
+      {
+        "text": "Google forbids catch-all denies",
+        "correct": false,
+        "why": "They are allowed; they are redundant here."
+      },
+      {
+        "text": "The health checks would fail",
+        "correct": false,
+        "why": "Not at a lower precedence than their allow."
+      }
+    ]
+  },
+  {
+    "id": "ex-genbp2wz",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SSH from 35.235.240.7 to a web machine tagged `frozen` matches `allow-ssh-from-iap` at 1000 and `deny-ssh-to-frozen` at 900. What decides?",
+    "hint": "Which is read first?",
+    "choices": [
+      {
+        "text": "The allow, written earlier in the file",
+        "correct": false,
+        "why": "The file's order means nothing; priority does."
+      },
+      {
+        "text": "Both, so the packet is half allowed",
+        "correct": false,
+        "why": "One rule decides."
+      },
+      {
+        "text": "The implied rule, after a conflict",
+        "correct": false,
+        "why": "There is no conflict; the order settles it."
+      },
+      {
+        "text": "The deny, read first at 900",
+        "correct": true,
+        "why": "Right. The allow at 1000 is never reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwzc9ma2",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The reports job was refused by the database. What fix does the lesson recommend?",
+    "hint": "Name it, do not widen.",
+    "choices": [
+      {
+        "text": "A source range of 10.0.0.0/8 on allow-web-to-db",
+        "correct": false,
+        "why": "That opens the database to every machine in the network."
+      },
+      {
+        "text": "Running the reports job as web@",
+        "correct": false,
+        "why": "That gives it every permission web@ holds."
+      },
+      {
+        "text": "Deleting the implied deny",
+        "correct": false,
+        "why": "It cannot be deleted."
+      },
+      {
+        "text": "A rule naming reports as a source",
+        "correct": true,
+        "why": "Right. Written and reviewed like the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-x664s72q",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At what priority did `walk.py` say the implied rule decided?",
+    "hint": "The last possible.",
+    "value": 65535,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-29g0g00b",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each source range in rules.json to what sends from it.",
+    "hint": "Ranges Google publishes.",
+    "pairs": [
+      {
+        "left": "35.191.0.0/16",
+        "right": "load balancer health checks"
+      },
+      {
+        "left": "35.235.240.0/20",
+        "right": "Identity-Aware Proxy's SSH"
+      },
+      {
+        "left": "0.0.0.0/0",
+        "right": "anywhere at all"
+      }
+    ],
+    "right_distractors": [
+      "the metadata server"
+    ]
+  },
+  {
+    "id": "ex-wmdg9nfv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps Google takes for one packet in order.",
+    "hint": "Policies come before rules.",
+    "items": [
+      "firewall policies on the organisation and folders",
+      "the network's rules, lowest number first",
+      "at a tie, deny before allow",
+      "the implied rule at 65535"
+    ],
+    "trap": "Reading the network's rules first is the slip: a policy on the tree is evaluated before them, which is how it holds against a project's own priority 0."
+  },
+  {
+    "id": "ex-1mef177y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner wants machines kept for an investigation to be unreachable by SSH, whoever edits them. Which rule fits, and why is a tag acceptable here?",
+    "hint": "What can a misplaced tag do?",
+    "choices": [
+      {
+        "text": "An allow at 900 on tag frozen, from IAP",
+        "correct": false,
+        "why": "That opens SSH, the opposite of the aim."
+      },
+      {
+        "text": "A deny at 900 on tag frozen; a stray tag closes, never opens",
+        "correct": true,
+        "why": "Right. A tag that takes access away makes a machine harder to reach, nothing more."
+      },
+      {
+        "text": "A deny at 70000, below the implied rule",
+        "correct": false,
+        "why": "Priorities stop at 65535, and below the allows it would never be read."
+      },
+      {
+        "text": "Removing the machines' service accounts",
+        "correct": false,
+        "why": "allow-ssh-from-iap targets all machines; removing an account changes nothing for it."
+      }
+    ]
+  }
+]

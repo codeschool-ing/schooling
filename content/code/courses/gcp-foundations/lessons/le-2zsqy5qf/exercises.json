@@ -1,0 +1,498 @@
+[
+  {
+    "id": "ex-yrg24h0f",
+    "version": 1,
+    "section": "a-global-network",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the scope of a VPC network in Google Cloud?",
+    "hint": "Read its address.",
+    "choices": [
+      {
+        "text": "One region",
+        "correct": false,
+        "why": "That is a subnet's scope."
+      },
+      {
+        "text": "Global, across every region",
+        "correct": true,
+        "why": "Right. One network spans every region; its subnets are what is regional."
+      },
+      {
+        "text": "One zone",
+        "correct": false,
+        "why": "That is a machine's scope."
+      },
+      {
+        "text": "One folder of the organisation",
+        "correct": false,
+        "why": "A network belongs to a project, and spans regions."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6rzjbme",
+    "version": 1,
+    "section": "a-global-network",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner spreads three machines across zones a, b and c of São Paulo. How many subnets does that take?",
+    "hint": "A subnet is regional.",
+    "choices": [
+      {
+        "text": "Three, one per zone",
+        "correct": false,
+        "why": "Zones never need ranges of their own."
+      },
+      {
+        "text": "Two, for the primary and the secondary range",
+        "correct": false,
+        "why": "A secondary range lives on the same subnet."
+      },
+      {
+        "text": "None; machines take the network's range",
+        "correct": false,
+        "why": "A network has no range of its own."
+      },
+      {
+        "text": "One, across the three zones",
+        "correct": true,
+        "why": "Right. A subnet covers every zone of its region."
+      }
+    ]
+  },
+  {
+    "id": "ex-n4tf5tf1",
+    "version": 1,
+    "section": "a-global-network",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine in São Paulo sends to one in Santiago, in the same network. What has to be built between them?",
+    "hint": "The network is global.",
+    "choices": [
+      {
+        "text": "Nothing, though the traffic is billed",
+        "correct": true,
+        "why": "Right. They talk on internal addresses; the crossing is billed at lesson 1's prices."
+      },
+      {
+        "text": "A peering between the two regions",
+        "correct": false,
+        "why": "Peering joins two networks, not two regions of one."
+      },
+      {
+        "text": "A VPN tunnel",
+        "correct": false,
+        "why": "A VPN reaches outside the network."
+      },
+      {
+        "text": "A NAT gateway in each region",
+        "correct": false,
+        "why": "NAT is for reaching the internet, lesson 17."
+      }
+    ]
+  },
+  {
+    "id": "ex-cv5ec1e6",
+    "version": 1,
+    "section": "a-global-network",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `gcloud compute networks create planner` make when no subnet mode is given?",
+    "hint": "Its help says.",
+    "choices": [
+      {
+        "text": "A custom mode network with no subnets",
+        "correct": false,
+        "why": "That needs `--subnet-mode=custom`."
+      },
+      {
+        "text": "A legacy network with one range",
+        "correct": false,
+        "why": "Legacy is deprecated and never the default."
+      },
+      {
+        "text": "An auto mode network",
+        "correct": true,
+        "why": "Right. `If not specified, defaults to AUTO`, and Terraform's provider assumes the same."
+      },
+      {
+        "text": "Nothing; the mode is required",
+        "correct": false,
+        "why": "The flag is optional."
+      }
+    ]
+  },
+  {
+    "id": "ex-268wrkp3",
+    "version": 1,
+    "section": "a-global-network",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `gcloud compute networks create planner --subnet-mode=custom` refused?",
+    "hint": "Who answered?",
+    "choices": [
+      {
+        "text": "The name planner was taken",
+        "correct": false,
+        "why": "The refusal is about authentication."
+      },
+      {
+        "text": "Custom mode requires a subnet in the same command",
+        "correct": false,
+        "why": "Subnets are created separately."
+      },
+      {
+        "text": "Compute Engine got no valid credential",
+        "correct": true,
+        "why": "Right. The lab holds none, so Google refuses before reading the request."
+      },
+      {
+        "text": "The emulator does not support networks",
+        "correct": false,
+        "why": "The request went to Google, not to the emulator."
+      }
+    ]
+  },
+  {
+    "id": "ex-nryrvzs2",
+    "version": 1,
+    "section": "auto-or-custom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can two auto mode networks never be joined by peering or a VPN?",
+    "hint": "Where do their ranges come from?",
+    "choices": [
+      {
+        "text": "Every one of them has the same ranges",
+        "correct": true,
+        "why": "Right. Every auto mode network cuts its subnets from 10.128.0.0/9."
+      },
+      {
+        "text": "Auto mode networks have no routes",
+        "correct": false,
+        "why": "They have routes like any network."
+      },
+      {
+        "text": "Peering requires global routing",
+        "correct": false,
+        "why": "Routing mode is not what blocks it."
+      },
+      {
+        "text": "Google forbids it for networks it created",
+        "correct": false,
+        "why": "The obstacle is arithmetic: the same addresses on both sides."
+      }
+    ]
+  },
+  {
+    "id": "ex-3m6c7wzt",
+    "version": 1,
+    "section": "auto-or-custom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does converting an auto mode network to custom mode fix?",
+    "hint": "The ranges stay.",
+    "choices": [
+      {
+        "text": "Its ranges are renumbered",
+        "correct": false,
+        "why": "The conversion keeps the ranges."
+      },
+      {
+        "text": "It can then be converted back when needed",
+        "correct": false,
+        "why": "Custom mode never becomes auto again."
+      },
+      {
+        "text": "It removes the default firewall rules",
+        "correct": false,
+        "why": "Firewall rules are separate resources."
+      },
+      {
+        "text": "New regions stop getting subnets",
+        "correct": true,
+        "why": "Right. Unused subnets can then be deleted, but the overlap with other auto networks remains."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj7nr0mh",
+    "version": 1,
+    "section": "auto-or-custom",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the planner make sure its new projects start with no network at all?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Deleting `default` after each project is made",
+        "correct": false,
+        "why": "That works once and depends on somebody remembering."
+      },
+      {
+        "text": "A boolean constraint on the organisation",
+        "correct": true,
+        "why": "Right. `compute.skipDefaultNetworkCreation` stops the default network being made."
+      },
+      {
+        "text": "A firewall rule denying everything",
+        "correct": false,
+        "why": "The network would still exist."
+      },
+      {
+        "text": "Creating projects with gcloud instead of the console",
+        "correct": false,
+        "why": "Both make the default network unless the constraint says otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2e5k12j",
+    "version": 1,
+    "section": "auto-or-custom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan refused `name = \"Planner_Santiago\"` and `ip_cidr_range = \"10.11.0.0/33\"`. Who refused them?",
+    "hint": "Nothing was asked of Google.",
+    "choices": [
+      {
+        "text": "The provider, on the laptop",
+        "correct": true,
+        "why": "Right. Both are checked before any request is made."
+      },
+      {
+        "text": "Compute Engine",
+        "correct": false,
+        "why": "A plan with a placeholder token asks Compute Engine nothing here."
+      },
+      {
+        "text": "The organisation policy",
+        "correct": false,
+        "why": "No policy was read."
+      },
+      {
+        "text": "The emulator",
+        "correct": false,
+        "why": "The emulator is Pub/Sub only."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7vdm8wx",
+    "version": 1,
+    "section": "auto-or-custom",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every auto mode network takes its subnets from the block 10.128.0.0/___.",
+    "hint": "Half of 10.0.0.0/8.",
+    "blanks": [
+      {
+        "accept": [
+          "9"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k71heh84",
+    "version": 1,
+    "section": "cutting-ranges",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many addresses does a `/24` subnet leave for machines in Google Cloud?",
+    "hint": "Google keeps four.",
+    "value": 252,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-26httczx",
+    "version": 1,
+    "section": "cutting-ranges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change can be made to a subnet's primary range after it exists?",
+    "hint": "expand-ip-range.",
+    "choices": [
+      {
+        "text": "Make it smaller",
+        "correct": false,
+        "why": "A primary range never shrinks."
+      },
+      {
+        "text": "Move it to another block",
+        "correct": false,
+        "why": "That is a new subnet."
+      },
+      {
+        "text": "Make it larger, into free space beside it",
+        "correct": true,
+        "why": "Right. The new prefix length must be smaller, and the addresses beside it free."
+      },
+      {
+        "text": "Any of these, while no machine uses it",
+        "correct": false,
+        "why": "Only expansion exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-41tn6aaw",
+    "version": 1,
+    "section": "cutting-ranges",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A staging subnet with `10.10.8.0/21` was added beside São Paulo's `10.10.0.0/20`, and the plan said `4 to add`. What happens on apply?",
+    "hint": "The provider does not check overlap.",
+    "choices": [
+      {
+        "text": "All four are created and share the addresses",
+        "correct": false,
+        "why": "No two subnets of a network may overlap."
+      },
+      {
+        "text": "Google refuses staging, after the rest is made",
+        "correct": true,
+        "why": "Right. The overlap is checked by Google when the subnet is created."
+      },
+      {
+        "text": "Terraform shrinks the staging range to fit",
+        "correct": false,
+        "why": "Terraform sends what is written."
+      },
+      {
+        "text": "Nothing is created, since the plan was wrong",
+        "correct": false,
+        "why": "The plan was valid as far as it could see; the others succeed first."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7tvy3j8",
+    "version": 1,
+    "section": "cutting-ranges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `ranges.py` exit 1 when it finds an overlap?",
+    "hint": "Think of a pipeline.",
+    "choices": [
+      {
+        "text": "Python requires it after printing a warning",
+        "correct": false,
+        "why": "It is the program's choice."
+      },
+      {
+        "text": "To delete the overlapping subnet",
+        "correct": false,
+        "why": "It creates and deletes nothing."
+      },
+      {
+        "text": "Because the ranges are invalid CIDR",
+        "correct": false,
+        "why": "Invalid ranges fail earlier, in ip_network."
+      },
+      {
+        "text": "To stop the apply that follows it",
+        "correct": true,
+        "why": "Right. A failing exit status stops the next step of a pipeline."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4a9e2np",
+    "version": 1,
+    "section": "cutting-ranges",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of Google's four kept addresses in 10.10.0.0/20 to its job.",
+    "hint": "First, second, second-to-last, last.",
+    "pairs": [
+      {
+        "left": "10.10.0.0",
+        "right": "the network itself"
+      },
+      {
+        "left": "10.10.0.1",
+        "right": "the subnet's gateway"
+      },
+      {
+        "left": "10.10.15.254",
+        "right": "kept for Google's future use"
+      },
+      {
+        "left": "10.10.15.255",
+        "right": "broadcast"
+      }
+    ],
+    "right_distractors": [
+      "the first machine"
+    ]
+  },
+  {
+    "id": "ex-jkfj13ws",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner will join its network to an office on 192.168.0.0/16 and to a partner's auto mode network. Which plan for São Paulo is safe for both?",
+    "hint": "Avoid two blocks.",
+    "choices": [
+      {
+        "text": "10.158.0.0/20",
+        "correct": false,
+        "why": "That is inside 10.128.0.0/9, where every auto mode network lives."
+      },
+      {
+        "text": "192.168.16.0/20",
+        "correct": false,
+        "why": "That is inside the office's range."
+      },
+      {
+        "text": "10.200.0.0/20",
+        "correct": false,
+        "why": "10.200 is between 10.128 and 10.255: inside the auto mode block."
+      },
+      {
+        "text": "10.10.0.0/20",
+        "correct": true,
+        "why": "Right. It is outside both 192.168.0.0/16 and 10.128.0.0/9."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1rd0cyj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of adding a subnet safely in order.",
+    "hint": "Arithmetic first.",
+    "items": [
+      "pick a /20 from the network's /16",
+      "check it with ranges.py",
+      "write the subnet in Terraform and plan",
+      "apply"
+    ],
+    "trap": "Planning before checking is the slip: the plan is clean whatever the ranges, so it proves nothing about overlap."
+  }
+]
