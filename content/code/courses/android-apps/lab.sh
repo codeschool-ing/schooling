@@ -349,7 +349,12 @@ case "${1:-}" in
     ;;
   fresh)
     need_root
-    rm -rf "${LIVE:?}/home/ana/${2:?}"
+    # Empty the directory rather than replace it: a Gradle daemon still running
+    # from an earlier command holds a mount of this very directory, and a new
+    # directory in its place would be invisible to that daemon.
+    if [ -d "$LIVE/home/ana/$2" ]; then
+      find "${LIVE:?}/home/ana/${2:?}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+    fi
     in_root "$LIVE" ana "mkdir -p ~/'$2'" "$LIVE_ENV"
     ;;
   skeleton)
