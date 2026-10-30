@@ -1,0 +1,579 @@
+[
+ {
+  "id": "ex-rdc1vbpb",
+  "version": 1,
+  "section": "tags",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`rg-shop-prod-app` carries `cost-centre: cc-410`. A machine is created in it with no tags. What tags does the machine have?",
+  "hint": "One of the four rules in the table.",
+  "choices": [
+   {
+    "text": "`cost-centre: cc-410`, inherited from the group",
+    "correct": false,
+    "why": "Resources do not inherit their group's tags."
+   },
+   {
+    "text": "Whatever the subscription carries",
+    "correct": false,
+    "why": "A subscription's tags are not inherited either."
+   },
+   {
+    "text": "None",
+    "correct": true,
+    "why": "Right. Something has to copy the tag down, which is the next section."
+   },
+   {
+    "text": "The group's tags, but only after a day",
+    "correct": false,
+    "why": "No delay turns a group's tags into a resource's."
+   }
+  ]
+ },
+ {
+  "id": "ex-en6fbm7q",
+  "version": 1,
+  "section": "tags",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "One team tags `cost-centre: CC-410` and another `cost-centre: cc-410`. What does a cost report show?",
+  "hint": "Names and values follow different case rules.",
+  "choices": [
+   {
+    "text": "Two cost centres where there is one",
+    "correct": true,
+    "why": "Right. The money of cc-410 splits into two rows."
+   },
+   {
+    "text": "One cost centre, since Azure ignores case in tags",
+    "correct": false,
+    "why": "It ignores case in names only. Values are case-sensitive."
+   },
+   {
+    "text": "Nothing: the second tag was refused as a duplicate",
+    "correct": false,
+    "why": "They are on different resources, and nothing compares them."
+   },
+   {
+    "text": "One cost centre, after Cost Management lower-cases values",
+    "correct": false,
+    "why": "Nothing lower-cases values on the way; spelling has to be agreed."
+   }
+  ]
+ },
+ {
+  "id": "ex-s69k82pt",
+  "version": 1,
+  "section": "tags",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many tag pairs may a single resource carry, by Microsoft's documented limit?",
+  "hint": "The same limit applies to a group and a subscription.",
+  "value": 50,
+  "tolerance": 0,
+  "unit": "tags"
+ },
+ {
+  "id": "ex-2hvd48rw",
+  "version": 1,
+  "section": "tags",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In `pip.bicep`, why is `'cost-centre'` written in quotes while `environment` is not?",
+  "hint": "Look at the character in the middle.",
+  "choices": [
+   {
+    "text": "Quoted keys are case-sensitive in Bicep",
+    "correct": false,
+    "why": "Quoting has nothing to do with case."
+   },
+   {
+    "text": "The cost centre is a secret and must be a string",
+    "correct": false,
+    "why": "Nothing secret here; both values are strings anyway."
+   },
+   {
+    "text": "Tags with hyphens must be declared in quotes for Azure to inherit them",
+    "correct": false,
+    "why": "Azure never sees the quotes; they are Bicep syntax."
+   },
+   {
+    "text": "A bare property name may not contain a hyphen",
+    "correct": true,
+    "why": "Right. `environment` is a plain name; `cost-centre` needs quotes."
+   }
+  ]
+ },
+ {
+  "id": "ex-1r6yhmvw",
+  "version": 1,
+  "section": "tags",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The compiled `pip.bicep` shows the tags as `[union(parameters('tags'), createObject('role', 'web'))]`. When are the actual tags worked out?",
+  "hint": "Who evaluates a bracketed expression?",
+  "choices": [
+   {
+    "text": "At compile time, by `az bicep build`",
+    "correct": false,
+    "why": "The compiler wrote the expression and left it to be evaluated."
+   },
+   {
+    "text": "When Resource Manager receives the template",
+    "correct": true,
+    "why": "Right, with whatever value the deployment passes for `tags`."
+   },
+   {
+    "text": "The first time somebody reads the resource",
+    "correct": false,
+    "why": "Tags are fixed when the resource is created, from the evaluated expression."
+   },
+   {
+    "text": "Never: Azure stores the expression as the tag",
+    "correct": false,
+    "why": "The expression is evaluated; a tag is a plain value."
+   }
+  ]
+ },
+ {
+  "id": "ex-dpe6qnx3",
+  "version": 1,
+  "section": "tags",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each of the shop's tags to the question it answers.",
+  "hint": "Each tag earns its place with one question.",
+  "pairs": [
+   {
+    "left": "`cost-centre`",
+    "right": "whose budget pays for it?"
+   },
+   {
+    "left": "`environment`",
+    "right": "can it be switched off at night?"
+   },
+   {
+    "left": "`owner`",
+    "right": "who do we ask before deleting it?"
+   },
+   {
+    "left": "`workload`",
+    "right": "which product is it part of?"
+   }
+  ],
+  "right_distractors": [
+   "which subscription is it in?"
+  ]
+ },
+ {
+  "id": "ex-vrrhvk0c",
+  "version": 1,
+  "section": "inheritance",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does the built-in policy *Inherit a tag from the resource group if missing* do to a resource that already has the tag with a different value?",
+  "hint": "Read the end of its name.",
+  "choices": [
+   {
+    "text": "Overwrites it with the group's value",
+    "correct": false,
+    "why": "That is the sibling definition, which adds or replaces."
+   },
+   {
+    "text": "Refuses the request until the values match",
+    "correct": false,
+    "why": "Its effect is `modify`, not `deny`."
+   },
+   {
+    "text": "Adds a second tag with the group's value",
+    "correct": false,
+    "why": "A resource has one value per tag name."
+   },
+   {
+    "text": "Leaves it as it is",
+    "correct": true,
+    "why": "Right. It adds the tag only where it is missing."
+   }
+  ]
+ },
+ {
+  "id": "ex-saeazysv",
+  "version": 1,
+  "section": "inheritance",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The policy's `roleDefinitionIds` names Contributor. Why does a policy need a role at all?",
+  "hint": "What does `modify` do to a resource?",
+  "choices": [
+   {
+    "text": "To read the group's tags, which are secret",
+    "correct": false,
+    "why": "Tags are not secret. The role is for writing."
+   },
+   {
+    "text": "Every policy definition must name a role",
+    "correct": false,
+    "why": "Only those whose effect changes resources do; a `deny` needs none."
+   },
+   {
+    "text": "Writing a tag onto a resource needs an identity allowed to write",
+    "correct": true,
+    "why": "Right. The assignment's own identity must be given that role."
+   },
+   {
+    "text": "So that the people it applies to become Contributors",
+    "correct": false,
+    "why": "The role is for the policy's identity, not for anybody else."
+   }
+  ]
+ },
+ {
+  "id": "ex-hfyktx1p",
+  "version": 1,
+  "section": "inheritance",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The policy is assigned today. What happens to the 200 untagged machines created last year?",
+  "hint": "When does a policy act?",
+  "choices": [
+   {
+    "text": "They are tagged within 24 hours",
+    "correct": false,
+    "why": "Nothing happens to them by itself; the policy acts on requests."
+   },
+   {
+    "text": "Nothing, until a remediation task runs",
+    "correct": true,
+    "why": "Right. Remediation applies the modification to what already exists."
+   },
+   {
+    "text": "They are tagged the next time anyone reads them",
+    "correct": false,
+    "why": "A read is not a request to create or change."
+   },
+   {
+    "text": "They are deleted for being out of line",
+    "correct": false,
+    "why": "No policy effect deletes resources."
+   }
+  ]
+ },
+ {
+  "id": "ex-q397mwy1",
+  "version": 1,
+  "section": "inheritance",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A shop wants its cost reports by cost centre, and does not want templates and a policy fighting over the tags on its resources. Its billing account is a Microsoft Customer Agreement. Which tool fits?",
+  "hint": "One of the two changes the resources.",
+  "choices": [
+   {
+    "text": "Cost Management's tag inheritance",
+    "correct": true,
+    "why": "Right. It tags the usage records only, and that agreement supports it."
+   },
+   {
+    "text": "The policy with the add-or-replace effect",
+    "correct": false,
+    "why": "That one writes on the resources, and overwrites what templates set: the fight it wants to avoid."
+   },
+   {
+    "text": "Tagging only the resource groups",
+    "correct": false,
+    "why": "Group tags do not reach the resources' usage on their own."
+   },
+   {
+    "text": "Nothing: cost centres need one subscription each",
+    "correct": false,
+    "why": "Subscriptions divide by environment; tags divide by owner, inside them."
+   }
+  ]
+ },
+ {
+  "id": "ex-qtgyv1vn",
+  "version": 1,
+  "section": "inheritance",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A policy whose effect is `___` changes a request on its way in, such as adding a tag.",
+  "hint": "The effect in the transcript.",
+  "blanks": [
+   {
+    "accept": [
+     "modify"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-dnd273cn",
+  "version": 1,
+  "section": "inheritance",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why are resource groups themselves untouched by this policy?",
+  "hint": "Read the `mode`.",
+  "choices": [
+   {
+    "text": "A group cannot hold tags",
+    "correct": false,
+    "why": "Groups do take tags; the shop's groups carry them."
+   },
+   {
+    "text": "The policy is assigned at the scope of a resource group",
+    "correct": false,
+    "why": "It was assigned at the subscription."
+   },
+   {
+    "text": "`Indexed` mode looks only at resources with tags and a location",
+    "correct": true,
+    "why": "Right. Groups fall outside it."
+   },
+   {
+    "text": "A group would inherit from itself in a loop",
+    "correct": false,
+    "why": "The mode excludes it before any such question arises."
+   }
+  ]
+ },
+ {
+  "id": "ex-c4jddchz",
+  "version": 1,
+  "section": "exports",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In an export, which column carries the resource's tags?",
+  "hint": "One JSON object in one field.",
+  "choices": [
+   {
+    "text": "`x_ResourceGroupName`",
+    "correct": false,
+    "why": "That names the group, not its tags."
+   },
+   {
+    "text": "`ResourceId`",
+    "correct": false,
+    "why": "The id says where; tags say whose."
+   },
+   {
+    "text": "`ChargeCategory`",
+    "correct": false,
+    "why": "That says what kind of charge a line is."
+   },
+   {
+    "text": "`Tags`",
+    "correct": true,
+    "why": "Right, as one JSON object per line."
+   }
+  ]
+ },
+ {
+  "id": "ex-bz6p7wa2",
+  "version": 1,
+  "section": "exports",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A program reads a daily export by opening one file in the folder. What does the lesson warn it may be missing?",
+  "hint": "What happens to a large month?",
+  "choices": [
+   {
+    "text": "The rest of the month, partitioned into other files",
+    "correct": true,
+    "why": "Right. Partitioning cannot be switched off."
+   },
+   {
+    "text": "Yesterday's costs, which a daily export deletes",
+    "correct": false,
+    "why": "A daily export overwrites with the month to date, yesterday included."
+   },
+   {
+    "text": "The tags, which are only in Parquet files",
+    "correct": false,
+    "why": "Tags are a column in CSV and Parquet alike."
+   },
+   {
+    "text": "Amortised costs, which need a separate subscription",
+    "correct": false,
+    "why": "Amortised cost is a dataset choice, or a column in FOCUS."
+   }
+  ]
+ },
+ {
+  "id": "ex-g5atjfg9",
+  "version": 1,
+  "section": "exports",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the invented month, `who_spent.py` by actual cost put the checkout team's `cc-410` at 0.00. Why?",
+  "hint": "Look at the reservation's lines.",
+  "choices": [
+   {
+    "text": "The machine was switched off in October",
+    "correct": false,
+    "why": "It ran every day: its effective cost is 3.20 a day."
+   },
+   {
+    "text": "Its usage was covered by a purchase, billed on an untagged line",
+    "correct": true,
+    "why": "Right. Billed cost zero on the machine, the whole year on the purchase."
+   },
+   {
+    "text": "`who_spent.py` drops lines it cannot attribute",
+    "correct": false,
+    "why": "It counts them as `(untagged)`, never drops them."
+   },
+   {
+    "text": "The tag was misspelt in the export",
+    "correct": false,
+    "why": "It reads `cost-centre: cc-410`, exactly the scheme."
+   }
+  ]
+ },
+ {
+  "id": "ex-brra6rs2",
+  "version": 1,
+  "section": "exports",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With the groups' tags lent to the resources, 139.50 stayed untagged: one resource at 4.50 a day. For how many days?",
+  "hint": "October.",
+  "value": 31,
+  "tolerance": 0,
+  "unit": "days"
+ },
+ {
+  "id": "ex-56a55xft",
+  "version": 1,
+  "section": "exports",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Billed, the invented month totals 1622.77; amortised, 553.97. A manager asks which is October's cost. What is the answer?",
+  "hint": "What does the difference consist of?",
+  "choices": [
+   {
+    "text": "1622.77, because that is what was invoiced",
+    "correct": false,
+    "why": "It is what was charged, and most of it pays for months after October."
+   },
+   {
+    "text": "The average of the two",
+    "correct": false,
+    "why": "An average of two definitions is neither."
+   },
+   {
+    "text": "553.97 consumed; the rest is reservation for later months",
+    "correct": true,
+    "why": "Right. Say which number you give, and why."
+   },
+   {
+    "text": "Neither: the data is invented",
+    "correct": false,
+    "why": "They are invented, and the question is the same for real data."
+   }
+  ]
+ },
+ {
+  "id": "ex-13n1dbwa",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the three runs of `who_spent.py` in the order the lesson made them, from least to most useful.",
+  "hint": "Each run fixes one thing the previous one got wrong.",
+  "items": [
+   "by billed cost, with the reservation on an untagged line",
+   "by effective cost, with the reservation spread over its usage",
+   "by effective cost, with the groups' tags lent to untagged resources"
+  ],
+  "trap": "Inheritance comes last: lending tags does not help while the reservation sits on a line with no group at all."
+ },
+ {
+  "id": "ex-mwkf3kf7",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After inheritance, only `vpng-shop-hub` is untagged. What should the shop do with that result?",
+  "hint": "What does the leftover list name?",
+  "choices": [
+   {
+    "text": "Drop the line from the report as noise",
+    "correct": false,
+    "why": "Dropping it makes the report add up to less than the bill."
+   },
+   {
+    "text": "Find who owns `rg-shop-hub` and tag the group",
+    "correct": true,
+    "why": "Right. The leftover is a list of groups nobody owns."
+   },
+   {
+    "text": "Split it evenly between the two cost centres",
+    "correct": false,
+    "why": "That decides an owner by arithmetic instead of finding one."
+   },
+   {
+    "text": "Delete the VPN gateway, since nobody owns it",
+    "correct": false,
+    "why": "Unowned in the report is not unused; it carries the office's traffic."
+   }
+  ]
+ },
+ {
+  "id": "ex-s3d5aakb",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these put a cost centre on a cost line? Choose all that apply.",
+  "hint": "Think of where the tag ends up in each case.",
+  "choices": [
+   {
+    "text": "A tag written in the template that creates the resource",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "The *if missing* policy, for resources created after its assignment",
+    "correct": true,
+    "why": "Right, on the resource itself."
+   },
+   {
+    "text": "Cost Management's tag inheritance, where the billing account supports it",
+    "correct": true,
+    "why": "Right, on the usage records only."
+   },
+   {
+    "text": "Tagging the resource group and doing nothing else",
+    "correct": false,
+    "why": "Group tags stay on the group."
+   },
+   {
+    "text": "Naming the resource group after the cost centre",
+    "correct": false,
+    "why": "A name is not a tag, and reports do not read it as one."
+   }
+  ]
+ }
+]

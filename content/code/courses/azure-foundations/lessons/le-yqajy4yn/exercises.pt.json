@@ -1,0 +1,382 @@
+{
+ "ex-hst54a40": {
+  "prompt": "A loja quer as máquinas web espalhadas pelas três zonas de `brazilsouth`. Quantas sub-redes isso exige na `vnet-shop-prod`?",
+  "hint": "Onde mora uma sub-rede do Azure?",
+  "choices": [
+   {
+    "text": "Três, uma por zona, já que uma sub-rede fica numa zona só",
+    "why": "Esse é o desenho de outras nuvens. Uma sub-rede do Azure cobre todas as zonas da região."
+   },
+   {
+    "text": "Nenhuma até se acrescentar uma segunda região",
+    "why": "Uma VNet mora numa região e as sub-redes em todas as zonas dela."
+   },
+   {
+    "text": "Seis, uma pública e uma privada em cada zona",
+    "why": "Nem as zonas nem público e privado multiplicam sub-redes aqui."
+   },
+   {
+    "text": "Uma: a sub-rede cobre todas as zonas",
+    "why": "Isso. As máquinas escolhem as zonas; a sub-rede está em todas."
+   }
+  ]
+ },
+ "ex-vz5rfrmg": {
+  "prompt": "O escritório diz que usa `10.0.0.0/8` e quer uma VPN até o Azure. Por que a lição chama isso de armadilha?",
+  "hint": "Veja a última linha da conferência de sobreposição.",
+  "choices": [
+   {
+    "text": "Porque `10.0.0.0/8` não é um intervalo privado",
+    "why": "É o maior dos três intervalos privados da RFC 1918."
+   },
+   {
+    "text": "Porque o Azure só aceita redes `/16` de um escritório",
+    "why": "Esse limite não existe. O tamanho não é o problema; o que ele cobre é."
+   },
+   {
+    "text": "Ele se sobrepõe a toda rede `10.` da loja no Azure",
+    "why": "Isso. Um `/8` contém todo `/16` que começa com `10.`, então nenhum endereço pode ser distinguido."
+   },
+   {
+    "text": "Porque uma VPN só carrega um `/24` por vez",
+    "why": "Uma VPN carrega os intervalos que os dois lados roteiam."
+   }
+  ]
+ },
+ "ex-fh0j8kp5": {
+  "prompt": "Qual endereço nunca pode fazer parte do intervalo de uma VNet?",
+  "hint": "O próprio Azure responde nele dentro de toda rede.",
+  "choices": [
+   {
+    "text": "`168.63.129.16`",
+    "why": "Isso. O DNS e as verificações de saúde do Azure respondem ali, então ele é recusado."
+   },
+   {
+    "text": "`100.64.0.1`",
+    "why": "O espaço compartilhado da RFC 6598 é aceito e tratado como privado."
+   },
+   {
+    "text": "`192.168.0.1`",
+    "why": "Um endereço privado; só o uso do escritório mantém a loja longe dele."
+   },
+   {
+    "text": "`10.20.0.0`",
+    "why": "É um endereço de rede dentro de um intervalo privado, e a `vnet-shop-prod` começa nele."
+   }
+  ]
+ },
+ "ex-2a6xgmfd": {
+  "prompt": "Quanto custa por mês uma VNet com quatro sub-redes e nada dentro?",
+  "hint": "O que é cobrado numa rede?",
+  "choices": [
+   {
+    "text": "Uma taxa fixa por sub-rede",
+    "why": "Sub-redes são gratuitas. A conta vem do que é colocado nelas."
+   },
+   {
+    "text": "Nada",
+    "why": "Isso. O que custa é o que se põe nela e aquilo a que ela se liga."
+   },
+   {
+    "text": "Uma taxa por endereço do intervalo, usado ou não",
+    "why": "Endereços privados não são cobrados."
+   },
+   {
+    "text": "O mesmo que uma máquina virtual pequena, já que uma rede roda numa",
+    "why": "Uma VNet não é uma máquina; é um conjunto de regras sobre endereços."
+   }
+  ]
+ },
+ "ex-2je6jkr0": {
+  "prompt": "Quantos endereços utilizáveis o Azure deixa numa sub-rede `/27`?",
+  "hint": "Um `/27` guarda 32.",
+  "unit": "endereços"
+ },
+ "ex-jsm66ee7": {
+  "prompt": "Ligue cada endereço da `snet-app`, `10.20.2.0/24`, ao uso que o Azure faz dele.",
+  "hint": "Os quatro primeiros e o último são tomados.",
+  "pairs": [
+   {
+    "left": "`10.20.2.0`",
+    "right": "o endereço de rede"
+   },
+   {
+    "left": "`10.20.2.1`",
+    "right": "o gateway padrão"
+   },
+   {
+    "left": "`10.20.2.3`",
+    "right": "mapear o DNS do Azure"
+   },
+   {
+    "left": "`10.20.2.4`",
+    "right": "o primeiro endereço que uma máquina pode receber"
+   }
+  ],
+  "right_distractors": [
+   "o endereço do firewall"
+  ]
+ },
+ "ex-k1sj1q74": {
+  "prompt": "O `plan.py` recusou `snet-jobs=10.20.5.0/23` com *has host bits set*. O que há de errado no intervalo?",
+  "hint": "Onde um `/23` pode começar?",
+  "choices": [
+   {
+    "text": "Ele se sobrepõe à `snet-web`",
+    "why": "A `snet-web` é `10.20.1.0/24`, bem abaixo."
+   },
+   {
+    "text": "Começa num terceiro ímpar",
+    "why": "Isso. `10.20.4.0/23` ou `10.20.6.0/23` são intervalos; `10.20.5.0/23` não é."
+   },
+   {
+    "text": "É menor que o mínimo do Azure",
+    "why": "Um `/23` guarda 512 endereços; o mínimo é um `/29`."
+   },
+   {
+    "text": "Ele cai fora de `10.20.0.0/16`",
+    "why": "Todo endereço `10.20.` está dentro da rede."
+   }
+  ]
+ },
+ "ex-n9zw6v8v": {
+  "prompt": "Por que a loja deixa mais de 98% de `10.20.0.0/16` fora de qualquer sub-rede?",
+  "hint": "Quando uma sub-rede pode ser redimensionada?",
+  "choices": [
+   {
+    "text": "Uma sub-rede só muda de tamanho vazia, então o espaço fica agora",
+    "why": "Isso. Camadas e serviços novos ganham intervalos novos em vez de uma reconstrução."
+   },
+   {
+    "text": "Porque uma VNet guarda no máximo quatro sub-redes",
+    "why": "Uma VNet guarda muito mais; quatro é o plano da loja, não um limite."
+   },
+   {
+    "text": "Porque o resto fica reservado para a região pareada",
+    "why": "O intervalo de uma VNet não é dividido com região nenhuma."
+   },
+   {
+    "text": "Porque o Azure cobra cada endereço colocado numa sub-rede",
+    "why": "Sub-redes e os seus endereços são gratuitos."
+   }
+  ]
+ },
+ "ex-bjq6y303": {
+  "prompt": "Uma equipe implanta o Azure Firewall num `/24` que chamou de `snet-firewall`. O que acontece?",
+  "hint": "Qual é o contrato entre o serviço e a sub-rede?",
+  "choices": [
+   {
+    "text": "O Azure renomeia a sub-rede na implantação",
+    "why": "Nada renomeia uma sub-rede por você."
+   },
+   {
+    "text": "Funciona, já que um `/24` é maior que o `/26` pedido",
+    "why": "O tamanho é necessário e não basta; o nome também é conferido."
+   },
+   {
+    "text": "O Azure recusa: a sub-rede precisa se chamar `AzureFirewallSubnet`",
+    "why": "Isso. O nome é o contrato, seja qual for o tamanho."
+   },
+   {
+    "text": "O firewall é colocado numa sub-rede oculta própria",
+    "why": "O Azure Firewall vai na `AzureFirewallSubnet` da própria VNet, que você cria."
+   }
+  ]
+ },
+ "ex-14xgxq0k": {
+  "prompt": "A menor sub-rede IPv4 que o Azure permite é um `/___`, com três endereços utilizáveis.",
+  "hint": "Oito endereços, cinco deles tomados.",
+  "blanks": [
+   {
+    "accept": [
+     "29"
+    ]
+   }
+  ]
+ },
+ "ex-x8qsej07": {
+  "prompt": "O que delegar a `snet-data` a `Microsoft.DBforPostgreSQL/flexibleServers` permite?",
+  "hint": "Quem passa a colocar coisas na sub-rede?",
+  "choices": [
+   {
+    "text": "Qualquer cliente PostgreSQL a se conectar pela internet",
+    "why": "Delegar é sobre quem pode construir na sub-rede, não quem pode se conectar a ela."
+   },
+   {
+    "text": "A sub-rede a ser compartilhada com outra assinatura",
+    "why": "A delegação é para um serviço, não para uma assinatura."
+   },
+   {
+    "text": "O banco a pegar endereços de toda sub-rede da VNet",
+    "why": "Só a sub-rede delegada é do serviço."
+   },
+   {
+    "text": "O serviço a criar e gerenciar o que precisa naquela sub-rede",
+    "why": "Isso. Ele também pode definir regras de rede ali que você não remove enquanto ele estiver lá."
+   }
+  ]
+ },
+ "ex-j1amzm6g": {
+  "prompt": "Por que o `vnet.bicep` escreve as sub-redes dentro da rede em vez de como recursos separados?",
+  "hint": "O que acontece quando só a rede é implantada de novo?",
+  "choices": [
+   {
+    "text": "O Bicep recusa sub-redes declaradas como recursos separados",
+    "why": "O Bicep aceita as duas formas."
+   },
+   {
+    "text": "Sub-redes separadas custariam mais",
+    "why": "Sub-redes não custam nada em nenhuma das formas."
+   },
+   {
+    "text": "A delegação só funciona em sub-redes escritas por dentro",
+    "why": "A delegação é uma propriedade da sub-rede nas duas formas."
+   },
+   {
+    "text": "Reimplantar só a rede as mantém",
+    "why": "Isso. Um arquivo de rede que as deixa de fora pode descrever uma rede sem sub-redes."
+   }
+  ]
+ },
+ "ex-jjn3v2p2": {
+  "prompt": "O `outside.bicep` pôs a `snet-pe` em `10.99.4.0/24`, fora da rede, e compilou. O que isso mostra?",
+  "hint": "O que o compilador confere num texto?",
+  "choices": [
+   {
+    "text": "Que o Azure aceita sub-redes fora da sua rede",
+    "why": "O Azure recusaria a implantação; quem não disse nada foi o compilador."
+   },
+   {
+    "text": "Que o `addressPrefix` é ignorado quando há `addressSpace`",
+    "why": "Os dois ficam no template, como a saída mostrou."
+   },
+   {
+    "text": "O compilador confere tipos, não a aritmética dos endereços",
+    "why": "Isso. É o trabalho que o `plan.py` faz antes de alguém implantar."
+   },
+   {
+    "text": "Que o intervalo é movido para dentro da rede na implantação",
+    "why": "Nada move um intervalo por você."
+   }
+  ]
+ },
+ "ex-fvjw32am": {
+  "prompt": "Um pipeline compila o `typo.bicep`, vê código de saída zero e implanta. O arquivo diz `defaultOutbondAccess: false`. O que a sub-rede recebe?",
+  "hint": "O que aconteceu com a propriedade escrita errado?",
+  "choices": [
+   {
+    "text": "O padrão da versão da API, não o que o arquivo quis",
+    "why": "Isso. Leia os avisos, ou torne-os erros no `bicepconfig.json`."
+   },
+   {
+    "text": "Nada: a compilação falhou e nada foi implantado",
+    "why": "O BCP089 é um aviso; a compilação teve sucesso."
+   },
+   {
+    "text": "Uma sub-rede sem intervalo nenhum",
+    "why": "O intervalo estava escrito certo e sobrevive."
+   },
+   {
+    "text": "Uma sub-rede privada, já que o Bicep corrigiu o nome",
+    "why": "O Bicep sugeriu o nome certo e escreveu o errado no template."
+   }
+  ]
+ },
+ "ex-wmxkf6tr": {
+  "prompt": "No Terraform, `___(\"10.20.0.0/16\", 8, 2)` devolve `10.20.2.0/24`.",
+  "hint": "A função que devolve a n-ésima fatia de um intervalo.",
+  "blanks": [
+   {
+    "accept": [
+     "cidrsubnet"
+    ]
+   }
+  ]
+ },
+ "ex-xcb6psgv": {
+  "prompt": "O que `defaultOutboundAccess: false` muda para uma máquina na `snet-app`?",
+  "hint": "Que saída sobra?",
+  "choices": [
+   {
+    "text": "Ela não pode ser alcançada pelo resto da VNet",
+    "why": "O tráfego dentro da rede não é afetado."
+   },
+   {
+    "text": "Só uma rota feita de propósito a leva para fora",
+    "why": "Isso. O firewall da lição 18 é essa rota para a loja."
+   },
+   {
+    "text": "Ela perde o endereço privado",
+    "why": "Os endereços privados ficam intocados."
+   },
+   {
+    "text": "Pode receber tráfego da internet em qualquer porta",
+    "why": "É sobre sair, e fecha uma porta em vez de abrir."
+   }
+  ]
+ },
+ "ex-h37q0bz1": {
+  "prompt": "Ponha os passos de construir a `vnet-shop-prod` na ordem em que a lição os faz.",
+  "hint": "O intervalo vem antes de qualquer coisa ser cortada dele.",
+  "items": [
+   "escolher um intervalo que não se sobreponha a nenhuma rede que a loja vai ligar",
+   "conferir o plano de sub-redes com o `plan.py`",
+   "escrever a rede e as sub-redes no `vnet.bicep`",
+   "compilar e ler as sub-redes de volta"
+  ],
+  "trap": "Compilar vem por último, e ainda assim não confere a aritmética: quem fez isso foi o `plan.py`."
+ },
+ "ex-n113fr7b": {
+  "prompt": "Staging é `10.30.0.0/16`. Um desenvolvedor cria uma rede de teste em `10.30.128.0/17` noutra assinatura, para ser ligada à produção no mês que vem. O que dá errado?",
+  "hint": "A rede de teste está dentro de outro intervalo do plano?",
+  "choices": [
+   {
+    "text": "Ele se sobrepõe ao staging, e os dois nunca serão ligados",
+    "why": "Isso. A produção faz peering com ela, e no dia em que o staging também precisar, os dois colidem."
+   },
+   {
+    "text": "O peering com a produção falha, já que um `/17` não faz peering",
+    "why": "Qualquer tamanho faz peering; o tamanho não é a questão."
+   },
+   {
+    "text": "Nada, desde que esteja noutra assinatura",
+    "why": "Sobreposição é sobre endereços, não sobre quem é dono deles."
+   },
+   {
+    "text": "O Azure recusa criá-la, já que `10.30.` é do staging",
+    "why": "O Azure só confere sobreposição quando duas redes são ligadas."
+   }
+  ]
+ },
+ "ex-mz8ejmht": {
+  "prompt": "Quais destas o Azure recusaria quando a sub-rede fosse criada? Marque todas as que se aplicam.",
+  "hint": "O `plan.py` confere as mesmas regras.",
+  "choices": [
+   {
+    "text": "`10.20.9.0/30` na `vnet-shop-prod`",
+    "why": "Isso. Abaixo do mínimo de `/29`."
+   },
+   {
+    "text": "`10.20.1.128/25` ao lado da `snet-web`",
+    "why": "Isso. Ele se sobrepõe a `10.20.1.0/24`."
+   },
+   {
+    "text": "`10.20.200.0/24` na `vnet-shop-prod`",
+    "why": "Dentro do intervalo e livre: aceito."
+   },
+   {
+    "text": "`10.30.0.0/24` na `vnet-shop-prod`",
+    "why": "Isso. Fora de `10.20.0.0/16`."
+   },
+   {
+    "text": "`10.20.0.0/24`, deixado sem uso pelo plano",
+    "why": "Sem uso por escolha, e perfeitamente válido."
+   }
+  ]
+ },
+ "ex-56971nwn": {
+  "prompt": "A `snet-pe` é um `/24`. Quantos private endpoints ela comporta, a um endereço cada?",
+  "hint": "A mesma aritmética de qualquer sub-rede.",
+  "unit": "endpoints"
+ }
+}

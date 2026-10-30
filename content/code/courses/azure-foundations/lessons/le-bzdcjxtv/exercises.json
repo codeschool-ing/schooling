@@ -1,0 +1,615 @@
+[
+ {
+  "id": "ex-9qxs2deg",
+  "version": 1,
+  "section": "definitions",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "bia is Owner of `shop-prod`. *Allowed locations*, set to Brazil, is assigned on `mg-shop` with `deny`. She asks for a machine in `southcentralus`. What happens?",
+  "hint": "Is policy about who asks?",
+  "choices": [
+   {
+    "text": "It is created, because Owner may do anything in the subscription",
+    "correct": false,
+    "why": "Owner is a permission. Policy judges the resource, whoever asks."
+   },
+   {
+    "text": "It is created and marked non-compliant",
+    "correct": false,
+    "why": "That is `audit`. This assignment uses `deny`."
+   },
+   {
+    "text": "It is refused",
+    "correct": true,
+    "why": "Right. The rule is about Texas, not about bia."
+   },
+   {
+    "text": "It is created in `brazilsouth` instead",
+    "correct": false,
+    "why": "Policy never moves a request to another region."
+   }
+  ]
+ },
+ {
+  "id": "ex-985gs1vd",
+  "version": 1,
+  "section": "definitions",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is the difference between a policy definition and a policy assignment?",
+  "hint": "One says what, the other says where.",
+  "choices": [
+   {
+    "text": "A definition is built-in and an assignment is custom",
+    "correct": false,
+    "why": "Both definitions and assignments exist in either flavour."
+   },
+   {
+    "text": "The definition is the rule; the assignment puts it on a scope",
+    "correct": true,
+    "why": "Right. One definition can be assigned many times with different parameters."
+   },
+   {
+    "text": "A definition applies to resources and an assignment to identities",
+    "correct": false,
+    "why": "Neither applies to identities; that is role-based access."
+   },
+   {
+    "text": "An assignment is a definition that has already run once",
+    "correct": false,
+    "why": "An assignment is a resource of its own, not a run."
+   }
+  ]
+ },
+ {
+  "id": "ex-a9196bfx",
+  "version": 1,
+  "section": "definitions",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is the id of *Allowed locations*, `e56962a6-...`, the same in every tenant?",
+  "hint": "Look at where the id starts.",
+  "choices": [
+   {
+    "text": "It is not: the GUID differs per subscription",
+    "correct": false,
+    "why": "A built-in's GUID is fixed; that is why a template can name it."
+   },
+   {
+    "text": "Every tenant copies it from GitHub on creation",
+    "correct": false,
+    "why": "GitHub is where it is published, not where tenants get it."
+   },
+   {
+    "text": "Policy ids are derived from the display name",
+    "correct": false,
+    "why": "The name is a GUID; nothing is derived from the title."
+   },
+   {
+    "text": "It is a built-in, defined once by Microsoft above every tenant",
+    "correct": true,
+    "why": "Right. Its id starts at `/providers/`, with no subscription."
+   }
+  ]
+ },
+ {
+  "id": "ex-vg7rj1ch",
+  "version": 1,
+  "section": "definitions",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop writes a custom definition about resource groups and gives it `\"mode\": \"Indexed\"`. It is assigned, it reports, and no resource group is ever refused. Why?",
+  "hint": "What does `Indexed` look at?",
+  "choices": [
+   {
+    "text": "`Indexed` only sees types with tags and a location, and skips groups",
+    "correct": true,
+    "why": "Right. A rule about groups needs mode `All`."
+   },
+   {
+    "text": "Resource groups are exempt from every policy",
+    "correct": false,
+    "why": "Microsoft ships a built-in for resource groups, in mode `All`."
+   },
+   {
+    "text": "The assignment needs a managed identity",
+    "correct": false,
+    "why": "Only `modify` and `deployIfNotExists` need one."
+   },
+   {
+    "text": "Custom definitions cannot use `deny`",
+    "correct": false,
+    "why": "They can; the shop's own uses it."
+   }
+  ]
+ },
+ {
+  "id": "ex-f8pc35yp",
+  "version": 1,
+  "section": "definitions",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a policy rule, `allOf` means every condition must hold, and `___` means at least one must.",
+  "hint": "The two combine conditions, like and/or.",
+  "blanks": [
+   {
+    "accept": [
+     "anyOf"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-39zas3p6",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "*Allowed locations* is assigned on `mg-shop`. Which of these does it govern?",
+  "hint": "An assignment holds at its scope and below.",
+  "choices": [
+   {
+    "text": "Only resources created directly in `mg-shop`",
+    "correct": false,
+    "why": "Resources are not created in management groups; they live in subscriptions below."
+   },
+   {
+    "text": "Only the subscriptions that existed on the day it was assigned",
+    "correct": false,
+    "why": "Next year's subscription under `mg-shop` is governed too."
+   },
+   {
+    "text": "The tenant root group and everything in the tenant",
+    "correct": false,
+    "why": "It reaches down, never up."
+   },
+   {
+    "text": "Every resource in every subscription under `mg-shop`",
+    "correct": true,
+    "why": "Right. Including those created later."
+   }
+  ]
+ },
+ {
+  "id": "ex-gz8fm1cd",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The owner of `shop-staging` dislikes a deny assigned on `mg-shop`. What can they do from inside their subscription?",
+  "hint": "Can something below switch off a rule from above?",
+  "choices": [
+   {
+    "text": "Assign the same definition with `disabled` at the subscription",
+    "correct": false,
+    "why": "That adds a second assignment; the first still applies."
+   },
+   {
+    "text": "See it, and nothing else",
+    "correct": true,
+    "why": "Right. A way out is written into the assignment or an exemption, above."
+   },
+   {
+    "text": "Delete the assignment, since it applies to their resources",
+    "correct": false,
+    "why": "The assignment lives on `mg-shop`, out of their reach."
+   },
+   {
+    "text": "Move the subscription out of `mg-shop`",
+    "correct": false,
+    "why": "Moving a subscription between management groups is not the subscription owner's call."
+   }
+  ]
+ },
+ {
+  "id": "ex-f3ej43nv",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A subscription denies everything outside `brazilsouth`; a resource group inside it denies everything outside `brazilsoutheast`. Where can a resource in that group be created?",
+  "hint": "Each assignment is evaluated on its own.",
+  "choices": [
+   {
+    "text": "Nowhere",
+    "correct": true,
+    "why": "Right. Cumulative most restrictive: each region fails one of the two rules."
+   },
+   {
+    "text": "In either of the two regions",
+    "correct": false,
+    "why": "Each region is denied by one of the two assignments."
+   },
+   {
+    "text": "In `brazilsoutheast`, because the nearer rule wins",
+    "correct": false,
+    "why": "No rule wins; both apply."
+   },
+   {
+    "text": "In `brazilsouth`, because the subscription's rule is higher",
+    "correct": false,
+    "why": "Being higher does not override; both are evaluated."
+   }
+  ]
+ },
+ {
+  "id": "ex-v67vn3g9",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the compiled `policy.bicep` hold `[[parameters('effect')]` with two brackets?",
+  "hint": "Two evaluators read that string.",
+  "choices": [
+   {
+    "text": "A bug in Bicep 0.48.1 that doubles the bracket",
+    "correct": false,
+    "why": "It is deliberate escaping, documented behaviour."
+   },
+   {
+    "text": "To make Resource Manager evaluate it twice",
+    "correct": false,
+    "why": "Resource Manager evaluates it zero times; it strips one bracket and stores the text."
+   },
+   {
+    "text": "So Resource Manager stores it as text for Policy to evaluate",
+    "correct": true,
+    "why": "Right. One bracket is removed at deployment, and Policy reads the rest each time the rule runs."
+   },
+   {
+    "text": "Because policy parameters must start with two brackets",
+    "correct": false,
+    "why": "In the stored definition it has one, as in the built-in."
+   }
+  ]
+ },
+ {
+  "id": "ex-21mfrp8m",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop's environment-tag assignment uses `enforcementMode: 'DoNotEnforce'`. What does that give the shop?",
+  "hint": "How should a new rule start?",
+  "choices": [
+   {
+    "text": "A rule that applies to new resources only",
+    "correct": false,
+    "why": "Every deny applies to new requests only; this is about not denying at all."
+   },
+   {
+    "text": "A report of what the rule would refuse, refusing nothing",
+    "correct": true,
+    "why": "Right. Evaluate first, enforce once the report is understood."
+   },
+   {
+    "text": "A rule that the owner of each subscription can switch off",
+    "correct": false,
+    "why": "Nothing below can switch an assignment off."
+   },
+   {
+    "text": "A cheaper assignment, billed at half the price of an enforced one",
+    "correct": false,
+    "why": "Enforcement mode has nothing to do with billing."
+   }
+  ]
+ },
+ {
+  "id": "ex-q8e1n8ba",
+  "version": 1,
+  "section": "assignments",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "At most how many characters may the name of a policy assignment at a management group have?",
+  "hint": "`shop-environment-tag` meets it with four to spare.",
+  "value": 24,
+  "tolerance": 0,
+  "unit": "characters"
+ },
+ {
+  "id": "ex-wda7z8jz",
+  "version": 1,
+  "section": "assignments",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each way of loosening a policy to what it is.",
+  "hint": "Two of them are written into or beside the assignment.",
+  "pairs": [
+   {
+    "left": "`notScopes`",
+    "right": "scopes the assignment skips"
+   },
+   {
+    "left": "an exemption",
+    "right": "one scope excused from one assignment, until a date"
+   },
+   {
+    "left": "`DoNotEnforce`",
+    "right": "evaluate and report without refusing"
+   }
+  ],
+  "right_distractors": [
+   "a lower assignment with `disabled`"
+  ]
+ },
+ {
+  "id": "ex-hetkb3ez",
+  "version": 1,
+  "section": "effects",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which effect lets the resource be created and marks it non-compliant?",
+  "hint": "The reporting family.",
+  "choices": [
+   {
+    "text": "`deny`",
+    "correct": false,
+    "why": "That refuses the request."
+   },
+   {
+    "text": "`modify`",
+    "correct": false,
+    "why": "That changes the request before it is carried out."
+   },
+   {
+    "text": "`disabled`",
+    "correct": false,
+    "why": "That does nothing at all."
+   },
+   {
+    "text": "`audit`",
+    "correct": true,
+    "why": "Right. Created, and reported."
+   }
+  ]
+ },
+ {
+  "id": "ex-z6k7mamr",
+  "version": 1,
+  "section": "effects",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put these effects in the order Azure Policy runs them when a request arrives.",
+  "hint": "A rule switched off costs nothing; a change can make a deny unnecessary.",
+  "items": [
+   "`disabled`",
+   "`modify`",
+   "`deny`",
+   "`audit`"
+  ],
+  "trap": "`modify` comes before `deny`: a request given the missing tag should not then be refused for missing it."
+ },
+ {
+  "id": "ex-028f5b68",
+  "version": 1,
+  "section": "effects",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The built-in *Inherit a tag from the resource group if missing* lists the Contributor role in its rule. Who gets that role?",
+  "hint": "An effect that acts needs somebody to act.",
+  "choices": [
+   {
+    "text": "Whoever creates the resource",
+    "correct": false,
+    "why": "The creator's permissions decide whether they may ask, not what Policy may change."
+   },
+   {
+    "text": "Microsoft's support team, for remediation",
+    "correct": false,
+    "why": "Nobody at Microsoft acts on your resources for a policy."
+   },
+   {
+    "text": "The assignment's managed identity",
+    "correct": true,
+    "why": "Right. `modify` acts as that identity, at the assignment's scope."
+   },
+   {
+    "text": "Nobody: a built-in already has every permission",
+    "correct": false,
+    "why": "A built-in is a definition; it acts through an identity like any other."
+   }
+  ]
+ },
+ {
+  "id": "ex-2j8jpddx",
+  "version": 1,
+  "section": "effects",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "*Allowed locations* with `deny` is assigned on a subscription that already has a machine in Texas. What happens to the machine?",
+  "hint": "When does a deny act?",
+  "choices": [
+   {
+    "text": "It keeps running, marked non-compliant",
+    "correct": true,
+    "why": "Right. A deny acts on requests; what exists is reported."
+   },
+   {
+    "text": "It is deleted at the next 24-hour evaluation",
+    "correct": false,
+    "why": "Evaluation reports; it never deletes."
+   },
+   {
+    "text": "It is moved to `brazilsouth` by a remediation task",
+    "correct": false,
+    "why": "Remediation exists for `modify` and `deployIfNotExists`, and no effect relocates a machine."
+   },
+   {
+    "text": "It is stopped within five minutes",
+    "correct": false,
+    "why": "Five minutes is when the assignment applies, and applying stops nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-ta09zzm7",
+  "version": 1,
+  "section": "effects",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is an initiative in Azure Policy?",
+  "hint": "The API calls it a policy set definition.",
+  "choices": [
+   {
+    "text": "A remediation task started by hand",
+    "correct": false,
+    "why": "That is remediation, a different thing."
+   },
+   {
+    "text": "A definition that runs before any other",
+    "correct": false,
+    "why": "Order is decided by effect, not by grouping."
+   },
+   {
+    "text": "A group of definitions assigned and reported as one",
+    "correct": true,
+    "why": "Right. Microsoft's regulatory benchmarks are built-in initiatives."
+   },
+   {
+    "text": "An assignment that applies to a whole tenant",
+    "correct": false,
+    "why": "Scope belongs to assignments; an initiative is a kind of definition."
+   }
+  ]
+ },
+ {
+  "id": "ex-whe3zgfn",
+  "version": 1,
+  "section": "effects",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Assignments are evaluated again once every ___ hours in the standard cycle.",
+  "hint": "A day.",
+  "blanks": [
+   {
+    "accept": [
+     "24",
+     "twenty-four"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-7kfzy3bc",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop wants every new storage account to have a diagnostic setting, created automatically when it is missing. Which effect fits?",
+  "hint": "A related resource deployed if it is missing.",
+  "choices": [
+   {
+    "text": "`auditIfNotExists`",
+    "correct": false,
+    "why": "That reports the missing setting and creates nothing."
+   },
+   {
+    "text": "`deployIfNotExists`",
+    "correct": true,
+    "why": "Right. It needs the assignment's managed identity and a role to do it."
+   },
+   {
+    "text": "`modify`",
+    "correct": false,
+    "why": "`modify` changes the request's own properties, such as tags; it does not create a second resource."
+   },
+   {
+    "text": "`append`",
+    "correct": false,
+    "why": "`append` adds fields to the request; it creates nothing beside it."
+   }
+  ]
+ },
+ {
+  "id": "ex-zwmwsmr5",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did the lab show without an Azure account? Choose all that apply.",
+  "hint": "What came from GitHub and from Bicep, and what was refused?",
+  "choices": [
+   {
+    "text": "The rule of a built-in definition",
+    "correct": true,
+    "why": "Right. Read from the GitHub copy."
+   },
+   {
+    "text": "The ARM template of an assignment at a management group",
+    "correct": true,
+    "why": "Right. `az bicep build`."
+   },
+   {
+    "text": "A deny refusing a resource in Texas",
+    "correct": false,
+    "why": "That needs Resource Manager; it was taught from the documentation."
+   },
+   {
+    "text": "The compliance report of `shop-prod`",
+    "correct": false,
+    "why": "Compliance lives in Azure; the scan request was refused."
+   },
+   {
+    "text": "The role a `modify` built-in asks for",
+    "correct": true,
+    "why": "Right. Contributor's GUID, in the rule."
+   }
+  ]
+ },
+ {
+  "id": "ex-s76y738x",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team wants test machines in Texas while production stays in Brazil, both under `mg-shop`. What change keeps *Allowed locations* on `mg-shop` honest?",
+  "hint": "The way out is written above, not done below.",
+  "choices": [
+   {
+    "text": "Assign *Allowed locations* again on the test subscription with Texas in the list",
+    "correct": false,
+    "why": "The `mg-shop` assignment would still deny Texas; rules add up."
+   },
+   {
+    "text": "Switch the assignment to `audit` for everybody",
+    "correct": false,
+    "why": "That loosens production too, which nobody asked for."
+   },
+   {
+    "text": "Give the team Owner on `mg-shop` so they can bypass it",
+    "correct": false,
+    "why": "Owner does not bypass policy."
+   },
+   {
+    "text": "An exemption for the test subscription, with a reason and an end date",
+    "correct": true,
+    "why": "Right. Written down, visible, and it expires; `notScopes` is the other honest route."
+   }
+  ]
+ }
+]

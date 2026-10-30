@@ -1,0 +1,402 @@
+{
+ "ex-wv833s5s": {
+  "prompt": "Que três coisas uma atribuição de papel junta?",
+  "hint": "Quem, o quê e onde.",
+  "choices": [
+   {
+    "text": "Um usuário, uma senha e um recurso",
+    "why": "Senha nenhuma entra: o login é assunto do Entra ID, e o acesso é decidido depois dele."
+   },
+   {
+    "text": "Um recurso, o dono dele e uma lista das pessoas que podem usá-lo",
+    "why": "O Azure não guarda lista de pessoas num recurso; ele junta as atribuições de todo escopo acima dele."
+   },
+   {
+    "text": "Uma entidade, um papel e o escopo em que ele vale",
+    "why": "Isso. Quem, qual lista de operações, e qual caixa."
+   },
+   {
+    "text": "Um tenant, uma assinatura e uma região",
+    "why": "A região não tem papel no acesso, e o tenant é onde as entidades moram, não uma peça da atribuição."
+   }
+  ]
+ },
+ "ex-1v6jagsy": {
+  "prompt": "As `actions` do Contributor são `*`. Qual linha dos `notActions` dele o impede de dar acesso a alguém?",
+  "hint": "Onde moram as atribuições de papel?",
+  "choices": [
+   {
+    "text": "`Microsoft.Subscription/cancel/action`",
+    "why": "Isso o impede de cancelar a assinatura; acesso fica em outro lugar."
+   },
+   {
+    "text": "`Microsoft.Authorization/*/Write`",
+    "why": "Isso. As atribuições de papel ficam em `Microsoft.Authorization`."
+   },
+   {
+    "text": "`Microsoft.Compute/galleries/share/action`",
+    "why": "Compartilhar uma galeria de imagens é uma das operações removidas, mas não é atribuição de papel."
+   },
+   {
+    "text": "`Microsoft.Blueprint/blueprintAssignments/write`",
+    "why": "Uma blueprint assignment é outro recurso, de um serviço aposentado."
+   }
+  ]
+ },
+ "ex-zfyd7cxp": {
+  "prompt": "Ligue cada papel nativo ao que ele permite.",
+  "hint": "Um deles dá acesso e não faz mais nada.",
+  "pairs": [
+   {
+    "left": "Owner",
+    "right": "tudo, inclusive dar acesso"
+   },
+   {
+    "left": "Contributor",
+    "right": "tudo, menos dar acesso"
+   },
+   {
+    "left": "Reader",
+    "right": "olhar, e não mudar nada"
+   },
+   {
+    "left": "User Access Administrator",
+    "right": "dar acesso, e nada mais"
+   }
+  ],
+  "right_distractors": [
+   "ler os blobs de toda storage account"
+  ]
+ },
+ "ex-4w8m97cz": {
+  "prompt": "Por que um arquivo Bicep pode citar o papel Reader pelo id `acdd72a7-3385-48ef-bd42-f606fba81ae7` no tenant de qualquer empresa?",
+  "hint": "Quem faz os papéis nativos?",
+  "choices": [
+   {
+    "text": "O id de um papel nativo é um só GUID em todo tenant do planeta",
+    "why": "Isso. É por isso que o papel é citado pelo id e não pelo nome de exibição."
+   },
+   {
+    "text": "Porque cada tenant copia o Reader com esse id quando é criado",
+    "why": "Nada é copiado: a definição é da Microsoft, atribuível em qualquer lugar."
+   },
+   {
+    "text": "Porque o Bicep traduz o id no nome local",
+    "why": "O Bicep passa o id sem mudar, como o template compilado mostrou."
+   },
+   {
+    "text": "Não pode: cada tenant dá ao Reader um id próprio",
+    "why": "Os ids nativos são fixos. Os papéis personalizados é que têm ids diferentes."
+   }
+  ]
+ },
+ "ex-jmr7ae97": {
+  "prompt": "Ler o conteúdo de um blob fica listado nas `___` de um papel, à parte das operações de gerenciamento.",
+  "hint": "O equivalente para gerenciamento se chama `actions`.",
+  "blanks": [
+   {
+    "accept": [
+     "dataActions"
+    ]
+   }
+  ]
+ },
+ "ex-mnhhvh4n": {
+  "prompt": "O que `notActions` faz numa definição de papel?",
+  "hint": "É uma proibição?",
+  "choices": [
+   {
+    "text": "Nega as operações à pessoa, sejam quais forem os outros papéis dela",
+    "why": "Isso é uma deny assignment. Um not-action remove só do próprio papel."
+   },
+   {
+    "text": "Lista operações que precisam de aprovação antes",
+    "why": "Aprovação é recurso da elevação da lição 10, não de uma definição de papel."
+   },
+   {
+    "text": "Registra operações que o papel já teve",
+    "why": "Não é histórico; é uma subtração em vigor."
+   },
+   {
+    "text": "Tira operações do que as actions daquele papel permitem",
+    "why": "Isso. Actions menos not-actions, dentro de um papel."
+   }
+  ]
+ },
+ "ex-tf4xct4j": {
+  "prompt": "`bia` tem Contributor na `shop-prod` e User Access Administrator no `rg-shop-prod`. `bia` pode criar uma atribuição de papel no `rg-shop-prod`?",
+  "hint": "O RBAC é aditivo.",
+  "choices": [
+   {
+    "text": "Não: os notActions do Contributor proíbem isso em todo lugar abaixo da assinatura",
+    "why": "Um not-action só estreita o Contributor; não anula outro papel."
+   },
+   {
+    "text": "Não: o escopo menor perde para o maior",
+    "why": "Escopos não competem. Toda atribuição que cobre o recurso conta."
+   },
+   {
+    "text": "Sim, pelo segundo papel, já que papéis se somam",
+    "why": "Isso. As permissões efetivas são a soma das atribuições."
+   },
+   {
+    "text": "Só depois de o Owner da assinatura aprovar",
+    "why": "Nada espera aprovação aqui: as duas atribuições simplesmente se somam."
+   }
+  ]
+ },
+ "ex-g8n97fpb": {
+  "prompt": "O `can.py` respondeu `no` para o Owner lendo um blob com `--data`. O que isso mostra?",
+  "hint": "Olhe as `dataActions` do Owner.",
+  "choices": [
+   {
+    "text": "Que a storage account está com acesso público desligado",
+    "why": "Nenhuma conta foi consultada. A resposta veio só das definições de papel."
+   },
+   {
+    "text": "Que o `can.py` tem um defeito, já que o Owner pode tudo",
+    "why": "O programa aplicou a regra documentada: as actions do Owner são `*`, as dataActions vazias."
+   },
+   {
+    "text": "Que os blobs estão protegidos por uma deny assignment",
+    "why": "Nenhuma deny assignment entrou; o programa nem as lê."
+   },
+   {
+    "text": "O `*` do Owner cobre só gerenciamento; a lista de dados está vazia",
+    "why": "Isso. Operações de dados precisam de um papel cujas `dataActions` as citem."
+   }
+  ]
+ },
+ "ex-eg7k3w11": {
+  "prompt": "Uma revisão de segurança diz: \"Só o Storage Blob Data Reader consegue ler as exportações de pedidos, porque o Contributor não tem dataActions.\" O que falta na frase?",
+  "hint": "A quarta pergunta feita ao `can.py`.",
+  "choices": [
+   {
+    "text": "O Contributor lista as chaves, e uma chave abre todo blob",
+    "why": "Isso. `listKeys` é uma ação de gerenciamento, e a chave contorna os papéis."
+   },
+   {
+    "text": "Que o Reader também tem dataActions `*/read`",
+    "why": "O `*/read` do Reader está em `actions`, não em `dataActions`."
+   },
+   {
+    "text": "Que deny assignments bloqueiam o Contributor no storage",
+    "why": "Nenhuma deny assignment assim existe por padrão."
+   },
+   {
+    "text": "Nada: o plano de dados é totalmente separado do gerenciamento",
+    "why": "Só enquanto as chaves compartilhadas estiverem desligadas."
+   }
+  ]
+ },
+ "ex-3bta78k0": {
+  "prompt": "Ponha os passos do Resource Manager ao julgar um pedido na ordem que a Microsoft documenta.",
+  "hint": "O que pode recusar antes de qualquer outra coisa ser lida?",
+  "items": [
+   "conferir as deny assignments que cobrem o recurso",
+   "reunir as atribuições de papel da entidade e dos grupos dela",
+   "procurar a operação nesses papéis, actions menos not-actions",
+   "avaliar as condições da atribuição"
+  ],
+  "trap": "As deny assignments vêm primeiro: uma que se aplique recusa o pedido e nada mais é lido."
+ },
+ "ex-3j9vwc21": {
+  "prompt": "Quem cria uma deny assignment?",
+  "hint": "Você não consegue escrever uma.",
+  "choices": [
+   {
+    "text": "Qualquer Owner, para proteger um grupo de recursos",
+    "why": "Um Owner não consegue criar uma diretamente, o que é parte do motivo de ela poder prender um Owner."
+   },
+   {
+    "text": "O Azure, para recursos como deployment stacks",
+    "why": "Isso. Um deployment stack com deny settings e uma aplicação gerenciada põem uma cada."
+   },
+   {
+    "text": "User Access Administrators, como o oposto de uma atribuição",
+    "why": "Eles criam atribuições de papel; deny assignments não são deles para fazer."
+   },
+   {
+    "text": "Ninguém mais: foram removidas com o Blueprints",
+    "why": "Existem hoje; os deployment stacks as criam."
+   }
+  ]
+ },
+ "ex-5x45efqh": {
+  "prompt": "Quantas atribuições de papel uma assinatura pode ter, pelo limite que a Microsoft diz que não vai aumentar?",
+  "hint": "O mesmo número de papéis personalizados por tenant.",
+  "unit": "atribuições"
+ },
+ "ex-xpjm61de": {
+  "prompt": "Reader é atribuído a um grupo na assinatura `shop-prod`. Onde os membros podem ler?",
+  "hint": "Para baixo, nunca para cima.",
+  "choices": [
+   {
+    "text": "Na `shop-prod` e no grupo de gerenciamento acima dela",
+    "why": "Uma atribuição nunca alcança para cima."
+   },
+   {
+    "text": "Em todo lugar dentro da `shop-prod`, grupos e recursos",
+    "why": "Isso. Todo grupo e todo recurso dela, e nada ao lado."
+   },
+   {
+    "text": "Em toda assinatura do tenant",
+    "why": "Só uma atribuição no grupo de gerenciamento raiz faria isso."
+   },
+   {
+    "text": "Só em grupos de recursos criados depois da atribuição",
+    "why": "A herança cobre igualmente o que existe e o que for acrescentado depois."
+   }
+  ]
+ },
+ "ex-wxmkbc5d": {
+  "prompt": "Por que a lição dá à atribuição o nome `guid(resourceGroup().id, groupId, readerId)`?",
+  "hint": "O que acontece na segunda implantação?",
+  "choices": [
+   {
+    "text": "Para esconder qual grupo recebeu o papel",
+    "why": "O grupo está nas propriedades para quem pode ler a atribuição."
+   },
+   {
+    "text": "Porque o Bicep recusa qualquer outro tipo de nome de atribuição ao compilar",
+    "why": "O compilador aceita qualquer nome; é o Resource Manager que quer um GUID."
+   },
+   {
+    "text": "Para uma nova implantação cair na mesma atribuição",
+    "why": "Isso. As mesmas três entradas dão o mesmo GUID toda vez."
+   },
+   {
+    "text": "Para o nome ser aleatório, e duas atribuições nunca colidirem",
+    "why": "O `guid()` é determinístico, e esse é o ponto."
+   }
+  ]
+ },
+ "ex-ayg6rfs3": {
+  "prompt": "O papel personalizado `Shop App Restarter` lista `assignableScopes: [subscription().id]`. O que isso decide?",
+  "hint": "Onde o papel pode ser distribuído?",
+  "choices": [
+   {
+    "text": "A quais recursos as actions do papel se aplicam",
+    "why": "O escopo da atribuição decide isso; esta lista decide onde atribuições podem ser feitas."
+   },
+   {
+    "text": "Quem pode reiniciar o web app",
+    "why": "Quem é decidido pelas atribuições, não pela definição."
+   },
+   {
+    "text": "A região onde a definição é guardada",
+    "why": "Definições de papel são guardadas globalmente, não por região."
+   },
+   {
+    "text": "Onde ele pode ser atribuído",
+    "why": "Isso. Aqui, só dentro desta assinatura."
+   }
+  ]
+ },
+ "ex-z7f2a9qj": {
+  "prompt": "Quais destes são hábitos que a lição recomenda? Marque todos os que se aplicam.",
+  "hint": "Três hábitos tornam o RBAC administrável.",
+  "choices": [
+   {
+    "text": "Atribuir papéis a grupos em vez de pessoas",
+    "why": "Isso. A participação muda; as atribuições ficam."
+   },
+   {
+    "text": "Dar Contributor na assinatura para ninguém ficar travado",
+    "why": "Isso deixa todo erro do maior tamanho possível."
+   },
+   {
+    "text": "Atribuir no menor escopo que funciona",
+    "why": "Isso."
+   },
+   {
+    "text": "Preferir um papel específico a um geral",
+    "why": "Isso. Network Contributor em vez de Contributor, para uma rede."
+   },
+   {
+    "text": "Tornar papéis personalizados atribuíveis em `/` para serem reaproveitados",
+    "why": "Um papel atribuível em qualquer lugar é mais uma coisa que todo mundo pode conceder."
+   }
+  ]
+ },
+ "ex-svah84jn": {
+  "prompt": "A função `___()` do Bicep transforma os argumentos no mesmo identificador toda vez, e é assim que a lição nomeia definições e atribuições de papel.",
+  "hint": "Quatro letras.",
+  "blanks": [
+   {
+    "accept": [
+     "guid"
+    ]
+   }
+  ]
+ },
+ "ex-pegz8bje": {
+  "prompt": "Os desenvolvedores de plantão precisam reiniciar o web app da loja e nada mais, só no `rg-shop-prod`. A que arranjo a lição leva?",
+  "hint": "Um papel estreito, um grupo, um escopo pequeno.",
+  "choices": [
+   {
+    "text": "`Shop App Restarter` para o grupo de plantão no `rg-shop-prod`",
+    "why": "Isso. Um papel específico, dado a um grupo, no menor escopo."
+   },
+   {
+    "text": "Owner para o grupo de plantão no `rg-shop-prod`, removido depois de cada incidente",
+    "why": "Owner também pode conceder acesso; e remover à mão depois de cada noite é o que a lição 10 substitui."
+   },
+   {
+    "text": "Contributor para cada desenvolvedor na `shop-prod`",
+    "why": "Largo demais no papel, no escopo e nas pessoas citadas uma a uma."
+   },
+   {
+    "text": "Reader no `rg-shop-prod`, já que reiniciar é uma leitura",
+    "why": "`restart/action` não é leitura, e `*/read` não casa com ela."
+   }
+  ]
+ },
+ "ex-5r2sxdrj": {
+  "prompt": "Qual pergunta o `can.py` sabe responder?",
+  "hint": "Ele lê definições de papel e nada mais.",
+  "choices": [
+   {
+    "text": "Se `bia` pode apagar a `vnet-shop-prod` hoje",
+    "why": "Isso precisa das atribuições, grupos e deny assignments de `bia`: fatos do Resource Manager."
+   },
+   {
+    "text": "Se a condição de uma atribuição vale para um blob",
+    "why": "Condições são o passo 4, que o modelo deixa de fora."
+   },
+   {
+    "text": "Quais papéis estão atribuídos no `rg-shop-prod`",
+    "why": "Atribuições moram no Resource Manager; o programa nunca viu uma."
+   },
+   {
+    "text": "Se as listas dos papéis que recebe permitem uma operação",
+    "why": "Isso. O passo 3 da ordem documentada, nos papéis que você entrega."
+   }
+  ]
+ },
+ "ex-136ns31f": {
+  "prompt": "Ligue cada operação ao papel nativo desta lição que a permite e é o mais estreito deles.",
+  "hint": "Leia as transcrições do `can.py`.",
+  "pairs": [
+   {
+    "left": "`Microsoft.Network/virtualNetworks/write`",
+    "right": "Contributor"
+   },
+   {
+    "left": "`Microsoft.Authorization/roleAssignments/write`",
+    "right": "User Access Administrator"
+   },
+   {
+    "left": "`.../containers/blobs/read`, como dado",
+    "right": "Storage Blob Data Reader"
+   },
+   {
+    "left": "`Microsoft.Web/sites/read`",
+    "right": "Reader"
+   }
+  ],
+  "right_distractors": [
+   "Owner"
+  ]
+ }
+}

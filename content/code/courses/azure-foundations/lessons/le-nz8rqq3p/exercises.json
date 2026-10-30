@@ -1,0 +1,553 @@
+[
+ {
+  "id": "ex-wpfq6yax",
+  "version": 1,
+  "section": "rules-and-priority",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "An NSG has an allow for port 22 at priority 300 and a deny for port 22 at priority 200. What happens to an SSH connection?",
+  "hint": "Lower numbers are read first.",
+  "choices": [
+   {
+    "text": "Denied, at 200",
+    "correct": true,
+    "why": "Right. 200 is read before 300, and reading stops there."
+   },
+   {
+    "text": "Allowed, since an allow anywhere in the list wins",
+    "correct": false,
+    "why": "An NSG is a queue, not a sum. The first match decides."
+   },
+   {
+    "text": "Allowed, since 300 is the higher priority",
+    "correct": false,
+    "why": "The lower number is the higher priority."
+   },
+   {
+    "text": "Refused by Azure, since two rules may not share a port",
+    "correct": false,
+    "why": "Two rules may share a port; they may not share a priority and direction."
+   }
+  ]
+ },
+ {
+  "id": "ex-v8aznr27",
+  "version": 1,
+  "section": "rules-and-priority",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the highest number a rule you write may use as its priority?",
+  "hint": "The defaults sit far above it.",
+  "value": 4096,
+  "tolerance": 0,
+  "unit": ""
+ },
+ {
+  "id": "ex-skpdkdej",
+  "version": 1,
+  "section": "rules-and-priority",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which default rule lets a compromised web server open a connection to the database on any port?",
+  "hint": "Both machines are in the same network.",
+  "choices": [
+   {
+    "text": "`AllowInternetOutBound`",
+    "correct": false,
+    "why": "That lets machines reach the internet, not each other."
+   },
+   {
+    "text": "`AllowAzureLoadBalancerInBound`",
+    "correct": false,
+    "why": "That one admits only Azure's health probes."
+   },
+   {
+    "text": "`DenyAllInBound`, which only covers the internet",
+    "correct": false,
+    "why": "It covers everything, but 65000 is read before 65500."
+   },
+   {
+    "text": "`AllowVnetInBound`",
+    "correct": true,
+    "why": "Right. Anything in the network may reach anything in it, at 65000."
+   }
+  ]
+ },
+ {
+  "id": "ex-kter9g5y",
+  "version": 1,
+  "section": "rules-and-priority",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A machine has an NSG on its subnet and another on its network interface. An inbound packet is allowed by the subnet's and denied by the interface's. What happens?",
+  "hint": "Both lists are read.",
+  "choices": [
+   {
+    "text": "It passes, since the subnet's NSG is read first",
+    "correct": false,
+    "why": "Being read first does not make it final: the interface's is read next."
+   },
+   {
+    "text": "It never reaches the machine",
+    "correct": true,
+    "why": "Right. Both must allow; a deny in either stops it."
+   },
+   {
+    "text": "Azure refuses to attach two NSGs to one machine",
+    "correct": false,
+    "why": "It allows it, and Microsoft advises against it."
+   },
+   {
+    "text": "The rule with the lower priority of the two decides",
+    "correct": false,
+    "why": "Priorities are compared inside one NSG, not across two."
+   }
+  ]
+ },
+ {
+  "id": "ex-xkr5c1b0",
+  "version": 1,
+  "section": "rules-and-priority",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "An NSG allows outbound 443. Why does it need no inbound rule for the replies?",
+  "hint": "What does the NSG remember?",
+  "choices": [
+   {
+    "text": "Replies come from the `AzureLoadBalancer` tag",
+    "correct": false,
+    "why": "Replies come from the server that was called."
+   },
+   {
+    "text": "Port 443 is always open inbound",
+    "correct": false,
+    "why": "No port is open inbound by default."
+   },
+   {
+    "text": "It is stateful: it keeps a record of the flow",
+    "correct": true,
+    "why": "Right. A rule decides who may start a conversation."
+   },
+   {
+    "text": "`AllowInternetOutBound` covers both directions",
+    "correct": false,
+    "why": "Each rule has one direction."
+   }
+  ]
+ },
+ {
+  "id": "ex-bqvrqymf",
+  "version": 1,
+  "section": "rules-and-priority",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "To shut a contractor out, ana deletes the rule that allowed their SSH. They are still connected an hour later. Why?",
+  "hint": "Which connections does a rule govern?",
+  "choices": [
+   {
+    "text": "SSH is exempt from NSG rules",
+    "correct": false,
+    "why": "No protocol is exempt."
+   },
+   {
+    "text": "Deleting a rule takes an hour to propagate",
+    "correct": false,
+    "why": "The delay is not the explanation; open flows are kept."
+   },
+   {
+    "text": "`AllowVnetInBound` let them back in",
+    "correct": false,
+    "why": "Nothing let them in again: they never left."
+   },
+   {
+    "text": "Rules govern new connections, and theirs was already open",
+    "correct": true,
+    "why": "Right. The next attempt is refused; the open session lasts until it ends."
+   }
+  ]
+ },
+ {
+  "id": "ex-2v9jbe7d",
+  "version": 1,
+  "section": "tags-and-groups",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each service tag to what it stands for.",
+  "hint": "One of them is a single address.",
+  "pairs": [
+   {
+    "left": "`AzureLoadBalancer`",
+    "right": "the address Azure's health probes come from"
+   },
+   {
+    "left": "`VirtualNetwork`",
+    "right": "the network, its peers and joined offices"
+   },
+   {
+    "left": "`Internet`",
+    "right": "what is outside and publicly reachable"
+   },
+   {
+    "left": "`Storage.BrazilSouth`",
+    "right": "Azure Storage's addresses in São Paulo"
+   }
+  ],
+  "right_distractors": [
+   "the shop's web servers"
+  ]
+ },
+ {
+  "id": "ex-kvtf1ynh",
+  "version": 1,
+  "section": "tags-and-groups",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is an application security group?",
+  "hint": "It is set on something you build.",
+  "choices": [
+   {
+    "text": "A list of Microsoft's addresses, kept up to date",
+    "correct": false,
+    "why": "That is a service tag."
+   },
+   {
+    "text": "A second NSG that a subnet inherits",
+    "correct": false,
+    "why": "An ASG holds no rules of its own."
+   },
+   {
+    "text": "A label on network interfaces, usable in a rule",
+    "correct": true,
+    "why": "Right. The rule follows the role, whatever the addresses."
+   },
+   {
+    "text": "A group of users allowed to change NSGs",
+    "correct": false,
+    "why": "It groups interfaces, not people; people are lesson 9."
+   }
+  ]
+ },
+ {
+  "id": "ex-8vb2zga2",
+  "version": 1,
+  "section": "tags-and-groups",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the shop write its web-to-application rule with ASGs instead of the two web servers' addresses?",
+  "hint": "What happens next month?",
+  "choices": [
+   {
+    "text": "The rule stays true as servers come and go",
+    "correct": true,
+    "why": "Right. Membership is set on each interface, not in the rule."
+   },
+   {
+    "text": "Because ASG rules are evaluated before address rules",
+    "correct": false,
+    "why": "Only priority decides the order."
+   },
+   {
+    "text": "Because NSG rules do not accept single addresses",
+    "correct": false,
+    "why": "They accept addresses and ranges."
+   },
+   {
+    "text": "Because ASGs make the rule apply across networks",
+    "correct": false,
+    "why": "An ASG is confined to one virtual network."
+   }
+  ]
+ },
+ {
+  "id": "ex-0hxyay9k",
+  "version": 1,
+  "section": "tags-and-groups",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why are the shop's priorities 100, 3900 and 4000, and not 100, 101 and 102?",
+  "hint": "Think of a rule needed in an emergency.",
+  "choices": [
+   {
+    "text": "Azure requires gaps of at least a hundred",
+    "correct": false,
+    "why": "No gap is required."
+   },
+   {
+    "text": "Room is left for rules added later",
+    "correct": true,
+    "why": "Right. 150 or 3950 are free for the day they are needed."
+   },
+   {
+    "text": "Rules close together are merged by Azure",
+    "correct": false,
+    "why": "Rules are never merged."
+   },
+   {
+    "text": "Higher numbers are cheaper",
+    "correct": false,
+    "why": "Priorities cost nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-5w1whh04",
+  "version": 1,
+  "section": "tags-and-groups",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The service tag `___` stands for `168.63.129.16`, where Azure's health probes come from.",
+  "hint": "Its name says which service sends them.",
+  "blanks": [
+   {
+    "accept": [
+     "AzureLoadBalancer"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-fktga5dr",
+  "version": 1,
+  "section": "packet-walk",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is `nsg.py`?",
+  "hint": "Read its first lines.",
+  "choices": [
+   {
+    "text": "Azure's IP flow verify, run locally",
+    "correct": false,
+    "why": "IP flow verify needs a machine in Azure."
+   },
+   {
+    "text": "A client that asks Network Watcher for verdicts",
+    "correct": false,
+    "why": "It sends nothing anywhere."
+   },
+   {
+    "text": "The course's model of the documented rules",
+    "correct": true,
+    "why": "Right. A model reading a compiled template, not an answer from Azure."
+   },
+   {
+    "text": "Microsoft's reference implementation of NSGs",
+    "correct": false,
+    "why": "Microsoft publishes no such program."
+   }
+  ]
+ },
+ {
+  "id": "ex-k1x833m6",
+  "version": 1,
+  "section": "packet-walk",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the draft, SSH from the web server to the application was allowed. By what?",
+  "hint": "Look at the number on the matching line.",
+  "choices": [
+   {
+    "text": "By the default `AllowVnetInBound`, at 65000",
+    "correct": true,
+    "why": "Right. A rule nobody in the shop wrote."
+   },
+   {
+    "text": "By nothing: the model has a bug",
+    "correct": false,
+    "why": "The model did what Azure documents."
+   },
+   {
+    "text": "By `AllowWebToApp`, since the source was a web server",
+    "correct": false,
+    "why": "That rule names port 8080 only; it printed a dash."
+   },
+   {
+    "text": "By `AllowAzureLoadBalancerInBound`",
+    "correct": false,
+    "why": "The source was a web server, not the probe address."
+   }
+  ]
+ },
+ {
+  "id": "ex-xkdpb7ae",
+  "version": 1,
+  "section": "packet-walk",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop adds a deny on `VirtualNetwork` at 4000 and forgets the rule at 3900. What does the documentation say happens to a load balancer in front of the application?",
+  "hint": "Is the probe's address inside `VirtualNetwork`?",
+  "choices": [
+   {
+    "text": "Nothing, since probes are exempt from NSGs",
+    "correct": false,
+    "why": "They are allowed by a default rule, which the deny is read before."
+   },
+   {
+    "text": "Its probes are denied, so it marks every machine unhealthy",
+    "correct": true,
+    "why": "Right. `VirtualNetwork` includes the host's address, so 65001 never gets a turn."
+   },
+   {
+    "text": "Only probes from the internet are blocked",
+    "correct": false,
+    "why": "Probes come from `168.63.129.16`, not the internet."
+   },
+   {
+    "text": "The load balancer moves to another subnet",
+    "correct": false,
+    "why": "Nothing moves; the probes just fail."
+   }
+  ]
+ },
+ {
+  "id": "ex-8ggxgqqk",
+  "version": 1,
+  "section": "packet-walk",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A web server cannot reach a new application server on 8080, though `AllowWebToApp` exists. The model says *Deny* at 4000. What is the first thing to check?",
+  "hint": "Which side of the rule names a group?",
+  "choices": [
+   {
+    "text": "Whether the NSG has more than three rules",
+    "correct": false,
+    "why": "The count is irrelevant to this packet."
+   },
+   {
+    "text": "Whether port 8080 is above the default rules",
+    "correct": false,
+    "why": "Ports have no position; rules do."
+   },
+   {
+    "text": "Whether the deny at 4000 should be at 50",
+    "correct": false,
+    "why": "That would deny the web tier too."
+   },
+   {
+    "text": "Whether the new server's interface is in `asg-shop-app`",
+    "correct": true,
+    "why": "Right. The rule was right; the membership was missing."
+   }
+  ]
+ },
+ {
+  "id": "ex-ng0g2tnx",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A request from `10.20.1.4` to `10.20.2.4` on port 22 meets `nsg-shop-app`. Put the rules in the order the model reads them.",
+  "hint": "Order is priority, lowest first.",
+  "items": [
+   "`AllowWebToApp`, 100",
+   "`AllowLoadBalancerProbe`, 3900",
+   "`DenyVnetInBound`, 4000"
+  ],
+  "trap": "Reading stops at 4000, which matches, so the defaults are never reached."
+ },
+ {
+  "id": "ex-76reaq3a",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does the default rule set allow? Choose all that apply.",
+  "hint": "Six rules, three per direction.",
+  "choices": [
+   {
+    "text": "A machine reaching another in its network on any port",
+    "correct": true,
+    "why": "Right. `AllowVnetInBound` and `AllowVnetOutBound`."
+   },
+   {
+    "text": "The internet opening a connection to a machine",
+    "correct": false,
+    "why": "`DenyAllInBound` refuses it."
+   },
+   {
+    "text": "A machine sending data out to any internet address",
+    "correct": true,
+    "why": "Right. `AllowInternetOutBound`."
+   },
+   {
+    "text": "Azure's health probe reaching a machine",
+    "correct": true,
+    "why": "Right. `AllowAzureLoadBalancerInBound`."
+   },
+   {
+    "text": "A machine in a peered network being refused",
+    "correct": false,
+    "why": "`VirtualNetwork` includes peered networks, so it is allowed."
+   }
+  ]
+ },
+ {
+  "id": "ex-1c38rr1a",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A rule allows `Internet` to `asg-shop-app` on 443 at priority 100. Which packet does it NOT let in?",
+  "hint": "What does the destination name?",
+  "choices": [
+   {
+    "text": "A customer in Recife reaching `10.20.2.4` on 443",
+    "correct": false,
+    "why": "That one matches source, group and port."
+   },
+   {
+    "text": "An Azure public address reaching `10.20.2.4` on 443",
+    "correct": false,
+    "why": "`Internet` includes Azure's public addresses."
+   },
+   {
+    "text": "A customer reaching `10.20.2.5`, outside the group, on 443",
+    "correct": true,
+    "why": "Right. The rule only applies to interfaces in the ASG."
+   },
+   {
+    "text": "A second customer reaching `10.20.2.4` on 443",
+    "correct": false,
+    "why": "Any number of customers match."
+   }
+  ]
+ },
+ {
+  "id": "ex-dvdg7a18",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Inbound, the ___ NSG is read before the interface's.",
+  "hint": "The wider of the two attachments.",
+  "blanks": [
+   {
+    "accept": [
+     "subnet"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]

@@ -1,0 +1,392 @@
+{
+ "ex-rdc1vbpb": {
+  "prompt": "O `rg-shop-prod-app` leva `cost-centre: cc-410`. Uma máquina é criada nele sem tags. Que tags a máquina tem?",
+  "hint": "Uma das quatro regras da tabela.",
+  "choices": [
+   {
+    "text": "`cost-centre: cc-410`, herdada do grupo",
+    "why": "Recursos não herdam as tags do grupo."
+   },
+   {
+    "text": "As que a assinatura tiver",
+    "why": "As tags de uma assinatura também não são herdadas."
+   },
+   {
+    "text": "Nenhuma",
+    "why": "Isso. Alguma coisa precisa copiar a tag para baixo, que é a próxima seção."
+   },
+   {
+    "text": "As do grupo, mas só depois de um dia",
+    "why": "Nenhum atraso transforma as tags do grupo nas do recurso."
+   }
+  ]
+ },
+ "ex-en6fbm7q": {
+  "prompt": "Uma equipe tagueia `cost-centre: CC-410` e outra `cost-centre: cc-410`. O que um relatório de custos mostra?",
+  "hint": "Nomes e valores seguem regras de caixa diferentes.",
+  "choices": [
+   {
+    "text": "Dois centros de custo onde existe um",
+    "why": "Isso. O dinheiro do cc-410 se divide em duas linhas."
+   },
+   {
+    "text": "Um centro de custo, já que o Azure ignora a caixa em tags",
+    "why": "Ele só ignora a caixa nos nomes. Valores diferenciam."
+   },
+   {
+    "text": "Nada: a segunda tag foi recusada como duplicada",
+    "why": "Estão em recursos diferentes, e nada as compara."
+   },
+   {
+    "text": "Um centro de custo, depois que o Cost Management passa os valores para minúsculas",
+    "why": "Nada passa os valores para minúsculas no caminho; a grafia precisa ser combinada."
+   }
+  ]
+ },
+ "ex-s69k82pt": {
+  "prompt": "Quantos pares de tags um único recurso pode levar, pelo limite documentado da Microsoft?",
+  "hint": "O mesmo limite vale para um grupo e uma assinatura.",
+  "unit": "tags"
+ },
+ "ex-2hvd48rw": {
+  "prompt": "No `pip.bicep`, por que `'cost-centre'` vai entre aspas e `environment` não?",
+  "hint": "Olhe o caractere do meio.",
+  "choices": [
+   {
+    "text": "Chaves entre aspas diferenciam caixa no Bicep",
+    "why": "As aspas não têm nada a ver com caixa."
+   },
+   {
+    "text": "O centro de custo é um segredo e precisa ser texto",
+    "why": "Nada secreto aqui; os dois valores são textos de qualquer jeito."
+   },
+   {
+    "text": "Tags com hífen precisam de aspas para o Azure herdá-las",
+    "why": "O Azure nunca vê as aspas; elas são sintaxe do Bicep."
+   },
+   {
+    "text": "Um nome de propriedade sem aspas não pode ter hífen",
+    "why": "Isso. `environment` é um nome simples; `cost-centre` precisa de aspas."
+   }
+  ]
+ },
+ "ex-1r6yhmvw": {
+  "prompt": "O `pip.bicep` compilado mostra as tags como `[union(parameters('tags'), createObject('role', 'web'))]`. Quando as tags de fato são calculadas?",
+  "hint": "Quem avalia uma expressão entre colchetes?",
+  "choices": [
+   {
+    "text": "Na compilação, pelo `az bicep build`",
+    "why": "O compilador escreveu a expressão e a deixou para ser avaliada."
+   },
+   {
+    "text": "Quando o Resource Manager recebe o template",
+    "why": "Isso, com o valor que a implantação passar para `tags`."
+   },
+   {
+    "text": "Na primeira vez que alguém lê o recurso",
+    "why": "As tags ficam fixas quando o recurso é criado, a partir da expressão avaliada."
+   },
+   {
+    "text": "Nunca: o Azure guarda a expressão como tag",
+    "why": "A expressão é avaliada; uma tag é um valor simples."
+   }
+  ]
+ },
+ "ex-dpe6qnx3": {
+  "prompt": "Ligue cada tag da loja à pergunta que ela responde.",
+  "hint": "Cada tag ganha o seu lugar com uma pergunta.",
+  "pairs": [
+   {
+    "left": "`cost-centre`",
+    "right": "o orçamento de quem paga isto?"
+   },
+   {
+    "left": "`environment`",
+    "right": "dá para desligar à noite?"
+   },
+   {
+    "left": "`owner`",
+    "right": "a quem perguntamos antes de apagar?"
+   },
+   {
+    "left": "`workload`",
+    "right": "de que produto isto faz parte?"
+   }
+  ],
+  "right_distractors": [
+   "em que assinatura isto está?"
+  ]
+ },
+ "ex-vrrhvk0c": {
+  "prompt": "O que a política nativa *Inherit a tag from the resource group if missing* faz com um recurso que já tem a tag com outro valor?",
+  "hint": "Leia o fim do nome dela.",
+  "choices": [
+   {
+    "text": "Sobrescreve com o valor do grupo",
+    "why": "Essa é a definição irmã, que acrescenta ou substitui."
+   },
+   {
+    "text": "Recusa o pedido até os valores baterem",
+    "why": "O efeito dela é `modify`, não `deny`."
+   },
+   {
+    "text": "Acrescenta uma segunda tag com o valor do grupo",
+    "why": "Um recurso tem um valor por nome de tag."
+   },
+   {
+    "text": "Deixa como está",
+    "why": "Isso. Ela só acrescenta a tag onde ela falta."
+   }
+  ]
+ },
+ "ex-saeazysv": {
+  "prompt": "O `roleDefinitionIds` da política cita o Contributor. Por que uma política precisa de um papel?",
+  "hint": "O que o `modify` faz com um recurso?",
+  "choices": [
+   {
+    "text": "Para ler as tags do grupo, que são secretas",
+    "why": "Tags não são secretas. O papel é para escrever."
+   },
+   {
+    "text": "Toda definição de política precisa citar um papel",
+    "why": "Só as que mudam recursos; um `deny` não precisa de nenhum."
+   },
+   {
+    "text": "Escrever uma tag num recurso precisa de uma identidade com permissão para escrever",
+    "why": "Isso. A identidade da própria atribuição precisa receber esse papel."
+   },
+   {
+    "text": "Para que as pessoas a quem ela se aplica virem Contributors",
+    "why": "O papel é para a identidade da política, não para mais ninguém."
+   }
+  ]
+ },
+ "ex-hfyktx1p": {
+  "prompt": "A política é atribuída hoje. O que acontece com as 200 máquinas sem tag criadas no ano passado?",
+  "hint": "Quando uma política age?",
+  "choices": [
+   {
+    "text": "São tagueadas em até 24 horas",
+    "why": "Nada acontece com elas sozinho; a política age sobre pedidos."
+   },
+   {
+    "text": "Nada, até rodar uma tarefa de remediação",
+    "why": "Isso. A remediação aplica a modificação ao que já existe."
+   },
+   {
+    "text": "São tagueadas na próxima vez que alguém as ler",
+    "why": "Uma leitura não é um pedido para criar ou mudar."
+   },
+   {
+    "text": "São apagadas por estarem fora da linha",
+    "why": "Nenhum efeito de política apaga recursos."
+   }
+  ]
+ },
+ "ex-q397mwy1": {
+  "prompt": "Uma loja quer os relatórios de custo por centro de custo, e não quer templates e uma política brigando pelas tags dos recursos. A conta de cobrança dela é um Microsoft Customer Agreement. Qual ferramenta serve?",
+  "hint": "Uma das duas muda os recursos.",
+  "choices": [
+   {
+    "text": "A herança de tags do Cost Management",
+    "why": "Isso. Ela tagueia só os registros de uso, e esse contrato a suporta."
+   },
+   {
+    "text": "A política que acrescenta ou substitui",
+    "why": "Essa escreve nos recursos, e sobrescreve o que os templates definem: a briga que ela quer evitar."
+   },
+   {
+    "text": "Taguear só os grupos de recursos",
+    "why": "As tags dos grupos não chegam sozinhas ao uso dos recursos."
+   },
+   {
+    "text": "Nada: centros de custo precisam de uma assinatura cada",
+    "why": "Assinaturas dividem por ambiente; tags dividem por dono, dentro delas."
+   }
+  ]
+ },
+ "ex-qtgyv1vn": {
+  "prompt": "Uma política cujo efeito é `___` muda um pedido no caminho, como ao acrescentar uma tag.",
+  "hint": "O efeito da transcrição.",
+  "blanks": [
+   {
+    "accept": [
+     "modify"
+    ]
+   }
+  ]
+ },
+ "ex-dnd273cn": {
+  "prompt": "Por que os próprios grupos de recursos não são tocados por esta política?",
+  "hint": "Leia o `mode`.",
+  "choices": [
+   {
+    "text": "Um grupo não aceita tags",
+    "why": "Grupos aceitam tags; os da loja as têm."
+   },
+   {
+    "text": "A política é atribuída no escopo de um grupo de recursos",
+    "why": "Ela foi atribuída na assinatura."
+   },
+   {
+    "text": "O modo `Indexed` só olha recursos com tags e localização",
+    "why": "Isso. Os grupos ficam fora dele."
+   },
+   {
+    "text": "Um grupo herdaria de si mesmo num laço",
+    "why": "O modo o exclui antes de qualquer pergunta dessas surgir."
+   }
+  ]
+ },
+ "ex-c4jddchz": {
+  "prompt": "Numa exportação, qual coluna traz as tags do recurso?",
+  "hint": "Um objeto JSON num campo.",
+  "choices": [
+   {
+    "text": "`x_ResourceGroupName`",
+    "why": "Essa dá o nome do grupo, não as tags."
+   },
+   {
+    "text": "`ResourceId`",
+    "why": "O id diz onde; as tags dizem de quem."
+   },
+   {
+    "text": "`ChargeCategory`",
+    "why": "Essa diz que tipo de cobrança é a linha."
+   },
+   {
+    "text": "`Tags`",
+    "why": "Isso, como um objeto JSON por linha."
+   }
+  ]
+ },
+ "ex-bz6p7wa2": {
+  "prompt": "Um programa lê uma exportação diária abrindo um arquivo da pasta. O que a lição avisa que pode estar faltando?",
+  "hint": "O que acontece com um mês grande?",
+  "choices": [
+   {
+    "text": "O resto do mês, particionado em outros arquivos",
+    "why": "Isso. O particionamento não pode ser desligado."
+   },
+   {
+    "text": "Os custos de ontem, que uma exportação diária apaga",
+    "why": "Uma exportação diária sobrescreve com o mês até a data, ontem incluído."
+   },
+   {
+    "text": "As tags, que só estão em arquivos Parquet",
+    "why": "Tags são uma coluna em CSV e em Parquet."
+   },
+   {
+    "text": "Os custos amortizados, que precisam de outra assinatura",
+    "why": "Custo amortizado é uma escolha de conjunto de dados, ou uma coluna no FOCUS."
+   }
+  ]
+ },
+ "ex-g5atjfg9": {
+  "prompt": "No mês inventado, o `who_spent.py` pelo custo real deu 0,00 para o `cc-410` da equipe de checkout. Por quê?",
+  "hint": "Olhe as linhas da reserva.",
+  "choices": [
+   {
+    "text": "A máquina ficou desligada em outubro",
+    "why": "Ela rodou todo dia: o custo efetivo dela é 3,20 por dia."
+   },
+   {
+    "text": "O uso dela foi coberto por uma compra, cobrada numa linha sem tag",
+    "why": "Isso. Custo cobrado zero na máquina, o ano inteiro na compra."
+   },
+   {
+    "text": "O `who_spent.py` descarta linhas que não consegue atribuir",
+    "why": "Ele as conta como `(untagged)`, nunca as descarta."
+   },
+   {
+    "text": "A tag estava escrita errada na exportação",
+    "why": "Ela diz `cost-centre: cc-410`, exatamente o esquema."
+   }
+  ]
+ },
+ "ex-brra6rs2": {
+  "prompt": "Com as tags dos grupos emprestadas aos recursos, 139,50 ficaram sem tag: um recurso a 4,50 por dia. Por quantos dias?",
+  "hint": "Outubro.",
+  "unit": "dias"
+ },
+ "ex-56a55xft": {
+  "prompt": "Cobrado, o mês inventado soma 1622,77; amortizado, 553,97. Uma gerente pergunta qual é o custo de outubro. Qual é a resposta?",
+  "hint": "Do que a diferença é feita?",
+  "choices": [
+   {
+    "text": "1622,77, porque é o que foi faturado",
+    "why": "É o que foi cobrado, e a maior parte paga meses depois de outubro."
+   },
+   {
+    "text": "A média dos dois",
+    "why": "Uma média de duas definições não é nenhuma delas."
+   },
+   {
+    "text": "553,97 consumidos; o resto é reserva de meses seguintes",
+    "why": "Isso. Diga qual número você dá, e por quê."
+   },
+   {
+    "text": "Nenhum: os dados são inventados",
+    "why": "São inventados, e a pergunta é a mesma para dados reais."
+   }
+  ]
+ },
+ "ex-13n1dbwa": {
+  "prompt": "Ponha as três execuções do `who_spent.py` na ordem em que a lição as fez, da menos para a mais útil.",
+  "hint": "Cada execução conserta uma coisa que a anterior errou.",
+  "items": [
+   "pelo custo cobrado, com a reserva numa linha sem tag",
+   "pelo custo efetivo, com a reserva espalhada pelo uso",
+   "pelo custo efetivo, com as tags dos grupos emprestadas aos recursos sem tag"
+  ],
+  "trap": "A herança vem por último: emprestar tags não ajuda enquanto a reserva está numa linha sem grupo nenhum."
+ },
+ "ex-mwkf3kf7": {
+  "prompt": "Depois da herança, só o `vpng-shop-hub` fica sem tag. O que a loja deve fazer com esse resultado?",
+  "hint": "O que a lista que sobra nomeia?",
+  "choices": [
+   {
+    "text": "Tirar a linha do relatório como ruído",
+    "why": "Tirá-la faz o relatório somar menos do que a fatura."
+   },
+   {
+    "text": "Descobrir quem é dono do `rg-shop-hub` e taguear o grupo",
+    "why": "Isso. O que sobra é uma lista de grupos que ninguém assume."
+   },
+   {
+    "text": "Dividir igualmente entre os dois centros de custo",
+    "why": "Isso decide um dono por aritmética em vez de achar um."
+   },
+   {
+    "text": "Apagar o VPN gateway, já que ninguém é dono",
+    "why": "Sem dono no relatório não é sem uso; ele leva o tráfego do escritório."
+   }
+  ]
+ },
+ "ex-s3d5aakb": {
+  "prompt": "Quais destas coisas põem um centro de custo numa linha de custo? Marque todas as que se aplicam.",
+  "hint": "Pense em onde a tag vai parar em cada caso.",
+  "choices": [
+   {
+    "text": "Uma tag escrita no template que cria o recurso",
+    "why": "Isso."
+   },
+   {
+    "text": "A política *if missing*, para recursos criados depois da atribuição",
+    "why": "Isso, no próprio recurso."
+   },
+   {
+    "text": "A herança de tags do Cost Management, onde a conta de cobrança a suporta",
+    "why": "Isso, só nos registros de uso."
+   },
+   {
+    "text": "Taguear o grupo de recursos e não fazer mais nada",
+    "why": "As tags do grupo ficam no grupo."
+   },
+   {
+    "text": "Dar ao grupo de recursos o nome do centro de custo",
+    "why": "Um nome não é uma tag, e os relatórios não o leem como uma."
+   }
+  ]
+ }
+}
