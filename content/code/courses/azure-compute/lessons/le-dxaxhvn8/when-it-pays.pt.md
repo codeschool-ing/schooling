@@ -43,7 +43,7 @@ o Microsoft Entra ID em vez de uma chave. `azureClientId` é o client id de uma 
 atribuída pelo usuário, e a documentação da Microsoft diz que ele é obrigatório sempre que o
 componente se autentica com uma. Os zeros são um marcador. **Com uma managed identity não há segredo
 nenhum no componente**, e é por isso que a Microsoft a recomenda para todo serviço do Azure que a
-suporte; a identidade ainda precisa de um papel no namespace, como as lições 8 e 9 de
+suporte. A identidade ainda precisa de um papel no namespace, como as lições 8 e 9 de
 `azure-foundations` configuram para qualquer identidade. Para um serviço que não consegue se
 autenticar assim, o componente nomeia um armazenamento de segredos, como o Key Vault, que a lição 17
 de `azure-operations` cobre. Entregar o arquivo a um ambiente é um comando, e ele encontra a recusa
@@ -227,7 +227,7 @@ http://localhost:3500/v1.0/invoke/shop/method/healthz  median 1.78 ms
 A mediana e não a média, porque uma chamada lenta num laptop ocupado mexe numa média e quase não
 toca numa mediana. **A chamada pelo sidecar levou 1,78 ms contra 1,17 ms**, que é o que custa uma
 passagem por um sidecar em loopback, neste laptop. Os números mudam entre execuções; em todas as
-execuções feitas para esta lição a do sidecar foi a mais lenta. Entre dois apps no Container Apps uma invocação de serviço passa por dois
+execuções deste programa feitas para esta lição a do sidecar foi a mais lenta. Entre dois apps no Container Apps uma invocação de serviço passa por dois
 sidecars, o de quem chama e o de quem é chamado, e em troca cada chamada ganha descoberta pelo app
 id e uma criptografia que o Container Apps gerencia.
 

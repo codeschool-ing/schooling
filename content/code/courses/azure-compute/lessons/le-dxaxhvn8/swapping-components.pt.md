@@ -177,5 +177,3 @@ Então, diante da promessa:
 | o nome do componente, `pubsub` | igual | igual |
 | criar a fila | desnecessário | tentado por padrão, recusado aqui |
 | dois apps num tópico | uma cópia para cada | uma cópia entre os dois |
-
-O código não mudou, e duas das quatro linhas mudaram.

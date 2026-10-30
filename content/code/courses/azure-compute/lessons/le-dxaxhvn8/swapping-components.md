@@ -177,5 +177,3 @@ So, against the promise:
 | the component's name, `pubsub` | unchanged | unchanged |
 | creating the queue | not needed | tried by default, refused here |
 | two apps on one topic | a copy each | one copy between them |
-
-The code did not change, and two of the four rows did.

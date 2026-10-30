@@ -72,8 +72,11 @@ run 'kubectl wait -n shop --for=condition=Ready pod/shop --timeout=120s'
 run 'kubectl exec -n shop shop -- env | grep ^AZURE_ | sort'
 run 'kubectl get mutatingwebhookconfigurations'
 
-block token
+block token-cat
 run "kubectl exec -n shop shop -- sh -c 'cat \"\$AZURE_FEDERATED_TOKEN_FILE\"' > token"
+run 'wc -c token'
+
+block token-decode
 run 'python3 decode.py token'
 
 block api-token

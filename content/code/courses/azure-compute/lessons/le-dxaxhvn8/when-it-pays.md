@@ -41,7 +41,7 @@ scopes:
 Microsoft Entra ID rather than a key. `azureClientId` is the client id of a user-assigned managed
 identity, and Microsoft's documentation says it is required whenever the component authenticates
 with one. The zeros are a placeholder. **With a managed identity there is no secret in the component
-at all**, which is why Microsoft recommends it for every Azure service that supports it; the
+at all**, which is why Microsoft recommends it for every Azure service that supports it. The
 identity still needs a role on the namespace, as `azure-foundations` lessons 8 and 9 set up for
 any identity. For a service that cannot sign in that way, the component names a secret store
 instead, such as Key Vault, which `azure-operations` lesson 17 covers. Handing the file to an
@@ -223,7 +223,7 @@ http://localhost:3500/v1.0/invoke/shop/method/healthz  median 1.78 ms
 The median rather than the mean, because one slow call on a busy laptop moves a mean and barely
 touches a median. **The call through the sidecar took 1.78 ms against 1.17 ms**, which is what
 one trip through a sidecar costs on loopback, on this laptop. The numbers move between runs; in every
-run made for this lesson the sidecar's was the slower. Between two apps in Container Apps a service invocation passes through two
+run of this program made for this lesson the sidecar's was the slower. Between two apps in Container Apps a service invocation passes through two
 sidecars, the caller's and the callee's, and in return each call gets discovery by app id and
 encryption that Container Apps manages.
 
