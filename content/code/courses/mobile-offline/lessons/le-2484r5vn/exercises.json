@@ -1,0 +1,506 @@
+[
+  {
+    "id": "ex-vv0g6yzz",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the outbox row written in the same transaction as the session it describes?",
+    "choices": [
+      {
+        "text": "The server reads the device's transaction log during sync",
+        "correct": false,
+        "why": "The server never sees the device's database."
+      },
+      {
+        "text": "Transactions make the two inserts faster than separate ones",
+        "correct": false,
+        "why": "They can, but that is not why it matters here."
+      },
+      {
+        "text": "So a crash between them cannot strand a change",
+        "correct": true,
+        "why": "Right. The two land together or neither does."
+      },
+      {
+        "text": "SQLite refuses two separate writes",
+        "correct": false,
+        "why": "It accepts them; the risk is the moment between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f9rg5ym",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does each outbox row's `body` hold in the lesson's planner?",
+    "choices": [
+      {
+        "text": "The whole row as it stood after the change",
+        "correct": true,
+        "why": "Right, and a delete has no body."
+      },
+      {
+        "text": "The HTTP request exactly as it will be sent, headers included",
+        "correct": false,
+        "why": "The outbox holds changes to the data, not requests."
+      },
+      {
+        "text": "The difference from the previous version, such as +5 minutes",
+        "correct": false,
+        "why": "That would make coalescing unsafe; the lesson sends the whole row."
+      },
+      {
+        "text": "Nothing; the drain reads the session table",
+        "correct": false,
+        "why": "Then a deleted session could not be described, and an older version would be lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-sekze5a4",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson's outbox use AUTOINCREMENT on `seq` rather than a plain integer primary key?",
+    "choices": [
+      {
+        "text": "Without it, SQLite would store the rows in random order",
+        "correct": false,
+        "why": "The query orders by seq; storage order is not the issue."
+      },
+      {
+        "text": "The server needs the numbers to be global",
+        "correct": false,
+        "why": "seq never leaves the device."
+      },
+      {
+        "text": "It is the only way to have a primary key in SQLite",
+        "correct": false,
+        "why": "Any column can be a primary key."
+      },
+      {
+        "text": "A deleted number is never reused, so a later operation never sorts first",
+        "correct": true,
+        "why": "Right. Without it, SQLite may reuse the highest number after a delete."
+      }
+    ]
+  },
+  {
+    "id": "ex-91r0x01f",
+    "version": 1,
+    "section": "draining",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no server running, what did `drain.ts` do with operations #2 and #3?",
+    "choices": [
+      {
+        "text": "Sent them in parallel and reported both as failed",
+        "correct": false,
+        "why": "It sends one at a time."
+      },
+      {
+        "text": "Nothing: it stopped at #1",
+        "correct": true,
+        "why": "Right. Both depend on #1 having arrived."
+      },
+      {
+        "text": "Deleted them, since the session is already on the device",
+        "correct": false,
+        "why": "That would lose the changes the server needs."
+      },
+      {
+        "text": "Moved them to the dead table",
+        "correct": false,
+        "why": "Dead is for 4xx answers, not for a missing network."
+      }
+    ]
+  },
+  {
+    "id": "ex-hy74bcwt",
+    "version": 1,
+    "section": "draining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why not send the whole outbox in parallel to save time?",
+    "choices": [
+      {
+        "text": "The server accepts one connection at a time",
+        "correct": false,
+        "why": "Node's server takes many; the risk is the order."
+      },
+      {
+        "text": "Nothing guarantees two operations on one session arrive in order",
+        "correct": true,
+        "why": "Right. An update before its create is a 404."
+      },
+      {
+        "text": "Parallel requests use more data",
+        "correct": false,
+        "why": "The same bytes are sent either way."
+      },
+      {
+        "text": "fetch in Node has no way to start several requests at the same moment",
+        "correct": false,
+        "why": "It can; Promise.all would do it."
+      }
+    ]
+  },
+  {
+    "id": "ex-em3z4k0c",
+    "version": 1,
+    "section": "draining",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the requests in the order the server's terminal printed them after the drain.",
+    "items": [
+      "POST /sessions (s7)",
+      "PUT /sessions/s7",
+      "POST /sessions (s8)",
+      "GET /sessions"
+    ]
+  },
+  {
+    "id": "ex-r9608r0m",
+    "version": 1,
+    "section": "draining",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which answers make `drain.ts` stop and leave the operation for the next run? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the network failing before any answer",
+        "correct": true,
+        "why": "That is the train."
+      },
+      {
+        "text": "a 503 from the server",
+        "correct": true,
+        "why": "A 5xx stops the drain too."
+      },
+      {
+        "text": "a 422 from the server",
+        "why": "A 4xx moves the operation to dead and the drain carries on."
+      },
+      {
+        "text": "a 201 from the server",
+        "why": "Success removes the row and moves on."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsaz41q1",
+    "version": 1,
+    "section": "coalescing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A session is created and then deleted before any drain runs. What does compaction leave for it?",
+    "choices": [
+      {
+        "text": "A delete, so the server removes it",
+        "correct": false,
+        "why": "The server never had it; a delete would be a 404."
+      },
+      {
+        "text": "Both, in order, since a delete is an event that must arrive",
+        "correct": false,
+        "why": "A delete of a row the server never saw tells it nothing."
+      },
+      {
+        "text": "A create, so the server keeps a record of it",
+        "correct": false,
+        "why": "The person deleted it; the server should not receive it."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Both operations go."
+      }
+    ]
+  },
+  {
+    "id": "ex-e86h8c0e",
+    "version": 1,
+    "section": "coalescing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's run, how many operations did `compact.ts` leave in the outbox?",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wze8pqq8",
+    "version": 1,
+    "section": "coalescing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's outbox carries operations such as 'add 25 minutes to this week's total'. What does the lesson say about coalescing them?",
+    "choices": [
+      {
+        "text": "Do not fold them: each is an event and has to arrive",
+        "correct": true,
+        "why": "Right. Two of them could only become one by adding them, which is a different rule."
+      },
+      {
+        "text": "Keep the first one, since it was queued earliest",
+        "correct": false,
+        "why": "Same loss, the other way round."
+      },
+      {
+        "text": "Keep the last one, as for the planner's updates",
+        "correct": false,
+        "why": "That drops minutes: each one is a step, not a new version."
+      },
+      {
+        "text": "Fold them if they are less than a minute apart",
+        "correct": false,
+        "why": "Time apart changes nothing about what they say."
+      }
+    ]
+  },
+  {
+    "id": "ex-bykwb8hn",
+    "version": 1,
+    "section": "coalescing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A compaction rule is right only if the server ends in the same ___ as it would by receiving every operation.",
+    "blanks": [
+      {
+        "accept": [
+          "state"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tsds0ydq",
+    "version": 1,
+    "section": "poison",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson call an operation the server will refuse every time it is sent?",
+    "choices": [
+      {
+        "text": "A tombstone",
+        "correct": false,
+        "why": "A tombstone records a delete, in lesson 11."
+      },
+      {
+        "text": "A conflict",
+        "correct": false,
+        "why": "A conflict is two changes to one row, in lesson 13."
+      },
+      {
+        "text": "Poison",
+        "correct": true,
+        "why": "Right. It blocks everything behind it until it is moved aside."
+      },
+      {
+        "text": "A backoff",
+        "correct": false,
+        "why": "Backoff is how long to wait between tries, in lesson 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-142kcr2p",
+    "version": 1,
+    "section": "poison",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the run, `#10 update s11` was valid and still not sent. Why?",
+    "choices": [
+      {
+        "text": "The create it updates was dead, so the server has no s11",
+        "correct": true,
+        "why": "Right. Sent, it would have been a 404."
+      },
+      {
+        "text": "The server was down by then",
+        "correct": false,
+        "why": "#11 was sent after it and got 201."
+      },
+      {
+        "text": "200 minutes is over the server's limit",
+        "correct": false,
+        "why": "The limit is 240."
+      },
+      {
+        "text": "Updates wait until every create in the outbox has been sent and accepted",
+        "correct": false,
+        "why": "Only updates to the same session wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-wh3chb70",
+    "version": 1,
+    "section": "poison",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what the server answered to what `drain.ts` does with the operation.",
+    "pairs": [
+      {
+        "left": "201 or 200",
+        "right": "removes it from the outbox"
+      },
+      {
+        "left": "422",
+        "right": "moves it to dead and carries on"
+      },
+      {
+        "left": "503",
+        "right": "leaves it and stops"
+      },
+      {
+        "left": "no answer at all",
+        "right": "leaves it and stops, as for a 5xx"
+      }
+    ],
+    "right_distractors": [
+      "sends it again at once"
+    ]
+  },
+  {
+    "id": "ex-9bz8mjdy",
+    "version": 1,
+    "section": "poison",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a 422 go to `dead` instead of being retried on the next drain?",
+    "choices": [
+      {
+        "text": "To save battery on the next drain",
+        "correct": false,
+        "why": "Battery is a side effect; the reason is the answer itself."
+      },
+      {
+        "text": "The server forgets the operation after a 422, so a retry would be meaningless",
+        "correct": false,
+        "why": "The server's memory is not the issue; the same bytes get the same answer."
+      },
+      {
+        "text": "The server read it and said no, and will say no to the same bytes again",
+        "correct": true,
+        "why": "Right. Retrying is a loop that holds everything behind it."
+      },
+      {
+        "text": "Because 4xx means the network failed",
+        "correct": false,
+        "why": "A 4xx is an answer, so the network worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-vce5wvps",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner's outbox holds `#1 create s20`, `#2 update s20`, `#3 delete s20`, `#4 create s21`. Compaction runs. What reaches the server when it drains?",
+    "choices": [
+      {
+        "text": "A delete of s20 and a create of s21",
+        "correct": false,
+        "why": "s20 was created in the same queue; the server never had it."
+      },
+      {
+        "text": "Only a create of s21",
+        "correct": true,
+        "why": "Right. #2 folds into #1, and the create and delete then cancel out."
+      },
+      {
+        "text": "A create of s20 with the updated body, then s21",
+        "correct": false,
+        "why": "The delete came after; the session no longer exists."
+      },
+      {
+        "text": "All four, since compaction leaves deletes alone",
+        "correct": false,
+        "why": "It handles deletes, two different ways."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vtyt21p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A release ships a bug that sends `minutes` as a string, and every create now gets a 400. What does the lesson's design make visible, and where?",
+    "choices": [
+      {
+        "text": "Nothing: the drain stops at the first 400 and waits for the network",
+        "correct": false,
+        "why": "A 4xx does not stop the drain; it moves the operation to dead."
+      },
+      {
+        "text": "A crash on every phone at once, since a 400 throws",
+        "correct": false,
+        "why": "fetch resolves with the 400; drain.ts reads its status."
+      },
+      {
+        "text": "Sessions retried every minute until the bug is fixed",
+        "correct": false,
+        "why": "Dead operations are not retried by the drain."
+      },
+      {
+        "text": "A count of dead operations rising on every phone, each with the server's reason",
+        "correct": true,
+        "why": "Right. That count, reported by the app, is how the team finds out the same day."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgh216ke",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A drain and a compaction start at the same moment on one phone. Which could go wrong? Choose all that apply.",
+    "choices": [
+      {
+        "text": "an update folded into a create the drain has already sent",
+        "correct": true,
+        "why": "The server then never receives the update."
+      },
+      {
+        "text": "the server receiving an update for a session it never got",
+        "correct": true,
+        "why": "The lesson's example of the race."
+      },
+      {
+        "text": "SQLite refusing both programs because two are open",
+        "why": "SQLite allows several connections; the trouble is the logic."
+      },
+      {
+        "text": "the dead table filling with valid operations",
+        "why": "Dead is filled by 4xx answers, which a race does not cause."
+      }
+    ]
+  }
+]

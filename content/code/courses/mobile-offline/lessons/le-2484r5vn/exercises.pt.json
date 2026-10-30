@@ -1,0 +1,342 @@
+{
+  "ex-vv0g6yzz": {
+    "prompt": "Por que a linha da caixa de saída é gravada na mesma transação da sessão que ela descreve?",
+    "choices": [
+      {
+        "text": "O servidor lê o registro de transações do aparelho durante a sincronização",
+        "why": "O servidor nunca vê o banco do aparelho."
+      },
+      {
+        "text": "Transações deixam as duas inserções mais rápidas que separadas",
+        "why": "Até podem, mas não é por isso que importa aqui."
+      },
+      {
+        "text": "Para uma queda entre as duas não deixar mudança sem envio",
+        "why": "Isso. As duas chegam juntas ou nenhuma chega."
+      },
+      {
+        "text": "O SQLite recusa duas escritas separadas",
+        "why": "Ele aceita; o risco é o instante entre elas."
+      }
+    ]
+  },
+  "ex-0f9rg5ym": {
+    "prompt": "O que o `body` de cada linha da caixa de saída guarda no planner da aula?",
+    "choices": [
+      {
+        "text": "A linha inteira como ficou depois da mudança",
+        "why": "Isso, e um delete não tem corpo."
+      },
+      {
+        "text": "A requisição HTTP exatamente como será enviada, cabeçalhos incluídos",
+        "why": "A caixa de saída guarda mudanças no dado, não requisições."
+      },
+      {
+        "text": "A diferença em relação à versão anterior, como +5 minutos",
+        "why": "Isso tornaria a coalescência insegura; a aula envia a linha inteira."
+      },
+      {
+        "text": "Nada; a drenagem lê a tabela de sessões",
+        "why": "Aí uma sessão apagada não poderia ser descrita, e uma versão antiga se perderia."
+      }
+    ]
+  },
+  "ex-sekze5a4": {
+    "prompt": "Por que a caixa de saída da aula usa AUTOINCREMENT em `seq` em vez de uma chave primária inteira comum?",
+    "choices": [
+      {
+        "text": "Sem ele, o SQLite guardaria as linhas em ordem aleatória",
+        "why": "A consulta ordena por seq; a ordem de armazenamento não é a questão."
+      },
+      {
+        "text": "O servidor precisa que os números sejam globais",
+        "why": "O seq nunca sai do aparelho."
+      },
+      {
+        "text": "É o único jeito de ter chave primária no SQLite",
+        "why": "Qualquer coluna pode ser chave primária."
+      },
+      {
+        "text": "Um número apagado nunca é reusado, então uma operação posterior nunca fica antes",
+        "why": "Isso. Sem ele, o SQLite pode reusar o número mais alto depois de um delete."
+      }
+    ]
+  },
+  "ex-91r0x01f": {
+    "prompt": "Sem servidor rodando, o que o `drain.ts` fez com as operações #2 e #3?",
+    "choices": [
+      {
+        "text": "Enviou as duas em paralelo e informou que falharam",
+        "why": "Ele envia uma de cada vez."
+      },
+      {
+        "text": "Nada: parou na #1",
+        "why": "Isso. As duas dependem de a #1 ter chegado."
+      },
+      {
+        "text": "Apagou as duas, já que a sessão já está no aparelho",
+        "why": "Isso perderia as mudanças de que o servidor precisa."
+      },
+      {
+        "text": "Moveu as duas para a tabela dead",
+        "why": "A dead é para respostas 4xx, não para falta de rede."
+      }
+    ]
+  },
+  "ex-hy74bcwt": {
+    "prompt": "Por que não enviar a caixa de saída inteira em paralelo para ganhar tempo?",
+    "choices": [
+      {
+        "text": "O servidor aceita uma conexão por vez",
+        "why": "O servidor do Node aceita várias; o risco é a ordem."
+      },
+      {
+        "text": "Nada garante que duas operações sobre uma sessão cheguem em ordem",
+        "why": "Isso. Um update antes do create é um 404."
+      },
+      {
+        "text": "Requisições em paralelo gastam mais dados",
+        "why": "Os mesmos bytes vão de qualquer jeito."
+      },
+      {
+        "text": "O fetch do Node não tem como começar várias requisições no mesmo instante",
+        "why": "Ele pode; o Promise.all faria isso."
+      }
+    ]
+  },
+  "ex-em3z4k0c": {
+    "prompt": "Ponha as requisições na ordem em que o terminal do servidor as imprimiu depois da drenagem.",
+    "items": [
+      "POST /sessions (s7)",
+      "PUT /sessions/s7",
+      "POST /sessions (s8)",
+      "GET /sessions"
+    ]
+  },
+  "ex-r9608r0m": {
+    "prompt": "Quais respostas fazem o `drain.ts` parar e deixar a operação para a próxima execução? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "a rede falhar antes de qualquer resposta",
+        "why": "Isso é o trem."
+      },
+      {
+        "text": "um 503 do servidor",
+        "why": "Um 5xx também para a drenagem."
+      },
+      {
+        "text": "um 422 do servidor",
+        "why": "Um 4xx move a operação para dead e a drenagem segue."
+      },
+      {
+        "text": "um 201 do servidor",
+        "why": "Sucesso remove a linha e segue."
+      }
+    ]
+  },
+  "ex-zsaz41q1": {
+    "prompt": "Uma sessão é criada e depois apagada antes de qualquer drenagem. O que a compactação deixa para ela?",
+    "choices": [
+      {
+        "text": "Um delete, para o servidor removê-la",
+        "why": "O servidor nunca a teve; um delete seria um 404."
+      },
+      {
+        "text": "As duas, em ordem, já que um delete é um evento que precisa chegar",
+        "why": "Um delete de uma linha que o servidor nunca viu não lhe diz nada."
+      },
+      {
+        "text": "Um create, para o servidor guardar um registro dela",
+        "why": "A pessoa a apagou; o servidor não deve recebê-la."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. As duas operações saem."
+      }
+    ]
+  },
+  "ex-e86h8c0e": {
+    "prompt": "Na execução da aula, quantas operações o `compact.ts` deixou na caixa de saída?"
+  },
+  "ex-wze8pqq8": {
+    "prompt": "A caixa de saída de uma equipe carrega operações como 'some 25 minutos ao total desta semana'. O que a aula diz sobre coalescê-las?",
+    "choices": [
+      {
+        "text": "Não dobrá-las: cada uma é um evento e precisa chegar",
+        "why": "Isso. Duas só virariam uma somando, que é outra regra."
+      },
+      {
+        "text": "Manter a primeira, já que entrou na fila antes",
+        "why": "A mesma perda, pelo outro lado."
+      },
+      {
+        "text": "Manter a última, como nos updates do planner",
+        "why": "Isso perde minutos: cada uma é um passo, não uma versão nova."
+      },
+      {
+        "text": "Dobrá-las se estiverem a menos de um minuto uma da outra",
+        "why": "A distância no tempo não muda o que elas dizem."
+      }
+    ]
+  },
+  "ex-bykwb8hn": {
+    "prompt": "Uma regra de compactação só está certa se o servidor terminar no mesmo ___ em que terminaria recebendo todas as operações.",
+    "blanks": [
+      {
+        "accept": [
+          "estado"
+        ]
+      }
+    ]
+  },
+  "ex-tsds0ydq": {
+    "prompt": "Como a aula chama uma operação que o servidor vai recusar toda vez que for enviada?",
+    "choices": [
+      {
+        "text": "Uma lápide",
+        "why": "Uma lápide registra um delete, na aula 11."
+      },
+      {
+        "text": "Um conflito",
+        "why": "Um conflito são duas mudanças numa linha, na aula 13."
+      },
+      {
+        "text": "Veneno",
+        "why": "Isso. Ela trava tudo atrás dela até ser tirada do caminho."
+      },
+      {
+        "text": "Um recuo",
+        "why": "Recuo é quanto esperar entre tentativas, na aula 9."
+      }
+    ]
+  },
+  "ex-142kcr2p": {
+    "prompt": "Na execução, `#10 update s11` era válido e mesmo assim não foi enviado. Por quê?",
+    "choices": [
+      {
+        "text": "O create que ele atualiza estava morto, então o servidor não tem s11",
+        "why": "Isso. Enviado, teria sido um 404."
+      },
+      {
+        "text": "O servidor já estava fora do ar",
+        "why": "A #11 foi enviada depois e recebeu 201."
+      },
+      {
+        "text": "200 minutos passa do limite do servidor",
+        "why": "O limite é 240."
+      },
+      {
+        "text": "Updates esperam até todo create da caixa de saída ser enviado e aceito",
+        "why": "Só updates da mesma sessão esperam."
+      }
+    ]
+  },
+  "ex-wh3chb70": {
+    "prompt": "Associe o que o servidor respondeu ao que o `drain.ts` faz com a operação.",
+    "pairs": [
+      {
+        "left": "201 ou 200",
+        "right": "a remove da caixa de saída"
+      },
+      {
+        "left": "422",
+        "right": "a move para dead e segue"
+      },
+      {
+        "left": "503",
+        "right": "a deixa e para"
+      },
+      {
+        "left": "nenhuma resposta",
+        "right": "a deixa e para, como num 5xx"
+      }
+    ],
+    "right_distractors": [
+      "a envia de novo na hora"
+    ]
+  },
+  "ex-9bz8mjdy": {
+    "prompt": "Por que um 422 vai para `dead` em vez de ser tentado de novo na próxima drenagem?",
+    "choices": [
+      {
+        "text": "Para poupar bateria na próxima drenagem",
+        "why": "A bateria é efeito colateral; o motivo é a própria resposta."
+      },
+      {
+        "text": "O servidor esquece a operação depois de um 422, então uma nova tentativa não faria sentido",
+        "why": "A memória do servidor não é a questão; os mesmos bytes recebem a mesma resposta."
+      },
+      {
+        "text": "O servidor a leu e disse não, e vai dizer não aos mesmos bytes de novo",
+        "why": "Isso. Tentar de novo é um laço que segura tudo atrás."
+      },
+      {
+        "text": "Porque 4xx quer dizer que a rede falhou",
+        "why": "Um 4xx é uma resposta, então a rede funcionou."
+      }
+    ]
+  },
+  "ex-vce5wvps": {
+    "prompt": "A caixa de saída de um planner tem `#1 create s20`, `#2 update s20`, `#3 delete s20`, `#4 create s21`. A compactação roda. O que chega ao servidor quando ela drena?",
+    "choices": [
+      {
+        "text": "Um delete de s20 e um create de s21",
+        "why": "s20 foi criada na mesma fila; o servidor nunca a teve."
+      },
+      {
+        "text": "Só um create de s21",
+        "why": "Isso. #2 se dobra em #1, e o create e o delete então se anulam."
+      },
+      {
+        "text": "Um create de s20 com o corpo atualizado, depois s21",
+        "why": "O delete veio depois; a sessão não existe mais."
+      },
+      {
+        "text": "As quatro, já que a compactação não mexe em deletes",
+        "why": "Ela trata deletes, de dois jeitos diferentes."
+      }
+    ]
+  },
+  "ex-2vtyt21p": {
+    "prompt": "Uma versão sai com um erro que envia `minutes` como string, e todo create agora recebe 400. O que o desenho da aula torna visível, e onde?",
+    "choices": [
+      {
+        "text": "Nada: a drenagem para no primeiro 400 e espera a rede",
+        "why": "Um 4xx não para a drenagem; ele move a operação para dead."
+      },
+      {
+        "text": "Uma queda em todo celular de uma vez, já que um 400 lança exceção",
+        "why": "O fetch resolve com o 400; o drain.ts lê o status."
+      },
+      {
+        "text": "Sessões tentadas de novo a cada minuto até o erro ser corrigido",
+        "why": "Operações mortas não são tentadas de novo pela drenagem."
+      },
+      {
+        "text": "Uma contagem de operações mortas subindo em todo celular, cada uma com o motivo do servidor",
+        "why": "Isso. Essa contagem, informada pelo app, é como a equipe descobre no mesmo dia."
+      }
+    ]
+  },
+  "ex-tgh216ke": {
+    "prompt": "Uma drenagem e uma compactação começam no mesmo instante num celular. O que poderia dar errado? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "um update dobrado num create que a drenagem já enviou",
+        "why": "Aí o servidor nunca recebe o update."
+      },
+      {
+        "text": "o servidor receber um update de uma sessão que nunca recebeu",
+        "why": "O exemplo da corrida, segundo a aula."
+      },
+      {
+        "text": "o SQLite recusar os dois programas porque há dois abertos",
+        "why": "O SQLite permite várias conexões; o problema é a lógica."
+      },
+      {
+        "text": "a tabela dead se enchendo de operações válidas",
+        "why": "A dead se enche com respostas 4xx, que uma corrida não causa."
+      }
+    ]
+  }
+}
