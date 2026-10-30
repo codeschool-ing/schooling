@@ -1,0 +1,638 @@
+[
+  {
+    "id": "ex-9sd5wtcc",
+    "version": 1,
+    "section": "the-feed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What has to be done to a container before its change feed can be read in the default mode?",
+    "hint": "`feed.py` created the container and read the feed at once.",
+    "choices": [
+      {
+        "text": "Enable a change feed policy with a retention period",
+        "correct": false,
+        "why": "That is for all versions and deletes, the other mode."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: every container has one."
+      },
+      {
+        "text": "Turn on continuous backup for the account",
+        "correct": false,
+        "why": "Also the other mode's requirement on Azure."
+      },
+      {
+        "text": "Create a lease container beside it",
+        "correct": false,
+        "why": "Leases are for the change feed processor; `feed.py` used none."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwn0fa4m",
+    "version": 1,
+    "section": "the-feed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Changes for customers `c-7` and `c-8` are written in that order. In what order does the feed return them?",
+    "hint": "Where is order guaranteed?",
+    "choices": [
+      {
+        "text": "`c-7` then `c-8`, in the order they were written",
+        "correct": false,
+        "why": "Only changes to the same partition key keep their order."
+      },
+      {
+        "text": "Either order, per key, not between keys",
+        "correct": true,
+        "why": "Right: the order holds inside a partition key and nowhere else."
+      },
+      {
+        "text": "By `_ts`, across the whole container",
+        "correct": false,
+        "why": "There is no container-wide order to rely on."
+      },
+      {
+        "text": "Alphabetically by id within each page",
+        "correct": false,
+        "why": "Ids have nothing to do with the feed's order."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmynyx22",
+    "version": 1,
+    "section": "the-feed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is inside the continuation token `feed.py` decoded?",
+    "hint": "Look at the line that starts with `continuation:`.",
+    "choices": [
+      {
+        "text": "The ids of the items already read",
+        "correct": false,
+        "why": "It records positions, not items."
+      },
+      {
+        "text": "A signed timestamp the server checks",
+        "correct": false,
+        "why": "It is base64-encoded JSON anybody can decode."
+      },
+      {
+        "text": "The position reached in each feed range",
+        "correct": true,
+        "why": "Right: one range from '' to FF on the emulator, at position 5."
+      },
+      {
+        "text": "The session token of the last write",
+        "correct": false,
+        "why": "Related numbers, a different token for a different purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-88nbajmt",
+    "version": 1,
+    "section": "the-feed",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each starting point to where the feed starts.",
+    "hint": "One description fits none.",
+    "pairs": [
+      {
+        "left": "`\"Beginning\"`",
+        "right": "The oldest entry the feed still has"
+      },
+      {
+        "left": "`\"Now\"`",
+        "right": "The next change after the request"
+      },
+      {
+        "left": "A `datetime`",
+        "right": "The first change at or after that time"
+      },
+      {
+        "left": "A saved token",
+        "right": "Just after the position it records"
+      }
+    ],
+    "right_distractors": [
+      "The last change of each item, newest first"
+    ]
+  },
+  {
+    "id": "ex-0g2d9sex",
+    "version": 1,
+    "section": "latest-version",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`feed.py` made three creates, two updates and one delete. How many entries did the feed return from the beginning?",
+    "hint": "One per living item, as it is now.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8fdw57h5",
+    "version": 1,
+    "section": "latest-version",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A view built from the latest-version feed still shows an order that was deleted last week. Why?",
+    "hint": "What did the feed say about `o-2`?",
+    "choices": [
+      {
+        "text": "Deletes are not in that feed, so nothing said so",
+        "correct": true,
+        "why": "Right: mark it deleted first, and let a time to live remove it."
+      },
+      {
+        "text": "The processor's token is a week old",
+        "correct": false,
+        "why": "An old token would replay changes, but a delete is not among them."
+      },
+      {
+        "text": "The feed reports deletes only after the time to live",
+        "correct": false,
+        "why": "In this mode it never reports a delete."
+      },
+      {
+        "text": "Deletes are reported once a day, in a batch",
+        "correct": false,
+        "why": "No such batch exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-1swa3s9g",
+    "version": 1,
+    "section": "latest-version",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the soft delete of `softdelete.py`.",
+    "hint": "The readers have to see it before it goes.",
+    "items": [
+      "Read the order",
+      "Set `deleted` to true and give it a `ttl`",
+      "Write it back, which puts it in the feed",
+      "Readers of the feed remove it from their views",
+      "The time to live removes it from the container"
+    ]
+  },
+  {
+    "id": "ex-vdae45kz",
+    "version": 1,
+    "section": "latest-version",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job reads the feed of the orders container and may be down for a weekend. What `ttl` should a soft-deleted order get?",
+    "hint": "Whom is the `ttl` a promise to?",
+    "choices": [
+      {
+        "text": "5 seconds, as in `softdelete.py`",
+        "correct": false,
+        "why": "Five seconds is a number for a lesson."
+      },
+      {
+        "text": "None: the job reads the flag whenever it next runs",
+        "correct": false,
+        "why": "Without a ttl the item stays for ever; with too short a one the job never sees the flag."
+      },
+      {
+        "text": "Several days, longer than any reader's absence",
+        "correct": true,
+        "why": "Right: an item that expires before a reader sees the mark is a delete that reader never learns about."
+      },
+      {
+        "text": "One day, the default of a container with time to live on",
+        "correct": false,
+        "why": "`default_ttl=-1` gives items no time to live at all unless they carry one."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0bjv23q",
+    "version": 1,
+    "section": "processor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `processor.py` save the view before the checkpoint, and not the other way round?",
+    "hint": "Imagine a crash between the two, in each order.",
+    "choices": [
+      {
+        "text": "Because Azurite writes blobs in alphabetical order",
+        "correct": false,
+        "why": "The order is the program's, and it matters wherever the blobs are."
+      },
+      {
+        "text": "The other order would skip changes the view never got, for good",
+        "correct": true,
+        "why": "Right: this order repeats some changes, and loses none."
+      },
+      {
+        "text": "Because the token is only valid once the view exists",
+        "correct": false,
+        "why": "The token is valid on its own; the risk is what it skips."
+      },
+      {
+        "text": "To make the feed deliver every change exactly once",
+        "correct": false,
+        "why": "It makes delivery at least once; the view is what makes a repeat harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-nker4q4j",
+    "version": 1,
+    "section": "processor",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the crash and the next run, what did `processor.py` show for customer `c-8`, in reais?",
+    "hint": "The change was applied twice.",
+    "value": 9.9,
+    "tolerance": 0.001,
+    "unit": "BRL"
+  },
+  {
+    "id": "ex-x8m1x89c",
+    "version": 1,
+    "section": "processor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague changes `processor.py` to keep one running total per customer and add each order's amount to it. What happens on the run after a crash before the checkpoint?",
+    "hint": "The same changes are read again.",
+    "choices": [
+      {
+        "text": "Nothing: the feed does not repeat changes",
+        "correct": false,
+        "why": "The feed resumes from the old token, so it does."
+      },
+      {
+        "text": "The run fails, because the token is out of date",
+        "correct": false,
+        "why": "An old token is a valid token; it just points further back."
+      },
+      {
+        "text": "The library notices the repeat and skips it",
+        "correct": false,
+        "why": "Nothing in the library tracks what your program applied."
+      },
+      {
+        "text": "The orders read again are added twice",
+        "correct": true,
+        "why": "Right: adding is not idempotent, setting is."
+      }
+    ]
+  },
+  {
+    "id": "ex-km1n4a08",
+    "version": 1,
+    "section": "processor",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Delivery that never loses a change but may repeat one is called at-least-___ delivery.",
+    "hint": "How many times, at least?",
+    "blanks": [
+      {
+        "accept": [
+          "once"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s3dc64y1",
+    "version": 1,
+    "section": "all-versions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `versions.py` get for the delete of `o-6`?",
+    "hint": "Look at the last line.",
+    "choices": [
+      {
+        "text": "Nothing, as in latest version",
+        "correct": false,
+        "why": "This mode keeps deletes."
+      },
+      {
+        "text": "Its previous version",
+        "correct": true,
+        "why": "Right: an entry with no current item, `delete`, now None, before `packed`."
+      },
+      {
+        "text": "The item as it was created",
+        "correct": false,
+        "why": "The delete's previous image is the last version, `packed`."
+      },
+      {
+        "text": "An error, because the item no longer exists",
+        "correct": false,
+        "why": "The feed reports the delete; nothing is read from the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zcvgwfq",
+    "version": 1,
+    "section": "all-versions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are true of the all versions and deletes mode? Choose all that apply.",
+    "hint": "One is true of latest version only.",
+    "choices": [
+      {
+        "text": "It has to be switched on for the container",
+        "correct": true,
+        "why": "Right: the `orders` container without a policy refused it."
+      },
+      {
+        "text": "It keeps changes only for a retention period",
+        "correct": true,
+        "why": "Right: on Azure the continuous backup period, on the emulator 1 to 10 minutes."
+      },
+      {
+        "text": "It starts from now or from a token, not from the beginning",
+        "correct": true,
+        "why": "Right: the history exists only from when it was switched on."
+      },
+      {
+        "text": "It returns each item once, as it is now",
+        "correct": false,
+        "why": "That is latest version; this mode returns every step."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvfbn35z",
+    "version": 1,
+    "section": "all-versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The emulator accepted a retention of 10 minutes and refused 60. What does that tell you about Azure?",
+    "hint": "Whose rule was it?",
+    "choices": [
+      {
+        "text": "That Azure keeps changes for 10 minutes at most",
+        "correct": false,
+        "why": "On Azure retention follows the continuous backup period."
+      },
+      {
+        "text": "Nothing; the limit is the emulator's",
+        "correct": true,
+        "why": "Right, and nothing in this course measured Azure's."
+      },
+      {
+        "text": "That Azure counts the retention in hours",
+        "correct": false,
+        "why": "The refusal says nothing about Azure's units."
+      },
+      {
+        "text": "That 60 minutes needs a support request on Azure",
+        "correct": false,
+        "why": "Nothing documented says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6f103x3",
+    "version": 1,
+    "section": "change-feed-processor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lease container hold?",
+    "hint": "`processor.py` kept the same thing in a blob, minus one field.",
+    "choices": [
+      {
+        "text": "A copy of every change, for replay",
+        "correct": false,
+        "why": "The changes stay in the monitored container's feed."
+      },
+      {
+        "text": "The view the delegate builds",
+        "correct": false,
+        "why": "The view is wherever your delegate writes it."
+      },
+      {
+        "text": "Owners and tokens",
+        "correct": true,
+        "why": "Right: per feed range, its owner and its continuation token; a lease is a checkpoint with an owner written on it."
+      },
+      {
+        "text": "The list of instances allowed to read",
+        "correct": false,
+        "why": "Instances take leases; nobody lists them in advance."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0hw0v3q",
+    "version": 1,
+    "section": "change-feed-processor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A second instance of a change feed processor starts. What happens?",
+    "hint": "Leases are shared out.",
+    "choices": [
+      {
+        "text": "The leases are rebalanced, and each range is read by one instance",
+        "correct": true,
+        "why": "Right: that is what the leases are for."
+      },
+      {
+        "text": "Both instances read every range, and the delegate sees each change twice",
+        "correct": false,
+        "why": "That is `processor.py` started twice, without leases."
+      },
+      {
+        "text": "The second waits until the first stops",
+        "correct": false,
+        "why": "Instances share the work while both run."
+      },
+      {
+        "text": "The monitored container's throughput doubles",
+        "correct": false,
+        "why": "Throughput is set on the container, not by its readers."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jycd01y",
+    "version": 1,
+    "section": "change-feed-processor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is true of the Azure Functions Cosmos DB trigger?",
+    "hint": "It is the change feed processor with hosting.",
+    "choices": [
+      {
+        "text": "It delivers each change exactly once",
+        "correct": false,
+        "why": "It is at-least-once, like the processor it is built on."
+      },
+      {
+        "text": "It needs no lease container",
+        "correct": false,
+        "why": "It needs the same lease container."
+      },
+      {
+        "text": "It is how Python programs read the feed with leases",
+        "correct": false,
+        "why": "It is a hosting option, not a Python library feature."
+      },
+      {
+        "text": "It runs at most one instance per lease",
+        "correct": true,
+        "why": "Right: one lease is read by one instance at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-xd7awa0f",
+    "version": 1,
+    "section": "change-feed-processor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda adds a search index, a copy to the lake and the spend view, each as its own consumer of the orders feed. What does that cost in reads?",
+    "hint": "Each consumer has its own leases.",
+    "choices": [
+      {
+        "text": "One read of the feed, shared by all three",
+        "correct": false,
+        "why": "Each reads independently, at its own pace."
+      },
+      {
+        "text": "Three reads, from the orders container",
+        "correct": true,
+        "why": "Right: each consumer pays for its own pages, from the same throughput the application uses."
+      },
+      {
+        "text": "Three reads, billed to the lease containers",
+        "correct": false,
+        "why": "Leases cost little; the feed's pages are charged to the monitored container."
+      },
+      {
+        "text": "Nothing extra: reading the feed is free",
+        "correct": false,
+        "why": "Every page of the feed costs request units."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbb7pvvz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Finance wants every status an order passed through, with its time, for the last month. What do you build?",
+    "hint": "Latest version drops steps; the other mode keeps them for a limited time.",
+    "choices": [
+      {
+        "text": "A reader of the latest-version feed that polls every minute",
+        "correct": false,
+        "why": "Two changes inside one minute still collapse into one."
+      },
+      {
+        "text": "A query on `_ts` over the orders container",
+        "correct": false,
+        "why": "`_ts` is the last write's time; the earlier steps are gone."
+      },
+      {
+        "text": "An all-versions consumer that keeps every entry",
+        "correct": true,
+        "why": "Right, or a status history kept in the item itself; the feed alone keeps changes only for its retention."
+      },
+      {
+        "text": "A soft delete with a ttl of one month",
+        "correct": false,
+        "why": "That keeps deleted items around; it does not record steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-2w83x3dh",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a feed consumer safe to run twice on the same change? Choose all that apply.",
+    "hint": "Setting, not adding.",
+    "choices": [
+      {
+        "text": "Writing the view keyed by the order id",
+        "correct": true,
+        "why": "Right: the second write sets the same value."
+      },
+      {
+        "text": "Removing an order flagged deleted, if present",
+        "correct": true,
+        "why": "Right: removing what is already gone changes nothing."
+      },
+      {
+        "text": "Adding each order's amount to a running total",
+        "correct": false,
+        "why": "The repeat adds again."
+      },
+      {
+        "text": "Saving the checkpoint before the view",
+        "correct": false,
+        "why": "That loses changes; it does not make repeats safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-654ccxcd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a Python program running on Azure keep its place in the feed, with version 4.17.1 of the library?",
+    "hint": "The library has no processor.",
+    "choices": [
+      {
+        "text": "In a lease container the library manages",
+        "correct": false,
+        "why": "That is the .NET and Java processor."
+      },
+      {
+        "text": "Nowhere: the service remembers each reader",
+        "correct": false,
+        "why": "The service remembers nothing about readers."
+      },
+      {
+        "text": "Wherever the program saves the continuation token",
+        "correct": true,
+        "why": "Right: a blob, as in `processor.py`, or a document of its own."
+      },
+      {
+        "text": "In the `_lsn` of the last item it read",
+        "correct": false,
+        "why": "One `_lsn` is one partition's position; the token covers every range."
+      }
+    ]
+  }
+]
