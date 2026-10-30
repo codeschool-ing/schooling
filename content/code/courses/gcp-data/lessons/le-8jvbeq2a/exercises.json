@@ -1,0 +1,578 @@
+[
+  {
+    "id": "ex-shdfzykn",
+    "version": 1,
+    "section": "instance-and-database",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many processing units are 3 Spanner nodes?",
+    "hint": "1 node is 1,000 processing units.",
+    "value": 3000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-v7str81e",
+    "version": 1,
+    "section": "instance-and-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these instance sizes does Spanner refuse?",
+    "hint": "Steps of 100 below 1,000, whole nodes above.",
+    "choices": [
+      {
+        "text": "100 processing units, a tenth of a node",
+        "correct": false,
+        "why": "The smallest instance Spanner sells, a tenth of a node."
+      },
+      {
+        "text": "900 processing units",
+        "correct": false,
+        "why": "A multiple of 100 below 1,000."
+      },
+      {
+        "text": "1,500 processing units",
+        "correct": true,
+        "why": "Right. Above 1,000 the steps are whole nodes, 1,000 at a time."
+      },
+      {
+        "text": "5 nodes, which is 5,000 processing units",
+        "correct": false,
+        "why": "5,000 processing units, a whole number of nodes."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2t69bpy",
+    "version": 1,
+    "section": "instance-and-database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do a Spanner database's compute capacity and replica placement come from?",
+    "hint": "Three layers: instance, database, table.",
+    "choices": [
+      {
+        "text": "Each table declares its own",
+        "correct": false,
+        "why": "Tables are declared by the schema and share the database's instance."
+      },
+      {
+        "text": "The instance it lives in",
+        "correct": true,
+        "why": "Right. Databases inside one instance share its capacity and configuration."
+      },
+      {
+        "text": "The database, chosen when it is created",
+        "correct": false,
+        "why": "`databases create` takes a schema, not a size or a placement."
+      },
+      {
+        "text": "The project's default region",
+        "correct": false,
+        "why": "The configuration is chosen per instance, with `--config`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5jz92h6",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a key that counts up, 1, 2, 3, a problem in Spanner and not in a single-server PostgreSQL?",
+    "hint": "Where does the next row go, and who serves that place?",
+    "choices": [
+      {
+        "text": "Spanner cannot index integers",
+        "correct": false,
+        "why": "Integer keys are fine; their order is the problem."
+      },
+      {
+        "text": "All new rows land in the last range",
+        "correct": true,
+        "why": "Right. The table's write rate becomes one server's."
+      },
+      {
+        "text": "Counters run out faster in Spanner",
+        "correct": false,
+        "why": "INT64 is the same size everywhere."
+      },
+      {
+        "text": "Spanner hashes integer keys, so neighbours separate",
+        "correct": false,
+        "why": "Spanner keeps rows sorted by key; it does not hash them."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ef51y05",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's run, why did `BySequence` put exactly 50 new rows in each quarter while `ByUuid` did not?",
+    "hint": "One is random and one is constructed.",
+    "choices": [
+      {
+        "text": "The emulator rounds the counts",
+        "correct": false,
+        "why": "The counts are what the program counted."
+      },
+      {
+        "text": "UUIDs are longer than integers, so they sort into fewer places",
+        "correct": false,
+        "why": "Length does not decide where a key sorts."
+      },
+      {
+        "text": "Bit-reversal spreads consecutive numbers evenly",
+        "correct": true,
+        "why": "Right. A UUID version 4 is random, so its spread varies a little per run."
+      },
+      {
+        "text": "The sequence was reset between the two tables",
+        "correct": false,
+        "why": "Both tables were filled once; the sequence was not reset."
+      }
+    ]
+  },
+  {
+    "id": "ex-mddmgyp7",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda logs app clicks into a Spanner table keyed by `(ClickTime, ClickId)`. Writes stall at one server's rate. Which change helps most?",
+    "hint": "What does the first column of the key decide?",
+    "choices": [
+      {
+        "text": "Add nodes to the instance",
+        "correct": false,
+        "why": "More nodes do not help if every write lands in one key range."
+      },
+      {
+        "text": "Make `ClickId` a UUID and keep `ClickTime` first",
+        "correct": false,
+        "why": "The first column still counts up, so new rows still go to the end."
+      },
+      {
+        "text": "Put `UserId` first in the key",
+        "correct": true,
+        "why": "Right. Writes from many users spread over many ranges, and one user's clicks stay in order."
+      },
+      {
+        "text": "Interleave the table in `Customers`",
+        "correct": false,
+        "why": "Interleaving needs the parent's key first, and would not fix time order on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-cymxjwb8",
+    "version": 1,
+    "section": "the-key",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Spanner cuts a table into contiguous ranges of keys, each served by one server at a time. One such range is a ___.",
+    "hint": "The lesson's figure draws four of them.",
+    "blanks": [
+      {
+        "accept": [
+          "split"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-drws9axh",
+    "version": 1,
+    "section": "interleaving",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `INTERLEAVE IN PARENT Customers` do to `Orders`?",
+    "hint": "It is about placement first.",
+    "choices": [
+      {
+        "text": "Copies each order into the customer's row",
+        "correct": false,
+        "why": "Rows stay separate; they are stored next to each other."
+      },
+      {
+        "text": "Stores the orders next to their customer",
+        "correct": true,
+        "why": "Right. A customer and their orders are one contiguous run of keys."
+      },
+      {
+        "text": "Creates a foreign key and nothing else",
+        "correct": false,
+        "why": "It enforces the parent, and its purpose is where the rows are stored."
+      },
+      {
+        "text": "Hashes the orders across all servers",
+        "correct": false,
+        "why": "It does the opposite: it keeps one customer's orders together."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zyts107",
+    "version": 1,
+    "section": "interleaving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `OrderNotes`, keyed by `(OrderId)`, refused as a child of `Customers`?",
+    "hint": "Read what the error asked for.",
+    "choices": [
+      {
+        "text": "Its key does not begin with `CustomerId`",
+        "correct": true,
+        "why": "Right. The child's key has to start with the parent's for the placement to exist."
+      },
+      {
+        "text": "A table cannot be interleaved in a table that already has a child",
+        "correct": false,
+        "why": "A parent may have several interleaved children."
+      },
+      {
+        "text": "`STRING(MAX)` columns cannot be interleaved",
+        "correct": false,
+        "why": "Column types are not the problem; the key is."
+      },
+      {
+        "text": "Notes should be interleaved in `Stock`",
+        "correct": false,
+        "why": "Notes belong to orders; the error was about the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-cv89k1cp",
+    "version": 1,
+    "section": "interleaving",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's accountants want deleting a customer to fail while the customer has orders. What should the schema say?",
+    "hint": "Cascade is one of two choices.",
+    "choices": [
+      {
+        "text": "`ON DELETE CASCADE`",
+        "correct": false,
+        "why": "That deletes the orders with the customer, which is what they do not want."
+      },
+      {
+        "text": "`ON DELETE NO ACTION`",
+        "correct": true,
+        "why": "Right. The delete of a parent is refused while it has children."
+      },
+      {
+        "text": "Nothing; Spanner never deletes a parent with children",
+        "correct": false,
+        "why": "With `ON DELETE CASCADE`, as in the lesson, it deletes them all."
+      },
+      {
+        "text": "A stale read before every delete",
+        "correct": false,
+        "why": "A read does not stop a delete; the schema does."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgsmk7b4",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`order.py c-99 banana 1 690` was refused. What happened to the stock `UPDATE` that had already run inside the transaction?",
+    "hint": "All or nothing.",
+    "choices": [
+      {
+        "text": "It was committed, and the stock is one banana short",
+        "correct": false,
+        "why": "The stock still read 6 afterwards."
+      },
+      {
+        "text": "It was rolled back",
+        "correct": true,
+        "why": "Right. It went with the refused `INSERT`. Nothing in a transaction becomes visible unless all of it commits."
+      },
+      {
+        "text": "It was retried until the customer existed",
+        "correct": false,
+        "why": "A refused write is not retried; an aborted transaction is."
+      },
+      {
+        "text": "It was kept as a stale version, readable in the past",
+        "correct": false,
+        "why": "An uncommitted write never existed at any timestamp."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0g69jja",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Quitanda read is a good place for a stale read of 15 seconds?",
+    "hint": "Who acts on the number?",
+    "choices": [
+      {
+        "text": "The checkout taking the last bananas",
+        "correct": false,
+        "why": "It acts on the number, so it reads strongly, inside its transaction."
+      },
+      {
+        "text": "The catalogue's stock count",
+        "correct": true,
+        "why": "Right. A number a few seconds old is good enough, and any up-to-date replica can answer."
+      },
+      {
+        "text": "A refund that checks the order was paid",
+        "correct": false,
+        "why": "Money decisions read the latest committed state."
+      },
+      {
+        "text": "The order confirmation shown after the commit",
+        "correct": false,
+        "why": "It must show the write that just happened, which only a strong read guarantees."
+      }
+    ]
+  },
+  {
+    "id": "ex-0739swax",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`run_in_transaction` may run your function more than once. Which version of `place` would be a bug?",
+    "hint": "What survives a retry?",
+    "choices": [
+      {
+        "text": "One that reads the stock inside the function",
+        "correct": false,
+        "why": "That is `order.py`, and each retry reads afresh."
+      },
+      {
+        "text": "One that raises `ValueError` when stock is short",
+        "correct": false,
+        "why": "Raising rolls back and is not retried."
+      },
+      {
+        "text": "One reusing a count read before the transaction",
+        "correct": true,
+        "why": "Right. A retry would reuse a value that may no longer be true."
+      },
+      {
+        "text": "One that writes the order with `THEN RETURN`",
+        "correct": false,
+        "why": "Returning the key is safe on every attempt."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxe3kxf2",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `two.py`, the rice update committed on its third attempt, seconds late. What does that tell you about Spanner?",
+    "hint": "Whose limit is it?",
+    "choices": [
+      {
+        "text": "Spanner locks the whole table during a transaction",
+        "correct": false,
+        "why": "Spanner locks rows; the rows here were different."
+      },
+      {
+        "text": "Nothing; it is the emulator's limit",
+        "correct": true,
+        "why": "Right. The emulator runs one read-write transaction at a time; Spanner would have committed both at once."
+      },
+      {
+        "text": "Transactions on different rows conflict in Spanner",
+        "correct": false,
+        "why": "They do not; that is the emulator's limit."
+      },
+      {
+        "text": "The client library is misconfigured",
+        "correct": false,
+        "why": "Its retries are what eventually committed the rice."
+      }
+    ]
+  },
+  {
+    "id": "ex-3s6fdkzx",
+    "version": 1,
+    "section": "capacity-and-price",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At 1.35 USD per node-hour, what does a Standard instance of 300 processing units cost for 730 hours?",
+    "hint": "0.3 × 1.35 × 730",
+    "value": 295.65,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-xqasq8kv",
+    "version": 1,
+    "section": "capacity-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants its Spanner database to keep writing if all of São Paulo is lost. Which edition does the pricing page say that needs?",
+    "hint": "Two regions or more.",
+    "choices": [
+      {
+        "text": "Standard",
+        "correct": false,
+        "why": "Standard is a regional instance."
+      },
+      {
+        "text": "Enterprise",
+        "correct": false,
+        "why": "Enterprise adds read-only replicas, not dual- or multi-region configurations."
+      },
+      {
+        "text": "Enterprise Plus",
+        "correct": true,
+        "why": "Right. Dual-region and multi-region configurations are Enterprise Plus."
+      },
+      {
+        "text": "Any edition, with `--config=emulator-config`",
+        "correct": false,
+        "why": "That configuration exists only in the emulator."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz11jrh8",
+    "version": 1,
+    "section": "capacity-and-price",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An emulator instance was created with `--edition=ENTERPRISE` and the São Paulo configuration, and both were accepted. What can you conclude about a real project?",
+    "hint": "What did `describe` show afterwards?",
+    "choices": [
+      {
+        "text": "The project may use that configuration and edition",
+        "correct": false,
+        "why": "The emulator checks neither; it accepted a configuration not in its own list."
+      },
+      {
+        "text": "Nothing; the emulator recorded no edition and checked no configuration",
+        "correct": true,
+        "why": "Right. Those two have to be checked against Google Cloud itself."
+      },
+      {
+        "text": "Enterprise is the default edition",
+        "correct": false,
+        "why": "The description showed no edition at all."
+      },
+      {
+        "text": "The instance would cost 134.69 a month",
+        "correct": false,
+        "why": "The arithmetic is right for Enterprise, but the emulator proved nothing about it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fbvedz6v",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each emulator answer to what it means on Spanner.",
+    "hint": "Some are refusals Spanner also makes; some are the emulator's own.",
+    "pairs": [
+      {
+        "left": "`Processing units should be multiple of 100`",
+        "right": "A rule Spanner enforces the same way"
+      },
+      {
+        "left": "`does not reference parent key column`",
+        "right": "An interleaving rule of the schema"
+      },
+      {
+        "left": "`No query plan`",
+        "right": "A feature the emulator does not have"
+      },
+      {
+        "left": "`does not support updating instances`",
+        "right": "A capacity change only Google Cloud can make"
+      }
+    ],
+    "right_distractors": [
+      "A query too slow to finish"
+    ]
+  },
+  {
+    "id": "ex-9cg79wt3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the lesson's shop database in the order they have to happen.",
+    "hint": "Each needs the one before it.",
+    "items": [
+      "`gcloud spanner instances create` with `--config` and a capacity",
+      "`gcloud spanner databases create` with `--ddl-file=schema.sql`",
+      "A customer row in `Customers`",
+      "An order for that customer, from `order.py`"
+    ]
+  },
+  {
+    "id": "ex-t9skpasz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the emulator let this lesson practise faithfully? Choose all that apply.",
+    "hint": "Schema and programming model, or capacity?",
+    "choices": [
+      {
+        "text": "The order of rows by primary key",
+        "correct": true,
+        "why": "Yes; `keys.py` measured it."
+      },
+      {
+        "text": "Interleaving rules and `ON DELETE CASCADE`",
+        "correct": true,
+        "why": "Yes; the refusal and the cascade ran as on Spanner."
+      },
+      {
+        "text": "A read-write transaction rolled back as a whole",
+        "correct": true,
+        "why": "Yes; the stock stayed at 6."
+      },
+      {
+        "text": "Where a hotspot makes one server busy",
+        "correct": false,
+        "why": "The emulator has one process and no splits."
+      },
+      {
+        "text": "The commit wait of TrueTime",
+        "correct": false,
+        "why": "The emulator has one clock and nothing to wait for."
+      }
+    ]
+  }
+]

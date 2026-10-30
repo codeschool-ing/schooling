@@ -1,0 +1,391 @@
+{
+  "ex-shdfzykn": {
+    "prompt": "Quantos processing units são 3 nós do Spanner?",
+    "hint": "1 nó são 1.000 processing units."
+  },
+  "ex-v7str81e": {
+    "prompt": "Qual destes tamanhos de instância o Spanner recusa?",
+    "hint": "Passos de 100 abaixo de 1.000, nós inteiros acima.",
+    "choices": [
+      {
+        "text": "100 processing units, um décimo de nó",
+        "why": "A menor instância que o Spanner vende, um décimo de nó."
+      },
+      {
+        "text": "900 processing units",
+        "why": "Um múltiplo de 100 abaixo de 1.000."
+      },
+      {
+        "text": "1.500 processing units",
+        "why": "Isso. Acima de 1.000 os passos são nós inteiros, de 1.000 em 1.000."
+      },
+      {
+        "text": "5 nós, que são 5.000 processing units",
+        "why": "5.000 processing units, um número inteiro de nós."
+      }
+    ]
+  },
+  "ex-x2t69bpy": {
+    "prompt": "De onde vêm a capacidade de computação e o posicionamento das réplicas de um banco do Spanner?",
+    "hint": "Três camadas: instância, banco, tabela.",
+    "choices": [
+      {
+        "text": "Cada tabela declara as suas",
+        "why": "As tabelas são declaradas pelo schema e dividem a instância do banco."
+      },
+      {
+        "text": "Da instância onde ele mora",
+        "why": "Isso. Bancos dentro de uma instância dividem a capacidade e a configuração dela."
+      },
+      {
+        "text": "Do banco, escolhidas na criação",
+        "why": "`databases create` recebe um schema, não um tamanho nem um posicionamento."
+      },
+      {
+        "text": "Da região padrão do projeto",
+        "why": "A configuração é escolhida por instância, com `--config`."
+      }
+    ]
+  },
+  "ex-k5jz92h6": {
+    "prompt": "Por que uma chave que conta, 1, 2, 3, é um problema no Spanner e não num PostgreSQL de um servidor?",
+    "hint": "Para onde vai a próxima linha, e quem atende esse lugar?",
+    "choices": [
+      {
+        "text": "O Spanner não indexa inteiros",
+        "why": "Chaves inteiras servem; a ordem delas é o problema."
+      },
+      {
+        "text": "Toda linha nova cai na última faixa",
+        "why": "Isso. A taxa de escrita da tabela vira a de um servidor."
+      },
+      {
+        "text": "Contadores acabam mais rápido no Spanner",
+        "why": "INT64 tem o mesmo tamanho em todo lugar."
+      },
+      {
+        "text": "O Spanner passa chaves inteiras por um hash, e vizinhas se separam",
+        "why": "O Spanner mantém as linhas ordenadas pela chave; não aplica hash."
+      }
+    ]
+  },
+  "ex-7ef51y05": {
+    "prompt": "Na execução da aula, por que `BySequence` pôs exatamente 50 linhas novas em cada quarto e `ByUuid` não?",
+    "hint": "Uma é aleatória e a outra é construída.",
+    "choices": [
+      {
+        "text": "O emulador arredonda as contagens",
+        "why": "As contagens são as que o programa contou."
+      },
+      {
+        "text": "UUIDs são mais longos que inteiros, então caem em menos lugares",
+        "why": "O comprimento não decide onde uma chave fica na ordem."
+      },
+      {
+        "text": "Inverter os bits espalha números seguidos por igual",
+        "why": "Isso. Um UUID versão 4 é aleatório, então o espalhamento varia um pouco a cada execução."
+      },
+      {
+        "text": "A sequência foi zerada entre as duas tabelas",
+        "why": "As duas tabelas foram preenchidas uma vez; a sequência não foi zerada."
+      }
+    ]
+  },
+  "ex-mddmgyp7": {
+    "prompt": "A Quitanda registra cliques do app numa tabela do Spanner com chave `(ClickTime, ClickId)`. As escritas param na taxa de um servidor. Que mudança ajuda mais?",
+    "hint": "O que a primeira coluna da chave decide?",
+    "choices": [
+      {
+        "text": "Acrescentar nós à instância",
+        "why": "Mais nós não ajudam se toda escrita cai numa faixa de chaves."
+      },
+      {
+        "text": "Tornar `ClickId` um UUID e manter `ClickTime` primeiro",
+        "why": "A primeira coluna continua contando, então as linhas novas continuam indo para o fim."
+      },
+      {
+        "text": "Pôr `UserId` primeiro na chave",
+        "why": "Isso. Escritas de muitos usuários se espalham por muitas faixas, e os cliques de um usuário ficam em ordem."
+      },
+      {
+        "text": "Intercalar a tabela em `Customers`",
+        "why": "Intercalar exige a chave do pai primeiro, e não resolveria a ordem do tempo sozinho."
+      }
+    ]
+  },
+  "ex-cymxjwb8": {
+    "prompt": "O Spanner corta uma tabela em faixas contíguas de chaves, cada uma atendida por um servidor de cada vez. Uma dessas faixas é um ___.",
+    "hint": "A figura da aula desenha quatro deles.",
+    "blanks": [
+      {
+        "accept": [
+          "split"
+        ]
+      }
+    ]
+  },
+  "ex-drws9axh": {
+    "prompt": "O que `INTERLEAVE IN PARENT Customers` faz com `Orders`?",
+    "hint": "É sobre posicionamento, antes de tudo.",
+    "choices": [
+      {
+        "text": "Copia cada pedido para a linha do cliente",
+        "why": "As linhas continuam separadas; ficam guardadas uma ao lado da outra."
+      },
+      {
+        "text": "Guarda os pedidos junto do cliente",
+        "why": "Isso. Um cliente e seus pedidos são uma sequência contígua de chaves."
+      },
+      {
+        "text": "Cria uma chave estrangeira e mais nada",
+        "why": "Ela exige o pai, e o propósito é onde as linhas ficam."
+      },
+      {
+        "text": "Espalha os pedidos por todos os servidores",
+        "why": "Faz o contrário: mantém juntos os pedidos de um cliente."
+      }
+    ]
+  },
+  "ex-8zyts107": {
+    "prompt": "Por que `OrderNotes`, com chave `(OrderId)`, foi recusada como filha de `Customers`?",
+    "hint": "Leia o que o erro pediu.",
+    "choices": [
+      {
+        "text": "A chave dela não começa com `CustomerId`",
+        "why": "Isso. A chave da filha precisa começar com a do pai para o posicionamento existir."
+      },
+      {
+        "text": "Uma tabela não pode ser intercalada numa que já tem filha",
+        "why": "Um pai pode ter várias filhas intercaladas."
+      },
+      {
+        "text": "Colunas `STRING(MAX)` não podem ser intercaladas",
+        "why": "O tipo das colunas não é o problema; a chave é."
+      },
+      {
+        "text": "As notas deveriam ser intercaladas em `Stock`",
+        "why": "Notas pertencem a pedidos; o erro era sobre a chave."
+      }
+    ]
+  },
+  "ex-cv89k1cp": {
+    "prompt": "Os contadores da Quitanda querem que apagar um cliente falhe enquanto ele tiver pedidos. O que o schema deve dizer?",
+    "hint": "Cascade é uma de duas escolhas.",
+    "choices": [
+      {
+        "text": "`ON DELETE CASCADE`",
+        "why": "Isso apaga os pedidos junto com o cliente, que é o que eles não querem."
+      },
+      {
+        "text": "`ON DELETE NO ACTION`",
+        "why": "Isso. O delete de um pai é recusado enquanto ele tem filhos."
+      },
+      {
+        "text": "Nada; o Spanner nunca apaga um pai com filhos",
+        "why": "Com `ON DELETE CASCADE`, como na aula, ele apaga todos."
+      },
+      {
+        "text": "Uma leitura stale antes de todo delete",
+        "why": "Uma leitura não impede um delete; o schema impede."
+      }
+    ]
+  },
+  "ex-sgsmk7b4": {
+    "prompt": "`order.py c-99 banana 1 690` foi recusado. O que aconteceu com o `UPDATE` do estoque que já tinha rodado dentro da transação?",
+    "hint": "Tudo ou nada.",
+    "choices": [
+      {
+        "text": "Foi confirmado, e o estoque ficou com uma banana a menos",
+        "why": "O estoque continuou 6 depois."
+      },
+      {
+        "text": "Foi desfeito",
+        "why": "Isso. Foi junto com o `INSERT` recusado. Nada numa transação fica visível se ela não confirmar inteira."
+      },
+      {
+        "text": "Foi repetido até o cliente existir",
+        "why": "Uma escrita recusada não é repetida; uma transação abortada é."
+      },
+      {
+        "text": "Ficou como uma versão antiga, legível no passado",
+        "why": "Uma escrita não confirmada nunca existiu em timestamp nenhum."
+      }
+    ]
+  },
+  "ex-n0g69jja": {
+    "prompt": "Qual leitura da Quitanda é um bom lugar para uma leitura stale de 15 segundos?",
+    "hint": "Quem age sobre o número?",
+    "choices": [
+      {
+        "text": "O checkout pegando as últimas bananas",
+        "why": "Ele age sobre o número, então lê de forma forte, dentro da transação."
+      },
+      {
+        "text": "A contagem de estoque do catálogo",
+        "why": "Isso. Um número de alguns segundos basta, e qualquer réplica em dia pode responder."
+      },
+      {
+        "text": "Um estorno que confere se o pedido foi pago",
+        "why": "Decisões de dinheiro leem o último estado confirmado."
+      },
+      {
+        "text": "A confirmação do pedido mostrada depois do commit",
+        "why": "Ela precisa mostrar a escrita que acabou de acontecer, o que só uma leitura forte garante."
+      }
+    ]
+  },
+  "ex-0739swax": {
+    "prompt": "`run_in_transaction` pode rodar a sua função mais de uma vez. Qual versão de `place` seria um bug?",
+    "hint": "O que sobrevive a uma repetição?",
+    "choices": [
+      {
+        "text": "Uma que lê o estoque dentro da função",
+        "why": "Esse é o `order.py`, e cada repetição lê de novo."
+      },
+      {
+        "text": "Uma que levanta `ValueError` quando falta estoque",
+        "why": "Levantar desfaz e não é repetido."
+      },
+      {
+        "text": "Uma que reusa um estoque lido antes da transação",
+        "why": "Isso. Uma repetição reusaria um valor que pode não valer mais."
+      },
+      {
+        "text": "Uma que grava o pedido com `THEN RETURN`",
+        "why": "Devolver a chave é seguro em toda tentativa."
+      }
+    ]
+  },
+  "ex-wxe3kxf2": {
+    "prompt": "No `two.py`, a atualização do arroz confirmou na terceira tentativa, segundos depois. O que isso diz sobre o Spanner?",
+    "hint": "De quem é o limite?",
+    "choices": [
+      {
+        "text": "O Spanner trava a tabela inteira durante uma transação",
+        "why": "O Spanner trava linhas; aqui as linhas eram diferentes."
+      },
+      {
+        "text": "Nada; é um limite do emulador",
+        "why": "Isso. O emulador roda uma transação de leitura e escrita por vez; o Spanner teria confirmado as duas ao mesmo tempo."
+      },
+      {
+        "text": "Transações em linhas diferentes conflitam no Spanner",
+        "why": "Não conflitam; esse é o limite do emulador."
+      },
+      {
+        "text": "A biblioteca cliente está mal configurada",
+        "why": "As repetições dela é que acabaram confirmando o arroz."
+      }
+    ]
+  },
+  "ex-3s6fdkzx": {
+    "prompt": "A 1,35 USD por nó-hora, quanto custa uma instância Standard de 300 processing units por 730 horas?",
+    "hint": "0,3 × 1,35 × 730",
+    "unit": "USD"
+  },
+  "ex-xqasq8kv": {
+    "prompt": "A Quitanda quer que o banco no Spanner continue escrevendo se São Paulo inteira cair. Qual edição a página de preços diz que isso exige?",
+    "hint": "Duas regiões ou mais.",
+    "choices": [
+      {
+        "text": "Standard",
+        "why": "A Standard é uma instância regional."
+      },
+      {
+        "text": "Enterprise",
+        "why": "A Enterprise acrescenta réplicas só de leitura, não configurações dual-region ou multirregionais."
+      },
+      {
+        "text": "Enterprise Plus",
+        "why": "Isso. Configurações dual-region e multirregionais são Enterprise Plus."
+      },
+      {
+        "text": "Qualquer edição, com `--config=emulator-config`",
+        "why": "Essa configuração só existe no emulador."
+      }
+    ]
+  },
+  "ex-zz11jrh8": {
+    "prompt": "Uma instância do emulador foi criada com `--edition=ENTERPRISE` e a configuração de São Paulo, e as duas foram aceitas. O que dá para concluir sobre um projeto real?",
+    "hint": "O que o `describe` mostrou depois?",
+    "choices": [
+      {
+        "text": "Que o projeto pode usar essa configuração e essa edição",
+        "why": "O emulador não confere nenhuma das duas; aceitou uma configuração fora da própria lista."
+      },
+      {
+        "text": "Nada; o emulador não registrou edição e não conferiu configuração",
+        "why": "Isso. As duas precisam ser conferidas no próprio Google Cloud."
+      },
+      {
+        "text": "Que a Enterprise é a edição padrão",
+        "why": "A descrição não mostrou edição nenhuma."
+      },
+      {
+        "text": "Que a instância custaria 134,69 por mês",
+        "why": "A conta está certa para a Enterprise, mas o emulador não provou nada sobre ela."
+      }
+    ]
+  },
+  "ex-fbvedz6v": {
+    "prompt": "Associe cada resposta do emulador ao que ela significa no Spanner.",
+    "hint": "Algumas são recusas que o Spanner também faz; outras são do emulador.",
+    "pairs": [
+      {
+        "left": "`Processing units should be multiple of 100`",
+        "right": "Uma regra que o Spanner impõe do mesmo jeito"
+      },
+      {
+        "left": "`does not reference parent key column`",
+        "right": "Uma regra de intercalação do schema"
+      },
+      {
+        "left": "`No query plan`",
+        "right": "Um recurso que o emulador não tem"
+      },
+      {
+        "left": "`does not support updating instances`",
+        "right": "Uma mudança de capacidade que só o Google Cloud faz"
+      }
+    ],
+    "right_distractors": [
+      "Uma consulta lenta demais para terminar"
+    ]
+  },
+  "ex-9cg79wt3": {
+    "prompt": "Ponha os passos do banco da loja da aula na ordem em que precisam acontecer.",
+    "hint": "Cada um precisa do anterior.",
+    "items": [
+      "`gcloud spanner instances create` com `--config` e uma capacidade",
+      "`gcloud spanner databases create` com `--ddl-file=schema.sql`",
+      "Uma linha de cliente em `Customers`",
+      "Um pedido desse cliente, pelo `order.py`"
+    ]
+  },
+  "ex-t9skpasz": {
+    "prompt": "Quais destas o emulador deixou esta aula praticar com fidelidade? Escolha todas as que se aplicam.",
+    "hint": "Schema e modelo de programação, ou capacidade?",
+    "choices": [
+      {
+        "text": "A ordem das linhas pela chave primária",
+        "why": "Sim; o `keys.py` a mediu."
+      },
+      {
+        "text": "As regras de intercalação e o `ON DELETE CASCADE`",
+        "why": "Sim; a recusa e o cascade rodaram como no Spanner."
+      },
+      {
+        "text": "Uma transação de leitura e escrita desfeita por inteiro",
+        "why": "Sim; o estoque ficou em 6."
+      },
+      {
+        "text": "Onde um hotspot deixa um servidor ocupado",
+        "why": "O emulador tem um processo e nenhum split."
+      },
+      {
+        "text": "A espera de commit do TrueTime",
+        "why": "O emulador tem um relógio e nada a esperar."
+      }
+    ]
+  }
+}
