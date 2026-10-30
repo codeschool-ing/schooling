@@ -1,0 +1,653 @@
+[
+  {
+    "id": "ex-8v39f8mg",
+    "version": 1,
+    "section": "persistent-disks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A machine with a persistent data disk is deleted. What happens to the disk?",
+    "hint": "Is the disk part of the machine?",
+    "choices": [
+      {
+        "text": "It is erased with the machine, as a drive inside a server would be",
+        "correct": false,
+        "why": "That is the wrong picture: the disk is a resource on Google's network."
+      },
+      {
+        "text": "It becomes a snapshot automatically",
+        "correct": false,
+        "why": "No snapshot is taken unless a schedule or a person takes it."
+      },
+      {
+        "text": "It stays, ready to attach to another machine",
+        "correct": true,
+        "why": "Right. A data disk created on its own outlives the machine."
+      },
+      {
+        "text": "It moves to the regional storage of the project",
+        "correct": false,
+        "why": "Nothing moves; the disk stays where it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-2per7a6t",
+    "version": 1,
+    "section": "persistent-disks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database on a 50 GiB pd-ssd is slow on disk. Someone proposes a 500 GiB pd-balanced. Why might that be faster?",
+    "hint": "What does a persistent disk's performance depend on?",
+    "choices": [
+      {
+        "text": "Performance grows with size, and ten times outweighs the type",
+        "correct": true,
+        "why": "Right, up to the type's ceiling and the machine's."
+      },
+      {
+        "text": "pd-balanced uses newer SSDs than pd-ssd",
+        "correct": false,
+        "why": "pd-ssd has more operations per GiB, not fewer."
+      },
+      {
+        "text": "Balanced disks are allowed to skip the machine's own ceiling on operations",
+        "correct": false,
+        "why": "Every disk gets the lower of its own limit and the machine's."
+      },
+      {
+        "text": "A larger disk is cached in the host's memory",
+        "correct": false,
+        "why": "Size buys performance per GiB, not a cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqdnexda",
+    "version": 1,
+    "section": "persistent-disks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson put /dev/disk/by-id/google-orders-data in /etc/fstab rather than /dev/sdb?",
+    "hint": "Which name stays the same between boots?",
+    "choices": [
+      {
+        "text": "/dev/sdb is reserved for the boot disk on every Debian machine",
+        "correct": false,
+        "why": "The boot disk is usually sda; that is not the reason."
+      },
+      {
+        "text": "fstab refuses names that start with /dev/sd",
+        "correct": false,
+        "why": "It accepts them; they just are not stable."
+      },
+      {
+        "text": "The by-id path is faster to mount",
+        "correct": false,
+        "why": "Speed is the same; stability differs."
+      },
+      {
+        "text": "/dev/sdb shifts between boots; the by-id name does not",
+        "correct": true,
+        "why": "Right. The by-id path comes from the name you set in Terraform."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sf6bf9m",
+    "version": 1,
+    "section": "persistent-disks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the sheet, what does a 200 GiB regional pd-balanced disk cost a month, in USD?",
+    "hint": "0.2 per GiB-month.",
+    "value": 40,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-b4vq3e2h",
+    "version": 1,
+    "section": "persistent-disks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A group of stateless web machines keeps nothing on disk that is not in the image. Is a regional disk for each one a good idea?",
+    "hint": "What would the second copy protect?",
+    "choices": [
+      {
+        "text": "Yes: a zone failure would otherwise lose the shop's data",
+        "correct": false,
+        "why": "The data is not on these disks; that is what stateless means."
+      },
+      {
+        "text": "No: the copies exist already, so it pays twice",
+        "correct": true,
+        "why": "Right. A lost machine is replaced from the image; nothing on its disk is unique."
+      },
+      {
+        "text": "Yes: regional disks are faster to write than zonal ones",
+        "correct": false,
+        "why": "They are slightly slower, since each write is confirmed twice."
+      },
+      {
+        "text": "No: regional disks cannot be boot disks",
+        "correct": false,
+        "why": "The objection is the cost of a needless copy, not a rule about boot disks."
+      }
+    ]
+  },
+  {
+    "id": "ex-tg47zkts",
+    "version": 1,
+    "section": "persistent-disks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A regional disk writes every block to ___ zones before it confirms the write.",
+    "hint": "How many copies does it keep?",
+    "blanks": [
+      {
+        "accept": [
+          "two",
+          "2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-65bs3p0t",
+    "version": 1,
+    "section": "hyperdisk",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 200 GiB Hyperdisk Balanced is provisioned at 5,000 IOPS and the baseline throughput. At 0.08 per GiB-month and 0.005 per IOPS-month above 3,000, what is a month, in USD?",
+    "hint": "16 for the space, plus 2,000 extra IOPS.",
+    "value": 26,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-7fp6hexf",
+    "version": 1,
+    "section": "hyperdisk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Hyperdisk change compared with a persistent disk?",
+    "hint": "Three things a disk sells.",
+    "choices": [
+      {
+        "text": "It is attached inside the host, like a local SSD",
+        "correct": false,
+        "why": "Hyperdisk is network storage, like a persistent disk."
+      },
+      {
+        "text": "It keeps two copies in two zones by default",
+        "correct": false,
+        "why": "That is a regional disk; Hyperdisk Balanced is zonal unless you choose its HA form."
+      },
+      {
+        "text": "Capacity, IOPS and throughput are bought apart",
+        "correct": true,
+        "why": "Right. Speed no longer has to come from size."
+      },
+      {
+        "text": "It is billed per operation rather than per GiB",
+        "correct": false,
+        "why": "Space is still per GiB; the extra performance is per IOPS and per MBps provisioned."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgq1kfp9",
+    "version": 1,
+    "section": "hyperdisk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On an n4-standard-4, the boot disk is changed to pd-balanced and terraform plan succeeds. What happens next?",
+    "hint": "Which disks does N4 attach?",
+    "choices": [
+      {
+        "text": "Compute Engine refuses it: N4 uses only Hyperdisk",
+        "correct": true,
+        "why": "Right. The same limit lessons 1 and 2 met."
+      },
+      {
+        "text": "The machine boots normally, since the plan succeeded",
+        "correct": false,
+        "why": "A plan checks the file, not the series' rules."
+      },
+      {
+        "text": "Terraform converts the disk to Hyperdisk on apply",
+        "correct": false,
+        "why": "Nothing converts a type silently."
+      },
+      {
+        "text": "The disk is attached but limited to the baseline 3,000 IOPS",
+        "correct": false,
+        "why": "It is not attached at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqjvh1zh",
+    "version": 1,
+    "section": "hyperdisk",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every Hyperdisk Balanced includes 3,000 IOPS and ___ MBps at no extra charge.",
+    "hint": "The throughput baseline on the price page.",
+    "blanks": [
+      {
+        "accept": [
+          "140"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qxe7vc5b",
+    "version": 1,
+    "section": "hyperdisk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report runs for two days at the end of each month and needs 12,000 IOPS; the rest of the month 3,000 is plenty. What does Hyperdisk allow that a persistent disk does not?",
+    "hint": "Can a disk shrink?",
+    "choices": [
+      {
+        "text": "Bursting to 12,000 automatically with no change at all",
+        "correct": false,
+        "why": "Hyperdisk delivers what is provisioned; it does not burst on its own."
+      },
+      {
+        "text": "Paying for the IOPS only when the report reads the disk",
+        "correct": false,
+        "why": "Provisioned IOPS are billed while they are set, used or not."
+      },
+      {
+        "text": "Moving the disk to a local SSD for two days",
+        "correct": false,
+        "why": "A local SSD cannot be attached after creation, and is not where data should live."
+      },
+      {
+        "text": "Raising the IOPS before the report and lowering them after",
+        "correct": true,
+        "why": "Right. A persistent disk would have to grow, and it cannot shrink back."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4wwgk6s",
+    "version": 1,
+    "section": "local-ssd",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these belongs on a local SSD?",
+    "hint": "Something that can be rebuilt.",
+    "choices": [
+      {
+        "text": "The orders database, for speed",
+        "correct": false,
+        "why": "Its data would be lost with the host."
+      },
+      {
+        "text": "Spill files of a sort",
+        "correct": true,
+        "why": "Right. Scratch space that a restart can rebuild."
+      },
+      {
+        "text": "The only copy of uploaded photos",
+        "correct": false,
+        "why": "Never the only copy of anything."
+      },
+      {
+        "text": "The machine's boot disk",
+        "correct": false,
+        "why": "A machine boots from a persistent disk or Hyperdisk."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5s6jbj1",
+    "version": 1,
+    "section": "local-ssd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A batch worker with a local SSD is stopped every night to save money. What does it find in the morning?",
+    "hint": "Stopping moves the machine off its host.",
+    "choices": [
+      {
+        "text": "Everything as it was, exactly as after an ordinary reboot",
+        "correct": false,
+        "why": "A reboot keeps the data; a stop does not, unless preserved."
+      },
+      {
+        "text": "The SSD detached and kept as a separate disk",
+        "correct": false,
+        "why": "A local SSD cannot exist apart from a host."
+      },
+      {
+        "text": "An empty local SSD, unless preservation was requested",
+        "correct": true,
+        "why": "Right. Stopping is the case that surprises people."
+      },
+      {
+        "text": "A snapshot of the SSD taken at the stop",
+        "correct": false,
+        "why": "Snapshots are of persistent disks and Hyperdisk, not local SSD."
+      }
+    ]
+  },
+  {
+    "id": "ex-pk8c9hwx",
+    "version": 1,
+    "section": "local-ssd",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At 0.08 per GiB-month, what do four local SSD slices of 375 GiB cost a month, in USD?",
+    "hint": "One slice is 30.",
+    "value": 120,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-m745czg1",
+    "version": 1,
+    "section": "local-ssd",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these events from the one that keeps a local SSD's data to the one that loses it with the machine gone for good.",
+    "hint": "Reboot and live migration keep it; deletion is final.",
+    "items": [
+      "The guest reboots",
+      "A live migration to another host",
+      "The machine is stopped",
+      "The machine is deleted"
+    ],
+    "trap": "Live migration copies the data to the new host, so it keeps it; a stop does not."
+  },
+  {
+    "id": "ex-xrwrnavr",
+    "version": 1,
+    "section": "local-ssd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a local SSD not be added to a running machine the way a persistent disk can?",
+    "hint": "Where is it?",
+    "choices": [
+      {
+        "text": "It is part of the host",
+        "correct": true,
+        "why": "Right. It is attached at creation and never afterwards."
+      },
+      {
+        "text": "Terraform has no resource for local SSDs",
+        "correct": false,
+        "why": "scratch_disk is how Terraform writes one."
+      },
+      {
+        "text": "Local SSDs are only sold with GPUs",
+        "correct": false,
+        "why": "An N2 takes them, as this lesson's file shows."
+      },
+      {
+        "text": "It needs a snapshot schedule first",
+        "correct": false,
+        "why": "Schedules are for persistent disks."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b4mxk9t",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the second snapshot of a disk copy?",
+    "hint": "Snapshots are incremental.",
+    "choices": [
+      {
+        "text": "The whole disk again, including empty blocks",
+        "correct": false,
+        "why": "Even the first copies only what is used."
+      },
+      {
+        "text": "Only the files the application marked for backup",
+        "correct": false,
+        "why": "A snapshot works on blocks, not files."
+      },
+      {
+        "text": "A copy of the first snapshot plus the changes",
+        "correct": false,
+        "why": "Nothing is copied twice."
+      },
+      {
+        "text": "Only the blocks that changed since the first",
+        "correct": true,
+        "why": "Right. That is what makes nightly snapshots cheap."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7rfqmy2",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The oldest of fourteen snapshots is deleted by the schedule. Is the next one still restorable?",
+    "hint": "What does Compute Engine do with blocks a newer snapshot still needs?",
+    "choices": [
+      {
+        "text": "No: it needed the oldest one's blocks, so the chain is broken",
+        "correct": false,
+        "why": "Deleting never breaks a newer snapshot."
+      },
+      {
+        "text": "Yes: the blocks it needs are moved to it",
+        "correct": true,
+        "why": "Right. Deletion is safe in any order."
+      },
+      {
+        "text": "Only if it was an archive snapshot",
+        "correct": false,
+        "why": "The kind does not decide this."
+      },
+      {
+        "text": "Only until the next schedule run",
+        "correct": false,
+        "why": "It stays restorable for as long as it is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2dpbyf8",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The schedule says start_time = \"04:00\". When does it run in São Paulo?",
+    "hint": "Which clock does the field use?",
+    "choices": [
+      {
+        "text": "At 04:00, since the policy is in southamerica-east1",
+        "correct": false,
+        "why": "The region does not set the time zone of the field."
+      },
+      {
+        "text": "At 04:00 in Iowa, where the prices come from",
+        "correct": false,
+        "why": "The price sheet has nothing to do with schedules."
+      },
+      {
+        "text": "At 01:00, because the field is in UTC",
+        "correct": true,
+        "why": "Right. São Paulo is three hours behind UTC."
+      },
+      {
+        "text": "At a random time within four hours",
+        "correct": false,
+        "why": "The time is the one written, in UTC."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzrdnn9t",
+    "version": 1,
+    "section": "snapshots",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A disk has 60 GiB in use and about 2 GiB changing a day. Ten nightly snapshots are kept. At most how many GiB do they hold, before compression?",
+    "hint": "The first holds what is used; each of the other nine holds a day of changes.",
+    "value": 78,
+    "tolerance": 0,
+    "unit": "GiB"
+  },
+  {
+    "id": "ex-37xk9x33",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson set on_source_disk_delete = \"KEEP_AUTO_SNAPSHOTS\"?",
+    "hint": "When are snapshots needed most?",
+    "choices": [
+      {
+        "text": "So that deleting the wrong disk leaves its snapshots to restore from",
+        "correct": true,
+        "why": "Right. That day is when the snapshots matter."
+      },
+      {
+        "text": "It makes the snapshots cheaper to store",
+        "correct": false,
+        "why": "It changes what survives, not the price."
+      },
+      {
+        "text": "Without it, the plan fails",
+        "correct": false,
+        "why": "The field is optional; a misspelt value fails, not a missing one."
+      },
+      {
+        "text": "It keeps the disk from being deleted at all",
+        "correct": false,
+        "why": "The disk can still be deleted; the snapshots stay."
+      }
+    ]
+  },
+  {
+    "id": "ex-44pekky0",
+    "version": 1,
+    "section": "snapshots",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A snapshot of a disk in use is crash-___: what you would find after pulling the power.",
+    "hint": "Not application-consistent.",
+    "blanks": [
+      {
+        "accept": [
+          "consistent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qza5sz6a",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the storage this lesson recommends.",
+    "hint": "Durability, two zones, speed bought separately, scratch.",
+    "pairs": [
+      {
+        "left": "A data disk that outlives its machine",
+        "right": "pd-balanced"
+      },
+      {
+        "left": "A database with no replica that must survive a zone failure",
+        "right": "a regional disk"
+      },
+      {
+        "left": "A database on N4 needing 6,000 IOPS on 100 GiB",
+        "right": "hyperdisk-balanced"
+      },
+      {
+        "left": "The spill files of a big sort",
+        "right": "a local SSD"
+      }
+    ],
+    "right_distractors": [
+      "an archive snapshot"
+    ]
+  },
+  {
+    "id": "ex-msa2zbd2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The orders-data disk is deleted by mistake on a Tuesday. With the lesson's schedule in place, what is the restore?",
+    "hint": "A restore never writes over anything.",
+    "choices": [
+      {
+        "text": "Undelete the disk from the recycle bin of the zone",
+        "correct": false,
+        "why": "The lesson's answer is the snapshots it kept."
+      },
+      {
+        "text": "Restore the disk in place from the archive snapshot",
+        "correct": false,
+        "why": "The schedule keeps standard snapshots, and a restore makes a new disk."
+      },
+      {
+        "text": "Nothing: the snapshots went with the disk",
+        "correct": false,
+        "why": "KEEP_AUTO_SNAPSHOTS is there to prevent exactly that."
+      },
+      {
+        "text": "Make a new disk from Monday night's snapshot",
+        "correct": true,
+        "why": "Right. The snapshots stayed, and the newest one has the data to 04:00 UTC."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dm8bm1s",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By the sheet, how much more a month does a 100 GiB pd-ssd cost than a 100 GiB pd-balanced, in USD?",
+    "hint": "0.17 against 0.1 per GiB-month.",
+    "value": 7,
+    "tolerance": 0.01,
+    "unit": "USD"
+  }
+]
