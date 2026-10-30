@@ -39,7 +39,7 @@
       },
       {
         "text": "O `no-cache` do HTTP também não guarda nada, então a comparação vale e a política faz o que a autora quer",
-        "why": "É a confusão contra a qual web-fundamentals avisa: `no-cache` pergunta, `no-store` recusa. O `no-cache` do HTTP guarda a cópia, sim."
+        "why": "É a confusão contra a qual *Fundamentos da Web e Internet* avisa: `no-cache` pergunta, `no-store` recusa. O `no-cache` do HTTP guarda a cópia, sim."
       }
     ]
   },
@@ -122,7 +122,7 @@
     ]
   },
   "ex-vyxddz0c": {
-    "prompt": "O planner responde em `example.com` e em `www.example.com`, sem redirecionamento entre os dois. Um aluno entra em `www.example.com`, segue um link para `example.com/course/git` e aparece como deslogado. O que explica isso, e o que a aula 4 de front-delivery faz a respeito?",
+    "prompt": "O planner responde em `example.com` e em `www.example.com`, sem redirecionamento entre os dois. Um aluno entra em `www.example.com`, segue um link para `example.com/course/git` e aparece como deslogado. O que explica isso, e o que a aula 4 de *Deploy, Design Systems e GraphQL* faz a respeito?",
     "hint": "Fundamentos da Web e Internet, aula 7; Deploy, Design Systems e GraphQL, aula 4.",
     "choices": [
       {
@@ -153,7 +153,7 @@
       },
       {
         "text": "As páginas que um estranho servir ali recebem o cookie de sessão do app, já que `Domain=example.com` cobre todo subdomínio",
-        "why": "Um cookie alargado vai para todo subdomínio, o abandonado incluído. Por isso web-fundamentals manda não alargar nada sem motivo."
+        "why": "Um cookie alargado vai para todo subdomínio, o abandonado incluído. Por isso *Fundamentos da Web e Internet* manda não alargar nada sem motivo."
       },
       {
         "text": "Apagar o `CNAME` primeiro e o projeto depois não teria deixado nada para tomar",
@@ -170,7 +170,7 @@
     ]
   },
   "ex-sc48zvwc": {
-    "prompt": "Na aula 10 de front-delivery o servidor GraphQL é parado, e o servidor de desenvolvimento registra `http proxy error: /graphql` com `ECONNREFUSED 127.0.0.1:4000`, enquanto a requisição da página recebe um 502. Lendo esse status como a aula 6 de web-fundamentals lê, onde está a falha?",
+    "prompt": "Na aula 10 de *Deploy, Design Systems e GraphQL* o servidor GraphQL é parado, e o servidor de desenvolvimento registra `http proxy error: /graphql` com `ECONNREFUSED 127.0.0.1:4000`, enquanto a requisição da página recebe um 502. Lendo esse status como a aula 6 de *Fundamentos da Web e Internet* lê, onde está a falha?",
     "hint": "Fundamentos da Web e Internet, aula 6; Deploy, Design Systems e GraphQL, aula 10.",
     "choices": [
       {
@@ -192,7 +192,7 @@
     ]
   },
   "ex-f9qf55s0": {
-    "prompt": "O servidor GraphQL do planner responde toda requisição com 200, inclusive as queries que falharam, e o painel da equipe conta falhas pelo código de status. A aula 6 de web-fundamentals lista o que um erro dentro de um 200 quebra. Quais dessas consequências valem aqui? Marque todas as que se aplicam.",
+    "prompt": "O servidor GraphQL do planner responde toda requisição com 200, inclusive as queries que falharam, e o painel da equipe conta falhas pelo código de status. A aula 6 de *Fundamentos da Web e Internet* lista o que um erro dentro de um 200 quebra. Quais dessas consequências valem aqui? Marque todas as que se aplicam.",
     "hint": "Deploy, Design Systems e GraphQL, aula 9; Fundamentos da Web e Internet, aula 6.",
     "choices": [
       {
@@ -299,7 +299,7 @@
     ]
   },
   "ex-g3hes5rx": {
-    "prompt": "O planner usa o service worker da aula 10 de front-performance: cache primeiro para `/assets/`, rede primeiro para as páginas. O deploy de hoje muda uma página e um script e deixa o `sw.js` como estava. Um visitante que volta precisa de um worker novo para ver a mudança?",
+    "prompt": "O planner usa o service worker da aula 10 de *Renderização, Performance e PWA*: cache primeiro para `/assets/`, rede primeiro para as páginas. O deploy de hoje muda uma página e um script e deixa o `sw.js` como estava. Um visitante que volta precisa de um worker novo para ver a mudança?",
     "hint": "Deploy, Design Systems e GraphQL, aula 1; Renderização, Performance e PWA, aula 10.",
     "choices": [
       {
@@ -1099,6 +1099,635 @@
       }
     ]
   },
+  "ex-3v6sfwt6": {
+    "prompt": "Um formulário lê o campo Minutos com `Number(new FormData(form).get(\"minutes\"))` e recusa a sessão quando `Number.isNaN(minutes)` dá verdadeiro. O campo não tem o atributo `required`. Alguém o deixa vazio e aperta Adicionar. O que a verificação enxerga?",
+    "hint": "JavaScript, aulas 2 e 12.",
+    "choices": [
+      {
+        "text": "`NaN`, e a sessão é recusada como se queria, porque uma string vazia não tem dígito nenhum para converter",
+        "why": "`Number` dá `NaN` para um texto que não consegue ler, como `\"42px\"`. A string vazia é a exceção que a aula 2 chama de armadilha: ela vira `0`."
+      },
+      {
+        "text": "`null`, já que ninguém digitou no campo, e `Number(null)` sai como `NaN`",
+        "why": "Todo campo volta do `FormData` como string, inclusive vazio, então o valor é `\"\"` e não `null`."
+      },
+      {
+        "text": "`0`, que não é `NaN`, então a verificação deixa passar; um `required` teria barrado o envio",
+        "why": "`Number(\"\")` é `0`, então uma verificação de `NaN` aceita o campo vazio. A validação nativa roda antes de o `submit` disparar, e é por isso que a aula 12 a põe primeiro."
+      },
+      {
+        "text": "A própria string `\"\"`, já que `Number` devolve o argumento sem mudança quando não consegue convertê-lo",
+        "why": "`Number` sempre devolve um número: o que leu, ou `NaN`. Nunca devolve a string que recebeu."
+      }
+    ]
+  },
+  "ex-5qyynhyw": {
+    "prompt": "Uma página de busca deve desistir de uma requisição que não respondeu em dois segundos, e o código que pega o erro precisa distinguir esse caso de alguém apertando Cancelar. Complete a opção: `fetch(url, { signal: AbortSignal.___(2000) })`",
+    "hint": "JavaScript, aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout"
+        ]
+      }
+    ]
+  },
+  "ex-emtvrt8g": {
+    "prompt": "Um colega reescreve o `markDone` do planner como `const next = { ...plan }; next.sessions.find((s) => s.id === id).done = true; return next;`, e a tela do React Native chama `setPlan(markDone(plan, id))`. O que há de errado?",
+    "hint": "JavaScript, aula 4; Apps Desktop e Mobile com Web, aula 7.",
+    "choices": [
+      {
+        "text": "O spread copia um nível só, então a sessão marcada pertence também ao plano antigo: o plano antigo foi editado no lugar",
+        "why": "`next.sessions` é o mesmo array de `plan.sessions`, com os mesmos objetos. As regras da aula 7 devolvem um plano novo e nunca editam o antigo, e foi por isso que puderam ir para o React sem mudança."
+      },
+      {
+        "text": "Nada: `next` é um objeto novo, então o plano antigo fica como estava e o React recebe um plano novo para desenhar",
+        "why": "O objeto de fora é novo, e é só isso que um spread faz de novo. A sessão alterada é a mesma para a qual o plano antigo também aponta."
+      },
+      {
+        "text": "O `find` devolve uma cópia da sessão, então mudar o `done` nela não altera nenhum dos dois planos",
+        "why": "O `find` devolve o próprio elemento, uma referência ao objeto que está no array. Escrever por ela muda esse objeto."
+      },
+      {
+        "text": "`{ ...plan }` copia tudo até o fundo, como faz o `structuredClone`, então o código está certo e só é mais lento do que precisava",
+        "why": "Essa é justamente a diferença que a aula 4 mostra: `structuredClone` copia até o fundo e o spread copia um nível."
+      }
+    ]
+  },
+  "ex-9d187m5z": {
+    "prompt": "Uma página guarda o tamanho medido de cada elemento em `const sizes = new Map()`, com o próprio elemento como chave. Linhas saem da lista o dia todo, e a memória da página não para de crescer. O que as aulas oferecem, e por que serve?",
+    "hint": "JavaScript, aulas 5 e 19.",
+    "choices": [
+      {
+        "text": "Esvaziá-lo com `sizes.clear()` num `setInterval` a cada minuto, o que o limita, entrem e saiam as linhas como for",
+        "why": "Isso joga fora os tamanhos de linhas ainda na tela e mantém as removidas até o próximo tique. As aulas amarram a vida de cada entrada à sua chave."
+      },
+      {
+        "text": "Usar como chave a string de id de cada elemento, para a entrada não segurar mais o próprio elemento",
+        "why": "As entradas continuam nunca saindo. Uma chave string guarda o tamanho para sempre como a chave objeto guardava, e nada amarra a entrada à linha."
+      },
+      {
+        "text": "Um `WeakSet` dos elementos, que os mantém listados sem virar o motivo de eles existirem",
+        "why": "Um `WeakSet` marca objetos e não guarda valor nenhum ao lado de cada um, então não tem onde pôr um tamanho."
+      },
+      {
+        "text": "Um `WeakMap` com o elemento como chave, que não mantém vivas as linhas removidas",
+        "why": "A aula 5 cita exatamente esse cache, o tamanho medido de cada elemento, e a aula 19 usa um `WeakMap` quando as chaves são objetos cuja vida deve decidir a da entrada."
+      }
+    ]
+  },
+  "ex-nz7dy9mr": {
+    "prompt": "Um widget de gráfico roda `window.addEventListener(\"resize\", this.redraw.bind(this))` quando é criado e `window.removeEventListener(\"resize\", this.redraw.bind(this))` quando a página o remove. A closure dele segura um array grande de pontos. Marque todas as que se aplicam.",
+    "hint": "JavaScript, aulas 7 e 19.",
+    "choices": [
+      {
+        "text": "A remoção não faz nada, porque cada `bind` cria uma função nova e as duas não são `===`",
+        "why": "O `removeEventListener` procura a mesma função, comparada com `===`, e um segundo `bind` é uma segunda função."
+      },
+      {
+        "text": "Todo widget removido fica na memória com seus pontos, porque o `window` ainda segura o listener dele",
+        "why": "Um listener vive enquanto viver o objeto que ele escuta, com tudo o que a closure capturou. O `window` vive enquanto a página viver."
+      },
+      {
+        "text": "A remoção funciona, já que as duas chamadas fazem o bind do mesmo método no mesmo objeto",
+        "why": "Mesmo método e mesmo objeto ainda dão duas funções ligadas diferentes, que é o bug que a aula 7 mostra com a campainha."
+      },
+      {
+        "text": "Fazer o bind uma vez no construtor e passar esse mesmo valor às duas chamadas resolve",
+        "why": "É a regra da aula 7: um bind só, guardado, usado para adicionar e para remover. Aí o listener sai, e o widget junto."
+      },
+      {
+        "text": "O coletor libera o widget mesmo assim, já que nenhuma variável da própria página aponta mais para ele",
+        "why": "O coletor mantém tudo o que se alcança a partir de uma raiz, e o `window`, pela lista de listeners, alcança a closure do widget."
+      }
+    ]
+  },
+  "ex-zk1rzvw3": {
+    "prompt": "Um erro de digitação, `totl = 0;` no lugar de `total = 0;`, está numa função em cada um destes lugares. Em quais ele lança um `ReferenceError` em vez de criar uma global sem avisar? Marque todas as que se aplicam.",
+    "hint": "JavaScript, aula 20; Apps Desktop e Mobile com Web, aula 11.",
+    "choices": [
+      {
+        "text": "o `src/main.ts` do planner, carregado por `<script type=\"module\">`",
+        "why": "Um módulo é strict sem precisar da string, no navegador como no Node."
+      },
+      {
+        "text": "o `electron/preload.cjs` do planner no Electron, como a aula 11 o escreveu",
+        "why": "Um arquivo `.cjs` é CommonJS, que é sloppy a não ser que diga `\"use strict\"`, e o preload da aula 11 não diz."
+      },
+      {
+        "text": "um método dentro do corpo de uma `class`, num arquivo `.cjs`",
+        "why": "Todo corpo de classe é strict, seja qual for o arquivo em volta."
+      },
+      {
+        "text": "um atributo `onclick=\"…\"` escrito no HTML",
+        "why": "Um handler inline roda como código sloppy; a sonda da aula 20 imprimiu `false`."
+      },
+      {
+        "text": "o `electron/main.mjs` do planner no Electron",
+        "why": "Um arquivo `.mjs` é um módulo ES no Node, e módulo ES é strict."
+      },
+      {
+        "text": "um `<script>` clássico sem `\"use strict\"` no topo",
+        "why": "Um script clássico é sloppy a não ser que ligue o modo strict por conta própria."
+      }
+    ]
+  },
+  "ex-6we7xx56": {
+    "prompt": "Uma página de estatísticas desenha o gráfico com uma biblioteca grande. O time troca o `import` da biblioteca por `import()`, para as outras páginas pararem de baixá-la. Que custo novo isso traz, e o que a aula 8 faz a respeito?",
+    "hint": "JavaScript, aula 9; Renderização, Performance e PWA, aula 8.",
+    "choices": [
+      {
+        "text": "A biblioteca passa a rodar em toda página, porque o `import()` sobe como um import estático, e nada se economiza",
+        "why": "O `import()` carrega o módulo quando a linha é alcançada; o programa da aula 9 nunca carregou `report.mjs` na execução que não pediu."
+      },
+      {
+        "text": "O chunk só é buscado quando a linha roda, e alguém espera; um `import()` no `pointerover` o busca antes",
+        "why": "Código carregado sob demanda é código que alguém espera. O ponteiro chega no link algumas centenas de milissegundos antes do clique, tempo para buscar o chunk."
+      },
+      {
+        "text": "Toda página passa a baixar mais um arquivo, o chunk, ao abrir, e um `<link rel=\"prefetch\">` o elimina",
+        "why": "As páginas que nunca rodam o `import()` nunca baixam o chunk; a página de curso não baixou código de gráfico nenhum."
+      },
+      {
+        "text": "O navegador recusa `import()` sem um import map, então o build precisa escrever um em toda página",
+        "why": "Import map serve para um nome solto que o navegador não sabe achar; o `import()` em si funciona numa página, e o bundler escreve o endereço real do chunk."
+      }
+    ]
+  },
+  "ex-e5hh17tx": {
+    "prompt": "Com os auxiliares da aula 14, em que `wait(ms, v)` cumpre com `v` depois de `ms` milissegundos e `fail(ms, m)` rejeita depois de `ms`, um programa roda `await Promise.any([fail(100, \"A is down\"), wait(400, \"B\"), wait(250, \"C\")])`. Cerca de quantos milissegundos depois do início dessa linha o `await` devolve o valor?",
+    "hint": "JavaScript, aula 14."
+  },
+  "ex-wzsv3fhq": {
+    "prompt": "A anotação de uma sessão é mostrada com `p.innerHTML = note`. O time adiciona uma Content Security Policy com `script-src 'self'` e fecha o chamado. Uma testadora salva a anotação `<b>3</b>` e vê um 3 em negrito. O que isso diz a ela?",
+    "hint": "JavaScript, aula 11; Testes, Segurança e Acessibilidade, aulas 8 e 9.",
+    "choices": [
+      {
+        "text": "A política não está sendo servida, porque com `script-src 'self'` o navegador recusa qualquer marcação que uma pessoa digitou",
+        "why": "Uma política diz de onde o código pode vir. Ela não tem nada a dizer sobre um `<b>`, que é marcação e não script."
+      },
+      {
+        "text": "Nada com que se preocupar: negrito não é script, e a política agora recusa o que quer que uma anotação faça",
+        "why": "A política barra um script injetado; não faz nada contra o próprio código da página transformando o texto de alguém em elementos, formulários e links incluídos."
+      },
+      {
+        "text": "A página ainda monta elementos com o que uma pessoa digitou; a correção é escrever a anotação com `textContent`",
+        "why": "O `<b>` é a testemunha da aula 9. Texto entra pelo método de texto, e `textContent` nunca lê sua string como HTML."
+      },
+      {
+        "text": "O navegador guardou a página antiga no cache, e um recarregamento forçado faz a política mostrar a anotação como texto puro",
+        "why": "Uma política nunca transforma marcação em texto, com cache ou sem. Só escrever o valor como texto faz isso."
+      }
+    ]
+  },
+  "ex-0e6c14wv": {
+    "prompt": "Um time entrega o mesmo controle Emprestar duas vezes: na web como uma `<div>` com listener de clique, e no app React Native como um `Pressable` sem `role`. Os dois parecem botões. O que cada um faz com quem não usa um ponteiro, e o que conserta cada um?",
+    "hint": "JavaScript, aula 12; Apps Desktop e Mobile com Web, aula 8.",
+    "choices": [
+      {
+        "text": "O Tab pula a `<div>`, e o leitor de tela anuncia o `Pressable` como nada em especial; `<button>` e `role=\"button\"` resolvem",
+        "why": "Uma `<div>` não recebe foco, então o teclado nunca chega nela. No React Native é o `role` que o TalkBack e o VoiceOver anunciam."
+      },
+      {
+        "text": "Os dois funcionam: Enter num elemento focado dispara o listener de clique, seja qual for o elemento",
+        "why": "O navegador transforma Enter e Espaço num clique num botão, não numa `<div>`, e a `<div>` nem chega a receber foco."
+      },
+      {
+        "text": "O Tab chega na `<div>` mas o Enter não faz nada, e o TalkBack pula o `Pressable`; um `tabindex` resolve os dois",
+        "why": "O Tab pulou a `<div>` na aula 12. E `tabindex` é um atributo da web; não diz nada a um leitor de tela nativo."
+      },
+      {
+        "text": "Só o da web; o React Native não tem suporte a leitor de tela, então o app precisa de uma versão acessível separada",
+        "why": "Um app React Native é lido pelo leitor de tela da própria plataforma, a partir das props `role` e `aria-label` que recebe."
+      }
+    ]
+  },
+  "ex-1edp3rra": {
+    "prompt": "Ponha as linhas que este programa imprime na ordem em que aparecem.\n\n```javascript\nsetTimeout(() => {\n  console.log(\"first timer\");\n  queueMicrotask(() => console.log(\"microtask from the first timer\"));\n}, 0);\nsetTimeout(() => console.log(\"second timer\"), 0);\nasync function load() {\n  console.log(\"load begins\");\n  await null;\n  console.log(\"load resumes\");\n}\nload();\nconsole.log(\"end\");\n```",
+    "hint": "JavaScript, aulas 13 e 14.",
+    "items": [
+      "`load begins`",
+      "`end`",
+      "`load resumes`",
+      "`first timer`",
+      "`microtask from the first timer`",
+      "`second timer`"
+    ],
+    "trap": "O deslize mais provável é pôr `load resumes` logo depois de `load begins`. O que vem depois de um `await` roda mais tarde, como microtarefa, então `end` vem antes; e uma microtarefa enfileirada por uma tarefa roda antes da tarefa seguinte."
+  },
+  "ex-yvrd51xj": {
+    "prompt": "Uma página roda a ordenação de dois segundos da aula 13 quando Sort é clicado. Um décimo de segundo depois, alguém clica em Ping, cujo handler só registra uma linha. Medida com `web-vitals`, qual parte da interação do Ping é a longa?",
+    "hint": "JavaScript, aula 13; Renderização, Performance e PWA, aula 5.",
+    "choices": [
+      {
+        "text": "O processamento, já que o handler do Ping é o que está rodando enquanto a pessoa espera a próxima pintura",
+        "why": "O handler do Ping roda quase nada depois que começa. A espera aconteceu antes de ele poder começar."
+      },
+      {
+        "text": "O atraso de apresentação, porque o navegador tem dois segundos de layout para fazer antes de pintar a mudança do Ping",
+        "why": "Apresentação é estilo, layout e pintura depois dos handlers. O Ping não muda nada na página, e a ordenação não era layout."
+      },
+      {
+        "text": "Nenhuma: o INP conta só o trabalho do handler mais lento, e o do Ping quase não leva tempo",
+        "why": "O INP vai do toque até a próxima pintura, e o tempo antes de o handler começar faz parte dele."
+      },
+      {
+        "text": "O atraso de entrada: o Ping espera quase 2 s para começar, porque a thread única está ocupada",
+        "why": "O clique entrou na fila na hora e foi atendido cerca de 2000 ms depois do início da ordenação. A aula 5 chama essa espera de atraso de entrada, longo sempre que a thread principal está ocupada com outra coisa."
+      }
+    ]
+  },
+  "ex-ga5weryg": {
+    "prompt": "A cascata de uma página mostra todas as requisições terminadas nos primeiros 300 ms, depois um trecho longo sem barra nenhuma, e a página aparece em cerca de dois segundos. Para onde a busca pelo atraso deve ir agora?",
+    "hint": "JavaScript, aula 22; Fundamentos da Web e Internet, aula 11.",
+    "choices": [
+      {
+        "text": "Para o servidor: o tempo depois da última requisição pertence à barra de espera, então é na API que cabe um perfil",
+        "why": "A barra de espera faz parte da linha de uma requisição, e todas as linhas tinham terminado. Um vão sem barras é tempo em que nada estava na rede."
+      },
+      {
+        "text": "O navegador estava ocupado, não a rede; um perfil em Bottom-Up, por self time, aponta a função",
+        "why": "Um vão longo sem nada é o navegador lendo ou rodando script. O profiler conta onde o programa estava, e o self time aponta o código que fez o trabalho."
+      },
+      {
+        "text": "Eram awaits em sequência, e o `Promise.all` fecha o vão",
+        "why": "Awaits em sequência desenham uma escada de barras, cada uma começando quando a anterior acaba. Este gráfico não tem barra nenhuma na parte lenta."
+      },
+      {
+        "text": "Os arquivos são grandes, e comprimi-los encolhe a barra de download de que o vão é feito",
+        "why": "Download é uma barra na linha de uma requisição. As linhas acabaram em 300 ms, então arquivos menores não encurtam o que veio depois."
+      }
+    ]
+  },
+  "ex-nfh1631c": {
+    "prompt": "Uma página instala o `watchErrors()` da aula 11. As configurações são lidas com `try { settings = JSON.parse(text); } catch { settings = {}; }`, e um arquivo salvo com uma vírgula a mais dá silenciosamente os padrões a todo usuário. Por que o monitor nunca relatou isso, e o que resolve?",
+    "hint": "JavaScript, aula 17; Deploy, Design Systems e GraphQL, aula 11.",
+    "choices": [
+      {
+        "text": "O listener de `error` só dispara para um `SyntaxError` encontrado na primeira leitura da página, então falta também o `unhandledrejection`",
+        "why": "Aqui o `JSON.parse` é síncrono e não há promise envolvida, e o evento `error` vê qualquer exceção que escape, a qualquer momento."
+      },
+      {
+        "text": "O `sendBeacon` recusou o relatório porque a página não estava fechando, e trocar por `fetch` o entrega",
+        "why": "O `sendBeacon` envia sempre que é chamado, fechando ou não. Relatório nenhum foi feito, porque nada chegou ao `report`."
+      },
+      {
+        "text": "O `catch` o pegou, então nada chegou ao `window`; esse `catch` precisa chamar `report` ou relançar",
+        "why": "Os dois eventos do `window` só veem o que nenhum `catch` pegou. Um erro engolido é invisível para eles, e é por isso que a aula 11 relata também dos `catch`es da própria página."
+      },
+      {
+        "text": "O `JSON.parse` devolve `undefined` para uma entrada ruim em vez de lançar, então não havia erro para relatar",
+        "why": "O `JSON.parse` lança um `SyntaxError` que diz a posição. O `catch` o recebeu e o descartou."
+      }
+    ]
+  },
+  "ex-dvmcfesp": {
+    "prompt": "Um teste chama `start(root(), async () => Response.json(data))` sem `await` e, na linha seguinte, verifica `screen.getByRole(\"heading\", { name: \"Study planner\" })`. Ele falha sem achar o título, embora a página funcione. Por quê, e o que a aula 3 escreve no lugar?",
+    "hint": "JavaScript, aula 14; Testes, Segurança e Acessibilidade, aula 3.",
+    "choices": [
+      {
+        "text": "A página desenha só depois do `load()`; o `findByRole` consulta até o elemento existir",
+        "why": "Uma função `async` devolve uma promise na hora, e o trabalho depois do `await load()` roda mais tarde. O `findBy…` consulta de novo e volta assim que o elemento está lá."
+      },
+      {
+        "text": "O jsdom não tem `fetch`, a página nunca carrega e o teste pede um navegador real",
+        "why": "O teste passa o próprio `load`, então nenhum `fetch` é chamado. A página carrega, só que depois da verificação."
+      },
+      {
+        "text": "O `getByRole` só vê o que foi desenhado antes de o teste começar, então meio segundo de pausa e a mesma consulta resolvem",
+        "why": "Uma pausa fixa falha numa máquina lenta e desperdiça tempo numa rápida. A aula 3 espera pela coisa, nunca pelo relógio."
+      },
+      {
+        "text": "O `Response.json(data)` monta uma resposta 500, que a página trata como carga falha e avisa",
+        "why": "O `Response.json` monta o 200 que um servidor mandaria com esses dados. O caso de falha da aula 3 passa `new Response(\"\", { status: 500 })`."
+      }
+    ]
+  },
+  "ex-fjk312c4": {
+    "prompt": "O `package.json` de uma dependência nova tem um script `postinstall`. Marque todas as que se aplicam.",
+    "hint": "JavaScript, aula 21; Testes, Segurança e Acessibilidade, aula 9.",
+    "choices": [
+      {
+        "text": "Com os padrões do npm, ele roda durante a instalação, como o seu usuário, e o npm não imprime nada sobre isso",
+        "why": "O `shelf-banner` deixou um arquivo para trás e o npm não disse nada; o arquivo foi o único sinal de que o script rodou."
+      },
+      {
+        "text": "O `npm ci --ignore-scripts` instala os arquivos do pacote e não roda nenhum dos scripts dele",
+        "why": "Essa execução não deixou arquivo. O custo é que um pacote que precisa mesmo compilar algo para de funcionar até você o recompilar de propósito."
+      },
+      {
+        "text": "O pnpm 10 o roda do mesmo jeito que o npm, e o Yarn 4 é o gerenciador que pula scripts de build por padrão",
+        "why": "É o contrário: o pnpm 10 pula os scripts de build de uma dependência a não ser que o projeto a nomeie, e o Yarn 4 os roda a não ser com `enableScripts: false`."
+      },
+      {
+        "text": "O `npm audit` lê o script e recusa o pacote antes de o script ter chance de rodar",
+        "why": "O `npm audit` lista vulnerabilidades conhecidas das versões instaladas. Não lê scripts, e roda depois da instalação."
+      },
+      {
+        "text": "Um pacote usado só pelo build nunca chega ao navegador, então os scripts dele rodam sem os direitos de ninguém",
+        "why": "O que chega ao navegador roda com os direitos da página, e o que roda no build ou nos testes roda com os seus."
+      }
+    ]
+  },
+  "ex-6z8j916f": {
+    "prompt": "Uma página em `https://app.example` envia um empréstimo com `fetch(\"https://api.example/loans\", { method: \"POST\", body: new FormData(form) })`, e as respostas da API não trazem cabeçalhos CORS. O `fetch` rejeita com `TypeError: Failed to fetch`, e o `withRetries` da aula 16 o envia mais três vezes. O que o laço provavelmente fez?",
+    "hint": "JavaScript, aula 16; Testes, Segurança e Acessibilidade, aula 7.",
+    "choices": [
+      {
+        "text": "Nada: uma falha de CORS quer dizer que o navegador nunca mandou a requisição, então toda nova tentativa falhou no mesmo ponto",
+        "why": "Um corpo que um formulário comum mandaria faz uma requisição simples, sem preflight. Ela chegou ao servidor; o navegador só escondeu a resposta da página."
+      },
+      {
+        "text": "Resolveu: na segunda tentativa o navegador põe os cabeçalhos CORS sozinho",
+        "why": "Os cabeçalhos CORS são a permissão do servidor, enviada na resposta. O navegador não pode concedê-los a si mesmo em tentativa nenhuma."
+      },
+      {
+        "text": "Repetiu um 404, o que a aula 16 diz que nunca ajuda, já que `Failed to fetch` é como um 404 chega",
+        "why": "Um 404 é uma resposta, e o `fetch` resolve com ele, com `ok: false`. `Failed to fetch` é a rejeição quando a página não recebe resposta que possa usar."
+      },
+      {
+        "text": "Quatro empréstimos, se o servidor salvou cada um: toda requisição chegou, e só a resposta foi escondida",
+        "why": "O CORS não impediu a requisição de chegar ao servidor. Um `POST` que funcionou e do qual nunca se teve notícia é exatamente o caso que a aula 16 manda não repetir."
+      }
+    ]
+  },
+  "ex-b76xzedg": {
+    "prompt": "Depois de uma revisão, um colega passa o token de sessão do `localStorage` para o `sessionStorage`, dizendo que um script injetado não consegue mais levá-lo. O que as duas aulas dizem?",
+    "hint": "JavaScript, aula 18; Testes, Segurança e Acessibilidade, aula 6.",
+    "choices": [
+      {
+        "text": "Ele tem razão: o `sessionStorage` pertence a uma aba, e um script injetado roda num contexto próprio",
+        "why": "Uma aba é a aba da página, e o script injetado roda nessa página. Todo script da mesma origem lê o mesmo `sessionStorage`."
+      },
+      {
+        "text": "Todo script da origem lê o `sessionStorage` também; só um cookie `HttpOnly` fica escondido deles",
+        "why": "A tabela da aula 6: os dois armazenamentos ficam abertos a todo script da origem, e só o cookie `HttpOnly` esconde o segredo deles."
+      },
+      {
+        "text": "Ele tem razão só em `https://`, onde o navegador mantém o `sessionStorage` cifrado entre leituras",
+        "why": "Nada nas duas aulas cifra o armazenamento web. O `https://` protege o caminho pela rede, não o que um script na página consegue ler."
+      },
+      {
+        "text": "Ficou pior: o `sessionStorage` vai ao servidor em toda requisição, como faz um cookie sem `HttpOnly`",
+        "why": "O armazenamento web é enviado pelo seu código e por mais nada. Cookies é que o navegador anexa a toda requisição."
+      }
+    ]
+  },
+  "ex-m21waavw": {
+    "prompt": "Associe cada necessidade à ferramenta que as aulas usam.",
+    "hint": "JavaScript, aulas 13 e 15.",
+    "pairs": [
+      {
+        "left": "uma barra na tela que cresce um pouco a cada quadro",
+        "right": "`requestAnimationFrame`"
+      },
+      {
+        "left": "consultar um servidor cuja resposta pode demorar mais que o intervalo",
+        "right": "um `setTimeout` encadeado"
+      },
+      {
+        "left": "uma busca enviada quando a pessoa para de digitar",
+        "right": "debounce"
+      },
+      {
+        "left": "atualizações regulares enquanto a página está rolando",
+        "right": "throttle"
+      },
+      {
+        "left": "um passo seguinte que precisa rodar antes de qualquer outra tarefa",
+        "right": "`queueMicrotask`"
+      }
+    ],
+    "right_distractors": [
+      "`setInterval`",
+      "um laço `while` que confere `performance.now()`"
+    ]
+  },
+  "ex-b8zhcha3": {
+    "prompt": "Associe cada ferramenta a quem desenha a tela do planner nela, e ao que do planner vai junto.",
+    "hint": "Apps Desktop e Mobile com Web, aula 10.",
+    "pairs": [
+      {
+        "left": "Capacitor",
+        "right": "uma WebView, e o planner inteiro vai junto"
+      },
+      {
+        "left": "React Native",
+        "right": "as views da própria plataforma, com React; as regras vão junto"
+      },
+      {
+        "left": "NativeScript",
+        "right": "as views da própria plataforma, com qualquer de vários frameworks; as regras vão junto"
+      },
+      {
+        "left": "Flutter",
+        "right": "o próprio motor, pixel a pixel; as regras são escritas de novo em Dart"
+      },
+      {
+        "left": "Ionic",
+        "right": "a mesma WebView do Capacitor, com componentes com cara de celular"
+      }
+    ],
+    "right_distractors": [
+      "as views da plataforma, convertidas do HTML do planner na hora do build",
+      "uma cópia do Chromium que ele carrega, com o Node.js ao lado"
+    ]
+  },
+  "ex-af8h2209": {
+    "prompt": "Alguém baixa o `.deb` do planner da página de release, com `SHA256SUMS`, `SHA256SUMS.asc` e o `planner-signing-key.asc` publicado. Ponha em ordem os passos da aula 14 para conferi-lo.",
+    "hint": "Apps Desktop e Mobile com Web, aula 14.",
+    "items": [
+      "Importar a chave publicada com `gpg --import planner-signing-key.asc`",
+      "Conferir a assinatura da lista com `gpg --verify SHA256SUMS.asc SHA256SUMS`",
+      "Conferir os pacotes contra a lista com `sha256sum -c SHA256SUMS`",
+      "Instalar o `.deb`, agora que as duas conferências disseram que está bom"
+    ],
+    "trap": "O deslize mais provável é rodar o `sha256sum -c` primeiro. Uma lista que bate com os arquivos prova pouco antes de a assinatura mostrar que ninguém a editou, porque quem pudesse mudar um arquivo poderia mudar a lista ao lado dele."
+  },
+  "ex-6j9r8e59": {
+    "prompt": "O planner deve manter a tela acesa durante uma sessão de estudo. Uma colega mostra a Screen Wake Lock API funcionando no Chrome do computador e diz que o app não precisa de plugin para isso. O que a aula 5 diz que esse teste deixa em aberto?",
+    "hint": "Apps Desktop e Mobile com Web, aula 5.",
+    "choices": [
+      {
+        "text": "Nada: a WebView é Chromium nos dois sistemas, então uma API que o Chrome do computador tem está lá no app",
+        "why": "A WebView do iOS é feita sobre o WebKit, o motor do Safari. Só a do Android é feita sobre o Chromium."
+      },
+      {
+        "text": "Se as lojas aceitam APIs da web, já que as duas recusam um app que chama uma em vez de um plugin",
+        "why": "Nenhuma regra das lojas trata de como o app é feito; a aula 6 diz que o critério é o que o app faz."
+      },
+      {
+        "text": "Se a WebView a tem nos dois sistemas: uma WebView não é o navegador de que é feita, e o Safari só a ganhou anos depois",
+        "why": "Essa é a primeira pergunta da aula 5, e o wake lock é o exemplo dela. Uma API do navegador pode faltar ou vir limitada na WebView feita a partir dele."
+      },
+      {
+        "text": "Se existe um plugin oficial, que a aula 5 manda procurar antes de considerar qualquer API da web",
+        "why": "A ordem da aula 5 começa pela web: ela já faz isso? O plugin oficial é a segunda pergunta."
+      }
+    ]
+  },
+  "ex-5w2z8b5s": {
+    "prompt": "Para testar uma configuração de build, um desenvolvedor acrescenta uma linha no começo de um arquivo em `android/app` cuja primeira linha diz que ele é gerado toda vez que o `capacitor update` roda. Depois do próximo `npx cap sync` a linha sumiu, e nada avisou. Qual era o arquivo? `android/app/___`",
+    "hint": "Apps Desktop e Mobile com Web, aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "capacitor.build.gradle"
+        ]
+      }
+    ]
+  },
+  "ex-1aqbjap0": {
+    "prompt": "O planner pede permissão de notificação no instante em que abre, e no iOS a pessoa toca em Não Permitir. Uma semana depois ela aperta Lembrar-me, e o app chama `requestPermissions()` de novo. O que acontece, e qual deveria ter sido o desenho?",
+    "hint": "Apps Desktop e Mobile com Web, aula 4; JavaScript, aula 18.",
+    "choices": [
+      {
+        "text": "Falha na hora, sem diálogo; o certo era pedir no toque do botão e, depois de um não, seguir sem lembretes",
+        "why": "No iOS o diálogo aparece uma vez e um pedido depois falha na hora. As duas aulas pedem no momento do uso, e uma recusa deixa o resto do app funcionando."
+      },
+      {
+        "text": "O iOS mostra o diálogo de novo, já que passou uma semana, então pedir na abertura serve se repetir",
+        "why": "Uma recusa não expira: um pedido depois falha na hora, e só a pessoa pode mudar a resposta, nos ajustes."
+      },
+      {
+        "text": "O plugin responde `prompt`, que quer dizer que a pessoa pode ser perguntada de novo, então o app insiste até ela aceitar",
+        "why": "`prompt` quer dizer que ninguém foi perguntado ainda. Depois do toque a resposta é `denied`, e perguntar de novo não mostra nada."
+      },
+      {
+        "text": "O pedido abre os ajustes do sistema para a pessoa, então o momento em que o app pergunta pouco importa",
+        "why": "Nenhuma das duas aulas tem um pedido abrindo os ajustes. Ele falha, e a pessoa precisa ir até lá por conta própria."
+      }
+    ]
+  },
+  "ex-dfye6phn": {
+    "prompt": "A medição da aula 6 imprime `5000 sessions, processor slowed 4x: open 920 ms`. Um colega propõe reescrever o planner em React Native porque a WebView é lenta demais. Lido com os limites da aula 5, o que o número diz?",
+    "hint": "Apps Desktop e Mobile com Web, aula 6; Renderização, Performance e PWA, aula 5.",
+    "choices": [
+      {
+        "text": "Precisa melhorar, fica entre 200 e 500 ms, e uma reescrita nativa é o que o leva para baixo de 200",
+        "why": "920 ms passa de 500, a linha do ruim. E a reescrita mira a causa errada."
+      },
+      {
+        "text": "É bom, já que o INP só conta o atraso de entrada e esses 920 ms são quase todos o handler rodando",
+        "why": "O INP são as três partes, atraso de entrada, processamento e apresentação, do toque até a próxima pintura."
+      },
+      {
+        "text": "É ruim, e a causa é a WebView, já que em velocidade total o mesmo toque levou só 167 ms",
+        "why": "A velocidade total só esconde o custo num computador rápido. O tempo cresce com o número de sessões, que é o desenho do planner."
+      },
+      {
+        "text": "É ruim, passa de 500 ms, e o tempo é o `render()` do planner reconstruindo cada linha, o que uma reescrita mantém",
+        "why": "O `render()` joga a tela fora e a monta de novo a cada mudança. A aula 6 manda medir primeiro e corrigir o desenho, desenhando menos, antes de culpar a WebView."
+      }
+    ]
+  },
+  "ex-793y12r3": {
+    "prompt": "A próxima mudança de um app Expo deve sair como atualização over-the-air, sem build novo na loja. Pela tabela da aula 9, quais mudanças podem ir por esse caminho? Marque todas as que se aplicam.",
+    "hint": "Apps Desktop e Mobile com Web, aula 9.",
+    "choices": [
+      {
+        "text": "a correção de um bug numa das telas",
+        "why": "JavaScript e assets são o que uma atualização carrega, e a correção de uma tela é isso."
+      },
+      {
+        "text": "um texto, uma cor ou uma imagem nova",
+        "why": "Isso muda o que o bundle desenha e nada nativo."
+      },
+      {
+        "text": "uma tela nova feita com componentes que já estão no app, se ela não muda o que o app é",
+        "why": "Permitido, dentro das regras das lojas: o revisor aprovou um app, e a atualização não pode transformá-lo em outro."
+      },
+      {
+        "text": "uma biblioteca de câmera que traz uma permissão nova",
+        "why": "O app instalado não tem esse código nativo, e um bundle que o chama para na chamada. Isso pede build de loja e uma runtime version nova."
+      },
+      {
+        "text": "transformar o planner numa loja, com o código nativo exatamente como está",
+        "why": "Um propósito novo nunca é atualização, seja qual for o código: é um app novo para um revisor ver."
+      }
+    ]
+  },
+  "ex-q44cvgzd": {
+    "prompt": "O planner no Electron escreve a anotação de uma sessão com `innerHTML`, e uma anotação forjada roda um script na janela. Com os `webPreferences` e o preload da aula 11, o que esse script alcança?",
+    "hint": "Apps Desktop e Mobile com Web, aula 11; JavaScript, aula 11.",
+    "choices": [
+      {
+        "text": "Qualquer arquivo que o usuário possa ler, porque o processo principal roda Node.js e a janela pertence a ele",
+        "why": "O processo principal tem Node; a página não. `require` e `process` são indefinidos na janela, e o processo principal atende um canal só."
+      },
+      {
+        "text": "O que a própria página alcança, mais o `window.desktop.exportPlan`, cujo handler confere o que recebe",
+        "why": "O `contextIsolation` deixa para a página uma função só do preload, e o `ipcMain.handle` recusa o que não for string de até um milhão de caracteres."
+      },
+      {
+        "text": "Nada: o `sandbox: true` impede de rodar na janela qualquer script de fora do `dist/` do build",
+        "why": "O sandbox limita o que o renderer pode fazer no sistema operacional; não escolhe quais scripts rodam. A aula 11 deixa isso para uma Content Security Policy."
+      },
+      {
+        "text": "O `ipcRenderer.invoke` em qualquer canal que nomear, já que o preload trouxe o `ipcRenderer` para a janela",
+        "why": "O `ipcRenderer` do preload vive num mundo que a página não vê. A página só recebe o que o `exposeInMainWorld` pôs no `window`."
+      }
+    ]
+  },
+  "ex-5rjpky34": {
+    "prompt": "Antes de o planner em Tauri ser lançado, uma revisora nota `\"csp\": null` no `tauri.conf.json`. Onde vai uma política, e o que ela fará pelo app?",
+    "hint": "Apps Desktop e Mobile com Web, aula 12; Testes, Segurança e Acessibilidade, aula 8.",
+    "choices": [
+      {
+        "text": "Em `capabilities/default.json`, ao lado do `core:default`, onde ela decide quais comandos a página pode chamar",
+        "why": "Uma capability concede permissões de plugin a janelas. Uma Content Security Policy é outra lista, sobre de onde a página pode carregar código."
+      },
+      {
+        "text": "Em lugar nenhum: no Tauri, `null` já quer dizer a política mais rígida que existe, e um script injetado é recusado",
+        "why": "`null` quer dizer que o template não definiu política nenhuma. Sem uma, a página roda qualquer script que chegue nela."
+      },
+      {
+        "text": "Em `app.security.csp`, posta em toda página; barra script inline injetado, não o código do app",
+        "why": "A aula 12 põe ali a string de política da aula 11. O `default-src 'self'` dela vale pelo `script-src`, que não admite script inline; uma política não faz nada contra código que vem do lugar certo."
+      },
+      {
+        "text": "Em `src-tauri/src/lib.rs`, como um comando em Rust que a página chama ao abrir para ligar a política",
+        "why": "Uma política que a própria página precisa ligar é uma que um script injetado poderia pular. O Tauri a acrescenta às páginas que serve."
+      }
+    ]
+  },
+  "ex-6ypygze4": {
+    "prompt": "No planner em Tauri, o comando `export_plan` da própria página funciona, mas uma chamada ao leitor de arquivo de texto do plugin de sistema de arquivos é recusada. Diga a permissão que o `capabilities/default.json` precisa listar para a janela principal: `___`",
+    "hint": "Apps Desktop e Mobile com Web, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "fs:allow-read-text-file"
+        ]
+      }
+    ]
+  },
+  "ex-w3hvjvyh": {
+    "prompt": "O planner está em `1.4.1`, versionado pelo `scripts/version.mjs` da aula 15. A próxima versão muda o formato do plano salvo, de modo que a `1.4.1` não consegue ler o que ela grava. Seguindo o versionamento semântico, que `versionCode` o script escreve para essa versão?",
+    "hint": "Apps Desktop e Mobile com Web, aula 15; JavaScript, aula 21."
+  },
+  "ex-4m5xscvm": {
+    "prompt": "A API do planner em `https://api.example` permite uma origem, `https://planner.example`, onde o site é servido, e as chamadas mandam o cookie de sessão com `credentials: \"include\"`. No app Capacitor no Android toda chamada falha com `TypeError: Failed to fetch`, e o console diz que foi bloqueada pela política de CORS. Qual é a correção?",
+    "hint": "Apps Desktop e Mobile com Web, aula 2; Testes, Segurança e Acessibilidade, aula 7.",
+    "choices": [
+      {
+        "text": "Acrescentar a origem do próprio app, `https://localhost` no Android e `capacitor://localhost` no iOS, à lista da API",
+        "why": "O Capacitor serve o app a partir de uma origem própria no celular. A API atende uma lista das origens em que confia, e a do app ainda não está nela."
+      },
+      {
+        "text": "Responder com `Access-Control-Allow-Origin: *`, que deixa o app entrar com qualquer origem que informar",
+        "why": "Com credenciais, o navegador recusa o curinga, e diz isso no console."
+      },
+      {
+        "text": "Pôr `server.url` em `https://api.example`, para o app ser servido a partir da origem da própria API",
+        "why": "Um app com `server.url` não contém o seu app; é uma WebView abrindo uma página remota, e a aula 2 diz que isso nunca vai para produção."
+      },
+      {
+        "text": "Ligar `cleartext: true`, que deixa a WebView alcançar um endereço que não seja `localhost`",
+        "why": "O `cleartext` libera `http` sem criptografia. A API está em `https`, e a recusa veio do CORS, não do esquema."
+      }
+    ]
+  },
   "ex-xmfzz1p0": {
     "prompt": "No `view.ts`, um colega desenha o controle **Done** como `<div class=\"tick\">Done</div>` com um listener de clique. O teste de componente `getByRole(\"button\", { name: \"Done\" })` agora lança erro, e o colega propõe mudar o teste. O que deveria mudar no lugar dele?",
     "hint": "Testes, Segurança e Acessibilidade, aula 3; HTML e CSS, aula 2.",
@@ -1254,7 +1883,7 @@
     ]
   },
   "ex-94q59d2v": {
-    "prompt": "O total semanal do planner pulsa. Um colega manteria `.week { animation: pulse 1s ease-in-out 3; }` e acrescentaria a regra global do `html-css`: um bloco `prefers-reduced-motion: reduce` que reduz toda animação a `0.01ms`. A aula 13 põe a animação dentro de `no-preference`. O que isso compra?",
+    "prompt": "O total semanal do planner pulsa. Um colega manteria `.week { animation: pulse 1s ease-in-out 3; }` e acrescentaria a regra global de *HTML e CSS*: um bloco `prefers-reduced-motion: reduce` que reduz toda animação a `0.01ms`. A aula 13 põe a animação dentro de `no-preference`. O que isso compra?",
     "hint": "Testes, Segurança e Acessibilidade, aula 13; HTML e CSS, aula 12.",
     "choices": [
       {
@@ -1653,7 +2282,7 @@
       },
       {
         "text": "A pergunta 1 falha: os outros dois métodos ainda recalculam, e a economia que o pedido queria não acontece",
-        "why": "A pergunta 1 é se a mudança faz o que o ticket pediu. A aula 3 de ai-dev achou exatamente isto: os testes passaram e estavam certos em passar, e a mudança não economizou nada, o que só se acha lendo a mudança contra o pedido."
+        "why": "A pergunta 1 é se a mudança faz o que o ticket pediu. A aula 3 de *IA no Desenvolvimento* achou exatamente isto: os testes passaram e estavam certos em passar, e a mudança não economizou nada, o que só se acha lendo a mudança contra o pedido."
       },
       {
         "text": "Um comentário bloqueante dizendo que o diff do assistente deve ser recusado de vez, porque código de assistente precisa de um segundo autor humano",
@@ -1667,11 +2296,11 @@
     "choices": [
       {
         "text": "Um assistente manda o que estiver aberto numa aba, e o `.gitignore` não diz nada ao editor sobre isso",
-        "why": "Aula 3 de ai-dev: um arquivo ignorado continua sendo um arquivo no disco, e uma aba é uma aba. Só uma lista de exclusão que o assistente lê o deixa de fora."
+        "why": "Aula 3 de *IA no Desenvolvimento*: um arquivo ignorado continua sendo um arquivo no disco, e uma aba é uma aba. Só uma lista de exclusão que o assistente lê o deixa de fora."
       },
       {
         "text": "O prefixo `VITE_` manda o build copiar o valor para o bundle que todo visitante baixa",
-        "why": "Aula 2 de front-delivery: o Vite copia uma variável porque o nome dela diz isso. Uma chave secreta no bundle pode ser lida por qualquer um que abra a página."
+        "why": "Aula 2 de *Deploy, Design Systems e GraphQL*: o Vite copia uma variável porque o nome dela diz isso. Uma chave secreta no bundle pode ser lida por qualquer um que abra a página."
       },
       {
         "text": "Minificar o bundle troca o nome do valor, então uma string copiada para ele não pode mais ser lida",
@@ -1683,12 +2312,12 @@
       },
       {
         "text": "Uma chave que começa com `sk_` é do tipo publicável, feita para o navegador",
-        "why": "A aula 2 de front-delivery dá `pk_` contra `sk_` como a convenção comum, e `sk_` é a secreta, só para servidor."
+        "why": "A aula 2 de *Deploy, Design Systems e GraphQL* dá `pk_` contra `sk_` como a convenção comum, e `sk_` é a secreta, só para servidor."
       }
     ]
   },
   "ex-e2j1egm5": {
-    "prompt": "Um assistente escreve uma correção para um campo de data que aceitava `31/02`, e um teste para ela na mesma resposta. O teste passa na primeira execução. O que a aula 5 de ai-dev e a aula 12 do projeto de portfólio dizem que está faltando?",
+    "prompt": "Um assistente escreve uma correção para um campo de data que aceitava `31/02`, e um teste para ela na mesma resposta. O teste passa na primeira execução. O que a aula 5 de *IA no Desenvolvimento* e a aula 12 do projeto de portfólio dizem que está faltando?",
     "hint": "IA no Desenvolvimento, aula 5; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
     "choices": [
       {
@@ -1705,21 +2334,21 @@
       },
       {
         "text": "O teste rodado no código de antes da correção, onde deveria falhar; só então se sabe que ele enxerga o bug",
-        "why": "Aula 5 de ai-dev: um teste gerado deve falhar antes da mudança que ele testa. Aula 12 do portfólio: para um bug, o teste vem primeiro, e você o vê falhar."
+        "why": "Aula 5 de *IA no Desenvolvimento*: um teste gerado deve falhar antes da mudança que ele testa. Aula 12 do portfólio: para um bug, o teste vem primeiro, e você o vê falhar."
       }
     ]
   },
   "ex-jg10fe1f": {
-    "prompt": "Uma equipe liga um bot que revisa todo pull request com um modelo e publica uma aprovação ou um pedido de mudanças. Alguém propõe pôr a aprovação do bot entre as verificações obrigatórias da `main`. O que dizem a aula 4 de ai-dev e a aula 3 de front-delivery?",
+    "prompt": "Uma equipe liga um bot que revisa todo pull request com um modelo e publica uma aprovação ou um pedido de mudanças. Alguém propõe pôr a aprovação do bot entre as verificações obrigatórias da `main`. O que dizem a aula 4 de *IA no Desenvolvimento* e a aula 3 de *Deploy, Design Systems e GraphQL*?",
     "hint": "IA no Desenvolvimento, aula 4; Deploy, Design Systems e GraphQL, aula 3.",
     "choices": [
       {
         "text": "Manter os comentários para quem decide; exigir as verificações verdadeiras ou falsas, como testes e tipos",
-        "why": "A aula 4 de ai-dev mantém a decisão de merge longe do bot, cuja aprovação é uma afirmação. A verificação obrigatória da aula 3 de front-delivery é um job com nome que passa ou falha."
+        "why": "A aula 4 de *IA no Desenvolvimento* mantém a decisão de merge longe do bot, cuja aprovação é uma afirmação. A verificação obrigatória da aula 3 de *Deploy, Design Systems e GraphQL* é um job com nome que passa ou falha."
       },
       {
         "text": "Exigir, já que uma verificação que ninguém é obrigado a esperar é uma sugestão, e o bot lê todo pull request",
-        "why": "Essa frase fala de verificações verdadeiras ou falsas. A aprovação de um bot é uma lista de hipóteses, e a aula 4 de ai-dev mostrou três confiantes e o bug real ausente."
+        "why": "Essa frase fala de verificações verdadeiras ou falsas. A aprovação de um bot é uma lista de hipóteses, e a aula 4 de *IA no Desenvolvimento* mostrou três confiantes e o bug real ausente."
       },
       {
         "text": "Exigir às sextas, quando os revisores humanos estão menos atentos, e deixar as pessoas fazerem merge sozinhas nos outros dias",
@@ -1727,7 +2356,7 @@
       },
       {
         "text": "Desligar o bot, já que um modelo deixa passar um erro de um a mais numa fronteira e os comentários gastam tokens à toa",
-        "why": "A aula 4 de ai-dev diz que um bom modelo acha achados locais e mecânicos como esse. O bot é útil como primeira leitura."
+        "why": "A aula 4 de *IA no Desenvolvimento* diz que um bom modelo acha achados locais e mecânicos como esse. O bot é útil como primeira leitura."
       }
     ]
   },
@@ -1802,11 +2431,11 @@
     "choices": [
       {
         "text": "Uma região criada no momento em que o texto chega geralmente não é lida por ninguém; ela tem de existir antes",
-        "why": "Aula 12 de front-quality: o leitor acompanha as regiões vivas que já estão na página, então a região é criada uma vez e mantida."
+        "why": "Aula 12 de *Testes, Segurança e Acessibilidade*: o leitor acompanha as regiões vivas que já estão na página, então a região é criada uma vez e mantida."
       },
       {
         "text": "Atualizada a cada pedaço, ela lê fragmentos um atrás do outro em vez de uma resposta",
-        "why": "Aula 9 de ai-dev: anunciar a resposta uma vez, quando estiver completa, ou por frase, para o leitor ter algo que consiga acompanhar."
+        "why": "Aula 9 de *IA no Desenvolvimento*: anunciar a resposta uma vez, quando estiver completa, ou por frase, para o leitor ter algo que consiga acompanhar."
       },
       {
         "text": "Ela deveria ser `role=\"alert\"`, para cada pedaço interromper o que o leitor está dizendo",
@@ -1845,12 +2474,12 @@
     ]
   },
   "ex-jzx6ramk": {
-    "prompt": "Uma página de produto pede a um modelo para arrumar avaliações de clientes mantendo a formatação, e mostra o resultado com `card.innerHTML = reply` e um comentário: `// our own output, safe`. Uma avaliação continha `<script>alert(\"hi\")</script>`. O que dizem a aula 11 de ai-dev e a aula 9 de front-quality?",
+    "prompt": "Uma página de produto pede a um modelo para arrumar avaliações de clientes mantendo a formatação, e mostra o resultado com `card.innerHTML = reply` e um comentário: `// our own output, safe`. Uma avaliação continha `<script>alert(\"hi\")</script>`. O que dizem a aula 11 de *IA no Desenvolvimento* e a aula 9 de *Testes, Segurança e Acessibilidade*?",
     "hint": "IA no Desenvolvimento, aula 11; Testes, Segurança e Acessibilidade, aula 9.",
     "choices": [
       {
         "text": "Seguro como está: um modelo reescreve o que lê, então uma tag script numa avaliação não sobrevive na resposta",
-        "why": "Na aula 11 de ai-dev o modelo manteve a tag, porque lhe pediram para manter a marcação. A resposta copiou o que ele leu."
+        "why": "Na aula 11 de *IA no Desenvolvimento* o modelo manteve a tag, porque lhe pediram para manter a marcação. A resposta copiou o que ele leu."
       },
       {
         "text": "Seguro quando o system prompt mandar o modelo tirar scripts, já que a instrução vai junto em toda requisição",
@@ -1862,12 +2491,12 @@
       },
       {
         "text": "Inseguro: a resposta é texto de fora, e `innerHTML` é um sink; escape-a, ou monte o card com `textContent`",
-        "why": "Aula 11 de ai-dev: trate a resposta de um modelo como qualquer outra coisa que veio de fora, porque muitas vezes veio. A aula 9 de front-quality lista `innerHTML` como sink, com `textContent` como o jeito seguro."
+        "why": "Aula 11 de *IA no Desenvolvimento*: trate a resposta de um modelo como qualquer outra coisa que veio de fora, porque muitas vezes veio. A aula 9 de *Testes, Segurança e Acessibilidade* lista `innerHTML` como sink, com `textContent` como o jeito seguro."
       }
     ]
   },
   "ex-q647fxh0": {
-    "prompt": "Um currículo diz *I care about accessibility*. Qual linha sob o projeto de portfólio transforma essa afirmação no que a aula 1 do portfólio chama de evidência, escrita como a aula 4 de first-job pede?",
+    "prompt": "Um currículo diz *I care about accessibility*. Qual linha sob o projeto de portfólio transforma essa afirmação no que a aula 1 do portfólio chama de evidência, escrita como a aula 4 de *Do Estudo ao Emprego* pede?",
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 1; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4.",
     "choices": [
       {
@@ -1889,7 +2518,7 @@
     ]
   },
   "ex-ms5t7en4": {
-    "prompt": "Um perfil no GitHub tem cinco repositórios de tutoriais de front-end e um projeto terminado. O que as aulas 2 do portfólio e 5 de first-job dizem para fazer com os tutoriais?",
+    "prompt": "Um perfil no GitHub tem cinco repositórios de tutoriais de front-end e um projeto terminado. O que as aulas 2 do portfólio e 5 de *Do Estudo ao Emprego* dizem para fazer com os tutoriais?",
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 2; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5.",
     "choices": [
       {
@@ -1920,7 +2549,7 @@
       },
       {
         "text": "Estreitar o layout para 320 pixels e ver se ele continua de pé",
-        "why": "A aula 3 verifica o layout em 320 pixels, o que a aula 13 de front-quality explica: o 1.4.10 *Reflow* pede nenhuma rolagem lateral nessa largura."
+        "why": "A aula 3 verifica o layout em 320 pixels, o que a aula 13 de *Testes, Segurança e Acessibilidade* explica: o 1.4.10 *Reflow* pede nenhuma rolagem lateral nessa largura."
       },
       {
         "text": "Usar o formulário só com o teclado",
@@ -2005,7 +2634,7 @@
     "trap": "O deslize mais provável é restaurar `app.py` antes de pôr a correção no stage. O `git restore` devolve o arquivo ao que está no stage, então, sem nada no stage, ele joga fora a correção junto com a linha de debug."
   },
   "ex-g0kk1t01": {
-    "prompt": "Você é o único revisor do seu próprio pull request do portfólio. Quais destas dão a distância que a aula 10 pede, ou a verificação que a aula 4 de ai-dev aceitaria? Marque todas as que se aplicam.",
+    "prompt": "Você é o único revisor do seu próprio pull request do portfólio. Quais destas dão a distância que a aula 10 pede, ou a verificação que a aula 4 de *IA no Desenvolvimento* aceitaria? Marque todas as que se aplicam.",
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 10; IA no Desenvolvimento, aula 4.",
     "choices": [
       {
@@ -2022,7 +2651,7 @@
       },
       {
         "text": "Pedir a um assistente para aprovar o diff e fazer o merge quando ele disser que está bom",
-        "why": "A aula 4 de ai-dev mantém a decisão de merge longe de um bot: a aprovação dele é uma afirmação, e o silêncio sobre um bug parece aprovação."
+        "why": "A aula 4 de *IA no Desenvolvimento* mantém a decisão de merge longe de um bot: a aprovação dele é uma afirmação, e o silêncio sobre um bug parece aprovação."
       },
       {
         "text": "Relê-lo no editor na mesma hora, enquanto o que você quis fazer ainda está fresco",
@@ -2048,7 +2677,7 @@
       },
       {
         "text": "Quarenta paradas chamadas *Add to cart*; cada uma precisa dizer em que age, o que o axe não julga",
-        "why": "O *Borrower, Lend, Borrower, Lend* da aula 13 virou *Lend Projector 1 to*. A aula 10 de front-quality lista se um nome descreve o que o controle faz entre as perguntas que uma máquina não responde."
+        "why": "O *Borrower, Lend, Borrower, Lend* da aula 13 virou *Lend Projector 1 to*. A aula 10 de *Testes, Segurança e Acessibilidade* lista se um nome descreve o que o controle faz entre as perguntas que uma máquina não responde."
       }
     ]
   },
@@ -2058,7 +2687,7 @@
     "choices": [
       {
         "text": "O build põe o valor num arquivo que todo visitante baixa; chave da conta inteira fica num servidor",
-        "why": "Aula 2 de front-delivery: se o navegador tem, quem usa o navegador tem, e um serviço com uma chave só é tratado como secreto. O ambiente da aula 14 protege um valor que o servidor lê em execução."
+        "why": "Aula 2 de *Deploy, Design Systems e GraphQL*: se o navegador tem, quem usa o navegador tem, e um serviço com uma chave só é tratado como secreto. O ambiente da aula 14 protege um valor que o servidor lê em execução."
       },
       {
         "text": "Basta, desde que o arquivo `.env` esteja no `.gitignore`, que é a metade da aula 14 que realmente importa",
@@ -2088,11 +2717,11 @@
       },
       {
         "text": "como sair dele, já que um portfólio dura mais que a maioria dos planos gratuitos",
-        "why": "A quinta verificação. A aula 1 de front-delivery diz o mesmo pelo outro lado: um plano gratuito é decisão de negócio de outra empresa."
+        "why": "A quinta verificação. A aula 1 de *Deploy, Design Systems e GraphQL* diz o mesmo pelo outro lado: um plano gratuito é decisão de negócio de outra empresa."
       },
       {
         "text": "os limites que este curso cita para cada um dos quatro hosts",
-        "why": "Nenhum dos dois cursos cita limites. A aula 1 de front-delivery explica: um número escrito em outubro de 2026 estaria errado antes de você ler."
+        "why": "Nenhum dos dois cursos cita limites. A aula 1 de *Deploy, Design Systems e GraphQL* explica: um número escrito em outubro de 2026 estaria errado antes de você ler."
       },
       {
         "text": "qual host tem mais estrelas no GitHub",
@@ -2101,7 +2730,7 @@
     ]
   },
   "ex-7tjrmm0s": {
-    "prompt": "A seção *Run it* do README de um portfólio diz `npm ci && npm run dev`, e os dois funcionam no notebook do autor. Como as aulas 16 do portfólio e 3 de front-delivery mandam descobrir se a afirmação se sustenta?",
+    "prompt": "A seção *Run it* do README de um portfólio diz `npm ci && npm run dev`, e os dois funcionam no notebook do autor. Como as aulas 16 do portfólio e 3 de *Deploy, Design Systems e GraphQL* mandam descobrir se a afirmação se sustenta?",
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16; Deploy, Design Systems e GraphQL, aula 3.",
     "choices": [
       {
@@ -2110,7 +2739,7 @@
       },
       {
         "text": "Clonar o repositório numa máquina sem nada do projeto e digitar exatamente o que o README diz",
-        "why": "A aula 16 roda o README a frio numa máquina feita do zero; a aula 3 de front-delivery mostra o porquê: um arquivo que seu computador tem e o repositório não só falha numa cópia limpa."
+        "why": "A aula 16 roda o README a frio numa máquina feita do zero; a aula 3 de *Deploy, Design Systems e GraphQL* mostra o porquê: um arquivo que está no seu computador e não está no repositório só falha numa cópia limpa."
       },
       {
         "text": "Pedir a um amigo para ler o README e dizer se os passos parecem completos",
@@ -2123,7 +2752,7 @@
     ]
   },
   "ex-tb2q47dx": {
-    "prompt": "Qual texto `alt` serve para a captura de tela no topo do README de um planejador de estudos, pela aula 17 do portfólio e pela aula 12 de front-quality?",
+    "prompt": "Qual texto `alt` serve para a captura de tela no topo do README de um planejador de estudos, pela aula 17 do portfólio e pela aula 12 de *Testes, Segurança e Acessibilidade*?",
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 17; Testes, Segurança e Acessibilidade, aula 12.",
     "choices": [
       {
@@ -2189,7 +2818,7 @@
     ]
   },
   "ex-nbyexvn5": {
-    "prompt": "Seu gráfico de contribuições está vazio nas seis semanas do projeto de portfólio, embora você tenha feito push toda semana. `git log --format='%an <%ae>'` mostra em todo commit o endereço pessoal que você digitou no dia em que instalou o git, que sua conta no GitHub não tem. Para onde apontam a aula 5 de first-job e a aula 18 do portfólio?",
+    "prompt": "Seu gráfico de contribuições está vazio nas seis semanas do projeto de portfólio, embora você tenha feito push toda semana. `git log --format='%an <%ae>'` mostra em todo commit o endereço pessoal que você digitou no dia em que instalou o git, que sua conta no GitHub não tem. Para onde apontam a aula 5 de *Do Estudo ao Emprego* e a aula 18 do portfólio?",
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5; O Projeto de Portfólio: do Briefing ao Deploy, aula 18.",
     "choices": [
       {
@@ -2227,7 +2856,7 @@
     "trap": "O deslize mais provável é começar pelos desconhecidos nas empresas que você quer. A aula 9 os põe por último, como o grupo mais difícil, e a mensagem que ela escreve é para eles."
   },
   "ex-kqsxnzm9": {
-    "prompt": "Um exercício para casa pede um formulário de agendamento que recuse uma data no passado, em umas três horas. Qual entrega cabe na aula 13 de first-job e na aula 12 do portfólio?",
+    "prompt": "Um exercício para casa pede um formulário de agendamento que recuse uma data no passado, em umas três horas. Qual entrega cabe na aula 13 de *Do Estudo ao Emprego* e na aula 12 do portfólio?",
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
     "choices": [
       {
@@ -2249,7 +2878,7 @@
     ]
   },
   "ex-tg55kry8": {
-    "prompt": "Uma recrutadora que não é técnica abre a triagem com *me fale sobre você*. Qual resposta segue a aula 11 de first-job, que pega a forma da aula 19 do portfólio?",
+    "prompt": "Uma recrutadora que não é técnica abre a triagem com *me fale sobre você*. Qual resposta segue a aula 11 de *Do Estudo ao Emprego*, que pega a forma da aula 19 do portfólio?",
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 11; O Projeto de Portfólio: do Briefing ao Deploy, aula 19.",
     "choices": [
       {
@@ -2271,7 +2900,7 @@
     ]
   },
   "ex-qkewyct5": {
-    "prompt": "*Me conte uma vez em que você falhou.* Qual resposta tem a forma que a aula 15 de first-job pede, com o material tirado de uma retrospectiva como a da aula 21 do portfólio?",
+    "prompt": "*Me conte uma vez em que você falhou.* Qual resposta tem a forma que a aula 15 de *Do Estudo ao Emprego* pede, com o material tirado de uma retrospectiva como a da aula 21 do portfólio?",
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15; O Projeto de Portfólio: do Briefing ao Deploy, aula 21.",
     "choices": [
       {
@@ -2323,7 +2952,7 @@
     ]
   },
   "ex-fb65qkq6": {
-    "prompt": "Seu primeiro ticket no trabalho é corrigir o label de um formulário que o leitor de tela anuncia errado. O que a aula 20 de first-job quer dele, com os hábitos da aula 10 do portfólio?",
+    "prompt": "Seu primeiro ticket no trabalho é corrigir o label de um formulário que o leitor de tela anuncia errado. O que a aula 20 de *Do Estudo ao Emprego* quer dele, com os hábitos da aula 10 do portfólio?",
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; O Projeto de Portfólio: do Briefing ao Deploy, aula 10.",
     "choices": [
       {
@@ -2369,7 +2998,7 @@
     ]
   },
   "ex-2ta62r30": {
-    "prompt": "A linha de evidência no topo do seu currículo aponta para o repositório do portfólio. Pela aula 3 de first-job e pela aula 16 do portfólio, o que a primeira tela do README deve mostrar a quem clica?",
+    "prompt": "A linha de evidência no topo do seu currículo aponta para o repositório do portfólio. Pela aula 3 de *Do Estudo ao Emprego* e pela aula 16 do portfólio, o que a primeira tela do README deve mostrar a quem clica?",
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 3; O Projeto de Portfólio: do Briefing ao Deploy, aula 16.",
     "choices": [
       {

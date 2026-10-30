@@ -55,7 +55,7 @@
       {
         "text": "HTTP's `no-cache` keeps nothing either, so the comparison holds and the policy does what its author wants",
         "correct": false,
-        "why": "That is the confusion web-fundamentals warns about: `no-cache` asks, `no-store` refuses. HTTP's `no-cache` does keep the copy."
+        "why": "That is the confusion *Web and Internet Fundamentals* warns about: `no-cache` asks, `no-store` refuses. HTTP's `no-cache` does keep the copy."
       }
     ]
   },
@@ -168,7 +168,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "The planner answers on both `example.com` and `www.example.com`, with no redirect between them. A student signs in on `www.example.com`, follows a link to `example.com/course/git`, and is shown as signed out. What explains it, and what does front-delivery lesson 4 do about it?",
+    "prompt": "The planner answers on both `example.com` and `www.example.com`, with no redirect between them. A student signs in on `www.example.com`, follows a link to `example.com/course/git`, and is shown as signed out. What explains it, and what does *Deployment, Design Systems and GraphQL* lesson 4 do about it?",
     "hint": "Web and Internet Fundamentals, lesson 7; Deployment, Design Systems and GraphQL, lesson 4.",
     "choices": [
       {
@@ -209,7 +209,7 @@
       {
         "text": "Pages served there by a stranger are sent the app's session cookie, since `Domain=example.com` covers every subdomain",
         "correct": true,
-        "why": "A widened cookie goes to every subdomain, the abandoned one included. That is why web-fundamentals says to widen nothing without a reason."
+        "why": "A widened cookie goes to every subdomain, the abandoned one included. That is why *Web and Internet Fundamentals* says to widen nothing without a reason."
       },
       {
         "text": "Deleting the `CNAME` first and the project second would have left nothing to take over",
@@ -233,7 +233,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "In front-delivery lesson 10 the GraphQL server is stopped, and the dev server logs `http proxy error: /graphql` with `ECONNREFUSED 127.0.0.1:4000`, while the page's request gets a 502. Reading that status the way web-fundamentals lesson 6 does, where is the fault?",
+    "prompt": "In *Deployment, Design Systems and GraphQL* lesson 10 the GraphQL server is stopped, and the dev server logs `http proxy error: /graphql` with `ECONNREFUSED 127.0.0.1:4000`, while the page's request gets a 502. Reading that status the way *Web and Internet Fundamentals* lesson 6 does, where is the fault?",
     "hint": "Web and Internet Fundamentals, lesson 6; Deployment, Design Systems and GraphQL, lesson 10.",
     "choices": [
       {
@@ -415,7 +415,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
-    "prompt": "The planner ships front-performance lesson 10's service worker: cache first for `/assets/`, network first for pages. Today's deploy changes a page and a script and leaves `sw.js` as it was. Does a returning visitor need a new worker to see the change?",
+    "prompt": "The planner ships *Rendering, Performance and PWA* lesson 10's service worker: cache first for `/assets/`, network first for pages. Today's deploy changes a page and a script and leaves `sw.js` as it was. Does a returning visitor need a new worker to see the change?",
     "hint": "Deployment, Design Systems and GraphQL, lesson 1; Rendering, Performance and PWA, lesson 10.",
     "choices": [
       {
@@ -1503,6 +1503,862 @@
     ]
   },
   {
+    "id": "ex-3v6sfwt6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A form reads its Minutes field with `Number(new FormData(form).get(\"minutes\"))` and refuses the session when `Number.isNaN(minutes)` is true. The field has no `required` attribute. Somebody leaves it empty and presses Add. What does the check see?",
+    "hint": "JavaScript, lessons 2 and 12.",
+    "choices": [
+      {
+        "text": "`NaN`, so the session is refused as intended, because an empty string has no digit in it to convert",
+        "correct": false,
+        "why": "`Number` gives `NaN` for text it cannot read, such as `\"42px\"`. The empty string is the exception lesson 2 calls the trap: it converts to `0`."
+      },
+      {
+        "text": "`null`, since nobody typed in the field, and `Number(null)` comes out as `NaN`",
+        "correct": false,
+        "why": "Every field comes back from `FormData` as a string, an empty one included, so the value is `\"\"` and not `null`."
+      },
+      {
+        "text": "`0`, which is not `NaN`, so the check lets it through; `required` would have stopped the submit",
+        "correct": true,
+        "why": "`Number(\"\")` is `0`, so a check for `NaN` passes an empty field. Constraint validation runs before `submit` fires, which is why lesson 12 puts it first."
+      },
+      {
+        "text": "The string `\"\"` itself, since `Number` hands back its argument unchanged when it cannot convert it",
+        "correct": false,
+        "why": "`Number` always returns a number: the value it read, or `NaN`. It never returns the string it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qyynhyw",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A search page should give up on a request that has not answered within two seconds, and the code that catches the error should be able to tell that case from somebody pressing Cancel. Complete the option: `fetch(url, { signal: AbortSignal.___(2000) })`",
+    "hint": "JavaScript, lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-emtvrt8g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague rewrites the planner's `markDone` as `const next = { ...plan }; next.sessions.find((s) => s.id === id).done = true; return next;`, and the React Native screen calls `setPlan(markDone(plan, id))`. What is wrong with it?",
+    "hint": "JavaScript, lesson 4; Desktop and Mobile Apps with Web, lesson 7.",
+    "choices": [
+      {
+        "text": "The spread copies one level, so the session it marks belongs to the old plan too: the old plan was edited in place",
+        "correct": true,
+        "why": "`next.sessions` is the same array as `plan.sessions`, holding the same objects. Lesson 7's rules return a new plan and never edit the old one, which is why they could move to React unchanged."
+      },
+      {
+        "text": "Nothing: `next` is a new object, so the old plan stays as it was and React receives a new plan to draw",
+        "correct": false,
+        "why": "The outer object is new, and that is all a spread makes new. The session changed is the one the old plan also points at."
+      },
+      {
+        "text": "`find` hands back a copy of the session, so setting `done` on it changes neither of the two plans",
+        "correct": false,
+        "why": "`find` returns the element itself, a reference to the object in the array. Writing through it changes that object."
+      },
+      {
+        "text": "`{ ...plan }` copies all the way down, as `structuredClone` does, so it is correct and only slower than it needs to be",
+        "correct": false,
+        "why": "That is the difference lesson 4 draws: `structuredClone` copies all the way down and a spread copies one level."
+      }
+    ]
+  },
+  {
+    "id": "ex-9d187m5z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A page keeps each element's measured size in `const sizes = new Map()`, keyed by the element. Rows are removed from the list all day, and the page's memory keeps growing. What do the lessons offer, and why does it fit?",
+    "hint": "JavaScript, lessons 5 and 19.",
+    "choices": [
+      {
+        "text": "Empty it with `sizes.clear()` from a `setInterval` every minute, which bounds it however the rows come and go",
+        "correct": false,
+        "why": "That throws away the sizes of rows still on screen and keeps removed ones until the next tick. The lessons tie each entry's life to its key instead."
+      },
+      {
+        "text": "Key the `Map` by each element's id string instead, so the entry no longer holds the element itself",
+        "correct": false,
+        "why": "The entries are still never removed. A string key keeps the size forever just as an object key did, and nothing ties the entry to the row."
+      },
+      {
+        "text": "A `WeakSet` of the elements, which keeps them listed without becoming the reason they exist",
+        "correct": false,
+        "why": "A `WeakSet` marks objects and holds no value beside each one, so it has nowhere to keep a size."
+      },
+      {
+        "text": "A `WeakMap` instead: its keys are not kept alive, so a deleted row's size goes too",
+        "correct": true,
+        "why": "Lesson 5 names exactly this cache, the measured size of each element, and lesson 19 uses a `WeakMap` when the keys are objects whose lifetime should decide the entry's."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz7dy9mr",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A chart widget runs `window.addEventListener(\"resize\", this.redraw.bind(this))` when it is created and `window.removeEventListener(\"resize\", this.redraw.bind(this))` when the page removes it. Its closure holds a large array of points. Choose all that apply.",
+    "hint": "JavaScript, lessons 7 and 19.",
+    "choices": [
+      {
+        "text": "The removal does nothing, because each `bind` makes a new function and the two are not `===`",
+        "correct": true,
+        "why": "`removeEventListener` looks for the same function, compared with `===`, and a second `bind` is a second function."
+      },
+      {
+        "text": "Every removed widget stays in memory with its points, because `window` still holds its listener",
+        "correct": true,
+        "why": "A listener lives as long as the object it listens to, with everything its closure captured. `window` lives as long as the page."
+      },
+      {
+        "text": "The removal works, since both calls bind the same method to the same object",
+        "correct": false,
+        "why": "Same method and same object still give two different bound functions, which is the bug lesson 7 shows with the bell."
+      },
+      {
+        "text": "Binding once in the constructor and passing that one value to both calls fixes it",
+        "correct": true,
+        "why": "That is lesson 7's rule: bind once, keep the result, add and remove with it. The listener then goes, and the widget with it."
+      },
+      {
+        "text": "The collector frees the widget anyway, since none of the page's own variables points at it any more",
+        "correct": false,
+        "why": "The collector keeps whatever can be reached from a root, and `window`, through its listener list, reaches the widget's closure."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk1rzvw3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A typo, `totl = 0;` for `total = 0;`, sits in a function in each of these places. In which does it throw a `ReferenceError` instead of quietly creating a global? Choose all that apply.",
+    "hint": "JavaScript, lesson 20; Desktop and Mobile Apps with Web, lesson 11.",
+    "choices": [
+      {
+        "text": "the planner's `src/main.ts`, loaded by `<script type=\"module\">`",
+        "correct": true,
+        "why": "A module is strict with no string needed, in the browser as in Node."
+      },
+      {
+        "text": "the Electron planner's `electron/preload.cjs`, as lesson 11 wrote it",
+        "correct": false,
+        "why": "A `.cjs` file is CommonJS, which is sloppy unless it says `\"use strict\"`, and the preload of lesson 11 does not."
+      },
+      {
+        "text": "a method inside a `class` body, in a `.cjs` file",
+        "correct": true,
+        "why": "Every class body is strict, whatever the file around it is."
+      },
+      {
+        "text": "an `onclick=\"…\"` attribute written in the HTML",
+        "correct": false,
+        "why": "An inline handler runs as sloppy code, the probe in lesson 20 printed `false`."
+      },
+      {
+        "text": "the Electron planner's `electron/main.mjs`",
+        "correct": true,
+        "why": "A `.mjs` file is an ES module in Node, and an ES module is strict."
+      },
+      {
+        "text": "a classic `<script>` with no `\"use strict\"` at its top",
+        "correct": false,
+        "why": "A classic script is sloppy unless it switches strict mode on itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-6we7xx56",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A stats page draws its chart with a large library. The team turns the library's `import` into `import()`, so the other pages stop downloading it. What new cost does that bring, and what does lesson 8 do about it?",
+    "hint": "JavaScript, lesson 9; Rendering, Performance and PWA, lesson 8.",
+    "choices": [
+      {
+        "text": "The library now runs on every page, since `import()` is hoisted like a static import, so nothing is saved",
+        "correct": false,
+        "why": "`import()` loads the module when the line is reached; lesson 9's program never loaded `report.mjs` on the run that did not ask for it."
+      },
+      {
+        "text": "The chunk is fetched when the line runs, so somebody waits; an `import()` on `pointerover` starts it sooner",
+        "correct": true,
+        "why": "Code loaded on demand is code somebody waits for. The pointer reaches the link a few hundred milliseconds before the click, which is time to fetch the chunk."
+      },
+      {
+        "text": "Every page now downloads one more small file, the chunk, at start-up, and `<link rel=\"prefetch\">` removes it",
+        "correct": false,
+        "why": "The pages that never run the `import()` never download the chunk; the course page downloaded no chart code at all."
+      },
+      {
+        "text": "A browser refuses `import()` without an import map, so the build has to write one into every page",
+        "correct": false,
+        "why": "An import map is for a bare name the browser cannot find; `import()` itself works in a page, and the bundler writes the chunk's real address."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5hh17tx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With lesson 14's helpers, where `wait(ms, v)` fulfils with `v` after `ms` milliseconds and `fail(ms, m)` rejects after `ms`, a program runs `await Promise.any([fail(100, \"A is down\"), wait(400, \"B\"), wait(250, \"C\")])`. About how many milliseconds after that line starts does the `await` give back its value?",
+    "hint": "JavaScript, lesson 14.",
+    "value": 250,
+    "tolerance": 30
+  },
+  {
+    "id": "ex-wzsv3fhq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A session's note is shown with `p.innerHTML = note`. The team adds a Content Security Policy with `script-src 'self'` and closes the ticket. A tester saves the note `<b>3</b>` and sees a bold 3. What does that tell them?",
+    "hint": "JavaScript, lesson 11; Testing, Security and Accessibility, lessons 8 and 9.",
+    "choices": [
+      {
+        "text": "The policy is not being served, because with `script-src 'self'` a browser refuses any markup a person typed",
+        "correct": false,
+        "why": "A policy says where code may come from. It has nothing to say about a `<b>`, which is markup and not a script."
+      },
+      {
+        "text": "Nothing to worry about: bold text is not a script, and the policy now refuses whatever a note could do",
+        "correct": false,
+        "why": "The policy stops an injected script; it does nothing about the page's own code turning a person's text into elements, forms and links included."
+      },
+      {
+        "text": "The page still builds elements out of what a person typed; the fix is writing the note with `textContent`",
+        "correct": true,
+        "why": "The `<b>` is lesson 9's witness. Text goes in through the method for text, and `textContent` never reads its string as HTML."
+      },
+      {
+        "text": "The browser kept the old page in its cache, and a hard reload makes the policy show the note as plain text",
+        "correct": false,
+        "why": "A policy never turns markup into text, cached or not. Only writing the value as text does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e6c14wv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team ships the same Lend control twice: on the web as a `<div>` with a click listener, and in its React Native app as a `Pressable` with no `role`. Both look like buttons. What does each do to somebody who does not use a pointer, and what fixes each?",
+    "hint": "JavaScript, lesson 12; Desktop and Mobile Apps with Web, lesson 8.",
+    "choices": [
+      {
+        "text": "Tab skips the `<div>`, and a screen reader announces the `Pressable` as nothing in particular; `<button>` and `role=\"button\"` fix them",
+        "correct": true,
+        "why": "A `<div>` is not focusable, so the keyboard never reaches it. In React Native the role is what TalkBack and VoiceOver announce."
+      },
+      {
+        "text": "Both work: Enter on a focused element fires its click listener whatever the element is, so only colours need checking",
+        "correct": false,
+        "why": "The browser turns Enter and Space into a click on a button, not on a `<div>`, and the `<div>` never gets focus in the first place."
+      },
+      {
+        "text": "Tab reaches the `<div>` but Enter does nothing, and TalkBack skips the `Pressable`; a `tabindex` fixes both of them",
+        "correct": false,
+        "why": "Tab skipped the `<div>` in lesson 12. And `tabindex` is a web attribute; it says nothing to a native screen reader."
+      },
+      {
+        "text": "The web one only; React Native has no screen reader support, so the app needs a separate accessible version",
+        "correct": false,
+        "why": "A React Native app is read by the platform's own screen reader, from the `role` and `aria-label` props it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-1edp3rra",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Put the lines this program prints in the order they appear.\n\n```javascript\nsetTimeout(() => {\n  console.log(\"first timer\");\n  queueMicrotask(() => console.log(\"microtask from the first timer\"));\n}, 0);\nsetTimeout(() => console.log(\"second timer\"), 0);\nasync function load() {\n  console.log(\"load begins\");\n  await null;\n  console.log(\"load resumes\");\n}\nload();\nconsole.log(\"end\");\n```",
+    "hint": "JavaScript, lessons 13 and 14.",
+    "items": [
+      "`load begins`",
+      "`end`",
+      "`load resumes`",
+      "`first timer`",
+      "`microtask from the first timer`",
+      "`second timer`"
+    ],
+    "trap": "The likeliest slip is putting `load resumes` straight after `load begins`. What follows an `await` runs later, as a microtask, so `end` comes first; and a microtask queued by a task runs before the next task."
+  },
+  {
+    "id": "ex-yvrd51xj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A page runs lesson 13's two-second sort when Sort is clicked. A tenth of a second later somebody clicks Ping, whose handler only logs a line. Measured with `web-vitals`, which part of the Ping interaction is the long one?",
+    "hint": "JavaScript, lesson 13; Rendering, Performance and PWA, lesson 5.",
+    "choices": [
+      {
+        "text": "Processing, since Ping's handler is the code running while the person waits for the next frame to be painted",
+        "correct": false,
+        "why": "Ping's handler runs for almost no time once it starts. The wait happened before it could start."
+      },
+      {
+        "text": "Presentation delay, because the browser has two seconds of layout to do before it can paint Ping's change",
+        "correct": false,
+        "why": "Presentation is style, layout and paint after the handlers. Ping changes nothing on the page, and the sort was not layout."
+      },
+      {
+        "text": "None of it: INP counts the slowest handler's own work, and Ping's handler takes almost nothing",
+        "correct": false,
+        "why": "INP runs from the tap to the next paint, and the time before the handler starts is part of it."
+      },
+      {
+        "text": "Input delay: Ping's handler starts almost two seconds late, because the sort holds the only thread",
+        "correct": true,
+        "why": "The click was queued on time and handled about 2000 ms after the sort began. Lesson 5 calls that wait the input delay, long whenever the main thread is busy with something else."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga5weryg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A page's waterfall shows every request finished within 300 ms of the start, then a long stretch with no bar in it, and the page appears at about two seconds. Where should the search for the delay go next?",
+    "hint": "JavaScript, lesson 22; Web and Internet Fundamentals, lesson 11.",
+    "choices": [
+      {
+        "text": "The server: time after the last request belongs to the waiting bar, so the API is where a profile belongs",
+        "correct": false,
+        "why": "The waiting bar is part of a request's row, and every row had ended. A gap with no bars is time nothing was on the network."
+      },
+      {
+        "text": "The browser was busy, not the network; a profile read Bottom-Up, by self time, names the function",
+        "correct": true,
+        "why": "A long gap with nothing in it is the browser parsing or running script. The profiler counts where the program was, and self time points at the code doing the work."
+      },
+      {
+        "text": "The requests were sequential awaits, and `Promise.all` closes the gap",
+        "correct": false,
+        "why": "Sequential awaits draw a staircase of bars, each starting as the last ends. This chart has no bars at all in the slow part."
+      },
+      {
+        "text": "The files are too big, and compressing them shrinks the downloading bar the gap is made of",
+        "correct": false,
+        "why": "Downloading is a bar on a request's row. The rows were over by 300 ms, so smaller files cannot shorten what came after."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfh1631c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A page installs lesson 11's `watchErrors()`. Its settings are read with `try { settings = JSON.parse(text); } catch { settings = {}; }`, and a stored file with a stray comma quietly gives every user the defaults. Why did the monitor never report it, and what fixes that?",
+    "hint": "JavaScript, lesson 17; Deployment, Design Systems and GraphQL, lesson 11.",
+    "choices": [
+      {
+        "text": "The `error` listener fires only for a `SyntaxError` met while the page is first parsed, so `unhandledrejection` is needed too",
+        "correct": false,
+        "why": "`JSON.parse` here is synchronous and no promise is involved, and the `error` event sees any exception that escapes, at any time."
+      },
+      {
+        "text": "`sendBeacon` refused the report because the page was not closing, and switching to `fetch` delivers it",
+        "correct": false,
+        "why": "`sendBeacon` sends whenever it is called, closing or not. No report was ever made, because nothing reached `report`."
+      },
+      {
+        "text": "The `catch` took it, so nothing reached `window`; that `catch` has to call `report` or rethrow",
+        "correct": true,
+        "why": "The two `window` events see only what no `catch` took. A swallowed error is invisible to them, which is why lesson 11 reports from the page's own `catch`es too."
+      },
+      {
+        "text": "`JSON.parse` hands back `undefined` for bad input rather than throwing, so there was no error to report",
+        "correct": false,
+        "why": "`JSON.parse` throws a `SyntaxError` that names the position. The `catch` received it and dropped it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvmcfesp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test calls `start(root(), async () => Response.json(data))` without `await` and, on the next line, asserts `screen.getByRole(\"heading\", { name: \"Study planner\" })`. It fails with no heading found, though the page works. Why, and what does lesson 3 write instead?",
+    "hint": "JavaScript, lesson 14; Testing, Security and Accessibility, lesson 3.",
+    "choices": [
+      {
+        "text": "The page draws only after `load()` settles; `findByRole` polls until the element is there",
+        "correct": true,
+        "why": "An `async` function returns a promise at once, and its work after `await load()` runs later. `findBy…` polls and returns as soon as the element is there."
+      },
+      {
+        "text": "jsdom has no `fetch`, so the page never loads, and the test needs a real browser",
+        "correct": false,
+        "why": "The test passes its own `load`, so no `fetch` is called. The page does load, just after the assertion."
+      },
+      {
+        "text": "`getByRole` sees only what was drawn before the test began, so a half-second pause and the same query fix it",
+        "correct": false,
+        "why": "A fixed pause fails on a slow machine and wastes time on a fast one. Lesson 3 waits for the thing, never for the clock."
+      },
+      {
+        "text": "`Response.json(data)` builds a 500 response, which the page treats as a failed load and says so",
+        "correct": false,
+        "why": "`Response.json` builds the 200 a server would send with that data. The failing case in lesson 3 passes `new Response(\"\", { status: 500 })`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjk312c4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A new dependency's `package.json` has a `postinstall` script. Choose all that apply.",
+    "hint": "JavaScript, lesson 21; Testing, Security and Accessibility, lesson 9.",
+    "choices": [
+      {
+        "text": "With npm's defaults it runs during the install, as your user, and npm prints nothing about it",
+        "correct": true,
+        "why": "`shelf-banner` left a file behind and npm said nothing; the file was the only sign the script had run."
+      },
+      {
+        "text": "`npm ci --ignore-scripts` installs the package's files and runs none of its scripts",
+        "correct": true,
+        "why": "That run left no file. The cost is that a package which really has to compile something stops working until you rebuild it on purpose."
+      },
+      {
+        "text": "pnpm 10 runs it just as npm does, and Yarn 4 is the manager that skips build scripts by default",
+        "correct": false,
+        "why": "It is the other way round: pnpm 10 skips a dependency's build scripts unless the project names it, and Yarn 4 runs them unless `enableScripts: false`."
+      },
+      {
+        "text": "`npm audit` reads the script and refuses the package before the script gets a chance to run",
+        "correct": false,
+        "why": "`npm audit` lists known vulnerabilities in the versions installed. It does not read scripts, and it runs after the install."
+      },
+      {
+        "text": "A package used only by the build never reaches the browser, so its scripts run with nobody's rights",
+        "correct": false,
+        "why": "What reaches the browser runs with the page's rights, and what runs in the build or the tests runs with yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-6z8j916f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A page on `https://app.example` sends a loan with `fetch(\"https://api.example/loans\", { method: \"POST\", body: new FormData(form) })`, and the API's answers carry no CORS headers. The `fetch` rejects with `TypeError: Failed to fetch`, and lesson 16's `withRetries` sends it three more times. What did the loop most likely do?",
+    "hint": "JavaScript, lesson 16; Testing, Security and Accessibility, lesson 7.",
+    "choices": [
+      {
+        "text": "Nothing: a CORS failure means the browser never sent the request, so every retry failed in the same place",
+        "correct": false,
+        "why": "A body a plain form could send makes a simple request, with no preflight. It reached the server; the browser only kept the answer from the page."
+      },
+      {
+        "text": "It fixed it: on a second attempt the browser adds the CORS headers itself",
+        "correct": false,
+        "why": "CORS headers are the server's permission, sent in its answer. The browser cannot grant them to itself on any attempt."
+      },
+      {
+        "text": "It retried a 404, which lesson 16 says never helps, since `Failed to fetch` is how a 404 arrives",
+        "correct": false,
+        "why": "A 404 is an answer, and `fetch` resolves on it with `ok: false`. `Failed to fetch` is the rejection when the page gets no usable answer."
+      },
+      {
+        "text": "Four loans, if the server saved each one: every request reached it, and only the answer was hidden",
+        "correct": true,
+        "why": "CORS did not stop the request from reaching the server. A `POST` that worked and was never heard from is exactly the case lesson 16 says not to retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-b76xzedg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After a review, a colleague moves the session token from `localStorage` to `sessionStorage`, saying an injected script can no longer take it. What do the two lessons say?",
+    "hint": "JavaScript, lesson 18; Testing, Security and Accessibility, lesson 6.",
+    "choices": [
+      {
+        "text": "They are right: `sessionStorage` belongs to one tab, and an injected script runs in a context of its own",
+        "correct": false,
+        "why": "One tab is the page's tab, and the injected script runs in that page. Every script on the same origin reads the same `sessionStorage`."
+      },
+      {
+        "text": "Any script on the origin reads `sessionStorage` too; only an `HttpOnly` cookie is hidden from them",
+        "correct": true,
+        "why": "Lesson 6's table: both storages are open to every script on the origin, and only the `HttpOnly` cookie keeps the secret from them."
+      },
+      {
+        "text": "They are right on `https://` alone, where the browser keeps `sessionStorage` encrypted between reads",
+        "correct": false,
+        "why": "Nothing in either lesson encrypts web storage. `https://` protects the trip over the network, not what a script on the page can read."
+      },
+      {
+        "text": "It is worse: `sessionStorage` travels to the server with every request, as a cookie without `HttpOnly` does",
+        "correct": false,
+        "why": "Web storage is sent by your code and by nothing else. Cookies are what the browser attaches to every request."
+      }
+    ]
+  },
+  {
+    "id": "ex-m21waavw",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each need to the tool the lessons reach for.",
+    "hint": "JavaScript, lessons 13 and 15.",
+    "pairs": [
+      {
+        "left": "a bar on screen that grows a little on every frame",
+        "right": "`requestAnimationFrame`"
+      },
+      {
+        "left": "polling a server whose answer may take longer than the gap",
+        "right": "a chained `setTimeout`"
+      },
+      {
+        "left": "a search sent once the person stops typing",
+        "right": "debounce"
+      },
+      {
+        "left": "regular updates while the page is being scrolled",
+        "right": "throttle"
+      },
+      {
+        "left": "a follow-up that must run before any other task",
+        "right": "`queueMicrotask`"
+      }
+    ],
+    "right_distractors": [
+      "`setInterval`",
+      "a `while` loop that checks `performance.now()`"
+    ]
+  },
+  {
+    "id": "ex-b8zhcha3",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each tool to who draws the planner's screen in it, and what of the planner comes along.",
+    "hint": "Desktop and Mobile Apps with Web, lesson 10.",
+    "pairs": [
+      {
+        "left": "Capacitor",
+        "right": "a WebView, and the whole planner comes along"
+      },
+      {
+        "left": "React Native",
+        "right": "the platform's own views, with React; the rules come along"
+      },
+      {
+        "left": "NativeScript",
+        "right": "the platform's own views, with any of several frameworks; the rules come along"
+      },
+      {
+        "left": "Flutter",
+        "right": "its own engine, pixel by pixel; the rules are written again in Dart"
+      },
+      {
+        "left": "Ionic",
+        "right": "the same WebView as Capacitor, with components that look like a phone's"
+      }
+    ],
+    "right_distractors": [
+      "the platform's views, converted from the planner's HTML when it is built",
+      "a copy of Chromium it carries, with Node.js beside it"
+    ]
+  },
+  {
+    "id": "ex-af8h2209",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Somebody downloads the planner's `.deb` from its release page, with `SHA256SUMS`, `SHA256SUMS.asc` and the published `planner-signing-key.asc`. Put lesson 14's steps for checking it in order.",
+    "hint": "Desktop and Mobile Apps with Web, lesson 14.",
+    "items": [
+      "Import the published key with `gpg --import planner-signing-key.asc`",
+      "Check the list's signature with `gpg --verify SHA256SUMS.asc SHA256SUMS`",
+      "Check the packages against the list with `sha256sum -c SHA256SUMS`",
+      "Install the `.deb`, now that both checks said it was good"
+    ],
+    "trap": "The likeliest slip is running `sha256sum -c` first. A list that matches its files proves little until its signature shows nobody edited it, because whoever could change a file could change the list beside it."
+  },
+  {
+    "id": "ex-6j9r8e59",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The planner should keep the screen on during a study session. A teammate shows the Screen Wake Lock API working in desktop Chrome and says the app needs no plugin for it. What does lesson 5 say that check leaves open?",
+    "hint": "Desktop and Mobile Apps with Web, lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing: a WebView is Chromium on both systems, so an API desktop Chrome has is there in the app",
+        "correct": false,
+        "why": "iOS's WebView is built on WebKit, Safari's engine. Only Android's is built on Chromium."
+      },
+      {
+        "text": "Whether the stores accept web APIs at all, since both refuse an app that calls one instead of a plugin",
+        "correct": false,
+        "why": "Neither store's rule is about how an app is built; lesson 6 says the test is what the app does."
+      },
+      {
+        "text": "Whether the WebView has it on both systems: a WebView is not the browser it is built from, and Safari gained it years later",
+        "correct": true,
+        "why": "That is the first question of lesson 5, and the wake lock is its example. A browser's API can be missing or limited in the WebView built from it."
+      },
+      {
+        "text": "Whether an official plugin exists, which lesson 5 says to look for before considering any web API",
+        "correct": false,
+        "why": "Lesson 5's order starts with the web: does it already do it? The official plugin is the second question."
+      }
+    ]
+  },
+  {
+    "id": "ex-5w2z8b5s",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To try a build setting, a developer adds a line near the top of a file in `android/app` whose first line says it is generated each time `capacitor update` is run. After the next `npx cap sync` the line is gone, and nothing said so. Which file was it? `android/app/___`",
+    "hint": "Desktop and Mobile Apps with Web, lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "capacitor.build.gradle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1aqbjap0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The planner asks for notification permission the moment it opens, and on iOS the person taps Don't Allow. A week later they press Remind me, and the app calls `requestPermissions()` again. What happens, and what should the design have been?",
+    "hint": "Desktop and Mobile Apps with Web, lesson 4; JavaScript, lesson 18.",
+    "choices": [
+      {
+        "text": "It fails at once with no dialog; ask when Remind me is pressed, and keep working without reminders after a no",
+        "correct": true,
+        "why": "On iOS the dialog is shown once and a later request fails straight away. Both lessons ask at the moment of use, and a refusal leaves the rest of the app working."
+      },
+      {
+        "text": "iOS shows the dialog again now that a week has passed, so asking at start-up is fine as long as it repeats",
+        "correct": false,
+        "why": "A refusal does not expire: a later request fails at once, and only the person can change the answer, in the settings."
+      },
+      {
+        "text": "The plugin answers `prompt`, which means the person can be asked again, so the app keeps asking until they agree",
+        "correct": false,
+        "why": "`prompt` means nobody has been asked yet. After the tap the answer is `denied`, and asking again shows nothing."
+      },
+      {
+        "text": "The request opens the system's settings for the person, so the moment the app asks hardly matters",
+        "correct": false,
+        "why": "Neither lesson has a request open the settings. It fails, and the person has to go there on their own."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfye6phn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 6's measurement prints `5000 sessions, processor slowed 4x: open 920 ms`. A teammate proposes rewriting the planner in React Native because the WebView is too slow. Read against lesson 5's thresholds, what does the number say?",
+    "hint": "Desktop and Mobile Apps with Web, lesson 6; Rendering, Performance and PWA, lesson 5.",
+    "choices": [
+      {
+        "text": "It needs improvement, between 200 and 500 ms, and a native rewrite is what brings it under 200",
+        "correct": false,
+        "why": "920 ms is past 500, the line for poor. And the rewrite is aimed at the wrong cause."
+      },
+      {
+        "text": "It is good, since INP counts only the input delay and those 920 ms are mostly the handler running",
+        "correct": false,
+        "why": "INP is all three parts, input delay, processing and presentation, from the tap to the next paint."
+      },
+      {
+        "text": "It is poor, and the cause is the WebView, since at full speed the same tap took only 167 ms",
+        "correct": false,
+        "why": "Full speed only hides the cost on a fast computer. The time grows with the number of sessions, which is the planner's design."
+      },
+      {
+        "text": "It is poor, past 500 ms, and the time is the planner's `render()` rebuilding every row, which a rewrite keeps",
+        "correct": true,
+        "why": "`render()` throws the screen away and builds it again on each change. Lesson 6 says to measure first and fix the design, by drawing less, before blaming the WebView."
+      }
+    ]
+  },
+  {
+    "id": "ex-793y12r3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "An Expo app's next change is to go out as an over-the-air update, with no new store build. By lesson 9's table, which changes may go that way? Choose all that apply.",
+    "hint": "Desktop and Mobile Apps with Web, lesson 9.",
+    "choices": [
+      {
+        "text": "a bug fix in one of the screens",
+        "correct": true,
+        "why": "JavaScript and assets are what an update carries, and a fix to a screen is both."
+      },
+      {
+        "text": "a new text, colour or image",
+        "correct": true,
+        "why": "These change what the bundle draws and nothing native."
+      },
+      {
+        "text": "a new screen built from components already in the app, if it does not change what the app is",
+        "correct": true,
+        "why": "Allowed, within the store rules: the reviewer approved an app, and the update must not turn it into a different one."
+      },
+      {
+        "text": "a camera library that brings a new permission with it",
+        "correct": false,
+        "why": "The installed app does not have that native code, and a bundle calling it stops at the call. It needs a store build and a new runtime version."
+      },
+      {
+        "text": "turning the planner into a shop, with the native code left exactly as it is",
+        "correct": false,
+        "why": "A new purpose is never an update, whatever the code: it is a new app for a reviewer to see."
+      }
+    ]
+  },
+  {
+    "id": "ex-q44cvgzd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The Electron planner writes a session's note with `innerHTML`, and a crafted note runs a script in the window. With lesson 11's `webPreferences` and preload, what can that script reach?",
+    "hint": "Desktop and Mobile Apps with Web, lesson 11; JavaScript, lesson 11.",
+    "choices": [
+      {
+        "text": "Any file the user can read, because the main process runs Node.js and the window belongs to it",
+        "correct": false,
+        "why": "The main process has Node; the page does not. `require` and `process` are undefined in the window, and the main process answers one channel."
+      },
+      {
+        "text": "What the page itself can, plus `window.desktop.exportPlan`, whose handler checks what it is sent",
+        "correct": true,
+        "why": "`contextIsolation` leaves the page one function from the preload, and `ipcMain.handle` refuses anything that is not a string of at most a million characters."
+      },
+      {
+        "text": "Nothing: `sandbox: true` stops any script that was not part of the built `dist/` from running in the window",
+        "correct": false,
+        "why": "The sandbox limits what the renderer may do in the operating system; it does not choose which scripts run. Lesson 11 leaves that to a Content Security Policy."
+      },
+      {
+        "text": "`ipcRenderer.invoke` on any channel it names, since the preload brought `ipcRenderer` into the window",
+        "correct": false,
+        "why": "The preload's `ipcRenderer` lives in a world the page cannot see. The page gets only what `exposeInMainWorld` put on `window`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rjpky34",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Before the Tauri planner ships, a reviewer notices `\"csp\": null` in `tauri.conf.json`. Where does a policy go, and what will it do for the app?",
+    "hint": "Desktop and Mobile Apps with Web, lesson 12; Testing, Security and Accessibility, lesson 8.",
+    "choices": [
+      {
+        "text": "In `capabilities/default.json`, beside `core:default`, where it decides which commands the page may call",
+        "correct": false,
+        "why": "A capability grants plugin permissions to windows. A Content Security Policy is a different list, about where the page may load code from."
+      },
+      {
+        "text": "Nowhere: in Tauri, `null` already means the strictest policy there is, so any injected script is refused",
+        "correct": false,
+        "why": "`null` means the template set no policy of its own. With none, the page runs whatever script reaches it."
+      },
+      {
+        "text": "In `app.security.csp`, added to every page; it stops injected inline script, not the app's own code",
+        "correct": true,
+        "why": "Lesson 12 puts lesson 11's policy string there. Its `default-src 'self'` stands in for `script-src`, which allows no inline script; a policy does nothing about code that comes from the right place."
+      },
+      {
+        "text": "In `src-tauri/src/lib.rs`, as a Rust command that the page invokes at start-up to switch the policy on",
+        "correct": false,
+        "why": "A policy that the page has to switch on itself is one an injected script could skip. Tauri adds it to the pages it serves."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ypygze4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In the Tauri planner, the page's own `export_plan` command works, but a call to the file-system plugin's text-file reader is refused. Name the permission that `capabilities/default.json` has to list for the main window: `___`",
+    "hint": "Desktop and Mobile Apps with Web, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "fs:allow-read-text-file"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w3hvjvyh",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "The planner is at `1.4.1`, versioned by lesson 15's `scripts/version.mjs`. The next release changes the saved-plan format, so that `1.4.1` cannot read what it writes. Following semantic versioning, what `versionCode` does the script write for that release?",
+    "hint": "Desktop and Mobile Apps with Web, lesson 15; JavaScript, lesson 21.",
+    "value": 20000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4m5xscvm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The planner's API at `https://api.example` allows one origin, `https://planner.example`, where the website is served, and the calls send the session cookie with `credentials: \"include\"`. In the Capacitor app on Android every call fails with `TypeError: Failed to fetch`, and the console says it was blocked by CORS policy. What is the fix?",
+    "hint": "Desktop and Mobile Apps with Web, lesson 2; Testing, Security and Accessibility, lesson 7.",
+    "choices": [
+      {
+        "text": "Add the app's own origin, `https://localhost` on Android and `capacitor://localhost` on iOS, to the API's list",
+        "correct": true,
+        "why": "Capacitor serves the app from its own origin on the phone. The API answers a list of the origins it trusts, and the app's is not on it yet."
+      },
+      {
+        "text": "Answer with `Access-Control-Allow-Origin: *`, which lets the app in whatever origin it reports",
+        "correct": false,
+        "why": "With credentials the browser refuses the wildcard, and says so in the console."
+      },
+      {
+        "text": "Set `server.url` to `https://api.example`, so the app is served from the API's own origin",
+        "correct": false,
+        "why": "An app with `server.url` set does not contain your app; it is a WebView opening a remote page, and lesson 2 says it never ships."
+      },
+      {
+        "text": "Turn on `cleartext: true`, which lets the WebView reach an address that is not `localhost`",
+        "correct": false,
+        "why": "`cleartext` allows plain `http`. The API is on `https`, and the refusal came from CORS, not from the scheme."
+      }
+    ]
+  },
+  {
     "id": "ex-xmfzz1p0",
     "version": 1,
     "type": "quiz",
@@ -1717,7 +2573,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
-    "prompt": "The planner's weekly total pulses. A colleague would keep `.week { animation: pulse 1s ease-in-out 3; }` and add the global rule from `html-css`: a `prefers-reduced-motion: reduce` block that cuts every animation to `0.01ms`. Lesson 13 moves the animation inside `no-preference` instead. What does that buy?",
+    "prompt": "The planner's weekly total pulses. A colleague would keep `.week { animation: pulse 1s ease-in-out 3; }` and add the global rule from *HTML and CSS*: a `prefers-reduced-motion: reduce` block that cuts every animation to `0.01ms`. Lesson 13 moves the animation inside `no-preference` instead. What does that buy?",
     "hint": "Testing, Security and Accessibility, lesson 13; HTML and CSS, lesson 12.",
     "choices": [
       {
@@ -2259,7 +3115,7 @@
       {
         "text": "Question 1 fails: the other two methods still recompute it, so none of the saving the request wanted happens",
         "correct": true,
-        "why": "Question 1 is whether the change does what the ticket asked. ai-dev lesson 3 found exactly this: the tests passed and were right to, and the change saved nothing, which only reading the change against the request can find."
+        "why": "Question 1 is whether the change does what the ticket asked. *AI in Development* lesson 3 found exactly this: the tests passed and were right to, and the change saved nothing, which only reading the change against the request can find."
       },
       {
         "text": "A blocking comment that the assistant's diff must be rejected outright, because code from an assistant needs a second human author",
@@ -2279,12 +3135,12 @@
       {
         "text": "An assistant sends whatever is open in a tab, and `.gitignore` says nothing to the editor about that",
         "correct": true,
-        "why": "ai-dev lesson 3: an ignored file is still a file on disk, and a tab is a tab. Only an exclusion list the assistant reads keeps it out."
+        "why": "*AI in Development* lesson 3: an ignored file is still a file on disk, and a tab is a tab. Only an exclusion list the assistant reads keeps it out."
       },
       {
         "text": "The `VITE_` prefix tells the build to copy the value into the bundle that every visitor downloads",
         "correct": true,
-        "why": "front-delivery lesson 2: Vite copies a variable in because its name says so. A secret key in the bundle is readable by anybody who opens the page."
+        "why": "*Deployment, Design Systems and GraphQL* lesson 2: Vite copies a variable in because its name says so. A secret key in the bundle is readable by anybody who opens the page."
       },
       {
         "text": "Minifying the bundle renames the value, so a string copied into it can no longer be read",
@@ -2299,7 +3155,7 @@
       {
         "text": "A key that starts with `sk_` is the publishable kind, meant for the browser",
         "correct": false,
-        "why": "front-delivery lesson 2 gives `pk_` against `sk_` as the common convention, and `sk_` is the secret one, for a server only."
+        "why": "*Deployment, Design Systems and GraphQL* lesson 2 gives `pk_` against `sk_` as the common convention, and `sk_` is the secret one, for a server only."
       }
     ]
   },
@@ -2308,7 +3164,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "An assistant writes a fix for a date input that accepted `31/02`, and a test for it in the same reply. The test passes on its first run. What do ai-dev lesson 5 and the portfolio project's lesson 12 both say is missing?",
+    "prompt": "An assistant writes a fix for a date input that accepted `31/02`, and a test for it in the same reply. The test passes on its first run. What do *AI in Development* lesson 5 and the portfolio project's lesson 12 both say is missing?",
     "hint": "AI in Development, lesson 5; The Portfolio Project: From Brief to Deploy, lesson 12.",
     "choices": [
       {
@@ -2329,7 +3185,7 @@
       {
         "text": "The test run on the code before the fix, where it should fail; only then is it known to see the bug",
         "correct": true,
-        "why": "ai-dev lesson 5: a generated test should fail before the change it tests. Portfolio lesson 12: for a bug, the test comes first, and you see it fail."
+        "why": "*AI in Development* lesson 5: a generated test should fail before the change it tests. Portfolio lesson 12: for a bug, the test comes first, and you see it fail."
       }
     ]
   },
@@ -2338,18 +3194,18 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A team turns on a bot that reviews every pull request with a model and posts an approval or a request for changes. Somebody proposes adding the bot's approval to the required checks on `main`. What do ai-dev lesson 4 and front-delivery lesson 3 say?",
+    "prompt": "A team turns on a bot that reviews every pull request with a model and posts an approval or a request for changes. Somebody proposes adding the bot's approval to the required checks on `main`. What do *AI in Development* lesson 4 and *Deployment, Design Systems and GraphQL* lesson 3 say?",
     "hint": "AI in Development, lesson 4; Deployment, Design Systems and GraphQL, lesson 3.",
     "choices": [
       {
         "text": "Keep its comments for whoever decides; require the checks that are true or false, like tests and types",
         "correct": true,
-        "why": "ai-dev lesson 4 keeps the merge decision away from the bot, whose approval is a claim. front-delivery lesson 3's required check is a named job that passes or fails."
+        "why": "*AI in Development* lesson 4 keeps the merge decision away from the bot, whose approval is a claim. *Deployment, Design Systems and GraphQL* lesson 3's required check is a named job that passes or fails."
       },
       {
         "text": "Require it, since a check that nobody is obliged to wait for is a suggestion, and the bot reads every pull request",
         "correct": false,
-        "why": "That sentence is about checks that are true or false. A bot's approval is a list of hypotheses, and ai-dev lesson 4 showed three confident ones and the real bug missing."
+        "why": "That sentence is about checks that are true or false. A bot's approval is a list of hypotheses, and *AI in Development* lesson 4 showed three confident ones and the real bug missing."
       },
       {
         "text": "Require it on Fridays, when the human reviewers are least careful, and let people merge alone on other days",
@@ -2359,7 +3215,7 @@
       {
         "text": "Turn the bot off, since a model misses an off-by-one at a boundary and its comments just cost tokens",
         "correct": false,
-        "why": "ai-dev lesson 4 says a good model does find local, mechanical findings like an off-by-one. The bot is useful as a first read."
+        "why": "*AI in Development* lesson 4 says a good model does find local, mechanical findings like an off-by-one. The bot is useful as a first read."
       }
     ]
   },
@@ -2455,12 +3311,12 @@
       {
         "text": "A region created at the moment its text arrives is usually read by nobody; it has to exist before",
         "correct": true,
-        "why": "front-quality lesson 12: a reader watches the live regions already in the page, so the region is made once and kept."
+        "why": "*Testing, Security and Accessibility* lesson 12: a reader watches the live regions already in the page, so the region is made once and kept."
       },
       {
         "text": "Updated on every piece, it reads out fragments one after another instead of an answer",
         "correct": true,
-        "why": "ai-dev lesson 9: announce the reply once, when it is complete, or by sentence, so the reader has something to follow."
+        "why": "*AI in Development* lesson 9: announce the reply once, when it is complete, or by sentence, so the reader has something to follow."
       },
       {
         "text": "It should be `role=\"alert\"`, so that each piece interrupts what the reader is saying",
@@ -2514,13 +3370,13 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
-    "prompt": "A product page asks a model to tidy up customer reviews and keep their formatting, then shows the result with `card.innerHTML = reply` and a comment: `// our own output, safe`. A review contained `<script>alert(\"hi\")</script>`. What do ai-dev lesson 11 and front-quality lesson 9 say?",
+    "prompt": "A product page asks a model to tidy up customer reviews and keep their formatting, then shows the result with `card.innerHTML = reply` and a comment: `// our own output, safe`. A review contained `<script>alert(\"hi\")</script>`. What do *AI in Development* lesson 11 and *Testing, Security and Accessibility* lesson 9 say?",
     "hint": "AI in Development, lesson 11; Testing, Security and Accessibility, lesson 9.",
     "choices": [
       {
         "text": "Safe as written: a model rewrites what it reads, so a script tag in a review does not survive into its reply",
         "correct": false,
-        "why": "In ai-dev lesson 11 the model kept the tag, because it was asked to keep the markup. The reply copied what it read."
+        "why": "In *AI in Development* lesson 11 the model kept the tag, because it was asked to keep the markup. The reply copied what it read."
       },
       {
         "text": "Safe once the system prompt tells the model to drop scripts, since the instruction travels with every request",
@@ -2535,7 +3391,7 @@
       {
         "text": "Unsafe: the reply is text from outside, and `innerHTML` is a sink; escape it, or build the card with `textContent`",
         "correct": true,
-        "why": "ai-dev lesson 11: treat a model's reply like anything else that came from outside, because often it did. front-quality lesson 9 lists `innerHTML` as a sink with `textContent` as the safe way."
+        "why": "*AI in Development* lesson 11: treat a model's reply like anything else that came from outside, because often it did. *Testing, Security and Accessibility* lesson 9 lists `innerHTML` as a sink with `textContent` as the safe way."
       }
     ]
   },
@@ -2544,7 +3400,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A CV says *I care about accessibility*. Which line under the portfolio project turns that claim into what portfolio lesson 1 calls evidence, written the way first-job lesson 4 asks?",
+    "prompt": "A CV says *I care about accessibility*. Which line under the portfolio project turns that claim into what portfolio lesson 1 calls evidence, written the way *From Study to Hired* lesson 4 asks?",
     "hint": "The Portfolio Project: From Brief to Deploy, lesson 1; From Study to Hired: CV, Interviews and the First 90 Days, lesson 4.",
     "choices": [
       {
@@ -2574,7 +3430,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "easy",
-    "prompt": "A GitHub profile has five repositories from front-end tutorials and one finished project. What do portfolio lesson 2 and first-job lesson 5 say to do with the tutorials?",
+    "prompt": "A GitHub profile has five repositories from front-end tutorials and one finished project. What do portfolio lesson 2 and *From Study to Hired* lesson 5 say to do with the tutorials?",
     "hint": "The Portfolio Project: From Brief to Deploy, lesson 2; From Study to Hired: CV, Interviews and the First 90 Days, lesson 5.",
     "choices": [
       {
@@ -2615,7 +3471,7 @@
       {
         "text": "Narrow the layout to 320 pixels and see whether it still holds",
         "correct": true,
-        "why": "Lesson 3 checks the layout at 320 pixels, which front-quality lesson 13 explains: 1.4.10 *Reflow* asks for no sideways scrolling at that width."
+        "why": "Lesson 3 checks the layout at 320 pixels, which *Testing, Security and Accessibility* lesson 13 explains: 1.4.10 *Reflow* asks for no sideways scrolling at that width."
       },
       {
         "text": "Use the form with the keyboard alone",
@@ -2730,7 +3586,7 @@
     "version": 1,
     "type": "multiple-choice",
     "difficulty": "medium",
-    "prompt": "You are the only reviewer of your own portfolio pull request. Which of these give the distance lesson 10 asks for, or the check ai-dev lesson 4 would accept? Choose all that apply.",
+    "prompt": "You are the only reviewer of your own portfolio pull request. Which of these give the distance lesson 10 asks for, or the check *AI in Development* lesson 4 would accept? Choose all that apply.",
     "hint": "The Portfolio Project: From Brief to Deploy, lesson 10; AI in Development, lesson 4.",
     "choices": [
       {
@@ -2751,7 +3607,7 @@
       {
         "text": "Asking an assistant to approve the diff and merging when it says it looks good",
         "correct": false,
-        "why": "ai-dev lesson 4 keeps the merge decision away from a bot: its approval is a claim, and silence about a bug reads like approval."
+        "why": "*AI in Development* lesson 4 keeps the merge decision away from a bot: its approval is a claim, and silence about a bug reads like approval."
       },
       {
         "text": "Rereading it in the editor straight away, while what you meant is still fresh",
@@ -2786,7 +3642,7 @@
       {
         "text": "Forty stops all called *Add to cart*; each needs a name saying what it acts on, which axe cannot judge",
         "correct": true,
-        "why": "Lesson 13's *Borrower, Lend, Borrower, Lend* became *Lend Projector 1 to*. front-quality lesson 10 lists whether a name describes what a control does among the questions a machine cannot answer."
+        "why": "Lesson 13's *Borrower, Lend, Borrower, Lend* became *Lend Projector 1 to*. *Testing, Security and Accessibility* lesson 10 lists whether a name describes what a control does among the questions a machine cannot answer."
       }
     ]
   },
@@ -2801,7 +3657,7 @@
       {
         "text": "The build copies it into a file every visitor downloads; an account-wide key belongs on a server",
         "correct": true,
-        "why": "front-delivery lesson 2: if the browser has it, the person using the browser has it, and a service with one key only gets treated as secret. Lesson 14's environment protects a value the server reads at run time."
+        "why": "*Deployment, Design Systems and GraphQL* lesson 2: if the browser has it, the person using the browser has it, and a service with one key only gets treated as secret. Lesson 14's environment protects a value the server reads at run time."
       },
       {
         "text": "It is enough as long as `.env` is in `.gitignore`, which is the half of lesson 14 that matters",
@@ -2841,12 +3697,12 @@
       {
         "text": "how you leave, since a portfolio outlives most free tiers",
         "correct": true,
-        "why": "The fifth check. front-delivery lesson 1 says the same thing from the other side: a free plan is somebody else's business decision."
+        "why": "The fifth check. *Deployment, Design Systems and GraphQL* lesson 1 says the same thing from the other side: a free plan is somebody else's business decision."
       },
       {
         "text": "the limits this course quotes for each of the four hosts",
         "correct": false,
-        "why": "Neither course quotes any. front-delivery lesson 1 explains why: a number written in October 2026 would be wrong before you read it."
+        "why": "Neither course quotes any. *Deployment, Design Systems and GraphQL* lesson 1 explains why: a number written in October 2026 would be wrong before you read it."
       },
       {
         "text": "which host has the most stars on GitHub",
@@ -2860,7 +3716,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A portfolio README's *Run it* section says `npm ci && npm run dev`, and both work on the author's laptop. How do portfolio lesson 16 and front-delivery lesson 3 say to find out whether the claim holds?",
+    "prompt": "A portfolio README's *Run it* section says `npm ci && npm run dev`, and both work on the author's laptop. How do portfolio lesson 16 and *Deployment, Design Systems and GraphQL* lesson 3 say to find out whether the claim holds?",
     "hint": "The Portfolio Project: From Brief to Deploy, lesson 16; Deployment, Design Systems and GraphQL, lesson 3.",
     "choices": [
       {
@@ -2871,7 +3727,7 @@
       {
         "text": "Clone the repository onto a machine with nothing of the project on it and type exactly what the README says",
         "correct": true,
-        "why": "Lesson 16 runs the README cold on a machine built from nothing; front-delivery lesson 3 shows why: a file your computer has and the repository does not fails only on a clean copy."
+        "why": "Lesson 16 runs the README cold on a machine built from nothing; *Deployment, Design Systems and GraphQL* lesson 3 shows why: a file your computer has and the repository does not fails only on a clean copy."
       },
       {
         "text": "Ask a friend to read the README and say whether the steps look complete",
@@ -2890,7 +3746,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "easy",
-    "prompt": "Which `alt` text fits the screenshot at the top of a study planner's README, by portfolio lesson 17 and front-quality lesson 12?",
+    "prompt": "Which `alt` text fits the screenshot at the top of a study planner's README, by portfolio lesson 17 and *Testing, Security and Accessibility* lesson 12?",
     "hint": "The Portfolio Project: From Brief to Deploy, lesson 17; Testing, Security and Accessibility, lesson 12.",
     "choices": [
       {
@@ -2980,7 +3836,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
-    "prompt": "Your contribution graph is empty for the six weeks of your portfolio project, though you pushed every week. `git log --format='%an <%ae>'` shows on every commit the personal address you typed the day you installed git, which your GitHub account does not have. What do first-job lesson 5 and portfolio lesson 18 point to?",
+    "prompt": "Your contribution graph is empty for the six weeks of your portfolio project, though you pushed every week. `git log --format='%an <%ae>'` shows on every commit the personal address you typed the day you installed git, which your GitHub account does not have. What do *From Study to Hired* lesson 5 and portfolio lesson 18 point to?",
     "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 5; The Portfolio Project: From Brief to Deploy, lesson 18.",
     "choices": [
       {
@@ -3036,7 +3892,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A take-home asks for a booking form that refuses a date in the past, in about three hours. Which hand-in fits first-job lesson 13 and portfolio lesson 12?",
+    "prompt": "A take-home asks for a booking form that refuses a date in the past, in about three hours. Which hand-in fits *From Study to Hired* lesson 13 and portfolio lesson 12?",
     "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13; The Portfolio Project: From Brief to Deploy, lesson 12.",
     "choices": [
       {
@@ -3066,7 +3922,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A recruiter who is not technical opens the screening call with *tell me about yourself*. Which answer follows first-job lesson 11, which borrows its shape from portfolio lesson 19?",
+    "prompt": "A recruiter who is not technical opens the screening call with *tell me about yourself*. Which answer follows *From Study to Hired* lesson 11, which borrows its shape from portfolio lesson 19?",
     "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 11; The Portfolio Project: From Brief to Deploy, lesson 19.",
     "choices": [
       {
@@ -3096,7 +3952,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
-    "prompt": "*Tell me about a time you failed.* Which answer has the shape first-job lesson 15 asks for, with its material taken from a retrospective like portfolio lesson 21's?",
+    "prompt": "*Tell me about a time you failed.* Which answer has the shape *From Study to Hired* lesson 15 asks for, with its material taken from a retrospective like portfolio lesson 21's?",
     "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 15; The Portfolio Project: From Brief to Deploy, lesson 21.",
     "choices": [
       {
@@ -3160,7 +4016,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "Your first ticket at work is to fix a form label that a screen reader announces wrongly. What does first-job lesson 20 want from it, with the habits of portfolio lesson 10?",
+    "prompt": "Your first ticket at work is to fix a form label that a screen reader announces wrongly. What does *From Study to Hired* lesson 20 want from it, with the habits of portfolio lesson 10?",
     "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; The Portfolio Project: From Brief to Deploy, lesson 10.",
     "choices": [
       {
@@ -3225,7 +4081,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "The evidence line at the top of your CV links to the portfolio repository. By first-job lesson 3 and portfolio lesson 16, what should the README's first screen show the person who clicks?",
+    "prompt": "The evidence line at the top of your CV links to the portfolio repository. By *From Study to Hired* lesson 3 and portfolio lesson 16, what should the README's first screen show the person who clicks?",
     "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 3; The Portfolio Project: From Brief to Deploy, lesson 16.",
     "choices": [
       {
