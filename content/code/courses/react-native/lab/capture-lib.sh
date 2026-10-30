@@ -74,7 +74,7 @@ start_from() {
   local from; from=$(LAB path "$1")
   [ -d "$from/planner" ] || { echo "start_from: lesson $1 left no ~/planner; record it first" >&2; exit 1; }
   rm -rf "$H/planner"
-  tar -C "$from" --exclude=planner/node_modules -cf - planner | tar -C "$H" -xf -
+  tar -C "$from" --exclude=planner/node_modules --exclude=planner/android --exclude=planner/ios --exclude=planner/dist -cf - planner | tar -C "$H" -xf -
   [ -d "$from/planner/node_modules" ] && cp -al "$from/planner/node_modules" "$H/planner/node_modules"
   chown -R ana:ana "$H/planner"
 }
