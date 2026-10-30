@@ -71,6 +71,7 @@ IMAGES=(
   mcr.microsoft.com/mssql/server:2022-latest
   registry:3
   redis:8-alpine
+  daprio/daprd:1.17.16
   kindest/node:v1.37.0
 )
 # the bases a lesson builds FROM, which get the proxy's certificate

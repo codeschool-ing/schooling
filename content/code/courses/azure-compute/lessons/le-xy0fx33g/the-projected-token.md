@@ -135,8 +135,8 @@ TRANSCRIPT:apply
 ```
 
 The four variables are in the container, and the last command shows who put them there: nobody.
-**On kind the label and the annotation are read by nothing**; there is no webhook configuration in
-the cluster at all, and on AKS that list would include the workload identity webhook.
+**On kind the label and the annotation are read by nothing**: the cluster has no mutating webhook
+at all, and a mutating webhook is exactly what AKS installs to do that work.
 
 ## Reading the token
 
@@ -192,8 +192,8 @@ first is for Entra ID, and a receiver that checks the audience refuses the other
 the trust in the next section names an audience as well as a subject.
 
 The lifetime differs too, and for a reason that belongs to kind. Its API server extends the default
-token to a year and adds `warnafter`, the moment after which it logs that an old token was used,
-so that clients which never reread the file keep working. AKS's documentation says that extension
+token to a year, so that clients which never reread the file keep working, and adds `warnafter`,
+the moment after which a use of the token is recorded as stale. AKS's documentation says that extension
 is off from Kubernetes 1.30, so on AKS this token lasts about an hour as well.
 
 ## Lifetime and rotation

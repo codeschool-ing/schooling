@@ -53,8 +53,7 @@ how long that is.
 
 ## A secret with an end date
 
-Here Entra ID differs from what you may have met with other clouds: a client secret has an end
-date. The command line says how long one lasts when nobody chooses, in the help of the two commands
+Unlike a key that lives until somebody deletes it, an Entra ID client secret has an end date. The command line says how long one lasts when nobody chooses, in the help of the two commands
 that create one:
 
 ```
@@ -120,5 +119,5 @@ gives a pod; the one after it writes down the trust on the Azure side; the last 
 exchange between the two.
 
 If the cluster already has secrets like `orders-entra`'s, the command `az ad app credential list
---id <application id>` lists an application's secrets with their end dates, and a secret that is
+--id <application id>` lists the metadata of an application's secrets, end dates included, and a secret that is
 old, used from a pod and due to expire next quarter is the first one to replace.

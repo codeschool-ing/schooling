@@ -33,8 +33,8 @@ generated for each cluster that never changes; for the shop's cluster the region
 On AKS Standard, a cluster created on Kubernetes 1.34 or later has the issuer on from the start, and
 an older or existing one needs it turned on, which restarts the API server for a moment. **Once on,
 it cannot be turned off.** The keys behind it rotate with `az aks oidc-issuer rotate-signing-keys`,
-and both the old key and the new one stay valid for 24 hours afterwards, which is the window in
-which every pod's token is replaced by one signed with the new key.
+and both the old key and the new one stay valid for 24 hours afterwards, long enough for every
+pod's token to be replaced by one signed with the new key.
 
 The command line names the two switches a cluster needs, and the query that reads the address
 back. Its help is real text from this version; the query needs a subscription and was refused:
@@ -63,8 +63,8 @@ more reason this course does not attempt the exchange.
 
 The identity is a **user-assigned managed identity**, the kind `azure-foundations` lesson 8 created
 as a resource of its own, here called `shop-orders`. Federated credentials can be added to one of
-those or to an application registration; a system-assigned identity, which lives and dies with one
-resource, has nowhere to put them. The declaration below is the whole of the Azure side: a cut-down
+those or to an application registration, and not to a system-assigned identity, which lives and
+dies with one resource. The declaration below is the whole of the Azure side: a cut-down
 version of lesson 11's cluster, keeping only what this lesson adds to it, and the identity with its
 credential. Save it as `~/azure/identity.bicep`, the notes left out:
 
