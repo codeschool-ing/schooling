@@ -6,7 +6,7 @@ version: 1
 **Inside one size class, a layout bends rather than switches: some things take whatever space
 there is, and some keep their size whatever happens.** The usual mistake runs in one of two
 directions. Either everything is given a fixed size, designed on one phone, and the layout leaves a
-blank band down the side of a wider window or cuts its last column off on a narrower one; or
+blank band down the side of a wider window or cuts its last column off on a narrower one. Or
 everything stretches, and a line of text runs the full width of a landscape tablet, which nobody
 can read.
 

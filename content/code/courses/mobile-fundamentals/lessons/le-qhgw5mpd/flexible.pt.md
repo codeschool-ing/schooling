@@ -6,7 +6,7 @@ version: 1
 **Dentro de uma classe de tamanho, um layout se dobra em vez de trocar: algumas coisas ocupam o
 espaço que houver, e outras mantêm o tamanho aconteça o que acontecer.** O erro comum vai numa de
 duas direções. Ou tudo recebe um tamanho fixo, projetado num celular, e o layout deixa uma faixa
-vazia na lateral de uma janela mais larga ou corta a última coluna numa mais estreita; ou tudo
+vazia na lateral de uma janela mais larga ou corta a última coluna numa mais estreita. Ou tudo
 estica, e uma linha de texto atravessa a largura inteira de um tablet em paisagem, o que ninguém
 consegue ler.
 
