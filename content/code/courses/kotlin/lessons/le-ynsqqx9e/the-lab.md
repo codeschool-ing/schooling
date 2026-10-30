@@ -30,6 +30,12 @@ What this course does not do is build an Android app. That needs the Android SDK
 and an emulator, and it is the next course on this path, `android-apps`, that installs them. The
 machine you build here is the one that course starts from.
 
+One more thing is described and not run: lesson 20's native build, which compiles Kotlin to a Linux
+executable with no JVM. Its compiler arrives from Maven Central like everything else, but the C
+toolchain it links with is downloaded from `download.jetbrains.com`, and the machine these lessons were
+recorded on could not reach that address. Lesson 20 shows the build file and says where its transcript
+would have been.
+
 ## Installed: the recommended path
 
 The versions are pinned, and the course was recorded with exactly these: **OpenJDK 21** from the

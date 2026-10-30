@@ -30,6 +30,11 @@ O que este curso não faz é construir um app Android. Isso exige o Android SDK,
 emulador, e é o próximo curso deste caminho, `android-apps`, que os instala. A máquina que você
 monta aqui é a de onde aquele curso parte.
 
+Mais uma coisa é descrita e não rodada: o build nativo da lição 20, que compila Kotlin para um executável
+Linux sem JVM. O compilador dele chega do Maven Central como todo o resto, mas o toolchain de C com que
+ele liga o programa é baixado de `download.jetbrains.com`, e a máquina em que estas lições foram gravadas
+não alcançava esse endereço. A lição 20 mostra o arquivo de build e diz onde a transcrição dele estaria.
+
 ## Instalado: o caminho recomendado
 
 As versões são fixas, e o curso foi gravado exatamente com estas: **OpenJDK 21** do pacote

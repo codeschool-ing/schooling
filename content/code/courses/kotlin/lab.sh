@@ -44,7 +44,12 @@
 #     an HTTPS proxy that re-signs every certificate. Its certificate is added
 #     to the machine's trust store before anything is installed (so the
 #     JDK's cacerts, which ca-certificates-java builds from that store, trusts
-#     it too); ~ana/.curlrc names the proxy for curl, and
+#     it too); ~ana/.curlrc names the proxy for curl, and exempts
+#     localhost from it, so lesson 20's curl reaches the server on the same
+#     machine as it does on the student's; ~ana/.yarnrc names it for the
+#     Yarn that Kotlin/JS downloads in lesson 20, with the machine's trust
+#     store as its CA file, since Yarn reads neither Gradle's settings nor
+#     the system's; and
 #     ~ana/.gradle/gradle.properties names it for Gradle. On the student's
 #     machine none of these exists and none is needed. No lesson prints them.
 #   - MAVEN CENTRAL. Through that proxy, repo.maven.apache.org answers
@@ -107,7 +112,8 @@ as_root() { in_root "$1" root "$2"; }
 stage_proxy() { # $1 = machine root
   [ -n "$PROXY" ] || return 0
   local R=$1 host=${PROXY#*://}; host=${host%/}; local port=${host##*:}; host=${host%:*}
-  printf 'proxy = "%s"\n' "$PROXY" > "$R/home/ana/.curlrc"
+  printf 'proxy = "%s"\nnoproxy = "localhost,127.0.0.1"\n' "$PROXY" > "$R/home/ana/.curlrc"
+  printf 'proxy "%s"\nhttps-proxy "%s"\ncafile "/etc/ssl/certs/ca-certificates.crt"\n' "$PROXY" "$PROXY" > "$R/home/ana/.yarnrc"
   mkdir -p "$R/home/ana/.gradle"
   printf 'systemProp.https.proxyHost=%s\nsystemProp.https.proxyPort=%s\nsystemProp.http.proxyHost=%s\nsystemProp.http.proxyPort=%s\n' \
     "$host" "$port" "$host" "$port" > "$R/home/ana/.gradle/gradle.properties"
@@ -129,7 +135,7 @@ allprojects {
     repositories.useMirror()
 }
 KTS
-  chown -R 1000:1000 "$R/home/ana/.curlrc" "$R/home/ana/.gradle"
+  chown -R 1000:1000 "$R/home/ana/.curlrc" "$R/home/ana/.yarnrc" "$R/home/ana/.gradle"
 }
 
 build() {
@@ -186,6 +192,9 @@ for m in re.finditer(r'^```([\w-]*)\n(.*?)^```$', text, re.S | re.M):
     first = body.split('\n', 1)[0]
     if lang == 'kotlin':
         f = re.fullmatch(r'// ([\w./-]+\.kts?)', first)
+        if not f and first.startswith('#!'):
+            # a script's shebang has to be its first line, so its name is the second
+            f = re.fullmatch(r'// ([\w./-]+\.kts?)', (body.split('\n') + [''])[1])
         if f: blocks.append((f.group(1), body))
     elif lang in ('toml', 'properties'):
         f = re.fullmatch(r'# ([\w./-]+)', first)
