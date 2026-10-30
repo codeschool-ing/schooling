@@ -43,6 +43,7 @@ case "${1:-}" in
   tools)
     # shellcheck source=capture.sh
     . "$COURSE/capture.sh"
+    fence "$COURSE/lessons/le-5ckszpkn/install.md" 1      # Bicep
     ;;
   *)
     echo "usage: bash lab.sh student|tools" >&2

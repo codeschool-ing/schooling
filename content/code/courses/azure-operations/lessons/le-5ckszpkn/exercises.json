@@ -1,0 +1,370 @@
+[
+  {
+    "id": "ex-zsefece7",
+    "version": 1,
+    "section": "install",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of the Bicep workflow needs an Azure subscription?",
+    "hint": "What does Resource Manager do that the compiler does not?",
+    "choices": [
+      {
+        "text": "Compiling a `.bicep` file to JSON",
+        "correct": false,
+        "why": "That runs on your computer, as this lesson shows."
+      },
+      {
+        "text": "Running the linter over a file",
+        "correct": false,
+        "why": "The linter is part of the same local program."
+      },
+      {
+        "text": "Deploying the template",
+        "correct": true,
+        "why": "Right. Deploying sends the JSON to Resource Manager, which needs a subscription."
+      },
+      {
+        "text": "Decompiling an existing ARM template",
+        "correct": false,
+        "why": "Decompiling reads a local JSON file and asks nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrbjs3ap",
+    "version": 1,
+    "section": "arm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an ARM template, why does the container also list the storage account in `dependsOn`?",
+    "hint": "How does Resource Manager create resources it is not told to order?",
+    "choices": [
+      {
+        "text": "ARM would otherwise create the two in parallel",
+        "correct": true,
+        "why": "Right. ARM creates in parallel unless dependsOn orders it."
+      },
+      {
+        "text": "Because the container's name does not mention the account",
+        "correct": false,
+        "why": "It does mention it, in the format() call; ARM does not infer order from that."
+      },
+      {
+        "text": "It grants the container access",
+        "correct": false,
+        "why": "dependsOn orders creation; it grants nothing."
+      },
+      {
+        "text": "It is optional, and only speeds the deployment up",
+        "correct": false,
+        "why": "It slows nothing down and is required for correctness."
+      }
+    ]
+  },
+  {
+    "id": "ex-hb5mbxj8",
+    "version": 1,
+    "section": "arm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A template has `\"name\": \"[paramaters('accountName')]\"`, with the function name misspelt. When is that found?",
+    "hint": "To a JSON parser, what is that value?",
+    "choices": [
+      {
+        "text": "When the file is saved, by any JSON editor",
+        "correct": false,
+        "why": "It is a perfectly valid JSON string; a JSON editor has nothing to say."
+      },
+      {
+        "text": "When Resource Manager evaluates the expression",
+        "correct": true,
+        "why": "Right. The expression lives inside a string, which JSON does not look into."
+      },
+      {
+        "text": "Never; Resource Manager ignores unknown functions",
+        "correct": false,
+        "why": "It refuses the template when it evaluates the call."
+      },
+      {
+        "text": "When git commits it",
+        "correct": false,
+        "why": "git stores bytes; it has no opinion about templates."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9d4r8zp",
+    "version": 1,
+    "section": "arm",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`bicep decompile` prints a warning that decompilation is best effort. What should you do with the generated `.bicep`?",
+    "hint": "Is it a translation or a draft?",
+    "choices": [
+      {
+        "text": "Deploy it at once; the warning appears every time",
+        "correct": false,
+        "why": "The warning is there because the mapping is not guaranteed."
+      },
+      {
+        "text": "Delete it and write the file by hand from the start",
+        "correct": false,
+        "why": "A decompiled file is a useful starting point; discarding it wastes the work."
+      },
+      {
+        "text": "Read it as a starting point, then build and lint it",
+        "correct": true,
+        "why": "Right. It came out clean here, and you only know that by checking."
+      },
+      {
+        "text": "Convert it back to JSON to compare the two by hand",
+        "correct": false,
+        "why": "Building it does compile it back, but reading the Bicep is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-qb8g6msg",
+    "version": 1,
+    "section": "what-bicep-fixes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each ARM habit to what replaces it in Bicep.",
+    "hint": "Each one is a mistake Bicep removes.",
+    "pairs": [
+      {
+        "left": "dependsOn written by hand",
+        "right": "A symbolic reference implies the order"
+      },
+      {
+        "left": "A child name built with slashes",
+        "right": "parent: and the short name"
+      },
+      {
+        "left": "reference(resourceId(...)) inside a string",
+        "right": "account.properties.primaryEndpoints"
+      },
+      {
+        "left": "parameters('accountName')",
+        "right": "accountName"
+      }
+    ],
+    "right_distractors": [
+      "A second service that deploys Bicep"
+    ]
+  },
+  {
+    "id": "ex-a76rpy9k",
+    "version": 1,
+    "section": "what-bicep-fixes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a deployment from Bicep need no permission beyond what an ARM deployment needs?",
+    "hint": "What does Resource Manager receive?",
+    "choices": [
+      {
+        "text": "Bicep deploys with its own built-in identity",
+        "correct": false,
+        "why": "Bicep has no identity; it is a compiler on your machine."
+      },
+      {
+        "text": "Bicep users get a role",
+        "correct": false,
+        "why": "No role is granted for using a language."
+      },
+      {
+        "text": "Bicep deployments skip Azure Policy",
+        "correct": false,
+        "why": "Policy applies to every Resource Manager request, whatever wrote it."
+      },
+      {
+        "text": "The compiled JSON, an ordinary ARM template",
+        "correct": true,
+        "why": "Right. Resource Manager never sees Bicep at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-g2bsezag",
+    "version": 1,
+    "section": "what-bicep-fixes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 2,
+    "tolerance": 0,
+    "prompt": "In the JSON compiled from `shop.bicep`, how many resources carry a `dependsOn` that nobody wrote?",
+    "hint": "Count the resources that name a parent.",
+    "unit": "resources"
+  },
+  {
+    "id": "ex-edx0nxf3",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bicep build` compiled a file with `sku: { name: 'Standard_LRSS' }` and printed nothing. What does that tell you?",
+    "hint": "How is the SKU's name typed in the schema Bicep has?",
+    "choices": [
+      {
+        "text": "That Standard_LRSS is a valid SKU name",
+        "correct": false,
+        "why": "It is not; Resource Manager will refuse it at deployment."
+      },
+      {
+        "text": "Its schema type is a plain string",
+        "correct": true,
+        "why": "Right. A clean compile is evidence of shape, not of correct values."
+      },
+      {
+        "text": "That warnings are off",
+        "correct": false,
+        "why": "The other typo produced a warning in the same run."
+      },
+      {
+        "text": "That the linter, not the compiler, checks SKUs",
+        "correct": false,
+        "why": "Neither checks a value the schema types as a plain string."
+      }
+    ]
+  },
+  {
+    "id": "ex-twp89ebg",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline step runs `bicep build main.bicep` and passes. The log shows a BCP083 warning about a property that does not exist. Why did the step pass, and what fixes that?",
+    "hint": "What was the exit status?",
+    "choices": [
+      {
+        "text": "BCP083 is informational; there is nothing to fix",
+        "correct": false,
+        "why": "It names a property that does not exist; the output would be wrong."
+      },
+      {
+        "text": "The step ran the linter, which never fails",
+        "correct": false,
+        "why": "It ran build, and lint rules can be raised to errors."
+      },
+      {
+        "text": "A warning exits 0; make warnings fail the step",
+        "correct": true,
+        "why": "Right. A pipeline that reads only the exit status ships warnings."
+      },
+      {
+        "text": "The agent's Bicep is older than the developer's",
+        "correct": false,
+        "why": "The warning appeared, so the version caught it; the issue is what happens next."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7eddppg",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an output carrying `listKeys()` dangerous even though the deployment succeeds?",
+    "hint": "Where are a deployment's outputs kept?",
+    "choices": [
+      {
+        "text": "listKeys rotates the key each time it is called",
+        "correct": false,
+        "why": "It reads the keys; it does not rotate them."
+      },
+      {
+        "text": "The key ends up in the deployment history",
+        "correct": true,
+        "why": "Right. That is what outputs-should-not-contain-secrets is about."
+      },
+      {
+        "text": "Outputs are limited to 24 characters, so the key is cut",
+        "correct": false,
+        "why": "There is no such limit; the whole key would be there."
+      },
+      {
+        "text": "It makes the template fail on the second deployment",
+        "correct": false,
+        "why": "It succeeds every time, which is what makes it easy to miss."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yccpng6",
+    "version": 1,
+    "section": "checking",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lint rules are switched on, off or raised to errors in a file named ___ beside the Bicep files.",
+    "hint": "A JSON file whose name starts with bicep.",
+    "blanks": [
+      {
+        "accept": [
+          "bicepconfig.json"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jzerjwpg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`lint.bicep` wrote the location as the literal `'brazilsouth'`, and `bicep lint` said nothing about it. What is the right conclusion?",
+    "hint": "Is there a rule for it?",
+    "choices": [
+      {
+        "text": "A literal location is good practice in Bicep",
+        "correct": false,
+        "why": "A parameter or resourceGroup().location is the usual advice; the silence is about configuration."
+      },
+      {
+        "text": "The linter cannot see string literals",
+        "correct": false,
+        "why": "It saw the listKeys call inside a string in the same file."
+      },
+      {
+        "text": "The rule is off unless bicepconfig.json turns it on",
+        "correct": true,
+        "why": "Right. A linter is only the rules it was told to run."
+      },
+      {
+        "text": "Resource Manager rewrites the location at deployment",
+        "correct": false,
+        "why": "It deploys where the template says."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5mvsn0e",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of the shop's storage template in order, from writing to the account existing.",
+    "hint": "Two steps run on the laptop, two in Azure.",
+    "items": [
+      "Write shop.bicep",
+      "bicep build writes shop.json with the dependsOn filled in",
+      "Resource Manager receives the JSON and checks it against policy and permissions",
+      "The account is created, then its blob service, then the container"
+    ],
+    "trap": "Thinking Resource Manager reads the Bicep is the slip: it receives only the compiled JSON."
+  }
+]
