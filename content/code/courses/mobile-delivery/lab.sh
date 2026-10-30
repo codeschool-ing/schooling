@@ -52,7 +52,7 @@
 set -euo pipefail
 
 NODE=v22.22.0
-APT="openjdk-21-jdk-headless unzip sqlite3"
+APT="openjdk-21-jdk-headless unzip sqlite3 ruby-full ruby-bundler build-essential"
 TOOLS=commandlinetools-linux-13114758_latest.zip
 BUNDLETOOL=1.18.3
 R8=8.13.25
@@ -93,7 +93,7 @@ EOF
 as() {
   # shellcheck disable=SC2046
   runuser -u ana -- env -i HOME=/home/ana USER=ana LOGNAME=ana SHELL=/bin/bash \
-    LANG=C.UTF-8 TZ=America/Sao_Paulo TERM=dumb PATH=/usr/local/bin:/usr/bin:/bin \
+    LANG=C.UTF-8 TZ=America/Sao_Paulo TERM=dumb PATH=/usr/bin:/bin \
     $(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ') \
     NODE_EXTRA_CA_CERTS=/usr/local/share/lab-gateway-ca.crt \
     NO_UPDATE_NOTIFIER=1 npm_config_update_notifier=false npm_config_fund=false \
