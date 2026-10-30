@@ -1,0 +1,656 @@
+[
+  {
+    "id": "ex-wzha1b4c",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does dependency injection mean in this lesson?",
+    "hint": "You have done it since lesson 10.",
+    "choices": [
+      {
+        "text": "A library that loads classes at run time by reflection",
+        "correct": false,
+        "why": "Hilt works at compile time, and injection needs no library at all."
+      },
+      {
+        "text": "A class is given what it needs instead of fetching it",
+        "correct": true,
+        "why": "Right: instead of fetching it, as `WeekViewModel` receives its handle."
+      },
+      {
+        "text": "Copying a dependency's code into the app",
+        "correct": false,
+        "why": "That is vendoring, a different subject."
+      },
+      {
+        "text": "Declaring libraries in `libs.versions.toml`",
+        "correct": false,
+        "why": "That pins build dependencies; injection is about objects at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-755dvgd2",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which mistake does Hilt turn from a run-time crash into a build error?",
+    "hint": "Section 05 made it on purpose.",
+    "choices": [
+      {
+        "text": "A dependency nothing can build",
+        "correct": true,
+        "why": "Right: `MissingBinding` stopped the build and named the type."
+      },
+      {
+        "text": "A composable recomposes too often",
+        "correct": false,
+        "why": "Recomposition is outside what Hilt sees."
+      },
+      {
+        "text": "A string is missing from `values-pt`",
+        "correct": false,
+        "why": "Missing translations fall back to the default; Hilt has nothing to do with them."
+      },
+      {
+        "text": "A network call times out",
+        "correct": false,
+        "why": "That happens at run time whatever builds the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-77hgmqve",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A hand-written container builds a new `InMemorySessionStore` inside each ViewModel factory. What does the student see?",
+    "hint": "How many stores are there?",
+    "choices": [
+      {
+        "text": "A build error naming the store",
+        "correct": false,
+        "why": "Code written by hand is not checked like that; it compiles."
+      },
+      {
+        "text": "The same sessions everywhere, because the class is the same",
+        "correct": false,
+        "why": "Same class, different instances: each holds its own list."
+      },
+      {
+        "text": "Screens that disagree",
+        "correct": true,
+        "why": "Right: each screen built its own empty store."
+      },
+      {
+        "text": "A crash when the second screen opens",
+        "correct": false,
+        "why": "Nothing crashes; the sessions are simply in another object."
+      }
+    ]
+  },
+  {
+    "id": "ex-88tpa1ye",
+    "version": 1,
+    "section": "setup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the manifest gain `android:name=\".PlannerApp\"`?",
+    "hint": "Which class does Android create first?",
+    "choices": [
+      {
+        "text": "To rename the app on the home screen",
+        "correct": false,
+        "why": "The label does that; `android:name` names a class."
+      },
+      {
+        "text": "So the graph exists before any activity",
+        "correct": true,
+        "why": "Right: that is where the singleton component is born."
+      },
+      {
+        "text": "Because KSP reads the manifest to find modules",
+        "correct": false,
+        "why": "KSP reads annotations in the source, not the manifest."
+      },
+      {
+        "text": "To export the application to other apps",
+        "correct": false,
+        "why": "Exporting is an activity's attribute, and the application is never exported."
+      }
+    ]
+  },
+  {
+    "id": "ex-d848xxad",
+    "version": 1,
+    "section": "setup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`InMemorySessionStore` loses its `@Singleton`. What changes?",
+    "hint": "`@Singleton` says how many.",
+    "choices": [
+      {
+        "text": "The build fails with `MissingBinding`",
+        "correct": false,
+        "why": "Hilt can still build it; the `@Inject` constructor is enough."
+      },
+      {
+        "text": "Nothing, singletons are the default in Hilt",
+        "correct": false,
+        "why": "Unscoped is the default: a new instance per request."
+      },
+      {
+        "text": "Each request gets a fresh, empty store",
+        "correct": true,
+        "why": "Right: two screens would no longer share the sessions."
+      },
+      {
+        "text": "The store moves into the ViewModel component",
+        "correct": false,
+        "why": "It moves nowhere; it is simply not shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-zeyh4x7h",
+    "version": 1,
+    "section": "setup",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The activity Hilt may inject is marked `@___`.",
+    "hint": "Section 03's `MainActivity`.",
+    "blanks": [
+      {
+        "accept": [
+          "AndroidEntryPoint"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nvnws78g",
+    "version": 1,
+    "section": "modules",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each annotation to what it tells Hilt.",
+    "hint": "Sections 03 and 04.",
+    "pairs": [
+      {
+        "left": "`@Binds`",
+        "right": "Use this implementation for that interface"
+      },
+      {
+        "left": "`@Provides`",
+        "right": "Call this function to make the type"
+      },
+      {
+        "left": "`@InstallIn`",
+        "right": "Which component the answers belong to"
+      },
+      {
+        "left": "`@Singleton`",
+        "right": "One instance for the whole app"
+      }
+    ],
+    "right_distractors": [
+      "Run this module only in tests"
+    ]
+  },
+  {
+    "id": "ex-bkkkks1h",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `Clock` given by a `@Provides` function rather than an `@Inject` constructor?",
+    "hint": "Whose class is it?",
+    "choices": [
+      {
+        "text": "It is a JDK class, so there is nothing to annotate",
+        "correct": true,
+        "why": "Right: there is no constructor of yours to put `@Inject` on."
+      },
+      {
+        "text": "Because `@Provides` makes it a singleton",
+        "correct": false,
+        "why": "It is unscoped here; `@Provides` says how, not how many."
+      },
+      {
+        "text": "Because interfaces need `@Provides`",
+        "correct": false,
+        "why": "The interface in this lesson used `@Binds`."
+      },
+      {
+        "text": "Because a clock changes every second",
+        "correct": false,
+        "why": "The object does not change; the time it reads does."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsh2v2kj",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson put the store and the clock in two modules instead of one?",
+    "hint": "What does a test uninstall?",
+    "choices": [
+      {
+        "text": "Hilt allows one binding per module",
+        "correct": false,
+        "why": "A module can hold any number of bindings."
+      },
+      {
+        "text": "A `@Binds` and a `@Provides` cannot share a file",
+        "correct": false,
+        "why": "They can, in an abstract class with a companion object; the reason is testing."
+      },
+      {
+        "text": "Tests uninstall whole modules",
+        "correct": true,
+        "why": "Right: section 07 uninstalls both and binds fakes."
+      },
+      {
+        "text": "To make the build faster",
+        "correct": false,
+        "why": "Splitting modules does not measurably change the build."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzskned5",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `@Singleton` class asks for a screen's `SavedStateHandle` in its constructor. What does Hilt do?",
+    "hint": "Which component holds the handle?",
+    "choices": [
+      {
+        "text": "Gives it the handle of whichever screen opened first",
+        "correct": false,
+        "why": "Hilt never guesses across components."
+      },
+      {
+        "text": "Refuses it when the app is built",
+        "correct": true,
+        "why": "Right: a singleton cannot see a binding of the ViewModel component."
+      },
+      {
+        "text": "Creates a new empty handle for it",
+        "correct": false,
+        "why": "It creates nothing; the binding is not visible there."
+      },
+      {
+        "text": "Crashes when the class is first used",
+        "correct": false,
+        "why": "The problem is caught before the app exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-4krj22ep",
+    "version": 1,
+    "section": "hilt-viewmodel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What replaced lesson 11's `viewModel(factory = WeekViewModel.Factory)` in the screen?",
+    "hint": "One call, no factory.",
+    "choices": [
+      {
+        "text": "`hiltViewModel()`",
+        "correct": true,
+        "why": "Right: it finds the factory Hilt generated."
+      },
+      {
+        "text": "`viewModel()` with no argument, which now knows Hilt",
+        "correct": false,
+        "why": "The plain `viewModel()` would need a factory for constructor arguments."
+      },
+      {
+        "text": "`remember { WeekViewModel(store, clock, handle) }`",
+        "correct": false,
+        "why": "That builds a ViewModel outside any store, lost at rotation."
+      },
+      {
+        "text": "A `@Provides` function in the activity",
+        "correct": false,
+        "why": "Activities do not hold `@Provides` functions; modules do."
+      }
+    ]
+  },
+  {
+    "id": "ex-t41wv53y",
+    "version": 1,
+    "section": "hilt-viewmodel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `onAdd()` no longer take a date?",
+    "hint": "What did the constructor gain?",
+    "choices": [
+      {
+        "text": "Because Hilt cannot pass arguments to functions",
+        "correct": false,
+        "why": "Hilt builds objects; function arguments were never its business."
+      },
+      {
+        "text": "Because the date is now stored in the handle",
+        "correct": false,
+        "why": "Only the draft is in the handle."
+      },
+      {
+        "text": "It asks the injected `Clock`",
+        "correct": true,
+        "why": "Right: and a test injects a stopped one."
+      },
+      {
+        "text": "Because sessions no longer have dates",
+        "correct": false,
+        "why": "They do: `LocalDate.now(clock)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-by1kjy3s",
+    "version": 1,
+    "section": "hilt-viewmodel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hiltViewModel()` is called inside an activity without `@AndroidEntryPoint`. When does the mistake show?",
+    "hint": "One of the few the compiler cannot see.",
+    "choices": [
+      {
+        "text": "At build time, as a `MissingBinding`",
+        "correct": false,
+        "why": "The graph is complete; what is missing is the activity's entry point."
+      },
+      {
+        "text": "At run time, naming the missing annotation",
+        "correct": true,
+        "why": "Right: section 04 says so."
+      },
+      {
+        "text": "Never: Hilt falls back to the default factory",
+        "correct": false,
+        "why": "There is no fallback; the default factory could not build it."
+      },
+      {
+        "text": "Only on Android 13 and later",
+        "correct": false,
+        "why": "The Android version has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv19995x",
+    "version": 1,
+    "section": "generated",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many generated Java files did the build of section 04 leave under `generated/ksp/debug` and `generated/hilt`?",
+    "hint": "`wc -l` counted them.",
+    "value": 22,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yzamb4v1",
+    "version": 1,
+    "section": "generated",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `Hilt_MainActivity`?",
+    "hint": "Generated, and `MainActivity` ends up extending it.",
+    "choices": [
+      {
+        "text": "A test double of the activity",
+        "correct": false,
+        "why": "It is part of the app, not of the tests."
+      },
+      {
+        "text": "A generated base class that injects the activity",
+        "correct": true,
+        "why": "Right: that is all `@AndroidEntryPoint` needs."
+      },
+      {
+        "text": "The component that holds the singleton store",
+        "correct": false,
+        "why": "That is `DaggerPlannerApp_HiltComponents_SingletonC`."
+      },
+      {
+        "text": "A copy of `MainActivity` for older Android versions",
+        "correct": false,
+        "why": "It has nothing to do with Android versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4s9eynf",
+    "version": 1,
+    "section": "generated",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the `MissingBinding` experiment of section 05 in order.",
+    "hint": "Break, read, repair, check.",
+    "items": [
+      "move `StoreModule.kt` out of the project",
+      "build, and read `[Dagger/MissingBinding]` naming `SessionStore`",
+      "put `StoreModule.kt` back",
+      "build again, and see `BUILD SUCCESSFUL`"
+    ]
+  },
+  {
+    "id": "ex-3w0n5cfe",
+    "version": 1,
+    "section": "generated",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two modules both `@Binds` an implementation to `SessionStore`. What happens?",
+    "hint": "Hilt never chooses for you.",
+    "choices": [
+      {
+        "text": "The last module compiled wins",
+        "correct": false,
+        "why": "There is no order to win by; Hilt refuses."
+      },
+      {
+        "text": "Each screen gets one at random",
+        "correct": false,
+        "why": "Nothing in Hilt is random."
+      },
+      {
+        "text": "`DuplicateBindings`, at build time",
+        "correct": true,
+        "why": "Right: the build names both bindings."
+      },
+      {
+        "text": "The app crashes at start-up",
+        "correct": false,
+        "why": "It never gets that far; the build fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqwp5dgm",
+    "version": 1,
+    "section": "testing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `@BindValue` do in `WeekHiltTest`?",
+    "hint": "Look at the two fields.",
+    "choices": [
+      {
+        "text": "Makes the field the graph's answer for its type",
+        "correct": true,
+        "why": "Right: the fake store and the stopped clock."
+      },
+      {
+        "text": "Copies the field's value into the `SavedStateHandle`",
+        "correct": false,
+        "why": "The handle is untouched; the field joins the graph."
+      },
+      {
+        "text": "Marks the field as read-only",
+        "correct": false,
+        "why": "`val` does that; `@BindValue` is about the graph."
+      },
+      {
+        "text": "Runs the field's initialiser on the main thread",
+        "correct": false,
+        "why": "Threads are not its concern."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5wnm8dp",
+    "version": 1,
+    "section": "testing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `HiltAndroidRule` given `order = 0` and the compose rule `order = 1`?",
+    "hint": "Which needs the other?",
+    "choices": [
+      {
+        "text": "Rules run alphabetically unless numbered",
+        "correct": false,
+        "why": "JUnit's default order is not alphabetical, and the point is dependency."
+      },
+      {
+        "text": "The activity needs the graph first",
+        "correct": true,
+        "why": "Right: Hilt builds the graph first."
+      },
+      {
+        "text": "So the compose rule can uninstall modules",
+        "correct": false,
+        "why": "`@UninstallModules` does that, on the class."
+      },
+      {
+        "text": "So the test runs faster",
+        "correct": false,
+        "why": "Order is about correctness here."
+      }
+    ]
+  },
+  {
+    "id": "ex-k732fg7z",
+    "version": 1,
+    "section": "testing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `WeekHiltTest`, the store starts with 50 and 90 minutes and the test adds 25. What total does the screen show, in minutes?",
+    "hint": "The last assertion.",
+    "value": 165,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-vqftvhbn",
+    "version": 1,
+    "section": "testing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`@Config(application = ___::class)` makes Robolectric start Hilt's test application instead of `PlannerApp`.",
+    "hint": "Hilt's name for it.",
+    "blanks": [
+      {
+        "accept": [
+          "HiltTestApplication"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7yx28ea1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 13 adds a network client that needs a base URL and a timeout. How should it enter the graph?",
+    "hint": "It is built with a builder, and tests will want to swap it.",
+    "choices": [
+      {
+        "text": "`@Inject constructor` on the library's class",
+        "correct": false,
+        "why": "It is not your class; you cannot annotate it."
+      },
+      {
+        "text": "A `@Provides` in its own module",
+        "correct": true,
+        "why": "Right: a builder call, in a module a test can uninstall."
+      },
+      {
+        "text": "As a global `object`, like lesson 11's `Stores`",
+        "correct": false,
+        "why": "That is the wiring this lesson removed."
+      },
+      {
+        "text": "Inside the ViewModel's constructor body",
+        "correct": false,
+        "why": "Then no test could replace it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrm78cvd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did the planner need for Hilt to build `WeekViewModel`? Choose all that apply.",
+    "hint": "The ViewModel's three arguments, and where it is asked for.",
+    "choices": [
+      {
+        "text": "A binding for `SessionStore`",
+        "correct": true,
+        "why": "Yes: `StoreModule`."
+      },
+      {
+        "text": "A `@Provides` for `SavedStateHandle`",
+        "correct": false,
+        "why": "No: Hilt provides the handle itself, per screen."
+      },
+      {
+        "text": "`@AndroidEntryPoint` on `MainActivity`",
+        "correct": true,
+        "why": "Yes: `hiltViewModel()` needs it."
+      },
+      {
+        "text": "A `ViewModelProvider.Factory` written by hand",
+        "correct": false,
+        "why": "No: that is what Hilt generated."
+      }
+    ]
+  }
+]
