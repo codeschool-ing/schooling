@@ -26,6 +26,9 @@ Os passos 3 e 4 só funcionam para versões que já sabiam lê-los. **A checagem
 tratamento do `410` são as duas partes do contrato que nunca podem ser removidas,** porque são como
 toda outra parte é aposentada. O lugar delas é na 1.0.0.
 
+*O cabeçalho `Sunset` é descrito a partir da RFC 8594, que a máquina de gravação não conseguiu
+acessar; o servidor abaixo é real e foi rodado.*
+
 ## Um servidor que anuncia o próprio fim
 
 Salve isto em `~/planner` como `sunset-server.ts`. Ele recebe o dia como argumento, para você rodá-lo

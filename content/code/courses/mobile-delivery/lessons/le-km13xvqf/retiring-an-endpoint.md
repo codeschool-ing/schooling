@@ -27,6 +27,9 @@ Steps 3 and 4 only work for versions that already knew how to read them. **The m
 and the handling of `410` are the two parts of the contract that can never be removed,** because they
 are how every other part is retired. They belong in 1.0.0.
 
+*The `Sunset` header is described from RFC 8594, which the recording machine could not reach; the
+server below is real and was run.*
+
 ## A server that announces its sunset
 
 Save this in `~/planner` as `sunset-server.ts`. It takes the day as its argument, so you can run it
