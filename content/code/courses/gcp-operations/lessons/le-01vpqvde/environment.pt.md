@@ -7,11 +7,12 @@ Este curso é praticado no seu próprio computador, contra **os emuladores que o
 alguns dos seus serviços e uma imitação de código aberto do Cloud Storage, com a linha de comando
 `gcloud` de verdade apontada para eles. Não há conta do Google Cloud em lugar nenhum, nada é cobrado,
 e a plataforma não roda nada por você: cada comando destas lições é um que você digita no seu próprio
-terminal. **A lição 1 de `gcp-foundations` monta este ambiente por inteiro**, com as três formas de ter
-um terminal com Ubuntu 24.04 (instalado, que ela recomenda; uma máquina virtual; um shell alugado on-line),
-quanto cada uma custa ao seu computador e o que fazer quando a instalação falha. Se você fez aquele
-curso, já tem tudo o que vem abaixo. Se não fez, ou apagou desde então, esta seção é a mesma montagem
-em resumo.
+terminal. **A lição 1 de `gcp-foundations` é de onde vem o próprio terminal**: as três formas de ter um com
+Ubuntu 24.04 (instalado, que ela recomenda; uma máquina virtual; um shell alugado on-line), quanto cada
+uma custa ao seu computador e o que fazer quando a instalação falha. O laboratório dela não é este. Este
+curso também precisa do Docker, de uma imitação do Cloud Storage e do seu próprio `gcloud` fixado, então
+monte o que vem abaixo mesmo que tenha feito aquele curso: vai para os mesmos `~/gcp` e `~/.local`, e a
+única coisa que substitui é o `gcloud` em `~/.local`, pela versão 591.0.0.
 
 ## Montando
 
