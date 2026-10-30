@@ -67,7 +67,7 @@ the job case again, and Microsoft's documentation names builds and tests among i
 The three developers' pull requests can each get a group that runs the tests and stops.
 
 **Pods for AKS.** *Virtual nodes* register Container Instances with an AKS cluster as a node of
-unlimited capacity: a pod scheduled there runs as a container group, without waiting for the
+unlimited capacity. A pod scheduled there runs as a container group, without waiting for the
 cluster to add a virtual machine, and is paid for by the second. Lesson 11 builds the AKS side.
 Here Container Instances is not the orchestrator. Kubernetes is, and Container Instances is the
 capacity it borrows.
@@ -87,8 +87,9 @@ capacity it borrows.
 its containers in place, and while they restart nobody is answering. With one group there is no
 second copy to carry the customers, and no traffic to move gradually. A load balancer can spread
 traffic across several groups in a virtual network, and Microsoft documents doing exactly that
-with a Standard Load Balancer, but then you are creating the groups, counting them, updating them
-one at a time and checking each is healthy, which is the work of an orchestrator, done by you.
+with a Standard Load Balancer. Then, though, you are the one creating the groups, counting them,
+updating them one at a time and checking each is healthy: the work of an orchestrator, done by
+hand.
 
 There is also a short list of things Container Instances will not do at all: no privileged containers,
 by Microsoft's FAQ, and a list of ports reserved for the service, 22 and 3389 among them, that a

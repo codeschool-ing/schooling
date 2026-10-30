@@ -69,7 +69,7 @@ mesmos contêineres no Container Instances.
 exemplos. Cada pull request dos três desenvolvedores pode ganhar um grupo que roda os testes e para.
 
 **Pods para o AKS.** Os *nós virtuais* registram o Container Instances num cluster AKS como um nó de
-capacidade ilimitada: um pod agendado ali roda como um grupo de contêineres, sem esperar o cluster
+capacidade ilimitada. Um pod agendado ali roda como um grupo de contêineres, sem esperar o cluster
 acrescentar uma máquina virtual, e é pago por segundo. A lição 11 monta o lado do AKS. Aqui o
 Container Instances não é o orquestrador. O Kubernetes é, e o Container Instances é a capacidade que
 ele pega emprestada.
@@ -89,8 +89,8 @@ ele pega emprestada.
 os contêineres dele no lugar, e enquanto reiniciam ninguém responde. Com um grupo só não há segunda
 cópia para segurar os clientes, nem tráfego para mover aos poucos. Um balanceador de carga pode
 espalhar o tráfego por vários grupos numa rede virtual, e a Microsoft documenta exatamente isso com
-um Standard Load Balancer, mas aí é você quem cria os grupos, conta, atualiza um de cada vez e
-confere se cada um está saudável, que é o trabalho de um orquestrador, feito por você.
+um Standard Load Balancer. Só que aí é você quem cria os grupos, conta, atualiza um de cada vez e
+confere se cada um está saudável: o trabalho de um orquestrador, feito à mão.
 
 Há também uma lista curta de coisas que o Container Instances não faz de jeito nenhum: nada de
 contêineres privilegiados, pelo FAQ da Microsoft, e uma lista de portas reservadas para o serviço,

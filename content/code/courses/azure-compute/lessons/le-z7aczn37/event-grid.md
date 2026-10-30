@@ -125,7 +125,7 @@ resource type says that the property is a number and nothing about its range, wh
 service. The CLI's help states it, offline:
 
 ```
-ana@laptop:~/azure$ az eventgrid event-subscription create --help | grep -A2 -E -- "--(max-delivery-attempts|event-ttl) "
+ana@laptop:~/azure$ az eventgrid event-subscription create --help | grep -A2 -E -- "^    --(max-delivery-attempts|event-ttl) "
     --event-ttl                                           : Event time to live (in minutes). Must be
                                                             a number between 1 and 1440.  Default:
                                                             1440.
@@ -133,8 +133,6 @@ ana@laptop:~/azure$ az eventgrid event-subscription create --help | grep -A2 -E 
     --max-delivery-attempts                               : Maximum number of delivery attempts.
                                                             Must be a number between 1 and 30.
                                                             Default: 30.
---
-            --max-delivery-attempts 10 --event-ttl 120
 ```
 
 So both limits of a retry policy have a fence the compiler does not know: 1 to 30 attempts, and 1 to

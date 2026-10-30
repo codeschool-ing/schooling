@@ -16,7 +16,7 @@ alguma coisa termina.
 Todo contêiner declara um **pedido**: quantos núcleos de CPU e quantos gigabytes de memória ele
 precisa. O pedido é obrigatório, e é o que o grupo recebe. Um contêiner também pode declarar um
 **limite**, que precisa ser pelo menos o pedido, e o deixa usar mais quando o grupo tem folga. A
-documentação da Microsoft descreve a conta com dois contêineres pedindo uma CPU cada: o grupo recebe
+documentação da Microsoft descreve a conta com dois contêineres pedindo uma CPU cada. O grupo recebe
 duas, e qualquer um deles pode ganhar um limite de até duas, tudo o que o grupo recebeu, para poder
 pegar emprestado o que o outro não está usando. Sem limite, o teto de um contêiner é o pedido dele.
 
@@ -168,7 +168,7 @@ três:
 termina falhou, qualquer que seja o código, e deve voltar. **Para o relatório de vendas noturno é
 `OnFailure`**: o relatório roda, escreve o arquivo, sai com 0, e o grupo para, com o estado mostrado
 como *Terminated* e a cobrança parada junto. Um relatório que cai no meio sai com erro e é iniciado
-de novo. Preste atenção na nota sobre `Never`: a documentação diz que um contêiner que sai com
+de novo. Preste atenção na nota sobre `Never`. A documentação diz que um contêiner que sai com
 código diferente de zero pode ser reiniciado pela plataforma mesmo assim, então um job que deve
 rodar no máximo uma vez precisa tratar as próprias falhas e sair com 0.
 
@@ -247,8 +247,8 @@ Um template pedindo um grupo Spot em São Paulo, escrito sem uma palavra de avis
 descobriria que a região não o oferece.
 
 **Confidencial**, `sku: 'Confidential'`, roda o grupo dentro de um ambiente de execução confiável em
-processadores AMD SEV-SNP, com a memória cifrada por uma chave que o processador guarda, e deixa o
-grupo provar a uma parte remota o que está rodando antes que ela libere um segredo para ele. O que
+processadores AMD SEV-SNP, com a memória cifrada por uma chave que o processador guarda. Ele também
+deixa o grupo provar a uma parte remota o que está rodando antes que ela libere um segredo para ele. O que
 pode rodar lá dentro é fixado por uma política, que a Microsoft diz ter de ser gerada pela extensão
 `confcom` da CLI e não poder ser escrita à mão. Serve para dados que quem opera o hardware não pode
 ver; os pedidos da loja não são isso.

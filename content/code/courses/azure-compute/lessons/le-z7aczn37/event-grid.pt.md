@@ -124,7 +124,7 @@ provavelmente era. **A contagem de 50 passou, embora a documentação da Microso
 A ajuda da CLI a informa, offline:
 
 ```
-ana@laptop:~/azure$ az eventgrid event-subscription create --help | grep -A2 -E -- "--(max-delivery-attempts|event-ttl) "
+ana@laptop:~/azure$ az eventgrid event-subscription create --help | grep -A2 -E -- "^    --(max-delivery-attempts|event-ttl) "
     --event-ttl                                           : Event time to live (in minutes). Must be
                                                             a number between 1 and 1440.  Default:
                                                             1440.
@@ -132,8 +132,6 @@ ana@laptop:~/azure$ az eventgrid event-subscription create --help | grep -A2 -E 
     --max-delivery-attempts                               : Maximum number of delivery attempts.
                                                             Must be a number between 1 and 30.
                                                             Default: 30.
---
-            --max-delivery-attempts 10 --event-ttl 120
 ```
 
 Então os dois limites de uma retry policy têm uma cerca que o compilador não conhece: de 1 a 30

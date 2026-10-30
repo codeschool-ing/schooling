@@ -210,7 +210,7 @@ sent order-41
 sent order-42
 sent order-43
 ana@laptop:~/azure$ messaging/bin/python work.py complete
-order-41: delivery_count 0, locked until 18:33:17 UTC
+order-41: delivery_count 0, locked until 18:51:16 UTC
 order-41: complete
 ```
 
@@ -225,19 +225,19 @@ recebido por um consumidor que cai, o que `crash` imita saindo sem liquidar:
 
 ```
 ana@laptop:~/azure$ for i in 1 2 3; do messaging/bin/python work.py abandon; done
-order-42: delivery_count 0, locked until 18:33:18 UTC
+order-42: delivery_count 0, locked until 18:51:18 UTC
 order-42: abandon
-order-42: delivery_count 1, locked until 18:33:20 UTC
+order-42: delivery_count 1, locked until 18:51:21 UTC
 order-42: abandon
-order-42: delivery_count 2, locked until 18:33:21 UTC
+order-42: delivery_count 2, locked until 18:51:24 UTC
 order-42: abandon
 ana@laptop:~/azure$ messaging/bin/python work.py crash
-order-43: delivery_count 0, locked until 18:33:23 UTC
+order-43: delivery_count 0, locked until 18:51:27 UTC
 order-43: crash
 ana@laptop:~/azure$ messaging/bin/python work.py complete
 nothing to receive
 ana@laptop:~/azure$ sleep 5; messaging/bin/python work.py reject
-order-43: delivery_count 1, locked until 18:33:32 UTC
+order-43: delivery_count 1, locked until 18:51:39 UTC
 order-43: reject
 ```
 
