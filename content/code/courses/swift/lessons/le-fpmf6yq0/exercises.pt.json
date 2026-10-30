@@ -1,0 +1,392 @@
+{
+  "ex-tt0x2tz6": {
+    "prompt": "`var monday` guarda uma `StudySession` cujo `course` é declarado com `let`. O que `monday.course = \"Kotlin\"` faz?",
+    "hint": "A instância é um `var`; a propriedade não.",
+    "choices": [
+      {
+        "text": "Muda o curso, porque `monday` é um `var`",
+        "why": "Uma propriedade `let` é fixada na inicialização, seja o que for que guarde a instância."
+      },
+      {
+        "text": "É recusado na compilação",
+        "why": "Isso: `cannot assign to property: 'course' is a 'let' constant`."
+      },
+      {
+        "text": "Compila, e quebra quando a linha roda",
+        "why": "Nunca roda."
+      },
+      {
+        "text": "Cria uma sessão nova com o curso novo e mantém a antiga",
+        "why": "Atribuição não cria instâncias."
+      }
+    ]
+  },
+  "ex-akdtsh7f": {
+    "prompt": "`struct StudySession { let course: String; var minutes: Int; var done = false }`. Que chamada compila?",
+    "hint": "Um valor padrão torna o argumento opcional.",
+    "choices": [
+      {
+        "text": "`StudySession(minutes: 45, course: \"Swift\")`",
+        "why": "Os argumentos memberwise vêm na ordem da declaração."
+      },
+      {
+        "text": "`StudySession(course: \"Swift\")`",
+        "why": "`minutes` não tem padrão, então é obrigatório."
+      },
+      {
+        "text": "`StudySession(course: \"Swift\", minutes: 45)`",
+        "why": "Isso: `done` pode ficar de fora e vale `false`."
+      },
+      {
+        "text": "`StudySession(\"Swift\", 45)`",
+        "why": "O inicializador memberwise tem rótulos."
+      }
+    ]
+  },
+  "ex-a9nz5k0r": {
+    "prompt": "Por quais destes uma propriedade armazenada `let` de uma struct pode receber um valor? Escolha todos os que se aplicam.",
+    "hint": "Uma vez, quando a instância é criada.",
+    "choices": [
+      {
+        "text": "Um valor padrão na declaração",
+        "why": "Sim, e aí ele não ganha argumento no inicializador."
+      },
+      {
+        "text": "Uma linha num `init`",
+        "why": "Sim: o inicializador é onde uma constante ainda não está fixada."
+      },
+      {
+        "text": "Um método `mutating`",
+        "why": "Não: depois da inicialização uma propriedade `let` nunca muda."
+      },
+      {
+        "text": "Um observador `didSet`",
+        "why": "Não: observadores são para propriedades `var`."
+      }
+    ]
+  },
+  "ex-eddyy3s7": {
+    "prompt": "`Week(sessions: [45, 30])` com `goal = 300` e `remaining` computado como `max(goal - total, 0)`. Depois de `week.sessions.append(60)`, quanto vale `week.remaining`?",
+    "hint": "O total é recalculado a cada leitura."
+  },
+  "ex-0n85ny5c": {
+    "prompt": "`var hours: Double { get { Double(minutes) / 60 } set { minutes = Int(newValue * 60) } }`. Depois de `session.hours = 1.25`, onde fica guardado o 1.25?",
+    "hint": "Uma propriedade computada não guarda nada.",
+    "choices": [
+      {
+        "text": "Em `hours`, ao lado de `minutes`",
+        "why": "`hours` não tem armazenamento nenhum."
+      },
+      {
+        "text": "Em lugar nenhum: `minutes` guarda 75, e `hours` calcula 1.25 de novo a cada leitura",
+        "why": "Isso: o setter traduziu o valor para a propriedade armazenada."
+      },
+      {
+        "text": "Em `newValue`, até a próxima atribuição",
+        "why": "`newValue` só existe enquanto o setter roda."
+      },
+      {
+        "text": "Em lugar nenhum: propriedades computadas não podem receber atribuição",
+        "why": "Esta tem um `set`, então pode."
+      }
+    ]
+  },
+  "ex-v2cde8ks": {
+    "prompt": "Um colega guarda `total` como `var` e o atualiza em todo método que acrescenta uma sessão. Que falha um `total` computado elimina?",
+    "choices": [
+      {
+        "text": "Ler o `total` vezes demais",
+        "why": "Uma propriedade computada é lida quantas vezes você quiser."
+      },
+      {
+        "text": "Um estouro quando o total passa de `Int.max`",
+        "why": "As duas versões somam os mesmos números."
+      },
+      {
+        "text": "Um total que discorda das sessões",
+        "why": "Isso: basta uma atualização esquecida, e uma propriedade computada não tem nada para esquecer."
+      },
+      {
+        "text": "Uma struct que não pode ser comparada com `==`",
+        "why": "Armazenada ou computada, o `Equatable` funciona igual."
+      }
+    ]
+  },
+  "ex-pwkevcan": {
+    "prompt": "`var minutes: Int { didSet { … } }`. O observador roda quando `StudySession(minutes: 45)` é criada?",
+    "hint": "O que o `Observers.swift` imprimiu quando a sessão foi criada?",
+    "choices": [
+      {
+        "text": "Sim, com `oldValue` 0",
+        "why": "Não há valor antigo durante a inicialização, e nada foi impresso."
+      },
+      {
+        "text": "Sim, mas só o `willSet`",
+        "why": "Nenhum observador rodou."
+      },
+      {
+        "text": "Não",
+        "why": "Isso: observadores rodam em atribuições a uma instância que já existe."
+      },
+      {
+        "text": "Só quando a struct está guardada num `var`",
+        "why": "`session` era um `var`, e mesmo assim nada foi impresso na criação."
+      }
+    ]
+  },
+  "ex-6pmfqwtb": {
+    "prompt": "Com `didSet { if minutes > 600 { minutes = 600 } }`, quanto `minutes` guarda depois de `session.minutes = 900`?"
+  },
+  "ex-a89e1ghn": {
+    "prompt": "Dentro do `didSet`, o valor que a propriedade tinha antes da atribuição se chama `___`.",
+    "hint": "O `willSet` recebe o outro, `newValue`.",
+    "blanks": [
+      {
+        "accept": [
+          "oldValue"
+        ]
+      }
+    ]
+  },
+  "ex-rqr2xhwp": {
+    "prompt": "Um `lazy var summary` imprime \"building the summary\" quando o valor é construído. O programa lê `summary` duas vezes. Quantas vezes essa linha é impressa?",
+    "choices": [
+      {
+        "text": "Duas, uma por leitura",
+        "why": "Isso é uma propriedade computada; uma lazy guarda o que construiu."
+      },
+      {
+        "text": "Uma, na primeira leitura",
+        "why": "Isso: \"report made\" veio antes, e depois a linha uma vez."
+      },
+      {
+        "text": "Uma, quando a instância é criada",
+        "why": "Ela veio depois de \"report made\", então a criação não a construiu."
+      },
+      {
+        "text": "Nenhuma, porque `print` não é permitido numa propriedade",
+        "why": "A closure pode fazer o que uma comum faz."
+      }
+    ]
+  },
+  "ex-3tfgf49h": {
+    "prompt": "Por que `let report = Report(…); print(report.summary)` é recusado quando `summary` é `lazy` e `Report` é uma struct?",
+    "hint": "O compilador chamou de mutating getter.",
+    "choices": [
+      {
+        "text": "Uma propriedade lazy é privada ao tipo que a declara, e o código de fora não consegue lê-la",
+        "why": "Controle de acesso é a lição 17, e `lazy` não muda nada ali."
+      },
+      {
+        "text": "Propriedades lazy só existem em classes",
+        "why": "O `Lazy.swift` usou uma numa struct guardada num `var`."
+      },
+      {
+        "text": "`summary` não tem anotação de tipo",
+        "why": "Tem uma, `String`."
+      },
+      {
+        "text": "A primeira leitura guarda um valor, o que é uma mudança que uma struct `let` proíbe",
+        "why": "Isso: guarde num `var`, ou faça do tipo uma classe."
+      }
+    ]
+  },
+  "ex-rxyzjvqg": {
+    "prompt": "Qual destes combina melhor com `lazy`?",
+    "hint": "Caro, talvez nunca usado, e fixo depois de construído.",
+    "choices": [
+      {
+        "text": "Um formatador para uma tela de relatório que muitos estudantes nunca abrem",
+        "why": "Isso: construído no primeiro uso, guardado depois, e não construído para quem nunca pede."
+      },
+      {
+        "text": "O total de uma semana que muda conforme sessões entram",
+        "why": "Um valor lazy é construído uma vez e ficaria velho; isso é uma propriedade computada."
+      },
+      {
+        "text": "Os minutos de uma sessão",
+        "why": "Barato e sempre usado: uma propriedade armazenada."
+      },
+      {
+        "text": "A meta semanal compartilhada por todas as sessões",
+        "why": "Compartilhada pelo tipo: um `static let`."
+      }
+    ]
+  },
+  "ex-bdztpc6r": {
+    "prompt": "O tipo da sessão declara uma constante com `static let`. Como ela é lida?",
+    "choices": [
+      {
+        "text": "`monday.weeklyGoal`, por qualquer instância",
+        "why": "Recusado: `static member 'weeklyGoal' cannot be used on instance`."
+      },
+      {
+        "text": "`StudySession.weeklyGoal`",
+        "why": "Isso, ou `Self.weeklyGoal` dentro do tipo."
+      },
+      {
+        "text": "`weeklyGoal`, de qualquer lugar do programa",
+        "why": "Dentro de um método de instância até isso foi recusado."
+      },
+      {
+        "text": "Só depois de criar uma instância",
+        "why": "O `Static.swift` o imprimiu antes de existir qualquer sessão."
+      }
+    ]
+  },
+  "ex-ffxvx2rp": {
+    "prompt": "No `Static.swift`, `share()` divide os minutos de uma sessão pela meta semanal de 300. O que devolve para 60 minutos?"
+  },
+  "ex-5v94e4e6": {
+    "prompt": "A seção 06 diz que um `static var` pede cuidado. Por quê?",
+    "hint": "O que ele é, de verdade?",
+    "choices": [
+      {
+        "text": "Ele é recalculado a cada leitura",
+        "why": "Ele é armazenado, e inicializado uma vez."
+      },
+      {
+        "text": "Cada instância ganha uma cópia própria",
+        "why": "Há um para o tipo inteiro."
+      },
+      {
+        "text": "É uma variável global compartilhada pelo programa inteiro",
+        "why": "Isso: qualquer código pode mudá-la a qualquer momento, o que o compilador da lição 15 recusa."
+      },
+      {
+        "text": "A primeira leitura dele é lenta",
+        "why": "Velocidade não é a preocupação que a seção cita."
+      }
+    ]
+  },
+  "ex-4smx3g4z": {
+    "prompt": "Uma classe tem `let owner` e `var goal: Int`, e o `init` dela só define `owner`. O que acontece?",
+    "choices": [
+      {
+        "text": "`goal` começa em 0",
+        "why": "O Swift não dá zero implícito."
+      },
+      {
+        "text": "`goal` é `nil` até ser definido",
+        "why": "Um `Int` não é opcional, então não pode ser `nil`."
+      },
+      {
+        "text": "Recusado: nem todas as propriedades armazenadas foram inicializadas",
+        "why": "Isso, com uma nota apontando para `self.goal`."
+      },
+      {
+        "text": "Uma quebra na primeira vez que algo lê `goal` enquanto o programa roda",
+        "why": "O compilador pega antes."
+      }
+    ]
+  },
+  "ex-63m8k3dx": {
+    "prompt": "Onde você pode escrever um segundo `init` para uma struct e manter o memberwise?",
+    "choices": [
+      {
+        "text": "Dentro das chaves da struct, marcado `convenience`",
+        "why": "`convenience` é palavra de classe, e dentro das chaves o memberwise some."
+      },
+      {
+        "text": "Numa extensão",
+        "why": "Isso: o `Extra.swift` usou os dois."
+      },
+      {
+        "text": "Em lugar nenhum; uma struct tem um ou outro",
+        "why": "O `Extra.swift` tinha os dois."
+      },
+      {
+        "text": "Num arquivo separado do mesmo programa",
+        "why": "O arquivo não importa; a extensão sim."
+      }
+    ]
+  },
+  "ex-bn08v43a": {
+    "prompt": "Que tipo tem `StudySession(course: \"Swift\", typed: \"45\")` quando esse inicializador é `init?`?",
+    "hint": "Um inicializador que pode falhar.",
+    "choices": [
+      {
+        "text": "`StudySession`, porque \"45\" é válido",
+        "why": "O tipo não depende do argumento."
+      },
+      {
+        "text": "`StudySession?`",
+        "why": "Isso: toda chamada pode dar `nil`, então o tipo diz isso."
+      },
+      {
+        "text": "`Int?`",
+        "why": "Isso é o que `Int(typed)` dá lá dentro."
+      },
+      {
+        "text": "`Result<StudySession, Error>`",
+        "why": "`Result` é a lição 12, e `init?` dá um opcional."
+      }
+    ]
+  },
+  "ex-cbt9t325": {
+    "prompt": "Um inicializador que passa o trabalho para outro inicializador do mesmo tipo, como `self.init(course:minutes:)` fez, se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "delegante"
+        ]
+      }
+    ]
+  },
+  "ex-1fke0hzb": {
+    "prompt": "Ligue cada necessidade do planner ao tipo de propriedade que a atende.",
+    "hint": "A figura da seção 05.",
+    "pairs": [
+      {
+        "left": "O total da semana, sempre em dia com as sessões",
+        "right": "computada"
+      },
+      {
+        "left": "Minutos que nunca podem passar de 600 depois de uma mudança",
+        "right": "observada com `didSet`"
+      },
+      {
+        "left": "Um resumo caro construído só se alguém o ler",
+        "right": "`lazy`"
+      },
+      {
+        "left": "A meta compartilhada por toda sessão",
+        "right": "`static`"
+      }
+    ],
+    "right_distractors": [
+      "`mutating`"
+    ]
+  },
+  "ex-dr1k1m5f": {
+    "prompt": "`session.minutes = 900` numa propriedade com os dois observadores e um limite de 600. Ponha o que acontece em ordem.",
+    "items": [
+      "O `willSet` roda, com `newValue` 900",
+      "900 é guardado",
+      "O `didSet` roda e o troca por 600",
+      "A próxima leitura devolve 600"
+    ]
+  },
+  "ex-15abcjpp": {
+    "prompt": "Uma sessão nunca pode existir com 0 minutos. O observador da seção 04 limita as mudanças. O que ele deixa passar, e o que fecha a lacuna?",
+    "hint": "Quando os observadores não rodam?",
+    "choices": [
+      {
+        "text": "Leituras; uma propriedade computada",
+        "why": "Leituras não tornam um valor inválido."
+      },
+      {
+        "text": "A inicialização; um `init?` que recusa valores ruins",
+        "why": "Isso: observadores pulam o inicializador, e um que pode falhar verifica antes de o valor existir."
+      },
+      {
+        "text": "Cópias; uma classe no lugar da struct",
+        "why": "Uma cópia leva um valor já válido."
+      },
+      {
+        "text": "Nada; o observador já cobre todos os casos que uma sessão alcança",
+        "why": "`StudySession(minutes: 0)` não roda observador nenhum."
+      }
+    ]
+  }
+}
