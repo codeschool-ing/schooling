@@ -38,8 +38,8 @@ mine":
 4. **Delete it** on the date, with the snapshot kept for a further month.
 
 The same shape applies to the other idle resources: an **unattached disk** is snapshotted and deleted; a **reserved
-IP address** in use by nothing is released (an address that is reserved but unused is billed by the hour, and
-releasing it is free, though the same address cannot be guaranteed again).
+IP address** in use by nothing is released. An address that is reserved but unused is billed by the hour, and
+releasing it is free, though the same address cannot be guaranteed again.
 
 ## Making it a habit
 

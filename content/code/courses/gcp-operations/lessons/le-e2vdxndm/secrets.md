@@ -92,7 +92,7 @@ appears in the command line, the shell history or a file.
 ## What it costs
 
 From the pricing page, read on 30 October 2026, per billing account each month: the first **6 active versions** are
-free, then 0.000082192 USD per version per hour, about 0.06 USD a month each; the first **10,000 access
-operations** are free, then 0.03 USD per 10,000; the first 3 rotation notifications are free, then 0.05 USD each.
-A destroyed version costs nothing, a disabled one costs the same as an enabled one, which is a reason to destroy
+free, then 0.000082192 USD per version per hour, about 0.06 USD a month each. The first **10,000 access
+operations** are free, then 0.03 USD per 10,000. The first 3 rotation notifications are free, then 0.05 USD each.
+A destroyed version costs nothing and a disabled one costs the same as an enabled one, which is a reason to destroy
 old versions once nothing reads them.

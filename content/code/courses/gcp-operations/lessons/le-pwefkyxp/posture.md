@@ -21,7 +21,7 @@ next month. Nothing in this section ran; it is from Google's documentation and t
 Organisation policies (`gcp-foundations` lesson 4) refuse the change at the moment it is made, for everybody,
 including an owner. **A finding that a policy has made impossible never needs triage.** Security Command Center's
 **security posture** feature packages a set of such policies and detectors as one declared posture per
-organisation or folder, and reports drift from it; the shop, with one project, writes the policies in Terraform
+organisation or folder, and reports drift from it. The shop, with one project, writes the policies in Terraform
 instead, where the same review applies to them as to everything else.
 
 ## Detection still matters

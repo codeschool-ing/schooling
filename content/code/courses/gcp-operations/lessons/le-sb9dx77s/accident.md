@@ -7,7 +7,7 @@ version: 1
 wrong prefix, a migration copies over the wrong file. The resources keep running; only Terraform's memory
 of them is gone. Below the state object is deleted. Against Google the command would be `gcloud storage rm
 gs://planner-dev-tfstate/shop/default.tfstate`; here it is the same request made directly to the Cloud
-Storage JSON API with `curl`, because `fake-gcs-server` answers `gcloud`'s deletion with an error message
+Storage JSON API with `curl`. `fake-gcs-server` answers `gcloud`'s deletion with an error message
 even when it has deleted the object, and that error is the imitation's, not Google's:
 
 ```

@@ -17,8 +17,8 @@ hand. None of the three is the right one in general; each fits a team that alrea
 | what it costs to run | the pipeline's minutes | Google's charge for the runs (not quoted in this course) | the cluster, all the time |
 | other clouds | the same tool, other providers | Google only | Google only |
 
-Read across a row rather than down a column. The last two rows are where teams usually decide: a team that
-also runs AWS or Azure keeps Terraform because it is the one tool that speaks all three, and a team whose
+Read across a row rather than down a column. The last two rows are where teams usually decide. A team that
+also runs AWS or Azure keeps Terraform, because it is the one tool that speaks all three; a team whose
 whole world is GKE gets more from Config Connector than from a second tool and a second review flow.
 
 ## The shop's choice

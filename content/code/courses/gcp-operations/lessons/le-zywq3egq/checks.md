@@ -113,7 +113,7 @@ Plan: 2 to add, 0 to change, 0 to destroy.
 The dashboard's first chart is the last section's arithmetic written down: align each revision's counter
 to a rate over sixty seconds, then sum across revisions grouped by status class. The second reads p50 and
 p99 from the latency distribution. `REDUCE_MEAN` across revisions is a compromise the section above warned
-about, accepted here because the shop's revisions serve similar traffic; a service whose instances differ
+about, accepted here because the shop's revisions serve similar traffic. A service whose instances differ
 widely would chart one line per revision instead.
 
 ## The uptime check, read

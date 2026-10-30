@@ -14,9 +14,9 @@ documentation and its pricing page, and nothing was run.
 ## Standard and Enterprise
 
 Cloud Armor comes in two tiers. **Standard** is pay as you go: policies, rules and requests are charged, and
-everything in this lesson is available in it. **Enterprise** adds adaptive protection (a model that learns the
-normal traffic of each backend and proposes a rule when a layer-7 attack begins), threat intelligence lists
-of known bad addresses, and access to Google's DDoS response team during an attack, for a monthly price per
+everything in this lesson is available in it. **Enterprise** adds adaptive protection, a model that learns the
+normal traffic of each backend and proposes a rule when a layer-7 attack begins. It also adds threat intelligence
+lists of known bad addresses, and access to Google's DDoS response team during an attack, for a monthly price per
 project or per billing account.
 
 From the pricing page, read on 30 October 2026, for globally scoped policies in the Standard tier:

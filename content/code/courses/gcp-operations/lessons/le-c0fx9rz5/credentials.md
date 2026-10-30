@@ -65,8 +65,8 @@ ana@laptop:~/gcp/tf/shop$ terraform plan -input=false -no-color | grep -A3 -E "^
 
 The plan is computed on your computer: Terraform compares the configuration with the state, finds
 nothing in the state, and proposes to create the bucket. `terraform_labels` is the merge of the
-resource's own labels and the provider's `default_labels`, which is what will be written on the bucket:
-the two from the provider block, and a third the provider adds on its own, `goog-terraform-provisioned`,
+resource's own labels and the provider's `default_labels`, which is what will be written on the bucket.
+That is the two from the provider block and a third the provider adds on its own, `goog-terraform-provisioned`,
 which says a resource came from Terraform without anybody having to remember to say so.
 `effective_labels` adds any that Google itself attaches. With the token, the provider asks Google once
 whose token it is, is told it is invalid, and carries on without saying so; nothing else leaves your

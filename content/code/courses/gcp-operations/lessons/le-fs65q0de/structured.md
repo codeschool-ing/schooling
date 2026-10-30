@@ -7,7 +7,7 @@ version: 1
 Cloud Functions collect whatever a container writes on its standard output and standard error and send it to
 Cloud Logging without an agent or a library. What becomes of each line depends on its shape: a line that is
 one JSON object becomes a **structured** entry, `jsonPayload`, whose fields can be searched one by one, and
-a handful of those fields mean something to Cloud Logging itself; any other line becomes `textPayload`, one
+a handful of those fields mean something to Cloud Logging itself. Any other line becomes `textPayload`, one
 string, searchable only as text. **Nothing in this lesson reaches Cloud Logging**: there is no emulator for
 it. What runs here is the program that writes the lines, and the questions Cloud Logging would answer, asked
 of those lines on your computer.
