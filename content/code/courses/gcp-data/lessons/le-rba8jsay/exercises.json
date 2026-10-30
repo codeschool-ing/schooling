@@ -1,0 +1,670 @@
+[
+  {
+    "id": "ex-wzdgnas2",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which exported variable sends the requests `gcloud storage` makes to fake-gcs-server instead of to Google?",
+    "hint": "One of them names an address.",
+    "choices": [
+      {
+        "text": "`CLOUDSDK_CORE_PROJECT`",
+        "correct": false,
+        "why": "That names the project the request acts in, `planner-dev`; the address is still Google's."
+      },
+      {
+        "text": "`CLOUDSDK_API_ENDPOINT_OVERRIDES_STORAGE`",
+        "correct": true,
+        "why": "Right. It replaces Cloud Storage's address with `http://localhost:4443/storage/v1/` for `gcloud`."
+      },
+      {
+        "text": "`STORAGE_EMULATOR_HOST`, which every Google tool reads",
+        "correct": false,
+        "why": "That one is read by the Python client library. `gcloud` takes its endpoint from its own setting."
+      },
+      {
+        "text": "`CLOUDSDK_AUTH_DISABLE_CREDENTIALS`",
+        "correct": false,
+        "why": "That stops `gcloud` sending credentials; it does not say where the request goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffmth4kh",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab set `CLOUDSDK_AUTH_DISABLE_CREDENTIALS=true` in every terminal, when the emulator checks no credentials anyway?",
+    "hint": "Think of a terminal that has lost its endpoint line.",
+    "choices": [
+      {
+        "text": "Because fake-gcs-server refuses every request that arrives carrying a token, a key or a signature",
+        "correct": false,
+        "why": "It accepts anything; the lesson's `curl` read an object with no credentials at all."
+      },
+      {
+        "text": "So a terminal that reaches Google by mistake has nothing of yours to send",
+        "correct": true,
+        "why": "Right. Without credentials, a request that escapes to the real address is refused rather than answered as you."
+      },
+      {
+        "text": "Because the Python libraries need it to find the emulator",
+        "correct": false,
+        "why": "The libraries find the emulator through the `…_EMULATOR_HOST` variables."
+      },
+      {
+        "text": "To make `gcloud` start faster",
+        "correct": false,
+        "why": "It changes what is sent, not how fast anything starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8nc88gm",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You stop fake-gcs-server with Ctrl+C at the end of a sitting and start it again the next day. What is in it?",
+    "hint": "Look at the `-backend` flag.",
+    "choices": [
+      {
+        "text": "Everything from yesterday, saved on disk in the directory it was started from",
+        "correct": false,
+        "why": "`-backend memory` keeps nothing on disk."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "Right. Each lesson rebuilds what it needs from its first command."
+      },
+      {
+        "text": "Yesterday's buckets, empty",
+        "correct": false,
+        "why": "The buckets are in the same memory as the objects, and go with them."
+      },
+      {
+        "text": "Only what was in `quitanda-raw-prod`, the bucket the lesson used most",
+        "correct": false,
+        "why": "No bucket is kept; the emulator has no idea which one mattered."
+      }
+    ]
+  },
+  {
+    "id": "ex-78dp8m1e",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `gcloud config set component_manager/fixed_sdk_version 591.0.0` protect you from?",
+    "hint": "It is run just before the components are installed.",
+    "choices": [
+      {
+        "text": "An install that offers to update the whole command line first",
+        "correct": true,
+        "why": "Right. With it, the version in your terminal stays the one in the transcripts."
+      },
+      {
+        "text": "Downloading the emulators from a mirror somewhere other than Google's own servers",
+        "correct": false,
+        "why": "Where they come from does not change; what version the command line is does."
+      },
+      {
+        "text": "A Java version that the emulators cannot use",
+        "correct": false,
+        "why": "Java is the first block's package and has nothing to do with this setting."
+      },
+      {
+        "text": "Running out of disk space halfway while the components are being unpacked",
+        "correct": false,
+        "why": "It changes no size; the lab is 1.6 GB either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-8j3dh7s1",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`gcloud storage buckets list` answers `You do not currently have an active account selected`. What is the fix in this lab?",
+    "hint": "The error suggests a command. Do not run it.",
+    "choices": [
+      {
+        "text": "Run `gcloud auth login`, as the error suggests, and sign in with your own Google account",
+        "correct": false,
+        "why": "That signs the command line in to a real Google account, which this course never wants."
+      },
+      {
+        "text": "Restart fake-gcs-server",
+        "correct": false,
+        "why": "The emulator was never asked; `gcloud` stopped before sending anything."
+      },
+      {
+        "text": "Export `CLOUDSDK_AUTH_DISABLE_CREDENTIALS=true` again",
+        "correct": true,
+        "why": "Right. It tells `gcloud` to send no credentials, and the request goes out."
+      },
+      {
+        "text": "Set `CLOUDSDK_CORE_PROJECT` to your own project",
+        "correct": false,
+        "why": "A missing project gives a different error, about the `[project]` property."
+      }
+    ]
+  },
+  {
+    "id": "ex-qeb0359e",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An error says `gcloud crashed (ConnectionError)` with `port=4443` and `Connection refused`. What happened?",
+    "hint": "Two words in the middle matter more than the first two.",
+    "choices": [
+      {
+        "text": "The command line is broken and has to be downloaded and installed again from the start",
+        "correct": false,
+        "why": "`crashed` is how `gcloud` reports a refused connection; nothing is broken."
+      },
+      {
+        "text": "Google received the request and refused it",
+        "correct": false,
+        "why": "Port 4443 on localhost is the emulator, not Google."
+      },
+      {
+        "text": "Nothing was listening on that port",
+        "correct": true,
+        "why": "Right. Start fake-gcs-server again in its own terminal."
+      },
+      {
+        "text": "The project is not set",
+        "correct": false,
+        "why": "That error names the `[project]` property and never reaches the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-nj14xmn2",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Starting fake-gcs-server prints `bind: address already in use`. What does that tell you?",
+    "hint": "Something is already on the port.",
+    "choices": [
+      {
+        "text": "Another emulator is already answering on 4443",
+        "correct": true,
+        "why": "Right. There is nothing to fix unless you wanted an empty one; `pgrep -af fake-gcs-server` finds it."
+      },
+      {
+        "text": "The port is blocked by the operating system's firewall, which refuses the program's bind",
+        "correct": false,
+        "why": "A firewall does not make a port look taken to a program on the same machine."
+      },
+      {
+        "text": "Java is missing",
+        "correct": false,
+        "why": "fake-gcs-server is a Go program and needs no Java."
+      },
+      {
+        "text": "The `-backend memory` flag is wrong",
+        "correct": false,
+        "why": "The flag is the lab's own; the error is about the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-9d20n3e3",
+    "version": 1,
+    "section": "what-the-emulators-are",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket created with `--location=us-east1` on the emulator reports `southamerica-east1`. Why?",
+    "hint": "Look at how the lab starts the emulator.",
+    "choices": [
+      {
+        "text": "Cloud Storage moves every new bucket to the region nearest to the person who created it",
+        "correct": false,
+        "why": "Cloud Storage keeps the location you asked for; it is a promise about where the bytes live."
+      },
+      {
+        "text": "It keeps no region per bucket and answers with the one in its start command",
+        "correct": true,
+        "why": "Right. `-location southamerica-east1` in the fifth block is what it reports for every bucket."
+      },
+      {
+        "text": "`CLOUDSDK_CORE_PROJECT` overrides the location",
+        "correct": false,
+        "why": "A project has no location of its own, and the variable names only the project."
+      },
+      {
+        "text": "`us-east1` does not exist",
+        "correct": false,
+        "why": "It exists; the emulator simply does not keep a location per bucket."
+      }
+    ]
+  },
+  {
+    "id": "ex-q57cez1b",
+    "version": 1,
+    "section": "what-the-emulators-are",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does this lab have an emulator for?",
+    "hint": "Four services from Google, one from somebody else.",
+    "choices": [
+      {
+        "text": "BigQuery",
+        "correct": false,
+        "why": "There is no BigQuery emulator from Google or anybody else; DuckDB runs the SQL instead."
+      },
+      {
+        "text": "Cloud SQL",
+        "correct": false,
+        "why": "Nothing imitates the managed service; a local PostgreSQL runs the engine."
+      },
+      {
+        "text": "Pub/Sub",
+        "correct": true,
+        "why": "Right. It is Google's own emulator, a component of the command line."
+      },
+      {
+        "text": "IAM",
+        "correct": false,
+        "why": "No control plane has an emulator, IAM included."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdahe5b4",
+    "version": 1,
+    "section": "what-the-emulators-are",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`curl` read an object from fake-gcs-server with no credentials. What does that mean for lesson 4, about who may read a bucket?",
+    "hint": "Ask what the emulator can refuse.",
+    "choices": [
+      {
+        "text": "Its refusals are taught from the documentation",
+        "correct": true,
+        "why": "Right. The emulator allows every request, so nothing here produces a denial."
+      },
+      {
+        "text": "The objects in the lab are public, and should be made private before lesson 4 starts",
+        "correct": false,
+        "why": "There is no private here to make: the emulator does not check."
+      },
+      {
+        "text": "Cloud Storage also allows anonymous reads by default, so nothing changes",
+        "correct": false,
+        "why": "Cloud Storage refuses an anonymous read unless the bucket grants one."
+      },
+      {
+        "text": "Lesson 4 has to be done against a real project",
+        "correct": false,
+        "why": "It is read where it cannot be practised; no lesson requires an account."
+      }
+    ]
+  },
+  {
+    "id": "ex-styqg51p",
+    "version": 1,
+    "section": "what-the-emulators-are",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An object's ACL shows `projectOwner-test-project`. What does it tell you?",
+    "hint": "`planner-dev` is the project the lab uses.",
+    "choices": [
+      {
+        "text": "The object belongs to a project called test-project in your account",
+        "correct": false,
+        "why": "There is no account; the name is the emulator's invention."
+      },
+      {
+        "text": "You are talking to the emulator",
+        "correct": true,
+        "why": "Right. It is the emulator's signature; an ACL naming one of your projects would mean you are not."
+      },
+      {
+        "text": "The project variable was not exported",
+        "correct": false,
+        "why": "Without a project the command would have failed before reaching anything."
+      },
+      {
+        "text": "The bucket was made public at some point, and anybody may now read the object",
+        "correct": false,
+        "why": "It names an owner, not a reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h4m3e6z",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this course read prices from the pricing pages rather than from the Cloud Billing Catalog API?",
+    "hint": "Follow what the API asks for.",
+    "choices": [
+      {
+        "text": "The API's list trails the pages by a month, so its prices are out of date",
+        "correct": false,
+        "why": "It is the same list as the pages, for programs."
+      },
+      {
+        "text": "The API has no prices for São Paulo",
+        "correct": false,
+        "why": "It has every SKU in every region."
+      },
+      {
+        "text": "The API needs a key, so a project, so an account",
+        "correct": true,
+        "why": "Right. So the pages are read, the date is written down, and nothing unread is shown."
+      },
+      {
+        "text": "The pages are cheaper than the API",
+        "correct": false,
+        "why": "Both are free to read; the API's requirement is an account."
+      }
+    ]
+  },
+  {
+    "id": "ex-fabz8kza",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Standard storage costs $0.035 per GiB-month in São Paulo. What does one TiB cost for a month there, in dollars?",
+    "hint": "A TiB is 1,024 GiB.",
+    "value": 35.84,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-ak09527a",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Class B operation costs $0.0004 per thousand. What do a million reads cost, in dollars?",
+    "hint": "A million is a thousand thousands.",
+    "value": 0.4,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-ys90fmvx",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pricing page charges storage per GiB-month. What is a GiB?",
+    "hint": "The `i` matters.",
+    "choices": [
+      {
+        "text": "10⁹ bytes",
+        "correct": false,
+        "why": "That is a GB; a GiB is about 7% larger."
+      },
+      {
+        "text": "2³⁰ bytes",
+        "correct": true,
+        "why": "Right. A gibibyte is 1,073,741,824 bytes."
+      },
+      {
+        "text": "1,000 MiB",
+        "correct": false,
+        "why": "A GiB is 1,024 MiB."
+      },
+      {
+        "text": "Whatever the region defines",
+        "correct": false,
+        "why": "The unit is the same everywhere; the price per unit is what changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-aa0jn1nh",
+    "version": 1,
+    "section": "buckets-and-objects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`gcloud storage ls gs://quitanda-raw-prod` printed `gs://quitanda-raw-prod/raw/`, a folder nobody created. Where did it come from?",
+    "hint": "Look at the `curl` below it.",
+    "choices": [
+      {
+        "text": "The console creates a folder for every new prefix",
+        "correct": false,
+        "why": "No console was involved; the bucket holds only three objects."
+      },
+      {
+        "text": "`gcloud storage cp` creates the folders of a path as it uploads",
+        "correct": false,
+        "why": "It uploaded three objects and nothing else."
+      },
+      {
+        "text": "A grouping of names at the first slash",
+        "correct": true,
+        "why": "Right. A folder is the answer to a question, and exists only while some name starts with it."
+      },
+      {
+        "text": "fake-gcs-server keeps a directory on disk for every prefix it is given",
+        "correct": false,
+        "why": "The JSON API answer shows `prefixes`, the grouping, not stored directories."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgh5972w",
+    "version": 1,
+    "section": "buckets-and-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A line is appended to a local file and it is uploaded again under the same name. Which of these changes on the object?",
+    "hint": "Three values were printed before and after.",
+    "choices": [
+      {
+        "text": "Nothing: the upload is skipped because the name exists",
+        "correct": false,
+        "why": "The upload ran, and the size went from 64 to 78."
+      },
+      {
+        "text": "Only the size",
+        "correct": false,
+        "why": "The MD5 and the generation changed too."
+      },
+      {
+        "text": "Size, MD5 and generation: it is a new object",
+        "correct": true,
+        "why": "Right. Nothing is edited in place; the old bytes are gone unless versioning is on."
+      },
+      {
+        "text": "The name gets a numbered suffix, so the old and the new versions are kept side by side",
+        "correct": false,
+        "why": "Cloud Storage keeps the name; without versioning the old object is simply replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-medcc3c8",
+    "version": 1,
+    "section": "buckets-and-objects",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two programs may write the same object. How does one of them avoid overwriting a write it never saw?",
+    "hint": "Every version of an object has a number.",
+    "choices": [
+      {
+        "text": "It uploads with the generation it read as a precondition, so the write fails if the object has moved on",
+        "correct": true,
+        "why": "Right. The same idea as a version column in a table."
+      },
+      {
+        "text": "It renames the object before writing",
+        "correct": false,
+        "why": "A rename is a copy and a delete, and does nothing to stop the other writer."
+      },
+      {
+        "text": "It checks the folder first",
+        "correct": false,
+        "why": "There is no folder, and a check followed by a write leaves a window for the other program."
+      },
+      {
+        "text": "It writes a smaller object",
+        "correct": false,
+        "why": "Size has nothing to do with who wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke0jkbvf",
+    "version": 1,
+    "section": "naming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these bucket names follows the course's scheme and Cloud Storage's rules?",
+    "hint": "Company, layer, environment, and no dots.",
+    "choices": [
+      {
+        "text": "`quitanda.raw.prod`",
+        "correct": false,
+        "why": "A dotted name needs a verified domain and breaks the TLS certificate of the usual address."
+      },
+      {
+        "text": "`Quitanda-Raw-Prod`",
+        "correct": false,
+        "why": "Capital letters are refused, by the emulator and by Cloud Storage."
+      },
+      {
+        "text": "`raw-prod-ana`",
+        "correct": false,
+        "why": "No company, and a person's name, who will move while the bucket stays."
+      },
+      {
+        "text": "`quitanda-curated-prod`",
+        "correct": true,
+        "why": "Right: company, layer, environment, all lowercase."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pe9kmh0",
+    "version": 1,
+    "section": "naming",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Daily files are written under `raw/orders/dt=2026-10-01/`, because a year-month-day date lists in ___ order.",
+    "hint": "Alphabetical order of these strings is the same as another order.",
+    "blanks": [
+      {
+        "accept": [
+          "time",
+          "chronological"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c65yg5yj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what a new terminal needs before `gcloud storage buckets list` answers from the emulator.",
+    "hint": "The emulator's own terminal comes first.",
+    "items": [
+      "Start fake-gcs-server in a terminal of its own",
+      "Open a second terminal and `cd ~/gcp`",
+      "Put `gcloud` on the path and activate the virtual environment",
+      "Export the project and the variable that disables credentials",
+      "Export the endpoint overrides and the emulator hosts"
+    ]
+  },
+  {
+    "id": "ex-ht6st2qj",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each error to what is missing.",
+    "hint": "Each names a different line of the setup.",
+    "pairs": [
+      {
+        "left": "`gcloud: command not found`",
+        "right": "The path to the command line"
+      },
+      {
+        "left": "`You do not currently have an active account selected`",
+        "right": "The setting that disables credentials"
+      },
+      {
+        "left": "`The required property [project] is not currently set`",
+        "right": "The project variable"
+      },
+      {
+        "left": "`port=4443` and `Connection refused`",
+        "right": "A running emulator"
+      }
+    ],
+    "right_distractors": [
+      "A Google account"
+    ]
+  },
+  {
+    "id": "ex-0dtwgqyj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's terminal lists buckets you have never seen, with a project id that is not `planner-dev`. What is the first thing to do?",
+    "hint": "Think of which half of the trick is missing.",
+    "choices": [
+      {
+        "text": "Stop and find where the credentials and the endpoint went, before running anything else",
+        "correct": true,
+        "why": "Right. That terminal is talking to Google as somebody; nothing more should be sent from it until you know who."
+      },
+      {
+        "text": "Restart fake-gcs-server so its buckets go away",
+        "correct": false,
+        "why": "The emulator would show no strangers' buckets; these came from somewhere else."
+      },
+      {
+        "text": "Delete the unknown buckets",
+        "correct": false,
+        "why": "They are somebody's real data, and deleting them is the worst possible step."
+      },
+      {
+        "text": "Run `gcloud components install` again",
+        "correct": false,
+        "why": "The installation is not what changed; the terminal's settings are."
+      }
+    ]
+  }
+]

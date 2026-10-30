@@ -1,0 +1,2546 @@
+[
+  {
+    "id": "ex-sv47ajph",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda's export job writes `raw/orders/01-10-2026/orders.csv`, `raw/orders/02-10-2026/orders.csv` and so on. What goes wrong when somebody lists `raw/orders/` at the end of the year?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Cloud Storage refuses the hyphens inside an object's name",
+        "correct": false,
+        "why": "An object name may hold almost any UTF-8 up to 1,024 bytes; hyphens are fine."
+      },
+      {
+        "text": "Each month's first day lists together, as names sort by bytes",
+        "correct": true,
+        "why": "Right: the listing is lexicographic, and a day-month-year date puts the 01s of every month side by side."
+      },
+      {
+        "text": "The folders are created out of order and some of them end up empty",
+        "correct": false,
+        "why": "There are no folders to create: a prefix exists only while some object's name starts with it."
+      },
+      {
+        "text": "Nothing; Cloud Storage lists objects in the order they were written",
+        "correct": false,
+        "why": "It lists in the order of the names' bytes, not of their creation."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjvj897h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A colleague deletes the only object under `raw/tmp/` in a bucket without hierarchical namespace. What does `gcloud storage ls gs://quitanda-raw-dev/raw/` show afterwards?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "An empty `raw/tmp/`, until somebody removes the folder too",
+        "correct": false,
+        "why": "That is a file system's habit; a flat namespace has nothing left to remove."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "Listing a prefix nothing starts with is an ordinary, empty answer."
+      },
+      {
+        "text": "`raw/tmp/` for seven days, the soft-delete window",
+        "correct": false,
+        "why": "Soft delete keeps the deleted object's bytes, not a folder in the listing."
+      },
+      {
+        "text": "No `raw/tmp/` at all",
+        "correct": true,
+        "why": "Right: a folder exists only while some object's name starts with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfd9mfwk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "In the lab, `curl` fetched a private report from fake-gcs-server with no credentials at all. What does that tell you about the same request to Cloud Storage?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Nothing, since the emulator checks no signature, token or IAM policy",
+        "correct": true,
+        "why": "Right: every request is allowed there, so a refusal can only be taught from the documentation."
+      },
+      {
+        "text": "That the bucket would be public on Google Cloud as well",
+        "correct": false,
+        "why": "Whether it is public depends on IAM and on public access prevention, which the emulator ignores."
+      },
+      {
+        "text": "That `planner-dev` grants `allUsers` read access by default",
+        "correct": false,
+        "why": "No project grants that by default, and the emulator never read a policy to find out."
+      },
+      {
+        "text": "That the object's owner, `projectOwner-test-project`, made it readable",
+        "correct": false,
+        "why": "That owner is a string the emulator invents for every object it holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-d66f3bny",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these bucket names would Cloud Storage refuse, or this course's scheme reject? Choose all that apply.",
+    "hint": "Lesson 1, the rules and the scheme.",
+    "choices": [
+      {
+        "text": "`quitanda-curated-prod`",
+        "correct": false,
+        "why": "Company, layer, environment: the scheme itself."
+      },
+      {
+        "text": "`goog-quitanda`",
+        "correct": true,
+        "why": "Names beginning with `goog` are refused."
+      },
+      {
+        "text": "`qr`",
+        "correct": true,
+        "why": "Two characters; the minimum is three."
+      },
+      {
+        "text": "`quitanda-marcos-raw`",
+        "correct": true,
+        "why": "A person's name: people move and the bucket stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qrb1fj6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Coldline in São Paulo costs 0.007 USD per GiB-month and has a 90-day minimum stay. 1,024 GiB are written to Coldline and deleted on the thirtieth day. What is the storage billed for them, in USD to the cent, counting a month as 30 days?",
+    "hint": "The minimum stay is a bill for leaving early.",
+    "value": 21.5,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-xeb3c13v",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Match each storage class to its minimum stay.",
+    "hint": "Lesson 2.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "none"
+      },
+      {
+        "left": "Nearline",
+        "right": "30 days"
+      },
+      {
+        "left": "Coldline",
+        "right": "90 days"
+      },
+      {
+        "left": "Archive",
+        "right": "365 days"
+      }
+    ]
+  },
+  {
+    "id": "ex-eyhcqt3g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A customer disputes a delivery from eight months ago, and the courier's photo is in Archive. On Cloud Storage, how soon can the support agent see it?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "After a restore request that takes several hours",
+        "correct": false,
+        "why": "Cloud Storage has no restore request and no tier of speed to choose."
+      },
+      {
+        "text": "Only once the object is rewritten into Standard",
+        "correct": false,
+        "why": "No rewrite is needed; and a rewrite out of Archive is itself charged as a read."
+      },
+      {
+        "text": "At once, with a fee on the bytes read",
+        "correct": true,
+        "why": "Right: Archive is read like any class, at once, and charged 0.05 a GiB served."
+      },
+      {
+        "text": "Never within the year: Archive objects are sealed for 365 days",
+        "correct": false,
+        "why": "The 365 days are a minimum billed stay, not a lock on reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbw74b0d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A bucket with Autoclass on holds two million 64 KiB thumbnails, almost never read. Where do they spend the year?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "In Nearline after 30 days, then in Coldline",
+        "correct": false,
+        "why": "That is the path of an object of 128 KiB or more."
+      },
+      {
+        "text": "In Archive from the first day, as the cheapest class",
+        "correct": false,
+        "why": "Autoclass moves objects by how long they have gone unread, never straight to Archive."
+      },
+      {
+        "text": "In Standard, unmanaged and paying no management fee",
+        "correct": true,
+        "why": "Right: objects smaller than 128 KiB are not managed and not counted."
+      },
+      {
+        "text": "In whichever class the bucket's default names",
+        "correct": false,
+        "why": "With Autoclass on, the default class is not what decides where an object goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ge3p9mrd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A rule keeps an export in Standard for 30 days, in Coldline until it is 365 days old, then in Archive until it is deleted at 1,825 days. With São Paulo's prices (Standard 0.035, Coldline 0.007, Archive 0.003 per GiB-month) and a 30-day month, what does one GiB cost over its life, in USD to the cent?",
+    "hint": "Days in each class, times its price, over 30.",
+    "value": 0.26,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-hbnvjzwc",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A hold that keeps an object like a temporary hold and, when released, restarts the count of the bucket's retention period is called an `___` hold.",
+    "hint": "Lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "event-based",
+          "event based",
+          "eventbased"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z19jq104",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In a bucket with versioning on, somebody runs `gcloud storage rm gs://quitanda-curated-prod/customers.parquet` with no generation. What is left?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "All of them, the live one now noncurrent",
+        "correct": true,
+        "why": "Right: nothing was removed, and copying a generation back makes it live again."
+      },
+      {
+        "text": "Nothing; the delete removes every generation under that name",
+        "correct": false,
+        "why": "Removing a generation needs the generation named."
+      },
+      {
+        "text": "The noncurrent ones only, since the live one is erased",
+        "correct": false,
+        "why": "The live version became noncurrent; its bytes are still there."
+      },
+      {
+        "text": "The live version, because IAM refuses a delete in a versioned bucket",
+        "correct": false,
+        "why": "IAM does not tell the two deletes apart: `storage.objects.delete` allows both."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsf2ycgr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An administrator of the project wants the invoice bucket protected against a colleague who means to delete invoices. Which setting does it?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Versioning, with a life-cycle rule that keeps three versions",
+        "correct": false,
+        "why": "Whoever may delete a live object may also delete its generations."
+      },
+      {
+        "text": "A retention policy left unlocked, so it can still be adjusted",
+        "correct": false,
+        "why": "Anybody who may change the bucket may clear an unlocked policy first."
+      },
+      {
+        "text": "Soft delete set to its longest duration of 90 days",
+        "correct": false,
+        "why": "Soft delete undoes accidents; it is no defence against somebody who means it."
+      },
+      {
+        "text": "A retention policy that is then locked",
+        "correct": true,
+        "why": "Right: a locked policy cannot be removed by anybody, the project's owner included."
+      }
+    ]
+  },
+  {
+    "id": "ex-68v100z6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A bucket's IAM policy grants `roles/storage.objectViewer` to `allUsers`, and nobody can find out who added it. Public access prevention is then set to `enforced`. What happens to the grant?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "It is deleted from the policy by Cloud Storage",
+        "correct": false,
+        "why": "The grant is left where it is; it simply stops working."
+      },
+      {
+        "text": "It stays written in the policy and grants nothing",
+        "correct": true,
+        "why": "Right: prevention closes the leak at once, without anybody first finding the grant."
+      },
+      {
+        "text": "The setting is refused until the grant is removed by hand",
+        "correct": false,
+        "why": "Prevention is accepted with the grant in place, which is its value on the day of a leak."
+      },
+      {
+        "text": "It keeps working for objects written before the change",
+        "correct": false,
+        "why": "Prevention applies to every object of the bucket, old and new."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mke6c5p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A grant to `allAuthenticatedUsers` on a reports bucket lets who read the reports?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Anyone with a Google account",
+        "correct": true,
+        "why": "Right: it is not anybody in Quitanda, it is anybody with a Google account."
+      },
+      {
+        "text": "The users of Quitanda's Google Workspace domain",
+        "correct": false,
+        "why": "That is the belief behind one of the classic leaks; the principal has no domain in it."
+      },
+      {
+        "text": "The service accounts of the project `planner-dev`",
+        "correct": false,
+        "why": "A project's service accounts are named one by one, or through a group."
+      },
+      {
+        "text": "Anyone online",
+        "correct": false,
+        "why": "That is `allUsers`; this one needs a signed-in Google account."
+      }
+    ]
+  },
+  {
+    "id": "ex-ac3bvr1v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A bucket was public for a week. Data Access logs were never turned on for Cloud Storage. What can Cloud Audit Logs still answer?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Which objects were downloaded, and by which addresses",
+        "correct": false,
+        "why": "That is Data Access, and it only answers if it was on before it happened."
+      },
+      {
+        "text": "Who changed the bucket's IAM or settings, and when",
+        "correct": true,
+        "why": "Right: Admin Activity is always on and kept 400 days; who READ is the question nobody can answer now."
+      },
+      {
+        "text": "Every read, since requests for public objects are logged in full",
+        "correct": false,
+        "why": "The documentation says requests for public objects are not recorded in the audit logs at all."
+      },
+      {
+        "text": "Nothing at all, because audit logs are billed and off by default",
+        "correct": false,
+        "why": "Admin Activity logs are on by default and not billed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pbaw87ck",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A job lists a prefix holding 5 million objects, page by page, before reading any of them. How many Class A operations is the listing alone?",
+    "hint": "A list returns at most 1,000 names.",
+    "value": 5000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qvcwtkks",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A bucket in `southamerica-east1` is copied once to a bucket in `europe-west1`: 2 TiB. Data leaving a Latin American bucket for another region costs 0.14 USD a GiB. What does the copy cost, in USD to the cent?",
+    "hint": "A TiB is 1,024 GiB.",
+    "value": 286.72,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-q5p83grn",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these requests does Cloud Storage bill as Class A operations? Choose all that apply.",
+    "hint": "Lesson 5, Class A and Class B.",
+    "choices": [
+      {
+        "text": "`objects.list` of a prefix",
+        "correct": true,
+        "why": "Listing is billed as a write."
+      },
+      {
+        "text": "`objects.rewrite` into Coldline",
+        "correct": true,
+        "why": "A class change is a Class A at the rate of the class it goes to."
+      },
+      {
+        "text": "`objects.get` of the metadata",
+        "correct": false,
+        "why": "Any get, of the data or the metadata, is Class B."
+      },
+      {
+        "text": "`objects.delete`",
+        "correct": false,
+        "why": "Deleting is free."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcg28bx9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda turns Requester Pays on for the order-history bucket a partner copies from. What stays on Quitanda's bill?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The network transfer, since the bytes leave Quitanda's bucket",
+        "correct": false,
+        "why": "Transfer is one of the meters that moves to the requester."
+      },
+      {
+        "text": "Nothing; the requester pays for every line of the bucket",
+        "correct": false,
+        "why": "Storage stays with the owner."
+      },
+      {
+        "text": "The operations, which belong to the bucket's project whoever asks",
+        "correct": false,
+        "why": "That is the default, and exactly what the setting changes."
+      },
+      {
+        "text": "The storage, and any early-deletion charge",
+        "correct": true,
+        "why": "Right: the requester pays the operations, the network and the retrieval fees."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssck4trb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Cloud SQL Enterprise instance in São Paulo has 4 vCPU and 16 GiB. A vCPU-hour is 0.062 USD and a GiB-hour of memory 0.0105. What do the vCPUs and memory cost in a 730-hour month, in USD to the cent?",
+    "hint": "Lesson 6: the machine is priced as two numbers.",
+    "value": 303.68,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-svz5y485",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Cloud SQL for SQL Server Standard instance has 2 vCPU. The Standard licence costs 0.13 USD per core-hour. What is the licence alone per hour, in USD?",
+    "hint": "Microsoft licenses a minimum per instance.",
+    "value": 0.52,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-851ad0vz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A script runs `gcloud sql instances create quitanda-orders --edition=enterprise --cpu=2 --memory=8GiB --region=southamerica-east1`, with no `--database-version`. What engine does the instance run?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "PostgreSQL, the engine of the course's laptop server",
+        "correct": false,
+        "why": "The laptop's engine has no say in Cloud SQL's default."
+      },
+      {
+        "text": "It is refused",
+        "correct": false,
+        "why": "It is accepted, and the default answers."
+      },
+      {
+        "text": "MySQL, the default",
+        "correct": true,
+        "why": "Right: `MYSQL_8_0`, whatever the team meant; name the version in every command."
+      },
+      {
+        "text": "SQL Server Express, the edition with no licence",
+        "correct": false,
+        "why": "SQL Server is chosen only by naming it in the version string."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2ev9gwj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On the course's PostgreSQL, `max_connections` is set to 400 in the configuration and the server is reloaded, not restarted. What does `pg_settings` show?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "400, applied by the reload",
+        "correct": false,
+        "why": "A `postmaster` setting cannot change under a running server."
+      },
+      {
+        "text": "Still 100, with `pending_restart` true",
+        "correct": true,
+        "why": "Right: the slots are laid out at start, so the value waits for a restart."
+      },
+      {
+        "text": "An error: the reload refuses a value it cannot apply",
+        "correct": false,
+        "why": "The reload reads the file, keeps the old value and marks the difference."
+      },
+      {
+        "text": "400 for new sessions and 100 for those already open",
+        "correct": false,
+        "why": "That is how a `user` setting behaves under `SET`, not a server-wide one."
+      }
+    ]
+  },
+  {
+    "id": "ex-zf9s8p8a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On a regional Cloud SQL instance, a migration runs `DELETE FROM orders` without a `WHERE`. What does high availability do about it?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "It fails over to the standby, which still holds the rows",
+        "correct": false,
+        "why": "The standby is kept in step synchronously, so it holds the same empty table."
+      },
+      {
+        "text": "It keeps the deleted rows for seven days on the standby",
+        "correct": false,
+        "why": "That is point-in-time recovery's log, and it restores into a new instance."
+      },
+      {
+        "text": "It refuses the statement",
+        "correct": false,
+        "why": "The primary takes every write; the standby takes no connections at all."
+      },
+      {
+        "text": "Nothing; the standby holds the same delete",
+        "correct": true,
+        "why": "Right: HA protects against a machine or a zone, not against a mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-d11ceg8e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Somebody wants Tuesday's backup back and runs `gcloud sql backups restore BACKUP_ID --restore-instance=quitanda-orders` on the production instance. What happens to the orders written since Tuesday?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "They are lost, because the restore replaces the instance's contents",
+        "correct": true,
+        "why": "Right: restore into another instance first, look, then decide."
+      },
+      {
+        "text": "They are kept, as a restore creates a new instance beside the old one",
+        "correct": false,
+        "why": "That is point-in-time recovery; restoring a backup does not."
+      },
+      {
+        "text": "They are merged with Tuesday's rows by the engine",
+        "correct": false,
+        "why": "A backup is a disk at one moment; nothing merges it with what came after."
+      },
+      {
+        "text": "They move to the read replica, which keeps what the primary loses",
+        "correct": false,
+        "why": "A replica replays the primary; it is neither a backup nor a standby."
+      }
+    ]
+  },
+  {
+    "id": "ex-ah7pvgba",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A customer places an order, and the next page reads it back from a read replica. What may the customer see?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "An error, as a replica refuses reads of recent rows",
+        "correct": false,
+        "why": "A replica answers every read; it answers them from where its replay has got to."
+      },
+      {
+        "text": "The order, since Cloud SQL replicas are synchronous",
+        "correct": false,
+        "why": "They are asynchronous: the primary commits, answers, and only then sends the change."
+      },
+      {
+        "text": "That the order does not exist, if the replica has not replayed it yet",
+        "correct": true,
+        "why": "Right: reads that must see their own writes belong on the primary."
+      },
+      {
+        "text": "A duplicate order, written once on each server",
+        "correct": false,
+        "why": "A replica refuses writes; there is only one place the order was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmn9kss3",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A copy made with `pg_basebackup` starts as a streaming replica, and stays in recovery, because its data directory holds a file called `___`.",
+    "hint": "Lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "standby.signal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xhnyeebq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does an AlloyDB primary write when a transaction commits?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The log and the changed pages, to its own persistent disk",
+        "correct": false,
+        "why": "That is a PostgreSQL server you know, and a Cloud SQL instance."
+      },
+      {
+        "text": "The changed pages, copied to every read node's disk",
+        "correct": false,
+        "why": "A read node is a reader of the same data, not a copy of it."
+      },
+      {
+        "text": "Only the log, to the shared storage layer",
+        "correct": true,
+        "why": "Right: the log processing service turns the log into pages in the background."
+      },
+      {
+        "text": "The rows in column format, for the columnar engine",
+        "correct": false,
+        "why": "The columnar engine is a copy in memory, built from the row store."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3t4t1vd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda's analysts need more read capacity on AlloyDB. What changes on the application's side when the read pool grows from 2 nodes to 6?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing; it keeps the pool's one address",
+        "correct": true,
+        "why": "Right: it is one number, `--read-pool-node-count`."
+      },
+      {
+        "text": "It learns the addresses of four new replicas",
+        "correct": false,
+        "why": "That is how Cloud SQL replicas are added, each an instance of its own."
+      },
+      {
+        "text": "It waits while each new node copies the cluster's storage",
+        "correct": false,
+        "why": "A read node copies nothing; the storage belongs to the cluster."
+      },
+      {
+        "text": "It moves its writes to the pool, now larger than the primary",
+        "correct": false,
+        "why": "Every write still goes through the one primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-zakdf18d",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "In São Paulo, one AlloyDB node of 8 vCPU and 64 GiB costs 1.98064 USD an hour, and a Cloud SQL Enterprise instance of the same size 1.168. How much more is the AlloyDB node in a 730-hour month, in USD to the cent?",
+    "hint": "Lesson 8.",
+    "value": 593.23,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-tmevfdfa",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A Spanner instance of 300 processing units exists for 10 hours. How many node-hours is it billed?",
+    "hint": "1,000 processing units are one node.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ap6tagdg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why is a counter that goes 1, 2, 3 a bad primary key for a busy Spanner table, though it is a good one in PostgreSQL?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Spanner refuses an integer as the first column of a key",
+        "correct": false,
+        "why": "Integers are fine; the bit-reversed sequence produces them."
+      },
+      {
+        "text": "A counter needs a lock that spans every region",
+        "correct": false,
+        "why": "The trouble is where the rows land, not how the number is issued."
+      },
+      {
+        "text": "The emulator shows the splits filling unevenly",
+        "correct": false,
+        "why": "The emulator has no splits; a hotspot cannot be shown there at all."
+      },
+      {
+        "text": "All new rows land in the last split",
+        "correct": true,
+        "why": "Right: a hotspot caps the table's write rate at one server, however many nodes are paid for."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gkmm2pn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`Notes` is to be interleaved in `Orders`, which is keyed `(CustomerId, OrderId)` and interleaved in `Customers`. Which primary key will Spanner accept for `Notes`?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "`(NoteId)`, with a foreign key to `Orders`",
+        "correct": false,
+        "why": "Interleaving is placement, and placement needs the parent's key at the front."
+      },
+      {
+        "text": "`(CustomerId, OrderId, NoteId)`",
+        "correct": true,
+        "why": "Right: a child's key repeats its parent's key as its first columns."
+      },
+      {
+        "text": "`(OrderId, NoteId)`",
+        "correct": false,
+        "why": "It must begin with the whole of the parent's key, `CustomerId` first."
+      },
+      {
+        "text": "`(NoteId, CustomerId, OrderId)`",
+        "correct": false,
+        "why": "The parent's columns come first, not last."
+      }
+    ]
+  },
+  {
+    "id": "ex-xrzq890a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "On the Spanner emulator, a quick transaction was aborted twice while a slow one was open, and still committed. What part of the program made that harmless?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The retry in `run_in_transaction`",
+        "correct": true,
+        "why": "Right: the retry is the lesson to keep; the delay is the emulator's."
+      },
+      {
+        "text": "A stale read, so the two transactions never met",
+        "correct": false,
+        "why": "Both were read-write transactions; a stale read writes nothing."
+      },
+      {
+        "text": "Reading the stock before the transaction began",
+        "correct": false,
+        "why": "Reads belong inside the transaction, because the function may run again."
+      },
+      {
+        "text": "Interleaving `Stock`",
+        "correct": false,
+        "why": "Placement does not stop the emulator from running one transaction at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgk0fbjb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Firestore screen pages through orders with `offset(90).limit(10)`. How many document reads does that one page bill?",
+    "hint": "The skipped documents are counted too.",
+    "value": 100,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kv1awqxw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A collection group query filters `status == 'pending'` and orders by `total_cents`. It answered on the emulator. What will Firestore on Google Cloud do with it, if nobody declared an index?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Answer it slowly, by scanning every `orders` collection",
+        "correct": false,
+        "why": "There is no scan to fall back on."
+      },
+      {
+        "text": "Refuse it, and link to the missing index",
+        "correct": true,
+        "why": "Right: Firestore answers from an index that fits exactly, or not at all; the Native emulator checks none."
+      },
+      {
+        "text": "Answer it from the two single-field indexes combined",
+        "correct": false,
+        "why": "An equality with a sort on another field needs a composite index."
+      },
+      {
+        "text": "Build the composite index by itself on the first run",
+        "correct": false,
+        "why": "Composite indexes are declared; Firestore does not build them on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-28nxn03p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Customer `c-17` has 40 orders in the subcollection `customers/c-17/orders`. What does a read of the document `customers/c-17` return?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The customer's fields with the 40 orders nested inside",
+        "correct": false,
+        "why": "That would be the array design, with its 1 MiB limit; this is a subcollection."
+      },
+      {
+        "text": "The fields and the ids of the 40 orders, without their contents",
+        "correct": false,
+        "why": "Even listing the subcollections under a document is a separate call."
+      },
+      {
+        "text": "An error, as a document with a subcollection is read as a collection",
+        "correct": false,
+        "why": "A document read is a document read, whatever lives under it."
+      },
+      {
+        "text": "The customer's own fields, and none of the orders",
+        "correct": true,
+        "why": "Right: a subcollection is not stored inside its parent and is not read with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9jfgm9d",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A Bigtable cluster of 3 Enterprise nodes runs all month. A node-hour is 0.98 USD and the month is 730 hours. What do the nodes cost, in USD to the cent?",
+    "hint": "Lesson 11.",
+    "value": 2146.2,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-8hnse6s2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`cbt set` reads the number after the `@` of a cell as a timestamp counted in ___ since 1970, so the same date in milliseconds lands in January 1970.",
+    "hint": "Lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "microseconds",
+          "micro-seconds",
+          "microsecond"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9h0asagf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A family holds both a customer's name, written once in August, and their district history. It is given `(age() > 30d || versions() > 2)`. What happens to the name at the end of October?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "It stays, because a single version is below the limit of two",
+        "correct": false,
+        "why": "With `||` either rule condemns a cell, and the age rule does."
+      },
+      {
+        "text": "It stays until a third version of the name is written",
+        "correct": false,
+        "why": "That would be the version rule alone, joined with `&&`."
+      },
+      {
+        "text": "It is collected, by the age rule",
+        "correct": true,
+        "why": "Right: the repair is a second family, since the family is where the policy lives."
+      },
+      {
+        "text": "The policy is refused",
+        "correct": false,
+        "why": "The two rules exist to be combined, as a union or an intersection."
+      }
+    ]
+  },
+  {
+    "id": "ex-32y4jwb8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Click rows are keyed `c-17#…`, `c-170#…`, `c-1700#…`. Why does a support screen read customer c-17's history with the prefix `c-17#` and not `c-17`?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Bigtable refuses a prefix that ends in a digit",
+        "correct": false,
+        "why": "Any bytes make a prefix; the problem is what else they match."
+      },
+      {
+        "text": "Otherwise c-170 and c-1700 match too",
+        "correct": true,
+        "why": "Right: in the lesson that put hundreds of other customers' rows on c-17's screen."
+      },
+      {
+        "text": "The `#` makes the read a range, which is cheaper than a prefix",
+        "correct": false,
+        "why": "A prefix is already a contiguous range; the `#` only stops it at the right customer."
+      },
+      {
+        "text": "A regex filter on `c-17` would be just as precise",
+        "correct": false,
+        "why": "A regex on the key is a filter: the server walks every row of the range to apply it."
+      }
+    ]
+  },
+  {
+    "id": "ex-92gjvd83",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Memorystore for Redis Standard instance of 8 GiB is in the M2 tier, 0.103 USD per GiB-hour. What does it cost in a 730-hour month, in USD to the cent?",
+    "hint": "Lesson 12.",
+    "value": 601.52,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-6kvttc71",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each Memorystore product to the unit its price is given in.",
+    "hint": "Lesson 12.",
+    "pairs": [
+      {
+        "left": "Memorystore for Redis",
+        "right": "a GiB of provisioned capacity, per hour"
+      },
+      {
+        "left": "Memorystore for Valkey",
+        "right": "a node, per hour"
+      },
+      {
+        "left": "Memorystore for Memcached",
+        "right": "a vCPU-hour plus a GiB-hour of memory"
+      }
+    ],
+    "right_distractors": [
+      "a million commands served"
+    ]
+  },
+  {
+    "id": "ex-x2kmgxgr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Memorystore for Redis instance keeps its default eviction policy and fills up with keys written without a time to live. What happens to the next write?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "It succeeds, and the least recently used key is evicted",
+        "correct": false,
+        "why": "That is `allkeys-lru`, which is not Memorystore's default."
+      },
+      {
+        "text": "It succeeds, and Memorystore adds capacity to the instance",
+        "correct": false,
+        "why": "Capacity is what you provision; nothing grows on its own."
+      },
+      {
+        "text": "It succeeds, and the oldest keys are written to disk",
+        "correct": false,
+        "why": "Persistence copies keys out; it does not make room in memory."
+      },
+      {
+        "text": "It fails: `volatile-lru` evicts only keys with a TTL",
+        "correct": true,
+        "why": "Right: with no key eligible, a full cache refuses the write."
+      }
+    ]
+  },
+  {
+    "id": "ex-kaebyz2t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The cached home page expires and fifty requests arrive before it is rebuilt. With the lesson's lock, written with `nx=True`, how many of them query the database?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "One; the others wait and read the copy it leaves",
+        "correct": true,
+        "why": "Right: `nx` succeeds only if the key does not exist, so exactly one request wins."
+      },
+      {
+        "text": "Fifty, one for each request that missed",
+        "correct": false,
+        "why": "That is the herd without the lock."
+      },
+      {
+        "text": "None, since Redis serves the expired copy until it is rebuilt",
+        "correct": false,
+        "why": "An expired key is gone: `GET` answers `(nil)`."
+      },
+      {
+        "text": "Two, the first and whoever arrives after its TTL",
+        "correct": false,
+        "why": "One wins the lock; the rest read what it writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxkd9vqc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "BigQuery counts a `STRING` as 2 bytes plus its length in UTF-8. How many logical bytes is the value `São Paulo`?",
+    "hint": "`ã` takes two bytes in UTF-8.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-frvkdvq8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An analyst in the project `quitanda-analytics` queries `planner-dev.quitanda.orders`. Which project is billed for the query's compute?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "`planner-dev`, the project that owns the table",
+        "correct": false,
+        "why": "The table's project pays to store it, not to have it queried."
+      },
+      {
+        "text": "Both, half each",
+        "correct": false,
+        "why": "There is no split; one project runs the job."
+      },
+      {
+        "text": "The job's own project, not the table's",
+        "correct": true,
+        "why": "Right: a query is a job, and the job's project pays, whoever owns the tables."
+      },
+      {
+        "text": "Whichever project the dataset `quitanda` names as its payer",
+        "correct": false,
+        "why": "A dataset has a location, not a payer for other people's queries."
+      }
+    ]
+  },
+  {
+    "id": "ex-jexc09sz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A dataset's tables compress about 2.5 to 1 and are all active. In São Paulo, logical storage is 0.023 USD per GiB-month and physical 0.07. Which billing model is cheaper for it?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Physical, because it bills the compressed bytes",
+        "correct": false,
+        "why": "It bills fewer bytes at three times the rate, and 2.5 to 1 does not make up for it."
+      },
+      {
+        "text": "Physical, since time travel is free under it",
+        "correct": false,
+        "why": "Physical billing is the one that charges for time travel and fail-safe."
+      },
+      {
+        "text": "Logical, below the 3.04 crossing",
+        "correct": true,
+        "why": "Right: 0.07 ÷ 0.023 is the crossing, and 2.5 is below it."
+      },
+      {
+        "text": "Either; they cost the same",
+        "correct": false,
+        "why": "They meet at one ratio, and 2.5 is not it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5qvhjc6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "On demand in `southamerica-east1`, BigQuery charges 11.25 USD per TiB. A query reads 3 TiB of a month already past its free TiB. What does it cost, in USD to the cent?",
+    "hint": "Lesson 14.",
+    "value": 33.75,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-9es8pt9y",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An Enterprise slot-hour costs 0.093 USD in São Paulo and on demand costs 11.25 USD per TiB. Around how many slot-hours per TiB read does a workload cost the same either way? Give a whole number.",
+    "hint": "Lesson 14.",
+    "value": 121,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-zbewvxy9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these stop an on-demand query from running up a bill, rather than only report it? Choose all that apply.",
+    "hint": "Lesson 14, guardrails.",
+    "choices": [
+      {
+        "text": "A custom quota of query usage per day per user",
+        "correct": true,
+        "why": "Past it, that user's queries are refused for the day."
+      },
+      {
+        "text": "`maximumBytesBilled` on the query",
+        "correct": true,
+        "why": "It fails before reading anything, and costs nothing."
+      },
+      {
+        "text": "A Cloud Billing budget at 80% of the month's amount",
+        "correct": false,
+        "why": "A budget sends an alert; it stops nothing."
+      },
+      {
+        "text": "`LIMIT 10` at the end of the query",
+        "correct": false,
+        "why": "The bytes of the columns read are billed whatever the limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-395h3dkb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "`SELECT * FROM quitanda.clicks LIMIT 10` runs on demand against a 2 TiB table with no partitions. What is it billed?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "All of it, about 2 TiB",
+        "correct": true,
+        "why": "Right: `LIMIT` does not reduce the bill."
+      },
+      {
+        "text": "The 10 MB minimum, since it returns ten rows",
+        "correct": false,
+        "why": "The minimum is a floor, and this query is far above it."
+      },
+      {
+        "text": "The ten rows' bytes",
+        "correct": false,
+        "why": "What is billed is what was read, not what came back."
+      },
+      {
+        "text": "Nothing, because a preview of a table is free",
+        "correct": false,
+        "why": "A query with `LIMIT` is an ordinary query and is billed as one."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2bkwy70",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`quitanda.orders` is partitioned by `dt`. Which of these filters let BigQuery rule partitions out before reading anything? Choose all that apply.",
+    "hint": "Compare the partitioning column, bare, with constants.",
+    "choices": [
+      {
+        "text": "`WHERE dt BETWEEN DATE '2026-09-01' AND DATE '2026-09-07'`",
+        "correct": true,
+        "why": "The bare column against constants."
+      },
+      {
+        "text": "`WHERE dt = DATE '2026-09-29'`",
+        "correct": true,
+        "why": "The same shape, one day."
+      },
+      {
+        "text": "`WHERE dt + INTERVAL 1 DAY = DATE '2026-09-30'`",
+        "correct": false,
+        "why": "The column is inside an expression."
+      },
+      {
+        "text": "`WHERE created_at >= TIMESTAMP '2026-09-29'`",
+        "correct": false,
+        "why": "It holds the same day, and it is not the partitioning column."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhf0891w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`require_partition_filter` is on for `quitanda.orders`, and an analyst forgets the date in a query. What does it cost?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "The 10 MB minimum, charged for the refusal",
+        "correct": false,
+        "why": "A failed query costs nothing."
+      },
+      {
+        "text": "The whole table, with a warning on the job",
+        "correct": false,
+        "why": "The option refuses; it does not warn."
+      },
+      {
+        "text": "Only the most recent partition, which BigQuery reads by default",
+        "correct": false,
+        "why": "No partition is chosen for her; the query fails."
+      },
+      {
+        "text": "Nothing; BigQuery refuses the query before it reads anything",
+        "correct": true,
+        "why": "Right: the cheapest guardrail in the course, for this one mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kwx09pa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A dry run of a query on a table clustered by `store_id`, filtering on `store_id = 7`, reports 4 GiB. What does the query end up billed?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Exactly 4 GiB, as the dry run reads the clustering metadata",
+        "correct": false,
+        "why": "The dry run cannot see the blocks the cluster filter will skip."
+      },
+      {
+        "text": "At most 4 GiB, less once blocks are skipped",
+        "correct": true,
+        "why": "Right: the estimate is an upper bound worked out before any block is skipped."
+      },
+      {
+        "text": "More than 4 GiB, because reclustering is billed to the query",
+        "correct": false,
+        "why": "Reclustering is automatic, in the background, and uses none of the project's slots or bytes."
+      },
+      {
+        "text": "The whole table, since clustering only helps with partitions",
+        "correct": false,
+        "why": "Clustering works inside a partition or without one."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6g0ejwr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda's reports ask about days, weeks and months, and one dashboard asks about the evening rush. Why not partition the orders by hour?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Wide queries open sixteen times the files",
+        "correct": true,
+        "why": "Right: partition by the coarsest unit the common filters still prune well; cluster for the hour."
+      },
+      {
+        "text": "BigQuery has no hourly partitioning",
+        "correct": false,
+        "why": "Time partitions can be hourly; the cost is elsewhere."
+      },
+      {
+        "text": "An hourly partition is billed a 10 MB minimum of its own",
+        "correct": false,
+        "why": "The minimum is per table referenced and per query, not per partition."
+      },
+      {
+        "text": "The hour is not a column the dashboards could filter on",
+        "correct": false,
+        "why": "It could be; the point is what the finer cut costs every other query."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4wheftv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A query processes 25,000,000 bytes. BigQuery rounds a query up to the next MB of 1,048,576 bytes. How many bytes is it billed?",
+    "hint": "Lesson 16.",
+    "value": 25165824,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-aw8h80qh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A DuckDB plan is read from the ___, where the table is read, up to the top, where the answer leaves.",
+    "hint": "Lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "bottom"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d05q10nn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "September's sales per district select `district` and `total_cents` and name `dt` only in the `WHERE`. Is `dt` part of the bytes billed?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "No, because a filter column is not returned",
+        "correct": false,
+        "why": "Billing follows what is read, and the filter has to read it."
+      },
+      {
+        "text": "Yes, 8 bytes a row over the days the filter keeps",
+        "correct": true,
+        "why": "Right: every column referenced counts, wherever it is referenced."
+      },
+      {
+        "text": "No, because the partitioning column is free on demand",
+        "correct": false,
+        "why": "It costs nothing on disk in those Parquet files, and its full width on the bill."
+      },
+      {
+        "text": "Only for the days the filter rules out",
+        "correct": false,
+        "why": "It is the other way round: the days kept are the ones read."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7p2vemn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "In BigQuery's execution graph, one stage shows a maximum compute time far above its average. What does that point to?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Slot contention, the query waiting for slots",
+        "correct": false,
+        "why": "That shows as a long wait with little read or compute."
+      },
+      {
+        "text": "A larger bill, since slow stages read more bytes",
+        "correct": false,
+        "why": "On demand the bill was fixed before the graph existed, by columns and partitions."
+      },
+      {
+        "text": "Shuffle spilling to disk for lack of memory",
+        "correct": false,
+        "why": "Spill is reported as its own figure, shuffle bytes spilled."
+      },
+      {
+        "text": "Skew: one worker got far more than the rest",
+        "correct": true,
+        "why": "Right: the stage ends when its slowest worker does."
+      }
+    ]
+  },
+  {
+    "id": "ex-vy3pa3cw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An analyst should query the order files in a bucket through BigQuery, and must not read the bucket with any other tool. What makes that possible?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "A plain external table, with read access to the bucket",
+        "correct": false,
+        "why": "That grants her the bucket, every file in it, through any tool."
+      },
+      {
+        "text": "An object table over the bucket",
+        "correct": false,
+        "why": "An object table lists metadata, one row per object, not the orders' rows."
+      },
+      {
+        "text": "A BigLake table, over a connection",
+        "correct": true,
+        "why": "Right: BigQuery reads the files on her behalf, so she needs no permission on the bucket."
+      },
+      {
+        "text": "Public access prevention on the bucket",
+        "correct": false,
+        "why": "That stops `allUsers` grants; it gives BigQuery nothing to read through."
+      }
+    ]
+  },
+  {
+    "id": "ex-2y28p785",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A BigLake table caches its metadata with `max_staleness` of four hours. A new day's file lands at 09:00. What may a query at 09:30 that uses the cache see?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "The new file, since a write invalidates the cache",
+        "correct": false,
+        "why": "A write to the bucket tells BigQuery nothing; staleness is what is allowed."
+      },
+      {
+        "text": "The table without the new file",
+        "correct": true,
+        "why": "Right: the price of the cache is that the table may be behind the bucket."
+      },
+      {
+        "text": "An error, until a refresh",
+        "correct": false,
+        "why": "Within the staleness the cache is trusted, and the query runs."
+      },
+      {
+        "text": "Half the new file, the row groups already listed",
+        "correct": false,
+        "why": "The cache holds files and their footers; a file is in it or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypmj7haa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda leaves the order files in the bucket and queries them as an external table. What does that give up against a native table?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Partition pruning, which needs data inside BigQuery",
+        "correct": false,
+        "why": "Hive-style `dt=` folders are read as a partition column by an external table too."
+      },
+      {
+        "text": "On-demand billing",
+        "correct": false,
+        "why": "On demand bills an external query per TiB like any other."
+      },
+      {
+        "text": "A single copy of the data, since the files are loaded too",
+        "correct": false,
+        "why": "The files ARE the table; nothing is stored twice."
+      },
+      {
+        "text": "Clustering, and the long-term rate",
+        "correct": true,
+        "why": "Right: BigQuery does not arrange the files, and they are billed as Cloud Storage objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyxfpee5",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "BI Engine in `southamerica-east1` costs 0.0749 USD per GiB-hour. What does a 5 GiB reservation cost in a 730-hour month, in USD to the cent?",
+    "hint": "Lesson 18.",
+    "value": 273.39,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-1b25f25x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A dashboard query asks for something `daily_sales_mv` cannot answer, so smart tuning cannot rewrite it. What happens?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "It runs against the base table and is billed as such, with no warning",
+        "correct": true,
+        "why": "Right: there is no error and no line on the bill; it just costs what it would have."
+      },
+      {
+        "text": "It fails, with a message naming the view",
+        "correct": false,
+        "why": "Nothing fails; that is why the fallback goes unnoticed."
+      },
+      {
+        "text": "BigQuery refreshes the view so it can answer",
+        "correct": false,
+        "why": "A refresh catches the view up; it does not change what it can answer."
+      },
+      {
+        "text": "It reads the view and returns the closest rows it has",
+        "correct": false,
+        "why": "A rewrite happens only when everything the query needs is in the view."
+      }
+    ]
+  },
+  {
+    "id": "ex-3m311z4s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda wants the median order value per district for each day, kept ready for the morning. Why a scheduled query rather than a materialised view?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "A materialised view cannot be partitioned by `dt`",
+        "correct": false,
+        "why": "The lesson's view is partitioned on the same column as its base table."
+      },
+      {
+        "text": "A scheduled query is free, while a view's refresh is billed",
+        "correct": false,
+        "why": "A scheduled query is billed as the query it runs."
+      },
+      {
+        "text": "A median cannot be maintained by combining stored parts with new rows",
+        "correct": true,
+        "why": "Right: two days' medians do not make the median of both, so it is recomputed on a timetable."
+      },
+      {
+        "text": "Materialised views refresh only once a week",
+        "correct": false,
+        "why": "They refresh after the base table changes, no more often than the interval set."
+      }
+    ]
+  },
+  {
+    "id": "ex-4eskeswm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On demand, BI Engine accelerates a dashboard query. What is the stage that reads the table data billed?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "The usual bytes, at a discounted rate",
+        "correct": false,
+        "why": "The pricing page says those stages are charged for 0 scanned bytes."
+      },
+      {
+        "text": "The 10 MB minimum",
+        "correct": false,
+        "why": "The accelerated stage is charged nothing at all."
+      },
+      {
+        "text": "Zero scanned bytes",
+        "correct": true,
+        "why": "Right: the stage BI Engine serves is free; the memory is paid as a reservation."
+      },
+      {
+        "text": "The slots the stage used, at the Standard edition's price",
+        "correct": false,
+        "why": "On demand there are no slot-hours to bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-bksz45vj",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Pub/Sub subscription filter can select messages by their ___ alone, since Pub/Sub never parses the `data` of a message.",
+    "hint": "Lesson 19.",
+    "blanks": [
+      {
+        "accept": [
+          "attributes",
+          "attribute"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-12k5kkfv",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these did the Pub/Sub emulator do the way Google documents the service? Choose all that apply.",
+    "hint": "Lesson 19, the emulator against the service.",
+    "choices": [
+      {
+        "text": "Give each subscription its own copy, `billing` only what its filter selected",
+        "correct": true,
+        "why": "Fan-out and filters behaved as the service's."
+      },
+      {
+        "text": "Forward a message to the dead-letter topic after five attempts",
+        "correct": true,
+        "why": "With the service's own `CloudPubSubDeadLetterSource…` attributes."
+      },
+      {
+        "text": "Wait 20 to 60 seconds before redelivering, as the retry policy asked",
+        "correct": false,
+        "why": "It stored the policy and redelivered at once."
+      },
+      {
+        "text": "Delete unacknowledged messages once the ten-minute retention ran out",
+        "correct": false,
+        "why": "It enforced the bounds and deleted nothing by them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dja1d0w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team creates a `fraud` subscription on `app-events`, a topic with no retention of its own, after a morning of events. What does `fraud` receive?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Only what is published after it exists",
+        "correct": true,
+        "why": "Right: the topic kept none of the morning's events for anybody."
+      },
+      {
+        "text": "The last seven days of the topic",
+        "correct": false,
+        "why": "Seven days is a subscription's retention of its own backlog, not the topic's history."
+      },
+      {
+        "text": "The morning's events not yet acknowledged by the other subscriptions",
+        "correct": false,
+        "why": "Each subscription keeps its own copies; nothing passes from one to another."
+      },
+      {
+        "text": "Every event since the topic was created",
+        "correct": false,
+        "why": "A topic is not a queue, and keeps nothing for a subscriber that did not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ppxqdfn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "On a subscription with ordering on, the reader nacks `o-102 placed` after having acknowledged nothing else of that key. On Google, what does it meet next for the key `o-102`?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "The later messages of the key first, then `o-102 placed`",
+        "correct": false,
+        "why": "That is what the emulator did, and it is not what Google documents."
+      },
+      {
+        "text": "`o-102 placed` alone, with the key paused after it",
+        "correct": false,
+        "why": "A pause on the key is the publisher's reaction to a failed publish, not a reader's nack."
+      },
+      {
+        "text": "The later messages, while `o-102 placed` goes to the dead-letter topic",
+        "correct": false,
+        "why": "A message is dead-lettered only after the set number of attempts, five at least."
+      },
+      {
+        "text": "`o-102 placed` again, followed by the later messages of the key",
+        "correct": true,
+        "why": "Right: the message comes back together with every later one of its key, in order."
+      }
+    ]
+  },
+  {
+    "id": "ex-sq80dwvv",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each way of handling a message to what a crash in the middle of it does.",
+    "hint": "Lesson 20.",
+    "pairs": [
+      {
+        "left": "ack, then do the work",
+        "right": "the message is lost, in silence"
+      },
+      {
+        "left": "do the work, then ack",
+        "right": "the work is done again after redelivery"
+      },
+      {
+        "left": "do the work and record the message's key in one transaction, then ack",
+        "right": "the redelivery is refused, and the effect happens once"
+      }
+    ],
+    "right_distractors": [
+      "Pub/Sub rewinds the consumer's offset"
+    ]
+  },
+  {
+    "id": "ex-1j6t8z8t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Quitanda's payments consumer records each message id in `processed` in the same transaction as the total. The publisher also retries a publish once. Which duplicates get through?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "The redeliveries after the consumer's crash",
+        "correct": false,
+        "why": "Those keep their message ids, and the table refuses them."
+      },
+      {
+        "text": "The upstream retry's copy, which has a fresh id",
+        "correct": true,
+        "why": "Right: dedupe on the order id, the event's own idempotency key, to catch both."
+      },
+      {
+        "text": "None; a message id identifies a payment",
+        "correct": false,
+        "why": "Two publishes of one payment are two ids to Pub/Sub."
+      },
+      {
+        "text": "Both kinds, since the table is written after the ack",
+        "correct": false,
+        "why": "It is written with the total, before the ack, which is why redeliveries are caught."
+      }
+    ]
+  },
+  {
+    "id": "ex-621819f5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A subscription has exactly-once delivery on. A publisher's retry puts one payment on the topic twice. What does the consumer receive?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Both of them",
+        "correct": true,
+        "why": "Right: two ids, one payment, both delivered; the consumer still has to dedupe."
+      },
+      {
+        "text": "One message, the setting having removed the copy",
+        "correct": false,
+        "why": "It compares no message bodies."
+      },
+      {
+        "text": "One, unless the consumer is in another region",
+        "correct": false,
+        "why": "Region changes the redelivery promise, and that promise is not about copies."
+      },
+      {
+        "text": "Neither",
+        "correct": false,
+        "why": "A topic accepts every publish; to it they are two events."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1zwg1sv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Dataflow bills batch shuffle after an adjustment: the first 250 GiB of a job at a quarter of their size, the next 4,870 GiB at half. A job shuffles 400 GiB. How many GiB are billed?",
+    "hint": "Lesson 21.",
+    "value": 137.5,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-e5zd62hj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In a Beam program, Python reaches the line `parsed = lines | 'Parse' >> beam.FlatMap(parse)`. What happens at that moment?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Every line of the input is parsed and kept in `parsed`",
+        "correct": false,
+        "why": "The PCollection will hold the output once a runner executes the pipeline."
+      },
+      {
+        "text": "A step is added to the graph, nothing more",
+        "correct": true,
+        "why": "Right: a Beam program builds the graph first and the runner runs it after."
+      },
+      {
+        "text": "The first element is parsed, to check the function works",
+        "correct": false,
+        "why": "No element is touched while the graph is being built."
+      },
+      {
+        "text": "The step is sent to Dataflow",
+        "correct": false,
+        "why": "The graph is handed to a runner only when the pipeline is run."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvacqdwe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A pipeline reading a Pub/Sub subscription groups by neighbourhood with no windowing, and Beam refuses it before reading a message. Why?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The DirectRunner cannot read Pub/Sub at all",
+        "correct": false,
+        "why": "With a one-minute window the same runner read the subscription and gave the night's totals."
+      },
+      {
+        "text": "A subscription has to be shared before it can be grouped",
+        "correct": false,
+        "why": "A pipeline should have its own subscription; sharing would halve what it receives."
+      },
+      {
+        "text": "Grouping by key is allowed only in batch",
+        "correct": false,
+        "why": "The middle of the program ran unchanged in both; only the window was missing."
+      },
+      {
+        "text": "Its global window never ends, so never emits",
+        "correct": true,
+        "why": "Right: an unbounded collection needs a window, or a trigger that fires before the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdkkmkfj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A streaming job with one-minute windows has to stop for good at 19:00:40. What does draining it keep that cancelling it loses?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The job's state, for a new version of the code to resume",
+        "correct": false,
+        "why": "That is `--update`, which keeps the job running."
+      },
+      {
+        "text": "The unacknowledged messages, which drain reads to the end of the backlog",
+        "correct": false,
+        "why": "Drain stops reading at once."
+      },
+      {
+        "text": "The totals already counted in the open minute, emitted as its window closes",
+        "correct": true,
+        "why": "Right: drain stops reading and lets every open window close and emit."
+      },
+      {
+        "text": "Nothing; both end the job the same way",
+        "correct": false,
+        "why": "Cancel throws away windows not yet closed."
+      }
+    ]
+  },
+  {
+    "id": "ex-67hfaebv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A sliding window of 30 minutes starts every 5 minutes. In how many windows is each element placed?",
+    "hint": "Lesson 22.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ac0sgt0h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Fixed five-minute windows have an allowed lateness of 300 seconds. An order placed at 19:03 arrives when the watermark is at 19:12. What happens to it?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "It is emitted in a `LATE` pane of the 19:00 window",
+        "correct": false,
+        "why": "That needs the watermark to be before 19:10, the window's end plus the lateness."
+      },
+      {
+        "text": "Dropped, with no error: the window's state went at 19:10",
+        "correct": true,
+        "why": "Right: lateness is measured against the watermark, and nothing reports the loss."
+      },
+      {
+        "text": "It is moved into the 19:10 window, the one now open",
+        "correct": false,
+        "why": "An element belongs to the window of its event time, or to none."
+      },
+      {
+        "text": "The pipeline fails with an error naming the order",
+        "correct": false,
+        "why": "No step fails and no error is logged for dropped late data."
+      }
+    ]
+  },
+  {
+    "id": "ex-fegyrsjj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A pipeline emits early panes and writes each one as a row per window and neighbourhood, overwriting the row each time. Which accumulation mode does that sink need?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Discarding, so that each pane is only what arrived since the last",
+        "correct": false,
+        "why": "Overwriting with a part would leave the row holding only the last part."
+      },
+      {
+        "text": "Either, since the on-time pane repairs the row",
+        "correct": false,
+        "why": "In discarding mode the on-time pane can be 0.00, and the row would say so."
+      },
+      {
+        "text": "Neither; early panes cannot be written to a table",
+        "correct": false,
+        "why": "A row per window in a table is the lesson's own example of such a sink."
+      },
+      {
+        "text": "Accumulating, so that every pane is the whole window so far",
+        "correct": true,
+        "why": "Right: the last pane written is the answer, and a pane delivered twice does no harm."
+      }
+    ]
+  },
+  {
+    "id": "ex-66a7mmtd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Sessions have a gap of five minutes. Customer `c-30` orders at 20:00:00 and at 20:04:30, and not again that evening. What session does the pipeline make?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "One, from 20:00:00 to 20:09:30",
+        "correct": true,
+        "why": "Right: the orders are under five minutes apart, and a session ends at the last one plus the gap."
+      },
+      {
+        "text": "One, from 20:00:00 to 20:04:30",
+        "correct": false,
+        "why": "The session runs on past the last element by the gap."
+      },
+      {
+        "text": "Two, one for each order",
+        "correct": false,
+        "why": "They would be two only if more than five minutes apart."
+      },
+      {
+        "text": "One, from 20:00:00 to 20:05:00, aligned to the clock",
+        "correct": false,
+        "why": "Alignment to the clock is what fixed windows do; a session is made from the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-ten7zmk2",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Dataproc's management fee is 0.010 USD per vCPU-hour, on every vCPU of the master and of both kinds of worker. A cluster has a master and 10 workers, all `n2-standard-4` (4 vCPU). What is the fee for one hour, in USD?",
+    "hint": "Lesson 23.",
+    "value": 0.44,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-s8vk2s96",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Dataproc cluster is to run a large nightly batch cheaply on Spot VMs. Which machines can be Spot without risking more than time?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "The primary workers, as Dataproc rebalances their blocks",
+        "correct": false,
+        "why": "Losing a primary loses HDFS blocks; primaries should be standard VMs."
+      },
+      {
+        "text": "The master, which only coordinates",
+        "correct": false,
+        "why": "Losing the master ends the cluster."
+      },
+      {
+        "text": "The secondary workers, since they hold no HDFS",
+        "correct": true,
+        "why": "Right: a lost secondary's tasks are run again elsewhere; nothing is lost but time."
+      },
+      {
+        "text": "Every machine, with a high-availability master",
+        "correct": false,
+        "why": "HA protects the master; the primaries still hold HDFS."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x2hjp5z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A cluster that runs for weeks has secondary workers. Why choose Spot rather than preemptible for them?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Spot VMs are never taken back by Google",
+        "correct": false,
+        "why": "They are spare capacity and are reclaimed when Google needs it."
+      },
+      {
+        "text": "Spot VMs may hold HDFS blocks, and preemptible ones may not",
+        "correct": false,
+        "why": "Neither secondary type holds HDFS; that is what makes them secondary."
+      },
+      {
+        "text": "Preemptible VMs stop within 24 hours; Spot do not",
+        "correct": true,
+        "why": "Right: both can be taken back with about thirty seconds' warning, but only one has a daily end."
+      },
+      {
+        "text": "Preemptible VMs cost the same as standard ones",
+        "correct": false,
+        "why": "Both are sold below the standard price."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8ceamgb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A Composer 2 small environment pays an environment fee of 0.56 USD an hour, on top of its components. What is that fee alone in a 730-hour month, in USD to the cent?",
+    "hint": "Lesson 24.",
+    "value": 408.8,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-1wncgmet",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A new DAG file dropped into Airflow's DAG folder is registered with `is_paused` true: the DAG starts ___, and schedules nothing until somebody turns it on.",
+    "hint": "Lesson 24.",
+    "blanks": [
+      {
+        "accept": [
+          "paused"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0htbgwgn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Cloud Scheduler job is created with `--schedule='0 3 * * *'` and no `--time-zone`. When does it fire, in São Paulo's time?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "At midnight, since the default zone is `Etc/UTC`",
+        "correct": true,
+        "why": "Right: and a workflow computing \"yesterday\" from the clock would then run three hours early."
+      },
+      {
+        "text": "At three in the morning, the region's own time",
+        "correct": false,
+        "why": "The job's zone is its own setting, not the region's."
+      },
+      {
+        "text": "At six in the morning, three hours after UTC",
+        "correct": false,
+        "why": "São Paulo is three hours behind UTC, not ahead."
+      },
+      {
+        "text": "Never, as the command is refused without a zone",
+        "correct": false,
+        "why": "It is accepted, with the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmq4m7tc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "On Airflow 3's default, `schedule='0 3 * * *'` makes a run at 03:00 on 30 October. Why does Quitanda's DAG hand its job `macros.ds_add(ds, -1)`?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "`ds` is the 29th, and the job wants the 28th to be sure it is complete",
+        "correct": false,
+        "why": "On this timetable `ds` is the day of the run itself."
+      },
+      {
+        "text": "`ds` is in UTC, and one day back converts it to São Paulo",
+        "correct": false,
+        "why": "A time zone shifts hours, not a whole day."
+      },
+      {
+        "text": "A backfill would otherwise process each night twice",
+        "correct": false,
+        "why": "A backfill creates one run per date; the shift is about which date a run is for."
+      },
+      {
+        "text": "That run's `ds` is the 30th, not the 29th",
+        "correct": true,
+        "why": "Right: `CronTriggerTimetable` makes the logical date the moment the run fires."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0fs187c",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Datastream's change data capture in São Paulo costs 3.176 USD a GiB for the first 2,500 GiB of the month and 2.382 for the next 2,500. A month processes 4,000 GiB of changes. What does it cost, in whole USD?",
+    "hint": "Each tier is charged only for what falls inside it.",
+    "value": 11513,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-fwcp45c1",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Put the steps of a cutover from the old PostgreSQL to its migrated copy in order.",
+    "hint": "Lesson 25.",
+    "items": [
+      "Run the job until the backfill is done and the delay is a few seconds",
+      "Stop the writers on the source",
+      "Wait for the delay to reach zero and the counts and totals to agree",
+      "Promote the destination and point the applications at it",
+      "Drop the replication slot on the source, once the job is gone"
+    ]
+  },
+  {
+    "id": "ex-hfmkcezh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Datastream stream was deleted and its PostgreSQL replication slot left behind. What happens on the source over the next weeks?",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "Nothing, since a slot with no reader is dropped by PostgreSQL",
+        "correct": false,
+        "why": "PostgreSQL keeps a slot until somebody drops it."
+      },
+      {
+        "text": "The slot holds the log from its bookmark onward, and the disk fills",
+        "correct": true,
+        "why": "Right: drop a slot when its reader is gone, or cap it with `max_slot_wal_keep_size`."
+      },
+      {
+        "text": "Writes are refused until a reader connects to the slot",
+        "correct": false,
+        "why": "Writes go on; it is the retained log that grows."
+      },
+      {
+        "text": "Datastream is billed for the changes the slot keeps",
+        "correct": false,
+        "why": "Datastream bills what it processes, and nothing for an idle stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-sq7fk9na",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On a PostgreSQL slot, a reader calls `pg_logical_slot_peek_changes` and then `pg_logical_slot_get_changes`. What does a second `get` straight after return?",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "Nothing, because `get` moved the slot's bookmark past those changes",
+        "correct": true,
+        "why": "Right: `peek` reads and leaves; `get` reads and moves the bookmark."
+      },
+      {
+        "text": "The same changes again, as `get` and `peek` both leave them",
+        "correct": false,
+        "why": "Only `peek` leaves them."
+      },
+      {
+        "text": "The changes `peek` read, since `peek` reserved them for the next call",
+        "correct": false,
+        "why": "`peek` reserves nothing; it moves no bookmark at all."
+      },
+      {
+        "text": "An error, as a slot can be read once",
+        "correct": false,
+        "why": "It can be read any number of times; it simply has nothing left."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyn7rk8s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda puts its raw bucket into a raw zone of the `sales` lake, and grants the analysts only the curated zone. A colleague still has `storage.objects.get` on the raw bucket through IAM. Can she read it?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "No; a bucket in a zone answers only to the zone's grants",
+        "correct": false,
+        "why": "IAM on the bucket still decides who reads it."
+      },
+      {
+        "text": "Yes; the zone draws no boundary",
+        "correct": true,
+        "why": "Right: what a lake does not buy is a boundary."
+      },
+      {
+        "text": "No, once discovery has run",
+        "correct": false,
+        "why": "Discovery reads the files to publish tables; it closes no access."
+      },
+      {
+        "text": "Only through BigQuery, as the lake publishes the bucket as tables",
+        "correct": false,
+        "why": "Published tables are an extra way in, not a replacement for the bucket's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p1vzs67",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Dataplex quality rule says `phone` is not null, with a threshold of 95%. Tonight's 20 orders include one with no phone. What does the rule report?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "Fail, as one row breaks the condition",
+        "correct": false,
+        "why": "That is a rule at 100%, right for a key and wrong for a phone typed by a customer."
+      },
+      {
+        "text": "Fail, as 95% means the rule allows no null at all",
+        "correct": false,
+        "why": "95% allows one row in twenty to fail."
+      },
+      {
+        "text": "Nothing, since profile scans and not quality scans judge nulls",
+        "correct": false,
+        "why": "A profile describes the share of nulls; a quality scan judges it against the rule."
+      },
+      {
+        "text": "Pass, as 19 of 20 rows is exactly the 95% threshold",
+        "correct": true,
+        "why": "Right: the rule passes when the share of rows meeting it reaches the threshold."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve42aqtb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`phone` in the curated orders carries a policy tag, and the analysts do not hold Fine-Grained Reader on it. What happens when an analyst runs `SELECT order_id, phone FROM quitanda.orders`?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "It returns `phone` as NULL for every row",
+        "correct": false,
+        "why": "Refusal, not a blank column, unless a masking data policy is attached."
+      },
+      {
+        "text": "It returns the phones, since IAM on the table grants every column",
+        "correct": false,
+        "why": "That is exactly what a policy tag is there to override, column by column."
+      },
+      {
+        "text": "The query fails with an access error; without `phone` it runs as before",
+        "correct": true,
+        "why": "Right: BigQuery checks the tag on every query, and refuses rather than blanking the column."
+      },
+      {
+        "text": "It returns the phones masked as hashes",
+        "correct": false,
+        "why": "Masking needs a data policy on the tag; the tag alone refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-zekbejgf",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the six questions the course asks of a workload in the order it asks them.",
+    "hint": "Lesson 27.",
+    "items": [
+      "What is the access pattern?",
+      "How fast does an answer have to come?",
+      "What consistency does the reader need?",
+      "How big is it, and how fast does it grow?",
+      "Who operates it?",
+      "What does it cost, at this workload?"
+    ]
+  },
+  {
+    "id": "ex-y21qd5sc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "On demand, a question scanning 50 GiB costs 50 ÷ 1,024 × 11.25 USD, once the month's free TiB is used. What is that, in USD to the cent?",
+    "hint": "Lesson 27.",
+    "value": 0.55,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-g21y1ht3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The \"my orders\" screen is opened 100,000 times a day and shows up to ten orders. Why is BigQuery the wrong store for it, whatever its price per TiB?",
+    "hint": "Lesson 27.",
+    "choices": [
+      {
+        "text": "BigQuery cannot filter on a customer id",
+        "correct": false,
+        "why": "It can; the trouble is what each such query costs and how long it takes."
+      },
+      {
+        "text": "Each lookup bills at least 10 MB per table",
+        "correct": true,
+        "why": "Right: a warehouse answers scans; a lookup by key belongs to a store built for keys."
+      },
+      {
+        "text": "BigQuery tables cannot hold more than a day of orders",
+        "correct": false,
+        "why": "They hold years; the shape of the reads is what does not fit."
+      },
+      {
+        "text": "The free TiB runs out on the first morning",
+        "correct": false,
+        "why": "The minimum per query is the issue, not the free tier."
+      }
+    ]
+  },
+  {
+    "id": "ex-wn9tbrd3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Quitanda's workers poll a `jobs` table every second with `SELECT … FOR UPDATE SKIP LOCKED`. Which store does the course say that access pattern was built for?",
+    "hint": "Lesson 27.",
+    "choices": [
+      {
+        "text": "Bigtable, keyed by the time each job was written",
+        "correct": false,
+        "why": "A time-first key is the course's other anti-pattern."
+      },
+      {
+        "text": "Memorystore, with a key per job and a time to live",
+        "correct": false,
+        "why": "A cache with an eviction policy may throw jobs away."
+      },
+      {
+        "text": "BigQuery, with a scheduled query that picks up pending rows",
+        "correct": false,
+        "why": "A warehouse fed row by row is the anti-pattern beside this one."
+      },
+      {
+        "text": "Pub/Sub, with a subscription per consumer and a dead-letter topic",
+        "correct": true,
+        "why": "Right: a queue is append and take, with an acknowledgement per message."
+      }
+    ]
+  }
+]

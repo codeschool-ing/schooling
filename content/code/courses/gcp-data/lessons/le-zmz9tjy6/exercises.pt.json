@@ -1,0 +1,427 @@
+{
+  "ex-sfde5mra": {
+    "prompt": "Ligue cada necessidade ao serviço que a atende.",
+    "hint": "Onde cada um termina?",
+    "pairs": [
+      {
+        "left": "o warehouse acompanha um banco vivo em minutos",
+        "right": "Datastream"
+      },
+      {
+        "left": "o próprio banco vai para o Cloud SQL",
+        "right": "Database Migration Service"
+      },
+      {
+        "left": "uma carga por noite basta",
+        "right": "BigQuery Data Transfer Service"
+      }
+    ],
+    "right_distractors": [
+      "Cloud Scheduler"
+    ]
+  },
+  "ex-kqgasfn9": {
+    "prompt": "Por que um stream anota a posição no log da origem antes de copiar a primeira tabela?",
+    "hint": "O que acontece com uma mudança feita enquanto uma tabela está sendo copiada?",
+    "choices": [
+      {
+        "text": "Para que a cópia possa pular as linhas que ainda vão mudar",
+        "why": "Nada é pulado; a cópia lê o que existe, e as mudanças são aplicadas depois dela."
+      },
+      {
+        "text": "Para que nenhuma mudança feita durante a cópia se perca",
+        "why": "Isso: tudo depois daquela posição é capturado, então nada cai entre o copiado e o capturado."
+      },
+      {
+        "text": "Porque o log é apagado quando a cópia começa",
+        "why": "O log é mantido, pelo slot, até o leitor confirmá-lo."
+      },
+      {
+        "text": "Para travar as tabelas contra escritas durante a cópia",
+        "why": "As escritas continuam durante o backfill; evitar a trava é o objetivo."
+      }
+    ]
+  },
+  "ex-zy6k90t8": {
+    "prompt": "Um stream é criado com --backfill-none. O que ele copia?",
+    "hint": "O backfill é uma das metades.",
+    "choices": [
+      {
+        "text": "As tabelas uma vez, e nenhuma mudança",
+        "why": "É o contrário: sem backfill não há cópia das tabelas."
+      },
+      {
+        "text": "Nada até que um backfill seja iniciado à mão por alguém",
+        "why": "Ele transmite mudanças desde o momento em que começa."
+      },
+      {
+        "text": "Só as mudanças a partir do momento em que começa",
+        "why": "Isso: para tabelas já carregadas de outro jeito."
+      },
+      {
+        "text": "As tabelas e as mudanças, mais devagar",
+        "why": "Isso é o --backfill-all, na mesma velocidade."
+      }
+    ]
+  },
+  "ex-92h0dg5v": {
+    "prompt": "A Quitanda quer guardar no BigQuery todo estado passado de cada pedido, não só o atual. Qual configuração de destino serve?",
+    "hint": "Um modo escreve cada mudança como linha nova.",
+    "choices": [
+      {
+        "text": "Modo merge com um dataFreshness curto",
+        "why": "O merge guarda o estado atual de cada linha, por mais que seja atualizado."
+      },
+      {
+        "text": "Modo append-only",
+        "why": "Isso: cada mudança vira uma linha, e o histórico é uma consulta."
+      },
+      {
+        "text": "Um destino Cloud Storage com arquivos Avro trocados a cada 15 segundos",
+        "why": "Arquivos guardariam as mudanças, e o requisito é uma tabela no BigQuery."
+      },
+      {
+        "text": "REPLICA IDENTITY DEFAULT na origem",
+        "why": "Isso decide quanto da linha antiga o log carrega, não como o BigQuery guarda as mudanças."
+      }
+    ]
+  },
+  "ex-74447r2x": {
+    "prompt": "Quais dois nomes uma configuração de origem PostgreSQL do Datastream carrega?",
+    "hint": "A ajuda os imprimiu.",
+    "choices": [
+      {
+        "text": "Um slot de replicação e uma publicação",
+        "why": "Isso: replicationSlot e publication."
+      },
+      {
+        "text": "Uma assinatura e um gatilho",
+        "why": "O Datastream lê um slot; ele não assina nada nem instala gatilhos."
+      },
+      {
+        "text": "O plugin de saída e o tamanho do segmento de WAL",
+        "why": "O plugin pertence ao slot, e o tamanho do segmento ao servidor."
+      },
+      {
+        "text": "Um segredo e um papel",
+        "why": "O segredo é do connection profile, não da configuração de origem."
+      }
+    ]
+  },
+  "ex-4w673vcv": {
+    "prompt": "De que o usuário do Datastream no PostgreSQL da loja precisa? Marque todas as que se aplicam.",
+    "hint": "Ele lê o log e as tabelas.",
+    "choices": [
+      {
+        "text": "O atributo REPLICATION",
+        "why": "Sim: para ler o log por um slot."
+      },
+      {
+        "text": "SELECT nas tabelas que copia",
+        "why": "Sim: para o backfill."
+      },
+      {
+        "text": "INSERT nas tabelas, para marcar o que leu",
+        "why": "O slot lembra o que foi lido; um usuário de CDC que escreve pode mudar o histórico."
+      },
+      {
+        "text": "Superusuário, para criar o slot durante o stream",
+        "why": "O slot e a publicação são criados antes, e o stream os nomeia."
+      }
+    ]
+  },
+  "ex-haas05ea": {
+    "prompt": "O banco da loja está num rack, alcançado a partir do Google Cloud por uma VPN. Qual conectividade a seção escolhe para o profile de origem, e por quê?",
+    "hint": "Quais opções aproximam o banco da internet?",
+    "choices": [
+      {
+        "text": "Conectividade por IP estático, porque não precisa de VPC",
+        "why": "Ela funciona admitindo endereços do Google no firewall do banco, o que o aproxima da internet."
+      },
+      {
+        "text": "Um bastion SSH, porque é o mais rápido de montar",
+        "why": "Rápido, e um host voltado para a internet na frente do banco da loja."
+      },
+      {
+        "text": "Uma conexão privada pareada com uma VPC que alcança o rack",
+        "why": "Isso: o banco fica fora da internet, e a VPN faz o resto."
+      },
+      {
+        "text": "Nenhuma: o Datastream alcança 198.51.100.20 diretamente",
+        "why": "Esse endereço está num rack sem motivo para estar na internet; algo precisa levar o caminho."
+      }
+    ]
+  },
+  "ex-7eww1e5x": {
+    "prompt": "Para um servidor PostgreSQL escrever no log o bastante para captura de mudanças, o `wal_level` precisa ser ___.",
+    "hint": "O SHOW wal_level o imprimiu.",
+    "blanks": [
+      {
+        "accept": [
+          "logical"
+        ]
+      }
+    ]
+  },
+  "ex-v2pqk55s": {
+    "prompt": "O slot de texto foi lido com get, e logo de novo com get. O que a segunda leitura devolveu, e por quê?",
+    "hint": "peek e get diferem numa coisa.",
+    "choices": [
+      {
+        "text": "As mesmas nove linhas, porque o get nunca move o marcador",
+        "why": "Isso é o peek; o get move o marcador para depois do que devolveu."
+      },
+      {
+        "text": "Um erro, porque o slot foi apagado",
+        "why": "O slot ainda existia; só não tinha nada novo."
+      },
+      {
+        "text": "Zero linhas, porque o get tinha movido o marcador",
+        "why": "Isso: depois que um leitor pega as mudanças, o servidor as esquece para aquele slot."
+      },
+      {
+        "text": "Só os commits, porque as linhas já tinham sido aplicadas",
+        "why": "Ler um slot não aplica nada; ele não devolveu nada."
+      }
+    ]
+  },
+  "ex-0y09t206": {
+    "prompt": "Ligue cada primeiro byte de uma mensagem pgoutput ao que ela é.",
+    "hint": "Uma delas descreve a tabela, uma vez.",
+    "pairs": [
+      {
+        "left": "B",
+        "right": "começa uma transação"
+      },
+      {
+        "left": "R",
+        "right": "descreve as colunas da tabela"
+      },
+      {
+        "left": "U",
+        "right": "uma alteração"
+      },
+      {
+        "left": "C",
+        "right": "confirma a transação"
+      }
+    ],
+    "right_distractors": [
+      "um checkpoint"
+    ]
+  },
+  "ex-f3w747vf": {
+    "prompt": "Com a replica identity padrão, o que o log carrega de um pedido apagado?",
+    "hint": "Leia a linha DELETE do slot de texto.",
+    "choices": [
+      {
+        "text": "A linha inteira como era",
+        "why": "Isso exige REPLICA IDENTITY FULL."
+      },
+      {
+        "text": "Só a chave primária",
+        "why": "Isso: o order_id, que basta para achar e apagar a linha no destino."
+      },
+      {
+        "text": "Nada: exclusões não vão para o log",
+        "why": "O DELETE estava lá, com a transação dele."
+      },
+      {
+        "text": "O número da linha no arquivo da tabela",
+        "why": "A decodificação lógica informa valores, não posições físicas."
+      }
+    ]
+  },
+  "ex-7yjef9aa": {
+    "prompt": "Um stream é pausado num feriado prolongado, numa origem movimentada sem max_slot_wal_keep_size. O que acontece na origem?",
+    "hint": "O que um slot guarda, e por quanto tempo?",
+    "choices": [
+      {
+        "text": "O slot é apagado depois de uma hora inativo",
+        "why": "Esse timer não existe por padrão; o slot espera o leitor."
+      },
+      {
+        "text": "O WAL se acumula até o leitor voltar ou o disco encher",
+        "why": "Isso: o slot guarda tudo o que o leitor não confirmou, sem limite por padrão."
+      },
+      {
+        "text": "As escritas são recusadas até o stream voltar",
+        "why": "A origem continua escrevendo; o que cresce é o log por trás das escritas."
+      },
+      {
+        "text": "Nada, porque o Datastream lê as mudanças do BigQuery depois",
+        "why": "As mudanças só existem no log da origem até um leitor pegá-las."
+      }
+    ]
+  },
+  "ex-7m6z8d97": {
+    "prompt": "Com max_slot_wal_keep_size em 32MB, o slot ficou 71 MB para trás e um checkpoint rodou. O que a configuração salvou, e o que custou?",
+    "hint": "Leia o wal_status antes e depois.",
+    "choices": [
+      {
+        "text": "Salvou o stream e custou o disco",
+        "why": "Ao contrário: o log foi removido, e o slot junto."
+      },
+      {
+        "text": "Salvou o disco e perdeu o slot",
+        "why": "Isso: lê-lo é um erro, e a volta é um slot novo e um backfill novo."
+      },
+      {
+        "text": "Salvou os dois, comprimindo o log antigo",
+        "why": "Nada foi comprimido; os segmentos além do limite foram removidos."
+      },
+      {
+        "text": "Nada, porque 32MB só vale para slots novos",
+        "why": "Valeu para o slot existente no checkpoint seguinte."
+      }
+    ]
+  },
+  "ex-7hyqwpqb": {
+    "prompt": "Num migration job contínuo, qual comando torna o destino Cloud SQL um primário independente?",
+    "hint": "O cutover tem nome no DMS.",
+    "choices": [
+      {
+        "text": "migration-jobs stop",
+        "why": "Parar pausa a replicação; o destino continua réplica."
+      },
+      {
+        "text": "migration-jobs verify",
+        "why": "O verify roda as checagens do job e não muda nada."
+      },
+      {
+        "text": "migration-jobs promote",
+        "why": "Isso: o promote encerra a replicação e faz o destino aceitar escritas."
+      },
+      {
+        "text": "migration-jobs demote-destination",
+        "why": "O demote vai no sentido contrário, transformando uma instância de volta em destino de replicação."
+      }
+    ]
+  },
+  "ex-td6kajpf": {
+    "prompt": "O que a página de preços diz que uma migração de PostgreSQL para Cloud SQL for PostgreSQL custa no próprio Database Migration Service?",
+    "hint": "O mesmo motor dos dois lados.",
+    "choices": [
+      {
+        "text": "$3.176 por GiB de mudanças em São Paulo",
+        "why": "Essa é a taxa heterogênea, para motores diferentes."
+      },
+      {
+        "text": "Nenhuma cobrança adicional, embora o destino seja cobrado",
+        "why": "Isso: migrações homogêneas não têm cobrança adicional, e o Cloud SQL cobra a instância."
+      },
+      {
+        "text": "Uma taxa fixa por migration job",
+        "why": "A página não tem taxa por job."
+      },
+      {
+        "text": "Uma taxa por hora da instância de replicação",
+        "why": "Não há instância sua para pagar neste serviço."
+      }
+    ]
+  },
+  "ex-3atn7xqq": {
+    "prompt": "Ponha o cutover na ordem que não perde nada.",
+    "hint": "Os escritores param antes de qualquer promote.",
+    "items": [
+      "Rodar o job até ele ficar quieto",
+      "Parar os escritores na origem",
+      "Esperar as últimas mudanças e comparar as contagens",
+      "Promover o destino e apontar as aplicações para ele",
+      "Apagar o slot de replicação na origem"
+    ]
+  },
+  "ex-d88sxzfy": {
+    "prompt": "Em São Paulo, o CDC do Datastream custa 3,176 USD por GiB nos primeiros 2.500 GiB do mês. Quanto custam 80 GiB de mudanças processadas, em USD, com duas casas?",
+    "hint": "Tudo cai na primeira faixa.",
+    "unit": "USD"
+  },
+  "ex-p5m7b64q": {
+    "prompt": "O programa imprimiu 190.56 e 476.40 para o mesmo mês de mudanças da Quitanda. O que a aula diz para fazer com os dois números?",
+    "hint": "De onde vem o fator?",
+    "choices": [
+      {
+        "text": "Informar a média, 333.48, como preço",
+        "why": "A média de dois palpites é um terceiro palpite; o fator pode ser medido."
+      },
+      {
+        "text": "Rodar o stream por uma semana, ler os bytes processados e então multiplicar",
+        "why": "Isso: o fator depende dos dados, e uma semana do stream real o mede."
+      },
+      {
+        "text": "Informar 190.56, já que 2x é o caso comum da página",
+        "why": "A página dá uma faixa de duas a cinco vezes, não um caso comum."
+      },
+      {
+        "text": "Ignorar os dois, porque CDC abaixo de 2.500 GiB é grátis",
+        "why": "A primeira faixa custa $3.176 por GiB; só origens AlloyDB e Spanner têm 100 GiB grátis."
+      }
+    ]
+  },
+  "ex-pgcba5aw": {
+    "prompt": "Um mês depois do cutover, o banco antigo da loja está ficando sem disco, embora ninguém escreva mais nele. Qual é a causa provável?",
+    "hint": "O que ficou para trás?",
+    "choices": [
+      {
+        "text": "O backfill ainda está copiando as tabelas",
+        "why": "O backfill acabou muito antes do cutover."
+      },
+      {
+        "text": "Um slot de replicação que ninguém lê, ainda segurando WAL",
+        "why": "Isso: o sexto passo do cutover, apagar o slot, foi pulado."
+      },
+      {
+        "text": "A publicação duplica toda linha que nomeia",
+        "why": "Uma publicação só nomeia tabelas; ela não guarda nada."
+      },
+      {
+        "text": "REPLICA IDENTITY FULL numa tabela só leitura",
+        "why": "Ela pesa em alterações e exclusões, e uma tabela só leitura não faz nenhuma."
+      }
+    ]
+  },
+  "ex-kzfc47pq": {
+    "prompt": "Quais destas coisas são verdadeiras sobre os dois slots da prática? Marque todas as que se aplicam.",
+    "hint": "O mesmo log, dois marcadores.",
+    "choices": [
+      {
+        "text": "Cada um viu as mesmas três transações",
+        "why": "Sim: os mesmos xids, 733 a 735, em texto num e em binário no outro."
+      },
+      {
+        "text": "Ler um com get deixou as mudanças do outro no lugar",
+        "why": "Sim: cada slot tem o próprio marcador."
+      },
+      {
+        "text": "O slot pgoutput informou o primeiro insert do ord-1",
+        "why": "O ord-1 foi inserido antes de qualquer slot existir, então nenhum o informa."
+      },
+      {
+        "text": "Os dois retinham o mesmo tamanho depois da inserção em massa",
+        "why": "Sim: 3431 kB cada, já que nenhum tinha sido lido depois da inserção em massa."
+      }
+    ]
+  },
+  "ex-f9kjz2xv": {
+    "prompt": "Por que a configuração de origem do Datastream precisa de uma publicação se o slot já existe?",
+    "hint": "O que o pgoutput publica?",
+    "choices": [
+      {
+        "text": "O pgoutput publica só as tabelas que a publicação nomeia",
+        "why": "Isso: o slot é o marcador, e a publicação é a lista de tabelas."
+      },
+      {
+        "text": "A publicação guarda as mudanças até o Datastream conseguir lê-las",
+        "why": "Quem segura o log é o slot; a publicação não guarda nada."
+      },
+      {
+        "text": "Ela põe o wal_level em logical",
+        "why": "O wal_level é configuração do servidor, definida quando ele inicia."
+      },
+      {
+        "text": "Ela dá ao usuário o atributo REPLICATION",
+        "why": "Isso é concedido ao papel, com ALTER ROLE."
+      }
+    ]
+  }
+}

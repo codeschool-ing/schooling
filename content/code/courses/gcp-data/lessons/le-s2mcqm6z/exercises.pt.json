@@ -1,0 +1,429 @@
+{
+  "ex-2855z17h": {
+    "prompt": "Onde é calculada a assinatura de uma URL assinada V4?",
+    "hint": "Pense no que o `sign.py` mandou antes de imprimir.",
+    "choices": [
+      {
+        "text": "No Cloud Storage, que a registra numa lista de links emitidos",
+        "why": "Nada é registrado em lugar nenhum; o serviço só verifica uma assinatura quando a URL é usada."
+      },
+      {
+        "text": "No computador de quem assina, a partir da chave privada",
+        "why": "Isso. Fazer uma URL não manda requisição nenhuma, e é por isso que uma URL para um objeto inexistente foi assinada sem reclamação."
+      },
+      {
+        "text": "No serviço de IAM do Google, toda vez",
+        "why": "Só ao assinar por personificação; com um arquivo de chave é puramente local."
+      },
+      {
+        "text": "No navegador de quem abre o link",
+        "why": "Quem lê só apresenta a URL; não consegue assinar nada."
+      }
+    ]
+  },
+  "ex-sjt0q74k": {
+    "prompt": "Uma URL assinada para uma nota fiscal é colada num chat com um fornecedor. O que aprende quem lê o chat?",
+    "hint": "Olhe o parâmetro `X-Goog-Credential`.",
+    "choices": [
+      {
+        "text": "A chave privada da conta de serviço",
+        "why": "A chave nunca sai de quem assina; só a assinatura sai."
+      },
+      {
+        "text": "Nada, já que a URL é criptografada",
+        "why": "Nada nela é criptografado; os parâmetros são texto puro."
+      },
+      {
+        "text": "Quem assinou, e um link ativo",
+        "why": "Isso: aprende que conta de serviço assinou, e pode baixar a nota até a URL expirar. A URL é a permissão, e a identidade de quem assinou está escrita nela."
+      },
+      {
+        "text": "A senha do fornecedor",
+        "why": "Uma URL assinada não carrega a senha de ninguém."
+      }
+    ]
+  },
+  "ex-d8e0jn9s": {
+    "prompt": "Qual é o maior prazo de validade de uma URL assinada V4, em segundos?",
+    "hint": "A biblioteca recusou 604.801."
+  },
+  "ex-wkax7kp1": {
+    "prompt": "No laboratório, uma URL válida por um segundo foi usada três segundos depois e o relatório voltou. O que isso mostra sobre o Cloud Storage?",
+    "hint": "Quem respondeu a requisição?",
+    "choices": [
+      {
+        "text": "Que o Cloud Storage dá uma tolerância depois de expirar",
+        "why": "A requisição nunca chegou ao Cloud Storage; quem respondeu foi o emulador."
+      },
+      {
+        "text": "Nada sobre o Cloud Storage",
+        "why": "Isso: o fake-gcs-server não lê assinatura, então o laboratório não testa expiração. Ele também serviu uma URL adulterada e uma sem assinatura nenhuma."
+      },
+      {
+        "text": "Que `X-Goog-Expires` é contado em minutos",
+        "why": "É em segundos, como `300` para cinco minutos mostrou."
+      },
+      {
+        "text": "Que a biblioteca arredonda uma expiração curta para um minuto",
+        "why": "A URL dizia `X-Goog-Expires=1`; nada a arredondou."
+      }
+    ]
+  },
+  "ex-nyjgj2en": {
+    "prompt": "Uma conta de serviço que assinou centenas de URLs válidas por uma semana tem a chave vazada. O que faz todas as URLs que ela assinou pararem de funcionar?",
+    "hint": "O Cloud Storage confere quem assinou no momento do uso.",
+    "choices": [
+      {
+        "text": "Esperar sete dias",
+        "why": "Funciona, mas só depois de uma semana exposta."
+      },
+      {
+        "text": "Apagar a chave que assinou",
+        "why": "Isso, ou tirar a permissão de leitura da conta. Cada URL é verificada contra uma chave e permissões de quem assinou que não existem mais."
+      },
+      {
+        "text": "Mudar a classe de armazenamento do objeto",
+        "why": "A classe não tem nada a ver com quem pode ler."
+      },
+      {
+        "text": "Ligar a prevenção de acesso público",
+        "why": "Uma URL assinada não é acesso público, então a prevenção não a impede."
+      }
+    ]
+  },
+  "ex-6rnhje84": {
+    "prompt": "Quem é `allAuthenticatedUsers` numa permissão do Cloud Storage?",
+    "hint": "O nome fazia parecer seguro.",
+    "choices": [
+      {
+        "text": "Qualquer pessoa com conta do Google",
+        "why": "Isso: não os usuários da Quitanda, todo mundo com uma conta do Google."
+      },
+      {
+        "text": "Todo usuário da organização da Quitanda",
+        "why": "Era o que as pessoas supunham, e está errado."
+      },
+      {
+        "text": "As contas de serviço do mesmo projeto",
+        "why": "Essas são citadas uma a uma, ou por um papel no projeto."
+      },
+      {
+        "text": "Qualquer pessoa na internet, conectada ou não",
+        "why": "Esse é o `allUsers`."
+      }
+    ]
+  },
+  "ex-jf8bb077": {
+    "prompt": "O que o acesso uniforme no nível do bucket muda num bucket?",
+    "hint": "Dois sistemas de permissão, um desligado.",
+    "choices": [
+      {
+        "text": "Desliga as ACLs",
+        "why": "Isso: o IAM fica como único lugar onde se concede acesso, e ele é necessário para condições do IAM no bucket."
+      },
+      {
+        "text": "Torna todo objeto público",
+        "why": "Ele não concede nada a ninguém."
+      },
+      {
+        "text": "Copia a ACL do bucket para cada objeto",
+        "why": "Isso era um jeito de trabalhar antes dele; o acesso uniforme ignora ACLs."
+      },
+      {
+        "text": "Criptografa os objetos com uma chave só",
+        "why": "Criptografia é outra configuração."
+      }
+    ]
+  },
+  "ex-8p0d9wp4": {
+    "prompt": "Contra o fake-gcs-server, `gcloud storage buckets get-iam-policy` num bucket que existe responde `404`. Por quê?",
+    "hint": "O emulador implementa objetos, não toda API.",
+    "choices": [
+      {
+        "text": "O nome do bucket está errado",
+        "why": "O bucket tinha acabado de ser criado e listado."
+      },
+      {
+        "text": "O emulador não implementa IAM",
+        "why": "Isso: nada responde à requisição. Nada de IAM pode ser praticado contra ele."
+      },
+      {
+        "text": "O projeto não tem dono",
+        "why": "O gcloud não manda credenciais aqui, e o emulador não confere nenhuma."
+      },
+      {
+        "text": "O acesso uniforme no nível do bucket esconde a política",
+        "why": "O acesso uniforme faz do IAM o único sistema; não esconde nada."
+      }
+    ]
+  },
+  "ex-kh2xbp1a": {
+    "prompt": "No laboratório, um `curl` sem credenciais leu um relatório que nenhuma permissão tinha tornado público. O que uma leitura anônima bem-sucedida no emulador diz sobre o mesmo objeto no Cloud Storage?",
+    "hint": "O emulador não confere credenciais em nenhuma requisição.",
+    "choices": [
+      {
+        "text": "Que ele é público lá também",
+        "why": "O emulador serve objetos privados a qualquer um, então a resposta dele não diz nada."
+      },
+      {
+        "text": "Que a ACL dele concede READER a allUsers",
+        "why": "O relatório não tinha essa ACL; o emulador o serviu mesmo assim."
+      },
+      {
+        "text": "Que a prevenção de acesso público está desligada",
+        "why": "O emulador não guarda essa configuração, ligada ou desligada."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. O único teste de se um objeto é público é uma requisição anônima ao serviço real."
+      }
+    ]
+  },
+  "ex-wfnr3dnm": {
+    "prompt": "Um bucket já tem `roles/storage.objectViewer` concedido a `allUsers`, e então a prevenção de acesso público é definida como `enforced`. O que acontece com a permissão?",
+    "hint": "Enforced faz duas coisas.",
+    "choices": [
+      {
+        "text": "Nada, porque a prevenção só recusa permissões novas",
+        "why": "Ela também faz as permissões públicas existentes pararem de funcionar."
+      },
+      {
+        "text": "Fica na política e não concede nada",
+        "why": "Isso, e é por isso que ligar a prevenção fecha um vazamento na hora."
+      },
+      {
+        "text": "É apagada da política",
+        "why": "A permissão continua escrita; só não tem efeito."
+      },
+      {
+        "text": "É trocada por `allAuthenticatedUsers`",
+        "why": "Isso continuaria público; a prevenção neutraliza as duas."
+      }
+    ]
+  },
+  "ex-5ea9n3z8": {
+    "prompt": "No Google Cloud CLI 591.0.0, que forma define a prevenção de acesso público como `enforced` num bucket?",
+    "hint": "A forma com `=enforced` foi recusada.",
+    "choices": [
+      {
+        "text": "`--public-access-prevention=enforced`",
+        "why": "Esta versão a recusa: `ignored explicit argument 'enforced'`."
+      },
+      {
+        "text": "`--pap=on`",
+        "why": "A opção não recebe valor nenhum."
+      },
+      {
+        "text": "`--public-access-prevention` só",
+        "why": "Isso; `--no-public-access-prevention` define `inherited`."
+      },
+      {
+        "text": "`--uniform-bucket-level-access`",
+        "why": "Essa é outra configuração, que desliga as ACLs."
+      }
+    ]
+  },
+  "ex-4ae1cdnj": {
+    "prompt": "Um bucket mostra a prevenção de acesso público como `inherited`. Ele está protegido?",
+    "hint": "Herdada de quê?",
+    "choices": [
+      {
+        "text": "Sim, herdada sempre significa imposta",
+        "why": "Significa que o bucket segue a organização; pode não haver nada a seguir."
+      },
+      {
+        "text": "Não, herdada significa desligada",
+        "why": "Pode estar protegido, se uma política acima impuser a prevenção."
+      },
+      {
+        "text": "Só com uma política acima dele",
+        "why": "Isso: uma política da organização que imponha a restrição, e o bucket sozinho não consegue dizer se há uma."
+      },
+      {
+        "text": "Só se também tiver acesso uniforme",
+        "why": "O acesso uniforme desliga as ACLs; não bloqueia permissões a allUsers pelo IAM."
+      }
+    ]
+  },
+  "ex-68kjrh0g": {
+    "prompt": "Ligue cada restrição de política da organização ao que ela impede.",
+    "hint": "Duas são de armazenamento, duas de IAM.",
+    "pairs": [
+      {
+        "left": "storage.publicAccessPrevention",
+        "right": "Um bucket legível por allUsers"
+      },
+      {
+        "left": "storage.uniformBucketLevelAccess",
+        "right": "Acesso concedido objeto a objeto por ACLs"
+      },
+      {
+        "left": "iam.allowedPolicyMemberDomains",
+        "right": "Uma permissão a um principal fora dos domínios da organização"
+      },
+      {
+        "left": "iam.disableServiceAccountKeyCreation",
+        "right": "Uma chave baixada assinando URLs"
+      }
+    ],
+    "right_distractors": [
+      "Um objeto apagado antes do prazo de retenção"
+    ]
+  },
+  "ex-66ya7rpy": {
+    "prompt": "Por que uma política da organização é uma defesa mais forte do que definir a prevenção de acesso público em cada bucket?",
+    "hint": "Pense no bucket do ano que vem.",
+    "choices": [
+      {
+        "text": "Sai mais barato por bucket",
+        "why": "Nenhuma das duas tem preço; a diferença é quem precisa lembrar."
+      },
+      {
+        "text": "Também criptografa os buckets",
+        "why": "Criptografia não tem relação."
+      },
+      {
+        "text": "Vale para buckets ainda não criados",
+        "why": "Isso, em projetos de que ninguém ouviu falar ainda. Uma configuração de bucket protege aquele bucket; uma restrição protege todo bucket abaixo dela."
+      },
+      {
+        "text": "Não pode ser sobrescrita em lugar nenhum",
+        "why": "Pode ser sobrescrita numa pasta ou projeto, e é por isso que as exceções são revisadas primeiro."
+      }
+    ]
+  },
+  "ex-0bg4dq4v": {
+    "prompt": "Com `iam.disableServiceAccountKeyCreation` imposta, como a Quitanda ainda assina URLs para fornecedores?",
+    "hint": "Há um jeito de assinar sem arquivo de chave em disco nenhum.",
+    "choices": [
+      {
+        "text": "Não consegue mais assinar URLs",
+        "why": "Assinar por personificação não precisa de chave baixada."
+      },
+      {
+        "text": "Com uma chave criada antes da restrição",
+        "why": "Essa chave ainda seria uma chave baixada, justamente o que a restrição existe para acabar."
+      },
+      {
+        "text": "Tornando público o bucket de notas fiscais",
+        "why": "Esse é o vazamento de que esta aula trata."
+      },
+      {
+        "text": "Por personificação, 12 horas no máximo",
+        "why": "Isso: com `--impersonate-service-account`, o serviço de credenciais do IAM do Google assina, e nenhuma chave privada sai do Google."
+      }
+    ]
+  },
+  "ex-fasmkrdp": {
+    "prompt": "Um bucket ficou público por um mês. Que registro diz à Quitanda quem de fato leu os objetos?",
+    "hint": "Alguns logs só estão ligados se alguém os ligou antes.",
+    "choices": [
+      {
+        "text": "Os logs de auditoria Admin Activity",
+        "why": "Eles registram quem mudou as configurações ou o IAM do bucket, não quem leu objetos."
+      },
+      {
+        "text": "Data Access ou logs de uso, se ligados antes",
+        "why": "Isso; e para objetos públicos a documentação aponta os logs de uso, já que os de auditoria não registram essas requisições."
+      },
+      {
+        "text": "O Cloud Asset Inventory",
+        "why": "Ele mostra o que está aberto agora, não quem passou."
+      },
+      {
+        "text": "Os achados do Security Command Center sobre o bucket",
+        "why": "Um achado diz que um bucket é público, não quem o leu."
+      }
+    ]
+  },
+  "ex-bkxkbmf7": {
+    "prompt": "Ordene as proteções da Quitanda da rede mais ampla para a mais estreita.",
+    "hint": "A organização primeiro, a URL única por último.",
+    "items": [
+      "Restrições de política da organização",
+      "Prevenção de acesso público e acesso uniforme em cada bucket",
+      "Permissões do IAM restritas por uma condição",
+      "URLs assinadas curtas, assinadas por personificação"
+    ]
+  },
+  "ex-b63zedpw": {
+    "prompt": "Qual é a única verificação de se um objeto é público que a aula diz que vale confiar?",
+    "hint": "Ela confere o resultado, não as configurações.",
+    "choices": [
+      {
+        "text": "Ler a política de IAM do bucket",
+        "why": "Ela deixa de fora ACLs e configurações acima do bucket."
+      },
+      {
+        "text": "Uma requisição anônima feita de fora",
+        "why": "Isso, esperando uma recusa. Contra o emulador ela não falha nunca, e é por isso que pertence ao serviço real."
+      },
+      {
+        "text": "Listar o bucket com o gcloud",
+        "why": "Uma listagem feita com as suas credenciais não diz nada sobre estranhos."
+      },
+      {
+        "text": "Conferir que o nome do bucket é difícil de adivinhar",
+        "why": "Um nome não é uma permissão."
+      }
+    ]
+  },
+  "ex-tnyya30r": {
+    "prompt": "Ligue cada jeito de um bucket vazar à proteção que o teria impedido.",
+    "hint": "Uma proteção por forma.",
+    "pairs": [
+      {
+        "left": "Uma permissão de objectViewer a allUsers no bucket",
+        "right": "Prevenção de acesso público"
+      },
+      {
+        "left": "Objetos escritos com --predefined-acl=publicRead",
+        "right": "Acesso uniforme no nível do bucket"
+      },
+      {
+        "left": "Uma permissão a allAuthenticatedUsers pensada para colegas",
+        "right": "iam.allowedPolicyMemberDomains"
+      },
+      {
+        "left": "Uma chave de conta de serviço commitada num repositório",
+        "right": "iam.disableServiceAccountKeyCreation"
+      }
+    ],
+    "right_distractors": [
+      "Versionamento de objetos"
+    ]
+  },
+  "ex-jbt5rk9j": {
+    "prompt": "Um fornecedor precisa de uma nota fiscal hoje. Qual é o jeito mais estreito de entregá-la?",
+    "hint": "Estreito no tempo e no que alcança.",
+    "choices": [
+      {
+        "text": "Conceder objectViewer no bucket à conta do Google do fornecedor",
+        "why": "Isso alcança todas as notas, enquanto a permissão durar."
+      },
+      {
+        "text": "Uma URL assinada válida por minutos",
+        "why": "Isso, para esse objeto, assinada por personificação: um objeto, uma requisição, vida curta e nenhum arquivo de chave."
+      },
+      {
+        "text": "Tornar a nota pública até o fornecedor confirmar",
+        "why": "Público é qualquer um, e confirmar é um passo que alguém esquece."
+      },
+      {
+        "text": "Uma URL assinada válida por sete dias, por segurança",
+        "why": "Sete dias é o máximo permitido, e o tempo máximo em que um link vazado funciona."
+      }
+    ]
+  },
+  "ex-3d11hnzy": {
+    "prompt": "O principal especial que significa qualquer pessoa na internet, conectada ou não, é escrito `___` numa permissão do IAM ou numa ACL.",
+    "hint": "O irmão dele cobre toda conta do Google conectada.",
+    "blanks": [
+      {
+        "accept": [
+          "allUsers"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,593 @@
+[
+  {
+    "id": "ex-7ehw2r38",
+    "version": 1,
+    "section": "regional-ha",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the standby of a regional Cloud SQL instance do while the primary is healthy?",
+    "hint": "It is insurance, not capacity.",
+    "choices": [
+      {
+        "text": "It receives every write on its disk, and serves nothing",
+        "correct": true,
+        "why": "Right. It is there for the day the primary fails."
+      },
+      {
+        "text": "It takes the nightly backup, so the primary is not slowed",
+        "correct": false,
+        "why": "Backups are a separate mechanism."
+      },
+      {
+        "text": "It replays the log a few seconds behind, like a replica",
+        "correct": false,
+        "why": "It is synchronous: nothing is behind."
+      },
+      {
+        "text": "It answers read queries, halving the primary's load",
+        "correct": false,
+        "why": "The standby takes no connections."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvynnw6t",
+    "version": 1,
+    "section": "regional-ha",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a failover, what does the application connect to?",
+    "hint": "The address and what is behind it are two different things.",
+    "choices": [
+      {
+        "text": "Nothing until a person promotes the standby",
+        "correct": false,
+        "why": "The failover is automatic."
+      },
+      {
+        "text": "A new private address, which it has to be told",
+        "correct": false,
+        "why": "The instance keeps its address."
+      },
+      {
+        "text": "The same address, on the other zone's machine",
+        "correct": true,
+        "why": "Right. The address does not change; what is behind it does."
+      },
+      {
+        "text": "The read replica's address, since the standby is not readable",
+        "correct": false,
+        "why": "The standby becomes the primary and is readable then."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a7m4axq",
+    "version": 1,
+    "section": "regional-ha",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A regional instance is created and somebody runs `DELETE FROM orders` by mistake. What does the standby hold?",
+    "hint": "When does the standby's disk get each write?",
+    "choices": [
+      {
+        "text": "The orders, since the standby is a copy from before",
+        "correct": false,
+        "why": "It is not a copy from before; it is the same writes, now."
+      },
+      {
+        "text": "An empty table, written before the commit returned",
+        "correct": true,
+        "why": "Right. Synchronous replication copies the mistake too."
+      },
+      {
+        "text": "The orders until the next failover",
+        "correct": false,
+        "why": "Nothing waits for a failover."
+      },
+      {
+        "text": "Whatever the last backup held",
+        "correct": false,
+        "why": "The standby is not a backup."
+      }
+    ]
+  },
+  {
+    "id": "ex-a73995h0",
+    "version": 1,
+    "section": "regional-ha",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the high-availability prices (0.1239 USD per vCPU-hour, 0.021 USD per GiB-hour), what does the machine of a regional instance with 2 vCPU and 8 GiB cost in 730 hours, in USD?",
+    "hint": "Two of one, eight of the other, then 730 hours.",
+    "value": 303.53,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-qtt8sqec",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these belongs on a read replica?",
+    "hint": "Who is harmed if the answer is a second old?",
+    "choices": [
+      {
+        "text": "The checkout's stock decrement",
+        "correct": false,
+        "why": "A replica refuses writes."
+      },
+      {
+        "text": "The hourly report of orders by neighbourhood",
+        "correct": true,
+        "why": "Right. Nobody is harmed by a second of lag there."
+      },
+      {
+        "text": "The nightly backup",
+        "correct": false,
+        "why": "Backups are taken from the instance by Cloud SQL."
+      },
+      {
+        "text": "The page that shows a customer the order they just placed",
+        "correct": false,
+        "why": "It may not have been replayed yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-fk7c9r68",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a read replica of the lesson 6 instance add to the month's bill?",
+    "hint": "The pricing page has a sentence about replicas.",
+    "choices": [
+      {
+        "text": "Nothing, replicas are included with high availability",
+        "correct": false,
+        "why": "They are billed on their own."
+      },
+      {
+        "text": "Only its disk",
+        "correct": false,
+        "why": "The machine is billed too."
+      },
+      {
+        "text": "A full instance's price, 177.34 for the same size",
+        "correct": true,
+        "why": "Right. Replicas are charged at the rate of stand-alone instances."
+      },
+      {
+        "text": "Half an instance, since it only reads",
+        "correct": false,
+        "why": "Reading does not halve the price."
+      }
+    ]
+  },
+  {
+    "id": "ex-2h84wkhk",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "São Paulo is lost. The cross-region replica is 40 seconds behind. What does promoting it mean?",
+    "hint": "Asynchronous replication, and what is never sent.",
+    "choices": [
+      {
+        "text": "The replica fails over by itself, like a standby",
+        "correct": false,
+        "why": "Promotion is a command somebody runs."
+      },
+      {
+        "text": "Nothing is lost, since the replica is synchronous across regions",
+        "correct": false,
+        "why": "Replicas are asynchronous."
+      },
+      {
+        "text": "Losing the last 40 seconds, and moving the address",
+        "correct": true,
+        "why": "Right. That decision is why it has to be written down beforehand."
+      },
+      {
+        "text": "Waiting until the replica catches up, then promoting",
+        "correct": false,
+        "why": "With the primary gone, nothing more arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-hp6jevxa",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`gcloud sql instances ___ quitanda-orders-reports` stops a replica's replication for good and makes it an instance that accepts writes.",
+    "hint": "A verb and a noun joined by a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "promote-replica"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bv1v4ctw",
+    "version": 1,
+    "section": "replica-lag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What made `~/gcp/pg/reports` start as a replica rather than as a server of its own?",
+    "hint": "`-R` wrote two things.",
+    "choices": [
+      {
+        "text": "The `standby.signal` file and the `primary_conninfo` line",
+        "correct": true,
+        "why": "Right. The file keeps it in recovery; the line says where to stream from."
+      },
+      {
+        "text": "The table `orders`, which only replicas have",
+        "correct": false,
+        "why": "The table came from the primary."
+      },
+      {
+        "text": "`--auth=trust` on the replica",
+        "correct": false,
+        "why": "That is about who may connect."
+      },
+      {
+        "text": "The port, 5434",
+        "correct": false,
+        "why": "Any port would do."
+      }
+    ]
+  },
+  {
+    "id": "ex-57t49se9",
+    "version": 1,
+    "section": "replica-lag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With replay paused, the primary had 1,100 orders and the replica 1,000, and `bytes_behind` was 21,952. Where were those hundred orders?",
+    "hint": "Received is not applied.",
+    "choices": [
+      {
+        "text": "In the archive, waiting for `pg_switch_wal()`",
+        "correct": false,
+        "why": "Archiving was not on yet."
+      },
+      {
+        "text": "Lost: a paused replica discards what arrives",
+        "correct": false,
+        "why": "Resuming brought them in."
+      },
+      {
+        "text": "Still on the primary, waiting to be sent",
+        "correct": false,
+        "why": "The bytes were sent; the gap is between sent and replayed."
+      },
+      {
+        "text": "On the replica, received in its log and not yet applied",
+        "correct": true,
+        "why": "Right. Resuming applied them and the gap went to 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hrgnsqk",
+    "version": 1,
+    "section": "replica-lag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An `INSERT` on the replica failed with `cannot execute INSERT in a read-only transaction`. Who refused it?",
+    "hint": "A setting, or the state of the server?",
+    "choices": [
+      {
+        "text": "A permission on the table, which nobody granted",
+        "correct": false,
+        "why": "The same user writes on the primary."
+      },
+      {
+        "text": "The engine itself, since a server in recovery is read-only",
+        "correct": true,
+        "why": "Right. A Cloud SQL replica refuses the same way."
+      },
+      {
+        "text": "`--auth=trust`, which only allows reads",
+        "correct": false,
+        "why": "Trust is about passwords, not writes."
+      },
+      {
+        "text": "Cloud SQL, which is not on the laptop",
+        "correct": false,
+        "why": "There is no Cloud SQL here; this is PostgreSQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-7zsvx14m",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which time does `gcloud sql instances clone --point-in-time` expect for 15:46:55 in São Paulo, three hours behind UTC?",
+    "hint": "The reference names the format and the zone.",
+    "choices": [
+      {
+        "text": "`2026-10-30 15:46:55`, read in the region's zone",
+        "correct": false,
+        "why": "There is no region time zone in the flag."
+      },
+      {
+        "text": "A transaction id, such as 733",
+        "correct": false,
+        "why": "That is what PostgreSQL logged, not what the flag takes."
+      },
+      {
+        "text": "`2026-10-30T15:46:55-03:00`, the local time with its offset",
+        "correct": false,
+        "why": "The reference asks for UTC."
+      },
+      {
+        "text": "`2026-10-30T18:46:55Z`",
+        "correct": true,
+        "why": "Right. RFC 3339, in UTC."
+      }
+    ]
+  },
+  {
+    "id": "ex-5f3x0r8y",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The restored server's log said `recovery stopping before commit of transaction 733`. What was transaction 733?",
+    "hint": "Look at its time against the target's.",
+    "choices": [
+      {
+        "text": "The `DELETE` without a `WHERE`",
+        "correct": true,
+        "why": "Right. Recovery stopped just short of it."
+      },
+      {
+        "text": "The base backup itself",
+        "correct": false,
+        "why": "A backup is not a transaction in the log."
+      },
+      {
+        "text": "The insert of the last hundred orders",
+        "correct": false,
+        "why": "Those were restored: the count was 1,100."
+      },
+      {
+        "text": "The `CREATE TABLE`, which came after the backup",
+        "correct": false,
+        "why": "The table was there before the base backup."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0gz2pwd",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Enterprise instance with point-in-time recovery on is found, on day nine, to have had a bad migration on day one. What can bring back the database as it was before the migration?",
+    "hint": "Compare the log retention with nine days.",
+    "choices": [
+      {
+        "text": "A clone to the second before the migration",
+        "correct": false,
+        "why": "Enterprise keeps at most 7 days of log."
+      },
+      {
+        "text": "The regional standby",
+        "correct": false,
+        "why": "It holds the migration too."
+      },
+      {
+        "text": "A backup taken before that",
+        "correct": true,
+        "why": "Right. Past the log's reach, only a backup from before it helps."
+      },
+      {
+        "text": "A read replica promoted now",
+        "correct": false,
+        "why": "A replica has the migration as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-7z4svvpk",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of the recovery done on the laptop.",
+    "hint": "Archiving has to come before the backup it depends on.",
+    "items": [
+      "Turn on `archive_mode` and restart",
+      "Take a base backup",
+      "Note the time, then make the mistake",
+      "Copy the base backup and add `recovery.signal`",
+      "Set the target time and start the copy"
+    ]
+  },
+  {
+    "id": "ex-shvz89m9",
+    "version": 1,
+    "section": "backups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`gcloud sql backups restore BACKUP_ID --restore-instance=quitanda-orders` runs on the production instance. What happens to the orders written since that backup?",
+    "hint": "Point-in-time recovery makes a new instance; does a restore?",
+    "choices": [
+      {
+        "text": "They are gone from the instance, replaced by the backup",
+        "correct": true,
+        "why": "Right. Restore into another instance first."
+      },
+      {
+        "text": "They move to a replica automatically",
+        "correct": false,
+        "why": "No replica is involved."
+      },
+      {
+        "text": "They are kept, since a restore makes a new instance",
+        "correct": false,
+        "why": "That is the clone; a restore overwrites its target."
+      },
+      {
+        "text": "They are merged with the backup's rows",
+        "correct": false,
+        "why": "Nothing is merged."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8vk3vca",
+    "version": 1,
+    "section": "backups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many automated backups does an Enterprise instance keep by default?",
+    "hint": "The reference gives two defaults.",
+    "choices": [
+      {
+        "text": "15",
+        "correct": false,
+        "why": "That is Enterprise Plus."
+      },
+      {
+        "text": "35",
+        "correct": false,
+        "why": "That is the most days of log on Enterprise Plus."
+      },
+      {
+        "text": "365",
+        "correct": false,
+        "why": "That is the most the flag allows."
+      },
+      {
+        "text": "7",
+        "correct": true,
+        "why": "Right. Enterprise Plus keeps 15."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkgmktj1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to the copy that protects against it.",
+    "hint": "One copy protects against none of them.",
+    "pairs": [
+      {
+        "left": "A zone loses power",
+        "right": "The regional standby"
+      },
+      {
+        "left": "The whole region is lost",
+        "right": "A replica in another region"
+      },
+      {
+        "left": "`DELETE FROM orders` at 15:46",
+        "right": "A clone to 15:45"
+      },
+      {
+        "left": "A bad migration found on day nine",
+        "right": "An on-demand backup from before it"
+      }
+    ],
+    "right_distractors": [
+      "A replica in the same region"
+    ]
+  },
+  {
+    "id": "ex-8hyec72k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants its reports off the primary AND protection against losing São Paulo, at the lowest cost. Which arrangement does both?",
+    "hint": "One copy can do two of the jobs.",
+    "choices": [
+      {
+        "text": "A regional instance, since the standby is in another zone",
+        "correct": false,
+        "why": "The standby serves no reads, and both zones are in São Paulo."
+      },
+      {
+        "text": "A read replica in another region, used for the reports",
+        "correct": true,
+        "why": "Right. It takes the reads, and it can be promoted if the region goes."
+      },
+      {
+        "text": "Two read replicas in São Paulo",
+        "correct": false,
+        "why": "Neither survives the loss of the region."
+      },
+      {
+        "text": "Seven days of automated backups",
+        "correct": false,
+        "why": "Backups serve no reads, and they live in the region's multi-region by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fb1nr94",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the restored copy on 5435 still have 1,100 orders while the original on 5433 had none?",
+    "hint": "Where did recovery start from?",
+    "choices": [
+      {
+        "text": "`pg_switch_wal()` undid the DELETE",
+        "correct": false,
+        "why": "It only closed a log segment."
+      },
+      {
+        "text": "The original rolled the DELETE back on restart",
+        "correct": false,
+        "why": "The DELETE was committed; nothing rolls it back."
+      },
+      {
+        "text": "Recovery replayed only up to the target",
+        "correct": true,
+        "why": "Right. The damaged directory was never used."
+      },
+      {
+        "text": "The restored copy read the replica, which still had the orders",
+        "correct": false,
+        "why": "The replica had copied the DELETE: it showed 0."
+      }
+    ]
+  }
+]

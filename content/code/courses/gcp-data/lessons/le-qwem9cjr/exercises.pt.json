@@ -1,0 +1,430 @@
+{
+  "ex-za5xwdak": {
+    "prompt": "O cache da Quitanda poderia rodar no Memorystore for Valkey. Por que esta aula pratica no servidor Redis que o Ubuntu empacota?",
+    "hint": "A que o Valkey responde?",
+    "choices": [
+      {
+        "text": "O Valkey não pode ser instalado fora do Google Cloud",
+        "why": "O Valkey é código aberto e roda em qualquer lugar; o motivo é que nada precisa mudar entre os dois."
+      },
+      {
+        "text": "O Valkey fala o protocolo do Redis: mesmo cliente, mesmos comandos",
+        "why": "Isso. Um programa escrito contra um roda contra o outro, e é por isso que `SET`, `EXPIRE` e despejo valem igual."
+      },
+      {
+        "text": "A linha de comando do Google Cloud traz um servidor Redis que a aula reaproveita",
+        "why": "Não existe emulador nenhum do Memorystore; o servidor é o pacote do Ubuntu."
+      },
+      {
+        "text": "O Redis é grátis, e o Valkey é cobrado por nó-hora",
+        "why": "Os dois são software livre; o que se cobra é o Google rodar as máquinas."
+      }
+    ]
+  },
+  "ex-sk2gskkc": {
+    "prompt": "Uma instância do Memorystore for Redis no nível Standard, de 10 GiB, em São Paulo, a US$ 0,103 por GiB-hora, roda por 730 horas. Quantos dólares dá? Responda com duas casas decimais.",
+    "hint": "O preço do nível é por gibibyte de capacidade provisionada, por hora."
+  },
+  "ex-w8hc54n2": {
+    "prompt": "A Quitanda precisa de uns 4 GiB de cache no nível Basic. Pelos preços de São Paulo, o que provisionar 5 GiB faz com a conta do mês?",
+    "hint": "Em que nível de capacidade cai cada tamanho?",
+    "choices": [
+      {
+        "text": "Diminui, porque 5 GiB caem no M2, com preço menor por GiB",
+        "why": "Isso. 4 × 0,087 × 730 dá 254,04 e 5 × 0,054 × 730 dá 197,10: um gibibyte a mais, 56,94 dólares a menos."
+      },
+      {
+        "text": "Aumenta um quarto, um GiB a mais sobre quatro",
+        "why": "Valeria se o preço por GiB fosse fixo; ele cai do M1 para o M2."
+      },
+      {
+        "text": "Nada, já que a conta segue a memória que as chaves usam",
+        "why": "O Memorystore cobra a capacidade provisionada, usada ou não."
+      },
+      {
+        "text": "Aumenta, porque um nível maior tem cobrança mínima",
+        "why": "Não há mínimo na página; o nível maior é mais barato por gibibyte."
+      }
+    ]
+  },
+  "ex-72kwdvgr": {
+    "prompt": "Ligue cada produto do Memorystore ao jeito como é cobrado.",
+    "hint": "Um é cobrado por gibibyte, dois por nó, um por processador e memória.",
+    "pairs": [
+      {
+        "left": "Memorystore for Redis",
+        "right": "GiB de capacidade provisionada, por nível"
+      },
+      {
+        "left": "Memorystore for Valkey",
+        "right": "Nós de um tipo escolhido, por hora"
+      },
+      {
+        "left": "Memorystore for Memcached",
+        "right": "vCPU-hora mais GiB-hora de memória"
+      },
+      {
+        "left": "Nível Standard, comparado com o Basic",
+        "right": "Um preço maior por GiB, por uma réplica"
+      }
+    ]
+  },
+  "ex-t3de29h6": {
+    "prompt": "`redis-cli TTL product:p-101` responde `(integer) -2`. O que isso quer dizer?",
+    "hint": "Compare com a chave `visits`, que respondeu `-1`.",
+    "choices": [
+      {
+        "text": "A chave nunca expira",
+        "why": "Isso é `-1`, que a chave `visits` respondeu."
+      },
+      {
+        "text": "A chave expira em dois segundos",
+        "why": "Um tempo restante é um número positivo; os negativos são as duas respostas especiais."
+      },
+      {
+        "text": "Não existe essa chave, por exemplo porque expirou",
+        "why": "Isso. Depois do `sleep 6` a chave tinha sumido, o `GET` respondeu `(nil)` e o `TTL` respondeu `-2`."
+      },
+      {
+        "text": "A chave expirou há dois segundos e ainda pode ser lida",
+        "why": "Uma chave expirada sumiu para todo leitor; o `GET` respondeu `(nil)`."
+      }
+    ]
+  },
+  "ex-79h01hmp": {
+    "prompt": "`redis-cli SET product:p-101 '{...}' ___ 300` guarda o valor com um tempo de vida de cinco minutos.",
+    "hint": "A opção tem duas letras, e `ex=` é o nome dela no cliente Python.",
+    "blanks": [
+      {
+        "accept": [
+          "EX"
+        ]
+      }
+    ]
+  },
+  "ex-0ga0d83y": {
+    "prompt": "Por que a aula roda `sudo systemctl disable --now redis-server` logo depois de instalar o pacote?",
+    "hint": "O que o pacote ligou por conta própria?",
+    "choices": [
+      {
+        "text": "O pacote ligou um serviço Redis próprio, que também ligaria a cada boot",
+        "why": "Isso. Pará-lo quer dizer que nada roda sem você ligar, como os emuladores."
+      },
+      {
+        "text": "O serviço do pacote grava em disco, e um cache não deve guardar nada",
+        "why": "A persistência é desligada pelas opções com que você liga o Redis; não é por isso que o serviço é parado."
+      },
+      {
+        "text": "Senão o `redis-cli` se conectaria ao Memorystore",
+        "why": "O `redis-cli` conecta em `127.0.0.1:6379` a menos que mandem outra coisa; uma instância do Memorystore só tem endereço privado numa VPC."
+      },
+      {
+        "text": "O serviço do pacote recusa conexões do Python",
+        "why": "Qualquer cliente na mesma máquina conecta nele; o motivo é que ele roda sem você o ter ligado."
+      }
+    ]
+  },
+  "ex-e7atymsb": {
+    "prompt": "Ponha em ordem as mensagens de uma leitura cache-aside que falta.",
+    "hint": "O cache nunca fala com o banco.",
+    "items": [
+      "O programa manda `GET product:p-101` ao cache",
+      "O cache responde nil: a chave não está lá",
+      "O programa roda o `SELECT` no banco",
+      "O programa grava a resposta com `SET ... EX 300`"
+    ]
+  },
+  "ex-ckyhbcja": {
+    "prompt": "A importação noturna mudou `p-101` para 1390 direto no banco, e a página continua mostrando 1290. Sem mudar a importação, o que deixa a página certa?",
+    "hint": "O cache não ficou sabendo da mudança.",
+    "choices": [
+      {
+        "text": "Reiniciar o `catalog.py`, que guarda o preço numa variável",
+        "why": "O programa roda uma vez por comando e não guarda nada; o preço velho está no Redis."
+      },
+      {
+        "text": "Ler a página de novo, já que um acerto atualiza a chave a partir do banco",
+        "why": "Um acerto devolve o que o cache tem e não lê nada do banco; é isso que um acerto é."
+      },
+      {
+        "text": "Nada até o tempo de vida da chave acabar",
+        "why": "Isso. O TTL é a rede de proteção: com 300 segundos, a página fica errada no máximo cinco minutos."
+      },
+      {
+        "text": "O Redis percebe o `UPDATE` e descarta a chave",
+        "why": "O Redis e o banco nunca conversam; ninguém avisou o cache."
+      }
+    ]
+  },
+  "ex-sqx0wba0": {
+    "prompt": "Por que o `set_price` apaga a chave do cache em vez de gravar 1390 nela?",
+    "hint": "Pense em dois escritores mudando o mesmo preço quase no mesmo instante.",
+    "choices": [
+      {
+        "text": "Gravar o valor reiniciaria o tempo de vida, e a cópia viveria demais",
+        "why": "Uma cópia nova com TTL novo não faz mal; o perigo é o valor mais antigo vencer."
+      },
+      {
+        "text": "Dois escritores disputando deixam o valor antigo; o delete, nada",
+        "why": "Isso. Depois de um delete, o próximo leitor busca o que o banco tiver."
+      },
+      {
+        "text": "O `DEL` é mais barato para o Redis que o `SET`",
+        "why": "Os dois são mínimos; a escolha é sobre correção, não velocidade."
+      },
+      {
+        "text": "O Redis recusa `SET` numa chave que já tem TTL",
+        "why": "O `SET` substitui a chave seja o que for que ela tinha, como o `catalog.py` faz em toda falta."
+      }
+    ]
+  },
+  "ex-70z8m49y": {
+    "prompt": "O cache tem `p-101` a 1290. Qual destas leituras ainda vai ao banco?",
+    "hint": "Qual delas decide dinheiro?",
+    "choices": [
+      {
+        "text": "A foto e o nome na página do produto",
+        "why": "Não faz mal com alguns minutos de atraso, que é para isso que serve um cache."
+      },
+      {
+        "text": "O preço cobrado no checkout",
+        "why": "Isso. Cobrar um preço velho é um bug com reembolso no fim."
+      },
+      {
+        "text": "O preço mostrado numa lista de resultados de busca",
+        "why": "Uma página de resultados é exibição, e a aula põe exatamente isso no cache; a cobrança é onde o banco decide."
+      },
+      {
+        "text": "A lista de categorias no menu",
+        "why": "Lida o dia todo e mudada raramente: boa coisa para pôr no cache."
+      }
+    ]
+  },
+  "ex-pa69qfts": {
+    "prompt": "O Redis está no `maxmemory` com a política `noeviction`. O que acontece com um `SET` novo?",
+    "hint": "Leia o nome da política ao pé da letra.",
+    "choices": [
+      {
+        "text": "É aceito, e a chave usada há mais tempo é despejada",
+        "why": "Isso é o `allkeys-lru`."
+      },
+      {
+        "text": "É recusado com um erro de OOM, e toda chave existente fica",
+        "why": "Isso. O `fill.py` contou 2.134 recusas, e o `redis-cli` imprimiu o erro para o preço de um produto."
+      },
+      {
+        "text": "É aceito, e as chaves mais antigas vão para o disco para abrir espaço",
+        "why": "O Redis não move chaves para o disco para abrir espaço; este servidor foi até ligado com a persistência desligada."
+      },
+      {
+        "text": "É aceito, e o Redis passa do limite",
+        "why": "O limite é respeitado; foi o que a demonstração com 2 MB mostrou."
+      }
+    ]
+  },
+  "ex-8cjmqfse": {
+    "prompt": "Um programa grava chaves sem tempo de vida numa instância do Memorystore for Redis deixada na política padrão, até ela encher. O que acontece depois?",
+    "hint": "A política padrão é `volatile-lru`, e a aula a rodou nas chaves de enchimento.",
+    "choices": [
+      {
+        "text": "As chaves usadas há mais tempo são despejadas, seja qual for a validade",
+        "why": "Isso é o `allkeys-lru`; o `volatile-lru` só considera chaves que têm TTL."
+      },
+      {
+        "text": "O Memorystore acrescenta capacidade para abrir espaço",
+        "why": "Uma instância tem a capacidade que você provisionou; aumentá-la é decisão sua, e conta sua."
+      },
+      {
+        "text": "As escritas são recusadas, porque nenhuma chave está apta ao despejo",
+        "why": "Isso. Localmente, as 1.000 escritas foram recusadas no `volatile-lru`, exatamente como no `noeviction`."
+      },
+      {
+        "text": "O Memorystore dá a cada chave um TTL padrão e expira as mais antigas",
+        "why": "Ninguém acrescenta um TTL por você; uma chave sem TTL fica até ser apagada."
+      }
+    ]
+  },
+  "ex-f29mh9bm": {
+    "prompt": "Por que sessões de login combinam mal com um cache rodando `allkeys-lru`?",
+    "hint": "O que o banco tem de uma sessão?",
+    "choices": [
+      {
+        "text": "Valores de sessão são grandes demais para o Redis",
+        "why": "Uma sessão é um valor pequeno; tamanho não é o problema."
+      },
+      {
+        "text": "O `allkeys-lru` recusa chaves que têm TTL",
+        "why": "Ele aceita qualquer chave e despeja qualquer chave; esse é o problema."
+      },
+      {
+        "text": "Sessões mudam rápido demais para um cache acompanhar",
+        "why": "O Redis lida bem com escritas frequentes; o que ele faz no limite é a questão."
+      },
+      {
+        "text": "A sessão é o original, e o cache tem permissão de despejá-la, deslogando o usuário",
+        "why": "Isso. Não há cópia a que recorrer, ao contrário de uma página de produto."
+      }
+    ]
+  },
+  "ex-cjey4t7t": {
+    "prompt": "No `herd.py`, por que a trava é gravada com `ex=10` além de `nx=True`?",
+    "hint": "Imagine que a requisição com a trava trave de vez.",
+    "choices": [
+      {
+        "text": "Para que a própria página expire em dez segundos",
+        "why": "A página é gravada com `ex=300`; o `ex=10` é da trava."
+      },
+      {
+        "text": "Para que uma requisição que morra segurando a trava não bloqueie as outras para sempre",
+        "why": "Isso. Depois de dez segundos a chave da trava some e outra requisição pode pegá-la."
+      },
+      {
+        "text": "Porque `nx=True` é recusado sem validade",
+        "why": "`nx=True` funciona sozinho; a validade é uma escolha de segurança."
+      },
+      {
+        "text": "Para que dez requisições de cada vez possam segurá-la",
+        "why": "Exatamente uma requisição ganha o `nx=True`; o número é de segundos."
+      }
+    ]
+  },
+  "ex-2q9zqbme": {
+    "prompt": "A réplica local respondeu `(error) READONLY` a um `SET`. Que regra ela estava protegendo?",
+    "hint": "Quantos escritores uma chave tem?",
+    "choices": [
+      {
+        "text": "Uma réplica só guarda chaves que têm TTL",
+        "why": "Ela tinha copiado todas as chaves; a recusa era sobre quem escreve."
+      },
+      {
+        "text": "Cada chave tem um só escritor, a primária",
+        "why": "Isso. As escritas vão para a primária e chegam à réplica pela replicação; uma réplica que aceitasse escritas próprias discordaria dela."
+      },
+      {
+        "text": "Uma réplica só aceita escritas depois de cinco segundos",
+        "why": "Cinco segundos é a espera antes da primeira cópia, não uma regra sobre escritas."
+      },
+      {
+        "text": "Escritas numa réplica exigem senha no modo protegido",
+        "why": "O modo protegido é sobre conexões de outras máquinas; aqui era um papel, não uma senha."
+      }
+    ]
+  },
+  "ex-50f2mcn6": {
+    "prompt": "Depois do `REPLICAOF NO ONE`, o servidor promovido aceitou escritas, mas um programa ainda apontado para a porta 6379 continuou falhando. O que o nível Standard do Memorystore faz que o failover à mão não fez?",
+    "hint": "Ao que o programa se conecta?",
+    "choices": [
+      {
+        "text": "Passa o endpoint primário para o nó promovido",
+        "why": "Isso. O endereço que o programa usa continua o mesmo e acompanha a promoção; localmente nada mudou a porta 6379."
+      },
+      {
+        "text": "Repete as escritas que a primária antiga não tinha mandado",
+        "why": "A replicação é assíncrona, e uma escrita nesse intervalo se perde no Memorystore também."
+      },
+      {
+        "text": "Mantém as conexões abertas durante o failover",
+        "why": "Um failover derruba as conexões abertas lá também; o cliente precisa se reconectar."
+      },
+      {
+        "text": "Promove a réplica antes de a primária falhar",
+        "why": "Uma promoção vem depois de uma falha, ou de um failover que alguém pediu."
+      }
+    ]
+  },
+  "ex-y4vqv0gz": {
+    "prompt": "No Memorystore for Valkey ou for Redis Cluster, como o cliente sabe qual shard guarda `product:p-101`?",
+    "hint": "Há 16.384 de alguma coisa.",
+    "choices": [
+      {
+        "text": "Manda todo comando para um endpoint, que o repassa ao shard certo",
+        "why": "Essa é a imagem do modo cluster desligado, em que uma primária guarda tudo."
+      },
+      {
+        "text": "Faz o hash da chave para um slot, e cada slot pertence a um shard",
+        "why": "Isso. O cliente calcula o slot e manda o comando direto ao shard dono dele."
+      },
+      {
+        "text": "Tenta os shards um por um até achar a chave",
+        "why": "Uma falta custaria então uma requisição por shard; o slot faz disso uma requisição só."
+      },
+      {
+        "text": "Os shards se enchem em sequência, então consulta a chave num diretório",
+        "why": "Não há diretório de chaves; o slot é calculado a partir da própria chave."
+      }
+    ]
+  },
+  "ex-6fq78s1e": {
+    "prompt": "Ligue cada sintoma à sua causa.",
+    "hint": "Cada um foi produzido nesta aula ou descrito por ela.",
+    "pairs": [
+      {
+        "left": "A página mostra o preço de ontem",
+        "right": "Um escritor mudou o banco sem apagar a chave"
+      },
+      {
+        "left": "Escritas falham com erro de OOM",
+        "right": "O cache está cheio e a política não despeja nada do que ele guarda"
+      },
+      {
+        "left": "Usuários são deslogados ao acaso",
+        "right": "As sessões moram num cache que despeja"
+      },
+      {
+        "left": "O banco dispara quando uma chave expira",
+        "right": "Toda requisição que falta roda a mesma consulta"
+      }
+    ],
+    "right_distractors": [
+      "A instância está no nível Basic"
+    ]
+  },
+  "ex-rv2njkhm": {
+    "prompt": "Qual conjunto de escolhas serve a um cache de páginas de produto que sempre pode ser reconstruído a partir do banco?",
+    "hint": "Tudo nele é cópia.",
+    "choices": [
+      {
+        "text": "`noeviction`, sem TTL, e escritas indo ao cache antes do banco",
+        "why": "Isso faz do cache o original e o deixa encher até recusar."
+      },
+      {
+        "text": "`allkeys-lru`, TTL em toda chave, e delete em toda escrita",
+        "why": "Isso. Esquecer não faz mal, o TTL limita o atraso, e o delete mantém os escritores honestos."
+      },
+      {
+        "text": "`volatile-lru`, sem TTL, e o valor novo gravado no cache a cada mudança",
+        "why": "Sem TTL, o `volatile-lru` não tem o que despejar e recusa escritas quando enche."
+      },
+      {
+        "text": "`allkeys-lru`, sem TTL, e nada feito nas escritas",
+        "why": "Um preço mudado ficaria errado até a chave por acaso ser despejada."
+      }
+    ]
+  },
+  "ex-rsz0arq9": {
+    "prompt": "Quais destas coisas esta aula realmente rodou, em vez de tirar da documentação do Google? Marque todas as que se aplicam.",
+    "hint": "O cache de verdade era o Redis local.",
+    "choices": [
+      {
+        "text": "Despejos no `allkeys-lru` com limite de 2 MB",
+        "why": "Sim, 3.039 deles, no Redis local."
+      },
+      {
+        "text": "Cinquenta requisições simultâneas fazendo uma leitura no banco atrás de uma trava",
+        "why": "Sim, com `herd.py lock`."
+      },
+      {
+        "text": "Uma réplica promovida depois que a primária parou",
+        "why": "Sim, à mão com `REPLICAOF NO ONE`, no Redis 7.0 local."
+      },
+      {
+        "text": "A política padrão `volatile-lru` do Memorystore",
+        "why": "A política foi rodada localmente; que o Memorystore a usa por padrão vem da documentação."
+      },
+      {
+        "text": "Uma instância Standard mudando o endpoint de lugar",
+        "why": "Nenhuma instância do Memorystore existe neste curso; o endpoint mudar vem da documentação."
+      }
+    ]
+  }
+}

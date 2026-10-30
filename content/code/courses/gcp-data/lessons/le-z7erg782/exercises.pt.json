@@ -1,0 +1,385 @@
+{
+  "ex-h620qram": {
+    "prompt": "Um cluster Dataproc de máquinas n2-standard-4 fica de pé por uma hora. O que é cobrado por cada máquina?",
+    "hint": "De quem é a máquina, e o que o Dataproc soma?",
+    "choices": [
+      {
+        "text": "Só a taxa do Dataproc, que inclui a máquina",
+        "why": "A taxa é de $0.010 por vCPU-hora por cima; a página de preços diz que a máquina é cobrada pelo Compute Engine além dela."
+      },
+      {
+        "text": "Uma DCU-hora por processador",
+        "why": "DCU é como o Serverless cobra; um cluster cobra máquinas e a taxa."
+      },
+      {
+        "text": "A hora do Compute Engine, o disco dela e a taxa sobre as quatro vCPUs",
+        "why": "Isso: 0.30832 da máquina, 0.04 de taxa e o disco de boot por GiB-hora."
+      },
+      {
+        "text": "Só a hora do Compute Engine, já que o Spark é de código aberto",
+        "why": "O Spark é software livre, e o Dataproc cobra mesmo assim a taxa de gestão por operá-lo nas suas máquinas."
+      }
+    ]
+  },
+  "ex-acbrtkf4": {
+    "prompt": "Ligue cada papel ao que ele roda.",
+    "hint": "Só um tipo de worker guarda blocos do HDFS.",
+    "pairs": [
+      {
+        "left": "master",
+        "right": "ResourceManager e NameNode"
+      },
+      {
+        "left": "worker primário",
+        "right": "DataNode e NodeManager"
+      },
+      {
+        "left": "worker secundário",
+        "right": "Só o NodeManager"
+      }
+    ],
+    "right_distractors": [
+      "O bucket do Cloud Storage onde os dados ficam"
+    ]
+  },
+  "ex-mkjxxagj": {
+    "prompt": "Um time guarda a única cópia das tabelas curadas no HDFS de um cluster de longa duração. O que isso o impede de fazer?",
+    "hint": "O que acontece com o HDFS quando as máquinas dele vão embora?",
+    "choices": [
+      {
+        "text": "Ler as tabelas pelo Spark, que só lê caminhos gs://",
+        "why": "O Spark lê HDFS nativamente; o conector soma o gs:// ao lado, não o substitui."
+      },
+      {
+        "text": "Apagar o cluster entre um job e outro",
+        "why": "Isso: apagar o cluster apaga os discos e os blocos neles, então o cluster nunca pode ser descartável."
+      },
+      {
+        "text": "Somar workers secundários a ele",
+        "why": "Dá para somar workers secundários a qualquer cluster padrão; eles só não guardam blocos."
+      },
+      {
+        "text": "Rodar mais de um job nele ao mesmo tempo",
+        "why": "O YARN divide um cluster entre jobs, onde quer que os dados estejam."
+      }
+    ]
+  },
+  "ex-wj80sbjt": {
+    "prompt": "Um cluster roda na imagem 2.2-debian12 e o time quer um Spark mais novo. Qual é o jeito Dataproc?",
+    "hint": "O que uma versão de imagem fixa?",
+    "choices": [
+      {
+        "text": "Atualizar o Spark no lugar com uma ação de inicialização",
+        "why": "Ações de inicialização rodam na criação; trocar o Spark com que a imagem foi montada e testada desfaz a imagem."
+      },
+      {
+        "text": "Criar um cluster numa imagem mais nova",
+        "why": "Isso: a imagem fixa Spark, Hadoop e o resto juntos, então um Spark novo é um cluster novo."
+      },
+      {
+        "text": "Pedir com spark-submit --version",
+        "why": "Essa opção informa a versão instalada; não muda nada."
+      },
+      {
+        "text": "Rodar gcloud dataproc clusters update com a nova versão de imagem",
+        "why": "Um cluster fica com a imagem com que foi criado; atualizar significa criar outro."
+      }
+    ]
+  },
+  "ex-gjtsxryn": {
+    "prompt": "Um cluster é criado com --num-secondary-workers=4 e sem --secondary-worker-type. Que tipo de máquina são as quatro?",
+    "hint": "A ajuda imprimiu o padrão.",
+    "choices": [
+      {
+        "text": "Spot",
+        "why": "Spot é uma das três opções, e precisa ser pedida."
+      },
+      {
+        "text": "VMs padrão não preemptivas",
+        "why": "Não preemptiva é uma escolha sua; não é o padrão."
+      },
+      {
+        "text": "Preemptivas",
+        "why": "Isso: default=\"preemptible\", como a linha de comando disse."
+      },
+      {
+        "text": "O mesmo tipo dos workers primários",
+        "why": "Os secundários usam o mesmo tipo de máquina por padrão, e o modelo de provisionamento é preemptivo se nada for dito."
+      }
+    ]
+  },
+  "ex-w3v72bj9": {
+    "prompt": "No meio de um job, o Google toma de volta um dos workers secundários Spot do cluster. O que acontece com o job?",
+    "hint": "O que um worker secundário guarda?",
+    "choices": [
+      {
+        "text": "Falha, porque os blocos do HDFS daquele worker sumiram",
+        "why": "Um worker secundário não roda DataNode e não guarda blocos; essa perda é de um worker primário."
+      },
+      {
+        "text": "O cluster é apagado junto",
+        "why": "É o que perder o master de um cluster padrão faz."
+      },
+      {
+        "text": "Continua, mais devagar, com as tarefas rodadas de novo em outro lugar",
+        "why": "Isso: o YARN entrega as tarefas perdidas às máquinas que sobraram."
+      },
+      {
+        "text": "Pausa até o worker voltar, e então retoma do ponto em que parou",
+        "why": "Nada espera a máquina; as tarefas são reagendadas na hora."
+      }
+    ]
+  },
+  "ex-zge2akc7": {
+    "prompt": "Na política de autoescala da seção, quais afirmações são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Leia os dois blocos Config e o gracefulDecommissionTimeout.",
+    "choices": [
+      {
+        "text": "Os workers primários ficam em dois",
+        "why": "Sim: minInstances e maxInstances são 2."
+      },
+      {
+        "text": "Um worker sendo removido pode terminar as tarefas por até uma hora",
+        "why": "Sim: gracefulDecommissionTimeout é 1h."
+      },
+      {
+        "text": "A política lê o uso de CPU do Cloud Monitoring",
+        "why": "Ela decide pela memória do YARN: o que o trabalho pendente pede e o que ninguém usa."
+      },
+      {
+        "text": "Os secundários podem cair a zero",
+        "why": "Sim: secondaryWorkerConfig.minInstances é 0."
+      }
+    ]
+  },
+  "ex-vyqam9az": {
+    "prompt": "Uma ação de inicialização que baixa e compila uma biblioteca leva 25 minutos em todo cluster novo. O que a seção sugere?",
+    "hint": "Quem paga esses minutos, e quantas vezes?",
+    "choices": [
+      {
+        "text": "Subir o --initialization-action-timeout para 30m",
+        "why": "O cluster subiria, e toda máquina continuaria cobrando 25 minutos em todo cluster."
+      },
+      {
+        "text": "Montar uma imagem própria com a biblioteca nela",
+        "why": "Isso: o custo é pago uma vez, quando a imagem é montada, em vez de em todo cluster."
+      },
+      {
+        "text": "Rodar o script só no master, com a checagem de papel",
+        "why": "Qualquer executor pode rodar o código que importa a biblioteca, então os workers também precisam dela."
+      },
+      {
+        "text": "Manter o cluster ligado para a ação acontecer uma vez só",
+        "why": "Isso troca 25 minutos por noite por 24 horas por dia de máquinas."
+      }
+    ]
+  },
+  "ex-4m892ne5": {
+    "prompt": "O que precisa mudar no daily_orders.py para ele rodar num cluster Dataproc em vez do notebook?",
+    "hint": "De onde vêm os caminhos?",
+    "choices": [
+      {
+        "text": "A URL do master no SparkSession.builder",
+        "why": "O programa não fixa master nenhum; o spark-submit dá um de fora."
+      },
+      {
+        "text": "Nada no arquivo: ele recebe caminhos gs:// em --src e --dst",
+        "why": "Isso: o conector lê gs:// e os argumentos levam os caminhos."
+      },
+      {
+        "text": "O leitor de CSV, que não lê do Cloud Storage",
+        "why": "Pelo conector do Cloud Storage, o mesmo leitor lê caminhos gs://."
+      },
+      {
+        "text": "O esquema, já que o Dataproc deduz os tipos",
+        "why": "O Spark se comporta igual nos dois; o esquema é escrito em qualquer um deles."
+      }
+    ]
+  },
+  "ex-n202gv66": {
+    "prompt": "Um job seguinte começa assim que aparece um arquivo part- em daily_orders/dt=2026-10-29/. Qual é o risco?",
+    "hint": "O que o _SUCCESS quer dizer?",
+    "choices": [
+      {
+        "text": "Ler meio resultado, escrito pelas tarefas que terminaram primeiro",
+        "why": "Isso: cada tarefa escreve o próprio part, e é o _SUCCESS que diz que todas terminaram."
+      },
+      {
+        "text": "Ler os arquivos .crc como dados",
+        "why": "Esses são checksums do sistema de arquivos local, e no gs:// nem são escritos."
+      },
+      {
+        "text": "Nenhum: um part está completo quando aparece",
+        "why": "Um part pode estar completo enquanto os outros ainda estão sendo escritos."
+      },
+      {
+        "text": "Parquet não pode ser lido até o Spark parar",
+        "why": "Um Parquet terminado pode ser lido na hora; a questão é se todos terminaram."
+      }
+    ]
+  },
+  "ex-w0c2qyha": {
+    "prompt": "Com o master `local[2]`, o Spark roda o job num processo só, com duas ___ fazendo o papel de executores.",
+    "hint": "Não são máquinas, nem processos.",
+    "blanks": [
+      {
+        "accept": [
+          "threads",
+          "thread",
+          "linhas de execução"
+        ]
+      }
+    ]
+  },
+  "ex-dkgncyh1": {
+    "prompt": "O DuckDB contou 20000 pedidos no CSV e 500 clientes no Parquet. Em média, quantos pedidos cada cliente fez naquele dia?",
+    "hint": "Pedidos divididos por clientes.",
+    "unit": "pedidos"
+  },
+  "ex-3qt9rbvw": {
+    "prompt": "Qual opção apaga um cluster depois de trinta minutos sem rodar job nenhum?",
+    "hint": "A ajuda a listou ao lado da irmã que para.",
+    "choices": [
+      {
+        "text": "--stop-max-idle=30m",
+        "why": "Essa para o cluster e mantém os discos, que continuam cobrados."
+      },
+      {
+        "text": "--delete-max-age=30m",
+        "why": "Essa apaga trinta minutos depois da criação, faça ele o que estiver fazendo."
+      },
+      {
+        "text": "--delete-max-idle=30m",
+        "why": "Isso: apagar depois desse tempo ocioso."
+      },
+      {
+        "text": "--initialization-action-timeout=30m",
+        "why": "Essa limita quanto um script de boot pode rodar."
+      }
+    ]
+  },
+  "ex-y4vcxkaa": {
+    "prompt": "Um workflow template usa managedCluster. O que acontece quando ele é instanciado e o job falha?",
+    "hint": "O cluster pertence ao workflow.",
+    "choices": [
+      {
+        "text": "O cluster fica para alguém olhar",
+        "why": "O template apaga o cluster gerenciado quando o último job termina, com sucesso ou não."
+      },
+      {
+        "text": "O cluster é apagado mesmo assim",
+        "why": "Isso: ele é criado para o workflow e apagado com ele."
+      },
+      {
+        "text": "O template tenta o job de novo num cluster novo para sempre",
+        "why": "Um template roda os jobs uma vez; tentar de novo é decisão do agendador."
+      },
+      {
+        "text": "Nada, porque um template precisa de clusterSelector para criar um cluster",
+        "why": "clusterSelector escolhe um cluster existente; quem cria é o managedCluster."
+      }
+    ]
+  },
+  "ex-pwbmnd3z": {
+    "prompt": "Ligue cada formato ao que ele custa enquanto não há trabalho.",
+    "hint": "Quais ainda têm máquinas?",
+    "pairs": [
+      {
+        "left": "cluster de longa duração",
+        "right": "toda máquina, disco e taxa"
+      },
+      {
+        "left": "batch do Serverless",
+        "right": "nada"
+      },
+      {
+        "left": "Dataproc no GKE",
+        "right": "os node pools que você mantém"
+      }
+    ],
+    "right_distractors": [
+      "uma DCU-hora por minuto ocioso"
+    ]
+  },
+  "ex-z5y2cer6": {
+    "prompt": "Um nó de cluster custa 0,35654 USD por hora. Quanto custam um master e quatro workers por 3 horas, em USD, com duas casas?",
+    "hint": "Cinco nós por três horas.",
+    "unit": "USD"
+  },
+  "ex-w7cghrde": {
+    "prompt": "Uma empresa herda 120 jobs Spark e quer todos no Google Cloud no mês que vem. Qual escolha o raciocínio da aula favorece?",
+    "hint": "Quanto cada opção custa em trabalho, não em dólares?",
+    "choices": [
+      {
+        "text": "Reescrever em Beam para o Dataflow, que é mais barato por hora",
+        "why": "O Dataflow foi o mais caro dos três por hora aqui, e reescrever 120 jobs é um projeto."
+      },
+      {
+        "text": "Dataproc, trocando caminhos hdfs:// por gs://",
+        "why": "Isso: código Spark existente é o maior motivo para o Dataproc existir."
+      },
+      {
+        "text": "Um cluster de longa duração sem timer de ociosidade, dimensionado para os 120",
+        "why": "Dataproc, sim, e a linha do sempre ligado custou doze vezes a do efêmero."
+      },
+      {
+        "text": "Deixar onde estão, já que nenhum motor de nuvem roda Spark",
+        "why": "Dataproc, Serverless e Dataproc no GKE rodam Spark."
+      }
+    ]
+  },
+  "ex-zc8x0r7t": {
+    "prompt": "Ordene pelo custo mensal do job da Quitanda como o programa imprimiu, do mais barato ao mais caro.",
+    "hint": "O cluster paga o master; o batch, o driver.",
+    "items": [
+      "Cluster Dataproc efêmero",
+      "Dataproc Serverless",
+      "Dataflow",
+      "Cluster ligado o mês todo"
+    ]
+  },
+  "ex-8q7kyzjz": {
+    "prompt": "Um cluster tem 2 workers primários e 40 secundários Spot, e a capacidade Spot da zona acaba no meio do job. Qual é o resultado provável?",
+    "hint": "Quais máquinas sobram, e elas guardam algo perdido?",
+    "choices": [
+      {
+        "text": "O job falha na hora com blocos de HDFS perdidos",
+        "why": "Os secundários não guardavam blocos; os primários, que guardam, continuam lá."
+      },
+      {
+        "text": "Nada muda, já que a política de autoescala troca as máquinas Spot perdidas por VMs padrão",
+        "why": "A política soma secundários do tipo que o cluster tem; sem capacidade Spot, não há o que somar."
+      },
+      {
+        "text": "O trabalho fica com dois workers, e o job demora muito mais",
+        "why": "Isso: nada se perde, e quase todos os processadores vão embora, e é por isso que a seção dimensiona os secundários como uma parte do trabalho."
+      },
+      {
+        "text": "O master também é tomado de volta e o cluster acaba",
+        "why": "O master é uma VM padrão, e é exatamente para isso que ele fica fora do Spot."
+      }
+    ]
+  },
+  "ex-q3411fmf": {
+    "prompt": "Ligado o mês todo, o cluster vence o Dataflow acima de 22,5 horas de trabalho por noite. O que isso diz de um cluster usado duas horas por noite?",
+    "hint": "Qual linha é reta?",
+    "choices": [
+      {
+        "text": "É mais barato que o Dataflow, porque o nó é mais barato por hora",
+        "why": "Por hora, sim; ligado, ele paga 730 horas por 60 de trabalho."
+      },
+      {
+        "text": "Paga cerca de 20 horas ociosas por dia, e o --delete-max-idle resolve",
+        "why": "Isso: a proteção é apagá-lo quando ocioso, não uma máquina mais barata."
+      },
+      {
+        "text": "Deveria passar para máquinas maiores para terminar mais rápido",
+        "why": "Terminar mais rápido num cluster ligado não encurta as horas que ele cobra."
+      },
+      {
+        "text": "Nada: 22,5 horas é o limite do Dataflow para um job em lote",
+        "why": "É o cruzamento de dois preços, não um limite de produto nenhum."
+      }
+    ]
+  }
+}

@@ -1,0 +1,623 @@
+[
+  {
+    "id": "ex-fdwvj0pj",
+    "version": 1,
+    "section": "beam-and-dataflow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is Dataflow, in Beam's terms?",
+    "hint": "Beam has a word for what executes a pipeline.",
+    "choices": [
+      {
+        "text": "A runner: Google's managed service for Beam pipelines",
+        "correct": true,
+        "why": "Right. The program is Beam; Dataflow is one of the places it runs."
+      },
+      {
+        "text": "A language of Google's for writing streaming jobs instead of Beam",
+        "correct": false,
+        "why": "The pipeline is written in Beam, in Python, Java or Go. Dataflow reads none of your source."
+      },
+      {
+        "text": "A library that replaces Beam's own transforms on Google Cloud",
+        "correct": false,
+        "why": "The same Beam program is sent to Dataflow unchanged; only `--runner` differs."
+      },
+      {
+        "text": "The Pub/Sub feature that delivers messages in order",
+        "correct": false,
+        "why": "That is ordering keys, lesson 19. Dataflow is compute, not messaging."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcmvvv16",
+    "version": 1,
+    "section": "beam-and-dataflow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a PCollection unbounded?",
+    "hint": "Compare a file with a subscription.",
+    "choices": [
+      {
+        "text": "It has no last element",
+        "correct": true,
+        "why": "Right: more messages may always arrive. A subscription never says it is finished; a file does."
+      },
+      {
+        "text": "It holds more elements than fit in memory",
+        "correct": false,
+        "why": "A bounded file of a terabyte is still bounded. The difference is whether it ends, not its size."
+      },
+      {
+        "text": "It was read with `ReadFromText`",
+        "correct": false,
+        "why": "`ReadFromText` reads a file, which ends: that is a bounded PCollection."
+      },
+      {
+        "text": "Its elements have no timestamps",
+        "correct": false,
+        "why": "Elements from a stream carry timestamps, the publish time by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hh1gc0f",
+    "version": 1,
+    "section": "beam-and-dataflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Python reaches the line `lines | 'Parse' >> beam.FlatMap(parse)`. What happens at that moment?",
+    "hint": "Beam builds first and runs after.",
+    "choices": [
+      {
+        "text": "Every line is parsed, and the result is kept in memory",
+        "correct": false,
+        "why": "Nothing is read yet. Parsing happens when the runner executes the graph."
+      },
+      {
+        "text": "A step is added to the graph, and nothing is parsed yet",
+        "correct": true,
+        "why": "Right. The runner decides later how, and where, `parse` runs."
+      },
+      {
+        "text": "The function `parse` is sent to Dataflow",
+        "correct": false,
+        "why": "Nothing is sent anywhere until the pipeline is run, and here the runner is local."
+      },
+      {
+        "text": "Beam checks that `parse` handles every bad line",
+        "correct": false,
+        "why": "Beam cannot know what a function does with its input. A mistake in it shows up when the pipeline runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5ng86tx",
+    "version": 1,
+    "section": "beam-and-dataflow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague runs `orders_beam.py` with `--runner=DirectRunner` on a laptop with internet access and gets different log lines from the lesson. Why?",
+    "hint": "In Beam 2.76.0 the DirectRunner is a switch.",
+    "choices": [
+      {
+        "text": "The emulator answers differently when the laptop is online",
+        "correct": false,
+        "why": "The emulator is local in both cases. The difference is in which runner Beam chose."
+      },
+      {
+        "text": "Beam 2.76.0 refuses `--runner=DirectRunner` and picks Dataflow",
+        "correct": false,
+        "why": "Dataflow is only ever chosen by name, and it needs a project and the `gcp` extra."
+      },
+      {
+        "text": "With GitHub reachable, Beam ran it on Prism instead",
+        "correct": true,
+        "why": "Right. Offline it fell back to the runner inside Python; that is why the lesson names `BundleBasedDirectRunner`."
+      },
+      {
+        "text": "The DirectRunner writes logs only when it has no network",
+        "correct": false,
+        "why": "It logs in both cases. What it logs differs because it ran on a different runner."
+      }
+    ]
+  },
+  {
+    "id": "ex-496m2zyt",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which step of `PlacedTotals` needs elements to change workers on Dataflow?",
+    "hint": "Only one step brings elements together.",
+    "choices": [
+      {
+        "text": "`Parse`, which turns a line into an event",
+        "correct": false,
+        "why": "It looks at one line at a time, so any worker can do any line."
+      },
+      {
+        "text": "`Placed`, which keeps the placed events",
+        "correct": false,
+        "why": "A filter decides for each element alone."
+      },
+      {
+        "text": "`Add`, the `CombinePerKey`",
+        "correct": true,
+        "why": "Right. Every placed order of one neighbourhood has to meet, and that is the shuffle."
+      },
+      {
+        "text": "`Format`, which writes the window",
+        "correct": false,
+        "why": "It formats one total at a time, after the combine."
+      }
+    ]
+  },
+  {
+    "id": "ex-wc7cp9zf",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The export ends with a line cut in the middle. What does `orders_beam.py` do with it?",
+    "hint": "Look at what `parse` yields when `json.loads` fails.",
+    "choices": [
+      {
+        "text": "It stops the whole pipeline at that line, with a `JSONDecodeError`",
+        "correct": false,
+        "why": "That is what a `parse` without the `try` would do, and then there would be no totals at all."
+      },
+      {
+        "text": "It skips the line in silence",
+        "correct": false,
+        "why": "Silence would leave the totals one order short with nothing saying so."
+      },
+      {
+        "text": "It sends the line to a second output, written to its own file",
+        "correct": true,
+        "why": "Right: `unreadable-00000-of-00001.txt` holds it, whole."
+      },
+      {
+        "text": "It counts the line as an order of zero reais",
+        "correct": false,
+        "why": "The line never becomes an event; it never reaches `Placed`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gd1ecgtq",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why may `add` not be written as \"count the pairs and sum the second fields of the original events\"?",
+    "hint": "Beam calls a combining function on parts, and then on the parts' results.",
+    "choices": [
+      {
+        "text": "Because some pairs are earlier results, already holding counts above one",
+        "correct": true,
+        "why": "Right. Counting pairs would count a partial sum of fifty orders as one order."
+      },
+      {
+        "text": "Because Beam passes it a dictionary, not pairs",
+        "correct": false,
+        "why": "`Key` made the values `(1, cents)` pairs, and partial results keep that shape."
+      },
+      {
+        "text": "Because Python cannot sum tuples",
+        "correct": false,
+        "why": "`add` sums them field by field, and that works."
+      },
+      {
+        "text": "Because the original events are lost after `Parse`",
+        "correct": false,
+        "why": "They are not lost, but `add` only ever sees the values of one key."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyv7ptws",
+    "version": 1,
+    "section": "the-pipeline",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The night run wrote five totals, of 150, 138, 161, 140 and 152 orders. How many of the 2,000 events were `placed`?",
+    "hint": "Each placed event is one order in one total.",
+    "value": 741,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vt4mj79d",
+    "version": 1,
+    "section": "in-stream",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Run with `--streaming --window 0`, what does the pipeline do?",
+    "hint": "The global window of an unbounded collection never ends.",
+    "choices": [
+      {
+        "text": "It runs and publishes the totals once a minute",
+        "correct": false,
+        "why": "There is no window to close once a minute: `--window 0` removed it."
+      },
+      {
+        "text": "It runs and never publishes anything",
+        "correct": false,
+        "why": "Beam does not let it get that far."
+      },
+      {
+        "text": "It refuses to start, before any message",
+        "correct": true,
+        "why": "Right: a group in the global window with the default trigger. The `ValueError` arrives before any message is read."
+      },
+      {
+        "text": "It falls back to batch and reads the subscription once",
+        "correct": false,
+        "why": "Beam has no such fallback; an unbounded source stays unbounded."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2h92tv9",
+    "version": 1,
+    "section": "in-stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The stream run published its totals with the window `15:33:00`, on the afternoon of 30 October. The events say 15 October, from 19:00. Why?",
+    "hint": "Ask where `ReadFromPubSub` takes an element's timestamp from.",
+    "choices": [
+      {
+        "text": "The emulator rewrites the field `at` on the way through",
+        "correct": false,
+        "why": "Nothing touched the message bodies; the same bytes arrived."
+      },
+      {
+        "text": "`Format` converts every time to the current day",
+        "correct": false,
+        "why": "`Format` only formats the window it is given."
+      },
+      {
+        "text": "Its time is when Pub/Sub received it, without a timestamp attribute",
+        "correct": true,
+        "why": "Right. The window is in publish time; lesson 22 reads the time from the event instead."
+      },
+      {
+        "text": "Fixed windows always start at the moment the pipeline itself starts",
+        "correct": false,
+        "why": "Fixed windows are aligned to the clock, minute by minute, whenever the pipeline started."
+      }
+    ]
+  },
+  {
+    "id": "ex-884w1dym",
+    "version": 1,
+    "section": "in-stream",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the DirectRunner, the pipeline dies after pulling 500 messages and before publishing their window. What happens to those 500 when it is started again?",
+    "hint": "Look at when this runner acknowledges a message.",
+    "choices": [
+      {
+        "text": "They are counted twice, as at-least-once delivery predicts",
+        "correct": false,
+        "why": "That would need them to be delivered again, and they were already acknowledged."
+      },
+      {
+        "text": "They are lost: it acknowledged each one when it pulled it",
+        "correct": true,
+        "why": "Right. Dataflow acknowledges only after the work is kept durably, which is the opposite trade."
+      },
+      {
+        "text": "They are counted once, as Pub/Sub removes the duplicates",
+        "correct": false,
+        "why": "There are no duplicates here, only messages nobody will deliver again."
+      },
+      {
+        "text": "They wait in the dead-letter topic",
+        "correct": false,
+        "why": "No dead-letter topic was configured, and nothing failed delivery."
+      }
+    ]
+  },
+  {
+    "id": "ex-7spgyzb1",
+    "version": 1,
+    "section": "in-stream",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these changed between the night run and the stream run? Choose all that apply.",
+    "hint": "Compare the two ends and the middle.",
+    "choices": [
+      {
+        "text": "Where the lines were read from",
+        "correct": true,
+        "why": "A file in one, a subscription in the other."
+      },
+      {
+        "text": "The window the totals belong to",
+        "correct": true,
+        "why": "`all` in batch, one minute of publish time in stream."
+      },
+      {
+        "text": "The steps of `PlacedTotals`",
+        "correct": false,
+        "why": "The same five steps ran in both; that is the point of the composite."
+      },
+      {
+        "text": "The totals per neighbourhood",
+        "correct": false,
+        "why": "They came out the same to the cent, because one window held every message."
+      },
+      {
+        "text": "Where the unreadable line went",
+        "correct": true,
+        "why": "A file in batch, the topic `order-totals-unreadable` in stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-m30j1715",
+    "version": 1,
+    "section": "on-dataflow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A streaming job on Dataflow has to stop, and the totals already counted in the open minute must be published. Which command?",
+    "hint": "One of the two ends at once.",
+    "choices": [
+      {
+        "text": "`gcloud dataflow jobs cancel`",
+        "correct": false,
+        "why": "Cancel stops at once and loses the open windows."
+      },
+      {
+        "text": "`gcloud dataflow jobs drain`",
+        "correct": true,
+        "why": "Right. Drain stops reading, closes the open windows, emits them and ends."
+      },
+      {
+        "text": "`gcloud dataflow jobs list --status=active`",
+        "correct": false,
+        "why": "That lists the jobs; it stops nothing."
+      },
+      {
+        "text": "Running the program again with `--update`",
+        "correct": false,
+        "why": "Update replaces the code and keeps the job running."
+      }
+    ]
+  },
+  {
+    "id": "ex-85bywpm0",
+    "version": 1,
+    "section": "on-dataflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a streaming worker without Streaming Engine default to a 400 GB disk?",
+    "hint": "Ask where the windows' state lives.",
+    "choices": [
+      {
+        "text": "It keeps its share of the windows' state on its own persistent disk",
+        "correct": true,
+        "why": "Right. With Streaming Engine the service keeps it, and 30 GB is enough."
+      },
+      {
+        "text": "It stores every message it has read, for replay",
+        "correct": false,
+        "why": "Replay is Pub/Sub's job, from the subscription; the worker keeps state, not a copy of the stream."
+      },
+      {
+        "text": "Pub/Sub requires a disk of that size on each subscriber",
+        "correct": false,
+        "why": "Pub/Sub sets no requirement on a subscriber's disk."
+      },
+      {
+        "text": "A bigger disk makes the worker's processor faster",
+        "correct": false,
+        "why": "A Persistent Disk's size sets its throughput, not the processor's speed; the reason is the state."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4h3744q",
+    "version": 1,
+    "section": "on-dataflow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants the nightly totals launched by Cloud Composer with a different `--input` each night, and one night's input needs an extra step in the graph. Which kind of template fits?",
+    "hint": "One kind fixes the graph's shape when it is staged.",
+    "choices": [
+      {
+        "text": "A classic template, because its parameters are runtime values",
+        "correct": false,
+        "why": "A classic template fixes the graph when it is staged; a runtime value cannot add a step."
+      },
+      {
+        "text": "No template: Composer runs the program from the analyst's laptop",
+        "correct": false,
+        "why": "Composer has no laptop to run from, and a schedule should not depend on one."
+      },
+      {
+        "text": "A Flex Template, which builds the graph at each launch",
+        "correct": true,
+        "why": "Right. The container runs the program at launch, so parameters can change the graph."
+      },
+      {
+        "text": "A Google-provided template",
+        "correct": false,
+        "why": "Those are fixed pipelines for common copies; this one is Quitanda's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-nc4sjdts",
+    "version": 1,
+    "section": "on-dataflow",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Dataflow feature to what it does.",
+    "hint": "Two of them are about the shuffle, in different modes.",
+    "pairs": [
+      {
+        "left": "Dataflow Shuffle",
+        "right": "Moves a batch job's shuffle off the workers into the service"
+      },
+      {
+        "left": "Streaming Engine",
+        "right": "Keeps a stream's shuffle and window state in the service"
+      },
+      {
+        "left": "Dataflow Prime",
+        "right": "Resizes a worker's memory and bills in DCUs"
+      },
+      {
+        "left": "FlexRS",
+        "right": "Starts a batch job within six hours, for a lower price"
+      }
+    ],
+    "right_distractors": [
+      "Lets a classic template add steps at launch"
+    ]
+  },
+  {
+    "id": "ex-p6fk9gq4",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A batch job shuffles 1,024 GiB. With the page's volume adjustment, how many GiB are billed?",
+    "hint": "A quarter of the first 250, half of the rest up to 5 TiB.",
+    "value": 449.5,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-8c628fp0",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One streaming worker of 2 vCPU runs the whole month, 730 hours, at 0.1035 dollars a vCPU-hour in São Paulo. What do its vCPUs alone cost, in dollars?",
+    "hint": "vCPUs times hours times the price.",
+    "value": 151.11,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-nx9kstjn",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The streaming job costs about 183 dollars a month and the nightly batch about 4. When is the stream worth it?",
+    "hint": "Both give the same totals; the difference is when.",
+    "choices": [
+      {
+        "text": "When the data grows larger than what one worker's memory holds",
+        "correct": false,
+        "why": "Batch handles any size by adding workers; size does not decide between the two."
+      },
+      {
+        "text": "When the totals feed something that acts within the minute",
+        "correct": true,
+        "why": "Right. A report read in the morning gets the same answer from the night run."
+      },
+      {
+        "text": "Whenever the events already arrive through Pub/Sub",
+        "correct": false,
+        "why": "They also land in the nightly export, which the batch reads for a fraction of the price."
+      },
+      {
+        "text": "When FlexRS is not available in the region",
+        "correct": false,
+        "why": "FlexRS only discounts batch; its absence would make batch dearer, not the stream worth it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvzbmqyt",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to one placed order in the stream run.",
+    "hint": "The window comes before the middle.",
+    "items": [
+      "`ReadFromPubSub` pulls the message and acknowledges it",
+      "The message is placed in the minute it was published in",
+      "`Parse` and `Placed` keep it as a placed order",
+      "`Add` adds it to its neighbourhood's total for that minute",
+      "The total is published to `order-totals` when the minute closes"
+    ]
+  },
+  {
+    "id": "ex-axf5em2s",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To send `orders_beam.py` to Google instead of running it here, the option to change is `--___`.",
+    "hint": "The program sets a default for it.",
+    "blanks": [
+      {
+        "accept": [
+          "runner",
+          "runner=DataflowRunner"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fehk2eep",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of `orders_beam.py` would have to change to read the nightly export from Cloud Storage on Dataflow?",
+    "hint": "Only the ends know where data lives.",
+    "choices": [
+      {
+        "text": "`PlacedTotals`, so that it reads from a bucket",
+        "correct": false,
+        "why": "The composite never knows where its lines come from."
+      },
+      {
+        "text": "`add`, to combine across workers",
+        "correct": false,
+        "why": "It already works in any grouping, which is what workers need."
+      },
+      {
+        "text": "Nothing: the paths and runner are options",
+        "correct": true,
+        "why": "Right. `--input gs://…`, `--output gs://…` and `--runner=DataflowRunner`, with the `gcp` extra installed."
+      },
+      {
+        "text": "`Format`, to write a window other than `all`",
+        "correct": false,
+        "why": "A batch over a file is still in the global window on Dataflow."
+      }
+    ]
+  }
+]

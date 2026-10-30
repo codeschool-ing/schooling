@@ -1,0 +1,205 @@
+{
+  "ex-5k206tyd": {
+    "prompt": "Um consumidor dá ack numa mensagem e depois faz o trabalho. Ele cai entre os dois. O que acontece com aquela mensagem?",
+    "hint": "O Pub/Sub ainda a tem?",
+    "choices": [
+      {"text": "É processada duas vezes", "why": "Essa é a outra ordem: trabalho primeiro, depois ack."},
+      {"text": "Se perde: o Pub/Sub a esqueceu no ack", "why": "Isso: no máximo uma vez. Nada é feito duas vezes, e esta mensagem nunca é processada."},
+      {"text": "O Pub/Sub percebe a queda e a entrega de novo", "why": "Depois do ack o Pub/Sub não tem mais nada a entregar; ele não sabe nada do trabalho do consumidor."},
+      {"text": "É processada exatamente uma vez", "why": "Nenhuma ordem dos dois passos dá isso; aqui o trabalho nunca aconteceu."}
+    ]
+  },
+  "ex-mqgtqv0k": {
+    "prompt": "Por que \"exatamente uma vez\" não é uma terceira forma de ordenar o trabalho e o ack?",
+    "hint": "As duas escritas vão para sistemas diferentes.",
+    "choices": [
+      {"text": "Porque o ack tem de vir primeiro", "why": "Ele pode vir em qualquer ordem; é isso que as duas garantias são."},
+      {"text": "Porque exige uma rede mais rápida", "why": "Velocidade diminui a janela e nunca a fecha."},
+      {"text": "Nenhuma escrita cobre as duas", "why": "Isso: uma queda entre elas perde ou repete. Exatamente uma vez se constrói com escritas atômicas ou trabalho idempotente, de ponta a ponta."},
+      {"text": "Porque o Pub/Sub o proíbe nos termos de uso", "why": "É questão de duas escritas separadas, não de uma regra."}
+    ]
+  },
+  "ex-5yhepzgz": {
+    "prompt": "Por que pelo menos uma vez é o padrão para tudo o que a Quitanda conta?",
+    "hint": "Qual das duas falhas dá para consertar depois?",
+    "choices": [
+      {"text": "Custa menos para rodar que no máximo uma vez", "why": "As duas custam o mesmo para rodar; diferem no que uma queda faz."},
+      {"text": "O Pub/Sub tira os duplicados sozinho", "why": "Não tira, e o reprocessamento da aula mostrou os totais errando sem deduplicação."},
+      {"text": "É a que não perde nada", "why": "Isso: duplicados podem ser tirados depois, mensagens perdidas não. No máximo uma vez só serve para dado que pode se perder."},
+      {"text": "Mantém as mensagens em ordem", "why": "Ordem é outro problema, resolvido por uma chave de ordenação."}
+    ]
+  },
+  "ex-wd2x0v2b": {
+    "prompt": "Um publicador manda `o-301` duas vezes porque a primeira resposta se perdeu. Qual chave separa as duas mensagens de dois pagamentos reais?",
+    "hint": "As duas cópias ganharam ids de mensagem diferentes.",
+    "choices": [
+      {"text": "O id de mensagem que o Pub/Sub deu", "why": "A cópia ganhou um id novo, 2 contra 1, então para o Pub/Sub são dois eventos."},
+      {"text": "O horário de publicação de cada uma", "why": "Cada cópia tem o próprio horário de publicação, e dois pagamentos reais com um segundo de diferença também."},
+      {"text": "O id do pedido nos dados", "why": "Isso: um pedido é pago uma vez, então uma segunda mensagem para o mesmo pedido é um duplicado."},
+      {"text": "O ack id da entrega", "why": "Um ack id nomeia uma entrega a um assinante, e é novo a cada entrega."}
+    ]
+  },
+  "ex-y4y52hzk": {
+    "prompt": "Na aula, um segundo `gcloud pubsub subscriptions pull` logo depois do primeiro levou uns dez segundos e devolveu as mesmas duas mensagens. Por quê?",
+    "hint": "O que tinha acontecido com elas no primeiro pull?",
+    "choices": [
+      {"text": "O prazo de dez segundos delas acabou", "why": "Isso: os mesmos ids de mensagem voltaram com os ack ids novos 3 e 4."},
+      {"text": "O emulador demorou a responder da primeira vez", "why": "Ele já estava rodando; a espera foi o prazo, do mesmo tamanho que `ackDeadlineSeconds`."},
+      {"text": "O publicador mandou as duas mensagens de novo", "why": "Nada foi publicado entre os pulls, e os ids eram os mesmos."},
+      {"text": "O primeiro pull já tinha dado ack nelas", "why": "Ele imprimiu ack ids sem dar ack; uma mensagem confirmada não é entregue de novo."}
+    ]
+  },
+  "ex-zhrx8bv6": {
+    "prompt": "Um consumidor de uma assinatura ordenada precisa de 25 segundos por mensagem e é escrito com pulls unários, num prazo de 10 segundos. O que ele deve fazer?",
+    "hint": "Pulls unários não têm ninguém estendendo os empréstimos.",
+    "choices": [
+      {"text": "Dar ack antes do trabalho", "why": "Isso impede a nova entrega deixando o consumidor no máximo uma vez, o que perde uma mensagem a cada queda."},
+      {"text": "Nada, já que uma assinatura ordenada espera o consumidor", "why": "A ordem não estende prazo; um prazo esgotado entrega de novo a mensagem e as seguintes da chave."},
+      {"text": "Diminuir a retenção da assinatura", "why": "A retenção decide quanto tempo uma mensagem é guardada, não quanto tempo um consumidor a segura."},
+      {"text": "Estender o prazo enquanto trabalha", "why": "Isso: é o que o cliente de streaming faz sozinho; na aula, sessenta segundos mantiveram as mensagens longe por vinte."}
+    ]
+  },
+  "ex-t6tbnx79": {
+    "prompt": "Quais destas coisas põem o mesmo pagamento duas vezes nas mãos de um consumidor? Marque todas as que valem.",
+    "hint": "Cinco lugares foram citados, e duas coisas que parecem duplicados e não são.",
+    "choices": [
+      {"text": "Um publicador que tenta de novo depois de uma resposta perdida", "why": "Isso; o tópico guarda as duas cópias, com dois ids."},
+      {"text": "Um consumidor que morre antes do ack", "why": "Isso; as mensagens voltam quando o prazo acaba."},
+      {"text": "Um endpoint de push que responde 503", "why": "Isso; a mensagem 17 da aula 19 chegou três vezes."},
+      {"text": "Dois clientes pagando o mesmo valor no mesmo dia", "why": "São dois eventos reais, não um duplicado."},
+      {"text": "Dois eventos de um pedido entregues fora de ordem", "why": "Isso é problema de ordem; cada evento chegou uma vez."}
+    ]
+  },
+  "ex-06g2e3cg": {
+    "prompt": "`totals.py plain 4` caiu, e o reinício logo em seguida não achou mensagem nenhuma. Por quê?",
+    "hint": "Quem segurava as sete mensagens naquele momento?",
+    "choices": [
+      {"text": "A queda tinha dado ack nelas", "why": "A queda veio antes do ack; dez segundos depois as sete foram entregues de novo."},
+      {"text": "Ainda estavam emprestadas ao processo morto", "why": "Isso: o Pub/Sub não distingue um consumidor morto de um lento, então espera o prazo acabar."},
+      {"text": "O snapshot as tinha tirado da assinatura", "why": "Um snapshot não tira nada; registra uma posição para onde fazer seek."},
+      {"text": "O SQLite travou a assinatura", "why": "O banco não sabe nada do Pub/Sub."}
+    ]
+  },
+  "ex-5z0cm1vr": {
+    "prompt": "No modo `plain`, `o-301` (4.590), `o-303` (990, publicado duas vezes) e `o-306` (7.200) são os pagamentos de `c-17`. A primeira execução somou quatro mensagens antes de cair, a segunda somou as sete. Com que total `c-17` terminou, em centavos?",
+    "hint": "`o-301` foi somado duas vezes, e cada cópia de `o-303` duas vezes.",
+    "unit": "centavos"
+  },
+  "ex-ks5mzs1v": {
+    "prompt": "Com a deduplicação pelo id da mensagem, `c-17` saiu 13.770 em vez de 12.780. O que passou?",
+    "hint": "Qual duplicado manteve o id de mensagem, e qual ganhou um novo?",
+    "choices": [
+      {"text": "A nova entrega depois da queda", "why": "Essa foi pega: os ids 3 a 6 foram recusados na segunda execução."},
+      {"text": "O segundo `o-303` do publicador", "why": "Isso: 13.770 é 12.780 mais um segundo 990."},
+      {"text": "O pagamento de `c-05`", "why": "`c-05` deu certo em todas as execuções; o total dele é 2.350."},
+      {"text": "Uma mensagem que o snapshot não guardava", "why": "O snapshot guardava as sete; a execução leu sete."}
+    ]
+  },
+  "ex-n245ena5": {
+    "prompt": "O `totals.py` registra o id do pedido em `processed` e soma ao total dentro de uma transação `with db:`. O que dá errado se as duas forem confirmadas separadas, a chave primeiro?",
+    "hint": "Ponha uma queda entre os dois commits.",
+    "choices": [
+      {"text": "O pedido fica registrado e nunca é contado", "why": "Isso: na nova entrega a chave já está lá, então o pagamento é pulado para sempre."},
+      {"text": "Nada, já que a nova entrega conserta", "why": "A nova entrega encontra a chave registrada e pula o pagamento; nada conserta."},
+      {"text": "O SQLite recusa dois commits por mensagem", "why": "O SQLite confirma o que pedirem; a brecha é do desenho do consumidor."},
+      {"text": "O pedido é contado duas vezes", "why": "Essa é a brecha na outra ordem, o total primeiro e a chave depois."}
+    ]
+  },
+  "ex-n368j4jy": {
+    "prompt": "`sink.py put c-09 500` rodou duas vezes. O que a linha guarda?",
+    "hint": "Um upsert define, um incremento soma.",
+    "choices": [
+      {"text": "500", "why": "Isso: a segunda escrita trocou 500 por 500."},
+      {"text": "1000", "why": "Isso é `add` duas vezes, a escrita que não é idempotente."},
+      {"text": "Um erro, já que a chave existe", "why": "`ON CONFLICT ... DO UPDATE` transforma o choque numa atualização."},
+      {"text": "Duas linhas de 500", "why": "`customer_id` é a chave primária, então há uma linha."}
+    ]
+  },
+  "ex-0sxzpnm4": {
+    "prompt": "Por que um upsert não serve ao fluxo de pagamentos da Quitanda do jeito que ele é?",
+    "hint": "O que cada evento carrega: um estado ou uma mudança?",
+    "choices": [
+      {"text": "O SQLite não tem upsert", "why": "Tem; o `sink.py put` é um."},
+      {"text": "Upserts são mais lentos que inserts, e o fluxo é movimentado", "why": "Velocidade não é o obstáculo; o conteúdo do evento é."},
+      {"text": "Um pagamento é uma mudança, não o saldo novo", "why": "Isso: para fazer upsert, o publicador teria de mandar o próprio saldo, que ele não conhece."},
+      {"text": "Um upsert perde o id do pedido", "why": "A chave da linha decide o que é guardado, e um id de pedido cabe numa linha como qualquer outra coisa."}
+    ]
+  },
+  "ex-337fx389": {
+    "prompt": "Um consumidor grava cada lote puxado no Cloud Storage com o SHA-256 do lote como nome. Por que uma nova entrega do Pub/Sub ainda deixa o mesmo pagamento em dois objetos?",
+    "hint": "Uma nova entrega remonta o mesmo lote?",
+    "choices": [
+      {"text": "O hash muda a cada execução", "why": "O SHA-256 dos mesmos bytes é o mesmo; as duas cópias da aula caíram num nome só."},
+      {"text": "Uma nova entrega agrupa as mensagens de outro jeito", "why": "Isso: uma assinatura não tem posições para agrupar, então o nome pelo conteúdo muda com o agrupamento."},
+      {"text": "O fake-gcs-server nunca sobrescreve um objeto existente", "why": "Sobrescreveu: a segunda cópia substituiu a primeira com um nome só."},
+      {"text": "O Cloud Storage recusa sobrescrever objetos", "why": "Uma sobrescrita é silenciosa e definitiva, como a aula 1 avisou; foi isso que fez o nome pelo conteúdo funcionar."}
+    ]
+  },
+  "ex-mv4as87n": {
+    "prompt": "O que a assinatura exatamente uma vez fez que a comum não fez?",
+    "hint": "As duas entregaram de novo a mensagem 10.",
+    "choices": [
+      {"text": "Recusou o ack com o ack id expirado", "why": "Isso, com `EXACTLY_ONCE_ACKID_FAILURE`; a comum o aceitou e não disse nada."},
+      {"text": "Não entregou de novo depois do prazo", "why": "Entregou de novo do mesmo jeito; a promessa é de nenhuma nova entrega antes do prazo, e nenhuma depois de um ack bem-sucedido."},
+      {"text": "Tirou a segunda cópia do publicador", "why": "Os ids 11 e 12 foram os dois entregues."},
+      {"text": "Entregou em ordem", "why": "Ordem é assunto da chave de ordenação, outra configuração."}
+    ]
+  },
+  "ex-vtavd4sq": {
+    "prompt": "Qual destas a entrega exatamente uma vez cobre?",
+    "hint": "Leia a promessa na ajuda do `gcloud`: ela é sobre um id de mensagem.",
+    "choices": [
+      {"text": "Uma nova tentativa do publicador que guardou um pagamento duas vezes", "why": "As cópias têm dois ids, e as duas foram entregues."},
+      {"text": "Um endpoint de push que respondeu 503", "why": "Assinaturas de push não oferecem entrega exatamente uma vez."},
+      {"text": "Um consumidor que soma um pagamento e morre antes do ack", "why": "A nova entrega vem depois do prazo, e o trabalho se repete; o efeito continua sendo do consumidor."},
+      {"text": "Uma mensagem confirmada com sucesso, numa assinatura de pull numa região", "why": "Isso: essa mensagem não é entregue à assinatura de novo."}
+    ]
+  },
+  "ex-knj1xqmx": {
+    "prompt": "Os eventos de status de um pedido às vezes chegam fora de ordem, e um `delivered` nunca pode ser sobrescrito por um `packed` atrasado. Do que o destino precisa?",
+    "hint": "A deduplicação testa existência; este teste compara.",
+    "choices": [
+      {"text": "Entrega exatamente uma vez na assinatura", "why": "Ela impede a nova entrega de um id e não faz nada pela ordem de duas mensagens diferentes."},
+      {"text": "Uma tabela de deduplicação por id de pedido", "why": "Ela recusaria todo evento do pedido depois do primeiro, inclusive o `delivered`."},
+      {"text": "Uma versão vinda do publicador, e uma escrita aplicada só se for mais nova", "why": "Isso: `UPDATE ... WHERE version < ?` guarda o status mais novo seja qual for a ordem de chegada."},
+      {"text": "Um prazo de ack mais longo", "why": "Um prazo é de uma entrega; não ordena duas mensagens."}
+    ]
+  },
+  "ex-xnpthcv5": {
+    "prompt": "Ligue cada fonte de duplicados ao que a pega.",
+    "hint": "Uma delas mantém o id de mensagem.",
+    "pairs": [
+      {"left": "Uma nova tentativa do publicador", "right": "Uma chave de idempotência nos dados"},
+      {"left": "Uma nova entrega depois do prazo", "right": "Uma deduplicação pelo id da mensagem"},
+      {"left": "Um reprocessamento com seek num upsert", "right": "Nada mais: o destino é idempotente"},
+      {"left": "Uma assinatura do Cloud Storage gravando duas vezes", "right": "Uma deduplicação quando o lago é compactado"}
+    ],
+    "right_distractors": ["Uma retenção maior no tópico"]
+  },
+  "ex-m8bx30kf": {
+    "prompt": "Ponha em ordem o que `totals.py by-order-id` faz com um lote puxado.",
+    "hint": "O ack é o último, uma vez por lote.",
+    "items": [
+      "Puxar até dez mensagens de `totals`",
+      "Ler de cada mensagem o id do pedido, o cliente e o valor",
+      "Numa transação, inserir o id do pedido e somar o valor",
+      "Se o insert violar a chave primária, relatar um duplicado e não somar nada",
+      "Confirmar o lote inteiro"
+    ]
+  },
+  "ex-3kje2wjf": {
+    "prompt": "Uma escrita é ___ quando repeti-la deixa o mesmo resultado que fazê-la uma vez.",
+    "hint": "Quase a palavra em que termina o título da aula.",
+    "blanks": [{"accept": ["idempotente", "idempotent"]}]
+  },
+  "ex-yrnvkenv": {
+    "prompt": "Um colega propõe ligar a entrega exatamente uma vez em `totals` e tirar a tabela `processed`. Qual execução da aula mostra que os totais errariam?",
+    "hint": "Que duplicado a entrega exatamente uma vez não vê?",
+    "choices": [
+      {"text": "A execução por id de mensagem, em que o segundo `o-303` do publicador foi somado", "why": "Isso: dois ids para um pagamento, e a entrega exatamente uma vez entregou as duas cópias na seção dela também."},
+      {"text": "A execução de `sink.py put`", "why": "Esse destino é idempotente; não tem nada a ver com `totals`."},
+      {"text": "Nenhuma; a entrega exatamente uma vez cobre todo duplicado", "why": "Ela cobre a nova entrega de um id, e a aula mostrou dois ids entregues."},
+      {"text": "O teste de push da aula 19", "why": "Push não oferece entrega exatamente uma vez, e `totals` é uma assinatura de pull."}
+    ]
+  }
+}
