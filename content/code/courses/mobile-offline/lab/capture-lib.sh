@@ -10,7 +10,8 @@
 #                         (lab/extract.py) to DEST: the file the lesson prints
 #                         is the file the capture runs
 #   serve DIR PORT 'cmd'  start a server in the background in DIR and wait for
-#                         PORT to answer; `unserve` stops it
+#                         PORT to answer; `unserve` stops it. One server per
+#                         lesson at a time; each lesson has its own port.
 #
 # RUNENV, when set, is run silently before each command.
 set -uo pipefail
@@ -19,6 +20,8 @@ MO_LAB=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 MO_COURSE=$(dirname "$MO_LAB")
 LESSON=$(cd "$(dirname "$0")" && pwd)
 LAB() { bash "$MO_COURSE/lab.sh" "$@"; }
+PIDF=/tmp/mo-serve-$(basename "$LESSON").pid
+LOGF=/tmp/mo-serve-$(basename "$LESSON").log
 
 shown() { local d=$1; d=${d/#\/home\/ana/\~}; printf '%s' "$d"; }
 run() {
@@ -43,16 +46,16 @@ put() {   # put MD FILE DEST
 SERVER=
 serve() { # serve DIR PORT 'command'
   local dir=$1 port=$2; shift 2
-  LAB as "cd $dir && { setsid bash -c 'echo \$\$ > /tmp/mo-serve.pid; exec $*' </dev/null >/tmp/mo-serve.log 2>&1 & }"
+  LAB as "cd $dir && { setsid bash -c 'echo \$\$ > $PIDF; exec $*' </dev/null >$LOGF 2>&1 & }"
   for _ in $(seq 100); do
     curl -s -o /dev/null "http://127.0.0.1:$port/" && { SERVER=1; return 0; }
     sleep 0.2
   done
-  echo "serve: nothing answered on port $port" >&2; cat /tmp/mo-serve.log >&2; exit 1
+  echo "serve: nothing answered on port $port" >&2; cat $LOGF >&2; exit 1
 }
 unserve() {
   [ -n "$SERVER" ] || return 0
-  kill -- -"$(cat /tmp/mo-serve.pid)" 2>/dev/null; rm -f /tmp/mo-serve.pid
+  kill -- -"$(cat $PIDF)" 2>/dev/null; rm -f $PIDF
   SERVER=; sleep 0.5
 }
 trap unserve EXIT

@@ -15,7 +15,7 @@ not a block byte for byte, and exits 1 if there is one. A transcript fence is
 a fence with no info string whose first line is a prompt."""
 import json, pathlib, re, sys
 
-lesson, out = pathlib.Path(sys.argv[1]), sys.argv[2]
+lesson, out = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2]
 check = "--check" in sys.argv
 blocks, name = {}, None
 for line in open(out, encoding="utf-8").read().split("\n"):
