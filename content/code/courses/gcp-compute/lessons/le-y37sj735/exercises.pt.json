@@ -1,0 +1,441 @@
+{
+  "ex-k79j3knw": {
+    "prompt": "Um Secret do Kubernetes guarda uma chave de conta de serviço em base64. Quem consegue ler a chave?",
+    "hint": "Base64 é um cadeado?",
+    "choices": [
+      {
+        "text": "Só o pod que o monta, que tem a chave para decifrar",
+        "why": "Não há o que decifrar; base64 não tem chave."
+      },
+      {
+        "text": "Qualquer um com acesso de leitura ao Secret",
+        "why": "Isso. Base64 é uma codificação, e uma linha a desfaz."
+      },
+      {
+        "text": "Ninguém, porque o Kubernetes cifra Secrets com a chave do cluster",
+        "why": "Criptografia em repouso protege o disco, não de quem pode ler o Secret."
+      },
+      {
+        "text": "Só o Google, que emitiu a chave",
+        "why": "O Google não guarda cópia da chave privada; quem tem o arquivo tem a chave."
+      }
+    ]
+  },
+  "ex-kpk0w87c": {
+    "prompt": "Uma chave criada para um teste há três anos aparece num log antigo de CI. O que ela ainda faz?",
+    "hint": "Uma chave gerenciada pelo usuário expira sozinha?",
+    "choices": [
+      {
+        "text": "Nada: chaves expiram em noventa dias",
+        "why": "Nenhum prazo vale, a menos que uma política da organização defina."
+      },
+      {
+        "text": "Só leitura, porque chaves antigas são rebaixadas",
+        "why": "Nada rebaixa uma chave."
+      },
+      {
+        "text": "Tudo que a conta de serviço tem permissão de fazer, de qualquer lugar",
+        "why": "Isso. Até alguém apagá-la, ela é a conta de serviço."
+      },
+      {
+        "text": "Só funciona de dentro do cluster que a usava",
+        "why": "Uma chave funciona de qualquer computador."
+      }
+    ]
+  },
+  "ex-qze1zjmh": {
+    "prompt": "Base64 é uma codificação, não ___.",
+    "hint": "O que precisaria de chave para desfazer?",
+    "blanks": [
+      {
+        "accept": [
+          "criptografia",
+          "cifragem"
+        ]
+      }
+    ]
+  },
+  "ex-tv9v32kg": {
+    "prompt": "Qual política de organização impede qualquer um de criar chaves de conta de serviço?",
+    "hint": "O nome dela diz o que desliga.",
+    "choices": [
+      {
+        "text": "iam.workloadIdentityUser",
+        "why": "Isso é um papel, o que a seção 03 concede."
+      },
+      {
+        "text": "storage.objectViewer",
+        "why": "Um papel do Storage, sem relação com chaves."
+      },
+      {
+        "text": "iam.disableServiceAccountKeyCreation",
+        "why": "Isso."
+      },
+      {
+        "text": "GKE_METADATA",
+        "why": "Uma configuração de node pool, não uma política."
+      }
+    ]
+  },
+  "ex-kj5fjsn8": {
+    "prompt": "Quais destes são problemas de uma chave estática? Escolha todos os que se aplicam.",
+    "hint": "Pense em vazar, acabar e trocar.",
+    "choices": [
+      {
+        "text": "Uma cópia vaza sem sinal no log de auditoria",
+        "why": "Isso; a chave vazada parece a conta de serviço."
+      },
+      {
+        "text": "Trocá-la exige atualizar todo Secret que a guarda",
+        "why": "Isso; por isso é adiada."
+      },
+      {
+        "text": "Para de funcionar quando o pod reinicia",
+        "why": "Continua funcionando, que é o problema."
+      },
+      {
+        "text": "Só pode ser usada contra o Cloud Storage",
+        "why": "Ela age como a conta de serviço em qualquer API."
+      }
+    ]
+  },
+  "ex-1td9pvey": {
+    "prompt": "Qual é o workload pool de todo cluster do projeto planner-dev?",
+    "hint": "Um por projeto.",
+    "choices": [
+      {
+        "text": "shop.svc.id.goog, com o nome do cluster",
+        "why": "O pool tem o nome do projeto."
+      },
+      {
+        "text": "planner-dev.svc.id.goog, comum aos clusters dele",
+        "why": "Isso; compartilhado por todo cluster do projeto com ele ligado."
+      },
+      {
+        "text": "planner-dev.iam.gserviceaccount.com",
+        "why": "Esse é o domínio dos e-mails das contas de serviço do Google."
+      },
+      {
+        "text": "Um pool criado por namespace",
+        "why": "Namespaces ficam dentro dos nomes do pool, não são pools próprios."
+      }
+    ]
+  },
+  "ex-gshr4xf7": {
+    "prompt": "Onde o roles/iam.workloadIdentityUser é concedido na seção 03?",
+    "hint": "A vinculação deixa uma identidade usar algo.",
+    "choices": [
+      {
+        "text": "No bucket shop-photos",
+        "why": "O bucket recebe storage.objectViewer."
+      },
+      {
+        "text": "No projeto, para todas as contas de serviço",
+        "why": "Concedê-lo no projeto deixaria o pod agir como qualquer uma."
+      },
+      {
+        "text": "Na conta de serviço do Kubernetes, pela anotação",
+        "why": "A anotação nomeia um e-mail; vinculações do IAM ficam no Google, não no cluster."
+      },
+      {
+        "text": "Na conta de serviço do Google photos-reader",
+        "why": "Isso; deixa [shop/photos] agir como aquela conta."
+      }
+    ]
+  },
+  "ex-97bqbhm2": {
+    "prompt": "O terraform validate recusou member = \"planner-dev.svc.id.goog[shop/photos]\". O que faltava?",
+    "hint": "Um membro diz o tipo primeiro.",
+    "choices": [
+      {
+        "text": "O prefixo serviceAccount: antes do nome",
+        "why": "Isso. Todo membro diz o tipo antes da identidade."
+      },
+      {
+        "text": "O número do projeto antes do pool",
+        "why": "Só a forma principal:// leva número."
+      },
+      {
+        "text": "Aspas em volta dos colchetes",
+        "why": "Os colchetes fazem parte do nome e não precisam de aspas."
+      },
+      {
+        "text": "Um namespace diferente de shop",
+        "why": "shop está certo; o problema era o formato."
+      }
+    ]
+  },
+  "ex-e9mfvtk9": {
+    "prompt": "Uma ServiceAccount do Kubernetes diz qual identidade do Google usa com a anotação iam.gke.io/gcp-service-___.",
+    "hint": "A última palavra da chave da anotação.",
+    "blanks": [
+      {
+        "accept": [
+          "account"
+        ]
+      }
+    ]
+  },
+  "ex-z077161j": {
+    "prompt": "Num cluster Standard, o node pool não tem workload_metadata_config GKE_METADATA, e todo o resto da seção 03 está no lugar. O que o pod photos recebe ao pedir um token?",
+    "hint": "Quem responde 169.254.169.254 nesse nó?",
+    "choices": [
+      {
+        "text": "Um token de photos-reader, porque a vinculação existe",
+        "why": "A vinculação nem é consultada; o servidor do GKE não está no caminho."
+      },
+      {
+        "text": "Um erro, porque nenhum servidor de metadados roda no nó",
+        "why": "O servidor de metadados do próprio nó responde."
+      },
+      {
+        "text": "Um token da conta de serviço do próprio nó",
+        "why": "Isso. É o vazamento que o GKE_METADATA fecha."
+      },
+      {
+        "text": "A chave do Secret antigo, se ele ainda existir",
+        "why": "O servidor de metadados não sabe nada de Secrets."
+      }
+    ]
+  },
+  "ex-b0c2ev02": {
+    "prompt": "Quantos recursos o plan do wi/main.tf acrescentou?",
+    "hint": "Conta, vinculação na conta, vinculação no bucket.",
+    "unit": "recursos"
+  },
+  "ex-3sqe3943": {
+    "prompt": "Ponha os passos da troca de token em ordem.",
+    "hint": "O pod pede primeiro, o Storage é chamado por último.",
+    "items": [
+      "A biblioteca cliente pede um token a 169.254.169.254",
+      "O servidor de metadados do GKE obtém o token da conta de serviço do Kubernetes",
+      "O Security Token Service devolve um token federado",
+      "A API de credenciais do IAM emite um token de photos-reader",
+      "A biblioteca chama o Cloud Storage com ele"
+    ]
+  },
+  "ex-2jxxthap": {
+    "prompt": "Um pod recebe \"iam.serviceAccounts.getAccessToken denied\". Qual passo falhou, e qual a causa de costume?",
+    "hint": "Qual chamada pede um token de photos-reader?",
+    "choices": [
+      {
+        "text": "Passo 5: o bucket não tem papel para photos-reader",
+        "why": "Isso dá um 403 do Storage, depois de o token sair."
+      },
+      {
+        "text": "Passo 2: o node pool não tem GKE_METADATA",
+        "why": "Aí o pod receberia o token do nó, não este erro."
+      },
+      {
+        "text": "Passo 4: a vinculação workloadIdentityUser falta ou tem nome errado",
+        "why": "Isso; um erro de digitação em [shop/photos] é o de costume."
+      },
+      {
+        "text": "Passo 1: o contêiner não alcança o endereço 169.254.169.254 de jeito nenhum",
+        "why": "Aí nem haveria erro do IAM."
+      }
+    ]
+  },
+  "ex-1k01b4kw": {
+    "prompt": "Por quanto tempo vale o token de acesso que o pod recebe?",
+    "hint": "Curta duração, e renovado pela biblioteca.",
+    "choices": [
+      {
+        "text": "Até o pod ser apagado",
+        "why": "Tokens expiram sozinhos."
+      },
+      {
+        "text": "Noventa dias, como uma chave trocada",
+        "why": "Nada nesta troca dura dias."
+      },
+      {
+        "text": "Cerca de uma hora",
+        "why": "Isso; um token roubado para de funcionar dentro da hora."
+      },
+      {
+        "text": "Enquanto o nó continuar rodando",
+        "why": "A vida do nó não define a do token."
+      }
+    ]
+  },
+  "ex-2asdd63v": {
+    "prompt": "O Deployment roda no namespace shops, e a vinculação nomeia [shop/photos]. O que acontece, e por que é difícil de perceber?",
+    "hint": "O IAM compara nomes exatamente.",
+    "choices": [
+      {
+        "text": "O IAM casa shop com shops e concede o token",
+        "why": "Nomes são comparados exatamente; não há correspondência aproximada."
+      },
+      {
+        "text": "O passo 4 é negado, e o IAM vê duas identidades sem reclamar",
+        "why": "Isso. Nada é inválido; só nomeia outra identidade."
+      },
+      {
+        "text": "O terraform validate recusa a vinculação porque parece erro de digitação",
+        "why": "O membro está bem formado; o validate não sabe o namespace."
+      },
+      {
+        "text": "O pod volta para a conta de serviço do nó",
+        "why": "Com GKE_METADATA não há volta para o nó."
+      }
+    ]
+  },
+  "ex-npjw4p3z": {
+    "prompt": "O pod alcança o servidor de metadados com o cabeçalho Metadata-Flavor: ___.",
+    "hint": "O mesmo do Compute Engine.",
+    "blanks": [
+      {
+        "accept": [
+          "Google"
+        ]
+      }
+    ]
+  },
+  "ex-7k0yvyj5": {
+    "prompt": "O que o identificador principal:// de uma concessão direta traz que membros serviceAccount: não trazem?",
+    "hint": "Doze dígitos.",
+    "choices": [
+      {
+        "text": "O número do projeto",
+        "why": "Isso; não o id, o número que o Google atribui."
+      },
+      {
+        "text": "O e-mail da conta de serviço do Google",
+        "why": "Uma concessão direta não tem conta de serviço do Google."
+      },
+      {
+        "text": "O nome do cluster",
+        "why": "O pool é por projeto; nenhum cluster é nomeado."
+      },
+      {
+        "text": "Uma data de validade da concessão",
+        "why": "Concessões não trazem validade aqui."
+      }
+    ]
+  },
+  "ex-82x2rjq9": {
+    "prompt": "Por que project_number é uma variável com doze zeros no wi/direct.tf?",
+    "hint": "O planner-dev existe no Google?",
+    "choices": [
+      {
+        "text": "Zeros querem dizer \"este projeto\" para o IAM",
+        "why": "O IAM não dá significado especial a zeros."
+      },
+      {
+        "text": "O provider preenche no plan o número real que pede ao Google",
+        "why": "Nada chega ao Google para perguntar."
+      },
+      {
+        "text": "O planner-dev deste laboratório não tem um; é um substituto",
+        "why": "Isso. Num projeto real a variável recebe o número de verdade."
+      },
+      {
+        "text": "Números de projeto são segredo e não podem ser escritos",
+        "why": "Um número de projeto é um identificador, não um segredo."
+      }
+    ]
+  },
+  "ex-08sr55y2": {
+    "prompt": "O job noturno da loja numa máquina virtual precisa ler shop-photos com a mesma identidade do pod. Qual arranjo serve?",
+    "hint": "Qual identidade existe fora do cluster?",
+    "choices": [
+      {
+        "text": "Uma concessão direta a principal://.../ns/shop/sa/photos para os dois",
+        "why": "Esse principal só existe dentro do pool do cluster."
+      },
+      {
+        "text": "Um arquivo de chave para a máquina virtual, ao lado do job",
+        "why": "Isso traz de volta o problema da seção 01."
+      },
+      {
+        "text": "O jeito com conta de serviço: os dois agem como photos-reader",
+        "why": "Isso. Uma conta de serviço do Google com nome, um lugar para conceder e revogar."
+      },
+      {
+        "text": "Duas concessões diretas com números de projeto diferentes",
+        "why": "A máquina virtual nem é uma identidade do Kubernetes."
+      }
+    ]
+  },
+  "ex-qdrrace4": {
+    "prompt": "O que a concessão direta remove, comparada com a seção 03? Escolha todas as que se aplicam.",
+    "hint": "Uma identidade, uma vinculação.",
+    "choices": [
+      {
+        "text": "A conta de serviço do Google photos-reader",
+        "why": "Isso; não há o que personificar."
+      },
+      {
+        "text": "A vinculação workloadIdentityUser",
+        "why": "Isso; ninguém age como ninguém."
+      },
+      {
+        "text": "O workload pool planner-dev.svc.id.goog",
+        "why": "O principal é nomeado dentro desse pool."
+      },
+      {
+        "text": "O papel no bucket",
+        "why": "Algum papel no bucket é o objetivo todo."
+      }
+    ]
+  },
+  "ex-tys4q3rt": {
+    "prompt": "O account_id de uma conta de serviço precisa ter entre 6 e quantos caracteres?",
+    "hint": "A recusa do provider disse.",
+    "unit": "caracteres"
+  },
+  "ex-hbt6hsx2": {
+    "prompt": "Ligue cada sintoma ao passo da troca que falhou.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "Um token da conta de serviço do nó",
+        "right": "Passo 2, sem GKE_METADATA"
+      },
+      {
+        "left": "getAccessToken denied",
+        "right": "Passo 4, vinculação ausente ou com nome errado"
+      },
+      {
+        "left": "Um token, depois 403 do Storage",
+        "right": "Passo 5, sem papel no bucket"
+      }
+    ],
+    "right_distractors": [
+      "Passo 3, o token federado expirou"
+    ]
+  },
+  "ex-jh1qfdah": {
+    "prompt": "Depois de passar para o Workload Identity, o que deve acontecer com o Secret photos-key antigo e a chave dele?",
+    "hint": "Uma chave funciona até alguém apagá-la.",
+    "choices": [
+      {
+        "text": "Mantê-los como reserva caso a troca falhe",
+        "why": "Uma chave de reserva é o vazamento que você quis remover."
+      },
+      {
+        "text": "Apagar o Secret; a chave expira sozinha depois",
+        "why": "A chave não expira sozinha."
+      },
+      {
+        "text": "Nada: o Workload Identity desliga chaves sozinho",
+        "why": "Nada desliga uma chave existente por você."
+      },
+      {
+        "text": "Apagar a chave no Google e o Secret no cluster",
+        "why": "Isso. Até a chave ser apagada, toda cópia continua funcionando."
+      }
+    ]
+  },
+  "ex-nm953cmp": {
+    "prompt": "Um workload pool é sempre o id do projeto seguido de .svc.id.___.",
+    "hint": "Quatro letras, do próprio Google.",
+    "blanks": [
+      {
+        "accept": [
+          "goog"
+        ]
+      }
+    ]
+  }
+}

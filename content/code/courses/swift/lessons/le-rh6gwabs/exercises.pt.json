@@ -1,0 +1,452 @@
+{
+  "ex-acgke5bg": {
+    "prompt": "Quando o ARC libera uma instância de classe?",
+    "hint": "Pense no que é contado.",
+    "choices": [
+      {
+        "text": "Quando o programa está com pouca memória",
+        "why": "Isso descreve um coletor; o ARC libera numa linha que você aponta, seja qual for a memória livre."
+      },
+      {
+        "text": "Na linha em que sua última referência forte sai",
+        "why": "Isso: a contagem chega a zero ali, e o `deinit` roda antes da próxima linha."
+      },
+      {
+        "text": "No fim da função que a criou, seja o que for que ainda a segure",
+        "why": "Só se nenhuma outra referência a segurar até lá; o `second` manteve a sessão depois de `first = nil`."
+      },
+      {
+        "text": "Quando nada alcançável aponta para ela",
+        "why": "Essa é a regra de um coletor, e a seção 03 é o caso em que as duas diferem."
+      }
+    ]
+  },
+  "ex-7yqwqx7s": {
+    "prompt": "No `Arc.swift`, depois de qual linha apareceu `session of 45 freed`?",
+    "hint": "Dois nomes seguravam a sessão.",
+    "choices": [
+      {
+        "text": "`first = nil`",
+        "why": "O `second` ainda a segurava, então a contagem foi de dois para um."
+      },
+      {
+        "text": "`second = nil`",
+        "why": "Isso: a última referência forte soltou, e a contagem chegou a zero."
+      },
+      {
+        "text": "`var second = first`",
+        "why": "Atribuir uma instância de classe soma uma referência; não libera nada."
+      },
+      {
+        "text": "A última linha do programa",
+        "why": "Ela foi liberada no meio, antes de `both are nil` ser impresso."
+      }
+    ]
+  },
+  "ex-jcma5khg": {
+    "prompt": "Quais destes são contados pelo ARC? Escolha todos os que se aplicam.",
+    "hint": "Valores são copiados, não compartilhados.",
+    "choices": [
+      {
+        "text": "Uma instância de uma `final class`",
+        "why": "Sim: toda instância de classe carrega uma contagem."
+      },
+      {
+        "text": "Uma `struct` com dois `Int`",
+        "why": "Não: uma struct é um valor, copiado na atribuição."
+      },
+      {
+        "text": "Uma closure guardada numa propriedade",
+        "why": "Sim: uma closure guardada é uma referência, e é assim que o ciclo da seção 06 se forma."
+      },
+      {
+        "text": "Um caso de `enum`",
+        "why": "Não: um enum é um tipo de valor."
+      }
+    ]
+  },
+  "ex-1f71s93p": {
+    "prompt": "O `Cycle.swift` não imprimiu linha nenhuma de `deinit`. Por quê?",
+    "choices": [
+      {
+        "text": "O `deinit` só roda quando o programa inteiro termina, nunca antes",
+        "why": "O `Arc.swift` mostrou o `deinit` rodando no meio do programa."
+      },
+      {
+        "text": "O `plan()` nunca retornou",
+        "why": "Ele imprimiu `plan() is returning` e o programa seguiu."
+      },
+      {
+        "text": "O curso e a sessão se seguram com força",
+        "why": "Isso: cada contagem fica em um depois que `plan()` retorna, então nenhuma chega a zero."
+      },
+      {
+        "text": "Uma `final class` não tem chamada de `deinit`",
+        "why": "O `final` só proíbe subclasses."
+      }
+    ]
+  },
+  "ex-6458efd8": {
+    "prompt": "Um objeto de tela segura um objeto timer, e o timer segura a tela para atualizá-la. As duas propriedades são comuns. O que acontece cada vez que a pessoa sai da tela?",
+    "hint": "Desenhe as setas.",
+    "choices": [
+      {
+        "text": "A tela é liberada, e o timer junto",
+        "why": "A referência do timer mantém a contagem da tela acima de zero."
+      },
+      {
+        "text": "O compilador se recusa a gerar o par",
+        "why": "A seção 03 compilou um ciclo sem aviso: cada propriedade está certa sozinha."
+      },
+      {
+        "text": "Os dois ficam na memória, e o timer continua disparando",
+        "why": "Isso: um ciclo, repetido a cada visita, com timers vivos dentro."
+      },
+      {
+        "text": "O app quebra ao sair da tela",
+        "why": "Um ciclo não quebra nada; ele retém memória, e por isso passa despercebido."
+      }
+    ]
+  },
+  "ex-gd34twjh": {
+    "prompt": "Um laço de referências fortes sem nada de fora apontando para dentro é um ___ de retenção.",
+    "hint": "O título da seção.",
+    "blanks": [
+      {
+        "accept": [
+          "ciclo"
+        ]
+      }
+    ]
+  },
+  "ex-hnyyfgg2": {
+    "prompt": "No que uma referência `weak` se transforma quando o objeto para o qual apontava é liberado?",
+    "choices": [
+      {
+        "text": "`nil`",
+        "why": "Isso: o Swift a ajusta, e por isso ela precisa ser um `var` opcional."
+      },
+      {
+        "text": "Uma cópia do objeto, mantida viva",
+        "why": "Nada é copiado; a referência simplesmente não tem para onde apontar."
+      },
+      {
+        "text": "Um ponteiro solto que quebra quando lido",
+        "why": "Isso é o que o `unowned` evita parando o programa."
+      },
+      {
+        "text": "Uma referência forte, para manter o objeto",
+        "why": "Uma referência fraca nunca vira forte sozinha."
+      }
+    ]
+  },
+  "ex-t62wjdz0": {
+    "prompt": "Por que `weak let course: Course` não compila?",
+    "hint": "Algo precisa mudá-la, e para quê.",
+    "choices": [
+      {
+        "text": "`weak` só funciona em structs",
+        "why": "É o contrário: só referências de classe podem ser fracas."
+      },
+      {
+        "text": "O Swift precisa poder pô-la em `nil` depois",
+        "why": "Isso: então ela tem de ser `var`, e de um tipo opcional."
+      },
+      {
+        "text": "Um `let` não pode guardar uma instância de classe",
+        "why": "`let session = StudySession(...)` guarda uma em todo programa daqui."
+      },
+      {
+        "text": "Propriedades de uma `final class` são só de leitura",
+        "why": "`sessions` é uma propriedade `var` de uma classe final."
+      }
+    ]
+  },
+  "ex-bf0cg7ph": {
+    "prompt": "Um curso e suas sessões apontam um para o outro. Qual referência deve ser `weak`?",
+    "hint": "Quem é dono de quem?",
+    "choices": [
+      {
+        "text": "O array `sessions` do curso",
+        "why": "Aí nada seria dono das sessões, e elas seriam liberadas assim que adicionadas."
+      },
+      {
+        "text": "A propriedade `course` da sessão",
+        "why": "Isso: o pai segura o filho com força, e o filho aponta de volta com `weak`."
+      },
+      {
+        "text": "As duas, para ficar a salvo de todo ciclo de uma vez",
+        "why": "Com as duas fracas, só nomes locais segurariam algum dos objetos."
+      },
+      {
+        "text": "Nenhuma: o ARC acha o laço sozinho",
+        "why": "O ARC conta; ele não procura laços."
+      }
+    ]
+  },
+  "ex-3pg5kk2x": {
+    "prompt": "No `Weak.swift`, quantas referências fortes seguram o curso logo depois que `plan()` retorna?",
+    "hint": "A referência da sessão é fraca, e `swift` era local."
+  },
+  "ex-2xwn65rs": {
+    "prompt": "O que acontece quando o código lê uma referência `unowned` cujo objeto foi liberado?",
+    "choices": [
+      {
+        "text": "Lê `nil`",
+        "why": "Isso é `weak`; uma referência unowned não é opcional."
+      },
+      {
+        "text": "Lê o que estiver naquela memória agora",
+        "why": "O Swift confere, e não lê memória liberada em silêncio."
+      },
+      {
+        "text": "O programa para com um erro fatal que diz o que ele leu",
+        "why": "Isso: `Attempted to read an unowned reference but object … was already destroyed`."
+      },
+      {
+        "text": "O objeto é criado de novo",
+        "why": "Nada recria um objeto que foi liberado."
+      }
+    ]
+  },
+  "ex-n1hqysxc": {
+    "prompt": "Um colega escreve `unowned let course` numa sessão, argumentando que cursos sempre vivem mais que sessões. Um ano depois, as sessões passam a ficar num cache para o modo offline. Qual o risco?",
+    "hint": "Quem segura as sessões agora?",
+    "choices": [
+      {
+        "text": "Nenhum, porque o `unowned` se adapta ao novo dono",
+        "why": "O `unowned` é uma promessa escrita uma vez; ele não acompanha mudanças posteriores."
+      },
+      {
+        "text": "Uma leitura depois que o pai foi liberado para o programa",
+        "why": "Isso: a promessa era verdade quando escrita e deixou de ser longe daquela linha."
+      },
+      {
+        "text": "Um ciclo de retenção entre o cache e o curso",
+        "why": "O `unowned` não soma referência forte, então não fecha um laço."
+      },
+      {
+        "text": "Um erro de compilação",
+        "why": "O compilador não enxerga tempos de vida através de um cache."
+      }
+    ]
+  },
+  "ex-jgvnfmnx": {
+    "prompt": "Ligue cada tipo de referência ao que ela faz.",
+    "hint": "A tabela no fim da seção 05.",
+    "pairs": [
+      {
+        "left": "um `var course: Course?` comum",
+        "right": "Soma um na contagem"
+      },
+      {
+        "left": "`weak var course: Course?`",
+        "right": "Lê `nil` quando o curso já foi"
+      },
+      {
+        "left": "`unowned let course: Course`",
+        "right": "Para o programa se lida depois que o curso já foi"
+      }
+    ],
+    "right_distractors": [
+      "Copia o curso na atribuição"
+    ]
+  },
+  "ex-rg02ynfe": {
+    "prompt": "No `Closures.swift`, qual contagem regressiva não imprimiu linha de `deinit`?",
+    "choices": [
+      {
+        "text": "A de Swift",
+        "why": "Isso: o objeto segura a closure e a closure segura o objeto."
+      },
+      {
+        "text": "A de Kotlin",
+        "why": "A closure dela usou `[weak self]`, e ela foi liberada."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "`Kotlin countdown freed` foi impresso."
+      },
+      {
+        "text": "As duas",
+        "why": "Uma delas foi liberada quando `run` retornou."
+      }
+    ]
+  },
+  "ex-g213t30z": {
+    "prompt": "Por que uma closure passada para o `map` pode usar `self` sem risco de ciclo?",
+    "hint": "Quando ela some?",
+    "choices": [
+      {
+        "text": "O `map` copia o `self` antes de chamá-la",
+        "why": "Nada é copiado; a closure simplesmente não sobrevive à chamada."
+      },
+      {
+        "text": "Closures nunca capturam `self`",
+        "why": "A closure guardada da seção 06 capturou, e vazou."
+      },
+      {
+        "text": "Ela não escapa",
+        "why": "Isso: só uma closure guardada pode ser metade de um laço."
+      },
+      {
+        "text": "O `map` captura `self` com `weak` por padrão",
+        "why": "Não existe esse padrão; a closure apenas vive pouco."
+      }
+    ]
+  },
+  "ex-mh4hn1ds": {
+    "prompt": "Para capturar `self` sem somar na contagem, uma closure guardada começa com a lista de captura `[___ self]`.",
+    "hint": "A palavra que a seção 04 apresentou.",
+    "blanks": [
+      {
+        "accept": [
+          "weak"
+        ]
+      }
+    ]
+  },
+  "ex-352s8nkx": {
+    "prompt": "Ponha os passos da closure de `weakReport()` na ordem em que acontecem quando ela roda depois que a contagem foi liberada.",
+    "hint": "Ela termina cedo.",
+    "items": [
+      "A closure é chamada",
+      "O `self` dentro dela lê `nil`",
+      "O `guard let self` falha",
+      "O `return` sai sem imprimir"
+    ]
+  },
+  "ex-2ep5daet": {
+    "prompt": "O que o LeakSanitizer relata?",
+    "choices": [
+      {
+        "text": "Todo objeto que tem um `deinit`",
+        "why": "Um `deinit` não diz nada sobre se um objeto vazou."
+      },
+      {
+        "text": "A memória para a qual nada alcançável aponta, na saída",
+        "why": "Isso: um ciclo são dois blocos alcançáveis só um pelo outro."
+      },
+      {
+        "text": "Toda referência forte do programa, com sua contagem",
+        "why": "Ele relata memória vazada, e nenhuma contagem."
+      },
+      {
+        "text": "As linhas em que faltou `weak`",
+        "why": "Ele mostra onde a memória vazada foi alocada, não onde vai a correção."
+      }
+    ]
+  },
+  "ex-fknkbdjh": {
+    "prompt": "Quantos bytes o LeakSanitizer relatou como vazados no `Cycle.swift`?",
+    "hint": "A linha `SUMMARY`."
+  },
+  "ex-mhsx920q": {
+    "prompt": "Por que a seção 07 passou o programa com sanitizer pelo `swift demangle`?",
+    "choices": [
+      {
+        "text": "Para tirar os avisos do linker",
+        "why": "Esses vieram do build, e o `grep -c` os contou."
+      },
+      {
+        "text": "Para rodar a verificação de vazamento de novo, mais rápido",
+        "why": "O `swift demangle` lê texto; não roda nada."
+      },
+      {
+        "text": "Para ler os nomes mutilados",
+        "why": "Isso: `$s4main6CourseC4name…` vira `Course.__allocating_init(name:)`."
+      },
+      {
+        "text": "Para recuperar as linhas de `print` que o sanitizer perdeu",
+        "why": "Elas nunca foram escritas; o demangle não as traz de volta."
+      }
+    ]
+  },
+  "ex-h71fabf0": {
+    "prompt": "Você suspeita de um vazamento na tela de configurações de um app e só tem uma máquina Linux com este toolchain. Qual a primeira verificação mais barata?",
+    "hint": "O último parágrafo da seção 07.",
+    "choices": [
+      {
+        "text": "Abrir o grafo de memória do Xcode",
+        "why": "O Xcode não existe no Linux."
+      },
+      {
+        "text": "Reescrever toda propriedade guardada das classes da tela como `unowned`",
+        "why": "Isso troca um vazamento por quebras, sem achar nada."
+      },
+      {
+        "text": "Tornar toda classe uma struct e toda struct uma classe",
+        "why": "Uma reescrita não é uma verificação."
+      },
+      {
+        "text": "Um `deinit` que imprime nos suspeitos, e sair da tela",
+        "why": "Isso: uma linha de `deinit` faltando aponta o objeto a olhar."
+      }
+    ]
+  },
+  "ex-n873tezx": {
+    "prompt": "Qual destes pares pode formar um ciclo de retenção?",
+    "hint": "Algo precisa ser contado dos dois lados.",
+    "choices": [
+      {
+        "text": "Duas structs, cada uma com a outra num array",
+        "why": "Structs são copiadas, não contadas; e uma struct não contém a si mesma assim."
+      },
+      {
+        "text": "Uma classe e uma closure dela que usa `self`",
+        "why": "Isso: o vazamento da seção 06."
+      },
+      {
+        "text": "Uma classe e uma propriedade `Int`",
+        "why": "Um `Int` não aponta para nada."
+      },
+      {
+        "text": "Uma classe e uma propriedade `weak` de volta para o pai",
+        "why": "O lado fraco não conta, que é a correção da seção 04."
+      }
+    ]
+  },
+  "ex-4nqcee1t": {
+    "prompt": "Uma `Countdown` guarda `onFinish` e a closure usa `self`. Que mudanças acabam com o vazamento? Escolha todas as que se aplicam.",
+    "hint": "Quebre uma seta do laço.",
+    "choices": [
+      {
+        "text": "`[weak self]` na closure, com `guard let self`",
+        "why": "Sim: a closure não conta mais."
+      },
+      {
+        "text": "Pôr `onFinish = nil` depois de chamá-la",
+        "why": "Sim: o objeto solta a closure, então o laço se abre."
+      },
+      {
+        "text": "Marcar a classe como `final`",
+        "why": "O `final` muda a herança, não as referências."
+      },
+      {
+        "text": "Escrever `self.course` em vez de `course`",
+        "why": "Isso só torna a captura visível; ela continua forte."
+      }
+    ]
+  },
+  "ex-r31pz74d": {
+    "prompt": "Qual afirmação sobre o ARC é verdadeira?",
+    "choices": [
+      {
+        "text": "Ele libera objetos em momentos imprevisíveis",
+        "why": "O ARC é determinístico: as mesmas linhas, toda execução."
+      },
+      {
+        "text": "Ele precisa de um `deinit` para liberar um objeto",
+        "why": "O `deinit` é opcional; ele só deixa você agir na saída."
+      },
+      {
+        "text": "Ele acha e quebra ciclos de retenção",
+        "why": "Ele não enxerga um laço; você o quebra com `weak` ou `unowned`."
+      },
+      {
+        "text": "Ele conta referências fortes",
+        "why": "Isso: e libera a instância quando a contagem chega a zero."
+      }
+    ]
+  }
+}

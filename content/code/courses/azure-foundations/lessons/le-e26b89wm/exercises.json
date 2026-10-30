@@ -1,0 +1,620 @@
+[
+ {
+  "id": "ex-hmq8x4dr",
+  "version": 1,
+  "section": "what-a-move-is",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`vnet-shop-prod` is moved from `rg-shop-prod` to `rg-shop-prod-network` in the same subscription. What changes?",
+  "hint": "Read the id before and after.",
+  "choices": [
+   {
+    "text": "Its region, to the destination group's region",
+    "correct": false,
+    "why": "A move never changes the region. The group's own location is only where its record lives."
+   },
+   {
+    "text": "Nothing, as long as both groups are in one subscription",
+    "correct": false,
+    "why": "Even inside one subscription the group is part of the id, so the id changes."
+   },
+   {
+    "text": "Its address space, which is renumbered on arrival",
+    "correct": false,
+    "why": "Nothing about the network itself changes. Its users notice nothing."
+   },
+   {
+    "text": "Its resource id",
+    "correct": true,
+    "why": "Right. The group in the path is rewritten, and so is everything that stored the old path."
+   }
+  ]
+ },
+ {
+  "id": "ex-c2a3ya29",
+  "version": 1,
+  "section": "what-a-move-is",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "While a move from `rg-shop-prod` to `rg-shop-prod-network` runs, a release pipeline tries to deploy a web app into `rg-shop-prod`. What happens to the release?",
+  "hint": "Both groups are in the same state during a move.",
+  "choices": [
+   {
+    "text": "It is refused: both groups are locked",
+    "correct": true,
+    "why": "Right. Existing resources keep working; nothing in either group can be created or changed."
+   },
+   {
+    "text": "It is queued and runs when the move finishes",
+    "correct": false,
+    "why": "Nothing queues it. The request is refused, and the pipeline has to try again."
+   },
+   {
+    "text": "It succeeds, since the web app is not being moved",
+    "correct": false,
+    "why": "The lock is on the whole group, not only on the resources being moved."
+   },
+   {
+    "text": "It lands in `rg-shop-prod-network` instead",
+    "correct": false,
+    "why": "A deployment goes where it is aimed or nowhere."
+   }
+  ]
+ },
+ {
+  "id": "ex-7eqfjfav",
+  "version": 1,
+  "section": "what-a-move-is",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "bia had the Contributor role assigned directly on `vnet-shop-prod`. The network moves to another resource group. What happens to her assignment?",
+  "hint": "Does an assignment on the resource travel with it?",
+  "choices": [
+   {
+    "text": "It moves with the network",
+    "correct": false,
+    "why": "Assignments on the resource are left behind; that is the documented behaviour."
+   },
+   {
+    "text": "It stays behind, orphaned",
+    "correct": true,
+    "why": "Right. Azure removes the orphan eventually; the new one is yours to create."
+   },
+   {
+    "text": "It is converted into an assignment on the new group",
+    "correct": false,
+    "why": "Nothing converts it, and a group-wide grant would be a much wider permission."
+   },
+   {
+    "text": "The move is refused until the assignment is removed",
+    "correct": false,
+    "why": "The move goes ahead; Microsoft only recommends removing it first."
+   }
+  ]
+ },
+ {
+  "id": "ex-e7x9mnwg",
+  "version": 1,
+  "section": "what-a-move-is",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop moves `shop-staging` from `mg-shop-nonprod` to `mg-shop-prod`. Which statement is true the second it finishes?",
+  "hint": "A subscription's id does not mention its management group.",
+  "choices": [
+   {
+    "text": "Every resource id in `shop-staging` has changed",
+    "correct": false,
+    "why": "Resource ids name the subscription, never its management group."
+   },
+   {
+    "text": "The resources in it are locked until the move ends",
+    "correct": false,
+    "why": "Nothing is locked when a subscription changes branch."
+   },
+   {
+    "text": "Its resources now inherit production's policies",
+    "correct": true,
+    "why": "Right. Nothing is renamed and nothing moves; the rules that apply change at once."
+   },
+   {
+    "text": "Staging's resources are moved into production's region",
+    "correct": false,
+    "why": "A management group has no region, and nothing is relocated."
+   }
+  ]
+ },
+ {
+  "id": "ex-tnm0rbka",
+  "version": 1,
+  "section": "what-a-move-is",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A move between resource groups changes a resource's id and never its ___.",
+  "hint": "Azure Resource Mover exists for changing this.",
+  "blanks": [
+   {
+    "accept": [
+     "region",
+     "location"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-1hd6e06w",
+  "version": 1,
+  "section": "the-table",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Where does `moves.py` get its answers from?",
+  "hint": "Look at `URL`.",
+  "choices": [
+   {
+    "text": "From a page of Microsoft's documentation",
+    "correct": true,
+    "why": "Right. The same table the documentation shows, read as Markdown."
+   },
+   {
+    "text": "From a list built into the Azure CLI",
+    "correct": false,
+    "why": "The CLI carries no such list."
+   },
+   {
+    "text": "From Resource Manager, which it asks for each type",
+    "correct": false,
+    "why": "It never talks to Azure. It would be refused here if it did."
+   },
+   {
+    "text": "From a file the student writes by hand",
+    "correct": false,
+    "why": "It downloads the table every time it runs."
+   }
+  ]
+ },
+ {
+  "id": "ex-0b6nvq3n",
+  "version": 1,
+  "section": "the-table",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`moves.py` reported `Microsoft.Network/loadBalancers` as `depends` for subscriptions. What did the table's cell say?",
+  "hint": "A cell can carry both words.",
+  "choices": [
+   {
+    "text": "Nothing: load balancers are missing from the table",
+    "correct": false,
+    "why": "A missing type answers `?`, not `depends`."
+   },
+   {
+    "text": "Yes for the Basic SKU and No for the Standard",
+    "correct": true,
+    "why": "Right. Both words in one cell is what the program calls `depends`."
+   },
+   {
+    "text": "No, with a link to the networking guidance",
+    "correct": false,
+    "why": "A No with a link is still only a No once the link is stripped."
+   },
+   {
+    "text": "That it depends on the region of the subscription",
+    "correct": false,
+    "why": "Region is not part of the rule; the version of the product is."
+   }
+  ]
+ },
+ {
+  "id": "ex-ahhtqc0y",
+  "version": 1,
+  "section": "the-table",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop wants its NAT gateway in `rg-shop-prod-network` instead of `rg-shop-prod`. By the table, what is the way?",
+  "hint": "The NAT gateway's row says No twice.",
+  "choices": [
+   {
+    "text": "Move it with `az resource move`, since a move inside one subscription always works",
+    "correct": false,
+    "why": "The table's first column is exactly the move inside a subscription, and it says No."
+   },
+   {
+    "text": "Move the subnet it is attached to, and it follows",
+    "correct": false,
+    "why": "It is not a child of the subnet, and a subnet does not move alone either."
+   },
+   {
+    "text": "Ask Microsoft support to move it",
+    "correct": false,
+    "why": "Support cannot move a type the platform does not move."
+   },
+   {
+    "text": "Create a new one there and delete the old",
+    "correct": true,
+    "why": "Right. A type that cannot move is recreated, with a short change of outbound addresses."
+   }
+  ]
+ },
+ {
+  "id": "ex-g49nbwdr",
+  "version": 1,
+  "section": "the-table",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The table says Yes for moving `publicIPAddresses` between subscriptions. A VM uses a Standard public IP. Can the shop move the VM and its IP to `shop-shared`?",
+  "hint": "What does the page the row links to add?",
+  "choices": [
+   {
+    "text": "Yes: the table's Yes covers it",
+    "correct": false,
+    "why": "The cell is the start of the answer. The networking guidance adds the exception."
+   },
+   {
+    "text": "Yes, provided both are in one resource group",
+    "correct": false,
+    "why": "That is necessary for any move across subscriptions, and not enough here."
+   },
+   {
+    "text": "No: the linked guidance excludes that case",
+    "correct": true,
+    "why": "Right. A Yes in the table sends you to read the linked page."
+   },
+   {
+    "text": "Only after upgrading the IP from Basic to Standard",
+    "correct": false,
+    "why": "Standard is the version that cannot cross; upgrading goes the wrong way."
+   }
+  ]
+ },
+ {
+  "id": "ex-g1ac27np",
+  "version": 1,
+  "section": "the-table",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "On the day the lesson read it, how many resource types did Microsoft's move table list?",
+  "hint": "The first line `moves.py` printed.",
+  "value": 756,
+  "tolerance": 0,
+  "unit": "types"
+ },
+ {
+  "id": "ex-azc6q39r",
+  "version": 1,
+  "section": "the-table",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `moves.py` lower-case the type names it stores and looks up?",
+  "hint": "Lesson 2 typed an id carelessly.",
+  "choices": [
+   {
+    "text": "Because Azure ignores case in type names",
+    "correct": true,
+    "why": "Right. `virtualNetworks` and `virtualnetworks` are one type, so the lookup treats them as one."
+   },
+   {
+    "text": "To make the output shorter",
+    "correct": false,
+    "why": "Case does not change length, and the output prints the name as typed."
+   },
+   {
+    "text": "Because the table spells every type in capitals",
+    "correct": false,
+    "why": "The table spells them in lower case, and people type them otherwise."
+   },
+   {
+    "text": "Because Python dictionaries refuse capital letters",
+    "correct": false,
+    "why": "Dictionaries take any string as a key."
+   }
+  ]
+ },
+ {
+  "id": "ex-5pg6mhtv",
+  "version": 1,
+  "section": "moving-safely",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `validateMoveResources` do?",
+  "hint": "It is the check before the move.",
+  "choices": [
+   {
+    "text": "It moves the resources and rolls back if anything fails",
+    "correct": false,
+    "why": "It moves nothing at all."
+   },
+   {
+    "text": "It lists the types the subscription may hold",
+    "correct": false,
+    "why": "That is the provider registration, a different question."
+   },
+   {
+    "text": "It says whether the move would succeed",
+    "correct": true,
+    "why": "Right. The portal runs it before every move."
+   },
+   {
+    "text": "It locks the two groups in advance",
+    "correct": false,
+    "why": "The lock comes with the move itself."
+   }
+  ]
+ },
+ {
+  "id": "ex-yk2vk2qf",
+  "version": 1,
+  "section": "moving-safely",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A network is moved into `shop-shared`, which has never held a network. The move fails with *the subscription isn't registered for a resource type*. What fixes it?",
+  "hint": "Creating a resource does it on the way; a move does not.",
+  "choices": [
+   {
+    "text": "Moving the network to a new resource group first",
+    "correct": false,
+    "why": "The group is not the problem; the destination subscription is."
+   },
+   {
+    "text": "Raising the subscription's quota for networks",
+    "correct": false,
+    "why": "A quota failure says so; this message is about registration."
+   },
+   {
+    "text": "Signing in to the destination tenant instead",
+    "correct": false,
+    "why": "Both subscriptions trust the same tenant, or the move would have failed earlier."
+   },
+   {
+    "text": "Registering the provider there",
+    "correct": true,
+    "why": "Right. `az provider register --namespace Microsoft.Network` in `shop-shared`: the destination has to be registered before it can hold the provider's resources."
+   }
+  ]
+ },
+ {
+  "id": "ex-xg69jr4b",
+  "version": 1,
+  "section": "moving-safely",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of moving a VM whose network sits in another resource group to another subscription in order.",
+  "hint": "Dependencies have to share a group before they cross.",
+  "items": [
+   "check the types against the move table",
+   "move the network into the VM's group, inside the source subscription",
+   "validate the move with `validateMoveResources`",
+   "move the whole group's worth to the destination in one request",
+   "split them into groups again at the destination"
+  ],
+  "trap": "The validation comes after the gathering: it checks the move you are about to make, with everything already in one group."
+ },
+ {
+  "id": "ex-eafzcgmy",
+  "version": 1,
+  "section": "moving-safely",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`vnet-shop-prod` is peered with the hub. What does the networking guidance require before it moves?",
+  "hint": "Lesson 20's subject has to be undone.",
+  "choices": [
+   {
+    "text": "Nothing: peerings move with the network as children",
+    "correct": false,
+    "why": "The guidance says the peering has to be removed first."
+   },
+   {
+    "text": "Remove the peering, move, then make it again",
+    "correct": true,
+    "why": "Right. The two networks are disconnected for the duration."
+   },
+   {
+    "text": "Moving the hub network in the same request",
+    "correct": false,
+    "why": "The hub stays; it is the peering that has to go."
+   },
+   {
+    "text": "Converting the peering into a VPN connection",
+    "correct": false,
+    "why": "No such conversion is part of a move."
+   }
+  ]
+ },
+ {
+  "id": "ex-h5q7d4dc",
+  "version": 1,
+  "section": "moving-safely",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these make a move fail or be refused, by Microsoft's checklist? Choose all that apply.",
+  "hint": "Read the table of the section as a list of failures.",
+  "choices": [
+   {
+    "text": "A read-only lock on the destination group",
+    "correct": true,
+    "why": "Right. A lock on either group or subscription refuses it."
+   },
+   {
+    "text": "The two subscriptions trusting different tenants",
+    "correct": true,
+    "why": "Right. That is a change of directory, not a move."
+   },
+   {
+    "text": "The source and destination groups being in different regions",
+    "correct": false,
+    "why": "A group's location is only its record's; it does not stop a move."
+   },
+   {
+    "text": "No quota left in the destination",
+    "correct": true,
+    "why": "Right. What arrives counts against the destination's limits."
+   },
+   {
+    "text": "A resource with tags",
+    "correct": false,
+    "why": "Tags travel with a resource and stop nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-bh6jac3e",
+  "version": 1,
+  "section": "moving-safely",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A startup's subscription was opened with the founder's personal account, and now must join the company's tenant. Which warning from the lesson applies?",
+  "hint": "This is a change of directory, not a move.",
+  "choices": [
+   {
+    "text": "Every resource id will change and has to be updated",
+    "correct": false,
+    "why": "The subscription keeps its id; what is lost is everything tied to the old tenant."
+   },
+   {
+    "text": "The resources have to be moved to one group first",
+    "correct": false,
+    "why": "That is the rule for moving resources across subscriptions, not for changing a subscription's tenant."
+   },
+   {
+    "text": "The subscription must first be moved to the root management group",
+    "correct": false,
+    "why": "Management groups belong to a tenant and play no part in changing it."
+   },
+   {
+    "text": "Role assignments and managed identities do not survive it",
+    "correct": true,
+    "why": "Right. They belonged to the old tenant, and have to be made again in the new one."
+   }
+  ]
+ },
+ {
+  "id": "ex-dn1rt5cg",
+  "version": 1,
+  "section": "moving-safely",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Before a destination subscription can hold networks, it has to be ___ for the `Microsoft.Network` namespace.",
+  "hint": "`az provider ...`",
+  "blanks": [
+   {
+    "accept": [
+     "registered"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-8j0242q7",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these moves keeps every resource id exactly as it was?",
+  "hint": "What does an id name, and what does it not?",
+  "choices": [
+   {
+    "text": "A network to another resource group",
+    "correct": false,
+    "why": "The group is in the id, so the id changes."
+   },
+   {
+    "text": "A subscription to another management group",
+    "correct": true,
+    "why": "Right. Ids never mention a management group."
+   },
+   {
+    "text": "A VM and its dependencies to another subscription",
+    "correct": false,
+    "why": "The subscription is in the id too."
+   },
+   {
+    "text": "A key vault to a group in another region",
+    "correct": false,
+    "why": "The vault's region does not change, but its group does, and the group is in the id."
+   }
+  ]
+ },
+ {
+  "id": "ex-tex6d2s5",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each of the shop's resource types to what the move table said about it on the day of recording.",
+  "hint": "Two say No twice; one differs between the columns.",
+  "pairs": [
+   {
+    "left": "`virtualNetworks`",
+    "right": "moves to another group and another subscription"
+   },
+   {
+    "left": "`bastionHosts`",
+    "right": "moves between groups, not subscriptions"
+   },
+   {
+    "left": "`azureFirewalls`",
+    "right": "does not move at all"
+   },
+   {
+    "left": "`loadBalancers`",
+    "right": "depends on the SKU across subscriptions"
+   }
+  ],
+  "right_distractors": [
+   "moves only to another region"
+  ]
+ },
+ {
+  "id": "ex-hakgy9bn",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague plans to move every resource of `rg-shop-prod` to a group in `southcentralus` \"so that it fails over to Texas\". What is wrong with the plan?",
+  "hint": "What does a group's location decide, and what does a move change?",
+  "choices": [
+   {
+    "text": "A move never changes where a resource runs",
+    "correct": true,
+    "why": "Right. The resources stay in São Paulo; only their group's name in the id changes."
+   },
+   {
+    "text": "Groups in Texas cannot hold resources from Brazil",
+    "correct": false,
+    "why": "They can: a group's resources may be in any region."
+   },
+   {
+    "text": "Moving to a paired region needs Microsoft's approval",
+    "correct": false,
+    "why": "No approval exists, because no relocation happens."
+   },
+   {
+    "text": "The firewall and NAT gateway would be left in São Paulo",
+    "correct": false,
+    "why": "True of those two types, but it is not why the plan fails: nothing would go to Texas."
+   }
+  ]
+ }
+]

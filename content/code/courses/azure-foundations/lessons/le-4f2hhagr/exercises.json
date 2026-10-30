@@ -1,0 +1,585 @@
+[
+ {
+  "id": "ex-wv833s5s",
+  "version": 1,
+  "section": "role-definitions",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What three things does a role assignment join?",
+  "hint": "Who, what and where.",
+  "choices": [
+   {
+    "text": "A user, a password and a resource",
+    "correct": false,
+    "why": "No password is involved: signing in is Entra ID's business, and access is decided after it."
+   },
+   {
+    "text": "A resource, its owner and a list of the people allowed to use it",
+    "correct": false,
+    "why": "Azure keeps no list of people on a resource; it collects assignments at every scope above it."
+   },
+   {
+    "text": "A principal, a role and a scope",
+    "correct": true,
+    "why": "Right. Who, which list of operations, and which box."
+   },
+   {
+    "text": "A tenant, a subscription and a region",
+    "correct": false,
+    "why": "A region plays no part in access, and a tenant is where principals live, not a piece of the assignment."
+   }
+  ]
+ },
+ {
+  "id": "ex-1v6jagsy",
+  "version": 1,
+  "section": "role-definitions",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Contributor's `actions` is `*`. Which line of its `notActions` keeps it from giving anybody access?",
+  "hint": "Where do role assignments live?",
+  "choices": [
+   {
+    "text": "`Microsoft.Subscription/cancel/action`",
+    "correct": false,
+    "why": "That stops it cancelling the subscription; access is elsewhere."
+   },
+   {
+    "text": "`Microsoft.Authorization/*/Write`",
+    "correct": true,
+    "why": "Right. Role assignments are under `Microsoft.Authorization`."
+   },
+   {
+    "text": "`Microsoft.Compute/galleries/share/action`",
+    "correct": false,
+    "why": "Sharing an image gallery is one of the removed operations, but it is not role assignment."
+   },
+   {
+    "text": "`Microsoft.Blueprint/blueprintAssignments/write`",
+    "correct": false,
+    "why": "A blueprint assignment is a different resource, from a retired service."
+   }
+  ]
+ },
+ {
+  "id": "ex-zfyd7cxp",
+  "version": 1,
+  "section": "role-definitions",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each built-in role to what it allows.",
+  "hint": "One of them gives access and does nothing else.",
+  "pairs": [
+   {
+    "left": "Owner",
+    "right": "everything, including giving access"
+   },
+   {
+    "left": "Contributor",
+    "right": "everything except giving access"
+   },
+   {
+    "left": "Reader",
+    "right": "looking, and changing nothing"
+   },
+   {
+    "left": "User Access Administrator",
+    "right": "giving access, and nothing else"
+   }
+  ],
+  "right_distractors": [
+   "reading the blobs in every storage account"
+  ]
+ },
+ {
+  "id": "ex-4w8m97cz",
+  "version": 1,
+  "section": "role-definitions",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why can a Bicep file name the Reader role by the id `acdd72a7-3385-48ef-bd42-f606fba81ae7` in any company's tenant?",
+  "hint": "Who makes the built-in roles?",
+  "choices": [
+   {
+    "text": "A built-in role's id is one and the same GUID in every tenant on the planet",
+    "correct": true,
+    "why": "Right. That is why the role is named by id rather than by display name."
+   },
+   {
+    "text": "Because each tenant copies Reader under that id when it is created",
+    "correct": false,
+    "why": "Nothing is copied: the definition is Microsoft's, assignable everywhere."
+   },
+   {
+    "text": "Because Bicep translates the id into the local name",
+    "correct": false,
+    "why": "Bicep passes the id through unchanged, as the compiled template showed."
+   },
+   {
+    "text": "It cannot: each tenant gives Reader an id of its own",
+    "correct": false,
+    "why": "The built-in ids are fixed. Custom roles are the ones whose ids differ."
+   }
+  ]
+ },
+ {
+  "id": "ex-jmr7ae97",
+  "version": 1,
+  "section": "role-definitions",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Reading a blob's contents is listed in a role's `___`, separate from the management operations.",
+  "hint": "Its counterpart for management is called `actions`.",
+  "blanks": [
+   {
+    "accept": [
+     "dataActions"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-mnhhvh4n",
+  "version": 1,
+  "section": "matching",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `notActions` do in a role definition?",
+  "hint": "Is it a ban?",
+  "choices": [
+   {
+    "text": "It denies the operations to the person, whatever other roles they hold",
+    "correct": false,
+    "why": "That is a deny assignment. A not-action removes from its own role only."
+   },
+   {
+    "text": "It lists operations that need approval first",
+    "correct": false,
+    "why": "Approval is a feature of lesson 10's elevation, not of a role definition."
+   },
+   {
+    "text": "It records operations the role used to have",
+    "correct": false,
+    "why": "It is not history; it is a live subtraction."
+   },
+   {
+    "text": "It takes operations out of what that role's actions allow",
+    "correct": true,
+    "why": "Right. Actions minus not-actions, inside one role."
+   }
+  ]
+ },
+ {
+  "id": "ex-tf4xct4j",
+  "version": 1,
+  "section": "matching",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`bia` holds Contributor on `shop-prod` and User Access Administrator on `rg-shop-prod`. May `bia` create a role assignment in `rg-shop-prod`?",
+  "hint": "RBAC is additive.",
+  "choices": [
+   {
+    "text": "No: Contributor's notActions forbid it everywhere below the subscription",
+    "correct": false,
+    "why": "A not-action only narrows Contributor; it does not cancel another role."
+   },
+   {
+    "text": "No: the narrower scope loses to the wider one",
+    "correct": false,
+    "why": "Scopes do not compete. Every assignment that covers the resource counts."
+   },
+   {
+    "text": "Yes, through the second role, since roles add up",
+    "correct": true,
+    "why": "Right. Effective permissions are the sum of the assignments."
+   },
+   {
+    "text": "Only after the subscription's Owner approves",
+    "correct": false,
+    "why": "Nothing waits for approval here: the two assignments simply add up."
+   }
+  ]
+ },
+ {
+  "id": "ex-g8n97fpb",
+  "version": 1,
+  "section": "matching",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`can.py` answered `no` for Owner reading a blob with `--data`. What does that show?",
+  "hint": "Look at Owner's `dataActions`.",
+  "choices": [
+   {
+    "text": "That the storage account has public access switched off",
+    "correct": false,
+    "why": "No account was asked. The answer came from the role definitions alone."
+   },
+   {
+    "text": "That `can.py` has a defect, since Owner may do everything",
+    "correct": false,
+    "why": "The program applied the documented rule: Owner's actions are `*`, its dataActions empty."
+   },
+   {
+    "text": "That blobs are protected by a deny assignment",
+    "correct": false,
+    "why": "No deny assignment was involved; the program does not even read them."
+   },
+   {
+    "text": "Owner's `*` covers management only; its data list is empty",
+    "correct": true,
+    "why": "Right. Data operations need a role whose `dataActions` names them."
+   }
+  ]
+ },
+ {
+  "id": "ex-eg7k3w11",
+  "version": 1,
+  "section": "matching",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A security review says: \"Only Storage Blob Data Reader can read the order exports, because Contributor has no dataActions.\" What is missing from the sentence?",
+  "hint": "The fourth question asked of `can.py`.",
+  "choices": [
+   {
+    "text": "Contributor lists the keys, and a key opens every blob",
+    "correct": true,
+    "why": "Right. `listKeys` is a management action, and the key bypasses roles."
+   },
+   {
+    "text": "That Reader also has dataActions `*/read`",
+    "correct": false,
+    "why": "Reader's `*/read` is in `actions`, not `dataActions`."
+   },
+   {
+    "text": "That deny assignments block Contributor from storage",
+    "correct": false,
+    "why": "No such deny assignment exists by default."
+   },
+   {
+    "text": "Nothing: the data plane is fully separate from management",
+    "correct": false,
+    "why": "Only while the shared keys are switched off."
+   }
+  ]
+ },
+ {
+  "id": "ex-3bta78k0",
+  "version": 1,
+  "section": "matching",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put Resource Manager's steps in judging a request in the order Microsoft documents.",
+  "hint": "What can refuse before anything else is read?",
+  "items": [
+   "check the deny assignments that cover the resource",
+   "gather the role assignments of the principal and its groups",
+   "look for the operation in those roles, actions minus not-actions",
+   "evaluate the conditions on the assignment"
+  ],
+  "trap": "The deny assignments come first: one that applies refuses the request and nothing else is read."
+ },
+ {
+  "id": "ex-3j9vwc21",
+  "version": 1,
+  "section": "matching",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Who creates a deny assignment?",
+  "hint": "You cannot write one.",
+  "choices": [
+   {
+    "text": "Any Owner, to protect a resource group",
+    "correct": false,
+    "why": "An Owner cannot create one directly, which is part of why it can bind an Owner."
+   },
+   {
+    "text": "Azure, for features such as deployment stacks",
+    "correct": true,
+    "why": "Right. A deployment stack with deny settings and a managed application each place one."
+   },
+   {
+    "text": "User Access Administrators, as the opposite of an assignment",
+    "correct": false,
+    "why": "They create role assignments; deny assignments are not theirs to make."
+   },
+   {
+    "text": "Nobody now: they were removed with Blueprints",
+    "correct": false,
+    "why": "They exist today; deployment stacks create them."
+   }
+  ]
+ },
+ {
+  "id": "ex-5x45efqh",
+  "version": 1,
+  "section": "assignments",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many role assignments may one subscription hold, by the limit Microsoft says it will not raise?",
+  "hint": "The same number as custom roles per tenant.",
+  "value": 5000,
+  "tolerance": 0,
+  "unit": "assignments"
+ },
+ {
+  "id": "ex-xpjm61de",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Reader is assigned to a group at the subscription `shop-prod`. Where can its members read?",
+  "hint": "Down, never up.",
+  "choices": [
+   {
+    "text": "In `shop-prod` and in the management group above it",
+    "correct": false,
+    "why": "An assignment never reaches up."
+   },
+   {
+    "text": "Everywhere inside `shop-prod`, groups and resources",
+    "correct": true,
+    "why": "Right. Every group and every resource in it, and nothing beside it."
+   },
+   {
+    "text": "In every subscription of the tenant",
+    "correct": false,
+    "why": "Only an assignment on the root management group would do that."
+   },
+   {
+    "text": "Only in resource groups created after the assignment",
+    "correct": false,
+    "why": "Inheritance covers what exists and what is added later alike."
+   }
+  ]
+ },
+ {
+  "id": "ex-wxmkbc5d",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the lesson give the assignment the name `guid(resourceGroup().id, groupId, readerId)`?",
+  "hint": "What happens on the second deployment?",
+  "choices": [
+   {
+    "text": "To hide which group was given the role",
+    "correct": false,
+    "why": "The group is in the properties for anybody who can read the assignment."
+   },
+   {
+    "text": "Because Bicep refuses any other kind of name for a role assignment at compile time",
+    "correct": false,
+    "why": "The compiler accepts any name; it is Resource Manager that wants a GUID."
+   },
+   {
+    "text": "So a redeploy lands on the same assignment",
+    "correct": true,
+    "why": "Right. The same three inputs give the same GUID every time."
+   },
+   {
+    "text": "To make the name random, so two assignments never collide",
+    "correct": false,
+    "why": "`guid()` is deterministic, which is the whole point."
+   }
+  ]
+ },
+ {
+  "id": "ex-ayg6rfs3",
+  "version": 1,
+  "section": "assignments",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The custom role `Shop App Restarter` lists `assignableScopes: [subscription().id]`. What does that decide?",
+  "hint": "Where may the role be handed out?",
+  "choices": [
+   {
+    "text": "Which resources the role's actions apply to",
+    "correct": false,
+    "why": "The assignment's scope decides that; this list decides where assignments may be made."
+   },
+   {
+    "text": "Who may restart the web app",
+    "correct": false,
+    "why": "Who is decided by assignments, not by the definition."
+   },
+   {
+    "text": "The region the definition is stored in",
+    "correct": false,
+    "why": "Role definitions are stored globally, not by region."
+   },
+   {
+    "text": "Where it may be assigned",
+    "correct": true,
+    "why": "Right. Here, inside this subscription only."
+   }
+  ]
+ },
+ {
+  "id": "ex-z7f2a9qj",
+  "version": 1,
+  "section": "assignments",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these are habits the lesson recommends? Choose all that apply.",
+  "hint": "Three habits keep RBAC manageable.",
+  "choices": [
+   {
+    "text": "Assign roles to groups rather than to people",
+    "correct": true,
+    "why": "Right. Membership changes; assignments stay."
+   },
+   {
+    "text": "Give Contributor on the subscription so nobody is blocked",
+    "correct": false,
+    "why": "That makes every mistake as large as possible."
+   },
+   {
+    "text": "Assign at the smallest scope that works",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "Prefer a specific role to a general one",
+    "correct": true,
+    "why": "Right. Network Contributor over Contributor, for a network."
+   },
+   {
+    "text": "Make custom roles assignable at `/` so they can be reused",
+    "correct": false,
+    "why": "A role assignable everywhere is one more thing everybody can grant."
+   }
+  ]
+ },
+ {
+  "id": "ex-svah84jn",
+  "version": 1,
+  "section": "assignments",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Bicep's `___()` function hashes its arguments into the same identifier every time, which is how the lesson names role definitions and assignments.",
+  "hint": "Four letters.",
+  "blanks": [
+   {
+    "accept": [
+     "guid"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-pegz8bje",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The on-call developers must restart the shop's web app and nothing else, in `rg-shop-prod` only. Which arrangement does the lesson lead to?",
+  "hint": "A narrow role, a group, a small scope.",
+  "choices": [
+   {
+    "text": "`Shop App Restarter` for the on-call group on `rg-shop-prod`",
+    "correct": true,
+    "why": "Right. A specific role, given to a group, at the smallest scope."
+   },
+   {
+    "text": "Owner for the on-call group on `rg-shop-prod`, removed after each incident",
+    "correct": false,
+    "why": "Owner can also grant access; and removing by hand after each night is what lesson 10 replaces."
+   },
+   {
+    "text": "Contributor for each developer on `shop-prod`",
+    "correct": false,
+    "why": "Too wide in role, in scope and in the people named one by one."
+   },
+   {
+    "text": "Reader on `rg-shop-prod`, since restarting is a read",
+    "correct": false,
+    "why": "`restart/action` is not a read, and `*/read` does not match it."
+   }
+  ]
+ },
+ {
+  "id": "ex-5r2sxdrj",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which question can `can.py` answer?",
+  "hint": "It reads role definitions and nothing else.",
+  "choices": [
+   {
+    "text": "Whether `bia` may delete `vnet-shop-prod` today",
+    "correct": false,
+    "why": "That needs `bia`'s assignments, groups and any deny assignment: Resource Manager's facts."
+   },
+   {
+    "text": "Whether a condition on an assignment holds for a blob",
+    "correct": false,
+    "why": "Conditions are step 4, which the model leaves out."
+   },
+   {
+    "text": "Which roles are assigned at `rg-shop-prod`",
+    "correct": false,
+    "why": "Assignments live in Resource Manager; the program has never seen one."
+   },
+   {
+    "text": "Whether the lists of the roles it is given allow an operation",
+    "correct": true,
+    "why": "Right. Step 3 of the documented order, on the roles you give it."
+   }
+  ]
+ },
+ {
+  "id": "ex-136ns31f",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each operation to the built-in role from this lesson that allows it and is the narrowest of them.",
+  "hint": "Read the transcripts of `can.py`.",
+  "pairs": [
+   {
+    "left": "`Microsoft.Network/virtualNetworks/write`",
+    "right": "Contributor"
+   },
+   {
+    "left": "`Microsoft.Authorization/roleAssignments/write`",
+    "right": "User Access Administrator"
+   },
+   {
+    "left": "`.../containers/blobs/read`, as data",
+    "right": "Storage Blob Data Reader"
+   },
+   {
+    "left": "`Microsoft.Web/sites/read`",
+    "right": "Reader"
+   }
+  ],
+  "right_distractors": [
+   "Owner"
+  ]
+ }
+]

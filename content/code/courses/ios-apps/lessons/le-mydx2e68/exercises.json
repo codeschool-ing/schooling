@@ -1,0 +1,600 @@
+[
+  {
+    "id": "ex-age37zp1",
+    "version": 1,
+    "section": "list-foreach",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `List` and `ForEach`?",
+    "hint": "One has an appearance and one has none.",
+    "choices": [
+      {
+        "text": "`ForEach` scrolls and `List` does not",
+        "correct": false,
+        "why": "The reverse: `List` scrolls; `ForEach` is not a container."
+      },
+      {
+        "text": "`List` is a styled container; `ForEach` makes a view per element",
+        "correct": true,
+        "why": "Right, and `ForEach` works inside a `List`, a stack or a `Form`."
+      },
+      {
+        "text": "They are two names for the same view",
+        "correct": false,
+        "why": "`List(_:rowContent:)` is a shorthand for one wrapping the other, which is not the same thing."
+      },
+      {
+        "text": "`ForEach` is a `for` loop that runs once per element",
+        "correct": false,
+        "why": "It is a view; SwiftUI decides when to build each row."
+      }
+    ]
+  },
+  {
+    "id": "ex-5e8120dh",
+    "version": 1,
+    "section": "list-foreach",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `List(model.plan.courses) { … }` be written with no `id:` argument?",
+    "hint": "Lesson 1 declared something about `Course`.",
+    "choices": [
+      {
+        "text": "Because `Course` is a struct",
+        "correct": false,
+        "why": "Being a struct says nothing about identity."
+      },
+      {
+        "text": "Because the list uses each row's position",
+        "correct": false,
+        "why": "It does not; section 04 shows why it must not."
+      },
+      {
+        "text": "Because `Course` conforms to `Identifiable`",
+        "correct": true,
+        "why": "Right: its `id` answers which row each element is."
+      },
+      {
+        "text": "Because `List` compares the whole value of each course",
+        "correct": false,
+        "why": "Then a rename would make the course a new row."
+      }
+    ]
+  },
+  {
+    "id": "ex-mj8vw2xt",
+    "version": 1,
+    "section": "identifiable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these ids is the worst choice for a `ForEach` over the planner's sessions?",
+    "hint": "A good id is stable, unique and owned by the data.",
+    "choices": [
+      {
+        "text": "`id: \\.id`, the session's own id",
+        "correct": false,
+        "why": "That is the one `Identifiable` already uses."
+      },
+      {
+        "text": "`id: \\.date`, the planned day",
+        "correct": true,
+        "why": "Right: two sessions on one day share it, and moving a session changes it."
+      },
+      {
+        "text": "An id the server assigned and sends back with every load",
+        "correct": false,
+        "why": "Stable and unique, and lesson 12 uses exactly that."
+      },
+      {
+        "text": "A string the app generated once when the session was created",
+        "correct": false,
+        "why": "Made once and kept, it is a fine id."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2ztfnb6",
+    "version": 1,
+    "section": "identifiable",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Identifiable` requires one property, `var id`, whose type conforms to ___.",
+    "hint": "The associated type's constraint.",
+    "blanks": [
+      {
+        "accept": [
+          "Hashable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8300qytw",
+    "version": 1,
+    "section": "identifiable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ForEach(titles, id: \\.self)` shows a list of course titles. What breaks it?",
+    "hint": "The element is its own id.",
+    "choices": [
+      {
+        "text": "Nothing; strings are `Hashable`, so they make perfect ids",
+        "correct": false,
+        "why": "Hashable is required, not sufficient: two equal strings are one id."
+      },
+      {
+        "text": "A title longer than the row",
+        "correct": false,
+        "why": "Length affects layout, not identity."
+      },
+      {
+        "text": "Two courses with the same title, or a rename",
+        "correct": true,
+        "why": "Right: equal strings collide, and a renamed course becomes a different row."
+      },
+      {
+        "text": "Sorting the titles alphabetically",
+        "correct": false,
+        "why": "Moving a row whose id is unchanged is a move, which SwiftUI handles."
+      }
+    ]
+  },
+  {
+    "id": "ex-za90k4ca",
+    "version": 1,
+    "section": "ids-not-indices",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `identity.swift`, after the first row was deleted, which row did the position-keyed memory show as open?",
+    "hint": "Position 1 after the delete.",
+    "choices": [
+      {
+        "text": "`Mobile, lifecycle`",
+        "correct": false,
+        "why": "That is what the id-keyed memory showed."
+      },
+      {
+        "text": "`SQL, indexes`",
+        "correct": true,
+        "why": "Right: a row the person never opened, now at position 1."
+      },
+      {
+        "text": "`SQL, joins`",
+        "correct": false,
+        "why": "It was the row deleted."
+      },
+      {
+        "text": "No row: the position was removed with the first row",
+        "correct": false,
+        "why": "Position 1 still exists; it now holds another session."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dtwzhz1",
+    "version": 1,
+    "section": "ids-not-indices",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `ForEach` keeps each row's state with its session when a row is deleted?",
+    "hint": "Identity has to follow the data.",
+    "choices": [
+      {
+        "text": "`ForEach(0..<plan.sessions.count)`",
+        "correct": false,
+        "why": "The identity is the position."
+      },
+      {
+        "text": "`ForEach(Array(plan.sessions.enumerated()), id: \\.offset)`",
+        "correct": false,
+        "why": "`offset` is the position again, spelled longer."
+      },
+      {
+        "text": "`ForEach(plan.sessions)`",
+        "correct": true,
+        "why": "Right: `StudySession` is `Identifiable`, so its id is the identity."
+      },
+      {
+        "text": "`ForEach(plan.sessions, id: \\.minutes)`",
+        "correct": false,
+        "why": "Two sessions of 30 minutes would share one identity."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6samesk",
+    "version": 1,
+    "section": "ids-not-indices",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A text field in each row keeps a half-typed note in the row's `@State`. After deleting a row above, a note appears on the wrong session. Which change fixes it?",
+    "hint": "Where does SwiftUI keep a row's `@State`?",
+    "choices": [
+      {
+        "text": "Give the `ForEach` the sessions' ids instead of positions",
+        "correct": true,
+        "why": "Right: the state is kept by identity, so identity must follow the session."
+      },
+      {
+        "text": "Move the note into a `@Binding` with a default value",
+        "correct": false,
+        "why": "A binding still has to point somewhere, and the row identity is still wrong."
+      },
+      {
+        "text": "Rebuild the list after every delete with a new `UUID` per row",
+        "correct": false,
+        "why": "Fresh ids make every row new and lose every note."
+      },
+      {
+        "text": "Animate the delete so SwiftUI can follow it",
+        "correct": false,
+        "why": "Animation follows identity; it cannot repair it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fcps46w",
+    "version": 1,
+    "section": "sections-swipe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the SQL course screen, `onDelete` passes `offsets` containing 1. What does 1 count?",
+    "hint": "Which collection did the `ForEach` receive?",
+    "choices": [
+      {
+        "text": "Position 1 of `model.plan.sessions`",
+        "correct": false,
+        "why": "That is the plan, all courses together; the screen showed only SQL."
+      },
+      {
+        "text": "Position 1 of the sessions the screen showed",
+        "correct": true,
+        "why": "Right, which is why section 06 translates it to an id."
+      },
+      {
+        "text": "The session whose id ends in 1",
+        "correct": false,
+        "why": "Offsets are positions, not ids."
+      },
+      {
+        "text": "The number of rows to delete",
+        "correct": false,
+        "why": "It is a set of positions; its count is how many."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejc8hdn7",
+    "version": 1,
+    "section": "sections-swipe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `try? model.markDone(session.id)` acceptable inside the swipe action, when swallowing errors is not acceptable elsewhere?",
+    "hint": "Where did the id come from?",
+    "choices": [
+      {
+        "text": "Swipe actions cannot throw, so any error is lost anyway",
+        "correct": false,
+        "why": "The closure could handle the error and show it; the reason is elsewhere."
+      },
+      {
+        "text": "`markDone` never throws",
+        "correct": false,
+        "why": "It throws `unknownSession` for an id that does not exist."
+      },
+      {
+        "text": "The id came from the row just swiped, which exists",
+        "correct": true,
+        "why": "Right; where the error could happen, the screen should show it."
+      },
+      {
+        "text": "Errors in a list are shown by SwiftUI automatically",
+        "correct": false,
+        "why": "SwiftUI shows nothing for an error you discard."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ce9hk69",
+    "version": 1,
+    "section": "edit-move",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests did `swift test --filter Editing` run?",
+    "hint": "The last line says.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8nypqsxj",
+    "version": 1,
+    "section": "edit-move",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `aScreenOffsetIsNotAPlanIndex`, which session did `plan.sessions.remove(at: 1)` remove?",
+    "hint": "Position 1 of the whole plan.",
+    "choices": [
+      {
+        "text": "`s3`, the SQL screen's row 1",
+        "correct": false,
+        "why": "That is what the person meant, and not what happened."
+      },
+      {
+        "text": "`s2`, the mobile session",
+        "correct": true,
+        "why": "Right: the test pins the bug, `[\"s1\", \"s3\", \"s4\"]`."
+      },
+      {
+        "text": "`s1`, because offsets start at 1",
+        "correct": false,
+        "why": "Offsets start at 0, like array indices."
+      },
+      {
+        "text": "None: the test expects an error",
+        "correct": false,
+        "why": "`remove(at:)` does not throw; it removed a session."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2tchgph",
+    "version": 1,
+    "section": "edit-move",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `plan.move(from: [2], to: 0, in: shown)` on the SQL sessions `s1, s3, s4`, why is `s2` still second in the whole plan?",
+    "hint": "Look at `slots`.",
+    "choices": [
+      {
+        "text": "`move` only works on the first course in the plan",
+        "correct": false,
+        "why": "It works on whichever sessions were shown."
+      },
+      {
+        "text": "`s2` was moved twice and ended where it started",
+        "correct": false,
+        "why": "It was not moved at all."
+      },
+      {
+        "text": "SwiftUI restores the other course's order",
+        "correct": false,
+        "why": "No SwiftUI runs in the package."
+      },
+      {
+        "text": "The new order is written only into the SQL sessions' places",
+        "correct": true,
+        "why": "Right: `slots` are the positions SQL sessions held, and `s2`'s position is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-azyf3718",
+    "version": 1,
+    "section": "edit-move",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `delete(at:in:)` in order.",
+    "hint": "Positions, then ids, then the plan.",
+    "items": [
+      "`onDelete` hands over offsets into `shown`",
+      "Each offset is turned into the id of the session shown there",
+      "The ids are collected in a `Set`",
+      "The plan removes every session whose id is in the set"
+    ]
+  },
+  {
+    "id": "ex-1a6qhbtr",
+    "version": 1,
+    "section": "lazy-stacks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `ScrollView` holds a `VStack` of 8,000 `SessionCard`s. What happens before the first card appears?",
+    "hint": "A plain stack is not lazy.",
+    "choices": [
+      {
+        "text": "Only the visible cards are built",
+        "correct": false,
+        "why": "That is a `LazyVStack` or a `List`."
+      },
+      {
+        "text": "All 8,000 cards are built",
+        "correct": true,
+        "why": "Right: a standard stack loads its whole hierarchy when it displays."
+      },
+      {
+        "text": "SwiftUI refuses a stack of more than 1,000 views",
+        "correct": false,
+        "why": "There is no such limit; it is slow, not refused."
+      },
+      {
+        "text": "The cards are built in the background while the first appears",
+        "correct": false,
+        "why": "Nothing is deferred in a plain stack."
+      }
+    ]
+  },
+  {
+    "id": "ex-h239bc07",
+    "version": 1,
+    "section": "lazy-stacks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each container to the situation it fits.",
+    "hint": "Section 07's table.",
+    "pairs": [
+      {
+        "left": "`VStack`",
+        "right": "A handful of rows that always fit"
+      },
+      {
+        "left": "`LazyVStack` in a `ScrollView`",
+        "right": "A long feed of custom cards"
+      },
+      {
+        "left": "`List`",
+        "right": "Rows with swipe actions and an edit mode"
+      }
+    ],
+    "right_distractors": [
+      "A grid of photos laid out by hand"
+    ]
+  },
+  {
+    "id": "ex-4zx3t2xy",
+    "version": 1,
+    "section": "lazy-stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to the Apple article quoted in section 07, when should you switch a plain stack to a lazy one?",
+    "hint": "Lazy trades layout correctness for performance.",
+    "choices": [
+      {
+        "text": "From the start, in every scrolling view",
+        "correct": false,
+        "why": "The article says to start with the standard stack."
+      },
+      {
+        "text": "When the simulator feels slow",
+        "correct": false,
+        "why": "It says never to profile on the simulator."
+      },
+      {
+        "text": "When profiling on a device shows a worthwhile improvement",
+        "correct": true,
+        "why": "Right, with Instruments' SwiftUI template."
+      },
+      {
+        "text": "Above 100 rows, the threshold the article sets",
+        "correct": false,
+        "why": "The article sets no number; it says to measure."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqffgj8d",
+    "version": 1,
+    "section": "performance",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`diff.swift` counted the changes by position for one session added at the top. How many?",
+    "hint": "The line starts with `by position:`.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3s26v194",
+    "version": 1,
+    "section": "performance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the id-based difference make the insertion cheap for SwiftUI?",
+    "hint": "Count what changed by id.",
+    "choices": [
+      {
+        "text": "Because strings compare faster than positions",
+        "correct": false,
+        "why": "The cost is in the rows rebuilt, not in the comparison."
+      },
+      {
+        "text": "Four rows are the same rows, so only one is new",
+        "correct": true,
+        "why": "Right: the others slide down with nothing in them redrawn."
+      },
+      {
+        "text": "Because `difference(from:)` runs on a background thread",
+        "correct": false,
+        "why": "It runs where it is called; threads are not the point."
+      },
+      {
+        "text": "Because the new row is drawn last",
+        "correct": false,
+        "why": "Order of drawing is not what makes it cheap."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqve19ev",
+    "version": 1,
+    "section": "performance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A decoder gives each session `id = UUID().uuidString` as data arrives. What does every refresh of the list cost?",
+    "hint": "Are the ids the same across two loads?",
+    "choices": [
+      {
+        "text": "Nothing extra: UUIDs are unique, which is all an id needs",
+        "correct": false,
+        "why": "Unique, and not stable: each load invents new ones."
+      },
+      {
+        "text": "Only the rows whose content changed are rebuilt",
+        "correct": false,
+        "why": "Every id is new, so every row is new."
+      },
+      {
+        "text": "Every row is removed and inserted again, losing its state",
+        "correct": true,
+        "why": "Right; the id has to come with the data, as lesson 12's do."
+      },
+      {
+        "text": "A compile error, since `UUID` is not `Hashable`",
+        "correct": false,
+        "why": "`UUID` and its string are both `Hashable`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzwrd1n5",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of a `ForEach` over `Identifiable` sessions? Choose all that apply.",
+    "hint": "Identity is the id.",
+    "choices": [
+      {
+        "text": "A renamed session keeps its row and its state",
+        "correct": true,
+        "why": "Yes: the id did not change."
+      },
+      {
+        "text": "Deleting a row moves the state below it up one row",
+        "correct": false,
+        "why": "That is what position identity does."
+      },
+      {
+        "text": "Inserting at the top is one insertion",
+        "correct": true,
+        "why": "Yes, as `diff.swift` counted."
+      },
+      {
+        "text": "`onDelete`'s offsets are ids",
+        "correct": false,
+        "why": "They are positions in what the `ForEach` was given."
+      }
+    ]
+  }
+]

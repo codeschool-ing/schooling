@@ -1,0 +1,674 @@
+[
+  {
+    "id": "ex-bgjn95s9",
+    "version": 1,
+    "section": "source-of-truth",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the planner's course screen, the list ticks the sessions done and the footer adds them up. Where should `done` live?",
+    "hint": "One fact, one owner.",
+    "choices": [
+      {
+        "text": "In the row, and the footer asks each row",
+        "correct": false,
+        "why": "Then the row is an owner and the footer depends on rows being on screen; the fact belongs in the plan."
+      },
+      {
+        "text": "Once, in the plan the screen draws from",
+        "correct": true,
+        "why": "Right. The list and the total are both computed from it, so they cannot disagree."
+      },
+      {
+        "text": "In both the list and the footer, kept in step after each tap",
+        "correct": false,
+        "why": "Two copies kept in step is exactly what goes wrong the first time a step is forgotten."
+      },
+      {
+        "text": "In the `Toggle`, which remembers whether it is on",
+        "correct": false,
+        "why": "A `Toggle` keeps nothing: it is handed a binding to somebody else's `Bool`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbfjgg10",
+    "version": 1,
+    "section": "source-of-truth",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a second source of truth waiting to disagree?",
+    "hint": "Can it be computed from the plan?",
+    "choices": [
+      {
+        "text": "The plan's list of sessions",
+        "correct": false,
+        "why": "That is the source of truth itself."
+      },
+      {
+        "text": "A `Binding` to the plan, handed to the detail screen",
+        "correct": false,
+        "why": "A binding holds no value; it reads and writes the owner's."
+      },
+      {
+        "text": "A `total` property set once from `weekTotal`",
+        "correct": true,
+        "why": "Right: it can be computed, so storing it makes a copy that goes stale."
+      },
+      {
+        "text": "The course's `id`, which never changes",
+        "correct": false,
+        "why": "It is part of the data, not derived from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w45y6p83",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a SwiftUI view not keep a counter in an ordinary `var` property?",
+    "hint": "What happens to the struct when the parent's body runs?",
+    "choices": [
+      {
+        "text": "The struct is made again, and the new copy starts from the initial value",
+        "correct": true,
+        "why": "Right. `@State` keeps the value outside the struct for that reason."
+      },
+      {
+        "text": "Structs cannot have `var` properties",
+        "correct": false,
+        "why": "They can; lesson 1's `Plan` has two."
+      },
+      {
+        "text": "SwiftUI makes every property `let` at compile time",
+        "correct": false,
+        "why": "Nothing rewrites your properties; `body` is not `mutating`, and the struct is replaced."
+      },
+      {
+        "text": "A `var` is shared between every copy of the view",
+        "correct": false,
+        "why": "Each copy of a struct has its own properties; that is the problem, not the cure."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4sh5q97",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parent creates `CourseDetailView(plan: newPlan)` with a different plan while the view is on screen. The view stores it with `_plan = State(initialValue: plan)`. What does it show?",
+    "hint": "When does SwiftUI use the initial value?",
+    "choices": [
+      {
+        "text": "The new plan, because the initialiser ran again",
+        "correct": false,
+        "why": "It ran, and SwiftUI ignored the value: the storage it kept wins."
+      },
+      {
+        "text": "The old plan, from the storage SwiftUI kept",
+        "correct": true,
+        "why": "Right. The initial value is used the first time the view appears and not after."
+      },
+      {
+        "text": "An empty plan, because the two values conflict",
+        "correct": false,
+        "why": "There is no merging; one value is kept."
+      },
+      {
+        "text": "A runtime error saying state was set twice",
+        "correct": false,
+        "why": "Nothing complains, which is why this trap is hard to see."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3gq7sya",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Apple's documentation say to declare `@State` properties `private`?",
+    "hint": "Who owns the value?",
+    "choices": [
+      {
+        "text": "Private properties are faster to read",
+        "correct": false,
+        "why": "Access control is about who may see a name, not speed."
+      },
+      {
+        "text": "SwiftUI refuses to compile public state",
+        "correct": false,
+        "why": "It compiles; the advice is about design."
+      },
+      {
+        "text": "The view owns it, and nothing outside should set it",
+        "correct": true,
+        "why": "Right. A parent that wants to influence it passes a starting value or owns the state itself."
+      },
+      {
+        "text": "So that a binding to it cannot be made with `$`",
+        "correct": false,
+        "why": "`$plan` works inside the view, and that binding is exactly what children receive."
+      }
+    ]
+  },
+  {
+    "id": "ex-021d8svn",
+    "version": 1,
+    "section": "state",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside the initialiser, `_plan` names the property ___ itself, not the plan inside it.",
+    "hint": "Two words in the lesson; the blank is the second.",
+    "blanks": [
+      {
+        "accept": [
+          "wrapper"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bamyb6ny",
+    "version": 1,
+    "section": "binding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a `Binding<Bool>` handed to a `Toggle` contain?",
+    "hint": "Not the value.",
+    "choices": [
+      {
+        "text": "A copy of the `Bool` taken when the toggle was made",
+        "correct": false,
+        "why": "A copy would fall behind; a binding reaches the owner's value."
+      },
+      {
+        "text": "A way to read the value and a way to write it",
+        "correct": true,
+        "why": "Right: two operations that reach back to wherever the owner keeps it."
+      },
+      {
+        "text": "The view that owns the value",
+        "correct": false,
+        "why": "It does not know the owner; the value could be in `@State` or an object."
+      },
+      {
+        "text": "A notification name to post on change",
+        "correct": false,
+        "why": "No notifications are involved; the write goes straight to the storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-3smcjfh1",
+    "version": 1,
+    "section": "binding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `ForEach($plan.sessions) { $session in … }`, what is `session` inside the closure?",
+    "hint": "The closure's parameter is declared with a dollar sign.",
+    "choices": [
+      {
+        "text": "Another binding, the same as `$session`",
+        "correct": false,
+        "why": "`$session` is the binding; without the sign it is the value."
+      },
+      {
+        "text": "The index of the session in the array",
+        "correct": false,
+        "why": "`ForEach` over a collection of `Identifiable` values gives elements, not indices."
+      },
+      {
+        "text": "The session's current value",
+        "correct": true,
+        "why": "Right; `$session` is the binding to it, and reading `session` reads through it."
+      },
+      {
+        "text": "A private copy the row can change freely, saved when the row disappears",
+        "correct": false,
+        "why": "There is no private copy and no saving later; writes go through at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-ac3vw6n8",
+    "version": 1,
+    "section": "binding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A preview wants to show `SessionRow` with no parent. Which binding does it pass?",
+    "hint": "One that ignores writes.",
+    "choices": [
+      {
+        "text": "`$session`, from a `let` in the preview",
+        "correct": false,
+        "why": "A `let` has no projected value; `$` works on `@State` and `@Binding`."
+      },
+      {
+        "text": "`.constant(…)`, a binding that ignores writes",
+        "correct": true,
+        "why": "Right. `Binding.constant` is the standard way to give a view a fixed value."
+      },
+      {
+        "text": "`nil`, since bindings are optional",
+        "correct": false,
+        "why": "`@Binding var session: StudySession` is not optional."
+      },
+      {
+        "text": "A new `@State`, declared at the top of the file",
+        "correct": false,
+        "why": "`@State` belongs inside a view, not at the top level of a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-11j0ccye",
+    "version": 1,
+    "section": "binding",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of syntax to what it is.",
+    "hint": "The dollar sign is the projected value.",
+    "pairs": [
+      {
+        "left": "`plan`",
+        "right": "The value kept in state"
+      },
+      {
+        "left": "`$plan`",
+        "right": "A binding to the whole plan"
+      },
+      {
+        "left": "`$plan.sessions[2].done`",
+        "right": "A binding narrowed to one field"
+      },
+      {
+        "left": "`_plan`",
+        "right": "The `State` wrapper itself"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the plan for the child"
+    ]
+  },
+  {
+    "id": "ex-y42y02cr",
+    "version": 1,
+    "section": "binding-by-hand",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`binding.swift` printed `a copy:` first. How many sessions were done in the storage at that point?",
+    "hint": "Read the list after `storage is`.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-dy0mdrb3",
+    "version": 1,
+    "section": "binding-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Ref`, why is the setter of `value` declared `nonmutating`?",
+    "hint": "What does setting `value` change?",
+    "choices": [
+      {
+        "text": "So that `Ref` can be a class",
+        "correct": false,
+        "why": "It is a struct; `nonmutating` exists for structs."
+      },
+      {
+        "text": "Because key paths only work on immutable values",
+        "correct": false,
+        "why": "The subscript takes a `WritableKeyPath`, which is for writing."
+      },
+      {
+        "text": "Setting it calls `write` and leaves the `Ref` itself unchanged",
+        "correct": true,
+        "why": "Right, so a `let` holding a `Ref`, like `DoneToggle.isOn`, can still be written through."
+      },
+      {
+        "text": "So the compiler copies the storage on every write",
+        "correct": false,
+        "why": "Nothing is copied; the closure writes into the `Storage` box."
+      }
+    ]
+  },
+  {
+    "id": "ex-sy5ganew",
+    "version": 1,
+    "section": "binding-by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`sessions[1].done` compiles although `Ref` declares no `subscript(Int)`. What makes it work?",
+    "hint": "Look at the attribute on the type.",
+    "choices": [
+      {
+        "text": "Swift adds an integer subscript to every generic struct",
+        "correct": false,
+        "why": "It adds nothing of the kind; something in `Ref` asked for it."
+      },
+      {
+        "text": "`@dynamicMemberLookup` turns `[1]` and `.done` into key paths for the subscript",
+        "correct": true,
+        "why": "Right: Swift builds `\\.[1]` and `\\.done` and calls `subscript(dynamicMember:)` with each."
+      },
+      {
+        "text": "`Storage` is a class, so its contents are reachable by index",
+        "correct": false,
+        "why": "The expression is on `sessions`, a `Ref`, not on the storage."
+      },
+      {
+        "text": "`print` converts the expression at run time",
+        "correct": false,
+        "why": "It is resolved when compiling; `print` only receives the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5h8x9ke",
+    "version": 1,
+    "section": "binding-by-hand",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the three lines `binding.swift` printed in the order they appeared.",
+    "hint": "Copy, binding, narrowed.",
+    "items": [
+      "`storage is [false, false]`",
+      "`storage is [true, false]`",
+      "`storage is [true, true]`"
+    ]
+  },
+  {
+    "id": "ex-6b80gbnr",
+    "version": 1,
+    "section": "derived-values",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The failing test expected 150. What did `screen.total.done` actually hold?",
+    "hint": "Swift Testing printed the left-hand side.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-707febs0",
+    "version": 1,
+    "section": "derived-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `DerivedTotal` pass where `StoredTotal` fails?",
+    "hint": "When is each total worked out?",
+    "choices": [
+      {
+        "text": "`DerivedTotal` uses a different `weekTotal`",
+        "correct": false,
+        "why": "Both call lesson 1's `weekTotal(today:)`."
+      },
+      {
+        "text": "`StoredTotal` marks a different session done",
+        "correct": false,
+        "why": "Both tests mark `s3`."
+      },
+      {
+        "text": "Swift Testing runs computed properties before stored ones",
+        "correct": false,
+        "why": "Test order has nothing to do with it; each test has its own value."
+      },
+      {
+        "text": "Its total is computed when read, after the change",
+        "correct": true,
+        "why": "Right. The stored one was computed in `init` and never told about `s3`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytr58be8",
+    "version": 1,
+    "section": "derived-values",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague keeps `StoredTotal` and adds a line updating `total` after every `markDone`. What is still wrong?",
+    "hint": "How many ways are there to change a plan?",
+    "choices": [
+      {
+        "text": "Every other change, `add` included, needs the same line, and one will be missed",
+        "correct": true,
+        "why": "Right: the copy stays correct only while every writer remembers it."
+      },
+      {
+        "text": "Nothing; the test passes now, so the design is sound",
+        "correct": false,
+        "why": "It passes for `markDone`; the next kind of change brings the bug back."
+      },
+      {
+        "text": "`total` cannot be assigned because it is a `let`",
+        "correct": false,
+        "why": "It is a `var` in `StoredTotal`."
+      },
+      {
+        "text": "`weekTotal` is too slow to call that often",
+        "correct": false,
+        "why": "It filters a short list; speed is not the problem here."
+      }
+    ]
+  },
+  {
+    "id": "ex-yp6qkx9r",
+    "version": 1,
+    "section": "state-traps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `SessionForm` keeps `@State private var draft = Draft()`, where `Draft` is a class. The stepper changes `draft.minutes` and the number on screen stays put. Why?",
+    "hint": "What does `@State` watch?",
+    "choices": [
+      {
+        "text": "Steppers only work with `Int` state, not properties",
+        "correct": false,
+        "why": "A stepper works with any `Binding` to a strideable value."
+      },
+      {
+        "text": "The reference did not change, so `@State` saw nothing",
+        "correct": true,
+        "why": "Right. Make `Draft` a struct, or make it observable as lesson 7 does."
+      },
+      {
+        "text": "`Draft()` is created again on every update and starts at 30",
+        "correct": false,
+        "why": "The initial value is used once; the same object is kept."
+      },
+      {
+        "text": "Classes cannot be stored in a property wrapper at all",
+        "correct": false,
+        "why": "They can be stored; changes inside them are not seen."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnqrtf1j",
+    "version": 1,
+    "section": "state-traps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parent and its child each declare `@State var plan`, the child's initialised from the parent's. The child adds a session. What does the parent show?",
+    "hint": "Count the owners.",
+    "choices": [
+      {
+        "text": "The new session, since the child's plan came from the parent",
+        "correct": false,
+        "why": "It came from the parent once; after that there are two plans."
+      },
+      {
+        "text": "A crash, since two states hold one plan",
+        "correct": false,
+        "why": "Nothing crashes; they hold two plans."
+      },
+      {
+        "text": "The old plan: there are two plans, and only the child's changed",
+        "correct": true,
+        "why": "Right. The child should take a `@Binding` to the parent's plan."
+      },
+      {
+        "text": "The new session, after the parent's body runs again",
+        "correct": false,
+        "why": "The parent's state did not change, so its body has nothing new to draw."
+      }
+    ]
+  },
+  {
+    "id": "ex-k80vwbgv",
+    "version": 1,
+    "section": "state-traps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these is a good use of `@State` in the planner?",
+    "hint": "Something that starts with the view and nobody else needs.",
+    "choices": [
+      {
+        "text": "The plan in `CourseDetailView`, copied from the list",
+        "correct": false,
+        "why": "That makes a second owner; the detail screen takes a binding."
+      },
+      {
+        "text": "Whether the week screen's breakdown is expanded",
+        "correct": true,
+        "why": "Right: it belongs to that view, starts with it and matters to nobody else."
+      },
+      {
+        "text": "The week's total, kept up to date by each row",
+        "correct": false,
+        "why": "It can be computed, so it should be."
+      },
+      {
+        "text": "The list of courses every screen shows",
+        "correct": false,
+        "why": "Shared by several screens, so it belongs above them, as lesson 7 does."
+      }
+    ]
+  },
+  {
+    "id": "ex-7f65yvaa",
+    "version": 1,
+    "section": "planner-screens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In section 08, why does `CourseDetailView` take `@Binding var plan` instead of `@State`?",
+    "hint": "Who owns the plan?",
+    "choices": [
+      {
+        "text": "`@State` is not allowed in a view opened by a `NavigationLink`",
+        "correct": false,
+        "why": "It is allowed; it would just be a second owner here."
+      },
+      {
+        "text": "The list owns it, and the detail screen changes it",
+        "correct": true,
+        "why": "Right: a change made on the detail screen has to land in the list's one plan."
+      },
+      {
+        "text": "Bindings are faster to draw than state",
+        "correct": false,
+        "why": "Speed is not the reason; ownership is."
+      },
+      {
+        "text": "A binding lets the detail screen keep its own copy of the plan",
+        "correct": false,
+        "why": "A binding is the opposite of a copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-zx1wcs80",
+    "version": 1,
+    "section": "planner-screens",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of one tap on a `SessionRow` toggle in order.",
+    "hint": "From the finger to the footer.",
+    "items": [
+      "The `Toggle` writes `true` into its `Binding<Bool>`",
+      "The write passes through `$session` and `$plan`",
+      "The list's `@State` plan changes",
+      "SwiftUI runs `body` again for the views that read it",
+      "The footer computes `weekTotal` from the new plan"
+    ]
+  },
+  {
+    "id": "ex-h9dmbrpe",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these hold no value of their own? Choose all that apply.",
+    "hint": "A binding reaches somebody else's.",
+    "choices": [
+      {
+        "text": "`@Binding var session: StudySession`",
+        "correct": true,
+        "why": "Yes: it reads and writes the owner's session."
+      },
+      {
+        "text": "`@State private var plan: Plan`",
+        "correct": false,
+        "why": "No: this is the owner, and SwiftUI keeps the value for it."
+      },
+      {
+        "text": "The `Ref` built in section 05",
+        "correct": true,
+        "why": "Yes: two closures, and the value is in `Storage`."
+      },
+      {
+        "text": "`let plan: Plan` passed to read",
+        "correct": false,
+        "why": "No: a `let` holds a copy, the read-only one."
+      }
+    ]
+  },
+  {
+    "id": "ex-xa9vs136",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Store what the person did, and ___ what follows from it.",
+    "hint": "The opposite of storing it.",
+    "blanks": [
+      {
+        "accept": [
+          "compute",
+          "calculate",
+          "derive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

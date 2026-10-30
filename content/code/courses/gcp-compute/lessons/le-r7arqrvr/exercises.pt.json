@@ -1,0 +1,432 @@
+{
+  "ex-bregth5h": {
+    "prompt": "Onde um contêiner do Cloud Run precisa escutar?",
+    "hint": "Um endereço e uma porta.",
+    "choices": [
+      {
+        "text": "127.0.0.1, na porta 80",
+        "why": "O loopback não atende ninguém de fora, e a porta é a de PORT."
+      },
+      {
+        "text": "Qualquer endereço, na porta 443 com certificado próprio",
+        "why": "O Cloud Run encerra o HTTPS; o contêiner recebe HTTP puro."
+      },
+      {
+        "text": "0.0.0.0, na porta de PORT",
+        "why": "Isso. As requisições chegam de fora do loopback do contêiner."
+      },
+      {
+        "text": "Um socket Unix que a plataforma nomeia em K_SERVICE",
+        "why": "K_SERVICE é o nome do serviço, não um socket."
+      }
+    ]
+  },
+  "ex-th7c7bsw": {
+    "prompt": "Um serviço grava cada pedido novo num arquivo em /tmp e o lê de volta na requisição seguinte. O que dá errado no Cloud Run?",
+    "hint": "Onde mora o /tmp, e quantas instâncias há?",
+    "choices": [
+      {
+        "text": "Cada instância tem o próprio arquivo, que some com ela",
+        "why": "Isso. A próxima requisição pode cair em outra instância, ou numa nova."
+      },
+      {
+        "text": "A gravação falha, porque o sistema de arquivos é só leitura",
+        "why": "Ele aceita escrita; é isso que deixa o bug silencioso."
+      },
+      {
+        "text": "Nada, contanto que o arquivo seja menor que o limite de memória",
+        "why": "Tamanho é o problema menor; o arquivo não é compartilhado nem dura."
+      },
+      {
+        "text": "O Cloud Run copia o /tmp entre instâncias, e as gravações conflitam",
+        "why": "Nada é copiado entre instâncias."
+      }
+    ]
+  },
+  "ex-6tgk6pw7": {
+    "prompt": "Depois do SIGTERM, quantos segundos uma instância do Cloud Run tem antes do SIGKILL?",
+    "hint": "O mesmo padrão do Docker.",
+    "unit": "segundos"
+  },
+  "ex-xwny51ds": {
+    "prompt": "Uma imagem montada num laptop Arm para Arm é publicada no Cloud Run. O que acontece?",
+    "hint": "O que o Cloud Run executa?",
+    "choices": [
+      {
+        "text": "Roda, mais devagar, sob emulação",
+        "why": "O Cloud Run não emula outra arquitetura."
+      },
+      {
+        "text": "Roda na mesma velocidade, já que o Python é interpretado",
+        "why": "O próprio interpretador é um binário Arm nessa imagem."
+      },
+      {
+        "text": "O Cloud Run a remonta para amd64 a partir do Dockerfile",
+        "why": "O Cloud Run recebe uma imagem, não um Dockerfile."
+      },
+      {
+        "text": "Não sobe: o Cloud Run executa linux/amd64",
+        "why": "Isso. Monte para amd64, ou para as duas."
+      }
+    ]
+  },
+  "ex-cw8xy13q": {
+    "prompt": "O Cloud Run define K_SERVICE, K_CONFIGURATION e K____ para nomear o que atende a requisição.",
+    "hint": "A lição 9 é sobre ela.",
+    "blanks": [
+      {
+        "accept": [
+          "REVISION"
+        ]
+      }
+    ]
+  },
+  "ex-bn4h562w": {
+    "prompt": "Por que o serviço de pedidos registra um objeto JSON por linha com um campo severity?",
+    "hint": "Quem lê a saída padrão no Cloud Run?",
+    "choices": [
+      {
+        "text": "Porque o Cloud Run recusa logs em texto puro",
+        "why": "Texto puro é aceito, como entradas sem estrutura."
+      },
+      {
+        "text": "O Cloud Logging lê cada linha como entrada estruturada",
+        "why": "Isso. Um aviso continua aviso."
+      },
+      {
+        "text": "Linhas JSON são mais curtas, então custam menos para guardar no Cloud Logging",
+        "why": "Elas são mais longas, se tanto; a estrutura é o ponto."
+      },
+      {
+        "text": "O http.server do Python escreve JSON por padrão",
+        "why": "O programa sobrescreve log_message para escrever assim."
+      }
+    ]
+  },
+  "ex-9v4c0ktj": {
+    "prompt": "Para que serve o ORDERS_DELAY_MS no serviço de pedidos?",
+    "hint": "Zero a menos que definido.",
+    "choices": [
+      {
+        "text": "Define quanto o Cloud Run espera antes de matar a instância",
+        "why": "Isso são os dez segundos depois do SIGTERM, que nenhuma variável muda."
+      },
+      {
+        "text": "Limita clientes que mandam requisições demais",
+        "why": "Ele atrasa toda resposta de /orders igualmente."
+      },
+      {
+        "text": "Faz as vezes de uma chamada ao banco, para a lição 11",
+        "why": "Isso. Uma requisição que espera, sem banco para esperar."
+      },
+      {
+        "text": "É o tempo limite da sondagem de inicialização",
+        "why": "A sondagem é configurada no serviço, não no programa."
+      }
+    ]
+  },
+  "ex-dkbydmx8": {
+    "prompt": "O docker image ls informou o tamanho da orders:1. Quantos MB?",
+    "hint": "Quase tudo é a imagem base.",
+    "unit": "MB"
+  },
+  "ex-vq4hv47c": {
+    "prompt": "Por que o CMD do Dockerfile é uma lista JSON e não CMD python3 app.py?",
+    "hint": "Qual processo recebe o SIGTERM?",
+    "choices": [
+      {
+        "text": "O Python vira o processo 1 e recebe o próprio SIGTERM",
+        "why": "Isso. Na forma shell quem recebe é o sh, e ele não repassa."
+      },
+      {
+        "text": "A forma JSON sobe o Python mais rápido",
+        "why": "O tempo de subida não é o que muda."
+      },
+      {
+        "text": "O Cloud Run só aceita a forma JSON",
+        "why": "As duas formas rodam; uma delas para mal."
+      },
+      {
+        "text": "A forma shell não consegue ler a variável PORT",
+        "why": "Um shell lê variáveis muito bem."
+      }
+    ]
+  },
+  "ex-gpdhda1t": {
+    "prompt": "Um servidor dentro do contêiner escutou em 127.0.0.1:8081, publicado com -p 8081:8081. O que o curl recebeu, e por quê?",
+    "hint": "Em qual interface chegam as conexões publicadas?",
+    "choices": [
+      {
+        "text": "Um 404, porque o http.server não serve o caminho /orders",
+        "why": "A requisição nunca chegou a um servidor para dizer 404."
+      },
+      {
+        "text": "Um tempo esgotado, porque o Docker bloqueia a porta 8081",
+        "why": "O Docker aceitou a conexão e não achou ninguém atrás."
+      },
+      {
+        "text": "A listagem do diretório, porque o loopback é alcançável pelo -p",
+        "why": "Não é; esse é o bug."
+      },
+      {
+        "text": "Uma conexão reiniciada: nada escutava na interface externa",
+        "why": "Isso. Status 56, Recv failure. O Cloud Run falharia na sondagem."
+      }
+    ]
+  },
+  "ex-wsz1hz4c": {
+    "prompt": "Com o CMD na forma shell, o docker stop levou 10,227 segundos e o código de saída foi 137. Que número de sinal o matou?",
+    "hint": "137 menos 128.",
+    "unit": ""
+  },
+  "ex-xqdmxd0j": {
+    "prompt": "O serviço de pedidos foi iniciado uma segunda vez com -e PORT=9090. O que isso testa?",
+    "hint": "Quem escolhe a porta no Cloud Run?",
+    "choices": [
+      {
+        "text": "Se duas cópias conseguem dividir uma porta",
+        "why": "Elas usaram portas diferentes no laptop."
+      },
+      {
+        "text": "Que ele escuta onde o PORT manda",
+        "why": "Isso. O Cloud Run é livre para escolher."
+      },
+      {
+        "text": "Se a imagem pode ser remontada para outra porta",
+        "why": "Nada foi remontado; a mesma imagem rodou."
+      },
+      {
+        "text": "Que o Cloud Run só permite portas acima de 9000",
+        "why": "Não existe essa regra; 8080 é o padrão."
+      }
+    ]
+  },
+  "ex-81payhw1": {
+    "prompt": "Ponha em ordem o que aconteceu quando o docker stop rodou contra o serviço de pedidos.",
+    "hint": "Um sinal, um tratador, uma saída.",
+    "items": [
+      "O Docker manda SIGTERM ao processo 1",
+      "O tratador do Python registra \"SIGTERM: shutting down\"",
+      "O programa sai",
+      "O docker stop retorna, numa fração de segundo"
+    ],
+    "trap": "Com a forma shell, o segundo passo nunca acontece e o último espera dez segundos."
+  },
+  "ex-tf0hb8hf": {
+    "prompt": "O serviço de uma equipe perde algumas requisições toda vez que o Cloud Run reduz a escala, e o Dockerfile termina com CMD gunicorn app:app. Qual é a causa mais provável?",
+    "hint": "Qual processo ouve o sinal?",
+    "choices": [
+      {
+        "text": "O gunicorn não roda no Cloud Run",
+        "why": "Ele roda; a lição 19 o usa."
+      },
+      {
+        "text": "A redução manda requisições para instâncias já paradas",
+        "why": "O Cloud Run para de rotear para a instância antes de desligá-la."
+      },
+      {
+        "text": "Na forma shell o sh ouve o SIGTERM e o gunicorn não",
+        "why": "Isso. Dez segundos depois, o SIGKILL corta as requisições em andamento."
+      },
+      {
+        "text": "A imagem é grande demais para ser baixada durante a redução",
+        "why": "Reduzir a escala não baixa nada."
+      }
+    ]
+  },
+  "ex-w4hbs9ry": {
+    "prompt": "Um serviço tem min_instance_count = 0 e ninguém o chama há uma hora. Quantas instâncias ele tem?",
+    "hint": "Instâncias ociosas não ficam para sempre.",
+    "choices": [
+      {
+        "text": "Nenhuma, e a próxima espera",
+        "why": "Isso. Essa espera é a partida a frio."
+      },
+      {
+        "text": "Uma, mantida quente por padrão",
+        "why": "Só um mínimo mantém uma; o padrão é zero."
+      },
+      {
+        "text": "Quantas a última hora movimentada pediu",
+        "why": "Instâncias ociosas são desligadas, depois de até uns quinze minutos."
+      },
+      {
+        "text": "Dez, o max_instance_count",
+        "why": "O máximo é um teto, não uma meta."
+      }
+    ]
+  },
+  "ex-5m6qqn27": {
+    "prompt": "Contra o que o max_instance_count = 10 protege?",
+    "hint": "O que uma rajada de tráfego faria sem ele?",
+    "choices": [
+      {
+        "text": "Instâncias subindo antes de a imagem ser baixada",
+        "why": "O download vem antes da subida, seja qual for o máximo."
+      },
+      {
+        "text": "Requisições esperando mais que o tempo limite",
+        "why": "Um teto pode fazer requisições esperarem mais, não menos."
+      },
+      {
+        "text": "Dez requisições chegando à mesma instância ao mesmo tempo",
+        "why": "Isso é concorrência por instância, outra configuração."
+      },
+      {
+        "text": "Uma rajada, ou um ataque, escalando a conta sem limite",
+        "why": "Isso. Ele limita por quantas instâncias você pode ser cobrado."
+      }
+    ]
+  },
+  "ex-g9qcnw5g": {
+    "prompt": "Por que a imagem é nomeada por um caminho do Artifact Registry no main.tf?",
+    "hint": "De onde o Cloud Run baixa?",
+    "choices": [
+      {
+        "text": "O Terraform valida o conteúdo da imagem pelo caminho",
+        "why": "O plan não verificou nada da imagem."
+      },
+      {
+        "text": "O Cloud Run baixa de um registro, nunca do seu laptop",
+        "why": "Isso. A orders:1 do seu laptop é invisível para o Google."
+      },
+      {
+        "text": "Porque o Artifact Registry monta a imagem a partir do app.py",
+        "why": "Um registro guarda imagens; não as monta."
+      },
+      {
+        "text": "A região no caminho define a região do serviço",
+        "why": "location define a região; o caminho só diz onde está a imagem."
+      }
+    ]
+  },
+  "ex-ec2axfh5": {
+    "prompt": "Com min_instance_count = ___, há sempre uma instância lá, cobrada enquanto ociosa.",
+    "hint": "Um número.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ]
+      }
+    ]
+  },
+  "ex-vnamzgv6": {
+    "prompt": "O que este laboratório consegue mostrar sobre publicar o serviço de pedidos? Escolha todos os que se aplicam.",
+    "hint": "O que precisa do Google e o que não precisa?",
+    "choices": [
+      {
+        "text": "Que o contêiner cumpre o contrato de runtime",
+        "why": "Isso; o docker run provou."
+      },
+      {
+        "text": "A descrição do serviço que o Terraform mandaria",
+        "why": "Isso; o plan é calculado localmente."
+      },
+      {
+        "text": "O endereço run.app que o serviço receberia",
+        "why": "Só o Google o atribui, e nada é inventado aqui."
+      },
+      {
+        "text": "Quanto o Cloud Run leva para subir uma instância",
+        "why": "Um tempo medido no laptop é do laptop, não do Cloud Run."
+      }
+    ]
+  },
+  "ex-w1sq7q19": {
+    "prompt": "Ponha os quatro estados de um serviço com escala a zero na ordem em que uma manhã quieta passa por eles.",
+    "hint": "Termina onde começou.",
+    "items": [
+      "Sem instâncias",
+      "Iniciando",
+      "Atendendo",
+      "Ociosa, depois desligada"
+    ],
+    "trap": "A ociosidade vem depois do atendimento, e só então a instância vai embora."
+  },
+  "ex-x07n7dzm": {
+    "prompt": "Ligue cada parte do contrato a quem a cumpre.",
+    "hint": "À esquerda da linha é o Google, à direita é você.",
+    "pairs": [
+      {
+        "left": "O certificado HTTPS",
+        "right": "Cloud Run"
+      },
+      {
+        "left": "Escutar em 0.0.0.0:$PORT",
+        "right": "O seu contêiner"
+      },
+      {
+        "left": "Quantas instâncias rodam",
+        "right": "O Cloud Run, dentro do seu teto"
+      },
+      {
+        "left": "Sair logo depois do SIGTERM",
+        "right": "O seu programa"
+      }
+    ],
+    "right_distractors": [
+      "O daemon do Docker no seu laptop"
+    ]
+  },
+  "ex-rc0sr69p": {
+    "prompt": "Um desenvolvedor conta visualizações numa variável global do serviço e o número no painel vive voltando para trás. Por quê?",
+    "hint": "Quantas cópias guardam essa variável?",
+    "choices": [
+      {
+        "text": "Inteiros do Python estouram e dão a volta",
+        "why": "Inteiros do Python não estouram."
+      },
+      {
+        "text": "O Cloud Run zera as globais a cada requisição",
+        "why": "As globais vivem enquanto a instância vive."
+      },
+      {
+        "text": "Cada instância tem o próprio contador, e instâncias vêm e vão",
+        "why": "Isso. O painel mostra a instância que calhou de responder."
+      },
+      {
+        "text": "O contador vai para o /tmp, que o Cloud Run limpa a cada hora",
+        "why": "Nada limpa o /tmp de hora em hora; a própria instância é que some."
+      }
+    ]
+  },
+  "ex-rgq7b2yj": {
+    "prompt": "Por padrão, quantos minutos uma requisição do Cloud Run pode levar antes de estourar o tempo?",
+    "hint": "Pode subir até sessenta.",
+    "unit": "minutos"
+  },
+  "ex-fs7bp7v1": {
+    "prompt": "O tempo que uma requisição espera enquanto o Cloud Run baixa a imagem e sobe o contêiner é a partida a ___.",
+    "hint": "A lição 11 a desmonta.",
+    "blanks": [
+      {
+        "accept": [
+          "frio"
+        ]
+      }
+    ]
+  },
+  "ex-9ymd5nc3": {
+    "prompt": "Qual destas faria o serviço de pedidos falhar na sondagem de inicialização padrão do Cloud Run?",
+    "hint": "A sondagem abre uma conexão TCP em PORT.",
+    "choices": [
+      {
+        "text": "Fixar a porta 8000 enquanto PORT diz 8080",
+        "why": "Isso. A sondagem conecta em PORT e não acha nada."
+      },
+      {
+        "text": "Responder /health com um 404 e um corpo JSON",
+        "why": "A sondagem padrão é TCP; ela nunca pede /health."
+      },
+      {
+        "text": "Registrar em texto puro em vez de linhas JSON",
+        "why": "O formato do log não afeta a sondagem."
+      },
+      {
+        "text": "Rodar como o usuário nobody",
+        "why": "Portas acima de 1024 não precisam de root."
+      }
+    ]
+  }
+}

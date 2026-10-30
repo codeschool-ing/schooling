@@ -1,0 +1,670 @@
+[
+  {
+    "id": "ex-bfvhr6j4",
+    "version": 1,
+    "section": "throws",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`let minutes = parseMinutes(\"45\")`, where `parseMinutes` is marked `throws`. What does the compiler say?",
+    "choices": [
+      {
+        "text": "Nothing, since \"45\" is a valid number",
+        "correct": false,
+        "why": "The compiler judges the call, not the value passed to it."
+      },
+      {
+        "text": "It refuses: the call is not marked `try`",
+        "correct": true,
+        "why": "Right: every call to a throwing function is marked."
+      },
+      {
+        "text": "`minutes` must be declared as an optional",
+        "correct": false,
+        "why": "An optional is one of the fixes the notes offer, not what is wrong."
+      },
+      {
+        "text": "It warns, and runs",
+        "correct": false,
+        "why": "It is an error; nothing is built."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nnfzxf8",
+    "version": 1,
+    "section": "throws",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An error is thrown and no function on its way up has a `catch`. What happens?",
+    "hint": "`Uncaught.swift`.",
+    "choices": [
+      {
+        "text": "The call returns `nil` instead",
+        "correct": false,
+        "why": "That is `try?`, written on purpose."
+      },
+      {
+        "text": "The error is printed and the program continues",
+        "correct": false,
+        "why": "`never printed` was never printed."
+      },
+      {
+        "text": "The program stops: `Error raised at top level`",
+        "correct": true,
+        "why": "Right: at the top there is no caller left to pass it to."
+      },
+      {
+        "text": "The compiler refuses the program",
+        "correct": false,
+        "why": "Top-level code may use `try`; the program compiled and printed 45 first."
+      }
+    ]
+  },
+  {
+    "id": "ex-34717ysn",
+    "version": 1,
+    "section": "throws",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function that can fail is declared with the word ___ between its parameters and its return type.",
+    "blanks": [
+      {
+        "accept": [
+          "throws"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-egj9x8ex",
+    "version": 1,
+    "section": "throws",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an `enum` the usual type for a function's errors?",
+    "choices": [
+      {
+        "text": "Each case is one way to fail",
+        "correct": true,
+        "why": "Right: `notANumber(String)` carries what the caller needs."
+      },
+      {
+        "text": "`Error` can be adopted only by enums",
+        "correct": false,
+        "why": "Section 04's `NetworkDown` is a struct that conforms to `Error`."
+      },
+      {
+        "text": "Enums are thrown faster than structs",
+        "correct": false,
+        "why": "Speed is not the reason; meaning is."
+      },
+      {
+        "text": "An enum is caught without a `do`",
+        "correct": false,
+        "why": "Every error needs a `do`/`catch` to be caught."
+      }
+    ]
+  },
+  {
+    "id": "ex-54ex7f9q",
+    "version": 1,
+    "section": "do-catch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `DoCatch.swift`, why did the loop go on after `\"forty\"` failed?",
+    "choices": [
+      {
+        "text": "`try` ignores errors inside a loop",
+        "correct": false,
+        "why": "`try` passes errors on; the `catch` handled this one."
+      },
+      {
+        "text": "A `catch` handled it",
+        "correct": true,
+        "why": "Right: a handled error is over, and the next pass of the loop runs."
+      },
+      {
+        "text": "Errors are skipped in Swift 5 language mode",
+        "correct": false,
+        "why": "The language mode does not change how errors are thrown and caught."
+      },
+      {
+        "text": "`parseMinutes` returned 0",
+        "correct": false,
+        "why": "It threw `notANumber`; no number came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkjdek8w",
+    "version": 1,
+    "section": "do-catch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two `catch` clauses match `tooLong(900)`: one with `where minutes >= 600` and one without. Which runs?",
+    "hint": "Clauses are tried in order.",
+    "choices": [
+      {
+        "text": "Both, one after the other",
+        "correct": false,
+        "why": "Only one clause handles an error."
+      },
+      {
+        "text": "The one without `where`, as the more general one",
+        "correct": false,
+        "why": "Generality does not win; position does."
+      },
+      {
+        "text": "The first written that matches",
+        "correct": true,
+        "why": "Right: which is why the narrower clause comes first in `DoCatch.swift`."
+      },
+      {
+        "text": "Neither; the compiler refuses overlapping clauses",
+        "correct": false,
+        "why": "It compiled and printed `looks like a typo`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmac05df",
+    "version": 1,
+    "section": "do-catch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a function that does not throw, a `do` catches both cases of `PlannerError` and nothing else, and the call inside uses plain `throws`. Why does the compiler refuse it?",
+    "hint": "What does plain `throws` promise about the type?",
+    "choices": [
+      {
+        "text": "A `catch` with a pattern must come after a bare `catch`",
+        "correct": false,
+        "why": "The order is the opposite: a bare `catch` last."
+      },
+      {
+        "text": "Plain `throws` admits errors of any type",
+        "correct": true,
+        "why": "Right: the two cases are covered, and the compiler cannot rule out anything else."
+      },
+      {
+        "text": "Enum cases cannot be caught one by one",
+        "correct": false,
+        "why": "`DoCatch.swift` caught them one by one."
+      },
+      {
+        "text": "`print` cannot be called inside a `do` block",
+        "correct": false,
+        "why": "Any code may sit inside a `do`."
+      }
+    ]
+  },
+  {
+    "id": "ex-as6nexh8",
+    "version": 1,
+    "section": "try-variants",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `TryVariants.swift`, what total did `typed.compactMap { try? parseMinutes($0) }` add up to?",
+    "hint": "Only the strings that are numbers are kept.",
+    "value": 135,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kvx4akgf",
+    "version": 1,
+    "section": "try-variants",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `try?` give when the call throws?",
+    "choices": [
+      {
+        "text": "`nil`",
+        "correct": true,
+        "why": "Right: the error is dropped and the result is an optional."
+      },
+      {
+        "text": "The error, as a value",
+        "correct": false,
+        "why": "That is closer to `Result`; `try?` keeps no reason."
+      },
+      {
+        "text": "A crash, with the error's name",
+        "correct": false,
+        "why": "That is `try!`."
+      },
+      {
+        "text": "Zero, for a number",
+        "correct": false,
+        "why": "Swift substitutes no default; `nil` is what comes back."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fcnbk5m",
+    "version": 1,
+    "section": "try-variants",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sign-up form reads a typed age with `try? parseAge(field)` and shows \"invalid\" when it is `nil`. What is lost?",
+    "hint": "What does `try?` discard?",
+    "choices": [
+      {
+        "text": "Nothing: `nil` says everything a form needs",
+        "correct": false,
+        "why": "A form needs to say what to fix."
+      },
+      {
+        "text": "The valid ages, which also become `nil`",
+        "correct": false,
+        "why": "A success is kept as the value."
+      },
+      {
+        "text": "Why it failed, which the error knew",
+        "correct": true,
+        "why": "Right: not a number, or too large, and only the error says which."
+      },
+      {
+        "text": "The program's ability to compile",
+        "correct": false,
+        "why": "`try?` compiles wherever `try` would."
+      }
+    ]
+  },
+  {
+    "id": "ex-j96jmqxa",
+    "version": 1,
+    "section": "try-variants",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each spelling to what happens when the call throws.",
+    "hint": "The table at the end of section 03.",
+    "pairs": [
+      {
+        "left": "`try`",
+        "right": "The error goes to the caller or a `catch`"
+      },
+      {
+        "left": "`try?`",
+        "right": "The result is `nil`"
+      },
+      {
+        "left": "`try!`",
+        "right": "The program stops"
+      }
+    ],
+    "right_distractors": [
+      "The error is logged and ignored"
+    ]
+  },
+  {
+    "id": "ex-phw81vz0",
+    "version": 1,
+    "section": "typed-throws",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `throws(PlannerError)`, what type is `error` inside the `catch`?",
+    "choices": [
+      {
+        "text": "`any Error`",
+        "correct": false,
+        "why": "That is what plain `throws` gives."
+      },
+      {
+        "text": "`PlannerError`",
+        "correct": true,
+        "why": "Right: so a `switch` can list its cases with no `default`."
+      },
+      {
+        "text": "`String`, the error's message",
+        "correct": false,
+        "why": "An error is a value of its own type, not a string."
+      },
+      {
+        "text": "`Result<Int, PlannerError>`",
+        "correct": false,
+        "why": "A `catch` receives the error, not a `Result`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ad1tv05z",
+    "version": 1,
+    "section": "typed-throws",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function declared `throws(PlannerError)` contains `throw NetworkDown()`. What happens?",
+    "choices": [
+      {
+        "text": "`NetworkDown` is converted into a `PlannerError`",
+        "correct": false,
+        "why": "There is no conversion between the two types."
+      },
+      {
+        "text": "It compiles, and crashes when it throws",
+        "correct": false,
+        "why": "The mismatch is caught before anything runs."
+      },
+      {
+        "text": "It compiles, and callers must add a bare `catch`",
+        "correct": false,
+        "why": "It does not compile at all."
+      },
+      {
+        "text": "A compile error",
+        "correct": true,
+        "why": "Right: `thrown expression type 'NetworkDown' cannot be converted to error type 'PlannerError'`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5g5x3bnq",
+    "version": 1,
+    "section": "typed-throws",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function that loads the planner from a server is about to be declared `throws(LoadError)`, an enum of three cases. What is the argument against?",
+    "hint": "Section 04's last paragraph.",
+    "choices": [
+      {
+        "text": "Failures from below will grow, and each new case breaks every caller's `switch`",
+        "correct": true,
+        "why": "Right: the set is not closed, so the contract will not hold still."
+      },
+      {
+        "text": "Typed throws are not allowed in functions that do networking",
+        "correct": false,
+        "why": "Nothing forbids it; it is a design choice."
+      },
+      {
+        "text": "A typed error cannot carry associated values",
+        "correct": false,
+        "why": "`tooLong(minutes:)` carried one in section 04."
+      },
+      {
+        "text": "Callers would lose the ability to use `try?`",
+        "correct": false,
+        "why": "`try?` works on typed throws too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbx0ct7f",
+    "version": 1,
+    "section": "result",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What are the two cases of `Result`?",
+    "choices": [
+      {
+        "text": "`.some` and `.none`",
+        "correct": false,
+        "why": "Those are `Optional`'s."
+      },
+      {
+        "text": "`.completed` and `.cancelled`",
+        "correct": false,
+        "why": "Close in meaning, and not their names."
+      },
+      {
+        "text": "`.success` and `.failure`",
+        "correct": true,
+        "why": "Right: each carries its value."
+      },
+      {
+        "text": "`.ok` and `.thrown`",
+        "correct": false,
+        "why": "Not Swift's names."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kyn5je4",
+    "version": 1,
+    "section": "result",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Result { try parseMinutes(\"forty\") }`, with `parseMinutes` declared plain `throws`. What is the type of the result?",
+    "hint": "The last line of `ResultDemo.swift`.",
+    "choices": [
+      {
+        "text": "`Result<Int, PlannerError>`",
+        "correct": false,
+        "why": "The compiler knows only that it throws something."
+      },
+      {
+        "text": "`Result<Int, Error>`",
+        "correct": true,
+        "why": "Right: plain `throws` gives no more than `Error`."
+      },
+      {
+        "text": "`Int?`",
+        "correct": false,
+        "why": "That would be `try?`."
+      },
+      {
+        "text": "`PlannerError`",
+        "correct": false,
+        "why": "The result holds the success too."
+      }
+    ]
+  },
+  {
+    "id": "ex-mst33td6",
+    "version": 1,
+    "section": "result",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order `ResultDemo.swift` printed them.",
+    "items": [
+      "`success: 45`",
+      "`failure: notANumber(\"forty\")`",
+      "`success(0.75)`",
+      "`45`, from `get()`"
+    ]
+  },
+  {
+    "id": "ex-nngvaw8q",
+    "version": 1,
+    "section": "rethrows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a function declared `rethrows` throw?",
+    "choices": [
+      {
+        "text": "Whenever its own body has a `throw`",
+        "correct": false,
+        "why": "A rethrowing function throws its closure's errors, not its own."
+      },
+      {
+        "text": "Only when the closure it was given throws",
+        "correct": true,
+        "why": "Right: so with a closure that cannot fail, no `try` is needed."
+      },
+      {
+        "text": "Never; `rethrows` turns errors into `nil`",
+        "correct": false,
+        "why": "`\"forty\"` was caught as an error in the second call."
+      },
+      {
+        "text": "At the end of the program",
+        "correct": false,
+        "why": "Errors are thrown where they happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-nd4yvev4",
+    "version": 1,
+    "section": "rethrows",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many times did `Rethrows.swift` print `total: leaving`?",
+    "hint": "`defer` runs on every way out.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a7m7de70",
+    "version": 1,
+    "section": "rethrows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three `defer` blocks are written in one function, in the order A, B, C. In what order do they run when it returns?",
+    "choices": [
+      {
+        "text": "A, B, C",
+        "correct": false,
+        "why": "The last written runs first."
+      },
+      {
+        "text": "C, B, A",
+        "correct": true,
+        "why": "Right: reverse order, so what was opened last closes first."
+      },
+      {
+        "text": "Only C, the last one",
+        "correct": false,
+        "why": "Every `defer` in the scope runs."
+      },
+      {
+        "text": "In parallel, in no fixed order",
+        "correct": false,
+        "why": "They run one after the other, in a fixed order."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8pptm85",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sync function must report \"wrong format\" to the screen, and \"server down\" to a retry loop. Which is the right tool?",
+    "hint": "Somebody acts on the reason.",
+    "choices": [
+      {
+        "text": "`try?`, and check for `nil`",
+        "correct": false,
+        "why": "`nil` cannot tell the two failures apart."
+      },
+      {
+        "text": "`try!`, since the server is ours",
+        "correct": false,
+        "why": "A server being down is not a bug in this program; it would crash it."
+      },
+      {
+        "text": "`try`, with a `catch` for each case",
+        "correct": true,
+        "why": "Right: each failure reaches the code that can act on it."
+      },
+      {
+        "text": "Return `0` on any failure",
+        "correct": false,
+        "why": "A zero cannot be told apart from a real zero, or one failure from the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-f07zzfmw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are reasons the program in `Uncaught.swift` stopped? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`parseMinutes(\"forty\")` threw",
+        "correct": true,
+        "why": "Yes: the error started there."
+      },
+      {
+        "text": "No `catch` stood between the `try` and the top level",
+        "correct": true,
+        "why": "Yes: so it reached the top."
+      },
+      {
+        "text": "`try` itself crashes on a failure",
+        "correct": false,
+        "why": "Plain `try` passes the error on; it is `try!` that crashes."
+      },
+      {
+        "text": "`SWIFT_BACKTRACE=enable=no` turned the error into a crash",
+        "correct": false,
+        "why": "It only shortens the report."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1zsnv2x",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Cleanup that must happen however a scope ends, by `return` or by an error, goes in a ___ block.",
+    "blanks": [
+      {
+        "accept": [
+          "defer"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gkjt1w54",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call needs no `try` at all?",
+    "hint": "A function that cannot throw.",
+    "choices": [
+      {
+        "text": "`parseMinutes(\"45\")`",
+        "correct": false,
+        "why": "It is marked `throws`, whatever the value."
+      },
+      {
+        "text": "`minutes(from: \"45\")`",
+        "correct": true,
+        "why": "Right: the failure is in the return value."
+      },
+      {
+        "text": "`results[0].get()`",
+        "correct": false,
+        "why": "`get()` throws the failure, so it needs `try`."
+      },
+      {
+        "text": "`total(…, reading: parseMinutes)`",
+        "correct": false,
+        "why": "With a throwing closure, a rethrowing function throws."
+      }
+    ]
+  }
+]

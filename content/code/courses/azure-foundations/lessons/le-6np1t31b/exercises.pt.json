@@ -1,0 +1,426 @@
+{
+ "ex-b9khbqr5": {
+  "prompt": "A aplicação da loja em `snet-app` abre `stshopprod.blob.core.windows.net` e ninguém construiu outro caminho. Como os pacotes chegam à conta?",
+  "hint": "Onde mora um serviço de plataforma?",
+  "choices": [
+   {
+    "text": "Diretamente, porque a conta está na mesma assinatura da rede",
+    "why": "Dividir a assinatura não põe nada dentro da rede. A conta mora do lado da Microsoft."
+   },
+   {
+    "text": "Nenhum lugar: uma sub-rede não alcança uma storage account até fazer peering com ela",
+    "why": "Peering liga duas redes virtuais; uma conta não é uma rede."
+   },
+   {
+    "text": "Por um private endpoint que o Azure cria no primeiro uso",
+    "why": "Nada é criado por você; um private endpoint é um recurso que alguém declara."
+   },
+   {
+    "text": "Ao endpoint público dela, como qualquer cliente da internet",
+    "why": "Isso. Sem service endpoint nem private endpoint, o caminho público é o único."
+   }
+  ]
+ },
+ "ex-8vxvm6b2": {
+  "prompt": "Depois que um service endpoint para `Microsoft.Storage` é ligado na `snet-app`, a que endereço a aplicação se conecta?",
+  "hint": "Qual caminho mantém a porta pública da conta?",
+  "choices": [
+   {
+    "text": "Um endereço privado da `snet-app`",
+    "why": "Um service endpoint não dá à conta endereço na sua rede; isso é um private endpoint."
+   },
+   {
+    "text": "`10.20.4.4`, na `snet-pe`",
+    "why": "Esse é o private endpoint da próxima seção, outro caminho."
+   },
+   {
+    "text": "O endereço público da conta, alcançado pelo backbone",
+    "why": "Isso. O que muda é que o tráfego leva a identidade da sub-rede."
+   },
+   {
+    "text": "O resolvedor do Azure, `168.63.129.16`, que o repassa",
+    "why": "Esse endereço responde DNS; não carrega tráfego de storage."
+   }
+  ]
+ },
+ "ex-2yrt0awv": {
+  "prompt": "Um código rodando na `snet-app` é comprometido, e a sub-rede tem um service endpoint de storage sem policy. O que a cópia dos dados da loja feita pelo atacante agora alcança que a loja não pretendia?",
+  "hint": "Um service endpoint abre caminho para um serviço, não para uma conta.",
+  "choices": [
+   {
+    "text": "Qualquer storage account da região, inclusive a dele",
+    "why": "Isso. Sem service endpoint policy, o caminho leva a toda conta daquele serviço."
+   },
+   {
+    "text": "Nada: o firewall da conta só permite a `snet-app`",
+    "why": "Esse firewall protege a conta da loja. O atacante escreve numa conta dele."
+   },
+   {
+    "text": "Só contas em outros tenants que aprovaram a sub-rede",
+    "why": "Aprovação é de private endpoints. Um service endpoint não pergunta a ninguém."
+   },
+   {
+    "text": "A rede do escritório, pela VPN",
+    "why": "O service endpoint trata do tráfego para serviços do Azure, não para o escritório."
+   }
+  ]
+ },
+ "ex-765x6n9f": {
+  "prompt": "Por que implantar o `se.bicep` deixaria a `snet-app` sem o network security group?",
+  "hint": "O que o arquivo diz sobre a sub-rede, e o que deixa de fora?",
+  "choices": [
+   {
+    "text": "Service endpoints e network security groups não convivem",
+    "why": "Convivem em qualquer sub-rede. O problema é o que este arquivo menciona."
+   },
+   {
+    "text": "O arquivo declara a sub-rede inteira e não cita grupo nenhum",
+    "why": "Isso. Uma declaração substitui o que a anterior dizia; declare a sub-rede uma vez, junto da rede."
+   },
+   {
+    "text": "O Bicep remove propriedades que não consegue validar",
+    "why": "O compilador não remove nada; compilou o que o arquivo diz."
+   },
+   {
+    "text": "O `existing` apaga as outras sub-redes da rede",
+    "why": "O `existing` só se refere à rede. Não muda nada."
+   }
+  ]
+ },
+ "ex-b5fry3pb": {
+  "prompt": "Quais destas coisas um service endpoint NÃO dá? Marque todas as que se aplicam.",
+  "hint": "Três limites estão listados na seção.",
+  "choices": [
+   {
+    "text": "Acesso a partir de uma rede com peering",
+    "why": "Isso. Ele só vale para tráfego que começa naquela sub-rede."
+   },
+   {
+    "text": "Um jeito de desligar o endpoint público da conta",
+    "why": "Isso. O serviço continua respondendo no endereço público."
+   },
+   {
+    "text": "Uma regra de firewall na conta citando a sub-rede",
+    "why": "Isso é exatamente o que ele dá: `virtualNetworkRules`."
+   },
+   {
+    "text": "Acesso do escritório por uma VPN",
+    "why": "Isso. O tráfego do escritório não começou na sub-rede."
+   },
+   {
+    "text": "Tráfego que leva a identidade da sub-rede",
+    "why": "Esse é o propósito dele."
+   }
+  ]
+ },
+ "ex-8gm5vzbx": {
+  "prompt": "O que é um private endpoint, fisicamente?",
+  "hint": "Ele pega um endereço de uma sub-rede.",
+  "choices": [
+   {
+    "text": "Uma cópia da storage account posta na sua região",
+    "why": "Os dados ficam onde estão; nada é copiado."
+   },
+   {
+    "text": "Uma rota que manda o endereço público da conta pelo seu firewall",
+    "why": "Uma rota muda para onde os pacotes vão; um private endpoint dá à conta um endereço seu."
+   },
+   {
+    "text": "Uma máquina virtual que repassa pedidos para a conta",
+    "why": "Não há máquina para gerenciar: é uma interface, operada pelo Azure."
+   },
+   {
+    "text": "Uma interface de rede na sua sub-rede, representando um serviço",
+    "why": "Isso. O Private Link liga essa interface ao serviço do lado da Microsoft."
+   }
+  ]
+ },
+ "ex-sfws324a": {
+  "prompt": "O primeiro private endpoint posto na `snet-pe`, `10.20.4.0/24`, recebe `10.20.4.x`. Quanto é x?",
+  "hint": "O Azure reserva os quatro primeiros endereços de toda sub-rede.",
+  "unit": ""
+ },
+ "ex-nd41n0j6": {
+  "prompt": "A loja quer um caminho privado para o serviço de blob e para o de arquivos da `stshopprod`. Quantos private endpoints ela precisa?",
+  "hint": "Olhe o `groupIds`.",
+  "choices": [
+   {
+    "text": "Um, já que os dois serviços são da mesma conta",
+    "why": "Um endpoint representa um sub-recurso da conta."
+   },
+   {
+    "text": "Dois, um por sub-recurso",
+    "why": "Isso. E cada um tem a sua zona: `privatelink.blob...` e `privatelink.file...`."
+   },
+   {
+    "text": "Um por sub-rede que queira alcançá-los",
+    "why": "Um endpoint serve toda rede que consegue rotear até ele e resolve o nome dele."
+   },
+   {
+    "text": "Nenhum: um service endpoint cobre os dois",
+    "why": "Um service endpoint é o outro caminho, e mantém a porta pública."
+   }
+  ]
+ },
+ "ex-pfkpfnz0": {
+  "prompt": "Um parceiro cria um private endpoint para uma das contas da loja a partir do próprio tenant. Em que estado fica a conexão até alguém da loja agir?",
+  "hint": "Quem tem permissão na conta?",
+  "choices": [
+   {
+    "text": "*Pending*, esperando o dono aprová-la",
+    "why": "Isso. É assim que um parceiro ganha um caminho privado e mais nada."
+   },
+   {
+    "text": "Rejeitada, porque endpoints entre tenants são proibidos",
+    "why": "Endpoints entre tenants são permitidos; esperam o dono."
+   },
+   {
+    "text": "Aprovada, porque private endpoints nunca precisam de aprovação",
+    "why": "A aprovação só é automática quando quem cria tem permissão no recurso."
+   },
+   {
+    "text": "Desconectada, até o parceiro fazer peering das duas redes",
+    "why": "Não há peering envolvido; o Private Link liga a interface ao serviço."
+   }
+  ]
+ },
+ "ex-ab6h8hv9": {
+  "prompt": "Por que o `pe.bicep` dá nome à zona com `environment().suffixes.storage` em vez de escrever `core.windows.net`?",
+  "hint": "O que o linter disse sobre a versão escrita à mão?",
+  "choices": [
+   {
+    "text": "Porque um nome literal não compila",
+    "why": "O `hard.bicep` compilou; o linter avisou."
+   },
+   {
+    "text": "Porque zonas privadas não podem ter pontos",
+    "why": "O nome da zona tem pontos de qualquer jeito."
+   },
+   {
+    "text": "Para servir também em nuvens soberanas",
+    "why": "Isso. Cada nuvem tem o seu sufixo de storage; a regra `no-hardcoded-env-urls` cuida disso."
+   },
+   {
+    "text": "Porque o Bicep cobra menos por expressões do que por textos",
+    "why": "Nada é cobrado pelo conteúdo de um template."
+   }
+  ]
+ },
+ "ex-w5r6ktjt": {
+  "prompt": "Ligue cada recurso do `pe.bicep` ao que ele faz.",
+  "hint": "Cinco recursos, e só dois são o endpoint.",
+  "pairs": [
+   {
+    "left": "o private endpoint",
+    "right": "uma interface na `snet-pe` para o serviço de blob"
+   },
+   {
+    "left": "o link de rede virtual",
+    "right": "faz a `vnet-shop-prod` enxergar a zona"
+   },
+   {
+    "left": "o zone group",
+    "right": "escreve o endereço do endpoint na zona"
+   },
+   {
+    "left": "`publicNetworkAccess: 'Disabled'`",
+    "right": "fecha o caminho público da conta"
+   }
+  ],
+  "right_distractors": [
+   "dá à conta um endereço público"
+  ]
+ },
+ "ex-qgmst3pc": {
+  "prompt": "A propriedade de sub-rede `privateEndpoint___Policies` faz filtros e rotas valerem para private endpoints.",
+  "hint": "As lições 17 e 18 são sobre elas.",
+  "blanks": [
+   {
+    "accept": [
+     "Network"
+    ]
+   }
+  ]
+ },
+ "ex-gz03sc4g": {
+  "prompt": "Que nome a aplicação usa depois que o private endpoint existe?",
+  "hint": "O certificado carrega um nome.",
+  "choices": [
+   {
+    "text": "O mesmo `stshopprod.blob.core.windows.net` de antes",
+    "why": "Isso. Só a resposta ao nome muda."
+   },
+   {
+    "text": "`stshopprod.privatelink.blob.core.windows.net`, escrito nas configurações",
+    "why": "Esse é o elo do meio da cadeia; o certificado não o carrega."
+   },
+   {
+    "text": "O endereço `10.20.4.4`, digitado no lugar de um nome",
+    "why": "Conectar pelo endereço reprovaria a verificação do certificado."
+   },
+   {
+    "text": "Um nome novo que o Azure atribui ao endpoint",
+    "why": "Nenhum nome novo é dado à aplicação para usar."
+   }
+  ]
+ },
+ "ex-4ajdv867": {
+  "prompt": "Por que a zona privada da loja se chama `privatelink.blob.core.windows.net` e não `blob.core.windows.net`?",
+  "hint": "Por quem responderia uma zona chamada `blob.core.windows.net`?",
+  "choices": [
+   {
+    "text": "Porque o Azure reserva `blob.core.windows.net` para o DNS público",
+    "why": "O motivo é por quem a zona responderia, não uma reserva."
+   },
+   {
+    "text": "Para responder só o elo do meio, deixando as outras contas públicas",
+    "why": "Isso. Uma zona `blob.core.windows.net` quebraria toda conta sem endpoint."
+   },
+   {
+    "text": "Porque o nome de uma zona privada precisa começar com `privatelink`",
+    "why": "A `shop.internal`, da lição 21, também é uma zona privada."
+   },
+   {
+    "text": "Porque o certificado cita o host `privatelink`",
+    "why": "O certificado cita o host comum da conta."
+   }
+  ]
+ },
+ "ex-vns7a0rf": {
+  "prompt": "Uma desenvolvedora na VPN do escritório roda `dig stshopprod.blob.core.windows.net` e recebe um endereço público, enquanto uma VM na `vnet-shop-prod` recebe `10.20.4.4`. O que falta?",
+  "hint": "Quem respondeu a pergunta do notebook?",
+  "choices": [
+   {
+    "text": "Um segundo private endpoint para o escritório",
+    "why": "Um endpoint serve o escritório também, quando o nome resolver lá."
+   },
+   {
+    "text": "Um service endpoint na sub-rede do VPN gateway",
+    "why": "Um service endpoint não muda resposta de DNS nenhuma."
+   },
+   {
+    "text": "Nada: o escritório deve usar o caminho público",
+    "why": "Com o acesso público desligado, o caminho público leva a uma recusa."
+   },
+   {
+    "text": "Um encaminhador condicional do DNS do escritório para o Azure",
+    "why": "Isso. O notebook pergunta ao DNS do escritório, que perguntou à internet."
+   }
+  ]
+ },
+ "ex-vgnj5ntv": {
+  "prompt": "Na cadeia capturada de `login.microsoftonline.com`, qual elo mostra o padrão do Private Link?",
+  "hint": "Procure um nome de zona.",
+  "choices": [
+   {
+    "text": "O primeiro, `login.mso.msidentity.com`",
+    "why": "É um alias comum; nada privado pode assumi-lo."
+   },
+   {
+    "text": "O último, que mudou entre execuções",
+    "why": "Esse elo espalha logins por vários lugares; a lição 22 trata dele."
+   },
+   {
+    "text": "`ak.privatelink.msidentity.com`, o segundo dos três",
+    "why": "Isso. Uma rede com uma zona privada desse nome poderia respondê-lo de outro jeito."
+   },
+   {
+    "text": "Nenhum: o Private Link não aparece no DNS público",
+    "why": "Aparece: o elo `privatelink` está na cadeia pública de propósito."
+   }
+  ]
+ },
+ "ex-3d3zhas0": {
+  "prompt": "Dentro de uma rede virtual, o resolvedor do próprio Azure responde no endereço `168.63.129.___`.",
+  "hint": "O mesmo endereço que toda rede usa.",
+  "blanks": [
+   {
+    "accept": [
+     "16"
+    ]
+   }
+  ]
+ },
+ "ex-w9cy9577": {
+  "prompt": "Uma VM na `vnet-shop-staging` resolve o nome da conta para o endereço público, embora a `vnet-shop-prod` receba `10.20.4.4`. As duas usam o resolvedor do Azure. Qual é a causa mais provável?",
+  "hint": "Para quais redes a zona responde?",
+  "choices": [
+   {
+    "text": "O acesso público da conta foi religado",
+    "why": "Isso muda se o endereço público responde, não para onde o nome resolve."
+   },
+   {
+    "text": "Assinaturas de staging não podem usar private endpoints",
+    "why": "Nada no nome de uma assinatura restringe o recurso."
+   },
+   {
+    "text": "O zone group escreveu o endereço errado",
+    "why": "A produção recebe o certo da mesma zona."
+   },
+   {
+    "text": "A zona não tem link com a `vnet-shop-staging`",
+    "why": "Isso. Uma zona só responde às redes ligadas a ela."
+   }
+  ]
+ },
+ "ex-tv6t4zte": {
+  "prompt": "Ponha os passos do caminho privado na ordem em que um pedido da `snet-app` passa por eles.",
+  "hint": "O nome é resolvido antes de qualquer pacote sair.",
+  "items": [
+   "a aplicação pede `stshopprod.blob.core.windows.net`",
+   "a cadeia chega a `stshopprod.privatelink.blob.core.windows.net`",
+   "a zona privada ligada responde `10.20.4.4`",
+   "os pacotes vão para a interface na `snet-pe`",
+   "o Private Link os leva ao serviço de blob da conta"
+  ],
+  "trap": "Toda falha da seção é uma quebra entre o segundo e o terceiro passos."
+ },
+ "ex-07jasy24": {
+  "prompt": "A loja desliga o acesso público da `stshopprod` antes de criar o private endpoint. O que acontece com a aplicação na `snet-app`, que tem um service endpoint?",
+  "hint": "Qual caminho termina no endpoint público?",
+  "choices": [
+   {
+    "text": "Nada, já que o service endpoint contorna o endpoint público",
+    "why": "Ele não o contorna; chega a ele pelo backbone."
+   },
+   {
+    "text": "Perde o acesso até o private endpoint existir",
+    "why": "Isso. Os caminhos 1 e 2 terminam no endpoint público, e foi isso que se fechou."
+   },
+   {
+    "text": "Passa sozinha para o caminho privado",
+    "why": "Não há caminho privado até o endpoint e o DNS dele existirem."
+   },
+   {
+    "text": "Mantém o acesso, mas só para leitura",
+    "why": "Desligar o acesso público não distingue leitura de escrita."
+   }
+  ]
+ },
+ "ex-bpvg0cjd": {
+  "prompt": "Quais destas coisas o laboratório de fato fez nesta lição? Marque todas as que se aplicam.",
+  "hint": "Veja o que tem transcrição.",
+  "choices": [
+   {
+    "text": "Compilou um private endpoint, a zona, o link e o zone group",
+    "why": "Isso. `az bicep build` no `pe.bicep`."
+   },
+   {
+    "text": "Resolveu o nome de uma storage account para `10.20.4.4`",
+    "why": "Isso precisa de um endpoint real e de uma rede dentro do Azure; foi ensinado, não executado."
+   },
+   {
+    "text": "Perguntou ao DNS público a cadeia de um nome da Microsoft",
+    "why": "Isso. `dig login.microsoftonline.com`."
+   },
+   {
+    "text": "Rodou o linter do Bicep sobre um nome de zona escrito à mão",
+    "why": "Isso. `no-hardcoded-env-urls`."
+   },
+   {
+    "text": "Aprovou uma conexão pendente de private endpoint",
+    "why": "Aprovar é um pedido ao Resource Manager; nada foi mandado."
+   }
+  ]
+ }
+}

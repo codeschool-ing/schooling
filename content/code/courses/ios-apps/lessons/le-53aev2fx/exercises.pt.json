@@ -1,0 +1,435 @@
+{
+  "ex-vbtebadm": {
+    "prompt": "Onde vai o `.resizable()` quando você usa `AsyncImage(url:content:placeholder:)`?",
+    "hint": "O `resizable` pertence a um tipo.",
+    "choices": [
+      {
+        "text": "No próprio `AsyncImage`, antes do `.frame`",
+        "why": "O `AsyncImage` não é uma `Image`; a documentação da Apple diz que o modificador não vai ali."
+      },
+      {
+        "text": "Na `Image` que a closure de conteúdo recebe",
+        "why": "Isso: a closure entrega a imagem carregada para você modificar."
+      },
+      {
+        "text": "No marcador, que então dimensiona a imagem",
+        "why": "O marcador só é desenhado enquanto carrega."
+      },
+      {
+        "text": "Em lugar nenhum: o `AsyncImage` se ajusta ao frame sozinho",
+        "why": "Sem `resizable` a imagem é desenhada no próprio tamanho em pixels e cortada."
+      }
+    ]
+  },
+  "ex-g3f35eaw": {
+    "prompt": "No iOS 17, o `AsyncImage` promete guardar uma capa que já baixou?",
+    "hint": "A documentação da Apple data o cache de um iOS posterior.",
+    "choices": [
+      {
+        "text": "Sim, num cache de memória compartilhado por todo `AsyncImage`",
+        "why": "Nenhum cache assim é prometido no iOS 17."
+      },
+      {
+        "text": "Sim, em disco, enquanto o app estiver instalado",
+        "why": "Nada promete isso também."
+      },
+      {
+        "text": "Não; é no iOS 27 que o cache HTTP é documentado",
+        "why": "Isso, e é por isso que a seção 06 constrói um cache que o app controla."
+      },
+      {
+        "text": "Não, e ele baixa toda capa duas vezes de propósito",
+        "why": "Ele pode baixar de novo; nada faz isso duas vezes de propósito."
+      }
+    ]
+  },
+  "ex-2pgrbt94": {
+    "prompt": "O download de uma capa falha, e o marcador é uma `Image` que também não carrega. O que a pessoa vê?",
+    "hint": "A documentação da Apple descreve exatamente esse caso.",
+    "choices": [
+      {
+        "text": "Nada, e nenhum erro é informado",
+        "why": "Isso: e é por isso que a forma com fases, com um case `failure`, existe."
+      },
+      {
+        "text": "Um símbolo de erro vermelho desenhado pelo SwiftUI",
+        "why": "O SwiftUI não desenha nada próprio aqui."
+      },
+      {
+        "text": "Um alerta dizendo que a imagem não pôde ser carregada",
+        "why": "O `AsyncImage` nunca mostra um alerta."
+      },
+      {
+        "text": "A última capa que carregou naquela linha",
+        "why": "Nada mantém uma imagem antiga no lugar."
+      }
+    ]
+  },
+  "ex-ymq2mfh0": {
+    "prompt": "Ligue cada case de `AsyncImagePhase` ao que o planner desenha.",
+    "hint": "O `switch` da seção 03.",
+    "pairs": [
+      {
+        "left": "`.empty`",
+        "right": "Um `ProgressView`"
+      },
+      {
+        "left": "`.success(let image)`",
+        "right": "A imagem, redimensionável e preenchida"
+      },
+      {
+        "left": "`.failure`",
+        "right": "Um símbolo de foto, com rótulo para o VoiceOver"
+      },
+      {
+        "left": "`@unknown default`",
+        "right": "`Color.clear`"
+      }
+    ],
+    "right_distractors": [
+      "Um alerta com botão de tentar de novo"
+    ]
+  },
+  "ex-04xhd5df": {
+    "prompt": "Por que o `switch` sobre `AsyncImagePhase` precisa de `@unknown default`, quando o `switch` da aula 12 sobre `Loadable` não tinha?",
+    "hint": "Quem pode acrescentar um case, e isso deveria quebrar a sua compilação?",
+    "choices": [
+      {
+        "text": "Porque `AsyncImagePhase` tem mais de três cases",
+        "why": "Ela tem três hoje, como o `Loadable`."
+      },
+      {
+        "text": "Porque views SwiftUI exigem um default em todo `switch`",
+        "why": "Não existe essa regra; o `CourseListView` fez switch sem um."
+      },
+      {
+        "text": "A Apple acrescenta cases em versões novas; no seu enum, um case novo deve quebrar a compilação",
+        "why": "Isso: os dois `switch` olham para lados opostos."
+      },
+      {
+        "text": "Porque o `Loadable` é genérico e o `AsyncImagePhase` não",
+        "why": "Genéricos não têm nada a ver com isso."
+      }
+    ]
+  },
+  "ex-26m7fa8q": {
+    "prompt": "Quantos bytes uma capa de 1200 por 800 ocupa depois de decodificada?",
+    "hint": "Largura vezes altura vezes quatro.",
+    "unit": "bytes"
+  },
+  "ex-1p353xcb": {
+    "prompt": "A fotografia foi baixada com 40.614 bytes. Por que decodificou em 48.771.072?",
+    "hint": "O que a decodificação produz?",
+    "choices": [
+      {
+        "text": "O PNG estava corrompido e decodificou errado",
+        "why": "O cabeçalho foi lido certo: 4032 por 3024."
+      },
+      {
+        "text": "O servidor o mandou sem compressão",
+        "why": "Ele chegou com 40.614 bytes, comprimido."
+      },
+      {
+        "text": "Quatro bytes para cada um dos 4032 x 3024 pixels",
+        "why": "Isso: a memória segue os pixels, não o arquivo."
+      },
+      {
+        "text": "O Swift guarda dez cópias de toda imagem que decodifica",
+        "why": "Uma cópia; ela só é grande."
+      }
+    ]
+  },
+  "ex-063xmey2": {
+    "prompt": "Um quadrado de 80 pontos numa tela 3x: quantos pixels de largura ele tem?",
+    "hint": "Pontos vezes escala.",
+    "unit": "pixels"
+  },
+  "ex-5rnbnfpa": {
+    "prompt": "Uma fotografia de verdade do mesmo tamanho, 4032 por 3024, comprime para 3 MB em vez de 40 KB. O que acontece com o tamanho decodificado?",
+    "hint": "Do que o tamanho decodificado depende?",
+    "choices": [
+      {
+        "text": "Cresce umas setenta vezes, junto com o arquivo",
+        "why": "O tamanho do arquivo não entra na conta."
+      },
+      {
+        "text": "Nada: continua 48.771.072 bytes",
+        "why": "Isso: mesmos pixels, mesma memória."
+      },
+      {
+        "text": "Diminui, porque o detalhe comprime em menos pixels",
+        "why": "O número de pixels está no cabeçalho e não muda."
+      },
+      {
+        "text": "Não dá para saber sem decodificar",
+        "why": "O cabeçalho diz largura e altura, e isso basta."
+      }
+    ]
+  },
+  "ex-v8ekra1k": {
+    "prompt": "O `pngSize` lê a largura e a altura do primeiro chunk do PNG, chamado ___, sem decodificar a imagem.",
+    "hint": "Quatro letras maiúsculas, nos bytes que a função compara.",
+    "blanks": [
+      {
+        "accept": [
+          "IHDR"
+        ]
+      }
+    ]
+  },
+  "ex-acgh816z": {
+    "prompt": "O que o downsampling com o ImageIO muda?",
+    "hint": "Mesmo arquivo.",
+    "choices": [
+      {
+        "text": "O arquivo que o servidor manda",
+        "why": "O download é idêntico."
+      },
+      {
+        "text": "Quantos pixels são decodificados",
+        "why": "Isso: só os que a tela precisa."
+      },
+      {
+        "text": "Como o frame escala a imagem ao desenhar",
+        "why": "É isso que o `AsyncImage` faz, depois de decodificar tudo."
+      },
+      {
+        "text": "A profundidade de cor, de quatro bytes por pixel para um",
+        "why": "Cada pixel ainda ocupa quatro bytes; há menos deles."
+      }
+    ]
+  },
+  "ex-vycamd3h": {
+    "prompt": "Ligue cada opção do ImageIO ao que ela faz.",
+    "hint": "A seção 05 explica cada uma.",
+    "pairs": [
+      {
+        "left": "`kCGImageSourceShouldCache: false`",
+        "right": "Não decodificar a imagem inteira ao abri-la"
+      },
+      {
+        "left": "`kCGImageSourceThumbnailMaxPixelSize`",
+        "right": "O lado maior do resultado, em pixels"
+      },
+      {
+        "left": "`kCGImageSourceShouldCacheImmediately`",
+        "right": "Decodificar agora, na thread que chamou"
+      },
+      {
+        "left": "`kCGImageSourceCreateThumbnailWithTransform`",
+        "right": "Aplicar a orientação da fotografia"
+      }
+    ],
+    "right_distractors": [
+      "Comprimir o resultado como JPEG"
+    ]
+  },
+  "ex-ybrt0acc": {
+    "prompt": "Por que o downsampling roda onde o download rodou, e não quando a linha desenha?",
+    "hint": "Onde o desenho acontece?",
+    "choices": [
+      {
+        "text": "O ImageIO não pode ser chamado de arquivos SwiftUI",
+        "why": "Pode ser chamado de qualquer lugar; a questão é onde ele roda."
+      },
+      {
+        "text": "Porque o download mantém o arquivo aberto",
+        "why": "Os dados estão na memória; nenhum arquivo está aberto."
+      },
+      {
+        "text": "Decodificar uma fotografia grande no main actor perde quadros enquanto a lista rola",
+        "why": "Isso: trabalho de CPU fica fora do main actor, e só o resultado pequeno passa."
+      },
+      {
+        "text": "O downsampling precisa da rede disponível",
+        "why": "Ele trabalha sobre bytes já baixados."
+      }
+    ]
+  },
+  "ex-1xkpfmq0": {
+    "prompt": "Dez linhas pediram três capas ao mesmo tempo, e o `covers` imprimiu `3 downloads`. O que evitou os outros sete?",
+    "hint": "Todas pediram antes de qualquer download terminar.",
+    "choices": [
+      {
+        "text": "O `NSCache`, que já tinha as capas",
+        "why": "Nada estava guardado ainda quando pediram; os downloads ainda rodavam."
+      },
+      {
+        "text": "O dicionário `inFlight`",
+        "why": "Isso: as linhas seguintes esperaram o download já em andamento."
+      },
+      {
+        "text": "O `URLSession`, que junta pedidos idênticos",
+        "why": "Ele envia o que recebe."
+      },
+      {
+        "text": "O servidor, que recusou pedidos repetidos com 304",
+        "why": "O servidor respondeu todo pedido que recebeu; só três foram enviados."
+      }
+    ]
+  },
+  "ex-1hbxw2a0": {
+    "prompt": "Por que `inFlight` e `downloads` são atualizados antes do primeiro `await` em `data(for:)`?",
+    "hint": "Um actor roda um método por vez só entre suspensões.",
+    "choices": [
+      {
+        "text": "Para nenhum outro chamador ver um espaço vazio e começar um segundo download",
+        "why": "Isso: num `await` outra chamada roda no meio, e aí o espaço já está ocupado."
+      },
+      {
+        "text": "Porque o compilador recusa uma atribuição depois de `await`",
+        "why": "Ele permite; a ordem é uma escolha."
+      },
+      {
+        "text": "Para o contador bater com o log do servidor",
+        "why": "A ordem importa pela correção, não pelos logs."
+      },
+      {
+        "text": "Porque o `NSCache` tem de ser escrito primeiro",
+        "why": "O cache é escrito depois do download."
+      }
+    ]
+  },
+  "ex-0s3pn5v6": {
+    "prompt": "Com um limite de 50 MB, o que o cache guardou depois de baixadas as três capas?",
+    "hint": "Só a fotografia custa 48.771.072.",
+    "choices": [
+      {
+        "text": "As três",
+        "why": "Juntas elas passaram do limite."
+      },
+      {
+        "text": "As duas capas, já que são mais baratas",
+        "why": "Foi ao contrário."
+      },
+      {
+        "text": "Só a fotografia",
+        "why": "Isso: a imagem de que a lista menos precisava em tamanho cheio."
+      },
+      {
+        "text": "Nada, porque o limite foi passado",
+        "why": "Ele descartou até caber."
+      }
+    ]
+  },
+  "ex-3p2j5511": {
+    "prompt": "Qual cache guarda respostas em disco conforme os cabeçalhos HTTP do servidor?",
+    "hint": "Bytes, não imagens.",
+    "choices": [
+      {
+        "text": "`NSCache`",
+        "why": "Esse é só de memória, e guarda o que você dá."
+      },
+      {
+        "text": "`URLCache`",
+        "why": "Isso."
+      },
+      {
+        "text": "`ImageCache`",
+        "why": "O cache do planner é de memória e decide por custo."
+      },
+      {
+        "text": "`UserDefaults`",
+        "why": "Esse guarda preferências pequenas, não respostas."
+      }
+    ]
+  },
+  "ex-yj4aar7x": {
+    "prompt": "Por que o `images: ImageCache` é passado para o `CourseRow` em vez de criado dentro dele?",
+    "hint": "Quantas linhas o compartilham?",
+    "choices": [
+      {
+        "text": "Porque actors não podem ser criados dentro de uma view",
+        "why": "Podem; só não guardariam nada útil."
+      },
+      {
+        "text": "Um cache por linha não compartilharia nada",
+        "why": "Isso: toda linha tem de ver os mesmos downloads e imagens."
+      },
+      {
+        "text": "Para a linha ser testável no Linux",
+        "why": "A linha é SwiftUI; não roda no Linux de jeito nenhum."
+      },
+      {
+        "text": "Porque o `List` destrói tudo que uma linha cria",
+        "why": "Isso é parte, mas o motivo é compartilhar."
+      }
+    ]
+  },
+  "ex-47fr6800": {
+    "prompt": "Uma linha sai da tela enquanto a capa dela baixa. O `task(id:)` é cancelado. O que acontece com o download?",
+    "hint": "De quem é a tarefa do download?",
+    "choices": [
+      {
+        "text": "Ele para, e a próxima linha que pedir começa de novo",
+        "why": "O download pertence ao cache, não à linha."
+      },
+      {
+        "text": "Continua na `Task` do próprio cache, e é guardado",
+        "why": "Isso: só a espera da linha para; a imagem fica pronta se ela voltar."
+      },
+      {
+        "text": "Ele é reiniciado com prioridade menor",
+        "why": "Nada o reinicia."
+      },
+      {
+        "text": "O `URLSession` o pausa até a linha reaparecer",
+        "why": "Nada o pausa."
+      }
+    ]
+  },
+  "ex-2n6fc7m1": {
+    "prompt": "Ponha em ordem o que acontece quando a linha de uma capa aparece pela primeira vez.",
+    "hint": "Cache, download, reduzir, desenhar.",
+    "items": [
+      "O `task` da linha pergunta ao cache compartilhado",
+      "O cache começa o único download daquela URL",
+      "Os bytes são reduzidos aos pixels da linha",
+      "A imagem pequena é atribuída e desenhada"
+    ]
+  },
+  "ex-8mj78mhk": {
+    "prompt": "Quais destes rodaram na máquina Linux? Escolha todos os que se aplicam.",
+    "hint": "Swift puro e Python rodaram; os frameworks da Apple não.",
+    "choices": [
+      {
+        "text": "O `make_covers.py` e o servidor de imagens",
+        "why": "Sim: seção 04."
+      },
+      {
+        "text": "O `ImageCache` com dez linhas de uma vez",
+        "why": "Sim: seção 06."
+      },
+      {
+        "text": "O `downsample` com ImageIO",
+        "why": "Não: o ImageIO está nos SDKs da Apple."
+      },
+      {
+        "text": "O `CourseCover` e as fases dele",
+        "why": "Não: SwiftUI, não executado."
+      }
+    ]
+  },
+  "ex-h3t0v96q": {
+    "prompt": "Uma lista mostra 30 capas, cada uma de uma foto de 12 megapixels, a 80 pontos numa tela 3x. Quanto de memória as miniaturas decodificadas ocupam, mais ou menos, contra decodificar no tamanho cheio?",
+    "hint": "230.400 bytes contra 48.771.072, trinta vezes cada.",
+    "choices": [
+      {
+        "text": "Uns 7 MB contra uns 140 MB",
+        "why": "As miniaturas estão certas; tamanho cheio é 30 x 48,8 MB, bem mais que 140."
+      },
+      {
+        "text": "Uns 7 MB contra uns 1,5 GB",
+        "why": "Isso: 30 x 230.400 dá 6,9 MB, e 30 x 48.771.072 dá 1,46 GB."
+      },
+      {
+        "text": "Uns 1,2 MB contra uns 1,2 MB, já que os arquivos são os mesmos",
+        "why": "A memória segue os pixels, não os arquivos."
+      },
+      {
+        "text": "Uns 70 MB contra uns 700 MB",
+        "why": "Faça a conta: nenhum dos dois bate."
+      }
+    ]
+  }
+}

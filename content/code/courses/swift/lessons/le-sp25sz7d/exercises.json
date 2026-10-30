@@ -1,0 +1,630 @@
+[
+  {
+    "id": "ex-98x4m3y9",
+    "version": 1,
+    "section": "wrappers-outside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In SwiftUI's `@State private var minutes = 45`, what is `@State`?",
+    "choices": [
+      {
+        "text": "A keyword of the Swift language, like `let`",
+        "correct": false,
+        "why": "It is a type, defined by SwiftUI; the language supplies the mechanism."
+      },
+      {
+        "text": "A property wrapper, defined by SwiftUI",
+        "correct": true,
+        "why": "Right: a type whose code runs on every read and write of `minutes`."
+      },
+      {
+        "text": "A macro that deletes the property",
+        "correct": false,
+        "why": "Nothing is deleted; the value is stored through the wrapper."
+      },
+      {
+        "text": "A comment that SwiftUI reads at run time",
+        "correct": false,
+        "why": "It is code, checked by the compiler."
+      }
+    ]
+  },
+  {
+    "id": "ex-pk99ewjy",
+    "version": 1,
+    "section": "wrappers-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `ByHand.swift` cost for every property that needs the 0 to 600 rule?",
+    "choices": [
+      {
+        "text": "A slower program",
+        "correct": false,
+        "why": "Speed is not the cost the section names."
+      },
+      {
+        "text": "A compiler warning per property",
+        "correct": false,
+        "why": "It compiles cleanly."
+      },
+      {
+        "text": "Six lines and another copy of the rule",
+        "correct": true,
+        "why": "Right: copies that can drift apart."
+      },
+      {
+        "text": "An extra `init` for each property, written by hand",
+        "correct": false,
+        "why": "The struct's memberwise initialiser is still generated."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddmgt8gy",
+    "version": 1,
+    "section": "wrappers-outside",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For `@Clamped(0...600) var minutes`, the compiler generates a hidden stored property called ___.",
+    "hint": "An underscore and the property's name.",
+    "blanks": [
+      {
+        "accept": [
+          "_minutes"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xg1hbs70",
+    "version": 1,
+    "section": "writing-a-wrapper",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What must a type marked `@propertyWrapper` have?",
+    "choices": [
+      {
+        "text": "A `wrappedValue` property",
+        "correct": true,
+        "why": "Right: every read and write of the wrapped property goes through it."
+      },
+      {
+        "text": "`projectedValue`",
+        "correct": false,
+        "why": "That one is optional, for the `$` name."
+      },
+      {
+        "text": "A conformance to `Equatable`, so values compare",
+        "correct": false,
+        "why": "Not required."
+      },
+      {
+        "text": "A `range` property and an initialiser taking a range",
+        "correct": false,
+        "why": "That is what `Clamped` happens to store."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ft117r5",
+    "version": 1,
+    "section": "writing-a-wrapper",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`@Clamped(0...1200) var weeklyGoal = 300`, then `weeklyGoal = 2000`. What does `weeklyGoal` hold?",
+    "value": 1200,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wrrg0tcd",
+    "version": 1,
+    "section": "writing-a-wrapper",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`@Clamped(0...600) var minutes = 900` in a struct, with no other write. What is `minutes` right after the struct is created?",
+    "hint": "The initial value goes through `init(wrappedValue:)`.",
+    "value": 600,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gvwy47wp",
+    "version": 1,
+    "section": "writing-a-wrapper",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`print(session._minutes.range)` outside `StudySession` is refused. Why?",
+    "choices": [
+      {
+        "text": "`_minutes` exists only at run time",
+        "correct": false,
+        "why": "It is an ordinary stored property; `describe()` used it."
+      },
+      {
+        "text": "The generated `_minutes` is `private`",
+        "correct": true,
+        "why": "Right: inaccessible due to `private` protection level."
+      },
+      {
+        "text": "`range` is not a property of `Clamped`",
+        "correct": false,
+        "why": "It is; `describe()` printed it."
+      },
+      {
+        "text": "Wrapped properties cannot be read from outside the type",
+        "correct": false,
+        "why": "`session.minutes` is read from outside all the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jykv7wx",
+    "version": 1,
+    "section": "writing-a-wrapper",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A break must always be shorter than its session. Is a property wrapper on `breakMinutes` the right place for that rule?",
+    "hint": "What does the rule relate?",
+    "choices": [
+      {
+        "text": "Yes: wrappers are for every rule about a property",
+        "correct": false,
+        "why": "A wrapper sees one value; this rule needs two."
+      },
+      {
+        "text": "Yes, if the wrapper's range is set to `0...minutes`",
+        "correct": false,
+        "why": "The range is fixed when the wrapper is made, and `minutes` changes later."
+      },
+      {
+        "text": "No: it relates two properties, so a method or `init` of the type",
+        "correct": true,
+        "why": "Right: a wrapper is for a rule about one value."
+      },
+      {
+        "text": "No: wrappers cannot hold an `Int`",
+        "correct": false,
+        "why": "`Clamped` holds one."
+      }
+    ]
+  },
+  {
+    "id": "ex-x1crxynf",
+    "version": 1,
+    "section": "projected-value",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `session.$minutes` read, for `@Clamped var minutes`?",
+    "choices": [
+      {
+        "text": "The previous value of `minutes`",
+        "correct": false,
+        "why": "Only if a wrapper chose to project that; ours projects a flag."
+      },
+      {
+        "text": "A copy of `minutes` that can be changed freely",
+        "correct": false,
+        "why": "A projected value is whatever the wrapper defines, here read-only."
+      },
+      {
+        "text": "`_minutes.projectedValue`",
+        "correct": true,
+        "why": "Right: the compiler rewrites the dollar name into that."
+      },
+      {
+        "text": "A `Binding`, like in every wrapper",
+        "correct": false,
+        "why": "`Binding` is what SwiftUI's `@State` projects; ours projects a `Bool`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvy1rfjw",
+    "version": 1,
+    "section": "projected-value",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Projected.swift`, 900 then 600 were written. Why did 600 print as accepted?",
+    "choices": [
+      {
+        "text": "The flag stays `true` once set",
+        "correct": false,
+        "why": "It went back to `false`, as the output shows."
+      },
+      {
+        "text": "The flag describes the latest write only",
+        "correct": true,
+        "why": "Right: 600 needed no clamping, so `projectedValue` became `false`."
+      },
+      {
+        "text": "600 is outside the range",
+        "correct": false,
+        "why": "`0...600` includes 600."
+      },
+      {
+        "text": "`private(set)` blocked the setter from changing the flag",
+        "correct": false,
+        "why": "`private(set)` blocks callers, not the wrapper's own code."
+      }
+    ]
+  },
+  {
+    "id": "ex-cap4ycwj",
+    "version": 1,
+    "section": "projected-value",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question about an unknown wrapper to where the answer is.",
+    "pairs": [
+      {
+        "left": "What does reading the property do?",
+        "right": "The getter of `wrappedValue`"
+      },
+      {
+        "left": "What does writing it do?",
+        "right": "The setter of `wrappedValue`"
+      },
+      {
+        "left": "What does `$name` give?",
+        "right": "The type of `projectedValue`"
+      }
+    ],
+    "right_distractors": [
+      "The place where the property is used"
+    ]
+  },
+  {
+    "id": "ex-sapeptsy",
+    "version": 1,
+    "section": "builders-outside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `VStack { … }`, three `Text` lines with no commas and no `return` become the stack's contents. What makes that work?",
+    "choices": [
+      {
+        "text": "Closures return all their lines",
+        "correct": false,
+        "why": "An ordinary closure discards them."
+      },
+      {
+        "text": "A result builder attached to the parameter of `VStack`",
+        "correct": true,
+        "why": "Right: it tells the compiler to collect each line's value."
+      },
+      {
+        "text": "A property wrapper on each `Text`",
+        "correct": false,
+        "why": "Wrappers apply to properties, not to lines of a block."
+      },
+      {
+        "text": "SwiftUI parses the source file at run time",
+        "correct": false,
+        "why": "It all happens at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-atns8y23",
+    "version": 1,
+    "section": "builders-outside",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a builder block, the compiler passes the value of each line to a static function of the builder called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "buildBlock"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vc4nks1g",
+    "version": 1,
+    "section": "builders-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which module, shipped with the toolchain on Linux, gave this lesson a result builder to run?",
+    "choices": [
+      {
+        "text": "SwiftUI",
+        "correct": false,
+        "why": "SwiftUI is not on Linux."
+      },
+      {
+        "text": "Foundation",
+        "correct": false,
+        "why": "The builder was `Regex { … }`."
+      },
+      {
+        "text": "RegexBuilder",
+        "correct": true,
+        "why": "Right: `Regex { … }` built a pattern from pieces."
+      },
+      {
+        "text": "Observation",
+        "correct": false,
+        "why": "That one supplied the `@Observable` macro."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7jnpyg1",
+    "version": 1,
+    "section": "writing-a-builder",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ReportLoop.swift` put a `for` loop inside a `ReportBuilder` block and was refused. What did the note suggest?",
+    "choices": [
+      {
+        "text": "Replace the loop with `forEach`",
+        "correct": false,
+        "why": "The note named a builder function."
+      },
+      {
+        "text": "Add `buildArray(_:)` to the builder",
+        "correct": true,
+        "why": "Right: that function gives a `for` a meaning inside the block."
+      },
+      {
+        "text": "Mark `report` as `async`",
+        "correct": false,
+        "why": "Nothing here is asynchronous."
+      },
+      {
+        "text": "Make `ReportBuilder` a struct instead of an enum",
+        "correct": false,
+        "why": "A builder may be either; the enum was not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-81pjwtq7",
+    "version": 1,
+    "section": "writing-a-builder",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each statement in a builder block to the function that handles it.",
+    "pairs": [
+      {
+        "left": "A line of text",
+        "right": "`buildExpression`"
+      },
+      {
+        "left": "A `for` loop",
+        "right": "`buildArray`"
+      },
+      {
+        "left": "An `if` with no `else`",
+        "right": "`buildOptional`"
+      },
+      {
+        "left": "An `if` with an `else`",
+        "right": "`buildEither`"
+      }
+    ],
+    "right_distractors": [
+      "`buildLoop`"
+    ]
+  },
+  {
+    "id": "ex-yfg1ca4f",
+    "version": 1,
+    "section": "writing-a-builder",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `ReportFull.swift`, the first report had no \"Goal reached\" line. What did `buildOptional` receive for that `if`?",
+    "hint": "225 against a goal of 300.",
+    "choices": [
+      {
+        "text": "An empty string",
+        "correct": false,
+        "why": "Then the report would have had a blank line."
+      },
+      {
+        "text": "`nil`, for a condition that failed",
+        "correct": true,
+        "why": "Right: the condition failed, and `lines ?? []` turned `nil` into no lines."
+      },
+      {
+        "text": "`[\"Goal reached\"]`, which `buildBlock` then dropped",
+        "correct": false,
+        "why": "`buildBlock` joins everything it is given."
+      },
+      {
+        "text": "Nothing: it was not called",
+        "correct": false,
+        "why": "It is called whether the condition holds or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-j46zbsd4",
+    "version": 1,
+    "section": "macros",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a macro run?",
+    "choices": [
+      {
+        "text": "While your code is being compiled",
+        "correct": true,
+        "why": "Right: the compiler runs it and adds what it returns."
+      },
+      {
+        "text": "When the program starts",
+        "correct": false,
+        "why": "Nothing of it is left to do at run time."
+      },
+      {
+        "text": "Each time the property it is attached to changes",
+        "correct": false,
+        "why": "That is the generated code running, not the macro."
+      },
+      {
+        "text": "Only in Xcode",
+        "correct": false,
+        "why": "`@Observable` expanded on Linux in this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-ac4x511d",
+    "version": 1,
+    "section": "macros",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`model.minutes` was written twice, and `onChange` ran once. Why?",
+    "choices": [
+      {
+        "text": "The second write had the same value",
+        "correct": false,
+        "why": "45 and then 90 are different."
+      },
+      {
+        "text": "`@Observable` reports only writes made from the main actor",
+        "correct": false,
+        "why": "Both writes were at the top level, on the main actor."
+      },
+      {
+        "text": "Tracking is one-shot",
+        "correct": true,
+        "why": "Right: to hear about the next change, track again, as SwiftUI does on each redraw."
+      },
+      {
+        "text": "The second write failed",
+        "correct": false,
+        "why": "\"now 90\" shows it succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-70x6rwtj",
+    "version": 1,
+    "section": "macros",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Section 07's expansion shows `minutes` with a getter that calls `access(keyPath:)`. What did the macro change about `minutes`?",
+    "choices": [
+      {
+        "text": "Nothing: macros cannot touch a property you wrote",
+        "correct": false,
+        "why": "It attached accessors to it."
+      },
+      {
+        "text": "Its value moved to `_minutes`, and `minutes` became computed",
+        "correct": true,
+        "why": "Right: the same shape as a wrapper's hidden storage."
+      },
+      {
+        "text": "It became an actor-isolated property",
+        "correct": false,
+        "why": "Nothing in the expansion mentions an actor."
+      },
+      {
+        "text": "It was renamed `$minutes`",
+        "correct": false,
+        "why": "The name you wrote is still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-fe0anr1k",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order they happen for `@Clamped(0...600) var minutes = 900`, then `minutes = 45`.",
+    "items": [
+      "The compiler generates `_minutes` and a computed `minutes`",
+      "`init(wrappedValue: 900, 0...600)` stores 600",
+      "`minutes = 45` calls the setter of `wrappedValue`",
+      "Reading `minutes` returns 45"
+    ]
+  },
+  {
+    "id": "ex-em7428yx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of syntax to the feature behind it.",
+    "pairs": [
+      {
+        "left": "`@Clamped(0...600) var minutes`",
+        "right": "A property wrapper"
+      },
+      {
+        "left": "`session.$minutes`",
+        "right": "A projected value"
+      },
+      {
+        "left": "`Regex { … }`",
+        "right": "A result builder"
+      },
+      {
+        "left": "`@Observable`",
+        "right": "A macro"
+      }
+    ],
+    "right_distractors": [
+      "An actor"
+    ]
+  },
+  {
+    "id": "ex-j767j0dq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate's `@Cached var courses` returns stale data, and nothing at the call site explains why. Following this lesson, what do you read first?",
+    "choices": [
+      {
+        "text": "Every place `courses` is assigned",
+        "correct": false,
+        "why": "The behaviour of a read lives in the wrapper, not at the call sites."
+      },
+      {
+        "text": "`Cached`'s getter",
+        "correct": true,
+        "why": "Right: that code runs on every read of `courses`."
+      },
+      {
+        "text": "The output of `-dump-macro-expansions`",
+        "correct": false,
+        "why": "`@Cached` on a `var` is a wrapper here; its code is in its declaration."
+      },
+      {
+        "text": "The `buildBlock` of the type that holds `courses`",
+        "correct": false,
+        "why": "That belongs to result builders."
+      }
+    ]
+  }
+]

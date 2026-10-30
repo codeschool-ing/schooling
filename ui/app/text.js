@@ -675,13 +675,14 @@ const RULES = {
       build provisioner required_plugins`,
   }),
 
-  /* Bicep, Azure's language for Resource Manager templates. Strings take the
-     single quote only, and `'''` opens one that spans lines. */
+  /* Bicep is Microsoft's language for Azure resources. Its strings take single
+     quotes only, with `'''` for one that spans lines; `@` before a decorator is
+     left uncoloured, and the decorator itself colours as the call it is. */
   bicep: language({
     quotes: ["'"],
     long: ["'''"],
-    keywords: `targetScope metadata param var resource module output existing import type func
-      for in if true false null`,
+    keywords: `targetScope param var resource module output existing metadata type func import
+      with as for in if true false null scope parent`,
   }),
 
   /* KQL, the query language of Azure Monitor, Log Analytics and Data

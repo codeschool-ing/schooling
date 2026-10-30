@@ -1,0 +1,617 @@
+[
+  {
+    "id": "ex-7ek03aq4",
+    "version": 1,
+    "section": "levels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You write `var minutes: [Int] = []` inside a struct, with no access keyword. What level does it have?",
+    "hint": "The table in section 02 marks one level as the default.",
+    "choices": [
+      {
+        "text": "`private`",
+        "correct": false,
+        "why": "Private has to be written; it is the narrowest, not the default."
+      },
+      {
+        "text": "`internal`",
+        "correct": true,
+        "why": "Right: visible anywhere in the same module, and nowhere else."
+      },
+      {
+        "text": "`public`, because the struct is visible",
+        "correct": false,
+        "why": "Nothing becomes public without the word; that is section 03's whole first error."
+      },
+      {
+        "text": "`fileprivate`, the file it was written in",
+        "correct": false,
+        "why": "The file is narrower than the default, which is the whole module."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1p1946v",
+    "version": 1,
+    "section": "levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Week.swift` holds a struct with `private var log` and, below it in the same file, a free function that reads `week.log`. Does it compile?",
+    "hint": "Private covers a declaration and its extensions in the file.",
+    "choices": [
+      {
+        "text": "Yes, since `private` means the whole file",
+        "correct": false,
+        "why": "That is `fileprivate`; `private` stops at the type and its extensions."
+      },
+      {
+        "text": "Yes, as every function in a file is part of the type",
+        "correct": false,
+        "why": "A free function belongs to no type."
+      },
+      {
+        "text": "No: the function is outside the type and its extensions",
+        "correct": true,
+        "why": "Right: that is why section 02 made `minutes` `fileprivate`, the level that covers a free function in the same file."
+      },
+      {
+        "text": "No: `private` properties are readable only in `init`",
+        "correct": false,
+        "why": "Every method of the type reads them, and extensions in the file do too."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rvvth3q",
+    "version": 1,
+    "section": "levels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A property is `internal` and used by twelve files of one module. You want to make it `private`. What is the cost?",
+    "hint": "Section 02: widening is cheap, and the other direction is not.",
+    "choices": [
+      {
+        "text": "None; access levels change nothing at run time",
+        "correct": false,
+        "why": "True about run time, and the twelve files stop compiling all the same."
+      },
+      {
+        "text": "Each of those twelve uses must change first",
+        "correct": true,
+        "why": "Right: narrowing breaks every use outside the new region, so you rewrite them through methods first."
+      },
+      {
+        "text": "A warning in each file, and the program still builds",
+        "correct": false,
+        "why": "Using an inaccessible name is an error, not a warning."
+      },
+      {
+        "text": "The property has to become a `let`",
+        "correct": false,
+        "why": "Access and mutability are separate questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww3vtycq",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`plan` imports `PlannerCore`, whose `struct Week` has no access keyword. What does the compiler say at `Week()` in `plan`?",
+    "choices": [
+      {
+        "text": "`'Week' is inaccessible due to 'internal' protection level`",
+        "correct": false,
+        "why": "That message names something it can see; from `plan`, an internal type is not there at all."
+      },
+      {
+        "text": "`cannot find 'Week' in scope`",
+        "correct": true,
+        "why": "Right: outside its module an internal type does not exist."
+      },
+      {
+        "text": "Nothing: the import makes every name visible",
+        "correct": false,
+        "why": "An import brings in only what the other module marked public or wider."
+      },
+      {
+        "text": "A warning that the type should be public",
+        "correct": false,
+        "why": "It is an error, and the build fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj4xfykw",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`public struct Week` with public properties, and no `init` written. Why does `Week()` still fail in another module?",
+    "hint": "Look at the note the compiler printed.",
+    "choices": [
+      {
+        "text": "Structs cannot be public",
+        "correct": false,
+        "why": "The type was visible; only its initialiser was not."
+      },
+      {
+        "text": "Another module has to call `Week.init()` in full",
+        "correct": false,
+        "why": "`Week()` and `Week.init()` are the same call to the same internal initialiser."
+      },
+      {
+        "text": "The library was not rebuilt after the change",
+        "correct": false,
+        "why": "`swift build` rebuilds what changed; the message is about access, not about an old build."
+      },
+      {
+        "text": "The generated initialiser is `internal`",
+        "correct": true,
+        "why": "Right: the note shows `internal init()`. A public type needs a public `init` written by hand."
+      }
+    ]
+  },
+  {
+    "id": "ex-x270x4ts",
+    "version": 1,
+    "section": "modules",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Section 03's package has a library and an executable. How many modules does it build?",
+    "hint": "A target is a module.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kszpya54",
+    "version": 1,
+    "section": "modules",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A unit of code compiled together and imported by name, such as `Foundation` or `PlannerCore`, is a ___.",
+    "hint": "The boundary `internal` stops at.",
+    "blanks": [
+      {
+        "accept": [
+          "module"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9pjfycem",
+    "version": 1,
+    "section": "private-set",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `public private(set) var minutes` allow another module to do?",
+    "choices": [
+      {
+        "text": "Read `minutes` whenever it likes, but never assign to it",
+        "correct": true,
+        "why": "Right: the getter is public and the setter is private."
+      },
+      {
+        "text": "Read and replace `minutes`, but not append to it",
+        "correct": false,
+        "why": "Replacing needs the setter just as appending does."
+      },
+      {
+        "text": "Nothing; `private` wins over `public`",
+        "correct": false,
+        "why": "The two words cover the getter and the setter separately."
+      },
+      {
+        "text": "Read and write it, with a warning",
+        "correct": false,
+        "why": "Writing it from outside is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgc0k6k7",
+    "version": 1,
+    "section": "private-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`week.minutes.append(45)` in `plan` is refused, though only appending. Why?",
+    "hint": "Appending changes the array.",
+    "choices": [
+      {
+        "text": "`append` is a private method of `Array`",
+        "correct": false,
+        "why": "`append` is public in the standard library; the setter of `minutes` is what is missing."
+      },
+      {
+        "text": "Changing the array needs the setter, and it is private",
+        "correct": true,
+        "why": "Right: `cannot use mutating member on immutable value: 'minutes' setter is inaccessible`."
+      },
+      {
+        "text": "`week` was declared with `let`",
+        "correct": false,
+        "why": "It was a `var`; the message names the setter."
+      },
+      {
+        "text": "Arrays from another module are copied and cannot change",
+        "correct": false,
+        "why": "A module boundary does not make a value immutable; the access level of the setter does."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bcpe4pm",
+    "version": 1,
+    "section": "private-set",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Section 04's `add` refuses a negative session. What did `private(set)` add to that rule?",
+    "hint": "What could a caller still do without it?",
+    "choices": [
+      {
+        "text": "It checks the sign of each number",
+        "correct": false,
+        "why": "The `guard` checks; `private(set)` checks no values."
+      },
+      {
+        "text": "Speed, since the array is no longer copied when it is read by `plan`",
+        "correct": false,
+        "why": "Access levels do not change how values are copied."
+      },
+      {
+        "text": "No caller appends around `add` any more",
+        "correct": true,
+        "why": "Right: without it, `plan` could append `-30` directly and the `guard` would never see it."
+      },
+      {
+        "text": "It makes `minutes` a constant",
+        "correct": false,
+        "why": "The value still changes, through `add`."
+      }
+    ]
+  },
+  {
+    "id": "ex-crv8rrgm",
+    "version": 1,
+    "section": "open",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`public class Reminder` in a library. What can another module NOT do with it?",
+    "choices": [
+      {
+        "text": "Create one with its public `init`",
+        "correct": false,
+        "why": "Creating is using, and `public` allows using."
+      },
+      {
+        "text": "Call its public methods",
+        "correct": false,
+        "why": "Calling is using."
+      },
+      {
+        "text": "Subclass it and override its methods",
+        "correct": true,
+        "why": "Right: subclassing outside the module needs `open`."
+      },
+      {
+        "text": "Store it in an array of `Reminder`",
+        "correct": false,
+        "why": "Storing it is using it too."
+      }
+    ]
+  },
+  {
+    "id": "ex-9j9fa3nr",
+    "version": 1,
+    "section": "open",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A class is `open` and its method `text()` is `public`. Another module subclasses it and overrides `text()`. What happens?",
+    "hint": "Section 05: two decisions.",
+    "choices": [
+      {
+        "text": "It compiles: an open class opens all its methods",
+        "correct": false,
+        "why": "Each method is opened on its own."
+      },
+      {
+        "text": "The subclass compiles and the override is refused",
+        "correct": true,
+        "why": "Right: `overriding non-open instance method outside of its defining module`."
+      },
+      {
+        "text": "The subclass is refused, and so is the override",
+        "correct": false,
+        "why": "The class is open, so subclassing it is allowed."
+      },
+      {
+        "text": "It compiles, and the library's `text()` runs instead",
+        "correct": false,
+        "why": "Swift does not silently ignore an override; it refuses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ek32fbf",
+    "version": 1,
+    "section": "open",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can be marked `open`? Choose all that apply.",
+    "hint": "What has subclasses?",
+    "choices": [
+      {
+        "text": "A class",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A method of a class",
+        "correct": true,
+        "why": "Yes: overriding is opened per method."
+      },
+      {
+        "text": "A struct",
+        "correct": false,
+        "why": "A struct has no subclasses, so `public` is its widest level."
+      },
+      {
+        "text": "A protocol",
+        "correct": false,
+        "why": "Protocols are adopted, not subclassed."
+      }
+    ]
+  },
+  {
+    "id": "ex-k52y468k",
+    "version": 1,
+    "section": "package",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is a `package func` visible?",
+    "choices": [
+      {
+        "text": "Only in its own file",
+        "correct": false,
+        "why": "That is `fileprivate`."
+      },
+      {
+        "text": "In every module that imports its module, wherever it is",
+        "correct": false,
+        "why": "That is `public`; `report` was refused."
+      },
+      {
+        "text": "In every module of the same package",
+        "correct": true,
+        "why": "Right: `plan` used it and `report`, another package, could not."
+      },
+      {
+        "text": "Only in its own module",
+        "correct": false,
+        "why": "That is `internal`, and `plan` is another module."
+      }
+    ]
+  },
+  {
+    "id": "ex-82mdver8",
+    "version": 1,
+    "section": "package",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before Swift 5.9, how did two modules of one package share a helper?",
+    "hint": "Which level reached across a module boundary before `package` existed?",
+    "choices": [
+      {
+        "text": "With `internal`, the default",
+        "correct": false,
+        "why": "Internal stops at the module."
+      },
+      {
+        "text": "By making it `public`",
+        "correct": true,
+        "why": "Right: every user of the library then saw it too, with a comment asking them not to call it."
+      },
+      {
+        "text": "By copying the file into both targets",
+        "correct": false,
+        "why": "That makes two different helpers in two modules, not one shared."
+      },
+      {
+        "text": "Through `fileprivate` and a shared directory",
+        "correct": false,
+        "why": "Fileprivate stops at the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-527wdxtj",
+    "version": 1,
+    "section": "package",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`report` was refused because the boundary of the `package` level is the ___, the directory with one `Package.swift`.",
+    "hint": "Not the module, and not the file.",
+    "blanks": [
+      {
+        "accept": [
+          "package"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mfshkt1m",
+    "version": 1,
+    "section": "namespaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `Goals` an enum with no cases, rather than a struct?",
+    "choices": [
+      {
+        "text": "No `Goals` value is ever created by mistake",
+        "correct": true,
+        "why": "Right: `'Goals' cannot be constructed because it has no accessible initializers`."
+      },
+      {
+        "text": "Static properties work in enums only",
+        "correct": false,
+        "why": "Structs and classes have them too."
+      },
+      {
+        "text": "Enums are faster",
+        "correct": false,
+        "why": "Nothing about speed: there are no instances at all."
+      },
+      {
+        "text": "A struct would make `Goals.weekly` public",
+        "correct": false,
+        "why": "Access is written per member either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-2s9b91y6",
+    "version": 1,
+    "section": "namespaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`plan` declares its own `struct Week` and imports `PlannerCore`, which has one too. What does a plain `Week` mean inside `plan`?",
+    "hint": "`String(reflecting:)` printed both full names.",
+    "choices": [
+      {
+        "text": "The library's, because it was imported first",
+        "correct": false,
+        "why": "Order of imports does not decide it; the current module's name wins."
+      },
+      {
+        "text": "Neither: the compiler refuses it as ambiguous",
+        "correct": false,
+        "why": "The program built and ran."
+      },
+      {
+        "text": "`plan`'s own, and the other is `PlannerCore.Week`",
+        "correct": true,
+        "why": "Right: a name declared in the current module wins, and the module name reaches past it."
+      },
+      {
+        "text": "Whichever of the two has an `init` that fits the call",
+        "correct": false,
+        "why": "Name lookup chooses the type before any initialiser is considered."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjt9gvsf",
+    "version": 1,
+    "section": "namespaces",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In section 07, `Goals.weekly` is 300 and the week holds 200 and 150 minutes. What does `print(Goals.weekly - theirs.total)` print?",
+    "value": -50,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mtb48ef0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need of the planner to the access level that meets it most narrowly.",
+    "hint": "Narrowest that works, as section 02 advised.",
+    "pairs": [
+      {
+        "left": "A note log only `Week` and its extensions touch",
+        "right": "`private`"
+      },
+      {
+        "left": "A debug summary for `plan`, a module of the same package",
+        "right": "`package`"
+      },
+      {
+        "left": "`Week` itself, used by other packages",
+        "right": "`public`"
+      },
+      {
+        "left": "A reminder class other packages may subclass",
+        "right": "`open`"
+      }
+    ],
+    "right_distractors": [
+      "`fileprivate`"
+    ]
+  },
+  {
+    "id": "ex-r1mtzz0r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these from the narrowest region to the widest.",
+    "items": [
+      "`private`",
+      "`fileprivate`",
+      "`internal`",
+      "`package`",
+      "`public`"
+    ]
+  },
+  {
+    "id": "ex-qt550k7q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library's `public func save(_ week: Week)` takes a `Week` that is `internal`. What does the compiler do?",
+    "hint": "Could a caller outside the module name the parameter's type?",
+    "choices": [
+      {
+        "text": "It makes `Week` public to match",
+        "correct": false,
+        "why": "The compiler never widens a level for you."
+      },
+      {
+        "text": "It accepts it, and callers outside pass any value",
+        "correct": false,
+        "why": "They could not even write the type of the argument."
+      },
+      {
+        "text": "It accepts it and treats the function as internal",
+        "correct": false,
+        "why": "It does not quietly demote a declaration; section 06 says it refuses it."
+      },
+      {
+        "text": "It refuses the declaration",
+        "correct": true,
+        "why": "Right: nothing can be used from further away than the things it mentions."
+      }
+    ]
+  }
+]

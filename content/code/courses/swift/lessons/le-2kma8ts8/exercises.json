@@ -1,0 +1,594 @@
+[
+  {
+    "id": "ex-6t3fjxwr",
+    "version": 1,
+    "section": "why",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Callbacks.swift`, why was \"the request is on its way\" printed second, before the course arrived?",
+    "hint": "What did `loadCourse` do before returning?",
+    "choices": [
+      {
+        "text": "`print` is faster than a closure",
+        "correct": false,
+        "why": "Speed has nothing to do with it; the order comes from when each line runs."
+      },
+      {
+        "text": "`loadCourse` returned at once and called back 200 ms later",
+        "correct": true,
+        "why": "Right: it only scheduled the closure, so the next line of the program ran first."
+      },
+      {
+        "text": "The semaphore reordered the lines",
+        "correct": false,
+        "why": "The semaphore only kept the program alive until `signal()`."
+      },
+      {
+        "text": "Swift runs the last line of a top-level file before the others",
+        "correct": false,
+        "why": "Top-level code runs from the top; the closures ran later because they were called later."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gcf3pjb",
+    "version": 1,
+    "section": "why",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which problems of completion handlers does section 02 name? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Each dependent step goes one closure deeper",
+        "correct": true,
+        "why": "Yes: the order on the page stops being the order in time."
+      },
+      {
+        "text": "A path that forgets to call the closure still compiles",
+        "correct": true,
+        "why": "Yes: and the caller waits for ever."
+      },
+      {
+        "text": "They do not work on Linux",
+        "correct": false,
+        "why": "They ran on Linux in section 02, through `Dispatch`."
+      },
+      {
+        "text": "An error has no caller left to be thrown to",
+        "correct": true,
+        "why": "Yes: so handlers grow an error parameter or a `Result`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4p9g83w",
+    "version": 1,
+    "section": "why",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to `Callbacks.swift` if you delete `finished.wait()`?",
+    "hint": "What keeps the program alive while the closures wait?",
+    "choices": [
+      {
+        "text": "Nothing changes",
+        "correct": false,
+        "why": "The wait is what held the process open for 400 ms."
+      },
+      {
+        "text": "It does not compile: a semaphore must be waited on",
+        "correct": false,
+        "why": "The compiler does not track semaphores."
+      },
+      {
+        "text": "It prints two lines and exits",
+        "correct": true,
+        "why": "Right: the top level ends before either closure is called."
+      },
+      {
+        "text": "It prints the four lines in the source's order",
+        "correct": false,
+        "why": "Without the wait the closures never get to print at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2m3409h",
+    "version": 1,
+    "section": "async-await",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `await` mark?",
+    "choices": [
+      {
+        "text": "A suspension point in the function",
+        "correct": true,
+        "why": "Right: the function pauses there if it has to wait, and other code runs meanwhile."
+      },
+      {
+        "text": "A call that runs on a new thread in parallel",
+        "correct": false,
+        "why": "`await` promises no parallelism; the two loads ran one after another."
+      },
+      {
+        "text": "A function whose result is optional",
+        "correct": false,
+        "why": "Optionals are a `?`; `await` is about time."
+      },
+      {
+        "text": "A call the compiler will run at start-up, before the rest",
+        "correct": false,
+        "why": "It runs where it is written, in order."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkys5djx",
+    "version": 1,
+    "section": "async-await",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`func report()` contains `await loadCourse(named: \"Swift\")`. What does the compiler say?",
+    "hint": "Look at the signature of `report`.",
+    "choices": [
+      {
+        "text": "Nothing; `await` makes the call legal anywhere",
+        "correct": false,
+        "why": "A function that is not `async` cannot pause, so it cannot await."
+      },
+      {
+        "text": "A warning that the call is slow",
+        "correct": false,
+        "why": "It is an error, and no program is written."
+      },
+      {
+        "text": "That `loadCourse` must be `throws`",
+        "correct": false,
+        "why": "Nothing here throws."
+      },
+      {
+        "text": "'async' call in a function that does not support concurrency",
+        "correct": true,
+        "why": "Right, with a note offering to mark `report` `async`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ay0z4hcx",
+    "version": 1,
+    "section": "async-await",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While an `async` function waits at an `await`, the ___ it was running on is free to run other work.",
+    "hint": "Not the function and not the task.",
+    "blanks": [
+      {
+        "accept": [
+          "thread"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g4x5qjz8",
+    "version": 1,
+    "section": "task",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `Task { … }` return to the code that wrote it?",
+    "choices": [
+      {
+        "text": "The closure's result, after waiting for it",
+        "correct": false,
+        "why": "It returns at once, before the work has run."
+      },
+      {
+        "text": "A handle on the work, to await",
+        "correct": true,
+        "why": "Right: `await task.value` gives the result when it exists."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "It returns a `Task<Success, Failure>`."
+      },
+      {
+        "text": "A thread",
+        "correct": false,
+        "why": "A task is not a thread; many tasks share few threads."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rrxs12n",
+    "version": 1,
+    "section": "task",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Forgotten.swift` printed \"done\" and never \"saved\". Why?",
+    "hint": "When does a script's process end?",
+    "choices": [
+      {
+        "text": "The task threw an error nobody caught",
+        "correct": false,
+        "why": "Nothing threw; `try?` was there and the sleep was not cancelled."
+      },
+      {
+        "text": "`Task.sleep` does not work at the top level",
+        "correct": false,
+        "why": "It worked in every other program of the lesson."
+      },
+      {
+        "text": "The process ended first",
+        "correct": true,
+        "why": "Right: nothing awaited the task, and the program ended under it."
+      },
+      {
+        "text": "A task prints only when it is detached",
+        "correct": false,
+        "why": "Any task may print; this one never reached its `print`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nk3cjee0",
+    "version": 1,
+    "section": "task",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task made with `Task { … }` is not tied to the function that created it. Swift calls it ___.",
+    "hint": "The opposite of what `async let` makes.",
+    "blanks": [
+      {
+        "accept": [
+          "unstructured"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s1mtpyrw",
+    "version": 1,
+    "section": "async-let",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three independent loads of 300 ms each are awaited one after another. Roughly how many milliseconds does that take?",
+    "hint": "Section 05 measured it.",
+    "value": 900,
+    "tolerance": 20
+  },
+  {
+    "id": "ex-kbxq3c5n",
+    "version": 1,
+    "section": "async-let",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same three loads started with `async let` and awaited together. Roughly how many milliseconds?",
+    "value": 300,
+    "tolerance": 20
+  },
+  {
+    "id": "ex-9hm6v53m",
+    "version": 1,
+    "section": "async-let",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function starts `async let report = loadReport()` and then returns early on an error, without awaiting `report`. What happens to the load?",
+    "hint": "A child task cannot outlive its scope.",
+    "choices": [
+      {
+        "text": "It keeps running in the background, like `Forgotten.swift`",
+        "correct": false,
+        "why": "That is an unstructured task; `async let` makes a child."
+      },
+      {
+        "text": "It is cancelled, and awaited, as the scope ends",
+        "correct": true,
+        "why": "Right: the scope ends, so its child is cancelled and awaited there."
+      },
+      {
+        "text": "The compiler refuses a scope that does not await every `async let`",
+        "correct": false,
+        "why": "It compiles; the cleanup is done for you at run time."
+      },
+      {
+        "text": "The program crashes",
+        "correct": false,
+        "why": "Nothing is wrong enough to crash; the child is cancelled."
+      }
+    ]
+  },
+  {
+    "id": "ex-50k4s4wq",
+    "version": 1,
+    "section": "task-group",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In what order does `for await … in group` hand out the results?",
+    "choices": [
+      {
+        "text": "The order the tasks were added",
+        "correct": false,
+        "why": "Statistics was added third and came last."
+      },
+      {
+        "text": "Alphabetical order of the course names",
+        "correct": false,
+        "why": "SQL came before Kotlin."
+      },
+      {
+        "text": "The order they finish",
+        "correct": true,
+        "why": "Right: SQL at 150 ms, Swift at 250, Kotlin at 300, Statistics at 500."
+      },
+      {
+        "text": "A random order chosen when the group opens",
+        "correct": false,
+        "why": "The order is the finishing order, which the delays decided."
+      }
+    ]
+  },
+  {
+    "id": "ex-x72ab88y",
+    "version": 1,
+    "section": "task-group",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four loads in one group take 150, 250, 300 and 500 ms. Roughly how many milliseconds does the whole group take?",
+    "hint": "The children run side by side.",
+    "value": 500,
+    "tolerance": 20
+  },
+  {
+    "id": "ex-5kzchwgy",
+    "version": 1,
+    "section": "task-group",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does each child in `Group.swift` return `(course, minutes)` and not only the minutes?",
+    "hint": "Think of a caller that needs Kotlin's minutes.",
+    "choices": [
+      {
+        "text": "A task group refuses children that return a plain `Int`",
+        "correct": false,
+        "why": "`withTaskGroup(of: Int.self)` is legal."
+      },
+      {
+        "text": "The results arrive in finishing order, so position says nothing",
+        "correct": true,
+        "why": "Right: each answer has to name what it belongs to."
+      },
+      {
+        "text": "Tuples are faster to send between tasks",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "To print the name; the sum would be wrong without it",
+        "correct": false,
+        "why": "The sum is the same in any order."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsxk0y4z",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `task.cancel()` do to a running task?",
+    "hint": "Cooperative.",
+    "choices": [
+      {
+        "text": "Stops its thread on the spot",
+        "correct": false,
+        "why": "Swift never stops a task from outside."
+      },
+      {
+        "text": "Sets a flag that its code is expected to check",
+        "correct": true,
+        "why": "Right: `Task.sleep` and `checkCancellation` read it; a loop that never does keeps going."
+      },
+      {
+        "text": "Throws an error into it at whatever line it is on",
+        "correct": false,
+        "why": "Errors appear only where the code checks."
+      },
+      {
+        "text": "Deletes its result",
+        "correct": false,
+        "why": "A cancelled task still produces a result, or an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jbmdr7p",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Cooperate.swift`, the careless loop was cancelled after two courses and still returned 270. Why?",
+    "choices": [
+      {
+        "text": "The cancel came too late to matter",
+        "correct": false,
+        "why": "It came after two courses; the careful version stopped there."
+      },
+      {
+        "text": "A task group ignored the request",
+        "correct": false,
+        "why": "There is no group in that program."
+      },
+      {
+        "text": "`try?` discarded each error",
+        "correct": true,
+        "why": "Right: every sleep threw at once, and the loop carried on."
+      },
+      {
+        "text": "`Task.sleep` does not check for cancellation",
+        "correct": false,
+        "why": "It does; that is why it threw at once after the cancel."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3r0h5fh",
+    "version": 1,
+    "section": "cancellation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of code to what it does about cancellation.",
+    "pairs": [
+      {
+        "left": "`try await Task.sleep(…)`",
+        "right": "Throws `CancellationError` if the task is cancelled"
+      },
+      {
+        "left": "`try? await Task.sleep(…)`",
+        "right": "Ends the wait and lets the code carry on"
+      },
+      {
+        "left": "`try Task.checkCancellation()`",
+        "right": "Throws at that line if cancelled, without waiting"
+      },
+      {
+        "left": "`Task.isCancelled`",
+        "right": "A `Bool` the code reads and decides on"
+      }
+    ],
+    "right_distractors": [
+      "Stops every task in the program"
+    ]
+  },
+  {
+    "id": "ex-fkp2a3xw",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A task started with `Task { … }` inside another task. The outer task is cancelled. What happens to the inner one?",
+    "hint": "Is it a child?",
+    "choices": [
+      {
+        "text": "It keeps running",
+        "correct": true,
+        "why": "Right: it is unstructured, not a child, so the cancellation does not reach it."
+      },
+      {
+        "text": "It is cancelled with its parent, like an `async let`",
+        "correct": false,
+        "why": "Only child tasks are cancelled with their parent."
+      },
+      {
+        "text": "The outer task cannot be cancelled while it holds another task",
+        "correct": false,
+        "why": "Any task can be cancelled."
+      },
+      {
+        "text": "Both crash",
+        "correct": false,
+        "why": "Cancellation is a flag, never a crash."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxry9ycs",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these lines of `Cancel.swift` in the order they happen in time.",
+    "items": [
+      "The task starts and `loadMinutes` begins to sleep",
+      "The top level waits 100 ms",
+      "`task.cancel()` sets the flag",
+      "`Task.sleep` throws `CancellationError`",
+      "The `catch` prints \"stopped\""
+    ]
+  },
+  {
+    "id": "ex-d2np0m21",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each situation to the tool section 06's table gives it.",
+    "pairs": [
+      {
+        "left": "A button's handler must load the week",
+        "right": "`Task { … }`"
+      },
+      {
+        "left": "The sessions need the course first",
+        "right": "`await`"
+      },
+      {
+        "left": "Exactly three independent loads",
+        "right": "`async let`"
+      },
+      {
+        "left": "One load per course in a list",
+        "right": "A task group"
+      }
+    ],
+    "right_distractors": [
+      "A semaphore"
+    ]
+  },
+  {
+    "id": "ex-exmr1v97",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner loads 20 courses in a task group, and one load fails with an error. Which variant makes the other 19 stop instead of finishing for nothing?",
+    "hint": "Section 06, the throwing kind.",
+    "choices": [
+      {
+        "text": "`withTaskGroup`, with `try?` inside each child",
+        "correct": false,
+        "why": "`try?` hides the failure, so nothing cancels the rest."
+      },
+      {
+        "text": "Twenty `async let`s",
+        "correct": false,
+        "why": "Twenty names do not fit a list known only at run time."
+      },
+      {
+        "text": "`withThrowingTaskGroup` and `for try await`",
+        "correct": true,
+        "why": "Right: the first error is rethrown and the group cancels the other children."
+      },
+      {
+        "text": "Twenty separate `Task { … }` values cancelled one by one in a loop",
+        "correct": false,
+        "why": "That works only if you write all of it yourself, which the group already does."
+      }
+    ]
+  }
+]

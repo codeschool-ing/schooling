@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-e96hxctj",
+    "version": 1,
+    "section": "usage-strings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner calls the camera API, and `Info.plist` has no `NSCameraUsageDescription`. What happens?",
+    "hint": "Section 02 quotes Apple's documentation on that key.",
+    "choices": [
+      {
+        "text": "iOS shows the alert with a default sentence",
+        "correct": false,
+        "why": "There is no default sentence: the key is required, and its absence stops the app."
+      },
+      {
+        "text": "iOS stops the app when it asks",
+        "correct": true,
+        "why": "Right. And no build step warned about it, which is why section 06 checks the file."
+      },
+      {
+        "text": "The camera opens, and the alert is skipped for that one session",
+        "correct": false,
+        "why": "Nothing reaches the camera without the person's answer, and that answer needs the string."
+      },
+      {
+        "text": "Xcode refuses to build the app until the key is added",
+        "correct": false,
+        "why": "The build succeeds; the failure arrives at the first tap on the camera button."
+      }
+    ]
+  },
+  {
+    "id": "ex-yasj0xwc",
+    "version": 1,
+    "section": "usage-strings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which usage string does guideline 5.1.1 ask for?",
+    "hint": "A reason, in terms of something the person wants.",
+    "choices": [
+      {
+        "text": "\"Planner needs access to your camera.\"",
+        "correct": false,
+        "why": "That states a need and no use; the guideline asks the string to describe the use."
+      },
+      {
+        "text": "\"Allow camera access to continue using Planner.\"",
+        "correct": false,
+        "why": "It describes nothing, and it pressures: 5.1.1(iv) forbids forcing consent."
+      },
+      {
+        "text": "\"Planner uses the camera to photograph your notes for a session.\"",
+        "correct": true,
+        "why": "Right: it says what the access is for, clearly and completely."
+      },
+      {
+        "text": "\"NSCameraUsageDescription\"",
+        "correct": false,
+        "why": "That is the key's name; the person would see it as the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pdgfgy2",
+    "version": 1,
+    "section": "usage-strings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A person tapped *Don't Allow* yesterday. Today the app calls the request method again. What does the person see?",
+    "hint": "The system stores the answer.",
+    "choices": [
+      {
+        "text": "Nothing: the call returns the stored answer",
+        "correct": true,
+        "why": "Right. The alert is shown once, and after that only Settings can change the answer."
+      },
+      {
+        "text": "The same alert, because every call asks",
+        "correct": false,
+        "why": "The system asks once and stores the status."
+      },
+      {
+        "text": "A different alert asking them to reconsider",
+        "correct": false,
+        "why": "iOS has no second alert; that is why section 07 exists."
+      },
+      {
+        "text": "The Settings app, opened automatically by iOS",
+        "correct": false,
+        "why": "Only the app can offer to open Settings, and only when the person taps a button."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t3mzgcm",
+    "version": 1,
+    "section": "usage-strings",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of access to the key `Info.plist` needs.",
+    "hint": "The table in section 02.",
+    "pairs": [
+      {
+        "left": "The camera",
+        "right": "`NSCameraUsageDescription`"
+      },
+      {
+        "left": "Location while in use",
+        "right": "`NSLocationWhenInUseUsageDescription`"
+      },
+      {
+        "left": "Saving into the photo library",
+        "right": "`NSPhotoLibraryAddUsageDescription`"
+      },
+      {
+        "left": "Tracking",
+        "right": "`NSUserTrackingUsageDescription`"
+      }
+    ],
+    "right_distractors": [
+      "`NSPrivacyTracking`"
+    ]
+  },
+  {
+    "id": "ex-c42p1c8k",
+    "version": 1,
+    "section": "camera-photos",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which camera state is the only one where `requestAccess` shows the alert?",
+    "hint": "Nobody has answered yet.",
+    "choices": [
+      {
+        "text": "`.denied`",
+        "correct": false,
+        "why": "A denied state is the answer already given; the call returns it."
+      },
+      {
+        "text": "`.restricted` by Screen Time",
+        "correct": false,
+        "why": "Somebody else set it, and the person cannot change it either."
+      },
+      {
+        "text": "`.notDetermined`",
+        "correct": true,
+        "why": "Right: nobody has asked yet, so iOS asks now."
+      },
+      {
+        "text": "`.authorized`",
+        "correct": false,
+        "why": "The person already said yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ayzwecf7",
+    "version": 1,
+    "section": "camera-photos",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does attaching an existing photo with `PhotosPicker` need no usage string?",
+    "hint": "Where does the picker run?",
+    "choices": [
+      {
+        "text": "Photos are less private than the camera, so iOS treats them as public data",
+        "correct": false,
+        "why": "A library can be more private than the camera; the reason is who sees it."
+      },
+      {
+        "text": "The picker runs outside the app, which sees only the photo chosen",
+        "correct": true,
+        "why": "Right. The app is never given the library, so there is nothing to ask for."
+      },
+      {
+        "text": "SwiftUI asks on the app's behalf with its own sentence",
+        "correct": false,
+        "why": "No alert appears at all for the out-of-process picker."
+      },
+      {
+        "text": "The usage string is only checked by App Review, not by iOS",
+        "correct": false,
+        "why": "iOS checks it too: the camera call without its key stops the app."
+      }
+    ]
+  },
+  {
+    "id": "ex-nd4cxnsw",
+    "version": 1,
+    "section": "camera-photos",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cameraAllowed()` ends its `switch` with `@unknown default: return false`. Why is that case there?",
+    "hint": "The enumeration belongs to Apple.",
+    "choices": [
+      {
+        "text": "To catch an error thrown by `requestAccess`",
+        "correct": false,
+        "why": "`requestAccess` does not throw; it returns a Bool."
+      },
+      {
+        "text": "Because `.restricted` is not a real case",
+        "correct": false,
+        "why": "It is real, and it is handled on the line above."
+      },
+      {
+        "text": "A future enum case needs an answer now",
+        "correct": true,
+        "why": "Right, and here an unknown state means no camera."
+      },
+      {
+        "text": "Swift needs it for every switch over an enum",
+        "correct": false,
+        "why": "A switch over your own enum needs none; section 07's has no default at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-93pjgz0j",
+    "version": 1,
+    "section": "camera-photos",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A school manages its students' iPhones and has switched the camera off. Which state does the planner see, and what should its button offer?",
+    "hint": "Who made the decision, and can the student undo it?",
+    "choices": [
+      {
+        "text": "`.denied`, with a button to open Settings",
+        "correct": false,
+        "why": "The student did not deny anything, and the switch in Settings is not theirs to turn."
+      },
+      {
+        "text": "`.restricted`, with a sentence and no Settings button",
+        "correct": true,
+        "why": "Right: somebody else decided, so sending them to Settings would be a dead end."
+      },
+      {
+        "text": "`.notDetermined`, so the app can ask the student",
+        "correct": false,
+        "why": "Asking is pointless when the device's manager has already decided."
+      },
+      {
+        "text": "`.authorized`, since the school granted the app",
+        "correct": false,
+        "why": "Turning the camera off is the opposite of granting it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmn9z5pz",
+    "version": 1,
+    "section": "location",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which location level does Apple's article call the preferred choice?",
+    "hint": "Better privacy and better battery life.",
+    "choices": [
+      {
+        "text": "Always, so updates arrive in the background",
+        "correct": false,
+        "why": "Always is for when it is necessary; the article prefers the other."
+      },
+      {
+        "text": "When In Use",
+        "correct": true,
+        "why": "Right, in the article's words: better privacy and battery life implications."
+      },
+      {
+        "text": "Neither: precise location is the preferred choice",
+        "correct": false,
+        "why": "Precision is a separate setting; the article compares the two levels."
+      },
+      {
+        "text": "Whichever the person picks in the alert",
+        "correct": false,
+        "why": "The app chooses which level to ask for; the article says which to prefer."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5wg68tw",
+    "version": 1,
+    "section": "location",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner ask for no location at all?",
+    "hint": "Compare the feature with the permission it would need.",
+    "choices": [
+      {
+        "text": "Location does not work on an iPhone without a GPS chip or a SIM card",
+        "correct": false,
+        "why": "Every iPhone can locate itself; the question is whether the planner should."
+      },
+      {
+        "text": "App Review rejects every study app that uses location",
+        "correct": false,
+        "why": "The guideline asks for relevance to the core function, not a ban by category."
+      },
+      {
+        "text": "The only use proposed needs Always, and a timed reminder solves it",
+        "correct": true,
+        "why": "Right: a stronger permission than the problem needs has not earned its place."
+      },
+      {
+        "text": "Core Location is not available to SwiftUI apps",
+        "correct": false,
+        "why": "Any iOS app can use Core Location; section 04 shows the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6pngrtz",
+    "version": 1,
+    "section": "location",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`requestWhenInUseAuthorization()` returns at once; the person's answer arrives later in the location manager's ___.",
+    "hint": "The object that `manager.delegate = self` names.",
+    "blanks": [
+      {
+        "accept": [
+          "delegate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ydss6pch",
+    "version": 1,
+    "section": "tracking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is tracking, in Apple's sense, and needs App Tracking Transparency?",
+    "hint": "Linking with other companies' data, for advertising.",
+    "choices": [
+      {
+        "text": "Saving the plan on the planner's own server, for backup",
+        "correct": false,
+        "why": "Keeping your own users' data for your own app is not tracking."
+      },
+      {
+        "text": "Counting crashes to fix the app",
+        "correct": false,
+        "why": "That is diagnostics for your own app, not linking with others' data."
+      },
+      {
+        "text": "Sending an ad network an ID to match across apps",
+        "correct": true,
+        "why": "Right: that links your data with other companies' for advertising."
+      },
+      {
+        "text": "Remembering the last open course in `UserDefaults`",
+        "correct": false,
+        "why": "That is a required-reason API, declared in the manifest, not tracking."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fef69tb",
+    "version": 1,
+    "section": "tracking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the documentation for `NSUserTrackingUsageDescription` say happens without the key?",
+    "hint": "Section 05 quotes it.",
+    "choices": [
+      {
+        "text": "The app crashes when it uses the framework",
+        "correct": true,
+        "why": "Right, the same failure as the camera without its key."
+      },
+      {
+        "text": "The alert shows a generic sentence about advertising",
+        "correct": false,
+        "why": "There is no generic sentence; the key is required."
+      },
+      {
+        "text": "Tracking is allowed with no alert",
+        "correct": false,
+        "why": "5.1.2(i) requires explicit permission through the framework."
+      },
+      {
+        "text": "App Store Connect sends a reminder email to the developer",
+        "correct": false,
+        "why": "That email is for required-reason APIs missing from the manifest."
+      }
+    ]
+  },
+  {
+    "id": "ex-d643yscm",
+    "version": 1,
+    "section": "tracking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner adds an analytics SDK for one chart. What should you read before shipping it?",
+    "hint": "The app answers for what its SDKs do.",
+    "choices": [
+      {
+        "text": "Only its licence, since privacy is the SDK maker's job",
+        "correct": false,
+        "why": "The app is answerable for an SDK that tracks on its behalf."
+      },
+      {
+        "text": "The SDK's own privacy manifest",
+        "correct": true,
+        "why": "Right: it says what the SDK collects and whether it tracks, and Xcode combines it with yours."
+      },
+      {
+        "text": "Its source code, line by line, for network calls",
+        "correct": false,
+        "why": "Possible, but the manifest is where the SDK declares this, and it is short."
+      },
+      {
+        "text": "Nothing: SDKs from Swift Package Manager are reviewed by Apple",
+        "correct": false,
+        "why": "Apple does not review packages; you add them yourself."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4vn22df",
+    "version": 1,
+    "section": "privacy-manifest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the privacy manifest record that `Info.plist`'s usage strings do not?",
+    "hint": "One says why the app asks; the other, what it does without asking.",
+    "choices": [
+      {
+        "text": "The sentence shown in the permission alert",
+        "correct": false,
+        "why": "That is the usage string, in `Info.plist`."
+      },
+      {
+        "text": "Data collected and required-reason APIs used",
+        "correct": true,
+        "why": "Right, both quoted from Apple's page in section 06."
+      },
+      {
+        "text": "The app's bundle identifier and its version",
+        "correct": false,
+        "why": "Those are `Info.plist` keys from lesson 1."
+      },
+      {
+        "text": "The certificate the app is signed with",
+        "correct": false,
+        "why": "Signing is lesson 21 and has nothing to do with this file."
+      }
+    ]
+  },
+  {
+    "id": "ex-96ftctmr",
+    "version": 1,
+    "section": "privacy-manifest",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner keeps the last open course in `UserDefaults`, read only by itself. The reason code it declares is ___.",
+    "hint": "Four characters, a period and a digit.",
+    "blanks": [
+      {
+        "accept": [
+          "CA92.1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1jwnjs6m",
+    "version": 1,
+    "section": "privacy-manifest",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Run on `Lesson1.plist`, `check-privacy.swift` printed `1 missing`. What exit status did `echo $?` print?",
+    "hint": "The last line of `check-privacy.swift`.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-025kyrqt",
+    "version": 1,
+    "section": "privacy-manifest",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Adding `tracking` to the checker's words gave two `MISSING` lines. Why two?",
+    "hint": "Tracking touches both files.",
+    "choices": [
+      {
+        "text": "The checker counts every word twice by mistake",
+        "correct": false,
+        "why": "`camera` and `userdefaults` were each reported once in the same run."
+      },
+      {
+        "text": "No usage string, and a manifest that says it does not track",
+        "correct": true,
+        "why": "Right: tracking needs both its string and a manifest that admits it."
+      },
+      {
+        "text": "`NSPrivacyTracking` has to list the advertising domains first",
+        "correct": false,
+        "why": "Domains go in `NSPrivacyTrackingDomains`, which this checker does not read."
+      },
+      {
+        "text": "A tracking app needs two reason codes for `UserDefaults`",
+        "correct": false,
+        "why": "The `UserDefaults` line was `ok` in that run."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgbypcp5",
+    "version": 1,
+    "section": "the-denied-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a person denies the camera, what does the planner's button become?",
+    "hint": "Guideline 5.1.1(iv): respect the setting, offer an alternative.",
+    "choices": [
+      {
+        "text": "An alert on launch until the camera is allowed",
+        "correct": false,
+        "why": "That is pressure, which 5.1.1(iv) forbids, and it blocks the rest of the app."
+      },
+      {
+        "text": "Nothing: the button is hidden, since a session needs no photo anyway",
+        "correct": false,
+        "why": "Hiding it leaves the person no way to know why or to change it."
+      },
+      {
+        "text": "A sentence that it is off, with a way to Settings",
+        "correct": true,
+        "why": "Right, in the place where the camera would have been."
+      },
+      {
+        "text": "The same button, which calls `requestAccess` again",
+        "correct": false,
+        "why": "The call returns the stored no; the person would tap and see nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkfpznw6",
+    "version": 1,
+    "section": "the-denied-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`button(for:)` has no `default` case. What does that buy?",
+    "hint": "What happens when a fifth state is added to `CameraAccess`?",
+    "choices": [
+      {
+        "text": "Faster code, since the compiler skips a branch",
+        "correct": false,
+        "why": "Speed is not the point; checking is."
+      },
+      {
+        "text": "A new state will not compile until it is given an answer",
+        "correct": true,
+        "why": "Right: the compiler checks every case is handled."
+      },
+      {
+        "text": "Nothing; Swift adds an empty default",
+        "correct": false,
+        "why": "Swift adds no default; an unhandled case is a compile error."
+      },
+      {
+        "text": "It lets `denied.swift` run without Foundation",
+        "correct": false,
+        "why": "The file needs no Foundation anyway; that is not what `default` decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-4c372c9y",
+    "version": 1,
+    "section": "the-denied-path",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a camera permission's life in order, for a person who first says no and later changes their mind.",
+    "hint": "Section 07's figure.",
+    "items": [
+      "`.notDetermined`",
+      "The app calls `requestAccess`",
+      "The person taps *Don't Allow*: `.denied`",
+      "The button offers Settings",
+      "The person turns the switch on: `.authorized`"
+    ]
+  },
+  {
+    "id": "ex-htq0b7dm",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these need a key or an entry in the planner's two privacy files? Choose all that apply.",
+    "hint": "Usage strings for what asks; the manifest for required-reason APIs.",
+    "choices": [
+      {
+        "text": "Taking a photo with the camera",
+        "correct": true,
+        "why": "Yes: `NSCameraUsageDescription`."
+      },
+      {
+        "text": "Choosing a photo with `PhotosPicker`",
+        "correct": false,
+        "why": "No: the picker runs outside the app."
+      },
+      {
+        "text": "Keeping the last course in `UserDefaults`",
+        "correct": true,
+        "why": "Yes: a required-reason API, `CA92.1`."
+      },
+      {
+        "text": "Scheduling a reminder at a time the person set",
+        "correct": false,
+        "why": "No: notifications ask with their own call and need neither file."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gwjvje0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When should the planner call `requestAccess` for the camera?",
+    "hint": "Asked out of context, people say no.",
+    "choices": [
+      {
+        "text": "At launch, so that every permission is settled at once",
+        "correct": false,
+        "why": "Out of context, and the no it invites is permanent."
+      },
+      {
+        "text": "During onboarding, on a screen explaining every feature",
+        "correct": false,
+        "why": "Still before the person wants a photo; the moment of use is later."
+      },
+      {
+        "text": "When the person taps the button that takes the photo",
+        "correct": true,
+        "why": "Right: the request is in context and the reason is obvious."
+      },
+      {
+        "text": "After a week, once the person trusts the app",
+        "correct": false,
+        "why": "Timing by calendar is still out of context."
+      }
+    ]
+  }
+]

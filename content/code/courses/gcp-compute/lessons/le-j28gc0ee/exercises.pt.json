@@ -1,0 +1,444 @@
+{
+  "ex-34k7a82n": {
+    "prompt": "Qual destas mudanças cria uma nova revisão de um serviço do Cloud Run?",
+    "hint": "Faz parte do template?",
+    "choices": [
+      {
+        "text": "Mover 10% do tráfego para outra revisão",
+        "why": "O tráfego pertence ao serviço, não a uma revisão."
+      },
+      {
+        "text": "Pôr uma tag numa revisão existente",
+        "why": "Uma tag é uma entrada na lista de tráfego."
+      },
+      {
+        "text": "Mudar uma variável de ambiente",
+        "why": "Isso. Qualquer coisa no template gera uma revisão nova."
+      },
+      {
+        "text": "Ler os logs do serviço no Cloud Logging",
+        "why": "Ler não muda nada."
+      }
+    ]
+  },
+  "ex-6c2d6zh9": {
+    "prompt": "Por que voltar atrás no Cloud Run é mais seguro que republicar o código de ontem?",
+    "hint": "O que ainda existe?",
+    "choices": [
+      {
+        "text": "Só o tráfego se move",
+        "why": "Isso. Nada de build, nada de imagem nova, nada que falhe diferente."
+      },
+      {
+        "text": "Voltar atrás pula as verificações de saúde",
+        "why": "Nada é pulado; nada novo é montado."
+      },
+      {
+        "text": "Revisões antigas rodam em máquinas mais rápidas",
+        "why": "Revisões não escolhem máquinas."
+      },
+      {
+        "text": "O Cloud Run guarda em cache as respostas de ontem",
+        "why": "Não há cache de respostas envolvido."
+      }
+    ]
+  },
+  "ex-qvcjf8p3": {
+    "prompt": "Com --revision-suffix=v2, o serviço orders ganha uma revisão chamada orders-___.",
+    "hint": "O sufixo vem depois do nome do serviço.",
+    "blanks": [
+      {
+        "accept": [
+          "v2"
+        ]
+      }
+    ]
+  },
+  "ex-wnae15ej": {
+    "prompt": "Em casa, a orders-v2 respondeu em cerca de um quarto de segundo e a orders-v1 em poucos milissegundos. O que causou a diferença?",
+    "hint": "Mesma imagem, configuração diferente.",
+    "choices": [
+      {
+        "text": "A orders-v2 foi montada de uma imagem mais nova",
+        "why": "As duas rodaram a orders:1."
+      },
+      {
+        "text": "A porta 8082 é mais lenta que a 8081",
+        "why": "Portas não têm velocidade."
+      },
+      {
+        "text": "O K_REVISION faz o programa registrar mais",
+        "why": "Ele só muda o nome na resposta."
+      },
+      {
+        "text": "O ORDERS_DELAY_MS=250 na orders-v2",
+        "why": "Isso. Uma mudança de configuração, que é uma revisão nova."
+      }
+    ]
+  },
+  "ex-anhh6sdw": {
+    "prompt": "Na captura, quantos segundos a orders-v2 levou para responder /orders? Responda com duas casas.",
+    "hint": "Leia o time_total.",
+    "unit": "segundos"
+  },
+  "ex-2fc6f0bw": {
+    "prompt": "Para onde aponta o endereço de um serviço do Cloud Run?",
+    "hint": "Não para uma revisão só.",
+    "choices": [
+      {
+        "text": "A revisão mais nova, sempre",
+        "why": "Só enquanto a divisão diz LATEST com 100%."
+      },
+      {
+        "text": "Uma divisão de tráfego",
+        "why": "Isso. Por padrão, LATEST com 100%."
+      },
+      {
+        "text": "Uma instância fixa escolhida na publicação",
+        "why": "Instâncias vêm e vão."
+      },
+      {
+        "text": "A revisão com mais instâncias",
+        "why": "O número de instâncias segue a divisão, não o contrário."
+      }
+    ]
+  },
+  "ex-fycak4r1": {
+    "prompt": "Com 90% para a orders-v1 e 10% para a orders-v2, um usuário carrega três páginas. O que ele pode ver?",
+    "hint": "Como cada requisição é atribuída?",
+    "choices": [
+      {
+        "text": "Uma versão só, escolhida quando chega pela primeira vez",
+        "why": "Nada prende um usuário a uma revisão."
+      },
+      {
+        "text": "Só a orders-v1, até 10% dos usuários terem chegado",
+        "why": "A divisão é por requisição, não por contagem de usuários."
+      },
+      {
+        "text": "As duas versões, já que cada requisição é atribuída sozinha",
+        "why": "Isso. Coerência por usuário precisa de uma flag na aplicação."
+      },
+      {
+        "text": "A orders-v2 exatamente a cada décima página",
+        "why": "A atribuição é aleatória na proporção, não um rodízio."
+      }
+    ]
+  },
+  "ex-c1prmrm5": {
+    "prompt": "O plan aceitou blocos de tráfego de 90% e 20%. O que acontece no apply?",
+    "hint": "Quem impõe a soma?",
+    "choices": [
+      {
+        "text": "A API do Cloud Run o recusa com um erro",
+        "why": "Isso. A soma é conferida do lado do Google."
+      },
+      {
+        "text": "O Cloud Run reduz os dois para caber em 100%",
+        "why": "Nada é reescalado; o pedido é recusado."
+      },
+      {
+        "text": "Os 10% a mais vão para o LATEST",
+        "why": "Não existe regra de sobra."
+      },
+      {
+        "text": "O Terraform recusa antes de chamar o Google",
+        "why": "O plan mostrou que ele não confere a soma."
+      }
+    ]
+  },
+  "ex-9751kcw6": {
+    "prompt": "Uma divisão tem LATEST com 10% e orders-v1 com 90%. Um desenvolvedor publica um experimento rápido. Quem recebe 10% dos usuários?",
+    "hint": "O LATEST se move sozinho.",
+    "choices": [
+      {
+        "text": "A orders-v2, porque o LATEST ficou preso quando foi definido",
+        "why": "O LATEST não fica preso; ele segue a mais nova."
+      },
+      {
+        "text": "Ninguém, até a divisão ser atualizada",
+        "why": "A parte do LATEST se move sem atualização."
+      },
+      {
+        "text": "A orders-v1, que assume a parte do LATEST",
+        "why": "Revisões nomeadas mantêm só a própria parte."
+      },
+      {
+        "text": "O experimento, porque agora ele é a revisão mais nova",
+        "why": "Isso. É por isso que misturar LATEST com revisões nomeadas confunde."
+      }
+    ]
+  },
+  "ex-802akexe": {
+    "prompt": "Ligue cada entrada de tráfego ao que ela faz.",
+    "hint": "Nomeada, mais nova, com tag.",
+    "pairs": [
+      {
+        "left": "revision = \"orders-v1\", percent = 90",
+        "right": "Fica na orders-v1 até alguém mover"
+      },
+      {
+        "left": "type LATEST, percent = 10",
+        "right": "Segue cada publicação nova"
+      },
+      {
+        "left": "tag = \"canary\", percent = 0",
+        "right": "Um endereço sem parte do tráfego"
+      }
+    ],
+    "right_distractors": [
+      "Apaga a revisão depois de um dia"
+    ]
+  },
+  "ex-msgacexj": {
+    "prompt": "O que uma tag dá a uma revisão?",
+    "hint": "Três hífens.",
+    "choices": [
+      {
+        "text": "Uma parte do tráfego do serviço",
+        "why": "Uma tag pode ter 0%; a parte é o percent."
+      },
+      {
+        "text": "Um endereço próprio",
+        "why": "Isso. canary---orders-….run.app."
+      },
+      {
+        "text": "Proteção contra ser apagada",
+        "why": "Tags não protegem nada."
+      },
+      {
+        "text": "Uma garantia de uma instância quente",
+        "why": "Isso é um número mínimo de instâncias."
+      }
+    ]
+  },
+  "ex-wsqbdba4": {
+    "prompt": "Uma equipe usou --no-traffic uma vez numa liberação cuidadosa, depois publicou três correções do jeito normal. Os usuários não veem nenhuma. Por quê?",
+    "hint": "Leia o segundo parágrafo da ajuda.",
+    "choices": [
+      {
+        "text": "As correções falharam na sondagem de inicialização",
+        "why": "Nada diz que falharam; elas não receberam tráfego."
+      },
+      {
+        "text": "O Cloud Run espera um dia antes de rotear para uma revisão nova",
+        "why": "Não existe essa espera."
+      },
+      {
+        "text": "Nada aponta mais para o LATEST, até o --to-latest",
+        "why": "Isso. As publicações seguintes também não recebem tráfego."
+      },
+      {
+        "text": "A tag manteve todo o tráfego na primeira revisão",
+        "why": "Uma tag alcança uma revisão; não segura a divisão."
+      }
+    ]
+  },
+  "ex-fgec9dev": {
+    "prompt": "Por que tirar a tag canary quando a liberação termina?",
+    "hint": "Quem alcança uma tag?",
+    "choices": [
+      {
+        "text": "Ela fica pública e fácil de adivinhar",
+        "why": "Isso. Tirar a tag tira o endereço."
+      },
+      {
+        "text": "Tags são cobradas por hora",
+        "why": "Tags não custam nada em si."
+      },
+      {
+        "text": "Uma tag impede apagar revisões velhas",
+        "why": "Esse não é o motivo; o risco é o endereço."
+      },
+      {
+        "text": "Tags expiram sozinhas depois de uma liberação",
+        "why": "Elas ficam até serem tiradas."
+      }
+    ]
+  },
+  "ex-hxz32mxh": {
+    "prompt": "Ponha em ordem a sequência comum de uma liberação cuidadosa.",
+    "hint": "Ninguém além de você primeiro.",
+    "items": [
+      "Publicar com --no-traffic --tag=canary",
+      "Testar contra o endereço da tag",
+      "Dar à revisão uma porcentagem pequena",
+      "Ir a 100% e tirar a tag"
+    ],
+    "trap": "Uma porcentagem antes dos testes manda usuários reais para um código que ninguém testou."
+  },
+  "ex-em54d8ad": {
+    "prompt": "Um serviço recebe 2.000 requisições por hora e o canário tem 10%. Quantas horas até ele ter visto 10.000 requisições?",
+    "hint": "200 por hora.",
+    "unit": "horas"
+  },
+  "ex-gjacxmn2": {
+    "prompt": "Qual comando, dos exemplos do próprio gcloud, volta tudo para a revisão antiga?",
+    "hint": "Uma revisão com 100.",
+    "choices": [
+      {
+        "text": "gcloud run services update-traffic myservice --to-latest",
+        "why": "Isso manda tudo para a mais nova."
+      },
+      {
+        "text": "gcloud run deploy myservice --no-traffic",
+        "why": "Isso cria uma revisão; não move nada de volta."
+      },
+      {
+        "text": "gcloud run services delete myservice",
+        "why": "Isso apaga o serviço e todas as revisões."
+      },
+      {
+        "text": "update-traffic com --to-revisions=ANTIGA=100",
+        "why": "Isso. Voltar atrás é uma mudança de tráfego."
+      }
+    ]
+  },
+  "ex-5t8qkdqg": {
+    "prompt": "Uma liberação voltou para a orders-v1 e a orders-v1 agora falha em toda requisição. A imagem não mudou. Qual é a causa provável?",
+    "hint": "O que mais a orders-v2 mudou?",
+    "choices": [
+      {
+        "text": "Revisões antigas se degradam depois de uma semana",
+        "why": "Uma revisão é imutável."
+      },
+      {
+        "text": "O código novo mudou os dados, e o antigo não consegue lê-los",
+        "why": "Isso. O código voltou e os dados não."
+      },
+      {
+        "text": "O Cloud Run apagou a imagem da orders-v1 para economizar",
+        "why": "Revisões guardam as imagens pelo digest."
+      },
+      {
+        "text": "A tag canary ainda aponta para a orders-v2",
+        "why": "Uma tag só afeta o próprio endereço."
+      }
+    ]
+  },
+  "ex-emcwv0gv": {
+    "prompt": "O que deve ser escrito antes de uma liberação começar? Escolha todos os que se aplicam.",
+    "hint": "A decisão, não o mecanismo.",
+    "choices": [
+      {
+        "text": "A métrica a observar para cada revisão",
+        "why": "Isso; latência e erros, por revisão."
+      },
+      {
+        "text": "O limite que dispara a volta atrás",
+        "why": "Isso; decidido antes de alguém ficar tentado a esperar."
+      },
+      {
+        "text": "O endereço run.app da revisão nova",
+        "why": "Ele é atribuído pelo Google e não é uma decisão."
+      },
+      {
+        "text": "Quanto dura cada etapa",
+        "why": "Isso; uma etapa de muito pouco tráfego vê muito pouco."
+      }
+    ]
+  },
+  "ex-2w2ng9kn": {
+    "prompt": "O Google Cloud ___ automatiza etapas de canário para o Cloud Run, movendo o tráfego por pipeline.",
+    "hint": "Um produto de entrega.",
+    "blanks": [
+      {
+        "accept": [
+          "Deploy"
+        ]
+      }
+    ]
+  },
+  "ex-gpdr9k1g": {
+    "prompt": "Ordene os movimentos dos exemplos do update-traffic do gcloud como uma liberação que dá errado.",
+    "hint": "Sobe, sobe, e volta.",
+    "items": [
+      "Revisão nova com 10%",
+      "Revisão nova com 20%",
+      "Revisão antiga com 100%"
+    ],
+    "trap": "O último movimento é voltar atrás, e ele não monta nada."
+  },
+  "ex-t5h896z0": {
+    "prompt": "O que pertence a uma revisão e não ao serviço?",
+    "hint": "Congelado na publicação.",
+    "choices": [
+      {
+        "text": "A divisão de tráfego entre revisões",
+        "why": "A divisão é do serviço."
+      },
+      {
+        "text": "O endereço run.app do serviço",
+        "why": "O endereço é do serviço."
+      },
+      {
+        "text": "A memória e as variáveis",
+        "why": "Isso. Estão no template."
+      },
+      {
+        "text": "A lista de tags",
+        "why": "Tags são entradas na lista de tráfego do serviço."
+      }
+    ]
+  },
+  "ex-kgr3b80m": {
+    "prompt": "Um redesenho do checkout precisa parecer o mesmo para um usuário em todas as páginas que ele abrir durante a liberação. O que a lição sugere?",
+    "hint": "Uma porcentagem é por requisição.",
+    "choices": [
+      {
+        "text": "Uma flag na aplicação que decide por usuário",
+        "why": "Isso. A divisão não prende um usuário a uma revisão."
+      },
+      {
+        "text": "Uma divisão de 50%, para cada usuário ver metade das vezes",
+        "why": "Metade das vezes é justamente a incoerência a evitar."
+      },
+      {
+        "text": "Uma tag, mandada a todo usuário por e-mail",
+        "why": "Isso torna a tag pública e pula a liberação."
+      },
+      {
+        "text": "LATEST com 10%, que gruda por usuário",
+        "why": "O LATEST também não gruda."
+      }
+    ]
+  },
+  "ex-f1p8y2z0": {
+    "prompt": "Com 50% de 2.000 requisições por hora, quantas horas para esperar dez ocorrências de um erro que acontece uma vez em mil?",
+    "hint": "São precisas 10.000 requisições.",
+    "unit": "horas"
+  },
+  "ex-058yrp2a": {
+    "prompt": "Uma publicação que não deve receber requisição nenhuma usa a opção --no-___.",
+    "hint": "A ajuda explica.",
+    "blanks": [
+      {
+        "accept": [
+          "traffic"
+        ]
+      }
+    ]
+  },
+  "ex-33csddkz": {
+    "prompt": "O que o K_REVISION guarda dentro de um contêiner do Cloud Run?",
+    "hint": "Definido pela plataforma.",
+    "choices": [
+      {
+        "text": "O digest da imagem, como o Artifact Registry lista",
+        "why": "O digest não é passado como variável aqui."
+      },
+      {
+        "text": "A porcentagem de tráfego que recebe",
+        "why": "O contêiner não fica sabendo da sua parte."
+      },
+      {
+        "text": "A tag do endereço chamado",
+        "why": "Tags não são passadas ao contêiner."
+      },
+      {
+        "text": "O nome da revisão que atende a requisição",
+        "why": "Isso. orders-v1 ou orders-v2 em casa."
+      }
+    ]
+  }
+}

@@ -1,0 +1,663 @@
+[
+  {
+    "id": "ex-wmw899z9",
+    "version": 1,
+    "section": "service-load-balancer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On GKE, what does a Service of type LoadBalancer produce?",
+    "hint": "Layer 4, regional.",
+    "choices": [
+      {
+        "text": "An external Application Load Balancer with one global address",
+        "correct": false,
+        "why": "That is what an Ingress or a Gateway builds."
+      },
+      {
+        "text": "A passthrough Network Load Balancer",
+        "correct": true,
+        "why": "Right: layer 4, regional, one per Service."
+      },
+      {
+        "text": "Nothing until a Gateway is attached to it",
+        "correct": false,
+        "why": "The Service alone is enough on GKE."
+      },
+      {
+        "text": "A NodePort reachable only from inside the VPC",
+        "correct": false,
+        "why": "A NodePort is a different type; LoadBalancer gets an external address."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgaw5yj0",
+    "version": 1,
+    "section": "service-load-balancer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same LoadBalancer manifest leaves EXTERNAL-IP at <pending> on a kind cluster and gets an address on GKE. Why?",
+    "hint": "Who builds the load balancer?",
+    "choices": [
+      {
+        "text": "kind refuses Services of type LoadBalancer",
+        "correct": false,
+        "why": "The Service is accepted; it just waits."
+      },
+      {
+        "text": "GKE assigns a node's own address to the Service",
+        "correct": false,
+        "why": "The address belongs to a load balancer outside the cluster."
+      },
+      {
+        "text": "Google builds one on GKE; on kind nobody does",
+        "correct": true,
+        "why": "Right; the cluster only asks."
+      },
+      {
+        "text": "The manifest needs a cloud annotation that kind ignores",
+        "correct": false,
+        "why": "No annotation is needed on GKE for an external one."
+      }
+    ]
+  },
+  {
+    "id": "ex-5075tvz6",
+    "version": 1,
+    "section": "service-load-balancer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a passthrough load balancer not do?",
+    "hint": "It sees connections.",
+    "choices": [
+      {
+        "text": "Carry MQTT traffic to a broker",
+        "correct": false,
+        "why": "Non-HTTP traffic is exactly what it suits."
+      },
+      {
+        "text": "Offer a service on an address inside the VPC",
+        "correct": false,
+        "why": "One annotation makes it internal."
+      },
+      {
+        "text": "Forward TCP connections to pods",
+        "correct": false,
+        "why": "That is its whole job."
+      },
+      {
+        "text": "Send /api/orders and / to different Services",
+        "correct": true,
+        "why": "Right; routing by path needs layer 7."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrgpfy9r",
+    "version": 1,
+    "section": "service-load-balancer",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The annotation networking.gke.io/load-balancer-type with the value ___ gives a Service an address inside the VPC.",
+    "hint": "The opposite of external.",
+    "blanks": [
+      {
+        "accept": [
+          "Internal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nvp99019",
+    "version": 1,
+    "section": "service-load-balancer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team deletes and recreates its LoadBalancer Service during a migration, and the site disappears for everyone although the pods are fine. What happened?",
+    "hint": "Whose address was it?",
+    "choices": [
+      {
+        "text": "The pods lost their readiness gate",
+        "correct": false,
+        "why": "The pods are fine; the front door moved."
+      },
+      {
+        "text": "The address changed, and DNS still has the old one",
+        "correct": true,
+        "why": "Right; reserve a static address, or use a Gateway on a reserved one."
+      },
+      {
+        "text": "GKE needs a second Service to rebuild the forwarding rule",
+        "correct": false,
+        "why": "One Service is enough; the address is what changed."
+      },
+      {
+        "text": "The load balancer kept routing to deleted nodes for ever",
+        "correct": false,
+        "why": "Nodes were not deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4wsrnek",
+    "version": 1,
+    "section": "ingress",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the GKE Ingress controller build from an Ingress?",
+    "hint": "Layer 7, global.",
+    "choices": [
+      {
+        "text": "An external Application Load Balancer",
+        "correct": true,
+        "why": "Right: one address, many paths, TLS at Google."
+      },
+      {
+        "text": "One passthrough load balancer per path",
+        "correct": false,
+        "why": "Paths share one layer-7 load balancer."
+      },
+      {
+        "text": "An nginx Deployment inside the cluster",
+        "correct": false,
+        "why": "That is another controller; GKE's builds Google's load balancer."
+      },
+      {
+        "text": "A Cloud Run service in front of the pods",
+        "correct": false,
+        "why": "Cloud Run has no part in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-aegrxjps",
+    "version": 1,
+    "section": "ingress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is shop-web reserved with Terraform instead of letting the Ingress get an address?",
+    "hint": "What outlives the Ingress?",
+    "choices": [
+      {
+        "text": "An Ingress cannot have an address of its own",
+        "correct": false,
+        "why": "It can, an ephemeral one."
+      },
+      {
+        "text": "A reserved address is cheaper than an ephemeral one",
+        "correct": false,
+        "why": "Price is not the argument made."
+      },
+      {
+        "text": "It outlives the Ingress and the cluster",
+        "correct": true,
+        "why": "Right; DNS points at it once."
+      },
+      {
+        "text": "Terraform validates that the address is free",
+        "correct": false,
+        "why": "The plan cannot know; the address is assigned on apply."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3fj45hd",
+    "version": 1,
+    "section": "ingress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A ManagedCertificate stays in Provisioning for hours. What is the usual cause?",
+    "hint": "How does the authority check the domain?",
+    "choices": [
+      {
+        "text": "The Ingress has too many paths",
+        "correct": false,
+        "why": "Paths do not affect the certificate."
+      },
+      {
+        "text": "Google issues certificates only on weekdays",
+        "correct": false,
+        "why": "Issuance does not depend on the day."
+      },
+      {
+        "text": "The cluster is regional and the certificate global",
+        "correct": false,
+        "why": "That is the normal arrangement."
+      },
+      {
+        "text": "DNS does not point at the load balancer yet",
+        "correct": true,
+        "why": "Right; that is how the domain is proved yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-739c7jzj",
+    "version": 1,
+    "section": "ingress",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many resources did the plan for lb/address.tf add on its own?",
+    "hint": "One address.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-ksbt04p6",
+    "version": 1,
+    "section": "ingress",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The external Application Load Balancer needs a ___ address, not a regional one.",
+    "hint": "Announced from Google's edge everywhere.",
+    "blanks": [
+      {
+        "accept": [
+          "global"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d86t0k8w",
+    "version": 1,
+    "section": "container-native-and-negs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a network endpoint group list, for a load balancer on GKE?",
+    "hint": "The load balancer's backends.",
+    "choices": [
+      {
+        "text": "The nodes of the cluster and their node ports",
+        "correct": false,
+        "why": "That is the old path, through instance groups."
+      },
+      {
+        "text": "Pod addresses and ports",
+        "correct": true,
+        "why": "Right; requests go straight to pods."
+      },
+      {
+        "text": "The Services in a namespace",
+        "correct": false,
+        "why": "A Service is a backend; its pods are the endpoints."
+      },
+      {
+        "text": "The certificates of the Ingress",
+        "correct": false,
+        "why": "Certificates live on the target proxy."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qbs9c5g",
+    "version": 1,
+    "section": "container-native-and-negs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With node backends, a node runs one broken pod among healthy ones. What does the load balancer see?",
+    "hint": "What does the health check test there?",
+    "choices": [
+      {
+        "text": "The broken pod, which it removes at once",
+        "correct": false,
+        "why": "With node backends it does not see pods."
+      },
+      {
+        "text": "An unhealthy node, which it removes",
+        "correct": false,
+        "why": "The node passes, because most of it is fine."
+      },
+      {
+        "text": "A node that passes, so traffic keeps arriving",
+        "correct": true,
+        "why": "Right; NEGs move the health check to the pod."
+      },
+      {
+        "text": "Nothing, until kube-proxy reports the pod",
+        "correct": false,
+        "why": "kube-proxy reports nothing to the load balancer."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpyj2jhz",
+    "version": 1,
+    "section": "container-native-and-negs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a rollout, why does the readiness gate GKE adds keep customers from seeing errors?",
+    "hint": "When does a new pod count as ready?",
+    "choices": [
+      {
+        "text": "Old pods go only once new ones are healthy in the load balancer",
+        "correct": true,
+        "why": "Right; Kubernetes waits for the load balancer."
+      },
+      {
+        "text": "It slows every rollout to one pod per minute",
+        "correct": false,
+        "why": "No fixed pace is imposed."
+      },
+      {
+        "text": "It sends a copy of each request to old and new pods",
+        "correct": false,
+        "why": "Nothing mirrors requests."
+      },
+      {
+        "text": "It keeps the old ReplicaSet for a soak period",
+        "correct": false,
+        "why": "That describes blue-green nodes in lesson 13."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c6v0ww7",
+    "version": 1,
+    "section": "container-native-and-negs",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the old path, the node hands the request to the rules of kube-___, which forward it to a pod.",
+    "hint": "The component that runs on every node.",
+    "blanks": [
+      {
+        "accept": [
+          "proxy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xb8jscts",
+    "version": 1,
+    "section": "container-native-and-negs",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the old path of a request through node backends.",
+    "hint": "Node first, pod last.",
+    "items": [
+      "The load balancer picks a node",
+      "The request arrives on the Service's node port",
+      "kube-proxy's rules pick a pod, often on another node",
+      "The pod answers"
+    ]
+  },
+  {
+    "id": "ex-s58vtj3j",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Gateway API, which object does each application team write?",
+    "hint": "Routes belong to teams.",
+    "choices": [
+      {
+        "text": "The GatewayClass",
+        "correct": false,
+        "why": "Google provides the classes on GKE."
+      },
+      {
+        "text": "The Gateway",
+        "correct": false,
+        "why": "The platform owns the Gateway."
+      },
+      {
+        "text": "An HTTPRoute, in its namespace",
+        "correct": true,
+        "why": "Right; it attaches to the platform's Gateway."
+      },
+      {
+        "text": "A ManagedCertificate",
+        "correct": false,
+        "why": "Certificates sit on the Gateway's listeners."
+      }
+    ]
+  },
+  {
+    "id": "ex-skf53h5n",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can an HTTPRoute do that an Ingress on GKE never could?",
+    "hint": "Ninety and ten.",
+    "choices": [
+      {
+        "text": "Send different paths to different Services",
+        "correct": false,
+        "why": "Ingress does that too."
+      },
+      {
+        "text": "Split traffic between Services by weight",
+        "correct": true,
+        "why": "Right; a canary without touching the Gateway."
+      },
+      {
+        "text": "Terminate TLS with a Google-managed certificate",
+        "correct": false,
+        "why": "Ingress has ManagedCertificate for that."
+      },
+      {
+        "text": "Use a global address",
+        "correct": false,
+        "why": "Ingress uses one too."
+      }
+    ]
+  },
+  {
+    "id": "ex-91nd9nwz",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The route sends weight 90 to orders and 10 to orders-next. Out of 2,000 requests, about how many reach orders-next?",
+    "hint": "Ten parts in a hundred.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-khnrwdqv",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which value of gateway_api_config.channel did the provider refuse, and why does it matter?",
+    "hint": "The accepted names carry a prefix.",
+    "choices": [
+      {
+        "text": "CHANNEL_EXPERIMENTAL, because Autopilot forbids it",
+        "correct": false,
+        "why": "It was in the accepted list."
+      },
+      {
+        "text": "CHANNEL_STANDARD, because it is the default already",
+        "correct": false,
+        "why": "It planned cleanly."
+      },
+      {
+        "text": "STANDARD: the names carry the CHANNEL_ prefix",
+        "correct": true,
+        "why": "Right; the provider listed the three it knows."
+      },
+      {
+        "text": "REGULAR, which belongs to release channels",
+        "correct": false,
+        "why": "That was lesson 13's field, not this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-99jznhx7",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The GKE class for the global external Application Load Balancer is gke-l7-global-external-___.",
+    "hint": "Google runs it for you.",
+    "blanks": [
+      {
+        "accept": [
+          "managed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jkw4ydwa",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to what the shop should use.",
+    "hint": "Layer, scope, ownership.",
+    "pairs": [
+      {
+        "left": "An MQTT broker on the internet",
+        "right": "A Service of type LoadBalancer"
+      },
+      {
+        "left": "A service offered to virtual machines in the VPC",
+        "right": "The Internal load balancer annotation"
+      },
+      {
+        "left": "Many HTTP paths on one domain, each team its own",
+        "right": "A Gateway and HTTPRoutes"
+      },
+      {
+        "left": "An address that never moves",
+        "right": "A reserved global address"
+      }
+    ],
+    "right_distractors": [
+      "A NodePort on every node"
+    ]
+  },
+  {
+    "id": "ex-zyqyn12z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop has five public HTTP services, each exposed as a Service of type LoadBalancer. What does moving them behind one Gateway change on the bill and in DNS?",
+    "hint": "Count the load balancers and the addresses.",
+    "choices": [
+      {
+        "text": "Nothing: a Gateway creates one load balancer per route",
+        "correct": false,
+        "why": "One Gateway is one load balancer."
+      },
+      {
+        "text": "Five addresses become ten, one per listener and route",
+        "correct": false,
+        "why": "Listeners share the Gateway's address."
+      },
+      {
+        "text": "Five load balancers and addresses become one of each",
+        "correct": true,
+        "why": "Right; routes share the Gateway."
+      },
+      {
+        "text": "The services lose TLS, which only Services provide",
+        "correct": false,
+        "why": "A passthrough Service provides no managed TLS at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh29qq07",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab check in lesson 16? Choose all that apply.",
+    "hint": "Terraform ran; kubectl did not.",
+    "choices": [
+      {
+        "text": "That the global address resource is well formed",
+        "correct": true,
+        "why": "Right; it planned, with the address known after apply."
+      },
+      {
+        "text": "That CHANNEL_STANDARD is an accepted Gateway API channel",
+        "correct": true,
+        "why": "Right; STANDARD alone was refused."
+      },
+      {
+        "text": "That the HTTPRoute attaches to the Gateway",
+        "correct": false,
+        "why": "No manifest was applied anywhere."
+      },
+      {
+        "text": "That the certificate was issued for shop.example.com",
+        "correct": false,
+        "why": "Nothing reached a certificate authority."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytz6rymj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Container-native load balancing is on without being asked for. On which clusters?",
+    "hint": "What GKE creates by default.",
+    "choices": [
+      {
+        "text": "Only on Standard clusters with Spot nodes",
+        "correct": false,
+        "why": "Spot has nothing to do with it."
+      },
+      {
+        "text": "Only on clusters in the EXTENDED channel",
+        "correct": false,
+        "why": "Channels decide versions, not this."
+      },
+      {
+        "text": "Only when a Service sets type LoadBalancer",
+        "correct": false,
+        "why": "It is about Ingress and Gateway backends."
+      },
+      {
+        "text": "Any whose pods get VPC addresses, Autopilot included",
+        "correct": true,
+        "why": "Right; Ingress and Gateway use NEGs there."
+      }
+    ]
+  }
+]

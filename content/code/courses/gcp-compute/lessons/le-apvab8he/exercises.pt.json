@@ -1,0 +1,443 @@
+{
+  "ex-wmw899z9": {
+    "prompt": "No GKE, o que um Service do tipo LoadBalancer produz?",
+    "hint": "Camada 4, regional.",
+    "choices": [
+      {
+        "text": "Um Application Load Balancer externo com um endereço global",
+        "why": "Isso é o que um Ingress ou um Gateway monta."
+      },
+      {
+        "text": "Um Network Load Balancer de passagem",
+        "why": "Isso: camada 4, regional, um por Service."
+      },
+      {
+        "text": "Nada até um Gateway ser ligado a ele",
+        "why": "O Service sozinho basta no GKE."
+      },
+      {
+        "text": "Uma NodePort alcançável só de dentro da VPC",
+        "why": "NodePort é outro tipo; LoadBalancer ganha endereço externo."
+      }
+    ]
+  },
+  "ex-tgaw5yj0": {
+    "prompt": "O mesmo manifesto LoadBalancer deixa o EXTERNAL-IP em <pending> num cluster kind e ganha endereço no GKE. Por quê?",
+    "hint": "Quem monta o balanceador?",
+    "choices": [
+      {
+        "text": "O kind recusa Services do tipo LoadBalancer",
+        "why": "O Service é aceito; ele só espera."
+      },
+      {
+        "text": "O GKE atribui ao Service o endereço de um nó",
+        "why": "O endereço é de um balanceador fora do cluster."
+      },
+      {
+        "text": "No GKE o Google monta um; no kind ninguém",
+        "why": "Isso; o cluster só pede."
+      },
+      {
+        "text": "O manifesto precisa de uma anotação de nuvem que o kind ignora",
+        "why": "No GKE nenhuma anotação é necessária para um externo."
+      }
+    ]
+  },
+  "ex-5075tvz6": {
+    "prompt": "Qual destas coisas um balanceador de passagem não consegue fazer?",
+    "hint": "Ele vê conexões.",
+    "choices": [
+      {
+        "text": "Levar tráfego MQTT a um broker",
+        "why": "Tráfego que não é HTTP é justamente o que ele serve."
+      },
+      {
+        "text": "Oferecer um serviço num endereço dentro da VPC",
+        "why": "Uma anotação o torna interno."
+      },
+      {
+        "text": "Repassar conexões TCP a pods",
+        "why": "Esse é todo o trabalho dele."
+      },
+      {
+        "text": "Mandar /api/orders e / para Services diferentes",
+        "why": "Isso; rotear por caminho exige camada 7."
+      }
+    ]
+  },
+  "ex-jrgpfy9r": {
+    "prompt": "A anotação networking.gke.io/load-balancer-type com o valor ___ dá a um Service um endereço dentro da VPC.",
+    "hint": "O contrário de externo.",
+    "blanks": [
+      {
+        "accept": [
+          "Internal"
+        ]
+      }
+    ]
+  },
+  "ex-nvp99019": {
+    "prompt": "Uma equipe apaga e recria o Service LoadBalancer durante uma migração, e o site some para todos embora os pods estejam bem. O que aconteceu?",
+    "hint": "De quem era o endereço?",
+    "choices": [
+      {
+        "text": "Os pods perderam o readiness gate",
+        "why": "Os pods estão bem; a porta da frente mudou."
+      },
+      {
+        "text": "O endereço mudou e o DNS ainda tem o antigo",
+        "why": "Isso; reserve um endereço estático, ou use um Gateway num reservado."
+      },
+      {
+        "text": "O GKE precisa de um segundo Service para refazer a regra",
+        "why": "Um Service basta; o endereço é que mudou."
+      },
+      {
+        "text": "O balanceador continuou roteando para nós apagados para sempre",
+        "why": "Nenhum nó foi apagado."
+      }
+    ]
+  },
+  "ex-h4wsrnek": {
+    "prompt": "O que o controlador de Ingress do GKE monta a partir de um Ingress?",
+    "hint": "Camada 7, global.",
+    "choices": [
+      {
+        "text": "Um Application Load Balancer externo",
+        "why": "Isso: um endereço, muitos caminhos, TLS no Google."
+      },
+      {
+        "text": "Um balanceador de passagem por caminho",
+        "why": "Os caminhos dividem um balanceador de camada 7."
+      },
+      {
+        "text": "Um Deployment de nginx dentro do cluster",
+        "why": "Esse é outro controlador; o do GKE monta o balanceador do Google."
+      },
+      {
+        "text": "Um serviço do Cloud Run na frente dos pods",
+        "why": "O Cloud Run não participa."
+      }
+    ]
+  },
+  "ex-aegrxjps": {
+    "prompt": "Por que o shop-web é reservado com Terraform em vez de deixar o Ingress pegar um endereço?",
+    "hint": "O que sobrevive ao Ingress?",
+    "choices": [
+      {
+        "text": "Um Ingress não pode ter endereço próprio",
+        "why": "Pode, um efêmero."
+      },
+      {
+        "text": "Um endereço reservado é mais barato que um efêmero",
+        "why": "O preço não é o argumento."
+      },
+      {
+        "text": "Ele sobrevive ao Ingress e ao cluster",
+        "why": "Isso; o DNS aponta para ele uma vez."
+      },
+      {
+        "text": "O Terraform confere que o endereço está livre",
+        "why": "O plan não sabe; o endereço é atribuído no apply."
+      }
+    ]
+  },
+  "ex-k3fj45hd": {
+    "prompt": "Um ManagedCertificate fica em Provisioning por horas. Qual a causa de costume?",
+    "hint": "Como a autoridade confere o domínio?",
+    "choices": [
+      {
+        "text": "O Ingress tem caminhos demais",
+        "why": "Caminhos não afetam o certificado."
+      },
+      {
+        "text": "O Google só emite certificados em dias úteis",
+        "why": "A emissão não depende do dia."
+      },
+      {
+        "text": "O cluster é regional e o certificado, global",
+        "why": "Esse é o arranjo normal."
+      },
+      {
+        "text": "O DNS ainda não aponta para o balanceador",
+        "why": "Isso; é assim que se prova que o domínio é seu."
+      }
+    ]
+  },
+  "ex-739c7jzj": {
+    "prompt": "Quantos recursos o plan do lb/address.tf acrescentou sozinho?",
+    "hint": "Um endereço.",
+    "unit": "recursos"
+  },
+  "ex-ksbt04p6": {
+    "prompt": "O Application Load Balancer externo precisa de um endereço ___, não regional.",
+    "hint": "Anunciado da borda do Google em toda parte.",
+    "blanks": [
+      {
+        "accept": [
+          "global"
+        ]
+      }
+    ]
+  },
+  "ex-d86t0k8w": {
+    "prompt": "O que um grupo de endpoints de rede lista, para um balanceador no GKE?",
+    "hint": "Os backends do balanceador.",
+    "choices": [
+      {
+        "text": "Os nós do cluster e suas portas de nó",
+        "why": "Esse é o caminho antigo, por grupos de instâncias."
+      },
+      {
+        "text": "Endereços e portas de pods",
+        "why": "Isso; as requisições vão direto aos pods."
+      },
+      {
+        "text": "Os Services de um namespace",
+        "why": "Um Service é um backend; os pods dele são os endpoints."
+      },
+      {
+        "text": "Os certificados do Ingress",
+        "why": "Certificados ficam no proxy de destino."
+      }
+    ]
+  },
+  "ex-1qbs9c5g": {
+    "prompt": "Com nós como backend, um nó roda um pod quebrado entre saudáveis. O que o balanceador vê?",
+    "hint": "O que a verificação de saúde testa ali?",
+    "choices": [
+      {
+        "text": "O pod quebrado, que ele remove na hora",
+        "why": "Com nós como backend ele não vê pods."
+      },
+      {
+        "text": "Um nó doente, que ele remove",
+        "why": "O nó passa, porque quase tudo nele está bem."
+      },
+      {
+        "text": "Um nó que passa, então o tráfego segue chegando",
+        "why": "Isso; os NEGs levam a verificação ao pod."
+      },
+      {
+        "text": "Nada, até o kube-proxy reportar o pod",
+        "why": "O kube-proxy não reporta nada ao balanceador."
+      }
+    ]
+  },
+  "ex-cpyj2jhz": {
+    "prompt": "Numa publicação gradual, por que o readiness gate que o GKE acrescenta evita que os clientes vejam erros?",
+    "hint": "Quando um pod novo conta como pronto?",
+    "choices": [
+      {
+        "text": "Os pods antigos só saem quando os novos estão saudáveis no balanceador",
+        "why": "Isso; o Kubernetes espera o balanceador."
+      },
+      {
+        "text": "Ele deixa toda publicação a um pod por minuto",
+        "why": "Nenhum ritmo fixo é imposto."
+      },
+      {
+        "text": "Manda uma cópia de cada requisição a pods antigos e novos",
+        "why": "Nada espelha requisições."
+      },
+      {
+        "text": "Mantém o ReplicaSet antigo por um período de observação",
+        "why": "Isso descreve nós blue-green da lição 13."
+      }
+    ]
+  },
+  "ex-2c6v0ww7": {
+    "prompt": "No caminho antigo, o nó entrega a requisição às regras do kube-___, que a repassam a um pod.",
+    "hint": "O componente que roda em todo nó.",
+    "blanks": [
+      {
+        "accept": [
+          "proxy"
+        ]
+      }
+    ]
+  },
+  "ex-xb8jscts": {
+    "prompt": "Ordene o caminho antigo de uma requisição com nós como backend.",
+    "hint": "Nó primeiro, pod por último.",
+    "items": [
+      "O balanceador escolhe um nó",
+      "A requisição chega na porta de nó do Service",
+      "As regras do kube-proxy escolhem um pod, muitas vezes noutro nó",
+      "O pod responde"
+    ]
+  },
+  "ex-s58vtj3j": {
+    "prompt": "Na Gateway API, qual objeto cada equipe de aplicação escreve?",
+    "hint": "Rotas pertencem às equipes.",
+    "choices": [
+      {
+        "text": "A GatewayClass",
+        "why": "O Google fornece as classes no GKE."
+      },
+      {
+        "text": "O Gateway",
+        "why": "A plataforma é dona do Gateway."
+      },
+      {
+        "text": "Um HTTPRoute, no namespace da equipe",
+        "why": "Isso; ele se liga ao Gateway da plataforma."
+      },
+      {
+        "text": "Um ManagedCertificate",
+        "why": "Certificados ficam nos listeners do Gateway."
+      }
+    ]
+  },
+  "ex-skf53h5n": {
+    "prompt": "O que um HTTPRoute faz que um Ingress no GKE nunca fez?",
+    "hint": "Noventa e dez.",
+    "choices": [
+      {
+        "text": "Mandar caminhos diferentes para Services diferentes",
+        "why": "O Ingress também faz isso."
+      },
+      {
+        "text": "Dividir o tráfego entre Services por peso",
+        "why": "Isso; um canário sem mexer no Gateway."
+      },
+      {
+        "text": "Terminar TLS com certificado gerenciado pelo Google",
+        "why": "O Ingress tem o ManagedCertificate para isso."
+      },
+      {
+        "text": "Usar um endereço global",
+        "why": "O Ingress também usa."
+      }
+    ]
+  },
+  "ex-91nd9nwz": {
+    "prompt": "A rota manda peso 90 para orders e 10 para orders-next. De 2.000 requisições, mais ou menos quantas chegam a orders-next?",
+    "hint": "Dez partes em cem.",
+    "unit": "requisições"
+  },
+  "ex-khnrwdqv": {
+    "prompt": "Qual valor de gateway_api_config.channel o provider recusou, e por que importa?",
+    "hint": "Os nomes aceitos têm um prefixo.",
+    "choices": [
+      {
+        "text": "CHANNEL_EXPERIMENTAL, porque o Autopilot o proíbe",
+        "why": "Estava na lista aceita."
+      },
+      {
+        "text": "CHANNEL_STANDARD, porque já é o padrão",
+        "why": "Ele planejou sem erro."
+      },
+      {
+        "text": "STANDARD: os nomes levam o prefixo CHANNEL_",
+        "why": "Isso; o provider listou os três que conhece."
+      },
+      {
+        "text": "REGULAR, que é dos canais de lançamento",
+        "why": "Esse era o campo da lição 13, não este."
+      }
+    ]
+  },
+  "ex-99jznhx7": {
+    "prompt": "A classe do GKE para o Application Load Balancer externo global é gke-l7-global-external-___.",
+    "hint": "O Google o gerencia por você.",
+    "blanks": [
+      {
+        "accept": [
+          "managed"
+        ]
+      }
+    ]
+  },
+  "ex-jkw4ydwa": {
+    "prompt": "Ligue cada necessidade ao que a loja deve usar.",
+    "hint": "Camada, alcance, responsabilidade.",
+    "pairs": [
+      {
+        "left": "Um broker MQTT na internet",
+        "right": "Um Service do tipo LoadBalancer"
+      },
+      {
+        "left": "Um serviço oferecido a máquinas virtuais na VPC",
+        "right": "A anotação de balanceador Internal"
+      },
+      {
+        "left": "Muitos caminhos HTTP num domínio, cada equipe com o seu",
+        "right": "Um Gateway e HTTPRoutes"
+      },
+      {
+        "left": "Um endereço que nunca muda",
+        "right": "Um endereço global reservado"
+      }
+    ],
+    "right_distractors": [
+      "Uma NodePort em todo nó"
+    ]
+  },
+  "ex-zyqyn12z": {
+    "prompt": "A loja tem cinco serviços HTTP públicos, cada um exposto como Service do tipo LoadBalancer. O que muda na conta e no DNS ao passá-los para trás de um Gateway?",
+    "hint": "Conte balanceadores e endereços.",
+    "choices": [
+      {
+        "text": "Nada: um Gateway cria um balanceador por rota",
+        "why": "Um Gateway é um balanceador."
+      },
+      {
+        "text": "Cinco endereços viram dez, um por listener e rota",
+        "why": "Listeners dividem o endereço do Gateway."
+      },
+      {
+        "text": "Cinco balanceadores e endereços viram um de cada",
+        "why": "Isso; as rotas dividem o Gateway."
+      },
+      {
+        "text": "Os serviços perdem TLS, que só Services fornecem",
+        "why": "Um Service de passagem nem fornece TLS gerenciado."
+      }
+    ]
+  },
+  "ex-vh29qq07": {
+    "prompt": "Quais destas coisas o laboratório verificou na lição 16? Escolha todas as que se aplicam.",
+    "hint": "O Terraform rodou; o kubectl não.",
+    "choices": [
+      {
+        "text": "Que o recurso de endereço global está bem formado",
+        "why": "Isso; planejou, com o endereço conhecido depois do apply."
+      },
+      {
+        "text": "Que CHANNEL_STANDARD é um canal aceito da Gateway API",
+        "why": "Isso; STANDARD sozinho foi recusado."
+      },
+      {
+        "text": "Que o HTTPRoute se liga ao Gateway",
+        "why": "Nenhum manifesto foi aplicado em lugar nenhum."
+      },
+      {
+        "text": "Que o certificado foi emitido para shop.example.com",
+        "why": "Nada chegou a uma autoridade certificadora."
+      }
+    ]
+  },
+  "ex-ytz6rymj": {
+    "prompt": "O balanceamento nativo de contêiner vem ligado sem pedir. Em quais clusters?",
+    "hint": "O que o GKE cria por padrão.",
+    "choices": [
+      {
+        "text": "Só em clusters Standard com nós Spot",
+        "why": "Spot não tem nada a ver."
+      },
+      {
+        "text": "Só em clusters do canal EXTENDED",
+        "why": "Canais decidem versões, não isso."
+      },
+      {
+        "text": "Só quando um Service usa type LoadBalancer",
+        "why": "É sobre os backends de Ingress e Gateway."
+      },
+      {
+        "text": "Os que dão aos pods endereços da VPC, Autopilot incluído",
+        "why": "Isso; Ingress e Gateway usam NEGs ali."
+      }
+    ]
+  }
+}

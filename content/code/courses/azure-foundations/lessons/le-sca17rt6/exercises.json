@@ -1,0 +1,604 @@
+[
+ {
+  "id": "ex-akj4b6fx",
+  "version": 1,
+  "section": "two-kinds",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a managed identity remove that a service principal with a secret has?",
+  "hint": "Who holds the credential?",
+  "choices": [
+   {
+    "text": "The need for a role assignment",
+    "correct": false,
+    "why": "An identity with no role reaches nothing; roles are still needed."
+   },
+   {
+    "text": "A credential anybody has to store or renew",
+    "correct": true,
+    "why": "Right. Azure holds it and rotates it."
+   },
+   {
+    "text": "The entry in Entra ID",
+    "correct": false,
+    "why": "A managed identity is a service principal in the directory."
+   },
+   {
+    "text": "The access token",
+    "correct": false,
+    "why": "The code still uses a token; it just never sees a credential."
+   }
+  ]
+ },
+ {
+  "id": "ex-59zk74ac",
+  "version": 1,
+  "section": "two-kinds",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop's pipeline runs on GitHub's machines and must deploy to Azure. Can it use a managed identity?",
+  "hint": "Where does the code have to run?",
+  "choices": [
+   {
+    "text": "Yes, a user-assigned one, since it is a resource of its own",
+    "correct": false,
+    "why": "Being a resource does not let it be used from outside Azure."
+   },
+   {
+    "text": "Yes, once the repository is linked to the subscription",
+    "correct": false,
+    "why": "No such link turns GitHub into an Azure resource."
+   },
+   {
+    "text": "No: it is not on Azure, so lesson 7's federation is the answer",
+    "correct": true,
+    "why": "Right. Managed identities serve code running on Azure resources."
+   },
+   {
+    "text": "No: managed identities serve virtual machines only",
+    "correct": false,
+    "why": "App Service, Functions, Container Apps and AKS use them too."
+   }
+  ]
+ },
+ {
+  "id": "ex-jzrm9rda",
+  "version": 1,
+  "section": "two-kinds",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The web app `app-shop-prod` is deleted and recreated by a deployment. What happens to its system-assigned identity's roles?",
+  "hint": "Whose lifetime does it follow?",
+  "choices": [
+   {
+    "text": "They are gone; the new identity starts with none",
+    "correct": true,
+    "why": "Right. The deployment has to give them again."
+   },
+   {
+    "text": "They move to the new web app automatically",
+    "correct": false,
+    "why": "The new app has a new identity, a new principal."
+   },
+   {
+    "text": "They stay, attached to the old identity's name",
+    "correct": false,
+    "why": "Roles point at object ids, and the old one is deleted."
+   },
+   {
+    "text": "They are restored from the subscription's backup",
+    "correct": false,
+    "why": "No such backup of role assignments exists."
+   }
+  ]
+ },
+ {
+  "id": "ex-j2361qzc",
+  "version": 1,
+  "section": "two-kinds",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does the shop give its roles to `id-shop-app`, a user-assigned identity?",
+  "hint": "It outlives the apps.",
+  "choices": [
+   {
+    "text": "Because system-assigned identities cannot hold roles",
+    "correct": false,
+    "why": "They can; they just lose them with their resource."
+   },
+   {
+    "text": "Because user-assigned identities are free and system ones are not",
+    "correct": false,
+    "why": "Price is not the difference the lesson draws."
+   },
+   {
+    "text": "Because it signs in with a certificate",
+    "correct": false,
+    "why": "No managed identity hands anybody a certificate."
+   },
+   {
+    "text": "Every new copy of the app starts with the roles",
+    "correct": true,
+    "why": "Right. Given once, kept across rebuilds, shared by many resources."
+   }
+  ]
+ },
+ {
+  "id": "ex-tj8v1k9a",
+  "version": 1,
+  "section": "two-kinds",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the compiled template, `systemPrincipalId` is a `reference(...)` expression rather than a GUID. Why?",
+  "hint": "When does the GUID come into existence?",
+  "choices": [
+   {
+    "text": "Outputs are always expressions in ARM templates",
+    "correct": false,
+    "why": "An output can be a plain value; this one cannot be known yet."
+   },
+   {
+    "text": "Bicep hides principal ids for security",
+    "correct": false,
+    "why": "A principal id is not secret; it does not exist yet."
+   },
+   {
+    "text": "The compiler failed to find the web app",
+    "correct": false,
+    "why": "It found it; the expression names it."
+   },
+   {
+    "text": "Entra ID makes it when the identity is created",
+    "correct": true,
+    "why": "Right. The template can only say where to read it afterwards."
+   }
+  ]
+ },
+ {
+  "id": "ex-43xfj526",
+  "version": 1,
+  "section": "two-kinds",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these are true of a user-assigned identity? Choose all that apply.",
+  "hint": "Compare the two columns of the table.",
+  "choices": [
+   {
+    "text": "It can be given roles before any resource uses it",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "Several resources can share it",
+    "correct": true,
+    "why": "Right: one principal, a short role list."
+   },
+   {
+    "text": "It is deleted with the first resource that used it",
+    "correct": false,
+    "why": "That is the system-assigned kind."
+   },
+   {
+    "text": "It is a resource of type `userAssignedIdentities`",
+    "correct": true,
+    "why": "Right, as in `app.bicep`."
+   },
+   {
+    "text": "It works for code outside Azure",
+    "correct": false,
+    "why": "No managed identity does; that is federation."
+   }
+  ]
+ },
+ {
+  "id": "ex-8b2nxvbg",
+  "version": 1,
+  "section": "the-token",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Where does code on an Azure virtual machine ask for its managed identity's token?",
+  "hint": "A link-local address.",
+  "choices": [
+   {
+    "text": "At the metadata service, `169.254.169.254`",
+    "correct": true,
+    "why": "Right. Only that machine can reach it."
+   },
+   {
+    "text": "At `login.microsoftonline.com`, with the machine's secret",
+    "correct": false,
+    "why": "The machine holds no secret; the platform signs in for it."
+   },
+   {
+    "text": "At `management.azure.com`",
+    "correct": false,
+    "why": "That is where the token is used, not where it is obtained."
+   },
+   {
+    "text": "In a file the platform writes to the disk",
+    "correct": false,
+    "why": "That is workload identity in Kubernetes, not a VM."
+   }
+  ]
+ },
+ {
+  "id": "ex-mnbje1ek",
+  "version": 1,
+  "section": "the-token",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the metadata service refuse a request without the header `Metadata: true`?",
+  "hint": "Think of a server tricked into fetching a URL.",
+  "choices": [
+   {
+    "text": "To tell version 2018 requests from older ones",
+    "correct": false,
+    "why": "That is `api-version`'s job."
+   },
+   {
+    "text": "A fetch forced through a crafted URL cannot add it",
+    "correct": true,
+    "why": "Right. It keeps a request a page tricks the server into making from reaching the token."
+   },
+   {
+    "text": "Because plain HTTP needs a header to be secure",
+    "correct": false,
+    "why": "The request never leaves the host; HTTP is enough."
+   },
+   {
+    "text": "To choose which managed identity answers",
+    "correct": false,
+    "why": "That is the `client_id` parameter."
+   }
+  ]
+ },
+ {
+  "id": "ex-t9h25p9z",
+  "version": 1,
+  "section": "the-token",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The web app has both identities. `id-shop-app` holds Storage Blob Data Reader on the account, but reads are refused. `AZURE_CLIENT_ID` was left out of the app's settings. What is happening?",
+  "hint": "Which identity answers a request that names none?",
+  "choices": [
+   {
+    "text": "The role takes a day to apply",
+    "correct": false,
+    "why": "That is not the explanation the evidence points to."
+   },
+   {
+    "text": "User-assigned identities cannot read storage",
+    "correct": false,
+    "why": "They can, given the role, as `app.bicep` does."
+   },
+   {
+    "text": "The code signs in as the system-assigned identity, which has no role",
+    "correct": true,
+    "why": "Right. Check the token's `oid` before blaming the role."
+   },
+   {
+    "text": "The storage account refuses tokens from App Service",
+    "correct": false,
+    "why": "It accepts any token with the right role."
+   }
+  ]
+ },
+ {
+  "id": "ex-0gee7e70",
+  "version": 1,
+  "section": "the-token",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is a managed identity \"exactly as safe as the machine it is attached to\"?",
+  "hint": "The credential cannot leak. What can?",
+  "choices": [
+   {
+    "text": "Any code running there can ask for a token",
+    "correct": true,
+    "why": "Right. Hence the narrowest roles on the narrowest scope."
+   },
+   {
+    "text": "Because the machine can change the identity's roles",
+    "correct": false,
+    "why": "Roles are changed in Azure, not from the machine."
+   },
+   {
+    "text": "Because Entra ID trusts the machine's IP address",
+    "correct": false,
+    "why": "Nothing in the flow trusts an address."
+   },
+   {
+    "text": "Because its credential is stored on the machine's disk",
+    "correct": false,
+    "why": "No credential is on the machine at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-p9qyr2mb",
+  "version": 1,
+  "section": "the-token",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each part of the metadata request to what it does.",
+  "hint": "Five parts in the table, four here.",
+  "pairs": [
+   {
+    "left": "`resource`",
+    "right": "which API the token is for"
+   },
+   {
+    "left": "`client_id`",
+    "right": "which identity, when there are several"
+   },
+   {
+    "left": "`Metadata: true`",
+    "right": "proof the request was made on purpose"
+   },
+   {
+    "left": "`api-version`",
+    "right": "which version of the interface"
+   }
+  ],
+  "right_distractors": [
+   "the secret of the identity"
+  ]
+ },
+ {
+  "id": "ex-prsqx19r",
+  "version": 1,
+  "section": "the-token",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "App Service gives the address of its identity service in the environment variable `IDENTITY____`.",
+  "hint": "Its partner is `IDENTITY_HEADER`.",
+  "blanks": [
+   {
+    "accept": [
+     "ENDPOINT"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-7cdq0ee0",
+  "version": 1,
+  "section": "default-credential",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `DefaultAzureCredential` do?",
+  "hint": "A list.",
+  "choices": [
+   {
+    "text": "Signs in as the subscription's owner by default",
+    "correct": false,
+    "why": "It signs in as whatever credential it finds first."
+   },
+   {
+    "text": "Asks the user to choose a credential",
+    "correct": false,
+    "why": "It chooses by its fixed order, unattended."
+   },
+   {
+    "text": "Creates a managed identity when none exists",
+    "correct": false,
+    "why": "It creates nothing; it only looks."
+   },
+   {
+    "text": "Tries a fixed list of credentials in order",
+    "correct": true,
+    "why": "Right. The first that produces a token wins."
+   }
+  ]
+ },
+ {
+  "id": "ex-xkvq5h16",
+  "version": 1,
+  "section": "default-credential",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put these credentials in the order `DefaultAzureCredential` tries them.",
+  "hint": "The lab printed the list.",
+  "items": [
+   "EnvironmentCredential",
+   "WorkloadIdentityCredential",
+   "ManagedIdentityCredential",
+   "AzureCliCredential"
+  ],
+  "trap": "The CLI comes after the managed identity: on Azure the platform answers before a developer's sign-in could."
+ },
+ {
+  "id": "ex-6h7mdzy3",
+  "version": 1,
+  "section": "default-credential",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With the three `AZURE_*` variables set, why was only `EnvironmentCredential` tried?",
+  "hint": "Unavailable and failed are different outcomes.",
+  "choices": [
+   {
+    "text": "Because the others need a network the lab lacks",
+    "correct": false,
+    "why": "The first run tried all of them on the same network."
+   },
+   {
+    "text": "A credential that is configured and fails stops the chain",
+    "correct": true,
+    "why": "Right. Carrying on would hide the mistake behind another identity."
+   },
+   {
+    "text": "Because the variables switched the others off",
+    "correct": false,
+    "why": "Nothing switched them off; the chain stopped."
+   },
+   {
+    "text": "Because the secret was accepted and the tenant refused",
+    "correct": false,
+    "why": "The secret was never sent; discovery failed first."
+   }
+  ]
+ },
+ {
+  "id": "ex-7r7wjy72",
+  "version": 1,
+  "section": "default-credential",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A container image built by a developer carries an old `AZURE_CLIENT_SECRET` and its two partners. In production, on a resource with a managed identity, what does `DefaultAzureCredential` do?",
+  "hint": "Which credential comes first?",
+  "choices": [
+   {
+    "text": "Uses the managed identity, which always wins on Azure",
+    "correct": false,
+    "why": "It is third in the list; the environment comes first."
+   },
+   {
+    "text": "Refuses to start until the variables are removed",
+    "correct": false,
+    "why": "Nothing checks for that; it simply uses them."
+   },
+   {
+    "text": "Signs in as the old service principal, with its roles",
+    "correct": true,
+    "why": "Right, if the secret still works. Name the credential you mean in production."
+   },
+   {
+    "text": "Tries both and keeps the one with more roles",
+    "correct": false,
+    "why": "It stops at the first that answers."
+   }
+  ]
+ },
+ {
+  "id": "ex-cg3jfq92",
+  "version": 1,
+  "section": "default-credential",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does the lesson recommend for code that runs only in production, on a resource with a user-assigned identity?",
+  "hint": "One line in place of the default list.",
+  "choices": [
+   {
+    "text": "`DefaultAzureCredential`, since it adapts to anything",
+    "correct": false,
+    "why": "Adapting is the danger when a stray credential is present."
+   },
+   {
+    "text": "`AzureCliCredential`, with `az login` run at start-up",
+    "correct": false,
+    "why": "That would need a stored credential to sign in with."
+   },
+   {
+    "text": "`ManagedIdentityCredential(client_id=...)`",
+    "correct": true,
+    "why": "Right. It cannot fall through to anything else."
+   },
+   {
+    "text": "`EnvironmentCredential`, with the client id in a variable",
+    "correct": false,
+    "why": "That one needs a secret or certificate, which is what is avoided."
+   }
+  ]
+ },
+ {
+  "id": "ex-x11v6n7h",
+  "version": 1,
+  "section": "default-credential",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many credentials did `DefaultAzureCredential` list as attempted in the lab's first run?",
+  "hint": "Count the lines under *Attempted credentials*.",
+  "value": 9,
+  "tolerance": 0,
+  "unit": "credentials"
+ },
+ {
+  "id": "ex-t4t2v1kk",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of the shop's web app reading an image with `id-shop-app` in order.",
+  "hint": "The role is given before anything asks for a token.",
+  "items": [
+   "create the user-assigned identity `id-shop-app`",
+   "give it Storage Blob Data Reader on the storage account",
+   "attach it to the web app and set `AZURE_CLIENT_ID`",
+   "the code asks the platform for a token naming that client id",
+   "the code reads the blob with the token"
+  ],
+  "trap": "A user-assigned identity can take its role before it is attached, which is one of its advantages."
+ },
+ {
+  "id": "ex-zay5pc84",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team moves an application from a virtual machine to their laptops for debugging, with the same code using `DefaultAzureCredential`. What identity does it use there, and why is that fine?",
+  "hint": "Which credential answers on a laptop?",
+  "choices": [
+   {
+    "text": "The developer's own `az login`, with her own roles",
+    "correct": true,
+    "why": "Right. The same code signs in as whoever runs it, which is the point of the class."
+   },
+   {
+    "text": "The VM's managed identity, reached over the internet",
+    "correct": false,
+    "why": "The metadata service is link-local; a laptop cannot reach it."
+   },
+   {
+    "text": "None: the code must be changed for laptops",
+    "correct": false,
+    "why": "Not changing the code is what the class is for."
+   },
+   {
+    "text": "A copy of the managed identity's secret",
+    "correct": false,
+    "why": "There is no such secret to copy."
+   }
+  ]
+ },
+ {
+  "id": "ex-q7qn4zy4",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A token's ___ claim holds the object id of the principal that signed in.",
+  "hint": "Three letters.",
+  "blanks": [
+   {
+    "accept": [
+     "oid"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]
