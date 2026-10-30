@@ -3,8 +3,7 @@ title: Info.plist, the app's description of itself
 version: 1
 ---
 
-**Every app carries a file that tells iOS what it is before a line of its code runs.** It is called
-`Info.plist`, it sits at the top of the app bundle, and the system reads it to learn the app's
+**Every app carries a file that tells iOS what it is before a line of its code runs.** It is called `Info.plist` and sits at the top of the app bundle. The system reads it to learn the app's
 identifier, its version, the name under the icon, which orientations it supports, which iOS it needs
 and, from lesson 18 on, the sentence it shows when the app asks for the camera.
 

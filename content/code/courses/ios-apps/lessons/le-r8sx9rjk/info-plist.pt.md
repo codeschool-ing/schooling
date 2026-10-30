@@ -3,8 +3,7 @@ title: Info.plist, a descrição que o app faz de si mesmo
 version: 1
 ---
 
-**Todo app carrega um arquivo que diz ao iOS o que ele é antes de uma linha do seu código rodar.** Ele
-se chama `Info.plist`, fica no topo do bundle do app, e o sistema o lê para saber o identificador do
+**Todo app carrega um arquivo que diz ao iOS o que ele é antes de uma linha do seu código rodar.** Ele se chama `Info.plist` e fica no topo do bundle do app. O sistema o lê para saber o identificador do
 app, a versão, o nome embaixo do ícone, quais orientações ele aceita, qual iOS ele exige e, a partir
 da aula 18, a frase que ele mostra quando pede a câmera.
 

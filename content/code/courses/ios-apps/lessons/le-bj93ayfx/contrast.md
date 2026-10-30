@@ -5,8 +5,7 @@ version: 1
 
 **Whether text can be read against its background is arithmetic, and it is the one accessibility
 question you can answer on any computer.** The Web Content Accessibility Guidelines define a
-contrast ratio between two colours, from 1:1 for the same colour twice to 21:1 for black on white,
-and WCAG 2.2 at level AA asks for **4.5:1 for ordinary text** and **3:1 for large text** and for
+contrast ratio between two colours, from 1:1 for the same colour twice to 21:1 for black on white. WCAG 2.2 at level AA asks for **4.5:1 for ordinary text** and **3:1 for large text** and for
 the parts of a control a person has to see. Apple's Human Interface Guidelines, read on 30 October
 2026, point at the same thresholds. This platform holds its own screens to AA, and an app built in
 this course should meet the same bar.

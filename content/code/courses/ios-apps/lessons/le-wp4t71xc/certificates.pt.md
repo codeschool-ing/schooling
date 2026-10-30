@@ -18,7 +18,7 @@ qualquer lugar.
 **A cadeia tem três elos, e o do meio é o que as pessoas esquecem.** O certificado raiz da Apple vem
 embutido em todo aparelho Apple. Ele assina o certificado intermediário **Worldwide Developer
 Relations** da Apple, o WWDR, e o intermediário assina o seu. Um Mac que tem o seu certificado mas não
-o intermediário WWDR atual não fecha a cadeia, e o Xcode mostra o certificado como não confiável; a
+o intermediário WWDR atual não fecha a cadeia, e assinar com ele falha até o intermediário ser instalado; a
 ajuda da conta da Apple mantém uma página com os intermediários justamente para esse caso. A seção 05
 mostra como essa falha aparece no `openssl`.
 

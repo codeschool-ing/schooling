@@ -45,9 +45,7 @@ como piso. Onde um Xcode mais novo tiver mudado um menu de lugar, a ideia da aul
 ## Sem um Mac, e querendo a metade do Mac também
 
 A seção 03 lista as formas de ter o Xcode, e nenhuma é de graça. Duas valem ser conhecidas agora. Um
-**iPad com o Swift Playgrounds**, que a Apple oferece sem custo na App Store, compila e roda apps
-SwiftUI no próprio iPad, e é a única forma de rodar as telas deste curso sem um Mac; ele não é o
-Xcode, e as aulas 1, 20 e 21 descrevem coisas que ele não tem. E um **Mac alugado num data center**,
+**iPad com o Swift Playgrounds**, que a Apple oferece sem custo na App Store, compila e roda apps SwiftUI no próprio iPad. É a única forma de rodar as telas deste curso sem um Mac. Ele não é o Xcode, e as aulas 1, 20 e 21 descrevem coisas que ele não tem. E um **Mac alugado num data center**,
 por hora ou por mês, de várias empresas, é um Mac de verdade que você acessa por área de trabalho
 remota. A aula 20 de `react-native` trata de uma terceira forma, que compila um app em Macs alugados
 sem que você veja nenhum, e que não ajuda em nada a desenvolver contra um simulador.

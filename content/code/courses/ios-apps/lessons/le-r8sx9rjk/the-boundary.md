@@ -45,9 +45,7 @@ its floor. Where a later Xcode has moved a menu, the idea in the lesson is the p
 ## Without a Mac, and wanting the Mac half too
 
 Section 03 names the ways to get Xcode, and none of them is free. Two are worth knowing now. An
-**iPad with Swift Playgrounds**, which Apple offers at no charge on the App Store, builds and runs
-SwiftUI apps on the iPad itself, and it is the one way to run the screens of this course without a
-Mac; it is not Xcode, and lessons 1, 20 and 21 describe things it does not have. And a **rented Mac
+**iPad with Swift Playgrounds**, which Apple offers at no charge on the App Store, builds and runs SwiftUI apps on the iPad itself. It is the one way to run the screens of this course without a Mac. It is not Xcode, and lessons 1, 20 and 21 describe things it does not have. And a **rented Mac
 in a data centre**, by the hour or the month from several companies, is a real Mac you reach over a
 remote desktop. Lesson 20 of `react-native` covers a third, which builds an app on rented Macs
 without your ever seeing one, and it does nothing for developing against a simulator.

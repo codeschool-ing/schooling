@@ -5,7 +5,7 @@ version: 1
 
 **Se um texto pode ser lido contra o fundo é aritmética, e é a única pergunta de acessibilidade que
 você responde em qualquer computador.** As Web Content Accessibility Guidelines definem uma razão de
-contraste entre duas cores, de 1:1 para a mesma cor duas vezes até 21:1 para preto no branco, e a
+contraste entre duas cores, de 1:1 para a mesma cor duas vezes até 21:1 para preto no branco. A
 WCAG 2.2 no nível AA pede **4,5:1 para texto comum** e **3:1 para texto grande** e para as partes de
 um controle que a pessoa precisa ver. As Human Interface Guidelines da Apple, lidas em 30 de outubro
 de 2026, apontam os mesmos limites. Esta plataforma segura as suas próprias telas no AA, e um app

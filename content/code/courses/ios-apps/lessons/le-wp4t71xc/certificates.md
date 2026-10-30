@@ -17,8 +17,8 @@ a certificate authority made for the purpose, which is the part that runs anywhe
 **The chain has three links, and the middle one is the one people forget.** Apple's root certificate
 is built into every Apple device. It signs Apple's **Worldwide Developer Relations** intermediate
 certificate, the WWDR certificate, and the intermediate signs yours. A Mac that has your certificate
-but not the current WWDR intermediate cannot complete the chain, and Xcode reports the certificate as
-not trusted; Apple's account help keeps a page of the intermediates for exactly that case. Section
+but not the current WWDR intermediate cannot complete the chain, so signing with it fails until the intermediate is installed;
+Apple's account help keeps a page of the intermediates for exactly that case. Section
 05 shows what that failure looks like from `openssl`.
 
 ## The two you use
