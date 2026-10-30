@@ -19,6 +19,9 @@
 #   - `ls -l` prints the recording's own dates and times; the lesson quotes
 #     only the sizes.
 #
+# The times in `ls -l` are the clock when the capture ran (30 October 2026),
+# so a run on another day differs in those columns and nowhere else.
+#
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0, TZ=America/Sao_Paulo.
 . "$(dirname "$0")/../../lab/capture-lib.sh"
 P=/home/ana/planner
