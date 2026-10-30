@@ -1,0 +1,661 @@
+[
+  {
+    "id": "ex-kvq5wjh2",
+    "version": 1,
+    "section": "two-types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the compiler say about `let course: String = nil`?",
+    "hint": "`String` without a question mark.",
+    "choices": [
+      {
+        "text": "Nothing; `course` is an empty string",
+        "correct": false,
+        "why": "An empty string is `\"\"`, a value; `nil` is no value, and a `String` refuses it."
+      },
+      {
+        "text": "It refuses, and suggests `String?`",
+        "correct": true,
+        "why": "Right: `'nil' cannot initialize specified type 'String'`, with a note to add `?`."
+      },
+      {
+        "text": "It compiles, and the program crashes when it reaches that line",
+        "correct": false,
+        "why": "The refusal comes at compile time; this program never runs."
+      },
+      {
+        "text": "It infers `String?` in its place",
+        "correct": false,
+        "why": "A written type is checked, never swapped for another."
+      }
+    ]
+  },
+  {
+    "id": "ex-kaa2fh4k",
+    "version": 1,
+    "section": "two-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`note` is a `String?`. Why does `print(note.count)` not compile?",
+    "choices": [
+      {
+        "text": "`count` exists only on arrays",
+        "correct": false,
+        "why": "A `String` has a `count`, its number of characters."
+      },
+      {
+        "text": "`print` cannot take an optional",
+        "correct": false,
+        "why": "It can, with lesson 1's warning; the error here is about `.count`."
+      },
+      {
+        "text": "`nil` is one of `note`'s values, and `nil` has no `count`",
+        "correct": true,
+        "why": "Right: the compiler asks you to unwrap it first, and names `?` and `!`."
+      },
+      {
+        "text": "The note is longer than the compiler allows for a string literal",
+        "correct": false,
+        "why": "Its length has nothing to do with it; its type does."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc88k0f4",
+    "version": 1,
+    "section": "two-types",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each value to what it is.",
+    "hint": "Section 02 kept `\"\"` and `nil` apart.",
+    "pairs": [
+      {
+        "left": "`\"\"` in a `String?`",
+        "right": "A string with nothing in it"
+      },
+      {
+        "left": "`nil` in a `String?`",
+        "right": "No string at all"
+      },
+      {
+        "left": "`.some(45)` in an `Int?`",
+        "right": "A number wrapped in an optional"
+      },
+      {
+        "left": "`Optional<String>`",
+        "right": "The long name of `String?`"
+      }
+    ],
+    "right_distractors": [
+      "A string the compiler will refuse"
+    ]
+  },
+  {
+    "id": "ex-d6awb3tk",
+    "version": 1,
+    "section": "if-let",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `if let minutes = Int(typed) { … }`, what type is `minutes` inside the braces?",
+    "choices": [
+      {
+        "text": "`Int?`",
+        "correct": false,
+        "why": "That is the type of `Int(typed)`; unwrapping removes the `?`."
+      },
+      {
+        "text": "`Int`",
+        "correct": true,
+        "why": "Right: a plain `Int`, which is why `total += minutes` compiles."
+      },
+      {
+        "text": "`String`, as `typed` is",
+        "correct": false,
+        "why": "`Int(typed)` converts the text; the result is a number."
+      },
+      {
+        "text": "`Optional<Int>`",
+        "correct": false,
+        "why": "That is `Int?` spelled out."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd6p8fbv",
+    "version": 1,
+    "section": "if-let",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`IfLet.swift` reads the entries `\"45\"`, `\"forty\"` and `\"30\"`. What total does it print?",
+    "hint": "One of the three is skipped.",
+    "value": 75,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-60sh7wdv",
+    "version": 1,
+    "section": "if-let",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`if let from = Int(start), let to = Int(end), to > from`. With `start` = `\"645\"` and `end` = `\"600\"`, what runs?",
+    "hint": "Both are numbers. Read the third condition.",
+    "choices": [
+      {
+        "text": "The body, because both unwraps succeed",
+        "correct": false,
+        "why": "Every condition must succeed, and `600 > 645` does not."
+      },
+      {
+        "text": "The `else`",
+        "correct": true,
+        "why": "Right: the first condition that fails sends the whole `if` to `else`; `Several.swift` printed `cannot read 645-600`."
+      },
+      {
+        "text": "Nothing: it does not compile",
+        "correct": false,
+        "why": "A later condition may use names unwrapped earlier; it compiles."
+      },
+      {
+        "text": "The body, with `from` and `to` swapped",
+        "correct": false,
+        "why": "Swift never reorders your values."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3yp86q6",
+    "version": 1,
+    "section": "guard-let",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `guard let value = Int(typed) else { return 0 }`, where can `value` be used?",
+    "hint": "This is the difference from `if let`.",
+    "choices": [
+      {
+        "text": "Only inside the `else` braces, where the check failed",
+        "correct": false,
+        "why": "Inside the `else` there is no value; that is the case where it was `nil`."
+      },
+      {
+        "text": "Only on the next line",
+        "correct": false,
+        "why": "It lasts longer than that."
+      },
+      {
+        "text": "In the rest of the function, below the guard",
+        "correct": true,
+        "why": "Right: the name stays, outside any braces of its own."
+      },
+      {
+        "text": "Anywhere in the file",
+        "correct": false,
+        "why": "It ends with the function that declared it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hc0rqe0b",
+    "version": 1,
+    "section": "guard-let",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `guard … else` body prints a message and has no `return`. What happens?",
+    "hint": "Section 04 compiled exactly this.",
+    "choices": [
+      {
+        "text": "A compile error: the `else` must not fall through",
+        "correct": true,
+        "why": "Right: the compiler checks that the `else` leaves, with `return`, `throw`, `break` or `continue`."
+      },
+      {
+        "text": "A warning, and the function carries on",
+        "correct": false,
+        "why": "Carrying on would use a value that is not there, so it is an error."
+      },
+      {
+        "text": "It works: printing counts as handling it",
+        "correct": false,
+        "why": "Printing is not leaving."
+      },
+      {
+        "text": "A crash when the guard fails",
+        "correct": false,
+        "why": "The program never gets that far; it does not compile."
+      }
+    ]
+  },
+  {
+    "id": "ex-ar710e6e",
+    "version": 1,
+    "section": "guard-let",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of `GuardLet.swift`'s function in the order they appear.",
+    "hint": "The ways out come first, then the work.",
+    "items": [
+      "`func minutes(from typed: String) -> Int {`",
+      "`guard let value = Int(typed) else {`",
+      "`guard value > 0 else {`",
+      "`return value`"
+    ]
+  },
+  {
+    "id": "ex-s63b8kq6",
+    "version": 1,
+    "section": "coalescing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`note` is a `String?`. What type is `note?.count`?",
+    "hint": "One of its two outcomes is `nil`.",
+    "choices": [
+      {
+        "text": "`Int`",
+        "correct": false,
+        "why": "A plain `Int` cannot hold the `nil` case."
+      },
+      {
+        "text": "`String?`",
+        "correct": false,
+        "why": "`count` is a number, so the result is a number type."
+      },
+      {
+        "text": "`Int?`",
+        "correct": true,
+        "why": "Right: a safe call's result is always optional."
+      },
+      {
+        "text": "It does not compile",
+        "correct": false,
+        "why": "`?.` is exactly how you ask an optional for its `count`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rve0gc98",
+    "version": 1,
+    "section": "coalescing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `let note: String? = nil`, what is `note?.count ?? 0`?",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a9ygg6w5",
+    "version": 1,
+    "section": "coalescing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`notes[1]?.uppercased().count`, where `notes[1]` is `nil`. What runs?",
+    "hint": "How many `?` does the chain need?",
+    "choices": [
+      {
+        "text": "`uppercased()` runs on `nil` and returns `\"\"`",
+        "correct": false,
+        "why": "Nothing to the right of the `?` runs when the left side is `nil`."
+      },
+      {
+        "text": "Neither call; the whole expression is `nil`",
+        "correct": true,
+        "why": "Right: one `?` guards everything after it in the chain."
+      },
+      {
+        "text": "`.count` crashes, since no `?` sits before it",
+        "correct": false,
+        "why": "The chain stopped at the first `?`; `.count` is never reached."
+      },
+      {
+        "text": "A compile error asking for a second `?`",
+        "correct": false,
+        "why": "`uppercased()` returns a plain `String`, so `.count` needs no `?`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rb0ph2fv",
+    "version": 1,
+    "section": "coalescing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report adds up typed minutes with `total += Int(typed) ?? 0`. A teacher asks which entries were not numbers. What is wrong with the code for that purpose?",
+    "hint": "What did section 05 say a default should mean?",
+    "choices": [
+      {
+        "text": "`??` crashes on text such as `\"forty\"`",
+        "correct": false,
+        "why": "It does not crash; it uses 0."
+      },
+      {
+        "text": "`Int(typed)` is a `String`",
+        "correct": false,
+        "why": "It is an `Int?`."
+      },
+      {
+        "text": "Nothing; the zero marks the missing ones",
+        "correct": false,
+        "why": "A zero is added to a total, and the total cannot say which entries gave it."
+      },
+      {
+        "text": "The default erases the fact that something was missing",
+        "correct": true,
+        "why": "Right: `??` fits when the default means the same as a value; here the reader needs `if let … else`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhnf4xwy",
+    "version": 1,
+    "section": "force-unwrap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `Int(\"forty\")!` do when the program reaches it?",
+    "choices": [
+      {
+        "text": "Gives 0",
+        "correct": false,
+        "why": "That is `?? 0`; `!` has no default."
+      },
+      {
+        "text": "Gives `nil`",
+        "correct": false,
+        "why": "`!` promises a plain value; it cannot give `nil`."
+      },
+      {
+        "text": "Stops the program with a fatal error",
+        "correct": true,
+        "why": "Right: `Unexpectedly found nil while unwrapping an Optional value`."
+      },
+      {
+        "text": "Refuses to compile, naming the line with `!`",
+        "correct": false,
+        "why": "It compiles; the `nil` is found while it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggqme6sg",
+    "version": 1,
+    "section": "force-unwrap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./bang 2>&1 | head -5` showed the fatal error but not the `46` printed two lines before it. Why?",
+    "hint": "Where was the output going?",
+    "choices": [
+      {
+        "text": "`head` keeps only error lines",
+        "correct": false,
+        "why": "`head` keeps the first lines of whatever arrives."
+      },
+      {
+        "text": "`print(good + 1)` never ran, being removed by the compiler",
+        "correct": false,
+        "why": "It ran; through `script` the `46` appeared."
+      },
+      {
+        "text": "A pipe buffers output, and the crash lost the buffer",
+        "correct": true,
+        "why": "Right: missing output before a crash is not proof that a line did not run."
+      },
+      {
+        "text": "Swift writes standard output only after standard error has finished",
+        "correct": false,
+        "why": "Order is not the issue; the line was lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmaezp2j",
+    "version": 1,
+    "section": "force-unwrap",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where is `!` an honest claim, according to section 06? Choose all that apply.",
+    "hint": "A crash has to be the failure you want.",
+    "choices": [
+      {
+        "text": "`URL(string: \"https://swift.org\")!`, with fixed text",
+        "correct": true,
+        "why": "Yes: the program built the value itself and the text is correct."
+      },
+      {
+        "text": "Reading the minutes a student typed",
+        "correct": false,
+        "why": "No: typed input is where `nil` is normal."
+      },
+      {
+        "text": "Inside a test",
+        "correct": true,
+        "why": "Yes: a crash with a line number is the failure a test wants."
+      },
+      {
+        "text": "To silence the compiler's \"must be unwrapped\" error",
+        "correct": false,
+        "why": "No: that is the worst reason to write one."
+      }
+    ]
+  },
+  {
+    "id": "ex-fz2t8z55",
+    "version": 1,
+    "section": "force-unwrap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You meet `var nameField: UITextField!` in an older iOS project. What does the `!` in the type mean?",
+    "hint": "Section 06's last part.",
+    "choices": [
+      {
+        "text": "The field can never be `nil`",
+        "correct": false,
+        "why": "It can; it is an optional that unwraps itself on each use."
+      },
+      {
+        "text": "An optional unwrapped at each use, crashing if `nil` then",
+        "correct": true,
+        "why": "Right: an implicitly unwrapped optional, for values set just after creation."
+      },
+      {
+        "text": "It is unwrapped once, at the moment the object holding it is created",
+        "correct": false,
+        "why": "Each use unwraps it again."
+      },
+      {
+        "text": "A field that the screen redraws whenever its text is changed",
+        "correct": false,
+        "why": "`!` says nothing about updates; it is about `nil`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7kq30cc",
+    "version": 1,
+    "section": "optional-map",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`func seconds(_ m: Int) -> Int { m * 60 }`. What number is inside `Int(\"45\").map(seconds)`?",
+    "value": 2700,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-31ywkgrj",
+    "version": 1,
+    "section": "optional-map",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `Int(\"forty\").map(seconds)`?",
+    "hint": "`map` keeps the `nil` it is given.",
+    "choices": [
+      {
+        "text": "0, after calling `seconds(0)`",
+        "correct": false,
+        "why": "`seconds` is not called at all when there is no value."
+      },
+      {
+        "text": "`nil`",
+        "correct": true,
+        "why": "Right: no value, so nothing to transform."
+      },
+      {
+        "text": "A crash, as with `!`",
+        "correct": false,
+        "why": "`map` never crashes on `nil`."
+      },
+      {
+        "text": "A compile error, since `map` is for arrays",
+        "correct": false,
+        "why": "Optionals have a `map` of their own."
+      }
+    ]
+  },
+  {
+    "id": "ex-81hbxk94",
+    "version": 1,
+    "section": "optional-map",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`[\"45\", \"forty\", \"30\"].___ { Int($0) }` gives `[45, 30]`: it converts each item and drops the ones that came back `nil`.",
+    "hint": "Section 07's last example.",
+    "blanks": [
+      {
+        "accept": [
+          "compactMap"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bt8v8vav",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of opening `Int(typed)` to what it does when the result is `nil`.",
+    "hint": "The figure at the end of section 07.",
+    "pairs": [
+      {
+        "left": "`if let m = Int(typed) { … }`",
+        "right": "Skips the braces"
+      },
+      {
+        "left": "`guard let m = Int(typed) else { return }`",
+        "right": "Leaves the function"
+      },
+      {
+        "left": "`Int(typed) ?? 0`",
+        "right": "Uses 0"
+      },
+      {
+        "left": "`Int(typed)!`",
+        "right": "Stops the program"
+      }
+    ],
+    "right_distractors": [
+      "Turns `nil` into an empty string"
+    ]
+  },
+  {
+    "id": "ex-xbebat89",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function saves a session and cannot do anything without a course name, which arrives as a `String?`. Which shape fits?",
+    "hint": "The function cannot continue without it.",
+    "choices": [
+      {
+        "text": "`name!` on the first line",
+        "correct": false,
+        "why": "A name a student may not have typed is input, where `nil` is normal."
+      },
+      {
+        "text": "`name ?? \"\"`",
+        "correct": false,
+        "why": "An empty name is not as good as a name; a session would be saved under nothing."
+      },
+      {
+        "text": "`guard let name else { return }` at the top",
+        "correct": true,
+        "why": "Right: the way out first, and the name stays for the rest of the function."
+      },
+      {
+        "text": "Wrap the whole function body in `if let name { … }`",
+        "correct": false,
+        "why": "It works, and nests everything a level deeper; that is what `guard` exists to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2g17ht1",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`??` is called the nil-___ operator.",
+    "hint": "Section 05 named it in bold.",
+    "blanks": [
+      {
+        "accept": [
+          "coalescing"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rfz7m77e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line compiles, with `typed` a `String` and `total` an `Int`?",
+    "hint": "Only one leaves an `Int` on the right of `+=`.",
+    "choices": [
+      {
+        "text": "`total += Int(typed)`",
+        "correct": false,
+        "why": "`Int(typed)` is an `Int?`."
+      },
+      {
+        "text": "`total += Int(typed) ?? 0`",
+        "correct": true,
+        "why": "Right: `??` leaves a plain `Int`."
+      },
+      {
+        "text": "`total += Int(typed ?? \"0\")`",
+        "correct": false,
+        "why": "`typed` is not optional, and `Int(…)` is still an `Int?`."
+      },
+      {
+        "text": "`total += typed.count?`",
+        "correct": false,
+        "why": "`typed` is a plain `String`, so `.count` needs no `?`, and a trailing `?` is not valid."
+      }
+    ]
+  }
+]

@@ -1,0 +1,442 @@
+{
+  "ex-ajv3zvpp": {
+    "prompt": "Do que uma struct precisa para o `JSONEncoder` codificá-la, quando todas as propriedades são `Int`, `Bool` e `String`?",
+    "choices": [
+      {
+        "text": "Um método `encode(to:)` escrito à mão",
+        "why": "O compilador escreve esse por você."
+      },
+      {
+        "text": "Conformar a `Codable`",
+        "why": "Isso: a conformância é a palavra e mais nada."
+      },
+      {
+        "text": "Um enum `CodingKeys` listando toda propriedade",
+        "why": "Ele é gerado a menos que os nomes precisem mudar."
+      },
+      {
+        "text": "Ser uma classe em vez de uma struct",
+        "why": "Structs codificam tão bem quanto classes; todo exemplo aqui é uma struct."
+      }
+    ]
+  },
+  "ex-zqwgz8qp": {
+    "prompt": "Três execuções do `Encode.swift` sem mudança imprimiram o JSON compacto com as chaves em ordens diferentes. Por quê?",
+    "hint": "Onde o encoder guarda as chaves de um objeto?",
+    "choices": [
+      {
+        "text": "O programa tem algum bug que embaralha os cursos e as sessões do planner",
+        "why": "Os dados são os mesmos a cada vez; só a ordem das chaves muda."
+      },
+      {
+        "text": "O JSON exige chaves em ordem aleatória",
+        "why": "O JSON não exige ordem nenhuma."
+      },
+      {
+        "text": "As chaves ficam num dicionário cujo hashing tem semente por processo",
+        "why": "Isso: e o `.sortedKeys` deixa a saída estável."
+      },
+      {
+        "text": "O `swift` o compilou de um jeito diferente a cada vez",
+        "why": "O código compilado é o mesmo; a ordem vem do hashing na execução."
+      }
+    ]
+  },
+  "ex-ft3rn5nm": {
+    "prompt": "Quantos bytes tinha o JSON compacto do planner na seção 01?"
+  },
+  "ex-hkmehy8g": {
+    "prompt": "Que tipo `encoder.encode(planner)` devolve?",
+    "choices": [
+      {
+        "text": "`String`",
+        "why": "Foi preciso o `String(decoding:as:)` para transformar o resultado em texto."
+      },
+      {
+        "text": "`Data`",
+        "why": "Isso: bytes, que é o que um arquivo ou uma requisição guarda."
+      },
+      {
+        "text": "`[String: Any]`",
+        "why": "Isso é um dicionário; o encoder produz bytes."
+      },
+      {
+        "text": "`URL`",
+        "why": "Uma `URL` foi onde os bytes foram gravados, não o que voltou."
+      }
+    ]
+  },
+  "ex-wmc1xeqq": {
+    "prompt": "Por que o `decode` recebe `[Course].self` como primeiro argumento?",
+    "hint": "Os bytes conseguem dizer que tipo são?",
+    "choices": [
+      {
+        "text": "Só quem chama sabe o tipo",
+        "why": "Isso: os mesmos bytes poderiam ser lidos como vários tipos, e só quem chama sabe."
+      },
+      {
+        "text": "Para passar um planner vazio a ser preenchido",
+        "why": "O `.self` é o tipo, não uma instância."
+      },
+      {
+        "text": "É o nome do arquivo que vai ser lido",
+        "why": "Os dados foram lidos à parte, com `Data(contentsOf:)`."
+      },
+      {
+        "text": "Para decodificar mais rápido",
+        "why": "Velocidade não é o motivo; sem ele não há em que decodificar."
+      }
+    ]
+  },
+  "ex-2pk01g5p": {
+    "prompt": "Quais destes o compilador gera para uma struct que conforma a `Codable`? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "`encode(to:)`",
+        "why": "Sim."
+      },
+      {
+        "text": "`init(from:)`",
+        "why": "Sim."
+      },
+      {
+        "text": "Um enum `CodingKeys`",
+        "why": "Sim: um caso por propriedade armazenada."
+      },
+      {
+        "text": "Um `JSONDecoder` configurado para o tipo",
+        "why": "Decoders são seus para criar e configurar."
+      }
+    ]
+  },
+  "ex-0bbgbzzn": {
+    "prompt": "A resposta de um servidor só é lida pelo app, nunca mandada de volta. Qual a conformância mais estreita para o tipo dela?",
+    "choices": [
+      {
+        "text": "`Codable`",
+        "why": "Funciona, e gera código de codificação que nada usa."
+      },
+      {
+        "text": "`Decodable`",
+        "why": "Isso: só a metade de leitura é gerada."
+      },
+      {
+        "text": "`Encodable`",
+        "why": "Essa é a metade de escrita, a que não é necessária."
+      },
+      {
+        "text": "`CodingKey`",
+        "why": "Esse é o protocolo das chaves, não do tipo."
+      }
+    ]
+  },
+  "ex-mpyft4aq": {
+    "prompt": "Num `CodingKeys` escrito à mão, qual é o raw value de cada caso?",
+    "choices": [
+      {
+        "text": "O tipo da propriedade",
+        "why": "O tipo vem da própria propriedade."
+      },
+      {
+        "text": "Um valor padrão para a propriedade",
+        "why": "Padrões ficam no `init(from:)`, seção 05."
+      },
+      {
+        "text": "A chave usada no JSON",
+        "why": "Isso: `minutes = \"study_minutes\"`."
+      },
+      {
+        "text": "A ordem da chave na saída",
+        "why": "A seção 01 mostrou que o encoder não guarda ordem."
+      }
+    ]
+  },
+  "ex-w5dxvwgp": {
+    "prompt": "O `Keys.swift` codifica uma sessão de volta para JSON. Que chaves a saída usa?",
+    "hint": "O mesmo enum funciona nos dois sentidos.",
+    "choices": [
+      {
+        "text": "`minutes` e `done`",
+        "why": "Esses são os nomes do Swift; o `CodingKeys` os renomeia na saída também."
+      },
+      {
+        "text": "`study_minutes` e `is_done`",
+        "why": "Isso."
+      },
+      {
+        "text": "Os dois conjuntos, um depois do outro",
+        "why": "Cada propriedade é escrita uma vez, numa chave."
+      },
+      {
+        "text": "`studyMinutes` e `isDone`",
+        "why": "Esse é o camel case da struct do `Snake.swift`."
+      }
+    ]
+  },
+  "ex-b8ytgw31": {
+    "prompt": "Um tipo `StudySession` é decodificado em cinco lugares de um app. Por que a seção 03 prefere um enum `CodingKeys` ao `.convertFromSnakeCase` aqui?",
+    "hint": "Onde mora cada mapeamento?",
+    "choices": [
+      {
+        "text": "O `.convertFromSnakeCase` é mais lento",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "O enum viaja com o tipo",
+        "why": "Isso: esqueça num decoder e aquele falha."
+      },
+      {
+        "text": "A estratégia não funciona no Linux",
+        "why": "O `Snake.swift` rodou no Linux."
+      },
+      {
+        "text": "Uma estratégia não mapeia `is_done`",
+        "why": "Ela o mapeou para `isDone`."
+      }
+    ]
+  },
+  "ex-48xh05hf": {
+    "prompt": "Um decoder ajustado para `.convertFromSnakeCase` lê a chave `study_minutes` numa propriedade chamada ___.",
+    "blanks": [
+      {
+        "accept": [
+          "studyMinutes"
+        ]
+      }
+    ]
+  },
+  "ex-4p29y3e8": {
+    "prompt": "Sem estratégia, o `JSONEncoder` gravou um `Date` como um número de segundos desde 1º de janeiro de que ano?"
+  },
+  "ex-brzqvnk3": {
+    "prompt": "O que `dateEncodingStrategy = .iso8601` grava para 26 de outubro de 2026 às 19:00 UTC?",
+    "choices": [
+      {
+        "text": "`814734000`",
+        "why": "Esse é o padrão, segundos desde 2001."
+      },
+      {
+        "text": "`\"2026-10-26T19:00:00Z\"`",
+        "why": "Isso: uma data, um `T`, uma hora e `Z` para UTC."
+      },
+      {
+        "text": "`\"26/10/2026 16:00\"`",
+        "why": "Isso é um formato local, para o qual o `.formatted` precisaria de um padrão."
+      },
+      {
+        "text": "`\"2026-10-26 16:00:00 -0300\"`",
+        "why": "Esse é o mesmo instante no fuso de São Paulo, que nenhuma estratégia daqui grava."
+      }
+    ]
+  },
+  "ex-j0mypy2s": {
+    "prompt": "Um app decodifica `\"2026-10-26T19:00:00Z\"` num `Date` com um decoder no padrão. O que acontece?",
+    "choices": [
+      {
+        "text": "Funciona: o decoder reconhece ISO 8601",
+        "why": "O padrão espera o número de 2001."
+      },
+      {
+        "text": "A data vira 1º de janeiro de 2001",
+        "why": "Nada é inventado; a decodificação falha."
+      },
+      {
+        "text": "`typeMismatch`: esperava-se um `Double`",
+        "why": "Isso: encontrou uma string onde deveria haver o número."
+      },
+      {
+        "text": "A data é lida no fuso de São Paulo",
+        "why": "Fuso não é a questão; o formato é."
+      }
+    ]
+  },
+  "ex-c4rzk68m": {
+    "prompt": "Ponha estes na ordem em que o `Dates.swift` os imprimiu.",
+    "items": [
+      "A data como `814734000`",
+      "A data como string ISO 8601",
+      "A data decodificada e `true`",
+      "Um erro `typeMismatch`"
+    ]
+  },
+  "ex-1pe392ka": {
+    "prompt": "Uma sessão em JSON não tem a chave `note`, e `note` é declarada `String?`. O que o decoder faz?",
+    "choices": [
+      {
+        "text": "Põe `note` em `nil`",
+        "why": "Isso: um opcional pode faltar."
+      },
+      {
+        "text": "Lança `keyNotFound`",
+        "why": "Isso é para uma propriedade que não é opcional."
+      },
+      {
+        "text": "Põe `note` numa string vazia",
+        "why": "Uma string vazia é um valor; nada inventa uma."
+      },
+      {
+        "text": "Pula a sessão inteira",
+        "why": "A sessão foi decodificada, com `note: nil`."
+      }
+    ]
+  },
+  "ex-59d779xt": {
+    "prompt": "Uma struct declara `var done: Bool = false`, e o JSON não tem `done`. Com o `init(from:)` gerado, o que acontece?",
+    "hint": "Seção 05, depois do exemplo.",
+    "choices": [
+      {
+        "text": "`done` fica `false`, pelo padrão",
+        "why": "O código gerado ignora o valor padrão."
+      },
+      {
+        "text": "`keyNotFound`",
+        "why": "Isso: escreva o `init(from:)` com `decodeIfPresent` para usar um padrão."
+      },
+      {
+        "text": "O compilador recusa a struct",
+        "why": "Compila; a falha é na hora de decodificar."
+      },
+      {
+        "text": "`done` fica `nil`",
+        "why": "Um `Bool` não pode ser `nil`."
+      }
+    ]
+  },
+  "ex-q05rbfr0": {
+    "prompt": "Dentro do `init(from:)`, a chamada que devolve `nil` para uma chave ausente em vez de lançar é `container.___`.",
+    "blanks": [
+      {
+        "accept": [
+          "decodeIfPresent"
+        ]
+      }
+    ]
+  },
+  "ex-bed1yav4": {
+    "prompt": "Ligue cada pedaço de JSON quebrado ao caso de `DecodingError` que ele produz.",
+    "hint": "A tabela da seção 06.",
+    "pairs": [
+      {
+        "left": "`\"minutes\": \"45\"`",
+        "right": "`typeMismatch`"
+      },
+      {
+        "left": "uma sessão sem `minutes`",
+        "right": "`keyNotFound`"
+      },
+      {
+        "left": "um `]` de fechamento faltando",
+        "right": "`dataCorrupted`"
+      },
+      {
+        "left": "`\"minutes\": null`",
+        "right": "`valueNotFound`"
+      }
+    ]
+  },
+  "ex-6jb6dph7": {
+    "prompt": "O que `[0].sessions[1]` num erro de decodificação lhe diz?",
+    "choices": [
+      {
+        "text": "O erro aconteceu na linha 1 do arquivo",
+        "why": "É um caminho pelos dados, não um número de linha."
+      },
+      {
+        "text": "Onde falhou: a segunda sessão do primeiro curso",
+        "why": "Isso: montado a partir do `context.codingPath`."
+      },
+      {
+        "text": "Que aconteceram dois erros",
+        "why": "Um erro, num lugar."
+      },
+      {
+        "text": "Que versão do planner gravou o arquivo",
+        "why": "Nada no caminho diz quem gravou os dados."
+      }
+    ]
+  },
+  "ex-sj5htpcm": {
+    "prompt": "Um colega carrega o `planner.json` com `try? decoder.decode(...)` e mostra um planner vazio quando dá `nil`. O que a seção 06 diz que está errado?",
+    "choices": [
+      {
+        "text": "O `try?` não pode ser usado com `decode`",
+        "why": "Pode; esse é o problema."
+      },
+      {
+        "text": "Nada: um planner vazio é um padrão seguro",
+        "why": "Ele diz à estudante que ela não tem sessões, o que é falso."
+      },
+      {
+        "text": "Um arquivo quebrado passa por um planner sem sessões",
+        "why": "Isso: pegue na borda, registre o caso e o caminho, e diga que o carregamento falhou."
+      },
+      {
+        "text": "O arquivo deveria ser gravado com `.sortedKeys` antes",
+        "why": "A ordem das chaves não afeta a decodificação."
+      }
+    ]
+  },
+  "ex-tk2x8y21": {
+    "prompt": "Um servidor manda `{\"study_minutes\": 45, \"started_at\": \"2026-10-26T19:00:00Z\"}`. Que par de ajustes o decodifica em `studyMinutes: Int` e `startedAt: Date`?",
+    "choices": [
+      {
+        "text": "`.sortedKeys` e `.prettyPrinted`",
+        "why": "Essas são opções de saída do encoder."
+      },
+      {
+        "text": "`.convertToSnakeCase` e `.secondsSince1970`",
+        "why": "Sentido errado, e formato de data errado."
+      },
+      {
+        "text": "`.convertFromSnakeCase` e `.iso8601`",
+        "why": "Isso: um para as chaves, um para a data."
+      },
+      {
+        "text": "Nenhum ajuste: o padrão lê os dois",
+        "why": "As chaves e datas padrão falham as duas aqui."
+      }
+    ]
+  },
+  "ex-q2rr3g5j": {
+    "prompt": "Um tipo de sessão ganha uma propriedade nova, `room: String`, na versão 2 do app. Arquivos antigos não têm `room`. Que escolhas deixam os arquivos antigos carregarem? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Declará-la `room: String?`",
+        "why": "Sim: um opcional pode faltar."
+      },
+      {
+        "text": "Escrever o `init(from:)` com `decodeIfPresent` e um padrão",
+        "why": "Sim: o jeito da seção 05."
+      },
+      {
+        "text": "Declará-la `var room: String = \"\"` e manter o código gerado",
+        "why": "O `init(from:)` gerado continua exigindo a chave."
+      },
+      {
+        "text": "Gravar os arquivos novos com `.sortedKeys`",
+        "why": "O problema são os arquivos antigos, e a ordem não é."
+      }
+    ]
+  },
+  "ex-9vhta5ar": {
+    "prompt": "Que módulo fornece o `JSONEncoder` e o `JSONDecoder`?",
+    "choices": [
+      {
+        "text": "A biblioteca padrão",
+        "why": "Eles precisam de `import Foundation`."
+      },
+      {
+        "text": "Foundation",
+        "why": "Isso: importado no topo de todo programa daqui."
+      },
+      {
+        "text": "O SwiftUI da Apple",
+        "why": "O SwiftUI desenha telas e não existe no Linux."
+      },
+      {
+        "text": "Codable",
+        "why": "O `Codable` é um protocolo, não um módulo."
+      }
+    ]
+  }
+}

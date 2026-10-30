@@ -1,0 +1,677 @@
+[
+  {
+    "id": "ex-rp5sgqvw",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `func hours(_ minutes: Int) -> Double { Double(minutes) / 60 }` need no `return`?",
+    "choices": [
+      {
+        "text": "Functions returning `Double` never need one",
+        "correct": false,
+        "why": "The type has nothing to do with it; `weekTotal` returns an `Int` and needed one."
+      },
+      {
+        "text": "Its body is one expression, whose value is the result",
+        "correct": true,
+        "why": "Right: a single-expression body returns its value."
+      },
+      {
+        "text": "Swift adds `return 0` at the end of every function that lacks one",
+        "correct": false,
+        "why": "Swift never invents a result; a missing one is an error."
+      },
+      {
+        "text": "`print` returns it",
+        "correct": false,
+        "why": "There is no `print` in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2za4jq65",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`weekTotal` is declared `-> Int` and its body ends without `return`. What does the compiler do?",
+    "hint": "Section 02 compiled exactly this.",
+    "choices": [
+      {
+        "text": "Warns, and the function returns 0",
+        "correct": false,
+        "why": "No value is invented; nothing is written."
+      },
+      {
+        "text": "Returns the last value it computed",
+        "correct": false,
+        "why": "That rule belongs to a single-expression body, and this one has a loop."
+      },
+      {
+        "text": "Refuses: missing return in a function expected to return `Int`",
+        "correct": true,
+        "why": "Right: every path through the body must produce the promised `Int`."
+      },
+      {
+        "text": "Compiles, and crashes at the closing brace",
+        "correct": false,
+        "why": "It is refused before anything runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1cggpk5",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`progress` returns `(done: Int, left: Int)`. How does the caller read the minutes left?",
+    "choices": [
+      {
+        "text": "`week[1]`",
+        "correct": false,
+        "why": "A tuple is not an array; its parts are read by name or by `.1`."
+      },
+      {
+        "text": "`week.left`",
+        "correct": true,
+        "why": "Right: the parts were named in the result type."
+      },
+      {
+        "text": "`week(left:)`",
+        "correct": false,
+        "why": "That is the shape of a call, and a tuple is not a function."
+      },
+      {
+        "text": "`week.get(\"left\")`",
+        "correct": false,
+        "why": "A tuple has no lookup by string."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ptsch52",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `func add(minutes: Int, to course: String)`, which word does the call write before `\"Swift\"`?",
+    "choices": [
+      {
+        "text": "`to:`",
+        "correct": true,
+        "why": "Right: `to` is the argument label; `course` is the name used inside."
+      },
+      {
+        "text": "`course:`",
+        "correct": false,
+        "why": "`course` is the parameter name, used in the body only."
+      },
+      {
+        "text": "`to course:`",
+        "correct": false,
+        "why": "The call writes the label alone."
+      },
+      {
+        "text": "Nothing; the second argument has no label",
+        "correct": false,
+        "why": "Only `_` removes a label."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jth2ahn",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`add(45, \"Swift\")` for `func add(minutes: Int, to course: String)`. What happens?",
+    "hint": "Labels are part of the name.",
+    "choices": [
+      {
+        "text": "It works; labels are optional at the call",
+        "correct": false,
+        "why": "The call must write the declared labels."
+      },
+      {
+        "text": "It works, with a warning about style",
+        "correct": false,
+        "why": "It is an error, not a warning."
+      },
+      {
+        "text": "Error: missing argument labels `minutes:to:`",
+        "correct": true,
+        "why": "Right: the compiler names the labels it wanted."
+      },
+      {
+        "text": "It calls a different `add` that takes no labels and adds two numbers",
+        "correct": false,
+        "why": "There is no such function in the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmfcyyhj",
+    "version": 1,
+    "section": "labels",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Writing `___` as the label of a parameter means the call writes no label for it.",
+    "hint": "One character.",
+    "blanks": [
+      {
+        "accept": [
+          "_"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xc7ks9pe",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A file declares `func remove(at index: Int)` and `func remove(_ course: String)`. What does Swift make of that?",
+    "hint": "What is a function's full name?",
+    "choices": [
+      {
+        "text": "A redeclaration error: both are called `remove`",
+        "correct": false,
+        "why": "Their full names differ, `remove(at:)` and `remove(_:)`."
+      },
+      {
+        "text": "Two distinct names, told apart by their labels",
+        "correct": true,
+        "why": "Right: labels are part of a function's identity."
+      },
+      {
+        "text": "One function; the second replaces the first",
+        "correct": false,
+        "why": "Swift never silently replaces a declaration."
+      },
+      {
+        "text": "Two functions, but only the last one declared can be called",
+        "correct": false,
+        "why": "Both can be called, each with its labels."
+      }
+    ]
+  },
+  {
+    "id": "ex-8afg3c3y",
+    "version": 1,
+    "section": "defaults-inout",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`func plan(_ course: String, minutes: Int = 30, on day: String = \"Monday\")`. What does `plan(\"Swift\", on: \"Friday\")` print in `Defaults.swift`?",
+    "choices": [
+      {
+        "text": "A compile error: `minutes:` must come before `on:`",
+        "correct": false,
+        "why": "An argument with a default may be skipped."
+      },
+      {
+        "text": "`Friday: Swift for 30 min`",
+        "correct": true,
+        "why": "Right: `minutes` took its default."
+      },
+      {
+        "text": "`Monday: Swift for 30 min`",
+        "correct": false,
+        "why": "`on:` was given, so the default day is not used."
+      },
+      {
+        "text": "`Friday: Swift for 0 min`",
+        "correct": false,
+        "why": "A skipped argument takes its declared default, 30."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h3vt9bn",
+    "version": 1,
+    "section": "defaults-inout",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`func total(_ sessions: Int...) -> Int` adds its arguments. What is `total()`?",
+    "hint": "A variadic parameter accepts zero values.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-aenmp735",
+    "version": 1,
+    "section": "defaults-inout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the call to an `inout` parameter have to write `&week`?",
+    "choices": [
+      {
+        "text": "To pass a copy rather than the variable",
+        "correct": false,
+        "why": "It is the other way round: it says the variable may come back changed."
+      },
+      {
+        "text": "Because `week` is a `let`",
+        "correct": false,
+        "why": "A `let` cannot be passed to `inout` at all."
+      },
+      {
+        "text": "It is optional, a reminder for readers who come later",
+        "correct": false,
+        "why": "The compiler requires it."
+      },
+      {
+        "text": "So the call marks the variable the function changes",
+        "correct": true,
+        "why": "Right: reading the call alone tells you the function changes `week`."
+      }
+    ]
+  },
+  {
+    "id": "ex-52qw82k7",
+    "version": 1,
+    "section": "defaults-inout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `func extend(_ minutes: Int) -> Int`, the line `minutes += 5`. What happens?",
+    "hint": "Parameters are constants.",
+    "choices": [
+      {
+        "text": "A compile error: `minutes` is a `let` constant",
+        "correct": true,
+        "why": "Right: the caller's value is protected; write `var longer = minutes` to change a copy."
+      },
+      {
+        "text": "The caller's variable grows by 5, since `Int` is passed through",
+        "correct": false,
+        "why": "That needs `inout` and `&`."
+      },
+      {
+        "text": "A local copy of `minutes` grows by 5 and is returned",
+        "correct": false,
+        "why": "No copy is made for you; the line does not compile."
+      },
+      {
+        "text": "It runs, and crashes",
+        "correct": false,
+        "why": "It never runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfgxg4fz",
+    "version": 1,
+    "section": "closures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the type of `func seconds(_ minutes: Int) -> Int`, as `type(of:)` prints it?",
+    "choices": [
+      {
+        "text": "`Int`",
+        "correct": false,
+        "why": "That is the type of its result, not of the function."
+      },
+      {
+        "text": "`Function<Int, Int>`",
+        "correct": false,
+        "why": "Swift has no generic `Function` type; the type is written with an arrow."
+      },
+      {
+        "text": "`(Int) -> Int`",
+        "correct": true,
+        "why": "Right: takes an `Int`, gives an `Int`."
+      },
+      {
+        "text": "`seconds(_:) -> Int`",
+        "correct": false,
+        "why": "That mixes its name with the type of its result."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzq93r5f",
+    "version": 1,
+    "section": "closures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`let convert = seconds` and `let value = seconds(45)`. What is the difference?",
+    "hint": "Look for the brackets.",
+    "choices": [
+      {
+        "text": "None; both call `seconds`",
+        "correct": false,
+        "why": "Without brackets, nothing is called."
+      },
+      {
+        "text": "`convert` holds the function; `value` holds 2700",
+        "correct": true,
+        "why": "Right: a function is a value, and brackets call it."
+      },
+      {
+        "text": "`convert` is a copy of `seconds` that has forgotten its type",
+        "correct": false,
+        "why": "It keeps the type `(Int) -> Int`."
+      },
+      {
+        "text": "The first does not compile without `func`",
+        "correct": false,
+        "why": "Storing a function in a constant is ordinary Swift."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fgxw9c9",
+    "version": 1,
+    "section": "closures",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these spellings of the same closure from the longest form to the shortest.",
+    "hint": "Section 05's example removed one thing at each step.",
+    "items": [
+      "`{ (minutes: Int) -> Int in return minutes * 60 }`",
+      "`{ minutes in return minutes * 60 }`",
+      "`{ minutes in minutes * 60 }`",
+      "`{ $0 * 60 }`"
+    ]
+  },
+  {
+    "id": "ex-f50zzyca",
+    "version": 1,
+    "section": "trailing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call is the same as `repeatTwice({ print(\"review\") })`?",
+    "choices": [
+      {
+        "text": "`repeatTwice() print(\"review\")`",
+        "correct": false,
+        "why": "A closure needs its braces."
+      },
+      {
+        "text": "`repeatTwice { print(\"review\") }`",
+        "correct": true,
+        "why": "Right: the only argument is a closure, so the brackets go."
+      },
+      {
+        "text": "`repeatTwice[print(\"review\")]`",
+        "correct": false,
+        "why": "Square brackets index into a collection; a closure needs braces."
+      },
+      {
+        "text": "`repeatTwice: print(\"review\")`",
+        "correct": false,
+        "why": "A colon after a name is a label, and this is not a call."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx958cr2",
+    "version": 1,
+    "section": "trailing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`load(course:onSuccess:onFailure:)` is called with two trailing closures. How is the second one introduced?",
+    "hint": "The first one goes without its label.",
+    "choices": [
+      {
+        "text": "With nothing; two blocks in a row",
+        "correct": false,
+        "why": "The second needs its label so the call knows which parameter it is."
+      },
+      {
+        "text": "Inside the brackets, after `course:`",
+        "correct": false,
+        "why": "Then it would not be trailing."
+      },
+      {
+        "text": "By its label, `onFailure:`, after the first closing brace",
+        "correct": true,
+        "why": "Right: `} onFailure: { … }`."
+      },
+      {
+        "text": "By `else`",
+        "correct": false,
+        "why": "`else` belongs to `if` and `guard`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ypthz3w",
+    "version": 1,
+    "section": "trailing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function receives a trailing closure. When does the closure run?",
+    "hint": "It is an argument.",
+    "choices": [
+      {
+        "text": "Immediately, before the function it was given to starts running",
+        "correct": false,
+        "why": "A closure is passed, not run, by the call."
+      },
+      {
+        "text": "Once, when the function returns",
+        "correct": false,
+        "why": "`repeatTwice` ran its closure twice, during the call."
+      },
+      {
+        "text": "Whenever the function calls it, as many times as it does",
+        "correct": true,
+        "why": "Right: now, twice, later or never is the function's choice."
+      },
+      {
+        "text": "At the end of the program",
+        "correct": false,
+        "why": "Nothing schedules a closure for the end of the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbvhkapm",
+    "version": 1,
+    "section": "capturing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`let next = makeCounter()` and then `print(next(), next(), next())`. What is printed?",
+    "hint": "The closure keeps its `count` alive between calls.",
+    "choices": [
+      {
+        "text": "`1 1 1`",
+        "correct": false,
+        "why": "That would mean a fresh `count` per call; it was captured once."
+      },
+      {
+        "text": "`1 2 3`",
+        "correct": true,
+        "why": "Right: each call finds the same captured `count`."
+      },
+      {
+        "text": "`0 1 2`",
+        "correct": false,
+        "why": "`count += 1` runs before `return count`."
+      },
+      {
+        "text": "A compile error: `count` no longer exists",
+        "correct": false,
+        "why": "Capturing is what keeps it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yg10va43",
+    "version": 1,
+    "section": "capturing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var goal = 300`, then `let fixed = { [goal] in print(goal) }`, then `goal = 360`, then `fixed()`. What number is printed?",
+    "hint": "A capture list copies.",
+    "value": 300,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wejpjndc",
+    "version": 1,
+    "section": "capturing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `handlers.append(action)` fail inside `func later(_ action: () -> Void)`?",
+    "hint": "Where does `handlers` live after `later` returns?",
+    "choices": [
+      {
+        "text": "`handlers` is a `let`",
+        "correct": false,
+        "why": "It is a `var`; the message is about escaping."
+      },
+      {
+        "text": "An array cannot hold functions, only values such as numbers and strings",
+        "correct": false,
+        "why": "`[() -> Void]` is an array of functions, and it compiled."
+      },
+      {
+        "text": "`action` is called once before it is stored, which uses it up",
+        "correct": false,
+        "why": "It is never called in `later`."
+      },
+      {
+        "text": "Stored, it outlives the call, and `@escaping` is missing",
+        "correct": true,
+        "why": "Right: a non-escaping closure cannot outlive the call; `@escaping` says it is intended."
+      }
+    ]
+  },
+  {
+    "id": "ex-ab5a2r6t",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of syntax to what it is for.",
+    "pairs": [
+      {
+        "left": "`_ minutes: Int`",
+        "right": "A parameter the call passes with no label"
+      },
+      {
+        "left": "`minutes: Int = 30`",
+        "right": "A parameter the call may leave out"
+      },
+      {
+        "left": "`total: inout Int`",
+        "right": "A parameter that changes the caller's variable"
+      },
+      {
+        "left": "`_ action: @escaping () -> Void`",
+        "right": "A closure the function may keep after it returns"
+      }
+    ],
+    "right_distractors": [
+      "A parameter the function may reassign"
+    ]
+  },
+  {
+    "id": "ex-8qjm445k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner function takes a list of minutes and a rule for which sessions count. Which declaration lets the call read `count([45, 20, 60]) { $0 >= 30 }`?",
+    "hint": "The rule comes last, and takes one `Int`.",
+    "choices": [
+      {
+        "text": "`func count(where rule: (Int) -> Bool, _ sessions: [Int]) -> Int`",
+        "correct": false,
+        "why": "A trailing closure has to be the last argument."
+      },
+      {
+        "text": "`func count(_ sessions: [Int], where rule: (Int) -> Bool) -> Int`",
+        "correct": true,
+        "why": "Right: list first with no label, then the closure, which may trail."
+      },
+      {
+        "text": "`func count(_ sessions: [Int], where rule: Bool) -> Int`",
+        "correct": false,
+        "why": "A `Bool` is a value, not a rule to apply to each item."
+      },
+      {
+        "text": "`func count(sessions: [Int], rule: (Int) -> Int) -> Int`",
+        "correct": false,
+        "why": "The call writes no `sessions:` label, and a rule that answers yes or no returns `Bool`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw09tmdc",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function written in place, with no name, is called a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "closure"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0xk23cmb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these warns rather than refusing to compile?",
+    "choices": [
+      {
+        "text": "Calling `weekTotal([45])` and ignoring the result",
+        "correct": true,
+        "why": "Right: `result of call to 'weekTotal' is unused`, a warning."
+      },
+      {
+        "text": "Calling `add(45, \"Swift\")` without labels",
+        "correct": false,
+        "why": "Missing labels are an error."
+      },
+      {
+        "text": "Writing `minutes += 5` to a parameter",
+        "correct": false,
+        "why": "Parameters are constants; it is an error."
+      },
+      {
+        "text": "Storing a closure for later without `@escaping`",
+        "correct": false,
+        "why": "An error, asking for `@escaping`."
+      }
+    ]
+  }
+]

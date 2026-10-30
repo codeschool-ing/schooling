@@ -1,0 +1,664 @@
+[
+  {
+    "id": "ex-4h38m8xf",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file does section 02 check the Swift archive against before unpacking it?",
+    "hint": "swift.org publishes it beside the archive.",
+    "choices": [
+      {
+        "text": "A SHA-256 checksum file",
+        "correct": false,
+        "why": "That is how Kotlin's compiler is checked; swift.org signs instead of publishing a checksum."
+      },
+      {
+        "text": "Its `.sig` signature",
+        "correct": true,
+        "why": "Right: `gpg --verify` checks the archive against the signature, using the imported public keys."
+      },
+      {
+        "text": "Ubuntu's package list",
+        "correct": false,
+        "why": "Ubuntu does not package Swift; the archive comes from download.swift.org."
+      },
+      {
+        "text": "Nothing; HTTPS already proves the file arrived whole and unaltered",
+        "correct": false,
+        "why": "HTTPS protects the transfer, and a connection that drops still leaves a short file behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fc16fm6",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the `apt` line install `binutils` and `libc6-dev` for a Swift compiler?",
+    "hint": "What happens after the compiler has produced machine code?",
+    "choices": [
+      {
+        "text": "They are the Swift standard library",
+        "correct": false,
+        "why": "The standard library ships inside the toolchain, in `usr/lib/swift/linux`."
+      },
+      {
+        "text": "Swift programs run on the JVM, and the JVM needs both of them to start",
+        "correct": false,
+        "why": "Swift compiles to native code; `file` showed an ELF executable, not bytecode."
+      },
+      {
+        "text": "The compiler links programs with the system's linker and C library",
+        "correct": true,
+        "why": "Right: `binutils` carries the linker, and every Swift program on Linux ends up calling the C library."
+      },
+      {
+        "text": "Only `swiftly` needs them",
+        "correct": false,
+        "why": "The toolchain needs them however it was installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy03ybss",
+    "version": 1,
+    "section": "the-lab",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these need a Mac, according to section 02? Choose all that apply.",
+    "hint": "The wall is the platform, not the language.",
+    "choices": [
+      {
+        "text": "Xcode and the iOS simulator",
+        "correct": true,
+        "why": "Yes: Apple ships both for macOS alone."
+      },
+      {
+        "text": "`async`/`await` and actors",
+        "correct": false,
+        "why": "No: concurrency is part of the language and runs on Linux."
+      },
+      {
+        "text": "Importing SwiftUI",
+        "correct": true,
+        "why": "Yes: SwiftUI is one of Apple's frameworks and is absent on Linux."
+      },
+      {
+        "text": "Running the tests of lesson 18",
+        "correct": false,
+        "why": "No: XCTest and Swift Testing both run on Linux."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytzbkqme",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`swift --version` prints `swift: command not found` in a terminal opened before you edited `~/.bashrc`. What is the quickest fix?",
+    "hint": "The shell reads that file when it starts.",
+    "choices": [
+      {
+        "text": "Download and unpack the archive again",
+        "correct": false,
+        "why": "The full path worked, so the files are there."
+      },
+      {
+        "text": "Reload the shell's settings with `source`, or open another window",
+        "correct": true,
+        "why": "Right: the old terminal still has the old `PATH`."
+      },
+      {
+        "text": "Install the `swift` package with `apt`",
+        "correct": false,
+        "why": "Ubuntu does not package this toolchain; the one you unpacked is the one you want."
+      },
+      {
+        "text": "Reboot the computer so that the libraries load",
+        "correct": false,
+        "why": "No library is missing here; the shell is looking in the wrong directories."
+      }
+    ]
+  },
+  {
+    "id": "ex-rc8zepaj",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`swift: error while loading shared libraries: libncurses.so.6`. Which program wrote that message?",
+    "hint": "Did `swift` get as far as running?",
+    "choices": [
+      {
+        "text": "The Swift compiler, while compiling",
+        "correct": false,
+        "why": "Nothing was being compiled; this is `swift --version`, and it never started."
+      },
+      {
+        "text": "`bash`, because `swift` is not on the `PATH`",
+        "correct": false,
+        "why": "That message is `command not found`, with status 127 and no library named."
+      },
+      {
+        "text": "`gpg`",
+        "correct": false,
+        "why": "`gpg` checks signatures and starts no programs."
+      },
+      {
+        "text": "Linux's dynamic loader",
+        "correct": true,
+        "why": "Right: the loader connects a program to its shared libraries, and stopped at the first one missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mx17bggf",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exit status does `bash` give a command it cannot find?",
+    "hint": "Section 03 printed it with `echo $?`.",
+    "value": 127,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x5h48mpj",
+    "version": 1,
+    "section": "first-program",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `swift Hello.swift` and `swiftc Hello.swift -o hello`?",
+    "choices": [
+      {
+        "text": "The first runs it at once; the second writes an executable and runs nothing",
+        "correct": true,
+        "why": "Right: same compiler, and only one of them leaves a file behind."
+      },
+      {
+        "text": "The first interprets; the second compiles",
+        "correct": false,
+        "why": "Both compile the whole file to machine code first."
+      },
+      {
+        "text": "The first uses Swift 5, the second Swift 6",
+        "correct": false,
+        "why": "Both are the same 6.4.2 compiler."
+      },
+      {
+        "text": "Only the second checks types",
+        "correct": false,
+        "why": "A type error stops `swift Hello.swift` just as firmly."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytq97zp0",
+    "version": 1,
+    "section": "first-program",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You copy the `hello` executable to another Linux machine with no Swift toolchain and run it. What happens?",
+    "hint": "`file` said \"dynamically linked\".",
+    "choices": [
+      {
+        "text": "It prints the sentence, since it is native code",
+        "correct": false,
+        "why": "Native, and it still borrows the Swift runtime from the toolchain each time it starts."
+      },
+      {
+        "text": "It does not start: no Swift runtime there",
+        "correct": true,
+        "why": "Right: the 17 KB file links `libswiftCore` and others at start-up. Lesson 20 builds one that carries them."
+      },
+      {
+        "text": "It asks to compile itself again",
+        "correct": false,
+        "why": "An executable carries no source and no compiler."
+      },
+      {
+        "text": "It runs, a little slower",
+        "correct": false,
+        "why": "Speed is not the issue; a missing shared library stops it before `main`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qh6z1kh",
+    "version": 1,
+    "section": "first-program",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a string, `\\(minutes)` puts the value of `minutes` into the text. This is called string ___.",
+    "hint": "The word section 04 put in bold.",
+    "blanks": [
+      {
+        "accept": [
+          "interpolation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wtgas76c",
+    "version": 1,
+    "section": "let-and-var",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`let goal = 300` and, two lines later, `goal = 360`. What happens?",
+    "hint": "`let` names a constant.",
+    "choices": [
+      {
+        "text": "It compiles, and `goal` is 360 from then on",
+        "correct": false,
+        "why": "That is what `var` would allow."
+      },
+      {
+        "text": "It compiles with a warning, and `goal` stays 300",
+        "correct": false,
+        "why": "Reassigning a `let` is an error, and no program is written."
+      },
+      {
+        "text": "The compiler refuses it",
+        "correct": true,
+        "why": "Right: `cannot assign to value: 'goal' is a 'let' constant`, with a note suggesting `var`."
+      },
+      {
+        "text": "The program crashes on the second assignment",
+        "correct": false,
+        "why": "It never runs; the check happens at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-taw60vss",
+    "version": 1,
+    "section": "let-and-var",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a function, `var goal = 300` is never reassigned. What does `swiftc` do?",
+    "hint": "Section 05 ran exactly this.",
+    "choices": [
+      {
+        "text": "It refuses to compile until you change it to `let`",
+        "correct": false,
+        "why": "It is advice, and the program was written and ran."
+      },
+      {
+        "text": "It compiles, with a warning",
+        "correct": true,
+        "why": "Right: a warning, `variable 'goal' was never mutated`, and the program runs."
+      },
+      {
+        "text": "It turns it into a `let` for you",
+        "correct": false,
+        "why": "The compiler suggests; it does not edit your file."
+      },
+      {
+        "text": "Nothing: unused mutability is not checked",
+        "correct": false,
+        "why": "Inside a function it is checked, because the compiler sees every use."
+      }
+    ]
+  },
+  {
+    "id": "ex-t66btrz5",
+    "version": 1,
+    "section": "let-and-var",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner keeps `studied` as a `var` total. A teammate proposes making every name a `var` \"in case it needs to change\". What does that cost?",
+    "hint": "What does a `let` tell somebody reading line 200?",
+    "choices": [
+      {
+        "text": "Speed: a `var` is slower to read",
+        "correct": false,
+        "why": "The cost section 05 names is the reader's, not the processor's."
+      },
+      {
+        "text": "Nothing, as the compiler treats both alike",
+        "correct": false,
+        "why": "It does not: it refuses to reassign a `let` and warns about an unchanged `var`."
+      },
+      {
+        "text": "Every reader must search for a later change",
+        "correct": true,
+        "why": "Right: a `let` is a promise that the value has not moved; a `var` makes no promise."
+      },
+      {
+        "text": "Memory: each `var` is copied when it is read",
+        "correct": false,
+        "why": "Reading a variable does not copy it in a way that matters here."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt2k9pb6",
+    "version": 1,
+    "section": "inference",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no annotation, what type is `let hours = 1.5`?",
+    "choices": [
+      {
+        "text": "`Float`",
+        "correct": false,
+        "why": "`Float` is half the size and is never inferred from a literal."
+      },
+      {
+        "text": "`Double`",
+        "correct": true,
+        "why": "Right: a literal with a decimal point is a `Double`."
+      },
+      {
+        "text": "`Int`, rounded to 1",
+        "correct": false,
+        "why": "Swift never rounds a literal to fit a type."
+      },
+      {
+        "text": "No type until it is used",
+        "correct": false,
+        "why": "The name has its type from the moment it is declared."
+      }
+    ]
+  },
+  {
+    "id": "ex-e78t44r9",
+    "version": 1,
+    "section": "inference",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`let minutes = 45` and then `print(minutes / 60)`. What is printed?",
+    "hint": "Both sides are `Int`.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9w1tefvz",
+    "version": 1,
+    "section": "inference",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `let pace: Double = 45` compile, when `let minutes: Int = 1.5` does not?",
+    "hint": "A literal has no type until it is used.",
+    "choices": [
+      {
+        "text": "Annotations convert values, and only the second conversion is refused",
+        "correct": false,
+        "why": "An annotation is checked, never a conversion."
+      },
+      {
+        "text": "`Double` accepts anything",
+        "correct": false,
+        "why": "It does not accept a `String`, or an `Int` that already has a type."
+      },
+      {
+        "text": "`45` is exactly a `Double`; `1.5` is not exactly an `Int`",
+        "correct": true,
+        "why": "Right: an integer literal can become any number type, and a decimal literal cannot lose its `.5` quietly."
+      },
+      {
+        "text": "The compiler checks only the first name declared in each file it reads",
+        "correct": false,
+        "why": "Every name is checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-k819fmeb",
+    "version": 1,
+    "section": "inference",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A data file stores a session's length as a 16-bit unsigned integer. Which type should the Swift code read it into first?",
+    "hint": "When does section 06 say to leave `Int`?",
+    "choices": [
+      {
+        "text": "`Int`, as for every number",
+        "correct": false,
+        "why": "`Int` is the default, and a format with a fixed size is the exception the section names."
+      },
+      {
+        "text": "`Double`, to be safe with a number of any size",
+        "correct": false,
+        "why": "A floating-point type would describe a different format."
+      },
+      {
+        "text": "`UInt16`, then convert it to `Int` for arithmetic",
+        "correct": true,
+        "why": "Right: the format decides the read, and `Int` keeps the rest of the code free of conversions."
+      },
+      {
+        "text": "`Int8`, the smallest",
+        "correct": false,
+        "why": "Eight signed bits cannot hold what sixteen unsigned bits can."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y87bv54",
+    "version": 1,
+    "section": "strong-types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`let total = minutes + hours`, with `minutes` an `Int` and `hours` a `Double`. What happens?",
+    "choices": [
+      {
+        "text": "`total` is a `Double`",
+        "correct": false,
+        "why": "Swift does not widen an `Int` on its own."
+      },
+      {
+        "text": "`total` is an `Int`, and the `.5` of `hours` is quietly dropped",
+        "correct": false,
+        "why": "Nothing is dropped, because nothing compiles."
+      },
+      {
+        "text": "A compile error: no `+` takes an `Int` and a `Double`",
+        "correct": true,
+        "why": "Right: the note lists the two versions that exist, and you write the conversion you meant."
+      },
+      {
+        "text": "A crash when the line runs",
+        "correct": false,
+        "why": "Types are checked before anything runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-46d8h92q",
+    "version": 1,
+    "section": "strong-types",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`let minutes = 45; let hours = 1.5`. What is `minutes + Int(hours * 60)`?",
+    "hint": "`hours * 60` is a `Double`, and `Int(…)` converts it.",
+    "value": 135,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-k4p4mf80",
+    "version": 1,
+    "section": "strong-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`let small: Int8 = 127` and then `let more = small + 1`. What does the program do?",
+    "hint": "Swift checks integer arithmetic while the program runs.",
+    "choices": [
+      {
+        "text": "Prints −128",
+        "correct": false,
+        "why": "That is what `&+` does, on purpose; `+` does not wrap."
+      },
+      {
+        "text": "Prints 128",
+        "correct": false,
+        "why": "128 does not fit in an `Int8`."
+      },
+      {
+        "text": "It does not compile",
+        "correct": false,
+        "why": "It compiled; `small` is a name and the overflow happens at run time."
+      },
+      {
+        "text": "Crashes before printing anything",
+        "correct": true,
+        "why": "Right: the overflow check stops the process, with \"Illegal instruction\"."
+      }
+    ]
+  },
+  {
+    "id": "ex-bejp49nn",
+    "version": 1,
+    "section": "strong-types",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Int(\"45\")` does not give an `Int`. It gives an `Int?`, which Swift calls an ___.",
+    "hint": "Lesson 2's subject.",
+    "blanks": [
+      {
+        "accept": [
+          "optional"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wa7hvhc2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line to what the compiler or the program does with it.",
+    "hint": "Sections 05 to 07.",
+    "pairs": [
+      {
+        "left": "`let goal = 300; goal = 360`",
+        "right": "Error: a `let` cannot be reassigned"
+      },
+      {
+        "left": "`45 / 60`",
+        "right": "0, from integer division"
+      },
+      {
+        "left": "`45 + 1.5` with two names",
+        "right": "Error: no `+` for `Int` and `Double`"
+      },
+      {
+        "left": "`Int(\"45\")`",
+        "right": "An `Int?`"
+      }
+    ],
+    "right_distractors": [
+      "0.75, converted for you"
+    ]
+  },
+  {
+    "id": "ex-dt4kkhtz",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of section 02's install in the order Ana typed them.",
+    "hint": "Libraries first, and nothing unpacked before it is checked.",
+    "items": [
+      "Install the libraries with `apt`",
+      "Download the archive and its `.sig`",
+      "Import swift.org's keys and run `gpg --verify`",
+      "Unpack it into `~/.local/share`",
+      "Add its `usr/bin` to `PATH` in `~/.bashrc`"
+    ]
+  },
+  {
+    "id": "ex-3a5r578x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program prints a week's average as `2` minutes where you expected `2.5`. What do you look at first?",
+    "hint": "Section 06: the operands decide the arithmetic.",
+    "choices": [
+      {
+        "text": "Whether `print` rounds the numbers it is given before writing them",
+        "correct": false,
+        "why": "`print` writes the value it is given."
+      },
+      {
+        "text": "The types on both sides of the division",
+        "correct": true,
+        "why": "Right: two `Int`s divide as integers and drop the remainder, with no warning."
+      },
+      {
+        "text": "Whether the toolchain installed is really version 6.4.2",
+        "correct": false,
+        "why": "Every version divides integers this way."
+      },
+      {
+        "text": "Whether an overflow happened",
+        "correct": false,
+        "why": "An overflow stops the program; it does not produce a smaller number."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpxr3ew6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these makes a Swift program stop while it is running, rather than refusing to compile?",
+    "choices": [
+      {
+        "text": "Reassigning a `let`",
+        "correct": false,
+        "why": "Refused at compile time."
+      },
+      {
+        "text": "Adding an `Int` to a `Double` in one expression",
+        "correct": false,
+        "why": "Refused at compile time."
+      },
+      {
+        "text": "Adding 1 to `Int8.max`",
+        "correct": true,
+        "why": "Right: the overflow is found when the sum runs."
+      },
+      {
+        "text": "Annotating `1.5` as an `Int`",
+        "correct": false,
+        "why": "Refused at compile time."
+      }
+    ]
+  }
+]

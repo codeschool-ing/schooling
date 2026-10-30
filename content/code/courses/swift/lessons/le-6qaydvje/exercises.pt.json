@@ -1,0 +1,376 @@
+{
+  "ex-gyb3ypqd": {
+    "prompt": "Quantos minutos o `Hierarchy.swift` informou para a semana?"
+  },
+  "ex-ax067da1": {
+    "prompt": "Por que os 60 minutos do simulado não contaram no `Hierarchy.swift`?",
+    "hint": "De onde `MockExam` tira `minutes`?",
+    "choices": [
+      {
+        "text": "O `reduce` pula subclasses",
+        "why": "O `reduce` somou todo elemento que recebeu."
+      },
+      {
+        "text": "Herdou o `0` de `StudyItem`, e ninguém o sobrescreveu",
+        "why": "Isso: ele está sob `Exam`, que também nunca sobrescreveu `minutes`."
+      },
+      {
+        "text": "`length` foi declarado como `let`",
+        "why": "Um `let` é lido normalmente; nada lê `length` aqui."
+      },
+      {
+        "text": "O array de `StudyItem` o copiou sem os campos próprios",
+        "why": "Instâncias de classe não são copiadas para um array; o objeto está inteiro."
+      }
+    ]
+  },
+  "ex-h3r9p98h": {
+    "prompt": "Por que `MockExam` declara `length` de novo, se `StudySession` já tem?",
+    "choices": [
+      {
+        "text": "Para sobrescrever o valor de `StudySession`",
+        "why": "`MockExam` não é uma `StudySession`, então não há o que sobrescrever."
+      },
+      {
+        "text": "O Swift exige que toda classe declare as propriedades armazenadas duas vezes",
+        "why": "Essa regra não existe."
+      },
+      {
+        "text": "Tem uma superclasse só, `Exam`",
+        "why": "Isso: o que vive em `StudySession` precisa ser copiado."
+      },
+      {
+        "text": "Porque `length` é privado de `StudySession`",
+        "why": "Não é privado; está fora de alcance por causa da árvore."
+      }
+    ]
+  },
+  "ex-1h4pz8eg": {
+    "prompt": "O planner precisa de uma propriedade \"tem prazo\" para alguns itens. Na árvore de classes, onde ela acaba?",
+    "hint": "Todo item do array precisa responder a ela.",
+    "choices": [
+      {
+        "text": "Num protocolo `Due`, ao qual só os itens que têm prazo conformam",
+        "why": "Essa é a resposta da composição, não da árvore."
+      },
+      {
+        "text": "Em `StudyItem`, respondida por todos",
+        "why": "Isso: a classe base cresce, com um padrão chutado para tudo que não tem prazo."
+      },
+      {
+        "text": "Só em `MockExam`",
+        "why": "Aí o array de `StudyItem` não poderia perguntar aos outros itens."
+      },
+      {
+        "text": "Numa segunda superclasse de cada classe que precise",
+        "why": "Uma classe tem uma superclasse só."
+      }
+    ]
+  },
+  "ex-rmv36f8s": {
+    "prompt": "No `Composed.swift`, o que acontece se você puser um `Exam` em `timed: [any Timed]`?",
+    "choices": [
+      {
+        "text": "Conta como 0 minutos",
+        "why": "Esse era o palpite da árvore; aqui não há nenhum."
+      },
+      {
+        "text": "Erro de compilação: `Exam` não é `Timed`",
+        "why": "Isso: o total errado vira uma recusa."
+      },
+      {
+        "text": "Uma quebra quando o total é calculado",
+        "why": "A conformidade é verificada antes de qualquer coisa rodar."
+      },
+      {
+        "text": "A nota da prova é somada no lugar",
+        "why": "Nada soma nota com minutos."
+      }
+    ]
+  },
+  "ex-h0cfe3bn": {
+    "prompt": "Que total o `Composed.swift` imprimiu?"
+  },
+  "ex-c98a7ybp": {
+    "prompt": "Qual destes o `report(_ item: some Titled & Graded)` recusa?",
+    "hint": "Ele precisa dos dois.",
+    "choices": [
+      {
+        "text": "Um `Exam`",
+        "why": "Uma prova tem título e nota."
+      },
+      {
+        "text": "Um `MockExam`",
+        "why": "Um simulado é os três, o que inclui os dois."
+      },
+      {
+        "text": "Uma `StudySession`",
+        "why": "Isso: ela tem título e não tem nota."
+      },
+      {
+        "text": "Qualquer struct que conforma a `Titled`, tenha o que tiver",
+        "why": "As que também são `Graded` são aceitas."
+      }
+    ]
+  },
+  "ex-mwe0a5ff": {
+    "prompt": "`Titled & Graded` se chama uma ___ de protocolos.",
+    "hint": "A seção 03 pôs o termo em negrito.",
+    "blanks": [
+      {
+        "accept": [
+          "composição",
+          "composicao"
+        ]
+      }
+    ]
+  },
+  "ex-3mxwe4w0": {
+    "prompt": "No `Mixins.swift`, de onde vem o `isLong` de uma `StudySession`?",
+    "choices": [
+      {
+        "text": "Da `extension Timed`",
+        "why": "Isso: todo tipo com tempo o ganha."
+      },
+      {
+        "text": "Da declaração da própria struct",
+        "why": "A struct declara duas propriedades armazenadas e mais nada."
+      },
+      {
+        "text": "De uma classe base chamada `Timed`",
+        "why": "`Timed` é um protocolo, e não há classe aqui."
+      },
+      {
+        "text": "Da `Sequence`, por meio do `totalMinutes`",
+        "why": "O `totalMinutes` é da semana, não de uma sessão."
+      }
+    ]
+  },
+  "ex-3abnpgtr": {
+    "prompt": "Por que `Break(minutes: 40)` não tem `label`?",
+    "hint": "Leia a cláusula `where`.",
+    "choices": [
+      {
+        "text": "`label` é privado",
+        "why": "Não é; as sessões o usam."
+      },
+      {
+        "text": "Uma pausa tem menos de 60 minutos",
+        "why": "A duração decide o `isLong`, não o `label`."
+      },
+      {
+        "text": "Mixins só funcionam no primeiro tipo declarado num arquivo",
+        "why": "A ordem no arquivo não decide nada."
+      },
+      {
+        "text": "`label` só existe em tipos que são `Titled` e `Timed`",
+        "why": "Isso: `Break` tem tempo e não tem título."
+      }
+    ]
+  },
+  "ex-varhjzmc": {
+    "prompt": "O que `week.totalMinutes` imprimiu no `Mixins.swift`?"
+  },
+  "ex-kqse010k": {
+    "prompt": "Uma extensão de `Timed` começa a precisar de `self.dueDate`, que `Timed` não exige. O que a seção 04 conclui?",
+    "choices": [
+      {
+        "text": "Converter `self` para o tipo que tem a propriedade",
+        "why": "Isso amarra uma capacidade a um tipo e falha para o resto."
+      },
+      {
+        "text": "Falta um requisito, ou o membro pertence a um tipo",
+        "why": "Isso: ou a capacidade precisa dele, ou a extensão está no lugar errado."
+      },
+      {
+        "text": "Guardar `dueDate` na extensão",
+        "why": "Extensões não acrescentam armazenamento."
+      },
+      {
+        "text": "Marcar a extensão como `final`",
+        "why": "`final` vale para classes e seus membros, e não muda nada aqui."
+      }
+    ]
+  },
+  "ex-9tectctg": {
+    "prompt": "Por que o `Reminder` guarda um `any Clock` em vez de chamar `Date()` ele mesmo?",
+    "choices": [
+      {
+        "text": "`Date()` não funciona no Linux",
+        "why": "O `SystemClock` chama `Date()` no Linux e funciona."
+      },
+      {
+        "text": "Um protocolo é mais rápido que uma chamada de função",
+        "why": "Velocidade não é o motivo, e a caixa custa uma consulta."
+      },
+      {
+        "text": "Para um teste passar um relógio que ele controla",
+        "why": "Isso: o mesmo código, com a segunda fixa, dá a mesma resposta todo dia."
+      },
+      {
+        "text": "Para o lembrete funcionar em vários fusos ao mesmo tempo",
+        "why": "A costura é sobre quem decide a hora, não sobre fusos."
+      }
+    ]
+  },
+  "ex-wgjj2jg5": {
+    "prompt": "Com o `SystemClock`, o `Reminder.swift` imprimiu `system: []`. Por quê?",
+    "hint": "Quando foi gravado?",
+    "choices": [
+      {
+        "text": "O relógio do sistema está quebrado no laboratório",
+        "why": "Ele deu a data real."
+      },
+      {
+        "text": "O `SystemClock` devolve `nil` no Linux",
+        "why": "O `now()` devolve uma `Date`, nunca `nil`."
+      },
+      {
+        "text": "O `filter` não compara `DateComponents`",
+        "why": "A linha do relógio fixo achou duas sessões com o mesmo filtro."
+      },
+      {
+        "text": "Rodou em 30 de outubro de 2026, e nenhuma sessão cai nesse dia",
+        "why": "Isso: a resposta depende do dia, que é o motivo da costura."
+      }
+    ]
+  },
+  "ex-mfnrrnv0": {
+    "prompt": "Um colega acrescenta `var testDate: Date?` ao `Reminder` e o confere antes de perguntar ao sistema. O que a seção 05 diz que está errado nisso?",
+    "choices": [
+      {
+        "text": "O teste passa a morar dentro do produto",
+        "why": "Isso: e cada nova dependência acrescenta outra flag."
+      },
+      {
+        "text": "Uma `Date` opcional não compila numa struct",
+        "why": "Compila; a objeção é de desenho."
+      },
+      {
+        "text": "Nada: uma flag e um protocolo são a mesma costura",
+        "why": "A seção defende o contrário."
+      },
+      {
+        "text": "O lembrete fica mais lento de rodar no app",
+        "why": "Velocidade não é a objeção."
+      }
+    ]
+  },
+  "ex-nrk94f2p": {
+    "prompt": "O que `final class Planner` impede?",
+    "choices": [
+      {
+        "text": "Mudar as propriedades `var` dela",
+        "why": "`final` é sobre subclasses, não sobre mutação."
+      },
+      {
+        "text": "Subclassificá-la",
+        "why": "Isso: `inheritance from a final class 'Planner'` é recusado."
+      },
+      {
+        "text": "Criar mais de uma instância",
+        "why": "Quantos planners se quiser podem ser criados."
+      },
+      {
+        "text": "Conformá-la a um protocolo depois, numa extensão",
+        "why": "Extensões e conformidades continuam funcionando numa classe final."
+      }
+    ]
+  },
+  "ex-0qn1frk9": {
+    "prompt": "Quais destes são motivos que a seção 06 dá para uma classe? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Um objeto compartilhado de propósito, cujas mudanças todos veem",
+        "why": "Sim: identidade."
+      },
+      {
+        "text": "Algo com tempo de vida, fechado quando o último usuário solta",
+        "why": "Sim: o `deinit` só existe em classes."
+      },
+      {
+        "text": "Um tipo que tem tempo e nota",
+        "why": "Isso são dois protocolos, seção 03."
+      },
+      {
+        "text": "Um framework que entrega uma classe base",
+        "why": "Sim: o `UIViewController`, por exemplo."
+      }
+    ]
+  },
+  "ex-sx2wxa9d": {
+    "prompt": "Por que `final` é o padrão barato para uma classe nova?",
+    "choices": [
+      {
+        "text": "Uma classe final usa menos memória por instância",
+        "why": "O tamanho da instância não muda."
+      },
+      {
+        "text": "O Swift acrescenta `final` a toda classe de qualquer jeito",
+        "why": "Não acrescenta; o `SharedPlanner` compilaria sem ele."
+      },
+      {
+        "text": "Tirar depois é fácil; pôr depois que outros subclassificaram não é",
+        "why": "Isso: a decisão só é reversível num sentido."
+      },
+      {
+        "text": "Classes finais são tipos de valor",
+        "why": "Continuam classes, com identidade."
+      }
+    ]
+  },
+  "ex-4t64s3z7": {
+    "prompt": "Ligue cada necessidade ao que a seção 06 busca.",
+    "pairs": [
+      {
+        "left": "Uma capacidade que vários tipos compartilham",
+        "right": "Um protocolo com uma extensão"
+      },
+      {
+        "left": "Um valor simples, como uma sessão",
+        "right": "Uma struct"
+      },
+      {
+        "left": "Uma coisa compartilhada com identidade",
+        "right": "Uma `final class`"
+      },
+      {
+        "left": "Uma classe base que um framework exige",
+        "right": "Uma subclasse"
+      }
+    ],
+    "right_distractors": [
+      "Uma segunda superclasse"
+    ]
+  },
+  "ex-c6a9q0qn": {
+    "prompt": "Ponha em ordem os passos para transformar a árvore da seção 02 no desenho da seção 03.",
+    "items": [
+      "Perguntar o que cada item sabe fazer, não o que ele é",
+      "Escrever um protocolo pequeno por capacidade",
+      "Fazer cada tipo conformar às capacidades que tem",
+      "Escrever funções que pedem só o que usam"
+    ]
+  },
+  "ex-nmdeer56": {
+    "prompt": "O planner acrescenta uma `Lecture` com tempo e título. Usando as seções 03 e 04, quanto código novo ela precisa para ganhar `label`, `isLong` e lugar no `totalMinutes`?",
+    "choices": [
+      {
+        "text": "Uma cópia de cada extensão, adaptada a `Lecture`",
+        "why": "Copiar é o que a árvore obrigava; aqui as extensões são compartilhadas."
+      },
+      {
+        "text": "Uma superclasse `TimedTitled` de que herdar",
+        "why": "Nenhuma classe está envolvida; a `Lecture` seria uma struct."
+      },
+      {
+        "text": "As propriedades armazenadas e `: Titled, Timed`",
+        "why": "Isso: o comportamento segue a capacidade."
+      },
+      {
+        "text": "Uma sobrescrita de cada um dos três membros",
+        "why": "Nada precisa ser sobrescrito, e auxiliares não devem ser redeclarados."
+      }
+    ]
+  }
+}
