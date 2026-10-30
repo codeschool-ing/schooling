@@ -121,7 +121,7 @@ Q("ex-5zgmmk0q", "list-performance", "quiz", "medium",
 Q("ex-ayjed0g8", "list-performance", "quiz", "hard",
   ("When does a fixed `getItemLayout` become wrong for the planner's rows?", "Quando um `getItemLayout` fixo fica errado para as linhas do planner?"),
   choices=[
-   C(False, "When the list passes a hundred items", "Quando a lista passa de cem itens", "The count does not matter.", "A contagem não importa."),
+   C(False, "When the list passes a hundred items", "Quando a lista passa de cem itens e começa a reciclar", "The count does not matter.", "A contagem não importa."),
    C(True, "When the person's text size grows the rows", "Quando a pessoa aumenta o tamanho do texto",
      "Right: 62 is the height at the default size.", "Isso: 62 é a altura no tamanho padrão."),
    C(False, "In dark mode", "No modo escuro", "Colours do not change height.", "Cores não mudam altura."),
