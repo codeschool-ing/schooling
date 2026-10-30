@@ -49,6 +49,7 @@ case "${1:-}" in
     fence "$COURSE/lessons/le-c0fx9rz5/provider.md" 1     # Terraform
     fence "$COURSE/lessons/le-zk4hkc0n/sdk.md" 1          # the OpenTelemetry SDK
     fence "$COURSE/lessons/le-0v5fmzyc/envelope.md" 1     # cryptography
+    fence "$COURSE/lessons/le-5gd6cxjh/wire.md" 1         # the Functions Framework
     ;;
   *)
     echo "usage: bash lab.sh student|tools" >&2
