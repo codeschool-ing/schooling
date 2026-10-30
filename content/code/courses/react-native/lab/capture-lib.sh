@@ -50,24 +50,27 @@ put() {   # put MD FILE DEST
     { echo "put: no listing of $file in $md" >&2; exit 1; }
   chown -R ana:ana "$H"
 }
-SERVER=
+SERVERS=
 serve() { # serve DIR PORT 'command'
-  # The server runs under its own `lab.sh as`, in the background, in a session
+  # Each server runs under its own `lab.sh as`, in the background, in a session
   # of its own: a server started inside a `run` dies with that run's PID
-  # namespace the moment the command returns. unserve kills the session.
+  # namespace the moment the command returns. unserve kills every session.
+  # What the server prints goes to ~/.serve-PORT.log; `served PORT` shows it.
   local dir=$1 port=$2; shift 2
-  setsid bash "$RN_COURSE/lab.sh" as "$LID" "cd $dir && exec $*" </dev/null >"$H/.serve.log" 2>&1 &
-  SERVER=$!
+  setsid bash "$RN_COURSE/lab.sh" as "$LID" "cd $dir && exec $*" </dev/null >"$H/.serve-$port.log" 2>&1 &
+  SERVERS="$SERVERS $!"
   for _ in $(seq 100); do
     curl -s --noproxy '*' -o /dev/null "http://127.0.0.1:$port/" && return 0
     sleep 0.2
   done
-  echo "serve: nothing answered on port $port" >&2; cat "$H/.serve.log" >&2; exit 1
+  echo "serve: nothing answered on port $port" >&2; cat "$H/.serve-$port.log" >&2; exit 1
 }
+served() { cat "$H/.serve-$1.log"; }
 unserve() {
-  [ -n "$SERVER" ] || return 0
-  kill -- -"$SERVER" 2>/dev/null; wait "$SERVER" 2>/dev/null; rm -f "$H/.serve.log"
-  SERVER=; sleep 0.5
+  [ -n "$SERVERS" ] || return 0
+  for s in $SERVERS; do kill -- -"$s" 2>/dev/null; wait "$s" 2>/dev/null; done
+  rm -f "$H"/.serve-*.log
+  SERVERS=; sleep 0.5
 }
 trap unserve EXIT
 start_from() {
