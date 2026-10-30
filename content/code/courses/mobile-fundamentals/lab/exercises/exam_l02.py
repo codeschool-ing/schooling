@@ -44,10 +44,10 @@ Q(None, None, "quiz", "hard",
   ("A team chose React Native to write the app once. Its main feature turns out to be a sensor no library supports. What has the choice now cost them?",
    "Uma equipe escolheu React Native para escrever o app uma vez. O recurso principal acaba sendo um sensor que nenhuma biblioteca suporta. O que a escolha passou a custar?"),
   hint=H(2), choices=[
-   C(True, "Writing the sensor's native module themselves, in Kotlin and in Swift", "Escrever o native module do sensor por conta própria, em Kotlin e em Swift",
+   C(True, "Their own native module, in Kotlin and Swift", "Um native module próprio, em Kotlin e em Swift",
      "Right. The far side of the border is platform code, and here nobody has written it yet.", "Isso. O outro lado da fronteira é código da plataforma, e aqui ninguém o escreveu ainda."),
    C(False, "Nothing: JavaScript reaches any API", "Nada: o JavaScript alcança qualquer API", "JavaScript cannot call a platform API directly.", "O JavaScript não chama uma API da plataforma diretamente."),
    C(False, "Moving the sensor code into a WebView", "Levar o código do sensor para uma WebView", "A WebView reaches less of the device, not more.", "Uma WebView alcança menos do aparelho, não mais."),
-   C(False, "Rewriting the screens in Dart", "Reescrever as telas em Dart", "Flutter would face the same border, through a platform channel.", "O Flutter enfrentaria a mesma fronteira, por um platform channel."),
+   C(False, "Rewriting the screens in Dart, so Flutter can reach it", "Reescrever as telas em Dart, para o Flutter alcançá-lo", "Flutter would face the same border, through a platform channel.", "O Flutter enfrentaria a mesma fronteira, por um platform channel."),
   ]),
 ]

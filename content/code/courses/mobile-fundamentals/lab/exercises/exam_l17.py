@@ -8,7 +8,7 @@ Q(None, None, "quiz", "medium",
   choices=[
    C(False, "The new phone blocks notifications from apps restored from a backup", "O celular novo bloqueia notificações de apps restaurados de backup",
      "Nothing blocks them; they are addressed to the wrong place.", "Nada as bloqueia; elas são endereçadas ao lugar errado."),
-   C(True, "The new phone has a new token, and the server still uses the old one", "O celular novo tem um token novo, e o servidor ainda usa o antigo",
+   C(True, "A new phone means a new token; the server still holds the old one", "O celular novo tem um token novo, e o servidor ainda usa o antigo",
      "Right. The app should send its token at every launch, and the server keep it current.", "Isso. O app deve mandar o token a cada abertura, e o servidor mantê-lo atualizado."),
    C(False, "Tokens expire after a fixed number of messages", "Tokens expiram depois de um número fixo de mensagens",
      "They change on events such as a new device, not on a count.", "Eles mudam em eventos como um aparelho novo, não por contagem."),

@@ -36,7 +36,7 @@ Q(None, None, "quiz", "hard",
   hint=H(11), choices=[
    C(False, "Outside the app, because the stack held one screen", "Fora do app, porque a pilha tinha uma tela",
      "That is the stack nobody built; the principles ask for a synthetic one.", "Essa é a pilha que ninguém montou; os princípios pedem uma sintética."),
-   C(True, "On the screen above the detail, as if they had tapped their way in", "Na tela acima do detalhe, como se tivesse entrado tocando",
+   C(True, "One level up, as if they had tapped their way in", "Um nível acima, como se tivesse entrado tocando",
      "Right: a synthetic back stack the person could have reached.", "Isso: uma pilha sintética que a pessoa poderia ter montado."),
    C(False, "On the app's last screen from the previous session", "Na última tela do app na sessão anterior",
      "Following a link replaces the old stack.", "Seguir um link substitui a pilha antiga."),

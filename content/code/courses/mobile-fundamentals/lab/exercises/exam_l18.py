@@ -48,7 +48,7 @@ Q(None, None, "quiz", "hard",
   ("An Android app wants its brand's own green on every phone, including on Android 12 and later. What does it do about dynamic colour?",
    "Um app Android quer o verde da própria marca em todo celular, inclusive do Android 12 em diante. O que ele faz com a cor dinâmica?"),
   hint=H, choices=[
-   C(True, "Keeps its own colour scheme and does not ask for a dynamic one", "Mantém o próprio esquema de cor e não pede um dinâmico",
+   C(True, "Keeps its scheme and never opts in", "Mantém o esquema e nunca opta por ela",
      "Right: dynamic colour is offered to an app that asks, never imposed.", "Isso: a cor dinâmica é oferecida a quem pede, nunca imposta."),
    C(False, "Nothing it can do: Android 12 replaces every app's colours with the wallpaper's", "Não há o que fazer: o Android 12 troca as cores de todo app pelas do papel de parede",
      "The system offers a scheme; the app decides whether to use it.", "O sistema oferece um esquema; o app decide se usa."),
