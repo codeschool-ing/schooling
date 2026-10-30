@@ -1,0 +1,503 @@
+[
+  {
+    "id": "ex-7275ake7",
+    "version": 1,
+    "section": "secrets-in-the-app",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service key is compiled into the planner. Who can read it?",
+    "choices": [
+      {
+        "text": "The team, since the binary is minified",
+        "correct": false,
+        "why": "Minifying removes whitespace, not strings; grep found it in one command."
+      },
+      {
+        "text": "Nobody, if it is encoded in base64 first",
+        "correct": false,
+        "why": "Encoding changes the command used to find it, and nothing else."
+      },
+      {
+        "text": "Anybody who downloads the app",
+        "correct": true,
+        "why": "Right. Treat it as published on the day the app reaches the store."
+      },
+      {
+        "text": "Whoever roots the phone first and digs through it",
+        "correct": false,
+        "why": "No root is needed: the app's package is a download anybody can unpack."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ga74r47",
+    "version": 1,
+    "section": "secrets-in-the-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "app.ts never read `tipsApiKey`. Why was the key in dist/app.js anyway?",
+    "choices": [
+      {
+        "text": "The build embeds the whole configuration it reads",
+        "correct": true,
+        "why": "Right. A key anywhere in what the build reads ships, used or not."
+      },
+      {
+        "text": "A bug in bundle.ts that a real bundler would not have",
+        "correct": false,
+        "why": "Real builds do the same with BuildConfig, Info.plist and EXPO_PUBLIC_ variables."
+      },
+      {
+        "text": "Node copies the JSON files it sees into the bundle",
+        "correct": false,
+        "why": "bundle.ts copied config.json on purpose, as a build does."
+      },
+      {
+        "text": "grep reads the source as well",
+        "correct": false,
+        "why": "It read dist/app.js and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhjg7nd3",
+    "version": 1,
+    "section": "secrets-in-the-app",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the planner gain by moving the tips key to its own server? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the key is no longer in anything a person downloads",
+        "correct": true,
+        "why": "It lives in the server's environment."
+      },
+      {
+        "text": "requests can be refused to people not signed in",
+        "correct": true,
+        "why": "The server checks the access token first."
+      },
+      {
+        "text": "the key can change without a store release",
+        "correct": true,
+        "why": "Only the server knows it."
+      },
+      {
+        "text": "the app can work with no network",
+        "why": "A tip still needs a request; this is about where the key lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-ftp5qgws",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the lesson keep the refresh token on a phone?",
+    "choices": [
+      {
+        "text": "In SharedPreferences or UserDefaults, beside the settings",
+        "correct": false,
+        "why": "Preferences are plain files in the sandbox and go into backups."
+      },
+      {
+        "text": "In the database, encrypted with the data key",
+        "correct": false,
+        "why": "The keystore is the place for it; it is the account's key."
+      },
+      {
+        "text": "Nowhere; it is asked for each time",
+        "correct": false,
+        "why": "Then the person would type the password each time."
+      },
+      {
+        "text": "In the platform's Keystore or Keychain",
+        "correct": true,
+        "why": "Right. In the course, keystore/ stands in for them."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn7wcsv7",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does rotating the refresh token buy?",
+    "choices": [
+      {
+        "text": "Shorter requests",
+        "correct": false,
+        "why": "The size is the same."
+      },
+      {
+        "text": "A copied refresh token works once at most, and its reuse shows",
+        "correct": true,
+        "why": "Right. Each use spends the old one and returns a new one."
+      },
+      {
+        "text": "No need for an access token",
+        "correct": false,
+        "why": "The access token is still sent on every request."
+      },
+      {
+        "text": "The password can be kept on the phone instead",
+        "correct": false,
+        "why": "The password is typed once and kept nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-h67nm1nz",
+    "version": 1,
+    "section": "tokens",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what the client did for `node client.ts tip guitar` after the pause.",
+    "items": [
+      "sent the request with the access token",
+      "got a 401",
+      "spent the refresh token for a new pair",
+      "sent the request again and got a 200"
+    ]
+  },
+  {
+    "id": "ex-08nwm6fa",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A person signs out in a tunnel, with no network. What does the lesson say the planner does?",
+    "choices": [
+      {
+        "text": "Refuses to sign out until the server confirms the revoke",
+        "correct": false,
+        "why": "The person expects to be signed out now."
+      },
+      {
+        "text": "Wipes now, and queues the revoke",
+        "correct": true,
+        "why": "Right. The revoke goes in the outbox; the wipe does not wait."
+      },
+      {
+        "text": "Signs out, and keeps the data for when the network returns",
+        "correct": false,
+        "why": "Keeping it leaves one person's data for the next."
+      },
+      {
+        "text": "Deletes the server's copy of the sessions",
+        "correct": false,
+        "why": "Signing out is not deleting the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-081av5fh",
+    "version": 1,
+    "section": "tokens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's server, how many seconds does an access token live when ACCESS_TTL is not set?",
+    "value": 900,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6f1m7hy9",
+    "version": 1,
+    "section": "keep-less",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson ask of each field the planner keeps or sends?",
+    "choices": [
+      {
+        "text": "Could it be useful one day?",
+        "correct": false,
+        "why": "That question keeps everything."
+      },
+      {
+        "text": "Does the store's form have a box for it?",
+        "correct": false,
+        "why": "The form follows from what is kept, not the other way round."
+      },
+      {
+        "text": "Is it encrypted on the way to the server?",
+        "correct": false,
+        "why": "That matters, and it is a different question."
+      },
+      {
+        "text": "What breaks if it is not there?",
+        "correct": true,
+        "why": "Right. If nothing breaks, it is not needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnc2asvx",
+    "version": 1,
+    "section": "keep-less",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The fixed log line says `sync failed for account acc-0193: session s5`. Why is that enough to fix a sync?",
+    "choices": [
+      {
+        "text": "The ids say which rows to look at",
+        "correct": true,
+        "why": "Right, and the data is on the server for whoever may look."
+      },
+      {
+        "text": "Because sync failures need no investigation",
+        "correct": false,
+        "why": "They do; the ids are what the investigation needs."
+      },
+      {
+        "text": "Because the crash reporter adds the e-mail address itself",
+        "correct": false,
+        "why": "That would be the same leak by another road."
+      },
+      {
+        "text": "Because the notes are in the id",
+        "correct": false,
+        "why": "An id carries no data about the person."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4r60bn5",
+    "version": 1,
+    "section": "keep-less",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lesson finds the leaked address with `___ -E -o '[a-z.]+@[a-z.]+' app.log`.",
+    "blanks": [
+      {
+        "accept": [
+          "grep"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nv2rhghm",
+    "version": 1,
+    "section": "store-declarations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sessions stay in the planner's local database and are never sent anywhere. Do the stores count them as collected?",
+    "choices": [
+      {
+        "text": "Yes: anything the app stores is collected",
+        "correct": false,
+        "why": "Both stores draw the line at leaving the device."
+      },
+      {
+        "text": "On Google Play, not on the App Store",
+        "correct": false,
+        "why": "Apple draws the same line."
+      },
+      {
+        "text": "No, not until they leave the device",
+        "correct": true,
+        "why": "Right. The day the outbox sends them, they go on the form."
+      },
+      {
+        "text": "If they are encrypted on the phone with a data key the Keystore wraps",
+        "correct": false,
+        "why": "Encryption does not change whether data is collected."
+      }
+    ]
+  },
+  {
+    "id": "ex-az3kn9cn",
+    "version": 1,
+    "section": "store-declarations",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each item to the store that asks for it.",
+    "pairs": [
+      {
+        "left": "the Data safety section",
+        "right": "Google Play"
+      },
+      {
+        "left": "PrivacyInfo.xcprivacy",
+        "right": "the App Store"
+      },
+      {
+        "left": "whether data is linked to the person and used for tracking",
+        "right": "Apple's App Privacy details"
+      }
+    ],
+    "right_distractors": [
+      "neither store"
+    ]
+  },
+  {
+    "id": "ex-n9aczg3b",
+    "version": 1,
+    "section": "store-declarations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner adds a crash reporter that sends the device model with each report. What does the lesson say about the forms?",
+    "choices": [
+      {
+        "text": "It collects on the app's behalf, so the answers must change",
+        "correct": true,
+        "why": "Right. One new library can make last month's answers false."
+      },
+      {
+        "text": "The privacy manifest changes, and the forms stay",
+        "correct": false,
+        "why": "The Data safety form and the App Privacy details change too."
+      },
+      {
+        "text": "The model is not personal data, so it is left off",
+        "correct": false,
+        "why": "Device data is among the types both forms list."
+      },
+      {
+        "text": "Nothing changes: the library declares itself",
+        "correct": false,
+        "why": "The store counts the library's collection as the app's."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8j3xj5s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team hides its key by splitting it in two strings and joining them at run time. What does the lesson's reasoning say they bought?",
+    "choices": [
+      {
+        "text": "A key the store cannot reject",
+        "correct": false,
+        "why": "The store is not the threat here."
+      },
+      {
+        "text": "Safety from grep, which is how keys are found",
+        "correct": false,
+        "why": "grep is one tool of many; running the app reveals the joined key."
+      },
+      {
+        "text": "A different command to find it, and nothing else",
+        "correct": true,
+        "why": "Right. The app has to use the key, so the app can be made to show it."
+      },
+      {
+        "text": "The same protection as the Keystore gives",
+        "correct": false,
+        "why": "The Keystore never hands the key to the app at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq0h917m",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `node client.ts signout` do in the lesson's run? Choose all that apply.",
+    "choices": [
+      {
+        "text": "asked the server to revoke the refresh token",
+        "correct": true,
+        "why": "POST /revoke -> 200 in the server's log."
+      },
+      {
+        "text": "removed the keystore, the database and the cache",
+        "correct": true,
+        "why": "It printed each one."
+      },
+      {
+        "text": "deleted the account on the server",
+        "why": "Signing out is not deleting the account."
+      },
+      {
+        "text": "kept the access token for the next sign-in",
+        "why": "The next request got a 401."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp3trbvx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson put deciding about unsent outbox sessions to the person at sign-out?",
+    "choices": [
+      {
+        "text": "The outbox cannot be wiped",
+        "correct": false,
+        "why": "It can; the question is whether it should be."
+      },
+      {
+        "text": "Wiping loses work; keeping leaves her data to the next person",
+        "correct": true,
+        "why": "Right. Both are costs only she can weigh, so the planner says how many there are."
+      },
+      {
+        "text": "The stores require a confirmation dialog at each sign-out",
+        "correct": false,
+        "why": "No store rule is involved."
+      },
+      {
+        "text": "The server deletes them anyway",
+        "correct": false,
+        "why": "The server never received them."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0radrn3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which required-reason API category does the lesson's privacy manifest give the reason E174.1?",
+    "choices": [
+      {
+        "text": "UserDefaults",
+        "correct": false,
+        "why": "That one gets CA92.1."
+      },
+      {
+        "text": "The keyboards installed on the phone",
+        "correct": false,
+        "why": "The planner does not call it."
+      },
+      {
+        "text": "The system's boot time, used to measure how long the phone has been on",
+        "correct": false,
+        "why": "The planner does not call it."
+      },
+      {
+        "text": "Disk space",
+        "correct": true,
+        "why": "Right: checking there is room before writing, as lesson 18 did."
+      }
+    ]
+  }
+]
