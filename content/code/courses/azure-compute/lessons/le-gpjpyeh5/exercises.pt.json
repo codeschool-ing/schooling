@@ -1,0 +1,461 @@
+{
+  "ex-8bkgh4ed": {
+    "prompt": "Você roda `az container create` com uma imagem e nada de diferente. O que o Azure cria?",
+    "hint": "Pense em qual recurso é nomeado, cobrado e apagado.",
+    "choices": [
+      {
+        "text": "Uma máquina virtual sua, do tamanho da imagem, que a roda",
+        "why": "Não há máquina sua: o host é da Microsoft e você nunca o vê."
+      },
+      {
+        "text": "Um grupo de contêineres com um contêiner",
+        "why": "O grupo é o recurso de nível mais alto, e um grupo de um é o caso comum."
+      },
+      {
+        "text": "Um contêiner sozinho, sem grupo, já que grupo exige dois",
+        "why": "Um grupo de um contêiner continua sendo um grupo; cada configuração é dele ou do contêiner dele."
+      },
+      {
+        "text": "Um pod num cluster AKS que o Azure gerencia por você",
+        "why": "O Container Instances não tem cluster em volta do grupo; o AKS é a lição 11."
+      }
+    ]
+  },
+  "ex-24qr1tzt": {
+    "prompt": "A loja e um sidecar de monitoramento rodam num só grupo de contêineres. Quais destas coisas os dois contêineres compartilham? Marque todas as que valem.",
+    "hint": "Quatro coisas são compartilhadas; a lista tem três delas.",
+    "choices": [
+      {
+        "text": "O host em que são colocados",
+        "why": "Os contêineres de um grupo são agendados numa máquina só."
+      },
+      {
+        "text": "Um endereço IP público cada, para que qualquer um seja chamado direto",
+        "why": "O grupo tem um endereço; os contêineres atrás dele se distinguem pela porta."
+      },
+      {
+        "text": "O `localhost`, em qualquer porta, aberta ou não",
+        "why": "É assim que o sidecar alcança `localhost:8080/healthz` sem endereço próprio."
+      },
+      {
+        "text": "Uma conta separada por contêiner, pelo tempo que cada um roda",
+        "why": "O grupo é cobrado como um só, pelo que os contêineres pedem, enquanto qualquer um deles roda."
+      },
+      {
+        "text": "Um ciclo de vida: iniciam, param e reiniciam juntos",
+        "why": "Reiniciar ou atualizar o grupo reinicia todos os contêineres dele."
+      }
+    ]
+  },
+  "ex-qr5at9ns": {
+    "prompt": "Um grupo de contêineres Linux tem três contêineres, que pedem 1,5 GB, 0,5 GB e 1 GB de memória, e nenhum define limite. Quantos gigabytes de memória o grupo recebe?",
+    "hint": "O que o grupo recebe é montado a partir dos pedidos dos contêineres.",
+    "unit": "GB"
+  },
+  "ex-xqskf1a0": {
+    "prompt": "O job do relatório precisa ser alcançável do escritório por uma VPN, e a equipe também o quer num nome DNS público. Um grupo de contêineres consegue as duas coisas?",
+    "hint": "Leia as regras que vêm com um grupo numa rede virtual.",
+    "choices": [
+      {
+        "text": "Sim, depois que a sub-rede for delegada ao Container Instances",
+        "why": "A delegação é o que deixa o grupo entrar na sub-rede; ela não acrescenta cara pública."
+      },
+      {
+        "text": "Sim, se o rótulo DNS for acrescentado depois que o grupo estiver na sub-rede",
+        "why": "A CLI recusa `--dns-name-label` com `--vnet`, e a regra do próprio Azure é a mesma: sem rótulo numa rede virtual."
+      },
+      {
+        "text": "Não: um grupo numa rede virtual não ganha endereço público nem rótulo DNS",
+        "why": "É um ou o outro. Uma cara pública para um grupo privado vem de alguma coisa na frente dele."
+      },
+      {
+        "text": "Sim, desde que o NAT gateway tenha um endereço IP público",
+        "why": "O NAT gateway leva as conexões de saída do grupo; nada entra por ele."
+      }
+    ]
+  },
+  "ex-rvq4xn7h": {
+    "prompt": "O sistema de um parceiro chama o grupo da loja pelo endereço IP público, que ele copiou na configuração. O que vai dar errado, e o que ele deveria usar?",
+    "hint": "O que a Microsoft diz sobre o endereço quando um grupo reinicia?",
+    "choices": [
+      {
+        "text": "Nada: o endereço é do grupo até o grupo ser apagado",
+        "why": "Ele é liberado quando o grupo é apagado, e também pode mudar quando o grupo reinicia."
+      },
+      {
+        "text": "Ele não é fixo entre reinícios; deveria usar o rótulo DNS",
+        "why": "O rótulo, `shop-sp.brazilsouth.azurecontainer.io`, é a metade estável."
+      },
+      {
+        "text": "Todos os grupos da região dividem o endereço; falta acrescentar a porta",
+        "why": "O endereço público de um grupo é só dele; a porta já era necessária de qualquer forma."
+      },
+      {
+        "text": "O endereço é trocado todo dia, então ele deveria consultá-lo de novo toda manhã",
+        "why": "Não há agenda nenhuma. Ele pode mudar num reinício, por isso nada deve guardá-lo."
+      }
+    ]
+  },
+  "ex-myghmxzw": {
+    "prompt": "Por que o `app.py` escuta em `0.0.0.0` e não em `127.0.0.1`?",
+    "hint": "De onde chega, para o contêiner, uma requisição publicada com `-p 8080:8080`?",
+    "choices": [
+      {
+        "text": "`0.0.0.0` põe a loja na internet; `127.0.0.1` a mantém no laptop",
+        "why": "Escutar em todas as interfaces dentro do contêiner não expõe nada por si; quem expõe é a porta publicada."
+      },
+      {
+        "text": "O `ThreadingHTTPServer` recusa `127.0.0.1` quando roda como `nobody`",
+        "why": "Qualquer usuário pode escutar no endereço de loopback; o problema é quem consegue alcançá-lo."
+      },
+      {
+        "text": "Um servidor em `127.0.0.1` dentro de um contêiner não é alcançável de fora dele",
+        "why": "As requisições chegam pela interface de rede do contêiner, e o endereço de loopback não está nela."
+      },
+      {
+        "text": "O Docker reescreve `127.0.0.1` para o endereço do host, então os dois funcionariam",
+        "why": "O Docker não reescreve nada no programa; a segunda chamada da transcrição do sidecar mostra o que é um `localhost` separado."
+      }
+    ]
+  },
+  "ex-xx0qp9k9": {
+    "prompt": "O segundo `docker run`, iniciado sem `--network container:shop`, pediu `http://localhost:8080/healthz` e recebeu `Connection refused`. Por quê?",
+    "hint": "De quem era aquele `localhost`?",
+    "choices": [
+      {
+        "text": "O `localhost` era só dele, e nada estava escutando na porta 8080 ali",
+        "why": "Sem a flag ele tem rede própria; com ela, divide a da loja, como num grupo."
+      },
+      {
+        "text": "A loja só aceita conexões de contêineres de outra imagem",
+        "why": "Os dois contêineres usaram `shop:1.0`, e a primeira chamada foi respondida."
+      },
+      {
+        "text": "A loja ainda respondia à primeira chamada e recusou a segunda",
+        "why": "O `ThreadingHTTPServer` responde cada requisição numa thread própria; nada ficou na fila."
+      },
+      {
+        "text": "`USER nobody` não pode abrir conexões de rede dentro de um contêiner",
+        "why": "A primeira chamada também rodou como `nobody`, e foi respondida."
+      }
+    ]
+  },
+  "ex-gh5q28ke": {
+    "prompt": "A flag `--network ___:shop` do Docker inicia um novo dentro da rede do `shop` em execução, o arranjo que um grupo dá aos membros dele.",
+    "hint": "A palavra que o Docker usa, em inglês, para o que ele roda.",
+    "blanks": [
+      {
+        "accept": [
+          "container"
+        ]
+      }
+    ]
+  },
+  "ex-gmcgcazx": {
+    "prompt": "Ponha em ordem os passos para rodar a loja no seu laptop.",
+    "hint": "Arquivos, depois uma imagem, depois um contêiner, depois tráfego, depois o que ele escreveu.",
+    "items": [
+      "Salvar o `app.py` e o `Dockerfile` em `~/azure/shop`",
+      "Construir a imagem com `docker build --tag shop:1.0 shop`",
+      "Iniciá-la com `docker run -d --name shop -p 8080:8080 shop:1.0`",
+      "Chamar `curl localhost:8080/version`",
+      "Ler a linha da requisição com `docker logs shop`"
+    ],
+    "trap": "A linha de log de uma requisição só existe depois da requisição; `docker logs` antes de qualquer `curl` mostra só a linha impressa ao iniciar."
+  },
+  "ex-kwc0xwj8": {
+    "prompt": "Uma desenvolvedora constrói `shop:1.0` num Mac com Apple silicon, envia a imagem, e o grupo de contêineres no Azure não inicia. Qual é a causa mais provável?",
+    "hint": "Para quais processadores o Container Instances roda imagens?",
+    "choices": [
+      {
+        "text": "`python:3.12-slim` não está entre as imagens base que o Azure permite",
+        "why": "Qualquer imagem num registro que o Azure alcance pode ser usada; nada restringe a base."
+      },
+      {
+        "text": "A imagem é só `arm64`, e o Container Instances roda imagens x64",
+        "why": "Construa com `--platform linux/amd64`; a Microsoft diz que uma imagem só `arm64` pode não iniciar."
+      },
+      {
+        "text": "O Container Instances recusa uma imagem cujo `Dockerfile` diz `USER nobody`",
+        "why": "Rodar com um usuário que não é root é permitido; só uma montagem do Azure Files exige root."
+      },
+      {
+        "text": "A porta 8080 é uma das que o Container Instances reserva para si",
+        "why": "A lista de reservadas inclui a 22 e a 3389, e não inclui a 8080."
+      }
+    ]
+  },
+  "ex-8m78y2xm": {
+    "prompt": "Um colega cria o grupo da loja com `--image`, `--ip-address Public` e `--dns-name-label shop-sp`, e nenhuma outra flag. Ele roda, e ninguém consegue alcançá-lo. Por quê?",
+    "hint": "Leia o valor padrão de uma flag no texto de ajuda.",
+    "choices": [
+      {
+        "text": "Sem `--cpu` e `--memory` o grupo inicia sem recurso nenhum",
+        "why": "O grupo rodou; um grupo pequeno demais para rodar não apareceria rodando."
+      },
+      {
+        "text": "Um rótulo DNS leva um dia para ser publicado, então o nome ainda não responde",
+        "why": "Nada na documentação descreve uma espera assim, e o endereço IP também não responderia."
+      },
+      {
+        "text": "Um grupo público precisa de balanceador de carga antes de receber tráfego",
+        "why": "Um grupo público é alcançado direto pelo endereço; balanceador é para vários grupos."
+      },
+      {
+        "text": "Sem `--ports`, a CLI abre a porta 80, e a loja escuta na 8080",
+        "why": "A ajuda diz `Default: [80]`. O grupo não responde a ninguém na 80 e está com a 8080 fechada."
+      }
+    ]
+  },
+  "ex-0f3x7d7a": {
+    "prompt": "Ligue cada carga de trabalho à política de reinício que serve para ela.",
+    "hint": "Pergunte o que deve acontecer depois de uma saída limpa, e depois de uma com falha.",
+    "pairs": [
+      {
+        "left": "A API de pedidos, que nunca deveria parar",
+        "right": "Always"
+      },
+      {
+        "left": "O relatório noturno, tentado de novo se cair, encerrado quando dá certo",
+        "right": "OnFailure"
+      },
+      {
+        "left": "Um job que não pode iniciar de novo depois de ter dado certo",
+        "right": "Never"
+      }
+    ],
+    "right_distractors": [
+      "OnFailure, com no máximo três novas tentativas"
+    ]
+  },
+  "ex-0n4yznc6": {
+    "prompt": "Um arquivo Bicep com `restartPolicy: 'OnFaliure'` compilou sem aviso, e a mesma palavra dada ao `az container create` foi recusada. O que as duas respostas dizem?",
+    "hint": "Qual dos dois tem a própria lista de valores permitidos?",
+    "choices": [
+      {
+        "text": "O compilador corrigiu a grafia no template, então o arquivo está seguro",
+        "why": "O `jq` leu `OnFaliure` de volta do `typo.json`; nada foi corrigido."
+      },
+      {
+        "text": "A CLI está desatualizada, e a versão `2025-09-01` da API trouxe a palavra",
+        "why": "Essa política não existe; as três são `Always`, `OnFailure` e `Never`."
+      },
+      {
+        "text": "O Azure trata uma política desconhecida como `Always`, então o grupo roda",
+        "why": "Nada na documentação diz o que o Azure faz com ela; só uma implantação mostraria."
+      },
+      {
+        "text": "O compilador aceita qualquer texto ali, então conferir o valor é com você",
+        "why": "Os tipos dele permitem as três palavras e qualquer outro texto; a CLI confere a própria lista."
+      }
+    ]
+  },
+  "ex-9kchv869": {
+    "prompt": "Um grupo tem dois contêineres, cada um pedindo 1 CPU. Um deles faz um trabalho mais pesado e recebe um limite de CPU. Qual é o maior limite, em CPUs, que ele pode receber?",
+    "hint": "Um limite pode ir até o que o grupo inteiro recebeu.",
+    "unit": "CPUs"
+  },
+  "ex-wes700mv": {
+    "prompt": "O grupo do relatório foi criado com `Always` por engano, e toda noite inicia o relatório de novo assim que ele termina. Como ele passa para `OnFailure`?",
+    "hint": "Algumas propriedades de um grupo não podem ser atualizadas no lugar.",
+    "choices": [
+      {
+        "text": "Apagar o grupo e criá-lo de novo com `OnFailure`",
+        "why": "A política de reinício é uma das propriedades que exigem apagar o grupo antes, com a CPU, a memória, o tipo de SO, o perfil de rede e a zona."
+      },
+      {
+        "text": "Rodar o create de novo com `--restart-policy OnFailure`, e os contêineres reiniciam no lugar",
+        "why": "É assim que muda uma propriedade atualizável; a política de reinício não é uma delas."
+      },
+      {
+        "text": "Rodar `az container restart` com a política nova, que vale a partir do próximo início",
+        "why": "Um reinício roda o grupo de novo com a configuração que ele tem; não recebe política nova."
+      },
+      {
+        "text": "Parar o grupo, mudar a política e iniciá-lo de novo, mantendo o endereço",
+        "why": "Um grupo parado não pode ser editado para outra política, e o endereço nunca foi garantido, de todo modo."
+      }
+    ]
+  },
+  "ex-ssbggqgs": {
+    "prompt": "Qual das cargas de trabalho da loja combina pior com um grupo de contêineres?",
+    "hint": "Qual delas tem clientes esperando o dia inteiro, durante toda implantação?",
+    "choices": [
+      {
+        "text": "O relatório de vendas noturno",
+        "why": "Um job que roda, escreve um arquivo e termina é o caso em que o Container Instances é melhor."
+      },
+      {
+        "text": "A API de pedidos",
+        "why": "Ela precisa de cópias sob carga e de atualizações sem interrupção, e um grupo não tem nenhuma das duas."
+      },
+      {
+        "text": "A exportação mensal do financeiro",
+        "why": "Outro job: iniciado, terminado, cobrado pelos minutos."
+      },
+      {
+        "text": "Uma rodada de testes de um pull request",
+        "why": "Um contêiner que roda os testes e para é o caso do agente de build que a Microsoft cita."
+      }
+    ]
+  },
+  "ex-33fmnpd9": {
+    "prompt": "Quais destas coisas um grupo de contêineres sozinho NÃO dá? Marque todas as que valem.",
+    "hint": "Faltam três coisas que um orquestrador faz.",
+    "choices": [
+      {
+        "text": "Uma segunda cópia iniciada quando a primeira está ocupada",
+        "why": "Um grupo não guarda contagem; mais grupos são você quem cria."
+      },
+      {
+        "text": "Um job que para de ser cobrado depois de terminar",
+        "why": "Com `OnFailure` ou `Never`, um grupo terminado para, e o medidor também."
+      },
+      {
+        "text": "Uma versão nova implantada sem interromper o serviço",
+        "why": "Uma atualização reinicia todos os contêineres no lugar, e ninguém responde enquanto isso."
+      },
+      {
+        "text": "Um endereço na frente de várias cópias da loja",
+        "why": "Um grupo não tem balanceador de carga próprio; a Microsoft documenta como pôr um Standard Load Balancer numa rede virtual."
+      },
+      {
+        "text": "Um sidecar que alcança a loja por `localhost`",
+        "why": "É exatamente isso o que um grupo dá aos contêineres dele."
+      }
+    ]
+  },
+  "ex-cwa0hw6c": {
+    "prompt": "A imagem do relatório é construída como a da loja, com `USER nobody`, e monta um compartilhamento do Azure Files para a saída. O que a documentação da Microsoft diz dessa combinação?",
+    "hint": "A documentação põe uma condição sobre o usuário dentro do contêiner.",
+    "choices": [
+      {
+        "text": "Uma montagem do Azure Files exige que o contêiner rode como root",
+        "why": "Então a imagem do relatório não pode rodar como `nobody`, e essa é uma troca a fazer sabendo."
+      },
+      {
+        "text": "Só funciona se o grupo estiver numa rede virtual",
+        "why": "Um grupo público também monta um compartilhamento; a rede virtual acrescenta a exigência de um service endpoint, não isso."
+      },
+      {
+        "text": "Um usuário que não é root só monta o compartilhamento como somente leitura",
+        "why": "Somente leitura é uma opção da montagem, não uma consequência do usuário."
+      },
+      {
+        "text": "O Azure Files só pode ser montado em contêineres Windows",
+        "why": "É o contrário: montagens de volume, Azure Files incluído, são só Linux."
+      }
+    ]
+  },
+  "ex-keh2zf9h": {
+    "prompt": "Um cluster AKS tem um nó virtual apoiado no Container Instances. Um pod é agendado nele. O que roda onde?",
+    "hint": "Qual dos dois é o orquestrador aqui?",
+    "choices": [
+      {
+        "text": "O Container Instances assume o agendamento do cluster inteiro",
+        "why": "O Kubernetes continua agendando; o nó virtual é mais um lugar onde ele pode pôr um pod."
+      },
+      {
+        "text": "O Azure acrescenta ao cluster uma máquina virtual mais rápido que o autoscaler",
+        "why": "Nenhuma máquina virtual é acrescentada; essa é a espera que o nó virtual evita."
+      },
+      {
+        "text": "O pod roda como um grupo de contêineres no Container Instances, posto ali pelo Kubernetes",
+        "why": "O nó se registra com capacidade ilimitada, e os pods dele rodam como grupos cobrados por segundo."
+      },
+      {
+        "text": "O pod roda nos nós do AKS, e o Container Instances só guarda a imagem dele",
+        "why": "Imagens ficam num registro; o pod em si roda no Container Instances."
+      }
+    ]
+  },
+  "ex-3txw6ec9": {
+    "prompt": "O NGroups mantém um número declarado de grupos de contêineres, cada um feito a partir de um modelo chamado container group ___.",
+    "hint": "A palavra, em inglês, para um modelo de configurações de que muitos grupos são feitos.",
+    "blanks": [
+      {
+        "accept": [
+          "profile"
+        ]
+      }
+    ]
+  },
+  "ex-7vxbn3e4": {
+    "prompt": "Um arquivo Bicep declara um grupo de contêineres Spot em `brazilsouth`, e compila sem aviso. O que a documentação da Microsoft diz sobre implantá-lo?",
+    "hint": "O compilador conhece tipos. O que ele não conhece?",
+    "choices": [
+      {
+        "text": "O Spot é um preview oferecido só em East US 2, West Europe e West US",
+        "why": "O compilador verifica tipos, não onde um recurso é oferecido."
+      },
+      {
+        "text": "Ele é implantado, com a política de remoção em apagar, a não ser que se escolha outra",
+        "why": "Grupos Spot não têm política de remoção para escolher; um grupo removido é reiniciado pelo Azure."
+      },
+      {
+        "text": "Ele é implantado, e ganha um endereço público assim que houver capacidade",
+        "why": "Um grupo Spot não ganha endereço público nenhum neste preview."
+      },
+      {
+        "text": "Ele é implantado em São Paulo, e Spot ali é só uma prioridade menor",
+        "why": "A documentação lista três regiões, e São Paulo não é uma delas."
+      }
+    ]
+  },
+  "ex-98jgvv1h": {
+    "prompt": "O grupo do relatório falhou na terça passada e está parado desde então. Alguém quer o log completo daquela noite. O que vai encontrar?",
+    "hint": "Veja o que fica guardado para um grupo rodando e para um parado.",
+    "choices": [
+      {
+        "text": "O log inteiro, guardado por 30 dias depois que o grupo parou",
+        "why": "Nenhuma retenção assim é documentada; um grupo parado guarda muito menos."
+      },
+      {
+        "text": "Nada, porque o log de um grupo parado é apagado junto com ele",
+        "why": "Alguma coisa fica, mas só 16 KB ou 1.000 linhas."
+      },
+      {
+        "text": "No máximo 16 KB ou 1.000 linhas, a não ser que tenha ido ao Log Analytics",
+        "why": "Um grupo rodando guarda 4 MB e um parado menos; um workspace guarda o resto."
+      },
+      {
+        "text": "O log de cada reinício, num arquivo separado por tentativa",
+        "why": "Não se descrevem arquivos por tentativa; o log do grupo é pequeno e limitado."
+      }
+    ]
+  },
+  "ex-r0rarhd9": {
+    "prompt": "O relatório noturno roda num grupo com `OnFailure`, cai uma vez e depois dá certo. Ponha em ordem o que acontece.",
+    "hint": "O medidor começa antes do programa.",
+    "items": [
+      "A primeira imagem começa a ser baixada, e o medidor começa",
+      "O relatório roda e sai com código 1",
+      "O contêiner é iniciado de novo",
+      "O relatório escreve o arquivo e sai com código 0",
+      "O grupo aparece como Terminated, e o medidor para"
+    ],
+    "trap": "Sob `OnFailure`, o código 0 é o fim; nada reinicia o contêiner depois disso."
+  },
+  "ex-warc6aag": {
+    "prompt": "A loja roda num grupo de contêineres. Você implanta `shop:1.1` rodando o create de novo com a imagem nova. O que os clientes veem?",
+    "hint": "Como uma atualização trata os contêineres de um grupo?",
+    "choices": [
+      {
+        "text": "Nada: o Azure inicia a 1.1 ao lado da 1.0 e move o tráfego quando ela está saudável",
+        "why": "Isso é uma atualização gradual, e um grupo sozinho não tem."
+      },
+      {
+        "text": "Nada, porque uma atualização só vale no próximo reinício",
+        "why": "Uma atualização reinicia os contêineres na hora."
+      },
+      {
+        "text": "Uma recusa, porque a imagem é uma propriedade que não pode ser atualizada",
+        "why": "A imagem pode ser atualizada no lugar; a CPU, a memória e a política de reinício não."
+      },
+      {
+        "text": "Uma interrupção enquanto todos os contêineres reiniciam no lugar, sem mais nada respondendo",
+        "why": "Um grupo, nenhuma segunda cópia, e uma atualização reinicia todos os contêineres dele."
+      }
+    ]
+  }
+}

@@ -1,0 +1,640 @@
+[
+  {
+    "id": "ex-vhmkqa9g",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run, `work.py crash` received `order-43` and exited without settling it. What state was the message in straight afterwards?",
+    "hint": "Look at the receive that came right after the crash.",
+    "choices": [
+      {
+        "text": "Removed from the queue, because it had been delivered to a consumer",
+        "correct": false,
+        "why": "That is receive-and-delete. In peek-lock, receiving removes nothing."
+      },
+      {
+        "text": "Locked until its five seconds ran out, then available again",
+        "correct": true,
+        "why": "Yes. The next receive found nothing; five seconds later it came back with its count raised."
+      },
+      {
+        "text": "Available to the next receiver at once, since the receiver had closed",
+        "correct": false,
+        "why": "Closing the receiver does not release the lock; the message stays locked until the lock expires."
+      },
+      {
+        "text": "In the dead-letter subqueue",
+        "correct": false,
+        "why": "Only an explicit dead-letter or a count past MaxDeliveryCount puts it there."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xpz15r9",
+    "version": 1,
+    "section": "queues",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue has `MaxDeliveryCount` 5. Every consumer abandons the same message. How many deliveries does the message get before the queue moves it to the dead-letter subqueue?",
+    "hint": "With 3, the run showed `order-42` delivered three times.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "deliveries"
+  },
+  {
+    "id": "ex-xsj2schq",
+    "version": 1,
+    "section": "queues",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of `order-43` in the run in order.",
+    "hint": "It met a crash first and a rejection last.",
+    "items": [
+      "received with `delivery_count 0`",
+      "the consumer exits without settling it",
+      "a receive finds nothing, though the queue is not empty",
+      "the five-second lock runs out",
+      "received with `delivery_count 1` and dead-lettered as `UnknownProduct`"
+    ],
+    "trap": "The empty receive comes before the lock runs out, not after: that is what shows the message was locked rather than gone."
+  },
+  {
+    "id": "ex-sjth44ps",
+    "version": 1,
+    "section": "queues",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The work is done and the message should leave the queue for good. In peek-lock mode, the receiver settles it with `___`.",
+    "hint": "It is the first of the three settlements in `work.py`.",
+    "blanks": [
+      {
+        "accept": [
+          "complete_message",
+          "complete",
+          "receiver.complete_message",
+          "complete_message(msg)",
+          "receiver.complete_message(msg)"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tpatxzdy",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A worker takes 90 seconds to process an order. The queue keeps the default lock duration, and nothing renews the lock. What happens?",
+    "hint": "The default lock duration is one minute.",
+    "choices": [
+      {
+        "text": "Service Bus keeps the lock while the connection stays open",
+        "correct": false,
+        "why": "The lock lasts its duration and no longer; renewing it is the client's job."
+      },
+      {
+        "text": "The message goes to the dead-letter subqueue after the first minute",
+        "correct": false,
+        "why": "An expired lock returns the message to the queue; dead-lettering needs the count past the limit."
+      },
+      {
+        "text": "The lock runs out mid-job, a second consumer receives it, and the first complete fails",
+        "correct": true,
+        "why": "Yes. Two workers end up on one order, which is why the lock should outlast normal processing or be renewed."
+      },
+      {
+        "text": "Other receivers wait for the first worker, because the message is still in progress",
+        "correct": false,
+        "why": "Nothing makes them wait once the lock has run out; the message is simply available again."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys65mqek",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Billing and shipping both read paid orders from one Service Bus queue. What does each of them see?",
+    "hint": "How many consumers does a queue give each message to?",
+    "choices": [
+      {
+        "text": "Every order, each in a copy of its own",
+        "correct": false,
+        "why": "That is a topic with a subscription each."
+      },
+      {
+        "text": "Part of the orders each, split between the two",
+        "correct": true,
+        "why": "Yes. A queue gives each message to one consumer, so the two compete and neither notices."
+      },
+      {
+        "text": "Only the orders that match its own filter",
+        "correct": false,
+        "why": "Filters belong to topic subscriptions; a queue has none."
+      },
+      {
+        "text": "Nothing at all: the queue refuses a second receiver on it",
+        "correct": false,
+        "why": "A queue takes any number of competing receivers."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gpbxw9k",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `publish.py 42:physical 43:digital`, which of these were true? Choose all that apply.",
+    "hint": "`shipping` has the rule `physical-only`.",
+    "choices": [
+      {
+        "text": "`billing` received both orders",
+        "correct": true,
+        "why": "Yes; with no rule of its own it has the default filter, which is always true."
+      },
+      {
+        "text": "`shipping` received the digital order and dropped it",
+        "correct": false,
+        "why": "It never received it: the broker did not put it in the subscription at all."
+      },
+      {
+        "text": "The filter read the application property `kind`, not the body",
+        "correct": true,
+        "why": "Yes. The body is opaque to the broker; the publisher put the kind beside it for that reason."
+      },
+      {
+        "text": "Completing order 42 in `billing` removed its copy from `shipping`",
+        "correct": false,
+        "why": "Each subscription is a queue of its own; `shipping` still had its copy to read."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5gen9pe",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need with the Service Bus feature that meets it.",
+    "hint": "One of the features on the right meets none of them.",
+    "pairs": [
+      {
+        "left": "billing and shipping each need every paid order",
+        "right": "a topic with two subscriptions"
+      },
+      {
+        "left": "shipping wants only physical goods",
+        "right": "a SQL filter on its subscription"
+      },
+      {
+        "left": "the steps of one order must be handled in order",
+        "right": "sessions, one per order"
+      },
+      {
+        "left": "a sender may resend after losing the answer",
+        "right": "duplicate detection on `MessageId`"
+      }
+    ],
+    "right_distractors": [
+      "a longer lock duration"
+    ]
+  },
+  {
+    "id": "ex-abfcvps9",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The queue `payments` has duplicate detection with a ten-minute window. A consumer charges the card for `charge-42` and crashes before completing the message. What does duplicate detection do about the second delivery?",
+    "hint": "Which half of the conversation does duplicate detection watch?",
+    "choices": [
+      {
+        "text": "It drops it, because the same id was seen within the window",
+        "correct": false,
+        "why": "It compares sends, not deliveries. The message was only ever sent once, so there is nothing to drop."
+      },
+      {
+        "text": "It moves the message to the dead-letter subqueue",
+        "correct": false,
+        "why": "Only the delivery count past the limit, or an explicit dead-letter, does that."
+      },
+      {
+        "text": "Nothing; the redelivery has to be caught by the consumer",
+        "correct": true,
+        "why": "Yes. Duplicate detection covers the sender's repeats; the consumer's are the consumer's to recognise."
+      },
+      {
+        "text": "It marks the message so that the consumer's next complete is refused",
+        "correct": false,
+        "why": "There is no such mark; the next delivery is an ordinary one with a raised count."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5zp99zb",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rule `kind = 'physical'` reads an application ___ that the publisher sets beside the body, never the body itself.",
+    "hint": "In `publish.py` it is a dictionary passed as `application_properties`.",
+    "blanks": [
+      {
+        "accept": [
+          "property"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5tx31y37",
+    "version": 1,
+    "section": "event-grid",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An Event Grid subscription's webhook is down for an hour. What happens to the events meant for it?",
+    "hint": "Push, not pull.",
+    "choices": [
+      {
+        "text": "They wait in the topic until the handler comes back and asks for them",
+        "correct": false,
+        "why": "That is a queue. Event Grid holds nothing for a handler to collect; it pushes."
+      },
+      {
+        "text": "They are retried on a schedule until attempts or time to live run out",
+        "correct": true,
+        "why": "Yes, and then dead-letters them to a blob container if one is set, or drops them."
+      },
+      {
+        "text": "They are dropped at the first failure",
+        "correct": false,
+        "why": "Only answers that a retry cannot fix, such as 400 or 403, skip the retries."
+      },
+      {
+        "text": "They go to the topic's dead-letter subqueue",
+        "correct": false,
+        "why": "Subqueues belong to Service Bus; Event Grid dead-letters to a blob container."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ppgq5zt",
+    "version": 1,
+    "section": "event-grid",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A subscription has `maxDeliveryAttempts` 10 and a time to live of 30 minutes. Following the documented schedule (10 s, 30 s, 1 min, 5 min, 10 min, 30 min, 1 h…) and ignoring its randomness, how many attempts are made before the event is given up?",
+    "hint": "Add the waits up: the first attempt is at 0, the second at 10 s, the third at 40 s.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "attempts"
+  },
+  {
+    "id": "ex-qqd0fv4f",
+    "version": 1,
+    "section": "event-grid",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of the `big-orders` subscription in order, from creation to the first order reviewed. The endpoint is a plain web app using the Event Grid schema.",
+    "hint": "Nothing is delivered before the endpoint has proved it expects it.",
+    "items": [
+      "the event subscription is created",
+      "Event Grid sends a `SubscriptionValidationEvent` to the endpoint",
+      "the endpoint echoes the `validationCode` back",
+      "the order API posts `shop.order.placed` to the topic",
+      "Event Grid posts the event to the endpoint"
+    ],
+    "trap": "The validation happens when the subscription is created, before any event; it is not repeated per event."
+  },
+  {
+    "id": "ex-y469d1j5",
+    "version": 1,
+    "section": "event-grid",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the webhook address in `events.bicep` a parameter marked `@secure()` instead of a string written in the file?",
+    "hint": "What did the compiler say about an address written in the file?",
+    "choices": [
+      {
+        "text": "Bicep refuses to compile a webhook address that is not secure",
+        "correct": false,
+        "why": "It compiles; the linter warns, and this course treats the warning as a refusal."
+      },
+      {
+        "text": "It holds a key in its query string",
+        "correct": true,
+        "why": "Yes. A secure parameter is kept out of the template's outputs and logs, and the linter asks for one."
+      },
+      {
+        "text": "Event Grid only delivers to addresses passed as secure parameters",
+        "correct": false,
+        "why": "Event Grid sees the address, not how the template received it."
+      },
+      {
+        "text": "It makes Event Grid use HTTPS for delivery instead of HTTP",
+        "correct": false,
+        "why": "The scheme is in the address itself; `@secure()` changes nothing about the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsv29m3a",
+    "version": 1,
+    "section": "event-grid",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop points a new subscription at its own order API, a plain web app, and the subscription never becomes active. The same subscription pointed at an Azure Function with an Event Grid trigger worked. What is the likeliest cause?",
+    "hint": "Which endpoints does Azure validate by itself?",
+    "choices": [
+      {
+        "text": "The web app does not answer the validation handshake",
+        "correct": true,
+        "why": "Yes. A Function with an Event Grid trigger is validated by Azure; a plain web app has to echo the code, or answer the OPTIONS request with CloudEvents."
+      },
+      {
+        "text": "Event Grid delivers only to Azure Functions and Service Bus, never to a plain web app",
+        "correct": false,
+        "why": "A webhook is the default destination type; any HTTPS endpoint that passes validation works."
+      },
+      {
+        "text": "The web app has to pull events from the topic, and it never asked",
+        "correct": false,
+        "why": "A custom topic pushes; pull delivery is for topics in an Event Grid namespace."
+      },
+      {
+        "text": "The topic's input schema is CloudEvents",
+        "correct": false,
+        "why": "Both schemas are delivered to webhooks; the schema changes how validation is asked, not whether it works."
+      }
+    ]
+  },
+  {
+    "id": "ex-qw2d9hne",
+    "version": 1,
+    "section": "event-hubs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The consumer group `billing` has read all six events. Then `analytics` reads from the start. What does it get?",
+    "hint": "Does reading take an event out of an event hub?",
+    "choices": [
+      {
+        "text": "Nothing, because billing consumed them",
+        "correct": false,
+        "why": "Reading removes nothing from an event hub; consumption is a queue's idea."
+      },
+      {
+        "text": "Only the events billing has not checkpointed",
+        "correct": false,
+        "why": "Checkpoints are per consumer group; billing's mean nothing to analytics."
+      },
+      {
+        "text": "All six",
+        "correct": true,
+        "why": "Yes. The run showed the same six lines for both groups, because each group has its own positions."
+      },
+      {
+        "text": "Each event that billing read, minus the ones still within the retention",
+        "correct": false,
+        "why": "Retention removes events after their time; it says nothing about who has read them."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbr32wmm",
+    "version": 1,
+    "section": "event-hubs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these hold for an event hub's partition key? Choose all that apply.",
+    "hint": "Look at where orders 42, 43 and 44 landed.",
+    "choices": [
+      {
+        "text": "Events with the same key land in the same partition",
+        "correct": true,
+        "why": "Yes; the key is hashed to pick the partition."
+      },
+      {
+        "text": "Each key gets a partition of its own",
+        "correct": false,
+        "why": "Orders 42 and 44 shared partition 0. A key picks which partition, not an exclusive one."
+      },
+      {
+        "text": "Within a partition, events keep the order they were sent in",
+        "correct": true,
+        "why": "Yes: paid, packed, shipped for order 42, at sequence numbers 0, 1 and 2."
+      },
+      {
+        "text": "Sequence numbers order events across the whole event hub",
+        "correct": false,
+        "why": "They count from 0 in each partition and mean nothing across them."
+      },
+      {
+        "text": "With no key at all, events are spread over the partitions in turn",
+        "correct": true,
+        "why": "Yes; Microsoft's documentation calls it round-robin assignment."
+      }
+    ]
+  },
+  {
+    "id": "ex-pm7f2hv9",
+    "version": 1,
+    "section": "event-hubs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An event hub has 4 partitions. At most how many readers in one consumer group can share the load at the same time?",
+    "hint": "Within a group, one reader owns a partition at a time.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "readers"
+  },
+  {
+    "id": "ex-b9jhbxqn",
+    "version": 1,
+    "section": "event-hubs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After doing the work for an event, the reader saves its position in that partition by writing a ___ to the blob container.",
+    "hint": "Without one, a reader starts again from the position `\"-1\"`.",
+    "blanks": [
+      {
+        "accept": [
+          "checkpoint"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cnf6p1my",
+    "version": 1,
+    "section": "event-hubs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Billing saves its checkpoint after charging. It crashes between the charge and the checkpoint. What happens on restart, and what makes it safe?",
+    "hint": "Remember the `nocheckpoint` run.",
+    "choices": [
+      {
+        "text": "Event Hubs sees the sequence number again and skips the event",
+        "correct": false,
+        "why": "Event Hubs keeps no record of what a reader did; positions are the reader's."
+      },
+      {
+        "text": "The event is read again; a charge key recorded once makes the repeat a skip",
+        "correct": true,
+        "why": "Yes. The position lagged the work, so the event comes back, and an idempotent handler recognises it."
+      },
+      {
+        "text": "The library saves the checkpoint on its way down, so nothing repeats",
+        "correct": false,
+        "why": "A crash gives the library no chance to write anything."
+      },
+      {
+        "text": "Nothing repeats if the checkpoint is moved before the charge",
+        "correct": false,
+        "why": "That moves the hole: a crash after the checkpoint and before the charge loses the order instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbfm93mm",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the shop with the service that fits it.",
+    "hint": "Work, news or a stream?",
+    "pairs": [
+      {
+        "left": "an order that must be charged by one worker, once",
+        "right": "a Service Bus queue"
+      },
+      {
+        "left": "billing and shipping each need every paid order, at their own pace",
+        "right": "a Service Bus topic"
+      },
+      {
+        "left": "a notice that the nightly sales report landed in a storage account",
+        "right": "an Event Grid system topic"
+      },
+      {
+        "left": "every click on the site, read by a report and by fraud checks",
+        "right": "an event hub with two consumer groups"
+      }
+    ],
+    "right_distractors": [
+      "a Service Bus session"
+    ]
+  },
+  {
+    "id": "ex-94gh3r5z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every consumer has handled an item successfully. In which of the three services is the item still there afterwards?",
+    "hint": "One of them is a log.",
+    "choices": [
+      {
+        "text": "Service Bus, in the subscription, until its time to live",
+        "correct": false,
+        "why": "A completed message is removed from its queue or subscription."
+      },
+      {
+        "text": "Event Grid, in the topic, for 24 hours",
+        "correct": false,
+        "why": "Event Grid keeps an event only while it is retrying a delivery."
+      },
+      {
+        "text": "Event Hubs, until the retention time ends",
+        "correct": true,
+        "why": "Yes. Reading moves a position and removes nothing."
+      },
+      {
+        "text": "None of them: handled means gone in all three",
+        "correct": false,
+        "why": "True for two of them, not for the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjb66sf7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of an idempotent billing consumer handling one Service Bus message in order.",
+    "hint": "The key goes in inside the same transaction as the charge, and the message is settled last.",
+    "items": [
+      "receive the message, locked",
+      "begin a database transaction",
+      "insert the charge key into the table where it is unique",
+      "charge the card",
+      "commit the transaction",
+      "complete the message"
+    ],
+    "trap": "Completing before committing reopens the hole: a crash in between leaves the message gone and the charge unrecorded."
+  },
+  {
+    "id": "ex-4r70fmat",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The queue `payments` has duplicate detection with a ten-minute window. Which of these repeats does duplicate detection catch?",
+    "hint": "It compares the MessageId of sends within the window.",
+    "choices": [
+      {
+        "text": "A redelivery of `charge-42` after its lock expired",
+        "correct": false,
+        "why": "A redelivery is not a second send; the queue has nothing to compare it with."
+      },
+      {
+        "text": "The sender resending `charge-42` twenty minutes later",
+        "correct": false,
+        "why": "The window was ten minutes; the id had been forgotten by then."
+      },
+      {
+        "text": "The sender resending `charge-42` two minutes later",
+        "correct": true,
+        "why": "Yes: same MessageId, inside the window, so the second send is accepted and dropped."
+      },
+      {
+        "text": "A resend with a fresh random id and the same body",
+        "correct": false,
+        "why": "Only the MessageId is compared, never the body; a new id is a new message."
+      }
+    ]
+  }
+]

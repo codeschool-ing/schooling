@@ -1,0 +1,432 @@
+{
+  "ex-vhmkqa9g": {
+    "prompt": "Na execução, `work.py crash` recebeu `order-43` e saiu sem liquidá-la. Em que estado a mensagem ficou logo depois?",
+    "hint": "Olhe o recebimento que veio logo depois da queda.",
+    "choices": [
+      {
+        "text": "Removida da fila, porque tinha sido entregue a um consumidor",
+        "why": "Isso é receive-and-delete. Em peek-lock, receber não remove nada."
+      },
+      {
+        "text": "Travada até os cinco segundos acabarem, e depois disponível de novo",
+        "why": "Isso. O recebimento seguinte não achou nada; cinco segundos depois ela voltou com a contagem maior."
+      },
+      {
+        "text": "Disponível para o próximo receiver na hora, já que o receiver tinha fechado",
+        "why": "Fechar o receiver não solta a trava; a mensagem fica travada até a trava expirar."
+      },
+      {
+        "text": "Na dead-letter subqueue",
+        "why": "Só um dead-letter explícito ou uma contagem acima de MaxDeliveryCount a põe lá."
+      }
+    ]
+  },
+  "ex-9xpz15r9": {
+    "prompt": "Uma fila tem `MaxDeliveryCount` 5. Todo consumidor abandona a mesma mensagem. Quantas entregas a mensagem recebe antes de a fila movê-la para a dead-letter subqueue?",
+    "hint": "Com 3, a execução mostrou `order-42` entregue três vezes.",
+    "unit": "entregas"
+  },
+  "ex-xsj2schq": {
+    "prompt": "Ponha a vida de `order-43` na execução em ordem.",
+    "hint": "Ela passou por uma queda primeiro e por uma rejeição no fim.",
+    "items": [
+      "recebida com `delivery_count 0`",
+      "o consumidor sai sem liquidá-la",
+      "um recebimento não acha nada, embora a fila não esteja vazia",
+      "a trava de cinco segundos expira",
+      "recebida com `delivery_count 1` e mandada para dead-letter como `UnknownProduct`"
+    ],
+    "trap": "O recebimento vazio vem antes de a trava expirar, não depois: é ele que mostra que a mensagem estava travada, e não sumida."
+  },
+  "ex-sjth44ps": {
+    "prompt": "O trabalho está feito e a mensagem deve sair da fila de vez. No modo peek-lock, o receiver a liquida com `___`.",
+    "hint": "É a primeira das três liquidações no `work.py`.",
+    "blanks": [
+      {
+        "accept": [
+          "complete_message",
+          "complete",
+          "receiver.complete_message",
+          "complete_message(msg)",
+          "receiver.complete_message(msg)"
+        ]
+      }
+    ]
+  },
+  "ex-tpatxzdy": {
+    "prompt": "Um worker leva 90 segundos para processar um pedido. A fila mantém a lock duration padrão, e nada renova a trava. O que acontece?",
+    "hint": "A lock duration padrão é de um minuto.",
+    "choices": [
+      {
+        "text": "O Service Bus mantém a trava enquanto a conexão continuar aberta",
+        "why": "A trava dura o tempo dela e nada mais; renová-la é tarefa do cliente."
+      },
+      {
+        "text": "A mensagem vai para a dead-letter subqueue depois do primeiro minuto",
+        "why": "Uma trava expirada devolve a mensagem para a fila; dead-letter pede a contagem acima do limite."
+      },
+      {
+        "text": "A trava expira no meio, um segundo consumidor a recebe, e o primeiro complete falha",
+        "why": "Isso. Dois workers acabam no mesmo pedido, e é por isso que a trava deve durar mais que o processamento normal, ou ser renovada."
+      },
+      {
+        "text": "Os outros receivers esperam o primeiro worker, porque a mensagem ainda está em andamento",
+        "why": "Nada os faz esperar depois que a trava expirou; a mensagem simplesmente está disponível de novo."
+      }
+    ]
+  },
+  "ex-ys65mqek": {
+    "prompt": "O faturamento e a expedição leem pedidos pagos de uma mesma fila do Service Bus. O que cada um vê?",
+    "hint": "A quantos consumidores uma fila entrega cada mensagem?",
+    "choices": [
+      {
+        "text": "Todos os pedidos, cada um numa cópia própria",
+        "why": "Isso é um tópico com uma assinatura para cada um."
+      },
+      {
+        "text": "Parte dos pedidos cada um, divididos entre os dois",
+        "why": "Isso. Uma fila entrega cada mensagem a um consumidor, então os dois competem e nenhum percebe."
+      },
+      {
+        "text": "Só os pedidos que casam com o próprio filtro",
+        "why": "Filtros são das assinaturas de um tópico; uma fila não tem."
+      },
+      {
+        "text": "Nada: a fila recusa um segundo receiver que se conecte",
+        "why": "Uma fila aceita quantos receivers concorrentes houver."
+      }
+    ]
+  },
+  "ex-2gpbxw9k": {
+    "prompt": "Depois de `publish.py 42:physical 43:digital`, quais destas eram verdade? Escolha todas as que se aplicam.",
+    "hint": "`shipping` tem a regra `physical-only`.",
+    "choices": [
+      {
+        "text": "`billing` recebeu os dois pedidos",
+        "why": "Isso; sem regra própria, ela tem o filtro padrão, que é sempre verdadeiro."
+      },
+      {
+        "text": "`shipping` recebeu o pedido digital e o descartou",
+        "why": "Ela nunca o recebeu: o broker nem o pôs na assinatura."
+      },
+      {
+        "text": "O filtro leu a application property `kind`, não o corpo",
+        "why": "Isso. O corpo é opaco para o broker; o publicador pôs o tipo ao lado dele por esse motivo."
+      },
+      {
+        "text": "Completar o pedido 42 em `billing` removeu a cópia dele de `shipping`",
+        "why": "Cada assinatura é uma fila própria; `shipping` ainda tinha a cópia dela para ler."
+      }
+    ]
+  },
+  "ex-p5gen9pe": {
+    "prompt": "Ligue cada necessidade ao recurso do Service Bus que a atende.",
+    "hint": "Um dos recursos à direita não atende nenhuma delas.",
+    "pairs": [
+      {
+        "left": "faturamento e expedição precisam, cada um, de todo pedido pago",
+        "right": "um tópico com duas assinaturas"
+      },
+      {
+        "left": "a expedição quer só produtos físicos",
+        "right": "um filtro SQL na assinatura dela"
+      },
+      {
+        "left": "os passos de um pedido precisam ser tratados em ordem",
+        "right": "sessões, uma por pedido"
+      },
+      {
+        "left": "um remetente pode mandar de novo depois de perder a resposta",
+        "right": "detecção de duplicatas pelo `MessageId`"
+      }
+    ],
+    "right_distractors": [
+      "uma lock duration maior"
+    ]
+  },
+  "ex-abfcvps9": {
+    "prompt": "A fila `payments` tem detecção de duplicatas com uma janela de dez minutos. Um consumidor cobra o cartão de `charge-42` e cai antes de completar a mensagem. O que a detecção de duplicatas faz com a segunda entrega?",
+    "hint": "Qual metade da conversa a detecção de duplicatas observa?",
+    "choices": [
+      {
+        "text": "Descarta, porque o mesmo id foi visto dentro da janela",
+        "why": "Ela compara envios, não entregas. A mensagem só foi mandada uma vez, então não há o que descartar."
+      },
+      {
+        "text": "Move a mensagem para a dead-letter subqueue",
+        "why": "Só a contagem acima do limite, ou um dead-letter explícito, faz isso."
+      },
+      {
+        "text": "Nada; quem tem de pegar a nova entrega é o consumidor",
+        "why": "Isso. A detecção de duplicatas cobre as repetições do remetente; as do consumidor, é ele quem reconhece."
+      },
+      {
+        "text": "Marca a mensagem para que o próximo complete do consumidor seja recusado",
+        "why": "Não existe essa marca; a entrega seguinte é comum, com a contagem maior."
+      }
+    ]
+  },
+  "ex-v5zp99zb": {
+    "prompt": "A regra `kind = 'physical'` lê uma application ___ que o publicador põe ao lado do corpo, nunca o corpo em si.",
+    "hint": "No `publish.py` ela é um dicionário passado como `application_properties`.",
+    "blanks": [
+      {
+        "accept": [
+          "property",
+          "propriedade"
+        ]
+      }
+    ]
+  },
+  "ex-5tx31y37": {
+    "prompt": "O webhook de uma assinatura do Event Grid fica fora do ar por uma hora. O que acontece com os eventos destinados a ele?",
+    "hint": "Empurrar, não puxar.",
+    "choices": [
+      {
+        "text": "Esperam no tópico até o handler voltar e pedi-los",
+        "why": "Isso é uma fila. O Event Grid não guarda nada para um handler buscar; ele empurra."
+      },
+      {
+        "text": "O Event Grid tenta de novo no cronograma dele até as tentativas ou o time to live acabarem",
+        "why": "Isso, e depois os manda para um contêiner de dead-letter se houver um, ou os descarta."
+      },
+      {
+        "text": "São descartados na primeira falha",
+        "why": "Só respostas que uma nova tentativa não resolve, como 400 ou 403, pulam as tentativas."
+      },
+      {
+        "text": "Vão para a dead-letter subqueue do tópico",
+        "why": "Subqueues são do Service Bus; o Event Grid faz dead-letter num contêiner de blob."
+      }
+    ]
+  },
+  "ex-2ppgq5zt": {
+    "prompt": "Uma assinatura tem `maxDeliveryAttempts` 10 e time to live de 30 minutos. Seguindo o cronograma documentado (10 s, 30 s, 1 min, 5 min, 10 min, 30 min, 1 h…) e ignorando a aleatoriedade, quantas tentativas são feitas antes de o evento ser abandonado?",
+    "hint": "Some as esperas: a primeira tentativa é em 0, a segunda em 10 s, a terceira em 40 s.",
+    "unit": "tentativas"
+  },
+  "ex-qqd0fv4f": {
+    "prompt": "Ponha a vida da assinatura `big-orders` em ordem, da criação ao primeiro pedido revisto. O endpoint é uma aplicação web comum usando o schema do Event Grid.",
+    "hint": "Nada é entregue antes de o endpoint provar que espera aquilo.",
+    "items": [
+      "a event subscription é criada",
+      "o Event Grid manda um `SubscriptionValidationEvent` para o endpoint",
+      "o endpoint devolve o `validationCode`",
+      "a API de pedidos posta `shop.order.placed` no tópico",
+      "o Event Grid posta o evento no endpoint"
+    ],
+    "trap": "A validação acontece quando a assinatura é criada, antes de qualquer evento; ela não se repete a cada evento."
+  },
+  "ex-y469d1j5": {
+    "prompt": "Por que o endereço do webhook em `events.bicep` é um parâmetro marcado `@secure()` em vez de uma string escrita no arquivo?",
+    "hint": "O que o compilador disse sobre um endereço escrito no arquivo?",
+    "choices": [
+      {
+        "text": "O Bicep se recusa a compilar um endereço de webhook que não seja seguro",
+        "why": "Ele compila; o linter avisa, e este curso trata o aviso como recusa."
+      },
+      {
+        "text": "Ele guarda uma chave na query string",
+        "why": "Isso. Um parâmetro seguro fica fora das saídas e dos logs do template, e o linter pede um."
+      },
+      {
+        "text": "O Event Grid só entrega em endereços passados como parâmetros seguros",
+        "why": "O Event Grid vê o endereço, não como o template o recebeu."
+      },
+      {
+        "text": "Faz o Event Grid usar HTTPS na entrega em vez de HTTP",
+        "why": "O esquema está no próprio endereço; o `@secure()` não muda nada na requisição."
+      }
+    ]
+  },
+  "ex-zsv29m3a": {
+    "prompt": "A loja aponta uma assinatura nova para a própria API de pedidos, uma aplicação web comum, e a assinatura nunca fica ativa. A mesma assinatura apontada para uma Azure Function com trigger do Event Grid funcionou. Qual é a causa mais provável?",
+    "hint": "Quais endpoints o próprio Azure valida?",
+    "choices": [
+      {
+        "text": "A aplicação web não responde ao handshake de validação",
+        "why": "Isso. Uma Function com trigger do Event Grid é validada pelo Azure; uma aplicação web comum precisa devolver o código, ou responder à requisição OPTIONS com CloudEvents."
+      },
+      {
+        "text": "O Event Grid só entrega para Azure Functions e Service Bus, nunca para uma aplicação web comum",
+        "why": "O webhook é o tipo de destino padrão; qualquer endpoint HTTPS que passe na validação funciona."
+      },
+      {
+        "text": "A aplicação web precisa puxar os eventos do tópico, e nunca pediu",
+        "why": "Um custom topic empurra; pull delivery é para tópicos num namespace do Event Grid."
+      },
+      {
+        "text": "O input schema do tópico é CloudEvents",
+        "why": "Os dois schemas são entregues a webhooks; o schema muda como a validação é pedida, não se ela funciona."
+      }
+    ]
+  },
+  "ex-qw2d9hne": {
+    "prompt": "O consumer group `billing` leu os seis eventos. Depois `analytics` lê desde o começo. O que ele recebe?",
+    "hint": "Ler tira um evento de um event hub?",
+    "choices": [
+      {
+        "text": "Nada, porque billing os consumiu",
+        "why": "Ler não remove nada de um event hub; consumir é ideia de fila."
+      },
+      {
+        "text": "Só os eventos de que billing não fez checkpoint",
+        "why": "Checkpoints são por consumer group; os de billing não significam nada para analytics."
+      },
+      {
+        "text": "Os seis",
+        "why": "Isso. A execução mostrou as mesmas seis linhas para os dois grupos, porque cada grupo tem as próprias posições."
+      },
+      {
+        "text": "Cada evento que billing leu, menos os que ainda estão dentro da retenção",
+        "why": "A retenção remove eventos depois do tempo deles; não diz nada sobre quem os leu."
+      }
+    ]
+  },
+  "ex-tbr32wmm": {
+    "prompt": "Quais destas valem para a partition key de um event hub? Escolha todas as que se aplicam.",
+    "hint": "Veja onde os pedidos 42, 43 e 44 caíram.",
+    "choices": [
+      {
+        "text": "Eventos com a mesma chave caem na mesma partição",
+        "why": "Isso; a chave passa por um hash que escolhe a partição."
+      },
+      {
+        "text": "Cada chave ganha uma partição só para si",
+        "why": "Os pedidos 42 e 44 dividiram a partição 0. Uma chave escolhe qual partição, não uma exclusiva."
+      },
+      {
+        "text": "Dentro de uma partição, os eventos mantêm a ordem em que foram mandados",
+        "why": "Isso: paid, packed, shipped do pedido 42, nos números de sequência 0, 1 e 2."
+      },
+      {
+        "text": "Os números de sequência ordenam os eventos no event hub inteiro",
+        "why": "Eles contam a partir de 0 em cada partição e não dizem nada entre elas."
+      },
+      {
+        "text": "Sem chave nenhuma, os eventos são distribuídos pelas partições em rodízio",
+        "why": "Isso; a documentação da Microsoft chama de atribuição round-robin."
+      }
+    ]
+  },
+  "ex-pm7f2hv9": {
+    "prompt": "Um event hub tem 4 partições. No máximo quantos leitores de um consumer group conseguem dividir a carga ao mesmo tempo?",
+    "hint": "Dentro de um grupo, um leitor é dono de uma partição por vez.",
+    "unit": "leitores"
+  },
+  "ex-b9jhbxqn": {
+    "prompt": "Depois de fazer o trabalho de um evento, o leitor salva a posição dele naquela partição escrevendo um ___ no contêiner de blobs.",
+    "hint": "Sem ele, um leitor recomeça da posição `\"-1\"`.",
+    "blanks": [
+      {
+        "accept": [
+          "checkpoint"
+        ]
+      }
+    ]
+  },
+  "ex-cnf6p1my": {
+    "prompt": "O faturamento salva o checkpoint depois de cobrar. Ele cai entre a cobrança e o checkpoint. O que acontece no reinício, e o que torna isso seguro?",
+    "hint": "Lembre da execução `nocheckpoint`.",
+    "choices": [
+      {
+        "text": "O Event Hubs vê o número de sequência de novo e pula o evento",
+        "why": "O Event Hubs não guarda registro do que um leitor fez; as posições são do leitor."
+      },
+      {
+        "text": "O evento é lido de novo; uma chave de cobrança registrada uma vez faz da repetição um pulo",
+        "why": "Isso. A posição ficou atrás do trabalho, então o evento volta, e um handler idempotente o reconhece."
+      },
+      {
+        "text": "A biblioteca salva o checkpoint ao cair, então nada se repete",
+        "why": "Uma queda não dá à biblioteca chance de escrever nada."
+      },
+      {
+        "text": "Nada se repete se o checkpoint for movido para antes da cobrança",
+        "why": "Isso só muda o buraco de lado: uma queda depois do checkpoint e antes da cobrança perde o pedido."
+      }
+    ]
+  },
+  "ex-mbfm93mm": {
+    "prompt": "Ligue cada parte da loja ao serviço que se encaixa nela.",
+    "hint": "Trabalho, notícia ou fluxo?",
+    "pairs": [
+      {
+        "left": "um pedido que precisa ser cobrado por um worker, uma vez",
+        "right": "uma fila do Service Bus"
+      },
+      {
+        "left": "faturamento e expedição precisam, cada um, de todo pedido pago, no próprio ritmo",
+        "right": "um tópico do Service Bus"
+      },
+      {
+        "left": "um aviso de que o relatório de vendas noturno chegou numa storage account",
+        "right": "um system topic do Event Grid"
+      },
+      {
+        "left": "todo clique no site, lido por um relatório e por verificações de fraude",
+        "right": "um event hub com dois consumer groups"
+      }
+    ],
+    "right_distractors": [
+      "uma sessão do Service Bus"
+    ]
+  },
+  "ex-94gh3r5z": {
+    "prompt": "Todo consumidor tratou um item com sucesso. Em qual dos três serviços o item continua lá depois?",
+    "hint": "Um deles é um log.",
+    "choices": [
+      {
+        "text": "Service Bus, na assinatura, até o time to live dele",
+        "why": "Uma mensagem completada é removida da fila ou da assinatura."
+      },
+      {
+        "text": "Event Grid, no tópico, por 24 horas",
+        "why": "O Event Grid só guarda um evento enquanto tenta uma entrega."
+      },
+      {
+        "text": "Event Hubs, até o tempo de retenção acabar",
+        "why": "Isso. Ler move uma posição e não remove nada."
+      },
+      {
+        "text": "Em nenhum: tratado quer dizer sumido nos três",
+        "why": "Vale para dois deles, não para o log."
+      }
+    ]
+  },
+  "ex-cjb66sf7": {
+    "prompt": "Ponha em ordem os passos de um consumidor de faturamento idempotente tratando uma mensagem do Service Bus.",
+    "hint": "A chave entra na mesma transação da cobrança, e a mensagem é liquidada por último.",
+    "items": [
+      "receber a mensagem, travada",
+      "abrir uma transação no banco",
+      "inserir a chave da cobrança na tabela em que ela é única",
+      "cobrar o cartão",
+      "confirmar a transação",
+      "completar a mensagem"
+    ],
+    "trap": "Completar antes de confirmar reabre o buraco: uma queda no meio deixa a mensagem sumida e a cobrança sem registro."
+  },
+  "ex-4r70fmat": {
+    "prompt": "A fila `payments` tem detecção de duplicatas com uma janela de dez minutos. Qual destas repetições a detecção de duplicatas pega?",
+    "hint": "Ela compara o MessageId dos envios dentro da janela.",
+    "choices": [
+      {
+        "text": "Uma nova entrega de `charge-42` depois que a trava dela expirou",
+        "why": "Uma nova entrega não é um segundo envio; a fila não tem com o que compará-la."
+      },
+      {
+        "text": "O remetente mandando `charge-42` de novo vinte minutos depois",
+        "why": "A janela era de dez minutos; o id já tinha sido esquecido."
+      },
+      {
+        "text": "O remetente mandando `charge-42` de novo dois minutos depois",
+        "why": "Isso: mesmo MessageId, dentro da janela, então o segundo envio é aceito e descartado."
+      },
+      {
+        "text": "Um reenvio com um id aleatório novo e o mesmo corpo",
+        "why": "Só o MessageId é comparado, nunca o corpo; um id novo é uma mensagem nova."
+      }
+    ]
+  }
+}
