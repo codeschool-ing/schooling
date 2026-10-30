@@ -1,0 +1,332 @@
+[
+  {
+    "id": "ex-7dsmhwcf",
+    "version": 1,
+    "section": "two-places",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can a web application firewall see that a network firewall cannot?",
+    "hint": "An attack arrives on port 443.",
+    "choices": [
+      {
+        "text": "The client's IP address and port number",
+        "correct": false,
+        "why": "A network firewall sees those too."
+      },
+      {
+        "text": "The request itself",
+        "correct": true,
+        "why": "Right. Path, headers and body."
+      },
+      {
+        "text": "The database's queries, as they run",
+        "correct": false,
+        "why": "It sees HTTP, not what the application does with it."
+      },
+      {
+        "text": "Traffic between two virtual machines in the same subnet",
+        "correct": false,
+        "why": "It sits in front of HTTP endpoints, not between VMs."
+      }
+    ]
+  },
+  {
+    "id": "ex-q92fjfnt",
+    "version": 1,
+    "section": "two-places",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to where the WAF belongs.",
+    "hint": "Edge or region?",
+    "pairs": [
+      {
+        "left": "Stop attacks before they reach the region",
+        "right": "Front Door"
+      },
+      {
+        "left": "Protect backends that have only private addresses",
+        "right": "Application Gateway"
+      },
+      {
+        "left": "Serve customers worldwide with caching at the edge",
+        "right": "Front Door, too"
+      }
+    ]
+  },
+  {
+    "id": "ex-nkvf2meb",
+    "version": 1,
+    "section": "two-places",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A scan finds SQL injection in the search endpoint, and the WAF blocks the pattern. What is still to do?",
+    "hint": "A guard at a door with a broken lock.",
+    "choices": [
+      {
+        "text": "Nothing; the managed rule set covers SQL injection",
+        "correct": false,
+        "why": "Patterns can be evaded; the code is still vulnerable."
+      },
+      {
+        "text": "Switch the policy to Detection so the logs show it",
+        "correct": false,
+        "why": "That would stop blocking a known attack."
+      },
+      {
+        "text": "Fix the query itself, in the search endpoint's code",
+        "correct": true,
+        "why": "Right. The WAF buys time; parameterised queries are the fix."
+      },
+      {
+        "text": "Add a geo rule that blocks traffic from outside Brazil",
+        "correct": false,
+        "why": "Attackers rent addresses anywhere; the code stays broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvvka9m4",
+    "version": 1,
+    "section": "policy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which order does the shop's Front Door policy evaluate its rules?",
+    "hint": "Custom before managed, by priority.",
+    "choices": [
+      {
+        "text": "checkoutRateLimit, onlyBrazilForAdmin, then the managed sets",
+        "correct": true,
+        "why": "Right. Custom rules first, lowest priority number first."
+      },
+      {
+        "text": "The managed sets, then the custom rules",
+        "correct": false,
+        "why": "Custom rules come first."
+      },
+      {
+        "text": "onlyBrazilForAdmin, then checkoutRateLimit",
+        "correct": false,
+        "why": "Priority 10 comes before 20."
+      },
+      {
+        "text": "All rules at once, in parallel",
+        "correct": false,
+        "why": "They are evaluated in order, and the first decisive match acts."
+      }
+    ]
+  },
+  {
+    "id": "ex-evmq8vf3",
+    "version": 1,
+    "section": "policy",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 30,
+    "tolerance": 0,
+    "prompt": "How many requests to /checkout per minute from one client does checkoutRateLimit allow before blocking?",
+    "hint": "rateLimitThreshold.",
+    "unit": "requests"
+  },
+  {
+    "id": "ex-6vs5rc14",
+    "version": 1,
+    "section": "policy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is onlyBrazilForAdmin not what protects the administration path?",
+    "hint": "Where can an address be?",
+    "choices": [
+      {
+        "text": "Geo rules are only evaluated in Detection mode",
+        "correct": false,
+        "why": "They work in both modes."
+      },
+      {
+        "text": "negateCondition makes it allow everything",
+        "correct": false,
+        "why": "It turns the match into not-Brazil, as intended."
+      },
+      {
+        "text": "Front Door cannot read the request path",
+        "correct": false,
+        "why": "It can; the rule matches on RequestUri."
+      },
+      {
+        "text": "Brazilian addresses are for rent too",
+        "correct": true,
+        "why": "Right. It cuts scanner noise; the sign-in with a second factor protects the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-48p2synh",
+    "version": 1,
+    "section": "detection-first",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A new WAF policy starts in the mode called ___, which logs matches and blocks nothing.",
+    "hint": "The other mode is Prevention.",
+    "blanks": [
+      {
+        "accept": [
+          "Detection"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s90w6403",
+    "version": 1,
+    "section": "detection-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What question does the shop ask of the WAF's logs before switching to Prevention?",
+    "hint": "False positives cost sales.",
+    "choices": [
+      {
+        "text": "How many attacks were blocked last month",
+        "correct": false,
+        "why": "In Detection nothing was blocked; and blocks mostly count scanners."
+      },
+      {
+        "text": "Which rules matched legitimate requests",
+        "correct": true,
+        "why": "Right. Each is a false positive to remove first."
+      },
+      {
+        "text": "Which country sent the most traffic",
+        "correct": false,
+        "why": "That says nothing about whether blocking would hurt customers."
+      },
+      {
+        "text": "Whether the managed rule set is the latest",
+        "correct": false,
+        "why": "Version is a separate decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mbyd55x",
+    "version": 1,
+    "section": "detection-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The default rule set keeps matching customers' searches. Which fix does the lesson recommend?",
+    "hint": "Narrow holes are better than wide ones.",
+    "choices": [
+      {
+        "text": "Turn the matching rule off for the whole site",
+        "correct": false,
+        "why": "That removes protection everywhere to fix one field."
+      },
+      {
+        "text": "Leave the policy in Detection permanently",
+        "correct": false,
+        "why": "Then it is a log, not a firewall."
+      },
+      {
+        "text": "Remove the search box",
+        "correct": false,
+        "why": "The shop needs search; the WAF should fit the shop."
+      },
+      {
+        "text": "An exclusion for the `search` argument, with its reason written down",
+        "correct": true,
+        "why": "Right. One argument, one rule set, documented."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fa7gzsq",
+    "version": 1,
+    "section": "detection-first",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the shop's path from a new policy to blocking in order.",
+    "hint": "Watch, fix, switch, watch again.",
+    "items": [
+      "Deploy the policy in Detection",
+      "Read which rules matched legitimate requests",
+      "Add narrow exclusions for the false positives",
+      "Switch the mode to Prevention through the pipeline",
+      "Watch the 403s on customer routes"
+    ],
+    "trap": "Switching before reading the logs is the slip: the false positives are found by customers instead."
+  },
+  {
+    "id": "ex-f5vf14wf",
+    "version": 1,
+    "section": "cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the number of blocked requests a poor measure of a WAF's value?",
+    "hint": "Who sends most of what is blocked?",
+    "choices": [
+      {
+        "text": "It mostly counts scanners hitting the site",
+        "correct": true,
+        "why": "Right. False positives, custom-rule hits and rules still in Detection say more."
+      },
+      {
+        "text": "Blocked requests are not logged",
+        "correct": false,
+        "why": "They are logged; that is how they are counted."
+      },
+      {
+        "text": "Blocks are billed and inspections are not",
+        "correct": false,
+        "why": "Inspection is what is billed."
+      },
+      {
+        "text": "A higher number always means a worse policy",
+        "correct": false,
+        "why": "It means nothing either way, which is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcqaw9q3",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson do? Choose all that apply.",
+    "hint": "Compiled, yes; inspected, no.",
+    "choices": [
+      {
+        "text": "Compile a Front Door WAF policy with two custom rules",
+        "correct": true,
+        "why": "Yes. bicep build."
+      },
+      {
+        "text": "Compile a regional policy with an exclusion",
+        "correct": true,
+        "why": "Yes. appgw-waf.bicep."
+      },
+      {
+        "text": "Block a request in Prevention mode",
+        "correct": false,
+        "why": "No. No WAF was deployed."
+      },
+      {
+        "text": "Read a week of WAF logs for false positives",
+        "correct": false,
+        "why": "No. A WAF log needs a WAF."
+      }
+    ]
+  }
+]

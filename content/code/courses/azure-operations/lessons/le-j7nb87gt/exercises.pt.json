@@ -1,0 +1,224 @@
+{
+  "ex-7dsmhwcf": {
+    "prompt": "O que um firewall de aplicação web enxerga que um firewall de rede não enxerga?",
+    "hint": "Um ataque chega pela porta 443.",
+    "choices": [
+      {
+        "text": "O endereço IP e a porta do cliente",
+        "why": "Um firewall de rede também vê isso."
+      },
+      {
+        "text": "A própria requisição",
+        "why": "Certo. Caminho, cabeçalhos e corpo."
+      },
+      {
+        "text": "As consultas do banco, enquanto rodam",
+        "why": "Ele vê HTTP, não o que a aplicação faz com ele."
+      },
+      {
+        "text": "Tráfego entre duas VMs da mesma sub-rede",
+        "why": "Ele fica na frente de endpoints HTTP, não entre VMs."
+      }
+    ]
+  },
+  "ex-q92fjfnt": {
+    "prompt": "Ligue cada situação ao lugar onde o WAF pertence.",
+    "hint": "Borda ou região?",
+    "pairs": [
+      {
+        "left": "Parar ataques antes de chegarem à região",
+        "right": "Front Door"
+      },
+      {
+        "left": "Proteger backends que só têm endereços privados",
+        "right": "Application Gateway"
+      },
+      {
+        "left": "Atender clientes do mundo todo com cache na borda",
+        "right": "Front Door, também"
+      }
+    ]
+  },
+  "ex-nkvf2meb": {
+    "prompt": "Uma varredura acha injeção de SQL no endpoint de busca, e o WAF bloqueia o padrão. O que ainda falta fazer?",
+    "hint": "Um guarda numa porta de fechadura quebrada.",
+    "choices": [
+      {
+        "text": "Nada; o conjunto gerenciado cobre injeção de SQL",
+        "why": "Padrões podem ser contornados; o código continua vulnerável."
+      },
+      {
+        "text": "Passar a política para Detection para os logs mostrarem",
+        "why": "Isso pararia de bloquear um ataque conhecido."
+      },
+      {
+        "text": "Consertar a própria consulta, no código da busca",
+        "why": "Certo. O WAF ganha tempo; consultas parametrizadas são a correção."
+      },
+      {
+        "text": "Acrescentar uma regra geográfica que bloqueia tráfego de fora do Brasil",
+        "why": "Atacantes alugam endereços em qualquer lugar; o código continua quebrado."
+      }
+    ]
+  },
+  "ex-wvvka9m4": {
+    "prompt": "Em que ordem a política do Front Door da loja avalia as regras?",
+    "hint": "Personalizadas antes das gerenciadas, por prioridade.",
+    "choices": [
+      {
+        "text": "checkoutRateLimit, onlyBrazilForAdmin, depois os conjuntos gerenciados",
+        "why": "Certo. Personalizadas primeiro, o menor número de prioridade antes."
+      },
+      {
+        "text": "Os conjuntos gerenciados, depois as personalizadas",
+        "why": "As personalizadas vêm primeiro."
+      },
+      {
+        "text": "onlyBrazilForAdmin, depois checkoutRateLimit",
+        "why": "Prioridade 10 vem antes de 20."
+      },
+      {
+        "text": "Todas as regras de uma vez, em paralelo",
+        "why": "Elas são avaliadas em ordem, e a primeira correspondência decisiva age."
+      }
+    ]
+  },
+  "ex-evmq8vf3": {
+    "prompt": "Quantas requisições a /checkout por minuto vindas de um cliente o checkoutRateLimit permite antes de bloquear?",
+    "hint": "rateLimitThreshold.",
+    "unit": "requisições"
+  },
+  "ex-6vs5rc14": {
+    "prompt": "Por que a onlyBrazilForAdmin não é o que protege o caminho de administração?",
+    "hint": "Onde um endereço pode estar?",
+    "choices": [
+      {
+        "text": "Regras geográficas só são avaliadas em Detection",
+        "why": "Elas funcionam nos dois modos."
+      },
+      {
+        "text": "O negateCondition faz ela liberar tudo",
+        "why": "Ele transforma a checagem em não Brasil, como pretendido."
+      },
+      {
+        "text": "O Front Door não lê o caminho da requisição",
+        "why": "Lê; a regra casa com RequestUri."
+      },
+      {
+        "text": "Endereços no Brasil também se alugam",
+        "why": "Certo. Ela corta barulho de scanners; o login com segundo fator protege o caminho."
+      }
+    ]
+  },
+  "ex-48p2synh": {
+    "prompt": "Uma política de WAF nova começa no modo chamado ___, que registra correspondências e não bloqueia nada.",
+    "hint": "O outro modo é Prevention.",
+    "blanks": [
+      {
+        "accept": [
+          "Detection"
+        ]
+      }
+    ]
+  },
+  "ex-s90w6403": {
+    "prompt": "Que pergunta a loja faz aos logs do WAF antes de passar para Prevention?",
+    "hint": "Falsos positivos custam vendas.",
+    "choices": [
+      {
+        "text": "Quantos ataques foram bloqueados no mês passado",
+        "why": "Em Detection nada foi bloqueado; e bloqueios contam sobretudo scanners."
+      },
+      {
+        "text": "Quais regras casaram com requisições legítimas",
+        "why": "Certo. Cada uma é um falso positivo a remover antes."
+      },
+      {
+        "text": "Qual país mandou mais tráfego",
+        "why": "Isso não diz nada sobre bloquear prejudicar clientes."
+      },
+      {
+        "text": "Se o conjunto gerenciado é o mais recente",
+        "why": "A versão é outra decisão."
+      }
+    ]
+  },
+  "ex-6mbyd55x": {
+    "prompt": "O conjunto padrão vive casando com as buscas dos clientes. Qual correção a lição recomenda?",
+    "hint": "Buracos estreitos são melhores que largos.",
+    "choices": [
+      {
+        "text": "Desligar a regra que casa para o site inteiro",
+        "why": "Isso tira proteção de todo lugar para consertar um campo."
+      },
+      {
+        "text": "Deixar a política em Detection para sempre",
+        "why": "Aí ela é um log, não um firewall."
+      },
+      {
+        "text": "Tirar a caixa de busca",
+        "why": "A loja precisa de busca; o WAF é que deve se encaixar na loja."
+      },
+      {
+        "text": "Uma exclusão para o argumento `search`, com o motivo escrito",
+        "why": "Certo. Um argumento, um conjunto de regras, documentado."
+      }
+    ]
+  },
+  "ex-4fa7gzsq": {
+    "prompt": "Ponha em ordem o caminho da loja de uma política nova até bloquear.",
+    "hint": "Observar, consertar, trocar, observar de novo.",
+    "trap": "Trocar antes de ler os logs é o deslize: os falsos positivos passam a ser achados pelos clientes.",
+    "items": [
+      "Implantar a política em Detection",
+      "Ler quais regras casaram com requisições legítimas",
+      "Acrescentar exclusões estreitas para os falsos positivos",
+      "Trocar o modo para Prevention pela esteira",
+      "Observar os 403 nas rotas de clientes"
+    ]
+  },
+  "ex-f5vf14wf": {
+    "prompt": "Por que o número de requisições bloqueadas é uma medida ruim do valor de um WAF?",
+    "hint": "Quem manda a maior parte do que é bloqueado?",
+    "choices": [
+      {
+        "text": "Ele conta sobretudo scanners batendo no site",
+        "why": "Certo. Falsos positivos, acertos de regras personalizadas e regras em Detection dizem mais."
+      },
+      {
+        "text": "Requisições bloqueadas não são registradas",
+        "why": "Elas são registradas; é assim que são contadas."
+      },
+      {
+        "text": "Bloqueios são cobrados e inspeções não",
+        "why": "A inspeção é o que é cobrado."
+      },
+      {
+        "text": "Um número maior sempre significa política pior",
+        "why": "Ele não significa nada em nenhum sentido, que é o ponto."
+      }
+    ]
+  },
+  "ex-gcqaw9q3": {
+    "prompt": "Quais destas coisas esta lição fez? Marque todas as que se aplicam.",
+    "hint": "Compilou, sim; inspecionou, não.",
+    "choices": [
+      {
+        "text": "Compilar uma política de WAF do Front Door com duas regras personalizadas",
+        "why": "Sim. bicep build."
+      },
+      {
+        "text": "Compilar uma política regional com uma exclusão",
+        "why": "Sim. appgw-waf.bicep."
+      },
+      {
+        "text": "Bloquear uma requisição no modo Prevention",
+        "why": "Não. Nenhum WAF foi implantado."
+      },
+      {
+        "text": "Ler uma semana de logs do WAF atrás de falsos positivos",
+        "why": "Não. Um log de WAF precisa de um WAF."
+      }
+    ]
+  }
+}
