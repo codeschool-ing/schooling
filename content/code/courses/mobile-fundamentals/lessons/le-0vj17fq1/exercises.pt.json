@@ -1,0 +1,461 @@
+{
+  "ex-eyn4chxk": {
+    "prompt": "Em qual situação uma requisição falha na hora, com um erro que o app pode mostrar imediatamente?",
+    "choices": [
+      {
+        "text": "No Wi-Fi de um café que pede login antes",
+        "why": "Ali a requisição recebe resposta, da página do café e não do seu servidor."
+      },
+      {
+        "text": "Dentro de um elevador, com o celular ainda ligado à antena",
+        "why": "Esse é o caso silencioso: a requisição sai e nada responde."
+      },
+      {
+        "text": "Modo avião",
+        "why": "Isso. Não existe rede nenhuma, então a requisição falha num milissegundo."
+      },
+      {
+        "text": "Em dados móveis com uma franquia mensal pequena",
+        "why": "Uma rede tarifada funciona; ela custa dinheiro, não falha."
+      }
+    ]
+  },
+  "ex-rdy3qk7r": {
+    "prompt": "O Android informa uma rede com a capacidade INTERNET e sem VALIDATED. Qual é a explicação mais provável?",
+    "choices": [
+      {
+        "text": "Um portal cativo está esperando o usuário fazer login",
+        "why": "Isso. A rede está configurada para a internet, mas a sondagem não passou."
+      },
+      {
+        "text": "O seu servidor está fora do ar",
+        "why": "A sondagem do sistema não vai ao seu servidor; ela não sabe nada sobre ele."
+      },
+      {
+        "text": "O celular está em modo avião",
+        "why": "Em modo avião não existe rede de que informar capacidades."
+      },
+      {
+        "text": "A rede é tarifada",
+        "why": "Tarifada é outra capacidade, NOT_METERED, e não diz nada sobre alcançar a internet."
+      }
+    ]
+  },
+  "ex-zvjhvct7": {
+    "prompt": "O NetInfo diz que isInternetReachable é true, e a requisição do planner ao próprio servidor falha mesmo assim. Como as duas coisas podem estar certas?",
+    "choices": [
+      {
+        "text": "Não podem; o NetInfo tem um bug",
+        "why": "As duas podem estar certas: a flag é sobre outro endereço."
+      },
+      {
+        "text": "isInternetReachable só fica correto depois da primeira requisição que o app envia",
+        "why": "Ele vem da verificação da própria biblioteca, não das suas requisições."
+      },
+      {
+        "text": "O celular trocou para uma rede tarifada",
+        "why": "Uma rede tarifada ainda alcança o seu servidor."
+      },
+      {
+        "text": "A flag vem de uma verificação contra outro endereço, não o seu",
+        "why": "Isso. Por padrão o NetInfo sonda um endereço do Google; o seu servidor pode estar fora do ar enquanto ele responde."
+      }
+    ]
+  },
+  "ex-knsc6std": {
+    "prompt": "Quais destes são bons usos do estado da rede informado pelo sistema? Escolha todos os que valem.",
+    "choices": [
+      {
+        "text": "Esperar existir uma rede para enviar uma requisição",
+        "why": "Isso. Sem rede nenhuma, enviar não adianta."
+      },
+      {
+        "text": "Deixar um download grande para uma rede não tarifada",
+        "why": "Isso. O custo para o usuário é exatamente o que a flag de tarifada informa."
+      },
+      {
+        "text": "Tentar de novo uma requisição que falhou quando a rede volta",
+        "why": "Isso. A mudança é um momento melhor que qualquer cronômetro."
+      },
+      {
+        "text": "Concluir que o servidor está de pé, e dispensar o timeout",
+        "why": "O estado da rede não diz nada sobre o seu servidor; só uma requisição diz."
+      }
+    ]
+  },
+  "ex-96ck9p0t": {
+    "prompt": "Associe cada situação ao que a requisição do app encontra.",
+    "pairs": [
+      {
+        "left": "um elevador",
+        "right": "silêncio: nada recusa, nada responde"
+      },
+      {
+        "left": "modo avião",
+        "right": "um erro na hora"
+      },
+      {
+        "left": "um portal cativo",
+        "right": "uma resposta da página de outra pessoa"
+      },
+      {
+        "left": "uma rede tarifada",
+        "right": "uma resposta, com custo para o usuário"
+      }
+    ],
+    "right_distractors": [
+      "uma recusa do sistema operacional"
+    ]
+  },
+  "ex-y38wj751": {
+    "prompt": "O que o caminho /hang do servidor faz com uma requisição?",
+    "choices": [
+      {
+        "text": "Responde com um erro depois de três segundos",
+        "why": "Isso seria um erro lento; o /hang nunca responde."
+      },
+      {
+        "text": "Lê, e nunca responde",
+        "why": "Isso. O handler retorna sem escrever, e a conexão fica aberta."
+      },
+      {
+        "text": "Fecha a conexão na hora",
+        "why": "Uma conexão fechada é um erro que o cliente vê. O /hang a mantém aberta."
+      },
+      {
+        "text": "Derruba o processo do servidor",
+        "why": "O servidor continua rodando e registra a requisição como qualquer outra."
+      }
+    ]
+  },
+  "ex-weh647d0": {
+    "prompt": "O curl perguntou ao /hang com --max-time 3 e parou. O que o mesmo comando teria feito sem o --max-time?",
+    "choices": [
+      {
+        "text": "Parado depois de 60 segundos, o padrão do curl",
+        "why": "O curl não põe limite numa transferência inteira a menos que peçam."
+      },
+      {
+        "text": "Continuado esperando",
+        "why": "Isso. Nada responde e nada limita a espera."
+      },
+      {
+        "text": "Imprimido a semana, porque o /hang acaba respondendo",
+        "why": "O /hang nunca escreve uma resposta."
+      },
+      {
+        "text": "Falhado na hora com status 503",
+        "why": "503 é a resposta do /flaky, não do /hang."
+      }
+    ]
+  },
+  "ex-g0hdab51": {
+    "prompt": "Por que o api.ts escuta em 127.0.0.1?",
+    "choices": [
+      {
+        "text": "A porta 8014 exige isso",
+        "why": "Qualquer porta pode escutar em qualquer endereço; o endereço decide quem consegue conectar."
+      },
+      {
+        "text": "O Node.js recusa qualquer outro endereço",
+        "why": "O Node.js escuta em qualquer endereço que receber."
+      },
+      {
+        "text": "Faz o servidor responder mais rápido do que um endereço público faria",
+        "why": "Velocidade não é o motivo; alcance é."
+      },
+      {
+        "text": "Para que só o seu próprio computador consiga alcançá-lo",
+        "why": "Isso. Outra máquina no seu Wi-Fi não consegue se conectar a ele."
+      }
+    ]
+  },
+  "ex-dhkqmcbd": {
+    "prompt": "O status que um servidor manda quando está temporariamente sem condições de fazer o trabalho, e que o cliente pode tentar de novo, é ___.",
+    "blanks": [
+      {
+        "accept": [
+          "503"
+        ]
+      }
+    ]
+  },
+  "ex-21qf2hde": {
+    "prompt": "Um servidor manda um byte a cada cinquenta segundos. Qual limite para a requisição?",
+    "choices": [
+      {
+        "text": "Um prazo para a requisição inteira",
+        "why": "Isso. Ele conta desde o início, chegue o que chegar."
+      },
+      {
+        "text": "Um timeout de conexão de 10 segundos",
+        "why": "A conexão abriu há muito tempo; esse limite já passou."
+      },
+      {
+        "text": "Um timeout de leitura de 60 segundos",
+        "why": "Cada byte zera esse relógio, então ele nunca chega a 60."
+      },
+      {
+        "text": "Nenhum: um gotejamento nunca é parado",
+        "why": "O prazo da requisição inteira o para."
+      }
+    ]
+  },
+  "ex-p2v152bx": {
+    "prompt": "Perguntando ao /hang sem limite próprio, depois de mais ou menos quantos segundos o fetch do Node.js desistiu?",
+    "unit": "segundos"
+  },
+  "ex-6m6wd9rx": {
+    "prompt": "O fetchWeek imprimiu AbortError em vez de TimeoutError. O que aconteceu?",
+    "choices": [
+      {
+        "text": "O servidor recusou a conexão",
+        "why": "Uma recusa é um TypeError, fetch failed, com ECONNREFUSED."
+      },
+      {
+        "text": "A rede foi lenta demais para o prazo",
+        "why": "Esse é o caso do TimeoutError."
+      },
+      {
+        "text": "O próprio app parou a requisição, porque a tela foi embora",
+        "why": "Isso. O AbortController da tela foi abortado; ninguém está esperando o resultado."
+      },
+      {
+        "text": "O servidor respondeu 503",
+        "why": "Isso é uma resposta, e o fetchWeek lança um Error comum por ela."
+      }
+    ]
+  },
+  "ex-bcn0pg8t": {
+    "prompt": "Uma aluna começa a enviar um vídeo de 200 MB de uma aula e acompanha a barra de progresso. Que limite combina melhor com essa requisição?",
+    "choices": [
+      {
+        "text": "Um prazo longo, com timeout de leitura que pegue uma travada",
+        "why": "Isso. O juízo é sobre a tela: ela vê o progresso, e um silêncio ainda precisa ser pego."
+      },
+      {
+        "text": "Nenhum limite, porque ela começou de propósito",
+        "why": "Sem limite, um upload travado gira para sempre, a falha de que esta aula trata."
+      },
+      {
+        "text": "Os mesmos cinco segundos que a tela da semana usa",
+        "why": "Cinco segundos cortariam quase qualquer upload real desse tamanho."
+      },
+      {
+        "text": "O padrão da plataforma, qualquer que seja",
+        "why": "Os padrões variam, de 60 segundos a sete dias; não são decisão de ninguém para esta tela."
+      }
+    ]
+  },
+  "ex-mrmxjmpn": {
+    "prompt": "Ponha as etapas de uma requisição em ordem.",
+    "items": [
+      "achar o endereço do servidor",
+      "abrir a conexão",
+      "enviar a requisição",
+      "esperar o primeiro byte",
+      "ler o corpo"
+    ]
+  },
+  "ex-0ved39nr": {
+    "prompt": "O fetchWeek recebe um 404. O que ele faz?",
+    "choices": [
+      {
+        "text": "Tenta de novo com backoff",
+        "why": "Só 500 ou mais é tentado de novo."
+      },
+      {
+        "text": "Espera a rede voltar",
+        "why": "A rede está bem: o servidor respondeu."
+      },
+      {
+        "text": "Lança o erro na hora",
+        "why": "Isso. Um 404 vai falhar do mesmo jeito por mais vezes que se pergunte."
+      },
+      {
+        "text": "Devolve uma semana vazia",
+        "why": "Uma semana vazia seria uma mentira na tela."
+      }
+    ]
+  },
+  "ex-350xqyya": {
+    "prompt": "Com uma primeira espera de 500 ms que dobra a cada falha, quantos milissegundos o fetchWeek espera no total antes da terceira tentativa?",
+    "unit": "ms"
+  },
+  "ex-xd74fb3z": {
+    "prompt": "Uma requisição para adicionar uma sessão de 30 minutos estoura o prazo. Por que enviá-la de novo não é seguro por si só?",
+    "choices": [
+      {
+        "text": "O servidor vai recusar uma segunda requisição do mesmo celular",
+        "why": "Nada no servidor recusa uma repetição; esse é exatamente o problema."
+      },
+      {
+        "text": "O servidor pode já ter adicionado e perdido só a resposta",
+        "why": "Isso. Um timeout diz que não veio resposta, não que nada aconteceu."
+      },
+      {
+        "text": "Um timeout quer dizer que a sessão foi rejeitada",
+        "why": "Uma rejeição seria uma resposta; um timeout é a falta dela."
+      },
+      {
+        "text": "Novas tentativas podem ser mais lentas que a primeira",
+        "why": "Velocidade não tem nada a ver com repetir ser seguro."
+      }
+    ]
+  },
+  "ex-fjh7h5nj": {
+    "prompt": "Que requisição pode ser repetida depois de um timeout sem chave nenhuma, e por quê?",
+    "choices": [
+      {
+        "text": "Pagar uma assinatura, porque o gateway confere",
+        "why": "Sem uma chave, nada reconhece a repetição; é uma segunda cobrança."
+      },
+      {
+        "text": "Adicionar uma sessão, porque a aluna queria adicioná-la",
+        "why": "Ela queria adicionar uma, e a repetição adiciona duas."
+      },
+      {
+        "text": "Nenhuma: toda requisição que muda dados precisa de chave",
+        "why": "Marcar como concluída muda dados e é seguro repetir."
+      },
+      {
+        "text": "Marcar uma sessão como concluída: fazer duas vezes a deixa concluída",
+        "why": "Isso. O resultado é o mesmo, chegue quantas vezes chegar."
+      }
+    ]
+  },
+  "ex-z9er5mxm": {
+    "prompt": "Um id único que o app inventa uma vez para uma operação, e manda em toda tentativa para o servidor recusar uma repetição, é uma chave de ___.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotência",
+          "idempotencia"
+        ]
+      }
+    ]
+  },
+  "ex-dn81y2qf": {
+    "prompt": "Por que um cliente de verdade acrescenta jitter ao backoff?",
+    "choices": [
+      {
+        "text": "Para a saída bater com a transcrição",
+        "why": "É o contrário: o jitter ficou de fora para a saída bater."
+      },
+      {
+        "text": "Para cada espera ser mais curta que a anterior",
+        "why": "O backoff deixa as esperas mais longas; o jitter só as espalha."
+      },
+      {
+        "text": "Para que celulares que falharam juntos não voltem juntos",
+        "why": "Isso. Mil agendas idênticas batem no servidor no mesmo instante."
+      },
+      {
+        "text": "Porque servidores rejeitam requisições que chegam em horários redondos",
+        "why": "Nenhum servidor faz isso."
+      }
+    ]
+  },
+  "ex-p4fsfj07": {
+    "prompt": "O servidor está fora do ar e há uma cópia salva da semana desta manhã. O que a tela da semana deve mostrar?",
+    "choices": [
+      {
+        "text": "A cópia, e a idade dela",
+        "why": "Isso. A idade deixa a aluna decidir se ela serve."
+      },
+      {
+        "text": "A cópia, como se fosse atual",
+        "why": "Isso troca 'não consegui conferir' por uma afirmação de que conferiu."
+      },
+      {
+        "text": "Uma semana vazia, até o servidor responder",
+        "why": "Uma semana vazia parece exatamente uma semana sem nada planejado."
+      },
+      {
+        "text": "Um spinner, até a rede voltar",
+        "why": "Um spinner sem fim é a primeira falha que esta aula nomeia."
+      }
+    ]
+  },
+  "ex-9mzvvjsm": {
+    "prompt": "O screen.ts salvou a semana às 08:30 e rodou de novo às 10:45 com o servidor parado. Quantos minutos de idade ele disse que a cópia tinha?",
+    "unit": "minutos"
+  },
+  "ex-yf68ywmb": {
+    "prompt": "Onde fica o ECONNREFUSED por trás de 'não consegui alcançar o planner'?",
+    "choices": [
+      {
+        "text": "Na tela, para a aluna poder pesquisar",
+        "why": "A aluna pode agir sobre 'tentar de novo', não sobre um erro de socket."
+      },
+      {
+        "text": "Em lugar nenhum; deve ser descartado",
+        "why": "Descartá-lo deixa quem desenvolve sem nada para depurar."
+      },
+      {
+        "text": "No week.json, ao lado da cópia salva",
+        "why": "A cópia salva guarda a semana e quando ela veio, mais nada."
+      },
+      {
+        "text": "Num log, para quem desenvolve",
+        "why": "Isso. A tela fala a língua do usuário; o log guarda a causa."
+      }
+    ]
+  },
+  "ex-bbxw00de": {
+    "prompt": "Associe cada estado da tela da semana ao que ela precisa mostrar.",
+    "pairs": [
+      {
+        "left": "carregando",
+        "right": "que está perguntando, até o prazo"
+      },
+      {
+        "left": "atual",
+        "right": "a semana como o servidor mandou"
+      },
+      {
+        "left": "desatualizada",
+        "right": "a semana salva e a idade dela"
+      },
+      {
+        "left": "erro",
+        "right": "o que deu errado, e Tentar de novo"
+      }
+    ],
+    "right_distractors": [
+      "uma semana vazia"
+    ]
+  },
+  "ex-07frfwtc": {
+    "prompt": "Uma aluna abre a semana num elevador. O celular informa uma rede validada, a requisição sai, e nada volta. Com o código desta aula, o que ela vê?",
+    "choices": [
+      {
+        "text": "Um spinner que continua enquanto a rede ainda se diz validada",
+        "why": "O estado da rede não decide a espera; o prazo decide."
+      },
+      {
+        "text": "Depois de cinco segundos, a semana salva com a idade, e Tentar de novo",
+        "why": "Isso. O prazo encerra a espera, e a falha recorre à cópia."
+      },
+      {
+        "text": "Um erro na hora, porque o elevador não tem sinal",
+        "why": "Um elevador falha em silêncio, não na hora; é por isso que o prazo existe."
+      },
+      {
+        "text": "Três novas tentativas com backoff, e depois uma tela em branco",
+        "why": "O screen.ts pergunta uma vez, e nunca mostra uma tela em branco."
+      }
+    ]
+  },
+  "ex-habjjq03": {
+    "prompt": "Ponha em ordem o que o screen.ts faz numa execução em que o servidor está fora do ar.",
+    "items": [
+      "imprimir que está carregando",
+      "perguntar ao servidor, com um prazo de cinco segundos",
+      "capturar a falha",
+      "ler o week.json",
+      "mostrar a semana salva com a idade",
+      "oferecer Tentar de novo"
+    ]
+  }
+}

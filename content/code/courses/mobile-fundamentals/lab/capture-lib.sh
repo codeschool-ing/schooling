@@ -49,17 +49,21 @@ put() {   # put MD FILE DEST
 }
 SERVER=
 serve() { # serve DIR PORT 'command'
+  # The server runs under its own `lab.sh as`, in the background, in a session
+  # of its own: a server started inside a `run` dies with that run's PID
+  # namespace the moment the command returns. unserve kills the session.
   local dir=$1 port=$2; shift 2
-  LAB as "$LID" "cd $dir && { setsid bash -c 'echo \$\$ > /home/ana/.serve.pid; exec $*' </dev/null >/home/ana/.serve.log 2>&1 & }"
+  setsid bash "$MF_COURSE/lab.sh" as "$LID" "cd $dir && exec $*" </dev/null >"$H/.serve.log" 2>&1 &
+  SERVER=$!
   for _ in $(seq 100); do
-    curl -s --noproxy '*' -o /dev/null "http://127.0.0.1:$port/" && { SERVER=1; return 0; }
+    curl -s --noproxy '*' -o /dev/null "http://127.0.0.1:$port/" && return 0
     sleep 0.2
   done
   echo "serve: nothing answered on port $port" >&2; cat "$H/.serve.log" >&2; exit 1
 }
 unserve() {
   [ -n "$SERVER" ] || return 0
-  kill -- -"$(cat "$H/.serve.pid")" 2>/dev/null; rm -f "$H/.serve.pid" "$H/.serve.log"
+  kill -- -"$SERVER" 2>/dev/null; wait "$SERVER" 2>/dev/null; rm -f "$H/.serve.log"
   SERVER=; sleep 0.5
 }
 trap unserve EXIT
