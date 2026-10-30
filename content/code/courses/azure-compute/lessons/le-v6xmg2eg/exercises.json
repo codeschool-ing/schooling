@@ -1,0 +1,690 @@
+[
+  {
+    "id": "ex-m6zaxqz9",
+    "version": 1,
+    "section": "the-discount",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a Spot virtual machine, compared with a regular one of the same size?",
+    "hint": "Same images, same hardware, same disks.",
+    "choices": [
+      {
+        "text": "A smaller share of a host, with fewer guaranteed vCPUs than the size promises",
+        "correct": false,
+        "why": "That is closer to lesson 1's B family. A Spot machine has every vCPU of its size, for as long as it runs."
+      },
+      {
+        "text": "The same machine on capacity Azure is not using, with no priority to keep it",
+        "correct": true,
+        "why": "Right. Images, hardware, disks and performance are the same; what differs is that Azure takes the capacity back when a regular machine needs it."
+      },
+      {
+        "text": "A machine on older hardware that Azure is retiring, sold off cheaply",
+        "correct": false,
+        "why": "Microsoft's guide says Spot runs on the same hardware as regular machines. What is cheap is the priority, not the equipment."
+      },
+      {
+        "text": "A regular machine with a 99% SLA instead of the higher one",
+        "correct": false,
+        "why": "There is no SLA for Spot at all, at any percentage."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyk10q34",
+    "version": 1,
+    "section": "the-discount",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop wants to save money on its staging server, a `Standard_B2s_v2`, by declaring it with `priority: 'Spot'`. What does the documentation say about that?",
+    "hint": "Look at the list of restrictions.",
+    "choices": [
+      {
+        "text": "It works, and a burstable size gets the largest discount",
+        "correct": false,
+        "why": "The B-series is the one family the Spot pages name as unsupported."
+      },
+      {
+        "text": "It works, but the credits stop accruing while the machine is Spot",
+        "correct": false,
+        "why": "The documentation describes no such rule, because the question never arises: B sizes cannot be Spot."
+      },
+      {
+        "text": "It is refused only in `brazilsouth`, where Spot is not offered",
+        "correct": false,
+        "why": "Spot is offered in every region except Azure operated by 21Vianet; the size is what rules it out."
+      },
+      {
+        "text": "It is not possible: B-series sizes are not supported for Spot",
+        "correct": true,
+        "why": "Right. B-series and promo sizes are excluded, so the staging server would need a D size to be Spot."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbsq8p3k",
+    "version": 1,
+    "section": "the-discount",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`priority: 'spot'`, in lower case, compiled with no warning. What does that silence tell you?",
+    "hint": "The compiler printed the type of `priority` when it was given a number.",
+    "choices": [
+      {
+        "text": "That Azure accepts the lower-case spelling, since the compiler checks values against Azure's types",
+        "correct": false,
+        "why": "It checks against the type it has, and for `priority` that type is any string. It compared the value with nothing."
+      },
+      {
+        "text": "Nothing about Azure: its type for `priority` is any string, so there was no list to check",
+        "correct": true,
+        "why": "Right. Whether Resource Manager takes `spot` is decided by the compute service; copy `Spot` from the CLI's list."
+      },
+      {
+        "text": "That the compiler corrected the case, as the template shows `Spot`",
+        "correct": false,
+        "why": "The template showed `\"spot\"`, exactly as written. The compiler changes nothing."
+      },
+      {
+        "text": "That the warning is printed only at deployment, when the subscription is known",
+        "correct": false,
+        "why": "The compiler warns at build time or not at all; it printed a warning for the number in the same place."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntmebgcs",
+    "version": 1,
+    "section": "the-discount",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At an illustrative regular rate of 0.20 USD an hour, and supposing for the arithmetic a Spot discount of 60%, what do 300 Spot hours cost, in USD?",
+    "hint": "You pay 40% of the regular rate.",
+    "value": 24,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-vdth83xs",
+    "version": 1,
+    "section": "the-discount",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's report machine already exists as a regular machine. Somebody adds `priority: 'Spot'` to its file and deploys it again. What should they expect?",
+    "hint": "When is Spot decided?",
+    "choices": [
+      {
+        "text": "The machine is converted at its next restart, and billed as Spot from then on",
+        "correct": false,
+        "why": "The documentation's FAQ says setting Spot is supported only at creation; an existing machine is not converted."
+      },
+      {
+        "text": "A refusal: Spot is set only at creation, so this needs a new machine",
+        "correct": true,
+        "why": "Right. The error list even has a code for a priority applied to a machine created without one, `VMPriorityCannotBeApplied`."
+      },
+      {
+        "text": "A Spot machine beside the regular one, with the same name and a suffix",
+        "correct": false,
+        "why": "A deployment never invents a second machine with a new name; it updates the one it names."
+      },
+      {
+        "text": "Nothing, because priority is read only by the CLI and not by Bicep",
+        "correct": false,
+        "why": "The template carried `\"priority\": \"Spot\"`; Resource Manager reads it like any other property."
+      }
+    ]
+  },
+  {
+    "id": "ex-jct26gzf",
+    "version": 1,
+    "section": "eviction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `maxPrice: -1` decide for a Spot machine?",
+    "hint": "The portal calls it an eviction type.",
+    "choices": [
+      {
+        "text": "That the machine is evicted only for capacity, and never billed above the standard price",
+        "correct": true,
+        "why": "Right. Price is no longer a reason to evict it, and the documentation says you pay the Spot price or the standard one, whichever is lower."
+      },
+      {
+        "text": "That it is never evicted, at the cost of paying the standard price",
+        "correct": false,
+        "why": "Capacity can always take a Spot machine; -1 removes only the price reason."
+      },
+      {
+        "text": "That there is no maximum, so the hourly price may rise above the standard price",
+        "correct": false,
+        "why": "The documentation is explicit that you are never charged above the standard price."
+      },
+      {
+        "text": "That the maximum is chosen by Azure each hour from the current price",
+        "correct": false,
+        "why": "Nobody chooses a maximum; -1 means there is none for eviction purposes."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjwj0xc1",
+    "version": 1,
+    "section": "eviction",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the machine to what an eviction leaves of it, under each policy.",
+    "hint": "One policy keeps the machine; the other keeps nothing.",
+    "pairs": [
+      {
+        "left": "Deallocate: the disks",
+        "right": "Kept, and still billed"
+      },
+      {
+        "left": "Deallocate: the cores",
+        "right": "Still counted against the Spot quota"
+      },
+      {
+        "left": "Delete: the disks",
+        "right": "Deleted together with the machine"
+      },
+      {
+        "left": "Delete: the replacement",
+        "right": "Created by something outside, of any size, in any zone"
+      }
+    ],
+    "right_distractors": [
+      "Restarted by Azure as soon as capacity returns"
+    ]
+  },
+  {
+    "id": "ex-yt89gfmp",
+    "version": 1,
+    "section": "eviction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`maxPrice: 0.05` made the compiler print five errors and write no template. What is the way to write that maximum in Bicep?",
+    "hint": "Bicep has integers only.",
+    "choices": [
+      {
+        "text": "`maxPrice: '0.05'`, as text, which Resource Manager converts",
+        "correct": false,
+        "why": "Text is what the warning refused for `'-1'`: the type wants a number."
+      },
+      {
+        "text": "`maxPrice: 5`, since the property is in cents",
+        "correct": false,
+        "why": "The maximum is in US dollars an hour; 5 would be five dollars."
+      },
+      {
+        "text": "`maxPrice: json('0.05')`, which becomes the number 0.05 at deployment",
+        "correct": true,
+        "why": "Right. It compiled with no warning, and the template carries `[json('0.05')]` for Resource Manager to evaluate."
+      },
+      {
+        "text": "`maxPrice: 0,05`, with the comma Bicep uses for decimals",
+        "correct": false,
+        "why": "Bicep has no decimal numbers in either notation; a comma separates items."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsrdmbq2",
+    "version": 1,
+    "section": "eviction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Spot machine with a maximum of 0.04 USD an hour was evicted when the Spot price rose to 0.05. The next day the price is 0.03. What happens to the machine?",
+    "hint": "Look at the last rows of the documentation's table.",
+    "choices": [
+      {
+        "text": "It restarts on its own, since the price is under its maximum again",
+        "correct": false,
+        "why": "The documentation says the machine is not restarted automatically after a price eviction."
+      },
+      {
+        "text": "It restarts on its own, but is billed at its maximum of 0.04",
+        "correct": false,
+        "why": "Nothing restarts it, and you never pay your maximum, only the current price."
+      },
+      {
+        "text": "It stays stopped until somebody starts it, and is then billed at the current price",
+        "correct": true,
+        "why": "Right. A price eviction is not undone when the price falls; restarting is yours to do."
+      },
+      {
+        "text": "It is deleted, because a price eviction ignores the eviction policy",
+        "correct": false,
+        "why": "The eviction policy decides what is left whatever the reason for the eviction."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7rc8y0b",
+    "version": 1,
+    "section": "eviction",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of a Spot machine evicted with `Deallocate`? Choose all that apply.",
+    "hint": "Think about what is still there, and who pays for it.",
+    "choices": [
+      {
+        "text": "Its disks are kept and billed while it waits",
+        "correct": true,
+        "why": "The documentation says the storage of the underlying disks is still charged."
+      },
+      {
+        "text": "Its cores still count against the subscription's quota",
+        "correct": true,
+        "why": "Deallocated machines count against quota, which can block their own replacements."
+      },
+      {
+        "text": "A restart is not guaranteed to succeed",
+        "correct": true,
+        "why": "Capacity returns when it returns; the documentation says there is no guarantee the allocation will succeed."
+      },
+      {
+        "text": "It may be restarted in another zone where there is room",
+        "correct": false,
+        "why": "A deallocated machine stays in its region and zone; moving is what Delete and a new machine give you."
+      },
+      {
+        "text": "Azure restarts it on its own when capacity returns",
+        "correct": false,
+        "why": "Nothing restarts it; something you build has to keep trying, or a scale set's try and restore for instances in a set."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqygsjz4",
+    "version": 1,
+    "section": "scheduled-events",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Scheduled Events document, the event type that announces a Spot eviction is ___.",
+    "hint": "Its minimum notice is 30 seconds.",
+    "blanks": [
+      {
+        "accept": [
+          "Preempt"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cvaqhk04",
+    "version": 1,
+    "section": "scheduled-events",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the report machine's listener in order, from boot to eviction.",
+    "hint": "It asks long before anything happens.",
+    "items": [
+      "Ask the Scheduled Events endpoint at boot, and every second after",
+      "See a new DocumentIncarnation holding a Preempt that names this machine",
+      "Send SIGTERM, so the report writes a checkpoint and exits",
+      "POST a StartRequests body naming the event",
+      "Azure evicts the machine, at NotBefore or sooner"
+    ],
+    "trap": "Waiting to start the listener until trouble is suspected: the first answer can take two minutes."
+  },
+  {
+    "id": "ex-11xpftyf",
+    "version": 1,
+    "section": "scheduled-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the listener start at boot, rather than when the machine's metrics suggest an eviction is coming?",
+    "hint": "What switches Scheduled Events on?",
+    "choices": [
+      {
+        "text": "Because Azure sends the Preempt only to listeners that registered at boot",
+        "correct": false,
+        "why": "Nothing registers. The machine asks, and the service answers whoever asks with the header."
+      },
+      {
+        "text": "Its first request switches it on, and that answer takes up to two minutes",
+        "correct": true,
+        "why": "Right. Thirty seconds of notice are no use to a listener whose first answer is still on its way."
+      },
+      {
+        "text": "Because the metrics are in Azure Monitor, which a machine cannot read",
+        "correct": false,
+        "why": "There are no metrics that predict an eviction; that is not why the listener starts early."
+      },
+      {
+        "text": "Because a listener started later uses an older api-version",
+        "correct": false,
+        "why": "The version is whatever the request names, at any time."
+      }
+    ]
+  },
+  {
+    "id": "ex-0b893171",
+    "version": 1,
+    "section": "scheduled-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The listener crashes before it acknowledges a Preempt. What happens to the eviction?",
+    "hint": "What does an acknowledgement change?",
+    "choices": [
+      {
+        "text": "It is postponed until the machine acknowledges, however long that takes",
+        "correct": false,
+        "why": "An event does not wait for consent; the documentation says it goes ahead at NotBefore."
+      },
+      {
+        "text": "It is cancelled, and a new Preempt is sent a minute later",
+        "correct": false,
+        "why": "Nothing cancels an eviction because the machine stayed silent."
+      },
+      {
+        "text": "It becomes a Delete, whatever the policy says",
+        "correct": false,
+        "why": "The eviction policy is fixed on the machine; the listener has no part in it."
+      },
+      {
+        "text": "It goes ahead at NotBefore, as it would have anyway",
+        "correct": true,
+        "why": "Right. Acknowledging only lets Azure go ahead sooner; silence never makes the window longer."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7jmtsme",
+    "version": 1,
+    "section": "scheduled-events",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A listener on every instance of a scale set drains its worker on any Preempt it sees, without reading `Resources`. One Spot instance is being evicted. What goes wrong?",
+    "hint": "Who receives the events of a placement group?",
+    "choices": [
+      {
+        "text": "Nothing: each instance receives only its own events",
+        "correct": false,
+        "why": "The documentation says the events of every machine in a scale set placement group are delivered to all of them."
+      },
+      {
+        "text": "All of them stop their workers, while only one machine is leaving",
+        "correct": true,
+        "why": "Right. The fix is the check `spot-watch.py` makes: act only when this machine's name is in `Resources`."
+      },
+      {
+        "text": "The evicted instance never sees its own event, because another acknowledged it first",
+        "correct": false,
+        "why": "Every instance can read the event; acknowledgement does not hide it."
+      },
+      {
+        "text": "The scale set refuses the acknowledgements and the eviction is delayed",
+        "correct": false,
+        "why": "The service answers 200 to any valid event id, even one already acknowledged."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryea2t04",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Flexible scale set has `baseRegularPriorityCount: 2` and `regularPriorityPercentageAboveBase: 25`. At a capacity of 12, how many of its instances are Spot, rounding as the documentation's examples do?",
+    "hint": "Take off the base, split the rest, and round the regular share down.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "ex-26mze2s4",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orchestrationMode: 'Uniform'` beside a `priorityMixPolicy` compiled with no warning. What should you conclude?",
+    "hint": "What does the compiler check, and what does it not?",
+    "choices": [
+      {
+        "text": "That Uniform scale sets now support the mix, since the type lets a Uniform set carry one",
+        "correct": false,
+        "why": "The documentation says plainly that the mix works only with Flexible; the type knows nothing of that rule."
+      },
+      {
+        "text": "Nothing in its favour: the compiler checks each property alone, and the mix needs Flexible",
+        "correct": true,
+        "why": "Right. Rules that tie properties together are in the documentation and in Azure's answer to a deployment."
+      },
+      {
+        "text": "That the mix will be applied after the set is converted to Flexible",
+        "correct": false,
+        "why": "The orchestration mode is chosen once, when the set is created, as lesson 4 said."
+      },
+      {
+        "text": "That a warning appears once a single placement group is set",
+        "correct": false,
+        "why": "No warning depends on it; the compiler did not compare the two properties at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kgya3qk",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 4's autoscale setting is pointed at the shop's Spot workers, which have try and restore enabled. What happens to try and restore?",
+    "hint": "Who owns the count?",
+    "choices": [
+      {
+        "text": "It restores evicted instances first, and autoscale adds any still missing",
+        "correct": false,
+        "why": "The two do not share the count; the documentation says one switches the other off."
+      },
+      {
+        "text": "It stays on, but only for instances evicted for price",
+        "correct": false,
+        "why": "It only ever restores instances evicted for capacity, and here it is off altogether."
+      },
+      {
+        "text": "It is disabled: the count is now driven by the autoscale rules",
+        "correct": true,
+        "why": "Right. And the documentation advises Delete for an autoscaled Spot set, so evicted instances do not hold disks and quota."
+      },
+      {
+        "text": "It raises the autoscale minimum to the restored count",
+        "correct": false,
+        "why": "Nothing changes the autoscale profile; that stays as lesson 4 wrote it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wk6d7qyt",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The order API needs three machines to answer at all and runs on up to twelve at the busiest hour. How should it use Spot?",
+    "hint": "What is the minimum for?",
+    "choices": [
+      {
+        "text": "Not at all, because a production API is too important for Spot",
+        "correct": false,
+        "why": "Importance is not the test; what one eviction costs is, and above the minimum it costs little."
+      },
+      {
+        "text": "All twelve on Spot, spread over three zones so one eviction takes few",
+        "correct": false,
+        "why": "Spot evictions can take many at once, and then the API stops answering; the minimum must be regular."
+      },
+      {
+        "text": "A base of three regular machines, and Spot only above it",
+        "correct": true,
+        "why": "Right. A priority mix with `baseRegularPriorityCount: 3` keeps the API answering on the night every Spot instance goes."
+      },
+      {
+        "text": "Three Spot machines with `maxPrice: -1`, which are never evicted",
+        "correct": false,
+        "why": "`-1` removes only the price reason; capacity can still take every one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcd0yx5y",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At an illustrative eviction rate of 20% an hour, what is the chance, in percent, that a three-hour job on one Spot machine finishes with no eviction at all?",
+    "hint": "Each hour passes with no eviction 80% of the time.",
+    "value": 51.2,
+    "tolerance": 0.1,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-rzsm8q5f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The nightly report has no checkpoints and must be ready by 07:00. On Spot it saves money every month and misses the deadline on about one night in six. Which change makes Spot safe for it?",
+    "hint": "What does an eviction throw away?",
+    "choices": [
+      {
+        "text": "Setting `maxPrice: -1`, so the report is never evicted",
+        "correct": false,
+        "why": "`-1` removes the price reason only; capacity evictions, the ones in the arithmetic, remain."
+      },
+      {
+        "text": "Writing a checkpoint to Blob Storage every half hour, and one more on SIGTERM",
+        "correct": true,
+        "why": "Right. An eviction then costs about 25 minutes instead of a restart from nothing, and the deadline holds."
+      },
+      {
+        "text": "Switching the eviction policy to Delete, so the replacement starts faster",
+        "correct": false,
+        "why": "A faster restart does not bring back two hours of lost work."
+      },
+      {
+        "text": "Polling Scheduled Events ten times a second to get more notice",
+        "correct": false,
+        "why": "The notice is at most thirty seconds however often you ask, and the service limits a machine to five requests a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-jbjb39zx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the portal, somebody chose the eviction type *Price or capacity* with a maximum of 0.06 USD an hour. How is that choice written in a Bicep file?",
+    "hint": "The API has no property named after the portal's choice.",
+    "choices": [
+      {
+        "text": "`evictionType: 'PriceOrCapacity'` beside `evictionPolicy`",
+        "correct": false,
+        "why": "The compiler refused `evictionType`: it is not a property of a virtual machine."
+      },
+      {
+        "text": "`evictionPolicy: 'Price'`, with the maximum written in `billingProfile` below it",
+        "correct": false,
+        "why": "The policy is Deallocate or Delete, what is left afterwards, not the reason for the eviction."
+      },
+      {
+        "text": "`priority: 'Spot'` alone, since an eviction for price is what a Spot machine does by default",
+        "correct": false,
+        "why": "Capacity is the only reason that is always present; price exists only with a maximum."
+      },
+      {
+        "text": "`billingProfile: { maxPrice: json('0.06') }`, a number instead of -1",
+        "correct": true,
+        "why": "Right. The eviction type is the value of `maxPrice`, and a decimal needs `json` in Bicep."
+      }
+    ]
+  },
+  {
+    "id": "ex-7h60kjxm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team wants each Spot worker in a scale set to have several minutes to drain before it is taken away. What notice does the documentation offer?",
+    "hint": "Look at the minimum notice of each event type, and at what a Spot instance may enable.",
+    "choices": [
+      {
+        "text": "A Terminate notification of 5 to 15 minutes, set once on the scale set's model",
+        "correct": false,
+        "why": "Terminate notifications exist for scale set instances, and the documentation says they cannot be enabled on Spot ones."
+      },
+      {
+        "text": "A Redeploy event with ten minutes' notice before each eviction",
+        "correct": false,
+        "why": "Redeploy is a move to another host, not an eviction; a Spot eviction is a Preempt."
+      },
+      {
+        "text": "At most thirty seconds, through the Preempt event, on a best-effort basis",
+        "correct": true,
+        "why": "Right. Nothing lengthens it, so the workers must be safe to stop within that time or without any notice."
+      },
+      {
+        "text": "Unlimited time, for as long as the machine has not yet acknowledged the event",
+        "correct": false,
+        "why": "The event goes ahead at NotBefore whether or not the machine has acknowledged it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdkmr5z0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten Spot `D2s_v5` workers, outside any scale set, were evicted with `Deallocate`. The automation that creates replacements now fails, and the illustrative Spot quota is 20 vCPUs. Why, and what would have avoided it?",
+    "hint": "What do deallocated machines still hold?",
+    "choices": [
+      {
+        "text": "Their 20 vCPUs are still counted against the quota; `Delete` would have released them",
+        "correct": true,
+        "why": "Right. Deallocated machines count against quota, so replacements cannot be created until the old ones go or restart."
+      },
+      {
+        "text": "The Spot price rose; `maxPrice: -1` would have avoided it",
+        "correct": false,
+        "why": "A price above the maximum stops a creation with its own error, and these machines had no maximum problem to begin with."
+      },
+      {
+        "text": "The region has no Spot quota at all; a request for regular quota fixes it",
+        "correct": false,
+        "why": "The quota was there and in use; Spot quota is a separate pool, raised through the ordinary request."
+      },
+      {
+        "text": "The names are taken; a scale set would have generated new ones",
+        "correct": false,
+        "why": "Nothing in the documentation ties this failure to names; the deallocated machines are holding the cores."
+      }
+    ]
+  }
+]

@@ -1,0 +1,428 @@
+{
+  "ex-xjxr6zhm": {
+    "prompt": "O shop-db-1 é apagado. Os dois discos de dados estavam ligados com deleteOption em Detach. O que acontece com o shop-db-data?",
+    "hint": "Um disco é um recurso ao lado da máquina, com fatura própria.",
+    "choices": [
+      {
+        "text": "É apagado junto com a máquina, porque estava ligado a ela",
+        "why": "Isso é o que o Delete faz. O Detach deixa o disco como um recurso por si só."
+      },
+      {
+        "text": "Fica no Azure, ligado a nada, e é cobrado a cada hora",
+        "why": "Desanexado e intacto, com os pedidos dentro, e ainda na fatura até alguém apagá-lo."
+      },
+      {
+        "text": "Fica guardado sem custo até outra máquina ligá-lo",
+        "why": "Um disco desanexado é cobrado igual a um ligado; é assim que eles se acumulam."
+      },
+      {
+        "text": "Vira um snapshot, e o disco em si é removido",
+        "why": "Nada transforma um disco em snapshot sozinho; um snapshot é um recurso que você cria."
+      }
+    ]
+  },
+  "ex-kbqd3e2n": {
+    "prompt": "Que valor de cache do host a Microsoft recomenda para o disco que guarda o log de escrita do banco, e por quê?",
+    "hint": "Pense em como um log é usado: gravado em sequência, quase nunca lido.",
+    "choices": [
+      {
+        "text": "ReadWrite, já que o log é quase só gravação e esse modo segura gravações",
+        "why": "Ele as segura no host e grava depois, o que só é seguro para um software que descarrega direito. Para um disco de muita gravação a orientação é None."
+      },
+      {
+        "text": "ReadOnly, já que leituras em cache não contam no disco",
+        "why": "Verdade para leituras em cache, e inútil para um disco que quase nunca é lido."
+      },
+      {
+        "text": "None, já que o log é gravado em sequência e raramente relido",
+        "why": "Um cache ajuda leituras repetidas, e o log não tem nenhuma; None manda cada gravação direto para o disco."
+      },
+      {
+        "text": "ReadWrite, já que esse é o padrão de um disco de dados",
+        "why": "ReadWrite é o padrão do disco do SO. Para discos de dados, duas páginas da Microsoft discordam, e é por isso que o db.bicep escreve o valor."
+      }
+    ]
+  },
+  "ex-vbzv4709": {
+    "prompt": "Uma desenvolvedora grava o relatório de vendas noturno em /dev/disk/azure/resource num Standard_D4ds_v5, porque é rápido. Qual destes está documentado como capaz de perdê-lo?",
+    "hint": "Esse caminho é o disco temporário, no host.",
+    "choices": [
+      {
+        "text": "Um reinício feito de dentro do sistema operacional",
+        "why": "A Microsoft documenta que os dados do disco temporário sobrevivem a um reinício comum bem-sucedido."
+      },
+      {
+        "text": "Um snapshot tirado do disco do SO",
+        "why": "Um snapshot lê um disco gerenciado; ele nem toca no disco temporário."
+      },
+      {
+        "text": "A máquina ser parada e desalocada",
+        "why": "Parar, reimplantar ou um evento de manutenção podem perdê-lo, porque o disco pertence ao host e não à máquina."
+      },
+      {
+        "text": "Ligar o cache ReadOnly no disco de dados",
+        "why": "Isso reanexa o disco de dados em que é posto. O disco temporário não é um disco gerenciado e não tem configuração de cache."
+      }
+    ]
+  },
+  "ex-bkb3j0at": {
+    "prompt": "No db.bicep o disco de dados e o disco de log se distinguem por um número de unidade lógica, escrito como ___: 0 e 1.",
+    "hint": "As três letras vêm de logical unit number.",
+    "blanks": [
+      {
+        "accept": [
+          "lun"
+        ]
+      }
+    ]
+  },
+  "ex-57y11g41": {
+    "prompt": "Ponha em ordem os passos de levar o shop-db-data para outra máquina.",
+    "hint": "Primeiro dentro da máquina, depois o Azure.",
+    "items": [
+      "Parar o banco de gravar no disco",
+      "Desmontar o sistema de arquivos e tirar a linha dele do /etc/fstab",
+      "Desanexar o disco com az vm disk detach",
+      "Ligá-lo a uma máquina da mesma zona"
+    ],
+    "trap": "Desanexar um disco ainda montado o puxa de baixo de um sistema de arquivos em uso."
+  },
+  "ex-jy2qbngj": {
+    "prompt": "Um Standard_D2ds_v5 (3.750 IOPS sem cache, créditos de burst gastos) tem dois discos de dados P30 de 5.000 IOPS cada, cache None. Um job pede tudo o que os dois discos têm. Quantos IOPS ele recebe no total?",
+    "hint": "O menor entre o que os discos oferecem juntos e o que a máquina permite.",
+    "unit": "IOPS"
+  },
+  "ex-eq666y55": {
+    "prompt": "Qual é o máximo de IOPS que um disco Premium SSD v2 de 40 GiB pode receber?",
+    "hint": "Acima de 6 GiB, 500 por GiB, até 80.000.",
+    "unit": "IOPS"
+  },
+  "ex-v9ekzz71": {
+    "prompt": "Quais destas são verdadeiras sobre o Premium SSD v2? Escolha todas as que se aplicam.",
+    "hint": "Três números, e três limites que vêm junto.",
+    "choices": [
+      {
+        "text": "Não pode ser usado como disco do SO",
+        "why": "É só disco de dados, como o Ultra Disk."
+      },
+      {
+        "text": "É vendido em faixas P, como o Premium SSD",
+        "why": "Não tem faixas: qualquer tamanho de 1 em 1 GiB, com IOPS e MB/s definidos à parte."
+      },
+      {
+        "text": "A ligação dele não aceita cache do host",
+        "why": "A Microsoft lista o cache do host entre o que ele não suporta; a ligação diz None."
+      },
+      {
+        "text": "Pode ter redundância de zona, como PremiumV2_ZRS",
+        "why": "ZRS é oferecido para Premium SSD e Standard SSD, não para o v2; a CLI não lista esse SKU."
+      },
+      {
+        "text": "Os primeiros 3.000 IOPS e 125 MB/s não são cobrados",
+        "why": "Essa base vem com todo disco; só o que se define acima dela é cobrado."
+      }
+    ]
+  },
+  "ex-j6m5xe5k": {
+    "prompt": "Um Premium SSD de 1 TiB (P30) roda acima dos seus 5.000 IOPS por várias horas todo dia útil. Para onde aponta a orientação da Microsoft?",
+    "hint": "Burst é para períodos curtos; que modelo serve para um P30?",
+    "choices": [
+      {
+        "text": "Burst por créditos, que não custa nada a mais",
+        "why": "O burst por créditos cobre Premium SSDs de 512 GiB ou menos, e um balde cheio dura 30 minutos."
+      },
+      {
+        "text": "Uma faixa de desempenho mais alta, a preço fixo",
+        "why": "Um disco que passaria a maior parte do tempo em burst pertence a uma faixa mais alta, com preço fixo por faixa."
+      },
+      {
+        "text": "Burst sob demanda deixado ligado, já que não tem taxa fixa",
+        "why": "Tem uma taxa por hora enquanto está ligado mais cada operação acima da faixa, e a Microsoft o considera antieconômico para bursts frequentes."
+      },
+      {
+        "text": "Cache ReadWrite, para as gravações pararem de contar no disco",
+        "why": "Gravações em cache chegam ao disco quando o cache é descarregado, e contam aí."
+      }
+    ]
+  },
+  "ex-aeq3w6wt": {
+    "prompt": "O disk-small.bicep, um Premium SSD v2 de 8 GiB com 5.000 IOPS, compilou sem aviso. Por quê?",
+    "hint": "O que o compilador confere: cada valor, ou a relação entre dois?",
+    "choices": [
+      {
+        "text": "8 GiB permitem 5.000 IOPS, então não havia o que pegar",
+        "why": "A partir de 6 GiB o limite é 500 por GiB, então 8 GiB permitem 4.000. O Azure o recusaria."
+      },
+      {
+        "text": "O Bicep pula as verificações em discos Premium SSD v2",
+        "why": "Ele conferiu o mesmo disco um momento antes e recusou a vazão escrita como texto."
+      },
+      {
+        "text": "O limite que liga os dois é regra do Azure",
+        "why": "Os dois números são inteiros válidos. A conta que liga IOPS ao tamanho é conferida pelo Azure quando o pedido chega."
+      },
+      {
+        "text": "O aviso só aparece quando o template é implantado",
+        "why": "O compilador mostra os avisos no build; ele mostrou um para a vazão em texto."
+      }
+    ]
+  },
+  "ex-0329z4hc": {
+    "prompt": "Um servidor web de staging com disco do SO efêmero não é necessário à noite. Como você para de pagar o processamento dele até de manhã?",
+    "hint": "Um dos jeitos comuns está na tabela do que você abre mão.",
+    "choices": [
+      {
+        "text": "Parando e desalocando, como com qualquer máquina",
+        "why": "Parar e desalocar não é suportado com disco do SO efêmero."
+      },
+      {
+        "text": "Tirando snapshot do disco do SO, depois desalocando",
+        "why": "Um disco do SO efêmero não aceita snapshot, e a máquina também não pode ser desalocada."
+      },
+      {
+        "text": "Desanexando o disco do SO e mantendo a máquina",
+        "why": "Um disco do SO não é desanexado de uma máquina em uso, e um efêmero não é um disco gerenciado para guardar."
+      },
+      {
+        "text": "Apagando a máquina, e criando de novo de manhã",
+        "why": "É o que a Microsoft manda fazer no lugar, e para uma máquina que não guarda nada não se perde nada."
+      }
+    ]
+  },
+  "ex-7jggxhx8": {
+    "prompt": "Um Standard_D2ds_v5 tem um disco temporário de 75 GiB. Um disco do SO efêmero de uma imagem de 30 GiB é posto nele, sem Trusted Launch. Quantos GiB de disco temporário sobram?",
+    "hint": "O disco temporário encolhe do tamanho da imagem.",
+    "unit": "GiB"
+  },
+  "ex-qy3kjg0c": {
+    "prompt": "Ligue cada evento ao que ele faz com um disco do SO efêmero.",
+    "hint": "Que eventos levam a máquina para outro host, e qual é recusado de cara?",
+    "pairs": [
+      {
+        "left": "Mudar para outro tamanho",
+        "right": "Apagado, e o SO provisionado de novo"
+      },
+      {
+        "left": "Migração ao vivo durante manutenção",
+        "right": "Mantido"
+      },
+      {
+        "left": "Parar e desalocar",
+        "right": "Não suportado"
+      },
+      {
+        "left": "Reimagem",
+        "right": "De volta à imagem"
+      }
+    ],
+    "right_distractors": [
+      "Mantido, e cobrado como disco gerenciado"
+    ]
+  },
+  "ex-3k133ke5": {
+    "prompt": "Qual destas máquinas combina mal com um disco do SO efêmero?",
+    "hint": "Procure a que depende de algo que a tabela diz não ser suportado.",
+    "choices": [
+      {
+        "text": "Um servidor web num scale set cuja imagem traz tudo o que ele roda",
+        "why": "O caso para o qual o recurso foi feito: nada no disco do SO vale guardar, e reimagem é o conserto."
+      },
+      {
+        "text": "Um jump host parado e desalocado toda noite",
+        "why": "Parar e desalocar não é suportado, então a economia noturna em volta da qual ele foi montado é impossível."
+      },
+      {
+        "text": "Um agente de build que é reimageado depois de cada job",
+        "why": "Uma reimagem rápida para o estado original é exatamente o que um disco do SO efêmero dá."
+      },
+      {
+        "text": "Uma máquina Spot que é apagada quando é despejada",
+        "why": "Discos do SO efêmeros são suportados em máquinas Spot, apagadas em vez de desalocadas."
+      }
+    ]
+  },
+  "ex-q3tg7ekt": {
+    "prompt": "O web-wrong.bicep, com cache ReadWrite e posição TempDisk num disco do SO efêmero, compilou sem aviso. O que isso diz?",
+    "hint": "Lembre o que o compilador recusou na primeira etapa.",
+    "choices": [
+      {
+        "text": "TempDisk é aceito como outro nome de ResourceDisk",
+        "why": "A CLI lista CacheDisk, NvmeDisk e ResourceDisk; TempDisk é um nome do texto, não um valor."
+      },
+      {
+        "text": "O Bicep transforma ReadWrite em ReadOnly num disco efêmero",
+        "why": "O template levou ReadWrite exatamente como escrito; o compilador não muda valores."
+      },
+      {
+        "text": "Os dois cabem nos tipos, e as regras são do serviço Azure",
+        "why": "A posição só é conferida como texto e ReadWrite é um valor de cache conhecido; a regra que os liga a um disco efêmero é do serviço."
+      },
+      {
+        "text": "Os dois estão certos, e só o cache completo exige ReadOnly",
+        "why": "O guia de implantação da Microsoft põe ReadOnly em todo disco do SO efêmero, parcial ou completo."
+      }
+    ]
+  },
+  "ex-zzn4efh7": {
+    "prompt": "Por que não ligar um único disco gerenciado a todos os servidores web da loja para as fotos enviadas?",
+    "hint": "O Azure permite um disco compartilhado. O que ele precisa a mais?",
+    "choices": [
+      {
+        "text": "Um disco gerenciado só pode ser ligado a uma única máquina",
+        "why": "Discos compartilhados existem; a Microsoft documenta ligar um disco a várias máquinas para clusters."
+      },
+      {
+        "text": "Só um disco ZRS pode ser ligado a mais de uma máquina",
+        "why": "Compartilhar não é um recurso do ZRS; o ZRS só acrescenta ligar de máquinas de outras zonas."
+      },
+      {
+        "text": "Compartilhar exige um gerenciador de cluster que decida quem grava",
+        "why": "O Pacemaker ou o Windows Server Failover Clustering cuida das travas; o Azure Files faz o compartilhamento por você."
+      },
+      {
+        "text": "Discos guardam blocos, e fotos são arquivos que pedem um armazenamento de objetos",
+        "why": "Um sistema de arquivos num disco guarda fotos muito bem; o problema é várias máquinas gravando nele."
+      }
+    ]
+  },
+  "ex-1xb0vqev": {
+    "prompt": "Quantos IOPS a Microsoft recomenda para um compartilhamento SSD de 1.024 GiB no provisionado v2?",
+    "hint": "3.000 mais um por GiB.",
+    "unit": "IOPS"
+  },
+  "ex-h7r68w27": {
+    "prompt": "Um compartilhamento NFS no Azure Files precisa da camada de mídia ___, que a CLI chama de premium.",
+    "hint": "Duas camadas de mídia: uma de estado sólido, outra de disco giratório.",
+    "blanks": [
+      {
+        "accept": [
+          "SSD"
+        ]
+      }
+    ]
+  },
+  "ex-kvseej5h": {
+    "prompt": "O files.bicep desliga o acesso pela rede pública e não declara endpoint privado. Implantado como está, quem consegue montar o compartilhamento uploads?",
+    "hint": "O NFS não tem login de usuário; pelo que ele é autenticado?",
+    "choices": [
+      {
+        "text": "Qualquer máquina em brazilsouth com o auxiliar aznfs instalado",
+        "why": "O auxiliar criptografa o tráfego; ele não dá rota até uma conta sem endpoint."
+      },
+      {
+        "text": "Qualquer cliente que tenha a chave da conta de armazenamento",
+        "why": "Compartilhamentos NFS não aceitam a chave; eles dependem só das regras de rede."
+      },
+      {
+        "text": "Qualquer rede virtual da mesma assinatura",
+        "why": "Chegar a um compartilhamento exige um endpoint privado, ou um endpoint de serviço que as regras permitam; estar na assinatura não é nenhum dos dois."
+      },
+      {
+        "text": "Ninguém: a conta não tem endereço alcançável",
+        "why": "O endpoint público está desligado e nada mais foi declarado, então não há endereço para montar."
+      }
+    ]
+  },
+  "ex-yqvnx7w1": {
+    "prompt": "Por que a etapa do Azure Files é lida e não praticada, se o laboratório tem o Azurite?",
+    "hint": "Veja as três portas que a ajuda do Azurite lista.",
+    "choices": [
+      {
+        "text": "O Azurite serve armazenamento de blob, fila e tabela, e nenhum serviço de arquivos",
+        "why": "A ajuda dele lista três portas, de 10000 a 10002, e nenhuma é de arquivos."
+      },
+      {
+        "text": "O Azurite tem serviço de arquivos, mas precisa de uma conta Azure para subir",
+        "why": "O Azurite não precisa de conta nenhuma; ele não tem serviço de arquivos para subir."
+      },
+      {
+        "text": "O NFS não pode ser montado de dentro de um contêiner Docker",
+        "why": "Não é o motivo dado: para começar, não há nada no laptop para montar."
+      },
+      {
+        "text": "O Azure Files não é oferecido na região brazilsouth",
+        "why": "Nada na lição diz isso; o motivo é o que o emulador serve."
+      }
+    ]
+  },
+  "ex-hm887sww": {
+    "prompt": "Ligue cada parte dos dados da loja ao lugar onde esta lição a põe.",
+    "hint": "Pergunte de cada uma: é compartilhada, é guardada, e como é usada?",
+    "pairs": [
+      {
+        "left": "Os arquivos de dados do banco",
+        "right": "Um disco de dados Premium SSD v2"
+      },
+      {
+        "left": "Swap e arquivos de rascunho",
+        "right": "O disco temporário"
+      },
+      {
+        "left": "O SO de um servidor web num scale set",
+        "right": "Um disco do SO efêmero"
+      },
+      {
+        "left": "Fotos que todo servidor web serve",
+        "right": "Um compartilhamento do Azure Files"
+      }
+    ],
+    "right_distractors": [
+      "Um snapshot do disco do SO"
+    ]
+  },
+  "ex-mb3sf7ch": {
+    "prompt": "Para economizar, o shop-db-1 passa de um Standard_D4ds_v5 para um Standard_D2ds_v5. O disco de dados Premium SSD v2 dele fica em 5.000 IOPS e 145 MB/s. Quando os créditos de burst da máquina acabam, o que os discos dela conseguem entregar, sem cache?",
+    "hint": "A linha do D2ds_v5 na tabela da Ddsv5.",
+    "choices": [
+      {
+        "text": "5.000 IOPS e 145 MB/s, porque o disco está provisionado para isso",
+        "why": "O disco consegue; a máquina aceita menos, e o programa recebe o menor dos dois."
+      },
+      {
+        "text": "3.750 IOPS e 145 MB/s, porque um tamanho só limita IOPS",
+        "why": "Um tamanho também limita a vazão: 85 MB/s no D2ds_v5."
+      },
+      {
+        "text": "No máximo 3.750 IOPS e 85 MB/s, todos juntos",
+        "why": "São os limites sem cache do tamanho, divididos pelo disco de dados, o log e o disco do SO."
+      },
+      {
+        "text": "Nada muda até o disco ser redimensionado para combinar com a máquina",
+        "why": "O limite vale na hora; nada no disco precisa mudar para isso."
+      }
+    ]
+  },
+  "ex-q1cqbd0m": {
+    "prompt": "Uma leitura num disco de dados com cache ReadOnly não acha o bloco no cache do host. Ponha em ordem o que acontece.",
+    "hint": "O disco responde ao cache e à máquina de uma vez.",
+    "items": [
+      "O programa faz a leitura",
+      "O cache do host não tem o bloco",
+      "A leitura vai pela rede até o disco gerenciado",
+      "O disco devolve o bloco ao cache e à máquina"
+    ],
+    "trap": "Uma falta conta nos limites com cache e sem cache, porque passa pelos dois."
+  },
+  "ex-mnnk9ghr": {
+    "prompt": "Qual destes erros o compilador Bicep recusou nesta lição?",
+    "hint": "Ele recusou um tipo errado, e um valor fora de uma lista que conhece.",
+    "choices": [
+      {
+        "text": "O SKU do disco escrito Premium_V2_LRS",
+        "why": "O nome do SKU é um texto qualquer para o compilador; ele entrou no template."
+      },
+      {
+        "text": "O disco de dados na zona 2 e a máquina na zona 1",
+        "why": "Cada zona é um texto válido; a diferença é o Azure quem recusa."
+      },
+      {
+        "text": "O protocolo do compartilhamento escrito NFSv4",
+        "why": "O enabledProtocols é um texto para o compilador; NFSv4 chegou ao template."
+      },
+      {
+        "text": "O valor de cache escrito none, todo em letras minúsculas",
+        "why": "O cache é tipado como None, ReadOnly ou ReadWrite, então none foi recusado com BCP036."
+      }
+    ]
+  }
+}

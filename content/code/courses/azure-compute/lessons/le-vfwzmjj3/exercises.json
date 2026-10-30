@@ -1,0 +1,641 @@
+[
+  {
+    "id": "ex-xjxr6zhm",
+    "version": 1,
+    "section": "managed-disks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "shop-db-1 is deleted. Its two data disks were attached with deleteOption set to Detach. What happens to shop-db-data?",
+    "hint": "A disk is a resource beside the machine, with a bill of its own.",
+    "choices": [
+      {
+        "text": "It is deleted with the machine, because it was attached to it",
+        "correct": false,
+        "why": "That is what Delete does. Detach leaves the disk as a resource of its own."
+      },
+      {
+        "text": "It stays in Azure, attached to nothing, and is billed every hour",
+        "correct": true,
+        "why": "Detached and intact, with the orders on it, and still on the bill until somebody deletes it."
+      },
+      {
+        "text": "It is kept at no charge until another machine attaches it",
+        "correct": false,
+        "why": "A detached disk is billed exactly as an attached one; that is how they pile up."
+      },
+      {
+        "text": "It becomes a snapshot, and the disk itself is removed",
+        "correct": false,
+        "why": "Nothing turns a disk into a snapshot by itself; a snapshot is a resource you create."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbqd3e2n",
+    "version": 1,
+    "section": "managed-disks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which host caching value does Microsoft recommend for the disk that holds the database write log, and why?",
+    "hint": "Think about how a log is used: written in order, read almost never.",
+    "choices": [
+      {
+        "text": "ReadWrite, since the log is mostly writes and that mode holds writes",
+        "correct": false,
+        "why": "It holds them on the host and writes them later, which is safe only for software that flushes properly. For a write-heavy disk the guidance is None."
+      },
+      {
+        "text": "ReadOnly, since cached reads do not count against the disk",
+        "correct": false,
+        "why": "True of cached reads, and useless for a disk that is almost never read."
+      },
+      {
+        "text": "None, since the log is written in sequence and seldom read back",
+        "correct": true,
+        "why": "A cache helps repeated reads, and the log has none to repeat; None sends each write straight to the disk."
+      },
+      {
+        "text": "ReadWrite, since that is the default of a data disk",
+        "correct": false,
+        "why": "ReadWrite is the default of the OS disk. For data disks, two of Microsoft's pages disagree, which is why db.bicep writes the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbzv4709",
+    "version": 1,
+    "section": "managed-disks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A developer writes the nightly sales report to /dev/disk/azure/resource on a Standard_D4ds_v5, because it is fast. Which of these is documented as able to lose it?",
+    "hint": "That path is the temporary disk, on the host.",
+    "choices": [
+      {
+        "text": "A restart from inside the operating system",
+        "correct": false,
+        "why": "Microsoft documents that data on the temporary disk persists through a successful standard restart."
+      },
+      {
+        "text": "A snapshot taken of the OS disk",
+        "correct": false,
+        "why": "A snapshot reads a managed disk; it does not touch the temporary disk at all."
+      },
+      {
+        "text": "The machine being stopped and deallocated",
+        "correct": true,
+        "why": "Stopping, a redeploy or a maintenance event can lose it, because the disk belongs to the host and not to the machine."
+      },
+      {
+        "text": "Turning on ReadOnly caching for the data disk",
+        "correct": false,
+        "why": "That reattaches the data disk it is set on. The temporary disk is not a managed disk and has no caching setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkb3j0at",
+    "version": 1,
+    "section": "managed-disks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In db.bicep the data disk and the log disk are told apart by a logical unit number, written as ___: 0 and 1.",
+    "hint": "The three letters stand for logical unit number.",
+    "blanks": [
+      {
+        "accept": [
+          "lun"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-57y11g41",
+    "version": 1,
+    "section": "managed-disks",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps of moving shop-db-data to another machine.",
+    "hint": "Inside the machine first, then Azure.",
+    "items": [
+      "Stop the database writing to the disk",
+      "Unmount the file system and remove its line from /etc/fstab",
+      "Detach the disk with az vm disk detach",
+      "Attach it to a machine in the same zone"
+    ],
+    "trap": "Detaching a disk that is still mounted pulls it from under a running file system."
+  },
+  {
+    "id": "ex-jy2qbngj",
+    "version": 1,
+    "section": "disk-types",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Standard_D2ds_v5 (3,750 IOPS uncached, its burst credits spent) has two P30 data disks of 5,000 IOPS each, caching None. A job asks both disks for everything they have. How many IOPS does it get in total?",
+    "hint": "The lower of what the disks offer together and what the machine allows.",
+    "value": 3750,
+    "tolerance": 0,
+    "unit": "IOPS"
+  },
+  {
+    "id": "ex-eq666y55",
+    "version": 1,
+    "section": "disk-types",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the most IOPS a 40 GiB Premium SSD v2 disk may be given?",
+    "hint": "Above 6 GiB, 500 per GiB, up to 80,000.",
+    "value": 20000,
+    "tolerance": 0,
+    "unit": "IOPS"
+  },
+  {
+    "id": "ex-v9ekzz71",
+    "version": 1,
+    "section": "disk-types",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of Premium SSD v2? Choose all that apply.",
+    "hint": "Three numbers, and three limits that come with them.",
+    "choices": [
+      {
+        "text": "It cannot be used as an OS disk",
+        "correct": true,
+        "why": "It is a data disk only, like Ultra Disk."
+      },
+      {
+        "text": "It is sold in P tiers, like Premium SSD",
+        "correct": false,
+        "why": "It has no tiers: any size in steps of 1 GiB, with IOPS and MB/s set apart."
+      },
+      {
+        "text": "Its attachment takes no host caching",
+        "correct": true,
+        "why": "Microsoft lists host caching among what it does not support; the attachment says None."
+      },
+      {
+        "text": "It can be zone-redundant, as PremiumV2_ZRS",
+        "correct": false,
+        "why": "ZRS is offered for Premium SSD and Standard SSD, not for v2; the CLI lists no such SKU."
+      },
+      {
+        "text": "Its first 3,000 IOPS and 125 MB/s carry no charge",
+        "correct": true,
+        "why": "That baseline comes with every disk; only what is set above it is billed."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6m5xe5k",
+    "version": 1,
+    "section": "disk-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 1 TiB Premium SSD (P30) runs above its 5,000 IOPS for several hours every working day. What does Microsoft's guidance point to?",
+    "hint": "Bursting is for short spells; which model fits a P30 at all?",
+    "choices": [
+      {
+        "text": "Credit-based bursting, which costs nothing extra",
+        "correct": false,
+        "why": "Credit-based bursting covers Premium SSDs of 512 GiB and less, and a full bucket lasts 30 minutes."
+      },
+      {
+        "text": "A higher performance tier, at a fixed price",
+        "correct": true,
+        "why": "A disk that would otherwise run in burst most of the time belongs in a higher tier, at a fixed price per tier."
+      },
+      {
+        "text": "On-demand bursting left on, since it has no fixed fee",
+        "correct": false,
+        "why": "It has an hourly fee while enabled plus every operation above the tier, and Microsoft calls it uneconomic for frequent bursts."
+      },
+      {
+        "text": "ReadWrite caching, so the writes stop counting against the disk",
+        "correct": false,
+        "why": "Cached writes still reach the disk when the cache is flushed, and count then."
+      }
+    ]
+  },
+  {
+    "id": "ex-aeq3w6wt",
+    "version": 1,
+    "section": "disk-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "disk-small.bicep, an 8 GiB Premium SSD v2 with 5,000 IOPS, compiled with no warning. Why?",
+    "hint": "What does the compiler check: each value, or the relation between two?",
+    "choices": [
+      {
+        "text": "8 GiB allows 5,000 IOPS, so there was nothing to catch",
+        "correct": false,
+        "why": "From 6 GiB the limit is 500 per GiB, so 8 GiB allows 4,000. Azure would refuse it."
+      },
+      {
+        "text": "Bicep skips the checks on Premium SSD v2 disks",
+        "correct": false,
+        "why": "It checked the same disk a moment earlier and refused the throughput written as text."
+      },
+      {
+        "text": "The limit linking the two is Azure's rule",
+        "correct": true,
+        "why": "Both numbers are valid integers. The arithmetic linking IOPS to size is checked by Azure when the request arrives."
+      },
+      {
+        "text": "The warning is printed only when the template is deployed",
+        "correct": false,
+        "why": "The compiler prints its warnings on build; it printed one for the text throughput."
+      }
+    ]
+  },
+  {
+    "id": "ex-0329z4hc",
+    "version": 1,
+    "section": "ephemeral-os-disks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A staging web server with an ephemeral OS disk is not needed overnight. How do you stop paying for its compute until the morning?",
+    "hint": "One of the usual ways is in the table of what you give up.",
+    "choices": [
+      {
+        "text": "Stop and deallocate it, as with any machine",
+        "correct": false,
+        "why": "Stop-deallocate is not supported with an ephemeral OS disk."
+      },
+      {
+        "text": "Snapshot its OS disk, then deallocate it",
+        "correct": false,
+        "why": "An ephemeral OS disk cannot be snapshotted, and the machine cannot be deallocated either."
+      },
+      {
+        "text": "Detach the OS disk and keep the machine",
+        "correct": false,
+        "why": "An OS disk is not detached from a running machine, and an ephemeral one is not a managed disk to keep."
+      },
+      {
+        "text": "Delete it, and create it again in the morning",
+        "correct": true,
+        "why": "That is what Microsoft says to do instead, and for a machine that keeps nothing it loses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jggxhx8",
+    "version": 1,
+    "section": "ephemeral-os-disks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Standard_D2ds_v5 has a 75 GiB temporary disk. An ephemeral OS disk from a 30 GiB image is placed on it, without Trusted Launch. How many GiB of temporary disk are left?",
+    "hint": "The temporary disk shrinks by the size of the image.",
+    "value": 45,
+    "tolerance": 0,
+    "unit": "GiB"
+  },
+  {
+    "id": "ex-qy3kjg0c",
+    "version": 1,
+    "section": "ephemeral-os-disks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each event to what it does to an ephemeral OS disk.",
+    "hint": "Which events move the machine to another host, and which one is refused outright?",
+    "pairs": [
+      {
+        "left": "Resize to another size",
+        "right": "Deleted, and the OS provisioned again"
+      },
+      {
+        "left": "Live migration during maintenance",
+        "right": "Kept"
+      },
+      {
+        "left": "Stop and deallocate",
+        "right": "Not supported"
+      },
+      {
+        "left": "Reimage",
+        "right": "Back to the image"
+      }
+    ],
+    "right_distractors": [
+      "Kept, and billed as a managed disk"
+    ]
+  },
+  {
+    "id": "ex-3k133ke5",
+    "version": 1,
+    "section": "ephemeral-os-disks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these machines is a poor fit for an ephemeral OS disk?",
+    "hint": "Look for the one that relies on something the table says is not supported.",
+    "choices": [
+      {
+        "text": "A web server in a scale set whose image carries all it runs",
+        "correct": false,
+        "why": "The case the feature is designed for: nothing on its OS disk is worth keeping, and reimage is the repair."
+      },
+      {
+        "text": "A jump host stopped and deallocated every night",
+        "correct": true,
+        "why": "Stop-deallocate is not supported, so the nightly saving it was built around is impossible."
+      },
+      {
+        "text": "A build agent that is reimaged after every job",
+        "correct": false,
+        "why": "A fast reimage to the original state is exactly what an ephemeral OS disk gives."
+      },
+      {
+        "text": "A Spot machine that is deleted when it is evicted",
+        "correct": false,
+        "why": "Ephemeral OS disks are supported on Spot machines, deleted rather than deallocated."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3tg7ekt",
+    "version": 1,
+    "section": "ephemeral-os-disks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "web-wrong.bicep, with caching ReadWrite and placement TempDisk on an ephemeral OS disk, compiled with no warning. What does that tell you?",
+    "hint": "Recall what the compiler did refuse in the first section.",
+    "choices": [
+      {
+        "text": "TempDisk is accepted as another name for ResourceDisk",
+        "correct": false,
+        "why": "The CLI lists CacheDisk, NvmeDisk and ResourceDisk; TempDisk is a name from the prose, not a value."
+      },
+      {
+        "text": "Bicep turns ReadWrite into ReadOnly for an ephemeral disk",
+        "correct": false,
+        "why": "The template carried ReadWrite exactly as written; the compiler changes no values."
+      },
+      {
+        "text": "Both values fit the types; the rules are Azure's",
+        "correct": true,
+        "why": "The placement is checked only as a string and ReadWrite is a known caching value; the rule linking them to an ephemeral disk is the service's."
+      },
+      {
+        "text": "Both are correct, and only full caching needs ReadOnly",
+        "correct": false,
+        "why": "Microsoft's deployment guide sets ReadOnly for every ephemeral OS disk, partial or full."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzn4efh7",
+    "version": 1,
+    "section": "azure-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why not attach one managed disk to all the shop's web servers for the uploaded photos?",
+    "hint": "Azure allows a shared disk. What does it need on top?",
+    "choices": [
+      {
+        "text": "A managed disk may only ever be attached to a single machine",
+        "correct": false,
+        "why": "Shared disks exist; Microsoft documents attaching one disk to several machines for clusters."
+      },
+      {
+        "text": "Only a ZRS disk may be attached to more than one machine",
+        "correct": false,
+        "why": "Sharing is not a ZRS feature; ZRS only adds attaching from machines in other zones."
+      },
+      {
+        "text": "Sharing needs a cluster manager to decide who writes",
+        "correct": true,
+        "why": "Pacemaker or Windows Server Failover Clustering handles the locking; Azure Files does the sharing for you."
+      },
+      {
+        "text": "Disks hold blocks, and photos are files that need an object store",
+        "correct": false,
+        "why": "A file system on a disk holds photos perfectly well; the problem is several machines writing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xb0vqev",
+    "version": 1,
+    "section": "azure-files",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What IOPS does Microsoft recommend for a 1,024 GiB SSD share on provisioned v2?",
+    "hint": "3,000 plus one per GiB.",
+    "value": 4024,
+    "tolerance": 0,
+    "unit": "IOPS"
+  },
+  {
+    "id": "ex-h7r68w27",
+    "version": 1,
+    "section": "azure-files",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An NFS share in Azure Files needs the ___ media tier, which the CLI calls premium.",
+    "hint": "Two media tiers: one solid-state, one spinning.",
+    "blanks": [
+      {
+        "accept": [
+          "SSD"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kvseej5h",
+    "version": 1,
+    "section": "azure-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "files.bicep switches public network access off and declares no private endpoint. Deployed as it stands, who can mount the uploads share?",
+    "hint": "NFS has no user sign-in; what is it authenticated by?",
+    "choices": [
+      {
+        "text": "Any machine in brazilsouth with the aznfs helper installed",
+        "correct": false,
+        "why": "The helper encrypts the traffic; it does not give a route to an account with no endpoint."
+      },
+      {
+        "text": "Any client that holds the storage account key",
+        "correct": false,
+        "why": "NFS shares do not take the key; they rely on the network rules alone."
+      },
+      {
+        "text": "Any virtual network in the same subscription",
+        "correct": false,
+        "why": "Reaching a share takes a private endpoint, or a service endpoint the rules allow; being in the subscription is neither."
+      },
+      {
+        "text": "Nobody: the account has no reachable address",
+        "correct": true,
+        "why": "The public endpoint is off and nothing else was declared, so there is no address to mount."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqvnx7w1",
+    "version": 1,
+    "section": "azure-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the Azure Files section read rather than practised, when the lab has Azurite?",
+    "hint": "Look at the three ports Azurite's help lists.",
+    "choices": [
+      {
+        "text": "Azurite serves blob, queue and table storage, and no file service",
+        "correct": true,
+        "why": "Its help lists three ports, 10000 to 10002, and none of them is for files."
+      },
+      {
+        "text": "Azurite has a file service, but it needs an Azure account to start",
+        "correct": false,
+        "why": "Azurite needs no account at all; it has no file service to start."
+      },
+      {
+        "text": "NFS cannot be mounted from inside a Docker container",
+        "correct": false,
+        "why": "Not the reason given: there is nothing on the laptop to mount in the first place."
+      },
+      {
+        "text": "Azure Files is not offered in the brazilsouth region",
+        "correct": false,
+        "why": "Nothing in the lesson says so; the reason is what the emulator serves."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm887sww",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the shop's data to where this lesson puts it.",
+    "hint": "Ask of each: is it shared, is it kept, and how is it used?",
+    "pairs": [
+      {
+        "left": "The database's data files",
+        "right": "A Premium SSD v2 data disk"
+      },
+      {
+        "left": "Swap and scratch files",
+        "right": "The temporary disk"
+      },
+      {
+        "left": "The OS of a web server in a scale set",
+        "right": "An ephemeral OS disk"
+      },
+      {
+        "left": "Photos every web server serves",
+        "right": "An Azure Files share"
+      }
+    ],
+    "right_distractors": [
+      "A snapshot of the OS disk"
+    ]
+  },
+  {
+    "id": "ex-mb3sf7ch",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save money, shop-db-1 moves from a Standard_D4ds_v5 to a Standard_D2ds_v5. Its Premium SSD v2 data disk stays at 5,000 IOPS and 145 MB/s. Once the machine's burst credits are spent, what can its disks deliver, uncached?",
+    "hint": "The D2ds_v5 row of the Ddsv5 table.",
+    "choices": [
+      {
+        "text": "5,000 IOPS and 145 MB/s, because the disk is provisioned for them",
+        "correct": false,
+        "why": "The disk can do that; the machine takes less, and the program gets the lower of the two."
+      },
+      {
+        "text": "3,750 IOPS and 145 MB/s, because a size only caps IOPS",
+        "correct": false,
+        "why": "A size caps throughput too: 85 MB/s on the D2ds_v5."
+      },
+      {
+        "text": "At most 3,750 IOPS and 85 MB/s, for all its disks together",
+        "correct": true,
+        "why": "Those are the size's uncached limits, shared by the data disk, the log and the OS disk."
+      },
+      {
+        "text": "Nothing changes until the disk is resized to match the machine",
+        "correct": false,
+        "why": "The cap applies at once; nothing about the disk has to change for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1cqbd0m",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A read on a data disk with ReadOnly caching misses the host cache. Put what happens in order.",
+    "hint": "The disk answers the cache and the machine at once.",
+    "items": [
+      "The program issues the read",
+      "The host cache does not hold the block",
+      "The read goes over the network to the managed disk",
+      "The disk returns the block to the cache and to the machine"
+    ],
+    "trap": "A miss counts against both the cached and the uncached limits, because it passes through both."
+  },
+  {
+    "id": "ex-mnnk9ghr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these mistakes did the Bicep compiler refuse in this lesson?",
+    "hint": "It refused a wrong type, and a value outside a list it knows.",
+    "choices": [
+      {
+        "text": "The disk SKU written Premium_V2_LRS",
+        "correct": false,
+        "why": "The SKU name is a plain string to the compiler; it went into the template."
+      },
+      {
+        "text": "The data disk in zone 2 and the machine in zone 1",
+        "correct": false,
+        "why": "Each zone is a valid string; the mismatch is Azure's to refuse."
+      },
+      {
+        "text": "The share protocol written NFSv4",
+        "correct": false,
+        "why": "enabledProtocols is a string to the compiler; NFSv4 reached the template."
+      },
+      {
+        "text": "The caching value written none, in lower case",
+        "correct": true,
+        "why": "Caching is typed as None, ReadOnly or ReadWrite, so none was refused with BCP036."
+      }
+    ]
+  }
+]
