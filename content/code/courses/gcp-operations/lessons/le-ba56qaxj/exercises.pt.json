@@ -1,0 +1,273 @@
+{
+ "ex-w68z7swb": {
+  "prompt": "Do que o Error Reporting precisa para ver uma exceção?",
+  "hint": "Uma entrada.",
+  "choices": [
+   {
+    "text": "Um agente instalado no contêiner",
+    "why": "Nada é instalado; ele lê o Cloud Logging."
+   },
+   {
+    "text": "Uma entrada ERROR com o stack trace dentro",
+    "why": "Certo. Uma entrada, severidade ERROR ou pior."
+   },
+   {
+    "text": "Uma métrica chamada error_count",
+    "why": "Ele lê entradas de log, não métricas."
+   },
+   {
+    "text": "Vinte linhas de texto, uma por frame",
+    "why": "Linhas separadas são exatamente o que ele não agrupa."
+   }
+  ]
+ },
+ "ex-f4pbd66a": {
+  "prompt": "Dois KeyErrors de produtos diferentes compartilham uma pilha. Como o Error Reporting os mostra?",
+  "hint": "Ele agrupa pela pilha, não pelo valor da mensagem.",
+  "choices": [
+   {
+    "text": "Como dois grupos, um por produto",
+    "why": "Os valores diferem; a pilha não."
+   },
+   {
+    "text": "Como um grupo com duas ocorrências",
+    "why": "Certo. Um bug, contado duas vezes."
+   },
+   {
+    "text": "De jeito nenhum, já que KeyError não é erro",
+    "why": "Qualquer exceção com stack trace conta."
+   },
+   {
+    "text": "Como um grupo por minuto",
+    "why": "Grupos não se dividem por tempo."
+   }
+  ]
+ },
+ "ex-te7vbazz": {
+  "prompt": "Um grupo de erro foi de 3 ocorrências por hora para 3.000. O que o Error Reporting envia?",
+  "hint": "Quando ele notifica?",
+  "choices": [
+   {
+    "text": "Uma notificação por ocorrência nova",
+    "why": "Seriam milhares; ele notifica uma vez por grupo novo."
+   },
+   {
+    "text": "Um alerta quando a taxa cruza um limite",
+    "why": "Ele não tem limite de taxa; isso é trabalho de um contador."
+   },
+   {
+    "text": "Nada a mais: o grupo não é novo",
+    "why": "Certo. Um alerta de taxa precisa das lições 10 e 14."
+   },
+   {
+    "text": "Um resumo diário com a contagem nova",
+    "why": "Esse resumo não faz parte dele."
+   }
+  ]
+ },
+ "ex-r5sf7eht": {
+  "prompt": "Por que a entrada tem `serviceContext` com uma versão?",
+  "hint": "Um release pode mover uma linha.",
+  "choices": [
+   {
+    "text": "Para mostrar que versão relatou primeiro um grupo",
+    "why": "Certo. Um release novo pode abrir um grupo novo para o mesmo bug."
+   },
+   {
+    "text": "Porque entradas sem ele são rejeitadas",
+    "why": "É opcional; torna os grupos legíveis."
+   },
+   {
+    "text": "Para rotear a entrada a um bucket de log",
+    "why": "Roteamento é o filtro do sink."
+   },
+   {
+    "text": "Para subir a severidade da entrada",
+    "why": "A severidade vem do campo severity."
+   }
+  ]
+ },
+ "ex-zkmhzvkf": {
+  "prompt": "O que leva um trace de um serviço para o seguinte?",
+  "hint": "Um cabeçalho.",
+  "choices": [
+   {
+    "text": "O Cloud Logging, que junta entradas por horário",
+    "why": "Horário não junta um trace; um id junta."
+   },
+   {
+    "text": "O cabeçalho traceparent",
+    "why": "Certo. Um serviço que o descarta quebra o trace."
+   },
+   {
+    "text": "A conta de serviço de cada serviço",
+    "why": "Identidades não carregam traces."
+   },
+   {
+    "text": "Uma tabela compartilhada de ids de requisição",
+    "why": "Nenhuma tabela é necessária; o id viaja com a requisição."
+   }
+  ]
+ },
+ "ex-gammjrzd": {
+  "prompt": "Um trace do checkout para no serviço de pagamento, e um trace separado começa ali. Causa mais provável?",
+  "hint": "O que quem chama deveria ter passado adiante?",
+  "choices": [
+   {
+    "text": "O serviço de pagamento está com amostragem desligada",
+    "why": "Aí nem haveria o segundo trace."
+   },
+   {
+    "text": "O cabeçalho não foi repassado",
+    "why": "Certo. O motivo mais comum de um trace parar numa fronteira."
+   },
+   {
+    "text": "O Cloud Trace limita um trace a um serviço",
+    "why": "Traces cruzam serviços; esse é o ponto deles."
+   },
+   {
+    "text": "O serviço de pagamento não escreve logs",
+    "why": "Logs e traces são separados; logs não juntam spans."
+   }
+  ]
+ },
+ "ex-kknwwr4t": {
+  "prompt": "O que diz o último campo do `traceparent`, `01`?",
+  "hint": "Uma decisão tomada uma vez, no início.",
+  "choices": [
+   {
+    "text": "A versão do trace",
+    "why": "A versão é o primeiro campo, 00."
+   },
+   {
+    "text": "Que é o primeiro span",
+    "why": "A posição do span não está no cabeçalho."
+   },
+   {
+    "text": "Que a requisição é amostrada",
+    "why": "Certo. Todo serviço seguinte o respeita, então um trace é inteiro ou ausente."
+   },
+   {
+    "text": "O número de serviços até agora",
+    "why": "O cabeçalho não conta saltos."
+   }
+  ]
+ },
+ "ex-fjd8e0yy": {
+  "prompt": "Um serviço produz 7 milhões de spans por mês. A 0,20 USD por milhão depois de 2,5 milhões grátis, quanto custa o Cloud Trace?",
+  "hint": "Milhões acima da franquia, vezes o preço.",
+  "unit": "USD"
+ },
+ "ex-rt55tn72": {
+  "prompt": "Num flame graph, para onde você olha primeiro?",
+  "hint": "Largura, não altura.",
+  "choices": [
+   {
+    "text": "Para a torre mais alta",
+    "why": "Altura é profundidade de chamadas; pode custar pouco."
+   },
+   {
+    "text": "Para uma barra larga perto do topo",
+    "why": "Certo. Uma função que custa muito sozinha."
+   },
+   {
+    "text": "Para a barra de baixo, que é sempre a mais larga",
+    "why": "É a entrada do programa, larga por definição, e não diz nada."
+   },
+   {
+    "text": "Para a barra com o nome mais longo",
+    "why": "Nomes não carregam custo."
+   }
+  ]
+ },
+ "ex-z2q5sa42": {
+  "prompt": "Um release deixou a API 30% mais lenta, e ninguém sabe por quê. Que comparação é mais rápida?",
+  "hint": "service_version.",
+  "choices": [
+   {
+    "text": "Ler o diff inteiro do release",
+    "why": "Possível, e muito mais lento que uma comparação."
+   },
+   {
+    "text": "Dois traces de requisições lentas",
+    "why": "Traces mostram onde na requisição, não que função."
+   },
+   {
+    "text": "O Profiler, versão contra versão",
+    "why": "Certo. Uma barra que cresceu."
+   },
+   {
+    "text": "Os grupos do Error Reporting das duas versões",
+    "why": "Lentidão não é erro."
+   }
+  ]
+ },
+ "ex-p94rw2mx": {
+  "prompt": "Ligue cada pergunta à ferramenta que a responde.",
+  "hint": "Uma ferramenta percebe; três investigam.",
+  "pairs": [
+   {
+    "left": "Que erro é novo?",
+    "right": "Error Reporting"
+   },
+   {
+    "left": "Onde esta requisição lenta gastou o tempo?",
+    "right": "Cloud Trace"
+   },
+   {
+    "left": "Em que o processo gasta a CPU?",
+    "right": "Cloud Profiler"
+   },
+   {
+    "left": "Está pior que o normal agora?",
+    "right": "uma métrica e um alerta"
+   }
+  ],
+  "right_distractors": [
+   "um sink de log"
+  ]
+ },
+ "ex-2vzarjqs": {
+  "prompt": "O campo que nomeia o serviço e a versão num erro relatado é `___`.",
+  "hint": "camelCase, duas palavras.",
+  "blanks": [
+   {
+    "accept": [
+     "serviceContext"
+    ]
+   }
+  ]
+ },
+ "ex-d73jqq8g": {
+  "prompt": "Ponha a investigação de um checkout lento na ordem que a lição sugere.",
+  "hint": "Perceber, depois a requisição, depois a função.",
+  "items": [
+   "Um alerta de latência p99 dispara",
+   "O trace de uma requisição lenta mostra que o span da própria API é longo",
+   "O Profiler mostra que função pegou a CPU"
+  ],
+  "trap": "Começar pelo profiler é o deslize: sem o trace, ninguém sabe que serviço perfilar."
+ },
+ "ex-txp6z4wg": {
+  "prompt": "Quais destas coisas o código da loja precisa fazer para as três ferramentas funcionarem? Escolha todas as que se aplicam.",
+  "hint": "Coisas pequenas no código.",
+  "choices": [
+   {
+    "text": "Escrever um stack trace dentro de uma entrada ERROR",
+    "why": "Sim, para o Error Reporting."
+   },
+   {
+    "text": "Repassar o cabeçalho de trace nas chamadas de saída",
+    "why": "Sim, para o Cloud Trace."
+   },
+   {
+    "text": "Rodar um coletor próprio de stack traces",
+    "why": "Não. O Error Reporting lê o Cloud Logging."
+   },
+   {
+    "text": "Iniciar o agente do Profiler na inicialização",
+    "why": "Sim, para o Cloud Profiler."
+   }
+  ]
+ }
+}
