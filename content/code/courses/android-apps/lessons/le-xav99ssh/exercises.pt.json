@@ -1,0 +1,424 @@
+{
+  "ex-ge2dqrt3": {
+    "prompt": "Por que a aula lê o JSON num `SessionDto` em vez de direto no `StudySession`?",
+    "hint": "Qual dos dois muda quando o servidor muda?",
+    "choices": [
+      {
+        "text": "Para a mudança do servidor parar no DTO",
+        "why": "Isso: as telas leem o modelo, e só o DTO e o `toDomain()` conhecem o fio."
+      },
+      {
+        "text": "Porque uma data class não pode levar `@Serializable`",
+        "why": "O próprio `SessionDto` é uma data class com `@Serializable`."
+      },
+      {
+        "text": "Porque o Retrofit se recusa a devolver um modelo de domínio",
+        "why": "O Retrofit devolve o que o conversor conseguir ler; a divisão é uma escolha de projeto, não uma regra da biblioteca."
+      },
+      {
+        "text": "Para deixar o JSON menor no fio",
+        "why": "O DTO é uma classe Kotlin; não muda nada nos bytes que o servidor manda."
+      }
+    ]
+  },
+  "ex-etzt3khq": {
+    "prompt": "Ligue cada diferença entre o JSON e o modelo à ferramenta que a aula usa para ela.",
+    "hint": "Seções 03, 04 e 05.",
+    "pairs": [
+      {
+        "left": "`course_id` contra `courseId`",
+        "right": "`@SerialName`"
+      },
+      {
+        "left": "uma data mandada como texto",
+        "right": "`LocalDateSerializer`"
+      },
+      {
+        "left": "uma chave que o app nunca viu",
+        "right": "`ignoreUnknownKeys`"
+      }
+    ],
+    "right_distractors": [
+      "`encodeDefaults`"
+    ]
+  },
+  "ex-yapht81f": {
+    "prompt": "O plugin de serialização é tirado do arquivo de build. O que acontece com `Json.decodeFromString<SessionDto>(text)`?",
+    "hint": "A anotação sozinha não escreve nada.",
+    "choices": [
+      {
+        "text": "O build falha porque `@Serializable` fica desconhecida sem o plugin",
+        "why": "A anotação vem da biblioteca, que continua dependência, então compila."
+      },
+      {
+        "text": "Compila, e falha ao rodar: nenhum serializador encontrado",
+        "why": "Isso: nenhum serializador foi gerado, e a chamada procura um em tempo de execução."
+      },
+      {
+        "text": "Ela recorre à reflexão, mais devagar",
+        "why": "A kotlinx.serialization não tem plano B por reflexão; esse é o outro modo do Moshi."
+      },
+      {
+        "text": "Ela devolve um `SessionDto` vazio",
+        "why": "Não há valor vazio para devolver; `id` e `minutes` não têm padrão."
+      }
+    ]
+  },
+  "ex-tz2w86jt": {
+    "prompt": "A ida e volta decodificou `\"done\": false` e escreveu o objeto de volta. Por que `done` sumiu da saída?",
+    "hint": "Compare o valor com o da classe.",
+    "choices": [
+      {
+        "text": "`false` nunca é escrito por bibliotecas de JSON",
+        "why": "`false` é um valor JSON válido e é escrito quando se pede."
+      },
+      {
+        "text": "Uma propriedade `Boolean` é pulada se não tiver anotação",
+        "why": "O tipo não importa; o padrão importa."
+      },
+      {
+        "text": "É igual ao padrão, e padrões são omitidos",
+        "why": "Isso: `done` tem padrão `false`, então o codificador o omitiu."
+      },
+      {
+        "text": "O teste imprimiu o DTO antes de o campo ser lido",
+        "why": "A primeira linha mostra `done=false`, lido corretamente."
+      }
+    ]
+  },
+  "ex-1xn7jp3z": {
+    "prompt": "O plugin gera uma classe aninhada chamada `SessionDto$$___` que lê e escreve cada campo.",
+    "hint": "O `find` listou três arquivos de classe.",
+    "blanks": [
+      {
+        "accept": [
+          "serializer"
+        ]
+      }
+    ]
+  },
+  "ex-pmsdyfm8": {
+    "prompt": "Com o `Json` padrão, o servidor acrescenta uma chave `room` a uma sessão. O que o app recebe?",
+    "hint": "A primeira linha estrita.",
+    "choices": [
+      {
+        "text": "A sessão, sem o `room`",
+        "why": "Isso é o que `ignoreUnknownKeys = true` dá, não o padrão."
+      },
+      {
+        "text": "Uma `JsonDecodingException` que nomeia a chave",
+        "why": "Isso: o padrão recusa a sessão inteira em `Encountered an unknown key 'room'`."
+      },
+      {
+        "text": "Uma `MissingFieldException`",
+        "why": "Nada falta; algo a mais chegou."
+      },
+      {
+        "text": "A sessão, com `room` guardado num mapa de extras",
+        "why": "Um DTO não tem lugar para chaves que não declara."
+      }
+    ]
+  },
+  "ex-468vjtx7": {
+    "prompt": "Um servidor passa a mandar `\"done\": null` e `\"minutes\": null`. Com `coerceInputValues = true`, o que o app recebe?",
+    "hint": "A coerção precisa de um padrão para onde ir.",
+    "choices": [
+      {
+        "text": "Uma sessão com `done = false` e `minutes = 0`",
+        "why": "`minutes` não tem padrão, e a biblioteca não inventa zero."
+      },
+      {
+        "text": "Uma sessão com os dois campos `null`",
+        "why": "As duas propriedades são de tipos não nulos; nenhuma pode guardar `null`."
+      },
+      {
+        "text": "Um erro: `minutes` não tem padrão",
+        "why": "Isso: a coerção transformou `done` em `false` no terceiro teste e deixou `minutes` falhando."
+      },
+      {
+        "text": "A sessão, porque `coerceInputValues` também ignora chaves desconhecidas",
+        "why": "As duas configurações são independentes, e nenhuma chave aqui é desconhecida."
+      }
+    ]
+  },
+  "ex-g65g8sqx": {
+    "prompt": "Por que a aula põe toda configuração num `plannerJson` compartilhado em vez de escrever `Json { ... }` onde for preciso?",
+    "hint": "Duas instâncias, dois conjuntos de regras.",
+    "choices": [
+      {
+        "text": "Montar um `Json` é lento a ponto de importar em cada tela",
+        "why": "O argumento da aula é consistência, não velocidade."
+      },
+      {
+        "text": "Para que todas as partes do app leiam JSON pelas mesmas regras",
+        "why": "Isso: duas instâncias montadas à parte discordam, sobre chaves desconhecidas por exemplo."
+      },
+      {
+        "text": "O Retrofit só aceita uma `val` de nível superior como conversor",
+        "why": "Qualquer instância de `Json` pode fazer um conversor."
+      },
+      {
+        "text": "`ignoreUnknownKeys` só pode ser definido uma vez por processo",
+        "why": "Cada instância leva as próprias configurações; esse é o problema que a compartilhada evita."
+      }
+    ]
+  },
+  "ex-qy2m7vnn": {
+    "prompt": "Ordene os payloads do `ServerChangesTest` do que o `Json` padrão lê até o que nenhuma configuração da aula salva.",
+    "hint": "Um funciona sem configuração, um precisa de `ignoreUnknownKeys`, um não tem jeito.",
+    "items": [
+      "sem `done`",
+      "uma chave `room` a mais",
+      "sem `minutes`"
+    ]
+  },
+  "ex-vzfba9nr": {
+    "prompt": "Por que o build falhou quando `SessionDto.date` virou `LocalDate`?",
+    "hint": "De quem é o tipo `LocalDate`?",
+    "choices": [
+      {
+        "text": "`LocalDate` precisa do Android 26, acima do mínimo do módulo",
+        "why": "O `minSdk` é 26, e o erro era sobre serializadores, não níveis de API."
+      },
+      {
+        "text": "O plugin não tem serializador para o `LocalDate` do Java",
+        "why": "Isso: `Serializer was not found for type 'LocalDate'`, no arquivo e na linha."
+      },
+      {
+        "text": "Uma data class não pode guardar um valor `java.time`",
+        "why": "O `StudySession` já guarda um."
+      },
+      {
+        "text": "O JSON não tem tipo de data, então datas não podem ser lidas",
+        "why": "Uma data viaja como string, que o serializador desta seção lê."
+      }
+    ]
+  },
+  "ex-h6tmbpj6": {
+    "prompt": "O servidor manda `\"date\": \"27/10/2026\"`. O que o `LocalDateSerializer` faz com isso?",
+    "hint": "O `LocalDate.parse` aceita uma forma.",
+    "choices": [
+      {
+        "text": "Lê como 27 de outubro, adivinhando a ordem",
+        "why": "Nada adivinha: o `LocalDate.parse` só aceita ISO 8601."
+      },
+      {
+        "text": "Guarda o texto sem mudar em `date`",
+        "why": "`date` é um `LocalDate`; não há texto para guardar."
+      },
+      {
+        "text": "Falha no índice 0",
+        "why": "Isso: uma data malformada é um erro, nunca uma data errada."
+      },
+      {
+        "text": "Usa a data de hoje no lugar",
+        "why": "Um substituto silencioso é justamente o que o serializador evita."
+      }
+    ]
+  },
+  "ex-q2rh17vr": {
+    "prompt": "Quantos arquivos de classe o `find` listou para o `SessionDto` depois que o plugin o compilou?",
+    "hint": "A classe, o companion e mais um."
+  },
+  "ex-237y904m": {
+    "prompt": "Hoje o `toDomain()` copia cinco campos um a um. Quando ele se paga?",
+    "hint": "Imagine o servidor renomeando um campo.",
+    "choices": [
+      {
+        "text": "Só quando o app tiver duas telas",
+        "why": "O número de telas não é o que muda o mapeamento."
+      },
+      {
+        "text": "Quando o fio e o modelo deixam de bater",
+        "why": "Isso: o DTO e esta função mudam, e nada mais muda."
+      },
+      {
+        "text": "Nunca; deveria ser apagado até fazer algo",
+        "why": "Apagá-lo devolve o DTO a toda tela, que é o que a seção 02 evita."
+      },
+      {
+        "text": "Quando o Moshi substituir a kotlinx.serialization no app",
+        "why": "Uma troca de biblioteca muda as anotações do DTO, não o propósito do mapeamento."
+      }
+    ]
+  },
+  "ex-pyx2pqm1": {
+    "prompt": "Que padrão difere entre o Moshi e a kotlinx.serialization nos testes desta aula?",
+    "hint": "Três dos quatro payloads deram a mesma resposta.",
+    "choices": [
+      {
+        "text": "Um campo ausente sem padrão",
+        "why": "As duas recusam: `MissingFieldException` e `Required value 'minutes' missing`."
+      },
+      {
+        "text": "Uma chave que a classe não declara",
+        "why": "Isso: o Moshi ignora `room` por padrão e a kotlinx.serialization o recusa."
+      },
+      {
+        "text": "Um `null` num `Int`",
+        "why": "As duas recusam, cada uma do seu jeito."
+      },
+      {
+        "text": "Um campo ausente que tem padrão",
+        "why": "As duas usaram `done = false`."
+      }
+    ]
+  },
+  "ex-ff0h7ng0": {
+    "prompt": "O que `ksp(libs.moshi.codegen)` acrescenta ao build?",
+    "hint": "Olhe em `app/build/generated/ksp`.",
+    "choices": [
+      {
+        "text": "Um gerador que escreve o adaptador no build",
+        "why": "Isso: o adaptador é Kotlin comum no diretório de build."
+      },
+      {
+        "text": "A biblioteca de execução do Moshi ao app",
+        "why": "Isso é `implementation(libs.moshi)`; o `ksp(...)` só roda no build."
+      },
+      {
+        "text": "Um plano B por reflexão para classes sem `@JsonClass`",
+        "why": "A reflexão é outro artefato, o `moshi-kotlin`, que esta aula não usa."
+      },
+      {
+        "text": "O plugin do compilador de que `@Serializable` precisa",
+        "why": "Esse é o plugin de serialização em `plugins { }`, outra ferramenta."
+      }
+    ]
+  },
+  "ex-ccsj3ynt": {
+    "prompt": "Ligue cada peça da kotlinx.serialization à sua equivalente no Moshi.",
+    "hint": "A tabela no fim da seção 06.",
+    "pairs": [
+      {
+        "left": "`@SerialName(\"course_id\")`",
+        "right": "`@Json(name = \"course_id\")`"
+      },
+      {
+        "left": "`@Serializable`",
+        "right": "`@JsonClass(generateAdapter = true)`"
+      },
+      {
+        "left": "`KSerializer<LocalDate>`",
+        "right": "um objeto com `@ToJson` e `@FromJson`"
+      }
+    ],
+    "right_distractors": [
+      "`Moshi.Builder().build()`"
+    ]
+  },
+  "ex-sq85rbqe": {
+    "prompt": "O teste do conversor passou e imprimiu `Method isLoggable in android.util.Log not mocked`. De onde veio a exceção?",
+    "hint": "Um teste de unidade compila contra um esboço do Android.",
+    "choices": [
+      {
+        "text": "Um bug na `PlannerApi` do planner",
+        "why": "O stack trace começa na detecção de plataforma do OkHttp, antes de qualquer código do planner rodar."
+      },
+      {
+        "text": "Um método `Log` do esboço que lança exceção",
+        "why": "Isso: `isReturnDefaultValues = true` faz esses esboços devolverem padrões no lugar."
+      },
+      {
+        "text": "O MockWebServer não roda sem emulador",
+        "why": "Ele rodou e respondeu: o teste imprimiu as duas sessões."
+      },
+      {
+        "text": "A chave `room` fez o conversor registrar um aviso",
+        "why": "O `plannerJson` ignora `room` em silêncio; o trace vem da partida do OkHttp."
+      }
+    ]
+  },
+  "ex-sjh25m2v": {
+    "prompt": "As duas sessões do teste somam quantos minutos?",
+    "hint": "45 e 90.",
+    "unit": "min"
+  },
+  "ex-p8p2g67p": {
+    "prompt": "A linha que impede os métodos do esboço de lançar exceção num teste de unidade é `unitTests.___ = true`.",
+    "hint": "O segundo arquivo de build da seção 07.",
+    "blanks": [
+      {
+        "accept": [
+          "isReturnDefaultValues"
+        ]
+      }
+    ]
+  },
+  "ex-djyjgs0r": {
+    "prompt": "Uma colega monta o conversor do Retrofit a partir de um `Json` novo em vez do `plannerJson`. O servidor acrescenta uma chave. O que quebra?",
+    "hint": "Que configurações um `Json` novo tem?",
+    "choices": [
+      {
+        "text": "Nada, já que o próprio Retrofit ignora chaves desconhecidas",
+        "why": "O Retrofit entrega o corpo ao conversor e não aplica regras próprias."
+      },
+      {
+        "text": "Só os testes, já que celulares usam outro conversor",
+        "why": "O conversor é o mesmo código num celular e num teste."
+      },
+      {
+        "text": "Toda requisição cuja resposta traz a chave nova",
+        "why": "Isso: o `Json` padrão recusa chaves desconhecidas, então cada resposta dessas vira exceção."
+      },
+      {
+        "text": "O build, na compilação",
+        "why": "Uma chave numa resposta só existe quando a resposta chega."
+      }
+    ]
+  },
+  "ex-eb4cc1s1": {
+    "prompt": "Quais destas fariam um `StudySession` chegar à tela com um valor errado, em silêncio? Escolha todas as que se aplicam.",
+    "hint": "Uma exceção é barulhenta; um palpite não.",
+    "choices": [
+      {
+        "text": "Um serializador de `LocalDate` que devolve a data de hoje quando o parse falha",
+        "why": "Sim: o total da semana contaria a sessão na semana errada, e nada avisaria."
+      },
+      {
+        "text": "Um DTO sem padrão para `minutes`",
+        "why": "Não: um `minutes` ausente lança exceção, que é barulhento."
+      },
+      {
+        "text": "Um DTO que declara `val minutes: Int = 0`",
+        "why": "Sim: uma sessão que o servidor mandou sem duração apareceria com zero minutos."
+      },
+      {
+        "text": "`ignoreUnknownKeys = true`",
+        "why": "Não: ele descarta chaves que o app não usa, e todo valor que o app lê continua conferido."
+      }
+    ]
+  },
+  "ex-a344348r": {
+    "prompt": "O servidor renomeia `course_id` para `courseId`. Com o código da aula, qual é a menor mudança, e onde?",
+    "hint": "Qual anotação carrega o nome do servidor?",
+    "choices": [
+      {
+        "text": "Tirar o `@SerialName(\"course_id\")` do `SessionDto`",
+        "why": "Isso: o nome Kotlin agora bate com o fio, e o modelo e as telas não se mexem."
+      },
+      {
+        "text": "Renomear `StudySession.courseId`",
+        "why": "O modelo já diz `courseId`, e de qualquer forma não deveria seguir o servidor."
+      },
+      {
+        "text": "Definir `ignoreUnknownKeys = false`",
+        "why": "Isso deixaria o app mais estrito e não consertaria nada; `course_id` passaria a faltar."
+      },
+      {
+        "text": "Mudar o `toDomain()` para ler o nome novo",
+        "why": "O `toDomain()` lê a propriedade Kotlin do DTO, que mantém o nome."
+      }
+    ]
+  },
+  "ex-tz683sss": {
+    "prompt": "Ponha os passos por que uma resposta passa, da rede até a tela.",
+    "hint": "O conversor vem antes de qualquer objeto Kotlin existir.",
+    "items": [
+      "O OkHttp recebe os bytes do corpo",
+      "o conversor os decodifica com o `plannerJson`",
+      "`PlannerApi.sessions()` devolve `List<SessionDto>`",
+      "o `toDomain()` transforma cada DTO num `StudySession`"
+    ]
+  }
+}
