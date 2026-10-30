@@ -13,16 +13,16 @@ ana@dev:~/planner$ npx ng test --watch=false 2>&1 | tail -14
  RUN  v4.1.12 /home/ana/planner
 
  ✓ |planner| src/app/minutes-pipe.spec.ts (4 tests) 5ms
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 66ms
- ✓ |planner| src/app/app.spec.ts (2 tests) 78ms
- ✓ |planner| src/app/planner-store.spec.ts (1 test) 5ms
- ✓ |planner| src/app/autofocus.spec.ts (1 test) 13ms
- ✓ |planner| src/app/week/week.spec.ts (1 test) 84ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 61ms
+ ✓ |planner| src/app/autofocus.spec.ts (1 test) 10ms
+ ✓ |planner| src/app/app.spec.ts (2 tests) 77ms
+ ✓ |planner| src/app/planner-store.spec.ts (1 test) 6ms
+ ✓ |planner| src/app/week/week.spec.ts (1 test) 80ms
 
  Test Files  6 passed (6)
       Tests  10 passed (10)
-   Start at  19:32:45
-   Duration  1.35s (transform 232ms, setup 1.05s, import 309ms, tests 251ms, environment 3.64s)
+   Start at  20:57:04
+   Duration  1.24s (transform 283ms, setup 925ms, import 356ms, tests 239ms, environment 3.19s)
 ```
 
 Dez testes em seis arquivos, e a maioria diz pouco. O `planner-store.spec.ts` confere que o store

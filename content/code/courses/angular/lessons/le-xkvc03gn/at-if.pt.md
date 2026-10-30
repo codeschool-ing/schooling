@@ -26,8 +26,8 @@ falta, ou que não falta nada:
 ```
 ana@dev:~/planner$ look http://localhost:4200/ --text app-week-summary
 [vite] connecting...
-[vite] connected.
 Angular is running in development mode.
+[vite] connected.
 165 minutes planned, 90 done.
 
 75 minutes to go.

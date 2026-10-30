@@ -29,9 +29,8 @@ files, and the old forms kept working for several majors while teams moved.
 ## TypeScript from the first line
 
 Every Angular project is TypeScript, and there is no JavaScript option. That matters more to the
-people choosing it than to the people learning it: a type error found by the compiler in a
-template is a bug that never reached a tester, and on a codebase that ten people change every day
-the compiler is the one reviewer who reads every line. Two sections of this lesson teach you enough
+people choosing it than to the people learning it: a type error found by the compiler in a template is a bug that never reached a tester.
+On a codebase that ten people change every day, the compiler is the one reviewer who reads every line. Two sections of this lesson teach you enough
 TypeScript to start; each lesson after that adds the part it needs.
 
 ## What it costs

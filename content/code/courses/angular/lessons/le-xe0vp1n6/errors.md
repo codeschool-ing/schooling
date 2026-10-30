@@ -3,10 +3,7 @@ title: When the server says no, or says nothing
 version: 1
 ---
 
-**A request can fail in two ways, and `HttpClient` reports both as an `HttpErrorResponse`.** The
-server can answer with an error status, 400, 404 or 500, and a body saying why; or there can be no
-answer at all, because the server is down or the network is, and then the status is 0, or, through
-the dev server's proxy, a 500 the proxy made up. Either way the request's Observable ends with an
+**A request can fail in two ways, and `HttpClient` reports both as an `HttpErrorResponse`.** The server can answer with an error status, 400, 404 or 500, and a body saying why. Or there can be no answer at all, because the server is down or the network is; then the status is 0, or, through the dev server's proxy, a 500 the proxy made up. Either way the request's Observable ends with an
 error instead of a value.
 
 Reading already handles it. The resource goes into its error state, and lesson 6's templates show

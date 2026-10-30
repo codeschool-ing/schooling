@@ -31,7 +31,7 @@ as formas antigas continuaram funcionando por várias versões enquanto os times
 
 Todo projeto Angular é TypeScript, e não existe opção em JavaScript. Isso importa mais para quem
 escolhe do que para quem aprende: um erro de tipo achado pelo compilador num template é um bug que
-nunca chegou a quem testa, e numa base que dez pessoas mudam todo dia o compilador é o único revisor
+nunca chegou a quem testa. Numa base que dez pessoas mudam todo dia, o compilador é o único revisor
 que lê todas as linhas. Duas seções desta aula ensinam TypeScript suficiente para começar; cada aula
 depois acrescenta a parte de que precisa.
 

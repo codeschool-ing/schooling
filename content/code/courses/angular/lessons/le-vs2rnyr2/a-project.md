@@ -41,7 +41,7 @@ CREATE planner/src/app/app.routes.ts (77 bytes)
 CREATE planner/public/favicon.ico (15086 bytes)
 - Installing packages (npm)...
 npm error Cannot read properties of null (reading 'edgesOut')
-npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-23T23_32_54_625Z-debug-0.log
+npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-29T23_35_30_831Z-debug-0.log
 ✖ Package install failed, see above.
 The Schematic workflow failed. See above.
 ```
@@ -59,9 +59,7 @@ message that names none of your packages.
 
 `Cannot read properties of null (reading 'edgesOut')` is not a problem with the project. It is a
 JavaScript error inside npm itself, in the part that works out **peer dependencies**: packages that
-another package expects you to have installed beside it, rather than bringing them along. Vitest,
-the test runner, declares a dozen optional peers, one of them declares its own, and npm 10.9.4, the
-version that came with Node 22.22.0, trips over the chain. npm 11 does not, and Node 22.22.0 does not
+another package expects you to have installed beside it, rather than bringing them along. Vitest, the test runner, declares a dozen optional peers, and one of them declares its own. npm 10.9.4, the version that came with Node 22.22.0, trips over the chain. npm 11 does not, and Node 22.22.0 does not
 ship npm 11, so this course works around it rather than installing a second npm.
 
 The workaround is one setting: **`legacy-peer-deps`** tells npm not to install peer dependencies on
@@ -101,9 +99,14 @@ same team on the same calendar, but each package's patch number moves when that 
 ```
 ana@dev:~/planner$ npm install
 
-added 470 packages, and audited 471 packages in 13s
+added 470 packages, and audited 471 packages in 11s
 
-found 0 vulnerabilities
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix --force
+
+Run `npm audit` for details.
 ana@dev:~/planner$ npm ls --depth=0
 planner@0.0.0 /home/ana/planner
 ├── @angular/build@21.2.28
@@ -126,6 +129,8 @@ ana@dev:~/planner$ du -sh node_modules
 318M	node_modules
 ```
 
+The two vulnerabilities are in a library the CLI's build system uses, and nothing in them reaches the page you build. The `ng update` at the end of this lesson takes the version that fixes them.
+
 **`package-lock.json` is the file to keep.** `npm install` wrote it beside `package.json`, with the
 exact version of every one of those packages, the ones you named and the ones they brought in. Run
 `npm ci` on another machine and it rebuilds `node_modules` from the lockfile and nothing else, which
@@ -142,11 +147,11 @@ ana@dev:~/planner$ git init -q
 ana@dev:~/planner$ git add -A
 ana@dev:~/planner$ git commit -q -m "A new Angular project"
 ana@dev:~/planner$ git show --stat --oneline | tail -1
- 25 files changed, 9394 insertions(+)
+ 25 files changed, 9398 insertions(+)
 ana@dev:~/planner$ wc -l package-lock.json
-8603 package-lock.json
+8607 package-lock.json
 ```
 
 `.gitignore`, which `ng new` wrote, already leaves out `node_modules` and the build output, so the
-commit holds what the CLI generated, what you wrote, and the lockfile: 25 files, and 8,603 of
-those 9,394 lines are `package-lock.json`.
+commit holds what the CLI generated, what you wrote, and the lockfile: 25 files, and 8,607 of
+those 9,398 lines are `package-lock.json`.

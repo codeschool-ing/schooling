@@ -21,15 +21,12 @@ page would notice breaking, so the test reads the page:
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓.*course-sessions|Tests '
- ✓ |planner| src/app/course-sessions/course-sessions.spec.ts (1 test) 163ms
+ ✓ |planner| src/app/course-sessions/course-sessions.spec.ts (1 test) 143ms
       Tests  20 passed (20)
 ```
 
 The test does not provide a fake `PlannerStore`. It could, with
-`{ provide: PlannerStore, useValue: ... }`, and some teams do that for every component. But the
-store is part of what the component's page depends on, and with the HTTP layer faked underneath it,
-the real store costs nothing and catches more: a test against a hand-written fake checks the
-component against the fake, which agrees with whatever its author believed. Replace a dependency
+`{ provide: PlannerStore, useValue: ... }`, and some teams do that for every component. But the store is part of what the component's page depends on, and with the HTTP layer faked underneath it, the real store costs nothing and catches more. A test against a hand-written fake checks the component against the fake, which agrees with whatever its author believed. Replace a dependency
 when the real one is slow, needs a network, or makes a test depend on something it is not about.
 
 ## The placeholder, made to say something
@@ -62,6 +59,6 @@ passes for a template that shows the wrong numbers.
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓.*week-summary|Tests '
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 24ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 18ms
       Tests  20 passed (20)
 ```

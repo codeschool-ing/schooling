@@ -25,7 +25,8 @@ e comece dentro dela com o framework que este curso conhece. O `--skip-install` 
 o passo que a aula 2 precisou contornar, e o contorno é o `.npmrc` do planner:
 
 ```
-ana@dev:~/compare$ npx @angular/cli@21.2.28 new angular --defaults --skip-git --skip-install --ssr=false
+ana@dev:~/compare$ npx @angular/cli@21.2.29 new angular --defaults --skip-git --skip-install --ssr=false
+npm warn exec The following package was not found and will be installed: @angular/cli@21.2.29
 CREATE angular/.prettierrc (161 bytes)
 CREATE angular/README.md (1461 bytes)
 CREATE angular/.editorconfig (314 bytes)
@@ -58,20 +59,14 @@ ana@dev:~/compare/angular$ cp ~/planner/.npmrc .
 Depois as mesmas versões exatas do planner, para o cartão rodar no Angular que este curso usou:
 
 ```
-ana@dev:~/compare/angular$ npm install --save-exact @angular/common@21.2.25 @angular/compiler@21.2.25 @angular/core@21.2.25 @angular/forms@21.2.25 @angular/platform-browser@21.2.25 @angular/router@21.2.25 rxjs@7.8.2 tslib@2.8.1 @angular/build@21.2.28 @angular/cli@21.2.28 @angular/compiler-cli@21.2.25 jsdom@28.1.0 prettier@3.9.10 typescript@5.9.3 vitest@4.1.12
+ana@dev:~/compare/angular$ npm install --save-exact @angular/common@21.2.25 @angular/compiler@21.2.25 @angular/core@21.2.25 @angular/forms@21.2.25 @angular/platform-browser@21.2.25 @angular/router@21.2.25 rxjs@7.8.2 tslib@2.8.1 @angular/build@21.2.29 @angular/cli@21.2.29 @angular/compiler-cli@21.2.25 jsdom@28.1.0 prettier@3.9.10 typescript@5.9.3 vitest@4.1.12
 
-added 470 packages, and audited 471 packages in 22s
+added 470 packages, and audited 471 packages in 14s
 
-2 vulnerabilities (1 moderate, 1 high)
-
-To address all issues, run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
-As duas vulnerabilidades são as que a aula 22 leu, no servidor de desenvolvimento do
-`@angular/build`. O cartão é a aplicação inteira, então ele é o componente raiz, e nada mais é
+Nenhuma vulnerabilidade: o `@angular/build` 21.2.29 é o patch que a aula 2 aplicou. O cartão é a aplicação inteira, então ele é o componente raiz, e nada mais é
 necessário:
 
 ```

@@ -59,10 +59,7 @@ export class Week {
 ```
 
 `'d MMMM'` is a pattern, day then month in full; `'longDate'` is a named format, which the locale
-decides. `DatePipe` takes a `Date`, a number of milliseconds, or a string, and reads a string with
-only a date in it, like `2026-10-19`, as that day where the browser is, not as midnight UTC, which
-is what `new Date('2026-10-19')` would make of it and which is the day before anywhere west of
-London:
+decides. `DatePipe` takes a `Date`, a number of milliseconds, or a string. It reads a string with only a date in it, like `2026-10-19`, as that day where the browser is, not as midnight UTC, which is what `new Date('2026-10-19')` would make of it and which is the day before anywhere west of London:
 
 ```
 ana@dev:~/planner$ look http://localhost:4200/ --today 2026-10-23 --text 'app-week p'

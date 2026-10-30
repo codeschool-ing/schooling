@@ -118,7 +118,7 @@ ana@dev:~/planner$ look http://localhost:4200/ --scripts --text app-bench
 [vite] connecting...
 [vite] connected.
 Angular is running in development mode.
-scripts: /main.js /chunk-VUJOFXKG.js /chunk-OZXTPHRX.js /chunk-CEZKWLVC.js
+scripts: /main.js /chunk-OZXTPHRX.js /chunk-VUJOFXKG.js /chunk-CEZKWLVC.js
 Show the chart
 
 The chart loads when it is asked for.

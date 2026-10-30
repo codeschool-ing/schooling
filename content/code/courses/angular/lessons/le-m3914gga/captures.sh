@@ -36,7 +36,6 @@ save persisting src/app/preferences.ts; w
 cap_look http://localhost:4200/courses/javascript --today 2026-10-23 --text app-course-sessions --do "'check Hide sessions that are done'" --do "'go /courses/javascript'"
 
 cap '~/planner' 'npm install @ngrx/store@21.1.1'
-cap '~/planner' 'npm audit 2>&1 | head -13'
 cap '~/planner' 'npx ng generate component bench --inline-template --inline-style --skip-tests'
 save ngrx-store src/app/bench/bench.ts
 save ngrx-store src/app/app.config.ts

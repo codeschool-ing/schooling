@@ -58,8 +58,6 @@ O que reconhecer:
 ana@dev:~/planner$ look http://localhost:4200/ --text app-bench
 [vite] connecting...
 [vite] connected.
-[vite] connecting...
-[vite] connected.
 Angular is running in development mode.
 Bench
 

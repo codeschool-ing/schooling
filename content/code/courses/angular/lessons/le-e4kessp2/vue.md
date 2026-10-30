@@ -29,7 +29,7 @@ create-vite v9.3.1
 ```
 ana@dev:~/compare/vue$ npm install
 
-added 53 packages, and audited 54 packages in 4s
+added 53 packages, and audited 54 packages in 5s
 
 found 0 vulnerabilities
 ```
@@ -67,8 +67,8 @@ createApp(WeekCard).mount('#app');
 ```
 ana@dev:~/compare/vue$ look http://localhost:5173/ --do 'check Sat 24 Oct, 50 minutes' --text body
 [vite] connecting...
-Vue: setup runs
 [vite] connected.
+Vue: setup runs
 -- check Sat 24 Oct, 50 minutes
 JavaScript
  Tue 20 Oct, 60 minutes

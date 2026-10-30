@@ -83,8 +83,8 @@ From the week to Git, back to the week, and to JavaScript:
 ```
 ana@dev:~/planner$ look http://localhost:4200/ --text h2 --do 'click Git' --do 'click This week' --do 'click JavaScript'
 [vite] connecting...
-Angular is running in development mode.
 [vite] connected.
+Angular is running in development mode.
 -- click Git
 probe 1 made
 a course page, given probe 1
@@ -95,9 +95,7 @@ JavaScript
 ```
 
 **One probe, made the first time the area was entered, and never destroyed.** Leaving for the week
-did not end it, and the JavaScript page was given the same one as Git's. A route's injector is made
-when the route is first used and kept for as long as the application runs, so a service provided on a
-route is a singleton for that area, shared by every course, not one per course and not one per visit.
+did not end it, and the JavaScript page was given the same one as Git's. A route's injector is made when the route is first used and kept for as long as the application runs. So a service provided on a route is a singleton for that area, shared by every course, not one per course and not one per visit.
 
 | provided | one instance per | made | ends |
 |---|---|---|---|

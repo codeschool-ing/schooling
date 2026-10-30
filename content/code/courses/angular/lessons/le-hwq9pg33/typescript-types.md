@@ -20,7 +20,7 @@ ana@dev:~$ cd ~/ts
 ana@dev:~/ts$ npm init -y > /dev/null
 ana@dev:~/ts$ npm install --save-exact typescript@5.9.3
 
-added 1 package, and audited 2 packages in 2s
+added 1 package, and audited 2 packages in 759ms
 
 found 0 vulnerabilities
 ana@dev:~/ts$ du -sh ~/ts

@@ -14,9 +14,7 @@ is remembered by nothing, and runs on every check of the component, like an impu
 | a value worked out once per check, cheaply | a method | acceptable when it is cheap, like `asText()` in lesson 14 |
 | state that is the same everywhere | in the store | lesson 11's rule: a fact about the planner moves there |
 
-The planner has all four: `minutes` is a pipe because five templates say durations the same way;
-`rows` in `Week` is a `computed` because it is that screen's shape; `shows()` in the form is a method
-because it is two comparisons; `weekTotals` is in the store because every screen agrees on it.
+The planner has all four. `minutes` is a pipe because five templates say durations the same way; `rows` in `Week` is a `computed` because it is that screen's shape; `shows()` in the form is a method because it is two comparisons; `weekTotals` is in the store because every screen agrees on it.
 
 The bench goes:
 

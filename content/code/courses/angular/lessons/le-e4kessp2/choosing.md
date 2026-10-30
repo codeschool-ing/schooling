@@ -13,9 +13,7 @@ are the small ones.** What weighs in a real choice:
 | the team wants one upgrade path, `ng update`, for the whole stack | the team already knows React, Vue or Svelte, and its libraries |
 | forms, routing and HTTP should be the same in every project the company has | a framework's own full-stack tool, Next, Nuxt or SvelteKit, is the product |
 
-Angular's habit of deciding things is the reason it is common in companies with many teams and
-applications that live for years: a developer who moves from one Angular project to another finds the
-same folders, the same services, the same router and the same forms. React's habit of not deciding
+Angular's habit of deciding things is the reason it is common in companies with many teams and applications that live for years. A developer who moves from one Angular project to another finds the same folders, the same services, the same router and the same forms. React's habit of not deciding
 is the reason it is everywhere else: each project assembles what it needs, and no two assemble it the
 same way. Neither is a mistake. Knowing which one a team has made, and why, is the useful part.
 

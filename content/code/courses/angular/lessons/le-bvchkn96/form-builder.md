@@ -66,7 +66,7 @@ which is the check that matters for a rewrite like this one:
 
 ```
 ana@dev:~/planner$ npx ng build 2>&1 | grep -E 'ERROR|bundle generation'
-Application bundle generation complete. [2.620 seconds] - 2026-10-24T01:10:14.306Z
+Application bundle generation complete. [2.663 seconds] - 2026-10-29T23:48:03.386Z
 ```
 
 | written with `new` | written with the builder |

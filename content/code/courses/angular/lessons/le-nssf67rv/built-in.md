@@ -105,8 +105,8 @@ export class AddSession {
 ```
 ana@dev:~/planner$ look http://localhost:4200/ --text app-add-session --do 'fill Minutes = 2'
 [vite] connecting...
-Angular is running in development mode.
 [vite] connected.
+Angular is running in development mode.
 -- fill Minutes = 2
 Add sessions
 Date 1

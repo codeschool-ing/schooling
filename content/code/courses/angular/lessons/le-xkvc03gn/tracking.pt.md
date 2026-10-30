@@ -94,7 +94,7 @@ Angular is running in development mode.
 -- fill by position: Git = 25
 -- click Reverse
 - heading "Bench" [level=2]
-- button "Reverse"
+- button "Reverse" [focused]
 - heading "Tracked by id" [level=3]
 - paragraph
   - LabelText

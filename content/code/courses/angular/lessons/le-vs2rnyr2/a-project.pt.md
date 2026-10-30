@@ -41,7 +41,7 @@ CREATE planner/src/app/app.routes.ts (77 bytes)
 CREATE planner/public/favicon.ico (15086 bytes)
 - Installing packages (npm)...
 npm error Cannot read properties of null (reading 'edgesOut')
-npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-23T23_32_54_625Z-debug-0.log
+npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-29T23_35_30_831Z-debug-0.log
 ✖ Package install failed, see above.
 The Schematic workflow failed. See above.
 ```
@@ -102,9 +102,14 @@ no mesmo calendário, mas o número de patch de cada pacote anda quando aquele p
 ```
 ana@dev:~/planner$ npm install
 
-added 470 packages, and audited 471 packages in 13s
+added 470 packages, and audited 471 packages in 11s
 
-found 0 vulnerabilities
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix --force
+
+Run `npm audit` for details.
 ana@dev:~/planner$ npm ls --depth=0
 planner@0.0.0 /home/ana/planner
 ├── @angular/build@21.2.28
@@ -127,6 +132,8 @@ ana@dev:~/planner$ du -sh node_modules
 318M	node_modules
 ```
 
+As duas vulnerabilidades estão numa biblioteca que o sistema de build da CLI usa, e nada nelas chega à página que você constrói. O `ng update` do fim desta aula instala a versão que as corrige.
+
 **O `package-lock.json` é o arquivo a guardar.** O `npm install` o escreveu ao lado do `package.json`,
 com a versão exata de cada um daqueles pacotes, os que você listou e os que eles trouxeram. Rode
 `npm ci` em outra máquina e ele reconstrói o `node_modules` a partir do lockfile e de mais nada, que é
@@ -143,11 +150,11 @@ ana@dev:~/planner$ git init -q
 ana@dev:~/planner$ git add -A
 ana@dev:~/planner$ git commit -q -m "A new Angular project"
 ana@dev:~/planner$ git show --stat --oneline | tail -1
- 25 files changed, 9394 insertions(+)
+ 25 files changed, 9398 insertions(+)
 ana@dev:~/planner$ wc -l package-lock.json
-8603 package-lock.json
+8607 package-lock.json
 ```
 
 O `.gitignore`, que o `ng new` escreveu, já deixa de fora o `node_modules` e a saída do build, então o
-commit guarda o que a CLI gerou, o que você escreveu, e o lockfile: 25 arquivos, e 8.603 daquelas
-9.394 linhas são o `package-lock.json`.
+commit guarda o que a CLI gerou, o que você escreveu, e o lockfile: 25 arquivos, e 8.607 daquelas
+9.398 linhas são o `package-lock.json`.

@@ -86,13 +86,13 @@ see in each test is only what makes it different.
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓|Tests '
- ✓ |planner| src/app/planner.spec.ts (8 tests) 8ms
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 51ms
+ ✓ |planner| src/app/planner.spec.ts (8 tests) 15ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 65ms
+ ✓ |planner| src/app/app.spec.ts (2 tests) 69ms
  ✓ |planner| src/app/autofocus.spec.ts (1 test) 12ms
- ✓ |planner| src/app/app.spec.ts (2 tests) 99ms
- ✓ |planner| src/app/planner-store.spec.ts (1 test) 8ms
- ✓ |planner| src/app/minutes-pipe.spec.ts (4 tests) 2ms
- ✓ |planner| src/app/week/week.spec.ts (1 test) 95ms
+ ✓ |planner| src/app/planner-store.spec.ts (1 test) 4ms
+ ✓ |planner| src/app/minutes-pipe.spec.ts (4 tests) 1ms
+ ✓ |planner| src/app/week/week.spec.ts (1 test) 97ms
       Tests  18 passed (18)
 ```
 
@@ -108,22 +108,22 @@ ana@dev:~/planner$ sed -i 's/(date.getDay() + 6) % 7/date.getDay()/' src/app/pla
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓|❯|×|Tests '
 ❯ Building...
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 64ms
- ✓ |planner| src/app/autofocus.spec.ts (1 test) 18ms
- ❯ |planner| src/app/planner.spec.ts (8 tests | 3 failed) 20ms
-     × starts on the Monday and ends on the Sunday 10ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 50ms
+ ❯ |planner| src/app/planner.spec.ts (8 tests | 3 failed) 13ms
+     × starts on the Monday and ends on the Sunday 7ms
      × puts a Sunday in the week that ends on it 2ms
-     × crosses the end of a month 2ms
+     × crosses the end of a month 1ms
      ✓ counts what is planned and what is done, in the week only 1ms
-     ✓ is zero for no sessions 1ms
-     ✓ accepts a planner 1ms
-     ✓ refuses minutes that are not a number 2ms
+     ✓ is zero for no sessions 0ms
+     ✓ accepts a planner 0ms
+     ✓ refuses minutes that are not a number 1ms
      ✓ refuses an answer with no sessions 1ms
- ✓ |planner| src/app/app.spec.ts (2 tests) 100ms
- ✓ |planner| src/app/minutes-pipe.spec.ts (4 tests) 3ms
- ✓ |planner| src/app/planner-store.spec.ts (1 test) 14ms
- ❯ |planner| src/app/week/week.spec.ts (1 test | 1 failed) 130ms
-     × counts the week that holds today 128ms
+ ✓ |planner| src/app/app.spec.ts (2 tests) 80ms
+ ✓ |planner| src/app/autofocus.spec.ts (1 test) 11ms
+ ✓ |planner| src/app/minutes-pipe.spec.ts (4 tests) 1ms
+ ✓ |planner| src/app/planner-store.spec.ts (1 test) 5ms
+ ❯ |planner| src/app/week/week.spec.ts (1 test | 1 failed) 88ms
+     × counts the week that holds today 87ms
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
  ❯ src/app/planner.spec.ts:14:34
  ❯ src/app/planner.spec.ts:18:34
@@ -132,10 +132,7 @@ ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓|❯|×|Tests '
       Tests  4 failed | 14 passed (18)
 ```
 
-Four tests failed: the three about `weekOf`, which between them name the problem, every week now
-starting a day early; and `Week`'s own test from lesson 10, which checks the same rule from much
-further away, through a rendered page, and can only say that a date range is not the one it
-expected. The screens would have shown it too, but only to somebody who knew which dates to look
+Four tests failed. The three about `weekOf` between them name the problem: every week now starts a day early. The fourth is `Week`'s own test from lesson 10, which checks the same rule from much further away, through a rendered page, and can only say that a date range is not the one it expected. The screens would have shown it too, but only to somebody who knew which dates to look
 for. Put the line back:
 
 ```

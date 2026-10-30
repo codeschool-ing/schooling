@@ -4,9 +4,7 @@ version: 1
 ---
 
 **Before standalone components, every component belonged to an NgModule, and the module, not the
-component, decided what its template could use.** Standalone components arrived as a preview in
-Angular 14, became stable in 15 and the default in 19, but an application written in 2020 and still earning money in
-2026 is full of modules, and the first ticket you pick up at work may well be in one. This section
+component, decided what its template could use.** Standalone components arrived as a preview in Angular 14, became stable in 15 and the default in 19. But an application written in 2020 and still earning money in 2026 is full of modules, and the first ticket you pick up at work may well be in one. This section
 builds a small one so that you have seen every part before you meet them in somebody else's code.
 
 ## A project the old way
@@ -47,7 +45,7 @@ ana@dev:~/legacy$ cp ../planner/.npmrc .
 ana@dev:~/legacy$ sed 's/"planner"/"legacy"/' ../planner/package.json > package.json
 ana@dev:~/legacy$ npm install
 
-added 470 packages, and audited 471 packages in 10s
+added 470 packages, and audited 471 packages in 24s
 
 found 0 vulnerabilities
 ```

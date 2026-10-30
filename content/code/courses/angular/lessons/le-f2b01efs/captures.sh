@@ -16,6 +16,9 @@ cd "$(dirname "$0")"
 source ../../lab/lib.sh
 bash "$LAB_SH" down >/dev/null 2>&1; sleep 1
 restore le-rgrv5qyn
+# Node's clock is the browser's 23 October: the first week.spec reads the date
+# in Node, and fails or passes by the week it is run in (lib.sh's server_today).
+server_today 2026-10-23
 serve
 w() { rebuilt; }
 

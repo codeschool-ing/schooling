@@ -90,6 +90,7 @@ cap '~/planner' "npm view @angular/core time --json | grep -E '\"2[0-2]\\.0\\.0\
 cap '~/planner' 'npx ng update @angular/core@22 @angular/cli@22 2>&1 | tail -5'
 cap '~/planner' 'git status --short' 'git add -A' 'git commit -q -m "The CLI: serve, generate, build, test"' 'npx ng update @angular/core@22 @angular/cli@22 2>&1 | tail -5'
 cap '~/planner' 'npx ng update @angular/core@21 @angular/cli@21'
+cap '~/planner' 'git diff --stat' 'git add -A' 'git commit -q -m "Angular 21, latest patch"'
 
 bg_stop serve
 snapshot le-vs2rnyr2

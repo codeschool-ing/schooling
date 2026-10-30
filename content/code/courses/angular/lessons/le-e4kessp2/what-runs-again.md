@@ -18,10 +18,7 @@ said which:
 ```
 
 **Three of the four track reads.** A signal in Angular, a ref in Vue and a rune in Svelte all know
-who read them, so a change reaches exactly those readers and nothing else. That is lesson 6 and
-lesson 7 of this course, and it is the same idea under three names: Vue has had it from the start,
-Svelte has had runes since version 5, and Angular moved to it with signals, which is why the planner
-could drop zone.js.
+who read them, so a change reaches exactly those readers and nothing else. That is lesson 6 and lesson 7 of this course, and it is the same idea under three names. Vue has had it from the start, Svelte has had runes since version 5, and Angular moved to it with signals, which is why the planner could drop zone.js.
 
 **React re-runs and compares.** A change of state runs the component's function again, the whole of
 it, and React compares the new result with the old to find what to change in the page. Nothing is

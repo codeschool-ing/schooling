@@ -23,7 +23,7 @@ dizem alguma coisa:
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓.*planner-store|Tests '
- ✓ |planner| src/app/planner-store.spec.ts (2 tests) 24ms
+ ✓ |planner| src/app/planner-store.spec.ts (2 tests) 21ms
       Tests  19 passed (19)
 ```
 

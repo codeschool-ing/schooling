@@ -44,8 +44,8 @@ export class Bench {
 ```
 ana@dev:~/planner$ look http://localhost:4200/ --text app-bench --do 'click Mark done'
 [vite] connecting...
-[vite] connected.
 Angular is running in development mode.
+[vite] connected.
 -- click Mark done
 Bench
 

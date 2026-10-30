@@ -16,39 +16,13 @@ para um bench, para vê-lo rodar:
 ```
 ana@dev:~/planner$ npm install @ngrx/store@21.1.1
 
-added 1 package, and audited 478 packages in 794ms
+added 1 package, and audited 478 packages in 898ms
 
-2 vulnerabilities (1 moderate, 1 high)
-
-To address all issues (including breaking changes), run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
-O `npm` menciona dois avisos, e eles não são do NgRx. O `npm audit` diz quais são:
-
-```
-ana@dev:~/planner$ npm audit 2>&1 | head -13
-# npm audit report
-
-undici  7.0.0 - 7.30.0
-Severity: high
-undici vulnerable to Denial of Service via unbounded memory in the EventSource parser - https://github.com/advisories/GHSA-4qv8-2p9j-2685
-undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens - https://github.com/advisories/GHSA-f72v-6w45-q472
-undici vulnerable to Denial of Service via unhandled error on excessive content-encodings - https://github.com/advisories/GHSA-xjj6-f33q-929c
-fix available via `npm audit fix --force`
-Will install @angular/build@20.3.41, which is a breaking change
-node_modules/undici
-  @angular/build  21.0.0-next.0 - 21.2.28
-  Depends on vulnerable versions of undici
-  node_modules/@angular/build
-```
-
-Os dois vêm do `undici`, uma biblioteca HTTP que o `@angular/build` usa no seu computador, que nunca
-chega ao navegador, e a correção oferecida com `--force` é voltar ao `@angular/build` 20, uma versão
-maior abaixo. Ler um relatório desses e decidir é um trabalho à parte; aqui a resposta é esperar um
-patch da ferramenta de build, não aceitar um rebaixamento.
+Nenhuma vulnerabilidade, nem do NgRx nem de ninguém: as duas que a primeira instalação da aula 2
+contou foram embora com o patch que a aula 2 aplicou, como a aula 7 mostrou.
 
 ```
 ana@dev:~/planner$ npx ng generate component bench --inline-template --inline-style --skip-tests
@@ -154,12 +128,7 @@ ana@dev:~/planner$ rm -r src/app/bench && git checkout -- src/app/app.html src/a
 ```
 ana@dev:~/planner$ npm uninstall @ngrx/store
 
-removed 1 package, and audited 477 packages in 791ms
+removed 1 package, and audited 477 packages in 722ms
 
-2 vulnerabilities (1 moderate, 1 high)
-
-To address all issues (including breaking changes), run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```

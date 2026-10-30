@@ -19,14 +19,9 @@ ana@dev:~/planner$ git status --short
 ana@dev:~/planner$ git checkout -- .
 ana@dev:~/planner$ npm ci
 
-added 474 packages, and audited 475 packages in 8s
+added 474 packages, and audited 475 packages in 6s
 
-2 moderate severity vulnerabilities
-
-To address all issues (including breaking changes), run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
 The same bench, the same timers:

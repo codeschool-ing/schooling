@@ -66,7 +66,7 @@ erro nenhum, que é a conferência que importa numa reescrita como esta:
 
 ```
 ana@dev:~/planner$ npx ng build 2>&1 | grep -E 'ERROR|bundle generation'
-Application bundle generation complete. [2.620 seconds] - 2026-10-24T01:10:14.306Z
+Application bundle generation complete. [2.663 seconds] - 2026-10-29T23:48:03.386Z
 ```
 
 | escrito com `new` | escrito com o builder |

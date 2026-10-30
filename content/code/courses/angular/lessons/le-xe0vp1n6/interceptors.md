@@ -82,10 +82,6 @@ resource uses `HttpClient` underneath, so it goes through the same chain as a `p
 | logs the method, the URL and the time taken | finds out which requests are slow |
 | tries again on a network failure | survives a moment of bad Wi-Fi |
 
-**One protection is built in rather than written.** `HttpClient` already defends against
-cross-site request forgery, where another site's page makes your browser send a request to your
-API with your cookies: when the server sets an `XSRF-TOKEN` cookie, `HttpClient` copies it into an
-`X-XSRF-TOKEN` header on every request that changes something, and the server checks that the two
-match. A page on another site cannot read your cookies, so it cannot send the header. The planner's
+**One protection is built in rather than written.** `HttpClient` already defends against cross-site request forgery, where another site's page makes your browser send a request to your API with your cookies. When the server sets an `XSRF-TOKEN` cookie, `HttpClient` copies it into an `X-XSRF-TOKEN` header on every request that changes something, and the server checks that the two match. A page on another site cannot read your cookies, so it cannot send the header. The planner's
 API uses no cookies, so there is nothing to forge yet; an API that signs people in with one should
 check the header.

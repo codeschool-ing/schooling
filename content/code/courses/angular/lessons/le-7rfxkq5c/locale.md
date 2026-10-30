@@ -31,7 +31,4 @@ Day before month, no comma, and nothing in the template changed.
 
 **One application, one locale per build.** A planner that served English and Portuguese readers
 would build twice, once per locale, with Angular's `@angular/localize` translating the template text
-as well; that is a project of its own and outside this course. A locale chosen at run time, by the
-reader, is possible with `LOCALE_ID` and a pipe argument, `{{ day | date: 'longDate' : undefined :
-'pt' }}`, after registering that locale's data by hand; most applications that need it use the
-build-per-locale approach instead, because it translates everything, not only the dates.
+as well; that is a project of its own and outside this course. A locale chosen at run time, by the reader, is possible with `LOCALE_ID` and a pipe argument, `{{ day | date: 'longDate' : undefined : 'pt' }}`, after registering that locale's data by hand. Most applications that need it use the build-per-locale approach instead, because it translates everything, not only the dates.

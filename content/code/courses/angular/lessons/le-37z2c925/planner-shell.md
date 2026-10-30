@@ -45,14 +45,14 @@ component can be created. `App`'s second test still looks for the heading:
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | tail -9
- ✓ |planner| src/app/week/week.spec.ts (1 test) 49ms
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 45ms
- ✓ |planner| src/app/app.spec.ts (2 tests) 68ms
+ ✓ |planner| src/app/week/week.spec.ts (1 test) 53ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 73ms
+ ✓ |planner| src/app/app.spec.ts (2 tests) 73ms
 
  Test Files  3 passed (3)
       Tests  4 passed (4)
-   Start at  20:13:18
-   Duration  1.17s (transform 134ms, setup 901ms, import 150ms, tests 162ms, environment 1.71s)
+   Start at  20:38:08
+   Duration  1.56s (transform 229ms, setup 1.10s, import 234ms, tests 199ms, environment 2.22s)
 ```
 
 Four tests, three files, all passing. **Creating `App` in a test creates `Week` and `WeekSummary` as

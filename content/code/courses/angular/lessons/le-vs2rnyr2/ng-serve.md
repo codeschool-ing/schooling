@@ -17,7 +17,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total | 47.85 kB
 
-Application bundle generation complete. [1.466 seconds] - 2026-10-23T23:33:14.577Z
+Application bundle generation complete. [1.961 seconds] - 2026-10-29T23:35:48.445Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -34,9 +34,9 @@ memory each one holds, in kilobytes, in its first column:
 
 ```
 ana@dev:~/planner$ ps -o rss=,args= -u ana | sort -rn | head -3
-437964 ng serve (planner)
-82192 npm exec ng serve
-25952 /home/ana/planner/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.28.1 --ping
+433224 ng serve (planner)
+81432 npm exec ng serve
+20020 /home/ana/planner/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.28.1 --ping
 ```
 
 The first line is the dev server, the second the `npx` that started it, the third `esbuild`, the
@@ -48,7 +48,7 @@ running and it refuses, because the port is taken:
 ```
 ana@dev:~/planner$ npx ng serve
 An unhandled exception occurred: Port 4200 is already in use. Use '--port' to specify a different port.
-See "/tmp/ng-X7tgA8/angular-errors.log" for further details.
+See "/tmp/ng-4yZzVb/angular-errors.log" for further details.
 ```
 
 At a terminal it asks instead whether to use another port. Either way, the fix is usually to find
@@ -82,7 +82,8 @@ be pasted into a lesson, so this course reads pages with a short program instead
 //   --do 'click TEXT' | 'fill LABEL = TEXT' | 'check LABEL' | 'press KEY'
 //        | 'select LABEL = OPTION' | 'go PATH' | 'wait MS'
 //        click finds a button or a link by what it says; fill, check and
-//        select find a form field by its label, as a screen reader would
+//        select find a form field by its label, as a screen reader would;
+//        check clicks a checkbox, so a ticked one is unticked
 //   --text SEL     print the text of SEL instead of the whole page
 //   --html SEL     print SEL's HTML instead of text, without the attributes
 //                  Angular adds to keep a component's styles to itself
@@ -221,7 +222,7 @@ for (const action of opt.do) {
   if (verb === "click") await page.getByRole("button", { name: arg, exact: true })
     .or(page.getByRole("link", { name: arg, exact: true })).first().click();
   else if (verb === "fill") await field(label).fill(value ?? "");
-  else if (verb === "check") await field(arg).check();
+  else if (verb === "check") await field(arg).click();
   else if (verb === "select") await field(label).selectOption(value);
   else if (verb === "press") await page.keyboard.press(arg);
   else if (verb === "go") await page.goto(new URL(arg, origin).href);
@@ -312,7 +313,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total | 47.85 kB
 
-Application bundle generation complete. [1.466 seconds] - 2026-10-23T23:33:14.577Z
+Application bundle generation complete. [1.961 seconds] - 2026-10-29T23:35:48.445Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -322,7 +323,7 @@ NOTE: Raw file sizes do not reflect development server per-request transformatio
 Initial chunk files | Names | Raw size
 main.js             | main  |  2.39 kB | 
 
-Application bundle generation complete. [0.115 seconds] - 2026-10-23T23:33:17.626Z
+Application bundle generation complete. [0.189 seconds] - 2026-10-29T23:35:51.874Z
 
 Component update sent to client(s).
 ```
@@ -372,7 +373,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total |  2.48 kB
 
-Application bundle generation complete. [1.383 seconds] - 2026-10-23T23:33:23.246Z
+Application bundle generation complete. [1.731 seconds] - 2026-10-29T23:35:59.082Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.

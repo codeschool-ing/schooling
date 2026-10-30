@@ -48,22 +48,22 @@ polyfills.server.mjs | polyfills.server | 363 bytes |
 Lazy chunk files     | Names            |  Raw size
 chunk-4PI5SPPZ.mjs   | courses-routes   |  40.46 kB | 
 
-Application bundle generation complete. [3.048 seconds] - 2026-10-23T12:00:03.754Z
+Application bundle generation complete. [2.776 seconds] - 2026-10-23T12:00:03.421Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
   ➜  Local:   http://localhost:4200/
 Preferences will last this visit only: ReferenceError: localStorage is not defined
     at map (/home/ana/planner/src/app/preferences.ts:26:9)
-    at Object.eval (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-5IER7EOY.js:4208:5)
-    at runEffect (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-5IER7EOY.js:1033:10)
-    at Object.run (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-5IER7EOY.js:4132:7)
-    at ZoneAwareEffectScheduler.flushQueue (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-5IER7EOY.js:4066:14)
-    at ZoneAwareEffectScheduler.flush (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-5IER7EOY.js:4048:33)
-    at _ApplicationRef.synchronizeOnce (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12413:32)
-    at _ApplicationRef.synchronize (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12401:14)
-    at _ApplicationRef.tickImpl (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12376:12)
-    at _ApplicationRef._tick (/home/ana/planner/.angular/cache/21.2.28/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12364:12)
+    at Object.eval (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-5IER7EOY.js:4208:5)
+    at runEffect (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-5IER7EOY.js:1033:10)
+    at Object.run (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-5IER7EOY.js:4132:7)
+    at ZoneAwareEffectScheduler.flushQueue (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-5IER7EOY.js:4066:14)
+    at ZoneAwareEffectScheduler.flush (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-5IER7EOY.js:4048:33)
+    at _ApplicationRef.synchronizeOnce (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12413:32)
+    at _ApplicationRef.synchronize (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12401:14)
+    at _ApplicationRef.tickImpl (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12376:12)
+    at _ApplicationRef._tick (/home/ana/planner/.angular/cache/21.2.29/planner/vite/deps_ssr/chunk-HGKWEPPS.js:12364:12)
 ```
 
 `Preferences`, from lesson 22, writes the preference to `localStorage` in an effect, and effects run

@@ -8,7 +8,7 @@ version: 1
 does not read again. As in lesson 21, the version is written in full and the questions are skipped:
 
 ```
-ana@dev:~/planner$ npx ng add @angular/ssr@21.2.28 --skip-confirmation --interactive=false
+ana@dev:~/planner$ npx ng add @angular/ssr@21.2.29 --skip-confirmation --interactive=false
 ❯ Determining Package Manager
 › Using package manager: npm
 ✔ Determining Package Manager
@@ -16,7 +16,7 @@ ana@dev:~/planner$ npx ng add @angular/ssr@21.2.28 --skip-confirmation --interac
 ✔ Loading package information
 ❯ Installing package
 ✔ Installing package
-                        Package dependency "@angular/ssr" already exists with a different specifier. "21.2.28" will be replaced with "^21.2.28".
+                        Package dependency "@angular/ssr" already exists with a different specifier. "21.2.29" will be replaced with "^21.2.29".
 CREATE src/main.server.ts (292 bytes)
 CREATE src/app/app.config.server.ts (426 bytes)
 CREATE src/app/app.routes.server.ts (166 bytes)
@@ -29,14 +29,14 @@ UPDATE src/app/app.config.ts (890 bytes)
 ✔ Packages installed successfully.
 ```
 
-One line in the middle needs reading. The CLI installed `@angular/ssr` at exactly `21.2.28`, as the
+One line in the middle needs reading. The CLI installed `@angular/ssr` at exactly `21.2.29`, as the
 project's `.npmrc` asks; then the set-up step, which edits `package.json` itself, put a caret in
 front of it. It did the same to the three packages it added:
 
 ```
 ana@dev:~/planner$ git diff package.json
 diff --git a/package.json b/package.json
-index c10b1b0..c24238f 100644
+index c2fe35f..da4d573 100644
 --- a/package.json
 +++ b/package.json
 @@ -6,7 +6,8 @@
@@ -55,14 +55,14 @@ index c10b1b0..c24238f 100644
      "@angular/platform-browser": "21.2.25",
 +    "@angular/platform-server": "21.2.25",
      "@angular/router": "21.2.25",
-+    "@angular/ssr": "^21.2.28",
++    "@angular/ssr": "^21.2.29",
 +    "express": "^5.1.0",
      "rxjs": "7.8.2",
      "tslib": "2.8.1"
    },
 @@ -26,6 +30,8 @@
-     "@angular/build": "21.2.28",
-     "@angular/cli": "21.2.28",
+     "@angular/build": "21.2.29",
+     "@angular/cli": "21.2.29",
      "@angular/compiler-cli": "21.2.25",
 +    "@types/express": "^5.0.1",
 +    "@types/node": "^20.17.19",
@@ -71,27 +71,21 @@ index c10b1b0..c24238f 100644
      "typescript": "5.9.3",
 ```
 
-**`^21.2.28` means "21.2.28 or any later 21"**, so the next `npm install` on another computer may
+**`^21.2.29` means "21.2.29 or any later 21"**, so the next `npm install` on another computer may
 choose a different version from the one this project was tested with. The fix is to install the
 four again, at exact versions. While doing that, `@types/node` should describe the Node.js the
 project runs on, which is 22, not the 20 the set-up wrote:
 
 ```
-ana@dev:~/planner$ npm install --save-exact @angular/ssr@21.2.28 express@5.3.0 @types/express@5.0.6 @types/node@22.20.5
+ana@dev:~/planner$ npm install --save-exact @angular/ssr@21.2.29 express@5.3.0 @types/express@5.0.6 @types/node@22.20.5
 
-changed 1 package, and audited 491 packages in 1s
+changed 1 package, and audited 491 packages in 832ms
 
-2 vulnerabilities (1 moderate, 1 high)
-
-To address all issues, run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
 Only `@types/node` changed on disk; the other three were already installed at those versions, and
-what changed for them is the line in `package.json`. The two vulnerabilities are the ones lesson 22
-read in `@angular/build`, not something this command brought in. What is left of the diff is what
+what changed for them is the line in `package.json`. What is left of the diff is what
 the project gained:
 
 ```
@@ -100,7 +94,7 @@ ana@dev:~/planner$ git diff package.json | grep '^[-+] '
 +    "test": "ng test",
 +    "serve:ssr:planner": "node dist/planner/server/server.mjs"
 +    "@angular/platform-server": "21.2.25",
-+    "@angular/ssr": "21.2.28",
++    "@angular/ssr": "21.2.29",
 +    "express": "5.3.0",
 +    "@types/express": "5.0.6",
 +    "@types/node": "22.20.5",

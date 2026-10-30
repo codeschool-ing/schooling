@@ -105,10 +105,7 @@ This week
 The week could not be loaded: session 5: minutes is "50"
 ```
 
-The page now says what is wrong, and where, instead of showing a number that is wrong. A check this
-size, by hand, is enough for one shape with five fields; for a real API with dozens, a library such
-as Zod writes the same check from a description of the shape, and gives the type from the same
-description so the two cannot drift apart.
+The page now says what is wrong, and where, instead of showing a number that is wrong. A check this size, by hand, is enough for one shape with five fields. For a real API with dozens, a library such as Zod writes the same check from a description of the shape, and gives the type from the same description so the two cannot drift apart.
 
 The server's copy goes back to a number:
 

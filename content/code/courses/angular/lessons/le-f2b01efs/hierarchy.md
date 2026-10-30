@@ -4,10 +4,7 @@ version: 1
 ---
 
 **An Angular application has a tree of injectors, not one, and a question goes up the tree until
-an injector has a recipe for it.** Every component has an injector of its own, made from its
-`providers` list; above them all sits the root injector, made from `app.config.ts` and every
-`providedIn: 'root'`; above that, a platform injector shared by the whole page, and at the top a
-last one that answers anything by throwing `NG0201`. Where a recipe sits decides who shares what it
+an injector has a recipe for it.** Every component has an injector of its own, made from its `providers` list. Above them all sits the root injector, made from `app.config.ts` and every `providedIn: 'root'`. Above that is a platform injector shared by the whole page, and at the top a last one that answers anything by throwing `NG0201`. Where a recipe sits decides who shares what it
 makes.
 
 ```schooling-figure

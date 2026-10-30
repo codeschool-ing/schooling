@@ -10,6 +10,7 @@ printed `[vite] connecting...`. Its project generator, `create-vite`, is run at 
 
 ```
 ana@dev:~/compare$ npm create vite@9.3.1 -- react --template react-ts --no-immediate
+npm warn exec The following package was not found and will be installed: create-vite@9.3.1
 
 > npx
 > cva react --template react-ts --no-immediate
@@ -33,7 +34,7 @@ the version that was installed, as the planner's are, and remove the template's 
 ```
 ana@dev:~/compare/react$ npm install
 
-added 27 packages, and audited 28 packages in 3s
+added 27 packages, and audited 28 packages in 5s
 
 found 0 vulnerabilities
 ```
@@ -41,7 +42,7 @@ found 0 vulnerabilities
 ```
 ana@dev:~/compare/react$ npm install --save-exact react@19.3.1 react-dom@19.3.1 @types/node@22.20.5 @types/react@19.3.0 @types/react-dom@19.3.0 @vitejs/plugin-react@6.1.2 oxlint@1.90.0 typescript@6.0.3 vite@8.3.5
 
-added 3 packages, changed 2 packages, and audited 31 packages in 3s
+added 3 packages, changed 2 packages, and audited 31 packages in 2s
 
 found 0 vulnerabilities
 ```

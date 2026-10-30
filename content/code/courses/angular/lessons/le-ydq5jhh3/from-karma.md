@@ -54,7 +54,7 @@ ana@dev:~/planner$ npx ng generate @schematics/angular:refactor-jasmine-vitest -
     Jasmine to Vitest Refactoring Summary:
     - 1 test file(s) scanned.
     - 1 file(s) transformed.
-CREATE jasmine-vitest-20261029T223326033Z.md (350 bytes)
+CREATE jasmine-vitest-20261029T235741782Z.md (350 bytes)
 UPDATE src/app/minutes-pipe.jasmine.spec.ts (473 bytes)
 ```
 
@@ -81,7 +81,7 @@ a `TODO`, with the file and the line.
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓.*jasmine|Tests '
- ✓ |planner| src/app/minutes-pipe.jasmine.spec.ts (1 test) 5ms
+ ✓ |planner| src/app/minutes-pipe.jasmine.spec.ts (1 test) 2ms
       Tests  22 passed (22)
 ```
 

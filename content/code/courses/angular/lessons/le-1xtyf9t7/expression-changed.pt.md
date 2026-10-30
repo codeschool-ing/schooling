@@ -33,11 +33,12 @@ O `grep -v` tira as linhas do stack trace, que começam com espaços e `at`:
 ana@dev:~/planner$ look http://localhost:4200/ --text app-bench | grep -v '^    at '
 [vite] connecting...
 [vite] connected.
+[error] ERROR RuntimeError: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: '1793318437138'. Current value: '1793318437139'. Expression location: _Bench component. Find more at https://v21.angular.dev/errors/NG0100
 Angular is running in development mode.
-[error] ERROR RuntimeError: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: '1792799255446'. Current value: '1792799255469'. Expression location: _Bench component. Find more at https://v21.angular.dev/errors/NG0100
+[error] ERROR RuntimeError: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: '1793318437138'. Current value: '1793318437163'. Expression location: _Bench component. Find more at https://v21.angular.dev/errors/NG0100
 Bench
 
-Checked at 1792799255446
+Checked at 1793318437138
 ```
 
 A mensagem tem tudo o que é preciso: o código, `NG0100`; o valor anterior e o atual, a poucos

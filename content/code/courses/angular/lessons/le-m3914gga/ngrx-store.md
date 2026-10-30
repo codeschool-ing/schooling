@@ -16,40 +16,13 @@ bench, to see it run:
 ```
 ana@dev:~/planner$ npm install @ngrx/store@21.1.1
 
-added 1 package, and audited 478 packages in 794ms
+added 1 package, and audited 478 packages in 898ms
 
-2 vulnerabilities (1 moderate, 1 high)
-
-To address all issues (including breaking changes), run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
-`npm` mentions two advisories, and they are not NgRx's. `npm audit` says what they are:
-
-```
-ana@dev:~/planner$ npm audit 2>&1 | head -13
-# npm audit report
-
-undici  7.0.0 - 7.30.0
-Severity: high
-undici vulnerable to Denial of Service via unbounded memory in the EventSource parser - https://github.com/advisories/GHSA-4qv8-2p9j-2685
-undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens - https://github.com/advisories/GHSA-f72v-6w45-q472
-undici vulnerable to Denial of Service via unhandled error on excessive content-encodings - https://github.com/advisories/GHSA-xjj6-f33q-929c
-fix available via `npm audit fix --force`
-Will install @angular/build@20.3.41, which is a breaking change
-node_modules/undici
-  @angular/build  21.0.0-next.0 - 21.2.28
-  Depends on vulnerable versions of undici
-  node_modules/@angular/build
-```
-
-Both come from `undici`, an HTTP library that `@angular/build` uses on your computer, which never reaches
-the browser, and the fix offered with `--force` is to go back to `@angular/build` 20, a major version
-down. Reading such a
-report and deciding is a job of its own; here the answer is to wait for a patch of the build tool,
-not to take a downgrade.
+No vulnerabilities, NgRx's or anybody's: the two that lesson 2's first install counted went with
+the patch lesson 2 took, as lesson 7 showed.
 
 ```
 ana@dev:~/planner$ npx ng generate component bench --inline-template --inline-style --skip-tests
@@ -141,10 +114,7 @@ Angular is running in development mode.
 ```
 
 The same arithmetic `PlannerStore` would do with a signal and a method, written as two actions, a
-reducer, two selectors and a provider. **That ceremony is the product, not a flaw**: every change to the
-state is an action object, so all of them can be logged, replayed and inspected in a browser
-extension that shows the state before and after each one, and a team of forty can read any feature
-the same way. For one person and one planner, it is more code than the problem.
+reducer, two selectors and a provider. **That ceremony is the product, not a flaw**: every change to the state is an action object, so all of them can be logged, replayed and inspected in a browser extension that shows the state before and after each one. And a team of forty can read any feature the same way. For one person and one planner, it is more code than the problem.
 
 The bench, its provider and the package go:
 
@@ -155,12 +125,7 @@ ana@dev:~/planner$ rm -r src/app/bench && git checkout -- src/app/app.html src/a
 ```
 ana@dev:~/planner$ npm uninstall @ngrx/store
 
-removed 1 package, and audited 477 packages in 791ms
+removed 1 package, and audited 477 packages in 722ms
 
-2 vulnerabilities (1 moderate, 1 high)
-
-To address all issues (including breaking changes), run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```

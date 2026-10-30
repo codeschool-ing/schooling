@@ -34,42 +34,23 @@ Then zone.js itself, at the version Angular 21 accepts:
 ```
 ana@dev:~/planner$ npm install zone.js@0.16.3
 
-added 1 package, and audited 476 packages in 897ms
+added 1 package, and audited 476 packages in 782ms
 
-2 moderate severity vulnerabilities
-
-To address all issues (including breaking changes), run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
-npm added the package, and then reported two vulnerabilities that lesson 2's install did not. They
-are not in zone.js. `npm audit` says where:
+npm added the package and found nothing to report. The two vulnerabilities lesson 2's first install
+counted were in `@angular/build` 21.2.28, and the `ng update` at the end of lesson 2 took 21.2.29,
+which carries the fix. `npm audit` agrees:
 
 ```
 ana@dev:~/planner$ npm audit 2>&1 | head -12
-# npm audit report
-
-undici  7.0.0 - 7.30.0
-Severity: moderate
-undici vulnerable to Denial of Service via unbounded memory in the EventSource parser - https://github.com/advisories/GHSA-4qv8-2p9j-2685
-undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens - https://github.com/advisories/GHSA-f72v-6w45-q472
-fix available via `npm audit fix --force`
-Will install @angular/build@20.3.41, which is a breaking change
-node_modules/undici
-  @angular/build  21.0.0-next.0 - 21.2.28
-  Depends on vulnerable versions of undici
-  node_modules/@angular/build
+found 0 vulnerabilities
 ```
 
-`undici` is an HTTP library the CLI's build system uses, and an advisory against it was published
-after lesson 2 was recorded: the database `npm audit` reads changes every day, and a project that was
-clean yesterday is not clean today without a line of it changing. Read the fix it offers before
-running anything: `--force` would install `@angular/build` 20, a whole major backwards, to replace a
-library that only runs on your computer while you build. The proportionate answer is to note it and
-take the patched `@angular/build` 21 when it is published, with the `ng update` of lesson 2.
-`front-quality` is the course about reading these reports.
+That is the case for taking patches as they come rather than when something breaks: the fix arrived
+in one, and taking it was one command. The database `npm audit` reads changes every day, so a
+project that was clean yesterday can carry a report today without a line of it changing. `front-quality` is the course about reading these reports.
 
 It has to be loaded before anything else, so it goes on the first line of `main.ts`, where it replaces
 the browser's asynchronous functions before Angular's code runs:
@@ -124,7 +105,5 @@ callback finished, zone.js told Angular, and Angular walked the tree and found `
 is the convenience zone.js bought: assign to any field, from anywhere asynchronous, and the page
 follows.
 
-It also cost something on every page. zone.js is code the browser downloads and runs before the
-application starts, and a walk of the whole tree after every timer, every mouse move a listener sees
-and every resolved promise is work done whether anything changed or not. And the middle line already
+It also cost something on every page. zone.js is code the browser downloads and runs before the application starts. And a walk of the whole tree after every timer, every mouse move a listener sees and every resolved promise is work done whether anything changed or not. And the middle line already
 shows the trouble: the OnPush component kept its 0, for a reason the next section gives.

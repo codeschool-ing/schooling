@@ -20,7 +20,7 @@ pessoa lendo a página perceberia quebrar, então o teste lê a página:
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓.*course-sessions|Tests '
- ✓ |planner| src/app/course-sessions/course-sessions.spec.ts (1 test) 163ms
+ ✓ |planner| src/app/course-sessions/course-sessions.spec.ts (1 test) 143ms
       Tests  20 passed (20)
 ```
 
@@ -61,6 +61,6 @@ um template que mostra os números errados.
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓.*week-summary|Tests '
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 24ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 18ms
       Tests  20 passed (20)
 ```

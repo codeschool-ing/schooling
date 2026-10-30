@@ -18,7 +18,7 @@ styles-5INURTSO.css | styles        |   0 bytes |                 0 bytes
 
                     | Initial total | 187.14 kB |                50.84 kB
 
-Application bundle generation complete. [3.464 seconds] - 2026-10-23T23:33:30.254Z
+Application bundle generation complete. [5.041 seconds] - 2026-10-29T23:36:08.317Z
 
 Output location: /home/ana/planner/dist/planner
 ```
@@ -107,11 +107,11 @@ Its terminal logged both requests, the second with its 404:
 ```
 ana@dev:~/planner$ python3 -m http.server 8081 --directory dist/planner/browser
 Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
-127.0.0.1 - - [23/Oct/2026 20:33:30] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [23/Oct/2026 20:33:31] "GET /styles-5INURTSO.css HTTP/1.1" 200 -
-127.0.0.1 - - [23/Oct/2026 20:33:31] "GET /main-J4WVDBNH.js HTTP/1.1" 200 -
-127.0.0.1 - - [23/Oct/2026 20:33:32] code 404, message File not found
-127.0.0.1 - - [23/Oct/2026 20:33:32] "GET /courses/git HTTP/1.1" 404 -
+127.0.0.1 - - [29/Oct/2026 20:36:09] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [29/Oct/2026 20:36:09] "GET /styles-5INURTSO.css HTTP/1.1" 200 -
+127.0.0.1 - - [29/Oct/2026 20:36:09] "GET /main-J4WVDBNH.js HTTP/1.1" 200 -
+127.0.0.1 - - [29/Oct/2026 20:36:10] code 404, message File not found
+127.0.0.1 - - [29/Oct/2026 20:36:10] "GET /courses/git HTTP/1.1" 404 -
 ```
 
 Stop it with Ctrl-C. The build output is not something to commit: `.gitignore`

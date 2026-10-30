@@ -81,7 +81,7 @@ npm error }
 npm error
 npm error If you are behind a proxy, please make sure that the
 npm error 'proxy' config is set properly.  See: 'npm help config'
-npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-23T22_21_50_338Z-debug-0.log
+npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-29T23_33_59_073Z-debug-0.log
 ```
 
 `ECONNREFUSED` quer dizer que algo respondeu e disse não; `ETIMEDOUT`, que nada respondeu;

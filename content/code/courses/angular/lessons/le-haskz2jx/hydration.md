@@ -114,11 +114,11 @@ polyfills.server.mjs | polyfills.server | 363 bytes |
 Lazy chunk files     | Names            |  Raw size
 chunk-4PI5SPPZ.mjs   | courses-routes   |  40.46 kB | 
 
-Application bundle generation complete. [3.370 seconds] - 2026-10-23T12:00:04.077Z
+Application bundle generation complete. [3.062 seconds] - 2026-10-23T12:00:03.623Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
-9:00:04 AM [vite] (client) Re-optimizing dependencies because lockfile has changed
+9:00:03 AM [vite] (client) Re-optimizing dependencies because lockfile has changed
   ➜  Local:   http://localhost:4200/
 NG02801: Angular detected that `HttpClient` is not configured to use `fetch` APIs. It's strongly recommended to enable `fetch` for applications that use Server-Side Rendering for better performance and compatibility. To enable `fetch`, add the `withFetch()` to the `provideHttpClient()` call at the root of the application.
 XHR support in `@angular/platform-server` is deprecated and will be removed in a future version of Angular. It has known security and performance issues in server environments, such as forwarding `Authorization` headers on cross-origin redirects and susceptibility to denial-of-service (DoS) via redirect loops. Please enable the HttpClient fetch backend instead by using `withFetch()`.

@@ -5,8 +5,7 @@ version: 1
 
 **This lesson builds one small piece of the planner four times, in Angular, React, Vue and Svelte,
 and puts the four side by side.** The piece is a card: one course's week, its sessions with a box to
-tick, and a line that adds up the minutes. It is small enough to read whole in each framework, and
-it has the three parts every framework has to answer for: **state** that changes, the sessions;
+tick, and a line that adds up the minutes. It is small enough to read whole in each framework. And it has the three parts every framework has to answer for: **state** that changes, the sessions;
 **derived values** that follow it, the two totals; and a **template** that draws both and sends the
 tick back.
 
@@ -25,7 +24,8 @@ and start inside it with the framework this course knows. `--skip-install` becau
 lesson 2 had to work around, and the way round it is the planner's `.npmrc`:
 
 ```
-ana@dev:~/compare$ npx @angular/cli@21.2.28 new angular --defaults --skip-git --skip-install --ssr=false
+ana@dev:~/compare$ npx @angular/cli@21.2.29 new angular --defaults --skip-git --skip-install --ssr=false
+npm warn exec The following package was not found and will be installed: @angular/cli@21.2.29
 CREATE angular/.prettierrc (161 bytes)
 CREATE angular/README.md (1461 bytes)
 CREATE angular/.editorconfig (314 bytes)
@@ -58,19 +58,14 @@ ana@dev:~/compare/angular$ cp ~/planner/.npmrc .
 Then the same exact versions as the planner, so the card runs on the Angular this course used:
 
 ```
-ana@dev:~/compare/angular$ npm install --save-exact @angular/common@21.2.25 @angular/compiler@21.2.25 @angular/core@21.2.25 @angular/forms@21.2.25 @angular/platform-browser@21.2.25 @angular/router@21.2.25 rxjs@7.8.2 tslib@2.8.1 @angular/build@21.2.28 @angular/cli@21.2.28 @angular/compiler-cli@21.2.25 jsdom@28.1.0 prettier@3.9.10 typescript@5.9.3 vitest@4.1.12
+ana@dev:~/compare/angular$ npm install --save-exact @angular/common@21.2.25 @angular/compiler@21.2.25 @angular/core@21.2.25 @angular/forms@21.2.25 @angular/platform-browser@21.2.25 @angular/router@21.2.25 rxjs@7.8.2 tslib@2.8.1 @angular/build@21.2.29 @angular/cli@21.2.29 @angular/compiler-cli@21.2.25 jsdom@28.1.0 prettier@3.9.10 typescript@5.9.3 vitest@4.1.12
 
-added 470 packages, and audited 471 packages in 22s
+added 470 packages, and audited 471 packages in 14s
 
-2 vulnerabilities (1 moderate, 1 high)
-
-To address all issues, run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
-The two vulnerabilities are the ones lesson 22 read, in `@angular/build`'s development server. The
+No vulnerabilities: `@angular/build` 21.2.29 is the patch lesson 2 took. The
 card is the whole application, so it is the root component, and nothing else is needed:
 
 ```

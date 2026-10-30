@@ -11,10 +11,7 @@ ana@dev:~/planner$ npx ng build 2>&1 | grep -E 'Initial total|courses-routes'
 chunk-ODVGTZAK.js     | courses-routes | 196.97 kB |                37.46 kB
 ```
 
-The first download grew by about 20 kB, most of it the theme's styles, which every page needs. The
-course area's chunk grew from 45 kB to 197 kB: the checkbox, the dialog and the parts of the CDK they
-bring are used only on a course's pages, so they went into its lazy chunk, and a visit to the week
-alone does not download them. Lesson 18's split is paying for itself here.
+The first download grew by about 20 kB, most of it the theme's styles, which every page needs. The course area's chunk grew from 45 kB to 197 kB. The checkbox, the dialog and the parts of the CDK they bring are used only on a course's pages, so they went into its lazy chunk, and a visit to the week alone does not download them. Lesson 18's split is paying for itself here.
 
 | choose | when |
 |---|---|

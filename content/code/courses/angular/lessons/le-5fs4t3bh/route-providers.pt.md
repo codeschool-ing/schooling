@@ -82,8 +82,8 @@ Da semana para o Git, de volta para a semana, e para o JavaScript:
 ```
 ana@dev:~/planner$ look http://localhost:4200/ --text h2 --do 'click Git' --do 'click This week' --do 'click JavaScript'
 [vite] connecting...
-Angular is running in development mode.
 [vite] connected.
+Angular is running in development mode.
 -- click Git
 probe 1 made
 a course page, given probe 1

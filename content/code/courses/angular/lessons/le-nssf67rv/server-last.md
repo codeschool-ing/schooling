@@ -20,9 +20,7 @@ server's are not optional.
 
 The asynchronous check has the same limit, from the other side. It said the 24th was taken when it
 asked; a session added somewhere else a second later would not be caught until the server saw the
-`POST`. The planner's server does not refuse a second session on one day, so the check is advice to
-the person rather than a rule the data keeps; a rule the data must keep belongs in the server, where
-it is checked at the moment of writing.
+`POST`. The planner's server does not refuse a second session on one day, so the check is advice to the person rather than a rule the data keeps. A rule the data must keep belongs in the server, where it is checked at the moment of writing.
 
 One last change. Lesson 14's `startAgain` cleared the array and pushed a new control, so after every
 successful submit the one date input on the page was destroyed and made again. Keeping the first

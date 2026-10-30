@@ -3,10 +3,7 @@ title: HttpClient, and a resource that uses it
 version: 1
 ---
 
-**`HttpClient` is Angular's service for talking to a server.** `fetch` works in an Angular
-application, and lesson 6 used it, but `HttpClient` does three things `fetch` leaves to you: it
-reads the JSON for you, it treats a 404 or a 500 as an error rather than an answer, and every
-request it makes passes through interceptors, which this lesson's sixth section uses. It is a service
+**`HttpClient` is Angular's service for talking to a server.** `fetch` works in an Angular application, and lesson 6 used it. But `HttpClient` does three things `fetch` leaves to you: it reads the JSON for you, it treats a 404 or a 500 as an error rather than an answer, and every request it makes passes through interceptors, which this lesson's sixth section uses. It is a service
 like any other, so a class gets one with `inject(HttpClient)`.
 
 In Angular 21 nothing has to be provided first: `HttpClient` has `providedIn: 'root'`, and sends

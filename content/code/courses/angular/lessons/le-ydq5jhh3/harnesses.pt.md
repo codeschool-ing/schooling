@@ -22,7 +22,7 @@ mesmos quando a marcação por baixo muda.
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | grep -E '✓.*course-sessions|Tests '
- ✓ |planner| src/app/course-sessions/course-sessions.spec.ts (2 tests) 366ms
+ ✓ |planner| src/app/course-sessions/course-sessions.spec.ts (2 tests) 310ms
       Tests  21 passed (21)
 ```
 

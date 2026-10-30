@@ -107,8 +107,8 @@ export class App {}
 ```
 ana@dev:~/planner$ look http://localhost:4200/ --today 2026-10-23 --text main
 [vite] connecting...
-[vite] connected.
 Angular is running in development mode.
+[vite] connected.
 This week
 
 2026-10-19 to 2026-10-25

@@ -48,7 +48,7 @@ ana@dev:~/legacy$ cp ../planner/.npmrc .
 ana@dev:~/legacy$ sed 's/"planner"/"legacy"/' ../planner/package.json > package.json
 ana@dev:~/legacy$ npm install
 
-added 470 packages, and audited 471 packages in 10s
+added 470 packages, and audited 471 packages in 24s
 
 found 0 vulnerabilities
 ```

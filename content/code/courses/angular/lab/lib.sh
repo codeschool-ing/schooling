@@ -21,6 +21,10 @@ session() {
   # $? is kept from one command to the next, so `echo $?` answers about the
   # command before it and not about the printf that drew the prompt.
   script="cd $dir; __rc=0"
+  # The clock server_today set, for the commands typed here too: `ng test`
+  # runs the specs in Node, and a spec that reads the real date is a spec
+  # whose answer depends on the day the course was recorded.
+  [ -n "${SERVER_TODAY:-}" ] && script+="; export LAB_TODAY=$SERVER_TODAY NODE_OPTIONS=--import=file://$STATE/clock.mjs"
   for c in "$@"; do
     script+=$'\n'"printf 'ana@dev:%s\$ %s\\n' \"\$(dirs +0)\" $(printf '%q' "$c")"$'\n'"(exit \$__rc); $c 2>&1; __rc=\$?"
   done
@@ -89,11 +93,12 @@ bg() {
   [ -n "${SERVER_TODAY:-}" ] && env="LAB_TODAY=$SERVER_TODAY NODE_OPTIONS=--import=file://$STATE/clock.mjs "
   bash "$LAB_SH" script "cd $dir; ${env}setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
 }
-# THE SERVER'S CLOCK. `look --today` sets the browser's; from lesson 23 a page
-# is first drawn by Node, whose `new Date()` would be the recording computer's
-# day. server_today DATE: every program bg starts after it believes the day is
-# DATE, from 09:00 on and moving as a clock does, the morning the browser is
-# given. Node reads the module before the program, so nothing in a transcript
+# NODE'S CLOCK. `look --today` sets the browser's; from lesson 23 a page is
+# first drawn by Node, and lesson 10's first spec reads the date in Node, so
+# `new Date()` there would be the recording computer's day. server_today DATE:
+# every program bg starts after it, and every command session types, believes
+# the day is DATE, from 09:00 on and moving as a clock does, the morning the
+# browser is given. Node reads the module before the program, so nothing in a transcript
 # shows it, and the commands printed are the ones the student types.
 server_today() {
   SERVER_TODAY=$1
@@ -151,6 +156,9 @@ wait_log() {
 
 # serve: `ng serve` in a second terminal, until the first build is done.
 serve() {
+  # A fresh dev server writes a fresh log, so a build count taken before it
+  # means nothing after it: a save waiting for its build starts counting here.
+  SAVE_MARK=
   bg serve '~/planner' 'npx ng serve'
   wait_log serve 'Watch mode enabled'
   sleep 0.5

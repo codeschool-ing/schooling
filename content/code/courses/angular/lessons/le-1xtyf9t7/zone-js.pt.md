@@ -34,42 +34,23 @@ Depois o próprio zone.js, na versão que o Angular 21 aceita:
 ```
 ana@dev:~/planner$ npm install zone.js@0.16.3
 
-added 1 package, and audited 476 packages in 897ms
+added 1 package, and audited 476 packages in 782ms
 
-2 moderate severity vulnerabilities
-
-To address all issues (including breaking changes), run:
-  npm audit fix --force
-
-Run `npm audit` for details.
+found 0 vulnerabilities
 ```
 
-O npm acrescentou o pacote, e depois informou duas vulnerabilidades que a instalação da aula 2 não
-informou. Elas não estão no zone.js. O `npm audit` diz onde:
+O npm acrescentou o pacote e não achou nada a relatar. As duas vulnerabilidades que a primeira
+instalação da aula 2 contou estavam no `@angular/build` 21.2.28, e o `ng update` do fim da aula 2
+levou ao 21.2.29, que traz a correção. O `npm audit` concorda:
 
 ```
 ana@dev:~/planner$ npm audit 2>&1 | head -12
-# npm audit report
-
-undici  7.0.0 - 7.30.0
-Severity: moderate
-undici vulnerable to Denial of Service via unbounded memory in the EventSource parser - https://github.com/advisories/GHSA-4qv8-2p9j-2685
-undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens - https://github.com/advisories/GHSA-f72v-6w45-q472
-fix available via `npm audit fix --force`
-Will install @angular/build@20.3.41, which is a breaking change
-node_modules/undici
-  @angular/build  21.0.0-next.0 - 21.2.28
-  Depends on vulnerable versions of undici
-  node_modules/@angular/build
+found 0 vulnerabilities
 ```
 
-O `undici` é uma biblioteca de HTTP que o sistema de build da CLI usa, e um alerta contra ela foi
-publicado depois que a aula 2 foi gravada: a base que o `npm audit` lê muda todo dia, e um projeto que
-estava limpo ontem não está limpo hoje sem nenhuma linha dele mudar. Leia o conserto oferecido antes de
-rodar qualquer coisa: o `--force` instalaria o `@angular/build` 20, um major inteiro para trás, para
-trocar uma biblioteca que só roda no seu computador enquanto você faz o build. A resposta proporcional
-é anotar e pegar o `@angular/build` 21 corrigido quando for publicado, com o `ng update` da aula 2. O
-`front-quality` é o curso sobre ler esses relatórios.
+Esse é o argumento para aceitar patches quando saem, e não quando algo quebra: a correção veio num
+deles, e aceitá-la foi um comando. A base que o `npm audit` lê muda todo dia, então um projeto limpo
+ontem pode ter um relatório hoje sem nenhuma linha dele mudar. `front-quality` é o curso sobre ler esses relatórios.
 
 Ele precisa ser carregado antes de qualquer outra coisa, então vai na primeira linha do `main.ts`, onde
 troca as funções assíncronas do navegador antes de o código do Angular rodar:

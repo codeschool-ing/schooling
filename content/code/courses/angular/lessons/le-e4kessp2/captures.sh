@@ -5,7 +5,7 @@
 #
 # It starts from the ~/planner lesson 24's captures left, which this lesson
 # does not change, and makes four small projects beside it in ~/compare: a new
-# Angular project from @angular/cli 21.2.28 on the planner's versions, and
+# Angular project from @angular/cli 21.2.29 on the planner's versions, and
 # create-vite 9.3.1's react-ts, vue-ts and svelte-ts templates, with what they
 # depend on from the npm registry and React 19.3.1, Vue 3.5.44 and Svelte
 # 5.57.3 pinned, as npm installed them on the day of the recording.
@@ -24,9 +24,9 @@ look_at() { cap "$1" "look http://localhost:$2/ --do 'check Sat 24 Oct, 50 minut
 
 # one-card: Angular
 cap '~' 'mkdir compare'
-cap $C 'npx @angular/cli@21.2.28 new angular --defaults --skip-git --skip-install --ssr=false'
+cap $C 'npx @angular/cli@21.2.29 new angular --defaults --skip-git --skip-install --ssr=false'
 cap $C/angular 'cp ~/planner/.npmrc .'
-cap $C/angular 'npm install --save-exact @angular/common@21.2.25 @angular/compiler@21.2.25 @angular/core@21.2.25 @angular/forms@21.2.25 @angular/platform-browser@21.2.25 @angular/router@21.2.25 rxjs@7.8.2 tslib@2.8.1 @angular/build@21.2.28 @angular/cli@21.2.28 @angular/compiler-cli@21.2.25 jsdom@28.1.0 prettier@3.9.10 typescript@5.9.3 vitest@4.1.12'
+cap $C/angular 'npm install --save-exact @angular/common@21.2.25 @angular/compiler@21.2.25 @angular/core@21.2.25 @angular/forms@21.2.25 @angular/platform-browser@21.2.25 @angular/router@21.2.25 rxjs@7.8.2 tslib@2.8.1 @angular/build@21.2.29 @angular/cli@21.2.29 @angular/compiler-cli@21.2.25 jsdom@28.1.0 prettier@3.9.10 typescript@5.9.3 vitest@4.1.12'
 cap $C/angular 'rm src/app/app.html src/app/app.css src/app/app.spec.ts src/app/app.routes.ts'
 shown "$PWD/one-card.md" src/app/app.ts $C/angular/src/app/app.ts
 shown "$PWD/one-card.md" src/app/app.config.ts $C/angular/src/app/app.config.ts

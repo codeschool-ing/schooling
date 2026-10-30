@@ -15,8 +15,8 @@ Found 15 dependencies.
     
       Name                       Version                  Command to update
      ------------------------------------------------------------------------
-      @angular/cli               21.2.28 -> 22.2.4        ng update @angular/cli
-      @angular/core              21.2.25 -> 22.2.3        ng update @angular/core
+      @angular/cli               21.2.28 -> 22.2.5        ng update @angular/cli
+      @angular/core              21.2.25 -> 22.2.4        ng update @angular/core
     
     There might be additional packages which don't provide 'ng update' capabilities that are outdated.
     You can update the additional packages by running the update command of your package manager.
@@ -95,14 +95,35 @@ security fixes among them, and naming the major takes the newest of it:
 
 ```
 ana@dev:~/planner$ npx ng update @angular/core@21 @angular/cli@21
+The installed Angular CLI version is outdated.
+Installing a temporary Angular CLI versioned 21 to perform the update.
 Using package manager: npm
 Collecting installed dependencies...
 Found 15 dependencies.
 Fetching dependency metadata from registry...
 Package '@angular/core' is already up to date.
-Package '@angular/cli' is already up to date.
+    Updating package.json with dependency @angular/build @ "21.2.29" (was "21.2.28")...
+    Updating package.json with dependency @angular/cli @ "21.2.29" (was "21.2.28")...
+UPDATE package.json (779 bytes)
+❯ Cleaning node modules directory
+✔ Cleaning node modules directory
+❯ Installing packages
+✔ Installing packages
 ```
 
-Nothing to do on the day of the recording: the versions in `package.json` were the newest 21 there
-was. When a patch does arrive, the same command writes the new numbers into `package.json` and the
-lockfile; read the diff, and run `ng test` before you commit them.
+On the day of the recording there was something to do. The framework, `@angular/core`, was still the
+newest 21, but the CLI and its build system had moved from 21.2.28 to 21.2.29 since the project was
+made. The command wrote the new numbers into `package.json`, installed again, and the lockfile
+followed:
+
+```
+ana@dev:~/planner$ git diff --stat
+ package-lock.json | 68 +++++++++++++++++++++++++++----------------------------
+ package.json      |  4 ++--
+ 2 files changed, 36 insertions(+), 36 deletions(-)
+ana@dev:~/planner$ git add -A
+ana@dev:~/planner$ git commit -q -m "Angular 21, latest patch"
+```
+
+Read the diff, and run `ng test` before you commit it. The rest of this course runs on the CLI and
+build system at 21.2.29.

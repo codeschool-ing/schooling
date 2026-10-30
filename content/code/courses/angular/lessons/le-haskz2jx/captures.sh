@@ -49,9 +49,9 @@ cap '~/planner' "curl -s http://localhost:4200/ | sed -n '/<body>/,/<\/body>/p'"
 bg_stop serve
 
 # adding-ssr
-cap '~/planner' 'npx ng add @angular/ssr@21.2.28 --skip-confirmation --interactive=false'
+cap '~/planner' 'npx ng add @angular/ssr@21.2.29 --skip-confirmation --interactive=false'
 cap '~/planner' 'git diff package.json'
-cap '~/planner' 'npm install --save-exact @angular/ssr@21.2.28 express@5.3.0 @types/express@5.0.6 @types/node@22.20.5'
+cap '~/planner' 'npm install --save-exact @angular/ssr@21.2.29 express@5.3.0 @types/express@5.0.6 @types/node@22.20.5'
 cap '~/planner' "git diff package.json | grep '^[-+] '"
 cap '~/planner' 'git status --short'
 cap '~/planner' 'cat src/app/app.config.server.ts'

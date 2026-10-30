@@ -51,9 +51,7 @@ Angular is running in development mode.
 - button "Write a note"
 ```
 
-The field is the one marked focused. For a sighted mouse user that is a convenience; for somebody on a
-keyboard or a screen reader, it is the difference between being taken to the field and having to hunt
-for it, and lessons 9 and 21 use the same move when a screen changes.
+The field is the one marked focused. For a sighted mouse user that is a convenience. For somebody on a keyboard or a screen reader, it is the difference between being taken to the field and having to hunt for it, and lessons 9 and 21 use the same move when a screen changes.
 
 Like inputs and outputs, queries had a decorated form first, `@ViewChild('note') note!: ElementRef`,
 filled in a lifecycle hook lesson 9 introduces, and `ng generate @angular/core:signal-queries-migration`
