@@ -95,8 +95,8 @@ API lock-in than its row says; a fleet of virtual machines built from a gallery 
 extensions in it has more than its row says. What it shows is the pattern. **The more a service
 does for you, the more of your code takes its shape**, and the operational knowledge follows the
 service rather than the code. Contracts read the same in every row a savings plan covers, because
-they attach to the bill and not to the platform. The Consumption plans of Functions and Logic
-Apps are not on Microsoft's list, so those rows have nothing to sign.
+they attach to the bill and not to the platform. Of Functions' plans only Premium is on Microsoft's
+list, and Logic Apps is not on it at all.
 
 Two consequences carry into the rest of the lesson. Lock-in is a cost to weigh against what it
 buys, beside the running cost and the effort to migrate that lesson 21 put in its comparison. And

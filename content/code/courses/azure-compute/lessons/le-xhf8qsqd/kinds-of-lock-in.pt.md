@@ -97,8 +97,8 @@ API do que a linha dele diz; uma frota de máquinas virtuais construída a parti
 galeria com as extensões do Azure dentro tem mais do que a linha dela diz. O que a figura mostra é
 o padrão. **Quanto mais um serviço faz por você, mais o seu código toma a forma dele**, e o
 conhecimento operacional acompanha o serviço, não o código. Contratos se leem igual em toda linha
-que um savings plan cobre, porque se prendem à fatura e não à plataforma. Os planos Consumption do
-Functions e do Logic Apps não estão na lista da Microsoft, então essas linhas não têm nada a assinar.
+que um savings plan cobre, porque se prendem à fatura e não à plataforma. Dos planos do
+Functions, só o Premium está na lista da Microsoft, e o Logic Apps não está nela.
 
 Duas consequências seguem pelo resto da aula. Lock-in é um custo a pesar contra o que ele compra, ao
 lado do custo de operação e do esforço de migração que a aula 21 pôs na comparação dela. E o tipo de
