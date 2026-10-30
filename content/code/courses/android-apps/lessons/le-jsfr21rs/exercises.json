@@ -1,0 +1,568 @@
+[
+  {
+    "id": "ex-k7dnbdqz",
+    "version": 1,
+    "section": "nav-host",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `CoursesScreen` take an `onOpen` function instead of a `NavController`?",
+    "hint": "Think of previews and tests.",
+    "choices": [
+      {
+        "text": "So it can be previewed and tested on its own",
+        "correct": true,
+        "why": "Right: a screen holding a controller only works inside that graph."
+      },
+      {
+        "text": "Because a composable may not hold a `NavController`",
+        "correct": false,
+        "why": "It may; `PlannerNavHost` does. It is a design choice."
+      },
+      {
+        "text": "So that navigation runs on a background thread",
+        "correct": false,
+        "why": "Navigation happens on the main thread either way."
+      },
+      {
+        "text": "To avoid the serialization plugin",
+        "correct": false,
+        "why": "The routes still need it; the screen just does not see them."
+      }
+    ]
+  },
+  {
+    "id": "ex-5e7dvb49",
+    "version": 1,
+    "section": "nav-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change to the build file does a `@Serializable` route need?",
+    "hint": "An annotation that a compiler plugin handles.",
+    "choices": [
+      {
+        "text": "The `kotlin.serialization` plugin",
+        "correct": true,
+        "why": "Right: it generates the code that turns a route into a string and back."
+      },
+      {
+        "text": "Raising `compileSdk` to 38",
+        "correct": false,
+        "why": "Routes have nothing to do with the SDK level."
+      },
+      {
+        "text": "The KSP plugin and a navigation compiler",
+        "correct": false,
+        "why": "Type-safe routes use the serialization plugin, not KSP."
+      },
+      {
+        "text": "Nothing; `navigation-compose` brings it",
+        "correct": false,
+        "why": "The library brings the runtime, not the compiler plugin."
+      }
+    ]
+  },
+  {
+    "id": "ex-swdr42yj",
+    "version": 1,
+    "section": "nav-host",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each call to what it does to the back stack.",
+    "hint": "Push, pop, or start.",
+    "pairs": [
+      {
+        "left": "`navigate(CourseDetail(id))`",
+        "right": "Pushes an entry on top"
+      },
+      {
+        "left": "`popBackStack()`",
+        "right": "Removes the entry on top"
+      },
+      {
+        "left": "`startDestination = Courses`",
+        "right": "Decides the first entry"
+      }
+    ],
+    "right_distractors": [
+      "Clears the stack and restarts the activity"
+    ]
+  },
+  {
+    "id": "ex-p6gm6dd4",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`CourseDetail` has one property, `courseId`. What route pattern did Navigation generate for it?",
+    "hint": "The test printed it.",
+    "choices": [
+      {
+        "text": "`CourseDetail?courseId`",
+        "correct": false,
+        "why": "A required property became a path placeholder."
+      },
+      {
+        "text": "`CourseDetail/{courseId}`",
+        "correct": true,
+        "why": "Right: the class name and a placeholder per property."
+      },
+      {
+        "text": "`course/kotlin`",
+        "correct": false,
+        "why": "That is a hand-written route with a value already in it."
+      },
+      {
+        "text": "`{CourseDetail}`",
+        "correct": false,
+        "why": "The placeholder is the property, not the class."
+      }
+    ]
+  },
+  {
+    "id": "ex-bsjq01pa",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner pass `courseId` to the course screen rather than the `Course` with its sessions?",
+    "hint": "Where are arguments kept?",
+    "choices": [
+      {
+        "text": "Navigation refuses data classes as arguments",
+        "correct": false,
+        "why": "The route itself is a data class; the issue is what goes in it."
+      },
+      {
+        "text": "Strings are faster to compare",
+        "correct": false,
+        "why": "Speed is not the reason the lesson gives."
+      },
+      {
+        "text": "Arguments are saved in a `Bundle`, and a copy goes stale",
+        "correct": true,
+        "why": "Right: and the id is enough for the next screen to find the rest."
+      },
+      {
+        "text": "The `Course` cannot be serialized",
+        "correct": false,
+        "why": "It could be made serializable; it would still be the wrong habit."
+      }
+    ]
+  },
+  {
+    "id": "ex-301p3ce2",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague passes a list of 2,000 sessions as a route argument. It works on their phone. What can happen on a student's?",
+    "hint": "The argument is saved with the back stack.",
+    "choices": [
+      {
+        "text": "A crash when the state is saved",
+        "correct": true,
+        "why": "Right: `TransactionTooLargeException`; a `Bundle` is meant for small values."
+      },
+      {
+        "text": "The list arrives sorted differently",
+        "correct": false,
+        "why": "Order is kept; size is the problem."
+      },
+      {
+        "text": "Navigation silently drops the argument",
+        "correct": false,
+        "why": "Nothing is dropped silently; it fails."
+      },
+      {
+        "text": "Nothing; arguments live only in memory",
+        "correct": false,
+        "why": "They are saved so the stack survives the process being taken away."
+      }
+    ]
+  },
+  {
+    "id": "ex-y17pnb15",
+    "version": 1,
+    "section": "arguments",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `composable<CourseDetail> { entry -> … }`, the route comes back with `entry.___<CourseDetail>()`.",
+    "hint": "To the route.",
+    "blanks": [
+      {
+        "accept": [
+          "toRoute"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-90arb22n",
+    "version": 1,
+    "section": "back-stack",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the test's five taps, what was the largest number of entries the back stack held at once?",
+    "hint": "After tapping Add session.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sv452d4p",
+    "version": 1,
+    "section": "back-stack",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `TestNavHostController` is built without `navigatorProvider.addNavigator(ComposeNavigator())`. What goes wrong?",
+    "hint": "Who knows what a `composable` destination is?",
+    "choices": [
+      {
+        "text": "The graph cannot be built",
+        "correct": true,
+        "why": "Right: a test controller starts without that navigator."
+      },
+      {
+        "text": "The test passes but prints no routes",
+        "correct": false,
+        "why": "It cannot get as far as printing."
+      },
+      {
+        "text": "Back stops working, but navigate works",
+        "correct": false,
+        "why": "Neither works without the navigator."
+      },
+      {
+        "text": "Arguments arrive as `null`",
+        "correct": false,
+        "why": "Arguments are not the problem; the destinations are."
+      }
+    ]
+  },
+  {
+    "id": "ex-12pse9h8",
+    "version": 1,
+    "section": "back-stack",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the back stacks the test printed in order.",
+    "hint": "Push, push, pop, pop.",
+    "items": [
+      "`Courses`",
+      "`Courses > CourseDetail`",
+      "`Courses > CourseDetail > AddSession`",
+      "`Courses > CourseDetail`, after Save"
+    ]
+  },
+  {
+    "id": "ex-sqfvn9cm",
+    "version": 1,
+    "section": "back-stack",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After saving a session, why does the form pop itself rather than navigate to the course screen?",
+    "hint": "What would back do afterwards?",
+    "choices": [
+      {
+        "text": "Back would reopen the finished form",
+        "correct": true,
+        "why": "Right: and back would open it again."
+      },
+      {
+        "text": "`navigate` cannot go to a destination already in the stack",
+        "correct": false,
+        "why": "It can, and section 05 shows what that does."
+      },
+      {
+        "text": "Popping saves the session to the database",
+        "correct": false,
+        "why": "Navigation saves nothing; saving is a later lesson's job."
+      },
+      {
+        "text": "Popping is faster than navigating",
+        "correct": false,
+        "why": "Speed is not the reason; the shape of the stack is."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ecg06q3",
+    "version": 1,
+    "section": "pop-up-to",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `launchSingleTop = true` prevent?",
+    "hint": "A double tap.",
+    "choices": [
+      {
+        "text": "A second copy of the destination already on top",
+        "correct": true,
+        "why": "Right: the double tap left one `CourseDetail`."
+      },
+      {
+        "text": "Any destination appearing twice anywhere in the stack",
+        "correct": false,
+        "why": "Only the top is checked."
+      },
+      {
+        "text": "The back button",
+        "correct": false,
+        "why": "Back still pops normally."
+      },
+      {
+        "text": "Arguments changing",
+        "correct": false,
+        "why": "It is about entries, not arguments."
+      }
+    ]
+  },
+  {
+    "id": "ex-10gye77y",
+    "version": 1,
+    "section": "pop-up-to",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`navigate(Courses) { popUpTo<Courses> { inclusive = true } }` from the form. What does the stack hold afterwards?",
+    "hint": "Pop down to `Courses`, that one too, then push.",
+    "choices": [
+      {
+        "text": "`Courses > CourseDetail > AddSession > Courses`",
+        "correct": false,
+        "why": "That is the plain `navigate` with no `popUpTo`."
+      },
+      {
+        "text": "`Courses > Courses`",
+        "correct": false,
+        "why": "That is `popUpTo` without `inclusive`."
+      },
+      {
+        "text": "`Courses`",
+        "correct": true,
+        "why": "Right: everything popped, the old list included, and one new list pushed."
+      },
+      {
+        "text": "An empty stack, so the activity closes",
+        "correct": false,
+        "why": "The new `Courses` is pushed after the popping."
+      }
+    ]
+  },
+  {
+    "id": "ex-m98gp1ek",
+    "version": 1,
+    "section": "pop-up-to",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the test call `nav.navigate` inside `rule.runOnUiThread { … }`?",
+    "hint": "Where must navigation happen?",
+    "choices": [
+      {
+        "text": "Navigation must happen on the main thread",
+        "correct": true,
+        "why": "Right: the test thread is not the main thread."
+      },
+      {
+        "text": "To make both calls happen in one frame, as a double tap would",
+        "correct": false,
+        "why": "That is a side effect; the reason is the thread."
+      },
+      {
+        "text": "Because `TestNavHostController` is not thread-safe on Linux",
+        "correct": false,
+        "why": "The operating system is not the point."
+      },
+      {
+        "text": "To print the stack afterwards",
+        "correct": false,
+        "why": "Printing happens in `runOnIdle`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0w47zsr",
+    "version": 1,
+    "section": "pop-up-to",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plain `navigate(Courses)` from the form left how many entries in the stack?",
+    "hint": "Two of them were `Courses`.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yw65fjgb",
+    "version": 1,
+    "section": "system-back",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With only `Courses` on the stack, the student presses back. What happens?",
+    "hint": "The third back in the test.",
+    "choices": [
+      {
+        "text": "Nothing; the last screen ignores back",
+        "correct": false,
+        "why": "The test printed `finishing: true`."
+      },
+      {
+        "text": "The activity finishes and the student leaves the app",
+        "correct": true,
+        "why": "Right: `NavHost` stops answering and the dispatcher's default closes the activity."
+      },
+      {
+        "text": "`Courses` is pushed again",
+        "correct": false,
+        "why": "Back never pushes."
+      },
+      {
+        "text": "The app crashes on an empty stack",
+        "correct": false,
+        "why": "The stack is never emptied by back; the activity closes instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-ye6aj1h1",
+    "version": 1,
+    "section": "system-back",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which object receives the system's back gesture, and is the one `NavHost` registers with?",
+    "hint": "The test called it directly.",
+    "choices": [
+      {
+        "text": "`OnBackPressedDispatcher`",
+        "correct": true,
+        "why": "Right: the activity's dispatcher."
+      },
+      {
+        "text": "`NavHostController`",
+        "correct": false,
+        "why": "The controller is told by `NavHost`; it does not receive the gesture."
+      },
+      {
+        "text": "`ComposeNavigator`",
+        "correct": false,
+        "why": "That draws `composable` destinations."
+      },
+      {
+        "text": "`BackStackEntry`",
+        "correct": false,
+        "why": "An entry is what gets popped."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmr11cch",
+    "version": 1,
+    "section": "system-back",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reminder notification opens the planner straight on Thursday's Kotlin course. Which mechanism, and what back stack should it build?",
+    "hint": "As if the student had tapped there.",
+    "choices": [
+      {
+        "text": "A deep link, building `Courses > CourseDetail`",
+        "correct": true,
+        "why": "Right: back then goes to the list, not out of the app."
+      },
+      {
+        "text": "A deep link, building only `CourseDetail`",
+        "correct": false,
+        "why": "Navigation builds the stack the student would have had, list included."
+      },
+      {
+        "text": "A second activity for that course",
+        "correct": false,
+        "why": "The planner keeps one activity; a deep link opens a destination in it."
+      },
+      {
+        "text": "`launchSingleTop`, building `CourseDetail > Courses`",
+        "correct": false,
+        "why": "`launchSingleTop` is about duplicates, and that stack is upside down."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4q4mxx9",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these belong in a route's properties? Choose all that apply.",
+    "hint": "Small, stable, and enough to find the rest.",
+    "choices": [
+      {
+        "text": "A course's id",
+        "correct": true,
+        "why": "Yes: the planner's routes carry exactly this."
+      },
+      {
+        "text": "The list of the course's sessions",
+        "correct": false,
+        "why": "No: large, and stale as soon as a session is added."
+      },
+      {
+        "text": "A session's id, for an edit screen",
+        "correct": true,
+        "why": "Yes: another id the next screen can look up."
+      },
+      {
+        "text": "The `NavController`",
+        "correct": false,
+        "why": "No: it cannot be saved, and screens should not hold it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzmcmh2r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student taps a course, then taps it again before the screen changes, then presses back once. Without `launchSingleTop`, where are they?",
+    "hint": "Two entries were pushed.",
+    "choices": [
+      {
+        "text": "On the list of courses, where they began",
+        "correct": false,
+        "why": "One back pops one entry; there were two course screens."
+      },
+      {
+        "text": "On the first copy of that page",
+        "correct": true,
+        "why": "Right: the second copy popped and the first is underneath."
+      },
+      {
+        "text": "Outside the app, on the home screen",
+        "correct": false,
+        "why": "That needs the stack down to its last entry."
+      },
+      {
+        "text": "On the add-session form",
+        "correct": false,
+        "why": "Nothing pushed the form."
+      }
+    ]
+  }
+]
