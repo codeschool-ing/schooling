@@ -54,7 +54,9 @@ of lessons 8 and 9, and it does not know the `WITH` clause above. Started with
 `docker compose --profile sql up -d`, it answers:
 
 ```
-@@SQLREFUSE@@
+ana@laptop:~/azure$ docker compose exec sql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Quitanda-Lab-2026 -C -Q "CREATE TABLE dbo.orders (order_id varchar(10) NOT NULL, customer_id varchar(8) NOT NULL) WITH (DISTRIBUTION = HASH(customer_id), CLUSTERED COLUMNSTORE INDEX)"
+Msg 102, Level 15, State 1, Server 4d7f0bc8f6d6, Line 1
+Incorrect syntax near 'INDEX'.
 ```
 
 That refusal is the honest boundary of this section. Distributions, data movement and the 60-way split

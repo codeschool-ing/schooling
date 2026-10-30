@@ -49,7 +49,7 @@ GROUP BY payment;
 plus the data moved between its own steps and anything written, with a minimum of 10 MB per query and
 every query rounded up to the next megabyte. There is nothing to provision and nothing to pause, and a
 careless query over a large folder is billed for every byte of it. So the layout of the files is the
-price list: what a question can skip, it does not pay for. Sections 4 and 5 of this lesson measure that
+price list: what a question can skip, it does not pay for. Sections 04 and 05 of this lesson measure that
 with a stand-in, and lesson 18 comes back to it with Delta Lake.
 
 **The two are not rivals.** A common shape is the lake as the store of everything, serverless for

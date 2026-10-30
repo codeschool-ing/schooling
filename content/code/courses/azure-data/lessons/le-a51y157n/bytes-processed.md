@@ -3,7 +3,15 @@ title: One question, four amounts of bytes
 version: 1
 ---
 
-@@BP-INTRO@@
+**A serverless pool charges for what it reads, so the same question can cost very different amounts
+depending on the files it is asked of.** This section asks one question, October's sales by way of
+payment, four times: of the CSV and of the Parquet, for the whole month and for one day. The engine is
+**DuckDB, not Synapse**: it reads the files in Azurite through a small file system written here, which
+counts every byte it fetches. The counts are what a lake reader has to fetch for each question; what a
+serverless pool would bill is at least that, with the 10 MB minimum and the rounding of the previous
+section applied, at an illustrative price.
+
+Save this as `ask.py`, beside `gen.py`:
 
 ```schooling-example
 {"language": "python", "file": "ask.py", "parts": [
@@ -18,4 +26,102 @@ version: 1
 ]}
 ```
 
-@@BP-RUNS@@
+## The whole month, as CSV and as Parquet
+
+```
+ana@laptop:~/azure$ python ask.py "SELECT payment, count(*) AS orders, sum(total_cents) / 100 AS reais FROM orders_csv GROUP BY payment ORDER BY reais DESC"
+┌──────────────┬────────┬─────────────┐
+│   payment    │ orders │    reais    │
+│   varchar    │ int64  │   double    │
+├──────────────┼────────┼─────────────┤
+│ pix          │ 307681 │ 63109558.55 │
+│ credit       │ 219350 │ 44934884.91 │
+│ debit        │  87078 │  17837618.2 │
+│ meal-voucher │  53454 │ 10989255.43 │
+└──────────────┴────────┴─────────────┘
+
+read from the lake: 34,900,248 bytes in 50 ranged reads of 31 blobs
+billed as 35 MB (whole MB, 10 MB minimum): 0.000175 USD at an illustrative 5.00 USD per TB
+```
+
+**34,900,248 bytes: every byte of every CSV file**, and a little more than the 33,935,337 stored,
+because PyArrow first read the start of one file to learn the columns, as the one-day questions below
+show more plainly. The question needs two columns of seven, and a
+CSV gives a reader no way to skip the other five.
+
+```
+ana@laptop:~/azure$ python ask.py "SELECT payment, count(*) AS orders, sum(total_cents) / 100 AS reais FROM orders GROUP BY payment ORDER BY reais DESC"
+┌──────────────┬────────┬─────────────┐
+│   payment    │ orders │    reais    │
+│   varchar    │ int64  │   double    │
+├──────────────┼────────┼─────────────┤
+│ pix          │ 307681 │ 63109558.55 │
+│ credit       │ 219350 │ 44934884.91 │
+│ debit        │  87078 │  17837618.2 │
+│ meal-voucher │  53454 │ 10989255.43 │
+└──────────────┴────────┴─────────────┘
+
+read from the lake: 5,600,246 bytes in 94 ranged reads of 31 blobs
+billed as 10 MB (whole MB, 10 MB minimum): 0.000050 USD at an illustrative 5.00 USD per TB
+```
+
+**The same four rows from 5,600,246 bytes**, a sixth of the CSV's. DuckDB asked PyArrow for `payment` and
+`total_cents` only, and PyArrow read each file's footer, then the blocks of those two columns, and
+nothing else: 94 ranged reads, about three per file, where the CSV needed fewer and larger ones.
+
+## One day, as Parquet and as CSV
+
+```
+ana@laptop:~/azure$ python ask.py "SELECT payment, count(*) AS orders, sum(total_cents) / 100 AS reais FROM orders WHERE dt = '2026-10-15' GROUP BY payment ORDER BY reais DESC"
+┌──────────────┬────────┬────────────┐
+│   payment    │ orders │   reais    │
+│   varchar    │ int64  │   double   │
+├──────────────┼────────┼────────────┤
+│ pix          │   8415 │ 1720742.02 │
+│ credit       │   5928 │ 1219676.93 │
+│ debit        │   2357 │  478763.39 │
+│ meal-voucher │   1488 │  306383.34 │
+└──────────────┴────────┴────────────┘
+
+blobs opened: orders/dt=2026-10-01/part-0.parquet, orders/dt=2026-10-15/part-0.parquet
+read from the lake: 228,895 bytes in 4 ranged reads of 2 blobs
+billed as 10 MB (whole MB, 10 MB minimum): 0.000050 USD at an illustrative 5.00 USD per TB
+```
+
+**228,895 bytes from two blobs.** The filter on `dt` was settled before anything was read: `dt` is in the
+folder name, so the other days were never opened. The second blob is the 15th; the first, the 1st of
+October, was opened when the dataset was created, because PyArrow reads one file to learn the table's
+columns. A serverless pool has the same need, and the same kind of cost, when it is not told the schema.
+
+```
+ana@laptop:~/azure$ python ask.py "SELECT payment, count(*) AS orders, sum(total_cents) / 100 AS reais FROM orders_csv WHERE dt = '2026-10-15' GROUP BY payment ORDER BY reais DESC"
+┌──────────────┬────────┬────────────┐
+│   payment    │ orders │   reais    │
+│   varchar    │ int64  │   double   │
+├──────────────┼────────┼────────────┤
+│ pix          │   8415 │ 1720742.02 │
+│ credit       │   5928 │ 1219676.93 │
+│ debit        │   2357 │  478763.39 │
+│ meal-voucher │   1488 │  306383.34 │
+└──────────────┴────────┴────────────┘
+
+blobs opened: orders_csv/dt=2026-10-01/part-0.csv, orders_csv/dt=2026-10-15/part-0.csv
+read from the lake: 1,889,288 bytes in 2 ranged reads of 2 blobs
+billed as 10 MB (whole MB, 10 MB minimum): 0.000050 USD at an illustrative 5.00 USD per TB
+```
+
+**The CSV read the whole of the 15th, 1,889,288 bytes, about eight times the Parquet.** Partitioning
+worked for both formats: each opened two files out of thirty-one. **The two decisions are independent
+and they multiply**: the folders decide how many files a question opens, and the format decides how
+much of each file it reads. Together they took the question from 34,900,248 bytes to 228,895, about 150
+times less.
+
+## What the bill would say
+
+At this size every query but the first falls under the 10 MB minimum, so on a serverless pool three of
+the four would cost the same, and the first three and a half times as much. That is a property of a
+small lake, not a reason to ignore the layout: the ratios stay and the minimum does not. A year of these
+orders read as CSV by a dashboard that refreshes every five minutes is the CSV month twelve times over,
+288 times a day. The same dashboard over Parquet, partitioned by day and asking for today, reads a
+footer and two columns of one file. Both answer correctly, and only one of them is a bill anybody
+notices.

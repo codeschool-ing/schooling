@@ -29,7 +29,24 @@ Save this as `gen.py` in `~/azure`:
 ```
 
 ```
-@@GEN@@
+ana@laptop:~/azure$ python gen.py
+orders      31 files, 13,433,647 bytes
+orders_csv  31 files, 33,935,337 bytes
+667,563 orders in October
 ```
 
-@@GEN-TEXT@@
+**The same 667,563 orders, 13,433,647 bytes as Parquet and 33,935,337 as CSV**: the Parquet is 40% of
+the CSV, holding exactly the same rows. Two things make the difference. Parquet stores each column
+together, so a column of `pix`, `pix`, `credit` repeated twenty thousand times compresses to very little,
+where CSV writes every value out in full on every line. And it stores numbers as numbers, where CSV
+spells `24890` as five characters and a comma.
+
+**Each file says what is inside it, too.** A Parquet file ends with a footer that lists its columns,
+their types, and where in the file each column's data starts. That footer is what lets a reader fetch
+two columns of seven and skip the rest, which the next section measures. A CSV file has none of this: to
+find the `payment` of any order a reader has to read every line from the start.
+
+**And the folders say what day each file holds.** `orders/dt=2026-10-15/part-0.parquet` holds the 15th
+of October and nothing else, which is the convention called hive partitioning. A serverless pool reads
+it through its `filepath()` function, and DuckDB and PyArrow read it as a column called `dt`. A query
+that asks for one day can skip the other thirty files without opening them.
