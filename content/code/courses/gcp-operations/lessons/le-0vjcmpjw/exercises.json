@@ -1,0 +1,415 @@
+[
+ {
+  "id": "ex-07zth5ek",
+  "version": 1,
+  "section": "pipeline",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does Cloud Deploy do with the shop's source code?",
+  "hint": "Where does it start?",
+  "choices": [
+   {
+    "text": "Builds it into an image before each target",
+    "correct": false,
+    "why": "Building is Cloud Build's job; Cloud Deploy starts from an image that exists."
+   },
+   {
+    "text": "Nothing; it starts from an image",
+    "correct": true,
+    "why": "Right. It carries the image forward; it never compiles anything."
+   },
+   {
+    "text": "Runs its tests before promoting",
+    "correct": false,
+    "why": "Tests belong to the build; Cloud Deploy decides nothing about quality."
+   },
+   {
+    "text": "Scans it for vulnerabilities",
+    "correct": false,
+    "why": "Scanning is Artifact Analysis, on the image in the registry."
+   }
+  ]
+ },
+ {
+  "id": "ex-mhnprcnf",
+  "version": 1,
+  "section": "pipeline",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In `clouddeploy.yaml`, where is it said that a release must pass through `dev` before `prod`?",
+  "hint": "Which document has an ordered list?",
+  "choices": [
+   {
+    "text": "In the prod target, under requireApproval",
+    "correct": false,
+    "why": "That makes prod wait for a person; the order comes from elsewhere."
+   },
+   {
+    "text": "In skaffold.yaml, by the order of the profiles",
+    "correct": false,
+    "why": "Profiles are named, not ordered; Skaffold renders, it does not sequence."
+   },
+   {
+    "text": "In the pipeline's serialPipeline stages",
+    "correct": true,
+    "why": "Right. The stages are a list, run in the order written."
+   },
+   {
+    "text": "Nowhere; Cloud Deploy sorts targets alphabetically",
+    "correct": false,
+    "why": "Nothing is sorted; the order is declared in the pipeline."
+   }
+  ]
+ },
+ {
+  "id": "ex-h9gg8ddg",
+  "version": 1,
+  "section": "pipeline",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why does the prod target name its own service account in executionConfigs?",
+  "hint": "Think about a mistake made in dev.",
+  "choices": [
+   {
+    "text": "So that what deploys to dev cannot also deploy to prod",
+    "correct": true,
+    "why": "Right. A narrower account per target keeps a dev mistake in dev."
+   },
+   {
+    "text": "Because Cloud Run requires a different account per region",
+    "correct": false,
+    "why": "Both targets are in the same region; the account is about blast radius."
+   },
+   {
+    "text": "So the build can push images to prod's registry",
+    "correct": false,
+    "why": "The build pushes once, to one repository; this account renders and deploys."
+   },
+   {
+    "text": "Because approvals are made by service accounts",
+    "correct": false,
+    "why": "Approvals are a person's, with roles/clouddeploy.approver."
+   }
+  ]
+ },
+ {
+  "id": "ex-77w3y4td",
+  "version": 1,
+  "section": "release",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A release `rel-a1b2c3d` was created on Monday from the tag `a1b2c3d`. On Tuesday somebody pushes a different image under the same tag. What does promoting the release to prod deploy?",
+  "hint": "When was the tag resolved?",
+  "choices": [
+   {
+    "text": "The image the tag points at on Tuesday",
+    "correct": false,
+    "why": "The tag was resolved when the release was created, not at promotion."
+   },
+   {
+    "text": "Monday's image, by its digest",
+    "correct": true,
+    "why": "Right. The release was rendered once, with the digest fixed."
+   },
+   {
+    "text": "Nothing: the promotion fails because the tag moved",
+    "correct": false,
+    "why": "Cloud Deploy does not look at the tag again, so it does not notice."
+   },
+   {
+    "text": "A new render of the prod manifests with the current tag",
+    "correct": false,
+    "why": "Promotion never re-renders; it uses what was rendered for prod."
+   }
+  ]
+ },
+ {
+  "id": "ex-7p986k3a",
+  "version": 1,
+  "section": "release",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the two-container demonstration, what shows that the promotion kept the image unchanged?",
+  "hint": "Read the last transcript.",
+  "choices": [
+   {
+    "text": "Both answered {\"status\": \"ok\"}",
+    "correct": false,
+    "why": "Two different images could both answer ok; that proves nothing about identity."
+   },
+   {
+    "text": "They were started a few seconds apart",
+    "correct": false,
+    "why": "Timing says nothing about which image ran."
+   },
+   {
+    "text": "docker inspect printed one image digest for dev and for prod",
+    "correct": true,
+    "why": "Right. One digest on both lines is what a promotion has to leave behind."
+   },
+   {
+    "text": "Their container ids are the same",
+    "correct": false,
+    "why": "Container ids differ; each container is its own. The image is what matches."
+   }
+  ]
+ },
+ {
+  "id": "ex-m4n5pmam",
+  "version": 1,
+  "section": "release",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these may differ between the shop's dev and prod? Choose all that apply.",
+  "hint": "One row of the table never differs.",
+  "choices": [
+   {
+    "text": "The minimum number of instances",
+    "correct": true,
+    "why": "Yes, from the profile."
+   },
+   {
+    "text": "The image digest",
+    "correct": false,
+    "why": "No. A different image is a different release."
+   },
+   {
+    "text": "The database address",
+    "correct": true,
+    "why": "Yes, from the profile."
+   },
+   {
+    "text": "The service account that deploys",
+    "correct": true,
+    "why": "Yes, from the target."
+   }
+  ]
+ },
+ {
+  "id": "ex-7gdabpw9",
+  "version": 1,
+  "section": "release",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team rebuilds the image from the same commit before deploying to prod, \"to be safe\". What does that lose?",
+  "hint": "Is a rebuild the same image?",
+  "choices": [
+   {
+    "text": "Nothing: the same commit gives the same image",
+    "correct": false,
+    "why": "A rebuild can pull a newer base image or package, and gets a new digest."
+   },
+   {
+    "text": "The evidence: what reaches prod is not what ran in dev",
+    "correct": true,
+    "why": "Right. The tests in dev were about a different digest."
+   },
+   {
+    "text": "Only build minutes, which the second build pays for again",
+    "correct": false,
+    "why": "Minutes are the small cost; the lost guarantee is the large one."
+   },
+   {
+    "text": "The approval, which Cloud Deploy skips for rebuilt images",
+    "correct": false,
+    "why": "Cloud Deploy knows nothing about how an image was made; nothing is skipped."
+   }
+  ]
+ },
+ {
+  "id": "ex-5zh9qw92",
+  "version": 1,
+  "section": "approval",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A promotion to prod has been made. What state is the rollout in, and what moves it on?",
+  "hint": "prod has requireApproval: true.",
+  "choices": [
+   {
+    "text": "SUCCEEDED, at once",
+    "correct": false,
+    "why": "With requireApproval, the rollout cannot deploy until it is approved."
+   },
+   {
+    "text": "IN_PROGRESS, until the canary finishes",
+    "correct": false,
+    "why": "Nothing has started; it waits before deploying."
+   },
+   {
+    "text": "PENDING_APPROVAL, until the tests in dev pass again",
+    "correct": false,
+    "why": "Nothing reruns tests; a person moves it."
+   },
+   {
+    "text": "PENDING_APPROVAL, until an approver approves",
+    "correct": true,
+    "why": "Right. Approving is a separate permission from promoting."
+   }
+  ]
+ },
+ {
+  "id": "ex-kd9wrbfx",
+  "version": 1,
+  "section": "approval",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "One person holds both `clouddeploy.releaser` and `clouddeploy.approver`. What is true of the gate for them?",
+  "hint": "Who stands on each side?",
+  "choices": [
+   {
+    "text": "Cloud Deploy refuses an approval from the promoter",
+    "correct": false,
+    "why": "Nothing in the roles stops it; the separation is in who holds them."
+   },
+   {
+    "text": "They approve their own promotion; only the record remains",
+    "correct": true,
+    "why": "Right. The record of who and when is what is left."
+   },
+   {
+    "text": "The approval needs a second factor, which keeps it separate",
+    "correct": false,
+    "why": "A second factor proves who you are, not that somebody else checked."
+   },
+   {
+    "text": "They cannot promote to prod at all",
+    "correct": false,
+    "why": "Releaser is exactly the role that promotes."
+   }
+  ]
+ },
+ {
+  "id": "ex-e62h3pgt",
+  "version": 1,
+  "section": "approval",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `gcloud deploy targets rollback prod` deploy?",
+  "hint": "Does anything get built?",
+  "choices": [
+   {
+    "text": "A rebuild of the previous commit",
+    "correct": false,
+    "why": "Nothing is rebuilt; the previous release already exists."
+   },
+   {
+    "text": "The previous tag, re-resolved",
+    "correct": false,
+    "why": "Releases hold digests, so nothing is resolved again."
+   },
+   {
+    "text": "The previous release",
+    "correct": true,
+    "why": "Right. As a new rollout, which a gated target makes wait for approval."
+   },
+   {
+    "text": "dev's image",
+    "correct": false,
+    "why": "dev may be ahead; rollback goes to prod's own previous release."
+   }
+  ]
+ },
+ {
+  "id": "ex-w0s60j7z",
+  "version": 1,
+  "section": "approval",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each Cloud Deploy word to what it is.",
+  "hint": "One right-hand item is something else.",
+  "pairs": [
+   {
+    "left": "target",
+    "right": "one place to deploy"
+   },
+   {
+    "left": "release",
+    "right": "manifests rendered once, images by digest"
+   },
+   {
+    "left": "rollout",
+    "right": "one release going to one target"
+   },
+   {
+    "left": "delivery pipeline",
+    "right": "the ordered list of stages"
+   }
+  ],
+  "right_distractors": [
+   "the build that makes the image"
+  ]
+ },
+ {
+  "id": "ex-spmcytk8",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the shop's path to production in order.",
+  "hint": "Evidence before a person; a person before production.",
+  "items": [
+   "The build pushes the image",
+   "A release is created and rendered",
+   "The release rolls out to dev",
+   "The release is promoted to prod",
+   "An approver approves the rollout"
+  ],
+  "trap": "Approving before the promotion is the slip: there is no rollout to approve until the promotion creates it."
+ },
+ {
+  "id": "ex-vpznfnhx",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A rollback to prod at 3 a.m. sits waiting and nothing is restored. What is the likeliest reason?",
+  "hint": "A rollback is a rollout like any other.",
+  "choices": [
+   {
+    "text": "The previous image was rebuilt and the build failed",
+    "correct": false,
+    "why": "Rollback rebuilds nothing."
+   },
+   {
+    "text": "prod requires approval, and nobody approved",
+    "correct": true,
+    "why": "Right. The gate applies to rollbacks too; worth knowing before that night."
+   },
+   {
+    "text": "Cloud Deploy does not roll back outside working hours",
+    "correct": false,
+    "why": "There is no such rule."
+   },
+   {
+    "text": "The previous release was deleted by the registry's cleanup policy",
+    "correct": false,
+    "why": "A cleanup policy deletes images, not releases; that would fail the deploy, not leave it waiting."
+   }
+  ]
+ },
+ {
+  "id": "ex-7xdhndeh",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "value": 2,
+  "tolerance": 0,
+  "prompt": "The shop's pipeline has stages dev and prod. How many rollouts does one release create if it reaches prod with no rollback?",
+  "hint": "One release going to one target."
+ }
+]

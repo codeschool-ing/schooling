@@ -1,0 +1,285 @@
+{
+ "ex-07zth5ek": {
+  "prompt": "O que o Cloud Deploy faz com o código-fonte da loja?",
+  "hint": "Onde ele começa?",
+  "choices": [
+   {
+    "text": "Constrói uma imagem a partir dele antes de cada alvo",
+    "why": "Construir é trabalho do Cloud Build; o Cloud Deploy começa de uma imagem que existe."
+   },
+   {
+    "text": "Nada; parte de uma imagem pronta",
+    "why": "Certo. Ele leva a imagem adiante; nunca compila nada."
+   },
+   {
+    "text": "Roda os testes dele antes de promover",
+    "why": "Testes pertencem ao build; o Cloud Deploy não decide nada sobre qualidade."
+   },
+   {
+    "text": "Varre em busca de vulnerabilidades",
+    "why": "Varredura é o Artifact Analysis, na imagem no registro."
+   }
+  ]
+ },
+ "ex-mhnprcnf": {
+  "prompt": "No `clouddeploy.yaml`, onde se diz que um release precisa passar por `dev` antes de `prod`?",
+  "hint": "Que documento tem uma lista ordenada?",
+  "choices": [
+   {
+    "text": "No alvo prod, em requireApproval",
+    "why": "Isso faz o prod esperar uma pessoa; a ordem vem de outro lugar."
+   },
+   {
+    "text": "No skaffold.yaml, pela ordem dos perfis",
+    "why": "Perfis são nomeados, não ordenados; o Skaffold renderiza, não sequencia."
+   },
+   {
+    "text": "Nos stages do serialPipeline do pipeline",
+    "why": "Certo. Os stages são uma lista, executada na ordem escrita."
+   },
+   {
+    "text": "Em lugar nenhum; o Cloud Deploy ordena os alvos alfabeticamente",
+    "why": "Nada é ordenado; a ordem é declarada no pipeline."
+   }
+  ]
+ },
+ "ex-h9gg8ddg": {
+  "prompt": "Por que o alvo prod nomeia uma conta de serviço própria em executionConfigs?",
+  "hint": "Pense num erro cometido em dev.",
+  "choices": [
+   {
+    "text": "Para que o que faz deploy em dev não possa também fazer em prod",
+    "why": "Certo. Uma conta mais estreita por alvo mantém um erro de dev em dev."
+   },
+   {
+    "text": "Porque o Cloud Run exige uma conta diferente por região",
+    "why": "Os dois alvos estão na mesma região; a conta é sobre o raio de impacto."
+   },
+   {
+    "text": "Para o build poder enviar imagens ao registro de prod",
+    "why": "O build envia uma vez, para um repositório; esta conta renderiza e faz deploy."
+   },
+   {
+    "text": "Porque as aprovações são feitas por contas de serviço",
+    "why": "Aprovações são de uma pessoa, com roles/clouddeploy.approver."
+   }
+  ]
+ },
+ "ex-77w3y4td": {
+  "prompt": "Um release `rel-a1b2c3d` foi criado na segunda a partir da tag `a1b2c3d`. Na terça alguém envia outra imagem com a mesma tag. O que a promoção do release para prod implanta?",
+  "hint": "Quando a tag foi resolvida?",
+  "choices": [
+   {
+    "text": "A imagem para onde a tag aponta na terça",
+    "why": "A tag foi resolvida quando o release foi criado, não na promoção."
+   },
+   {
+    "text": "A resolvida na criação do release, pelo digest",
+    "why": "Certo. O release foi renderizado uma vez, com o digest fixo."
+   },
+   {
+    "text": "Nada: a promoção falha porque a tag se moveu",
+    "why": "O Cloud Deploy não olha a tag de novo, então não percebe."
+   },
+   {
+    "text": "Uma nova renderização dos manifestos de prod com a tag atual",
+    "why": "A promoção nunca renderiza de novo; usa o que foi renderizado para prod."
+   }
+  ]
+ },
+ "ex-7p986k3a": {
+  "prompt": "Na demonstração com dois contêineres, o que mostra que a promoção manteve a imagem igual?",
+  "hint": "Leia a última transcrição.",
+  "choices": [
+   {
+    "text": "Os dois responderam {\"status\": \"ok\"}",
+    "why": "Duas imagens diferentes poderiam responder ok; isso não prova identidade."
+   },
+   {
+    "text": "Foram iniciados com poucos segundos de diferença",
+    "why": "O tempo não diz nada sobre que imagem rodou."
+   },
+   {
+    "text": "docker inspect imprimiu um mesmo digest de imagem para dev e para prod",
+    "why": "Certo. Um digest nas duas linhas é o que uma promoção precisa deixar."
+   },
+   {
+    "text": "Os ids dos contêineres são iguais",
+    "why": "Os ids diferem; cada contêiner é um. A imagem é o que coincide."
+   }
+  ]
+ },
+ "ex-m4n5pmam": {
+  "prompt": "Quais destes podem diferir entre o dev e o prod da loja? Escolha todos os que se aplicam.",
+  "hint": "Uma linha da tabela nunca difere.",
+  "choices": [
+   {
+    "text": "O número mínimo de instâncias",
+    "why": "Sim, pelo perfil."
+   },
+   {
+    "text": "O digest da imagem",
+    "why": "Não. Uma imagem diferente é um release diferente."
+   },
+   {
+    "text": "O endereço do banco de dados",
+    "why": "Sim, pelo perfil."
+   },
+   {
+    "text": "A conta de serviço que faz deploy",
+    "why": "Sim, pelo alvo."
+   }
+  ]
+ },
+ "ex-7gdabpw9": {
+  "prompt": "Um time reconstrói a imagem a partir do mesmo commit antes do deploy em prod, \"por segurança\". O que isso perde?",
+  "hint": "Uma reconstrução é a mesma imagem?",
+  "choices": [
+   {
+    "text": "Nada: o mesmo commit gera a mesma imagem",
+    "why": "Uma reconstrução pode baixar imagem base ou pacote mais novos, e ganha um digest novo."
+   },
+   {
+    "text": "A evidência: o que chega a prod não é o que rodou em dev",
+    "why": "Certo. Os testes em dev foram sobre outro digest."
+   },
+   {
+    "text": "Só minutos de build, que o segundo build paga de novo",
+    "why": "Minutos são o custo pequeno; a garantia perdida é o grande."
+   },
+   {
+    "text": "A aprovação, que o Cloud Deploy pula para imagens reconstruídas",
+    "why": "O Cloud Deploy não sabe como uma imagem foi feita; nada é pulado."
+   }
+  ]
+ },
+ "ex-5zh9qw92": {
+  "prompt": "Uma promoção para prod foi feita. Em que estado fica o rollout, e o que o faz avançar?",
+  "hint": "prod tem requireApproval: true.",
+  "choices": [
+   {
+    "text": "SUCCEEDED, na hora",
+    "why": "Com requireApproval, o rollout não pode fazer deploy até ser aprovado."
+   },
+   {
+    "text": "IN_PROGRESS, até o canário terminar",
+    "why": "Nada começou; ele espera antes do deploy."
+   },
+   {
+    "text": "PENDING_APPROVAL, até os testes em dev passarem de novo",
+    "why": "Nada roda os testes de novo; uma pessoa o move."
+   },
+   {
+    "text": "PENDING_APPROVAL, até um aprovador aprovar",
+    "why": "Certo. Aprovar é uma permissão separada de promover."
+   }
+  ]
+ },
+ "ex-kd9wrbfx": {
+  "prompt": "Uma pessoa tem `clouddeploy.releaser` e `clouddeploy.approver`. O que é verdade sobre a barreira para ela?",
+  "hint": "Quem fica de cada lado?",
+  "choices": [
+   {
+    "text": "O Cloud Deploy recusa a aprovação de quem promoveu",
+    "why": "Nada nos papéis impede; a separação está em quem os tem."
+   },
+   {
+    "text": "Aprovam a própria promoção; resta só o registro",
+    "why": "Certo. O registro de quem e quando é o que sobra."
+   },
+   {
+    "text": "A aprovação exige um segundo fator, que a mantém separada",
+    "why": "Um segundo fator prova quem você é, não que outra pessoa verificou."
+   },
+   {
+    "text": "Não podem promover para prod de jeito nenhum",
+    "why": "Releaser é exatamente o papel que promove."
+   }
+  ]
+ },
+ "ex-e62h3pgt": {
+  "prompt": "O que `gcloud deploy targets rollback prod` implanta?",
+  "hint": "Algo é construído?",
+  "choices": [
+   {
+    "text": "Uma reconstrução do commit anterior",
+    "why": "Nada é reconstruído; o release anterior já existe."
+   },
+   {
+    "text": "A tag anterior, resolvida de novo",
+    "why": "Releases guardam digests, então nada é resolvido de novo."
+   },
+   {
+    "text": "O release anterior",
+    "why": "Certo. Como um rollout novo, que um alvo com barreira faz esperar aprovação."
+   },
+   {
+    "text": "A de dev",
+    "why": "dev pode estar à frente; o rollback vai para o release anterior do próprio prod."
+   }
+  ]
+ },
+ "ex-w0s60j7z": {
+  "prompt": "Ligue cada palavra do Cloud Deploy ao que ela é.",
+  "hint": "Um item da direita é outra coisa.",
+  "pairs": [
+   {
+    "left": "target",
+    "right": "um lugar para deploy"
+   },
+   {
+    "left": "release",
+    "right": "manifestos renderizados uma vez, imagens por digest"
+   },
+   {
+    "left": "rollout",
+    "right": "um release indo para um alvo"
+   },
+   {
+    "left": "delivery pipeline",
+    "right": "a lista ordenada de stages"
+   }
+  ],
+  "right_distractors": [
+   "o build que faz a imagem"
+  ]
+ },
+ "ex-spmcytk8": {
+  "prompt": "Ponha em ordem o caminho da loja até a produção.",
+  "hint": "Evidência antes de uma pessoa; uma pessoa antes da produção.",
+  "items": [
+   "O build envia a imagem",
+   "Um release é criado e renderizado",
+   "O release vai para dev",
+   "O release é promovido para prod",
+   "Um aprovador aprova o rollout"
+  ],
+  "trap": "Aprovar antes da promoção é o deslize: não existe rollout para aprovar até a promoção criá-lo."
+ },
+ "ex-vpznfnhx": {
+  "prompt": "Um rollback para prod às 3 da manhã fica esperando e nada é restaurado. Qual é a razão mais provável?",
+  "hint": "Um rollback é um rollout como qualquer outro.",
+  "choices": [
+   {
+    "text": "A imagem anterior foi reconstruída e o build falhou",
+    "why": "O rollback não reconstrói nada."
+   },
+   {
+    "text": "prod exige aprovação, e ninguém aprovou",
+    "why": "Certo. A barreira vale também para rollbacks; vale saber antes daquela noite."
+   },
+   {
+    "text": "O Cloud Deploy não faz rollback fora do horário comercial",
+    "why": "Essa regra não existe."
+   },
+   {
+    "text": "O release anterior foi apagado pela política de limpeza do registro",
+    "why": "Uma política de limpeza apaga imagens, não releases; isso faria o deploy falhar, não esperar."
+   }
+  ]
+ },
+ "ex-7xdhndeh": {
+  "prompt": "O pipeline da loja tem os stages dev e prod. Quantos rollouts um release cria se chega a prod sem rollback?",
+  "hint": "Um release indo para um alvo."
+ }
+}
