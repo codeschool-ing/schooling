@@ -25,10 +25,10 @@ nomeada de actions, escrita num arquivo chamado `Fastfile`.
 ## Por que uma equipe o usa em vez de um script de shell
 
 Um release poderia ser um script de shell, e o pipeline da lição 10 é quase isso. O Fastlane ganha o
-seu lugar de três jeitos: as **actions de loja** falam as APIs das lojas, que um script de shell
-teria de chamar à mão; a **organização da ficha**, uma pasta por idioma e um arquivo por campo, é o
-formato que as duas actions de envio leem; e as **lanes** rodam igual num notebook e num pipeline,
-então o release que uma pessoa consegue rodar é o release que o CI roda.
+seu lugar de três jeitos. As **actions de loja** falam as APIs das lojas, que um script de shell
+teria de chamar à mão. A organização da ficha, uma pasta por idioma e um arquivo por campo, é o
+formato que as duas actions de envio leem. E as lanes rodam igual num notebook e num pipeline, então
+o release que uma pessoa consegue rodar é o release que o CI roda.
 
 ## Nas três plataformas
 

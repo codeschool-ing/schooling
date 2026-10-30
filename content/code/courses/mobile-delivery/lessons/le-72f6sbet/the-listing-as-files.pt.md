@@ -64,9 +64,8 @@ listing/ios/pt-BR/subtitle.txt
 ## Capturas para conferir
 
 Uma captura de verdade vem do app. Para ter imagens de tamanhos exatos aqui, um programa curto
-escreve um PNG de uma cor só em qualquer tamanho; você não precisa lê-lo com atenção, só saber que
-ele escreve um PNG válido cujo cabeçalho leva a largura e a altura, que é tudo o que uma loja
-confere primeiro. Salve-o como `blank.ts`:
+escreve um PNG de uma cor só em qualquer tamanho. Você não precisa lê-lo com atenção. Ele escreve um
+PNG válido cujo cabeçalho leva a largura e a altura, e isso é tudo o que uma loja confere primeiro. Salve-o como `blank.ts`:
 
 ```typescript
 // blank.ts: write a PNG of one colour, WIDTH x HEIGHT pixels, to stand in for a screenshot

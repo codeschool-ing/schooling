@@ -8,7 +8,7 @@ On Google Play the ladder is a set of tracks. {{tracks}} Internal, closed, open,
 
 The rule that matters most is simple. {{same}} The build your testers tried is the build that ships. You promote it up the ladder. You never rebuild it at the top.
 
-Today you model the tracks in a short script, {{script}} and watch which build each person actually gets, including the one that surprises people: a tester who is on two tracks at once.
+Today you model the tracks in a short script, {{script}} and watch which build each person actually gets. One case surprises people: a tester who is on two tracks at once.
 """),
     ("the-tracks-on-play", "reading"),
     ("testflight", "reading"),

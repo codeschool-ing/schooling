@@ -63,8 +63,8 @@ listing/ios/pt-BR/subtitle.txt
 ## Screenshots to check
 
 A real screenshot comes from the app. To have pictures of exact sizes here, a short program writes
-a PNG of one colour at any size; you do not need to read it closely, only to know it writes a valid
-PNG whose header carries the width and height, which is all a store checks first. Save it as
+a PNG of one colour at any size. You do not need to read it closely. It writes a valid PNG whose
+header carries the width and height, and that is all a store checks first. Save it as
 `blank.ts`:
 
 ```typescript

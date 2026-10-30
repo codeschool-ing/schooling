@@ -25,10 +25,10 @@ called `Fastfile`.
 ## Why a team uses it rather than a shell script
 
 A release could be a shell script, and the pipeline of lesson 10 is mostly one. Fastlane earns its
-place in three ways: its **store actions** speak the stores' APIs, which a shell script would have
-to call by hand; its **listing layout**, one folder per language and one file per field, is the
-format both upload actions read; and its **lanes** run the same on a laptop and in a pipeline, so
-the release a person can run is the release CI runs.
+place in three ways. Its **store actions** speak the stores' APIs, which a shell script would have
+to call by hand. Its listing layout, one folder per language and one file per field, is the format
+both upload actions read. And its lanes run the same on a laptop and in a pipeline, so the release a
+person can run is the release CI runs.
 
 ## On the three platforms
 
