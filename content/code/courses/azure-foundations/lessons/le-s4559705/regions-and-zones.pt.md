@@ -54,7 +54,6 @@ laboratório ela recebe a mesma resposta que qualquer outra pergunta para o Reso
 ```
 ana@laptop:~/azure$ az account list-locations --output table
 ERROR: Please run 'az login' to setup account.
-rc=0
 ```
 
 **Este comando não foi respondido aqui**, e com uma conta ele devolve uma entrada por região. O que

@@ -21,9 +21,15 @@
 # built-in policy definitions. Whatever needs Azure Resource Manager is taught
 # from Microsoft's documentation and the prose says it was not run.
 #
-# `check` IS EXPECTED TO REPORT SOME BLOCKS, and none of them is drift: each
-# prints something no two runs share, and no sentence of prose quotes it. The
-# list is kept in EXPECTED below, with the reason beside each.
+# `check` MAY REPORT FOUR BLOCKS, and none of them is drift in the lab: each
+# reads something on the internet that Microsoft changes on its own schedule,
+# and no sentence of prose quotes the part that moves.
+#   lesson 3  the-table          Microsoft's move-support page, edited often
+#   lesson 19 dig-login          login.microsoftonline.com's CNAME chain, which
+#   lesson 22 (its dig blocks)   ends in trafficmanager.net or akadns.net by turn
+#   lesson 21 dig-portal         portal.azure.com's chain, the same way
+# The run recorded on 2026-10-30 reported none of them. Anything else that
+# differs is a transcript that no longer matches its lab.
 #
 # A capture that changes its numbers changes the prose that quotes them: after
 # `capture`, re-read every number the lesson's text cites.

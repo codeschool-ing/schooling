@@ -53,7 +53,6 @@ gets the same answer as every other question for Resource Manager:
 ```
 ana@laptop:~/azure$ az account list-locations --output table
 ERROR: Please run 'az login' to setup account.
-rc=0
 ```
 
 **This command was not answered here**, and with an account it returns one entry per region. What
