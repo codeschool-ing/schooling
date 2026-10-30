@@ -1,0 +1,297 @@
+{
+ "ex-92ta0chg": {
+  "prompt": "Que configuração do bucket de estado torna um estado apagado recuperável?",
+  "hint": "Cada escrita guarda a anterior.",
+  "choices": [
+   {
+    "text": "public_access_prevention",
+    "why": "Isso o mantém privado; não guarda histórico."
+   },
+   {
+    "text": "versioning",
+    "why": "Certo. As versões não atuais foram o que a restauração usou."
+   },
+   {
+    "text": "uniform_bucket_level_access",
+    "why": "Isso simplifica permissões; nada é guardado."
+   },
+   {
+    "text": "Uma regra de ciclo de vida que apaga versões antigas",
+    "why": "Isso limita o histórico; não o cria."
+   }
+  ]
+ },
+ "ex-9nbwhfzq": {
+  "prompt": "Duas configurações recebem o mesmo `prefix` de backend por engano. O que acontece?",
+  "hint": "O prefixo é o endereço da configuração.",
+  "choices": [
+   {
+    "text": "O Terraform recusa o segundo init",
+    "why": "Nada verifica; o prefixo é só uma pasta."
+   },
+   {
+    "text": "O apply de cada uma sobrescreve o estado da outra",
+    "why": "Certo. E cada plano propõe destruir os recursos da outra."
+   },
+   {
+    "text": "Elas o compartilham com segurança, graças à trava",
+    "why": "A trava serializa escritas; não faz de duas configurações uma."
+   },
+   {
+    "text": "O bucket guarda dois arquivos com o mesmo nome, um por configuração",
+    "why": "Um nome é um objeto; a segunda escrita o substitui."
+   }
+  ]
+ },
+ "ex-pahs3s8j": {
+  "prompt": "Por que o bucket de estado fica fora do IAM geral do projeto?",
+  "hint": "O que o estado guarda?",
+  "choices": [
+   {
+    "text": "Ler o estado é ler os segredos dele",
+    "why": "Certo. Cada atributo, senhas geradas inclusive."
+   },
+   {
+    "text": "O Cloud Storage cobra mais por buckets compartilhados por muitas contas",
+    "why": "O preço não depende de quem tem acesso."
+   },
+   {
+    "text": "O Terraform se recusa a travar um bucket que outras contas leem",
+    "why": "A trava funciona seja quem for que lê o bucket."
+   },
+   {
+    "text": "O versionamento só funciona em buckets com poucos leitores",
+    "why": "Versionamento não tem nada a ver com leitores."
+   }
+  ]
+ },
+ "ex-ty6v0qm0": {
+  "prompt": "O que significa `Error 412: Precondition failed` na mensagem da trava?",
+  "hint": "Como o objeto da trava é criado?",
+  "choices": [
+   {
+    "text": "A conta de serviço não tem permissão para escrever no bucket",
+    "why": "Isso seria 403; 412 é uma condição sobre o objeto."
+   },
+   {
+    "text": "O arquivo de estado está corrompido",
+    "why": "O estado nem foi lido; a escrita da trava falhou antes."
+   },
+   {
+    "text": "O objeto da trava já existe",
+    "why": "Certo. Só é escrito se ausente, e alguém o tem."
+   },
+   {
+    "text": "O versionamento do bucket está desligado",
+    "why": "A trava não depende de versionamento."
+   }
+  ]
+ },
+ "ex-3xwmnaf9": {
+  "prompt": "Os planos falham com o erro da trava, e o `Who` da trava é o runner de CI, criado há 40 minutos. O que vem antes de `terraform force-unlock`?",
+  "hint": "A trava pode estar protegendo algo.",
+  "choices": [
+   {
+    "text": "Nada: 40 minutos é tempo suficiente para ter certeza",
+    "why": "Um apply longo pode levar isso; o tempo sozinho não prova nada."
+   },
+   {
+    "text": "Rodar o plano de novo com -lock=false",
+    "why": "Isso ignora a trava em vez de descobrir por que ela está lá."
+   },
+   {
+    "text": "Apagar o default.tfstate para a trava não importar mais",
+    "why": "Esse é o acidente do estado perdido, de propósito."
+   },
+   {
+    "text": "Confirmar que o job de CI está mesmo morto",
+    "why": "Certo. Se ele ainda está aplicando, destravar deixa dois escritores entrarem."
+   }
+  ]
+ },
+ "ex-rs67rvnp": {
+  "prompt": "Um tutorial sugere `-lock=false` para \"Error acquiring the state lock\" numa esteira. Qual é o risco?",
+  "hint": "Para que servia a trava?",
+  "choices": [
+   {
+    "text": "O Terraform fica mais lento sem a trava",
+    "why": "Fica mais rápido, se tanto; velocidade não é o problema."
+   },
+   {
+    "text": "Duas execuções escrevem o estado e a segunda vence",
+    "why": "Certo. Uma delas perde em silêncio o que registrou."
+   },
+   {
+    "text": "O Cloud Storage recusa escritas sem trava",
+    "why": "Ele as aceita; esse é o perigo."
+   },
+   {
+    "text": "O estado deixa de ser versionado",
+    "why": "O versionamento é do bucket, não muda com a opção."
+   }
+  ]
+ },
+ "ex-5hgqrdr6": {
+  "prompt": "Depois que o estado foi apagado, o plano propôs criar os dois recursos. O que esse plano significava?",
+  "hint": "Os recursos existiam?",
+  "choices": [
+   {
+    "text": "Os recursos tinham sido apagados com o estado",
+    "why": "Eles estavam intactos; só o registro sumiu."
+   },
+   {
+    "text": "O Terraform perdeu o rastro de recursos que ainda existiam",
+    "why": "Certo. Um plano para criar o que existe é um sinal de pare."
+   },
+   {
+    "text": "A configuração tinha mudado desde o último apply",
+    "why": "Nada nos arquivos mudou."
+   },
+   {
+    "text": "O emulador tinha reiniciado e os esquecido",
+    "why": "Eles continuavam lá; a restauração mostrou nenhuma mudança."
+   }
+  ]
+ },
+ "ex-15gvj3aa": {
+  "prompt": "Por que a versão mais nova do `default.tfstate` era a errada para restaurar?",
+  "hint": "Olhe o serial e os recursos dela.",
+  "choices": [
+   {
+    "text": "A versão mais nova é sempre a trava, não o estado",
+    "why": "A lista foi filtrada para default.tfstate."
+   },
+   {
+    "text": "Ela foi corrompida pela exclusão",
+    "why": "Era um estado válido: vazio."
+   },
+   {
+    "text": "O plano depois do acidente escreveu um estado vazio",
+    "why": "Certo. Serial 1 e nada: restaurá-lo não mudaria nada."
+   },
+   {
+    "text": "Versões com menos de uma hora não podem ser lidas",
+    "why": "Esse atraso não existe."
+   }
+  ]
+ },
+ "ex-fnn3vb5y": {
+  "prompt": "Na lista de versões, que `serial` guardava o estado da loja como devia ser: dois recursos, depois que `slow.tf` foi removido?",
+  "hint": "Três recursos era a versão com slow.tf."
+ },
+ "ex-2bz0gzn7": {
+  "prompt": "Por que o `terraform state push` precisou de `-force` na restauração?",
+  "hint": "Compare os seriais.",
+  "choices": [
+   {
+    "text": "Porque a trava ainda estava com o plano",
+    "why": "O plano tinha terminado e a liberado."
+   },
+   {
+    "text": "Ela substituiu um estado de outra linhagem",
+    "why": "Certo. O estado vazio era uma linhagem nova; -force diz que é de propósito."
+   },
+   {
+    "text": "Enviar para um bucket versionado sempre exige isso",
+    "why": "Versionamento não tem nada a ver com push."
+   },
+   {
+    "text": "Porque o token era fake",
+    "why": "O emulador nunca verificou o token."
+   }
+  ]
+ },
+ "ex-z762vqnp": {
+  "prompt": "Depois de um import, por que o provider google ainda proporia criar o objeto da lista de preços?",
+  "hint": "Nem todo tipo de recurso pode ser importado.",
+  "choices": [
+   {
+    "text": "O objeto foi apagado com o estado",
+    "why": "Ele ainda existia; o estado foi a única coisa perdida."
+   },
+   {
+    "text": "O bloco de import dele nomeou o bucket errado",
+    "why": "Não há bloco de import para ele: o tipo não suporta."
+   },
+   {
+    "text": "O tipo de recurso dele não tem import nenhum",
+    "why": "Certo. A única proposta que sobra é escrevê-lo de novo."
+   },
+   {
+    "text": "Objetos são sempre recriados em todo plano",
+    "why": "Com o estado, o objeto não mostrou mudanças."
+   }
+  ]
+ },
+ "ex-1aahp518": {
+  "prompt": "Um pull request muda o `prefix` do backend de `shop` para `shop-prod`, e o plano propõe criar doze recursos que existem. Qual é a leitura certa?",
+  "hint": "Um prefixo novo é um estado novo, vazio.",
+  "choices": [
+   {
+    "text": "Doze recursos novos foram acrescentados no mesmo pull request",
+    "why": "Eles já existem; o plano diz criar porque o estado está vazio."
+   },
+   {
+    "text": "Pare: o estado precisa ser movido, não recriado",
+    "why": "Certo. init -migrate-state o move; aplicar duplicaria ou falharia."
+   },
+   {
+    "text": "Aplicar: o Terraform vai achar e adotar os existentes",
+    "why": "O Terraform só adota por import; apply cria."
+   },
+   {
+    "text": "Aprovar: renomear o prefixo é cosmético",
+    "why": "O prefixo é o endereço do estado, nada cosmético."
+   }
+  ]
+ },
+ "ex-mf0z8fy8": {
+  "prompt": "Ponha em ordem a restauração de um estado apagado.",
+  "hint": "Olhe antes de enviar.",
+  "items": [
+   "Listar as versões não atuais do default.tfstate",
+   "Ler o serial e os recursos de cada versão",
+   "Baixar a versão com o serial certo",
+   "Fazer terraform state push dela",
+   "Planejar, e esperar nenhuma mudança"
+  ],
+  "trap": "Enviar a versão mais nova sem lê-la é o deslize: aqui era o estado vazio que o plano escreveu."
+ },
+ "ex-zdq339vp": {
+  "prompt": "O bloco que diz ao Terraform qual objeto real é um endereço de recurso, sem criá-lo, se chama `___`.",
+  "hint": "Uma palavra, também verbo em inglês.",
+  "blanks": [
+   {
+    "accept": [
+     "import"
+    ]
+   }
+  ]
+ },
+ "ex-5631mbb0": {
+  "prompt": "Quais destes deixam o Terraform propondo criar recursos que já existem? Escolha todos os que se aplicam.",
+  "hint": "Cada um deixa um estado vazio onde se esperava o antigo.",
+  "choices": [
+   {
+    "text": "O objeto de estado é apagado",
+    "why": "Sim."
+   },
+   {
+    "text": "O prefixo do backend muda sem migração",
+    "why": "Sim: um estado novo, vazio."
+   },
+   {
+    "text": "A trava fica para trás de um apply morto",
+    "why": "Não. Os planos são recusados, não enganados."
+   },
+   {
+    "text": "Uma versão vazia antiga é restaurada em vez da certa",
+    "why": "Sim, como a versão mais nova teria sido."
+   },
+   {
+    "text": "Uma versão não atual é apagada pela regra de ciclo de vida",
+    "why": "Não. O estado atual fica intacto."
+   }
+  ]
+ }
+}
