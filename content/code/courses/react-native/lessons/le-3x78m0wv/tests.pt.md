@@ -60,6 +60,27 @@ curso seja qual for o dia em que roda; sem isso, o `src/today.ts` lê a data rea
 segunda-feira. O `getByRole("heading")` encontra o elemento cujo papel é título, como um leitor de tela
 faria, e falha se não houver nenhum ou houver mais de um.
 
+**O TypeScript também precisa ser avisado sobre o Jest.** `test` e `expect` são globais que o Jest
+fornece, e o TypeScript 6 só carrega os tipos globais de um pacote quando o projeto o cita. Sem isso, o
+`npx tsc --noEmit` aponta cada `test` da pasta como um nome que não encontra. Deixe o `tsconfig.json`
+assim:
+
+```json
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "types": ["jest"]
+  }
+}
+```
+
+E confira o projeto inteiro de novo, testes incluídos:
+
+```
+ana@dev:~/planner$ npx tsc --noEmit
+```
+
 ## Rodando
 
 O Jest precisa ser avisado para usar o preset. Acrescente estas duas entradas ao `package.json` com o
@@ -84,17 +105,17 @@ ana@dev:~/planner$ npm test
 > planner@1.0.0 test
 > jest
 
-PASS __tests__/App.test.tsx
 PASS __tests__/planner.test.ts
+PASS __tests__/App.test.tsx
 
 Test Suites: 2 passed, 2 total
 Tests:       5 passed, 5 total
 Snapshots:   0 total
-Time:        0.848 s, estimated 1 s
+Time:        1.07 s, estimated 2 s
 Ran all test suites.
 ```
 
-Cinco testes em dois arquivos, todos passando, em uns quatro segundos. **Um teste que renderiza o app e
+Cinco testes em dois arquivos, todos passando, em cerca de um segundo. **Um teste que renderiza o app e
 encontra o total prova mais do que uma captura de tela provaria**: prova que o número é calculado a
 partir dos dados, que o título é anunciado como título, e vai dizer isso no dia em que um dos dois
 deixar de ser verdade.

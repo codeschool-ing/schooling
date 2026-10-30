@@ -59,6 +59,27 @@ whatever day it runs; without it, `src/today.ts` reads the real date and the tot
 Monday. `getByRole("heading")` finds the element whose role is heading, as a screen reader would, and
 fails if there is none or more than one.
 
+**TypeScript has to be told about Jest, too.** `test` and `expect` are globals that Jest provides, and
+TypeScript 6 loads the global types of a package only when the project names it. Without this,
+`npx tsc --noEmit` reports every `test` in the folder as a name it cannot find. Make
+`tsconfig.json`:
+
+```json
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "types": ["jest"]
+  }
+}
+```
+
+And check the whole project again, tests included:
+
+```
+ana@dev:~/planner$ npx tsc --noEmit
+```
+
 ## Running them
 
 Jest needs to be told to use the preset. Add these two entries to `package.json` with npm, which
@@ -83,17 +104,17 @@ ana@dev:~/planner$ npm test
 > planner@1.0.0 test
 > jest
 
-PASS __tests__/App.test.tsx
 PASS __tests__/planner.test.ts
+PASS __tests__/App.test.tsx
 
 Test Suites: 2 passed, 2 total
 Tests:       5 passed, 5 total
 Snapshots:   0 total
-Time:        0.848 s, estimated 1 s
+Time:        1.07 s, estimated 2 s
 Ran all test suites.
 ```
 
-Five tests in two files, all passing, in about four seconds. **A test that renders the app and finds
+Five tests in two files, all passing, in about a second. **A test that renders the app and finds
 the total proves more than a screenshot would**: it proves the number is computed from the data, that
 the heading is announced as one, and it will say so the day either stops being true.
 

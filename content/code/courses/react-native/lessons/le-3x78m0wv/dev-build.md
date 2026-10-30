@@ -76,9 +76,9 @@ installable package signed with a key that is only for development:
 ```
 ana@dev:~/planner$ cd android
 ana@dev:~/planner/android$ ./gradlew assembleDebug -PreactNativeArchitectures=arm64-v8a 2>&1 | tail -3
+For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 2m 19s
-446 actionable tasks: 446 executed
+BUILD FAILED in 1m 51s
 ```
 
 **The first build is slow**, because Gradle downloads its own distribution and every library, and the
@@ -93,21 +93,15 @@ what a release needs and takes several times longer.
 
 ```
 ana@dev:~/planner/android$ ls -lh app/build/outputs/apk/debug/
-total 64M
--rw-r--r-- 1 ana ana 64M Oct 30 15:28 app-debug.apk
--rw-r--r-- 1 ana ana 403 Oct 30 15:28 output-metadata.json
+ls: cannot access 'app/build/outputs/apk/debug/': No such file or directory
 ana@dev:~/planner/android$ ~/Android/Sdk/build-tools/37.0.0/aapt2 dump badging app/build/outputs/apk/debug/app-debug.apk | grep -E "^(package|minSdkVersion|targetSdkVersion|application-label:|native-code)"
-package: name='org.example.planner' versionCode='1' versionName='1.0.0' platformBuildVersionName='17' platformBuildVersionCode='37' compileSdkVersion='37' compileSdkVersionCodename='17'
-minSdkVersion:'24'
-targetSdkVersion:'36'
-application-label:'Study planner'
-native-code: 'arm64-v8a'
+10-30 15:41:57.470     7     7 W ziparchive: Unable to open 'app/build/outputs/apk/debug/app-debug.apk': No such file or directory
+app/build/outputs/apk/debug/app-debug.apk: error: failed opening zip: I/O error.
 ana@dev:~/planner/android$ unzip -l app/build/outputs/apk/debug/app-debug.apk | grep -cE "index.android.bundle"
+unzip:  cannot find or open app/build/outputs/apk/debug/app-debug.apk, app/build/outputs/apk/debug/app-debug.apk.zip or app/build/outputs/apk/debug/app-debug.apk.ZIP.
 0
 ana@dev:~/planner/android$ unzip -l app/build/outputs/apk/debug/app-debug.apk | grep -E "libhermes|libreactnative"
-   568952  1981-01-01 01:01   lib/arm64-v8a/libhermestooling.so
-  4021008  1981-01-01 01:01   lib/arm64-v8a/libhermesvm.so
- 24062944  1981-01-01 01:01   lib/arm64-v8a/libreactnative.so
+unzip:  cannot find or open app/build/outputs/apk/debug/app-debug.apk, app/build/outputs/apk/debug/app-debug.apk.zip or app/build/outputs/apk/debug/app-debug.apk.ZIP.
 ```
 
 `aapt2`, from the build tools, reads the package without installing it. The package name and the

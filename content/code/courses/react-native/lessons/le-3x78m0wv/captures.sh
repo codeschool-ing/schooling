@@ -65,6 +65,9 @@ unserve
 
 put tests.md __tests__/planner.test.ts $P/__tests__/planner.test.ts
 put tests.md __tests__/App.test.tsx $P/__tests__/App.test.tsx
+put tests.md tsconfig.json $P/tsconfig.json
+block tsc2
+run $P 'npx tsc --noEmit'
 quiet $P "npm pkg set scripts.test=jest jest.preset=jest-expo"
 block test
 run $P 'npm pkg get scripts.test jest'

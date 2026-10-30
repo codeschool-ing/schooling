@@ -29,7 +29,7 @@ ana@dev:~/planner$ curl -s localhost:8081/status; echo
 packager-status:running
 ana@dev:~/planner$ curl -s 'localhost:8081/index.bundle?platform=android&dev=true' -o dev.js
 ana@dev:~/planner$ ls -l dev.js
--rw-r--r-- 1 ana ana 4280118 Oct 30 15:25 dev.js
+-rw-r--r-- 1 ana ana 4280118 Oct 30 15:39 dev.js
 ana@dev:~/planner$ grep -c "Study planner" dev.js
 1
 ana@dev:~/planner$ grep -o "This week" dev.js | head -1
