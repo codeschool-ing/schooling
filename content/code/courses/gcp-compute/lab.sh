@@ -147,8 +147,13 @@ ENV
   sh_fence "$LESSON1/your-lab.md" 6 >> "$work/env"
   local status=0
   env -i bash -c 'cd /home/ana; . "$1"; shift; "$@"' lab "$work/env" "$@" || status=$?
-  umount /home/ana/.docker /home/ana/.config/gcloud /home/ana/gcp/venv /home/ana/gcp 2>/dev/null || true
-  rm -r -- "${work:?}"
+  umount -l /home/ana/.docker /home/ana/.config/gcloud /home/ana/gcp/venv /home/ana/gcp 2>/dev/null || true
+  # never delete through a mount still in place: the venv is shared by every run
+  if mountpoint -q "$work/gcp/venv" || [ -n "$(ls -A "$work/gcp/venv" 2>/dev/null)" ]; then
+    echo "lab.sh: $work/gcp/venv is still mounted; leaving $work in place" >&2
+  else
+    rm -r -- "${work:?}"
+  fi
   return $status
 }
 
