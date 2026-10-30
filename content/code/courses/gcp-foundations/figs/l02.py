@@ -29,16 +29,18 @@ def estate():
         f.rect(x - 70, 92, 140, 36, stroke='--amber', fill='--ink', dash='5 3')
         f.text(x, 110, name, size=10.5, mono=True)
     projects = [(150, 'planner-prod', False), (335, 'planner-staging', False), (475, 'planner-dev', True),
-                (585, 'planner-network', False), (680, 'planner-logs', False)]
-    parents = {150: 150, 335: 400, 475: 400, 585: 630, 680: 630}
+                (581, 'planner-network', False), (678, 'planner-logs', False)]
+    parents = {150: 150, 335: 400, 475: 400, 581: 630, 678: 630}
     for x, name, here in projects:
         f.line(parents[x], 128, x, 168, stroke='--paper-dim', width=1.2)
         w = 118 if len(name) > 13 else 100
-        if x == 680:
-            w = 82
+        if x == 581:
+            w = 110
+        if x == 678:
+            w = 78
         f.rect(x - w / 2, 168, w, 36, stroke='--phosphor', fill='--scan' if here else '--panel',
                width=2.2 if here else 1.4)
-        f.text(x, 186, name, size=9.5 if len(name) > 12 else 10.5, mono=True)
+        f.text(x, 186, name, size=9.5 if len(name) > 11 else 10.5, mono=True)
     f.text(475, 218, T('the lab', 'o laboratório'), size=9.5, fill='--phosphor', weight='600')
     for x, name in ((430, 'topics/orders'), (540, 'networks/planner')):
         f.line(475, 204 if x == 430 else 204, x, 248, stroke='--paper-dim', width=1)
