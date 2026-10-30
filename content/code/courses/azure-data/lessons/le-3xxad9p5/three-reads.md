@@ -12,10 +12,17 @@ as `~/azure/reads.py`:
 {"language": "python", "file": "reads.py", "parts": [{"code": "\"\"\"Three ways to read Quitanda's orders, and what each one sends.\"\"\"\nimport collections\nfrom azure.cosmos import CosmosClient, PartitionKey\n\nKEY = \"C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==\"\nsent = collections.Counter()\n\n\ndef count(request):\n    sent[\"requests\"] += 1\n\n\nclient = CosmosClient(\"http://localhost:8081\", KEY, raw_request_hook=count)\ndb = client.create_database_if_not_exists(\"quitanda\")\norders = db.create_container_if_not_exists(\"orders\", PartitionKey(\"/customerId\"))\n", "note": "**The same hook as lesson 7's `count.py`**, because the Cosmos DB library is built on the same core as Blob Storage's: every HTTP request it sends passes through `count` first. The container is the previous section's, partitioned by customer."}, {"code": "\nfor n in range(1000):\n    orders.upsert_item({\"id\": f\"o-{n}\", \"customerId\": f\"c-{n % 100}\",\n                        \"totalCents\": 1500 + n * 37 % 30000})\n", "note": "A thousand orders of a hundred customers, ten each, written one request at a time."}, {"code": "\n\ndef measure(name, read):\n    sent.clear()\n    items = read()\n    charge = orders.client_connection.last_response_headers[\"x-ms-request-charge\"]\n    print(f\"{name:<26}{sent['requests']:>2} request(s){charge:>6} RU{len(items):>5} item(s)\")\n", "note": "**Every answer from Cosmos DB carries its price in a header**, `x-ms-request-charge`, in request units. `measure` runs one read and prints the requests it took, the charge of the last answer and the items it returned."}, {"code": "\n\nmeasure(\"point read\", lambda: [orders.read_item(\"o-17\", partition_key=\"c-17\")])\nmeasure(\"query in one partition\", lambda: list(orders.query_items(\n    \"SELECT * FROM c WHERE c.customerId = 'c-17'\", partition_key=\"c-17\")))\nmeasure(\"query across partitions\", lambda: list(orders.query_items(\n    \"SELECT * FROM c WHERE c.totalCents > 30000\", enable_cross_partition_query=True)))\nprint(\"feed ranges in the container:\", len(list(orders.read_feed_ranges())))\n", "note": "**Three reads, from the cheapest kind to the dearest.** A point read names the `id` and the partition key. A query that names the key's value is answered inside one logical partition. A query on any other field has to ask every physical partition, and the library refuses to send one unless `enable_cross_partition_query` says you meant it. The last line asks how many ranges of the hash, physical partitions, the container has."}]}
 ```
 
-<<CAP reads>>
+```
+ana@laptop:~/azure$ python reads.py
+point read                 1 request(s)     1 RU    1 item(s)
+query in one partition     1 request(s)     1 RU   11 item(s)
+query across partitions    1 request(s)     1 RU   40 item(s)
+feed ranges in the container: 1
+```
 
 **One request each, one request unit each, and one feed range.** The items are right: one order, then
-customer `c-17`'s ten, then the orders above 30,000 cents. Everything else on those lines is the
+customer `c-17`'s eleven, the ten written here and the `o-1001` of the previous section, then the 40
+orders above 30,000 cents. Everything else on those lines is the
 emulator's simplification, and the section is about reading past it.
 
 ## What Azure charges instead

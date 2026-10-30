@@ -17,7 +17,14 @@ as `~/azure/spread.py`:
 {"language": "python", "file": "spread.py", "parts": [{"code": "\"\"\"How four candidate partition keys would spread a year of Quitanda's orders.\"\"\"\nimport collections, random\n\nrng = random.Random(7)\nHOURS = [1, 1, 1, 1, 1, 2, 4, 6, 8, 8, 9, 10, 12, 10, 8, 8, 9, 11, 12, 10, 7, 4, 2, 1]\norders = []\nfor n in range(100_000):\n    day = n * 365 // 100_000\n    orders.append({\n        \"id\": f\"o-{n}\",\n        \"customerId\": f\"c-{int(7000 * rng.random() ** 3)}\",\n        \"placedDate\": f\"2026-{day:03}\",\n        \"hour\": rng.choices(range(24), weights=HOURS)[0],\n        \"status\": \"delivered\" if day < 364 else rng.choice([\"placed\", \"paid\", \"delivered\"]),\n    })\n", "note": "**A year of orders made up by the program, the same every run** because the random generator is seeded. A hundred thousand orders, spread evenly over 365 days and unevenly over the hours, with the lunchtime and evening peaks. Customers are skewed on purpose: cubing a random number piles the draws towards the low ids, so a few customers, restaurants, order far more than the rest. Every order but the last day's is delivered."}, {"code": "\nevening = [o for o in orders if o[\"placedDate\"] == \"2026-200\" and o[\"hour\"] == 19]\n\n\ndef report(key):\n    sizes = collections.Counter(o[key] for o in orders)\n    largest = sizes.most_common(1)[0][1]\n    hot = collections.Counter(o[key] for o in evening).most_common(1)[0][1]\n    question = \"one\" if key == \"customerId\" else \"every\"\n    print(f\"/{key:<12}{len(sizes):>9,}{largest:>9,}{100 * largest / len(orders):>7.1f}%\"\n          f\"{100 * hot / len(evening):>9.0f}%{question:>8}\")\n", "note": "**Three measures for each key, one per property of a good key.** How many distinct values there are, and how large the largest logical partition is, in orders and as a share of all of them. What share of one busy evening hour's writes lands on a single value. And how many partitions the app's most common question, a customer's orders, has to visit."}, {"code": "\n\nprint(f\"{'key':<13}{'values':>9}{'largest':>9}{'share':>8}{'hot hour':>10}{'visits':>8}\")\nfor key in (\"id\", \"customerId\", \"placedDate\", \"status\"):\n    report(key)\n", "note": "The four candidates: the order's own `id`, the customer, the day it was placed, and its status."}]}
 ```
 
-<<CAP spread>>
+```
+ana@laptop:~/azure$ python spread.py
+key             values  largest   share  hot hour  visits
+/id            100,000        1    0.0%        4%   every
+/customerId      6,983    5,206    5.2%        8%     one
+/placedDate        365      274    0.3%      100%   every
+/status              3   99,822   99.8%      100%   every
+```
 
 Each row is one decision, read across:
 
@@ -63,10 +70,15 @@ print("replace_container returned without an error")
 print("after: ", orders.read()["partitionKey"]["paths"])
 ```
 
-<<CAP rekey>>
+```
+ana@laptop:~/azure$ python rekey.py
+before: ['/customerId']
+replace_container returned without an error
+after:  ['/customerId']
+```
 
 **The emulator accepted a request to change the key and kept the old one**, without a word. That is
 the failure lesson 1 warned about in its plainest form: a success that did nothing. What Azure answers
-to the same request was not run here; the documentation's rule is that the key does not change, and a
+to the same request was not run here. The documentation's rule is that the key does not change, and a
 program that believes the success above has a container still partitioned by customer while its author
 thinks otherwise.

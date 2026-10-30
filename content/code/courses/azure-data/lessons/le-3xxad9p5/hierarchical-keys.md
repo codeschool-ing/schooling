@@ -8,7 +8,7 @@ version: 1
 outgrows 20 GB, or the load one physical partition can take. With a plain key, every order of the
 busiest customer is one logical partition, which can never be split. With a hierarchical key, each
 pair of customer and month is a logical partition of its own, so the busiest customer's history can
-spread over many physical partitions, and a query that names only the customer is still sent to the
+spread over many physical partitions. A query that names only the customer is still sent to the
 partitions holding that customer and to no others.
 
 Quitanda's business customers, the restaurants at the top of the previous table, are the reason it
@@ -38,7 +38,13 @@ everything = list(by_month.query_items("SELECT VALUE c.id FROM c", partition_key
 print("one customer, by the first level only:", everything)
 ```
 
-<<CAP hier>>
+```
+ana@laptop:~/azure$ python hier.py
+{'kind': 'MultiHash', 'paths': ['/customerId', '/orderMonth'], 'version': 2}
+point read needs both levels: o-3 2026-10
+one customer, one month: ['o-2', 'o-3']
+one customer, by the first level only: ['o-0', 'o-1', 'o-2', 'o-3']
+```
 
 **The key is a list of paths with `kind` set to `MultiHash`**, and it is fixed at creation like any
 other. A point read needs every level, both values here. A query can name all of them, and reach one
@@ -46,7 +52,7 @@ logical partition, or only the first ones, a **prefix**, and reach every logical
 customer: the four orders of `c-0` across three months.
 
 **What this run shows is the shape, not the routing.** The emulator has one physical partition, so
-every query here was answered by the same one; on Azure the documented behaviour is that a query naming
+every query here was answered by the same one. On Azure, the documented behaviour is that a query naming
 the prefix goes only to the physical partitions that hold it, and a query naming no level at all goes
 everywhere. That was not run.
 
@@ -56,6 +62,5 @@ everywhere. That was not run.
 customer, and that is a price the application pays in every line that reads. It is worth paying when
 one top-level value is going to outgrow a logical partition, as a tenant of a multi-tenant system or a
 customer that is a chain of restaurants does. For Quitanda's ordinary customers, a few hundred orders
-each, the plain `/customerId` of the previous section is simpler and enough; the documentation's own
-advice is to reach for the hierarchy when a single value's data or load is the problem, and not
+each, the plain `/customerId` of the previous section is simpler and enough. The documentation's own advice is to reach for the hierarchy when a single value's data or load is the problem, and not
 before.

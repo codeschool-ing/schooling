@@ -52,7 +52,13 @@ except exceptions.CosmosHttpResponseError as e:
     print("an item of 2.1 MB:", e.status_code, e.reason)
 ```
 
-<<CAP model>>
+```
+ana@laptop:~/azure$ python model.py
+items called o-1001: [{'customerId': 'c-17'}, {'customerId': 'c-18'}]
+o-1001 again in c-17: 409 Conflict
+system properties: ['_attachments', '_etag', '_rid', '_self', '_ts']
+an item of 2.1 MB: 413 Payload Too Large
+```
 
 **Two items called `o-1001` live in one container**, because an `id` is unique only within a value of
 the partition key: `o-1001` of customer `c-17` and `o-1001` of `c-18` are different items. Writing
@@ -62,7 +68,7 @@ have avoided by replacing it. **So an item's identity is the pair, the partition
 
 The properties that begin with an underscore are the service's: `_rid` is its internal id, `_self`
 its address, `_etag` changes on every write and makes conditional updates possible, and `_ts` is the
-time of the last write, in seconds since 1970. **And an item has a ceiling of 2 MB**, which the
+time of the last write, in seconds since 1970; `_attachments` is one this course does not use. **And an item has a ceiling of 2 MB**, which the
 emulator enforces as Azure documents it: the 2.1 MB note was refused with `413`. A document that
 might grow past that, an order with an unbounded list of events inside it, is a design that will one
 day fail on a write.
