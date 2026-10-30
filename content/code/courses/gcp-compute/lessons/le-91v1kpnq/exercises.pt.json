@@ -1,0 +1,411 @@
+{
+  "ex-6w8n590b": {
+    "prompt": "No GKE Standard, quem roda o etcd do seu cluster?",
+    "hint": "Em qual metade do cluster ele fica?",
+    "choices": [
+      {
+        "text": "Você, num node pool reservado para ele",
+        "why": "O etcd faz parte do plano de controle, que nunca aparece no seu projeto."
+      },
+      {
+        "text": "O Google",
+        "why": "Isso. O plano de controle, etcd incluído, é do Google rodar e corrigir."
+      },
+      {
+        "text": "Uma VM do Compute Engine criada no seu projeto junto com o cluster",
+        "why": "Nenhuma máquina do plano de controle aparece no seu projeto."
+      },
+      {
+        "text": "Ninguém: o GKE troca o etcd pelo Cloud SQL",
+        "why": "O GKE não troca o etcd pelo Cloud SQL; ele roda o plano de controle por você."
+      }
+    ]
+  },
+  "ex-35v2np5h": {
+    "prompt": "A zona de um cluster zonal sai do ar. O que acontece com os pods que já rodavam em nós de outras zonas?",
+    "hint": "O que o API server faz, e o que ele não faz?",
+    "choices": [
+      {
+        "text": "Param na hora, porque os nós precisam do API server para rodar qualquer coisa",
+        "why": "Pods em execução continuam; o kubelet não precisa do API server a cada segundo."
+      },
+      {
+        "text": "Continuam rodando, mas nada é agendado, escalado ou mudado",
+        "why": "Isso. O plano de controle fica inalcançável, então o cluster congela em vez de cair."
+      },
+      {
+        "text": "O GKE move o plano de controle para uma zona saudável em segundos",
+        "why": "Isso é o que um cluster regional dá; um zonal tem um plano de controle só."
+      },
+      {
+        "text": "São reagendados nas zonas saudáveis",
+        "why": "Reagendar precisa do scheduler, que está no plano de controle inalcançável."
+      }
+    ]
+  },
+  "ex-me2mtejh": {
+    "prompt": "A taxa de gerenciamento é de 0,10 USD por hora por cluster. Quanto custam três clusters num mês de 730 horas, antes de qualquer crédito?",
+    "hint": "Taxa vezes horas vezes clusters.",
+    "unit": "USD"
+  },
+  "ex-79q4pzxr": {
+    "prompt": "Um cluster cuja location é uma região, como southamerica-east1, é um cluster ___.",
+    "hint": "Não é zonal.",
+    "blanks": [
+      {
+        "accept": [
+          "regional"
+        ]
+      }
+    ]
+  },
+  "ex-akxdp5ym": {
+    "prompt": "Por que o gke/main.tf não tem nenhum node pool?",
+    "hint": "O que o recurso de cluster descreve?",
+    "choices": [
+      {
+        "text": "O GKE Standard cria os nós a partir do tipo de máquina do cluster",
+        "why": "O recurso de cluster não tem tipo de máquina para nós aqui; os pools carregam isso."
+      },
+      {
+        "text": "Os nós são acrescentados depois à mão com kubectl",
+        "why": "O kubectl não cria nós do Compute Engine."
+      },
+      {
+        "text": "Um cluster regional não pode ter pool padrão",
+        "why": "Clusters regionais têm pools; este arquivo só os mantém separados."
+      },
+      {
+        "text": "Os pools são um recurso próprio, no pool.tf",
+        "why": "Isso. O recurso de cluster descreve o plano de controle, e cada pool é gerido à parte."
+      }
+    ]
+  },
+  "ex-sen9a9h6": {
+    "prompt": "Um pool regional cobre três zonas com autoscaling min_node_count = 1 e max_node_count = 3. Qual o maior número de nós que ele pode alcançar?",
+    "hint": "Os limites são por zona.",
+    "unit": "nós"
+  },
+  "ex-jrhtah67": {
+    "prompt": "O pool da loja diz node_count = 1. Com quantas máquinas e2-standard-4 ele começa?",
+    "hint": "Quantas zonas a região tem?",
+    "choices": [
+      {
+        "text": "Uma, o número escrito no arquivo",
+        "why": "Num cluster regional a contagem é por zona."
+      },
+      {
+        "text": "Zero, até um pod ser agendado",
+        "why": "O node_count é o tamanho inicial; os limites vêm do min e do max."
+      },
+      {
+        "text": "Três, uma em cada zona da região",
+        "why": "Isso; uns 293 dólares por mês no piso."
+      },
+      {
+        "text": "Nove, o máximo dos limites de autoscaling",
+        "why": "Nove é o teto, não o começo."
+      }
+    ]
+  },
+  "ex-gxksacw6": {
+    "prompt": "O que é um node pool por baixo?",
+    "hint": "A lição 4 monta um desses à mão.",
+    "choices": [
+      {
+        "text": "Um grupo gerenciado de instâncias do Compute Engine",
+        "why": "Isso. O GKE conduz o grupo por você."
+      },
+      {
+        "text": "Um Deployment de nós no Kubernetes",
+        "why": "Nós são máquinas, não pods num Deployment."
+      },
+      {
+        "text": "Um serviço do Cloud Run com uma revisão por nó",
+        "why": "O Cloud Run não participa dos nós do GKE."
+      },
+      {
+        "text": "Um conjunto de instâncias do App Engine flexível",
+        "why": "O App Engine flexível é outro produto."
+      }
+    ]
+  },
+  "ex-33pw7eab": {
+    "prompt": "A loja quer o redimensionamento de fotos, que pode ser interrompido, fora dos nós que atendem clientes. Qual o formato usual?",
+    "hint": "Pools existem para tipos de nó.",
+    "choices": [
+      {
+        "text": "Um segundo cluster só para o trabalho em lote",
+        "why": "Funciona e acrescenta uma segunda taxa sem um motivo que um pool não resolva."
+      },
+      {
+        "text": "Um tipo de máquina maior no pool existente",
+        "why": "Nós maiores continuam misturando as duas cargas."
+      },
+      {
+        "text": "Um max_surge maior para os pods em lote ganharem os nós extras",
+        "why": "Os nós extras só existem durante atualizações."
+      },
+      {
+        "text": "Um segundo pool de nós Spot com um taint que os pods em lote toleram",
+        "why": "Isso. Só pods que toleram caem ali, e Spot combina com trabalho interrompível."
+      }
+    ]
+  },
+  "ex-7arne57g": {
+    "prompt": "Ligue cada configuração do pool.tf ao que ela faz.",
+    "hint": "Três estão em management e node_config.",
+    "pairs": [
+      {
+        "left": "auto_repair",
+        "right": "Substitui um nó que falha nas verificações de saúde"
+      },
+      {
+        "left": "auto_upgrade",
+        "right": "Leva os nós às versões que o canal oferece"
+      },
+      {
+        "left": "GKE_METADATA",
+        "right": "Os pods pedem ao servidor de metadados do GKE, não à conta do nó"
+      },
+      {
+        "left": "node_count",
+        "right": "O número inicial de nós em cada zona"
+      }
+    ],
+    "right_distractors": [
+      "Define o máximo de pods por nó"
+    ]
+  },
+  "ex-cz89k67b": {
+    "prompt": "Em que ordem o GKE atualiza um cluster?",
+    "hint": "O API server aceita nós atrás dele, nunca à frente.",
+    "choices": [
+      {
+        "text": "Primeiro o plano de controle, depois os node pools",
+        "why": "Isso. Os nós podem ficar algumas versões menores atrás do API server, nunca à frente."
+      },
+      {
+        "text": "Primeiro os nós, depois o plano de controle",
+        "why": "Nós à frente do API server é a única ordem não suportada."
+      },
+      {
+        "text": "Os dois juntos, para ficarem numa versão só",
+        "why": "Eles são atualizados em sequência."
+      },
+      {
+        "text": "O pool com mais nós primeiro, depois o resto",
+        "why": "O tamanho do pool não define a ordem."
+      }
+    ]
+  },
+  "ex-r18hb0t2": {
+    "prompt": "Um pool tem max_surge = 1 e max_unavailable = 0. O que é verdade durante a atualização dele?",
+    "hint": "Um acrescenta, outro tira.",
+    "choices": [
+      {
+        "text": "A capacidade cai um nó por vez, para economizar",
+        "why": "max_unavailable = 0 quer dizer que nunca cai."
+      },
+      {
+        "text": "Existe um nó extra por vez, e a capacidade nunca cai",
+        "why": "Isso. Mais lento, e você paga o nó extra enquanto ele existe."
+      },
+      {
+        "text": "Todos os nós são trocados juntos depois de um extra ser acrescentado",
+        "why": "O surge troca em passos pequenos; trocar um conjunto inteiro é blue-green."
+      },
+      {
+        "text": "Pods não são despejados, porque há capacidade sobrando",
+        "why": "Todo nó antigo é drenado; a capacidade sobrando é para onde os pods dele vão."
+      }
+    ]
+  },
+  "ex-enm7162d": {
+    "prompt": "Ordene os canais de lançamento do que recebe versões novas primeiro até o que mantém uma versão por mais tempo.",
+    "hint": "O Extended vai além do suporte padrão.",
+    "items": [
+      "RAPID",
+      "REGULAR",
+      "STABLE",
+      "EXTENDED"
+    ],
+    "trap": "O EXTENDED não é um STABLE mais lento: mantém uma versão menor além do suporte padrão, com taxa extra nesse período."
+  },
+  "ex-2hh1mw3b": {
+    "prompt": "Um Deployment com uma réplica cai por um minuto toda vez que os nós são atualizados, embora max_unavailable seja 0. Por quê?",
+    "hint": "O que o max_unavailable conta?",
+    "choices": [
+      {
+        "text": "O max_unavailable é ignorado no canal regular",
+        "why": "A configuração vale em todo canal."
+      },
+      {
+        "text": "O plano de controle fica fora durante a atualização dos nós",
+        "why": "O plano de controle é atualizado antes e separado."
+      },
+      {
+        "text": "Ele conta nós, e o único pod ainda reinicia quando o nó dele é drenado",
+        "why": "Isso. Duas réplicas e um PodDisruptionBudget mantêm o serviço no ar."
+      },
+      {
+        "text": "Os nós extras sobem sem a imagem em cache",
+        "why": "Um pull lento alonga a pausa; não explica por que existe pausa."
+      }
+    ]
+  },
+  "ex-8h14z5w0": {
+    "prompt": "Antes de remover um nó antigo, o GKE o isola e então o ___, despejando os pods.",
+    "hint": "A palavra que o kubectl usa para a mesma coisa.",
+    "blanks": [
+      {
+        "accept": [
+          "drena"
+        ]
+      }
+    ]
+  },
+  "ex-ws8qj26n": {
+    "prompt": "Quais destas coisas o laboratório verificou ao rodar terraform validate nos arquivos da lição 13? Escolha todas as que se aplicam.",
+    "hint": "Valores enumerados o provider conhece.",
+    "choices": [
+      {
+        "text": "Que o canal de lançamento é um dos nomes aceitos",
+        "why": "Isso; WEEKLY foi recusado."
+      },
+      {
+        "text": "Que a estratégia de atualização é uma que o provider conhece",
+        "why": "Isso; ROLLING foi recusado."
+      },
+      {
+        "text": "Que uma atualização manteria todo pod rodando",
+        "why": "Nada foi atualizado; nem há pods nos arquivos."
+      },
+      {
+        "text": "Que a janela de manutenção permite 48 horas em 32 dias",
+        "why": "Essa regra é verificada pelo GKE ao criar o cluster."
+      }
+    ]
+  },
+  "ex-sm149gv1": {
+    "prompt": "O start_time da janela é 05:00 UTC. Que horas são em São Paulo?",
+    "hint": "São Paulo está três horas atrás do UTC.",
+    "choices": [
+      {
+        "text": "08:00",
+        "why": "É onde a janela termina, às 11:00 UTC."
+      },
+      {
+        "text": "05:00, porque o GKE converte para a região do cluster",
+        "why": "Os horários são UTC; nada os converte."
+      },
+      {
+        "text": "03:00",
+        "why": "Isso seria duas horas atrás."
+      },
+      {
+        "text": "02:00",
+        "why": "Isso; o date com TZ=America/Sao_Paulo mostrou."
+      }
+    ]
+  },
+  "ex-37w18ta1": {
+    "prompt": "O GKE pede 48 horas de disponibilidade de manutenção em quaisquer 32 dias. Com janela só aos sábados e domingos, quantas horas cada janela diária precisa ter, no mínimo?",
+    "hint": "Conte o menor número de dias de fim de semana que quaisquer 32 dias podem ter.",
+    "unit": "horas"
+  },
+  "ex-1rep7hwk": {
+    "prompt": "Qual escopo de exclusão serve para \"nada muda nos nós durante uma migração de dois meses\"?",
+    "hint": "Um escopo é limitado a um período curto.",
+    "choices": [
+      {
+        "text": "NO_UPGRADES, renovado a cada poucas semanas",
+        "why": "Esse escopo tem duração limitada, e renová-lo acumula uma atualização grande."
+      },
+      {
+        "text": "NO_MINOR_OR_NODE_UPGRADES",
+        "why": "Isso. Os escopos mais estreitos podem durar muito mais, até o fim do suporte."
+      },
+      {
+        "text": "Uma janela de manutenção de zero horas",
+        "why": "Uma janela precisa deixar 48 horas em 32 dias."
+      },
+      {
+        "text": "O canal EXTENDED sozinho",
+        "why": "Um canal decide versões, não quando os nós podem mudar."
+      }
+    ]
+  },
+  "ex-zmn9m96c": {
+    "prompt": "Uma exclusão com escopo NO_UPGRADES está aberta, e a versão do cluster chega ao fim do suporte. O que acontece?",
+    "hint": "Duas coisas passam de qualquer jeito.",
+    "choices": [
+      {
+        "text": "O cluster é atualizado mesmo assim",
+        "why": "Isso. Uma exclusão escolhe o momento; não mantém o cluster parado."
+      },
+      {
+        "text": "Nada até a exclusão fechar",
+        "why": "O fim do suporte é uma das duas coisas que uma janela não segura."
+      },
+      {
+        "text": "O cluster é apagado",
+        "why": "Nada é apagado; ele é atualizado."
+      },
+      {
+        "text": "O cluster passa sozinho para o canal EXTENDED",
+        "why": "Trocar de canal é decisão sua, nunca automática."
+      }
+    ]
+  },
+  "ex-1qkjy7ev": {
+    "prompt": "A recorrência FREQ=WEEKLY;BYDAY=SA,SU é uma RRULE, a sintaxe do padrão i___.",
+    "hint": "O mesmo que um convite de calendário usa.",
+    "blanks": [
+      {
+        "accept": [
+          "Calendar",
+          "calendar"
+        ]
+      }
+    ]
+  },
+  "ex-p3n3hcy2": {
+    "prompt": "Um cluster regional paga a taxa de 73 USD e mantém três nós e2-standard-4 a 97,84 por mês cada. Qual o total do mês?",
+    "hint": "Taxa mais três nós.",
+    "unit": "USD"
+  },
+  "ex-f0b9e4kw": {
+    "prompt": "Ordene o que acontece num passo de surge da atualização de um nó.",
+    "hint": "Capacidade primeiro, depois a retirada.",
+    "items": [
+      "Um nó na versão nova é criado",
+      "Um nó antigo é isolado",
+      "Os pods dele são despejados, respeitando os PodDisruptionBudgets",
+      "O nó antigo é removido"
+    ],
+    "trap": "Isolar antes de o nó novo existir é o que max_unavailable = 0 impede."
+  },
+  "ex-1yja8rp7": {
+    "prompt": "Uma equipe mantém um cluster por desenvolvedor, oito no total, cada um zonal com um nó pequeno. Qual linha da conta é a surpresa?",
+    "hint": "A taxa de um cluster é coberta pelo crédito.",
+    "choices": [
+      {
+        "text": "Os nós, porque nós zonais custam mais que regionais",
+        "why": "Um nó custa o tipo de máquina dele, onde quer que esteja."
+      },
+      {
+        "text": "O tráfego entre os planos de controle dos clusters",
+        "why": "Planos de controle não conversam entre si."
+      },
+      {
+        "text": "Sete taxas de gerenciamento de uns 73 dólares cada",
+        "why": "Isso. O crédito cobre uma; as outras somam uns 511 dólares por mês antes de qualquer nó."
+      },
+      {
+        "text": "Nada, porque clusters zonais são de graça",
+        "why": "Só um é coberto pelo crédito."
+      }
+    ]
+  }
+}
