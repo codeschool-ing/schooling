@@ -110,7 +110,4 @@ acrescentou seja um commit só dela:
 ```
 ana@dev:~/planner$ git add backstack.ts taps.ts
 ana@dev:~/planner$ git commit -q -m "Two tabs, each with its own back stack"
-ana@dev:~/planner$ git log --oneline
-c001117 Two tabs, each with its own back stack
-87ae50d The planner core, as lesson 1 gives it
 ```
