@@ -178,6 +178,10 @@ allprojects {
     repositories.useMirror()
     tasks.withType<Test>().configureEach {
         systemProperty("robolectric.dependency.repo.url", mirror)
+        // the test JVM is a process of its own and does not inherit Gradle's proxy
+        listOf("https.proxyHost", "https.proxyPort").forEach { k ->
+            System.getProperty(k)?.let { systemProperty(k, it) }
+        }
     }
 }
 KTS
