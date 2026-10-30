@@ -6,7 +6,7 @@ version: 1
 **On a phone, the database is almost always SQLite, whatever the library on top of it is called.**
 Android ships it, iOS ships it, and React Native reaches it through a library that calls the one the
 platform shipped. Room, Core Data and SwiftData are ways of talking to SQLite in Kotlin and Swift.
-Realm is the one exception in this lesson's title: an engine of its own.
+Realm is the exception the title names, with an engine of its own.
 
 That matters more than it looks. When a Room query is slow, the reason is an SQLite query plan.
 When a SwiftData store grows a column, an SQLite table gets an `ALTER`. **Learning SQLite once
