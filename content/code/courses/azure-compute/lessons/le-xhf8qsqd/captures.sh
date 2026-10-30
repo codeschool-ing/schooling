@@ -43,7 +43,7 @@ DAPRD=daprio/daprd:1.17.16
 cleanup() {
   quiet 'docker rm -f shop shop-dapr'
   quiet 'kind delete cluster --name shop'
-  quiet 'docker image rm shop:1.0'
+  quiet 'docker image rm shop:1.0 shop:again'
 }
 trap cleanup EXIT
 cleanup
@@ -60,6 +60,8 @@ from_example "$HERE/what-leaving-costs.md" exitcost.py > exitcost.py
 block build
 run 'docker build --quiet --tag shop:1.0 shop'
 run "docker image inspect shop:1.0 --format '{{.Id}}'"
+run 'docker build --quiet --tag shop:again shop'
+run 'docker image rm shop:again'
 
 block docker
 run 'docker run -d --name shop -p 8080:8080 shop:1.0 > /dev/null'
@@ -82,7 +84,9 @@ run 'kind load docker-image shop:1.0 --name shop'
 run 'kubectl apply -f shop-pod.yaml'
 run 'kubectl wait --for=condition=Ready pod/shop --timeout=120s'
 run "kubectl exec shop -- python -c \"import urllib.request; print(urllib.request.urlopen('http://localhost:8080/version').read().decode())\""
+run "kubectl get pod shop -o jsonpath='{.spec.nodeName} {.status.containerStatuses[0].image}{\"\\n\"}'"
 run "kubectl get pod shop -o jsonpath='{.status.containerStatuses[0].imageID}{\"\\n\"}'"
+run "docker exec shop-worker ctr -n k8s.io images ls name==docker.io/library/shop:1.0 2> /dev/null | awk '{print \$1, \$3}'"
 run 'kind delete cluster --name shop'
 
 # what-leaving-costs
