@@ -1,0 +1,460 @@
+{
+  "ex-yk9rpap0": {
+    "prompt": "Na execução, onde o `daprd` ficava em relação ao programa da loja?",
+    "hint": "Pense no que `--network container:shop` fez.",
+    "choices": [
+      {
+        "text": "Dentro do processo Python da loja, carregado como biblioteca",
+        "why": "Não há import do Dapr em lugar nenhum do `app.py`; o sidecar é um programa próprio, num contêiner próprio."
+      },
+      {
+        "text": "Num contêiner próprio, dividindo o namespace de rede e o localhost da loja",
+        "why": "Isso. É por isso que os metadados dizem que ele alcança o app em `127.0.0.1:8080`."
+      },
+      {
+        "text": "Num contêiner na `shop-net`, alcançado pelo nome `shop-dapr`",
+        "why": "Ele não tem rede própria onde ser alcançado; `docker port shop-dapr` não imprimiu nada."
+      },
+      {
+        "text": "Como um serviço no Azure que a loja chama pela internet",
+        "why": "Nada no laboratório chegou ao Azure; o sidecar rodou no laptop, ao lado da loja."
+      }
+    ]
+  },
+  "ex-3xqbp6c1": {
+    "prompt": "A porta 3500 teve de ser publicada com `-p 3500:3500` quando o contêiner da loja iniciou, antes de o sidecar existir. Por que ali?",
+    "hint": "Veja o que `docker port` imprimiu para cada contêiner.",
+    "choices": [
+      {
+        "text": "Porque o Dapr se recusa a iniciar quando o contêiner dele tem uma porta publicada",
+        "why": "O Dapr não tem opinião sobre as portas do Docker; um contêiner que divide o namespace de outro simplesmente não tem portas a publicar."
+      },
+      {
+        "text": "Porque a 3500 é a porta da própria loja e o sidecar escuta em outra",
+        "why": "O sidecar escuta na 3500; a loja escuta na 8080."
+      },
+      {
+        "text": "Porque o sidecar entrou no namespace da loja e não tem rede própria onde publicar",
+        "why": "Isso. Portas pertencem a um namespace de rede, e este é o da loja."
+      },
+      {
+        "text": "Porque publicá-la no sidecar entraria em conflito com a porta 8080",
+        "why": "Duas portas diferentes não entram em conflito; o motivo é que o sidecar não tem namespace próprio."
+      }
+    ]
+  },
+  "ex-491cg35w": {
+    "prompt": "Quais destes foram pedidos do sidecar para o app, e não do app ou do laptop para o sidecar? Escolha todos os que se aplicam.",
+    "hint": "O log da própria loja mostra o que chegou até ela.",
+    "choices": [
+      {
+        "text": "`GET /dapr/config` na loja",
+        "why": "Isso; a loja o registrou com um 404."
+      },
+      {
+        "text": "`GET /dapr/subscribe` na loja, depois de carregado um broker",
+        "why": "Isso; com um componente de pub/sub carregado, o sidecar pergunta ao app o que ele assina."
+      },
+      {
+        "text": "`GET /v1.0/healthz`",
+        "why": "Esse foi o `curl` do laptop perguntando ao sidecar sobre ele mesmo."
+      },
+      {
+        "text": "`POST /v1.0/state/statestore`",
+        "why": "Esse vai no outro sentido: alguém pedindo ao sidecar que guarde estado."
+      },
+      {
+        "text": "`POST /orders` num assinante, levando um CloudEvent",
+        "why": "Isso; entregar é o sidecar chamando o app dele na rota que o app indicou."
+      }
+    ]
+  },
+  "ex-2njcax8d": {
+    "prompt": "Um container app roda no modo de várias revisões, com uma revisão nova recebendo 10% do tráfego. Alguém muda `dapr.appPort`. O que a documentação da Microsoft diz que acontece?",
+    "hint": "As configurações do Dapr têm escopo de aplicação.",
+    "choices": [
+      {
+        "text": "Uma revisão nova é criada com a porta nova, e não recebe tráfego até alguém dar",
+        "why": "É isso que faz uma mudança no template. Uma configuração do Dapr não faz parte de uma revisão."
+      },
+      {
+        "text": "Nenhuma revisão é criada, e todas as revisões existentes reiniciam com a porta nova",
+        "why": "Isso. Por isso uma mudança no Dapr não pode ser testada antes em 10% do tráfego."
+      },
+      {
+        "text": "Só a revisão com 10% reinicia, por ser a mais recente",
+        "why": "A documentação diz que todas as revisões existentes são reiniciadas."
+      },
+      {
+        "text": "A mudança é recusada até o app voltar ao modo de revisão única",
+        "why": "Nada na documentação a recusa; ela se aplica a todas as revisões de uma vez."
+      }
+    ]
+  },
+  "ex-zzsh6pef": {
+    "prompt": "O Container Apps inicia o sidecar ao lado de cada réplica, e o seu código alcança a API HTTP dele em `localhost`, na porta ___.",
+    "hint": "A mesma porta que você publicou no contêiner da loja.",
+    "blanks": [
+      {
+        "accept": [
+          "3500"
+        ]
+      }
+    ]
+  },
+  "ex-5fjr02r3": {
+    "prompt": "A loja guardou `order-1`. O sidecar do billing, com o mesmo componente `statestore` carregado, pediu `order-1` e recebeu 204 com corpo vazio. Por quê?",
+    "hint": "Veja a chave que o Redis de fato guardava.",
+    "choices": [
+      {
+        "text": "O armazenamento tem escopo só da loja, então o billing lê uma cópia vazia",
+        "why": "Nada tinha escopo; o billing carregou o componente e alcançou o mesmo Redis."
+      },
+      {
+        "text": "O sidecar do billing procurou `billing||order-1`, e toda chave leva o app id na frente",
+        "why": "Isso. O prefixo padrão é o app id, então dois apps num armazenamento só veem as próprias chaves."
+      },
+      {
+        "text": "O Redis ainda não tinha copiado o valor para o lado do billing",
+        "why": "Há um Redis só e nenhuma cópia; a chave simplesmente tem outro nome."
+      },
+      {
+        "text": "O ETag de `order-1` pertencia à loja",
+        "why": "Um ETag protege escritas, e isto foi a leitura de uma chave que não existe para o billing."
+      }
+    ]
+  },
+  "ex-rzsdjfh8": {
+    "prompt": "Ponha os passos da execução com ETag na ordem em que aconteceram.",
+    "hint": "O valor terminou com quantidade 3.",
+    "items": [
+      "uma leitura de `order-1` responde com `Etag: 1`",
+      "uma escrita com ETag 1 é aceita com 204",
+      "a versão no Redis passa a 2",
+      "uma segunda escrita com ETag 1 é recusada com 409",
+      "uma leitura mostra quantidade 3"
+    ],
+    "trap": "A recusa vem depois de a versão mudar: é o 1 vencido encontrando um 2 que faz dele um conflito."
+  },
+  "ex-5k2z5q1h": {
+    "prompt": "No componente do Redis, o billing roda duas réplicas e o audit uma, todas assinando `orders`. A loja publica 5 pedidos. Quantas entregas são feitas no total, contando cada programa que recebe uma?",
+    "hint": "Um grupo de consumidores por app id; réplicas de um app dividem o grupo.",
+    "unit": "entregas"
+  },
+  "ex-hberk52p": {
+    "prompt": "Um defeito faz o `subscriber.py` responder 404 em `/orders`. O que a documentação do Dapr diz que o sidecar faz com uma mensagem entregue ali?",
+    "hint": "As respostas que ele entende são SUCCESS, RETRY e DROP, e o código de status também diz algo.",
+    "choices": [
+      {
+        "text": "Tenta de novo até o app responder SUCCESS",
+        "why": "Tentar de novo é o que `RETRY` pede; um 404 é lido como uma rota que não existe."
+      },
+      {
+        "text": "Entrega a mensagem ao outro assinante",
+        "why": "Cada app tem a sua cópia; a falha do billing não passa a mensagem dele ao audit."
+      },
+      {
+        "text": "Descarta a mensagem e escreve um erro no log do sidecar",
+        "why": "Isso. Uma rota errada perde mensagens, e o log do próprio app não diz nada."
+      },
+      {
+        "text": "Encerra a assinatura daquele tópico",
+        "why": "A assinatura continua; cada mensagem que encontra o 404 é descartada."
+      }
+    ]
+  },
+  "ex-3ecgyfx0": {
+    "prompt": "Ligue cada peça ao que ela decide.",
+    "hint": "Uma resposta da direita não pertence a nenhuma.",
+    "pairs": [
+      {
+        "left": "`metadata.name` num arquivo de componente",
+        "right": "o nome que o código põe na URL"
+      },
+      {
+        "left": "`spec.type` num arquivo de componente",
+        "right": "a que produto o sidecar se conecta"
+      },
+      {
+        "left": "`spec.metadata` num arquivo de componente",
+        "right": "as configurações de que o tipo precisa, como um endereço"
+      },
+      {
+        "left": "`/dapr/subscribe` no app",
+        "right": "o que o sidecar assina em nome do app"
+      }
+    ],
+    "right_distractors": [
+      "onde os próprios valores ficam guardados"
+    ]
+  },
+  "ex-12d8bve4": {
+    "prompt": "A primeira publicação pelo componente do Service Bus respondeu 500. O que ele tentava fazer?",
+    "hint": "Leia o endereço no erro: o esquema e a porta.",
+    "choices": [
+      {
+        "text": "Alcançar `localhost`, porque a connection string o nomeava",
+        "why": "A string nomeava `servicebus`, e o erro mostra esse host sendo alcançado."
+      },
+      {
+        "text": "Enviar por AMQP a uma fila `orders` que não tinha sido declarada",
+        "why": "O `Config.json` a declarava, e o pedido nem chegou ao AMQP."
+      },
+      {
+        "text": "Conferir por HTTPS que a fila existe, para criá-la se não existisse",
+        "why": "Isso. O gerenciamento de entidades vem ligado por padrão, e o emulador não serve esse endpoint."
+      },
+      {
+        "text": "Entregar ao `subscriber.py`, que não tinha sido mudado para o Service Bus",
+        "why": "A falha foi do publicador, antes de qualquer entrega; o assinante não precisou de mudança nenhuma."
+      }
+    ]
+  },
+  "ex-pn05vmqx": {
+    "prompt": "Depois da troca para `pubsub.azure.servicebus.queues`, cada um dos pedidos 2 a 6 chegou ao billing ou ao audit, nunca aos dois. Por quê?",
+    "hint": "Ao que o componente ligou o tópico `orders`?",
+    "choices": [
+      {
+        "text": "Billing e audit acabaram com o mesmo consumer ID",
+        "why": "Os consumer IDs deles são os app ids, que são diferentes, e mesmo assim dividiram as mensagens."
+      },
+      {
+        "text": "O tópico virou uma fila só, os dois apps recebiam dela, e uma fila entrega cada mensagem a um receptor",
+        "why": "Isso. A API ficou a mesma e a entrega passou a ser a da fila."
+      },
+      {
+        "text": "O emulador distribui a carga entre receptores, o que o Azure não faria",
+        "why": "Uma fila do Service Bus no Azure também entrega cada mensagem a um receptor."
+      },
+      {
+        "text": "O `disableEntityManagement` removeu uma das duas assinaturas",
+        "why": "Ele impede o componente de criar entidades; nunca houve assinaturas, só a fila."
+      }
+    ]
+  },
+  "ex-74hszbj5": {
+    "prompt": "Quais destes eram iguais antes e depois da troca para o Service Bus? Escolha todos os que se aplicam.",
+    "hint": "Compare os dois arquivos de componente e o que os assinantes imprimiram.",
+    "choices": [
+      {
+        "text": "`subscriber.py`",
+        "why": "Isso; nenhuma linha dele mudou."
+      },
+      {
+        "text": "O pedido que publica, `/v1.0/publish/pubsub/orders`",
+        "why": "Isso; a mesma URL e o mesmo corpo."
+      },
+      {
+        "text": "O `type` do componente",
+        "why": "Ele passou de `pubsub.redis` para `pubsub.azure.servicebus.queues`."
+      },
+      {
+        "text": "Uma cópia de cada pedido para cada um dos dois apps",
+        "why": "Nas filas do Service Bus os dois apps dividiram uma cópia entre si."
+      },
+      {
+        "text": "O nome do componente, `pubsub`",
+        "why": "Isso; o código o chama por esse nome, então ele precisava ficar."
+      }
+    ]
+  },
+  "ex-tsyv5znb": {
+    "prompt": "O componente do Service Bus cria as filas e assinaturas de que precisa, a menos que uma entrada de metadata o impeça: ___ com o valor `\"true\"`.",
+    "hint": "É a linha acrescentada com `printf`.",
+    "blanks": [
+      {
+        "accept": [
+          "disableEntityManagement"
+        ]
+      }
+    ]
+  },
+  "ex-mq5xsjm9": {
+    "prompt": "No Service Bus, com o gerenciamento de entidades desligado, a loja quer que billing e audit recebam cada um todos os pedidos, como no Redis. O que é preciso?",
+    "hint": "Qual entidade do Service Bus dá a cada leitor interessado a sua própria cópia?",
+    "choices": [
+      {
+        "text": "O componente de filas, com um `consumerID` diferente definido para cada app",
+        "why": "Os app ids deles já eram diferentes, que é o padrão de um consumer ID, e mesmo assim competiram pela fila."
+      },
+      {
+        "text": "Dois arquivos de componente chamados `pubsub`, um por app, cada um nomeando a mesma fila",
+        "why": "Os dois leriam a mesma fila `orders`, e uma fila continua entregando cada mensagem a um receptor."
+      },
+      {
+        "text": "Um `maxDeliveryCount` maior na fila",
+        "why": "Isso é quantas vezes uma mensagem que falha é tentada de novo, não quantos receptores a recebem."
+      },
+      {
+        "text": "O componente de tópicos, e um tópico `orders` com as assinaturas `billing` e `audit` declaradas antes",
+        "why": "Isso. Cada app lê a própria assinatura, e com o gerenciamento desligado elas precisam existir antes."
+      }
+    ]
+  },
+  "ex-ty7dd89f": {
+    "prompt": "No `dapr.bicep`, `componentType` está escrito `'pubsub.azure.servicebus.queue'`, no singular. O que acontece, pelo que a execução mostrou?",
+    "hint": "O compilador pegou um erro de digitação e não o outro.",
+    "choices": [
+      {
+        "text": "O compilador avisa com BCP089 e sugere o plural",
+        "why": "O BCP089 veio para `appID`, uma propriedade que o compilador conhece. `componentType` é uma string qualquer."
+      },
+      {
+        "text": "Compila em silêncio, e o `daprd` recusa o tipo ao iniciar",
+        "why": "Isso. O sidecar de código aberto saiu com `couldn't find message bus`; o template tinha sido escrito sem uma palavra."
+      },
+      {
+        "text": "Compila, e o sidecar o carrega como o componente de filas",
+        "why": "O sidecar da execução não adivinhou; ele parou."
+      },
+      {
+        "text": "O compilador se recusa a escrever o `queue.json`",
+        "why": "`ls queue.*` listou o `queue.json`; o template foi escrito."
+      }
+    ]
+  },
+  "ex-49fqmp7p": {
+    "prompt": "O billing assina pelo Dapr no Container Apps, com `minReplicas: 0` e nenhuma regra de escala além da padrão para HTTP. Ninguém chama o billing por HTTP. O que acontece com os pedidos que a loja publica?",
+    "hint": "Quem recebe uma mensagem de um app que não tem réplica?",
+    "choices": [
+      {
+        "text": "O Azure mantém o sidecar do billing rodando sozinho, para recebê-los",
+        "why": "O sidecar vive numa réplica; sem réplica não há sidecar."
+      },
+      {
+        "text": "O sidecar da loja os entrega direto ao billing quando ele acordar",
+        "why": "Pub/sub passa pelo broker; o sidecar do publicador nunca entrega a um assinante."
+      },
+      {
+        "text": "O Container Apps se recusa a implantar um assinante do Dapr que pode escalar a zero",
+        "why": "Nada o recusa; ele é implantado e não recebe nada."
+      },
+      {
+        "text": "Ficam esperando no broker, sem sidecar para recebê-los, até uma réplica iniciar",
+        "why": "Isso. É por isso que o billing mantém uma réplica, ou ganha uma regra de escala pelo tamanho da fila."
+      }
+    ]
+  },
+  "ex-cam8ntqw": {
+    "prompt": "O que a lista `scopes` de um componente do Dapr num ambiente do Container Apps contém?",
+    "hint": "A documentação é específica sobre qual nome é.",
+    "choices": [
+      {
+        "text": "Os nomes dos container apps que podem carregá-lo",
+        "why": "Quase, e errado: a documentação diz que scopes são app ids do Dapr, não nomes de container apps."
+      },
+      {
+        "text": "Os app ids do Dapr que o carregam",
+        "why": "Isso; `shop` e `billing` no `dapr.bicep` são os valores de `appId`."
+      },
+      {
+        "text": "As managed identities que podem se autenticar por ele",
+        "why": "A identidade é nomeada em `azureClientId`; scopes dizem quais apps carregam o componente."
+      },
+      {
+        "text": "As revisões de um app que podem usá-lo",
+        "why": "As configurações do Dapr são do app, não de uma revisão, e carregar um componente também."
+      }
+    ]
+  },
+  "ex-yb0ghxnh": {
+    "prompt": "Ligue cada custo do Dapr ao lugar onde a lição o mostrou.",
+    "hint": "Uma evidência da direita não mostra nenhum deles.",
+    "pairs": [
+      {
+        "left": "um segundo processo em cada réplica",
+        "right": "o `shop-dapr` usando mais memória que a `shop`"
+      },
+      {
+        "left": "um salto em cada chamada que passa por ele",
+        "right": "a mediana de `/healthz` maior pelo sidecar"
+      },
+      {
+        "left": "um segundo log para ler",
+        "right": "o erro de gerenciamento de entidades, no sidecar e não na loja"
+      },
+      {
+        "left": "a API do Dapr como dependência",
+        "right": "a chave `shop||order-1` no Redis"
+      }
+    ],
+    "right_distractors": [
+      "uma revisão nova a cada mudança numa configuração do Dapr"
+    ]
+  },
+  "ex-dqky83ys": {
+    "prompt": "Em qual destes casos o Dapr se paga?",
+    "hint": "Procure o caso em que o mesmo código de fato encontra mais de um backend.",
+    "choices": [
+      {
+        "text": "Um serviço Python num único namespace do Service Bus para sempre, que precisa de sessões",
+        "why": "Ele ganha um processo e um salto e só alcança sessões por metadados do componente; a biblioteca do próprio broker o serve melhor."
+      },
+      {
+        "text": "Um relatório noturno rodando como job do Container Apps",
+        "why": "O Dapr não é suportado em jobs do Container Apps."
+      },
+      {
+        "text": "Um serviço que precisa rodar exatamente o Dapr 1.17.16 em produção",
+        "why": "O Container Apps escolhe e atualiza a versão; uma versão fixa não está disponível lá."
+      },
+      {
+        "text": "Equipes em Python e Go, com Redis nos laptops e Service Bus no Azure",
+        "why": "Isso: um arquivo por ambiente, e uma API para as duas linguagens."
+      }
+    ]
+  },
+  "ex-rfebbszc": {
+    "prompt": "Ponha em ordem o caminho de um pedido da loja até o billing, no componente do Redis.",
+    "hint": "Começa no localhost da loja e termina no do billing.",
+    "items": [
+      "o código da loja faz POST em `localhost:3500/v1.0/publish/pubsub/orders`",
+      "o sidecar da loja embrulha o pedido num CloudEvent e o acrescenta ao stream `orders`",
+      "o sidecar do billing o lê pelo grupo de consumidores `billing`",
+      "o sidecar do billing faz POST dele em `/orders` no `localhost:8080` do billing",
+      "o `subscriber.py` responde `SUCCESS`"
+    ],
+    "trap": "O envelope é posto pelo sidecar do publicador, antes do Redis; o assinante já o recebe embrulhado."
+  },
+  "ex-az2qtx95": {
+    "prompt": "Um ambiente tem três container apps com Dapr, rodando 2, 2 e 4 réplicas. Quantos sidecars `daprd` estão rodando?",
+    "hint": "Um sidecar por réplica.",
+    "unit": "sidecars"
+  },
+  "ex-awjq3r6j": {
+    "prompt": "Seja qual for o broker, um assinante acha o pedido em `data`, porque o Dapr embrulha toda mensagem publicada num envelope do formato aberto chamado ___.",
+    "hint": "O `type` dele na execução era `com.dapr.event.sent`.",
+    "blanks": [
+      {
+        "accept": [
+          "CloudEvents",
+          "CloudEvent",
+          "Cloud Events",
+          "Cloud Event"
+        ]
+      }
+    ]
+  },
+  "ex-55fzhc8w": {
+    "prompt": "No Azure, o componente `statestore` do ambiente tem `scopes: ['shop', 'billing']`. Um terceiro app, o audit, chama `/v1.0/state/statestore` e o sidecar dele responde que nenhum armazenamento de estado está configurado. Qual é a causa mais provável?",
+    "hint": "Quais apps carregam um componente com escopo?",
+    "choices": [
+      {
+        "text": "A managed identity do audit não tem papel no armazenamento",
+        "why": "Um papel faltando falha quando o armazenamento é usado; um componente que nunca foi carregado é outra resposta."
+      },
+      {
+        "text": "O app id do audit não está em `scopes`, então o sidecar dele nunca carregou o componente",
+        "why": "Isso. Scopes nomeiam os app ids que carregam um componente, e o audit não é um deles."
+      },
+      {
+        "text": "O audit pede chaves com prefixo `audit||`, que ainda não existem",
+        "why": "Isso dá 204 e corpo vazio, como o billing recebeu no laboratório, e não um armazenamento ausente."
+      },
+      {
+        "text": "O componente foi adicionado sem reiniciar a revisão do audit",
+        "why": "Mesmo depois de reiniciar, um sidecar só carrega os componentes com escopo para o app id dele."
+      }
+    ]
+  }
+}

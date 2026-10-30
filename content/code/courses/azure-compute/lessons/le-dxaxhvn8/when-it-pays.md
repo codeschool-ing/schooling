@@ -234,3 +234,19 @@ ana@laptop:~/azure$ docker rm -f shop shop-dapr billing billing-dapr audit audit
 ana@laptop:~/azure$ docker network rm shop-net
 shop-net
 ```
+
+```python
+# hop.py
+import statistics
+import sys
+import time
+import urllib.request
+
+for url in sys.argv[1:]:
+    times = []
+    for _ in range(500):
+        start = time.perf_counter()
+        urllib.request.urlopen(url).read()
+        times.append((time.perf_counter() - start) * 1000)
+    print(f'{url}  median {statistics.median(times):.2f} ms')
+```

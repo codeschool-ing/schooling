@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-yk9rpap0",
+    "version": 1,
+    "section": "the-sidecar",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run, where did `daprd` sit relative to the shop's program?",
+    "hint": "Think about what `--network container:shop` did.",
+    "choices": [
+      {
+        "text": "Inside the shop's Python process, loaded as a library",
+        "correct": false,
+        "why": "There is no import of Dapr anywhere in `app.py`; the sidecar is a program of its own, in a container of its own."
+      },
+      {
+        "text": "In a container of its own, sharing the shop's network namespace and its localhost",
+        "correct": true,
+        "why": "Yes. That is why the metadata says it reaches the app at `127.0.0.1:8080`."
+      },
+      {
+        "text": "In a container on `shop-net`, reached by the name `shop-dapr`",
+        "correct": false,
+        "why": "It has no network of its own to be reached on; `docker port shop-dapr` printed nothing."
+      },
+      {
+        "text": "As a service in Azure that the shop calls over the internet",
+        "correct": false,
+        "why": "Nothing in the lab reached Azure; the sidecar ran on the laptop, beside the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xqbp6c1",
+    "version": 1,
+    "section": "the-sidecar",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Port 3500 had to be published with `-p 3500:3500` when the shop's container started, before the sidecar existed. Why there?",
+    "hint": "Look at what `docker port` printed for each container.",
+    "choices": [
+      {
+        "text": "Because Dapr refuses to start when its container has a published port",
+        "correct": false,
+        "why": "Dapr has no opinion about Docker's ports; a container sharing another's namespace simply has none to publish."
+      },
+      {
+        "text": "Because 3500 is the shop's own port and the sidecar listens elsewhere",
+        "correct": false,
+        "why": "The sidecar listens on 3500; the shop listens on 8080."
+      },
+      {
+        "text": "Because the sidecar joined the shop's namespace and has no network of its own to publish on",
+        "correct": true,
+        "why": "Yes. Ports belong to a network namespace, and this one is the shop's."
+      },
+      {
+        "text": "Because publishing it on the sidecar would clash with port 8080",
+        "correct": false,
+        "why": "Two different ports cannot clash; the reason is that the sidecar has no namespace of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-491cg35w",
+    "version": 1,
+    "section": "the-sidecar",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these were requests from the sidecar to the app, rather than from the app or the laptop to the sidecar? Choose all that apply.",
+    "hint": "The shop's own log shows what reached it.",
+    "choices": [
+      {
+        "text": "`GET /dapr/config` on the shop",
+        "correct": true,
+        "why": "Yes; the shop logged it with a 404."
+      },
+      {
+        "text": "`GET /dapr/subscribe` on the shop, once a broker was loaded",
+        "correct": true,
+        "why": "Yes; with a pub/sub component loaded the sidecar asks the app what it subscribes to."
+      },
+      {
+        "text": "`GET /v1.0/healthz`",
+        "correct": false,
+        "why": "That was `curl` on the laptop asking the sidecar about itself."
+      },
+      {
+        "text": "`POST /v1.0/state/statestore`",
+        "correct": false,
+        "why": "That goes the other way: a caller asking the sidecar to save state."
+      },
+      {
+        "text": "`POST /orders` on a subscriber, carrying a CloudEvent",
+        "correct": true,
+        "why": "Yes; delivery is the sidecar calling its app on the route the app named."
+      }
+    ]
+  },
+  {
+    "id": "ex-2njcax8d",
+    "version": 1,
+    "section": "the-sidecar",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A container app runs in multiple-revision mode, with a new revision taking 10% of the traffic. Somebody changes `dapr.appPort`. What does Microsoft's documentation say happens?",
+    "hint": "Dapr's settings are application-scope.",
+    "choices": [
+      {
+        "text": "A new revision is made with the new port, and takes no traffic until it is given some",
+        "correct": false,
+        "why": "That is what a change to the template does. A Dapr setting is not part of a revision."
+      },
+      {
+        "text": "No revision is made, and every existing revision is restarted with the new port",
+        "correct": true,
+        "why": "Yes. So a Dapr change cannot be tried on 10% of the traffic first."
+      },
+      {
+        "text": "Only the revision taking 10% restarts, as the latest one",
+        "correct": false,
+        "why": "The documentation says all existing revisions are restarted."
+      },
+      {
+        "text": "The change is refused until the app is back in single-revision mode",
+        "correct": false,
+        "why": "Nothing in the documentation refuses it; it applies to every revision at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzsh6pef",
+    "version": 1,
+    "section": "the-sidecar",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Container Apps starts the sidecar beside every replica, and your code reaches its HTTP API on `localhost`, on port ___.",
+    "hint": "The same port you published on the shop's container.",
+    "blanks": [
+      {
+        "accept": [
+          "3500"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5fjr02r3",
+    "version": 1,
+    "section": "state-and-pubsub",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop saved `order-1`. Billing's sidecar, loaded with the same `statestore` component, asked for `order-1` and got 204 with an empty body. Why?",
+    "hint": "Look at the key Redis actually held.",
+    "choices": [
+      {
+        "text": "The state store is scoped to the shop, so billing reads an empty copy",
+        "correct": false,
+        "why": "Nothing was scoped; billing loaded the component and reached the same Redis."
+      },
+      {
+        "text": "Billing's sidecar looked for `billing||order-1`, and every key carries its app id in front",
+        "correct": true,
+        "why": "Yes. The default prefix is the app id, so two apps on one store see only their own keys."
+      },
+      {
+        "text": "Redis had not yet copied the value to billing's side",
+        "correct": false,
+        "why": "There is one Redis and no copying; the key simply has a different name."
+      },
+      {
+        "text": "The ETag on `order-1` belonged to the shop",
+        "correct": false,
+        "why": "An ETag guards writes, and this was a read of a key that does not exist for billing."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzsdjfh8",
+    "version": 1,
+    "section": "state-and-pubsub",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the ETag run in the order they happened.",
+    "hint": "The value ended at quantity 3.",
+    "items": [
+      "a read of `order-1` answers with `Etag: 1`",
+      "a write carrying ETag 1 is accepted with 204",
+      "the version in Redis becomes 2",
+      "a second write carrying ETag 1 is refused with 409",
+      "a read shows quantity 3"
+    ],
+    "trap": "The refusal comes after the version moved: it is the stale 1 meeting a 2 that makes it a conflict."
+  },
+  {
+    "id": "ex-5k2z5q1h",
+    "version": 1,
+    "section": "state-and-pubsub",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the Redis component, billing runs two replicas and audit runs one, all subscribed to `orders`. The shop publishes 5 orders. How many deliveries are made in total, counting every program that receives one?",
+    "hint": "One consumer group per app id; replicas of one app share their group.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "deliveries"
+  },
+  {
+    "id": "ex-hberk52p",
+    "version": 1,
+    "section": "state-and-pubsub",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bug makes `subscriber.py` answer 404 on `/orders`. What does Dapr's documentation say the sidecar does with a message delivered there?",
+    "hint": "The answers it understands are SUCCESS, RETRY and DROP, and a status code says something too.",
+    "choices": [
+      {
+        "text": "Retries it until the app answers SUCCESS",
+        "correct": false,
+        "why": "Retrying is what `RETRY` asks for; a 404 is read as a route that does not exist."
+      },
+      {
+        "text": "Delivers it to the other subscriber instead",
+        "correct": false,
+        "why": "Each app has its own copy; billing's failure does not move its message to audit."
+      },
+      {
+        "text": "Drops it, and writes an error in the sidecar's log",
+        "correct": true,
+        "why": "Yes. A wrong route loses messages, and the app's own log says nothing about it."
+      },
+      {
+        "text": "Stops the subscription for that topic",
+        "correct": false,
+        "why": "The subscription stays; each message that meets the 404 is dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ecgyfx0",
+    "version": 1,
+    "section": "state-and-pubsub",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece with what it decides.",
+    "hint": "One answer on the right belongs to none of them.",
+    "pairs": [
+      {
+        "left": "`metadata.name` in a component file",
+        "right": "the name the code puts in the URL"
+      },
+      {
+        "left": "`spec.type` in a component file",
+        "right": "which product the sidecar connects to"
+      },
+      {
+        "left": "`spec.metadata` in a component file",
+        "right": "the settings that type needs, such as an address"
+      },
+      {
+        "left": "`/dapr/subscribe` on the app",
+        "right": "what the sidecar subscribes to on the app's behalf"
+      }
+    ],
+    "right_distractors": [
+      "where the values themselves are kept"
+    ]
+  },
+  {
+    "id": "ex-12d8bve4",
+    "version": 1,
+    "section": "swapping-components",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first publish through the Service Bus component answered 500. What was it trying to do?",
+    "hint": "Read the address in the error: the scheme and the port.",
+    "choices": [
+      {
+        "text": "Reach `localhost`, because the connection string named it",
+        "correct": false,
+        "why": "The string named `servicebus`, and the error shows that host being reached."
+      },
+      {
+        "text": "Send over AMQP to a queue `orders` that had not been declared",
+        "correct": false,
+        "why": "`Config.json` declared it, and the request never got as far as AMQP."
+      },
+      {
+        "text": "Check over HTTPS that the queue exists, so it could create it if not",
+        "correct": true,
+        "why": "Yes. Entity management is on by default, and the emulator does not serve that endpoint."
+      },
+      {
+        "text": "Deliver to `subscriber.py`, which had not been changed for Service Bus",
+        "correct": false,
+        "why": "The failure was the publisher's, before any delivery; the subscriber needed no change at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn05vmqx",
+    "version": 1,
+    "section": "swapping-components",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the swap to `pubsub.azure.servicebus.queues`, each of orders 2 to 6 reached billing or audit, never both. Why?",
+    "hint": "What did the component map the topic `orders` to?",
+    "choices": [
+      {
+        "text": "Billing and audit ended up with the same consumer ID",
+        "correct": false,
+        "why": "Their consumer IDs are their app ids, which differ, and they still shared the messages."
+      },
+      {
+        "text": "The topic became one queue, both apps received from it, and a queue gives each message to one receiver",
+        "correct": true,
+        "why": "Yes. The API stayed the same and the delivery became the queue's."
+      },
+      {
+        "text": "The emulator balances load between receivers, as Azure would not",
+        "correct": false,
+        "why": "A Service Bus queue in Azure hands each message to one receiver too."
+      },
+      {
+        "text": "`disableEntityManagement` removed one of the two subscriptions",
+        "correct": false,
+        "why": "It stops the component creating entities; there were never subscriptions, only the queue."
+      }
+    ]
+  },
+  {
+    "id": "ex-74hszbj5",
+    "version": 1,
+    "section": "swapping-components",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these were the same before and after the swap to Service Bus? Choose all that apply.",
+    "hint": "Compare the two component files, and what the subscribers printed.",
+    "choices": [
+      {
+        "text": "`subscriber.py`",
+        "correct": true,
+        "why": "Yes; not a line of it changed."
+      },
+      {
+        "text": "The request that publishes, `/v1.0/publish/pubsub/orders`",
+        "correct": true,
+        "why": "Yes; the same URL and body."
+      },
+      {
+        "text": "The component's `type`",
+        "correct": false,
+        "why": "It went from `pubsub.redis` to `pubsub.azure.servicebus.queues`."
+      },
+      {
+        "text": "A copy of each order for each of the two apps",
+        "correct": false,
+        "why": "On Service Bus queues the two apps shared one copy between them."
+      },
+      {
+        "text": "The component's name, `pubsub`",
+        "correct": true,
+        "why": "Yes; the code calls it by that name, so it had to stay."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsyv5znb",
+    "version": 1,
+    "section": "swapping-components",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Service Bus component creates the queues and subscriptions it needs unless a metadata entry tells it not to: ___ set to `\"true\"`.",
+    "hint": "It is the line appended with `printf`.",
+    "blanks": [
+      {
+        "accept": [
+          "disableEntityManagement"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mq5xsjm9",
+    "version": 1,
+    "section": "swapping-components",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On Service Bus, with entity management off, the shop wants billing and audit each to receive every order, as they did on Redis. What does that take?",
+    "hint": "Which Service Bus entity gives every interested reader its own copy?",
+    "choices": [
+      {
+        "text": "The queues component, with a different `consumerID` set for each app",
+        "correct": false,
+        "why": "Their app ids already differed, which is what a consumer ID defaults to, and they still competed for the queue."
+      },
+      {
+        "text": "Two component files called `pubsub`, one per app, each naming the same queue",
+        "correct": false,
+        "why": "Both would read the one queue `orders`, and a queue still gives each message to one receiver."
+      },
+      {
+        "text": "A higher `maxDeliveryCount` on the queue",
+        "correct": false,
+        "why": "That is how often a failing message is retried, not how many receivers get it."
+      },
+      {
+        "text": "The topics component, and a topic `orders` with subscriptions `billing` and `audit` declared beforehand",
+        "correct": true,
+        "why": "Yes. Each app reads its own subscription, and with entity management off they must exist first."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty7dd89f",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `dapr.bicep`, `componentType` is written `'pubsub.azure.servicebus.queue'`, singular. What happens, going by the run?",
+    "hint": "The compiler checked one typo and not the other.",
+    "choices": [
+      {
+        "text": "The compiler warns with BCP089 and offers the plural",
+        "correct": false,
+        "why": "BCP089 came for `appID`, a property the compiler knows. `componentType` is a plain string."
+      },
+      {
+        "text": "It compiles in silence, and `daprd` refuses the type when it starts",
+        "correct": true,
+        "why": "Yes. The open-source sidecar exited with `couldn't find message bus`; the template had been written without a word."
+      },
+      {
+        "text": "It compiles, and the sidecar loads it as the queues component",
+        "correct": false,
+        "why": "The sidecar in the run did not guess; it stopped."
+      },
+      {
+        "text": "The compiler refuses to write `queue.json`",
+        "correct": false,
+        "why": "`ls queue.*` listed `queue.json`; the template was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-49fqmp7p",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Billing subscribes through Dapr in Container Apps, with `minReplicas: 0` and no scale rule but the default one for HTTP. Nobody calls billing over HTTP. What happens to the orders the shop publishes?",
+    "hint": "Who receives a message for an app that has no replica?",
+    "choices": [
+      {
+        "text": "Azure keeps billing's sidecar running on its own, to receive them",
+        "correct": false,
+        "why": "The sidecar lives in a replica; with no replica there is no sidecar."
+      },
+      {
+        "text": "The shop's sidecar delivers them to billing directly when it wakes",
+        "correct": false,
+        "why": "Pub/sub goes through the broker; the publisher's sidecar never delivers to a subscriber."
+      },
+      {
+        "text": "Container Apps refuses to deploy a Dapr subscriber that can scale to zero",
+        "correct": false,
+        "why": "Nothing refuses it; it deploys, and receives nothing."
+      },
+      {
+        "text": "They wait in the broker with no sidecar to receive them, until a replica starts",
+        "correct": true,
+        "why": "Yes. That is why billing keeps one replica, or gets a scale rule on the queue's length."
+      }
+    ]
+  },
+  {
+    "id": "ex-cam8ntqw",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `scopes` list of a Dapr component in a Container Apps environment hold?",
+    "hint": "The documentation is particular about which name it is.",
+    "choices": [
+      {
+        "text": "The names of the container apps allowed to load it",
+        "correct": false,
+        "why": "Close, and wrong: the documentation says scopes are Dapr app ids, not container app names."
+      },
+      {
+        "text": "The Dapr app ids that load it",
+        "correct": true,
+        "why": "Yes; `shop` and `billing` in `dapr.bicep` are the `appId` values."
+      },
+      {
+        "text": "The managed identities that may sign in through it",
+        "correct": false,
+        "why": "The identity is named in `azureClientId`; scopes say which apps load the component."
+      },
+      {
+        "text": "The revisions of an app that may use it",
+        "correct": false,
+        "why": "Dapr settings belong to the app, not to a revision, and so does loading a component."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb0ghxnh",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each cost of Dapr with where the lesson showed it.",
+    "hint": "One piece of evidence on the right shows none of them.",
+    "pairs": [
+      {
+        "left": "a second process in every replica",
+        "right": "`shop-dapr` using more memory than `shop`"
+      },
+      {
+        "left": "a hop on every call through it",
+        "right": "the median of `/healthz` higher through the sidecar"
+      },
+      {
+        "left": "a second log to read",
+        "right": "the entity-management error, in the sidecar and not the shop"
+      },
+      {
+        "left": "Dapr's API as a dependency",
+        "right": "the key `shop||order-1` in Redis"
+      }
+    ],
+    "right_distractors": [
+      "a new revision for every change to a Dapr setting"
+    ]
+  },
+  {
+    "id": "ex-dqky83ys",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In which of these does Dapr pay for itself?",
+    "hint": "Look for the case where the same code really meets more than one backend.",
+    "choices": [
+      {
+        "text": "A Python service on one Service Bus namespace for good, needing sessions",
+        "correct": false,
+        "why": "It gains a process and a hop and reaches sessions only through component metadata; the broker's own library serves it better."
+      },
+      {
+        "text": "A nightly report run as a Container Apps job",
+        "correct": false,
+        "why": "Dapr is not supported for Container Apps jobs at all."
+      },
+      {
+        "text": "A service that must run exactly Dapr 1.17.16 in production",
+        "correct": false,
+        "why": "Container Apps picks and upgrades the version; a pinned version is not on offer there."
+      },
+      {
+        "text": "Teams in Python and Go, on Redis on laptops and Service Bus in Azure",
+        "correct": true,
+        "why": "Yes: one file per environment, and one API for both languages."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfebbszc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the journey of one order from the shop to billing, on the Redis component, in order.",
+    "hint": "It starts on the shop's localhost and ends on billing's.",
+    "items": [
+      "the shop's code posts to `localhost:3500/v1.0/publish/pubsub/orders`",
+      "the shop's sidecar wraps the order in a CloudEvent and adds it to the stream `orders`",
+      "billing's sidecar reads it through the consumer group `billing`",
+      "billing's sidecar posts it to `/orders` on billing's `localhost:8080`",
+      "`subscriber.py` answers `SUCCESS`"
+    ],
+    "trap": "The envelope is added by the publisher's sidecar, before Redis; the subscriber receives it already wrapped."
+  },
+  {
+    "id": "ex-az2qtx95",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An environment has three Dapr-enabled container apps, running 2, 2 and 4 replicas. How many `daprd` sidecars are running?",
+    "hint": "One sidecar per replica.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "sidecars"
+  },
+  {
+    "id": "ex-awjq3r6j",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Whatever the broker, a subscriber finds the order under `data`, because Dapr wraps every published message in an envelope of the open format called ___.",
+    "hint": "Its `type` in the run was `com.dapr.event.sent`.",
+    "blanks": [
+      {
+        "accept": [
+          "CloudEvents",
+          "CloudEvent",
+          "Cloud Events",
+          "Cloud Event"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-55fzhc8w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In Azure, the environment's `statestore` component has `scopes: ['shop', 'billing']`. A third app, audit, calls `/v1.0/state/statestore` and its sidecar answers that no state store is configured. What is the likeliest cause?",
+    "hint": "Which apps load a scoped component?",
+    "choices": [
+      {
+        "text": "Audit's managed identity has no role on the store",
+        "correct": false,
+        "why": "A missing role fails when the store is used; a component that was never loaded is a different answer."
+      },
+      {
+        "text": "Audit's app id is not in `scopes`, so its sidecar never loaded the component",
+        "correct": true,
+        "why": "Yes. Scopes name the app ids that load a component, and audit is not one of them."
+      },
+      {
+        "text": "Audit asks for keys prefixed `audit||`, which do not exist yet",
+        "correct": false,
+        "why": "That gives 204 and an empty body, as billing got in the lab, not a missing store."
+      },
+      {
+        "text": "The component was added without restarting audit's revision",
+        "correct": false,
+        "why": "Even after a restart, a sidecar loads only the components scoped to its app id."
+      }
+    ]
+  }
+]
