@@ -1,0 +1,662 @@
+[
+  {
+    "id": "ex-74j4yrvb",
+    "version": 1,
+    "section": "what-google-takes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On GKE Autopilot, who chooses the machine type of the nodes?",
+    "hint": "You describe pods, not machines.",
+    "choices": [
+      {
+        "text": "Google, from what the pods request",
+        "correct": true,
+        "why": "Right. There is no node pool to set one on."
+      },
+      {
+        "text": "You, in the cluster's node_config",
+        "correct": false,
+        "why": "An Autopilot cluster has no node configuration of yours."
+      },
+      {
+        "text": "You, by creating one node pool per machine type",
+        "correct": false,
+        "why": "Node pools are refused on Autopilot."
+      },
+      {
+        "text": "Nobody: every node is an e2-standard-4",
+        "correct": false,
+        "why": "Google picks machines to fit the pods; there is no single fixed type."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj0geg99",
+    "version": 1,
+    "section": "what-google-takes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is still your job on Autopilot?",
+    "hint": "What happens to a one-replica Deployment when its node is replaced?",
+    "choices": [
+      {
+        "text": "Choosing the surge settings for node upgrades",
+        "correct": false,
+        "why": "Google upgrades Autopilot nodes; there are no pool settings."
+      },
+      {
+        "text": "Setting the number of nodes in each zone",
+        "correct": false,
+        "why": "Google adds nodes as pods are scheduled."
+      },
+      {
+        "text": "Replica counts and PodDisruptionBudgets",
+        "correct": true,
+        "why": "Right. A single replica is still down while its node is replaced."
+      },
+      {
+        "text": "Patching the nodes' operating system",
+        "correct": false,
+        "why": "Google patches and hardens Autopilot nodes."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjq2jwra",
+    "version": 1,
+    "section": "what-google-takes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container on Autopilot requests 2 vCPU and uses a tenth of one. What is it billed for?",
+    "hint": "On Autopilot the request is the bill.",
+    "choices": [
+      {
+        "text": "0.1 vCPU, what it used",
+        "correct": false,
+        "why": "Autopilot bills requests, not usage."
+      },
+      {
+        "text": "2 vCPU, every hour it runs",
+        "correct": true,
+        "why": "Right; on Autopilot the request is the bill."
+      },
+      {
+        "text": "A whole node, since it cannot share one",
+        "correct": false,
+        "why": "Pods share nodes; you pay for the request."
+      },
+      {
+        "text": "Nothing, until it exceeds its request",
+        "correct": false,
+        "why": "The request is billed from the moment the pod runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr9qxhte",
+    "version": 1,
+    "section": "what-google-takes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Terraform, the one line that hands a GKE cluster's nodes over to Google is enable____ = true.",
+    "hint": "The mode's name, after an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "autopilot"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wt3q08g6",
+    "version": 1,
+    "section": "what-google-takes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What kind of location does an Autopilot cluster always have?",
+    "hint": "Lesson 13 named both kinds.",
+    "choices": [
+      {
+        "text": "A single zone, chosen by Google",
+        "correct": false,
+        "why": "Autopilot clusters are not zonal."
+      },
+      {
+        "text": "Several regions at once",
+        "correct": false,
+        "why": "A cluster lives in one region."
+      },
+      {
+        "text": "Whatever location the first pod asks for",
+        "correct": false,
+        "why": "Location is fixed at creation."
+      },
+      {
+        "text": "A region",
+        "correct": true,
+        "why": "Right; Autopilot clusters are always regional."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjy0wwx3",
+    "version": 1,
+    "section": "paying-per-pod",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 0.0445 USD per vCPU-hour and 0.0049225 per GiB-hour, what does one pod requesting 1 vCPU and 4 GiB cost for 730 hours?",
+    "hint": "vCPU times rate, plus GiB times rate, times 730.",
+    "value": 46.86,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-sy4xpmtn",
+    "version": 1,
+    "section": "paying-per-pod",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "autopilot.py says two tiny pods cost 19.84 on Autopilot and 97.84 on Standard. Why is Standard so much dearer here?",
+    "hint": "What is the smallest Standard can be?",
+    "choices": [
+      {
+        "text": "Standard charges a higher rate per vCPU",
+        "correct": false,
+        "why": "Per vCPU, the node is cheaper; the waste is the problem."
+      },
+      {
+        "text": "A whole node is paid for, and the pods use a sixteenth of it",
+        "correct": true,
+        "why": "Right. Autopilot wins when nodes would sit partly empty."
+      },
+      {
+        "text": "Standard adds a cluster fee and Autopilot does not",
+        "correct": false,
+        "why": "Both pay the fee; the program leaves it out on both sides."
+      },
+      {
+        "text": "Standard nodes reserve half their memory for the system",
+        "correct": false,
+        "why": "The reservation is 3.92 vCPU and 13.30 GiB left of 4 and 16, far from half."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zg7njn3",
+    "version": 1,
+    "section": "paying-per-pod",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's pods cost 212.73 on Autopilot and a 195.67 floor on two Standard nodes. Why does the lesson not call Standard cheaper for the shop?",
+    "hint": "How many nodes does a regional pool have at least?",
+    "choices": [
+      {
+        "text": "Autopilot discounts are applied after the month ends",
+        "correct": false,
+        "why": "No such discount is in the comparison."
+      },
+      {
+        "text": "Standard's price excludes the disks of the nodes",
+        "correct": false,
+        "why": "True of both sides in a sense, and not the reason given."
+      },
+      {
+        "text": "A regional pool needs a node in each zone: three, at 293.51",
+        "correct": true,
+        "why": "Right. The 195.67 assumed two nodes in one zone, packed perfectly."
+      },
+      {
+        "text": "autopilot.py rounds Standard down to whole nodes",
+        "correct": false,
+        "why": "It rounds up, not down."
+      }
+    ]
+  },
+  {
+    "id": "ex-c01s7gb3",
+    "version": 1,
+    "section": "paying-per-pod",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does autopilot.py leave out? Choose all that apply.",
+    "hint": "The program says what it does not model.",
+    "choices": [
+      {
+        "text": "The system pods GKE runs on each Standard node",
+        "correct": true,
+        "why": "Right; they make the real room smaller."
+      },
+      {
+        "text": "Autopilot raising requests below its minimums",
+        "correct": true,
+        "why": "Right; the raised values are billed."
+      },
+      {
+        "text": "The memory GKE reserves on a Standard node",
+        "correct": false,
+        "why": "allocatable() models exactly that."
+      },
+      {
+        "text": "The rate per GiB-hour of Autopilot memory",
+        "correct": false,
+        "why": "POD_GIB is in the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cmev488",
+    "version": 1,
+    "section": "paying-per-pod",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these by monthly cost, cheapest first, from the lesson's runs of autopilot.py.",
+    "hint": "19.84, 97.84, 195.67, 391.35.",
+    "items": [
+      "Two tiny pods on Autopilot",
+      "Two tiny pods on Standard",
+      "The shop's eight pods on Standard",
+      "Twelve big pods on Standard"
+    ],
+    "trap": "Standard is not always the dear one: it is the cheapest per vCPU once pods fill its nodes."
+  },
+  {
+    "id": "ex-dpbaypvd",
+    "version": 1,
+    "section": "what-you-cannot-do",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "terraform plan accepted a google_container_node_pool on an Autopilot cluster. What would happen on apply?",
+    "hint": "Can the pool alone tell what kind of cluster it joins?",
+    "choices": [
+      {
+        "text": "The pool would be created and ignored by the scheduler",
+        "correct": false,
+        "why": "Autopilot does not accept node pools at all."
+      },
+      {
+        "text": "The cluster would switch to Standard to hold it",
+        "correct": false,
+        "why": "A cluster's mode never changes after creation."
+      },
+      {
+        "text": "Terraform would ask whether to convert the cluster",
+        "correct": false,
+        "why": "Terraform has no such prompt; there is nothing to convert to."
+      },
+      {
+        "text": "GKE would refuse it, after the cluster existed",
+        "correct": true,
+        "why": "Right. The rule crosses two resources, so the plan cannot see it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxh7jkmk",
+    "version": 1,
+    "section": "what-you-cannot-do",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does Autopilot refuse?",
+    "hint": "Anything that depends on the node being yours.",
+    "choices": [
+      {
+        "text": "A Deployment with three replicas",
+        "correct": false,
+        "why": "Ordinary workloads run unchanged."
+      },
+      {
+        "text": "A pod that asks for a GPU",
+        "correct": false,
+        "why": "Autopilot picks a node with a GPU for it."
+      },
+      {
+        "text": "A privileged container",
+        "correct": true,
+        "why": "Right; it is refused when the pod is created."
+      },
+      {
+        "text": "A DaemonSet for a monitoring agent",
+        "correct": false,
+        "why": "Allowed, and billed on every node it lands on."
+      }
+    ]
+  },
+  {
+    "id": "ex-rd8evtmt",
+    "version": 1,
+    "section": "what-you-cannot-do",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod asks for interruptible, cheaper capacity with the node selector cloud.google.com/gke-___: \"true\".",
+    "hint": "The pricing model's own name, in lower case.",
+    "blanks": [
+      {
+        "accept": [
+          "spot"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6v4jt0cn",
+    "version": 1,
+    "section": "what-you-cannot-do",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds remove_default_node_pool = true to its Autopilot cluster and validate refuses at once, while a separate node pool resource passed. What explains the difference?",
+    "hint": "Where does each rule live?",
+    "choices": [
+      {
+        "text": "The first conflict is inside one resource; the second crosses two",
+        "correct": true,
+        "why": "Right. The provider checks what one resource says about itself."
+      },
+      {
+        "text": "validate runs stricter checks than plan does",
+        "correct": false,
+        "why": "plan runs the same checks and more."
+      },
+      {
+        "text": "The node pool resource is not supported by provider 8.9.0",
+        "correct": false,
+        "why": "It is, and lesson 13 planned one."
+      },
+      {
+        "text": "remove_default_node_pool is deprecated everywhere",
+        "correct": false,
+        "why": "The error is a conflict with enable_autopilot, not a deprecation."
+      }
+    ]
+  },
+  {
+    "id": "ex-0y8qhyck",
+    "version": 1,
+    "section": "what-you-cannot-do",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to how a pod gets it on Autopilot.",
+    "hint": "You choose hardware through the pod.",
+    "pairs": [
+      {
+        "left": "A GPU",
+        "right": "Ask for it in the pod's resources"
+      },
+      {
+        "left": "Interruptible, cheaper capacity",
+        "right": "The gke-spot node selector"
+      },
+      {
+        "left": "A different balance of processor and price",
+        "right": "A compute class"
+      },
+      {
+        "left": "A shell on the node",
+        "right": "Not available; use kubectl and logs"
+      }
+    ],
+    "right_distractors": [
+      "A node pool with a taint"
+    ]
+  },
+  {
+    "id": "ex-ymn039e7",
+    "version": 1,
+    "section": "standard-or-autopilot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Can an existing Standard cluster be converted to Autopilot?",
+    "hint": "The mode is set once.",
+    "choices": [
+      {
+        "text": "Yes, by setting enable_autopilot = true and applying",
+        "correct": false,
+        "why": "The mode is fixed at creation; changing it means a new cluster."
+      },
+      {
+        "text": "Yes, once every node pool has been deleted",
+        "correct": false,
+        "why": "Deleting pools does not change the mode."
+      },
+      {
+        "text": "No: build a new one of that kind and redeploy",
+        "correct": true,
+        "why": "Right. The Kubernetes objects mostly move unchanged."
+      },
+      {
+        "text": "Only on the EXTENDED release channel",
+        "correct": false,
+        "why": "Channels decide versions, not modes."
+      }
+    ]
+  },
+  {
+    "id": "ex-gz9t677w",
+    "version": 1,
+    "section": "standard-or-autopilot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question comes first when choosing between Standard and Autopilot?",
+    "hint": "One answer makes the price irrelevant.",
+    "choices": [
+      {
+        "text": "How full would Standard's nodes be?",
+        "correct": false,
+        "why": "Second: it matters only if Autopilot can run everything."
+      },
+      {
+        "text": "Is the load uneven through the day?",
+        "correct": false,
+        "why": "Third, and again a price question."
+      },
+      {
+        "text": "Who would look after the nodes?",
+        "correct": false,
+        "why": "Fourth, and weighed against price."
+      },
+      {
+        "text": "Does anything need what Autopilot refuses?",
+        "correct": true,
+        "why": "Right. If yes, that workload needs Standard whatever the price."
+      }
+    ]
+  },
+  {
+    "id": "ex-44mxp0dz",
+    "version": 1,
+    "section": "standard-or-autopilot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team of two runs a few small services that are busy by day and idle at night, and one log agent that needs a host path. What is the cheapest sound plan?",
+    "hint": "Is the agent needed at all?",
+    "choices": [
+      {
+        "text": "A Standard cluster sized for the daytime peak",
+        "correct": false,
+        "why": "It pays for empty nodes every night."
+      },
+      {
+        "text": "One Autopilot and one Standard cluster for the agent",
+        "correct": false,
+        "why": "A second cluster fee and pool for an agent the platform replaces."
+      },
+      {
+        "text": "Autopilot, with the platform's own logging instead of the agent",
+        "correct": true,
+        "why": "Right. GKE ships logs to Cloud Logging already, so the refused workload disappears."
+      },
+      {
+        "text": "Autopilot, with the agent run as a privileged DaemonSet",
+        "correct": false,
+        "why": "Privileged pods are refused on Autopilot."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4z1zd65",
+    "version": 1,
+    "section": "standard-or-autopilot",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Autopilot wins when Standard's nodes would sit partly ___.",
+    "hint": "The opposite of full.",
+    "blanks": [
+      {
+        "accept": [
+          "empty",
+          "idle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7m3nnkac",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Autopilot Spot pods list at 0.0133 USD per vCPU-hour against 0.0445 on demand. What share of the on-demand vCPU price is saved, in percent, rounded to a whole number?",
+    "hint": "One minus the ratio.",
+    "value": 70,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-g5rk9hdw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twelve pods of 1 vCPU and 4 GiB cost 391.35 on Standard and 562.30 on Autopilot. Which statement fits?",
+    "hint": "How full are the four nodes?",
+    "choices": [
+      {
+        "text": "Autopilot is always dearer for more than ten pods",
+        "correct": false,
+        "why": "The count does not decide; how full nodes are does."
+      },
+      {
+        "text": "Steady pods fill the nodes, and a node is cheaper per vCPU",
+        "correct": true,
+        "why": "Right; that is when Standard wins."
+      },
+      {
+        "text": "Standard here leaves out the cluster fee, and Autopilot does not",
+        "correct": false,
+        "why": "Both leave it out."
+      },
+      {
+        "text": "Autopilot bills the memory twice, once per zone",
+        "correct": false,
+        "why": "Requests are billed once."
+      }
+    ]
+  },
+  {
+    "id": "ex-18b3v9cw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the four questions for choosing a mode in the lesson's order.",
+    "hint": "A refusal outranks a price.",
+    "items": [
+      "Does anything need what Autopilot refuses?",
+      "How full would Standard's nodes be?",
+      "Is the load uneven?",
+      "Who would look after the nodes?"
+    ]
+  },
+  {
+    "id": "ex-ywe5r3zq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Autopilot, what decides when a pod's node is replaced for an upgrade?",
+    "hint": "You have one lever left.",
+    "choices": [
+      {
+        "text": "The pod's own upgrade_settings",
+        "correct": false,
+        "why": "Pods have no upgrade settings."
+      },
+      {
+        "text": "A node pool's max_surge",
+        "correct": false,
+        "why": "There is no node pool on Autopilot."
+      },
+      {
+        "text": "Nothing: Autopilot nodes are never replaced",
+        "correct": false,
+        "why": "They are replaced; you just do not control how."
+      },
+      {
+        "text": "Google, inside the cluster's maintenance window",
+        "correct": true,
+        "why": "Right. The window is the lever you keep."
+      }
+    ]
+  },
+  {
+    "id": "ex-cm5q5pb6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are billed on Autopilot? Choose all that apply.",
+    "hint": "Requests, while they run, and one flat fee.",
+    "choices": [
+      {
+        "text": "The cluster management fee",
+        "correct": true,
+        "why": "Right; Autopilot pays it like Standard."
+      },
+      {
+        "text": "Each DaemonSet pod on every node it lands on",
+        "correct": true,
+        "why": "Right; a DaemonSet multiplies with the nodes."
+      },
+      {
+        "text": "The empty space on the nodes Google runs",
+        "correct": false,
+        "why": "That is exactly what Autopilot does not bill."
+      },
+      {
+        "text": "A pod's requests while it is not running",
+        "correct": false,
+        "why": "Requests are billed while pods run."
+      }
+    ]
+  }
+]

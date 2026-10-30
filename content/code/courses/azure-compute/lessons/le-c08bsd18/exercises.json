@@ -1,0 +1,665 @@
+[
+  {
+    "id": "ex-7xn387dn",
+    "version": 1,
+    "section": "registries-and-tiers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does the shop need a Premium registry for?",
+    "hint": "Three of the four come with every tier, or with Standard.",
+    "choices": [
+      {
+        "text": "Zone redundancy across the availability zones of brazilsouth",
+        "correct": false,
+        "why": "Every tier gets it, on by default, in a region with zones."
+      },
+      {
+        "text": "A replica of the registry in southcentralus",
+        "correct": true,
+        "why": "Right. Geo-replication is one of the features the documentation ties to Premium."
+      },
+      {
+        "text": "An artifact cache rule for python:3.12-slim from Docker Hub",
+        "correct": false,
+        "why": "Artifact cache is in Basic, Standard and Premium."
+      },
+      {
+        "text": "Anonymous pull, so anyone can download the image",
+        "correct": false,
+        "why": "Standard has it too."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qwc4t37",
+    "version": 1,
+    "section": "registries-and-tiers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pipeline that pushes and pulls against a Basic registry is pointed at a Premium one. What has to change in its docker commands?",
+    "hint": "The tiers differ in limits and features, not in protocol.",
+    "choices": [
+      {
+        "text": "Its pushes, which Premium receives through a separate upload API",
+        "correct": false,
+        "why": "Every tier exposes the same data-plane API, so a push is the same request."
+      },
+      {
+        "text": "The manifest format, because Premium stores Docker media types",
+        "correct": false,
+        "why": "The tier says nothing about manifest formats; the registry stores what it is sent."
+      },
+      {
+        "text": "Nothing beyond the login server, if the registry name changed",
+        "correct": true,
+        "why": "Right. Basic, Standard and Premium speak one API; only the address in the image name moves."
+      },
+      {
+        "text": "Its sign-in, because Premium requires the admin user",
+        "correct": false,
+        "why": "No tier requires the admin user; it is disabled by default in all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k1qc17y",
+    "version": 1,
+    "section": "registries-and-tiers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of az acr login --name shopregistry? Choose all that apply.",
+    "hint": "Follow the token from az login to Docker.",
+    "choices": [
+      {
+        "text": "It signs in with the Microsoft Entra identity that az login obtained",
+        "correct": true,
+        "why": "It exchanges that identity's token for a registry token."
+      },
+      {
+        "text": "The registry token it obtains lasts three hours",
+        "correct": true,
+        "why": "That is why a pipeline signs in again on every run."
+      },
+      {
+        "text": "It hands the token to Docker, so docker push works with no password typed",
+        "correct": true,
+        "why": "Docker keeps it in its configuration for the following commands."
+      },
+      {
+        "text": "It switches the admin user on for the duration of the session",
+        "correct": false,
+        "why": "The admin user is a separate account, off by default, and az acr login does not touch it."
+      },
+      {
+        "text": "It stores a password for the identity in the registry, with no expiry",
+        "correct": false,
+        "why": "No password is stored; the token expires and is fetched again."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9ts7vvd",
+    "version": 1,
+    "section": "registries-and-tiers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A registry has been switched to the mode in which a role can be limited to particular repositories. After az aks update --attach-acr, the cluster's nodes still cannot pull. What is the fix?",
+    "hint": "In that mode the pull role has a different name.",
+    "choices": [
+      {
+        "text": "Turn on the admin user and give its password to the cluster",
+        "correct": false,
+        "why": "That would work around roles with a shared secret, the arrangement managed identities replace."
+      },
+      {
+        "text": "Assign Container Registry Repository Reader by hand",
+        "correct": true,
+        "why": "Right. That mode uses Repository Reader instead of AcrPull, and --attach-acr is not supported there."
+      },
+      {
+        "text": "Move the registry to Premium, which that mode requires for pulls",
+        "correct": false,
+        "why": "The mode concerns role assignments, not the tier."
+      },
+      {
+        "text": "Wait three hours, until the nodes' registry token is renewed",
+        "correct": false,
+        "why": "A renewed token carries the same permissions; the missing piece is the role."
+      }
+    ]
+  },
+  {
+    "id": "ex-fse75f21",
+    "version": 1,
+    "section": "registries-and-tiers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In most of Azure, a registry's data may also be kept in the paired area of the same geography. A registry created in Brazil South keeps its data inside its own ___.",
+    "hint": "The one place this lesson's registry was created in.",
+    "blanks": [
+      {
+        "accept": [
+          "region"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rtrsnky1",
+    "version": 1,
+    "section": "pushing-and-digests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the digest that docker push prints computed from?",
+    "hint": "Section 03 fed something through sha256sum and got the same 64 characters.",
+    "choices": [
+      {
+        "text": "The repository name and the tag, so each tag has its own digest",
+        "correct": false,
+        "why": "1.0 and latest printed the same digest for the same image, so the tag is not an input."
+      },
+      {
+        "text": "The bytes of the manifest document the tag names",
+        "correct": true,
+        "why": "Right. sha256sum over the index's bytes gave the Docker-Content-Digest."
+      },
+      {
+        "text": "The moment of the push, which makes every push unique",
+        "correct": false,
+        "why": "The push of latest gave the digest 1.0 already had, minutes later."
+      },
+      {
+        "text": "The uncompressed size of all the layers added together",
+        "correct": false,
+        "why": "A size is not a hash; two different images can have the same size."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfwy3wj9",
+    "version": 1,
+    "section": "pushing-and-digests",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of publishing the shop to a registry in the order they happen.",
+    "hint": "The name is the destination, and the manifest names the blobs.",
+    "items": [
+      "Build the image",
+      "Tag it with the registry's name in front",
+      "Send the blobs the registry does not hold",
+      "Put the manifest under the tag",
+      "Read the digest the push printed"
+    ],
+    "trap": "The manifest goes last: it refers to blobs the registry has to hold already."
+  },
+  {
+    "id": "ex-10hkh0gd",
+    "version": 1,
+    "section": "pushing-and-digests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop pushed 1.0 and latest, then built 1.1 and pushed it as 1.1 and latest. What does the tag 1.0 name now?",
+    "hint": "Look at the three lines the loop over the tags printed.",
+    "choices": [
+      {
+        "text": "The 1.1 build, because latest and 1.0 were one tag",
+        "correct": false,
+        "why": "Two tags on one image are two pointers; moving one leaves the other."
+      },
+      {
+        "text": "Nothing at all: the push of latest left the 1.0 image with no tag",
+        "correct": false,
+        "why": "An image is untagged only when its last tag leaves; 1.0 stayed."
+      },
+      {
+        "text": "A new index that lists the 1.0 and 1.1 images side by side",
+        "correct": false,
+        "why": "Pushing does not merge indexes; each build has its own."
+      },
+      {
+        "text": "The digest it named before the move, character for character",
+        "correct": true,
+        "why": "Right. Only latest moved; 1.0 still names the first build."
+      }
+    ]
+  },
+  {
+    "id": "ex-agm0g027",
+    "version": 1,
+    "section": "pushing-and-digests",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Version 1.1 was built FROM the 1.0 image with one ENV line added. How many layer blobs did its push have to upload?",
+    "hint": "An ENV line changes the configuration, not the files.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0md71mr1",
+    "version": 1,
+    "section": "pushing-and-digests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Kubernetes Deployment names shopregistry.azurecr.io/shop:latest, and its nodes pulled at different moments of a day when latest moved. What is running, and what prevents it?",
+    "hint": "Nothing announced the move.",
+    "choices": [
+      {
+        "text": "One version: the registry refuses to move a tag that a node has pulled",
+        "correct": false,
+        "why": "The local registry moved latest with no complaint, and ACR does the same unless the tag is locked."
+      },
+      {
+        "text": "Two versions behind one name; naming the digest prevents it",
+        "correct": true,
+        "why": "Right. Each node holds whatever latest meant when it pulled; a digest cannot mean two things."
+      },
+      {
+        "text": "The newest version on every node, because each node compares digests every minute",
+        "correct": false,
+        "why": "A node keeps the image it has; nothing in the registry tells it a tag moved."
+      },
+      {
+        "text": "Two versions; a longer tag name such as latest-stable prevents it",
+        "correct": false,
+        "why": "Any tag can be moved; the length of its name changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzpdfte0",
+    "version": 1,
+    "section": "tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate passes a GitHub token to az acr build with --build-arg GITHUB_TOKEN=... . What is wrong with that?",
+    "hint": "Read the warning in the option's help text.",
+    "choices": [
+      {
+        "text": "Quick tasks ignore build arguments, so the build fails without the token",
+        "correct": false,
+        "why": "Quick tasks accept build arguments; the help documents the option."
+      },
+      {
+        "text": "Build args are visible to the ACR team; use --secret-build-arg",
+        "correct": true,
+        "why": "Right. The help says so in capitals, and the documentation adds the diagnostic logs."
+      },
+      {
+        "text": "The token expires after three hours, before the build ends",
+        "correct": false,
+        "why": "Three hours is the registry token from az acr login, a different token."
+      },
+      {
+        "text": "Build arguments are written into the image's tag",
+        "correct": false,
+        "why": "The tag comes from --image; build arguments go to the Dockerfile."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkvbwxq9",
+    "version": 1,
+    "section": "tasks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each trigger of a task created with az acr task create to how it starts out.",
+    "hint": "The help printed a default for three of them.",
+    "pairs": [
+      {
+        "left": "Commit",
+        "right": "On from the moment the task is created"
+      },
+      {
+        "left": "Pull request",
+        "right": "Off until switched on"
+      },
+      {
+        "left": "Base image update",
+        "right": "On, once the task has run once"
+      },
+      {
+        "left": "Schedule",
+        "right": "Present when a cron expression is given"
+      }
+    ],
+    "right_distractors": [
+      "Runs whenever a tag in the registry is deleted"
+    ]
+  },
+  {
+    "id": "ex-y7rgqreh",
+    "version": 1,
+    "section": "tasks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Premium registry has had a 7-day retention policy for untagged manifests since January. In March it still holds hundreds of untagged copies of the shop, all pushed by Docker 29 after January. Why?",
+    "hint": "Section 03 printed the media type of what was pushed.",
+    "choices": [
+      {
+        "text": "The policy waits 30 days whatever the setting says",
+        "correct": false,
+        "why": "The setting runs from 0 to 365 days and is honoured."
+      },
+      {
+        "text": "The policy deletes only on the day of the week it was enabled",
+        "correct": false,
+        "why": "Each untagged manifest gets its own deletion time, its own days after it lost its tag."
+      },
+      {
+        "text": "OCI media types, which the policy skips; acr purge handles them",
+        "correct": true,
+        "why": "Right. The policy reads only Docker media types, and Docker 29 writes OCI ones."
+      },
+      {
+        "text": "A retention policy applies to Basic registries and is ignored on Premium",
+        "correct": false,
+        "why": "It is the other way round: the policy is a Premium feature."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqvece4c",
+    "version": 1,
+    "section": "tasks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A base image trigger fires when the image named in FROM is rebuilt under the same tag, so that tag has to be a ___ one, such as 3.12-slim, which its maintainer moves to each patched build.",
+    "hint": "The opposite of a unique tag.",
+    "blanks": [
+      {
+        "accept": [
+          "stable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y9b3cpvv",
+    "version": 1,
+    "section": "tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The DELETE of the 1.0 digest answered 202. The image is still on the laptop, yet docker pull of that digest fails. Why?",
+    "hint": "A pull begins with a question to somebody.",
+    "choices": [
+      {
+        "text": "The DELETE removed the laptop's copy of the image as well",
+        "correct": false,
+        "why": "The registry cannot reach into Docker's local store; the copy is still there."
+      },
+      {
+        "text": "Deleting gave the image a new digest, so the old one names nothing",
+        "correct": false,
+        "why": "A digest is computed from the bytes; deleting does not recompute anything."
+      },
+      {
+        "text": "The pull asks the registry first, and the manifest is gone",
+        "correct": true,
+        "why": "Right. not found is the registry's answer, whatever the laptop holds."
+      },
+      {
+        "text": "The registry needs a restart before it serves that digest again",
+        "correct": false,
+        "why": "A restart changes nothing; the manifest is gone from storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-km0m3xge",
+    "version": 1,
+    "section": "geo-replication-and-scanning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "shopregistry has its home in brazilsouth and a replica in southcentralus. What name does a cluster in southcentralus pull from?",
+    "hint": "You push once, to one name.",
+    "choices": [
+      {
+        "text": "shopregistry.azurecr.io, the same login server as everywhere",
+        "correct": true,
+        "why": "Right. Azure routes the request to the replica it judges best for the client."
+      },
+      {
+        "text": "shopregistry-southcentralus.azurecr.io, a registry of its own",
+        "correct": false,
+        "why": "A replica is not a second registry, and it has no name of its own of that kind."
+      },
+      {
+        "text": "The home region's address, so pulls go to brazilsouth",
+        "correct": false,
+        "why": "Pulling from home across a continent is what the replica exists to avoid."
+      },
+      {
+        "text": "A name it learns from the replication's webhook",
+        "correct": false,
+        "why": "Webhooks report that a copy finished; they do not hand out addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1md3zrp",
+    "version": 1,
+    "section": "geo-replication-and-scanning",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A registry holds 40 GB of images, with its home region and two replicas. How many GB of storage are billed?",
+    "hint": "Storage is billed per replica, and the home region holds a copy too.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-ep7havfk",
+    "version": 1,
+    "section": "geo-replication-and-scanning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline pushes shop:1.2 in brazilsouth and at once deploys it to a cluster in southcentralus, whose pods report manifest unknown. Two minutes later the same pods start. What happened, and what should the pipeline do?",
+    "hint": "The registry is consistent eventually, not at once.",
+    "choices": [
+      {
+        "text": "The replica needed its own az acr login; sign in to each region",
+        "correct": false,
+        "why": "Credentials belong to the registry and are the same in every region."
+      },
+      {
+        "text": "The copy had not arrived; retry with back-off, or wait for the webhook",
+        "correct": true,
+        "why": "Right. Those are the two remedies the documentation names."
+      },
+      {
+        "text": "manifest unknown means the image was deleted; push it again",
+        "correct": false,
+        "why": "Nothing was deleted; two minutes later the same digest was there."
+      },
+      {
+        "text": "A task in southcentralus failed to rebuild the image; move the tasks there",
+        "correct": false,
+        "why": "Tasks belong to the home region, and no task was involved in this push."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qek0xct",
+    "version": 1,
+    "section": "geo-replication-and-scanning",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which mistakes in wrong.bicep compiled with no warning at all? Choose all that apply.",
+    "hint": "Two of the five are typed as any string or any number.",
+    "choices": [
+      {
+        "text": "name: 'shop-registry'",
+        "correct": false,
+        "why": "BCP416: the hyphen breaks the naming pattern of letters and digits."
+      },
+      {
+        "text": "sku name 'Premuim'",
+        "correct": true,
+        "why": "The SKU name is typed as one of the tiers or any string, so the typo passed."
+      },
+      {
+        "text": "adminUserEnabled: 'false'",
+        "correct": false,
+        "why": "BCP036: text where the API takes a boolean."
+      },
+      {
+        "text": "stauts in the retention policy",
+        "correct": false,
+        "why": "BCP089, with status offered as the right spelling."
+      },
+      {
+        "text": "days: 400",
+        "correct": true,
+        "why": "The type says only that it is a number; the 0 to 365 range is in the CLI's help, not in the type."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpqs7pyq",
+    "version": 1,
+    "section": "geo-replication-and-scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Defender for Cloud reports no findings for the shop's image. What does that tell you?",
+    "hint": "A scan compares packages with published vulnerabilities.",
+    "choices": [
+      {
+        "text": "That the shop's own code, app.py, has no security bugs in it",
+        "correct": false,
+        "why": "The scanner reads packages it can identify; the shop's own code is not one."
+      },
+      {
+        "text": "That no password or token was copied into any of the layers",
+        "correct": false,
+        "why": "A token in a file is not a package with a published vulnerability."
+      },
+      {
+        "text": "That the image will stay free of findings while it is in use",
+        "correct": false,
+        "why": "A vulnerability published next month is not in today's result."
+      },
+      {
+        "text": "Its packages had no published vulnerability that day",
+        "correct": true,
+        "why": "Right. That is the whole claim, on that day."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6bqrtaj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of releasing shop 1.2 through ACR in a safe order.",
+    "hint": "The deployment names what the push reported, and the tag is protected last.",
+    "items": [
+      "az acr login --name shopregistry",
+      "docker push shopregistry.azurecr.io/shop:1.2",
+      "Take the digest the push printed",
+      "Deploy shopregistry.azurecr.io/shop@ that digest",
+      "Lock the tag 1.2 with --write-enabled false"
+    ],
+    "trap": "Sign in before the push: Docker needs the registry token to send anything."
+  },
+  {
+    "id": "ex-zq88y503",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of deleting to what it removes.",
+    "hint": "Two of them are ACR's, one is a single command, and one is the local registry.",
+    "pairs": [
+      {
+        "left": "Retention policy",
+        "right": "Untagged Docker-type manifests, some days after they lose their tag"
+      },
+      {
+        "left": "acr purge --untagged",
+        "right": "Tags older than --ago, then manifests left without one"
+      },
+      {
+        "left": "az acr repository delete --image shop@sha256:…",
+        "right": "One manifest, its tags and the layers no other image uses"
+      },
+      {
+        "left": "A registry with REGISTRY_STORAGE_DELETE_ENABLED=false",
+        "right": "Nothing: it answers 405"
+      }
+    ],
+    "right_distractors": [
+      "The layers of an image, leaving its tags in place"
+    ]
+  },
+  {
+    "id": "ex-vven6gyt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "brazilsouth, the home region of shopregistry, is down for an afternoon. The registry has a replica in southcentralus. What still works?",
+    "hint": "Split the registry into its data plane and its control plane.",
+    "choices": [
+      {
+        "text": "Nothing until brazilsouth returns, because the home region holds the registry",
+        "correct": false,
+        "why": "The home region holds the settings; the data plane carries on through the replicas."
+      },
+      {
+        "text": "Everything, including changes to the network rules, through the replica",
+        "correct": false,
+        "why": "Settings cannot be changed until the home region recovers."
+      },
+      {
+        "text": "Push and pull through shopregistry.azurecr.io, while tasks wait for the home region",
+        "correct": true,
+        "why": "Right. Data operations go to the replica, and tasks belong to the home region."
+      },
+      {
+        "text": "Pulls, but pushes are refused because replicas are read-only",
+        "correct": false,
+        "why": "Replication is active-active: every replica takes writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-v91052wk",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Standard registry serves up to 10,000 read requests a minute. One node pulling the shop makes 9 reads: the index, the image manifest, the configuration and 6 layers. How many nodes can pull it within one minute before the registry answers 429? Give a whole number.",
+    "hint": "Divide, and round down: a node either finishes its pull or does not.",
+    "value": 1111,
+    "tolerance": 0
+  }
+]

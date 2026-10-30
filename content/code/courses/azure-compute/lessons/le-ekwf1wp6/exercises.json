@@ -1,0 +1,637 @@
+[
+  {
+    "id": "ex-k05v9ex1",
+    "version": 1,
+    "section": "what-a-plan-decides",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop is starting a new serverless Python function app in 2026. Which plan does Microsoft's documentation point it to?",
+    "choices": [
+      {
+        "text": "The Consumption plan, on Linux",
+        "correct": false,
+        "why": "Linux Consumption is marked retired in the hosting table, gets no new language versions, and the option retires on 30 September 2028."
+      },
+      {
+        "text": "The Flex Consumption plan",
+        "correct": true,
+        "why": "The documentation calls it the recommended serverless plan, and Python runs only on Linux, where it is the serverless option left."
+      },
+      {
+        "text": "The Consumption plan, on Windows",
+        "correct": false,
+        "why": "Windows Consumption is still available, but Python is not supported on Windows in Azure Functions."
+      },
+      {
+        "text": "A Premium plan with no always ready instances",
+        "correct": false,
+        "why": "A Premium plan always has at least one billed instance, so it is never serverless in the pay-per-execution sense."
+      }
+    ]
+  },
+  {
+    "id": "ex-30hj9vx2",
+    "version": 1,
+    "section": "what-a-plan-decides",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each plan with what it charges for, as the documentation describes it.",
+    "pairs": [
+      {
+        "left": "Flex Consumption",
+        "right": "executions and memory while executing, plus any always ready instances"
+      },
+      {
+        "left": "Premium",
+        "right": "the cores and memory of every allocated instance, with no execution charge"
+      },
+      {
+        "left": "Dedicated",
+        "right": "the App Service plan, however many apps it holds"
+      },
+      {
+        "left": "Consumption (legacy)",
+        "right": "executions, and memory times execution time, with nothing kept ready"
+      }
+    ],
+    "right_distractors": [
+      "each request's CPU time, whatever the memory"
+    ]
+  },
+  {
+    "id": "ex-vm2bjagz",
+    "version": 1,
+    "section": "what-a-plan-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`take_order` sits on a Flex Consumption app whose timeout in `host.json` is unbounded. A customer's order takes six minutes to price. What does the customer get?",
+    "choices": [
+      {
+        "text": "The answer after six minutes, since nothing bounds the timeout",
+        "correct": false,
+        "why": "The function may keep running, but the caller is behind a load balancer whose idle timeout is 230 seconds."
+      },
+      {
+        "text": "No answer: an HTTP function has 230 seconds, whatever the timeout says",
+        "correct": true,
+        "why": "The documentation gives 230 seconds as the most an HTTP-triggered function can take to respond, because of the load balancer in front."
+      },
+      {
+        "text": "A refusal when the app starts, because unbounded is not allowed on Flex",
+        "correct": false,
+        "why": "Unbounded is allowed on Flex Consumption; the limit that bites here is the HTTP one."
+      },
+      {
+        "text": "The answer after five minutes, the Consumption default",
+        "correct": false,
+        "why": "Five minutes is the legacy Consumption plan's default; this app is on Flex, whose default is 30."
+      }
+    ]
+  },
+  {
+    "id": "ex-dckfenhv",
+    "version": 1,
+    "section": "what-a-plan-decides",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`flex.bicep` compiled with no warning at `instanceMemoryMB: 1024` and `maximumInstanceCount: 2000`. Which of these does that tell you? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The resource types call both properties a number, and both values are numbers",
+        "correct": true,
+        "why": "That is all the compiler checks here: the type, not which numbers the service offers."
+      },
+      {
+        "text": "Azure offers 1,024 MB instances on Flex Consumption",
+        "correct": false,
+        "why": "The documentation lists 512, 2,048 and 4,096 MB; the compiler did not ask."
+      },
+      {
+        "text": "Whether Azure accepts the file is still unknown on the laptop",
+        "correct": true,
+        "why": "Only the service answers that, and nothing here sent it the template."
+      },
+      {
+        "text": "The ceiling of 1,000 instances applies only to Premium",
+        "correct": false,
+        "why": "1,000 is Flex Consumption's own most per function group; the compiler simply does not know it."
+      },
+      {
+        "text": "A clean compile is not proof the values are allowed",
+        "correct": true,
+        "why": "The documentation rules out both values, and the compiler passed them anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxgr7tcd",
+    "version": 1,
+    "section": "what-a-plan-decides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On Flex Consumption, a burst of receipts piles up on the `orders` queue. What happens to the instances answering `take_order`?",
+    "choices": [
+      {
+        "text": "They stay as they are: `make_receipt` scales on instances of its own",
+        "correct": true,
+        "why": "Flex scales each function on its own except the HTTP, Event Grid blob and Durable groups, so the queue function gets separate instances."
+      },
+      {
+        "text": "They grow too, because every function in an app scales together",
+        "correct": false,
+        "why": "That is how Consumption and Premium scale, per app; Flex scales per function."
+      },
+      {
+        "text": "They are shared with `make_receipt` until the HTTP group is full",
+        "correct": false,
+        "why": "The HTTP group holds HTTP functions only; a queue trigger is in a group of its own."
+      },
+      {
+        "text": "They shrink, to free the regional quota for the queue",
+        "correct": false,
+        "why": "The regional quota limits the total; it does not take instances from one group to give to another."
+      }
+    ]
+  },
+  {
+    "id": "ex-1eqc6qnm",
+    "version": 1,
+    "section": "the-cold-start",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what a cold request to `take_order` waits for, from the first step to the answer.",
+    "items": [
+      "The platform finds an instance and gives it the app",
+      "The Functions host starts and reads `host.json`",
+      "The host starts the Python worker",
+      "The worker imports `function_app.py`",
+      "The host hands the request to `take_order`"
+    ],
+    "trap": "Putting the import before the worker: the file is imported by the worker, so the worker has to exist first."
+  },
+  {
+    "id": "ex-ksgg8kv1",
+    "version": 1,
+    "section": "the-cold-start",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the legacy Consumption plan a request lands on a prewarmed placeholder. What does it still wait for?",
+    "choices": [
+      {
+        "text": "Nothing: a placeholder is an instance kept ready for the app",
+        "correct": false,
+        "why": "A placeholder is generic; it becomes your app only when the request arrives, so your file is not loaded yet."
+      },
+      {
+        "text": "The host and the worker starting, as on any cold start",
+        "correct": false,
+        "why": "Those are exactly what the placeholder has running already, by the documentation's description."
+      },
+      {
+        "text": "The import of `function_app.py`, and then the call",
+        "correct": true,
+        "why": "The host and the worker are running, but the placeholder could not have known your file, so the import is still paid."
+      },
+      {
+        "text": "Only the package download, because Consumption has no worker",
+        "correct": false,
+        "why": "Every plan runs a language worker beside the host; the placeholder has one started."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5fdevfe",
+    "version": 1,
+    "section": "the-cold-start",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a Premium plan, one function of the app is called on each new instance during scale-out, before the instance takes traffic, to open connections early. Its trigger is the ___ trigger.",
+    "blanks": [
+      {
+        "accept": [
+          "warmup",
+          "warm-up"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z3hkq489",
+    "version": 1,
+    "section": "the-cold-start",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop puts the nightly sales report in the same function app as `take_order`, and the report imports a large data library at the top of `function_app.py`. Who pays for that import?",
+    "choices": [
+      {
+        "text": "Only the report, once a night when its timer fires",
+        "correct": false,
+        "why": "The import runs when the worker loads the file, on every new instance, whichever function the instance is for."
+      },
+      {
+        "text": "Every cold start of the app, `take_order`'s included",
+        "correct": true,
+        "why": "One app is one file imported once per instance, so the order API's cold starts carry the report's library."
+      },
+      {
+        "text": "Nobody, because Flex Consumption imports each function separately",
+        "correct": false,
+        "why": "Flex scales functions on separate instances, but each instance still imports the whole `function_app.py`."
+      },
+      {
+        "text": "Only warm requests, which re-import the library each time",
+        "correct": false,
+        "why": "Python keeps a module once imported; the cost is at the import, which is the cold start."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmbr8qqg",
+    "version": 1,
+    "section": "the-cold-start",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Microsoft's guidance says to create clients at module level in Python. What does that do to the cold start?",
+    "choices": [
+      {
+        "text": "Shortens it, because the client is built before the instance exists",
+        "correct": false,
+        "why": "Module level runs during the import, on the instance; it is part of the cold start."
+      },
+      {
+        "text": "Lengthens it a little, so that every warm call reuses the client",
+        "correct": true,
+        "why": "The client is built once at the import, and each warm request uses the connection instead of opening one."
+      },
+      {
+        "text": "Nothing, since clients are built by the host and not by the worker",
+        "correct": false,
+        "why": "A client your code builds is your code's; only bindings are the host's."
+      },
+      {
+        "text": "Removes it, because a module-level client keeps the instance warm",
+        "correct": false,
+        "why": "Nothing in your code decides whether the platform keeps an instance; that is the plan's."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mde2fc6",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`first200` counted about forty `000` codes before the first `200`. What does `000` mean there?",
+    "choices": [
+      {
+        "text": "No HTTP answer at all: nothing listened on 7071 yet",
+        "correct": true,
+        "why": "`000` is `curl`'s code for no HTTP answer; nothing listened on 7071 until the host was ready."
+      },
+      {
+        "text": "The function ran and returned an empty body",
+        "correct": false,
+        "why": "A function that ran would give a real status, 200 or 500; `000` is no answer at all."
+      },
+      {
+        "text": "The host answered that it was still starting",
+        "correct": false,
+        "why": "A host answering would send a real HTTP status; on the laptop it sent nothing until it was ready."
+      },
+      {
+        "text": "Azurite refused the host's storage connection",
+        "correct": false,
+        "why": "That would show in the host's log, not as `curl`'s status for a request to the app."
+      }
+    ]
+  },
+  {
+    "id": "ex-e97qfpsz",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each run of `first200` begin with `docker rm -f cold`?",
+    "choices": [
+      {
+        "text": "To clear Azurite's lease, which would otherwise block the host",
+        "correct": false,
+        "why": "The lease is in Azurite, which keeps running; each new container takes a lease of its own."
+      },
+      {
+        "text": "So each run starts with no instance at all: a cold start",
+        "correct": true,
+        "why": "A container that is already running is a warm instance; removing it makes the next `docker run` a start from nothing."
+      },
+      {
+        "text": "Because Docker cannot publish port 7071 twice in one minute",
+        "correct": false,
+        "why": "The port is freed when the container is removed; there is no wait. Two running containers are what would collide."
+      },
+      {
+        "text": "To delete the image, so the build is measured too",
+        "correct": false,
+        "why": "`docker rm` removes a container, not an image; the build is done once, before the runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-r81z47bj",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shopfn:slow` sleeps for 8 seconds at import. In the laptop's log, the start script's first line came 12.43 s before `Initializing Host`, against 5.09 s for `shopfn:1`. How many seconds longer is that, to two decimals?",
+    "hint": "A little less than the sleep: part of a short import hides behind the host's own start.",
+    "value": 7.34,
+    "tolerance": 0.01,
+    "unit": "s"
+  },
+  {
+    "id": "ex-63sshsdy",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `--cpus 0.25`, the same image took about three times as long to its first 200 as with a whole processor. What does that suggest about a 512 MB Flex Consumption instance?",
+    "choices": [
+      {
+        "text": "Nothing, because Flex gives every size the same processor",
+        "correct": false,
+        "why": "The documentation pairs 512 MB with a quarter of a core and 2,048 MB with one; memory and processor come together."
+      },
+      {
+        "text": "A longer cold start, since it gets a quarter of a core",
+        "correct": true,
+        "why": "Starting the host is computation, and the laptop's analogue slowed as the processor shrank; Azure's own figure was not measured."
+      },
+      {
+        "text": "It will be refused for Python, which needs a whole core",
+        "correct": false,
+        "why": "Nothing in the documentation ties Python to a size; all three are offered."
+      },
+      {
+        "text": "Its cold start is three times as long in Azure, exactly",
+        "correct": false,
+        "why": "The laptop's ratio is the laptop's; it suggests a direction, not Azure's number."
+      }
+    ]
+  },
+  {
+    "id": "ex-mveepw3r",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the timestamped log, about five seconds pass between the start script's first line and `Initializing Host`. Which of these is it fair to conclude?",
+    "choices": [
+      {
+        "text": "Azure's cold start for this app is about five seconds",
+        "correct": false,
+        "why": "These are the laptop's numbers; Azure's platform steps, and its placeholders, were not measured."
+      },
+      {
+        "text": "The function itself is slow, and should be rewritten",
+        "correct": false,
+        "why": "Once ready, `take_order` answered in milliseconds; the seconds are spent before any function runs."
+      },
+      {
+        "text": "On the laptop, most of the wait comes before the host logs anything about the app",
+        "correct": true,
+        "why": "The function's own time is small next to it; that is the shape the laptop shows, and only the shape transfers."
+      },
+      {
+        "text": "Azurite is slow to answer, and a real storage account would remove it",
+        "correct": false,
+        "why": "Nothing in the log points at storage; the gap is before the host has initialised at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-xk2e1h33",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `plans.py`'s illustrative rates, one order on a 2 GB instance billed for 1 second costs 0.0000524 USD. How many orders a month cost the same as the always-on instance at 150 USD? Round to the nearest thousand.",
+    "value": 2863000,
+    "tolerance": 1000,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-wx3w9qjp",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Keep `plans.py`'s rates, but put the order API on a 512 MB instance, which is 0.5 GB, still billed 1 second an order. What does one order cost, in USD?",
+    "hint": "0.5 GB × 1 s × 0.000026, plus the execution's share of 0.40 per million.",
+    "value": 1.34e-05,
+    "tolerance": 2e-07,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-53j048sq",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's order API takes about 400,000 orders a month, roughly 0.15 a second, mostly in the daytime. With `plans.py`'s illustrative rates, what does keeping one instance always on buy it?",
+    "choices": [
+      {
+        "text": "A lower bill, since the shop is above the break-even",
+        "correct": false,
+        "why": "The break-even is about 1.09 a second; at 0.15 a second, on demand costs about 21 USD against 150."
+      },
+      {
+        "text": "Nothing at all: on demand already has no cold start at this rate",
+        "correct": false,
+        "why": "At night the app goes idle for minutes at a time, and the next order meets a cold start."
+      },
+      {
+        "text": "The end of the morning's cold starts, for most of the 150 USD",
+        "correct": true,
+        "why": "On demand costs about 21 USD here, so the instance is roughly 129 USD a month spent on latency, not saved."
+      },
+      {
+        "text": "A higher limit on instances, which on demand caps at one",
+        "correct": false,
+        "why": "On-demand Flex scales out to its maximum instance count, 100 by default; nothing caps it at one."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7cxyfpv",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Microsoft's cost example runs 40 requests a second, 10 at a time, on 2 GB Flex instances. Why is the IO-bound case about 0.25 USD an hour and the CPU-bound one about 1.93?",
+    "choices": [
+      {
+        "text": "CPU time is billed on Flex and waiting is not",
+        "correct": false,
+        "why": "The documentation bills memory while an instance executes; CPU does not appear in the meter."
+      },
+      {
+        "text": "The CPU-bound app pays a higher rate per GB-second",
+        "correct": false,
+        "why": "Both cases use the same assumed rate, 0.000026 per GB-second."
+      },
+      {
+        "text": "The IO-bound requests are fewer, so fewer executions are billed",
+        "correct": false,
+        "why": "Both run the same 144,000 executions an hour, 0.0576 USD of the total."
+      },
+      {
+        "text": "Ten requests share one active instance instead of keeping ten active",
+        "correct": true,
+        "why": "The meter counts the memory of active instances, so one busy instance costs a tenth of ten busy ones for the same work."
+      }
+    ]
+  },
+  {
+    "id": "ex-5w831se2",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose the free grant were 100,000 GB-s a month, a number invented for this question. With 2 GB billed for 1 second an order, by how many orders a month does the grant move the break-even up?",
+    "hint": "Each order uses 2 GB-s of the grant before it costs anything.",
+    "value": 50000,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-qt3xxynr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which plan answers a request with no cold start and also scales to zero when nobody calls?",
+    "choices": [
+      {
+        "text": "Premium, with its prewarmed instances",
+        "correct": false,
+        "why": "Premium always keeps at least one billed instance; it never scales to zero."
+      },
+      {
+        "text": "Dedicated, with Always On",
+        "correct": false,
+        "why": "Always On keeps the host running on the plan's instances, which is the opposite of scaling to zero."
+      },
+      {
+        "text": "Flex Consumption, with one always ready instance per group",
+        "correct": false,
+        "why": "An always ready instance is never taken away, so the group does not go to zero while it has one."
+      },
+      {
+        "text": "None of them: an instance kept ready is an instance kept",
+        "correct": true,
+        "why": "Removing the cold start means something is running before the request, and that is what scaling to zero gives up."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mceafnv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting with the plan it belongs to.",
+    "pairs": [
+      {
+        "left": "`--always-ready-instances http=1`",
+        "right": "Flex Consumption"
+      },
+      {
+        "left": "`--sku EP1 --max-burst 10`",
+        "right": "Premium"
+      },
+      {
+        "left": "Always On",
+        "right": "Dedicated"
+      },
+      {
+        "left": "`--min-replicas 1`",
+        "right": "Container Apps"
+      }
+    ],
+    "right_distractors": [
+      "Consumption (legacy)"
+    ]
+  },
+  {
+    "id": "ex-x1525m10",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plan named `P1V2` scales by hand or by autoscale rules and never on events, because despite its letter it is not Elastic Premium but a ___ plan.",
+    "blanks": [
+      {
+        "accept": [
+          "Dedicated",
+          "App Service",
+          "Dedicated (App Service)"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-43zs6ehw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The finance export runs once a night, is triggered from a queue, and takes four minutes. On demand, at `plans.py`'s rates, what is the case for paying for an always-on instance for it?",
+    "choices": [
+      {
+        "text": "Its cold start delays a customer, so readiness is worth the price",
+        "correct": false,
+        "why": "A queue trigger has nobody waiting; a few seconds of start add a few seconds to a file read in the morning."
+      },
+      {
+        "text": "It runs longer than the five-minute limit and needs Premium",
+        "correct": false,
+        "why": "Four minutes is under every plan's default, and Flex's default is 30 minutes anyway."
+      },
+      {
+        "text": "Hardly any: nobody waits, and it bills minutes a night",
+        "correct": true,
+        "why": "Four minutes of a 2 GB instance is about 0.012 USD a night at these rates; readiness buys nothing anyone sees."
+      },
+      {
+        "text": "On demand cannot run a queue trigger without one instance kept",
+        "correct": false,
+        "why": "Flex scales queue triggers from zero on events; nothing needs to be kept."
+      }
+    ]
+  }
+]

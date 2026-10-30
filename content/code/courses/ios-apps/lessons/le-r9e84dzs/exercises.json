@@ -1,0 +1,729 @@
+[
+  {
+    "id": "ex-210p7w5d",
+    "version": 1,
+    "section": "why-a-repository",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What went wrong with lesson 12's `CourseListView` on a train with no signal?",
+    "hint": "The phone had seen the courses that morning.",
+    "choices": [
+      {
+        "text": "It crashed on the `DecodingError`",
+        "correct": false,
+        "why": "No body arrived to decode; the request failed before that."
+      },
+      {
+        "text": "It showed an error, though nothing had changed",
+        "correct": true,
+        "why": "Right: it asked the network every time, and nothing kept the courses it had already seen."
+      },
+      {
+        "text": "It showed yesterday's courses with no warning that they were old",
+        "correct": false,
+        "why": "It showed nothing old at all; it had kept nothing."
+      },
+      {
+        "text": "It kept retrying and drained the battery",
+        "correct": false,
+        "why": "Lesson 12's screen retries only when the person presses the button."
+      }
+    ]
+  },
+  {
+    "id": "ex-zs1cg9j3",
+    "version": 1,
+    "section": "why-a-repository",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `PlannerRepository` hold a `PlanSource` and a `PlanStore` rather than an `APIClient` and a `FileStore`?",
+    "hint": "Think of the tests in section 06.",
+    "choices": [
+      {
+        "text": "Because actors cannot hold structs",
+        "correct": false,
+        "why": "Actors hold structs; `snapshot` is one."
+      },
+      {
+        "text": "To make the compiled app smaller on the phone",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "So a test, or SwiftData later, stands in for either one",
+        "correct": true,
+        "why": "Right: the repository is written against what they can do, not what they are."
+      },
+      {
+        "text": "Because `APIClient` cannot be used inside an actor",
+        "correct": false,
+        "why": "It can; it is `Sendable`, and it is the source in `repo`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hx4n57w6",
+    "version": 1,
+    "section": "why-a-repository",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are promises the repository makes to the screens? Choose all that apply.",
+    "hint": "Section 02 lists three.",
+    "choices": [
+      {
+        "text": "A read answers at once with what the device has",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A write waits until the server confirms it",
+        "correct": false,
+        "why": "No: a write lands on the device first."
+      },
+      {
+        "text": "A failed request never empties the device's plan",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The server never refuses a session the device accepted",
+        "correct": false,
+        "why": "No: it can, and the repository reports it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wap78nxy",
+    "version": 1,
+    "section": "the-protocols",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `extension APIClient: PlanSource {}` empty?",
+    "hint": "Compare the protocol with lesson 12's client.",
+    "choices": [
+      {
+        "text": "Its methods are added later, in section 04",
+        "correct": false,
+        "why": "Nothing is added later; the conformance is complete."
+      },
+      {
+        "text": "Protocols in Swift provide every method by default",
+        "correct": false,
+        "why": "Only with a protocol extension, and `PlanSource` has none."
+      },
+      {
+        "text": "It already has all three methods",
+        "correct": true,
+        "why": "Right: the protocol is the client's signatures with the bodies removed."
+      },
+      {
+        "text": "An empty extension marks `APIClient` as deprecated in favour of the repository",
+        "correct": false,
+        "why": "Nothing is deprecated; the repository uses the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-60wxhwdc",
+    "version": 1,
+    "section": "the-protocols",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`FileStore.save` writes with `.atomic`. What does that protect against?",
+    "hint": "What would an app killed mid-write leave behind?",
+    "choices": [
+      {
+        "text": "Half a file after a crash",
+        "correct": true,
+        "why": "Right: it writes elsewhere and renames, so the old file stays whole until the new one is complete."
+      },
+      {
+        "text": "Two screens saving at the same moment from different threads",
+        "correct": false,
+        "why": "That is the actor's job; `.atomic` is about one write being whole."
+      },
+      {
+        "text": "Another app reading the planner's file",
+        "correct": false,
+        "why": "Other apps cannot reach it in the first place; that is the sandbox."
+      },
+      {
+        "text": "A disk that is full",
+        "correct": false,
+        "why": "A full disk still fails the write; `storeError` is what reports it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce75x1ze",
+    "version": 1,
+    "section": "the-protocols",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The sessions added on the device that the server has not confirmed are kept in the snapshot's list called ___.",
+    "hint": "It is the list `sync` walks.",
+    "blanks": [
+      {
+        "accept": [
+          "pending"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kszxn4zm",
+    "version": 1,
+    "section": "read-offline-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A refresh gets the courses, then fails on the second course's sessions. What does the device's plan look like afterwards?",
+    "hint": "Where does `refresh` assign to the snapshot?",
+    "choices": [
+      {
+        "text": "The new courses, and the first course's sessions only",
+        "correct": false,
+        "why": "Nothing is assigned until every request has succeeded."
+      },
+      {
+        "text": "Exactly as it was before the refresh",
+        "correct": true,
+        "why": "Right: the `throw` leaves before the snapshot is touched."
+      },
+      {
+        "text": "Empty, until the next refresh works",
+        "correct": false,
+        "why": "Emptying the plan on a failure is what the repository exists to prevent."
+      },
+      {
+        "text": "The new courses with no sessions",
+        "correct": false,
+        "why": "The courses are not assigned either."
+      }
+    ]
+  },
+  {
+    "id": "ex-kfnf20yq",
+    "version": 1,
+    "section": "read-offline-first",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the first successful refresh, how many minutes did the week of 19 October have planned?",
+    "hint": "The server's four sessions, three of them in that week.",
+    "value": 150,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-xebjrcvy",
+    "version": 1,
+    "section": "read-offline-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `plan` a computed property of the actor and not an `async` function that asks the server?",
+    "hint": "What would a screen wait for?",
+    "choices": [
+      {
+        "text": "Because actors cannot have `async` functions",
+        "correct": false,
+        "why": "`refresh` and `sync` are `async` functions of the same actor."
+      },
+      {
+        "text": "To avoid decoding JSON twice",
+        "correct": false,
+        "why": "Decoding is not what it saves."
+      },
+      {
+        "text": "Because SwiftUI cannot call an `async` function",
+        "correct": false,
+        "why": "SwiftUI calls them from `task` and `refreshable`."
+      },
+      {
+        "text": "So a read never waits for the network, whatever it is doing",
+        "correct": true,
+        "why": "Right: reading is building a plan from two arrays already on the device."
+      }
+    ]
+  },
+  {
+    "id": "ex-86p3adck",
+    "version": 1,
+    "section": "read-offline-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`repo` run with no command printed `2 courses, 4 sessions` with the server stopped. Where did they come from?",
+    "hint": "The previous run saved something.",
+    "choices": [
+      {
+        "text": "`planner.json`, saved by the last refresh",
+        "correct": true,
+        "why": "Right: `PlannerRepository` loads the store when it is made."
+      },
+      {
+        "text": "A cache inside `URLSession` that answered for the server",
+        "correct": false,
+        "why": "`repo` with no command makes no request at all."
+      },
+      {
+        "text": "The sample data written into `repo`'s `main.swift`",
+        "correct": false,
+        "why": "`repo` has no sample data; the first run printed 0 courses."
+      },
+      {
+        "text": "The server, which keeps running after `Ctrl-C` for a minute",
+        "correct": false,
+        "why": "`Ctrl-C` stops it; the read came from the device."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4x9xmdw",
+    "version": 1,
+    "section": "writes-and-sync",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `add` does with a new session in order.",
+    "hint": "Check, keep, save, send.",
+    "items": [
+      "Check it against the plan the device has",
+      "Append it to `pending`",
+      "Save the snapshot to the store",
+      "Call `sync`, which tries to send it"
+    ]
+  },
+  {
+    "id": "ex-vm8x4wcc",
+    "version": 1,
+    "section": "writes-and-sync",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `repo add s5` with the server stopped, how many minutes did the week have planned?",
+    "hint": "The waiting session counts already.",
+    "value": 180,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-ztvhvtyc",
+    "version": 1,
+    "section": "writes-and-sync",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sync` gets `status(422, \"no course art\")` for a pending session. What does it do with it?",
+    "hint": "Will the server ever accept it?",
+    "choices": [
+      {
+        "text": "Keeps it pending, to try again on the next sync",
+        "correct": false,
+        "why": "A 4xx will not change; it would be sent for ever."
+      },
+      {
+        "text": "Drops it and returns its id",
+        "correct": true,
+        "why": "Right, so the screen can say what was not kept."
+      },
+      {
+        "text": "Moves it to the confirmed sessions anyway",
+        "correct": false,
+        "why": "The server refused it; calling it confirmed would be a lie."
+      },
+      {
+        "text": "Creates the course `art` on the server and resends it",
+        "correct": false,
+        "why": "The client has no way to create courses, and should not guess."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1hzzqs5",
+    "version": 1,
+    "section": "writes-and-sync",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what came back to what `sync` does.",
+    "hint": "Will trying again help?",
+    "pairs": [
+      {
+        "left": "`offline(\"notConnectedToInternet\")`",
+        "right": "Keeps it pending"
+      },
+      {
+        "left": "`status(422, …)`",
+        "right": "Drops it and reports the id"
+      },
+      {
+        "left": "The session, sent back",
+        "right": "Moves it to the confirmed sessions"
+      }
+    ],
+    "right_distractors": [
+      "Deletes the device's file"
+    ]
+  },
+  {
+    "id": "ex-xet89wgq",
+    "version": 1,
+    "section": "a-fake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can the repository's tests run without starting `serve.py`?",
+    "hint": "What does the repository know about its source?",
+    "choices": [
+      {
+        "text": "Swift Testing starts a server for each test",
+        "correct": false,
+        "why": "It starts nothing; the tests bring their own source."
+      },
+      {
+        "text": "It is handed a `FakeSource` instead",
+        "correct": true,
+        "why": "Right: anything that conforms will do."
+      },
+      {
+        "text": "`URLSession` answers from a recorded file in tests",
+        "correct": false,
+        "why": "No request is made at all."
+      },
+      {
+        "text": "They skip every test that would need the network",
+        "correct": false,
+        "why": "All eight ran and passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jjbmqq5",
+    "version": 1,
+    "section": "a-fake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each test make its own file with a fresh `UUID` in the name?",
+    "hint": "Swift Testing runs tests at the same time.",
+    "choices": [
+      {
+        "text": "Because `FileStore` refuses to open a file twice",
+        "correct": false,
+        "why": "It does not; two tests would happily share and break each other."
+      },
+      {
+        "text": "To make the tests run faster",
+        "correct": false,
+        "why": "Speed is not it."
+      },
+      {
+        "text": "So parallel tests never read each other's plan",
+        "correct": true,
+        "why": "Right: a shared file would make a test pass or fail by timing."
+      },
+      {
+        "text": "Because the temporary directory is emptied after each test",
+        "correct": false,
+        "why": "Nothing empties it between tests."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfze18fn",
+    "version": 1,
+    "section": "a-fake",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests passed in section 06's run?",
+    "hint": "Lesson 1, lesson 12 and this lesson.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n7k4h04z",
+    "version": 1,
+    "section": "a-fake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `FakeSource.add`, `loseNextAnswer` keeps the session and then throws `timedOut`. Which real situation is that?",
+    "hint": "The server did the work.",
+    "choices": [
+      {
+        "text": "A phone with no signal at all",
+        "correct": false,
+        "why": "Then the server would not have kept it; that is the `online` switch."
+      },
+      {
+        "text": "A server that refuses an unknown course",
+        "correct": false,
+        "why": "That is the 422 path, with no session kept."
+      },
+      {
+        "text": "A request that arrived and was done, whose answer never got back",
+        "correct": true,
+        "why": "Right: the phone cannot tell it from a request that never arrived."
+      },
+      {
+        "text": "A request cancelled by the screen",
+        "correct": false,
+        "why": "Cancelled is its own case; this is a timeout after the work was done."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqnf757k",
+    "version": 1,
+    "section": "errors-across",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes it safe for `sync` to send a session a second time after a timeout?",
+    "hint": "It is a rule on the server.",
+    "choices": [
+      {
+        "text": "`URLSession` deduplicates repeated `POST` requests",
+        "correct": false,
+        "why": "It sends what it is given."
+      },
+      {
+        "text": "The server keeps a repeated id once",
+        "correct": true,
+        "why": "Right: the id is made on the device, so the second post is recognisably the same session."
+      },
+      {
+        "text": "The repository waits long enough for the first answer",
+        "correct": false,
+        "why": "The first answer will never come; waiting cannot fix it."
+      },
+      {
+        "text": "The timeout cancels the first request on the server",
+        "correct": false,
+        "why": "Lesson 12's log showed the server finishing requests the client had abandoned."
+      }
+    ]
+  },
+  {
+    "id": "ex-p44kdyg7",
+    "version": 1,
+    "section": "errors-across",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An operation that gives the same result however many times it is repeated is called ___.",
+    "hint": "The server's half of offline-first.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-grajqz62",
+    "version": 1,
+    "section": "errors-across",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`repo add s6 art …` printed `not added: unknownCourse(\"art\")`. Which code refused it?",
+    "hint": "It happened before anything was saved or sent.",
+    "choices": [
+      {
+        "text": "The server, with a 422",
+        "correct": false,
+        "why": "A 422 would come back as a refused id from `sync`, not as a `PlanError`."
+      },
+      {
+        "text": "`FileStore`, which checks course ids on save",
+        "correct": false,
+        "why": "The store saves whatever it is given."
+      },
+      {
+        "text": "Lesson 1's `Plan.add`",
+        "correct": true,
+        "why": "Right: the repository checks a write against the plan before keeping it."
+      },
+      {
+        "text": "`APIClient.add`, before sending",
+        "correct": false,
+        "why": "The client sends what it is given and reports what came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgjmnpd8",
+    "version": 1,
+    "section": "errors-across",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the repository record `storeError` instead of using `try?` on `save`?",
+    "hint": "What would the person be told otherwise?",
+    "choices": [
+      {
+        "text": "Because `try?` does not compile inside an actor",
+        "correct": false,
+        "why": "It compiles anywhere."
+      },
+      {
+        "text": "Silence would claim a session was saved",
+        "correct": true,
+        "why": "Right: a silent failure here loses the person's work without a word."
+      },
+      {
+        "text": "To retry the save automatically on the next launch",
+        "correct": false,
+        "why": "Nothing retries it; it is reported."
+      },
+      {
+        "text": "Because a failed save would also fail the network request",
+        "correct": false,
+        "why": "The two are independent."
+      }
+    ]
+  },
+  {
+    "id": "ex-grdf4k47",
+    "version": 1,
+    "section": "wiring-views",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `PlannerModel.refresh`, why is `show()` called before the repository's refresh?",
+    "hint": "Section 04's promise.",
+    "choices": [
+      {
+        "text": "Because `refresh` throws away the plan",
+        "correct": false,
+        "why": "A refresh that fails changes nothing."
+      },
+      {
+        "text": "To draw the device's plan first",
+        "correct": true,
+        "why": "Right: the screen is never empty while it waits."
+      },
+      {
+        "text": "To cancel any earlier refresh",
+        "correct": false,
+        "why": "`show` only reads; cancelling is `task`'s job."
+      },
+      {
+        "text": "Because SwiftUI requires one read before every write",
+        "correct": false,
+        "why": "There is no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-hd7n4bva",
+    "version": 1,
+    "section": "wiring-views",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `refreshable` add to the list in `CourseListView`?",
+    "hint": "A gesture people already know.",
+    "choices": [
+      {
+        "text": "A button in the toolbar",
+        "correct": false,
+        "why": "It adds a gesture, not a button."
+      },
+      {
+        "text": "A timer that refreshes every minute",
+        "correct": false,
+        "why": "Nothing runs on a timer."
+      },
+      {
+        "text": "Pull to refresh, with the system's spinner",
+        "correct": true,
+        "why": "Right: the spinner shows while the closure runs."
+      },
+      {
+        "text": "A background refresh when the app is closed",
+        "correct": false,
+        "why": "That is lesson 16, and it is not `refreshable`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3w10hsgn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the train, a student adds a session, closes the app, and opens it at home on Wi-Fi. Trace what the repository does, in order. Which is right?",
+    "hint": "The file survives the app closing.",
+    "choices": [
+      {
+        "text": "Loads the file with the pending session, shows it, refreshes, and `sync` sends it",
+        "correct": true,
+        "why": "Right: the pending list was saved before the app closed."
+      },
+      {
+        "text": "Starts empty, since pending sessions live only in memory",
+        "correct": false,
+        "why": "`pending` is in the snapshot, and the snapshot is saved on every change."
+      },
+      {
+        "text": "Refreshes first, and the refresh deletes the pending session",
+        "correct": false,
+        "why": "A refresh replaces the server's half and leaves `pending` alone."
+      },
+      {
+        "text": "Asks the student whether to send the session",
+        "correct": false,
+        "why": "Sending is automatic; asking would be a question nobody can answer well."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8y72kt4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of this lesson was NOT run on the Linux machine?",
+    "hint": "SwiftUI is the line.",
+    "choices": [
+      {
+        "text": "The four repository tests",
+        "correct": false,
+        "why": "They ran under `swift test` in section 06."
+      },
+      {
+        "text": "`repo add` with the server stopped",
+        "correct": false,
+        "why": "It ran: section 05 shows it."
+      },
+      {
+        "text": "`PlannerModel` and `CourseListView` with `refreshable`",
+        "correct": true,
+        "why": "Right: section 08 is SwiftUI, written from Apple's documentation and not run."
+      },
+      {
+        "text": "Reading `planner.json` with `grep`",
+        "correct": false,
+        "why": "It ran: section 05 shows the pending list."
+      }
+    ]
+  }
+]

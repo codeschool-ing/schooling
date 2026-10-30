@@ -1,0 +1,621 @@
+[
+  {
+    "id": "ex-sfde5mra",
+    "version": 1,
+    "section": "backfill-and-cdc",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each need to the service that answers it.",
+    "hint": "Where does each one end?",
+    "pairs": [
+      {
+        "left": "the warehouse follows a live database within minutes",
+        "right": "Datastream"
+      },
+      {
+        "left": "the database itself moves to Cloud SQL",
+        "right": "Database Migration Service"
+      },
+      {
+        "left": "a load once a night is enough",
+        "right": "BigQuery Data Transfer Service"
+      }
+    ],
+    "right_distractors": [
+      "Cloud Scheduler"
+    ]
+  },
+  {
+    "id": "ex-kqgasfn9",
+    "version": 1,
+    "section": "backfill-and-cdc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a stream note the position in the source's log before it copies the first table?",
+    "hint": "What happens to a change made while a table is being copied?",
+    "choices": [
+      {
+        "text": "So the copy can skip rows that will change",
+        "correct": false,
+        "why": "Nothing is skipped; the copy reads what is there, and the changes are applied after it."
+      },
+      {
+        "text": "So that no change made during the copy is lost",
+        "correct": true,
+        "why": "Right: everything after that position is captured, so nothing falls between copied and captured."
+      },
+      {
+        "text": "Because the log is deleted once the copy starts",
+        "correct": false,
+        "why": "The log is kept, by the slot, until the reader confirms it."
+      },
+      {
+        "text": "To lock the tables against writes during the copy",
+        "correct": false,
+        "why": "Writes go on during the backfill; avoiding a lock is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy6k90t8",
+    "version": 1,
+    "section": "backfill-and-cdc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A stream is created with --backfill-none. What does it copy?",
+    "hint": "Backfill is one half.",
+    "choices": [
+      {
+        "text": "The tables once, and no changes",
+        "correct": false,
+        "why": "That is the opposite: no backfill means no copy of the tables."
+      },
+      {
+        "text": "Nothing until a backfill is started by hand",
+        "correct": false,
+        "why": "It streams changes from the moment it starts."
+      },
+      {
+        "text": "Only the changes from the moment it starts",
+        "correct": true,
+        "why": "Right: for tables already loaded some other way."
+      },
+      {
+        "text": "The tables and the changes, more slowly",
+        "correct": false,
+        "why": "That is --backfill-all, at the same speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-92h0dg5v",
+    "version": 1,
+    "section": "backfill-and-cdc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants every past state of each order kept in BigQuery, not only the current one. Which destination setting fits?",
+    "hint": "One mode writes every change as a new row.",
+    "choices": [
+      {
+        "text": "Merge mode with a short dataFreshness",
+        "correct": false,
+        "why": "Merge keeps the current state of each row, however often it is refreshed."
+      },
+      {
+        "text": "Append-only mode",
+        "correct": true,
+        "why": "Right: every change becomes a row, and the history is a query."
+      },
+      {
+        "text": "A Cloud Storage destination with Avro files rotated every 15 seconds",
+        "correct": false,
+        "why": "Files would keep the changes, and the requirement is a BigQuery table."
+      },
+      {
+        "text": "REPLICA IDENTITY DEFAULT on the source",
+        "correct": false,
+        "why": "That decides how much of the old row the log carries, not how BigQuery stores the changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-74447r2x",
+    "version": 1,
+    "section": "streams-and-profiles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which two names does a PostgreSQL source configuration for Datastream carry?",
+    "hint": "The help printed them.",
+    "choices": [
+      {
+        "text": "A replication slot and a publication",
+        "correct": true,
+        "why": "Right: replicationSlot and publication."
+      },
+      {
+        "text": "A subscription and a trigger",
+        "correct": false,
+        "why": "Datastream reads a slot; it neither subscribes nor installs triggers."
+      },
+      {
+        "text": "The output plugin and the WAL segment size",
+        "correct": false,
+        "why": "The plugin belongs to the slot, and the segment size to the server."
+      },
+      {
+        "text": "A secret and a role",
+        "correct": false,
+        "why": "The secret is the connection profile's, not the source configuration's."
+      }
+    ]
+  },
+  {
+    "id": "ex-4w673vcv",
+    "version": 1,
+    "section": "streams-and-profiles",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the Datastream user on the shop's PostgreSQL need? Choose all that apply.",
+    "hint": "It reads the log and the tables.",
+    "choices": [
+      {
+        "text": "The REPLICATION attribute",
+        "correct": true,
+        "why": "Yes: to read the log through a slot."
+      },
+      {
+        "text": "SELECT on the tables it copies",
+        "correct": true,
+        "why": "Yes: for the backfill."
+      },
+      {
+        "text": "INSERT on the tables, to mark what it read",
+        "correct": false,
+        "why": "The slot remembers what was read; a CDC user that can write can change the history."
+      },
+      {
+        "text": "Superuser, to create the slot during the stream",
+        "correct": false,
+        "why": "The slot and the publication are created beforehand, and the stream names them."
+      }
+    ]
+  },
+  {
+    "id": "ex-haas05ea",
+    "version": 1,
+    "section": "streams-and-profiles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's database is in a rack, reached from Google Cloud over a VPN. Which connectivity does the section choose for the source profile, and why?",
+    "hint": "Which options bring the database closer to the internet?",
+    "choices": [
+      {
+        "text": "Static IP connectivity, because it needs no VPC",
+        "correct": false,
+        "why": "It works by admitting Google addresses through the database's firewall, which puts it closer to the internet."
+      },
+      {
+        "text": "An SSH bastion, because it is the quickest to set up",
+        "correct": false,
+        "why": "Quick, and a host facing the internet in front of the shop's database."
+      },
+      {
+        "text": "A private connection peered with a VPC that reaches the rack",
+        "correct": true,
+        "why": "Right: the database stays off the internet, and the VPN does the rest."
+      },
+      {
+        "text": "None: Datastream reaches 198.51.100.20 directly",
+        "correct": false,
+        "why": "That address is in a rack with no reason to be on the internet; something has to carry the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-7eww1e5x",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For a PostgreSQL server to write enough to its log for change data capture, `wal_level` must be ___.",
+    "hint": "SHOW wal_level printed it.",
+    "blanks": [
+      {
+        "accept": [
+          "logical"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v2pqk55s",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The text slot was read with get, then read again with get at once. What did the second read return, and why?",
+    "hint": "peek and get differ in one thing.",
+    "choices": [
+      {
+        "text": "The same nine rows, because get never moves the bookmark",
+        "correct": false,
+        "why": "That is peek; get moves the bookmark past what it returned."
+      },
+      {
+        "text": "An error, because the slot was dropped",
+        "correct": false,
+        "why": "The slot still existed; it simply had nothing new."
+      },
+      {
+        "text": "Zero rows, because get had moved the bookmark",
+        "correct": true,
+        "why": "Right: once a reader takes its changes, the server forgets them for that slot."
+      },
+      {
+        "text": "Only the commits, because the rows had been applied",
+        "correct": false,
+        "why": "Nothing is applied by reading a slot; it returned nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-0y09t206",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each first byte of a pgoutput message to what it is.",
+    "hint": "One of them describes the table, once.",
+    "pairs": [
+      {
+        "left": "B",
+        "right": "begins a transaction"
+      },
+      {
+        "left": "R",
+        "right": "describes the table's columns"
+      },
+      {
+        "left": "U",
+        "right": "an update"
+      },
+      {
+        "left": "C",
+        "right": "commits the transaction"
+      }
+    ],
+    "right_distractors": [
+      "a checkpoint"
+    ]
+  },
+  {
+    "id": "ex-f3w747vf",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the default replica identity, what does the log carry for a deleted order?",
+    "hint": "Read the DELETE line of the text slot.",
+    "choices": [
+      {
+        "text": "The whole row as it was",
+        "correct": false,
+        "why": "That needs REPLICA IDENTITY FULL."
+      },
+      {
+        "text": "Only the primary key",
+        "correct": true,
+        "why": "Right: order_id, which is enough to find and delete the row on the destination."
+      },
+      {
+        "text": "Nothing: deletes are not logged",
+        "correct": false,
+        "why": "The DELETE was there, with its transaction."
+      },
+      {
+        "text": "The row number in the table file",
+        "correct": false,
+        "why": "Logical decoding reports values, not physical positions."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yjef9aa",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stream is paused for a long weekend on a busy source with no max_slot_wal_keep_size. What happens on the source?",
+    "hint": "What does a slot keep, and for how long?",
+    "choices": [
+      {
+        "text": "The slot is dropped after an hour of inactivity",
+        "correct": false,
+        "why": "No such timer exists by default; the slot waits for its reader."
+      },
+      {
+        "text": "WAL piles up until the reader returns or the disk fills",
+        "correct": true,
+        "why": "Right: the slot keeps everything its reader has not confirmed, without limit by default."
+      },
+      {
+        "text": "Writes are refused until the stream resumes",
+        "correct": false,
+        "why": "The source keeps writing; it is the log behind the writes that grows."
+      },
+      {
+        "text": "Nothing, because Datastream reads the changes from BigQuery afterwards",
+        "correct": false,
+        "why": "The changes exist only in the source's log until a reader takes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-7m6z8d97",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With max_slot_wal_keep_size at 32MB, the slot fell 71 MB behind and a checkpoint ran. What did the setting save, and what did it cost?",
+    "hint": "Read wal_status before and after.",
+    "choices": [
+      {
+        "text": "It saved the stream and cost the disk",
+        "correct": false,
+        "why": "The other way round: the log was removed, and the slot with it."
+      },
+      {
+        "text": "It saved the disk and lost the slot",
+        "correct": true,
+        "why": "Right: reading it is an error, and the way back is a new slot and a new backfill."
+      },
+      {
+        "text": "It saved both, by compressing the old log",
+        "correct": false,
+        "why": "Nothing was compressed; the segments past the limit were removed."
+      },
+      {
+        "text": "Nothing, because 32MB only applies to new slots",
+        "correct": false,
+        "why": "It applied to the existing slot at the next checkpoint."
+      }
+    ]
+  },
+  {
+    "id": "ex-7hyqwpqb",
+    "version": 1,
+    "section": "dms-and-transfers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a continuous migration job, which command makes the Cloud SQL destination a standalone primary?",
+    "hint": "The cutover has a name in DMS.",
+    "choices": [
+      {
+        "text": "migration-jobs stop",
+        "correct": false,
+        "why": "Stopping pauses the replication; the destination stays a replica."
+      },
+      {
+        "text": "migration-jobs verify",
+        "correct": false,
+        "why": "Verify runs the job's checks and changes nothing."
+      },
+      {
+        "text": "migration-jobs promote",
+        "correct": true,
+        "why": "Right: promote ends the replication and makes the destination accept writes."
+      },
+      {
+        "text": "migration-jobs demote-destination",
+        "correct": false,
+        "why": "Demote goes the other way, turning an instance back into a destination of replication."
+      }
+    ]
+  },
+  {
+    "id": "ex-td6kajpf",
+    "version": 1,
+    "section": "dms-and-transfers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the pricing page say a PostgreSQL to Cloud SQL for PostgreSQL migration costs in Database Migration Service itself?",
+    "hint": "Same engine on both sides.",
+    "choices": [
+      {
+        "text": "$3.176 a GiB of changes in São Paulo",
+        "correct": false,
+        "why": "That is the heterogeneous rate, for different engines."
+      },
+      {
+        "text": "No additional charge, though the destination is billed",
+        "correct": true,
+        "why": "Right: homogeneous migrations are offered at no additional charge, and Cloud SQL bills the instance."
+      },
+      {
+        "text": "A flat fee per migration job",
+        "correct": false,
+        "why": "The page has no per-job fee."
+      },
+      {
+        "text": "An hourly rate for the replication instance",
+        "correct": false,
+        "why": "There is no instance of yours to pay for in this service."
+      }
+    ]
+  },
+  {
+    "id": "ex-3atn7xqq",
+    "version": 1,
+    "section": "cutover-and-cost",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the cutover in the order that loses nothing.",
+    "hint": "The writers stop before anything is promoted.",
+    "items": [
+      "Run the job until it is quiet",
+      "Stop the writers on the source",
+      "Wait for the last changes and compare the counts",
+      "Promote the destination and point the applications at it",
+      "Drop the replication slot on the source"
+    ]
+  },
+  {
+    "id": "ex-d88sxzfy",
+    "version": 1,
+    "section": "cutover-and-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In São Paulo, Datastream CDC costs 3.176 USD a GiB for the first 2,500 GiB of a month. What do 80 GiB of processed changes cost, in USD, to two decimals?",
+    "hint": "All of it is in the first tier.",
+    "value": 254.08,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-p5m7b64q",
+    "version": 1,
+    "section": "cutover-and-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The program printed 190.56 and 476.40 for the same month of Quitanda's changes. What does the lesson say to do with the two numbers?",
+    "hint": "Where does the factor come from?",
+    "choices": [
+      {
+        "text": "Quote the average, 333.48, as the price",
+        "correct": false,
+        "why": "An average of two guesses is a third guess; the factor is measurable."
+      },
+      {
+        "text": "Run the stream for a week, read the processed bytes, then multiply",
+        "correct": true,
+        "why": "Right: the factor depends on the data, and a week of the real stream measures it."
+      },
+      {
+        "text": "Quote 190.56, since 2x is the page's usual case",
+        "correct": false,
+        "why": "The page gives a range of two to five, not a usual case."
+      },
+      {
+        "text": "Ignore both, because CDC under 2,500 GiB is free",
+        "correct": false,
+        "why": "The first tier is $3.176 a GiB; only AlloyDB and Spanner sources have 100 GiB free."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgcba5aw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A month after the cutover, the old shop database is running out of disk although nobody writes to it any more. What is the likely cause?",
+    "hint": "What was left behind?",
+    "choices": [
+      {
+        "text": "The backfill is still copying the tables",
+        "correct": false,
+        "why": "The backfill ended long before the cutover."
+      },
+      {
+        "text": "A replication slot that nobody reads, still holding WAL",
+        "correct": true,
+        "why": "Right: the sixth step of the cutover, dropping the slot, was skipped."
+      },
+      {
+        "text": "The publication duplicates every row it names",
+        "correct": false,
+        "why": "A publication only names tables; it stores nothing."
+      },
+      {
+        "text": "REPLICA IDENTITY FULL on a read-only table",
+        "correct": false,
+        "why": "It adds to updates and deletes, and a read-only table makes neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzfc47pq",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the two slots in the practice? Choose all that apply.",
+    "hint": "Same log, two bookmarks.",
+    "choices": [
+      {
+        "text": "Each saw the same three transactions",
+        "correct": true,
+        "why": "Yes: the same xids, 733 to 735, as text in one and binary in the other."
+      },
+      {
+        "text": "Reading one with get left the other's changes in place",
+        "correct": true,
+        "why": "Yes: each slot has its own bookmark."
+      },
+      {
+        "text": "The pgoutput slot reported ord-1's first insert",
+        "correct": false,
+        "why": "ord-1 was inserted before either slot existed, so neither reports it."
+      },
+      {
+        "text": "Both held the same retained size after the bulk insert",
+        "correct": true,
+        "why": "Yes: 3431 kB each, since neither had been read past the bulk insert."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9kjz2xv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Datastream's source configuration need a publication when its slot already exists?",
+    "hint": "What does pgoutput publish?",
+    "choices": [
+      {
+        "text": "pgoutput publishes only the tables the publication names",
+        "correct": true,
+        "why": "Right: the slot is the bookmark, and the publication is the list of tables."
+      },
+      {
+        "text": "The publication stores the changes until Datastream reads them",
+        "correct": false,
+        "why": "The slot keeps the log; a publication stores nothing."
+      },
+      {
+        "text": "It sets wal_level to logical",
+        "correct": false,
+        "why": "wal_level is a server setting, set when the server starts."
+      },
+      {
+        "text": "It gives the user the REPLICATION attribute",
+        "correct": false,
+        "why": "That is granted to the role, with ALTER ROLE."
+      }
+    ]
+  }
+]

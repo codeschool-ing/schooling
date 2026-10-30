@@ -1,0 +1,675 @@
+[
+  {
+    "id": "ex-r9wdcee9",
+    "version": 1,
+    "section": "a-function-app",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Azure deploy, configure and scale as one unit?",
+    "choices": [
+      {
+        "text": "Each function on its own, so `take_order` scales apart from `make_receipt`",
+        "correct": false,
+        "why": "That is the picture the name suggests. Every function in an app shares its deployment, its settings and its plan."
+      },
+      {
+        "text": "The function app, with every function in it",
+        "correct": true,
+        "why": "The documentation calls the app the unit of deployment and management: its functions are deployed, configured and scaled together."
+      },
+      {
+        "text": "The Python worker, started once per request",
+        "correct": false,
+        "why": "The worker is a process the host starts beside itself and keeps; it is not the unit Azure deploys."
+      },
+      {
+        "text": "The storage account named by `AzureWebJobsStorage`",
+        "correct": false,
+        "why": "The app needs that account, but it is a separate resource; it is not what gets deployed and scaled."
+      }
+    ]
+  },
+  {
+    "id": "ex-30md43y1",
+    "version": 1,
+    "section": "a-function-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`make_receipt` writes a receipt to blob storage. Which process opens the connection to the storage account?",
+    "choices": [
+      {
+        "text": "The Python worker, through the `azure-functions` library it imports",
+        "correct": false,
+        "why": "That library holds decorators and types and no storage client. The worker never talks to storage."
+      },
+      {
+        "text": "Azurite, which fetches the value from the worker",
+        "correct": false,
+        "why": "Azurite is the storage account here; it answers requests and fetches nothing."
+      },
+      {
+        "text": "The Functions host, with the value the worker hands back",
+        "correct": true,
+        "why": "The worker returns what the function `set()`, and the host does the write. All input and output goes through the host."
+      },
+      {
+        "text": "`make_receipt` itself, with the string in `ShopStorage`",
+        "correct": false,
+        "why": "The function never reads that setting; the binding names it and the host uses it."
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "drillable": true,
+    "id": "ex-nxnsjrzf",
+    "section": "a-function-app",
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each file of the app with what it holds.",
+    "pairs": [
+      {
+        "left": "`function_app.py`",
+        "right": "the functions, with their triggers and bindings as decorators"
+      },
+      {
+        "left": "`host.json`",
+        "right": "settings of the host for every function, and the extension bundle"
+      },
+      {
+        "left": "`requirements.txt`",
+        "right": "the Python packages the build installs"
+      },
+      {
+        "left": "`Dockerfile`",
+        "right": "the base image with the host, and where the app is copied"
+      }
+    ],
+    "right_distractors": [
+      "the application settings, such as `AzureWebJobsStorage`",
+      "the Functions host itself, as a Python package"
+    ]
+  },
+  {
+    "id": "ex-gnhzbgm7",
+    "version": 1,
+    "section": "a-function-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An app has one HTTP function and none of its code touches storage. Why does it still need `AzureWebJobsStorage`?",
+    "choices": [
+      {
+        "text": "It does not: only storage bindings read that setting",
+        "correct": false,
+        "why": "The host itself needs it, and the documentation says the app cannot start without it."
+      },
+      {
+        "text": "The HTTP trigger keeps every request body in a blob",
+        "correct": false,
+        "why": "Nothing in the lab wrote a request body anywhere; the host wrote only its lock blob."
+      },
+      {
+        "text": "Azure bills the app through its storage account",
+        "correct": false,
+        "why": "Billing has nothing to do with the setting; it is where the host keeps its own state."
+      },
+      {
+        "text": "The host keeps its own state there: leases, keys",
+        "correct": true,
+        "why": "Leases for what runs once, the keys of HTTP functions and trigger bookkeeping: the lab showed the lease taken before any function ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zqnd9y9",
+    "version": 1,
+    "section": "a-function-app",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Production needs the queue extension to give up after three attempts, the laptop keeps five, and both run the same image. What does production set?",
+    "choices": [
+      {
+        "text": "`AzureFunctionsJobHost__extensions__queues__maxDequeueCount=3`",
+        "correct": true,
+        "why": "A setting named after a path in `host.json`, joined with double underscores, overrides that value without a new build."
+      },
+      {
+        "text": "A decorator argument on the queue trigger, `max_dequeue_count=3`",
+        "correct": false,
+        "why": "That would change the code and the image, which must stay the same; the value is a host setting."
+      },
+      {
+        "text": "A second `host.json` in the image, picked by an environment variable",
+        "correct": false,
+        "why": "The host reads one `host.json`. The override mechanism exists precisely so the file does not have to change."
+      },
+      {
+        "text": "`;maxDequeueCount=3` at the end of the storage account's connection string",
+        "correct": false,
+        "why": "A connection string says how to reach an account; the queue extension does not read its behaviour from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4expak1",
+    "version": 1,
+    "section": "running-it-locally",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`storage.sh` contains the account key `Eby8vdM0…`. Is committing the file to the shop's repository a leak?",
+    "choices": [
+      {
+        "text": "Yes: with it anybody can read the shop's storage account in Azure",
+        "correct": false,
+        "why": "The key is Azurite's development key; it belongs to the emulator and opens nothing of the shop's."
+      },
+      {
+        "text": "No, because Azurite ignores keys and accepts any request",
+        "correct": false,
+        "why": "Azurite checks the key; that is why the strings carry it. It is harmless because it is public, not because it is ignored."
+      },
+      {
+        "text": "Only if the file can be read by users other than ana",
+        "correct": false,
+        "why": "File permissions do not matter for a key that Microsoft publishes."
+      },
+      {
+        "text": "No: it is Azurite's published key, the same in every copy",
+        "correct": true,
+        "why": "Microsoft prints it in its documentation, and the strings in the file point at the emulator and nowhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-hmj8j2w8",
+    "version": 1,
+    "section": "running-it-locally",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `storage.sh` hold two connection strings for one Azurite?",
+    "choices": [
+      {
+        "text": "The app and your terminal reach it at different addresses",
+        "correct": true,
+        "why": "Inside the Docker network the address is `azurite`; your terminal reaches the ports published on the laptop."
+      },
+      {
+        "text": "One is for blobs and the other for queues",
+        "correct": false,
+        "why": "Each string names all three services; they differ only in the address."
+      },
+      {
+        "text": "The host needs a read-only key and `az` a key that can write",
+        "correct": false,
+        "why": "Both strings carry the same account and the same key."
+      },
+      {
+        "text": "The app speaks HTTPS to storage, and the CLI speaks plain HTTP",
+        "correct": false,
+        "why": "Both strings say `DefaultEndpointsProtocol=http`."
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "drillable": true,
+    "id": "ex-qdsfp44a",
+    "section": "running-it-locally",
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Inside the container, `ps` showed the host and a second process that imports `function_app.py` and runs a function when the host sends a call: the Python language ___.",
+    "blanks": [
+      {
+        "accept": [
+          "worker"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4va7vwxb",
+    "version": 1,
+    "section": "running-it-locally",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after the app started, before any request, `azure-webjobs-hosts` already held one blob. What was it for?",
+    "choices": [
+      {
+        "text": "A copy of `function_app.py`, for other instances of the app to load",
+        "correct": false,
+        "why": "The code is in the image. The blob was `locks/…/host`, which holds no code."
+      },
+      {
+        "text": "The key that protects `take_order`",
+        "correct": false,
+        "why": "`take_order` is anonymous and asks for no key; the blob was a lock."
+      },
+      {
+        "text": "A lease, so instances of one app agree on what runs once",
+        "correct": true,
+        "why": "`locks/<host id>/host` is leased by one host; in Azure that is how a timer runs on one instance only."
+      },
+      {
+        "text": "The first receipt, written when the host started",
+        "correct": false,
+        "why": "There was no order yet, and receipts go to `receipts`, from the second version on."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhmggpzf",
+    "version": 1,
+    "section": "running-it-locally",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants the image built in this lesson on a Flex Consumption plan. What happens?",
+    "choices": [
+      {
+        "text": "It runs as soon as `WEBSITES_PORT` is set to 80",
+        "correct": false,
+        "why": "The port is not the problem, and 80 is the default anyway. Flex Consumption does not take a container at all."
+      },
+      {
+        "text": "The plan refuses it: it takes code, not images",
+        "correct": true,
+        "why": "The hosting table lists containers on Premium, Dedicated and Container Apps; Flex Consumption and Consumption take code."
+      },
+      {
+        "text": "It runs, with longer cold starts than on Premium",
+        "correct": false,
+        "why": "Cold starts are lesson 16; here the plan refuses a container before anything starts."
+      },
+      {
+        "text": "It runs if `--image` names Container Registry rather than Docker Hub",
+        "correct": false,
+        "why": "The registry does not change what the plan accepts."
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "drillable": true,
+    "id": "ex-f6sperp4",
+    "section": "triggers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "With the queue settings the host printed, how many times does `make_receipt` run for an order whose product has no price, before the message is in `orders-poison`?",
+    "hint": "The first attempt counts.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "runs"
+  },
+  {
+    "version": 1,
+    "drillable": true,
+    "id": "ex-q4djf02y",
+    "section": "triggers",
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put in order what happened to order A-1002, from the request to the poison queue.",
+    "items": [
+      "`take_order` calls `set()` on its queue output and returns",
+      "The host writes the message to `orders`",
+      "A poll finds the message and the host runs `make_receipt`",
+      "`make_receipt` raises `KeyError`, and the message is visible again at once",
+      "After the fifth failure the host moves the message to `orders-poison`"
+    ],
+    "trap": "Putting the write to the queue before the answer is ready: the host writes what the function `set()` once the function has returned."
+  },
+  {
+    "id": "ex-3gcyx5ze",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first version of `take_order` received the body `hello` and raised. What happened next?",
+    "choices": [
+      {
+        "text": "The host answered 500 and nothing was tried again",
+        "correct": true,
+        "why": "An HTTP trigger answers someone who is waiting; the failure is their answer, and retrying is their decision."
+      },
+      {
+        "text": "The host ran the function four more times, then gave up",
+        "correct": false,
+        "why": "Five attempts belong to the queue trigger. The HTTP request was over after one."
+      },
+      {
+        "text": "The request was moved to a poison queue for HTTP",
+        "correct": false,
+        "why": "There is no such queue; a poison queue belongs to a queue trigger."
+      },
+      {
+        "text": "The caller got a 400 with the traceback in the body",
+        "correct": false,
+        "why": "The body was empty and the code was 500; the traceback went to the log only. A 400 came later, from the second version's own check."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw62bfdy",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database `make_receipt` depends on restarts for twenty seconds, and the orders that arrive meanwhile fail. With the defaults, where do those orders end up?",
+    "choices": [
+      {
+        "text": "In `orders`, waiting until the database answers again",
+        "correct": false,
+        "why": "With `VisibilityTimeout` at zero a failed message is retried at once, so nothing waits for the database."
+      },
+      {
+        "text": "In `orders-poison`, their five attempts spent during the restart",
+        "correct": true,
+        "why": "Five attempts in a burst fit inside twenty seconds. A `visibilityTimeout` in `host.json` would space them past the outage."
+      },
+      {
+        "text": "Nowhere: the host drops a message after its fifth failure",
+        "correct": false,
+        "why": "The host moves it to the poison queue; it is kept, not dropped."
+      },
+      {
+        "text": "Back with the caller, who receives a 500 for each",
+        "correct": false,
+        "why": "The caller got 202 when the order was queued; a queue trigger answers nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-74zngy0f",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes `make_receipt` run when a message lands on `orders`?",
+    "choices": [
+      {
+        "text": "Azurite pushes each new message to the function's URL",
+        "correct": false,
+        "why": "Nothing pushes a queue message. The storage service only answers when asked."
+      },
+      {
+        "text": "`take_order` calls it after writing the message",
+        "correct": false,
+        "why": "The two functions never call each other; the queue is between them."
+      },
+      {
+        "text": "A loop the decorator wraps around the function",
+        "correct": false,
+        "why": "The decorator only declares the trigger; the loop is the host's, outside your code."
+      },
+      {
+        "text": "The host polls the queue and runs it per message",
+        "correct": true,
+        "why": "It looks again sooner after finding something and later after an empty look, up to a minute by default."
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "drillable": true,
+    "id": "ex-kg926pt2",
+    "section": "bindings",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these did the host do for `make_receipt`, with no line of the function doing it? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Deleting the message from `orders` after a success",
+        "correct": true,
+        "why": "The queue trigger deletes a message once the function returns normally."
+      },
+      {
+        "text": "Writing `receipts/A-1001.json`",
+        "correct": true,
+        "why": "The function only called `set()`; the blob output binding wrote the blob."
+      },
+      {
+        "text": "Moving A-1002 to `orders-poison`",
+        "correct": true,
+        "why": "The host counted the attempts and moved the message after the fifth."
+      },
+      {
+        "text": "Working out 2 × 2990 cents",
+        "correct": false,
+        "why": "That is the function's own line, `PRICES[order['sku']] * order['qty']`."
+      },
+      {
+        "text": "Logging the line `order A-1001, attempt 1`",
+        "correct": false,
+        "why": "The function wrote that with `logging.info`; the host only carried it to the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr6qwrz4",
+    "version": 1,
+    "section": "bindings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The blob output's path is `receipts/{order}.json`, and a message on `orders` reads `{\"order\": \"A-2002\", \"sku\": \"cap\", \"qty\": 3}`. Which blob does a successful run write?",
+    "choices": [
+      {
+        "text": "`receipts/{order}.json`, braces included",
+        "correct": false,
+        "why": "Braces mark a binding expression; the host fills them in from the message."
+      },
+      {
+        "text": "A blob named after the queue message's id",
+        "correct": false,
+        "why": "The id is metadata of the message; the path names the `order` field of its body."
+      },
+      {
+        "text": "`receipts/A-2002.json`",
+        "correct": true,
+        "why": "The message is JSON, so `{order}` is replaced by its `order` field."
+      },
+      {
+        "text": "A name read from an application setting called `order`",
+        "correct": false,
+        "why": "That would be `%order%`, in percent signs. Braces read the trigger's payload."
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "drillable": true,
+    "id": "ex-55hbswd0",
+    "section": "bindings",
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A program other than `take_order` that puts orders on the queue for `make_receipt` has to send each message as ___, unless `host.json` sets `messageEncoding` to `none`.",
+    "blanks": [
+      {
+        "accept": [
+          "base64",
+          "base 64",
+          "base-64"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yk14vhj7",
+    "version": 1,
+    "section": "bindings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `extensionBundle` block is deleted from `host.json`. What happens to `take_order`, whose trigger is HTTP and built into the host?",
+    "choices": [
+      {
+        "text": "It still answers, because HTTP needs no extension",
+        "correct": false,
+        "why": "Its trigger needs none, but its queue output does, and a function is loaded with all its bindings or not at all."
+      },
+      {
+        "text": "It answers 202 and quietly writes nothing to the queue",
+        "correct": false,
+        "why": "Nothing is skipped quietly: the host refused the function and logged that `queue` is not registered."
+      },
+      {
+        "text": "The host refuses to start and the container exits",
+        "correct": false,
+        "why": "The host started and took its lease; it refused the two functions only."
+      },
+      {
+        "text": "It is in error, its route is never mapped, and requests get 404",
+        "correct": true,
+        "why": "The host refused it because of the queue output, so `POST /api/orders` reached nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-aac6y2z0",
+    "version": 1,
+    "section": "bindings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `@app.queue_output(…, connection='ShopStorage')`, what is `ShopStorage`?",
+    "choices": [
+      {
+        "text": "A connection string, written into the code itself",
+        "correct": false,
+        "why": "The code holds no secret. The string is in a setting with that name."
+      },
+      {
+        "text": "A setting's name, or a prefix of several",
+        "correct": true,
+        "why": "On the laptop the setting holds a connection string; in Azure, `ShopStorage__…` settings describe an identity-based connection."
+      },
+      {
+        "text": "The storage account's name in Azure",
+        "correct": false,
+        "why": "The account in the identity example is `shopdata`; `ShopStorage` is only the setting's name."
+      },
+      {
+        "text": "The managed identity the host signs in with",
+        "correct": false,
+        "why": "The identity belongs to the function app; the setting says which connection to use."
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "drillable": true,
+    "id": "ex-t9fz1xha",
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "On the Consumption plan, with the default `batchSize` of 16 and the documented `newBatchThreshold` of N × `batchSize` / 2 with N = 1, how many messages can one queue-triggered function be processing at once on one instance?",
+    "hint": "A new batch is fetched when the count in progress falls to the threshold.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-kdna8pp6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Azure the shop moves `ShopStorage` from a key to the app's managed identity. What changes?",
+    "choices": [
+      {
+        "text": "`ShopStorage__…` settings for the services and credential, plus roles",
+        "correct": true,
+        "why": "The service URIs plus `__credential=managedidentity`, and the roles each binding needs, with no change to the code."
+      },
+      {
+        "text": "`connection='ShopStorage'` becomes `connection='ManagedIdentity'` in the code",
+        "correct": false,
+        "why": "The code keeps naming the same setting; the settings change, not the decorator."
+      },
+      {
+        "text": "Only `AzureWebJobsStorage__accountName`, which the bindings follow",
+        "correct": false,
+        "why": "That covers the host's connection. With identities the documentation asks for a separate connection for bindings."
+      },
+      {
+        "text": "The identity's client id goes into `host.json`",
+        "correct": false,
+        "why": "Connections are application settings, not `host.json` values."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgp8m380",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`make_receipt` should deal with an order for an unknown product without spending five attempts on it. Which change does that?",
+    "choices": [
+      {
+        "text": "Set `maxDequeueCount` to 1 for the whole app",
+        "correct": false,
+        "why": "That also removes the retries that a passing failure, such as a database restart, needs."
+      },
+      {
+        "text": "Catch the `KeyError` and raise a `ValueError` instead",
+        "correct": false,
+        "why": "Any exception is a failure to the host; the message is retried five times all the same."
+      },
+      {
+        "text": "Check the product, log why, and return normally",
+        "correct": true,
+        "why": "Returning normally deletes the message, and the log says why. The retries stay for failures that go away."
+      },
+      {
+        "text": "Set `visibilityTimeout` to an hour",
+        "correct": false,
+        "why": "The five attempts still happen, an hour apart, and the order is just as unknown each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4028f0w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson call bindings the point of Azure Functions, rather than calling the storage SDK from `make_receipt`?",
+    "choices": [
+      {
+        "text": "Bindings run faster than the same calls made with the SDK",
+        "correct": false,
+        "why": "Nothing in the lesson measured speed; the argument is about who does the work and where it is configured."
+      },
+      {
+        "text": "The host does the reads, writes and retries, set by configuration",
+        "correct": true,
+        "why": "Polling, deleting, retrying, the poison queue and the write are the host's, tuned in settings, and the host knows what each function waits for."
+      },
+      {
+        "text": "Functions refuses code that imports an Azure SDK",
+        "correct": false,
+        "why": "The documentation says the opposite: a write a binding cannot express is done with the SDK."
+      },
+      {
+        "text": "Code written with bindings runs unchanged on any cloud",
+        "correct": false,
+        "why": "The decorators name Azure's services; that is the lock-in lesson 22 weighs."
+      }
+    ]
+  }
+]

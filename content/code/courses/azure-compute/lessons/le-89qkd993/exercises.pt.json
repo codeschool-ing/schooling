@@ -1,0 +1,446 @@
+{
+  "ex-m1673wq1": {
+    "prompt": "No app da loja, qual função decide que `charge` roda depois de `reserve_stock` e antes de `ship`?",
+    "choices": [
+      {
+        "text": "`start_order`, porque é ela que passa o pedido",
+        "why": "A função cliente inicia a instância e responde; ela não diz nada sobre os passos."
+      },
+      {
+        "text": "`order_flow`, o orquestrador",
+        "why": "Sim: a ordem dos seus `yield` é a ordem dos passos."
+      },
+      {
+        "text": "`reserve_stock`, ao retornar antes das outras",
+        "why": "Uma atividade faz um passo e nunca sabe o que vem depois dela."
+      },
+      {
+        "text": "O extension bundle, pela ordem das funções no arquivo",
+        "why": "O bundle traz a extensão; a ordem dos passos está no código."
+      }
+    ]
+  },
+  "ex-zj54nb7s": {
+    "prompt": "No laptop o primeiro pedido foi respondido com HTTP 500, e o log do host culpou os webhooks. O que faltava?",
+    "hint": "A linha do log nomeava uma configuração.",
+    "choices": [
+      {
+        "text": "O pacote `azure-functions-durable` na imagem",
+        "why": "Ele estava instalado; sem ele o arquivo não carregaria e o host não teria encontrado funções."
+      },
+      {
+        "text": "Uma chave, porque a rota pede o nível `FUNCTION`",
+        "why": "`DFApp` recebeu `ANONYMOUS`, então a rota não pede chave."
+      },
+      {
+        "text": "`WEBSITE_HOSTNAME`, que o Azure define em todo app que roda",
+        "why": "Sim: o cliente precisa dele para escrever os endereços de status, e um contêiner num laptop precisa recebê-lo."
+      },
+      {
+        "text": "A tabela History, que o Azurite só cria no primeiro pedido",
+        "why": "As tabelas do task hub são assunto da extensão, e a falta delas não é o que o log apontou."
+      }
+    ]
+  },
+  "ex-9mr4s78z": {
+    "prompt": "Associe cada parte do app Durable Functions da loja ao que ela faz.",
+    "hint": "Uma descrição não pertence a nada nesta lição.",
+    "pairs": [
+      {
+        "left": "`start_order`",
+        "right": "inicia uma instância e responde com os endereços dela"
+      },
+      {
+        "left": "`order_flow`",
+        "right": "diz quais passos rodam, e em que ordem"
+      },
+      {
+        "left": "`reserve_stock`",
+        "right": "faz um passo do trabalho"
+      },
+      {
+        "left": "`TestHubName`",
+        "right": "guarda o estado de toda instância do app"
+      }
+    ],
+    "right_distractors": [
+      "transforma os decoradores num `function.json` por função"
+    ]
+  },
+  "ex-ex3z90e7": {
+    "prompt": "A loja usa o número do pedido como id da instância. Quais destas são verdade neste host? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma segunda partida para um pedido ainda `Pending` é recusada",
+        "why": "Sim: o segundo POST de A-1002 recebeu um 500 dizendo que a instância já existe."
+      },
+      {
+        "text": "Uma partida para um pedido que terminou o roda de novo desde o começo",
+        "why": "Sim: `NonRunningStates` podem ser iniciados de novo, e A-1002 rodou uma segunda vez."
+      },
+      {
+        "text": "O id torna as atividades seguras de rodar duas vezes",
+        "why": "Ele protege só enquanto a instância roda; as atividades ainda têm de ser escritas para se repetir."
+      },
+      {
+        "text": "Duas instâncias no task hub podem dividir um id se as entradas forem diferentes",
+        "why": "Um id é único dentro do task hub, seja qual for a entrada."
+      },
+      {
+        "text": "O endereço de status traz o id no caminho",
+        "why": "Sim: `.../instances/A-1001?...`."
+      }
+    ]
+  },
+  "ex-g42bktem": {
+    "prompt": "A função cliente respondeu 202 na hora, e o cabeçalho ___ trazia o endereço a consultar, com `Retry-After` ao lado.",
+    "hint": "Um cabeçalho HTTP que diz onde algo está.",
+    "blanks": [
+      {
+        "accept": [
+          "Location"
+        ]
+      }
+    ]
+  },
+  "ex-d1dmvar9": {
+    "prompt": "Um orquestrador chama cinco atividades uma depois da outra, cada uma com seu `yield`, e então retorna. Quantas vezes a função orquestradora roda para uma instância?",
+    "hint": "A-1001 tinha três atividades.",
+    "unit": "execuções"
+  },
+  "ex-gfzb3dep": {
+    "prompt": "Com os dois relógios na linha de log, `now` mudou a cada execução de A-1003 e `context` não. Por quê?",
+    "choices": [
+      {
+        "text": "Ele é lido do histórico, então um replay recebe a hora da primeira execução",
+        "why": "Sim, e é isso que o torna seguro para decidir qualquer coisa."
+      },
+      {
+        "text": "`context` é a hora em que o contêiner subiu",
+        "why": "O contêiner estava no ar havia algum tempo; o valor era a hora da primeira execução de A-1003."
+      },
+      {
+        "text": "`datetime.now()` fica em cache no worker entre execuções",
+        "why": "Foi ele que mudou; nada o guardou."
+      },
+      {
+        "text": "O orquestrador rodou uma vez só e registrou quatro linhas",
+        "why": "Quatro execuções: a primeira com `replaying=False` e as outras três com `True`."
+      }
+    ]
+  },
+  "ex-khndvagc": {
+    "prompt": "A loja quer um código de desconto aleatório para cada pedido, escolhido dentro da orquestração e usado num passo seguinte. Onde o código deve ser gerado?",
+    "choices": [
+      {
+        "text": "No orquestrador, com `random.choice` semeado por `datetime.now()`",
+        "why": "Uma semente vinda do relógio muda a cada replay, então cada replay escolhe um código diferente."
+      },
+      {
+        "text": "No orquestrador, com `uuid.uuid4()`",
+        "why": "Um valor novo a cada replay; a documentação aponta `context.new_guid()` no lugar."
+      },
+      {
+        "text": "Numa atividade, cujo resultado o histórico guarda",
+        "why": "Sim: os replays leem o resultado guardado em vez de rodá-la de novo."
+      },
+      {
+        "text": "Numa variável de ambiente que o orquestrador lê",
+        "why": "Um valor para todos os pedidos, e que pode mudar entre replays."
+      }
+    ]
+  },
+  "ex-5yr33pjm": {
+    "prompt": "Ponha em ordem as quatro linhas que a primeira execução de `order_flow` acrescentou ao histórico de A-1001.",
+    "items": [
+      "`OrchestratorStarted`",
+      "`ExecutionStarted`, com a entrada",
+      "`TaskScheduled` para `reserve_stock`",
+      "`OrchestratorCompleted`"
+    ],
+    "trap": "Pôr `ExecutionStarted` primeiro: toda execução, a primeira inclusive, abre com `OrchestratorStarted`."
+  },
+  "ex-dv33q7q6": {
+    "prompt": "Uma equipe quer mover o task hub de um app em produção do provedor Azure Storage para o Durable Task Scheduler. O que diz a documentação?",
+    "choices": [
+      {
+        "text": "Não é possível migrar dados entre provedores: crie um app novo no novo provedor",
+        "why": "Sim, numa nota da página de provedores."
+      },
+      {
+        "text": "Mudar `storageProvider` no `host.json` e as instâncias se mudam no próximo start",
+        "why": "A configuração escolhe um backend para o estado novo; nada copia o antigo."
+      },
+      {
+        "text": "Exportar a tabela History e importá-la no painel do scheduler",
+        "why": "Não existe essa importação; o painel mostra as instâncias do próprio scheduler."
+      },
+      {
+        "text": "Reescrever os orquestradores, porque o scheduler precisa de outra API",
+        "why": "A documentação diz que apps existentes usam o scheduler sem mudar o código."
+      }
+    ]
+  },
+  "ex-kgpanh2m": {
+    "prompt": "O que em `order_flow` fez as seis reservas de A-1005 rodarem ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "Um só `yield` em `task_all` sobre tarefas feitas sem `yield`",
+        "why": "Sim: as tarefas são agendadas juntas num checkpoint e esperadas uma vez."
+      },
+      {
+        "text": "Uma thread por linha, que `task_all` inicia por baixo dos panos",
+        "why": "Nenhuma thread: as atividades rodam no host, não no orquestrador."
+      },
+      {
+        "text": "Declarar o orquestrador com `async def`",
+        "why": "Proibido: um orquestrador Python é um gerador."
+      },
+      {
+        "text": "Uma configuração no `host.json` que roda atividades em paralelo",
+        "why": "O arquivo era o da lição 15, sem mudança; foi só o código."
+      }
+    ]
+  },
+  "ex-jaq5snd3": {
+    "prompt": "Um pedido de 100 linhas roda num host com 4 processadores e o padrão de 10 atividades por processador. Cada `reserve_line` leva 1 segundo. Desconsiderando o tempo entre atividades, quantos segundos no mínimo levam as reservas?",
+    "hint": "Conte as ondas.",
+    "unit": "segundos"
+  },
+  "ex-5gw28k4y": {
+    "prompt": "Num plano que acrescentou uma segunda instância do app, onde podem rodar as atividades de um fan-out?",
+    "choices": [
+      {
+        "text": "Só na instância que tem a fila de controle do orquestrador",
+        "why": "Esse é o orquestrador; as atividades não têm estado."
+      },
+      {
+        "text": "Em qualquer das duas: ambas disputam a fila de work items",
+        "why": "Sim, e é assim que um fan-out usa as instâncias que um plano acrescenta."
+      },
+      {
+        "text": "Na instância que recebeu o pedido HTTP",
+        "why": "O pedido só iniciou a instância; o trabalho passa pela fila."
+      },
+      {
+        "text": "Numa terceira instância reservada para atividades",
+        "why": "Não existe essa instância; toda instância do app roda os dois tipos."
+      }
+    ]
+  },
+  "ex-yj7dc278": {
+    "prompt": "Uma das seis chamadas `reserve_line` de um pedido levanta uma exceção. O que a documentação diz que acontece com `yield context.task_all(tasks)`?",
+    "choices": [
+      {
+        "text": "Ele devolve cinco resultados, com `None` no lugar da que falhou",
+        "why": "Ele não devolve resultados parciais."
+      },
+      {
+        "text": "Ele tenta de novo a chamada que falhou, sozinho, até dar certo",
+        "why": "Novas tentativas só acontecem com `call_activity_with_retry` e um `RetryOptions`."
+      },
+      {
+        "text": "Ele falha no primeiro erro, que `try` e `except` capturam",
+        "why": "Sim; sem captura, a instância termina `Failed`."
+      },
+      {
+        "text": "As outras cinco são canceladas e o estoque delas liberado",
+        "why": "Nada desfaz o trabalho delas; qualquer compensação é o orquestrador que escreve."
+      }
+    ]
+  },
+  "ex-87be6wzq": {
+    "prompt": "Um job noturno faz fan-out para 20.000 itens numa só orquestração, e cada replay ficou lento. Quais estão entre as respostas da documentação? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Dividir o trabalho em sub-orquestrações, cada uma com seu histórico",
+        "why": "Sim: cada filha repete só as suas linhas."
+      },
+      {
+        "text": "Fazer as atividades devolverem uma referência a um blob em vez dos dados",
+        "why": "Sim: o que uma atividade devolve é guardado e lido de volta a cada replay."
+      },
+      {
+        "text": "Subir `partitionCount` para 64",
+        "why": "Dezesseis é o máximo, e partições não encurtam um histórico."
+      },
+      {
+        "text": "Rodar o laço sobre os itens numa thread dentro do orquestrador",
+        "why": "Um orquestrador não pode fazer trabalho nem entrada ou saída próprios."
+      }
+    ]
+  },
+  "ex-z5gr23qq": {
+    "prompt": "Suponha que `order_flow` deixasse de fora `timeout.cancel()`. A-1007 é pago um segundo depois de abrir a janela de dez minutos. O que o status diz um minuto depois?",
+    "choices": [
+      {
+        "text": "`Completed`, porque o pagamento ganhou a corrida",
+        "why": "A documentação diz que uma instância não é marcada `Completed` enquanto um timer que ela criou está pendente."
+      },
+      {
+        "text": "`Failed`, porque sobrou um timer",
+        "why": "Deixar um não é erro; só atrasa o fim."
+      },
+      {
+        "text": "`expired`, porque o timer dispara depois",
+        "why": "`task_any` já devolveu o pagamento; o caminho do timer nunca roda."
+      },
+      {
+        "text": "`Running`, até o timer disparar",
+        "why": "Sim, e por isso o código cancela o perdedor."
+      }
+    ]
+  },
+  "ex-nrbjrrbn": {
+    "prompt": "O pagamento de A-1009 foi levantado depois que o cancelamento do cliente o encerrou. O que a API de gerenciamento respondeu?",
+    "choices": [
+      {
+        "text": "202 Accepted, e o evento ficou guardado para depois",
+        "why": "Um evento guardado é para uma instância que ainda vai esperar; esta tinha terminado."
+      },
+      {
+        "text": "404 Not Found",
+        "why": "A instância existe, encerrada; 404 é para um id que o hub não tem."
+      },
+      {
+        "text": "410 Gone",
+        "why": "Sim: a resposta da documentação para uma instância que terminou ou falhou."
+      },
+      {
+        "text": "400 Bad Request, porque o corpo não era JSON",
+        "why": "O corpo era JSON com content type JSON."
+      }
+    ]
+  },
+  "ex-3t1zgf5c": {
+    "prompt": "A-1011 esperava o pagamento, uma versão nova do código foi publicada, e o pagamento então o fez falhar. O que a falha comparou?",
+    "choices": [
+      {
+        "text": "O id da imagem nova com o id da imagem que iniciou a instância",
+        "why": "Nada compara imagens; o reinício com a mesma imagem funcionou."
+      },
+      {
+        "text": "O passo que o código novo pediu com o que está no histórico",
+        "why": "Sim: um timer no histórico, uma atividade no replay."
+      },
+      {
+        "text": "O host id, que um contêiner novo mudaria se não estivesse fixado",
+        "why": "Ele estava fixado com `AzureFunctionsWebHost__hostid`, e por isso o endereço ainda funcionou."
+      },
+      {
+        "text": "O corpo do evento com a entrada que `charge` espera receber",
+        "why": "O código nem chegou a `charge`; o replay falhou antes."
+      }
+    ]
+  },
+  "ex-2mqtq7n9": {
+    "prompt": "Em Python um único timer durável pode durar no máximo ___ dias, então uma espera mais longa é um laço de timers mais curtos.",
+    "hint": "Menos de uma semana.",
+    "blanks": [
+      {
+        "accept": [
+          "seis",
+          "6"
+        ]
+      }
+    ]
+  },
+  "ex-s6mkzkvx": {
+    "prompt": "Um webhook do banco às vezes entrega a mesma confirmação de pagamento duas vezes. Com o evento levantado a cada entrega, o que tem de valer?",
+    "choices": [
+      {
+        "text": "Nada: a extensão descarta o segundo evento porque os nomes são iguais",
+        "why": "A documentação diz que os eventos são entregues pelo menos uma vez, com duplicatas."
+      },
+      {
+        "text": "O orquestrador tem de usar `async def` para esperar só o primeiro",
+        "why": "Um orquestrador nunca é uma corrotina."
+      },
+      {
+        "text": "Tratar uma confirmação tem de ser seguro de repetir",
+        "why": "Sim: a documentação recomenda exatamente isso para a entrega pelo menos uma vez."
+      },
+      {
+        "text": "O banco tem de receber o endereço de terminate em vez disso",
+        "why": "Encerrar termina a instância; não é um jeito de pagar."
+      }
+    ]
+  },
+  "ex-9eh6ew6a": {
+    "prompt": "Ponha em ordem o que um cliente vê quando inicia um pedido e segue o padrão HTTP assíncrono até o fim.",
+    "items": [
+      "`POST /api/orders` responde 202 com um cabeçalho `Location`",
+      "Consultar `Location` responde 202 enquanto a instância roda",
+      "Consultar `Location` responde 200 quando a instância terminou",
+      "O corpo dessa resposta traz `output`"
+    ],
+    "trap": "Esperar a saída na primeira resposta: a função cliente retorna antes de qualquer passo rodar."
+  },
+  "ex-03tw2awh": {
+    "prompt": "Há instâncias de `order_flow` esperando pagamentos. Qual destas mudanças é incompatível para elas?",
+    "choices": [
+      {
+        "text": "Mudar o texto da linha de log no topo do orquestrador",
+        "why": "Uma linha de log não é um pedido; os replays fazem as mesmas chamadas."
+      },
+      {
+        "text": "Fazer `ship` dormir dois segundos em vez de um",
+        "why": "Fica dentro de uma atividade, e atividades não têm replay."
+      },
+      {
+        "text": "Acrescentar ao app uma função HTTP sem relação",
+        "why": "Ela não muda nenhum orquestrador."
+      },
+      {
+        "text": "Chamar uma atividade nova antes da espera pelo pagamento",
+        "why": "Sim: exatamente o que fez A-1011 falhar."
+      }
+    ]
+  },
+  "ex-5amz9eck": {
+    "prompt": "Associe cada provedor de armazenamento ao lugar onde ele guarda um task hub.",
+    "hint": "Um lugar não pertence a nenhum provedor que a documentação lista.",
+    "pairs": [
+      {
+        "left": "Azure Storage",
+        "right": "tabelas, filas e blobs numa conta de armazenamento sua"
+      },
+      {
+        "left": "Durable Task Scheduler",
+        "right": "um recurso gerenciado do Azure acessado por gRPC"
+      },
+      {
+        "left": "Netherite",
+        "right": "Event Hubs e page blobs, com suporte terminando em 2028"
+      },
+      {
+        "left": "MSSQL",
+        "right": "um banco SQL Server, que pode rodar sem Azure nenhum"
+      }
+    ],
+    "right_distractors": [
+      "contêineres numa conta Cosmos DB"
+    ]
+  },
+  "ex-6eqeth5g": {
+    "prompt": "A-1010 estava esperando quando o contêiner reiniciou, e o pagamento levantado depois o terminou. O que o levou através do reinício?",
+    "choices": [
+      {
+        "text": "O worker Python, que manteve o gerador pausado na memória",
+        "why": "O worker reiniciou com o contêiner; nada na memória sobreviveu."
+      },
+      {
+        "text": "O Docker, que salva os processos de um contêiner ao reiniciar",
+        "why": "`docker restart` para os processos e os inicia de novo do zero."
+      },
+      {
+        "text": "A linha e o histórico da instância no task hub, que o host novo leu",
+        "why": "Sim: o estado esteve no Azurite o tempo todo."
+      },
+      {
+        "text": "O timer, que ficou pausado durante o reinício",
+        "why": "Um timer é uma mensagem com uma hora marcada; ele não pausa."
+      }
+    ]
+  }
+}

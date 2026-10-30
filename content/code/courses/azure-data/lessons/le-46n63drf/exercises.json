@@ -1,0 +1,657 @@
+[
+  {
+    "id": "ex-kqw8ncxh",
+    "version": 1,
+    "section": "five-levels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a consistency level in Cosmos DB decide?",
+    "hint": "It is not the C of ACID.",
+    "choices": [
+      {
+        "text": "Whether a read is ever shown a version older than the newest write",
+        "correct": true,
+        "why": "Right: it is about which copy a read reaches and what that copy has applied."
+      },
+      {
+        "text": "Whether a write that breaks a constraint is rejected",
+        "correct": false,
+        "why": "That is the C of ACID, a different idea that shares the word."
+      },
+      {
+        "text": "How many copies of each item Azure keeps",
+        "correct": false,
+        "why": "The copies exist at every level; the level decides what a read of them is promised."
+      },
+      {
+        "text": "Whether two items are written in one transaction",
+        "correct": false,
+        "why": "Transactions are a separate feature; the level is about reads of copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dz0ebt0",
+    "version": 1,
+    "section": "five-levels",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the five levels in order, strongest first.",
+    "hint": "Session sits in the middle.",
+    "items": [
+      "Strong",
+      "Bounded staleness",
+      "Session",
+      "Consistent prefix",
+      "Eventual"
+    ]
+  },
+  {
+    "id": "ex-cnqcvc1a",
+    "version": 1,
+    "section": "five-levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An order goes created, paid, delivered. A reader in another session is shown delivered, and then paid. Which levels allow that?",
+    "hint": "Which level forbids seeing writes out of order, and which does not?",
+    "choices": [
+      {
+        "text": "Consistent prefix and eventual, the two weakest",
+        "correct": false,
+        "why": "Consistent prefix forbids exactly this: an older value, never a reversal."
+      },
+      {
+        "text": "Eventual only",
+        "correct": true,
+        "why": "Right: eventual promises nothing about order, so two reads can reach copies that disagree."
+      },
+      {
+        "text": "Session, because the reader is in another session",
+        "correct": false,
+        "why": "Outside the writer's session, session still gives consistent prefix and reads that never go back."
+      },
+      {
+        "text": "None: Cosmos DB never shows writes out of order",
+        "correct": false,
+        "why": "At eventual it does, and the section's example is that reversal."
+      }
+    ]
+  },
+  {
+    "id": "ex-yprqxspg",
+    "version": 1,
+    "section": "five-levels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An account in two regions runs at bounded staleness with the documented minimums. How far behind can a read in the second region be?",
+    "hint": "The minimums differ with the number of regions.",
+    "choices": [
+      {
+        "text": "Up to 5 seconds or 10 writes",
+        "correct": false,
+        "why": "Those are the minimums for one region."
+      },
+      {
+        "text": "Not at all, because bounded staleness reads from the write region",
+        "correct": false,
+        "why": "Reads are served locally; the bound is what limits their age."
+      },
+      {
+        "text": "Up to 300 seconds or 100,000 writes",
+        "correct": true,
+        "why": "Right: in several regions the bound is five minutes at the least."
+      },
+      {
+        "text": "Up to about 15 minutes, as at eventual",
+        "correct": false,
+        "why": "Fifteen minutes is what an outage can lose at the weak levels, not a bound on a read."
+      }
+    ]
+  },
+  {
+    "id": "ex-q676hnw6",
+    "version": 1,
+    "section": "five-levels",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A new Cosmos DB account is created at ___ consistency.",
+    "hint": "The level with a token.",
+    "blanks": [
+      {
+        "accept": [
+          "session"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2p6fx93s",
+    "version": 1,
+    "section": "session-tokens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a read carrying a session token guaranteed?",
+    "hint": "The token names a point in a partition's log.",
+    "choices": [
+      {
+        "text": "To be served by the copy in the write region",
+        "correct": false,
+        "why": "Any copy will do, as long as it has reached the token's point."
+      },
+      {
+        "text": "A copy that has applied the write the token names",
+        "correct": true,
+        "why": "Right: a copy behind that point refuses with 1002."
+      },
+      {
+        "text": "A lock on the item until the session ends",
+        "correct": false,
+        "why": "Nothing is locked; the token is a header and nothing more."
+      },
+      {
+        "text": "Strong consistency for that one read, at twice the request units",
+        "correct": false,
+        "why": "It is a session read, served by one copy, at the session price."
+      }
+    ]
+  },
+  {
+    "id": "ex-erqbqtv3",
+    "version": 1,
+    "section": "session-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `session.py`, why did the app's read of its own order go out with `no token`?",
+    "hint": "Look at the line just before it.",
+    "choices": [
+      {
+        "text": "Session consistency sends tokens with writes, not reads",
+        "correct": false,
+        "why": "It is the reads that carry them; the writes hand them out."
+      },
+      {
+        "text": "The client was created at the account's eventual default",
+        "correct": false,
+        "why": "It was created with `consistency_level=\"Session\"`."
+      },
+      {
+        "text": "The emulator omits the header the library files tokens under",
+        "correct": true,
+        "why": "Right: no `x-ms-alt-content-path`, so the library stored nothing. On Azure it would have sent `0:0#2`."
+      },
+      {
+        "text": "A token is attached only after the first read of a partition",
+        "correct": false,
+        "why": "There is no such rule; the write's answer is where the token comes from."
+      }
+    ]
+  },
+  {
+    "id": "ex-11rtcasj",
+    "version": 1,
+    "section": "session-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A read answers 404 with sub-status 1002. What happened?",
+    "hint": "Not found, or not yet?",
+    "choices": [
+      {
+        "text": "The item was deleted after the token was issued",
+        "correct": false,
+        "why": "A deleted item is a plain 404, with no 1002."
+      },
+      {
+        "text": "The partition key in the request was wrong",
+        "correct": false,
+        "why": "That is also a plain 404: no item under that key."
+      },
+      {
+        "text": "The session expired after its time limit",
+        "correct": false,
+        "why": "A session has no time limit; it is a string the client holds."
+      },
+      {
+        "text": "The copy had not applied the write the token names",
+        "correct": true,
+        "why": "Right: *the read session is not available*, and the library retries it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z63cbt81",
+    "version": 1,
+    "section": "session-tokens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One web server takes the payment and a different one serves the next page. How does the second keep the customer's session?",
+    "hint": "What is a session, physically?",
+    "choices": [
+      {
+        "text": "The token goes to the browser with the answer and comes back on the next read",
+        "correct": true,
+        "why": "Right: the token is a string, and it crosses processes however strings do."
+      },
+      {
+        "text": "Both create their clients at session consistency, which is enough",
+        "correct": false,
+        "why": "Each client has its own tokens; the second never saw the first's write."
+      },
+      {
+        "text": "The second asks for strong on that one read",
+        "correct": false,
+        "why": "A request can only ask for less than the account's level, which is session."
+      },
+      {
+        "text": "Cosmos DB recognises the customer by the partition key",
+        "correct": false,
+        "why": "The partition key says where the item is, not whose session it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7x14byw",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The product page does 3,000 point reads a second of 1 KB items. About how many request units a second does it need at strong?",
+    "hint": "One unit per read at session, and the top two levels double it.",
+    "value": 6000,
+    "tolerance": 0,
+    "unit": "RU/s"
+  },
+  {
+    "id": "ex-bhq7p2ya",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do the request units of a write at strong compare with the same write at eventual?",
+    "hint": "Every write is committed the same way.",
+    "choices": [
+      {
+        "text": "They are the same",
+        "correct": true,
+        "why": "Right: every write goes to a majority of the copies at every level; only reads differ."
+      },
+      {
+        "text": "About twice, as for reads",
+        "correct": false,
+        "why": "Reads double because two copies answer them; writes are committed the same way at every level."
+      },
+      {
+        "text": "Half, because eventual writes to fewer copies",
+        "correct": false,
+        "why": "Eventual changes how reads are served, not how many copies a write reaches."
+      },
+      {
+        "text": "Twice in one region, and four times across two",
+        "correct": false,
+        "why": "Regions change the waiting at strong, not the units."
+      }
+    ]
+  },
+  {
+    "id": "ex-a25jcf6m",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two customers try to buy the last bunch of coriander in the same second. What stops both purchases succeeding?",
+    "hint": "Both could read 1 at any level.",
+    "choices": [
+      {
+        "text": "Setting the account to strong consistency",
+        "correct": false,
+        "why": "Both read 1 at strong, both write 0: strong makes the read current, not the subtraction safe."
+      },
+      {
+        "text": "A write made conditional on the stock item's ETag",
+        "correct": true,
+        "why": "Right: the second write finds a different ETag and is refused, at any level."
+      },
+      {
+        "text": "Reading the stock at bounded staleness with K set to 1",
+        "correct": false,
+        "why": "The minimum K is 10, and no bound on a read protects a write."
+      },
+      {
+        "text": "Putting both customers' requests in one session",
+        "correct": false,
+        "why": "A session orders reads and writes for whoever holds it; it does not serialise two writers."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhhrtw9h",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are true of an account that takes writes in several regions? Choose all that apply.",
+    "hint": "Three of the four were said in the section.",
+    "choices": [
+      {
+        "text": "Strong consistency is not offered",
+        "correct": true,
+        "why": "Right: two writers would have to wait for each other on every write."
+      },
+      {
+        "text": "Two regions change one item, and a policy keeps one version",
+        "correct": true,
+        "why": "Right: that is a conflict, and resolving it is part of the design."
+      },
+      {
+        "text": "By default the version with the later timestamp is kept",
+        "correct": true,
+        "why": "Right: last writer wins, unless you choose otherwise."
+      },
+      {
+        "text": "A write at session waits for the farthest region",
+        "correct": false,
+        "why": "That wait belongs to strong; session commits locally and replicates afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-52msn8xq",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An account has one write region and runs at strong. How many acknowledged writes can the loss of that region lose?",
+    "hint": "Strong waits for the other regions before it acknowledges.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sp30xga4",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An account's default is session. Which request will it serve?",
+    "hint": "A request can only ask for less.",
+    "choices": [
+      {
+        "text": "A read asking for strong",
+        "correct": false,
+        "why": "Stronger than the account's level is the one thing a request cannot ask for."
+      },
+      {
+        "text": "A read asking for eventual",
+        "correct": true,
+        "why": "Right: weaker than the default is allowed."
+      },
+      {
+        "text": "A write asking for eventual, to spend fewer units",
+        "correct": false,
+        "why": "Writes ignore the setting, and cost the same at every level anyway."
+      },
+      {
+        "text": "A read asking for bounded staleness on a slow page",
+        "correct": false,
+        "why": "Bounded staleness is stronger than session."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzjz5qey",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`overriding.py` read at `Strong` and at `Linearizable`, and the emulator served both for one request unit. What does that tell you about Azure?",
+    "hint": "What did the emulator check?",
+    "choices": [
+      {
+        "text": "That Azure accepts `Linearizable` as another name for strong",
+        "correct": false,
+        "why": "It is not one of Cosmos DB's five levels."
+      },
+      {
+        "text": "That Azure serves a strong read against an eventual account",
+        "correct": false,
+        "why": "The documentation says a request may only weaken the level."
+      },
+      {
+        "text": "Nothing: the emulator checked neither",
+        "correct": true,
+        "why": "Right: it accepts any level and charges one unit for everything."
+      },
+      {
+        "text": "That a strong read costs one request unit on Azure too",
+        "correct": false,
+        "why": "About twice a session read; the one is a placeholder."
+      }
+    ]
+  },
+  {
+    "id": "ex-386tgsze",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With version 4.17.1 of the Python library, a program reads the catalogue at eventual and orders at session. How is it built?",
+    "hint": "Where does `read_item` take a level from?",
+    "choices": [
+      {
+        "text": "One client, passing `consistency_level` to each `read_item`",
+        "correct": false,
+        "why": "`read_item` lists no such argument; the level belongs to the client."
+      },
+      {
+        "text": "Two clients, one per level, kept for the program's whole life",
+        "correct": true,
+        "why": "Right: the level is set on the client, and a client is expensive to create."
+      },
+      {
+        "text": "A new client for each request, at the level it needs",
+        "correct": false,
+        "why": "Correct levels, at the price of creating a client every time."
+      },
+      {
+        "text": "Change the account's default before each kind of read",
+        "correct": false,
+        "why": "The default is an account setting for everybody, not a switch per read."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xyaf4ef",
+    "version": 1,
+    "section": "regions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform validate` passed strong consistency with writes in two regions. What happens to that file next?",
+    "hint": "Whose rule is it?",
+    "choices": [
+      {
+        "text": "Azure refuses it when `apply` asks for the account",
+        "correct": true,
+        "why": "Right: the rule is Azure's, and lives in no schema the provider checks."
+      },
+      {
+        "text": "The provider quietly lowers it to session",
+        "correct": false,
+        "why": "Providers do not rewrite a declared level."
+      },
+      {
+        "text": "Nothing: validate passing means the combination is allowed",
+        "correct": false,
+        "why": "Validate checks the schema and asks Azure nothing."
+      },
+      {
+        "text": "Azure creates it and turns off writes in the second region",
+        "correct": false,
+        "why": "That would be a silent change of meaning; nothing documented does it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh7f1m5w",
+    "version": 1,
+    "section": "regions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting of `azurerm_cosmosdb_account` to what it decides.",
+    "hint": "One description fits none of them.",
+    "pairs": [
+      {
+        "left": "`consistency_level`",
+        "right": "What every read is promised by default"
+      },
+      {
+        "left": "`failover_priority = 0`",
+        "right": "The region that takes the writes"
+      },
+      {
+        "left": "`multiple_write_locations_enabled`",
+        "right": "Whether the other regions take writes too"
+      },
+      {
+        "left": "`max_interval_in_seconds`",
+        "right": "The T of bounded staleness"
+      }
+    ],
+    "right_distractors": [
+      "The number of copies inside one region"
+    ]
+  },
+  {
+    "id": "ex-pz1jzpyp",
+    "version": 1,
+    "section": "regions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reviewer reads a two-region account declared at bounded staleness with `max_interval_in_seconds = 5`. What should they say?",
+    "hint": "Validate passed it. Which minimum applies?",
+    "choices": [
+      {
+        "text": "Nothing, since 5 is inside the provider's range",
+        "correct": false,
+        "why": "The provider's range is the one-region minimum; it does not know how many regions there are."
+      },
+      {
+        "text": "That several regions need at least 300 seconds",
+        "correct": true,
+        "why": "Right: the multi-region minimum is 300 seconds and 100,000 writes, and only Azure enforces it."
+      },
+      {
+        "text": "That bounded staleness is not offered in more than one region",
+        "correct": false,
+        "why": "It is offered; strong is the one refused with several writing regions."
+      },
+      {
+        "text": "That 5 seconds makes the account strong in practice",
+        "correct": false,
+        "why": "Even five seconds is a window strong does not have, and reads still cost what bounded staleness costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkhk6vfb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Staff watch a dashboard of today's order count, refreshed every minute. Which level should its client ask for?",
+    "hint": "Who writes, and what does a second of age cost?",
+    "choices": [
+      {
+        "text": "Strong, because a dashboard has to be exact",
+        "correct": false,
+        "why": "It is a minute old by design; strong would double its reads for nothing."
+      },
+      {
+        "text": "Session, so that staff see their own writes",
+        "correct": false,
+        "why": "The dashboard writes nothing, so read-your-writes buys it nothing."
+      },
+      {
+        "text": "Eventual: a count a few seconds old is harmless",
+        "correct": true,
+        "why": "Right, and it is a weakening the account allows."
+      },
+      {
+        "text": "Bounded staleness at 60 seconds, to match the refresh",
+        "correct": false,
+        "why": "That pays twice for every read to guarantee a bound nobody needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-ck8e0j91",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the emulator do in this lesson that Azure would not? Choose all that apply.",
+    "hint": "One of them Azure does as well.",
+    "choices": [
+      {
+        "text": "Charge one request unit for a strong read",
+        "correct": true,
+        "why": "Right: on Azure it is about twice a session read."
+      },
+      {
+        "text": "Serve a strong read on an account whose default is eventual",
+        "correct": true,
+        "why": "Right: a request may only weaken the level."
+      },
+      {
+        "text": "Report eventual as the level of a new account",
+        "correct": true,
+        "why": "Right: Azure creates a new account at session."
+      },
+      {
+        "text": "Refuse a read whose token names a write that never happened",
+        "correct": false,
+        "why": "Azure answers that the same way: 404, sub-status 1002."
+      }
+    ]
+  },
+  {
+    "id": "ex-82n1k6ct",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every write to a container answers with the header `x-ms-___-token`.",
+    "hint": "It is named after the level that uses it.",
+    "blanks": [
+      {
+        "accept": [
+          "session"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,614 @@
+[
+  {
+    "id": "ex-fy3cx8vf",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Billing and analytics both need every payment event. How are they set up?",
+    "hint": "Where does a message wait until somebody has dealt with it?",
+    "choices": [
+      {
+        "text": "Two subscriptions on one topic",
+        "correct": true,
+        "why": "Right: each subscription receives its own copy and keeps its own record of what was acknowledged."
+      },
+      {
+        "text": "One subscription that both services read from",
+        "correct": false,
+        "why": "Readers sharing a subscription share its messages: each message goes to one of them, so each service would see about half."
+      },
+      {
+        "text": "Two topics, with the app publishing every event to each",
+        "correct": false,
+        "why": "That works and doubles the publisher's work for nothing; the fan-out is what subscriptions are for."
+      },
+      {
+        "text": "One topic read directly by both, with no subscription",
+        "correct": false,
+        "why": "A topic keeps nothing for a reader; messages are only ever read from a subscription."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqn3hsty",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`analytics` was pulled with `--auto-ack` and came back empty the second time. Why did `billing` still receive the payments?",
+    "hint": "What does an acknowledgement remove a message from?",
+    "choices": [
+      {
+        "text": "Billing was pulled first",
+        "correct": false,
+        "why": "It was pulled second, and the order of the pulls does not matter here."
+      },
+      {
+        "text": "The filter on billing made Pub/Sub keep a separate copy of the payments",
+        "correct": false,
+        "why": "Every subscription keeps its own copy, filter or not; the filter only decides which messages it is given."
+      },
+      {
+        "text": "An ack removes the message from that subscription and from no other",
+        "correct": true,
+        "why": "Right: acking in analytics left billing's copies untouched."
+      },
+      {
+        "text": "The emulator ignores acknowledgements",
+        "correct": false,
+        "why": "It honoured them: the second pull of analytics was empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-7727q5c1",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Billing should receive payments only, and the payment details are inside the JSON body. Why did `events.py` also send `type` as an attribute?",
+    "hint": "What does Pub/Sub read of a message, and what does it leave alone?",
+    "choices": [
+      {
+        "text": "Attributes are cheaper than data on the bill",
+        "correct": false,
+        "why": "The pricing page counts attributes in the size of a message, like the data."
+      },
+      {
+        "text": "A filter reads attributes and never the body",
+        "correct": true,
+        "why": "Right: Pub/Sub does not parse `data`, so what a filter selects on has to be an attribute."
+      },
+      {
+        "text": "The body is encrypted, so the subscription cannot read it",
+        "correct": false,
+        "why": "The body is bytes Pub/Sub never parses; encryption has nothing to do with filters."
+      },
+      {
+        "text": "gcloud prints only attributes in its table",
+        "correct": false,
+        "why": "It prints the data too; the format chosen in the lesson simply left it out."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7zy6brx",
+    "version": 1,
+    "section": "topics-and-subscriptions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fraud check is added a week after launch, as a new subscription on `app-events`, which has no topic retention. What does it receive on its first pull?",
+    "hint": "When does a subscription start receiving?",
+    "choices": [
+      {
+        "text": "The last seven days of events, the default retention",
+        "correct": false,
+        "why": "Seven days is how long a subscription keeps its own unacked messages; this one has none yet."
+      },
+      {
+        "text": "Only events published after it was created",
+        "correct": true,
+        "why": "Right: the topic kept nothing for it, so its first pull in the lesson came back empty."
+      },
+      {
+        "text": "Every event the other subscriptions have not acknowledged",
+        "correct": false,
+        "why": "Their backlogs belong to them; a new subscription does not inherit any of it."
+      },
+      {
+        "text": "An error, because the topic already has subscribers",
+        "correct": false,
+        "why": "A topic takes any number of subscriptions; the creation succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ezj9hv9",
+    "version": 1,
+    "section": "pull-and-push",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A push endpoint answers `503`. What does Pub/Sub do with the message?",
+    "hint": "The receiver of the lesson answered 503 twice.",
+    "choices": [
+      {
+        "text": "Treats it as a nack and sends it again",
+        "correct": true,
+        "why": "Right: message 17 arrived three times, until a 204 acknowledged it."
+      },
+      {
+        "text": "Moves it to the dead-letter topic at once",
+        "correct": false,
+        "why": "A dead-letter topic takes a message only after the configured number of attempts, five at least."
+      },
+      {
+        "text": "Drops it, since the endpoint said it was unavailable",
+        "correct": false,
+        "why": "Dropping on an error would lose messages; any non-2xx answer is a nack."
+      },
+      {
+        "text": "Switches the subscription to pull",
+        "correct": false,
+        "why": "The kind of subscription changes only when somebody changes its configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcpk5rap",
+    "version": 1,
+    "section": "pull-and-push",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`subscriber.py` received six of the eight new events, and message 10 was missing. Why?",
+    "hint": "What happened to message 10 just before the program started?",
+    "choices": [
+      {
+        "text": "The filter removed it",
+        "correct": false,
+        "why": "`analytics` has no filter; it receives everything."
+      },
+      {
+        "text": "It was lent to the earlier gcloud pull, and its deadline had not run out",
+        "correct": true,
+        "why": "Right: a pulled message is out of reach until it is acked or its ack deadline expires; it came back in a later section."
+      },
+      {
+        "text": "Streaming pull skips messages that a unary pull has seen",
+        "correct": false,
+        "why": "No such rule exists; message 10 was delivered later, to the same program."
+      },
+      {
+        "text": "It was acknowledged by the ack command",
+        "correct": false,
+        "why": "The ack named message 9's ack id only."
+      }
+    ]
+  },
+  {
+    "id": "ex-3p1vsxst",
+    "version": 1,
+    "section": "pull-and-push",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A callback in the Python client spends 40 seconds on one message, on a subscription whose ack deadline is 10 seconds. What happens?",
+    "hint": "What does the library do while a callback is still running?",
+    "choices": [
+      {
+        "text": "The message is delivered again after 10 seconds",
+        "correct": false,
+        "why": "That is what happens to a gcloud pull, which nobody extends; the client library keeps the lease alive."
+      },
+      {
+        "text": "The callback is killed at 10 seconds",
+        "correct": false,
+        "why": "The library does not interrupt a callback; deadlines are about the message, not the thread."
+      },
+      {
+        "text": "The library extends the deadline while the callback runs",
+        "correct": true,
+        "why": "Right: by default it keeps extending for up to an hour, so a slow callback does not cause a redelivery and a dead process does."
+      },
+      {
+        "text": "Pub/Sub raises the subscription's ack deadline to 40 seconds",
+        "correct": false,
+        "why": "The subscription's setting does not change; the library extends the lease on that one message."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5sj43v6",
+    "version": 1,
+    "section": "ordering-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order status events must keep their order per customer. What should the ordering key be?",
+    "hint": "The smallest thing whose events must stay in order.",
+    "choices": [
+      {
+        "text": "The customer id",
+        "correct": true,
+        "why": "Right: each customer's events keep their order, and customers are free of each other."
+      },
+      {
+        "text": "The store",
+        "correct": false,
+        "why": "Three stores give three keys, and every customer of a store waits behind every other one."
+      },
+      {
+        "text": "A constant such as `orders`",
+        "correct": false,
+        "why": "One key is one lane: the whole topic would be ordered and limited to the throughput of a single key."
+      },
+      {
+        "text": "The message id",
+        "correct": false,
+        "why": "A key unique per message orders nothing, because no two messages share it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fw7g3f9",
+    "version": 1,
+    "section": "ordering-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`redeliver.py` nacked `o-102 placed` on the ordered subscription. On Google, what does the reader receive next for key `c-02`?",
+    "hint": "What the emulator did is the other half of the lesson's figure.",
+    "choices": [
+      {
+        "text": "`o-102 packed`, then `o-102 delivered`, then `o-102 placed`",
+        "correct": false,
+        "why": "That is what the emulator delivered, and it breaks the order the subscription asked for."
+      },
+      {
+        "text": "Only `o-102 packed`; the nacked message goes to the dead-letter topic",
+        "correct": false,
+        "why": "One nack is one attempt; dead-lettering needs the configured number, five at least."
+      },
+      {
+        "text": "`o-102 placed` again, then `o-102 packed`",
+        "correct": true,
+        "why": "Right: the service redelivers the nacked message and every later one of its key, in order, even ones already acked."
+      },
+      {
+        "text": "Nothing more for that key until a person intervenes",
+        "correct": false,
+        "why": "The key resumes with the redelivery; no person is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4fxsdeh",
+    "version": 1,
+    "section": "ordering-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Publishing a message with ordering key `c-17` fails after the library's retries. What happens to the next publish with `c-17`?",
+    "hint": "What would happen to the order if the next message went through?",
+    "choices": [
+      {
+        "text": "It is sent, and the failed message is retried behind it",
+        "correct": false,
+        "why": "Then the later message would overtake the earlier one, the exact thing ordering is for."
+      },
+      {
+        "text": "It fails at once, until the program calls `resume_publish` for the key",
+        "correct": true,
+        "why": "Right: the client pauses the key so that nothing overtakes the message that did not go, and the program decides what to do."
+      },
+      {
+        "text": "It succeeds without an ordering key",
+        "correct": false,
+        "why": "The library does not strip keys; it pauses the key."
+      },
+      {
+        "text": "Every key of the publisher is paused",
+        "correct": false,
+        "why": "Only the key whose publish failed is paused; the others go on."
+      }
+    ]
+  },
+  {
+    "id": "ex-dh4rfr4t",
+    "version": 1,
+    "section": "dead-letters-and-replay",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the billing worker nack the payment `\"23,50\"` instead of acking it and moving on?",
+    "hint": "What would an ack have done to the payment?",
+    "choices": [
+      {
+        "text": "An ack would have lost the payment in silence",
+        "correct": true,
+        "why": "Right: a nack asks for it again, and the dead-letter topic then keeps it for a person to look at."
+      },
+      {
+        "text": "Nacking is faster than acking",
+        "correct": false,
+        "why": "Speed is not the point; what each one does to the message is."
+      },
+      {
+        "text": "The emulator refuses acks for messages with errors",
+        "correct": false,
+        "why": "Pub/Sub never looks inside the data, so it knows nothing of the error."
+      },
+      {
+        "text": "Acks are only allowed after a successful database write",
+        "correct": false,
+        "why": "Pub/Sub has no idea what the consumer writes; the ordering of work and ack is the consumer's choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sx36j32",
+    "version": 1,
+    "section": "dead-letters-and-replay",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the smallest maximum number of delivery attempts a dead-letter policy accepts?",
+    "hint": "`gcloud` refused 3 before sending anything.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "attempts"
+  },
+  {
+    "id": "ex-9c81xgg3",
+    "version": 1,
+    "section": "dead-letters-and-replay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `seek --time` to ten minutes earlier, `analytics` replayed eleven messages, and none of ids 1 to 9. Why not those?",
+    "hint": "When were they acknowledged, and what was the subscription keeping then?",
+    "choices": [
+      {
+        "text": "They were older than ten minutes",
+        "correct": false,
+        "why": "All of them were published within the last ten minutes of the run; age was not the reason."
+      },
+      {
+        "text": "Seek replays only messages that were never delivered",
+        "correct": false,
+        "why": "Seek to a time marks retained messages unacknowledged, delivered or not; the eleven had all been delivered."
+      },
+      {
+        "text": "They were acknowledged before `--retain-acked-messages` was turned on, so nothing kept them",
+        "correct": true,
+        "why": "Right: an acked message is gone from its subscription unless retention of acked messages, or topic retention, keeps it."
+      },
+      {
+        "text": "The filter on billing removed them",
+        "correct": false,
+        "why": "The filter belongs to billing; analytics was the subscription that was seeked."
+      }
+    ]
+  },
+  {
+    "id": "ex-535m6m29",
+    "version": 1,
+    "section": "dead-letters-and-replay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three subscriptions on `app-events` each need to replay up to a week. Which setting keeps that history most cheaply?",
+    "hint": "How many copies does each option store?",
+    "choices": [
+      {
+        "text": "`--retain-acked-messages` with seven days on each subscription",
+        "correct": false,
+        "why": "That keeps one copy per subscription, three in all, each billed as storage."
+      },
+      {
+        "text": "Topic retention of seven days",
+        "correct": true,
+        "why": "Right: the topic stores one copy and every attached subscription seeks into it."
+      },
+      {
+        "text": "A snapshot of each subscription every day",
+        "correct": false,
+        "why": "A snapshot lasts at most seven days and each is billed for what it holds; it suits a planned change, not a rolling week."
+      },
+      {
+        "text": "A longer ack deadline",
+        "correct": false,
+        "why": "The ack deadline is about one delivery, measured in seconds; it keeps no history."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nndnzra",
+    "version": 1,
+    "section": "emulator-and-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A subscription was created with `--min-retry-delay=20s`. After a nack, the emulator delivered the message again in under a second. What does that test say about the retry policy on Google?",
+    "hint": "Which side of the line between enforced and ignored is this on?",
+    "choices": [
+      {
+        "text": "The policy is broken and should not be used",
+        "correct": false,
+        "why": "The emulator ignored it; that says nothing about the service, which documents the wait."
+      },
+      {
+        "text": "It works only for push subscriptions",
+        "correct": false,
+        "why": "A retry policy applies to pull subscriptions as well; nothing in the run was about push."
+      },
+      {
+        "text": "That it waits about one second",
+        "correct": false,
+        "why": "The second was the emulator's own speed, not a reading of the policy."
+      },
+      {
+        "text": "Nothing: it was stored and not applied",
+        "correct": true,
+        "why": "Right: Google documents a wait between the two bounds, and this lab cannot show it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gpec91v",
+    "version": 1,
+    "section": "emulator-and-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A topic receives 1 TiB in a month and has three subscriptions, none filtered. At $40 per TiB and ignoring the free 10 GiB, what is the throughput bill in USD?",
+    "hint": "Throughput is the publish plus one delivery per subscription.",
+    "value": 160,
+    "tolerance": 0.5,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-8nfr3gwd",
+    "version": 1,
+    "section": "emulator-and-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Billing receives two events in eight through a filter on `app-events`. What does moving billing to a topic of its own, fed only payments, change on the bill?",
+    "hint": "How are filtered messages billed?",
+    "choices": [
+      {
+        "text": "Nothing, since a filter already removes the other events",
+        "correct": false,
+        "why": "A filter removes them from delivery and not from the bill: Pub/Sub acks them automatically and charges the throughput."
+      },
+      {
+        "text": "It raises the bill, because a second topic is charged per hour",
+        "correct": false,
+        "why": "Pub/Sub charges no fee per topic; it charges bytes."
+      },
+      {
+        "text": "It removes the delivery charge for the six events in eight billing never wanted",
+        "correct": true,
+        "why": "Right: about a third of the throughput line in the lesson's arithmetic, at the price of the app publishing payments twice."
+      },
+      {
+        "text": "It removes the 1 KB minimum per request",
+        "correct": false,
+        "why": "The minimum applies to every request on every topic."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wt5a3d8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem to the Pub/Sub setting that answers it.",
+    "hint": "One setting keeps history, one moves a message aside, one selects, one orders.",
+    "pairs": [
+      {
+        "left": "A payment nobody can parse keeps coming back",
+        "right": "A dead-letter topic"
+      },
+      {
+        "left": "Billing wants payments and nothing else",
+        "right": "A message filter"
+      },
+      {
+        "left": "A customer's status changes must arrive in order",
+        "right": "An ordering key"
+      },
+      {
+        "left": "A bug found on Monday needs the weekend replayed",
+        "right": "Retention, then seek"
+      }
+    ],
+    "right_distractors": [
+      "A longer ack deadline"
+    ]
+  },
+  {
+    "id": "ex-pvjf9tta",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened to the payment `\"23,50\"` in the lesson.",
+    "hint": "The dead-letter subscription is read last.",
+    "items": [
+      "The app publishes it to `app-events`",
+      "The filter lets it into `billing`",
+      "The billing worker fails to parse it and nacks it",
+      "After the fifth attempt, Pub/Sub publishes it to `app-events-dead`",
+      "A pull from `billing-dead` shows it with the attributes that say where it came from"
+    ]
+  },
+  {
+    "id": "ex-h92v6vqn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the emulator do as Google documents? Choose all that apply.",
+    "hint": "Separate what ran as the service runs from what it accepted and ignored.",
+    "choices": [
+      {
+        "text": "Forward a message to the dead-letter topic after five attempts",
+        "correct": true,
+        "why": "Right, with the service's own attribute names."
+      },
+      {
+        "text": "Deliver a nacked ordered message before the later ones of its key",
+        "correct": false,
+        "why": "It delivered `o-102 packed` first."
+      },
+      {
+        "text": "Retry a push request that got a 503",
+        "correct": true,
+        "why": "Right, with the same message id each time."
+      },
+      {
+        "text": "Delete a message once its retention had passed",
+        "correct": false,
+        "why": "The message was still there eleven minutes after a ten-minute retention."
+      },
+      {
+        "text": "Give only the filtered messages to billing",
+        "correct": true,
+        "why": "Right: billing received ids 4 and 7 and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpvk2564",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A message stays in a subscription until the reader sends an ___ for it.",
+    "hint": "`--auto-ack` sends it for you.",
+    "blanks": [
+      {
+        "accept": [
+          "ack",
+          "acknowledgement",
+          "acknowledgment"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

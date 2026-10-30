@@ -1,0 +1,448 @@
+{
+  "ex-darr9vwv": {
+    "prompt": "No AKS, qual destas coisas roda em máquinas que a Microsoft opera, e não na sua assinatura?",
+    "hint": "A metade que o tier paga.",
+    "choices": [
+      {
+        "text": "O kube-proxy, um pod em cada node",
+        "why": "Ele roda nos seus nodes, ao lado dos seus pods, como os DaemonSets que o kind mostrou em cada worker."
+      },
+      {
+        "text": "O scale set por trás do pool system",
+        "why": "Ele fica no node resource group da sua assinatura, cobrado como máquinas virtuais."
+      },
+      {
+        "text": "O CoreDNS, para o qual o pool system existe",
+        "why": "O CoreDNS é um pod de sistema, e pods de sistema rodam no seu pool system, nas suas máquinas."
+      },
+      {
+        "text": "O etcd",
+        "why": "Isso. O etcd, o API server, o scheduler e os controllers são o control plane, e nenhum deles está num node que você possa listar."
+      }
+    ]
+  },
+  "ex-nj8r87bg": {
+    "prompt": "O que falta a um cluster no tier Free, comparado com um no Standard?",
+    "hint": "Toda funcionalidade do AKS está em todo tier.",
+    "choices": [
+      {
+        "text": "Um SLA de disponibilidade do API server com garantia financeira",
+        "why": "Isso. O Free tem todas as funcionalidades e um control plane de melhor esforço, sem dinheiro por trás da promessa."
+      },
+      {
+        "text": "Availability zones para os node pools",
+        "why": "Zonas são uma propriedade dos pools, e o tier não as decide."
+      },
+      {
+        "text": "Node pools em modo user",
+        "why": "Um pool user existe em todo tier; o modo não é algo que o tier vende."
+      },
+      {
+        "text": "Mais de 10 nodes",
+        "why": "Dez é o teto recomendado; o limite documentado no Free é de 1.000 nodes."
+      }
+    ]
+  },
+  "ex-vp6d1w9c": {
+    "prompt": "Um cluster Standard com availability zones tem um SLA de 99,95% no API server. Num mês de 730 horas, quantos minutos o API server pode ficar inacessível sem quebrar a promessa?",
+    "hint": "0,05% de 730 horas, em minutos.",
+    "unit": "minutos"
+  },
+  "ex-jqyaes0g": {
+    "prompt": "Quais destas coisas o cluster kind desta lição NÃO consegue reproduzir? Escolha todas as que se aplicam.",
+    "hint": "O kind é o Kubernetes que o AKS roda, e nada do que a Microsoft acrescenta.",
+    "choices": [
+      {
+        "text": "Um node pool como um objeto, com um scale set por trás",
+        "why": "O kind sobe contêineres do Docker; nada os agrupa num pool que se redimensione ou atualize como um só."
+      },
+      {
+        "text": "Um drain recusado por um PodDisruptionBudget",
+        "why": "Isso é Kubernetes, e o lab rodou: o API server recusou os evictions que o orçamento não permitia."
+      },
+      {
+        "text": "A orquestração de um upgrade com surge",
+        "why": "Adicionar o node de surge e reimagear o antigo é coisa do AKS; o lab usou um node com cordon no lugar do node de surge."
+      },
+      {
+        "text": "Um node com o taint CriticalAddonsOnly",
+        "why": "Um taint é um campo do objeto node, e o kubectl o pôs no shop-worker."
+      },
+      {
+        "text": "Uma maintenance configuration",
+        "why": "Não há resource provider do AKS no lab para lê-la; o compilador do Bicep conferiu a forma e nada a executou."
+      }
+    ]
+  },
+  "ex-8ge2d8qm": {
+    "prompt": "Um cluster Standard tem todos os nodes na zona 1. A zona 1 falha por uma hora, todos os pods caem e o API server continua respondendo. O que o SLA prometia aqui?",
+    "hint": "Leia de que trata o SLA.",
+    "choices": [
+      {
+        "text": "Nada foi quebrado, porque os pods do shop contam como parte do control plane",
+        "why": "Pods são cargas nos seus nodes; o SLA não os conta de forma nenhuma."
+      },
+      {
+        "text": "Que a Microsoft leva os nodes para outra zona dentro da hora",
+        "why": "Nada no SLA move nodes; espalhá-los por zonas é declarado no pool."
+      },
+      {
+        "text": "Só o control plane estar acessível, o que se manteve, então foi cumprida",
+        "why": "Isso. O SLA trata do API server e de mais nada, e as zonas dos nodes são decisão sua."
+      },
+      {
+        "text": "Um crédito pela hora, já que o cluster caiu",
+        "why": "O API server do cluster estava de pé. O que caiu era seu para espalhar."
+      }
+    ]
+  },
+  "ex-pe9eyq98": {
+    "prompt": "O que mantém os pods do shop fora do pool system de um cluster AKS?",
+    "hint": "Uma preferência não é uma recusa.",
+    "choices": [
+      {
+        "text": "O rótulo kubernetes.azure.com/mode=system nos nodes dele",
+        "why": "O AKS prefere pôr pods de sistema ali por causa dele, e ele não recusa nada a ninguém."
+      },
+      {
+        "text": "O taint CriticalAddonsOnly=true:NoSchedule",
+        "why": "Isso. Só pods que o toleram são agendados ali, e os pods de sistema toleram enquanto o shop não."
+      },
+      {
+        "text": "O modo do pool, que o AKS confere contra o namespace de cada pod",
+        "why": "O modo é uma propriedade do pool e nada o compara com um namespace."
+      },
+      {
+        "text": "O tamanho de VM dele, pequeno demais para cargas de usuário",
+        "why": "Um pool system tem pelo menos 4 vCPUs e 4 GB, o que dá espaço de sobra para o shop."
+      }
+    ]
+  },
+  "ex-jzvydp9a": {
+    "prompt": "Ligue cada coisa escrita num node ao que ela diz.",
+    "hint": "Dois rótulos que o AKS escreve, um taint, e um que só o kind tem.",
+    "pairs": [
+      {
+        "left": "kubernetes.azure.com/agentpool",
+        "right": "O nome do pool a que o node pertence"
+      },
+      {
+        "left": "kubernetes.azure.com/mode",
+        "right": "Se o pool é system ou user"
+      },
+      {
+        "left": "CriticalAddonsOnly=true:NoSchedule",
+        "right": "Só pods que o toleram são agendados aqui"
+      },
+      {
+        "left": "node-role.kubernetes.io/control-plane",
+        "right": "O node de control plane do kind, que o AKS nunca mostra"
+      }
+    ],
+    "right_distractors": [
+      "O tamanho de máquina virtual do node"
+    ]
+  },
+  "ex-5cdpfhge": {
+    "prompt": "Os pods de sistema toleram o taint ___=true:NoSchedule, e é por isso que um pool system dedicado roda esses pods e nada mais.",
+    "hint": "O nome diz para quem ele é.",
+    "blanks": [
+      {
+        "accept": [
+          "CriticalAddonsOnly"
+        ]
+      }
+    ]
+  },
+  "ex-pnq1f58h": {
+    "prompt": "Um time quer capacidade Spot para o relatório noturno de vendas do shop. Onde ele pode ficar?",
+    "hint": "Os evictions da lição 5, e as restrições do pool system.",
+    "choices": [
+      {
+        "text": "No pool system, em Spot, para economizar nos nodes que ficam sempre ligados",
+        "why": "Um pool system não pode rodar em Spot; um eviction ali levaria o CoreDNS junto."
+      },
+      {
+        "text": "Em qualquer pool, já que Spot se escolhe por pod",
+        "why": "Spot é uma propriedade do scale set por trás de um pool, então todo node dele é Spot ou nenhum é."
+      },
+      {
+        "text": "Em lugar nenhum: clusters AKS não usam Spot",
+        "why": "Usam, em pools user."
+      },
+      {
+        "text": "Num pool user só dele, com scaleSetPriority em Spot",
+        "why": "Isso. Pools Spot têm de ser user, e um pool só dele mantém a API do shop em capacidade normal."
+      }
+    ]
+  },
+  "ex-8f5520z1": {
+    "prompt": "O slip.bicep tinha um pool chamado shop-apps, mode: 'system' e maxPods: 300, e o compilador imprimiu um aviso, o do nome. O que o silêncio dele sobre os outros dois diz?",
+    "hint": "O que um tipo que aceita qualquer string diz sobre uma string?",
+    "choices": [
+      {
+        "text": "Nada: o máximo documentado de 250 pods, e se system é aceito no lugar de System, são do serviço decidir",
+        "why": "Isso. Silêncio não é veredito, e a documentação é onde está escrito o 250."
+      },
+      {
+        "text": "Que os dois são válidos, já que o compilador confere contra os tipos do próprio Azure",
+        "why": "Ele confere contra os tipos, e o tipo do mode é qualquer string e o do maxPods não tem teto."
+      },
+      {
+        "text": "Que o Azure vai baixar o maxPods para 250 e pôr o mode em maiúscula sozinho",
+        "why": "Nada na lição diz isso, e um laptop não tem como descobrir o que o serviço faria."
+      },
+      {
+        "text": "Que o aviso do nome parou o compilador antes de ele ler o resto",
+        "why": "Um aviso não para nada; o template foi escrito, e uma checagem que não existe não é uma pulada."
+      }
+    ]
+  },
+  "ex-11brckye": {
+    "prompt": "Ponha na ordem os passos que o AKS segue para atualizar um node pool com surge.",
+    "hint": "Capacidade primeiro, remoção por último.",
+    "items": [
+      "Adicionar os nodes de surge que o maxSurge pede",
+      "Dar cordon e drain num node antigo, no ritmo que os orçamentos de interrupção permitem",
+      "Esperar o tempo de soak",
+      "Reimagear o node drenado na versão nova",
+      "Remover os nodes de surge quando todo node estiver atualizado"
+    ],
+    "trap": "O node de surge vem primeiro: é ele que dá aos pods despejados um lugar para ir."
+  },
+  "ex-mm5g4y2v": {
+    "prompt": "Um pool de 10 nodes tem maxSurge em 33%. Quantos nodes de surge o AKS adiciona por vez?",
+    "hint": "Uma porcentagem do número de nodes, arredondada para cima.",
+    "unit": "nodes"
+  },
+  "ex-fkdpj7eb": {
+    "prompt": "No lab, o drain pediu os três pods do shop de uma vez e dois foram recusados com \"would violate the pod's disruption budget\". Por que os três acabaram despejados mesmo assim?",
+    "hint": "O que mudou entre uma tentativa e a seguinte?",
+    "choices": [
+      {
+        "text": "O drain passou por cima do orçamento depois da terceira recusa",
+        "why": "O drain nunca passa por cima de um orçamento; ele pede de novo a cada cinco segundos até ser permitido ou o tempo acabar."
+      },
+      {
+        "text": "O uncordon do shop-worker3 subiu o minAvailable enquanto durou o drain",
+        "why": "O uncordon muda para onde os pods podem ir, e nada no orçamento."
+      },
+      {
+        "text": "Cada nova tentativa esperou uma substituta ficar pronta no outro node",
+        "why": "Isso. Três pods prontos com dois exigidos permitem um por vez, então os evictions seguiram o ritmo das substitutas."
+      },
+      {
+        "text": "A readiness probe falhou, então os pods deixaram de contar",
+        "why": "Um pod que não está pronto conta contra o orçamento, não a favor; as probes passaram o tempo todo."
+      }
+    ]
+  },
+  "ex-0e21p44w": {
+    "prompt": "Um cluster fora do suporte de longo prazo roda a 1.35 e precisa chegar à 1.37. Como ele chega lá?",
+    "hint": "Versões minor, e pular.",
+    "choices": [
+      {
+        "text": "Num upgrade só, já que as duas versões estão dentro do N-2",
+        "why": "Ter suporte não torna o salto permitido; fora do LTS nenhuma versão minor pode ser pulada."
+      },
+      {
+        "text": "Atualizando primeiro os node pools para a 1.37, e depois o control plane",
+        "why": "Os pools seguem o control plane e podem ficar atrás dele; nunca à frente."
+      },
+      {
+        "text": "Só criando um cluster novo na 1.37",
+        "why": "Um upgrade no lugar funciona, uma versão minor por vez."
+      },
+      {
+        "text": "Em dois upgrades, para a 1.36 e depois para a 1.37",
+        "why": "Isso. Uma versão minor por vez, o control plane primeiro em cada uma."
+      }
+    ]
+  },
+  "ex-hdchkzg9": {
+    "prompt": "Durante um upgrade do AKS, um orçamento de três de três bloqueia o drain de um node do pool apps, que tem undrainableNodeBehavior: Cordon. O que acontece? Escolha todas as que se aplicam.",
+    "hint": "Leia o que o aks.bicep escolheu, e o que faz um upgrade iniciado pela plataforma.",
+    "choices": [
+      {
+        "text": "O AKS baixa o orçamento para dois de três e drena o node",
+        "why": "O AKS nunca edita o seu orçamento; só um upgrade forçado ou iniciado pela plataforma passa por cima dele."
+      },
+      {
+        "text": "O node fica com cordon e com o rótulo kubernetes.azure.com/upgrade-status=Quarantined",
+        "why": "É isso que o Cordon faz com um node que não consegue drenar."
+      },
+      {
+        "text": "O upgrade inteiro volta para a versão anterior",
+        "why": "Nada volta sozinho, e um upgrade de control plane não tem como voltar."
+      },
+      {
+        "text": "O resto do pool continua sendo atualizado",
+        "why": "Pôr um node em quarentena é o que deixa os outros continuarem."
+      },
+      {
+        "text": "O node bloqueado fica na versão antiga até alguém resolver",
+        "why": "O node em quarentena é seu para resolver: o orçamento primeiro, depois o node."
+      }
+    ]
+  },
+  "ex-d6qdsq5d": {
+    "prompt": "Um pool em Azure CNI tem 10 nodes, maxSurge de 1 e maxPods de 30. A Microsoft dá os endereços de que um upgrade precisa como (nodes + maxSurge) × (1 + maxPods). Quantos endereços a subnet precisa ter livres para esse pool?",
+    "hint": "Um endereço por node, e um por pod que ele pode rodar.",
+    "unit": "endereços"
+  },
+  "ex-1drd2b4g": {
+    "prompt": "Um cluster roda a 1.36.2 com upgradeChannel em stable. Estão disponíveis a 1.35.9, a 1.36.6, a 1.37.1 e a 1.37.3, e a 1.37 é a minor mais nova. Para qual versão o canal o leva?",
+    "hint": "O stable é a última patch de N-1.",
+    "choices": [
+      {
+        "text": "1.37.3",
+        "why": "Essa é a última patch de N, que é para onde o rapid vai."
+      },
+      {
+        "text": "1.36.6",
+        "why": "Isso. N é 1.37, então N-1 é 1.36, e a última patch dela é a 1.36.6."
+      },
+      {
+        "text": "1.37.1",
+        "why": "O stable não pega a primeira patch de uma minor mais nova; ele fica uma minor atrás da mais nova."
+      },
+      {
+        "text": "A lugar nenhum, já que a 1.36 já tem suporte",
+        "why": "O stable também move a patch: a 1.36.2 está atrás da 1.36.6."
+      }
+    ]
+  },
+  "ex-dyg0h046": {
+    "prompt": "Uma janela tem startTime 02:00 e utcOffset -03:00. A que horas ela começa em UTC? Responda só com a hora.",
+    "hint": "A hora local menos o offset."
+  },
+  "ex-kbm5ypvv": {
+    "prompt": "Ligue cada maintenance configuration ao que ela agenda.",
+    "hint": "Duas seguem um canal; uma segue os releases do próprio AKS.",
+    "pairs": [
+      {
+        "left": "default",
+        "right": "Os releases semanais do AKS, de componentes do control plane e add-ons de sistema"
+      },
+      {
+        "left": "aksManagedAutoUpgradeSchedule",
+        "right": "Os upgrades de Kubernetes que o upgradeChannel decide"
+      },
+      {
+        "left": "aksManagedNodeOSUpgradeSchedule",
+        "right": "As imagens de node que o nodeOSUpgradeChannel decide"
+      }
+    ],
+    "right_distractors": [
+      "A manutenção de plataforma do Azure nos hosts por baixo dos scale sets"
+    ]
+  },
+  "ex-75e3kp6t": {
+    "prompt": "Uma janela vai das 08:00 às 12:00. Um upgrade de node pool começa às 11:50 e ainda está rodando às 12:15. O que o AKS faz?",
+    "hint": "A janela limita uma das pontas do trabalho.",
+    "choices": [
+      {
+        "text": "Deixa terminar, e não começa nada após o meio-dia",
+        "why": "Isso. Uma janela limita quando o trabalho começa, não quando termina."
+      },
+      {
+        "text": "Para o upgrade às 12:00 e retoma na próxima janela",
+        "why": "O trabalho em andamento não é parado no fim de uma janela."
+      },
+      {
+        "text": "Volta o pool para a versão anterior, já que ele rodou fora da janela",
+        "why": "Nada volta atrás por atrasar."
+      },
+      {
+        "text": "Deixa terminar e logo em seguida atualiza o próximo pool",
+        "why": "Depois que a janela fechou, nada novo começa até a próxima."
+      }
+    ]
+  },
+  "ex-yz0he2zz": {
+    "prompt": "Um cluster tem uma janela aksManagedAutoUpgradeSchedule todo domingo e upgradeChannel em none. O que acontece no domingo?",
+    "hint": "Uma janela diz quando, não o quê.",
+    "choices": [
+      {
+        "text": "O AKS o atualiza para a última patch, já que uma janela habilita patches",
+        "why": "Habilitar a manutenção planejada não habilita upgrades automáticos."
+      },
+      {
+        "text": "O AKS recusa a janela, porque none e uma janela não podem coexistir",
+        "why": "Os dois são aceitos; só não fazem nada juntos."
+      },
+      {
+        "text": "Nada atualiza a versão do Kubernetes dele, porque nenhum canal pede",
+        "why": "Isso. A janela é um compromisso marcado, e com none ninguém aparece."
+      },
+      {
+        "text": "A janela passa o cluster para stable sozinha",
+        "why": "Uma janela nunca muda o canal."
+      }
+    ]
+  },
+  "ex-fjkrp826": {
+    "prompt": "Sobre quais destes deslizes o compilador do Bicep avisou nesta lição? Escolha todos os que se aplicam.",
+    "hint": "Faixas e padrões estão nos tipos; listas de strings muitas vezes não.",
+    "choices": [
+      {
+        "text": "durationHours: 2 numa janela de manutenção",
+        "why": "O tipo tem mínimo de 4."
+      },
+      {
+        "text": "utcOffset: '-3:00'",
+        "why": "O tipo carrega o padrão de um sinal e dois dígitos de cada lado dos dois-pontos."
+      },
+      {
+        "text": "dayOfWeek: 'Sun'",
+        "why": "Passou: o tipo do dayOfWeek é qualquer string, e os sete nomes são regra do serviço."
+      },
+      {
+        "text": "nodeSoakDurationInMinutes: 45",
+        "why": "O máximo do tipo é 30."
+      },
+      {
+        "text": "drainTimeoutInMinutes: 2",
+        "why": "Passou: o tipo permite de 1 a 1.440, e o mínimo documentado de 5 é do serviço."
+      }
+    ]
+  },
+  "ex-w5a9p29w": {
+    "prompt": "O pool apps tem três nodes, cada um quase cheio, maxSurge 0 e maxUnavailable 1, e o shop tem três réplicas com minAvailable: 2. O que tem mais chance de travar o upgrade dele?",
+    "hint": "Sem surge, o espaço vem dos nodes que sobram.",
+    "choices": [
+      {
+        "text": "O taint do pool system, que nenhum pod do shop tolera",
+        "why": "O taint mantém o shop fora do pool system, que nunca foi para onde os pods dele podiam ir."
+      },
+      {
+        "text": "O maxUnavailable, que um pool user não tem permissão de usar",
+        "why": "É o pool system que não pode usar maxUnavailable."
+      },
+      {
+        "text": "O tempo de soak, que por padrão é de trinta minutos para cada node",
+        "why": "O soak padrão é 0; 30 é o máximo."
+      },
+      {
+        "text": "Substitutas em Pending, e o orçamento sem folga",
+        "why": "Isso. Sem node de surge os pods despejados precisam de espaço em dois nodes cheios, e até ficarem prontos o orçamento recusa o próximo eviction."
+      }
+    ]
+  },
+  "ex-6nex8dpn": {
+    "prompt": "Um cluster fora do suporte de longo prazo está na 1.34 e precisa chegar à 1.37. Quantos upgrades de control plane isso leva?",
+    "hint": "Um por versão minor.",
+    "unit": "upgrades"
+  },
+  "ex-m9y8pvkb": {
+    "prompt": "O kubectl ___ marca um node como não agendável e não move nenhum dos pods dele; o drain faz isso primeiro, e depois os despeja.",
+    "hint": "A primeira metade de um drain.",
+    "blanks": [
+      {
+        "accept": [
+          "cordon"
+        ]
+      }
+    ]
+  }
+}

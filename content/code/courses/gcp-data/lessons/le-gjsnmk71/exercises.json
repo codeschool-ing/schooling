@@ -1,0 +1,554 @@
+[
+  {
+    "id": "ex-cjv267w3",
+    "version": 1,
+    "section": "documents-and-collections",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does reading the document `customers/c-17` return?",
+    "hint": "A subcollection is not stored inside its parent.",
+    "choices": [
+      {
+        "text": "Only the customer's own fields",
+        "correct": true,
+        "why": "Right. The `orders` subcollection is read separately."
+      },
+      {
+        "text": "The customer's fields and every order under it",
+        "correct": false,
+        "why": "Orders in a subcollection are not part of the parent document."
+      },
+      {
+        "text": "A list of the subcollection names",
+        "correct": false,
+        "why": "Listing collections under a document is a separate call."
+      },
+      {
+        "text": "Nothing until the collection is created",
+        "correct": false,
+        "why": "Collections are created by writing a document into them."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdxr16vs",
+    "version": 1,
+    "section": "documents-and-collections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Quitanda not keep a customer's orders in an array field of the customer's document?",
+    "hint": "A document has a size limit.",
+    "choices": [
+      {
+        "text": "Arrays cannot be indexed",
+        "correct": false,
+        "why": "Arrays get an `array-contains` index; the problem is growth."
+      },
+      {
+        "text": "Arrays are read one element per billed read",
+        "correct": false,
+        "why": "A document read is one read, whatever its size."
+      },
+      {
+        "text": "It grows towards the 1 MiB limit",
+        "correct": true,
+        "why": "Right. A subcollection has no size limit, which is what it is for."
+      },
+      {
+        "text": "Batches cannot write arrays",
+        "correct": false,
+        "why": "`seed.py` writes `products`, an array, in a batch."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghk7978v",
+    "version": 1,
+    "section": "documents-and-collections",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes may one field's value hold in Firestore, as the emulator's refusal said?",
+    "hint": "1 MiB less 89 bytes.",
+    "value": 1048487,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7fnr21ck",
+    "version": 1,
+    "section": "documents-and-collections",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An order stores the path of a product document, and the product is deleted. What does Firestore do?",
+    "hint": "Is a reference a constraint?",
+    "choices": [
+      {
+        "text": "Refuses the delete while orders refer to it",
+        "correct": false,
+        "why": "That is a foreign key; Firestore has none."
+      },
+      {
+        "text": "Deletes the orders too",
+        "correct": false,
+        "why": "That is Spanner's `ON DELETE CASCADE`; Firestore has no cascade."
+      },
+      {
+        "text": "Moves the orders to a deleted-products collection",
+        "correct": false,
+        "why": "Firestore moves nothing on its own."
+      },
+      {
+        "text": "Nothing; the path now leads nowhere",
+        "correct": true,
+        "why": "Right. A reference is a value, and integrity is the program's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvbwq4mr",
+    "version": 1,
+    "section": "single-field-indexes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which indexes does Firestore build automatically for a field in a collection?",
+    "hint": "Two directions, and one more for arrays.",
+    "choices": [
+      {
+        "text": "None; every index is declared",
+        "correct": false,
+        "why": "Single-field indexes are automatic."
+      },
+      {
+        "text": "Both directions, plus `array-contains`",
+        "correct": true,
+        "why": "Right. These are the single-field indexes."
+      },
+      {
+        "text": "Only the document id",
+        "correct": false,
+        "why": "Every field is indexed unless exempted."
+      },
+      {
+        "text": "One composite index per pair of fields",
+        "correct": false,
+        "why": "Composite indexes are declared, never built by themselves."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxxwax31",
+    "version": 1,
+    "section": "single-field-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every new click document has a `clicked_at` timestamp, and the app writes thousands a second to one collection. What does the lesson suggest?",
+    "hint": "A value that grows with every write.",
+    "choices": [
+      {
+        "text": "Add a composite index on `clicked_at`",
+        "correct": false,
+        "why": "More index entries at the end of the same range make it worse."
+      },
+      {
+        "text": "A stale read before each write",
+        "correct": false,
+        "why": "Reads do not change where index entries land."
+      },
+      {
+        "text": "An exemption for `clicked_at`",
+        "correct": true,
+        "why": "Right. A sequential indexed value caps the collection near 500 writes a second."
+      },
+      {
+        "text": "Write the clicks in a transaction",
+        "correct": false,
+        "why": "A transaction adds work; the hotspot is the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6n5s46j",
+    "version": 1,
+    "section": "single-field-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `query.py` end every query with `limit(5)`?",
+    "hint": "What is billed?",
+    "choices": [
+      {
+        "text": "Each returned document is billed",
+        "correct": true,
+        "why": "Right. The limit names the price. Without it a query pays for everything that matches."
+      },
+      {
+        "text": "The emulator returns at most five documents",
+        "correct": false,
+        "why": "The emulator returns everything that matches."
+      },
+      {
+        "text": "Collection group queries need a limit",
+        "correct": false,
+        "why": "They do not; the limit is a choice."
+      },
+      {
+        "text": "Indexes hold only five entries per value",
+        "correct": false,
+        "why": "An index holds an entry per document."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc84tvma",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pending-biggest` answered on the laptop. What happens on its first call against Firestore with no composite index?",
+    "hint": "The emulator's default mode checks no index.",
+    "choices": [
+      {
+        "text": "It answers the same rows, more slowly",
+        "correct": false,
+        "why": "Firestore has no slow path; it refuses."
+      },
+      {
+        "text": "It scans the collection group and bills every document",
+        "correct": false,
+        "why": "Firestore never scans."
+      },
+      {
+        "text": "Firestore builds the index on the fly",
+        "correct": false,
+        "why": "Composite indexes are declared, and building one takes time."
+      },
+      {
+        "text": "It fails, and the error links to the index to create",
+        "correct": true,
+        "why": "Right. That is the refusal the Native emulator never gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kc12jq2",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The composite index for `pending-biggest` is created with the default `--query-scope=collection`. Which query does it serve?",
+    "hint": "Which collections does the query read?",
+    "choices": [
+      {
+        "text": "`pending-biggest`, as written in `query.py`",
+        "correct": false,
+        "why": "That reads the collection group, and needs the collection-group scope."
+      },
+      {
+        "text": "The same query on one customer's `orders`",
+        "correct": true,
+        "why": "Right. Collection scope serves a query on one collection."
+      },
+      {
+        "text": "Every query on `status`",
+        "correct": false,
+        "why": "Single-field queries already have their indexes."
+      },
+      {
+        "text": "Queries in Datastore mode only",
+        "correct": false,
+        "why": "Scope is about collections, not modes."
+      }
+    ]
+  },
+  {
+    "id": "ex-hq6xyb8p",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How can the laptop be made to refuse a query that lacks a composite index?",
+    "hint": "One mode has a flag for it.",
+    "choices": [
+      {
+        "text": "Datastore mode, with `--require-indexes`",
+        "correct": true,
+        "why": "Right. With `--index-file` beside it; the help says both work only in Datastore mode."
+      },
+      {
+        "text": "Start the Native emulator with `--rules`",
+        "correct": false,
+        "why": "Rules are about access, not indexes."
+      },
+      {
+        "text": "Set `FIRESTORE_EMULATOR_HOST` to port 8081",
+        "correct": false,
+        "why": "That only changes where the client connects."
+      },
+      {
+        "text": "Use Query Explain before each query",
+        "correct": false,
+        "why": "The emulator returns no explain metrics."
+      }
+    ]
+  },
+  {
+    "id": "ex-xxefqts7",
+    "version": 1,
+    "section": "composite-indexes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Firestore's feature that reports the index used and the documents read by a query, which the emulator does not provide, is Query ___.",
+    "hint": "It is spelt like the SQL keyword for a plan.",
+    "blanks": [
+      {
+        "accept": [
+          "Explain"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e1yrb2z9",
+    "version": 1,
+    "section": "transactions-and-cursors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `stock.py`, why was the losing customer refused rather than allowed to buy six?",
+    "hint": "What did its retry read?",
+    "choices": [
+      {
+        "text": "Firestore refuses a second write",
+        "correct": false,
+        "why": "The winner's write was the second write to a document read twice."
+      },
+      {
+        "text": "The thread started later",
+        "correct": false,
+        "why": "Both started together; the commit order decided."
+      },
+      {
+        "text": "Batches cannot decrement a field",
+        "correct": false,
+        "why": "This is a transaction, and it reads before it writes."
+      },
+      {
+        "text": "Its transaction ran again from the top and read four",
+        "correct": true,
+        "why": "Right. Retried from the top, it saw the stock as it now was."
+      }
+    ]
+  },
+  {
+    "id": "ex-whq4vmwj",
+    "version": 1,
+    "section": "transactions-and-cursors",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page of 10 orders is fetched with `offset(90).limit(10)`. By the pricing page's rule, how many document reads are billed?",
+    "hint": "Skipped documents are billed too.",
+    "value": 100,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yz9tkx3p",
+    "version": 1,
+    "section": "transactions-and-cursors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every order also increments one `stats/today` document, and at the evening peak orders arrive several per second. What is the problem, and the fix?",
+    "hint": "A single document has a sustained write rate.",
+    "choices": [
+      {
+        "text": "No problem; transactions serialise the increments",
+        "correct": false,
+        "why": "They do, which is the problem: one document takes about one write a second."
+      },
+      {
+        "text": "The document grows past 1 MiB; split it by hour",
+        "correct": false,
+        "why": "A counter does not grow; the rate is the issue."
+      },
+      {
+        "text": "One document: about one write a second",
+        "correct": true,
+        "why": "Right. Spread the counter over several documents, a distributed counter added up on read."
+      },
+      {
+        "text": "Index exemptions on the counter field",
+        "correct": false,
+        "why": "Indexes are not the limit here; the document is."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2css7rp",
+    "version": 1,
+    "section": "modes-and-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 0.045 USD per 100,000 reads beyond 50,000 free a day, what do 250,000 reads a day cost over 30 days, in USD?",
+    "hint": "(250,000 − 50,000) × 30 / 100,000 × 0.045",
+    "value": 2.7,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-kbbpxnx5",
+    "version": 1,
+    "section": "modes-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Quitanda database fits Datastore mode rather than Native?",
+    "hint": "Who reads it?",
+    "choices": [
+      {
+        "text": "The app's order history, read from phones",
+        "correct": false,
+        "why": "Phones need the Firebase SDKs, which are Native mode's."
+      },
+      {
+        "text": "A service only servers read",
+        "correct": true,
+        "why": "Right. Servers lose nothing without listeners and mobile SDKs."
+      },
+      {
+        "text": "The delivery status screen, which listens for changes",
+        "correct": false,
+        "why": "Real-time listeners are Native mode's."
+      },
+      {
+        "text": "Any database with more than 1 GiB",
+        "correct": false,
+        "why": "Size does not choose the mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnekvv0g",
+    "version": 1,
+    "section": "modes-and-price",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda moves the app's data from the `(default)` database to a named database `shop`, with the same traffic. What happens to the monthly bill of 4.86?",
+    "hint": "Read what the free quota applies to.",
+    "choices": [
+      {
+        "text": "Nothing; the free quota is per project",
+        "correct": false,
+        "why": "The page says named databases do not qualify for it."
+      },
+      {
+        "text": "It falls, because named databases cost less",
+        "correct": false,
+        "why": "The rates are the same; only the free quota differs."
+      },
+      {
+        "text": "It doubles, because both databases are billed",
+        "correct": false,
+        "why": "The `(default)` database would be empty and cost nothing."
+      },
+      {
+        "text": "It rises: no free quota for named databases",
+        "correct": true,
+        "why": "Right. Every read, write and GiB is then billed from the first one."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkkqaj0y",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Firestore term to its Datastore-mode name or meaning.",
+    "hint": "Datastore had its own words first.",
+    "pairs": [
+      {
+        "left": "document",
+        "right": "entity"
+      },
+      {
+        "left": "collection",
+        "right": "kind"
+      },
+      {
+        "left": "composite index",
+        "right": "a declared index over several properties"
+      }
+    ],
+    "right_distractors": [
+      "a split"
+    ]
+  },
+  {
+    "id": "ex-dqd4m3h1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the Firestore emulator in Native mode do as Firestore would? Choose all that apply.",
+    "hint": "Data model and transactions, or indexes and metrics?",
+    "choices": [
+      {
+        "text": "Refuse a field value over 1,048,487 bytes",
+        "correct": true,
+        "why": "Yes; the limit is Firestore's."
+      },
+      {
+        "text": "Retry a transaction whose read went stale",
+        "correct": true,
+        "why": "Yes; the stock never went below zero."
+      },
+      {
+        "text": "Page with a cursor from the last document",
+        "correct": true,
+        "why": "Yes; `pages.py` read six pages."
+      },
+      {
+        "text": "Refuse a query that needs a missing composite index",
+        "correct": false,
+        "why": "Only Datastore mode with `--require-indexes` refused."
+      },
+      {
+        "text": "Return Query Explain metrics",
+        "correct": false,
+        "why": "It returned none."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqg95vke",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of shipping `pending-biggest` to production in order.",
+    "hint": "The index has to exist before the query meets it.",
+    "items": [
+      "Write the query and run it against the emulator",
+      "Declare the composite index with collection-group scope",
+      "Wait for the index to finish building",
+      "Deploy the code that runs the query"
+    ]
+  }
+]

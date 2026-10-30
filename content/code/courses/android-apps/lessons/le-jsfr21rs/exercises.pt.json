@@ -1,0 +1,382 @@
+{
+  "ex-k7dnbdqz": {
+    "prompt": "Por que o `CoursesScreen` recebe uma função `onOpen` em vez de um `NavController`?",
+    "hint": "Pense em prévias e testes.",
+    "choices": [
+      {
+        "text": "Para poder ser vista em prévia e testada sozinha",
+        "why": "Isso: uma tela que segura um controlador só funciona dentro daquele grafo."
+      },
+      {
+        "text": "Porque um composable não pode segurar um `NavController`",
+        "why": "Pode; o `PlannerNavHost` segura. É uma escolha de desenho."
+      },
+      {
+        "text": "Para a navegação rodar numa thread de fundo",
+        "why": "A navegação acontece na thread principal de qualquer jeito."
+      },
+      {
+        "text": "Para evitar o plugin de serialização",
+        "why": "As rotas ainda precisam dele; a tela só não as vê."
+      }
+    ]
+  },
+  "ex-5e7dvb49": {
+    "prompt": "Que mudança no arquivo de build uma rota `@Serializable` precisa?",
+    "hint": "Uma anotação que um plugin do compilador trata.",
+    "choices": [
+      {
+        "text": "O plugin `kotlin.serialization`",
+        "why": "Isso: ele gera o código que transforma uma rota numa string e de volta."
+      },
+      {
+        "text": "Subir o `compileSdk` para 38",
+        "why": "Rotas não têm nada a ver com o nível do SDK."
+      },
+      {
+        "text": "O plugin KSP e um compilador de navegação",
+        "why": "Rotas com tipo usam o plugin de serialização, não o KSP."
+      },
+      {
+        "text": "Nada; o `navigation-compose` já traz",
+        "why": "A biblioteca traz o runtime, não o plugin do compilador."
+      }
+    ]
+  },
+  "ex-swdr42yj": {
+    "prompt": "Ligue cada chamada ao que ela faz com a pilha de navegação.",
+    "hint": "Empilhar, desempilhar ou começar.",
+    "pairs": [
+      {
+        "left": "`navigate(CourseDetail(id))`",
+        "right": "Empilha uma entrada no topo"
+      },
+      {
+        "left": "`popBackStack()`",
+        "right": "Remove a entrada do topo"
+      },
+      {
+        "left": "`startDestination = Courses`",
+        "right": "Decide a primeira entrada"
+      }
+    ],
+    "right_distractors": [
+      "Limpa a pilha e reinicia a activity"
+    ]
+  },
+  "ex-p6gm6dd4": {
+    "prompt": "O `CourseDetail` tem uma propriedade, `courseId`. Que padrão de rota o Navigation gerou para ele?",
+    "hint": "O teste o imprimiu.",
+    "choices": [
+      {
+        "text": "`CourseDetail?courseId`",
+        "why": "Uma propriedade obrigatória virou um espaço reservado no caminho."
+      },
+      {
+        "text": "`CourseDetail/{courseId}`",
+        "why": "Isso: o nome da classe e um espaço reservado por propriedade."
+      },
+      {
+        "text": "`course/kotlin`",
+        "why": "Isso é uma rota escrita à mão com um valor já dentro."
+      },
+      {
+        "text": "`{CourseDetail}`",
+        "why": "O espaço reservado é a propriedade, não a classe."
+      }
+    ]
+  },
+  "ex-bsjq01pa": {
+    "prompt": "Por que o planner passa `courseId` para a tela do curso, em vez do `Course` com as sessões?",
+    "hint": "Onde os argumentos ficam guardados?",
+    "choices": [
+      {
+        "text": "O Navigation recusa data classes como argumentos",
+        "why": "A própria rota é uma data class; a questão é o que vai nela."
+      },
+      {
+        "text": "Strings são mais rápidas de comparar",
+        "why": "Velocidade não é o motivo que a aula dá."
+      },
+      {
+        "text": "Argumentos são salvos num `Bundle`, e uma cópia envelhece",
+        "why": "Isso: e o id basta para a próxima tela encontrar o resto."
+      },
+      {
+        "text": "O `Course` não pode ser serializado",
+        "why": "Ele poderia ser serializável; continuaria sendo o hábito errado."
+      }
+    ]
+  },
+  "ex-301p3ce2": {
+    "prompt": "Um colega passa uma lista de 2.000 sessões como argumento de rota. Funciona no celular dele. O que pode acontecer no de um estudante?",
+    "hint": "O argumento é salvo com a pilha.",
+    "choices": [
+      {
+        "text": "Uma quebra ao salvar o estado",
+        "why": "Isso: `TransactionTooLargeException`; um `Bundle` é feito para valores pequenos."
+      },
+      {
+        "text": "A lista chega em outra ordem",
+        "why": "A ordem é mantida; o tamanho é o problema."
+      },
+      {
+        "text": "O Navigation descarta o argumento em silêncio",
+        "why": "Nada é descartado em silêncio; falha."
+      },
+      {
+        "text": "Nada; argumentos só vivem na memória",
+        "why": "Eles são salvos para a pilha sobreviver ao processo ser tirado."
+      }
+    ]
+  },
+  "ex-y17pnb15": {
+    "prompt": "Dentro de `composable<CourseDetail> { entry -> … }`, a rota volta com `entry.___<CourseDetail>()`.",
+    "hint": "Para a rota.",
+    "blanks": [
+      {
+        "accept": [
+          "toRoute"
+        ]
+      }
+    ]
+  },
+  "ex-90arb22n": {
+    "prompt": "Nos cinco toques do teste, qual foi o maior número de entradas que a pilha teve ao mesmo tempo?",
+    "hint": "Depois de tocar em Add session."
+  },
+  "ex-sv452d4p": {
+    "prompt": "Um `TestNavHostController` é criado sem `navigatorProvider.addNavigator(ComposeNavigator())`. O que dá errado?",
+    "hint": "Quem sabe o que é um destino `composable`?",
+    "choices": [
+      {
+        "text": "O grafo não pode ser montado",
+        "why": "Isso: um controlador de teste começa sem esse navegador."
+      },
+      {
+        "text": "O teste passa mas não imprime rotas",
+        "why": "Ele não chega a imprimir."
+      },
+      {
+        "text": "O voltar para de funcionar, mas o navigate funciona",
+        "why": "Nenhum funciona sem o navegador."
+      },
+      {
+        "text": "Os argumentos chegam `null`",
+        "why": "Os argumentos não são o problema; os destinos são."
+      }
+    ]
+  },
+  "ex-12pse9h8": {
+    "prompt": "Ponha em ordem as pilhas que o teste imprimiu.",
+    "hint": "Empilha, empilha, desempilha, desempilha.",
+    "items": [
+      "`Courses`",
+      "`Courses > CourseDetail`",
+      "`Courses > CourseDetail > AddSession`",
+      "`Courses > CourseDetail`, depois de Save"
+    ]
+  },
+  "ex-sqfvn9cm": {
+    "prompt": "Depois de salvar uma sessão, por que o formulário se desempilha em vez de navegar para a tela do curso?",
+    "hint": "O que o voltar faria depois?",
+    "choices": [
+      {
+        "text": "O voltar reabriria o formulário terminado",
+        "why": "Isso: e o voltar o abriria de novo."
+      },
+      {
+        "text": "O `navigate` não pode ir para um destino que já está na pilha",
+        "why": "Pode, e a seção 05 mostra o que isso faz."
+      },
+      {
+        "text": "Desempilhar salva a sessão no banco",
+        "why": "A navegação não salva nada; salvar é trabalho de outra aula."
+      },
+      {
+        "text": "Desempilhar é mais rápido que navegar",
+        "why": "Velocidade não é o motivo; a forma da pilha é."
+      }
+    ]
+  },
+  "ex-7ecg06q3": {
+    "prompt": "O que o `launchSingleTop = true` evita?",
+    "hint": "Um toque duplo.",
+    "choices": [
+      {
+        "text": "Uma segunda cópia do destino que já está no topo",
+        "why": "Isso: o toque duplo deixou um `CourseDetail` só."
+      },
+      {
+        "text": "Qualquer destino aparecer duas vezes em qualquer lugar da pilha",
+        "why": "Só o topo é conferido."
+      },
+      {
+        "text": "O botão voltar",
+        "why": "O voltar continua desempilhando normalmente."
+      },
+      {
+        "text": "Os argumentos mudarem",
+        "why": "É sobre entradas, não argumentos."
+      }
+    ]
+  },
+  "ex-10gye77y": {
+    "prompt": "`navigate(Courses) { popUpTo<Courses> { inclusive = true } }` a partir do formulário. O que a pilha contém depois?",
+    "hint": "Desempilhe até `Courses`, esse também, e depois empilhe.",
+    "choices": [
+      {
+        "text": "`Courses > CourseDetail > AddSession > Courses`",
+        "why": "Esse é o `navigate` simples, sem `popUpTo`."
+      },
+      {
+        "text": "`Courses > Courses`",
+        "why": "Esse é o `popUpTo` sem `inclusive`."
+      },
+      {
+        "text": "`Courses`",
+        "why": "Isso: tudo desempilhado, a lista antiga incluída, e uma lista nova empilhada."
+      },
+      {
+        "text": "Uma pilha vazia, então a activity fecha",
+        "why": "O novo `Courses` é empilhado depois de desempilhar."
+      }
+    ]
+  },
+  "ex-m98gp1ek": {
+    "prompt": "Por que o teste chama `nav.navigate` dentro de `rule.runOnUiThread { … }`?",
+    "hint": "Onde a navegação tem de acontecer?",
+    "choices": [
+      {
+        "text": "A navegação tem de acontecer na thread principal",
+        "why": "Isso: a thread do teste não é a principal."
+      },
+      {
+        "text": "Para as duas chamadas acontecerem num quadro, como num toque duplo",
+        "why": "Isso é um efeito colateral; o motivo é a thread."
+      },
+      {
+        "text": "Porque o `TestNavHostController` não é seguro entre threads no Linux",
+        "why": "O sistema operacional não é a questão."
+      },
+      {
+        "text": "Para imprimir a pilha depois",
+        "why": "Imprimir acontece no `runOnIdle`."
+      }
+    ]
+  },
+  "ex-y0w47zsr": {
+    "prompt": "O `navigate(Courses)` simples a partir do formulário deixou quantas entradas na pilha?",
+    "hint": "Duas delas eram `Courses`."
+  },
+  "ex-yw65fjgb": {
+    "prompt": "Com só `Courses` na pilha, o estudante aperta voltar. O que acontece?",
+    "hint": "O terceiro voltar do teste.",
+    "choices": [
+      {
+        "text": "Nada; a última tela ignora o voltar",
+        "why": "O teste imprimiu `finishing: true`."
+      },
+      {
+        "text": "A activity termina e o estudante sai do app",
+        "why": "Isso: o `NavHost` para de responder e o padrão do dispatcher fecha a activity."
+      },
+      {
+        "text": "O `Courses` é empilhado de novo",
+        "why": "Voltar nunca empilha."
+      },
+      {
+        "text": "O app quebra com a pilha vazia",
+        "why": "O voltar nunca esvazia a pilha; a activity fecha no lugar."
+      }
+    ]
+  },
+  "ex-ye6aj1h1": {
+    "prompt": "Que objeto recebe o gesto de voltar do sistema, e é aquele em que o `NavHost` se registra?",
+    "hint": "O teste o chamou diretamente.",
+    "choices": [
+      {
+        "text": "`OnBackPressedDispatcher`",
+        "why": "Isso: o dispatcher da activity."
+      },
+      {
+        "text": "`NavHostController`",
+        "why": "O controlador é avisado pelo `NavHost`; ele não recebe o gesto."
+      },
+      {
+        "text": "`ComposeNavigator`",
+        "why": "Esse desenha destinos `composable`."
+      },
+      {
+        "text": "`BackStackEntry`",
+        "why": "Uma entrada é o que é desempilhado."
+      }
+    ]
+  },
+  "ex-jmr11cch": {
+    "prompt": "Uma notificação de lembrete abre o planner direto no curso de Kotlin. Qual mecanismo, e que pilha ele deve montar?",
+    "hint": "Como se o estudante tivesse tocado até lá.",
+    "choices": [
+      {
+        "text": "Um deep link, montando `Courses > CourseDetail`",
+        "why": "Isso: o voltar então vai para a lista, não para fora do app."
+      },
+      {
+        "text": "Um deep link, montando só `CourseDetail`",
+        "why": "O Navigation monta a pilha que o estudante teria tido, com a lista."
+      },
+      {
+        "text": "Uma segunda activity para aquele curso",
+        "why": "O planner mantém uma activity só; um deep link abre um destino nela."
+      },
+      {
+        "text": "`launchSingleTop`, montando `CourseDetail > Courses`",
+        "why": "O `launchSingleTop` é sobre duplicatas, e essa pilha está de cabeça para baixo."
+      }
+    ]
+  },
+  "ex-e4q4mxx9": {
+    "prompt": "Quais destes pertencem às propriedades de uma rota? Escolha todos os que se aplicam.",
+    "hint": "Pequeno, estável, e suficiente para achar o resto.",
+    "choices": [
+      {
+        "text": "O id de um curso",
+        "why": "Sim: as rotas do planner carregam exatamente isso."
+      },
+      {
+        "text": "A lista de sessões do curso",
+        "why": "Não: grande, e velha assim que uma sessão é acrescentada."
+      },
+      {
+        "text": "O id de uma sessão, para uma tela de edição",
+        "why": "Sim: outro id que a próxima tela pode buscar."
+      },
+      {
+        "text": "O `NavController`",
+        "why": "Não: ele não pode ser salvo, e telas não deveriam segurá-lo."
+      }
+    ]
+  },
+  "ex-nzmcmh2r": {
+    "prompt": "Um estudante toca num curso, toca de novo antes de a tela mudar e aperta voltar uma vez. Sem `launchSingleTop`, onde ele está?",
+    "hint": "Duas entradas foram empilhadas.",
+    "choices": [
+      {
+        "text": "Na lista de cursos, onde começou",
+        "why": "Um voltar desempilha uma entrada; havia duas telas de curso."
+      },
+      {
+        "text": "Na primeira cópia daquela página",
+        "why": "Isso: a segunda cópia saiu e a primeira está embaixo."
+      },
+      {
+        "text": "Fora do app, na tela inicial",
+        "why": "Isso precisa da pilha na última entrada."
+      },
+      {
+        "text": "No formulário de sessão",
+        "why": "Nada empilhou o formulário."
+      }
+    ]
+  }
+}

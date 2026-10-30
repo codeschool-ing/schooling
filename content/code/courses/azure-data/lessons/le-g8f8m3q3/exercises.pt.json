@@ -1,0 +1,409 @@
+{
+  "ex-yaffywh5": {
+    "prompt": "O que uma chave de conta de armazenamento consegue fazer?",
+    "hint": "É a chave-mestra, não a senha de um usuário.",
+    "choices": [
+      {
+        "text": "Ler blobs, e nada mais sem um papel que permita",
+        "why": "Uma chave não é limitada por papéis; ela assina qualquer requisição."
+      },
+      {
+        "text": "Só o que a pessoa que a listou tem permissão de fazer",
+        "why": "A chave não carrega identidade; quem a tem faz tudo."
+      },
+      {
+        "text": "Qualquer coisa, na conta inteira",
+        "why": "Isso. Por isso ela nunca deveria sair da conta."
+      },
+      {
+        "text": "Gerenciar as configurações da conta no Azure Resource Manager",
+        "why": "O Resource Manager é o plano de controle, atrás de login; a chave age no plano de dados."
+      }
+    ]
+  },
+  "ex-y4kz76s3": {
+    "prompt": "Uma requisição assinada com uma chave diferente em um caractere foi recusada. O que a conta compara?",
+    "hint": "A chave nunca viaja.",
+    "choices": [
+      {
+        "text": "A assinatura dela contra a enviada",
+        "why": "Isso. Só o HMAC viaja."
+      },
+      {
+        "text": "A chave enviada na requisição contra a que ela guarda",
+        "why": "A chave nunca é enviada."
+      },
+      {
+        "text": "As regras de rede da conta contra o endereço de quem chama",
+        "why": "Foi o que a linha de comando sugeriu, e não era a causa."
+      },
+      {
+        "text": "O login de quem chama contra os papéis da conta",
+        "why": "Uma requisição assinada com chave não tem login nenhum."
+      }
+    ]
+  },
+  "ex-13nqxtpf": {
+    "prompt": "Uma chave de conta foi impressa num log de build público há uma hora. Qual é a primeira coisa a fazer, e quanto custa?",
+    "hint": "Nada registra quem tem uma cópia.",
+    "choices": [
+      {
+        "text": "Apagar o log de build, o que tira a chave de circulação",
+        "why": "Quem leu o log nessa hora ainda tem a chave."
+      },
+      {
+        "text": "Pôr os contêineres em `off`, o que bloqueia a chave",
+        "why": "O nível público trata de requisições anônimas; uma assinada com chave o ignora."
+      },
+      {
+        "text": "Esperar a chave expirar, o que leva sete dias",
+        "why": "Chaves de conta não expiram."
+      },
+      {
+        "text": "Regenerar a chave na hora, e todo cliente ainda nela quebra",
+        "why": "Isso. A quebra é o preço de ter usado a chave."
+      }
+    ]
+  },
+  "ex-ge4fzzpn": {
+    "prompt": "Ponha em ordem a rotação de chaves documentada pela Microsoft, começando com todo cliente na `key1`.",
+    "hint": "Ninguém fica numa chave que está para mudar.",
+    "items": [
+      "Mover todo cliente para a `key2`",
+      "Regenerar a `key1`",
+      "Voltar todo cliente para a nova `key1`",
+      "Regenerar a `key2`"
+    ]
+  },
+  "ex-rxwec75d": {
+    "prompt": "Ligue cada parâmetro de SAS ao que ele carrega.",
+    "hint": "`echo \"$SAS\" | tr \"&\" \"\\n\"` imprimiu um por linha.",
+    "pairs": [
+      {
+        "left": "`se`",
+        "right": "a validade, em UTC"
+      },
+      {
+        "left": "`sp`",
+        "right": "as permissões"
+      },
+      {
+        "left": "`sr`",
+        "right": "o tipo de recurso nomeado"
+      },
+      {
+        "left": "`sig`",
+        "right": "o HMAC sobre o resto"
+      }
+    ],
+    "right_distractors": [
+      "a própria chave da conta"
+    ]
+  },
+  "ex-fs5c8xen": {
+    "prompt": "Alguém edita uma SAS só de leitura na URL, trocando `sp=r` por `sp=rw`, e tenta uma escrita. O que acontece?",
+    "hint": "O que a assinatura cobre?",
+    "choices": [
+      {
+        "text": "A escrita passa, porque `sp` agora diz `w`",
+        "why": "`sp` está coberto pela assinatura; mudá-lo invalida a assinatura."
+      },
+      {
+        "text": "É recusada: a assinatura quebrou",
+        "why": "Isso. `AuthorizationFailure` no laboratório."
+      },
+      {
+        "text": "É recusada com `AuthorizationPermissionMismatch`",
+        "why": "Essa é a resposta a uma SAS válida sem a permissão; esta já não é válida."
+      },
+      {
+        "text": "As leituras continuam e só a escrita falha",
+        "why": "A URL editada falha até para leitura; a original continua lendo."
+      }
+    ]
+  },
+  "ex-wbqs0dpe": {
+    "prompt": "Uma SAS assinada para `exports/2026/10/orders-2026-10-29.csv` é usada na exportação de 28 de outubro do mesmo contêiner. Por que é recusada?",
+    "hint": "`sr=b`.",
+    "choices": [
+      {
+        "text": "O dia 28 expirou",
+        "why": "A validade é da SAS, não do blob em que é usada."
+      },
+      {
+        "text": "A assinatura cobre o caminho de um blob",
+        "why": "Isso. `sr=b` e o caminho fazem parte do que foi assinado."
+      },
+      {
+        "text": "Uma SAS funciona uma vez só e já tinha sido usada",
+        "why": "Uma SAS funciona quantas vezes quiser até expirar."
+      },
+      {
+        "text": "Ler outro blob exige `l` além de `r`",
+        "why": "`l` lista um contêiner; não estende uma SAS de blob a outros blobs."
+      }
+    ]
+  },
+  "ex-8tzen5w0": {
+    "prompt": "Que tipo de SAS continua funcionando depois que o acesso por chave compartilhada é desligado na conta?",
+    "hint": "Qual delas não é assinada com a chave da conta?",
+    "choices": [
+      {
+        "text": "Uma SAS de serviço assinada contra uma política armazenada",
+        "why": "Ela continua assinada com a chave da conta, e a chave compartilhada está desligada."
+      },
+      {
+        "text": "Uma SAS de conta",
+        "why": "Também assinada com a chave da conta."
+      },
+      {
+        "text": "Nenhuma; desligar a chave compartilhada encerra toda SAS",
+        "why": "A SAS de user delegation é a exceção, de propósito."
+      },
+      {
+        "text": "Uma SAS de user delegation",
+        "why": "Isso. Ela é assinada com uma chave emitida pelo Entra ID."
+      }
+    ]
+  },
+  "ex-vnxvkhjd": {
+    "prompt": "Por quantos dias no máximo vale uma user delegation key, segundo a documentação da Microsoft?",
+    "hint": "Uma semana.",
+    "unit": "dias"
+  },
+  "ex-4n4x61zp": {
+    "prompt": "A SAS feita a partir da política `analysts` não tinha `sp` nem `se`. Onde ficam as permissões e a validade?",
+    "hint": "`si=analysts`.",
+    "choices": [
+      {
+        "text": "Na política, guardada no contêiner",
+        "why": "Isso. A SAS a nomeia com `si`."
+      },
+      {
+        "text": "Na chave da conta",
+        "why": "A chave assina; não guarda permissões."
+      },
+      {
+        "text": "Em lugar nenhum: essa SAS concede tudo até ser revogada",
+        "why": "Ela concede o que a política diz, `rl` até a validade dela."
+      },
+      {
+        "text": "Na assinatura, codificadas",
+        "why": "Uma assinatura prova; não carrega nada legível."
+      }
+    ]
+  },
+  "ex-hppgnnn6": {
+    "prompt": "A Quitanda apaga a política `analysts`. O que acontece com as URLs de SAS já entregues com ela?",
+    "hint": "O laboratório usou a mesma URL antes e depois.",
+    "choices": [
+      {
+        "text": "Continuam funcionando até a validade delas",
+        "why": "Elas não têm validade própria; era a da política."
+      },
+      {
+        "text": "Só param depois de girar a chave da conta",
+        "why": "Apagar a política basta; é para isso que ela existe."
+      },
+      {
+        "text": "Param de funcionar na hora",
+        "why": "Isso. A listagem do laboratório foi recusada logo depois da exclusão."
+      },
+      {
+        "text": "Viram só de leitura",
+        "why": "Elas viram nada."
+      }
+    ]
+  },
+  "ex-aq7cgd80": {
+    "prompt": "Quantas políticas de acesso armazenadas um contêiner pode ter, segundo a documentação da Microsoft?",
+    "hint": "Menos de dez.",
+    "unit": "políticas"
+  },
+  "ex-ef4gb4ad": {
+    "prompt": "Um parceiro precisa de leitura num contêiner por um mês, e a Quitanda quer poder cortar o acesso no dia em que o contrato acabar antes. Que SAS?",
+    "hint": "Qual delas pode ser retirada sem girar a chave?",
+    "choices": [
+      {
+        "text": "Uma SAS de serviço com `--expiry` daqui a um mês",
+        "why": "Só girar a chave a encerraria antes."
+      },
+      {
+        "text": "Uma SAS de conta por um mês",
+        "why": "Mais ampla que o necessário, e tão difícil de retirar quanto."
+      },
+      {
+        "text": "Um contêiner público, com a URL mandada só ao parceiro",
+        "why": "Público quer dizer qualquer um, seja para quem a URL foi mandada."
+      },
+      {
+        "text": "Uma assinada contra uma política do parceiro",
+        "why": "Isso. Apagar a política a encerra no mesmo dia."
+      }
+    ]
+  },
+  "ex-mh684qp5": {
+    "prompt": "Com o nível do contêiner em `blob`, o que uma requisição sem credenciais consegue fazer?",
+    "hint": "O laboratório tentou duas coisas.",
+    "choices": [
+      {
+        "text": "Listar o contêiner, e não ler os blobs",
+        "why": "O contrário."
+      },
+      {
+        "text": "Ler e listar, já que o contêiner é público",
+        "why": "Listar exige o nível `container`."
+      },
+      {
+        "text": "Ler um blob pelo nome, sem listar",
+        "why": "Isso. A listagem foi recusada nesse nível."
+      },
+      {
+        "text": "Nada, até uma SAS ser acrescentada",
+        "why": "O `curl` leu a exportação sem SAS nenhuma."
+      }
+    ]
+  },
+  "ex-42sar1xd": {
+    "prompt": "Por que o nível `blob` não é seguro para as exportações da Quitanda, mesmo que ninguém consiga listá-las?",
+    "hint": "Como os nomes foram escolhidos na lição 2?",
+    "choices": [
+      {
+        "text": "O nível `blob` também permite escritas",
+        "why": "Os níveis públicos só permitem leitura."
+      },
+      {
+        "text": "Os nomes seguem um padrão que qualquer um adivinha",
+        "why": "Isso. Os nomes de um lake são previsíveis de propósito."
+      },
+      {
+        "text": "Buscadores indexam blobs públicos automaticamente",
+        "why": "A lição não disse isso; nomes adivinháveis bastam."
+      },
+      {
+        "text": "O nível expira depois de um dia e vira `container`",
+        "why": "Os níveis não mudam sozinhos."
+      }
+    ]
+  },
+  "ex-qdsnq6mr": {
+    "prompt": "No Azure, o nível de um contêiner diz `container`, e o `allowBlobPublicAccess` da conta é false. O que uma listagem anônima recebe?",
+    "hint": "Qual das duas configurações vence?",
+    "choices": [
+      {
+        "text": "Uma recusa",
+        "why": "Isso. Com a chave da conta em false, nenhum contêiner é público."
+      },
+      {
+        "text": "A lista de nomes, como o contêiner permite",
+        "why": "O false da conta vence qualquer nível de contêiner."
+      },
+      {
+        "text": "Só os blobs escritos antes da chave ser definida",
+        "why": "A chave vale para toda requisição, seja qual for a idade do blob."
+      },
+      {
+        "text": "Os nomes, sem o conteúdo",
+        "why": "Nenhuma requisição anônima recebe nada."
+      }
+    ]
+  },
+  "ex-q1dg4780": {
+    "prompt": "Ligue cada vazamento à configuração que o elimina.",
+    "hint": "Uma linha do `main.tf` cada.",
+    "pairs": [
+      {
+        "left": "um contêiner posto como público para um teste",
+        "right": "`allow_nested_items_to_be_public = false`"
+      },
+      {
+        "left": "uma chave de conta enviada junto com o código",
+        "right": "`shared_access_key_enabled = false`"
+      },
+      {
+        "left": "uma SAS assinada por um ano",
+        "right": "`sas_policy` com `Block`"
+      }
+    ],
+    "right_distractors": [
+      "`min_tls_version = \"TLS1_2\"`"
+    ]
+  },
+  "ex-xwmwc0hq": {
+    "prompt": "Que coluna de `StorageBlobLogs` distingue uma leitura anônima de uma assinada com SAS?",
+    "hint": "Ela diz como a requisição foi autenticada.",
+    "choices": [
+      {
+        "text": "`OperationName`",
+        "why": "Diz o que foi feito, `GetBlob`, não como foi assinado."
+      },
+      {
+        "text": "`Uri`",
+        "why": "Diz qual blob; uma SAS pode estar na query de qualquer um."
+      },
+      {
+        "text": "`AuthenticationType`",
+        "why": "Isso. Anônima, SAS, chave ou Entra ID."
+      },
+      {
+        "text": "`StatusCode`",
+        "why": "As duas leituras passam com 200."
+      }
+    ]
+  },
+  "ex-x3qdq621": {
+    "prompt": "A Quitanda desliga o acesso por chave compartilhada. Quais dos programas das lições 2 a 5 param de funcionar, e por quê?",
+    "hint": "Como `UseDevelopmentStorage=true` assina?",
+    "choices": [
+      {
+        "text": "Todos: cada um assina com a chave",
+        "why": "Isso. Eles precisariam de uma identidade do Entra ID no lugar."
+      },
+      {
+        "text": "Nenhum; eles usam a biblioteca Python, que assina com Entra ID",
+        "why": "A biblioteca assina com o que a cadeia de conexão der: aqui, a chave."
+      },
+      {
+        "text": "Só os que escrevem; leituras continuam",
+        "why": "A chave desligada recusa leituras assinadas com chave também."
+      },
+      {
+        "text": "Só os que usam `az`",
+        "why": "As bibliotecas e o `az` assinam do mesmo jeito aqui."
+      }
+    ]
+  },
+  "ex-mj68reys": {
+    "prompt": "Uma SAS usada para uma escrita que ela não concede é recusada com o código de erro ___.",
+    "hint": "Authorization, depois permission, depois mismatch.",
+    "blanks": [
+      {
+        "accept": [
+          "AuthorizationPermissionMismatch"
+        ]
+      }
+    ]
+  },
+  "ex-m8ear5b1": {
+    "prompt": "Quais destas revogam uma SAS de serviço vazada antes da validade? Marque todas as que valem.",
+    "hint": "Do que a assinatura depende?",
+    "choices": [
+      {
+        "text": "Regenerar a chave da conta que a assinou",
+        "why": "Sim, e todo outro cliente que usa essa chave quebra junto."
+      },
+      {
+        "text": "Apagar a política de acesso armazenada que ela nomeia, se nomear uma",
+        "why": "Sim; a listagem do laboratório falhou logo depois da exclusão."
+      },
+      {
+        "text": "Pôr o nível de acesso público do contêiner em `off`",
+        "why": "SAS não é acesso anônimo; o nível não a afeta."
+      },
+      {
+        "text": "Apagar o blob e enviar de novo",
+        "why": "A SAS nomeia o caminho, então lê o blob novo do mesmo jeito."
+      }
+    ]
+  }
+}

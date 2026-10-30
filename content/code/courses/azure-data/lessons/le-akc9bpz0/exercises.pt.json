@@ -1,0 +1,410 @@
+{
+  "ex-tdn8m5wg": {
+    "prompt": "Um blob é apagado numa conta com soft delete de blob em 14 dias. O que acontece no dia 5?",
+    "hint": "Nada se moveu; ele foi marcado.",
+    "choices": [
+      {
+        "text": "Ele sumiu, e só um backup o traz de volta",
+        "why": "Essa é a conta sem soft delete."
+      },
+      {
+        "text": "Ele fica num contêiner de lixeira que dá para navegar",
+        "why": "Nada é movido; o blob fica no próprio nome, marcado como apagado."
+      },
+      {
+        "text": "Guardado, marcado como apagado e cobrado até o dia 14",
+        "why": "Isso. Depois do dia 14 some de vez."
+      },
+      {
+        "text": "A exclusão foi recusada, porque o blob está protegido por 14 dias",
+        "why": "Soft delete nunca impede uma exclusão; isso é imutabilidade."
+      }
+    ]
+  },
+  "ex-4nt1a6js": {
+    "prompt": "Um engenheiro apaga o contêiner `orders-raw` inteiro por engano. O soft delete de blob está ligado; o de contêiner, desligado. O que dá para recuperar?",
+    "hint": "As duas chaves protegem contra erros diferentes.",
+    "choices": [
+      {
+        "text": "Nada; isso precisava da outra chave",
+        "why": "Isso. As duas são chaves independentes."
+      },
+      {
+        "text": "Todo blob, porque o soft delete de blob cobre todos",
+        "why": "O soft delete de blob cobre blobs apagados um a um, não um contêiner apagado."
+      },
+      {
+        "text": "O contêiner, vazio, já que só os blobs foram apagados de forma reversível",
+        "why": "Sem soft delete de contêiner o contêiner também some."
+      },
+      {
+        "text": "Os blobs escritos nos últimos 14 dias",
+        "why": "A retenção conta a partir da exclusão, não de quando os blobs foram escritos."
+      }
+    ]
+  },
+  "ex-wp33gmzn": {
+    "prompt": "Qual é a maior retenção de soft delete de blob, em dias, que o provedor do Terraform aceitou?",
+    "hint": "A recusa imprimiu a faixa.",
+    "unit": "dias"
+  },
+  "ex-2jgpzdhs": {
+    "prompt": "Numa conta com versionamento, um programa apaga `rates/usd-brl.csv`. O que sobra?",
+    "hint": "Uma exclusão com versionamento não destrói nada.",
+    "choices": [
+      {
+        "text": "Nada; o versionamento só protege sobrescritas",
+        "why": "Uma exclusão transforma o conteúdo atual numa versão anterior."
+      },
+      {
+        "text": "O blob, intacto, porque exclusões são recusadas com versionamento ligado",
+        "why": "Nada recusa a exclusão; só a imutabilidade faz isso."
+      },
+      {
+        "text": "Um blob apagado de forma reversível que some depois dos dias de retenção",
+        "why": "Isso é o soft delete sem versionamento."
+      },
+      {
+        "text": "Uma versão anterior com o conteúdo",
+        "why": "Isso. Restaurar é uma cópia, que já é uma versão nova."
+      }
+    ]
+  },
+  "ex-j7y0z98n": {
+    "prompt": "Uma tabela de 50 GB é reescrita inteira toda noite numa conta com versionamento e sem regra para versões. Mais ou menos quantos GB de versões anteriores ela guarda depois de 365 noites?",
+    "hint": "Cada noite deixa uma cópia inteira para trás.",
+    "unit": "GB"
+  },
+  "ex-mgqwrq7b": {
+    "prompt": "No `snapshot.py`, como a taxa de câmbio certa foi restaurada?",
+    "hint": "As duas últimas linhas do programa.",
+    "choices": [
+      {
+        "text": "Apagando o blob atual, para o snapshot tomar o lugar dele",
+        "why": "Um snapshot nunca toma o lugar do blob sozinho."
+      },
+      {
+        "text": "Copiando a URL do snapshot sobre o nome do próprio blob",
+        "why": "Isso, do mesmo jeito que uma versão é restaurada."
+      },
+      {
+        "text": "Com um undelete do snapshot",
+        "why": "Nada foi apagado, e o Azurite não tem undelete."
+      },
+      {
+        "text": "Renomeando o snapshot para o nome do blob",
+        "why": "O Blob Storage não tem renomear, como a lição 3 contou."
+      }
+    ]
+  },
+  "ex-bcv20xa8": {
+    "prompt": "Qual é a diferença entre um snapshot e uma versão?",
+    "hint": "Quem decide quando cada um é feito?",
+    "choices": [
+      {
+        "text": "Um snapshot pode ser escrito e uma versão é só de leitura",
+        "why": "Os dois são cópias só de leitura."
+      },
+      {
+        "text": "Uma versão é feita a cada escrita; um snapshot só quando um programa pede",
+        "why": "Isso. O versionamento automatiza o que os snapshots faziam à mão."
+      },
+      {
+        "text": "Snapshots são grátis, versões são cobradas",
+        "why": "Os dois guardam dados que são cobrados."
+      },
+      {
+        "text": "Versões sobrevivem a uma exclusão, snapshots são apagados com o blob antes",
+        "why": "Não é isso que os separa; é quem os dispara."
+      }
+    ]
+  },
+  "ex-zzx9eg9r": {
+    "prompt": "No `lifecycle.tf`, por que o `prefix_match` começa com `orders-raw/`?",
+    "hint": "Uma regra é da conta, não de um contêiner.",
+    "choices": [
+      {
+        "text": "É uma pasta que a regra cria para os blobs movidos",
+        "why": "Uma regra não cria nada; ela move e apaga."
+      },
+      {
+        "text": "Prefixos têm de começar pelo nome da conta",
+        "why": "A conta está implícita; o prefixo começa pelo contêiner."
+      },
+      {
+        "text": "É enfeite opcional; a regra vale para a conta inteira",
+        "why": "Sem ele a regra valeria para todo block blob da conta."
+      },
+      {
+        "text": "Ele nomeia primeiro o contêiner, depois o começo dos nomes de blob",
+        "why": "Isso. Assim a regra mexe nas exportações e em nada mais da conta."
+      }
+    ]
+  },
+  "ex-akaeaq9n": {
+    "prompt": "Por que a regra da Quitanda para as exportações para no cold em vez do archive?",
+    "hint": "Em que conta estão as exportações, e como ela é replicada?",
+    "choices": [
+      {
+        "text": "A conta dela é ZRS, replicação sem esse tier",
+        "why": "Isso, como a lição 4 mostrou."
+      },
+      {
+        "text": "Cold é mais barato que archive para dados guardados sete anos",
+        "why": "O archive guarda um gigabyte por menos; o motivo é outro."
+      },
+      {
+        "text": "Uma regra não pode mover blobs para o archive",
+        "why": "O provedor listou ações `tier_to_archive_...`."
+      },
+      {
+        "text": "O archive quebraria a regra das versões",
+        "why": "As versões têm ações de archive próprias."
+      }
+    ]
+  },
+  "ex-xhnc5wsw": {
+    "prompt": "Um colega propõe uma regra que move logs para cold aos 30 dias e os apaga aos 60. Quanto custa cada log?",
+    "hint": "Os mínimos da lição 4 valem para o que uma regra faz.",
+    "choices": [
+      {
+        "text": "30 dias de hot e 30 de cold, como está escrito",
+        "why": "O mínimo do cold é 90 dias e é cobrado inteiro."
+      },
+      {
+        "text": "Nada a mais, já que regras são isentas de saída antecipada",
+        "why": "Não existe essa isenção."
+      },
+      {
+        "text": "30 dias de hot e 90 de cold, 60 deles por dias em que não ficou",
+        "why": "Isso. Uma regra não sabe nada de dias mínimos."
+      },
+      {
+        "text": "A regra é recusada, porque 60 é menos que o mínimo do cold",
+        "why": "Nada confere a regra contra os mínimos; a conta é que mostra."
+      }
+    ]
+  },
+  "ex-6j40qs4w": {
+    "prompt": "Uma regra de ciclo de vida é salva às 14h. Quando a Microsoft documenta que ela começa a mover blobs?",
+    "hint": "A política não é instantânea.",
+    "choices": [
+      {
+        "text": "Na hora, para todo blob que bate",
+        "why": "As políticas são rodadas pela plataforma uma vez por dia, não ao salvar."
+      },
+      {
+        "text": "Às 14h do dia seguinte, exato",
+        "why": "Não há hora fixa; são até 24 horas, mais o tempo das ações."
+      },
+      {
+        "text": "Depois de 30 dias, a menor idade da regra",
+        "why": "As idades são dos blobs, não da regra."
+      },
+      {
+        "text": "Em até umas 24 horas, e as ações levam mais numa conta grande",
+        "why": "Isso. Uma regra escrita hoje não arquiva nada esta noite."
+      }
+    ]
+  },
+  "ex-vkv0q0vw": {
+    "prompt": "Ligue cada proteção ao que ela faz.",
+    "hint": "Duas guardam uma cópia depois do erro, duas o recusam.",
+    "pairs": [
+      {
+        "left": "soft delete",
+        "right": "guarda um blob apagado por alguns dias"
+      },
+      {
+        "left": "versionamento",
+        "right": "guarda o que cada escrita substituiu"
+      },
+      {
+        "left": "retenção por tempo",
+        "right": "recusa mudanças até uma data"
+      },
+      {
+        "left": "legal hold",
+        "right": "recusa mudanças até ser retirado"
+      }
+    ],
+    "right_distractors": [
+      "move blobs para tiers mais baratos"
+    ]
+  },
+  "ex-52nqxm53": {
+    "prompt": "Por que o `audit.tf` define `locked = false` na primeira versão?",
+    "hint": "O que pode ser desfeito numa política travada?",
+    "choices": [
+      {
+        "text": "Políticas travadas não são suportadas em contas ZRS",
+        "why": "A lição não cita esse limite."
+      },
+      {
+        "text": "O Terraform não consegue criar política travada",
+        "why": "`locked` é um atributo que o provedor aceita como `true` também."
+      },
+      {
+        "text": "Para testar antes; travada, ela só cresce",
+        "why": "Isso. Travar é uma mudança revisada, feita quando todos concordam."
+      },
+      {
+        "text": "Uma política destravada recusa exclusões por mais tempo",
+        "why": "As duas recusam pelo mesmo período; só a travada não pode ser encurtada."
+      }
+    ]
+  },
+  "ex-zne8ehh3": {
+    "prompt": "Um processo exige que a Quitanda mantenha as notas de setembro inalteradas até ele acabar, numa data que ninguém sabe. Que proteção serve?",
+    "hint": "Uma delas não tem data.",
+    "choices": [
+      {
+        "text": "Uma retenção por tempo de sete anos, por segurança",
+        "why": "Fixa uma data que ninguém escolheu, e uma travada não pode ser encurtada se o processo acabar cedo."
+      },
+      {
+        "text": "Um legal hold, retirado no fim do processo",
+        "why": "Isso. Dura o quanto durar."
+      },
+      {
+        "text": "Soft delete com o máximo de 365 dias",
+        "why": "O soft delete deixa a mudança acontecer; o processo precisa que ela seja recusada."
+      },
+      {
+        "text": "Versionamento, para toda mudança ficar guardada",
+        "why": "Ele guarda as mudanças em vez de recusá-las."
+      }
+    ]
+  },
+  "ex-1axxtk25": {
+    "prompt": "O Azurite guardou uma política de soft delete de 7 dias. O que a listagem com `--include d` mostrou depois de uma exclusão?",
+    "hint": "A configuração respondeu como se funcionasse.",
+    "choices": [
+      {
+        "text": "Uma lista vazia",
+        "why": "Isso. A configuração foi guardada e nada foi mantido."
+      },
+      {
+        "text": "O blob apagado, com `deleted: true`",
+        "why": "É o que o Azure mostraria por sete dias."
+      },
+      {
+        "text": "Um erro, porque `--include d` não é suportado",
+        "why": "A listagem respondeu sem reclamar, sem nada dentro."
+      },
+      {
+        "text": "O blob, ainda atual, porque o Azurite ignorou a exclusão",
+        "why": "A exclusão funcionou; o blob simplesmente sumiu."
+      }
+    ]
+  },
+  "ex-tk4tckqh": {
+    "prompt": "O que um `APINotImplemented` do Azurite diz?",
+    "hint": "Leia a mensagem que veio junto.",
+    "choices": [
+      {
+        "text": "Que a requisição estava malformada e deve ser corrigida",
+        "why": "A mesma requisição funciona no Azure; é o emulador que não a tem."
+      },
+      {
+        "text": "Que a conta precisa de login antes",
+        "why": "Essa é a mensagem do plano de controle, `Please run 'az login'`."
+      },
+      {
+        "text": "Que o Azurite não escreveu essa operação",
+        "why": "Isso. A mensagem diz isso com todas as letras."
+      },
+      {
+        "text": "Que o recurso está desligado nesta conta",
+        "why": "Nada na conta foi desligado; a mensagem diz que a operação não foi escrita."
+      }
+    ]
+  },
+  "ex-qrc2cq0z": {
+    "prompt": "O que um teste que passa contra o Azurite prova? Marque todas as que valem.",
+    "hint": "Só o que o Azurite de fato fez, e não guardou nem recusou.",
+    "choices": [
+      {
+        "text": "Que um snapshot é guardado e pode ser copiado de volta sobre o blob",
+        "why": "Sim; o Azurite implementa snapshots."
+      },
+      {
+        "text": "Que um blob apagado pode ser recuperado dentro da retenção",
+        "why": "O Azurite não guardou nada e recusou o undelete."
+      },
+      {
+        "text": "Que a requisição de soft delete está bem formada",
+        "why": "Sim, e nada além disso."
+      },
+      {
+        "text": "Que um id de versão guardado restaura o conteúdo certo",
+        "why": "O Azurite não deu id de versão nenhum."
+      }
+    ]
+  },
+  "ex-acvqwesk": {
+    "prompt": "Ordene as proteções da que só guarda um blob apagado por um tempo até a que ninguém consegue desfazer.",
+    "hint": "Soft delete vem primeiro; uma política travada vem por último.",
+    "items": [
+      "soft delete",
+      "versionamento",
+      "retenção por tempo destravada",
+      "retenção por tempo travada"
+    ]
+  },
+  "ex-xbfp849v": {
+    "prompt": "Numa regra de ciclo de vida, o valor de `blob_types` para block blobs se escreve `___`.",
+    "hint": "Minúscula primeiro, depois uma maiúscula.",
+    "blanks": [
+      {
+        "accept": [
+          "blockBlob"
+        ]
+      }
+    ]
+  },
+  "ex-bkzyydy1": {
+    "prompt": "Que proteção teria salvo as seis linhas de log que o `--overwrite` da lição 2 destruiu, sem mais nada ligado?",
+    "hint": "Uma sobrescrita, não uma exclusão.",
+    "choices": [
+      {
+        "text": "Versionamento",
+        "why": "Isso. A sobrescrita teria deixado as seis linhas como versão anterior."
+      },
+      {
+        "text": "Soft delete de contêiner",
+        "why": "Ninguém apagou o contêiner."
+      },
+      {
+        "text": "Uma regra de ciclo de vida",
+        "why": "Uma regra move e apaga por idade; não guarda nada."
+      },
+      {
+        "text": "Um legal hold posto depois da sobrescrita",
+        "why": "Protegeria o conteúdo novo, não o perdido."
+      }
+    ]
+  },
+  "ex-aqzs6se8": {
+    "prompt": "Os registros de auditoria da Quitanda não podem ser alterados por sete anos, e um auditor vai perguntar como isso é garantido. Que desenho responde?",
+    "hint": "Guardar uma cópia não é o mesmo que recusar a mudança.",
+    "choices": [
+      {
+        "text": "Versionamento, com uma regra de ciclo de vida que guarda cada versão por sete anos",
+        "why": "Quem tem permissão de apagar versões ainda consegue apagá-las."
+      },
+      {
+        "text": "Soft delete no máximo, renovado todo ano",
+        "why": "365 dias é o máximo, e ele nunca recusa uma mudança."
+      },
+      {
+        "text": "Um procedimento de restauração testado a partir de snapshots do Azurite",
+        "why": "O Azurite é um laboratório; não garante nada sobre o Azure."
+      },
+      {
+        "text": "Uma retenção travada de sete anos num contêiner que só guarda os registros",
+        "why": "Isso. Ninguém consegue encurtá-la, e nada mais fica preso junto."
+      }
+    ]
+  }
+}

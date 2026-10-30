@@ -1,0 +1,610 @@
+[
+ {
+  "id": "ex-b004hmxv",
+  "version": 1,
+  "section": "the-hierarchy",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of the four boxes is billed for the resources inside it?",
+  "hint": "One box holds identity and another holds money.",
+  "choices": [
+   {
+    "text": "The tenant",
+    "correct": false,
+    "why": "The tenant holds identities. Nothing is billed to it."
+   },
+   {
+    "text": "Each subscription, for what it holds",
+    "correct": true,
+    "why": "Right. It is the box of money, and its quotas are counted in it."
+   },
+   {
+    "text": "The root management group",
+    "correct": false,
+    "why": "Management groups pass rules down; they are not billed."
+   },
+   {
+    "text": "The resource group",
+    "correct": false,
+    "why": "A group sorts resources inside a subscription; the bill is the subscription's."
+   }
+  ]
+ },
+ {
+  "id": "ex-trcvvq54",
+  "version": 1,
+  "section": "the-hierarchy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is the id of a tenant's root management group?",
+  "hint": "The portal calls it Tenant Root Group.",
+  "choices": [
+   {
+    "text": "Always the string `root`",
+    "correct": false,
+    "why": "No fixed string: the root is named after its tenant."
+   },
+   {
+    "text": "The id of the first subscription created",
+    "correct": false,
+    "why": "Subscriptions hang below the root; none of them names it."
+   },
+   {
+    "text": "It is the tenant's own id",
+    "correct": true,
+    "why": "Right. Which is why `tree.bicep` defaults its parent to `tenant().tenantId`."
+   },
+   {
+    "text": "Whatever the person who signed up chose",
+    "correct": false,
+    "why": "Nobody chooses it; it is created with the tenant."
+   }
+  ]
+ },
+ {
+  "id": "ex-hv0kzg9h",
+  "version": 1,
+  "section": "the-hierarchy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`rg-shop-prod` was created in `brazilsouth`. A virtual machine in it is in `southcentralus`. What does the group's location decide?",
+  "hint": "What does the group itself store?",
+  "choices": [
+   {
+    "text": "Nothing: the VM's creation should have been refused",
+    "correct": false,
+    "why": "A group's resources may be in any region. Azure accepts it."
+   },
+   {
+    "text": "That the VM is billed at São Paulo's prices",
+    "correct": false,
+    "why": "A resource is priced by its own region, not its group's."
+   },
+   {
+    "text": "The region the VM falls back to if Texas fails",
+    "correct": false,
+    "why": "No such fallback exists; recovery is something you design."
+   },
+   {
+    "text": "Where the group's own record is kept",
+    "correct": true,
+    "why": "Right. Only the metadata lives there, which is why it should match the resources."
+   }
+  ]
+ },
+ {
+  "id": "ex-rb28g3x2",
+  "version": 1,
+  "section": "the-hierarchy",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many levels of management groups may a tenant have below its root, not counting the root or the subscriptions?",
+  "hint": "The lesson gives the depth in words.",
+  "value": 6,
+  "tolerance": 0,
+  "unit": "levels"
+ },
+ {
+  "id": "ex-ergrsma9",
+  "version": 1,
+  "section": "the-hierarchy",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop's marketing department is split in two. Somebody proposes moving `shop-prod` under a new management group named after one of the halves. What does the lesson say against it?",
+  "hint": "What does a branch of the tree exist for?",
+  "choices": [
+   {
+    "text": "Moving it changes the policies production inherits",
+    "correct": true,
+    "why": "Right. A reorganisation would drag the policies of production with it."
+   },
+   {
+    "text": "Management groups cannot be created after the first year",
+    "correct": false,
+    "why": "They can be created at any time, up to 10,000."
+   },
+   {
+    "text": "Marketing has no access to Azure, so the group would be empty",
+    "correct": false,
+    "why": "Access is not what the tree is drawn from either."
+   },
+   {
+    "text": "A subscription cannot be moved once placed",
+    "correct": false,
+    "why": "It can be moved. That is the danger, not the protection."
+   }
+  ]
+ },
+ {
+  "id": "ex-8dxd4ge8",
+  "version": 1,
+  "section": "the-hierarchy",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Resource groups do not ___: a group cannot contain another group.",
+  "hint": "A word for boxes inside boxes.",
+  "blanks": [
+   {
+    "accept": [
+     "nest"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-r9wr6z5v",
+  "version": 1,
+  "section": "resource-ids",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In `/subscriptions/bbbbcccc-1111-dddd-2222-eeee3333ffff/resourceGroups/rg-shop-prod/providers/Microsoft.Network/virtualNetworks/vnet-shop-prod`, what is `Microsoft.Network`?",
+  "hint": "It comes right after `providers`.",
+  "choices": [
+   {
+    "text": "The name of the network",
+    "correct": false,
+    "why": "The name is the last piece, `vnet-shop-prod`."
+   },
+   {
+    "text": "The namespace that owns the type",
+    "correct": true,
+    "why": "Right. `Microsoft.Compute` owns machines, `Microsoft.Storage` storage accounts."
+   },
+   {
+    "text": "The subscription's display name",
+    "correct": false,
+    "why": "A subscription appears in an id by its GUID only."
+   },
+   {
+    "text": "The region the network lives in",
+    "correct": false,
+    "why": "A region is not part of a resource id at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-9dpt2tnm",
+  "version": 1,
+  "section": "resource-ids",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`rid.py` printed the management group's whole id back as its `name`. Why?",
+  "hint": "Where does that id start?",
+  "choices": [
+   {
+    "text": "The management group did not exist in the lab",
+    "correct": false,
+    "why": "Nothing exists in the lab; the parser only reads strings."
+   },
+   {
+    "text": "The id was mistyped",
+    "correct": false,
+    "why": "It is the correct form of a management group's id."
+   },
+   {
+    "text": "The parser expects a subscription in it",
+    "correct": true,
+    "why": "Right. Things above every subscription have ids that start at `/providers/`."
+   },
+   {
+    "text": "Management groups have no names, only ids",
+    "correct": false,
+    "why": "`mg-shop` is its name; the parser just did not find it."
+   }
+  ]
+ },
+ {
+  "id": "ex-jzfdkyh3",
+  "version": 1,
+  "section": "resource-ids",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A cleanup script keeps a list of ids it has already deleted and skips any id `==` one in the list. It deletes `.../resourceGroups/rg-shop-prod/...` and later meets `.../resourcegroups/RG-SHOP-PROD/...`. What happens?",
+  "hint": "Who compares ids ignoring case, and who does not?",
+  "choices": [
+   {
+    "text": "It deletes the same group twice",
+    "correct": true,
+    "why": "Right. The two strings differ, so the script treats them as two resources."
+   },
+   {
+    "text": "Skips it: Azure ignores case",
+    "correct": false,
+    "why": "Azure ignores case; the script's `==` does not."
+   },
+   {
+    "text": "Azure refuses the second id as malformed",
+    "correct": false,
+    "why": "Azure accepts either spelling as the same resource."
+   },
+   {
+    "text": "The parser corrects the case before comparing",
+    "correct": false,
+    "why": "The parser returned the pieces exactly as typed."
+   }
+  ]
+ },
+ {
+  "id": "ex-69kkzh5t",
+  "version": 1,
+  "section": "resource-ids",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each name rule to an example of it.",
+  "hint": "One rule exists because the name becomes an address.",
+  "pairs": [
+   {
+    "left": "unique among its siblings",
+    "right": "two groups called `rg-shop-prod` in one subscription"
+   },
+   {
+    "left": "unique across all of Azure",
+    "right": "a storage account called `shopassets`"
+   },
+   {
+    "left": "limited length and characters",
+    "right": "3 to 24 lower-case letters and digits"
+   }
+  ],
+  "right_distractors": [
+   "the display name shown in the portal"
+  ]
+ },
+ {
+  "id": "ex-5d5856eb",
+  "version": 1,
+  "section": "resource-ids",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Under the naming convention this course uses, what is `snet-app`?",
+  "hint": "Read the prefix.",
+  "choices": [
+   {
+    "text": "The app's subscription network",
+    "correct": false,
+    "why": "A subscription has no network of its own; a network lives in a group."
+   },
+   {
+    "text": "A service endpoint for the app",
+    "correct": false,
+    "why": "Endpoints are lesson 19 and have prefixes of their own."
+   },
+   {
+    "text": "A storage network share",
+    "correct": false,
+    "why": "Storage accounts take no dashes at all."
+   },
+   {
+    "text": "A subnet for the application",
+    "correct": true,
+    "why": "Right. `snet-` is the prefix for a subnet."
+   }
+  ]
+ },
+ {
+  "id": "ex-yft22ff3",
+  "version": 1,
+  "section": "resource-ids",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A management group's id starts with `/___/Microsoft.Management/managementGroups/`, with no subscription in it.",
+  "hint": "The same word sits before every namespace in an id.",
+  "blanks": [
+   {
+    "accept": [
+     "providers"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-b2hf4sxy",
+  "version": 1,
+  "section": "four-scopes",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `az bicep build` produce from a `.bicep` file?",
+  "hint": "It is what Resource Manager receives.",
+  "choices": [
+   {
+    "text": "A running resource in a sandbox subscription",
+    "correct": false,
+    "why": "Building sends nothing to Azure."
+   },
+   {
+    "text": "A Terraform configuration of the same resources",
+    "correct": false,
+    "why": "Bicep compiles to Azure's own format, not Terraform's."
+   },
+   {
+    "text": "An ARM template, in JSON",
+    "correct": true,
+    "why": "Right. The same document a deployment would send."
+   },
+   {
+    "text": "A plan of what would change in the subscription",
+    "correct": false,
+    "why": "Comparing against what exists needs Azure; that is `what-if`, lesson 26."
+   }
+  ]
+ },
+ {
+  "id": "ex-kfp94bb6",
+  "version": 1,
+  "section": "four-scopes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`wrong.bicep` has no `targetScope` line. Where is it aimed?",
+  "hint": "The compiler said so in its refusal.",
+  "choices": [
+   {
+    "text": "At a resource group, where a file with no scope aims",
+    "correct": true,
+    "why": "Right. `Scope \"resourceGroup\" is not valid for this resource type.`"
+   },
+   {
+    "text": "At whichever subscription is signed in",
+    "correct": false,
+    "why": "The scope is fixed in the file, not by who deploys it."
+   },
+   {
+    "text": "Nowhere, until a scope is given on the command line",
+    "correct": false,
+    "why": "The file has a scope even when it does not say one."
+   },
+   {
+    "text": "At the tenant",
+    "correct": false,
+    "why": "The tenant is chosen with `targetScope = 'tenant'`."
+   }
+  ]
+ },
+ {
+  "id": "ex-gmt9mrr3",
+  "version": 1,
+  "section": "four-scopes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the compiled `tree.bicep`, the parent of `mg-shop-prod` is `[tenantResourceId(...)]` rather than an id. Why?",
+  "hint": "Who knows the tenant's id?",
+  "choices": [
+   {
+    "text": "The compiler could not find `mg-shop` and left a placeholder",
+    "correct": false,
+    "why": "It found it: the expression names it."
+   },
+   {
+    "text": "Resource Manager evaluates it when the template arrives",
+    "correct": true,
+    "why": "Right. Only Resource Manager knows the values; the compiler fixes the shape."
+   },
+   {
+    "text": "Bicep hides ids so that templates can be shared",
+    "correct": false,
+    "why": "Nothing is hidden; the value just does not exist yet."
+   },
+   {
+    "text": "Management groups have no ids until they have subscriptions",
+    "correct": false,
+    "why": "A management group has an id from the moment it exists."
+   }
+  ]
+ },
+ {
+  "id": "ex-tr20tsfs",
+  "version": 1,
+  "section": "four-scopes",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each resource to the scope a deployment of it is aimed at.",
+  "hint": "Each box is created from the box above it.",
+  "pairs": [
+   {
+    "left": "a management group",
+    "right": "the tenant"
+   },
+   {
+    "left": "a resource group",
+    "right": "a subscription"
+   },
+   {
+    "left": "a virtual network",
+    "right": "a resource group"
+   }
+  ],
+  "right_distractors": [
+   "a region"
+  ]
+ },
+ {
+  "id": "ex-gweqek8n",
+  "version": 1,
+  "section": "four-scopes",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`az deployment sub create --location brazilsouth --template-file rg.bicep` creates a group whose own `location` is set in the file. What is the `--location` on the command line for?",
+  "hint": "What has no location of its own?",
+  "choices": [
+   {
+    "text": "It overrides the location written in the file",
+    "correct": false,
+    "why": "The file's value stands; the flag is about something else."
+   },
+   {
+    "text": "It sets the default for resources created later",
+    "correct": false,
+    "why": "That is `AZURE_DEFAULTS_LOCATION`, a CLI setting."
+   },
+   {
+    "text": "It is the region the subscription is billed in",
+    "correct": false,
+    "why": "A subscription is not billed by region; resources are priced by their own."
+   },
+   {
+    "text": "It locates the deployment's own record",
+    "correct": true,
+    "why": "Right. A subscription has no location, so the deployment needs to be told one."
+   }
+  ]
+ },
+ {
+  "id": "ex-rhwp46p0",
+  "version": 1,
+  "section": "four-scopes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`terraform validate` passed and `terraform plan` failed with *Please run 'az login'*. What does that pair show?",
+  "hint": "Which of the two needs to ask Azure anything?",
+  "choices": [
+   {
+    "text": "The configuration has an error that only `plan` detects",
+    "correct": false,
+    "why": "`plan` never got as far as the configuration; it stopped at the sign-in."
+   },
+   {
+    "text": "Terraform needs Bicep to be installed to plan",
+    "correct": false,
+    "why": "Terraform does not use Bicep at all."
+   },
+   {
+    "text": "The provider was downloaded but not installed",
+    "correct": false,
+    "why": "`init` installed it, and `validate` used it."
+   },
+   {
+    "text": "Shape is checked here; comparing needs an identity",
+    "correct": true,
+    "why": "Right. The same line Bicep draws."
+   }
+  ]
+ },
+ {
+  "id": "ex-vhjjfgvw",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the pieces of a subnet's resource id in the order they appear, from the left.",
+  "hint": "From the outermost box inwards.",
+  "items": [
+   "the subscription id",
+   "the resource group's name",
+   "the provider namespace",
+   "the network's type and name",
+   "the subnet's type and name"
+  ],
+  "trap": "The subnet comes last because it is a child of the network."
+ },
+ {
+  "id": "ex-a1fsznsp",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague says: \"Our Azure account is the subscription, so our users live in it.\" What is wrong with the sentence?",
+  "hint": "Which box holds identities?",
+  "choices": [
+   {
+    "text": "Users live in the root management group",
+    "correct": false,
+    "why": "Management groups hold subscriptions, not users."
+   },
+   {
+    "text": "Nothing: users are created inside each subscription",
+    "correct": false,
+    "why": "A subscription trusts a tenant for its identities; it holds none."
+   },
+   {
+    "text": "Users live in the tenant the subscription trusts",
+    "correct": true,
+    "why": "Right. Identity is the tenant's box and money the subscription's."
+   },
+   {
+    "text": "Users live in a resource group of their own",
+    "correct": false,
+    "why": "A resource group holds resources; an identity is not one of them."
+   }
+  ]
+ },
+ {
+  "id": "ex-fjmajeyb",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these can the lab check without an Azure account? Choose all that apply.",
+  "hint": "What did the lesson's commands answer, and what did they refuse?",
+  "choices": [
+   {
+    "text": "That a resource is aimed at a scope where it can be created",
+    "correct": true,
+    "why": "Right. `BCP135` was that check."
+   },
+   {
+    "text": "That every block of a Terraform file matches the provider's schema",
+    "correct": true,
+    "why": "Right. `terraform validate`."
+   },
+   {
+    "text": "That `rg-shop-prod` does not yet exist in the subscription",
+    "correct": false,
+    "why": "Only Resource Manager knows what exists."
+   },
+   {
+    "text": "The pieces of a resource id",
+    "correct": true,
+    "why": "Right. An id is a string, and `rid.py` cut it up."
+   },
+   {
+    "text": "Which management group a subscription is in today",
+    "correct": false,
+    "why": "That is a question about Azure now, which needs a sign-in."
+   }
+  ]
+ }
+]

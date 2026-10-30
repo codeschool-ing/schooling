@@ -1,0 +1,1871 @@
+{
+  "ex-5n47g291": {
+    "prompt": "Um fornecedor entrega um binário fechado compilado só para x86-64. Qual destes tamanhos não consegue executá-lo?",
+    "hint": "Aula 1. Leia as letras adicionais, e lembre qual processador não tem letra.",
+    "choices": [
+      {
+        "text": "Standard_E8as_v5",
+        "why": "O a é AMD, que é x86-64 como a Intel; o binário roda."
+      },
+      {
+        "text": "Standard_D4ds_v5, o que tem disco local",
+        "why": "Sem letra de processador é Intel, e o d é só um disco temporário local."
+      },
+      {
+        "text": "Standard_F2as_v6, porque não tem multithreading",
+        "why": "Núcleos inteiros em vez de threads mudam a velocidade, não o conjunto de instruções: é AMD, x86-64."
+      },
+      {
+        "text": "Standard_D4pds_v6",
+        "why": "Isso. O p é Arm, o Cobalt 100 na v6, e um processador Arm só roda programas compilados para Arm."
+      }
+    ]
+  },
+  "ex-c70jcmrw": {
+    "prompt": "Uma Standard_B2ls_v2 tem 2 vCPUs, base de 30% e guarda no máximo 864 créditos. Com o banco cheio, ela roda as duas vCPUs a 60%. Quantas horas até os créditos acabarem?",
+    "hint": "Aula 1. Créditos por minuto são (base × vCPUs − CPU usada × vCPUs) / 100.",
+    "unit": "horas"
+  },
+  "ex-524jcarw": {
+    "prompt": "A API de pedidos roda numa Standard_B2s_v2 (2 vCPUs, base 40%, guarda no máximo 1.152). Ela fica estável em 55% num dia útil de dez horas e em 5% nas outras catorze, todo dia. O que acontece com ela ao longo de um mês?",
+    "hint": "Aula 1. Calcule o que um dia gasta e o que uma noite guarda.",
+    "choices": [
+      {
+        "text": "Fica presa à base desde a primeira hora movimentada, porque 55% está acima de 40%",
+        "why": "Acima da base ela gasta créditos; só fica presa à base quando o banco esvazia."
+      },
+      {
+        "text": "Esgota depois de alguns dias, porque cada dia útil é um déficit",
+        "why": "O dia gasta 18 por hora, 180 no total, e a noite guarda 42 por hora, 588: o saldo cresce."
+      },
+      {
+        "text": "Nunca é limitada: as noites guardam mais do que os dias gastam",
+        "why": "Isso. (80 − 110) / 100 dá −0,3 por minuto, 180 no dia; (80 − 10) / 100 dá 0,7 por minuto, 588 na noite."
+      },
+      {
+        "text": "É limitada quando o banco chega ao limite de 1.152",
+        "why": "No limite ela só para de guardar mais; banco cheio é o oposto de limitada."
+      }
+    ]
+  },
+  "ex-azqfr2e1": {
+    "prompt": "Um colega diz que a família F é a escolha quando um programa precisa de menos memória do que a D oferece. O que vale para a série Fasv6?",
+    "hint": "Aula 1. Veja as três proporções em que a v6 a vende, e o que cada vCPU é.",
+    "choices": [
+      {
+        "text": "Tem 2 GiB por vCPU, metade do que a D tem",
+        "why": "É a crença que a aula pede para largar; quem corta a memória pela metade é a letra l, e a F vem em três proporções."
+      },
+      {
+        "text": "Vem com 2, 4 e 8 GiB por vCPU, e cada vCPU é um núcleo físico inteiro",
+        "why": "Isso. Fals_v6, Fas_v6 e Fams_v6; roda sem multithreading simultâneo."
+      },
+      {
+        "text": "É a D com clock mais alto e as mesmas duas threads por núcleo",
+        "why": "A diferença está nas threads: a F na v6 dá um núcleo por vCPU onde a D na Intel divide um entre duas."
+      },
+      {
+        "text": "É uma família burstable que guarda créditos abaixo da base",
+        "why": "Burstable é a B; a F vende o processador inteiro o tempo todo."
+      }
+    ]
+  },
+  "ex-593ktzhw": {
+    "prompt": "As máquinas web da loja são criadas a partir de uma imagem gerenciada própria, e uma regra nova exige Secure Boot em todas as máquinas. O que precisa mudar?",
+    "hint": "Aula 2. Pergunte qual tipo de imagem própria o Trusted Launch aceita.",
+    "choices": [
+      {
+        "text": "Publicá-la como versão de imagem de galeria com Trusted Launch",
+        "why": "Isso. A galeria é a resposta da Microsoft para uma imagem própria que mantém o Secure Boot."
+      },
+      {
+        "text": "Pôr securityType: 'TrustedLaunch' na declaração de cada máquina e manter a imagem gerenciada",
+        "why": "O Trusted Launch não aceita imagens gerenciadas: uma máquina criada a partir de uma é uma máquina Standard."
+      },
+      {
+        "text": "Capturar a imagem de novo como especializada, para o boot já vir feito",
+        "why": "Especializada ou generalizada trata de contas e nomes; não faz nada pela proteção do boot."
+      },
+      {
+        "text": "Rodar waagent -deprovision+user de novo antes de cada criação",
+        "why": "O desprovisionamento é feito uma vez, antes da captura, e não tem volta; não tem relação com o Secure Boot."
+      }
+    ]
+  },
+  "ex-cetasj8x": {
+    "prompt": "Um arquivo Bicep usa a versão de API de máquina virtual 2025-11-01, omite o perfil de segurança e nomeia uma imagem de geração 1. Como a máquina sai?",
+    "hint": "Aula 2. A partir dessa versão de API a omissão quer dizer algo novo, sob uma condição.",
+    "choices": [
+      {
+        "text": "Trusted Launch, porque essa versão de API sempre o usa por padrão",
+        "why": "Ela usa Trusted Launch só quando a imagem, o disco e o tamanho aceitam."
+      },
+      {
+        "text": "A implantação falha, porque o Trusted Launch exige geração 2",
+        "why": "Nada falha: a volta para Standard é silenciosa, e é por isso que o curso escreve o tipo de segurança."
+      },
+      {
+        "text": "Uma ConfidentialVM, já que a imagem não aceita Trusted Launch",
+        "why": "Confidential é uma escolha à parte, em tamanhos feitos para isso, e nunca um plano B."
+      },
+      {
+        "text": "Uma máquina Standard, sem nenhum erro avisando",
+        "why": "Isso. Uma imagem de geração 1 não pode ter Trusted Launch, e essa versão de API então cai calada para Standard."
+      }
+    ]
+  },
+  "ex-eadyjme0": {
+    "prompt": "Associe cada forma de compartilhar uma Compute Gallery ao que o outro lado recebe.",
+    "hint": "Aula 2. Três formas, cada uma mais ampla que a anterior.",
+    "pairs": [
+      {
+        "left": "Uma função na galeria, pelo Azure RBAC",
+        "right": "Nada que possa listar: precisa receber de você o id da imagem"
+      },
+      {
+        "left": "Uma galeria compartilhada diretamente",
+        "right": "Uma galeria só de leitura, para até 30 assinaturas e 5 tenants"
+      },
+      {
+        "left": "Uma galeria da comunidade",
+        "right": "Imagens públicas, para todo cliente do Azure, sob um nome feito do seu prefixo"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia de cada versão na galeria da sua própria assinatura"
+    ]
+  },
+  "ex-r1zj2q6y": {
+    "prompt": "Quando `az vm image show` devolve um `plan` que não é null, os termos de licença da imagem têm de ser aceitos, com `az vm image terms accept`, uma vez por ___ antes que qualquer template crie uma máquina a partir dela.",
+    "hint": "Aula 2. Não uma vez por máquina, nem uma vez por região.",
+    "blanks": [
+      {
+        "accept": [
+          "assinatura"
+        ]
+      }
+    ]
+  },
+  "ex-y5yc71mb": {
+    "prompt": "Ponha em ordem o que o Azure VM Image Builder faz depois que o template de imagem é executado.",
+    "hint": "Aula 2. Os mesmos quatro passos que uma pessoa faria à mão, entre a criação e a remoção de uma máquina de build.",
+    "items": [
+      "Criar uma máquina de build num grupo de recursos de staging cujo nome começa com IT_",
+      "Executar as personalizações que o template lista",
+      "Generalizar a máquina de build",
+      "Capturá-la no destino, por exemplo uma galeria",
+      "Apagar a máquina de build"
+    ],
+    "trap": "Capturar antes de generalizar é o deslize: uma captura feita antes é de uma máquina específica, com as chaves e o usuário dela."
+  },
+  "ex-30sdp4r9": {
+    "prompt": "Um disco de dados Premium SSD v2 está com 2.400 IOPS. Qual é a maior vazão que ele pode receber, em MB/s?",
+    "hint": "Aula 3. A vazão tem um teto por IOPS configurado, abaixo de um teto geral.",
+    "unit": "MB/s"
+  },
+  "ex-kzv84ekc": {
+    "prompt": "Um Premium SSD P30 (5.000 IOPS) tem o burst sob demanda ativado. Um job em lote o roda a 9.000 IOPS por 120 segundos. As operações acima do tier são cobradas em unidades de 10.000. Quantas unidades essa execução cobra?",
+    "hint": "Aula 3. O exemplo da própria Microsoft fez o mesmo com 7.000 IOPS por 60 segundos.",
+    "unit": "unidades"
+  },
+  "ex-h23fpe4m": {
+    "prompt": "Toda noite a loja tira um snapshot de shop-db-data e depois de shop-db-log, um disco de cada vez. Qual é a fraqueza, e o que a Microsoft oferece no lugar?",
+    "hint": "Aula 3. Um snapshot cobre um disco num momento.",
+    "choices": [
+      {
+        "text": "Snapshots incrementais não podem ser restaurados sozinhos; tire completos",
+        "why": "O primeiro incremental é uma cópia completa e cada um depois restaura; a fraqueza está entre os dois discos, não dentro de cada um."
+      },
+      {
+        "text": "Um snapshot é uma cópia nos mesmos três lugares que o disco, então não é backup; use ZRS",
+        "why": "Um snapshot é um recurso à parte, e ZRS é redundância, que não protege de um engano mais do que o LRS."
+      },
+      {
+        "text": "Dados e log são de dois instantes; o restore point pega todos os discos",
+        "why": "Isso. Dois snapshots de dois discos são tirados em dois momentos."
+      },
+      {
+        "text": "Snapshots param o banco enquanto são tirados; desanexe os discos antes",
+        "why": "Um snapshot é consistente com uma queda e é tirado com a máquina rodando; nada para."
+      }
+    ]
+  },
+  "ex-zhn2cp92": {
+    "prompt": "O disco do banco da loja precisa continuar funcionando com a perda de uma zona, anexado a uma máquina em outra zona. Qual SKU serve?",
+    "hint": "Aula 3. Leia a redundância no nome do SKU, e quais tipos oferecem a redundante por zona.",
+    "choices": [
+      {
+        "text": "Premium_ZRS",
+        "why": "Isso. Três cópias em três zonas, e um disco ZRS é o tipo que a Microsoft documenta anexando de outra zona."
+      },
+      {
+        "text": "PremiumV2_ZRS, pelas IOPS separadas e pelas zonas",
+        "why": "Esse SKU não existe: a redundância por zona não é oferecida no Premium SSD v2."
+      },
+      {
+        "text": "Premium_LRS com um snapshot a cada hora",
+        "why": "Um disco LRS vive numa zona; um snapshot é um jeito de criar um disco novo depois, não de manter este anexado."
+      },
+      {
+        "text": "UltraSSD_LRS, o tipo mais rápido",
+        "why": "Velocidade não é redundância; é LRS, as três cópias num só datacenter."
+      }
+    ]
+  },
+  "ex-sz0cqxjv": {
+    "prompt": "Cada amostra de um minuto marca 60 até 12:00 e 90 a partir de 12:01. A regra faz a média de uma janela de dez minutos e dispara quando a média é GreaterThan 70. Quantos minutos depois de 12:00 ela dispara pela primeira vez?",
+    "hint": "Aula 4. Cada minuto troca uma amostra velha por uma nova.",
+    "unit": "minutos"
+  },
+  "ex-szv0htd6": {
+    "prompt": "Há cinco instâncias rodando. Duas regras de scale-out disparam na mesma execução: uma é ChangeCount 2, a outra ExactCount 9. Que contagem o autoscale define?",
+    "hint": "Aula 4. Regras de scale-out se combinam de um jeito diferente das de scale-in.",
+    "choices": [
+      {
+        "text": "Sete, pela primeira regra da lista",
+        "why": "A ordem na lista não decide nada; o motor compara as contagens que as regras pedem."
+      },
+      {
+        "text": "Nove, a maior das duas contagens novas",
+        "why": "Isso. Quando várias regras de scale-out disparam, o motor fica com a maior contagem nova."
+      },
+      {
+        "text": "Onze, somando as mudanças das duas regras",
+        "why": "As regras não são somadas; cada uma propõe uma contagem e uma delas é escolhida."
+      },
+      {
+        "text": "Sete, a mudança menor, para evitar flapping",
+        "why": "O menor é a regra do scale-in; scale-outs nunca são checados contra flapping e ficam com o maior."
+      }
+    ]
+  },
+  "ex-smg17ak6": {
+    "prompt": "Qual destes exige um scale set Uniform em vez de um Flexible?",
+    "hint": "Aula 4. A comparação da Microsoft cita duas coisas que só o modo mais antigo aceita.",
+    "choices": [
+      {
+        "text": "Listar dois tamanhos e deixar o Azure escolher o mais barato a cada scale-out",
+        "why": "Isso é o instance mix, e ele só existe no modo Flexible."
+      },
+      {
+        "text": "Um cluster do Service Fabric",
+        "why": "Isso. Service Fabric e AKS são as duas coisas que a comparação lista como só do Uniform."
+      },
+      {
+        "text": "Anexar uma máquina virtual que já existe",
+        "why": "Só um conjunto Flexible aceita uma máquina virtual que já existe."
+      },
+      {
+        "text": "Fazer backup de uma instância com o Azure Backup",
+        "why": "O Azure Backup funciona numa instância Flexible, uma máquina virtual comum, e consta como incompatível com o Uniform."
+      }
+    ]
+  },
+  "ex-dcnxjeb9": {
+    "prompt": "Associe cada repairAction dos reparos automáticos de instância ao que a instância reparada mantém.",
+    "hint": "Aula 4. Do que mais substitui ao que menos substitui.",
+    "pairs": [
+      {
+        "left": "Replace",
+        "right": "Nada: um id de instância novo, um endereço privado novo e discos novos"
+      },
+      {
+        "left": "Reimage",
+        "right": "O endereço e os discos de dados, com um disco de SO novo"
+      },
+      {
+        "left": "Restart",
+        "right": "Tudo o que tinha"
+      }
+    ],
+    "right_distractors": [
+      "Os discos, levados para um host saudável em outra zona"
+    ]
+  },
+  "ex-cg9fk3kh": {
+    "prompt": "As instâncias de um scale set Flexible novo dão boot, e o cloud-init delas não consegue baixar pacotes da internet. Nada na rede foi alterado. Qual é a causa mais provável?",
+    "hint": "Aula 4. Uma das diferenças entre os modos importa no primeiro dia.",
+    "choices": [
+      {
+        "text": "As instâncias estão num placement group de 100, que não tem rota de saída",
+        "why": "Um placement group trata de domínios de falha e tamanho, não de rotas."
+      },
+      {
+        "text": "A extensão de saúde segura o tráfego até a primeira sonda passar",
+        "why": "A extensão pergunta a um endereço local e decide a saúde; ela não bloqueia o tráfego de saída da instância."
+      },
+      {
+        "text": "Um conjunto Flexible não tem acesso de saída padrão",
+        "why": "Isso. As instâncias só chegam à internet por algo que você configura."
+      },
+      {
+        "text": "A política de upgrade é Manual, então as instâncias não recebem o perfil de rede",
+        "why": "Toda instância nova é feita do modelo atual, perfil de rede incluído, em qualquer modo."
+      }
+    ]
+  },
+  "ex-46pg3s1k": {
+    "prompt": "Um scale set Flexible tem baseRegularPriorityCount: 4 e regularPriorityPercentageAboveBase: 50. Com capacidade 15, quantas instâncias são Spot, arredondando como nos exemplos da documentação?",
+    "hint": "Aula 5. Primeiro a base; a parcela vale para o que está acima dela, e a instância que sobra vai para um lado.",
+    "unit": "instâncias"
+  },
+  "ex-nw4ehrfn": {
+    "prompt": "Qual destes planos com Spot não dá para montar de jeito nenhum?",
+    "hint": "Aula 5. Uma das restrições iniciais trata de onde uma máquina Spot pode ser colocada.",
+    "choices": [
+      {
+        "text": "Um scale set Flexible com duas instâncias regulares e o resto Spot",
+        "why": "Isso é o Spot Priority Mix, e Flexible é o modo que ele exige."
+      },
+      {
+        "text": "Um worker Spot removido com Delete, num disco de SO efêmero",
+        "why": "O guia recomenda exatamente esse par: o disco morre a cada remoção de qualquer jeito."
+      },
+      {
+        "text": "Uma máquina Spot com maxPrice: -1 na zona 2",
+        "why": "-1 é o tipo de remoção só por capacidade, e uma zona não é obstáculo."
+      },
+      {
+        "text": "Três máquinas Spot num availability set",
+        "why": "Isso. Spot não é permitido num availability set; existe um código de erro só para isso."
+      }
+    ]
+  },
+  "ex-zt7ftr9v": {
+    "prompt": "O listener da máquina do relatório envia Metadata:true e a api-version certa, mas a biblioteca HTTP dele passa pelo proxy indicado no HTTPS_PROXY da máquina. O que está errado?",
+    "hint": "Aula 5. Onde o serviço de metadados responde, e o que a documentação diz sobre proxies.",
+    "choices": [
+      {
+        "text": "Sem proxy: a requisição não pode sair do host",
+        "why": "Isso. É o que --noproxy \"*\" faz na linha do curl, e um opener sem proxy no listener."
+      },
+      {
+        "text": "Nada; qualquer rota até 169.254.169.254 chega ao mesmo serviço",
+        "why": "O serviço não é feito para ser alcançado por proxy: o endereço só responde de dentro da máquina."
+      },
+      {
+        "text": "Só a primeira requisição dá errado, porque é ela que liga o serviço",
+        "why": "A primeira requisição ligar o serviço é outro fato; pelo proxy, toda requisição vai pelo caminho errado."
+      },
+      {
+        "text": "Ele precisa perguntar por HTTPS, que aí o proxy deixa passar",
+        "why": "A requisição documentada é http simples para esse endereço; a correção é pular o proxy, não trocar o esquema."
+      }
+    ]
+  },
+  "ex-48vb018x": {
+    "prompt": "Associe cada tipo do Scheduled Events ao aviso mínimo documentado.",
+    "hint": "Aula 5. Um deles é a remoção do Spot.",
+    "pairs": [
+      {
+        "left": "Freeze",
+        "right": "15 minutos"
+      },
+      {
+        "left": "Redeploy",
+        "right": "10 minutos"
+      },
+      {
+        "left": "Preempt",
+        "right": "30 segundos, sem garantia"
+      },
+      {
+        "left": "Terminate",
+        "right": "5 a 15 minutos, configurados no scale set"
+      }
+    ],
+    "right_distractors": [
+      "24 horas"
+    ]
+  },
+  "ex-efpgz4pw": {
+    "prompt": "Quais destes cabem no Spot? Marque todos que se aplicam.",
+    "hint": "Aula 5. Pergunte quanto uma remoção custa a cada um.",
+    "choices": [
+      {
+        "text": "Agentes de build de CI para os pull requests da loja",
+        "why": "Isso. Um build interrompido roda de novo, e builds são feitos para ser repetíveis."
+      },
+      {
+        "text": "O único servidor de banco de dados da loja",
+        "why": "Uma máquina única com estado é a primeira coisa que a aula tira do Spot."
+      },
+      {
+        "text": "Workers de fila acima de um piso de workers regulares",
+        "why": "Isso. Um job não concluído volta, então uma remoção custa um job feito duas vezes."
+      },
+      {
+        "text": "As três máquinas de que a API de pedidos precisa para responder",
+        "why": "O mínimo que um serviço precisa para ficar de pé é a base regular; só o que está acima vai para o Spot."
+      },
+      {
+        "text": "Um job em lote que grava um checkpoint a cada meia hora",
+        "why": "Isso. Uma remoção custa os minutos desde o último checkpoint."
+      }
+    ]
+  },
+  "ex-6q8kevja": {
+    "prompt": "Uma máquina sozinha tem disco de SO Premium SSD e um disco de dados Standard SSD. Nos 30 dias do contrato, quantos minutos de indisponibilidade a promessa dela permite?",
+    "hint": "Aula 6. Uma máquina com discos misturados recebe a promessa do disco mais fraco.",
+    "unit": "minutos"
+  },
+  "ex-gb5vfj9k": {
+    "prompt": "Para economizar, a equipe cria shop-web-1 no set, para e desaloca a máquina, e depois cria shop-web-2 no mesmo set. Qual é o risco?",
+    "hint": "Aula 6. A documentação descreve exatamente essa sequência.",
+    "choices": [
+      {
+        "text": "shop-web-2 é recusada, porque um set exige todas as máquinas rodando",
+        "why": "Nada é recusado; a sequência funciona e deixa o posicionamento mais fraco."
+      },
+      {
+        "text": "O disco de shop-web-2 fica livre para cair no domínio de falha de shop-web-1",
+        "why": "Isso. O conselho documentado é deixar a primeira rodando até a segunda existir."
+      },
+      {
+        "text": "shop-web-1 perde o lugar no set ao ser desalocada",
+        "why": "Uma máquina entra no set na criação e fica nele; desalocar não a tira."
+      },
+      {
+        "text": "As duas máquinas vão para o mesmo domínio de atualização para sempre",
+        "why": "Os domínios de atualização só se repetem a partir da sexta máquina; a segunda pega outro, faça a primeira o que fizer."
+      }
+    ]
+  },
+  "ex-ypr9q4ca": {
+    "prompt": "Um scale set distribuído entre zonas usa balanceamento Strict. A zona 3 apaga, e o autoscale pede mais duas instâncias. O que acontece?",
+    "hint": "Aula 6. Os dois modos de balanceamento respondem a uma falha de jeitos diferentes.",
+    "choices": [
+      {
+        "text": "O scale-out é bloqueado, porque deixaria o conjunto desbalanceado",
+        "why": "Isso. O Strict bloqueia uma operação que desbalanceia, mesmo com uma zona fora."
+      },
+      {
+        "text": "Elas vão para as zonas 1 e 2, e são levadas para a zona 3 quando ela voltar",
+        "why": "O best effort as colocaria nas zonas que funcionam, e nada nunca move uma instância depois."
+      },
+      {
+        "text": "Elas esperam na fila da zona 3 e começam lá quando ela voltar",
+        "why": "Não existe fila por zona; a operação é bloqueada."
+      },
+      {
+        "text": "Elas são criadas como instâncias regionais, fora de qualquer zona",
+        "why": "Toda instância de um conjunto distribuído entre zonas é zonal; ele nunca cria uma regional."
+      }
+    ]
+  },
+  "ex-kw53svzm": {
+    "prompt": "Associe cada arranjo ao uptime que o contrato lido em 2026-10-30 promete.",
+    "hint": "Aula 6. Cada nove é um tamanho diferente de falha sobrevivida.",
+    "pairs": [
+      {
+        "left": "Uma máquina, todos os discos Premium SSD",
+        "right": "99,9%"
+      },
+      {
+        "left": "Duas ou mais máquinas num availability set",
+        "right": "99,95%"
+      },
+      {
+        "left": "Duas ou mais máquinas em duas ou mais zonas",
+        "right": "99,99%"
+      },
+      {
+        "left": "Uma máquina em Standard HDD",
+        "right": "95%"
+      }
+    ],
+    "right_distractors": [
+      "99,999%"
+    ]
+  },
+  "ex-tf86hqam": {
+    "prompt": "Um recurso que mantém as máquinas nomeadas nele fisicamente próximas, preso a um datacenter para ter a menor latência entre elas, é um proximity ___ group.",
+    "hint": "Aula 6. Ele troca a proteção da distância pela velocidade.",
+    "blanks": [
+      {
+        "accept": [
+          "placement"
+        ]
+      }
+    ]
+  },
+  "ex-byrz6btv": {
+    "prompt": "Um grupo de contêineres roda um lote de pagamentos que não pode rodar duas vezes depois de dar certo. A política é Never. Do que mais o job precisa, pela documentação da Microsoft?",
+    "hint": "Aula 7. Leia a ressalva que a documentação faz sobre o Never.",
+    "choices": [
+      {
+        "text": "Nada; Never quer dizer que o contêiner não é iniciado de novo em caso nenhum",
+        "why": "Depois de uma saída diferente de zero a plataforma ainda pode reiniciá-lo, então só o Never não garante no máximo uma vez."
+      },
+      {
+        "text": "Um limite de zero tentativas, escrito OnFailure:0",
+        "why": "O limite é sintaxe do Docker; o Container Instances não documenta limite de tentativas."
+      },
+      {
+        "text": "Rodar numa rede virtual, onde os reinícios ficam desligados",
+        "why": "De onde um grupo é alcançado não tem relação com ele ser reiniciado."
+      },
+      {
+        "text": "Capturar as próprias falhas e sempre sair com 0",
+        "why": "Isso. Um job que deve rodar no máximo uma vez precisa garantir que nunca sai com código de erro."
+      }
+    ]
+  },
+  "ex-fmdzxr21": {
+    "prompt": "O grupo do relatório roda numa sub-rede delegada ao Container Instances e precisa chamar a API de um fornecedor na internet. O que dá a ele a saída?",
+    "hint": "Aula 7. A Microsoft cita uma única forma suportada.",
+    "choices": [
+      {
+        "text": "Um IP público acrescentado ao grupo ao lado do privado",
+        "why": "Um grupo numa rede virtual não tem endereço público, e a CLI se recusa a dar um."
+      },
+      {
+        "text": "Um rótulo DNS, que deixa o grupo alcançável nos dois sentidos",
+        "why": "Um rótulo DNS é de grupo público, e um grupo numa sub-rede não pode ter um."
+      },
+      {
+        "text": "Um NAT gateway na sub-rede",
+        "why": "Isso. A documentação o chama de única forma suportada de saída para um grupo numa rede virtual."
+      },
+      {
+        "text": "Um contêiner sidecar no grupo que encaminha o tráfego para fora",
+        "why": "Um sidecar divide a rede do grupo e não tem uma saída que falte ao grupo."
+      }
+    ]
+  },
+  "ex-8a62t2zr": {
+    "prompt": "Quais destes só podem ser mudados num grupo de contêineres existente apagando-o e criando de novo? Marque todos que se aplicam.",
+    "hint": "Aula 7. Uma atualização é o create rodado de novo com o mesmo nome; algumas propriedades não mudam assim.",
+    "choices": [
+      {
+        "text": "A política de reinício",
+        "why": "Isso. É uma das propriedades fixas durante a vida do grupo."
+      },
+      {
+        "text": "As requisições de CPU e memória",
+        "why": "Isso. O tamanho é fixo: mudá-lo é um grupo novo."
+      },
+      {
+        "text": "A tag da imagem de um contêiner",
+        "why": "Uma imagem nova é a atualização comum: o create de novo, e os contêineres reiniciam no lugar."
+      },
+      {
+        "text": "O perfil de rede",
+        "why": "Isso. Levar um grupo para dentro ou para fora de uma rede virtual exige recriá-lo."
+      },
+      {
+        "text": "A zona de disponibilidade",
+        "why": "Isso. A zona também está na lista documentada."
+      }
+    ]
+  },
+  "ex-jehaegrp": {
+    "prompt": "Como um grupo de contêineres Spot difere da máquina virtual Spot da aula 5 quando a capacidade é retomada?",
+    "hint": "Aula 7. Procure a configuração que a versão em contêiner não tem.",
+    "choices": [
+      {
+        "text": "Ele é apagado com os volumes, como o Delete faria numa máquina",
+        "why": "Nada é escolhido e nada é apagado de vez; o Azure reinicia o grupo."
+      },
+      {
+        "text": "Ele vai para um host regular, mantendo o endereço público",
+        "why": "Um grupo Spot nem tem endereço público para manter."
+      },
+      {
+        "text": "Não há política de remoção a escolher: o Azure reinicia sozinho o grupo removido",
+        "why": "Isso. A versão em contêiner não tem Deallocate nem Delete; o grupo volta sozinho."
+      },
+      {
+        "text": "Ele espera desalocado até alguém iniciá-lo, como o Deallocate faria",
+        "why": "Esse é o padrão da máquina; o grupo de contêineres não espera ninguém."
+      }
+    ]
+  },
+  "ex-5wzryr6x": {
+    "prompt": "Uma regra de fila pede uma réplica a cada 10 mensagens, com maxReplicas 30. Há uma réplica rodando quando chegam 200 mensagens. Pela fórmula de passos da documentação, que contagem o terceiro passo de escala atinge?",
+    "hint": "Aula 8. Cada passo é min(maxReplicaCount, desiredReplicas, max(4, 2 × currentReplicaCount)).",
+    "unit": "réplicas"
+  },
+  "ex-d7wp29h0": {
+    "prompt": "A loja quer session affinity na API de pedidos e um canário 90/10 na próxima versão, as duas coisas ao mesmo tempo. O que a documentação permite?",
+    "hint": "Aula 8. Cada uma das duas exige um modo de revisão.",
+    "choices": [
+      {
+        "text": "Não as duas: a afinidade exige o modo single, e uma divisão por pesos exige o multiple",
+        "why": "Isso. O single mantém uma revisão ativa, então não há o que dividir."
+      },
+      {
+        "text": "As duas, desde que a revisão do canário tenha um rótulo",
+        "why": "Um rótulo dá um endereço a uma revisão; não muda o modo que a afinidade exige."
+      },
+      {
+        "text": "As duas, porque a afinidade prende cada cliente a uma revisão da divisão",
+        "why": "A afinidade manda um cliente para a mesma réplica por um cookie, e só é suportada no modo single."
+      },
+      {
+        "text": "As duas, no modo Labels em preview, que junta as duas coisas",
+        "why": "O curso não se apoia no modo Labels, e nada do que leu diz que ele traz a afinidade."
+      }
+    ]
+  },
+  "ex-gwnnhxsq": {
+    "prompt": "Associe cada mudança no container app da loja ao que ela faz.",
+    "hint": "Aula 8. A divisão entre template e configuration decide quase todas.",
+    "pairs": [
+      {
+        "left": "SHOP_VERSION de 1.0 para 1.1",
+        "right": "Cria uma revisão nova"
+      },
+      {
+        "left": "Os pesos de 90/10 para 50/50",
+        "right": "Vale para todas as revisões, e não cria nenhuma"
+      },
+      {
+        "left": "Um valor novo para o segredo do registro",
+        "right": "Não é visto por uma revisão rodando até ela reiniciar"
+      },
+      {
+        "left": "A sub-rede do ambiente",
+        "right": "Não pode ser mudada depois que o ambiente existe"
+      }
+    ],
+    "right_distractors": [
+      "Reinicia toda réplica no lugar, como a atualização de um grupo de contêineres faria"
+    ]
+  },
+  "ex-yqh5emk2": {
+    "prompt": "Num ambiente de workload profiles, a escala até zero pertence ao perfil ___, o que todo ambiente desse tipo traz e não pode remover.",
+    "hint": "Aula 8. Não é o Dedicated, nem o Flexible em preview.",
+    "blanks": [
+      {
+        "accept": [
+          "Consumption",
+          "consumo"
+        ]
+      }
+    ]
+  },
+  "ex-j5y80m9k": {
+    "prompt": "No modo single revision, ponha em ordem a implantação de uma revisão nova da loja.",
+    "hint": "Aula 8. O tráfego muda por último, e uma vez só.",
+    "items": [
+      "A revisão nova é criada ao lado da antiga",
+      "Ela escala até a contagem de réplicas da antiga, dentro dos próprios limites",
+      "Toda réplica passa nas probes de startup e de readiness",
+      "Todo o tráfego passa para a revisão nova",
+      "A revisão antiga é desprovisionada"
+    ],
+    "trap": "Mover o tráfego antes de as probes passarem é o deslize: é a espera que deixa o tráfego na revisão antiga quando a nova nunca fica pronta."
+  },
+  "ex-pmwa8a5k": {
+    "prompt": "Duas réplicas da loja salvam order-1 pelo state store do Dapr quase no mesmo instante, nenhuma enviando ETag. O que acontece?",
+    "hint": "Aula 9. A proteção contra dois escritores só funciona quando é pedida.",
+    "choices": [
+      {
+        "text": "A segunda escrita é recusada com 409",
+        "why": "409 é a resposta a uma escrita com ETag velho; uma escrita sem ETag nunca é recusada."
+      },
+      {
+        "text": "A primeira vence, porque os stores do Dapr são first-write-wins",
+        "why": "First-write-wins é o que um ETag compra; não é o padrão."
+      },
+      {
+        "text": "Cada réplica recebe a própria cópia sob a própria chave",
+        "why": "O prefixo da chave é o app id, e as duas réplicas têm o mesmo app id, shop."
+      },
+      {
+        "text": "As duas dão certo e a última vence",
+        "why": "Isso. Sem ETag o padrão é a última escrita vencer, e a documentação manda contar com isso."
+      }
+    ]
+  },
+  "ex-1hpejvwx": {
+    "prompt": "O relatório noturno vai para um job do Container Apps, e a equipe quer que ele publique o resultado pelo componente de pub/sub do Dapr do ambiente. O que diz a documentação da Microsoft?",
+    "hint": "Aula 9. Uma das coisas do Dapr que o Container Apps deixa de fora é sobre jobs.",
+    "choices": [
+      {
+        "text": "Funciona depois que os scopes do componente listarem o nome do job",
+        "why": "Os scopes restringem quais app ids carregam um componente; não dão Dapr a quem não tem."
+      },
+      {
+        "text": "Um job do Container Apps não pode ter Dapr",
+        "why": "Isso. O Dapr é para container apps; o relatório publicaria com a biblioteca do próprio broker."
+      },
+      {
+        "text": "Só funciona com um componente Tier 1",
+        "why": "Os tiers dizem quais componentes têm suporte; o obstáculo aqui é o job."
+      },
+      {
+        "text": "Funciona se o job rodar o arquivo de configuração do próprio Dapr",
+        "why": "O arquivo de configuração do próprio Dapr não pode ser usado no Container Apps de jeito nenhum."
+      }
+    ]
+  },
+  "ex-536nsv0f": {
+    "prompt": "A API de pedidos só vai falar com um namespace do Service Bus, e precisa de sessões do Service Bus. Por que o Dapr não combina com ela?",
+    "hint": "Aula 9. Pergunte o que o building block não nomeia, e por onde isso é alcançado, se for.",
+    "choices": [
+      {
+        "text": "O que falta ao building block amarra o código a um broker",
+        "why": "Isso. Ela paga o processo e o salto e abre mão do uso direto do broker; a biblioteca do próprio broker serve melhor."
+      },
+      {
+        "text": "O Dapr não alcança um namespace real do Service Bus, só o emulador",
+        "why": "O mesmo componente entra num namespace real, com identidade gerenciada no Container Apps."
+      },
+      {
+        "text": "Sessões exigem um segundo sidecar por réplica",
+        "why": "Um sidecar atende todo building block; o número de sidecars não é o problema."
+      },
+      {
+        "text": "O Dapr proíbe pub/sub numa fila e exige um tópico",
+        "why": "O Dapr tem um componente para filas do Service Bus; foi o que entrou na troca."
+      }
+    ]
+  },
+  "ex-jmta5tc2": {
+    "prompt": "Associe cada resposta que um assinante dá a uma entrega ao que o sidecar faz em seguida.",
+    "hint": "Aula 9. Três são palavras no corpo da resposta; uma é um código de status.",
+    "pairs": [
+      {
+        "left": "SUCCESS",
+        "right": "A mensagem está encerrada"
+      },
+      {
+        "left": "RETRY",
+        "right": "A mensagem é entregue de novo"
+      },
+      {
+        "left": "DROP",
+        "right": "A mensagem é descartada"
+      },
+      {
+        "left": "Um 404 do app",
+        "right": "A mensagem é descartada com um erro no log do sidecar"
+      }
+    ],
+    "right_distractors": [
+      "A mensagem é levada a uma fila de dead-letter pelo Dapr"
+    ]
+  },
+  "ex-sz3r17fe": {
+    "prompt": "Uma task constrói a loja a partir de um Dockerfile de dois estágios: um estágio de build FROM uma imagem e um estágio final FROM python:3.12-slim. A imagem base do estágio de build é corrigida sob a mesma tag. O gatilho de imagem base reconstrói a loja?",
+    "hint": "Aula 10. Qual base a documentação diz que uma task acompanha.",
+    "choices": [
+      {
+        "text": "Sim, em 10 a 60 minutos, como para qualquer base num registro público",
+        "why": "Esse atraso vale para uma base pública, mas esta base nem é acompanhada."
+      },
+      {
+        "text": "Sim, na hora, porque os dois estágios estão no mesmo Dockerfile",
+        "why": "Estar no mesmo arquivo não é o que o gatilho lê; ele registra a base da imagem final."
+      },
+      {
+        "text": "Não: só a base da imagem final é acompanhada",
+        "why": "Isso. Os estágios anteriores de um Dockerfile multiestágio não são seguidos."
+      },
+      {
+        "text": "Só se o gatilho de pull request estiver ligado",
+        "why": "O gatilho de pull request trata de pull requests; imagens base têm gatilho próprio."
+      }
+    ]
+  },
+  "ex-5qphvc7g": {
+    "prompt": "O plano para contêineres do Defender for Cloud está ligado na assinatura. Qual das imagens da loja ele deixa de escanear?",
+    "hint": "Aula 10. Ele escaneia o que é enviado ou importado, e o que foi baixado recentemente.",
+    "choices": [
+      {
+        "text": "1.2, enviada hoje de manhã e ainda não baixada",
+        "why": "Um push é um dos eventos que faz uma imagem ser escaneada."
+      },
+      {
+        "text": "1.0, enviada em janeiro e baixada por ninguém há 45 dias",
+        "why": "Isso. Ela foi escaneada no push, e sai quando passam 30 dias sem nenhum pull."
+      },
+      {
+        "text": "1.1, baixada pelos nós do cluster todo dia",
+        "why": "Uma imagem baixada nos últimos 30 dias continua sendo escaneada."
+      },
+      {
+        "text": "python:3.12-slim, guardada no registro por uma regra de artifact cache",
+        "why": "Uma imagem em cache é baixada pelo registro, e a regra a buscou quando alguém fez o pull."
+      }
+    ]
+  },
+  "ex-kyyx4hn2": {
+    "prompt": "Uma task semanal roda acr purge --filter 'shop:.*' --ago 30d --untagged. A versão 1.1 foi enviada há 40 dias e ainda roda em produção. O que a mantém no registro?",
+    "hint": "Aula 10. O filtro também casa com as tags de release.",
+    "choices": [
+      {
+        "text": "A tag dela: o purge só apaga manifests que ficaram sem tag",
+        "why": "--ago 30d remove primeiro as tags com mais de trinta dias, tags de release incluídas."
+      },
+      {
+        "text": "A implantação que a baixa por digest",
+        "why": "Baixar por digest protege de uma tag movida, não de uma exclusão: os avisos dizem para não fazer purge do que alguém baixa por digest."
+      },
+      {
+        "text": "Nada; não dá para mandar um purge manter alguma coisa",
+        "why": "Uma trava é justamente como se manda um purge manter algo."
+      },
+      {
+        "text": "Travá-la: az acr repository update --image shop:1.1 --write-enabled false",
+        "why": "Isso. O purge pula uma tag travada, que é o que o guia de tags recomenda para o que está implantado."
+      }
+    ]
+  },
+  "ex-p1a15rbd": {
+    "prompt": "Um token passado ao `az acr build` como argumento de build fica visível para a equipe do ACR, então ele vai na opção `--___-build-arg`, que fica fora do que ela vê.",
+    "hint": "Aula 10. Uma palavra antes de build-arg.",
+    "blanks": [
+      {
+        "accept": [
+          "secret"
+        ]
+      }
+    ]
+  },
+  "ex-ev3bj81r": {
+    "prompt": "A loja começa com um registro Basic. Quais destes ela já tem ali? Marque todos que se aplicam.",
+    "hint": "Aula 10. Os tiers falam uma API; os recursos mudam.",
+    "choices": [
+      {
+        "text": "A mesma API de push e pull do Premium",
+        "why": "Isso. Um pipeline escrito contra o Basic funciona sem mudança contra o Premium."
+      },
+      {
+        "text": "Uma réplica em southcentralus",
+        "why": "A geo-replicação é só do Premium."
+      },
+      {
+        "text": "Uma regra de artifact cache para python:3.12-slim",
+        "why": "Isso. O artifact cache existe nos três tiers."
+      },
+      {
+        "text": "Redundância de zona entre as zonas da região",
+        "why": "Isso. Ligada por padrão em todo tier, numa região com zonas, diga a propriedade o que disser."
+      },
+      {
+        "text": "Um private endpoint",
+        "why": "Private endpoints são só do Premium."
+      }
+    ]
+  },
+  "ex-y08fw7wt": {
+    "prompt": "Um cluster ficou numa versão minor depois do fim de vida por mais de sessenta dias, com janela de manutenção aos domingos e um budget de três de três na loja. O que o AKS faz?",
+    "hint": "Aula 11. A documentação dá nome a esse tipo de upgrade, e diz o que ele ignora.",
+    "choices": [
+      {
+        "text": "Nada até alguém rodar az aks upgrade, já que o upgradeChannel decide",
+        "why": "Passados sessenta dias do fim de vida o AKS age, diga o canal o que disser."
+      },
+      {
+        "text": "Ele atualiza o cluster no domingo seguinte, parando no drain bloqueado",
+        "why": "Um upgrade iniciado pela plataforma não espera a janela, e não para no budget."
+      },
+      {
+        "text": "Ele passa o cluster para o suporte de longo prazo do tier Premium",
+        "why": "O suporte de longo prazo nunca é automático: exige o tier Premium e o plano escolhido de forma explícita."
+      },
+      {
+        "text": "O AKS age sozinho, uma minor por vez, e passa por cima dos dois",
+        "why": "Isso. É o upgrade iniciado pela plataforma, que traz o cluster de volta a uma versão suportada."
+      }
+    ]
+  },
+  "ex-swkvjstv": {
+    "prompt": "A loja atualizou o control plane e depois o pool apps para 1.37, e agora a loja se comporta mal. Passaram cinco dias. O que pode ser desfeito?",
+    "hint": "Aula 11. As duas metades de um upgrade voltam de jeitos diferentes, se voltam.",
+    "choices": [
+      {
+        "text": "Os dois, com az aks upgrade --kubernetes-version 1.36",
+        "why": "Um upgrade do control plane não pode ser revertido."
+      },
+      {
+        "text": "Nenhum dos dois: um upgrade do AKS é definitivo",
+        "why": "Um node pool pode voltar, dentro de limites."
+      },
+      {
+        "text": "O pool apps, uma versão para trás, por sete dias",
+        "why": "Isso. A partir da API 2026-04-01; o control plane fica na 1.37."
+      },
+      {
+        "text": "Só o control plane, já que os pools podem ficar até três versões atrás",
+        "why": "A defasagem permite atualizar o control plane primeiro; não permite voltar com ele."
+      }
+    ]
+  },
+  "ex-b3959xr7": {
+    "prompt": "Um cluster roda 1.36.2; há 1.36.6, 1.37.1 e 1.37.3 disponíveis, e 1.37 é a minor mais nova. Associe cada upgradeChannel a onde ele leva a versão do Kubernetes.",
+    "hint": "Aula 11. Cada canal escolhe uma versão minor e depois pega o patch mais recente dela.",
+    "pairs": [
+      {
+        "left": "none",
+        "right": "Fica na 1.36.2"
+      },
+      {
+        "left": "patch",
+        "right": "1.36.6"
+      },
+      {
+        "left": "rapid",
+        "right": "1.37.3"
+      }
+    ],
+    "right_distractors": [
+      "1.37.1"
+    ]
+  },
+  "ex-8bv2vvfj": {
+    "prompt": "Um cluster Standard sem zonas de disponibilidade tem SLA de 99,9% no API server. Num mês de 730 horas, quantos minutos ele pode ficar inalcançável sem quebrar a promessa?",
+    "hint": "Aula 11. A mesma conta da aula 6, sobre 730 horas.",
+    "unit": "minutos"
+  },
+  "ex-v91yk3yv": {
+    "prompt": "Um cluster fora do suporte de longo prazo roda 1.35 no control plane e em todos os pools, e precisa chegar a 1.37. Ponha os upgrades em ordem.",
+    "hint": "Aula 11. Nenhuma versão minor é pulada, e os pools seguem o control plane, nunca vão na frente.",
+    "items": [
+      "O control plane para 1.36",
+      "Os pools para 1.36",
+      "O control plane para 1.37",
+      "Os pools para 1.37"
+    ],
+    "trap": "Mover os pools primeiro é o deslize: um node pool pode ficar atrás do control plane, e nunca na frente dele."
+  },
+  "ex-py9t7y8k": {
+    "prompt": "Um pod tem karpenter.sh/do-not-disrupt: \"true\" num nó cujo NodePool define expireAfter, e o nó chega a essa idade. O que acontece?",
+    "hint": "Aula 12. Das três formas de os nós irem embora, uma é a forçada.",
+    "choices": [
+      {
+        "text": "O nó é substituído assim mesmo: a expiração ignora a anotação e os budgets",
+        "why": "Isso. É por isso que o pool da aula desligou a expiração e deixou os budgets no comando."
+      },
+      {
+        "text": "Nada, até o pod terminar, porque a anotação segura toda interrupção",
+        "why": "A anotação segura a consolidação e o drift, e não a expiração."
+      },
+      {
+        "text": "O nó espera o budget do pool permitir",
+        "why": "A expiração é a única interrupção que os budgets não seguram."
+      },
+      {
+        "text": "O pod vai para um nó de sistema, que nunca expira",
+        "why": "Nenhum pod seu pode rodar num nó de sistema gerenciado, nem com uma tolerância ampla."
+      }
+    ]
+  },
+  "ex-8mqbrp1f": {
+    "prompt": "A loja escreve um budget de 0 num NodePool das 09:00 às 21:00, pensando no horário de vendas de São Paulo, três horas atrás do UTC. Quando ele de fato fecha as interrupções?",
+    "hint": "Aula 12. Nas janelas da aula 11 há um campo para corrigir isso, aqui não há.",
+    "choices": [
+      {
+        "text": "Das 09:00 às 21:00 em São Paulo, tirado da região do cluster",
+        "why": "Nada lê a região; o horário de um budget é em UTC e não pode ser outra coisa."
+      },
+      {
+        "text": "Das 06:00 às 18:00 em São Paulo, porque o horário é em UTC",
+        "why": "Isso. Três horas antes, então a noite da loja fica aberta à consolidação."
+      },
+      {
+        "text": "Das 12:00 às 24:00 em São Paulo, porque o Karpenter soma o fuso",
+        "why": "O fuso vai no outro sentido, e o Karpenter não soma nenhum: lê o horário como UTC."
+      },
+      {
+        "text": "Nunca: um budget de 0 é recusado pelo CRD",
+        "why": "0 é um budget válido, e o budget ativo mais restritivo vence."
+      }
+    ]
+  },
+  "ex-15zb2jgw": {
+    "prompt": "Um NodePool tem 15 nós e um budget de \"25%\". Um nó já está sendo apagado e um não está pronto. Quantos nós a mais o Karpenter pode interromper agora?",
+    "hint": "Aula 12. A contagem de nós vezes a porcentagem, arredondada para cima, menos o que já está saindo e o que não está pronto.",
+    "unit": "nós"
+  },
+  "ex-02xxbc5f": {
+    "prompt": "Num cluster Automatic, o manifesto de um contêiner pede 50m de CPU e 64Mi de memória. O que a salvaguarda de requisições de recursos faz?",
+    "hint": "Aula 12. O mutador tem valores para quando nada é escrito, e um piso para quando é pouco.",
+    "choices": [
+      {
+        "text": "Sobe as duas para o mínimo de 100m e 100Mi",
+        "why": "Isso. Um valor pequeno sobe para 100m de CPU e 100Mi de memória."
+      },
+      {
+        "text": "Recusa o pod, porque as requisições estão abaixo do mínimo",
+        "why": "Requisições são uma regra que muta; probes e latest é que só recusam."
+      },
+      {
+        "text": "Troca as duas por 500m e 2048Mi",
+        "why": "Esses são os valores para um contêiner sem requisições e sem limites."
+      },
+      {
+        "text": "Deixa como estão, já que qualquer requisição escrita é aceita",
+        "why": "Um valor dado mas pequeno é levado ao mínimo."
+      }
+    ]
+  },
+  "ex-xn0brbw6": {
+    "prompt": "Num cluster Automatic, o pod do relatório noturno pede mais do que qualquer nó rodando tem livre. Ponha em ordem o que acontece.",
+    "hint": "Aula 12. As requisições do pod são de onde vem o tamanho.",
+    "items": [
+      "O scheduler não acha nó e deixa o pod Pending",
+      "O NAP lê as requisições do pod e fica com os tamanhos que os NodePools permitem e que caberiam nele",
+      "O NAP cria uma máquina, e um NodeClaim registra o que ele pediu ao Azure",
+      "O pod é agendado no nó novo",
+      "O relatório termina, e a consolidação remove o nó vazio"
+    ],
+    "trap": "Criar a máquina antes de ler as requisições é o deslize: o NAP parte do pod pendente, o lado oposto de um pool com tamanho fixo."
+  },
+  "ex-qjk9vzfb": {
+    "prompt": "A loja gira as chaves de assinatura do cluster com az aks oidc-issuer rotate-signing-keys. Por que a chave velha e a nova continuam válidas por 24 horas?",
+    "hint": "Aula 13. Pense nos tokens que já estão nos arquivos dos pods.",
+    "choices": [
+      {
+        "text": "Porque o Entra ID só busca de novo as chaves de um emissor uma vez por dia",
+        "why": "Nada na aula dá o intervalo de atualização do Entra ID; a sobreposição é por causa dos tokens nos pods."
+      },
+      {
+        "text": "Porque as credenciais federadas precisam ser editadas para nomear a chave nova",
+        "why": "Uma credencial nomeia um emissor, um assunto e uma audiência; nunca nomeia uma chave."
+      },
+      {
+        "text": "Para cada token de pod ser trocado antes de a chave velha cair",
+        "why": "Isso. Um token projetado dura uma hora por padrão, então um dia cobre todas as trocas."
+      },
+      {
+        "text": "Porque o endereço do emissor muda e o velho precisa continuar respondendo",
+        "why": "O endereço do emissor tem um GUID que nunca muda; só as chaves por trás dele giram."
+      }
+    ]
+  },
+  "ex-2y372ejc": {
+    "prompt": "O script de um pod pede ao endpoint de token do Entra ID um token com scope=https://storage.azure.com/, como fazia numa máquina virtual pelo serviço de metadados. O que a documentação avisa?",
+    "hint": "Aula 13. Os dois fluxos usam endpoints diferentes, e querem o recurso escrito de jeitos diferentes.",
+    "choices": [
+      {
+        "text": "Nada: o endpoint aceita o recurso em qualquer das formas",
+        "why": "A forma sem sufixo pode falhar aqui; esse é exatamente o aviso."
+      },
+      {
+        "text": "O scope é ignorado e o token vale para todo recurso que a identidade alcança",
+        "why": "Um token é para o único recurso que a requisição nomeou; nada o amplia."
+      },
+      {
+        "text": "Falha com AADSTS700212, porque a audiência está errada",
+        "why": "Esse código é para um token cuja audiência não é a da credencial, outro erro."
+      },
+      {
+        "text": "A versão 2 quer <resource>/.default, que a forma sem sufixo não tem",
+        "why": "Isso. O serviço de metadados aceitava o recurso sem sufixo; o endpoint v2 quer <resource>/.default."
+      }
+    ]
+  },
+  "ex-qy59att9": {
+    "prompt": "Cinco minutos depois de shop-orders receber Storage Blob Data Contributor no contêiner de recibos, o pod obtém um token de acesso do Entra ID e a conta de armazenamento recusa a escrita. Qual é a explicação mais provável?",
+    "hint": "Aula 13. O token foi emitido, então a troca funcionou.",
+    "choices": [
+      {
+        "text": "A credencial federada ainda não se propagou",
+        "why": "Uma credencial não propagada teria impedido a emissão do token."
+      },
+      {
+        "text": "A função nova ainda não fez efeito",
+        "why": "Isso. Um pod recusado logo depois da configuração costuma estar certo e recente demais."
+      },
+      {
+        "text": "O token projetado expirou antes da escrita",
+        "why": "O token de acesso foi emitido; o que a conta de armazenamento confere é a função da identidade."
+      },
+      {
+        "text": "A função também precisa ser dada à identidade do kubelet",
+        "why": "Isso daria a função a todo pod do nó; o pod age só como shop-orders."
+      }
+    ]
+  },
+  "ex-v2y72dyh": {
+    "prompt": "Uma equipe tenta pôr a credencial federada numa identidade atribuída pelo sistema, para não criar um recurso próprio. O que a aula diz?",
+    "hint": "Aula 13. Em quais dois tipos de identidade uma credencial federada pode ficar.",
+    "choices": [
+      {
+        "text": "Ali não: só user-assigned ou registro de app",
+        "why": "Isso. Uma identidade atribuída pelo sistema vive e morre com um recurso."
+      },
+      {
+        "text": "Funciona, e a credencial é apagada junto com o cluster",
+        "why": "Uma credencial é filha da identidade e nunca é apagada junto com um cluster."
+      },
+      {
+        "text": "Funciona, mas só para os pods do próprio kubelet",
+        "why": "A identidade do kubelet é do nó, e é a rota contra a qual a aula avisa."
+      },
+      {
+        "text": "Funciona depois que o emissor OIDC é ligado",
+        "why": "O emissor é necessário de qualquer forma; não muda quais identidades aceitam credencial."
+      }
+    ]
+  },
+  "ex-hr6s68bn": {
+    "prompt": "Atrás do AGIC, a loja reduz de cinco para três pods e alguns clientes recebem 502 por um minuto. Por quê, e o que a documentação recomenda?",
+    "hint": "Aula 14. A mudança percorre um caminho longo antes de o gateway saber dela.",
+    "choices": [
+      {
+        "text": "O pod do AGIC estava ocupado e descartou as requisições que passavam por ele; dê mais réplicas a ele",
+        "why": "O AGIC não carrega requisição nenhuma: o gateway as manda direto aos pods."
+      },
+      {
+        "text": "O kube-proxy ainda roteava para os pods velhos; mude para NodePort",
+        "why": "Não há kube-proxy no caminho: o gateway fala direto com os endereços dos pods."
+      },
+      {
+        "text": "A sonda de saúde usava o caminho / do Ingress, que responde 404",
+        "why": "Isso deixaria todo pod doente o tempo todo, não por um minuto durante uma redução."
+      },
+      {
+        "text": "Pods que já tinham saído recebiam requisições até o ARM atualizar o gateway",
+        "why": "Isso. O gateway pode levar um minuto para receber uma atualização, e o draining é a resposta documentada."
+      }
+    ]
+  },
+  "ex-d9ftkwty": {
+    "prompt": "Um Application Gateway já atende o site da empresa, e a equipe quer que o AGIC acrescente as regras da loja sem mexer no resto. Como o AGIC precisa ser instalado?",
+    "hint": "Aula 14. Por padrão o AGIC é dono do gateway inteiro.",
+    "choices": [
+      {
+        "text": "Como add-on do AKS, com --appgw-id apontando para esse gateway",
+        "why": "O add-on assume o gateway inteiro e apagaria os listeners feitos à mão; o modo compartilhado não existe ali."
+      },
+      {
+        "text": "Como add-on, com --appgw-subnet-cidr, para ter uma sub-rede própria",
+        "why": "Isso cria um gateway novo no grupo de recursos dos nós; não compartilha o existente."
+      },
+      {
+        "text": "Com Helm, no modo compartilhado",
+        "why": "Isso. O modo compartilhado, e o ProhibitedTargets junto, só existem na instalação por Helm."
+      },
+      {
+        "text": "De qualquer jeito, desde que o gateway seja do SKU WAF_v2",
+        "why": "WAF_v2 é um dos dois SKUs com que o AGIC trabalha; não diz nada sobre compartilhar."
+      }
+    ]
+  },
+  "ex-zdmy627v": {
+    "prompt": "Uma regra de um HTTPRoute lista três backends com pesos 2, 2 e 1. Que porcentagem das requisições da regra vai para o terceiro?",
+    "hint": "Aula 14. Um peso é uma proporção da soma na sua lista.",
+    "unit": "%"
+  },
+  "ex-b5swe1k0": {
+    "prompt": "A exportação financeira quer um ponto de entrada pelo Application Gateway for Containers que só seja alcançável a partir da rede virtual, na porta 8443. O que diz a documentação?",
+    "hint": "Aula 14. Leia em que um frontend escuta, e que tipo de endereço ele tem.",
+    "choices": [
+      {
+        "text": "Funciona com uma segunda associação na sub-rede de finanças",
+        "why": "Hoje um recurso só pode ter uma associação, e uma associação não é um frontend de qualquer jeito."
+      },
+      {
+        "text": "Um frontend escuta só nas portas 80 e 443 e não tem endereço privado",
+        "why": "Isso. Nenhuma das duas metades desse pedido cabe no que um frontend é."
+      },
+      {
+        "text": "Funciona com o ALB Controller gerenciando o frontend",
+        "why": "Quem gerencia um frontend muda quem é dono dele, não em que ele pode escutar."
+      },
+      {
+        "text": "Funciona se um ReferenceGrant em finance permitir",
+        "why": "Um grant permite uma referência entre namespaces; não tem relação com portas ou endereços."
+      }
+    ]
+  },
+  "ex-spha0kvk": {
+    "prompt": "Atrás do Application Gateway for Containers, o endpoint /report da loja leva uns 90 segundos para responder, e a rota não define timeouts. O que os clientes recebem?",
+    "hint": "Aula 14. O data plane tem uma espera padrão.",
+    "choices": [
+      {
+        "text": "A resposta, já que o data plane espera o quanto o pod esperar",
+        "why": "Ele espera 60 segundos, a não ser que a rota diga outra coisa."
+      },
+      {
+        "text": "Um timeout: o data plane espera 60 segundos se nada disser o contrário",
+        "why": "Isso. timeouts.request na rota é onde se escreve uma espera maior."
+      },
+      {
+        "text": "A resposta, depois de somado o timeout de connection-draining de 30 segundos",
+        "why": "Connection draining é uma anotação do AGIC para pods sendo removidos, não um timeout de requisição."
+      },
+      {
+        "text": "Um 500, como para um backend que não existe",
+        "why": "O 500 é o que a especificação pede para um backend inválido; este existe e é lento."
+      }
+    ]
+  },
+  "ex-wahyzt5a": {
+    "prompt": "O path de uma saída de blob é '%RECEIPTS%/{order}.json'. A configuração RECEIPTS do app vale receipts-2026, e a mensagem da fila é {\"order\": \"A-3003\", \"sku\": \"cap\", \"qty\": 1}. Que blob uma execução bem-sucedida grava?",
+    "hint": "Aula 15. Dois tipos de expressão de binding, lidos de dois lugares diferentes.",
+    "choices": [
+      {
+        "text": "%RECEIPTS%/A-3003.json, já que só chaves são expressões",
+        "why": "Sinais de porcentagem também são expressões, lidas de uma configuração."
+      },
+      {
+        "text": "receipts-2026/cap.json",
+        "why": "{order} lê o campo order da mensagem, não o sku."
+      },
+      {
+        "text": "receipts-2026/A-3003.json",
+        "why": "Isso. %RECEIPTS% vem da configuração e {order} da mensagem JSON que disparou a execução."
+      },
+      {
+        "text": "Nenhum: o host não lê um campo de uma mensagem codificada em base64",
+        "why": "O host decodifica as próprias mensagens base64; quem precisa codificar é um remetente fora do binding."
+      }
+    ]
+  },
+  "ex-tqqy4f2j": {
+    "prompt": "make_receipt também precisa gravar no armazenamento de um jeito que o binding de saída de blob não consegue expressar. Como faz isso?",
+    "hint": "Aula 15. O que a documentação diz sobre os clientes por trás de um binding.",
+    "choices": [
+      {
+        "text": "Com o Azure SDK, um cliente que a própria função cria e configura",
+        "why": "Isso. Um binding oferece o que a extensão dele oferece e mais nada."
+      },
+      {
+        "text": "Pega emprestado o cliente de armazenamento do próprio binding pelo parâmetro receipt",
+        "why": "O código não acessa os clientes internos usados pelas extensões de binding."
+      },
+      {
+        "text": "Com uma segunda saída de blob no mesmo path, que acrescenta as opções que faltam",
+        "why": "Um segundo binding oferece as mesmas opções que o primeiro."
+      },
+      {
+        "text": "Definindo as opções que faltam no host.json em extensions.blobs",
+        "why": "O host.json ajusta como a extensão se comporta; não faz um binding fazer um tipo de gravação que ele não tem."
+      }
+    ]
+  },
+  "ex-2dgakprw": {
+    "prompt": "Com identidades gerenciadas, associe cada conexão do app da loja à função que a tabela da documentação dá a ela.",
+    "hint": "Aula 15. As funções são concedidas por binding.",
+    "pairs": [
+      {
+        "left": "O AzureWebJobsStorage do próprio host",
+        "right": "Storage Blob Data Owner"
+      },
+      {
+        "left": "O gatilho de fila de make_receipt",
+        "right": "Storage Queue Data Reader com Storage Queue Data Message Processor"
+      },
+      {
+        "left": "A saída de fila de take_order",
+        "right": "Storage Queue Data Contributor"
+      }
+    ],
+    "right_distractors": [
+      "Storage Account Contributor"
+    ]
+  },
+  "ex-dvt4zp3q": {
+    "prompt": "Uma função tem exatamente ___ gatilho, e qualquer número de bindings de entrada e de saída.",
+    "hint": "Aula 15. O gatilho é o binding que também inicia a função.",
+    "blanks": [
+      {
+        "accept": [
+          "um",
+          "1"
+        ]
+      }
+    ]
+  },
+  "ex-n0hd981r": {
+    "prompt": "A exportação financeira noturna é uma função com gatilho de timer num plano Dedicated, ao lado de um web app, com Always On desligado. Ninguém chama o function app por HTTP. O que acontece à noite?",
+    "hint": "Aula 16. O que acorda um runtime ocioso nesse plano.",
+    "choices": [
+      {
+        "text": "Ela roda na hora, porque um plano Dedicated é cobrado trabalhe ou não",
+        "why": "Pagar o plano não mantém o runtime acordado; quem faz isso é o Always On."
+      },
+      {
+        "text": "Ela roda atrasada, depois de uma partida a frio de alguns segundos",
+        "why": "Nada a inicia: só uma requisição HTTP acorda um runtime ocioso ali."
+      },
+      {
+        "text": "Ela roda numa instância pré-aquecida guardada para scale-out",
+        "why": "Instâncias pré-aquecidas são o buffer do plano Premium, não do Dedicated."
+      },
+      {
+        "text": "Um timer que nada acorda: só HTTP acorda um runtime ocioso",
+        "why": "Isso. Um gatilho de timer que deixa de rodar em silêncio é a consequência documentada."
+      }
+    ]
+  },
+  "ex-bbxbjmzn": {
+    "prompt": "No Flex Consumption, o período mínimo cobrável de execução é 1.000 ms, arredondado para cima para os 100 ms seguintes depois disso. Uma execução dura 1.340 ms. Quantos milissegundos são cobrados?",
+    "hint": "Aula 16. Passado o mínimo, o arredondamento é para cima.",
+    "unit": "ms"
+  },
+  "ex-234rbyn7": {
+    "prompt": "Um app Flex Consumption tem redundância de zona ligada, e always ready definido em uma instância para o grupo http. O que a documentação exige?",
+    "hint": "Aula 16. A redundância de zona põe um piso na contagem.",
+    "choices": [
+      {
+        "text": "Nada a mais; uma instância always ready se espalha sozinha pelas zonas",
+        "why": "Uma instância roda num lugar só; a documentação pede mais de uma."
+      },
+      {
+        "text": "Instâncias always ready para todo grupo de funções, não só o http",
+        "why": "A exigência vale por grupo que as tem, e trata da contagem."
+      },
+      {
+        "text": "Uma mudança para o Premium, já que o Flex não tem redundância de zona",
+        "why": "O Flex tem redundância de zona; ela vem com essa condição."
+      },
+      {
+        "text": "Pelo menos duas instâncias always ready por grupo",
+        "why": "Isso. Com redundância de zona ligada, a documentação exige pelo menos duas."
+      }
+    ]
+  },
+  "ex-r6w7fzr4": {
+    "prompt": "Todos os apps Flex Consumption de uma assinatura dividem uma cota regional de 250 núcleos por padrão. Se toda instância for do tamanho de 4.096 MB, que tem dois núcleos, quantas instâncias podem rodar nessa região ao mesmo tempo?",
+    "hint": "Aula 16. Memória e processador vêm juntos em cada tamanho.",
+    "unit": "instâncias"
+  },
+  "ex-h5resrfg": {
+    "prompt": "Diga o timeout do function app o que disser, uma função HTTP tem ___ segundos para responder, o timeout ocioso do balanceador na frente do app.",
+    "hint": "Aula 16. Trabalho mais longo vai para uma fila ou para o Durable Functions.",
+    "blanks": [
+      {
+        "accept": [
+          "230"
+        ]
+      }
+    ]
+  },
+  "ex-98n9neb0": {
+    "prompt": "Um orquestrador chama cinco atividades uma depois da outra, cada uma atrás do seu yield, e depois retorna. No provedor Azure Storage cada execução do orquestrador acrescenta quatro eventos à tabela History. Quantos eventos o histórico do pedido tem no fim, sem contar a linha sentinel?",
+    "hint": "Aula 17. Conte as execuções primeiro: uma por resultado de atividade, mais a primeira.",
+    "unit": "eventos"
+  },
+  "ex-f56eqn9h": {
+    "prompt": "Um bug no webhook do banco gera PaymentConfirmed para a instância A-2001-X em vez de A-2001. O que a API de gerenciamento faz, e o que isso significa para a loja?",
+    "hint": "Aula 17. A documentação diz o que acontece com um evento para um id que não existe.",
+    "choices": [
+      {
+        "text": "Ela responde 410 Gone, que o webhook registra como erro",
+        "why": "410 é para uma instância que terminou ou falhou, não para uma que nunca existiu."
+      },
+      {
+        "text": "Ela descarta o evento sem erro, então A-2001 espera até o timer expirar o pedido",
+        "why": "Isso. É o caso a vigiar quando o id vem de um webhook: nada reclama."
+      },
+      {
+        "text": "Ela inicia uma instância nova chamada A-2001-X para guardar o evento",
+        "why": "Gerar um evento nunca inicia uma instância; só o start_new da função cliente faz isso."
+      },
+      {
+        "text": "Ela entrega o evento ao id mais parecido, A-2001",
+        "why": "Os ids são comparados exatamente; nada adivinha."
+      }
+    ]
+  },
+  "ex-974hndfv": {
+    "prompt": "No plano Consumption, um pedido passa por três atividades sequenciais. O que é cobrado pelo orquestrador dele?",
+    "hint": "Aula 17. Os replays, e o tempo de espera num yield.",
+    "choices": [
+      {
+        "text": "Uma execução, do início até o último resultado",
+        "why": "O orquestrador não roda durante esse tempo; roda quatro vezes, por pouco tempo."
+      },
+      {
+        "text": "Quatro execuções, mais os segundos em que esperou cada atividade",
+        "why": "O tempo que um orquestrador passa esperando num yield não é cobrado."
+      },
+      {
+        "text": "Quatro execuções, uma por rodada do orquestrador, e nada pela espera",
+        "why": "Isso. No Consumption cada replay é cobrado como uma execução."
+      },
+      {
+        "text": "Nada; só as atividades são cobradas",
+        "why": "No Consumption os replays são cobrados; os outros planos é que não cobram."
+      }
+    ]
+  },
+  "ex-hsr9g2x6": {
+    "prompt": "O app da loja escalou para 30 instâncias no provedor Azure Storage, com a contagem de partições no máximo. Quantas delas podem rodar orquestradores ao mesmo tempo?",
+    "hint": "Aula 17. Um orquestrador roda no host que tem o lease da sua fila de controle.",
+    "choices": [
+      {
+        "text": "No máximo 16",
+        "why": "Isso. O provedor tem no máximo dezesseis partições, então no máximo dezesseis instâncias têm uma."
+      },
+      {
+        "text": "As 30, já que toda instância disputa a fila de work-item",
+        "why": "É assim que as atividades se espalham; os orquestradores ficam presos às filas de controle."
+      },
+      {
+        "text": "4, o número padrão de filas de controle",
+        "why": "Quatro é o padrão; a pergunta pôs as partições no máximo."
+      },
+      {
+        "text": "1, porque um orquestrador roda numa thread",
+        "why": "Uma thread por instância do host, e vários hosts podem ter partições cada um."
+      }
+    ]
+  },
+  "ex-x790xzem": {
+    "prompt": "Quais destes order_flow, um orquestrador, pode fazer com segurança? Marque todos que se aplicam.",
+    "hint": "Aula 17. Ele precisa fazer os mesmos pedidos na mesma ordem toda vez que roda.",
+    "choices": [
+      {
+        "text": "Ler a hora de context.current_utc_datetime",
+        "why": "Isso. Ela vem do histórico, então todo replay lê o mesmo valor."
+      },
+      {
+        "text": "Chamar datetime.now() para decidir se envia hoje",
+        "why": "O relógio da máquina responde diferente a cada replay."
+      },
+      {
+        "text": "Gerar um id com context.new_guid()",
+        "why": "Isso. É o jeito seguro em replay de obter um."
+      },
+      {
+        "text": "Esperar com time.sleep(60) antes de cobrar",
+        "why": "Uma espera num orquestrador é um timer durável, nunca um sleep."
+      },
+      {
+        "text": "Esperar com yield context.create_timer(when)",
+        "why": "Isso. É o sleep do orquestrador, e o único que ele pode usar."
+      }
+    ]
+  },
+  "ex-gzj8r32z": {
+    "prompt": "A loja quer que o plano P1v3 de duas instâncias que já existe seja redundante por zona, e o plano informa maximumNumberOfZones igual a 1. Que caminho a documentação deixa?",
+    "hint": "Aula 18. Esse número depende de onde o plano foi colocado, não do tier dele.",
+    "choices": [
+      {
+        "text": "Definir zoneRedundant: true e acrescentar uma terceira instância",
+        "why": "Duas instâncias já cumprem a condição de instâncias; o obstáculo é a contagem de zonas do plano."
+      },
+      {
+        "text": "Criar o plano de novo, num grupo de recursos novo",
+        "why": "Isso. Um plano que responde um tem de ser refeito, num grupo de recursos novo."
+      },
+      {
+        "text": "Passar o plano para Isolated v2, que é redundante por zona por padrão",
+        "why": "Nada do que a aula leu diz que um tier muda a unidade de escala em que o plano está."
+      },
+      {
+        "text": "Nada: o Brazil South não tem zonas de disponibilidade",
+        "why": "O Brazil South tem zonas, aula 6; o limite é a unidade de escala deste plano."
+      }
+    ]
+  },
+  "ex-h3pw4gwp": {
+    "prompt": "O roteamento de tráfego manda 10% dos visitantes da produção para staging. Um cliente cai em staging, e depois staging é corrigido e o roteamento volta a zero. O que esse cliente pode ver?",
+    "hint": "Aula 18. Como a escolha do slot fica guardada.",
+    "choices": [
+      {
+        "text": "A produção na página seguinte, já que cada requisição é roteada de novo",
+        "why": "A escolha fica guardada, para um cliente não alternar entre versões a cada página."
+      },
+      {
+        "text": "Staging para sempre, até os cookies do navegador serem apagados",
+        "why": "O cookie dura uma hora, não para sempre."
+      },
+      {
+        "text": "O mesmo slot por até uma hora, até o cookie vencer",
+        "why": "Isso. O cookie guarda a escolha por uma hora; um link com x-ms-routing-name=self nomeia a produção."
+      },
+      {
+        "text": "Um erro, porque o endereço de staging está fechado para clientes",
+        "why": "O roteamento serve staging no endereço da produção; uma regra de IP no slot é outra coisa."
+      }
+    ]
+  },
+  "ex-85cz8v2v": {
+    "prompt": "O plano da loja tem duas instâncias com healthCheckPath definido. Uma configuração ruim faz as duas falharem na verificação. O que o App Service faz?",
+    "hint": "Aula 18. A verificação de saúde nunca tira mais que uma parte das instâncias.",
+    "choices": [
+      {
+        "text": "Não tira nenhuma, e as duas continuam recebendo tráfego",
+        "why": "Isso. Com todas as instâncias falhando, nenhuma sai do balanceador."
+      },
+      {
+        "text": "Tira as duas do balanceador, e a loja não responde nada",
+        "why": "Com todas as instâncias falhando, nenhuma é tirada."
+      },
+      {
+        "text": "Tira uma, a primeira a falhar dez requisições",
+        "why": "Isso seria metade, o teto padrão; mas com todas falhando, a documentação diz que nenhuma sai."
+      },
+      {
+        "text": "Troca staging de volta para a produção",
+        "why": "A verificação de saúde tira e substitui instâncias; nunca troca slots."
+      }
+    ]
+  },
+  "ex-v2bp1txs": {
+    "prompt": "O site de administração divide o plano da loja, com alwaysOn desligado. Os desenvolvedores o abrem toda manhã depois de uma noite parada. O que eles percebem?",
+    "hint": "Aula 18. O que acontece com um app que ninguém chama por um tempo.",
+    "choices": [
+      {
+        "text": "Nada: as instâncias do plano rodam a noite toda, então o app está carregado",
+        "why": "As instâncias rodam, mas o app nelas é descarregado sem o Always On."
+      },
+      {
+        "text": "Um 503 até trocarem o site a partir de staging",
+        "why": "Um app descarregado é carregado de novo pela próxima requisição; nada precisa de troca."
+      },
+      {
+        "text": "Uma conta menor pela noite, já que um app descarregado não é cobrado",
+        "why": "O plano é pago seja o que for que rode nele; descarregar não economiza nada."
+      },
+      {
+        "text": "Uma primeira requisição lenta, depois de 20 minutos descarregado",
+        "why": "Isso. O próximo a chamar paga o aquecimento."
+      }
+    ]
+  },
+  "ex-nbd7t2q1": {
+    "prompt": "Uma cópia do gatilho Recurrence da exportação da manhã não tem timeZone, tem startTime 2026-11-02T06:00:00Z e o schedule na hora 6. Quando ele dispara, em São Paulo, três horas atrás do UTC?",
+    "hint": "Aula 19. Sem fuso, o gatilho lê os horários num fuso específico.",
+    "choices": [
+      {
+        "text": "Às 06:00, porque a região brazilsouth decide o fuso",
+        "why": "Nada lê a região; sem timeZone os horários são UTC."
+      },
+      {
+        "text": "Às 09:00, porque o UTC está três horas à frente",
+        "why": "Seis em UTC são três em São Paulo, não nove."
+      },
+      {
+        "text": "Às 03:00, porque agora os horários são UTC",
+        "why": "Isso. Seis da manhã em São Paulo seria escrito 09:00:00Z."
+      },
+      {
+        "text": "Nunca, porque um gatilho Recurrence exige fuso",
+        "why": "O fuso é opcional; sem ele o gatilho roda em UTC."
+      }
+    ]
+  },
+  "ex-gxzhzkbq": {
+    "prompt": "Um workflow Consumption com gatilho Recurrence e sem startTime é implantado desativado às 15:00 e ativado às 15:20. Quando é a primeira execução?",
+    "hint": "Aula 19. É por isso que o arquivo da aula tem um startTime.",
+    "choices": [
+      {
+        "text": "Na próxima hora agendada depois das 15:20",
+        "why": "Sem startTime ele não espera o agendamento."
+      },
+      {
+        "text": "Às 15:20, no instante em que é ativado",
+        "why": "Isso. Um gatilho Recurrence sem startTime dispara assim que o workflow é ativado."
+      },
+      {
+        "text": "Nunca, até alguém reenviar uma execução",
+        "why": "Reenviar repete uma execução terminada; não é como um gatilho começa."
+      },
+      {
+        "text": "Às 15:00, recuperando a execução que perdeu enquanto desativado",
+        "why": "Um workflow desativado não roda nada, e nada é recuperado."
+      }
+    ]
+  },
+  "ex-skyne64h": {
+    "prompt": "Numa manhã o gatilho da exportação dispara, Get_orders falha duas vezes e dá certo na terceira tentativa, e Any_orders, Export, Summary e Send_export rodam uma vez cada. Quantas execuções essa execução Consumption cobra?",
+    "hint": "Aula 19. Cada tentativa de uma ação é uma execução, e o gatilho também.",
+    "unit": "execuções"
+  },
+  "ex-skn78gy9": {
+    "prompt": "Uma definição monta o endereço da loja como \"@parameters('shopUrl')/orders\". O que diz a documentação?",
+    "hint": "Aula 19. Texto em volta de uma expressão.",
+    "choices": [
+      {
+        "text": "Incorreto: com texto em volta, a expressão precisa de chaves",
+        "why": "Isso. @{...} põe o valor dentro de uma string."
+      },
+      {
+        "text": "Está certo: o @ faz da string inteira uma expressão",
+        "why": "Com texto em volta, a expressão precisa de chaves; essa forma é marcada como incorreta."
+      },
+      {
+        "text": "Só está certo se shopUrl for declarado como parâmetro string",
+        "why": "O tipo do parâmetro não é o problema; a falta das chaves é."
+      },
+      {
+        "text": "O compilador Bicep o recusa com um aviso",
+        "why": "O compilador não lê nada dentro da definição; passaria em silêncio."
+      }
+    ]
+  },
+  "ex-kwkccfgk": {
+    "prompt": "Get_orders falha em todas as tentativas numa manhã. Uma ação Alert nomeia Get_orders no runAfter com Failed e TimedOut. Ponha em ordem o que o motor faz.",
+    "hint": "Aula 19. Uma ação espera o status do que ela nomeia.",
+    "items": [
+      "O gatilho dispara às 06:00",
+      "Get_orders é tentado, e depois repetido com um minuto de intervalo",
+      "Get_orders é marcado Failed",
+      "Alert roda, porque nomeou o status Failed"
+    ],
+    "trap": "Rodar Alert antes de Get_orders ter um status final é o deslize: uma ação espera até o que ela nomeia no runAfter terminar."
+  },
+  "ex-ahj6bqxv": {
+    "prompt": "Um consumidor da fila orders muda para receive-and-delete para economizar a chamada de liquidação, e cai no meio de um pedido. O que acontece com esse pedido?",
+    "hint": "Aula 20. Quando a mensagem sai da fila nesse modo.",
+    "choices": [
+      {
+        "text": "Ele volta quando o lock vence, com a contagem aumentada",
+        "why": "Isso é o peek-lock; neste modo não há lock para vencer."
+      },
+      {
+        "text": "Ele vai para a subfila de dead-letter com o motivo Crashed",
+        "why": "Nada é posto de lado; a mensagem já não existe em lugar nenhum."
+      },
+      {
+        "text": "A detecção de duplicatas o reenvia a partir da janela",
+        "why": "A detecção de duplicatas só descarta repetições; nunca reenvia nada."
+      },
+      {
+        "text": "Ele se perde: a mensagem foi removida no momento em que foi enviada ao consumidor",
+        "why": "Isso. Processamento no máximo uma vez, bom para dado que perde valor em um minuto e não para pedido pago."
+      }
+    ]
+  },
+  "ex-0mnz6crj": {
+    "prompt": "Um serviço novo começa a mandar os passos dos pedidos para a fila order-steps, declarada com RequiresSession, e não define session id. O que acontece?",
+    "hint": "Aula 20. Depois que as sessões são ligadas, valem para todo mundo.",
+    "choices": [
+      {
+        "text": "Os envios são recusados",
+        "why": "Isso. Numa fila com sessão, uma mensagem sem session id é recusada, então todo remetente tem de usá-las."
+      },
+      {
+        "text": "As mensagens são aceitas e recebem uma sessão própria",
+        "why": "Nada inventa um session id para um remetente."
+      },
+      {
+        "text": "As mensagens são aceitas e entregues na ordem de chegada",
+        "why": "Sem session id a mensagem nem entra."
+      },
+      {
+        "text": "As mensagens vão para o dead-letter com MaxDeliveryCountExceeded",
+        "why": "Esse motivo é de uma mensagem entregue vezes demais, não de uma que nunca foi aceita."
+      }
+    ]
+  },
+  "ex-cvddwzzn": {
+    "prompt": "Um worker recebeu um pedido, perdeu a conexão enquanto cobrava o cartão, reconectou e tentou completar a mensagem. O complete falha. O que a documentação aconselha?",
+    "hint": "Aula 20. Um lock pertence à conexão que o segura.",
+    "choices": [
+      {
+        "text": "Repetir o complete até dar certo",
+        "why": "O lock se perdeu com a conexão, então liquidar de novo não pode dar certo."
+      },
+      {
+        "text": "Recebê-la de novo em vez de repetir a liquidação",
+        "why": "Isso. A resposta documentada é um novo receive; a idempotência torna segura a segunda cópia."
+      },
+      {
+        "text": "Mandá-la para o dead-letter, já que uma liquidação falhada quer dizer mensagem ruim",
+        "why": "Não há nada de errado com a mensagem; o problema foi a conexão."
+      },
+      {
+        "text": "Subir a duração do lock para mais de cinco minutos para ele não se perder",
+        "why": "Cinco minutos é o máximo, e um lock se perde com a conexão, seja qual for a duração."
+      }
+    ]
+  },
+  "ex-pwtf51b0": {
+    "prompt": "O webhook da assinatura big-orders começa a responder 401 depois que alguém gira a chave dele. O que o Event Grid faz com o próximo evento?",
+    "hint": "Aula 20. Algumas respostas não valem nova tentativa.",
+    "choices": [
+      {
+        "text": "Tenta de novo no cronograma por até 24 horas, depois o descarta",
+        "why": "Um 401 é uma das respostas que o Event Grid não repete para um webhook."
+      },
+      {
+        "text": "Guarda o evento no tópico até o endpoint responder 200",
+        "why": "O Event Grid não guarda nada para ninguém buscar."
+      },
+      {
+        "text": "Não tenta de novo, porque tentar outra vez não resolve um 401",
+        "why": "Isso. Para um webhook, 400, 401, 403 e 413 não são repetidos."
+      },
+      {
+        "text": "Manda o handshake de validação de novo antes de cada entrega",
+        "why": "O handshake é feito uma vez na criação da assinatura, não a cada evento."
+      }
+    ]
+  },
+  "ex-avj636dd": {
+    "prompt": "Um serviço Python no Flex Consumption recebe 120 requisições por segundo no pico, cada uma durando 250 ms, com a concorrência HTTP padrão. Quantas instâncias o pico ocupa?",
+    "hint": "Aula 21. Requisições em andamento são a taxa vezes a duração, e o padrão é uma por instância.",
+    "unit": "instâncias"
+  },
+  "ex-qmek2v35": {
+    "prompt": "Uma equipe dimensiona a ferramenta interna pelo volume mensal, 59,13 milhões de requisições, que dá uma média de 22,5 por segundo. O que a média escondeu?",
+    "hint": "Aula 21. Dois dos quatro números lidos de um perfil.",
+    "choices": [
+      {
+        "text": "A duração de uma requisição, que o volume já contém",
+        "why": "O volume conta requisições, não quanto cada uma dura; mas a duração não é o que a média escondeu aqui."
+      },
+      {
+        "text": "Nada: para uma coluna fixa a média é tudo o que importa",
+        "why": "Um número fixo de máquinas ainda precisa ser dimensionado pelo pico."
+      },
+      {
+        "text": "As cotas gratuitas, que a média gasta primeiro",
+        "why": "Cotas são franquias da assinatura; não estão num perfil de jeito nenhum."
+      },
+      {
+        "text": "O pico de 60 por segundo e as 15 horas silenciosas por dia",
+        "why": "Isso. São os dois números que decidem entre as opções."
+      }
+    ]
+  },
+  "ex-frjz37ty": {
+    "prompt": "A ferramenta do escritório roda no Container Apps com mínimo de duas réplicas. Um monitor de disponibilidade externo a chama uma vez por minuto a noite toda. O que isso faz com a conta da noite?",
+    "hint": "Aula 21. O que uma réplica não pode fazer para contar como ociosa.",
+    "choices": [
+      {
+        "text": "Nada: uma requisição por minuto é pouco demais para sair da tarifa ociosa",
+        "why": "Uma réplica só é ociosa enquanto não atende requisição nenhuma; o gotejamento a mantém ativa."
+      },
+      {
+        "text": "Faz o app escalar a zero entre as chamadas, e a noite não custa nada",
+        "why": "O mínimo de dois mantém as duas réplicas, e as chamadas impediriam a escala a zero de qualquer forma."
+      },
+      {
+        "text": "Acrescenta uma cobrança por requisição grande o bastante para dobrar a conta",
+        "why": "1.440 chamadas por noite são um arredondamento na cobrança por requisição; o que muda é a tarifa das réplicas."
+      },
+      {
+        "text": "Mantém as réplicas na tarifa ativa por horas que poderiam ter sido ociosas",
+        "why": "Isso. Ocioso é nenhuma requisição, menos de 0,01 de núcleo e menos de 1.000 bytes por segundo."
+      }
+    ]
+  },
+  "ex-1xpb8t35": {
+    "prompt": "Um endpoint da loja monta um arquivo enquanto o navegador espera, e leva uns 235 segundos. Onde ele pode continuar sendo uma página que espera, pelos limites que a aula leu?",
+    "hint": "Aula 21. Três limites de requisição: Functions, App Service e o ingress do Container Apps.",
+    "choices": [
+      {
+        "text": "No Functions, se o timeout subir para uma hora",
+        "why": "Uma função HTTP tem 230 segundos para responder, diga o timeout o que disser."
+      },
+      {
+        "text": "No App Service, com Always On",
+        "why": "Conte com os mesmos 230 segundos num web app; o Always On mantém o app carregado e não muda limite."
+      },
+      {
+        "text": "Atrás do ingress do Container Apps, que permite 240 segundos",
+        "why": "Isso. Mas cinco segundos de margem já são motivo para virar um job de qualquer jeito."
+      },
+      {
+        "text": "Em lugar nenhum do Azure: todo serviço corta a requisição em 230 segundos",
+        "why": "O ingress do Container Apps dá 240, e uma máquina virtual não impõe esse limite."
+      }
+    ]
+  },
+  "ex-dybbbf1g": {
+    "prompt": "Pela documentação da Microsoft sobre concorrência HTTP no Flex Consumption, um function app Python atende uma requisição HTTP por ___ de cada vez por padrão, então seis requisições em andamento ocupam seis delas.",
+    "hint": "Aula 21. Não é por processo dentro de uma máquina.",
+    "blanks": [
+      {
+        "accept": [
+          "instância",
+          "instancia"
+        ]
+      }
+    ]
+  },
+  "ex-nbmgtkpw": {
+    "prompt": "Um savings plan de computação é um gasto fixo por hora em vários serviços. Quais destes a lista da Microsoft, como a aula a leu, põe sob um? Marque todos que se aplicam.",
+    "hint": "Aula 22. Dos planos do Functions, só um está na lista.",
+    "choices": [
+      {
+        "text": "Máquinas virtuais",
+        "why": "Isso. Estão na lista, como estão para uma reserva."
+      },
+      {
+        "text": "Container Apps",
+        "why": "Isso. O Container Apps está entre os serviços a que um savings plan se aplica."
+      },
+      {
+        "text": "Functions no Flex Consumption",
+        "why": "Dos planos do Functions só o Premium está na lista."
+      },
+      {
+        "text": "App Service",
+        "why": "Isso. O App Service está na lista."
+      },
+      {
+        "text": "Logic Apps",
+        "why": "O Logic Apps não está na lista de jeito nenhum."
+      }
+    ]
+  },
+  "ex-05b2wxfa": {
+    "prompt": "A loja leva o Container App para outro provedor para cortar a conta de computação, e deixa o banco de pedidos no brazilsouth por enquanto. O que ela fez consigo mesma?",
+    "hint": "Aula 22. Que tipo de lock-in pertence ao armazenamento e não à computação.",
+    "choices": [
+      {
+        "text": "Toda consulta agora atravessa a internet, mais lenta e cobrada por gigabyte ao sair do Azure",
+        "why": "Isso. A computação decide quão perto o código precisa ficar dos dados."
+      },
+      {
+        "text": "Nada: o banco pesa o mesmo seja quem for que o leia",
+        "why": "Pesa o mesmo, e a distância até ele agora é a internet."
+      },
+      {
+        "text": "Removeu o lock-in de dados, já que o app saiu",
+        "why": "Os dados ficaram, e o peso deles também; só o código saiu."
+      },
+      {
+        "text": "O lock-in de identidade está resolvido, porque os tokens do novo provedor funcionam com o Entra",
+        "why": "Cada conexão que o Entra garantia agora precisa ser garantida por outra coisa."
+      }
+    ]
+  },
+  "ex-g8k0t6b3": {
+    "prompt": "A loja fala com o Service Bus por AMQP 1.0, um padrão ISO e IEC. Se a fila for para outro broker um dia, o que fica para trás?",
+    "hint": "Aula 22. O protocolo é a costura; os recursos acima dele são do broker.",
+    "choices": [
+      {
+        "text": "Nada: qualquer broker AMQP 1.0 roda o mesmo código sem mudança",
+        "why": "O protocolo viaja, e o que o código usa acima dele não."
+      },
+      {
+        "text": "Sessões, dead-letter e a biblioteca cliente",
+        "why": "Isso. Aí, no dia em que a fila mudar, uma função como send_export_request muda."
+      },
+      {
+        "text": "As próprias mensagens, que o AMQP não consegue levar",
+        "why": "Mover dados é uma linha à parte da estimativa; a pergunta é sobre o código."
+      },
+      {
+        "text": "Só a string de conexão",
+        "why": "Sessões, dead-letter e a biblioteca cliente são mais que uma string."
+      }
+    ]
+  },
+  "ex-0t907e7r": {
+    "prompt": "Qual destas escolhas merece um architecture decision record, pelo teste da aula?",
+    "hint": "Aula 22. Escreva um quando a decisão sairia cara de reverter.",
+    "choices": [
+      {
+        "text": "Qual biblioteca JSON o módulo de exportação usa",
+        "why": "Uma escolha dentro de um módulo pode ser trocada numa tarde."
+      },
+      {
+        "text": "O nome de uma variável no compare.py",
+        "why": "Nada nisso sai caro de reverter."
+      },
+      {
+        "text": "Assinar um savings plan de três anos",
+        "why": "Isso. Um compromisso de um ano ou mais está na lista da aula, com plataforma de computação, banco de dados e modelo de identidade."
+      },
+      {
+        "text": "A cor dos botões do site de administração",
+        "why": "Uma mudança ali custa minutos, o oposto do que um registro é para."
+      }
+    ]
+  }
+}

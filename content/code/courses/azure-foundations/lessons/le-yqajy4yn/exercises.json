@@ -1,0 +1,567 @@
+[
+ {
+  "id": "ex-hst54a40",
+  "version": 1,
+  "section": "address-space",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The shop wants its web machines spread over the three zones of `brazilsouth`. How many subnets does that take in `vnet-shop-prod`?",
+  "hint": "Where does an Azure subnet live?",
+  "choices": [
+   {
+    "text": "Three, one per zone, since a subnet sits in a single zone",
+    "correct": false,
+    "why": "That is the picture other clouds draw. An Azure subnet spans every zone of its region."
+   },
+   {
+    "text": "None until a second region is added",
+    "correct": false,
+    "why": "A VNet lives in one region and its subnets in all of that region's zones."
+   },
+   {
+    "text": "Six, a public and a private one in each zone",
+    "correct": false,
+    "why": "Neither zones nor public and private multiply subnets here."
+   },
+   {
+    "text": "One: a subnet spans every zone",
+    "correct": true,
+    "why": "Right. The machines choose their zones; the subnet is in all of them."
+   }
+  ]
+ },
+ {
+  "id": "ex-vz5rfrmg",
+  "version": 1,
+  "section": "address-space",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The office says it uses `10.0.0.0/8` and wants a VPN to Azure. Why does the lesson call that a trap?",
+  "hint": "Look at the last line of the overlap check.",
+  "choices": [
+   {
+    "text": "Because `10.0.0.0/8` is not a private range",
+    "correct": false,
+    "why": "It is the largest of the three private ranges of RFC 1918."
+   },
+   {
+    "text": "Because Azure accepts only `/16` networks from an office",
+    "correct": false,
+    "why": "No such limit exists. The size is not the problem; what it covers is."
+   },
+   {
+    "text": "It overlaps every `10.` network the shop has in Azure",
+    "correct": true,
+    "why": "Right. A `/8` contains every `/16` that starts with `10.`, so no address can be told apart."
+   },
+   {
+    "text": "Because a VPN carries only one `/24` at a time",
+    "correct": false,
+    "why": "A VPN carries whatever ranges both sides route."
+   }
+  ]
+ },
+ {
+  "id": "ex-fh0j8kp5",
+  "version": 1,
+  "section": "address-space",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which address can never be part of a VNet's range?",
+  "hint": "Azure itself answers on it inside every network.",
+  "choices": [
+   {
+    "text": "`168.63.129.16`",
+    "correct": true,
+    "why": "Right. Azure's DNS and health checks answer there, so it is refused."
+   },
+   {
+    "text": "`100.64.0.1`",
+    "correct": false,
+    "why": "The shared space of RFC 6598 is accepted and treated as private."
+   },
+   {
+    "text": "`192.168.0.1`",
+    "correct": false,
+    "why": "A private address; only the office's use of the range keeps the shop out of it."
+   },
+   {
+    "text": "`10.20.0.0`",
+    "correct": false,
+    "why": "It is a network address inside a private range, and `vnet-shop-prod` starts with it."
+   }
+  ]
+ },
+ {
+  "id": "ex-2a6xgmfd",
+  "version": 1,
+  "section": "address-space",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a VNet with four subnets and nothing in it cost per month?",
+  "hint": "What is billed in a network?",
+  "choices": [
+   {
+    "text": "A fixed fee per subnet",
+    "correct": false,
+    "why": "Subnets are free. The bill comes from what is placed in them."
+   },
+   {
+    "text": "Nothing",
+    "correct": true,
+    "why": "Right. What costs is what you put in it and connect it to."
+   },
+   {
+    "text": "A fee per address in the range, used or not",
+    "correct": false,
+    "why": "Private addresses are not billed."
+   },
+   {
+    "text": "The same as a small virtual machine, as a network runs on one",
+    "correct": false,
+    "why": "A VNet is not a machine; it is rules about addresses."
+   }
+  ]
+ },
+ {
+  "id": "ex-2je6jkr0",
+  "version": 1,
+  "section": "cutting-subnets",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many usable addresses does Azure leave in a `/27` subnet?",
+  "hint": "A `/27` holds 32.",
+  "value": 27,
+  "tolerance": 0,
+  "unit": "addresses"
+ },
+ {
+  "id": "ex-jsm66ee7",
+  "version": 1,
+  "section": "cutting-subnets",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each address of `snet-app`, `10.20.2.0/24`, to what Azure uses it for.",
+  "hint": "The first four and the last are taken.",
+  "pairs": [
+   {
+    "left": "`10.20.2.0`",
+    "right": "the network address"
+   },
+   {
+    "left": "`10.20.2.1`",
+    "right": "the default gateway"
+   },
+   {
+    "left": "`10.20.2.3`",
+    "right": "mapping Azure's DNS"
+   },
+   {
+    "left": "`10.20.2.4`",
+    "right": "the first address a machine can get"
+   }
+  ],
+  "right_distractors": [
+   "the firewall's address"
+  ]
+ },
+ {
+  "id": "ex-k1sj1q74",
+  "version": 1,
+  "section": "cutting-subnets",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`plan.py` refused `snet-jobs=10.20.7.0/23` with *has host bits set*. What is wrong with the range?",
+  "hint": "Where can a `/23` start?",
+  "choices": [
+   {
+    "text": "It overlaps `snet-web`",
+    "correct": false,
+    "why": "`snet-web` is `10.20.1.0/24`, far below it."
+   },
+   {
+    "text": "It starts on an odd third number",
+    "correct": true,
+    "why": "Right. `10.20.6.0/23` or `10.20.8.0/23` are ranges; `10.20.7.0/23` is not."
+   },
+   {
+    "text": "It is smaller than Azure's minimum",
+    "correct": false,
+    "why": "A `/23` holds 512 addresses; the minimum is a `/29`."
+   },
+   {
+    "text": "It falls outside `10.20.0.0/16`",
+    "correct": false,
+    "why": "Every `10.20.` address is inside the network."
+   }
+  ]
+ },
+ {
+  "id": "ex-n9zw6v8v",
+  "version": 1,
+  "section": "cutting-subnets",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the shop leave over 98% of `10.20.0.0/16` in no subnet at all?",
+  "hint": "When can a subnet be resized?",
+  "choices": [
+   {
+    "text": "A subnet resizes only while empty, so room is left now",
+    "correct": true,
+    "why": "Right. New tiers and services get fresh ranges instead of a rebuild."
+   },
+   {
+    "text": "Because a VNet may hold at most four subnets",
+    "correct": false,
+    "why": "A VNet holds many more; four is the shop's plan, not a limit."
+   },
+   {
+    "text": "Because the rest is kept for the paired region",
+    "correct": false,
+    "why": "A VNet's range is not shared with any region."
+   },
+   {
+    "text": "Because Azure bills each address placed in a subnet",
+    "correct": false,
+    "why": "Subnets and their addresses are free."
+   }
+  ]
+ },
+ {
+  "id": "ex-bjq6y303",
+  "version": 1,
+  "section": "cutting-subnets",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team deploys Azure Firewall into a `/24` it named `snet-firewall`. What happens?",
+  "hint": "What is the contract between the service and the subnet?",
+  "choices": [
+   {
+    "text": "Azure renames the subnet on deployment",
+    "correct": false,
+    "why": "Nothing renames a subnet for you."
+   },
+   {
+    "text": "It works, since a `/24` is larger than the `/26` asked for",
+    "correct": false,
+    "why": "Size is necessary and not enough; the name is checked too."
+   },
+   {
+    "text": "Azure refuses it: the subnet must be called `AzureFirewallSubnet`",
+    "correct": true,
+    "why": "Right. The name is the contract, whatever the size."
+   },
+   {
+    "text": "The firewall is placed in a hidden subnet of its own",
+    "correct": false,
+    "why": "Azure Firewall goes in the VNet's own `AzureFirewallSubnet`, which you create."
+   }
+  ]
+ },
+ {
+  "id": "ex-14xgxq0k",
+  "version": 1,
+  "section": "cutting-subnets",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The smallest IPv4 subnet Azure allows is a `/___`, with three usable addresses.",
+  "hint": "Eight addresses, five of them taken.",
+  "blanks": [
+   {
+    "accept": [
+     "29"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-x8qsej07",
+  "version": 1,
+  "section": "delegation",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does delegating `snet-data` to `Microsoft.DBforPostgreSQL/flexibleServers` allow?",
+  "hint": "Who gets to place things in the subnet?",
+  "choices": [
+   {
+    "text": "Any PostgreSQL client to connect from the internet",
+    "correct": false,
+    "why": "Delegation is about who may build in the subnet, not who may connect to it."
+   },
+   {
+    "text": "The subnet to be shared with another subscription",
+    "correct": false,
+    "why": "Delegation is to a service, not to a subscription."
+   },
+   {
+    "text": "The database to take addresses from every subnet of the VNet",
+    "correct": false,
+    "why": "Only the delegated subnet is the service's."
+   },
+   {
+    "text": "The service to create and manage what it needs in that subnet",
+    "correct": true,
+    "why": "Right. It may also set network rules there that you cannot remove while it is there."
+   }
+  ]
+ },
+ {
+  "id": "ex-j1amzm6g",
+  "version": 1,
+  "section": "delegation",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `vnet.bicep` write the subnets inside the network instead of as separate resources?",
+  "hint": "What happens when the network alone is deployed again?",
+  "choices": [
+   {
+    "text": "Bicep refuses subnets declared as separate resources",
+    "correct": false,
+    "why": "Bicep allows both forms."
+   },
+   {
+    "text": "Separate subnets would cost extra",
+    "correct": false,
+    "why": "Subnets cost nothing in either form."
+   },
+   {
+    "text": "Delegation works only on subnets written inside",
+    "correct": false,
+    "why": "A delegation is a property of the subnet in either form."
+   },
+   {
+    "text": "Redeploying the network alone keeps them",
+    "correct": true,
+    "why": "Right. A network file that leaves them out can describe a network with no subnets."
+   }
+  ]
+ },
+ {
+  "id": "ex-jjn3v2p2",
+  "version": 1,
+  "section": "delegation",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`outside.bicep` put `snet-pe` at `10.99.4.0/24`, outside the network, and compiled. What does that show?",
+  "hint": "What does the compiler check about a string?",
+  "choices": [
+   {
+    "text": "That Azure accepts subnets outside their network",
+    "correct": false,
+    "why": "Azure would refuse the deployment; it was the compiler that said nothing."
+   },
+   {
+    "text": "That `addressPrefix` is ignored when `addressSpace` is set",
+    "correct": false,
+    "why": "Both are kept in the template, as the output showed."
+   },
+   {
+    "text": "The compiler checks types, not the arithmetic of addresses",
+    "correct": true,
+    "why": "Right. That is the job `plan.py` does before anybody deploys."
+   },
+   {
+    "text": "That the range is moved inside the network on deployment",
+    "correct": false,
+    "why": "Nothing moves a range for you."
+   }
+  ]
+ },
+ {
+  "id": "ex-fvjw32am",
+  "version": 1,
+  "section": "delegation",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A pipeline compiles `typo.bicep`, sees a zero exit code and deploys. The file says `defaultOutbondAccess: false`. What does the subnet get?",
+  "hint": "What became of the misspelt property?",
+  "choices": [
+   {
+    "text": "Its API version's default, not what the file meant",
+    "correct": true,
+    "why": "Right. Read the warnings, or make them errors in `bicepconfig.json`."
+   },
+   {
+    "text": "Nothing: the build failed and nothing was deployed",
+    "correct": false,
+    "why": "BCP089 is a warning; the build succeeded."
+   },
+   {
+    "text": "A subnet with no address range at all",
+    "correct": false,
+    "why": "The range was spelt correctly and survives."
+   },
+   {
+    "text": "A private subnet, since Bicep corrected the name",
+    "correct": false,
+    "why": "Bicep suggested the right name and wrote the wrong one into the template."
+   }
+  ]
+ },
+ {
+  "id": "ex-wmxkf6tr",
+  "version": 1,
+  "section": "delegation",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In Terraform, `___(\"10.20.0.0/16\", 8, 2)` returns `10.20.2.0/24`.",
+  "hint": "The function that returns the n-th slice of a range.",
+  "blanks": [
+   {
+    "accept": [
+     "cidrsubnet"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-xcb6psgv",
+  "version": 1,
+  "section": "delegation",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `defaultOutboundAccess: false` change for a machine in `snet-app`?",
+  "hint": "Which way out is left?",
+  "choices": [
+   {
+    "text": "It cannot be reached from the rest of the VNet",
+    "correct": false,
+    "why": "Traffic inside the network is unaffected."
+   },
+   {
+    "text": "Only a route built on purpose takes it out",
+    "correct": true,
+    "why": "Right. The firewall of lesson 18 is that route for the shop."
+   },
+   {
+    "text": "It loses its private address",
+    "correct": false,
+    "why": "Private addresses are untouched."
+   },
+   {
+    "text": "It may receive traffic from the internet on any port",
+    "correct": false,
+    "why": "It is about leaving, and it closes a door rather than opening one."
+   }
+  ]
+ },
+ {
+  "id": "ex-h37q0bz1",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of building `vnet-shop-prod` in the order the lesson takes them.",
+  "hint": "The range comes before anything is cut from it.",
+  "items": [
+   "choose a range that overlaps no network the shop will connect",
+   "check the subnet plan with `plan.py`",
+   "write the network and its subnets in `vnet.bicep`",
+   "compile it and read the subnets back"
+  ],
+  "trap": "Compiling comes last, and still does not check the arithmetic: `plan.py` did that."
+ },
+ {
+  "id": "ex-n113fr7b",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Staging is `10.30.0.0/16`. A developer creates a test network at `10.30.128.0/17` in another subscription, to be peered with production next month. What goes wrong?",
+  "hint": "Is the test network inside another range of the plan?",
+  "choices": [
+   {
+    "text": "It overlaps staging, so those two will never be joined",
+    "correct": true,
+    "why": "Right. Production peers with it, and the day staging needs it too, the two collide."
+   },
+   {
+    "text": "The peering with production fails, since a `/17` cannot peer",
+    "correct": false,
+    "why": "Any size can peer; the size is not the issue."
+   },
+   {
+    "text": "Nothing, as long as it is in another subscription",
+    "correct": false,
+    "why": "Overlap is about addresses, not about who owns them."
+   },
+   {
+    "text": "Azure refuses to create it, since `10.30.` belongs to staging",
+    "correct": false,
+    "why": "Azure checks overlap only when two networks are connected."
+   }
+  ]
+ },
+ {
+  "id": "ex-mz8ejmht",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these would Azure refuse when the subnet is created? Choose all that apply.",
+  "hint": "`plan.py` checks the same rules.",
+  "choices": [
+   {
+    "text": "`10.20.9.0/30` in `vnet-shop-prod`",
+    "correct": true,
+    "why": "Right. Below the `/29` minimum."
+   },
+   {
+    "text": "`10.20.1.128/25` beside `snet-web`",
+    "correct": true,
+    "why": "Right. It overlaps `10.20.1.0/24`."
+   },
+   {
+    "text": "`10.20.200.0/24` in `vnet-shop-prod`",
+    "correct": false,
+    "why": "Inside the range and free: accepted."
+   },
+   {
+    "text": "`10.30.0.0/24` in `vnet-shop-prod`",
+    "correct": true,
+    "why": "Right. Outside `10.20.0.0/16`."
+   },
+   {
+    "text": "`10.20.0.0/24`, left unused by the plan",
+    "correct": false,
+    "why": "Unused by choice, and perfectly valid."
+   }
+  ]
+ },
+ {
+  "id": "ex-56971nwn",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`snet-pe` is a `/24`. How many private endpoints can it hold, at one address each?",
+  "hint": "The same arithmetic as any subnet.",
+  "value": 251,
+  "tolerance": 0,
+  "unit": "endpoints"
+ }
+]

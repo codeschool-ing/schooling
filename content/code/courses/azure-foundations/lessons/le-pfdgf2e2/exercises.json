@@ -1,0 +1,637 @@
+[
+ {
+  "id": "ex-rg3smwe2",
+  "version": 1,
+  "section": "the-request-path",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which address does every request to create, change or delete an Azure resource reach, whichever tool sent it?",
+  "hint": "Lesson 1 read it from `az cloud show`.",
+  "choices": [
+   {
+    "text": "`login.microsoftonline.com`",
+    "correct": false,
+    "why": "That is where the token comes from, the step before."
+   },
+   {
+    "text": "`management.azure.com`",
+    "correct": true,
+    "why": "Right. Azure Resource Manager."
+   },
+   {
+    "text": "`portal.azure.com`",
+    "correct": false,
+    "why": "The portal is one client; it too calls Resource Manager."
+   },
+   {
+    "text": "`core.windows.net`",
+    "correct": false,
+    "why": "That ends a storage account's data plane address."
+   }
+  ]
+ },
+ {
+  "id": "ex-96dtrq9c",
+  "version": 1,
+  "section": "the-request-path",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the four steps of a request in order.",
+  "hint": "The token comes before anything reaches Resource Manager.",
+  "items": [
+   "the client gets a token from Microsoft Entra ID",
+   "the client sends the request to Resource Manager with the token",
+   "Resource Manager checks the token, role, policies, locks and limits",
+   "Resource Manager hands the request to the resource provider"
+  ],
+  "trap": "The provider does the work last, and only after every check passed."
+ },
+ {
+  "id": "ex-md5sstq4",
+  "version": 1,
+  "section": "the-request-path",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The lab asked Entra ID for a token and got `AADSTS90002`. What does that code mean?",
+  "hint": "Read the first sentence the lesson kept.",
+  "choices": [
+   {
+    "text": "The client secret was wrong",
+    "correct": false,
+    "why": "Entra ID never got as far as the secret; it stopped at the tenant."
+   },
+   {
+    "text": "The scope `management.azure.com/.default` is not allowed",
+    "correct": false,
+    "why": "That is the usual scope for Resource Manager."
+   },
+   {
+    "text": "The machine is not allowed to reach Entra ID",
+    "correct": false,
+    "why": "Entra ID answered; the refusal is its own."
+   },
+   {
+    "text": "The tenant in the address does not exist",
+    "correct": true,
+    "why": "Right. `Tenant ... not found`."
+   }
+  ]
+ },
+ {
+  "id": "ex-j086a4j6",
+  "version": 1,
+  "section": "the-request-path",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the filtered `--debug` output of `az group list`, what did the CLI do before it stopped?",
+  "hint": "Read the three lines in order.",
+  "choices": [
+   {
+    "text": "It sent a GET to Resource Manager and was refused with 401",
+    "correct": false,
+    "why": "No request was sent; the stop came before the token."
+   },
+   {
+    "text": "It asked Entra ID for a token and was refused",
+    "correct": false,
+    "why": "With no sign-in stored, there was nobody to ask a token for."
+   },
+   {
+    "text": "Built a client for Resource Manager, then found no sign-in",
+    "correct": true,
+    "why": "Right. `ResourceManagementClient`, then `Please run 'az login'`."
+   },
+   {
+    "text": "It failed to find the `group list` command",
+    "correct": false,
+    "why": "`Command table: group list` is the line where it found it."
+   }
+  ]
+ },
+ {
+  "id": "ex-hgzkf6a9",
+  "version": 1,
+  "section": "the-request-path",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team argues that deploying with Terraform rather than the portal will get round an Azure Policy that denies public IP addresses. What does the lesson say?",
+  "hint": "Where is a policy judged?",
+  "choices": [
+   {
+    "text": "It fails just as it would from the portal",
+    "correct": true,
+    "why": "Right. Resource Manager judges every client's request; steps 2 to 4 are shared by every door."
+   },
+   {
+    "text": "It works if the plan is approved first",
+    "correct": false,
+    "why": "An approval in Terraform means nothing to Resource Manager."
+   },
+   {
+    "text": "It works, because Terraform calls the providers directly",
+    "correct": false,
+    "why": "No client calls a provider directly; Resource Manager stands in front of them all."
+   },
+   {
+    "text": "It fails, because Terraform cannot create public IP addresses",
+    "correct": false,
+    "why": "It can; the refusal is the policy's, not Terraform's."
+   }
+  ]
+ },
+ {
+  "id": "ex-5epnjdbm",
+  "version": 1,
+  "section": "the-request-path",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A client asks Entra ID for a token for Resource Manager with the scope `https://management.azure.com/.___`.",
+  "hint": "The word for what applies when nothing else is chosen.",
+  "blanks": [
+   {
+    "accept": [
+     "default"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-k43qva46",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which HTTP method creates a resource, or replaces it with the body sent?",
+  "hint": "It is idempotent.",
+  "choices": [
+   {
+    "text": "`POST`",
+    "correct": false,
+    "why": "Resource Manager uses `POST` for actions such as restarting, not for creating resources."
+   },
+   {
+    "text": "`PATCH`",
+    "correct": false,
+    "why": "`PATCH` changes only the fields sent, such as tags."
+   },
+   {
+    "text": "`GET`",
+    "correct": false,
+    "why": "`GET` reads and changes nothing."
+   },
+   {
+    "text": "`PUT`",
+    "correct": true,
+    "why": "Right. Sending it twice leaves the resource as sending it once."
+   }
+  ]
+ },
+ {
+  "id": "ex-yp8yky48",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is `PUT` being idempotent the property lesson 26 builds on?",
+  "hint": "What happens if a file is applied twice?",
+  "choices": [
+   {
+    "text": "It lets a deployment skip the permission checks",
+    "correct": false,
+    "why": "Every `PUT` is checked like any other request."
+   },
+   {
+    "text": "It makes each deployment faster than the one before",
+    "correct": false,
+    "why": "Idempotence is about the result, not the time."
+   },
+   {
+    "text": "Applying a file twice gives the same result",
+    "correct": true,
+    "why": "Right. That is what lets Bicep and Terraform describe a whole environment."
+   },
+   {
+    "text": "It deletes whatever the body does not mention",
+    "correct": false,
+    "why": "That is complete mode, a different thing, in lesson 26."
+   }
+  ]
+ },
+ {
+  "id": "ex-mkq1vjxk",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`request.py` printed a full `PUT` for the network but not for the subnet. Why?",
+  "hint": "Look at the subnet's `name` in the template.",
+  "choices": [
+   {
+    "text": "Its name is an expression",
+    "correct": true,
+    "why": "Right. `[format(...)]`, which the program refused to guess."
+   },
+   {
+    "text": "The subnet has no `location`, so it has no body",
+    "correct": false,
+    "why": "A child resource takes its parent's place; its body still has `properties`."
+   },
+   {
+    "text": "Subnets cannot be created through the REST API",
+    "correct": false,
+    "why": "They can; a subnet is a child resource with its own URL."
+   },
+   {
+    "text": "Bicep forgot to compile it",
+    "correct": false,
+    "why": "It is in the template, with a `dependsOn` naming the network."
+   }
+  ]
+ },
+ {
+  "id": "ex-8q1wz2xm",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A pipeline sends the subnet's `PUT` before the network's, in parallel to save time. What does the lesson predict?",
+  "hint": "What is a child resource without its parent?",
+  "choices": [
+   {
+    "text": "Both succeed, since Resource Manager queues them",
+    "correct": false,
+    "why": "Ordering by `dependsOn` happens inside a deployment, not between separate requests."
+   },
+   {
+    "text": "The subnet is refused, as its parent is missing",
+    "correct": true,
+    "why": "Right. That order is what `dependsOn` gives a deployment."
+   },
+   {
+    "text": "The network is created with the subnet already inside",
+    "correct": false,
+    "why": "Two separate requests do not merge."
+   },
+   {
+    "text": "The subnet is created in a default network",
+    "correct": false,
+    "why": "There is no default network in Azure to fall into."
+   }
+  ]
+ },
+ {
+  "id": "ex-123p1a13",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A file names `Microsoft.Network/virtualNetworks@2099-01-01`. What did `az bicep build` do?",
+  "hint": "Was it an error or a warning?",
+  "choices": [
+   {
+    "text": "Warned, and compiled anyway",
+    "correct": true,
+    "why": "Right. Whether the version exists is Resource Manager's question."
+   },
+   {
+    "text": "Replaced it with the latest version it knew",
+    "correct": false,
+    "why": "The template keeps the version written."
+   },
+   {
+    "text": "Refused to compile, with an error",
+    "correct": false,
+    "why": "It compiled; `BCP081` is a warning."
+   },
+   {
+    "text": "Asked Resource Manager whether that version exists",
+    "correct": false,
+    "why": "Building sends nothing anywhere."
+   }
+  ]
+ },
+ {
+  "id": "ex-35jrx31h",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each HTTP method to what it does in Resource Manager.",
+  "hint": "One changes only the fields sent.",
+  "pairs": [
+   {
+    "left": "`GET`",
+    "right": "reads a resource or lists a collection"
+   },
+   {
+    "left": "`PUT`",
+    "right": "creates or replaces with the body sent"
+   },
+   {
+    "left": "`PATCH`",
+    "right": "changes only the fields sent"
+   },
+   {
+    "left": "`DELETE`",
+    "right": "removes it"
+   }
+  ],
+  "right_distractors": [
+   "registers a resource provider"
+  ]
+ },
+ {
+  "id": "ex-x9vg44hj",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A request to create a VPN gateway is answered at once with 201 and an `Azure-AsyncOperation` header. What should the client do?",
+  "hint": "When is the operation finished?",
+  "choices": [
+   {
+    "text": "Report success: 201 means the gateway exists",
+    "correct": false,
+    "why": "201 here starts a long operation; the state is not final yet."
+   },
+   {
+    "text": "Send the same `PUT` again every second until it returns 200",
+    "correct": false,
+    "why": "That spends write tokens and polls the wrong thing."
+   },
+   {
+    "text": "Poll that address after `Retry-After` seconds",
+    "correct": true,
+    "why": "Right. Until the state reads `Succeeded`, `Failed` or `Canceled`."
+   },
+   {
+    "text": "Ask Entra ID for a new token",
+    "correct": false,
+    "why": "The token is not the issue; the operation is still running."
+   }
+  ]
+ },
+ {
+  "id": "ex-x5ep3rab",
+  "version": 1,
+  "section": "rest-calls",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The date after the `@` in a Bicep resource type becomes the URL's `api-___` parameter.",
+  "hint": "It names a version.",
+  "blanks": [
+   {
+    "accept": [
+     "version"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-z83m519m",
+  "version": 1,
+  "section": "providers-and-limits",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A deployment fails with `MissingSubscriptionRegistration`. What is missing?",
+  "hint": "Something has to be registered in the subscription.",
+  "choices": [
+   {
+    "text": "A role assignment for the deploying identity",
+    "correct": false,
+    "why": "A missing role is `AuthorizationFailed`, a different error."
+   },
+   {
+    "text": "The subscription's link to a management group",
+    "correct": false,
+    "why": "A subscription may sit under the root and deploy normally."
+   },
+   {
+    "text": "A budget for the subscription",
+    "correct": false,
+    "why": "Budgets never block a deployment."
+   },
+   {
+    "text": "The provider's registration",
+    "correct": true,
+    "why": "Right. `az provider register --namespace ...` fixes it."
+   }
+  ]
+ },
+ {
+  "id": "ex-rgevshn1",
+  "version": 1,
+  "section": "providers-and-limits",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does Microsoft's documentation advise registering only the resource providers you use?",
+  "hint": "Think of a stolen credential.",
+  "choices": [
+   {
+    "text": "Each registered provider is billed monthly",
+    "correct": false,
+    "why": "Registration costs nothing; resources do."
+   },
+   {
+    "text": "An intruder cannot use one never registered",
+    "correct": true,
+    "why": "Right, and registration can add Microsoft applications to the tenant."
+   },
+   {
+    "text": "Unregistered providers get faster updates",
+    "correct": false,
+    "why": "Registration has nothing to do with updates."
+   },
+   {
+    "text": "A subscription may register at most ten providers",
+    "correct": false,
+    "why": "There is no such limit in the lesson."
+   }
+  ]
+ },
+ {
+  "id": "ex-qxcnxa6v",
+  "version": 1,
+  "section": "providers-and-limits",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A script has just emptied the subscription's read bucket. By Microsoft's figures, how many reads can it make in the next 4 seconds without being throttled?",
+  "hint": "The refill is 25 a second.",
+  "value": 100,
+  "tolerance": 0,
+  "unit": "reads"
+ },
+ {
+  "id": "ex-6y7m4n5r",
+  "version": 1,
+  "section": "providers-and-limits",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A request is answered with 429 and `Retry-After: 6`. What does the lesson say a script should do?",
+  "hint": "What happens to a request sent too early?",
+  "choices": [
+   {
+    "text": "Retry at once, since 429 is a temporary error",
+    "correct": false,
+    "why": "A request before the time is refused again, and spends another token."
+   },
+   {
+    "text": "Sign in again, since the token expired",
+    "correct": false,
+    "why": "An expired token gives 401, not 429."
+   },
+   {
+    "text": "Switch to another subscription to keep going",
+    "correct": false,
+    "why": "That spreads a mistake, it does not fix it."
+   },
+   {
+    "text": "Wait six seconds before the next request",
+    "correct": true,
+    "why": "Right, and read the rate-limit headers to slow down before it happens."
+   }
+  ]
+ },
+ {
+  "id": "ex-rp9dext0",
+  "version": 1,
+  "section": "providers-and-limits",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these are data plane operations? Choose all that apply.",
+  "hint": "Using a resource, not managing it.",
+  "choices": [
+   {
+    "text": "Reading a blob at `shopassets.blob.core.windows.net`",
+    "correct": true,
+    "why": "Right. The storage service answers, not Resource Manager."
+   },
+   {
+    "text": "Changing a storage account's replication",
+    "correct": false,
+    "why": "That configures the resource: control plane."
+   },
+   {
+    "text": "Signing in to a virtual machine over SSH",
+    "correct": true,
+    "why": "Right. Using the machine, not managing it."
+   },
+   {
+    "text": "Reading a secret from `kv-shop-prod.vault.azure.net`",
+    "correct": true,
+    "why": "Right. The vault itself answers."
+   },
+   {
+    "text": "Creating a key vault",
+    "correct": false,
+    "why": "Creating goes through `management.azure.com`."
+   }
+  ]
+ },
+ {
+  "id": "ex-k6w0nz0n",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Lesson 19 closes `shopassets.blob.core.windows.net` to the internet with a private endpoint. From a laptop outside the network, can ana still change the account's replication?",
+  "hint": "Which plane do network rules close, and which plane is replication?",
+  "choices": [
+   {
+    "text": "Yes, through `management.azure.com`",
+    "correct": true,
+    "why": "Right. Network rules apply to the data plane; managing still goes through Resource Manager."
+   },
+   {
+    "text": "No, the private endpoint closes every address of the account",
+    "correct": false,
+    "why": "It closes the data plane address, not Resource Manager."
+   },
+   {
+    "text": "Only from Cloud Shell, which is inside Azure",
+    "correct": false,
+    "why": "The control plane does not care where the client sits."
+   },
+   {
+    "text": "Only after she reads a blob to prove access",
+    "correct": false,
+    "why": "Data plane access does not grant control plane rights, nor the reverse."
+   }
+  ]
+ },
+ {
+  "id": "ex-jzh3ezzr",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In `PUT https://management.azure.com/subscriptions/bbbbcccc-1111-dddd-2222-eeee3333ffff/resourceGroups/rg-shop-prod/providers/Microsoft.Network/virtualNetworks/vnet-shop-prod?api-version=2024-05-01`, which piece says which properties the body may carry?",
+  "hint": "It is a date.",
+  "choices": [
+   {
+    "text": "`Microsoft.Network`",
+    "correct": false,
+    "why": "That names the provider who handles the request."
+   },
+   {
+    "text": "`api-version=2024-05-01`",
+    "correct": true,
+    "why": "Right. The version is the contract for the body."
+   },
+   {
+    "text": "`rg-shop-prod`",
+    "correct": false,
+    "why": "That is where the resource goes."
+   },
+   {
+    "text": "`PUT`",
+    "correct": false,
+    "why": "The method says what to do, not what the body contains."
+   }
+  ]
+ },
+ {
+  "id": "ex-0ty6512m",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Past the request limit, Resource Manager answers with HTTP status ___.",
+  "hint": "Too Many Requests.",
+  "blanks": [
+   {
+    "accept": [
+     "429"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]

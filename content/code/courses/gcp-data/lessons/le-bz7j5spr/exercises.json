@@ -1,0 +1,636 @@
+[
+  {
+    "id": "ex-1bff6p8k",
+    "version": 1,
+    "section": "no-cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does BigQuery ask you to size before you can run a query?",
+    "hint": "Compare it with the Cloud SQL instance of lesson 6.",
+    "choices": [
+      {
+        "text": "A number of nodes and a node type",
+        "correct": false,
+        "why": "That is a cluster, and BigQuery has none: no instance, no node type."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Storage grows as rows are written and compute is given slots per query."
+      },
+      {
+        "text": "The disk of the dataset, in GiB",
+        "correct": false,
+        "why": "There is no disk to provision; you are billed for what the tables hold."
+      },
+      {
+        "text": "How many slots each query will use",
+        "correct": false,
+        "why": "On demand, BigQuery decides that per query, up to 2,000 shared by the project."
+      }
+    ]
+  },
+  {
+    "id": "ex-7c690cpe",
+    "version": 1,
+    "section": "no-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An analyst in the project `quitanda-analytics` queries `planner-dev.quitanda.orders`. Which project pays for the query?",
+    "hint": "A query is a job, and a job belongs to somebody.",
+    "choices": [
+      {
+        "text": "`planner-dev`, because it owns the table",
+        "correct": false,
+        "why": "The owner pays to store it; the pricing page says the owner is not charged when the data is read."
+      },
+      {
+        "text": "Both, half each",
+        "correct": false,
+        "why": "There is no split: one job, one project billed."
+      },
+      {
+        "text": "The analyst's own",
+        "correct": true,
+        "why": "Right. Compute goes to the reader's project and storage to the owner's."
+      },
+      {
+        "text": "Neither, as long as both are in one organisation",
+        "correct": false,
+        "why": "Sharing an organisation does not make a query free."
+      }
+    ]
+  },
+  {
+    "id": "ex-3h2xdgkc",
+    "version": 1,
+    "section": "no-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens between two stages of a BigQuery query, such as a read stage and a sum per store?",
+    "hint": "The second stage needs every row of one store in one place.",
+    "choices": [
+      {
+        "text": "They are shuffled to the next stage's slots, by key",
+        "correct": true,
+        "why": "Right. That is the shuffle, and lesson 16 reads it in the execution graph."
+      },
+      {
+        "text": "The table is copied to a larger machine",
+        "correct": false,
+        "why": "Nothing is copied to a machine; slots read storage over the network."
+      },
+      {
+        "text": "Each slot writes a temporary table the next one loads",
+        "correct": false,
+        "why": "There is no load between stages; the rows go through a memory tier."
+      },
+      {
+        "text": "Nothing: one slot runs the whole query",
+        "correct": false,
+        "why": "A stage that reads a large table is split among many slots at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-j559513p",
+    "version": 1,
+    "section": "no-cluster",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are decisions a BigQuery user makes that change the bill? Choose all that apply.",
+    "hint": "BigQuery leaves out several things a cluster warehouse asks for.",
+    "choices": [
+      {
+        "text": "How a table is partitioned",
+        "correct": true,
+        "why": "Yes. Lesson 15."
+      },
+      {
+        "text": "How a table is clustered",
+        "correct": true,
+        "why": "Yes. Lesson 15 too."
+      },
+      {
+        "text": "Which column distributes the rows across nodes",
+        "correct": false,
+        "why": "No table lives on a particular machine, so there is no distribution key."
+      },
+      {
+        "text": "When to vacuum a table",
+        "correct": false,
+        "why": "The storage is Google's to arrange; there is no vacuum to schedule."
+      },
+      {
+        "text": "Which columns a query names",
+        "correct": true,
+        "why": "Yes. Compute reads only those columns, and on demand you pay for what it reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn9epfvq",
+    "version": 1,
+    "section": "no-emulator",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this course run BigQuery's SQL in DuckDB rather than in an emulator?",
+    "hint": "Think of what Google publishes, and what this lesson is about.",
+    "choices": [
+      {
+        "text": "DuckDB is BigQuery's open-source engine",
+        "correct": false,
+        "why": "They are unrelated projects; DuckDB's SQL follows PostgreSQL."
+      },
+      {
+        "text": "The BigQuery emulator needs a paid account",
+        "correct": false,
+        "why": "There is no BigQuery emulator from Google, paid or free."
+      },
+      {
+        "text": "Google publishes no BigQuery emulator",
+        "correct": true,
+        "why": "Right. A lab with the right rows and the wrong bill would teach the wrong half."
+      },
+      {
+        "text": "`bq` was too old to talk to an emulator",
+        "correct": false,
+        "why": "`bq` refused for want of an account; there is nothing for it to talk to."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnfj2tw0",
+    "version": 1,
+    "section": "no-emulator",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does DuckDB measure for real in these lessons? Choose all that apply.",
+    "hint": "DuckDB is free, runs on your cores, and writes no Capacitor.",
+    "choices": [
+      {
+        "text": "The rows a query returns",
+        "correct": true,
+        "why": "Yes. The SQL runs for real on the same files."
+      },
+      {
+        "text": "Which folders a filter on `dt` skips",
+        "correct": true,
+        "why": "Yes. It reads the date out of `dt=` folder names and prunes them."
+      },
+      {
+        "text": "The dollars BigQuery would bill",
+        "correct": false,
+        "why": "DuckDB costs nothing; the bill is computed from Google's documentation."
+      },
+      {
+        "text": "The slot-hours a query would use",
+        "correct": false,
+        "why": "DuckDB runs on your laptop's cores; its time says nothing about slots."
+      },
+      {
+        "text": "A table's physical bytes in BigQuery",
+        "correct": false,
+        "why": "Those are Capacitor's; Parquet's size is only a clue."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwrbztc7",
+    "version": 1,
+    "section": "no-emulator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query takes 0.3 seconds in DuckDB on Quitanda's orders. What does that tell you about the same query in BigQuery?",
+    "hint": "One runs on a laptop and the other on slots it is given.",
+    "choices": [
+      {
+        "text": "It will use about 0.3 slot-seconds",
+        "correct": false,
+        "why": "Slot time depends on how many slots BigQuery gives it, which DuckDB cannot know."
+      },
+      {
+        "text": "Nothing about its slots or its bill",
+        "correct": true,
+        "why": "Right. The rows match; the cost is computed apart."
+      },
+      {
+        "text": "It will cost less than a cent",
+        "correct": false,
+        "why": "On demand the bill follows bytes read, not time, and has a minimum."
+      },
+      {
+        "text": "It will be slower in BigQuery",
+        "correct": false,
+        "why": "Nothing measured here can say that either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpsra6fz",
+    "version": 1,
+    "section": "the-orders",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `make_orders.py` seeded with `random.Random(13)`?",
+    "hint": "Think of the numbers in the transcripts.",
+    "choices": [
+      {
+        "text": "So that BigQuery accepts the files",
+        "correct": false,
+        "why": "BigQuery does not care how the values were chosen."
+      },
+      {
+        "text": "So every run writes the same orders",
+        "correct": true,
+        "why": "Right. The time differs; the rows do not."
+      },
+      {
+        "text": "To make the program run faster",
+        "correct": false,
+        "why": "A seed fixes the choices; it does not speed them up."
+      },
+      {
+        "text": "To give each day the same number of orders",
+        "correct": false,
+        "why": "`WEEKDAY` and the random factor still vary the days; the seed only repeats them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccbkrq9c",
+    "version": 1,
+    "section": "the-orders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `bq load` of the Parquet files from `gs://quitanda-curated-prod/orders/` into a table, what happens to the objects in the bucket?",
+    "hint": "The load copies; does anything tidy up?",
+    "choices": [
+      {
+        "text": "They are moved into BigQuery and the bucket is emptied",
+        "correct": false,
+        "why": "A load reads the files; it does not remove them."
+      },
+      {
+        "text": "They become long-term storage after the load",
+        "correct": false,
+        "why": "Long-term is a BigQuery rate for tables; it does not apply to Cloud Storage objects."
+      },
+      {
+        "text": "They stay, billed as objects as well as a table",
+        "correct": true,
+        "why": "Right. Nothing deletes them for you."
+      },
+      {
+        "text": "They are deleted after seven days of time travel",
+        "correct": false,
+        "why": "Time travel is about a table's past versions, not the source files."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sqgx5gk",
+    "version": 1,
+    "section": "the-orders",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A folder named `dt=2026-08-01` follows the convention called ___ partitioning, which both DuckDB and BigQuery read a column out of.",
+    "hint": "The name of an Apache project.",
+    "blanks": [
+      {
+        "accept": [
+          "Hive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qm2x55qz",
+    "version": 1,
+    "section": "logical-bytes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many logical bytes does BigQuery count for the `STRING` value `'Butantã'`?",
+    "hint": "Two bytes, plus its length in UTF-8, not in characters.",
+    "choices": [
+      {
+        "text": "7",
+        "correct": false,
+        "why": "That is its length in characters, without the 2 bytes of overhead."
+      },
+      {
+        "text": "9",
+        "correct": false,
+        "why": "That is 2 + 7: it counts `ã` as one byte, and in UTF-8 it is two."
+      },
+      {
+        "text": "10",
+        "correct": true,
+        "why": "Right. 8 UTF-8 bytes plus 2."
+      },
+      {
+        "text": "8",
+        "correct": false,
+        "why": "That is its UTF-8 length, without the 2 bytes BigQuery adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5twqppf",
+    "version": 1,
+    "section": "logical-bytes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table has 2,000,000 rows and three columns: an `INT64`, a `DATE` and a `BOOL`, none of them null. What is its logical size, in bytes?",
+    "hint": "8 + 8 + 1 bytes a row.",
+    "value": 34000000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pskef5az",
+    "version": 1,
+    "section": "logical-bytes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Half the values in a `STRING` column are `NULL`. What do those values add to the column's logical size?",
+    "hint": "The documentation has a row for `NULL`.",
+    "choices": [
+      {
+        "text": "2 bytes each, the overhead of a string",
+        "correct": false,
+        "why": "The 2 bytes belong to a value; a `NULL` has none."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. A `NULL` of any type counts 0 bytes."
+      },
+      {
+        "text": "The average length of the other half",
+        "correct": false,
+        "why": "Nothing is imputed; a `NULL` is counted as 0."
+      },
+      {
+        "text": "8 bytes each, like a fixed-width value",
+        "correct": false,
+        "why": "Even an `INT64` that is `NULL` counts 0 bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-n63mx3sz",
+    "version": 1,
+    "section": "logical-bytes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's 99,177,572 logical bytes sit in 32,451,790 bytes of Parquet. What does that ratio of 3.06 tell you about BigQuery's physical bytes for the same table?",
+    "hint": "Parquet and Capacitor are two formats.",
+    "choices": [
+      {
+        "text": "They are 32,451,790 bytes, since both formats are columnar",
+        "correct": false,
+        "why": "Both are columnar and compressed, and they are still different formats."
+      },
+      {
+        "text": "Physical bytes equal logical bytes until the table goes long-term",
+        "correct": false,
+        "why": "Long-term changes the rate, not the size."
+      },
+      {
+        "text": "They will be exactly a third of the logical bytes",
+        "correct": false,
+        "why": "Nothing here measures BigQuery's compression, so no exact figure follows."
+      },
+      {
+        "text": "Only that these columns compress well; the number itself is in `INFORMATION_SCHEMA.TABLE_STORAGE`",
+        "correct": true,
+        "why": "Right. The Parquet ratio is a clue, and the real one is reported per table."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w4vxmjs",
+    "version": 1,
+    "section": "storage-bill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A partition of `orders` has not been written to for 91 days, and analysts query it every morning. Which rate does it pay?",
+    "hint": "Check the page's list of what resets the clock.",
+    "choices": [
+      {
+        "text": "Long-term",
+        "correct": true,
+        "why": "Right. Querying does not reset the 90 days."
+      },
+      {
+        "text": "Active, because it is read daily",
+        "correct": false,
+        "why": "Reads do not count as modifications."
+      },
+      {
+        "text": "Active for the hours it is being read",
+        "correct": false,
+        "why": "The rate follows writes, never reads."
+      },
+      {
+        "text": "Neither: a queried partition is billed as compute",
+        "correct": false,
+        "why": "The query is billed as compute; the partition is still stored and billed as storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bncg3t2",
+    "version": 1,
+    "section": "storage-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under logical billing in southamerica-east1, what does 2,048 GiB cost in a month if it is all long-term? Give USD to two decimal places.",
+    "hint": "0.016 USD per GiB-month.",
+    "value": 32.77,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-kgrxpedj",
+    "version": 1,
+    "section": "storage-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the active rates, physical billing is cheaper than logical only when the data compresses by more than what?",
+    "hint": "Divide one rate by the other.",
+    "choices": [
+      {
+        "text": "2.19 to one",
+        "correct": false,
+        "why": "That is the long-term crossing, 0.035 ÷ 0.016."
+      },
+      {
+        "text": "3.04 to one",
+        "correct": true,
+        "why": "Right. 0.07 ÷ 0.023."
+      },
+      {
+        "text": "Any compression at all, since physical bytes are fewer",
+        "correct": false,
+        "why": "Fewer bytes at three times the rate: the ratio has to beat the rate's."
+      },
+      {
+        "text": "2 to one",
+        "correct": false,
+        "why": "At 2 to one, 0.07 ÷ 2 is still above 0.023."
+      }
+    ]
+  },
+  {
+    "id": "ex-wv1h715q",
+    "version": 1,
+    "section": "storage-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda rewrites the last 30 days of a large table every night to correct late orders. Which storage billing model does that habit push against?",
+    "hint": "Where do the replaced bytes go, and who pays for them?",
+    "choices": [
+      {
+        "text": "Physical: the replaced bytes are billed as time travel and fail-safe",
+        "correct": true,
+        "why": "Right. Under logical billing the same history costs nothing."
+      },
+      {
+        "text": "Logical, because rewritten data is counted twice",
+        "correct": false,
+        "why": "Logical billing has no charge for time travel or fail-safe."
+      },
+      {
+        "text": "Neither: rewrites only affect the query bill",
+        "correct": false,
+        "why": "They also reset the 90-day clock and keep old bytes for time travel."
+      },
+      {
+        "text": "Long-term, which a rewrite turns off for the whole table and every partition in it, every night",
+        "correct": false,
+        "why": "Long-term is a rate, not a model; and on a partitioned table only the rewritten partitions go active."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yxsrvb3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of BigQuery's meters to what it counts.",
+    "hint": "One of the right-hand options is not billed at all.",
+    "pairs": [
+      {
+        "left": "storage, logical",
+        "right": "The uncompressed bytes of each value, by type, per GiB-month"
+      },
+      {
+        "left": "storage, physical",
+        "right": "The compressed bytes stored, time travel and fail-safe included"
+      },
+      {
+        "left": "compute, on demand",
+        "right": "The logical bytes of the columns a query reads, per TiB"
+      },
+      {
+        "left": "compute, capacity",
+        "right": "The slots reserved, per slot-hour"
+      }
+    ],
+    "right_distractors": [
+      "A batch load from Cloud Storage"
+    ]
+  },
+  {
+    "id": "ex-r8r9wzge",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's whole orders table is 0.092 GiB and it is queried hundreds of times a day. Where is its cost?",
+    "hint": "Compare it with the free storage each month.",
+    "choices": [
+      {
+        "text": "In storage, because it is queried so often",
+        "correct": false,
+        "why": "Storage does not depend on how often a table is read."
+      },
+      {
+        "text": "In the queries: its storage fits inside the free 10 GiB",
+        "correct": true,
+        "why": "Right. Storing these orders is free; reading them is the bill."
+      },
+      {
+        "text": "In time travel, since it is partitioned by day",
+        "correct": false,
+        "why": "Partitioning has nothing to do with time travel charges, which only physical billing has."
+      },
+      {
+        "text": "Nowhere: tables under 1 TiB are free to query",
+        "correct": false,
+        "why": "The free TiB is per month of queries, not per table."
+      }
+    ]
+  },
+  {
+    "id": "ex-bs3j626j",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these numbers in this lesson were measured, rather than taken from Google's documentation or computed from it? Choose all that apply.",
+    "hint": "Two things ran: DuckDB, and fake-gcs-server.",
+    "choices": [
+      {
+        "text": "The table has 1,245,118 rows",
+        "correct": true,
+        "why": "Yes. DuckDB counted them."
+      },
+      {
+        "text": "The Parquet files are 32,451,790 bytes",
+        "correct": true,
+        "why": "Yes. `du` and the emulator both printed it."
+      },
+      {
+        "text": "A `STRING` costs 2 bytes plus its UTF-8 length",
+        "correct": false,
+        "why": "That is the documented rule; DuckDB only applied it."
+      },
+      {
+        "text": "Physical billing would cost 13.14 USD a month for 1 TiB, nine tenths long-term",
+        "correct": false,
+        "why": "Computed from the page's rates, at a ratio nobody measured."
+      },
+      {
+        "text": "Time travel lasts seven days by default",
+        "correct": false,
+        "why": "From Google's documentation; nothing here keeps a past version."
+      }
+    ]
+  }
+]

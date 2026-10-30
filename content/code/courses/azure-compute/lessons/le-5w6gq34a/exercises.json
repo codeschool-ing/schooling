@@ -1,0 +1,645 @@
+[
+  {
+    "id": "ex-t2zk7mx8",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the four numbers read off a request profile, which one does a Flex Consumption bill follow, with the instance size and the billed duration fixed?",
+    "hint": "On demand, Flex bills memory while executing and the executions themselves.",
+    "choices": [
+      {
+        "text": "The volume",
+        "correct": true,
+        "why": "Right. Each request is billed the same GB-seconds and one execution, so the bill is the volume times a price per request."
+      },
+      {
+        "text": "The peak hour",
+        "correct": false,
+        "why": "The peak sizes machines, replicas and nodes. Functions adds instances as requests arrive and pays for none in advance."
+      },
+      {
+        "text": "The number of idle hours",
+        "correct": false,
+        "why": "An idle hour costs a function nothing, so it is where Functions gains, but it does not set the bill."
+      },
+      {
+        "text": "The hour the traffic starts",
+        "correct": false,
+        "why": "A function is billed the same at 03:00 as at 15:00."
+      }
+    ]
+  },
+  {
+    "id": "ex-njfa38ny",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service takes 20 requests a second for 12 hours a day and none in the other 12. Over the average month of 730 hours (30.42 days), how many requests is that, in millions, to two decimal places?",
+    "hint": "Requests a day, then times 730 / 24.",
+    "value": 26.28,
+    "tolerance": 0.01,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-cr9t71p7",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's API is Python. At its evening peak of 80 requests a second, each taking 100 ms, how many Flex Consumption instances does it occupy with the default HTTP concurrency, and why?",
+    "hint": "Requests in flight are the rate times the duration; then ask how many each instance takes.",
+    "choices": [
+      {
+        "text": "One, because a 2,048 MB instance takes 16 requests at once",
+        "correct": false,
+        "why": "16 is the default for a 2,048 MB instance in other languages. Microsoft's documentation sets Python apps to one."
+      },
+      {
+        "text": "Eight: 80 × 0.1 s are in flight, one per instance",
+        "correct": true,
+        "why": "Right. Concurrency is the rate times the duration, and a Python app takes one HTTP request per instance by default."
+      },
+      {
+        "text": "Eighty, one for each request that arrives in a second",
+        "correct": false,
+        "why": "A request lasts a tenth of a second, so the eighty of one second are not all in flight together."
+      },
+      {
+        "text": "Two, the floor the program keeps for every option",
+        "correct": false,
+        "why": "`LEAST` applies to machines, replicas and nodes. Functions on demand keeps no floor."
+      }
+    ]
+  },
+  {
+    "id": "ex-7hgpvvv1",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The number of requests in flight at once is the rate of requests multiplied by their ___.",
+    "hint": "60 a second at 100 ms each is six at once.",
+    "blanks": [
+      {
+        "accept": [
+          "duration",
+          "average duration",
+          "latency"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mc0sf0rm",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each number read off a request profile to the part of the bill it drives.",
+    "hint": "Which meter or which sizing decision does each one feed?",
+    "pairs": [
+      {
+        "left": "the volume",
+        "right": "Functions' executions, and Container Apps' request charge"
+      },
+      {
+        "left": "the peak",
+        "right": "how many machines, replicas or nodes must run"
+      },
+      {
+        "left": "the idle hours",
+        "right": "where a replica pays the idle rate, or nothing at zero"
+      },
+      {
+        "left": "the duration",
+        "right": "the GB-seconds, and which timeouts apply"
+      }
+    ],
+    "right_distractors": [
+      "the tax rate of the region"
+    ]
+  },
+  {
+    "id": "ex-jzgr327s",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `compare.py`'s table, two virtual machines cost 146.00, the App Service plan 219.00 and AKS 511.00 on every row, from 0.13 million requests to 1,051 million. Why?",
+    "hint": "What do those three bill for, and does any profile need more of it?",
+    "choices": [
+      {
+        "text": "The program has a bug and ignores the profile for them",
+        "correct": false,
+        "why": "It sizes them per hour with `copies`; the profiles simply never ask for more than the floor."
+      },
+      {
+        "text": "Reservations are applied to them automatically",
+        "correct": false,
+        "why": "No discount is in the file; the program uses pay-as-you-go rates for all three."
+      },
+      {
+        "text": "Each is a fixed count of machines paid by the hour, and no profile outgrows the floor",
+        "correct": true,
+        "why": "Right. Even busy fits two `D2s_v5` exactly, so the bill does not move with the traffic."
+      },
+      {
+        "text": "Their rates are documented by Microsoft, unlike the others",
+        "correct": false,
+        "why": "Every rate in `rates.json` is illustrative; only the Container Apps grants are documented."
+      }
+    ]
+  },
+  {
+    "id": "ex-ykyarp6e",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The webhook profile, one call every twenty seconds all day, costs 6.89 USD on Functions and 58.75 on Container Apps. What makes the difference?",
+    "hint": "Count the idle hours, then think about what each meter counts.",
+    "choices": [
+      {
+        "text": "Container Apps charges for every request, and Functions does not",
+        "correct": false,
+        "why": "Container Apps' first two million requests a month are free, and the webhook makes 0.13 million."
+      },
+      {
+        "text": "Functions has larger free grants than Container Apps",
+        "correct": false,
+        "why": "The program leaves Functions' grants at zero; the difference is there without them."
+      },
+      {
+        "text": "A replica cannot take a request that arrives every twenty seconds",
+        "correct": false,
+        "why": "It can, easily; the problem is that it is paid for in between."
+      },
+      {
+        "text": "No hour is idle, so replicas bill as active all month",
+        "correct": true,
+        "why": "Right. A call in every hour keeps the replicas active; Flex pays for 131,400 seconds and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnth7de1",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `CA_MIN` set to 0, which rows of the Container Apps column fell because hours with no request now cost nothing? Choose all that apply.",
+    "hint": "Some rows fell for a different reason: they lost their second replica.",
+    "choices": [
+      {
+        "text": "nightly, from 15.82 to 0.43",
+        "correct": true,
+        "why": "Right. Its 22 silent hours cost nothing, and the two busy ones fit inside the grants."
+      },
+      {
+        "text": "steady, from 89.49 to 57.95",
+        "correct": false,
+        "why": "Steady has no silent hour. It fell because 30 a second needs only one replica once there is no floor of two."
+      },
+      {
+        "text": "office, from 52.04 to 42.18",
+        "correct": true,
+        "why": "Right. Its fifteen silent hours went from the idle rate to nothing."
+      },
+      {
+        "text": "webhook, from 58.75 to 27.22",
+        "correct": false,
+        "why": "It never reaches zero: a call every twenty seconds keeps one replica up. It lost the second replica, not its idle hours."
+      },
+      {
+        "text": "busy, which fell with the others",
+        "correct": false,
+        "why": "Busy did not move: 667.65 both times, since eight replicas run all day either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-5v8v3hjx",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At the file's rates, 0.000026 USD per GB-second and 0.40 USD per million executions, with each request billed as one second, how many millions of requests a month make a 512 MB Flex instance cost what two virtual machines cost, 146.00 USD? Two decimal places.",
+    "hint": "A request costs 0.5 GB-seconds plus one execution; divide 146 by that.",
+    "value": 10.9,
+    "tolerance": 0.02,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-35qkr8fk",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `compare.py` leave out, so that a close result between two virtual machines and Container Apps leans further towards Container Apps than the table shows?",
+    "hint": "Which of the two needs something in front of it that the other brings along?",
+    "choices": [
+      {
+        "text": "The free grants of Container Apps",
+        "correct": false,
+        "why": "They are in the program, taken from the active seconds."
+      },
+      {
+        "text": "Reservations, which a steady load rewards",
+        "correct": false,
+        "why": "Those would favour the machines, not Container Apps."
+      },
+      {
+        "text": "The 300 seconds Container Apps waits before removing replicas",
+        "correct": false,
+        "why": "That makes real replicas run a little longer than the program counts, which adds to Container Apps' side."
+      },
+      {
+        "text": "The load balancer or gateway the machines need in front",
+        "correct": true,
+        "why": "Right. Container Apps comes with its own ingress, and two machines need a load balancer or an Application Gateway that is not on the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5ndm3z6",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two copies of `shop:1.0` run on ports 8081 and 8082. An order posted to 8081 appears in its list, and 8082 answers `[]`. Why?",
+    "hint": "Where does `app.py` keep its orders?",
+    "choices": [
+      {
+        "text": "Each process keeps its own `ORDERS` list in memory",
+        "correct": true,
+        "why": "Right. Nothing is shared between processes, which is also why the restart emptied the first one."
+      },
+      {
+        "text": "The second container had not started yet",
+        "correct": false,
+        "why": "It answered, with an empty list; a container that had not started would not answer at all."
+      },
+      {
+        "text": "The order was written to the first container's disk",
+        "correct": false,
+        "why": "`app.py` writes nothing to disk; the list is a Python variable."
+      },
+      {
+        "text": "Docker isolates the two networks, so the order could not reach 8082",
+        "correct": false,
+        "why": "The order was never sent to 8082. Nothing in the shop forwards an order to another copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-btx6y9zj",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The month's finance export takes five minutes while the page waits. Which change lets it run behind Container Apps, App Service or Functions?",
+    "hint": "Two of the three limits are not the timeout you set.",
+    "choices": [
+      {
+        "text": "Make it a job that finance collects when it is ready",
+        "correct": true,
+        "why": "Right. Nothing waits on an open request, so no front end's limit applies."
+      },
+      {
+        "text": "Set `functionTimeout` in `host.json` to ten minutes",
+        "correct": false,
+        "why": "An HTTP function still has 230 seconds to answer, whatever its timeout says."
+      },
+      {
+        "text": "Move it to App Service, which has no request limit",
+        "correct": false,
+        "why": "The same 230 seconds applies, the idle timeout of the load balancer in front."
+      },
+      {
+        "text": "Keep it on Container Apps, whose ingress waits longer than five minutes",
+        "correct": false,
+        "why": "The ingress documentation gives 240 seconds, which five minutes exceed."
+      }
+    ]
+  },
+  {
+    "id": "ex-89j0bzad",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens once the month's export is a job, from finance pressing the button to the file in their hands.",
+    "items": [
+      "The page puts a message on a Service Bus queue and answers at once",
+      "The message starts an event-driven Container Apps job",
+      "The job builds the file and writes it to storage",
+      "Finance collects the file when the page says it is ready"
+    ],
+    "trap": "Starting the job before the message exists: an event-driven job is started by the message, so the queue comes first."
+  },
+  {
+    "id": "ex-n9crk33w",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop keeps a pool of 20 database connections per process. Moved to Flex Consumption as a Python app, why is the database the first thing to fall over in a burst?",
+    "hint": "Count processes, not requests.",
+    "choices": [
+      {
+        "text": "Functions closes every connection after each request",
+        "correct": false,
+        "why": "Connections can be kept by a client created outside the handler; the number of instances is the problem."
+      },
+      {
+        "text": "Flex Consumption cannot reach a database in a virtual network",
+        "correct": false,
+        "why": "It can: virtual network integration is one of Flex's additions over the old Consumption plan."
+      },
+      {
+        "text": "The 230-second limit holds connections open too long",
+        "correct": false,
+        "why": "The limit is on answering a request; it says nothing about how many connections exist."
+      },
+      {
+        "text": "Every request in flight is an instance with its own pool",
+        "correct": true,
+        "why": "Right. One HTTP request per instance by default means a burst to 100 instances is 100 pools."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqaagxm5",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of these moves, which asks the least of the shop's code?",
+    "hint": "Which two targets run the same image?",
+    "choices": [
+      {
+        "text": "From Container Apps to Functions on Flex",
+        "correct": false,
+        "why": "The web server has to become handlers in `function_app.py`, which is the dearest move in the table."
+      },
+      {
+        "text": "From one virtual machine to two, behind a load balancer",
+        "correct": false,
+        "why": "The code runs unchanged, but the orders in memory still have to move to a database first."
+      },
+      {
+        "text": "From Container Apps to AKS",
+        "correct": true,
+        "why": "Right. The same `shop:1.0` runs in both; the move is new manifests around it."
+      },
+      {
+        "text": "From one virtual machine to Container Apps",
+        "correct": false,
+        "why": "It needs the statelessness the others need, plus the image, which the shop happens to have."
+      }
+    ]
+  },
+  {
+    "id": "ex-kx0gg71h",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop's profile peaks at 80 requests a second. Why does that peak cost Container Apps almost nothing extra?",
+    "hint": "How many replicas does 80 need, and how many run anyway?",
+    "choices": [
+      {
+        "text": "The peak lasts only two hours, which are free",
+        "correct": false,
+        "why": "Nothing about an evening hour is free; the grants are a monthly total."
+      },
+      {
+        "text": "80 needs two replicas of 50, and two run anyway",
+        "correct": true,
+        "why": "Right. Only four hours exceed what one replica carries, and the floor already covers them."
+      },
+      {
+        "text": "Container Apps does not bill for requests at the peak",
+        "correct": false,
+        "why": "It bills requests past two million a month whenever they arrive."
+      },
+      {
+        "text": "Scale-out is faster than scale-in",
+        "correct": false,
+        "why": "True of KEDA, and it changes nothing in the program's bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8kapr5r",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the file's active rates, 0.00002 USD per vCPU-second and 0.000002 per GiB-second, what does a nightly report cost a month as a Container Apps job of 2 vCPUs and 4 GiB that runs 12 minutes a night, over 30.42 nights, with the grants already spent? USD, two decimal places.",
+    "hint": "720 seconds a night, times the nights, times each resource and its rate.",
+    "value": 1.05,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-4jsdcm7j",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same shop profile with silent nights costs 69.34 USD on Container Apps instead of 85.81. What paid for the 16.47 difference?",
+    "hint": "Compare the two profiles hour by hour.",
+    "choices": [
+      {
+        "text": "The request charge on the requests the trickle sends",
+        "correct": false,
+        "why": "The trickle is 1.75 million requests a month; at 0.40 a million that is under a dollar."
+      },
+      {
+        "text": "Two replicas kept at the active rate all night",
+        "correct": true,
+        "why": "Right. The trickle of 2 a second keeps both replicas off the idle rate all night."
+      },
+      {
+        "text": "A third replica that the trickle starts every night",
+        "correct": false,
+        "why": "Two requests a second fit in one replica; the floor is two and stays two."
+      },
+      {
+        "text": "Cold starts that the trickle triggers",
+        "correct": false,
+        "why": "With a minimum of two, nothing starts cold; and a cold start is not on the program's bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-tn7gnpaz",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A decision like the shop's is only finished when it names the numbers that would ___ it.",
+    "hint": "Traffic three times today's is one of them.",
+    "blanks": [
+      {
+        "accept": [
+          "reopen",
+          "change",
+          "overturn",
+          "reverse"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nqfe8m2k",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At three times today's traffic, two virtual machines cost 146.00 and Container Apps 159.92. What does that tell the shop?",
+    "hint": "Is a 10% gap at illustrative rates a verdict?",
+    "choices": [
+      {
+        "text": "To move to virtual machines now, before the traffic grows",
+        "correct": false,
+        "why": "Today Container Apps is 60.19 cheaper; the crossing is a trigger to watch, not a date."
+      },
+      {
+        "text": "That Container Apps stops scaling past 240 requests a second",
+        "correct": false,
+        "why": "It scales to five replicas there; the program prices them, which is how the total grew."
+      },
+      {
+        "text": "That growth near that size reopens the decision, and the real rates have to settle it",
+        "correct": true,
+        "why": "Right. Within 20% is a tie even at real rates, and these are illustrative; it is where to price machines properly."
+      },
+      {
+        "text": "That the free grants run out at that volume",
+        "correct": false,
+        "why": "The grants are spent by today's traffic already; tripling it adds replicas and requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dnd5ad3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of the shop's workloads, and the webhook of section 02, to where this lesson runs it.",
+    "hint": "Think of who waits, how long the work runs and how often it is called.",
+    "pairs": [
+      {
+        "left": "the order API",
+        "right": "a Container App with a minimum of two replicas"
+      },
+      {
+        "left": "the nightly sales report",
+        "right": "a scheduled Container Apps job"
+      },
+      {
+        "left": "the month's finance export",
+        "right": "an event-driven job started from a queue"
+      },
+      {
+        "left": "the webhook profile",
+        "right": "a function on Flex Consumption"
+      }
+    ],
+    "right_distractors": [
+      "an AKS cluster on the Standard tier"
+    ]
+  },
+  {
+    "id": "ex-6a7yec7c",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's method in order, from the traffic to the decision.",
+    "items": [
+      "Write the traffic down as 24 hourly rates",
+      "Read the volume, the peak, the idle hours and the duration",
+      "Price the profile five ways with the rates in a file",
+      "Check the limits and what the code assumes",
+      "Write the decision down with what would reopen it"
+    ],
+    "trap": "Pricing before reading the profile: the program needs the profile as its input, so the numbers come first."
+  },
+  {
+    "id": "ex-xddyepwq",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the file's active rates, 0.00002 USD per vCPU-second and 0.000002 per GiB-second, what does one Container Apps replica of 0.5 vCPU and 1 GiB cost when it is active for a whole 730-hour month, before any free grant? USD, two decimal places.",
+    "hint": "730 × 3,600 seconds, times 0.5 vCPU at one rate and 1 GiB at the other.",
+    "value": 31.54,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-7m9kvv6w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new internal stock page follows the office profile, is written in Python, and nobody minds a slow first answer in the morning. The team knows containers. Which fits it best, by this lesson's method?",
+    "hint": "Fifteen silent hours, nobody waiting, and an image the team can build.",
+    "choices": [
+      {
+        "text": "Container Apps, scaled to zero",
+        "correct": true,
+        "why": "Right. 42.18 in the zero run, the silent hours free, and the cold start lands on nobody who minds."
+      },
+      {
+        "text": "Two virtual machines, the simplest move",
+        "correct": false,
+        "why": "146.00 a month for a tool that is silent fifteen hours a day, plus the operating system to look after."
+      },
+      {
+        "text": "Functions on Flex, since it pays nothing while idle",
+        "correct": false,
+        "why": "Idle is free, but 59.13 million requests at one billed second each cost 3,098.41 at the file's rates."
+      },
+      {
+        "text": "A small AKS cluster on the Free tier",
+        "correct": false,
+        "why": "Three nodes still run all night, and the cluster is a second thing to operate for one page."
+      }
+    ]
+  }
+]

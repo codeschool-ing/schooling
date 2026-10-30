@@ -1,0 +1,686 @@
+[
+  {
+    "id": "ex-1j5ntc9w",
+    "version": 1,
+    "section": "an-activity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who creates the planner's `MainActivity` object when somebody taps the icon?",
+    "hint": "You write the class and never call its constructor.",
+    "choices": [
+      {
+        "text": "The system, after reading the manifest",
+        "correct": true,
+        "why": "Right: Android finds the `LAUNCHER` activity in the manifest, makes the instance and then calls its callbacks."
+      },
+      {
+        "text": "`setContent`, the first time it runs",
+        "correct": false,
+        "why": "`setContent` runs inside `onCreate`, on an activity that already exists."
+      },
+      {
+        "text": "Your `Application` class, by calling `MainActivity()`",
+        "correct": false,
+        "why": "An activity made with its constructor in your code has no window and no lifecycle."
+      },
+      {
+        "text": "The launcher app, which loads the class into its own process",
+        "correct": false,
+        "why": "The launcher only asks; the activity lives in the planner's own process."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x3bxcrp",
+    "version": 1,
+    "section": "an-activity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson's `onPause` log BEFORE calling `super.onPause()`, while `onResume` logs after?",
+    "hint": "Think of the order the lines appear in.",
+    "choices": [
+      {
+        "text": "The framework throws if a log comes after `super` in a callback going down",
+        "correct": false,
+        "why": "The framework only requires that `super` is called, not where."
+      },
+      {
+        "text": "So the log reads in the order things happen to the activity",
+        "correct": true,
+        "why": "Right: going up, the framework does its part first; going down, your part is the last thing before the framework's."
+      },
+      {
+        "text": "`Log.d` does not work after `super.onPause()` has returned",
+        "correct": false,
+        "why": "Logging works at any point; `onStop` and `onDestroy` log the same way."
+      },
+      {
+        "text": "It is a style rule for Kotlin, unrelated to Android",
+        "correct": false,
+        "why": "Kotlin has no such rule; the order is about reading the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-7r9kng68",
+    "version": 1,
+    "section": "an-activity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Compose app's activity extends `ComponentActivity` and not `AppCompatActivity`. What would `AppCompatActivity` add?",
+    "hint": "It came before Compose.",
+    "choices": [
+      {
+        "text": "The `setContent` function itself",
+        "correct": false,
+        "why": "`setContent` comes from `androidx.activity` and works on `ComponentActivity`."
+      },
+      {
+        "text": "The lifecycle callbacks",
+        "correct": false,
+        "why": "Every activity has them; they come from Android's own `Activity`."
+      },
+      {
+        "text": "The toolbar and theming of the pre-Compose view system",
+        "correct": true,
+        "why": "Right: it builds on the same class and adds the old views' toolbar and themes, which a Compose app does not use."
+      },
+      {
+        "text": "Support for running on Android 8",
+        "correct": false,
+        "why": "`minSdk = 26` is Android 8 already, with `ComponentActivity`."
+      }
+    ]
+  },
+  {
+    "id": "ex-kapybdb4",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The test launches the activity and then sends it Home. Put the callbacks in the order the log printed them.",
+    "hint": "Up three steps, then down two.",
+    "items": [
+      "`onCreate`",
+      "`onStart`",
+      "`onResume`",
+      "`onPause`",
+      "`onStop`"
+    ]
+  },
+  {
+    "id": "ex-d7nfv3x9",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each pair of callbacks to the question whose answer it brackets.",
+    "hint": "Outer, middle, inner.",
+    "pairs": [
+      {
+        "left": "`onCreate` / `onDestroy`",
+        "right": "Does the object exist?"
+      },
+      {
+        "left": "`onStart` / `onStop`",
+        "right": "Can anybody see it?"
+      },
+      {
+        "left": "`onResume` / `onPause`",
+        "right": "Is it the one in front, taking touches?"
+      }
+    ],
+    "right_distractors": [
+      "Has the process been killed?"
+    ]
+  },
+  {
+    "id": "ex-857j7wgb",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The user presses Home and comes back a minute later. Which callback does NOT run on the way back?",
+    "hint": "Is it the same object?",
+    "choices": [
+      {
+        "text": "`onStart`",
+        "correct": false,
+        "why": "It runs: the activity becomes visible again."
+      },
+      {
+        "text": "`onCreate`",
+        "correct": true,
+        "why": "Right: the instance survived, so it is not created again."
+      },
+      {
+        "text": "`onResume`",
+        "correct": false,
+        "why": "It runs: the activity comes back in front."
+      }
+    ]
+  },
+  {
+    "id": "ex-h70k4q0d",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the test's log, Home produced `onPause` and `onStop` and no `onSaveInstanceState`. What does the lesson conclude?",
+    "hint": "A test drives the transitions; it is not the system.",
+    "choices": [
+      {
+        "text": "That Home never saves state, so the `Bundle` is only for rotation",
+        "correct": false,
+        "why": "On a device the system calls it after `onStop`; that is what process death relies on."
+      },
+      {
+        "text": "That `moveToState` does not simulate that call, which a device does make",
+        "correct": true,
+        "why": "Right: Google documents the call after `onStop` since Android 9; the rotation test shows it."
+      },
+      {
+        "text": "That the activity was finished instead of stopped",
+        "correct": false,
+        "why": "`onDestroy` did not run after Home, so nothing was finished."
+      },
+      {
+        "text": "That Robolectric needs `GraphicsMode.NATIVE` for the call",
+        "correct": false,
+        "why": "Graphics mode is about drawing pixels, not lifecycle calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-90mgv0g2",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After Back, `onDestroy` logged `finishing ___`.",
+    "hint": "The user said they were done with this screen.",
+    "blanks": [
+      {
+        "accept": [
+          "true"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a3zfnxex",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the system do to the activity when the phone is turned, by default?",
+    "hint": "Count the instances in the log.",
+    "choices": [
+      {
+        "text": "Destroys it and creates a new instance",
+        "correct": true,
+        "why": "Right: the log showed `instance 2` with `saved state: true`."
+      },
+      {
+        "text": "Keeps it and calls `onConfigurationChanged`",
+        "correct": false,
+        "why": "Only if the manifest opts out with `android:configChanges`, which the course avoids."
+      },
+      {
+        "text": "Pauses it and redraws only the composables",
+        "correct": false,
+        "why": "The whole activity goes, from `onPause` to `onDestroy`."
+      },
+      {
+        "text": "Kills the process and starts the app again from the launcher",
+        "correct": false,
+        "why": "The process stayed: `ProcessWide.created` reached 2 in the same process."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbj003rr",
+    "version": 1,
+    "section": "rotation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After one rotation, what number did `ProcessWide.created` print in the new `onCreate`?",
+    "hint": "`instance … in this process`.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6rftf3yp",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A form keeps the name being typed in `private var draft = \"\"` on the activity. The user turns the phone. What is in `draft` afterwards?",
+    "hint": "Whose field is it?",
+    "choices": [
+      {
+        "text": "What was typed, since the process survived",
+        "correct": false,
+        "why": "The process survived and the object did not; the field belonged to the object."
+      },
+      {
+        "text": "An empty string, in a new instance",
+        "correct": true,
+        "why": "Right: a field of the activity goes with the instance that was destroyed."
+      },
+      {
+        "text": "What was typed, because `onSaveInstanceState` saves every field",
+        "correct": false,
+        "why": "It saves what the code or the framework puts in the `Bundle`, and a plain field is neither."
+      },
+      {
+        "text": "`null`, because Kotlin resets it",
+        "correct": false,
+        "why": "The new instance runs the initialiser again, which gives `\"\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gggn7ax6",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds `android:configChanges=\"orientation|screenSize\"` to stop the form emptying on rotation. What still empties it?",
+    "hint": "Only the changes listed are handled.",
+    "choices": [
+      {
+        "text": "Nothing: the attribute covers every configuration change",
+        "correct": false,
+        "why": "It covers the two it names."
+      },
+      {
+        "text": "Turning the phone back the other way",
+        "correct": false,
+        "why": "Both directions are an orientation change, and both are now handled."
+      },
+      {
+        "text": "Switching the phone to dark mode",
+        "correct": true,
+        "why": "Right: dark mode is not in the list, so the activity is still rebuilt and the field lost."
+      },
+      {
+        "text": "Calling `onConfigurationChanged` from the form",
+        "correct": false,
+        "why": "The system calls it; it rebuilds nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-xyqdqbr5",
+    "version": 1,
+    "section": "the-process",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The system kills the planner's process in the background to free memory. Which callback runs first?",
+    "hint": "Step 2 of the sequence.",
+    "choices": [
+      {
+        "text": "`onDestroy`, with `finishing false`",
+        "correct": false,
+        "why": "Nothing runs: a killed process has no chance to call anything."
+      },
+      {
+        "text": "`onSaveInstanceState`",
+        "correct": false,
+        "why": "It ran earlier, when the activity stopped; the kill itself runs nothing."
+      },
+      {
+        "text": "None at all",
+        "correct": true,
+        "why": "Right: the process is gone with every object in it, which is why state is saved at `onStop`."
+      },
+      {
+        "text": "`onPause`, then `onStop`",
+        "correct": false,
+        "why": "Those ran when the user left; the kill comes later."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxhfws42",
+    "version": 1,
+    "section": "the-process",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After process death the user reopens the planner from the recent apps. What does `onCreate` log?",
+    "hint": "A new process, an old `Bundle`.",
+    "choices": [
+      {
+        "text": "`instance 1 in this process, saved state: true`",
+        "correct": true,
+        "why": "Right: the counter starts again in a new process, and the saved `Bundle` is handed over."
+      },
+      {
+        "text": "`instance 2 in this process, saved state: true`",
+        "correct": false,
+        "why": "That is rotation, where the process survives; here `ProcessWide` was lost with the process."
+      },
+      {
+        "text": "`instance 1 in this process, saved state: false`",
+        "correct": false,
+        "why": "That is a fresh start; the system kept the `Bundle` to restore the screen."
+      },
+      {
+        "text": "Nothing: the app opens on the launcher's home screen",
+        "correct": false,
+        "why": "The task remembered the activity, and the system recreates it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkwb4wym",
+    "version": 1,
+    "section": "the-process",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each place a value lives to the first event in the table that loses it.",
+    "hint": "Columns, left to right: rotation, Home, process death, swipe away.",
+    "pairs": [
+      {
+        "left": "a field of the activity",
+        "right": "rotation"
+      },
+      {
+        "left": "an `object`",
+        "right": "process death"
+      },
+      {
+        "left": "the saved `Bundle`",
+        "right": "the user swiping the app away"
+      }
+    ],
+    "right_distractors": [
+      "pressing Home"
+    ]
+  },
+  {
+    "id": "ex-42whxw68",
+    "version": 1,
+    "section": "the-process",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under how many kilobytes does Google's documentation recommend keeping saved state?",
+    "hint": "Past that, a transaction can throw `TransactionTooLargeException`.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "kB"
+  },
+  {
+    "id": "ex-n53gxhev",
+    "version": 1,
+    "section": "the-process",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an Android app start in a fraction of a second although the framework is large?",
+    "hint": "The first process the system keeps from boot.",
+    "choices": [
+      {
+        "text": "The framework is compiled into each APK",
+        "correct": false,
+        "why": "No APK carries the framework; lesson 1's dex was libraries."
+      },
+      {
+        "text": "Its process is a fork of the zygote, which has the framework loaded",
+        "correct": true,
+        "why": "Right: the copy starts with the classes already in memory."
+      },
+      {
+        "text": "The previous process is reused for every app",
+        "correct": false,
+        "why": "Each app gets its own process; it is a copy of the zygote, not a reuse."
+      },
+      {
+        "text": "The launcher keeps the app running in the background",
+        "correct": false,
+        "why": "The launcher only asks; the speed comes from `fork`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kkscmy9",
+    "version": 1,
+    "section": "set-content",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The window test listed the views inside `android.R.id.content`. What did it find?",
+    "hint": "`views in the content`.",
+    "choices": [
+      {
+        "text": "One view per composable on the screen",
+        "correct": false,
+        "why": "Composables are not views; Compose draws them inside one."
+      },
+      {
+        "text": "A `TextView` with the sentence",
+        "correct": false,
+        "why": "`Text` is a composable, drawn by Compose, not a `TextView`."
+      },
+      {
+        "text": "One `ComposeView`",
+        "correct": true,
+        "why": "Right: `setContent` makes one `ComposeView` the activity's content."
+      },
+      {
+        "text": "No view at all, since Compose replaces the window",
+        "correct": false,
+        "why": "Compose keeps the window and the activity, and puts its one view in the content frame."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7ddmx69",
+    "version": 1,
+    "section": "set-content",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the test run with `recordRoborazziDebug` rather than `testDebugUnitTest` to get the PNG?",
+    "hint": "Roborazzi has modes.",
+    "choices": [
+      {
+        "text": "`testDebugUnitTest` cannot run Robolectric tests",
+        "correct": false,
+        "why": "It ran the lifecycle tests, which are Robolectric tests."
+      },
+      {
+        "text": "Roborazzi writes a picture only when it is recording",
+        "correct": true,
+        "why": "Right: in the other modes it compares against one, which lesson 21 shows."
+      },
+      {
+        "text": "The record task gives the screen a size",
+        "correct": false,
+        "why": "The size comes from `@Config(qualifiers = …)`."
+      },
+      {
+        "text": "Only the record task draws real pixels",
+        "correct": false,
+        "why": "Pixels come from `@GraphicsMode(NATIVE)`, in either task."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rcbqye5",
+    "version": 1,
+    "section": "set-content",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`@Config(qualifiers = \"w320dp-h200dp-xhdpi\")` produced a PNG how many pixels wide?",
+    "hint": "xhdpi is twice the original density.",
+    "value": 640,
+    "tolerance": 0,
+    "unit": "px"
+  },
+  {
+    "id": "ex-9w85knga",
+    "version": 1,
+    "section": "one-activity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a single-activity Compose app, what is moving from the course list to a course's sessions?",
+    "hint": "A screen is a function.",
+    "choices": [
+      {
+        "text": "A new activity, started with an intent",
+        "correct": false,
+        "why": "That was the old shape, one activity per screen."
+      },
+      {
+        "text": "Another composable, with the course as an ordinary parameter",
+        "correct": true,
+        "why": "Right: lesson 9 builds the back stack that decides which composable is shown."
+      },
+      {
+        "text": "A `Bundle` passed through `onSaveInstanceState`",
+        "correct": false,
+        "why": "The `Bundle` is for restoring a screen, not for moving between screens."
+      },
+      {
+        "text": "A second `setContent` call replacing the first",
+        "correct": false,
+        "why": "`setContent` runs once; the screens change inside the composition it starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-jftxjree",
+    "version": 1,
+    "section": "one-activity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An exported activity reads a course id from an intent's extras. Why does the lesson say to check that id like any other input?",
+    "hint": "Who can send that intent?",
+    "choices": [
+      {
+        "text": "Extras are lost after process death",
+        "correct": false,
+        "why": "The question is who wrote the value, not whether it survives."
+      },
+      {
+        "text": "Every app on the phone is allowed to start it, with whatever it puts inside",
+        "correct": true,
+        "why": "Right: `exported=\"true\"` is a door from outside, so the id comes from a stranger."
+      },
+      {
+        "text": "Kotlin cannot type-check values inside a `Bundle`",
+        "correct": false,
+        "why": "A wrong type is a nuisance; a hostile value of the right type is the risk."
+      },
+      {
+        "text": "The launcher modifies extras before delivering them",
+        "correct": false,
+        "why": "The launcher sends no extras; other apps might."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsx3xnft",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these survive both a rotation AND process death? Choose all that apply.",
+    "hint": "The table in section 05.",
+    "choices": [
+      {
+        "text": "A course id put in the saved `Bundle`",
+        "correct": true,
+        "why": "Yes: the system keeps the `Bundle` across both."
+      },
+      {
+        "text": "A list in an `object`",
+        "correct": false,
+        "why": "No: it survives rotation and dies with the process."
+      },
+      {
+        "text": "A session stored in a database",
+        "correct": true,
+        "why": "Yes: it is on disk."
+      },
+      {
+        "text": "A field of `MainActivity`",
+        "correct": false,
+        "why": "No: rotation alone loses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9vyk8fy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the log lines of one rotation in order.",
+    "hint": "The old instance goes down; the new one comes up.",
+    "items": [
+      "`onPause`",
+      "`onStop`",
+      "`onSaveInstanceState`",
+      "`onDestroy: finishing false, configuration change true`",
+      "`onCreate: instance 2 in this process, saved state: true`"
+    ]
+  },
+  {
+    "id": "ex-tcgx1c1v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A tester on a phone with lots of memory says the planner always restores the open course. A student on a cheap phone says it opens on an empty screen. Which explanation fits both?",
+    "hint": "Which phone's system kills background processes more?",
+    "choices": [
+      {
+        "text": "The open course lives in an `object`, which process death loses",
+        "correct": true,
+        "why": "Right: on the big phone the process survives; on the small one it is killed, and the `object` with it."
+      },
+      {
+        "text": "The cheap phone runs an older Android without `onSaveInstanceState`",
+        "correct": false,
+        "why": "Every Android has it; `minSdk` is 26."
+      },
+      {
+        "text": "The student pressed Back instead of Home",
+        "correct": false,
+        "why": "Possible for one report, but it does not explain why it depends on the phone."
+      },
+      {
+        "text": "Rotation is handled differently on small screens",
+        "correct": false,
+        "why": "Rotation behaves the same; memory is what differs."
+      }
+    ]
+  }
+]

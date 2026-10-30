@@ -1,0 +1,619 @@
+[
+  {
+    "id": "ex-w3m8d6mb",
+    "version": 1,
+    "section": "view-model-scope",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is `viewModelScope` cancelled?",
+    "hint": "It lives exactly as long as its owner.",
+    "choices": [
+      {
+        "text": "At every rotation of the phone",
+        "correct": false,
+        "why": "A rotation keeps the ViewModel, so it keeps its scope too."
+      },
+      {
+        "text": "When it is cleared, in `onCleared()`",
+        "correct": true,
+        "why": "Right: `CancelTest` cleared the store and the write was cancelled."
+      },
+      {
+        "text": "When the activity stops",
+        "correct": false,
+        "why": "Stopping changes what the screen collects, not the ViewModel's scope."
+      },
+      {
+        "text": "Never: it lives as long as the process",
+        "correct": false,
+        "why": "That describes `GlobalScope`, which section 02 calls the wrong picture."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh60kybv",
+    "version": 1,
+    "section": "view-model-scope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `SlowStore` rethrow the `CancellationException` it catches?",
+    "hint": "Cancellation is cooperative.",
+    "choices": [
+      {
+        "text": "Because Kotlin refuses to compile a catch that swallows it",
+        "correct": false,
+        "why": "It compiles; swallowing it is a bug the compiler does not see."
+      },
+      {
+        "text": "So the coroutine really stops",
+        "correct": true,
+        "why": "Right: a coroutine that swallows it carries on as if nothing had been asked."
+      },
+      {
+        "text": "So the test prints `write completed` afterwards",
+        "correct": false,
+        "why": "The rethrow is exactly what stops `write completed` from ever printing."
+      },
+      {
+        "text": "Because `delay` needs it to restart",
+        "correct": false,
+        "why": "A cancelled `delay` does not restart."
+      }
+    ]
+  },
+  {
+    "id": "ex-6b1mgex7",
+    "version": 1,
+    "section": "view-model-scope",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The student presses **Add** and closes the app at once. Why might `viewModelScope` be the wrong place for that write?",
+    "hint": "What happens to the scope when the screen goes for good?",
+    "choices": [
+      {
+        "text": "An unfinished write dies with the ViewModel",
+        "correct": true,
+        "why": "Right: work that must outlive the screen goes to WorkManager, lesson 18."
+      },
+      {
+        "text": "`viewModelScope` runs on a background thread that is too slow",
+        "correct": false,
+        "why": "It runs on `Main`; speed is not the issue, lifetime is."
+      },
+      {
+        "text": "The write would run twice, once per activity",
+        "correct": false,
+        "why": "One ViewModel launches it once, whatever the activities do."
+      },
+      {
+        "text": "Closing the app keeps the scope alive for an hour",
+        "correct": false,
+        "why": "Closing clears the ViewModel and cancels the scope."
+      }
+    ]
+  },
+  {
+    "id": "ex-j53fvyqf",
+    "version": 1,
+    "section": "state-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `initialValue` set to `WeekUiState(loading = true)` instead of an empty list?",
+    "hint": "What would an empty list say to the student?",
+    "choices": [
+      {
+        "text": "An empty list would be a false claim",
+        "correct": true,
+        "why": "Right: loading is the honest first state."
+      },
+      {
+        "text": "`stateIn` refuses an empty list",
+        "correct": false,
+        "why": "It accepts any value of the type."
+      },
+      {
+        "text": "A loading state makes `combine` run faster",
+        "correct": false,
+        "why": "The initial value has no effect on speed."
+      },
+      {
+        "text": "Because `SavedStateHandle` needs a boolean",
+        "correct": false,
+        "why": "The handle holds the draft; `loading` is not in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5406gxq",
+    "version": 1,
+    "section": "state-in",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `started` policy to when the store is collected.",
+    "hint": "The table in section 03.",
+    "pairs": [
+      {
+        "left": "`Eagerly`",
+        "right": "From the ViewModel's creation to its end"
+      },
+      {
+        "left": "`Lazily`",
+        "right": "From the first collector to the ViewModel's end"
+      },
+      {
+        "left": "`WhileSubscribed(5_000)`",
+        "right": "While collected, and five seconds after"
+      }
+    ],
+    "right_distractors": [
+      "Only while the activity is resumed"
+    ]
+  },
+  {
+    "id": "ex-p2zs86s0",
+    "version": 1,
+    "section": "state-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After this lesson's rewrite, how does a new session reach `state` once `onAdd` runs?",
+    "hint": "No function builds the state by hand any more.",
+    "choices": [
+      {
+        "text": "`onAdd` calls `_state.update` with the new list",
+        "correct": false,
+        "why": "That was lesson 10; there is no `_state` now."
+      },
+      {
+        "text": "The store emits, and `combine` follows",
+        "correct": true,
+        "why": "Right: one path for every change, whoever made it."
+      },
+      {
+        "text": "The screen adds it to its own copy of the list",
+        "correct": false,
+        "why": "The screen holds no copy; that is lesson 10's one-way flow."
+      },
+      {
+        "text": "The channel delivers it to the state",
+        "correct": false,
+        "why": "The channel carries the snackbar event, not the session."
+      }
+    ]
+  },
+  {
+    "id": "ex-fch24zz2",
+    "version": 1,
+    "section": "state-in",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`saved.___(DRAFT, \"\")` turns a key of the `SavedStateHandle` into a `StateFlow`.",
+    "hint": "Its name says what it returns.",
+    "blanks": [
+      {
+        "accept": [
+          "getStateFlow"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hkdrjk4s",
+    "version": 1,
+    "section": "lifecycle-collection",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `SubscriptionTest`, how many collectors did the store have four seconds after the activity stopped?",
+    "hint": "The grace period is five seconds.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-typ8kaq5",
+    "version": 1,
+    "section": "lifecycle-collection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `collectAsStateWithLifecycle()` do that `collectAsState()` does not?",
+    "hint": "Press the home button.",
+    "choices": [
+      {
+        "text": "It stops collecting below `STARTED`",
+        "correct": true,
+        "why": "Right: `collectAsState` collects while the composable is composed, stopped or not."
+      },
+      {
+        "text": "It keeps the last value across process death",
+        "correct": false,
+        "why": "Neither survives the process; that is `SavedStateHandle`'s job."
+      },
+      {
+        "text": "It collects on a background thread",
+        "correct": false,
+        "why": "Both collect on the main thread for the composition."
+      },
+      {
+        "text": "It converts a cold flow into a hot one",
+        "correct": false,
+        "why": "That is `stateIn`, in the ViewModel."
+      }
+    ]
+  },
+  {
+    "id": "ex-k700tsm6",
+    "version": 1,
+    "section": "lifecycle-collection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone changes `WhileSubscribed(5_000)` to `WhileSubscribed(0)`. What changes at each rotation?",
+    "hint": "During a rotation, for a moment, nobody collects.",
+    "choices": [
+      {
+        "text": "Nothing, because the ViewModel survives the rotation",
+        "correct": false,
+        "why": "The ViewModel survives, but its upstream stops the instant the last collector leaves."
+      },
+      {
+        "text": "The upstream restarts each time",
+        "correct": true,
+        "why": "Right: the grace period is what lets a rotation pass without that."
+      },
+      {
+        "text": "The screen keeps collecting in the background",
+        "correct": false,
+        "why": "Background collection is decided by `collectAsStateWithLifecycle`, unchanged here."
+      },
+      {
+        "text": "The state is lost and shows loading for good",
+        "correct": false,
+        "why": "It restarts with the new collector and loads again."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xykv7d9",
+    "version": 1,
+    "section": "effects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why must a composable not call `viewModel.events.collect` directly in its body?",
+    "hint": "How often does a body run?",
+    "choices": [
+      {
+        "text": "The body reruns at each recomposition, restarting it",
+        "correct": true,
+        "why": "Right: work starts in `LaunchedEffect` or from a callback."
+      },
+      {
+        "text": "Because `collect` is not allowed on a `Flow` of events",
+        "correct": false,
+        "why": "It is allowed; the question is where."
+      },
+      {
+        "text": "Because events must be collected in the activity",
+        "correct": false,
+        "why": "The route collects them, in a `LaunchedEffect`."
+      },
+      {
+        "text": "Because the snackbar cannot be shown from Compose",
+        "correct": false,
+        "why": "The planner shows it from Compose through `SnackbarHostState`."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9wc93df",
+    "version": 1,
+    "section": "effects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The total's tap shows \"That is 2 h 40 min\" in a snackbar. Why is it launched with `rememberCoroutineScope` and not `LaunchedEffect`?",
+    "hint": "Who decides when it starts?",
+    "choices": [
+      {
+        "text": "Because `LaunchedEffect` cannot call `showSnackbar`",
+        "correct": false,
+        "why": "It can, and the event collector does exactly that."
+      },
+      {
+        "text": "A tap starts it: a callback, not being on screen",
+        "correct": true,
+        "why": "Right: a callback launches into the remembered scope."
+      },
+      {
+        "text": "Because the ViewModel must not know about hours",
+        "correct": false,
+        "why": "True that the screen does the conversion, but that is not why the scope differs."
+      },
+      {
+        "text": "Because `rememberCoroutineScope` survives rotation",
+        "correct": false,
+        "why": "It is cancelled when the composable leaves the composition."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3xadgzt",
+    "version": 1,
+    "section": "effects",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of the `LaunchedEffect(viewModel)` in `WeekRoute` in order.",
+    "hint": "It belongs to being on screen.",
+    "items": [
+      "`WeekRoute` enters the composition",
+      "the effect's coroutine starts collecting `events`",
+      "an `Added` event arrives and a snackbar is shown",
+      "`WeekRoute` leaves the composition and the coroutine is cancelled"
+    ]
+  },
+  {
+    "id": "ex-r0aqq40k",
+    "version": 1,
+    "section": "one-off-events",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "If \"Added 45 min\" were a `message` field in `WeekUiState`, what would happen at the next rotation?",
+    "hint": "The new screen reads the state from the start.",
+    "choices": [
+      {
+        "text": "Nothing, rotation does not touch the state",
+        "correct": false,
+        "why": "Exactly: the state is kept, message included, and the new screen draws it."
+      },
+      {
+        "text": "The snackbar would appear again",
+        "correct": true,
+        "why": "Right, unless the screen reports it shown and the ViewModel clears it."
+      },
+      {
+        "text": "The message would be lost",
+        "correct": false,
+        "why": "State survives a rotation; the problem is showing it twice."
+      },
+      {
+        "text": "The app would refuse to compile",
+        "correct": false,
+        "why": "It compiles; the bug is in behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ze5sxsg",
+    "version": 1,
+    "section": "one-off-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner use `Channel(Channel.BUFFERED)` rather than a `MutableSharedFlow` with no replay for its events?",
+    "hint": "What happens to an event sent while nobody listens?",
+    "choices": [
+      {
+        "text": "A channel is faster for small objects",
+        "correct": false,
+        "why": "Speed is not the argument; delivery is."
+      },
+      {
+        "text": "A shared flow cannot carry a sealed interface",
+        "correct": false,
+        "why": "It can carry any type."
+      },
+      {
+        "text": "The channel keeps the event until a receiver comes",
+        "correct": true,
+        "why": "Right: during a rotation there is briefly no collector, and the shared flow would drop it."
+      },
+      {
+        "text": "Only a channel can be collected in `LaunchedEffect`",
+        "correct": false,
+        "why": "Any flow can be collected there."
+      }
+    ]
+  },
+  {
+    "id": "ex-6prgemjq",
+    "version": 1,
+    "section": "one-off-events",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A save fails and the student must see why before trying again. Following this lesson, where does that error go?",
+    "hint": "Messages that are only information take one path; this is not one of them.",
+    "choices": [
+      {
+        "text": "Into the channel, like \"Added 45 min\"",
+        "correct": false,
+        "why": "The channel can lose an event in a narrow case, which is acceptable only for information."
+      },
+      {
+        "text": "Into the UI state, until it has been seen",
+        "correct": true,
+        "why": "Right: what must be seen goes in the state, as Google's guide argues."
+      },
+      {
+        "text": "Into a log, since the screen cannot show errors",
+        "correct": false,
+        "why": "The screen can show anything the state carries."
+      },
+      {
+        "text": "Into the `SavedStateHandle` alone",
+        "correct": false,
+        "why": "The handle is for surviving the process, not for showing things."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxznvwpe",
+    "version": 1,
+    "section": "testing-flows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do this lesson's ViewModel tests call `Dispatchers.setMain`?",
+    "hint": "Which dispatcher does `viewModelScope` use?",
+    "choices": [
+      {
+        "text": "The JVM has no Android main looper",
+        "correct": true,
+        "why": "Right: `viewModelScope` runs on `Main`, which the test replaces with a test dispatcher."
+      },
+      {
+        "text": "To make the tests run on several threads at once",
+        "correct": false,
+        "why": "A test dispatcher runs on one thread, in virtual time."
+      },
+      {
+        "text": "Because `runTest` refuses to start without it",
+        "correct": false,
+        "why": "`runTest` starts fine; `onAdd` is what would fail."
+      },
+      {
+        "text": "To get Robolectric's looper",
+        "correct": false,
+        "why": "These tests use no Robolectric at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-tav3vjp5",
+    "version": 1,
+    "section": "testing-flows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `withNobodyCollectingTheStateStaysLoading`, a session is added and `state.value.loading` is still true. Why?",
+    "hint": "What starts the upstream?",
+    "choices": [
+      {
+        "text": "The write was cancelled",
+        "correct": false,
+        "why": "Nothing cancelled it; the store has the session."
+      },
+      {
+        "text": "`UnconfinedTestDispatcher` never runs `launch`",
+        "correct": false,
+        "why": "It runs them at once; the store was written."
+      },
+      {
+        "text": "Nobody collected `state`, so `WhileSubscribed` never started the upstream",
+        "correct": true,
+        "why": "Right: the second test starts a collector in `backgroundScope` first."
+      },
+      {
+        "text": "`loading` can only become false on a device",
+        "correct": false,
+        "why": "The second test turned it false on the JVM."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qdnjsjx",
+    "version": 1,
+    "section": "testing-flows",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests did the whole run of this lesson execute, across its four test classes?",
+    "hint": "Add the `tests=` of each suite.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rf2wgkp4",
+    "version": 1,
+    "section": "testing-flows",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A collector started in `runTest`'s `___` is cancelled by itself when the test ends.",
+    "hint": "Section 07's second test.",
+    "blanks": [
+      {
+        "accept": [
+          "backgroundScope"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f5d9zk17",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these start a coroutine in a place this lesson approves? Choose all that apply.",
+    "hint": "Scope of the ViewModel, an effect, or a callback.",
+    "choices": [
+      {
+        "text": "`viewModelScope.launch { store.add(…) }` in `onAdd`",
+        "correct": true,
+        "why": "Yes: it ends with the ViewModel."
+      },
+      {
+        "text": "`GlobalScope.launch` in a button's `onClick`",
+        "correct": false,
+        "why": "No: it outlives the screen and anything it belonged to."
+      },
+      {
+        "text": "`LaunchedEffect(viewModel) { viewModel.events.collect { … } }`",
+        "correct": true,
+        "why": "Yes: it starts and ends with the composable."
+      },
+      {
+        "text": "`runBlocking { store.add(…) }` in a composable's body",
+        "correct": false,
+        "why": "No: it blocks the main thread at every recomposition."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4yqqvwr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen shows live data from a network flow. The student opens another app for two minutes. With this lesson's setup, what is the network doing during those two minutes?",
+    "hint": "Two mechanisms, five seconds.",
+    "choices": [
+      {
+        "text": "Idle, after the first five seconds",
+        "correct": true,
+        "why": "Right: `collectAsStateWithLifecycle` stops at once and `WhileSubscribed(5_000)` five seconds later."
+      },
+      {
+        "text": "Still fetching, because the ViewModel is alive",
+        "correct": false,
+        "why": "Being alive does not mean collecting; `WhileSubscribed` stops the upstream."
+      },
+      {
+        "text": "Fetching for two minutes and then stopping",
+        "correct": false,
+        "why": "The grace period is five seconds, not the time away."
+      },
+      {
+        "text": "Nothing, because the process is always killed",
+        "correct": false,
+        "why": "The process may well survive two minutes; the lifecycle is what stops the work."
+      }
+    ]
+  }
+]

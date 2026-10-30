@@ -131,7 +131,14 @@ const drawings = [];
 for (const path of files.sort()) {
   for (const fence of readFileSync(path, 'utf8').matchAll(/```schooling-figure\n(.*?)\n```/gs)) {
     try {
-      drawings.push([path, JSON.parse(fence[1]).svg]);
+      /* A FIGURE THAT IS A PICTURE HAS NO RUNS TO READ. `image` is a raster,
+         a screenshot a test wrote, and its words are pixels rather than
+         `<tspan>`s; this tool measures text against a painted ground, and a
+         PNG has neither in a form it can see. Skipped by name, so the count
+         below stays the count of what was measured. */
+      const fig = JSON.parse(fence[1]);
+      if (fig.svg === undefined && fig.image !== undefined) continue;
+      drawings.push([path, fig.svg]);
     } catch (e) {
       problems.push(`${path}: a schooling-figure fence is not JSON: ${e.message}`);
     }

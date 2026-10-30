@@ -1,0 +1,394 @@
+{
+  "ex-smmvyyww": {
+    "prompt": "Qual operação a Microsoft fixa em exatamente uma unidade de requisição?",
+    "hint": "A coisa mais barata que o Cosmos DB faz.",
+    "choices": [
+      {
+        "text": "Uma escrita de um item de 1 KB",
+        "why": "Uma escrita custa mais que uma leitura do mesmo item."
+      },
+      {
+        "text": "Uma leitura pontual de um item de 1 KB",
+        "why": "Isso: a leitura pontual é a âncora da escala toda."
+      },
+      {
+        "text": "Uma consulta que devolve um item de 1 KB",
+        "why": "Uma consulta tem custo próprio, e normalmente mais que uma leitura pontual do mesmo item."
+      },
+      {
+        "text": "Qualquer requisição de até 1 KB, leitura ou escrita",
+        "why": "O tamanho é um fator entre vários; o tipo de operação é outro."
+      }
+    ]
+  },
+  "ex-nk2n546j": {
+    "prompt": "Quais destes aumentam as unidades de requisição de uma operação? Marque todos os que se aplicam.",
+    "hint": "Um deles não muda nada no trabalho.",
+    "choices": [
+      {
+        "text": "Um item maior",
+        "why": "Isso: mais bytes para ler, gravar e indexar."
+      },
+      {
+        "text": "Mais propriedades indexadas, numa escrita",
+        "why": "Isso: cada propriedade indexada é trabalho em toda escrita."
+      },
+      {
+        "text": "Uma consulta que não nomeia a chave de partição",
+        "why": "Isso: ela vai para todas as partições físicas."
+      },
+      {
+        "text": "Rodar a mesma consulta uma segunda vez",
+        "why": "A cobrança é determinística: a mesma operação nos mesmos dados custa o mesmo."
+      }
+    ]
+  },
+  "ex-856fn0d7": {
+    "prompt": "Toda resposta do Cosmos DB diz quanto a operação custou no cabeçalho `x-ms-request-___`.",
+    "hint": "O que foi cobrado pela operação.",
+    "blanks": [
+      {
+        "accept": [
+          "charge"
+        ]
+      }
+    ]
+  },
+  "ex-t59ztpf8": {
+    "prompt": "O `charges.py` informou 1 para uma escrita de 9 KB e para uma consulta entre partições. O que você faz com esses números?",
+    "hint": "O que o emulador disse para todo o resto?",
+    "choices": [
+      {
+        "text": "Usá-los como limite inferior da estimativa",
+        "why": "Não limitam nada: o emulador informa o mesmo 1 para tudo."
+      },
+      {
+        "text": "Multiplicar pelo tamanho em KB para ter o número do Azure",
+        "why": "Não há fórmula publicada, e um marcador vezes qualquer coisa ainda é um marcador."
+      },
+      {
+        "text": "Nada: medir as cobranças numa conta real",
+        "why": "Isso: o cabeçalho está no lugar certo e guarda um marcador."
+      },
+      {
+        "text": "Confiar neles nas escritas e não nas consultas",
+        "why": "As escritas são igualmente planas: 1 KB e 9 KB voltaram como 1."
+      }
+    ]
+  },
+  "ex-m5qex2kt": {
+    "prompt": "Ligue cada forma de pagar ao que ela cobra.",
+    "hint": "Uma descrição não é de nenhuma.",
+    "pairs": [
+      {
+        "left": "Vazão manual",
+        "right": "As RU/s definidas, toda hora"
+      },
+      {
+        "left": "Autoescala",
+        "right": "O maior RU/s de cada hora, nunca abaixo de um décimo do máximo"
+      },
+      {
+        "left": "Serverless",
+        "right": "As unidades de requisição consumidas, por milhão"
+      }
+    ],
+    "right_distractors": [
+      "Os bytes devolvidos ao cliente"
+    ]
+  },
+  "ex-xvkne5bw": {
+    "prompt": "Um contêiner com autoescala tem máximo de 4.000 RU/s. Qual é o nível mais baixo pelo qual ele é cobrado numa hora, em RU/s?",
+    "hint": "Um décimo do teto.",
+    "unit": "RU/s"
+  },
+  "ex-f316ajvs": {
+    "prompt": "A autoescala custa 1,5 vez o manual por RU/s. Abaixo de que fração média do máximo as horas dela precisam ser cobradas para ela sair mais barata?",
+    "hint": "O manual paga pelo máximo toda hora.",
+    "choices": [
+      {
+        "text": "Metade",
+        "why": "Em metade a autoescala custa 0,75 do manual, mas o ponto de equilíbrio é mais alto."
+      },
+      {
+        "text": "Dois terços",
+        "why": "Isso: 1,5 vez dois terços é um, o preço do manual."
+      },
+      {
+        "text": "Um décimo",
+        "why": "Um décimo é o piso de que ela nunca desce, não o ponto de equilíbrio."
+      },
+      {
+        "text": "Quinze por cento",
+        "why": "Isso confunde o fator 1,5 com uma fração."
+      }
+    ]
+  },
+  "ex-rst9b6rq": {
+    "prompt": "O `modes.py` pediu um contêiner de 100 RU/s e o emulador o criou e informou 100. O que o Azure teria feito?",
+    "hint": "Qual é o mínimo manual?",
+    "choices": [
+      {
+        "text": "Recusado: a vazão manual começa em 400 RU/s",
+        "why": "Isso, e o emulador ainda respondeu a todo contêiner com a oferta do último."
+      },
+      {
+        "text": "Criado em 100, já que a vazão anda de 100 em 100",
+        "why": "Os passos são de 100 acima de um mínimo de 400."
+      },
+      {
+        "text": "Criado como serverless, que não tem mínimo",
+        "why": "O serverless é escolhido para a conta, não dado a um contêiner que pediu pouco."
+      },
+      {
+        "text": "Criado com autoescala até 1.000 RU/s",
+        "why": "Nada converte um pedido manual em autoescala."
+      }
+    ]
+  },
+  "ex-vrmacnw8": {
+    "prompt": "Por que a autoescala custou menos de um quarto do manual no `sizing.py`?",
+    "hint": "Olhe a última linha que ele imprimiu.",
+    "choices": [
+      {
+        "text": "Porque a autoescala tem preço menor por RU/s",
+        "why": "Tem um maior, 1,5 vez."
+      },
+      {
+        "text": "Porque a autoescala ignora a hora da promoção",
+        "why": "Ela cobra aquela hora em 2.700, como o manual."
+      },
+      {
+        "text": "As horas dela ficaram em 14% do máximo",
+        "why": "Isso: uma hora cheia e vinte e três calmas."
+      },
+      {
+        "text": "Porque o serverless pôs um teto nela",
+        "why": "As três são precificadas de forma independente."
+      }
+    ]
+  },
+  "ex-qe5wagy6": {
+    "prompt": "Com os preços ilustrativos, abaixo de que fração do tempo, em porcentagem inteira mais próxima, a capacidade reservada precisa estar ocupada para o serverless sair mais barato que o manual?",
+    "hint": "0,008 dólar por uma hora de 100 RU/s contra 360.000 unidades a 0,25 por milhão.",
+    "unit": "%"
+  },
+  "ex-6fmnt13w": {
+    "prompt": "A carga da Quitanda vira 300 pedidos por segundo o dia todo. Qual forma de pagar ganha agora, e por quê?",
+    "hint": "A que fração do máximo a autoescala é cobrada?",
+    "choices": [
+      {
+        "text": "Manual, pela mesma conta",
+        "why": "Isso: a autoescala é cobrada no máximo toda hora a 1,5 vez o preço, 233,28 contra 155,52."
+      },
+      {
+        "text": "Autoescala, porque sempre acompanha a carga",
+        "why": "Não há o que acompanhar: a carga é plana no pico."
+      },
+      {
+        "text": "Serverless, porque as unidades são consumidas de qualquer jeito",
+        "why": "Unidades consumidas custam muito mais que reservadas e usadas: 1.749,60."
+      },
+      {
+        "text": "Custam o mesmo quando a carga é estável",
+        "why": "O preço por unidade ainda difere em 1,5 vez."
+      }
+    ]
+  },
+  "ex-r9ab5rbr": {
+    "prompt": "Que números do `sizing.py` devem ser trocados primeiro, antes de qualquer preço?",
+    "hint": "Eles foram chamados de suposições.",
+    "choices": [
+      {
+        "text": "O número de dias do mês",
+        "why": "Trinta é aritmética, não um palpite sobre o Cosmos DB."
+      },
+      {
+        "text": "As cobranças das requisições e as contagens de pedidos",
+        "why": "Isso: meça as primeiras numa conta e tire as segundas dos registros da loja."
+      },
+      {
+        "text": "O arredondamento de todo valor para cima até centenas de RU/s",
+        "why": "É assim que a vazão é definida e cobrada."
+      },
+      {
+        "text": "O mínimo de 400 RU/s",
+        "why": "Isso é documentado, não suposto."
+      }
+    ]
+  },
+  "ex-p2s435s9": {
+    "prompt": "Uma requisição precisa de mais unidades de requisição do que o segundo dela tem. O que o Cosmos DB responde?",
+    "hint": "Demais.",
+    "choices": [
+      {
+        "text": "Põe a requisição na fila até o próximo segundo e responde 200",
+        "why": "Nada vai para fila; a requisição é recusada e o cliente espera."
+      },
+      {
+        "text": "429, com `x-ms-retry-after-ms`",
+        "why": "Isso: nada é gravado, e o cabeçalho diz quanto esperar."
+      },
+      {
+        "text": "503, e o contêiner aumenta",
+        "why": "A vazão manual nunca muda sozinha."
+      },
+      {
+        "text": "Atende e cobra as unidades a mais com preço maior",
+        "why": "Não existe cheque especial: o orçamento é por segundo."
+      }
+    ]
+  },
+  "ex-mrm5kccb": {
+    "prompt": "Um contêiner tem 30.000 RU/s em três partições físicas. Quantas RU/s, no máximo, todos os itens com uma mesma chave de partição conseguem?",
+    "hint": "Uma chave mora numa partição física.",
+    "unit": "RU/s"
+  },
+  "ex-qmszk0y7": {
+    "prompt": "O Normalized RU Consumption fica em 100% enquanto o contêiner usa um quinto da vazão. Qual é a correção?",
+    "hint": "Qual partição está em 100%?",
+    "choices": [
+      {
+        "text": "Dobrar a vazão do contêiner",
+        "why": "A chave quente fica numa partição; as outras ganham mais para deixar parado."
+      },
+      {
+        "text": "Aumentar as tentativas da biblioteca",
+        "why": "Mais tentativas gastam mais unidades que a partição não tem."
+      },
+      {
+        "text": "Passar o contêiner para serverless",
+        "why": "O serverless é escolhido por conta, e o teto de uma chave vale lá também."
+      },
+      {
+        "text": "Uma chave de partição que espalhe a carga",
+        "why": "Isso: uma partição no orçamento e o resto parado é uma partição quente."
+      }
+    ]
+  },
+  "ex-mf815dt6": {
+    "prompt": "O `flood.py` gravou 2.000 pedidos num contêiner de 400 RU/s em 12,8 segundos sem nenhuma repetição. O que isso mostra?",
+    "hint": "Quem foi perguntado?",
+    "choices": [
+      {
+        "text": "Que 400 RU/s aguentam 156 escritas por segundo",
+        "why": "Com 6 RU ilustrativas por escrita ela aguenta cerca de 66."
+      },
+      {
+        "text": "Só o quão rápidos são o programa e o notebook",
+        "why": "Isso: o emulador nunca faz throttling."
+      },
+      {
+        "text": "Que a biblioteca absorveu o throttling",
+        "why": "Ela informou zero tentativas com throttling em toda escrita."
+      },
+      {
+        "text": "Que escritas não contam contra a vazão",
+        "why": "Contam, e custam mais que leituras."
+      }
+    ]
+  },
+  "ex-zhaxz2zc": {
+    "prompt": "Nos padrões, como a biblioteca Python 4.17.1 trata um 429?",
+    "hint": "Pergunte à biblioteca, como a seção fez.",
+    "choices": [
+      {
+        "text": "Lança na hora, para o programa decidir",
+        "why": "Ela repete antes; o programa só sabe dos que sobrevivem a isso."
+      },
+      {
+        "text": "Repete para sempre, esperando um segundo a cada vez",
+        "why": "Existe um limite, e nenhum intervalo fixo por padrão."
+      },
+      {
+        "text": "9 repetições, 30 segundos, a espera pedida",
+        "why": "Isso: 9, 30 e nenhum intervalo fixo, do `RetryOptions`."
+      },
+      {
+        "text": "Repete 3 vezes em 5 segundos",
+        "why": "Esses são os números que o `writer.py` escolheu, não os padrões."
+      }
+    ]
+  },
+  "ex-jksftqw3": {
+    "prompt": "Ponha em ordem o que acontece com uma escrita que sofre throttling no `writer.py`, a partir da primeira resposta.",
+    "hint": "O programa fica sabendo por último.",
+    "items": [
+      "O Cosmos DB responde 429 com `x-ms-retry-after-ms`",
+      "A biblioteca espera o tempo que o cabeçalho pediu",
+      "A biblioteca manda a escrita de novo, até três vezes",
+      "As repetições ou os cinco segundos acabam",
+      "O `save` pega o `CosmosHttpResponseError` e informa a espera"
+    ]
+  },
+  "ex-kx068dqe": {
+    "prompt": "Um terço das requisições de um contêiner sofre throttling. Por que aumentar o número de tentativas é a correção errada?",
+    "hint": "O que uma tentativa gasta?",
+    "choices": [
+      {
+        "text": "Repetições também gastam unidades",
+        "why": "Isso: a carga cresce e a latência sobe; a correção é capacidade, a chave ou menos trabalho."
+      },
+      {
+        "text": "Porque o Azure limita as tentativas a nove",
+        "why": "Nove é o padrão da biblioteca, e é configurável."
+      },
+      {
+        "text": "Porque tentativas transformam leituras em escritas",
+        "why": "Uma leitura repetida continua sendo leitura."
+      },
+      {
+        "text": "Porque uma requisição repetida não custa nada e esconde o problema",
+        "why": "Ela esconde o problema, mas é cobrada como qualquer outra requisição."
+      }
+    ]
+  },
+  "ex-206w7nxt": {
+    "prompt": "A Quitanda cria um contêiner de comprovantes de entrega, gravado uma vez por pedido e lido algumas centenas de vezes por dia no total. Que forma de pagar, com os preços ilustrativos?",
+    "hint": "Quão ocupadas ficariam 400 RU/s reservadas?",
+    "choices": [
+      {
+        "text": "Manual em 400 RU/s, a opção mais barata",
+        "why": "Reservada o dia todo e ocupada muito menos de 9% do tempo."
+      },
+      {
+        "text": "Autoescala até 1.000 RU/s, já que ela desce à noite",
+        "why": "Ela nunca cobra abaixo de 100, ainda quase sempre parada."
+      },
+      {
+        "text": "Serverless, numa conta criada para isso",
+        "why": "Isso: ocupada bem abaixo de 9% do tempo, e o serverless é escolhido para a conta inteira."
+      },
+      {
+        "text": "A que o emulador informar como mais barata",
+        "why": "O emulador informa uma cobrança marcadora e a oferta do contêiner errado."
+      }
+    ]
+  },
+  "ex-dcb3f16x": {
+    "prompt": "Com 6 RU ilustrativas por escrita, cerca de quantas escritas por segundo um contêiner de 400 RU/s aguenta? Arredonde para baixo.",
+    "hint": "400 dividido por 6."
+  },
+  "ex-6069kheg": {
+    "prompt": "Quais destas o emulador fez nesta lição que o Azure não faria? Marque todas as que se aplicam.",
+    "hint": "Uma é a biblioteca, não o emulador.",
+    "choices": [
+      {
+        "text": "Cobrar 1 por uma escrita de 9 KB",
+        "why": "Isso: um marcador."
+      },
+      {
+        "text": "Aceitar um contêiner de 100 RU/s",
+        "why": "Isso: o mínimo manual é 400."
+      },
+      {
+        "text": "Aceitar 2.000 escritas em 12,8 segundos com 400 RU/s sem um 429",
+        "why": "Isso: ele nunca faz throttling."
+      },
+      {
+        "text": "Repetir nove vezes por padrão uma requisição com throttling",
+        "why": "Essa é a política da biblioteca, e valeria no Azure também."
+      }
+    ]
+  }
+}

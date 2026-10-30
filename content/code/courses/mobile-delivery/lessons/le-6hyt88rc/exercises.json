@@ -1,0 +1,474 @@
+[
+  {
+    "id": "ex-3km3jxcm",
+    "version": 1,
+    "section": "the-anr",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds does Android wait for an app to answer an input event before declaring an ANR?",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-snge9mmn",
+    "version": 1,
+    "section": "the-anr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Google Play's ANR threshold, 0.47%, sit below its crash threshold, 1.09%?",
+    "choices": [
+      {
+        "text": "ANRs are rarer, so the bar is lower",
+        "correct": false,
+        "why": "Rarity is not the argument; harm is."
+      },
+      {
+        "text": "ANRs are counted per session, crashes per user",
+        "correct": false,
+        "why": "Both are user-perceived rates."
+      },
+      {
+        "text": "A freeze makes people wait, then decide",
+        "correct": true,
+        "why": "Right. Google treats a frozen app as worse than a crashed one."
+      },
+      {
+        "text": "ANRs are easier to fix",
+        "correct": false,
+        "why": "Not a reason for a threshold."
+      }
+    ]
+  },
+  {
+    "id": "ex-06ec4m2s",
+    "version": 1,
+    "section": "the-anr",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these, done on the main thread, can cause an ANR? Choose every one.",
+    "choices": [
+      {
+        "text": "Opening the planner's database",
+        "correct": true,
+        "why": "Right. Disk on the main thread."
+      },
+      {
+        "text": "Parsing a year of sessions",
+        "correct": true,
+        "why": "Right. Long computation."
+      },
+      {
+        "text": "Waiting for a lock another thread holds",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Setting a variable",
+        "why": "Instant; it blocks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hc7zt1f",
+    "version": 1,
+    "section": "watchdog-and-jetsam",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An iOS crash report shows `0x8badf00d` with `scene-create`. What happened?",
+    "choices": [
+      {
+        "text": "A launch that took too long",
+        "correct": true,
+        "why": "Right. The watchdog ended it: the first frame was not drawn in time."
+      },
+      {
+        "text": "A Swift error was thrown",
+        "correct": false,
+        "why": "That would be an ordinary crash."
+      },
+      {
+        "text": "The app ran out of memory",
+        "correct": false,
+        "why": "That is a jetsam event, with its own report."
+      },
+      {
+        "text": "The person swiped the app away",
+        "correct": false,
+        "why": "That leaves no watchdog code."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5y9c24g",
+    "version": 1,
+    "section": "watchdog-and-jetsam",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A watchdog report's backtrace shows a quick string formatting call. The team cannot see how that took seconds. What does Apple's documentation say?",
+    "choices": [
+      {
+        "text": "The formatting call was slow on that device",
+        "correct": false,
+        "why": "Possible, but not what the documentation warns about."
+      },
+      {
+        "text": "The dSYM was wrong",
+        "correct": false,
+        "why": "A wrong dSYM gives wrong names, not this."
+      },
+      {
+        "text": "Watchdog backtraces are random",
+        "correct": false,
+        "why": "They are exact about the last moment."
+      },
+      {
+        "text": "The backtrace shows the last task, not the one that used the time",
+        "correct": true,
+        "why": "Right. The last straw, not the load."
+      }
+    ]
+  },
+  {
+    "id": "ex-rq8qhcke",
+    "version": 1,
+    "section": "watchdog-and-jetsam",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can no crash reporter catch a jetsam kill?",
+    "choices": [
+      {
+        "text": "Jetsam happens only when the app is closed",
+        "correct": false,
+        "why": "It can end the foreground app too."
+      },
+      {
+        "text": "SIGKILL, which nothing catches",
+        "correct": true,
+        "why": "Right. There is no moment to write anything."
+      },
+      {
+        "text": "The report is sent to Apple first",
+        "correct": false,
+        "why": "Order is not the problem."
+      },
+      {
+        "text": "Apple forbids crash reporters from it",
+        "correct": false,
+        "why": "There is nothing to forbid; it cannot be caught."
+      }
+    ]
+  },
+  {
+    "id": "ex-aj09ap6c",
+    "version": 1,
+    "section": "watchdog-and-jetsam",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each source of evidence to what it tells you after a kill.",
+    "pairs": [
+      {
+        "left": "ApplicationExitInfo",
+        "right": "why the previous Android process ended"
+      },
+      {
+        "left": "MetricKit",
+        "right": "the system's diagnostics, on the next iOS launch"
+      },
+      {
+        "left": "a jetsam event report",
+        "right": "the memory of every process, with no backtraces of yours"
+      }
+    ],
+    "right_distractors": [
+      "the stack of the moment the app was killed"
+    ]
+  },
+  {
+    "id": "ex-s0ay6ktr",
+    "version": 1,
+    "section": "a-watchdog-you-can-watch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the blocking run of `hang.ts`, why does the watchdog's line appear before `week ready`?",
+    "choices": [
+      {
+        "text": "Node prints workers first",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "Another thread, still free",
+        "correct": true,
+        "why": "Right. The main thread was stuck in its loop."
+      },
+      {
+        "text": "The main thread finished early",
+        "correct": false,
+        "why": "It ran six seconds."
+      },
+      {
+        "text": "The watchdog paused the loop",
+        "correct": false,
+        "why": "It only watched."
+      }
+    ]
+  },
+  {
+    "id": "ex-440d6m69",
+    "version": 1,
+    "section": "a-watchdog-you-can-watch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The watchdog prints with `writeSync(1, ...)` rather than `console.log`. What would `console.log` have done?",
+    "choices": [
+      {
+        "text": "Printed the same line at the same moment",
+        "correct": false,
+        "why": "It goes through the main thread, which was stuck."
+      },
+      {
+        "text": "Crashed the worker",
+        "correct": false,
+        "why": "It works in a worker; it is only late."
+      },
+      {
+        "text": "Written the hang report twice",
+        "correct": false,
+        "why": "Writing the report is separate."
+      },
+      {
+        "text": "After the freeze it describes",
+        "correct": true,
+        "why": "Right. In a worker it hands the text to the main thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-kd475cr3",
+    "version": 1,
+    "section": "a-watchdog-you-can-watch",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The main thread writes a timestamp several times a second, and the watchdog thread reads it. The lesson calls that timestamp a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "heartbeat"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6radj7sv",
+    "version": 1,
+    "section": "a-watchdog-you-can-watch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do real hang detectors often report at 2 seconds rather than 5?",
+    "choices": [
+      {
+        "text": "A two-second freeze is noticed",
+        "correct": true,
+        "why": "Right. Sentry calls those app hangs."
+      },
+      {
+        "text": "Shorter checks use less battery on the phone",
+        "correct": false,
+        "why": "The limit does not change how often it checks."
+      },
+      {
+        "text": "Apple's watchdog fires at exactly 2 seconds",
+        "correct": false,
+        "why": "No such fixed number is given."
+      },
+      {
+        "text": "Android requires 2 seconds",
+        "correct": false,
+        "why": "Android's limit is 5 for input."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0hh4gzh",
+    "version": 1,
+    "section": "off-the-main-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the Kotlin listing, which line moves the database read off the main thread?",
+    "choices": [
+      {
+        "text": "viewModelScope.launch",
+        "correct": false,
+        "why": "That starts on the main thread."
+      },
+      {
+        "text": "_week.value = ...",
+        "correct": false,
+        "why": "That must run on the main thread."
+      },
+      {
+        "text": "withContext(Dispatchers.IO)",
+        "correct": true,
+        "why": "Right. Then back to main for the assignment."
+      },
+      {
+        "text": "sumOf",
+        "correct": false,
+        "why": "That is the sum, already back on main."
+      }
+    ]
+  },
+  {
+    "id": "ex-syw7f085",
+    "version": 1,
+    "section": "off-the-main-thread",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A React Native screen sums 50,000 sessions in JavaScript on every render. Which thread freezes?",
+    "choices": [
+      {
+        "text": "The JavaScript thread",
+        "correct": true,
+        "why": "Right. Touch handlers and animations driven from JavaScript stop."
+      },
+      {
+        "text": "The native main thread, so the system shows an ANR",
+        "correct": false,
+        "why": "Native views keep drawing; the JavaScript side stops answering."
+      },
+      {
+        "text": "The database thread",
+        "correct": false,
+        "why": "The sum is not in the database."
+      },
+      {
+        "text": "None; Hermes runs it in parallel",
+        "correct": false,
+        "why": "Hermes runs your code on the JavaScript thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-a17h56m1",
+    "version": 1,
+    "section": "off-the-main-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After moving work off the main thread, which number shows the cure worked?",
+    "choices": [
+      {
+        "text": "The duration of the work",
+        "correct": false,
+        "why": "It takes as long; the app answers meanwhile."
+      },
+      {
+        "text": "The app's download size in the store",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "The user-perceived ANR rate falling",
+        "correct": true,
+        "why": "Right. And hang reports drying up."
+      },
+      {
+        "text": "The crash rate in Android vitals",
+        "correct": false,
+        "why": "ANRs are counted separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-wj0k0hmm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a hang detector in order.",
+    "items": [
+      "the main thread updates the heartbeat",
+      "the main thread gets stuck",
+      "the watchdog sees the heartbeat stop changing",
+      "past the limit, it writes a report from its own thread"
+    ]
+  },
+  {
+    "id": "ex-qkz1r08h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Crash reports for the planner are flat, but ApplicationExitInfo on the next launch often says the low-memory killer ended the app in the foreground. What is happening?",
+    "choices": [
+      {
+        "text": "People closing the app",
+        "correct": false,
+        "why": "That has its own exit reason."
+      },
+      {
+        "text": "Memory kills that no reporter could catch",
+        "correct": true,
+        "why": "Right. Look at memory, not at the crash list."
+      },
+      {
+        "text": "A broken crash reporter",
+        "correct": false,
+        "why": "It works; these kills are invisible to it."
+      },
+      {
+        "text": "ANRs mislabelled",
+        "correct": false,
+        "why": "ANRs have their own reason too."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pa8q00j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On which platform does a frozen main thread produce a dialog offering to wait or close?",
+    "choices": [
+      {
+        "text": "iOS",
+        "correct": false,
+        "why": "iOS ends the app instead."
+      },
+      {
+        "text": "Neither",
+        "correct": false,
+        "why": "Android does."
+      },
+      {
+        "text": "Both",
+        "correct": false,
+        "why": "Only Android asks."
+      },
+      {
+        "text": "Android",
+        "correct": true,
+        "why": "Right. The ANR dialog."
+      }
+    ]
+  }
+]

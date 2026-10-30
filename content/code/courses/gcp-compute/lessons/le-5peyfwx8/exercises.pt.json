@@ -1,0 +1,424 @@
+{
+  "ex-9rfpfwjt": {
+    "prompt": "Um serviço do Cloud Run sobe e passa na verificação de saúde, depois trava na primeira consulta a um banco em 10.20.0.3. O que falta?",
+    "hint": "Onde a instância roda, e onde está o banco?",
+    "choices": [
+      {
+        "text": "Uma regra de firewall liberando a porta 5432 para a internet",
+        "why": "Abrir o banco para a internet é o contrário da solução, e a instância continua sem rota privada."
+      },
+      {
+        "text": "Uma rota da instância para dentro da VPC",
+        "why": "Isso. A instância roda na rede do Google, que não tem rota para a sua até a revisão ganhar uma."
+      },
+      {
+        "text": "Uma instância maior, porque a consulta estourou o tempo",
+        "why": "A conexão nem abriu; tamanho não tem nada a ver com rota que falta."
+      },
+      {
+        "text": "O papel roles/run.invoker no banco",
+        "why": "Esse papel diz quem pode chamar um serviço do Cloud Run, não como alcançar um banco."
+      }
+    ]
+  },
+  "ex-zmt3109j": {
+    "prompt": "Onde se configura o acesso à VPC de um serviço do Cloud Run?",
+    "hint": "Que parte de um serviço pode ser dividida entre duas versões?",
+    "choices": [
+      {
+        "text": "No projeto, para todos os serviços de uma vez",
+        "why": "Cada serviço decide, e dentro dele cada revisão."
+      },
+      {
+        "text": "Na VPC, listando os serviços que podem entrar",
+        "why": "A VPC não lista serviços do Cloud Run; a revisão é que nomeia a rede."
+      },
+      {
+        "text": "No modelo de revisão, então cada revisão traz o seu",
+        "why": "Isso. Uma revisão nova pode trocar o conector pela saída direta, e o tráfego pode ser dividido entre elas."
+      },
+      {
+        "text": "Na imagem do contêiner, por uma variável de ambiente",
+        "why": "Uma variável de ambiente carrega um endereço, não uma rota."
+      }
+    ]
+  },
+  "ex-26xayd16": {
+    "prompt": "O serviço orders agora alcança 10.20.0.3. O que isso lhe dá no banco?",
+    "hint": "Um endereço privado é uma rota.",
+    "choices": [
+      {
+        "text": "Acesso de leitura, porque tráfego de dentro da VPC é confiável",
+        "why": "Estar dentro não concede permissão nenhuma no banco."
+      },
+      {
+        "text": "O que a conta de serviço dele tiver no projeto",
+        "why": "Papéis de projeto não fazem login no PostgreSQL sozinhos."
+      },
+      {
+        "text": "Acesso total, até uma regra de firewall dizer outra coisa",
+        "why": "Firewall decide alcance, não direitos no banco."
+      },
+      {
+        "text": "Nada ainda: falta um login no banco",
+        "why": "Isso. Um endereço privado é uma rota, não uma permissão: ainda falta um usuário de banco ou autenticação por IAM."
+      }
+    ]
+  },
+  "ex-qpf3pvyg": {
+    "prompt": "Ligue cada mecanismo ao que ele põe na VPC.",
+    "hint": "Um põe a própria instância lá.",
+    "pairs": [
+      {
+        "left": "Saída direta para a VPC",
+        "right": "Um endereço por instância, numa sub-rede que você escolhe"
+      },
+      {
+        "left": "Conector de Serverless VPC Access",
+        "right": "Algumas máquinas pequenas numa /28 que repassam o tráfego"
+      },
+      {
+        "left": "Cloud NAT",
+        "right": "Uma saída da VPC para a internet a partir de um endereço reservado"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia do banco dentro da rede do Google"
+    ]
+  },
+  "ex-fyp2c4kg": {
+    "prompt": "Sem acesso à VPC, uma conexão do Cloud Run para um endereço privado não falha na hora: ela ___ o tempo.",
+    "hint": "O que acontece quando nada nunca responde?",
+    "blanks": [
+      {
+        "accept": [
+          "estoura",
+          "esgota"
+        ]
+      }
+    ]
+  },
+  "ex-1qtaykpf": {
+    "prompt": "O que a saída direta para a VPC acrescenta à conta, além do próprio tráfego?",
+    "hint": "Tem alguma coisa rodando no meio?",
+    "choices": [
+      {
+        "text": "As máquinas e2-micro de um conector, pelo menos duas",
+        "why": "Esse é o custo do conector; a saída direta não tem máquinas."
+      },
+      {
+        "text": "Nada: nenhuma máquina roda no meio",
+        "why": "Isso. Cada instância está na própria sub-rede, então não há nada para cobrar por hora."
+      },
+      {
+        "text": "Uma taxa por endereço da sub-rede, cobrada por hora",
+        "why": "Endereços da sua sub-rede não são cobrados um a um."
+      },
+      {
+        "text": "Um gateway Cloud NAT, que ela cria para você",
+        "why": "Nada cria um NAT para você; ele só é preciso com ALL_TRAFFIC para a internet."
+      }
+    ]
+  },
+  "ex-k3rdyt87": {
+    "prompt": "Durante um pico, um serviço com saída direta para de ganhar instâncias e as requisições fazem fila, enquanto o máximo do próprio serviço está longe. Qual a causa mais provável?",
+    "hint": "O que toda instância em execução ocupa?",
+    "choices": [
+      {
+        "text": "O conector chegou a max_instances e não escalou mais",
+        "why": "Com saída direta não existe conector."
+      },
+      {
+        "text": "O PRIVATE_RANGES_ONLY segura instâncias novas para proteger a VPC",
+        "why": "A configuração de saída escolhe rotas; não limita nada."
+      },
+      {
+        "text": "A sub-rede ficou sem endereços livres",
+        "why": "Isso. Instâncias novas não sobem sem endereço, e as antigas só liberam o delas algum tempo depois de parar."
+      },
+      {
+        "text": "O banco recusa mais que um número fixo de conexões",
+        "why": "Isso faria consultas falharem, não impediria instâncias de subir."
+      }
+    ]
+  },
+  "ex-g05mazxr": {
+    "prompt": "O Google reserva quatro endereços em toda sub-rede. Quantos sobram para instâncias na /26 shop-run?",
+    "hint": "Uma /26 tem 2 elevado a 6 endereços.",
+    "unit": "endereços"
+  },
+  "ex-5w6zm2ga": {
+    "prompt": "O terraform plan aceitou network = \"shop\" e subnetwork = \"shop-run\". O que foi verificado?",
+    "hint": "Quem sabe quais sub-redes existem?",
+    "choices": [
+      {
+        "text": "Só que o bloco tem o formato que o provider espera",
+        "why": "Isso. O Cloud Run verifica existência, região e endereços livres ao criar a revisão."
+      },
+      {
+        "text": "Que a sub-rede existe em southamerica-east1",
+        "why": "O plan não perguntou a ninguém; o laboratório não tem rede nenhuma."
+      },
+      {
+        "text": "Que a sub-rede tem espaço para o máximo de instâncias",
+        "why": "Nada no plan conta endereços."
+      },
+      {
+        "text": "Que o banco em 10.20.0.3 responde na porta 5432",
+        "why": "Para o Terraform o endereço é só uma variável de ambiente."
+      }
+    ]
+  },
+  "ex-vnkzx0dn": {
+    "prompt": "No modelo de revisão, o bloco que contém network_interfaces se chama vpc____.",
+    "hint": "O mesmo bloco também contém egress.",
+    "blanks": [
+      {
+        "accept": [
+          "access"
+        ]
+      }
+    ]
+  },
+  "ex-h8s6y1kc": {
+    "prompt": "Um conector mantém min_instances = 2 de e2-micro, a 6,11 USD por mês cada. Qual é o piso dele num ano?",
+    "hint": "Duas máquinas, doze meses.",
+    "unit": "USD"
+  },
+  "ex-hvzj6npt": {
+    "prompt": "Depois de um pico, um conector ainda roda as três instâncias às três da manhã. Por quê?",
+    "hint": "Ele cresce sob carga. E depois?",
+    "choices": [
+      {
+        "text": "O pico elevou min_instances para 3",
+        "why": "Nada reescreve min_instances."
+      },
+      {
+        "text": "O Cloud Run mantém instâncias ociosas aquecidas pelo conector",
+        "why": "Instâncias ociosas do Cloud Run não seguram máquinas do conector."
+      },
+      {
+        "text": "Um conector escala para fora sob carga e não volta sozinho",
+        "why": "Isso. Ele pode ficar no máximo até alguém perceber, e é cobrado o tempo todo."
+      },
+      {
+        "text": "A faixa /28 precisa de três máquinas para continuar roteável",
+        "why": "A faixa fica reservada de qualquer jeito; máquinas não a mantêm roteável."
+      }
+    ]
+  },
+  "ex-zz8x9x58": {
+    "prompt": "Uma revisão tem connector = google_vpc_access_connector.shop.id e um bloco network_interfaces, e o terraform plan sai limpo. O que esse plan limpo quer dizer?",
+    "hint": "O que o Terraform sabe do id do conector antes de ele existir?",
+    "choices": [
+      {
+        "text": "Que o Cloud Run aceita os dois mecanismos numa revisão",
+        "why": "Não aceita; com um id literal o próprio provider recusa o par."
+      },
+      {
+        "text": "Que o bloco network_interfaces é ignorado quando há conector",
+        "why": "Nada o ignora; a regra é que eles conflitam."
+      },
+      {
+        "text": "Só que a regra ainda não pôde ser verificada",
+        "why": "Isso. A recusa viria do Cloud Run ao criar a revisão."
+      },
+      {
+        "text": "Que o conector será criado primeiro e depois removido",
+        "why": "O plan diz 2 to add e nada sobre remoção."
+      }
+    ]
+  },
+  "ex-yfkk5evg": {
+    "prompt": "Em quais destas situações um conector ainda é uma escolha razoável? Escolha todas as que se aplicam.",
+    "hint": "Pense em espaço de endereços e no que foi construído em volta do conector.",
+    "choices": [
+      {
+        "text": "Uma regra de firewall admite 10.8.0.0/28 e mais nada",
+        "why": "Isso; a faixa fixa é aquilo em torno do que a rede foi feita."
+      },
+      {
+        "text": "A equipe de rede cede uma /28 e nenhum espaço para uma sub-rede maior",
+        "why": "Isso; a saída direta precisa de endereços para cada instância."
+      },
+      {
+        "text": "O serviço não pode pagar nada à noite",
+        "why": "Um conector tem um piso cobrado a noite inteira."
+      },
+      {
+        "text": "O serviço é novo e a sub-rede está vazia",
+        "why": "Esse é o caso para o qual a saída direta é recomendada."
+      }
+    ]
+  },
+  "ex-x7sk08zz": {
+    "prompt": "O ip_cidr_range de um conector é uma /___ própria, dezesseis endereços.",
+    "hint": "Dois elevado a quatro dá dezesseis.",
+    "blanks": [
+      {
+        "accept": [
+          "28"
+        ]
+      }
+    ]
+  },
+  "ex-r3af9tjg": {
+    "prompt": "Qual configuração decide quem pode mandar requisições a um serviço do Cloud Run?",
+    "hint": "Uma é sobre quem chama, a outra sobre as conexões do próprio serviço.",
+    "choices": [
+      {
+        "text": "Egress, no bloco vpc_access",
+        "why": "Egress é para onde vão as conexões de saída."
+      },
+      {
+        "text": "A sub-rede de onde as instâncias tiram endereços",
+        "why": "Isso faz parte da saída."
+      },
+      {
+        "text": "Ingress, definido no serviço como um todo",
+        "why": "Isso; o papel de invocador do IAM é a metade de identidade da mesma pergunta."
+      },
+      {
+        "text": "O tipo de máquina do conector",
+        "why": "Um conector só carrega tráfego de saída."
+      }
+    ]
+  },
+  "ex-apk974tk": {
+    "prompt": "O orders está com INGRESS_TRAFFIC_INTERNAL_ONLY. As chamadas do web, outro serviço do Cloud Run sem acesso à VPC, são recusadas. Por quê?",
+    "hint": "Por onde uma chamada do web sai do web?",
+    "choices": [
+      {
+        "text": "O web não tem roles/run.invoker no orders",
+        "why": "Isso seria uma recusa de identidade; aqui é a configuração de rede que recusa antes."
+      },
+      {
+        "text": "As chamadas dele não saem pela VPC",
+        "why": "Isso. Elas chegam pela rede do Google, então não são internas; dê saída direta ao web e elas chegam de dentro."
+      },
+      {
+        "text": "Dois serviços do Cloud Run nunca podem chamar um ao outro",
+        "why": "Podem; a chamada é que precisa contar como interna."
+      },
+      {
+        "text": "O INGRESS_TRAFFIC_INTERNAL_ONLY aceita só chamadores do Compute Engine",
+        "why": "Ele aceita o que chega da VPC, incluindo Cloud Run com saída."
+      }
+    ]
+  },
+  "ex-zgdnshqh": {
+    "prompt": "A API de um parceiro admite um único endereço IP fixo. Do que o serviço que chama precisa?",
+    "hint": "Para onde vai o tráfego com ALL_TRAFFIC, e como ele sai?",
+    "choices": [
+      {
+        "text": "PRIVATE_RANGES_ONLY, para as chamadas públicas manterem um endereço",
+        "why": "Com esse valor as chamadas públicas saem dos endereços compartilhados do Cloud Run."
+      },
+      {
+        "text": "Um conector, cujas máquinas mantêm os endereços públicos",
+        "why": "Um conector repassa para a VPC; a saída continua sendo a da VPC."
+      },
+      {
+        "text": "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER com endereço estático",
+        "why": "Ingress é sobre chamadas que entram, não que saem."
+      },
+      {
+        "text": "ALL_TRAFFIC para a VPC, e Cloud NAT com endereço reservado",
+        "why": "Isso. Toda requisição de saída passa a sair desse endereço."
+      }
+    ]
+  },
+  "ex-1km6xx1h": {
+    "prompt": "Uma revisão passa de PRIVATE_RANGES_ONLY para ALL_TRAFFIC numa VPC sem Cloud NAT. O que quebra?",
+    "hint": "Para onde vai agora uma chamada a um endereço público?",
+    "choices": [
+      {
+        "text": "O banco privado, porque público e privado agora dividem uma rota",
+        "why": "Endereços privados são alcançados igual a antes."
+      },
+      {
+        "text": "As chamadas para a internet, que agora seguem as rotas da VPC e não acham saída",
+        "why": "Isso. O ALL_TRAFFIC manda tudo para a VPC; a internet precisa de NAT dali."
+      },
+      {
+        "text": "As requisições de entrada, porque a entrada segue a saída",
+        "why": "Mudar a saída nunca muda a entrada."
+      },
+      {
+        "text": "Nada: o Cloud Run acrescenta um NAT sozinho",
+        "why": "Nada acrescenta um NAT para você."
+      }
+    ]
+  },
+  "ex-y0zsxpfh": {
+    "prompt": "A entrada é uma verificação de rede; a verificação de identidade de quem pode chamar um serviço é o papel roles/run.___ do IAM.",
+    "hint": "O papel que deixa um chamador invocar.",
+    "blanks": [
+      {
+        "accept": [
+          "invoker"
+        ]
+      }
+    ]
+  },
+  "ex-eztas20t": {
+    "prompt": "Ponha numa ordem sensata os passos para dar ao serviço orders acesso ao banco privado.",
+    "hint": "O espaço de endereços vem antes de algo usá-lo.",
+    "items": [
+      "Separar uma sub-rede para o Cloud Run, dimensionada para o máximo de instâncias",
+      "Acrescentar vpc_access com network_interfaces ao modelo de revisão",
+      "Publicar a revisão nova com saída PRIVATE_RANGES_ONLY",
+      "Dar ao serviço um usuário de banco ou autenticação por IAM"
+    ],
+    "trap": "A identidade no banco vem por último só no sentido de que a rota tem de existir antes; pulá-la deixa um banco alcançável que recusa todo login."
+  },
+  "ex-122eqwfc": {
+    "prompt": "Um conector com min_instances = 2 e max_instances = 5 de e2-micro (6,11 USD por mês cada) ficou preso no máximo depois de um pico. Quanto custa a mais por mês do que no piso?",
+    "hint": "Três máquinas a mais.",
+    "unit": "USD"
+  },
+  "ex-wvam59cw": {
+    "prompt": "A loja fecha o orders em INGRESS_TRAFFIC_INTERNAL_ONLY e mantém roles/run.invoker só para o web. Qual mudança, sozinha, deixaria um atacante na internet chamar o orders?",
+    "hint": "As duas verificações têm de falhar.",
+    "choices": [
+      {
+        "text": "Pôr a entrada do orders em INGRESS_TRAFFIC_ALL de novo",
+        "why": "O atacante continua sem o papel de invocador, então o IAM recusa."
+      },
+      {
+        "text": "Conceder roles/run.invoker no orders a allUsers",
+        "why": "A entrada continua recusando tráfego da internet."
+      },
+      {
+        "text": "Mudar a saída do orders para ALL_TRAFFIC em toda parte",
+        "why": "A saída nunca muda quem pode chamar."
+      },
+      {
+        "text": "Nenhuma delas sozinha; precisa das duas primeiras juntas",
+        "why": "Isso. Rede e identidade são verificações separadas, e cada uma segura sozinha."
+      }
+    ]
+  },
+  "ex-adn1rydx": {
+    "prompt": "Quais destas coisas o laboratório de fato verificou nos arquivos Terraform da lição 12? Escolha todas as que se aplicam.",
+    "hint": "Tudo que roda está no seu laptop.",
+    "choices": [
+      {
+        "text": "Que os valores de entrada e saída estão entre os aceitos",
+        "why": "Isso; o provider recusou INTERNAL e PRIVATE_ONLY."
+      },
+      {
+        "text": "Que um id literal de conector conflita com network_interfaces",
+        "why": "Isso; os dois blocos apareceram nos dois erros."
+      },
+      {
+        "text": "Que a sub-rede shop-run tem endereços livres",
+        "why": "Só o Cloud Run pode saber isso."
+      },
+      {
+        "text": "Que o banco responde de dentro da VPC",
+        "why": "Não existe banco nem VPC no laboratório."
+      }
+    ]
+  }
+}

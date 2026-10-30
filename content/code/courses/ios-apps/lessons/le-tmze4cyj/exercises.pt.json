@@ -1,0 +1,476 @@
+{
+  "ex-00yyrz26": {
+    "prompt": "O que o `@main` em `struct PlannerApp: App` faz?",
+    "hint": "Um programa tem um desses.",
+    "choices": [
+      {
+        "text": "Transforma a struct numa classe para o SwiftUI guardar uma referência",
+        "why": "Ela continua struct; o SwiftUI cria o valor e lê o body."
+      },
+      {
+        "text": "Marca o ponto de entrada do programa",
+        "why": "Isso: o protocolo `App` fornece o `main()` que o sistema chama ao abrir."
+      },
+      {
+        "text": "Roda o body numa thread de fundo",
+        "why": "Um `App` fica isolado no main actor por padrão, o contrário."
+      },
+      {
+        "text": "Deixa vários arquivos iniciarem o app",
+        "why": "Só é permitido exatamente um ponto de entrada entre todos os arquivos."
+      }
+    ]
+  },
+  "ex-hpd792q4": {
+    "prompt": "O `week` da aula 1 terminava quando o `main.swift` chegava à última linha. Por que o `PlannerApp` não termina depois de o `body` ser lido?",
+    "hint": "Quem roda o app?",
+    "choices": [
+      {
+        "text": "O body dele fica num laço até a pessoa fechá-lo",
+        "why": "Um body devolve uma descrição e mais nada; não tem laço."
+      },
+      {
+        "text": "O iOS o reinicia toda vez que o body retorna",
+        "why": "O processo continua vivo; nada o reinicia."
+      },
+      {
+        "text": "O SwiftUI é dono do programa e continua lendo a descrição",
+        "why": "Isso: o App é um valor que descreve o app, e o SwiftUI é o que roda."
+      },
+      {
+        "text": "O `@State` dentro dele segura o processo aberto",
+        "why": "O estado é um dado que as views leem; não decide quanto tempo o processo vive."
+      }
+    ]
+  },
+  "ex-52e6akww": {
+    "prompt": "Em qual actor rodam as propriedades e os métodos de `PlannerApp`, a não ser que você diga o contrário?",
+    "hint": "O protocolo passa adiante o seu isolamento.",
+    "choices": [
+      {
+        "text": "Um actor novo para cada cena",
+        "why": "As cenas compartilham o isolamento do app; não há um actor por cena."
+      },
+      {
+        "text": "Na thread que chamou o `main()`, sem isolamento nenhum",
+        "why": "A documentação diz que um tipo que obedece herda o isolamento `@MainActor`."
+      },
+      {
+        "text": "O main actor",
+        "why": "Isso, o que desenha a tela, herdado do protocolo `App`."
+      },
+      {
+        "text": "Um actor de fundo que o sistema escolhe",
+        "why": "Código de interface quer o main actor, e esse é o padrão aqui."
+      }
+    ]
+  },
+  "ex-rv6qcwev": {
+    "prompt": "Num iPad, uma pessoa abre duas janelas do planner de um `WindowGroup`. O plano é `@State` dentro de `CourseListView`. O que acontece quando uma sessão é acrescentada numa janela?",
+    "hint": "Leia o que a documentação diz sobre armazenamento por janela.",
+    "choices": [
+      {
+        "text": "A outra janela não a mostra, porque cada janela tem o seu `@State`",
+        "why": "Isso, e por isso a aula 7 leva o plano para um modelo criado no App."
+      },
+      {
+        "text": "As duas janelas a mostram, porque compartilham uma view",
+        "why": "Um WindowGroup é um modelo: cada janela ganha views novas e armazenamento novo."
+      },
+      {
+        "text": "O app trava, já que duas janelas não guardam estado",
+        "why": "Cada janela guarda estado muito bem; só não é compartilhado."
+      },
+      {
+        "text": "O iPadOS fecha a segunda janela",
+        "why": "Nada a fecha; as duas simplesmente discordam."
+      }
+    ]
+  },
+  "ex-3pn5sxpd": {
+    "prompt": "O que é um `WindowGroup`?",
+    "hint": "Ele pode fazer mais de uma janela.",
+    "choices": [
+      {
+        "text": "A janela que o iPhone mostra, criada uma vez",
+        "why": "Num iPhone ele faz uma janela, mas é o modelo, não a janela."
+      },
+      {
+        "text": "Um modelo de janelas",
+        "why": "Isso: as views dele são o que cada janela criada contém."
+      },
+      {
+        "text": "Uma lista das views do app na ordem em que aparecem",
+        "why": "Isso está mais perto de uma pilha de navegação, aula 9."
+      },
+      {
+        "text": "A janela de ajustes do macOS",
+        "why": "Essa é a cena `Settings`."
+      }
+    ]
+  },
+  "ex-dedw4en8": {
+    "prompt": "Ligue cada tipo de cena ao seu uso.",
+    "hint": "Um deles é o do planner.",
+    "pairs": [
+      {
+        "left": "`WindowGroup`",
+        "right": "Janelas feitas de um modelo, tantas quanto a plataforma permitir"
+      },
+      {
+        "left": "`DocumentGroup`",
+        "right": "Uma janela por arquivo que o app abre e salva"
+      },
+      {
+        "left": "`Settings`",
+        "right": "A janela de ajustes no macOS"
+      },
+      {
+        "left": "`Window`",
+        "right": "Uma janela única"
+      }
+    ],
+    "right_distractors": [
+      "A fase em que uma cena está"
+    ]
+  },
+  "ex-8x791a3f": {
+    "prompt": "Uma pessoa vai para a tela inicial. Em qual fase a cena do planner termina?",
+    "hint": "Ela não está mais visível.",
+    "choices": [
+      {
+        "text": "`inactive`",
+        "why": "Inativa é o caminho; ainda está em primeiro plano."
+      },
+      {
+        "text": "`background`",
+        "why": "Isso, e dali o iOS pode encerrar o processo."
+      },
+      {
+        "text": "`active`, até a pessoa fechá-lo",
+        "why": "Uma cena que não está visível não está ativa."
+      },
+      {
+        "text": "`suspended`, uma quarta fase",
+        "why": "O `ScenePhase` tem três casos."
+      }
+    ]
+  },
+  "ex-dbkh26b3": {
+    "prompt": "Um iPad mostra duas janelas do planner; uma está na frente, a outra em segundo plano. O que o `scenePhase` lê no `App`, e numa view da janela de fundo?",
+    "hint": "Dentro de uma view é a cena daquela view; no App é um agregado.",
+    "choices": [
+      {
+        "text": "`background` nos dois, já que uma janela está escondida",
+        "why": "O App informa active se qualquer cena estiver ativa."
+      },
+      {
+        "text": "`active` nos dois, já que o app está na frente",
+        "why": "Uma view lê a fase da própria cena, e a cena dela está em segundo plano."
+      },
+      {
+        "text": "`active` no App, `background` naquela view",
+        "why": "Isso: o App agrega, e uma view lê a própria cena."
+      },
+      {
+        "text": "`inactive` no App, porque as duas discordam",
+        "why": "Não há média; qualquer cena ativa deixa o App ativo."
+      }
+    ]
+  },
+  "ex-t9e49wfv": {
+    "prompt": "Ponha em ordem as fases por que uma cena passa: ativa, depois a pessoa vai para a tela inicial e volta.",
+    "hint": "Quatro movimentos depois do primeiro active.",
+    "items": [
+      "`active`",
+      "`inactive`, saindo",
+      "`background`",
+      "`inactive`, voltando",
+      "`active` de novo"
+    ]
+  },
+  "ex-s61z4nny": {
+    "prompt": "Por que a pessoa fechar o app não é o momento de salvar os dados no iOS?",
+    "hint": "O que acontece em vez de fechar, quase sempre?",
+    "choices": [
+      {
+        "text": "Fechar um app apaga os arquivos dele primeiro",
+        "why": "Os arquivos sobrevivem; o problema é que o momento raramente chega."
+      },
+      {
+        "text": "As pessoas raramente fecham apps, e o iOS encerra alguns em segundo plano sem avisar",
+        "why": "Isso, então o app salva ao sair de ativa, como a documentação da Apple aconselha."
+      },
+      {
+        "text": "O SwiftUI proíbe gravar arquivos depois que o `onChange` roda",
+        "why": "Nada proíbe; uma escrita curta no `onChange` é o que a seção 07 faz."
+      },
+      {
+        "text": "Um app fechado continua rodando, então não precisa",
+        "why": "Um processo encerrado não roda nada."
+      }
+    ]
+  },
+  "ex-2yhwv0bv": {
+    "prompt": "O primeiro `Lifecycle` devolvia `.refresh` a cada ida para `.active`. Qual teste pegou?",
+    "hint": "Uma ida para ativa que nunca passou pelo segundo plano.",
+    "choices": [
+      {
+        "text": "`goingHomeSavesOnceAndComingBackRefreshes`",
+        "why": "Essa viagem passa pelo segundo plano, então atualizar ali é certo; passou."
+      },
+      {
+        "text": "`aBannerSavesAndDoesNotRefresh`",
+        "why": "Isso: um banner volta a ativa sem segundo plano, e recebeu `.refresh`."
+      },
+      {
+        "text": "`mondayIsTheStartOfTheWeek`",
+        "why": "Esse é da aula 1, e passou as duas vezes."
+      },
+      {
+        "text": "Nenhum: os dois testes de ciclo de vida passaram",
+        "why": "A primeira execução falhou com uma ocorrência."
+      }
+    ]
+  },
+  "ex-d71njyt2": {
+    "prompt": "Uma cena vai ativa → inativa → segundo plano → inativa → segundo plano → inativa → ativa (a pessoa espiou o seletor de apps duas vezes). O que o segundo `Lifecycle` devolve no último movimento?",
+    "hint": "`wasInBackground` é ligado por qualquer segundo plano e só desligado por ativa.",
+    "choices": [
+      {
+        "text": "`.nothing`, já que estava inativa logo antes",
+        "why": "A flag lembra o segundo plano através das idas a inativa."
+      },
+      {
+        "text": "`.save`, já que passou duas vezes pelo segundo plano",
+        "why": "Salvar é para sair de ativa, não para chegar."
+      },
+      {
+        "text": "`.refresh`, uma vez",
+        "why": "Isso: a flag estava ligada, então chegar a ativa atualiza e a desliga."
+      },
+      {
+        "text": "`.refresh` duas vezes, um por segundo plano",
+        "why": "Um movimento devolve uma ação."
+      }
+    ]
+  },
+  "ex-my22r5nd": {
+    "prompt": "Em `case (_, .active) where wasInBackground`, a parte depois do `where` é uma condição que um ___ que casa também precisa satisfazer.",
+    "hint": "Aquilo de que um case de switch é feito.",
+    "blanks": [
+      {
+        "accept": [
+          "padrão",
+          "padrao",
+          "case"
+        ]
+      }
+    ]
+  },
+  "ex-5054t6cd": {
+    "prompt": "Por que o `Lifecycle` usa o `Phase` do próprio planner em vez do `ScenePhase` do SwiftUI?",
+    "hint": "Onde os testes rodaram?",
+    "choices": [
+      {
+        "text": "O `ScenePhase` tem mais casos do que o planner precisa",
+        "why": "Ele tem os mesmos três; o `Phase` o espelha caso a caso."
+      },
+      {
+        "text": "Para compilar e ser testado sem SwiftUI, no Linux",
+        "why": "Isso: nada no pacote importa o SwiftUI."
+      },
+      {
+        "text": "O `ScenePhase` não pode ser usado num `switch`",
+        "why": "A seção 07 faz switch sobre ele para montar um `Phase`."
+      },
+      {
+        "text": "A Apple descontinuou o `ScenePhase` no iOS 17",
+        "why": "Ele é atual, e o app o lê na seção 07."
+      }
+    ]
+  },
+  "ex-0x5szj22": {
+    "prompt": "Quantos testes rodaram em cada `swift test` da seção 05?",
+    "hint": "Dois da aula 1 e dois novos."
+  },
+  "ex-3vesp9n5": {
+    "prompt": "No SwiftUI, como um toque em `SessionForm` chega ao plano que `CourseListView` possui?",
+    "hint": "Os eventos sobem pela árvore numa forma específica.",
+    "choices": [
+      {
+        "text": "O formulário repinta as linhas da lista ele mesmo",
+        "why": "Nada no SwiftUI pinta outra view; você descreve, o SwiftUI desenha."
+      },
+      {
+        "text": "Chamando um método no objeto da view pai",
+        "why": "Views são valores que o pai recria; não há objeto a chamar."
+      },
+      {
+        "text": "Como uma mudança em dados do pai, por um binding ou um modelo",
+        "why": "Isso: a aula 6 é o binding e a aula 7 o modelo observável."
+      },
+      {
+        "text": "Por uma notificação que o app inteiro escuta",
+        "why": "Isso contornaria a árvore em vez de passar por ela."
+      }
+    ]
+  },
+  "ex-zcwwr8by": {
+    "prompt": "Por que o `List(courses)` aceita o array de cursos direto?",
+    "hint": "A aula 1 deu ao `Course` uma conformidade para isso.",
+    "choices": [
+      {
+        "text": "Porque `Course` é uma struct",
+        "why": "Ser struct não diz nada sobre identidade."
+      },
+      {
+        "text": "Porque o array é um `let`",
+        "why": "Um `var` funcionaria também."
+      },
+      {
+        "text": "Porque `Course` é `Identifiable`",
+        "why": "Isso: cada linha é conhecida pelo `id` do curso, o assunto da aula 8."
+      },
+      {
+        "text": "Porque o `List` ordena qualquer array pelo título antes de mostrar",
+        "why": "O List mostra a ordem que recebe, e não ordena nada."
+      }
+    ]
+  },
+  "ex-wcks9d58": {
+    "prompt": "Ligue cada tela do planner ao que ela mostra.",
+    "hint": "Quatro telas, as mesmas em toda plataforma.",
+    "pairs": [
+      {
+        "left": "`CourseListView`",
+        "right": "Os cursos, com os minutos da semana"
+      },
+      {
+        "left": "`CourseDetailView`",
+        "right": "As sessões de um curso"
+      },
+      {
+        "left": "`SessionForm`",
+        "right": "Data e minutos para uma sessão nova"
+      },
+      {
+        "left": "`WeekView`",
+        "right": "O total da semana, planejado contra feito"
+      }
+    ],
+    "right_distractors": [
+      "O ponto de entrada do app"
+    ]
+  },
+  "ex-9f6v4vk8": {
+    "prompt": "O que pertence ao `@SceneStorage`?",
+    "hint": "Algo barato de perder.",
+    "choices": [
+      {
+        "text": "Os cursos e sessões do plano, para nada se perder",
+        "why": "O SceneStorage é destruído com a cena e não garante quando salva; dados vão para disco."
+      },
+      {
+        "text": "Qual curso estava aberto",
+        "why": "Isso: pequeno, por cena, e inofensivo se uma janela for removida."
+      },
+      {
+        "text": "A senha da pessoa",
+        "why": "A documentação diz para não usá-lo com dados sensíveis."
+      },
+      {
+        "text": "O total de minutos da semana, para não somar de novo",
+        "why": "O total é derivado do plano; a aula 6 o calcula em vez de guardar."
+      }
+    ]
+  },
+  "ex-tr7kafpq": {
+    "prompt": "Por que o `Phase.init(_:)` precisa de `@unknown default` no switch sobre `ScenePhase`?",
+    "hint": "De quem é o enum?",
+    "choices": [
+      {
+        "text": "Porque o `ScenePhase` tem um quarto caso que o iOS 17 trouxe",
+        "why": "Ele tem três; a cláusula é para casos que podem vir."
+      },
+      {
+        "text": "Enum da Apple, livre para ganhar casos",
+        "why": "Isso: o compilador o pede num enum de outro módulo que tem o direito de crescer."
+      },
+      {
+        "text": "Sem ele o switch travaria em tempo de execução",
+        "why": "O compilador avisa antes de qualquer coisa rodar."
+      },
+      {
+        "text": "Para salvar o plano quando a fase é desconhecida",
+        "why": "Ele mapeia uma fase desconhecida para inativa, que não faz nada."
+      }
+    ]
+  },
+  "ex-mgf04s0a": {
+    "prompt": "Por que o `onChange(of: scenePhase)` do planner fica no `App` e não na `CourseListView`?",
+    "hint": "O plano é compartilhado por todas as janelas.",
+    "choices": [
+      {
+        "text": "Views não conseguem ler o ambiente",
+        "why": "Qualquer view lê o `scenePhase`; a seção 04 mostra uma."
+      },
+      {
+        "text": "O App roda antes de toda view, então é mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "No App a fase é o agregado de todas as janelas, o que serve a um plano compartilhado",
+        "why": "Isso: uma view veria só a própria cena."
+      },
+      {
+        "text": "O `onChange` só existe em cenas",
+        "why": "Ele existe em views também."
+      }
+    ]
+  },
+  "ex-yvbxk35s": {
+    "prompt": "Quais destes foram executados para esta aula na máquina Linux? Escolha todos os que se aplicam.",
+    "hint": "Só o que não importa o SwiftUI.",
+    "choices": [
+      {
+        "text": "Os testes do `Lifecycle`",
+        "why": "Sim: a seção 05 os rodou duas vezes."
+      },
+      {
+        "text": "O `PlannerApp` com o `onChange`",
+        "why": "Não: ele importa o SwiftUI."
+      },
+      {
+        "text": "Os `PlanTests` da aula 1",
+        "why": "Sim: estão no mesmo pacote e rodaram junto."
+      },
+      {
+        "text": "Uma primeira `CourseListView` com um `List`",
+        "why": "Não: escrita a partir da documentação, não executada."
+      }
+    ]
+  },
+  "ex-8pss6vvg": {
+    "prompt": "Um colega propõe salvar o plano só em `.background`, nunca em `.inactive`. Pensando no segundo `Lifecycle`, o que se perde?",
+    "hint": "O que a documentação da Apple diz sobre sair do estado ativo?",
+    "choices": [
+      {
+        "text": "Nada, porque toda viagem chega ao segundo plano",
+        "why": "Um banner nunca chega ao segundo plano."
+      },
+      {
+        "text": "A atualização, que então nunca acontece",
+        "why": "Atualizar é decidido ao chegar a ativa, sem relação com quando se salva."
+      },
+      {
+        "text": "O salvamento no momento que a Apple aconselha, ao sair de ativa",
+        "why": "Isso: se o app for encerrado antes do segundo plano, o que foi digitado desde então some."
+      },
+      {
+        "text": "Os testes, que não rodam mais no Linux",
+        "why": "Qualquer regra é Swift puro e testa do mesmo jeito."
+      }
+    ]
+  }
+}

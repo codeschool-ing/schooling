@@ -1,0 +1,300 @@
+{
+  "ex-rqk26mfr": {
+    "prompt": "Associe cada plataforma à ferramenta que reescreve o build de release dela.",
+    "pairs": [
+      {
+        "left": "Android",
+        "right": "R8"
+      },
+      {
+        "left": "iOS",
+        "right": "o compilador e o linker, removendo símbolos"
+      },
+      {
+        "left": "React Native",
+        "right": "Metro ou esbuild, depois Hermes"
+      }
+    ],
+    "right_distractors": [
+      "bundletool"
+    ]
+  },
+  "ex-d9cdfxb4": {
+    "prompt": "Por que a pilha de um build de release pode ser mais curta que a do mesmo crash num build de debug?",
+    "choices": [
+      {
+        "text": "Builds de release pegam algumas exceções",
+        "why": "O crash é o mesmo crash."
+      },
+      {
+        "text": "Coletores cortam pilhas para economizar espaço",
+        "why": "A pilha curta veio do build, não do coletor."
+      },
+      {
+        "text": "O inlining tirou o quadro próprio de um método",
+        "why": "Isso. O código dele agora mora dentro de quem o chama."
+      },
+      {
+        "text": "Renomear junta quadros com o mesmo nome curto",
+        "why": "Renomear muda nomes, não o número de quadros."
+      }
+    ]
+  },
+  "ex-sz7smjpf": {
+    "prompt": "Por que o mapeamento precisa vir do build que foi publicado, e não de um build novo do mesmo commit?",
+    "choices": [
+      {
+        "text": "Cada build escolhe os próprios nomes",
+        "why": "Isso. Dois builds do mesmo commit escolhem nomes e inlining diferentes; só o arquivo daquele build desfaz aquele build."
+      },
+      {
+        "text": "O mapeamento guarda a chave de assinatura",
+        "why": "Ele guarda nomes, nunca chaves."
+      },
+      {
+        "text": "Um build novo não tem mapeamento nenhum",
+        "why": "Ele tem um, próprio."
+      },
+      {
+        "text": "Builds novos são recusados pelas lojas",
+        "why": "A pergunta é sobre ler pilhas, não sobre enviar."
+      }
+    ]
+  },
+  "ex-0p3dc56d": {
+    "prompt": "No bundle minificado, todo quadro diz linha 1. O que distingue os quadros?",
+    "choices": [
+      {
+        "text": "Nada; é preciso um source map até para distingui-los",
+        "why": "A coluna já difere; o mapa diz o que ela significa."
+      },
+      {
+        "text": "O nome minificado da função",
+        "why": "O segundo quadro não tinha nenhum."
+      },
+      {
+        "text": "A ordem das linhas na pilha",
+        "why": "A ordem diz quem chamou quem, não onde."
+      },
+      {
+        "text": "A coluna",
+        "why": "Isso. 75 e 161 na pilha da lição."
+      }
+    ]
+  },
+  "ex-20zma2dh": {
+    "prompt": "O `symbolicate.ts` subtrai 1 da coluna antes de perguntar ao source map. Por quê?",
+    "choices": [
+      {
+        "text": "Para pular o parêntese de abertura do quadro",
+        "why": "A regex já tirou os parênteses."
+      },
+      {
+        "text": "Pilhas contam colunas a partir de 1, o mapa a partir de 0",
+        "why": "Isso. E o 1 volta na hora de imprimir."
+      },
+      {
+        "text": "O bundle começa com um caractere invisível",
+        "why": "Não começa; a contagem é que difere."
+      },
+      {
+        "text": "O Node informa a coluna depois do erro",
+        "why": "Ele informa a coluna do erro."
+      }
+    ]
+  },
+  "ex-9tvy08yq": {
+    "prompt": "No seu próprio computador, o Node reescreve uma pilha minificada pelo source map durante a execução quando iniciado com `node --enable-___`.",
+    "blanks": [
+      {
+        "accept": [
+          "source-maps"
+        ]
+      }
+    ]
+  },
+  "ex-3t5p4qb1": {
+    "prompt": "Num celular, por que o Hermes não usa o source map ele mesmo?",
+    "choices": [
+      {
+        "text": "O Hermes não lê JSON",
+        "why": "Lê; o mapa só não é publicado."
+      },
+      {
+        "text": "O mapa fica na máquina de build",
+        "why": "Isso. O servidor é onde os dois se encontram."
+      },
+      {
+        "text": "Source maps são proibidos pelas lojas",
+        "why": "Essa regra não existe; publicar um só acrescentaria tamanho."
+      },
+      {
+        "text": "O Hermes simboliza com um dSYM",
+        "why": "Um dSYM é para código nativo do iOS."
+      }
+    ]
+  },
+  "ex-xb9h9e4w": {
+    "prompt": "O que `-keepattributes SourceFile,LineNumberTable` dá à equipe?",
+    "choices": [
+      {
+        "text": "Nomes de classe sem encolher",
+        "why": "As classes continuam sendo renomeadas."
+      },
+      {
+        "text": "Um jar menor",
+        "why": "Manter atributos o deixa um pouco maior."
+      },
+      {
+        "text": "Proteção contra engenharia reversa do app",
+        "why": "Ele faz o contrário de esconder."
+      },
+      {
+        "text": "Linhas que o retrace mapeia",
+        "why": "Isso. Sem eles nenhuma pilha diz qual linha."
+      }
+    ]
+  },
+  "ex-911sd6mh": {
+    "prompt": "A pilha encolhida tinha um quadro, `main` na linha 7. O retrace imprimiu dois. De onde veio o segundo?",
+    "choices": [
+      {
+        "text": "Do mapeamento",
+        "why": "Isso. Ele registra que totalFor foi embutido, e guarda o que a pilha perdeu."
+      },
+      {
+        "text": "O retrace rodou o jar sem encolher",
+        "why": "Ele leu dois arquivos de texto; não rodou nada."
+      },
+      {
+        "text": "O retrace adivinha quadros que faltam",
+        "why": "Ele os lê do mapeamento."
+      },
+      {
+        "text": "Das informações de depuração do próprio Java",
+        "why": "O jar encolhido tinha perdido aquele quadro."
+      }
+    ]
+  },
+  "ex-1x1x74ex": {
+    "prompt": "Depois do retrace, em que linha do `Week.java` está o bug?"
+  },
+  "ex-xab05jt4": {
+    "prompt": "Por que a demonstração de R8 da lição usa Java em vez de Kotlin?",
+    "choices": [
+      {
+        "text": "O R8 recusa Kotlin",
+        "why": "O R8 lê bytecode, seja qual for o compilador."
+      },
+      {
+        "text": "Crashes em Java são mais fáceis de ler",
+        "why": "A pilha tem a mesma cara."
+      },
+      {
+        "text": "O JDK o compila sem mais nada instalado",
+        "why": "Isso. Kotlin compila para o mesmo bytecode."
+      },
+      {
+        "text": "Apps Android são escritos em Java",
+        "why": "A maioria dos novos é Kotlin; o R8 não se importa."
+      }
+    ]
+  },
+  "ex-6gk134w7": {
+    "prompt": "Como um dSYM prova que pertence a um certo binário iOS?",
+    "choices": [
+      {
+        "text": "Os dois compartilham um UUID do linker",
+        "why": "Isso. Qualquer outro dSYM é recusado."
+      },
+      {
+        "text": "Pelo nome da versão dentro dele",
+        "why": "Dois builds de uma versão diferem."
+      },
+      {
+        "text": "Pela data em que foi feito",
+        "why": "Datas não casam builds."
+      },
+      {
+        "text": "Pelo nome do arquivo, que o Xcode ajusta para bater",
+        "why": "Nomes podem ser copiados; o UUID não."
+      }
+    ]
+  },
+  "ex-ya6d6qf9": {
+    "prompt": "Um quadro diz `0x0000000102f4a8c4 0x102f30000 + 108740`. Se o mesmo build carregasse em `0x104a00000` em outro celular, a mesma instrução estaria em que deslocamento? Responda o valor somado, em decimal."
+  },
+  "ex-8vdgc4r1": {
+    "prompt": "Um guia antigo diz para baixar dSYMs do App Store Connect porque a Apple recompila o app. O que a lição diz disso?",
+    "choices": [
+      {
+        "text": "Ainda é o único jeito de obtê-los",
+        "why": "O seu próprio archive os tem."
+      },
+      {
+        "text": "Vale só para apps React Native",
+        "why": "Era sobre builds iOS nativos."
+      },
+      {
+        "text": "Era sobre bitcode, que acabou no Xcode 14",
+        "why": "Isso. O dSYM do seu build agora bate com o que a Apple distribui."
+      },
+      {
+        "text": "A Apple apaga dSYMs depois da revisão",
+        "why": "Nada diz isso."
+      }
+    ]
+  },
+  "ex-n6ya03zf": {
+    "prompt": "Coloque em ordem os passos para ler um crash de release Android.",
+    "items": [
+      "guardar o mapping.txt do build publicado",
+      "enviá-lo com o release",
+      "um relatório chega com nomes curtos",
+      "passar o retrace com aquele mapeamento",
+      "ler os quadros restaurados"
+    ]
+  },
+  "ex-mv4trbf4": {
+    "prompt": "Quais destes arquivos precisam ser guardados de cada build de release? Escolha todos.",
+    "choices": [
+      {
+        "text": "mapping.txt",
+        "why": "Isso, para o Android."
+      },
+      {
+        "text": "o .dSYM",
+        "why": "Isso, para o iOS."
+      },
+      {
+        "text": "o source map",
+        "why": "Isso, para o bundle JavaScript."
+      },
+      {
+        "text": "o keystore de debug",
+        "why": "Ele não assina nada publicado."
+      }
+    ]
+  },
+  "ex-3j04cf8j": {
+    "prompt": "Uma pilha passada pelo retrace nomeia métodos que não fazem sentido para o crash. Qual é a causa mais provável?",
+    "choices": [
+      {
+        "text": "Os números de linha foram mantidos no build de release",
+        "why": "Mantê-los é o que faz o retrace funcionar."
+      },
+      {
+        "text": "O mapeamento veio de outro build",
+        "why": "Isso. Bobagem com toda a confiança."
+      },
+      {
+        "text": "O retrace precisa de internet",
+        "why": "Ele lê dois arquivos locais."
+      },
+      {
+        "text": "O app não foi minificado",
+        "why": "Aí não haveria o que passar no retrace."
+      }
+    ]
+  }
+}

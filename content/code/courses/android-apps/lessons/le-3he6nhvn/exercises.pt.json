@@ -1,0 +1,448 @@
+{
+  "ex-cg44hy6n": {
+    "prompt": "O que o Room acrescenta ao SQLite que todo celular Android já tem?",
+    "hint": "Onde um erro numa consulta é encontrado?",
+    "choices": [
+      {
+        "text": "Um motor de armazenamento mais rápido que o SQLite",
+        "why": "O Room guarda tudo no SQLite; ele troca a API, não o motor."
+      },
+      {
+        "text": "SQL conferido no build",
+        "why": "Isso: o KSP lê cada consulta e um erro de digitação derruba o build."
+      },
+      {
+        "text": "Sincronização das tabelas com um servidor",
+        "why": "O Room não sabe nada de servidores; a aula 16 põe a rede ao lado dele."
+      },
+      {
+        "text": "Criptografia do arquivo do banco",
+        "why": "O Room não criptografa; o arquivo é protegido pelo armazenamento privado do app."
+      }
+    ]
+  },
+  "ex-ejpvjvwm": {
+    "prompt": "Ligue cada anotação do Room ao uso que o planner faz dela.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "`@Entity`",
+        "right": "`SessionEntity`, uma linha por sessão"
+      },
+      {
+        "left": "`@Dao`",
+        "right": "`SessionDao`, as consultas"
+      },
+      {
+        "left": "`@Database`",
+        "right": "`PlannerDatabase`, que entrega os DAOs"
+      }
+    ],
+    "right_distractors": [
+      "`StudySession`, o modelo que as telas leem"
+    ]
+  },
+  "ex-9mx5zjt2": {
+    "prompt": "Por que o arquivo de build acrescenta os schemas ao source set `debug` e não ao `test`?",
+    "hint": "De quem são os assets que o Robolectric lê?",
+    "choices": [
+      {
+        "text": "Porque builds de release precisam dos schemas para migrar",
+        "why": "Uma migração roda o código da `Migration`; os arquivos JSON só são lidos pelo ajudante de teste."
+      },
+      {
+        "text": "Porque `test` não tem assets no AGP 9",
+        "why": "A linha com `test` compilou; o ajudante só não encontrou os arquivos ali."
+      },
+      {
+        "text": "O Robolectric lê os assets de debug",
+        "why": "Isso: com `test` o ajudante lançou `Cannot find the schema file in the assets folder`."
+      },
+      {
+        "text": "Para o Room exportá-los enquanto o app roda",
+        "why": "O Room exporta os schemas no build, no `schemaDirectory`."
+      }
+    ]
+  },
+  "ex-8e6tdy6a": {
+    "prompt": "Uma sessão é inserida com `id = 0`. Que id ela recebe?",
+    "hint": "`autoGenerate = true`.",
+    "choices": [
+      {
+        "text": "0, como escrito",
+        "why": "Com `autoGenerate`, 0 significa \"não definido\" e o SQLite escolhe o número."
+      },
+      {
+        "text": "O próximo número, devolvido pelo insert",
+        "why": "Isso: o primeiro insert do `DaoTest` devolveu 1."
+      },
+      {
+        "text": "Um `Long` aleatório, para evitar colisões",
+        "why": "O SQLite conta para cima; não sorteia números."
+      },
+      {
+        "text": "Nenhum: o insert falha até alguém dar um id",
+        "why": "O padrão 0 é justamente o que deixa o insert seguir."
+      }
+    ]
+  },
+  "ex-07rc72mh": {
+    "prompt": "O curso `sql` é apagado. O que acontece com as sessões dele, com a entidade como está escrita?",
+    "hint": "Leia o `onDelete` da chave estrangeira.",
+    "choices": [
+      {
+        "text": "Ficam, apontando para um curso que não existe mais",
+        "why": "É o que uma tabela sem chave estrangeira permitiria, e o que a chave existe para impedir."
+      },
+      {
+        "text": "A exclusão é recusada enquanto houver sessões",
+        "why": "Isso seria `RESTRICT`; a entidade diz `CASCADE`."
+      },
+      {
+        "text": "São apagadas junto",
+        "why": "Isso: `ForeignKey.CASCADE` apaga as linhas filhas."
+      },
+      {
+        "text": "O `course_id` delas vira `NULL`",
+        "why": "Isso seria `SET_NULL`, e `course_id` é `NOT NULL` de qualquer forma."
+      }
+    ]
+  },
+  "ex-831s1fdf": {
+    "prompt": "Por que o `SessionEntity` declara `Index(\"course_id\")`?",
+    "hint": "Duas perguntas que o app faz, e uma exclusão.",
+    "choices": [
+      {
+        "text": "Sem ele, toda exclusão de curso varre a tabela de sessões inteira",
+        "why": "Isso, e o mesmo índice atende as sessões de um curso."
+      },
+      {
+        "text": "O SQLite exige um índice em toda coluna `TEXT`",
+        "why": "`date` e `name` também são `TEXT`; essa regra não existe."
+      },
+      {
+        "text": "Um índice torna a coluna única",
+        "why": "Só `unique = true` faz isso; muitas sessões dividem um curso."
+      },
+      {
+        "text": "O Room não consegue escrever a chave estrangeira sem ele",
+        "why": "O Room escreve a chave e só avisa sobre o índice ausente."
+      }
+    ]
+  },
+  "ex-x7ppmxgr": {
+    "prompt": "Por que o conversor guarda um `LocalDate` como texto ISO, como `2026-10-27`?",
+    "hint": "Pense no `ORDER BY` e numa pessoa abrindo o arquivo.",
+    "choices": [
+      {
+        "text": "O SQLite recusa datas inteiras",
+        "why": "O SQLite guardaria um número de dias sem problema; quem perde é quem lê."
+      },
+      {
+        "text": "Ordena na ordem das datas e se lê como data",
+        "why": "Isso: `ORDER BY` e `BETWEEN` funcionam na coluna, e ninguém precisa decifrar `20388`."
+      },
+      {
+        "text": "Texto ocupa menos bytes que um número",
+        "why": "Ocupa alguns a mais; a seção chama isso de custo."
+      },
+      {
+        "text": "O Room só aceita conversores que devolvam `String`",
+        "why": "Um conversor pode devolver qualquer tipo que o SQLite tenha, `Long` inclusive."
+      }
+    ]
+  },
+  "ex-jrx2ywaf": {
+    "prompt": "O banco nomeia os conversores uma vez com a anotação `@___(Converters::class)`.",
+    "hint": "No plural, em `PlannerDatabase`.",
+    "blanks": [
+      {
+        "accept": [
+          "TypeConverters"
+        ]
+      }
+    ]
+  },
+  "ex-tnrkk6sg": {
+    "prompt": "De onde vem o arquivo `app/schemas/com.example.planner.data.PlannerDatabase/1.json`?",
+    "hint": "Ninguém o digitou.",
+    "choices": [
+      {
+        "text": "O Room o escreve no build, no `schemaDirectory`",
+        "why": "Isso: um JSON por versão, que vai para o controle de versão."
+      },
+      {
+        "text": "A primeira execução do app num celular",
+        "why": "Ele apareceu depois do `assembleDebug`, sem celular nenhum."
+      },
+      {
+        "text": "O `MigrationTestHelper`, quando um teste roda",
+        "why": "O ajudante lê esses arquivos; não os escreve."
+      },
+      {
+        "text": "O Gradle o baixa do repositório do Google",
+        "why": "Ele descreve as suas tabelas, que nenhum repositório tem."
+      }
+    ]
+  },
+  "ex-82hsx0vy": {
+    "prompt": "Uma consulta diz `FROM session` e a tabela é `sessions`. Quando o erro é encontrado?",
+    "hint": "A seção 05 tentou.",
+    "choices": [
+      {
+        "text": "Quando a tela que usa a consulta abre pela primeira vez",
+        "why": "Isso é a API do próprio SQLite; o Room traz para antes."
+      },
+      {
+        "text": "No build, como `no such table: session`",
+        "why": "Isso: o KSP conferiu a consulta contra o schema e o build falhou."
+      },
+      {
+        "text": "Só quando uma migração roda",
+        "why": "Nenhuma migração entrou nisso; o nome da tabela só estava errado."
+      },
+      {
+        "text": "Nunca: o SQLite cria a tabela que falta",
+        "why": "O SQLite nunca cria uma tabela porque uma consulta a mencionou."
+      }
+    ]
+  },
+  "ex-k4bgb5vx": {
+    "prompt": "Por que o `minutesBetween` diz `COALESCE(SUM(minutes), 0)` em vez de `SUM(minutes)`?",
+    "hint": "Qual é a soma de nenhuma linha em SQL?",
+    "choices": [
+      {
+        "text": "Porque o `SUM` de nenhuma linha é `NULL`",
+        "why": "Isso: uma semana vazia deveria somar 0, e o `Flow<Int>` não carrega `NULL`."
+      },
+      {
+        "text": "O `SUM` ignora linhas com `done` igual a 0",
+        "why": "O `SUM` soma toda linha que o `WHERE` mantém; o `done` não entra."
+      },
+      {
+        "text": "Para arredondar o total para minutos inteiros",
+        "why": "`minutes` já é inteiro, e o `COALESCE` não arredonda nada."
+      },
+      {
+        "text": "O Room recusa uma agregação sem valor reserva",
+        "why": "O Room aceita `SUM`; o reserva é sobre o caso vazio."
+      }
+    ]
+  },
+  "ex-tw809f72": {
+    "prompt": "O `DaoTest` insere uma sessão do curso `rust`, que não está em `courses`. O que a impede?",
+    "hint": "O nome da exceção diz qual camada.",
+    "choices": [
+      {
+        "text": "O Room, comparando o id com as consultas do DAO no build",
+        "why": "Ids são valores em tempo de execução; o build não os conhece."
+      },
+      {
+        "text": "A função de mapeamento `toEntity()`",
+        "why": "O teste montou a entidade direto; nenhum mapeamento rodou."
+      },
+      {
+        "text": "A chave estrangeira do SQLite",
+        "why": "Isso: `FOREIGN KEY constraint failed`, do próprio banco."
+      },
+      {
+        "text": "Nada: a sessão é guardada e escondida",
+        "why": "O insert lançou exceção; nada foi guardado."
+      }
+    ]
+  },
+  "ex-a682nhty": {
+    "prompt": "No `DaoTest`, que id a primeira sessão inserida recebeu?",
+    "hint": "`new id:` na saída."
+  },
+  "ex-aqd1szyc": {
+    "prompt": "Marcar uma sessão como feita não muda nenhum `minutes`, e mesmo assim o `Flow` da semana emitiu 135 de novo. Por quê?",
+    "hint": "O que o Room acompanha: tabelas ou linhas?",
+    "choices": [
+      {
+        "text": "O canal do teste duplicou o último valor",
+        "why": "O canal só repassa o que o `Flow` mandou."
+      },
+      {
+        "text": "A invalidação é por tabela",
+        "why": "Isso, e por isso valores iguais podem chegar duas vezes seguidas."
+      },
+      {
+        "text": "O `markDone` também reescreve a coluna `minutes`",
+        "why": "O SQL dele é `SET done = 1`, nada mais."
+      },
+      {
+        "text": "O `SUM` conta sessões feitas duas vezes",
+        "why": "O total ficou 135, contando cada sessão uma vez."
+      }
+    ]
+  },
+  "ex-eva3hcx6": {
+    "prompt": "Quantos valores o `Flow` da semana emitiu no `FlowTest`, o primeiro incluído?",
+    "hint": "Um antes de qualquer escrita, e depois um por escrita."
+  },
+  "ex-bwgcqsep": {
+    "prompt": "Uma tela coleta `forCourse(\"android\")` e redesenha uma lista longa a cada emissão. O que a aula sugere?",
+    "hint": "Emissões iguais são possíveis.",
+    "choices": [
+      {
+        "text": "Trocar o `Flow` por uma leitura `suspend` num timer",
+        "why": "Isso abre mão da atualização automática, que é o propósito do `Flow`."
+      },
+      {
+        "text": "Pôr `distinctUntilChanged()` antes da coleta",
+        "why": "Isso: uma escrita na linha de outro curso roda a consulta de novo e devolve uma lista igual."
+      },
+      {
+        "text": "Pôr as sessões de cada curso numa tabela própria",
+        "why": "Isso multiplica tabelas e migrações para poupar uma comparação."
+      },
+      {
+        "text": "Desligar a invalidação para esse DAO",
+        "why": "Não existe esse botão; a invalidação é como o `Flow` funciona."
+      }
+    ]
+  },
+  "ex-wr3mf7ax": {
+    "prompt": "A versão 2 do app acrescenta uma coluna, e ninguém escreveu migração. O que acontece num celular que tinha a versão 1?",
+    "hint": "O teste `noMigration`.",
+    "choices": [
+      {
+        "text": "O Room acrescenta a coluna sozinho",
+        "why": "Só uma `AutoMigration` declarada faz isso."
+      },
+      {
+        "text": "O app quebra já na primeira consulta ao banco",
+        "why": "Isso: o Room se recusa a abrir o arquivo."
+      },
+      {
+        "text": "As linhas antigas são apagadas e o app começa vazio",
+        "why": "Isso só acontece se você pedir `fallbackToDestructiveMigration()`."
+      },
+      {
+        "text": "O app continua usando a versão 1 do schema",
+        "why": "O código é a versão 2; não dá para rodar no schema antigo."
+      }
+    ]
+  },
+  "ex-natfanb0": {
+    "prompt": "Uma migração acrescenta `note TEXT NOT NULL DEFAULT ''` enquanto a entidade diz `note: String?`. Ela roda sem erro. Por que continua errada?",
+    "hint": "Compare a tabela migrada com o schema 2.",
+    "choices": [
+      {
+        "text": "A tabela não bate mais com o que o Room espera",
+        "why": "Isso: o `runMigrationsAndValidate` recusou com `Migration didn't properly handle: sessions`."
+      },
+      {
+        "text": "`ALTER TABLE` não consegue acrescentar coluna com padrão",
+        "why": "Consegue, e acrescentou; o que difere é a definição da coluna."
+      },
+      {
+        "text": "Ela apaga as linhas que não tinham nota",
+        "why": "O padrão preenche essas linhas; nada é apagado."
+      },
+      {
+        "text": "Migrações não podem conter SQL",
+        "why": "A migração correta também é uma linha de SQL."
+      }
+    ]
+  },
+  "ex-p8vf0b1v": {
+    "prompt": "Ordene os passos do `MigrationTest.oneToTwo`.",
+    "hint": "Primeiro um banco antigo, depois o código testado.",
+    "items": [
+      "`helper.createDatabase(name, 1)`",
+      "inserir um curso e uma sessão com SQL puro",
+      "`runMigrationsAndValidate(name, 2, true, MIGRATION_1_2)`",
+      "ler de volta a linha migrada"
+    ]
+  },
+  "ex-tzkzv7qc": {
+    "prompt": "Por que `fallbackToDestructiveMigration()` é a cura errada para o planner?",
+    "hint": "O que o banco guarda?",
+    "choices": [
+      {
+        "text": "Está obsoleta e não compila mais",
+        "why": "A seção a cita como opção que existe; a objeção é ao que ela faz."
+      },
+      {
+        "text": "Apaga o histórico de estudo da pessoa",
+        "why": "Isso: serve para um cache, não para dados que só o celular tem."
+      },
+      {
+        "text": "Roda toda migração duas vezes",
+        "why": "Não roda nenhuma; recria o banco vazio."
+      },
+      {
+        "text": "Precisa dos arquivos de schema no celular",
+        "why": "Os arquivos de schema só são lidos pelo ajudante de teste."
+      }
+    ]
+  },
+  "ex-1sda0xa1": {
+    "prompt": "Quais destas mudanças no `SessionEntity` precisam de migração quando a versão 3 sair? Escolha todas as que se aplicam.",
+    "hint": "Qualquer coisa que mude a tabela no disco.",
+    "choices": [
+      {
+        "text": "Acrescentar `val rating: Int? = null`",
+        "why": "Sim: uma coluna nova precisa ser acrescentada à tabela existente."
+      },
+      {
+        "text": "Renomear a função `toDomain()`",
+        "why": "Não: uma função Kotlin não faz parte da tabela."
+      },
+      {
+        "text": "Acrescentar `Index(\"done\")`",
+        "why": "Sim: um índice faz parte do schema, e o JSON do schema o registra."
+      },
+      {
+        "text": "Mudar o SQL do `markDone` no DAO",
+        "why": "Não: uma consulta lê a tabela e não muda o formato dela."
+      }
+    ]
+  },
+  "ex-v3kcx15b": {
+    "prompt": "Uma tela nova mostra as sessões de um curso e precisa atualizar quando uma sessão é acrescentada. Que método do DAO serve?",
+    "hint": "Que tipo de retorno responde de novo?",
+    "choices": [
+      {
+        "text": "`suspend fun forCourse(id: String): List<SessionEntity>`",
+        "why": "Responde uma vez; a tela precisaria perguntar de novo depois de cada insert."
+      },
+      {
+        "text": "`fun forCourse(id: String): Flow<List<SessionEntity>>`",
+        "why": "Isso: o Room a roda de novo depois de cada escrita em `sessions`."
+      },
+      {
+        "text": "`@Insert suspend fun forCourse(id: String)`",
+        "why": "O `@Insert` escreve linhas; não lê nada."
+      },
+      {
+        "text": "`fun forCourse(id: String): Int`",
+        "why": "Uma contagem não é a lista, e uma chamada bloqueante não pode rodar na thread principal."
+      }
+    ]
+  },
+  "ex-z2b0q7ek": {
+    "prompt": "A versão 2 saiu com `MIGRATION_1_2`. A versão 3 acrescenta outra coluna com `MIGRATION_2_3`. Um celular ainda na versão 1 atualiza direto para a 3. O que o Room faz?",
+    "hint": "Migrações são degraus.",
+    "choices": [
+      {
+        "text": "Roda 1 para 2 e depois 2 para 3, se as duas estiverem no builder",
+        "why": "Isso: o Room encadeia as migrações que tem num caminho da versão do arquivo à do código."
+      },
+      {
+        "text": "Recusa, porque não existe `MIGRATION_1_3`",
+        "why": "Uma migração direta é permitida mas não exigida; uma cadeia de degraus é um caminho válido."
+      },
+      {
+        "text": "Roda só a `MIGRATION_2_3`",
+        "why": "O arquivo está na versão 1, então o degrau de 1 para 2 precisa rodar antes."
+      },
+      {
+        "text": "Apaga o banco, porque pular duas versões é demais",
+        "why": "A distância não importa; só um degrau faltando importa."
+      }
+    ]
+  }
+}

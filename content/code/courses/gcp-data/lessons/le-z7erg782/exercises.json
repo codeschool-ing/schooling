@@ -1,0 +1,566 @@
+[
+  {
+    "id": "ex-h620qram",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Dataproc cluster of n2-standard-4 machines is up for an hour. What is billed for each machine?",
+    "hint": "Whose machine is it, and what does Dataproc add?",
+    "choices": [
+      {
+        "text": "The Dataproc fee alone, which includes the machine",
+        "correct": false,
+        "why": "The fee is $0.010 per vCPU-hour on top; the pricing page says the machine is billed by Compute Engine in addition."
+      },
+      {
+        "text": "A DCU-hour for each processor",
+        "correct": false,
+        "why": "DCUs are how Serverless bills; a cluster bills machines and the fee."
+      },
+      {
+        "text": "The Compute Engine hour, its disk, and the fee on its four vCPUs",
+        "correct": true,
+        "why": "Right: 0.30832 for the machine, 0.04 of fee and the boot disk by the GiB-hour."
+      },
+      {
+        "text": "Only the Compute Engine hour, since Spark is open source",
+        "correct": false,
+        "why": "Spark is free software, and Dataproc still charges its management fee for running it on your machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-acbrtkf4",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each role to what it runs.",
+    "hint": "Only one kind of worker holds blocks of HDFS.",
+    "pairs": [
+      {
+        "left": "master",
+        "right": "ResourceManager and NameNode"
+      },
+      {
+        "left": "primary worker",
+        "right": "DataNode and NodeManager"
+      },
+      {
+        "left": "secondary worker",
+        "right": "NodeManager alone"
+      }
+    ],
+    "right_distractors": [
+      "The Cloud Storage bucket the data lives in"
+    ]
+  },
+  {
+    "id": "ex-mkjxxagj",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team keeps the only copy of its curated tables in the HDFS of a long-running cluster. What does that stop them doing?",
+    "hint": "What happens to HDFS when its machines go?",
+    "choices": [
+      {
+        "text": "Reading the tables from Spark, which only reads gs:// paths",
+        "correct": false,
+        "why": "Spark reads HDFS natively; the connector adds gs:// beside it rather than replacing it."
+      },
+      {
+        "text": "Deleting the cluster between jobs",
+        "correct": true,
+        "why": "Right: deleting the cluster deletes its disks and the blocks on them, so the cluster can never be disposable."
+      },
+      {
+        "text": "Adding secondary workers to it",
+        "correct": false,
+        "why": "Secondary workers can be added to any standard cluster; they simply hold no blocks."
+      },
+      {
+        "text": "Running more than one job on it at a time",
+        "correct": false,
+        "why": "YARN shares a cluster between jobs whatever the data lives in."
+      }
+    ]
+  },
+  {
+    "id": "ex-wj80sbjt",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster runs on image 2.2-debian12 and the team wants a newer Spark. What is the Dataproc way?",
+    "hint": "What does an image version fix?",
+    "choices": [
+      {
+        "text": "Upgrade Spark in place with an initialization action",
+        "correct": false,
+        "why": "Initialization actions run at creation; replacing the Spark an image was built and tested with defeats the image."
+      },
+      {
+        "text": "Create a cluster on a newer image",
+        "correct": true,
+        "why": "Right: the image fixes Spark, Hadoop and the rest together, so a new Spark is a new cluster."
+      },
+      {
+        "text": "Ask for it with spark-submit --version",
+        "correct": false,
+        "why": "That flag reports the version installed; it changes nothing."
+      },
+      {
+        "text": "Run gcloud dataproc clusters update with the new image version",
+        "correct": false,
+        "why": "A cluster keeps the image it was created on; upgrading means creating one."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjtsxryn",
+    "version": 1,
+    "section": "secondary-workers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cluster is created with --num-secondary-workers=4 and no --secondary-worker-type. What kind of machines are the four?",
+    "hint": "The help printed the default.",
+    "choices": [
+      {
+        "text": "Spot",
+        "correct": false,
+        "why": "Spot is one of the three choices, and it has to be asked for."
+      },
+      {
+        "text": "Non-preemptible standard VMs",
+        "correct": false,
+        "why": "Non-preemptible is a choice you make; it is not the default."
+      },
+      {
+        "text": "Preemptible",
+        "correct": true,
+        "why": "Right: default=\"preemptible\", as the command line said."
+      },
+      {
+        "text": "The same type as the primary workers",
+        "correct": false,
+        "why": "Secondaries share the machine type by default, and their provisioning model is preemptible unless told otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3v72bj9",
+    "version": 1,
+    "section": "secondary-workers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Mid-job, Google reclaims one of the cluster's Spot secondary workers. What happens to the job?",
+    "hint": "What does a secondary worker store?",
+    "choices": [
+      {
+        "text": "It fails, because the HDFS blocks on that worker are gone",
+        "correct": false,
+        "why": "A secondary worker runs no DataNode and holds no blocks; that loss belongs to a primary worker."
+      },
+      {
+        "text": "The cluster is deleted with it",
+        "correct": false,
+        "why": "That is what losing the master of a standard cluster does."
+      },
+      {
+        "text": "It carries on, slower, with its tasks run again elsewhere",
+        "correct": true,
+        "why": "Right: YARN gives the lost tasks to the machines that are left."
+      },
+      {
+        "text": "It pauses until the worker comes back, then resumes where it stopped",
+        "correct": false,
+        "why": "Nothing waits for the machine; the tasks are rescheduled at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-zge2akc7",
+    "version": 1,
+    "section": "secondary-workers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the autoscaling policy of the section, which statements are true? Choose all that apply.",
+    "hint": "Read the two Config blocks and gracefulDecommissionTimeout.",
+    "choices": [
+      {
+        "text": "The primary workers stay at two",
+        "correct": true,
+        "why": "Yes: minInstances and maxInstances are both 2."
+      },
+      {
+        "text": "A worker being removed may finish its tasks for up to an hour",
+        "correct": true,
+        "why": "Yes: gracefulDecommissionTimeout is 1h."
+      },
+      {
+        "text": "The policy reads CPU use from Cloud Monitoring",
+        "correct": false,
+        "why": "It decides from YARN memory: what pending work asks for and what nobody uses."
+      },
+      {
+        "text": "The secondaries can go down to none",
+        "correct": true,
+        "why": "Yes: secondaryWorkerConfig.minInstances is 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyqam9az",
+    "version": 1,
+    "section": "secondary-workers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An initialization action that downloads and compiles a library takes 25 minutes on every new cluster. What does the section suggest?",
+    "hint": "Who pays for those minutes, and how many times?",
+    "choices": [
+      {
+        "text": "Raise --initialization-action-timeout to 30m",
+        "correct": false,
+        "why": "The cluster would start, and every machine would still bill 25 minutes on every cluster."
+      },
+      {
+        "text": "Build a custom image with the library on it",
+        "correct": true,
+        "why": "Right: the cost is paid once, when the image is built, rather than on every cluster."
+      },
+      {
+        "text": "Run the script only on the master, with the role check",
+        "correct": false,
+        "why": "Any executor may run the code that imports the library, so the workers need it too."
+      },
+      {
+        "text": "Keep the cluster running so the action only happens once",
+        "correct": false,
+        "why": "That trades 25 minutes a night for 24 hours a day of machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-4m892ne5",
+    "version": 1,
+    "section": "a-job-locally",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What has to change in daily_orders.py for it to run on a Dataproc cluster instead of the laptop?",
+    "hint": "Where do the paths come from?",
+    "choices": [
+      {
+        "text": "The master URL in SparkSession.builder",
+        "correct": false,
+        "why": "The program names no master; spark-submit gives it one from outside."
+      },
+      {
+        "text": "Nothing in the file: it is given gs:// paths as --src and --dst",
+        "correct": true,
+        "why": "Right: the connector reads gs:// and the arguments carry the paths."
+      },
+      {
+        "text": "The CSV reader, which cannot read from Cloud Storage",
+        "correct": false,
+        "why": "Through the Cloud Storage connector, the same reader reads gs:// paths."
+      },
+      {
+        "text": "The schema, since Dataproc infers types",
+        "correct": false,
+        "why": "Spark behaves the same on both; the schema is written down in either place."
+      }
+    ]
+  },
+  {
+    "id": "ex-n202gv66",
+    "version": 1,
+    "section": "a-job-locally",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A downstream job starts as soon as a part- file appears under daily_orders/dt=2026-10-29/. What is the risk?",
+    "hint": "What does _SUCCESS mean?",
+    "choices": [
+      {
+        "text": "Reading half a result, written by the tasks that finished first",
+        "correct": true,
+        "why": "Right: each task writes its own part file, and _SUCCESS is what says all of them finished."
+      },
+      {
+        "text": "Reading the .crc files as data",
+        "correct": false,
+        "why": "Those are the local file system's checksums, and on gs:// they are not written at all."
+      },
+      {
+        "text": "None: a part file is complete when it appears",
+        "correct": false,
+        "why": "One part file can be complete while the others are still being written."
+      },
+      {
+        "text": "Parquet cannot be read until Spark stops",
+        "correct": false,
+        "why": "A finished Parquet file is readable at once; the question is whether all of them have finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0c2qyha",
+    "version": 1,
+    "section": "a-job-locally",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the master `local[2]`, Spark runs the job in one process with two ___ standing in for executors.",
+    "hint": "Not machines, and not processes.",
+    "blanks": [
+      {
+        "accept": [
+          "threads",
+          "thread"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dkgncyh1",
+    "version": 1,
+    "section": "a-job-locally",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "DuckDB counted 20000 orders in the CSV and 500 customers in the Parquet. On average, how many orders did each customer place that day?",
+    "hint": "Orders divided by customers.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-3qt9rbvw",
+    "version": 1,
+    "section": "lifetimes-and-serverless",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which flag deletes a cluster after it has run no job for thirty minutes?",
+    "hint": "The help listed it beside its stopping twin.",
+    "choices": [
+      {
+        "text": "--stop-max-idle=30m",
+        "correct": false,
+        "why": "That stops the cluster and keeps its disks, which are still billed."
+      },
+      {
+        "text": "--delete-max-age=30m",
+        "correct": false,
+        "why": "That deletes it thirty minutes after creation, whatever it is doing."
+      },
+      {
+        "text": "--delete-max-idle=30m",
+        "correct": true,
+        "why": "Right: deletion after that much idleness."
+      },
+      {
+        "text": "--initialization-action-timeout=30m",
+        "correct": false,
+        "why": "That limits how long a boot script may run."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4vcxkaa",
+    "version": 1,
+    "section": "lifetimes-and-serverless",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A workflow template uses managedCluster. What happens when it is instantiated and its job fails?",
+    "hint": "The cluster belongs to the workflow.",
+    "choices": [
+      {
+        "text": "The cluster is kept so somebody can look at it",
+        "correct": false,
+        "why": "The template deletes its managed cluster when the last job ends, succeeded or not."
+      },
+      {
+        "text": "The cluster is deleted anyway",
+        "correct": true,
+        "why": "Right: it is created for the workflow and deleted with it."
+      },
+      {
+        "text": "The template retries the job on a new cluster forever",
+        "correct": false,
+        "why": "A template runs its jobs once; retrying is the scheduler's decision."
+      },
+      {
+        "text": "Nothing, because a template needs clusterSelector to create a cluster",
+        "correct": false,
+        "why": "clusterSelector picks an existing cluster; managedCluster is the one that creates."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwbmnd3z",
+    "version": 1,
+    "section": "lifetimes-and-serverless",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each shape to what it costs while there is no work.",
+    "hint": "Which ones still have machines?",
+    "pairs": [
+      {
+        "left": "long-running cluster",
+        "right": "every machine, disk and fee"
+      },
+      {
+        "left": "Serverless batch",
+        "right": "nothing"
+      },
+      {
+        "left": "Dataproc on GKE",
+        "right": "the node pools you keep"
+      }
+    ],
+    "right_distractors": [
+      "a DCU-hour per idle minute"
+    ]
+  },
+  {
+    "id": "ex-z5y2cer6",
+    "version": 1,
+    "section": "dataproc-or-dataflow",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster node costs 0.35654 USD an hour. What do a master and four workers cost for 3 hours, in USD, to two decimals?",
+    "hint": "Five nodes for three hours.",
+    "value": 5.35,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-w7cghrde",
+    "version": 1,
+    "section": "dataproc-or-dataflow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company inherits 120 Spark jobs and wants them on Google Cloud next month. Which choice does the lesson's reasoning favour?",
+    "hint": "What does each option cost in work, not in dollars?",
+    "choices": [
+      {
+        "text": "Rewrite them in Beam for Dataflow, which is cheaper per hour",
+        "correct": false,
+        "why": "Dataflow was the dearer of the three per hour here, and a rewrite of 120 jobs is a project."
+      },
+      {
+        "text": "Dataproc, changing hdfs:// paths to gs://",
+        "correct": true,
+        "why": "Right: existing Spark code is the largest reason Dataproc exists."
+      },
+      {
+        "text": "One long-running cluster with no idle timer, sized for all 120",
+        "correct": false,
+        "why": "Dataproc, yes, and the left-on line cost twelve times the ephemeral one."
+      },
+      {
+        "text": "Keep them on premises, since no cloud engine runs Spark",
+        "correct": false,
+        "why": "Dataproc, Serverless and Dataproc on GKE all run Spark."
+      }
+    ]
+  },
+  {
+    "id": "ex-zc8x0r7t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these by the monthly cost of Quitanda's job as the program printed it, cheapest first.",
+    "hint": "The cluster pays for its master; the batch for its driver.",
+    "items": [
+      "Ephemeral Dataproc cluster",
+      "Dataproc Serverless",
+      "Dataflow",
+      "Cluster left on all month"
+    ]
+  },
+  {
+    "id": "ex-8q7kyzjz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster has 2 primary workers and 40 Spot secondaries, and Spot capacity in the zone runs out mid-job. What is the likely outcome?",
+    "hint": "Which machines are left, and do they hold anything lost?",
+    "choices": [
+      {
+        "text": "The job fails at once with lost HDFS blocks",
+        "correct": false,
+        "why": "The secondaries held no blocks; the primaries that hold them are still there."
+      },
+      {
+        "text": "Nothing changes, since the autoscaling policy replaces the lost Spot machines with standard VMs",
+        "correct": false,
+        "why": "The policy adds secondaries of the type the cluster has; with no Spot capacity there is nothing to add."
+      },
+      {
+        "text": "The work is carried by two workers, and the job takes far longer",
+        "correct": true,
+        "why": "Right: nothing is lost, and almost all the processors are, which is why the section sizes secondaries as a share of the work."
+      },
+      {
+        "text": "The master is reclaimed too and the cluster ends",
+        "correct": false,
+        "why": "The master is a standard VM, which is the point of keeping it off Spot."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3411fmf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Left on all month, the cluster beats Dataflow above 22.5 hours of work a night. What does that say about a cluster used two hours a night?",
+    "hint": "Which line is flat?",
+    "choices": [
+      {
+        "text": "It is cheaper than Dataflow, because the node is cheaper per hour",
+        "correct": false,
+        "why": "Per hour, yes; left on, it pays 730 hours for 60 of work."
+      },
+      {
+        "text": "It pays for about 20 idle hours a day, and --delete-max-idle is the fix",
+        "correct": true,
+        "why": "Right: the guard is deleting it when idle, not a cheaper machine."
+      },
+      {
+        "text": "It should move to larger machines to finish faster",
+        "correct": false,
+        "why": "Finishing faster on a cluster left on does not shorten the hours it bills."
+      },
+      {
+        "text": "Nothing: 22.5 hours is Dataflow's limit for a batch job",
+        "correct": false,
+        "why": "It is a crossing of two prices, not a limit of any product."
+      }
+    ]
+  }
+]

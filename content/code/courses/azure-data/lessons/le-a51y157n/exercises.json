@@ -1,0 +1,614 @@
+[
+  {
+    "id": "ex-g824hzs5",
+    "version": 1,
+    "section": "two-pools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a serverless SQL pool billed for?",
+    "hint": "Nothing is provisioned.",
+    "choices": [
+      {
+        "text": "Each hour it is available, at its size",
+        "correct": false,
+        "why": "That is the dedicated pool; serverless has no size."
+      },
+      {
+        "text": "The data its queries process",
+        "correct": true,
+        "why": "Right: per terabyte, at least 10 MB a query."
+      },
+      {
+        "text": "The rows each query returns to the client",
+        "correct": false,
+        "why": "What is read, not what is returned, decides it."
+      },
+      {
+        "text": "The files stored in the workspace's lake",
+        "correct": false,
+        "why": "Storage is the storage account's bill, not the pool's."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdkn4yce",
+    "version": 1,
+    "section": "two-pools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's dedicated pool runs one report a night, for an hour. What does a pool left running all day cost it?",
+    "hint": "What does a paused pool bill?",
+    "choices": [
+      {
+        "text": "Twenty-three idle hours of compute, every day",
+        "correct": true,
+        "why": "Right: paused, it would bill storage only."
+      },
+      {
+        "text": "Nothing extra, since idle compute is not billed",
+        "correct": false,
+        "why": "A running dedicated pool is billed by the hour, busy or not."
+      },
+      {
+        "text": "Only the storage, as for a paused pool",
+        "correct": false,
+        "why": "That is what pausing buys."
+      },
+      {
+        "text": "The data it processes, as serverless does",
+        "correct": false,
+        "why": "That is the other pool's meter."
+      }
+    ]
+  },
+  {
+    "id": "ex-9w8v9e52",
+    "version": 1,
+    "section": "two-pools",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the minimum, in megabytes, that a serverless pool bills for one query?",
+    "hint": "Three of `ask.py`'s four questions fell under it.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-gyw8zt7f",
+    "version": 1,
+    "section": "two-pools",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Dashboards query three tables all day; analysts explore the rest of the lake now and then. Which arrangement fits?",
+    "hint": "The two pools are not rivals.",
+    "choices": [
+      {
+        "text": "Load the whole lake into a dedicated pool",
+        "correct": false,
+        "why": "Pays by the hour to hold what is rarely asked."
+      },
+      {
+        "text": "Serverless for everything, dashboards included",
+        "correct": false,
+        "why": "Possible, but every dashboard refresh is billed by its bytes, all day."
+      },
+      {
+        "text": "A dedicated pool for the three tables, serverless for the rest",
+        "correct": true,
+        "why": "Right: constant demand on provisioned capacity, occasional questions on the lake."
+      },
+      {
+        "text": "Two dedicated pools, one paused at night",
+        "correct": false,
+        "why": "The exploring still pays for a pool sized for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9erq2n0",
+    "version": 1,
+    "section": "distributions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Into how many distributions is every table of a dedicated SQL pool split?",
+    "hint": "Whatever the size.",
+    "value": 60,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4d851yfz",
+    "version": 1,
+    "section": "distributions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda hashes its orders table on `store`, which has five values. What happens to a query over it?",
+    "hint": "How many distributions hold rows?",
+    "choices": [
+      {
+        "text": "It runs on all 60, a twelfth of the work on each",
+        "correct": false,
+        "why": "Only distributions that hold rows have work."
+      },
+      {
+        "text": "Five distributions do it all while 55 wait",
+        "correct": true,
+        "why": "Right: skew, from a column with too few values."
+      },
+      {
+        "text": "The pool rehashes it on a better column",
+        "correct": false,
+        "why": "The definition is yours; nothing changes it."
+      },
+      {
+        "text": "It is refused until a sixth store opens",
+        "correct": false,
+        "why": "Skew is slow, not refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yfpck4g",
+    "version": 1,
+    "section": "distributions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each table to the distribution that fits it.",
+    "hint": "One kind of table fits none.",
+    "pairs": [
+      {
+        "left": "A large fact table of orders",
+        "right": "`HASH(customer_id)`"
+      },
+      {
+        "left": "A staging table loaded and read once",
+        "right": "`ROUND_ROBIN`"
+      },
+      {
+        "left": "A small table of the five stores",
+        "right": "`REPLICATE`"
+      }
+    ],
+    "right_distractors": [
+      "`HASH(store)`"
+    ]
+  },
+  {
+    "id": "ex-11nk6z03",
+    "version": 1,
+    "section": "distributions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two large tables are both hashed on `customer_id` and joined on `order_id`. What does the query plan show?",
+    "hint": "Are matching rows on the same node?",
+    "choices": [
+      {
+        "text": "Nothing special: both are hashed, so the join is local",
+        "correct": false,
+        "why": "Hashed on a column other than the join's, matching rows can be anywhere."
+      },
+      {
+        "text": "A data movement step",
+        "correct": true,
+        "why": "Right: rows are shuffled so that matches meet."
+      },
+      {
+        "text": "An error, because the join column must be the hash column",
+        "correct": false,
+        "why": "It runs; it is just slower."
+      },
+      {
+        "text": "A replication of both tables to every node",
+        "correct": false,
+        "why": "Replication is a table definition, not something a query does."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0qxmpds",
+    "version": 1,
+    "section": "the-lake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why were the same orders 40% smaller as Parquet than as CSV?",
+    "hint": "How each format lays out a column.",
+    "choices": [
+      {
+        "text": "Parquet drops rows that repeat",
+        "correct": false,
+        "why": "Every order is there; the counts matched."
+      },
+      {
+        "text": "`gen.py` wrote fewer days of Parquet",
+        "correct": false,
+        "why": "31 files each."
+      },
+      {
+        "text": "Columns compress; numbers stay numbers",
+        "correct": true,
+        "why": "Right: CSV spells every value out on every line."
+      },
+      {
+        "text": "Azurite compresses Parquet blobs on upload",
+        "correct": false,
+        "why": "Blob storage stores bytes as given."
+      }
+    ]
+  },
+  {
+    "id": "ex-wjz56735",
+    "version": 1,
+    "section": "the-lake",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Folders named like `dt=2026-10-15`, which a reader turns into a column, are called ___ partitioning.",
+    "hint": "Named after the system that made the convention.",
+    "blanks": [
+      {
+        "accept": [
+          "hive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qbhkxsey",
+    "version": 1,
+    "section": "the-lake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What in a Parquet file lets a reader fetch two columns of seven?",
+    "hint": "It is at the end.",
+    "choices": [
+      {
+        "text": "A header line naming the columns, as in CSV",
+        "correct": false,
+        "why": "A header names columns; it says nothing about where their data is."
+      },
+      {
+        "text": "The footer, saying where each column's data starts",
+        "correct": true,
+        "why": "Right: read the footer, then seek to the blocks needed."
+      },
+      {
+        "text": "The `dt=` folder it sits in",
+        "correct": false,
+        "why": "The folder skips whole files, not columns."
+      },
+      {
+        "text": "An index Azurite keeps beside the blob",
+        "correct": false,
+        "why": "The storage knows nothing about the format."
+      }
+    ]
+  },
+  {
+    "id": "ex-4febgrrn",
+    "version": 1,
+    "section": "bytes-processed",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To the nearest whole number, how many times fewer bytes did the Parquet month read than the CSV month?",
+    "hint": "34,900,248 and 5,600,246.",
+    "value": 6,
+    "tolerance": 0.5
+  },
+  {
+    "id": "ex-bmjxmxjr",
+    "version": 1,
+    "section": "bytes-processed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The one-day Parquet query opened the file of 1 October as well as the 15th. Why?",
+    "hint": "Before any filter is applied.",
+    "choices": [
+      {
+        "text": "Partition pruning failed for the first day",
+        "correct": false,
+        "why": "It worked: 29 days were never opened."
+      },
+      {
+        "text": "DuckDB reads the oldest file to check the dates",
+        "correct": false,
+        "why": "The dates are in the folder names."
+      },
+      {
+        "text": "The 1st held orders of the 15th",
+        "correct": false,
+        "why": "Each file holds its own day."
+      },
+      {
+        "text": "To learn the table's columns",
+        "correct": true,
+        "why": "Right: PyArrow reads one file for the schema when the dataset is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-m90y1s20",
+    "version": 1,
+    "section": "bytes-processed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The one-day CSV query read about eight times the one-day Parquet query. What did partitioning do for the CSV?",
+    "hint": "Count the blobs opened.",
+    "choices": [
+      {
+        "text": "Two files opened of 31, as for Parquet",
+        "correct": true,
+        "why": "Right: the folders decide how many files; the format decides how much of each."
+      },
+      {
+        "text": "Nothing, because CSV cannot be partitioned",
+        "correct": false,
+        "why": "Partitioning is folders, and works for any format."
+      },
+      {
+        "text": "It let the reader skip columns in the CSV",
+        "correct": false,
+        "why": "Folders skip files, never columns."
+      },
+      {
+        "text": "It halved the bytes of the remaining file",
+        "correct": false,
+        "why": "The whole of the 15th was read."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmnjdkke",
+    "version": 1,
+    "section": "bytes-processed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three of the four queries would be billed the same 10 MB on a serverless pool. Why does the layout still matter?",
+    "hint": "What grows and what does not?",
+    "choices": [
+      {
+        "text": "It does not: the minimum makes every query cost the same",
+        "correct": false,
+        "why": "Only while the lake is tiny."
+      },
+      {
+        "text": "Because the minimum is charged per file opened",
+        "correct": false,
+        "why": "It is per query."
+      },
+      {
+        "text": "The ratios grow with the data; the minimum stays put",
+        "correct": true,
+        "why": "Right: a year read every five minutes is where 150 times matters."
+      },
+      {
+        "text": "Because CSV queries are refused above 10 MB",
+        "correct": false,
+        "why": "Nothing refuses them; they are billed."
+      }
+    ]
+  },
+  {
+    "id": "ex-18gwybv1",
+    "version": 1,
+    "section": "bytes-processed",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did `ask.py` measure, and which belong to Synapse? Choose the ones `ask.py` measured.",
+    "hint": "The engine was DuckDB.",
+    "choices": [
+      {
+        "text": "The bytes a reader had to fetch from the lake",
+        "correct": true,
+        "why": "Right: counted in `readinto`."
+      },
+      {
+        "text": "Which blobs a filter on `dt` let it skip",
+        "correct": true,
+        "why": "Right: two opened of 31."
+      },
+      {
+        "text": "The data processed that Synapse would bill",
+        "correct": false,
+        "why": "That includes Synapse's own steps; the count is a lower bound."
+      },
+      {
+        "text": "The time Synapse would take to answer",
+        "correct": false,
+        "why": "Nothing here ran Synapse."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx30a712",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the storage account in `main.tf` say `is_hns_enabled = true`?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "To make the pool's backups zone redundant",
+        "correct": false,
+        "why": "Backups are `storage_account_type`, LRS or GRS."
+      },
+      {
+        "text": "The workspace needs a Data Lake filesystem",
+        "correct": true,
+        "why": "Right: the hierarchical namespace of lesson 3."
+      },
+      {
+        "text": "So that serverless queries are free",
+        "correct": false,
+        "why": "They are billed by bytes regardless."
+      },
+      {
+        "text": "To let Azurite emulate it",
+        "correct": false,
+        "why": "Azurite has no Data Lake endpoint, and Terraform does not talk to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4g6xbt3",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where in the declaration is the pool paused at night?",
+    "hint": "A property or an operation?",
+    "choices": [
+      {
+        "text": "In `sku_name`, by choosing `DW100c`",
+        "correct": false,
+        "why": "That is the size while it runs."
+      },
+      {
+        "text": "In `create_mode`",
+        "correct": false,
+        "why": "That says how the pool is created."
+      },
+      {
+        "text": "In the workspace's `identity` block",
+        "correct": false,
+        "why": "That is who the workspace acts as."
+      },
+      {
+        "text": "Nowhere: pausing is done outside the file",
+        "correct": true,
+        "why": "Right: a schedule, a pipeline or a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4xkx439",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`storage_account_type` accepts `LRS` and `GRS`. Why did Quitanda choose `LRS`?",
+    "hint": "Where is `brazilsouth`'s pair?",
+    "choices": [
+      {
+        "text": "`GRS` copies backups abroad",
+        "correct": true,
+        "why": "Right: to the United States, the paired region of lesson 1."
+      },
+      {
+        "text": "`GRS` is not offered for pools at `DW100c`",
+        "correct": false,
+        "why": "The provider offered both with no reference to size."
+      },
+      {
+        "text": "`LRS` makes the pool pause faster",
+        "correct": false,
+        "why": "Backups have nothing to do with pausing."
+      },
+      {
+        "text": "`ZRS` was refused, and `LRS` was the next one",
+        "correct": false,
+        "why": "The choice between the two offered is about where data may go."
+      }
+    ]
+  },
+  {
+    "id": "ex-57r62ef2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened when `ask.py` answered the one-day Parquet question.",
+    "hint": "The schema comes before the scan.",
+    "items": [
+      "List the blobs under `orders/`",
+      "Read one file to learn the columns",
+      "Keep only the folder `dt=2026-10-15`",
+      "Read that file's footer",
+      "Read the `payment` and `total_cents` blocks and add them up"
+    ]
+  },
+  {
+    "id": "ex-qaw4hpnm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard asks for today's sales every five minutes, over a year of orders kept as one CSV per month. What change saves the most?",
+    "hint": "The two decisions multiply.",
+    "choices": [
+      {
+        "text": "A bigger dedicated pool for the dashboard",
+        "correct": false,
+        "why": "More compute, the same files read."
+      },
+      {
+        "text": "Parquet, in one folder per day",
+        "correct": true,
+        "why": "Right: one file opened instead of twelve, and two columns of it."
+      },
+      {
+        "text": "Gzip the CSV files to halve their size",
+        "correct": false,
+        "why": "Smaller files, still read whole, every one of them."
+      },
+      {
+        "text": "Refresh every ten minutes instead",
+        "correct": false,
+        "why": "Half the queries, each as wasteful as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfvqxkqs",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about this lesson's practice are true? Choose all that apply.",
+    "hint": "What stood in for what?",
+    "choices": [
+      {
+        "text": "DuckDB answered every query, not Synapse",
+        "correct": true,
+        "why": "Right: Synapse has no emulator."
+      },
+      {
+        "text": "SQL Server refused a dedicated pool's `CREATE TABLE`",
+        "correct": true,
+        "why": "Right: it does not know `DISTRIBUTION`."
+      },
+      {
+        "text": "Terraform created a workspace with no account",
+        "correct": false,
+        "why": "It validated a file and created nothing."
+      },
+      {
+        "text": "The files were read through the Data Lake endpoint",
+        "correct": false,
+        "why": "Azurite has none; they were read as blobs."
+      }
+    ]
+  }
+]

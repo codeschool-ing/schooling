@@ -1,0 +1,593 @@
+[
+ {
+  "id": "ex-3a7z54zr",
+  "version": 1,
+  "section": "reading-answers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the answer for `portal.azure.com`, what does a `CNAME` line say?",
+  "hint": "It is not an address.",
+  "choices": [
+   {
+    "text": "This name's address, in IPv4",
+    "correct": false,
+    "why": "That is an `A` record, the last line."
+   },
+   {
+    "text": "The server that answers for the zone",
+    "correct": false,
+    "why": "That is an `NS` record."
+   },
+   {
+    "text": "An alias: ask about the other name",
+    "correct": true,
+    "why": "Right. The resolver followed each one for you."
+   },
+   {
+    "text": "How long the answer may be cached",
+    "correct": false,
+    "why": "That is the TTL, a column of every record."
+   }
+  ]
+ },
+ {
+  "id": "ex-7xqswrst",
+  "version": 1,
+  "section": "reading-answers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the lesson's `dig` use `+nottlid`?",
+  "hint": "What changes every second?",
+  "choices": [
+   {
+    "text": "Because TTLs are secret",
+    "correct": false,
+    "why": "Nothing about a TTL is secret; dig prints it by default."
+   },
+   {
+    "text": "To make the resolver skip its cache",
+    "correct": false,
+    "why": "It only changes what is printed, not how the question is asked."
+   },
+   {
+    "text": "Because Azure DNS records have no TTL",
+    "correct": false,
+    "why": "Every record has one; `public.bicep` sets them."
+   },
+   {
+    "text": "The TTL changes every second",
+    "correct": true,
+    "why": "Right. The column is there on your machine without the option."
+   }
+  ]
+ },
+ {
+  "id": "ex-rnksxcn6",
+  "version": 1,
+  "section": "reading-answers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "You run the lesson's `dig portal.azure.com` and get a different chain from the transcript. What does that most likely mean?",
+  "hint": "Look at the first two links' zones.",
+  "choices": [
+   {
+    "text": "The services picked another path",
+    "correct": true,
+    "why": "Right. They pick the next link at the moment you ask."
+   },
+   {
+    "text": "Your resolver is broken",
+    "correct": false,
+    "why": "A different chain is the expected result, not a fault."
+   },
+   {
+    "text": "The portal moved out of Azure",
+    "correct": false,
+    "why": "The links still name Azure's services; only the choice differs."
+   },
+   {
+    "text": "The transcript was written by hand",
+    "correct": false,
+    "why": "It was captured; the chain changes between runs, as its own section warns."
+   }
+  ]
+ },
+ {
+  "id": "ex-sb25w4q9",
+  "version": 1,
+  "section": "reading-answers",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each record type to what it holds.",
+  "hint": "One of them holds a name, never an address, for mail.",
+  "pairs": [
+   {
+    "left": "`A`",
+    "right": "an IPv4 address"
+   },
+   {
+    "left": "`MX`",
+    "right": "a mail server's name and a preference"
+   },
+   {
+    "left": "`NS`",
+    "right": "the name servers of a zone"
+   },
+   {
+    "left": "`TXT`",
+    "right": "free text, such as a proof of ownership"
+   }
+  ],
+  "right_distractors": [
+   "the zone's serial number"
+  ]
+ },
+ {
+  "id": "ex-6418st8b",
+  "version": 1,
+  "section": "reading-answers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why can the top of a zone, `shop.example` itself, not be a CNAME?",
+  "hint": "What records must the top already have?",
+  "choices": [
+   {
+    "text": "Azure DNS does not support CNAME records",
+    "correct": false,
+    "why": "`www` in `public.bicep` is one."
+   },
+   {
+    "text": "A CNAME cannot share its name",
+    "correct": true,
+    "why": "Right. Which is the problem alias records solve."
+   },
+   {
+    "text": "A CNAME at the top would point at itself",
+    "correct": false,
+    "why": "It could point anywhere; the rule is about sharing the name."
+   },
+   {
+    "text": "The registrar forbids it, not the DNS",
+    "correct": false,
+    "why": "It is a rule of the DNS itself."
+   }
+  ]
+ },
+ {
+  "id": "ex-8a3w3yay",
+  "version": 1,
+  "section": "public-zones",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The shop has created the zone `shop.example` in Azure DNS but changed nothing at the registrar. Who gets answers from the zone?",
+  "hint": "What tells the internet where the zone is?",
+  "choices": [
+   {
+    "text": "Everybody, as soon as the zone exists",
+    "correct": false,
+    "why": "Without the delegation, no resolver is sent to Azure."
+   },
+   {
+    "text": "Those who ask Azure's servers directly",
+    "correct": true,
+    "why": "Right. The delegation at the registrar is what sends the internet there."
+   },
+   {
+    "text": "Only the virtual networks linked to it",
+    "correct": false,
+    "why": "Links belong to private zones."
+   },
+   {
+    "text": "Nobody, until Microsoft approves the domain",
+    "correct": false,
+    "why": "Microsoft approves nothing; the registrar's NS records decide."
+   }
+  ]
+ },
+ {
+  "id": "ex-zqe37fp9",
+  "version": 1,
+  "section": "public-zones",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many name servers does Azure assign to a public zone?",
+  "hint": "One per top-level domain in the list.",
+  "value": 4,
+  "tolerance": 0,
+  "unit": "name servers"
+ },
+ {
+  "id": "ex-dvq5627m",
+  "version": 1,
+  "section": "public-zones",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is the compiled output `nameServers` an expression rather than a list of names?",
+  "hint": "When are the servers chosen?",
+  "choices": [
+   {
+    "text": "Because Bicep hides the names until deployment for safety",
+    "correct": false,
+    "why": "Nothing is hidden; the names do not exist yet."
+   },
+   {
+    "text": "Because the four servers are the same for every zone",
+    "correct": false,
+    "why": "The numbers differ from zone to zone."
+   },
+   {
+    "text": "Because a private zone has no name servers",
+    "correct": false,
+    "why": "`public.bicep` is a public zone."
+   },
+   {
+    "text": "Because Azure picks them when the zone is created",
+    "correct": true,
+    "why": "Right. Nobody knows them before, the compiler included."
+   }
+  ]
+ },
+ {
+  "id": "ex-1epn6tx9",
+  "version": 1,
+  "section": "public-zones",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`dig NS shop.example +short` lists two of the four Azure name servers. What is the state of the delegation?",
+  "hint": "Does it work, and how well?",
+  "choices": [
+   {
+    "text": "Working, and half as resilient as it should be",
+    "correct": true,
+    "why": "Right. Write all four at the registrar."
+   },
+   {
+    "text": "Broken: no resolver will reach the zone",
+    "correct": false,
+    "why": "Two correct servers are enough to answer."
+   },
+   {
+    "text": "Correct: Azure answers with two at a time",
+    "correct": false,
+    "why": "Azure gave four, and the parent should name all of them."
+   },
+   {
+    "text": "Pending until the other two are approved",
+    "correct": false,
+    "why": "There is nothing to approve; the registrar lists what it was given."
+   }
+  ]
+ },
+ {
+  "id": "ex-9n7v6fbb",
+  "version": 1,
+  "section": "public-zones",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop deletes `pip-shop-web`. Its zone has an alias `A` at `@` pointing at it, and an old plain `A` at `old` holding the same address typed by hand. Which one becomes a dangling record?",
+  "hint": "Which record knows the resource is gone?",
+  "choices": [
+   {
+    "text": "The alias at `@`",
+    "correct": false,
+    "why": "An alias follows the resource and answers nothing once it is gone."
+   },
+   {
+    "text": "Both, until the TTL runs out",
+    "correct": false,
+    "why": "The alias stops answering; only the typed one goes on."
+   },
+   {
+    "text": "The plain `A` at `old`",
+    "correct": true,
+    "why": "Right. It keeps pointing at an address that may now be somebody else's."
+   },
+   {
+    "text": "Neither: Azure deletes records that name a deleted address",
+    "correct": false,
+    "why": "Azure has no way to know a typed address belonged to that resource."
+   }
+  ]
+ },
+ {
+  "id": "ex-4kgb7w0j",
+  "version": 1,
+  "section": "public-zones",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What can an Azure DNS alias record set point at? Choose all that apply.",
+  "hint": "Four kinds of target are named.",
+  "choices": [
+   {
+    "text": "A public IP address resource",
+    "correct": true,
+    "why": "Right. `pip-shop-web` in the file."
+   },
+   {
+    "text": "A Traffic Manager profile",
+    "correct": true,
+    "why": "Right. Lesson 22 builds one."
+   },
+   {
+    "text": "A virtual machine's private address",
+    "correct": false,
+    "why": "Private addresses belong in private zones."
+   },
+   {
+    "text": "Another record set in the same zone",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "A zone in another DNS provider",
+    "correct": false,
+    "why": "An alias points at Azure resources."
+   }
+  ]
+ },
+ {
+  "id": "ex-w2e53nvj",
+  "version": 1,
+  "section": "public-zones",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a record set's name, `___` stands for the top of the zone.",
+  "hint": "One character.",
+  "blanks": [
+   {
+    "accept": [
+     "@"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-5pjxacgg",
+  "version": 1,
+  "section": "private-zones",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Who can ask the private zone `shop.internal` a question?",
+  "hint": "What does a virtual network link do?",
+  "choices": [
+   {
+    "text": "Anybody who knows Azure's name servers",
+    "correct": false,
+    "why": "Those serve public zones. Private zones have no public servers."
+   },
+   {
+    "text": "Every network in the same subscription",
+    "correct": false,
+    "why": "A subscription grants nothing; the link does."
+   },
+   {
+    "text": "Machines in the virtual networks linked to it",
+    "correct": true,
+    "why": "Right. Through `168.63.129.16`."
+   },
+   {
+    "text": "The office, through the VPN, with no further setup",
+    "correct": false,
+    "why": "The office needs a forwarder to the Private Resolver."
+   }
+  ]
+ },
+ {
+  "id": "ex-a6vxzrhg",
+  "version": 1,
+  "section": "private-zones",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `registrationEnabled: true` on the link do?",
+  "hint": "Nobody keeps a list.",
+  "choices": [
+   {
+    "text": "Machines register their own names",
+    "correct": true,
+    "why": "Right. One registration zone per network."
+   },
+   {
+    "text": "Private endpoints register their addresses in the zone",
+    "correct": false,
+    "why": "Their records come from zone groups, as in lesson 19."
+   },
+   {
+    "text": "The zone is registered with a public registrar",
+    "correct": false,
+    "why": "A private zone has nothing to do with registrars."
+   },
+   {
+    "text": "The network may resolve names in the zone",
+    "correct": false,
+    "why": "Any link lets it resolve; registration is the extra."
+   }
+  ]
+ },
+ {
+  "id": "ex-w3xvy7f5",
+  "version": 1,
+  "section": "private-zones",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop creates a private zone `shop.example` holding only `api`, linked to `vnet-shop-prod`. What happens to `www.shop.example` for machines in that network?",
+  "hint": "Does a private zone fall through?",
+  "choices": [
+   {
+    "text": "It resolves from the public zone as before",
+    "correct": false,
+    "why": "A private zone does not fall through to the public one."
+   },
+   {
+    "text": "It resolves to `api`'s address",
+    "correct": false,
+    "why": "Nothing maps `www` to `api`."
+   },
+   {
+    "text": "It resolves only after the TTL of the public record runs out",
+    "correct": false,
+    "why": "Waiting changes nothing; the private zone answers first."
+   },
+   {
+    "text": "It stops resolving there",
+    "correct": true,
+    "why": "Right. The private zone answers \"no such name\"."
+   }
+  ]
+ },
+ {
+  "id": "ex-3kz7pt4b",
+  "version": 1,
+  "section": "private-zones",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which half of the Private Resolver lets laptops in the office resolve `db.shop.internal`?",
+  "hint": "Which direction does the question travel?",
+  "choices": [
+   {
+    "text": "The outbound endpoint, with a ruleset",
+    "correct": false,
+    "why": "That sends Azure's questions to the office."
+   },
+   {
+    "text": "The inbound endpoint",
+    "correct": true,
+    "why": "Right. With a conditional forwarder for `shop.internal`."
+   },
+   {
+    "text": "A link from the private zone to the office network",
+    "correct": false,
+    "why": "Links join zones to virtual networks only."
+   },
+   {
+    "text": "Neither: the office uses `168.63.129.16` directly",
+    "correct": false,
+    "why": "That address answers only inside Azure."
+   }
+  ]
+ },
+ {
+  "id": "ex-zwz0hczx",
+  "version": 1,
+  "section": "private-zones",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A rule such as \"questions for `corp.shop.example` go to `192.168.1.10`\" belongs to a forwarding ___ on the outbound endpoint.",
+  "hint": "A set of rules has a one-word name.",
+  "blanks": [
+   {
+    "accept": [
+     "ruleset",
+     "rule set"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-3y3xysgc",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of moving `shop.example` to Azure DNS in the safe order.",
+  "hint": "The registrar changes last.",
+  "items": [
+   "create the zone in Azure DNS",
+   "copy every record into the new zone",
+   "ask the new name servers directly with `dig @<server>`",
+   "write the four name servers at the registrar",
+   "wait for the parent's old NS records to expire"
+  ],
+  "trap": "Changing the registrar first sends the internet to a zone that is still empty."
+ },
+ {
+  "id": "ex-208vvz4f",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A machine in `vnet-shop-staging` cannot resolve `db.shop.internal`, though one in `vnet-shop-prod` can. What is the first thing to check?",
+  "hint": "Whom does the zone answer?",
+  "choices": [
+   {
+    "text": "The record's TTL",
+    "correct": false,
+    "why": "TTL decides caching, not who may ask."
+   },
+   {
+    "text": "Whether the zone has a link to `vnet-shop-staging`",
+    "correct": true,
+    "why": "Right. The file linked production only."
+   },
+   {
+    "text": "The zone's four name servers",
+    "correct": false,
+    "why": "Private zones are not asked through name servers."
+   },
+   {
+    "text": "Whether staging has registration enabled",
+    "correct": false,
+    "why": "Registration writes names; resolving needs only a link."
+   }
+  ]
+ },
+ {
+  "id": "ex-fxdk35xb",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did the lab actually do in this lesson? Choose all that apply.",
+  "hint": "Look at what has a transcript.",
+  "choices": [
+   {
+    "text": "Read a whole CNAME chain from the public DNS",
+    "correct": true,
+    "why": "Right. `dig portal.azure.com`."
+   },
+   {
+    "text": "Compiled a public zone with an alias record",
+    "correct": true,
+    "why": "Right. `public.bicep`."
+   },
+   {
+    "text": "Listed the name servers of a delegated zone with `dig NS`",
+    "correct": false,
+    "why": "The recording machine's resolver left NS questions unanswered."
+   },
+   {
+    "text": "Resolved `db.shop.internal` through a private zone",
+    "correct": false,
+    "why": "Private zones answer only inside Azure."
+   },
+   {
+    "text": "Compiled a private zone with automatic registration",
+    "correct": true,
+    "why": "Right. `private.bicep`."
+   }
+  ]
+ }
+]

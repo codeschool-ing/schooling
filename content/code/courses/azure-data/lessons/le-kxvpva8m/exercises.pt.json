@@ -1,0 +1,423 @@
+{
+  "ex-g4kgsyk5": {
+    "prompt": "O que apagar um pedido de `lake/flat` fez com o arquivo Parquet que o guardava?",
+    "hint": "Arquivos Parquet nunca são editados.",
+    "choices": [
+      {
+        "text": "Tirou a linha do arquivo, no próprio arquivo",
+        "why": "Um arquivo Parquet não pode ser editado no lugar; o Delta nunca muda um arquivo que já escreveu."
+      },
+      {
+        "text": "Nada: um arquivo novo recebeu as outras linhas, e um commit parou de citar o antigo",
+        "why": "Isso. O arquivo antigo continua no disco; só não está mais na tabela."
+      },
+      {
+        "text": "Apagou-o do disco e escreveu um menor no lugar dele, com o mesmo nome e no mesmo caminho",
+        "why": "Só o vacuum apaga arquivos do disco, e ele não tinha rodado."
+      },
+      {
+        "text": "Acrescentou uma linha de marcação ao fim dele",
+        "why": "Nada é acrescentado a um arquivo Parquet já escrito."
+      }
+    ]
+  },
+  "ex-rfzfewb7": {
+    "prompt": "`lake/flat` guardava 98.727 pedidos num arquivo. Quantas linhas apagar um pedido teve de copiar?",
+    "hint": "Todas as linhas do arquivo menos a apagada."
+  },
+  "ex-1hr84vqg": {
+    "prompt": "Depois do delete, um colega conta os pedidos com o DuckDB sobre `lake/flat/*.parquet` e obtém 197.453. Por quê?",
+    "hint": "O que um glob sobre a pasta ignora?",
+    "choices": [
+      {
+        "text": "O delete falhou no meio e escreveu o mês inteiro uma segunda vez na pasta",
+        "why": "O delete funcionou: a versão 1 do log tem 98.726 linhas."
+      },
+      {
+        "text": "O DuckDB conta linhas apagadas até o vacuum rodar",
+        "why": "Aqui o DuckDB não sabe nada de deletes; ele leu arquivos."
+      },
+      {
+        "text": "Leu a pasta: o arquivo antigo e o novo",
+        "why": "Isso. Só quem lê o log sabe que o arquivo antigo saiu da tabela."
+      },
+      {
+        "text": "O arquivo zstd guarda cada linha duas vezes",
+        "why": "O codec muda o tamanho, não as linhas."
+      }
+    ]
+  },
+  "ex-94af3q8s": {
+    "prompt": "Dois jobs terminam de escrever seus arquivos Parquet no mesmo instante e os dois tentam fazer o commit da versão 8 da mesma tabela. O que impede que os dois consigam?",
+    "hint": "Um commit é um arquivo com um número como nome.",
+    "choices": [
+      {
+        "text": "O arquivo do commit só é criado se não existir outro com esse nome; quem perde tenta de novo como versão 9",
+        "why": "Isso. O \"criar só se não existir\" do armazenamento é a trava inteira, e por isso nenhum serviço de trava foi necessário."
+      },
+      {
+        "text": "Um serviço de trava ao lado da conta de armazenamento, que o Delta exige no Azure",
+        "why": "O `deltalake` gravou no Azurite na lição 17 sem serviço de trava."
+      },
+      {
+        "text": "Nada; os dois fazem commit e a tabela fica com duas versões 8",
+        "why": "Dois arquivos não podem ter o mesmo nome, e a segunda criação falha."
+      },
+      {
+        "text": "O Delta permite um escritor por tabela, então o segundo job nem começou",
+        "why": "Escritores não pedem permissão para começar; descobrem no commit."
+      }
+    ]
+  },
+  "ex-96exn812": {
+    "prompt": "Num commit, a ação ___ tira um arquivo da tabela e o deixa no disco.",
+    "hint": "O oposto dela é `add`.",
+    "blanks": [
+      {
+        "accept": [
+          "remove"
+        ]
+      }
+    ]
+  },
+  "ex-8f7ed5tz": {
+    "prompt": "Em `lake/by_day`, onde fica o `dt` de cada pedido?",
+    "hint": "Olhe o schema que o arquivo Parquet imprimiu.",
+    "choices": [
+      {
+        "text": "Numa coluna `dt` dentro de cada arquivo Parquet",
+        "why": "Os arquivos particionados não têm coluna `dt`; o schema deles lista seis colunas."
+      },
+      {
+        "text": "No nome da pasta e no log",
+        "why": "Isso. O leitor recoloca a coluna a partir dali, e filtra por ela sem abrir arquivo."
+      },
+      {
+        "text": "Só nas estatísticas do rodapé do Parquet",
+        "why": "O rodapé descreve as colunas dentro do arquivo, e `dt` não é uma delas."
+      },
+      {
+        "text": "Num arquivo de índice de partições que a biblioteca guarda ao lado do log",
+        "why": "Esse arquivo não existe; o log e as pastas são tudo o que há."
+      }
+    ]
+  },
+  "ex-ctwvzj8q": {
+    "prompt": "A pergunta do mês leu 2.442.170 bytes de `by_day`, que ocupa 1.879.174 bytes no disco. Como um leitor lê mais do que existe?",
+    "hint": "Cada arquivo diário tem uns 60 KB.",
+    "choices": [
+      {
+        "text": "Os valores de partição foram lidos uma vez por linha",
+        "why": "Os valores de partição vêm do log, não dos arquivos."
+      },
+      {
+        "text": "O DuckDB leu cada arquivo duas vezes para conferir",
+        "why": "Nada confere arquivos lendo-os duas vezes."
+      },
+      {
+        "text": "A primeira leitura, a do rodapé, trouxe cada arquivo pequeno inteiro, e as colunas foram lidas de novo",
+        "why": "Isso. Um arquivo menor que essa primeira leitura é lido inteiro e depois de novo em parte."
+      },
+      {
+        "text": "O JSON do log foi contado como dado",
+        "why": "O `measure.py` contou só o que passou pela torneira, que o dataset abriu: os arquivos Parquet."
+      }
+    ]
+  },
+  "ex-5t6ac9t9": {
+    "prompt": "`lake/daily` não tem coluna de partição, e mesmo assim a pergunta sobre um dia abriu 1 arquivo de 31. Como o leitor soube qual?",
+    "hint": "Cada arquivo foi escrito por um append de uma noite.",
+    "choices": [
+      {
+        "text": "Abriu cada rodapé e parou no certo",
+        "why": "Ele abriu um arquivo, não 31 rodapés."
+      },
+      {
+        "text": "As estatísticas de cada arquivo no log dizem que o menor e o maior `dt` dele são aquele dia",
+        "why": "Isso. É o data skipping, e não precisa de pastas, só de arquivos escritos na ordem em que são consultados."
+      },
+      {
+        "text": "Os nomes dos arquivos trazem a data",
+        "why": "Os nomes são aleatórios; a data não está neles."
+      },
+      {
+        "text": "O `deltalake` particiona sozinho, em silêncio, toda tabela pela coluna de data, pedindo ou não",
+        "why": "`daily` foi escrito sem `partition_by`, e não tem pastas `dt=`."
+      }
+    ]
+  },
+  "ex-nfsfhv0a": {
+    "prompt": "Apagar o mesmo pedido copiou 98.726 linhas em `lake/flat` e 2.998 em `lake/by_day`. Quantas vezes menos linhas a tabela particionada copiou, arredondando para o inteiro mais próximo?",
+    "hint": "Divida um pelo outro."
+  },
+  "ex-5ctzd7vd": {
+    "prompt": "O suporte consulta muito os pedidos de um cliente, então alguém propõe particionar a tabela de pedidos por `customer_id`. O que acontece com a pergunta do painel sobre um dia?",
+    "hint": "Quantas pastas guardam os pedidos de um dia?",
+    "choices": [
+      {
+        "text": "Fica mais rápida, já que cada pasta é menor",
+        "why": "Pastas menores só ajudam uma pergunta que cite um cliente."
+      },
+      {
+        "text": "Nada muda, porque o dia continua no log",
+        "why": "O arquivo de cada cliente guarda muitos dias, então a faixa de `dt` dele descarta pouco."
+      },
+      {
+        "text": "Abre milhares de arquivos minúsculos, um por cliente",
+        "why": "Isso. Qualquer cliente pode ter comprado naquele dia, então toda pasta é aberta, e cada arquivo custa mais para abrir do que guarda."
+      },
+      {
+        "text": "Falha, já que uma tabela particionada só pode ser filtrada pela coluna de partição",
+        "why": "Qualquer coluna pode ser filtrada; a partição decide só o que pode ser pulado."
+      }
+    ]
+  },
+  "ex-kvvxe9rv": {
+    "prompt": "Quais destes permitem a um leitor pular um arquivo sem abri-lo? Escolha todas as que se aplicam.",
+    "hint": "Tudo o que o leitor sabe antes de abrir qualquer coisa.",
+    "choices": [
+      {
+        "text": "O valor de partição registrado para o arquivo",
+        "why": "Sim: está no caminho e no log."
+      },
+      {
+        "text": "O menor e o maior valor nas estatísticas do `add` do arquivo",
+        "why": "Sim: isso é o data skipping."
+      },
+      {
+        "text": "As estatísticas dos grupos de linhas no rodapé do Parquet",
+        "why": "Elas deixam o leitor pular partes de um arquivo, depois de abri-lo para ler o rodapé."
+      },
+      {
+        "text": "O `commitInfo` do commit",
+        "why": "Ele registra quem fez o quê e quando, nada sobre valores."
+      }
+    ]
+  },
+  "ex-epgcsn59": {
+    "prompt": "O que a compactação de `lake/hourly` mudou?",
+    "hint": "Conte as linhas antes e depois.",
+    "choices": [
+      {
+        "text": "As linhas, que foram ordenadas e deduplicadas",
+        "why": "A compactação não muda nenhuma linha; as ações dela dizem `dataChange=false`."
+      },
+      {
+        "text": "Os arquivos: 527 pequenos viraram 31",
+        "why": "Isso. As mesmas 98.727 linhas, um arquivo por dia."
+      },
+      {
+        "text": "As partições, que passaram de dias para meses",
+        "why": "As partições continuaram `dt`; cada dia foi compactado dentro de si."
+      },
+      {
+        "text": "Nada na tabela, só o disco, onde os arquivos pequenos foram apagados",
+        "why": "É o contrário: a tabela mudou e o disco guardou os arquivos antigos."
+      }
+    ]
+  },
+  "ex-p7sjrptn": {
+    "prompt": "Depois da compactação o disco guardava 558 arquivos Parquet para uma tabela de 31. Por quê?",
+    "hint": "A compactação é um commit como qualquer outro.",
+    "choices": [
+      {
+        "text": "Os 527 arquivos pequenos saíram da tabela e ficaram no disco até o vacuum",
+        "why": "Isso. 527 antigos mais 31 novos dão 558."
+      },
+      {
+        "text": "A compactação falhou no meio e deixou os dois",
+        "why": "Ela fez commit: a versão 527 cita 31 arquivos."
+      },
+      {
+        "text": "Os checkpoints também são arquivos Parquet",
+        "why": "A contagem deixou de fora o `_delta_log`, onde ficam os checkpoints."
+      },
+      {
+        "text": "Cada arquivo novo foi escrito uma vez por coluna de partição e uma vez por coluna de ordenação",
+        "why": "Cada dia virou um arquivo, escrito uma vez."
+      }
+    ]
+  },
+  "ex-hnxr9far": {
+    "prompt": "Toda ação do commit de compactação diz `dataChange=false`. Para quem é isso?",
+    "hint": "Pense num leitor que quer só o que é novo.",
+    "choices": [
+      {
+        "text": "O vacuum, que guarda para sempre os arquivos marcados assim, seja qual for a retenção",
+        "why": "O vacuum remove o que nenhuma versão recente cita, seja qual for a marca."
+      },
+      {
+        "text": "Um job que lê só o que é novo",
+        "why": "Isso. Ele pula o commit em vez de ler o mês de novo como 31 arquivos novos."
+      },
+      {
+        "text": "O DuckDB, que recusa arquivos com essa marca",
+        "why": "O DuckDB leu a tabela compactada normalmente."
+      },
+      {
+        "text": "Quem lê o histórico, e nenhum programa",
+        "why": "Programas a leem: um leitor que acompanha mudanças depende dela."
+      }
+    ]
+  },
+  "ex-j0n0tvxv": {
+    "prompt": "O carregador da Quitanda acrescenta à tabela de pedidos de hora em hora, das 7 às 23. Quando a partição `dt=2026-10-15` deve ser compactada?",
+    "hint": "Compactar uma partição que ainda está sendo escrita é trabalho perdido.",
+    "choices": [
+      {
+        "text": "Depois de cada carga horária, para mantê-la com um arquivo o dia todo",
+        "why": "Dezessete reescritas de um dia que cresce, onde uma bastaria."
+      },
+      {
+        "text": "Uma vez por mês, junto com todos os outros dias",
+        "why": "Um mês de painéis lê os arquivos pequenos antes."
+      },
+      {
+        "text": "Uma vez, depois da última carga do dia",
+        "why": "Isso. O dia então está fechado, e uma reescrita o deixa com um arquivo para sempre."
+      },
+      {
+        "text": "Nunca; o vacuum junta os arquivos pequenos sozinho",
+        "why": "O vacuum apaga arquivos; não junta nada."
+      }
+    ]
+  },
+  "ex-76gzez11": {
+    "prompt": "O que o vacuum apaga?",
+    "hint": "É a única operação que apaga arquivos de dados.",
+    "choices": [
+      {
+        "text": "Linhas que um delete marcou",
+        "why": "Um delete já reescreveu os arquivos; o vacuum trabalha com arquivos inteiros."
+      },
+      {
+        "text": "Commits com mais de sete dias do `_delta_log`",
+        "why": "O log tem a própria retenção; o vacuum apaga arquivos de dados."
+      },
+      {
+        "text": "Arquivos de dados que nenhuma versão dentro do período de retenção cita",
+        "why": "Isso. Os arquivos que a versão atual cita ficam, seja qual for a idade."
+      },
+      {
+        "text": "Os arquivos pequenos da versão atual, que a compactação substitui",
+        "why": "O vacuum nunca toca num arquivo que a versão atual cita."
+      }
+    ]
+  },
+  "ex-gmpqmwdw": {
+    "prompt": "Depois de `vacuum 0 force`, `table.py lake/hourly@100 files` ainda imprime 101 arquivos e 18.577 linhas, e `read` falha. Por que a diferença?",
+    "hint": "O que cada um abre?",
+    "choices": [
+      {
+        "text": "O `files` lê só o log, que ainda descreve a versão 100; os arquivos de dados dela sumiram",
+        "why": "Isso. O log sobreviveu aos arquivos."
+      },
+      {
+        "text": "O `files` usa um cache que o vacuum não limpa",
+        "why": "Cada execução abre a tabela do zero; não há cache entre execuções."
+      },
+      {
+        "text": "O vacuum apagou o log da versão 100 mas não os arquivos dela",
+        "why": "É o contrário."
+      },
+      {
+        "text": "O `read` falhou porque a tabela fica travada enquanto o vacuum roda",
+        "why": "O vacuum já tinha terminado; o erro cita um arquivo que falta."
+      }
+    ]
+  },
+  "ex-rgehh7nh": {
+    "prompt": "O `deltalake` recusou um vacuum com zero hora de retenção porque a retenção padrão dele é de ___ horas, sete dias.",
+    "hint": "Sete vezes vinte e quatro.",
+    "blanks": [
+      {
+        "accept": [
+          "168"
+        ]
+      }
+    ]
+  },
+  "ex-b497yf9y": {
+    "prompt": "Um cliente pede para ser apagado, e os pedidos dele são deletados da tabela numa segunda-feira. A retenção é de sete dias e o vacuum roda aos domingos. Quando as linhas somem do disco?",
+    "hint": "Um arquivo fica elegível sete dias depois do delete, e alguma coisa precisa removê-lo.",
+    "choices": [
+      {
+        "text": "Na segunda, no momento do commit do delete",
+        "why": "O delete tira as linhas da tabela; os arquivos antigos ficam no disco."
+      },
+      {
+        "text": "No domingo seguinte, seis dias depois",
+        "why": "Nesse domingo os arquivos antigos têm seis dias, dentro da retenção de sete, então o vacuum os mantém."
+      },
+      {
+        "text": "No segundo domingo, 13 dias depois",
+        "why": "Isso. O primeiro vacuum depois dos sete dias é o do segundo domingo; até lá as linhas podem ser lidas voltando no tempo."
+      },
+      {
+        "text": "Nunca, enquanto a viagem no tempo estiver ligada para a tabela",
+        "why": "A viagem no tempo não é um interruptor; ela dura enquanto os arquivos durarem."
+      }
+    ]
+  },
+  "ex-95v7ne20": {
+    "prompt": "`by_day` leu 73.813 bytes para a pergunta do dia. Mil vezes maior, feita 4.464 vezes por mês, a um preço ilustrativo de 5 USD por terabyte processado (um terabyte sendo 10^12 bytes), qual é a conta do mês em USD, com duas casas?",
+    "hint": "Bytes × 1.000 × 4.464, depois divida por 10^12 e multiplique por 5."
+  },
+  "ex-pj89x92w": {
+    "prompt": "Por que a lição conta o custo dos arquivos pequenos em arquivos abertos, em vez de multiplicar os bytes deles por mil como o resto?",
+    "hint": "O que define quantos arquivos existem?",
+    "choices": [
+      {
+        "text": "Arquivos pequenos não são cobrados por byte",
+        "why": "Bytes são cobrados do mesmo jeito em qualquer arquivo."
+      },
+      {
+        "text": "A quantidade deles é definida pelo número de escritas, não por quanto a tabela guarda",
+        "why": "Isso. Com mil vezes os pedidos, uma carga horária continua escrevendo 17 arquivos por dia, só que maiores."
+      },
+      {
+        "text": "Requisições custam mais que bytes em qualquer tamanho",
+        "why": "O que custa mais depende dos tamanhos; é isso que as tabelas comparam."
+      },
+      {
+        "text": "A compactação torna irrelevantes os bytes dos arquivos pequenos",
+        "why": "Antes da compactação os bytes são lidos; a lição os mediu."
+      }
+    ]
+  },
+  "ex-8e960zp5": {
+    "prompt": "Ligue cada operação numa tabela Delta ao que ela escreve.",
+    "hint": "Só uma delas apaga alguma coisa do disco.",
+    "pairs": [
+      {
+        "left": "delete",
+        "right": "Arquivos novos com as outras linhas, e um commit que remove os antigos"
+      },
+      {
+        "left": "compactação",
+        "right": "Menos arquivos, e maiores, num commit marcado como sem mudança nos dados"
+      },
+      {
+        "left": "vacuum",
+        "right": "Nada novo: apaga arquivos antigos do disco e registra dois commits"
+      },
+      {
+        "left": "restore",
+        "right": "Um commit cujos arquivos são os de uma versão mais antiga"
+      }
+    ],
+    "right_distractors": [
+      "Uma edição dentro de um arquivo Parquet existente"
+    ]
+  },
+  "ex-ad7r00bd": {
+    "prompt": "Ponha os passos de um delete numa tabela Delta na ordem em que acontecem.",
+    "hint": "Os leitores nunca podem ver metade dele.",
+    "items": [
+      "O arquivo Parquet novo, com todas as outras linhas, é escrito onde nenhum leitor olha",
+      "O próximo commit numerado é criado, removendo o arquivo antigo e adicionando o novo",
+      "Um leitor que começa agora lê a versão nova",
+      "O vacuum, passada a retenção, apaga o arquivo antigo do disco"
+    ]
+  }
+}

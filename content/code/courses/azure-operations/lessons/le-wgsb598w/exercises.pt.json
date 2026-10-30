@@ -1,0 +1,263 @@
+{
+  "ex-fmjs1yd3": {
+    "prompt": "Por que a loja põe a aprovação no ambiente shop-production e não no YAML da esteira?",
+    "hint": "Quem consegue apagar uma linha de YAML?",
+    "choices": [
+      {
+        "text": "Aprovações no YAML não são suportadas pelo Azure Pipelines",
+        "why": "O ponto não é suporte; é quem controla a proteção."
+      },
+      {
+        "text": "Para que toda esteira que o mira espere",
+        "why": "Certo. Uma verificação no ambiente não sai editando uma esteira."
+      },
+      {
+        "text": "Aprovações no ambiente são mais baratas por job paralelo",
+        "why": "Verificações não são cobradas por job; o motivo é controle."
+      },
+      {
+        "text": "Porque o ambiente é onde os agentes rodam",
+        "why": "Agentes vêm de um pool; o ambiente é o alvo."
+      }
+    ]
+  },
+  "ex-r0x5pd4y": {
+    "prompt": "Um deploy chega a shop-production numa terça às 10:00. A aprovação foi dada, mas um alerta do Azure Monitor disparou em rg-shop há cinco minutos. O que acontece?",
+    "hint": "Uma verificação que passa basta?",
+    "choices": [
+      {
+        "text": "Ele começa, porque uma pessoa aprovou",
+        "why": "Uma aprovação é uma das verificações; o job espera todas."
+      },
+      {
+        "text": "Ele espera até o gate de alertas passar",
+        "why": "Certo. Toda verificação precisa passar, e o gate é reavaliado até passar ou estourar o tempo."
+      },
+      {
+        "text": "Ele começa no slot staging e para antes da troca",
+        "why": "As verificações rodam antes de o job começar; nada é implantado enquanto uma falha."
+      },
+      {
+        "text": "Ele é cancelado e tem de ser enfileirado de novo amanhã",
+        "why": "O gate espera e reavalia; ele só falha no limite de tempo."
+      }
+    ]
+  },
+  "ex-mn8wt4dh": {
+    "prompt": "Qual é a opção de aprovação útil que a lição recomenda, e por quê?",
+    "hint": "Os olhos de quem uma aprovação acrescenta?",
+    "choices": [
+      {
+        "text": "Permitir qualquer membro do projeto, para os deploys não travarem",
+        "why": "Aí o autor pode aprovar, e a aprovação não acrescenta uma segunda pessoa."
+      },
+      {
+        "text": "Uma aprovação que não expira",
+        "why": "Uma aprovação parada deveria falhar uma hora; um deploy que ninguém aprovou não deveria ficar esperando."
+      },
+      {
+        "text": "Recusar quem enfileirou a execução",
+        "why": "Certo. Do contrário a aprovação é uma espera, e não um segundo par de olhos."
+      },
+      {
+        "text": "Exigir três aprovadores em todo ambiente",
+        "why": "A quantidade é escolha de cada ambiente; o que mais importa é quem fica de fora."
+      }
+    ]
+  },
+  "ex-dtespgjm": {
+    "prompt": "Ligue cada verificação de shop-production ao que ela evita.",
+    "hint": "Uma proteção cada.",
+    "pairs": [
+      {
+        "left": "Aprovação",
+        "right": "Uma mudança que só o autor olhou"
+      },
+      {
+        "left": "Horário comercial",
+        "right": "Um deploy quando não há ninguém para observar"
+      },
+      {
+        "left": "Consultar alertas do Azure Monitor",
+        "right": "Implantar no meio de um incidente em curso"
+      },
+      {
+        "left": "Lock exclusivo",
+        "right": "Duas execuções disputando o mesmo slot"
+      }
+    ],
+    "right_distractors": [
+      "Um build que falha nos testes unitários"
+    ]
+  },
+  "ex-k65dh5k3": {
+    "prompt": "O que o App Service faz antes de mudar o roteamento numa troca?",
+    "hint": "Onde acontece a partida a frio?",
+    "choices": [
+      {
+        "text": "Sobe os processos de staging com as configurações de produção e espera que respondam",
+        "why": "Certo. O aquecimento acontece antes de qualquer requisição de cliente chegar à versão nova."
+      },
+      {
+        "text": "Copia o banco de produção para o slot staging",
+        "why": "Uma troca nunca toca em dados."
+      },
+      {
+        "text": "Reconstrói a imagem a partir do commit",
+        "why": "Nada é reconstruído; o slot já roda a versão nova."
+      },
+      {
+        "text": "Pede aos aprovadores da esteira de novo",
+        "why": "Aprovações pertencem ao ambiente da esteira, antes do deploy; a troca não as consulta."
+      }
+    ]
+  },
+  "ex-xs1jejpb": {
+    "prompt": "Depois de uma troca, a produção começa a gravar pedidos no banco de staging. O que faltou?",
+    "hint": "Quais configurações viajam com o código?",
+    "choices": [
+      {
+        "text": "A troca com prévia",
+        "why": "A prévia deixa testar antes de concluir; ela mostraria o problema, não o evitaria."
+      },
+      {
+        "text": "Marcar DB_CONNECTION como específica do slot",
+        "why": "Certo. Uma configuração fixa fica com o slot; uma comum viaja com o código."
+      },
+      {
+        "text": "Um caminho de health check no slot staging",
+        "why": "Health checks decidem quando os processos estão prontos, não qual banco usam."
+      },
+      {
+        "text": "A troca automática, que trocaria os dois slots de uma vez",
+        "why": "A troca automática é a mesma troca sem ninguém olhando; ela leva as configurações do mesmo jeito."
+      }
+    ]
+  },
+  "ex-7pvdt7e7": {
+    "prompt": "Por que a loja não liga a troca automática em produção?",
+    "hint": "Que momento ela remove?",
+    "choices": [
+      {
+        "text": "A troca automática pula o aquecimento",
+        "why": "Ela aquece como qualquer troca."
+      },
+      {
+        "text": "A troca automática só funciona no nível Free",
+        "why": "Ela é um recurso de planos que têm slots."
+      },
+      {
+        "text": "Ela troca também as configurações fixas",
+        "why": "Configurações fixas ficam com o slot em toda troca."
+      },
+      {
+        "text": "Ninguém olha antes da troca",
+        "why": "Certo. Todo deploy em staging vai direto para a produção."
+      }
+    ]
+  },
+  "ex-nc55760w": {
+    "prompt": "A produção se comporta mal dez minutos depois de uma troca. Qual é o caminho mais rápido de volta à versão anterior?",
+    "hint": "Onde está a versão anterior agora?",
+    "choices": [
+      {
+        "text": "Rodar de novo a execução anterior da esteira para reconstruir e implantar",
+        "why": "Funciona, e leva o tempo de um build e de um deploy."
+      },
+      {
+        "text": "Trocar de novo",
+        "why": "Certo. O staging guarda a versão anterior, já aquecida."
+      },
+      {
+        "text": "Restaurar o app do backup de ontem à noite",
+        "why": "Um backup restaura mais do que o código e leva mais tempo que uma troca."
+      },
+      {
+        "text": "Esperar o diagnóstico e então implantar uma correção",
+        "why": "A regra da loja é trocar de volta primeiro e investigar depois."
+      }
+    ]
+  },
+  "ex-xfgncgdr": {
+    "prompt": "A versão 42 renomeou `delivery_slot` para `delivery_window` numa migração só. A produção falha, e a equipe troca de volta para a 41. O que acontece?",
+    "hint": "A troca mexeu na tabela?",
+    "choices": [
+      {
+        "text": "A 41 roda normal, porque a troca restaurou o esquema antigo",
+        "why": "Uma troca permuta código e configuração, nunca dados."
+      },
+      {
+        "text": "A troca é recusada enquanto há migração pendente",
+        "why": "O App Service não sabe nada das migrações do banco."
+      },
+      {
+        "text": "A 41 consulta uma coluna que não existe mais, e falha também",
+        "why": "Certo. É por isso que mudanças em dado compartilhado são divididas em expandir e contrair."
+      },
+      {
+        "text": "As duas colunas existem, então qualquer versão funciona",
+        "why": "Isso seria expandir e depois contrair; renomear num passo só deixa uma coluna."
+      }
+    ]
+  },
+  "ex-qet25s21": {
+    "prompt": "Ponha em ordem a mudança expandir-e-contrair na tabela de pedidos.",
+    "hint": "Acrescentar, usar as duas, depois remover.",
+    "trap": "Remover a coluna velha na mesma versão em que entra a nova é o deslize: a troca de volta encontra uma coluna que sumiu.",
+    "items": [
+      "Acrescentar delivery_window, aceitando nulo",
+      "A versão 42 escreve nas duas colunas",
+      "Esperar até ninguém mais trocar de volta para a 41",
+      "A versão 43 remove delivery_slot"
+    ]
+  },
+  "ex-r84hrc9a": {
+    "prompt": "O plano do App Service de uma equipe não tem slots no seu nível, e ela quer o padrão desta lição. Qual é a resposta honesta?",
+    "hint": "O padrão existe sem slots?",
+    "choices": [
+      {
+        "text": "Usar a troca com prévia, que dispensa slot",
+        "why": "A prévia é um tipo de troca, e toda troca precisa de um slot."
+      },
+      {
+        "text": "Implantar duas vezes em produção, uma para aquecer",
+        "why": "O primeiro deploy já cai nos clientes."
+      },
+      {
+        "text": "Ir para um nível com slots, ou implantar no lugar",
+        "why": "Certo. Slots dependem do nível do plano; conferir isso antes faz parte do desenho."
+      },
+      {
+        "text": "Criar um segundo grupo de recursos e trocar entre eles",
+        "why": "Uma troca é entre slots de um app, não entre grupos de recursos."
+      }
+    ]
+  },
+  "ex-7h78a3mw": {
+    "prompt": "A regra da loja observa `POST /checkout` por uma janela fixa depois de cada troca antes de dar a versão como boa. Quantos minutos tem essa janela?",
+    "hint": "Está na seção sobre rollback.",
+    "unit": "minutos"
+  },
+  "ex-7p608eer": {
+    "prompt": "Quais destas coisas uma troca de volta para a versão anterior desfaz? Marque todas as que se aplicam.",
+    "hint": "Código e configuração, sim; dados, não.",
+    "choices": [
+      {
+        "text": "Um bug no código novo",
+        "why": "Sim. O código anterior é o que roda depois da troca."
+      },
+      {
+        "text": "Uma configuração errada que viajou com a versão nova",
+        "why": "Sim. Configurações comuns viajam com o código, nos dois sentidos."
+      },
+      {
+        "text": "Linhas que a versão nova gravou num formato novo",
+        "why": "Não. Os dados ficam como a versão nova deixou."
+      },
+      {
+        "text": "Uma coluna que a migração da versão nova removeu",
+        "why": "Não. É exatamente para isso que existe expandir e contrair."
+      }
+    ]
+  }
+}

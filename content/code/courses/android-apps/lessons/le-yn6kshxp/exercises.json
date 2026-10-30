@@ -1,0 +1,616 @@
+[
+  {
+    "id": "ex-sp01rtnn",
+    "version": 1,
+    "section": "ui-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `WeekUiState` compute `totalMinutes` from `sessions` instead of storing it as a field?",
+    "hint": "Section 02 opens with a screen showing 90 beside a list adding up to 135.",
+    "choices": [
+      {
+        "text": "So the total can never disagree with the list",
+        "correct": true,
+        "why": "Right: a value computed from the list follows every change to it, and nothing can forget to update it."
+      },
+      {
+        "text": "Because a data class cannot hold an `Int` beside a `List`",
+        "correct": false,
+        "why": "A data class holds any mix of fields; the choice is about consistency."
+      },
+      {
+        "text": "To make the screen recompose less often",
+        "correct": false,
+        "why": "A computed property changes nothing about when the screen recomposes; the state is replaced either way."
+      },
+      {
+        "text": "Because `SavedStateHandle` cannot store numbers",
+        "correct": false,
+        "why": "The handle stores numbers fine, and the total is not in the handle at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-fe4bq3zr",
+    "version": 1,
+    "section": "ui-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`draftMinutes` is a `String`. What would go wrong if it were an `Int`?",
+    "hint": "Think about the field while the student is half-way through typing.",
+    "choices": [
+      {
+        "text": "Nothing, an `Int` would only use less memory",
+        "correct": false,
+        "why": "An empty field and `\"4\"` on the way to `\"45\"` are states an `Int` cannot represent faithfully."
+      },
+      {
+        "text": "An empty or half-typed field could not be shown",
+        "correct": true,
+        "why": "Right: the text being typed is not yet a number, so it is kept as text and converted once, in `canAdd` and `onAdd`."
+      },
+      {
+        "text": "`OutlinedTextField` would refuse to compile",
+        "correct": false,
+        "why": "It would compile with a conversion at the call; the problem shows up when somebody types."
+      },
+      {
+        "text": "The total would be computed in hours",
+        "correct": false,
+        "why": "The unit has nothing to do with the type of the draft."
+      }
+    ]
+  },
+  {
+    "id": "ex-daktp9sz",
+    "version": 1,
+    "section": "ui-state",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The ViewModel keeps a private `MutableStateFlow` and exposes it as a read-only `___`, so that only it can change the state.",
+    "hint": "The type `asStateFlow()` returns.",
+    "blanks": [
+      {
+        "accept": [
+          "StateFlow"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g43p9mad",
+    "version": 1,
+    "section": "one-way-flow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the planner, what does `WeekScreen` do when the student ticks a session's checkbox?",
+    "hint": "State goes down, events come up.",
+    "choices": [
+      {
+        "text": "Calls `onToggleDone(id)` and draws whatever state comes back",
+        "correct": true,
+        "why": "Right: the screen reports the intention and never changes the session itself."
+      },
+      {
+        "text": "Sets `session.done = true` in the list it was given",
+        "correct": false,
+        "why": "`done` is a `val` in an immutable class, and editing the given state is exactly what one-way flow forbids."
+      },
+      {
+        "text": "Keeps the tick in a `remember` until the ViewModel catches up",
+        "correct": false,
+        "why": "That is the second copy of the truth section 03 warns about."
+      },
+      {
+        "text": "Writes the tick to the `SavedStateHandle`",
+        "correct": false,
+        "why": "The screen never touches the handle; only the ViewModel does."
+      }
+    ]
+  },
+  {
+    "id": "ex-fq3k4da6",
+    "version": 1,
+    "section": "one-way-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson split the screen into `WeekScreen` and `WeekRoute`?",
+    "hint": "Which of the two did the screenshot test call?",
+    "choices": [
+      {
+        "text": "Because a composable may only take four parameters",
+        "correct": false,
+        "why": "There is no such limit; `WeekScreen` takes five."
+      },
+      {
+        "text": "So one part draws from any value and one part wires",
+        "correct": true,
+        "why": "Right: the test drew `WeekScreen` from a state it made up; only `WeekRoute` touches the ViewModel."
+      },
+      {
+        "text": "Because `viewModel()` cannot be called inside a `Column`",
+        "correct": false,
+        "why": "It can be called in any composable; the split is about what each part depends on."
+      },
+      {
+        "text": "So that the activity can choose a different ViewModel per rotation",
+        "correct": false,
+        "why": "The same ViewModel is kept across rotation, which is section 04's point."
+      }
+    ]
+  },
+  {
+    "id": "ex-1se00fzm",
+    "version": 1,
+    "section": "one-way-flow",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The screenshot test drew three sessions of 45, 25 and 90 minutes. What total did the screen show, in minutes?",
+    "hint": "Add them.",
+    "value": 160,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-5k7j543k",
+    "version": 1,
+    "section": "one-way-flow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague makes `onDraftChange` ignore any keystroke that is not a digit, by not changing the state. What does the student see when typing a letter?",
+    "hint": "Whose value does the field show?",
+    "choices": [
+      {
+        "text": "The letter appears, and disappears at the next recomposition",
+        "correct": false,
+        "why": "The field never holds text of its own, so there is nothing to show the letter before the state changes."
+      },
+      {
+        "text": "The app crashes, because the field and the state disagree",
+        "correct": false,
+        "why": "They cannot disagree: the field shows `state.draftMinutes` and nothing else."
+      },
+      {
+        "text": "Nothing changes in the field: the letter is refused",
+        "correct": true,
+        "why": "Right: the field draws the state; a state that did not change draws the same text."
+      },
+      {
+        "text": "The letter is kept and converted to 0 by `toIntOrNull`",
+        "correct": false,
+        "why": "`toIntOrNull` gives `null` for a letter, and the letter never reached the state anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga83v39k",
+    "version": 1,
+    "section": "surviving",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`RecreateTest` printed the identities before and after `recreate()`. Which changed?",
+    "hint": "Two different activities, one…",
+    "choices": [
+      {
+        "text": "Both: a new activity and a new ViewModel",
+        "correct": false,
+        "why": "Then the session would have been lost, and the test found 45 minutes after the recreation."
+      },
+      {
+        "text": "Only the activity",
+        "correct": true,
+        "why": "Right: the activity is a new object and the ViewModelStore handed the old ViewModel to it."
+      },
+      {
+        "text": "Only the ViewModel",
+        "correct": false,
+        "why": "It is the other way round: recreation replaces the activity and keeps the ViewModel."
+      },
+      {
+        "text": "Neither, because Robolectric does not recreate",
+        "correct": false,
+        "why": "It does: the activity's identity changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-83e4x5vk",
+    "version": 1,
+    "section": "surviving",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match where a value lives to the first event that loses it.",
+    "hint": "The table in section 04.",
+    "pairs": [
+      {
+        "left": "a plain `remember`",
+        "right": "a rotation"
+      },
+      {
+        "left": "a ViewModel's field",
+        "right": "the process killed in the background"
+      },
+      {
+        "left": "`SavedStateHandle`",
+        "right": "the app removed from recents"
+      }
+    ],
+    "right_distractors": [
+      "a new version of the app installed"
+    ]
+  },
+  {
+    "id": "ex-ekv8n56h",
+    "version": 1,
+    "section": "surviving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `ViewModelStore` do when its activity is destroyed for good, not by a configuration change?",
+    "hint": "The store is kept only across a configuration change.",
+    "choices": [
+      {
+        "text": "Hands its ViewModels to the next activity that opens",
+        "correct": false,
+        "why": "It hands them on only across a configuration change; otherwise there is no successor."
+      },
+      {
+        "text": "Writes its ViewModels into the saved `Bundle`",
+        "correct": false,
+        "why": "Only `SavedStateHandle` values reach the `Bundle`; a ViewModel is never serialised."
+      },
+      {
+        "text": "Calls `onCleared()` on each ViewModel and empties itself",
+        "correct": true,
+        "why": "Right: that is the end of a ViewModel's life."
+      },
+      {
+        "text": "Keeps them until the process ends",
+        "correct": false,
+        "why": "They are cleared with the activity, which is why `ProcessDeathTest` got a new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywsc29f5",
+    "version": 1,
+    "section": "saved-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `ProcessDeathTest` rebuilt the activity from the `Bundle`, what came back?",
+    "hint": "`after:` in the output.",
+    "choices": [
+      {
+        "text": "The draft \"30\", and no session",
+        "correct": true,
+        "why": "Right: the draft was in the handle and the session only in the old ViewModel's memory."
+      },
+      {
+        "text": "The session, and an empty draft",
+        "correct": false,
+        "why": "The session was never written to the handle, so nothing could bring it back."
+      },
+      {
+        "text": "Both, because the ViewModel was the same",
+        "correct": false,
+        "why": "The test printed `same ViewModel: false`."
+      },
+      {
+        "text": "Neither: the Bundle is empty after `destroy()`",
+        "correct": false,
+        "why": "The Bundle was filled by `saveInstanceState` before `destroy()`, and the draft came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-8z73nspz",
+    "version": 1,
+    "section": "saved-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belongs in a `SavedStateHandle`?",
+    "hint": "What the student was in the middle of, never the data itself.",
+    "choices": [
+      {
+        "text": "Every study session of the semester",
+        "correct": false,
+        "why": "That is data; it belongs in a database, and a large Bundle fails with `TransactionTooLargeException`."
+      },
+      {
+        "text": "The id of the course on screen",
+        "correct": true,
+        "why": "Right: small, and enough to reload everything else."
+      },
+      {
+        "text": "The activity, so it can be restored as it was",
+        "correct": false,
+        "why": "An activity is not something a Bundle can hold, and holding one is section 06's leak."
+      },
+      {
+        "text": "The rendered screen as a bitmap",
+        "correct": false,
+        "why": "A bitmap is large and is redrawn from the state anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd7s94r0",
+    "version": 1,
+    "section": "saved-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student types 45, switches to a video app for an hour, and comes back. The phone had killed the planner's process. Which statement describes what they see?",
+    "hint": "Section 05 imitated exactly this in a test.",
+    "choices": [
+      {
+        "text": "The app opens on its first screen with nothing typed",
+        "correct": false,
+        "why": "The system recreates the activity with its Bundle, and the draft is in it."
+      },
+      {
+        "text": "The same screen with 45 in the field, and the sessions added before it gone",
+        "correct": true,
+        "why": "Right: the handle survives the process and this lesson's in-memory list does not; lesson 15 fixes the second half."
+      },
+      {
+        "text": "Everything exactly as it was, because the ViewModel was kept",
+        "correct": false,
+        "why": "A ViewModel lives in the process's memory and dies with it."
+      },
+      {
+        "text": "A crash, because the ViewModel's state is null",
+        "correct": false,
+        "why": "A new ViewModel is built with a default state and the handle's draft; nothing is null."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6eaesh7",
+    "version": 1,
+    "section": "what-not-to-hold",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `LeakyViewModel`, holding the activity's `Context`, leak memory?",
+    "hint": "Which of the two lives longer?",
+    "choices": [
+      {
+        "text": "Because `getString` copies every resource into the ViewModel",
+        "correct": false,
+        "why": "`getString` returns one string; the problem is the reference kept in the field."
+      },
+      {
+        "text": "Because a `Context` cannot be garbage-collected at all",
+        "correct": false,
+        "why": "A `Context` is collected like anything else once nothing refers to it."
+      },
+      {
+        "text": "The ViewModel outlives the activity and keeps the destroyed one reachable",
+        "correct": true,
+        "why": "Right: after a rotation the old activity and its whole view tree stay in memory."
+      },
+      {
+        "text": "Because lint marks it, and marked code is kept by R8",
+        "correct": false,
+        "why": "Lint and R8 are unrelated; lint only reported the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-714snn0t",
+    "version": 1,
+    "section": "what-not-to-hold",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lint reported the leaky field under the check called `___`.",
+    "hint": "It is in square brackets at the end of the warning.",
+    "blanks": [
+      {
+        "accept": [
+          "StaticFieldLeak"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bsgb0pzh",
+    "version": 1,
+    "section": "what-not-to-hold",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the planner put \"160 min this week\" on screen without the ViewModel touching resources?",
+    "hint": "Values from one side, text from the other.",
+    "choices": [
+      {
+        "text": "The ViewModel keeps an `Application` and formats with it",
+        "correct": false,
+        "why": "The course names `AndroidViewModel` and does not use it, to keep the ViewModel testable with no Android."
+      },
+      {
+        "text": "The state carries the numbers and `WeekScreen` formats them with `stringResource`",
+        "correct": true,
+        "why": "Right: the ViewModel produces values and the screen produces text, in the phone's language."
+      },
+      {
+        "text": "The string is hard-coded in English in the state",
+        "correct": false,
+        "why": "Then no other language could ever show it; lesson 1 section 07 warns against exactly that."
+      },
+      {
+        "text": "The activity formats it and passes it to the ViewModel",
+        "correct": false,
+        "why": "Text flows down from the screen's own resources; the ViewModel never receives it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vk74bvrf",
+    "version": 1,
+    "section": "testing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can `WeekViewModelTest` run with no Robolectric?",
+    "hint": "Look at the ViewModel's imports.",
+    "choices": [
+      {
+        "text": "Because Gradle skips Android for tests in the `ui` package",
+        "correct": false,
+        "why": "A package name changes nothing; what the class depends on does."
+      },
+      {
+        "text": "Because the ViewModel holds no Android object",
+        "correct": true,
+        "why": "Right: plain Kotlin over a `StateFlow`, built with a `SavedStateHandle` from a map."
+      },
+      {
+        "text": "Because `testDebugUnitTest` always uses Robolectric anyway",
+        "correct": false,
+        "why": "Only tests marked `@RunWith(RobolectricTestRunner::class)` get it; this one is plain JUnit."
+      },
+      {
+        "text": "Because ViewModels are stubbed on the JVM",
+        "correct": false,
+        "why": "The real `ViewModel` class ran; nothing was stubbed."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gsghezr",
+    "version": 1,
+    "section": "testing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each test to the question it answers.",
+    "hint": "The table at the end of section 07.",
+    "pairs": [
+      {
+        "left": "`WeekViewModelTest`",
+        "right": "What does the state become after each event?"
+      },
+      {
+        "left": "`WeekScreenShotTest`",
+        "right": "What does one state look like on screen?"
+      },
+      {
+        "left": "`RecreateTest`",
+        "right": "Are the screen, the ViewModel and the lifecycle connected?"
+      }
+    ],
+    "right_distractors": [
+      "Does the app start quickly on a real phone?"
+    ]
+  },
+  {
+    "id": "ex-1gjbcqg3",
+    "version": 1,
+    "section": "testing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `togglingMarksOneSessionAndTheCountFollows`, three sessions of 25, 50 and 90 minutes are added. What total does the test expect?",
+    "hint": "Marking one done does not change the total.",
+    "value": 165,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a4n8w773",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one tap of **Add** in the order things happen in the planner.",
+    "hint": "Up, then down.",
+    "items": [
+      "`WeekScreen`'s button calls `onAdd`",
+      "`WeekRoute` calls `viewModel.onAdd(LocalDate.now())`",
+      "the ViewModel puts a new `WeekUiState` in its flow",
+      "`collectAsStateWithLifecycle` hands the new state to `WeekScreen`",
+      "`WeekScreen` draws the new total"
+    ]
+  },
+  {
+    "id": "ex-p681x0qf",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these survive the process being killed in the background? Choose all that apply.",
+    "hint": "Only what reached the Bundle, or the disk.",
+    "choices": [
+      {
+        "text": "A value in `rememberSaveable`",
+        "correct": true,
+        "why": "Yes: it is saved into the Bundle."
+      },
+      {
+        "text": "A field of the ViewModel",
+        "correct": false,
+        "why": "No: the ViewModel dies with the process."
+      },
+      {
+        "text": "A key in `SavedStateHandle`",
+        "correct": true,
+        "why": "Yes: that is what the handle is for."
+      },
+      {
+        "text": "A value in a plain `remember`",
+        "correct": false,
+        "why": "No: it does not even survive a rotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdr63b8n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new screen needs the course name in the title. The ViewModel has the course id. Where should the id-to-name lookup's result end up?",
+    "hint": "One state for one screen.",
+    "choices": [
+      {
+        "text": "In a field of the UI state, computed by the ViewModel",
+        "correct": true,
+        "why": "Right: everything the screen draws is in its state, and the ViewModel makes it."
+      },
+      {
+        "text": "In a `remember` inside the screen, looked up on first draw",
+        "correct": false,
+        "why": "That is a second copy of the truth, lost on rotation, and the screen doing work it should not."
+      },
+      {
+        "text": "In the `SavedStateHandle`, beside the id",
+        "correct": false,
+        "why": "The handle holds the id; the name is data that can be looked up again from it."
+      },
+      {
+        "text": "In the activity, passed to `setContent`",
+        "correct": false,
+        "why": "The activity is recreated on rotation and would need to look it up again; the state is where it belongs."
+      }
+    ]
+  }
+]

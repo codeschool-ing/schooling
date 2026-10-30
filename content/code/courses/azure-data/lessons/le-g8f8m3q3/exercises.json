@@ -1,0 +1,601 @@
+[
+  {
+    "id": "ex-yaffywh5",
+    "version": 1,
+    "section": "the-account-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can a storage account key do?",
+    "hint": "It is the master key, not a user's password.",
+    "choices": [
+      {
+        "text": "Read blobs, and nothing else unless a role allows it",
+        "correct": false,
+        "why": "A key is not limited by roles; it signs any request."
+      },
+      {
+        "text": "Only what the person who listed it is allowed to do",
+        "correct": false,
+        "why": "The key carries no identity; whoever holds it can do everything."
+      },
+      {
+        "text": "Anything, in the whole account",
+        "correct": true,
+        "why": "Right. That is why it should never leave the account."
+      },
+      {
+        "text": "Manage the account's settings in Azure Resource Manager",
+        "correct": false,
+        "why": "Resource Manager is the control plane, behind a login; the key works on the data plane."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4kz76s3",
+    "version": 1,
+    "section": "the-account-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request signed with a key that differs by one character was refused. What does the account compare?",
+    "hint": "The key never travels.",
+    "choices": [
+      {
+        "text": "Its own signature against the one sent",
+        "correct": true,
+        "why": "Right. Only the HMAC travels."
+      },
+      {
+        "text": "The key sent in the request against the one it stores",
+        "correct": false,
+        "why": "The key is never sent."
+      },
+      {
+        "text": "The account's network rules against the caller's address",
+        "correct": false,
+        "why": "That is what the command line suggested, and it was not the cause."
+      },
+      {
+        "text": "The caller's login against the account's roles",
+        "correct": false,
+        "why": "A key-signed request has no login at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-13nqxtpf",
+    "version": 1,
+    "section": "the-account-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An account key was printed in a public build log an hour ago. What is the first thing to do, and what does it cost?",
+    "hint": "Nothing records who has a copy.",
+    "choices": [
+      {
+        "text": "Delete the build log, which removes the key from circulation",
+        "correct": false,
+        "why": "Anybody who read the log in that hour still has the key."
+      },
+      {
+        "text": "Set the containers to `off`, which blocks the key",
+        "correct": false,
+        "why": "The public level concerns anonymous requests; a key-signed one ignores it."
+      },
+      {
+        "text": "Wait for the key to expire, which takes seven days",
+        "correct": false,
+        "why": "Account keys do not expire."
+      },
+      {
+        "text": "Regenerate the key at once, and every client still on it breaks",
+        "correct": true,
+        "why": "Right. The breakage is the price of having used the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-ge4fzzpn",
+    "version": 1,
+    "section": "the-account-key",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Microsoft's documented key rotation in order, starting with every client on `key1`.",
+    "hint": "Nobody is ever left on a key that is about to change.",
+    "items": [
+      "Move every client to `key2`",
+      "Regenerate `key1`",
+      "Move every client back to the new `key1`",
+      "Regenerate `key2`"
+    ]
+  },
+  {
+    "id": "ex-rxwec75d",
+    "version": 1,
+    "section": "sas-tokens",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each SAS parameter to what it carries.",
+    "hint": "`echo \"$SAS\" | tr \"&\" \"\\n\"` printed them one per line.",
+    "pairs": [
+      {
+        "left": "`se`",
+        "right": "the expiry, in UTC"
+      },
+      {
+        "left": "`sp`",
+        "right": "the permissions"
+      },
+      {
+        "left": "`sr`",
+        "right": "the kind of resource named"
+      },
+      {
+        "left": "`sig`",
+        "right": "the HMAC over the rest"
+      }
+    ],
+    "right_distractors": [
+      "the account key itself"
+    ]
+  },
+  {
+    "id": "ex-fs5c8xen",
+    "version": 1,
+    "section": "sas-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody edits a read-only SAS in the URL, changing `sp=r` to `sp=rw`, and tries a write. What happens?",
+    "hint": "What does the signature cover?",
+    "choices": [
+      {
+        "text": "The write succeeds, because `sp` now says `w`",
+        "correct": false,
+        "why": "`sp` is covered by the signature; changing it invalidates the signature."
+      },
+      {
+        "text": "It is refused: the signature is broken",
+        "correct": true,
+        "why": "Right. `AuthorizationFailure` in the lab."
+      },
+      {
+        "text": "It is refused with `AuthorizationPermissionMismatch`",
+        "correct": false,
+        "why": "That is the answer to a valid SAS lacking a permission; this one is no longer valid."
+      },
+      {
+        "text": "Reads keep working and only the write fails",
+        "correct": false,
+        "why": "The edited URL fails for reads too; the original URL still reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbqs0dpe",
+    "version": 1,
+    "section": "sas-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A SAS signed for `exports/2026/10/orders-2026-10-29.csv` is used on the 28 October export in the same container. Why is it refused?",
+    "hint": "`sr=b`.",
+    "choices": [
+      {
+        "text": "The 28th has expired",
+        "correct": false,
+        "why": "The expiry belongs to the SAS, not to the blob it is used on."
+      },
+      {
+        "text": "Its signature covers the path of one blob",
+        "correct": true,
+        "why": "Right. `sr=b` and the path are part of what was signed."
+      },
+      {
+        "text": "A SAS works once and was already used",
+        "correct": false,
+        "why": "A SAS works as many times as wanted until it expires."
+      },
+      {
+        "text": "Reading another blob needs `l` as well as `r`",
+        "correct": false,
+        "why": "`l` lists a container; it does not widen a blob SAS to other blobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tzen5w0",
+    "version": 1,
+    "section": "sas-tokens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which kind of SAS keeps working after shared key access is switched off for the account?",
+    "hint": "Which one is not signed with the account key?",
+    "choices": [
+      {
+        "text": "A service SAS signed against a stored access policy",
+        "correct": false,
+        "why": "It is still signed with the account key, and shared key is off."
+      },
+      {
+        "text": "An account SAS",
+        "correct": false,
+        "why": "Also signed with the account key."
+      },
+      {
+        "text": "None; switching shared key off ends every SAS",
+        "correct": false,
+        "why": "The user delegation SAS is the exception, by design."
+      },
+      {
+        "text": "A user delegation SAS",
+        "correct": true,
+        "why": "Right. It is signed with a key Entra ID issued."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnxvkhjd",
+    "version": 1,
+    "section": "sas-tokens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For how many days at most is a user delegation key valid, according to Microsoft's documentation?",
+    "hint": "A week.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-4n4x61zp",
+    "version": 1,
+    "section": "stored-access-policies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The SAS made from the `analysts` policy had no `sp` and no `se`. Where are the permissions and the expiry?",
+    "hint": "`si=analysts`.",
+    "choices": [
+      {
+        "text": "In the policy, stored on the container",
+        "correct": true,
+        "why": "Right. The SAS names it with `si`."
+      },
+      {
+        "text": "In the account key",
+        "correct": false,
+        "why": "The key signs; it holds no permissions."
+      },
+      {
+        "text": "Nowhere: such a SAS grants everything until revoked",
+        "correct": false,
+        "why": "It grants what the policy says, `rl` until its expiry."
+      },
+      {
+        "text": "In the signature, encoded",
+        "correct": false,
+        "why": "A signature proves; it carries nothing readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-hppgnnn6",
+    "version": 1,
+    "section": "stored-access-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda deletes the `analysts` policy. What happens to the SAS URLs already handed out with it?",
+    "hint": "The lab used the same URL before and after.",
+    "choices": [
+      {
+        "text": "They keep working until their own expiry",
+        "correct": false,
+        "why": "They have no expiry of their own; it was the policy's."
+      },
+      {
+        "text": "They stop only after the account key is rotated",
+        "correct": false,
+        "why": "Deleting the policy is enough; that is its purpose."
+      },
+      {
+        "text": "They stop working at once",
+        "correct": true,
+        "why": "Right. The lab's listing was refused right after the delete."
+      },
+      {
+        "text": "They become read-only",
+        "correct": false,
+        "why": "They become nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-aq7cgd80",
+    "version": 1,
+    "section": "stored-access-policies",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many stored access policies can one container hold, according to Microsoft's documentation?",
+    "hint": "Fewer than ten.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "policies"
+  },
+  {
+    "id": "ex-ef4gb4ad",
+    "version": 1,
+    "section": "stored-access-policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner needs read access to one container for a month, and Quitanda wants to be able to cut it off the day the contract ends early. Which SAS?",
+    "hint": "Which one can be taken back without rotating the key?",
+    "choices": [
+      {
+        "text": "A service SAS with `--expiry` a month away",
+        "correct": false,
+        "why": "Only rotating the key would end it early."
+      },
+      {
+        "text": "An account SAS for a month",
+        "correct": false,
+        "why": "Wider than needed, and just as hard to take back."
+      },
+      {
+        "text": "A public container, with the URL sent only to the partner",
+        "correct": false,
+        "why": "Public means anybody, whoever the URL was sent to."
+      },
+      {
+        "text": "One signed against a policy for the partner",
+        "correct": true,
+        "why": "Right. Deleting the policy ends it the same day."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh684qp5",
+    "version": 1,
+    "section": "public-access",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the container's level at `blob`, what can a request with no credentials do?",
+    "hint": "The lab tried two things.",
+    "choices": [
+      {
+        "text": "List the container, and not read the blobs",
+        "correct": false,
+        "why": "The other way round."
+      },
+      {
+        "text": "Read and list, since the container is public",
+        "correct": false,
+        "why": "Listing needs the level `container`."
+      },
+      {
+        "text": "Read a blob by its name, and not list",
+        "correct": true,
+        "why": "Right. The listing was refused at that level."
+      },
+      {
+        "text": "Nothing, until a SAS is added",
+        "correct": false,
+        "why": "`curl` read the export with no SAS at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-42sar1xd",
+    "version": 1,
+    "section": "public-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `blob` level not safe for Quitanda's exports, even though nobody can list them?",
+    "hint": "How were the names chosen in lesson 2?",
+    "choices": [
+      {
+        "text": "`blob` level also allows writes",
+        "correct": false,
+        "why": "Public levels only ever allow reading."
+      },
+      {
+        "text": "Their names follow a guessable pattern",
+        "correct": true,
+        "why": "Right. A lake's names are predictable by design."
+      },
+      {
+        "text": "Search engines index public blobs automatically",
+        "correct": false,
+        "why": "The lesson did not claim that; guessable names are enough."
+      },
+      {
+        "text": "The level expires after a day and turns into `container`",
+        "correct": false,
+        "why": "Levels do not change on their own."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdsnq6mr",
+    "version": 1,
+    "section": "public-access",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On Azure, a container's level says `container`, and the account's `allowBlobPublicAccess` is false. What does an anonymous listing get?",
+    "hint": "Which of the two settings wins?",
+    "choices": [
+      {
+        "text": "A refusal",
+        "correct": true,
+        "why": "Right. With the account switch false, no container is public."
+      },
+      {
+        "text": "The list of names, as the container allows",
+        "correct": false,
+        "why": "The account's false wins over any container level."
+      },
+      {
+        "text": "Only the blobs written before the switch was set",
+        "correct": false,
+        "why": "The switch applies to every request, whatever the blob's age."
+      },
+      {
+        "text": "The names, without the content",
+        "correct": false,
+        "why": "No anonymous request gets anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1dg4780",
+    "version": 1,
+    "section": "the-container-that-leaked",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each leak to the setting that removes it.",
+    "hint": "One line of `main.tf` each.",
+    "pairs": [
+      {
+        "left": "a container set to public for a test",
+        "right": "`allow_nested_items_to_be_public = false`"
+      },
+      {
+        "left": "an account key committed with code",
+        "right": "`shared_access_key_enabled = false`"
+      },
+      {
+        "left": "a SAS signed for a year",
+        "right": "`sas_policy` with `Block`"
+      }
+    ],
+    "right_distractors": [
+      "`min_tls_version = \"TLS1_2\"`"
+    ]
+  },
+  {
+    "id": "ex-xwmwc0hq",
+    "version": 1,
+    "section": "the-container-that-leaked",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which column of `StorageBlobLogs` tells an anonymous read from a read signed with a SAS?",
+    "hint": "It names how the request was authenticated.",
+    "choices": [
+      {
+        "text": "`OperationName`",
+        "correct": false,
+        "why": "It says what was done, `GetBlob`, not how it was signed."
+      },
+      {
+        "text": "`Uri`",
+        "correct": false,
+        "why": "It says which blob; a SAS can sit in the query string of either."
+      },
+      {
+        "text": "`AuthenticationType`",
+        "correct": true,
+        "why": "Right. Anonymous, SAS, key or Entra ID."
+      },
+      {
+        "text": "`StatusCode`",
+        "correct": false,
+        "why": "Both reads succeed with 200."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3qdq621",
+    "version": 1,
+    "section": "the-container-that-leaked",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda switches shared key access off. Which of its programs from lessons 2 to 5 stop working, and why?",
+    "hint": "How does `UseDevelopmentStorage=true` sign?",
+    "choices": [
+      {
+        "text": "All of them: each signs with the key",
+        "correct": true,
+        "why": "Right. They would need an Entra ID identity instead."
+      },
+      {
+        "text": "None; they use the Python library, which signs with Entra ID",
+        "correct": false,
+        "why": "The library signs with whatever the connection string gives it: here, the key."
+      },
+      {
+        "text": "Only the ones that write; reads keep working",
+        "correct": false,
+        "why": "The switch refuses key-signed reads too."
+      },
+      {
+        "text": "Only the ones that use `az`",
+        "correct": false,
+        "why": "The libraries and `az` sign the same way here."
+      }
+    ]
+  },
+  {
+    "id": "ex-mj68reys",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A SAS used for a write it does not grant is refused with the error code ___.",
+    "hint": "Authorization, then permission, then mismatch.",
+    "blanks": [
+      {
+        "accept": [
+          "AuthorizationPermissionMismatch"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m8ear5b1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these revoke a leaked service SAS before its expiry? Choose all that apply.",
+    "hint": "What does the signature depend on?",
+    "choices": [
+      {
+        "text": "Regenerating the account key that signed it",
+        "correct": true,
+        "why": "Yes, and every other client using that key breaks too."
+      },
+      {
+        "text": "Deleting the stored access policy it names, if it names one",
+        "correct": true,
+        "why": "Yes; the lab's listing failed right after the delete."
+      },
+      {
+        "text": "Setting the container's public access level to `off`",
+        "correct": false,
+        "why": "A SAS is not anonymous access; the level does not affect it."
+      },
+      {
+        "text": "Deleting the blob and uploading it again",
+        "correct": false,
+        "why": "The SAS names the path, so it reads the new blob just as well."
+      }
+    ]
+  }
+]

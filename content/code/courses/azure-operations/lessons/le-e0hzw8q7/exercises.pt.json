@@ -1,0 +1,250 @@
+{
+  "ex-q6a0nhfp": {
+    "prompt": "O blob de estado da loja é sobrescrito com um estado vazio. O que aconteceu com os recursos no Azure?",
+    "hint": "O que o Azure sabe do arquivo de estado?",
+    "choices": [
+      {
+        "text": "Foram apagados quando o estado foi esvaziado",
+        "why": "O estado é um registro; mudá-lo não muda nada no Azure."
+      },
+      {
+        "text": "Nada; continuam rodando",
+        "why": "Certo. O que se perde é o mapa do Terraform, não os recursos."
+      },
+      {
+        "text": "Foram parados até o estado ser restaurado",
+        "why": "Nada no Azure observa o blob de estado."
+      },
+      {
+        "text": "Foram movidos para rg-tfstate por segurança",
+        "why": "Nada se move; o Azure nem sabe que algo aconteceu."
+      }
+    ]
+  },
+  "ex-srvnzf57": {
+    "prompt": "Depois que o estado se perde, quais recursos são os mais perigosos para planejar e aplicar?",
+    "hint": "Quais não colidiriam pelo nome?",
+    "choices": [
+      {
+        "text": "Grupos de recursos, porque guardam todo o resto",
+        "why": "Um grupo de recursos com nome fixo colide e falha, que é o caso de sorte."
+      },
+      {
+        "text": "Os que têm o nome gerado, e não um nome fixo",
+        "why": "Certo. Eles são criados uma segunda vez ao lado do primeiro, e os dois são cobrados."
+      },
+      {
+        "text": "Contas de armazenamento, porque os nomes são globais",
+        "why": "Um nome global fixo também colide; o perigo é um nome que muda."
+      },
+      {
+        "text": "terraform_data, porque não tem id no Azure",
+        "why": "Ele só existe no estado, e recriá-lo não toca em nada."
+      }
+    ]
+  },
+  "ex-5298m2wq": {
+    "prompt": "Você baixou um snapshot do estado. O que confere antes de enviá-lo por cima do blob atual?",
+    "hint": "É a história da mesma configuração?",
+    "choices": [
+      {
+        "text": "Que o lineage é o mesmo do estado atual",
+        "why": "Certo. Um lineage igual diz que é a história da mesma configuração."
+      },
+      {
+        "text": "Que o serial é maior que o atual",
+        "why": "Uma restauração volta a um serial mais antigo; é isso que recuperar quer dizer."
+      },
+      {
+        "text": "Que ele tem menos de 45 bytes",
+        "why": "45 bytes era o estado vazio; o bom tinha 861."
+      },
+      {
+        "text": "Que o horário do snapshot é de hoje",
+        "why": "O snapshot certo é o último de antes do acidente, seja qual for a data."
+      }
+    ]
+  },
+  "ex-jv7d75mv": {
+    "prompt": "No laboratório, quantos bytes tinha o blob de estado real, como o snapshot o guardou?",
+    "hint": "Veja a lista depois da sobrescrita.",
+    "unit": "bytes"
+  },
+  "ex-t5s1a33c": {
+    "prompt": "Ligue cada acidente à proteção que responde a ele.",
+    "hint": "Versões para sobrescritas, exclusão reversível para deleções.",
+    "pairs": [
+      {
+        "left": "Um estado vazio enviado por cima do real",
+        "right": "Versionamento de blobs"
+      },
+      {
+        "left": "O blob apagado com os snapshots",
+        "right": "Exclusão reversível"
+      },
+      {
+        "left": "A conta de armazenamento apagada pelo portal",
+        "right": "Um lock CanNotDelete"
+      },
+      {
+        "left": "terraform destroy da aplicação",
+        "right": "Um rg-tfstate separado"
+      }
+    ]
+  },
+  "ex-jxskt2qx": {
+    "prompt": "`az storage blob undelete` respondeu `APINotImplemented` no laboratório. O que isso diz sobre o Azure?",
+    "hint": "Quem respondeu?",
+    "choices": [
+      {
+        "text": "Que o Azure não oferece mais exclusão reversível",
+        "why": "O Azure oferece; o Azurite é que não implementa."
+      },
+      {
+        "text": "Que a linha de comando é nova demais para a conta",
+        "why": "Essa seria a mensagem de versão de API da lição 1."
+      },
+      {
+        "text": "Nada sobre o Azure; quem recusa é o Azurite",
+        "why": "Certo. Essa parte é ensinada pela documentação e marcada como não executada."
+      },
+      {
+        "text": "Que a exclusão reversível estava desligada na conta",
+        "why": "Desligada significaria nada para recuperar, não uma API não implementada."
+      }
+    ]
+  },
+  "ex-wj0hcy9e": {
+    "prompt": "O que um bloco `import` diz ao Terraform?",
+    "hint": "Endereço de um lado, id do outro.",
+    "choices": [
+      {
+        "text": "Para baixar a configuração de um recurso do Azure",
+        "why": "Isso é o que o -generate-config-out rascunha; o bloco em si mapeia."
+      },
+      {
+        "text": "Para copiar um recurso para um novo grupo de recursos",
+        "why": "Nada é copiado nem movido."
+      },
+      {
+        "text": "Para restaurar o estado do snapshot mais novo",
+        "why": "O import reconstrói o estado a partir do Azure, não de uma cópia."
+      },
+      {
+        "text": "Que o recurso neste endereço é o que tem este id",
+        "why": "Certo. Esse mapa é exatamente o que o estado perdido guardava."
+      }
+    ]
+  },
+  "ex-phhv9kwa": {
+    "prompt": "O primeiro plano depois de acrescentar oitenta blocos de import tem trezentas linhas. O que a lição aconselha?",
+    "hint": "Onde um erro é mais fácil de achar?",
+    "choices": [
+      {
+        "text": "Aplicar tudo de uma vez e consertar o que quebrar",
+        "why": "Um erro entre oitenta recursos é o mais difícil de achar."
+      },
+      {
+        "text": "Importar em lotes pequenos, aplicando entre eles",
+        "why": "Certo. Um erro aparece entre cinco recursos, e não entre oitenta."
+      },
+      {
+        "text": "Apagar a configuração e ficar só com o generated.tf",
+        "why": "Arquivos gerados são rascunhos com todos os padrões; precisam de leitura."
+      },
+      {
+        "text": "Ignorar as diferenças de propriedade; são ruído",
+        "why": "Cada diferença é uma decisão sobre o recurso ou o arquivo."
+      }
+    ]
+  },
+  "ex-4k7a93gy": {
+    "prompt": "Qual é a diferença entre o lease da lição 6 e o lock `CanNotDelete` desta lição?",
+    "hint": "Conteúdo por um tempo, ou um recurso até ser removido?",
+    "choices": [
+      {
+        "text": "Nenhuma; os dois são nomes da trava do estado",
+        "why": "Um é recurso do Storage num blob, o outro do Resource Manager num recurso."
+      },
+      {
+        "text": "O lock é mais rápido de pegar que o lease",
+        "why": "Velocidade não é a diferença; escopo e propósito são."
+      },
+      {
+        "text": "Um lease guarda um blob durante um apply; um lock guarda um recurso contra deleção",
+        "why": "Certo. Eles protegem coisas diferentes por tempos diferentes."
+      },
+      {
+        "text": "O lease protege contra Owners, o lock não",
+        "why": "Até um Owner precisa remover o lock antes; esse é o ponto dele."
+      }
+    ]
+  },
+  "ex-80rhv3gv": {
+    "prompt": "Uma esteira que roda `apply` primeiro tira um ___ do blob de estado.",
+    "hint": "Uma cópia somente leitura num ponto do tempo.",
+    "blanks": [
+      {
+        "accept": [
+          "snapshot"
+        ]
+      }
+    ]
+  },
+  "ex-vjqtjfbz": {
+    "prompt": "Um desenvolvedor pede escrita na conta de estado para inspecionar o estado. O que a loja responde?",
+    "hint": "Quantos escritores o desenho tem?",
+    "choices": [
+      {
+        "text": "Conceder, porque ler exige escrita",
+        "why": "Ler nunca exige escrita."
+      },
+      {
+        "text": "Conceder temporariamente com um client secret",
+        "why": "Um segredo acrescenta uma credencial e ainda acrescenta um escritor."
+      },
+      {
+        "text": "Entregar a ele a chave de acesso da conta",
+        "why": "O acesso por chave está desligado na conta, de propósito."
+      },
+      {
+        "text": "Rodar terraform show pela esteira",
+        "why": "Certo. Duas identidades escrevem; os outros leem pela esteira."
+      }
+    ]
+  },
+  "ex-4qtgyg4g": {
+    "prompt": "Ponha em ordem a recuperação de um estado sobrescrito.",
+    "hint": "Achar, conferir, devolver, confirmar.",
+    "trap": "Enviar antes de conferir o lineage é o deslize: uma cópia de outra configuração trocaria o registro pelo errado.",
+    "items": [
+      "Listar os snapshots ou versões de antes do acidente",
+      "Baixar a cópia escolhida",
+      "Conferir o lineage",
+      "Enviá-la por cima do blob atual",
+      "Rodar o plan e esperar nenhuma criação inexplicada"
+    ]
+  },
+  "ex-d7mny6gb": {
+    "prompt": "Quais destas coisas o laboratório executou de fato? Marque todas as que se aplicam.",
+    "hint": "O Azurite tem snapshots; não tem versões nem exclusão reversível.",
+    "choices": [
+      {
+        "text": "Restaurar o estado de um snapshot",
+        "why": "Sim. Baixar, conferir, enviar, planejar."
+      },
+      {
+        "text": "Recuperar um blob da exclusão reversível",
+        "why": "Não. O Azurite respondeu APINotImplemented."
+      },
+      {
+        "text": "Um plano propondo criar o que já existia",
+        "why": "Sim. Com o estado vazio, contra terraform_data."
+      },
+      {
+        "text": "Importar rg-shop com um bloco import",
+        "why": "Não. O import precisa da assinatura real."
+      }
+    ]
+  }
+}

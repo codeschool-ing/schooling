@@ -1,0 +1,544 @@
+[
+  {
+    "id": "ex-k0p2s2f6",
+    "version": 1,
+    "section": "four-meters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does Microsoft's bandwidth page bill data coming into Azure from the internet?",
+    "hint": "Think of why an account fills cheaply and empties expensively.",
+    "choices": [
+      {
+        "text": "Per GB, at the same rate as data leaving",
+        "correct": false,
+        "why": "Leaving is charged; arriving is not."
+      },
+      {
+        "text": "Free, though the writes are billed",
+        "correct": true,
+        "why": "Right. Inbound bytes are free and inbound requests are not."
+      },
+      {
+        "text": "Per GB, but only for accounts on geo-redundant replication",
+        "correct": false,
+        "why": "Geo-replication is a transfer to the paired region, a different line."
+      },
+      {
+        "text": "Per GB, at a lower rate than data leaving",
+        "correct": false,
+        "why": "There is no inbound rate at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxfxpr8m",
+    "version": 1,
+    "section": "four-meters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading 1 GB from the cool tier is billed on which meters?",
+    "hint": "Hot pays one of them; cool pays a second on the same read.",
+    "choices": [
+      {
+        "text": "Read operations only, the same as hot",
+        "correct": false,
+        "why": "Cool adds a charge per GB read back."
+      },
+      {
+        "text": "Data retrieval only, since read operations are a charge of the hot tier",
+        "correct": false,
+        "why": "Every tier charges for operations; cool charges more for each."
+      },
+      {
+        "text": "Read operations, and data retrieval per GB",
+        "correct": true,
+        "why": "Right: two charges on the same read."
+      },
+      {
+        "text": "Bandwidth, because the bytes leave the tier",
+        "correct": false,
+        "why": "Bandwidth is bytes leaving the region, not a tier."
+      }
+    ]
+  },
+  {
+    "id": "ex-2tt4xwpj",
+    "version": 1,
+    "section": "four-meters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At an illustrative 0.02 USD per GB-month and 0.004 USD per 10,000 read operations, how many reads cost the same as keeping 1 GB in hot for a month?",
+    "hint": "Divide the two prices, then multiply by the 10,000 the read price is quoted for.",
+    "value": 50000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qdgmswj7",
+    "version": 1,
+    "section": "four-meters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Microsoft's sheet, which class of operation is a `List Blobs` request?",
+    "hint": "Listing has a line of its own.",
+    "choices": [
+      {
+        "text": "A read operation, since a listing just reads names",
+        "correct": false,
+        "why": "It reads, and it is still not priced like a read."
+      },
+      {
+        "text": "None: listing is free",
+        "correct": false,
+        "why": "Only inbound bytes are free."
+      },
+      {
+        "text": "List and create container operations",
+        "correct": true,
+        "why": "Right, a line of its own, not priced like a read."
+      },
+      {
+        "text": "A charge per GB of names returned",
+        "correct": false,
+        "why": "An operation is priced per operation, whatever it returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-gk0wwb4v",
+    "version": 1,
+    "section": "counting-requests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`count.py` wrote 6,000 taps as a blob each, then the same taps as one blob. How many `Put Blob` requests did each take?",
+    "hint": "Read the second and third lines of its output.",
+    "choices": [
+      {
+        "text": "6,000 and 1",
+        "correct": true,
+        "why": "Right: same bytes, six thousand times the writes."
+      },
+      {
+        "text": "1 and 1, because the library batches small writes into one request",
+        "correct": false,
+        "why": "Nothing batched them; every upload_blob was a request."
+      },
+      {
+        "text": "6,000 and 6,000, since a request carries one line",
+        "correct": false,
+        "why": "The one blob of lines went in a single request."
+      },
+      {
+        "text": "6,000 and 2, the second as two blocks",
+        "correct": false,
+        "why": "A blob that small is one Put Blob; blocks start above 64 MiB."
+      }
+    ]
+  },
+  {
+    "id": "ex-1weyt68v",
+    "version": 1,
+    "section": "counting-requests",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container holds 12,500 blobs under one prefix. How many `List Blobs` requests does listing all their names take?",
+    "hint": "One page holds at most 5,000 names.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7h55jg1f",
+    "version": 1,
+    "section": "counting-requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Uploading 80 MiB with the library's defaults took 21 requests. Why?",
+    "hint": "Compare it with the 64 MiB upload in the figure.",
+    "choices": [
+      {
+        "text": "Azure refuses any single request larger than 4 MiB",
+        "correct": false,
+        "why": "A blob of 64 MiB went in one Put Blob."
+      },
+      {
+        "text": "Above 64 MiB the library sends 20 blocks of 4 MiB and one list that commits them",
+        "correct": true,
+        "why": "Right: max_single_put_size and max_block_size at their defaults."
+      },
+      {
+        "text": "Azurite splits large blobs, where Azure takes them whole",
+        "correct": false,
+        "why": "The splitting is the client's; the same program would send the same requests to Azure."
+      },
+      {
+        "text": "One request per 4 MiB is how the bill counts, and the hook reports the bill",
+        "correct": false,
+        "why": "The hook counts requests leaving the program; it knows nothing of a bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-32g4rz7c",
+    "version": 1,
+    "section": "counting-requests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard reads 6,000 small tap blobs every morning. Which change cuts the number of operations it sends?",
+    "hint": "No setting of the client changes how the data was cut up.",
+    "choices": [
+      {
+        "text": "Raising `max_single_get_size`",
+        "correct": false,
+        "why": "Each blob is already one Get Blob; the size only matters above 32 MiB."
+      },
+      {
+        "text": "Reading on eight threads instead of one",
+        "correct": false,
+        "why": "Threads make it quicker; the count is the same."
+      },
+      {
+        "text": "Writing the taps as one blob per day",
+        "correct": true,
+        "why": "Right: one Get Blob instead of 6,000."
+      },
+      {
+        "text": "Listing with 10,000 names a page",
+        "correct": false,
+        "why": "A page holds at most 5,000, and the listing was not the cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-6betp1fq",
+    "version": 1,
+    "section": "counting-requests",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`count.py` sees every request because it passes its function to the client as the option ___.",
+    "hint": "It is called just before each request is sent.",
+    "blanks": [
+      {
+        "accept": [
+          "raw_request_hook"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yk8vk4vg",
+    "version": 1,
+    "section": "small-blobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `costs.py`, why is the cool line dearer than the hot one for the same taps?",
+    "hint": "The taps are read every morning.",
+    "choices": [
+      {
+        "text": "Cool's minimum of 30 days is charged again on every blob each month",
+        "correct": false,
+        "why": "The taps stay all month; no early deletion happens."
+      },
+      {
+        "text": "Cool charges more per operation, and per GB read",
+        "correct": true,
+        "why": "Right: storage halves and everything touched grows."
+      },
+      {
+        "text": "Cool blobs must be rehydrated before they can be read",
+        "correct": false,
+        "why": "That is archive; a cool blob is read directly."
+      },
+      {
+        "text": "Cool stores each blob as 64 KB",
+        "correct": false,
+        "why": "Nothing in the program rounds a blob up."
+      }
+    ]
+  },
+  {
+    "id": "ex-xb8e47yt",
+    "version": 1,
+    "section": "small-blobs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At an illustrative 0.05 USD per 10,000 write operations, what does writing 2,000,000 blobs cost, in USD?",
+    "hint": "Two hundred times ten thousand.",
+    "value": 10,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-jzw7pzgq",
+    "version": 1,
+    "section": "small-blobs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these produce many small blobs? Choose all that apply.",
+    "hint": "The section names three sources.",
+    "choices": [
+      {
+        "text": "A stream writer saving whatever arrived in the last few seconds",
+        "correct": true,
+        "why": "Yes: a file per flush."
+      },
+      {
+        "text": "A folder per hour per customer",
+        "correct": true,
+        "why": "Yes: partitions too fine for the data."
+      },
+      {
+        "text": "One blob per app event",
+        "correct": true,
+        "why": "Yes: convenient to write and ruinous to read."
+      },
+      {
+        "text": "A nightly job merging the day into 64 MiB files",
+        "correct": false,
+        "why": "That is the cure, not the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-rejd7vtm",
+    "version": 1,
+    "section": "small-blobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`costs.py` reads each 64 MiB file in nine requests. Where does the nine come from?",
+    "hint": "`count.py` read 80 MiB in thirteen.",
+    "choices": [
+      {
+        "text": "Azure caps a single read at 8 MiB, so 64 MiB takes eight reads and a check",
+        "correct": false,
+        "why": "The library's first read took 32 MiB."
+      },
+      {
+        "text": "One `List Blobs` to find the file, then eight reads of 8 MiB",
+        "correct": false,
+        "why": "The listing is counted apart, once a day."
+      },
+      {
+        "text": "The first 32 MiB in one request, then 8 ranges of 4 MiB",
+        "correct": true,
+        "why": "Right: 1 + 32 / 4."
+      },
+      {
+        "text": "The file was written in nine blocks, and is read back the same way",
+        "correct": false,
+        "why": "A 64 MiB blob goes up in one Put Blob, and reading does not follow the blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-353ekxv3",
+    "version": 1,
+    "section": "to-the-internet",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At an illustrative 0.10 USD per GB past the free 100 GB of the month, what does sending 5,120 GB to the internet in one month cost, in USD?",
+    "hint": "Take the free part off first.",
+    "value": 502,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-ykhkpj42",
+    "version": 1,
+    "section": "to-the-internet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the images behind a content delivery network, why does `costs.py` print dashes for transfer and total?",
+    "hint": "Somebody still delivers the bytes to the viewers.",
+    "choices": [
+      {
+        "text": "Transfer behind a delivery network is free",
+        "correct": false,
+        "why": "The network charges for delivery; it is just not in this program."
+      },
+      {
+        "text": "The account sends nothing once the network is in front",
+        "correct": false,
+        "why": "One download in twenty still reaches the account."
+      },
+      {
+        "text": "Azurite has no delivery network, so the line was never run",
+        "correct": false,
+        "why": "`costs.py` runs no emulator; it is arithmetic."
+      },
+      {
+        "text": "The network's price is not in the program",
+        "correct": true,
+        "why": "Right, and so is whether the leg from the account to it is charged."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dre6akh",
+    "version": 1,
+    "section": "to-the-internet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner copies 5 TB out of Quitanda's account into another region, with a SAS token Quitanda issued. Whose bill carries the transfer?",
+    "hint": "Look for a setting that moves the bill.",
+    "choices": [
+      {
+        "text": "Quitanda's: nothing in Blob Storage bills the reader",
+        "correct": true,
+        "why": "Right: the owner pays, whoever reads."
+      },
+      {
+        "text": "The partner's, because a SAS token identifies who is reading",
+        "correct": false,
+        "why": "A SAS token grants access; it says nothing about billing."
+      },
+      {
+        "text": "Nobody's: reads made with a SAS token are free",
+        "correct": false,
+        "why": "Operations and transfer are billed however the request was authorised."
+      },
+      {
+        "text": "The partner's, as long as the token expires within the day",
+        "correct": false,
+        "why": "Expiry limits how long the door is open, not who pays."
+      }
+    ]
+  },
+  {
+    "id": "ex-enjcpdr5",
+    "version": 1,
+    "section": "inside-azure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly job in a private subnet with a NAT gateway reads 2 TB a month from an account in the same region. Which change removes the charge per GB at no cost?",
+    "hint": "One of the two ways past the gateway is free.",
+    "choices": [
+      {
+        "text": "A private endpoint for the account",
+        "correct": false,
+        "why": "It removes the gateway's charge and adds its own, per GB in both directions."
+      },
+      {
+        "text": "A service endpoint for `Microsoft.Storage` on the subnet",
+        "correct": true,
+        "why": "Right: the traffic leaves the gateway and nothing replaces the charge."
+      },
+      {
+        "text": "Moving the account from ZRS to LRS",
+        "correct": false,
+        "why": "Redundancy changes capacity, not what the gateway processes."
+      },
+      {
+        "text": "Putting a content delivery network in front of the account",
+        "correct": false,
+        "why": "That is for viewers on the internet, not a job in the same region."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrtz4sf9",
+    "version": 1,
+    "section": "inside-azure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which line does an account on GRS pay that the same account on ZRS does not?",
+    "hint": "Where do the extra copies go?",
+    "choices": [
+      {
+        "text": "Data retrieval, per GB read back",
+        "correct": false,
+        "why": "Retrieval belongs to the cooler tiers."
+      },
+      {
+        "text": "A charge for traffic between ZRS's three zones",
+        "correct": false,
+        "why": "ZRS's copies are paid in its capacity price."
+      },
+      {
+        "text": "Geo-replication data transfer, per GB",
+        "correct": true,
+        "why": "Right: every write is copied to the paired region."
+      },
+      {
+        "text": "None at all: the two cost the same",
+        "correct": false,
+        "why": "The second region is a transfer, and it is billed."
+      }
+    ]
+  },
+  {
+    "id": "ex-030ss7ff",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each route of a byte with what Microsoft's pricing pages charge for it.",
+    "hint": "One of them is free, and one charge on the right belongs to no route.",
+    "pairs": [
+      {
+        "left": "Same region, through a service endpoint",
+        "right": "no charge"
+      },
+      {
+        "left": "Same region, through a NAT gateway",
+        "right": "per GB processed, plus an hourly price"
+      },
+      {
+        "left": "To the paired region, on GRS",
+        "right": "geo-replication transfer, per GB"
+      },
+      {
+        "left": "To the internet",
+        "right": "first 100 GB a month free, then per GB"
+      }
+    ],
+    "right_distractors": [
+      "per 10,000 operations"
+    ]
+  },
+  {
+    "id": "ex-w5mbcgd3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order these monthly totals from the `costs.py` table, largest first.",
+    "hint": "Transfer, then cool, then hot, then packed.",
+    "items": [
+      "500 GB of images with 20 TB out",
+      "The taps a blob each, in cool",
+      "The taps a blob each, in hot",
+      "The taps in 123 files of 64 MiB"
+    ]
+  },
+  {
+    "id": "ex-qvf2swz1",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At an illustrative 0.08 USD per GB between regions, what does copying 5,120 GB from `brazilsouth` to `eastus` once cost, in USD?",
+    "hint": "No free allowance applies between regions in this lesson's sums.",
+    "value": 409.6,
+    "tolerance": 0.01
+  }
+]

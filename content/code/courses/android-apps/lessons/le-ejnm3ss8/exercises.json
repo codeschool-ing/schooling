@@ -1,0 +1,660 @@
+[
+  {
+    "id": "ex-7ae03wks",
+    "version": 1,
+    "section": "outliving-the-process",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner launches the upload in `viewModelScope` and the student swipes the app away. What happens to the upload?",
+    "hint": "Where does a coroutine live?",
+    "choices": [
+      {
+        "text": "It ends with the process, half done",
+        "correct": true,
+        "why": "Right: a coroutine lives in the process, and the process is the system's to end."
+      },
+      {
+        "text": "It moves to a system thread and finishes there",
+        "correct": false,
+        "why": "No coroutine leaves its process; the system has no thread that adopts it."
+      },
+      {
+        "text": "It is paused, and resumes the next time the app opens",
+        "correct": false,
+        "why": "Nothing was saved, so there is nothing to resume."
+      },
+      {
+        "text": "It keeps running, because it is on a background thread",
+        "correct": false,
+        "why": "A background thread is still a thread of the process that just ended."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwbjyapv",
+    "version": 1,
+    "section": "outliving-the-process",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a WorkManager request survive the phone rebooting?",
+    "hint": "Where is the request kept, and who is told when the phone starts?",
+    "choices": [
+      {
+        "text": "Google Play services keep a copy and restore it",
+        "correct": false,
+        "why": "WorkManager does not depend on Play services; the copy is its own."
+      },
+      {
+        "text": "WorkManager's database and a boot receiver",
+        "correct": true,
+        "why": "Right: the request is on disk, and `RECEIVE_BOOT_COMPLETED` is how WorkManager hears the phone started."
+      },
+      {
+        "text": "The system's job scheduler keeps jobs across reboots by itself",
+        "correct": false,
+        "why": "WorkManager does not rely on that; it reschedules from its own database."
+      },
+      {
+        "text": "The request lives in `SharedPreferences`",
+        "correct": false,
+        "why": "WorkManager keeps requests in a SQLite database of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrx84wfr",
+    "version": 1,
+    "section": "outliving-the-process",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job to the tool section 02 gives it.",
+    "hint": "Ask: is somebody waiting to see it, must it be exact, must it run eventually?",
+    "pairs": [
+      {
+        "left": "Load the course list the student is looking at",
+        "right": "A coroutine in the screen's scope"
+      },
+      {
+        "left": "Send new sessions some time when there is a network",
+        "right": "WorkManager"
+      },
+      {
+        "left": "Remind the student at 19:00 sharp",
+        "right": "An alarm"
+      }
+    ],
+    "right_distractors": [
+      "A periodic request every five minutes"
+    ]
+  },
+  {
+    "id": "ex-5z5zkde6",
+    "version": 1,
+    "section": "a-worker",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`doWork` catches an `IOException` on attempt 1 of 3. What does `SyncWorker` return?",
+    "hint": "Attempts are counted from 0.",
+    "choices": [
+      {
+        "text": "`Result.failure()`",
+        "correct": false,
+        "why": "That is attempt 2, the last of three."
+      },
+      {
+        "text": "`Result.retry()`",
+        "correct": true,
+        "why": "Right: `1 < 3 - 1`, so it asks to be tried again."
+      },
+      {
+        "text": "`Result.success()` with `sent : 0`",
+        "correct": false,
+        "why": "Nothing was sent; reporting success would hide the failure."
+      },
+      {
+        "text": "It throws the exception on to WorkManager",
+        "correct": false,
+        "why": "The `catch` keeps it in the worker; an exception that escapes counts as failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkabmma5",
+    "version": 1,
+    "section": "a-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `SyncWorker` retry only on `IOException`, and let any other exception fail it?",
+    "hint": "Which failures can a later attempt fix?",
+    "choices": [
+      {
+        "text": "WorkManager forbids retrying any other exception type",
+        "correct": false,
+        "why": "The worker decides; WorkManager retries whatever answers `retry`."
+      },
+      {
+        "text": "A network problem passes; a bug repeats itself",
+        "correct": true,
+        "why": "Right: retrying an `IllegalStateException` only spends the battery."
+      },
+      {
+        "text": "Other exceptions crash the app, so retrying them is impossible",
+        "correct": false,
+        "why": "An exception escaping `doWork` is recorded as a failure; the app does not crash."
+      },
+      {
+        "text": "`IOException` is the only checked exception in Kotlin",
+        "correct": false,
+        "why": "Kotlin has no checked exceptions at all; `@Throws` is for Java callers."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyy0b3e6",
+    "version": 1,
+    "section": "a-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`PlannerWorkerFactory.createWorker` returns `null` for `SummaryWorker`. What does WorkManager do?",
+    "hint": "Section 03 says `null` is not an error.",
+    "choices": [
+      {
+        "text": "Fails the request with `FAILED`",
+        "correct": false,
+        "why": "The chain test shows `SummaryWorker` succeeding."
+      },
+      {
+        "text": "By reflection, as usual",
+        "correct": true,
+        "why": "Right: that is how a worker with no extra dependency is still created."
+      },
+      {
+        "text": "Asks Hilt for it",
+        "correct": false,
+        "why": "This project has no Hilt; the fallback is WorkManager's own default factory."
+      },
+      {
+        "text": "Retries `createWorker` until it returns a worker",
+        "correct": false,
+        "why": "It asks once, then falls back."
+      }
+    ]
+  },
+  {
+    "id": "ex-df255wv8",
+    "version": 1,
+    "section": "a-worker",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `SyncWorkerTest`, how many sessions did the output of the successful attempt say were sent?",
+    "hint": "`Data {sent : …}`",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-s7jxdty4",
+    "version": 1,
+    "section": "constraints-and-periods",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who checks that `NetworkType.CONNECTED` holds before `SyncWorker` runs?",
+    "hint": "Not your code.",
+    "choices": [
+      {
+        "text": "`doWork`, in its first line",
+        "correct": false,
+        "why": "The worker never sees the constraint; it is not called until it holds."
+      },
+      {
+        "text": "The system, through WorkManager",
+        "correct": true,
+        "why": "Right: constraints are checked by the system, not by your code."
+      },
+      {
+        "text": "The `Uploader`, which fails without a network",
+        "correct": false,
+        "why": "It would fail, but that is the retry path, not the constraint."
+      },
+      {
+        "text": "`PlannerApp.onCreate`",
+        "correct": false,
+        "why": "`onCreate` only schedules the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1hspvm7",
+    "version": 1,
+    "section": "constraints-and-periods",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A periodic sync has run once. Six hours pass while the phone has no network. What does the test of section 04 say happens?",
+    "hint": "Look at the line after `six hours later`.",
+    "choices": [
+      {
+        "text": "It runs anyway, because the period is over",
+        "correct": false,
+        "why": "Uploads stayed at 1 until the constraints were met again."
+      },
+      {
+        "text": "The request is `SUCCEEDED` and is removed",
+        "correct": false,
+        "why": "A periodic request never reaches `SUCCEEDED`; it went back to `ENQUEUED`."
+      },
+      {
+        "text": "It waits, `ENQUEUED`, until the network is back",
+        "correct": true,
+        "why": "Right: each period waits for its constraints again."
+      },
+      {
+        "text": "The period is skipped and the next one starts in six hours",
+        "correct": false,
+        "why": "Nothing was skipped: the second upload ran as soon as the constraints were met."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxq06w5e",
+    "version": 1,
+    "section": "constraints-and-periods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`scheduleSync` is called from `onCreate`, which runs on every process start. What stops the planner from piling up periodic requests?",
+    "hint": "The request has a name.",
+    "choices": [
+      {
+        "text": "Unique work with `KEEP`, which leaves the first one alone",
+        "correct": true,
+        "why": "Right: three calls left one request, with the first id."
+      },
+      {
+        "text": "WorkManager merges identical requests by comparing their workers",
+        "correct": false,
+        "why": "Without a unique name, every `enqueue` adds a new request."
+      },
+      {
+        "text": "`onCreate` runs once per installation",
+        "correct": false,
+        "why": "It runs every time the process starts."
+      },
+      {
+        "text": "The constraints reject a duplicate",
+        "correct": false,
+        "why": "Constraints are about the phone's state, not about other requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjpt88vc",
+    "version": 1,
+    "section": "constraints-and-periods",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A periodic request asks for 5 minutes. How many minutes does WorkManager actually use?",
+    "hint": "The third test printed it.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-swra5veq",
+    "version": 1,
+    "section": "constraints-and-periods",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `BackoffPolicy.___` and 30 seconds, a retry waits 30 seconds, then 60, then 120.",
+    "hint": "The other policy adds 30 each time.",
+    "blanks": [
+      {
+        "accept": [
+          "EXPONENTIAL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p0rtfz8k",
+    "version": 1,
+    "section": "chains",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the chain, how does `SummaryWorker` know how many sessions were sent?",
+    "hint": "`inputData`",
+    "choices": [
+      {
+        "text": "It calls the `Uploader` again",
+        "correct": false,
+        "why": "That would send twice; it only reads."
+      },
+      {
+        "text": "Its input is the sync's output `Data`",
+        "correct": true,
+        "why": "Right: in a chain, each request's output is the next one's input."
+      },
+      {
+        "text": "Both workers share a `companion object` variable",
+        "correct": false,
+        "why": "Only the key's name is shared; values cannot survive a process restart that way."
+      },
+      {
+        "text": "It reads the count from WorkManager's log",
+        "correct": false,
+        "why": "Workers communicate through `Data`, not logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-hz4mwgrz",
+    "version": 1,
+    "section": "chains",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The server is down. Right after the chain is enqueued, what are the states of the sync and the summary?",
+    "hint": "A retry is not a failure.",
+    "choices": [
+      {
+        "text": "`FAILED` and `FAILED`",
+        "correct": false,
+        "why": "That is what a `failure` would do; the sync asked for a retry."
+      },
+      {
+        "text": "`ENQUEUED` and `BLOCKED`",
+        "correct": true,
+        "why": "Right: the sync waits for its back-off, and the summary waits for the sync."
+      },
+      {
+        "text": "`RUNNING` and `ENQUEUED`",
+        "correct": false,
+        "why": "With a synchronous executor nothing is still running when the test reads it."
+      },
+      {
+        "text": "`ENQUEUED` and `SUCCEEDED` with an empty message",
+        "correct": false,
+        "why": "The summary never ran; it is held behind the sync."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwc2gs27",
+    "version": 1,
+    "section": "chains",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student taps \"sync now\" twice in a second. The chain uses `beginUniqueWork(\"sync-now\", REPLACE, …)`. What happens?",
+    "hint": "`REPLACE` cancels what is still waiting.",
+    "choices": [
+      {
+        "text": "Two chains run, and the sessions are sent twice",
+        "correct": false,
+        "why": "A unique name allows one chain at a time."
+      },
+      {
+        "text": "The second tap is ignored",
+        "correct": false,
+        "why": "That is `KEEP`; `REPLACE` does the opposite."
+      },
+      {
+        "text": "The unfinished first chain is cancelled; a fresh one runs",
+        "correct": true,
+        "why": "Right: the old one ends `CANCELLED`, and one send happens."
+      },
+      {
+        "text": "WorkManager refuses the second chain and throws an exception at the button",
+        "correct": false,
+        "why": "Unique work is a policy, not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-7035ftbq",
+    "version": 1,
+    "section": "chains",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the life of a one-time request whose first attempt hits a dead network and whose second succeeds.",
+    "hint": "It is `ENQUEUED` more than once.",
+    "items": [
+      "`ENQUEUED`, waiting to run",
+      "`RUNNING`, and `doWork` returns `retry`",
+      "`ENQUEUED` again, during the back-off",
+      "`RUNNING`, and `doWork` returns `success`",
+      "`SUCCEEDED`"
+    ]
+  },
+  {
+    "id": "ex-4398mzr7",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You give `PlannerApp` a `Configuration.Provider` but leave the manifest without the `tools:node=\"remove\"` entry. What goes wrong?",
+    "hint": "Something initialises WorkManager before your `Application` has a say.",
+    "choices": [
+      {
+        "text": "The build fails because two configurations exist",
+        "correct": false,
+        "why": "Nothing fails at build time; the problem appears when a worker is built."
+      },
+      {
+        "text": "Nothing: `Configuration.Provider` always wins",
+        "correct": false,
+        "why": "The library's initialiser sets WorkManager up first, with the default configuration."
+      },
+      {
+        "text": "Your factory is never used, so `SyncWorker` cannot be built",
+        "correct": true,
+        "why": "Right: the default factory only knows the two-parameter constructor."
+      },
+      {
+        "text": "The app asks the student for a startup permission",
+        "correct": false,
+        "why": "There is no such permission; this is a manifest-merging question."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mdqpbst",
+    "version": 1,
+    "section": "the-application",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which permissions did adding WorkManager put into the merged manifest? Choose all that apply.",
+    "hint": "Section 06 listed the merged manifest's permissions.",
+    "choices": [
+      {
+        "text": "`RECEIVE_BOOT_COMPLETED`",
+        "correct": true,
+        "why": "Yes: it is how WorkManager reschedules after a reboot."
+      },
+      {
+        "text": "`INTERNET`",
+        "correct": false,
+        "why": "No: WorkManager checks the network, it does not use it; lesson 13 adds this one."
+      },
+      {
+        "text": "`ACCESS_NETWORK_STATE`",
+        "correct": true,
+        "why": "Yes: it lets WorkManager check the network constraint."
+      },
+      {
+        "text": "`POST_NOTIFICATIONS`",
+        "correct": false,
+        "why": "No: that is lesson 19's, and the app has to ask for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3e33wkz",
+    "version": 1,
+    "section": "the-application",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`grep -c WorkManagerInitializer` on the merged manifest printed what number?",
+    "hint": "The library's own manifest printed 1.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9je9v5rw",
+    "version": 1,
+    "section": "what-the-system-kills",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these stops the planner's sync from ever running until the student opens the app again?",
+    "hint": "One row of the table is in bold.",
+    "choices": [
+      {
+        "text": "The phone rebooting overnight",
+        "correct": false,
+        "why": "The boot receiver reschedules everything."
+      },
+      {
+        "text": "The system ending the process for memory",
+        "correct": false,
+        "why": "The request is on disk; the system restarts the work."
+      },
+      {
+        "text": "Force stop in the app's settings",
+        "correct": true,
+        "why": "Right: every job is cancelled, and Android honours it completely."
+      },
+      {
+        "text": "Doze, while the phone lies still",
+        "correct": false,
+        "why": "Doze delays work to maintenance windows; it does not cancel it."
+      }
+    ]
+  },
+  {
+    "id": "ex-23a355mt",
+    "version": 1,
+    "section": "what-the-system-kills",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A tester reports that the sync runs on one phone and stops on another brand, with the same app. What is the likeliest cause section 07 names?",
+    "hint": "Something does to apps what Force stop does.",
+    "choices": [
+      {
+        "text": "The maker's battery manager",
+        "correct": true,
+        "why": "Right: it has the effect of Force stop, and nothing in code overrides it."
+      },
+      {
+        "text": "The second phone's Android lacks WorkManager",
+        "correct": false,
+        "why": "WorkManager ships inside the app, not with Android."
+      },
+      {
+        "text": "The period of six hours is too long for that brand",
+        "correct": false,
+        "why": "A period is not brand-specific; fifteen minutes is the only floor."
+      },
+      {
+        "text": "`KEEP` behaves differently across makers",
+        "correct": false,
+        "why": "Unique-work policies are WorkManager's code, the same everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbsxtrej",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes a worker that sends \"the session added at 09:14\" by its id. Section 07 suggests something else. Why?",
+    "hint": "Workers run late, and sometimes more than once.",
+    "choices": [
+      {
+        "text": "Workers cannot receive ids in `Data`",
+        "correct": false,
+        "why": "A short id fits in `Data` easily."
+      },
+      {
+        "text": "Sending whatever is unsent stays correct when it runs late or twice",
+        "correct": true,
+        "why": "Right: by the time it runs, the session may have changed or been sent already."
+      },
+      {
+        "text": "One worker per session would exceed the 15-minute floor",
+        "correct": false,
+        "why": "The floor is about periodic requests, not how many one-time ones exist."
+      },
+      {
+        "text": "The id would be lost if the process died",
+        "correct": false,
+        "why": "Input `Data` is stored in WorkManager's database and survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6ktse34",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `Result` to what WorkManager does next.",
+    "hint": "One of them is final.",
+    "pairs": [
+      {
+        "left": "`Result.success()`",
+        "right": "Stores the output and starts the next request in the chain"
+      },
+      {
+        "left": "`Result.retry()`",
+        "right": "Puts the request back to run after the back-off delay"
+      },
+      {
+        "left": "`Result.failure()`",
+        "right": "Never runs it again, and fails what is chained after it"
+      }
+    ],
+    "right_distractors": [
+      "Asks the student whether to try again"
+    ]
+  },
+  {
+    "id": "ex-x6jsfd6a",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A worker whose `doWork` is a `suspend` function extends `___`.",
+    "hint": "Section 03's `SyncWorker`.",
+    "blanks": [
+      {
+        "accept": [
+          "CoroutineWorker"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

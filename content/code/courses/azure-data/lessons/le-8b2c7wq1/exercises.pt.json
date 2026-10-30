@@ -1,0 +1,433 @@
+{
+  "ex-9sd5wtcc": {
+    "prompt": "O que precisa ser feito num contêiner antes de ler o change feed dele no modo padrão?",
+    "hint": "O `feed.py` criou o contêiner e leu o feed na hora.",
+    "choices": [
+      {
+        "text": "Ligar uma política de change feed com período de retenção",
+        "why": "Isso é para todas as versões e exclusões, o outro modo."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: todo contêiner tem um."
+      },
+      {
+        "text": "Ligar o backup contínuo da conta",
+        "why": "Também é requisito do outro modo no Azure."
+      },
+      {
+        "text": "Criar um contêiner de leases ao lado",
+        "why": "Leases são do processador do change feed; o `feed.py` não usou nenhum."
+      }
+    ]
+  },
+  "ex-xwn0fa4m": {
+    "prompt": "Mudanças dos clientes `c-7` e `c-8` são gravadas nessa ordem. Em que ordem o feed as devolve?",
+    "hint": "Onde a ordem é garantida?",
+    "choices": [
+      {
+        "text": "`c-7` e depois `c-8`, na ordem em que foram gravadas",
+        "why": "Só mudanças na mesma chave de partição mantêm a ordem."
+      },
+      {
+        "text": "Qualquer uma, por chave, não entre chaves",
+        "why": "Isso: a ordem vale dentro de uma chave de partição e em nenhum outro lugar."
+      },
+      {
+        "text": "Por `_ts`, no contêiner inteiro",
+        "why": "Não existe ordem do contêiner inteiro em que confiar."
+      },
+      {
+        "text": "Em ordem alfabética de id dentro de cada página",
+        "why": "Ids não têm nada a ver com a ordem do feed."
+      }
+    ]
+  },
+  "ex-nmynyx22": {
+    "prompt": "O que há dentro do token de continuação que o `feed.py` decodificou?",
+    "hint": "Olhe a linha que começa com `continuation:`.",
+    "choices": [
+      {
+        "text": "Os ids dos itens já lidos",
+        "why": "Ele registra posições, não itens."
+      },
+      {
+        "text": "Um carimbo de tempo assinado que o servidor confere",
+        "why": "É JSON em base64 que qualquer um decodifica."
+      },
+      {
+        "text": "A posição alcançada em cada faixa do feed",
+        "why": "Isso: uma faixa de '' a FF no emulador, na posição 5."
+      },
+      {
+        "text": "O token de sessão da última escrita",
+        "why": "Números parecidos, outro token com outro propósito."
+      }
+    ]
+  },
+  "ex-88nbajmt": {
+    "prompt": "Ligue cada ponto de partida a onde o feed começa.",
+    "hint": "Uma descrição não serve para nenhum.",
+    "pairs": [
+      {
+        "left": "`\"Beginning\"`",
+        "right": "A entrada mais antiga que o feed ainda tem"
+      },
+      {
+        "left": "`\"Now\"`",
+        "right": "A próxima mudança depois da requisição"
+      },
+      {
+        "left": "Um `datetime`",
+        "right": "A primeira mudança naquele horário ou depois"
+      },
+      {
+        "left": "Um token salvo",
+        "right": "Logo depois da posição que ele registra"
+      }
+    ],
+    "right_distractors": [
+      "A última mudança de cada item, da mais nova para a mais antiga"
+    ]
+  },
+  "ex-0g2d9sex": {
+    "prompt": "O `feed.py` fez três criações, duas atualizações e uma exclusão. Quantas entradas o feed devolveu desde o início?",
+    "hint": "Uma por item vivo, como ele está agora."
+  },
+  "ex-8fdw57h5": {
+    "prompt": "Uma visão construída a partir do feed de última versão ainda mostra um pedido apagado semana passada. Por quê?",
+    "hint": "O que o feed disse sobre o `o-2`?",
+    "choices": [
+      {
+        "text": "Exclusões não estão nesse feed, então nada avisou",
+        "why": "Isso: marque como apagado primeiro, e deixe um time to live removê-lo."
+      },
+      {
+        "text": "O token do processador tem uma semana",
+        "why": "Um token velho repetiria mudanças, mas uma exclusão não está entre elas."
+      },
+      {
+        "text": "O feed só informa exclusões depois do time to live",
+        "why": "Neste modo ele nunca informa uma exclusão."
+      },
+      {
+        "text": "Exclusões são informadas uma vez por dia, em lote",
+        "why": "Esse lote não existe."
+      }
+    ]
+  },
+  "ex-1swa3s9g": {
+    "prompt": "Ponha em ordem a exclusão lógica do `softdelete.py`.",
+    "hint": "Os leitores precisam ver antes de sumir.",
+    "items": [
+      "Ler o pedido",
+      "Pôr `deleted` como verdadeiro e dar a ele um `ttl`",
+      "Gravar de volta, o que o põe no feed",
+      "Os leitores do feed o tiram das visões deles",
+      "O time to live o remove do contêiner"
+    ]
+  },
+  "ex-vdae45kz": {
+    "prompt": "Um job noturno lê o feed do contêiner de pedidos e pode ficar parado num fim de semana. Que `ttl` um pedido apagado logicamente deve receber?",
+    "hint": "Para quem o `ttl` é uma promessa?",
+    "choices": [
+      {
+        "text": "5 segundos, como no `softdelete.py`",
+        "why": "Cinco segundos é um número para uma lição."
+      },
+      {
+        "text": "Nenhum: o job lê a marca quando rodar de novo",
+        "why": "Sem ttl o item fica para sempre; com um curto demais o job nunca vê a marca."
+      },
+      {
+        "text": "Vários dias, mais que a ausência de qualquer leitor",
+        "why": "Isso: um item que expira antes de um leitor ver a marca é uma exclusão que esse leitor nunca fica sabendo."
+      },
+      {
+        "text": "Um dia, o padrão de um contêiner com time to live ligado",
+        "why": "`default_ttl=-1` não dá time to live a item nenhum a menos que ele traga um."
+      }
+    ]
+  },
+  "ex-z0bjv23q": {
+    "prompt": "Por que o `processor.py` salva a visão antes do checkpoint, e não o contrário?",
+    "hint": "Imagine uma queda entre os dois, em cada ordem.",
+    "choices": [
+      {
+        "text": "Porque o Azurite grava blobs em ordem alfabética",
+        "why": "A ordem é do programa, e importa onde quer que os blobs estejam."
+      },
+      {
+        "text": "A outra ordem pularia para sempre mudanças que a visão nunca recebeu",
+        "why": "Isso: esta ordem repete algumas mudanças, e não perde nenhuma."
+      },
+      {
+        "text": "Porque o token só vale depois que a visão existe",
+        "why": "O token vale sozinho; o risco é o que ele pula."
+      },
+      {
+        "text": "Para o feed entregar cada mudança exatamente uma vez",
+        "why": "Isso torna a entrega pelo menos uma; a visão é o que torna a repetição inofensiva."
+      }
+    ]
+  },
+  "ex-nker4q4j": {
+    "prompt": "Depois da queda e da execução seguinte, o que o `processor.py` mostrou para o cliente `c-8`, em reais?",
+    "hint": "A mudança foi aplicada duas vezes.",
+    "unit": "BRL"
+  },
+  "ex-x8m1x89c": {
+    "prompt": "Um colega muda o `processor.py` para guardar um total corrente por cliente e somar o valor de cada pedido. O que acontece na execução depois de uma queda antes do checkpoint?",
+    "hint": "As mesmas mudanças são lidas de novo.",
+    "choices": [
+      {
+        "text": "Nada: o feed não repete mudanças",
+        "why": "O feed retoma do token velho, então repete."
+      },
+      {
+        "text": "A execução falha, porque o token está desatualizado",
+        "why": "Um token velho é um token válido; ele só aponta mais para trás."
+      },
+      {
+        "text": "A biblioteca percebe a repetição e pula",
+        "why": "Nada na biblioteca acompanha o que o seu programa aplicou."
+      },
+      {
+        "text": "Os pedidos lidos de novo são somados duas vezes",
+        "why": "Isso: somar não é idempotente, definir é."
+      }
+    ]
+  },
+  "ex-km1n4a08": {
+    "prompt": "Entrega que nunca perde mudanças mas pode repeti-las se chama entrega pelo menos ___.",
+    "hint": "Quantas vezes, no mínimo?",
+    "blanks": [
+      {
+        "accept": [
+          "uma vez",
+          "uma"
+        ]
+      }
+    ]
+  },
+  "ex-s3dc64y1": {
+    "prompt": "O que o `versions.py` recebeu para a exclusão do `o-6`?",
+    "hint": "Olhe a última linha.",
+    "choices": [
+      {
+        "text": "Nada, como na última versão",
+        "why": "Este modo guarda exclusões."
+      },
+      {
+        "text": "A versão anterior dele",
+        "why": "Isso: uma entrada sem item atual, `delete`, now None, before `packed`."
+      },
+      {
+        "text": "O item como foi criado",
+        "why": "A imagem anterior da exclusão é a última versão, `packed`."
+      },
+      {
+        "text": "Um erro, porque o item não existe mais",
+        "why": "O feed informa a exclusão; nada é lido do contêiner."
+      }
+    ]
+  },
+  "ex-9zcvgwfq": {
+    "prompt": "Quais valem para o modo de todas as versões e exclusões? Marque todas as que se aplicam.",
+    "hint": "Uma vale só para a última versão.",
+    "choices": [
+      {
+        "text": "Precisa ser ligado no contêiner",
+        "why": "Isso: o contêiner `orders` sem política recusou."
+      },
+      {
+        "text": "Só guarda mudanças por um período de retenção",
+        "why": "Isso: no Azure o período do backup contínuo, no emulador de 1 a 10 minutos."
+      },
+      {
+        "text": "Começa de agora ou de um token, não do início",
+        "why": "Isso: o histórico só existe a partir de quando foi ligado."
+      },
+      {
+        "text": "Devolve cada item uma vez, como ele está agora",
+        "why": "Isso é a última versão; este modo devolve cada passo."
+      }
+    ]
+  },
+  "ex-dvfbn35z": {
+    "prompt": "O emulador aceitou retenção de 10 minutos e recusou 60. O que isso diz sobre o Azure?",
+    "hint": "De quem era a regra?",
+    "choices": [
+      {
+        "text": "Que o Azure guarda mudanças por no máximo 10 minutos",
+        "why": "No Azure a retenção segue o período do backup contínuo."
+      },
+      {
+        "text": "Nada; o limite é do emulador",
+        "why": "Isso, e nada neste curso mediu o do Azure."
+      },
+      {
+        "text": "Que o Azure conta a retenção em horas",
+        "why": "A recusa não diz nada sobre as unidades do Azure."
+      },
+      {
+        "text": "Que 60 minutos exigem um chamado de suporte no Azure",
+        "why": "Nada documentado diz isso."
+      }
+    ]
+  },
+  "ex-z6f103x3": {
+    "prompt": "O que o contêiner de leases guarda?",
+    "hint": "O `processor.py` guardava a mesma coisa num blob, menos um campo.",
+    "choices": [
+      {
+        "text": "Uma cópia de toda mudança, para reprocessar",
+        "why": "As mudanças ficam no feed do contêiner monitorado."
+      },
+      {
+        "text": "A visão que o delegate constrói",
+        "why": "A visão fica onde o seu delegate a grava."
+      },
+      {
+        "text": "Donos e tokens",
+        "why": "Isso: por faixa do feed, o dono e o token de continuação; um lease é um checkpoint com um dono escrito nele."
+      },
+      {
+        "text": "A lista de instâncias autorizadas a ler",
+        "why": "Instâncias pegam leases; ninguém as lista antes."
+      }
+    ]
+  },
+  "ex-z0hw0v3q": {
+    "prompt": "Uma segunda instância de um processador do change feed começa. O que acontece?",
+    "hint": "Os leases são divididos.",
+    "choices": [
+      {
+        "text": "Os leases são rebalanceados, e cada faixa é lida por uma instância",
+        "why": "Isso: é para isso que os leases servem."
+      },
+      {
+        "text": "As duas instâncias leem todas as faixas, e o delegate vê cada mudança duas vezes",
+        "why": "Isso é o `processor.py` iniciado duas vezes, sem leases."
+      },
+      {
+        "text": "A segunda espera a primeira parar",
+        "why": "As instâncias dividem o trabalho enquanto as duas rodam."
+      },
+      {
+        "text": "A vazão do contêiner monitorado dobra",
+        "why": "A vazão é definida no contêiner, não pelos leitores."
+      }
+    ]
+  },
+  "ex-4jycd01y": {
+    "prompt": "Qual destas vale para o gatilho do Cosmos DB no Azure Functions?",
+    "hint": "É o processador do change feed com hospedagem.",
+    "choices": [
+      {
+        "text": "Entrega cada mudança exatamente uma vez",
+        "why": "É pelo menos uma vez, como o processador em que se apoia."
+      },
+      {
+        "text": "Não precisa de contêiner de leases",
+        "why": "Precisa do mesmo contêiner de leases."
+      },
+      {
+        "text": "É como programas Python leem o feed com leases",
+        "why": "É uma opção de hospedagem, não um recurso da biblioteca Python."
+      },
+      {
+        "text": "Roda no máximo uma instância por lease",
+        "why": "Isso: um lease é lido por uma instância de cada vez."
+      }
+    ]
+  },
+  "ex-xd7awa0f": {
+    "prompt": "A Quitanda cria um índice de busca, uma cópia para o lago e a visão de gastos, cada um como consumidor próprio do feed de pedidos. Quanto isso custa em leituras?",
+    "hint": "Cada consumidor tem os próprios leases.",
+    "choices": [
+      {
+        "text": "Uma leitura do feed, dividida pelos três",
+        "why": "Cada um lê de forma independente, no seu ritmo."
+      },
+      {
+        "text": "Três, na vazão do contêiner monitorado",
+        "why": "Isso: cada consumidor paga pelas suas páginas, da mesma vazão que a aplicação usa."
+      },
+      {
+        "text": "Três leituras, cobradas nos contêineres de leases",
+        "why": "Leases custam pouco; as páginas do feed são cobradas no contêiner monitorado."
+      },
+      {
+        "text": "Nada a mais: ler o feed é de graça",
+        "why": "Toda página do feed custa unidades de requisição."
+      }
+    ]
+  },
+  "ex-kbb7pvvz": {
+    "prompt": "O financeiro quer todo status por que um pedido passou, com o horário, no último mês. O que você constrói?",
+    "hint": "A última versão perde passos; o outro modo os guarda por tempo limitado.",
+    "choices": [
+      {
+        "text": "Um leitor do feed de última versão que consulta a cada minuto",
+        "why": "Duas mudanças dentro de um minuto ainda viram uma."
+      },
+      {
+        "text": "Uma consulta em `_ts` no contêiner de pedidos",
+        "why": "`_ts` é o horário da última escrita; os passos anteriores sumiram."
+      },
+      {
+        "text": "Um consumidor de todas as versões que guarda cada entrada",
+        "why": "Isso, ou um histórico de status guardado no próprio item; o feed sozinho só guarda mudanças pela retenção."
+      },
+      {
+        "text": "Uma exclusão lógica com ttl de um mês",
+        "why": "Isso mantém itens apagados; não registra passos."
+      }
+    ]
+  },
+  "ex-2w83x3dh": {
+    "prompt": "Quais destes tornam seguro um consumidor do feed rodar duas vezes na mesma mudança? Marque todos os que se aplicam.",
+    "hint": "Definir, não somar.",
+    "choices": [
+      {
+        "text": "Gravar a visão com chave pelo id do pedido",
+        "why": "Isso: a segunda escrita define o mesmo valor."
+      },
+      {
+        "text": "Remover um pedido marcado como apagado, se estiver lá",
+        "why": "Isso: remover o que já sumiu não muda nada."
+      },
+      {
+        "text": "Somar o valor de cada pedido a um total corrente",
+        "why": "A repetição soma de novo."
+      },
+      {
+        "text": "Salvar o checkpoint antes da visão",
+        "why": "Isso perde mudanças; não torna repetições seguras."
+      }
+    ]
+  },
+  "ex-654ccxcd": {
+    "prompt": "Onde um programa Python rodando no Azure guarda o lugar dele no feed, com a versão 4.17.1 da biblioteca?",
+    "hint": "A biblioteca não tem processador.",
+    "choices": [
+      {
+        "text": "Num contêiner de leases que a biblioteca gerencia",
+        "why": "Esse é o processador do .NET e do Java."
+      },
+      {
+        "text": "Em lugar nenhum: o serviço lembra de cada leitor",
+        "why": "O serviço não lembra nada sobre os leitores."
+      },
+      {
+        "text": "Onde quer que o programa salve o token de continuação",
+        "why": "Isso: um blob, como no `processor.py`, ou um documento próprio."
+      },
+      {
+        "text": "No `_lsn` do último item que leu",
+        "why": "Um `_lsn` é a posição de uma partição; o token cobre todas as faixas."
+      }
+    ]
+  }
+}

@@ -1,0 +1,640 @@
+[
+  {
+    "id": "ex-ammy801d",
+    "version": 1,
+    "section": "fault-and-update-domains",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Six machines of the order API sit in a set with two fault domains and five update domains. The power supply feeding one rack fails. What does the shop lose?",
+    "hint": "A rack is a row in the figure, not a column.",
+    "choices": [
+      {
+        "text": "One machine, the one whose update domain was due for a restart",
+        "correct": false,
+        "why": "That describes planned maintenance, which takes an update domain. A power failure is unplanned and takes a fault domain."
+      },
+      {
+        "text": "The machines of that fault domain, three of the six",
+        "correct": true,
+        "why": "Right. A fault domain is the hardware that shares a power source and a switch, so its machines go together, and the other fault domain keeps answering."
+      },
+      {
+        "text": "Nothing, because Azure moves the six to another rack before the power goes",
+        "correct": false,
+        "why": "A power supply that dies gives no notice. Live migration moves a machine off a host that is still running, not off a rack whose power has already gone."
+      },
+      {
+        "text": "All six, since an availability set lives inside one rack",
+        "correct": false,
+        "why": "The set exists to spread its machines across fault domains, which are different racks' worth of power and network."
+      }
+    ]
+  },
+  {
+    "id": "ex-yaj7kysm",
+    "version": 1,
+    "section": "fault-and-update-domains",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A set has five update domains. Twelve machines are created in it, one after another. How many machines are in the first machine's update domain, counting the first one?",
+    "hint": "The sixth goes with the first, the seventh with the second.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "machines"
+  },
+  {
+    "id": "ex-pebzjm6y",
+    "version": 1,
+    "section": "fault-and-update-domains",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-web-1` has run on its own for a month. The team now wants it in `shop-avset`. What does that take?",
+    "hint": "Read the SDK's description of `availabilitySet` again.",
+    "choices": [
+      {
+        "text": "Adding `availabilitySet` to the running machine's file and deploying it again",
+        "correct": false,
+        "why": "The property is accepted only when the machine is created. An existing machine cannot be added to a set."
+      },
+      {
+        "text": "Deallocating it first, then setting the property and starting it",
+        "correct": false,
+        "why": "Deallocating does not reopen the choice. It is also the step that can put two machines of a set in one fault domain."
+      },
+      {
+        "text": "A new machine, created in the set",
+        "correct": true,
+        "why": "Right. A machine joins a set when it is created or never, so the way in is a new machine there."
+      },
+      {
+        "text": "Raising the set's fault domain count so that there is room for it",
+        "correct": false,
+        "why": "The counts are fixed once the set exists, and they are not a capacity limit on the number of machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwe482xk",
+    "version": 1,
+    "section": "fault-and-update-domains",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Bicep, a managed availability set, the kind that holds machines with managed disks, is declared with the `sku` name ___.",
+    "hint": "It is the word for disks that follow their machine's fault domain.",
+    "blanks": [
+      {
+        "accept": [
+          "Aligned"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6f7b6km4",
+    "version": 1,
+    "section": "fault-and-update-domains",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to a set during a planned maintenance that needs a reboot.",
+    "hint": "Notice comes first; the update domains come last.",
+    "items": [
+      "Azure announces the maintenance",
+      "During the self-service phase, you may start it on a machine yourself",
+      "The scheduled phase begins, and Azure starts it",
+      "One update domain is restarted",
+      "That update domain has 30 minutes to recover before the next one starts"
+    ],
+    "trap": "The 30 minutes come after a restart, not before it: they are the time a restarted update domain has to recover."
+  },
+  {
+    "id": "ex-z0ngqn9w",
+    "version": 1,
+    "section": "availability-zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's two machines are created in Brazil South with no `zones` at all. Which is true of them?",
+    "hint": "Regional is not the same as everywhere.",
+    "choices": [
+      {
+        "text": "Each one is spread over the three zones, like a zone-redundant address",
+        "correct": false,
+        "why": "A machine is never spread by Azure. Without zones it is regional: placed in one zone it does not tell you about."
+      },
+      {
+        "text": "They go into zones 1 and 2, one each, because there are two of them",
+        "correct": false,
+        "why": "Nothing assigns regional machines to zones in order, and nothing reports which zone they landed in."
+      },
+      {
+        "text": "Azure places each in a zone it does not report, and nothing stops both sharing one",
+        "correct": true,
+        "why": "Right. A regional machine is in one zone nobody tells you, so nothing keeps two of them apart, and a failure in any zone takes down whichever is in it."
+      },
+      {
+        "text": "They cannot be created, because a region with zones requires one",
+        "correct": false,
+        "why": "Regional machines are allowed in a region with zones; they simply have no zone of their own that you chose."
+      }
+    ]
+  },
+  {
+    "id": "ex-10dze4mc",
+    "version": 1,
+    "section": "availability-zones",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each declaration to what it gives the shop.",
+    "hint": "Zonal, zone-redundant, regional, and one combination.",
+    "pairs": [
+      {
+        "left": "`zones: ['1']` on a virtual machine",
+        "right": "Pinned to one zone, and down whenever that zone is"
+      },
+      {
+        "left": "`zones: ['1', '2', '3']` on a Standard public IP",
+        "right": "Spread by Azure, surviving the loss of any one zone"
+      },
+      {
+        "left": "No `zones` on a virtual machine",
+        "right": "In one zone of the region that nobody reports"
+      },
+      {
+        "left": "`zones: ['1']` and `availabilitySet` on one machine",
+        "right": "Compiles cleanly, and is a pair Azure does not accept"
+      }
+    ],
+    "right_distractors": [
+      "Copied by Azure into the region's pair"
+    ]
+  },
+  {
+    "id": "ex-r0814c44",
+    "version": 1,
+    "section": "availability-zones",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's subscription and the finance team's subscription each put a machine in zone `1` of Brazil South, to keep them together. What have they actually arranged?",
+    "hint": "Who decides which building `1` means?",
+    "choices": [
+      {
+        "text": "Two machines in one building, since zone 1 is the same for every customer",
+        "correct": false,
+        "why": "Zone numbers are logical. Each subscription's are mapped to physical zones, and the mapping is returned per subscription."
+      },
+      {
+        "text": "Nothing certain: each subscription maps its zone `1` on its own",
+        "correct": true,
+        "why": "Right. The location list carries `logicalZone` and `physicalZone` per subscription, and only reading both mappings says whether the two machines share a building."
+      },
+      {
+        "text": "Two different buildings, because Azure keeps subscriptions apart",
+        "correct": false,
+        "why": "Nothing promises that either. Two subscriptions may map their numbers onto the same physical zone."
+      },
+      {
+        "text": "One building, but only while both deployments use the same API version",
+        "correct": false,
+        "why": "The API version decides which properties a template may use, not where a zone is."
+      }
+    ]
+  },
+  {
+    "id": "ex-fetfgrbq",
+    "version": 1,
+    "section": "availability-zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 4's scale set has six instances, two per zone, and the default balancing. Zone 2 goes dark and autoscale adds two instances. Where do they go?",
+    "hint": "The default is best effort.",
+    "choices": [
+      {
+        "text": "Nowhere until zone 2 is back, since the scale-out would unbalance the set",
+        "correct": false,
+        "why": "That is strict balancing, which blocks an operation that would unbalance the set. The default is best effort."
+      },
+      {
+        "text": "Into zone 2, so that each zone keeps the same count",
+        "correct": false,
+        "why": "Zone 2 is dark; nothing can be created there until it returns."
+      },
+      {
+        "text": "Into the region's pair, which takes over while a zone is down",
+        "correct": false,
+        "why": "A scale set lives in one region. Nothing moves its instances to another one."
+      },
+      {
+        "text": "Into zones 1 and 3, with the imbalance accepted while zone 2 is down",
+        "correct": true,
+        "why": "Right. Best effort keeps scaling into the zones that work and accepts the imbalance while one zone is out; later scale operations restore the balance."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0zs0tff",
+    "version": 1,
+    "section": "availability-zones",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the Bicep compiler warn about in this lesson's mistaken copies? Choose all that apply.",
+    "hint": "It knows types, not limits or combinations.",
+    "choices": [
+      {
+        "text": "A zone written as the number `1` instead of the string `'1'`",
+        "correct": true,
+        "why": "Caught: a zone is a string, and each number in the list drew a warning."
+      },
+      {
+        "text": "A machine placed in zone `'4'` of a region with three zones",
+        "correct": false,
+        "why": "Passed: `'4'` is a string, and the type does not know how many zones a region has."
+      },
+      {
+        "text": "An update domain count written as the text `'5'`",
+        "correct": true,
+        "why": "Caught: the property is typed as a number, so text drew BCP036."
+      },
+      {
+        "text": "A machine given both a zone and an availability set",
+        "correct": false,
+        "why": "Passed: each property is valid alone, and the rule against the pair lives in the documentation."
+      },
+      {
+        "text": "Four fault domains on an availability set",
+        "correct": false,
+        "why": "Passed: four is a number. The limit of three is in Microsoft's documentation, not in the type."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ga8gcvs",
+    "version": 1,
+    "section": "the-arithmetic-of-availability",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The agreement measures a virtual machine over 30 days. How many minutes of downtime does a 99.95% promise allow in that period?",
+    "hint": "43,200 minutes times what is left over.",
+    "value": 21.6,
+    "tolerance": 0.05,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-27jbwx5t",
+    "version": 1,
+    "section": "the-arithmetic-of-availability",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An order passes through the Standard load balancer (99.99%), then the machines across zones (99.99%), then a database promised 99.9%. What is the availability of the chain, in percent, to two decimal places?",
+    "hint": "In series, multiply the fractions.",
+    "value": 99.88,
+    "tolerance": 0.005,
+    "unit": "%"
+  },
+  {
+    "id": "ex-6ksa2g5e",
+    "version": 1,
+    "section": "the-arithmetic-of-availability",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two copies of a service are each available 99% of the time, and they never fail for the same reason. How many minutes in 30 days are both down at once?",
+    "hint": "Each is down 0.01 of the time; both together, the product.",
+    "value": 4.32,
+    "tolerance": 0.01,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-cr2vsyj6",
+    "version": 1,
+    "section": "the-arithmetic-of-availability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The parallel formula gives two machines of 99.9% an availability of 99.9999%. Why does the agreement promise a pair in an availability set only 99.95%?",
+    "hint": "Read the formula's assumption.",
+    "choices": [
+      {
+        "text": "Because it adds the two machines' downtime together instead of multiplying the chances",
+        "correct": false,
+        "why": "Adding is neither rule. The agreement counts a minute as down when no machine of the set answers."
+      },
+      {
+        "text": "It assumes no shared cause, and the two still share a datacentre",
+        "correct": true,
+        "why": "Right. Fault domains separate racks, not buildings, so the copies keep failures in common and the agreement does not assume otherwise."
+      },
+      {
+        "text": "Because 99.95% is a figure per machine, so the pair as a whole is promised more",
+        "correct": false,
+        "why": "The 99.95% is for the set as a whole, two or more machines measured together."
+      },
+      {
+        "text": "The parallel formula is for parts in series, not copies",
+        "correct": false,
+        "why": "It is the other way round: multiplying availabilities is for parts in series; the parallel formula is for copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvr289g9",
+    "version": 1,
+    "section": "the-arithmetic-of-availability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One of the shop's two zonal machines is down for a whole day, and the other answers throughout. How much downtime does that day add under the agreement's definition for machines across zones?",
+    "hint": "When is a minute down for a group of machines?",
+    "choices": [
+      {
+        "text": "1,440 minutes, the whole day",
+        "correct": false,
+        "why": "That would be true of a single machine. Across zones, a minute counts only when no machine in the region answers."
+      },
+      {
+        "text": "720 minutes, since one machine of two was down",
+        "correct": false,
+        "why": "The agreement does not count a share of the machines; it asks whether any of them had connectivity."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right. Downtime across zones is a minute with no connectivity to any machine in the region, and the other one answered all day."
+      },
+      {
+        "text": "It depends on whether the failed machine had Premium SSD disks",
+        "correct": false,
+        "why": "The disk type decides a single machine's percentage. For machines across zones it does not change what counts as down."
+      }
+    ]
+  },
+  {
+    "id": "ex-mst2f7b1",
+    "version": 1,
+    "section": "choosing-the-protection",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The order API runs in three zones. Which of these failures does that arrangement not survive?",
+    "hint": "Look for what every copy has in common.",
+    "choices": [
+      {
+        "text": "A cooling failure in one of the region's datacentres, lasting an afternoon",
+        "correct": false,
+        "why": "That is exactly what zones survive: the other two zones have cooling of their own."
+      },
+      {
+        "text": "A release that crashes on start, rolled out to every instance",
+        "correct": true,
+        "why": "Right. Every copy runs the same image, so a release that breaks it breaks it in all three zones; a rolling upgrade with health checks is what limits that."
+      },
+      {
+        "text": "A rack losing power",
+        "correct": false,
+        "why": "A rack is smaller than a zone; the instances in other racks and zones keep answering."
+      },
+      {
+        "text": "A maintenance that reboots the machines of the region, zone after zone",
+        "correct": false,
+        "why": "Maintenance is sequenced zone by zone, so the zones are not all touched at the same moment."
+      }
+    ]
+  },
+  {
+    "id": "ex-t99mf4vk",
+    "version": 1,
+    "section": "choosing-the-protection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is one machine on Premium SSD a reasonable home for the shop's nightly sales report, when the order API gets three zones?",
+    "hint": "Ask what a late report costs.",
+    "choices": [
+      {
+        "text": "Its work is fine late: a failure at two delays a report nobody reads before morning",
+        "correct": true,
+        "why": "Right. The protection is chosen by the cost of the failure, and here the cost is a late report."
+      },
+      {
+        "text": "A single machine on Premium SSD is promised as much as two machines across zones",
+        "correct": false,
+        "why": "One machine on Premium SSD is promised 99.9%; two across zones, 99.99%. The report does not need the difference."
+      },
+      {
+        "text": "Reports cannot run on more than one machine",
+        "correct": false,
+        "why": "Nothing stops it; it would simply cost a second machine for a job that can wait."
+      },
+      {
+        "text": "Night-time hours are outside the SLA's measurement",
+        "correct": false,
+        "why": "The agreement measures every minute of the 30 days; nothing about the hour changes that."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsbwd6z4",
+    "version": 1,
+    "section": "choosing-the-protection",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to what keeps the shop going through it.",
+    "hint": "Each answer is the size just above the failure.",
+    "pairs": [
+      {
+        "left": "A region",
+        "right": "A copy in a second region"
+      },
+      {
+        "left": "A bad release",
+        "right": "A rolling upgrade that stops when health checks fail"
+      },
+      {
+        "left": "A zone, for one machine's data",
+        "right": "A ZRS disk, with a copy in each of three zones"
+      },
+      {
+        "left": "A rack's power",
+        "right": "A second fault domain"
+      }
+    ],
+    "right_distractors": [
+      "A proximity placement group"
+    ]
+  },
+  {
+    "id": "ex-2114mbbz",
+    "version": 1,
+    "section": "choosing-the-protection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team in a region with zones runs two database machines that replicate synchronously, and every write waits for the other machine. Which arrangement fits what it is asking for?",
+    "hint": "Weigh latency against the size of the failure survived.",
+    "choices": [
+      {
+        "text": "Two zones, because 99.99% is the highest promise this lesson quotes for machines",
+        "correct": false,
+        "why": "It survives more, and every write pays the round trip between zones, which this team wants to avoid."
+      },
+      {
+        "text": "A proximity placement group spanning all three zones of the region",
+        "correct": false,
+        "why": "A proximity placement group is pinned to one datacentre; it cannot span zones."
+      },
+      {
+        "text": "An availability set, accepting that a datacentre failure takes both",
+        "correct": true,
+        "why": "Right. The set spreads the pair over racks and keeps them close, and a proximity placement group would bring them closer still; the trade is that neither survives the building."
+      },
+      {
+        "text": "One machine with a ZRS disk",
+        "correct": false,
+        "why": "A ZRS disk keeps the data through a zone failure, but one machine is no replica at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-07sm8xgk",
+    "version": 1,
+    "section": "choosing-the-protection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop decides to keep a copy of its orders in Brazil South's paired region. What does Microsoft's page on regions say that matters for that copy?",
+    "hint": "Pairs keep data in one geography, with one exception.",
+    "choices": [
+      {
+        "text": "The copy stays inside Brazil, as every pair keeps data in its geography",
+        "correct": false,
+        "why": "Brazil South is the stated exception to that rule."
+      },
+      {
+        "text": "The pair is another zone of Brazil South",
+        "correct": false,
+        "why": "A pair is a second region. Zones are inside one region."
+      },
+      {
+        "text": "It leaves Brazil: Brazil South's pair is outside its geography",
+        "correct": true,
+        "why": "Right. The regions page names Brazil South as the exception, so a copy kept in its pair is outside the country."
+      },
+      {
+        "text": "The copy is covered by the 99.99% promise of machines across zones",
+        "correct": false,
+        "why": "That promise is about machines across zones inside one region. A second region is outside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssmzhchb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A copy of `shop-avset.bicep` with `platformFaultDomainCount: 4` compiles with no warning. What does that silence tell you?",
+    "hint": "What does the compiler know about the property?",
+    "choices": [
+      {
+        "text": "That Brazil South has four disk fault domains",
+        "correct": false,
+        "why": "Regions have two or three disk fault domains, and the compiler knows nothing about any region."
+      },
+      {
+        "text": "That the compiler lowers it to the largest count the region allows",
+        "correct": false,
+        "why": "The template carries the number as written; nothing rewrites it."
+      },
+      {
+        "text": "That 4 is a number, and the limit of three is not in the type",
+        "correct": true,
+        "why": "Right. The type checks that it is a number and nothing more; the limit is in the documentation, and Resource Manager would refuse the value at deployment."
+      },
+      {
+        "text": "That a Flexible scale set would accept it, so an availability set will too",
+        "correct": false,
+        "why": "The two are different resources with different documented limits, and neither limit is in the type."
+      }
+    ]
+  },
+  {
+    "id": "ex-awwaeyx9",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A single machine on Standard SSD (99.5%) sits behind the Standard load balancer (99.99%). How many minutes of downtime in 30 days do the two promises add up to, to one decimal place?",
+    "hint": "Multiply the two, then take the rest of 43,200 minutes.",
+    "value": 220.3,
+    "tolerance": 0.1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-m78ybfbd",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A virtual machine declared with no `zones` property, in a region that has zones, is called a ___ machine: Azure places it in a zone it does not report.",
+    "hint": "Not zonal, not zone-redundant.",
+    "blanks": [
+      {
+        "accept": [
+          "regional",
+          "nonzonal",
+          "non-zonal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gbnb5nj2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In one 30-day period, the order API across zones had 30 minutes in which no machine in the region answered. What does the agreement give the shop?",
+    "hint": "Turn 30 minutes into a percentage first, then read the credit table.",
+    "choices": [
+      {
+        "text": "Nothing, since 30 minutes is inside the allowance",
+        "correct": false,
+        "why": "At 99.99% the allowance is 4.32 minutes. Thirty minutes is about 99.93%, below the promise."
+      },
+      {
+        "text": "A 10% credit on those machines' fees for the period, once it claims within 60 days",
+        "correct": true,
+        "why": "Right. 99.93% is below 99.99% and above 99%, so the credit is 10%, and only on a claim made within 60 days."
+      },
+      {
+        "text": "A 25% credit, paid automatically",
+        "correct": false,
+        "why": "25% is for below 99%, and no credit is automatic: the shop has to claim it."
+      },
+      {
+        "text": "A refund of what the 30 minutes of the shop's machines cost, with an explanation of the cause",
+        "correct": false,
+        "why": "A credit is a percentage of the period's fees, not the cost of the minutes, and the agreement promises no explanation."
+      }
+    ]
+  }
+]

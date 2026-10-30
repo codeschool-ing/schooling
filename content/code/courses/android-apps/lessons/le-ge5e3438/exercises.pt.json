@@ -1,0 +1,482 @@
+{
+  "ex-vagpz9va": {
+    "prompt": "Um botão soma 25 a `var minutes = 0` declarado num composable. O que a tela mostra depois de um clique?",
+    "hint": "O Compose consegue ver uma variável comum mudar?",
+    "choices": [
+      {
+        "text": "25 min",
+        "why": "A variável vale 25, e nada avisou o Compose para rodar de novo."
+      },
+      {
+        "text": "0 min",
+        "why": "Isso: o teste imprimiu `a plain var after one click: 0 min`."
+      },
+      {
+        "text": "Uma falha, já que um composable não pode ter um `var`",
+        "why": "Compila e roda; só nunca atualiza."
+      },
+      {
+        "text": "Nada até o celular ser girado",
+        "why": "Girar reconstrói a partir do 0 de novo."
+      }
+    ]
+  },
+  "ex-pwyw94me": {
+    "prompt": "`var minutes by mutableIntStateOf(0)` sem `remember` também mostra 0 depois de um clique. Por quê, se o Compose viu a escrita?",
+    "hint": "O que rodar de novo faz com a primeira linha?",
+    "choices": [
+      {
+        "text": "A escrita é ignorada porque aconteceu dentro do `onClick`",
+        "why": "Escritas a partir de tratadores de evento são o jeito normal de o estado mudar."
+      },
+      {
+        "text": "A recomposição criou um novo objeto de estado valendo 0",
+        "why": "Isso: o 25 foi para o objeto que a execução seguinte jogou fora."
+      },
+      {
+        "text": "`mutableIntStateOf` só funciona com `Long`",
+        "why": "É a versão para `Int`; a de `Long` é `mutableLongStateOf`."
+      },
+      {
+        "text": "O `waitForIdle` zerou o valor",
+        "why": "Ele só espera o Compose terminar de reagir."
+      }
+    ]
+  },
+  "ex-9gvw5m9n": {
+    "prompt": "Para um `Long`, a função de estado especializada é `mutable___StateOf`.",
+    "hint": "Como `mutableIntStateOf`, para outro tipo.",
+    "blanks": [
+      {
+        "accept": [
+          "Long"
+        ]
+      }
+    ]
+  },
+  "ex-bmpt9f5s": {
+    "prompt": "Por que os testes desta aula importam `createComposeRule` do pacote `v2`?",
+    "hint": "Leia o aviso do compilador sobre o outro.",
+    "choices": [
+      {
+        "text": "O outro está obsoleto, e o `v2` enfileira corrotinas como as ferramentas de teste do Kotlin",
+        "why": "Isso: é também por isso que os testes chamam `waitForIdle`."
+      },
+      {
+        "text": "Só o `v2` funciona com o Robolectric",
+        "why": "As aulas 2 e 3 rodaram o outro no Robolectric."
+      },
+      {
+        "text": "O `v2` é necessário para o `rememberSaveable`",
+        "why": "A regra é sobre agendamento, não sobre salvar."
+      },
+      {
+        "text": "O `v2` tira capturas de tela",
+        "why": "Quem tira as capturas é o Roborazzi."
+      }
+    ]
+  },
+  "ex-4s04pbvn": {
+    "prompt": "Onde o `remember` guarda o valor?",
+    "hint": "A aula 3 a desenhou.",
+    "choices": [
+      {
+        "text": "No `Bundle` salvo da activity",
+        "why": "Esse é o `rememberSaveable`."
+      },
+      {
+        "text": "Num campo estático compartilhado por todas as chamadas da função",
+        "why": "Cada ponto de chamada tem o próprio valor."
+      },
+      {
+        "text": "Na composição, no nó de quem o chamou",
+        "why": "Isso: vive tanto quanto aquele nó."
+      },
+      {
+        "text": "No `ViewModel`",
+        "why": "O `ViewModel` é o lugar da aula 10, e o `remember` não o usa."
+      }
+    ]
+  },
+  "ex-4hd3y89d": {
+    "prompt": "Um valor lembrado é feito de `course.name`, sem chave. A tela então recebe outro curso. O que ela mostra?",
+    "hint": "O `remember` teve motivo para rodar de novo?",
+    "choices": [
+      {
+        "text": "O valor do curso novo, já que o parâmetro mudou",
+        "why": "Sem chave, o `remember` mantém o primeiro resultado."
+      },
+      {
+        "text": "O valor do primeiro curso",
+        "why": "Isso: `remember(course.id) { … }` rodaria de novo para cada curso."
+      },
+      {
+        "text": "Um valor vazio, porque o nó é zerado",
+        "why": "O nó fica; só uma chave ou a saída o zeram."
+      },
+      {
+        "text": "Um erro de compilação pedindo uma chave",
+        "why": "Chaves são opcionais; esquecer uma é um bug silencioso."
+      }
+    ]
+  },
+  "ex-ejx3p14k": {
+    "prompt": "Um `if` para de chamar um composable que lembrou um valor e o chama de novo um segundo depois. O que o composable vê?",
+    "hint": "O valor vive tanto quanto o nó.",
+    "choices": [
+      {
+        "text": "O valor antigo, porque a mesma função foi chamada",
+        "why": "Mesma função, nó novo: o nó antigo foi removido."
+      },
+      {
+        "text": "Um valor novo: o `remember` roda a lambda de novo",
+        "why": "Isso: sair da composição removeu o nó e os valores dele."
+      },
+      {
+        "text": "O valor do `Bundle`",
+        "why": "O `remember` nunca escreve no `Bundle`."
+      },
+      {
+        "text": "Uma exceção por ler um nó removido",
+        "why": "Um nó novo é criado; nada lê o antigo."
+      }
+    ]
+  },
+  "ex-j2ax5qtp": {
+    "prompt": "Depois de dois cliques e uma rotação, o que os dois contadores mostraram?",
+    "hint": "Um deles foi salvo.",
+    "choices": [
+      {
+        "text": "`remember: 0 min` e `rememberSaveable: 50 min`",
+        "why": "Isso."
+      },
+      {
+        "text": "`remember: 50 min` e `rememberSaveable: 50 min`",
+        "why": "Isso era antes do giro."
+      },
+      {
+        "text": "`remember: 50 min` e `rememberSaveable: 0 min`",
+        "why": "Ao contrário: o `remember` foi junto com a composição."
+      },
+      {
+        "text": "`remember: 0 min` e `rememberSaveable: 0 min`",
+        "why": "O salvável voltou do `Bundle`."
+      }
+    ]
+  },
+  "ex-f3b63jnm": {
+    "prompt": "Quantos minutos o contador do `rememberSaveable` mostrou depois da rotação?",
+    "hint": "Dois cliques de 25.",
+    "unit": "min"
+  },
+  "ex-cgcqpdh3": {
+    "prompt": "Por que o contador do `remember` voltou a 0 na rotação?",
+    "hint": "O que a rotação da aula 2 destruiu?",
+    "choices": [
+      {
+        "text": "A rotação zerou todo objeto de estado para o valor inicial",
+        "why": "O salvável não foi zerado."
+      },
+      {
+        "text": "A activity, e a composição que guardava o valor",
+        "why": "Isso: a composição nova rodou a lambda de novo."
+      },
+      {
+        "text": "O clique do botão se perdeu",
+        "why": "Os dois cliques contaram: os dois mostravam 50 antes."
+      },
+      {
+        "text": "O `recreate()` mata o processo",
+        "why": "Ele recria a activity no mesmo processo."
+      }
+    ]
+  },
+  "ex-t18etmgv": {
+    "prompt": "O sistema mata o planner em segundo plano enquanto o seletor mostra 40, guardado em `rememberSaveable`. O usuário volta. O que ele vê?",
+    "hint": "O mesmo `Bundle` atravessa a morte do processo.",
+    "choices": [
+      {
+        "text": "25, o valor inicial",
+        "why": "Isso seria o `remember`, que morre com o processo."
+      },
+      {
+        "text": "A tela inicial do launcher",
+        "why": "A tarefa é restaurada com o estado salvo."
+      },
+      {
+        "text": "40",
+        "why": "Isso, como o Google documenta; não executado num aparelho aqui, e emulado na seção 05."
+      },
+      {
+        "text": "40 só se um `ViewModel` também o guardasse",
+        "why": "Um `ViewModel` morre com o processo; o que sobrevive é o `Bundle`."
+      }
+    ]
+  },
+  "ex-cevtgapy": {
+    "prompt": "Por que `rememberSaveable { mutableStateOf(Draft(\"kotlin\", 45)) }` falhou ao salvar?",
+    "hint": "Leia a mensagem.",
+    "choices": [
+      {
+        "text": "Uma data class não pode ser guardada num `Bundle` como está",
+        "why": "Isso: a mensagem pediu um `Saver` próprio."
+      },
+      {
+        "text": "`mutableStateOf` não guarda uma data class",
+        "why": "Ele guarda qualquer coisa; o problema é salvar."
+      },
+      {
+        "text": "O `StateRestorationTester` precisa de uma activity",
+        "why": "Ele roda sem uma, e esse é o propósito dele."
+      },
+      {
+        "text": "O `minutes` do rascunho era grande demais",
+        "why": "45 é minúsculo; o problema é o tipo."
+      }
+    ]
+  },
+  "ex-n3v1x87f": {
+    "prompt": "O que um `listSaver` para `Draft` precisa fornecer?",
+    "hint": "Duas direções.",
+    "choices": [
+      {
+        "text": "Um `save` que transforma o rascunho numa lista que um `Bundle` guarda, e um `restore` que o reconstrói",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma implementação de `Parcelable`",
+        "why": "Esse é o outro caminho, o `@Parcelize`, sem `Saver`."
+      },
+      {
+        "text": "Uma chave que muda quando o rascunho muda",
+        "why": "Chaves são do `remember`; um `Saver` converte."
+      },
+      {
+        "text": "Uma tabela no banco para o rascunho",
+        "why": "Um `Saver` escreve no `Bundle`, não num banco."
+      }
+    ]
+  },
+  "ex-ncpbe8rn": {
+    "prompt": "Alguém quer guardar todas as sessões que o estudante já registrou num `rememberSaveable` com `Saver`. O que a seção 05 diz?",
+    "hint": "Pense no tamanho.",
+    "choices": [
+      {
+        "text": "Funciona, já que um `Saver` converte qualquer lista",
+        "why": "Ele converte; não aumenta o `Bundle`."
+      },
+      {
+        "text": "Pertence a um banco de dados",
+        "why": "Isso: não é um rascunho, e o `Bundle` deve ficar abaixo de 50 kB."
+      },
+      {
+        "text": "Usar `remember`, que não tem limite",
+        "why": "O `remember` perde tudo na rotação."
+      },
+      {
+        "text": "Usar `@Parcelize` para fazer caber",
+        "why": "Outra codificação não encolhe os dados."
+      }
+    ]
+  },
+  "ex-2z483n9a": {
+    "prompt": "Em `MinutesPicker(minutes, onMinutesChange)`, quem muda o número?",
+    "hint": "O seletor só pode pedir.",
+    "choices": [
+      {
+        "text": "O seletor, pelo próprio `remember`",
+        "why": "Ele não tem estado próprio."
+      },
+      {
+        "text": "Quem chama e é dono do estado",
+        "why": "Isso: o `NewSession` aceita o pedido em `{ minutes = it }`."
+      },
+      {
+        "text": "O Compose, automaticamente, quando o botão é apertado",
+        "why": "O Compose só redesenha; alguém precisa escrever o estado."
+      },
+      {
+        "text": "A activity, pelo `onSaveInstanceState`",
+        "why": "Salvar não é mudar."
+      }
+    ]
+  },
+  "ex-hf415f8f": {
+    "prompt": "A sessão nova começou com 25 minutos e o teste apertou `5 min more` duas vezes. O que o dono mostrou?",
+    "hint": "`Planned: … min`.",
+    "unit": "min"
+  },
+  "ex-amj7bzeb": {
+    "prompt": "Até onde o estado dos minutos deve ser elevado?",
+    "hint": "Todos os que leem e escrevem, e não mais alto.",
+    "choices": [
+      {
+        "text": "Até a `MainActivity`, para toda tela poder lê-lo",
+        "why": "Funcionaria e faria toda tela recompor quando o seletor se mexesse."
+      },
+      {
+        "text": "Para dentro do seletor, para ficar autossuficiente",
+        "why": "Aí a linha de resumo não conseguiria lê-lo."
+      },
+      {
+        "text": "Até o `NewSession`, o composable mais baixo acima de todos os que o leem e escrevem",
+        "why": "Isso."
+      },
+      {
+        "text": "Até um `object` global",
+        "why": "Uma global não é observada pelo Compose e morre com o processo."
+      }
+    ]
+  },
+  "ex-c4sg54jm": {
+    "prompt": "Ligue cada parte do seletor elevado ao seu trabalho.",
+    "hint": "Estado desce, eventos sobem.",
+    "pairs": [
+      {
+        "left": "`minutes: Int`",
+        "right": "O valor que desce"
+      },
+      {
+        "left": "`onMinutesChange: (Int) -> Unit`",
+        "right": "O pedido que sobe"
+      },
+      {
+        "left": "`rememberSaveable` in `NewSession`",
+        "right": "A cópia do dono, que sobrevive à rotação"
+      }
+    ],
+    "right_distractors": [
+      "Uma segunda cópia guardada dentro do seletor"
+    ]
+  },
+  "ex-v3kcc0sg": {
+    "prompt": "Que lugar mantém um valor na rotação mas o perde quando o processo morre?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "`rememberSaveable`",
+        "why": "Ele sobrevive à morte do processo pelo `Bundle`."
+      },
+      {
+        "text": "Um `ViewModel`",
+        "why": "Isso."
+      },
+      {
+        "text": "Um banco de dados",
+        "why": "Ele sobrevive às duas."
+      },
+      {
+        "text": "`remember`",
+        "why": "Ele já perde o valor na rotação."
+      }
+    ]
+  },
+  "ex-6999xd6d": {
+    "prompt": "Que valor do planner pertence ao `rememberSaveable`?",
+    "hint": "O que só os dedos do usuário produziram.",
+    "choices": [
+      {
+        "text": "A lista de todos os cursos",
+        "why": "Um banco a guarda e pode carregá-la de novo."
+      },
+      {
+        "text": "Uma semana de sessões concluídas",
+        "why": "Isso é o trabalho do estudante: banco de dados."
+      },
+      {
+        "text": "Minutos escolhidos para uma sessão nova",
+        "why": "Isso: pequeno, digitado pelo usuário, nada mais o reconstrói."
+      },
+      {
+        "text": "O progresso da animação de um botão",
+        "why": "Perdê-lo não custa nada: `remember`."
+      }
+    ]
+  },
+  "ex-1r4bpsf3": {
+    "prompt": "Ordene os quatro lugares do valor que vive menos ao que vive mais.",
+    "hint": "As barras da figura.",
+    "items": [
+      "`remember`",
+      "um `ViewModel`",
+      "`rememberSaveable`",
+      "um banco de dados"
+    ]
+  },
+  "ex-spz8x5zj": {
+    "prompt": "Um formulário guarda o nome de um curso sendo digitado. Quais destes o mantêm numa rotação? Escolha todos os que se aplicam.",
+    "hint": "A rotação destrói a activity e a composição dela.",
+    "choices": [
+      {
+        "text": "`var name by rememberSaveable { mutableStateOf(\"\") }`",
+        "why": "Sim: uma `String` vai no `Bundle`."
+      },
+      {
+        "text": "`var name by remember { mutableStateOf(\"\") }`",
+        "why": "Não: a composição vai embora."
+      },
+      {
+        "text": "`var name = \"\"` no composable",
+        "why": "Não, e nem chega a atualizar."
+      },
+      {
+        "text": "Um campo de `ViewModel` que o formulário lê",
+        "why": "Sim: o `ViewModel` sobrevive à rotação, aula 10."
+      }
+    ]
+  },
+  "ex-ydqc8q63": {
+    "prompt": "Um teste passa com `remember`, mas usuários dizem que o contador zera quando passam o celular para o modo escuro. O que explica?",
+    "hint": "Aula 2: o que é uma mudança de configuração?",
+    "choices": [
+      {
+        "text": "O modo escuro é uma mudança de configuração, então a activity é reconstruída como na rotação",
+        "why": "Isso: o `rememberSaveable` corrige as duas."
+      },
+      {
+        "text": "O modo escuro limpa o `Bundle`",
+        "why": "O `Bundle` é o que teria mantido o valor."
+      },
+      {
+        "text": "O Material 3 zera estado quando as cores mudam",
+        "why": "Cores não mexem em estado; a reconstrução mexe."
+      },
+      {
+        "text": "O teste rodou só no tema claro",
+        "why": "O tema não é a causa; a reconstrução é."
+      }
+    ]
+  },
+  "ex-5aq5whb7": {
+    "prompt": "Ponha em ordem o que acontece com um valor de `rememberSaveable` durante uma rotação.",
+    "hint": "Salvo antes de o antigo ir, lido quando o novo chega.",
+    "items": [
+      "o estado da activity antiga é escrito no `Bundle`",
+      "a activity antiga e a composição dela são destruídas",
+      "o `onCreate` da activity nova recebe o `Bundle`",
+      "a composição nova chega ao `rememberSaveable` e recebe o valor salvo"
+    ]
+  },
+  "ex-e1yhfg1v": {
+    "prompt": "Que linha corrige o bug de um contador que mostra 0 depois de todo clique?",
+    "hint": "Ele precisa de um valor observado e de um lugar para guardá-lo.",
+    "choices": [
+      {
+        "text": "`var minutes = 0`",
+        "why": "O Compose não consegue vê-lo mudar."
+      },
+      {
+        "text": "`var minutes by mutableIntStateOf(0)`",
+        "why": "Vista, e recriada a cada execução."
+      },
+      {
+        "text": "`var minutes by remember { mutableIntStateOf(0) }`",
+        "why": "Isso: observada, e mantida entre as execuções."
+      },
+      {
+        "text": "`val minutes = remember { 0 }`",
+        "why": "Mantido, mas um `Int` comum não pode ser mudado nem observado."
+      }
+    ]
+  }
+}

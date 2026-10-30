@@ -1,0 +1,389 @@
+{
+  "ex-e9jfw35v": {
+    "prompt": "Qual destas coisas muda o que uma consulta sob demanda é cobrada?",
+    "hint": "Três coisas fixam a conta antes de a consulta rodar.",
+    "choices": [
+      {
+        "text": "Um filtro `store_id = 7` numa tabela particionada só por `dt`",
+        "why": "Um filtro em outra coluna lê a coluna; não poda nada."
+      },
+      {
+        "text": "Acrescentar `LIMIT 100`",
+        "why": "As linhas devolvidas não mudam os bytes lidos."
+      },
+      {
+        "text": "Citar uma coluna a menos",
+        "why": "Certo. Toda coluna citada é cobrada."
+      },
+      {
+        "text": "Pedir o resultado em JSON",
+        "why": "O formato da saída não tem nada a ver com os bytes lidos."
+      }
+    ]
+  },
+  "ex-t9914tj0": {
+    "prompt": "Uma consulta cita `dt` só no `WHERE` e lê 594.882 linhas de uma tabela particionada. Quantos bytes `dt` soma ao que ela processa?",
+    "hint": "Um `DATE` são 8 bytes."
+  },
+  "ex-4777v6b0": {
+    "prompt": "O `bqbill.py` imprimiu 15.023.069 bytes processados e 15.728.640 cobrados. O que faz a diferença?",
+    "hint": "Divida o número cobrado por 1.048.576.",
+    "choices": [
+      {
+        "text": "O mínimo de 10 MB",
+        "why": "15 MB já está acima do mínimo."
+      },
+      {
+        "text": "O arredondamento para cima até o próximo MB",
+        "why": "Certo. 15.728.640 são exatamente 15 MB."
+      },
+      {
+        "text": "A compressão dos arquivos Parquet",
+        "why": "A compressão reduz bytes em disco, nunca os cobrados."
+      },
+      {
+        "text": "Os bytes dos rodapés dos arquivos",
+        "why": "Rodapés nem entram no tamanho lógico."
+      }
+    ]
+  },
+  "ex-r8p68k80": {
+    "prompt": "Por que o `bqbill.py` aceita uma faixa de `dt` e nenhum outro filtro?",
+    "hint": "Qual filtro muda quais linhas são contadas?",
+    "choices": [
+      {
+        "text": "O DuckDB não consegue filtrar por outras colunas",
+        "why": "O DuckDB filtra por qualquer coisa; o programa recusa de propósito."
+      },
+      {
+        "text": "Só o filtro de partição muda os bytes cobrados",
+        "why": "Certo. Qualquer outro filtro é cobrado pela coluna e não poda nada."
+      },
+      {
+        "text": "Filtros em strings são cobrados duas vezes",
+        "why": "Nenhuma coluna é cobrada duas vezes; ela conta uma vez se for citada."
+      },
+      {
+        "text": "Outros filtros fazem a conta depender do cache",
+        "why": "O cache depende da consulta inteira e das tabelas, não dos filtros dela."
+      }
+    ]
+  },
+  "ex-yhtxnamc": {
+    "prompt": "Quanto custa um dry run no BigQuery?",
+    "hint": "A consulta é planejada, não rodada.",
+    "choices": [
+      {
+        "text": "O mínimo de 10 MB",
+        "why": "O mínimo vale para consultas que rodam."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Ele informa os bytes e não lê nenhum."
+      },
+      {
+        "text": "Os bytes dos metadados da tabela",
+        "why": "Metadados não são cobrados como bytes de consulta."
+      },
+      {
+        "text": "Metade da estimativa que imprime",
+        "why": "Não há cobrança parcial por uma estimativa."
+      }
+    ]
+  },
+  "ex-ffpg8rg5": {
+    "prompt": "Uma consulta tem `maximum_bytes_billed` em 1 GiB e seria cobrada por 3 GiB. O que acontece?",
+    "hint": "O limite age antes de qualquer coisa ser lida.",
+    "choices": [
+      {
+        "text": "Ela roda e é cobrada por 1 GiB",
+        "why": "Não existe conta com teto; a consulta roda inteira ou não roda."
+      },
+      {
+        "text": "Ela lê o primeiro GiB e para",
+        "why": "Nada é lido: ela falha antes de começar."
+      },
+      {
+        "text": "Ela falha com um erro e não custa nada",
+        "why": "Certo. Essa é a proteção por consulta."
+      },
+      {
+        "text": "Ela vai para uma reserva para terminar",
+        "why": "Nenhum limite muda o modelo de preço de uma consulta."
+      }
+    ]
+  },
+  "ex-1qsy5h4k": {
+    "prompt": "A transformação noturna é cobrada por 400 GiB, e alguém põe `maximum_bytes_billed` em 1 GiB em toda consulta do código do projeto. O que esta aula prevê?",
+    "hint": "O limite é escolhido por consulta.",
+    "choices": [
+      {
+        "text": "Uma noite mais segura",
+        "why": "O job da noite é recusado toda vez que roda."
+      },
+      {
+        "text": "A transformação é recusada toda noite",
+        "why": "Certo. Um limite feito para o painel é errado para o job grande."
+      },
+      {
+        "text": "A transformação roda, cobrada por 1 GiB",
+        "why": "Não há conta com teto; ela falha."
+      },
+      {
+        "text": "Nada, já que o limite só vale para painéis",
+        "why": "Ele vale para qualquer consulta que o carregue."
+      }
+    ]
+  },
+  "ex-5tpskzpy": {
+    "prompt": "A flag do `bq` que pede ao BigQuery os bytes que uma consulta processaria, sem rodá-la, é `--___`.",
+    "hint": "Duas palavras ligadas por um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "dry_run"
+        ]
+      }
+    ]
+  },
+  "ex-9yqgdxv2": {
+    "prompt": "Em que direção um plano do DuckDB é lido?",
+    "hint": "Onde a tabela é lida?",
+    "choices": [
+      {
+        "text": "De baixo para cima",
+        "why": "Certo. Cada passo passa linhas para o de cima."
+      },
+      {
+        "text": "De cima, na ordem em que o SQL é escrito",
+        "why": "A ordem do SQL não é a ordem de execução."
+      },
+      {
+        "text": "Da esquerda para a direita, uma coluna por passo",
+        "why": "As caixas são empilhadas por passo, não por coluna."
+      },
+      {
+        "text": "Em qualquer ordem, já que todos os passos rodam ao mesmo tempo",
+        "why": "Cada passo depende das linhas do de baixo."
+      }
+    ]
+  },
+  "ex-fpxnwdat": {
+    "prompt": "O plano da consulta por bairro lista só `district` e `total_cents` como projeções. Por que `dt` falta?",
+    "hint": "Onde `dt` mora nestes arquivos?",
+    "choices": [
+      {
+        "text": "O filtro em `dt` foi descartado",
+        "why": "Ele está ali em File Filters."
+      },
+      {
+        "text": "`dt` é pequena demais para listar",
+        "why": "Tamanho não tem relação com as projeções."
+      },
+      {
+        "text": "Veio dos nomes das pastas",
+        "why": "Certo. No BigQuery `dt` é uma coluna e é cobrada."
+      },
+      {
+        "text": "Só colunas do `SELECT` são projetadas",
+        "why": "Colunas de filtro também são lidas quando são colunas."
+      }
+    ]
+  },
+  "ex-pfg4em2m": {
+    "prompt": "`HASH_GROUP_BY` recebeu 594.882 linhas e produziu 8. Quantas linhas entraram para cada uma que saiu? Arredonde para um número inteiro.",
+    "hint": "Divida."
+  },
+  "ex-avg66xzz": {
+    "prompt": "Uma consulta feita para um dia mostra `Scanning Files: 60/60` no plano. O que o plano pegou?",
+    "hint": "A contagem de arquivos é a de partições lidas.",
+    "choices": [
+      {
+        "text": "Um filtro que não podou",
+        "why": "Certo. Esse é o erro caro, pego antes."
+      },
+      {
+        "text": "Um laptop lento",
+        "why": "A contagem é sobre arquivos, não velocidade."
+      },
+      {
+        "text": "Slots demais",
+        "why": "O DuckDB não tem slots."
+      },
+      {
+        "text": "Um dia com pedidos demais para um arquivo",
+        "why": "Um dia seria um arquivo, quantos pedidos tivesse."
+      }
+    ]
+  },
+  "ex-dhz3vddt": {
+    "prompt": "Num estágio, o tempo máximo de computação é dez vezes a média. Como a documentação chama isso, e o que costuma causar?",
+    "hint": "O estágio termina quando o worker mais lento termina.",
+    "choices": [
+      {
+        "text": "Contenção de slots, por outras consultas",
+        "why": "Contenção aparece como espera, não como um worker computando mais."
+      },
+      {
+        "text": "Skew: um valor de chave muito mais comum que os outros",
+        "why": "Certo. Um worker recebeu muito mais que os outros."
+      },
+      {
+        "text": "Uma falta no cache",
+        "why": "O cache responde consultas inteiras, não estágios."
+      },
+      {
+        "text": "Cota de shuffle insuficiente",
+        "why": "Isso aparece como bytes de shuffle derramados em disco."
+      }
+    ]
+  },
+  "ex-n8156tk5": {
+    "prompt": "Um job usou 120.000 slot-milissegundos e levou 4 segundos. Quantos slots ele ocupou em média?",
+    "hint": "Tempo de slot dividido pelo tempo decorrido, na mesma unidade."
+  },
+  "ex-g90c981x": {
+    "prompt": "Por que os workers do primeiro estágio já somam `total_cents` por bairro antes do shuffle?",
+    "hint": "Compare o que atravessaria a rede de cada jeito.",
+    "choices": [
+      {
+        "text": "O BigQuery cobra menos bytes por somas parciais",
+        "why": "Sob demanda, a conta foi fixada antes de o grafo existir."
+      },
+      {
+        "text": "Para poucas linhas por worker cruzarem o shuffle em vez de todo pedido",
+        "why": "Certo. É aí que a consulta fica barata de mover."
+      },
+      {
+        "text": "Porque o segundo estágio não sabe somar",
+        "why": "Ele termina a agregação a partir das parciais."
+      },
+      {
+        "text": "Para ordenar a resposta antes",
+        "why": "A ordenação é do último estágio."
+      }
+    ]
+  },
+  "ex-3732kmcq": {
+    "prompt": "Que bytes o BigQuery cobra sob demanda?",
+    "hint": "Uma tabela de preços tem de ser conhecível antes.",
+    "choices": [
+      {
+        "text": "Os bytes comprimidos que o motor lê",
+        "why": "Esses dependem da compressão e nunca são o que se cobra."
+      },
+      {
+        "text": "Os bytes lógicos, por tipo",
+        "why": "Certo. Sem compressão, valor a valor."
+      },
+      {
+        "text": "Os bytes do resultado",
+        "why": "O tamanho do resultado não entra na conta."
+      },
+      {
+        "text": "Os bytes físicos da tabela inteira",
+        "why": "Só as colunas citadas contam, e de forma lógica."
+      }
+    ]
+  },
+  "ex-vhcmvaz3": {
+    "prompt": "`district` tem 230.035 bytes em disco em setembro e cerca de 5,5 milhões na conta. Por que tão longe?",
+    "hint": "Oito valores, quase 600.000 linhas.",
+    "choices": [
+      {
+        "text": "O BigQuery guarda strings sem compressão, ao contrário do Parquet",
+        "why": "Ele as comprime; cobra como se não comprimisse."
+      },
+      {
+        "text": "O Parquet guarda cada nome uma vez, num dicionário",
+        "why": "Certo. `RLE_DICTIONARY` nas codificações."
+      },
+      {
+        "text": "Nomes com acento contam em dobro",
+        "why": "Acentos somam um byte cada em UTF-8, longe da diferença."
+      },
+      {
+        "text": "A conta inclui `dt`",
+        "why": "`dt` é o seu próprio 4.759.056; isto é só `district`."
+      }
+    ]
+  },
+  "ex-zc59kzy8": {
+    "prompt": "Um notebook tira `orders` do BigQuery pela Storage Read API. Pelo que ele paga, pela página de preços?",
+    "hint": "Mesma regra, outro preço.",
+    "choices": [
+      {
+        "text": "Bytes lógicos, a 1,98 USD por TiB após 300 grátis",
+        "why": "Certo. O tamanho por tipo, de novo."
+      },
+      {
+        "text": "Os bytes comprimidos mandados pela rede ao notebook",
+        "why": "A página cobra pelo tamanho por tipo, não pelo que passa no fio."
+      },
+      {
+        "text": "Nada, já que não é uma consulta",
+        "why": "Ela tem preço próprio na página."
+      },
+      {
+        "text": "11,25 USD por TiB, como uma consulta",
+        "why": "Isso é sob demanda; a Storage Read API tem linha própria."
+      }
+    ]
+  },
+  "ex-fj7jfwy3": {
+    "prompt": "Ponha os três estágios da consulta por bairro na ordem em que o BigQuery os roda.",
+    "hint": "Parciais vêm antes dos totais.",
+    "items": [
+      "Ler as duas colunas de setembro e somar por bairro na parte de cada worker",
+      "Fazer o shuffle por bairro e terminar as somas",
+      "Ordenar os oito totais e escrever a resposta"
+    ]
+  },
+  "ex-eaw4h3ts": {
+    "prompt": "Ligue cada ferramenta à pergunta que ela responde.",
+    "hint": "Uma pergunta da direita não tem ferramenta aqui.",
+    "pairs": [
+      {
+        "left": "Um dry run",
+        "right": "Quantos bytes isto vai ser cobrado, antes de rodar?"
+      },
+      {
+        "left": "`maximum_bytes_billed`",
+        "right": "Recusar esta consulta se ela custar mais do que isto"
+      },
+      {
+        "left": "O grafo de execução",
+        "right": "Qual estágio levou o tempo, e com quantos slots?"
+      },
+      {
+        "left": "`parquet_metadata`",
+        "right": "Quantos bytes cada coluna ocupa em disco?"
+      }
+    ],
+    "right_distractors": [
+      "Qual analista digitou a consulta?"
+    ]
+  },
+  "ex-q06gaa10": {
+    "prompt": "Quais destas coisas foram medidas nesta aula, e não calculadas ou tiradas da documentação do Google? Escolha todas as que se aplicam.",
+    "hint": "O DuckDB e os rodapés do Parquet mediram; o resto foi calculado ou documentado.",
+    "choices": [
+      {
+        "text": "As duas colunas de setembro ocupam 2.978.159 bytes em disco",
+        "why": "Sim, do `parquet_metadata`."
+      },
+      {
+        "text": "`HASH_GROUP_BY` transformou 594.882 linhas em 8",
+        "why": "Sim, do `EXPLAIN ANALYZE`."
+      },
+      {
+        "text": "A consulta por bairro seria cobrada por 15.728.640 bytes",
+        "why": "Calculado pelo `bqbill.py` a partir de tamanhos documentados."
+      },
+      {
+        "text": "O BigQuery a roda em três estágios",
+        "why": "Uma ilustração a partir da documentação; nenhum job rodou."
+      }
+    ]
+  }
+}

@@ -1,0 +1,658 @@
+[
+  {
+    "id": "ex-ebn263nf",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service receives 5 requests a second around the clock. How many requests is that in a day?",
+    "hint": "Rate times 3,600 times 24.",
+    "value": 432000,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-1c4rp9k9",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The office profile carries fewer requests a month than steady. Why does it still need more capacity at its busiest?",
+    "hint": "Which of the four numbers decides the size?",
+    "choices": [
+      {
+        "text": "Its requests run longer than steady's",
+        "correct": false,
+        "why": "The example gives every profile the same 100 ms."
+      },
+      {
+        "text": "Its idle hours have to be paid in advance",
+        "correct": false,
+        "why": "Idle hours cost a machine money, but they do not add capacity."
+      },
+      {
+        "text": "Its peak is 60 a second, twice steady's 30",
+        "correct": true,
+        "why": "Right. Capacity follows the peak, and the volume follows the whole day."
+      },
+      {
+        "text": "Office traffic arrives from more countries",
+        "correct": false,
+        "why": "Nothing in a profile says where requests come from."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qdz6wp1",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Requests arrive at random, one a second, and each runs for 100 ms. Roughly how much of the time does an instance have a request inside it?",
+    "hint": "One minus e to the minus rate times duration.",
+    "choices": [
+      {
+        "text": "About a tenth",
+        "correct": true,
+        "why": "Right: 1 - e^(-0.1) is 9.5%."
+      },
+      {
+        "text": "All of it, since there is always a request coming",
+        "correct": false,
+        "why": "Arriving is not the same as being served; most of each second is empty."
+      },
+      {
+        "text": "Half of it",
+        "correct": false,
+        "why": "That would need about seven requests a second at 100 ms."
+      },
+      {
+        "text": "None of it, because 100 ms rounds down to zero",
+        "correct": false,
+        "why": "Nothing rounds the time away; Cloud Run bills in 100 ms steps, not to zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-09aantsm",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An hour with no request at all is an ___ hour, and it is where the pricing models part company.",
+    "hint": "It is the third of the four numbers.",
+    "blanks": [
+      {
+        "accept": [
+          "idle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f133vwt4",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does compare.py read its prices from prices.py through a pipe rather than having them typed in?",
+    "hint": "Where would a second copy of a price go wrong?",
+    "choices": [
+      {
+        "text": "A pipe is faster than reading constants",
+        "correct": false,
+        "why": "Speed is not the point; the program runs in a fraction of a second either way."
+      },
+      {
+        "text": "Python cannot hold numbers with eight decimal places",
+        "correct": false,
+        "why": "It can; prices.py holds them."
+      },
+      {
+        "text": "The pipe fetches today's prices from Google",
+        "correct": false,
+        "why": "Nothing is fetched; prices.py prints the numbers it holds."
+      },
+      {
+        "text": "Each price lives in one place only",
+        "correct": true,
+        "why": "Right. No price is typed twice, and a missing one is an error rather than zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a7xfcd6",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the sparse profile, request-based billing costs 7.37 a month and instance-based 49.93. What explains the gap?",
+    "hint": "How busy is the instance?",
+    "choices": [
+      {
+        "text": "Request-based billing has a lower rate per vCPU-second",
+        "correct": false,
+        "why": "Its rate is higher, 0.000024 against 0.000018."
+      },
+      {
+        "text": "Only the busy tenth of the time is billed",
+        "correct": true,
+        "why": "Right. Instance-based billing pays for all of the hour."
+      },
+      {
+        "text": "Instance-based billing keeps two instances as a floor",
+        "correct": false,
+        "why": "The floor of two is for machines and pods; Cloud Run has none in the program."
+      },
+      {
+        "text": "The free tier is applied to request-based billing only",
+        "correct": false,
+        "why": "The program applies no free tier at all, and says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg4325dm",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Instance-based billing costs 0.000019 a second for an instance of 1 vCPU and 512 MiB, and request-based 0.00002525 while serving. Above what busy fraction, in percent and before the fee per request, is instance-based cheaper?",
+    "hint": "Divide the first by the second.",
+    "value": 75.2,
+    "tolerance": 0.3,
+    "unit": "%"
+  },
+  {
+    "id": "ex-fw8p0rnn",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 400 requests a second two e2-standard-2 machines cost 97.84 and Cloud Run billed by request 685.90. Most of that 685.90 is what?",
+    "hint": "Count the requests in a month.",
+    "choices": [
+      {
+        "text": "The processor time of four instances",
+        "correct": false,
+        "why": "That is about 265; the larger part is elsewhere."
+      },
+      {
+        "text": "The load balancer Cloud Run puts in front",
+        "correct": false,
+        "why": "The program prices no load balancer for any option."
+      },
+      {
+        "text": "The fee of 0.40 per million on about a billion requests a month",
+        "correct": true,
+        "why": "Right: 420.48 of it."
+      },
+      {
+        "text": "The minimum instances that request-based billing keeps warm",
+        "correct": false,
+        "why": "The program sets no minimum instances."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkt32nng",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compute Engine costs 97.84 in every row of the table. Why?",
+    "hint": "What is the floor, and when is it exceeded?",
+    "choices": [
+      {
+        "text": "Two machines are the floor, and no profile needs more",
+        "correct": true,
+        "why": "Right. Even busy fits in two at 200 requests a second each."
+      },
+      {
+        "text": "The program forgot to read the profile for machines",
+        "correct": false,
+        "why": "It reads it every hour; the result simply never exceeds the floor."
+      },
+      {
+        "text": "Compute Engine prices are fixed monthly, unlike the others",
+        "correct": false,
+        "why": "They are hourly; 97.84 is two machines for 730 hours."
+      },
+      {
+        "text": "Machines scale to zero in idle hours and back again",
+        "correct": false,
+        "why": "Nothing stops them in the program; that is why idle hours cost them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba9fbdyq",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does compare.py leave out? Choose all that apply.",
+    "hint": "The last part of the section lists them.",
+    "choices": [
+      {
+        "text": "The load balancer machines and pods need",
+        "correct": true,
+        "why": "Right; Cloud Run has one built in."
+      },
+      {
+        "text": "Cloud Run's monthly free allowances",
+        "correct": true,
+        "why": "Right; for small profiles they take the bill to nearly nothing."
+      },
+      {
+        "text": "The fee per request under request-based billing",
+        "correct": false,
+        "why": "It is in: 0.40 per million."
+      },
+      {
+        "text": "Committed use discounts",
+        "correct": true,
+        "why": "Right; lesson 23 weighs what a commitment ties you to."
+      },
+      {
+        "text": "The GKE cluster management fee",
+        "correct": false,
+        "why": "It is in the Autopilot column; the free credit is what is left out."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6zm1yza",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which habit of an existing service is called the most expensive to undo before a move?",
+    "hint": "What does a machine keep by accident?",
+    "choices": [
+      {
+        "text": "Logging to standard output",
+        "correct": false,
+        "why": "That is what Cloud Run wants; it costs nothing to keep."
+      },
+      {
+        "text": "Listening on a fixed port such as 8080",
+        "correct": false,
+        "why": "Reading $PORT is a one-line change."
+      },
+      {
+        "text": "Being written in Python rather than Go",
+        "correct": false,
+        "why": "Every option here runs either language."
+      },
+      {
+        "text": "State kept on local disk or in memory",
+        "correct": true,
+        "why": "Right. Every option but a single machine loses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b87vx66q",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each workload to the option its limits leave.",
+    "hint": "Read the numbers before the prices.",
+    "pairs": [
+      {
+        "left": "A report that runs for three hours and exits",
+        "right": "A Cloud Run job"
+      },
+      {
+        "left": "A game server speaking UDP",
+        "right": "A machine or a pod"
+      },
+      {
+        "left": "An HTTP request that takes 40 minutes",
+        "right": "A Cloud Run service"
+      },
+      {
+        "left": "A thumbnail made per upload, in seconds",
+        "right": "A function triggered by an event"
+      }
+    ],
+    "right_distractors": [
+      "App Engine standard with automatic scaling"
+    ]
+  },
+  {
+    "id": "ex-1mnnr8w2",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section rank the options by operations in the opposite order from their price?",
+    "hint": "Who patches what, after the move?",
+    "choices": [
+      {
+        "text": "Operations is billed by Google at a higher rate on cheap options",
+        "correct": false,
+        "why": "Operations is your team's time, not a line on the bill."
+      },
+      {
+        "text": "The cheapest at scale, machines, leave the most work to the team",
+        "correct": true,
+        "why": "Right. Cloud Run leaves you the container and little else."
+      },
+      {
+        "text": "Managed options need more people to run",
+        "correct": false,
+        "why": "The reverse: managing is what you pay the provider to do."
+      },
+      {
+        "text": "Machines have no operating system to patch",
+        "correct": false,
+        "why": "They are the only option where patching is entirely yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzmk7f0a",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Cloud Run service must finish each request within ___ minutes.",
+    "hint": "An hour.",
+    "blanks": [
+      {
+        "accept": [
+          "60",
+          "sixty"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1a7yqg90",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service stores uploaded files in /tmp and serves them back later. It moves from one machine to Cloud Run with three instances. What happens, and when does anyone notice?",
+    "hint": "Which instance answers the second request?",
+    "choices": [
+      {
+        "text": "Cloud Run refuses to deploy a container that writes to /tmp",
+        "correct": false,
+        "why": "Writing to /tmp is allowed; it is memory, and it is per instance."
+      },
+      {
+        "text": "The files are shared by all three instances automatically",
+        "correct": false,
+        "why": "Nothing shares an instance's filesystem with another."
+      },
+      {
+        "text": "Downloads fail now and then, once traffic spreads",
+        "correct": true,
+        "why": "Right. A file lives on the instance that received it, until that instance goes."
+      },
+      {
+        "text": "Uploads become slower but every download still works",
+        "correct": false,
+        "why": "The cost is correctness, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbgs9ehd",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The orders profile sums to 387 requests a second over its 24 hours. How many requests is that in a day?",
+    "hint": "Each hourly rate lasts 3,600 seconds.",
+    "value": 1393200,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-hb12jnws",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At ten times today's orders traffic, two e2-standard-2 machines (97.84) beat Cloud Run billed by instance (104.03). Why only then?",
+    "hint": "Were the machines full before?",
+    "choices": [
+      {
+        "text": "The machines cost the same, and only now are they full",
+        "correct": true,
+        "why": "Right. Cloud Run grew with the traffic; the two machines had been idle capacity."
+      },
+      {
+        "text": "Compute Engine gives a volume discount above 400 requests a second",
+        "correct": false,
+        "why": "No such discount exists in the sheet or the program."
+      },
+      {
+        "text": "Cloud Run raises its price per vCPU-second at high volume",
+        "correct": false,
+        "why": "The rate is the same; it pays for more instances."
+      },
+      {
+        "text": "Ten times the traffic needs a GPU, which Cloud Run lacks",
+        "correct": false,
+        "why": "No GPU is involved, and Cloud Run can attach one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kdcyhfn",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The nightly export runs for 20 minutes and stops. Where does the worked choice put it?",
+    "hint": "It is not a service.",
+    "choices": [
+      {
+        "text": "On a Cloud Run service with a minimum instance",
+        "correct": false,
+        "why": "A minimum instance pays all day for 20 minutes of work."
+      },
+      {
+        "text": "On an e2-micro left running",
+        "correct": false,
+        "why": "It would be paid for 24 hours to work for a third of one."
+      },
+      {
+        "text": "On GKE Autopilot, as a Deployment",
+        "correct": false,
+        "why": "A Deployment keeps pods running; the export should stop."
+      },
+      {
+        "text": "On a Cloud Run job, started by Cloud Scheduler",
+        "correct": true,
+        "why": "Right. It pays for the 20 minutes and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-0d83rfht",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the purpose of the decision table's last column, \"revisit when\"?",
+    "hint": "Reasons have an expiry.",
+    "choices": [
+      {
+        "text": "It schedules the next price review every quarter",
+        "correct": false,
+        "why": "It names conditions, not dates."
+      },
+      {
+        "text": "It names when the reasons stop being true, not a date",
+        "correct": true,
+        "why": "Right. It turns a choice into one that can be checked later."
+      },
+      {
+        "text": "It lists the services that will move to GKE next",
+        "correct": false,
+        "why": "Nothing in the table plans a move to GKE."
+      },
+      {
+        "text": "It records who approved each choice",
+        "correct": false,
+        "why": "That would be worth keeping, but it is not this column."
+      }
+    ]
+  },
+  {
+    "id": "ex-fbqt4ap1",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The worked choice runs nothing on Compute Engine or GKE. A colleague concludes the shop should forbid both. What does the section say to that?",
+    "hint": "A result or a principle?",
+    "choices": [
+      {
+        "text": "It agrees: serverless is cheaper at every volume",
+        "correct": false,
+        "why": "The ×10 run shows machines winning; the claim is false."
+      },
+      {
+        "text": "It agrees, since GKE needs a cluster fee",
+        "correct": false,
+        "why": "A fee is a cost to weigh, not a reason to forbid."
+      },
+      {
+        "text": "It is a result, and a GPU or UDP service would change it",
+        "correct": true,
+        "why": "Right. The table records reasons, and other reasons give other rows."
+      },
+      {
+        "text": "It disagrees, because GKE is the default for every container",
+        "correct": false,
+        "why": "There is no such default; the choice is per service."
+      }
+    ]
+  },
+  {
+    "id": "ex-6me7qxvt",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of choosing compute for a service in the order this lesson follows.",
+    "hint": "Profile first, decision record last.",
+    "items": [
+      "Write down the request profile",
+      "Rule out options whose limits the workload breaks",
+      "Price the remaining options from the sheet",
+      "Record the choice with the condition to revisit it"
+    ],
+    "trap": "Pricing before ruling out wastes the comparison on options that cannot carry the work."
+  },
+  {
+    "id": "ex-0y6kx5dh",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two e2-standard-2 machines cost 97.84 a month. How much is that for a year?",
+    "hint": "Times twelve.",
+    "value": 1174.08,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-9nrjmqy5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A status page gets two requests a second, each of 50 ms, all day. Which Cloud Run billing mode does the arithmetic favour, and why?",
+    "hint": "Work out the busy fraction: 1 - e^(-2 × 0.05).",
+    "choices": [
+      {
+        "text": "Request-based: the instance is busy under a tenth of the time",
+        "correct": true,
+        "why": "Right: about 9.5%, far below the 75% line."
+      },
+      {
+        "text": "Instance-based, because the traffic never stops at any hour",
+        "correct": false,
+        "why": "Never stopping is not the same as being busy: the instance is empty 90% of the time."
+      },
+      {
+        "text": "Either, because the volume is below the free tier",
+        "correct": false,
+        "why": "The free tier is left out, and it only applies to request-based billing anyway."
+      },
+      {
+        "text": "Instance-based, because requests of 50 ms are rounded up to a second",
+        "correct": false,
+        "why": "Cloud Run rounds to 100 ms, not to a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekrh93yk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which profile in the table did Autopilot never win, and why?",
+    "hint": "Two pods and a fee.",
+    "choices": [
+      {
+        "text": "Only busy, because pods cannot reach 400 a second",
+        "correct": false,
+        "why": "Eight pods carried busy; it was the machines that won."
+      },
+      {
+        "text": "Only sparse, because pods cannot scale to zero",
+        "correct": false,
+        "why": "It lost every row, not one."
+      },
+      {
+        "text": "Only steady, because Autopilot bills per request",
+        "correct": false,
+        "why": "Autopilot bills for pod resources, per hour."
+      },
+      {
+        "text": "None: two pods plus the fee always lost",
+        "correct": true,
+        "why": "Right. Autopilot earns its place through operations, which the table does not price."
+      }
+    ]
+  }
+]

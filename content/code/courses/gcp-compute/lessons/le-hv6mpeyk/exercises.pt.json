@@ -1,0 +1,441 @@
+{
+  "ex-8mnk6efw": {
+    "prompt": "Ligue cada palavra ao que ela é.",
+    "hint": "Definição, rodada, pedaço.",
+    "pairs": [
+      {
+        "left": "job",
+        "right": "A definição: uma imagem e como cortar o trabalho"
+      },
+      {
+        "left": "execução",
+        "right": "Uma rodada dele, a de hoje à noite por exemplo"
+      },
+      {
+        "left": "tarefa",
+        "right": "Um pedaço de uma rodada, com um índice"
+      }
+    ],
+    "right_distractors": [
+      "Uma requisição que o job responde"
+    ]
+  },
+  "ex-s1y9sey6": {
+    "prompt": "O que o Cloud Run lê para decidir se uma tarefa deu certo?",
+    "hint": "Não os logs.",
+    "choices": [
+      {
+        "text": "Se uma linha ERROR foi registrada",
+        "why": "Os logs não são lidos para o veredito."
+      },
+      {
+        "text": "Se o contêiner respondeu em PORT",
+        "why": "Um job não tem porta."
+      },
+      {
+        "text": "O status de saída do contêiner, 0 ou não",
+        "why": "Isso. Um job que falha precisa sair com status diferente de zero."
+      },
+      {
+        "text": "Quanto a tarefa rodou frente ao tempo limite",
+        "why": "Um tempo esgotado falha a tarefa; terminar cedo não faz dar certo."
+      }
+    ]
+  },
+  "ex-j51cynen": {
+    "prompt": "Um serviço responde uma requisição na hora e depois passa dois minutos gerando um relatório em segundo plano. Como a lição chama isso?",
+    "hint": "Quem está esperando o relatório?",
+    "choices": [
+      {
+        "text": "Um job fingindo ser serviço",
+        "why": "Isso. Trabalho com fim e ninguém esperando é um job."
+      },
+      {
+        "text": "Um serviço bem desenhado que mantém quem chama rápido",
+        "why": "Ele depende de CPU depois da resposta, como a lição 11 explica."
+      },
+      {
+        "text": "Uma tarefa com paralelismo um",
+        "why": "Nem é um job, e esse é o problema."
+      },
+      {
+        "text": "Um serviço com instância mínima",
+        "why": "Nada diz que ele tem mínimo."
+      }
+    ]
+  },
+  "ex-cts662yk": {
+    "prompt": "Uma execução de um job com --tasks=3 sobe três ___, cada um informado de qual pedaço é.",
+    "hint": "O que o Cloud Run sempre sobe.",
+    "blanks": [
+      {
+        "accept": [
+          "contêineres",
+          "conteineres",
+          "contêiner"
+        ]
+      }
+    ]
+  },
+  "ex-fj7h84ak": {
+    "prompt": "Com 3 tarefas, quais pedidos a tarefa 1 pega de ORDERS[index::count] entre 1001 e 1010?",
+    "hint": "Começa na posição 1, passo 3.",
+    "choices": [
+      {
+        "text": "1001, 1004, 1007 e 1010",
+        "why": "Essa é a tarefa 0."
+      },
+      {
+        "text": "1004, 1005 e 1006",
+        "why": "Isso é uma faixa, não um passo."
+      },
+      {
+        "text": "1003, 1006 e 1009",
+        "why": "Essa é a tarefa 2."
+      },
+      {
+        "text": "1002, 1005 e 1008",
+        "why": "Isso. A captura mostra o mesmo."
+      }
+    ]
+  },
+  "ex-enwaw8nm": {
+    "prompt": "Dez pedidos são cortados por passo entre 3 tarefas. Quantos pedidos a tarefa 0 pega?",
+    "hint": "Posições 0, 3, 6, 9.",
+    "unit": "pedidos"
+  },
+  "ex-j5kgcv3j": {
+    "prompt": "Cada tarefa lê os pedidos de um banco com SELECT id FROM orders WHERE day = ontem, e pega o seu passo. O que falta?",
+    "hint": "A lista é a mesma em toda tarefa?",
+    "choices": [
+      {
+        "text": "Um LIMIT, para cada tarefa ler menos",
+        "why": "Cada uma ainda precisa da lista inteira para pegar o passo."
+      },
+      {
+        "text": "Um ORDER BY",
+        "why": "Isso. Sem ele os passos podem se sobrepor e deixar buracos."
+      },
+      {
+        "text": "Uma transação em volta da leitura",
+        "why": "Isolamento não fixa a ordem das linhas."
+      },
+      {
+        "text": "O índice da tarefa no WHERE",
+        "why": "Isso é o corte por hash, outro método."
+      }
+    ]
+  },
+  "ex-reew8njc": {
+    "prompt": "Por que o --parallelism é em geral o número que protege alguma coisa?",
+    "hint": "O que as tarefas dividem?",
+    "choices": [
+      {
+        "text": "Ele limita o número de tarefas da execução",
+        "why": "Isso é o --tasks."
+      },
+      {
+        "text": "Ele define quantas novas tentativas cada tarefa tem",
+        "why": "Isso é o --max-retries."
+      },
+      {
+        "text": "Limita a carga no que as tarefas dividem",
+        "why": "Isso. Trezentas de uma vez podem esgotar as conexões."
+      },
+      {
+        "text": "Ele baixa o preço por tarefa",
+        "why": "O preço segue o tempo rodando, não o paralelismo."
+      }
+    ]
+  },
+  "ex-qcvsa6ax": {
+    "prompt": "Um job tem 120 tarefas do mesmo tamanho e paralelismo 8. Mais ou menos quantas rodadas a execução leva?",
+    "hint": "Tarefas divididas pelo paralelismo.",
+    "unit": "rodadas"
+  },
+  "ex-e3gs3keb": {
+    "prompt": "A tarefa 1 falha na tentativa 0. O que é a nova tentativa?",
+    "hint": "O mesmo pedaço de trabalho.",
+    "choices": [
+      {
+        "text": "Mesmo índice, com o contador em 1",
+        "why": "Isso. Mesmo índice, próxima tentativa."
+      },
+      {
+        "text": "Uma nova execução do job inteiro",
+        "why": "Novas tentativas são por tarefa."
+      },
+      {
+        "text": "A tarefa 1 de novo com o índice seguinte, 2",
+        "why": "O índice não muda."
+      },
+      {
+        "text": "As tarefas 0, 1 e 2 de novo",
+        "why": "As outras não são afetadas."
+      }
+    ]
+  },
+  "ex-yj2wfthm": {
+    "prompt": "Uma tentativa escreveu as faturas de 1002 e 1005 e caiu. A nova tentativa escreve as três. Como manter cada pedido com uma fatura só?",
+    "hint": "Fazer duas vezes deve dar o mesmo que uma.",
+    "choices": [
+      {
+        "text": "Pôr paralelismo 1 para as tarefas nunca se sobreporem",
+        "why": "A duplicata vem da nova tentativa de uma tarefa, não de sobreposição."
+      },
+      {
+        "text": "Subir o tempo limite para as tentativas nunca caírem",
+        "why": "Quedas têm outras causas além de tempo."
+      },
+      {
+        "text": "Pular os pedidos registrados na tentativa 0",
+        "why": "Os logs dizem o que estava planejado, não o que foi escrito."
+      },
+      {
+        "text": "Dar a cada uma um nome fixo e sobrescrever",
+        "why": "Isso. A nova tentativa reescreve a invoice-1002 em vez de acrescentar."
+      }
+    ]
+  },
+  "ex-fydq31mv": {
+    "prompt": "Uma tarefa tem timeout = \"600s\" e max_retries = 3. Em minutos, quanto tempo ela pode rodar no total antes de a execução falhar?",
+    "hint": "Uma tentativa mais três novas, dez minutos cada.",
+    "unit": "minutos"
+  },
+  "ex-647xezp0": {
+    "prompt": "Um job cobra cartões de clientes e não dá para torná-lo idempotente. O que a lição recomenda?",
+    "hint": "Uma nova tentativa cobraria de novo.",
+    "choices": [
+      {
+        "text": "max_retries = 3, para a cobrança que falhou ser concluída",
+        "why": "Cobraria cartões já cobrados."
+      },
+      {
+        "text": "max_retries = 0, e um alerta quando falhar",
+        "why": "Isso. Uma nova tentativa faria estrago."
+      },
+      {
+        "text": "Um tempo limite maior, para nunca precisar de nova tentativa",
+        "why": "Tempo não evita toda falha."
+      },
+      {
+        "text": "Mais tarefas, para cada falha afetar menos cartões",
+        "why": "Pedaços menores ainda cobram duas vezes na nova tentativa."
+      }
+    ]
+  },
+  "ex-87dr6ewy": {
+    "prompt": "Uma operação que deixa o mesmo resultado quando feita duas vezes se chama ___.",
+    "hint": "Uma palavra da matemática.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente"
+        ]
+      }
+    ]
+  },
+  "ex-yj13eda4": {
+    "prompt": "No jobtf/main.tf há dois blocos template aninhados. O que o de dentro descreve?",
+    "hint": "O de fora é a execução.",
+    "choices": [
+      {
+        "text": "O agendamento do job",
+        "why": "Um job não tem agendamento próprio."
+      },
+      {
+        "text": "Quantas tarefas rodam ao mesmo tempo",
+        "why": "Isso é o parallelism, no bloco de fora."
+      },
+      {
+        "text": "Como cada tarefa roda",
+        "why": "Isso."
+      },
+      {
+        "text": "A divisão de tráfego entre revisões",
+        "why": "Jobs não têm tráfego."
+      }
+    ]
+  },
+  "ex-hh3awxe6": {
+    "prompt": "O que inicia um job do Cloud Run toda noite?",
+    "hint": "Um job não tem agendamento próprio.",
+    "choices": [
+      {
+        "text": "O Cloud Scheduler, numa agenda",
+        "why": "Isso. Uma chamada de API autorizada numa expressão cron."
+      },
+      {
+        "text": "O campo cron do próprio job",
+        "why": "Esse campo não existe."
+      },
+      {
+        "text": "Uma instância mínima que o acorda",
+        "why": "Jobs não têm instâncias esperando."
+      },
+      {
+        "text": "O servidor de metadados da lição 7",
+        "why": "Esse pertence às máquinas do Compute Engine."
+      }
+    ]
+  },
+  "ex-gxnj5meb": {
+    "prompt": "O job do agendador tem schedule = \"0 2 * * *\" e nenhum time_zone. Quando ele roda para uma loja em São Paulo?",
+    "hint": "O padrão é UTC.",
+    "choices": [
+      {
+        "text": "Às 02:00 em São Paulo, a região do projeto",
+        "why": "A região não define o fuso."
+      },
+      {
+        "text": "Às 02:00 no fuso de quem aplicou",
+        "why": "O laptop de ninguém decide isso."
+      },
+      {
+        "text": "Ele se recusa a rodar até um fuso ser definido",
+        "why": "Ele roda, em UTC."
+      },
+      {
+        "text": "Às 02:00 UTC, que são 23:00 do dia anterior em São Paulo",
+        "why": "Isso. Antes de acabar o dia que está sendo faturado."
+      }
+    ]
+  },
+  "ex-rj9544vz": {
+    "prompt": "Que papel a conta de serviço do agendador precisa para a chamada funcionar?",
+    "hint": "Permissão para rodar o job.",
+    "choices": [
+      {
+        "text": "roles/owner no projeto",
+        "why": "Muito mais do que precisa."
+      },
+      {
+        "text": "roles/run.invoker no job",
+        "why": "Isso. Concedido no job, numa configuração real."
+      },
+      {
+        "text": "roles/cloudscheduler.admin",
+        "why": "Esse administra agendamentos, não o job."
+      },
+      {
+        "text": "Nenhum: um token OAuth basta sozinho",
+        "why": "Um token prova quem chama, não o que pode fazer."
+      }
+    ]
+  },
+  "ex-bvcm3axv": {
+    "prompt": "Quais hábitos mantêm um job noturno honesto? Escolha todos os que se aplicam.",
+    "hint": "Ele roda enquanto ninguém olha.",
+    "choices": [
+      {
+        "text": "Um alerta numa execução que falhou",
+        "why": "Isso; uma mensagem de manhã."
+      },
+      {
+        "text": "Um jeito de rodá-lo à mão",
+        "why": "Isso; para a manhã em que o agendamento falhou."
+      },
+      {
+        "text": "Um agendamento a cada minuto, para alcançar mais rápido",
+        "why": "Isso convida execuções sobrepostas."
+      },
+      {
+        "text": "Escritas idempotentes, caso duas execuções se sobreponham",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-nf4tqrya": {
+    "prompt": "Quantos campos tem a expressão cron \"0 2 * * *\"?",
+    "hint": "Minuto, hora, dia, mês, dia da semana.",
+    "unit": "campos"
+  },
+  "ex-7g87z5f2": {
+    "prompt": "Ponha em ordem a noite do job de faturas.",
+    "hint": "Agendamento, API, execução, tarefas.",
+    "items": [
+      "O Cloud Scheduler dispara às 02:00 de São Paulo",
+      "Ele faz POST no método :run do job com o seu token",
+      "O Cloud Run inicia uma execução de três tarefas",
+      "Cada tarefa fatura o seu passo e sai com 0"
+    ],
+    "trap": "A execução não começa antes da chamada de API que a pede."
+  },
+  "ex-0zsfwghx": {
+    "prompt": "Uma exportação noturna leva em geral 20 minutos, está agendada a cada 30, e numa noite leva 50 porque o banco estava lento. Que risco isso cria?",
+    "hint": "O que começa enquanto a primeira ainda roda?",
+    "choices": [
+      {
+        "text": "A segunda execução espera a primeira terminar",
+        "why": "Nada no agendamento espera."
+      },
+      {
+        "text": "O Cloud Scheduler desativa o job",
+        "why": "Ele continua disparando no horário."
+      },
+      {
+        "text": "Duas execuções trabalham nas mesmas linhas ao mesmo tempo",
+        "why": "Isso. Só escritas idempotentes tornam isso inofensivo."
+      },
+      {
+        "text": "A primeira execução é morta aos 30 minutos",
+        "why": "Quem decide é o tempo limite, não o agendamento."
+      }
+    ]
+  },
+  "ex-q57x5718": {
+    "prompt": "A variável que diz a uma tarefa qual pedaço ela é, contado do zero, é CLOUD_RUN_TASK____.",
+    "hint": "Nem COUNT, nem ATTEMPT.",
+    "blanks": [
+      {
+        "accept": [
+          "INDEX"
+        ]
+      }
+    ]
+  },
+  "ex-tfpn2sak": {
+    "prompt": "Por que a lição rodou as três tarefas uma depois da outra em vez de juntas?",
+    "hint": "Como ficariam os logs?",
+    "choices": [
+      {
+        "text": "Para os logs não se misturarem",
+        "why": "Isso. No Cloud Run elas rodariam ao mesmo tempo."
+      },
+      {
+        "text": "O Docker não roda três contêineres ao mesmo tempo",
+        "why": "Ele roda; a escolha foi pela leitura."
+      },
+      {
+        "text": "Jobs do Cloud Run sempre rodam tarefas uma por vez",
+        "why": "Eles rodam até o paralelismo ao mesmo tempo."
+      },
+      {
+        "text": "Porque o passo só funciona em sequência",
+        "why": "O passo não precisa de ordem entre tarefas."
+      }
+    ]
+  },
+  "ex-jk8z78qc": {
+    "prompt": "Quais destes são bons candidatos a job do Cloud Run e não a serviço? Escolha todos os que se aplicam.",
+    "hint": "Tem fim, e ninguém esperando.",
+    "choices": [
+      {
+        "text": "Uma exportação noturna de pedidos",
+        "why": "Isso."
+      },
+      {
+        "text": "A API /orders da loja",
+        "why": "Alguém espera cada resposta."
+      },
+      {
+        "text": "Uma migração de banco antes de uma liberação",
+        "why": "Isso; roda uma vez e acaba."
+      },
+      {
+        "text": "Redimensionar um lote de fotos enviadas",
+        "why": "Isso, quando ninguém espera cada uma."
+      }
+    ]
+  }
+}

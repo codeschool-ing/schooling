@@ -1,0 +1,224 @@
+{
+  "ex-0z2afj59": {
+    "prompt": "Ligue cada objeto do Key Vault ao que uma aplicação faz com ele.",
+    "hint": "Entregue, ou usado no lugar?",
+    "pairs": [
+      {
+        "left": "segredo",
+        "right": "Lê o valor inteiro de volta"
+      },
+      {
+        "left": "chave",
+        "right": "Pede ao cofre para assinar com ela"
+      },
+      {
+        "left": "certificado",
+        "right": "Faz renová-lo com uma autoridade"
+      }
+    ]
+  },
+  "ex-f7ytbgcc": {
+    "prompt": "Por que uma chave é mais segura que um segredo contra uma aplicação comprometida?",
+    "hint": "Onde mora a parte privada?",
+    "choices": [
+      {
+        "text": "Chaves são cifradas e segredos não",
+        "why": "Os dois são protegidos em repouso; a diferença é o que sai do cofre."
+      },
+      {
+        "text": "A chave nunca sai do cofre",
+        "why": "Certo. O app recebe assinaturas, não a chave."
+      },
+      {
+        "text": "Chaves expiram automaticamente todo dia",
+        "why": "A expiração é uma política; a da loja é de um ano."
+      },
+      {
+        "text": "Só cofres premium guardam segredos",
+        "why": "Todo nível guarda segredos."
+      }
+    ]
+  },
+  "ex-natg1jwn": {
+    "prompt": "Um atacante com uma conta de administrador apaga o cofre da loja. Com proteção contra purga ligada, o que ele não consegue fazer?",
+    "hint": "Apagar e purgar são coisas diferentes.",
+    "choices": [
+      {
+        "text": "Apagar o cofre",
+        "why": "Apagar continua funcionando; a exclusão reversível o mantém recuperável."
+      },
+      {
+        "text": "Ler os segredos um a um antes de apagar o cofre",
+        "why": "A proteção contra purga não governa leitura; os papéis governam."
+      },
+      {
+        "text": "Purgá-lo antes de passarem os 90 dias",
+        "why": "Certo. Ninguém purga, nem um Owner."
+      },
+      {
+        "text": "Desligar a exclusão reversível",
+        "why": "Isso nem é possível em cofres novos; o que fica bloqueado é a purga."
+      }
+    ]
+  },
+  "ex-vntk436r": {
+    "prompt": "Por que o cofre usa `enableRbacAuthorization: true`?",
+    "hint": "Um sistema de permissões ou dois?",
+    "choices": [
+      {
+        "text": "Access policies não concedem leitura",
+        "why": "Concedem; o problema é ter um segundo sistema."
+      },
+      {
+        "text": "Um sistema de permissões, não dois",
+        "why": "Certo. Um sistema para revisar em vez de dois."
+      },
+      {
+        "text": "O RBAC torna o cofre público",
+        "why": "Acesso de rede é outra configuração, e está Disabled."
+      },
+      {
+        "text": "É exigido pela proteção contra purga",
+        "why": "As duas configurações são independentes."
+      }
+    ]
+  },
+  "ex-grzm9f32": {
+    "prompt": "O que a identidade do app consegue fazer com o papel *Key Vault Secrets User* em kv-shop-prod?",
+    "hint": "Ler, e mais nada.",
+    "choices": [
+      {
+        "text": "Ler e escrever segredos",
+        "why": "Escrever exige outro papel."
+      },
+      {
+        "text": "Ler segredos em todo cofre da assinatura",
+        "why": "O escopo da atribuição é este cofre só."
+      },
+      {
+        "text": "Ler valores de segredos neste cofre",
+        "why": "Certo. Nada mais, e em nenhum outro lugar."
+      },
+      {
+        "text": "Conceder a si mesma mais papéis",
+        "why": "Isso exige um papel que gerencia acesso, que este não é."
+      }
+    ]
+  },
+  "ex-fm88sxz5": {
+    "prompt": "O aviso do linter em leaky.bicep some quando se acrescenta `@secure()`. Por que a loja ainda assim não define segredos no Bicep?",
+    "hint": "Onde o valor estava antes de chegar ao template?",
+    "choices": [
+      {
+        "text": "O Bicep não cria segredos",
+        "why": "Cria, como o leaky.bicep mostra."
+      },
+      {
+        "text": "O @secure() guarda o valor no histórico de deploys",
+        "why": "Ele o mantém fora do histórico."
+      },
+      {
+        "text": "O valor viajou para chegar lá",
+        "why": "Certo. O template monta o cofre e o acesso; os valores são definidos à parte."
+      },
+      {
+        "text": "Segredos definidos pelo Bicep nunca expiram",
+        "why": "A expiração não depende de quem definiu o valor."
+      }
+    ]
+  },
+  "ex-8g9jse3r": {
+    "prompt": "Uma configuração de app que nomeia um segredo começa com @Microsoft.___( .",
+    "hint": "O nome do serviço, como uma palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "KeyVault"
+        ]
+      }
+    ]
+  },
+  "ex-z87ww36v": {
+    "prompt": "Por que o `DefaultAzureCredential` deixa o mesmo código rodar num notebook e em produção?",
+    "hint": "Ele tenta jeitos numa ordem fixa.",
+    "choices": [
+      {
+        "text": "Ele acha a identidade que estiver lá",
+        "why": "Certo. Identidade gerenciada no Azure, o login da CLI no notebook."
+      },
+      {
+        "text": "Ele guarda uma credencial no código",
+        "why": "Ele não guarda nenhuma; esse é o ponto."
+      },
+      {
+        "text": "Ele pula a autenticação quando roda em notebooks",
+        "why": "Ele autentica como o desenvolvedor logado na CLI."
+      },
+      {
+        "text": "Ele lê a connection string do cofre",
+        "why": "Ele precisa de uma identidade antes de ler qualquer coisa."
+      }
+    ]
+  },
+  "ex-hns4bty3": {
+    "prompt": "O app busca payments-api-key no cofre a cada requisição e começa a falhar na Black Friday. O que aconteceu?",
+    "hint": "Cofres têm limites.",
+    "choices": [
+      {
+        "text": "A chave expirou naquela manhã",
+        "why": "Nada na história diz isso; o padrão é o dia mais movimentado."
+      },
+      {
+        "text": "Ela bateu nos limites de requisições por cofre do Key Vault",
+        "why": "Certo. Leia uma vez e guarde em cache."
+      },
+      {
+        "text": "A Black Friday desliga identidades gerenciadas",
+        "why": "Nada desliga identidades por data."
+      },
+      {
+        "text": "A referência resolveu uma versão antiga",
+        "why": "O app lê no código aqui, e uma versão antiga ainda funcionaria."
+      }
+    ]
+  },
+  "ex-4wxcw28j": {
+    "prompt": "Ponha os passos de girar a senha do banco na ordem segura.",
+    "hint": "O banco precisa aceitá-la antes de alguém buscá-la.",
+    "trap": "Gravar no cofre antes do banco é o deslize: o app buscaria uma senha que o banco ainda não aceita.",
+    "items": [
+      "O cofre publica um evento de expiração próxima",
+      "Uma função gera uma senha nova",
+      "A função a define no banco",
+      "A função a grava no cofre como versão nova",
+      "O app pega a versão mais recente"
+    ]
+  },
+  "ex-yqmssj65": {
+    "prompt": "Quantos dias antes de expirar a chave receipt-signing gira?",
+    "hint": "O timeBeforeExpiry da ação rotate.",
+    "unit": "dias"
+  },
+  "ex-80zax7zz": {
+    "prompt": "Qual resposta a loja prefere para a senha do banco, onde o serviço permite?",
+    "hint": "Tire a coisa que precisa ser girada.",
+    "choices": [
+      {
+        "text": "Girá-la toda semana em vez de todo ano",
+        "why": "Girar mais rápido ainda deixa uma senha."
+      },
+      {
+        "text": "Guardá-la como chave em vez de segredo",
+        "why": "Uma senha é um valor a entregar, que é o que um segredo é."
+      },
+      {
+        "text": "Identidade gerenciada com Entra",
+        "why": "Certo. Sem senha, e portanto sem rotação."
+      },
+      {
+        "text": "Escrevê-la direto nas configurações do app",
+        "why": "Isso põe o valor onde quem tem leitura no app o vê."
+      }
+    ]
+  }
+}

@@ -1,0 +1,460 @@
+{
+  "ex-vc7vrht5": {
+    "prompt": "O que o Retrofit escreve para você a partir da interface `PlannerApi`?",
+    "hint": "Uma função por endpoint, anotada.",
+    "choices": [
+      {
+        "text": "O servidor que responde às requisições",
+        "why": "O Retrofit é um cliente; o servidor é de outra pessoa, ou o MockWebServer nos testes."
+      },
+      {
+        "text": "O código que monta cada requisição e lê cada resposta",
+        "why": "Isso: depois o OkHttp envia os bytes."
+      },
+      {
+        "text": "As tabelas do banco para as sessões",
+        "why": "Isso é o Room, aula 15."
+      },
+      {
+        "text": "O token que o servidor espera",
+        "why": "O token vem do app, por um interceptor."
+      }
+    ]
+  },
+  "ex-hj6rk4vf": {
+    "prompt": "A URL base é `https://api.example.com/v1/` e uma função tem `@GET(\"/courses\")`, com barra no começo. Que endereço é pedido?",
+    "hint": "Um link relativo que começa com barra.",
+    "choices": [
+      {
+        "text": "`https://api.example.com/v1/courses`",
+        "why": "Isso é o que `courses` sem a barra dá."
+      },
+      {
+        "text": "`https://api.example.com/courses`",
+        "why": "Isso: a barra inicial joga fora o `v1/`, como num navegador."
+      },
+      {
+        "text": "O Retrofit recusa a anotação no build",
+        "why": "É válida; só resolve para outro endereço."
+      },
+      {
+        "text": "`https://api.example.com/v1//courses`",
+        "why": "URLs são resolvidas, não concatenadas."
+      }
+    ]
+  },
+  "ex-ehpx0bad": {
+    "prompt": "Por que a aula mantém `SessionDto` separado de `StudySession`?",
+    "hint": "Um é a forma do JSON.",
+    "choices": [
+      {
+        "text": "O Retrofit não devolve uma classe com `LocalDate`",
+        "why": "Um conversor resolveria; a aula 14 resolve. O motivo é independência."
+      },
+      {
+        "text": "Para cada lado mudar sozinho",
+        "why": "Isso: um campo renomeado no servidor muda uma classe."
+      },
+      {
+        "text": "Porque `data class` não pode ser `@Serializable`",
+        "why": "Os DTOs são data classes serializáveis."
+      },
+      {
+        "text": "Para usar menos memória no celular",
+        "why": "Duas classes não economizam memória; não é esse o ponto."
+      }
+    ]
+  },
+  "ex-x949qhmb": {
+    "prompt": "O que o `server.takeRequest()` entrega ao teste?",
+    "hint": "O lado do servidor da conversa.",
+    "choices": [
+      {
+        "text": "A lista de cursos já lida",
+        "why": "Isso o cliente devolveu; o `takeRequest` é a outra ponta."
+      },
+      {
+        "text": "A requisição como chegou ao servidor",
+        "why": "Isso: assim a própria requisição é cobrada pelo contrato."
+      },
+      {
+        "text": "A próxima resposta da fila",
+        "why": "Respostas são enfileiradas; requisições são retiradas."
+      },
+      {
+        "text": "Uma cópia do cliente OkHttp",
+        "why": "O servidor não sabe nada do objeto cliente."
+      }
+    ]
+  },
+  "ex-3yeqkhs5": {
+    "prompt": "A resposta do POST não tinha o campo `done`, e mesmo assim o teste imprimiu `done=false`. De onde veio o valor?",
+    "hint": "Olhe o `SessionDto`.",
+    "choices": [
+      {
+        "text": "Do padrão `= false` no `SessionDto`",
+        "why": "Isso: um campo ausente recebe o padrão declarado."
+      },
+      {
+        "text": "O servidor o acrescentou na volta",
+        "why": "O servidor mandou exatamente o corpo enfileirado, sem `done`."
+      },
+      {
+        "text": "O OkHttp preenche booleanos ausentes com false",
+        "why": "O OkHttp move bytes; não sabe nada dos campos do JSON."
+      },
+      {
+        "text": "Do `NewSessionDto`, que a requisição levou",
+        "why": "O `NewSessionDto` nem tem campo `done`."
+      }
+    ]
+  },
+  "ex-k4rh1v48": {
+    "prompt": "O teste conferiu que a requisição levava o cabeçalho `Authorization: ___ test-token`.",
+    "hint": "O nome do esquema antes do token.",
+    "blanks": [
+      {
+        "accept": [
+          "Bearer"
+        ]
+      }
+    ]
+  },
+  "ex-hj68swg5": {
+    "prompt": "Ligue cada situação ao que o `apiCall` devolve.",
+    "hint": "Resposta, recusa, nenhuma resposta.",
+    "pairs": [
+      {
+        "left": "o servidor responde 200 com uma lista",
+        "right": "`Ok`"
+      },
+      {
+        "left": "o servidor responde 404",
+        "right": "`Refused`"
+      },
+      {
+        "left": "a conexão cai três vezes",
+        "right": "`Unreachable`"
+      }
+    ],
+    "right_distractors": [
+      "`Cancelled`"
+    ]
+  },
+  "ex-h1h1mxjd": {
+    "prompt": "Por que o `apiCall` captura `HttpException` e `IOException` mas não `Exception`?",
+    "hint": "Duas coisas precisam passar direto.",
+    "choices": [
+      {
+        "text": "Capturar `Exception` é recusado pelo compilador Kotlin",
+        "why": "Compila; só estaria errado."
+      },
+      {
+        "text": "Para cancelamento e bugs de verdade passarem",
+        "why": "Isso: uma chamada cancelada precisa cancelar, e um bug precisa quebrar onde você vê."
+      },
+      {
+        "text": "Porque o Retrofit só lança essas duas",
+        "why": "Ele lança outras, um bug entre elas, e essas não podem ser escondidas."
+      },
+      {
+        "text": "Para guardar o corpo da resposta para a tela",
+        "why": "O `Refused` guarda só o código."
+      }
+    ]
+  },
+  "ex-t58na2ng": {
+    "prompt": "O planner mostra \"Algo deu errado\" para toda falha. O que ele jogou fora?",
+    "hint": "Uma é algo para dizer, outra é algo para tentar de novo.",
+    "choices": [
+      {
+        "text": "Nada, já que o estudante não conserta nenhuma",
+        "why": "O estudante pode esperar uma conexão, e não conserta uma recusa; as palavras deveriam dizer qual."
+      },
+      {
+        "text": "O método HTTP da requisição que falhou",
+        "why": "O método importa para retentativas, não para a mensagem."
+      },
+      {
+        "text": "Se é para avisar o estudante ou tentar de novo",
+        "why": "Isso: recusado e inalcançável pedem ações diferentes."
+      },
+      {
+        "text": "O token, que o erro contém",
+        "why": "Nenhum erro aqui carrega o token."
+      }
+    ]
+  },
+  "ex-ez69xh84": {
+    "prompt": "Em `ApiResultTest.noAnswer`, quantas tentativas o servidor contou antes de a chamada virar `Unreachable`?",
+    "hint": "O `maxAttempts`."
+  },
+  "ex-6nzqvy1c": {
+    "prompt": "Qual tempo-limite do OkHttp limita a chamada inteira, retentativas incluídas?",
+    "hint": "O que está em 30 segundos.",
+    "choices": [
+      {
+        "text": "`readTimeout`",
+        "why": "Limita a espera entre dois pedaços da resposta."
+      },
+      {
+        "text": "`connectTimeout`",
+        "why": "Limita abrir uma conexão."
+      },
+      {
+        "text": "`callTimeout`",
+        "why": "Isso."
+      },
+      {
+        "text": "`writeTimeout`",
+        "why": "Limita a espera entre dois pedaços da requisição."
+      }
+    ]
+  },
+  "ex-1j0k8br6": {
+    "prompt": "Um servidor manda um byte a cada nove segundos durante dois minutos. Só com `readTimeout` em 10 s, o que acontece?",
+    "hint": "Entre dois pedaços, não o todo.",
+    "choices": [
+      {
+        "text": "Estoura o tempo depois de dez segundos",
+        "why": "Nenhum intervalo chega a dez segundos, então nunca dispara."
+      },
+      {
+        "text": "O estudante espera os dois minutos inteiros",
+        "why": "Isso: só o `callTimeout` limita a chamada inteira."
+      },
+      {
+        "text": "O OkHttp o repete três vezes",
+        "why": "Nada falhou, então nada é repetido."
+      },
+      {
+        "text": "A conexão é recusada",
+        "why": "Foi aceita; só está lenta."
+      }
+    ]
+  },
+  "ex-q9tvxj2x": {
+    "prompt": "Um `POST` que acrescenta uma sessão estoura o tempo. Por que o `RetryInterceptor` não o envia de novo?",
+    "hint": "O que pode ter acontecido no servidor?",
+    "choices": [
+      {
+        "text": "O OkHttp proíbe enviar um corpo duas vezes",
+        "why": "Ele permite; o interceptor decide não fazer."
+      },
+      {
+        "text": "Ele já estaria salvo",
+        "why": "Isso: um segundo envio salvaria duas vezes."
+      },
+      {
+        "text": "Um `POST` não estoura o tempo",
+        "why": "Qualquer chamada pode estourar o tempo."
+      },
+      {
+        "text": "Porque o token expira depois de uma tentativa",
+        "why": "O token é reutilizado; não é esse o motivo."
+      }
+    ]
+  },
+  "ex-x7wp95s3": {
+    "prompt": "Um `GET` perde a conexão duas vezes e depois dá certo. Ponha em ordem o que o `RetryInterceptor` faz.",
+    "hint": "200 ms, depois o dobro.",
+    "items": [
+      "seguir, e capturar uma `IOException`",
+      "dormir 200 ms",
+      "seguir de novo, e capturar outra `IOException`",
+      "dormir 400 ms",
+      "seguir uma terceira vez e devolver a resposta"
+    ]
+  },
+  "ex-gbksys4c": {
+    "prompt": "No caso do POST do `RetryTest`, quantas tentativas chegaram ao servidor?",
+    "hint": "A linha impressa termina com ele."
+  },
+  "ex-rb8s6qar": {
+    "prompt": "Por que o token é passado ao `AuthInterceptor` como função e não como string?",
+    "hint": "Entrar, renovar, sair.",
+    "choices": [
+      {
+        "text": "O token muda",
+        "why": "Isso: cada requisição lê o atual, ou nenhum."
+      },
+      {
+        "text": "Porque o OkHttp exige que todo parâmetro de interceptor seja um lambda",
+        "why": "O OkHttp não exige nada do construtor."
+      },
+      {
+        "text": "Para esconder o token do interceptor de log",
+        "why": "Quem faz isso é o `redactHeader`."
+      },
+      {
+        "text": "Para o token ficar criptografado na memória",
+        "why": "Uma função não criptografa nada."
+      }
+    ]
+  },
+  "ex-mch7hm0t": {
+    "prompt": "O que o log mostrou para o cabeçalho `Authorization`?",
+    "hint": "O `redactHeader`.",
+    "choices": [
+      {
+        "text": "Nada: a linha foi removida",
+        "why": "A linha está lá, com o valor oculto."
+      },
+      {
+        "text": "`Bearer s3cr3t-t0ken`",
+        "why": "Esse seria o vazamento que a aula evita."
+      },
+      {
+        "text": "`Authorization: ██`",
+        "why": "Isso: o cabeçalho existe e o valor não chega ao log."
+      },
+      {
+        "text": "Um hash do token",
+        "why": "Nenhum hash é registrado; o valor é substituído."
+      }
+    ]
+  },
+  "ex-xng6gv8h": {
+    "prompt": "Alguém move o interceptor de log para antes do `AuthInterceptor`. O que os logs mostram daí em diante?",
+    "hint": "Cada interceptor vê a requisição depois dos que estão à esquerda.",
+    "choices": [
+      {
+        "text": "Requisições sem cabeçalho `Authorization`",
+        "why": "Isso: um log que mente sobre o que foi enviado."
+      },
+      {
+        "text": "O token em texto claro",
+        "why": "O cabeçalho nem existe ainda nesse ponto, oculto ou não."
+      },
+      {
+        "text": "Cada requisição três vezes",
+        "why": "As retentativas acontecem depois do log, então ele vê uma chamada."
+      },
+      {
+        "text": "Nada muda",
+        "why": "A ordem muda o que cada interceptor vê."
+      }
+    ]
+  },
+  "ex-fv9ze581": {
+    "prompt": "Dentro de um interceptor, `chain.___(request)` passa a requisição adiante e devolve a resposta.",
+    "hint": "Aparece nos três interceptors.",
+    "blanks": [
+      {
+        "accept": [
+          "proceed"
+        ]
+      }
+    ]
+  },
+  "ex-dkzdz656": {
+    "prompt": "O manifesto do planner nunca declarou `INTERNET`, e mesmo assim o combinado a tinha. De onde veio?",
+    "hint": "O relatório da combinação nomeia a origem.",
+    "choices": [
+      {
+        "text": "O AGP a acrescenta a todo app",
+        "why": "O relatório nomeou uma biblioteca, não o plugin."
+      },
+      {
+        "text": "O manifesto do próprio `okhttp-android`",
+        "why": "Isso."
+      },
+      {
+        "text": "O Robolectric, para os testes",
+        "why": "O Robolectric é dependência de teste e nunca chega ao manifesto do app."
+      },
+      {
+        "text": "O `targetSdk` 36 a concede implicitamente",
+        "why": "Nenhum nível de SDK concede permissão sozinho."
+      }
+    ]
+  },
+  "ex-9agy199j": {
+    "prompt": "Por que a aula põe a exceção de texto claro em `src/debug/`?",
+    "hint": "Quais builds participam?",
+    "choices": [
+      {
+        "text": "Porque `res/xml` só é permitido em debug",
+        "why": "Qualquer source set pode ter `res/xml`."
+      },
+      {
+        "text": "Ele fica fora dos builds de release",
+        "why": "Isso: só o build de debug o combina."
+      },
+      {
+        "text": "Porque o emulador só roda builds de debug",
+        "why": "Um emulador roda qualquer build."
+      },
+      {
+        "text": "Para o APK de release ficar menor",
+        "why": "Um XML pequeno não é questão de tamanho."
+      }
+    ]
+  },
+  "ex-0amg2y8c": {
+    "prompt": "O que `android:usesCleartextTraffic=\"true\"` permite que a configuração de segurança de rede da aula não permite?",
+    "hint": "Quais endereços, quais builds?",
+    "choices": [
+      {
+        "text": "HTTP simples para todo endereço, também em release",
+        "why": "Isso: a configuração nomeia um endereço, só em debug."
+      },
+      {
+        "text": "HTTPS para o host do emulador",
+        "why": "HTTPS nunca foi bloqueado."
+      },
+      {
+        "text": "Requisições sem a permissão `INTERNET`",
+        "why": "Nada dispensa a `INTERNET`."
+      },
+      {
+        "text": "Nada a mais: são equivalentes",
+        "why": "O atributo é muito mais amplo."
+      }
+    ]
+  },
+  "ex-yeny0jrp": {
+    "prompt": "Quais destas requisições o `RetryInterceptor` pode mandar uma segunda vez? Escolha todas as que se aplicam.",
+    "hint": "Método, e tipo de falha.",
+    "choices": [
+      {
+        "text": "`GET courses` cuja conexão caiu",
+        "why": "Sim: um GET depois de uma `IOException`."
+      },
+      {
+        "text": "`GET courses/chemistry/sessions` respondido com 404",
+        "why": "Não: uma resposta não é repetida."
+      },
+      {
+        "text": "`POST courses/android/sessions` que estourou o tempo",
+        "why": "Não: uma escrita nunca é repetida."
+      },
+      {
+        "text": "`GET courses` que estourou o tempo na leitura",
+        "why": "Sim: `SocketTimeoutException` é uma `IOException`."
+      }
+    ]
+  },
+  "ex-nzsmryd3": {
+    "prompt": "Um teste confere só `assertEquals(3, courses.size)`. Que bug ele deixa passar que o `takeRequest()` pegaria?",
+    "hint": "O MockWebServer responde qualquer caminho pedido.",
+    "choices": [
+      {
+        "text": "Um caminho errado, como `/v1/course`",
+        "why": "Isso: a resposta enfileirada volta qualquer que seja o caminho."
+      },
+      {
+        "text": "Um número errado de cursos no JSON",
+        "why": "A asserção de tamanho pega isso."
+      },
+      {
+        "text": "Um nome de curso com acento",
+        "why": "Nenhuma das conferências trata de nomes."
+      },
+      {
+        "text": "Um servidor mais lento que dez segundos",
+        "why": "Isso falha por tempo de qualquer jeito."
+      }
+    ]
+  }
+}

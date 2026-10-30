@@ -1,0 +1,454 @@
+{
+  "ex-xxqmb6f6": {
+    "prompt": "Um leitor grava o checkpoint e depois faz o trabalho. Uma queda cai entre os dois. O que aconteceu com o evento?",
+    "hint": "Onde o leitor reiniciado começa?",
+    "choices": [
+      {
+        "text": "Perdeu-se, nunca tratado: no máximo uma vez",
+        "why": "Isso. O reinício começa depois do checkpoint novo, e o trabalho nunca foi feito."
+      },
+      {
+        "text": "É tratado duas vezes, porque o checkpoint foi gravado antes da queda",
+        "why": "Um checkpoint gravado antes leva o reinício para depois do evento, então ele não é tratado de novo."
+      },
+      {
+        "text": "É tratado exatamente uma vez, porque o serviço percebe a queda",
+        "why": "O Event Hubs não guarda registro dos leitores; ele não percebe nada."
+      },
+      {
+        "text": "Vai para uma fila de mensagens mortas",
+        "why": "O Event Hubs não tem fila de mensagens mortas; o evento só fica na partição até a retenção acabar."
+      }
+    ]
+  },
+  "ex-rwfeswhn": {
+    "prompt": "Por que pelo menos uma vez é o padrão das bibliotecas do Event Hubs e dos exemplos da Microsoft?",
+    "hint": "Compare o que cada garantia arrisca.",
+    "choices": [
+      {
+        "text": "É o mais barato, porque grava menos checkpoints",
+        "why": "A ordem dos dois passos, não a quantidade, define a garantia."
+      },
+      {
+        "text": "Não perde nada; o destino cuida das repetições",
+        "why": "Isso. No máximo uma vez perde eventos; pelo menos uma vez os repete, e um destino pode ser feito para absorver isso."
+      },
+      {
+        "text": "Porque o serviço apaga os eventos depois do checkpoint",
+        "why": "A retenção é a única exclusão; checkpoints não mexem no hub."
+      },
+      {
+        "text": "Porque exatamente uma vez exige Premium",
+        "why": "Nenhuma camada liga exatamente uma vez; ele é conquistado pelo destino."
+      }
+    ]
+  },
+  "ex-0qsc4zn3": {
+    "prompt": "O que o Stream Analytics documenta sobre entregar linhas às suas saídas?",
+    "hint": "Processamento e entrega são declarados em separado.",
+    "choices": [
+      {
+        "text": "Exatamente uma vez para toda saída",
+        "why": "Exatamente uma vez é declarado para o processamento dentro do job; a entrega é pelo menos uma vez."
+      },
+      {
+        "text": "No máximo uma vez, para que um painel não conte em dobro",
+        "why": "Isso perderia linhas; a promessa documentada é a outra."
+      },
+      {
+        "text": "Pelo menos uma vez, repetindo uma gravação recusada",
+        "why": "Isso. Uma linha pode chegar duas vezes à tabela SQL depois de uma falha, e a chave da tabela torna isso inofensivo."
+      },
+      {
+        "text": "Nada; a entrega fica com o serviço da própria saída",
+        "why": "A documentação declara, sim: pelo menos uma vez."
+      }
+    ]
+  },
+  "ex-x95av8tb": {
+    "prompt": "Fazer o trabalho primeiro e gravar o checkpoint depois dá a garantia chamada pelo ___ uma vez.",
+    "hint": "Nada se perde, algo pode se repetir.",
+    "blanks": [
+      {
+        "accept": [
+          "menos"
+        ]
+      }
+    ]
+  },
+  "ex-3v2q6k35": {
+    "prompt": "O `pay.py` enviou `o-303` duas vezes. O que o event hub guardou?",
+    "hint": "O serviço compara eventos?",
+    "choices": [
+      {
+        "text": "Um evento, porque o segundo tinha o mesmo corpo",
+        "why": "O serviço nunca olha dentro de um evento e não compara nada."
+      },
+      {
+        "text": "Dois eventos com dois números de sequência",
+        "why": "Isso: sete eventos para seis pagamentos."
+      },
+      {
+        "text": "Um evento, e o segundo envio falhou com um conflito",
+        "why": "Nada recusou o segundo envio; ele foi impresso como os outros."
+      },
+      {
+        "text": "Dois eventos com o mesmo número de sequência",
+        "why": "Todo evento numa partição ganha um número próprio; as cópias são o 2 e o 3."
+      }
+    ]
+  },
+  "ex-jkj29sxb": {
+    "prompt": "A Quitanda reimplanta a checagem de fraude, reiniciando as três cópias uma a uma. Nenhuma cópia cai. Ainda pode haver eventos tratados duas vezes?",
+    "hint": "De onde começa o novo dono de uma partição?",
+    "choices": [
+      {
+        "text": "Não, porque um reinício limpo grava um checkpoint final",
+        "why": "Mover uma partição acontece enquanto as cópias rodam; o novo dono começa do último checkpoint, que pode estar atrás."
+      },
+      {
+        "text": "Não, porque duplicatas só vêm de produtores",
+        "why": "Produtores são uma das quatro fontes; o rebalanceamento é outra."
+      },
+      {
+        "text": "Sim, do último checkpoint de cada partição movida",
+        "why": "Isso. O que o dono antigo tratou depois desse checkpoint é tratado de novo."
+      },
+      {
+        "text": "Sim, mas só na camada Basic",
+        "why": "O balanceamento de carga funciona igual em toda camada."
+      }
+    ]
+  },
+  "ex-206mz54e": {
+    "prompt": "Um leitor remove todo pagamento cujo cliente e valor coincidam com um visto na última hora. `c-17` paga 990 por dois pedidos diferentes naquela noite. O que acontece?",
+    "hint": "O que faz dois eventos serem o mesmo?",
+    "choices": [
+      {
+        "text": "Um pagamento real é apagado",
+        "why": "Isso. A identidade vem do id do pedido, nunca de uma semelhança entre conteúdos."
+      },
+      {
+        "text": "Os dois ficam, porque os números de sequência são diferentes",
+        "why": "Este leitor compara cliente e valor, não números de sequência, então remove o segundo."
+      },
+      {
+        "text": "Os dois ficam, porque a hora não passou",
+        "why": "Dentro da hora é justamente quando esta regra remove um."
+      },
+      {
+        "text": "O serviço recusa o segundo pagamento no envio",
+        "why": "O serviço não compara nada; os dois são guardados."
+      }
+    ]
+  },
+  "ex-8zmqmdg3": {
+    "prompt": "A loja da Quitanda dá a cada envio um id aleatório novo, inclusive no reenvio de um pagamento cuja resposta se perdeu. O que um leitor mais adiante pode fazer com as duas cópias?",
+    "hint": "Qual id as distinguiria?",
+    "choices": [
+      {
+        "text": "Descartar a de número de sequência maior",
+        "why": "Ele não tem como saber que as duas andam juntas."
+      },
+      {
+        "text": "Usar os ids para juntá-las",
+        "why": "Os ids são diferentes, então dizem o contrário: dois eventos."
+      },
+      {
+        "text": "Nada confiável: parecem dois pedidos",
+        "why": "Isso. O id do pedido, decidido quando o pedido foi feito, é o que o reenvio deveria levar."
+      },
+      {
+        "text": "Perguntar ao Event Hubs qual foi a nova tentativa",
+        "why": "O serviço também não sabe; ele guardou dois eventos."
+      }
+    ]
+  },
+  "ex-x7khb2aw": {
+    "prompt": "O `totals.py add 5` fez checkpoint no número de sequência 2 e caiu depois do 4. Onde a segunda execução começou?",
+    "hint": "O checkpoint é a anotação do leitor.",
+    "choices": [
+      {
+        "text": "No número de sequência 5, depois do último evento tratado",
+        "why": "Nada registrou que o 3 e o 4 foram tratados; a anotação dizia 2."
+      },
+      {
+        "text": "No 0, porque uma queda reinicia o leitor do zero",
+        "why": "O checkpoint sobreviveu à queda no Azurite, então o leitor retomou dele."
+      },
+      {
+        "text": "No 3",
+        "why": "Isso. Começou depois do checkpoint, e por isso tratou o 3 e o 4 de novo."
+      },
+      {
+        "text": "No evento mais recente, porque `starting_position` é `-1`",
+        "why": "`-1` é o evento mais antigo, e só vale onde não há checkpoint."
+      }
+    ]
+  },
+  "ex-7777afm5": {
+    "prompt": "Depois das execuções com `add`, o total de `c-17` ficou em 14.760 centavos. O correto é 12.780. Errou por quantos centavos?",
+    "hint": "Duas cópias a mais de um pagamento.",
+    "unit": "centavos"
+  },
+  "ex-p0nm321z": {
+    "prompt": "Por que o total de `c-02` ficou certo depois das execuções com `add`, enquanto o de `c-05` dobrou?",
+    "hint": "Quais números de sequência foram repetidos?",
+    "choices": [
+      {
+        "text": "`c-02` paga com cartão, que o leitor trata à parte",
+        "why": "O leitor trata todo pagamento do mesmo jeito."
+      },
+      {
+        "text": "Nenhum pagamento de `c-02` caiu entre o checkpoint e a queda",
+        "why": "Isso. Só o 3 e o 4 foram repetidos, `o-303` e `o-304`."
+      },
+      {
+        "text": "O leitor percebeu as duplicatas de `c-02` e as pulou",
+        "why": "O leitor `add` não detecta nada."
+      },
+      {
+        "text": "`c-02` mora em outra partição",
+        "why": "Todo pagamento foi para a partição 0."
+      }
+    ]
+  },
+  "ex-tnst5xng": {
+    "prompt": "Um colega propõe fazer checkpoint depois de cada evento para consertar os totais. O que continuaria errado?",
+    "hint": "Havia duas fontes de duplicatas.",
+    "choices": [
+      {
+        "text": "Nada; toda repetição sumiria",
+        "why": "Uma queda entre o trabalho e o checkpoint ainda repete um evento, e a duplicata do produtor fica intacta."
+      },
+      {
+        "text": "A nova tentativa do produtor, e repetições de um evento",
+        "why": "Isso. A janela encolhe para um evento, e a nova tentativa são dois eventos que qualquer leitor trata duas vezes."
+      },
+      {
+        "text": "Só a conta de checkpoints, que cresceria",
+        "why": "Ela cresceria, e os totais continuariam errados."
+      },
+      {
+        "text": "Os totais dos clientes de outras partições",
+        "why": "Todos os pagamentos estavam na partição 0; o problema não é onde moram."
+      }
+    ]
+  },
+  "ex-9khv3xnc": {
+    "prompt": "Qual destas gravações é idempotente?",
+    "hint": "Faça duas vezes e compare com uma.",
+    "choices": [
+      {
+        "text": "Somar 990 ao total de `c-17`",
+        "why": "Duas vezes soma 1.980."
+      },
+      {
+        "text": "Acrescentar uma linha a um blob de log",
+        "why": "Duas vezes deixa duas linhas."
+      },
+      {
+        "text": "Gravar 990 no blob chamado `o-303`",
+        "why": "Isso. Gravado duas vezes, continua dizendo 990."
+      },
+      {
+        "text": "Aumentar em um um contador de checkouts",
+        "why": "Um incremento é a forma que nenhuma repetição aguenta."
+      }
+    ]
+  },
+  "ex-3mdpbe2c": {
+    "prompt": "No modo `upsert`, a repetição tratou os números de sequência 3 e 4 de novo. Por que os totais ficaram certos?",
+    "hint": "O que cada gravação fez com os blobs?",
+    "choices": [
+      {
+        "text": "O leitor reconheceu as duplicatas e as pulou",
+        "why": "Nada foi pulado; toda linha diz que gravou."
+      },
+      {
+        "text": "As repetições regravaram o mesmo blob de pedido com o mesmo conteúdo",
+        "why": "Isso, inclusive o segundo `o-303` do produtor; os totais são somados de um blob por pedido."
+      },
+      {
+        "text": "O Azurite recusou a segunda gravação com `BlobAlreadyExists`",
+        "why": "O programa grava com sobrescrita; a recusa foi um comando à parte com `--if-none-match '*'`."
+      },
+      {
+        "text": "Desta vez a queda aconteceu depois do checkpoint",
+        "why": "A queda e o checkpoint ficaram nos mesmos lugares do modo `add`."
+      }
+    ]
+  },
+  "ex-hg4jww44": {
+    "prompt": "Ligue cada destino à gravação que torna uma duplicata inofensiva nele.",
+    "hint": "Cada um usa como chave o id do pedido ou o conteúdo.",
+    "pairs": [
+      {
+        "left": "Azure SQL Database",
+        "right": "um insert com o id do pedido como chave"
+      },
+      {
+        "left": "Cosmos DB",
+        "right": "um upsert de documento cujo `id` é o id do pedido"
+      },
+      {
+        "left": "um lake de arquivos",
+        "right": "um arquivo com o nome dos números de sequência que guarda"
+      },
+      {
+        "left": "Blob Storage, mantendo a primeira cópia",
+        "right": "uma criação com `If-None-Match: *`"
+      }
+    ],
+    "right_distractors": [
+      "um arquivo com o nome da hora em que foi gravado"
+    ]
+  },
+  "ex-c093zpr4": {
+    "prompt": "Um registro é enviado, corrigido e enviado de novo com o mesmo id. O destino recusa uma segunda gravação com `If-None-Match: *`. Qual cópia fica guardada?",
+    "hint": "Recusar mantém uma ponta, sobrescrever a outra.",
+    "choices": [
+      {
+        "text": "A corrigida, porque chegou por último",
+        "why": "Isso é o que a sobrescrita mantém; a recusa mantém o que estava lá."
+      },
+      {
+        "text": "As duas, com o mesmo nome",
+        "why": "Um nome guarda um blob."
+      },
+      {
+        "text": "Nenhuma, porque o conflito apaga o blob",
+        "why": "A recusa não muda nada do que está guardado."
+      },
+      {
+        "text": "A primeira, sem correção",
+        "why": "Isso. Para um registro corrigido depois de enviado, escolher a recusa é escolher a primeira cópia como verdade."
+      }
+    ]
+  },
+  "ex-jq5q0v9x": {
+    "prompt": "No modo `guard`, `c-17` saiu com 13.770 em vez de 12.780. Por quê?",
+    "hint": "O que uma marca d'água de números de sequência compara?",
+    "choices": [
+      {
+        "text": "A repetição do 3 e do 4 não foi pega",
+        "why": "Foi: as duas linhas dizem que pulou."
+      },
+      {
+        "text": "A nova tentativa do produtor tem número de sequência próprio, então contou como nova",
+        "why": "Isso. A marca d'água pega o que o leitor repete, não o que o produtor repetiu."
+      },
+      {
+        "text": "O blob de estado foi gravado separado dos totais",
+        "why": "Totais e número de sequência estão num blob só, num upload só."
+      },
+      {
+        "text": "O `o-306` foi pulado por engano",
+        "why": "O número 6 foi somado; o erro é 990, o valor de `o-303`."
+      }
+    ]
+  },
+  "ex-gj4e5nq2": {
+    "prompt": "Um leitor guarda os totais num blob e o último número de sequência num segundo blob, gravado logo depois. O que uma queda pode fazer?",
+    "hint": "Duas gravações de novo.",
+    "choices": [
+      {
+        "text": "Nada, porque a segunda gravação é só milissegundos depois",
+        "why": "Uma queda pode cair em qualquer intervalo, por menor que seja."
+      },
+      {
+        "text": "Perder os totais, mas nunca o número de sequência",
+        "why": "Os totais são gravados primeiro, então são eles que sobrevivem a uma queda entre os dois."
+      },
+      {
+        "text": "Deixar totais à frente do número guardado",
+        "why": "Isso. A repetição então o soma de novo: o mesmo problema, um nível abaixo."
+      },
+      {
+        "text": "Fazer a marca d'água valer para todas as partições de uma vez",
+        "why": "Uma marca d'água é por partição, seja como for guardada."
+      }
+    ]
+  },
+  "ex-98vctaqk": {
+    "prompt": "Onde para a promessa de exatamente uma vez do Stream Analytics?",
+    "hint": "Processamento e entrega.",
+    "choices": [
+      {
+        "text": "Na borda do job: a entrega às saídas é pelo menos uma vez",
+        "why": "Isso. A chave da saída ou um upsert tornam o resto inofensivo."
+      },
+      {
+        "text": "Em lugar nenhum; ela cobre a tabela SQL também",
+        "why": "A documentação declara a entrega às saídas como pelo menos uma vez."
+      },
+      {
+        "text": "No event hub, que entrega cada evento uma vez",
+        "why": "O Event Hubs entrega pelo menos uma vez."
+      },
+      {
+        "text": "No produtor, que o job consegue tornar idempotente",
+        "why": "Um job lê; ele não manda em como o produtor envia."
+      }
+    ]
+  },
+  "ex-xp3yvnsy": {
+    "prompt": "Ponha em ordem o que aconteceu com `o-304` nas execuções com `add`.",
+    "hint": "O checkpoint estava antes dele.",
+    "items": [
+      "O `pay.py` o envia, como número de sequência 4",
+      "A primeira execução grava um checkpoint no 2",
+      "A primeira execução o soma ao total de `c-05`",
+      "A primeira execução cai",
+      "A segunda execução começa depois do 2 e o soma de novo"
+    ]
+  },
+  "ex-4zta1v7f": {
+    "prompt": "Quais destas coisas tornam uma duplicata inofensiva em vez de evitá-la? Marque todas as que se aplicam.",
+    "hint": "Duplicatas vão acontecer; o que as absorve?",
+    "choices": [
+      {
+        "text": "Gravar cada pagamento sob o id do pedido",
+        "why": "Isso; a repetição e a nova tentativa regravaram os mesmos blobs."
+      },
+      {
+        "text": "Guardar estado e último número de sequência numa gravação só",
+        "why": "Isso, para as repetições do próprio leitor."
+      },
+      {
+        "text": "Fazer checkpoint depois de cada evento",
+        "why": "Encolhe a janela; uma duplicata que ainda chega é contada."
+      },
+      {
+        "text": "Guardar os totais como incrementos",
+        "why": "Incrementos são a forma que nenhuma repetição aguenta."
+      },
+      {
+        "text": "Escolher a camada Premium",
+        "why": "Nenhuma camada muda a entrega de pelo menos uma vez."
+      }
+    ]
+  },
+  "ex-27frkvpj": {
+    "prompt": "A Quitanda acrescenta um job do Stream Analytics que grava contagens de checkouts por minuto numa tabela SQL. Qual desenho de tabela torna inofensiva uma gravação repetida?",
+    "hint": "O que identifica uma linha da saída?",
+    "choices": [
+      {
+        "text": "Uma coluna de identidade como chave primária",
+        "why": "Cada repetição ganha um valor de identidade novo e insere uma segunda linha."
+      },
+      {
+        "text": "Nenhuma chave, e um job noturno que apaga linhas duplicadas",
+        "why": "Até a noite, a tela mostra a contagem dobrada."
+      },
+      {
+        "text": "Uma chave primária na hora de fim da janela, para que a repetição seja recusada ou mesclada",
+        "why": "Isso. Uma linha por janela é a identidade da saída, como o id do pedido é a de um pagamento."
+      },
+      {
+        "text": "Uma tolerância a fora de ordem maior",
+        "why": "A tolerância decide atraso, não o que acontece quando uma gravação é repetida."
+      }
+    ]
+  }
+}

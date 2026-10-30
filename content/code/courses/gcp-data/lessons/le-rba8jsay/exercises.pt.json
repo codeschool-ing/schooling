@@ -1,0 +1,455 @@
+{
+  "ex-wzdgnas2": {
+    "prompt": "Qual variável exportada manda as requisições que o `gcloud storage` faz para o fake-gcs-server em vez do Google?",
+    "hint": "Uma delas dá nome a um endereço.",
+    "choices": [
+      {
+        "text": "`CLOUDSDK_CORE_PROJECT`",
+        "why": "Essa dá nome ao projeto em que a requisição age, `planner-dev`; o endereço continua sendo o do Google."
+      },
+      {
+        "text": "`CLOUDSDK_API_ENDPOINT_OVERRIDES_STORAGE`",
+        "why": "Isso. Ela troca o endereço do Cloud Storage por `http://localhost:4443/storage/v1/` para o `gcloud`."
+      },
+      {
+        "text": "`STORAGE_EMULATOR_HOST`, que toda ferramenta do Google lê",
+        "why": "Essa é lida pela biblioteca cliente Python. O `gcloud` pega o endpoint de uma configuração própria."
+      },
+      {
+        "text": "`CLOUDSDK_AUTH_DISABLE_CREDENTIALS`",
+        "why": "Essa faz o `gcloud` não mandar credenciais; não diz para onde a requisição vai."
+      }
+    ]
+  },
+  "ex-ffmth4kh": {
+    "prompt": "Por que o laboratório define `CLOUDSDK_AUTH_DISABLE_CREDENTIALS=true` em todo terminal, se o emulador não confere credencial nenhuma?",
+    "hint": "Pense num terminal que perdeu a linha do endpoint.",
+    "choices": [
+      {
+        "text": "Porque o fake-gcs-server recusa toda requisição que chega carregando um token, uma chave ou uma assinatura",
+        "why": "Ele aceita qualquer coisa; o `curl` da aula leu um objeto sem credencial nenhuma."
+      },
+      {
+        "text": "Para que um terminal que chegue ao Google por engano não tenha nada seu para mandar",
+        "why": "Isso. Sem credenciais, uma requisição que escapa para o endereço real é recusada em vez de respondida como você."
+      },
+      {
+        "text": "Porque as bibliotecas Python precisam dela para achar o emulador",
+        "why": "As bibliotecas acham o emulador pelas variáveis `…_EMULATOR_HOST`."
+      },
+      {
+        "text": "Para o `gcloud` iniciar mais rápido",
+        "why": "Ela muda o que é mandado, não a velocidade com que algo inicia."
+      }
+    ]
+  },
+  "ex-w8nc88gm": {
+    "prompt": "Você interrompe o fake-gcs-server com Ctrl+C no fim de uma sessão e o inicia de novo no dia seguinte. O que há nele?",
+    "hint": "Olhe o parâmetro `-backend`.",
+    "choices": [
+      {
+        "text": "Tudo de ontem, gravado em disco no diretório de onde ele foi iniciado",
+        "why": "`-backend memory` não grava nada em disco."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Cada aula reconstrói o que precisa a partir do primeiro comando."
+      },
+      {
+        "text": "Os buckets de ontem, vazios",
+        "why": "Os buckets estão na mesma memória que os objetos, e vão embora com eles."
+      },
+      {
+        "text": "Só o que estava em `quitanda-raw-prod`, o bucket que a aula mais usou",
+        "why": "Nenhum bucket é guardado; o emulador não faz ideia de qual importava."
+      }
+    ]
+  },
+  "ex-78dp8m1e": {
+    "prompt": "De que `gcloud config set component_manager/fixed_sdk_version 591.0.0` protege você?",
+    "hint": "Ela é rodada logo antes de instalar os componentes.",
+    "choices": [
+      {
+        "text": "De uma instalação que oferece atualizar a linha de comando inteira primeiro",
+        "why": "Isso. Com ela, a versão no seu terminal continua sendo a das transcrições."
+      },
+      {
+        "text": "De baixar os emuladores de um espelho em algum lugar que não os servidores do próprio Google",
+        "why": "De onde eles vêm não muda; o que muda é a versão da linha de comando."
+      },
+      {
+        "text": "De uma versão do Java que os emuladores não conseguem usar",
+        "why": "O Java é o pacote do primeiro bloco e não tem nada a ver com essa configuração."
+      },
+      {
+        "text": "De ficar sem espaço em disco no meio do caminho enquanto os componentes são descompactados",
+        "why": "Ela não muda tamanho nenhum; o laboratório tem 1,6 GB de qualquer jeito."
+      }
+    ]
+  },
+  "ex-8j3dh7s1": {
+    "prompt": "`gcloud storage buckets list` responde `You do not currently have an active account selected`. Qual é a correção neste laboratório?",
+    "hint": "O erro sugere um comando. Não o rode.",
+    "choices": [
+      {
+        "text": "Rodar `gcloud auth login`, como o erro sugere, e entrar com a sua própria conta do Google",
+        "why": "Isso conecta a linha de comando a uma conta real do Google, o que este curso nunca quer."
+      },
+      {
+        "text": "Reiniciar o fake-gcs-server",
+        "why": "O emulador nem foi consultado; o `gcloud` parou antes de mandar qualquer coisa."
+      },
+      {
+        "text": "Exportar `CLOUDSDK_AUTH_DISABLE_CREDENTIALS=true` de novo",
+        "why": "Isso. Ela diz ao `gcloud` para não mandar credenciais, e a requisição sai."
+      },
+      {
+        "text": "Definir `CLOUDSDK_CORE_PROJECT` com o seu próprio projeto",
+        "why": "A falta de projeto dá outro erro, sobre a propriedade `[project]`."
+      }
+    ]
+  },
+  "ex-qeb0359e": {
+    "prompt": "Um erro diz `gcloud crashed (ConnectionError)` com `port=4443` e `Connection refused`. O que aconteceu?",
+    "hint": "Duas palavras do meio importam mais que as duas primeiras.",
+    "choices": [
+      {
+        "text": "A linha de comando quebrou e precisa ser baixada e instalada de novo desde o começo",
+        "why": "`crashed` é como o `gcloud` relata uma conexão recusada; nada quebrou."
+      },
+      {
+        "text": "O Google recebeu a requisição e a recusou",
+        "why": "A porta 4443 em localhost é o emulador, não o Google."
+      },
+      {
+        "text": "Ninguém estava escutando naquela porta",
+        "why": "Isso. Inicie o fake-gcs-server de novo no terminal dele."
+      },
+      {
+        "text": "O projeto não está definido",
+        "why": "Esse erro cita a propriedade `[project]` e nunca chega à rede."
+      }
+    ]
+  },
+  "ex-nj14xmn2": {
+    "prompt": "Iniciar o fake-gcs-server imprime `bind: address already in use`. O que isso diz a você?",
+    "hint": "Já há algo na porta.",
+    "choices": [
+      {
+        "text": "Outro emulador já está respondendo na 4443",
+        "why": "Isso. Não há nada a corrigir, a menos que você quisesse um vazio; `pgrep -af fake-gcs-server` o encontra."
+      },
+      {
+        "text": "A porta está bloqueada pelo firewall do sistema operacional, que recusa o bind do programa",
+        "why": "Um firewall não faz uma porta parecer ocupada para um programa na mesma máquina."
+      },
+      {
+        "text": "Falta o Java",
+        "why": "O fake-gcs-server é um programa em Go e não precisa de Java."
+      },
+      {
+        "text": "O parâmetro `-backend memory` está errado",
+        "why": "O parâmetro é o do laboratório; o erro é sobre a porta."
+      }
+    ]
+  },
+  "ex-9d20n3e3": {
+    "prompt": "Um bucket criado com `--location=us-east1` no emulador informa `southamerica-east1`. Por quê?",
+    "hint": "Olhe como o laboratório inicia o emulador.",
+    "choices": [
+      {
+        "text": "O Cloud Storage leva todo bucket novo para a região mais próxima da pessoa que o criou",
+        "why": "O Cloud Storage mantém a localização que você pediu; ela é uma promessa sobre onde os bytes moram."
+      },
+      {
+        "text": "Ele não guarda região por bucket e responde com a do comando que o iniciou",
+        "why": "Isso. O `-location southamerica-east1` do quinto bloco é o que ele informa para todo bucket."
+      },
+      {
+        "text": "`CLOUDSDK_CORE_PROJECT` sobrepõe a localização",
+        "why": "Um projeto não tem localização própria, e a variável dá nome só ao projeto."
+      },
+      {
+        "text": "`us-east1` não existe",
+        "why": "Existe; o emulador simplesmente não guarda localização por bucket."
+      }
+    ]
+  },
+  "ex-q57cez1b": {
+    "prompt": "Para qual destes este laboratório tem um emulador?",
+    "hint": "Quatro serviços do Google, um de outra pessoa.",
+    "choices": [
+      {
+        "text": "BigQuery",
+        "why": "Não há emulador de BigQuery do Google nem de ninguém; o DuckDB roda o SQL no lugar."
+      },
+      {
+        "text": "Cloud SQL",
+        "why": "Nada imita o serviço gerenciado; um PostgreSQL local roda o motor."
+      },
+      {
+        "text": "Pub/Sub",
+        "why": "Isso. É o emulador do próprio Google, um componente da linha de comando."
+      },
+      {
+        "text": "IAM",
+        "why": "Nenhum plano de controle tem emulador, o IAM incluído."
+      }
+    ]
+  },
+  "ex-rdahe5b4": {
+    "prompt": "O `curl` leu um objeto do fake-gcs-server sem credenciais. O que isso significa para a aula 4, sobre quem pode ler um bucket?",
+    "hint": "Pergunte o que o emulador consegue recusar.",
+    "choices": [
+      {
+        "text": "As recusas dela são ensinadas pela documentação",
+        "why": "Isso. O emulador permite toda requisição, então nada aqui produz uma negação."
+      },
+      {
+        "text": "Os objetos do laboratório são públicos, e precisam ser tornados privados antes de a aula 4 começar",
+        "why": "Não há privado para fazer aqui: o emulador não confere."
+      },
+      {
+        "text": "O Cloud Storage também permite leitura anônima por padrão, então nada muda",
+        "why": "O Cloud Storage recusa uma leitura anônima a menos que o bucket a conceda."
+      },
+      {
+        "text": "A aula 4 precisa ser feita contra um projeto real",
+        "why": "Ela é lida onde não pode ser praticada; nenhuma aula exige conta."
+      }
+    ]
+  },
+  "ex-styqg51p": {
+    "prompt": "A ACL de um objeto mostra `projectOwner-test-project`. O que isso diz a você?",
+    "hint": "`planner-dev` é o projeto que o laboratório usa.",
+    "choices": [
+      {
+        "text": "O objeto pertence a um projeto chamado test-project na sua conta",
+        "why": "Não há conta; o nome é invenção do emulador."
+      },
+      {
+        "text": "Você está falando com o emulador",
+        "why": "Isso. É a assinatura do emulador; uma ACL com um projeto seu significaria que não está."
+      },
+      {
+        "text": "A variável do projeto não foi exportada",
+        "why": "Sem projeto o comando teria falhado antes de chegar a qualquer lugar."
+      },
+      {
+        "text": "O bucket foi tornado público em algum momento, e qualquer pessoa pode ler o objeto agora",
+        "why": "Ela dá nome a um dono, não a um leitor."
+      }
+    ]
+  },
+  "ex-8h4m3e6z": {
+    "prompt": "Por que este curso lê os preços nas páginas de preços em vez da Cloud Billing Catalog API?",
+    "hint": "Siga o que a API pede.",
+    "choices": [
+      {
+        "text": "A lista da API fica um mês atrás das páginas, então os preços dela estão desatualizados",
+        "why": "É a mesma lista das páginas, para programas."
+      },
+      {
+        "text": "A API não tem preços para São Paulo",
+        "why": "Ela tem todo SKU em toda região."
+      },
+      {
+        "text": "A API pede uma chave, logo um projeto, logo uma conta",
+        "why": "Isso. Então as páginas são lidas, a data é anotada, e nada que não foi lido é mostrado."
+      },
+      {
+        "text": "As páginas são mais baratas que a API",
+        "why": "As duas são gratuitas para ler; o que a API exige é uma conta."
+      }
+    ]
+  },
+  "ex-fabz8kza": {
+    "prompt": "O armazenamento Standard custa US$ 0,035 por GiB-mês em São Paulo. Quanto custa um TiB por um mês lá, em dólares?",
+    "hint": "Um TiB são 1.024 GiB."
+  },
+  "ex-ak09527a": {
+    "prompt": "Uma operação de Classe B custa US$ 0,0004 por milhar. Quanto custa um milhão de leituras, em dólares?",
+    "hint": "Um milhão são mil milhares."
+  },
+  "ex-ys90fmvx": {
+    "prompt": "Uma página de preços cobra armazenamento por GiB-mês. O que é um GiB?",
+    "hint": "O `i` importa.",
+    "choices": [
+      {
+        "text": "10⁹ bytes",
+        "why": "Isso é um GB; um GiB é cerca de 7% maior."
+      },
+      {
+        "text": "2³⁰ bytes",
+        "why": "Isso. Um gibibyte são 1.073.741.824 bytes."
+      },
+      {
+        "text": "1.000 MiB",
+        "why": "Um GiB são 1.024 MiB."
+      },
+      {
+        "text": "O que a região definir",
+        "why": "A unidade é a mesma em todo lugar; o que muda é o preço por unidade."
+      }
+    ]
+  },
+  "ex-aa0jn1nh": {
+    "prompt": "`gcloud storage ls gs://quitanda-raw-prod` imprimiu `gs://quitanda-raw-prod/raw/`, uma pasta que ninguém criou. De onde ela veio?",
+    "hint": "Olhe o `curl` logo abaixo.",
+    "choices": [
+      {
+        "text": "O console cria uma pasta para cada prefixo novo",
+        "why": "Nenhum console participou; o bucket guarda só três objetos."
+      },
+      {
+        "text": "O `gcloud storage cp` cria as pastas de um caminho enquanto faz o upload",
+        "why": "Ele subiu três objetos e mais nada."
+      },
+      {
+        "text": "Um agrupamento dos nomes na primeira barra",
+        "why": "Isso. Uma pasta é a resposta a uma pergunta, e só existe enquanto algum nome começar com ela."
+      },
+      {
+        "text": "O fake-gcs-server mantém um diretório em disco para cada prefixo que recebe",
+        "why": "A resposta da API JSON mostra `prefixes`, o agrupamento, e não diretórios guardados."
+      }
+    ]
+  },
+  "ex-cgh5972w": {
+    "prompt": "Uma linha é acrescentada a um arquivo local e ele é enviado de novo sob o mesmo nome. O que muda no objeto?",
+    "hint": "Três valores foram impressos antes e depois.",
+    "choices": [
+      {
+        "text": "Nada: o upload é pulado porque o nome existe",
+        "why": "O upload rodou, e o tamanho foi de 64 para 78."
+      },
+      {
+        "text": "Só o tamanho",
+        "why": "O MD5 e a geração mudaram também."
+      },
+      {
+        "text": "Tamanho, MD5 e geração: é um objeto novo",
+        "why": "Isso. Nada é editado no lugar; os bytes antigos se vão, a menos que o versionamento esteja ligado."
+      },
+      {
+        "text": "O nome ganha um sufixo numerado, e assim a versão antiga e a nova ficam guardadas lado a lado",
+        "why": "O Cloud Storage mantém o nome; sem versionamento o objeto antigo é simplesmente substituído."
+      }
+    ]
+  },
+  "ex-medcc3c8": {
+    "prompt": "Dois programas podem escrever o mesmo objeto. Como um deles evita sobrescrever uma escrita que nunca viu?",
+    "hint": "Toda versão de um objeto tem um número.",
+    "choices": [
+      {
+        "text": "Ele faz o upload com a geração que leu como pré-condição, e a escrita falha se o objeto tiver mudado",
+        "why": "Isso. A mesma ideia de uma coluna de versão numa tabela."
+      },
+      {
+        "text": "Ele renomeia o objeto antes de escrever",
+        "why": "Renomear é copiar e apagar, e não impede nada do outro escritor."
+      },
+      {
+        "text": "Ele confere a pasta antes",
+        "why": "Não há pasta, e uma conferência seguida de uma escrita deixa uma janela para o outro programa."
+      },
+      {
+        "text": "Ele escreve um objeto menor",
+        "why": "O tamanho não tem nada a ver com quem ganha."
+      }
+    ]
+  },
+  "ex-ke0jkbvf": {
+    "prompt": "Qual destes nomes de bucket segue o esquema do curso e as regras do Cloud Storage?",
+    "hint": "Empresa, camada, ambiente, e sem pontos.",
+    "choices": [
+      {
+        "text": "`quitanda.raw.prod`",
+        "why": "Um nome com pontos precisa de domínio verificado e quebra o certificado TLS do endereço comum."
+      },
+      {
+        "text": "`Quitanda-Raw-Prod`",
+        "why": "Letras maiúsculas são recusadas, pelo emulador e pelo Cloud Storage."
+      },
+      {
+        "text": "`raw-prod-ana`",
+        "why": "Sem empresa, e com o nome de uma pessoa, que vai mudar enquanto o bucket fica."
+      },
+      {
+        "text": "`quitanda-curated-prod`",
+        "why": "Isso: empresa, camada, ambiente, tudo minúsculo."
+      }
+    ]
+  },
+  "ex-2pe9kmh0": {
+    "prompt": "Os arquivos diários são gravados sob `raw/orders/dt=2026-10-01/`, porque uma data ano-mês-dia sai listada em ordem ___.",
+    "hint": "A ordem alfabética dessas strings é a mesma de outra ordem.",
+    "blanks": [
+      {
+        "accept": [
+          "cronológica",
+          "temporal",
+          "de tempo"
+        ]
+      }
+    ]
+  },
+  "ex-c65yg5yj": {
+    "prompt": "Ponha em ordem o que um terminal novo precisa antes de `gcloud storage buckets list` responder pelo emulador.",
+    "hint": "O terminal do próprio emulador vem primeiro.",
+    "items": [
+      "Iniciar o fake-gcs-server num terminal só dele",
+      "Abrir um segundo terminal e fazer `cd ~/gcp`",
+      "Pôr o `gcloud` no caminho e ativar o ambiente virtual",
+      "Exportar o projeto e a variável que desliga as credenciais",
+      "Exportar os endpoints sobrepostos e os hosts dos emuladores"
+    ]
+  },
+  "ex-ht6st2qj": {
+    "prompt": "Associe cada erro ao que está faltando.",
+    "hint": "Cada um aponta uma linha diferente da configuração.",
+    "pairs": [
+      {
+        "left": "`gcloud: command not found`",
+        "right": "O caminho para a linha de comando"
+      },
+      {
+        "left": "`You do not currently have an active account selected`",
+        "right": "A configuração que desliga as credenciais"
+      },
+      {
+        "left": "`The required property [project] is not currently set`",
+        "right": "A variável do projeto"
+      },
+      {
+        "left": "`port=4443` e `Connection refused`",
+        "right": "Um emulador rodando"
+      }
+    ],
+    "right_distractors": [
+      "Uma conta do Google"
+    ]
+  },
+  "ex-0dtwgqyj": {
+    "prompt": "O terminal de um colega lista buckets que você nunca viu, com um id de projeto que não é `planner-dev`. Qual é a primeira coisa a fazer?",
+    "hint": "Pense em qual metade do truque está faltando.",
+    "choices": [
+      {
+        "text": "Parar e descobrir para onde foram as credenciais e o endpoint, antes de rodar qualquer outra coisa",
+        "why": "Isso. Aquele terminal está falando com o Google como alguém; nada mais deve sair dele até você saber quem."
+      },
+      {
+        "text": "Reiniciar o fake-gcs-server para os buckets sumirem",
+        "why": "O emulador não mostraria buckets de estranhos; estes vieram de outro lugar."
+      },
+      {
+        "text": "Apagar os buckets desconhecidos",
+        "why": "São dados reais de alguém, e apagá-los é o pior passo possível."
+      },
+      {
+        "text": "Rodar `gcloud components install` de novo",
+        "why": "Não foi a instalação que mudou; foram as configurações do terminal."
+      }
+    ]
+  }
+}

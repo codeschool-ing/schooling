@@ -1,0 +1,625 @@
+[
+  {
+    "id": "ex-6w8n590b",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In GKE Standard, who runs etcd for your cluster?",
+    "hint": "Which half of the cluster is it in?",
+    "choices": [
+      {
+        "text": "You, on a node pool reserved for it",
+        "correct": false,
+        "why": "etcd is part of the control plane, which never appears in your project."
+      },
+      {
+        "text": "Google",
+        "correct": true,
+        "why": "Right. The control plane, etcd included, is Google's to run and patch."
+      },
+      {
+        "text": "A Compute Engine VM created in your project with the cluster",
+        "correct": false,
+        "why": "No control-plane machine appears in your project."
+      },
+      {
+        "text": "Nobody: GKE replaces etcd with Cloud SQL",
+        "correct": false,
+        "why": "GKE does not swap etcd for Cloud SQL; it runs the control plane for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-35v2np5h",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A zonal cluster's zone has an outage. What happens to pods that were already running on nodes in other zones?",
+    "hint": "What does the API server do, and what does it not do?",
+    "choices": [
+      {
+        "text": "They stop at once, because nodes need the API server to run anything",
+        "correct": false,
+        "why": "Running pods keep running; the kubelet does not need the API server second by second."
+      },
+      {
+        "text": "They keep running, but nothing is scheduled, scaled or changed",
+        "correct": true,
+        "why": "Right. The control plane is unreachable, so the cluster is frozen rather than down."
+      },
+      {
+        "text": "GKE moves the control plane to a healthy zone within seconds",
+        "correct": false,
+        "why": "That is what a regional cluster gives; a zonal one has one control plane."
+      },
+      {
+        "text": "They are rescheduled into the healthy zones",
+        "correct": false,
+        "why": "Rescheduling needs the scheduler, which is in the unreachable control plane."
+      }
+    ]
+  },
+  {
+    "id": "ex-me2mtejh",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The cluster management fee is 0.10 USD an hour. What do three clusters cost for a month of 730 hours, before any credit?",
+    "hint": "Fee times hours times clusters.",
+    "value": 219,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-79q4pzxr",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cluster whose location is a region, such as southamerica-east1, is a ___ cluster.",
+    "hint": "Not zonal.",
+    "blanks": [
+      {
+        "accept": [
+          "regional"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-akxdp5ym",
+    "version": 1,
+    "section": "the-control-plane",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does gke/main.tf have no node pool in it?",
+    "hint": "What does the cluster resource describe?",
+    "choices": [
+      {
+        "text": "GKE Standard creates its nodes from the cluster's machine type",
+        "correct": false,
+        "why": "The cluster resource has no machine type for its nodes here; pools carry that."
+      },
+      {
+        "text": "Nodes are added later by hand with kubectl",
+        "correct": false,
+        "why": "kubectl does not create Compute Engine nodes."
+      },
+      {
+        "text": "A regional cluster cannot have a default pool",
+        "correct": false,
+        "why": "Regional clusters do have pools; this file simply keeps them separate."
+      },
+      {
+        "text": "The pools are a resource of their own, in pool.tf",
+        "correct": true,
+        "why": "Right. The cluster resource describes the control plane, and each pool is managed separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-sen9a9h6",
+    "version": 1,
+    "section": "node-pools",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A regional pool covers three zones with autoscaling min_node_count = 1 and max_node_count = 3. What is the largest number of nodes it can reach?",
+    "hint": "The bounds are per zone.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-jrhtah67",
+    "version": 1,
+    "section": "node-pools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's pool says node_count = 1. How many e2-standard-4 machines does it start with?",
+    "hint": "How many zones does the region have?",
+    "choices": [
+      {
+        "text": "One, the number written in the file",
+        "correct": false,
+        "why": "In a regional cluster the count is per zone."
+      },
+      {
+        "text": "Zero, until a pod is scheduled",
+        "correct": false,
+        "why": "node_count is the starting size; autoscaling bounds come from min and max."
+      },
+      {
+        "text": "Three, one in each zone of the region",
+        "correct": true,
+        "why": "Right; about 293 dollars a month at the floor."
+      },
+      {
+        "text": "Nine, the maximum of the autoscaling bounds",
+        "correct": false,
+        "why": "Nine is the ceiling, not the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxksacw6",
+    "version": 1,
+    "section": "node-pools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a node pool underneath?",
+    "hint": "Lesson 4 builds one of these by hand.",
+    "choices": [
+      {
+        "text": "A managed instance group of Compute Engine machines",
+        "correct": true,
+        "why": "Right. GKE drives the group for you."
+      },
+      {
+        "text": "A Kubernetes Deployment of nodes",
+        "correct": false,
+        "why": "Nodes are machines, not pods in a Deployment."
+      },
+      {
+        "text": "A Cloud Run service with one revision per node",
+        "correct": false,
+        "why": "Cloud Run is not involved in GKE nodes."
+      },
+      {
+        "text": "A set of App Engine flexible instances",
+        "correct": false,
+        "why": "App Engine flexible is a different product."
+      }
+    ]
+  },
+  {
+    "id": "ex-33pw7eab",
+    "version": 1,
+    "section": "node-pools",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants photo resizing, which can be interrupted, kept off the nodes that serve customers. What is the usual shape?",
+    "hint": "Pools exist for kinds of node.",
+    "choices": [
+      {
+        "text": "A second cluster just for the batch work",
+        "correct": false,
+        "why": "That works and adds a second management fee for no reason a pool cannot meet."
+      },
+      {
+        "text": "A larger machine type for the existing pool",
+        "correct": false,
+        "why": "Bigger nodes still mix both workloads."
+      },
+      {
+        "text": "A higher max_surge so batch pods get the surge nodes",
+        "correct": false,
+        "why": "Surge nodes exist only during upgrades."
+      },
+      {
+        "text": "A second pool of Spot nodes with a taint the batch pods tolerate",
+        "correct": true,
+        "why": "Right. Only tolerating pods land there, and Spot suits interruptible work."
+      }
+    ]
+  },
+  {
+    "id": "ex-7arne57g",
+    "version": 1,
+    "section": "node-pools",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting in pool.tf to what it does.",
+    "hint": "Three of them are in management and node_config.",
+    "pairs": [
+      {
+        "left": "auto_repair",
+        "right": "Replaces a node that fails its health checks"
+      },
+      {
+        "left": "auto_upgrade",
+        "right": "Moves nodes to versions the release channel offers"
+      },
+      {
+        "left": "GKE_METADATA",
+        "right": "Pods ask GKE's metadata server, not the node's account"
+      },
+      {
+        "left": "node_count",
+        "right": "The starting number of nodes in each zone"
+      }
+    ],
+    "right_distractors": [
+      "Sets the maximum pods per node"
+    ]
+  },
+  {
+    "id": "ex-cz89k67b",
+    "version": 1,
+    "section": "release-channels-and-upgrades",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In what order does GKE upgrade a cluster?",
+    "hint": "The API server supports nodes behind it, never ahead.",
+    "choices": [
+      {
+        "text": "The control plane first, then the node pools",
+        "correct": true,
+        "why": "Right. Nodes may lag the API server by some minor versions, never lead it."
+      },
+      {
+        "text": "Nodes first, then the control plane",
+        "correct": false,
+        "why": "Nodes ahead of the API server is the one order not supported."
+      },
+      {
+        "text": "Both at once, to keep them on one version",
+        "correct": false,
+        "why": "They are upgraded in sequence."
+      },
+      {
+        "text": "Whichever pool has the most nodes, then the rest",
+        "correct": false,
+        "why": "Pool size does not set the order."
+      }
+    ]
+  },
+  {
+    "id": "ex-r18hb0t2",
+    "version": 1,
+    "section": "release-channels-and-upgrades",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pool has max_surge = 1 and max_unavailable = 0. What is true during its upgrade?",
+    "hint": "One adds, one removes.",
+    "choices": [
+      {
+        "text": "Capacity drops by one node at a time, to save money",
+        "correct": false,
+        "why": "max_unavailable = 0 means it never drops."
+      },
+      {
+        "text": "One extra node exists at a time, and capacity never drops",
+        "correct": true,
+        "why": "Right. Slower, and you pay for the extra node while it exists."
+      },
+      {
+        "text": "All nodes are replaced together after one extra is added",
+        "correct": false,
+        "why": "Surge replaces in small steps; replacing a whole set is blue-green."
+      },
+      {
+        "text": "Pods are not evicted, because there is spare capacity",
+        "correct": false,
+        "why": "Every old node is drained; spare capacity is where its pods go."
+      }
+    ]
+  },
+  {
+    "id": "ex-enm7162d",
+    "version": 1,
+    "section": "release-channels-and-upgrades",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the release channels from the one that receives new versions first to the one that keeps a version longest.",
+    "hint": "Extended goes past standard support.",
+    "items": [
+      "RAPID",
+      "REGULAR",
+      "STABLE",
+      "EXTENDED"
+    ],
+    "trap": "EXTENDED is not a slower STABLE: it keeps a minor version past standard support, at an extra fee during that period."
+  },
+  {
+    "id": "ex-2hh1mw3b",
+    "version": 1,
+    "section": "release-channels-and-upgrades",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Deployment with one replica goes down for a minute every time the nodes are upgraded, although max_unavailable is 0. Why?",
+    "hint": "What does max_unavailable count?",
+    "choices": [
+      {
+        "text": "max_unavailable is ignored on the regular channel",
+        "correct": false,
+        "why": "The setting applies on every channel."
+      },
+      {
+        "text": "The control plane is down during node upgrades",
+        "correct": false,
+        "why": "The control plane is upgraded first and separately."
+      },
+      {
+        "text": "It counts nodes, and the one pod still restarts when its node drains",
+        "correct": true,
+        "why": "Right. Two replicas and a PodDisruptionBudget keep the service up."
+      },
+      {
+        "text": "Surge nodes start without the image cached",
+        "correct": false,
+        "why": "A slow pull lengthens the gap; it does not explain why there is a gap at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h14z5w0",
+    "version": 1,
+    "section": "release-channels-and-upgrades",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before an old node is removed, GKE cordons it and then ___ it, evicting its pods.",
+    "hint": "The word kubectl uses for the same thing.",
+    "blanks": [
+      {
+        "accept": [
+          "drains"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ws8qj26n",
+    "version": 1,
+    "section": "release-channels-and-upgrades",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab check when you ran terraform validate on lesson 13's files? Choose all that apply.",
+    "hint": "Enum values are known to the provider.",
+    "choices": [
+      {
+        "text": "That the release channel is one of the accepted names",
+        "correct": true,
+        "why": "Right; WEEKLY was refused."
+      },
+      {
+        "text": "That the upgrade strategy is one the provider knows",
+        "correct": true,
+        "why": "Right; ROLLING was refused."
+      },
+      {
+        "text": "That an upgrade would keep every pod running",
+        "correct": false,
+        "why": "Nothing was upgraded; pods are not even in the files."
+      },
+      {
+        "text": "That the maintenance window allows 48 hours in 32 days",
+        "correct": false,
+        "why": "That rule is checked by GKE when the cluster is created."
+      }
+    ]
+  },
+  {
+    "id": "ex-sm149gv1",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The window's start_time is 05:00 UTC. What time is that in São Paulo?",
+    "hint": "São Paulo is three hours behind UTC.",
+    "choices": [
+      {
+        "text": "08:00",
+        "correct": false,
+        "why": "That is where the window ends, at 11:00 UTC."
+      },
+      {
+        "text": "05:00, because GKE converts to the cluster's region",
+        "correct": false,
+        "why": "The times are UTC; nothing converts them."
+      },
+      {
+        "text": "03:00",
+        "correct": false,
+        "why": "That would be two hours behind."
+      },
+      {
+        "text": "02:00",
+        "correct": true,
+        "why": "Right; date with TZ=America/Sao_Paulo printed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-37w18ta1",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "GKE asks for 48 hours of maintenance availability in any 32 days. With a window on Saturdays and Sundays only, how many hours long must each day's window be, at least?",
+    "hint": "Count the fewest weekend days any 32 days can hold.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-1rep7hwk",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which exclusion scope suits \"nothing changes on the nodes during a two-month migration\"?",
+    "hint": "One scope is limited to a short period.",
+    "choices": [
+      {
+        "text": "NO_UPGRADES, renewed every few weeks",
+        "correct": false,
+        "why": "That scope is limited in length, and renewing it piles up a large upgrade."
+      },
+      {
+        "text": "NO_MINOR_OR_NODE_UPGRADES",
+        "correct": true,
+        "why": "Right. The narrower scopes may last much longer, up to the end of support."
+      },
+      {
+        "text": "A maintenance window of zero hours",
+        "correct": false,
+        "why": "A window has to leave 48 hours in 32 days."
+      },
+      {
+        "text": "The EXTENDED release channel on its own",
+        "correct": false,
+        "why": "A channel decides versions, not when nodes may change."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmn9m96c",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An exclusion with scope NO_UPGRADES is open, and the cluster's version reaches the end of its support. What happens?",
+    "hint": "Two things go through regardless.",
+    "choices": [
+      {
+        "text": "The cluster is upgraded anyway",
+        "correct": true,
+        "why": "Right. An exclusion chooses the moment; it does not keep a cluster still."
+      },
+      {
+        "text": "Nothing until the exclusion closes",
+        "correct": false,
+        "why": "End of support is one of the two things a window cannot hold back."
+      },
+      {
+        "text": "The cluster is deleted",
+        "correct": false,
+        "why": "Nothing is deleted; it is upgraded."
+      },
+      {
+        "text": "The cluster moves to the EXTENDED channel by itself",
+        "correct": false,
+        "why": "Changing channel is your decision, never automatic."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qkjy7ev",
+    "version": 1,
+    "section": "maintenance-windows",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The recurrence FREQ=WEEKLY;BYDAY=SA,SU is an RRULE, the syntax of the i___ standard.",
+    "hint": "The same one a calendar invitation uses.",
+    "blanks": [
+      {
+        "accept": [
+          "Calendar",
+          "calendar"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p3n3hcy2",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A regional cluster pays its 73 USD fee and keeps three e2-standard-4 nodes at 97.84 a month each. What is the monthly total?",
+    "hint": "Fee plus three nodes.",
+    "value": 366.52,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-f0b9e4kw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happens in one surge step of a node upgrade.",
+    "hint": "Capacity first, then removal.",
+    "items": [
+      "A node at the new version is created",
+      "An old node is cordoned",
+      "Its pods are evicted, respecting PodDisruptionBudgets",
+      "The old node is removed"
+    ],
+    "trap": "Cordoning before the new node exists is what max_unavailable = 0 prevents."
+  },
+  {
+    "id": "ex-1yja8rp7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps one cluster per developer, eight in all, each a zonal cluster with one small node. Which line of their bill is the surprise?",
+    "hint": "One cluster's fee is covered by the credit.",
+    "choices": [
+      {
+        "text": "The nodes, because zonal nodes cost more than regional ones",
+        "correct": false,
+        "why": "A node costs its machine type, wherever it is."
+      },
+      {
+        "text": "Egress between the clusters' control planes",
+        "correct": false,
+        "why": "Control planes do not talk to each other."
+      },
+      {
+        "text": "Seven management fees of about 73 dollars each",
+        "correct": true,
+        "why": "Right. The credit covers one; the others add about 511 dollars a month before any node."
+      },
+      {
+        "text": "Nothing, because zonal clusters are free",
+        "correct": false,
+        "why": "Only one is covered by the credit."
+      }
+    ]
+  }
+]

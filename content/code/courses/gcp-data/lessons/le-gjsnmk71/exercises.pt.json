@@ -1,0 +1,369 @@
+{
+  "ex-cjv267w3": {
+    "prompt": "O que a leitura do documento `customers/c-17` devolve?",
+    "hint": "Uma subcoleção não fica guardada dentro do pai.",
+    "choices": [
+      {
+        "text": "Só os campos do próprio cliente",
+        "why": "Isso. A subcoleção `orders` é lida à parte."
+      },
+      {
+        "text": "Os campos do cliente e todo pedido debaixo dele",
+        "why": "Pedidos numa subcoleção não fazem parte do documento pai."
+      },
+      {
+        "text": "Uma lista dos nomes das subcoleções",
+        "why": "Listar as coleções de um documento é outra chamada."
+      },
+      {
+        "text": "Nada, até a coleção ser criada",
+        "why": "Coleções nascem quando um documento é gravado nelas."
+      }
+    ]
+  },
+  "ex-wdxr16vs": {
+    "prompt": "Por que a Quitanda não guarda os pedidos de um cliente num campo array do documento do cliente?",
+    "hint": "Um documento tem limite de tamanho.",
+    "choices": [
+      {
+        "text": "Arrays não podem ser indexados",
+        "why": "Arrays ganham um índice `array-contains`; o problema é o crescimento."
+      },
+      {
+        "text": "Arrays são lidos um elemento por leitura cobrada",
+        "why": "Ler um documento é uma leitura, seja qual for o tamanho."
+      },
+      {
+        "text": "Ele cresce rumo ao limite de 1 MiB",
+        "why": "Isso. Uma subcoleção não tem limite de tamanho, e é para isso que ela existe."
+      },
+      {
+        "text": "Batches não gravam arrays",
+        "why": "O `seed.py` grava `products`, um array, num batch."
+      }
+    ]
+  },
+  "ex-ghk7978v": {
+    "prompt": "Quantos bytes cabem no valor de um campo no Firestore, como a recusa do emulador disse?",
+    "hint": "1 MiB menos 89 bytes."
+  },
+  "ex-7fnr21ck": {
+    "prompt": "Um pedido guarda o caminho de um documento de produto, e o produto é apagado. O que o Firestore faz?",
+    "hint": "Uma referência é uma restrição?",
+    "choices": [
+      {
+        "text": "Recusa o delete enquanto houver pedidos apontando para ele",
+        "why": "Isso é uma chave estrangeira; o Firestore não tem."
+      },
+      {
+        "text": "Apaga os pedidos também",
+        "why": "Esse é o `ON DELETE CASCADE` do Spanner; o Firestore não tem cascade."
+      },
+      {
+        "text": "Move os pedidos para uma coleção de produtos apagados",
+        "why": "O Firestore não move nada sozinho."
+      },
+      {
+        "text": "Nada; o caminho passa a não levar a lugar nenhum",
+        "why": "Isso. Uma referência é um valor, e a integridade é trabalho do programa."
+      }
+    ]
+  },
+  "ex-rvbwq4mr": {
+    "prompt": "Quais índices o Firestore cria sozinho para um campo de uma coleção?",
+    "hint": "Duas direções, e mais um para arrays.",
+    "choices": [
+      {
+        "text": "Nenhum; todo índice é declarado",
+        "why": "Os índices de campo único são automáticos."
+      },
+      {
+        "text": "Duas direções, mais `array-contains`",
+        "why": "Isso. Esses são os índices de campo único."
+      },
+      {
+        "text": "Só o id do documento",
+        "why": "Todo campo é indexado, a menos que haja uma isenção."
+      },
+      {
+        "text": "Um índice composto por par de campos",
+        "why": "Índices compostos são declarados, nunca criados sozinhos."
+      }
+    ]
+  },
+  "ex-hxxwax31": {
+    "prompt": "Todo documento novo de clique tem um timestamp `clicked_at`, e o app grava milhares por segundo numa coleção. O que a aula sugere?",
+    "hint": "Um valor que cresce a cada escrita.",
+    "choices": [
+      {
+        "text": "Um índice composto em `clicked_at`",
+        "why": "Mais entradas no fim da mesma faixa pioram."
+      },
+      {
+        "text": "Uma leitura stale antes de cada escrita",
+        "why": "Leituras não mudam onde as entradas de índice caem."
+      },
+      {
+        "text": "Uma isenção para `clicked_at`",
+        "why": "Isso. Um valor indexado sequencial limita a coleção a uns 500 por segundo."
+      },
+      {
+        "text": "Gravar os cliques numa transação",
+        "why": "Uma transação acrescenta trabalho; o hotspot é o índice."
+      }
+    ]
+  },
+  "ex-v6n5s46j": {
+    "prompt": "Por que o `query.py` termina toda consulta com `limit(5)`?",
+    "hint": "O que é cobrado?",
+    "choices": [
+      {
+        "text": "Cada documento devolvido é cobrado",
+        "why": "Isso. O limite define o preço. Sem ele a consulta paga por tudo o que casa."
+      },
+      {
+        "text": "O emulador devolve no máximo cinco documentos",
+        "why": "O emulador devolve tudo o que casa."
+      },
+      {
+        "text": "Consultas de collection group exigem um limite",
+        "why": "Não exigem; o limite é uma escolha."
+      },
+      {
+        "text": "Os índices guardam só cinco entradas por valor",
+        "why": "Um índice guarda uma entrada por documento."
+      }
+    ]
+  },
+  "ex-mc84tvma": {
+    "prompt": "`pending-biggest` respondeu no laptop. O que acontece na primeira chamada contra o Firestore sem índice composto?",
+    "hint": "O modo padrão do emulador não confere índice.",
+    "choices": [
+      {
+        "text": "Responde as mesmas linhas, mais devagar",
+        "why": "O Firestore não tem caminho lento; ele recusa."
+      },
+      {
+        "text": "Varre o collection group e cobra todo documento",
+        "why": "O Firestore nunca varre."
+      },
+      {
+        "text": "O Firestore cria o índice na hora",
+        "why": "Índices compostos são declarados, e criar um leva tempo."
+      },
+      {
+        "text": "Falha, com um link para o índice",
+        "why": "Isso. É a recusa que o emulador Native nunca dá."
+      }
+    ]
+  },
+  "ex-4kc12jq2": {
+    "prompt": "O índice composto de `pending-biggest` é criado com o padrão `--query-scope=collection`. A qual consulta ele serve?",
+    "hint": "Quais coleções a consulta lê?",
+    "choices": [
+      {
+        "text": "`pending-biggest`, como está no `query.py`",
+        "why": "Essa lê o collection group e precisa do escopo collection-group."
+      },
+      {
+        "text": "A mesma consulta nos `orders` de um cliente",
+        "why": "Isso. O escopo collection serve uma consulta numa coleção."
+      },
+      {
+        "text": "Toda consulta em `status`",
+        "why": "Consultas de um campo já têm os índices."
+      },
+      {
+        "text": "Só consultas no modo Datastore",
+        "why": "Escopo é sobre coleções, não sobre modos."
+      }
+    ]
+  },
+  "ex-hq6xyb8p": {
+    "prompt": "Como fazer o laptop recusar uma consulta sem índice composto?",
+    "hint": "Um dos modos tem uma flag para isso.",
+    "choices": [
+      {
+        "text": "O modo Datastore, com `--require-indexes`",
+        "why": "Isso. Com `--index-file` ao lado; a ajuda diz que as duas só funcionam no modo Datastore."
+      },
+      {
+        "text": "Iniciar o emulador Native com `--rules`",
+        "why": "Regras são sobre acesso, não sobre índices."
+      },
+      {
+        "text": "Apontar `FIRESTORE_EMULATOR_HOST` para a porta 8081",
+        "why": "Isso só muda onde o cliente se conecta."
+      },
+      {
+        "text": "Usar o Query Explain antes de cada consulta",
+        "why": "O emulador não devolve métricas de explain."
+      }
+    ]
+  },
+  "ex-xxefqts7": {
+    "prompt": "O recurso do Firestore que informa o índice usado e os documentos lidos por uma consulta, que o emulador não oferece, é o Query ___.",
+    "hint": "Escreve-se como a palavra-chave SQL de um plano.",
+    "blanks": [
+      {
+        "accept": [
+          "Explain"
+        ]
+      }
+    ]
+  },
+  "ex-e1yrb2z9": {
+    "prompt": "No `stock.py`, por que o cliente que perdeu foi recusado em vez de comprar seis?",
+    "hint": "O que a repetição dele leu?",
+    "choices": [
+      {
+        "text": "O Firestore recusa uma segunda escrita",
+        "why": "A escrita do vencedor foi a segunda num documento lido duas vezes."
+      },
+      {
+        "text": "A thread começou depois",
+        "why": "As duas começaram juntas; a ordem dos commits decidiu."
+      },
+      {
+        "text": "Batches não conseguem diminuir um campo",
+        "why": "Isto é uma transação, e ela lê antes de escrever."
+      },
+      {
+        "text": "A transação dele rodou de novo desde o começo e leu quatro",
+        "why": "Isso. Repetida desde o começo, ela viu o estoque como estava."
+      }
+    ]
+  },
+  "ex-whq4vmwj": {
+    "prompt": "Uma página de 10 pedidos é buscada com `offset(90).limit(10)`. Pela regra da página de preços, quantas leituras de documento são cobradas?",
+    "hint": "Documentos pulados também são cobrados."
+  },
+  "ex-yz9tkx3p": {
+    "prompt": "Todo pedido também incrementa um documento `stats/today`, e no pico da noite chegam vários pedidos por segundo. Qual é o problema, e a solução?",
+    "hint": "Um documento tem uma taxa de escrita sustentada.",
+    "choices": [
+      {
+        "text": "Nenhum; as transações serializam os incrementos",
+        "why": "Serializam, e esse é o problema: um documento aguenta cerca de uma escrita por segundo."
+      },
+      {
+        "text": "O documento passa de 1 MiB; divida por hora",
+        "why": "Um contador não cresce; o problema é a taxa."
+      },
+      {
+        "text": "Ele aguenta cerca de uma escrita/s",
+        "why": "Isso. Espalhe o contador por vários documentos, um contador distribuído somado na leitura."
+      },
+      {
+        "text": "Isenções de índice no campo do contador",
+        "why": "Índices não são o limite aqui; o documento é."
+      }
+    ]
+  },
+  "ex-q2css7rp": {
+    "prompt": "A 0,045 USD por 100.000 leituras acima das 50.000 grátis por dia, quanto custam 250.000 leituras por dia em 30 dias, em USD?",
+    "hint": "(250.000 − 50.000) × 30 / 100.000 × 0,045",
+    "unit": "USD"
+  },
+  "ex-kbbpxnx5": {
+    "prompt": "Qual banco da Quitanda combina com o modo Datastore em vez do Native?",
+    "hint": "Quem lê?",
+    "choices": [
+      {
+        "text": "O histórico de pedidos do app, lido dos celulares",
+        "why": "Celulares precisam dos SDKs do Firebase, que são do modo Native."
+      },
+      {
+        "text": "Um serviço que só servidores leem",
+        "why": "Isso. Servidores não perdem nada sem listeners e SDKs móveis."
+      },
+      {
+        "text": "A tela de status da entrega, que escuta mudanças",
+        "why": "Listeners em tempo real são do modo Native."
+      },
+      {
+        "text": "Qualquer banco com mais de 1 GiB",
+        "why": "O tamanho não escolhe o modo."
+      }
+    ]
+  },
+  "ex-xnekvv0g": {
+    "prompt": "A Quitanda move os dados do app do banco `(default)` para um banco nomeado `shop`, com o mesmo tráfego. O que acontece com a conta mensal de 4,86?",
+    "hint": "Leia a que a cota gratuita se aplica.",
+    "choices": [
+      {
+        "text": "Nada; a cota gratuita é por projeto",
+        "why": "A página diz que bancos nomeados não têm direito a ela."
+      },
+      {
+        "text": "Cai, porque bancos nomeados custam menos por operação",
+        "why": "As tarifas são as mesmas; só a cota gratuita muda."
+      },
+      {
+        "text": "Dobra, porque os dois bancos são cobrados",
+        "why": "O banco `(default)` ficaria vazio e não custaria nada."
+      },
+      {
+        "text": "Sobe: bancos nomeados não têm cota gratuita",
+        "why": "Isso. Toda leitura, escrita e GiB passa a ser cobrada desde a primeira."
+      }
+    ]
+  },
+  "ex-hkkqaj0y": {
+    "prompt": "Associe cada termo do Firestore ao nome ou significado no modo Datastore.",
+    "hint": "O Datastore tinha as próprias palavras antes.",
+    "pairs": [
+      {
+        "left": "documento",
+        "right": "entidade"
+      },
+      {
+        "left": "coleção",
+        "right": "kind"
+      },
+      {
+        "left": "índice composto",
+        "right": "um índice declarado sobre várias propriedades"
+      }
+    ],
+    "right_distractors": [
+      "um split"
+    ]
+  },
+  "ex-dqd4m3h1": {
+    "prompt": "Quais destas o emulador do Firestore em modo Native fez como o Firestore faria? Escolha todas as que se aplicam.",
+    "hint": "Modelo de dados e transações, ou índices e métricas?",
+    "choices": [
+      {
+        "text": "Recusar um valor de campo acima de 1.048.487 bytes",
+        "why": "Sim; o limite é o do Firestore."
+      },
+      {
+        "text": "Repetir uma transação cuja leitura ficou velha",
+        "why": "Sim; o estoque nunca ficou abaixo de zero."
+      },
+      {
+        "text": "Paginar com um cursor a partir do último documento",
+        "why": "Sim; o `pages.py` leu seis páginas."
+      },
+      {
+        "text": "Recusar uma consulta que precisa de um índice composto ausente",
+        "why": "Só o modo Datastore com `--require-indexes` recusou."
+      },
+      {
+        "text": "Devolver as métricas do Query Explain",
+        "why": "Não devolveu nenhuma."
+      }
+    ]
+  },
+  "ex-fqg95vke": {
+    "prompt": "Ponha em ordem os passos para levar `pending-biggest` à produção.",
+    "hint": "O índice precisa existir antes de a consulta encontrá-lo.",
+    "items": [
+      "Escrever a consulta e rodá-la contra o emulador",
+      "Declarar o índice composto com escopo collection-group",
+      "Esperar o índice terminar de ser construído",
+      "Publicar o código que roda a consulta"
+    ]
+  }
+}

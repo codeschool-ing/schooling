@@ -1,0 +1,394 @@
+{
+  "ex-rawj1hze": {
+    "prompt": "O que é o Azure Data Lake Storage Gen2?",
+    "hint": "Conte quantos produtos estão envolvidos.",
+    "choices": [
+      {
+        "text": "Um serviço separado, com contas e tabela de preços próprias",
+        "why": "Isso descreve o primeiro Data Lake Store, que a Microsoft aposentou."
+      },
+      {
+        "text": "Um endereço novo para os mesmos blobs planos, sem mais nada mudando",
+        "why": "O endereço é uma parte; diretórios, renomeação atômica e listas de acesso são o resto."
+      },
+      {
+        "text": "Uma conta de armazenamento com o espaço de nomes hierárquico ligado",
+        "why": "Isso. A mesma conta, os mesmos contêineres e tiers; os diretórios passam a existir."
+      },
+      {
+        "text": "Um cluster Spark que guarda os arquivos no Blob Storage",
+        "why": "Ele não roda computação nenhuma; motores como o Spark leem dele."
+      }
+    ]
+  },
+  "ex-0dsz2kvq": {
+    "prompt": "Em `abfss://lake@stquitandalakeprd.dfs.core.windows.net/raw/`, a parte antes do `@` nomeia o ___ system.",
+    "hint": "A palavra do Data Lake para um contêiner.",
+    "blanks": [
+      {
+        "accept": [
+          "file"
+        ]
+      }
+    ]
+  },
+  "ex-ahyagb9b": {
+    "prompt": "Por que a renomeação atômica de diretório importa para um job Spark?",
+    "hint": "Como o job termina o trabalho?",
+    "choices": [
+      {
+        "text": "Ele confirma renomeando a saída para o lugar, com segurança",
+        "why": "Isso. Num espaço de nomes plano essa renomeação é uma cópia de cada arquivo, e pode parar no meio."
+      },
+      {
+        "text": "Faz o job ler a entrada mais rápido, porque os diretórios ficam em cache no motor",
+        "why": "Renomear não deixa nada mais rápido para quem lê."
+      },
+      {
+        "text": "O Spark se recusa a começar numa conta sem isso",
+        "why": "O Spark também consegue usar o endpoint de blob; o que ele perde é o commit seguro."
+      },
+      {
+        "text": "Renomear é de graça com espaço hierárquico e cobrado no plano",
+        "why": "A lição contou operações, não uma gratuidade; a questão é uma operação contra milhares, feita com segurança."
+      }
+    ]
+  },
+  "ex-xc5ewv5j": {
+    "prompt": "Um programa de cópia escrito para contas planas lista uma conta com espaço hierárquico pelo endpoint de blob e copia 1.040 blobs onde se esperavam 1.000 arquivos. O motivo mais provável?",
+    "hint": "Como um diretório aparece pela interface de blob?",
+    "choices": [
+      {
+        "text": "Quarenta arquivos foram gravados duas vezes pela cópia",
+        "why": "Gravar um nome duas vezes deixa um blob, não dois."
+      },
+      {
+        "text": "A listagem devolveu quarenta versões de arquivos antigos",
+        "why": "Uma listagem simples não traz versões se não pedir."
+      },
+      {
+        "text": "O Azure conta cada bloco de 4 MiB como um blob separado na listagem",
+        "why": "Uma listagem nomeia blobs, nunca os blocos deles."
+      },
+      {
+        "text": "Diretórios, listados como blobs vazios com `hdi_isfolder=true`",
+        "why": "Isso. São marcadores de diretórios, inofensivos depois de reconhecidos."
+      }
+    ]
+  },
+  "ex-n8d9ygjg": {
+    "prompt": "O `rename.py` move um prefixo de 2.500 blobs num espaço de nomes plano numa execução só. Quantas requisições ele conta? Uma página de listagem cabe até 5.000 nomes.",
+    "hint": "Uma página, depois duas requisições por blob.",
+    "unit": "requisições"
+  },
+  "ex-e0a6hzkm": {
+    "prompt": "O `rename.py` parou depois de 400 de 1.000 blobs. O que viu um job que lia o prefixo antigo nesse momento?",
+    "hint": "Conte debaixo de cada prefixo.",
+    "choices": [
+      {
+        "text": "Os 1.000 arquivos, porque nada é apagado até a renomeação terminar",
+        "why": "Cada blob é apagado logo depois da cópia; não há um fim pelo qual esperar."
+      },
+      {
+        "text": "600, com 400 já no prefixo novo",
+        "why": "Isso. As listagens imprimiram 600 e 400."
+      },
+      {
+        "text": "Um erro dizendo que o prefixo está sendo movido",
+        "why": "Nada no Blob Storage sabe que há uma movimentação em andamento."
+      },
+      {
+        "text": "Nenhum arquivo, porque o prefixo fica travado durante a movimentação",
+        "why": "Não há trava de prefixo; prefixo nem é uma coisa que existe."
+      }
+    ]
+  },
+  "ex-0ggbjyb1": {
+    "prompt": "Por que o `rename.py` confere `copy_status` antes de apagar a origem?",
+    "hint": "Uma cópia é iniciada, nem sempre terminada.",
+    "choices": [
+      {
+        "text": "Apagar um blob enquanto ele é copiado é recusado pelo serviço, e a conferência evita esse erro",
+        "why": "O perigo é o contrário: a exclusão é aceita."
+      },
+      {
+        "text": "Uma cópia ainda `pending` na volta da chamada perderia os dados se a origem fosse apagada nessa hora",
+        "why": "Isso. O Azurite respondeu `success` toda vez; um programa não pode contar com isso."
+      },
+      {
+        "text": "Deixa a renomeação mais rápida pulando cada blob cuja cópia já existe no nome novo",
+        "why": "O status descreve esta cópia, não se o destino existia."
+      },
+      {
+        "text": "O status conta como requisição, e o contador precisa dele",
+        "why": "O status vem na resposta da própria cópia; nenhuma requisição extra é feita."
+      }
+    ]
+  },
+  "ex-mx1x67f6": {
+    "prompt": "O lake da Quitanda precisa ficar numa conta plana por mais um ano. Que desenho evita renomear o diretório de um dia?",
+    "hint": "Dois caminhos foram citados: evitar a renomeação, ou nunca tocar nos arquivos.",
+    "choices": [
+      {
+        "text": "Renomear de noite, quando nenhum job lê o lake e ninguém vê o estado pela metade",
+        "why": "Ainda custa duas requisições por arquivo, e uma falha ainda deixa duas metades."
+      },
+      {
+        "text": "Usar blocos maiores, para cada cópia ser uma requisição só",
+        "why": "Cada cópia já é uma requisição; o tamanho do bloco não muda a conta."
+      },
+      {
+        "text": "Copiar com mais threads para a janela ficar menor",
+        "why": "Uma janela menor ainda é uma janela, e a conta é a mesma."
+      },
+      {
+        "text": "Nomes finais desde o início, mais um manifesto",
+        "why": "Isso. Nada é renomeado, e o manifesto troca os leitores com uma escrita condicional."
+      }
+    ]
+  },
+  "ex-amemapj1": {
+    "prompt": "`az storage fs create -n lake2` funcionou contra o Azurite. O que isso prova?",
+    "hint": "O que é um file system, do lado do blob?",
+    "choices": [
+      {
+        "text": "Nada além de um contêiner: ele foi criado pelo endpoint de blob",
+        "why": "Isso. `lake2` apareceu na lista de contêineres ao lado de `lake`."
+      },
+      {
+        "text": "Que o Azurite suporta espaço hierárquico, mas só para contêineres criados depois da conta",
+        "why": "O comando seguinte, um diretório, falhou com `ERROR: None`."
+      },
+      {
+        "text": "Que a linha de comando caiu para uma pasta local",
+        "why": "A lista de contêineres veio do Azurite, não do disco."
+      },
+      {
+        "text": "Que a conta agora foi convertida para Data Lake Storage",
+        "why": "A conversão é uma operação do plano de controle, que nenhum emulador responde."
+      }
+    ]
+  },
+  "ex-dkkmf3xs": {
+    "prompt": "O que o Azurite respondeu a `PUT .../lake2/raw?resource=directory`?",
+    "hint": "A linha de comando imprimiu `ErrorCode:None` para a mesma requisição.",
+    "choices": [
+      {
+        "text": "`201 Created`, com o diretório como um blob de tamanho zero",
+        "why": "Nada foi criado; a listagem teria mostrado."
+      },
+      {
+        "text": "`404 Not Found`, porque `lake2` ainda não existia",
+        "why": "`lake2` existia; o comando anterior o criou."
+      },
+      {
+        "text": "Um `400 Bad Request` seco, corpo vazio",
+        "why": "Isso, e por isso a linha de comando não tinha código para imprimir."
+      },
+      {
+        "text": "`501 Not Implemented`, nomeando a operação do Data Lake",
+        "why": "Essa seria a recusa útil; o Azurite deu um 400 seco."
+      }
+    ]
+  },
+  "ex-aqyxw27g": {
+    "prompt": "Quais destas coisas o `terraform validate` conferiu em `~/azure/tf/lake`? Marque todas as que valem.",
+    "hint": "Ele lê os arquivos e o esquema do provedor, e não pergunta nada ao Azure.",
+    "choices": [
+      {
+        "text": "Que `is_hns_enabled` é um booleano",
+        "why": "Sim; um texto ali é erro de tipo."
+      },
+      {
+        "text": "Que o `resource` de um caminho é `directory`",
+        "why": "Sim; `file` foi recusado com a lista de valores aceitos."
+      },
+      {
+        "text": "Que o nome `stquitandalakeprd` está livre no Azure",
+        "why": "Só o Azure sabe isso, na hora de criar."
+      },
+      {
+        "text": "Que o id do grupo dos analistas existe no Microsoft Entra ID",
+        "why": "O id da lição é inventado, e o validate aceitou."
+      }
+    ]
+  },
+  "ex-yh49q8dm": {
+    "prompt": "Uma analista tem `r` em `curated/orders/2026/10.parquet` e nenhuma entrada nos diretórios acima. Ela consegue ler o arquivo?",
+    "hint": "O que `x` quer dizer num diretório?",
+    "choices": [
+      {
+        "text": "Sim; `r` no arquivo é o que a leitura precisa, digam o que disserem os diretórios acima",
+        "why": "É metade do que precisa; o caminho também tem de ser atravessável."
+      },
+      {
+        "text": "Sim, se `other` tiver `r` no contêiner",
+        "why": "`r` num diretório lista o conteúdo; atravessar exige `x`."
+      },
+      {
+        "text": "Não; arquivos não podem ter entradas próprias",
+        "why": "Arquivos e diretórios têm listas, os dois."
+      },
+      {
+        "text": "Não, sem `x` em cada diretório acima",
+        "why": "Isso. `x` em cada diretório do caminho, `r` no arquivo."
+      }
+    ]
+  },
+  "ex-frrftc21": {
+    "prompt": "O grupo dos analistas é posto na lista padrão de `curated/` hoje. Os 10.000 arquivos de ontem continuam ilegíveis para eles. Por quê?",
+    "hint": "Quando a lista padrão é copiada?",
+    "choices": [
+      {
+        "text": "Mudanças nas listas levam até um dia para chegar a cada arquivo abaixo de um diretório",
+        "why": "Nada se propaga; os arquivos antigos nunca iam mudar."
+      },
+      {
+        "text": "A lista padrão só vale para diretórios, nunca para arquivos",
+        "why": "Arquivos novos lá dentro também começam com uma cópia dela."
+      },
+      {
+        "text": "A lista padrão é copiada uma vez, na criação",
+        "why": "Isso. É uma atualização recursiva que muda os itens que já existem."
+      },
+      {
+        "text": "Um papel na conta os nega, e papéis são conferidos primeiro",
+        "why": "Papéis concedem, não negam; e um papel afetaria os arquivos de hoje também."
+      }
+    ]
+  },
+  "ex-7e86vrp7": {
+    "prompt": "Uma engenheira tem Storage Blob Data Contributor na conta inteira do lake. A lista de `raw/` dá ao grupo dela só `r-x`. Ela consegue escrever em `raw/`?",
+    "hint": "Qual camada é conferida primeiro, e o que acontece quando ela diz sim?",
+    "choices": [
+      {
+        "text": "Não; a lista é mais específica, então vence",
+        "why": "Específico não vence aqui; o papel é conferido primeiro e concede."
+      },
+      {
+        "text": "Sim; o papel concede, então a lista nem é consultada",
+        "why": "Isso. Um papel dado amplo demais não pode ser estreitado por uma lista."
+      },
+      {
+        "text": "Só depois de a lista padrão de `raw/` ser atualizada",
+        "why": "A lista padrão decide com o que os filhos novos começam, não quem escreve."
+      },
+      {
+        "text": "Só nos arquivos de que ela é dona, como no Linux",
+        "why": "A posse faz parte das listas, que nem foram consultadas."
+      }
+    ]
+  },
+  "ex-gtrmf81y": {
+    "prompt": "Ligue cada entrada de uma lista de acesso ao que ela significa.",
+    "hint": "Quatro tipos de entrada, como o provedor listou.",
+    "pairs": [
+      {
+        "left": "`user` com um id",
+        "right": "uma pessoa ou service principal nomeado"
+      },
+      {
+        "left": "`group` com um id",
+        "right": "um grupo nomeado do Microsoft Entra ID"
+      },
+      {
+        "left": "`mask`",
+        "right": "o máximo que qualquer entrada nomeada pode ter"
+      },
+      {
+        "left": "`other`",
+        "right": "todo o resto que chegou ao item"
+      }
+    ],
+    "right_distractors": [
+      "a chave compartilhada da conta"
+    ]
+  },
+  "ex-9t4cje05": {
+    "prompt": "A Quitanda ligou o espaço de nomes hierárquico numa conta e se arrependeu. O que ela pode fazer?",
+    "hint": "A documentação cita uma direção só.",
+    "choices": [
+      {
+        "text": "Mover os dados para uma conta nova",
+        "why": "Isso, como uma troca de tipo ou de desempenho na lição 1."
+      },
+      {
+        "text": "Desligar nas configurações da conta",
+        "why": "Depois de ligado, fica ligado."
+      },
+      {
+        "text": "Rodar a conversão ao contrário",
+        "why": "A conversão vai do plano para o hierárquico e não tem volta."
+      },
+      {
+        "text": "Recriar os contêineres na mesma conta",
+        "why": "A configuração é da conta, não dos contêineres."
+      }
+    ]
+  },
+  "ex-hz7rssww": {
+    "prompt": "Por que a Quitanda mantém as exportações da loja na conta plana em vez de no lake?",
+    "hint": "Do que cada conta precisa que a outra não precisa?",
+    "choices": [
+      {
+        "text": "Contas planas podem guardar um gigabyte por menos",
+        "why": "A lição argumentou por recursos, não por diferença de preço."
+      },
+      {
+        "text": "O lake não aceita arquivos CSV",
+        "why": "Arquivo é arquivo; o formato não importa para o espaço de nomes."
+      },
+      {
+        "text": "Não ganham nada com ele e podem perder um recurso de proteção",
+        "why": "Isso. Nada que o espaço de nomes acrescenta é usado ali, e algo que pode faltar a ele é."
+      },
+      {
+        "text": "O Azurite não emula o lake",
+        "why": "Verdade no laboratório, e motivo nenhum para um desenho no Azure."
+      }
+    ]
+  },
+  "ex-whqnrem8": {
+    "prompt": "Ponha em ordem o que o `rename.py` faz para cada blob.",
+    "hint": "A origem vai por último.",
+    "items": [
+      "Listar os nomes sob o prefixo antigo",
+      "Iniciar uma cópia para o nome novo",
+      "Conferir que o status da cópia é `success`",
+      "Apagar o blob de origem"
+    ]
+  },
+  "ex-1w5kpz1f": {
+    "prompt": "Qual operação precisa do endpoint do Data Lake e por isso falha no Azurite?",
+    "hint": "Qual delas precisa de um diretório existindo?",
+    "choices": [
+      {
+        "text": "Pôr uma lista de controle de acesso no diretório `raw/`",
+        "why": "Isso. Listas só existem com diretórios."
+      },
+      {
+        "text": "Criar um contêiner chamado `lake2`",
+        "why": "Isso passou pelo endpoint de blob e funcionou."
+      },
+      {
+        "text": "Listar blobs sob um prefixo",
+        "why": "Operação do endpoint de blob; o programa de renomear fez isso mil vezes."
+      },
+      {
+        "text": "Copiar um blob para um nome novo",
+        "why": "Também endpoint de blob, e funcionou."
+      }
+    ]
+  },
+  "ex-pb8x62yr": {
+    "prompt": "No Terraform, o atributo de `azurerm_storage_account` que liga o espaço de nomes hierárquico é `___`.",
+    "hint": "Três letras para o espaço de nomes, entre `is` e `enabled`.",
+    "blanks": [
+      {
+        "accept": [
+          "is_hns_enabled"
+        ]
+      }
+    ]
+  }
+}
