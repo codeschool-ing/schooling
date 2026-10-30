@@ -1,0 +1,585 @@
+[
+  {
+    "id": "ex-p5d3fh2t",
+    "version": 1,
+    "section": "materialised-views",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between a view and a materialised view in BigQuery?",
+    "hint": "One of them stores something.",
+    "choices": [
+      {
+        "text": "Only the materialised view stores a result",
+        "correct": true,
+        "why": "Right. That stored result is what saves the reading."
+      },
+      {
+        "text": "A materialised view is a view in another project",
+        "correct": false,
+        "why": "Projects have nothing to do with it."
+      },
+      {
+        "text": "A view is cached for a day; a materialised view forever",
+        "correct": false,
+        "why": "A view stores nothing, and a materialised view is refreshed."
+      },
+      {
+        "text": "Only a materialised view can be queried with SQL",
+        "correct": false,
+        "why": "Both are queried with SQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0g2fsy2",
+    "version": 1,
+    "section": "materialised-views",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `SUM(total_cents)` be maintained incrementally and a median cannot?",
+    "hint": "Combine an old result with the new rows.",
+    "choices": [
+      {
+        "text": "Sums add up; medians do not",
+        "correct": true,
+        "why": "Right. That is the restriction's reason."
+      },
+      {
+        "text": "Medians are not in GoogleSQL",
+        "correct": false,
+        "why": "GoogleSQL computes quantiles; they just cannot be combined."
+      },
+      {
+        "text": "Sums are smaller to store",
+        "correct": false,
+        "why": "Size is not what decides it."
+      },
+      {
+        "text": "A median needs the time of day",
+        "correct": false,
+        "why": "Time-dependent functions are a separate restriction."
+      }
+    ]
+  },
+  {
+    "id": "ex-ac8h9p4n",
+    "version": 1,
+    "section": "materialised-views",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "New orders arrived ten minutes ago and the view has not been refreshed yet. What does a query on the view return, without `max_staleness`?",
+    "hint": "BigQuery reads a delta.",
+    "choices": [
+      {
+        "text": "The stored result, ten minutes old",
+        "correct": false,
+        "why": "Only `max_staleness` allows a stale answer."
+      },
+      {
+        "text": "An error until the refresh",
+        "correct": false,
+        "why": "The view is always queryable."
+      },
+      {
+        "text": "Stored rows plus the new ones",
+        "correct": true,
+        "why": "Right. The delta is read from the base table."
+      },
+      {
+        "text": "The base table, scanned in full",
+        "correct": false,
+        "why": "Only the rows since the refresh are read from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j6nr4ft",
+    "version": 1,
+    "section": "materialised-views",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda rewrites the whole `orders` table every night. What does that do to a materialised view over it?",
+    "hint": "Incremental means adding new rows.",
+    "choices": [
+      {
+        "text": "Nothing: views ignore rewrites of the base",
+        "correct": false,
+        "why": "A rewrite changes every row the view aggregated."
+      },
+      {
+        "text": "It makes the view free to refresh",
+        "correct": false,
+        "why": "A full recomputation is the dearest refresh."
+      },
+      {
+        "text": "It recomputes everything, every time",
+        "correct": true,
+        "why": "Right. Changed rows, not new rows."
+      },
+      {
+        "text": "The view is deleted",
+        "correct": false,
+        "why": "It is invalidated and recomputed, not deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5dwze6z",
+    "version": 1,
+    "section": "incremental",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The third run of `incremental.py` read 16,359 order rows to add one day. The first read 1,228,759 for 59 days. What fraction of the first did the third read? Give three decimal places.",
+    "hint": "Divide.",
+    "value": 0.013,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-82mjr573",
+    "version": 1,
+    "section": "incremental",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the second run of `incremental.py`, with nothing new, read?",
+    "hint": "It looks for days it has not seen.",
+    "choices": [
+      {
+        "text": "The whole table, to check it",
+        "correct": false,
+        "why": "It compared folder names and read no orders."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. A refresh with no change costs nothing."
+      },
+      {
+        "text": "The last day again",
+        "correct": false,
+        "why": "The last day was already aggregated."
+      },
+      {
+        "text": "Only the footers",
+        "correct": false,
+        "why": "It opened no Parquet file at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-bn0sq5ej",
+    "version": 1,
+    "section": "incremental",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The check returned zero differences. What does that establish?",
+    "hint": "`EXCEPT` keeps rows of the first query missing from the second.",
+    "choices": [
+      {
+        "text": "That DuckDB and BigQuery agree",
+        "correct": false,
+        "why": "BigQuery never ran."
+      },
+      {
+        "text": "Incremental equals full",
+        "correct": true,
+        "why": "Right. The bookkeeping lost nothing."
+      },
+      {
+        "text": "That the aggregate is smaller than the table",
+        "correct": false,
+        "why": "True, but not what `EXCEPT` measured."
+      },
+      {
+        "text": "That no order was corrected",
+        "correct": false,
+        "why": "It compares results, not history."
+      }
+    ]
+  },
+  {
+    "id": "ex-atymx2bm",
+    "version": 1,
+    "section": "incremental",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should a materialised view be partitioned like its base table, by the lesson's argument?",
+    "hint": "Think of a correction to one day.",
+    "choices": [
+      {
+        "text": "So that BigQuery can read both with one slot",
+        "correct": false,
+        "why": "Slots have nothing to do with it."
+      },
+      {
+        "text": "Because a view must copy its base table's options",
+        "correct": false,
+        "why": "It may differ; it is a choice."
+      },
+      {
+        "text": "So a correction to one day costs recomputing one day",
+        "correct": true,
+        "why": "Right. The partition is the unit of recomputation."
+      },
+      {
+        "text": "To get long-term storage pricing",
+        "correct": false,
+        "why": "That follows writes, not the alignment."
+      }
+    ]
+  },
+  {
+    "id": "ex-82p0m7rq",
+    "version": 1,
+    "section": "smart-tuning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does smart tuning do?",
+    "hint": "Nobody changes the report.",
+    "choices": [
+      {
+        "text": "Points base-table queries at a view",
+        "correct": true,
+        "why": "Right. The dashboard still says `FROM orders`."
+      },
+      {
+        "text": "Tunes the number of slots a reservation holds",
+        "correct": false,
+        "why": "That is the autoscaler of lesson 14."
+      },
+      {
+        "text": "Picks the clustering columns",
+        "correct": false,
+        "why": "Clustering is chosen by whoever creates the table."
+      },
+      {
+        "text": "Compresses the view",
+        "correct": false,
+        "why": "Compression is the storage's, invisible."
+      }
+    ]
+  },
+  {
+    "id": "ex-twpdhn8a",
+    "version": 1,
+    "section": "smart-tuning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The view holds `dt`, `district`, `orders` and `sales`. Which query cannot be rewritten to read it?",
+    "hint": "An aggregate cannot be taken apart.",
+    "choices": [
+      {
+        "text": "Sales per district for September",
+        "correct": false,
+        "why": "Everything it needs is in the view."
+      },
+      {
+        "text": "Orders per day",
+        "correct": false,
+        "why": "A sum of the view's `orders` per `dt`."
+      },
+      {
+        "text": "Sales per store",
+        "correct": true,
+        "why": "Right. The view has no `store_id`."
+      },
+      {
+        "text": "Total sales of 29 September",
+        "correct": false,
+        "why": "A sum of the view's eight rows for that day."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nd556f5",
+    "version": 1,
+    "section": "smart-tuning",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bqbill.py` printed 31,457,280 bytes billed for the base table and 10,485,760 for the view. How many times the view's bill is the base table's?",
+    "hint": "Divide.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vw9894q3",
+    "version": 1,
+    "section": "smart-tuning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard adds a column the view does not have. What happens to its queries?",
+    "hint": "There is no error.",
+    "choices": [
+      {
+        "text": "They fail with an error naming the view",
+        "correct": false,
+        "why": "Nothing fails; the rewrite just does not happen."
+      },
+      {
+        "text": "They read the base table, silently",
+        "correct": true,
+        "why": "Right. Read what the job actually did."
+      },
+      {
+        "text": "BigQuery adds the column to the view",
+        "correct": false,
+        "why": "A view's definition never changes by itself."
+      },
+      {
+        "text": "They are served from the cache",
+        "correct": false,
+        "why": "The cache needs the same query on unchanged tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-khpvdy3t",
+    "version": 1,
+    "section": "scheduled-queries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What runs a scheduled query on its timetable?",
+    "hint": "The same one that loads Google Ads data on a schedule.",
+    "choices": [
+      {
+        "text": "Cloud Scheduler",
+        "correct": false,
+        "why": "A separate product; scheduled queries do not need it."
+      },
+      {
+        "text": "The BigQuery Data Transfer Service",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "BI Engine",
+        "correct": false,
+        "why": "BI Engine is memory, not a scheduler."
+      },
+      {
+        "text": "Cloud Composer",
+        "correct": false,
+        "why": "Composer is lesson 24's, for chains of steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ek14dcj",
+    "version": 1,
+    "section": "scheduled-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the scheduled query use `MERGE` rather than `INSERT`?",
+    "hint": "The service retries and backfills.",
+    "choices": [
+      {
+        "text": "`INSERT` is not allowed in a scheduled query",
+        "correct": false,
+        "why": "It is allowed; it is just unsafe to repeat."
+      },
+      {
+        "text": "Repeating a run must not add the day twice",
+        "correct": true,
+        "why": "Right. Safe to repeat."
+      },
+      {
+        "text": "`MERGE` reads fewer bytes",
+        "correct": false,
+        "why": "Both read the same source rows."
+      },
+      {
+        "text": "Medians need `MERGE`",
+        "correct": false,
+        "why": "The median is computed by the `SELECT` inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-ze4tprjy",
+    "version": 1,
+    "section": "scheduled-queries",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Besides `@run_date`, the service fills a second parameter with the instant the run was scheduled for, `@run___`.",
+    "hint": "An underscore, then a word of four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "_time"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t2wwtyz4",
+    "version": 1,
+    "section": "scheduled-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A scheduled query fails one night and nobody set a notification. What does the dashboard show the next morning?",
+    "hint": "Where does a failed run show?",
+    "choices": [
+      {
+        "text": "An error banner",
+        "correct": false,
+        "why": "Nothing tells the dashboard the run failed."
+      },
+      {
+        "text": "The previous results, as if current",
+        "correct": true,
+        "why": "Right. Only the run history, or a notification, says otherwise."
+      },
+      {
+        "text": "Nothing, since the table is emptied",
+        "correct": false,
+        "why": "A failed run writes nothing, so the old rows stay."
+      },
+      {
+        "text": "Yesterday's base table",
+        "correct": false,
+        "why": "The dashboard reads the destination table."
+      }
+    ]
+  },
+  {
+    "id": "ex-dchv6n8t",
+    "version": 1,
+    "section": "bi-engine",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A BI Engine reservation of 5 GiB in southamerica-east1 is kept for a month. By the page's monthly price, what does it cost, in USD?",
+    "hint": "54.677 USD per GiB-month.",
+    "value": 273.39,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-1g3hvxxv",
+    "version": 1,
+    "section": "bi-engine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On demand, what does a BI Engine-accelerated query pay for the stage that reads the table?",
+    "hint": "The page has the sentence.",
+    "choices": [
+      {
+        "text": "Half the bytes",
+        "correct": false,
+        "why": "There is no half price."
+      },
+      {
+        "text": "Nothing: 0 scanned bytes",
+        "correct": true,
+        "why": "Right. The memory is paid for instead."
+      },
+      {
+        "text": "The 10 MB minimum",
+        "correct": false,
+        "why": "The page says 0 scanned bytes for that stage."
+      },
+      {
+        "text": "The same as without it",
+        "correct": false,
+        "why": "Then it would only buy speed; it buys the bytes too."
+      }
+    ]
+  },
+  {
+    "id": "ex-na9g01qf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 15's partitioned dashboard cost 2.90 USD a month at a thousand times Quitanda's size. Is 2 GiB of BI Engine worth buying for it?",
+    "hint": "Compare 2.90 with the reservation's month.",
+    "choices": [
+      {
+        "text": "Yes, since accelerated reads are free",
+        "correct": false,
+        "why": "The memory costs 109.35 a month to save 2.90."
+      },
+      {
+        "text": "No: 109.35 USD of memory to save 2.90",
+        "correct": true,
+        "why": "Right. Make the answer small first."
+      },
+      {
+        "text": "Yes, if it is on a 3-year commitment",
+        "correct": false,
+        "why": "BI Engine has no such commitment of its own."
+      },
+      {
+        "text": "No, since BI Engine only works on Standard edition",
+        "correct": false,
+        "why": "The page offers it with on demand and editions alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-6df4yw1a",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's advice for a slow, expensive dashboard in order.",
+    "hint": "Small first, fast second.",
+    "items": [
+      "Partition and cluster the base table",
+      "Keep the answer in a materialised view, or a scheduled query",
+      "Check from the job statistics that the dashboard reads it",
+      "Put BI Engine in front of the small tables, if they still read enough to matter"
+    ]
+  },
+  {
+    "id": "ex-4td54h6a",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to the job it does.",
+    "hint": "One right-hand option belongs to a lesson before this one.",
+    "pairs": [
+      {
+        "left": "Materialised view",
+        "right": "Keeps an incremental aggregate current, maintained by BigQuery"
+      },
+      {
+        "left": "Scheduled query",
+        "right": "Runs any SQL on a timetable and writes its result"
+      },
+      {
+        "left": "Smart tuning",
+        "right": "Sends a base-table query to a view that can answer it"
+      },
+      {
+        "left": "BI Engine",
+        "right": "Serves the reading stage from memory, billed by the GiB-hour"
+      }
+    ],
+    "right_distractors": [
+      "Refuses a query that would bill too much"
+    ]
+  }
+]

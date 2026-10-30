@@ -1,0 +1,1729 @@
+{
+  "ex-sv47ajph": {
+    "prompt": "O job de exportação da Quitanda grava `raw/orders/01-10-2026/orders.csv`, `raw/orders/02-10-2026/orders.csv` e assim por diante. O que dá errado quando alguém lista `raw/orders/` no fim do ano?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "O Cloud Storage recusa os hífens dentro do nome de um objeto",
+        "why": "Um nome de objeto aceita quase qualquer UTF-8 até 1.024 bytes; hífen não é problema."
+      },
+      {
+        "text": "Os dias primeiro saem juntos, já que os nomes se ordenam por bytes",
+        "why": "Isso: a listagem é lexicográfica, e uma data dia-mês-ano põe os 01 de todos os meses lado a lado."
+      },
+      {
+        "text": "As pastas são criadas fora de ordem e algumas acabam vazias",
+        "why": "Não há pastas para criar: um prefixo só existe enquanto o nome de algum objeto começa com ele."
+      },
+      {
+        "text": "Nada; o Cloud Storage lista os objetos na ordem em que foram gravados",
+        "why": "Ele lista pela ordem dos bytes dos nomes, não pela da criação."
+      }
+    ]
+  },
+  "ex-vjvj897h": {
+    "prompt": "Uma colega apaga o único objeto sob `raw/tmp/` num bucket sem namespace hierárquico. O que `gcloud storage ls gs://quitanda-raw-dev/raw/` mostra depois?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Um `raw/tmp/` vazio, até alguém apagar a pasta também",
+        "why": "Esse é o hábito de um sistema de arquivos; num namespace plano não sobra nada para apagar."
+      },
+      {
+        "text": "Um erro",
+        "why": "Listar um prefixo com que nada começa é uma resposta comum, vazia."
+      },
+      {
+        "text": "`raw/tmp/` por sete dias, a janela do soft delete",
+        "why": "O soft delete guarda os bytes do objeto apagado, não uma pasta na listagem."
+      },
+      {
+        "text": "Nenhum `raw/tmp/`",
+        "why": "Isso: uma pasta só existe enquanto o nome de algum objeto começa com ela."
+      }
+    ]
+  },
+  "ex-jfd9mfwk": {
+    "prompt": "No laboratório, o `curl` buscou um relatório privado no fake-gcs-server sem credencial nenhuma. O que isso diz sobre a mesma requisição ao Cloud Storage?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Nada, já que o emulador não confere assinatura, token nem política do IAM",
+        "why": "Isso: lá toda requisição é permitida, então uma recusa só se ensina pela documentação."
+      },
+      {
+        "text": "Que o bucket também seria público no Google Cloud",
+        "why": "Ser público depende do IAM e da prevenção de acesso público, que o emulador ignora."
+      },
+      {
+        "text": "Que o `planner-dev` concede leitura a `allUsers` por padrão",
+        "why": "Nenhum projeto concede isso por padrão, e o emulador nem leu uma política para saber."
+      },
+      {
+        "text": "Que o dono do objeto, `projectOwner-test-project`, o deixou legível",
+        "why": "Esse dono é um texto que o emulador inventa para todo objeto que guarda."
+      }
+    ]
+  },
+  "ex-d66f3bny": {
+    "prompt": "Quais destes nomes de bucket o Cloud Storage recusaria, ou o esquema deste curso rejeitaria? Marque todos os que se aplicam.",
+    "hint": "Aula 1, as regras e o esquema.",
+    "choices": [
+      {
+        "text": "`quitanda-curated-prod`",
+        "why": "Empresa, camada, ambiente: o próprio esquema."
+      },
+      {
+        "text": "`goog-quitanda`",
+        "why": "Nomes que começam com `goog` são recusados."
+      },
+      {
+        "text": "`qr`",
+        "why": "Dois caracteres; o mínimo é três."
+      },
+      {
+        "text": "`quitanda-marcos-raw`",
+        "why": "Nome de uma pessoa: pessoas mudam e o bucket fica."
+      }
+    ]
+  },
+  "ex-4qrb1fj6": {
+    "prompt": "O Coldline em São Paulo custa 0,007 USD por GiB-mês e tem estadia mínima de 90 dias. 1.024 GiB são gravados no Coldline e apagados no trigésimo dia. Qual é o armazenamento cobrado por eles, em USD com centavos, contando o mês como 30 dias?",
+    "hint": "A estadia mínima é uma conta por sair cedo."
+  },
+  "ex-xeb3c13v": {
+    "prompt": "Associe cada classe de armazenamento à sua estadia mínima.",
+    "hint": "Aula 2.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "nenhuma"
+      },
+      {
+        "left": "Nearline",
+        "right": "30 dias"
+      },
+      {
+        "left": "Coldline",
+        "right": "90 dias"
+      },
+      {
+        "left": "Archive",
+        "right": "365 dias"
+      }
+    ]
+  },
+  "ex-eyhcqt3g": {
+    "prompt": "Um cliente contesta uma entrega de oito meses atrás, e a foto do entregador está no Archive. No Cloud Storage, em quanto tempo a atendente consegue vê-la?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Depois de um pedido de restauração que leva várias horas",
+        "why": "O Cloud Storage não tem pedido de restauração nem nível de velocidade para escolher."
+      },
+      {
+        "text": "Só depois que o objeto é reescrito no Standard",
+        "why": "Nenhuma reescrita é necessária; e reescrever a partir do Archive já é cobrado como leitura."
+      },
+      {
+        "text": "Na hora, com uma taxa sobre os bytes lidos",
+        "why": "Isso: o Archive é lido como qualquer classe, na hora, e cobra 0,05 por GiB servido."
+      },
+      {
+        "text": "Nunca dentro do ano: objetos no Archive ficam lacrados por 365 dias",
+        "why": "Os 365 dias são uma estadia mínima cobrada, não uma trava de leitura."
+      }
+    ]
+  },
+  "ex-gbw74b0d": {
+    "prompt": "Um bucket com Autoclass ligado guarda dois milhões de miniaturas de 64 KiB, quase nunca lidas. Onde elas passam o ano?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "No Nearline depois de 30 dias, e depois no Coldline",
+        "why": "Esse é o caminho de um objeto de 128 KiB ou mais."
+      },
+      {
+        "text": "No Archive desde o primeiro dia, por ser a classe mais barata",
+        "why": "O Autoclass move objetos pelo tempo sem leitura, nunca direto para o Archive."
+      },
+      {
+        "text": "No Standard, sem gestão e sem pagar a taxa de gestão",
+        "why": "Isso: objetos menores que 128 KiB não são geridos nem contados."
+      },
+      {
+        "text": "Na classe que o padrão do bucket indicar",
+        "why": "Com o Autoclass ligado, não é a classe padrão que decide para onde o objeto vai."
+      }
+    ]
+  },
+  "ex-ge3p9mrd": {
+    "prompt": "Uma regra mantém uma exportação no Standard por 30 dias, no Coldline até completar 365 dias, e depois no Archive até ser apagada aos 1.825 dias. Com os preços de São Paulo (Standard 0,035, Coldline 0,007, Archive 0,003 por GiB-mês) e o mês de 30 dias, quanto custa um GiB ao longo da vida, em USD com centavos?",
+    "hint": "Dias em cada classe, vezes o preço, dividido por 30."
+  },
+  "ex-hbnvjzwc": {
+    "prompt": "A retenção (hold) que segura um objeto como a temporária e, ao ser liberada, recomeça a contagem do período de retenção do bucket se chama hold `___`.",
+    "hint": "Aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "event-based",
+          "event based",
+          "eventbased",
+          "baseado em evento",
+          "baseada em evento"
+        ]
+      }
+    ]
+  },
+  "ex-z19jq104": {
+    "prompt": "Num bucket com versionamento ligado, alguém roda `gcloud storage rm gs://quitanda-curated-prod/customers.parquet` sem geração. O que sobra?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Todas, a viva agora não atual",
+        "why": "Isso: nada foi removido, e copiar uma geração de volta a torna viva de novo."
+      },
+      {
+        "text": "Nada; o delete remove todas as gerações daquele nome",
+        "why": "Remover uma geração exige dar nome à geração."
+      },
+      {
+        "text": "Só as não atuais, já que a viva é apagada",
+        "why": "A versão viva virou não atual; os bytes dela continuam lá."
+      },
+      {
+        "text": "A versão viva, porque o IAM recusa um delete num bucket versionado",
+        "why": "O IAM não distingue os dois deletes: `storage.objects.delete` permite ambos."
+      }
+    ]
+  },
+  "ex-rsf2ycgr": {
+    "prompt": "Uma administradora do projeto quer o bucket de notas fiscais protegido contra um colega que pretende apagá-las. Que configuração faz isso?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Versionamento, com uma regra de ciclo de vida que guarda três versões",
+        "why": "Quem pode apagar um objeto vivo também pode apagar as gerações dele."
+      },
+      {
+        "text": "Uma política de retenção destravada, para ainda poder ajustá-la",
+        "why": "Quem pode alterar o bucket pode limpar antes uma política destravada."
+      },
+      {
+        "text": "Soft delete na duração máxima de 90 dias",
+        "why": "O soft delete desfaz acidentes; não é defesa contra quem age de propósito."
+      },
+      {
+        "text": "Uma política de retenção, depois travada",
+        "why": "Isso: uma política travada não pode ser removida por ninguém, nem pelo dono do projeto."
+      }
+    ]
+  },
+  "ex-68v100z6": {
+    "prompt": "A política do IAM de um bucket concede `roles/storage.objectViewer` a `allUsers`, e ninguém descobre quem adicionou. A prevenção de acesso público é então posta em `enforced`. O que acontece com a concessão?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "É apagada da política pelo Cloud Storage",
+        "why": "A concessão fica onde está; só deixa de funcionar."
+      },
+      {
+        "text": "Continua escrita na política e não concede nada",
+        "why": "Isso: a prevenção fecha o vazamento na hora, sem ninguém antes achar a concessão."
+      },
+      {
+        "text": "A configuração é recusada até alguém remover a concessão à mão",
+        "why": "A prevenção é aceita com a concessão no lugar, e esse é o valor dela no dia de um vazamento."
+      },
+      {
+        "text": "Continua valendo para objetos gravados antes da mudança",
+        "why": "A prevenção vale para todos os objetos do bucket, antigos e novos."
+      }
+    ]
+  },
+  "ex-0mke6c5p": {
+    "prompt": "Uma concessão a `allAuthenticatedUsers` num bucket de relatórios deixa quem ler os relatórios?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Qualquer pessoa com conta Google",
+        "why": "Isso: não é qualquer pessoa da Quitanda, é qualquer pessoa com conta Google."
+      },
+      {
+        "text": "Os usuários do domínio Google Workspace da Quitanda",
+        "why": "Essa é a crença por trás de um dos vazamentos clássicos; o principal não tem domínio nenhum."
+      },
+      {
+        "text": "As contas de serviço do projeto `planner-dev`",
+        "why": "As contas de serviço de um projeto são nomeadas uma a uma, ou por um grupo."
+      },
+      {
+        "text": "Qualquer um na internet",
+        "why": "Esse é o `allUsers`; este exige uma conta Google conectada."
+      }
+    ]
+  },
+  "ex-ac3bvr1v": {
+    "prompt": "Um bucket ficou público por uma semana. Os logs de Data Access nunca foram ligados para o Cloud Storage. O que os Cloud Audit Logs ainda conseguem responder?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Quais objetos foram baixados, e por quais endereços",
+        "why": "Isso é Data Access, e ele só responde se estava ligado antes do fato."
+      },
+      {
+        "text": "Quem mudou o IAM ou as configurações do bucket, e quando",
+        "why": "Isso: o Admin Activity está sempre ligado e é guardado por 400 dias; quem LEU é a pergunta que agora ninguém responde."
+      },
+      {
+        "text": "Toda leitura, já que requisições a objetos públicos são registradas por inteiro",
+        "why": "A documentação diz que requisições a objetos públicos nem entram nos logs de auditoria."
+      },
+      {
+        "text": "Nada, porque os logs de auditoria são cobrados e vêm desligados",
+        "why": "Os logs de Admin Activity vêm ligados e não são cobrados."
+      }
+    ]
+  },
+  "ex-pbaw87ck": {
+    "prompt": "Um job lista um prefixo com 5 milhões de objetos, página por página, antes de ler qualquer um deles. Quantas operações Classe A é só a listagem?",
+    "hint": "Uma listagem devolve no máximo 1.000 nomes."
+  },
+  "ex-qvcwtkks": {
+    "prompt": "Um bucket em `southamerica-east1` é copiado uma vez para um bucket em `europe-west1`: 2 TiB. Dados que saem de um bucket da América Latina para outra região custam 0,14 USD por GiB. Quanto custa a cópia, em USD com centavos?",
+    "hint": "Um TiB são 1.024 GiB."
+  },
+  "ex-q5p83grn": {
+    "prompt": "Quais destas requisições o Cloud Storage cobra como operações Classe A? Marque todas as que se aplicam.",
+    "hint": "Aula 5, Classe A e Classe B.",
+    "choices": [
+      {
+        "text": "`objects.list` de um prefixo",
+        "why": "Listar é cobrado como escrita."
+      },
+      {
+        "text": "`objects.rewrite` para o Coldline",
+        "why": "Mudar de classe é uma Classe A, no preço da classe de destino."
+      },
+      {
+        "text": "`objects.get` dos metadados",
+        "why": "Qualquer get, dos dados ou dos metadados, é Classe B."
+      },
+      {
+        "text": "`objects.delete`",
+        "why": "Apagar é gratuito."
+      }
+    ]
+  },
+  "ex-hcg28bx9": {
+    "prompt": "A Quitanda liga o Requester Pays no bucket de histórico de pedidos que um parceiro copia. O que fica na conta da Quitanda?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "A transferência de rede, já que os bytes saem do bucket da Quitanda",
+        "why": "A transferência é um dos medidores que passam para quem requisita."
+      },
+      {
+        "text": "Nada; quem requisita paga todas as linhas do bucket",
+        "why": "O armazenamento fica com a dona."
+      },
+      {
+        "text": "As operações, que pertencem ao projeto do bucket, seja quem for que peça",
+        "why": "Esse é o padrão, e é justamente o que a configuração muda."
+      },
+      {
+        "text": "O armazenamento, e eventuais cobranças por exclusão antecipada",
+        "why": "Isso: quem requisita paga as operações, a rede e as taxas de recuperação."
+      }
+    ]
+  },
+  "ex-ssck4trb": {
+    "prompt": "Uma instância Cloud SQL Enterprise em São Paulo tem 4 vCPU e 16 GiB. A vCPU-hora custa 0,062 USD e o GiB-hora de memória 0,0105. Quanto custam as vCPUs e a memória num mês de 730 horas, em USD com centavos?",
+    "hint": "Aula 6: a máquina é cobrada como dois números."
+  },
+  "ex-svz5y485": {
+    "prompt": "Uma instância Cloud SQL for SQL Server Standard tem 2 vCPU. A licença Standard custa 0,13 USD por núcleo-hora. Quanto é só a licença por hora, em USD?",
+    "hint": "A Microsoft licencia um mínimo por instância."
+  },
+  "ex-851ad0vz": {
+    "prompt": "Um script roda `gcloud sql instances create quitanda-orders --edition=enterprise --cpu=2 --memory=8GiB --region=southamerica-east1`, sem `--database-version`. Que engine a instância roda?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "PostgreSQL, a engine do servidor do laptop do curso",
+        "why": "A engine do laptop não tem voz no padrão do Cloud SQL."
+      },
+      {
+        "text": "É recusado",
+        "why": "Ele é aceito, e o padrão responde."
+      },
+      {
+        "text": "MySQL, o padrão",
+        "why": "Isso: `MYSQL_8_0`, seja qual for a intenção do time; dê nome à versão em todo comando."
+      },
+      {
+        "text": "SQL Server Express, a edição sem licença",
+        "why": "O SQL Server só é escolhido nomeando-o na string de versão."
+      }
+    ]
+  },
+  "ex-w2ev9gwj": {
+    "prompt": "No PostgreSQL do curso, `max_connections` é posto em 400 na configuração e o servidor é recarregado, não reiniciado. O que `pg_settings` mostra?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "400, aplicado pelo reload",
+        "why": "Uma configuração `postmaster` não muda com o servidor rodando."
+      },
+      {
+        "text": "Ainda 100, com `pending_restart` verdadeiro até o servidor reiniciar",
+        "why": "Isso: os slots são montados na partida, então o valor espera um reinício."
+      },
+      {
+        "text": "Um erro: o reload recusa um valor que não consegue aplicar",
+        "why": "O reload lê o arquivo, mantém o valor antigo e marca a diferença."
+      },
+      {
+        "text": "400 para sessões novas e 100 para as já abertas",
+        "why": "Assim se comporta uma configuração `user` com `SET`, não uma do servidor inteiro."
+      }
+    ]
+  },
+  "ex-zf9s8p8a": {
+    "prompt": "Numa instância regional do Cloud SQL, uma migração roda `DELETE FROM orders` sem `WHERE`. O que a alta disponibilidade faz a respeito?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Faz failover para o standby, que ainda tem as linhas",
+        "why": "O standby é mantido em sincronia, então tem a mesma tabela vazia."
+      },
+      {
+        "text": "Guarda as linhas apagadas por sete dias no standby",
+        "why": "Isso é o log da recuperação point-in-time, e ela restaura numa instância nova."
+      },
+      {
+        "text": "Recusa o comando",
+        "why": "O primário recebe todas as escritas; o standby não recebe conexão nenhuma."
+      },
+      {
+        "text": "Nada; o standby recebe o mesmo delete",
+        "why": "Isso: a alta disponibilidade protege contra uma máquina ou uma zona, não contra um engano."
+      }
+    ]
+  },
+  "ex-d11ceg8e": {
+    "prompt": "Alguém quer de volta o backup de terça e roda `gcloud sql backups restore BACKUP_ID --restore-instance=quitanda-orders` na instância de produção. O que acontece com os pedidos gravados desde terça?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Somem, porque o restore substitui todo o conteúdo da instância de destino",
+        "why": "Isso: restaure antes em outra instância, olhe, e depois decida."
+      },
+      {
+        "text": "Ficam, já que um restore cria uma instância nova ao lado da antiga",
+        "why": "Isso é a recuperação point-in-time; restaurar um backup não faz assim."
+      },
+      {
+        "text": "São mesclados com as linhas de terça pela engine",
+        "why": "Um backup é um disco num momento; nada o mescla com o que veio depois."
+      },
+      {
+        "text": "Vão para a réplica de leitura, que guarda o que o primário perde",
+        "why": "Uma réplica repete o primário; não é backup nem standby."
+      }
+    ]
+  },
+  "ex-ah7pvgba": {
+    "prompt": "Um cliente faz um pedido, e a página seguinte o lê de volta numa réplica de leitura. O que o cliente pode ver?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Um erro, já que uma réplica recusa leituras de linhas recentes",
+        "why": "Uma réplica responde toda leitura; responde a partir de onde a repetição chegou."
+      },
+      {
+        "text": "O pedido, já que as réplicas do Cloud SQL são síncronas",
+        "why": "São assíncronas: o primário faz o commit, responde, e só então envia a mudança."
+      },
+      {
+        "text": "Que ele não existe, enquanto a repetição do log não chegar até lá",
+        "why": "Isso: leituras que precisam ver as próprias escritas ficam no primário."
+      },
+      {
+        "text": "Um pedido duplicado, gravado uma vez em cada servidor",
+        "why": "Uma réplica recusa escritas; o pedido foi gravado num lugar só."
+      }
+    ]
+  },
+  "ex-nmn9kss3": {
+    "prompt": "Uma cópia feita com `pg_basebackup` sobe como réplica por streaming, e fica em recuperação, porque o diretório de dados dela tem um arquivo chamado `___`.",
+    "hint": "Aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "standby.signal"
+        ]
+      }
+    ]
+  },
+  "ex-xhnyeebq": {
+    "prompt": "O que um primário do AlloyDB grava quando uma transação faz commit?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O log e as páginas alteradas, no próprio disco persistente",
+        "why": "Esse é o PostgreSQL que você conhece, e uma instância do Cloud SQL."
+      },
+      {
+        "text": "As páginas alteradas, copiadas para o disco de cada nó de leitura",
+        "why": "Um nó de leitura lê os mesmos dados, não é uma cópia deles."
+      },
+      {
+        "text": "Só o log, na camada de armazenamento compartilhada",
+        "why": "Isso: o serviço de processamento de log transforma o log em páginas em segundo plano."
+      },
+      {
+        "text": "As linhas em formato de coluna, para o columnar engine",
+        "why": "O columnar engine é uma cópia em memória, feita a partir do armazenamento em linhas."
+      }
+    ]
+  },
+  "ex-q3t4t1vd": {
+    "prompt": "Os analistas da Quitanda precisam de mais capacidade de leitura no AlloyDB. O que muda do lado da aplicação quando o read pool passa de 2 nós para 6?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Nada; ela usa o mesmo endereço do pool",
+        "why": "Isso: é um número só, `--read-pool-node-count`."
+      },
+      {
+        "text": "Aprende os endereços de quatro réplicas novas",
+        "why": "É assim que se acrescentam réplicas do Cloud SQL, cada uma uma instância própria."
+      },
+      {
+        "text": "Espera enquanto cada nó novo copia o armazenamento do cluster",
+        "why": "Um nó de leitura não copia nada; o armazenamento é do cluster."
+      },
+      {
+        "text": "Passa as escritas para o pool, agora maior que o primário",
+        "why": "Toda escrita continua passando pelo primário único."
+      }
+    ]
+  },
+  "ex-zakdf18d": {
+    "prompt": "Em São Paulo, um nó AlloyDB de 8 vCPU e 64 GiB custa 1,98064 USD por hora, e uma instância Cloud SQL Enterprise do mesmo tamanho 1,168. Quanto o nó AlloyDB custa a mais num mês de 730 horas, em USD com centavos?",
+    "hint": "Aula 8."
+  },
+  "ex-tmevfdfa": {
+    "prompt": "Uma instância Spanner de 300 unidades de processamento existe por 10 horas. Quantas nó-horas são cobradas?",
+    "hint": "1.000 unidades de processamento são um nó."
+  },
+  "ex-ap6tagdg": {
+    "prompt": "Por que um contador que vai 1, 2, 3 é uma chave primária ruim para uma tabela movimentada no Spanner, embora seja boa no PostgreSQL?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O Spanner recusa um inteiro como primeira coluna da chave",
+        "why": "Inteiros servem; a sequência com bits invertidos os produz."
+      },
+      {
+        "text": "Um contador exige uma trava que atravessa todas as regiões",
+        "why": "O problema é onde as linhas caem, não como o número é emitido."
+      },
+      {
+        "text": "O emulador mostra os splits enchendo de forma desigual",
+        "why": "O emulador não tem splits; um hotspot nem aparece lá."
+      },
+      {
+        "text": "Toda linha nova cai no último split",
+        "why": "Isso: um hotspot limita a taxa de escrita da tabela a um servidor, por mais nós que se pague."
+      }
+    ]
+  },
+  "ex-4gkmm2pn": {
+    "prompt": "`Notes` vai ser intercalada em `Orders`, que tem a chave `(CustomerId, OrderId)` e é intercalada em `Customers`. Que chave primária o Spanner aceita para `Notes`?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "`(NoteId)`, com uma chave estrangeira para `Orders`",
+        "why": "Intercalar é posicionamento, e posicionar exige a chave da mãe na frente."
+      },
+      {
+        "text": "`(CustomerId, OrderId, NoteId)`",
+        "why": "Isso: a chave da filha repete a chave da mãe como primeiras colunas."
+      },
+      {
+        "text": "`(OrderId, NoteId)`",
+        "why": "Tem de começar com a chave inteira da mãe, `CustomerId` primeiro."
+      },
+      {
+        "text": "`(NoteId, CustomerId, OrderId)`",
+        "why": "As colunas da mãe vêm primeiro, não por último."
+      }
+    ]
+  },
+  "ex-xrzq890a": {
+    "prompt": "No emulador do Spanner, uma transação rápida foi abortada duas vezes enquanto uma lenta estava aberta, e ainda assim fez commit. Que parte do programa tornou isso inofensivo?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "A nova tentativa do `run_in_transaction`",
+        "why": "Isso: a nova tentativa é a lição a guardar; a demora é do emulador."
+      },
+      {
+        "text": "Uma leitura desatualizada, para as duas transações nunca se encontrarem",
+        "why": "As duas eram de leitura e escrita; uma leitura desatualizada não grava nada."
+      },
+      {
+        "text": "Ler o estoque antes de a transação começar",
+        "why": "Leituras ficam dentro da transação, porque a função pode rodar de novo."
+      },
+      {
+        "text": "Intercalar `Stock`",
+        "why": "Posicionamento não impede o emulador de rodar uma transação por vez."
+      }
+    ]
+  },
+  "ex-jgk0fbjb": {
+    "prompt": "Uma tela do Firestore pagina os pedidos com `offset(90).limit(10)`. Quantas leituras de documento essa página cobra?",
+    "hint": "Os documentos pulados também contam."
+  },
+  "ex-kv1awqxw": {
+    "prompt": "Uma consulta de collection group filtra `status == 'pending'` e ordena por `total_cents`. Ela respondeu no emulador. O que o Firestore no Google Cloud faz com ela, se ninguém declarou um índice?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Responde devagar, varrendo todas as coleções `orders`",
+        "why": "Não existe varredura para recorrer."
+      },
+      {
+        "text": "Recusa, com um link para o índice que falta",
+        "why": "Isso: o Firestore responde a partir de um índice que sirva exatamente, ou não responde; o emulador em modo Native não confere nenhum."
+      },
+      {
+        "text": "Responde a partir dos dois índices de campo único combinados",
+        "why": "Uma igualdade com ordenação em outro campo exige um índice composto."
+      },
+      {
+        "text": "Cria sozinho o índice composto na primeira execução",
+        "why": "Índices compostos são declarados; o Firestore não os cria por conta própria."
+      }
+    ]
+  },
+  "ex-28nxn03p": {
+    "prompt": "O cliente `c-17` tem 40 pedidos na subcoleção `customers/c-17/orders`. O que uma leitura do documento `customers/c-17` devolve?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Os campos do cliente com os 40 pedidos aninhados",
+        "why": "Esse seria o desenho em array, com o limite de 1 MiB; isto é uma subcoleção."
+      },
+      {
+        "text": "Os campos e os ids dos 40 pedidos, sem o conteúdo",
+        "why": "Até listar as subcoleções sob um documento é uma chamada separada."
+      },
+      {
+        "text": "Um erro, já que um documento com subcoleção é lido como coleção",
+        "why": "Uma leitura de documento é uma leitura de documento, seja o que for que exista sob ele."
+      },
+      {
+        "text": "Os campos do próprio cliente, e nenhum dos pedidos",
+        "why": "Isso: uma subcoleção não fica guardada dentro da mãe e não é lida com ela."
+      }
+    ]
+  },
+  "ex-w9jfgm9d": {
+    "prompt": "Um cluster Bigtable de 3 nós Enterprise roda o mês inteiro. A nó-hora custa 0,98 USD e o mês tem 730 horas. Quanto custam os nós, em USD com centavos?",
+    "hint": "Aula 11."
+  },
+  "ex-8hnse6s2": {
+    "prompt": "O `cbt set` lê o número depois do `@` de uma célula como um timestamp contado em ___ desde 1970, então a mesma data em milissegundos cai em janeiro de 1970.",
+    "hint": "Aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "microssegundos",
+          "microsegundos",
+          "microssegundo",
+          "microseconds"
+        ]
+      }
+    ]
+  },
+  "ex-9h0asagf": {
+    "prompt": "Uma família guarda o nome do cliente, gravado uma vez em agosto, e o histórico de bairros. Ela recebe `(age() > 30d || versions() > 2)`. O que acontece com o nome no fim de outubro?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Fica, porque uma versão só está abaixo do limite de duas",
+        "why": "Com `||` qualquer das regras condena a célula, e a de idade condena."
+      },
+      {
+        "text": "Fica até ser gravada uma terceira versão do nome",
+        "why": "Isso seria só a regra de versões, unida com `&&`."
+      },
+      {
+        "text": "É coletado, pela regra de idade",
+        "why": "Isso: o conserto é uma segunda família, já que a política mora na família."
+      },
+      {
+        "text": "A política é recusada",
+        "why": "As duas regras existem para serem combinadas, em união ou interseção."
+      }
+    ]
+  },
+  "ex-32y4jwb8": {
+    "prompt": "As linhas de clique têm chave `c-17#…`, `c-170#…`, `c-1700#…`. Por que a tela do suporte lê o histórico do cliente c-17 com o prefixo `c-17#` e não `c-17`?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O Bigtable recusa um prefixo que termina em dígito",
+        "why": "Quaisquer bytes formam um prefixo; o problema é o que mais eles casam."
+      },
+      {
+        "text": "Senão c-170 e c-1700 também casam",
+        "why": "Isso: na aula isso pôs centenas de linhas de outros clientes na tela do c-17."
+      },
+      {
+        "text": "O `#` faz da leitura um intervalo, que é mais barato que um prefixo",
+        "why": "Um prefixo já é um intervalo contíguo; o `#` só o faz parar no cliente certo."
+      },
+      {
+        "text": "Um filtro regex em `c-17` seria igualmente preciso",
+        "why": "Um regex na chave é um filtro: o servidor percorre todas as linhas do intervalo para aplicá-lo."
+      }
+    ]
+  },
+  "ex-92gjvd83": {
+    "prompt": "Uma instância Memorystore for Redis Standard de 8 GiB está na faixa M2, 0,103 USD por GiB-hora. Quanto custa num mês de 730 horas, em USD com centavos?",
+    "hint": "Aula 12."
+  },
+  "ex-6kvttc71": {
+    "prompt": "Associe cada produto do Memorystore à unidade em que seu preço é dado.",
+    "hint": "Aula 12.",
+    "pairs": [
+      {
+        "left": "Memorystore for Redis",
+        "right": "um GiB de capacidade provisionada, por hora"
+      },
+      {
+        "left": "Memorystore for Valkey",
+        "right": "um nó, por hora"
+      },
+      {
+        "left": "Memorystore for Memcached",
+        "right": "uma vCPU-hora mais um GiB-hora de memória"
+      }
+    ],
+    "right_distractors": [
+      "um milhão de comandos atendidos"
+    ]
+  },
+  "ex-x2kmgxgr": {
+    "prompt": "Uma instância Memorystore for Redis mantém a política de despejo padrão e enche com chaves gravadas sem time to live. O que acontece com a próxima escrita?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Dá certo, e a chave usada há mais tempo é despejada",
+        "why": "Esse é o `allkeys-lru`, que não é o padrão do Memorystore."
+      },
+      {
+        "text": "Dá certo, e o Memorystore acrescenta capacidade à instância",
+        "why": "A capacidade é a que você provisiona; nada cresce sozinho."
+      },
+      {
+        "text": "Dá certo, e as chaves mais antigas são gravadas em disco",
+        "why": "A persistência copia chaves para fora; não abre espaço na memória."
+      },
+      {
+        "text": "Falha: o `volatile-lru` só despeja chaves com TTL",
+        "why": "Isso: sem chave elegível, um cache cheio recusa a escrita."
+      }
+    ]
+  },
+  "ex-kaebyz2t": {
+    "prompt": "A página inicial em cache expira e cinquenta requisições chegam antes de ela ser refeita. Com a trava da aula, gravada com `nx=True`, quantas delas consultam o banco?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Uma; as outras esperam e leem a cópia que ela deixa",
+        "why": "Isso: `nx` só dá certo se a chave não existe, então exatamente uma requisição ganha."
+      },
+      {
+        "text": "Cinquenta, uma para cada requisição que não achou",
+        "why": "Essa é a manada sem a trava."
+      },
+      {
+        "text": "Nenhuma, já que o Redis serve a cópia expirada até ela ser refeita",
+        "why": "Uma chave expirada some: o `GET` responde `(nil)`."
+      },
+      {
+        "text": "Duas, a primeira e quem chegar depois do TTL dela",
+        "why": "Uma ganha a trava; as demais leem o que ela grava."
+      }
+    ]
+  },
+  "ex-sxkd9vqc": {
+    "prompt": "O BigQuery conta uma `STRING` como 2 bytes mais o comprimento em UTF-8. Quantos bytes lógicos tem o valor `São Paulo`?",
+    "hint": "`ã` ocupa dois bytes em UTF-8."
+  },
+  "ex-frvkdvq8": {
+    "prompt": "Uma analista no projeto `quitanda-analytics` consulta `planner-dev.quitanda.orders`. Que projeto paga pela computação da consulta?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "`planner-dev`, o projeto dono da tabela",
+        "why": "O projeto da tabela paga para guardá-la, não para que a consultem."
+      },
+      {
+        "text": "Os dois, metade cada",
+        "why": "Não há divisão; um projeto roda o job."
+      },
+      {
+        "text": "O projeto do próprio job, não o da tabela",
+        "why": "Isso: uma consulta é um job, e o projeto do job paga, seja quem for o dono das tabelas."
+      },
+      {
+        "text": "O projeto que o dataset `quitanda` indicar como pagador",
+        "why": "Um dataset tem uma localização, não um pagador para consultas alheias."
+      }
+    ]
+  },
+  "ex-jexc09sz": {
+    "prompt": "As tabelas de um dataset comprimem cerca de 2,5 para 1 e estão todas ativas. Em São Paulo, o armazenamento lógico custa 0,023 USD por GiB-mês e o físico 0,07. Qual modelo de cobrança sai mais barato?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "O físico, porque cobra os bytes comprimidos",
+        "why": "Cobra menos bytes a três vezes o preço, e 2,5 para 1 não compensa."
+      },
+      {
+        "text": "O físico, já que nele o time travel é grátis",
+        "why": "A cobrança física é justamente a que cobra time travel e fail-safe."
+      },
+      {
+        "text": "O lógico, abaixo do cruzamento em 3,04",
+        "why": "Isso: 0,07 ÷ 0,023 é o cruzamento, e 2,5 fica abaixo dele."
+      },
+      {
+        "text": "Tanto faz; custam o mesmo",
+        "why": "Eles se encontram numa razão só, e 2,5 não é ela."
+      }
+    ]
+  },
+  "ex-z5qvhjc6": {
+    "prompt": "Sob demanda em `southamerica-east1`, o BigQuery cobra 11,25 USD por TiB. Uma consulta lê 3 TiB num mês que já passou do TiB grátis. Quanto custa, em USD com centavos?",
+    "hint": "Aula 14."
+  },
+  "ex-9es8pt9y": {
+    "prompt": "Uma slot-hora Enterprise custa 0,093 USD em São Paulo e o sob demanda custa 11,25 USD por TiB. Com cerca de quantas slot-horas por TiB lido uma carga custa o mesmo de um jeito ou de outro? Dê um número inteiro.",
+    "hint": "Aula 14."
+  },
+  "ex-zbewvxy9": {
+    "prompt": "Quais destes impedem uma consulta sob demanda de gerar a conta, em vez de só avisar dela? Marque todos os que se aplicam.",
+    "hint": "Aula 14, proteções.",
+    "choices": [
+      {
+        "text": "Uma cota personalizada de uso de consultas por dia por usuário",
+        "why": "Passado o limite, as consultas daquele usuário são recusadas no dia."
+      },
+      {
+        "text": "`maximumBytesBilled` na consulta",
+        "why": "Falha antes de ler qualquer coisa, e não custa nada."
+      },
+      {
+        "text": "Um orçamento do Cloud Billing em 80% do valor do mês",
+        "why": "Um orçamento manda um alerta; não para nada."
+      },
+      {
+        "text": "`LIMIT 10` no fim da consulta",
+        "why": "Os bytes das colunas lidas são cobrados seja qual for o limite."
+      }
+    ]
+  },
+  "ex-395h3dkb": {
+    "prompt": "`SELECT * FROM quitanda.clicks LIMIT 10` roda sob demanda numa tabela de 2 TiB sem partições. Quanto é cobrado?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Tudo, cerca de 2 TiB",
+        "why": "Isso: o `LIMIT` não reduz a conta."
+      },
+      {
+        "text": "O mínimo de 10 MB, já que devolve dez linhas",
+        "why": "O mínimo é um piso, e esta consulta fica muito acima dele."
+      },
+      {
+        "text": "As dez linhas",
+        "why": "O que se cobra é o que foi lido, não o que voltou."
+      },
+      {
+        "text": "Nada, porque uma prévia de tabela é grátis",
+        "why": "Uma consulta com `LIMIT` é uma consulta comum e é cobrada como tal."
+      }
+    ]
+  },
+  "ex-p2bkwy70": {
+    "prompt": "`quitanda.orders` é particionada por `dt`. Quais destes filtros deixam o BigQuery descartar partições antes de ler qualquer coisa? Marque todos os que se aplicam.",
+    "hint": "Compare a coluna de particionamento, pura, com constantes.",
+    "choices": [
+      {
+        "text": "`WHERE dt BETWEEN DATE '2026-09-01' AND DATE '2026-09-07'`",
+        "why": "A coluna pura comparada com constantes."
+      },
+      {
+        "text": "`WHERE dt = DATE '2026-09-29'`",
+        "why": "A mesma forma, um dia."
+      },
+      {
+        "text": "`WHERE dt + INTERVAL 1 DAY = DATE '2026-09-30'`",
+        "why": "A coluna está dentro de uma expressão."
+      },
+      {
+        "text": "`WHERE created_at >= TIMESTAMP '2026-09-29'`",
+        "why": "Guarda o mesmo dia, e não é a coluna de particionamento."
+      }
+    ]
+  },
+  "ex-mhf0891w": {
+    "prompt": "`require_partition_filter` está ligado em `quitanda.orders`, e uma analista esquece a data numa consulta. Quanto custa?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "O mínimo de 10 MB, cobrado pela recusa",
+        "why": "Uma consulta que falha não custa nada."
+      },
+      {
+        "text": "A tabela inteira, com um aviso no job",
+        "why": "A opção recusa; não avisa."
+      },
+      {
+        "text": "Só a partição mais recente, que o BigQuery lê por padrão",
+        "why": "Nenhuma partição é escolhida por ela; a consulta falha."
+      },
+      {
+        "text": "Nada; o BigQuery recusa a consulta antes de ler qualquer coisa",
+        "why": "Isso: a proteção mais barata do curso, para esse erro específico."
+      }
+    ]
+  },
+  "ex-7kwx09pa": {
+    "prompt": "O dry run de uma consulta numa tabela clusterizada por `store_id`, filtrando `store_id = 7`, informa 4 GiB. Quanto a consulta acaba cobrando?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Exatamente 4 GiB, já que o dry run lê os metadados de cluster",
+        "why": "O dry run não enxerga os blocos que o filtro de cluster vai pular."
+      },
+      {
+        "text": "No máximo 4 GiB, menos se blocos forem pulados",
+        "why": "Isso: a estimativa é um teto calculado antes de pular qualquer bloco."
+      },
+      {
+        "text": "Mais de 4 GiB, porque a reclusterização é cobrada da consulta",
+        "why": "A reclusterização é automática, em segundo plano, e não usa slots nem bytes do projeto."
+      },
+      {
+        "text": "A tabela inteira, já que o cluster só ajuda com partições",
+        "why": "O cluster funciona dentro de uma partição ou sem nenhuma."
+      }
+    ]
+  },
+  "ex-w6g0ejwr": {
+    "prompt": "Os relatórios da Quitanda perguntam sobre dias, semanas e meses, e um painel pergunta sobre o pico da noite. Por que não particionar os pedidos por hora?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Consultas largas abrem dezesseis vezes mais arquivos",
+        "why": "Isso: particione pela unidade mais grossa que os filtros comuns ainda podam bem; clusterize para a hora."
+      },
+      {
+        "text": "O BigQuery não tem particionamento por hora",
+        "why": "Partições por tempo podem ser por hora; o custo está em outro lugar."
+      },
+      {
+        "text": "Uma partição por hora é cobrada com um mínimo próprio de 10 MB",
+        "why": "O mínimo é por tabela referenciada e por consulta, não por partição."
+      },
+      {
+        "text": "A hora não é uma coluna em que os painéis pudessem filtrar",
+        "why": "Poderia ser; a questão é o que o corte mais fino custa a todas as outras consultas."
+      }
+    ]
+  },
+  "ex-v4wheftv": {
+    "prompt": "Uma consulta processa 25.000.000 bytes. O BigQuery arredonda a consulta para o próximo MB de 1.048.576 bytes. Quantos bytes são cobrados?",
+    "hint": "Aula 16."
+  },
+  "ex-aw8h80qh": {
+    "prompt": "Um plano do DuckDB se lê de ___, onde a tabela é lida, até o topo, por onde a resposta sai.",
+    "hint": "Aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "baixo",
+          "fundo"
+        ]
+      }
+    ]
+  },
+  "ex-d05q10nn": {
+    "prompt": "As vendas de setembro por bairro selecionam `district` e `total_cents` e só citam `dt` no `WHERE`. A `dt` entra nos bytes cobrados?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Não, porque uma coluna de filtro não é devolvida",
+        "why": "A cobrança segue o que é lido, e o filtro precisa lê-la."
+      },
+      {
+        "text": "Sim, 8 bytes por linha nos dias que o filtro mantém",
+        "why": "Isso: toda coluna referenciada conta, onde quer que seja referenciada."
+      },
+      {
+        "text": "Não, porque a coluna de particionamento é grátis sob demanda",
+        "why": "Não custa nada em disco naqueles arquivos Parquet, e a largura inteira na conta."
+      },
+      {
+        "text": "Só nos dias que o filtro descarta",
+        "why": "É o contrário: os dias mantidos são os lidos."
+      }
+    ]
+  },
+  "ex-q7p2vemn": {
+    "prompt": "No execution graph do BigQuery, um estágio mostra um tempo máximo de computação muito acima da média. Para onde isso aponta?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Disputa por slots, a consulta esperando slots",
+        "why": "Isso aparece como espera longa com pouca leitura ou computação."
+      },
+      {
+        "text": "Uma conta maior, já que estágios lentos leem mais bytes",
+        "why": "Sob demanda a conta foi fixada antes de o grafo existir, por colunas e partições."
+      },
+      {
+        "text": "Shuffle derramando em disco por falta de memória",
+        "why": "O derramamento aparece num número próprio, os bytes de shuffle derramados."
+      },
+      {
+        "text": "Skew: um worker recebeu muito mais que os outros",
+        "why": "Isso: o estágio termina quando o worker mais lento termina."
+      }
+    ]
+  },
+  "ex-vy3pa3cw": {
+    "prompt": "Uma analista deve consultar os arquivos de pedidos de um bucket pelo BigQuery, sem poder ler o bucket por nenhuma outra ferramenta. O que torna isso possível?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Uma tabela externa simples, com leitura no bucket",
+        "why": "Isso concede o bucket a ela, todo arquivo dele, por qualquer ferramenta."
+      },
+      {
+        "text": "Uma object table sobre o bucket",
+        "why": "Uma object table lista metadados, uma linha por objeto, não as linhas dos pedidos."
+      },
+      {
+        "text": "Uma tabela BigLake, sobre uma conexão",
+        "why": "Isso: o BigQuery lê os arquivos em nome dela, então ela não precisa de permissão no bucket."
+      },
+      {
+        "text": "Prevenção de acesso público no bucket",
+        "why": "Isso barra concessões a `allUsers`; não dá ao BigQuery nada por onde ler."
+      }
+    ]
+  },
+  "ex-2y28p785": {
+    "prompt": "Uma tabela BigLake guarda os metadados em cache com `max_staleness` de quatro horas. O arquivo de um dia novo chega às 09:00. O que uma consulta às 09:30 que usa o cache pode ver?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "O arquivo novo, já que uma escrita invalida o cache",
+        "why": "Uma escrita no bucket não avisa o BigQuery; o atraso é o que se permite."
+      },
+      {
+        "text": "O que já havia antes, sem o que chegou às 09:00",
+        "why": "Isso: o preço do cache é a tabela poder ficar atrás do bucket."
+      },
+      {
+        "text": "Um erro, até atualizar",
+        "why": "Dentro do atraso permitido o cache é aceito, e a consulta roda."
+      },
+      {
+        "text": "Metade do arquivo novo, os row groups já listados",
+        "why": "O cache guarda arquivos e seus rodapés; um arquivo está nele ou não."
+      }
+    ]
+  },
+  "ex-ypmj7haa": {
+    "prompt": "A Quitanda deixa os arquivos de pedidos no bucket e os consulta como tabela externa. Do que isso abre mão em relação a uma tabela nativa?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "A poda de partições, que exige os dados dentro do BigQuery",
+        "why": "Pastas `dt=` no estilo Hive também são lidas como coluna de partição numa tabela externa."
+      },
+      {
+        "text": "A cobrança sob demanda",
+        "why": "O sob demanda cobra uma consulta externa por TiB como qualquer outra."
+      },
+      {
+        "text": "Uma cópia única dos dados, já que os arquivos também são carregados",
+        "why": "Os arquivos SÃO a tabela; nada é guardado duas vezes."
+      },
+      {
+        "text": "O cluster, e a tarifa de longo prazo",
+        "why": "Isso: o BigQuery não organiza os arquivos, e eles são cobrados como objetos do Cloud Storage."
+      }
+    ]
+  },
+  "ex-nyxfpee5": {
+    "prompt": "O BI Engine em `southamerica-east1` custa 0,0749 USD por GiB-hora. Quanto custa uma reserva de 5 GiB num mês de 730 horas, em USD com centavos?",
+    "hint": "Aula 18."
+  },
+  "ex-1b25f25x": {
+    "prompt": "A consulta de um painel pede algo que `daily_sales_mv` não sabe responder, então o smart tuning não consegue reescrevê-la. O que acontece?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Roda na tabela base e é cobrada como tal, sem aviso nenhum",
+        "why": "Isso: não há erro nem linha na conta; só custa o que teria custado."
+      },
+      {
+        "text": "Falha, com uma mensagem que cita a view",
+        "why": "Nada falha; é por isso que o desvio passa despercebido."
+      },
+      {
+        "text": "O BigQuery atualiza a view para que ela possa responder",
+        "why": "Uma atualização põe a view em dia; não muda o que ela sabe responder."
+      },
+      {
+        "text": "Lê a view e devolve as linhas mais próximas que ela tem",
+        "why": "A reescrita só acontece quando tudo o que a consulta precisa está na view."
+      }
+    ]
+  },
+  "ex-3m311z4s": {
+    "prompt": "A Quitanda quer a mediana do valor dos pedidos por bairro em cada dia, pronta para a manhã. Por que uma consulta agendada e não uma visão materializada?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Uma visão materializada não pode ser particionada por `dt`",
+        "why": "A view da aula é particionada pela mesma coluna da tabela base."
+      },
+      {
+        "text": "Uma consulta agendada é grátis, enquanto a atualização da view é cobrada",
+        "why": "Uma consulta agendada é cobrada como a consulta que roda."
+      },
+      {
+        "text": "Uma mediana não se mantém combinando partes guardadas com linhas novas",
+        "why": "Isso: as medianas de dois dias não dão a mediana dos dois, então ela é recalculada num horário."
+      },
+      {
+        "text": "Visões materializadas só se atualizam uma vez por semana",
+        "why": "Elas se atualizam depois que a tabela base muda, não mais que o intervalo definido."
+      }
+    ]
+  },
+  "ex-4eskeswm": {
+    "prompt": "Sob demanda, o BI Engine acelera a consulta de um painel. Quanto é cobrado o estágio que lê os dados da tabela?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Os bytes de sempre, com tarifa reduzida",
+        "why": "A página de preços diz que esses estágios são cobrados por 0 bytes lidos."
+      },
+      {
+        "text": "O piso de 10 MB",
+        "why": "O estágio acelerado não é cobrado em nada."
+      },
+      {
+        "text": "Zero bytes lidos",
+        "why": "Isso: o estágio servido pelo BI Engine é grátis; a memória se paga como reserva."
+      },
+      {
+        "text": "Os slots que o estágio usou, ao preço da edição Standard",
+        "why": "Sob demanda não há slot-horas para cobrar."
+      }
+    ]
+  },
+  "ex-bksz45vj": {
+    "prompt": "O filtro de uma assinatura do Pub/Sub só consegue selecionar mensagens pelos ___, já que o Pub/Sub nunca interpreta o `data` de uma mensagem.",
+    "hint": "Aula 19.",
+    "blanks": [
+      {
+        "accept": [
+          "atributos",
+          "atributo",
+          "attributes"
+        ]
+      }
+    ]
+  },
+  "ex-12k5kkfv": {
+    "prompt": "Quais destas coisas o emulador do Pub/Sub fez do jeito que o Google documenta o serviço? Marque todas as que se aplicam.",
+    "hint": "Aula 19, o emulador contra o serviço.",
+    "choices": [
+      {
+        "text": "Dar a cada assinatura sua própria cópia, e à `billing` só o que o filtro dela selecionou",
+        "why": "Fan-out e filtros se comportaram como os do serviço."
+      },
+      {
+        "text": "Encaminhar uma mensagem ao tópico de dead letter depois de cinco tentativas",
+        "why": "Com os próprios atributos `CloudPubSubDeadLetterSource…` do serviço."
+      },
+      {
+        "text": "Esperar de 20 a 60 segundos antes de reentregar, como a política de retry pedia",
+        "why": "Ele guardou a política e reentregou na hora."
+      },
+      {
+        "text": "Apagar mensagens não confirmadas quando a retenção de dez minutos acabou",
+        "why": "Ele conferiu os limites e não apagou nada por eles."
+      }
+    ]
+  },
+  "ex-1dja1d0w": {
+    "prompt": "Um time cria a assinatura `fraud` em `app-events`, um tópico sem retenção própria, depois de uma manhã de eventos. O que a `fraud` recebe?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Só o que for publicado depois que ela existe",
+        "why": "Isso: o tópico não guardou nenhum dos eventos da manhã para ninguém."
+      },
+      {
+        "text": "Os últimos sete dias do tópico",
+        "why": "Sete dias é a retenção da assinatura para o próprio backlog, não o histórico do tópico."
+      },
+      {
+        "text": "Os eventos da manhã ainda não confirmados pelas outras assinaturas",
+        "why": "Cada assinatura guarda as próprias cópias; nada passa de uma para outra."
+      },
+      {
+        "text": "Todos os eventos desde a criação do tópico",
+        "why": "Um tópico não é uma fila, e não guarda nada para uma assinante que não existia."
+      }
+    ]
+  },
+  "ex-5ppxqdfn": {
+    "prompt": "Numa assinatura com ordenação ligada, o leitor dá nack em `o-102 placed` sem ter confirmado nada mais daquela chave. No Google, o que ele encontra em seguida para a chave `o-102`?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Primeiro as mensagens posteriores da chave, depois `o-102 placed`",
+        "why": "Isso foi o que o emulador fez, e não é o que o Google documenta."
+      },
+      {
+        "text": "Só `o-102 placed`, com a chave pausada depois dela",
+        "why": "A pausa da chave é a reação do publisher a uma publicação que falhou, não a um nack do leitor."
+      },
+      {
+        "text": "As mensagens posteriores, enquanto `o-102 placed` vai para o tópico de dead letter",
+        "why": "Uma mensagem só vai para dead letter depois do número definido de tentativas, cinco no mínimo."
+      },
+      {
+        "text": "`o-102 placed` de novo, e depois as que vieram atrás dela",
+        "why": "Isso: a mensagem volta junto com todas as posteriores da chave, em ordem."
+      }
+    ]
+  },
+  "ex-sq80dwvv": {
+    "prompt": "Associe cada jeito de tratar uma mensagem ao que uma queda no meio dele provoca.",
+    "hint": "Aula 20.",
+    "pairs": [
+      {
+        "left": "ack, depois o trabalho",
+        "right": "a mensagem se perde, em silêncio"
+      },
+      {
+        "left": "o trabalho, depois o ack",
+        "right": "o trabalho é refeito depois da reentrega"
+      },
+      {
+        "left": "o trabalho e o registro da chave da mensagem numa transação, depois o ack",
+        "right": "a reentrega é recusada, e o efeito acontece uma vez"
+      }
+    ],
+    "right_distractors": [
+      "o Pub/Sub volta o offset do consumidor"
+    ]
+  },
+  "ex-1j6t8z8t": {
+    "prompt": "O consumidor de pagamentos da Quitanda registra cada id de mensagem em `processed` na mesma transação do total. O publisher também repete uma publicação uma vez. Quais duplicatas passam?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "As reentregas depois da queda do consumidor",
+        "why": "Essas mantêm os ids de mensagem, e a tabela as recusa."
+      },
+      {
+        "text": "A cópia reenviada na origem, com id novo",
+        "why": "Isso: deduplique pelo id do pedido, a chave de idempotência do próprio evento, para pegar as duas."
+      },
+      {
+        "text": "Nenhuma; um id de mensagem identifica um pagamento",
+        "why": "Duas publicações de um pagamento são dois ids para o Pub/Sub."
+      },
+      {
+        "text": "As duas, já que a tabela é gravada depois do ack",
+        "why": "Ela é gravada com o total, antes do ack, e por isso as reentregas são pegas."
+      }
+    ]
+  },
+  "ex-621819f5": {
+    "prompt": "Uma assinatura tem exactly-once delivery ligado. A repetição de um publisher põe um pagamento duas vezes no tópico. O que o consumidor recebe?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "As duas mensagens",
+        "why": "Isso: dois ids, um pagamento, os dois entregues; o consumidor ainda precisa deduplicar."
+      },
+      {
+        "text": "Uma mensagem, a configuração tendo removido a cópia",
+        "why": "Ela não compara corpos de mensagem."
+      },
+      {
+        "text": "Uma, a menos que o consumidor esteja em outra região",
+        "why": "A região muda a promessa sobre reentrega, e essa promessa não trata de cópias."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Um tópico aceita toda publicação; para ele são dois eventos."
+      }
+    ]
+  },
+  "ex-j1zwg1sv": {
+    "prompt": "O Dataflow cobra o shuffle em lote depois de um ajuste: os primeiros 250 GiB de um job a um quarto do tamanho, os 4.870 GiB seguintes pela metade. Um job embaralha 400 GiB. Quantos GiB são cobrados?",
+    "hint": "Aula 21."
+  },
+  "ex-e5zd62hj": {
+    "prompt": "Num programa Beam, o Python chega à linha `parsed = lines | 'Parse' >> beam.FlatMap(parse)`. O que acontece naquele momento?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Cada linha da entrada é interpretada e guardada em `parsed`",
+        "why": "A PCollection vai conter a saída quando um runner executar o pipeline."
+      },
+      {
+        "text": "Um passo entra no grafo, e mais nada",
+        "why": "Isso: um programa Beam monta o grafo primeiro e o runner o executa depois."
+      },
+      {
+        "text": "O primeiro elemento é interpretado, para conferir que a função funciona",
+        "why": "Nenhum elemento é tocado enquanto o grafo é montado."
+      },
+      {
+        "text": "O passo vai para o Dataflow",
+        "why": "O grafo só vai para um runner quando o pipeline é executado."
+      }
+    ]
+  },
+  "ex-nvacqdwe": {
+    "prompt": "Um pipeline que lê uma assinatura do Pub/Sub agrupa por bairro sem janela, e o Beam o recusa antes de ler uma mensagem. Por quê?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "O DirectRunner nem consegue ler o Pub/Sub",
+        "why": "Com janela de um minuto o mesmo runner leu a assinatura e deu os totais da noite."
+      },
+      {
+        "text": "Uma assinatura precisa ser compartilhada antes de ser agrupada",
+        "why": "Um pipeline deve ter assinatura própria; compartilhar dividiria pela metade o que ele recebe."
+      },
+      {
+        "text": "Agrupar por chave só é permitido em lote",
+        "why": "O meio do programa rodou sem mudança nos dois; só faltava a janela."
+      },
+      {
+        "text": "A janela global nunca termina, e nunca emite",
+        "why": "Isso: uma coleção ilimitada precisa de janela, ou de um trigger que dispare antes do fim."
+      }
+    ]
+  },
+  "ex-vdkkmkfj": {
+    "prompt": "Um job de streaming com janelas de um minuto precisa parar de vez às 19:00:40. O que o drain preserva e o cancel perde?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "O estado do job, para uma versão nova do código retomar",
+        "why": "Isso é o `--update`, que mantém o job rodando."
+      },
+      {
+        "text": "As mensagens não confirmadas, que o drain lê até o fim do backlog",
+        "why": "O drain para de ler na hora."
+      },
+      {
+        "text": "Os totais já contados no minuto aberto, emitidos quando a janela fecha",
+        "why": "Isso: o drain para de ler e deixa toda janela aberta fechar e emitir."
+      },
+      {
+        "text": "Nada; os dois encerram o job do mesmo jeito",
+        "why": "O cancel joga fora as janelas ainda não fechadas."
+      }
+    ]
+  },
+  "ex-67hfaebv": {
+    "prompt": "Uma janela deslizante de 30 minutos começa a cada 5 minutos. Em quantas janelas cada elemento é colocado?",
+    "hint": "Aula 22."
+  },
+  "ex-ac0sgt0h": {
+    "prompt": "Janelas fixas de cinco minutos têm allowed lateness de 300 segundos. Um pedido feito às 19:03 chega quando a watermark está em 19:12. O que acontece com ele?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "É emitido num pane `LATE` da janela das 19:00",
+        "why": "Isso exige a watermark antes de 19:10, o fim da janela mais o atraso permitido."
+      },
+      {
+        "text": "Some sem aviso, já que o estado foi apagado às 19:10",
+        "why": "Isso: o atraso é medido contra a watermark, e nada avisa da perda."
+      },
+      {
+        "text": "É levado para a janela das 19:10, a que está aberta agora",
+        "why": "Um elemento pertence à janela do seu tempo de evento, ou a nenhuma."
+      },
+      {
+        "text": "O pipeline falha com um erro que cita o pedido",
+        "why": "Nenhum passo falha e nenhum erro é registrado para dados atrasados descartados."
+      }
+    ]
+  },
+  "ex-fegyrsjj": {
+    "prompt": "Um pipeline emite panes antecipados e grava cada um como uma linha por janela e bairro, sobrescrevendo a linha a cada vez. Que modo de acumulação esse destino exige?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Descartando, para que cada pane seja só o que chegou desde o anterior",
+        "why": "Sobrescrever com uma parte deixaria a linha só com a última parte."
+      },
+      {
+        "text": "Qualquer um, já que o pane no horário conserta a linha",
+        "why": "No modo descartando o pane no horário pode ser 0,00, e a linha diria isso."
+      },
+      {
+        "text": "Nenhum; panes antecipados não podem ser gravados numa tabela",
+        "why": "Uma linha por janela numa tabela é o próprio exemplo da aula desse destino."
+      },
+      {
+        "text": "Acumulativo, para que cada pane seja a janela inteira até ali",
+        "why": "Isso: o último pane gravado é a resposta, e um pane entregue duas vezes não faz mal."
+      }
+    ]
+  },
+  "ex-66a7mmtd": {
+    "prompt": "As sessões têm intervalo de cinco minutos. O cliente `c-30` faz pedidos às 20:00:00 e às 20:04:30, e não pede mais naquela noite. Que sessão o pipeline monta?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Uma, de 20:00:00 a 20:09:30",
+        "why": "Isso: os pedidos têm menos de cinco minutos entre si, e a sessão acaba no último mais o intervalo."
+      },
+      {
+        "text": "Uma, de 20:00:00 a 20:04:30",
+        "why": "A sessão continua depois do último elemento pelo tamanho do intervalo."
+      },
+      {
+        "text": "Duas, uma para cada pedido",
+        "why": "Só seriam duas se estivessem a mais de cinco minutos uma da outra."
+      },
+      {
+        "text": "Uma, de 20:00:00 a 20:05:00, alinhada ao relógio",
+        "why": "Alinhar ao relógio é o que janelas fixas fazem; uma sessão é feita a partir dos dados."
+      }
+    ]
+  },
+  "ex-ten7zmk2": {
+    "prompt": "A taxa de gestão do Dataproc é 0,010 USD por vCPU-hora, sobre cada vCPU do master e dos dois tipos de worker. Um cluster tem um master e 10 workers, todos `n2-standard-4` (4 vCPU). Qual é a taxa por uma hora, em USD?",
+    "hint": "Aula 23."
+  },
+  "ex-s8vk2s96": {
+    "prompt": "Um cluster Dataproc vai rodar um lote noturno grande com VMs Spot, para sair barato. Que máquinas podem ser Spot sem arriscar mais do que tempo?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "Os workers primários, já que o Dataproc rebalanceia os blocos deles",
+        "why": "Perder um primário perde blocos do HDFS; primários devem ser VMs padrão."
+      },
+      {
+        "text": "O master, que só coordena",
+        "why": "Perder o master encerra o cluster."
+      },
+      {
+        "text": "Os workers secundários, já que não guardam HDFS",
+        "why": "Isso: as tarefas de um secundário perdido rodam de novo em outro lugar; só se perde tempo."
+      },
+      {
+        "text": "Todas as máquinas, com um master de alta disponibilidade",
+        "why": "A alta disponibilidade protege o master; os primários continuam guardando HDFS."
+      }
+    ]
+  },
+  "ex-5x2hjp5z": {
+    "prompt": "Um cluster que roda por semanas tem workers secundários. Por que escolher Spot e não preemptível para eles?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "VMs Spot nunca são retomadas pelo Google",
+        "why": "São capacidade ociosa e são retomadas quando o Google precisa."
+      },
+      {
+        "text": "VMs Spot podem guardar blocos do HDFS, e as preemptíveis não",
+        "why": "Nenhum tipo de secundário guarda HDFS; é isso que os faz secundários."
+      },
+      {
+        "text": "A preemptível para em até 24 horas; a Spot não",
+        "why": "Isso: as duas podem ser retomadas com cerca de trinta segundos de aviso, mas só uma tem fim diário."
+      },
+      {
+        "text": "VMs preemptíveis custam o mesmo que as padrão",
+        "why": "As duas são vendidas abaixo do preço padrão."
+      }
+    ]
+  },
+  "ex-f8ceamgb": {
+    "prompt": "Um ambiente Composer 2 pequeno paga uma taxa de ambiente de 0,56 USD por hora, além dos componentes. Quanto é só essa taxa num mês de 730 horas, em USD com centavos?",
+    "hint": "Aula 24."
+  },
+  "ex-1wncgmet": {
+    "prompt": "Um arquivo de DAG novo posto na pasta de DAGs do Airflow é registrado com `is_paused` verdadeiro: a DAG começa ___, e não agenda nada até alguém ligá-la.",
+    "hint": "Aula 24.",
+    "blanks": [
+      {
+        "accept": [
+          "pausada",
+          "pausado",
+          "paused"
+        ]
+      }
+    ]
+  },
+  "ex-0htbgwgn": {
+    "prompt": "Um job do Cloud Scheduler é criado com `--schedule='0 3 * * *'` e sem `--time-zone`. Quando ele dispara, no horário de São Paulo?",
+    "hint": "Aula 24.",
+    "choices": [
+      {
+        "text": "À meia-noite, já que o fuso padrão é `Etc/UTC`",
+        "why": "Isso: e um workflow que calcula \"ontem\" pelo relógio rodaria então três horas antes."
+      },
+      {
+        "text": "Às três da manhã, a hora da própria região",
+        "why": "O fuso do job é configuração dele, não da região."
+      },
+      {
+        "text": "Às seis da manhã, três horas depois do UTC",
+        "why": "São Paulo está três horas atrás do UTC, não à frente."
+      },
+      {
+        "text": "Nunca, já que o comando é recusado sem fuso",
+        "why": "Ele é aceito, com o padrão."
+      }
+    ]
+  },
+  "ex-fmq4m7tc": {
+    "prompt": "No padrão do Airflow 3, `schedule='0 3 * * *'` cria uma execução às 03:00 de 30 de outubro. Por que a DAG da Quitanda passa ao job `macros.ds_add(ds, -1)`?",
+    "hint": "Aula 24.",
+    "choices": [
+      {
+        "text": "O `ds` é o 29, e o job quer o 28 para ter certeza de que está completo",
+        "why": "Nesse timetable o `ds` é o próprio dia da execução."
+      },
+      {
+        "text": "O `ds` está em UTC, e um dia a menos o converte para São Paulo",
+        "why": "Um fuso desloca horas, não um dia inteiro."
+      },
+      {
+        "text": "Senão um backfill processaria cada noite duas vezes",
+        "why": "Um backfill cria uma execução por data; o ajuste é sobre a qual data uma execução se refere."
+      },
+      {
+        "text": "O `ds` dessa execução é o dia 30, não o 29",
+        "why": "Isso: o `CronTriggerTimetable` faz da data lógica o momento em que a execução dispara."
+      }
+    ]
+  },
+  "ex-g0fs187c": {
+    "prompt": "A captura de mudanças do Datastream em São Paulo custa 3,176 USD por GiB nos primeiros 2.500 GiB do mês e 2,382 nos 2.500 seguintes. Um mês processa 4.000 GiB de mudanças. Quanto custa, em USD inteiros?",
+    "hint": "Cada faixa só cobra o que cai dentro dela."
+  },
+  "ex-fwcp45c1": {
+    "prompt": "Ponha em ordem os passos da virada do PostgreSQL antigo para a cópia migrada.",
+    "hint": "Aula 25.",
+    "items": [
+      "Rodar o job até o backfill acabar e o atraso ser de poucos segundos",
+      "Parar quem escreve na origem",
+      "Esperar o atraso chegar a zero e as contagens e totais baterem",
+      "Promover o destino e apontar as aplicações para ele",
+      "Remover o slot de replicação na origem, quando o job tiver acabado"
+    ]
+  },
+  "ex-hfmkcezh": {
+    "prompt": "Um stream do Datastream foi apagado e o slot de replicação dele no PostgreSQL ficou para trás. O que acontece na origem nas semanas seguintes?",
+    "hint": "Aula 25.",
+    "choices": [
+      {
+        "text": "Nada, já que o PostgreSQL remove um slot sem leitor",
+        "why": "O PostgreSQL mantém um slot até alguém removê-lo."
+      },
+      {
+        "text": "O slot segura o log do marcador em diante, e o disco enche",
+        "why": "Isso: remova o slot quando o leitor dele se for, ou limite com `max_slot_wal_keep_size`."
+      },
+      {
+        "text": "As escritas são recusadas até um leitor se conectar ao slot",
+        "why": "As escritas continuam; o que cresce é o log retido."
+      },
+      {
+        "text": "O Datastream é cobrado pelas mudanças que o slot guarda",
+        "why": "O Datastream cobra o que processa, e nada por um stream parado."
+      }
+    ]
+  },
+  "ex-sq7fk9na": {
+    "prompt": "Num slot do PostgreSQL, um leitor chama `pg_logical_slot_peek_changes` e depois `pg_logical_slot_get_changes`. O que um segundo `get` logo em seguida devolve?",
+    "hint": "Aula 25.",
+    "choices": [
+      {
+        "text": "Nada, porque o `get` moveu o marcador do slot para depois daquelas mudanças",
+        "why": "Isso: o `peek` lê e deixa; o `get` lê e move o marcador."
+      },
+      {
+        "text": "As mesmas mudanças de novo, já que `get` e `peek` as deixam",
+        "why": "Só o `peek` as deixa."
+      },
+      {
+        "text": "As mudanças que o `peek` leu, já que o `peek` as reservou para a próxima chamada",
+        "why": "O `peek` não reserva nada; não move marcador nenhum."
+      },
+      {
+        "text": "Um erro, já que um slot só pode ser lido uma vez",
+        "why": "Ele pode ser lido quantas vezes for; só não tem mais nada."
+      }
+    ]
+  },
+  "ex-gyn7rk8s": {
+    "prompt": "A Quitanda põe o bucket bruto numa zona raw do lake `sales`, e dá aos analistas só a zona curated. Uma colega ainda tem `storage.objects.get` no bucket bruto pelo IAM. Ela consegue lê-lo?",
+    "hint": "Aula 26.",
+    "choices": [
+      {
+        "text": "Não; um bucket numa zona só responde às concessões da zona",
+        "why": "O IAM do bucket continua decidindo quem o lê."
+      },
+      {
+        "text": "Sim; a zona não é uma fronteira",
+        "why": "Isso: o que um lake não compra é uma fronteira."
+      },
+      {
+        "text": "Não, após a descoberta rodar",
+        "why": "A descoberta lê os arquivos para publicar tabelas; não fecha acesso nenhum."
+      },
+      {
+        "text": "Só pelo BigQuery, já que o lake publica o bucket como tabelas",
+        "why": "As tabelas publicadas são uma porta a mais, não substituem a do próprio bucket."
+      }
+    ]
+  },
+  "ex-7p1vzs67": {
+    "prompt": "Uma regra de qualidade do Dataplex diz que `phone` não é nulo, com limiar de 95%. Os 20 pedidos de hoje incluem um sem telefone. O que a regra informa?",
+    "hint": "Aula 26.",
+    "choices": [
+      {
+        "text": "Reprovada, já que uma linha quebra a condição",
+        "why": "Essa é uma regra a 100%, certa para uma chave e errada para um telefone digitado pelo cliente."
+      },
+      {
+        "text": "Reprovada, já que 95% significa que a regra não tolera nulo nenhum",
+        "why": "95% permite que uma linha em vinte falhe."
+      },
+      {
+        "text": "Nada, já que quem julga nulos são os profile scans, não os quality scans",
+        "why": "Um profile descreve a fração de nulos; um quality scan a julga contra a regra."
+      },
+      {
+        "text": "Aprovada, já que 19 de 20 linhas é exatamente o limiar de 95%",
+        "why": "Isso: a regra passa quando a fração de linhas que a cumpre alcança o limiar."
+      }
+    ]
+  },
+  "ex-ve42aqtb": {
+    "prompt": "A coluna `phone` dos pedidos curados tem uma policy tag, e os analistas não têm Fine-Grained Reader nela. O que acontece quando uma analista roda `SELECT order_id, phone FROM quitanda.orders`?",
+    "hint": "Aula 26.",
+    "choices": [
+      {
+        "text": "Devolve `phone` como NULL em todas as linhas",
+        "why": "Recusa, não coluna vazia, a menos que haja uma data policy de mascaramento."
+      },
+      {
+        "text": "Devolve os telefones, já que o IAM na tabela concede todas as colunas",
+        "why": "É exatamente isso que uma policy tag existe para contrariar, coluna por coluna."
+      },
+      {
+        "text": "A consulta falha com erro de acesso; sem `phone` ela roda como antes",
+        "why": "Isso: o BigQuery confere a tag em toda consulta, e recusa em vez de esvaziar a coluna."
+      },
+      {
+        "text": "Devolve os telefones mascarados como hashes",
+        "why": "Mascarar exige uma data policy na tag; a tag sozinha recusa."
+      }
+    ]
+  },
+  "ex-zekbejgf": {
+    "prompt": "Ponha as seis perguntas que o curso faz a uma carga na ordem em que ele as faz.",
+    "hint": "Aula 27.",
+    "items": [
+      "Qual é o padrão de acesso?",
+      "Em quanto tempo a resposta tem de vir?",
+      "Que consistência o leitor precisa?",
+      "Qual o tamanho, e quão rápido cresce?",
+      "Quem opera?",
+      "Quanto custa, nesta carga?"
+    ]
+  },
+  "ex-y21qd5sc": {
+    "prompt": "Sob demanda, uma pergunta que varre 50 GiB custa 50 ÷ 1.024 × 11,25 USD, depois de usado o TiB grátis do mês. Quanto dá, em USD com centavos?",
+    "hint": "Aula 27."
+  },
+  "ex-g21y1ht3": {
+    "prompt": "A tela \"meus pedidos\" é aberta 100.000 vezes por dia e mostra até dez pedidos. Por que o BigQuery é o armazenamento errado para ela, seja qual for o preço por TiB?",
+    "hint": "Aula 27.",
+    "choices": [
+      {
+        "text": "O BigQuery não consegue filtrar por id de cliente",
+        "why": "Consegue; o problema é quanto cada consulta dessas custa e quanto demora."
+      },
+      {
+        "text": "Cada busca é cobrada em no mínimo 10 MB por tabela que ela cita",
+        "why": "Isso: um warehouse responde varreduras; uma busca por chave pertence a um armazenamento feito para chaves."
+      },
+      {
+        "text": "Tabelas do BigQuery não guardam mais de um dia de pedidos",
+        "why": "Guardam anos; é a forma das leituras que não encaixa."
+      },
+      {
+        "text": "O TiB grátis acaba na primeira manhã",
+        "why": "O problema é o mínimo por consulta, não a faixa grátis."
+      }
+    ]
+  },
+  "ex-wn9tbrd3": {
+    "prompt": "Os workers da Quitanda consultam uma tabela `jobs` a cada segundo com `SELECT … FOR UPDATE SKIP LOCKED`. Para qual armazenamento o curso diz que esse padrão de acesso foi feito?",
+    "hint": "Aula 27.",
+    "choices": [
+      {
+        "text": "Bigtable, com chave pelo horário em que cada job foi gravado",
+        "why": "Uma chave que começa pelo tempo é o outro antipadrão do curso."
+      },
+      {
+        "text": "Memorystore, com uma chave por job e um time to live",
+        "why": "Um cache com política de despejo pode jogar jobs fora."
+      },
+      {
+        "text": "BigQuery, com uma consulta agendada que pega as linhas pendentes",
+        "why": "Um warehouse alimentado linha a linha é o antipadrão ao lado deste."
+      },
+      {
+        "text": "Pub/Sub, com uma assinatura por consumidor e um tópico de dead letter",
+        "why": "Isso: uma fila é acrescentar e tirar, com uma confirmação por mensagem."
+      }
+    ]
+  }
+}

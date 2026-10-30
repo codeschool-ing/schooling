@@ -1,0 +1,455 @@
+{
+  "ex-q4fwc0pd": {
+    "prompt": "O que o Eventarc entrega a um destino, seja qual for a origem?",
+    "hint": "Um formato para tudo.",
+    "choices": [
+      {
+        "text": "Uma mensagem do Pub/Sub que o destino precisa puxar",
+        "why": "A entrega é um push; o destino não puxa nada."
+      },
+      {
+        "text": "Uma linha numa tabela que o destino lê",
+        "why": "Nada é gravado numa tabela para o destino."
+      },
+      {
+        "text": "Um CloudEvent por HTTP",
+        "why": "Isso. Toda origem chega no mesmo formato."
+      },
+      {
+        "text": "Uma entrada de log de auditoria, para todo tipo de origem",
+        "why": "Entradas de auditoria são uma origem entre várias."
+      }
+    ]
+  },
+  "ex-bvda94ta": {
+    "prompt": "Ligue cada parte de um gatilho à pergunta que ela responde.",
+    "hint": "Três respostas e uma identidade.",
+    "pairs": [
+      {
+        "left": "critérios de seleção",
+        "right": "Quais eventos"
+      },
+      {
+        "left": "destino",
+        "right": "Para onde vão"
+      },
+      {
+        "left": "transporte",
+        "right": "Por onde viajam"
+      },
+      {
+        "left": "conta de serviço",
+        "right": "Com que identidade são entregues"
+      }
+    ],
+    "right_distractors": [
+      "Com que frequência são repetidos"
+    ]
+  },
+  "ex-p3q9d84q": {
+    "prompt": "O plan do gatilho das fotos imprimiu transport (known after apply). Por quê?",
+    "hint": "Quem cria o tópico?",
+    "choices": [
+      {
+        "text": "O Eventarc cria e nomeia os dois sozinho",
+        "why": "Isso. Eles só existem quando o gatilho existe."
+      },
+      {
+        "text": "O arquivo deixou de fora um bloco transport de que precisa",
+        "why": "Um gatilho sobre uma origem do Google não precisa; o Eventarc cria."
+      },
+      {
+        "text": "O token no-account não conseguiu ler o tópico",
+        "why": "Nada foi lido; o plan não consultou API nenhuma."
+      },
+      {
+        "text": "Gatilhos de armazenamento não têm transporte nenhum",
+        "why": "Eles viajam pelo Pub/Sub como a maioria das origens."
+      }
+    ]
+  },
+  "ex-4eh82fwz": {
+    "prompt": "Uma equipe aplica o gatilho das fotos e nenhum evento chega, embora os uploads funcionem. O plan estava limpo. Que causa a lição aponta?",
+    "hint": "O que um plan não enxerga?",
+    "choices": [
+      {
+        "text": "A função voltou normalmente, então o Eventarc parou de entregar",
+        "why": "Uma volta normal é sucesso; a entrega continua."
+      },
+      {
+        "text": "Eventos de armazenamento precisam dos logs de auditoria ligados antes",
+        "why": "Eventos de armazenamento são diretos; logs de auditoria são outra origem."
+      },
+      {
+        "text": "O tipo de evento estava errado, e o Terraform aceitou calado",
+        "why": "Possível em geral, mas aqui o arquivo bate com o tipo documentado."
+      },
+      {
+        "text": "Falta ao agente do bucket a permissão de publicar",
+        "why": "Isso. Uma concessão única por projeto, invisível para um plan."
+      }
+    ]
+  },
+  "ex-p4zrxpen": {
+    "prompt": "Um gatilho sobre um bucket em São Paulo é criado na região ___.",
+    "hint": "A região do próprio bucket.",
+    "blanks": [
+      {
+        "accept": [
+          "southamerica-east1"
+        ]
+      }
+    ]
+  },
+  "ex-djdv1bzr": {
+    "prompt": "Quais são os dois jeitos que o Cloud Storage tem de anunciar uma mudança?",
+    "hint": "Um antigo, um novo.",
+    "choices": [
+      {
+        "text": "Um e-mail para o dono do projeto, e um webhook",
+        "why": "Nenhum dos dois; os dois jeitos passam por eventos."
+      },
+      {
+        "text": "Notificações no Pub/Sub e o Eventarc",
+        "why": "Isso. Os metadados são o mesmo JSON nos dois."
+      },
+      {
+        "text": "Uma entrada de auditoria, e uma API de consulta",
+        "why": "Logs de auditoria são a saída para serviços sem eventos diretos."
+      },
+      {
+        "text": "Um arquivo gravado ao lado do objeto, e uma notificação no Pub/Sub",
+        "why": "Nenhum arquivo é gravado ao lado do objeto."
+      }
+    ]
+  },
+  "ex-xg269x24": {
+    "prompt": "Por que o laboratório usa o curl para enviar ao fake-gcs-server em vez do gcloud storage cp?",
+    "hint": "O mesmo motivo da lição 17.",
+    "choices": [
+      {
+        "text": "O gcloud storage não sabe enviar imagens",
+        "why": "Ele envia qualquer arquivo; a conta é o obstáculo."
+      },
+      {
+        "text": "O curl é mais rápido para arquivos grandes",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O gcloud exige conta",
+        "why": "Isso. O curl fala a API JSON sem credencial."
+      },
+      {
+        "text": "O fake-gcs-server só aceita uploads multipart, que o gcloud não manda",
+        "why": "Ele aceitou um upload simples do curl."
+      }
+    ]
+  },
+  "ex-megrwtg4": {
+    "prompt": "A função imprimiu OBJECT_FINALIZE e OBJECT_DELETE sem decodificar os dados. Onde os leu?",
+    "hint": "Um resumo viaja ao lado dos dados.",
+    "choices": [
+      {
+        "text": "Nos atributos da mensagem, em eventType",
+        "why": "Isso. Bucket e objeto também estão lá."
+      },
+      {
+        "text": "No cabeçalho ce-type do CloudEvent",
+        "why": "O tipo ali é messagePublished, o do Pub/Sub."
+      },
+      {
+        "text": "Na URL que a assinatura de push chamou",
+        "why": "A URL foi a mesma para os dois."
+      },
+      {
+        "text": "No content type do objeto",
+        "why": "Esse é image/jpeg para os dois."
+      }
+    ]
+  },
+  "ex-xvfwbr25": {
+    "prompt": "A foto enviada foi feita com head -c 48213 /dev/urandom. Que tamanho, em bytes, o evento de finalização informou?",
+    "hint": "-c conta bytes.",
+    "unit": "bytes"
+  },
+  "ex-vafzq5wj": {
+    "prompt": "A loja passa de uma notificação no Pub/Sub para um gatilho de armazenamento do Eventarc. Que parte do código de miniaturas precisa mudar?",
+    "hint": "O envelope muda; os metadados não.",
+    "choices": [
+      {
+        "text": "O trabalho da miniatura, porque o JSON do objeto muda",
+        "why": "Os metadados são o mesmo JSON."
+      },
+      {
+        "text": "Nada, as duas entregas são idênticas byte a byte",
+        "why": "Não há message para desembrulhar no evento direto."
+      },
+      {
+        "text": "O decorador, que precisa virar http",
+        "why": "Os dois chegam como CloudEvents."
+      },
+      {
+        "text": "A leitura, já que não há message para desembrulhar",
+        "why": "Isso. Mantenha leitura e trabalho em funções separadas."
+      }
+    ]
+  },
+  "ex-scgpahsm": {
+    "prompt": "O número nos metadados de um objeto que distingue duas versões do mesmo nome é a sua ___.",
+    "hint": "Conta as gravações naquele nome.",
+    "blanks": [
+      {
+        "accept": [
+          "geração",
+          "geracao",
+          "generation"
+        ]
+      }
+    ]
+  },
+  "ex-sxgmv64z": {
+    "prompt": "Quando o Eventarc precisa do Cloud Audit Logs para ver uma mudança?",
+    "hint": "Nem todo serviço anuncia as suas.",
+    "choices": [
+      {
+        "text": "Para todo evento, como transporte",
+        "why": "O transporte é o Pub/Sub."
+      },
+      {
+        "text": "Quando o serviço não anuncia nada diretamente",
+        "why": "Isso. As entradas de auditoria são a rede mais larga."
+      },
+      {
+        "text": "Só para uploads no Cloud Storage",
+        "why": "O Storage tem eventos diretos."
+      },
+      {
+        "text": "Quando o destino é uma função em vez de um serviço",
+        "why": "O destino não decide a origem."
+      }
+    ]
+  },
+  "ex-ymeh63km": {
+    "prompt": "Ligue cada critério do gatilho de máquinas novas ao seu valor.",
+    "hint": "Tipo, serviço, método.",
+    "pairs": [
+      {
+        "left": "type",
+        "right": "google.cloud.audit.log.v1.written"
+      },
+      {
+        "left": "serviceName",
+        "right": "compute.googleapis.com"
+      },
+      {
+        "left": "methodName",
+        "right": "v1.compute.instances.insert"
+      }
+    ],
+    "right_distractors": [
+      "google.cloud.storage.object.v1.finalized"
+    ]
+  },
+  "ex-hq9e9ymy": {
+    "prompt": "Um gatilho sobre storage.objects.get pelos logs de auditoria nunca dispara. Qual é a causa provável?",
+    "hint": "Ler dados é outro tipo de log.",
+    "choices": [
+      {
+        "text": "Gatilhos de auditoria só disparam para remoções",
+        "why": "Disparam para qualquer método registrado."
+      },
+      {
+        "text": "get é uma leitura, e o Eventarc ignora leituras",
+        "why": "O Eventarc seleciona o que é registrado; a lacuna é o log."
+      },
+      {
+        "text": "Os logs de acesso a dados ficam desligados até serem ligados para aquele serviço",
+        "why": "Isso. Um método que não é registrado nunca dispara, e nada avisa."
+      },
+      {
+        "text": "O nome do método precisa do prefixo v1",
+        "why": "O nome não é o motivo aqui."
+      }
+    ]
+  },
+  "ex-48ag6pyh": {
+    "prompt": "Por que um gatilho de log de auditoria é errado para mandar o recibo a um cliente?",
+    "hint": "Quem está esperando, e por quanto tempo?",
+    "choices": [
+      {
+        "text": "A entrega leva até minutos, e uma pessoa está esperando",
+        "why": "Isso. Serve para inventário, não para algo esperado."
+      },
+      {
+        "text": "Entradas de auditoria são apagadas depois de uma hora",
+        "why": "Retenção não é o problema."
+      },
+      {
+        "text": "Gatilhos de auditoria não alcançam o Cloud Run",
+        "why": "O destino pode ser o Cloud Run."
+      },
+      {
+        "text": "Recibos são dados pessoais, que logs de auditoria recusam",
+        "why": "O gatilho leva a chamada de API, não o recibo."
+      }
+    ]
+  },
+  "ex-8zfqc4cj": {
+    "prompt": "Um gatilho em southamerica-east1 sobre entradas de auditoria de um serviço global não vê nada. Por quê?",
+    "hint": "Onde as entradas são gravadas?",
+    "choices": [
+      {
+        "text": "Serviços globais não gravam entradas de auditoria",
+        "why": "Gravam, globalmente."
+      },
+      {
+        "text": "São Paulo não oferece Eventarc para logs de auditoria de tipo nenhum",
+        "why": "O gatilho de armazenamento morava lá."
+      },
+      {
+        "text": "A conta de serviço não tem o papel de logging",
+        "why": "Uma falta de permissão é possível, mas a localização é a causa citada."
+      },
+      {
+        "text": "As entradas são globais; o gatilho também precisa ser",
+        "why": "Isso. A localização precisa bater com onde as entradas caem."
+      }
+    ]
+  },
+  "ex-sye0vvch": {
+    "prompt": "Quantas vezes o Eventarc e o Pub/Sub prometem entregar um evento?",
+    "hint": "Leia a primeira frase em negrito da seção.",
+    "choices": [
+      {
+        "text": "Exatamente uma vez",
+        "why": "Essa é a suposição confortável que a lição corrige."
+      },
+      {
+        "text": "Pelo menos uma vez",
+        "why": "Isso. Uma duplicata pode chegar mesmo sem falha."
+      },
+      {
+        "text": "No máximo uma vez",
+        "why": "Perder eventos não é a promessa; repetir é."
+      },
+      {
+        "text": "Uma vez por assinante e região",
+        "why": "Não existe essa conta."
+      }
+    ]
+  },
+  "ex-s66jvn6m": {
+    "prompt": "A função flaky recebeu a mensagem 1 quantas vezes nos dez segundos que o laboratório esperou?",
+    "hint": "O grep -c contou.",
+    "unit": "entregas"
+  },
+  "ex-jfjcmg0q": {
+    "prompt": "Por que uma duplicata pode chegar mesmo quando a função deu certo?",
+    "hint": "Algo volta depois do trabalho.",
+    "choices": [
+      {
+        "text": "O Pub/Sub manda toda mensagem duas vezes por segurança",
+        "why": "Não por projeto; por uma confirmação perdida."
+      },
+      {
+        "text": "O framework chama a função duas vezes por requisição",
+        "why": "Uma requisição, uma chamada."
+      },
+      {
+        "text": "A confirmação se perdeu no caminho de volta",
+        "why": "Isso. Aí o remetente entrega de novo."
+      },
+      {
+        "text": "Dois gatilhos são criados para cada função",
+        "why": "Um gatilho por publicação."
+      }
+    ]
+  },
+  "ex-29qzcc29": {
+    "prompt": "Ordene o que acontece com uma mensagem cuja função sempre falha, numa assinatura com tópico de mensagens mortas e 5 tentativas.",
+    "hint": "O tópico de mensagens mortas vem depois da última tentativa.",
+    "items": [
+      "A mensagem é empurrada e a função lança exceção",
+      "O Pub/Sub espera, mais a cada vez, e empurra de novo",
+      "A quinta tentativa falha",
+      "A mensagem vai para o tópico de mensagens mortas"
+    ]
+  },
+  "ex-11bh0w3f": {
+    "prompt": "Qual destas é idempotente por natureza?",
+    "hint": "Fazer duas vezes deixa o mundo como fazer uma.",
+    "choices": [
+      {
+        "text": "Gravar uma miniatura num nome de arquivo fixo",
+        "why": "Isso. O mesmo arquivo duas vezes é o mesmo arquivo."
+      },
+      {
+        "text": "Mandar um e-mail de confirmação do pedido",
+        "why": "Duas vezes são dois e-mails."
+      },
+      {
+        "text": "Somar o total do pedido a uma soma mensal",
+        "why": "Duas vezes soma duas vezes."
+      },
+      {
+        "text": "Cobrar o cartão do cliente",
+        "why": "Duas vezes são duas cobranças."
+      }
+    ]
+  },
+  "ex-p5f7mww0": {
+    "prompt": "Um evento chega com dados malformados. O que a função deve fazer, por esta lição?",
+    "hint": "Repetir vai ajudar?",
+    "choices": [
+      {
+        "text": "Lançar exceção, para ser repetido até corrigir",
+        "why": "Vai estar malformado em toda tentativa."
+      },
+      {
+        "text": "Dormir um minuto e depois lançar",
+        "why": "Esperar não conserta os dados."
+      },
+      {
+        "text": "Apagar a assinatura",
+        "why": "Isso para todos os eventos, os bons também."
+      },
+      {
+        "text": "Registrar no log e voltar sem erro",
+        "why": "Isso. Lançar só compraria um dia de falhas idênticas."
+      }
+    ]
+  },
+  "ex-vbkjv2hx": {
+    "prompt": "Um tópico que recebe mensagens depois da última tentativa falha se chama tópico de mensagens ___.",
+    "hint": "Para onde vai a correspondência que não se entrega.",
+    "blanks": [
+      {
+        "accept": [
+          "mortas"
+        ]
+      }
+    ]
+  },
+  "ex-bmwj0jfa": {
+    "prompt": "Uma função é publicada com gatilho de evento e repetições no padrão. Quais afirmações são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Qual é o padrão?",
+    "choices": [
+      {
+        "text": "Um evento que falha é descartado depois de uma tentativa",
+        "why": "Isso; as repetições vêm desligadas."
+      },
+      {
+        "text": "Uma falha pode se perder sem ninguém notar",
+        "why": "Isso; desligada, uma falha se perde em silêncio."
+      },
+      {
+        "text": "Cada evento é repetido por 24 horas",
+        "why": "Só com as repetições ligadas."
+      },
+      {
+        "text": "Duplicatas ficam impossíveis",
+        "why": "Uma confirmação perdida ainda causa uma."
+      }
+    ]
+  }
+}

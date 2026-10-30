@@ -1,0 +1,405 @@
+{
+  "ex-3gsffk6t": {
+    "prompt": "Uma tabela bruta de chegada não tem coluna de data em que alguém confie. Que tipo de particionamento serve para ela?",
+    "hint": "A única data certa é quando a linha chegou.",
+    "choices": [
+      {
+        "text": "Por horário de ingestão",
+        "why": "Certo. `_PARTITIONTIME` e `_PARTITIONDATE` guardam o momento da chegada."
+      },
+      {
+        "text": "Por faixa de inteiros sobre o número da linha",
+        "why": "Um número de linha não diz nada pelo qual uma consulta filtre."
+      },
+      {
+        "text": "Por uma coluna `DATE` preenchida com a data de hoje por quem lê",
+        "why": "Isso é horário de ingestão feito à mão, e errado para cada leitor num dia diferente."
+      },
+      {
+        "text": "Nenhum: uma tabela sem data não pode ser particionada",
+        "why": "Horário de ingestão e faixa de inteiros não precisam de coluna de data."
+      }
+    ]
+  },
+  "ex-qtbpqwxf": {
+    "prompt": "Por que o particionamento por horário de ingestão é errado para os pedidos da Quitanda?",
+    "hint": "Pense num pedido que chega com um dia de atraso.",
+    "choices": [
+      {
+        "text": "Custa mais para guardar",
+        "why": "O armazenamento custa o mesmo, seja qual for o particionamento."
+      },
+      {
+        "text": "Arquiva pedido atrasado pelo dia da carga",
+        "why": "Certo. Um relatório de um dia o perderia."
+      },
+      {
+        "text": "Não pode ser filtrado num `WHERE`",
+        "why": "`_PARTITIONDATE` é filtrado como qualquer coluna."
+      },
+      {
+        "text": "O BigQuery o limita a partições por hora",
+        "why": "O horário de ingestão também pode ser cortado por dia e outras unidades."
+      }
+    ]
+  },
+  "ex-dwyjvg6f": {
+    "prompt": "Ligue cada partição especial às linhas que ela guarda.",
+    "hint": "Uma opção da direita nem é partição.",
+    "pairs": [
+      {
+        "left": "`__NULL__`",
+        "right": "Linhas cuja coluna de particionamento é nula"
+      },
+      {
+        "left": "`__UNPARTITIONED__`",
+        "right": "Linhas cujo inteiro cai fora da faixa declarada"
+      },
+      {
+        "left": "`_PARTITIONTIME`",
+        "right": "Uma pseudocoluna com o momento em que uma linha por ingestão chegou"
+      }
+    ],
+    "right_distractors": [
+      "Linhas mais antigas que a expiração de partição"
+    ]
+  },
+  "ex-3dj42kf3": {
+    "prompt": "`partition_expiration_days = 1095` remove um dia de pedidos no terceiro aniversário dele. Quanto custa essa remoção?",
+    "hint": "A página de preços lista operações gratuitas.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Certo. Apagar partições individuais de uma tabela é gratuito."
+      },
+      {
+        "text": "Uma consulta sobre a partição, a 11,25 USD por TiB",
+        "why": "A expiração não roda consulta e não cobra bytes."
+      },
+      {
+        "text": "O mínimo de 10 MB, uma vez por dia",
+        "why": "O mínimo vale para consultas, e isto não é uma."
+      },
+      {
+        "text": "Um slot-minuto",
+        "why": "Nenhum slot é cobrado por ela."
+      }
+    ]
+  },
+  "ex-0z3dsdb7": {
+    "prompt": "Uma tabela é particionada por `dt`. Que filtro poda as partições dela?",
+    "hint": "Deixe a coluna sozinha, comparada com constantes.",
+    "choices": [
+      {
+        "text": "`created_at >= TIMESTAMP '2026-09-29 00:00:00-03'`",
+        "why": "Cita outra coluna; as partições são cortadas por `dt`."
+      },
+      {
+        "text": "`dt + INTERVAL 1 DAY = DATE '2026-09-30'`",
+        "why": "A coluna está dentro de uma expressão."
+      },
+      {
+        "text": "`dt = DATE '2026-09-29'`",
+        "why": "Certo. Um arquivo de sessenta no DuckDB."
+      },
+      {
+        "text": "`dt = (SELECT max(dt) FROM orders)`",
+        "why": "Não é constante: o dia só é conhecido depois de uma leitura."
+      }
+    ]
+  },
+  "ex-ewmbmq5t": {
+    "prompt": "Uma tabela particionada por dia guarda 90 dias de mesmo tamanho. Uma consulta lê uma coluna de 9 deles. Que fração da conta sem partição ela paga? Dê um decimal.",
+    "hint": "A economia é a parte das partições podadas; ignore o mínimo."
+  },
+  "ex-vpcg7me6": {
+    "prompt": "`require_partition_filter` está ligado, e uma consulta diz `WHERE dt > DATE '2000-01-01'`. O que acontece?",
+    "hint": "A opção confere que o filtro existe, não o que ele poda.",
+    "choices": [
+      {
+        "text": "Ela é recusada, porque o filtro não poda nada",
+        "why": "A opção não julga quanto um filtro poda."
+      },
+      {
+        "text": "Ela roda e lê todas as partições",
+        "why": "Certo. A proteção pede um filtro, não um bom filtro."
+      },
+      {
+        "text": "Ela roda só nos 90 dias mais novos",
+        "why": "Nada estreita um filtro sozinho."
+      },
+      {
+        "text": "Ela falha, e custa o mínimo de 10 MB",
+        "why": "Ela não falha, e uma consulta que falha não custaria nada."
+      }
+    ]
+  },
+  "ex-nyf0k8mz": {
+    "prompt": "O DuckDB podou `strftime(dt, '%Y-%m') = '2026-09'` para 29 arquivos. Por que esta aula ainda aconselha escrever `dt BETWEEN` no BigQuery?",
+    "hint": "Um motor foi medido; o outro foi documentado.",
+    "choices": [
+      {
+        "text": "`strftime` não existe no GoogleSQL, então a consulta falharia de uma vez",
+        "why": "O GoogleSQL tem as próprias funções de formatação; o ponto é a coluna dentro de uma."
+      },
+      {
+        "text": "O Google só promete poda para a coluna sozinha",
+        "why": "Certo. O que o DuckDB faz não é prova do que o BigQuery faz."
+      },
+      {
+        "text": "`BETWEEN` é mais barato por byte",
+        "why": "Todo byte custa o mesmo; a questão é quantos são lidos."
+      },
+      {
+        "text": "O DuckDB errou e leu os 60 arquivos",
+        "why": "O plano disse 29 de 60, e foi isso que ele abriu."
+      }
+    ]
+  },
+  "ex-tbep70yf": {
+    "prompt": "O layout por hora guarda as mesmas linhas que o diário. Por que a soma por bairro foi mais lenta nele?",
+    "hint": "Conte os arquivos.",
+    "choices": [
+      {
+        "text": "Ele lê mais bytes por linha, já que a hora é uma coluna",
+        "why": "As colunas e os tamanhos delas são os mesmos."
+      },
+      {
+        "text": "Ele abre dezesseis vezes mais arquivos",
+        "why": "Certo. Um custo fixo por pedaço, pago quase mil vezes."
+      },
+      {
+        "text": "Os arquivos dele são mais comprimidos",
+        "why": "Os tamanhos ficaram mais ou menos iguais."
+      },
+      {
+        "text": "O DuckDB pula partições por hora",
+        "why": "Ele leu todas; esta consulta não tem filtro."
+      }
+    ]
+  },
+  "ex-npnr85x8": {
+    "prompt": "O relatório do horário de pico da Quitanda pergunta das 18h às 21h de um dia. O que esta aula sugere para ele?",
+    "hint": "Particione pela unidade mais grossa que os filtros comuns ainda podam bem.",
+    "choices": [
+      {
+        "text": "Particionar por hora em vez de por dia",
+        "why": "Isso multiplica as partições para todas as outras consultas."
+      },
+      {
+        "text": "Manter partições diárias e clusterizar pela hora",
+        "why": "Certo. O clustering atende o segundo filtro dentro do dia."
+      },
+      {
+        "text": "Particionar por mês, para ter menos pedaços",
+        "why": "Aí uma pergunta de um dia lê um mês."
+      },
+      {
+        "text": "Particionar por faixa de inteiros em `items`",
+        "why": "Ninguém filtra o pico pelo número de itens."
+      }
+    ]
+  },
+  "ex-wr8zq6fx": {
+    "prompt": "O `EXPLAIN ___` do DuckDB roda a consulta e informa quanto tempo cada passo levou, e foi assim que os dois layouts foram cronometrados.",
+    "hint": "Uma palavra, em maiúsculas na aula.",
+    "blanks": [
+      {
+        "accept": [
+          "ANALYZE",
+          "ANALYSE"
+        ]
+      }
+    ]
+  },
+  "ex-4mbqpd0a": {
+    "prompt": "Quantas colunas de clustering uma tabela do BigQuery pode citar?",
+    "hint": "Menos de cinco.",
+    "choices": [
+      {
+        "text": "Uma, como a coluna de particionamento",
+        "why": "O particionamento usa uma coluna; o clustering usa mais."
+      },
+      {
+        "text": "Até quatro",
+        "why": "Certo, e a ordem delas importa."
+      },
+      {
+        "text": "Até dezesseis",
+        "why": "Quatro é o limite documentado."
+      },
+      {
+        "text": "Quantas a tabela tiver",
+        "why": "Há um limite, e ordenar por todas as colunas não ordenaria por nenhuma de forma útil."
+      }
+    ]
+  },
+  "ex-ryew9s86": {
+    "prompt": "Uma tabela está clusterizada por `store_id, payment`. Que filtro pula menos blocos?",
+    "hint": "A segunda coluna só está ordenada dentro de cada valor da primeira.",
+    "choices": [
+      {
+        "text": "`store_id = 7 AND payment = 'pix'`",
+        "why": "As duas colunas, em ordem: este pula mais."
+      },
+      {
+        "text": "`store_id = 7`",
+        "why": "A primeira coluna sozinha pula bem."
+      },
+      {
+        "text": "`payment = 'pix'`",
+        "why": "Certo. Pix aparece dentro da sequência de cada loja, então pula pouco."
+      },
+      {
+        "text": "`store_id IN (7, 8)`",
+        "why": "Duas lojas vizinhas ainda pulam a maioria dos blocos."
+      }
+    ]
+  },
+  "ex-802np6ac": {
+    "prompt": "Um dry run numa tabela clusterizada por `store_id` estima 2 GiB para um filtro de uma loja, e a consulta depois é cobrada por 0,4 GiB. O que aconteceu?",
+    "hint": "Que pulo é conhecido antes de a consulta rodar?",
+    "choices": [
+      {
+        "text": "O dry run errou e deveria ser reportado",
+        "why": "A estimativa é documentada como limite superior para tabelas clusterizadas."
+      },
+      {
+        "text": "O cache respondeu parte da consulta",
+        "why": "Uma resposta do cache não cobra nada, nem parte."
+      },
+      {
+        "text": "Blocos foram pulados durante a execução, o que o dry run não vê",
+        "why": "Certo. O clustering é a economia que aparece na conta."
+      },
+      {
+        "text": "O armazenamento de longo prazo reduziu os bytes à metade",
+        "why": "Longo prazo muda uma tarifa de armazenamento, nunca os bytes de uma consulta."
+      }
+    ]
+  },
+  "ex-8qqtna3v": {
+    "prompt": "Quais destas afirmações sobre clustering no BigQuery são verdadeiras, pela documentação do Google? Escolha todas as que se aplicam.",
+    "hint": "Pense em quem paga para mantê-la ordenada.",
+    "choices": [
+      {
+        "text": "A reclusterização roda em segundo plano sem usar os slots do projeto",
+        "why": "Sim, e sem custo."
+      },
+      {
+        "text": "A ordem das colunas de clustering muda quais filtros pulam bem",
+        "why": "Sim, como numa chave de ordenação composta."
+      },
+      {
+        "text": "Um `VACUUM` noturno tem de ser agendado para mantê-la ordenada",
+        "why": "Não há vacuum; o BigQuery faz isso."
+      },
+      {
+        "text": "O clustering substitui o particionamento, então uma tabela tem um ou outro",
+        "why": "Uma tabela pode ter os dois, e a da Quitanda tem."
+      }
+    ]
+  },
+  "ex-need9s8n": {
+    "prompt": "No tamanho da própria Quitanda, por que o clustering não economizou nada na conta do painel?",
+    "hint": "Compare um dia de três colunas com um limiar.",
+    "choices": [
+      {
+        "text": "Os bytes do dia já estavam abaixo do mínimo de 10 MB",
+        "why": "Certo. 392.616 bytes são cobrados como 10.485.760 de qualquer jeito."
+      },
+      {
+        "text": "Clustering só funciona em colunas `STRING`",
+        "why": "`INT64` está entre os tipos documentados."
+      },
+      {
+        "text": "A loja pedida estava em todo grupo de linhas",
+        "why": "Só dois de nove podiam contê-la."
+      },
+      {
+        "text": "Painéis são cobrados por slot-horas",
+        "why": "Sob demanda cobra bytes, seja qual for o cliente."
+      }
+    ]
+  },
+  "ex-g87wmpem": {
+    "prompt": "Uma consulta é cobrada a 0,3058 USD e roda toda hora de um mês de 30 dias. Quanto custa o mês, em USD, com duas casas decimais?",
+    "hint": "720 execuções.",
+    "unit": "USD"
+  },
+  "ex-a1sh7ytb": {
+    "prompt": "A Quitanda decide depois de três anos particionar `orders`, que nunca teve partições. Quanto custa a mudança sob demanda?",
+    "hint": "O BigQuery não reparticiona uma tabela no lugar.",
+    "choices": [
+      {
+        "text": "Nada: `ALTER TABLE` acrescenta particionamento de graça",
+        "why": "O particionamento não pode ser acrescentado no lugar."
+      },
+      {
+        "text": "Uma consulta lendo cada byte de cada coluna da tabela antiga, uma vez",
+        "why": "Certo. `CREATE TABLE ... AS SELECT *` é cobrado por tudo."
+      },
+      {
+        "text": "Só os bytes de `dt`",
+        "why": "Toda coluna tem de ser lida para ser escrita de novo."
+      },
+      {
+        "text": "O mínimo de 10 MB",
+        "why": "Só numa tabela abaixo de 10 MB, o que três anos de cliques não são."
+      }
+    ]
+  },
+  "ex-c3cchxdm": {
+    "prompt": "Ponha os layouts da pergunta do painel em ordem de conta a mil vezes o tamanho, do mais caro ao mais barato.",
+    "hint": "220,15, 2,90 e 0,65 USD por mês.",
+    "items": [
+      "Sem partições",
+      "Particionada por `dt`",
+      "Particionada por `dt` e clusterizada por `store_id`"
+    ]
+  },
+  "ex-qvfnyxc0": {
+    "prompt": "Sem partições, por que a conta do painel de hora em hora continua crescendo enquanto a de uma tabela particionada fica estável?",
+    "hint": "O que cada um lê quando o histórico fica mais longo?",
+    "choices": [
+      {
+        "text": "Partições mais antigas custam mais para ler",
+        "why": "Um byte custa o mesmo, seja qual for a idade."
+      },
+      {
+        "text": "Ela lê todos os dias guardados, e eles aumentam; a outra lê um só",
+        "why": "Certo. O particionamento transforma um custo que cresce num custo estável."
+      },
+      {
+        "text": "O armazenamento de longo prazo é somado à conta de consultas",
+        "why": "Armazenamento e consultas são contas separadas."
+      },
+      {
+        "text": "O TiB gratuito acaba",
+        "why": "O TiB gratuito é mensal e o mesmo dos dois jeitos."
+      }
+    ]
+  },
+  "ex-46jr8ej8": {
+    "prompt": "Quais destes números foram medidos nesta aula, e não calculados ou tirados da documentação? Escolha todas as que se aplicam.",
+    "hint": "O DuckDB mediu planos, arquivos, grupos de linhas e tempos.",
+    "choices": [
+      {
+        "text": "O filtro de uma semana abriu 7 de 60 arquivos",
+        "why": "Sim, o plano do DuckDB."
+      },
+      {
+        "text": "Dois de nove grupos de linhas podiam conter a loja 7",
+        "why": "Sim, das estatísticas dos próprios arquivos."
+      },
+      {
+        "text": "O painel custa 0,65 USD por mês clusterizado, a mil vezes",
+        "why": "Calculado, com grupos de linhas no papel de blocos."
+      },
+      {
+        "text": "Uma tabela pode ter até quatro colunas de clustering",
+        "why": "Documentação do Google."
+      }
+    ]
+  }
+}

@@ -211,7 +211,7 @@ repository can see that:
 
 | what | names |
 |---|---|
-| keyword languages | `javascript` `typescript` `python` `go` `java` `kotlin` `swift` `csharp` `php` `sql` `r` `dockerfile` `hcl` `bicep` `dax` `powerquery` |
+| keyword languages | `javascript` `typescript` `python` `go` `java` `kotlin` `swift` `csharp` `php` `sql` `r` `dockerfile` `hcl` `bicep` `kql` `dax` `powerquery` |
 | the ones carried by position | `html` `css` `json` `yaml` `ini` `vim` `sh` |
 | aliases | `js` `jsx` `mjs` `node` `ts` `tsx` `py` `golang` `kt` `cs` `htm` `xml` `yml` `toml` `conf` `cfg` `properties` `vimrc` `tf` `terraform` `m` `pq` `bash` `zsh` `shell` `console` `terminal` |
 

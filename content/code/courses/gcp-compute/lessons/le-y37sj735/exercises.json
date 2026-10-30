@@ -1,0 +1,660 @@
+[
+  {
+    "id": "ex-k79j3knw",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Kubernetes Secret holds a service account key in base64. Who can read the key?",
+    "hint": "Is base64 a lock?",
+    "choices": [
+      {
+        "text": "Only the pod that mounts it, which holds the decryption key",
+        "correct": false,
+        "why": "There is nothing to decrypt; base64 has no key."
+      },
+      {
+        "text": "Anyone with read access to the Secret",
+        "correct": true,
+        "why": "Right. base64 is an encoding, and one line reverses it."
+      },
+      {
+        "text": "Nobody, because Kubernetes encrypts Secrets with the cluster's key",
+        "correct": false,
+        "why": "Encryption at rest protects the disk, not someone allowed to get the Secret."
+      },
+      {
+        "text": "Only Google, which issued the key",
+        "correct": false,
+        "why": "Google keeps no copy of the private key; whoever holds the file has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpk0w87c",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A key made for a test three years ago is found in an old CI log. What does it still do?",
+    "hint": "Does a user-managed key expire by itself?",
+    "choices": [
+      {
+        "text": "Nothing: keys expire after ninety days",
+        "correct": false,
+        "why": "No expiry applies unless an organisation policy sets one."
+      },
+      {
+        "text": "Only read access, since old keys are downgraded",
+        "correct": false,
+        "why": "Nothing downgrades a key."
+      },
+      {
+        "text": "Everything the service account is allowed, from anywhere",
+        "correct": true,
+        "why": "Right. Until someone deletes it, it is the service account."
+      },
+      {
+        "text": "It works only from inside the cluster that used it",
+        "correct": false,
+        "why": "A key works from any computer."
+      }
+    ]
+  },
+  {
+    "id": "ex-qze1zjmh",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "base64 is an encoding, not ___.",
+    "hint": "What would need a key to undo?",
+    "blanks": [
+      {
+        "accept": [
+          "encryption"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tv9v32kg",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which organisation policy stops anyone creating service account keys?",
+    "hint": "It is named after what it disables.",
+    "choices": [
+      {
+        "text": "iam.workloadIdentityUser",
+        "correct": false,
+        "why": "That is a role, the one section 03 grants."
+      },
+      {
+        "text": "storage.objectViewer",
+        "correct": false,
+        "why": "A role on Storage, unrelated to keys."
+      },
+      {
+        "text": "iam.disableServiceAccountKeyCreation",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "GKE_METADATA",
+        "correct": false,
+        "why": "A node pool setting, not a policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-kj5fjsn8",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are problems of a static key? Choose all that apply.",
+    "hint": "Think of leaking, ending and rotating.",
+    "choices": [
+      {
+        "text": "A copy leaks with no sign in the audit log",
+        "correct": true,
+        "why": "Right; the leaked key looks like the service account."
+      },
+      {
+        "text": "Rotating it means updating every Secret that holds it",
+        "correct": true,
+        "why": "Right; which is why it gets put off."
+      },
+      {
+        "text": "It stops working when the pod restarts",
+        "correct": false,
+        "why": "It keeps working, which is the problem."
+      },
+      {
+        "text": "It can only be used against Cloud Storage",
+        "correct": false,
+        "why": "It acts as the service account against any API."
+      }
+    ]
+  },
+  {
+    "id": "ex-1td9pvey",
+    "version": 1,
+    "section": "the-pool-and-the-binding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the workload pool of every cluster in the project planner-dev?",
+    "hint": "One per project.",
+    "choices": [
+      {
+        "text": "shop.svc.id.goog, named after the cluster",
+        "correct": false,
+        "why": "The pool is named after the project."
+      },
+      {
+        "text": "planner-dev.svc.id.goog, shared by its clusters",
+        "correct": true,
+        "why": "Right; shared by every cluster in the project with it on."
+      },
+      {
+        "text": "planner-dev.iam.gserviceaccount.com",
+        "correct": false,
+        "why": "That is the domain of Google service accounts' emails."
+      },
+      {
+        "text": "A pool created per namespace",
+        "correct": false,
+        "why": "Namespaces are inside the pool's names, not pools of their own."
+      }
+    ]
+  },
+  {
+    "id": "ex-gshr4xf7",
+    "version": 1,
+    "section": "the-pool-and-the-binding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where is roles/iam.workloadIdentityUser granted in section 03?",
+    "hint": "The binding lets an identity use something.",
+    "choices": [
+      {
+        "text": "On the bucket shop-photos",
+        "correct": false,
+        "why": "The bucket gets storage.objectViewer."
+      },
+      {
+        "text": "On the project, for all service accounts",
+        "correct": false,
+        "why": "Granting it project-wide would let the pod act as any of them."
+      },
+      {
+        "text": "On the Kubernetes service account, through its annotation",
+        "correct": false,
+        "why": "The annotation names an email; IAM bindings live in Google, not in the cluster."
+      },
+      {
+        "text": "On the Google service account photos-reader",
+        "correct": true,
+        "why": "Right; it lets [shop/photos] act as that one account."
+      }
+    ]
+  },
+  {
+    "id": "ex-97bqbhm2",
+    "version": 1,
+    "section": "the-pool-and-the-binding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "terraform validate refused member = \"planner-dev.svc.id.goog[shop/photos]\". What was missing?",
+    "hint": "A member names its kind first.",
+    "choices": [
+      {
+        "text": "The serviceAccount: prefix before the name",
+        "correct": true,
+        "why": "Right. Every member names its kind before the identity."
+      },
+      {
+        "text": "The project number before the pool",
+        "correct": false,
+        "why": "Only the principal:// form carries a number."
+      },
+      {
+        "text": "Quotes around the brackets",
+        "correct": false,
+        "why": "Brackets are part of the name and need no quoting."
+      },
+      {
+        "text": "A namespace other than shop",
+        "correct": false,
+        "why": "shop is right; the format was the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9mfvtk9",
+    "version": 1,
+    "section": "the-pool-and-the-binding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Kubernetes ServiceAccount names the Google identity it uses with the annotation iam.gke.io/gcp-service-___.",
+    "hint": "The last word of the annotation's key.",
+    "blanks": [
+      {
+        "accept": [
+          "account"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z077161j",
+    "version": 1,
+    "section": "the-pool-and-the-binding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a Standard cluster, the node pool lacks workload_metadata_config GKE_METADATA, and everything else of section 03 is in place. What does the photos pod get when it asks for a token?",
+    "hint": "Who answers 169.254.169.254 on that node?",
+    "choices": [
+      {
+        "text": "A token for photos-reader, because the binding exists",
+        "correct": false,
+        "why": "The binding is never consulted; GKE's server is not in the path."
+      },
+      {
+        "text": "An error, because no metadata server runs on the node",
+        "correct": false,
+        "why": "The node's own metadata server answers."
+      },
+      {
+        "text": "A token for the node's own service account",
+        "correct": true,
+        "why": "Right. That is the leak GKE_METADATA closes."
+      },
+      {
+        "text": "The key from the old Secret, if it still exists",
+        "correct": false,
+        "why": "The metadata server knows nothing of Secrets."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0c2ev02",
+    "version": 1,
+    "section": "the-pool-and-the-binding",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many resources did the plan of wi/main.tf add?",
+    "hint": "Account, binding on the account, binding on the bucket.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-3sqe3943",
+    "version": 1,
+    "section": "how-the-pod-gets-a-token",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the token exchange in order.",
+    "hint": "The pod asks first, Storage is called last.",
+    "items": [
+      "The client library asks 169.254.169.254 for a token",
+      "GKE's metadata server gets the Kubernetes service account's token",
+      "The Security Token Service returns a federated token",
+      "The IAM credentials API issues a token for photos-reader",
+      "The library calls Cloud Storage with it"
+    ]
+  },
+  {
+    "id": "ex-2jxxthap",
+    "version": 1,
+    "section": "how-the-pod-gets-a-token",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod gets \"iam.serviceAccounts.getAccessToken denied\". Which step failed, and what is the usual cause?",
+    "hint": "Which call asks for a token for photos-reader?",
+    "choices": [
+      {
+        "text": "Step 5: the bucket has no role for photos-reader",
+        "correct": false,
+        "why": "That gives a 403 from Storage, after a token was issued."
+      },
+      {
+        "text": "Step 2: the node pool lacks GKE_METADATA",
+        "correct": false,
+        "why": "Then the pod would get the node's token, not this error."
+      },
+      {
+        "text": "Step 4: the workloadIdentityUser binding is missing or misnamed",
+        "correct": true,
+        "why": "Right; a typo in [shop/photos] is the usual one."
+      },
+      {
+        "text": "Step 1: the container cannot reach the address 169.254.169.254 at all",
+        "correct": false,
+        "why": "Then there would be no IAM error at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-1k01b4kw",
+    "version": 1,
+    "section": "how-the-pod-gets-a-token",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How long is the access token the pod receives valid for?",
+    "hint": "Short-lived, and refreshed by the library.",
+    "choices": [
+      {
+        "text": "Until the pod is deleted",
+        "correct": false,
+        "why": "Tokens expire on their own."
+      },
+      {
+        "text": "Ninety days, like a rotated key",
+        "correct": false,
+        "why": "Nothing in this exchange lasts days."
+      },
+      {
+        "text": "About an hour",
+        "correct": true,
+        "why": "Right; a stolen token stops working within the hour."
+      },
+      {
+        "text": "As long as the node keeps running",
+        "correct": false,
+        "why": "The node's life does not set the token's."
+      }
+    ]
+  },
+  {
+    "id": "ex-2asdd63v",
+    "version": 1,
+    "section": "how-the-pod-gets-a-token",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The Deployment runs in the namespace shops, and the binding names [shop/photos]. What happens, and why is it hard to spot?",
+    "hint": "IAM compares names exactly.",
+    "choices": [
+      {
+        "text": "IAM matches shop to shops and grants the token",
+        "correct": false,
+        "why": "Names are compared exactly; there is no fuzzy match."
+      },
+      {
+        "text": "Step 4 is denied, and IAM sees two identities without complaint",
+        "correct": true,
+        "why": "Right. Nothing is invalid; it simply names somebody else."
+      },
+      {
+        "text": "terraform validate refuses the binding because it looks like a typo",
+        "correct": false,
+        "why": "The member is well formed; validate cannot know the namespace."
+      },
+      {
+        "text": "The pod falls back to the node's service account",
+        "correct": false,
+        "why": "With GKE_METADATA there is no fallback to the node."
+      }
+    ]
+  },
+  {
+    "id": "ex-npjw4p3z",
+    "version": 1,
+    "section": "how-the-pod-gets-a-token",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The pod reaches the metadata server with the header Metadata-Flavor: ___.",
+    "hint": "The same as on Compute Engine.",
+    "blanks": [
+      {
+        "accept": [
+          "Google"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7k0yvyj5",
+    "version": 1,
+    "section": "direct-access",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the principal:// identifier in a direct grant carry that serviceAccount: members do not?",
+    "hint": "Twelve digits.",
+    "choices": [
+      {
+        "text": "The project number",
+        "correct": true,
+        "why": "Right; not the id, the number Google assigns."
+      },
+      {
+        "text": "The Google service account's email",
+        "correct": false,
+        "why": "A direct grant has no Google service account."
+      },
+      {
+        "text": "The cluster's name",
+        "correct": false,
+        "why": "The pool is per project; no cluster is named."
+      },
+      {
+        "text": "An expiry date for the grant",
+        "correct": false,
+        "why": "Grants carry no expiry here."
+      }
+    ]
+  },
+  {
+    "id": "ex-82x2rjq9",
+    "version": 1,
+    "section": "direct-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is project_number a variable set to twelve zeros in wi/direct.tf?",
+    "hint": "Does planner-dev exist at Google?",
+    "choices": [
+      {
+        "text": "Zeros mean \"this project\" to IAM",
+        "correct": false,
+        "why": "IAM gives zeros no special meaning."
+      },
+      {
+        "text": "The provider fills in the real number at plan time from Google",
+        "correct": false,
+        "why": "Nothing reaches Google to ask."
+      },
+      {
+        "text": "This lab's planner-dev has none to give; it is a stand-in",
+        "correct": true,
+        "why": "Right. On a real project the variable gets the real number."
+      },
+      {
+        "text": "Project numbers are secret and must not be written down",
+        "correct": false,
+        "why": "A project number is an identifier, not a secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-08sr55y2",
+    "version": 1,
+    "section": "direct-access",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's nightly job on a virtual machine must read shop-photos as the same identity as the pod. Which arrangement fits?",
+    "hint": "Which identity exists outside the cluster?",
+    "choices": [
+      {
+        "text": "A direct grant to principal://.../ns/shop/sa/photos for both",
+        "correct": false,
+        "why": "That principal exists only inside the cluster's pool."
+      },
+      {
+        "text": "A key file for the virtual machine, kept beside the job",
+        "correct": false,
+        "why": "That brings back the problem of section 01."
+      },
+      {
+        "text": "The service-account way: both act as photos-reader",
+        "correct": true,
+        "why": "Right. One named Google service account, one place to grant and revoke."
+      },
+      {
+        "text": "Two direct grants with different project numbers",
+        "correct": false,
+        "why": "The virtual machine is not a Kubernetes identity at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdrrace4",
+    "version": 1,
+    "section": "direct-access",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the direct grant remove, compared with section 03? Choose all that apply.",
+    "hint": "One identity, one binding.",
+    "choices": [
+      {
+        "text": "The Google service account photos-reader",
+        "correct": true,
+        "why": "Right; there is nothing to impersonate."
+      },
+      {
+        "text": "The workloadIdentityUser binding",
+        "correct": true,
+        "why": "Right; nothing is acted as."
+      },
+      {
+        "text": "The workload pool planner-dev.svc.id.goog",
+        "correct": false,
+        "why": "The principal is named inside that pool."
+      },
+      {
+        "text": "The role on the bucket",
+        "correct": false,
+        "why": "Some role on the bucket is the whole point."
+      }
+    ]
+  },
+  {
+    "id": "ex-tys4q3rt",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service account's account_id must have between 6 and how many characters?",
+    "hint": "The provider's refusal said it.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-hbt6hsx2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to the step of the exchange that failed.",
+    "hint": "Section 04's table.",
+    "pairs": [
+      {
+        "left": "A token for the node's service account",
+        "right": "Step 2, no GKE_METADATA"
+      },
+      {
+        "left": "getAccessToken denied",
+        "right": "Step 4, binding missing or misnamed"
+      },
+      {
+        "left": "A token, then 403 from Storage",
+        "right": "Step 5, no role on the bucket"
+      }
+    ],
+    "right_distractors": [
+      "Step 3, the federated token expired"
+    ]
+  },
+  {
+    "id": "ex-jh1qfdah",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After moving to Workload Identity, what should happen to the old photos-key Secret and its key?",
+    "hint": "A key keeps working until somebody deletes it.",
+    "choices": [
+      {
+        "text": "Keep them as a fallback in case the exchange fails",
+        "correct": false,
+        "why": "A fallback key is the leak you set out to remove."
+      },
+      {
+        "text": "Delete the Secret; the key expires by itself later",
+        "correct": false,
+        "why": "The key does not expire on its own."
+      },
+      {
+        "text": "Nothing: Workload Identity disables keys automatically",
+        "correct": false,
+        "why": "Nothing disables an existing key for you."
+      },
+      {
+        "text": "Delete the key at Google and the Secret in the cluster",
+        "correct": true,
+        "why": "Right. Until the key is deleted, every copy still works."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm953cmp",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A workload pool is always the project id followed by .svc.id.___.",
+    "hint": "Four letters, Google's own.",
+    "blanks": [
+      {
+        "accept": [
+          "goog"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

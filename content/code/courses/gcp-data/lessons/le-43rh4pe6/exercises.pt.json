@@ -1,0 +1,439 @@
+{
+  "ex-7rmvdx4h": {
+    "prompt": "Que parte de uma tabela do Bigtable precisa existir antes que uma linha escreva nela?",
+    "hint": "Veja o que o `cbt set` recusou.",
+    "choices": [
+      {
+        "text": "Cada qualificador de coluna que as linhas vão ter",
+        "why": "Qualificadores são escritos com os dados; o `o-10004` de c-18 nunca foi declarado."
+      },
+      {
+        "text": "A família de colunas, declarada antes na própria tabela",
+        "why": "Isso. A família é declarada na tabela, e uma escrita em `x:note` foi recusada porque `x` não existia."
+      },
+      {
+        "text": "O tipo de cada valor, string ou inteiro",
+        "why": "Não há tipos: todo valor é bytes."
+      },
+      {
+        "text": "A faixa de chaves de linha que a tabela vai guardar",
+        "why": "Chaves de linha nunca são declaradas; qualquer sequência de bytes é uma chave válida."
+      }
+    ]
+  },
+  "ex-gy8hwxty": {
+    "prompt": "c-18 tem as colunas `o:o-10004` e `o:o-10005` e c-17 não tem nenhuma. O que a tabela guarda para as colunas de pedido que faltam em c-17?",
+    "hint": "O Bigtable é chamado de esparso por um motivo.",
+    "choices": [
+      {
+        "text": "Uma célula vazia para cada, para que as linhas se alinhem",
+        "why": "As linhas não se alinham; cada uma é o seu próprio mapa, e nada é guardado para fazê-las bater."
+      },
+      {
+        "text": "Um marcador de nulo na família `o`",
+        "why": "Não existe nulo no Bigtable. Uma coluna ausente simplesmente não está lá."
+      },
+      {
+        "text": "Nada: aquela coluna simplesmente não existe ali",
+        "why": "Isso. Uma coluna que a linha não tem não custa nada, e é isso que permite a um qualificador ter o nome de um id de pedido."
+      },
+      {
+        "text": "Uma versão vazia por coluna, até a política coletá-la",
+        "why": "Nenhuma versão é escrita para uma coluna que ninguém escreveu, então não há o que coletar."
+      }
+    ]
+  },
+  "ex-yyr0b8at": {
+    "prompt": "Depois de `cbt set customers c-18 o:o-10004=4290`, o que está na célula?",
+    "hint": "Todo valor no Bigtable é o mesmo tipo de coisa.",
+    "choices": [
+      {
+        "text": "Um inteiro de 64 bits, porque o valor só tem dígitos",
+        "why": "O `cbt` não adivinha tipos. Um programa que quer um inteiro escreve um de largura fixa por conta própria."
+      },
+      {
+        "text": "Os caracteres 4, 2, 9 e 0, como bytes",
+        "why": "Isso. Valores, chaves de linha e qualificadores são todos bytes, e o `cbt set` escreve o que recebeu como string."
+      },
+      {
+        "text": "Um número a que o servidor soma na próxima escrita",
+        "why": "Isso é uma família agregada, outro tipo de família; `o` é uma família comum."
+      },
+      {
+        "text": "Uma string, com o tipo registrado ao lado na família",
+        "why": "Uma família registra uma política de coleta de lixo, não um tipo para os valores."
+      }
+    ]
+  },
+  "ex-b5pedrxz": {
+    "prompt": "Quais destas coisas uma escrita no Bigtable garante? Escolha todas as que ela garante.",
+    "hint": "A atomicidade no Bigtable para na borda de uma linha.",
+    "choices": [
+      {
+        "text": "Todas as células que ela define naquela linha são aplicadas juntas, ou nenhuma",
+        "why": "Sim. Uma escrita numa linha é atômica, por mais células que toque."
+      },
+      {
+        "text": "Uma chave de linha que ninguém escreveu antes é criada pela escrita",
+        "why": "Sim. Uma linha existe assim que tem uma célula; não há etapa de inserção."
+      },
+      {
+        "text": "Duas linhas mandadas num `bulk_mutate_rows` dão certo ou falham juntas",
+        "why": "Cada linha de um lote é aplicada por conta própria, e as falhas são informadas por linha."
+      },
+      {
+        "text": "Um índice sobre uma coluna nova é atualizado no mesmo passo",
+        "why": "Não há índices secundários; a chave de linha é o único."
+      },
+      {
+        "text": "A escrita é recusada se o qualificador for novo para a tabela",
+        "why": "Qualificadores novos são o caso normal; só uma família desconhecida é recusada."
+      }
+    ]
+  },
+  "ex-1nn5ybce": {
+    "prompt": "Uma família não tem política de coleta de lixo. O que acontece com as versões mais antigas de uma coluna?",
+    "hint": "A política é o que as remove.",
+    "choices": [
+      {
+        "text": "Só a mais nova fica, e cada escrita a substitui",
+        "why": "Isso é um `UPDATE` relacional. No Bigtable uma escrita acrescenta uma célula acima das antigas."
+      },
+      {
+        "text": "Ficam guardadas até alguma coisa apagá-las de propósito",
+        "why": "Isso. Sem política nada é coletado, e a família cresce a cada escrita."
+      },
+      {
+        "text": "Expiram depois de trinta dias, o padrão",
+        "why": "Não há idade padrão; o `ls` mostrou política vazia para `p` e `o`."
+      },
+      {
+        "text": "São fundidas numa célula só na próxima compactação",
+        "why": "A compactação é quando a coleta acontece, e sem política não há o que coletar."
+      }
+    ]
+  },
+  "ex-1cq854zc": {
+    "prompt": "A política é `maxage=30d or maxversions=2` e hoje é 30 de outubro. Uma coluna tem uma célula, escrita em 29 de agosto. O que a coleta de lixo faz com ela?",
+    "hint": "Uma regra de idade não pergunta quantas versões existem.",
+    "choices": [
+      {
+        "text": "Mantém, porque é a única versão",
+        "why": "Foi isso que levou o nome de Ana: a regra de idade vale para toda célula, inclusive a única."
+      },
+      {
+        "text": "Apaga, porque tem mais de trinta dias",
+        "why": "Isso. Com `or`, qualquer regra condena a célula, e 62 dias passam de 30."
+      },
+      {
+        "text": "Mantém até ser escrita uma terceira versão",
+        "why": "A regra de versões a manteria, mas com `or` a regra de idade sozinha basta para apagá-la."
+      },
+      {
+        "text": "Apaga só se as regras estivessem ligadas com `and`",
+        "why": "Com `and`, a célula precisa ser condenada pelas duas; esta é a versão mais nova, então `and` a manteria."
+      }
+    ]
+  },
+  "ex-ba70cbx6": {
+    "prompt": "Uma família tem a política `maxage=30d and maxversions=2`, uma interseção. Em 30 de outubro uma coluna tem células de 15 de outubro, 14 de outubro, 12 de outubro e 21 de setembro. Quantas células sobrevivem à coleta de lixo?",
+    "hint": "Com `and`, uma célula só vai embora quando está além da segunda versão E tem mais de trinta dias."
+  },
+  "ex-z886k0hv": {
+    "prompt": "Um programa que escreve o timestamp de uma célula em milissegundos, onde o Bigtable espera ___, guarda a célula em janeiro de 1970.",
+    "hint": "Conte os dígitos de `1788000000000000`.",
+    "blanks": [
+      {
+        "accept": [
+          "microssegundos",
+          "microssegundo",
+          "micros",
+          "microseconds"
+        ]
+      }
+    ]
+  },
+  "ex-0yyn3g0p": {
+    "prompt": "Uma família guarda `maxversions=1`, e mesmo assim o programa que mostra o bairro atual de um cliente lê com `cells-per-column=1`. Por quê?",
+    "hint": "Quando a coleta acontece?",
+    "choices": [
+      {
+        "text": "Sem o filtro a leitura é recusada",
+        "why": "Leituras sem filtro são aceitas; o primeiro `lookup` da seção devolveu todas as versões."
+      },
+      {
+        "text": "A coleta atrasa, e células condenadas ainda voltam",
+        "why": "Isso. Uma leitura devolve células que a política já condenou, e o filtro é o que garante uma versão."
+      },
+      {
+        "text": "O filtro é o que deixa a leitura mais barata na conta",
+        "why": "O Bigtable cobra nós por hora, não leituras; o filtro muda o que volta."
+      },
+      {
+        "text": "Ele manda o Bigtable coletar o lixo antes de ler",
+        "why": "Nenhuma leitura dispara a coleta; ela acontece em segundo plano, no próprio calendário."
+      }
+    ]
+  },
+  "ex-4swtwyea": {
+    "prompt": "Por que a chave de cliques põe um `#` entre o cliente e o horário?",
+    "hint": "Pense em dois mil clientes e num prefixo.",
+    "choices": [
+      {
+        "text": "Porque o Bigtable divide a chave em campos no `#`",
+        "why": "O Bigtable não sabe nada de `#`; a chave é uma sequência de bytes e o separador é uma convenção."
+      },
+      {
+        "text": "Para que `prefix=c-17` deixe de casar com c-170",
+        "why": "Isso. `prefix=c-17` devolveu 497 linhas de 111 clientes, e `prefix=c-17#` as seis que eram de c-17."
+      },
+      {
+        "text": "Para que as linhas de cada cliente venham depois da tabela de clientes",
+        "why": "A tabela de cliques não tem outro tipo de linha; o separador é sobre prefixos."
+      },
+      {
+        "text": "Porque uma chave de linha não aceita dois números lado a lado",
+        "why": "Uma chave de linha aceita quaisquer bytes."
+      }
+    ]
+  },
+  "ex-js9ae4y5": {
+    "prompt": "Com as quinze linhas de \"Carregando\", quantas linhas `cbt read clicks start=c-17#8207812900000 end=c-18#` devolve?",
+    "hint": "Liste as chaves em ordem, comece onde o início ficaria e pare antes de `c-18#`."
+  },
+  "ex-2g0w83tm": {
+    "prompt": "O suporte quer os eventos de checkout de c-17, do mais novo para o mais antigo, e nada mais, numa leitura contínua. Que chave faz isso, e quanto custa?",
+    "hint": "Um campo levado para a chave decide quais linhas ficam juntas.",
+    "choices": [
+      {
+        "text": "`c-17#checkout#<horário invertido>`; C1 passa a ler por tela",
+        "why": "Isso. Promover a tela agrupa os checkouts de um cliente, e os últimos eventos de todas as telas deixam de ser uma sequência só."
+      },
+      {
+        "text": "Uma família por tela, e todas as outras leituras ficam iguais",
+        "why": "Famílias dividem as colunas dentro de uma linha; não escolhem quais linhas ficam vizinhas."
+      },
+      {
+        "text": "A mesma chave com um `regex` na tela, sem custo nenhum",
+        "why": "Um filtro lê o intervalo inteiro que recebe; decide o que volta, não o que é lido."
+      },
+      {
+        "text": "O id do cliente invertido, para os checkouts virem primeiro",
+        "why": "Inverter o id muda onde ficam as linhas de um cliente, não quais delas são checkouts."
+      }
+    ]
+  },
+  "ex-zkkeqs26": {
+    "prompt": "`prefix=c-17#` viu 6 linhas e `regex='c-17#.*'` viu 8.999, e as duas devolveram as mesmas 6. O que explica a diferença?",
+    "hint": "Qual das duas disse ao servidor onde começar?",
+    "choices": [
+      {
+        "text": "O regex também casou com c-170 a c-179, e os descartou",
+        "why": "`c-17#` não casa com `c-170#…`; o regex casou com as mesmas seis linhas."
+      },
+      {
+        "text": "O emulador mantém um cache para leituras por prefixo",
+        "why": "As duas leituras foram à mesma tabela em memória; a diferença está no que foi lido."
+      },
+      {
+        "text": "Um regex filtra; sem intervalo, são todas as linhas",
+        "why": "Isso. Sem início, fim ou prefixo o intervalo é a tabela inteira, e o filtro passou por cada linha."
+      },
+      {
+        "text": "O regex também leu cada versão de cada célula",
+        "why": "A contagem de células é o dobro da de linhas nas duas leituras, uma versão de duas colunas cada."
+      }
+    ]
+  },
+  "ex-sn5gcgms": {
+    "prompt": "Por que inverter o timestamp de uma chave com o horário na frente não remove o ponto quente?",
+    "hint": "Onde fica a chave mais nova quando o horário é invertido?",
+    "choices": [
+      {
+        "text": "Chaves invertidas passam por hash, e por isso colidem",
+        "why": "Nada passa por hash; a chave é comparada byte a byte, invertida ou não."
+      },
+      {
+        "text": "O Bigtable não divide um tablet com chaves invertidas",
+        "why": "O Bigtable divide qualquer tablet; o problema é que o ponto quente anda com o relógio."
+      },
+      {
+        "text": "Cada chave nova é a menor, então tudo vai para o tablet 0",
+        "why": "Isso. O modelo mandou as 1.000 para o tablet 0; o ponto quente passou do fim para o começo."
+      },
+      {
+        "text": "Chaves invertidas são mais longas e enchem cada tablet mais rápido",
+        "why": "São os mesmos 13 dígitos."
+      }
+    ]
+  },
+  "ex-r2sw1dtn": {
+    "prompt": "A chave de uma tabela tem o horário na frente. O cluster está no máximo do autoscaling, 6 nós, e a taxa de escrita não sobe. O que fará subir o máximo para 12?",
+    "hint": "Quantos tablets estão recebendo as escritas?",
+    "choices": [
+      {
+        "text": "Dobrar a taxa de escrita, já que as escritas se espalham pelos nós",
+        "why": "As escritas se espalham por intervalo de chaves, e toda chave nova está num intervalo só."
+      },
+      {
+        "text": "Pouco: toda escrita nova continua indo para o último tablet",
+        "why": "Isso. Um tablet é servido por um nó de cada vez, então mais nós acrescentam capacidade que ninguém usa."
+      },
+      {
+        "text": "Espalhar as linhas do tablet quente pelos seis nós novos",
+        "why": "Uma divisão deixa a chave mais nova num tablet só; as linhas antigas se espalham e as escritas não."
+      },
+      {
+        "text": "Fazer o Bigtable acrescentar um salt às chaves sozinho",
+        "why": "O Bigtable nunca muda uma chave; a chave é do programa."
+      }
+    ]
+  },
+  "ex-hezymkkw": {
+    "prompt": "Ligue cada projeto de chave a onde o modelo pôs um minuto de cliques novos.",
+    "hint": "Pergunte onde a chave mais nova fica em cada projeto.",
+    "pairs": [
+      {
+        "left": "horário na frente",
+        "right": "todos no último tablet"
+      },
+      {
+        "left": "horário invertido na frente",
+        "right": "todos no primeiro tablet"
+      },
+      {
+        "left": "cliente na frente",
+        "right": "espalhados por todos os tablets"
+      },
+      {
+        "left": "salt e horário na frente",
+        "right": "na ponta mais nova de cada balde"
+      }
+    ]
+  },
+  "ex-6nc31wdh": {
+    "prompt": "Por que o salt da aula vem de um hash do id do cliente e não de um dígito sorteado?",
+    "hint": "Pense no leitor, não no escritor.",
+    "choices": [
+      {
+        "text": "Para o leitor saber em que balde está cada cliente",
+        "why": "Isso. c-17 está sempre no balde 8, então C1 continua sendo uma leitura por prefixo; um salt sorteado obrigaria a ler os dez."
+      },
+      {
+        "text": "Porque um dígito sorteado mandaria toda escrita para um balde",
+        "why": "Um dígito sorteado espalha as escritas no mínimo tão bem; o custo dele cai nas leituras."
+      },
+      {
+        "text": "Porque o Bigtable recusa chaves que começam com um número sorteado",
+        "why": "O Bigtable aceita quaisquer bytes como chave."
+      },
+      {
+        "text": "Para que cada balde fique com exatamente a mesma carga",
+        "why": "Os baldes do modelo ficaram desiguais, de 0 a 200 por tablet; um hash espalha, não iguala."
+      }
+    ]
+  },
+  "ex-j3d61f24": {
+    "prompt": "Três nós Enterprise em São Paulo a US$ 0,98 por nó-hora durante 730 horas, mais um segundo cluster de três nós em outra zona da mesma região. Qual é a conta de nós do mês, em dólares?",
+    "hint": "A replicação entre clusters de uma região não é cobrada; os nós são."
+  },
+  "ex-ztfn75ca": {
+    "prompt": "Um cluster do Bigtable não atende nenhuma requisição o fim de semana inteiro. Quanto custam os nós nessas horas?",
+    "hint": "Leia a frase da página de preços sobre uso.",
+    "choices": [
+      {
+        "text": "Nada, já que nenhuma requisição foi feita",
+        "why": "Isso é um serviço por requisição como o Firestore; o Bigtable cobra os nós que existem."
+      },
+      {
+        "text": "O mesmo que em qualquer outra hora da semana",
+        "why": "Isso. Os nós são cobrados a cada hora em que existem, nas palavras da página independentemente do uso."
+      },
+      {
+        "text": "Metade, numa tarifa reduzida para nó ocioso",
+        "why": "Não há tarifa de ociosidade na página."
+      },
+      {
+        "text": "Só o armazenamento, porque nós ociosos ficam pausados",
+        "why": "O Bigtable nunca pausa um nó sozinho; um nó removido é um nó mudado por você ou pelo autoscaling."
+      }
+    ]
+  },
+  "ex-7j0sh5x0": {
+    "prompt": "Por que o autoscaling chega atrasado para uma promoção que começa às 18:00 em ponto?",
+    "hint": "O que precisa acontecer antes que um nó novo ajude?",
+    "choices": [
+      {
+        "text": "Ele só roda uma vez por hora, na virada da cobrança",
+        "why": "Ele reage à meta de CPU continuamente; a hora é como os nós são cobrados, não quando são acrescentados."
+      },
+      {
+        "text": "Ele espera a meta de armazenamento antes de acrescentar nós",
+        "why": "A meta de CPU sozinha basta para acrescentar nós."
+      },
+      {
+        "text": "Nós novos só ajudam depois que tablets vão para eles",
+        "why": "Isso. A documentação avisa de até uns vinte minutos sob carga, então o mínimo é aumentado antes do evento."
+      },
+      {
+        "text": "Ele não acrescenta nó enquanto o cluster está ocupado",
+        "why": "Ocupado é justamente quando ele acrescenta; o atraso está no nó passar a ser útil."
+      }
+    ]
+  },
+  "ex-ctq3xypv": {
+    "prompt": "Ponha os passos de projetar a tabela de cliques na ordem em que esta aula os dá.",
+    "hint": "A tabela não é o primeiro passo, e a chave também não.",
+    "items": [
+      "Escrever as perguntas com entradas e tamanhos",
+      "Escolher que campo vem primeiro na chave de linha",
+      "Fixar o separador e a largura de cada parte",
+      "Criar a tabela, com suas famílias e políticas",
+      "Carregar linhas e ler cada pergunta como prefixo ou intervalo"
+    ]
+  },
+  "ex-p69d5txd": {
+    "prompt": "Uma tabela de monitoramento guarda uma linha por sensor por minuto, e sua leitura principal é todos os sensores nos últimos dez minutos. Que chave serve?",
+    "hint": "A leitura principal parte de um horário, não de um sensor, e as escritas não podem se acumular numa ponta.",
+    "choices": [
+      {
+        "text": "O sensor, depois o horário invertido, lido com um prefixo",
+        "why": "Isso serve ao histórico de um sensor; todos os sensores de uma vez seria uma leitura da tabela inteira."
+      },
+      {
+        "text": "O horário, depois o sensor, com mais nós",
+        "why": "Toda escrita cai no fim da tabela, e mais nós servem tablets em que ninguém escreve."
+      },
+      {
+        "text": "Um salt do sensor, depois o horário, lido com um intervalo por balde",
+        "why": "Isso. As leituras continuam sendo intervalos de tempo, e as escritas vão para tantos lugares quantos baldes houver."
+      },
+      {
+        "text": "Um hash da chave inteira, lido com um filtro regex",
+        "why": "Fazer hash da chave inteira perde a ordem, e a leitura vira um scan com filtro."
+      }
+    ]
+  },
+  "ex-23atbnry": {
+    "prompt": "Uma tabela precisa guardar cada clique por noventa dias e o nome de cada cliente enquanto a conta existir. Como ficam as famílias?",
+    "hint": "Uma política pertence a uma família, e vale para toda célula dela.",
+    "choices": [
+      {
+        "text": "Uma família com `maxage=90d or maxversions=1`",
+        "why": "A regra de idade apagaria cada nome noventa dias depois de escrito, como levou o de Ana."
+      },
+      {
+        "text": "Duas: cliques sob `maxage=90d`, nomes sob `maxversions=1`",
+        "why": "Isso. A família do nome não tem regra de idade, então a única versão fica; os cliques expiram sozinhos."
+      },
+      {
+        "text": "Uma família sem política, e um job que apaga cliques antigos",
+        "why": "Funciona e transforma a retenção num programa que alguém precisa manter rodando; uma política faz isso sozinha."
+      },
+      {
+        "text": "Duas famílias, ambas sob `maxage=90d`",
+        "why": "Então os nomes expiram também; a família que os guarda não pode ter regra de idade."
+      }
+    ]
+  }
+}

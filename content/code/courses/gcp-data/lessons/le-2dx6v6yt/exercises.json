@@ -1,0 +1,601 @@
+[
+  {
+    "id": "ex-3gsffk6t",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A raw landing table has no date column anybody trusts. Which kind of partitioning suits it?",
+    "hint": "The only certain date is when the row arrived.",
+    "choices": [
+      {
+        "text": "By ingestion time",
+        "correct": true,
+        "why": "Right. `_PARTITIONTIME` and `_PARTITIONDATE` hold the moment of arrival."
+      },
+      {
+        "text": "By integer range on its row number",
+        "correct": false,
+        "why": "A row number says nothing a query filters on."
+      },
+      {
+        "text": "By a `DATE` column filled with today's date by the reader",
+        "correct": false,
+        "why": "That is ingestion time done by hand, and wrong for every reader on a different day."
+      },
+      {
+        "text": "None: a table without a date cannot be partitioned",
+        "correct": false,
+        "why": "Ingestion time and integer range need no date column."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtbpqwxf",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is ingestion-time partitioning wrong for Quitanda's orders?",
+    "hint": "Think of an order that arrives a day late.",
+    "choices": [
+      {
+        "text": "It costs more to store",
+        "correct": false,
+        "why": "Storage is priced the same whatever the partitioning."
+      },
+      {
+        "text": "It files late orders by load day",
+        "correct": true,
+        "why": "Right. A report on a day would then miss it."
+      },
+      {
+        "text": "It cannot be filtered in a `WHERE`",
+        "correct": false,
+        "why": "`_PARTITIONDATE` is filtered like any column."
+      },
+      {
+        "text": "BigQuery limits it to hourly partitions",
+        "correct": false,
+        "why": "Ingestion time can be cut by day and other units too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwyjvg6f",
+    "version": 1,
+    "section": "partitions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each special partition to the rows it holds.",
+    "hint": "One right-hand option is not a partition at all.",
+    "pairs": [
+      {
+        "left": "`__NULL__`",
+        "right": "Rows whose partitioning column is null"
+      },
+      {
+        "left": "`__UNPARTITIONED__`",
+        "right": "Rows whose integer falls outside the declared range"
+      },
+      {
+        "left": "`_PARTITIONTIME`",
+        "right": "A pseudo-column holding when an ingestion-time row arrived"
+      }
+    ],
+    "right_distractors": [
+      "Rows older than the partition expiration"
+    ]
+  },
+  {
+    "id": "ex-3dj42kf3",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`partition_expiration_days = 1095` removes a day of orders on its third birthday. What does that deletion cost?",
+    "hint": "The pricing page lists free operations.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Deleting individual table partitions is free."
+      },
+      {
+        "text": "A query over the partition, at 11.25 USD per TiB",
+        "correct": false,
+        "why": "Expiration runs no query and bills no bytes."
+      },
+      {
+        "text": "The 10 MB minimum, once a day",
+        "correct": false,
+        "why": "The minimum applies to queries, and this is not one."
+      },
+      {
+        "text": "One slot-minute",
+        "correct": false,
+        "why": "No slots are billed for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z3dsdb7",
+    "version": 1,
+    "section": "pruning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A table is partitioned by `dt`. Which filter prunes its partitions?",
+    "hint": "Keep the column alone, compared with constants.",
+    "choices": [
+      {
+        "text": "`created_at >= TIMESTAMP '2026-09-29 00:00:00-03'`",
+        "correct": false,
+        "why": "It names another column; the partitions are cut by `dt`."
+      },
+      {
+        "text": "`dt + INTERVAL 1 DAY = DATE '2026-09-30'`",
+        "correct": false,
+        "why": "The column is inside an expression."
+      },
+      {
+        "text": "`dt = DATE '2026-09-29'`",
+        "correct": true,
+        "why": "Right. One file of sixty in DuckDB."
+      },
+      {
+        "text": "`dt = (SELECT max(dt) FROM orders)`",
+        "correct": false,
+        "why": "Not a constant: the day is only known after a read."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewmbmq5t",
+    "version": 1,
+    "section": "pruning",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table is partitioned by day and holds 90 days of equal size. A query reads one column for 9 of them. What fraction of the unpartitioned bill does it pay? Give a decimal.",
+    "hint": "The saving is the share of partitions pruned; ignore the minimum.",
+    "value": 0.1,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-vpcg7me6",
+    "version": 1,
+    "section": "pruning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`require_partition_filter` is on, and a query says `WHERE dt > DATE '2000-01-01'`. What happens?",
+    "hint": "The option checks that the filter exists, not what it prunes.",
+    "choices": [
+      {
+        "text": "It is refused, because the filter prunes nothing",
+        "correct": false,
+        "why": "The option does not judge how much a filter prunes."
+      },
+      {
+        "text": "It runs and reads every partition",
+        "correct": true,
+        "why": "Right. The guardrail asks for a filter, not a good one."
+      },
+      {
+        "text": "It runs on the newest 90 days only",
+        "correct": false,
+        "why": "Nothing narrows a filter by itself."
+      },
+      {
+        "text": "It fails, and costs the 10 MB minimum",
+        "correct": false,
+        "why": "It does not fail, and a failed query would cost nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyf0k8mz",
+    "version": 1,
+    "section": "pruning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "DuckDB pruned `strftime(dt, '%Y-%m') = '2026-09'` to 29 files. Why does this lesson still advise writing `dt BETWEEN` in BigQuery?",
+    "hint": "One engine was measured; the other was documented.",
+    "choices": [
+      {
+        "text": "`strftime` does not exist in GoogleSQL, so the query would fail outright",
+        "correct": false,
+        "why": "GoogleSQL has its own formatting functions; the point is the column inside one."
+      },
+      {
+        "text": "Google promises pruning only for the bare column",
+        "correct": true,
+        "why": "Right. What DuckDB does is not evidence of what BigQuery does."
+      },
+      {
+        "text": "`BETWEEN` is cheaper per byte",
+        "correct": false,
+        "why": "Every byte costs the same; the question is how many are read."
+      },
+      {
+        "text": "DuckDB was wrong and read all 60 files",
+        "correct": false,
+        "why": "The plan said 29 of 60, and that is what it opened."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbep70yf",
+    "version": 1,
+    "section": "small-partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The hourly layout holds the same rows as the daily one. Why was the sum per district slower on it?",
+    "hint": "Count the files.",
+    "choices": [
+      {
+        "text": "It reads more bytes per row, since the hour is a column",
+        "correct": false,
+        "why": "The columns and their sizes are the same."
+      },
+      {
+        "text": "It opens sixteen times as many files",
+        "correct": true,
+        "why": "Right. A fixed cost per piece, paid nearly a thousand times."
+      },
+      {
+        "text": "Its files are compressed harder",
+        "correct": false,
+        "why": "The sizes came out about the same."
+      },
+      {
+        "text": "DuckDB skips hourly partitions",
+        "correct": false,
+        "why": "It read all of them; this query has no filter."
+      }
+    ]
+  },
+  {
+    "id": "ex-npnr85x8",
+    "version": 1,
+    "section": "small-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's evening-rush report asks about 18:00 to 21:00 of a day. What does this lesson suggest for it?",
+    "hint": "Partition by the coarsest unit the common filters still prune well.",
+    "choices": [
+      {
+        "text": "Partition by hour instead of by day",
+        "correct": false,
+        "why": "That multiplies the partitions for every other query."
+      },
+      {
+        "text": "Keep daily partitions and cluster on the hour",
+        "correct": true,
+        "why": "Right. Clustering serves the second filter inside the day."
+      },
+      {
+        "text": "Partition by month, to have fewer pieces",
+        "correct": false,
+        "why": "Then a one-day question reads a month."
+      },
+      {
+        "text": "Partition by integer range on `items`",
+        "correct": false,
+        "why": "Nobody filters the rush on the number of items."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr8zq6fx",
+    "version": 1,
+    "section": "small-partitions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "DuckDB's `EXPLAIN ___` runs the query and reports how long each step took, which is how the two layouts were timed.",
+    "hint": "One word, in capitals in the lesson.",
+    "blanks": [
+      {
+        "accept": [
+          "ANALYZE",
+          "ANALYSE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4mbqpd0a",
+    "version": 1,
+    "section": "clustering",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many clustering columns may a BigQuery table name?",
+    "hint": "Fewer than five.",
+    "choices": [
+      {
+        "text": "One, like the partitioning column",
+        "correct": false,
+        "why": "Partitioning takes one column; clustering takes more."
+      },
+      {
+        "text": "Up to four",
+        "correct": true,
+        "why": "Right, and their order matters."
+      },
+      {
+        "text": "Up to sixteen",
+        "correct": false,
+        "why": "Four is the documented limit."
+      },
+      {
+        "text": "As many as the table has",
+        "correct": false,
+        "why": "There is a limit, and sorting by every column would sort by none usefully."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryew9s86",
+    "version": 1,
+    "section": "clustering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table is clustered by `store_id, payment`. Which filter skips the fewest blocks?",
+    "hint": "The second column is sorted only within each value of the first.",
+    "choices": [
+      {
+        "text": "`store_id = 7 AND payment = 'pix'`",
+        "correct": false,
+        "why": "Both columns, in order: this skips the most."
+      },
+      {
+        "text": "`store_id = 7`",
+        "correct": false,
+        "why": "The first column alone skips well."
+      },
+      {
+        "text": "`payment = 'pix'`",
+        "correct": true,
+        "why": "Right. Pix appears inside every store's run, so it skips little."
+      },
+      {
+        "text": "`store_id IN (7, 8)`",
+        "correct": false,
+        "why": "Two neighbouring stores still skip most blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-802np6ac",
+    "version": 1,
+    "section": "clustering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dry run on a table clustered by `store_id` estimates 2 GiB for a filter on one store, and the query is then billed 0.4 GiB. What happened?",
+    "hint": "Which skip is known before the query runs?",
+    "choices": [
+      {
+        "text": "The dry run was wrong and should be reported",
+        "correct": false,
+        "why": "The estimate is documented as an upper bound for clustered tables."
+      },
+      {
+        "text": "The cache answered part of the query",
+        "correct": false,
+        "why": "A cached answer bills nothing at all, not part."
+      },
+      {
+        "text": "Blocks were skipped while running, which the dry run cannot see",
+        "correct": true,
+        "why": "Right. Clustering is the saving found on the bill."
+      },
+      {
+        "text": "Long-term storage halved the bytes",
+        "correct": false,
+        "why": "Long-term changes a storage rate, never a query's bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qqtna3v",
+    "version": 1,
+    "section": "clustering",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of clustering in BigQuery, by Google's documentation? Choose all that apply.",
+    "hint": "Think of who pays to keep it sorted.",
+    "choices": [
+      {
+        "text": "Reclustering runs in the background without using the project's slots",
+        "correct": true,
+        "why": "Yes, and at no charge."
+      },
+      {
+        "text": "The order of the clustering columns changes which filters skip well",
+        "correct": true,
+        "why": "Yes, as with a compound sort key."
+      },
+      {
+        "text": "A nightly `VACUUM` has to be scheduled to keep it sorted",
+        "correct": false,
+        "why": "There is no vacuum; BigQuery does it."
+      },
+      {
+        "text": "Clustering replaces partitioning, so a table has one or the other",
+        "correct": false,
+        "why": "A table can have both, and Quitanda's does."
+      }
+    ]
+  },
+  {
+    "id": "ex-need9s8n",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At Quitanda's own size, why did clustering save nothing on the dashboard's bill?",
+    "hint": "Compare one day of three columns with a threshold.",
+    "choices": [
+      {
+        "text": "The day's bytes were already under the 10 MB minimum",
+        "correct": true,
+        "why": "Right. 392,616 bytes is billed as 10,485,760 either way."
+      },
+      {
+        "text": "Clustering only works on `STRING` columns",
+        "correct": false,
+        "why": "`INT64` is among the documented types."
+      },
+      {
+        "text": "The store asked for was in every row group",
+        "correct": false,
+        "why": "Only two of nine might hold it."
+      },
+      {
+        "text": "Dashboards are billed by slot-hours",
+        "correct": false,
+        "why": "On demand bills bytes, whatever the client is."
+      }
+    ]
+  },
+  {
+    "id": "ex-g87wmpem",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query is billed 0.3058 USD and runs every hour of a 30-day month. What does the month cost, in USD, to two decimal places?",
+    "hint": "720 runs.",
+    "value": 220.18,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-a1sh7ytb",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda decides after three years to partition `orders`, which never had partitions. What does the change cost on demand?",
+    "hint": "BigQuery cannot repartition a table in place.",
+    "choices": [
+      {
+        "text": "Nothing: `ALTER TABLE` adds partitioning for free",
+        "correct": false,
+        "why": "Partitioning cannot be added in place."
+      },
+      {
+        "text": "A query reading every byte of every column of the old table, once",
+        "correct": true,
+        "why": "Right. `CREATE TABLE ... AS SELECT *` is billed for all of it."
+      },
+      {
+        "text": "Only the bytes of `dt`",
+        "correct": false,
+        "why": "Every column has to be read to be written again."
+      },
+      {
+        "text": "The 10 MB minimum",
+        "correct": false,
+        "why": "Only on a table under 10 MB, which three years of a click stream is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3cchxdm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the layouts of the dashboard question in order of their bill at a thousand times the size, dearest first.",
+    "hint": "220.15, 2.90 and 0.65 USD a month.",
+    "items": [
+      "No partitions",
+      "Partitioned by `dt`",
+      "Partitioned by `dt` and clustered by `store_id`"
+    ]
+  },
+  {
+    "id": "ex-qvfnyxc0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without partitions, why does the hourly dashboard's bill keep growing while a partitioned one stays flat?",
+    "hint": "What does each read when the history gets longer?",
+    "choices": [
+      {
+        "text": "Older partitions cost more to read",
+        "correct": false,
+        "why": "A byte costs the same whatever its age."
+      },
+      {
+        "text": "It reads every day the table holds, and the history grows; the partitioned one reads one day",
+        "correct": true,
+        "why": "Right. Partitioning turns a growing cost into a flat one."
+      },
+      {
+        "text": "Long-term storage is added to its query bill",
+        "correct": false,
+        "why": "Storage and queries are separate bills."
+      },
+      {
+        "text": "The free TiB runs out",
+        "correct": false,
+        "why": "The free TiB is monthly and the same either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-46jr8ej8",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these numbers were measured in this lesson, rather than computed or taken from documentation? Choose all that apply.",
+    "hint": "DuckDB measured plans, files, row groups and times.",
+    "choices": [
+      {
+        "text": "A week's filter opened 7 of 60 files",
+        "correct": true,
+        "why": "Yes, DuckDB's plan."
+      },
+      {
+        "text": "Two of nine row groups might hold store 7",
+        "correct": true,
+        "why": "Yes, from the files' own statistics."
+      },
+      {
+        "text": "The dashboard costs 0.65 USD a month clustered, at a thousand times",
+        "correct": false,
+        "why": "Computed, with row groups standing in for blocks."
+      },
+      {
+        "text": "A table may have up to four clustering columns",
+        "correct": false,
+        "why": "Google's documentation."
+      }
+    ]
+  }
+]

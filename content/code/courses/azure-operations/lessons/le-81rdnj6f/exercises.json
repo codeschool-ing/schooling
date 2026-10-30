@@ -1,0 +1,367 @@
+[
+  {
+    "id": "ex-r2nb5rjr",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team creates an App Service and, a week later, wants last Tuesday's HTTP logs. They never configured anything. What can they get?",
+    "hint": "Which signal is kept without being asked?",
+    "choices": [
+      {
+        "text": "The HTTP logs, from the default workspace",
+        "correct": false,
+        "why": "There is no default routing; resource logs are discarded without a setting."
+      },
+      {
+        "text": "Platform metrics only",
+        "correct": true,
+        "why": "Right. Metrics are kept 93 days with nothing configured; the logs are gone."
+      },
+      {
+        "text": "The HTTP logs, if they turn on a setting now",
+        "correct": false,
+        "why": "A setting routes from now on; nothing earlier can be recovered."
+      },
+      {
+        "text": "Nothing at all, until a workspace exists",
+        "correct": false,
+        "why": "Metrics exist without any workspace."
+      }
+    ]
+  },
+  {
+    "id": "ex-vp9zrqg8",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each signal to how it reaches a Log Analytics workspace.",
+    "hint": "One of them needs an agent.",
+    "pairs": [
+      {
+        "left": "An App Service's HTTP logs",
+        "right": "A diagnostic setting on the app"
+      },
+      {
+        "left": "Who deleted a resource group",
+        "right": "A diagnostic setting on the subscription's activity log"
+      },
+      {
+        "left": "A VM's own syslog",
+        "right": "The Azure Monitor Agent and a data collection rule"
+      },
+      {
+        "left": "Platform metrics, to join with logs",
+        "right": "AllMetrics in a diagnostic setting"
+      }
+    ]
+  },
+  {
+    "id": "ex-7h7s39f7",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 93,
+    "tolerance": 0,
+    "prompt": "For how many days does Azure Monitor keep platform metrics with nothing configured?",
+    "hint": "About three months.",
+    "unit": "days"
+  },
+  {
+    "id": "ex-qn3v47ay",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The average of `HttpResponseTime` over a minute is 180 ms. What can you conclude about that minute's customers?",
+    "hint": "Which minutes give the same average?",
+    "choices": [
+      {
+        "text": "Each was served in about 180 ms",
+        "correct": false,
+        "why": "A few four-second requests among fast ones give the same average."
+      },
+      {
+        "text": "Half were faster than 180 ms",
+        "correct": false,
+        "why": "That is the median, which an average does not give you."
+      },
+      {
+        "text": "Very little about the slow ones",
+        "correct": true,
+        "why": "Right. The average hides the tail, which is why the shop computes percentiles from logs."
+      },
+      {
+        "text": "That none waited more than 180 ms",
+        "correct": false,
+        "why": "That would be the maximum, a different aggregation."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8tv2t96",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Http5xx` rises on the shop's App Service plan. What does splitting it by instance tell you that the total does not?",
+    "hint": "A dimension turns one line into several.",
+    "choices": [
+      {
+        "text": "Whether one instance produces them all",
+        "correct": true,
+        "why": "Right. A single bad instance looks like a general problem in the total."
+      },
+      {
+        "text": "Which customer received each error",
+        "correct": false,
+        "why": "Metrics never identify a request or a customer."
+      },
+      {
+        "text": "The 95th percentile of the errors",
+        "correct": false,
+        "why": "A count has no percentile, and splitting does not add one."
+      },
+      {
+        "text": "Which line of code threw the exception",
+        "correct": false,
+        "why": "That is in logs and traces, not in a metric."
+      }
+    ]
+  },
+  {
+    "id": "ex-4b0g0jjb",
+    "version": 1,
+    "section": "diagnostic-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the shop declare the diagnostic setting in Bicep instead of clicking it in the portal?",
+    "hint": "Who will know it exists?",
+    "choices": [
+      {
+        "text": "The portal cannot create diagnostic settings",
+        "correct": false,
+        "why": "It can; the question is where the decision is recorded."
+      },
+      {
+        "text": "Settings created in Bicep are free",
+        "correct": false,
+        "why": "Ingestion costs the same whoever created the setting."
+      },
+      {
+        "text": "So the decision lives in a reviewed file beside the app",
+        "correct": true,
+        "why": "Right. A click leaves no record anybody reads."
+      },
+      {
+        "text": "So the logs are kept for 93 days instead of 30",
+        "correct": false,
+        "why": "Retention is a workspace setting, lesson 9's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-az3vs93g",
+    "version": 1,
+    "section": "diagnostic-settings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`typo.bicep` routes a category `AppServiceHttpLog` that does not exist, and compiles with exit status 0. Where is it caught?",
+    "hint": "To Bicep, the category is a string.",
+    "choices": [
+      {
+        "text": "Nowhere; the setting deploys and routes nothing",
+        "correct": false,
+        "why": "Resource Manager refuses unknown categories rather than accepting them silently."
+      },
+      {
+        "text": "By the linter, which knows every category",
+        "correct": false,
+        "why": "The linter raised nothing; categories are not in Bicep's types."
+      },
+      {
+        "text": "At deployment, by Resource Manager",
+        "correct": true,
+        "why": "Right. Found in the deploy stage, not at build."
+      },
+      {
+        "text": "In the workspace, which drops the table",
+        "correct": false,
+        "why": "Nothing reaches the workspace from a setting that was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1131hm2",
+    "version": 1,
+    "section": "diagnostic-settings",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Setting `logAnalyticsDestinationType` to ___ sends each category to a table of its own instead of AzureDiagnostics.",
+    "hint": "One word, the value in the shop's file.",
+    "blanks": [
+      {
+        "accept": [
+          "Dedicated"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-etdf2e2n",
+    "version": 1,
+    "section": "dcr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the shop's rule, what does `transformKql` do to a syslog message about `healthz`?",
+    "hint": "It runs before the record is stored.",
+    "choices": [
+      {
+        "text": "Stores it in a cheaper table",
+        "correct": false,
+        "why": "It filters; nothing is redirected."
+      },
+      {
+        "text": "Drops it before ingestion",
+        "correct": true,
+        "why": "Right. Rows a transformation drops are never ingested."
+      },
+      {
+        "text": "Masks the word healthz",
+        "correct": false,
+        "why": "The where clause removes the row; project-away removes a column."
+      },
+      {
+        "text": "Marks it as debug and keeps it",
+        "correct": false,
+        "why": "Nothing in the transformation sets a level."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a4g8j9v",
+    "version": 1,
+    "section": "dcr",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The rule compiles and deploys, and the workspace still receives nothing from the worker VMs. What is the likely missing piece?",
+    "hint": "A rule names what to collect; what names the machines?",
+    "choices": [
+      {
+        "text": "A diagnostic setting on each VM",
+        "correct": false,
+        "why": "Diagnostic settings route platform logs; guest data comes through the agent."
+      },
+      {
+        "text": "The transformation, which drops everything",
+        "correct": false,
+        "why": "It drops health-check messages only."
+      },
+      {
+        "text": "A Bicep warning that was ignored",
+        "correct": false,
+        "why": "It compiled with no warning; this is about deployment."
+      },
+      {
+        "text": "An association to each VM, and the agent on it",
+        "correct": true,
+        "why": "Right. A rule does nothing until associated with machines running the agent."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtdemxhg",
+    "version": 1,
+    "section": "dcr",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the shop's data collection rule already leave out? Choose all that apply.",
+    "hint": "Read the log levels and the transformation.",
+    "choices": [
+      {
+        "text": "Syslog messages at Info level",
+        "correct": true,
+        "why": "Yes. Only Warning and above are collected."
+      },
+      {
+        "text": "The HostIP column",
+        "correct": true,
+        "why": "Yes. project-away removes it before storage."
+      },
+      {
+        "text": "CPU samples between 9:00 and 17:00",
+        "correct": false,
+        "why": "No. Counters are sampled every 60 seconds, all day."
+      },
+      {
+        "text": "Warnings about health-check requests",
+        "correct": true,
+        "why": "Yes. The where clause drops them."
+      }
+    ]
+  },
+  {
+    "id": "ex-96fnxxcc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of a syslog warning from a worker VM to a row in the workspace in order.",
+    "hint": "Machine first, storage last.",
+    "items": [
+      "The VM's system log records the warning",
+      "The agent reads it, as the associated rule says",
+      "transformKql runs on the record",
+      "The row is stored, and billed, in the workspace"
+    ],
+    "trap": "Putting the transformation after storage is the slip: it runs before, which is why dropped rows cost nothing to keep."
+  },
+  {
+    "id": "ex-1ztw0h7y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During an incident, the team needs which customer requests failed between 14:05 and 14:47. Which signal answers that?",
+    "hint": "Which one names a request?",
+    "choices": [
+      {
+        "text": "Platform metrics, split by instance",
+        "correct": false,
+        "why": "Metrics count requests; they never name one."
+      },
+      {
+        "text": "The activity log",
+        "correct": false,
+        "why": "It records control-plane operations, not customer requests."
+      },
+      {
+        "text": "Request logs routed to the workspace",
+        "correct": true,
+        "why": "Right. Logs name each request, if they were routed before the incident."
+      },
+      {
+        "text": "The data collection rule's performance counters",
+        "correct": false,
+        "why": "Those are CPU and memory from inside VMs."
+      }
+    ]
+  }
+]

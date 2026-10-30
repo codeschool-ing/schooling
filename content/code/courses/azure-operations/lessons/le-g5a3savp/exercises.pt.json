@@ -1,0 +1,207 @@
+{
+  "ex-3hjxc385": {
+    "prompt": "O que um private endpoint faz com o endpoint público de um serviço?",
+    "hint": "Ele acrescenta um caminho.",
+    "choices": [
+      {
+        "text": "Remove automaticamente",
+        "why": "Ele fica até o publicNetworkAccess ser desligado."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Fechar o caminho público é outra configuração."
+      },
+      {
+        "text": "Move-o para trás do Front Door",
+        "why": "O Front Door é outro serviço, sem relação com private endpoints."
+      },
+      {
+        "text": "Restringe-o a sub-redes do Azure, como um service endpoint",
+        "why": "Isso é o que um service endpoint faz; um private endpoint acrescenta um endereço privado."
+      }
+    ]
+  },
+  "ex-tjbx3jye": {
+    "prompt": "Ligue cada jeito de alcançar um serviço ao que acontece com o endpoint público.",
+    "hint": "Só um acrescenta um endereço privado.",
+    "pairs": [
+      {
+        "left": "regras de firewall",
+        "right": "Continua, filtrado por endereço"
+      },
+      {
+        "left": "service endpoints",
+        "right": "Continua, filtrado por sub-rede"
+      },
+      {
+        "left": "private endpoint",
+        "right": "Continua até você desligá-lo"
+      }
+    ]
+  },
+  "ex-bnt17g8q": {
+    "prompt": "O endpoint existe e está aprovado, mas um app em vnet-shop ainda alcança o endereço público do servidor SQL. Qual recurso provavelmente falta?",
+    "hint": "Quem responde o nome dentro da rede?",
+    "choices": [
+      {
+        "text": "A interface de rede do private endpoint",
+        "why": "Ela existe; o nome só não aponta para ela."
+      },
+      {
+        "text": "Um segundo servidor SQL",
+        "why": "Um servidor basta; o problema é a resolução."
+      },
+      {
+        "text": "O link da zona com a rede",
+        "why": "Certo. Sem ele, ninguém na rede usa a zona."
+      },
+      {
+        "text": "Uma regra de NSG liberando a porta 1433",
+        "why": "Isso é sobre tráfego, não sobre qual endereço o nome devolve."
+      }
+    ]
+  },
+  "ex-sd1tbtmw": {
+    "prompt": "Por que o nome da zona usa `environment().suffixes.sqlServerHostname`?",
+    "hint": "Nem toda nuvem do Azure tem o mesmo sufixo.",
+    "choices": [
+      {
+        "text": "Para o mesmo arquivo funcionar em outras nuvens do Azure",
+        "why": "Certo. Nuvens soberanas usam outros sufixos de domínio."
+      },
+      {
+        "text": "Nomes de zona têm de ser calculados, nunca escritos",
+        "why": "Um nome literal funciona na nuvem pública; a função é para portabilidade."
+      },
+      {
+        "text": "Esconde o nome da zona da internet",
+        "why": "Zonas privadas nem são públicas; o nome não é segredo."
+      },
+      {
+        "text": "Faz a zona resolver nomes públicos também",
+        "why": "A zona só responde os próprios registros."
+      }
+    ]
+  },
+  "ex-7a4fqd8t": {
+    "prompt": "Num private endpoint para um servidor SQL, `groupIds` guarda o valor ___.",
+    "hint": "Uma palavra em camel case.",
+    "blanks": [
+      {
+        "accept": [
+          "sqlServer"
+        ]
+      }
+    ]
+  },
+  "ex-xz771egm": {
+    "prompt": "O private endpoint funciona das VMs no Azure mas não do escritório pela VPN. Qual é a correção provável?",
+    "hint": "A qual DNS o escritório pergunta?",
+    "choices": [
+      {
+        "text": "Um segundo private endpoint para o escritório",
+        "why": "Um endpoint serve aos dois; o escritório é que não o resolve."
+      },
+      {
+        "text": "Religar o acesso público",
+        "why": "Isso reabre a porta que a lição fechou."
+      },
+      {
+        "text": "Um gateway de VPN maior",
+        "why": "Banda não é o problema; o nome é."
+      },
+      {
+        "text": "Um encaminhador ou DNS Private Resolver para domínios privatelink",
+        "why": "Certo. Consultas locais precisam chegar ao resolvedor do Azure."
+      }
+    ]
+  },
+  "ex-stvzah85": {
+    "prompt": "Uma conexão a um private endpoint falha. O que a lição testa primeiro?",
+    "hint": "Uma pergunta de DNS até prova em contrário.",
+    "choices": [
+      {
+        "text": "A senha do SQL",
+        "why": "A autenticação vem depois de o endereço estar certo."
+      },
+      {
+        "text": "Resolver o nome de onde o cliente roda",
+        "why": "Certo. Compare a resposta com o endereço do endpoint."
+      },
+      {
+        "text": "Reiniciar o servidor SQL",
+        "why": "Nada num reinício muda o endereço que um nome devolve."
+      },
+      {
+        "text": "Recriar o private endpoint em outra sub-rede",
+        "why": "Antes de mudar qualquer coisa, descubra para onde o nome resolve."
+      }
+    ]
+  },
+  "ex-cv29n9gy": {
+    "prompt": "Um servidor DNS próprio na rede deve encaminhar ao resolvedor do Azure em 168.63.129.___.",
+    "hint": "A última parte do endereço.",
+    "blanks": [
+      {
+        "accept": [
+          "16"
+        ]
+      }
+    ]
+  },
+  "ex-8r325n38": {
+    "prompt": "Por que a loja atribui uma política `deny` em vez de só definir publicNetworkAccess como Disabled?",
+    "hint": "Quem vai religar?",
+    "choices": [
+      {
+        "text": "A propriedade não pode ser definida em Bicep",
+        "why": "Pode; o cofre da lição 17 define."
+      },
+      {
+        "text": "Para ninguém religar em silêncio",
+        "why": "Certo. A política recusa a mudança no Resource Manager."
+      },
+      {
+        "text": "Políticas são mais baratas que private endpoints",
+        "why": "Elas fazem trabalhos diferentes; custo não é o motivo."
+      },
+      {
+        "text": "Uma política deny também cria o private endpoint",
+        "why": "Ela recusa; não cria nada."
+      }
+    ]
+  },
+  "ex-a64j70ag": {
+    "prompt": "Ponha em ordem os passos da loja para fechar o caminho público do servidor SQL.",
+    "hint": "Caminho privado primeiro, política por último.",
+    "trap": "Desligar o acesso público antes de o caminho privado resolver é o deslize: o app perde o banco.",
+    "items": [
+      "Criar o private endpoint, a zona, o link e o zone group",
+      "Conferir que o nome resolve privado na rede do app",
+      "Definir publicNetworkAccess como Disabled nos servidores existentes",
+      "Atribuir a política deny na assinatura"
+    ]
+  },
+  "ex-z2jzt16m": {
+    "prompt": "Quais destas afirmações valem depois que os arquivos da lição forem implantados? Marque todas as que se aplicam.",
+    "hint": "Caminho privado, uma zona, uma política.",
+    "choices": [
+      {
+        "text": "A connection string do app não muda",
+        "why": "Sim. O mesmo nome responde de forma privada."
+      },
+      {
+        "text": "Servidores SQL públicos existentes são desligados pela política",
+        "why": "Não. O deny impede violações novas; as existentes aparecem como não conformes."
+      },
+      {
+        "text": "Um servidor SQL novo com acesso público é recusado",
+        "why": "Sim. Pelo Resource Manager, seja qual for a ferramenta."
+      },
+      {
+        "text": "O escritório resolve o endereço privado sem mais configuração",
+        "why": "Não. Precisa de um encaminhador ou do DNS Private Resolver."
+      }
+    ]
+  }
+}

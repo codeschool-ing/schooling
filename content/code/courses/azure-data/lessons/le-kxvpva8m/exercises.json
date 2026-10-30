@@ -1,0 +1,635 @@
+[
+  {
+    "id": "ex-g4kgsyk5",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did deleting one order from `lake/flat` do to the Parquet file that held it?",
+    "hint": "Parquet files are never edited.",
+    "choices": [
+      {
+        "text": "Edited the row out of the file, in place",
+        "correct": false,
+        "why": "A Parquet file cannot be edited in place; Delta never changes a file it has written."
+      },
+      {
+        "text": "Nothing: a new file got the other rows, and a commit stopped naming the old one",
+        "correct": true,
+        "why": "Right. The old file is still on disk; it is simply no longer in the table."
+      },
+      {
+        "text": "Deleted it from the disk and wrote a smaller one in its place, under the same name",
+        "correct": false,
+        "why": "Only vacuum deletes files from disk, and it had not run."
+      },
+      {
+        "text": "Appended a tombstone row to the end of it",
+        "correct": false,
+        "why": "Nothing is appended to a written Parquet file."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfzfewb7",
+    "version": 1,
+    "section": "the-log",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`lake/flat` held 98,727 orders in one file. How many rows did deleting one order have to copy?",
+    "hint": "Every row of the file but the deleted one.",
+    "value": 98726,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1hr84vqg",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the delete, a colleague counts the orders with DuckDB over `lake/flat/*.parquet` and gets 197,453. Why?",
+    "hint": "What does a glob over the folder ignore?",
+    "choices": [
+      {
+        "text": "The delete failed halfway and wrote the whole month a second time into the folder",
+        "correct": false,
+        "why": "The delete worked: the log's version 1 has 98,726 rows."
+      },
+      {
+        "text": "DuckDB counts deleted rows until vacuum runs",
+        "correct": false,
+        "why": "DuckDB knows nothing of deletes here; it read files."
+      },
+      {
+        "text": "It read the folder: the old file and the new",
+        "correct": true,
+        "why": "Right. Only a reader of the log knows the old file is out of the table."
+      },
+      {
+        "text": "The zstd file stores each row twice",
+        "correct": false,
+        "why": "The codec changes the size, not the rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-94af3q8s",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two jobs finish writing their Parquet files at the same moment and both try to commit version 8 of the same table. What stops both from succeeding?",
+    "hint": "A commit is one file with a number for a name.",
+    "choices": [
+      {
+        "text": "The commit file is created only if no file of that name exists; the loser retries as version 9",
+        "correct": true,
+        "why": "Right. The store's \"create only if absent\" is the whole lock, which is why no lock service was needed."
+      },
+      {
+        "text": "A lock service beside the storage account, which Delta needs on Azure",
+        "correct": false,
+        "why": "`deltalake` wrote to Azurite in lesson 17 with no lock service."
+      },
+      {
+        "text": "Nothing; both commit and the table has two version 8s",
+        "correct": false,
+        "why": "Two files cannot have the same name, and the second creation fails."
+      },
+      {
+        "text": "Delta allows one writer per table, so the second job was never started",
+        "correct": false,
+        "why": "Writers do not ask permission to start; they find out at the commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-96exn812",
+    "version": 1,
+    "section": "the-log",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a commit, the ___ action takes a file out of the table and leaves it on disk.",
+    "hint": "Its opposite is `add`.",
+    "blanks": [
+      {
+        "accept": [
+          "remove"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8f7ed5tz",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `lake/by_day`, where is the `dt` of each order kept?",
+    "hint": "Look at the schema the Parquet file printed.",
+    "choices": [
+      {
+        "text": "In a `dt` column inside every Parquet file",
+        "correct": false,
+        "why": "The partitioned files have no `dt` column; their schema lists six columns."
+      },
+      {
+        "text": "In the folder's name and in the log",
+        "correct": true,
+        "why": "Right. The reader puts the column back from there, and filters on it without opening a file."
+      },
+      {
+        "text": "In the Parquet footer's statistics only",
+        "correct": false,
+        "why": "The footer describes the columns inside the file, and `dt` is not one of them."
+      },
+      {
+        "text": "In a separate partition index file that the library keeps beside the log",
+        "correct": false,
+        "why": "There is no such file; the log and the folders are all there is."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctwvzj8q",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The month question read 2,442,170 bytes from `by_day`, which holds 1,879,174 bytes on disk. How can a reader read more than there is?",
+    "hint": "Each daily file is about 60 KB.",
+    "choices": [
+      {
+        "text": "The partition values were read once per row",
+        "correct": false,
+        "why": "Partition values come from the log, not from the files."
+      },
+      {
+        "text": "DuckDB read every file twice to check them",
+        "correct": false,
+        "why": "Nothing checks files by reading them twice."
+      },
+      {
+        "text": "The first read, for the footer, fetched each small file whole, and the columns were read again",
+        "correct": true,
+        "why": "Right. A file smaller than that first read is read whole and then partly again."
+      },
+      {
+        "text": "The log's JSON was counted as data",
+        "correct": false,
+        "why": "`measure.py` counted only what crossed the tap, which the dataset opened: the Parquet files."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t6ac9t9",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`lake/daily` has no partition column, yet the question about one day opened 1 file of 31. How did the reader know which?",
+    "hint": "Each file was written by one night's append.",
+    "choices": [
+      {
+        "text": "It opened each footer and stopped at the right one",
+        "correct": false,
+        "why": "It opened one file, not 31 footers."
+      },
+      {
+        "text": "Each file's statistics in the log say its smallest and largest `dt` are that day",
+        "correct": true,
+        "why": "Right. That is data skipping, and it needs no folders, only files written in the order they are asked about."
+      },
+      {
+        "text": "The file names carry the date",
+        "correct": false,
+        "why": "The names are random; the date is not in them."
+      },
+      {
+        "text": "`deltalake` quietly partitions every table by its date column, whether asked to or not",
+        "correct": false,
+        "why": "`daily` was written with no `partition_by`, and has no `dt=` folders."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfsfhv0a",
+    "version": 1,
+    "section": "partitions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Deleting the same order copied 98,726 rows in `lake/flat` and 2,998 in `lake/by_day`. How many times fewer rows did the partitioned table copy, to the nearest whole number?",
+    "hint": "Divide one by the other.",
+    "value": 33,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5ctzd7vd",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Support often looks up one customer's orders, so somebody proposes partitioning the orders table by `customer_id`. What happens to the dashboard's question about one day?",
+    "hint": "How many folders hold one day's orders?",
+    "choices": [
+      {
+        "text": "It gets faster, since each folder is smaller",
+        "correct": false,
+        "why": "Smaller folders help only a question that names a customer."
+      },
+      {
+        "text": "Nothing changes, because the day is still in the log",
+        "correct": false,
+        "why": "Each customer's file holds many days, so its `dt` range rules little out."
+      },
+      {
+        "text": "It opens thousands of tiny files, one per customer",
+        "correct": true,
+        "why": "Right. Every customer may have ordered that day, so every folder is opened, and each file costs more to open than it holds."
+      },
+      {
+        "text": "It fails, since a partitioned table can be filtered only on its partition column",
+        "correct": false,
+        "why": "Any column can be filtered; the partition decides only what can be skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvvxe9rv",
+    "version": 1,
+    "section": "partitions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these let a reader skip a file without opening it? Choose all that apply.",
+    "hint": "Whatever the reader learns before it opens anything.",
+    "choices": [
+      {
+        "text": "The partition value recorded for the file",
+        "correct": true,
+        "why": "Yes: it is in the path and the log."
+      },
+      {
+        "text": "The smallest and largest values in the file's `add` statistics",
+        "correct": true,
+        "why": "Yes: that is data skipping."
+      },
+      {
+        "text": "The row-group statistics in the Parquet footer",
+        "correct": false,
+        "why": "They let a reader skip parts of a file, after opening it to read the footer."
+      },
+      {
+        "text": "The commit's `commitInfo`",
+        "correct": false,
+        "why": "It records who did what and when, nothing about values."
+      }
+    ]
+  },
+  {
+    "id": "ex-epgcsn59",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did compacting `lake/hourly` change?",
+    "hint": "Count the rows before and after.",
+    "choices": [
+      {
+        "text": "The rows, which were sorted and deduplicated",
+        "correct": false,
+        "why": "Compaction changes no row; its actions say `dataChange=false`."
+      },
+      {
+        "text": "The files: 527 small ones became 31",
+        "correct": true,
+        "why": "Right. Same 98,727 rows, one file per day."
+      },
+      {
+        "text": "The partitions, which went from days to months",
+        "correct": false,
+        "why": "The partitions stayed `dt`; each day was compacted within itself."
+      },
+      {
+        "text": "Nothing in the table, only the disk, where the small files were deleted",
+        "correct": false,
+        "why": "It is the other way round: the table changed and the disk kept the old files."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7sjrptn",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After compaction the disk held 558 Parquet files for a table of 31. Why?",
+    "hint": "Compaction is a commit like any other.",
+    "choices": [
+      {
+        "text": "The 527 small files left the table and stayed on disk until vacuum",
+        "correct": true,
+        "why": "Right. 527 old plus 31 new is 558."
+      },
+      {
+        "text": "Compaction failed halfway and left both",
+        "correct": false,
+        "why": "It committed: version 527 names 31 files."
+      },
+      {
+        "text": "The checkpoints are Parquet files too",
+        "correct": false,
+        "why": "The count left out `_delta_log`, where the checkpoints are."
+      },
+      {
+        "text": "Each new file was written once per partition column and once per sort column",
+        "correct": false,
+        "why": "Each day became one file, written once."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnxr9far",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every action of the compaction commit says `dataChange=false`. Who is that for?",
+    "hint": "Think of a reader that wants only what is new.",
+    "choices": [
+      {
+        "text": "Vacuum, which keeps files marked that way forever, whatever the retention",
+        "correct": false,
+        "why": "Vacuum removes what no recent version names, whatever the flag."
+      },
+      {
+        "text": "A job that reads only what is new",
+        "correct": true,
+        "why": "Right. It skips the commit instead of reading the month again as 31 new files."
+      },
+      {
+        "text": "DuckDB, which refuses files with that flag",
+        "correct": false,
+        "why": "DuckDB read the compacted table normally."
+      },
+      {
+        "text": "The person reading the history, and no program",
+        "correct": false,
+        "why": "Programs read it: a reader that follows changes depends on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0n0tvxv",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's loader appends to the orders table every hour from 7 to 23. When should the partition `dt=2026-10-15` be compacted?",
+    "hint": "Compacting a partition that is still being written is wasted work.",
+    "choices": [
+      {
+        "text": "After every hourly load, to keep it at one file all day",
+        "correct": false,
+        "why": "Seventeen rewrites of a growing day, where one would do."
+      },
+      {
+        "text": "Once a month, together with every other day",
+        "correct": false,
+        "why": "A month of dashboards reads the small files first."
+      },
+      {
+        "text": "Once, after the day's last load",
+        "correct": true,
+        "why": "Right. The day is then closed, and one rewrite leaves it at one file for good."
+      },
+      {
+        "text": "Never; vacuum merges small files on its own",
+        "correct": false,
+        "why": "Vacuum deletes files; it merges nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-76gzez11",
+    "version": 1,
+    "section": "time-travel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does vacuum delete?",
+    "hint": "It is the one operation that deletes data files.",
+    "choices": [
+      {
+        "text": "Rows that a delete has marked",
+        "correct": false,
+        "why": "A delete already rewrote the files; vacuum works on whole files."
+      },
+      {
+        "text": "Commits older than seven days from `_delta_log`",
+        "correct": false,
+        "why": "The log has its own retention; vacuum deletes data files."
+      },
+      {
+        "text": "Data files that no version within the retention period names",
+        "correct": true,
+        "why": "Right. Files the current version names are kept, whatever their age."
+      },
+      {
+        "text": "The current version's small files, which compaction replaces",
+        "correct": false,
+        "why": "Vacuum never touches a file the current version names."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmpqmwdw",
+    "version": 1,
+    "section": "time-travel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `vacuum 0 force`, `table.py lake/hourly@100 files` still prints 101 files and 18,577 rows, and `read` fails. Why the difference?",
+    "hint": "What does each one open?",
+    "choices": [
+      {
+        "text": "`files` reads only the log, which still describes version 100; its data files are gone",
+        "correct": true,
+        "why": "Right. The log outlived the files."
+      },
+      {
+        "text": "`files` uses a cache that vacuum does not clear",
+        "correct": false,
+        "why": "Each run opens the table afresh; there is no cache between runs."
+      },
+      {
+        "text": "Vacuum deleted the log of version 100 but not its files",
+        "correct": false,
+        "why": "It is the other way round."
+      },
+      {
+        "text": "`read` failed because the table is locked while vacuum runs",
+        "correct": false,
+        "why": "Vacuum had finished; the error names a missing file."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgehh7nh",
+    "version": 1,
+    "section": "time-travel",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`deltalake` refused a vacuum with zero hours of retention because its default retention is ___ hours, seven days.",
+    "hint": "Seven times twenty-four.",
+    "blanks": [
+      {
+        "accept": [
+          "168"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b497yf9y",
+    "version": 1,
+    "section": "time-travel",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer asks to be erased, and their orders are deleted from the table on a Monday. Retention is seven days and vacuum runs on Sundays. When are the rows gone from the disk?",
+    "hint": "A file becomes eligible seven days after the delete, and something has to remove it.",
+    "choices": [
+      {
+        "text": "On Monday, the moment the delete commits",
+        "correct": false,
+        "why": "The delete takes the rows out of the table; the old files stay on disk."
+      },
+      {
+        "text": "The following Sunday, six days later",
+        "correct": false,
+        "why": "On that Sunday the old files are six days old, inside the seven-day retention, so vacuum keeps them."
+      },
+      {
+        "text": "The second Sunday, 13 days later",
+        "correct": true,
+        "why": "Right. The first vacuum past the seven days is the second Sunday; until then the rows can be read by travelling back."
+      },
+      {
+        "text": "Never, as long as time travel is switched on for the table",
+        "correct": false,
+        "why": "Time travel is not a switch; it lasts as long as the files do."
+      }
+    ]
+  },
+  {
+    "id": "ex-95v7ne20",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`by_day` read 73,813 bytes for the day question. At a thousand times the size, asked 4,464 times a month, at an illustrative 5 USD per terabyte processed (a terabyte being 10^12 bytes), what is the month's bill in USD, to two decimals?",
+    "hint": "Bytes × 1,000 × 4,464, then divide by 10^12 and multiply by 5.",
+    "value": 1.65,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-pj89x92w",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson count the cost of small files in files opened, rather than multiplying their bytes by a thousand like the rest?",
+    "hint": "What sets how many files there are?",
+    "choices": [
+      {
+        "text": "Small files are free to read by the byte",
+        "correct": false,
+        "why": "Bytes are billed the same whatever the file."
+      },
+      {
+        "text": "Their number is set by how many writes there are, not by how much the table holds",
+        "correct": true,
+        "why": "Right. At a thousand times the orders, an hourly load still writes 17 files a day, only bigger."
+      },
+      {
+        "text": "Requests cost more than bytes at every size",
+        "correct": false,
+        "why": "Which costs more depends on the sizes; that is what the tables compare."
+      },
+      {
+        "text": "Compaction makes the bytes of small files irrelevant",
+        "correct": false,
+        "why": "Before compaction the bytes are read; the lesson measured them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e960zp5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each operation on a Delta table to what it writes.",
+    "hint": "Only one of them deletes anything from disk.",
+    "pairs": [
+      {
+        "left": "delete",
+        "right": "New files with the other rows, and a commit that removes the old ones"
+      },
+      {
+        "left": "compact",
+        "right": "Fewer, larger files, in a commit marked as no change to the data"
+      },
+      {
+        "left": "vacuum",
+        "right": "Nothing new: it deletes old files from disk and records two commits"
+      },
+      {
+        "left": "restore",
+        "right": "A commit whose files are those of an older version"
+      }
+    ],
+    "right_distractors": [
+      "An edit inside an existing Parquet file"
+    ]
+  },
+  {
+    "id": "ex-ad7r00bd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a delete on a Delta table in the order they happen.",
+    "hint": "Readers must never see half of it.",
+    "items": [
+      "The new Parquet file, with every other row, is written where no reader looks",
+      "The next numbered commit is created, removing the old file and adding the new",
+      "A reader that starts now reads the new version",
+      "Vacuum, past the retention, deletes the old file from disk"
+    ]
+  }
+]

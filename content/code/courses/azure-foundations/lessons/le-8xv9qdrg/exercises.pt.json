@@ -1,0 +1,436 @@
+{
+ "ex-hafjc569": {
+  "prompt": "O `az group create` sem parâmetros responde `the following arguments are required`. Quem recusou?",
+  "hint": "Alguma coisa saiu do computador?",
+  "choices": [
+   {
+    "text": "O Resource Manager, que precisa de nome para todo grupo",
+    "why": "Nenhum pedido foi mandado; o Resource Manager nem o viu."
+   },
+   {
+    "text": "A própria CLI, ao ler a linha",
+    "why": "Isso. A análise acontece antes de qualquer login ou pedido."
+   },
+   {
+    "text": "O Microsoft Entra ID, por falta de login",
+    "why": "A falta de login dá `Please run 'az login'`, outra parada."
+   },
+   {
+    "text": "O Azure Policy, que exige que os nomes sigam uma convenção",
+    "why": "A política é julgada no Resource Manager, que este comando nem alcançou."
+   }
+  ]
+ },
+ "ex-39vsj012": {
+  "prompt": "A ajuda de `--location` termina com `Config: brazilsouth.`. O que isso diz?",
+  "hint": "Qual configuração o `env.sh` exporta?",
+  "choices": [
+   {
+    "text": "Que `brazilsouth` é a única região que o laboratório aceita",
+    "why": "Qualquer região pode ser citada na linha; isto é só o padrão."
+   },
+   {
+    "text": "Que a assinatura foi criada em São Paulo",
+    "why": "Uma assinatura não tem localização, e o laboratório nem tem uma."
+   },
+   {
+    "text": "Que há uma localização padrão definida e ela vai preencher o parâmetro",
+    "why": "Isso. Ela veio do `AZURE_DEFAULTS_LOCATION`."
+   },
+   {
+    "text": "Que `--location` é obrigatório neste comando",
+    "why": "Só o `--name` estava marcado `[Required]`."
+   }
+  ]
+ },
+ "ex-jdtbkbc8": {
+  "prompt": "O `az config get defaults` lista `group` com a origem `/home/ana/azure/.azure/config`. De onde veio esse valor?",
+  "hint": "Qual comando escreve esse arquivo?",
+  "choices": [
+   {
+    "text": "De um `az config set` que alguém rodou",
+    "why": "Isso. Ele escreve o arquivo de configuração dentro do `AZURE_CONFIG_DIR`."
+   },
+   {
+    "text": "Do `env.sh`, como a localização",
+    "why": "O `env.sh` exporta só a localização; a origem dela diz `AZURE_DEFAULTS_LOCATION`."
+   },
+   {
+    "text": "Do último grupo de recursos que a CLI criou",
+    "why": "A CLI não guarda o que criou como padrão."
+   },
+   {
+    "text": "Das configurações da própria assinatura no Azure",
+    "why": "Um caminho no disco é um arquivo local, não algo lido do Azure."
+   }
+  ]
+ },
+ "ex-wzz62dk9": {
+  "prompt": "Um script de implantação roda `az group delete --yes` e conta com o grupo padrão. Na semana passada um colega rodou `az config set defaults.group=rg-shop-prod` na mesma CLI. Qual é o conselho da lição?",
+  "hint": "Qual dos três lugares vence?",
+  "choices": [
+   {
+    "text": "Exportar `AZURE_DEFAULTS_GROUP` no script, que vence o arquivo",
+    "why": "Venceria, mas continua sendo um padrão que a próxima pessoa pode mudar; citar o grupo é mais seguro."
+   },
+   {
+    "text": "Rodar `az config unset` no começo de todo script",
+    "why": "Remove um padrão e deixa o script ainda dependendo do que mais estiver definido."
+   },
+   {
+    "text": "Nada: o `--yes` pede confirmação antes de apagar",
+    "why": "O `--yes` faz o contrário: pula a confirmação."
+   },
+   {
+    "text": "Citar o grupo na linha de comando toda vez",
+    "why": "Isso. Um parâmetro na linha sempre vence, e não depende do padrão de ninguém."
+   }
+  ]
+ },
+ "ex-ve1zrjb0": {
+  "prompt": "Ordene os três lugares de onde uma configuração pode vir, do que perde para o que vence.",
+  "hint": "O mais perto do comando vence.",
+  "items": [
+   "o arquivo de configuração em `AZURE_CONFIG_DIR`",
+   "uma variável de ambiente `AZURE_<SEÇÃO>_<NOME>`",
+   "um parâmetro na linha de comando"
+  ],
+  "trap": "A variável de ambiente vence o arquivo, e é por isso que o `env.sh` pôde definir a localização sem tocar nele."
+ },
+ "ex-jwzve2wg": {
+  "prompt": "Onde fica uma extensão instalada com `az extension add` neste laboratório?",
+  "hint": "O que o `env.sh` reservou para a CLI?",
+  "choices": [
+   {
+    "text": "Em `~/azure/venv`, ao lado dos pacotes da própria CLI",
+    "why": "As extensões ficam separadas da instalação, para uma atualização não as perder."
+   },
+   {
+    "text": "Em lugar nenhum: extensões rodam no Azure, não localmente",
+    "why": "Uma extensão é um pacote Python que a CLI carrega no seu computador."
+   },
+   {
+    "text": "Em `/usr/lib`, compartilhada por todos os usuários",
+    "why": "Nada neste laboratório é instalado no sistema todo, fora os pacotes do Ubuntu."
+   },
+   {
+    "text": "Dentro do `AZURE_CONFIG_DIR`, em `~/azure/.azure`",
+    "why": "Isso. Então as extensões do laboratório ficam separadas de qualquer outra CLI da máquina."
+   }
+  ]
+ },
+ "ex-jt467tn1": {
+  "prompt": "Para ver cada passo da CLI, inclusive cada pedido e resposta, acrescente `--___` ao comando.",
+  "hint": "A mesma palavra da ferramenta de programador para achar bugs.",
+  "blanks": [
+   {
+    "accept": [
+     "debug"
+    ]
+   }
+  ]
+ },
+ "ex-ftw99aq5": {
+  "prompt": "Qual formato de `--output` é feito para scripts de shell?",
+  "hint": "Sem chaves, sem aspas.",
+  "choices": [
+   {
+    "text": "`table`",
+    "why": "A largura das colunas depende dos dados, o que quebra a análise."
+   },
+   {
+    "text": "`jsonc`",
+    "why": "Os códigos de cor quebram um pipe."
+   },
+   {
+    "text": "`tsv`",
+    "why": "Isso. Valores separados por tabulação, sem nada em volta."
+   },
+   {
+    "text": "`yaml`",
+    "why": "Legível, mas um script teria de analisar YAML."
+   }
+  ]
+ },
+ "ex-e0scfmfv": {
+  "prompt": "Por que `--query \"[?name=='AzureCloud'].endpoints.resourceManager | [0]\" --output tsv` imprimiu um endereço puro, sem colchetes?",
+  "hint": "O que o `| [0]` faz com uma lista?",
+  "choices": [
+   {
+    "text": "Porque o `| [0]` transformou a lista de uma entrada no seu valor",
+    "why": "Isso. O filtro devolveu uma lista, e o `[0]` pegou a primeira entrada."
+   },
+   {
+    "text": "Porque o `tsv` tira os colchetes de qualquer lista",
+    "why": "O `tsv` imprime uma lista como várias linhas, não como um valor só."
+   },
+   {
+    "text": "Porque só uma nuvem está ativa",
+    "why": "O filtro era sobre o nome, não sobre o `isActive`."
+   },
+   {
+    "text": "Porque `endpoints` nunca é uma lista no JMESPath",
+    "why": "É um objeto; a lista veio do filtro na frente dele."
+   }
+  ]
+ },
+ "ex-49qsq5dk": {
+  "prompt": "Ligue cada peça de JMESPath ao que ela faz.",
+  "hint": "Uma delas monta algo novo.",
+  "pairs": [
+   {
+    "left": "`[?name=='AzureCloud']`",
+    "right": "fica com as entradas em que o teste é verdadeiro"
+   },
+   {
+    "left": "`{name: name, active: isActive}`",
+    "right": "monta um objeto novo com campos escolhidos"
+   },
+   {
+    "left": "`length([])`",
+    "right": "conta as entradas"
+   },
+   {
+    "left": "`&name` dentro de `sort_by`",
+    "right": "se refere a um campo em vez do valor dele"
+   }
+  ],
+  "right_distractors": [
+   "manda a consulta ao Azure"
+  ]
+ },
+ "ex-hpkcg7eg": {
+  "prompt": "Uma consulta escrita como `--query '[?name==\"AzureCloud\"].name'` falha com um erro sobre um campo. Qual é a regra da lição?",
+  "hint": "No JMESPath, quais aspas fazem um texto?",
+  "choices": [
+   {
+    "text": "O JMESPath não aceita filtros sobre nomes",
+    "why": "Aceita: o próprio filtro da lição compara `name`."
+   },
+   {
+    "text": "Aspas duplas por fora, simples para os textos de dentro",
+    "why": "Isso. No JMESPath aspas duplas nomeiam um campo, então `\"AzureCloud\"` foi lido como um."
+   },
+   {
+    "text": "A consulta precisa terminar em `| [0]`",
+    "why": "O `| [0]` serve para pegar um valor, não para fazer um filtro funcionar."
+   },
+   {
+    "text": "Consultas só funcionam com `--output tsv`",
+    "why": "O `--query` funciona com todo formato de saída."
+   }
+  ]
+ },
+ "ex-vyvp4mc8": {
+  "prompt": "Um script roda `az account list --query \"[0].id\" -o tsv` e guarda o resultado como a assinatura onde implantar. Num terminal em que ninguém fez login, o que acontece?",
+  "hint": "O que o `az account list` respondeu no laboratório, e com qual código de saída?",
+  "choices": [
+   {
+    "text": "O comando falha, e um script com `set -e` para na hora",
+    "why": "Ele não falhou: saiu com 0."
+   },
+   {
+    "text": "A CLI abre um navegador para fazer login antes",
+    "why": "Só o `az login` faz isso; este comando só avisa."
+   },
+   {
+    "text": "Recebe um valor vazio e segue em frente, com código de saída 0",
+    "why": "Isso. Uma lista vazia é uma resposta correta, então o script precisa conferir o que voltou."
+   },
+   {
+    "text": "Pega a assinatura citada no `env.sh`",
+    "why": "O `env.sh` não cita assinatura nenhuma."
+   }
+  ]
+ },
+ "ex-7nskw6pp": {
+  "prompt": "Você tem um `main.json` compilado e quer os tipos de recurso dele. Qual ferramenta a lição manda usar?",
+  "hint": "Um arquivo é a resposta de um comando `az`?",
+  "choices": [
+   {
+    "text": "`az --query`, que aceita um nome de arquivo",
+    "why": "O `--query` só funciona sobre a resposta do comando a que é dado."
+   },
+   {
+    "text": "O `jq`, já que o template é um arquivo e não uma resposta da CLI",
+    "why": "Isso. `--query` para uma resposta do `az`, `jq` para todo o resto."
+   },
+   {
+    "text": "`grep` na saída `table`",
+    "why": "Não há `table` de um arquivo, e analisar uma tabela é justamente o que se evita."
+   },
+   {
+    "text": "`az bicep build --query`",
+    "why": "Compilar imprime um template; não é uma resposta JSON que a CLI filtra."
+   }
+  ]
+ },
+ "ex-rvbd86ys": {
+  "prompt": "A linguagem de consulta por trás do `--query` se chama ___.",
+  "hint": "O nome começa com JMES.",
+  "blanks": [
+   {
+    "accept": [
+     "JMESPath"
+    ]
+   }
+  ]
+ },
+ "ex-6y2jh1d8": {
+  "prompt": "Qual é o equivalente em Azure PowerShell do `az group list`?",
+  "hint": "Verbo-substantivo, com `Az` no substantivo.",
+  "choices": [
+   {
+    "text": "`List-AzGroup`",
+    "why": "`List` não é um dos verbos do PowerShell; `Get` é."
+   },
+   {
+    "text": "`az-group-list`",
+    "why": "Isso é o comando da CLI com hífens, não um cmdlet."
+   },
+   {
+    "text": "`Show-AzureGroups`",
+    "why": "Os substantivos do módulo começam com `Az` e ficam no singular."
+   },
+   {
+    "text": "`Get-AzResourceGroup`",
+    "why": "Isso. `Get` lê, e o substantivo nomeia o tipo."
+   }
+  ]
+ },
+ "ex-a14khm2x": {
+  "prompt": "Qual diferença entre a CLI do Azure e o Azure PowerShell a lição diz que importa?",
+  "hint": "Veja o que volta.",
+  "choices": [
+   {
+    "text": "O PowerShell devolve objetos, a CLI imprime texto",
+    "why": "Isso. Escolha pelo que a sua equipe já escreve."
+   },
+   {
+    "text": "O PowerShell alcança serviços que a CLI não alcança",
+    "why": "Os dois chegam à mesma API, então nenhum faz o que o outro não faz."
+   },
+   {
+    "text": "A CLI é mais rápida porque pula o Resource Manager",
+    "why": "Nenhum o pula; os dois mandam os pedidos pelo Resource Manager."
+   },
+   {
+    "text": "O PowerShell só roda no Windows",
+    "why": "O PowerShell 7 roda no Linux e no macOS também."
+   }
+  ]
+ },
+ "ex-43gc6yr1": {
+  "prompt": "Quais destas são verdade sobre o Cloud Shell, pela documentação da Microsoft? Marque todas as que se aplicam.",
+  "hint": "Pense na máquina, no armazenamento e na conta.",
+  "choices": [
+   {
+    "text": "Uma sessão termina depois de 20 minutos sem atividade interativa",
+    "why": "Isso. A máquina é temporária."
+   },
+   {
+    "text": "Guarda o `$HOME` num compartilhamento de 5 GB na sua própria storage account",
+    "why": "Isso, e esse armazenamento é cobrado pelo preço normal."
+   },
+   {
+    "text": "Funciona sem conta do Azure",
+    "why": "Ele abre a partir do portal, logado como você."
+   },
+   {
+    "text": "Já está logado com a identidade que você usou no portal",
+    "why": "Isso. É o que o torna prático para cinco minutos."
+   },
+   {
+    "text": "Software instalado fora do `$HOME` sobrevive até a próxima sessão",
+    "why": "A máquina é trocada; só o `$HOME` persiste, e só com armazenamento."
+   }
+  ]
+ },
+ "ex-4h0edq4w": {
+  "prompt": "A Ana mantém produção e staging separados fazendo login em cada um num terminal separado, cada um com o seu `AZURE_CONFIG_DIR`. Contra o que esse arranjo protege?",
+  "hint": "O que uma CLI que nunca fez login em staging sabe sobre ela?",
+  "choices": [
+   {
+    "text": "Contra um token roubado do disco",
+    "why": "Cada diretório continua guardando um token; o arranjo é sobre erros, não roubo."
+   },
+   {
+    "text": "Contra apontar um comando para a assinatura errada por engano",
+    "why": "Isso. O terminal de produção não alcança staging de jeito nenhum."
+   },
+   {
+    "text": "Contra a limitação de pedidos, já que cada diretório tem o seu limite",
+    "why": "Os limites são contados por assinatura e região no Azure, não por diretório."
+   },
+   {
+    "text": "Contra precisar de autenticação multifator duas vezes",
+    "why": "Dois logins são dois segundos fatores, não menos."
+   }
+  ]
+ },
+ "ex-8y0rr5nv": {
+  "prompt": "O `az network vnet create` é digitado sem `--location`, num terminal que leu o `env.sh`. Para onde a rede iria?",
+  "hint": "Qual padrão o `env.sh` exporta?",
+  "choices": [
+   {
+    "text": "Para `southcentralus`, o par de São Paulo",
+    "why": "O par não tem nada a ver com padrões."
+   },
+   {
+    "text": "Para lugar nenhum: o comando é recusado sem localização",
+    "why": "Um padrão o preenche, como a ajuda disse com `Config:`."
+   },
+   {
+    "text": "Para a região da assinatura",
+    "why": "Uma assinatura não tem região própria."
+   },
+   {
+    "text": "Para `brazilsouth`",
+    "why": "Isso. O `AZURE_DEFAULTS_LOCATION` preenche o parâmetro que falta."
+   }
+  ]
+ },
+ "ex-5a5h85ea": {
+  "prompt": "Um script analisa `az vm list --output table` com `awk '{print $2}'` e funciona por meses, depois quebra. Qual é a causa mais provável sobre a qual a lição avisa?",
+  "hint": "O que decide o formato de uma tabela?",
+  "choices": [
+   {
+    "text": "Um valor novo mudou as colunas",
+    "why": "Isso. Larguras e colunas seguem os dados, então peça os campos com `--query` e use `tsv`."
+   },
+   {
+    "text": "A Microsoft removeu o `--output table`",
+    "why": "Ele continua existindo; o que mudou foi o formato."
+   },
+   {
+    "text": "O `awk` não consegue ler saída de programas Python",
+    "why": "O `awk` lê qualquer texto; o problema é qual texto chega."
+   },
+   {
+    "text": "A lista de VMs ficou comprida demais para um pipe",
+    "why": "Um pipe não tem limite de tamanho que importe aqui."
+   }
+  ]
+ },
+ "ex-pzecc486": {
+  "prompt": "Ponha em ordem o que acontece com a resposta de um comando `az`.",
+  "hint": "O formato vem por último.",
+  "items": [
+   "a CLI recebe a resposta em JSON",
+   "o `--query` fica com a parte pedida",
+   "o `--output` imprime essa parte no formato escolhido"
+  ],
+  "trap": "Os dois passos depois do primeiro rodam no seu computador, depois que a resposta chegou."
+ },
+ "ex-s76fst5j": {
+  "prompt": "Para um comando não imprimir nada quando só o código de saída importa, use `--output ___`.",
+  "hint": "A palavra em inglês para nada.",
+  "blanks": [
+   {
+    "accept": [
+     "none"
+    ]
+   }
+  ]
+ }
+}

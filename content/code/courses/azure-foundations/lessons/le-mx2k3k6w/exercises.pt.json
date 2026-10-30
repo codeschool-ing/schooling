@@ -1,0 +1,446 @@
+{
+ "ex-g2pvk5c9": {
+  "prompt": "Qual dos quatro serviços é regional e lê cada pedido HTTP?",
+  "hint": "Regional e camada 7.",
+  "choices": [
+   {
+    "text": "Azure Load Balancer",
+    "why": "Regional, mas camada 4: lê endereços e portas, nunca uma URL."
+   },
+   {
+    "text": "Application Gateway",
+    "why": "Isso. Um proxy reverso numa região, decidindo pedido a pedido."
+   },
+   {
+    "text": "Front Door",
+    "why": "Ele também lê HTTP, mas fica na borda, na frente de várias regiões."
+   },
+   {
+    "text": "Traffic Manager",
+    "why": "Ele responde consultas de DNS e não lê pedido nenhum."
+   }
+  ]
+ },
+ "ex-vazzkqdz": {
+  "prompt": "O navegador de um usuário ouviu do Traffic Manager que devia usar o endpoint A. O endpoint A cai um minuto depois. O que faz o próximo pedido do usuário?",
+  "hint": "Onde a decisão foi tomada, e quanto tempo ela dura?",
+  "choices": [
+   {
+    "text": "O Traffic Manager o redireciona no caminho para o endpoint B",
+    "why": "Nenhum pacote passa pelo Traffic Manager, então não há nada no caminho para ele redirecionar."
+   },
+   {
+    "text": "Falha na hora, e todo pedido seguinte falha também",
+    "why": "Quando o cache expira, a próxima consulta recebe um endpoint saudável."
+   },
+   {
+    "text": "Ainda vai para A até a resposta em cache expirar",
+    "why": "Isso. A decisão mora no DNS, e as respostas do DNS ficam em cache pelo TTL."
+   },
+   {
+    "text": "O Front Door assume, já que ele é reserva do Traffic Manager",
+    "why": "São serviços separados; um não fica atrás do outro a não ser que você monte assim."
+   }
+  ]
+ },
+ "ex-sf3t12j7": {
+  "prompt": "A aplicação atrás de um Application Gateway registra o endereço de origem de cada pedido. O que ela registra?",
+  "hint": "Quem abriu a conexão que a aplicação recebeu?",
+  "choices": [
+   {
+    "text": "O endereço público do próprio cliente",
+    "why": "Isso é o que um backend atrás do Load Balancer vê. Um proxy abre uma conexão própria."
+   },
+   {
+    "text": "O endereço da localidade de borda mais próxima da Microsoft",
+    "why": "Localidades de borda são do Front Door, que este desenho não tem."
+   },
+   {
+    "text": "Nada, já que um proxy remove o endereço de origem",
+    "why": "Todo pacote tem origem; ela é a do gateway."
+   },
+   {
+    "text": "Um endereço do gateway, da sub-rede dele",
+    "why": "Isso. O endereço do cliente chega no `X-Forwarded-For`."
+   }
+  ]
+ },
+ "ex-t79cdert": {
+  "prompt": "Um Application Gateway guarda o endereço do cliente no cabeçalho ___.",
+  "hint": "Começa com X.",
+  "blanks": [
+   {
+    "accept": [
+     "X-Forwarded-For"
+    ]
+   }
+  ]
+ },
+ "ex-2cqj1jjx": {
+  "prompt": "Quais destas coisas o Application Gateway faz e o Load Balancer não? Marque todas as que se aplicam.",
+  "hint": "Quais delas precisam que o pedido seja lido?",
+  "choices": [
+   {
+    "text": "Mandar `/api/` para um pool e as páginas para outro",
+    "why": "Isso. Isso precisa do caminho, que só um serviço de camada 7 lê."
+   },
+   {
+    "text": "Espalhar tráfego UDP pelas máquinas",
+    "why": "Esse é o trabalho do Load Balancer; o gateway lida com HTTP."
+   },
+   {
+    "text": "Hospedar vários sites num endereço",
+    "why": "Isso. Ele lê o nome do host em cada pedido."
+   },
+   {
+    "text": "Receber health probes das máquinas",
+    "why": "Os dois sondam os backends; nenhum recebe sondas deles."
+   },
+   {
+    "text": "Manter um usuário numa máquina com um cookie",
+    "why": "Isso. Um cookie é parte do pedido, invisível na camada 4."
+   }
+  ]
+ },
+ "ex-9v3z3ej7": {
+  "prompt": "O que aconteceu com o SKU Basic do Azure Load Balancer?",
+  "hint": "Uma data em setembro de 2025.",
+  "choices": [
+   {
+    "text": "Foi aposentado em 30 de setembro de 2025",
+    "why": "Isso. Todo load balancer criado hoje é Standard."
+   },
+   {
+    "text": "Foi renomeado para Standard, com os mesmos recursos",
+    "why": "O Standard era um SKU separado com mais recursos, não um nome novo."
+   },
+   {
+    "text": "Passou para a camada global",
+    "why": "A camada global é uma forma do Standard, sem relação com o Basic."
+   },
+   {
+    "text": "Virou o padrão para load balancers internos",
+    "why": "Os internos também são Standard."
+   }
+  ]
+ },
+ "ex-gfjfssdj": {
+  "prompt": "Ligue cada lista do `lb.bicep` ao que ela diz.",
+  "hint": "A regra é a que junta as outras três.",
+  "pairs": [
+   {
+    "left": "`frontendIPConfigurations`",
+    "right": "onde o tráfego chega"
+   },
+   {
+    "left": "`backendAddressPools`",
+    "right": "para onde o tráfego pode ir"
+   },
+   {
+    "left": "`probes`",
+    "right": "quais máquinas estão aptas"
+   },
+   {
+    "left": "`loadBalancingRules`",
+    "right": "qual porta vai para qual pool"
+   }
+  ],
+  "right_distractors": [
+   "em que zona o load balancer fica"
+  ]
+ },
+ "ex-tfgt3r2e": {
+  "prompt": "O template compilado mostrou `\"zones\":null` para `lb-shop-web` e as três zonas para `pip-shop-web`. O que isso faz do front end?",
+  "hint": "De onde um front end Standard tira as zonas?",
+  "choices": [
+   {
+    "text": "Zonal, na zona 1, já que o load balancer não citou nenhuma",
+    "why": "Não citar zona não quer dizer zona 1. O front end segue o endereço."
+   },
+   {
+    "text": "Inválido: um load balancer Standard precisa listar as zonas",
+    "why": "Compilou, e o recurso load balancer não tem propriedade de zonas a preencher."
+   },
+   {
+    "text": "Redundante entre zonas, porque o endereço abrange as três",
+    "why": "Isso. O próprio load balancer é regional e não tem nada a dizer sobre zonas."
+   },
+   {
+    "text": "Regional, sem proteção contra a queda de uma zona",
+    "why": "O endereço é servido pelas três zonas, então perder uma não o derruba."
+   }
+  ]
+ },
+ "ex-2whc9k4p": {
+  "prompt": "O front end da loja é redundante entre zonas, e as três máquinas web do `be-web` foram criadas na zona 2. A zona 2 cai. O que os clientes recebem?",
+  "hint": "Qual metade sobreviveu?",
+  "choices": [
+   {
+    "text": "Nada: o endereço responde, e nenhuma máquina atrás dele",
+    "why": "Isso. O front end sobreviveu a uma zona e o pool não."
+   },
+   {
+    "text": "O site, porque a probe move as máquinas para a zona 1",
+    "why": "Uma probe só marca máquinas como inaptas. Nada as move."
+   },
+   {
+    "text": "O site, servido pela cópia do front end em outra zona",
+    "why": "Um front end encaminha tráfego; ele não guarda cópia do site para servir."
+   },
+   {
+    "text": "Um redirecionamento para a região pareada, `southcentralus`",
+    "why": "Um load balancer nunca manda tráfego para outra região sozinho."
+   }
+  ]
+ },
+ "ex-s59hyaz2": {
+  "prompt": "Por que a `rule-https` define `disableOutboundSnat: true`?",
+  "hint": "É sobre conexões que as máquinas abrem, não as que recebem.",
+  "choices": [
+   {
+    "text": "Para impedir os clientes de alcançar as máquinas diretamente",
+    "why": "O alcance de entrada é o front end e os filtros da rede; esta configuração é sobre saída."
+   },
+   {
+    "text": "Para a saída ir por um caminho próprio, não por este endereço",
+    "why": "Isso. Um NAT gateway ou uma regra de saída, em vez de esgotar as portas de um endereço compartilhado."
+   },
+   {
+    "text": "Porque HTTPS na porta 443 não pode ser traduzido",
+    "why": "A tradução de endereço funciona em qualquer porta; o motivo são as portas do endereço compartilhado."
+   },
+   {
+    "text": "Para manter cada cliente numa máquina",
+    "why": "Isso é persistência de sessão, outra configuração que a regra deixa no padrão."
+   }
+  ]
+ },
+ "ex-fgxy068c": {
+  "prompt": "Como uma máquina web entra no pool `be-web`?",
+  "hint": "O pool no `lb.bicep` ficou vazio.",
+  "choices": [
+   {
+    "text": "Listando o nome dela na propriedade `members` do pool",
+    "why": "O pool não tem essa lista; ele é preenchido do outro lado."
+   },
+   {
+    "text": "Automaticamente, por estar na mesma sub-rede",
+    "why": "Dividir uma sub-rede não põe nada num pool."
+   },
+   {
+    "text": "Respondendo à probe pela primeira vez",
+    "why": "A probe julga membros; ela não os inscreve."
+   },
+   {
+    "text": "Pela própria interface de rede, que cita o pool",
+    "why": "Isso. O Azure liga uma máquina a um pool pela interface de rede dela."
+   }
+  ]
+ },
+ "ex-vc7ezerf": {
+  "prompt": "A `probe-http` pede `/healthz` a cada membro num intervalo fixo. Quantos segundos?",
+  "hint": "`intervalInSeconds`.",
+  "unit": "segundos"
+ },
+ "ex-nv8jsv5a": {
+  "prompt": "Na cadeia que o `dig` imprimiu para `portal.azure.com`, qual nome é do Front Door?",
+  "hint": "Procure o domínio que a lição citou para o Front Door.",
+  "choices": [
+   {
+    "text": "`portal-prod-02-linkage.trafficmanager.net`",
+    "why": "`trafficmanager.net` é o Traffic Manager, que decide primeiro."
+   },
+   {
+    "text": "`p-0010.p-msedge.net`",
+    "why": "Esse é um dos nomes de borda no fim da cadeia."
+   },
+   {
+    "text": "`azureportal.z01.azurefd.net`",
+    "why": "Isso. `azurefd.net` dá nome a um endpoint do Front Door."
+   },
+   {
+    "text": "`portal.azure.com`",
+    "why": "Esse é o nome consultado, um apelido para o resto."
+   }
+  ]
+ },
+ "ex-6kg7x235": {
+  "prompt": "Por que a lição acrescentou `+nottlid` e `grep CNAME` ao `dig`?",
+  "hint": "O que mudaria entre duas execuções?",
+  "choices": [
+   {
+    "text": "Porque os endereços dos serviços da Microsoft são secretos",
+    "why": "São respostas públicas a qualquer um; só variam por lugar e minuto."
+   },
+   {
+    "text": "Para tirar TTLs e endereços, que mudam a cada vez",
+    "why": "Isso. O que fica é a cadeia de nomes, que é a parte que vale ler."
+   },
+   {
+    "text": "Para impedir o `dig` de contatar o Traffic Manager",
+    "why": "A consulta sai do mesmo jeito; as opções só moldam o que é impresso."
+   },
+   {
+    "text": "Porque `+nottlid` pede a resposta sem cache",
+    "why": "Ele tira o TTL da impressão; os caches funcionam como antes."
+   }
+  ]
+ },
+ "ex-34qsdmek": {
+  "prompt": "O `dig shop-azure-foundations-l22.trafficmanager.net` respondeu `NXDOMAIN`. O que isso diz?",
+  "hint": "De quem é a zona `trafficmanager.net`?",
+  "choices": [
+   {
+    "text": "Ninguém criou um perfil com esse nome",
+    "why": "Isso. Nomes em `trafficmanager.net` são únicos em todo o Azure."
+   },
+   {
+    "text": "O perfil existe mas está desativado",
+    "why": "Um perfil desativado ainda existe como nome. NXDOMAIN diz que não há nenhum."
+   },
+   {
+    "text": "O laboratório não alcança o Traffic Manager sem conta",
+    "why": "Ele alcançou o DNS sem problema; a resposta foi que o nome não existe."
+   },
+   {
+    "text": "Nomes do Traffic Manager não podem ter os dígitos `22`",
+    "why": "Dígitos são permitidos; o nome só não tem dono."
+   }
+  ]
+ },
+ "ex-k5p6c59v": {
+  "prompt": "Um jogo multijogador manda UDP para servidores em `brazilsouth` e `eastus` e quer cada jogador na região mais próxima. Qual serviço serve?",
+  "hint": "Faça as três perguntas em ordem.",
+  "choices": [
+   {
+    "text": "Front Door, com o roteamento por latência das origens",
+    "why": "O Front Door faz proxy de HTTP. UDP reprova na primeira pergunta."
+   },
+   {
+    "text": "Um Application Gateway em cada região",
+    "why": "Não é HTTP, então não é serviço de camada 7, e cada gateway vê uma região."
+   },
+   {
+    "text": "Um Load Balancer interno abrangendo as duas regiões",
+    "why": "Um load balancer interno serve a rede de uma região."
+   },
+   {
+    "text": "Traffic Manager por desempenho, sobre um Load Balancer por região",
+    "why": "Isso. O direcionamento por DNS escolhe a região e a camada 4 leva o UDP."
+   }
+  ]
+ },
+ "ex-sy017fc3": {
+  "prompt": "Por que o Traffic Manager não está no caminho da loja até `shop.example`?",
+  "hint": "Qual serviço já escolhe a região?",
+  "choices": [
+   {
+    "text": "O Traffic Manager não consegue apontar para um nome em `brazilsouth`",
+    "why": "Ele aponta para endpoints em qualquer lugar, o Brasil incluído."
+   },
+   {
+    "text": "Está aposentado, como o Front Door classic",
+    "why": "O Traffic Manager é um serviço atual. Classic é uma camada do Front Door."
+   },
+   {
+    "text": "O Front Door já escolhe a região",
+    "why": "Isso. Uma segunda camada de DNS só acrescentaria um cache para esperar expirar."
+   },
+   {
+    "text": "Custa mais que o Front Door pelo mesmo tráfego",
+    "why": "A lição não cita preço, e o motivo dado é sobre o desenho."
+   }
+  ]
+ },
+ "ex-nyx4c97h": {
+  "prompt": "Ponha as paradas do pedido de um cliente no desenho da loja em ordem, do cliente para dentro.",
+  "hint": "Global primeiro, depois regional, depois entre as camadas.",
+  "items": [
+   "a localidade de borda do Front Door mais próxima",
+   "o Application Gateway na `snet-agw`",
+   "uma máquina web no `be-web`",
+   "o Load Balancer interno na `snet-app`",
+   "uma máquina da aplicação"
+  ],
+  "trap": "Os pedidos para `/api/` pulam as máquinas web e vão do gateway direto ao pool da aplicação."
+ },
+ "ex-93mk0kmp": {
+  "prompt": "Uma equipe põe o Traffic Manager com TTL de 300 segundos na frente de duas regiões, e promete recuperação \"em um minuto\" depois da queda de uma região. O que há de errado na promessa?",
+  "hint": "Quem guarda a resposta antiga, e por quanto tempo?",
+  "choices": [
+   {
+    "text": "O Traffic Manager leva uma hora para notar uma queda",
+    "why": "As sondas dele notam bem antes disso. A demora está em outro lugar."
+   },
+   {
+    "text": "O Traffic Manager não faz failover entre duas regiões",
+    "why": "O roteamento por prioridade faz exatamente isso."
+   },
+   {
+    "text": "Nada, desde que as duas regiões sejam pareadas",
+    "why": "O pareamento não afeta quanto tempo as respostas de DNS ficam em cache."
+   },
+   {
+    "text": "Respostas em cache seguram usuários na região caída até cinco minutos",
+    "why": "Isso. Um TTL de 300 segundos deixa um resolvedor guardar a resposta antiga por esse tempo."
+   }
+  ]
+ },
+ "ex-z2y2dhf4": {
+  "prompt": "Ligue cada necessidade ao serviço que a decisão da lição dá a ela.",
+  "hint": "Camada primeiro, depois região.",
+  "pairs": [
+   {
+    "left": "TCP para uma camada de banco numa região",
+    "right": "Load Balancer"
+   },
+   {
+    "left": "HTTP numa região, `/api/` separado das páginas",
+    "right": "Application Gateway"
+   },
+   {
+    "left": "HTTP em três regiões, com cache na borda",
+    "right": "Front Door"
+   },
+   {
+    "left": "qualquer protocolo, direcionado por DNS entre regiões",
+    "right": "Traffic Manager"
+   }
+  ]
+ },
+ "ex-zf44kgca": {
+  "prompt": "Qual destas coisas o laboratório de fato conferiu sobre o `lb.bicep`?",
+  "hint": "O que um compilador sabe?",
+  "choices": [
+   {
+    "text": "Que `brazilsouth` vende o SKU Standard",
+    "why": "Isso é um fato sobre o Azure, conhecido só na implantação."
+   },
+   {
+    "text": "Que o arquivo tem um formato que o Resource Manager aceita",
+    "why": "Isso. O formato aqui, os valores lá."
+   },
+   {
+    "text": "Que o endereço público está livre na região",
+    "why": "Endereços são distribuídos pelo Azure na implantação."
+   },
+   {
+    "text": "Que `/healthz` responde nas máquinas web",
+    "why": "Nenhuma máquina existe; o caminho da probe é só um texto."
+   }
+  ]
+ },
+ "ex-a1h6cj4k": {
+  "prompt": "Dos quatro serviços, o ___ é aquele por onde nenhum pacote seu passa.",
+  "hint": "Ele responde no DNS.",
+  "blanks": [
+   {
+    "accept": [
+     "Traffic Manager",
+     "TrafficManager",
+     "Azure Traffic Manager"
+    ]
+   }
+  ]
+ }
+}

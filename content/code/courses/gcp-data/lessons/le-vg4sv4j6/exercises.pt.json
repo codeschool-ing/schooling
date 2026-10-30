@@ -1,0 +1,355 @@
+{
+  "ex-ve6xrfw4": {
+    "prompt": "Uma analista da Quitanda abre um arquivo guardado em Archive. Quanto tempo leva para chegar o primeiro byte?",
+    "hint": "Compare as quatro classes em velocidade, não em preço.",
+    "choices": [
+      {
+        "text": "Até doze horas, depois de um pedido de restauração",
+        "why": "É assim que funcionam alguns níveis de arquivo em outros lugares. O Cloud Storage não tem etapa de restauração por classe: o Archive é lido diretamente."
+      },
+      {
+        "text": "Milissegundos, como no Standard",
+        "why": "Isso. As quatro classes têm a mesma latência e a mesma vazão; o Archive difere no preço e na estadia mínima."
+      },
+      {
+        "text": "Alguns minutos, porque o objeto fica em discos mais lentos",
+        "why": "Nada na classe torna a leitura mais lenta; a diferença é a taxa de recuperação de 0,05 USD por GiB."
+      },
+      {
+        "text": "Não pode ser lido até ser copiado para o Standard antes",
+        "why": "Objetos em Archive são lidos como qualquer outro. Copiá-lo pagaria a taxa de recuperação e uma reescrita."
+      }
+    ]
+  },
+  "ex-2jtjhb1x": {
+    "prompt": "A Quitanda escreve 100 GiB em Coldline (0,007 USD por GiB-mês, mínimo de 90 dias) e apaga depois de 30 dias. Contando um mês como 30 dias, quantos USD de armazenamento ele paga no total?",
+    "hint": "Ele é cobrado pelo mínimo, não pelos dias que ficou."
+  },
+  "ex-0wqyffh6": {
+    "prompt": "Ligue cada classe à sua duração mínima de armazenamento.",
+    "hint": "Cada degrau mais frio multiplica a estadia, mais ou menos.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "Sem mínimo"
+      },
+      {
+        "left": "Nearline",
+        "right": "30 dias"
+      },
+      {
+        "left": "Coldline",
+        "right": "90 dias"
+      },
+      {
+        "left": "Archive",
+        "right": "365 dias"
+      }
+    ],
+    "right_distractors": [
+      "180 dias"
+    ]
+  },
+  "ex-kjrryd7s": {
+    "prompt": "O aplicativo da Quitanda escreve um evento de 4 KB por toque em Archive, 50 milhões por mês. Que custo cresce mais rápido com esse desenho?",
+    "hint": "O Archive não tem tamanho mínimo cobrado. Olhe o que tem preço por requisição.",
+    "choices": [
+      {
+        "text": "O armazenamento, porque cada evento de 4 KB é cobrado como 128 KiB",
+        "why": "O Cloud Storage não tem tamanho mínimo de objeto: um objeto de 4 KB é cobrado como 4 KB."
+      },
+      {
+        "text": "A taxa de recuperação sobre a escrita",
+        "why": "A taxa de recuperação é cobrada em leituras, cópias e reescritas, não no upload."
+      },
+      {
+        "text": "Operações Class A, a 0,05 USD por 1.000 requisições",
+        "why": "Isso: 2.500 USD por mês só para escrevê-los, para dados que pesam uns 200 GB."
+      },
+      {
+        "text": "Quase nada, já que o Archive é a classe mais barata",
+        "why": "É a mais barata para guardar por GiB, e a mais cara por requisição."
+      }
+    ]
+  },
+  "ex-f413w7hh": {
+    "prompt": "Um upload não informa `--storage-class`. No Cloud Storage, que classe o objeto recebe?",
+    "hint": "O bucket tem uma configuração exatamente para isso.",
+    "choices": [
+      {
+        "text": "A classe padrão do bucket",
+        "why": "Isso, e um bucket criado sem padrão tem STANDARD."
+      },
+      {
+        "text": "Sempre STANDARD, diga o bucket o que disser",
+        "why": "É o que o fake-gcs-server faz, ignorando o padrão; o Cloud Storage usa a classe padrão do bucket."
+      },
+      {
+        "text": "NEARLINE, por ser a mais barata sem mínimo longo",
+        "why": "Nada escolhe a classe pelo preço; quem decide é o padrão do bucket."
+      },
+      {
+        "text": "A classe do último objeto escrito naquele prefixo",
+        "why": "Prefixos não têm configurações; o bucket tem."
+      }
+    ]
+  },
+  "ex-v1229hqm": {
+    "prompt": "Um script faz upload com `--storage-class=GLACIER`, e os testes contra o fake-gcs-server passam. O que acontece no Cloud Storage?",
+    "hint": "Veja o que o emulador fez com um nome que não conhece.",
+    "choices": [
+      {
+        "text": "O objeto é guardado como ARCHIVE, a classe mais próxima",
+        "why": "Nada traduz nomes; o Cloud Storage não tem classe GLACIER e não adivinha uma."
+      },
+      {
+        "text": "É recusado, porque essa classe não existe no Cloud Storage",
+        "why": "Isso. O emulador guardou o texto como veio, então o teste não provou nada sobre o nome."
+      },
+      {
+        "text": "O objeto é guardado como STANDARD com um aviso",
+        "why": "O Cloud Storage não recai em silêncio; ele recusa a requisição."
+      },
+      {
+        "text": "Funciona, já que o emulador imita as verificações do Cloud Storage",
+        "why": "O emulador aceitou uma classe que o Cloud Storage não tem, que é justamente o ponto da transcrição."
+      }
+    ]
+  },
+  "ex-4htvt8vw": {
+    "prompt": "A Quitanda muda um objeto Nearline para Archive com `gcloud storage objects update --storage-class=ARCHIVE` dez dias depois de escrevê-lo. O que o Cloud Storage cobra pela mudança?",
+    "hint": "A opção dispara uma reescrita.",
+    "choices": [
+      {
+        "text": "Nada: mudar a classe é editar metadados",
+        "why": "A ajuda diz que ela dispara uma reescrita dos dados do objeto, que é um objeto novo."
+      },
+      {
+        "text": "Só a diferença no preço de armazenamento entre as duas classes daquele dia em diante, proporcional",
+        "why": "Isso deixa de fora o que a reescrita em si custa."
+      },
+      {
+        "text": "Uma operação Class A, uma taxa de recuperação e os 20 dias restantes do Nearline",
+        "why": "Isso. Uma reescrita lê o objeto antigo, escreve um novo e encerra cedo a vida do antigo."
+      },
+      {
+        "text": "Uma operação Class B, porque o objeto é lido",
+        "why": "Uma reescrita é uma escrita, cobrada como Class A ao preço da classe de destino."
+      }
+    ]
+  },
+  "ex-eskh2sd7": {
+    "prompt": "No `gcloud storage objects describe`, depois de `objects update --storage-class`, um número de ___ diferente mostra que um objeto novo foi escrito sobre o antigo.",
+    "hint": "É o número escrito depois do `#` no endereço completo de um objeto.",
+    "blanks": [
+      {
+        "accept": [
+          "generation",
+          "geração",
+          "geracao"
+        ]
+      }
+    ]
+  },
+  "ex-bwbadmgv": {
+    "prompt": "Que comando restaura um objeto guardado em Archive para que possa ser lido?",
+    "hint": "Leia de novo a ajuda de `gcloud storage restore`.",
+    "choices": [
+      {
+        "text": "`gcloud storage restore`",
+        "why": "Esse comando restaura objetos excluídos de forma reversível, o que é outra coisa."
+      },
+      {
+        "text": "`gcloud storage objects update --storage-class=STANDARD`",
+        "why": "Isso reescreve o objeto em Standard, pagando a taxa de recuperação; não é preciso para lê-lo."
+      },
+      {
+        "text": "Nenhum é preciso: `cat` ou `cp` funciona na hora",
+        "why": "Isso. `cat` ou `cp` o lê na hora, e a taxa de recuperação é cobrada sobre os bytes servidos."
+      },
+      {
+        "text": "`gcloud storage cp` com um nível de restauração",
+        "why": "Não existem níveis de restauração nas classes do Cloud Storage."
+      }
+    ]
+  },
+  "ex-anw8347n": {
+    "prompt": "Um relatório lê 300 GiB de objetos em Coldline (recuperação de 0,02 USD por GiB). Deixando de fora operações e rede, qual é a taxa de recuperação, em USD?",
+    "hint": "A taxa é por GiB servido."
+  },
+  "ex-5jshr8rq": {
+    "prompt": "Um programa lê só os primeiros 8 MB de cada objeto de 100 MB em Nearline, e um download às vezes quebra no meio. Sobre o que é cobrada a taxa de recuperação?",
+    "hint": "A página de preços fala dos dados acessados.",
+    "choices": [
+      {
+        "text": "Sobre os bytes realmente servidos",
+        "why": "Isso: 8 MB na leitura parcial, e o que tiver chegado antes da quebra."
+      },
+      {
+        "text": "Sobre o objeto inteiro, 100 MB, toda vez que é aberto",
+        "why": "A página de preços diz que a taxa se baseia nos dados acessados, não no tamanho do objeto."
+      },
+      {
+        "text": "Sobre nada, já que uma leitura parcial é só uma operação Class B",
+        "why": "A operação também é cobrada; a taxa continua valendo para os bytes lidos."
+      },
+      {
+        "text": "Sobre o tamanho do objeto, mas uma vez por mês",
+        "why": "Não existe teto mensal nem cobrança por objeto; é por byte servido."
+      }
+    ]
+  },
+  "ex-e0g34qby": {
+    "prompt": "Num bucket com Autoclass, o que acontece com um objeto lido depois de 200 dias em Coldline?",
+    "hint": "O Autoclass acompanha como cada objeto é usado, nas duas direções.",
+    "choices": [
+      {
+        "text": "Fica em Coldline e paga a taxa de recuperação",
+        "why": "Buckets com Autoclass não pagam taxa de recuperação, e uma leitura move o objeto."
+      },
+      {
+        "text": "Volta para o Standard",
+        "why": "Isso. Uma leitura o devolve ao Standard, e ele começa a envelhecer de novo a partir dali."
+      },
+      {
+        "text": "Segue para o Archive, a classe terminal",
+        "why": "O envelhecimento só acontece enquanto o objeto não é lido."
+      },
+      {
+        "text": "É restaurado primeiro e depois lido",
+        "why": "Nenhuma classe do Cloud Storage precisa de restauração."
+      }
+    ]
+  },
+  "ex-azh70dd2": {
+    "prompt": "O bucket do data lake da Quitanda tem Autoclass e 2 milhões de objetos de 50 MiB cada, guardados o mês todo. A 0,0025 USD por 1.000 objetos a cada 30 dias, qual é a taxa de gerenciamento do mês, em USD?",
+    "hint": "A taxa é por objeto, qualquer que seja o tamanho, a partir de 128 KiB."
+  },
+  "ex-wb1wwrte": {
+    "prompt": "Os logs da Quitanda são escritos como um objeto de 20 KiB por requisição. Por que o Autoclass não economiza nada neles?",
+    "hint": "Olhe o tamanho abaixo do qual o Autoclass não faz nada.",
+    "choices": [
+      {
+        "text": "O Autoclass recusa buckets com objetos pequenos",
+        "why": "Ele aceita; só os deixa onde estão."
+      },
+      {
+        "text": "Objetos abaixo de 128 KiB não são gerenciados: ficam no Standard",
+        "why": "Isso. Não pagam taxa e nunca se movem; escrever menos objetos e maiores é a primeira correção."
+      },
+      {
+        "text": "A taxa de cada objeto de 20 KiB custa mais do que o armazenamento do objeto",
+        "why": "Objetos abaixo de 128 KiB nem pagam a taxa."
+      },
+      {
+        "text": "Os logs são lidos demais na primeira semana para algum dia saírem do Standard",
+        "why": "Pode ser verdade por uma semana; o motivo aqui é o tamanho, que os deixa de fora com qualquer número de leituras."
+      }
+    ]
+  },
+  "ex-8sbz3aen": {
+    "prompt": "A 0,007 USD por GiB-mês, quanto custa guardar um tebibyte (1.024 GiB) em Coldline por um ano, em USD?",
+    "hint": "Volume vezes preço mensal vezes doze."
+  },
+  "ex-xznr76fw": {
+    "prompt": "Um tebibyte fica um ano inteiro em São Paulo e é lido inteiro umas dez vezes. Que classe a conta da aula torna mais barata?",
+    "hint": "O Archive deixa de ganhar em 1,6 leitura, o Nearline só começa em 15,6.",
+    "choices": [
+      {
+        "text": "Archive",
+        "why": "O Archive deixa de ser mais barato que o Coldline em 1,6 leitura completa por ano."
+      },
+      {
+        "text": "Nearline",
+        "why": "O Nearline só vence o Coldline a partir de 15,6 leituras completas por ano."
+      },
+      {
+        "text": "Coldline",
+        "why": "Isso: de cerca de 1,6 a 15,6 leituras completas por ano, o Coldline é a mais barata das quatro."
+      },
+      {
+        "text": "Standard",
+        "why": "O Standard só vence acima de umas 18 leituras completas por ano."
+      }
+    ]
+  },
+  "ex-nafjbav2": {
+    "prompt": "A Quitanda guarda um tebibyte temporário por 60 dias e nunca o lê. Por que o Archive, a linha mais barata da tabela, é a classe errada para ele?",
+    "hint": "A tabela supõe que todo objeto fica um ano inteiro.",
+    "choices": [
+      {
+        "text": "Objetos em Archive não podem ser apagados de jeito nenhum antes de completar um ano",
+        "why": "Podem ser apagados quando você quiser; o problema é a conta que vem depois."
+      },
+      {
+        "text": "O Archive cobra 365 dias: 60 dias custam 37,38 USD, não uns 6",
+        "why": "Isso. O Coldline, com mínimo de 90 dias, cobra 21,50 USD aqui, o mais barato dos quatro."
+      },
+      {
+        "text": "Lê-lo de volta do Archive demoraria mais do que os 60 dias permitem",
+        "why": "Nada no Cloud Storage demora para ler, e esses dados nunca são lidos."
+      },
+      {
+        "text": "O Archive só existe em multirregiões",
+        "why": "O Archive existe em São Paulo, a 0,003 USD por GiB-mês."
+      }
+    ]
+  },
+  "ex-gyz9y0q9": {
+    "prompt": "Ligue cada tipo de dado da Quitanda à classe que combina com ele.",
+    "hint": "Pergunte com que frequência é lido e por quanto tempo é guardado.",
+    "pairs": [
+      {
+        "left": "Os pedidos de hoje, lidos por todo relatório",
+        "right": "Standard"
+      },
+      {
+        "left": "Fotos de entrega lidas só quando um cliente contesta um pedido, guardadas por dois anos",
+        "right": "Archive"
+      },
+      {
+        "left": "Um retrato mensal lido pelo financeiro uma ou duas vezes no ano seguinte",
+        "right": "Coldline"
+      },
+      {
+        "left": "Backups restaurados para teste a cada poucas semanas e guardados por três meses",
+        "right": "Nearline"
+      }
+    ],
+    "right_distractors": [
+      "Rapid storage"
+    ]
+  },
+  "ex-0wwg9ejb": {
+    "prompt": "Ordene as classes pela taxa para ler um GiB de volta, da mais barata para a mais cara.",
+    "hint": "O Standard não cobra nada; o piso do preço de guardar é o teto deste.",
+    "items": [
+      "Standard",
+      "Nearline",
+      "Coldline",
+      "Archive"
+    ]
+  },
+  "ex-je8vg4v9": {
+    "prompt": "Contra o fake-gcs-server, um teste escreve um objeto com `--storage-class=COLDLINE`, reescreve-o para ARCHIVE e confere a classe. O que o teste prova?",
+    "hint": "Veja o que o emulador devolveu depois da reescrita.",
+    "choices": [
+      {
+        "text": "Que reescritas mantêm a classe, já que o emulador respondeu COLDLINE",
+        "why": "O emulador respondeu STANDARD depois de toda reescrita, pedisse o que pedisse."
+      },
+      {
+        "text": "Que a requisição estava bem formada, e nada sobre a classe guardada",
+        "why": "Isso. O emulador escreve todo objeto reescrito como Standard, então a classe que ele mostra é a dele."
+      },
+      {
+        "text": "Que o Cloud Storage recusaria a reescrita dentro do mínimo de 90 dias",
+        "why": "O Cloud Storage permite e cobra o resto dos 90 dias; o emulador não cobra nada."
+      },
+      {
+        "text": "Que a taxa de recuperação do Archive foi cobrada",
+        "why": "Nada é cobrado no emulador, e a taxa seria a do Coldline de qualquer forma."
+      }
+    ]
+  }
+}

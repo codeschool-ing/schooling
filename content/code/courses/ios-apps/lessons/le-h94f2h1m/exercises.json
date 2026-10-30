@@ -1,0 +1,624 @@
+[
+  {
+    "id": "ex-q9p3pbcz",
+    "version": 1,
+    "section": "observable",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can the planner's `PlannerModel` be built and run on Linux, when its views cannot?",
+    "hint": "Which framework does `@Observable` come from?",
+    "choices": [
+      {
+        "text": "Because it is a struct, and structs need no framework",
+        "correct": false,
+        "why": "It is a class, `final class PlannerModel`."
+      },
+      {
+        "text": "Observation is part of the Swift toolchain, not of SwiftUI",
+        "correct": true,
+        "why": "Right. Only the views need SwiftUI, and so a Mac."
+      },
+      {
+        "text": "Linux has a reduced copy of SwiftUI that covers models",
+        "correct": false,
+        "why": "SwiftUI has no Linux version, reduced or otherwise."
+      },
+      {
+        "text": "`@MainActor` lets it run without an Apple SDK",
+        "correct": false,
+        "why": "`@MainActor` is about which thread calls it, not which platform."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6a0adr3",
+    "version": 1,
+    "section": "observable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `@ObservationIgnored` do to `lastSaved`?",
+    "hint": "Section 03's last scene.",
+    "choices": [
+      {
+        "text": "It makes the property read-only",
+        "correct": false,
+        "why": "The program writes it in the last scene."
+      },
+      {
+        "text": "It stops the property being saved to disk",
+        "correct": false,
+        "why": "Nothing in the model saves to disk; the attribute is about tracking."
+      },
+      {
+        "text": "Writes to it notify no view",
+        "correct": true,
+        "why": "Right: setting it printed nothing, because it is out of tracking."
+      },
+      {
+        "text": "It hides the property from other modules",
+        "correct": false,
+        "why": "That is access control; it is still `public`."
+      }
+    ]
+  },
+  {
+    "id": "ex-07kn8d7v",
+    "version": 1,
+    "section": "observable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the week's total `public var week: WeekTotal { … }` rather than a stored property updated after each change?",
+    "hint": "Lesson 6 section 06.",
+    "choices": [
+      {
+        "text": "Computed from `plan` and `today`, it cannot fall behind them",
+        "correct": true,
+        "why": "Right, and Observation tracks what it reads, so a view reading `week` is told when either changes."
+      },
+      {
+        "text": "`@Observable` cannot track stored properties of a struct type",
+        "correct": false,
+        "why": "It tracks `plan`, a struct, perfectly well."
+      },
+      {
+        "text": "Computed properties are faster than stored ones",
+        "correct": false,
+        "why": "They recompute on each read; the point is correctness."
+      },
+      {
+        "text": "The compiler forbids stored properties in an observable class",
+        "correct": false,
+        "why": "`plan` and `today` are stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgc4ht1h",
+    "version": 1,
+    "section": "what-is-tracked",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `today` moved on a week, which two of section 03's screens were told?",
+    "hint": "Which closures read `today`, directly or through `week`?",
+    "choices": [
+      {
+        "text": "CourseListView and Header",
+        "correct": false,
+        "why": "The course list read only course titles, which are in `plan`."
+      },
+      {
+        "text": "CourseListView and WeekView",
+        "correct": false,
+        "why": "The list was left alone; it read nothing that changed."
+      },
+      {
+        "text": "WeekView and Header",
+        "correct": true,
+        "why": "Right: the header read `today`, and `week` reads it too."
+      },
+      {
+        "text": "All three, since `today` belongs to the model",
+        "correct": false,
+        "why": "Observation tells readers of the property, not every holder of the object."
+      }
+    ]
+  },
+  {
+    "id": "ex-ca5tcgz7",
+    "version": 1,
+    "section": "what-is-tracked",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marking `s3` done told `CourseListView`, which shows only course titles. Why?",
+    "hint": "What did the closure actually read on the model?",
+    "choices": [
+      {
+        "text": "Observation tells every view on screen about every change",
+        "correct": false,
+        "why": "The header was not told, so it is not every view."
+      },
+      {
+        "text": "It read `model.plan`, and the change wrote a new `plan`",
+        "correct": true,
+        "why": "Right. `plan` is one tracked property; a session changing inside it is a write to `plan`."
+      },
+      {
+        "text": "Course titles are computed from the sessions",
+        "correct": false,
+        "why": "They are stored in `courses`; nothing computes them."
+      },
+      {
+        "text": "`markDone` calls `print`, which every view observes",
+        "correct": false,
+        "why": "`markDone` prints nothing; the lines come from `onChange`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6e81naet",
+    "version": 1,
+    "section": "what-is-tracked",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In section 03's output, how many screens were told when `lastSaved` was set?",
+    "hint": "Count the lines under that scene.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-37gm5p9m",
+    "version": 1,
+    "section": "what-is-tracked",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the program's output, `WeekView` and `Header` came out in one order. On another run, could they come out in the other?",
+    "hint": "Section 03 says what Observation promises about order.",
+    "choices": [
+      {
+        "text": "No: they come out in the order the closures were registered",
+        "correct": false,
+        "why": "The output already contradicts that: `WeekView` was registered after the list, before the header, and still came out first."
+      },
+      {
+        "text": "Yes: Observation keeps no order among the views it notifies",
+        "correct": true,
+        "why": "Right, which is why nothing in an app should depend on it."
+      },
+      {
+        "text": "No: alphabetical order decides it",
+        "correct": false,
+        "why": "Nothing sorts them by name."
+      },
+      {
+        "text": "Only if the program is built in Release",
+        "correct": false,
+        "why": "The build configuration has nothing to do with notification order."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1eqxv8n",
+    "version": 1,
+    "section": "owning-the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `PlannerApp` keep the model as `@State private var model = PlannerModel(…)`?",
+    "hint": "`App` is a struct, made again when SwiftUI wants.",
+    "choices": [
+      {
+        "text": "So SwiftUI watches the object for changes",
+        "correct": false,
+        "why": "Watching is Observation's job, in any `body` that reads a property."
+      },
+      {
+        "text": "So one instance survives every new copy of the struct",
+        "correct": true,
+        "why": "Right. Without it each copy would create a fresh model and lose the plan."
+      },
+      {
+        "text": "Because classes may only be stored in `@State`",
+        "correct": false,
+        "why": "Views store the same model in a plain `let`."
+      },
+      {
+        "text": "To make the model private to the app's first screen",
+        "correct": false,
+        "why": "It is passed or put in the environment for every screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-396p9d70",
+    "version": 1,
+    "section": "owning-the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`CourseListView` receives the model as `let model: PlannerModel`. How does it get redrawn when the plan changes?",
+    "hint": "What subscribes a view?",
+    "choices": [
+      {
+        "text": "It does not; a `let` never changes, so neither does the screen",
+        "correct": false,
+        "why": "The reference never changes; the object it points to does, and `body` read it."
+      },
+      {
+        "text": "The parent passes a new model after each change",
+        "correct": false,
+        "why": "There is one model for the life of the scene."
+      },
+      {
+        "text": "Its `body` read `model.plan`, so Observation tells SwiftUI to run it again",
+        "correct": true,
+        "why": "Right: reading the property is the subscription, whatever wrapper holds the reference."
+      },
+      {
+        "text": "It needs `@ObservedObject`, or it is never redrawn",
+        "correct": false,
+        "why": "That is the older mechanism, for `ObservableObject`, section 08."
+      }
+    ]
+  },
+  {
+    "id": "ex-8y317xbc",
+    "version": 1,
+    "section": "bindable",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make `$model.today` from a model it was handed, a view declares it `@___ var model: PlannerModel`.",
+    "hint": "The wrapper that adds a projected value and nothing else.",
+    "blanks": [
+      {
+        "accept": [
+          "Bindable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qymhcjgd",
+    "version": 1,
+    "section": "bindable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `@Bindable` add to a view's reference to an observable model?",
+    "hint": "It neither owns nor watches.",
+    "choices": [
+      {
+        "text": "Ownership, so the model survives a redraw",
+        "correct": false,
+        "why": "That is `@State`."
+      },
+      {
+        "text": "A subscription to every property of the model",
+        "correct": false,
+        "why": "Subscription comes from `body` reading properties."
+      },
+      {
+        "text": "The `$` projection, to hand out bindings",
+        "correct": true,
+        "why": "Right: `$model.today` becomes a `Binding<String>`."
+      },
+      {
+        "text": "A copy of the model the text field edits",
+        "correct": false,
+        "why": "No copy: the binding writes the shared model's `today`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyej46pm",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WeekView` declares `@Environment(PlannerModel.self) private var model`, and a preview shows it without `.environment(model)`. What does Apple's documentation say happens?",
+    "hint": "It is not a compile error.",
+    "choices": [
+      {
+        "text": "The preview gets a default `PlannerModel()`",
+        "correct": false,
+        "why": "Nothing makes one for you."
+      },
+      {
+        "text": "The build fails with a missing-environment error",
+        "correct": false,
+        "why": "It compiles; the failure is at run time."
+      },
+      {
+        "text": "The view shows empty values until a model arrives",
+        "correct": false,
+        "why": "That is what asking for an optional lets you write yourself."
+      },
+      {
+        "text": "SwiftUI throws an exception and the app stops",
+        "correct": true,
+        "why": "Right; ask for `PlannerModel?` where the object may be absent."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2175yh9",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `SessionRow` needs one session and nothing else from the model. Which is the better way to give it the session?",
+    "hint": "Section 06's two rules.",
+    "choices": [
+      {
+        "text": "A property in its initialiser, from its parent",
+        "correct": true,
+        "why": "Right: one child, one value, visible where the row is made."
+      },
+      {
+        "text": "`@Environment(PlannerModel.self)`, and look the session up by id",
+        "correct": false,
+        "why": "It works, and it hides where the data comes from and makes every preview supply the model."
+      },
+      {
+        "text": "A new `PlannerModel()` inside the row",
+        "correct": false,
+        "why": "That is a second owner with an empty plan."
+      },
+      {
+        "text": "A global variable the app sets at launch",
+        "correct": false,
+        "why": "A global is invisible to SwiftUI and to Observation's subscriptions through views."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvtxpc8n",
+    "version": 1,
+    "section": "which-tool",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation in the planner to what the view should write.",
+    "hint": "Who creates it, who changes it, how far away is the reader.",
+    "pairs": [
+      {
+        "left": "`PlannerApp` creates the shared model",
+        "right": "`@State private var model = PlannerModel(…)`"
+      },
+      {
+        "left": "`WeekView` reads the model, several levels down",
+        "right": "`@Environment(PlannerModel.self) private var model`"
+      },
+      {
+        "left": "A row changes one session its parent owns",
+        "right": "`@Binding var session: StudySession`"
+      },
+      {
+        "left": "A section remembers whether it is expanded",
+        "right": "`@State private var expanded = false`"
+      }
+    ],
+    "right_distractors": [
+      "`@ObservedObject var model = PlannerModel()`"
+    ]
+  },
+  {
+    "id": "ex-z2e1je5d",
+    "version": 1,
+    "section": "which-tool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `SessionForm` keep its half-typed session in its own `@State` instead of writing straight into the model?",
+    "hint": "Who else needs a session that is not saved yet?",
+    "choices": [
+      {
+        "text": "Text fields cannot bind to an observable model",
+        "correct": false,
+        "why": "They can, through `@Bindable`, section 05."
+      },
+      {
+        "text": "Until it is saved it belongs to nobody else",
+        "correct": true,
+        "why": "Right; writing each keystroke into the plan would show a half-typed session on every screen."
+      },
+      {
+        "text": "The model is read-only outside `PlannerApp`",
+        "correct": false,
+        "why": "The detail screen calls `model.markDone` from outside it."
+      },
+      {
+        "text": "`@State` is faster to type into",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdjfwe66",
+    "version": 1,
+    "section": "which-tool",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these makes a second owner? Choose all that apply.",
+    "hint": "Two plans in one app.",
+    "choices": [
+      {
+        "text": "A detail screen that copies its `plan` argument into its own `@State`",
+        "correct": true,
+        "why": "Yes: from then on its plan and the list's are separate."
+      },
+      {
+        "text": "`@Bindable var model: PlannerModel` in the week screen",
+        "correct": false,
+        "why": "No: it holds the shared reference and adds `$`."
+      },
+      {
+        "text": "`let model = PlannerModel(plan: Plan(), today: …)` inside a view",
+        "correct": true,
+        "why": "Yes: a fresh model with an empty plan, not the app's."
+      },
+      {
+        "text": "`@Environment(PlannerModel.self)` in two different screens",
+        "correct": false,
+        "why": "No: both take out the one model the app put there."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4ssczac",
+    "version": 1,
+    "section": "before-observation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the older `ObservableObject`, which views run `body` again when one `@Published` property changes?",
+    "hint": "What is a view subscribed to there?",
+    "choices": [
+      {
+        "text": "Only those that read that property",
+        "correct": false,
+        "why": "That is what `@Observable` gives, as section 03 measured."
+      },
+      {
+        "text": "Every view that holds the object",
+        "correct": true,
+        "why": "Right: the object announces a change and every holder redraws, whatever it read."
+      },
+      {
+        "text": "None until `objectWillChange` is called by hand",
+        "correct": false,
+        "why": "`@Published` calls it for you."
+      },
+      {
+        "text": "Only the view that created the object",
+        "correct": false,
+        "why": "Views that received it with `@ObservedObject` redraw too."
+      }
+    ]
+  },
+  {
+    "id": "ex-1r3e27sd",
+    "version": 1,
+    "section": "before-observation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A view declares `@ObservedObject var model = OldPlannerModel()`. What goes wrong?",
+    "hint": "`@ObservedObject` does not keep anything.",
+    "choices": [
+      {
+        "text": "It does not compile, because an initial value is not allowed",
+        "correct": false,
+        "why": "It compiles, which is why the mistake survives."
+      },
+      {
+        "text": "The model is shared by every screen by accident",
+        "correct": false,
+        "why": "The opposite: each redraw of the parent makes another one."
+      },
+      {
+        "text": "A new model is created whenever the parent redraws, and its state is lost",
+        "correct": true,
+        "why": "Right: `@StateObject` is the wrapper that creates and keeps."
+      },
+      {
+        "text": "Combine refuses to publish from a view",
+        "correct": false,
+        "why": "Publishing works; the object just does not live long."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8t5txe7",
+    "version": 1,
+    "section": "before-observation",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each older wrapper to its Observation spelling.",
+    "hint": "Section 08's table.",
+    "pairs": [
+      {
+        "left": "`@StateObject`",
+        "right": "`@State`"
+      },
+      {
+        "left": "`@EnvironmentObject`",
+        "right": "`@Environment(Model.self)`"
+      },
+      {
+        "left": "`.environmentObject(model)`",
+        "right": "`.environment(model)`"
+      },
+      {
+        "left": "`@ObservedObject`",
+        "right": "`let`, or `@Bindable` for bindings"
+      }
+    ],
+    "right_distractors": [
+      "`@Published`"
+    ]
+  },
+  {
+    "id": "ex-sf52hne5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of one keystroke in `WeekView`'s text field in order.",
+    "hint": "From the field to the redraw.",
+    "items": [
+      "The field writes into `$model.today`",
+      "The model's `today` is set",
+      "Observation calls `onChange` for every view that read `today`",
+      "SwiftUI runs those views' `body` again",
+      "`WeekView` reads `model.week` for the new week"
+    ]
+  },
+  {
+    "id": "ex-jkyhedwz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A screen that reads any part of `model.plan` redraws on any change to it. When is that worth fixing?",
+    "hint": "Section 03's last paragraph.",
+    "choices": [
+      {
+        "text": "At once, in every app, since any extra redraw is a bug",
+        "correct": false,
+        "why": "For a few dozen sessions nobody can see the cost, and simplicity is worth more."
+      },
+      {
+        "text": "When a measured screen is slow, a list of thousands of rows",
+        "correct": true,
+        "why": "Right: then split the state into pieces each screen reads separately."
+      },
+      {
+        "text": "Not ever: Observation already tracks each session separately",
+        "correct": false,
+        "why": "It tracks `plan` as one property, as the second scene showed."
+      },
+      {
+        "text": "Only when the model is not `@MainActor`",
+        "correct": false,
+        "why": "The actor decides the thread, not what is tracked."
+      }
+    ]
+  }
+]

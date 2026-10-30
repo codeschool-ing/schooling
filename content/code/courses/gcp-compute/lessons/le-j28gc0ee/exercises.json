@@ -1,0 +1,670 @@
+[
+  {
+    "id": "ex-34k7a82n",
+    "version": 1,
+    "section": "revisions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these changes creates a new revision of a Cloud Run service?",
+    "hint": "Is it part of the template?",
+    "choices": [
+      {
+        "text": "Moving 10% of traffic to another revision",
+        "correct": false,
+        "why": "Traffic belongs to the service, not to a revision."
+      },
+      {
+        "text": "Adding a tag to an existing revision",
+        "correct": false,
+        "why": "A tag is an entry in the traffic list."
+      },
+      {
+        "text": "Changing an environment variable",
+        "correct": true,
+        "why": "Right. Anything in the template makes a new revision."
+      },
+      {
+        "text": "Reading the service's logs in Cloud Logging",
+        "correct": false,
+        "why": "Reading changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c2d6zh9",
+    "version": 1,
+    "section": "revisions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a rollback on Cloud Run safer than a redeployment of yesterday's code?",
+    "hint": "What still exists?",
+    "choices": [
+      {
+        "text": "Only traffic moves",
+        "correct": true,
+        "why": "Right. No build, no new image, nothing that can fail differently."
+      },
+      {
+        "text": "A rollback skips the health checks",
+        "correct": false,
+        "why": "Nothing is skipped; nothing new is built."
+      },
+      {
+        "text": "Old revisions run on faster machines",
+        "correct": false,
+        "why": "Revisions do not choose machines."
+      },
+      {
+        "text": "Cloud Run caches yesterday's responses",
+        "correct": false,
+        "why": "There is no response cache involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvcjf8p3",
+    "version": 1,
+    "section": "revisions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With --revision-suffix=v2, the service orders gets a revision named orders-___.",
+    "hint": "The suffix follows the service name.",
+    "blanks": [
+      {
+        "accept": [
+          "v2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wnae15ej",
+    "version": 1,
+    "section": "revisions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At home, orders-v2 answered in about a quarter of a second and orders-v1 in a few milliseconds. What caused the difference?",
+    "hint": "Same image, different configuration.",
+    "choices": [
+      {
+        "text": "orders-v2 was built from a newer image",
+        "correct": false,
+        "why": "Both ran orders:1."
+      },
+      {
+        "text": "Port 8082 is slower than port 8081",
+        "correct": false,
+        "why": "Ports have no speed."
+      },
+      {
+        "text": "K_REVISION makes the program log more",
+        "correct": false,
+        "why": "It only changes the name in the answer."
+      },
+      {
+        "text": "ORDERS_DELAY_MS=250 in orders-v2",
+        "correct": true,
+        "why": "Right. A change of configuration, which is a new revision."
+      }
+    ]
+  },
+  {
+    "id": "ex-anhh6sdw",
+    "version": 1,
+    "section": "revisions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the capture, how many seconds did orders-v2 take to answer /orders? Answer to two decimals.",
+    "hint": "Read time_total.",
+    "value": 0.25,
+    "tolerance": 0.01,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-2fc6f0bw",
+    "version": 1,
+    "section": "traffic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a Cloud Run service's address point at?",
+    "hint": "Not a single revision.",
+    "choices": [
+      {
+        "text": "The newest revision, always",
+        "correct": false,
+        "why": "Only while the split says LATEST at 100%."
+      },
+      {
+        "text": "A traffic split",
+        "correct": true,
+        "why": "Right. By default, LATEST at 100%."
+      },
+      {
+        "text": "A fixed instance chosen at deployment",
+        "correct": false,
+        "why": "Instances come and go."
+      },
+      {
+        "text": "The revision with the most instances",
+        "correct": false,
+        "why": "Instance counts follow the split, not the reverse."
+      }
+    ]
+  },
+  {
+    "id": "ex-fycak4r1",
+    "version": 1,
+    "section": "traffic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 90% to orders-v1 and 10% to orders-v2, a user loads three pages. What can they see?",
+    "hint": "How is each request assigned?",
+    "choices": [
+      {
+        "text": "Only one version, chosen when they first arrive",
+        "correct": false,
+        "why": "Nothing keeps a user on one revision."
+      },
+      {
+        "text": "Only orders-v1, until 10% of all users have arrived",
+        "correct": false,
+        "why": "The split is per request, not per user count."
+      },
+      {
+        "text": "Both versions, since each request is assigned on its own",
+        "correct": true,
+        "why": "Right. Consistency per user needs a flag in the application."
+      },
+      {
+        "text": "orders-v2 on every tenth page exactly",
+        "correct": false,
+        "why": "Assignment is random in proportion, not a rotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1prmrm5",
+    "version": 1,
+    "section": "traffic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan accepted traffic blocks of 90% and 20%. What happens at apply?",
+    "hint": "Who enforces the sum?",
+    "choices": [
+      {
+        "text": "Cloud Run's API refuses it with an error",
+        "correct": true,
+        "why": "Right. The sum is checked on Google's side."
+      },
+      {
+        "text": "Cloud Run scales both to fit 100%",
+        "correct": false,
+        "why": "Nothing rescales; the request is refused."
+      },
+      {
+        "text": "The extra 10% goes to LATEST",
+        "correct": false,
+        "why": "There is no overflow rule."
+      },
+      {
+        "text": "Terraform rejects it before calling Google",
+        "correct": false,
+        "why": "The plan showed it does not check the sum."
+      }
+    ]
+  },
+  {
+    "id": "ex-9751kcw6",
+    "version": 1,
+    "section": "traffic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A split has LATEST at 10% and orders-v1 at 90%. A developer deploys a quick experiment. Who receives 10% of users?",
+    "hint": "LATEST moves on its own.",
+    "choices": [
+      {
+        "text": "orders-v2, because LATEST was pinned when it was set",
+        "correct": false,
+        "why": "LATEST is not pinned; it follows the newest."
+      },
+      {
+        "text": "Nobody, until the split is updated",
+        "correct": false,
+        "why": "LATEST's share moves without an update."
+      },
+      {
+        "text": "orders-v1, which takes over LATEST's share",
+        "correct": false,
+        "why": "Named revisions keep their own share only."
+      },
+      {
+        "text": "The experiment, because it is now the latest revision",
+        "correct": true,
+        "why": "Right. That is why mixing LATEST with named revisions is confusing."
+      }
+    ]
+  },
+  {
+    "id": "ex-802akexe",
+    "version": 1,
+    "section": "traffic",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each traffic entry to what it does.",
+    "hint": "Named, latest, tagged.",
+    "pairs": [
+      {
+        "left": "revision = \"orders-v1\", percent = 90",
+        "right": "Stays on orders-v1 until moved"
+      },
+      {
+        "left": "type LATEST, percent = 10",
+        "right": "Follows each new deployment"
+      },
+      {
+        "left": "tag = \"canary\", percent = 0",
+        "right": "An address with no share of traffic"
+      }
+    ],
+    "right_distractors": [
+      "Deletes the revision after a day"
+    ]
+  },
+  {
+    "id": "ex-msgacexj",
+    "version": 1,
+    "section": "tags-and-no-traffic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a tag give a revision?",
+    "hint": "Three hyphens.",
+    "choices": [
+      {
+        "text": "A share of the service's traffic",
+        "correct": false,
+        "why": "A tag can have 0%; the share is the percent."
+      },
+      {
+        "text": "An address of its own",
+        "correct": true,
+        "why": "Right. canary---orders-….run.app."
+      },
+      {
+        "text": "Protection from being deleted",
+        "correct": false,
+        "why": "Tags do not protect anything."
+      },
+      {
+        "text": "A guarantee of one warm instance",
+        "correct": false,
+        "why": "That is a minimum number of instances."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsqbdba4",
+    "version": 1,
+    "section": "tags-and-no-traffic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team used --no-traffic once for a careful release, then deployed three fixes the normal way. Users see none of them. Why?",
+    "hint": "Read the help's second paragraph.",
+    "choices": [
+      {
+        "text": "The fixes failed their startup probe",
+        "correct": false,
+        "why": "Nothing says they failed; they received no traffic."
+      },
+      {
+        "text": "Cloud Run waits a day before routing to a new revision",
+        "correct": false,
+        "why": "There is no such wait."
+      },
+      {
+        "text": "Nothing points at LATEST any more, until --to-latest",
+        "correct": true,
+        "why": "Right. Later deployments take no traffic either."
+      },
+      {
+        "text": "The tag kept all traffic on the first revision",
+        "correct": false,
+        "why": "A tag reaches a revision; it does not hold the split."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgec9dev",
+    "version": 1,
+    "section": "tags-and-no-traffic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why remove the canary tag when the rollout is over?",
+    "hint": "Who can reach a tag?",
+    "choices": [
+      {
+        "text": "It stays public and guessable",
+        "correct": true,
+        "why": "Right. Removing the tag removes the address."
+      },
+      {
+        "text": "Tags are billed by the hour",
+        "correct": false,
+        "why": "Tags cost nothing in themselves."
+      },
+      {
+        "text": "A tag blocks deleting old revisions",
+        "correct": false,
+        "why": "That is not why; the address is the risk."
+      },
+      {
+        "text": "Tags expire anyway after a rollout",
+        "correct": false,
+        "why": "They stay until removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxz32mxh",
+    "version": 1,
+    "section": "tags-and-no-traffic",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the usual sequence for a careful release in order.",
+    "hint": "Nobody but you first.",
+    "items": [
+      "Deploy with --no-traffic --tag=canary",
+      "Test against the tag's address",
+      "Give the revision a small percentage",
+      "Move to 100% and remove the tag"
+    ],
+    "trap": "A percentage before the tests sends real users to code nobody has tried."
+  },
+  {
+    "id": "ex-em54d8ad",
+    "version": 1,
+    "section": "gradual-rollout",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service takes 2,000 requests an hour and the canary has 10%. How many hours until it has seen 10,000 requests?",
+    "hint": "200 an hour.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-gjacxmn2",
+    "version": 1,
+    "section": "gradual-rollout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which command, from gcloud's own examples, rolls everything back to the old revision?",
+    "hint": "One revision at 100.",
+    "choices": [
+      {
+        "text": "gcloud run services update-traffic myservice --to-latest",
+        "correct": false,
+        "why": "That sends everything to the newest one."
+      },
+      {
+        "text": "gcloud run deploy myservice --no-traffic",
+        "correct": false,
+        "why": "That creates a revision; it moves nothing back."
+      },
+      {
+        "text": "gcloud run services delete myservice",
+        "correct": false,
+        "why": "That removes the service and every revision."
+      },
+      {
+        "text": "update-traffic with --to-revisions=OLD=100",
+        "correct": true,
+        "why": "Right. A rollback is a change of traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t8qkdqg",
+    "version": 1,
+    "section": "gradual-rollout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A rollout rolled back to orders-v1 and orders-v1 now fails on every request. The image did not change. What is the likely cause?",
+    "hint": "What else did orders-v2 change?",
+    "choices": [
+      {
+        "text": "Old revisions decay after a week",
+        "correct": false,
+        "why": "A revision is immutable."
+      },
+      {
+        "text": "The new code changed the data, and the old code cannot read it",
+        "correct": true,
+        "why": "Right. The code went back and the data did not."
+      },
+      {
+        "text": "Cloud Run deleted orders-v1's image to save space",
+        "correct": false,
+        "why": "Revisions keep their images by digest."
+      },
+      {
+        "text": "The tag canary still points at orders-v2",
+        "correct": false,
+        "why": "A tag affects only its own address."
+      }
+    ]
+  },
+  {
+    "id": "ex-emcwv0gv",
+    "version": 1,
+    "section": "gradual-rollout",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should be written down before a rollout starts? Choose all that apply.",
+    "hint": "The decision, not the mechanism.",
+    "choices": [
+      {
+        "text": "The metric to watch for each revision",
+        "correct": true,
+        "why": "Right; latency and errors, per revision."
+      },
+      {
+        "text": "The threshold that triggers a rollback",
+        "correct": true,
+        "why": "Right; decided before anyone is tempted to wait."
+      },
+      {
+        "text": "The run.app address of the new revision",
+        "correct": false,
+        "why": "It is assigned by Google and not a decision."
+      },
+      {
+        "text": "How long each stage lasts",
+        "correct": true,
+        "why": "Right; a stage of very little traffic sees very little."
+      }
+    ]
+  },
+  {
+    "id": "ex-2w2ng9kn",
+    "version": 1,
+    "section": "gradual-rollout",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Google Cloud ___ automates canary stages for Cloud Run, moving traffic by pipeline.",
+    "hint": "A delivery product.",
+    "blanks": [
+      {
+        "accept": [
+          "Deploy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gpdr9k1g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the moves in gcloud's update-traffic examples as one rollout that fails.",
+    "hint": "Up, up, then back.",
+    "items": [
+      "New revision at 10%",
+      "New revision at 20%",
+      "Old revision at 100%"
+    ],
+    "trap": "The last move is a rollback, and it builds nothing."
+  },
+  {
+    "id": "ex-t5h896z0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belongs to a revision rather than to the service?",
+    "hint": "Frozen at deployment.",
+    "choices": [
+      {
+        "text": "The traffic split between revisions",
+        "correct": false,
+        "why": "The split is the service's."
+      },
+      {
+        "text": "The service's run.app address",
+        "correct": false,
+        "why": "The address is the service's."
+      },
+      {
+        "text": "Memory and environment variables",
+        "correct": true,
+        "why": "Right. They are in the template."
+      },
+      {
+        "text": "The list of tags",
+        "correct": false,
+        "why": "Tags are entries in the service's traffic list."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgr3b80m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A checkout redesign must look the same to a user across every page they open during the rollout. What does the lesson suggest?",
+    "hint": "A percentage is per request.",
+    "choices": [
+      {
+        "text": "A flag in the application that decides per user",
+        "correct": true,
+        "why": "Right. The split cannot keep a user on one revision."
+      },
+      {
+        "text": "A 50% split, so each user sees it half the time",
+        "correct": false,
+        "why": "Half the time is exactly the inconsistency to avoid."
+      },
+      {
+        "text": "A tag, sent to every user by email",
+        "correct": false,
+        "why": "That makes the tag public and skips the rollout."
+      },
+      {
+        "text": "LATEST at 10%, which sticks per user",
+        "correct": false,
+        "why": "LATEST is not sticky either."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1p8y2z0",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 50% of 2,000 requests an hour, how many hours to expect ten occurrences of an error that happens once in a thousand requests?",
+    "hint": "10,000 requests needed.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-058yrp2a",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A deployment that should receive no requests at all uses the flag --no-___.",
+    "hint": "The help explains it.",
+    "blanks": [
+      {
+        "accept": [
+          "traffic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-33csddkz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does K_REVISION hold inside a Cloud Run container?",
+    "hint": "Set by the platform.",
+    "choices": [
+      {
+        "text": "The image's digest, as Artifact Registry lists it",
+        "correct": false,
+        "why": "The digest is not passed as a variable here."
+      },
+      {
+        "text": "The percentage of traffic it receives",
+        "correct": false,
+        "why": "The container is not told its share."
+      },
+      {
+        "text": "The tag of the address that was called",
+        "correct": false,
+        "why": "Tags are not passed to the container."
+      },
+      {
+        "text": "The name of the revision serving the request",
+        "correct": true,
+        "why": "Right. orders-v1 or orders-v2 at home."
+      }
+    ]
+  }
+]

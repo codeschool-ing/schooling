@@ -1,0 +1,689 @@
+[
+  {
+    "id": "ex-00yyrz26",
+    "version": 1,
+    "section": "app-protocol",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `@main` on `struct PlannerApp: App` do?",
+    "hint": "A program has one of these.",
+    "choices": [
+      {
+        "text": "It makes the struct a class so SwiftUI can keep a reference to it",
+        "correct": false,
+        "why": "It stays a struct; SwiftUI creates the value and reads its body."
+      },
+      {
+        "text": "It marks the program's entry point",
+        "correct": true,
+        "why": "Right: the `App` protocol supplies the `main()` the system calls at launch."
+      },
+      {
+        "text": "It runs the body on a background thread",
+        "correct": false,
+        "why": "An `App` is isolated to the main actor by default, the opposite."
+      },
+      {
+        "text": "It lets several files each start the app",
+        "correct": false,
+        "why": "Exactly one entry point is allowed among all the files."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpd792q4",
+    "version": 1,
+    "section": "app-protocol",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 1's `week` ended when `main.swift` reached its last line. Why does `PlannerApp` not end when its `body` has been read?",
+    "hint": "Who runs the app?",
+    "choices": [
+      {
+        "text": "Its body loops forever until the person closes it",
+        "correct": false,
+        "why": "A body returns a description and nothing more; it contains no loop."
+      },
+      {
+        "text": "iOS restarts it each time the body returns",
+        "correct": false,
+        "why": "The process stays alive; nothing restarts it."
+      },
+      {
+        "text": "SwiftUI owns the running program and keeps reading the description",
+        "correct": true,
+        "why": "Right: the App is a value describing the app, and SwiftUI is what runs."
+      },
+      {
+        "text": "The `@State` in it holds the process open",
+        "correct": false,
+        "why": "State is data the views read; it does not decide how long a process lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-52e6akww",
+    "version": 1,
+    "section": "app-protocol",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On which actor do the properties and methods of `PlannerApp` run, unless you say otherwise?",
+    "hint": "The protocol passes its isolation on.",
+    "choices": [
+      {
+        "text": "A new actor for each scene",
+        "correct": false,
+        "why": "Scenes share the app's isolation; there is no actor per scene."
+      },
+      {
+        "text": "Whatever thread called `main()`, with no isolation at all",
+        "correct": false,
+        "why": "The documentation says a conforming type inherits `@MainActor` isolation."
+      },
+      {
+        "text": "The main actor",
+        "correct": true,
+        "why": "Right, the one that draws the screen, inherited from the `App` protocol."
+      },
+      {
+        "text": "A background actor that the system picks",
+        "correct": false,
+        "why": "Interface code wants the main actor, and that is the default here."
+      }
+    ]
+  },
+  {
+    "id": "ex-rv6qcwev",
+    "version": 1,
+    "section": "scenes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On an iPad, a person opens two planner windows from one `WindowGroup`. The plan is `@State` inside `CourseListView`. What happens when a session is added in one window?",
+    "hint": "Read what the documentation says about storage per window.",
+    "choices": [
+      {
+        "text": "The other window does not show it, because each window has its own `@State`",
+        "correct": true,
+        "why": "Right, which is why lesson 7 moves the plan into one model created in the App."
+      },
+      {
+        "text": "Both windows show it, because they share one view",
+        "correct": false,
+        "why": "A WindowGroup is a template: each window gets new views and new storage."
+      },
+      {
+        "text": "The app crashes, since two windows cannot hold state",
+        "correct": false,
+        "why": "Each window holds state perfectly well; it is just not shared."
+      },
+      {
+        "text": "iPadOS closes the second window",
+        "correct": false,
+        "why": "Nothing closes it; the two simply disagree."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pn5sxpd",
+    "version": 1,
+    "section": "scenes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a `WindowGroup`?",
+    "hint": "It can make more than one window.",
+    "choices": [
+      {
+        "text": "The window the iPhone shows, created once",
+        "correct": false,
+        "why": "On an iPhone it makes one window, but it is the template, not the window."
+      },
+      {
+        "text": "A template for windows",
+        "correct": true,
+        "why": "Right: its views are what each window it creates contains."
+      },
+      {
+        "text": "A list of the app's views in the order they appear",
+        "correct": false,
+        "why": "That is closer to a navigation stack, lesson 9."
+      },
+      {
+        "text": "The macOS settings window",
+        "correct": false,
+        "why": "That is the `Settings` scene."
+      }
+    ]
+  },
+  {
+    "id": "ex-dedw4en8",
+    "version": 1,
+    "section": "scenes",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each scene type to what it is for.",
+    "hint": "One of them is the planner's.",
+    "pairs": [
+      {
+        "left": "`WindowGroup`",
+        "right": "Windows built from one template, as many as the platform allows"
+      },
+      {
+        "left": "`DocumentGroup`",
+        "right": "One window per file the app opens and saves"
+      },
+      {
+        "left": "`Settings`",
+        "right": "The settings window on macOS"
+      },
+      {
+        "left": "`Window`",
+        "right": "A single, unique window"
+      }
+    ],
+    "right_distractors": [
+      "The phase a scene is in"
+    ]
+  },
+  {
+    "id": "ex-8x791a3f",
+    "version": 1,
+    "section": "scene-phase",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A person goes to the home screen. Which phase does the planner's scene end up in?",
+    "hint": "It is no longer visible.",
+    "choices": [
+      {
+        "text": "`inactive`",
+        "correct": false,
+        "why": "Inactive is on the way; it is still in the foreground."
+      },
+      {
+        "text": "`background`",
+        "correct": true,
+        "why": "Right, and from there iOS may end the process."
+      },
+      {
+        "text": "`active`, until the person closes it",
+        "correct": false,
+        "why": "A scene that is not visible is not active."
+      },
+      {
+        "text": "`suspended`, a fourth phase",
+        "correct": false,
+        "why": "`ScenePhase` has three cases."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbkh26b3",
+    "version": 1,
+    "section": "scene-phase",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An iPad shows two planner windows; one is in front, the other is in the background. What does `scenePhase` read in the `App`, and in a view of the background window?",
+    "hint": "Inside a view it is that view's scene; in the App it is an aggregate.",
+    "choices": [
+      {
+        "text": "`background` in both, since one window is hidden",
+        "correct": false,
+        "why": "The App reports active if any scene is active."
+      },
+      {
+        "text": "`active` in both, since the app is in front",
+        "correct": false,
+        "why": "A view reads its own scene's phase, and its scene is in the background."
+      },
+      {
+        "text": "`active` in the App, `background` in that view",
+        "correct": true,
+        "why": "Right: the App aggregates, and a view reads its own scene."
+      },
+      {
+        "text": "`inactive` in the App, because the two disagree",
+        "correct": false,
+        "why": "There is no averaging; any active scene makes the App active."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9e49wfv",
+    "version": 1,
+    "section": "scene-phase",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the phases a scene passes through in order: active, then the person goes home and comes back.",
+    "hint": "Four moves after the first active.",
+    "items": [
+      "`active`",
+      "`inactive`, leaving",
+      "`background`",
+      "`inactive`, returning",
+      "`active` again"
+    ]
+  },
+  {
+    "id": "ex-s61z4nny",
+    "version": 1,
+    "section": "scene-phase",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a person closing an app not the moment to save its data on iOS?",
+    "hint": "What usually happens instead of closing?",
+    "choices": [
+      {
+        "text": "Closing an app deletes its files first",
+        "correct": false,
+        "why": "Files survive; the problem is that the moment rarely comes."
+      },
+      {
+        "text": "People rarely close apps, and iOS ends some in the background without warning",
+        "correct": true,
+        "why": "Right, so the app saves on leaving active, as Apple's documentation advises."
+      },
+      {
+        "text": "SwiftUI forbids writing files after `onChange` runs",
+        "correct": false,
+        "why": "Nothing forbids it; a short write in `onChange` is what section 07 does."
+      },
+      {
+        "text": "A closed app keeps running, so there is no need",
+        "correct": false,
+        "why": "An ended process runs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yhwv0bv",
+    "version": 1,
+    "section": "phase-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first `Lifecycle` returned `.refresh` on every move to `.active`. Which test caught it?",
+    "hint": "A move to active that never went through the background.",
+    "choices": [
+      {
+        "text": "`goingHomeSavesOnceAndComingBackRefreshes`",
+        "correct": false,
+        "why": "That journey does go through the background, so refreshing there is right; it passed."
+      },
+      {
+        "text": "`aBannerSavesAndDoesNotRefresh`",
+        "correct": true,
+        "why": "Right: a banner returns to active without the background, and got `.refresh`."
+      },
+      {
+        "text": "`mondayIsTheStartOfTheWeek`",
+        "correct": false,
+        "why": "That is lesson 1's, and it passed both times."
+      },
+      {
+        "text": "None: both lifecycle tests passed",
+        "correct": false,
+        "why": "The first run failed with one issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-d71njyt2",
+    "version": 1,
+    "section": "phase-machine",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A scene goes active → inactive → background → inactive → background → inactive → active (the person peeked at the app switcher twice). What does the second `Lifecycle` return for the final move?",
+    "hint": "`wasInBackground` is set by any background and cleared only by active.",
+    "choices": [
+      {
+        "text": "`.nothing`, since it was inactive just before",
+        "correct": false,
+        "why": "The flag remembers the background across the inactive moves."
+      },
+      {
+        "text": "`.save`, since it passed through the background twice",
+        "correct": false,
+        "why": "Save is for leaving active, not arriving."
+      },
+      {
+        "text": "`.refresh`, once",
+        "correct": true,
+        "why": "Right: the flag was set, so arriving at active refreshes and clears it."
+      },
+      {
+        "text": "`.refresh` twice, one per background",
+        "correct": false,
+        "why": "One move returns one action."
+      }
+    ]
+  },
+  {
+    "id": "ex-my22r5nd",
+    "version": 1,
+    "section": "phase-machine",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `case (_, .active) where wasInBackground`, the part after `where` is a condition that a matching ___ must also satisfy.",
+    "hint": "The thing a case of a switch is made of.",
+    "blanks": [
+      {
+        "accept": [
+          "pattern",
+          "case"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5054t6cd",
+    "version": 1,
+    "section": "phase-machine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `Lifecycle` use the planner's own `Phase` rather than SwiftUI's `ScenePhase`?",
+    "hint": "Where were the tests run?",
+    "choices": [
+      {
+        "text": "`ScenePhase` has more cases than the planner needs",
+        "correct": false,
+        "why": "It has the same three; `Phase` mirrors it case for case."
+      },
+      {
+        "text": "So it compiles and is tested without SwiftUI, on Linux",
+        "correct": true,
+        "why": "Right: nothing in the package imports SwiftUI."
+      },
+      {
+        "text": "`ScenePhase` cannot be used in a `switch`",
+        "correct": false,
+        "why": "Section 07 switches over it to build a `Phase`."
+      },
+      {
+        "text": "Apple deprecated `ScenePhase` in iOS 17",
+        "correct": false,
+        "why": "It is current, and the app reads it in section 07."
+      }
+    ]
+  },
+  {
+    "id": "ex-0x5szj22",
+    "version": 1,
+    "section": "phase-machine",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests ran in each `swift test` of section 05?",
+    "hint": "Two of lesson 1's and two new ones.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3vesp9n5",
+    "version": 1,
+    "section": "the-view-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In SwiftUI, how does a tap in `SessionForm` reach the plan that `CourseListView` owns?",
+    "hint": "Events travel up the tree in a particular form.",
+    "choices": [
+      {
+        "text": "The form repaints the list's rows itself",
+        "correct": false,
+        "why": "Nothing in SwiftUI paints another view; you describe, SwiftUI draws."
+      },
+      {
+        "text": "By calling a method on the parent view object",
+        "correct": false,
+        "why": "Views are values the parent recreates; there is no object to call."
+      },
+      {
+        "text": "As a change to data the parent owns, through a binding or a model",
+        "correct": true,
+        "why": "Right: lesson 6 is the binding and lesson 7 the observable model."
+      },
+      {
+        "text": "Through a notification the whole app listens to",
+        "correct": false,
+        "why": "That would work around the tree rather than through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcwwr8by",
+    "version": 1,
+    "section": "the-view-tree",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can `List(courses)` take the array of courses directly?",
+    "hint": "Lesson 1 gave `Course` a conformance for this.",
+    "choices": [
+      {
+        "text": "Because `Course` is a struct",
+        "correct": false,
+        "why": "Being a struct says nothing about identity."
+      },
+      {
+        "text": "Because the array is a `let`",
+        "correct": false,
+        "why": "A `var` would work as well."
+      },
+      {
+        "text": "Because `Course` is `Identifiable`",
+        "correct": true,
+        "why": "Right: each row is known by its course's `id`, lesson 8's subject."
+      },
+      {
+        "text": "Because `List` sorts any array by title before showing it",
+        "correct": false,
+        "why": "List shows the order it is given, and sorts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcks9d58",
+    "version": 1,
+    "section": "the-view-tree",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each planner screen to what it shows.",
+    "hint": "Four screens, the same on every platform.",
+    "pairs": [
+      {
+        "left": "`CourseListView`",
+        "right": "The courses, with each week's minutes"
+      },
+      {
+        "left": "`CourseDetailView`",
+        "right": "One course's sessions"
+      },
+      {
+        "left": "`SessionForm`",
+        "right": "A date and minutes for a new session"
+      },
+      {
+        "left": "`WeekView`",
+        "right": "The week's total, planned against done"
+      }
+    ],
+    "right_distractors": [
+      "The app's entry point"
+    ]
+  },
+  {
+    "id": "ex-9f6v4vk8",
+    "version": 1,
+    "section": "launch-and-restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belongs in `@SceneStorage`?",
+    "hint": "Something cheap to lose.",
+    "choices": [
+      {
+        "text": "The plan's courses and sessions, so nothing is lost",
+        "correct": false,
+        "why": "SceneStorage is destroyed with its scene and has no timing guarantee; data goes to disk."
+      },
+      {
+        "text": "Which course was open",
+        "correct": true,
+        "why": "Right: small, per scene, and harmless if a window is removed."
+      },
+      {
+        "text": "The person's password",
+        "correct": false,
+        "why": "The documentation says not to use it with sensitive data."
+      },
+      {
+        "text": "The week's total minutes, to avoid summing again",
+        "correct": false,
+        "why": "The total is derived from the plan; lesson 6 computes it rather than storing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tr7kafpq",
+    "version": 1,
+    "section": "launch-and-restore",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `Phase.init(_:)` need `@unknown default` in its switch over `ScenePhase`?",
+    "hint": "Whose enum is it?",
+    "choices": [
+      {
+        "text": "Because `ScenePhase` has a fourth case iOS 17 added",
+        "correct": false,
+        "why": "It has three; the clause is for cases that may come."
+      },
+      {
+        "text": "Apple's enum, free to gain cases later",
+        "correct": true,
+        "why": "Right: the compiler asks for it on an enum from another module that is allowed to grow."
+      },
+      {
+        "text": "Without it the switch would crash at run time",
+        "correct": false,
+        "why": "The compiler warns before anything runs."
+      },
+      {
+        "text": "To save the plan when the phase is unknown",
+        "correct": false,
+        "why": "It maps an unknown phase to inactive, which does nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgf04s0a",
+    "version": 1,
+    "section": "launch-and-restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the planner's `onChange(of: scenePhase)` attached to the `App` and not to `CourseListView`?",
+    "hint": "The plan is shared by every window.",
+    "choices": [
+      {
+        "text": "Views cannot read the environment",
+        "correct": false,
+        "why": "Any view can read `scenePhase`; section 04 shows one."
+      },
+      {
+        "text": "The App runs before every view, so it is faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "In the App the phase is the aggregate of every window, which fits a shared plan",
+        "correct": true,
+        "why": "Right: a view would see only its own scene."
+      },
+      {
+        "text": "`onChange` exists only on scenes",
+        "correct": false,
+        "why": "It exists on views too."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvbxk35s",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these were run for this lesson on the Linux machine? Choose all that apply.",
+    "hint": "Only what imports no SwiftUI.",
+    "choices": [
+      {
+        "text": "The `Lifecycle` tests",
+        "correct": true,
+        "why": "Yes: section 05 ran them twice."
+      },
+      {
+        "text": "`PlannerApp` with its `onChange`",
+        "correct": false,
+        "why": "No: it imports SwiftUI."
+      },
+      {
+        "text": "Lesson 1's `PlanTests`",
+        "correct": true,
+        "why": "Yes: they are in the same package and ran with them."
+      },
+      {
+        "text": "A first `CourseListView` with a `List`",
+        "correct": false,
+        "why": "No: written from the documentation, not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-8pss6vvg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes saving the plan only in `.background`, never in `.inactive`. With the second `Lifecycle` in mind, what is lost?",
+    "hint": "What does Apple's documentation say about leaving the active state?",
+    "choices": [
+      {
+        "text": "Nothing, because every journey reaches the background",
+        "correct": false,
+        "why": "A banner never reaches the background."
+      },
+      {
+        "text": "The refresh, which then never happens",
+        "correct": false,
+        "why": "Refreshing is decided on arriving at active, unaffected by when saving happens."
+      },
+      {
+        "text": "The save at the moment Apple advises, leaving active",
+        "correct": true,
+        "why": "Right: if the app is ended before reaching the background, the work typed since is gone."
+      },
+      {
+        "text": "The tests, which can no longer run on Linux",
+        "correct": false,
+        "why": "Either rule is plain Swift and tests the same way."
+      }
+    ]
+  }
+]

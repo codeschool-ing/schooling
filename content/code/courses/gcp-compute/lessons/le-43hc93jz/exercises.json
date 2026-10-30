@@ -1,0 +1,694 @@
+[
+  {
+    "id": "ex-sq2jnt0w",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do you change the machine type in an instance template that a group uses?",
+    "hint": "Can a template be edited?",
+    "choices": [
+      {
+        "text": "Edit the template; the group picks up the change at once",
+        "correct": false,
+        "why": "Templates cannot be edited at all."
+      },
+      {
+        "text": "Edit each machine in the group by hand, then the template",
+        "correct": false,
+        "why": "Editing machines by hand is the drift templates exist to end."
+      },
+      {
+        "text": "Make a new template and point the group at it",
+        "correct": true,
+        "why": "Right. A new description is a new template with a new name."
+      },
+      {
+        "text": "Stop the group, edit the template, start the group",
+        "correct": false,
+        "why": "Stopping does not make a template editable."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0hn80vf",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the template use create_before_destroy?",
+    "hint": "Which template is the group using while the new one is made?",
+    "choices": [
+      {
+        "text": "The group still uses the old one",
+        "correct": true,
+        "why": "Right. New first, repoint, then delete the old."
+      },
+      {
+        "text": "It makes the template cheaper while both exist",
+        "correct": false,
+        "why": "Templates cost nothing; the order is the point."
+      },
+      {
+        "text": "Terraform cannot delete templates otherwise",
+        "correct": false,
+        "why": "It can; the problem is deleting one that is in use."
+      },
+      {
+        "text": "It keeps the old machines from being replaced",
+        "correct": false,
+        "why": "Replacement is the update policy's business."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5j74syr",
+    "version": 1,
+    "section": "templates",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Because every version of a template needs a new name, the lesson writes ___ = \"web-\" instead of a fixed name.",
+    "hint": "The start of a name Terraform completes.",
+    "blanks": [
+      {
+        "accept": [
+          "name_prefix"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0yvzjypj",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The template names the image family shop-web. A machine is created on Monday and another on Friday after a new build. What is true?",
+    "hint": "When is a family resolved?",
+    "choices": [
+      {
+        "text": "Both run Monday's build, because the template is fixed",
+        "correct": false,
+        "why": "The template is fixed; the family it names is not."
+      },
+      {
+        "text": "The Friday machine fails, because the template is stale",
+        "correct": false,
+        "why": "Nothing fails; it boots the newer build."
+      },
+      {
+        "text": "Both run Friday's build after the group restarts them",
+        "correct": false,
+        "why": "A restart keeps the disk it has."
+      },
+      {
+        "text": "They boot different builds from one template",
+        "correct": true,
+        "why": "Right. Pin a dated image where that is not acceptable."
+      }
+    ]
+  },
+  {
+    "id": "ex-4q1wvhw9",
+    "version": 1,
+    "section": "the-group",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a group with target_size = 3, an operator deletes one machine by hand. What happens?",
+    "hint": "What number does the group defend?",
+    "choices": [
+      {
+        "text": "The group shrinks to two and stays there",
+        "correct": false,
+        "why": "The target is still three."
+      },
+      {
+        "text": "The group creates another, as three is the target",
+        "correct": true,
+        "why": "Right. To have fewer machines, change the number."
+      },
+      {
+        "text": "The group refuses the deletion",
+        "correct": false,
+        "why": "Deletion works; the group just replaces the machine."
+      },
+      {
+        "text": "The other two are deleted to keep the group consistent",
+        "correct": false,
+        "why": "Nothing else is touched."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4pca23a",
+    "version": 1,
+    "section": "the-group",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the shop use a regional group rather than a zonal one?",
+    "hint": "What does a zone failure take?",
+    "choices": [
+      {
+        "text": "Regional groups are cheaper per machine",
+        "correct": false,
+        "why": "Machines cost the same; the spread is what differs."
+      },
+      {
+        "text": "Only regional groups are allowed to run health checks on their machines",
+        "correct": false,
+        "why": "Zonal groups have autohealing too."
+      },
+      {
+        "text": "Machines spread across zones survive one zone's loss",
+        "correct": true,
+        "why": "Right. A zonal group would lose every machine with its zone."
+      },
+      {
+        "text": "Zonal groups cannot use templates",
+        "correct": false,
+        "why": "Both kinds use templates."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkhng7fy",
+    "version": 1,
+    "section": "the-group",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the orders database of lesson 3 not belong in a group like web?",
+    "hint": "What does a replacement start from?",
+    "choices": [
+      {
+        "text": "A replaced machine starts from the template, and its data is gone",
+        "correct": true,
+        "why": "Right. A group needs machines that keep nothing they cannot lose."
+      },
+      {
+        "text": "Databases cannot run on e2-standard-2",
+        "correct": false,
+        "why": "They can; the problem is state."
+      },
+      {
+        "text": "Groups only accept machines with a GPU",
+        "correct": false,
+        "why": "Groups accept any machine a template describes."
+      },
+      {
+        "text": "A group can hold at most three machines",
+        "correct": false,
+        "why": "There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-qggrcknq",
+    "version": 1,
+    "section": "the-group",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every machine of the group is named from base_instance_name, web, plus a short random ___.",
+    "hint": "Four characters added at the end.",
+    "blanks": [
+      {
+        "accept": [
+          "suffix"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v73tgv0e",
+    "version": 1,
+    "section": "the-group",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of the group to what it does.",
+    "hint": "Number, names, zones, port.",
+    "pairs": [
+      {
+        "left": "target_size",
+        "right": "The number of machines the group keeps"
+      },
+      {
+        "left": "base_instance_name",
+        "right": "The start of every machine's name"
+      },
+      {
+        "left": "distribution_policy_zones",
+        "right": "The zones the machines are spread across"
+      },
+      {
+        "left": "named_port",
+        "right": "A name a load balancer uses for the port"
+      }
+    ],
+    "right_distractors": [
+      "The image every machine boots"
+    ]
+  },
+  {
+    "id": "ex-81fbdrg4",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With check_interval_sec = 10 and unhealthy_threshold = 3, roughly how long until a machine that stops answering is unhealthy?",
+    "hint": "Three checks, ten seconds apart.",
+    "choices": [
+      {
+        "text": "10 seconds",
+        "correct": false,
+        "why": "One failure is not enough."
+      },
+      {
+        "text": "5 seconds, the timeout",
+        "correct": false,
+        "why": "The timeout is how long one answer may take."
+      },
+      {
+        "text": "120 seconds, the initial delay",
+        "correct": false,
+        "why": "That is for new machines only."
+      },
+      {
+        "text": "About 30 seconds",
+        "correct": true,
+        "why": "Right. Three failures in a row, every ten seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-es0n3xg9",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group with autohealing and initial_delay_sec = 0 creates machines, deletes them and creates them again, and none ever serves. Why?",
+    "hint": "What does a machine do in its first minute?",
+    "choices": [
+      {
+        "text": "The health check path is wrong",
+        "correct": false,
+        "why": "A wrong path would fail too, but the delay is the cause here."
+      },
+      {
+        "text": "Booting machines fail the check and are replaced before they finish",
+        "correct": true,
+        "why": "Right. The delay gives a new machine time to start."
+      },
+      {
+        "text": "The target size is too small",
+        "correct": false,
+        "why": "Size does not make machines fail their checks."
+      },
+      {
+        "text": "Regional groups do not support autohealing",
+        "correct": false,
+        "why": "They do; the shop's group uses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rm0hha07",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every machine in a new group fails its health check from the start, even long after booting, and the service answers fine from inside the machine. What is the likeliest cause?",
+    "hint": "Where do the checks come from?",
+    "choices": [
+      {
+        "text": "The initial delay is too short",
+        "correct": false,
+        "why": "The failures continue long after booting."
+      },
+      {
+        "text": "The template uses an image family",
+        "correct": false,
+        "why": "The image does not decide whether checks arrive."
+      },
+      {
+        "text": "Google's probes are blocked by the firewall",
+        "correct": true,
+        "why": "Right. The service is fine; the questions never reach it."
+      },
+      {
+        "text": "The group has three zones where one would have been enough",
+        "correct": false,
+        "why": "Zones do not block health checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9crsgqz",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A regional group across three zones has target_size = 7. At most how many machines does the fullest zone hold?",
+    "hint": "The difference between zones is at most one.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "machines"
+  },
+  {
+    "id": "ex-jmp1nv3n",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A /healthz that always answers 200 while the web server runs is a weak check. Why?",
+    "hint": "What else does a request need?",
+    "choices": [
+      {
+        "text": "It ignores whether the database is reachable",
+        "correct": true,
+        "why": "Right. A machine can be up and unable to serve a single order."
+      },
+      {
+        "text": "200 is not a status health checks accept",
+        "correct": false,
+        "why": "200 is exactly what they accept."
+      },
+      {
+        "text": "Health checks are required to use HTTPS on every port they probe",
+        "correct": false,
+        "why": "The shop's check is plain HTTP on 8080."
+      },
+      {
+        "text": "It answers too fast for the timeout",
+        "correct": false,
+        "why": "Fast is fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8wt71hy",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With max_surge_fixed = 3 and max_unavailable_fixed = 0 on a group of three, how many machines can exist during an update?",
+    "hint": "Surge adds above the target.",
+    "choices": [
+      {
+        "text": "Three, never more",
+        "correct": false,
+        "why": "Surge allows three above the target."
+      },
+      {
+        "text": "Zero for a moment, between old and new",
+        "correct": false,
+        "why": "max_unavailable 0 forbids that."
+      },
+      {
+        "text": "Nine, three per zone",
+        "correct": false,
+        "why": "The surge is three in all."
+      },
+      {
+        "text": "Up to six",
+        "correct": true,
+        "why": "Right. Three old and three new, for a few minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqm5q4t7",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between PROACTIVE and OPPORTUNISTIC?",
+    "hint": "When does each one apply the new template?",
+    "choices": [
+      {
+        "text": "PROACTIVE restarts machines; OPPORTUNISTIC replaces them",
+        "correct": false,
+        "why": "Restart or replace is minimal_action."
+      },
+      {
+        "text": "PROACTIVE replaces at once; OPPORTUNISTIC waits for other creations",
+        "correct": true,
+        "why": "Right. Opportunistic only uses the new template when a machine is made for another reason."
+      },
+      {
+        "text": "PROACTIVE is for regional groups and OPPORTUNISTIC for zonal ones",
+        "correct": false,
+        "why": "Both work for either kind."
+      },
+      {
+        "text": "OPPORTUNISTIC is cheaper, because it uses Spot machines",
+        "correct": false,
+        "why": "Spot is a provisioning model, lesson 6."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xv1bvmx",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A regional group in three zones is given max_surge_fixed = 2. The plan succeeds. What happens next?",
+    "hint": "Fixed values for a regional group must be zero or at least something.",
+    "choices": [
+      {
+        "text": "The group surges two machines, in two of the zones",
+        "correct": false,
+        "why": "A regional group moves zone by zone, so 2 is refused."
+      },
+      {
+        "text": "Terraform rounds it up to 3 on apply",
+        "correct": false,
+        "why": "Nothing rounds it."
+      },
+      {
+        "text": "Compute Engine refuses it: 0 or at least 3",
+        "correct": true,
+        "why": "Right. The plan does not know the zone count rule."
+      },
+      {
+        "text": "The update runs with no surge at all",
+        "correct": false,
+        "why": "The value is refused, not ignored."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecrpfcq8",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a canary release in order.",
+    "hint": "One machine first, compare, then all.",
+    "items": [
+      "Add a second version with target_size fixed = 1",
+      "Compare the canary's errors and latency with the others",
+      "If it holds, make the new template the only version",
+      "Remove the old template once nothing uses it"
+    ],
+    "trap": "Removing the old template comes last: Compute Engine refuses to delete one in use."
+  },
+  {
+    "id": "ex-jkrncm98",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A share of the group sent to a new template ahead of the rest is called a ___.",
+    "hint": "A bird that once went into mines first.",
+    "blanks": [
+      {
+        "accept": [
+          "canary"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vk6t16m9",
+    "version": 1,
+    "section": "rolling-updates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the canary's stable version write the template's full name instead of a Terraform reference?",
+    "hint": "Who manages the old template in this file?",
+    "choices": [
+      {
+        "text": "It already exists and this file does not manage it",
+        "correct": true,
+        "why": "Right. The canary is a moment between two releases."
+      },
+      {
+        "text": "Terraform references cannot appear in version blocks",
+        "correct": false,
+        "why": "The canary version uses one."
+      },
+      {
+        "text": "Full names are faster for the group to resolve",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "The stable template is in another project",
+        "correct": false,
+        "why": "It is in planner-dev, as the name says."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7pk10vw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did terraform plan check in this lesson? Choose all that apply.",
+    "hint": "The provider checks some words, not Compute Engine's rules.",
+    "choices": [
+      {
+        "text": "That update_policy type is PROACTIVE or OPPORTUNISTIC",
+        "correct": true,
+        "why": "Right; SOMETIMES was refused."
+      },
+      {
+        "text": "That max_surge_fixed suits the number of zones",
+        "correct": false,
+        "why": "That rule is checked at creation."
+      },
+      {
+        "text": "That the canary's block is named target_size",
+        "correct": true,
+        "why": "Right; a block named target was refused."
+      },
+      {
+        "text": "That the image family shop-web exists",
+        "correct": false,
+        "why": "A string is not looked up during a plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzjz1gvt",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rolling update of three e2-standard-2 machines (0.06701142 USD an hour) surges three extra machines for 20 minutes. What do the extra machines cost, in USD, to four decimal places?",
+    "hint": "Three machines, a third of an hour each.",
+    "value": 0.067,
+    "tolerance": 0.0002,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-9cf6m6td",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a zone returns from an outage, the group deletes some machines in the other zones and creates new ones in it. Why is that safe for the web group and not for a database?",
+    "hint": "What does redistribution do to a machine?",
+    "choices": [
+      {
+        "text": "Databases cannot run in more than one zone",
+        "correct": false,
+        "why": "They can, with replication; the issue is deletion."
+      },
+      {
+        "text": "Redistribution only moves machines without a GPU",
+        "correct": false,
+        "why": "GPUs are not the question."
+      },
+      {
+        "text": "The web group uses a canary, which protects it",
+        "correct": false,
+        "why": "A canary is about releases, not zones."
+      },
+      {
+        "text": "Rebalancing removes servers, and web holds no state",
+        "correct": true,
+        "why": "Right. A database would lose what was on the deleted machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmetyhzp",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the blocks of group/main.tf in the order the lesson added them.",
+    "hint": "Description, group, question, policy.",
+    "items": [
+      "The instance template",
+      "The regional group",
+      "The health check and autohealing",
+      "The update policy and the canary"
+    ],
+    "trap": "The health check needs the group to exist to be tied to it; the policy acts on both."
+  },
+  {
+    "id": "ex-1hedwy20",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about a managed instance group is true?",
+    "hint": "You manage a number.",
+    "choices": [
+      {
+        "text": "Its machines keep their boot disk through a replacement",
+        "correct": false,
+        "why": "A replacement starts from the template."
+      },
+      {
+        "text": "It recreates machines until the count matches",
+        "correct": true,
+        "why": "Right. The number is what it defends."
+      },
+      {
+        "text": "Its template is edited in place for each release",
+        "correct": false,
+        "why": "Templates are never edited."
+      },
+      {
+        "text": "It needs a load balancer before it can create machines",
+        "correct": false,
+        "why": "The group creates machines without one."
+      }
+    ]
+  }
+]

@@ -666,15 +666,6 @@ const RULES = {
 
   /* HCL is what Terraform, OpenTofu and Packer are written in. `#` and `//`
      both start a comment; a heredoc is left uncoloured rather than guessed. */
-  /* Bicep, Azure's own declaration language. Its multi-line string is three quotes, and it goes
-     first, or the plain quote would end that string after its first character. */
-  bicep: language({
-    quotes: ["'"],
-    long: ["'''"],
-    keywords: `targetScope param var resource module output existing metadata type func import
-      using extension if for in true false null`,
-  }),
-
   hcl: language({
     line: ['#', '//'],
     quotes: ['"'],
@@ -682,6 +673,27 @@ const RULES = {
       output locals module moved import removed check backend cloud for_each count depends_on
       lifecycle dynamic content for in if each self var local true false null packer source
       build provisioner required_plugins`,
+  }),
+
+  /* Bicep is Microsoft's language for Azure resources. Its strings take single
+     quotes only, with `'''` for one that spans lines; `@` before a decorator is
+     left uncoloured, and the decorator itself colours as the call it is. */
+  bicep: language({
+    quotes: ["'"],
+    long: ["'''"],
+    keywords: `targetScope param var resource module output existing metadata type func import
+      with as for in if true false null scope parent`,
+  }),
+
+  /* KQL, the query language of Azure Monitor, Log Analytics and Data
+     Explorer. The keywords are the tabular operators and the words that join
+     them; a function such as `bin(` is coloured as a call. */
+  kql: language({
+    block: null,
+    keywords: `let where project extend summarize by take limit top order sort asc desc join kind
+      on union render count distinct parse with mv-expand make-series from to step range
+      datatable print evaluate lookup as and or not in has contains startswith endswith between
+      ago now true false`,
   }),
 
   /* ---------- and the ones that are not keyword languages ----------

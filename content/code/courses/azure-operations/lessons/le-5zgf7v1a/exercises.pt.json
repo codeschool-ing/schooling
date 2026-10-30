@@ -1,0 +1,255 @@
+{
+  "ex-18z8y4yt": {
+    "prompt": "Por que `take 3` é o jeito errado de achar as três primeiras falhas do incidente?",
+    "hint": "Que ordem o take promete?",
+    "choices": [
+      {
+        "text": "Ele devolve as três últimas linhas",
+        "why": "Ele não promete ordem nenhuma, nem primeira nem última."
+      },
+      {
+        "text": "Ele devolve três quaisquer",
+        "why": "Certo. `top 3 by TimeGenerated asc` ordena antes."
+      },
+      {
+        "text": "Ele não pode ser combinado com where",
+        "why": "A primeira consulta desta lição combina os dois."
+      },
+      {
+        "text": "Ele só funciona em tabelas com menos de mil linhas",
+        "why": "Ele funciona em qualquer tabela, e por isso serve para espiar."
+      }
+    ]
+  },
+  "ex-52r71638": {
+    "prompt": "O emulador responde `General_BadRequest` à sua consulta. Qual é o primeiro passo da lição?",
+    "hint": "O emulador não diz qual nome está errado.",
+    "choices": [
+      {
+        "text": "Reiniciar o emulador, já que o erro é genérico",
+        "why": "Reiniciar perde as tabelas e não conserta consulta nenhuma."
+      },
+      {
+        "text": "Recarregar o requests.kql caso a tabela esteja danificada",
+        "why": "A tabela está boa; a consulta nomeia algo que ela não tem."
+      },
+      {
+        "text": "Conferir os nomes com o `getschema`",
+        "why": "Certo. Uma coluna escrita errado é a causa mais comum, e o getschema lista as reais."
+      },
+      {
+        "text": "Trocar todo == por =~",
+        "why": "Isso muda a diferenciação de maiúsculas nas comparações, não nomes."
+      }
+    ]
+  },
+  "ex-zw56c3e3": {
+    "prompt": "Um colega filtra `where TimeGenerated between (datetime(2026-10-15 14:00) .. 1h)` para ver o incidente, que começou às 14:05 no horário de São Paulo. O que ele recebe?",
+    "hint": "Em que fuso está o TimeGenerated?",
+    "choices": [
+      {
+        "text": "O incidente, porque o emulador converte para o horário local",
+        "why": "Nada converte o filtro; os horários são UTC."
+      },
+      {
+        "text": "Uma hora três horas antes dele",
+        "why": "Certo. 14:00 UTC são 11:00 em São Paulo; converta para quem lê, não para o filtro."
+      },
+      {
+        "text": "Um erro, porque o between precisa de dois datetimes",
+        "why": "Uma duração como fim é permitida."
+      },
+      {
+        "text": "O incidente deslocado três minutos",
+        "why": "A diferença é de três horas."
+      }
+    ]
+  },
+  "ex-n18k9pva": {
+    "prompt": "Por que o `thursday.kql` escreve `100.0 * failed / requests` e não `100 * failed / requests`?",
+    "hint": "Em que tipo duas contagens se dividem?",
+    "choices": [
+      {
+        "text": "100.0 é arredondado em duas casas",
+        "why": "Quem arredonda é o round(); o ponto decimal muda o tipo."
+      },
+      {
+        "text": "O KQL recusa multiplicação inteira",
+        "why": "Ele multiplica inteiros sem problema."
+      },
+      {
+        "text": "Para a divisão ser real, e não inteira",
+        "why": "Certo. Com inteiros, 109 * 100 / 4193 trunca."
+      },
+      {
+        "text": "Para expressar a resposta como fração de um",
+        "why": "Multiplicar por 100 a expressa em porcentagem."
+      }
+    ]
+  },
+  "ex-77b8nysc": {
+    "prompt": "Na quinta, que porcentagem das requisições de checkout falhou?",
+    "hint": "O failed_pct do thursday.kql.",
+    "unit": "%"
+  },
+  "ex-p9fx5932": {
+    "prompt": "As quatro rotas têm p95 de 150 ms. O que a coluna p99 acrescenta?",
+    "hint": "Onde as rotas se separam?",
+    "choices": [
+      {
+        "text": "Nada: o p95 já descreve as requisições lentas",
+        "why": "Três rotas escondem uma cauda de quase um segundo além do percentil 95."
+      },
+      {
+        "text": "Que uma cauda lenta existe além dele em três rotas",
+        "why": "Certo. A cauda só aparece além do percentil 95 aqui."
+      },
+      {
+        "text": "Que a média do checkout está errada",
+        "why": "A média está calculada certo; ela só esconde a cauda."
+      },
+      {
+        "text": "Que o incidente está incluído em GET /products",
+        "why": "O incidente afetou só o checkout."
+      }
+    ]
+  },
+  "ex-gj9ed8c4": {
+    "prompt": "No `window.kql`, o bin das 17:00 mostra 9 falhas em 37. Por que não os dois em cada três inteiros?",
+    "hint": "Quando o incidente começou dentro daquele bin?",
+    "choices": [
+      {
+        "text": "O emulador amostra linhas dentro de um bin",
+        "why": "Toda linha é contada."
+      },
+      {
+        "text": "Falhas são contadas no fim do bin",
+        "why": "Linhas são contadas onde caem, ao longo de todo o bin."
+      },
+      {
+        "text": "O incidente começou às 17:05, no meio dele",
+        "why": "Certo. O bin mistura cinco minutos normais com cinco falhando."
+      },
+      {
+        "text": "Bins de dez minutos fazem a média da taxa de falha",
+        "why": "O countif conta; não faz média."
+      }
+    ]
+  },
+  "ex-6a4kyggs": {
+    "prompt": "Um serviço passa a responder 500 em 20 ms em vez de falhar devagar. Qual coluna do window.kql se mexe, e para que lado?",
+    "hint": "Um erro rápido continua sendo erro.",
+    "choices": [
+      {
+        "text": "As duas sobem juntas, como na quinta",
+        "why": "Elas subiram juntas porque as falhas de quinta eram timeouts."
+      },
+      {
+        "text": "failed sobe; o p95 continua baixo",
+        "why": "Certo. Erros rápidos puxam a latência para baixo, e por isso os dois sinais são observados."
+      },
+      {
+        "text": "p95 sobe; failed fica parado",
+        "why": "Um 500 é falha seja qual for a velocidade."
+      },
+      {
+        "text": "Nenhuma, porque 20 ms é menor que o bin",
+        "why": "O tamanho do bin é sobre agrupar no tempo, não sobre a duração da requisição."
+      }
+    ]
+  },
+  "ex-8fmd6r9h": {
+    "prompt": "Ao contrário do summarize by bin(), o operador ___ preenche intervalos vazios com um valor padrão em vez de deixá-los de fora.",
+    "hint": "A lição 25 o usa; tem hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "make-series"
+        ]
+      }
+    ]
+  },
+  "ex-scw3d1w7": {
+    "prompt": "Por que o owners.kql diz `kind=leftouter` explicitamente?",
+    "hint": "Qual é o join padrão do KQL?",
+    "choices": [
+      {
+        "text": "O KQL recusa um join sem kind",
+        "why": "Ele aceita e usa o próprio padrão."
+      },
+      {
+        "text": "leftouter é mais rápido que todo outro tipo de join no KQL",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para uma rota sem dono continuar na resposta",
+        "why": "Certo. E o tipo padrão não é o inner join que as pessoas esperam, então nomeá-lo evita surpresa."
+      },
+      {
+        "text": "Para juntar por duas colunas em vez de uma",
+        "why": "As colunas são nomeadas pelo `on`, não pelo kind."
+      }
+    ]
+  },
+  "ex-vv6r34x4": {
+    "prompt": "O relatório semanal mostra catalogue com 135 falhas e payments com 130. O que esta lição conclui?",
+    "hint": "Como as falhas se espalharam no tempo?",
+    "choices": [
+      {
+        "text": "Catalogue teve a semana pior",
+        "why": "As falhas dele se espalharam ralas por sete dias."
+      },
+      {
+        "text": "As duas equipes tiveram uma semana igualmente ruim",
+        "why": "Totais parecidos, experiências muito diferentes para os clientes."
+      },
+      {
+        "text": "Payments teve o incidente, escondido pelo total",
+        "why": "Certo. Quase todas as falhas de payments caíram em 42 minutos; um total responde quantas, não quão grave."
+      },
+      {
+        "text": "O join contou payments duas vezes",
+        "why": "Cada rota aparece uma vez à direita; nada dobrou."
+      }
+    ]
+  },
+  "ex-1pkx2htr": {
+    "prompt": "Ponha as linhas da consulta principal do owners.kql na ordem em que rodam.",
+    "hint": "Filtrar, contar, anexar, escolher colunas.",
+    "trap": "Juntar antes de resumir é o deslize: funciona, e anexa uma equipe a um quarto de milhão de linhas em vez de quatro.",
+    "items": [
+      "AppRequests",
+      "where not(Success)",
+      "summarize failed = count() by Name",
+      "join kind=leftouter owners on Name",
+      "project Team, Name, failed"
+    ]
+  },
+  "ex-xsqrbs57": {
+    "prompt": "Quantos checkouts lentos que falharam a consulta `local` contou no incidente de quinta?",
+    "hint": "A coluna failures.",
+    "unit": "falhas"
+  },
+  "ex-0ed4fzxh": {
+    "prompt": "Quais destas coisas o KQL faz nesta lição exatamente como um workspace do Log Analytics faria? Marque todas as que se aplicam.",
+    "hint": "A linguagem é a mesma; o editor e os gráficos não.",
+    "choices": [
+      {
+        "text": "Calcular um percentil 99 com percentile()",
+        "why": "Sim. Mesmo motor, mesma função."
+      },
+      {
+        "text": "Agrupar por bin(TimeGenerated, 10m)",
+        "why": "Sim. Idêntico."
+      },
+      {
+        "text": "Nomear a coluna escrita errado num erro",
+        "why": "Não. O emulador responde General_BadRequest; um workspace nomeia a coluna."
+      },
+      {
+        "text": "Desenhar o render timechart como gráfico",
+        "why": "Não. O emulador devolve tabelas; um workspace as desenha."
+      }
+    ]
+  }
+}

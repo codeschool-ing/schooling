@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-acgke5bg",
+    "version": 1,
+    "section": "arc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does ARC free a class instance?",
+    "hint": "Think of what is counted.",
+    "choices": [
+      {
+        "text": "When the program is short of memory",
+        "correct": false,
+        "why": "That describes a collector; ARC frees on a line you can point to, whatever memory is left."
+      },
+      {
+        "text": "On the line where its last strong reference goes",
+        "correct": true,
+        "why": "Right: the count reaches zero there, and `deinit` runs before the next line."
+      },
+      {
+        "text": "At the end of the function that created it, whatever else holds it",
+        "correct": false,
+        "why": "Only if no other reference holds it by then; `second` kept the session past `first = nil`."
+      },
+      {
+        "text": "When nothing reachable points at it",
+        "correct": false,
+        "why": "That is a collector's rule, and section 03 is the case where the two differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yqwqx7s",
+    "version": 1,
+    "section": "arc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Arc.swift`, which line printed `session of 45 freed` just after it ran?",
+    "hint": "Two names held the session.",
+    "choices": [
+      {
+        "text": "`first = nil`",
+        "correct": false,
+        "why": "`second` still held it, so the count went from two to one."
+      },
+      {
+        "text": "`second = nil`",
+        "correct": true,
+        "why": "Right: the last strong reference let go, and the count reached zero."
+      },
+      {
+        "text": "`var second = first`",
+        "correct": false,
+        "why": "Assigning a class instance adds a reference; it frees nothing."
+      },
+      {
+        "text": "The last line of the program",
+        "correct": false,
+        "why": "It was freed in the middle, before `both are nil` was printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcma5khg",
+    "version": 1,
+    "section": "arc",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are counted by ARC? Choose all that apply.",
+    "hint": "Values are copied, not shared.",
+    "choices": [
+      {
+        "text": "An instance of a `final class`",
+        "correct": true,
+        "why": "Yes: every class instance carries a count."
+      },
+      {
+        "text": "A `struct` holding two `Int`s",
+        "correct": false,
+        "why": "No: a struct is a value, copied on assignment."
+      },
+      {
+        "text": "A closure stored in a property",
+        "correct": true,
+        "why": "Yes: a stored closure is a reference, which is how section 06's cycle forms."
+      },
+      {
+        "text": "An `enum` case",
+        "correct": false,
+        "why": "No: an enum is a value type."
+      }
+    ]
+  },
+  {
+    "id": "ex-1f71s93p",
+    "version": 1,
+    "section": "cycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Cycle.swift` printed no `deinit` line at all. Why?",
+    "choices": [
+      {
+        "text": "`deinit` runs only when the whole program exits, never before",
+        "correct": false,
+        "why": "`Arc.swift` showed `deinit` running in the middle of the program."
+      },
+      {
+        "text": "`plan()` never returned",
+        "correct": false,
+        "why": "It printed `plan() is returning` and the program went on."
+      },
+      {
+        "text": "The course and the session hold each other strongly",
+        "correct": true,
+        "why": "Right: each count stays at one after `plan()` returns, so neither reaches zero."
+      },
+      {
+        "text": "A `final class` has no `deinit` call",
+        "correct": false,
+        "why": "`final` only forbids subclasses."
+      }
+    ]
+  },
+  {
+    "id": "ex-6458efd8",
+    "version": 1,
+    "section": "cycle",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen object holds a timer object, and the timer holds the screen to refresh it. Both properties are ordinary. What happens each time the user leaves the screen?",
+    "hint": "Draw the arrows.",
+    "choices": [
+      {
+        "text": "The screen is freed, and the timer with it",
+        "correct": false,
+        "why": "The timer's reference keeps the screen's count above zero."
+      },
+      {
+        "text": "The compiler refuses to build the pair",
+        "correct": false,
+        "why": "Section 03 compiled a cycle with no warning: each property is fine on its own."
+      },
+      {
+        "text": "Both stay in memory, and the timer keeps firing",
+        "correct": true,
+        "why": "Right: a cycle, repeated each visit, with live timers inside it."
+      },
+      {
+        "text": "The app crashes on leaving the screen",
+        "correct": false,
+        "why": "A cycle crashes nothing; it keeps memory, which is why it goes unnoticed."
+      }
+    ]
+  },
+  {
+    "id": "ex-gd34twjh",
+    "version": 1,
+    "section": "cycle",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A loop of strong references with nothing outside pointing in is a retain ___.",
+    "hint": "The section's title.",
+    "blanks": [
+      {
+        "accept": [
+          "cycle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hnyyfgg2",
+    "version": 1,
+    "section": "weak",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a `weak` reference become when the object it pointed to is freed?",
+    "choices": [
+      {
+        "text": "`nil`",
+        "correct": true,
+        "why": "Right: Swift sets it, which is why it must be an optional `var`."
+      },
+      {
+        "text": "A copy of the object, kept alive",
+        "correct": false,
+        "why": "Nothing is copied; the reference simply has nothing to point to."
+      },
+      {
+        "text": "A dangling pointer that crashes when read",
+        "correct": false,
+        "why": "That is what `unowned` guards against by stopping the program."
+      },
+      {
+        "text": "A strong reference, to keep the object",
+        "correct": false,
+        "why": "A weak reference never turns strong on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-t62wjdz0",
+    "version": 1,
+    "section": "weak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `weak let course: Course` not compile?",
+    "hint": "Something has to change it, and to what.",
+    "choices": [
+      {
+        "text": "`weak` works only on structs",
+        "correct": false,
+        "why": "It is the opposite: only class references can be weak."
+      },
+      {
+        "text": "Swift must be able to set it to `nil` later",
+        "correct": true,
+        "why": "Right: so it has to be a `var`, and of an optional type."
+      },
+      {
+        "text": "A `let` cannot hold a class instance",
+        "correct": false,
+        "why": "`let session = StudySession(...)` holds one in every program here."
+      },
+      {
+        "text": "Properties of a `final class` are read-only",
+        "correct": false,
+        "why": "`sessions` is a `var` property of a final class."
+      }
+    ]
+  },
+  {
+    "id": "ex-bf0cg7ph",
+    "version": 1,
+    "section": "weak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A course and its sessions point at each other. Which reference should be `weak`?",
+    "hint": "Who owns whom?",
+    "choices": [
+      {
+        "text": "The course's `sessions` array",
+        "correct": false,
+        "why": "Then nothing would own the sessions, and they would be freed as soon as they were added."
+      },
+      {
+        "text": "The session's `course` property",
+        "correct": true,
+        "why": "Right: the parent holds the child strongly, and the child points back weakly."
+      },
+      {
+        "text": "Both, to be safe from every cycle at once",
+        "correct": false,
+        "why": "With both weak, nothing but local names would hold either object."
+      },
+      {
+        "text": "Neither: ARC finds the loop by itself",
+        "correct": false,
+        "why": "ARC counts; it does not look for loops."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pg5kk2x",
+    "version": 1,
+    "section": "weak",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Weak.swift`, how many strong references hold the course just after `plan()` returns?",
+    "hint": "The session's reference is weak, and `swift` was local.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2xwn65rs",
+    "version": 1,
+    "section": "unowned",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens when code reads an `unowned` reference whose object has been freed?",
+    "choices": [
+      {
+        "text": "It reads `nil`",
+        "correct": false,
+        "why": "That is `weak`; an unowned reference is not optional."
+      },
+      {
+        "text": "It reads whatever is in that memory now",
+        "correct": false,
+        "why": "Swift checks, and does not read freed memory quietly."
+      },
+      {
+        "text": "The program stops with a fatal error that says what it read",
+        "correct": true,
+        "why": "Right: `Attempted to read an unowned reference but object … was already destroyed`."
+      },
+      {
+        "text": "The object is created again",
+        "correct": false,
+        "why": "Nothing re-creates an object that was freed."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1hqysxc",
+    "version": 1,
+    "section": "unowned",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate writes `unowned let course` in a session, arguing courses always outlive sessions. A year later, sessions are cached for an offline mode. What is the risk?",
+    "hint": "Who holds the sessions now?",
+    "choices": [
+      {
+        "text": "None, as `unowned` adapts to the new owner",
+        "correct": false,
+        "why": "`unowned` is a promise written once; it does not follow later changes."
+      },
+      {
+        "text": "One read after the parent is freed stops the program",
+        "correct": true,
+        "why": "Right: the promise was true when written and stopped being true far from that line."
+      },
+      {
+        "text": "A retain cycle between the cache and the course",
+        "correct": false,
+        "why": "`unowned` adds no strong reference, so it cannot close a loop."
+      },
+      {
+        "text": "A compile error",
+        "correct": false,
+        "why": "The compiler cannot see lifetimes across a cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgvnfmnx",
+    "version": 1,
+    "section": "unowned",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of reference to what it does.",
+    "hint": "The table at the end of section 05.",
+    "pairs": [
+      {
+        "left": "a plain `var course: Course?`",
+        "right": "Adds one to the count"
+      },
+      {
+        "left": "`weak var course: Course?`",
+        "right": "Reads `nil` once the course is gone"
+      },
+      {
+        "left": "`unowned let course: Course`",
+        "right": "Stops the program if read after the course is gone"
+      }
+    ],
+    "right_distractors": [
+      "Copies the course when assigned"
+    ]
+  },
+  {
+    "id": "ex-rg02ynfe",
+    "version": 1,
+    "section": "closures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Closures.swift`, which countdown printed no `deinit` line?",
+    "choices": [
+      {
+        "text": "The Swift one",
+        "correct": true,
+        "why": "Right: the object holds its closure and the closure holds the object."
+      },
+      {
+        "text": "The Kotlin one",
+        "correct": false,
+        "why": "Its closure used `[weak self]`, and it was freed."
+      },
+      {
+        "text": "Neither",
+        "correct": false,
+        "why": "`Kotlin countdown freed` was printed."
+      },
+      {
+        "text": "Both",
+        "correct": false,
+        "why": "One of them was freed when `run` returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-g213t30z",
+    "version": 1,
+    "section": "closures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a closure passed to `map` use `self` without risk of a cycle?",
+    "hint": "When is it gone?",
+    "choices": [
+      {
+        "text": "`map` copies `self` before calling it",
+        "correct": false,
+        "why": "Nothing is copied; the closure simply does not outlive the call."
+      },
+      {
+        "text": "Closures never capture `self`",
+        "correct": false,
+        "why": "Section 06's stored closure did, and leaked."
+      },
+      {
+        "text": "It does not escape",
+        "correct": true,
+        "why": "Right: only a stored closure can be one half of a loop."
+      },
+      {
+        "text": "`map` captures `self` weakly by default",
+        "correct": false,
+        "why": "There is no such default; the closure is simply short-lived."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh4hn1ds",
+    "version": 1,
+    "section": "closures",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To capture `self` without adding to its count, a stored closure starts with the capture list `[___ self]`.",
+    "hint": "The word section 04 introduced.",
+    "blanks": [
+      {
+        "accept": [
+          "weak"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-352s8nkx",
+    "version": 1,
+    "section": "closures",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `weakReport()`'s closure in the order they happen when it runs after the countdown is freed.",
+    "hint": "It ends early.",
+    "items": [
+      "The closure is called",
+      "`self` inside it reads `nil`",
+      "`guard let self` fails",
+      "`return` leaves without printing"
+    ]
+  },
+  {
+    "id": "ex-2ep5daet",
+    "version": 1,
+    "section": "finding-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does LeakSanitizer report?",
+    "choices": [
+      {
+        "text": "Every object that has a `deinit`",
+        "correct": false,
+        "why": "A `deinit` says nothing about whether an object leaked."
+      },
+      {
+        "text": "Memory nothing reachable points to, at exit",
+        "correct": true,
+        "why": "Right: a cycle is two blocks reachable only from each other."
+      },
+      {
+        "text": "Every strong reference in the program, with its count",
+        "correct": false,
+        "why": "It reports leaked memory, and no counts."
+      },
+      {
+        "text": "The lines where `weak` was missing",
+        "correct": false,
+        "why": "It shows where the leaked memory was allocated, not where a fix goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-fknkbdjh",
+    "version": 1,
+    "section": "finding-leaks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes did LeakSanitizer report leaked for `Cycle.swift`?",
+    "hint": "The `SUMMARY` line.",
+    "value": 112,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mhsx920q",
+    "version": 1,
+    "section": "finding-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did section 07 pipe the sanitized program through `swift demangle`?",
+    "choices": [
+      {
+        "text": "To remove the linker's warnings",
+        "correct": false,
+        "why": "Those came from the build, and `grep -c` counted them."
+      },
+      {
+        "text": "To run the leak check a second time, faster",
+        "correct": false,
+        "why": "`swift demangle` reads text; it runs nothing."
+      },
+      {
+        "text": "To read the mangled names",
+        "correct": true,
+        "why": "Right: `$s4main6CourseC4name…` becomes `Course.__allocating_init(name:)`."
+      },
+      {
+        "text": "To restore the `print` lines the sanitizer lost",
+        "correct": false,
+        "why": "Those were never written; demangling cannot bring them back."
+      }
+    ]
+  },
+  {
+    "id": "ex-h71fabf0",
+    "version": 1,
+    "section": "finding-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You suspect a leak in an app's settings screen and you have only a Linux machine with this toolchain. What is the cheapest first check?",
+    "hint": "Section 07's last paragraph.",
+    "choices": [
+      {
+        "text": "Open Xcode's memory graph",
+        "correct": false,
+        "why": "Xcode does not exist on Linux."
+      },
+      {
+        "text": "Rewrite every stored property in the screen's classes as `unowned`",
+        "correct": false,
+        "why": "That trades a leak for crashes, without finding anything."
+      },
+      {
+        "text": "Make every class a struct and every struct a class",
+        "correct": false,
+        "why": "A rewrite is not a check."
+      },
+      {
+        "text": "A printing `deinit` in the suspects, then leave the screen",
+        "correct": true,
+        "why": "Right: a missing `deinit` line names the object to look at."
+      }
+    ]
+  },
+  {
+    "id": "ex-n873tezx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these pairs can form a retain cycle?",
+    "hint": "Something has to be counted on both sides.",
+    "choices": [
+      {
+        "text": "Two structs, each holding the other in an array",
+        "correct": false,
+        "why": "Structs are copied, not counted; and a struct cannot contain itself this way."
+      },
+      {
+        "text": "A class and a closure of its own using `self`",
+        "correct": true,
+        "why": "Right: section 06's leak."
+      },
+      {
+        "text": "A class and an `Int` property",
+        "correct": false,
+        "why": "An `Int` points at nothing."
+      },
+      {
+        "text": "A class and a `weak` property back to its parent",
+        "correct": false,
+        "why": "The weak side does not count, which is section 04's fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nqcee1t",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Countdown` stores `onFinish` and the closure uses `self`. Which changes stop the leak? Choose all that apply.",
+    "hint": "Break one arrow of the loop.",
+    "choices": [
+      {
+        "text": "`[weak self]` in the closure, with `guard let self`",
+        "correct": true,
+        "why": "Yes: the closure no longer counts."
+      },
+      {
+        "text": "Set `onFinish = nil` after calling it",
+        "correct": true,
+        "why": "Yes: the object lets go of the closure, so the loop opens."
+      },
+      {
+        "text": "Mark the class `final`",
+        "correct": false,
+        "why": "`final` changes inheritance, not references."
+      },
+      {
+        "text": "Write `self.course` instead of `course`",
+        "correct": false,
+        "why": "That only makes the capture visible; it is still strong."
+      }
+    ]
+  },
+  {
+    "id": "ex-r31pz74d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which statement about ARC is true?",
+    "choices": [
+      {
+        "text": "It frees objects at unpredictable moments",
+        "correct": false,
+        "why": "ARC is deterministic: the same lines, every run."
+      },
+      {
+        "text": "It needs a `deinit` to free an object",
+        "correct": false,
+        "why": "`deinit` is optional; it only lets you act on the way out."
+      },
+      {
+        "text": "It finds and breaks retain cycles",
+        "correct": false,
+        "why": "It cannot see a loop; you break it with `weak` or `unowned`."
+      },
+      {
+        "text": "It counts strong references",
+        "correct": true,
+        "why": "Right: and frees the instance when the count reaches zero."
+      }
+    ]
+  }
+]

@@ -1,0 +1,410 @@
+{
+  "ex-g824hzs5": {
+    "prompt": "Pelo que um pool de SQL serverless é cobrado?",
+    "hint": "Nada é provisionado.",
+    "choices": [
+      {
+        "text": "Cada hora em que está disponível, pelo tamanho",
+        "why": "Esse é o pool dedicado; o serverless não tem tamanho."
+      },
+      {
+        "text": "Os dados que as consultas processam",
+        "why": "Isso: por terabyte, pelo menos 10 MB por consulta."
+      },
+      {
+        "text": "As linhas que cada consulta devolve ao cliente",
+        "why": "O que é lido, não o que é devolvido, decide."
+      },
+      {
+        "text": "Os arquivos guardados no lago do workspace",
+        "why": "Armazenamento é cobrança da conta de armazenamento, não do pool."
+      }
+    ]
+  },
+  "ex-qdkn4yce": {
+    "prompt": "O pool dedicado da Quitanda roda um relatório por noite, por uma hora. Quanto custa um pool deixado ligado o dia todo?",
+    "hint": "O que um pool pausado cobra?",
+    "choices": [
+      {
+        "text": "Vinte e três horas ociosas de computação por dia",
+        "why": "Isso: pausado, cobraria só o armazenamento."
+      },
+      {
+        "text": "Nada a mais, já que computação ociosa não é cobrada",
+        "why": "Um pool dedicado ligado é cobrado por hora, ocupado ou não."
+      },
+      {
+        "text": "Só o armazenamento, como num pool pausado",
+        "why": "Isso é o que pausar compra."
+      },
+      {
+        "text": "Os dados que ele processa, como o serverless",
+        "why": "Esse é o medidor do outro pool."
+      }
+    ]
+  },
+  "ex-9w8v9e52": {
+    "prompt": "Qual é o mínimo, em megabytes, que um pool serverless cobra por consulta?",
+    "hint": "Três das quatro perguntas do `ask.py` ficaram abaixo dele.",
+    "unit": "MB"
+  },
+  "ex-gyw8zt7f": {
+    "prompt": "Painéis consultam três tabelas o dia todo; analistas exploram o resto do lago de vez em quando. Que arranjo serve?",
+    "hint": "Os dois pools não são rivais.",
+    "choices": [
+      {
+        "text": "Carregar o lago inteiro num pool dedicado",
+        "why": "Paga por hora para guardar o que é pouco perguntado."
+      },
+      {
+        "text": "Serverless para tudo, painéis inclusive",
+        "why": "Possível, mas cada atualização de painel é cobrada pelos bytes, o dia todo."
+      },
+      {
+        "text": "Um pool dedicado para as três tabelas, serverless para o resto",
+        "why": "Isso: demanda constante em capacidade provisionada, perguntas ocasionais no lago."
+      },
+      {
+        "text": "Dois pools dedicados, um pausado à noite",
+        "why": "A exploração ainda paga por um pool dimensionado para ela."
+      }
+    ]
+  },
+  "ex-m9erq2n0": {
+    "prompt": "Em quantas distribuições toda tabela de um pool de SQL dedicado é dividida?",
+    "hint": "Seja qual for o tamanho."
+  },
+  "ex-4d851yfz": {
+    "prompt": "A Quitanda faz hash da tabela de pedidos em `store`, que tem cinco valores. O que acontece com uma consulta sobre ela?",
+    "hint": "Quantas distribuições guardam linhas?",
+    "choices": [
+      {
+        "text": "Roda nas 60, um doze avos do trabalho em cada",
+        "why": "Só distribuições que guardam linhas têm trabalho."
+      },
+      {
+        "text": "Cinco distribuições fazem tudo enquanto 55 esperam",
+        "why": "Isso: desequilíbrio, de uma coluna com valores de menos."
+      },
+      {
+        "text": "O pool refaz o hash numa coluna melhor",
+        "why": "A definição é sua; nada a muda."
+      },
+      {
+        "text": "É recusada até uma sexta loja abrir",
+        "why": "Desequilíbrio é lento, não recusado."
+      }
+    ]
+  },
+  "ex-8yfpck4g": {
+    "prompt": "Ligue cada tabela à distribuição que serve para ela.",
+    "hint": "Um tipo de tabela não serve em nenhuma.",
+    "pairs": [
+      {
+        "left": "Uma grande tabela fato de pedidos",
+        "right": "`HASH(customer_id)`"
+      },
+      {
+        "left": "Uma tabela de staging carregada e lida uma vez",
+        "right": "`ROUND_ROBIN`"
+      },
+      {
+        "left": "Uma tabela pequena das cinco lojas",
+        "right": "`REPLICATE`"
+      }
+    ],
+    "right_distractors": [
+      "`HASH(store)`"
+    ]
+  },
+  "ex-11nk6z03": {
+    "prompt": "Duas tabelas grandes têm hash em `customer_id` e são unidas por `order_id`. O que o plano da consulta mostra?",
+    "hint": "As linhas correspondentes estão no mesmo nó?",
+    "choices": [
+      {
+        "text": "Nada de especial: as duas têm hash, então a junção é local",
+        "why": "Com hash numa coluna diferente da junção, as linhas correspondentes podem estar em qualquer lugar."
+      },
+      {
+        "text": "Um passo de movimentação de dados",
+        "why": "Isso: linhas são embaralhadas para as correspondentes se encontrarem."
+      },
+      {
+        "text": "Um erro, porque a coluna da junção tem de ser a do hash",
+        "why": "Roda; só é mais lenta."
+      },
+      {
+        "text": "Uma replicação das duas tabelas em todo nó",
+        "why": "Replicação é definição de tabela, não algo que uma consulta faz."
+      }
+    ]
+  },
+  "ex-w0qxmpds": {
+    "prompt": "Por que os mesmos pedidos ficaram 40% menores em Parquet que em CSV?",
+    "hint": "Como cada formato organiza uma coluna.",
+    "choices": [
+      {
+        "text": "O Parquet descarta linhas que se repetem",
+        "why": "Todo pedido está lá; as contagens bateram."
+      },
+      {
+        "text": "O `gen.py` gravou menos dias de Parquet",
+        "why": "31 arquivos cada."
+      },
+      {
+        "text": "Colunas comprimem bem; números ficam números",
+        "why": "Isso: o CSV escreve cada valor por extenso em cada linha."
+      },
+      {
+        "text": "O Azurite comprime blobs Parquet no envio para o contêiner",
+        "why": "O armazenamento de blobs guarda os bytes como recebe."
+      }
+    ]
+  },
+  "ex-wjz56735": {
+    "prompt": "Pastas com nomes como `dt=2026-10-15`, que um leitor transforma em coluna, se chamam particionamento ___.",
+    "hint": "Tem o nome do sistema que criou a convenção.",
+    "blanks": [
+      {
+        "accept": [
+          "hive"
+        ]
+      }
+    ]
+  },
+  "ex-qbhkxsey": {
+    "prompt": "O que num arquivo Parquet deixa um leitor buscar duas colunas de sete?",
+    "hint": "Fica no fim.",
+    "choices": [
+      {
+        "text": "Uma linha de cabeçalho com os nomes das colunas, como no CSV",
+        "why": "Um cabeçalho nomeia colunas; não diz onde os dados delas estão."
+      },
+      {
+        "text": "O rodapé, dizendo onde começam os dados de cada coluna",
+        "why": "Isso: lê o rodapé, depois pula para os blocos necessários."
+      },
+      {
+        "text": "A pasta `dt=` em que ele está",
+        "why": "A pasta pula arquivos inteiros, não colunas."
+      },
+      {
+        "text": "Um índice que o Azurite guarda ao lado do blob",
+        "why": "O armazenamento não sabe nada do formato."
+      }
+    ]
+  },
+  "ex-4febgrrn": {
+    "prompt": "Arredondando para o inteiro mais próximo, quantas vezes menos bytes o mês em Parquet leu que o mês em CSV?",
+    "hint": "34.900.248 e 5.600.246."
+  },
+  "ex-bmjxmxjr": {
+    "prompt": "A consulta de um dia em Parquet abriu o arquivo de 1º de outubro além do dia 15. Por quê?",
+    "hint": "Antes de qualquer filtro ser aplicado.",
+    "choices": [
+      {
+        "text": "A poda de partições falhou para o primeiro dia",
+        "why": "Funcionou: 29 dias nunca foram abertos."
+      },
+      {
+        "text": "O DuckDB lê o arquivo mais antigo para conferir as datas",
+        "why": "As datas estão nos nomes das pastas."
+      },
+      {
+        "text": "O dia 1º tinha pedidos do dia 15",
+        "why": "Cada arquivo guarda o próprio dia."
+      },
+      {
+        "text": "Para conhecer as colunas da tabela",
+        "why": "Isso: o PyArrow lê um arquivo para o esquema quando o dataset é criado."
+      }
+    ]
+  },
+  "ex-m90y1s20": {
+    "prompt": "A consulta de um dia em CSV leu cerca de oito vezes a de um dia em Parquet. O que o particionamento fez pelo CSV?",
+    "hint": "Conte os blobs abertos.",
+    "choices": [
+      {
+        "text": "Dois arquivos abertos de 31, como no Parquet",
+        "why": "Isso: as pastas decidem quantos arquivos; o formato decide quanto de cada."
+      },
+      {
+        "text": "Nada, porque CSV não pode ser particionado",
+        "why": "Particionamento são pastas, e funciona para qualquer formato."
+      },
+      {
+        "text": "Deixou o leitor pular colunas no CSV",
+        "why": "Pastas pulam arquivos, nunca colunas."
+      },
+      {
+        "text": "Cortou pela metade os bytes do arquivo restante",
+        "why": "O dia 15 inteiro foi lido."
+      }
+    ]
+  },
+  "ex-cmnjdkke": {
+    "prompt": "Três das quatro consultas seriam cobradas pelos mesmos 10 MB num pool serverless. Por que o layout ainda importa?",
+    "hint": "O que cresce e o que não cresce?",
+    "choices": [
+      {
+        "text": "Não importa: o mínimo faz toda consulta custar o mesmo",
+        "why": "Só enquanto o lago é minúsculo."
+      },
+      {
+        "text": "Porque o mínimo é cobrado por arquivo aberto",
+        "why": "É por consulta."
+      },
+      {
+        "text": "As razões crescem com os dados; o mínimo fica parado",
+        "why": "Isso: um ano lido a cada cinco minutos é onde 150 vezes importa."
+      },
+      {
+        "text": "Porque consultas em CSV são recusadas acima de 10 MB",
+        "why": "Nada as recusa; elas são cobradas."
+      }
+    ]
+  },
+  "ex-18gwybv1": {
+    "prompt": "Quais destes o `ask.py` mediu, e quais são do Synapse? Marque os que o `ask.py` mediu.",
+    "hint": "O motor era o DuckDB.",
+    "choices": [
+      {
+        "text": "Os bytes que um leitor precisou buscar no lago",
+        "why": "Isso: contados no `readinto`."
+      },
+      {
+        "text": "Que blobs um filtro em `dt` deixou pular",
+        "why": "Isso: dois abertos de 31."
+      },
+      {
+        "text": "Os dados processados que o Synapse cobraria",
+        "why": "Isso inclui os passos do próprio Synapse; a contagem é um limite inferior."
+      },
+      {
+        "text": "O tempo que o Synapse levaria para responder",
+        "why": "Nada aqui rodou o Synapse."
+      }
+    ]
+  },
+  "ex-bx30a712": {
+    "prompt": "Por que a conta de armazenamento no `main.tf` diz `is_hns_enabled = true`?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "Para tornar os backups do pool redundantes entre zonas",
+        "why": "Backups são `storage_account_type`, LRS ou GRS."
+      },
+      {
+        "text": "O workspace precisa de um sistema de arquivos Data Lake",
+        "why": "Isso: o namespace hierárquico da lição 3."
+      },
+      {
+        "text": "Para as consultas serverless saírem de graça",
+        "why": "Elas são cobradas por bytes de qualquer jeito."
+      },
+      {
+        "text": "Para o Azurite poder emulá-la",
+        "why": "O Azurite não tem endpoint de Data Lake, e o Terraform não fala com ele."
+      }
+    ]
+  },
+  "ex-z4g6xbt3": {
+    "prompt": "Onde na declaração o pool é pausado à noite?",
+    "hint": "Uma propriedade ou uma operação?",
+    "choices": [
+      {
+        "text": "No `sku_name`, escolhendo `DW100c`",
+        "why": "Isso é o tamanho enquanto roda."
+      },
+      {
+        "text": "No `create_mode`",
+        "why": "Isso diz como o pool é criado."
+      },
+      {
+        "text": "No bloco `identity` do workspace",
+        "why": "Isso é como quem o workspace age."
+      },
+      {
+        "text": "Em lugar nenhum: pausar é feito fora do arquivo",
+        "why": "Isso: um agendamento, um pipeline ou uma pessoa."
+      }
+    ]
+  },
+  "ex-z4xkx439": {
+    "prompt": "O `storage_account_type` aceita `LRS` e `GRS`. Por que a Quitanda escolheu `LRS`?",
+    "hint": "Onde fica o par da `brazilsouth`?",
+    "choices": [
+      {
+        "text": "O `GRS` copia backups para fora",
+        "why": "Isso: para os Estados Unidos, a região par da lição 1."
+      },
+      {
+        "text": "O `GRS` não é oferecido para pools em `DW100c`",
+        "why": "O provedor ofereceu os dois sem falar de tamanho."
+      },
+      {
+        "text": "O `LRS` faz o pool pausar mais rápido",
+        "why": "Backups não têm nada a ver com pausar."
+      },
+      {
+        "text": "O `ZRS` foi recusado, e o `LRS` era o próximo",
+        "why": "A escolha entre os dois oferecidos é sobre onde os dados podem ir."
+      }
+    ]
+  },
+  "ex-57r62ef2": {
+    "prompt": "Ponha em ordem o que aconteceu quando o `ask.py` respondeu a pergunta de um dia em Parquet.",
+    "hint": "O esquema vem antes da varredura.",
+    "items": [
+      "Listar os blobs sob `orders/`",
+      "Ler um arquivo para conhecer as colunas",
+      "Manter só a pasta `dt=2026-10-15`",
+      "Ler o rodapé desse arquivo",
+      "Ler os blocos de `payment` e `total_cents` e somar"
+    ]
+  },
+  "ex-qaw4hpnm": {
+    "prompt": "Um painel pede as vendas de hoje a cada cinco minutos, sobre um ano de pedidos guardados num CSV por mês. Que mudança economiza mais?",
+    "hint": "As duas decisões se multiplicam.",
+    "choices": [
+      {
+        "text": "Um pool dedicado maior para o painel",
+        "why": "Mais computação, os mesmos arquivos lidos."
+      },
+      {
+        "text": "Parquet, numa pasta por dia",
+        "why": "Isso: um arquivo aberto em vez de doze, e duas colunas dele."
+      },
+      {
+        "text": "Comprimir os CSV com gzip para cortar o tamanho pela metade",
+        "why": "Arquivos menores, ainda lidos inteiros, todos eles."
+      },
+      {
+        "text": "Atualizar a cada dez minutos",
+        "why": "Metade das consultas, cada uma tão desperdiçada quanto antes."
+      }
+    ]
+  },
+  "ex-zfvqxkqs": {
+    "prompt": "Quais afirmações sobre a prática desta lição são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "O que substituiu o quê?",
+    "choices": [
+      {
+        "text": "O DuckDB respondeu toda consulta, não o Synapse",
+        "why": "Isso: o Synapse não tem emulador."
+      },
+      {
+        "text": "O SQL Server recusou o `CREATE TABLE` de um pool dedicado",
+        "why": "Isso: ele não conhece `DISTRIBUTION`."
+      },
+      {
+        "text": "O Terraform criou um workspace sem conta",
+        "why": "Ele validou um arquivo e não criou nada."
+      },
+      {
+        "text": "Os arquivos foram lidos pelo endpoint de Data Lake",
+        "why": "O Azurite não tem; eles foram lidos como blobs."
+      }
+    ]
+  }
+}

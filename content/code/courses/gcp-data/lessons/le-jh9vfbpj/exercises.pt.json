@@ -1,0 +1,370 @@
+{
+  "ex-1xwtak6n": {
+    "prompt": "O que uma primária do AlloyDB escreve na camada de armazenamento?",
+    "hint": "Pense no que torna um commit durável.",
+    "choices": [
+      {
+        "text": "Só registros de log",
+        "why": "Isso. O serviço de processamento de log constrói os blocos de dados a partir deles."
+      },
+      {
+        "text": "Páginas de dados, depois de cada checkpoint",
+        "why": "Esse é um servidor PostgreSQL no próprio disco; a primária do AlloyDB não escreve páginas."
+      },
+      {
+        "text": "O log e as páginas, num disco da própria zona",
+        "why": "A primária não tem disco; o armazenamento é regional e compartilhado."
+      },
+      {
+        "text": "Linhas inteiras, que o read pool depois indexa",
+        "why": "O read pool não indexa nada; ele lê os mesmos blocos que a primária."
+      }
+    ]
+  },
+  "ex-f67gah1a": {
+    "prompt": "A Quitanda acrescenta um terceiro nó ao read pool do AlloyDB. O que acontece com a linha de armazenamento da conta?",
+    "hint": "De quem é o armazenamento?",
+    "choices": [
+      {
+        "text": "Cresce o tamanho do banco, pela nova cópia",
+        "why": "Essa é uma réplica do Cloud SQL, que guarda uma cópia inteira só dela."
+      },
+      {
+        "text": "Cresce o tamanho do cache do novo nó",
+        "why": "O cache faz parte da máquina do nó, cobrada como vCPUs e memória, não como armazenamento."
+      },
+      {
+        "text": "Nada; o cluster paga o armazenamento uma vez",
+        "why": "Isso. A página de preços diz que o custo do armazenamento não muda quando se acrescentam nós de leitura."
+      },
+      {
+        "text": "Dobra, porque leituras são cobradas por GiB lido",
+        "why": "O AlloyDB não cobra por leitura nem por GiB lido."
+      }
+    ]
+  },
+  "ex-96f07h4f": {
+    "prompt": "A carga de escrita da Quitanda passa do que a maior máquina do AlloyDB absorve, e as leituras ficam iguais. Qual é o próximo passo?",
+    "hint": "Conte os escritores de um cluster.",
+    "choices": [
+      {
+        "text": "Acrescentar nós ao read pool até as escritas caberem",
+        "why": "Nós de leitura recebem só leituras; toda escrita continua passando pela única primária."
+      },
+      {
+        "text": "Espalhar as escritas por muitas máquinas, como o Spanner",
+        "why": "Isso. O AlloyDB tem exatamente um escritor, e é nessa linha que o Spanner começa."
+      },
+      {
+        "text": "Ligar o columnar engine na primária",
+        "why": "O columnar engine acelera leituras analíticas e acrescenta trabalho às escritas."
+      },
+      {
+        "text": "Acrescentar uma segunda primária em outra zona",
+        "why": "O segundo nó de uma primária regional é um standby que não atende nada até um failover."
+      }
+    ]
+  },
+  "ex-eg0rb9gq": {
+    "prompt": "Por que uma camada de armazenamento remota não deixa toda consulta do AlloyDB mais lenta?",
+    "hint": "Conte os lugares onde uma página pode estar antes do serviço de armazenamento.",
+    "choices": [
+      {
+        "text": "Dois caches por nó: memória e armazenamento local",
+        "why": "Isso. O serviço de armazenamento só é alcançado quando os dois falham."
+      },
+      {
+        "text": "A camada de armazenamento fica na mesma máquina da primária",
+        "why": "Ela é um serviço regional, espalhado pelas zonas, fora dos nós."
+      },
+      {
+        "text": "As consultas são respondidas pelo log, nunca por páginas",
+        "why": "As consultas leem páginas; o log é aquilo de que as páginas são feitas."
+      },
+      {
+        "text": "Os nós do read pool copiam o banco inteiro ao iniciar",
+        "why": "Nós de leitura não guardam cópia; leem blocos quando precisam."
+      }
+    ]
+  },
+  "ex-k088b9bs": {
+    "prompt": "Qual `--availability-type` dá a uma primária do AlloyDB um standby em outra zona?",
+    "hint": "O outro valor é uma zona só.",
+    "choices": [
+      {
+        "text": "`ZONAL`",
+        "why": "Um nó numa zona, sem failover automático."
+      },
+      {
+        "text": "`REGIONAL`",
+        "why": "Isso. Dois nós em duas zonas, os dois cobrados."
+      },
+      {
+        "text": "`READ_POOL`",
+        "why": "Esse é um valor de `--instance-type`, para uma instância que só recebe leituras."
+      },
+      {
+        "text": "`MULTI_REGIONAL`",
+        "why": "Esse valor não existe; uma cópia em outra região é um cluster secundário."
+      }
+    ]
+  },
+  "ex-4t191t5z": {
+    "prompt": "Com `--cpu-count=16` e sem tipo de máquina, quantos GiB de memória tem um nó do AlloyDB?",
+    "hint": "N2 high-memory: 8 GiB por vCPU.",
+    "unit": "GiB"
+  },
+  "ex-bzgrhw4v": {
+    "prompt": "A Quitanda quer que o read pool sobreviva à perda de uma zona. Qual é o menor pool que consegue?",
+    "hint": "A ajuda diz o que um pool de um nó pode ser.",
+    "choices": [
+      {
+        "text": "Um nó, regional",
+        "why": "Um read pool de tamanho 1 só pode ser zonal."
+      },
+      {
+        "text": "Dois nós, em duas zonas",
+        "why": "Isso. Um pool de dois ou mais nós os espalha pelas zonas."
+      },
+      {
+        "text": "Três nós, um por zona, que é o mínimo para um quórum",
+        "why": "Não há quórum entre nós de leitura; dois bastam para cobrir zonas."
+      },
+      {
+        "text": "Qualquer tamanho, porque a camada de armazenamento é regional",
+        "why": "O armazenamento sobrevive a uma zona; um nó na zona perdida, não."
+      }
+    ]
+  },
+  "ex-21df0nya": {
+    "prompt": "No PostgreSQL comum desta aula, por que a receita de outubro por bairro leu toda página de `orders`?",
+    "hint": "Onde estão as linhas de outubro?",
+    "choices": [
+      {
+        "text": "O filtro em `day` foi aplicado depois da agregação",
+        "why": "O filtro rodou no scan e tirou linhas, não páginas."
+      },
+      {
+        "text": "Lê-se a linha inteira, e outubro está em toda parte",
+        "why": "Isso. Toda página precisa ser aberta para achá-las, com endereço e notas junto."
+      },
+      {
+        "text": "`SET max_parallel_workers_per_gather = 0` desliga os índices",
+        "why": "Ele mantém a consulta num processo só; não havia índice em `day` para usar."
+      },
+      {
+        "text": "O columnar engine estava desligado",
+        "why": "Não existe columnar engine nenhum num PostgreSQL comum."
+      }
+    ]
+  },
+  "ex-7wskm75e": {
+    "prompt": "Qual consulta da Quitanda ganha menos com o columnar engine do AlloyDB?",
+    "hint": "Muitas linhas e poucas colunas é o formato dele.",
+    "choices": [
+      {
+        "text": "A receita por bairro do ano inteiro",
+        "why": "Muitas linhas, três colunas: exatamente o que ele faz."
+      },
+      {
+        "text": "O número de pedidos cancelados por mês",
+        "why": "Muitas linhas, duas colunas."
+      },
+      {
+        "text": "Um pedido de um cliente pela chave primária, todas as colunas",
+        "why": "Isso. Uma linha pelo índice é o que o armazenamento por linha já faz com poucos buffers."
+      },
+      {
+        "text": "A média dos pedidos entregues na Mooca",
+        "why": "Muitas linhas, três colunas."
+      }
+    ]
+  },
+  "ex-72hx6trm": {
+    "prompt": "A tabela inteira tinha 51.658 páginas e a de três colunas, 11.840. Quantas vezes menos páginas leu o scan estreito? Uma casa decimal.",
+    "hint": "Divida a maior pela menor."
+  },
+  "ex-0krdsdfa": {
+    "prompt": "A Quitanda liga o columnar engine só no read pool dos analistas. O que isso compra?",
+    "hint": "A flag é por instância.",
+    "choices": [
+      {
+        "text": "A primária do checkout nunca cede memória a um armazenamento por coluna",
+        "why": "Isso. O armazenamento por coluna disputa memória, então mora onde os relatórios rodam."
+      },
+      {
+        "text": "O armazenamento por coluna deixa de custar",
+        "why": "A memória dele é a do pool, cobrada com os nós."
+      },
+      {
+        "text": "As escritas da primária deixam de chegar ao armazenamento por coluna",
+        "why": "As mudanças chegam onde ele estiver; o AlloyDB o mantém atualizado."
+      },
+      {
+        "text": "Os relatórios passam a poder usar `google_columnar_engine_add` no PostgreSQL",
+        "why": "A função só existe no AlloyDB."
+      }
+    ]
+  },
+  "ex-3w97wfm9": {
+    "prompt": "O que muda numa aplicação que passa do Cloud SQL para PostgreSQL ao AlloyDB?",
+    "hint": "Os dois rodam o mesmo motor.",
+    "choices": [
+      {
+        "text": "O schema, porque as chaves primárias decidem onde as linhas ficam",
+        "why": "Esse é o Spanner, cujas chaves decidem onde as linhas moram."
+      },
+      {
+        "text": "A string de conexão",
+        "why": "Isso. O AlloyDB é PostgreSQL; essa mudança é o passo mais curto."
+      },
+      {
+        "text": "Toda consulta, para o dialeto GoogleSQL",
+        "why": "O AlloyDB fala PostgreSQL; o GoogleSQL é um dos dialetos do Spanner."
+      },
+      {
+        "text": "O driver, por um protocolo proprietário",
+        "why": "O AlloyDB usa os drivers e o protocolo do PostgreSQL."
+      }
+    ]
+  },
+  "ex-tbr3vaze": {
+    "prompt": "Por que este laboratório pratica num PostgreSQL comum e não no AlloyDB Omni?",
+    "hint": "O que falta no Omni que é o assunto da aula?",
+    "choices": [
+      {
+        "text": "O Omni não é publicado para Linux",
+        "why": "O Google o publica como imagem de contêiner para Linux, Docker e Kubernetes."
+      },
+      {
+        "text": "O Omni não tem columnar engine, que é o que esta aula mede",
+        "why": "O columnar engine está dentro do Omni."
+      },
+      {
+        "text": "O Omni usa os próprios discos, sem armazenamento compartilhado",
+        "why": "Isso. A parte que distingue o AlloyDB é a que o Omni deixa de fora."
+      },
+      {
+        "text": "O Omni precisa de um cluster do AlloyDB para se conectar",
+        "why": "O Omni roda sozinho, sem cluster atrás."
+      }
+    ]
+  },
+  "ex-c3cv7h9d": {
+    "prompt": "Associe cada produto a como suas leituras crescem.",
+    "hint": "Um deles cresce as escritas do mesmo jeito.",
+    "pairs": [
+      {
+        "left": "Cloud SQL",
+        "right": "Réplicas de leitura, cada uma com cópia inteira"
+      },
+      {
+        "left": "AlloyDB",
+        "right": "Nós de read pool lendo um armazenamento compartilhado"
+      },
+      {
+        "left": "Spanner",
+        "right": "Mais nós, que atendem leituras e escritas por faixa de chave"
+      }
+    ],
+    "right_distractors": [
+      "Um standby maior"
+    ]
+  },
+  "ex-cbg4sh8q": {
+    "prompt": "Qual destas NÃO é uma linha da conta do AlloyDB?",
+    "hint": "Três coisas são cobradas.",
+    "choices": [
+      {
+        "text": "vCPUs e memória de cada nó",
+        "why": "Cobrados por vCPU-hora e por GiB-hora."
+      },
+      {
+        "text": "O armazenamento que o cluster guarda",
+        "why": "Cobrado por GiB-mês do que é usado."
+      },
+      {
+        "text": "Requisições de I/O à camada de armazenamento",
+        "why": "Isso. O AlloyDB não cobra por leitura nem por escrita."
+      },
+      {
+        "text": "Armazenamento de backup",
+        "why": "Cobrado por GiB-mês na tarifa de backup."
+      }
+    ]
+  },
+  "ex-rxxqjf2w": {
+    "prompt": "Nos preços de tabela de São Paulo, quanto custa um nó do AlloyDB de 8 vCPUs e 64 GiB por 730 horas, em USD até o centavo?",
+    "hint": "(8 × 0,1051 + 64 × 0,01781) × 730",
+    "unit": "USD"
+  },
+  "ex-dt6vm68w": {
+    "prompt": "O formato da Quitanda passa de duas máquinas de leitura para quatro, nos dois produtos, com os dados iguais. O que acontece com a quantidade de dados em que a conta do AlloyDB encontra a do Cloud SQL?",
+    "hint": "Cada leitora acrescenta computação dos dois lados, e um disco de um.",
+    "choices": [
+      {
+        "text": "Fica em cerca de 4.370 GiB, porque a linha depende de quantos dados existem e de mais nada",
+        "why": "A linha é uma diferença de computação sobre uma diferença de armazenamento por GiB, e as duas mudam."
+      },
+      {
+        "text": "Cai, para cerca de 3.380 GiB",
+        "why": "Isso. Cada leitora alarga a diferença de computação em cerca de 593 por mês e acrescenta 0,255 por GiB ao armazenamento do Cloud SQL: (6 × 1.445,87 − 1.704,70 − 4 × 852,64) / (1,53 − 0,476909)."
+      },
+      {
+        "text": "Sobe, porque cada nó de leitura do AlloyDB custa cerca de 593 por mês a mais que uma réplica",
+        "why": "Custa, mas cada réplica também traz um disco inteiro, e acima de uns 2.330 GiB esse disco custa mais do que os 593."
+      },
+      {
+        "text": "Não dá para calcular sem um free trial",
+        "why": "É aritmética nas páginas de preço, como os 4.370."
+      }
+    ]
+  },
+  "ex-8w7f1k4m": {
+    "prompt": "Ponha em ordem os passos para montar o banco de pedidos da Quitanda no AlloyDB.",
+    "hint": "O cluster é dono do armazenamento antes de existir qualquer máquina.",
+    "items": [
+      "`gcloud alloydb clusters create`, com a rede e o backup contínuo",
+      "A instância `PRIMARY`, `REGIONAL`, 8 vCPUs",
+      "Um `READ_POOL` de dois nós para a loja",
+      "A flag do columnar engine num segundo read pool, para os analistas"
+    ]
+  },
+  "ex-8ms0mv22": {
+    "prompt": "Quais destas decorrem da camada de armazenamento compartilhada do AlloyDB? Escolha todas as que se aplicam.",
+    "hint": "Pense no que um nó de leitura deixa de precisar.",
+    "choices": [
+      {
+        "text": "Um nó de leitura não acrescenta armazenamento à conta",
+        "why": "Sim; há uma camada de armazenamento por cluster."
+      },
+      {
+        "text": "Um novo nó de leitura não tem cópia para montar antes de atender",
+        "why": "Sim; ele lê os blocos que já estão lá."
+      },
+      {
+        "text": "O armazenamento é cobrado pelo que é usado, e não por um tamanho escolhido antes",
+        "why": "Sim; o armazenamento cresce e diminui sozinho."
+      },
+      {
+        "text": "Escritas podem ir para qualquer nó de um read pool",
+        "why": "Toda escrita passa pela única primária."
+      },
+      {
+        "text": "Um `DELETE` sem `WHERE` pode ser desfeito a partir de um nó de leitura",
+        "why": "O nó de leitura lê o mesmo armazenamento e vê o delete na hora; o backup contínuo é o que desfaz."
+      }
+    ]
+  },
+  "ex-jcsevea7": {
+    "prompt": "O AlloyDB guarda o log por uma janela de recuperação, então um cluster pode ser restaurado em qualquer momento dentro dela. Esse recurso é o continuous ___.",
+    "hint": "Ele é ligado com `--enable-continuous-…`.",
+    "blanks": [
+      {
+        "accept": [
+          "backup"
+        ]
+      }
+    ]
+  }
+}

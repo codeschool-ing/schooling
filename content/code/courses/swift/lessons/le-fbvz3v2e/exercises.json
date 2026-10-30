@@ -1,0 +1,666 @@
+[
+  {
+    "id": "ex-ajv3zvpp",
+    "version": 1,
+    "section": "encode",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a struct need for `JSONEncoder` to encode it, when all its properties are `Int`, `Bool` and `String`?",
+    "choices": [
+      {
+        "text": "An `encode(to:)` method written by hand",
+        "correct": false,
+        "why": "The compiler writes that one for you."
+      },
+      {
+        "text": "To conform to `Codable`",
+        "correct": true,
+        "why": "Right: the conformance is the word and nothing else."
+      },
+      {
+        "text": "A `CodingKeys` enum listing every property",
+        "correct": false,
+        "why": "It is generated unless the names have to change."
+      },
+      {
+        "text": "To be a class rather than a struct",
+        "correct": false,
+        "why": "Structs encode as well as classes; every example here is a struct."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqwgz8qp",
+    "version": 1,
+    "section": "encode",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three runs of the unchanged `Encode.swift` printed the compact JSON with keys in different orders. Why?",
+    "hint": "Where does the encoder keep an object's keys?",
+    "choices": [
+      {
+        "text": "The program has a bug somewhere that shuffles the planner's courses and sessions",
+        "correct": false,
+        "why": "The data is the same each time; only the key order moves."
+      },
+      {
+        "text": "JSON requires keys in random order",
+        "correct": false,
+        "why": "JSON requires no order at all."
+      },
+      {
+        "text": "Keys sit in a dictionary whose hashing is seeded per process",
+        "correct": true,
+        "why": "Right: and `.sortedKeys` makes the output stable."
+      },
+      {
+        "text": "`swift` compiled it differently each time",
+        "correct": false,
+        "why": "The compiled code is the same; the order comes from the hashing at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft3rn5nm",
+    "version": 1,
+    "section": "encode",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes was the compact JSON of the planner in section 01?",
+    "value": 118,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hkmehy8g",
+    "version": 1,
+    "section": "encode",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What type does `encoder.encode(planner)` return?",
+    "choices": [
+      {
+        "text": "`String`",
+        "correct": false,
+        "why": "`String(decoding:as:)` was needed to turn the result into text."
+      },
+      {
+        "text": "`Data`",
+        "correct": true,
+        "why": "Right: bytes, which is what a file or a request holds."
+      },
+      {
+        "text": "`[String: Any]`",
+        "correct": false,
+        "why": "That is a dictionary; the encoder produces bytes."
+      },
+      {
+        "text": "`URL`",
+        "correct": false,
+        "why": "A `URL` was where the bytes were written, not what came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmc1xeqq",
+    "version": 1,
+    "section": "decode",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `decode` take `[Course].self` as its first argument?",
+    "hint": "Can the bytes say what type they are?",
+    "choices": [
+      {
+        "text": "Only the caller knows the type",
+        "correct": true,
+        "why": "Right: the same bytes could be read as several types, and only the caller knows."
+      },
+      {
+        "text": "To pass an empty planner to fill",
+        "correct": false,
+        "why": "`.self` is the type, not an instance."
+      },
+      {
+        "text": "It is the name of the file to read",
+        "correct": false,
+        "why": "The data was read separately, with `Data(contentsOf:)`."
+      },
+      {
+        "text": "To decode faster",
+        "correct": false,
+        "why": "Speed is not why; without it there is nothing to decode into."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pk01g5p",
+    "version": 1,
+    "section": "decode",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the compiler generate for a struct that conforms to `Codable`? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`encode(to:)`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`init(from:)`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A `CodingKeys` enum",
+        "correct": true,
+        "why": "Yes: one case per stored property."
+      },
+      {
+        "text": "A `JSONDecoder` configured for the type",
+        "correct": false,
+        "why": "Decoders are yours to create and configure."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bbgbzzn",
+    "version": 1,
+    "section": "decode",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server's response is only ever read by the app, never sent back. What is the narrowest conformance for its type?",
+    "choices": [
+      {
+        "text": "`Codable`",
+        "correct": false,
+        "why": "It works, and generates encoding code nothing uses."
+      },
+      {
+        "text": "`Decodable`",
+        "correct": true,
+        "why": "Right: only the reading half is generated."
+      },
+      {
+        "text": "`Encodable`",
+        "correct": false,
+        "why": "That is the writing half, the one not needed."
+      },
+      {
+        "text": "`CodingKey`",
+        "correct": false,
+        "why": "That is the protocol for keys, not for the type."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpyft4aq",
+    "version": 1,
+    "section": "coding-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a hand-written `CodingKeys`, what is the raw value of each case?",
+    "choices": [
+      {
+        "text": "The property's type",
+        "correct": false,
+        "why": "The type comes from the property itself."
+      },
+      {
+        "text": "A default value for the property",
+        "correct": false,
+        "why": "Defaults belong in `init(from:)`, section 05."
+      },
+      {
+        "text": "The key used in the JSON",
+        "correct": true,
+        "why": "Right: `minutes = \"study_minutes\"`."
+      },
+      {
+        "text": "The order of the key in the output",
+        "correct": false,
+        "why": "Section 01 showed the encoder keeps no order."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5dxvwgp",
+    "version": 1,
+    "section": "coding-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Keys.swift` encodes a session back to JSON. Which keys does the output use?",
+    "hint": "The same enum works both ways.",
+    "choices": [
+      {
+        "text": "`minutes` and `done`",
+        "correct": false,
+        "why": "Those are the Swift names; `CodingKeys` renames them on the way out too."
+      },
+      {
+        "text": "`study_minutes` and `is_done`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Both sets, one after the other",
+        "correct": false,
+        "why": "Each property is written once, under one key."
+      },
+      {
+        "text": "`studyMinutes` and `isDone`",
+        "correct": false,
+        "why": "That is the camel case of `Snake.swift`'s struct."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8ytgw31",
+    "version": 1,
+    "section": "coding-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One `StudySession` type is decoded in five places of an app. Why does section 03 prefer a `CodingKeys` enum to `.convertFromSnakeCase` here?",
+    "hint": "Where does each mapping live?",
+    "choices": [
+      {
+        "text": "`.convertFromSnakeCase` is slower",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "The enum travels with the type",
+        "correct": true,
+        "why": "Right: forget it on one decoder and that one fails."
+      },
+      {
+        "text": "The strategy does not work on Linux",
+        "correct": false,
+        "why": "`Snake.swift` ran on Linux."
+      },
+      {
+        "text": "A strategy cannot map `is_done`",
+        "correct": false,
+        "why": "It mapped it to `isDone`."
+      }
+    ]
+  },
+  {
+    "id": "ex-48xh05hf",
+    "version": 1,
+    "section": "coding-keys",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A decoder set to `.convertFromSnakeCase` reads the key `study_minutes` into a property named ___.",
+    "blanks": [
+      {
+        "accept": [
+          "studyMinutes"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4p29y3e8",
+    "version": 1,
+    "section": "dates",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With no strategy, `JSONEncoder` wrote a `Date` as a number of seconds since 1 January of which year?",
+    "value": 2001,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-brzqvnk3",
+    "version": 1,
+    "section": "dates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `dateEncodingStrategy = .iso8601` write for 26 October 2026 at 19:00 UTC?",
+    "choices": [
+      {
+        "text": "`814734000`",
+        "correct": false,
+        "why": "That is the default, seconds since 2001."
+      },
+      {
+        "text": "`\"2026-10-26T19:00:00Z\"`",
+        "correct": true,
+        "why": "Right: a date, a `T`, a time and `Z` for UTC."
+      },
+      {
+        "text": "`\"26/10/2026 16:00\"`",
+        "correct": false,
+        "why": "That is a local format, which `.formatted` would need a pattern for."
+      },
+      {
+        "text": "`\"2026-10-26 16:00:00 -0300\"`",
+        "correct": false,
+        "why": "That is the same instant in São Paulo's offset, which no strategy here writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0mypy2s",
+    "version": 1,
+    "section": "dates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An app decodes `\"2026-10-26T19:00:00Z\"` into a `Date` with a decoder left at its defaults. What happens?",
+    "choices": [
+      {
+        "text": "It works: the decoder recognises ISO 8601",
+        "correct": false,
+        "why": "The default expects the 2001 number."
+      },
+      {
+        "text": "The date becomes 1 January 2001",
+        "correct": false,
+        "why": "Nothing is invented; the decode fails."
+      },
+      {
+        "text": "`typeMismatch`: a `Double` was expected",
+        "correct": true,
+        "why": "Right: it found a string where the number should be."
+      },
+      {
+        "text": "The date is read in São Paulo's time zone",
+        "correct": false,
+        "why": "Time zones are not the issue; the format is."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4rzk68m",
+    "version": 1,
+    "section": "dates",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order `Dates.swift` printed them.",
+    "items": [
+      "The date as `814734000`",
+      "The date as an ISO 8601 string",
+      "The decoded date and `true`",
+      "A `typeMismatch` error"
+    ]
+  },
+  {
+    "id": "ex-1pe392ka",
+    "version": 1,
+    "section": "missing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A JSON session has no `note` key, and `note` is declared `String?`. What does the decoder do?",
+    "choices": [
+      {
+        "text": "Sets `note` to `nil`",
+        "correct": true,
+        "why": "Right: an optional may be missing."
+      },
+      {
+        "text": "Throws `keyNotFound`",
+        "correct": false,
+        "why": "That is for a property that is not optional."
+      },
+      {
+        "text": "Sets `note` to an empty string",
+        "correct": false,
+        "why": "An empty string is a value; nothing invents one."
+      },
+      {
+        "text": "Skips the whole session",
+        "correct": false,
+        "why": "The session decoded, with `note: nil`."
+      }
+    ]
+  },
+  {
+    "id": "ex-59d779xt",
+    "version": 1,
+    "section": "missing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A struct declares `var done: Bool = false`, and the JSON has no `done`. With the generated `init(from:)`, what happens?",
+    "hint": "Section 05, after the example.",
+    "choices": [
+      {
+        "text": "`done` is `false`, from the default",
+        "correct": false,
+        "why": "The generated code ignores the default value."
+      },
+      {
+        "text": "`keyNotFound`",
+        "correct": true,
+        "why": "Right: write `init(from:)` with `decodeIfPresent` to use a default."
+      },
+      {
+        "text": "The compiler refuses the struct",
+        "correct": false,
+        "why": "It compiles; the failure is at decode time."
+      },
+      {
+        "text": "`done` is `nil`",
+        "correct": false,
+        "why": "A `Bool` cannot be `nil`."
+      }
+    ]
+  },
+  {
+    "id": "ex-q05rbfr0",
+    "version": 1,
+    "section": "missing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `init(from:)`, the call that returns `nil` for an absent key instead of throwing is `container.___`.",
+    "blanks": [
+      {
+        "accept": [
+          "decodeIfPresent"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bed1yav4",
+    "version": 1,
+    "section": "errors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of broken JSON to the `DecodingError` case it produces.",
+    "hint": "The table in section 06.",
+    "pairs": [
+      {
+        "left": "`\"minutes\": \"45\"`",
+        "right": "`typeMismatch`"
+      },
+      {
+        "left": "a session with no `minutes`",
+        "right": "`keyNotFound`"
+      },
+      {
+        "left": "a missing closing `]`",
+        "right": "`dataCorrupted`"
+      },
+      {
+        "left": "`\"minutes\": null`",
+        "right": "`valueNotFound`"
+      }
+    ]
+  },
+  {
+    "id": "ex-6jb6dph7",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `[0].sessions[1]` in a decoding error tell you?",
+    "choices": [
+      {
+        "text": "The error happened on line 1 of the file",
+        "correct": false,
+        "why": "It is a path through the data, not a line number."
+      },
+      {
+        "text": "Where it failed: the first course's second session",
+        "correct": true,
+        "why": "Right: built from `context.codingPath`."
+      },
+      {
+        "text": "That two errors happened",
+        "correct": false,
+        "why": "One error, at one place."
+      },
+      {
+        "text": "Which version of the planner wrote the file",
+        "correct": false,
+        "why": "Nothing in the path says who wrote the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-sj5htpcm",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate loads `planner.json` with `try? decoder.decode(...)` and shows an empty planner when it is `nil`. What does section 06 say is wrong?",
+    "choices": [
+      {
+        "text": "`try?` cannot be used with `decode`",
+        "correct": false,
+        "why": "It can; that is the trouble."
+      },
+      {
+        "text": "Nothing: an empty planner is a safe default",
+        "correct": false,
+        "why": "It tells the student they have no sessions, which is false."
+      },
+      {
+        "text": "A broken file passes for a planner with no sessions",
+        "correct": true,
+        "why": "Right: catch at the edge, log the case and path, and say the load failed."
+      },
+      {
+        "text": "The file should be written with `.sortedKeys` first",
+        "correct": false,
+        "why": "Key order does not affect decoding."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk2x8y21",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server sends `{\"study_minutes\": 45, \"started_at\": \"2026-10-26T19:00:00Z\"}`. Which pair of settings decodes it into `studyMinutes: Int` and `startedAt: Date`?",
+    "choices": [
+      {
+        "text": "`.sortedKeys` and `.prettyPrinted`",
+        "correct": false,
+        "why": "Those are encoder output options."
+      },
+      {
+        "text": "`.convertToSnakeCase` and `.secondsSince1970`",
+        "correct": false,
+        "why": "Wrong direction, and wrong date format."
+      },
+      {
+        "text": "`.convertFromSnakeCase` and `.iso8601`",
+        "correct": true,
+        "why": "Right: one for the keys, one for the date."
+      },
+      {
+        "text": "No settings: the defaults read both",
+        "correct": false,
+        "why": "The default keys and dates both fail here."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2rr3g5j",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session type gains a new property, `room: String`, in version 2 of the app. Old files have no `room`. Which choices let old files still load? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Declare it `room: String?`",
+        "correct": true,
+        "why": "Yes: an optional may be missing."
+      },
+      {
+        "text": "Write `init(from:)` with `decodeIfPresent` and a default",
+        "correct": true,
+        "why": "Yes: section 05's way."
+      },
+      {
+        "text": "Declare it `var room: String = \"\"` and keep the generated code",
+        "correct": false,
+        "why": "The generated `init(from:)` still requires the key."
+      },
+      {
+        "text": "Encode new files with `.sortedKeys`",
+        "correct": false,
+        "why": "The old files are the problem, and order is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vhta5ar",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which module provides `JSONEncoder` and `JSONDecoder`?",
+    "choices": [
+      {
+        "text": "The standard library",
+        "correct": false,
+        "why": "They need `import Foundation`."
+      },
+      {
+        "text": "Foundation",
+        "correct": true,
+        "why": "Right: imported at the top of every program here."
+      },
+      {
+        "text": "Apple's SwiftUI",
+        "correct": false,
+        "why": "SwiftUI draws screens and does not exist on Linux."
+      },
+      {
+        "text": "Codable",
+        "correct": false,
+        "why": "`Codable` is a protocol, not a module."
+      }
+    ]
+  }
+]

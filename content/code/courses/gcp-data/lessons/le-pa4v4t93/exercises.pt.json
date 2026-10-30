@@ -1,0 +1,391 @@
+{
+  "ex-p5d3fh2t": {
+    "prompt": "Qual a diferença entre uma view e uma visão materializada no BigQuery?",
+    "hint": "Uma delas guarda alguma coisa.",
+    "choices": [
+      {
+        "text": "Só a materializada guarda um resultado",
+        "why": "Certo. Esse resultado guardado é o que economiza a leitura."
+      },
+      {
+        "text": "Uma visão materializada é uma view em outro projeto",
+        "why": "Projetos não têm nada a ver com isso."
+      },
+      {
+        "text": "Uma view fica em cache um dia; uma materializada para sempre",
+        "why": "Uma view não guarda nada, e uma materializada é atualizada."
+      },
+      {
+        "text": "Só uma visão materializada pode ser consultada com SQL",
+        "why": "As duas são consultadas com SQL."
+      }
+    ]
+  },
+  "ex-k0g2fsy2": {
+    "prompt": "Por que `SUM(total_cents)` pode ser mantida de forma incremental e uma mediana não?",
+    "hint": "Combine um resultado antigo com as linhas novas.",
+    "choices": [
+      {
+        "text": "Somas se somam; medianas não",
+        "why": "Certo. Esse é o motivo da restrição."
+      },
+      {
+        "text": "Medianas não existem no GoogleSQL",
+        "why": "O GoogleSQL calcula quantis; eles só não se combinam."
+      },
+      {
+        "text": "Somas são menores para guardar",
+        "why": "Não é o tamanho que decide."
+      },
+      {
+        "text": "Uma mediana precisa da hora do dia",
+        "why": "Funções dependentes do tempo são outra restrição."
+      }
+    ]
+  },
+  "ex-ac8h9p4n": {
+    "prompt": "Pedidos novos chegaram há dez minutos e a view ainda não foi atualizada. O que uma consulta nela devolve, sem `max_staleness`?",
+    "hint": "O BigQuery lê um delta.",
+    "choices": [
+      {
+        "text": "O resultado guardado, de dez minutos atrás",
+        "why": "Só `max_staleness` permite resposta velha."
+      },
+      {
+        "text": "Um erro até a atualização",
+        "why": "A view sempre pode ser consultada."
+      },
+      {
+        "text": "O guardado mais as linhas novas",
+        "why": "Certo. O delta é lido da tabela base."
+      },
+      {
+        "text": "A tabela base, lida inteira",
+        "why": "Só as linhas desde a atualização são lidas dela."
+      }
+    ]
+  },
+  "ex-4j6nr4ft": {
+    "prompt": "A Quitanda reescreve a tabela `orders` inteira toda noite. O que isso faz com uma visão materializada sobre ela?",
+    "hint": "Incremental quer dizer somar linhas novas.",
+    "choices": [
+      {
+        "text": "Nada: views ignoram reescritas da base",
+        "why": "Uma reescrita muda toda linha que a view agregou."
+      },
+      {
+        "text": "Deixa a view grátis para atualizar",
+        "why": "Uma recomputação inteira é a atualização mais cara."
+      },
+      {
+        "text": "Recomputa tudo, toda vez",
+        "why": "Certo. Linhas mudadas, não linhas novas."
+      },
+      {
+        "text": "A view é apagada",
+        "why": "Ela é invalidada e recomputada, não apagada."
+      }
+    ]
+  },
+  "ex-m5dwze6z": {
+    "prompt": "A terceira execução do `incremental.py` leu 16.359 linhas de pedidos para somar um dia. A primeira leu 1.228.759 para 59 dias. Que fração da primeira a terceira leu? Dê três casas decimais.",
+    "hint": "Divida."
+  },
+  "ex-82mjr573": {
+    "prompt": "O que a segunda execução do `incremental.py`, sem nada novo, leu?",
+    "hint": "Ele procura dias que não viu.",
+    "choices": [
+      {
+        "text": "A tabela inteira, para conferir",
+        "why": "Ele comparou nomes de pasta e não leu pedidos."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Uma atualização sem mudança não custa nada."
+      },
+      {
+        "text": "O último dia de novo",
+        "why": "O último dia já estava agregado."
+      },
+      {
+        "text": "Só os rodapés",
+        "why": "Ele não abriu arquivo Parquet nenhum."
+      }
+    ]
+  },
+  "ex-bn0sq5ej": {
+    "prompt": "A conferência devolveu zero diferenças. O que isso estabelece?",
+    "hint": "`EXCEPT` mantém linhas da primeira consulta que faltam na segunda.",
+    "choices": [
+      {
+        "text": "Que o DuckDB e o BigQuery concordam",
+        "why": "O BigQuery nunca rodou."
+      },
+      {
+        "text": "Incremental igual ao completo",
+        "why": "Certo. A contabilidade não perdeu nada."
+      },
+      {
+        "text": "Que o agregado é menor que a tabela",
+        "why": "Verdade, mas não é o que o `EXCEPT` mediu."
+      },
+      {
+        "text": "Que nenhum pedido foi corrigido",
+        "why": "Ele compara resultados, não histórico."
+      }
+    ]
+  },
+  "ex-atymx2bm": {
+    "prompt": "Por que uma visão materializada deve ser particionada como a tabela base, pelo argumento da aula?",
+    "hint": "Pense numa correção de um dia.",
+    "choices": [
+      {
+        "text": "Para o BigQuery ler as duas com um slot",
+        "why": "Slots não têm nada a ver com isso."
+      },
+      {
+        "text": "Porque uma view tem de copiar as opções da base",
+        "why": "Ela pode ser diferente; é uma escolha."
+      },
+      {
+        "text": "Para uma correção de um dia custar recomputar um dia",
+        "why": "Certo. A partição é a unidade de recomputação."
+      },
+      {
+        "text": "Para ter o preço de longo prazo",
+        "why": "Isso segue as escritas, não o alinhamento."
+      }
+    ]
+  },
+  "ex-82p0m7rq": {
+    "prompt": "O que o smart tuning faz?",
+    "hint": "Ninguém muda o relatório.",
+    "choices": [
+      {
+        "text": "Aponta consultas da base para uma view",
+        "why": "Certo. O painel continua dizendo `FROM orders`."
+      },
+      {
+        "text": "Ajusta quantos slots uma reserva mantém",
+        "why": "Esse é o autoscaler da aula 14."
+      },
+      {
+        "text": "Escolhe as colunas de clustering",
+        "why": "O clustering é escolhido por quem cria a tabela."
+      },
+      {
+        "text": "Comprime a view",
+        "why": "A compressão é do armazenamento, invisível."
+      }
+    ]
+  },
+  "ex-twpdhn8a": {
+    "prompt": "A view guarda `dt`, `district`, `orders` e `sales`. Que consulta não pode ser reescrita para lê-la?",
+    "hint": "Um agregado não pode ser desmontado.",
+    "choices": [
+      {
+        "text": "Vendas por bairro em setembro",
+        "why": "Tudo de que ela precisa está na view."
+      },
+      {
+        "text": "Pedidos por dia",
+        "why": "Uma soma de `orders` da view por `dt`."
+      },
+      {
+        "text": "Vendas por loja",
+        "why": "Certo. A view não tem `store_id`."
+      },
+      {
+        "text": "Vendas totais de 29 de setembro",
+        "why": "Uma soma das oito linhas da view naquele dia."
+      }
+    ]
+  },
+  "ex-3nd556f5": {
+    "prompt": "O `bqbill.py` imprimiu 31.457.280 bytes cobrados para a tabela base e 10.485.760 para a view. Quantas vezes a conta da view é a da base?",
+    "hint": "Divida."
+  },
+  "ex-vw9894q3": {
+    "prompt": "Um painel acrescenta uma coluna que a view não tem. O que acontece com as consultas dele?",
+    "hint": "Não há erro.",
+    "choices": [
+      {
+        "text": "Falham com um erro citando a view",
+        "why": "Nada falha; a reescrita só não acontece."
+      },
+      {
+        "text": "Leem a tabela base, em silêncio",
+        "why": "Certo. Leia o que o job de fato fez."
+      },
+      {
+        "text": "O BigQuery acrescenta a coluna à view",
+        "why": "A definição de uma view nunca muda sozinha."
+      },
+      {
+        "text": "São servidas pelo cache",
+        "why": "O cache precisa da mesma consulta sobre tabelas sem mudança."
+      }
+    ]
+  },
+  "ex-khpvdy3t": {
+    "prompt": "O que roda uma consulta agendada na agenda dela?",
+    "hint": "O mesmo que carrega dados do Google Ads numa agenda.",
+    "choices": [
+      {
+        "text": "Cloud Scheduler",
+        "why": "Um produto separado; consultas agendadas não precisam dele."
+      },
+      {
+        "text": "O BigQuery Data Transfer Service",
+        "why": "Certo."
+      },
+      {
+        "text": "BI Engine",
+        "why": "BI Engine é memória, não agendador."
+      },
+      {
+        "text": "Cloud Composer",
+        "why": "O Composer é da aula 24, para cadeias de passos."
+      }
+    ]
+  },
+  "ex-3ek14dcj": {
+    "prompt": "Por que a consulta agendada usa `MERGE` e não `INSERT`?",
+    "hint": "O serviço repete e faz backfill.",
+    "choices": [
+      {
+        "text": "`INSERT` não é permitido numa consulta agendada",
+        "why": "É permitido; só não é seguro repetir."
+      },
+      {
+        "text": "Repetir não pode somar o dia duas vezes",
+        "why": "Certo. Seguro de repetir."
+      },
+      {
+        "text": "`MERGE` lê menos bytes",
+        "why": "Os dois leem as mesmas linhas de origem."
+      },
+      {
+        "text": "Medianas precisam de `MERGE`",
+        "why": "A mediana é calculada pelo `SELECT` de dentro."
+      }
+    ]
+  },
+  "ex-ze4tprjy": {
+    "prompt": "Além de `@run_date`, o serviço preenche um segundo parâmetro com o instante para o qual a execução foi agendada, `@run___`.",
+    "hint": "Um sublinhado, e depois uma palavra de quatro letras.",
+    "blanks": [
+      {
+        "accept": [
+          "_time"
+        ]
+      }
+    ]
+  },
+  "ex-t2wwtyz4": {
+    "prompt": "Uma consulta agendada falha numa noite e ninguém configurou notificação. O que o painel mostra na manhã seguinte?",
+    "hint": "Onde aparece uma execução que falhou?",
+    "choices": [
+      {
+        "text": "Um aviso de erro",
+        "why": "Nada avisa o painel de que a execução falhou."
+      },
+      {
+        "text": "Os resultados anteriores, como se fossem atuais",
+        "why": "Certo. Só o histórico de execuções, ou uma notificação, diz o contrário."
+      },
+      {
+        "text": "Nada, já que a tabela é esvaziada",
+        "why": "Uma execução que falha não escreve nada, então as linhas antigas ficam."
+      },
+      {
+        "text": "A tabela base de ontem",
+        "why": "O painel lê a tabela de destino."
+      }
+    ]
+  },
+  "ex-dchv6n8t": {
+    "prompt": "Uma reserva de BI Engine de 5 GiB em southamerica-east1 é mantida por um mês. Pelo preço mensal da página, quanto custa, em USD?",
+    "hint": "54,677 USD por GiB-mês.",
+    "unit": "USD"
+  },
+  "ex-1g3hvxxv": {
+    "prompt": "Sob demanda, quanto uma consulta acelerada pelo BI Engine paga pelo estágio que lê a tabela?",
+    "hint": "A página tem a frase.",
+    "choices": [
+      {
+        "text": "Metade dos bytes",
+        "why": "Não há meio preço."
+      },
+      {
+        "text": "Nada: 0 byte lido",
+        "why": "Certo. Paga-se a memória no lugar."
+      },
+      {
+        "text": "O mínimo de 10 MB",
+        "why": "A página diz 0 byte lido para esse estágio."
+      },
+      {
+        "text": "O mesmo que sem ele",
+        "why": "Aí só compraria velocidade; compra os bytes também."
+      }
+    ]
+  },
+  "ex-na9g01qf": {
+    "prompt": "O painel particionado da aula 15 custava 2,90 USD por mês a mil vezes o tamanho da Quitanda. Vale comprar 2 GiB de BI Engine para ele?",
+    "hint": "Compare 2,90 com o mês da reserva.",
+    "choices": [
+      {
+        "text": "Sim, já que leituras aceleradas são gratuitas",
+        "why": "A memória custa 109,35 por mês para economizar 2,90."
+      },
+      {
+        "text": "Não: 109,35 USD de memória para economizar 2,90",
+        "why": "Certo. Primeiro faça a resposta pequena."
+      },
+      {
+        "text": "Sim, se estiver num compromisso de 3 anos",
+        "why": "O BI Engine não tem compromisso próprio assim."
+      },
+      {
+        "text": "Não, já que o BI Engine só funciona na edição Standard",
+        "why": "A página o oferece sob demanda e com edições."
+      }
+    ]
+  },
+  "ex-6df4yw1a": {
+    "prompt": "Ponha em ordem os passos do conselho desta aula para um painel lento e caro.",
+    "hint": "Pequeno primeiro, rápido depois.",
+    "items": [
+      "Particionar e clusterizar a tabela base",
+      "Guardar a resposta numa visão materializada, ou numa consulta agendada",
+      "Conferir pelas estatísticas do job que o painel a lê",
+      "Pôr o BI Engine na frente das tabelas pequenas, se ainda lerem o bastante para importar"
+    ]
+  },
+  "ex-4td54h6a": {
+    "prompt": "Ligue cada ferramenta ao trabalho que ela faz.",
+    "hint": "Uma opção da direita é de uma aula anterior.",
+    "pairs": [
+      {
+        "left": "Visão materializada",
+        "right": "Mantém um agregado incremental atualizado, cuidado pelo BigQuery"
+      },
+      {
+        "left": "Consulta agendada",
+        "right": "Roda qualquer SQL numa agenda e escreve o resultado"
+      },
+      {
+        "left": "Smart tuning",
+        "right": "Manda uma consulta da tabela base para uma view que a responda"
+      },
+      {
+        "left": "BI Engine",
+        "right": "Serve o estágio de leitura da memória, cobrado por GiB-hora"
+      }
+    ],
+    "right_distractors": [
+      "Recusa uma consulta que cobraria demais"
+    ]
+  }
+}

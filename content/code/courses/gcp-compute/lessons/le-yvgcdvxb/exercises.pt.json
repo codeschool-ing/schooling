@@ -1,0 +1,411 @@
+{
+  "ex-k5wewdtd": {
+    "prompt": "Qual é o máximo padrão do Cloud Run de requisições simultâneas por instância?",
+    "hint": "Pode subir até 1.000.",
+    "unit": "requisições"
+  },
+  "ex-mt7rt5nc": {
+    "prompt": "Vinte requisições, cada uma esperando 200 ms, levaram 4,07 s uma de cada vez e 0,61 s vinte de uma vez. Por quê?",
+    "hint": "O que as requisições estavam fazendo?",
+    "choices": [
+      {
+        "text": "O Docker subiu contêineres extras para a rajada",
+        "why": "Um contêiner atendeu toda requisição."
+      },
+      {
+        "text": "A espera é pulada quando as requisições chegam juntas",
+        "why": "Cada requisição esperou; esperaram juntas."
+      },
+      {
+        "text": "Esperas se sobrepõem em threads; não se somam",
+        "why": "Isso. Esperar é o que threads dividem de graça."
+      },
+      {
+        "text": "O laptop deu mais CPUs ao contêiner",
+        "why": "Nada mudou a CPU do contêiner."
+      }
+    ]
+  },
+  "ex-k0722y4e": {
+    "prompt": "Na rodada de 200 requisições, 80 de cada vez, a mediana foi 0,209 s e a mais lenta 2,062 s. O que a lição lê nessa distância?",
+    "hint": "O que virou o limite, a espera ou o programa?",
+    "choices": [
+      {
+        "text": "80 está acima do que este programa aguenta",
+        "why": "Isso. A fila de conexões transbordou e os clientes tentaram de novo."
+      },
+      {
+        "text": "O substituto do banco ficou lento sob carga",
+        "why": "A espera é um sleep fixo."
+      },
+      {
+        "text": "O laptop ficou sem memória",
+        "why": "Nada aponta para memória."
+      },
+      {
+        "text": "O Cloud Run limitaria a rajada em 20",
+        "why": "Nada rodou no Cloud Run."
+      }
+    ]
+  },
+  "ex-ag4f3w8b": {
+    "prompt": "Um serviço gera um PDF por requisição, usando uma vCPU inteira por um segundo. Com concorrência 80 em 1 vCPU, o que acontece sob carga?",
+    "hint": "Cheio é medido em requisições.",
+    "choices": [
+      {
+        "text": "O Cloud Run sobe uma instância nova quando a CPU chega a 100%",
+        "why": "Ele sobe uma quando as requisições chegam à concorrência."
+      },
+      {
+        "text": "Cada requisição ganha uma vCPU sozinha",
+        "why": "A concorrência divide a CPU da instância."
+      },
+      {
+        "text": "Requisições além da primeira são recusadas com 429",
+        "why": "Elas são aceitas, até 80."
+      },
+      {
+        "text": "Uma vCPU dividida, e a latência sobe",
+        "why": "Isso. Baixe a concorrência para trabalho que calcula."
+      }
+    ]
+  },
+  "ex-3evg1hnn": {
+    "prompt": "O http.server do Python mantém uma fila de conexões esperando para ser aceitas, ___ por padrão.",
+    "hint": "Um número pequeno.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "cinco"
+        ]
+      }
+    ]
+  },
+  "ex-1a5072xf": {
+    "prompt": "Com a alocação de CPU padrão, o que uma instância recebe entre requisições?",
+    "hint": "Cobrança por requisição.",
+    "choices": [
+      {
+        "text": "Uma vCPU inteira, cobrada pela taxa ociosa",
+        "why": "A taxa ociosa é para instâncias mínimas, e a CPU é estrangulada."
+      },
+      {
+        "text": "Quase nenhuma CPU",
+        "why": "Isso. Responde a próxima requisição na hora, mas não trabalha no meio."
+      },
+      {
+        "text": "Nada: ela é desligada depois de cada requisição",
+        "why": "Ela continua viva, só estrangulada."
+      },
+      {
+        "text": "Meia vCPU, para terminar trabalho em segundo plano",
+        "why": "Essa cota não existe."
+      }
+    ]
+  },
+  "ex-3b7x8713": {
+    "prompt": "Pelo runcost.py, quanto custa por mês a cobrança por instância para 1 vCPU e 512 MiB, em USD?",
+    "hint": "O mesmo em toda parte ocupada.",
+    "unit": "USD"
+  },
+  "ex-qay7dvs8": {
+    "prompt": "Por requisição, ocupada 25% do mês: vCPU ativa 0,000024 e memória 0,0000025 por segundo, 1 vCPU e 0,5 GiB, 2.628.000 segundos. Quanto custa em USD?",
+    "hint": "0,25 × 2.628.000 × (0,000024 + 0,5 × 0,0000025).",
+    "unit": "USD"
+  },
+  "ex-3nh1yt3k": {
+    "prompt": "Um serviço responde na hora e depois manda um e-mail de confirmação numa thread em segundo plano. Com a alocação padrão de CPU, o que acontece com o e-mail?",
+    "hint": "Quem tem a CPU depois da resposta?",
+    "choices": [
+      {
+        "text": "É enviado normalmente, alguns milissegundos depois",
+        "why": "A CPU foi tirada junto com a resposta."
+      },
+      {
+        "text": "O Cloud Run se recusa a iniciar threads em segundo plano",
+        "why": "As threads começam; só não recebem CPU."
+      },
+      {
+        "text": "Atrasa ou se perde; ele pertence a uma fila",
+        "why": "Isso. O Cloud Tasks da lição 20, ou um job."
+      },
+      {
+        "text": "É enviado e cobrado pela taxa de requisição",
+        "why": "Nem é enviado com segurança."
+      }
+    ]
+  },
+  "ex-9n8fkv9m": {
+    "prompt": "Um serviço fica ocupado 90% do tempo. Pela conta do runcost.py, qual cobrança sai mais barata, e por quê?",
+    "hint": "Onde as duas linhas se cruzam?",
+    "choices": [
+      {
+        "text": "Por instância: acima de uns 75% ocupada, a taxa menor ganha",
+        "why": "Isso. 49,93 fixos contra uns 60 por requisição."
+      },
+      {
+        "text": "Por requisição, porque nunca cobra o tempo ocioso",
+        "why": "Com 90% ocupada sobra pouco tempo ocioso para economizar."
+      },
+      {
+        "text": "Custam o mesmo em qualquer parte ocupada",
+        "why": "Só a por instância é fixa."
+      },
+      {
+        "text": "Por requisição, por causa do nível gratuito de dois milhões de requisições",
+        "why": "O nível gratuito é pequeno perto de um mês a 90%."
+      }
+    ]
+  },
+  "ex-hzzn052h": {
+    "prompt": "A cobrança por instância é definida com cpu____ = false no Terraform.",
+    "hint": "A CPU nunca é estrangulada na ociosidade.",
+    "blanks": [
+      {
+        "accept": [
+          "_idle",
+          "idle"
+        ]
+      }
+    ]
+  },
+  "ex-x66s2k2s": {
+    "prompt": "Qual parte de uma partida a frio é inteiramente sua para encurtar?",
+    "hint": "Antes de escutar.",
+    "choices": [
+      {
+        "text": "Buscar a imagem no Artifact Registry",
+        "why": "O Cloud Run a transmite; é quase toda da plataforma."
+      },
+      {
+        "text": "Montar a caixa de areia em volta do contêiner",
+        "why": "Isso é da plataforma."
+      },
+      {
+        "text": "O tempo que a requisição passa na internet",
+        "why": "Isso não faz parte da partida a frio."
+      },
+      {
+        "text": "O que o programa faz antes de escutar",
+        "why": "Isso. Imports, conexões, caches."
+      }
+    ]
+  },
+  "ex-cfv53js4": {
+    "prompt": "Neste laptop, quantos segundos levou do docker run até a primeira resposta do /health? Responda com duas casas.",
+    "hint": "Leia a linha real.",
+    "unit": "segundos"
+  },
+  "ex-0n9h9p6j": {
+    "prompt": "Importar o cliente de Pub/Sub levou 0,38 s com a subida do Python; os imports do serviço de pedidos levaram 0,05 s. O que segue para um serviço no Cloud Run?",
+    "hint": "Cada instância paga isso uma vez, na subida.",
+    "choices": [
+      {
+        "text": "Toda requisição fica 0,33 s mais lenta com a biblioteca grande",
+        "why": "Imports acontecem uma vez por instância, não por requisição."
+      },
+      {
+        "text": "Cada partida a frio paga o import; adie os pesados",
+        "why": "Isso. Importe uma dependência rara onde ela é usada."
+      },
+      {
+        "text": "O Cloud Run guarda imports em cache entre instâncias",
+        "why": "Cada instância é um processo novo."
+      },
+      {
+        "text": "A diferença some nas máquinas mais rápidas do Cloud Run",
+        "why": "Nada medido aqui diz isso."
+      }
+    ]
+  },
+  "ex-fda6asnt": {
+    "prompt": "Ponha as partes de uma partida a frio na ordem em que acontecem.",
+    "hint": "A imagem vem primeiro.",
+    "items": [
+      "O Cloud Run busca a imagem",
+      "O contêiner sobe",
+      "O programa importa e se prepara",
+      "O programa escuta em PORT"
+    ],
+    "trap": "Escutar é o último passo: nada é roteado à instância antes disso."
+  },
+  "ex-avj8r8f0": {
+    "prompt": "Por que o curso não cita nenhum tempo de partida a frio do próprio Cloud Run?",
+    "hint": "Onde os tempos foram medidos?",
+    "choices": [
+      {
+        "text": "O Cloud Run não tem partida a frio com instâncias mínimas",
+        "why": "Mínimos as escondem; elas ainda existem."
+      },
+      {
+        "text": "O Google proíbe publicar tempos",
+        "why": "Esse não é o motivo."
+      },
+      {
+        "text": "Nenhum destes tempos veio do Cloud Run",
+        "why": "Isso. Nada é inventado."
+      },
+      {
+        "text": "Partidas a frio no Cloud Run ficam sempre abaixo de 10 ms",
+        "why": "Essa garantia não existe."
+      }
+    ]
+  },
+  "ex-270tc91q": {
+    "prompt": "Uma instância mínima de 1 vCPU e 0,5 GiB fica ociosa 95% de um mês de 2.628.000 segundos a 0,0000025 por vCPU-segundo e por GiB-segundo. Quanto custa o tempo ocioso, em USD?",
+    "hint": "0,95 × 2.628.000 × 1,5 × 0,0000025.",
+    "unit": "USD"
+  },
+  "ex-tv2hjtan": {
+    "prompt": "Qual serviço ganha mais com min_instance_count = 1?",
+    "hint": "Quem encontra partida a frio com mais frequência?",
+    "choices": [
+      {
+        "text": "Um chamado poucas vezes por hora",
+        "why": "Isso. Quase toda chamada subiria a frio."
+      },
+      {
+        "text": "Um com tráfego constante o dia todo",
+        "why": "Lá sempre há uma instância rodando de todo jeito."
+      },
+      {
+        "text": "Um job que roda de noite",
+        "why": "Jobs não têm instâncias mínimas."
+      },
+      {
+        "text": "Um que nunca foi chamado",
+        "why": "Aí ninguém notaria a subida."
+      }
+    ]
+  },
+  "ex-4rfcap3h": {
+    "prompt": "Um serviço divide o tráfego 90/10 entre duas revisões e tem min_instance_count = 1. Quantas instâncias quentes isso pode manter?",
+    "hint": "Um mínimo é por revisão com tráfego.",
+    "choices": [
+      {
+        "text": "Uma, dividida pelas duas revisões",
+        "why": "Cada revisão com tráfego mantém a sua."
+      },
+      {
+        "text": "Nenhuma até a divisão ser 100/0",
+        "why": "Divisões não desligam mínimos."
+      },
+      {
+        "text": "Dez, o máximo",
+        "why": "O máximo é um teto."
+      },
+      {
+        "text": "Duas, uma por revisão com tráfego",
+        "why": "Isso. As duas são cobradas enquanto ociosas."
+      }
+    ]
+  },
+  "ex-yfybjyy1": {
+    "prompt": "O que o startup_cpu_boost faz?",
+    "hint": "Enquanto a instância sobe.",
+    "choices": [
+      {
+        "text": "Mantém uma CPU quente entre requisições",
+        "why": "Isso é cpu_idle = false."
+      },
+      {
+        "text": "Dá CPU extra enquanto a instância sobe",
+        "why": "Isso. Depois ela é retirada."
+      },
+      {
+        "text": "Dobra a CPU para toda requisição",
+        "why": "Só na subida, e por pouco tempo."
+      },
+      {
+        "text": "Sobe uma instância reserva antes de ser preciso",
+        "why": "Isso é uma instância mínima."
+      }
+    ]
+  },
+  "ex-beyjdvdn": {
+    "prompt": "Ponha as quatro decisões da lição na ordem que ela recomenda.",
+    "hint": "O que multiplica tudo vem primeiro.",
+    "items": [
+      "A concorrência, a partir de uma medição",
+      "A alocação de CPU, pela parte ocupada",
+      "Uma subida mais curta, no programa",
+      "Um mínimo e um impulso, para o que sobrar"
+    ],
+    "trap": "Um mínimo primeiro paga todo mês para esconder o que uma subida mais curta tiraria."
+  },
+  "ex-fhsjmm8t": {
+    "prompt": "Ligue cada sintoma à configuração que o resolve.",
+    "hint": "Uma configuração para cada.",
+    "pairs": [
+      {
+        "left": "A latência sobe numa instância fazendo trabalho de CPU",
+        "right": "Baixar a concorrência"
+      },
+      {
+        "left": "Trabalho depois da resposta nunca termina",
+        "right": "Mover para uma fila ou um job"
+      },
+      {
+        "left": "A primeira chamada da manhã é lenta",
+        "right": "Uma instância mínima"
+      },
+      {
+        "left": "Ocupado 90% do tempo e caro",
+        "right": "Cobrança por instância"
+      }
+    ],
+    "right_distractors": [
+      "Um max_instance_count maior"
+    ]
+  },
+  "ex-faxfjnmt": {
+    "prompt": "Uma equipe põe concorrência 1 \"por segurança\" num serviço que espera um banco. Numa rajada de 50 requisições simultâneas, o que muda?",
+    "hint": "Cheio é medido em requisições.",
+    "choices": [
+      {
+        "text": "Nada: o Cloud Run enfileira as outras 49 numa instância",
+        "why": "Ele sobe mais instâncias no lugar."
+      },
+      {
+        "text": "As requisições ficam mais rápidas, já que cada uma tem uma instância inteira",
+        "why": "Elas esperam o banco de todo jeito, e algumas esperam uma subida."
+      },
+      {
+        "text": "Até 50 instâncias sobem, muitas a frio, cada uma cobrada",
+        "why": "Isso. O padrão carregaria numa só."
+      },
+      {
+        "text": "O banco recebe menos conexões",
+        "why": "Cinquenta instâncias abrem pelo menos as mesmas."
+      }
+    ]
+  },
+  "ex-6jeycr0p": {
+    "prompt": "A cobrança por requisição arredonda cada trecho cobrado para cima em quantos milissegundos?",
+    "hint": "Um décimo de segundo.",
+    "unit": "ms"
+  },
+  "ex-27xj3d4c": {
+    "prompt": "Quais destas coisas esta lição mediu no laptop? Escolha todas as que se aplicam.",
+    "hint": "Números do laptop são do laptop.",
+    "choices": [
+      {
+        "text": "Quanto um contêiner levou para responder a primeira requisição",
+        "why": "Isso; cerca de meio segundo."
+      },
+      {
+        "text": "Quanto custa importar o cliente de Pub/Sub",
+        "why": "Isso; 0,38 s com a subida do Python."
+      },
+      {
+        "text": "Quanto o Cloud Run leva para baixar a imagem",
+        "why": "Nada aqui roda no Cloud Run."
+      },
+      {
+        "text": "Quanto o impulso de CPU acelera uma subida",
+        "why": "O laboratório não consegue medir e não cita ganho."
+      }
+    ]
+  }
+}

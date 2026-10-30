@@ -1,0 +1,270 @@
+{
+  "ex-50aksmgh": {
+    "prompt": "O `main.bicep` chama `modules/state.bicep`. O que o `main.json` compilado contém no nível de cima?",
+    "hint": "Veja a primeira resposta do jq nesta lição.",
+    "choices": [
+      {
+        "text": "Os três recursos de armazenamento, achatados numa lista",
+        "why": "Eles estão dentro, um nível abaixo, no template aninhado."
+      },
+      {
+        "text": "Um deploy aninhado com o template do módulo",
+        "why": "Certo. Um módulo compila num recurso Microsoft.Resources/deployments."
+      },
+      {
+        "text": "Um link para o arquivo do módulo, buscado no deploy",
+        "why": "Módulos locais são embutidos; nada é buscado no seu disco depois."
+      },
+      {
+        "text": "Nada, até o módulo ser publicado num registro",
+        "why": "Um caminho local compila no lugar; um registro é uma opção, não uma exigência."
+      }
+    ]
+  },
+  "ex-45s61yrh": {
+    "prompt": "Dois módulos diferentes no `main.bicep` recebem os dois `name: 'storage'`. O que dá errado no grupo de recursos?",
+    "hint": "O que o nome de um módulo nomeia?",
+    "choices": [
+      {
+        "text": "As duas contas de armazenamento ganham o mesmo nome",
+        "why": "Nomes de conta vêm dos próprios parâmetros, não do nome do módulo."
+      },
+      {
+        "text": "O Bicep se recusa a compilar nomes de módulo duplicados",
+        "why": "A pergunta é sobre o que acontece no Azure; o registro é o problema."
+      },
+      {
+        "text": "Um registro de deploy sobrescreve o outro",
+        "why": "Certo. O nome nomeia um deploy aninhado, e dois sob um nome dividem um registro."
+      },
+      {
+        "text": "O segundo módulo é pulado como duplicado",
+        "why": "Nada é pulado em silêncio; os registros colidem."
+      }
+    ]
+  },
+  "ex-r46bjg3j": {
+    "prompt": "Por que a loja monta o nome da conta com `uniqueString(resourceGroup().id)`?",
+    "hint": "Ele precisa ser o mesmo toda vez, e dificilmente estar ocupado.",
+    "choices": [
+      {
+        "text": "Ele muda a cada deploy, e contas velhas nunca são reaproveitadas",
+        "why": "Ele é determinístico; um nome que mudasse criaria uma conta nova a cada vez."
+      },
+      {
+        "text": "Estável por grupo, e difícil de colidir no mundo",
+        "why": "Certo. Nomes de conta de armazenamento são globais, e o hash mantém o nome fixo para o grupo."
+      },
+      {
+        "text": "O Azure exige isso para toda conta de armazenamento",
+        "why": "É uma convenção, não uma exigência."
+      },
+      {
+        "text": "Ele cifra o nome para não ser lido nos logs",
+        "why": "Um hash não é cifragem, e o nome não é segredo."
+      }
+    ]
+  },
+  "ex-81erzatg": {
+    "prompt": "`main.wrong.bicepparam` define `environment = 'production'` e um `region` não declarado. O que o `bicep build-params` faz?",
+    "hint": "Compare com o aviso da lição 4.",
+    "choices": [
+      {
+        "text": "Escreve o arquivo e avisa sobre os dois",
+        "why": "Os dois são erros aqui, e nenhum arquivo foi escrito."
+      },
+      {
+        "text": "Ignora region e aceita production como string",
+        "why": "Era assim que os arquivos JSON antigos se comportavam; o bicepparam é conferido."
+      },
+      {
+        "text": "Recusa com dois erros e código de saída 1",
+        "why": "Certo. O arquivo nomeia o template, então os dois erros são conferidos contra ele."
+      },
+      {
+        "text": "Pergunta interativamente o valor certo",
+        "why": "É um compilador; ele relata e para."
+      }
+    ]
+  },
+  "ex-fvb5nwwz": {
+    "prompt": "Um colega diz que `@secure()` deixa a senha segura em todo lugar. Usando o `db.parameters.json` desta lição, o que você responde?",
+    "hint": "Leia a última transcrição.",
+    "choices": [
+      {
+        "text": "Ele protege o valor dentro do Azure; o arquivo gerado o guarda em texto puro",
+        "why": "Certo. Por isso um arquivo de parâmetros gerado nunca entra num commit."
+      },
+      {
+        "text": "Concordo: o arquivo gerado o guarda cifrado",
+        "why": "A transcrição mostra o valor às claras."
+      },
+      {
+        "text": "Está seguro no arquivo, mas não no histórico de deploys",
+        "why": "É o contrário: o secure o tira do histórico, e o arquivo o tem às claras."
+      },
+      {
+        "text": "Está seguro enquanto o nome da variável for secreto",
+        "why": "O nome SHOP_DB_PASSWORD não esconde nada; o valor é que é segredo."
+      }
+    ]
+  },
+  "ex-3g5a791g": {
+    "prompt": "Um arquivo `.bicepparam` nomeia o template a que pertence com a palavra-chave ___.",
+    "hint": "A primeira linha dele.",
+    "blanks": [
+      {
+        "accept": [
+          "using"
+        ]
+      }
+    ]
+  },
+  "ex-x6axev9f": {
+    "prompt": "Ligue cada tipo de mudança do what-if ao seu significado.",
+    "hint": "Existem seis; quatro estão aqui.",
+    "pairs": [
+      {
+        "left": "Create",
+        "right": "Ainda não existe, será criado"
+      },
+      {
+        "left": "Modify",
+        "right": "Existe, e algumas propriedades vão mudar"
+      },
+      {
+        "left": "Ignore",
+        "right": "Existe, não está no template, fica como está"
+      },
+      {
+        "left": "Deploy",
+        "right": "Existe, e o what-if não sabe dizer o que muda"
+      }
+    ],
+    "right_distractors": [
+      "Apagado porque o arquivo não o nomeia mais"
+    ]
+  },
+  "ex-dz8dtxbz": {
+    "prompt": "O what-if mostra Modify em `minimumTlsVersion` da conta de estado, uma propriedade que ninguém mudou no arquivo. Qual é a história provável?",
+    "hint": "Quem mais muda recursos?",
+    "choices": [
+      {
+        "text": "O what-if sempre lista todas as propriedades",
+        "why": "Ele lista as que mudariam, mais algum ruído conhecido."
+      },
+      {
+        "text": "Alguém a mudou à mão, e o deploy vai desfazer isso",
+        "why": "Certo. Modify numa propriedade intocada é desvio, que vale ler antes de implantar."
+      },
+      {
+        "text": "A versão da API no arquivo é velha demais para defini-la",
+        "why": "Uma API velha falharia ao compilar ou a ignoraria, não mostraria mudança."
+      },
+      {
+        "text": "O Bicep mudou o valor na compilação",
+        "why": "O JSON compilado leva o que o arquivo diz."
+      }
+    ]
+  },
+  "ex-vhd8aty4": {
+    "prompt": "A loja apaga um cache Redis do `main.bicep` e reimplanta do jeito normal. O what-if o tinha listado como Ignore. O que é verdade um mês depois?",
+    "hint": "O que o modo incremental faz com o que não vê mais?",
+    "choices": [
+      {
+        "text": "Ele foi apagado no novo deploy",
+        "why": "Deploys incrementais não apagam o que o arquivo para de mencionar."
+      },
+      {
+        "text": "O Azure o apagou depois de 30 dias sem deploy",
+        "why": "Nada expira recursos por falta de deploy."
+      },
+      {
+        "text": "Ele foi para uma lixeira",
+        "why": "Nada disso acontece com um recurso ignorado."
+      },
+      {
+        "text": "Ele continua rodando, e sendo cobrado",
+        "why": "Certo. Ignore quer dizer deixado em paz, e é isso que uma stack com deleteResources muda."
+      }
+    ]
+  },
+  "ex-93jbq6cy": {
+    "prompt": "Qual configuração da stack impede alguém de apagar o plano do App Service da loja pelo portal?",
+    "hint": "Ela nega.",
+    "choices": [
+      {
+        "text": "--action-on-unmanage deleteResources",
+        "why": "Isso decide o que acontece com recursos que saem do arquivo."
+      },
+      {
+        "text": "--deny-settings-mode denyDelete",
+        "why": "Certo. Apagar por qualquer caminho fora da stack é recusado."
+      },
+      {
+        "text": "--action-on-unmanage detachAll",
+        "why": "Desanexar para de gerenciar; não protege nada."
+      },
+      {
+        "text": "O nome da stack",
+        "why": "Um nome não protege nada."
+      }
+    ]
+  },
+  "ex-42nrg143": {
+    "prompt": "Por que a loja nunca usa `deleteResources` no grupo de recursos da conta de estado do Terraform?",
+    "hint": "O que uma edição descuidada do arquivo apagaria então?",
+    "choices": [
+      {
+        "text": "Stacks não gerenciam contas de armazenamento",
+        "why": "Gerenciam; a questão é se devem apagar uma."
+      },
+      {
+        "text": "deleteResources é mais lento que detachAll",
+        "why": "Velocidade não é a preocupação."
+      },
+      {
+        "text": "Uma linha tirada por engano apagaria o estado, assunto da lição 7",
+        "why": "Certo. Onde a perda é irrecuperável, uma deleção nunca deveria seguir de uma edição."
+      },
+      {
+        "text": "O Terraform se recusa a usar uma conta que uma stack gerencia",
+        "why": "O Terraform não sabe nem se importa com qual ferramenta criou a conta."
+      }
+    ]
+  },
+  "ex-5hb46dye": {
+    "prompt": "Ponha em ordem o caminho da loja para uma mudança no main.bicep.",
+    "hint": "Conferir localmente, perguntar ao Azure, perguntar a uma pessoa, depois implantar.",
+    "trap": "Rodar o what-if antes das verificações locais é o deslize: o Azure seria consultado sobre um arquivo que nem compila.",
+    "items": [
+      "bicep build e lint, com avisos quebrando o passo",
+      "bicep build-params para o ambiente",
+      "what-if contra rg-shop",
+      "Uma pessoa aprova, lendo o what-if",
+      "A stack implanta"
+    ]
+  },
+  "ex-kgbgyh3m": {
+    "prompt": "Quais destas coisas a lição rodou no seu computador? Marque todas as que se aplicam.",
+    "hint": "Tudo que precisa do grupo de recursos real foi lido.",
+    "choices": [
+      {
+        "text": "Compilar um módulo num deploy aninhado",
+        "why": "Sim. bicep build, localmente."
+      },
+      {
+        "text": "Recusar um valor que o @allowed não permite",
+        "why": "Sim. O build-params o conferiu contra o template."
+      },
+      {
+        "text": "Um what-if contra rg-shop",
+        "why": "Não. Ele precisa do Resource Manager e do grupo real."
+      },
+      {
+        "text": "Criar uma deployment stack com denyDelete",
+        "why": "Não. Uma stack é um recurso numa assinatura."
+      }
+    ]
+  }
+}

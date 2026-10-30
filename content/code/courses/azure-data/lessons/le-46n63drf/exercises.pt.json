@@ -1,0 +1,444 @@
+{
+  "ex-kqw8ncxh": {
+    "prompt": "O que um nível de consistência decide no Cosmos DB?",
+    "hint": "Não é o C do ACID.",
+    "choices": [
+      {
+        "text": "Se uma leitura chega a ver uma versão mais antiga que a última escrita",
+        "why": "Isso: é sobre qual cópia uma leitura alcança e o que essa cópia já aplicou."
+      },
+      {
+        "text": "Se uma escrita que quebra uma restrição é rejeitada",
+        "why": "Esse é o C do ACID, outra ideia que divide a palavra."
+      },
+      {
+        "text": "Quantas cópias de cada item o Azure guarda",
+        "why": "As cópias existem em todo nível; o nível decide o que se promete a quem as lê."
+      },
+      {
+        "text": "Se dois itens são gravados numa transação",
+        "why": "Transações são outro recurso; o nível é sobre a leitura das cópias."
+      }
+    ]
+  },
+  "ex-1dz0ebt0": {
+    "prompt": "Ponha os cinco níveis em ordem, do mais forte para o mais fraco.",
+    "hint": "A sessão fica no meio.",
+    "items": [
+      "Forte",
+      "Desatualização limitada",
+      "Sessão",
+      "Prefixo consistente",
+      "Eventual"
+    ]
+  },
+  "ex-cnqcvc1a": {
+    "prompt": "Um pedido passa por created, paid, delivered. Um leitor em outra sessão vê delivered, e depois paid. Quais níveis permitem isso?",
+    "hint": "Qual nível proíbe ver escritas fora de ordem, e qual não proíbe?",
+    "choices": [
+      {
+        "text": "Prefixo consistente e eventual, os dois mais fracos",
+        "why": "O prefixo consistente proíbe exatamente isso: um valor antigo, nunca uma inversão."
+      },
+      {
+        "text": "Só o eventual",
+        "why": "Isso: o eventual não promete nada sobre ordem, então duas leituras alcançam cópias que discordam."
+      },
+      {
+        "text": "Sessão, porque o leitor está em outra sessão",
+        "why": "Fora da sessão de quem escreveu, a sessão ainda dá prefixo consistente e leituras que nunca voltam."
+      },
+      {
+        "text": "Nenhum: o Cosmos DB nunca mostra escritas fora de ordem",
+        "why": "No eventual mostra, e o exemplo da seção é essa inversão."
+      }
+    ]
+  },
+  "ex-yprqxspg": {
+    "prompt": "Uma conta em duas regiões roda em desatualização limitada com os mínimos documentados. Quão atrasada pode estar uma leitura na segunda região?",
+    "hint": "Os mínimos mudam com o número de regiões.",
+    "choices": [
+      {
+        "text": "Até 5 segundos ou 10 escritas",
+        "why": "Esses são os mínimos para uma região."
+      },
+      {
+        "text": "Nada, porque a desatualização limitada lê da região de escrita",
+        "why": "As leituras são servidas localmente; o limite é o que restringe a idade delas."
+      },
+      {
+        "text": "Até 300 segundos ou 100.000 escritas",
+        "why": "Isso: em várias regiões o limite é de pelo menos cinco minutos."
+      },
+      {
+        "text": "Até uns 15 minutos, como no eventual",
+        "why": "Quinze minutos é o que uma queda pode perder nos níveis fracos, não um limite de leitura."
+      }
+    ]
+  },
+  "ex-q676hnw6": {
+    "prompt": "Uma conta nova do Cosmos DB é criada em consistência de ___.",
+    "hint": "O nível que tem um token.",
+    "blanks": [
+      {
+        "accept": [
+          "sessão",
+          "sessao"
+        ]
+      }
+    ]
+  },
+  "ex-2p6fx93s": {
+    "prompt": "O que garante uma leitura que leva um token de sessão?",
+    "hint": "O token nomeia um ponto no log de uma partição.",
+    "choices": [
+      {
+        "text": "Ser servida pela cópia na região de escrita",
+        "why": "Qualquer cópia serve, desde que tenha chegado ao ponto do token."
+      },
+      {
+        "text": "Uma cópia que já aplicou a escrita que o token nomeia",
+        "why": "Isso: uma cópia atrás desse ponto recusa com 1002."
+      },
+      {
+        "text": "Um bloqueio no item até a sessão acabar",
+        "why": "Nada fica bloqueado; o token é um cabeçalho e nada mais."
+      },
+      {
+        "text": "Consistência forte para essa leitura, pelo dobro de unidades de requisição",
+        "why": "É uma leitura de sessão, servida por uma cópia, pelo preço da sessão."
+      }
+    ]
+  },
+  "ex-erqbqtv3": {
+    "prompt": "No `session.py`, por que a leitura do app do próprio pedido saiu com `no token`?",
+    "hint": "Olhe a linha logo antes dela.",
+    "choices": [
+      {
+        "text": "A consistência de sessão manda tokens com escritas, não com leituras",
+        "why": "São as leituras que os levam; as escritas os entregam."
+      },
+      {
+        "text": "O cliente foi criado no padrão eventual da conta",
+        "why": "Ele foi criado com `consistency_level=\"Session\"`."
+      },
+      {
+        "text": "O emulador omite o cabeçalho sob o qual a biblioteca arquiva tokens",
+        "why": "Isso: sem `x-ms-alt-content-path`, a biblioteca não guardou nada. No Azure ela teria mandado `0:0#2`."
+      },
+      {
+        "text": "Um token só é anexado depois da primeira leitura de uma partição",
+        "why": "Não existe essa regra; o token vem da resposta da escrita."
+      }
+    ]
+  },
+  "ex-11rtcasj": {
+    "prompt": "Uma leitura responde 404 com subestado 1002. O que aconteceu?",
+    "hint": "Não encontrado, ou ainda não?",
+    "choices": [
+      {
+        "text": "O item foi apagado depois que o token foi emitido",
+        "why": "Um item apagado é um 404 simples, sem 1002."
+      },
+      {
+        "text": "A chave de partição da requisição estava errada",
+        "why": "Isso também é um 404 simples: nenhum item sob essa chave."
+      },
+      {
+        "text": "A sessão expirou depois do prazo",
+        "why": "Uma sessão não tem prazo; é uma string que o cliente guarda."
+      },
+      {
+        "text": "A cópia não tinha aplicado a escrita que o token nomeia",
+        "why": "Isso: *the read session is not available*, e a biblioteca tenta de novo."
+      }
+    ]
+  },
+  "ex-z63cbt81": {
+    "prompt": "Um servidor web recebe o pagamento e outro serve a página seguinte. Como o segundo mantém a sessão do cliente?",
+    "hint": "O que é uma sessão, fisicamente?",
+    "choices": [
+      {
+        "text": "O token vai para o navegador com a resposta e volta na próxima leitura",
+        "why": "Isso: o token é uma string, e atravessa processos como qualquer string."
+      },
+      {
+        "text": "Os dois criam os clientes em consistência de sessão, o que basta",
+        "why": "Cada cliente tem os seus tokens; o segundo nunca viu a escrita do primeiro."
+      },
+      {
+        "text": "O segundo pede forte só nessa leitura",
+        "why": "Uma requisição só pede menos que o nível da conta, que é sessão."
+      },
+      {
+        "text": "O Cosmos DB reconhece o cliente pela chave de partição",
+        "why": "A chave de partição diz onde o item está, não de quem é a sessão."
+      }
+    ]
+  },
+  "ex-q7x14byw": {
+    "prompt": "A página de produto faz 3.000 leituras pontuais por segundo de itens de 1 KB. Cerca de quantas unidades de requisição por segundo ela precisa em forte?",
+    "hint": "Uma unidade por leitura em sessão, e os dois níveis do topo dobram isso.",
+    "unit": "RU/s"
+  },
+  "ex-bhq7p2ya": {
+    "prompt": "Como as unidades de requisição de uma escrita em forte se comparam com a mesma escrita em eventual?",
+    "hint": "Toda escrita é confirmada do mesmo jeito.",
+    "choices": [
+      {
+        "text": "São as mesmas",
+        "why": "Isso: toda escrita vai para a maioria das cópias em todo nível; só as leituras mudam."
+      },
+      {
+        "text": "Cerca do dobro, como nas leituras",
+        "why": "As leituras dobram porque duas cópias respondem; as escritas são confirmadas igual em todo nível."
+      },
+      {
+        "text": "Metade, porque o eventual grava em menos cópias",
+        "why": "O eventual muda como as leituras são servidas, não quantas cópias uma escrita alcança."
+      },
+      {
+        "text": "O dobro numa região, e quatro vezes em duas",
+        "why": "As regiões mudam a espera em forte, não as unidades."
+      }
+    ]
+  },
+  "ex-a25jcf6m": {
+    "prompt": "Dois clientes tentam comprar o último maço de coentro no mesmo segundo. O que impede as duas compras de darem certo?",
+    "hint": "Os dois poderiam ler 1 em qualquer nível.",
+    "choices": [
+      {
+        "text": "Pôr a conta em consistência forte",
+        "why": "Os dois leem 1 em forte, os dois gravam 0: o forte deixa a leitura atual, não a subtração segura."
+      },
+      {
+        "text": "Uma escrita condicionada ao ETag do item de estoque",
+        "why": "Isso: a segunda escrita encontra outro ETag e é recusada, em qualquer nível."
+      },
+      {
+        "text": "Ler o estoque em desatualização limitada com K igual a 1",
+        "why": "O K mínimo é 10, e nenhum limite numa leitura protege uma escrita."
+      },
+      {
+        "text": "Pôr as requisições dos dois clientes numa sessão só",
+        "why": "Uma sessão ordena leituras e escritas de quem a tem; não enfileira dois escritores."
+      }
+    ]
+  },
+  "ex-xhhrtw9h": {
+    "prompt": "O que vale para uma conta que aceita escritas em várias regiões? Marque todas as que se aplicam.",
+    "hint": "Três das quatro foram ditas na seção.",
+    "choices": [
+      {
+        "text": "A consistência forte não é oferecida",
+        "why": "Isso: dois escritores teriam de esperar um pelo outro a cada escrita."
+      },
+      {
+        "text": "Duas regiões mudam um item, e uma política guarda uma versão",
+        "why": "Isso: é um conflito, e resolvê-lo faz parte do projeto."
+      },
+      {
+        "text": "Por padrão fica a versão com o carimbo de tempo mais recente",
+        "why": "Isso: vence a última escrita, a não ser que você escolha outra coisa."
+      },
+      {
+        "text": "Uma escrita em sessão espera a região mais distante",
+        "why": "Essa espera é do forte; a sessão confirma localmente e replica depois."
+      }
+    ]
+  },
+  "ex-52msn8xq": {
+    "prompt": "Uma conta tem uma região de escrita e roda em forte. Quantas escritas confirmadas a perda dessa região pode perder?",
+    "hint": "O forte espera as outras regiões antes de confirmar."
+  },
+  "ex-sp30xga4": {
+    "prompt": "O padrão de uma conta é sessão. Qual requisição ela vai servir?",
+    "hint": "Uma requisição só pode pedir menos.",
+    "choices": [
+      {
+        "text": "Uma leitura pedindo forte",
+        "why": "Mais forte que o nível da conta é a única coisa que uma requisição não pode pedir."
+      },
+      {
+        "text": "Uma leitura pedindo eventual",
+        "why": "Isso: mais fraco que o padrão é permitido."
+      },
+      {
+        "text": "Uma escrita pedindo eventual, para gastar menos unidades",
+        "why": "Escritas ignoram a opção, e custam o mesmo em todo nível de qualquer jeito."
+      },
+      {
+        "text": "Uma leitura pedindo desatualização limitada numa página lenta",
+        "why": "A desatualização limitada é mais forte que a sessão."
+      }
+    ]
+  },
+  "ex-kzjz5qey": {
+    "prompt": "O `overriding.py` leu em `Strong` e em `Linearizable`, e o emulador serviu as duas por uma unidade de requisição. O que isso diz sobre o Azure?",
+    "hint": "O que o emulador verificou?",
+    "choices": [
+      {
+        "text": "Que o Azure aceita `Linearizable` como outro nome para forte",
+        "why": "Não é um dos cinco níveis do Cosmos DB."
+      },
+      {
+        "text": "Que o Azure serve uma leitura forte numa conta eventual",
+        "why": "A documentação diz que uma requisição só enfraquece o nível."
+      },
+      {
+        "text": "Nada: o emulador não verificou nenhuma das duas",
+        "why": "Isso: ele aceita qualquer nível e cobra uma unidade por tudo."
+      },
+      {
+        "text": "Que uma leitura forte custa uma unidade de requisição no Azure também",
+        "why": "Cerca do dobro de uma leitura de sessão; o um é um marcador."
+      }
+    ]
+  },
+  "ex-386tgsze": {
+    "prompt": "Com a versão 4.17.1 da biblioteca Python, um programa lê o catálogo em eventual e os pedidos em sessão. Como ele é construído?",
+    "hint": "De onde o `read_item` tira o nível?",
+    "choices": [
+      {
+        "text": "Um cliente, passando `consistency_level` a cada `read_item`",
+        "why": "O `read_item` não lista esse argumento; o nível é do cliente."
+      },
+      {
+        "text": "Dois clientes, um por nível, mantidos pela vida inteira do programa",
+        "why": "Isso: o nível é definido no cliente, e um cliente é caro de criar."
+      },
+      {
+        "text": "Um cliente novo a cada requisição, no nível que ela precisa",
+        "why": "Níveis certos, pelo preço de criar um cliente toda vez."
+      },
+      {
+        "text": "Mudar o padrão da conta antes de cada tipo de leitura",
+        "why": "O padrão é uma opção da conta para todo mundo, não um botão por leitura."
+      }
+    ]
+  },
+  "ex-7xyaf4ef": {
+    "prompt": "O `terraform validate` aceitou consistência forte com escritas em duas regiões. O que acontece com esse arquivo depois?",
+    "hint": "De quem é a regra?",
+    "choices": [
+      {
+        "text": "O Azure recusa quando o `apply` pede a conta",
+        "why": "Isso: a regra é do Azure, e não está em nenhum esquema que o provedor confere."
+      },
+      {
+        "text": "O provedor baixa para sessão em silêncio",
+        "why": "Provedores não reescrevem um nível declarado."
+      },
+      {
+        "text": "Nada: o validate passar quer dizer que a combinação é permitida",
+        "why": "O validate confere o esquema e não pergunta nada ao Azure."
+      },
+      {
+        "text": "O Azure cria e desliga as escritas na segunda região",
+        "why": "Isso seria uma mudança silenciosa de sentido; nada documentado faz isso."
+      }
+    ]
+  },
+  "ex-zh7f1m5w": {
+    "prompt": "Ligue cada opção do `azurerm_cosmosdb_account` ao que ela decide.",
+    "hint": "Uma descrição não serve para nenhuma.",
+    "pairs": [
+      {
+        "left": "`consistency_level`",
+        "right": "O que toda leitura recebe de promessa por padrão"
+      },
+      {
+        "left": "`failover_priority = 0`",
+        "right": "A região que recebe as escritas"
+      },
+      {
+        "left": "`multiple_write_locations_enabled`",
+        "right": "Se as outras regiões também recebem escritas"
+      },
+      {
+        "left": "`max_interval_in_seconds`",
+        "right": "O T da desatualização limitada"
+      }
+    ],
+    "right_distractors": [
+      "O número de cópias dentro de uma região"
+    ]
+  },
+  "ex-pz1jzpyp": {
+    "prompt": "Um revisor lê uma conta em duas regiões declarada em desatualização limitada com `max_interval_in_seconds = 5`. O que ele deve dizer?",
+    "hint": "O validate aceitou. Qual mínimo vale?",
+    "choices": [
+      {
+        "text": "Nada, já que 5 está dentro da faixa do provedor",
+        "why": "A faixa do provedor é o mínimo de uma região; ele não sabe quantas regiões há."
+      },
+      {
+        "text": "Que várias regiões precisam de pelo menos 300 segundos",
+        "why": "Isso: o mínimo com várias regiões é 300 segundos e 100.000 escritas, e só o Azure o impõe."
+      },
+      {
+        "text": "Que a desatualização limitada não é oferecida em mais de uma região",
+        "why": "É oferecida; o forte é que é recusado com várias regiões de escrita."
+      },
+      {
+        "text": "Que 5 segundos tornam a conta forte na prática",
+        "why": "Mesmo cinco segundos são uma janela que o forte não tem, e as leituras custam o que a desatualização limitada custa."
+      }
+    ]
+  },
+  "ex-zkhk6vfb": {
+    "prompt": "A equipe acompanha um painel com a contagem de pedidos do dia, atualizado a cada minuto. Que nível o cliente dele deve pedir?",
+    "hint": "Quem escreve, e quanto custa um segundo de idade?",
+    "choices": [
+      {
+        "text": "Forte, porque um painel tem de ser exato",
+        "why": "Ele tem um minuto de idade por projeto; o forte dobraria as leituras por nada."
+      },
+      {
+        "text": "Sessão, para a equipe ver as próprias escritas",
+        "why": "O painel não grava nada, então ler as próprias escritas não compra nada."
+      },
+      {
+        "text": "Eventual: uma contagem de alguns segundos atrás não faz mal",
+        "why": "Isso, e é um enfraquecimento que a conta permite."
+      },
+      {
+        "text": "Desatualização limitada em 60 segundos, para casar com a atualização",
+        "why": "Isso paga o dobro por leitura para garantir um limite de que ninguém precisa."
+      }
+    ]
+  },
+  "ex-ck8e0j91": {
+    "prompt": "Quais destas o emulador fez nesta lição que o Azure não faria? Marque todas as que se aplicam.",
+    "hint": "Uma delas o Azure também faz.",
+    "choices": [
+      {
+        "text": "Cobrar uma unidade de requisição por uma leitura forte",
+        "why": "Isso: no Azure é cerca do dobro de uma leitura de sessão."
+      },
+      {
+        "text": "Servir uma leitura forte numa conta cujo padrão é eventual",
+        "why": "Isso: uma requisição só enfraquece o nível."
+      },
+      {
+        "text": "Informar eventual como o nível de uma conta nova",
+        "why": "Isso: o Azure cria uma conta nova em sessão."
+      },
+      {
+        "text": "Recusar uma leitura cujo token nomeia uma escrita que nunca aconteceu",
+        "why": "O Azure responde isso do mesmo jeito: 404, subestado 1002."
+      }
+    ]
+  },
+  "ex-82n1k6ct": {
+    "prompt": "Toda escrita num contêiner responde com o cabeçalho `x-ms-___-token`.",
+    "hint": "Ele tem o nome do nível que o usa.",
+    "blanks": [
+      {
+        "accept": [
+          "session"
+        ]
+      }
+    ]
+  }
+}

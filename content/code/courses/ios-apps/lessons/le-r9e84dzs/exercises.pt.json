@@ -1,0 +1,487 @@
+{
+  "ex-210p7w5d": {
+    "prompt": "O que deu errado com o `CourseListView` da aula 12 num trem sem sinal?",
+    "hint": "O telefone tinha visto os cursos de manhã.",
+    "choices": [
+      {
+        "text": "Quebrou com o `DecodingError`",
+        "why": "Nenhum corpo chegou para decodificar; o pedido falhou antes."
+      },
+      {
+        "text": "Mostrou um erro, embora nada tivesse mudado",
+        "why": "Isso: ele perguntava à rede toda vez, e nada guardava os cursos que já tinha visto."
+      },
+      {
+        "text": "Mostrou os cursos de ontem sem avisar que eram velhos",
+        "why": "Não mostrou nada velho; não tinha guardado nada."
+      },
+      {
+        "text": "Ficou tentando de novo e gastou a bateria",
+        "why": "A tela da aula 12 só tenta de novo quando a pessoa aperta o botão."
+      }
+    ]
+  },
+  "ex-zs1cg9j3": {
+    "prompt": "Por que o `PlannerRepository` guarda um `PlanSource` e um `PlanStore` em vez de um `APIClient` e um `FileStore`?",
+    "hint": "Pense nos testes da seção 06.",
+    "choices": [
+      {
+        "text": "Porque actors não guardam structs",
+        "why": "Actors guardam structs; o `snapshot` é uma."
+      },
+      {
+        "text": "Para o app compilado ficar menor no telefone",
+        "why": "Tamanho não é o motivo."
+      },
+      {
+        "text": "Para um teste, ou o SwiftData depois, substituir qualquer um",
+        "why": "Isso: o repositório é escrito contra o que eles sabem fazer, não contra o que são."
+      },
+      {
+        "text": "Porque o `APIClient` não pode ser usado dentro de um actor",
+        "why": "Pode; ele é `Sendable`, e é a fonte no `repo`."
+      }
+    ]
+  },
+  "ex-hx4n57w6": {
+    "prompt": "Quais destas são promessas que o repositório faz às telas? Escolha todas as que se aplicam.",
+    "hint": "A seção 02 lista três.",
+    "choices": [
+      {
+        "text": "Uma leitura responde na hora com o que o aparelho tem",
+        "why": "Sim."
+      },
+      {
+        "text": "Uma escrita espera até o servidor confirmá-la",
+        "why": "Não: uma escrita cai primeiro no aparelho."
+      },
+      {
+        "text": "Um pedido que falha nunca esvazia o plano do aparelho",
+        "why": "Sim."
+      },
+      {
+        "text": "O servidor nunca recusa uma sessão que o aparelho aceitou",
+        "why": "Não: pode, e o repositório informa."
+      }
+    ]
+  },
+  "ex-wap78nxy": {
+    "prompt": "Por que a `extension APIClient: PlanSource {}` é vazia?",
+    "hint": "Compare o protocolo com o cliente da aula 12.",
+    "choices": [
+      {
+        "text": "Os métodos são acrescentados depois, na seção 04",
+        "why": "Nada é acrescentado depois; a conformidade está completa."
+      },
+      {
+        "text": "Protocolos em Swift dão todo método por padrão",
+        "why": "Só com uma extensão de protocolo, e `PlanSource` não tem."
+      },
+      {
+        "text": "Ele já tem os três métodos",
+        "why": "Isso: o protocolo são as assinaturas do cliente sem os corpos."
+      },
+      {
+        "text": "Uma extensão vazia marca o `APIClient` como obsoleto em favor do repositório",
+        "why": "Nada fica obsoleto; o repositório usa o cliente."
+      }
+    ]
+  },
+  "ex-60wxhwdc": {
+    "prompt": "O `FileStore.save` grava com `.atomic`. Contra o que isso protege?",
+    "hint": "O que um app morto no meio da gravação deixaria?",
+    "choices": [
+      {
+        "text": "Meio arquivo depois de uma queda",
+        "why": "Isso: grava em outro lugar e renomeia, então o arquivo antigo fica inteiro até o novo estar completo."
+      },
+      {
+        "text": "Duas telas salvando no mesmo instante em threads diferentes",
+        "why": "Esse é o trabalho do actor; o `.atomic` trata de uma gravação ficar inteira."
+      },
+      {
+        "text": "Outro app lendo o arquivo do planner",
+        "why": "Outros apps nem conseguem alcançá-lo; isso é o sandbox."
+      },
+      {
+        "text": "Um disco cheio",
+        "why": "Um disco cheio ainda faz a gravação falhar; é o `storeError` que informa."
+      }
+    ]
+  },
+  "ex-ce75x1ze": {
+    "prompt": "As sessões acrescentadas no aparelho que o servidor não confirmou ficam na lista do snapshot chamada ___.",
+    "hint": "É a lista que o `sync` percorre.",
+    "blanks": [
+      {
+        "accept": [
+          "pending"
+        ]
+      }
+    ]
+  },
+  "ex-kszxn4zm": {
+    "prompt": "Uma atualização pega os cursos e falha nas sessões do segundo curso. Como fica o plano do aparelho depois?",
+    "hint": "Onde o `refresh` atribui ao snapshot?",
+    "choices": [
+      {
+        "text": "Os cursos novos, e só as sessões do primeiro curso",
+        "why": "Nada é atribuído até todo pedido ter dado certo."
+      },
+      {
+        "text": "Exatamente como estava antes",
+        "why": "Isso: o `throw` sai antes de o snapshot ser tocado."
+      },
+      {
+        "text": "Vazio, até a próxima atualização funcionar",
+        "why": "Esvaziar o plano numa falha é o que o repositório existe para evitar."
+      },
+      {
+        "text": "Os cursos novos sem sessões",
+        "why": "Os cursos também não são atribuídos."
+      }
+    ]
+  },
+  "ex-kfnf20yq": {
+    "prompt": "Depois da primeira atualização bem-sucedida, quantos minutos a semana de 19 de outubro tinha planejados?",
+    "hint": "As quatro sessões do servidor, três delas naquela semana.",
+    "unit": "minutos"
+  },
+  "ex-xebjrcvy": {
+    "prompt": "Por que `plan` é uma propriedade calculada do actor e não uma função `async` que pergunta ao servidor?",
+    "hint": "Pelo que uma tela esperaria?",
+    "choices": [
+      {
+        "text": "Porque actors não podem ter funções `async`",
+        "why": "`refresh` e `sync` são funções `async` do mesmo actor."
+      },
+      {
+        "text": "Para evitar decodificar JSON duas vezes",
+        "why": "Decodificação não é o que ela poupa."
+      },
+      {
+        "text": "Porque o SwiftUI não consegue chamar uma função `async`",
+        "why": "O SwiftUI as chama a partir do `task` e do `refreshable`."
+      },
+      {
+        "text": "Para uma leitura nunca esperar a rede, faça ela o que fizer",
+        "why": "Isso: ler é montar um plano a partir de dois arrays que já estão no aparelho."
+      }
+    ]
+  },
+  "ex-86p3adck": {
+    "prompt": "O `repo` rodado sem comando imprimiu `2 courses, 4 sessions` com o servidor parado. De onde vieram?",
+    "hint": "A execução anterior salvou algo.",
+    "choices": [
+      {
+        "text": "`planner.json`, salvo pela última atualização",
+        "why": "Isso: o `PlannerRepository` carrega o armazenamento ao ser criado."
+      },
+      {
+        "text": "Um cache dentro do `URLSession` que respondeu pelo servidor",
+        "why": "O `repo` sem comando não faz pedido nenhum."
+      },
+      {
+        "text": "Os dados de exemplo escritos no `main.swift` do `repo`",
+        "why": "O `repo` não tem dados de exemplo; a primeira execução imprimiu 0 cursos."
+      },
+      {
+        "text": "O servidor, que continua rodando um minuto depois do `Ctrl-C`",
+        "why": "O `Ctrl-C` o para; a leitura veio do aparelho."
+      }
+    ]
+  },
+  "ex-f4x9xmdw": {
+    "prompt": "Ponha em ordem o que o `add` faz com uma sessão nova.",
+    "hint": "Conferir, guardar, salvar, enviar.",
+    "items": [
+      "Conferi-la contra o plano que o aparelho tem",
+      "Acrescentá-la a `pending`",
+      "Salvar o snapshot no armazenamento",
+      "Chamar o `sync`, que tenta enviá-la"
+    ]
+  },
+  "ex-vm8x4wcc": {
+    "prompt": "Depois do `repo add s5` com o servidor parado, quantos minutos a semana tinha planejados?",
+    "hint": "A sessão esperando já conta.",
+    "unit": "minutos"
+  },
+  "ex-ztvhvtyc": {
+    "prompt": "O `sync` recebe `status(422, \"no course art\")` para uma sessão pendente. O que ele faz com ela?",
+    "hint": "O servidor algum dia vai aceitá-la?",
+    "choices": [
+      {
+        "text": "A mantém pendente, para tentar no próximo sync",
+        "why": "Um 4xx não vai mudar; ela seria enviada para sempre."
+      },
+      {
+        "text": "A descarta e devolve o id dela",
+        "why": "Isso, para a tela poder dizer o que não foi guardado."
+      },
+      {
+        "text": "A passa para as confirmadas mesmo assim",
+        "why": "O servidor a recusou; chamá-la de confirmada seria mentira."
+      },
+      {
+        "text": "Cria o curso `art` no servidor e a reenvia",
+        "why": "O cliente não tem como criar cursos, e não deve adivinhar."
+      }
+    ]
+  },
+  "ex-e1hzzqs5": {
+    "prompt": "Ligue o que voltou ao que o `sync` faz.",
+    "hint": "Tentar de novo vai ajudar?",
+    "pairs": [
+      {
+        "left": "`offline(\"notConnectedToInternet\")`",
+        "right": "A mantém pendente"
+      },
+      {
+        "left": "`status(422, …)`",
+        "right": "A descarta e informa o id"
+      },
+      {
+        "left": "A sessão, devolvida",
+        "right": "A passa para as confirmadas"
+      }
+    ],
+    "right_distractors": [
+      "Apaga o arquivo do aparelho"
+    ]
+  },
+  "ex-xet89wgq": {
+    "prompt": "Por que os testes do repositório rodam sem iniciar o `serve.py`?",
+    "hint": "O que o repositório sabe da sua fonte?",
+    "choices": [
+      {
+        "text": "O Swift Testing inicia um servidor para cada teste",
+        "why": "Ele não inicia nada; os testes trazem a própria fonte."
+      },
+      {
+        "text": "Ele recebe um `FakeSource` no lugar",
+        "why": "Isso: qualquer coisa que siga o protocolo serve."
+      },
+      {
+        "text": "O `URLSession` responde de um arquivo gravado nos testes",
+        "why": "Nenhum pedido é feito."
+      },
+      {
+        "text": "Eles pulam todo teste que precisaria da rede",
+        "why": "Os oito rodaram e passaram."
+      }
+    ]
+  },
+  "ex-2jjbmqq5": {
+    "prompt": "Por que cada teste cria o próprio arquivo com um `UUID` novo no nome?",
+    "hint": "O Swift Testing roda testes ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Porque o `FileStore` se recusa a abrir um arquivo duas vezes",
+        "why": "Não se recusa; dois testes compartilhariam e se quebrariam."
+      },
+      {
+        "text": "Para os testes rodarem mais rápido",
+        "why": "Velocidade não é."
+      },
+      {
+        "text": "Para testes em paralelo nunca lerem o plano um do outro",
+        "why": "Isso: um arquivo compartilhado faria um teste passar ou falhar por acaso de tempo."
+      },
+      {
+        "text": "Porque o diretório temporário é esvaziado depois de cada teste",
+        "why": "Nada o esvazia entre os testes."
+      }
+    ]
+  },
+  "ex-tfze18fn": {
+    "prompt": "Quantos testes passaram na execução da seção 06?",
+    "hint": "Aula 1, aula 12 e esta aula."
+  },
+  "ex-n7k4h04z": {
+    "prompt": "No `FakeSource.add`, o `loseNextAnswer` guarda a sessão e depois lança `timedOut`. Que situação real é essa?",
+    "hint": "O servidor fez o trabalho.",
+    "choices": [
+      {
+        "text": "Um telefone sem sinal nenhum",
+        "why": "Aí o servidor não a teria guardado; isso é o interruptor `online`."
+      },
+      {
+        "text": "Um servidor que recusa um curso desconhecido",
+        "why": "Esse é o caminho do 422, sem sessão guardada."
+      },
+      {
+        "text": "Um pedido que chegou e foi feito, cuja resposta nunca voltou",
+        "why": "Isso: o telefone não consegue distingui-lo de um pedido que nunca chegou."
+      },
+      {
+        "text": "Um pedido cancelado pela tela",
+        "why": "Cancelado é um case próprio; isto é um timeout depois de o trabalho ser feito."
+      }
+    ]
+  },
+  "ex-kqnf757k": {
+    "prompt": "O que torna seguro o `sync` enviar uma sessão uma segunda vez depois de um timeout?",
+    "hint": "É uma regra no servidor.",
+    "choices": [
+      {
+        "text": "O `URLSession` remove `POST` repetidos",
+        "why": "Ele envia o que recebe."
+      },
+      {
+        "text": "O servidor guarda um id repetido uma vez",
+        "why": "Isso: o id é feito no aparelho, então o segundo envio é reconhecivelmente a mesma sessão."
+      },
+      {
+        "text": "O repositório espera o bastante pela primeira resposta",
+        "why": "A primeira resposta nunca vem; esperar não resolve."
+      },
+      {
+        "text": "O timeout cancela o primeiro pedido no servidor",
+        "why": "O log da aula 12 mostrou o servidor terminando pedidos que o cliente abandonou."
+      }
+    ]
+  },
+  "ex-p44kdyg7": {
+    "prompt": "Uma operação que dá o mesmo resultado não importa quantas vezes seja repetida se chama ___.",
+    "hint": "A metade do servidor no offline-first.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente"
+        ]
+      }
+    ]
+  },
+  "ex-grajqz62": {
+    "prompt": "O `repo add s6 art …` imprimiu `not added: unknownCourse(\"art\")`. Que código recusou?",
+    "hint": "Aconteceu antes de qualquer coisa ser salva ou enviada.",
+    "choices": [
+      {
+        "text": "O servidor, com um 422",
+        "why": "Um 422 voltaria como id recusado do `sync`, não como `PlanError`."
+      },
+      {
+        "text": "O `FileStore`, que confere ids de curso ao salvar",
+        "why": "O armazenamento salva o que receber."
+      },
+      {
+        "text": "O `Plan.add` da aula 1",
+        "why": "Isso: o repositório confere uma escrita contra o plano antes de guardá-la."
+      },
+      {
+        "text": "O `APIClient.add`, antes de enviar",
+        "why": "O cliente envia o que recebe e informa o que voltou."
+      }
+    ]
+  },
+  "ex-qgjmnpd8": {
+    "prompt": "Por que o repositório registra `storeError` em vez de usar `try?` no `save`?",
+    "hint": "O que diriam à pessoa de outro jeito?",
+    "choices": [
+      {
+        "text": "Porque `try?` não compila dentro de um actor",
+        "why": "Compila em qualquer lugar."
+      },
+      {
+        "text": "O silêncio diria que a sessão foi salva",
+        "why": "Isso: uma falha silenciosa aqui perde o trabalho da pessoa sem uma palavra."
+      },
+      {
+        "text": "Para tentar salvar de novo sozinho na próxima abertura",
+        "why": "Nada tenta de novo; ela é informada."
+      },
+      {
+        "text": "Porque uma gravação que falha faria o pedido de rede falhar também",
+        "why": "As duas são independentes."
+      }
+    ]
+  },
+  "ex-grdf4k47": {
+    "prompt": "No `PlannerModel.refresh`, por que o `show()` é chamado antes da atualização do repositório?",
+    "hint": "A promessa da seção 04.",
+    "choices": [
+      {
+        "text": "Porque o `refresh` joga o plano fora",
+        "why": "Uma atualização que falha não muda nada."
+      },
+      {
+        "text": "Para desenhar primeiro o plano do aparelho",
+        "why": "Isso: a tela nunca fica vazia enquanto espera."
+      },
+      {
+        "text": "Para cancelar qualquer atualização anterior",
+        "why": "O `show` só lê; cancelar é trabalho do `task`."
+      },
+      {
+        "text": "Porque o SwiftUI exige uma leitura antes de toda escrita",
+        "why": "Não existe essa regra."
+      }
+    ]
+  },
+  "ex-hd7n4bva": {
+    "prompt": "O que o `refreshable` acrescenta à lista do `CourseListView`?",
+    "hint": "Um gesto que as pessoas já conhecem.",
+    "choices": [
+      {
+        "text": "Um botão na barra de ferramentas",
+        "why": "Ele acrescenta um gesto, não um botão."
+      },
+      {
+        "text": "Um timer que atualiza a cada minuto",
+        "why": "Nada roda num timer."
+      },
+      {
+        "text": "Puxar para atualizar, com o indicador do sistema",
+        "why": "Isso: o indicador aparece enquanto a closure roda."
+      },
+      {
+        "text": "Uma atualização em segundo plano com o app fechado",
+        "why": "Isso é a aula 16, e não é o `refreshable`."
+      }
+    ]
+  },
+  "ex-3w10hsgn": {
+    "prompt": "No trem, uma estudante acrescenta uma sessão, fecha o app e o abre em casa no Wi-Fi. Siga o que o repositório faz, em ordem. Qual está certo?",
+    "hint": "O arquivo sobrevive ao app fechar.",
+    "choices": [
+      {
+        "text": "Carrega o arquivo com a sessão pendente, a mostra, atualiza, e o `sync` a envia",
+        "why": "Isso: a lista pendente foi salva antes de o app fechar."
+      },
+      {
+        "text": "Começa vazio, já que as sessões pendentes moram só na memória",
+        "why": "`pending` está no snapshot, e o snapshot é salvo a cada mudança."
+      },
+      {
+        "text": "Atualiza primeiro, e a atualização apaga a sessão pendente",
+        "why": "Uma atualização substitui a metade do servidor e deixa `pending` em paz."
+      },
+      {
+        "text": "Pergunta à estudante se deve enviar a sessão",
+        "why": "Enviar é automático; perguntar seria uma pergunta que ninguém responde bem."
+      }
+    ]
+  },
+  "ex-f8y72kt4": {
+    "prompt": "Que parte desta aula NÃO foi executada na máquina Linux?",
+    "hint": "O SwiftUI é a linha.",
+    "choices": [
+      {
+        "text": "Os quatro testes do repositório",
+        "why": "Rodaram no `swift test` da seção 06."
+      },
+      {
+        "text": "O `repo add` com o servidor parado",
+        "why": "Rodou: a seção 05 o mostra."
+      },
+      {
+        "text": "O `PlannerModel` e o `CourseListView` com `refreshable`",
+        "why": "Isso: a seção 08 é SwiftUI, escrita a partir da documentação da Apple e não executada."
+      },
+      {
+        "text": "Ler o `planner.json` com o `grep`",
+        "why": "Rodou: a seção 05 mostra a lista pendente."
+      }
+    ]
+  }
+}

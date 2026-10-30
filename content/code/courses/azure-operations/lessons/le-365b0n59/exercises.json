@@ -1,0 +1,384 @@
+[
+  {
+    "id": "ex-rv7jv7gt",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the shop alert on checkout failures with a log search alert rather than a metric alert?",
+    "hint": "Which signal knows which requests failed?",
+    "choices": [
+      {
+        "text": "Metric alerts cannot have a severity",
+        "correct": false,
+        "why": "Both kinds have one."
+      },
+      {
+        "text": "Only the logs know which route failed",
+        "correct": true,
+        "why": "Right. A platform metric counts 5xx for the whole app; the query can single out checkout."
+      },
+      {
+        "text": "Log search alerts fire faster than metric alerts",
+        "correct": false,
+        "why": "The reverse: logs arrive in minutes, metrics are evaluated every minute."
+      },
+      {
+        "text": "Metric alerts are billed per request",
+        "correct": false,
+        "why": "Rules are billed per rule and per frequency, not per request."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2n6qjmx",
+    "version": 1,
+    "section": "anatomy",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each setting of a log search alert to what it decides.",
+    "hint": "Four settings, four questions.",
+    "pairs": [
+      {
+        "left": "evaluation frequency",
+        "right": "How often the query runs"
+      },
+      {
+        "left": "window size",
+        "right": "How far back each run looks"
+      },
+      {
+        "left": "failing periods",
+        "right": "How many yes answers in a row before firing"
+      },
+      {
+        "left": "autoMitigate",
+        "right": "Whether it resolves by itself"
+      }
+    ],
+    "right_distractors": [
+      "Who receives the e-mail"
+    ]
+  },
+  {
+    "id": "ex-we3g72ch",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stateless rule (no autoMitigate) evaluates every 5 minutes through a 40-minute incident. What does on-call receive?",
+    "hint": "Every yes is a new alert.",
+    "choices": [
+      {
+        "text": "One alert, resolved at the end",
+        "correct": false,
+        "why": "That is the stateful behaviour."
+      },
+      {
+        "text": "Nothing at all until the incident has ended",
+        "correct": false,
+        "why": "Alerts fire during the condition, not after."
+      },
+      {
+        "text": "About eight alerts, one per evaluation",
+        "correct": true,
+        "why": "Right. That is why the shop turns autoMitigate on."
+      },
+      {
+        "text": "One alert per failed request in the window",
+        "correct": false,
+        "why": "Alerts come from evaluations of the query, not from each row."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wnv1sqt",
+    "version": 1,
+    "section": "log-alert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does checkout-failing require `total >= 10`?",
+    "hint": "Think of three checkouts at 03:00.",
+    "choices": [
+      {
+        "text": "So a quiet night pages nobody",
+        "correct": true,
+        "why": "Right. One in three is 33% and means nothing."
+      },
+      {
+        "text": "Kusto refuses percentages over fewer than ten rows",
+        "correct": false,
+        "why": "It computes any percentage; the guard is a design choice."
+      },
+      {
+        "text": "Log search alerts need at least ten rows to run",
+        "correct": false,
+        "why": "They run on any result, including none."
+      },
+      {
+        "text": "Ten is the default failing-periods setting",
+        "correct": false,
+        "why": "Failing periods count evaluations, not requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-p41hrb27",
+    "version": 1,
+    "section": "log-alert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to evaluate.kql, when would checkout-failing have fired, in São Paulo time?",
+    "hint": "The first window to say yes ended at 17:10 UTC.",
+    "choices": [
+      {
+        "text": "14:05, the moment the incident began",
+        "correct": false,
+        "why": "The rule needs a window to end before it can see it."
+      },
+      {
+        "text": "14:10",
+        "correct": true,
+        "why": "Right. 17:10 UTC, and a few minutes later in a real workspace, where logs arrive late."
+      },
+      {
+        "text": "17:10, because alerts use São Paulo time",
+        "correct": false,
+        "why": "17:10 is UTC; São Paulo is three hours behind."
+      },
+      {
+        "text": "14:55, when it resolved",
+        "correct": false,
+        "why": "That is the resolution, not the firing."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqhcxrfr",
+    "version": 1,
+    "section": "log-alert",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 41,
+    "tolerance": 0.1,
+    "prompt": "In the window ending 17:25, what percentage of checkouts failed?",
+    "hint": "9 of 22, rounded to the nearest whole number.",
+    "unit": "%"
+  },
+  {
+    "id": "ex-n0bypzey",
+    "version": 1,
+    "section": "log-alert",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes raising the threshold from 5% to 50% to avoid noise. What does Thursday's table say would happen?",
+    "hint": "Look at the 17:25 window.",
+    "choices": [
+      {
+        "text": "The alert would fire once and resolve at the end",
+        "correct": false,
+        "why": "17:25 was at 41%, so it would resolve mid-incident."
+      },
+      {
+        "text": "It would never fire at all during Thursday's incident",
+        "correct": false,
+        "why": "Most windows were above 60%."
+      },
+      {
+        "text": "It would resolve at 17:25 and fire again at 17:30",
+        "correct": true,
+        "why": "Right. A high threshold turns one incident into two alerts."
+      },
+      {
+        "text": "It would fire earlier, at 17:05",
+        "correct": false,
+        "why": "A higher threshold can only fire later or the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-n33mk7x6",
+    "version": 1,
+    "section": "action-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Twelve alert rules should all page the on-call engineer. What does the action group buy the team?",
+    "hint": "Count the edits when the rota changes.",
+    "choices": [
+      {
+        "text": "Cheaper e-mails",
+        "correct": false,
+        "why": "Price is not why."
+      },
+      {
+        "text": "Faster evaluation of all twelve rules",
+        "correct": false,
+        "why": "Action groups act after firing; they do not evaluate."
+      },
+      {
+        "text": "One place to change who is paged",
+        "correct": true,
+        "why": "Right. Twelve rules name one group; one edit changes all of them."
+      },
+      {
+        "text": "Automatic suppression of alerts at night",
+        "correct": false,
+        "why": "That is a processing rule's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-b10s7rkm",
+    "version": 1,
+    "section": "action-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `useCommonAlertSchema: true` change for the shop's chat webhook?",
+    "hint": "Metric and log alerts arrive in what shape?",
+    "choices": [
+      {
+        "text": "It encrypts the payload",
+        "correct": false,
+        "why": "HTTPS protects it in transit; the schema is about shape."
+      },
+      {
+        "text": "Every kind of alert arrives in one JSON shape",
+        "correct": true,
+        "why": "Right. The consumer understands one format instead of several."
+      },
+      {
+        "text": "It limits the webhook to alerts of severity 0 and 1",
+        "correct": false,
+        "why": "Severity filtering is not what the schema does."
+      },
+      {
+        "text": "It turns the webhook into an e-mail",
+        "correct": false,
+        "why": "Each receiver keeps its type."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2jr9g9k",
+    "version": 1,
+    "section": "processing-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During planned maintenance, why does the shop suppress notifications instead of disabling checkout-failing?",
+    "hint": "What does a disabled rule record?",
+    "choices": [
+      {
+        "text": "Disabled rules are still billed",
+        "correct": false,
+        "why": "Cost is not the argument."
+      },
+      {
+        "text": "Rules cannot be disabled once deployed",
+        "correct": false,
+        "why": "They can; `enabled: false` does it."
+      },
+      {
+        "text": "The alert is still recorded",
+        "correct": true,
+        "why": "Right. A disabled rule leaves no trace and is easily forgotten."
+      },
+      {
+        "text": "Processing rules page a different team instead",
+        "correct": false,
+        "why": "This one removes all action groups; it pages nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bevg4k9",
+    "version": 1,
+    "section": "processing-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The maintenance window was written with timeZone UTC and the same 02:00 to 04:00. What happens on the night?",
+    "hint": "02:00 UTC is what time in São Paulo?",
+    "choices": [
+      {
+        "text": "Nothing changes; Azure converts to local time",
+        "correct": false,
+        "why": "The schedule is read in the zone it names."
+      },
+      {
+        "text": "It silences 23:00 to 01:00 and pages at 02:05",
+        "correct": true,
+        "why": "Right. The window lands three hours early in local time."
+      },
+      {
+        "text": "The processing rule fails to deploy",
+        "correct": false,
+        "why": "UTC is a valid zone; it deploys and is wrong."
+      },
+      {
+        "text": "It silences 05:00 to 07:00",
+        "correct": false,
+        "why": "São Paulo is behind UTC, not ahead."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4s1r1mp",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens at 17:10 UTC on Thursday in order, from the rule's point of view.",
+    "hint": "Query, condition, alert, processing, receivers.",
+    "items": [
+      "The query runs over 17:05 to 17:10",
+      "It returns a row, so the condition is met",
+      "An alert of severity 1 fires",
+      "Processing rules are applied to it",
+      "ag-shop-oncall e-mails and posts to chat"
+    ],
+    "trap": "Putting the action group before the processing rules is the slip: they sit between the alert and its receivers."
+  },
+  {
+    "id": "ex-ksgpff3y",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson actually run? Choose all that apply.",
+    "hint": "Compile and query, yes; fire and send, no.",
+    "choices": [
+      {
+        "text": "Compiling the alert rule, the action group and the processing rule",
+        "correct": true,
+        "why": "Yes. bicep build, all three."
+      },
+      {
+        "text": "The rule's query over each five-minute window of Thursday",
+        "correct": true,
+        "why": "Yes. evaluate.kql in the emulator."
+      },
+      {
+        "text": "An e-mail to oncall@example.com",
+        "correct": false,
+        "why": "No. Nothing was deployed, and example.com belongs to nobody."
+      },
+      {
+        "text": "Suppressing a real alert during maintenance",
+        "correct": false,
+        "why": "No. There were no alerts to suppress."
+      }
+    ]
+  }
+]

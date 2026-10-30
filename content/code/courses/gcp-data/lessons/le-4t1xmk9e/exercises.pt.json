@@ -1,0 +1,418 @@
+{
+  "ex-fdwvj0pj": {
+    "prompt": "O que é o Dataflow, nos termos do Beam?",
+    "hint": "O Beam tem uma palavra para o que executa um pipeline.",
+    "choices": [
+      {
+        "text": "Um runner: o serviço gerenciado do Google para pipelines do Beam",
+        "why": "Isso. O programa é Beam; o Dataflow é um dos lugares onde ele roda."
+      },
+      {
+        "text": "Uma linguagem do Google para escrever jobs de streaming no lugar do Beam",
+        "why": "O pipeline é escrito em Beam, em Python, Java ou Go. O Dataflow não lê nada do seu código-fonte."
+      },
+      {
+        "text": "Uma biblioteca que substitui as transformações do Beam no Google Cloud",
+        "why": "O mesmo programa do Beam vai para o Dataflow sem mudança; só o `--runner` muda."
+      },
+      {
+        "text": "O recurso do Pub/Sub que entrega mensagens em ordem",
+        "why": "Isso são as chaves de ordenação, aula 19. O Dataflow é processamento, não mensageria."
+      }
+    ]
+  },
+  "ex-jcmvvv16": {
+    "prompt": "O que torna uma PCollection ilimitada?",
+    "hint": "Compare um arquivo com uma assinatura.",
+    "choices": [
+      {
+        "text": "Ela não tem último elemento",
+        "why": "Isso: sempre podem chegar mais mensagens. Uma assinatura nunca diz que terminou; um arquivo diz."
+      },
+      {
+        "text": "Ela tem mais elementos do que cabem na memória",
+        "why": "Um arquivo de um terabyte continua limitado. A diferença é se termina, não o tamanho."
+      },
+      {
+        "text": "Ela foi lida com `ReadFromText`",
+        "why": "`ReadFromText` lê um arquivo, que termina: isso é uma PCollection limitada."
+      },
+      {
+        "text": "Os elementos dela não têm timestamp",
+        "why": "Os elementos de um fluxo trazem timestamp, o horário de publicação por padrão."
+      }
+    ]
+  },
+  "ex-4hh1gc0f": {
+    "prompt": "O Python chega à linha `lines | 'Parse' >> beam.FlatMap(parse)`. O que acontece nesse momento?",
+    "hint": "O Beam monta primeiro e roda depois.",
+    "choices": [
+      {
+        "text": "Cada linha é analisada, e o resultado fica na memória",
+        "why": "Nada foi lido ainda. A análise acontece quando o runner executa o grafo."
+      },
+      {
+        "text": "Um passo entra no grafo, e nada é analisado ainda",
+        "why": "Isso. O runner decide depois como, e onde, `parse` roda."
+      },
+      {
+        "text": "A função `parse` é enviada ao Dataflow",
+        "why": "Nada é enviado a lugar nenhum antes de o pipeline rodar, e aqui o runner é local."
+      },
+      {
+        "text": "O Beam confere que `parse` trata toda linha ruim",
+        "why": "O Beam não tem como saber o que uma função faz com a entrada. Um erro nela aparece quando o pipeline roda."
+      }
+    ]
+  },
+  "ex-s5ng86tx": {
+    "prompt": "Uma colega roda o `orders_beam.py` com `--runner=DirectRunner` num laptop com internet e vê linhas de log diferentes das da aula. Por quê?",
+    "hint": "No Beam 2.76.0 o DirectRunner é uma chave.",
+    "choices": [
+      {
+        "text": "O emulador responde diferente quando o laptop está online",
+        "why": "O emulador é local nos dois casos. A diferença está em qual runner o Beam escolheu."
+      },
+      {
+        "text": "O Beam 2.76.0 recusa `--runner=DirectRunner` e escolhe o Dataflow",
+        "why": "O Dataflow só é escolhido pelo nome, e precisa de um projeto e do extra `gcp`."
+      },
+      {
+        "text": "Com o GitHub ao alcance, o Beam rodou no Prism",
+        "why": "Isso. Sem rede ele voltou para o runner de dentro do Python; é por isso que a aula nomeia o `BundleBasedDirectRunner`."
+      },
+      {
+        "text": "O DirectRunner só grava log quando está sem rede nenhuma",
+        "why": "Ele grava nos dois casos. O que grava muda porque rodou em outro runner."
+      }
+    ]
+  },
+  "ex-496m2zyt": {
+    "prompt": "Qual passo de `PlacedTotals` precisa que os elementos mudem de worker no Dataflow?",
+    "hint": "Só um passo junta elementos.",
+    "choices": [
+      {
+        "text": "`Parse`, que transforma a linha em evento",
+        "why": "Ele olha uma linha de cada vez, então qualquer worker faz qualquer linha."
+      },
+      {
+        "text": "`Placed`, que fica com os eventos feitos",
+        "why": "Um filtro decide para cada elemento sozinho."
+      },
+      {
+        "text": "`Add`, o `CombinePerKey`",
+        "why": "Isso. Todo pedido feito de um bairro precisa se encontrar, e isso é o shuffle."
+      },
+      {
+        "text": "`Format`, que escreve a janela",
+        "why": "Ele formata um total de cada vez, depois da combinação."
+      }
+    ]
+  },
+  "ex-wc7cp9zf": {
+    "prompt": "A exportação termina com uma linha cortada no meio. O que o `orders_beam.py` faz com ela?",
+    "hint": "Veja o que `parse` produz quando `json.loads` falha.",
+    "choices": [
+      {
+        "text": "Para o pipeline inteiro bem nessa linha, com um `JSONDecodeError`",
+        "why": "É o que um `parse` sem o `try` faria, e aí não haveria total nenhum."
+      },
+      {
+        "text": "Pula a linha em silêncio",
+        "why": "O silêncio deixaria os totais com um pedido a menos e nada avisando."
+      },
+      {
+        "text": "Manda a linha para uma segunda saída, gravada num arquivo próprio",
+        "why": "Isso: `unreadable-00000-of-00001.txt` guarda a linha, inteira."
+      },
+      {
+        "text": "Conta a linha como um pedido de zero reais",
+        "why": "A linha nunca vira evento; nunca chega a `Placed`."
+      }
+    ]
+  },
+  "ex-gd1ecgtq": {
+    "prompt": "Por que `add` não pode ser escrita como \"conte os pares e some os segundos campos dos eventos originais\"?",
+    "hint": "O Beam chama uma função de combinação sobre partes, e depois sobre os resultados das partes.",
+    "choices": [
+      {
+        "text": "Porque alguns pares são resultados anteriores, que já contam mais de um",
+        "why": "Isso. Contar pares contaria uma soma parcial de cinquenta pedidos como um pedido."
+      },
+      {
+        "text": "Porque o Beam passa um dicionário para ela, não pares",
+        "why": "`Key` transformou os valores em pares `(1, cents)`, e os resultados parciais mantêm esse formato."
+      },
+      {
+        "text": "Porque o Python não sabe somar tuplas",
+        "why": "`add` soma campo a campo, e isso funciona."
+      },
+      {
+        "text": "Porque os eventos originais se perdem depois de `Parse`",
+        "why": "Não se perdem, mas `add` só vê os valores de uma chave."
+      }
+    ]
+  },
+  "ex-zyv7ptws": {
+    "prompt": "A execução da noite gravou cinco totais, de 150, 138, 161, 140 e 152 pedidos. Quantos dos 2.000 eventos eram `placed`?",
+    "hint": "Cada evento `placed` é um pedido em um total."
+  },
+  "ex-vt4mj79d": {
+    "prompt": "Rodando com `--streaming --window 0`, o que o pipeline faz?",
+    "hint": "A janela global de uma coleção ilimitada nunca termina.",
+    "choices": [
+      {
+        "text": "Roda e publica os totais uma vez a cada minuto que passa",
+        "why": "Não há janela para fechar a cada minuto: `--window 0` tirou a janela."
+      },
+      {
+        "text": "Roda e nunca publica nada",
+        "why": "O Beam não deixa chegar a esse ponto."
+      },
+      {
+        "text": "Recusa-se a começar, antes de qualquer mensagem",
+        "why": "Isso: um agrupamento na janela global com o gatilho padrão. O `ValueError` chega antes de qualquer mensagem ser lida."
+      },
+      {
+        "text": "Volta para o modo em lote e lê a assinatura uma vez",
+        "why": "O Beam não tem essa saída; uma fonte ilimitada continua ilimitada."
+      }
+    ]
+  },
+  "ex-c2h92tv9": {
+    "prompt": "A execução em fluxo publicou os totais com a janela `15:33:00`, na tarde de 30 de outubro. Os eventos dizem 15 de outubro, a partir das 19:00. Por quê?",
+    "hint": "Pergunte de onde o `ReadFromPubSub` tira o timestamp de um elemento.",
+    "choices": [
+      {
+        "text": "O emulador reescreve o campo `at` no caminho",
+        "why": "Nada mexeu no corpo das mensagens; chegaram os mesmos bytes."
+      },
+      {
+        "text": "`Format` converte todo horário para o dia corrente",
+        "why": "`Format` só formata a janela que recebe."
+      },
+      {
+        "text": "Sem atributo de timestamp, o horário é quando o Pub/Sub recebeu",
+        "why": "Isso. A janela está no horário de publicação; a aula 22 lê o horário do evento."
+      },
+      {
+        "text": "Janelas fixas sempre começam no momento exato em que o pipeline começa",
+        "why": "Janelas fixas são alinhadas ao relógio, minuto a minuto, seja qual for a hora em que o pipeline começou."
+      }
+    ]
+  },
+  "ex-884w1dym": {
+    "prompt": "No DirectRunner, o pipeline morre depois de puxar 500 mensagens e antes de publicar a janela delas. O que acontece com essas 500 quando ele recomeça?",
+    "hint": "Veja quando este runner confirma uma mensagem.",
+    "choices": [
+      {
+        "text": "São contadas duas vezes, como a entrega pelo menos uma vez prevê",
+        "why": "Para isso teriam de ser entregues de novo, e já tinham sido confirmadas."
+      },
+      {
+        "text": "Se perdem: o runner confirmou cada uma ao puxá-la da assinatura",
+        "why": "Isso. O Dataflow só confirma depois que o trabalho fica guardado de forma durável, a troca oposta."
+      },
+      {
+        "text": "São contadas uma vez, porque o Pub/Sub remove duplicatas",
+        "why": "Não há duplicata aqui, só mensagens que ninguém vai entregar de novo."
+      },
+      {
+        "text": "Ficam esperando no tópico de mensagens mortas",
+        "why": "Nenhum tópico de mensagens mortas foi configurado, e nenhuma entrega falhou."
+      }
+    ]
+  },
+  "ex-7spgyzb1": {
+    "prompt": "Quais destes mudaram entre a execução da noite e a execução em fluxo? Marque todas as que se aplicam.",
+    "hint": "Compare as duas pontas e o meio.",
+    "choices": [
+      {
+        "text": "De onde as linhas foram lidas",
+        "why": "Um arquivo numa, uma assinatura na outra."
+      },
+      {
+        "text": "A janela a que os totais pertencem",
+        "why": "`all` em lote, um minuto do horário de publicação em fluxo."
+      },
+      {
+        "text": "Os passos de `PlacedTotals`",
+        "why": "Os mesmos cinco passos rodaram nos dois; é para isso que serve a composta."
+      },
+      {
+        "text": "Os totais por bairro",
+        "why": "Saíram iguais até o centavo, porque uma janela recebeu todas as mensagens."
+      },
+      {
+        "text": "Para onde foi a linha ilegível",
+        "why": "Um arquivo em lote, o tópico `order-totals-unreadable` em fluxo."
+      }
+    ]
+  },
+  "ex-m30j1715": {
+    "prompt": "Um job de streaming no Dataflow precisa parar, e os totais já contados no minuto aberto têm de ser publicados. Qual comando?",
+    "hint": "Um dos dois termina na hora.",
+    "choices": [
+      {
+        "text": "`gcloud dataflow jobs cancel`",
+        "why": "Cancelar para na hora e perde as janelas abertas."
+      },
+      {
+        "text": "`gcloud dataflow jobs drain`",
+        "why": "Isso. Drenar para de ler, fecha as janelas abertas, emite o que têm e termina."
+      },
+      {
+        "text": "`gcloud dataflow jobs list --status=active`",
+        "why": "Isso lista os jobs; não para nada."
+      },
+      {
+        "text": "Rodar o programa de novo com `--update`",
+        "why": "O update troca o código e mantém o job rodando."
+      }
+    ]
+  },
+  "ex-85bywpm0": {
+    "prompt": "Por que um worker de streaming sem Streaming Engine vem por padrão com um disco de 400 GB?",
+    "hint": "Pergunte onde fica o estado das janelas.",
+    "choices": [
+      {
+        "text": "Ele guarda a sua parte do estado das janelas no próprio disco persistente",
+        "why": "Isso. Com Streaming Engine o serviço guarda, e 30 GB bastam."
+      },
+      {
+        "text": "Ele armazena cada mensagem que leu, para reprocessar",
+        "why": "Reprocessar é trabalho do Pub/Sub, a partir da assinatura; o worker guarda estado, não uma cópia do fluxo."
+      },
+      {
+        "text": "O Pub/Sub exige um disco desse tamanho em cada assinante",
+        "why": "O Pub/Sub não impõe nada ao disco de um assinante."
+      },
+      {
+        "text": "Um disco maior deixa o processador do worker mais rápido",
+        "why": "O tamanho de um disco persistente define a vazão dele, não a velocidade do processador; o motivo é o estado."
+      }
+    ]
+  },
+  "ex-p4h3744q": {
+    "prompt": "A Quitanda quer que os totais da noite sejam lançados pelo Cloud Composer com um `--input` diferente a cada noite, e a entrada de uma noite precisa de um passo a mais no grafo. Que tipo de template serve?",
+    "hint": "Um tipo fixa o formato do grafo quando é preparado.",
+    "choices": [
+      {
+        "text": "Um template clássico, porque os parâmetros dele são valores de execução",
+        "why": "Um template clássico fixa o grafo quando é preparado; um valor de execução não acrescenta um passo."
+      },
+      {
+        "text": "Nenhum template: o Composer roda o programa do laptop da analista",
+        "why": "O Composer não tem laptop de onde rodar, e um agendamento não deve depender de um."
+      },
+      {
+        "text": "Um Flex Template, que monta o grafo a cada lançamento",
+        "why": "Isso. O contêiner roda o programa no lançamento, então os parâmetros podem mudar o grafo."
+      },
+      {
+        "text": "Um template fornecido pelo Google",
+        "why": "Esses são pipelines fixos para cópias comuns; este é da própria Quitanda."
+      }
+    ]
+  },
+  "ex-nc4sjdts": {
+    "prompt": "Ligue cada recurso do Dataflow ao que ele faz.",
+    "hint": "Dois deles tratam do shuffle, em modos diferentes.",
+    "pairs": [
+      {
+        "left": "Dataflow Shuffle",
+        "right": "Tira dos workers o shuffle de um job em lote e leva para o serviço"
+      },
+      {
+        "left": "Streaming Engine",
+        "right": "Guarda no serviço o shuffle e o estado das janelas de um fluxo"
+      },
+      {
+        "left": "Dataflow Prime",
+        "right": "Ajusta a memória de um worker e cobra em DCUs"
+      },
+      {
+        "left": "FlexRS",
+        "right": "Começa um job em lote em até seis horas, por um preço menor"
+      }
+    ],
+    "right_distractors": [
+      "Deixa um template clássico acrescentar passos no lançamento"
+    ]
+  },
+  "ex-p6fk9gq4": {
+    "prompt": "Um job em lote faz o shuffle de 1.024 GiB. Com o ajuste de volume da página, quantos GiB são cobrados?",
+    "hint": "Um quarto dos primeiros 250, metade do resto até 5 TiB."
+  },
+  "ex-8c628fp0": {
+    "prompt": "Um worker de streaming de 2 vCPU roda o mês inteiro, 730 horas, a 0,1035 dólar por vCPU-hora em São Paulo. Quanto custam só as vCPUs dele, em dólares?",
+    "hint": "vCPUs vezes horas vezes o preço."
+  },
+  "ex-nx9kstjn": {
+    "prompt": "O job de streaming custa uns 183 dólares por mês e o lote da noite uns 4. Quando o fluxo vale a pena?",
+    "hint": "Os dois dão os mesmos totais; a diferença é quando.",
+    "choices": [
+      {
+        "text": "Quando os dados ficam maiores que a memória de um worker inteiro",
+        "why": "O lote lida com qualquer tamanho acrescentando workers; o tamanho não decide entre os dois."
+      },
+      {
+        "text": "Quando os totais alimentam algo que age dentro do minuto",
+        "why": "Isso. Um relatório lido de manhã tem a mesma resposta da execução da noite."
+      },
+      {
+        "text": "Sempre que os eventos já chegam pelo Pub/Sub",
+        "why": "Eles também caem na exportação da noite, que o lote lê por uma fração do preço."
+      },
+      {
+        "text": "Quando o FlexRS não existe na região",
+        "why": "O FlexRS só dá desconto no lote; a falta dele deixaria o lote mais caro, não o fluxo mais útil."
+      }
+    ]
+  },
+  "ex-jvzbmqyt": {
+    "prompt": "Ponha em ordem o que acontece com um pedido feito na execução em fluxo.",
+    "hint": "A janela vem antes do meio.",
+    "items": [
+      "`ReadFromPubSub` puxa a mensagem e a confirma",
+      "A mensagem é posta no minuto em que foi publicada",
+      "`Parse` e `Placed` a mantêm como pedido feito",
+      "`Add` a soma ao total do bairro naquele minuto",
+      "O total é publicado em `order-totals` quando o minuto fecha"
+    ]
+  },
+  "ex-axf5em2s": {
+    "prompt": "Para mandar o `orders_beam.py` ao Google em vez de rodá-lo aqui, a opção a mudar é `--___`.",
+    "hint": "O programa define um padrão para ela.",
+    "blanks": [
+      {
+        "accept": [
+          "runner",
+          "runner=DataflowRunner"
+        ]
+      }
+    ]
+  },
+  "ex-fehk2eep": {
+    "prompt": "Que parte do `orders_beam.py` teria de mudar para ler a exportação da noite do Cloud Storage no Dataflow?",
+    "hint": "Só as pontas sabem onde os dados ficam.",
+    "choices": [
+      {
+        "text": "`PlacedTotals`, para que passe a ler de um bucket",
+        "why": "A composta nunca sabe de onde vêm as linhas."
+      },
+      {
+        "text": "`add`, para combinar entre workers",
+        "why": "Ela já funciona em qualquer agrupamento, que é o que os workers precisam."
+      },
+      {
+        "text": "Nada no código: caminhos e runner são opções",
+        "why": "Isso. `--input gs://…`, `--output gs://…` e `--runner=DataflowRunner`, com o extra `gcp` instalado."
+      },
+      {
+        "text": "`Format`, para gravar uma janela que não seja `all`",
+        "why": "Um lote sobre um arquivo continua na janela global no Dataflow."
+      }
+    ]
+  }
+}

@@ -1,0 +1,497 @@
+{
+  "ex-7pcvhwy8": {
+    "prompt": "Por que o servidor do planner escuta em `127.0.0.1` e não em todo endereço?",
+    "hint": "Ele não tem senha e aceita qualquer coisa enviada a ele.",
+    "choices": [
+      {
+        "text": "O Python não consegue escutar em outro endereço",
+        "why": "O `ThreadingHTTPServer` aceita qualquer endereço; este foi escolhido."
+      },
+      {
+        "text": "Para nada mais na rede alcançá-lo",
+        "why": "Isso: `127.0.0.1` quer dizer esta máquina, o que serve a um servidor sem senha."
+      },
+      {
+        "text": "Porque o App Transport Security exige esse endereço",
+        "why": "O ATS trata das conexões do app, e desde o iOS 17 recusa endereços IP por padrão."
+      },
+      {
+        "text": "Para as respostas chegarem mais rápido que pelo Wi-Fi",
+        "why": "Velocidade não é o motivo; quem consegue alcançá-lo é."
+      }
+    ]
+  },
+  "ex-b6w61bcv": {
+    "prompt": "Ligue cada pedido ao que o servidor do planner responde.",
+    "hint": "A seção 02 testou três deles com o `curl`.",
+    "pairs": [
+      {
+        "left": "`GET /courses`",
+        "right": "200, os dois cursos"
+      },
+      {
+        "left": "`GET /courses/art/sessions`",
+        "right": "404, `no course art`"
+      },
+      {
+        "left": "`GET /courses?fail`",
+        "right": "500, de propósito"
+      },
+      {
+        "left": "`POST /sessions` para o curso `art`",
+        "right": "422, `no course art`"
+      }
+    ],
+    "right_distractors": [
+      "401, é preciso uma senha"
+    ]
+  },
+  "ex-ph3kd8mc": {
+    "prompt": "Você para o servidor com `Ctrl-C` e o inicia de novo. O que aconteceu com a sessão que você enviou?",
+    "hint": "Onde o servidor guarda as sessões?",
+    "choices": [
+      {
+        "text": "Continua lá, num arquivo ao lado do `serve.py`",
+        "why": "O servidor não grava arquivo; as listas dele moram na memória."
+      },
+      {
+        "text": "Volta quando o app a envia uma segunda vez ao abrir",
+        "why": "Nada a reenvia; o app não foi escrito para isso."
+      },
+      {
+        "text": "Sumiu: as listas recomeçam das quatro do arquivo",
+        "why": "Isso, e num curso isso ajuda: cada execução começa dos mesmos dados."
+      },
+      {
+        "text": "Fica guardada, marcada como feita",
+        "why": "Nada a marca; ela simplesmente não é guardada."
+      }
+    ]
+  },
+  "ex-pmcf1vt3": {
+    "prompt": "No Linux, `URLSession.shared` dá `type 'URLSession' (aka 'AnyObject') has no member 'shared'`. O que falta?",
+    "hint": "No Linux os tipos de rede moram num módulo próprio.",
+    "choices": [
+      {
+        "text": "`import FoundationNetworking`",
+        "why": "Isso: o Foundation de código aberto guarda o `URLSession` ali, atrás do `#if canImport`."
+      },
+      {
+        "text": "Um toolchain Swift mais novo que o 6.4.2",
+        "why": "O 6.4.2 tem `URLSession`; o arquivo não importou o módulo que o guarda."
+      },
+      {
+        "text": "`libcurl4-openssl-dev`, da linha do `apt` da aula 1",
+        "why": "Esse pacote foi instalado; uma biblioteca faltando falha na ligação, não com esta mensagem."
+      },
+      {
+        "text": "`import SwiftUI`",
+        "why": "O SwiftUI não existe no Linux, e não é onde o `URLSession` mora."
+      }
+    ]
+  },
+  "ex-4yhx0jmn": {
+    "prompt": "O `URLSession.shared.data(from:)` recebe um `404` do servidor. O que a chamada faz?",
+    "hint": "Para o `URLSession`, só a falta de resposta é um erro.",
+    "choices": [
+      {
+        "text": "Lança um `URLError` com código 404",
+        "why": "Nenhum erro é lançado por um status HTTP; os códigos de `URLError` tratam da conexão."
+      },
+      {
+        "text": "Volta, com o status na resposta",
+        "why": "Isso, e é por isso que o cliente da seção 05 confere o status ele mesmo."
+      },
+      {
+        "text": "Devolve um `Data` vazio e nenhuma resposta",
+        "why": "O corpo também chega: aqui foi `{\"error\": …}`."
+      },
+      {
+        "text": "Tenta o pedido de novo até receber um `200`",
+        "why": "O `URLSession` não tenta de novo um status por você."
+      }
+    ]
+  },
+  "ex-59w9ye20": {
+    "prompt": "Por que o curso prefere o modificador `task` do SwiftUI para começar um carregamento a partir de uma view?",
+    "hint": "O que acontece com o trabalho quando a view vai embora?",
+    "choices": [
+      {
+        "text": "Roda o pedido na thread principal, que é mais rápida",
+        "why": "O pedido roda onde o `URLSession` o roda; velocidade não é a questão."
+      },
+      {
+        "text": "Tenta de novo sozinho quando a rede volta",
+        "why": "Ele não tenta de novo; isso é escolha da tela."
+      },
+      {
+        "text": "Cancela o trabalho quando a view some",
+        "why": "Isso; uma `Task` começada no `onAppear` não é cancelada por nada."
+      },
+      {
+        "text": "É o único lugar onde `await` é permitido no SwiftUI",
+        "why": "Qualquer contexto assíncrono aceita `await`, uma `Task` inclusive."
+      }
+    ]
+  },
+  "ex-s7d1epmk": {
+    "prompt": "No `WireSession`, o enum que liga `courseID` ao `courseId` do servidor se chama ___.",
+    "hint": "Ele segue `CodingKey`.",
+    "blanks": [
+      {
+        "accept": [
+          "CodingKeys"
+        ]
+      }
+    ]
+  },
+  "ex-xc3mdz4g": {
+    "prompt": "Qual `DecodingError` um corpo com `\"course_id\"` no lugar de `\"courseId\"` produz?",
+    "hint": "O tipo exige uma chave que o JSON não tem.",
+    "choices": [
+      {
+        "text": "`typeMismatch`, no caminho `course_id`",
+        "why": "Um type mismatch é um valor do tipo errado, como `\"forty\"` para um `Int`."
+      },
+      {
+        "text": "`keyNotFound`, para `courseId`",
+        "why": "Isso: o decodificador procurou `courseId` e não achou essa chave."
+      },
+      {
+        "text": "Nenhum: a chave a mais é ignorada e `courseID` fica vazio",
+        "why": "Chaves a mais são ignoradas, mas uma obrigatória que falta lança; nada fica pela metade."
+      },
+      {
+        "text": "`dataCorrupted`, porque o JSON é inválido",
+        "why": "O JSON é válido; tem outra chave nele."
+      }
+    ]
+  },
+  "ex-d67ft34s": {
+    "prompt": "Uma colega torna o próprio `StudySession` `Codable` e larga o `WireSession`. Depois o servidor passa a mandar datas como timestamps Unix. O que quebra primeiro?",
+    "hint": "Onde o formato do modelo teria de mudar?",
+    "choices": [
+      {
+        "text": "Nada: o `JSONDecoder` converte um timestamp no texto do dia",
+        "why": "Um número não decodifica numa `String`; é um `typeMismatch`."
+      },
+      {
+        "text": "Só os testes, que dá para atualizar",
+        "why": "A decodificação falha no app tanto quanto nos testes."
+      },
+      {
+        "text": "A decodificação, e a correção muda o tipo das telas",
+        "why": "Isso. Com um tipo de fio, a mudança fica no `Wire.swift` e o modelo mantém o dia."
+      },
+      {
+        "text": "O servidor, que recusa o formato de data antigo no `POST`",
+        "why": "A pergunta é sobre o app lendo as respostas do servidor."
+      }
+    ]
+  },
+  "ex-88av61sx": {
+    "prompt": "Depois de acrescentar o `WireTests.swift`, quantos testes o `swift test` informou na última linha?",
+    "hint": "Dois da aula 1, dois novos."
+  },
+  "ex-3bkrx6rq": {
+    "prompt": "Ponha as conferências do cliente na ordem em que o `send` as faz.",
+    "hint": "Resposta, status, formato.",
+    "items": [
+      "Houve resposta, ou foi cancelado?",
+      "A resposta é um `HTTPURLResponse`?",
+      "O status está entre 200 e 299?",
+      "O corpo decodifica como o tipo esperado?"
+    ]
+  },
+  "ex-ayp4syz8": {
+    "prompt": "Alguém sobe a decodificação no `send` para antes da conferência de status. O servidor responde `500` com `{\"error\": \"database down\"}`. O que a tela recebe?",
+    "hint": "Tente decodificar uma mensagem de erro como lista de cursos.",
+    "choices": [
+      {
+        "text": "`status(500, \"database down\")`, como antes",
+        "why": "O status nunca é alcançado: a decodificação falhou antes."
+      },
+      {
+        "text": "`unreadable`: o app se culpa",
+        "why": "Isso: a página de erro é lida como dado, e a mensagem diz que é bug do app."
+      },
+      {
+        "text": "`offline`, e a tela oferece tentar de novo",
+        "why": "Houve resposta; offline é para nenhuma resposta."
+      },
+      {
+        "text": "Uma lista de cursos vazia",
+        "why": "Um objeto não decodifica como array; lança em vez de produzir um vazio."
+      }
+    ]
+  },
+  "ex-fvykw99j": {
+    "prompt": "O que o cliente informou quando nada escutava na porta 8099?",
+    "hint": "É um dos cases `offline`.",
+    "choices": [
+      {
+        "text": "`status(503, \"\")`",
+        "why": "Um status precisa de um servidor que o mande; nada respondeu."
+      },
+      {
+        "text": "`offline(\"timedOut\")`",
+        "why": "Uma conexão recusada falha na hora; um timeout é o servidor lento da seção 07."
+      },
+      {
+        "text": "`unreadable(\"the body was empty\")`",
+        "why": "Unreadable é um sucesso com o corpo errado."
+      },
+      {
+        "text": "`offline(\"cannotConnectToHost\")`",
+        "why": "Isso: o código de `URLError` para uma conexão recusada."
+      }
+    ]
+  },
+  "ex-gj78s5jd": {
+    "prompt": "Por que a URL base é passada ao `APIClient` em vez de escrita dentro dele?",
+    "hint": "Pense em onde o planner roda.",
+    "choices": [
+      {
+        "text": "Um cliente, esta máquina ou um servidor real",
+        "why": "Isso, e um teste consegue entregar a ele o que precisar."
+      },
+      {
+        "text": "O Swift não permite um literal de URL dentro de uma struct",
+        "why": "Permite; o `fetch` escreve URLs no meio do código."
+      },
+      {
+        "text": "O `URLSession` recusa um pedido a um endereço fixo no código",
+        "why": "O `URLSession` não sabe de onde um endereço veio."
+      },
+      {
+        "text": "O App Transport Security o lê do inicializador",
+        "why": "O ATS lê o `Info.plist`, nunca um inicializador."
+      }
+    ]
+  },
+  "ex-4npmfzym": {
+    "prompt": "Por que o carregamento de uma tela é modelado como um enum `Loadable` e não como três propriedades `isLoading`, `courses` e `error`?",
+    "hint": "Conte as combinações que cada um permite.",
+    "choices": [
+      {
+        "text": "Um enum ocupa menos memória que três propriedades",
+        "why": "Memória não é o argumento; estados impossíveis são."
+      },
+      {
+        "text": "Um estado por vez, desenhado num `switch`",
+        "why": "Isso: três propriedades permitem carregando e erro ao mesmo tempo, e nada exige desenhar o erro."
+      },
+      {
+        "text": "O SwiftUI só observa enums, não booleanos",
+        "why": "O SwiftUI observa qualquer estado guardado; a aula 6 usa valores simples."
+      },
+      {
+        "text": "O `URLSession` devolve um `Loadable` direto",
+        "why": "`Loadable` é tipo do próprio planner, no `Loadable.swift`."
+      }
+    ]
+  },
+  "ex-wjhct6hg": {
+    "prompt": "Para quais destes erros o planner oferece tentar de novo? Escolha todos os que se aplicam.",
+    "hint": "Tentar de novo só onde perguntar de novo pode dar outra resposta.",
+    "choices": [
+      {
+        "text": "`offline(\"timedOut\")`",
+        "why": "Sim: a rede pode voltar."
+      },
+      {
+        "text": "`status(500, …)`",
+        "why": "Sim: um erro do servidor pode passar."
+      },
+      {
+        "text": "`status(404, …)`",
+        "why": "Não: o curso sumiu, e perguntar de novo dá o mesmo 404."
+      },
+      {
+        "text": "`unreadable(…)`",
+        "why": "Não: a mesma resposta dá o mesmo bug."
+      }
+    ]
+  },
+  "ex-hwcdafce": {
+    "prompt": "Por que a mensagem de `cancelled` é uma string vazia?",
+    "hint": "Quem começou o carregamento, e onde está agora?",
+    "choices": [
+      {
+        "text": "Porque o servidor não manda corpo quando um pedido é cancelado",
+        "why": "A mensagem é frase do próprio app, não do servidor."
+      },
+      {
+        "text": "É um marcador para traduzir depois",
+        "why": "Ela é vazia de propósito, e a seção 06 diz por quê."
+      },
+      {
+        "text": "A tela que pediu foi embora, então não há a quem contar",
+        "why": "Isso; o código com `task(id:)` da seção 07 não escreve nada num carregamento cancelado."
+      },
+      {
+        "text": "O Swift não permite um case de enum sem mensagem",
+        "why": "Permite; `cancelled` nem tem valor associado."
+      }
+    ]
+  },
+  "ex-pztd3h6v": {
+    "prompt": "O pedido com `?delay=3` foi cancelado depois de 300 ms. O que o servidor fez?",
+    "hint": "Olhe o fim do log do servidor na seção 02.",
+    "choices": [
+      {
+        "text": "Parou na hora, porque o cliente cancelou o pedido",
+        "why": "O servidor não sabia; dormiu os três segundos."
+      },
+      {
+        "text": "Respondeu depois, e o cliente já tinha ido",
+        "why": "Isso: cancelar para a espera, não o trabalho que já chegou ao servidor."
+      },
+      {
+        "text": "Registrou um status `499` para o pedido",
+        "why": "O log diz `200` e depois que o cliente tinha ido embora."
+      },
+      {
+        "text": "Caiu com um broken pipe",
+        "why": "O `reply` pega o broken pipe e registra uma linha."
+      }
+    ]
+  },
+  "ex-k6tp56d2": {
+    "prompt": "Um pedido é cancelado antes de começar e outro é parado em andamento. Que erros chegam ao `send`, e o que ele faz deles?",
+    "hint": "O cancelamento chega em duas formas.",
+    "choices": [
+      {
+        "text": "Os dois chegam como `URLError(.timedOut)`, que vira `offline`",
+        "why": "Um timeout é diferente de um cancelamento, e o cliente os separa."
+      },
+      {
+        "text": "Dois erros, os dois viram `.cancelled`",
+        "why": "Isso: duas formas, um significado para a tela."
+      },
+      {
+        "text": "Nenhum: um pedido cancelado devolve corpo vazio",
+        "why": "Uma chamada cancelada lança; não devolve corpo."
+      },
+      {
+        "text": "Um `status(499, \"\")` do servidor para os dois",
+        "why": "Nenhum status volta para um pedido que ninguém esperou."
+      }
+    ]
+  },
+  "ex-xq4e8n2n": {
+    "prompt": "Quantos segundos a sessão do cliente impaciente esperou por dados antes de desistir?",
+    "hint": "É o `timeoutIntervalForRequest`.",
+    "unit": "segundos"
+  },
+  "ex-tb42qm17": {
+    "prompt": "No `CourseDetailView`, por que o código do `task(id:)` volta cedo quando o carregamento deu `.failed(.cancelled)`?",
+    "hint": "Quando ele é cancelado?",
+    "choices": [
+      {
+        "text": "Para tentar o mesmo curso mais uma vez",
+        "why": "Ele não tenta de novo; deixa o estado como está."
+      },
+      {
+        "text": "Para manter um indicador na tela até a rede voltar",
+        "why": "O carregamento novo define o próprio estado; o antigo fica calado."
+      },
+      {
+        "text": "Um carregamento mais novo, de outro curso, o substituiu",
+        "why": "Isso: o antigo não pode pousar as sessões em cima das do curso novo."
+      },
+      {
+        "text": "Porque o `Loadable.run` não representa um cancelamento",
+        "why": "Representa: `.failed(.cancelled)` é exatamente isso."
+      }
+    ]
+  },
+  "ex-dj9tpcrs": {
+    "prompt": "No iOS 17, qual chave do `Info.plist` deixa o planner alcançar `http://127.0.0.1:8012` durante o desenvolvimento, e nada mais?",
+    "hint": "A exceção estreita, não a larga.",
+    "choices": [
+      {
+        "text": "`NSAllowsArbitraryLoads`",
+        "why": "Essa desliga o ATS para tudo e tem de ser justificada à revisão."
+      },
+      {
+        "text": "`NSAllowsLocalNetworking`",
+        "why": "Isso: nomes locais e endereços IP, que o iOS 17 deixou de permitir por padrão."
+      },
+      {
+        "text": "`NSExceptionDomains` com `localhost`",
+        "why": "A URL usa um endereço IP, e a chave local estreita o cobre."
+      },
+      {
+        "text": "Nenhuma chave: o ATS ignora portas acima de 8000",
+        "why": "O ATS não tem regra sobre números de porta."
+      }
+    ]
+  },
+  "ex-884fv18d": {
+    "prompt": "Por que todo pedido `http` desta aula funcionou no Linux sem exceção nenhuma?",
+    "hint": "Onde mora o ATS?",
+    "choices": [
+      {
+        "text": "Porque o Linux criptografa o tráfego local por você",
+        "why": "Nada o criptografou; o servidor fala HTTP simples."
+      },
+      {
+        "text": "O ATS é da Apple, não do Foundation aberto",
+        "why": "Isso, e é também por isso que esta seção não foi executada."
+      },
+      {
+        "text": "Porque o servidor mandou `Content-Type: application/json`",
+        "why": "O tipo de conteúdo não tem nada a ver com o ATS."
+      },
+      {
+        "text": "Porque a porta 8012 conta como HTTPS",
+        "why": "O esquema, não a porta, diz se é HTTPS."
+      }
+    ]
+  },
+  "ex-m2dm6232": {
+    "prompt": "Uma estudante num trem abre o planner, e o pedido da lista de cursos estoura o tempo. Siga: qual `APIError`, qual `Loadable`, e o que o `CourseListView` desenha?",
+    "hint": "O estágio um falha; o erro pode ser tentado de novo.",
+    "choices": [
+      {
+        "text": "`status(408, \"\")`, `.failed`, uma mensagem sem botão",
+        "why": "Um timeout não produz status; nada respondeu."
+      },
+      {
+        "text": "`cancelled`, `.loading`, um indicador que fica",
+        "why": "Ninguém cancelou; a sessão desistiu de esperar."
+      },
+      {
+        "text": "`offline(\"timedOut\")`, `.failed`, a mensagem de offline e um botão Try again",
+        "why": "Isso: offline pode ser tentado de novo, então o botão aparece."
+      },
+      {
+        "text": "`unreadable(…)`, `.loaded([])`, uma lista vazia",
+        "why": "Nenhum corpo chegou para ser ilegível, e o `run` nunca transforma um erro em lista."
+      }
+    ]
+  },
+  "ex-sjqwv6e7": {
+    "prompt": "Que parte desta aula rodou na máquina Linux, e qual foi só escrita a partir da documentação da Apple? Escolha a que NÃO foi executada.",
+    "hint": "O SwiftUI é a linha.",
+    "choices": [
+      {
+        "text": "O programa `fetch` e os seus três resultados",
+        "why": "Esse rodou: a seção 05 mostra a saída dele."
+      },
+      {
+        "text": "Os pedidos cancelado e estourado",
+        "why": "Esses rodaram: a seção 07 os mostra."
+      },
+      {
+        "text": "O `CourseListView` desenhando os três estados",
+        "why": "Isso: é SwiftUI, escrito a partir da documentação e não executado."
+      },
+      {
+        "text": "Os testes de decodificação `WireTests`",
+        "why": "Rodaram no `swift test` da seção 04."
+      }
+    ]
+  }
+}

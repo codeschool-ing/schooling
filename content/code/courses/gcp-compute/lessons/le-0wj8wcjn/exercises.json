@@ -1,0 +1,727 @@
+[
+  {
+    "id": "ex-ef3k3r2x",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this course, gcloud compute machine-types list stops with \"You do not currently have an active account selected\". Where did the refusal happen?",
+    "hint": "Was anything sent?",
+    "choices": [
+      {
+        "text": "At Google, which rejected the empty credentials it was sent",
+        "correct": false,
+        "why": "Nothing was sent. gcloud checks for an account before it builds the request."
+      },
+      {
+        "text": "On the laptop, in gcloud itself, before any request left",
+        "correct": true,
+        "why": "Right. With no account selected, gcloud stops before the network is involved."
+      },
+      {
+        "text": "In the Pub/Sub emulator, which does not know Compute Engine",
+        "correct": false,
+        "why": "The emulator is not involved; gcloud did not try to reach anything."
+      },
+      {
+        "text": "In Terraform, whose token no-account was used by gcloud",
+        "correct": false,
+        "why": "gcloud does not read GOOGLE_OAUTH_ACCESS_TOKEN for this; that variable is for Terraform."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2bdq73s",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab export GOOGLE_OAUTH_ACCESS_TOKEN=no-account in every terminal?",
+    "hint": "What does Terraform need before it will plan, and what must it never have here?",
+    "choices": [
+      {
+        "text": "It is the token the Pub/Sub emulator expects from every client",
+        "correct": false,
+        "why": "The emulator accepts clients with no credentials at all."
+      },
+      {
+        "text": "It makes gcloud skip the account check for read-only commands",
+        "correct": false,
+        "why": "gcloud still refuses without an account; the variable is read by Terraform."
+      },
+      {
+        "text": "The provider needs a credential, and this one reaches no account",
+        "correct": true,
+        "why": "Right. It satisfies the provider and would be refused by Google if it ever reached it."
+      },
+      {
+        "text": "It is the free tier's shared token, valid for e2-micro machines",
+        "correct": false,
+        "why": "There is no such token; the free tier needs a real account."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhf4kt2j",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plan stops with \"could not find default credentials\" and suggests gcloud auth application-default login. What does the course tell you to do?",
+    "hint": "Which line of the terminal setup was skipped?",
+    "choices": [
+      {
+        "text": "Run the suggested login, since the plan reaches nothing anyway",
+        "correct": false,
+        "why": "That puts a real credential on the laptop, one apply away from a billed machine."
+      },
+      {
+        "text": "Delete the provider block, which is where the error points",
+        "correct": false,
+        "why": "Without the block Terraform still configures the provider, and still needs a credential."
+      },
+      {
+        "text": "Export GOOGLE_OAUTH_ACCESS_TOKEN=no-account in that terminal",
+        "correct": true,
+        "why": "Right. The line was missing, and the word is enough for a plan."
+      },
+      {
+        "text": "Run terraform init again so that the mirror is read",
+        "correct": false,
+        "why": "init had worked; the plan stopped at credentials, not at the provider's installation."
+      }
+    ]
+  },
+  {
+    "id": "ex-tg45ser0",
+    "version": 1,
+    "section": "your-lab",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab stands in for Google Cloud with gcloud, Terraform, the emulators and ___, which runs the containers Cloud Run would run.",
+    "hint": "The tool from the course before this one.",
+    "blanks": [
+      {
+        "accept": [
+          "Docker",
+          "docker"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6kgvr1tn",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the course's prices typed into prices.py rather than downloaded by it, as AWS's list can be?",
+    "hint": "What does Google's machine-readable catalogue ask for?",
+    "choices": [
+      {
+        "text": "The Cloud Billing Catalog API needs an API key, which needs an account",
+        "correct": true,
+        "why": "Right. The public pages are readable by people, not by a program without credentials."
+      },
+      {
+        "text": "Google forbids copying its prices into programs",
+        "correct": false,
+        "why": "Nothing forbids it; the obstacle is that the machine-readable form needs a key."
+      },
+      {
+        "text": "Google prices change every hour, so a download would be stale at once",
+        "correct": false,
+        "why": "List prices do not move hourly. Spot prices change at most daily, and on-demand ones less often."
+      },
+      {
+        "text": "A download would only give prices in Brazilian reais",
+        "correct": false,
+        "why": "The catalogue quotes US dollars and other currencies; currency is not the obstacle."
+      }
+    ]
+  },
+  {
+    "id": "ex-98s2t40w",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The sheet prices e2-standard-4 at 0.13402284 USD an hour. What is a month of 730 hours, to the cent?",
+    "hint": "Hourly price times 730.",
+    "value": 97.84,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-ws5tqjne",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sheet's prices are Iowa's, and the lab places everything in São Paulo. What may the lessons safely do with them?",
+    "hint": "Two numbers from the same page and day.",
+    "choices": [
+      {
+        "text": "Quote them as São Paulo's, since Google charges one price worldwide",
+        "correct": false,
+        "why": "Prices differ by region; the sheet says which region it is."
+      },
+      {
+        "text": "Add a fixed São Paulo surcharge to each of them",
+        "correct": false,
+        "why": "No such fixed surcharge exists; each region has its own price list."
+      },
+      {
+        "text": "Compare them with each other, all from one region and one day",
+        "correct": true,
+        "why": "Right. A comparison needs consistent numbers; a budget needs your region's own page."
+      },
+      {
+        "text": "Treat them as a bill for the lab's machines",
+        "correct": false,
+        "why": "The lab runs nothing at Google and bills nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-09z89264",
+    "version": 1,
+    "section": "the-name",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the name c4a-highmem-8 to what it says.",
+    "hint": "Series letter, generation, processor, ratio, count.",
+    "pairs": [
+      {
+        "left": "c",
+        "right": "The performance tier of general purpose"
+      },
+      {
+        "left": "4",
+        "right": "The generation"
+      },
+      {
+        "left": "a",
+        "right": "An Arm processor, Google's Axion"
+      },
+      {
+        "left": "highmem",
+        "right": "About 8 GiB of memory per vCPU"
+      },
+      {
+        "left": "8",
+        "right": "The number of vCPUs"
+      }
+    ],
+    "right_distractors": [
+      "An AMD processor",
+      "Eight times the memory of a standard"
+    ]
+  },
+  {
+    "id": "ex-ncq62h2k",
+    "version": 1,
+    "section": "the-name",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many vCPUs does n4-standard-16 have?",
+    "hint": "Read the last word of the name.",
+    "choices": [
+      {
+        "text": "4, because standard means 4 GiB per vCPU",
+        "correct": false,
+        "why": "The 4 GiB is the ratio; the count is the last number."
+      },
+      {
+        "text": "64, four times the last number",
+        "correct": false,
+        "why": "64 is roughly its memory in GiB, not its vCPUs."
+      },
+      {
+        "text": "It depends on the zone the machine is created in",
+        "correct": false,
+        "why": "The zone decides whether the type is offered, not what it is."
+      },
+      {
+        "text": "16",
+        "correct": true,
+        "why": "Right. The last word of a predefined type is its vCPU count."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fwv1w64",
+    "version": 1,
+    "section": "the-name",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On an Intel series a vCPU is one hardware thread. What is it on c4a, Google's Arm series?",
+    "hint": "Arm has no shared threads.",
+    "choices": [
+      {
+        "text": "A whole physical core",
+        "correct": true,
+        "why": "Right. With no hyperthreading, a vCPU is a core, which is one reason the series matters as much as the size."
+      },
+      {
+        "text": "Half a hardware thread, shared with a neighbour",
+        "correct": false,
+        "why": "That would be a shared-core type, which is an E2 thing."
+      },
+      {
+        "text": "Two hardware threads of one core, as on Intel",
+        "correct": false,
+        "why": "On Intel a vCPU is one thread, and two of them share a core."
+      },
+      {
+        "text": "A quarter of a core, with bursting above it",
+        "correct": false,
+        "why": "That describes e2-micro's share, not an Arm vCPU."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf9k7mz6",
+    "version": 1,
+    "section": "the-name",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "terraform plan accepted machine_type = \"e2-standard-3\" and planned 1 to add. What does that tell you?",
+    "hint": "Who holds the catalogue of machine types?",
+    "choices": [
+      {
+        "text": "That E2 offers three-vCPU machines in that zone",
+        "correct": false,
+        "why": "E2 sizes go 2, 4, 8, 16 and 32; the plan did not ask the zone."
+      },
+      {
+        "text": "Only that the file is coherent; Compute Engine checks the name",
+        "correct": true,
+        "why": "Right. The provider checks the shape of the file, and the catalogue lives on the other side."
+      },
+      {
+        "text": "That the provider rounds 3 up to the next valid size, 4",
+        "correct": false,
+        "why": "The plan printed e2-standard-3 exactly as written; nothing rounds it."
+      },
+      {
+        "text": "That the token no-account was accepted, so Google validated the plan",
+        "correct": false,
+        "why": "Nothing reached Google; the plan ran in a lab with no network."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1q0fvt7",
+    "version": 1,
+    "section": "the-name",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Terraform colours its output even into a pipe, so a plan you filter with grep is run with the flag -___.",
+    "hint": "The flag removes the colour.",
+    "blanks": [
+      {
+        "accept": [
+          "no-color"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mjd40173",
+    "version": 1,
+    "section": "the-name",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "terraform init printed \"(unauthenticated)\" and a warning about incomplete lock file information. Why?",
+    "hint": "Where did the provider come from?",
+    "choices": [
+      {
+        "text": "The token no-account was rejected while downloading",
+        "correct": false,
+        "why": "Nothing was downloaded, and the token is not used by init."
+      },
+      {
+        "text": "The provider binary was damaged on the way and should be reinstalled",
+        "correct": false,
+        "why": "It installed and planned correctly; the message is about provenance."
+      },
+      {
+        "text": "It came from the local mirror, so no registry signature was checked",
+        "correct": true,
+        "why": "Right. The lock file holds checksums for this platform only, which is fine for a lab."
+      },
+      {
+        "text": "HashiCorp only signs providers for paying customers",
+        "correct": false,
+        "why": "Providers are signed for everyone; the mirror is why the check was skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-njs354cr",
+    "version": 1,
+    "section": "families",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "e2-highmem-2 is 65.99 USD a month and e2-standard-4 is 97.84. How much is saved in a year by running the first instead of the second?",
+    "hint": "The monthly difference, times twelve.",
+    "value": 382.2,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-8a3eafhj",
+    "version": 1,
+    "section": "families",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these 2-vCPU, 8 GiB machines from the cheapest to the dearest, by the sheet.",
+    "hint": "E2 is the cheapest; N2 is an older generation.",
+    "items": [
+      "e2-standard-2",
+      "n2d-standard-2",
+      "c4a-standard-2",
+      "n4-standard-2",
+      "n2-standard-2"
+    ],
+    "trap": "c4a is a performance series and still comes before n4, because Arm is priced lower per vCPU."
+  },
+  {
+    "id": "ex-gjfsbkye",
+    "version": 1,
+    "section": "families",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service runs on c4-standard-2. What has to be true before moving it to c4a-standard-2?",
+    "hint": "What does the a in c4a change?",
+    "choices": [
+      {
+        "text": "The service must use more than 8 GiB of memory",
+        "correct": false,
+        "why": "c4a-standard-2 has 8 GiB; memory is not the condition."
+      },
+      {
+        "text": "The zone must offer sustained use discounts",
+        "correct": false,
+        "why": "Discounts do not decide whether software runs."
+      },
+      {
+        "text": "The project must move to a billing account set up for Arm",
+        "correct": false,
+        "why": "There is no such account; billing does not care about processors."
+      },
+      {
+        "text": "Its image and every compiled dependency must exist for arm64",
+        "correct": true,
+        "why": "Right. C4A is Arm, and x86 binaries do not run on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2ccgmre",
+    "version": 1,
+    "section": "families",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's batch job is idle most of the night and, when it runs, waits mostly on a database. Someone proposes n4-standard-2 over e2-standard-2 \"for the better processor\". What is the strongest objection?",
+    "hint": "What does the extra money buy, and when does that matter?",
+    "choices": [
+      {
+        "text": "Speed counts while computing, and this job spends its time waiting",
+        "correct": true,
+        "why": "Right. N4 costs about 17 dollars more a month and buys speed this job does not use."
+      },
+      {
+        "text": "N4 cannot attach a persistent disk at all",
+        "correct": false,
+        "why": "N4 attaches Hyperdisk; lesson 3 compares the two families of disk."
+      },
+      {
+        "text": "E2 is the newer of the two series, so it is the faster one anyway",
+        "correct": false,
+        "why": "N4 is the newer series; E2 is the cheaper one."
+      },
+      {
+        "text": "N4 machines are offered only in Iowa",
+        "correct": false,
+        "why": "Availability varies by zone, but that is not the argument here."
+      }
+    ]
+  },
+  {
+    "id": "ex-akenhthh",
+    "version": 1,
+    "section": "families",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which family is meant for a database that keeps a terabyte in memory?",
+    "hint": "Its letters are M and X.",
+    "choices": [
+      {
+        "text": "Compute optimised",
+        "correct": false,
+        "why": "That is for arithmetic-heavy work."
+      },
+      {
+        "text": "Accelerator optimised",
+        "correct": false,
+        "why": "That carries GPUs."
+      },
+      {
+        "text": "Memory optimised",
+        "correct": true,
+        "why": "Right. It starts where general purpose stops, at around a terabyte."
+      },
+      {
+        "text": "General purpose, highmem",
+        "correct": false,
+        "why": "highmem is 8 GiB per vCPU, far short of a terabyte on any common size."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5nayz9b",
+    "version": 1,
+    "section": "custom-and-shared-core",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With N4 custom rates of 0.03275 USD per vCPU-hour and 0.003717 per GiB-hour, what does n4-custom-2-12288 cost an hour?",
+    "hint": "12288 MiB is 12 GiB.",
+    "value": 0.110104,
+    "tolerance": 2e-06,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-hqwb79x5",
+    "version": 1,
+    "section": "custom-and-shared-core",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "n4-custom-4-32768 costs 182.46 a month and n4-highmem-4, with the same vCPUs and memory, 173.77. Why?",
+    "hint": "What does Google's price page say about custom types?",
+    "choices": [
+      {
+        "text": "Custom types run on older processors",
+        "correct": false,
+        "why": "Same series, same processors; the price differs, not the hardware."
+      },
+      {
+        "text": "Custom types carry a 5% premium over predefined ones",
+        "correct": true,
+        "why": "Right. A custom type that lands on a predefined shape is that shape, dearer."
+      },
+      {
+        "text": "32 GiB on four vCPUs is extended memory",
+        "correct": false,
+        "why": "8 GiB per vCPU is still inside N4's normal range."
+      },
+      {
+        "text": "highmem prices include a sustained use discount already",
+        "correct": false,
+        "why": "Both are on-demand list prices from the same page."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqn8swxk",
+    "version": 1,
+    "section": "custom-and-shared-core",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a custom type's name carry its memory in MiB, as in n4-custom-4-10240?",
+    "hint": "What unit does memory come in?",
+    "choices": [
+      {
+        "text": "MiB is cheaper per unit than GiB on the price page",
+        "correct": false,
+        "why": "The price is per GiB-hour whatever the name says."
+      },
+      {
+        "text": "Terraform rejects GiB in a machine_type string",
+        "correct": false,
+        "why": "Terraform checks no names; the convention is Compute Engine's."
+      },
+      {
+        "text": "It keeps the name shorter than writing GiB with decimals",
+        "correct": false,
+        "why": "10240 is longer than 10; brevity is not the reason."
+      },
+      {
+        "text": "Memory comes in multiples of 256 MiB",
+        "correct": true,
+        "why": "Right. A size like 10.25 GiB is valid, and MiB writes it as a whole number."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0psgcjc",
+    "version": 1,
+    "section": "custom-and-shared-core",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sheet shows e2-small with 2 vCPUs. What does it actually guarantee?",
+    "hint": "The 2 is a ceiling.",
+    "choices": [
+      {
+        "text": "Two whole vCPUs, exactly what an e2-standard-2 machine gets",
+        "correct": false,
+        "why": "Then it would cost the same; it costs a quarter of that."
+      },
+      {
+        "text": "Half a vCPU over time, bursting above it when there is room",
+        "correct": true,
+        "why": "Right. The 2 is how far a burst reaches, not what is held for you."
+      },
+      {
+        "text": "One vCPU, the same share as e2-medium",
+        "correct": false,
+        "why": "e2-medium is the one with a whole vCPU."
+      },
+      {
+        "text": "A quarter of a vCPU, the same as e2-micro",
+        "correct": false,
+        "why": "A quarter is e2-micro's share."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3cs2tc7",
+    "version": 1,
+    "section": "custom-and-shared-core",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web server is busy every afternoon and has just been moved to e2-small \"to save money\". What will the team see, and where?",
+    "hint": "What can a burst not cover?",
+    "choices": [
+      {
+        "text": "A higher bill, because bursting is charged by the second",
+        "correct": false,
+        "why": "The price of e2-small is fixed; the cost of a sustained load is paid in speed."
+      },
+      {
+        "text": "An error from Compute Engine refusing the move",
+        "correct": false,
+        "why": "Nothing refuses it; the type is valid for any load."
+      },
+      {
+        "text": "Slow afternoons, and nothing on the bill to explain them",
+        "correct": true,
+        "why": "Right. A steady load is exactly what a burst cannot cover, and the bill does not say so."
+      },
+      {
+        "text": "The machine restarting whenever it exceeds half a vCPU",
+        "correct": false,
+        "why": "It is held to its share, not restarted."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8tqz306",
+    "version": 1,
+    "section": "custom-and-shared-core",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Above 8 GiB per vCPU, an N4 custom type uses ___ memory, which is priced higher per GiB.",
+    "hint": "Its name says it goes beyond the range.",
+    "blanks": [
+      {
+        "accept": [
+          "extended"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t3ywnx00",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of choosing a machine type for a new service in the order this lesson argues for.",
+    "hint": "The family comes before the size.",
+    "items": [
+      "Measure the memory and processor the service uses under real load",
+      "Work out the ratio of memory to vCPU",
+      "Pick the family and type whose ratio matches",
+      "Pick the size, and compare a custom type only if the gap is large"
+    ],
+    "trap": "Picking a size first is the habit the lesson warns against: it lands on twice the vCPUs to get the memory."
+  },
+  {
+    "id": "ex-2q5ds7db",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three copies of a service move from e2-standard-4 (0.13402284 USD an hour) to e2-highmem-2 (0.09039966). How much is saved in a month of 730 hours, to the cent?",
+    "hint": "The hourly difference, times 730, times three.",
+    "value": 95.53,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-27bjp3kc",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a clean terraform plan in this lab establish? Choose all that apply.",
+    "hint": "A plan reads your file, not Google's catalogue.",
+    "choices": [
+      {
+        "text": "That the file is valid HCL the provider understands",
+        "correct": true,
+        "why": "Right; that is what the provider checks."
+      },
+      {
+        "text": "That the machine type exists in the zone",
+        "correct": false,
+        "why": "e2-standard-3 planned cleanly and does not exist."
+      },
+      {
+        "text": "Which attributes you set and which only Compute Engine can fill in",
+        "correct": true,
+        "why": "Right; the second kind shows as (known after apply)."
+      },
+      {
+        "text": "That the project has quota for the machine",
+        "correct": false,
+        "why": "Quota is checked by Google when the machine is created."
+      }
+    ]
+  }
+]

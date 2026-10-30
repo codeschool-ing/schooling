@@ -1,0 +1,368 @@
+[
+  {
+    "id": "ex-q6a0nhfp",
+    "version": 1,
+    "section": "the-accident",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop's state blob is overwritten with an empty state. What happened to the resources in Azure?",
+    "hint": "What does Azure know about the state file?",
+    "choices": [
+      {
+        "text": "They were deleted when the state was emptied",
+        "correct": false,
+        "why": "The state is a record; changing it changes nothing in Azure."
+      },
+      {
+        "text": "Nothing; they keep running",
+        "correct": true,
+        "why": "Right. What is lost is Terraform's mapping, not the resources."
+      },
+      {
+        "text": "They were stopped until the state is restored",
+        "correct": false,
+        "why": "Nothing in Azure watches the state blob."
+      },
+      {
+        "text": "They were moved to rg-tfstate for safety",
+        "correct": false,
+        "why": "Nothing moves; Azure is unaware anything happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-srvnzf57",
+    "version": 1,
+    "section": "the-accident",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the state is lost, which resources are the most dangerous to plan and apply against?",
+    "hint": "Which ones would not collide on their name?",
+    "choices": [
+      {
+        "text": "Resource groups, because they hold everything else",
+        "correct": false,
+        "why": "A resource group with a fixed name collides and fails, which is the lucky case."
+      },
+      {
+        "text": "The ones whose names are generated, not fixed",
+        "correct": true,
+        "why": "Right. They are created a second time beside the first, and both are billed."
+      },
+      {
+        "text": "Storage accounts, because names are global",
+        "correct": false,
+        "why": "A fixed global name collides too; the danger is a name that changes."
+      },
+      {
+        "text": "terraform_data, because it has no id in Azure",
+        "correct": false,
+        "why": "It exists only in the state, and recreating it touches nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5298m2wq",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You downloaded a snapshot of the state. What do you check before uploading it over the current blob?",
+    "hint": "Is it the same configuration's history?",
+    "choices": [
+      {
+        "text": "That its lineage matches",
+        "correct": true,
+        "why": "Right. A matching lineage says it is the same configuration's history."
+      },
+      {
+        "text": "That its serial is higher than the current one",
+        "correct": false,
+        "why": "A restore goes back to an older serial; that is what recovering means."
+      },
+      {
+        "text": "That it is smaller than 45 bytes",
+        "correct": false,
+        "why": "45 bytes was the empty state; the good one was 861."
+      },
+      {
+        "text": "That the snapshot's timestamp is today's",
+        "correct": false,
+        "why": "The right snapshot is the last one from before the accident, whatever its date."
+      }
+    ]
+  },
+  {
+    "id": "ex-jv7d75mv",
+    "version": 1,
+    "section": "restore",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 861,
+    "tolerance": 0,
+    "prompt": "In the lab, how many bytes did the real state blob have, as the snapshot kept it?",
+    "hint": "Look at the list after the overwrite.",
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-t5s1a33c",
+    "version": 1,
+    "section": "restore",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each accident to the protection that answers it.",
+    "hint": "Versions for overwrites, soft delete for deletions.",
+    "pairs": [
+      {
+        "left": "An empty state uploaded over the real one",
+        "right": "Blob versioning"
+      },
+      {
+        "left": "The blob deleted with its snapshots",
+        "right": "Soft delete"
+      },
+      {
+        "left": "The storage account deleted from the portal",
+        "right": "A CanNotDelete lock"
+      },
+      {
+        "left": "terraform destroy of the application",
+        "right": "A separate rg-tfstate"
+      }
+    ]
+  },
+  {
+    "id": "ex-jxskt2qx",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`az storage blob undelete` answered `APINotImplemented` in the lab. What does that tell you about Azure?",
+    "hint": "Who answered?",
+    "choices": [
+      {
+        "text": "That soft delete is no longer offered by Azure",
+        "correct": false,
+        "why": "Azure offers it; Azurite does not implement it."
+      },
+      {
+        "text": "That the command line is too new for the account",
+        "correct": false,
+        "why": "That would be the API-version message from lesson 1."
+      },
+      {
+        "text": "Nothing about Azure; Azurite is the one refusing",
+        "correct": true,
+        "why": "Right. That part is taught from the documentation and marked as not run."
+      },
+      {
+        "text": "That soft delete was off on the account",
+        "correct": false,
+        "why": "Off would mean nothing to undelete, not an unimplemented API."
+      }
+    ]
+  },
+  {
+    "id": "ex-wj0hcy9e",
+    "version": 1,
+    "section": "import",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an `import` block tell Terraform?",
+    "hint": "Address on one side, id on the other.",
+    "choices": [
+      {
+        "text": "To download a resource's configuration from Azure",
+        "correct": false,
+        "why": "That is what -generate-config-out drafts; the block itself maps."
+      },
+      {
+        "text": "To copy a resource into a new resource group",
+        "correct": false,
+        "why": "Nothing is copied or moved."
+      },
+      {
+        "text": "To restore the state from its newest snapshot",
+        "correct": false,
+        "why": "Import rebuilds state from Azure, not from a copy."
+      },
+      {
+        "text": "That this address is the resource with this id",
+        "correct": true,
+        "why": "Right. That mapping is exactly what the lost state held."
+      }
+    ]
+  },
+  {
+    "id": "ex-phhv9kwa",
+    "version": 1,
+    "section": "import",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first plan after adding eighty import blocks is three hundred lines long. What does the lesson advise?",
+    "hint": "Where is a mistake easier to find?",
+    "choices": [
+      {
+        "text": "Apply it all at once and fix what breaks",
+        "correct": false,
+        "why": "A mistake among eighty resources is the hardest to find."
+      },
+      {
+        "text": "Import in small batches, applying in between",
+        "correct": true,
+        "why": "Right. A mistake is then found among five resources rather than eighty."
+      },
+      {
+        "text": "Delete the configuration and keep only generated.tf",
+        "correct": false,
+        "why": "Generated files are drafts with every default; they need reading."
+      },
+      {
+        "text": "Ignore the property differences; they are noise",
+        "correct": false,
+        "why": "Each difference is a decision about the resource or the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k7a93gy",
+    "version": 1,
+    "section": "prevention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between lesson 6's lease and this lesson's `CanNotDelete` lock?",
+    "hint": "Content for a while, or a resource until removed?",
+    "choices": [
+      {
+        "text": "None; both are names for the state lock",
+        "correct": false,
+        "why": "One is a Storage feature on a blob, the other a Resource Manager feature on a resource."
+      },
+      {
+        "text": "The lock is faster to acquire than the lease",
+        "correct": false,
+        "why": "Speed is not the difference; scope and purpose are."
+      },
+      {
+        "text": "A lease guards one blob during an apply; a lock guards a resource from deletion",
+        "correct": true,
+        "why": "Right. They protect different things for different lengths of time."
+      },
+      {
+        "text": "The lease protects against Owners, the lock does not",
+        "correct": false,
+        "why": "Even an Owner has to remove the lock first; that is its point."
+      }
+    ]
+  },
+  {
+    "id": "ex-80rhv3gv",
+    "version": 1,
+    "section": "prevention",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pipeline that runs `apply` first takes a ___ of the state blob.",
+    "hint": "A read-only copy at a point in time.",
+    "blanks": [
+      {
+        "accept": [
+          "snapshot"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vjqtjfbz",
+    "version": 1,
+    "section": "prevention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer asks for write access to the state account to inspect the state. What does the shop answer?",
+    "hint": "How many writers does the design have?",
+    "choices": [
+      {
+        "text": "Grant it, because reading needs write access",
+        "correct": false,
+        "why": "Reading never needs write access."
+      },
+      {
+        "text": "Grant it temporarily with a client secret",
+        "correct": false,
+        "why": "A secret adds a credential and still adds a writer."
+      },
+      {
+        "text": "Give them the account key",
+        "correct": false,
+        "why": "Key access is off on the account, on purpose."
+      },
+      {
+        "text": "Run terraform show through the pipeline",
+        "correct": true,
+        "why": "Right. Two identities write; everybody else reads through the pipeline."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qtgyg4g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the recovery from an overwritten state in order.",
+    "hint": "Find, check, put back, confirm.",
+    "items": [
+      "List the snapshots or versions from before the accident",
+      "Download the chosen copy",
+      "Check its lineage",
+      "Upload it over the current blob",
+      "Run plan and expect no unexplained creates"
+    ],
+    "trap": "Uploading before checking the lineage is the slip: a copy from another configuration would replace the record with the wrong one."
+  },
+  {
+    "id": "ex-d7mny6gb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab actually run? Choose all that apply.",
+    "hint": "Azurite has snapshots; it has neither versions nor soft delete.",
+    "choices": [
+      {
+        "text": "Restoring the state from a snapshot",
+        "correct": true,
+        "why": "Yes. Download, check, upload, plan."
+      },
+      {
+        "text": "Undeleting a soft-deleted blob",
+        "correct": false,
+        "why": "No. Azurite answered APINotImplemented."
+      },
+      {
+        "text": "A plan proposing to create what already existed",
+        "correct": true,
+        "why": "Yes. With the empty state, against terraform_data."
+      },
+      {
+        "text": "Importing rg-shop with an import block",
+        "correct": false,
+        "why": "No. Import needs the real subscription."
+      }
+    ]
+  }
+]
