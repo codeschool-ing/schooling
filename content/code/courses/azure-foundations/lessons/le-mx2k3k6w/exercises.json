@@ -1,0 +1,649 @@
+[
+ {
+  "id": "ex-g2pvk5c9",
+  "version": 1,
+  "section": "four-services",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of the four services is regional and reads every HTTP request?",
+  "hint": "Regional and layer 7.",
+  "choices": [
+   {
+    "text": "Azure Load Balancer",
+    "correct": false,
+    "why": "Regional, but layer 4: it reads addresses and ports, never a URL."
+   },
+   {
+    "text": "Application Gateway",
+    "correct": true,
+    "why": "Right. A reverse proxy in one region, deciding per request."
+   },
+   {
+    "text": "Front Door",
+    "correct": false,
+    "why": "It reads HTTP too, but it stands at the edge, in front of several regions."
+   },
+   {
+    "text": "Traffic Manager",
+    "correct": false,
+    "why": "It answers DNS queries and reads no request at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-vazzkqdz",
+  "version": 1,
+  "section": "four-services",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A user's browser was told by Traffic Manager to use endpoint A. Endpoint A fails a minute later. What does the user's next request do?",
+  "hint": "Where was the decision made, and how long does it last?",
+  "choices": [
+   {
+    "text": "Traffic Manager reroutes it in flight to endpoint B",
+    "correct": false,
+    "why": "No packet passes through Traffic Manager, so there is nothing in flight for it to reroute."
+   },
+   {
+    "text": "It fails at once, and every later request fails as well",
+    "correct": false,
+    "why": "Once the cache expires, the next lookup gets a healthy endpoint."
+   },
+   {
+    "text": "It still goes to A until the cached answer expires",
+    "correct": true,
+    "why": "Right. The decision lives in DNS, and DNS answers are cached for their TTL."
+   },
+   {
+    "text": "Front Door takes over, since it backs up Traffic Manager",
+    "correct": false,
+    "why": "They are separate services; neither stands behind the other unless you build it so."
+   }
+  ]
+ },
+ {
+  "id": "ex-sf3t12j7",
+  "version": 1,
+  "section": "four-services",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The application behind an Application Gateway logs the source address of every request. What does it log?",
+  "hint": "Who opened the connection the application received?",
+  "choices": [
+   {
+    "text": "The customer's own public address",
+    "correct": false,
+    "why": "That is what a backend behind Load Balancer sees. A proxy opens a connection of its own."
+   },
+   {
+    "text": "The address of Microsoft's nearest edge location",
+    "correct": false,
+    "why": "Edge locations belong to Front Door, which this design does not have."
+   },
+   {
+    "text": "Nothing, since a proxy strips the source address",
+    "correct": false,
+    "why": "Every packet has a source; it is the gateway's."
+   },
+   {
+    "text": "An address of the gateway, from its subnet",
+    "correct": true,
+    "why": "Right. The customer's address arrives in `X-Forwarded-For` instead."
+   }
+  ]
+ },
+ {
+  "id": "ex-t79cdert",
+  "version": 1,
+  "section": "four-services",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "An Application Gateway keeps the customer's address in the ___ header.",
+  "hint": "It starts with X.",
+  "blanks": [
+   {
+    "accept": [
+     "X-Forwarded-For"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-2cqj1jjx",
+  "version": 1,
+  "section": "four-services",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these can Application Gateway do and Load Balancer cannot? Choose all that apply.",
+  "hint": "Which of them needs the request to be read?",
+  "choices": [
+   {
+    "text": "Send `/api/` to one pool and the pages to another",
+    "correct": true,
+    "why": "Right. That needs the path, which only a layer 7 service reads."
+   },
+   {
+    "text": "Spread UDP traffic across machines",
+    "correct": false,
+    "why": "That is Load Balancer's work; the gateway handles HTTP."
+   },
+   {
+    "text": "Host several sites on one address",
+    "correct": true,
+    "why": "Right. It reads the host name in each request."
+   },
+   {
+    "text": "Take health probes from the machines",
+    "correct": false,
+    "why": "Both probe their backends; neither receives probes from them."
+   },
+   {
+    "text": "Keep a user on one machine with a cookie",
+    "correct": true,
+    "why": "Right. A cookie is part of the request, invisible at layer 4."
+   }
+  ]
+ },
+ {
+  "id": "ex-9v3z3ej7",
+  "version": 1,
+  "section": "four-services",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What happened to the Basic SKU of Azure Load Balancer?",
+  "hint": "A date in September 2025.",
+  "choices": [
+   {
+    "text": "It was retired on 30 September 2025",
+    "correct": true,
+    "why": "Right. Every load balancer created today is Standard."
+   },
+   {
+    "text": "It was renamed Standard, with the same features",
+    "correct": false,
+    "why": "Standard was a separate SKU with more features, not a new name."
+   },
+   {
+    "text": "It moved to the global tier",
+    "correct": false,
+    "why": "The global tier is a form of Standard, unrelated to Basic."
+   },
+   {
+    "text": "It became the default for internal load balancers",
+    "correct": false,
+    "why": "Internal ones are Standard too."
+   }
+  ]
+ },
+ {
+  "id": "ex-gfjfssdj",
+  "version": 1,
+  "section": "load-balancer",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each list of `lb.bicep` to what it says.",
+  "hint": "The rule is the one that joins the other three.",
+  "pairs": [
+   {
+    "left": "`frontendIPConfigurations`",
+    "right": "where traffic arrives"
+   },
+   {
+    "left": "`backendAddressPools`",
+    "right": "where traffic may go"
+   },
+   {
+    "left": "`probes`",
+    "right": "which machines are fit"
+   },
+   {
+    "left": "`loadBalancingRules`",
+    "right": "which port goes to which pool"
+   }
+  ],
+  "right_distractors": [
+   "which zone the load balancer sits in"
+  ]
+ },
+ {
+  "id": "ex-tfgt3r2e",
+  "version": 1,
+  "section": "load-balancer",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The compiled template showed `\"zones\":null` for `lb-shop-web` and all three zones for `pip-shop-web`. What does that make the front end?",
+  "hint": "Where does a Standard front end take its zones from?",
+  "choices": [
+   {
+    "text": "Zonal, in zone 1, since the load balancer named none",
+    "correct": false,
+    "why": "Naming no zone does not mean zone 1. The front end follows its address."
+   },
+   {
+    "text": "Invalid: a Standard load balancer must list its zones",
+    "correct": false,
+    "why": "It compiled, and the load balancer resource has no zones property to fill."
+   },
+   {
+    "text": "Zone-redundant, because its address spans the three",
+    "correct": true,
+    "why": "Right. The load balancer itself is regional and has nothing to say about zones."
+   },
+   {
+    "text": "Regional, with no protection against a zone failure",
+    "correct": false,
+    "why": "The address is served from all three zones, so losing one does not take it down."
+   }
+  ]
+ },
+ {
+  "id": "ex-2whc9k4p",
+  "version": 1,
+  "section": "load-balancer",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop's front end is zone-redundant, and all three web machines in `be-web` were created in zone 2. Zone 2 fails. What do customers get?",
+  "hint": "Which half survived?",
+  "choices": [
+   {
+    "text": "Nothing: the address answers, and no machine behind it does",
+    "correct": true,
+    "why": "Right. The front end survived a zone and the pool did not."
+   },
+   {
+    "text": "The site, because the probe moves the machines to zone 1",
+    "correct": false,
+    "why": "A probe only marks machines unfit. Nothing moves them."
+   },
+   {
+    "text": "The site, served from the front end's copy in another zone",
+    "correct": false,
+    "why": "A front end forwards traffic; it holds no copy of the site to serve."
+   },
+   {
+    "text": "A redirect to the paired region, `southcentralus`",
+    "correct": false,
+    "why": "A load balancer never sends traffic to another region on its own."
+   }
+  ]
+ },
+ {
+  "id": "ex-s59hyaz2",
+  "version": 1,
+  "section": "load-balancer",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `rule-https` set `disableOutboundSnat: true`?",
+  "hint": "It is about connections the machines open, not the ones they receive.",
+  "choices": [
+   {
+    "text": "To stop customers from reaching the machines directly",
+    "correct": false,
+    "why": "Inbound reach is the front end and the network's filters; this setting is about outbound."
+   },
+   {
+    "text": "So outbound traffic takes a route of its own",
+    "correct": true,
+    "why": "Right. A NAT gateway or an outbound rule, instead of running a shared address out of ports."
+   },
+   {
+    "text": "Because HTTPS on port 443 cannot be translated",
+    "correct": false,
+    "why": "Address translation works for any port; the reason is the shared address's ports."
+   },
+   {
+    "text": "To keep each customer on one machine",
+    "correct": false,
+    "why": "That is session persistence, a different setting the rule leaves at its default."
+   }
+  ]
+ },
+ {
+  "id": "ex-fgxy068c",
+  "version": 1,
+  "section": "load-balancer",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How does a web machine join the pool `be-web`?",
+  "hint": "The pool in `lb.bicep` was left empty.",
+  "choices": [
+   {
+    "text": "By listing its name in the pool's `members` property",
+    "correct": false,
+    "why": "The pool has no such list; it is filled from the other side."
+   },
+   {
+    "text": "Automatically, by being in the same subnet",
+    "correct": false,
+    "why": "Sharing a subnet puts nothing in a pool."
+   },
+   {
+    "text": "By answering the probe for the first time",
+    "correct": false,
+    "why": "The probe judges members; it does not enrol them."
+   },
+   {
+    "text": "From its own network interface, which names the pool",
+    "correct": true,
+    "why": "Right. Azure attaches a machine to a pool through its network interface."
+   }
+  ]
+ },
+ {
+  "id": "ex-vc7ezerf",
+  "version": 1,
+  "section": "load-balancer",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`probe-http` asks every member for `/healthz` at a fixed interval. How many seconds is it?",
+  "hint": "`intervalInSeconds`.",
+  "value": 5,
+  "tolerance": 0,
+  "unit": "seconds"
+ },
+ {
+  "id": "ex-nv8jsv5a",
+  "version": 1,
+  "section": "global-entry",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the chain `dig` printed for `portal.azure.com`, which name belongs to Front Door?",
+  "hint": "Look for the domain the lesson named for Front Door.",
+  "choices": [
+   {
+    "text": "`portal-prod-02-linkage.trafficmanager.net`",
+    "correct": false,
+    "why": "`trafficmanager.net` is Traffic Manager, which decides first."
+   },
+   {
+    "text": "`p-0010.p-msedge.net`",
+    "correct": false,
+    "why": "That is one of the edge names at the end of the chain."
+   },
+   {
+    "text": "`azureportal.z01.azurefd.net`",
+    "correct": true,
+    "why": "Right. `azurefd.net` names a Front Door endpoint."
+   },
+   {
+    "text": "`portal.azure.com`",
+    "correct": false,
+    "why": "That is the name looked up, an alias for the rest."
+   }
+  ]
+ },
+ {
+  "id": "ex-6kg7x235",
+  "version": 1,
+  "section": "global-entry",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did the lesson add `+nottlid` and `grep CNAME` to `dig`?",
+  "hint": "What would differ between two runs?",
+  "choices": [
+   {
+    "text": "Because the addresses of Microsoft's services are secret",
+    "correct": false,
+    "why": "They are public answers to anybody; they just vary by place and minute."
+   },
+   {
+    "text": "To drop the TTLs and addresses, which change each time",
+    "correct": true,
+    "why": "Right. What stays is the chain of names, which is the part worth reading."
+   },
+   {
+    "text": "To stop `dig` from contacting Traffic Manager",
+    "correct": false,
+    "why": "The query goes out the same way; the options only shape what is printed."
+   },
+   {
+    "text": "Because `+nottlid` asks for the answer without caching",
+    "correct": false,
+    "why": "It leaves the TTL out of the printout; the caches work as before."
+   }
+  ]
+ },
+ {
+  "id": "ex-34qsdmek",
+  "version": 1,
+  "section": "global-entry",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`dig shop-azure-foundations-l22.trafficmanager.net` answered `NXDOMAIN`. What does that say?",
+  "hint": "Whose zone is `trafficmanager.net`?",
+  "choices": [
+   {
+    "text": "Nobody has created a profile with that name",
+    "correct": true,
+    "why": "Right. Names in `trafficmanager.net` are unique across Azure."
+   },
+   {
+    "text": "The profile exists but is disabled",
+    "correct": false,
+    "why": "A disabled profile still exists as a name. NXDOMAIN says there is none."
+   },
+   {
+    "text": "The lab cannot reach Traffic Manager without an account",
+    "correct": false,
+    "why": "It reached the DNS fine; the answer was that the name does not exist."
+   },
+   {
+    "text": "Traffic Manager names cannot contain the digits `22`",
+    "correct": false,
+    "why": "Digits are allowed; the name simply has no owner."
+   }
+  ]
+ },
+ {
+  "id": "ex-k5p6c59v",
+  "version": 1,
+  "section": "global-entry",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A multiplayer game sends UDP to servers in `brazilsouth` and `eastus` and wants each player on the nearer region. Which service fits?",
+  "hint": "Ask the three questions in order.",
+  "choices": [
+   {
+    "text": "Front Door, with the latency routing of its origins",
+    "correct": false,
+    "why": "Front Door proxies HTTP. UDP fails the first question."
+   },
+   {
+    "text": "Application Gateway in each region",
+    "correct": false,
+    "why": "Not HTTP, so not a layer 7 service, and each gateway sees one region."
+   },
+   {
+    "text": "One internal Load Balancer spanning both regions",
+    "correct": false,
+    "why": "An internal load balancer serves one region's network."
+   },
+   {
+    "text": "Traffic Manager by performance, over a Load Balancer per region",
+    "correct": true,
+    "why": "Right. DNS steering picks the region and layer 4 carries the UDP."
+   }
+  ]
+ },
+ {
+  "id": "ex-sy017fc3",
+  "version": 1,
+  "section": "global-entry",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is Traffic Manager not in the shop's path to `shop.example`?",
+  "hint": "Which service already chooses the region?",
+  "choices": [
+   {
+    "text": "Traffic Manager cannot point at a name in `brazilsouth`",
+    "correct": false,
+    "why": "It can point at endpoints anywhere, Brazil included."
+   },
+   {
+    "text": "It is retired, like the classic Front Door",
+    "correct": false,
+    "why": "Traffic Manager is a current service. Classic is a tier of Front Door."
+   },
+   {
+    "text": "Front Door already chooses the region",
+    "correct": true,
+    "why": "Right. A second DNS layer would only add a cache to wait out."
+   },
+   {
+    "text": "It costs more than Front Door for the same traffic",
+    "correct": false,
+    "why": "The lesson quotes no price, and the reason given is about the design."
+   }
+  ]
+ },
+ {
+  "id": "ex-nyx4c97h",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the stops of a customer's request in the shop's design in order, from the customer inwards.",
+  "hint": "Global first, then regional, then between the tiers.",
+  "items": [
+   "the nearest Front Door edge location",
+   "the Application Gateway in `snet-agw`",
+   "a web machine in `be-web`",
+   "the internal Load Balancer in `snet-app`",
+   "an application machine"
+  ],
+  "trap": "Requests for `/api/` skip the web machines and go from the gateway to the application pool."
+ },
+ {
+  "id": "ex-93mk0kmp",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team puts Traffic Manager with a 300-second TTL in front of two regions, and promises recovery \"within a minute\" of a region failing. What is wrong with the promise?",
+  "hint": "Who holds the old answer, and for how long?",
+  "choices": [
+   {
+    "text": "Traffic Manager takes an hour to notice a failure",
+    "correct": false,
+    "why": "Its probes notice in well under that. The delay is elsewhere."
+   },
+   {
+    "text": "Traffic Manager cannot fail over between two regions",
+    "correct": false,
+    "why": "Priority routing does exactly that."
+   },
+   {
+    "text": "Nothing, as long as both regions are paired",
+    "correct": false,
+    "why": "Pairing has no effect on how long DNS answers are cached."
+   },
+   {
+    "text": "Cached answers keep users on the failed region up to five minutes",
+    "correct": true,
+    "why": "Right. A 300-second TTL lets a resolver keep the old answer that long."
+   }
+  ]
+ },
+ {
+  "id": "ex-z2y2dhf4",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each need to the service the lesson's decision gives it.",
+  "hint": "Layer first, then region.",
+  "pairs": [
+   {
+    "left": "TCP to a database tier in one region",
+    "right": "Load Balancer"
+   },
+   {
+    "left": "HTTP in one region, `/api/` split from pages",
+    "right": "Application Gateway"
+   },
+   {
+    "left": "HTTP in three regions, with an edge cache",
+    "right": "Front Door"
+   },
+   {
+    "left": "any protocol, steered by DNS between regions",
+    "right": "Traffic Manager"
+   }
+  ]
+ },
+ {
+  "id": "ex-zf44kgca",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did the lab actually check about `lb.bicep`?",
+  "hint": "What does a compiler know?",
+  "choices": [
+   {
+    "text": "That `brazilsouth` sells the Standard SKU",
+    "correct": false,
+    "why": "That is a fact about Azure, known only at deployment."
+   },
+   {
+    "text": "That its shape is one Azure accepts",
+    "correct": true,
+    "why": "Right. Shape here, values there."
+   },
+   {
+    "text": "That the public address is free in the region",
+    "correct": false,
+    "why": "Addresses are handed out by Azure at deployment."
+   },
+   {
+    "text": "That `/healthz` answers on the web machines",
+    "correct": false,
+    "why": "No machine exists; the probe path is just a string."
+   }
+  ]
+ },
+ {
+  "id": "ex-a1h6cj4k",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Of the four services, ___ is the one no packet of yours passes through.",
+  "hint": "It answers in DNS.",
+  "blanks": [
+   {
+    "accept": [
+     "Traffic Manager",
+     "TrafficManager",
+     "Azure Traffic Manager"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]

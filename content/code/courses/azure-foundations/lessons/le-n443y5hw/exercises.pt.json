@@ -1,0 +1,383 @@
+{
+ "ex-xhjvat4j": {
+  "prompt": "A Ana cria o peering da `vnet-shop-prod` para o hub, e ninguém cria o lado do hub. Em que estado ele fica?",
+  "hint": "Um peering são dois recursos.",
+  "choices": [
+   {
+    "text": "*Initiated*, até a outra metade existir",
+    "why": "Isso. Os dois passam a *Connected* quando o parceiro aparece."
+   },
+   {
+    "text": "*Connected*, num sentido só",
+    "why": "Nenhuma metade funciona sozinha; não existe peering de um sentido."
+   },
+   {
+    "text": "*Failed*, porque o hub está em outra assinatura",
+    "why": "Peering entre assinaturas é permitido; precisa dos dois donos."
+   },
+   {
+    "text": "*Pending*, esperando aprovação da Microsoft",
+    "why": "A Microsoft não aprova nada aqui. O outro dono cria a metade dele."
+   }
+  ]
+ },
+ "ex-0mv8wg1h": {
+  "prompt": "Ligue cada configuração de peering ao que ela diz no lado onde é posta.",
+  "hint": "Duas delas são um empréstimo e um pegar emprestado.",
+  "pairs": [
+   {
+    "left": "`allowGatewayTransit`",
+    "right": "esta rede empresta o seu gateway"
+   },
+   {
+    "left": "`useRemoteGateways`",
+    "right": "esta rede usa o gateway da rede remota"
+   },
+   {
+    "left": "`allowForwardedTraffic`",
+    "right": "esta rede aceita pacotes encaminhados de outro lugar"
+   },
+   {
+    "left": "`allowVirtualNetworkAccess`",
+    "right": "as máquinas remotas podem alcançar esta rede"
+   }
+  ],
+  "right_distractors": [
+   "o peering atravessa regiões"
+  ]
+ },
+ "ex-958a16m1": {
+  "prompt": "Por que o Azure se recusa a fazer peering de duas redes cujos intervalos se sobrepõem?",
+  "hint": "Pense num pacote para um endereço compartilhado.",
+  "choices": [
+   {
+    "text": "Porque intervalos sobrepostos custam mais para transportar",
+    "why": "O preço não tem nada a ver; o pacote se perderia."
+   },
+   {
+    "text": "Porque só intervalos do mesmo tamanho podem ter peering",
+    "why": "Os tamanhos podem diferir à vontade; a staging e o escritório diferem."
+   },
+   {
+    "text": "Porque sobreposição só é permitida dentro de uma assinatura",
+    "why": "Nenhuma assinatura torna possíveis peers sobrepostos."
+   },
+   {
+    "text": "Porque um pacote para um endereço comum teria dois destinos",
+    "why": "Isso. O Azure recusa em vez de adivinhar."
+   }
+  ]
+ },
+ "ex-v0bqzvxv": {
+  "prompt": "O `overlap.py` relatou `prod 10.20.0.0/16 and dev 10.20.128.0/17`. Alguém sugere fazer peering da `dev` só com o hub, nunca com a `prod`. Por que isso também falha?",
+  "hint": "O que o hub passaria a ter?",
+  "choices": [
+   {
+    "text": "Funciona, já que a sobreposição importa entre peers diretos",
+    "why": "O hub é peer direto das duas, e esse é o problema."
+   },
+   {
+    "text": "Um `/17` não pode ter peering com um `/16`",
+    "why": "Tamanhos não importam; a sobreposição importa."
+   },
+   {
+    "text": "O hub teria duas rotas para os mesmos endereços",
+    "why": "Isso. A `prod` já tem peering com o hub, então a `dev` colide lá."
+   },
+   {
+    "text": "O hub recusa redes de outro ambiente",
+    "why": "Ambientes são uma convenção; o Azure confere os intervalos."
+   }
+  ]
+ },
+ "ex-68b82xe2": {
+  "prompt": "Quantos endereços o `10.20.128.0/17` contém?",
+  "hint": "Sobram quinze bits para endereços.",
+  "unit": "endereços"
+ },
+ "ex-vtp77fz0": {
+  "prompt": "Um gigabyte vai da `vnet-shop-prod` para o hub por um peering na mesma região. Como ele é cobrado?",
+  "hint": "Diferente do dado que chega da internet.",
+  "choices": [
+   {
+    "text": "Não é cobrado, já que os dois estão em `brazilsouth`",
+    "why": "Dado em peering é cobrado mesmo dentro de uma região."
+   },
+   {
+    "text": "Duas vezes: na saída e na chegada",
+    "why": "Isso. As duas direções são cobradas por gigabyte."
+   },
+   {
+    "text": "Uma vez, pela assinatura que mandou",
+    "why": "A chegada também é cobrada."
+   },
+   {
+    "text": "Como saída para a internet, na faixa da região",
+    "why": "O peering tem medidores próprios; não é tráfego de internet."
+   }
+  ]
+ },
+ "ex-mj0fgabf": {
+  "prompt": "Produção e staging têm cada uma peering com o hub, e com nada mais. Uma máquina na produção alcança uma na staging?",
+  "hint": "O que a produção aprende pelo peering dela?",
+  "choices": [
+   {
+    "text": "Sim, pelo hub",
+    "why": "O hub não é um equipamento; nada nele encaminha entre peerings."
+   },
+   {
+    "text": "Não: não há rota entre elas",
+    "why": "Isso. Ela aprende o intervalo do hub e nada além."
+   },
+   {
+    "text": "Sim, se as duas estiverem na mesma região",
+    "why": "A região não muda o que um peering repassa."
+   },
+   {
+    "text": "Para tráfego respondendo a um pedido da staging, sim",
+    "why": "Não há rota em nenhuma direção."
+   }
+  ]
+ },
+ "ex-tskr8n7n": {
+  "prompt": "Seis redes vão ser ligadas em malha completa, cada uma com peering com todas as outras. Quantos peerings são?",
+  "hint": "n × (n − 1) / 2.",
+  "unit": "peerings"
+ },
+ "ex-fztmrrac": {
+  "prompt": "A loja roteia o tráfego entre spokes por um firewall no hub. O que o lado da spoke de destino no peering precisa permitir?",
+  "hint": "O pacote não começou no hub.",
+  "choices": [
+   {
+    "text": "`allowGatewayTransit`",
+    "why": "Isso empresta um gateway; não diz nada sobre pacotes encaminhados."
+   },
+   {
+    "text": "`useRemoteGateways`",
+    "why": "Isso pega emprestado o gateway do hub para o escritório."
+   },
+   {
+    "text": "`allowForwardedTraffic`",
+    "why": "Isso. O firewall repassa um pacote de outra spoke, e isto o aceita."
+   },
+   {
+    "text": "Nada: tráfego em peering é aceito como vier",
+    "why": "Tráfego que começou em outro lugar precisa desta chave."
+   }
+  ]
+ },
+ "ex-e2tfw877": {
+  "prompt": "A equipe de staging da loja pede um peering direto com a produção \"para facilitar os testes\". O que a lição pesa contra?",
+  "hint": "Por que os dois ambientes são assinaturas separadas?",
+  "choices": [
+   {
+    "text": "Um erro num chegaria ao outro, sem passar pelo firewall",
+    "why": "Isso. A não transitividade é o padrão que a loja quer."
+   },
+   {
+    "text": "Peerings diretos entre spokes não são suportados",
+    "why": "São suportados; é uma malha."
+   },
+   {
+    "text": "O peering custaria mais que um firewall",
+    "why": "Um peering direto é o caminho mais barato; a objeção não é dinheiro."
+   },
+   {
+    "text": "O intervalo da staging se sobrepõe ao da produção",
+    "why": "O `overlap.py` achou a staging livre de toda outra rede."
+   }
+  ]
+ },
+ "ex-89xgg5fx": {
+  "prompt": "Quais destas coisas deixam duas spokes se alcançarem? Marque todas as que se aplicam.",
+  "hint": "Três jeitos de atravessar.",
+  "choices": [
+   {
+    "text": "Um peering direto entre elas",
+    "why": "Isso. A malha, um par por vez."
+   },
+   {
+    "text": "Um firewall no hub e tabelas de rotas nas spokes",
+    "why": "Isso. A lição 18 monta os dois."
+   },
+   {
+    "text": "O Azure Virtual WAN",
+    "why": "Isso. Um hub que a Microsoft opera, com roteadores próprios."
+   },
+   {
+    "text": "Ligar o `allowGatewayTransit` no hub",
+    "why": "Isso empresta o gateway do escritório; não roteia nada entre spokes."
+   },
+   {
+    "text": "Fazer peering das duas spokes com o mesmo hub",
+    "why": "Essa é justamente a situação em que elas não se alcançam."
+   }
+  ]
+ },
+ "ex-09wbe2e3": {
+  "prompt": "Nas rotas efetivas de uma máquina, um intervalo aprendido de uma rede ligada diretamente mostra o tipo de próximo salto `VNet___`.",
+  "hint": "O nome do próprio recurso.",
+  "blanks": [
+   {
+    "accept": [
+     "Peering"
+    ]
+   }
+  ]
+ },
+ "ex-znaj0thd": {
+  "prompt": "Qual destas coisas fica no hub da loja em vez de numa spoke?",
+  "hint": "Deve haver uma dela para todos.",
+  "choices": [
+   {
+    "text": "O banco de dados de produção",
+    "why": "Uma carga de trabalho mora na própria spoke."
+   },
+   {
+    "text": "Os servidores de aplicação da staging",
+    "why": "Esses são a carga da staging, na spoke dela."
+   },
+   {
+    "text": "Uma cópia dos registros DNS privados de cada spoke",
+    "why": "Zonas são ligadas a redes, não copiadas para elas."
+   },
+   {
+    "text": "O gateway para o escritório, um para todas as spokes",
+    "why": "Isso. Um gateway, emprestado a toda spoke pelo gateway transit."
+   }
+  ]
+ },
+ "ex-c55w2mdd": {
+  "prompt": "O `peering.bicep` compilou num peering e num `Microsoft.Resources/deployments`. O que é o segundo?",
+  "hint": "Para onde o módulo mira?",
+  "choices": [
+   {
+    "text": "Um registro da compilação, guardado pelo Bicep",
+    "why": "O Bicep não guarda registro; é parte do template."
+   },
+   {
+    "text": "Uma implantação que move o hub para `shop-prod`",
+    "why": "Nada se move; o hub fica em `shop-shared`."
+   },
+   {
+    "text": "Uma segunda cópia do peering da spoke, por segurança",
+    "why": "Ele leva a metade do hub, não uma cópia."
+   },
+   {
+    "text": "Uma implantação aninhada que roda na assinatura do hub",
+    "why": "Isso. Um módulo mirado em outro lugar vira um template dentro do template."
+   }
+  ]
+ },
+ "ex-4nnm8gjv": {
+  "prompt": "Alguém liga `allowGatewayTransit` e `useRemoteGateways` no lado do hub e roda `az bicep build`. O que acontece?",
+  "hint": "Cada um é um booleano válido sozinho.",
+  "choices": [
+   {
+    "text": "A compilação falha com um erro sobre o par",
+    "why": "O compilador confere tipos, não esta combinação."
+   },
+   {
+    "text": "Compila; o Azure recusaria ao receber o pedido",
+    "why": "Isso. Um erro de valores, que só o Azure julga."
+   },
+   {
+    "text": "O linter avisa e renomeia uma delas",
+    "why": "O linter não renomeia nada."
+   },
+   {
+    "text": "A compilação descarta a segunda configuração sem avisar",
+    "why": "Nada é descartado; o template leva os dois."
+   }
+  ]
+ },
+ "ex-c5v0r2kz": {
+  "prompt": "Como a configuração Terraform alcança duas assinaturas?",
+  "hint": "Olhe os dois blocos `provider`.",
+  "choices": [
+   {
+    "text": "Pondo os dois peerings num recurso só",
+    "why": "Cada metade é um `azurerm_virtual_network_peering` próprio."
+   },
+   {
+    "text": "Um módulo com `scope`, como no Bicep",
+    "why": "Esse é o jeito do Bicep; o Terraform usa alias de provider."
+   },
+   {
+    "text": "Duas cópias do provider, uma com alias",
+    "why": "Isso. O peering do hub diz `provider = azurerm.shared`."
+   },
+   {
+    "text": "O Terraform trabalha numa assinatura por execução",
+    "why": "Os aliases deixam uma execução alcançar várias."
+   }
+  ]
+ },
+ "ex-bm8ya5gd": {
+  "prompt": "O equipamento de VPN ou ExpressRoute do escritório precisa ficar numa sub-rede chamada `___Subnet`.",
+  "hint": "A do firewall é `AzureFirewallSubnet`.",
+  "blanks": [
+   {
+    "accept": [
+     "Gateway"
+    ]
+   }
+  ]
+ },
+ "ex-gd2k6bjh": {
+  "prompt": "Ponha em ordem o caminho de um pacote da produção para a staging, no desenho da loja.",
+  "hint": "Ele sobe e desce.",
+  "items": [
+   "uma máquina na `vnet-shop-prod` manda para `10.30.1.5`",
+   "a tabela de rotas da spoke manda o intervalo da staging para o firewall",
+   "o pacote atravessa o peering até o hub",
+   "o firewall decide se ele pode passar",
+   "ele atravessa o peering do hub até a `vnet-shop-staging`"
+  ],
+  "trap": "Sem a tabela de rotas o pacote não teria rota nenhuma, e nem chegaria ao hub."
+ },
+ "ex-a6ag0617": {
+  "prompt": "Uma spoke nova, `vnet-shop-dev`, está planejada. Qual intervalo cabe no plano da loja?",
+  "hint": "Confira contra hub, prod, staging e o escritório.",
+  "choices": [
+   {
+    "text": "`10.40.0.0/16`",
+    "why": "Isso. Não encontra nenhum dos quatro."
+   },
+   {
+    "text": "`10.0.0.0/16`",
+    "why": "Esse é o intervalo do hub."
+   },
+   {
+    "text": "`192.168.10.0/24`",
+    "why": "Esse está dentro do intervalo do escritório."
+   },
+   {
+    "text": "`10.20.128.0/17`",
+    "why": "Esse está dentro do intervalo da produção, como o `overlap.py` mostrou."
+   }
+  ]
+ },
+ "ex-djx0369k": {
+  "prompt": "Uma máquina na staging não alcança o escritório, embora o VPN gateway do hub funcione para a produção. O peering da staging está com `useRemoteGateways` desligado. O que resolve?",
+  "hint": "Quem empresta e quem pega emprestado?",
+  "choices": [
+   {
+    "text": "Ligar o `allowGatewayTransit` no lado da staging",
+    "why": "Isso faria a staging emprestar, e ela não tem nada para emprestar."
+   },
+   {
+    "text": "Fazer peering da staging direto com a rede do escritório",
+    "why": "O escritório não é uma rede virtual; é alcançado pelo gateway."
+   },
+   {
+    "text": "Dar à staging um segundo gateway próprio",
+    "why": "Funciona e paga por um gateway que o hub já empresta."
+   },
+   {
+    "text": "Ligar o `useRemoteGateways` no lado da staging",
+    "why": "Isso. O hub empresta; a staging precisa dizer que pega emprestado."
+   }
+  ]
+ }
+}
