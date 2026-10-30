@@ -1,0 +1,616 @@
+[
+  {
+    "id": "ex-xwsnw5ky",
+    "version": 1,
+    "section": "function-types",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each lambda to its function type.",
+    "hint": "Parameters in parentheses, an arrow, the result.",
+    "pairs": [
+      {
+        "left": "`{ m: Int -> m + 15 }`",
+        "right": "`(Int) -> Int`"
+      },
+      {
+        "left": "`{ m: Int -> m >= 60 }`",
+        "right": "`(Int) -> Boolean`"
+      },
+      {
+        "left": "`{ println(\"tick\") }`",
+        "right": "`() -> Unit`"
+      },
+      {
+        "left": "`{ m: Int, c: String -> \"$c: $m\" }`",
+        "right": "`(Int, String) -> String`"
+      }
+    ],
+    "right_distractors": [
+      "`(String) -> Int`"
+    ]
+  },
+  {
+    "id": "ex-e86fpxy0",
+    "version": 1,
+    "section": "function-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`addBreak` is a `(Int) -> Int`. What is `addBreak(45)` on the JVM?",
+    "hint": "Printing `addBreak` showed what it is underneath.",
+    "choices": [
+      {
+        "text": "A jump to a function pointer",
+        "correct": false,
+        "why": "The JVM has no function pointers; a lambda is an object."
+      },
+      {
+        "text": "`addBreak.invoke(45)`",
+        "correct": true,
+        "why": "Right: every lambda is an object with an `invoke` method."
+      },
+      {
+        "text": "A call to a static method named `addBreak` that the compiler generated",
+        "correct": false,
+        "why": "`addBreak` is a local `val`, not a method; the call goes through the object."
+      },
+      {
+        "text": "A string lookup by the name `addBreak`",
+        "correct": false,
+        "why": "Nothing is looked up by name at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht5x6fz7",
+    "version": 1,
+    "section": "function-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which type is \"an optional callback that takes an `Int`\"?",
+    "hint": "Where the `?` sits decides what is optional.",
+    "choices": [
+      {
+        "text": "`(Int) -> Unit?`",
+        "correct": false,
+        "why": "That is a function that is always there and returns a `Unit?`."
+      },
+      {
+        "text": "`(Int?) -> Unit`",
+        "correct": false,
+        "why": "That is a function whose parameter is optional, not the function itself."
+      },
+      {
+        "text": "`((Int) -> Unit)?`",
+        "correct": true,
+        "why": "Right: the parentheses put the `?` on the whole function type."
+      },
+      {
+        "text": "`Unit? -> (Int)`",
+        "correct": false,
+        "why": "That is not Kotlin syntax."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5c5dwwm",
+    "version": 1,
+    "section": "lambda-syntax",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When can a lambda use `it`?",
+    "hint": "`val half: (Int) -> Int = { it / 2 }`.",
+    "choices": [
+      {
+        "text": "Whenever it has any parameters",
+        "correct": false,
+        "why": "With two parameters there is no `it`; both need names."
+      },
+      {
+        "text": "With one parameter of a known type",
+        "correct": true,
+        "why": "Right: `it` is the implicit name of that one parameter."
+      },
+      {
+        "text": "Only inside a `for` loop",
+        "correct": false,
+        "why": "`it` belongs to lambdas, not to loops."
+      },
+      {
+        "text": "Only when the lambda is a single line long",
+        "correct": false,
+        "why": "A multi-line lambda can use `it` too, though naming it reads better there."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p3x3264",
+    "version": 1,
+    "section": "lambda-syntax",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a multi-line lambda give back?",
+    "hint": "`describe` ended with a string template.",
+    "choices": [
+      {
+        "text": "Whatever its `return` statement says",
+        "correct": false,
+        "why": "A bare `return` is refused in a lambda."
+      },
+      {
+        "text": "`Unit`, unless its type is declared",
+        "correct": false,
+        "why": "The result is the last expression, declared type or not."
+      },
+      {
+        "text": "The value of its last expression",
+        "correct": true,
+        "why": "Right: `\"$hours h $rest min\"` was the result."
+      },
+      {
+        "text": "The value of its first expression",
+        "correct": false,
+        "why": "The earlier lines are steps; the last one is the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1syx8sf",
+    "version": 1,
+    "section": "lambda-syntax",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val double: (Int) -> Int = { m -> return m * 2 }` inside `main`. Why is the `return` refused?",
+    "hint": "A bare `return` belongs to something.",
+    "choices": [
+      {
+        "text": "It would return from `main`, the nearest `fun`",
+        "correct": true,
+        "why": "Right: the lambda is not a `fun`, so the `return` is not its own."
+      },
+      {
+        "text": "`return` is forbidden in a `val`",
+        "correct": false,
+        "why": "The `val` is beside the point; it is the lambda that matters."
+      },
+      {
+        "text": "`m * 2` needs parentheses after `return`",
+        "correct": false,
+        "why": "Parentheses change nothing here."
+      },
+      {
+        "text": "Lambdas cannot return numbers",
+        "correct": false,
+        "why": "`{ m -> m * 2 }` returns a number perfectly well."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh1h7ahw",
+    "version": 1,
+    "section": "higher-order",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`week = listOf(45, 30, 60, 90, 20)`. What is `countWhere(week, { it >= 60 })`?",
+    "hint": "60 counts.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-d0j8t2xx",
+    "version": 1,
+    "section": "higher-order",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `scaledBy(2)(45)` return, where `scaledBy(factor)` returns `{ it * factor }`?",
+    "hint": "The first call builds a function; the second calls it.",
+    "value": 90,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mb2zzy02",
+    "version": 1,
+    "section": "higher-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does passing the test as a parameter buy `countWhere`?",
+    "hint": "Five questions about sessions.",
+    "choices": [
+      {
+        "text": "It runs faster than a loop",
+        "correct": false,
+        "why": "It is a loop; speed is not the gain."
+      },
+      {
+        "text": "The compiler checks the test at run time",
+        "correct": false,
+        "why": "The compiler checks the lambda's type at compile time, as always."
+      },
+      {
+        "text": "It lets `countWhere` change the list while counting",
+        "correct": false,
+        "why": "It reads the list; nothing changes it."
+      },
+      {
+        "text": "One loop, and a line per question",
+        "correct": true,
+        "why": "Right: the varying part is the argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6j6759v",
+    "version": 1,
+    "section": "trailing-lambda",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `repeat(2) { … }`?",
+    "hint": "Look for it in the standard library.",
+    "choices": [
+      {
+        "text": "A loop keyword, like `for`",
+        "correct": false,
+        "why": "It only looks like one."
+      },
+      {
+        "text": "A library function and a trailing lambda",
+        "correct": true,
+        "why": "Right: `repeat(times: Int, action: (Int) -> Unit)`."
+      },
+      {
+        "text": "A macro the compiler expands",
+        "correct": false,
+        "why": "Kotlin has no macros; it is inline, which is different."
+      },
+      {
+        "text": "A coroutine builder",
+        "correct": false,
+        "why": "Those arrive in lesson 14."
+      }
+    ]
+  },
+  {
+    "id": "ex-qky5vwqk",
+    "version": 1,
+    "section": "trailing-lambda",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which parameter's lambda can be written after the parentheses?",
+    "hint": "`check(90, { … }) { … }`.",
+    "choices": [
+      {
+        "text": "Any parameter of a function type",
+        "correct": false,
+        "why": "Only one can trail, and it is not any one."
+      },
+      {
+        "text": "The first function-typed parameter",
+        "correct": false,
+        "why": "The first stayed inside the parentheses in `check`."
+      },
+      {
+        "text": "The last parameter, when it is a function",
+        "correct": true,
+        "why": "Right: only the last one trails."
+      },
+      {
+        "text": "Any parameter named `action` or `block`",
+        "correct": false,
+        "why": "The name is irrelevant; the position decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-640hz03z",
+    "version": 1,
+    "section": "trailing-lambda",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the standard library, the number of long sessions is `week.___ { it >= 60 }`.",
+    "hint": "The function `countWhere` turns out to be.",
+    "blanks": [
+      {
+        "accept": [
+          "count"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-32n6c4y3",
+    "version": 1,
+    "section": "references",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the type of `String::length`?",
+    "hint": "The object becomes the first parameter.",
+    "choices": [
+      {
+        "text": "`() -> Int`",
+        "correct": false,
+        "why": "That would be a bound reference to one string."
+      },
+      {
+        "text": "`(String) -> Int`",
+        "correct": true,
+        "why": "Right: it takes the string and gives its length."
+      },
+      {
+        "text": "`(Int) -> String`",
+        "correct": false,
+        "why": "The arrow points the other way."
+      },
+      {
+        "text": "`Int`",
+        "correct": false,
+        "why": "A reference is a function, not the result of calling it."
+      }
+    ]
+  },
+  {
+    "id": "ex-saq9b75h",
+    "version": 1,
+    "section": "references",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`val kotlin = \"Kotlin\"` and `val f = kotlin::startsWith`. What is `f(\"Kot\")`?",
+    "hint": "A bound reference already has its object.",
+    "choices": [
+      {
+        "text": "A compile error: `startsWith` needs two arguments",
+        "correct": false,
+        "why": "The object is already bound, so only the prefix is left."
+      },
+      {
+        "text": "`true`",
+        "correct": true,
+        "why": "Right: `\"Kotlin\".startsWith(\"Kot\")`."
+      },
+      {
+        "text": "`false`, because the reference compares exactly",
+        "correct": false,
+        "why": "`startsWith` checks a prefix, which `Kot` is."
+      },
+      {
+        "text": "`\"Kot\"`",
+        "correct": false,
+        "why": "`startsWith` answers yes or no."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8gvg1fv",
+    "version": 1,
+    "section": "references",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these cannot be written as a function reference?",
+    "hint": "A reference only forwards.",
+    "choices": [
+      {
+        "text": "`{ m -> isLong(m) }`",
+        "correct": false,
+        "why": "That is `::isLong`."
+      },
+      {
+        "text": "`{ s: String -> s.length }`",
+        "correct": false,
+        "why": "That is `String::length`."
+      },
+      {
+        "text": "`{ m -> !isLong(m) }`",
+        "correct": true,
+        "why": "Right: the negation is something a reference cannot add."
+      },
+      {
+        "text": "`{ m -> format(m) }`",
+        "correct": false,
+        "why": "That is `::format`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wnrrrx3s",
+    "version": 1,
+    "section": "closures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var total = 0`, `val add: (Int) -> Unit = { total += it }`, then `add(45)` and `add(30)`. What does `total` hold?",
+    "hint": "The lambda holds the variable, not a copy.",
+    "choices": [
+      {
+        "text": "0, because the lambda changed its own copy",
+        "correct": false,
+        "why": "There is no copy; Kotlin captures the variable."
+      },
+      {
+        "text": "It does not compile: lambdas may only read local variables",
+        "correct": false,
+        "why": "That is Java's rule; Kotlin allows the change."
+      },
+      {
+        "text": "75",
+        "correct": true,
+        "why": "Right: both calls changed `main`'s `total`."
+      },
+      {
+        "text": "30, the last value passed",
+        "correct": false,
+        "why": "`+=` adds; it does not replace."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnhj1x6y",
+    "version": 1,
+    "section": "closures",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`val next = makeCounter()`, then `next()`, `next()`, `val other = makeCounter()`, `other()`, `next()`. What does the last call return?",
+    "hint": "Each counter holds its own `count`.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-54jbtnt3",
+    "version": 1,
+    "section": "closures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var course = \"Kotlin\"`, `val show = { println(course) }`, `course = \"Android\"`, `show()`. What prints, and why?",
+    "hint": "When does the lambda read the variable?",
+    "choices": [
+      {
+        "text": "`Kotlin`, the value when the lambda was written",
+        "correct": false,
+        "why": "That needs a `val` copy taken before the lambda."
+      },
+      {
+        "text": "`Android`: it reads the variable when run",
+        "correct": true,
+        "why": "Right: it holds the variable, not its old value."
+      },
+      {
+        "text": "A compile error about reassigning a captured `var`",
+        "correct": false,
+        "why": "Kotlin allows it."
+      },
+      {
+        "text": "Nothing; the lambda was discarded when `course` changed",
+        "correct": false,
+        "why": "Changing a variable does not discard the lambda that holds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-24ccxgmk",
+    "version": 1,
+    "section": "inline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `inline` on a function that takes a lambda do?",
+    "hint": "Lesson 1's `println` was one.",
+    "choices": [
+      {
+        "text": "Copies its body and the lambda's into each call site",
+        "correct": true,
+        "why": "Right: no lambda object and no call through it at run time."
+      },
+      {
+        "text": "Runs the lambda on another thread",
+        "correct": false,
+        "why": "Inlining has nothing to do with threads."
+      },
+      {
+        "text": "Caches the lambda's result after its first call",
+        "correct": false,
+        "why": "Nothing is cached; the code is copied."
+      },
+      {
+        "text": "Forbids the lambda from capturing variables",
+        "correct": false,
+        "why": "An inlined lambda reads variables as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-teakptv6",
+    "version": 1,
+    "section": "inline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`printUntilLong(listOf(45, 90, 30))` uses `return@forEach` when an item is 60 or more. What does it print?",
+    "hint": "A labelled return leaves the lambda only.",
+    "choices": [
+      {
+        "text": "`short: 45`, then stops",
+        "correct": false,
+        "why": "That would be a bare `return`, leaving the whole function."
+      },
+      {
+        "text": "`short: 45`, `short: 90`, `short: 30`, `done`",
+        "correct": false,
+        "why": "90 hits the `return@forEach` before printing."
+      },
+      {
+        "text": "`short: 45`, `short: 30`, `done`",
+        "correct": true,
+        "why": "Right: it skips 90, like `continue`, and finishes."
+      },
+      {
+        "text": "`short: 45`, `done`",
+        "correct": false,
+        "why": "`return@forEach` does not stop the iteration, only that item."
+      }
+    ]
+  },
+  {
+    "id": "ex-hf12fk4p",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these compile? Choose all that apply.",
+    "hint": "A bare `return` is allowed in a lambda only when it is inlined into a `fun`.",
+    "choices": [
+      {
+        "text": "`fun f(w: List<Int>): Int? { w.forEach { if (it > 0) return it }; return null }`",
+        "correct": true,
+        "why": "Yes: `forEach` is inline, so the `return` leaves `f`."
+      },
+      {
+        "text": "`fun g() { twice { return } }`, with `twice` not inline",
+        "correct": false,
+        "why": "No: that is `NotInline.kt`'s refusal."
+      },
+      {
+        "text": "`val h: (Int) -> Int = { it * 2 }`",
+        "correct": true,
+        "why": "Yes: one parameter of a known type, so `it` works."
+      },
+      {
+        "text": "`val k = { it * 2 }`",
+        "correct": false,
+        "why": "No: nothing says what `it` is, so its type cannot be inferred."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr9p38jg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rewrite `countWhere(week, { m -> isLong(m) })` step by step. Put the forms in the order the lesson shortened them.",
+    "hint": "Name, then position, then the library.",
+    "items": [
+      "`countWhere(week, { m -> isLong(m) })`",
+      "`countWhere(week, { isLong(it) })`",
+      "`countWhere(week) { isLong(it) }`",
+      "`week.count(::isLong)`"
+    ]
+  }
+]
