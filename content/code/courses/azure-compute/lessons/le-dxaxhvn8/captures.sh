@@ -166,11 +166,11 @@ run "curl -s localhost:3500/v1.0/metadata | jq -c '.components[]'"
 # when-it-pays
 from_lesson "$HERE/when-it-pays.md" dapr.bicep > dapr.bicep
 from_lesson "$HERE/when-it-pays.md" pubsub-aca.yaml > pubsub-aca.yaml
+from_lesson "$HERE/when-it-pays.md" hop.py > hop.py
 
 block cost
 run "docker stats --no-stream --format '{{.Name}} {{.MemUsage}}' shop shop-dapr billing billing-dapr | cut -d/ -f1"
-run "for i in \$(seq 200); do curl -s -o /dev/null -w '%{time_total}\n' localhost:8080/healthz; done | awk '{s += \$1} END {printf \"%.2f ms\n\", s / NR * 1000}'"
-run "for i in \$(seq 200); do curl -s -o /dev/null -w '%{time_total}\n' localhost:3500/v1.0/invoke/shop/method/healthz; done | awk '{s += \$1} END {printf \"%.2f ms\n\", s / NR * 1000}'"
+run 'docker exec -i shop python - http://localhost:8080/healthz http://localhost:3500/v1.0/invoke/shop/method/healthz < hop.py'
 
 block bicep
 run 'bicep build dapr.bicep'
