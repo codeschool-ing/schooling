@@ -1,0 +1,658 @@
+[
+  {
+    "id": "ex-cyf0avgh",
+    "version": 1,
+    "section": "target-utilisation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Five machines run at 70% CPU each and the target is 50%. What size does the autoscaler recommend?",
+    "hint": "Total work divided by the target, rounded up.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "machines"
+  },
+  {
+    "id": "ex-edeaz9zw",
+    "version": 1,
+    "section": "target-utilisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a CPU target of 60% buy compared with 90%?",
+    "hint": "What is the other 40% for?",
+    "choices": [
+      {
+        "text": "A cheaper group, since fewer machines are needed at 60%",
+        "correct": false,
+        "why": "A lower target needs more machines for the same work."
+      },
+      {
+        "text": "A faster processor for each machine in the group",
+        "correct": false,
+        "why": "The target does not change the machine type."
+      },
+      {
+        "text": "Headroom for a burst while new machines start",
+        "correct": true,
+        "why": "Right. 90% is cheaper and leaves no room."
+      },
+      {
+        "text": "Fewer health check failures",
+        "correct": false,
+        "why": "Health checks are a separate thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-yarzw5x7",
+    "version": 1,
+    "section": "target-utilisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the group in autoscale/main.tf have no target_size?",
+    "hint": "Who sets the size once an autoscaler is attached?",
+    "choices": [
+      {
+        "text": "The autoscaler sets the size now",
+        "correct": true,
+        "why": "Right. One of them has to own the size."
+      },
+      {
+        "text": "Regional groups do not accept target_size",
+        "correct": false,
+        "why": "Lesson 4's regional group had one."
+      },
+      {
+        "text": "target_size is replaced by max_replicas",
+        "correct": false,
+        "why": "max_replicas is a ceiling, not a size."
+      },
+      {
+        "text": "The plan fails when both are present",
+        "correct": false,
+        "why": "The plan would accept both; the conflict shows later."
+      }
+    ]
+  },
+  {
+    "id": "ex-hky1b8sv",
+    "version": 1,
+    "section": "target-utilisation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The ___ is the setting that keeps a bug from scaling the group to a hundred machines; in Terraform it is max_replicas.",
+    "hint": "The opposite of a floor.",
+    "blanks": [
+      {
+        "accept": [
+          "maximum",
+          "ceiling",
+          "max"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0vvka7xq",
+    "version": 1,
+    "section": "target-utilisation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "cpu_utilization { target = 1.5 } plans cleanly. What does gcloud's help tell you about it?",
+    "hint": "The range in the flag's description.",
+    "choices": [
+      {
+        "text": "That 1.5 means 150% and is fine for burstable machines",
+        "correct": false,
+        "why": "The range is 0.0 to 1.0."
+      },
+      {
+        "text": "That the target is in vCPUs, so 1.5 is one and a half",
+        "correct": false,
+        "why": "It is a fraction of utilisation."
+      },
+      {
+        "text": "Nothing: the help has no range for this flag",
+        "correct": false,
+        "why": "It states 0.0 to 1.0."
+      },
+      {
+        "text": "The target must be from 0.0 to 1.0, so Compute Engine refuses it",
+        "correct": true,
+        "why": "Right. The plan does not check the range."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4b2kgjt",
+    "version": 1,
+    "section": "other-signals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which signal suits a photo worker that drains a Pub/Sub subscription?",
+    "hint": "Measure the work waiting.",
+    "choices": [
+      {
+        "text": "CPU utilisation, as for the web group",
+        "correct": false,
+        "why": "A queue can grow while CPU sits low."
+      },
+      {
+        "text": "Undelivered messages per machine",
+        "correct": true,
+        "why": "Right. It scales out before anybody waits."
+      },
+      {
+        "text": "Load-balancing utilisation",
+        "correct": false,
+        "why": "A worker pulling from a queue has no balancer in front."
+      },
+      {
+        "text": "A daily schedule from nine to six",
+        "correct": false,
+        "why": "Uploads do not keep office hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6jeg268",
+    "version": 1,
+    "section": "other-signals",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With single_instance_assignment = 50, how many workers does a backlog of 730 messages ask for?",
+    "hint": "Divide and round up.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "workers"
+  },
+  {
+    "id": "ex-6e9jqmjm",
+    "version": 1,
+    "section": "other-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the photos autoscaler have min_replicas = 0 when the web one keeps 3?",
+    "hint": "What does an empty queue mean?",
+    "choices": [
+      {
+        "text": "Metric-based autoscalers ignore min_replicas",
+        "correct": false,
+        "why": "They respect it; 0 was chosen."
+      },
+      {
+        "text": "Workers are cheaper than web machines, so zero is allowed",
+        "correct": false,
+        "why": "Price is not what allows zero."
+      },
+      {
+        "text": "With an empty queue there is no work, and nobody waits for a worker",
+        "correct": true,
+        "why": "Right. A web group must answer the first visitor at once."
+      },
+      {
+        "text": "Pub/Sub keeps one worker running for free",
+        "correct": false,
+        "why": "Pub/Sub runs no machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntz8a9yj",
+    "version": 1,
+    "section": "other-signals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An autoscaler follows CPU and a custom metric. The metric gets stuck at a high stale value. What happens?",
+    "hint": "Which recommendation wins?",
+    "choices": [
+      {
+        "text": "The group stays near its maximum until somebody notices",
+        "correct": true,
+        "why": "Right. The largest recommendation wins."
+      },
+      {
+        "text": "The CPU signal overrides it, since CPU is measured live",
+        "correct": false,
+        "why": "No signal overrides another; the largest size wins."
+      },
+      {
+        "text": "The autoscaler averages the two and settles in the middle",
+        "correct": false,
+        "why": "It takes the largest, not the average."
+      },
+      {
+        "text": "The autoscaler disables the metric after ten minutes",
+        "correct": false,
+        "why": "Nothing disables it automatically."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc7j0j37",
+    "version": 1,
+    "section": "other-signals",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When several signals give different sizes, the autoscaler uses the ___ of them.",
+    "hint": "The safe direction.",
+    "blanks": [
+      {
+        "accept": [
+          "largest",
+          "biggest",
+          "highest",
+          "maximum"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q7cs026j",
+    "version": 1,
+    "section": "schedules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a scaling schedule with min_required_replicas = 6 do during its window?",
+    "hint": "A floor or a size?",
+    "choices": [
+      {
+        "text": "Holds the group at exactly six",
+        "correct": false,
+        "why": "CPU can still add more on top."
+      },
+      {
+        "text": "Adds six to whatever the CPU rule wants",
+        "correct": false,
+        "why": "It is a floor, not an addition."
+      },
+      {
+        "text": "Removes machines above six to save money",
+        "correct": false,
+        "why": "A schedule never makes the group smaller."
+      },
+      {
+        "text": "Keeps at least six",
+        "correct": true,
+        "why": "Right. It raises the minimum for the window."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez0hk5te",
+    "version": 1,
+    "section": "schedules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the weekday schedule start at eight when traffic rises at nine?",
+    "hint": "What happens between creation and serving?",
+    "choices": [
+      {
+        "text": "Cron cannot express nine o'clock in São Paulo",
+        "correct": false,
+        "why": "It can; the hour is a choice."
+      },
+      {
+        "text": "New machines need time to boot and pass health checks",
+        "correct": true,
+        "why": "Right. They should be serving when the rise arrives."
+      },
+      {
+        "text": "Schedules always fire an hour late",
+        "correct": false,
+        "why": "They fire when written."
+      },
+      {
+        "text": "Machines are cheaper before nine",
+        "correct": false,
+        "why": "Prices do not change by the hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-twypax3f",
+    "version": 1,
+    "section": "schedules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The snapshot schedule of lesson 3 was in UTC. What does time_zone = \"America/Sao_Paulo\" do here?",
+    "hint": "How is the cron line read?",
+    "choices": [
+      {
+        "text": "It moves the machines to São Paulo for the window",
+        "correct": false,
+        "why": "Placement is the group's, not the schedule's."
+      },
+      {
+        "text": "It converts the schedule to UTC before saving it",
+        "correct": false,
+        "why": "The zone is stored and used as written."
+      },
+      {
+        "text": "The cron line is read in São Paulo time",
+        "correct": true,
+        "why": "Right. Eight stays eight in the shop's own clock."
+      },
+      {
+        "text": "It is decoration; the autoscaler always uses UTC",
+        "correct": false,
+        "why": "It decides how the expression is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwtw4143",
+    "version": 1,
+    "section": "schedules",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A schedule lifts the floor from 3 to 5 e2-standard-2 machines (0.06701142 USD an hour) for 8 hours on each of 20 weekdays. At most, what do the extra machines cost, in USD, to the cent?",
+    "hint": "Two extra machines, 160 hours each.",
+    "value": 21.44,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-559w7z8s",
+    "version": 1,
+    "section": "schedules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The Black Friday schedule names 0 0 27 11 *. What must the team remember next year?",
+    "hint": "Does the sale fall on the same date every year?",
+    "choices": [
+      {
+        "text": "It fires every 27 November; change it after the sale",
+        "correct": true,
+        "why": "Right. A sale whose date moves needs a schedule written for each year."
+      },
+      {
+        "text": "To renew the schedule, which expires after one firing",
+        "correct": false,
+        "why": "A cron schedule repeats; that is the problem."
+      },
+      {
+        "text": "Nothing: the line fires on Black Friday every year",
+        "correct": false,
+        "why": "It fires on 27 November every year, whatever day the sale is."
+      },
+      {
+        "text": "To switch it to UTC so it fires at midnight",
+        "correct": false,
+        "why": "São Paulo time is what makes it midnight in the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr0eht78",
+    "version": 1,
+    "section": "predictive-and-initialisation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the initialisation period, cooldown_period in Terraform, tell the autoscaler?",
+    "hint": "A new machine's numbers are misleading for a while.",
+    "choices": [
+      {
+        "text": "How long to wait between two scale-in steps",
+        "correct": false,
+        "why": "That is the scale-in control's window."
+      },
+      {
+        "text": "How long a machine may run before it is replaced",
+        "correct": false,
+        "why": "Nothing replaces a machine for its age here."
+      },
+      {
+        "text": "How long the group pauses after a failed health check",
+        "correct": false,
+        "why": "Health checks have their own thresholds."
+      },
+      {
+        "text": "How long to ignore a new machine's numbers",
+        "correct": true,
+        "why": "Right. Its startup CPU is not real load."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mbxyf5s",
+    "version": 1,
+    "section": "predictive-and-initialisation",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group at 12 machines has a scale-in control of at most 3 machines per 10 minutes. The load needs 3. How many minutes at least until the group is at 3?",
+    "hint": "Nine machines to remove, three per window.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-6tya625n",
+    "version": 1,
+    "section": "predictive-and-initialisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new group created yesterday is given predictive_method = \"OPTIMIZE_AVAILABILITY\". What should the team expect this week?",
+    "hint": "What does prediction learn from?",
+    "choices": [
+      {
+        "text": "Machines started a day ahead of every rise",
+        "correct": false,
+        "why": "It has no history yet to predict from."
+      },
+      {
+        "text": "No forecasts for about three days",
+        "correct": true,
+        "why": "Right. Prediction learns from the group's own past."
+      },
+      {
+        "text": "A refusal, since prediction needs a load balancer",
+        "correct": false,
+        "why": "It works on the CPU signal."
+      },
+      {
+        "text": "The CPU target ignored in favour of the forecast",
+        "correct": false,
+        "why": "The target still applies; prediction adds machines ahead of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfmqkvb2",
+    "version": 1,
+    "section": "predictive-and-initialisation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The initialisation period is set to 10 seconds for machines that take 3 minutes to start. What goes wrong?",
+    "hint": "What does the autoscaler read after 10 seconds?",
+    "choices": [
+      {
+        "text": "The machines are deleted by autohealing",
+        "correct": false,
+        "why": "That is the health check's initial delay, a different setting."
+      },
+      {
+        "text": "Nothing: a shorter period only makes scaling faster",
+        "correct": false,
+        "why": "It makes the autoscaler read startup work as load."
+      },
+      {
+        "text": "Startup CPU looks like load and adds machines",
+        "correct": true,
+        "why": "Right. Set it to the measured start time."
+      },
+      {
+        "text": "The schedule fires ten seconds early",
+        "correct": false,
+        "why": "Schedules do not read this setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-sknqaf00",
+    "version": 1,
+    "section": "predictive-and-initialisation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before scaling in, the autoscaler uses the highest recommendation of the last ten minutes; this is the ___ period.",
+    "hint": "It waits for the load to settle.",
+    "blanks": [
+      {
+        "accept": [
+          "stabilization",
+          "stabilisation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-06dpddvz",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these by how far ahead of the load each one acts, from furthest ahead to the one that only reacts.",
+    "hint": "A person writing a date knows the most.",
+    "items": [
+      "A schedule for a known sale",
+      "Predictive autoscaling",
+      "A queue-length signal",
+      "A CPU target"
+    ],
+    "trap": "A queue measures work waiting, so it acts before CPU rises; but it still waits for the work to arrive, unlike a forecast."
+  },
+  {
+    "id": "ex-m9qf3n6w",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to the problem it solves.",
+    "hint": "Floor, ceiling, start-up, way down.",
+    "pairs": [
+      {
+        "left": "min_replicas",
+        "right": "A quiet night leaving no machine in a zone"
+      },
+      {
+        "left": "max_replicas",
+        "right": "A bug scaling the group to a hundred machines"
+      },
+      {
+        "left": "cooldown_period",
+        "right": "Startup CPU read as real load"
+      },
+      {
+        "left": "scale_in_control",
+        "right": "Load that falls and comes straight back"
+      }
+    ],
+    "right_distractors": [
+      "Machines with different images"
+    ]
+  },
+  {
+    "id": "ex-tn0zp5be",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The web group scales on CPU, but at lunchtime users wait and CPU stays at 30%: each request waits on the database. What should change first?",
+    "hint": "More web machines would wait on the same database.",
+    "choices": [
+      {
+        "text": "Look at the database, since the group is not the bottleneck",
+        "correct": true,
+        "why": "Right. No autoscaling setting of the web group fixes this."
+      },
+      {
+        "text": "Lower the CPU target to 20% so more machines start",
+        "correct": false,
+        "why": "More web machines add load to the bottleneck."
+      },
+      {
+        "text": "Add predictive autoscaling for the lunchtime rise",
+        "correct": false,
+        "why": "Predicting more web machines does not help a slow database."
+      },
+      {
+        "text": "Switch to load-balancing utilisation",
+        "correct": false,
+        "why": "It would scale the web group up, onto the same slow database."
+      }
+    ]
+  },
+  {
+    "id": "ex-317cc455",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three machines at 40%, 50% and 60% CPU, target 0.5. What size does recommend.py print?",
+    "hint": "1.5 machines of work.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "machines"
+  },
+  {
+    "id": "ex-jacqp4g5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can this lab show about the autoscaler, and what can it not?",
+    "hint": "There is no group running.",
+    "choices": [
+      {
+        "text": "It can show the group growing under a load test",
+        "correct": false,
+        "why": "There is no group to grow."
+      },
+      {
+        "text": "It can show nothing, since the autoscaler is remote",
+        "correct": false,
+        "why": "The policy and the arithmetic run here."
+      },
+      {
+        "text": "Only the schedules, since they are cron",
+        "correct": false,
+        "why": "Schedules are planned like everything else; none fires here."
+      },
+      {
+        "text": "The policy and the arithmetic, not the scaling",
+        "correct": true,
+        "why": "Right. The plan shows the policy; recommend.py shows the rule."
+      }
+    ]
+  }
+]

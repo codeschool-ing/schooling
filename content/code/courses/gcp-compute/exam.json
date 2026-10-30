@@ -1,0 +1,2535 @@
+[
+  {
+    "id": "ex-h9ae8drk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A service needs two busy vCPUs and settles at 12 GiB of memory. On the price sheet, which E2 choice wastes least while staying predefined?",
+    "hint": "Lesson 1. Pick the ratio before the size.",
+    "choices": [
+      {
+        "text": "e2-standard-4, 4 vCPU and 16 GiB, at 97.84 a month",
+        "correct": false,
+        "why": "It carries two vCPUs nobody uses, for 31.85 more a month."
+      },
+      {
+        "text": "e2-standard-2, 2 vCPU and 8 GiB, at 48.92",
+        "correct": false,
+        "why": "8 GiB is less than the 12 the service settles at."
+      },
+      {
+        "text": "e2-highmem-2, 2 vCPU and 16 GiB, at 65.99",
+        "correct": true,
+        "why": "Right. The ratio fits, with 4 GiB of headroom."
+      },
+      {
+        "text": "e2-medium, sharing a core, at 24.46",
+        "correct": false,
+        "why": "4 GiB and one vCPU of share: far below the need."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mv43537",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With N4 custom rates of 0.03275 per vCPU-hour and 0.003717 per GiB-hour, what does n4-custom-4-20480 cost for a month of 730 hours, in USD?",
+    "hint": "Lesson 1. 20480 MiB is 20 GiB.",
+    "value": 149.9,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-vmsv2shf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "terraform plan accepted a machine_type nobody offers and planned \"1 to add\". Which part of Google checks the name, and when?",
+    "hint": "Lesson 1. The catalogue lives zone by zone.",
+    "choices": [
+      {
+        "text": "Compute Engine, on the API call that creates the machine",
+        "correct": true,
+        "why": "Right. A clean plan says the file is coherent, not that Google would accept it."
+      },
+      {
+        "text": "The provider, when terraform init installs it",
+        "correct": false,
+        "why": "The provider checks the file's shape and knows no catalogue."
+      },
+      {
+        "text": "gcloud, the next time its configuration is listed",
+        "correct": false,
+        "why": "gcloud config list shows settings, not machine types."
+      },
+      {
+        "text": "Cloud Billing, when the first invoice is drawn up",
+        "correct": false,
+        "why": "Billing never sees a machine that was not created."
+      }
+    ]
+  },
+  {
+    "id": "ex-qxnx9nnr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team runs a web server that is busy every afternoon on e2-small to save money, and users complain of slowness at exactly those hours. What is the most likely cause?",
+    "hint": "Lesson 1. What does a shared core guarantee?",
+    "choices": [
+      {
+        "text": "Spot preemption every afternoon",
+        "correct": false,
+        "why": "Nothing here is Spot, and preemption stops a machine rather than slowing it."
+      },
+      {
+        "text": "A sustained use discount that throttles busy machines",
+        "correct": false,
+        "why": "Discounts change the bill, never the speed; and E2 gets none."
+      },
+      {
+        "text": "Extended memory charged at a higher rate",
+        "correct": false,
+        "why": "e2-small has 2 GiB; extended memory is a custom-type feature."
+      },
+      {
+        "text": "A steady load held to half a vCPU once the burst is spent",
+        "correct": true,
+        "why": "Right. A burst covers short peaks, never an afternoon."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ab10msd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Google's monthly figures, and this course's, count a month as ___ hours.",
+    "hint": "Lesson 1. 8,760 over twelve.",
+    "blanks": [
+      {
+        "accept": [
+          "730"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z6hyvs77",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A webhook receives one request every two seconds, each of 100 ms, all day. Which Cloud Run billing mode should it use, by lesson 22's arithmetic?",
+    "hint": "Lesson 22. Busy fraction: 1 - e^(-0.5 × 0.1).",
+    "choices": [
+      {
+        "text": "Instance-based: the traffic arrives every hour of the day",
+        "correct": false,
+        "why": "Arriving all day is not being busy; the instance is empty 95% of the time."
+      },
+      {
+        "text": "Request-based: the instance is busy about 5% of the time",
+        "correct": true,
+        "why": "Right. Far below the 75% line where instance-based starts to win."
+      },
+      {
+        "text": "Either: below 2 million requests both are free",
+        "correct": false,
+        "why": "The free requests belong to request-based billing only."
+      },
+      {
+        "text": "Instance-based, with a minimum of one instance",
+        "correct": false,
+        "why": "That pays all day for an instance that is busy 5% of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b56ywqx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Cloud Run charges 0.40 USD per million requests under request-based billing. Ignoring the free tier, what is the fee on 300 million requests a month?",
+    "hint": "Lesson 22.",
+    "value": 120,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-cs0n5dh0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does lesson 22 rule out options by their limits before pricing them?",
+    "hint": "Lesson 22. A cheaper option that cannot carry the work.",
+    "choices": [
+      {
+        "text": "Because pricing is slow and limits are quick to read",
+        "correct": false,
+        "why": "Speed of work is not the argument."
+      },
+      {
+        "text": "Because Google refuses to quote prices for unsupported workloads",
+        "correct": false,
+        "why": "Price pages are public for every service."
+      },
+      {
+        "text": "Because an option that cannot carry the workload is not an option at any price",
+        "correct": true,
+        "why": "Right. Ten minutes of checking saves the meeting after the migration started."
+      },
+      {
+        "text": "Because limits are the same on every provider",
+        "correct": false,
+        "why": "They differ, which is exactly why they decide."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdtvk6q8",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Order these by their monthly cost for the busy profile in lesson 22, cheapest first.",
+    "hint": "Lesson 22. 400 requests a second around the clock.",
+    "items": [
+      "Compute Engine, two e2-standard-2",
+      "Cloud Run, instance-based",
+      "GKE Autopilot",
+      "Cloud Run, request-based"
+    ],
+    "trap": "Request-based billing is last because of its fee on about a billion requests, not because of its rate."
+  },
+  {
+    "id": "ex-4k6werq7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service keeps uploaded files in /tmp. Which move costs it least work?",
+    "hint": "Lesson 22. Which option keeps local state by accident?",
+    "choices": [
+      {
+        "text": "To a single Compute Engine machine",
+        "correct": true,
+        "why": "Right. Nothing changes, at the price of a machine that can fail with the files on it."
+      },
+      {
+        "text": "To Cloud Run with several instances",
+        "correct": false,
+        "why": "Each instance has its own /tmp, in memory; files go missing."
+      },
+      {
+        "text": "To a managed instance group that replaces machines",
+        "correct": false,
+        "why": "A replaced machine comes back without the files."
+      },
+      {
+        "text": "To GKE Autopilot, as a Deployment",
+        "correct": false,
+        "why": "A rescheduled pod loses what it wrote locally."
+      }
+    ]
+  },
+  {
+    "id": "ex-tghrmvnm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "By lesson 23, what makes the Functions Framework a seam rather than a tie?",
+    "hint": "It ran on a laptop with no network.",
+    "choices": [
+      {
+        "text": "Google promises never to change it",
+        "correct": false,
+        "why": "No such promise exists; the point is who else can run it."
+      },
+      {
+        "text": "It translates functions into Knative YAML",
+        "correct": false,
+        "why": "It serves functions over HTTP; it writes no YAML."
+      },
+      {
+        "text": "It is billed separately from Cloud Run",
+        "correct": false,
+        "why": "A function runs on Cloud Run and is billed as Cloud Run."
+      },
+      {
+        "text": "It is open source and serves the same code anywhere Python runs",
+        "correct": true,
+        "why": "Right. Nothing in the function itself says Google."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma7bsc9v",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "With lesson 23's tiers (first GiB free, 0.12 to 1 TiB, 0.11 to 10 TiB, 0.08 beyond), what do 3 TiB (3,072 GiB) of egress in one month cost, in USD?",
+    "hint": "Lesson 23. 1,023 GiB at 0.12, then 2,048 at 0.11.",
+    "value": 348.04,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-g86r0fev",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each dependency of the shop to what leaving it takes, as lesson 23's record says.",
+    "hint": "Lesson 23.",
+    "pairs": [
+      {
+        "left": "Cloud Run for orders and web",
+        "right": "Rebuild on any container service"
+      },
+      {
+        "left": "Pub/Sub behind the events module",
+        "right": "Rewrite one module"
+      },
+      {
+        "left": "Cloud Scheduler for the export",
+        "right": "Any scheduler that can call a URL"
+      },
+      {
+        "left": "A one-year commitment",
+        "right": "The months left on the term"
+      }
+    ],
+    "right_distractors": [
+      "Re-encrypt every object"
+    ]
+  },
+  {
+    "id": "ex-djhavxy6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A finance lead proposes a three-year commitment covering twice today's Cloud Run usage, \"since we will grow\". What does lesson 23 say?",
+    "hint": "Lesson 23. Saved or promised?",
+    "choices": [
+      {
+        "text": "Agree: longer terms always give larger discounts",
+        "correct": false,
+        "why": "The discount is real; the half that is not used yet is still paid."
+      },
+      {
+        "text": "Commit to the baseline that already runs; the rest is money promised",
+        "correct": true,
+        "why": "Right. A discount on capacity you hope to need is a bill for capacity you may not."
+      },
+      {
+        "text": "Agree, as long as the commitment is resource-based",
+        "correct": false,
+        "why": "The kind of commitment does not change paying for unused capacity."
+      },
+      {
+        "text": "Refuse any commitment, since it is a kind of lock-in",
+        "correct": false,
+        "why": "Lock-in chosen for a price worth paying is the lesson's point."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdgcb9sz",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Lesson 23 calls a place where your system meets the provider through an interface somebody else also implements a ___.",
+    "hint": "A word from tailoring.",
+    "blanks": [
+      {
+        "accept": [
+          "seam"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7gxs6q08",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team's instance template boots from the family shop-web. On Tuesday a bad build is published, and by Wednesday half the group runs it. What is the quickest way to stop new machines getting it?",
+    "hint": "Lesson 2. What does a family read?",
+    "choices": [
+      {
+        "text": "Delete the family, so the template falls back to Debian",
+        "correct": false,
+        "why": "A family is a label on images, not an object with a fallback."
+      },
+      {
+        "text": "Edit the template to name an older family",
+        "correct": false,
+        "why": "Templates cannot be edited; a new template is slower than one deprecation."
+      },
+      {
+        "text": "Deprecate the bad build",
+        "correct": true,
+        "why": "Right. The family points back to the previous image at once."
+      },
+      {
+        "text": "Mark the bad build DELETED, which removes it from storage at once",
+        "correct": false,
+        "why": "DELETED is a label; the image stays until somebody deletes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ng5976x9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A g2-standard-4 costs 0.706832276 USD an hour. A team runs it 9 hours on each of 22 working days instead of all month. What does it cost that month, to the cent?",
+    "hint": "Lesson 2. 198 hours.",
+    "value": 139.95,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-769zzwxe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A plan reads data \"google_compute_image\" and hangs for minutes on the train with no network. What is happening?",
+    "hint": "Lesson 2. When is a data source read?",
+    "choices": [
+      {
+        "text": "It retries the API its data source needs",
+        "correct": true,
+        "why": "Right. The lesson's run took five and a half minutes to fail."
+      },
+      {
+        "text": "Terraform is downloading the Debian image to the laptop",
+        "correct": false,
+        "why": "Nothing is downloaded; it asks a question."
+      },
+      {
+        "text": "The provider is waiting for the token no-account to expire",
+        "correct": false,
+        "why": "The token is never checked without a network."
+      },
+      {
+        "text": "Packer is building the image the data source names",
+        "correct": false,
+        "why": "Packer is a separate tool, run separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9w67dc1",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A machine with a GPU stops for host maintenance instead of migrating, so it is written with on_host_maintenance = \"___\".",
+    "hint": "Lesson 2. The other value is MIGRATE.",
+    "blanks": [
+      {
+        "accept": [
+          "TERMINATE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-14h07vfe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A single-machine PostgreSQL with no replica must survive the loss of a zone without restoring from backup. Which disk does lesson 3 point to?",
+    "hint": "Lesson 3. Two zones, written synchronously.",
+    "choices": [
+      {
+        "text": "A local SSD, for speed",
+        "correct": false,
+        "why": "It is lost with the host, never mind the zone."
+      },
+      {
+        "text": "A pd-ssd with nightly snapshots",
+        "correct": false,
+        "why": "Snapshots are a restore, which the question rules out."
+      },
+      {
+        "text": "A Hyperdisk Balanced with more IOPS",
+        "correct": false,
+        "why": "IOPS buys speed, not a second zone."
+      },
+      {
+        "text": "A regional disk",
+        "correct": true,
+        "why": "Right. A machine in the other zone attaches the replica and carries on."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5z4kpq0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A 500 GiB Hyperdisk Balanced is provisioned at 4,000 IOPS and 240 MBps. With 0.08 per GiB-month, 0.005 per IOPS-month above 3,000 and 0.04 per MBps-month above 140, what is a month, in USD?",
+    "hint": "Lesson 3. 40 + 5 + 4.",
+    "value": 49,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-yqmkf9bs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A batch machine keeps its working files on a local SSD and is stopped every evening by a script to save money. What does the team find each morning?",
+    "hint": "Lesson 3. Stopping moves the machine off its host.",
+    "choices": [
+      {
+        "text": "The files, as after a reboot",
+        "correct": false,
+        "why": "A reboot keeps them; a stop does not unless preserved."
+      },
+      {
+        "text": "An empty local SSD, unless preservation was asked for",
+        "correct": true,
+        "why": "Right. Write state somewhere durable before the stop."
+      },
+      {
+        "text": "A bill that stopped charging for the SSD overnight",
+        "correct": false,
+        "why": "Saving money is the motive, not the surprise."
+      },
+      {
+        "text": "A snapshot of the SSD taken at the stop",
+        "correct": false,
+        "why": "Local SSDs have no snapshots."
+      }
+    ]
+  },
+  {
+    "id": "ex-4q0p4m84",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are true of snapshots taken by a schedule? Choose all that apply.",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Each one after the first holds only changed blocks",
+        "correct": true,
+        "why": "Right; they are incremental."
+      },
+      {
+        "text": "Deleting the oldest leaves the newer ones restorable",
+        "correct": true,
+        "why": "Right; needed blocks are moved forward."
+      },
+      {
+        "text": "start_time is read in São Paulo time",
+        "correct": false,
+        "why": "It is UTC."
+      },
+      {
+        "text": "A restore writes back over the original disk",
+        "correct": false,
+        "why": "A restore makes a new disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ssazn0b",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The plan refused KEEP_SNAPSHOTS because on_source_disk_delete only accepts APPLY_RETENTION_POLICY or KEEP_AUTO____.",
+    "hint": "Lesson 3. The word that keeps them after the disk is gone.",
+    "blanks": [
+      {
+        "accept": [
+          "SNAPSHOTS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s0dgyrt0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "terraform apply fails with \"resource is in use\" while deleting an old instance template after a change. Which line was missing?",
+    "hint": "Lesson 4. Which order works?",
+    "choices": [
+      {
+        "text": "name_prefix, so the template gets a fresh name",
+        "correct": false,
+        "why": "A name clash fails at creation, not at deletion."
+      },
+      {
+        "text": "target_size in the group",
+        "correct": false,
+        "why": "The size has nothing to do with templates being deleted."
+      },
+      {
+        "text": "create_before_destroy in the lifecycle block",
+        "correct": true,
+        "why": "Right. Without it Terraform deletes the template the group still uses first."
+      },
+      {
+        "text": "max_unavailable_fixed = 0 in the update policy",
+        "correct": false,
+        "why": "The policy replaces machines; it does not order template deletion."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2y059k7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A regional group across three zones has target_size = 8, spread as evenly as the group allows. How is it spread?",
+    "hint": "Lesson 4. Zones differ by at most one.",
+    "choices": [
+      {
+        "text": "Three, three and two",
+        "correct": true,
+        "why": "Right. No two zones differ by more than one."
+      },
+      {
+        "text": "Four, four and none",
+        "correct": false,
+        "why": "That leaves a zone empty, the opposite of a regional group."
+      },
+      {
+        "text": "Eight in the first zone listed",
+        "correct": false,
+        "why": "That is a zonal group."
+      },
+      {
+        "text": "Four, two and two, the first zone taking the remainder twice",
+        "correct": false,
+        "why": "Four against two breaks the rule of one."
+      }
+    ]
+  },
+  {
+    "id": "ex-1111ttz0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A new template has a broken health endpoint. Which update setting limits the damage to one machine of three?",
+    "hint": "Lesson 4. One machine first.",
+    "choices": [
+      {
+        "text": "type = \"OPPORTUNISTIC\" on the update policy",
+        "correct": false,
+        "why": "It still spreads the template as machines are recreated."
+      },
+      {
+        "text": "max_surge_fixed = 3",
+        "correct": false,
+        "why": "Surge adds capacity; it does not hold the new template back."
+      },
+      {
+        "text": "initial_delay_sec raised to 600",
+        "correct": false,
+        "why": "A longer delay only postpones the failures."
+      },
+      {
+        "text": "A canary version with target_size fixed = 1",
+        "correct": true,
+        "why": "Right. Two machines stay on the stable template."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wa7ty4z",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each symptom to the setting the lessons on groups say to look at.",
+    "hint": "Lesson 4.",
+    "pairs": [
+      {
+        "left": "New machines are deleted before they finish booting",
+        "right": "initial_delay_sec"
+      },
+      {
+        "left": "Every machine fails its check and the service is fine",
+        "right": "the firewall rule for probes"
+      },
+      {
+        "left": "An update briefly leaves only two machines serving",
+        "right": "max_unavailable_fixed"
+      },
+      {
+        "left": "A machine deleted by hand comes back",
+        "right": "target_size"
+      }
+    ],
+    "right_distractors": [
+      "storage_locations"
+    ]
+  },
+  {
+    "id": "ex-524j9dm8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team puts its single orders database in a regional managed group \"for resilience\". What goes wrong first?",
+    "hint": "Lesson 4. What does a replacement start from?",
+    "choices": [
+      {
+        "text": "The group refuses machines with a data disk",
+        "correct": false,
+        "why": "Nothing refuses it; the trouble comes later."
+      },
+      {
+        "text": "A replacement or rebalancing starts from the template, without the data",
+        "correct": true,
+        "why": "Right. Stateful MIGs exist, and they are the last resort."
+      },
+      {
+        "text": "The database runs three copies that disagree",
+        "correct": false,
+        "why": "That needs target_size above one; the first problem is losing data."
+      },
+      {
+        "text": "The health check cannot reach port 5432",
+        "correct": false,
+        "why": "Any port can be checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-566g8zta",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Six machines run at 50% CPU with a target of 0.75, so the autoscaler recommends ___ machines.",
+    "hint": "Lesson 5. 3 machines of work.",
+    "blanks": [
+      {
+        "accept": [
+          "4",
+          "four"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c2v90p4g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An order-confirmation worker reads from a queue; on sale days the backlog grows to thousands while its CPU stays at 25%. Which change fixes the scaling?",
+    "hint": "Lesson 5. Measure the work waiting.",
+    "choices": [
+      {
+        "text": "Lower the CPU target to 0.2",
+        "correct": false,
+        "why": "It helps a little and still follows the wrong signal."
+      },
+      {
+        "text": "Add a schedule for sale days",
+        "correct": false,
+        "why": "A schedule guesses; the queue measures."
+      },
+      {
+        "text": "Scale on undelivered messages per machine",
+        "correct": true,
+        "why": "Right. It grows before anybody waits."
+      },
+      {
+        "text": "Turn on predictive autoscaling",
+        "correct": false,
+        "why": "Prediction learns the CPU pattern, which is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-py3rds9k",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A group peaks at 10 machines; the load then needs 4, and scale-in control allows 2 every 10 minutes. Order the sizes the group passes through.",
+    "hint": "Lesson 5.",
+    "items": [
+      "10",
+      "8",
+      "6",
+      "4"
+    ],
+    "trap": "It takes thirty minutes to reach 4, and the machines are still there if the load comes back."
+  },
+  {
+    "id": "ex-43d0qmpg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A schedule says min_required_replicas = 8 from nine to six; at noon the CPU rule wants 11. How many machines run?",
+    "hint": "Lesson 5. A floor, not a size.",
+    "choices": [
+      {
+        "text": "11",
+        "correct": true,
+        "why": "Right. The floor is 8 and CPU asks for more."
+      },
+      {
+        "text": "8, since the schedule overrides the CPU rule",
+        "correct": false,
+        "why": "A schedule only raises the minimum."
+      },
+      {
+        "text": "19, the sum of both",
+        "correct": false,
+        "why": "The autoscaler takes the larger, not the sum."
+      },
+      {
+        "text": "The max_replicas value, during a schedule",
+        "correct": false,
+        "why": "Schedules do not jump to the ceiling."
+      }
+    ]
+  },
+  {
+    "id": "ex-8f6t4803",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A report job on Spot writes its results only at the end, after five hours. What change makes it a good Spot tenant?",
+    "hint": "Lesson 6. What does a preemption cost it now?",
+    "choices": [
+      {
+        "text": "A longer shutdown script that uploads partial results",
+        "correct": false,
+        "why": "The thirty seconds do not stretch for a long script."
+      },
+      {
+        "text": "max_run_duration of six hours",
+        "correct": false,
+        "why": "A time limit stops runaways; it saves no progress."
+      },
+      {
+        "text": "instance_termination_action = \"STOP\"",
+        "correct": false,
+        "why": "STOP keeps the disk, not the work in memory."
+      },
+      {
+        "text": "Splitting the work and saving each piece as it finishes",
+        "correct": true,
+        "why": "Right. A preemption then costs one piece."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3n4sgyf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Ten c4a-standard-2 machines run 730 hours on Spot at 0.044388 USD an hour instead of 0.0898 on demand. What is saved in the month, to the cent?",
+    "hint": "Lesson 6. The hourly difference, times 730, times ten.",
+    "value": 331.51,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-mhywxkk7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service run by systemd on a Spot machine has no SIGTERM handler. What happens to the request it is serving at preemption?",
+    "hint": "Lesson 6. Exit code 143.",
+    "choices": [
+      {
+        "text": "It finishes, because Compute Engine waits thirty seconds",
+        "correct": false,
+        "why": "The wait helps only a program that handles the signal."
+      },
+      {
+        "text": "It is cut off: the process dies when the signal arrives",
+        "correct": true,
+        "why": "Right. The thirty seconds were there and nothing used them."
+      },
+      {
+        "text": "It is moved to another machine by live migration",
+        "correct": false,
+        "why": "Spot machines are preempted, not migrated."
+      },
+      {
+        "text": "systemd ignores SIGTERM for services by default",
+        "correct": false,
+        "why": "systemd sends it; the default action is to die."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqq6hwkc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which belong on Spot by lesson 6's test? Choose all that apply.",
+    "hint": "Lesson 6. Would anyone need to act?",
+    "choices": [
+      {
+        "text": "Pull-request test runners",
+        "correct": true,
+        "why": "Right; a run is retried."
+      },
+      {
+        "text": "The only Redis holding shopping carts",
+        "correct": false,
+        "why": "It holds state nobody can rebuild."
+      },
+      {
+        "text": "Extra web machines behind a standard base",
+        "correct": true,
+        "why": "Right; the base answers if they go."
+      },
+      {
+        "text": "Every web machine, to save 40%",
+        "correct": false,
+        "why": "A shortage would take them all at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4sqfkwd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A startup script appends a line to /etc/hosts and installs a package with no condition. The machine is restarted twice for patches. What state is it in?",
+    "hint": "Lesson 7. When does the guest environment run the script?",
+    "choices": [
+      {
+        "text": "As after the first boot: scripts run once, at creation",
+        "correct": false,
+        "why": "The script runs on every boot, not once."
+      },
+      {
+        "text": "Recreated by Terraform, since metadata changed",
+        "correct": false,
+        "why": "A restart changes no metadata, and Terraform was not run."
+      },
+      {
+        "text": "The line three times over",
+        "correct": true,
+        "why": "Right. A script that runs on every boot has to be safe to repeat."
+      },
+      {
+        "text": "Stopped, because a startup script that changes /etc fails the boot",
+        "correct": false,
+        "why": "A script never stops the boot, failing or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zazeq81",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A PDF service on a VM follows links found in uploaded documents. A document links to http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token. What protects the token, and what limits the damage if that fails?",
+    "hint": "Lesson 7. A filter, and what the token is worth.",
+    "choices": [
+      {
+        "text": "The header rule, then a narrow account",
+        "correct": true,
+        "why": "Right. A forged fetch rarely sets the header, and a dedicated account limits the rest."
+      },
+      {
+        "text": "The private address: only the VM's own network reaches it",
+        "correct": false,
+        "why": "The fetch is made from the VM, which reaches it fine."
+      },
+      {
+        "text": "The token's one-hour life, which makes it useless to steal",
+        "correct": false,
+        "why": "An hour is plenty to use a stolen token."
+      },
+      {
+        "text": "OS Login, which blocks reads by non-human users",
+        "correct": false,
+        "why": "OS Login governs SSH, not the metadata server."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtpxsb26",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A machine's calls to Pub/Sub fail with a permission error although the account holds roles/pubsub.publisher on the topic. Which could explain it? Choose all that apply.",
+    "hint": "Lesson 7. Two checks, and which identity is calling.",
+    "choices": [
+      {
+        "text": "The instance was created with only the storage-ro scope",
+        "correct": true,
+        "why": "Right; the token cannot call Pub/Sub at all."
+      },
+      {
+        "text": "No service_account block, so the default account is calling",
+        "correct": true,
+        "why": "Right; the role is on a different identity."
+      },
+      {
+        "text": "The metadata server only issues tokens for Cloud Storage",
+        "correct": false,
+        "why": "It issues tokens for whatever the scopes cover."
+      },
+      {
+        "text": "GOOGLE_APPLICATION_CREDENTIALS points at another account's key file",
+        "correct": true,
+        "why": "Right; that file comes first in the search order."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmz9b33j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Code that calls google.auth.default() is tested on a laptop with gcloud's application-default login and then deployed to a VM with an attached account. What changes in the code?",
+    "hint": "Lesson 7. The same search order everywhere.",
+    "choices": [
+      {
+        "text": "A key file must be copied so the VM finds credentials",
+        "correct": false,
+        "why": "That is exactly what the attached account avoids."
+      },
+      {
+        "text": "The project must be passed explicitly on a VM",
+        "correct": false,
+        "why": "The metadata server knows the project."
+      },
+      {
+        "text": "GOOGLE_APPLICATION_CREDENTIALS must be set to the metadata address",
+        "correct": false,
+        "why": "That variable names a file, and setting it would stop the search there."
+      },
+      {
+        "text": "Nothing; on the VM the metadata server answers",
+        "correct": true,
+        "why": "Right. That is what the order is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgf79smc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Node.js image runs fine with docker run -p 3000:3000 on a laptop but its Cloud Run deployment fails, saying the container did not listen on the port in PORT. The server code calls listen(3000). What is the fix?",
+    "hint": "Lesson 8. Who chooses the port?",
+    "choices": [
+      {
+        "text": "Publish port 3000 in the Dockerfile with EXPOSE",
+        "correct": false,
+        "why": "EXPOSE documents a port; Cloud Run still probes PORT."
+      },
+      {
+        "text": "Listen on process.env.PORT, on every interface",
+        "correct": true,
+        "why": "Right. Cloud Run sends requests to PORT, 8080 by default."
+      },
+      {
+        "text": "Raise the startup probe's timeout",
+        "correct": false,
+        "why": "Waiting longer on the wrong port never succeeds."
+      },
+      {
+        "text": "Rebuild the image for linux/amd64",
+        "correct": false,
+        "why": "An architecture problem stops the start, not the listening."
+      }
+    ]
+  },
+  {
+    "id": "ex-vct3jm5m",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service with the shell-form CMD is scaled in four times a day for 30 days. Each scale-in waits the full grace period before SIGKILL, as the shell-form container did at home. How many minutes of waiting is that in a month?",
+    "hint": "Lesson 8. Ten seconds each time.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-ne30efgx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service caches product prices in a Python dictionary filled on the first request. After a deployment, some users see new prices and others old ones for a while. Why?",
+    "hint": "Lesson 8. How many copies hold the dictionary?",
+    "choices": [
+      {
+        "text": "Cloud Run serves cached responses from its front end",
+        "correct": false,
+        "why": "The front end does not cache responses."
+      },
+      {
+        "text": "The dictionary is written to /tmp and shared slowly",
+        "correct": false,
+        "why": "Nothing is shared between instances."
+      },
+      {
+        "text": "Each instance filled its own cache, at its own moment",
+        "correct": true,
+        "why": "Right. Memory is per instance, and instances come and go."
+      },
+      {
+        "text": "Python dictionaries are not safe to read concurrently",
+        "correct": false,
+        "why": "Reads are not the problem; the copies are."
+      }
+    ]
+  },
+  {
+    "id": "ex-0x11y2s2",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each observation at home to what it predicts on Cloud Run.",
+    "hint": "Lesson 8. The laptop is the cheapest place to find out.",
+    "pairs": [
+      {
+        "left": "curl gets \"Connection reset by peer\"",
+        "right": "The startup probe fails"
+      },
+      {
+        "left": "docker stop takes ten seconds, exit 137",
+        "right": "Requests in flight are cut on scale-in"
+      },
+      {
+        "left": "The second copy answers on 9090",
+        "right": "The service works whatever PORT says"
+      },
+      {
+        "left": "Logs print one JSON object per line",
+        "right": "Cloud Logging files severities"
+      }
+    ],
+    "right_distractors": [
+      "The image is too large to deploy"
+    ]
+  },
+  {
+    "id": "ex-ecpm65c1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A new revision fails one request in a thousand. The service takes 2,000 requests an hour and the canary gets 5%. Roughly how long until the error has shown up ten times?",
+    "hint": "Lesson 9. 10,000 requests at 100 an hour.",
+    "choices": [
+      {
+        "text": "About a hundred hours, four days",
+        "correct": true,
+        "why": "Right. A small share of little traffic sees little."
+      },
+      {
+        "text": "About ten hours",
+        "correct": false,
+        "why": "That would be at 50%."
+      },
+      {
+        "text": "About fifty hours",
+        "correct": false,
+        "why": "That would be at 10%."
+      },
+      {
+        "text": "About an hour, since 2,000 is more than a thousand",
+        "correct": false,
+        "why": "Only 5% of the 2,000 reach the canary."
+      }
+    ]
+  },
+  {
+    "id": "ex-90c49cdx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Terraform sets the split 80/20 between orders-v1 and orders-v2. Someone runs gcloud run services update-traffic to roll back to orders-v1 at 100. What does the next terraform plan show?",
+    "hint": "Lesson 9. Who owns the traffic list?",
+    "choices": [
+      {
+        "text": "No changes, since the rollback created no revision",
+        "correct": false,
+        "why": "Traffic is part of the service Terraform describes."
+      },
+      {
+        "text": "An error, because gcloud locked the service",
+        "correct": false,
+        "why": "Nothing is locked."
+      },
+      {
+        "text": "A new revision orders-v3 to be created",
+        "correct": false,
+        "why": "The template did not change."
+      },
+      {
+        "text": "A change putting 20% back on orders-v2",
+        "correct": true,
+        "why": "Right. Write the rollback into the file too, or the next apply undoes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxcam9wm",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A release of orders-v3 needs a database column added before it starts using it. Put the safe order.",
+    "hint": "Lesson 9. Keep the way back open.",
+    "items": [
+      "Add the column, which the old code ignores",
+      "Deploy orders-v3 with --no-traffic and test its tag",
+      "Move traffic to it in stages",
+      "Remove anything only the old code needed, once nobody will roll back"
+    ],
+    "trap": "Removing what the old code needs before the rollout ends makes the rollback fail on data."
+  },
+  {
+    "id": "ex-kp38svhv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team wants every deployment to go live immediately except during the Black Friday week, when they want canaries. Which traffic setup fits?",
+    "hint": "Lesson 9. LATEST moves; named revisions stay.",
+    "choices": [
+      {
+        "text": "A permanent split with a canary tag at 0%",
+        "correct": false,
+        "why": "A tag alone never moves user traffic."
+      },
+      {
+        "text": "LATEST at 100% normally; that week, --no-traffic and staged moves",
+        "correct": true,
+        "why": "Right, and --to-latest afterwards, or later deploys stay dark."
+      },
+      {
+        "text": "Named revisions always, with --to-latest after each deploy",
+        "correct": false,
+        "why": "That works, but it is a manual step every time."
+      },
+      {
+        "text": "min_instance_count on the new revision",
+        "correct": false,
+        "why": "That keeps instances warm; it does not split traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-by4czfkt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A nightly job resizes 30,000 photos, each picked by id % CLOUD_RUN_TASK_COUNT. Someone raises --tasks from 10 to 12 while an execution is being retried. What can happen?",
+    "hint": "Lesson 10. What does changing the count do to a hash cut?",
+    "choices": [
+      {
+        "text": "Nothing: each task re-reads the count at the start",
+        "correct": false,
+        "why": "Re-reading a new count is exactly what moves the assignments."
+      },
+      {
+        "text": "Cloud Run refuses to change a job with a running execution",
+        "correct": false,
+        "why": "The lesson makes no such promise; the risk is in the cut."
+      },
+      {
+        "text": "Assignments shift, so some photos are done twice and others missed",
+        "correct": true,
+        "why": "Right, unless the work is idempotent and the run starts fresh."
+      },
+      {
+        "text": "The two new tasks wait for the next night",
+        "correct": false,
+        "why": "Tasks belong to an execution, not to a night."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4ytq7k2",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A job has --tasks=60, --parallelism=12, tasks of about 5 minutes and no failures. About how many minutes does the execution take?",
+    "hint": "Lesson 10. Rounds times the length of one.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-16d2c99f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A job's program catches every exception, logs it as ERROR and exits normally. A task fails to reach the database. What does Cloud Run record?",
+    "hint": "Lesson 10. What is the verdict made of?",
+    "choices": [
+      {
+        "text": "A success: the exit status was 0",
+        "correct": true,
+        "why": "Right. A job that fails must exit non-zero, or nothing retries or alerts."
+      },
+      {
+        "text": "A failed task, from the ERROR line",
+        "correct": false,
+        "why": "Logs are not read for the verdict."
+      },
+      {
+        "text": "A retry, since the database was unreachable",
+        "correct": false,
+        "why": "Cloud Run cannot see the database; it sees the exit."
+      },
+      {
+        "text": "A timeout, because the task never finished its work",
+        "correct": false,
+        "why": "It finished quickly, by exiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-vs3q78e6",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "To start a job at 06:00 in São Paulo, a Cloud Scheduler job needs schedule \"0 6 * * *\" and time_zone America/___.",
+    "hint": "Lesson 10. An IANA zone name.",
+    "blanks": [
+      {
+        "accept": [
+          "Sao_Paulo"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nbh98xt7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A service spends 300 ms per request waiting on another API and 5 ms computing. It runs with concurrency 1 and a burst of 200 simultaneous requests starts 200 instances. What does the lesson suggest first?",
+    "hint": "Lesson 11. Waiting is what threads share.",
+    "choices": [
+      {
+        "text": "A minimum of 200 instances, so none start cold",
+        "correct": false,
+        "why": "That pays for 200 idle instances all month."
+      },
+      {
+        "text": "Instance-based billing, since it is cheaper per second",
+        "correct": false,
+        "why": "Billing does not change how many instances start."
+      },
+      {
+        "text": "Startup CPU boost, to start the 200 faster",
+        "correct": false,
+        "why": "Faster starts of instances that need not exist."
+      },
+      {
+        "text": "Measure what one instance carries and raise the concurrency",
+        "correct": true,
+        "why": "Right. A waiting service can share an instance among many requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc2gexdk",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Using lesson 11's rates (active 0.000024 per vCPU-second and 0.0000025 per GiB-second; instance-based 0.000018 and 0.000002), at what busy share, in per cent, do the two billings cost the same for 1 vCPU and 0.5 GiB? Answer to the nearest per cent.",
+    "hint": "Lesson 11. 0.000019 divided by 0.00002525.",
+    "value": 75,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-5dknnz0m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service loads a 400 MB machine-learning model at start-up, before it listens. Its first request after a quiet hour takes eight seconds. Which change attacks the cause rather than hiding it?",
+    "hint": "Lesson 11. Your part of the cold start.",
+    "choices": [
+      {
+        "text": "min_instance_count = 1",
+        "correct": false,
+        "why": "That hides the start; the cause stays."
+      },
+      {
+        "text": "Load less before listening, or load the model on first use",
+        "correct": true,
+        "why": "Right. What the program does before it listens is yours to shorten."
+      },
+      {
+        "text": "A larger max_instance_count",
+        "correct": false,
+        "why": "More instances means more cold starts, not shorter ones."
+      },
+      {
+        "text": "Concurrency raised to 1,000",
+        "correct": false,
+        "why": "Concurrency does not shorten a start."
+      }
+    ]
+  },
+  {
+    "id": "ex-w25brkcy",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service that answers and then keeps working in a background thread loses its CPU under the default allocation; that work belongs in a ___ or a job.",
+    "hint": "Lesson 11. Lesson 20 has one called Cloud Tasks.",
+    "blanks": [
+      {
+        "accept": [
+          "queue"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qbgdpn3r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Load testing at home shows a median of 0.2 s and a slowest request of 2 s at 80 concurrent requests, but steady times at 20. What should the Cloud Run concurrency be set to, by the lesson's reasoning?",
+    "hint": "Lesson 11. Where the slowest pulls away from the median.",
+    "choices": [
+      {
+        "text": "80, since the median stayed at 0.2 s",
+        "correct": false,
+        "why": "The slowest requests are the users who complain."
+      },
+      {
+        "text": "1, to be safe",
+        "correct": false,
+        "why": "Twenty were steady; one wastes instances."
+      },
+      {
+        "text": "Around 20, where it stayed steady",
+        "correct": true,
+        "why": "Right. The setting is a ceiling; the program decides what it carries."
+      },
+      {
+        "text": "1,000, so one instance takes every burst",
+        "correct": false,
+        "why": "It already struggled at 80."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6zq5mmh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A new Cloud Run service must reach a Memorystore cache at 10.30.0.4, and the network team offers an empty /24 subnet for it. Which arrangement fits best?",
+    "hint": "Lesson 12. Nothing extra to run, nothing extra on the bill.",
+    "choices": [
+      {
+        "text": "Direct VPC egress into the /24, with PRIVATE_RANGES_ONLY",
+        "correct": true,
+        "why": "Right. Room for addresses, no machines in between."
+      },
+      {
+        "text": "A connector with min_instances 2, so the cache has a fixed source range",
+        "correct": false,
+        "why": "Nothing here asks for a fixed range, and the connector bills its machines all month."
+      },
+      {
+        "text": "ALL_TRAFFIC with Cloud NAT, so the cache sees one address",
+        "correct": false,
+        "why": "NAT is for the internet; a private address is reached without it."
+      },
+      {
+        "text": "INGRESS_TRAFFIC_INTERNAL_ONLY on the service",
+        "correct": false,
+        "why": "Ingress governs who calls the service, not where it connects."
+      }
+    ]
+  },
+  {
+    "id": "ex-c26hedvh",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A connector keeps min_instances = 3 of e2-micro, at 6.11 USD a month each on the price sheet. What is its floor for a year, in USD?",
+    "hint": "Lesson 12. Three machines, twelve months.",
+    "value": 219.96,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-z6jbv1y7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team locks a reporting service to INGRESS_TRAFFIC_INTERNAL_ONLY. A caller inside another Cloud Run service with no VPC access now fails. Which change fixes it without opening the service to the internet?",
+    "hint": "Lesson 12. How does a call count as internal?",
+    "choices": [
+      {
+        "text": "Grant the caller roles/run.invoker on the reporting service",
+        "correct": false,
+        "why": "The network check refuses before identity is looked at."
+      },
+      {
+        "text": "Switch the reporting service's egress to ALL_TRAFFIC",
+        "correct": false,
+        "why": "Egress never changes who may call in."
+      },
+      {
+        "text": "Set the reporting service to INGRESS_TRAFFIC_ALL",
+        "correct": false,
+        "why": "That is the opening the question rules out."
+      },
+      {
+        "text": "Give the caller direct VPC egress",
+        "correct": true,
+        "why": "Right. Its calls then leave through the VPC and count as internal."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzby82qz",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these would a clean terraform plan of a Cloud Run service with vpc_access NOT have checked? Choose all that apply.",
+    "hint": "Lesson 12. The plan reads your files on your laptop.",
+    "choices": [
+      {
+        "text": "That the subnet named exists in the region",
+        "correct": true,
+        "why": "Right; Cloud Run checks it when the revision is created."
+      },
+      {
+        "text": "That egress is one of the accepted values",
+        "correct": false,
+        "why": "The provider refuses an unknown value at validate."
+      },
+      {
+        "text": "That a connector given by reference does not clash with network_interfaces",
+        "correct": true,
+        "why": "Right; the reference is unknown until apply."
+      },
+      {
+        "text": "That ingress is spelled as the provider expects",
+        "correct": false,
+        "why": "An unknown ingress value is refused at validate."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5pna8hk",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A regional pool covering three zones has node_count = 2 of e2-standard-4, at 97.84 USD a month each. What do its nodes cost a month at that size, in USD?",
+    "hint": "Lesson 13. The count is per zone.",
+    "value": 587.04,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-p1bd9hw9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A payments team wants node upgrades that keep every old node until the new ones have run cleanly for a while, and can be rolled back. Which upgrade setting fits, and at what price?",
+    "hint": "Lesson 13. One strategy keeps a soak period.",
+    "choices": [
+      {
+        "text": "SURGE with max_surge 1 and max_unavailable 0, at one extra node",
+        "correct": false,
+        "why": "Surge replaces old nodes as it goes; nothing waits to roll back to."
+      },
+      {
+        "text": "BLUE_GREEN, doubling the pool's machines during the upgrade",
+        "correct": true,
+        "why": "Right. The old set stays through the soak period."
+      },
+      {
+        "text": "The STABLE channel, which upgrades nodes only after a soak",
+        "correct": false,
+        "why": "A channel picks versions; how nodes are replaced is the pool's setting."
+      },
+      {
+        "text": "A NO_UPGRADES exclusion renewed every month",
+        "correct": false,
+        "why": "That postpones upgrades; it gives no rollback."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmbb338k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team in São Paulo wants maintenance between 01:00 and 07:00 local time on weekends. What start_time of day should the recurring window carry?",
+    "hint": "Lesson 13. The times are UTC, and São Paulo is three hours behind.",
+    "choices": [
+      {
+        "text": "01:00 UTC, since GKE converts to the cluster's region",
+        "correct": false,
+        "why": "Nothing converts; 01:00 UTC is 22:00 the evening before."
+      },
+      {
+        "text": "22:00 UTC",
+        "correct": false,
+        "why": "That is subtracting three hours instead of adding them."
+      },
+      {
+        "text": "04:00 UTC",
+        "correct": true,
+        "why": "Right. 01:00 in São Paulo is 04:00 UTC."
+      },
+      {
+        "text": "07:00 UTC",
+        "correct": false,
+        "why": "That would start the window at 04:00 local."
+      }
+    ]
+  },
+  {
+    "id": "ex-emdm5yb3",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A cluster on no release channel has its channel set to ___, and GKE upgrades it anyway once its version leaves support.",
+    "hint": "Lesson 13. One of the five values the provider listed.",
+    "blanks": [
+      {
+        "accept": [
+          "UNSPECIFIED"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vwac246k",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On Autopilot at 0.0445 USD per vCPU-hour and 0.0049225 per GiB-hour, what do four pods requesting 0.5 vCPU and 2 GiB each cost for 730 hours, in USD?",
+    "hint": "Lesson 14. Sum the requests first.",
+    "value": 93.72,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-yxp6cnz5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A batch platform runs forty identical pods of 1 vCPU and 4 GiB around the clock, with nothing privileged. Which mode does the lesson's arithmetic favour, and why?",
+    "hint": "Lesson 14. When do nodes sit partly empty?",
+    "choices": [
+      {
+        "text": "Standard: steady pods fill nodes, and a node costs less per vCPU",
+        "correct": true,
+        "why": "Right; the same pattern as the twelve big pods."
+      },
+      {
+        "text": "Autopilot, because nothing is privileged",
+        "correct": false,
+        "why": "That only says Autopilot is allowed, not that it is cheaper."
+      },
+      {
+        "text": "Autopilot, because Standard always pays an extra cluster fee",
+        "correct": false,
+        "why": "Both pay the same fee."
+      },
+      {
+        "text": "Standard, because Autopilot refuses more than thirty pods",
+        "correct": false,
+        "why": "There is no such limit in the lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wxnjw8h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A security agent ships as a privileged DaemonSet with hostPath mounts. On an Autopilot cluster, when does it fail?",
+    "hint": "Lesson 14. Who refuses pods?",
+    "choices": [
+      {
+        "text": "At terraform validate, as a conflict with enable_autopilot",
+        "correct": false,
+        "why": "The DaemonSet is not in the Terraform files."
+      },
+      {
+        "text": "Never: DaemonSets are exempt from Autopilot's rules",
+        "correct": false,
+        "why": "DaemonSets are allowed, not exempt."
+      },
+      {
+        "text": "Only when Google next upgrades the nodes",
+        "correct": false,
+        "why": "The refusal comes at creation."
+      },
+      {
+        "text": "At pod creation, by admission controls",
+        "correct": true,
+        "why": "Right; nothing in Terraform sees a pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qjaeg8w",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team moving to Autopilot asks what it still decides itself. Choose all that apply.",
+    "hint": "Lesson 14. Pods, not nodes.",
+    "choices": [
+      {
+        "text": "The CPU and memory each container requests",
+        "correct": true,
+        "why": "Right; on Autopilot the request is the bill."
+      },
+      {
+        "text": "The machine type of the nodes",
+        "correct": false,
+        "why": "Google picks it from the requests."
+      },
+      {
+        "text": "Whether a pod asks for Spot capacity",
+        "correct": true,
+        "why": "Right, with a node selector."
+      },
+      {
+        "text": "The surge settings of node upgrades",
+        "correct": false,
+        "why": "There is no node pool to set them on."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht348pmx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team ran its Standard cluster for a year and now wants Autopilot. What does the move involve?",
+    "hint": "Lesson 14. The mode is fixed at creation.",
+    "choices": [
+      {
+        "text": "Setting enable_autopilot = true and one terraform apply",
+        "correct": false,
+        "why": "The mode cannot change on an existing cluster."
+      },
+      {
+        "text": "A new cluster and a redeploy",
+        "correct": true,
+        "why": "Right, minus anything Autopilot refuses; the cost is the migration, not a rewrite."
+      },
+      {
+        "text": "Rewriting every Deployment for Autopilot's API",
+        "correct": false,
+        "why": "The objects mostly move unchanged."
+      },
+      {
+        "text": "Deleting the node pools so the cluster converts itself",
+        "correct": false,
+        "why": "Nothing converts a cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gzx5nb9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A pod in the namespace billing, running as the Kubernetes service account invoices, must read a bucket through the Google service account invoice-reader. Which member goes on the workloadIdentityUser binding?",
+    "hint": "Lesson 15. Pool, then [namespace/name].",
+    "choices": [
+      {
+        "text": "serviceAccount:invoice-reader@planner-dev.iam.gserviceaccount.com",
+        "correct": false,
+        "why": "That is the account being acted as, not who acts."
+      },
+      {
+        "text": "serviceAccount:planner-dev.svc.id.goog[invoices/billing]",
+        "correct": false,
+        "why": "Reversed: IAM would see a different identity and say nothing."
+      },
+      {
+        "text": "serviceAccount:planner-dev.svc.id.goog[billing/invoices]",
+        "correct": true,
+        "why": "Right; namespace first, then the Kubernetes service account."
+      },
+      {
+        "text": "planner-dev.svc.id.goog[billing/invoices]",
+        "correct": false,
+        "why": "The member needs its kind in front; validate refuses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnyqcx6j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A key file for a service account appears in a public repository. Under Workload Identity, what is the equivalent risk?",
+    "hint": "Lesson 15. What exists that could leak?",
+    "choices": [
+      {
+        "text": "None of the same kind: only tokens that expire within about an hour",
+        "correct": true,
+        "why": "Right; there is no long-lived secret to leak."
+      },
+      {
+        "text": "The workload pool name, which grants access to anyone who knows it",
+        "correct": false,
+        "why": "A pool name is an identifier, not a credential."
+      },
+      {
+        "text": "The annotation on the Kubernetes service account",
+        "correct": false,
+        "why": "It names an email; it proves nothing by itself."
+      },
+      {
+        "text": "The base64 Secret GKE creates for each pod",
+        "correct": false,
+        "why": "GKE creates no such Secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qc595y5",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Order the steps of replacing a static key with Workload Identity for an existing pod, safest first.",
+    "hint": "Lesson 15. The key goes only when nothing needs it.",
+    "items": [
+      "Enable the workload pool and GKE_METADATA on the nodes",
+      "Grant the binding and annotate the Kubernetes service account",
+      "Redeploy the pod without the mounted key and confirm it reads the bucket",
+      "Delete the key at Google and the Secret in the cluster"
+    ],
+    "trap": "Deleting the key first breaks the pod before its replacement identity works."
+  },
+  {
+    "id": "ex-d7vkg9ya",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each Workload Identity setup to what it needs.",
+    "hint": "Lesson 15. Two ways, and the node setting under both.",
+    "pairs": [
+      {
+        "left": "Acting as a Google service account",
+        "right": "A workloadIdentityUser binding and an annotation"
+      },
+      {
+        "left": "Direct access to a bucket",
+        "right": "A principal:// member with the project number"
+      },
+      {
+        "left": "Pods on a Standard node pool",
+        "right": "workload_metadata_config set to GKE_METADATA"
+      }
+    ],
+    "right_distractors": [
+      "A JSON key mounted from a Secret"
+    ]
+  },
+  {
+    "id": "ex-yrpyfnjy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A game server in GKE speaks UDP to players on the internet. What should expose it?",
+    "hint": "Lesson 16. Which load balancer is not about HTTP?",
+    "choices": [
+      {
+        "text": "An Ingress with a ManagedCertificate",
+        "correct": false,
+        "why": "An Ingress routes HTTP; it cannot carry a game's UDP."
+      },
+      {
+        "text": "A Gateway of class gke-l7-global-external-managed",
+        "correct": false,
+        "why": "That class is a layer-7 HTTP load balancer."
+      },
+      {
+        "text": "A NEG annotation on a ClusterIP Service",
+        "correct": false,
+        "why": "A NEG is a backend for a load balancer, not one itself."
+      },
+      {
+        "text": "A Service of type LoadBalancer",
+        "correct": true,
+        "why": "Right; a passthrough load balancer forwards it untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-80emgqjg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Right after a rollout, a team with node backends sees errors for a minute while Kubernetes reports every new pod ready. What would container-native load balancing change?",
+    "hint": "Lesson 16. When does a new pod count as ready?",
+    "choices": [
+      {
+        "text": "Nothing: the minute is the load balancer's fixed delay",
+        "correct": false,
+        "why": "The gap comes from readiness not reaching the load balancer."
+      },
+      {
+        "text": "Ready would wait for the load balancer",
+        "correct": true,
+        "why": "Right; with the readiness gate a pod is ready only once healthy in the load balancer."
+      },
+      {
+        "text": "Requests would be mirrored to old and new pods",
+        "correct": false,
+        "why": "Nothing mirrors requests."
+      },
+      {
+        "text": "The load balancer would move to the pods' zone",
+        "correct": false,
+        "why": "Its location is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-0r371q89",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An HTTPRoute sends weight 95 to orders and 5 to orders-next. Out of 40,000 requests, about how many reach orders-next?",
+    "hint": "Lesson 16. Five parts in a hundred.",
+    "value": 2000,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-yjq0d5kt",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the Gateway API, the object that says which kind of load balancer to build, and which GKE provides, is the Gateway___.",
+    "hint": "Lesson 16. Owned by Google, not by a team.",
+    "blanks": [
+      {
+        "accept": [
+          "Class"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8st7sk18",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function that resizes uploads opens a database connection inside the handler on every call, and under load the database runs out of connections. What is the change lesson 17 points to?",
+    "hint": "Lesson 17. What is safe to share between calls on one instance?",
+    "choices": [
+      {
+        "text": "Raise max_instance_count so each call gets its own instance",
+        "correct": false,
+        "why": "More instances open more connections, not fewer."
+      },
+      {
+        "text": "Store the connection in a global counter keyed by request",
+        "correct": false,
+        "why": "A per-request key still opens one per call."
+      },
+      {
+        "text": "Open it once at module level and reuse it",
+        "correct": true,
+        "why": "Right. Expensive, shareable work goes outside the function, like PRICES."
+      },
+      {
+        "text": "Move the function to the first generation, one request per instance",
+        "correct": false,
+        "why": "That multiplies instances, and with them connections."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yj61std",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A CloudEvent sent to a function carries ce-id, ce-type and ce-source but its sender forgot ce-specversion. What does the function's own code see?",
+    "hint": "Lesson 17. The framework reads the attributes first.",
+    "choices": [
+      {
+        "text": "Nothing: the framework answers 400 before calling it",
+        "correct": true,
+        "why": "Right. A required attribute missing means no CloudEvent and no call."
+      },
+      {
+        "text": "An event whose specversion defaults to 1.0",
+        "correct": false,
+        "why": "Nothing is filled in; a missing attribute makes it no CloudEvent."
+      },
+      {
+        "text": "The raw HTTP request, since parsing failed",
+        "correct": false,
+        "why": "The function is not called with a fallback."
+      },
+      {
+        "text": "An event with an empty specversion string",
+        "correct": false,
+        "why": "The framework refuses rather than passing it on."
+      }
+    ]
+  },
+  {
+    "id": "ex-hfx33z4h",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With the quote function's prices (mug 3500, tee 7900, poster 2500 cents), what total_cents does an order of two tees and four posters return?",
+    "hint": "Lesson 17. 2 x 7900 + 4 x 2500.",
+    "value": 25800,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-zfd5w5ge",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each piece of work to the shape lessons 17 and 18 would give it.",
+    "hint": "Lessons 17 and 18. Who calls, and is anyone waiting?",
+    "pairs": [
+      {
+        "left": "A price quote the checkout waits for",
+        "right": "An HTTP function"
+      },
+      {
+        "left": "A thumbnail for each uploaded photo",
+        "right": "An Eventarc storage trigger"
+      },
+      {
+        "left": "An inventory entry for each new VM in the project",
+        "right": "An audit-log trigger"
+      },
+      {
+        "left": "Reacting to every order published by the web service",
+        "right": "A Pub/Sub trigger"
+      }
+    ],
+    "right_distractors": [
+      "A Compute Engine machine polling every minute"
+    ]
+  },
+  {
+    "id": "ex-jex86s62",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A trigger function charges a card and has retries turned on. The payment provider confirms the charge, but the function crashes before returning. What happens next, and what prevents a double charge?",
+    "hint": "Lesson 18. At least once.",
+    "choices": [
+      {
+        "text": "Nothing, because a crash after the work counts as success",
+        "correct": false,
+        "why": "No 2xx came back, so the event is delivered again."
+      },
+      {
+        "text": "The event moves straight to the dead-letter topic",
+        "correct": false,
+        "why": "Only after the last allowed attempt."
+      },
+      {
+        "text": "It is delivered again, and turning retries off afterwards undoes the charge",
+        "correct": false,
+        "why": "Nothing undoes a charge already made."
+      },
+      {
+        "text": "It returns; handled event ids stop the repeat",
+        "correct": true,
+        "why": "Right. Idempotence by event id is the first defence."
+      }
+    ]
+  },
+  {
+    "id": "ex-xb44cc7h",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The emulator redelivered a failing message about once a second: 10 deliveries in the 10 seconds the lab waited. At that pace, how many deliveries would one minute of failure produce?",
+    "hint": "Lesson 18. Ten in ten seconds.",
+    "value": 60,
+    "tolerance": 2,
+    "unit": "deliveries"
+  },
+  {
+    "id": "ex-tp6mp55r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team moves the thumbnails function from a Cloud Storage Pub/Sub notification to an Eventarc storage trigger, and every event now fails with a KeyError on \"message\". Why?",
+    "hint": "Lesson 18. The envelope differs.",
+    "choices": [
+      {
+        "text": "Eventarc delivers storage events as pull messages",
+        "correct": false,
+        "why": "It pushes a CloudEvent like every other source."
+      },
+      {
+        "text": "The data is the object JSON, with no message",
+        "correct": true,
+        "why": "Right. The metadata is the same; the parsing must change."
+      },
+      {
+        "text": "The bucket attribute must be named bucketId in the trigger",
+        "correct": false,
+        "why": "The criterion is bucket; the error is in the parsing."
+      },
+      {
+        "text": "Storage events need audit logs enabled first",
+        "correct": false,
+        "why": "Storage events are direct."
+      }
+    ]
+  },
+  {
+    "id": "ex-te77v01q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Someone wants a function to run whenever a Cloud Storage object is read, and builds an audit-log trigger on storage.objects.get. Nothing ever fires. What is the most likely reason?",
+    "hint": "Lesson 18. Two kinds of audit log.",
+    "choices": [
+      {
+        "text": "Reads are delivered only to pull subscriptions",
+        "correct": false,
+        "why": "Delivery does not depend on the method."
+      },
+      {
+        "text": "The trigger must name the object, not the bucket",
+        "correct": false,
+        "why": "Naming is not what stops it."
+      },
+      {
+        "text": "Data access logs are off, so reads write no audit entry",
+        "correct": true,
+        "why": "Right. An unlogged method never fires, and nothing says so."
+      },
+      {
+        "text": "Audit-log triggers deliver only after 24 hours",
+        "correct": false,
+        "why": "They take minutes, not a day."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6tn7ejw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An App Engine standard service set to F1 is visited by staff from 9:00 to 17:00 and scales to zero otherwise, one instance while open. What does it cost per day?",
+    "hint": "Lesson 19. Compare the hours with the daily allowance.",
+    "choices": [
+      {
+        "text": "Nothing; 8 hours fit in the 28 free",
+        "correct": true,
+        "why": "Right. The free F hours are per day per project."
+      },
+      {
+        "text": "0.40 USD: 8 hours at 0.05",
+        "correct": false,
+        "why": "The daily free allowance comes first."
+      },
+      {
+        "text": "1.20 USD: a full day of 24 hours at 0.05",
+        "correct": false,
+        "why": "It scales to zero outside opening hours."
+      },
+      {
+        "text": "43.58 USD a month, the flexible price",
+        "correct": false,
+        "why": "That is a flexible instance, which never scales to zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1pbd1wx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A flexible service runs its default two instances of 2 vCPU and 2 GiB all month. At 0.0526 per vCPU-hour and 0.0071 per GiB-hour, what does it cost for 730 hours, in USD?",
+    "hint": "Lesson 19. (2 x 0.0526 + 2 x 0.0071) x 730 x 2.",
+    "value": 174.32,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-rp11mxq5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A company acquires a startup whose App Engine app lives in us-central and must now serve Brazilian law from São Paulo. What does lesson 19 say the move takes?",
+    "hint": "Lesson 19. The region is chosen once.",
+    "choices": [
+      {
+        "text": "Editing location_id and applying",
+        "correct": false,
+        "why": "The application's region cannot change."
+      },
+      {
+        "text": "Deploying a new version with a region setting",
+        "correct": false,
+        "why": "Versions do not choose regions."
+      },
+      {
+        "text": "Splitting traffic 50/50 between the two regions",
+        "correct": false,
+        "why": "A split is between versions of one application."
+      },
+      {
+        "text": "A new project and a migration",
+        "correct": true,
+        "why": "Right. One application per project, one region forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-6z5vd8y5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "To keep each visitor on one version during a 90/10 rollout, App Engine splits traffic by ___.",
+    "hint": "Lesson 19. IP, random, or the third one.",
+    "blanks": [
+      {
+        "accept": [
+          "cookie"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vy4m3800",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A reporting job must call a partner API that allows 2 requests a second, for 10,000 records after a sale. Which tool from lesson 20 carries that limit?",
+    "hint": "Lesson 20. Which product owns \"how fast\"?",
+    "choices": [
+      {
+        "text": "Cloud Scheduler, firing every half second",
+        "correct": false,
+        "why": "Scheduler has a clock, not a rate limit, and fires at most each minute."
+      },
+      {
+        "text": "A Cloud Tasks queue with max_dispatches_per_second = 2",
+        "correct": true,
+        "why": "Right. The queue absorbs the burst at the partner's rate."
+      },
+      {
+        "text": "A Pub/Sub push subscription to the partner",
+        "correct": false,
+        "why": "A push subscription has no dispatch-rate setting of its own."
+      },
+      {
+        "text": "A function with max_instance_count = 2",
+        "correct": false,
+        "why": "Two instances can still send many requests a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-86zhaayc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "That queue holds the 10,000 records and dispatches 2 a second. How many seconds does it take to drain, at best?",
+    "hint": "Lesson 20. Tasks divided by rate.",
+    "value": 5000,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-pwe29h9a",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "With min_backoff 5s, max_backoff 100s and max_doublings 2, order the waits of the first five retries as they occur.",
+    "hint": "Lesson 20. Two doublings, then a step of 5 x 2^2.",
+    "items": [
+      "5 s",
+      "10 s",
+      "20 s",
+      "40 s",
+      "60 s"
+    ],
+    "trap": "After the doublings the wait grows by a fixed 20 s, so 40 is followed by 60, not 80."
+  },
+  {
+    "id": "ex-kbs9674b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Scheduler job is set to \"0 2 * * *\" with time_zone America/New_York to start a São Paulo backup at 03:00 local time. What goes wrong?",
+    "hint": "Lesson 20. The zone's own rules are followed.",
+    "choices": [
+      {
+        "text": "Nothing: the region southamerica-east1 overrides the zone",
+        "correct": false,
+        "why": "The region does not set the time zone."
+      },
+      {
+        "text": "Scheduler refuses zones outside the job's region",
+        "correct": false,
+        "why": "Any IANA zone is accepted."
+      },
+      {
+        "text": "New York's DST shifts it an hour twice a year",
+        "correct": true,
+        "why": "Right. Name the zone the time is meant in: America/Sao_Paulo."
+      },
+      {
+        "text": "The job runs at 02:00 UTC instead",
+        "correct": false,
+        "why": "With a zone named, UTC is not used."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y8wwhfb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A handler behind a Cloud Tasks queue receives a task for an order that was cancelled and deleted. Which responses follow lesson 20? Choose all that apply.",
+    "hint": "Lesson 20. Will time fix it?",
+    "choices": [
+      {
+        "text": "Log that the order no longer exists",
+        "correct": true,
+        "why": "Right; the reason must be visible."
+      },
+      {
+        "text": "Answer with a 2xx so the queue stops",
+        "correct": true,
+        "why": "Right; no retry will find the order."
+      },
+      {
+        "text": "Answer 503 so it is retried later",
+        "correct": false,
+        "why": "Every attempt would fail the same way."
+      },
+      {
+        "text": "Let the dispatch deadline pass without answering",
+        "correct": false,
+        "why": "That is a failure and is retried."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxb9tz3p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Cloud Run service in São Paulo starts slowly on every cold start, and its images live in a us-central1 repository. What change does lesson 21 suggest?",
+    "hint": "Lesson 21. The region is part of the host.",
+    "choices": [
+      {
+        "text": "Store them close to where they run",
+        "correct": true,
+        "why": "Right. Pulls stay in the region: faster, and no transfer between regions."
+      },
+      {
+        "text": "Make the repository virtual",
+        "correct": false,
+        "why": "A virtual repository still pulls from where the images are."
+      },
+      {
+        "text": "Turn on immutable tags",
+        "correct": false,
+        "why": "Tags do not move bytes closer."
+      },
+      {
+        "text": "Add a cleanup policy to keep fewer versions",
+        "correct": false,
+        "why": "Fewer stored versions do not speed a pull."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0ry9ar1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team deploys web@sha256:… to production. The next day someone pushes a broken build as web:latest. What happens to production?",
+    "hint": "Lesson 21. A digest names bytes.",
+    "choices": [
+      {
+        "text": "It picks up the broken build at the next restart",
+        "correct": false,
+        "why": "Only a deployment by tag would."
+      },
+      {
+        "text": "The push is refused because production uses the image",
+        "correct": false,
+        "why": "Without immutable tags, the push succeeds."
+      },
+      {
+        "text": "The registry rewrites the digest to the new build",
+        "correct": false,
+        "why": "A digest cannot point at other bytes."
+      },
+      {
+        "text": "Nothing: it runs the digest it was given",
+        "correct": true,
+        "why": "Right. Moving latest cannot touch a deployment by digest."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7jbb0hp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A repository holds 40.5 GiB of images. At 0.10 USD per GiB-month after the first 0.5 GiB, what does a month of storage cost?",
+    "hint": "Lesson 21.",
+    "value": 4.0,
+    "tolerance": 0.001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-jcns52pr",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A repository mode that caches an upstream such as Docker Hub, fetching on the first pull, is called ___.",
+    "hint": "Lesson 21. Standard, virtual, or this one.",
+    "blanks": [
+      {
+        "accept": [
+          "remote"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

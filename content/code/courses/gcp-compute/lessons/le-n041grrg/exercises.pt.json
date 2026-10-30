@@ -1,0 +1,427 @@
+{
+  "ex-8v39f8mg": {
+    "prompt": "Uma máquina com um disco de dados persistente é apagada. O que acontece com o disco?",
+    "hint": "O disco faz parte da máquina?",
+    "choices": [
+      {
+        "text": "É apagado junto com a máquina, como um drive dentro de um servidor seria",
+        "why": "Essa é a imagem errada: o disco é um recurso na rede do Google."
+      },
+      {
+        "text": "Vira um snapshot automaticamente",
+        "why": "Nenhum snapshot é tirado sem um agendamento ou uma pessoa."
+      },
+      {
+        "text": "Fica, pronto para outra máquina",
+        "why": "Isso. Um disco de dados criado à parte sobrevive à máquina."
+      },
+      {
+        "text": "Vai para o armazenamento regional do projeto",
+        "why": "Nada se move; o disco fica onde estava."
+      }
+    ]
+  },
+  "ex-2per7a6t": {
+    "prompt": "Um banco num pd-ssd de 50 GiB está lento no disco. Alguém propõe um pd-balanced de 500 GiB. Por que isso pode ser mais rápido?",
+    "hint": "Do que depende o desempenho de um disco persistente?",
+    "choices": [
+      {
+        "text": "O desempenho cresce com o tamanho, e dez vezes supera o tipo",
+        "why": "Isso, até o teto do tipo e o da máquina."
+      },
+      {
+        "text": "O pd-balanced usa SSDs mais novos que o pd-ssd",
+        "why": "O pd-ssd tem mais operações por GiB, não menos."
+      },
+      {
+        "text": "Discos balanced têm licença para ignorar o teto de operações da própria máquina",
+        "why": "Todo disco fica com o menor entre o próprio limite e o da máquina."
+      },
+      {
+        "text": "Um disco maior fica em cache na memória do host",
+        "why": "O tamanho compra desempenho por GiB, não um cache."
+      }
+    ]
+  },
+  "ex-gqdnexda": {
+    "prompt": "Por que a lição põe /dev/disk/by-id/google-orders-data no /etc/fstab em vez de /dev/sdb?",
+    "hint": "Qual nome continua igual entre boots?",
+    "choices": [
+      {
+        "text": "/dev/sdb é reservado ao disco de boot em toda máquina Debian",
+        "why": "O disco de boot costuma ser sda; esse não é o motivo."
+      },
+      {
+        "text": "O fstab recusa nomes que começam com /dev/sd",
+        "why": "Ele aceita; eles só não são estáveis."
+      },
+      {
+        "text": "O caminho by-id é mais rápido de montar",
+        "why": "A velocidade é a mesma; a estabilidade muda."
+      },
+      {
+        "text": "/dev/sdb muda entre boots; o nome by-id não muda",
+        "why": "Isso. O caminho by-id vem do nome que você deu no Terraform."
+      }
+    ]
+  },
+  "ex-9sf6bf9m": {
+    "prompt": "Pela tabela, quanto custa por mês um disco pd-balanced regional de 200 GiB, em USD?",
+    "hint": "0,2 por GiB-mês.",
+    "unit": "USD"
+  },
+  "ex-b4vq3e2h": {
+    "prompt": "Um grupo de máquinas web sem estado não guarda em disco nada que não esteja na imagem. Um disco regional para cada uma é boa ideia?",
+    "hint": "O que a segunda cópia protegeria?",
+    "choices": [
+      {
+        "text": "Sim: senão uma queda de zona perderia os dados da loja",
+        "why": "Os dados não estão nesses discos; é isso que sem estado quer dizer."
+      },
+      {
+        "text": "Não: as cópias já existem, paga duas vezes",
+        "why": "Isso. Uma máquina perdida é refeita a partir da imagem; nada no disco dela é único."
+      },
+      {
+        "text": "Sim: discos regionais escrevem mais rápido que os zonais",
+        "why": "São um pouco mais lentos, já que cada escrita é confirmada duas vezes."
+      },
+      {
+        "text": "Não: discos regionais não podem ser de boot",
+        "why": "A objeção é o custo de uma cópia desnecessária, não uma regra sobre boot."
+      }
+    ]
+  },
+  "ex-tg47zkts": {
+    "prompt": "Um disco regional grava cada bloco em ___ zonas antes de confirmar a escrita.",
+    "hint": "Quantas cópias ele mantém?",
+    "blanks": [
+      {
+        "accept": [
+          "duas",
+          "2"
+        ]
+      }
+    ]
+  },
+  "ex-65bs3p0t": {
+    "prompt": "Um Hyperdisk Balanced de 200 GiB é provisionado com 5.000 IOPS e a vazão base. A 0,08 por GiB-mês e 0,005 por IOPS-mês acima de 3.000, quanto dá um mês, em USD?",
+    "hint": "16 pelo espaço, mais 2.000 IOPS extras.",
+    "unit": "USD"
+  },
+  "ex-7fp6hexf": {
+    "prompt": "O que o Hyperdisk muda em relação a um disco persistente?",
+    "hint": "Três coisas que um disco vende.",
+    "choices": [
+      {
+        "text": "É ligado dentro do host, como um SSD local",
+        "why": "O Hyperdisk é armazenamento em rede, como o disco persistente."
+      },
+      {
+        "text": "Mantém duas cópias em duas zonas por padrão",
+        "why": "Isso é um disco regional; o Hyperdisk Balanced é zonal, salvo a forma HA."
+      },
+      {
+        "text": "Capacidade, IOPS e vazão são compradas à parte",
+        "why": "Isso. A velocidade não precisa mais vir do tamanho."
+      },
+      {
+        "text": "É cobrado por operação e não por GiB",
+        "why": "O espaço continua por GiB; o desempenho extra é por IOPS e por MBps provisionados."
+      }
+    ]
+  },
+  "ex-fgq1kfp9": {
+    "prompt": "Numa n4-standard-4, o disco de boot é trocado para pd-balanced e o terraform plan passa. O que acontece depois?",
+    "hint": "Que discos a N4 anexa?",
+    "choices": [
+      {
+        "text": "O Compute Engine recusa: a N4 só usa Hyperdisk",
+        "why": "Isso. O mesmo limite das lições 1 e 2."
+      },
+      {
+        "text": "A máquina sobe normalmente, já que o plan passou",
+        "why": "Um plan verifica o arquivo, não as regras da série."
+      },
+      {
+        "text": "O Terraform converte o disco para Hyperdisk no apply",
+        "why": "Nada converte um tipo em silêncio."
+      },
+      {
+        "text": "O disco é anexado mas fica limitado aos 3.000 IOPS da base",
+        "why": "Ele nem é anexado."
+      }
+    ]
+  },
+  "ex-zqjvh1zh": {
+    "prompt": "Todo Hyperdisk Balanced inclui 3.000 IOPS e ___ MBps sem custo extra.",
+    "hint": "A base de vazão na página de preços.",
+    "blanks": [
+      {
+        "accept": [
+          "140"
+        ]
+      }
+    ]
+  },
+  "ex-qxe7vc5b": {
+    "prompt": "Um relatório roda dois dias no fim de cada mês e precisa de 12.000 IOPS; no resto do mês 3.000 bastam. O que o Hyperdisk permite e o disco persistente não?",
+    "hint": "Um disco pode encolher?",
+    "choices": [
+      {
+        "text": "Subir a 12.000 sozinho, sem mudança nenhuma",
+        "why": "O Hyperdisk entrega o que foi provisionado; não sobe sozinho."
+      },
+      {
+        "text": "Pagar pelos IOPS só quando o relatório lê o disco",
+        "why": "IOPS provisionados são cobrados enquanto estão definidos, usados ou não."
+      },
+      {
+        "text": "Mover o disco para um SSD local por dois dias",
+        "why": "Um SSD local não é anexado depois da criação, e não é onde dados devem morar."
+      },
+      {
+        "text": "Subir os IOPS antes do relatório e baixar depois",
+        "why": "Isso. Um disco persistente teria de crescer, e não volta a encolher."
+      }
+    ]
+  },
+  "ex-b4wwgk6s": {
+    "prompt": "Qual destes pertence a um SSD local?",
+    "hint": "Algo que pode ser reconstruído.",
+    "choices": [
+      {
+        "text": "O banco de orders, pela velocidade",
+        "why": "Os dados se perderiam com o host."
+      },
+      {
+        "text": "Transbordo de uma ordenação",
+        "why": "Isso. Espaço de rascunho que um reinício reconstrói."
+      },
+      {
+        "text": "A única cópia das fotos enviadas",
+        "why": "Nunca a única cópia de nada."
+      },
+      {
+        "text": "O disco de boot da máquina",
+        "why": "Uma máquina sobe de um disco persistente ou Hyperdisk."
+      }
+    ]
+  },
+  "ex-k5s6jbj1": {
+    "prompt": "Um worker em lote com SSD local é parado toda noite para economizar. O que ele encontra de manhã?",
+    "hint": "Parar tira a máquina do host.",
+    "choices": [
+      {
+        "text": "Tudo como estava, exatamente como depois de um reboot comum",
+        "why": "Um reboot mantém os dados; uma parada não, salvo se preservados."
+      },
+      {
+        "text": "O SSD solto e guardado como disco separado",
+        "why": "Um SSD local não existe fora de um host."
+      },
+      {
+        "text": "Um SSD local vazio, salvo se pediu preservação",
+        "why": "Isso. Parar é o caso que surpreende."
+      },
+      {
+        "text": "Um snapshot do SSD tirado na parada",
+        "why": "Snapshots são de discos persistentes e Hyperdisk, não de SSD local."
+      }
+    ]
+  },
+  "ex-pk8c9hwx": {
+    "prompt": "A 0,08 por GiB-mês, quanto custam por mês quatro fatias de SSD local de 375 GiB, em USD?",
+    "hint": "Uma fatia custa 30.",
+    "unit": "USD"
+  },
+  "ex-m745czg1": {
+    "prompt": "Ordene estes eventos, do que mantém os dados de um SSD local até o que os perde com a máquina sumindo de vez.",
+    "hint": "Reboot e migração ao vivo mantêm; apagar é definitivo.",
+    "items": [
+      "O sistema reinicia",
+      "Uma migração ao vivo para outro host",
+      "A máquina é parada",
+      "A máquina é apagada"
+    ],
+    "trap": "A migração ao vivo copia os dados para o host novo, então os mantém; uma parada não."
+  },
+  "ex-xrwrnavr": {
+    "prompt": "Por que um SSD local não pode ser acrescentado a uma máquina rodando como um disco persistente pode?",
+    "hint": "Onde ele está?",
+    "choices": [
+      {
+        "text": "Faz parte do host",
+        "why": "Isso. É anexado na criação e nunca depois."
+      },
+      {
+        "text": "O Terraform não tem recurso para SSD local",
+        "why": "scratch_disk é como o Terraform escreve um."
+      },
+      {
+        "text": "SSDs locais só são vendidos com GPU",
+        "why": "Uma N2 aceita, como mostra o arquivo desta lição."
+      },
+      {
+        "text": "Precisa de um agendamento de snapshots antes",
+        "why": "Agendamentos são para discos persistentes."
+      }
+    ]
+  },
+  "ex-1b4mxk9t": {
+    "prompt": "O que o segundo snapshot de um disco copia?",
+    "hint": "Snapshots são incrementais.",
+    "choices": [
+      {
+        "text": "O disco inteiro de novo, incluindo blocos vazios",
+        "why": "Nem o primeiro copia blocos vazios."
+      },
+      {
+        "text": "Só os arquivos que a aplicação marcou para backup",
+        "why": "Um snapshot trabalha com blocos, não arquivos."
+      },
+      {
+        "text": "Uma cópia do primeiro snapshot mais as mudanças",
+        "why": "Nada é copiado duas vezes."
+      },
+      {
+        "text": "Só os blocos que mudaram desde o primeiro",
+        "why": "Isso. É o que torna barato o snapshot noturno."
+      }
+    ]
+  },
+  "ex-s7rfqmy2": {
+    "prompt": "O mais antigo de catorze snapshots é apagado pelo agendamento. O seguinte ainda pode ser restaurado?",
+    "hint": "O que o Compute Engine faz com blocos que um snapshot mais novo ainda precisa?",
+    "choices": [
+      {
+        "text": "Não: precisava dos blocos do mais antigo, então a cadeia quebrou",
+        "why": "Apagar nunca quebra um snapshot mais novo."
+      },
+      {
+        "text": "Sim: os blocos de que ele precisa são passados para ele",
+        "why": "Isso. Apagar é seguro em qualquer ordem."
+      },
+      {
+        "text": "Só se fosse um snapshot de arquivamento",
+        "why": "O tipo não decide isso."
+      },
+      {
+        "text": "Só até a próxima execução do agendamento",
+        "why": "Fica restaurável enquanto for mantido."
+      }
+    ]
+  },
+  "ex-t2dpbyf8": {
+    "prompt": "O agendamento diz start_time = \"04:00\". Quando ele roda em São Paulo?",
+    "hint": "Que relógio o campo usa?",
+    "choices": [
+      {
+        "text": "Às 04:00, já que a política está em southamerica-east1",
+        "why": "A região não define o fuso do campo."
+      },
+      {
+        "text": "Às 04:00 de Iowa, de onde vêm os preços",
+        "why": "A tabela de preços não tem nada a ver com agendamentos."
+      },
+      {
+        "text": "À 01:00, porque o campo é em UTC",
+        "why": "Isso. São Paulo fica três horas atrás do UTC."
+      },
+      {
+        "text": "Num horário aleatório dentro de quatro horas",
+        "why": "O horário é o escrito, em UTC."
+      }
+    ]
+  },
+  "ex-jzrdnn9t": {
+    "prompt": "Um disco tem 60 GiB em uso e cerca de 2 GiB mudando por dia. Dez snapshots noturnos são mantidos. No máximo quantos GiB eles guardam, antes da compressão?",
+    "hint": "O primeiro guarda o que está em uso; cada um dos outros nove guarda um dia de mudanças.",
+    "unit": "GiB"
+  },
+  "ex-37xk9x33": {
+    "prompt": "Por que a lição define on_source_disk_delete = \"KEEP_AUTO_SNAPSHOTS\"?",
+    "hint": "Quando os snapshots fazem mais falta?",
+    "choices": [
+      {
+        "text": "Para que apagar o disco errado deixe os snapshots para restaurar",
+        "why": "Isso. É nesse dia que os snapshots importam."
+      },
+      {
+        "text": "Deixa os snapshots mais baratos de guardar",
+        "why": "Muda o que sobrevive, não o preço."
+      },
+      {
+        "text": "Sem ele, o plan falha",
+        "why": "O campo é opcional; falha um valor mal escrito, não um ausente."
+      },
+      {
+        "text": "Impede o disco de ser apagado",
+        "why": "O disco ainda pode ser apagado; os snapshots ficam."
+      }
+    ]
+  },
+  "ex-44pekky0": {
+    "prompt": "Um snapshot de um disco em uso é consistente com uma ___: o que você encontraria depois de puxar o cabo de energia.",
+    "hint": "Não consistente com a aplicação.",
+    "blanks": [
+      {
+        "accept": [
+          "queda"
+        ]
+      }
+    ]
+  },
+  "ex-qza5sz6a": {
+    "prompt": "Ligue cada necessidade ao armazenamento que esta lição recomenda.",
+    "hint": "Durabilidade, duas zonas, velocidade comprada à parte, rascunho.",
+    "pairs": [
+      {
+        "left": "Um disco de dados que sobrevive à máquina",
+        "right": "pd-balanced"
+      },
+      {
+        "left": "Um banco sem réplica que precisa sobreviver a uma queda de zona",
+        "right": "um disco regional"
+      },
+      {
+        "left": "Um banco numa N4 precisando de 6.000 IOPS em 100 GiB",
+        "right": "hyperdisk-balanced"
+      },
+      {
+        "left": "Os arquivos transbordados de uma grande ordenação",
+        "right": "um SSD local"
+      }
+    ],
+    "right_distractors": [
+      "um snapshot de arquivamento"
+    ]
+  },
+  "ex-msa2zbd2": {
+    "prompt": "O disco orders-data é apagado por engano numa terça. Com o agendamento da lição, como é a restauração?",
+    "hint": "Uma restauração nunca escreve por cima de nada.",
+    "choices": [
+      {
+        "text": "Recuperar o disco da lixeira da zona",
+        "why": "A resposta da lição são os snapshots que ela manteve."
+      },
+      {
+        "text": "Restaurar o disco no lugar a partir do snapshot de arquivamento",
+        "why": "O agendamento guarda snapshots padrão, e restaurar cria um disco novo."
+      },
+      {
+        "text": "Nada: os snapshots foram junto com o disco",
+        "why": "KEEP_AUTO_SNAPSHOTS existe para impedir exatamente isso."
+      },
+      {
+        "text": "Criar um disco novo do snapshot de segunda à noite",
+        "why": "Isso. Os snapshots ficaram, e o mais novo tem os dados até 04:00 UTC."
+      }
+    ]
+  },
+  "ex-9dm8bm1s": {
+    "prompt": "Pela tabela, quanto a mais por mês custa um pd-ssd de 100 GiB que um pd-balanced de 100 GiB, em USD?",
+    "hint": "0,17 contra 0,1 por GiB-mês.",
+    "unit": "USD"
+  }
+}

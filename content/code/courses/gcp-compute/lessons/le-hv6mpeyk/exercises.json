@@ -1,0 +1,668 @@
+[
+  {
+    "id": "ex-8mnk6efw",
+    "version": 1,
+    "section": "jobs-and-tasks",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each word to what it is.",
+    "hint": "Definition, run, piece.",
+    "pairs": [
+      {
+        "left": "job",
+        "right": "The definition: an image and how to cut the work"
+      },
+      {
+        "left": "execution",
+        "right": "One run of it, tonight's for instance"
+      },
+      {
+        "left": "task",
+        "right": "One piece of a run, with an index"
+      }
+    ],
+    "right_distractors": [
+      "A request the job answers"
+    ]
+  },
+  {
+    "id": "ex-s1y9sey6",
+    "version": 1,
+    "section": "jobs-and-tasks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Cloud Run read to decide whether a task succeeded?",
+    "hint": "Not the logs.",
+    "choices": [
+      {
+        "text": "Whether an ERROR line was logged",
+        "correct": false,
+        "why": "Logs are not read for the verdict."
+      },
+      {
+        "text": "Whether the container answered on PORT",
+        "correct": false,
+        "why": "A job has no port."
+      },
+      {
+        "text": "The container's exit status, 0 or not",
+        "correct": true,
+        "why": "Right. A failing job must exit non-zero."
+      },
+      {
+        "text": "How long the task ran against its timeout",
+        "correct": false,
+        "why": "A timeout fails a task; finishing early does not make it succeed."
+      }
+    ]
+  },
+  {
+    "id": "ex-j51cynen",
+    "version": 1,
+    "section": "jobs-and-tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service answers a request at once and then spends two minutes generating a report in the background. What does the lesson call it?",
+    "hint": "Who is waiting for the report?",
+    "choices": [
+      {
+        "text": "A job pretending to be a service",
+        "correct": true,
+        "why": "Right. Work with an end and nobody waiting is a job."
+      },
+      {
+        "text": "A well-designed service that keeps callers fast",
+        "correct": false,
+        "why": "It relies on CPU after the response, which lesson 11 explains."
+      },
+      {
+        "text": "A task with parallelism of one",
+        "correct": false,
+        "why": "It is not a job at all, which is the problem."
+      },
+      {
+        "text": "A service with a minimum instance",
+        "correct": false,
+        "why": "Nothing says it has a minimum."
+      }
+    ]
+  },
+  {
+    "id": "ex-cts662yk",
+    "version": 1,
+    "section": "jobs-and-tasks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An execution of a job with --tasks=3 starts three ___, each told which piece it is.",
+    "hint": "What Cloud Run always starts.",
+    "blanks": [
+      {
+        "accept": [
+          "containers",
+          "container"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fj7h84ak",
+    "version": 1,
+    "section": "task-index",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With 3 tasks, which orders does task 1 take from ORDERS[index::count] over 1001 to 1010?",
+    "hint": "Start at position 1, step 3.",
+    "choices": [
+      {
+        "text": "1001, 1004, 1007 and 1010",
+        "correct": false,
+        "why": "That is task 0."
+      },
+      {
+        "text": "1004, 1005 and 1006",
+        "correct": false,
+        "why": "That is a range, not a stride."
+      },
+      {
+        "text": "1003, 1006 and 1009",
+        "correct": false,
+        "why": "That is task 2."
+      },
+      {
+        "text": "1002, 1005 and 1008",
+        "correct": true,
+        "why": "Right. The capture shows the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-enwaw8nm",
+    "version": 1,
+    "section": "task-index",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ten orders are cut by stride across 3 tasks. How many orders does task 0 take?",
+    "hint": "Positions 0, 3, 6, 9.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-j5kgcv3j",
+    "version": 1,
+    "section": "task-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each task reads the orders from a database with SELECT id FROM orders WHERE day = yesterday, then takes its stride. What is missing?",
+    "hint": "Is the list the same in every task?",
+    "choices": [
+      {
+        "text": "A LIMIT, so each task reads less",
+        "correct": false,
+        "why": "Each still needs the whole list to take its stride."
+      },
+      {
+        "text": "An ORDER BY",
+        "correct": true,
+        "why": "Right. Without it the strides may overlap and leave gaps."
+      },
+      {
+        "text": "A transaction around the read",
+        "correct": false,
+        "why": "Isolation does not fix the order of rows."
+      },
+      {
+        "text": "The task index in the WHERE clause",
+        "correct": false,
+        "why": "That is the hash cut, a different method."
+      }
+    ]
+  },
+  {
+    "id": "ex-reew8njc",
+    "version": 1,
+    "section": "task-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is --parallelism usually the number that protects something?",
+    "hint": "What do tasks share?",
+    "choices": [
+      {
+        "text": "It caps the number of tasks in the execution",
+        "correct": false,
+        "why": "That is --tasks."
+      },
+      {
+        "text": "It sets how many retries each task gets",
+        "correct": false,
+        "why": "That is --max-retries."
+      },
+      {
+        "text": "It caps load on whatever the tasks share",
+        "correct": true,
+        "why": "Right. Three hundred at once can exhaust its connections."
+      },
+      {
+        "text": "It lowers the price per task",
+        "correct": false,
+        "why": "Price follows running time, not parallelism."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcvsa6ax",
+    "version": 1,
+    "section": "task-index",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job has 120 tasks of equal length and a parallelism of 8. About how many rounds does the execution take?",
+    "hint": "Tasks divided by parallelism.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "rounds"
+  },
+  {
+    "id": "ex-e3gs3keb",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Task 1 fails on attempt 0. What is the retry?",
+    "hint": "Same piece of work.",
+    "choices": [
+      {
+        "text": "Same index, with the counter now at 1",
+        "correct": true,
+        "why": "Right. Same index, next attempt."
+      },
+      {
+        "text": "A new execution of the whole job",
+        "correct": false,
+        "why": "Retries are per task."
+      },
+      {
+        "text": "Task 1 again with the next index, 2",
+        "correct": false,
+        "why": "The index does not change."
+      },
+      {
+        "text": "Tasks 0, 1 and 2 again",
+        "correct": false,
+        "why": "The others are not affected."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj2wfthm",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An attempt wrote invoices for 1002 and 1005 and then crashed. The retry writes all three. How do you keep each order at one invoice?",
+    "hint": "Doing it twice should equal doing it once.",
+    "choices": [
+      {
+        "text": "Set parallelism to 1 so tasks never overlap",
+        "correct": false,
+        "why": "The duplicate comes from the retry of one task, not from overlap."
+      },
+      {
+        "text": "Raise the timeout so attempts never crash",
+        "correct": false,
+        "why": "Crashes have other causes than time."
+      },
+      {
+        "text": "Skip the orders logged in attempt 0",
+        "correct": false,
+        "why": "Logs say what was planned, not what was written."
+      },
+      {
+        "text": "Give each a fixed name, and overwrite on retry",
+        "correct": true,
+        "why": "Right. The retry rewrites invoice-1002 instead of adding one."
+      }
+    ]
+  },
+  {
+    "id": "ex-fydq31mv",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task has timeout = \"600s\" and max_retries = 3. In minutes, how long can it run in total before the execution fails?",
+    "hint": "One attempt plus three retries, each ten minutes.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-647xezp0",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job charges customers' cards and cannot be made idempotent. What does the lesson recommend?",
+    "hint": "A retry would charge again.",
+    "choices": [
+      {
+        "text": "max_retries = 3, so a failed charge is completed",
+        "correct": false,
+        "why": "It would charge cards that were already charged."
+      },
+      {
+        "text": "max_retries = 0, and an alert when it fails",
+        "correct": true,
+        "why": "Right. A retry would do harm."
+      },
+      {
+        "text": "A longer timeout, so it never needs a retry",
+        "correct": false,
+        "why": "Time does not prevent every failure."
+      },
+      {
+        "text": "More tasks, so each failure affects fewer cards",
+        "correct": false,
+        "why": "Smaller pieces still charge twice on retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-87dr6ewy",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An operation that leaves the same result when done twice is called ___.",
+    "hint": "A word from mathematics.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yj13eda4",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In jobtf/main.tf there are two nested template blocks. What does the inner one describe?",
+    "hint": "Outer is the execution.",
+    "choices": [
+      {
+        "text": "The schedule of the job",
+        "correct": false,
+        "why": "A job has no schedule of its own."
+      },
+      {
+        "text": "How many tasks run at once",
+        "correct": false,
+        "why": "That is parallelism, in the outer block."
+      },
+      {
+        "text": "How each single task runs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The traffic split between revisions",
+        "correct": false,
+        "why": "Jobs have no traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh3awxe6",
+    "version": 1,
+    "section": "scheduling-a-job",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What starts a Cloud Run job every night?",
+    "hint": "A job has no schedule of its own.",
+    "choices": [
+      {
+        "text": "Cloud Scheduler, on a cron",
+        "correct": true,
+        "why": "Right. An authorised API call on a cron expression."
+      },
+      {
+        "text": "The job's own cron field",
+        "correct": false,
+        "why": "There is no such field."
+      },
+      {
+        "text": "A minimum instance that wakes it",
+        "correct": false,
+        "why": "Jobs have no instances waiting."
+      },
+      {
+        "text": "The metadata server of lesson 7",
+        "correct": false,
+        "why": "That belongs to Compute Engine machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxnj5meb",
+    "version": 1,
+    "section": "scheduling-a-job",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The scheduler job has schedule = \"0 2 * * *\" and no time_zone. When does it run for a shop in São Paulo?",
+    "hint": "The default is UTC.",
+    "choices": [
+      {
+        "text": "At 02:00 in São Paulo, the project's region",
+        "correct": false,
+        "why": "The region does not set the time zone."
+      },
+      {
+        "text": "At 02:00 in the time zone of whoever applied it",
+        "correct": false,
+        "why": "Nobody's laptop decides it."
+      },
+      {
+        "text": "It refuses to run until a time zone is set",
+        "correct": false,
+        "why": "It runs, in UTC."
+      },
+      {
+        "text": "At 02:00 UTC, which is 23:00 the day before in São Paulo",
+        "correct": true,
+        "why": "Right. Before the day being invoiced has ended."
+      }
+    ]
+  },
+  {
+    "id": "ex-rj9544vz",
+    "version": 1,
+    "section": "scheduling-a-job",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What role does the scheduler's service account need for the call to work?",
+    "hint": "Permission to run the job.",
+    "choices": [
+      {
+        "text": "roles/owner on the project",
+        "correct": false,
+        "why": "Far more than it needs."
+      },
+      {
+        "text": "roles/run.invoker on the job",
+        "correct": true,
+        "why": "Right. Granted on the job, in a real setup."
+      },
+      {
+        "text": "roles/cloudscheduler.admin",
+        "correct": false,
+        "why": "That administers schedules, not the job."
+      },
+      {
+        "text": "No role: an OAuth token is enough on its own",
+        "correct": false,
+        "why": "A token proves who calls, not what they may do."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvcm3axv",
+    "version": 1,
+    "section": "scheduling-a-job",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habits keep a nightly job honest? Choose all that apply.",
+    "hint": "It runs while nobody watches.",
+    "choices": [
+      {
+        "text": "An alert on a failed execution",
+        "correct": true,
+        "why": "Right; a message in the morning."
+      },
+      {
+        "text": "A way to run it by hand",
+        "correct": true,
+        "why": "Right; for the morning the schedule failed."
+      },
+      {
+        "text": "A schedule every minute, to catch up faster",
+        "correct": false,
+        "why": "That invites overlapping executions."
+      },
+      {
+        "text": "Idempotent writes, in case two executions overlap",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf4tqrya",
+    "version": 1,
+    "section": "scheduling-a-job",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many fields does the cron expression \"0 2 * * *\" have?",
+    "hint": "Minute, hour, day, month, weekday.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "fields"
+  },
+  {
+    "id": "ex-7g87z5f2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the night of the invoice job in order.",
+    "hint": "Schedule, API, execution, tasks.",
+    "items": [
+      "Cloud Scheduler fires at 02:00 São Paulo time",
+      "It POSTs to the job's :run method with its token",
+      "Cloud Run starts an execution of three tasks",
+      "Each task invoices its stride and exits 0"
+    ],
+    "trap": "The execution cannot start before the API call that asks for it."
+  },
+  {
+    "id": "ex-0zsfwghx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly export usually takes 20 minutes, is scheduled every 30, and one night takes 50 because the database was slow. What risk does that create?",
+    "hint": "What starts while the first is still running?",
+    "choices": [
+      {
+        "text": "The second execution waits until the first ends",
+        "correct": false,
+        "why": "Nothing in the schedule waits."
+      },
+      {
+        "text": "Cloud Scheduler disables the job",
+        "correct": false,
+        "why": "It keeps firing on schedule."
+      },
+      {
+        "text": "Two executions work on the same rows at once",
+        "correct": true,
+        "why": "Right. Only idempotent writes make that harmless."
+      },
+      {
+        "text": "The first execution is killed at 30 minutes",
+        "correct": false,
+        "why": "Its timeout, not the schedule, decides that."
+      }
+    ]
+  },
+  {
+    "id": "ex-q57x5718",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The variable that tells a task which piece it is, counted from zero, is CLOUD_RUN_TASK____.",
+    "hint": "Not COUNT, not ATTEMPT.",
+    "blanks": [
+      {
+        "accept": [
+          "INDEX"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tfpn2sak",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lesson run the three tasks one after another instead of together?",
+    "hint": "What would the logs look like?",
+    "choices": [
+      {
+        "text": "So that their logs would not interleave",
+        "correct": true,
+        "why": "Right. On Cloud Run they would run at the same time."
+      },
+      {
+        "text": "Docker cannot run three containers at once",
+        "correct": false,
+        "why": "It can; the choice was about reading."
+      },
+      {
+        "text": "Cloud Run jobs always run tasks one at a time",
+        "correct": false,
+        "why": "They run up to the parallelism at once."
+      },
+      {
+        "text": "Because the stride only works sequentially",
+        "correct": false,
+        "why": "The stride needs no order between tasks."
+      }
+    ]
+  },
+  {
+    "id": "ex-jk8z78qc",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are good candidates for a Cloud Run job rather than a service? Choose all that apply.",
+    "hint": "Has an end, and nobody waiting.",
+    "choices": [
+      {
+        "text": "A nightly export of orders",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The shop's /orders API",
+        "correct": false,
+        "why": "Somebody waits for each answer."
+      },
+      {
+        "text": "A database migration before a release",
+        "correct": true,
+        "why": "Right; it runs once and ends."
+      },
+      {
+        "text": "Resizing a batch of uploaded photos",
+        "correct": true,
+        "why": "Right, when nobody waits on each one."
+      }
+    ]
+  }
+]
