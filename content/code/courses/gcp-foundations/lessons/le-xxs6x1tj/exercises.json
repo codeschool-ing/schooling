@@ -1,0 +1,434 @@
+[
+  {
+    "id": "ex-mb1pj0yz",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a workload send to Google's Security Token Service in the exchange?",
+    "hint": "Something it already holds from outside.",
+    "choices": [
+      {
+        "text": "A service account key it downloaded once",
+        "correct": false,
+        "why": "The whole point of federation is that no key exists."
+      },
+      {
+        "text": "Its outside provider's signed token",
+        "correct": true,
+        "why": "Right. STS checks it against the pool's provider and returns a federated token."
+      },
+      {
+        "text": "The password of the GitHub account that started the job",
+        "correct": false,
+        "why": "Passwords never cross. The job's signed token is what is presented."
+      },
+      {
+        "text": "A Google access token from the night before",
+        "correct": false,
+        "why": "A Google token is what it is trying to get, and yesterday's has expired."
+      }
+    ]
+  },
+  {
+    "id": "ex-way7x2tx",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `attribute.repository = assertion.repository` in a provider's mapping do?",
+    "hint": "It turns a claim into something IAM can select by.",
+    "choices": [
+      {
+        "text": "Refuses tokens from other repositories",
+        "correct": false,
+        "why": "Refusing is the condition's job. A mapping only names things."
+      },
+      {
+        "text": "Creates a service account named after the repository",
+        "correct": false,
+        "why": "No account is created; attributes are labels on federated identities."
+      },
+      {
+        "text": "Sends the repository's code to Google",
+        "correct": false,
+        "why": "Only the token's claims cross, never code."
+      },
+      {
+        "text": "Names the token's repository claim as an attribute",
+        "correct": true,
+        "why": "Right. A `principalSet://` can then pick every identity with a given repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-fh4gcd7j",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A provider trusts GitHub's issuer and has no attribute condition. Why is that dangerous?",
+    "hint": "Whose tokens does that issuer sign?",
+    "choices": [
+      {
+        "text": "Strangers' tokens pass too",
+        "correct": true,
+        "why": "Right. Only whatever roles happen to match would stand between a stranger's workflow and your project."
+      },
+      {
+        "text": "GitHub's tokens last a week without a condition",
+        "correct": false,
+        "why": "Their life is minutes either way. The danger is whose tokens are accepted."
+      },
+      {
+        "text": "The exchange then skips the signature check",
+        "correct": false,
+        "why": "The signature is checked regardless. A stranger's token is signed perfectly well."
+      },
+      {
+        "text": "The pool stops working after thirty days",
+        "correct": false,
+        "why": "Pools do not expire. The issue is who gets in."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptxbfzbt",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the exchange in order.",
+    "hint": "Outside first, Google APIs last.",
+    "items": [
+      "the outside provider signs a token for the job",
+      "STS checks it and returns a federated token",
+      "IAM Credentials trades it for the service account's token",
+      "the job calls Google APIs"
+    ],
+    "trap": "Putting IAM Credentials before STS is the slip: impersonating needs a Google credential, and the federated token is the first one the job has."
+  },
+  {
+    "id": "ex-bvj8zyb4",
+    "version": 1,
+    "section": "a-pool-for-ci",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `terraform validate` refuse `workload_identity_pool_id = \"ci\"`?",
+    "hint": "Count the characters.",
+    "choices": [
+      {
+        "text": "Pool ids may not be lowercase",
+        "correct": false,
+        "why": "They must be lowercase. The length is the problem."
+      },
+      {
+        "text": "`ci` is reserved by Google",
+        "correct": false,
+        "why": "Nothing is reserved; `ci-pool` was accepted a moment later."
+      },
+      {
+        "text": "It is shorter than four characters",
+        "correct": true,
+        "why": "Right. A pool id takes four to thirty-two."
+      },
+      {
+        "text": "A pool needs a provider in the same file",
+        "correct": false,
+        "why": "A pool alone is valid; the id is what was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-69vvg7kh",
+    "version": 1,
+    "section": "a-pool-for-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which role lets identities from a pool act as the deployer service account?",
+    "hint": "Not the Token Creator of lesson 8.",
+    "choices": [
+      {
+        "text": "`roles/owner` on the project",
+        "correct": false,
+        "why": "Far too much, and it does not mention the deployer at all."
+      },
+      {
+        "text": "`roles/iam.serviceAccountKeyAdmin`",
+        "correct": false,
+        "why": "That manages keys, which federation exists to avoid."
+      },
+      {
+        "text": "`roles/iam.workloadIdentityUser`, on the deployer",
+        "correct": true,
+        "why": "Right. It is granted on the account, to the pool's set of identities."
+      },
+      {
+        "text": "`roles/viewer` on the pool",
+        "correct": false,
+        "why": "Viewer reads the pool; it lets nobody act as anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-amdwkbxm",
+    "version": 1,
+    "section": "a-pool-for-ci",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The grant names `principalSet://.../attribute.repository/example/planner`. Which jobs can act as the deployer?",
+    "hint": "The set is chosen by repository alone.",
+    "choices": [
+      {
+        "text": "Any job of that repository, whatever its branch",
+        "correct": true,
+        "why": "Right. A pull request's branch matches too; restricting to main needs a stricter condition or grant."
+      },
+      {
+        "text": "Only jobs on `main`",
+        "correct": false,
+        "why": "Nothing in that set mentions a branch. That was the missing lock."
+      },
+      {
+        "text": "Any job in the `example` organisation",
+        "correct": false,
+        "why": "The condition admits the organisation; the grant narrows it to one repository."
+      },
+      {
+        "text": "No job, until a key is added",
+        "correct": false,
+        "why": "No key is ever needed; the federated token is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2zbxx3f",
+    "version": 1,
+    "section": "a-pool-for-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many locks stand between a stranger's GitHub workflow and the deployer in `pool.tf`?",
+    "hint": "One on the provider, one on the account.",
+    "choices": [
+      {
+        "text": "One: the issuer, since GitHub signs the token",
+        "correct": false,
+        "why": "GitHub signs strangers' tokens too. The issuer is not a lock."
+      },
+      {
+        "text": "None: anybody on GitHub can act as the deployer",
+        "correct": false,
+        "why": "The condition and the grant both have to match, and a stranger's token matches neither."
+      },
+      {
+        "text": "Three: issuer, condition and a key",
+        "correct": false,
+        "why": "There is no key in federation."
+      },
+      {
+        "text": "Two, one on each side",
+        "correct": true,
+        "why": "Right. The condition admits only `example`, and the grant names only `example/planner`."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6c2d8b7",
+    "version": 1,
+    "section": "a-pool-for-ci",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the largest number of characters a workload identity pool id may have?",
+    "hint": "Four is the smallest.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-sehx85pk",
+    "version": 1,
+    "section": "the-credential-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a credential configuration file sit in a repository when a key file cannot?",
+    "hint": "What does each one hold?",
+    "choices": [
+      {
+        "text": "It is encrypted by gcloud",
+        "correct": false,
+        "why": "Nothing is encrypted; the file is plain JSON with no secret in it."
+      },
+      {
+        "text": "It says where the token is, not what it is",
+        "correct": true,
+        "why": "Right. It holds no secret; the token appears only when the workload runs."
+      },
+      {
+        "text": "It expires after an hour",
+        "correct": false,
+        "why": "The tokens expire; the file is configuration and does not."
+      },
+      {
+        "text": "Google deletes it if it is published",
+        "correct": false,
+        "why": "Nobody deletes it, and there would be nothing to fear if it were read."
+      }
+    ]
+  },
+  {
+    "id": "ex-bndwd04z",
+    "version": 1,
+    "section": "the-credential-file",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of `credentials.json` to the step it describes.",
+    "hint": "Follow the exchange.",
+    "pairs": [
+      {
+        "left": "`credential_source.file`",
+        "right": "where the outside token will be"
+      },
+      {
+        "left": "`token_url`",
+        "right": "the Security Token Service"
+      },
+      {
+        "left": "`audience`",
+        "right": "the pool and provider presented to"
+      },
+      {
+        "left": "`service_account_impersonation_url`",
+        "right": "the trade for the deployer's token"
+      }
+    ],
+    "right_distractors": [
+      "the private key of the account"
+    ]
+  },
+  {
+    "id": "ex-724a2vns",
+    "version": 1,
+    "section": "the-credential-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `gcloud iam workload-identity-pools create-cred-config` succeeded though the pool does not exist. Why?",
+    "hint": "Did it ask Google anything?",
+    "choices": [
+      {
+        "text": "It asks Google nothing",
+        "correct": true,
+        "why": "Right. The file only records names and addresses; checking them happens at exchange time."
+      },
+      {
+        "text": "The emulator answered for the pool",
+        "correct": false,
+        "why": "The emulator is Pub/Sub only."
+      },
+      {
+        "text": "Google creates the pool on first use",
+        "correct": false,
+        "why": "Nothing creates the pool except a request to IAM, which was never sent."
+      },
+      {
+        "text": "The placeholder token was accepted for this one command",
+        "correct": false,
+        "why": "No token was sent; the command is local."
+      }
+    ]
+  },
+  {
+    "id": "ex-9e1c99rw",
+    "version": 1,
+    "section": "the-credential-file",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "STS answered `invalid_target` to the lab's exchange. What was it refusing?",
+    "hint": "It never got as far as the token.",
+    "choices": [
+      {
+        "text": "The text `not-a-real-token`, as a bad signature",
+        "correct": false,
+        "why": "With a real pool, that would be the refusal. Here the audience failed first."
+      },
+      {
+        "text": "The missing Google credential",
+        "correct": false,
+        "why": "STS is called without one; it issues the first."
+      },
+      {
+        "text": "The audience: no such pool was found",
+        "correct": true,
+        "why": "Right. The pool in a made-up project could not be found, so the token was never read."
+      },
+      {
+        "text": "The condition on `repository_owner`",
+        "correct": false,
+        "why": "The condition is read only once a pool and a valid token are found."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cs0wv50",
+    "version": 1,
+    "section": "the-credential-file",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A credential configuration file for federation says `type: ___`, where a key file would say `service_account`.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "external_account"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-290emsqk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A workflow in `example/planner` deploys from `main`, and outside contributors open pull requests from their own branches of the same repository. What makes sure only `main` can act as the deployer?",
+    "hint": "The repository alone matches every branch.",
+    "choices": [
+      {
+        "text": "The organisation condition already in `pool.tf`",
+        "correct": false,
+        "why": "It admits every repository of `example`, branches included."
+      },
+      {
+        "text": "Naming the ref in the condition as well",
+        "correct": true,
+        "why": "Right. A set chosen by repository matches pull request branches too; the ref closes it."
+      },
+      {
+        "text": "A key stored only in `main`'s secrets",
+        "correct": false,
+        "why": "That brings back the key federation removed."
+      },
+      {
+        "text": "Shortening the token's lifetime to a minute",
+        "correct": false,
+        "why": "A minute is plenty for a pull request's job to deploy."
+      }
+    ]
+  }
+]
