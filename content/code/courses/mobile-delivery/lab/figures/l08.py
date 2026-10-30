@@ -36,9 +36,9 @@ def figures(lang):
     x0, x1, y0, y1 = 90, 680, 250, 30
     def X(d): return x0 + (d - 1) * (x1 - x0) / 6
     def Y(v): return y0 - (v - 95) * (y0 - y1) / 5
-    f.rect(X(1) - 25, y1, X(2) - X(1) + 50, y0 - y1, stroke="wire", fill="ink", dashed=True, rx=2)
+    f.arrow([(X(2) + 25, y1 - 6), (X(2) + 25, y0)], color="wire", head=False, dashed=True)
     f.text((X(1) + X(2)) / 2, y1 + 14, t["wait"], size=9, fill="paper-dim", italic=True)
-    f.rect(X(4) - 20, y1, X(7) - X(4) + 40, y0 - y1, stroke="wire", fill="ink", dashed=True, rx=2)
+    f.arrow([(X(4) - 20, y1 - 6), (X(4) - 20, y0)], color="wire", head=False, dashed=True)
     f.text((X(4) + X(7)) / 2, y1 + 14, t["never"], size=9, fill="paper-dim", italic=True)
     for v in (95, 96, 97, 98, 99, 100):
         f.arrow([(x0 - 30, Y(v)), (x1 + 10, Y(v))], color="wire", head=False, width=0.6)
