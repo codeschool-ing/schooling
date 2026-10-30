@@ -1,0 +1,427 @@
+{
+  "ex-gpymknwk": {
+    "prompt": "O que é uma corrida de dados?",
+    "choices": [
+      {
+        "text": "Duas tarefas terminando numa ordem diferente a cada execução",
+        "why": "Isso é concorrência comum; o grupo da lição 14 fez isso e estava certo."
+      },
+      {
+        "text": "Duas threads mexendo na mesma memória ao mesmo tempo, uma delas escrevendo",
+        "why": "Isso: e o resultado depende de como os passos delas se intercalam."
+      },
+      {
+        "text": "Uma tarefa que nunca termina",
+        "why": "Isso é um travamento, não uma corrida."
+      },
+      {
+        "text": "Uma chamada `async` sem `await`",
+        "why": "Isso é um erro de compilação com outra mensagem."
+      }
+    ]
+  },
+  "ex-0c9bt5ez": {
+    "prompt": "O `Race.swift` imprimiu 677275, e depois 800000 duas vezes. O que as duas respostas certas dizem?",
+    "hint": "O pior de uma corrida, segundo a seção 02.",
+    "choices": [
+      {
+        "text": "A corrida se consertou depois que as tarefas aqueceram",
+        "why": "Nada mudou; a intercalação por acaso foi inofensiva."
+      },
+      {
+        "text": "A classe é segura, e a primeira execução pegou um bug do Swift",
+        "why": "A classe tem um `var` desprotegido escrito de várias threads."
+      },
+      {
+        "text": "Nada: um programa com corrida acerta por sorte",
+        "why": "Isso: uma execução que passa não prova nada sobre a próxima."
+      },
+      {
+        "text": "Que oito tarefas são demais para quatro núcleos",
+        "why": "O número de tarefas não é o bug; o `var` compartilhado é."
+      }
+    ]
+  },
+  "ex-p9c7m0nt": {
+    "prompt": "`minutes += m` parece um passo. Quantos passos são, na conta da seção 02?",
+    "hint": "Ler, …"
+  },
+  "ex-5b3g8c9z": {
+    "prompt": "O `swiftc` verifica muito pouco sobre concorrência a menos que você passe `-swift-version ___`.",
+    "blanks": [
+      {
+        "accept": [
+          "6"
+        ]
+      }
+    ]
+  },
+  "ex-grbj202g": {
+    "prompt": "O que um ator garante sobre o próprio estado?",
+    "choices": [
+      {
+        "text": "É copiado para cada chamador, como um struct",
+        "why": "Um ator é um tipo de referência; todos seguram o mesmo."
+      },
+      {
+        "text": "Só o código dele o toca, uma chamada por vez",
+        "why": "Isso: quem chama manda pedidos e o ator os roda em vez."
+      },
+      {
+        "text": "Nunca pode mudar depois do `init`",
+        "why": "`minutes` mudou 800.000 vezes por execução."
+      },
+      {
+        "text": "Os métodos dele rodam cada um numa thread separada, reservada ao ator",
+        "why": "Nenhuma thread é prometida; uma chamada por vez é."
+      }
+    ]
+  },
+  "ex-f6h476z1": {
+    "prompt": "De fora de um ator, `week.minutes = 0`. O que o compilador diz?",
+    "hint": "Chamadas e escritas são tratadas de jeitos diferentes.",
+    "choices": [
+      {
+        "text": "Acrescentar `await` na frente",
+        "why": "O `await` conserta uma chamada; uma escrita de fora é recusada seja o que for que você escreva."
+      },
+      {
+        "text": "Recusa de vez",
+        "why": "Isso: peça ao ator por um método como `reset()`."
+      },
+      {
+        "text": "Nada; propriedades de ator são públicas",
+        "why": "Isolamento não é controle de acesso; a lição 17 é."
+      },
+      {
+        "text": "Um aviso no modo Swift 6",
+        "why": "É um erro."
+      }
+    ]
+  },
+  "ex-jggm2pa0": {
+    "prompt": "Dentro do próprio `add` do ator, `minutes += m` não tem `await`. Por que não precisa?",
+    "choices": [
+      {
+        "text": "O `+=` é um único passo de máquina",
+        "why": "A seção 02 mostrou que são três."
+      },
+      {
+        "text": "Inteiros são `Sendable`",
+        "why": "Verdade, e não é o motivo; a questão é quem está rodando."
+      },
+      {
+        "text": "Esse código já roda no ator",
+        "why": "Isso: o `await` marca uma travessia da fronteira, e não há nenhuma."
+      },
+      {
+        "text": "O compilador pula as verificações dentro de métodos de um tipo `actor`",
+        "why": "Ele verifica; simplesmente não há nada a atravessar."
+      }
+    ]
+  },
+  "ex-dctkk3gm": {
+    "prompt": "No `Booking.swift`, as duas reservas passaram em `free >= 80` com 100 livres. Por quê?",
+    "hint": "O que acontece num `await` dentro de um ator?",
+    "choices": [
+      {
+        "text": "Uma corrida de dados em `free`",
+        "why": "Todo acesso a `free` aconteceu no ator, um por vez."
+      },
+      {
+        "text": "Cada chamada largou o ator no seu `await`, antes de subtrair",
+        "why": "Isso: a segunda conferência rodou na brecha que a primeira deixou."
+      },
+      {
+        "text": "O `guard` não é verificado em atores",
+        "why": "Foi verificado, duas vezes, e viu 100 nas duas."
+      },
+      {
+        "text": "O `async let` copia o ator",
+        "why": "As duas chamadas chegaram ao mesmo ator; ele é uma referência."
+      }
+    ]
+  },
+  "ex-t6ahzsg0": {
+    "prompt": "Outra chamada rodando num ator enquanto a primeira está suspensa num `await` se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "reentrância",
+          "reentrancia"
+        ]
+      }
+    ]
+  },
+  "ex-rz8j1ew1": {
+    "prompt": "Um ator de cache confere `if cache[id] == nil`, aguarda um download e então guarda. Dois pedidos do mesmo id chegam juntos. O que a seção 04 prevê?",
+    "hint": "Conferir, aguardar, agir.",
+    "choices": [
+      {
+        "text": "O ator roda o segundo pedido depois que o primeiro termina por completo",
+        "why": "Só entre awaits; o download é um await."
+      },
+      {
+        "text": "Um erro de compilação no modo Swift 6",
+        "why": "O Booking.swift compilou nesse modo; isto é um bug de lógica."
+      },
+      {
+        "text": "Os dois veem nil e os dois baixam",
+        "why": "Isso: o mesmo formato da reserva dupla."
+      },
+      {
+        "text": "Uma quebra quando a segunda gravação sobrescreve a primeira",
+        "why": "Sobrescrever uma entrada de dicionário é válido; o desperdício é silencioso."
+      }
+    ]
+  },
+  "ex-m8nx95n4": {
+    "prompt": "Ponha o `book` do `Reserved.swift` na ordem em que as linhas rodam.",
+    "hint": "Decida, depois aguarde.",
+    "items": [
+      "Conferir que `free >= minutes`",
+      "Subtrair os minutos de `free`",
+      "`await saveToServer(course)`",
+      "Imprimir a reserva e devolver `true`"
+    ]
+  },
+  "ex-0mk44x6f": {
+    "prompt": "Qual destes é `Sendable` sem nada escrito?",
+    "choices": [
+      {
+        "text": "Um struct de `String` e `Int`",
+        "why": "Isso: um tipo de valor de partes `Sendable`; é copiado quando passado."
+      },
+      {
+        "text": "Uma classe com um único `var note`",
+        "why": "Dois donos poderiam escrever o mesmo objeto."
+      },
+      {
+        "text": "Uma closure que captura uma instância de classe",
+        "why": "Foi exatamente por isso que o `Sendables.swift` foi recusado."
+      },
+      {
+        "text": "Uma classe não final que só tem `let`s",
+        "why": "Uma classe também precisa ser `final` para declará-lo."
+      }
+    ]
+  },
+  "ex-20s90zr8": {
+    "prompt": "O `Handover.swift` passa o mesmo `Draft`, que não é `Sendable`, para uma tarefa destacada, e compila. O que mudou em relação ao `Sendables.swift`?",
+    "choices": [
+      {
+        "text": "O `Draft` virou `final`",
+        "why": "Ele era `final` nos dois."
+      },
+      {
+        "text": "A tarefa deixou de ser destacada",
+        "why": "Os dois programas usam `Task.detached`."
+      },
+      {
+        "text": "Nada toca em `draft` depois que ele é enviado",
+        "why": "Isso: o isolamento por regiões permite uma entrega de verdade."
+      },
+      {
+        "text": "Foi compilado no modo Swift 5",
+        "why": "Os dois foram compilados com `-swift-version 6`."
+      }
+    ]
+  },
+  "ex-9tfw9gr1": {
+    "prompt": "`final class Course: Sendable { let name: String; var goal: Int }`. Por que é recusada?",
+    "choices": [
+      {
+        "text": "Uma classe nunca pode ser `Sendable`",
+        "why": "Uma classe final só de `let`s pode."
+      },
+      {
+        "text": "`goal` é uma propriedade armazenada mutável",
+        "why": "Isso: compartilhado e gravável é o que o `Sendable` proíbe numa classe."
+      },
+      {
+        "text": "`String` não é `Sendable`",
+        "why": "É."
+      },
+      {
+        "text": "Uma classe `Sendable` precisa de um `init` sem parâmetros",
+        "why": "Qualquer `init` serve."
+      }
+    ]
+  },
+  "ex-fdznvy0d": {
+    "prompt": "Um `Course` compartilhado precisa mudar a meta enquanto várias tarefas o seguram. Quais desenhos são corretos? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Tornar `Course` um ator",
+        "why": "Sim: estado compartilhado que muda é para isso que serve um ator."
+      },
+      {
+        "text": "Torná-lo um struct e mandar cópias",
+        "why": "Sim: cada tarefa passa a ter o próprio valor."
+      },
+      {
+        "text": "Marcá-lo `@unchecked Sendable` e mudar `goal` à vontade",
+        "why": "Não: isso cala a verificação sem proteger nada."
+      },
+      {
+        "text": "Compilar o módulo no modo Swift 5",
+        "why": "Não: a corrida continua, sem aviso."
+      }
+    ]
+  },
+  "ex-06qmrsgx": {
+    "prompt": "Por que as views do SwiftUI são marcadas com `@MainActor`?",
+    "choices": [
+      {
+        "text": "Elas rodam mais rápido quando toda view fica na thread principal",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para que sejam `Sendable`",
+        "why": "Isolamento e `Sendable` são promessas diferentes."
+      },
+      {
+        "text": "Só a thread principal tem permissão de tocar a interface",
+        "why": "Isso: e o compilador agora cobra isso do código."
+      },
+      {
+        "text": "O Linux exige",
+        "why": "O SwiftUI nem existe no Linux."
+      }
+    ]
+  },
+  "ex-t4dt33jc": {
+    "prompt": "No `Inherit.swift`, qual tarefa é recusada por definir `screen.title`?",
+    "hint": "O que cada tipo herda?",
+    "choices": [
+      {
+        "text": "As duas",
+        "why": "A `Task` comum compilou."
+      },
+      {
+        "text": "Só a `Task.detached`",
+        "why": "Isso: ela não herda ator nenhum, então é nonisolated."
+      },
+      {
+        "text": "Só a `Task` comum",
+        "why": "Ela herda o ator principal do `buttonTapped`."
+      },
+      {
+        "text": "Nenhuma, já que `buttonTapped` é `@MainActor`",
+        "why": "Uma tarefa destacada não roda no ator de quem a criou."
+      }
+    ]
+  },
+  "ex-g5sq9xdc": {
+    "prompt": "Uma atualização de tela carrega dados por dois segundos e então define um rótulo. Onde cada parte deve rodar?",
+    "hint": "O formato de quase toda atualização, segundo a seção 06.",
+    "choices": [
+      {
+        "text": "As duas no ator principal, para a ordem ficar clara",
+        "why": "Carregar no ator principal segura o desenho sem motivo."
+      },
+      {
+        "text": "As duas numa tarefa destacada",
+        "why": "Definir o rótulo ali é recusado."
+      },
+      {
+        "text": "A carga fora dele, o rótulo nele",
+        "why": "Isso: o ator principal fica livre durante o `await`."
+      },
+      {
+        "text": "O rótulo primeiro, depois a carga",
+        "why": "O rótulo precisa do que a carga devolve."
+      }
+    ]
+  },
+  "ex-rsxbz198": {
+    "prompt": "Ligue cada jeito de compilar ao modo de linguagem que ele recebe, se nada disser outro.",
+    "pairs": [
+      {
+        "left": "`swiftc Race.swift`",
+        "right": "Swift 5"
+      },
+      {
+        "left": "`swiftc -swift-version 6 Race.swift`",
+        "right": "Swift 6"
+      },
+      {
+        "left": "Um pacote em tools version 6.0",
+        "right": "Swift 6, todo target"
+      },
+      {
+        "left": "Um target 6.0 com `.swiftLanguageMode(.v5)`",
+        "right": "Swift 5, aquele target"
+      }
+    ],
+    "right_distractors": [
+      "Swift 4"
+    ]
+  },
+  "ex-3hyzq2mx": {
+    "prompt": "O que `.enableUpcomingFeature(\"ApproachableConcurrency\")` num manifesto novo faz?",
+    "choices": [
+      {
+        "text": "Desliga as verificações de corrida do Swift 6",
+        "why": "Uma corrida continua sendo erro com ela."
+      },
+      {
+        "text": "Adota antes alguns padrões planejados",
+        "why": "Isso: um pacote de upcoming features do Swift 6.2 que pede menos anotações num ator só."
+      },
+      {
+        "text": "Passa o target para o modo Swift 5",
+        "why": "Isso é o `.swiftLanguageMode(.v5)`."
+      },
+      {
+        "text": "Baixa um compilador mais novo para aquele target",
+        "why": "Uma configuração de manifesto não muda o toolchain."
+      }
+    ]
+  },
+  "ex-5qmp1sp6": {
+    "prompt": "Um time passa um módulo para o modo Swift 6 e recebe quarenta erros de concorrência. Que resposta combina com esta lição?",
+    "choices": [
+      {
+        "text": "Marcar toda classe como `@unchecked Sendable` para compilar",
+        "why": "Isso faz o compilador parar de olhar, e as corridas ficam."
+      },
+      {
+        "text": "Ler cada um pelo que atravessa e quem mais o alcança, e consertar",
+        "why": "Isso: cada erro aponta um lugar onde uma corrida pode acontecer."
+      },
+      {
+        "text": "Ignorar: uma suíte de testes que passa é prova suficiente",
+        "why": "O `Race.swift` passou em duas execuções de três."
+      },
+      {
+        "text": "Embrulhar todo método em `Task.detached`",
+        "why": "Isso tira isolamento em vez de acrescentar."
+      }
+    ]
+  },
+  "ex-r81pt7jp": {
+    "prompt": "Ligue cada ferramenta ao problema que resolve.",
+    "pairs": [
+      {
+        "left": "`actor`",
+        "right": "Estado compartilhado escrito por várias tarefas"
+      },
+      {
+        "left": "`Sendable`",
+        "right": "O que pode atravessar entre tarefas"
+      },
+      {
+        "left": "`@MainActor`",
+        "right": "Código que toca a interface"
+      },
+      {
+        "left": "`-swift-version 6`",
+        "right": "Ligar as verificações no `swiftc`"
+      }
+    ],
+    "right_distractors": [
+      "Rodar duas cargas ao mesmo tempo"
+    ]
+  }
+}
