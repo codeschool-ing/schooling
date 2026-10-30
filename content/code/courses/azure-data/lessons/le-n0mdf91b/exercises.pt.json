@@ -1,0 +1,393 @@
+{
+  "ex-szv1a161": {
+    "prompt": "Qual tier de acesso deixa um blob ilegível até ser trazido de volta?",
+    "hint": "Três dos quatro respondem em milissegundos.",
+    "choices": [
+      {
+        "text": "Cold",
+        "why": "Cold responde em milissegundos; o que ele muda é o preço da leitura."
+      },
+      {
+        "text": "Cool",
+        "why": "Cool também responde em milissegundos."
+      },
+      {
+        "text": "Archive",
+        "why": "Isso. Ele precisa ser reidratado antes."
+      },
+      {
+        "text": "Hot",
+        "why": "Hot é o tier sem custo extra para ler."
+      }
+    ]
+  },
+  "ex-sgfhyg2r": {
+    "prompt": "Ligue cada tier ao seu mínimo de dias cobrados, como documentado.",
+    "hint": "Crescem conforme o tier esfria.",
+    "pairs": [
+      {
+        "left": "hot",
+        "right": "nenhum"
+      },
+      {
+        "left": "cool",
+        "right": "30 dias"
+      },
+      {
+        "left": "cold",
+        "right": "90 dias"
+      },
+      {
+        "left": "archive",
+        "right": "180 dias"
+      }
+    ],
+    "right_distractors": [
+      "365 dias"
+    ]
+  },
+  "ex-qsh6ny02": {
+    "prompt": "Onde o tier de acesso de um blob é definido?",
+    "hint": "Um contêiner guardou três tiers lado a lado.",
+    "choices": [
+      {
+        "text": "Em cada block blob, com o padrão da conta para quem não tem",
+        "why": "Isso. Blobs sem tier próprio informam o padrão como inferido."
+      },
+      {
+        "text": "No contêiner, e todo blob dentro dele o compartilha",
+        "why": "Contêineres não têm tier; a lição pôs dois tiers diferentes num só."
+      },
+      {
+        "text": "Só na conta, então mudar dados de tier significa mudar de conta",
+        "why": "Isso descreve o desempenho, Standard ou Premium, não os tiers de acesso."
+      },
+      {
+        "text": "Em todo tipo de blob igualmente: block, append e page",
+        "why": "Um append blob foi recusado com `AccessTierNotSupportedForBlobType`."
+      }
+    ]
+  },
+  "ex-pzjhybrj": {
+    "prompt": "Mover dez milhões de blobs de log de 4 KB de hot para cool quase não economiza armazenamento, e a conta do mês sobe. Por quê?",
+    "hint": "O que é cobrado por blob e não por gigabyte?",
+    "choices": [
+      {
+        "text": "Cool cobra mais por gigabyte guardado que hot para blobs pequenos",
+        "why": "O preço por gigabyte guardado é menor no cool, seja qual for o tamanho."
+      },
+      {
+        "text": "Cool mantém uma cópia extra de cada blob, dobrando o armazenamento",
+        "why": "Cópias são decididas pela replicação da conta, não pelo tier."
+      },
+      {
+        "text": "Os blobs foram reidratados antes, pelo preço de prioridade alta",
+        "why": "Reidratação é para sair do archive; nada aqui foi arquivado."
+      },
+      {
+        "text": "Dez milhões de trocas de tier, cada uma cobrada no preço do cool",
+        "why": "Isso. Os dados são uns 40 GB; as operações são dez milhões."
+      }
+    ]
+  },
+  "ex-9a1yy930": {
+    "prompt": "Um blob foi enviado sem `--tier`. `az storage blob show` informa `Hot` e `blobTierInferred: true`. O que isso quer dizer?",
+    "hint": "Quem escolheu o tier?",
+    "choices": [
+      {
+        "text": "O Azure observou o uso do blob e o moveu para hot",
+        "why": "Nada observou nada; o blob acabou de ser enviado."
+      },
+      {
+        "text": "Ele segue o padrão da conta",
+        "why": "Isso. Um tier definido no blob diria `false` e ficaria parado."
+      },
+      {
+        "text": "O tier foi definido no blob e não pode ser trocado de novo",
+        "why": "O `set-tier` trocou o mesmo blob para cold logo depois."
+      },
+      {
+        "text": "O Azurite não conseguiu ler o tier e chutou",
+        "why": "O Azure informa a mesma marca pelo mesmo motivo."
+      }
+    ]
+  },
+  "ex-1j1kbcvv": {
+    "prompt": "Por que o provedor do Terraform recusa `access_tier = \"Archive\"` numa conta de armazenamento?",
+    "hint": "O que aconteceria com cada blob enviado sem tier?",
+    "choices": [
+      {
+        "text": "O archive não é oferecido em `brazilsouth`",
+        "why": "O validate confere o valor contra uma lista e não sabe nada de regiões."
+      },
+      {
+        "text": "O archive só se define blob a blob",
+        "why": "Isso. A lista aceita era `Cold`, `Cool`, `Hot`, `Premium` e `Smart`."
+      },
+      {
+        "text": "O valor se escreve `ARCHIVE` em maiúsculas",
+        "why": "A lista impressa usava `Cold` e `Cool`, e não tinha archive de jeito nenhum."
+      },
+      {
+        "text": "O Terraform precisa da conta criada antes de definir um tier",
+        "why": "`Cool` passou no mesmo arquivo um momento antes."
+      }
+    ]
+  },
+  "ex-js0vg948": {
+    "prompt": "A Quitanda volta uma pasta de 2 TB de fotos de cool para hot, uma semana depois de movê-la para cool. Como a Microsoft documenta que essa mudança é cobrada?",
+    "hint": "Esquentar um blob o lê do tier que ele deixa, e a semana importa.",
+    "choices": [
+      {
+        "text": "Nada: trocas de tier são grátis e só o armazenamento é cobrado",
+        "why": "Cada troca é uma operação, e esquentar soma um preço por gigabyte."
+      },
+      {
+        "text": "Uma escrita no hot para cada blob, e mais nada",
+        "why": "É assim que esfriar é cobrado, no tier de destino."
+      },
+      {
+        "text": "Uma reidratação completa, em prioridade padrão",
+        "why": "Reidratação só vale para o archive."
+      },
+      {
+        "text": "Leituras e recuperação do cool, mais saída antecipada",
+        "why": "Isso. Uma semana não chega aos 30 dias do cool."
+      }
+    ]
+  },
+  "ex-f77qt2eh": {
+    "prompt": "Baixar um blob no tier archive é recusado com o código de erro ___.",
+    "hint": "Duas palavras, juntas.",
+    "blanks": [
+      {
+        "accept": [
+          "BlobArchived"
+        ]
+      }
+    ]
+  },
+  "ex-ve20t2s3": {
+    "prompt": "No Azure, uma reidratação de um blob de 2 GB para hot com prioridade padrão acabou de começar. O que um download devolve nas próximas horas?",
+    "hint": "O Azurite terminou na hora; o Azure não.",
+    "choices": [
+      {
+        "text": "`BlobArchived`, até a reidratação terminar",
+        "why": "Isso. O tier continua dizendo `Archive` e o status diz `rehydrate-pending-to-hot`."
+      },
+      {
+        "text": "O conteúdo, devagar, conforme o blob volta",
+        "why": "Não há leitura parcial; o blob fica offline até o fim."
+      },
+      {
+        "text": "O conteúdo, na hora, como o Azurite mostrou",
+        "why": "Esse é o atalho do emulador, não o comportamento do Azure."
+      },
+      {
+        "text": "`BlobNotFound`, porque o blob é movido durante a reidratação",
+        "why": "O blob continua listado com suas propriedades o tempo todo."
+      }
+    ]
+  },
+  "ex-bchbh99e": {
+    "prompt": "Com prioridade padrão, em até quantas horas a Microsoft documenta que um blob arquivado é reidratado?",
+    "hint": "A tabela da seção.",
+    "unit": "horas"
+  },
+  "ex-6pzvfnwh": {
+    "prompt": "Um auditor precisa da exportação arquivada de setembro hoje à tarde, e a cópia no archive tem de ficar onde está. O que a Quitanda faz?",
+    "hint": "Dois jeitos de sair do archive, e duas restrições.",
+    "choices": [
+      {
+        "text": "Trocar o tier do blob arquivado para hot em prioridade alta",
+        "why": "Rápido, mas move a cópia do archive, que tinha de ficar."
+      },
+      {
+        "text": "Copiar para um nome novo em prioridade padrão, mais barata e igualmente rápida",
+        "why": "A padrão é documentada em até 15 horas, lenta demais para hoje à tarde."
+      },
+      {
+        "text": "Copiar para um nome novo em hot, prioridade alta, sem mexer no archive",
+        "why": "Isso. O `rehydrate.py` fez isso; no Azure a cópia fica pendente até acabar a reidratação por trás dela."
+      },
+      {
+        "text": "Baixar direto; o archive só atrasa o primeiro byte",
+        "why": "O download de um blob arquivado é recusado de vez."
+      }
+    ]
+  },
+  "ex-x2yw04c7": {
+    "prompt": "Por que a conta de archive da Quitanda usa LRS em vez do ZRS da conta de exportações?",
+    "hint": "Um tier e uma opção de replicação que não combinam.",
+    "choices": [
+      {
+        "text": "LRS reidrata mais rápido",
+        "why": "O tempo de reidratação depende da prioridade, não da replicação."
+      },
+      {
+        "text": "O Azurite só aceita archive em LRS",
+        "why": "O Azurite não tem replicação e aceitou todo tier."
+      },
+      {
+        "text": "Dados arquivados nunca valem três cópias",
+        "why": "LRS também guarda três cópias, num datacenter só."
+      },
+      {
+        "text": "O archive não é oferecido em contas ZRS de jeito nenhum",
+        "why": "Isso, nem em GZRS ou RA-GZRS, segundo a documentação na época em que foi escrito."
+      }
+    ]
+  },
+  "ex-9d7h9xaj": {
+    "prompt": "A um preço ilustrativo de 0,010 USD por GB-mês, quanto é cobrado de um GB movido para cool e apagado depois de 12 dias? O mês conta como 30 dias.",
+    "hint": "O mínimo é cobrado inteiro.",
+    "unit": "USD"
+  },
+  "ex-4tyj1sjt": {
+    "prompt": "O que acontece quando um blob em cold é apagado no vigésimo dia?",
+    "hint": "Alguma coisa impede a exclusão?",
+    "choices": [
+      {
+        "text": "A exclusão é recusada até os 90 dias passarem",
+        "why": "Nada a recusa; o Azurite e o Azure apagam na hora."
+      },
+      {
+        "text": "Ele vai para o archive em vez disso, para cumprir o mínimo lá",
+        "why": "Nenhuma troca de tier acontece numa exclusão."
+      },
+      {
+        "text": "Ele é apagado, e mais 70 dias de cold são cobrados",
+        "why": "Isso. O mínimo chega na conta, não como recusa."
+      },
+      {
+        "text": "Ele é apagado, e os vinte dias são devolvidos",
+        "why": "Os dias usados são cobrados normalmente; os não usados é que são somados."
+      }
+    ]
+  },
+  "ex-tvf6yx70": {
+    "prompt": "Uma regra de ciclo de vida arquiva blobs aos 30 dias e os apaga aos 90. Quanto custa cada blob que ela toca?",
+    "hint": "Quanto tempo o blob fica no archive, e qual é o mínimo do archive?",
+    "choices": [
+      {
+        "text": "60 dias de archive, o tempo que passou lá",
+        "why": "O mínimo do archive é 180 dias e é cobrado inteiro."
+      },
+      {
+        "text": "180 dias de archive, embora tenha ficado 60",
+        "why": "Isso. 120 dias de saída antecipada em cada blob."
+      },
+      {
+        "text": "Nada a mais, porque uma regra é isenta de saída antecipada",
+        "why": "A cobrança é sobre a estadia do blob, seja quem for que o move ou apaga."
+      },
+      {
+        "text": "90 dias de cold, já que a regra pula o cool",
+        "why": "A regra move para o archive, não para o cold."
+      }
+    ]
+  },
+  "ex-erptk3r8": {
+    "prompt": "Com os preços ilustrativos do `year.py`, cool custa 122,88 por ano e 10,24 por leitura completa; hot custa 245,76 e nada para ler. Quantas leituras completas por ano igualam os dois?",
+    "hint": "Divida a diferença do ano pelo preço de uma leitura.",
+    "unit": "leituras"
+  },
+  "ex-p8r6c4tz": {
+    "prompt": "Na última coluna do `year.py`, por que dez dias no archive saem mais caros que dez dias no hot?",
+    "hint": "Por quantos dias cada um é cobrado?",
+    "choices": [
+      {
+        "text": "O archive é cobrado por 180 dias, e isso pesa mais que o preço menor",
+        "why": "Isso. 12,29 contra 6,83 do hot."
+      },
+      {
+        "text": "O preço por gigabyte do archive é maior que o do hot",
+        "why": "No programa ele é dez vezes menor."
+      },
+      {
+        "text": "A coluna inclui uma reidratação do terabyte inteiro no fim dos dez dias de guarda",
+        "why": "Ela guarda os dados dez dias e apaga, sem leitura."
+      },
+      {
+        "text": "O hot dá os dez primeiros dias de graça",
+        "why": "O hot cobra os dez dias pelo preço dele: 6,83."
+      }
+    ]
+  },
+  "ex-ypsm3b54": {
+    "prompt": "Os analistas da Quitanda releem uma tabela de 500 GB umas duas vezes por mês. Pela aritmética do `year.py`, que tier serve?",
+    "hint": "Vinte e quatro leituras completas por ano; onde fica o ponto de equilíbrio do cool?",
+    "choices": [
+      {
+        "text": "Cold, porque é o tier online mais barato",
+        "why": "As leituras do cold são as mais caras online; 24 delas custariam bem mais que o hot."
+      },
+      {
+        "text": "Archive, porque a tabela é grande",
+        "why": "Tamanho não é a questão; uma leitura quinzenal não pode esperar uma reidratação."
+      },
+      {
+        "text": "Hot",
+        "why": "Isso. Com 24 leituras por ano, todo tier mais frio custa mais."
+      },
+      {
+        "text": "Cool, porque custa metade para guardar",
+        "why": "O equilíbrio dele com o hot é de 12 leituras por ano; 24 já passou."
+      }
+    ]
+  },
+  "ex-kdfj9fv0": {
+    "prompt": "Ordene os tiers do menor preço para guardar um gigabyte ao maior.",
+    "hint": "Quanto mais frio, mais barato de guardar.",
+    "items": [
+      "archive",
+      "cold",
+      "cool",
+      "hot"
+    ]
+  },
+  "ex-agsbzg2x": {
+    "prompt": "Quais destas o Azurite fez e o Azure não faria? Marque todas as que valem.",
+    "hint": "Procure os lugares em que tempo ou dinheiro teriam aparecido.",
+    "choices": [
+      {
+        "text": "Terminar uma reidratação antes do próximo comando",
+        "why": "Sim; o Azure documenta até 15 horas em prioridade padrão."
+      },
+      {
+        "text": "Apagar um blob em cold depois de minutos, sem cobrança",
+        "why": "Sim; o Azure cobraria o resto dos 90 dias."
+      },
+      {
+        "text": "Recusar um download do archive com `BlobArchived`",
+        "why": "O Azure recusa do mesmo jeito."
+      },
+      {
+        "text": "Recusar um tier num append blob",
+        "why": "O Azure também recusa."
+      }
+    ]
+  },
+  "ex-fsdfebka": {
+    "prompt": "Que comando move um blob existente para o tier cold?",
+    "hint": "Uma requisição, nada copiado.",
+    "choices": [
+      {
+        "text": "`az storage blob set-tier --tier Cold`",
+        "why": "Isso."
+      },
+      {
+        "text": "`az storage blob copy start --tier Cold`",
+        "why": "Isso cria um segundo blob com outro nome."
+      },
+      {
+        "text": "`az storage blob upload --tier Cold --overwrite`",
+        "why": "Isso manda o conteúdo de novo para trocar o blob."
+      },
+      {
+        "text": "`az storage blob update --tier Cold`",
+        "why": "O `update` muda configurações de conteúdo, não o tier."
+      }
+    ]
+  }
+}
