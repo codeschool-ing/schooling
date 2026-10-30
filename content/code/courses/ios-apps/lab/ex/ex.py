@@ -78,7 +78,8 @@ def write(target, qs):
     en, pt = build(qs, None)
     course = os.path.join(HERE, "..", "..")
     if target == "exam":
-        for e in en: e["drillable"] = False
+        for e in en:
+            e.pop("drillable"); e.pop("section")
         a, b = os.path.join(course, "exam.json"), os.path.join(course, "exam.pt.json")
     else:
         d = os.path.join(course, "lessons", target)
