@@ -1,0 +1,568 @@
+[
+ {
+  "id": "ex-rtrbhk8f",
+  "version": 1,
+  "section": "signal",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How does a template read the value of a signal called `minutes`?",
+  "choices": [
+   {
+    "text": "`{{ minutes }}`, as with a plain field",
+    "correct": false,
+    "why": "Without parentheses that is the signal itself, a function, and the template check refuses it."
+   },
+   {
+    "text": "`{{ minutes() }}`",
+    "correct": true,
+    "why": "Right. A signal is read by calling it, in a template as in code."
+   },
+   {
+    "text": "`{{ minutes.value }}`",
+    "correct": false,
+    "why": "That is how a resource exposes its value, as a signal you still call."
+   },
+   {
+    "text": "`{{ minutes.get() }}`",
+    "correct": false,
+    "why": "There is no `get`; the call itself reads it."
+   }
+  ]
+ },
+ {
+  "id": "ex-r57xx0c3",
+  "version": 1,
+  "section": "signal",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the lesson prefer `minutes.update((m) => m + 15)` to `minutes.set(minutes() + 15)`?",
+  "choices": [
+   {
+    "text": "`set` cannot take an expression",
+    "correct": false,
+    "why": "It takes any value; the difference is where the old value comes from."
+   },
+   {
+    "text": "`update` is faster",
+    "correct": false,
+    "why": "Speed is not the reason given."
+   },
+   {
+    "text": "Old and new in one call",
+    "correct": true,
+    "why": "Right. The read and the write cannot drift apart."
+   },
+   {
+    "text": "`set` does not notify readers",
+    "correct": false,
+    "why": "Both notify readers of a change."
+   }
+  ]
+ },
+ {
+  "id": "ex-yq54arsq",
+  "version": 1,
+  "section": "signal",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is a signal field in a component declared `readonly`?",
+  "choices": [
+   {
+    "text": "So its value cannot change",
+    "correct": false,
+    "why": "The value changes through `set` and `update`; `readonly` is about the field."
+   },
+   {
+    "text": "So nobody replaces the signal itself",
+    "correct": true,
+    "why": "Right. The field always holds the same signal, whose value changes."
+   },
+   {
+    "text": "Templates can only read `readonly` fields",
+    "correct": false,
+    "why": "They read `protected` and `public` fields alike."
+   },
+   {
+    "text": "Angular requires it for signals to work",
+    "correct": false,
+    "why": "Signals work in a mutable field too; it would just be a trap."
+   }
+  ]
+ },
+ {
+  "id": "ex-rxc58ptm",
+  "version": 1,
+  "section": "computed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In `try/computed.mts`, how many times did `  computing left` appear before `done` changed, for the two reads?",
+  "choices": [
+   {
+    "text": "Twice, once per read",
+    "correct": false,
+    "why": "The second read returned the stored value."
+   },
+   {
+    "text": "None, because nothing had changed",
+    "correct": false,
+    "why": "The first read had to compute; there was no value yet."
+   },
+   {
+    "text": "Once",
+    "correct": true,
+    "why": "Right. Computed at the first read, remembered for the second."
+   },
+   {
+    "text": "Three times, counting the moment it was created",
+    "correct": false,
+    "why": "Creating it computed nothing; it is lazy."
+   }
+  ]
+ },
+ {
+  "id": "ex-6p7znyv5",
+  "version": 1,
+  "section": "computed",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "In `try/branches.mts`, `done` changed while `showDone` was false, and `label` did not compute again. Why?",
+  "choices": [
+   {
+    "text": "`computed` ignores changes made with `set`",
+    "correct": false,
+    "why": "It reacts to `set`; it reacted to `showDone.set(true)`."
+   },
+   {
+    "text": "The last run never called `done()`, so it was not a dependency",
+    "correct": true,
+    "why": "Right. A computed depends on what it read last time."
+   },
+   {
+    "text": "`done` was set to a value equal to the old one",
+    "correct": false,
+    "why": "It went from 90 to 100."
+   },
+   {
+    "text": "Changes are only noticed in a component, not in a script",
+    "correct": false,
+    "why": "The same script noticed the change to `showDone`."
+   }
+  ]
+ },
+ {
+  "id": "ex-pxhez1nd",
+  "version": 1,
+  "section": "computed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A colleague reads a signal inside a `setTimeout` within a `computed`. What does the lesson warn?",
+  "choices": [
+   {
+    "text": "The computed throws an error at the next read",
+    "correct": false,
+    "why": "Nothing throws; the read simply goes unnoticed."
+   },
+   {
+    "text": "The timer is cancelled when the computed runs",
+    "correct": false,
+    "why": "The timer runs; the problem is tracking."
+   },
+   {
+    "text": "It turns into an effect without telling you",
+    "correct": false,
+    "why": "It stays a computed, and a wrong one."
+   },
+   {
+    "text": "That read is not tracked as a dependency",
+    "correct": true,
+    "why": "Right. Only signals called while the function runs are tracked."
+   }
+  ]
+ },
+ {
+  "id": "ex-c4ng8t08",
+  "version": 1,
+  "section": "computed",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A computed computes nothing until somebody reads it: it is ___.",
+  "blanks": [
+   {
+    "accept": [
+     "lazy"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-cw1ap17v",
+  "version": 1,
+  "section": "equality",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After `sessions().push({ minutes: 25 })`, `total()` still said 90. What would have brought the 25 in?",
+  "choices": [
+   {
+    "text": "`sessions.set(sessions())`, to tell the signal it changed",
+    "correct": false,
+    "why": "The same array again; `Object.is` finds no change."
+   },
+   {
+    "text": "Reading `total()` twice, so it computes again",
+    "correct": false,
+    "why": "Nothing marked it stale, so every read returns the stored 90."
+   },
+   {
+    "text": "Any update that gives the signal a new array",
+    "correct": true,
+    "why": "Right. A new array is a change, and the copy already held the 25."
+   },
+   {
+    "text": "Waiting a second for Angular to notice",
+    "correct": false,
+    "why": "There is nothing to notice: the signal was never told."
+   }
+  ]
+ },
+ {
+  "id": "ex-33whgpxm",
+  "version": 1,
+  "section": "equality",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What did `total()` print after the session of 50 minutes was added the right way?",
+  "value": 165,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-w7w4qc44",
+  "version": 1,
+  "section": "equality",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these marks a session done in a way a signal notices?",
+  "choices": [
+   {
+    "text": "`sessions()[0].done = true`",
+    "correct": false,
+    "why": "That changes an object in place; the signal holds the same array."
+   },
+   {
+    "text": "`sessions.update((l) => { l[0].done = true; return l; })`",
+    "correct": false,
+    "why": "It returns the same array, so `Object.is` finds no change."
+   },
+   {
+    "text": "`sessions.update((l) => l.map((s, i) => (i === 0 ? { ...s, done: true } : s)))`",
+    "correct": true,
+    "why": "Right. A new array, with a new object for the changed session."
+   },
+   {
+    "text": "`sessions.set(sessions())` after changing the object",
+    "correct": false,
+    "why": "Setting the same array is no change."
+   }
+  ]
+ },
+ {
+  "id": "ex-8wmndafs",
+  "version": 1,
+  "section": "effect",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After two clicks on `Mark 15 minutes done`, how many times had the effect run?",
+  "choices": [
+   {
+    "text": "Twice, once per click",
+    "correct": false,
+    "why": "It also ran once when the component was created."
+   },
+   {
+    "text": "Three times",
+    "correct": true,
+    "why": "Right. Once at creation, once after each click."
+   },
+   {
+    "text": "Once, because effects run only at creation",
+    "correct": false,
+    "why": "It runs again whenever what it read changes."
+   },
+   {
+    "text": "Four times, once per signal per click",
+    "correct": false,
+    "why": "It runs once per round of changes, not once per signal."
+   }
+  ]
+ },
+ {
+  "id": "ex-jdv2c6dw",
+  "version": 1,
+  "section": "effect",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague writes `effect(() => this.left.set(this.planned() - this.done()))`. What does the lesson say to write instead?",
+  "choices": [
+   {
+    "text": "`left = computed(() => this.planned() - this.done())`",
+    "correct": true,
+    "why": "Right. The same value, always right, with nothing to schedule."
+   },
+   {
+    "text": "The same effect, inside `ngOnInit`",
+    "correct": false,
+    "why": "Moving it does not fix copying a value into a second source of truth."
+   },
+   {
+    "text": "A `@let` in the template, so the class has no field at all",
+    "correct": false,
+    "why": "The class then cannot use the value, and the lesson's point is about deriving state."
+   },
+   {
+    "text": "`left.update` in each method that changes `done`",
+    "correct": false,
+    "why": "That spreads the derivation across every writer."
+   }
+  ]
+ },
+ {
+  "id": "ex-ppd6ya9j",
+  "version": 1,
+  "section": "effect",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each job with the tool the lesson gives it.",
+  "pairs": [
+   {
+    "left": "a value that changes and is set by the component",
+    "right": "`signal`"
+   },
+   {
+    "left": "a value worked out from other signals",
+    "right": "`computed`"
+   },
+   {
+    "left": "writing to `localStorage` when a value changes",
+    "right": "`effect`"
+   },
+   {
+    "left": "data that arrives later, with loading and error states",
+    "right": "`resource`"
+   }
+  ],
+  "right_distractors": [
+   "a value the template needs once"
+  ]
+ },
+ {
+  "id": "ex-zsfdr4w7",
+  "version": 1,
+  "section": "resource",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The loader asked for `/course.json` and the page said `Unexpected token '<'`. Why did `fetch` not reject?",
+  "choices": [
+   {
+    "text": "The dev server answered 200, as it does for every unknown address",
+    "correct": false,
+    "why": "`--network` showed 404; addresses with an extension are not answered with the page."
+   },
+   {
+    "text": "A 404 is an answer, and `fetch` only rejects when there is none",
+    "correct": true,
+    "why": "Right. The loader has to check `response.ok`."
+   },
+   {
+    "text": "`resource` swallows rejections from `fetch`",
+    "correct": false,
+    "why": "It turns them into `error()`, which the template showed."
+   },
+   {
+    "text": "The browser cached an older answer",
+    "correct": false,
+    "why": "The request was made and answered 404 that time."
+   }
+  ]
+ },
+ {
+  "id": "ex-fhwb4rk5",
+  "version": 1,
+  "section": "resource",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which three signals did the template read from the resource?",
+  "choices": [
+   {
+    "text": "`pending()`, `failed()` and `result()`",
+    "correct": false,
+    "why": "Those are not a resource's names."
+   },
+   {
+    "text": "`isLoading()`, `error()` and `value()`",
+    "correct": true,
+    "why": "Right. Each is a signal, read with parentheses."
+   },
+   {
+    "text": "`loader()`, `params()` and `status()`",
+    "correct": false,
+    "why": "`loader` and `params` are options you pass in, not signals you read."
+   },
+   {
+    "text": "`then()`, `catch()` and `finally()`",
+    "correct": false,
+    "why": "Those belong to a promise; a resource offers signals."
+   }
+  ]
+ },
+ {
+  "id": "ex-h9gt72nm",
+  "version": 1,
+  "section": "resource",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does it mean that `resource` is marked experimental in Angular 21?",
+  "choices": [
+   {
+    "text": "It only works in development builds",
+    "correct": false,
+    "why": "It works in every build; experimental is about the API's stability."
+   },
+   {
+    "text": "It will be removed in Angular 22",
+    "correct": false,
+    "why": "Nothing says so; it is the direction the framework is heading."
+   },
+   {
+    "text": "Its API is not frozen between versions",
+    "correct": true,
+    "why": "Right. The framework says so in its own documentation."
+   },
+   {
+    "text": "It needs a flag in `angular.json`",
+    "correct": false,
+    "why": "No flag is needed; the planner uses it as it is."
+   }
+  ]
+ },
+ {
+  "id": "ex-my0kr6ft",
+  "version": 1,
+  "section": "the-week-computed",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "With `--today 2026-10-28`, how many minutes did the planner say were planned?",
+  "value": 40,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-5qm89mgn",
+  "version": 1,
+  "section": "the-week-computed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`isoDay` builds the date from `getFullYear`, `getMonth` and `getDate` instead of calling `toISOString()`. Why?",
+  "choices": [
+   {
+    "text": "`toISOString()` does not exist in Node",
+    "correct": false,
+    "why": "It exists everywhere; the problem is its time zone."
+   },
+   {
+    "text": "`toISOString()` is slower",
+    "correct": false,
+    "why": "Speed is not the reason."
+   },
+   {
+    "text": "`toISOString()` answers in UTC, a day ahead at 22:00 here",
+    "correct": true,
+    "why": "Right. The planner's day is the person's day."
+   },
+   {
+    "text": "`toISOString()` includes the time, which breaks the comparison",
+    "correct": false,
+    "why": "It does, and slicing it would still give UTC's date."
+   }
+  ]
+ },
+ {
+  "id": "ex-168wvyzz",
+  "version": 1,
+  "section": "the-week-computed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`--network` listed `GET /courses.json` twice for one page. What does the lesson say comes next?",
+  "choices": [
+   {
+    "text": "Nothing: two requests for one file are free",
+    "correct": false,
+    "why": "The lesson calls it wasteful now and wrong the day the copies differ."
+   },
+   {
+    "text": "Caching the file in `localStorage`",
+    "correct": false,
+    "why": "Caching would hide the duplication, not remove it."
+   },
+   {
+    "text": "An input in lesson 8, then a service in lesson 11",
+    "correct": true,
+    "why": "Right. The week hands its numbers down, then one service holds the data."
+   },
+   {
+    "text": "Merging the two components into one",
+    "correct": false,
+    "why": "The tree keeps both; the data moves instead."
+   }
+  ]
+ },
+ {
+  "id": "ex-h8t2n8pg",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Each session has a `minutes` field, and the course page will show the course's total. Which tool should compute it?",
+  "choices": [
+   {
+    "text": "An `effect` that sets a `total` signal",
+    "correct": false,
+    "why": "That is the copy-into-a-signal mistake the lesson warns against."
+   },
+   {
+    "text": "A method called from the template",
+    "correct": false,
+    "why": "It works, recomputing on every check; a computed remembers."
+   },
+   {
+    "text": "A `resource`, because the sessions came from a file",
+    "correct": false,
+    "why": "The resource holds the data; the derivation is a different job."
+   },
+   {
+    "text": "A `computed`",
+    "correct": true,
+    "why": "Right. Derived from signals, remembered until they change."
+   }
+  ]
+ }
+]

@@ -1,0 +1,556 @@
+[
+ {
+  "id": "ex-fvgc9kmj",
+  "version": 1,
+  "section": "observables",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the bench, `subscribed` was logged after `before subscribe`. What does that show?",
+  "choices": [
+   {
+    "text": "The console reorders messages from the same component",
+    "correct": false,
+    "why": "The console prints in the order things ran."
+   },
+   {
+    "text": "Making an Observable runs nothing; subscribing does",
+    "correct": true,
+    "why": "Right. It is lazy."
+   },
+   {
+    "text": "The Observable waited for Angular to finish starting",
+    "correct": false,
+    "why": "It waited for `subscribe`, which came straight after."
+   },
+   {
+    "text": "`new Observable` is asynchronous, like a Promise",
+    "correct": false,
+    "why": "`got 1` arrived before `subscribe` returned."
+   }
+  ]
+ },
+ {
+  "id": "ex-4drwn7c5",
+  "version": 1,
+  "section": "observables",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The bench subscribed twice to one `http.get('/api/planner')`. Counting the store's, how many requests for `/api/planner` did the page make?",
+  "value": 3,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-ghvyxb7c",
+  "version": 1,
+  "section": "observables",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did two subscriptions to one `http.get(...)` send two requests?",
+  "choices": [
+   {
+    "text": "`HttpClient` sends every request twice to be safe",
+    "correct": false,
+    "why": "One subscriber, one request."
+   },
+   {
+    "text": "The proxy duplicates requests to the API",
+    "correct": false,
+    "why": "The API's log matched the page's network list."
+   },
+   {
+    "text": "It is cold: each subscriber runs the function again",
+    "correct": true,
+    "why": "Right. For `HttpClient`, the function sends the request."
+   },
+   {
+    "text": "The first subscription failed, and the second retried it",
+    "correct": false,
+    "why": "Both answered 200."
+   }
+  ]
+ },
+ {
+  "id": "ex-ksdttrkz",
+  "version": 1,
+  "section": "observables",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each with what it gives.",
+  "pairs": [
+   {
+    "left": "a `Promise`",
+    "right": "one value or an error, started at once"
+   },
+   {
+    "left": "a `signal`",
+    "right": "the value now, always there"
+   },
+   {
+    "left": "an `Observable`",
+    "right": "values over time, from when it is subscribed"
+   }
+  ],
+  "right_distractors": [
+   "a value written once at build time"
+  ]
+ },
+ {
+  "id": "ex-qv9vbkw4",
+  "version": 1,
+  "section": "operators",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`interval(100).pipe(map(n => n * 10), filter(n => n % 20 === 0), take(3))`: which values were logged?",
+  "choices": [
+   {
+    "text": "0, 10 and 20",
+    "correct": false,
+    "why": "`filter` dropped 10."
+   },
+   {
+    "text": "0, 20 and 40",
+    "correct": true,
+    "why": "Right. `take` counted only what `filter` let through."
+   },
+   {
+    "text": "0, 1 and 2",
+    "correct": false,
+    "why": "`map` multiplied each by ten first."
+   },
+   {
+    "text": "0, 20, 40, 60 and on, for ever",
+    "correct": false,
+    "why": "`take(3)` completed the chain."
+   }
+  ]
+ },
+ {
+  "id": "ex-3pxgyw23",
+  "version": 1,
+  "section": "operators",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What stopped `interval(100)`, which on its own counts for ever?",
+  "choices": [
+   {
+    "text": "The component was destroyed",
+    "correct": false,
+    "why": "The bench stayed on the page."
+   },
+   {
+    "text": "`filter` dropped the values after 40",
+    "correct": false,
+    "why": "`filter` lets through every multiple of 20."
+   },
+   {
+    "text": "`take(3)`, by completing the chain",
+    "correct": true,
+    "why": "Right. Completing the end of a chain ends what feeds it."
+   },
+   {
+    "text": "`look` closed the page after a second",
+    "correct": false,
+    "why": "The chain completed well before; `ticks done` was logged."
+   }
+  ]
+ },
+ {
+  "id": "ex-k84senp1",
+  "version": 1,
+  "section": "operators",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each operator with where it earns its place.",
+  "pairs": [
+   {
+    "left": "`debounceTime`",
+    "right": "a search box, so not every key sends a request"
+   },
+   {
+    "left": "`catchError`",
+    "right": "a fallback value instead of a broken screen"
+   },
+   {
+    "left": "`tap`",
+    "right": "a log line in the middle of a chain"
+   },
+   {
+    "left": "`distinctUntilChanged`",
+    "right": "not asking the same question twice in a row"
+   }
+  ],
+  "right_distractors": [
+   "turning a signal into a template"
+  ]
+ },
+ {
+  "id": "ex-4rc32d2g",
+  "version": 1,
+  "section": "switch-map",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Without `debounceTime`, typing `Jav` sent how many requests from the bench?",
+  "choices": [
+   {
+    "text": "One, for `Jav`",
+    "correct": false,
+    "why": "That needed the pause `debounceTime` adds."
+   },
+   {
+    "text": "Three, one per letter",
+    "correct": false,
+    "why": "The empty query at the start sent one too."
+   },
+   {
+    "text": "Four: the empty query, `J`, `Ja` and `Jav`",
+    "correct": true,
+    "why": "Right. One per value the query had."
+   },
+   {
+    "text": "None until the box lost focus",
+    "correct": false,
+    "why": "Each `input` event set the signal at once."
+   }
+  ]
+ },
+ {
+  "id": "ex-dmfnkggx",
+  "version": 1,
+  "section": "switch-map",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `debounceTime(300)` do with the values of the query?",
+  "choices": [
+   {
+    "text": "It passes one on only after 300 ms with no newer one",
+    "correct": true,
+    "why": "Right. A burst of keys becomes one value."
+   },
+   {
+    "text": "It delays every value by 300 ms and passes all of them",
+    "correct": false,
+    "why": "That is `delay`; `debounceTime` drops the ones overtaken."
+   },
+   {
+    "text": "It cancels any request slower than 300 ms",
+    "correct": false,
+    "why": "It acts on the values before any request exists."
+   },
+   {
+    "text": "It lets one value through every 300 ms",
+    "correct": false,
+    "why": "That is closer to `throttleTime`."
+   }
+  ]
+ },
+ {
+  "id": "ex-8ttemqvv",
+  "version": 1,
+  "section": "switch-map",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Over a slow network, the answer for `Ja` arrives after the answer for `Jav`. Which operator keeps the screen right?",
+  "choices": [
+   {
+    "text": "`mergeMap`, which keeps every answer",
+    "correct": false,
+    "why": "It would show `Ja`'s results under a box that says `Jav`."
+   },
+   {
+    "text": "`concatMap`, which keeps them in order",
+    "correct": false,
+    "why": "It would wait for every old answer, and show each in turn."
+   },
+   {
+    "text": "`switchMap`, which cancels",
+    "correct": true,
+    "why": "Right. An old answer cannot land, because it was never kept."
+   },
+   {
+    "text": "`exhaustMap`, which ignores new values while busy",
+    "correct": false,
+    "why": "It would drop `Jav` and show `Ja`."
+   }
+  ]
+ },
+ {
+  "id": "ex-h79jxqxe",
+  "version": 1,
+  "section": "switch-map",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each operator with what it does when a new value arrives while a request is still out.",
+  "pairs": [
+   {
+    "left": "`switchMap`",
+    "right": "cancels the old request, starts the new one"
+   },
+   {
+    "left": "`mergeMap`",
+    "right": "starts the new one and keeps both"
+   },
+   {
+    "left": "`concatMap`",
+    "right": "waits for the old one, then starts"
+   },
+   {
+    "left": "`exhaustMap`",
+    "right": "ignores the new value until done"
+   }
+  ],
+  "right_distractors": [
+   "sends both values in one request"
+  ]
+ },
+ {
+  "id": "ex-z8m7grsq",
+  "version": 1,
+  "section": "interop",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `toSignal(observable)` do about unsubscribing?",
+  "choices": [
+   {
+    "text": "Nothing; call `unsubscribe` in `ngOnDestroy`",
+    "correct": false,
+    "why": "It does it for you."
+   },
+   {
+    "text": "It unsubscribes when its component or service is destroyed",
+    "correct": true,
+    "why": "Right. That is why it needs an injection context."
+   },
+   {
+    "text": "It unsubscribes after the first value",
+    "correct": false,
+    "why": "It keeps the latest value as long as it lives."
+   },
+   {
+    "text": "It never subscribes until the template reads it",
+    "correct": false,
+    "why": "It subscribes at once."
+   }
+  ]
+ },
+ {
+  "id": "ex-vg28s41m",
+  "version": 1,
+  "section": "interop",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A template writes `{{ left$ | async }}` twice. What happens?",
+  "choices": [
+   {
+    "text": "One subscription, shared by both",
+    "correct": false,
+    "why": "Each pipe subscribes on its own."
+   },
+   {
+    "text": "A build error: one Observable, one `async`",
+    "correct": false,
+    "why": "It compiles."
+   },
+   {
+    "text": "The second shows nothing until the first completes",
+    "correct": false,
+    "why": "Both show the value when their request answers."
+   },
+   {
+    "text": "Two subscriptions, and since it is cold, two requests",
+    "correct": true,
+    "why": "Right. `@if (left$ | async; as left)` subscribes once."
+   }
+  ]
+ },
+ {
+  "id": "ex-rex9dczc",
+  "version": 1,
+  "section": "interop",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Inside a constructor, `.pipe(___())` completes a subscription when the component is destroyed.",
+  "blanks": [
+   {
+    "accept": [
+     "takeUntilDestroyed"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-mzq9hdwk",
+  "version": 1,
+  "section": "retry",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The store retries a failed `PATCH` only when `transient(error)` is true. Why not on a 400?",
+  "choices": [
+   {
+    "text": "A 400 means the API is restarting",
+    "correct": false,
+    "why": "A 400 is the API refusing the body."
+   },
+   {
+    "text": "It fails the same way each time",
+    "correct": true,
+    "why": "Right. Retrying a refusal is noise."
+   },
+   {
+    "text": "`retry` cannot see the status code",
+    "correct": false,
+    "why": "The `delay` function receives the error, status and all."
+   },
+   {
+    "text": "A 400 is retried by the browser on its own",
+    "correct": false,
+    "why": "The browser retries nothing on a 400."
+   }
+  ]
+ },
+ {
+  "id": "ex-jgedh1gj",
+  "version": 1,
+  "section": "retry",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the retry run, the first `PATCH` got a 500. What happened next?",
+  "choices": [
+   {
+    "text": "The box unticked and the message appeared",
+    "correct": false,
+    "why": "That is what happens once the retries run out."
+   },
+   {
+    "text": "The page reloaded the planner from the API",
+    "correct": false,
+    "why": "Only the `PATCH` was sent again."
+   },
+   {
+    "text": "It was sent again two seconds later, and saved",
+    "correct": true,
+    "why": "Right. The box stayed ticked."
+   },
+   {
+    "text": "Nothing: `retry` waits for the next tick",
+    "correct": false,
+    "why": "It sent the same request again on its own."
+   }
+  ]
+ },
+ {
+  "id": "ex-9rfvsd45",
+  "version": 1,
+  "section": "retry",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why will lesson 14's `POST` that adds a session not retry?",
+  "choices": [
+   {
+    "text": "A `POST` cannot be piped through `retry`",
+    "correct": false,
+    "why": "Any Observable can."
+   },
+   {
+    "text": "The API refuses a second `POST` from the same page",
+    "correct": false,
+    "why": "It accepts every valid one."
+   },
+   {
+    "text": "Adding a session never fails",
+    "correct": false,
+    "why": "It fails on a bad field, and with the API down."
+   },
+   {
+    "text": "A lost answer would mean a second session",
+    "correct": true,
+    "why": "Right. Only what is safe twice is retried."
+   }
+  ]
+ },
+ {
+  "id": "ex-pp59v8cx",
+  "version": 1,
+  "section": "signal-or-observable",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these call for RxJS rather than a signal? Choose every one.",
+  "choices": [
+   {
+    "text": "Waiting for a pause in typing",
+    "correct": true,
+    "why": "Right. `debounceTime`."
+   },
+   {
+    "text": "Keeping only the newest of overlapping requests",
+    "correct": true,
+    "why": "Right. `switchMap`."
+   },
+   {
+    "text": "Holding whether a panel is open",
+    "correct": false,
+    "why": "A `signal` holds that."
+   },
+   {
+    "text": "The week's total, worked out from the sessions",
+    "correct": false,
+    "why": "A `computed` works it out."
+   },
+   {
+    "text": "Trying a request again two seconds later",
+    "correct": true,
+    "why": "Right. `retry` with a `delay`."
+   }
+  ]
+ },
+ {
+  "id": "ex-j6ef872g",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Old code keeps the selected course in a `BehaviorSubject` and every template reads it with `| async`. You are changing one screen. What does the lesson suggest?",
+  "choices": [
+   {
+    "text": "Rewrite every screen to signals first",
+    "correct": false,
+    "why": "Nothing obliges a rewrite of code that works."
+   },
+   {
+    "text": "Leave it, since signals and Observables cannot meet",
+    "correct": false,
+    "why": "`toSignal` and `toObservable` exist to make them meet."
+   },
+   {
+    "text": "Read it with `toSignal` in the screen you change",
+    "correct": true,
+    "why": "Right. The two kinds meet at the edge of what you touched."
+   },
+   {
+    "text": "Subscribe to it in the constructor, with no cleanup",
+    "correct": false,
+    "why": "That is the leak `toSignal` avoids."
+   }
+  ]
+ }
+]

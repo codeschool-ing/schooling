@@ -1,0 +1,411 @@
+{
+ "ex-ptmkg16d": {
+  "prompt": "Por que a API guarda os dados no `planner.json` e não no `seed.json`?",
+  "choices": [
+   {
+    "text": "O Node não consegue escrever num arquivo que o git acompanha",
+    "why": "O git não trava arquivos; o Node escreve onde tiver permissão."
+   },
+   {
+    "text": "Para o seed ficar como era",
+    "why": "Isso. A cópia de trabalho é feita do seed quando falta."
+   },
+   {
+    "text": "O `seed.json` é somente leitura para o servidor de desenvolvimento",
+    "why": "O servidor de desenvolvimento não lê mais nenhum dos dois."
+   },
+   {
+    "text": "Arquivos JSON em `server/` são entregues ao navegador",
+    "why": "Nada entrega o `server/`; a API responde na porta 3000."
+   }
+  ]
+ },
+ "ex-ygwy1h5k": {
+  "prompt": "`curl -X PATCH .../api/sessions/5 -d '{\"done\":\"yes\"}'` foi recusado. Com o quê?",
+  "choices": [
+   {
+    "text": "404, não existe sessão 5",
+    "why": "A sessão 5 existe; a recusa foi sobre o corpo."
+   },
+   {
+    "text": "400, done must be true or false",
+    "why": "Isso. `\"yes\"` é uma string, não um booleano."
+   },
+   {
+    "text": "200, com `done` definido como true",
+    "why": "O servidor confere o tipo antes de mudar qualquer coisa."
+   },
+   {
+    "text": "500, porque o JSON não pôde ser lido",
+    "why": "O JSON era válido; o valor dele era do tipo errado."
+   }
+  ]
+ },
+ "ex-692m0faf": {
+  "prompt": "Que problema o proxy do servidor de desenvolvimento resolve?",
+  "choices": [
+   {
+    "text": "Faz a API responder mais rápido guardando as respostas",
+    "why": "Ele repassa pedidos; não guarda nada."
+   },
+   {
+    "text": "Deixa a API ler os arquivos da aplicação",
+    "why": "A API lê os dois arquivos dela."
+   },
+   {
+    "text": "As duas dividem uma origem, sem CORS",
+    "why": "Isso. O navegador só pergunta à porta 4200."
+   },
+   {
+    "text": "Reinicia a API quando o código dela muda",
+    "why": "A API é reiniciada à mão, no terminal dela."
+   }
+  ]
+ },
+ "ex-yp56q1p8": {
+  "prompt": "Depois que o `ng config` definiu o `proxyConfig`, por que o servidor de desenvolvimento teve de ser reiniciado?",
+  "choices": [
+   {
+    "text": "Ele lê o proxy quando inicia",
+    "why": "Isso. Uma mudança no `angular.json` não é observada como o código."
+   },
+   {
+    "text": "O `ng config` o para de propósito",
+    "why": "O `ng config` só edita o `angular.json`."
+   },
+   {
+    "text": "A porta 4200 foi tomada pela API",
+    "why": "A API escuta na 3000."
+   },
+   {
+    "text": "O cache em `.angular` precisava ser limpo antes",
+    "why": "Nenhum cache estava envolvido."
+   }
+  ]
+ },
+ "ex-qjty6vh1": {
+  "prompt": "No Angular 21, o que precisou ser acrescentado ao `app.config.ts` antes de o store poder fazer `inject(HttpClient)`?",
+  "choices": [
+   {
+    "text": "`provideHttpClient()`, senão a injeção falha com `NG0201`",
+    "why": "Isso valia antes do Angular 21; o store funcionou sem mudar a configuração."
+   },
+   {
+    "text": "Nada: o `HttpClient` já tem `providedIn: 'root'`",
+    "why": "Isso. O `provideHttpClient()` chega depois, para ligar os interceptors."
+   },
+   {
+    "text": "O `HttpClientModule` nos `imports` do componente",
+    "why": "Esse é o jeito da era dos módulos, e nada aqui precisou dele."
+   },
+   {
+    "text": "O `withFetch()`, já que não há outro jeito de mandar um pedido",
+    "why": "Sem ele, os pedidos passam pelo `XMLHttpRequest`."
+   }
+  ]
+ },
+ "ex-94217201": {
+  "prompt": "O que o `HttpClient` faz que um `fetch` comum deixa para você? Escolha todos.",
+  "choices": [
+   {
+    "text": "Lê o JSON da resposta",
+    "why": "Isso."
+   },
+   {
+    "text": "Trata um 404 ou um 500 como erro",
+    "why": "Isso. O `fetch` resolve com qualquer status."
+   },
+   {
+    "text": "Passa todo pedido pelos interceptors",
+    "why": "Isso."
+   },
+   {
+    "text": "Confere a resposta contra o argumento de tipo",
+    "why": "Nada confere um argumento de tipo em tempo de execução."
+   },
+   {
+    "text": "Guarda as respostas para um segundo pedido não ser enviado",
+    "why": "Ele envia todo pedido que lhe pedirem."
+   }
+  ]
+ },
+ "ex-nyh7r6tz": {
+  "prompt": "Para ler, o store usa `___(() => '/api/planner')`, um resource cujo loader é um GET do `HttpClient`.",
+  "blanks": [
+   {
+    "accept": [
+     "httpResource"
+    ]
+   }
+  ]
+ },
+ "ex-kwk2593x": {
+  "prompt": "A primeira página que importou o `@angular/common/http` se conectou ao servidor de desenvolvimento duas vezes. Por quê?",
+  "choices": [
+   {
+    "text": "O store mandou o GET duas vezes",
+    "why": "A lista da rede mostra um GET."
+   },
+   {
+    "text": "O proxy se reconecta a cada pedido",
+    "why": "O proxy fica entre o servidor de desenvolvimento e a API, não a página."
+   },
+   {
+    "text": "Um pacote novo foi preparado, e a página recarregou",
+    "why": "Isso. Acontece uma vez por pacote."
+   },
+   {
+    "text": "O `look` abre toda página duas vezes",
+    "why": "Todos os outros looks da aula se conectaram uma vez."
+   }
+  ]
+ },
+ "ex-7h9fmazz": {
+  "prompt": "Os minutos da sessão 5 viraram `\"50\"`, uma string. Por que o compilador não disse nada?",
+  "choices": [
+   {
+    "text": "O servidor de desenvolvimento pula a checagem de tipos em desenvolvimento",
+    "why": "Ele checa tipos; os dados não eram código."
+   },
+   {
+    "text": "O `httpResource` converte strings em números",
+    "why": "Não converteu, e é por isso que o total virou `11550`."
+   },
+   {
+    "text": "Um argumento de tipo é uma afirmação, sem conferência",
+    "why": "Isso. O compilador acreditou em `minutes: number`."
+   },
+   {
+    "text": "`minutes` foi declarado como `number | string`",
+    "why": "O `Session` o declara como `number`."
+   }
+  ]
+ },
+ "ex-qeteys0w": {
+  "prompt": "Com os minutos da sessão 5 como a string `\"50\"`, a semana disse `11550` minutos planejados. Quantos minutos da semana vieram antes da sessão 5 na soma?"
+ },
+ "ex-c0bbyj73": {
+  "prompt": "O que o `parse: parsePlanner` muda no resource?",
+  "choices": [
+   {
+    "text": "Uma resposta ruim vira um erro, com a mensagem",
+    "why": "Isso. A semana disse qual sessão e qual campo."
+   },
+   {
+    "text": "Transforma `\"50\"` em `50`, para o total ficar certo",
+    "why": "Ele recusa a resposta; não conserta nada."
+   },
+   {
+    "text": "Faz o pedido de novo até a resposta passar",
+    "why": "Ele roda uma vez por resposta."
+   },
+   {
+    "text": "Leva a checagem para o momento do build",
+    "why": "A checagem roda em cada resposta, em tempo de execução."
+   }
+  ]
+ },
+ "ex-r7056yev": {
+  "prompt": "Um método do store chama `this.http.patch(url, body)` e mais nada. O que acontece?",
+  "choices": [
+   {
+    "text": "O pedido é enviado e a resposta ignorada",
+    "why": "Um Observable não faz nada até alguém assinar."
+   },
+   {
+    "text": "Nenhum pedido é enviado",
+    "why": "Isso. Ninguém assinou, então nada rodou."
+   },
+   {
+    "text": "O pedido é enviado duas vezes, uma por tela",
+    "why": "Há um store só; e nenhum pedido é enviado."
+   },
+   {
+    "text": "O compilador recusa um Observable não usado",
+    "why": "Compila, e é isso que facilita não perceber."
+   }
+  ]
+ },
+ "ex-cnk9vgkh": {
+  "prompt": "Como a aula mostrou que a marcação chegou ao servidor?",
+  "choices": [
+   {
+    "text": "A caixa ficou marcada na mesma página",
+    "why": "A cópia da página marca ouvindo o servidor ou não."
+   },
+   {
+    "text": "O servidor de desenvolvimento imprimiu o PATCH",
+    "why": "O servidor de desenvolvimento repassa pedidos e só registra erros."
+   },
+   {
+    "text": "Uma página nova carregou 140 minutos feitos da API",
+    "why": "Isso. Uma página nova só sabe o que o servidor lhe manda."
+   },
+   {
+    "text": "O `git status` listou o `planner.json` como mudado",
+    "why": "O `planner.json` é ignorado pelo git."
+   }
+  ]
+ },
+ "ex-2z021f1a": {
+  "prompt": "Mudar a cópia na hora e avisar o servidor depois se chama atualização ___.",
+  "blanks": [
+   {
+    "accept": [
+     "otimista",
+     "optimistic"
+    ]
+   }
+  ]
+ },
+ "ex-wb586k8t": {
+  "prompt": "Por que o `GET` do `httpResource` também levou o cabeçalho `X-Requested-By`?",
+  "choices": [
+   {
+    "text": "O store o acrescentou às opções do resource",
+    "why": "O store não mudou nessa seção."
+   },
+   {
+    "text": "O `httpResource` manda o pedido pelo `HttpClient`, e portanto pela cadeia",
+    "why": "Isso. Uma cadeia para todo pedido."
+   },
+   {
+    "text": "O proxy copia cabeçalhos de pedidos anteriores",
+    "why": "O proxy repassa o que recebe."
+   },
+   {
+    "text": "O navegador acrescenta cabeçalhos próprios a todo pedido sozinho",
+    "why": "O navegador não acrescenta nenhum seu."
+   }
+  ]
+ },
+ "ex-y6wstatk": {
+  "prompt": "Por que um interceptor chama `req.clone({ setHeaders: ... })` em vez de definir um cabeçalho no `req`?",
+  "choices": [
+   {
+    "text": "O `clone` manda o pedido uma segunda vez",
+    "why": "O `next` o manda, uma vez."
+   },
+   {
+    "text": "Cabeçalhos só podem ser definidos numa cópia do pedido do navegador",
+    "why": "O pedido é um objeto do Angular, não do navegador."
+   },
+   {
+    "text": "Um `HttpRequest` não pode ser mudado, então uma cópia mudada é repassada",
+    "why": "Isso. A imutabilidade evita que um passo surpreenda o seguinte."
+   },
+   {
+    "text": "O `setHeaders` só funciona no primeiro pedido",
+    "why": "Funciona em todo pedido."
+   }
+  ]
+ },
+ "ex-d42zspqs": {
+  "prompt": "Associe cada interceptor ao que ele deixa uma aplicação fazer.",
+  "pairs": [
+   {
+    "left": "acrescenta `Authorization: Bearer ...`",
+    "right": "mandar o token de quem entrou"
+   },
+   {
+    "left": "lê um 401 na resposta",
+    "right": "mandar alguém entrar"
+   },
+   {
+    "left": "registra o método, a URL e o tempo",
+    "right": "achar os pedidos lentos"
+   },
+   {
+    "left": "tenta de novo numa falha de rede",
+    "right": "sobreviver a um momento de Wi-Fi ruim"
+   }
+  ],
+  "right_distractors": [
+   "compilar templates mais rápido"
+  ]
+ },
+ "ex-hngvhab6": {
+  "prompt": "Com a API parada, a página recebeu um 500. Quem o mandou?",
+  "choices": [
+   {
+    "text": "A API, enquanto desligava",
+    "why": "Nada estava escutando na porta 3000."
+   },
+   {
+    "text": "O proxy do servidor de desenvolvimento",
+    "why": "Isso. O terminal dele disse `ECONNREFUSED`."
+   },
+   {
+    "text": "O navegador, que transforma conexões recusadas em 500",
+    "why": "Sem proxy o navegador relataria status 0."
+   },
+   {
+    "text": "O `httpResource`, depois de um tempo limite",
+    "why": "O status veio pela rede, do proxy."
+   }
+  ]
+ },
+ "ex-hfnezvtd": {
+  "prompt": "Antes da correção, um `PATCH` que falhou deixava a caixa marcada. O que havia de errado nisso, além do erro no console?",
+  "choices": [
+   {
+    "text": "A caixa não podia ser desmarcada de novo",
+    "why": "Podia; a página só continuaria mentindo."
+   },
+   {
+    "text": "O total da semana dobrou",
+    "why": "O total mudou 50, como em qualquer marcação."
+   },
+   {
+    "text": "O servidor salvou a marcação mesmo assim, depois",
+    "why": "O servidor nunca a recebeu."
+   },
+   {
+    "text": "A página e o servidor discordavam",
+    "why": "Isso. Um recarregamento a desfaria em silêncio."
+   }
+  ]
+ },
+ "ex-fd3jw717": {
+  "prompt": "Por que a mensagem vai num parágrafo com `role=\"alert\"`?",
+  "choices": [
+   {
+    "text": "Deixa o parágrafo vermelho",
+    "why": "O `role` muda o que é anunciado, não a aparência."
+   },
+   {
+    "text": "Impede a caixa de ser marcada de novo",
+    "why": "Nada no role mexe na caixa."
+   },
+   {
+    "text": "Um leitor de tela o anuncia na hora",
+    "why": "Isso. Quem não vê a caixa desmarcar ouve por quê."
+   },
+   {
+    "text": "Manda a mensagem para o log do servidor",
+    "why": "É um atributo da página."
+   }
+  ]
+ },
+ "ex-nfz0vh0m": {
+  "prompt": "Um pedido falha com 400 porque o corpo estava errado. O que a aplicação deve fazer?",
+  "choices": [
+   {
+    "text": "Tentar três vezes e depois desistir em silêncio",
+    "why": "Um 400 falha igual toda vez, e silêncio é a única coisa que não pode haver."
+   },
+   {
+    "text": "Desfazer o que mostrou, e mostrar o motivo do servidor",
+    "why": "Isso. A página volta ao que o servidor acredita."
+   },
+   {
+    "text": "Ignorar, já que o próximo pedido vai resolver",
+    "why": "Nada vai reenviar este."
+   },
+   {
+    "text": "Recarregar a página inteira",
+    "why": "Um recarregamento esconde o erro e perde o motivo."
+   }
+  ]
+ }
+}

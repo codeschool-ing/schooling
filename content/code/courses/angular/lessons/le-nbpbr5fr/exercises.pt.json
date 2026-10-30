@@ -1,0 +1,343 @@
+{
+ "ex-8v68yfph": {
+  "prompt": "Antes do store, por que marcar uma sessão na página do curso deixava o total da semana igual?",
+  "choices": [
+   {
+    "text": "O evento `change` da caixa nunca chegava ao `CoursePage`",
+    "why": "Chegava: a cópia da página do curso mudou."
+   },
+   {
+    "text": "Cada componente tinha o próprio resource e a própria cópia",
+    "why": "Isso. A marcação mudava só a do `CoursePage`."
+   },
+   {
+    "text": "O `Week` é OnPush, e o OnPush ignora cliques em outro lugar",
+    "why": "Um signal lido pelos dois o teria atualizado; não havia."
+   },
+   {
+    "text": "O servidor de desenvolvimento guardou a primeira resposta do `courses.json`",
+    "why": "Os dois pedidos foram respondidos; cada cópia era só dela."
+   }
+  ]
+ },
+ "ex-yw3qb534": {
+  "prompt": "Antes do store, quantos pedidos de `/courses.json` um carregamento da página fazia?"
+ },
+ "ex-rmbkm52z": {
+  "prompt": "O que faz do `PlannerStore` um serviço, do ponto de vista do Angular?",
+  "choices": [
+   {
+    "text": "Ele estende a classe base `Service` do Angular, como o CLI escreve",
+    "why": "Não existe essa classe; ele não estende nada."
+   },
+   {
+    "text": "O nome dele termina em `Store`",
+    "why": "O nome é para pessoas; o Angular não lê nada dele."
+   },
+   {
+    "text": "Nada especial: uma classe injetável sem template",
+    "why": "Isso. Tudo nele é a aula 10."
+   },
+   {
+    "text": "Ele foi criado pelo `ng generate service`",
+    "why": "O CLI só escreveu um arquivo; uma classe escrita à mão é a mesma coisa."
+   }
+  ]
+ },
+ "ex-nnjx2cnw": {
+  "prompt": "Por que o store escreve `this.data.hasValue() ? this.data.value().courses : []` em vez de `this.data.value()?.courses ?? []`?",
+  "choices": [
+   {
+    "text": "O `?.` não funciona dentro de um `computed`",
+    "why": "Funciona em qualquer lugar onde uma expressão TypeScript funciona."
+   },
+   {
+    "text": "`value()` lança erro no estado de erro",
+    "why": "Isso. A conferência vem antes, então o computed nunca lança."
+   },
+   {
+    "text": "`hasValue()` inicia o pedido se ele não tiver começado",
+    "why": "Ele só lê o estado; o resource começou sozinho."
+   },
+   {
+    "text": "`hasValue()` é mais rápido que ler o valor",
+    "why": "Velocidade não é o motivo."
+   }
+  ]
+ },
+ "ex-f9cvr5h3": {
+  "prompt": "O comando do CLI que escreveu o `planner-store.ts` foi `npx ng generate ___ planner-store`.",
+  "blanks": [
+   {
+    "accept": [
+     "service"
+    ]
+   }
+  ]
+ },
+ "ex-shbd5w4b": {
+  "prompt": "Depois que os dois componentes injetaram o store, a marcação mostrou 140 minutos feitos. O que levou a mudança ao `Week`?",
+  "choices": [
+   {
+    "text": "O `CoursePage` emitiu um output que o `Week` escutava",
+    "why": "Nenhum dos dois sabe que o outro existe."
+   },
+   {
+    "text": "O store recarregou o `courses.json` depois do toggle",
+    "why": "Houve um pedido, antes da marcação."
+   },
+   {
+    "text": "A detecção de mudanças rodou na página inteira por causa do clique",
+    "why": "A página é zoneless e OnPush; um clique sozinho não redesenha nada."
+   },
+   {
+    "text": "O `totals` do `Week` lia o signal `sessions`, que mudou",
+    "why": "Isso. Um signal, lido pelos dois."
+   }
+  ]
+ },
+ "ex-48fcapbs": {
+  "prompt": "Os componentes declaram `protected readonly store = inject(PlannerStore)`. Por que `protected` e não `private`?",
+  "choices": [
+   {
+    "text": "Os templates leem o `store`",
+    "why": "Isso. Um template alcança membros `protected`, não `private`."
+   },
+   {
+    "text": "Campos `private` não podem guardar um valor injetado",
+    "why": "Podem; o `PlannerStore` guarda o resource dele num."
+   },
+   {
+    "text": "`protected` deixa subclasses trocarem o store",
+    "why": "Nada aqui herda de um componente."
+   },
+   {
+    "text": "`private` daria a cada componente o próprio store",
+    "why": "Visibilidade não tem nada a ver com qual injetor responde."
+   }
+  ]
+ },
+ "ex-nhh7rv0k": {
+  "prompt": "`this.store.sessions.set([])` parou o build. O que o erro dizia?",
+  "choices": [
+   {
+    "text": "`NG0201`: nenhum provider para `Session[]`",
+    "why": "Era um erro do TypeScript no build, não um erro de injeção."
+   },
+   {
+    "text": "`TS2339`: `set` não existe em `Signal<Session[]>`",
+    "why": "Isso. Um computed é um signal só de leitura."
+   },
+   {
+    "text": "`TS2341`: `sessions` é privado",
+    "why": "Esse erro era sobre o `data`; o `sessions` é público."
+   },
+   {
+    "text": "Nada: compilou, e limpou a lista de sessões da página",
+    "why": "O compilador recusou as duas linhas."
+   }
+  ]
+ },
+ "ex-xgf7x7ff": {
+  "prompt": "Quais destes impedem um componente de mudar os dados do store pelas costas dele? Escolha todos os que impedem.",
+  "choices": [
+   {
+    "text": "O resource é `private`",
+    "why": "Isso. Só os métodos do próprio store o alcançam."
+   },
+   {
+    "text": "`courses` e `sessions` são `computed`, sem `set`",
+    "why": "Isso."
+   },
+   {
+    "text": "O store é `providedIn: 'root'`",
+    "why": "Isso decide quem o compartilha, não quem pode escrever nele."
+   },
+   {
+    "text": "Os componentes são OnPush",
+    "why": "A detecção de mudanças não protege dados."
+   },
+   {
+    "text": "As mudanças passam por um método com nome, `toggle`",
+    "why": "Isso. O único lugar que muda uma sessão."
+   }
+  ]
+ },
+ "ex-4vem2kx2": {
+  "prompt": "Para estado num signal gravável comum, `this.state.___()` entrega um signal que o lê e não pode escrevê-lo.",
+  "blanks": [
+   {
+    "accept": [
+     "asReadonly"
+    ]
+   }
+  ]
+ },
+ "ex-57nd75yn": {
+  "prompt": "Por que os totais da semana foram para o store enquanto as linhas ficaram no `Week`?",
+  "choices": [
+   {
+    "text": "As linhas precisam de um template próprio, e um serviço não tem",
+    "why": "As linhas são um `computed`, que um serviço pode ter."
+   },
+   {
+    "text": "Um vale para qualquer tela; o outro serve a uma só",
+    "why": "Isso. Fatos vão, escolhas de uma tela ficam."
+   },
+   {
+    "text": "Os totais eram lentos de calcular num componente",
+    "why": "Velocidade não entrou na conta."
+   },
+   {
+    "text": "Um store não pode ter mais de quatro valores computed",
+    "why": "Não existe esse limite."
+   }
+  ]
+ },
+ "ex-m9thyrk4": {
+  "prompt": "Depois da mudança, o `Week` não injeta mais o `TODAY`, e mesmo assim o teste da semana que fornece o `TODAY` passou. Por quê?",
+  "choices": [
+   {
+    "text": "O teste foi pulado porque não batia mais",
+    "why": "Cinco testes rodaram e passaram."
+   },
+   {
+    "text": "O `Week` ainda lê `new Date()` como plano B",
+    "why": "O `Week` não lê data nenhuma agora."
+   },
+   {
+    "text": "O store perguntou ao injetor do teste, e o `useValue` do teste respondeu",
+    "why": "Isso. Seja quem for que pergunte, o injetor responde."
+   },
+   {
+    "text": "O teste só confere que o `Week` pode ser criado",
+    "why": "Ele confere o intervalo da semana de 28 de outubro."
+   }
+  ]
+ },
+ "ex-b0fjcr76": {
+  "prompt": "`minutesThisWeek(courseId)` é um método, não um `computed`. Um `computed` que o chama atualiza quando uma sessão muda?",
+  "choices": [
+   {
+    "text": "Não, um `computed` só rastreia signals, nunca chamadas de método",
+    "why": "O que é rastreado é a leitura de `sessions()` dentro do método."
+   },
+   {
+    "text": "Sim: `sessions()` é lido enquanto o `computed` roda",
+    "why": "Isso. O rastreamento segue as leituras, onde quer que estejam escritas."
+   },
+   {
+    "text": "Só se o método estiver marcado com `@Injectable`",
+    "why": "Esse decorator é para classes, e o rastreamento não precisa dele."
+   },
+   {
+    "text": "Só uma vez, na primeira vez que é chamado",
+    "why": "Atualiza toda vez que uma sessão que ele leu muda."
+   }
+  ]
+ },
+ "ex-vq5k2gcd": {
+  "prompt": "O `CoursePage` recebeu `providers: [PlannerStore]`. O que a marcação mostrou?",
+  "choices": [
+   {
+    "text": "Um `NG0201`, já que dois providers conflitam",
+    "why": "Um provider de componente sobre um da raiz é normal, e silencioso."
+   },
+   {
+    "text": "140 feitos, como antes",
+    "why": "A semana ficou com a cópia do próprio store."
+   },
+   {
+    "text": "Dois pedidos, e 90 feitos: um segundo store, com uma segunda cópia dos dados",
+    "why": "Isso. A pergunta do `CoursePage` parou no próprio injetor."
+   },
+   {
+    "text": "Um erro de build, já que o `PlannerStore` já é `providedIn: 'root'`",
+    "why": "Nada deixou de compilar."
+   }
+  ]
+ },
+ "ex-7jgw6228": {
+  "prompt": "Associe cada tipo de estado ao lugar onde fornecer o serviço dele.",
+  "pairs": [
+   {
+    "left": "compartilhado por toda tela da aplicação",
+    "right": "`providedIn: 'root'`"
+   },
+   {
+    "left": "separado para cada instância de um componente",
+    "right": "os `providers` desse componente"
+   },
+   {
+    "left": "de uma área, carregado com um grupo de rotas",
+    "right": "os `providers` de uma rota"
+   }
+  ],
+  "right_distractors": [
+   "os `imports` do componente que o usa"
+  ]
+ },
+ "ex-2jz7v6z7": {
+  "prompt": "Onde um serviço por componente é a escolha certa?",
+  "choices": [
+   {
+    "text": "Para as sessões do planner, para cada tela ser independente",
+    "why": "Cópias independentes são o defeito desta aula."
+   },
+   {
+    "text": "Para os campos meio preenchidos de um formulário mostrado várias vezes numa página",
+    "why": "Isso. Cada cópia deve ser separada e sair junto com o formulário."
+   },
+   {
+    "text": "Para qualquer coisa carregada de um servidor",
+    "why": "De onde os dados vêm não decide quem os compartilha."
+   },
+   {
+    "text": "Sempre que o serviço é usado por um componente hoje",
+    "why": "O único usuário de hoje não diz nada sobre o escopo do estado."
+   }
+  ]
+ },
+ "ex-7c7jm6d1": {
+  "prompt": "Como dá para saber, lendo o código, se um serviço é mesmo compartilhado?",
+  "choices": [
+   {
+    "text": "Pela palavra `Store` ou `Service` no nome",
+    "why": "Nomes não dizem nada sobre onde ele é fornecido."
+   },
+   {
+    "text": "Pelo `@Injectable()` na classe",
+    "why": "Isso só deixa o Angular construí-lo."
+   },
+   {
+    "text": "Por os métodos dele mudarem signals ou não",
+    "why": "Isso é sobre estado, não escopo."
+   },
+   {
+    "text": "Pelo `providedIn` e por toda lista `providers:` que o cita",
+    "why": "Isso. Quem escreve o provider decide o escopo."
+   }
+  ]
+ },
+ "ex-6v1hc7x7": {
+  "prompt": "Uma tela nova precisa do número de sessões que faltam fazer nesta semana. Onde isso deve ser calculado?",
+  "choices": [
+   {
+    "text": "No `PlannerStore`, como mais um computed",
+    "why": "Isso. É um fato sobre o planner, o mesmo para qualquer tela."
+   },
+   {
+    "text": "No componente da tela nova, com o próprio `resource`",
+    "why": "Isso seria uma terceira cópia dos dados."
+   },
+   {
+    "text": "No `Week`, que já conta a semana",
+    "why": "O `Week` não conta mais; o store conta."
+   },
+   {
+    "text": "No `planner.ts`, lido direto pelo template",
+    "why": "Um template só lê o que o componente dele expõe."
+   }
+  ]
+ }
+}

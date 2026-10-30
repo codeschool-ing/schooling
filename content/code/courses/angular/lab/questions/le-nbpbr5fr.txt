@@ -1,0 +1,201 @@
+# Lesson 11: services
+
+@ two-copies quiz easy #ex-8v68yfph
+? Before the store, why did ticking a session on the course page leave the week's total unchanged?
+?? Antes do store, por que marcar uma sessão na página do curso deixava o total da semana igual?
+- The checkbox's `change` event never reached `CoursePage` :: It did: the course page's copy changed.
+-- O evento `change` da caixa nunca chegava ao `CoursePage` :: Chegava: a cópia da página do curso mudou.
++ Each component had its own resource and its own copy :: Right. The tick changed only `CoursePage`'s.
+++ Cada componente tinha o próprio resource e a própria cópia :: Isso. A marcação mudava só a do `CoursePage`.
+- `Week` is OnPush, and OnPush ignores clicks elsewhere :: A signal both read would have updated it; there was none.
+-- O `Week` é OnPush, e o OnPush ignora cliques em outro lugar :: Um signal lido pelos dois o teria atualizado; não havia.
+- The dev server cached the first answer to `courses.json` :: Both requests were answered; each copy was its own.
+-- O servidor de desenvolvimento guardou a primeira resposta do `courses.json` :: Os dois pedidos foram respondidos; cada cópia era só dela.
+
+@ two-copies numeric easy #ex-yw3qb534
+? Before the store, how many requests for `/courses.json` did one load of the page make?
+?? Antes do store, quantos pedidos de `/courses.json` um carregamento da página fazia?
+= 2
+== 2
+
+@ a-service quiz easy #ex-rmbkm52z
+? What makes `PlannerStore` a service, as far as Angular is concerned?
+?? O que faz do `PlannerStore` um serviço, do ponto de vista do Angular?
+- It extends Angular's `Service` base class, as the CLI writes it :: There is no such class; it extends nothing.
+-- Ele estende a classe base `Service` do Angular, como o CLI escreve :: Não existe essa classe; ele não estende nada.
+- Its name ends with `Store` :: The name is for people; Angular reads none of it.
+-- O nome dele termina em `Store` :: O nome é para pessoas; o Angular não lê nada dele.
++ Nothing special: an injectable class with no template :: Right. Everything in it is lesson 10.
+++ Nada especial: uma classe injetável sem template :: Isso. Tudo nele é a aula 10.
+- It was created by `ng generate service` :: The CLI only wrote a file; a class written by hand is the same.
+-- Ele foi criado pelo `ng generate service` :: O CLI só escreveu um arquivo; uma classe escrita à mão é a mesma coisa.
+
+@ a-service quiz medium #ex-nnjx2cnw
+? Why does the store write `this.data.hasValue() ? this.data.value().courses : []` rather than `this.data.value()?.courses ?? []`?
+?? Por que o store escreve `this.data.hasValue() ? this.data.value().courses : []` em vez de `this.data.value()?.courses ?? []`?
+- `?.` does not work inside a `computed` :: It works anywhere a TypeScript expression does.
+-- O `?.` não funciona dentro de um `computed` :: Funciona em qualquer lugar onde uma expressão TypeScript funciona.
++ `value()` throws in the error state :: Right. The check comes first, so the computed never throws.
+++ `value()` lança erro no estado de erro :: Isso. A conferência vem antes, então o computed nunca lança.
+- `hasValue()` starts the request if it has not started :: It only reads the state; the resource started on its own.
+-- `hasValue()` inicia o pedido se ele não tiver começado :: Ele só lê o estado; o resource começou sozinho.
+- `hasValue()` is faster than reading the value :: Speed is not the reason.
+-- `hasValue()` é mais rápido que ler o valor :: Velocidade não é o motivo.
+
+@ a-service cloze easy #ex-f9cvr5h3
+? The CLI command that wrote `planner-store.ts` was `npx ng generate ___ planner-store`.
+?? O comando do CLI que escreveu o `planner-store.ts` foi `npx ng generate ___ planner-store`.
+= service
+== service
+
+@ using-it quiz medium #ex-shbd5w4b
+? After both components injected the store, the tick showed 140 minutes done. What carried the change to `Week`?
+?? Depois que os dois componentes injetaram o store, a marcação mostrou 140 minutos feitos. O que levou a mudança ao `Week`?
+- `CoursePage` emitted an output that `Week` listened to :: Neither knows the other exists.
+-- O `CoursePage` emitiu um output que o `Week` escutava :: Nenhum dos dois sabe que o outro existe.
+- The store reloaded `courses.json` after the toggle :: There was one request, before the tick.
+-- O store recarregou o `courses.json` depois do toggle :: Houve um pedido, antes da marcação.
+- Change detection ran over the whole page because of the click :: The page is zoneless and OnPush; a click alone redraws nothing.
+-- A detecção de mudanças rodou na página inteira por causa do clique :: A página é zoneless e OnPush; um clique sozinho não redesenha nada.
++ `Week`'s `totals` read the store's `sessions` signal, which changed :: Right. One signal, read by both.
+++ O `totals` do `Week` lia o signal `sessions`, que mudou :: Isso. Um signal, lido pelos dois.
+
+@ using-it quiz medium #ex-48fcapbs
+? The components declare `protected readonly store = inject(PlannerStore)`. Why `protected` and not `private`?
+?? Os componentes declaram `protected readonly store = inject(PlannerStore)`. Por que `protected` e não `private`?
++ The templates read `store` :: Right. A template reaches `protected` members, not `private` ones.
+++ Os templates leem o `store` :: Isso. Um template alcança membros `protected`, não `private`.
+- `private` fields cannot hold an injected value :: They can; `PlannerStore` keeps its resource in one.
+-- Campos `private` não podem guardar um valor injetado :: Podem; o `PlannerStore` guarda o resource dele num.
+- `protected` lets subclasses replace the store :: Nothing here subclasses a component.
+-- `protected` deixa subclasses trocarem o store :: Nada aqui herda de um componente.
+- `private` would give each component its own store :: Visibility has nothing to do with which injector answers.
+-- `private` daria a cada componente o próprio store :: Visibilidade não tem nada a ver com qual injetor responde.
+
+@ read-only quiz medium #ex-nhh7rv0k
+? `this.store.sessions.set([])` stopped the build. What did the error say?
+?? `this.store.sessions.set([])` parou o build. O que o erro dizia?
+- `NG0201`: no provider for `Session[]` :: It was a TypeScript error at build time, not an injection error.
+-- `NG0201`: nenhum provider para `Session[]` :: Era um erro do TypeScript no build, não um erro de injeção.
++ `TS2339`: `set` does not exist on `Signal<Session[]>` :: Right. A computed is a read-only signal.
+++ `TS2339`: `set` não existe em `Signal<Session[]>` :: Isso. Um computed é um signal só de leitura.
+- `TS2341`: `sessions` is private :: That error was about `data`; `sessions` is public.
+-- `TS2341`: `sessions` é privado :: Esse erro era sobre o `data`; o `sessions` é público.
+- Nothing: it compiled, and cleared the list on the page :: The compiler refused both lines.
+-- Nada: compilou, e limpou a lista de sessões da página :: O compilador recusou as duas linhas.
+
+@ read-only multiple-choice medium #ex-xgf7x7ff
+? Which of these keep a component from changing the store's data behind its back? Choose every one that does.
+?? Quais destes impedem um componente de mudar os dados do store pelas costas dele? Escolha todos os que impedem.
++ The resource is `private` :: Right. Only the store's own methods reach it.
+++ O resource é `private` :: Isso. Só os métodos do próprio store o alcançam.
++ `courses` and `sessions` are `computed`, with no `set` :: Right.
+++ `courses` e `sessions` são `computed`, sem `set` :: Isso.
+- The store is `providedIn: 'root'` :: That decides who shares it, not who may write to it.
+-- O store é `providedIn: 'root'` :: Isso decide quem o compartilha, não quem pode escrever nele.
+- The components are OnPush :: Change detection does not guard data.
+-- Os componentes são OnPush :: A detecção de mudanças não protege dados.
++ Changes go through a named method, `toggle` :: Right. The one place that changes a session.
+++ As mudanças passam por um método com nome, `toggle` :: Isso. O único lugar que muda uma sessão.
+
+@ read-only cloze medium #ex-4vem2kx2
+? For state in a plain writable signal, `this.state.___()` hands out a signal that reads it and cannot write it.
+?? Para estado num signal gravável comum, `this.state.___()` entrega um signal que o lê e não pode escrevê-lo.
+= asReadonly
+== asReadonly
+
+@ what-belongs quiz medium #ex-57nd75yn
+? Why did the week's totals move into the store while the rows stayed in `Week`?
+?? Por que os totais da semana foram para o store enquanto as linhas ficaram no `Week`?
+- The rows need a template of their own, and a service has none :: The rows are a `computed`, which a service can hold.
+-- As linhas precisam de um template próprio, e um serviço não tem :: As linhas são um `computed`, que um serviço pode ter.
++ One holds for any screen; the other suits one :: Right. Facts move, a screen's choices stay.
+++ Um vale para qualquer tela; o outro serve a uma só :: Isso. Fatos vão, escolhas de uma tela ficam.
+- The totals were slow to compute in a component :: Speed did not come into it.
+-- Os totais eram lentos de calcular num componente :: Velocidade não entrou na conta.
+- A store may not hold more than four computed values :: There is no such limit.
+-- Um store não pode ter mais de quatro valores computed :: Não existe esse limite.
+
+@ what-belongs quiz hard #ex-m9thyrk4
+? After the move, `Week` no longer injects `TODAY`, yet the week test that provides `TODAY` still passed. Why?
+?? Depois da mudança, o `Week` não injeta mais o `TODAY`, e mesmo assim o teste da semana que fornece o `TODAY` passou. Por quê?
+- The test was skipped because it no longer matched :: Five tests ran and passed.
+-- O teste foi pulado porque não batia mais :: Cinco testes rodaram e passaram.
+- `Week` still reads `new Date()` as a fallback :: `Week` reads no date at all now.
+-- O `Week` ainda lê `new Date()` como plano B :: O `Week` não lê data nenhuma agora.
++ The store asked the test's injector, and the test's `useValue` answered :: Right. Whoever asks, the injector answers.
+++ O store perguntou ao injetor do teste, e o `useValue` do teste respondeu :: Isso. Seja quem for que pergunte, o injetor responde.
+- The test checks only that `Week` can be created :: It checks the range of the week of 28 October.
+-- O teste só confere que o `Week` pode ser criado :: Ele confere o intervalo da semana de 28 de outubro.
+
+@ what-belongs quiz medium #ex-b0fjcr76
+? `minutesThisWeek(courseId)` is a method, not a `computed`. Does a `computed` that calls it update when a session changes?
+?? `minutesThisWeek(courseId)` é um método, não um `computed`. Um `computed` que o chama atualiza quando uma sessão muda?
+- No, only signals are ever tracked by a `computed`, never methods :: What is tracked is the read of `sessions()` inside the method.
+-- Não, um `computed` só rastreia signals, nunca chamadas de método :: O que é rastreado é a leitura de `sessions()` dentro do método.
++ Yes: `sessions()` is read while the `computed` runs :: Right. Tracking follows the reads, wherever they are written.
+++ Sim: `sessions()` é lido enquanto o `computed` roda :: Isso. O rastreamento segue as leituras, onde quer que estejam escritas.
+- Only if the method is marked `@Injectable` :: That decorator is for classes, and tracking does not need it.
+-- Só se o método estiver marcado com `@Injectable` :: Esse decorator é para classes, e o rastreamento não precisa dele.
+- Only once, the first time it is called :: It updates every time a session it read changes.
+-- Só uma vez, na primeira vez que é chamado :: Atualiza toda vez que uma sessão que ele leu muda.
+
+@ scope quiz medium #ex-vq5k2gcd
+? `CoursePage` was given `providers: [PlannerStore]`. What did the tick show?
+?? O `CoursePage` recebeu `providers: [PlannerStore]`. O que a marcação mostrou?
+- An `NG0201`, as two providers clash :: A component provider over a root one is normal, and silent.
+-- Um `NG0201`, já que dois providers conflitam :: Um provider de componente sobre um da raiz é normal, e silencioso.
+- 140 done, as before :: The week kept its own store's copy.
+-- 140 feitos, como antes :: A semana ficou com a cópia do próprio store.
++ Two requests, and 90 done: a second store with a second copy :: Right. `CoursePage`'s question stopped at its own injector.
+++ Dois pedidos, e 90 feitos: um segundo store, com uma segunda cópia dos dados :: Isso. A pergunta do `CoursePage` parou no próprio injetor.
+- A build error, since `PlannerStore` is already `providedIn: 'root'` :: Nothing failed to compile.
+-- Um erro de build, já que o `PlannerStore` já é `providedIn: 'root'` :: Nada deixou de compilar.
+
+@ scope matching medium #ex-7jgw6228
+? Match each kind of state with where to provide its service.
+?? Associe cada tipo de estado ao lugar onde fornecer o serviço dele.
+< shared by every screen of the application :: `providedIn: 'root'`
+<< compartilhado por toda tela da aplicação :: `providedIn: 'root'`
+< separate for each instance of one component :: that component's `providers`
+<< separado para cada instância de um componente :: os `providers` desse componente
+< one area's, loaded with a group of routes :: a route's `providers`
+<< de uma área, carregado com um grupo de rotas :: os `providers` de uma rota
+x the `imports` of the component that uses it
+xx os `imports` do componente que o usa
+
+@ scope quiz hard #ex-2jz7v6z7
+? Where is a per-component service the right choice?
+?? Onde um serviço por componente é a escolha certa?
+- For the planner's sessions, so each screen is independent :: Independent copies are this lesson's defect.
+-- Para as sessões do planner, para cada tela ser independente :: Cópias independentes são o defeito desta aula.
++ For the half-filled fields of a form shown several times on a page :: Right. Each copy is meant to be separate and to go with its form.
+++ Para os campos meio preenchidos de um formulário mostrado várias vezes numa página :: Isso. Cada cópia deve ser separada e sair junto com o formulário.
+- For anything that is loaded from a server :: Where data comes from does not decide who shares it.
+-- Para qualquer coisa carregada de um servidor :: De onde os dados vêm não decide quem os compartilha.
+- Whenever the service is used by one component today :: Today's single user says nothing about the state's scope.
+-- Sempre que o serviço é usado por um componente hoje :: O único usuário de hoje não diz nada sobre o escopo do estado.
+
+@ scope quiz medium #ex-7c7jm6d1
+? How can you tell, reading the code, whether a service is really shared?
+?? Como dá para saber, lendo o código, se um serviço é mesmo compartilhado?
+- By the word `Store` or `Service` in its name :: Names say nothing about where it is provided.
+-- Pela palavra `Store` ou `Service` no nome :: Nomes não dizem nada sobre onde ele é fornecido.
+- By `@Injectable()` on the class :: That only lets Angular build it.
+-- Pelo `@Injectable()` na classe :: Isso só deixa o Angular construí-lo.
+- By whether its methods change signals :: That is about state, not scope.
+-- Por os métodos dele mudarem signals ou não :: Isso é sobre estado, não escopo.
++ By `providedIn` and every `providers:` list that names it :: Right. Whoever writes the provider decides the scope.
+++ Pelo `providedIn` e por toda lista `providers:` que o cita :: Isso. Quem escreve o provider decide o escopo.
+
+@ drill quiz hard #ex-6v1hc7x7
+? A new screen needs the number of sessions still to do this week. Where should it be computed?
+?? Uma tela nova precisa do número de sessões que faltam fazer nesta semana. Onde isso deve ser calculado?
++ In `PlannerStore`, as a computed of its own :: Right. It is a fact about the planner, the same for any screen.
+++ No `PlannerStore`, como mais um computed :: Isso. É um fato sobre o planner, o mesmo para qualquer tela.
+- In the new screen's component, with its own `resource` :: That would be a third copy of the data.
+-- No componente da tela nova, com o próprio `resource` :: Isso seria uma terceira cópia dos dados.
+- In `Week`, which already counts the week :: `Week` no longer counts it; the store does.
+-- No `Week`, que já conta a semana :: O `Week` não conta mais; o store conta.
+- In `planner.ts`, read by the template directly :: A template can only read what its component exposes.
+-- No `planner.ts`, lido direto pelo template :: Um template só lê o que o componente dele expõe.

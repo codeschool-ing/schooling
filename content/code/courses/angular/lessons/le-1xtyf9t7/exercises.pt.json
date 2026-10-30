@@ -1,0 +1,375 @@
+{
+ "ex-34zw7xjm": {
+  "prompt": "O que o Angular faz durante a detecção de mudanças?",
+  "choices": [
+   {
+    "text": "Recarrega os dados do componente do servidor",
+    "why": "Carregar é trabalho do resource ou do serviço; a passada só lê as classes."
+   },
+   {
+    "text": "Relê os templates e corrige o DOM",
+    "why": "Isso. Ele percorre a árvore e compara."
+   },
+   {
+    "text": "Recompila os templates que mudaram em disco",
+    "why": "Isso é o servidor de desenvolvimento reconstruindo, não detecção de mudanças."
+   },
+   {
+    "text": "Destrói e recria todo componente",
+    "why": "Os componentes sobrevivem a uma passada; só os valores do DOM que diferem são tocados."
+   }
+  ]
+ },
+ "ex-ttm6vx05": {
+  "prompt": "O `label()` foi chamado de novo depois de um clique num botão cujo handler não faz nada. Por quê?",
+  "choices": [
+   {
+    "text": "O clique mudou o valor que `label` devolve, só desta vez",
+    "why": "Ele devolve sempre o mesmo texto."
+   },
+   {
+    "text": "O `look` recarregou a página depois de clicar no botão",
+    "why": "A página carregou uma vez; as chamadas a mais vieram de passadas."
+   },
+   {
+    "text": "Eventos agendam passadas, e métodos são consultados de novo",
+    "why": "Isso. O Angular não sabe a resposta de um método sem chamá-lo."
+   },
+   {
+    "text": "Métodos em templates são rodados num timer pelo Angular",
+    "why": "Não há timer; as passadas acontecem quando algo as agenda."
+   }
+  ]
+ },
+ "ex-keb86t4m": {
+  "prompt": "Em modo de desenvolvimento, por que o Angular percorre a árvore duas vezes seguidas?",
+  "choices": [
+   {
+    "text": "Para conferir que nada mudou entre as passadas",
+    "why": "Isso. Uma diferença é o erro `NG0100`."
+   },
+   {
+    "text": "Porque a primeira passada só lê e a segunda escreve o DOM",
+    "why": "Cada passada faz as duas coisas; a segunda só compara."
+   },
+   {
+    "text": "Para aquecer o cache antes da produção",
+    "why": "Builds de desenvolvimento não aquecem os de produção."
+   },
+   {
+    "text": "Porque o zone.js é carregado duas vezes",
+    "why": "O planner não tem zone.js, e a segunda passada aconteceu mesmo assim."
+   }
+  ]
+ },
+ "ex-bpqjedrt": {
+  "prompt": "Com o zone.js, o campo comum do componente padrão mostrou 1 depois do timer. O que disse ao Angular para percorrer a árvore?",
+  "choices": [
+   {
+    "text": "O campo, que avisa o Angular quando recebe um valor",
+    "why": "Um campo comum não avisa ninguém; isso é trabalho de um signal."
+   },
+   {
+    "text": "O `setTimeout` do próprio zone.js",
+    "why": "Isso. Ele tinha trocado o timer do navegador por um que avisa o Angular."
+   },
+   {
+    "text": "O navegador, que redesenha a página a cada segundo",
+    "why": "O navegador desenha o DOM; ele não sabe nada dos campos da classe."
+   },
+   {
+    "text": "O `look`, que clica na página enquanto espera",
+    "why": "O `--wait` só espera."
+   }
+  ]
+ },
+ "ex-40hy3yem": {
+  "prompt": "Que custo do zone.js a aula aponta?",
+  "choices": [
+   {
+    "text": "Ele não roda no Chromium, só em navegadores antigos",
+    "why": "Ele rodou no Chromium nesta mesma aula."
+   },
+   {
+    "text": "Ele transforma todo campo de todo componente num signal",
+    "why": "Ele não muda nada nos campos; ele envolve as funções assíncronas do navegador."
+   },
+   {
+    "text": "Ele proíbe o OnPush em qualquer componente",
+    "why": "O OnPush foi pensado para aplicações com zone.js."
+   },
+   {
+    "text": "Código a mais, e passadas depois de tudo",
+    "why": "Isso. Tenha algo mudado ou não."
+   }
+  ]
+ },
+ "ex-9axtmwvt": {
+  "prompt": "A primeira instalação da aula 2 contou duas vulnerabilidades. Por que o `npm audit` não achou nenhuma aqui?",
+  "choices": [
+   {
+    "text": "O zone.js substituiu a biblioteca vulnerável",
+    "why": "O zone.js não tem nada a ver com o build."
+   },
+   {
+    "text": "O `npm audit` só lê pacotes novos",
+    "why": "Ele lê o lockfile inteiro."
+   },
+   {
+    "text": "O `ng update` da aula 2 trouxe a correção",
+    "why": "Isso. O `@angular/build` 21.2.29 a traz."
+   },
+   {
+    "text": "Os alertas foram retirados",
+    "why": "Continuam valendo; a versão corrigida é que está instalada."
+   }
+  ]
+ },
+ "ex-rfkxyqf8": {
+  "prompt": "Com o zone.js, o campo comum do componente OnPush ficou 0 depois do timer. Por quê?",
+  "choices": [
+   {
+    "text": "O zone.js não envolve timers de componentes OnPush",
+    "why": "O mesmo timer disparou uma passada; a passada pulou o componente."
+   },
+   {
+    "text": "Nada o marcou, então a passada o pulou",
+    "why": "Isso. Um timer definindo um campo comum não é uma das coisas que marcam."
+   },
+   {
+    "text": "Componentes OnPush só são conferidos uma vez, na criação",
+    "why": "Eles são conferidos sempre que marcados; este nunca foi."
+   },
+   {
+    "text": "O timer lançou um erro dentro do componente OnPush",
+    "why": "Não houve erro; o valor só não foi lido de novo."
+   }
+  ]
+ },
+ "ex-zk4bnjh3": {
+  "prompt": "Quais destes marcam um componente OnPush para a próxima passada visitá-lo? Escolha todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "Um signal que o template dele lê muda",
+    "why": "Isso."
+   },
+   {
+    "text": "Um `(click)` ligado no template dele dispara",
+    "why": "Isso."
+   },
+   {
+    "text": "Um campo comum muda num timer",
+    "why": "Foi exatamente isso que ficou em 0."
+   },
+   {
+    "text": "O `markForCheck()` é chamado",
+    "why": "Isso. A saída de emergência de que o código antigo está cheio."
+   },
+   {
+    "text": "Um array que ele recebeu é alterado no lugar",
+    "why": "Mesma identidade, então nenhuma mudança pela regra do OnPush."
+   }
+  ]
+ },
+ "ex-s8fwaa81": {
+  "prompt": "Um pai passa `sessions` a um filho OnPush, depois dá push numa sessão do mesmo array. Por que o filho não atualiza?",
+  "choices": [
+   {
+    "text": "Filhos OnPush ignoram inputs",
+    "why": "Eles reagem a um input que muda para um valor novo."
+   },
+   {
+    "text": "Mesmo array, então pela identidade nada mudou",
+    "why": "Isso. A mesma regra do `Object.is` de um signal, da aula 6."
+   },
+   {
+    "text": "O `push` não é permitido em arrays passados como inputs",
+    "why": "É permitido, e essa é a armadilha."
+   },
+   {
+    "text": "O pai precisa chamar `markForCheck()` em si mesmo",
+    "why": "Marcar o pai não muda o input do filho."
+   }
+  ]
+ },
+ "ex-rdad881a": {
+  "prompt": "Sem o zone.js, qual linha do bench ainda mostrou 1?",
+  "choices": [
+   {
+    "text": "`default, plain field`",
+    "why": "Nada disse ao Angular que o campo comum mudou."
+   },
+   {
+    "text": "`OnPush, plain field`",
+    "why": "Ele já ficava 0 com o zone.js."
+   },
+   {
+    "text": "`OnPush, signal`",
+    "why": "Isso. Definir o signal marcou o componente dele e agendou uma passada."
+   },
+   {
+    "text": "Nenhuma, até a página ser recarregada",
+    "why": "A linha do signal atualizou sem recarregar."
+   }
+  ]
+ },
+ "ex-2j4h56ma": {
+  "prompt": "Ao levar uma aplicação antiga para zoneless, que falha a aula alerta ser silenciosa?",
+  "choices": [
+   {
+    "text": "O build falhando em todo campo comum",
+    "why": "O build não tem opinião sobre campos comuns."
+   },
+   {
+    "text": "Um erro no console a cada timer",
+    "why": "Nada é registrado; esse é o problema."
+   },
+   {
+    "text": "Campos definidos de forma assíncrona ficando velhos",
+    "why": "Isso. Eles mostram o valor antigo até algo disparar uma passada."
+   },
+   {
+    "text": "Testes passando que antes falhavam",
+    "why": "A preocupação da aula é a tela, não o resultado dos testes."
+   }
+  ]
+ },
+ "ex-ybzxmpsm": {
+  "prompt": "Associe cada evento a se ele agenda ou não uma passada numa aplicação zoneless.",
+  "pairs": [
+   {
+    "left": "um handler de `(click)` termina",
+    "right": "agenda uma passada"
+   },
+   {
+    "left": "um signal lido por um template é definido",
+    "right": "marca o componente e agenda uma passada"
+   },
+   {
+    "left": "um `setTimeout` atribui a um campo comum",
+    "right": "não agenda nada"
+   },
+   {
+    "left": "um `resource` termina de carregar",
+    "right": "o signal do valor muda e agenda uma passada"
+   }
+  ],
+  "right_distractors": [
+   "o mouse se move sobre a página"
+  ]
+ },
+ "ex-kw2wkyyv": {
+  "prompt": "Desde o Angular 21, um projeto novo criado com `ng new` não usa ___ nenhum.",
+  "blanks": [
+   {
+    "accept": [
+     "zone.js",
+     "zonejs",
+     "zone"
+    ]
+   }
+  ]
+ },
+ "ex-0w5e17n8": {
+  "prompt": "`{{ now() }}`, em que `now()` devolve `Date.now()`, produziu `NG0100`. Por que isso é um bug e não um alarme falso?",
+  "choices": [
+   {
+    "text": "O relógio não pode ser lido de dentro de um template Angular",
+    "why": "Pode; lê-lo a cada passada é o problema."
+   },
+   {
+    "text": "O `Date.now()` é lento demais para ser chamado num template",
+    "why": "Velocidade não é a questão; respostas que mudam são."
+   },
+   {
+    "text": "A tela mostra uma resposta enquanto o estado guarda outra",
+    "why": "Isso. Tela e estado discordam, e a produção não diria nada."
+   },
+   {
+    "text": "O modo de desenvolvimento acrescenta atrasos aleatórios entre as passadas",
+    "why": "Não há atraso acrescentado; as duas passadas ficam a milissegundos uma da outra."
+   }
+  ]
+ },
+ "ex-g13atweq": {
+  "prompt": "O erro que o modo de desenvolvimento do Angular relata quando uma expressão de template dá outra resposta na segunda passada é NG___.",
+  "blanks": [
+   {
+    "accept": [
+     "0100"
+    ]
+   }
+  ]
+ },
+ "ex-y2setqkn": {
+  "prompt": "Onde o erro `NG0100` apareceu?",
+  "choices": [
+   {
+    "text": "Só no console, em modo de desenvolvimento",
+    "why": "Isso. A página desenhou o primeiro valor e seguiu em frente."
+   },
+   {
+    "text": "Na página, no lugar do parágrafo",
+    "why": "O parágrafo mostrou um número."
+   },
+   {
+    "text": "Na saída do `ng build`, como erro de template",
+    "why": "O build não tem como saber o que um método devolve em tempo de execução."
+   },
+   {
+    "text": "Em produção também, como aviso",
+    "why": "A produção pula a segunda passada por completo."
+   }
+  ]
+ },
+ "ex-1y1y4s6p": {
+  "prompt": "O que o `ng config projects.planner.schematics.@schematics/angular:component.changeDetection OnPush` mudou?",
+  "choices": [
+   {
+    "text": "Todo componente existente virou OnPush",
+    "why": "Os arquivos existentes foram editados à mão nesta aula; o comando só mexe no `angular.json`."
+   },
+   {
+    "text": "O padrão dos componentes que o `ng generate` escreve",
+    "why": "Isso. Componentes novos já nascem com OnPush."
+   },
+   {
+    "text": "A detecção de mudanças da aplicação inteira",
+    "why": "A detecção de mudanças é configurada por componente, e o app já era zoneless."
+   },
+   {
+    "text": "O rigor do compilador TypeScript",
+    "why": "Isso é o `tsconfig.json`, sem relação."
+   }
+  ]
+ },
+ "ex-b86mv98m": {
+  "prompt": "Coloque os passos de levar uma aplicação antiga com zone.js para zoneless na ordem que a aula dá.",
+  "items": [
+   "tornar os componentes OnPush um por vez, consertando o que fica velho",
+   "trocar o `provideZoneChangeDetection` e remover o zone.js",
+   "rodar todos os testes e olhar todas as telas"
+  ]
+ },
+ "ex-s856ytax": {
+  "prompt": "Uma biblioteca chama o seu callback quando um arquivo termina de subir, e o seu componente define `this.progress = 100` ali. No planner zoneless, o que você escreve no lugar?",
+  "choices": [
+   {
+    "text": "A mesma linha, seguida de `setTimeout(() => {})` para disparar uma passada",
+    "why": "Um timer vazio não agenda nada sem zone.js."
+   },
+   {
+    "text": "`import 'zone.js'` no topo do componente",
+    "why": "Isso traria de volta o custo inteiro para consertar um campo."
+   },
+   {
+    "text": "`this.progress.set(100)`, com `progress` sendo um signal",
+    "why": "Isso. O signal marca o componente e agenda a passada."
+   },
+   {
+    "text": "Nada: callbacks de bibliotecas sempre disparam uma passada",
+    "why": "Só o que o Angular confia dispara uma passada; o callback de uma biblioteca não está na lista."
+   }
+  ]
+ }
+}

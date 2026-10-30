@@ -1,0 +1,235 @@
+# Lesson 24: testing
+
+@ the-runner quiz easy #ex-xyt9yg7g
+? Where do the planner's tests run when `ng test` starts them?
+?? Onde os testes do planner rodam quando o `ng test` os inicia?
++ In Node.js, with jsdom :: Right. No browser opens, which is why they start in about a second.
+++ No Node.js, com o jsdom no lugar do DOM :: Isso. Nenhum navegador abre, por isso começam em cerca de um segundo.
+- In the Chrome Karma opens :: That was the setup before Angular 21.
+-- No Chrome que o Karma abre :: Esse era o arranjo antes do Angular 21.
+- In the dev server's page :: The dev server is not involved.
+-- Na página do dev server :: O dev server não participa.
+- On the production server :: That serves pages, not tests.
+-- No servidor de produção :: Ele serve páginas, não testes.
+
+@ the-runner quiz medium #ex-w7ge3t81
+? What can a test in jsdom not check?
+?? O que um teste no jsdom não consegue verificar?
+- A click's result :: Events work in jsdom.
+-- O resultado de um clique :: Eventos funcionam no jsdom.
+- What `localStorage` holds :: jsdom has it.
+-- O que o `localStorage` guarda :: O jsdom tem.
++ An element's size on screen :: Right. jsdom lays nothing out.
+++ O tamanho de um elemento na tela :: Isso. O jsdom não diagrama nada.
+- The text a paragraph shows on the page :: That is the usual thing to check.
+-- O texto que um parágrafo mostra na página :: Essa é a verificação de costume.
+
+@ the-runner quiz medium #ex-dzvcp73w
+? What does the CLI's "should create" test prove about a component?
+?? O que o teste "should create" do CLI prova sobre um componente?
+- That its page shows the right numbers :: It reads nothing of the page.
+-- Que a página mostra os números certos :: Ele não lê nada da página.
++ That the class gets made, no more :: Right. It passes with every number wrong.
+++ Que a classe é criada, e mais nada :: Isso. Passa com todos os números errados.
+- That every line was checked :: Lines ran; nothing was asserted.
+-- Que toda linha foi verificada :: As linhas rodaram; nada foi afirmado.
+- That it works in a browser :: It runs in jsdom.
+-- Que funciona num navegador :: Ele roda no jsdom.
+
+@ pure-functions quiz medium #ex-7z9e2c06
+? Why does the `weekOf` test include a Sunday?
+?? Por que o teste do `weekOf` inclui um domingo?
+- Sessions are never on Sundays :: The data has no such rule.
+-- Nunca há sessões aos domingos :: Os dados não têm essa regra.
+- To reach every line of the function :: The test is chosen for a mistake, not for lines.
+-- Para cobrir cada linha da função :: O teste é escolhido por um erro, não por linhas.
+- Time zones change on Sundays :: That is not why.
+-- Os fusos horários mudam aos domingos :: Não é por isso.
++ `getDay()` calls Sunday 0 :: Right. An off-by-one puts it in the wrong week.
+++ O `getDay()` chama o domingo de 0, o início :: Isso. Um erro de um dia o põe na semana errada.
+
+@ pure-functions quiz hard #ex-d70ccm96
+? After the deliberate mistake, which failures said most precisely what was wrong?
+?? Depois do erro de propósito, que falhas disseram com mais precisão o que estava errado?
++ The three on `weekOf` :: Right. Together they showed every week starting a day early.
+++ As três do `weekOf` :: Isso. Juntas mostravam toda semana começando um dia antes.
+- `Week`'s, through the rendered page :: It could only say a range was not the expected one.
+-- As do `Week`, pela página renderizada :: Ele só podia dizer que um intervalo não era o esperado.
+- The store's, through the fake server :: They passed.
+-- As do store, pelo servidor falso :: Elas passaram.
+- None; the build stopped first :: The build succeeded; the tests ran.
+-- Nenhuma; o build parou antes :: O build passou; os testes rodaram.
+
+@ pure-functions cloze easy #ex-qm4mrw0w
+? To check that a function throws, with part of its message, a test writes `expect(() => parsePlanner(data)).___('...')`.
+?? Para verificar que uma função lança erro, com parte da mensagem, um teste escreve `expect(() => parsePlanner(data)).___('...')`.
+= toThrow
+== toThrow
+
+@ a-fake-server quiz medium #ex-f743vt72
+? Without `TestBed.tick()`, why did `expectOne('/api/planner')` find no request?
+?? Sem o `TestBed.tick()`, por que o `expectOne('/api/planner')` não achou requisição nenhuma?
+- The fake backend was not provided :: It was; the request was never sent.
+-- O backend falso não tinha sido fornecido :: Foi; a requisição nunca saiu.
+- The URL was relative :: Relative URLs match.
+-- A URL era relativa :: URLs relativas casam.
++ Effects had not run yet :: Right. The resource sends its request from one.
+++ Os effects ainda não tinham rodado :: Isso. O resource manda a requisição a partir de um.
+- `verify()` had cleared it :: `verify()` runs after each test.
+-- O `verify()` a tinha apagado :: O `verify()` roda depois de cada teste.
+
+@ a-fake-server quiz medium #ex-7tqtj55q
+? In the second store test, how does the fake server refuse the `PATCH`?
+?? No segundo teste do store, como o servidor falso recusa o `PATCH`?
+- It throws inside the store :: The store is not touched.
+-- Lança um erro dentro do store :: O store não é tocado.
++ `flush` with a 400 status :: Right. An error is answered like data, with a status.
+++ `flush` com status 400 :: Isso. Um erro é respondido como dados, com um status.
+- The test stops the API :: There is no API in a test.
+-- O teste para a API :: Não há API num teste.
+- `verify()` fails the request :: That checks for unanswered requests.
+-- O `verify()` faz a requisição falhar :: Ele confere requisições sem resposta.
+
+@ a-fake-server multiple-choice medium #ex-613c67w4
+? Which are true of `HttpTestingController`?
+?? O que é verdade sobre o `HttpTestingController`?
++ `provideHttpClientTesting()` comes after `provideHttpClient()` :: Right. It replaces the backend that one set up.
+++ O `provideHttpClientTesting()` vem depois do `provideHttpClient()` :: Isso. Ele troca o backend que aquele montou.
++ `verify()` fails on a request nobody answered :: Right. An unexpected request is a finding.
+++ O `verify()` falha numa requisição que ninguém respondeu :: Isso. Uma requisição inesperada é um achado.
+- It checks the real API's answers :: It never reaches the real API.
+-- Ele confere as respostas da API real :: Ele nunca chega à API real.
+- It needs the dev server running :: Nothing leaves the test.
+-- Ele precisa do dev server rodando :: Nada sai do teste.
+
+@ components quiz medium #ex-xs3t3p91
+? Why does the course page test read the rows' text rather than the component's `shown()` signal?
+?? Por que o teste da página do curso lê o texto das linhas em vez do signal `shown()` do componente?
+- Signals are unreadable from a test :: They can be read.
+-- Signals são ilegíveis de fora, num teste :: Podem ser lidos.
+- `shown()` is private :: It is protected, and the reason is another.
+-- O `shown()` é privado :: É protected, e o motivo é outro.
+- Text is faster to read :: Speed is not the reason.
+-- Texto é mais rápido de ler :: Velocidade não é o motivo.
++ Any correct version passes it :: Right. It checks what a person sees.
+++ Qualquer versão correta passa nele :: Isso. Confere o que uma pessoa vê.
+
+@ components quiz hard #ex-1x18yqpg
+? The course page test uses the real `PlannerStore`. When is a fake one worth writing?
+?? O teste da página do curso usa o `PlannerStore` real. Quando vale escrever um falso?
++ When the real one is slow :: Right. Or needs a network, or ties the test to what it is not about.
+++ Quando o real é lento :: Isso. Ou precisa de rede, ou prende o teste ao que não é o assunto dele.
+- Always, so the test is about one component :: The real store with a fake backend catches more.
+-- Sempre, para o teste ser sobre um componente só :: O store real com backend falso pega mais.
+- Never; fakes are forbidden :: They have their place.
+-- Nunca; falsos são proibidos :: Eles têm seu lugar.
+- When the store has signals :: Signals are no reason.
+-- Quando o store tem signals :: Signals não são motivo.
+
+@ harnesses quiz medium #ex-gs50ymry
+? Why tick "Hide sessions that are done" with `MatCheckboxHarness` rather than clicking its `<input>`?
+?? Por que marcar "Hide sessions that are done" com o `MatCheckboxHarness` em vez de clicar no `<input>`?
+- The `<input>` cannot be clicked in jsdom :: It can.
+-- O `<input>` não pode ser clicado no jsdom :: Pode.
+- A harness is faster :: Speed is not the point.
+-- Um harness é mais rápido :: Velocidade não é o ponto.
++ The markup belongs to Material :: Right. The harness stays when the markup changes.
+++ A marcação pertence ao Material :: Isso. O harness fica quando a marcação muda.
+- A harness skips the `TestBed` setup :: This one needs the fixture.
+-- Um harness dispensa a configuração do `TestBed` :: Este precisa da fixture.
+
+@ harnesses quiz medium #ex-2jq07mpn
+? Why does the harness test never call `whenStable()` after `check()`?
+?? Por que o teste com harness nunca chama `whenStable()` depois do `check()`?
+- The checkbox is not OnPush :: That is not why.
+-- O checkbox não é OnPush :: Não é por isso.
++ Each harness call waits for Angular :: Right. That is why every call has an `await`.
+++ Cada chamada de harness espera o Angular :: Isso. Por isso toda chamada tem um `await`.
+- `check()` returns before the page changes :: It resolves after the page has changed.
+-- O `check()` volta antes de a página mudar :: Ele termina depois que a página mudou.
+- The list never changes :: It drops a row.
+-- A lista nunca muda :: Ela perde uma linha.
+
+@ harnesses matching medium #ex-7v66enza
+? Match each harness method with what it does.
+?? Associe cada método de harness ao que ele faz.
+< `check()` :: ticks the box, as a click would
+<< `check()` :: marca a caixa, como um clique faria
+< `isChecked()` :: says whether it is ticked
+<< `isChecked()` :: diz se está marcada
+< `getLabelText()` :: reads what the box says
+<< `getLabelText()` :: lê o que a caixa diz
+x reads a private field of the component
+xx lê um campo privado do componente
+
+@ from-karma quiz medium #ex-sffng36d
+? Why did the Jasmine-style spec stop the build under Vitest?
+?? Por que o spec no estilo Jasmine parou o build sob o Vitest?
+- `describe` is Jasmine's only :: Vitest has `describe` too.
+-- O `describe` é só do Jasmine :: O Vitest também tem `describe`.
+- `TestBed` belongs to Karma's setup :: `TestBed` works under both.
+-- O `TestBed` faz parte do arranjo do Karma :: O `TestBed` funciona nos dois.
+- The pipe needs a browser :: A pipe is a class.
+-- O pipe precisa de um navegador :: Um pipe é uma classe.
++ `spyOn` is not a Vitest name :: Right. Nor is `toHaveBeenCalledOnceWith`.
+++ `spyOn` não é um nome do Vitest :: Isso. Nem `toHaveBeenCalledOnceWith`.
+
+@ from-karma matching medium #ex-rgd8dywt
+? Match each Jasmine form with its Vitest form.
+?? Associe cada forma do Jasmine à forma do Vitest.
+< `spyOn(object, 'method')` :: `vi.spyOn(object, 'method')`
+<< `spyOn(object, 'method')` :: `vi.spyOn(object, 'method')`
+< `jasmine.createSpy()` :: `vi.fn()`
+<< `jasmine.createSpy()` :: `vi.fn()`
+< `.and.returnValue(x)` :: `.mockReturnValue(x)`
+<< `.and.returnValue(x)` :: `.mockReturnValue(x)`
+x `vi.useKarma()`
+xx `vi.useKarma()`
+
+@ from-karma quiz hard #ex-8jx7qgmz
+? A project on Karma wants Vitest with its tests green at every step. What order?
+?? Um projeto no Karma quer o Vitest com os testes verdes em cada passo. Em que ordem?
++ New builder on Karma, then Vitest :: Right. `unit-test` with `"runner": "karma"` first. Builder first, runner second.
+++ Builder novo no Karma, depois Vitest :: Isso. O `unit-test` com `"runner": "karma"` primeiro. Builder primeiro, runner depois.
+- Delete `karma.conf.js` first :: Then nothing runs the tests.
+-- Apagar o `karma.conf.js` primeiro :: Aí nada roda os testes.
+- Rewrite every spec by hand, then switch :: The schematic does most of it.
+-- Reescrever cada spec à mão, depois trocar :: O schematic faz a maior parte.
+- Vitest first, then fix the failures :: Every Jasmine spy fails at once.
+-- Vitest primeiro, depois consertar as falhas :: Todo spy do Jasmine falha de uma vez.
+
+@ what-goes-where ordering medium #ex-xrqje450
+? Order the levels from cheapest to most expensive.
+?? Ordene os níveis do mais barato ao mais caro.
+> a plain function
+>> uma função simples
+> a service with a fake server
+>> um serviço com um servidor falso
+> a component through its page
+>> um componente pela página dele
+> the whole application in a browser
+>> a aplicação inteira num navegador
+
+@ what-goes-where quiz medium #ex-p6et4rhw
+? Which failure can only an end-to-end test catch?
+?? Que falha só um teste ponta a ponta pega?
+- A wrong total :: A function test sees that.
+-- Um total errado :: Um teste de função vê isso.
+- A row that does not hide :: A component test sees that.
+-- Uma linha que não some :: Um teste de componente vê isso.
++ The API renamed a field :: Right. Every fake still answers with the old one.
+++ A API real renomeou um campo da resposta :: Isso. Todo falso ainda responde com o antigo.
+- A refused `PATCH` left unhandled :: The fake server sees that.
+-- Um `PATCH` recusado sem tratamento :: O servidor falso vê isso.
+
+@ drill quiz hard #ex-545vnh7w
+? A test reads `store['data'].value()` to check the totals. What is wrong with it?
+?? Um teste lê `store['data'].value()` para conferir os totais. O que há de errado?
+- Nothing, it is the fastest way :: Speed is not the measure.
+-- Nada, é o jeito mais rápido :: Velocidade não é a medida.
++ It reads how, not what :: Right. Rename the field and it fails with nothing broken.
+++ Lê o como, não o quê :: Isso. Renomeie o campo e ele falha sem nada quebrado.
+- It needs a harness to read the store :: Harnesses are for controls.
+-- Precisa de um harness para ler o store :: Harnesses são para controles.
+- It must run in a browser :: jsdom is enough.
+-- Precisa rodar num navegador :: O jsdom basta.

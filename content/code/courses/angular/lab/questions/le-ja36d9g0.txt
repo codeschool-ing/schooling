@@ -1,0 +1,249 @@
+# Lesson 4: templates, interpolation, property and event binding
+
+@ interpolation quiz easy #ex-jd16aac4
+? `note` holds the string `<b>bold?</b>`, and the template writes `{{ note }}`. What does the page show?
+?? `note` guarda a string `<b>bold?</b>`, e o template escreve `{{ note }}`. O que a página mostra?
+- The word `bold?` in bold :: That would mean the string became markup, which interpolation never lets happen.
+-- A palavra `bold?` em negrito :: Isso significaria que a string virou marcação, o que a interpolação nunca permite.
++ The characters `<b>bold?</b>`, as text :: Right. Interpolation always produces text.
+++ Os caracteres `<b>bold?</b>`, como texto :: Isso. A interpolação sempre produz texto.
+- Nothing, because Angular removes HTML from strings :: Nothing is removed; the characters are shown as they are.
+-- Nada, porque o Angular remove HTML de strings :: Nada é removido; os caracteres aparecem como são.
+- A build error, because the string looks like a tag :: The compiler does not inspect the contents of a string field.
+-- Um erro de build, porque a string parece uma tag :: O compilador não inspeciona o conteúdo de um campo string.
+
+@ interpolation quiz medium #ex-gmp9gm8j
+? Which of these may a template expression inside `{{ }}` do?
+?? O que destes uma expressão de template dentro de `{{ }}` pode fazer?
+- `minutes = 0`, to reset a field before showing it :: Assignment is only allowed in an event binding.
+-- `minutes = 0`, para zerar um campo antes de mostrá-lo :: Atribuição só é permitida num event binding.
+- `console.log(minutes)`, to debug :: A template sees the component and nothing else, so no globals.
+-- `console.log(minutes)`, para depurar :: Um template vê o componente e mais nada, então nenhum global.
++ `course.sessions * minutes` :: Right. Reading properties and doing arithmetic are allowed.
+++ `course.sessions * minutes` :: Isso. Ler propriedades e fazer contas é permitido.
+- `new Date()`, to show today :: `new` is not allowed in a template expression.
+-- `new Date()`, para mostrar hoje :: O `new` não é permitido numa expressão de template.
+
+@ interpolation quiz medium #ex-t2vwfrrc
+? Why are the bench's fields declared `protected`?
+?? Por que os campos do bench são declarados `protected`?
++ The template reads them, code outside the class does not :: Right. That is exactly the access a template needs.
+++ O template os lê, e código de fora da classe não :: Isso. É exatamente o acesso de que um template precisa.
+- A template can only read fields that are `protected` :: It can read `public` ones too; `protected` is the narrower choice that still works.
+-- Um template só consegue ler campos `protected` :: Ele lê os `public` também; `protected` é a escolha mais estreita que ainda funciona.
+- `protected` makes them read-only :: That is `readonly`, a different word.
+-- `protected` os torna só de leitura :: Isso é o `readonly`, outra palavra.
+- So the CLI does not overwrite them on the next `ng generate` :: The CLI never edits an existing component's fields.
+-- Para a CLI não sobrescrevê-los no próximo `ng generate` :: A CLI nunca edita os campos de um componente existente.
+
+@ interpolation cloze easy #ex-pmdf63rd
+? `{{ nothing?.name ?? 'no name' }}` printed `no name`. The operator that stopped at `null` instead of throwing is written ___.
+?? `{{ nothing?.name ?? 'no name' }}` imprimiu `no name`. O operador que parou no `null` em vez de lançar um erro se escreve ___.
+= ?.
+== ?.
+
+@ property-binding quiz medium #ex-z5be2z4m
+? `--html` showed no `value` attribute on the `<input>`, yet the field showed 45. Why?
+?? O `--html` não mostrou atributo `value` no `<input>`, e mesmo assim o campo mostrava 45. Por quê?
+- The binding failed, and the 45 is the browser's default :: A number field has no default of 45; the binding set it.
+-- O binding falhou, e o 45 é o padrão do navegador :: Um campo numérico não tem 45 como padrão; o binding o definiu.
++ `[value]` set the property, which does not reflect into the attribute :: Right. The attribute is only the starting text; the property is what is in the box.
+++ O `[value]` definiu a propriedade, que não reflete no atributo :: Isso. O atributo é só o texto inicial; a propriedade é o que está na caixa.
+- `look --html` removes attributes Angular added :: It removes only `_ngcontent-` and `_nghost-`, and the min and max were shown.
+-- O `look --html` remove os atributos que o Angular acrescentou :: Ele só remove `_ngcontent-` e `_nghost-`, e o min e o max apareceram.
+- Angular stores the value in a hidden attribute :: Nothing is hidden; it sets the DOM property.
+-- O Angular guarda o valor num atributo escondido :: Nada é escondido; ele define a propriedade do DOM.
+
+@ property-binding quiz hard #ex-e9mw3cw2
+? `<td [colspan]="2">` failed with `NG8002: Can't bind to 'colspan' since it isn't a known property of 'td'`. Which fix keeps the binding?
+?? `<td [colspan]="2">` falhou com `NG8002: Can't bind to 'colspan' since it isn't a known property of 'td'`. Qual conserto mantém o binding?
+- Import `CommonModule`, which teaches Angular table properties :: No module adds DOM properties; the property is called something else.
+-- Importar o `CommonModule`, que ensina ao Angular as propriedades de tabela :: Nenhum módulo acrescenta propriedades do DOM; a propriedade tem outro nome.
+- Write `colspan="{{ 2 }}"` :: Interpolation in an attribute is a property binding too, and fails the same way.
+-- Escrever `colspan="{{ 2 }}"` :: Interpolação num atributo também é property binding, e falha do mesmo jeito.
++ `[attr.colspan]="2"` :: Right. It sets the attribute by its HTML name.
+++ `[attr.colspan]="2"` :: Isso. Ele define o atributo pelo nome HTML.
+- Add `CUSTOM_ELEMENTS_SCHEMA` to the component :: That silences checks for unknown elements; it would hide the mistake, not fix it.
+-- Acrescentar `CUSTOM_ELEMENTS_SCHEMA` ao componente :: Isso cala as conferências de elementos desconhecidos; esconderia o erro, não o consertaria.
+
+@ property-binding quiz medium #ex-403jqa6h
+? Why `[disabled]="minutes >= 240"` rather than writing `disabled="false"` in the HTML when the button should be enabled?
+?? Por que `[disabled]="minutes >= 240"` em vez de escrever `disabled="false"` no HTML quando o botão deve ficar habilitado?
+- `disabled="false"` would be a build error :: It compiles; it just does not do what it says.
+-- `disabled="false"` daria erro de build :: Compila; só não faz o que diz.
++ In HTML its mere presence switches the control off :: Right. The binding passes a real boolean to the property.
+++ No HTML, a simples presença do atributo desliga o controle :: Isso. O binding passa um booleano de verdade para a propriedade.
+- The property binding is faster to draw :: Speed is not the difference; meaning is.
+-- O property binding desenha mais rápido :: A velocidade não é a diferença; o sentido é.
+- Buttons ignore attributes and only read properties :: They read both; the attribute's presence is what disables.
+-- Botões ignoram atributos e só leem propriedades :: Leem os dois; a presença do atributo é o que desabilita.
+
+@ class-and-style quiz easy #ex-dkbegwqj
+? At 45 minutes, `[style.color]="minutes > 200 ? 'red' : null"` produced what on the paragraph?
+?? Com 45 minutos, `[style.color]="minutes > 200 ? 'red' : null"` produziu o quê no parágrafo?
+- `style="color: null"` :: `null` removes the style rather than writing it.
+-- `style="color: null"` :: O `null` remove o estilo em vez de escrevê-lo.
+- `style=""`, an empty attribute :: There was no `style` attribute at all.
+-- `style=""`, um atributo vazio :: Não havia atributo `style` nenhum.
++ No `style` attribute at all :: Right. `null` means no value for that style.
+++ Nenhum atributo `style` :: Isso. `null` quer dizer nenhum valor para aquele estilo.
+- `style="color: black"`, the default :: Angular writes no default; it removes the style.
+-- `style="color: black"`, o padrão :: O Angular não escreve padrão nenhum; ele remove o estilo.
+
+@ class-and-style numeric medium #ex-gemy7w9c
+? `[style.width.%]="minutes / 2.4"` with `minutes` at 45. What percentage did the bar's width get?
+?? `[style.width.%]="minutes / 2.4"` com `minutes` em 45. Que porcentagem a largura da barra recebeu?
+= 18.75
+== 18.75
+
+@ class-and-style quiz medium #ex-e69fhayn
+? The lesson says to prefer a class to a style. Which case earns a style binding?
+?? A aula diz para preferir uma classe a um estilo. Que caso justifica um style binding?
+- Making overdue sessions red :: That is a state, `overdue`, and belongs in a class the stylesheet defines.
+-- Deixar sessões atrasadas em vermelho :: Isso é um estado, `overdue`, e pertence a uma classe que a folha de estilo define.
++ A bar whose width follows a number :: Right. A continuous value has no class to name it.
+++ Uma barra cuja largura segue um número :: Isso. Um valor contínuo não tem classe que o nomeie.
+- Hiding an element when a list is empty :: That is a state too; lesson 5's `@if` is the better tool.
+-- Esconder um elemento quando uma lista está vazia :: Isso também é um estado; o `@if` da aula 5 é a ferramenta melhor.
+- Bold text for long sessions :: The bench did exactly this with a class.
+-- Texto em negrito para sessões longas :: O bench fez exatamente isso com uma classe.
+
+@ event-binding quiz medium #ex-y6qga2zs
+? In `(input)="typed($event)"`, what is `$event`?
+?? Em `(input)="typed($event)"`, o que é o `$event`?
+- The new value of the field, as a number :: It is the whole event; the method reads the value from its target.
+-- O novo valor do campo, como número :: É o evento inteiro; o método lê o valor a partir do target dele.
+- A copy of the component, so the method can change it :: The method already has the component as `this`.
+-- Uma cópia do componente, para o método poder mudá-lo :: O método já tem o componente como `this`.
++ The DOM's own `Event` object :: Right. Hence `event.target as HTMLInputElement` to read the value.
+++ O próprio objeto `Event` do DOM :: Isso. Por isso o `event.target as HTMLInputElement` para ler o valor.
+- An Angular wrapper that only exists in development mode :: It is the browser's event, in every build.
+-- Um invólucro do Angular que só existe em modo de desenvolvimento :: É o evento do navegador, em qualquer build.
+
+@ event-binding quiz medium #ex-ygb8fc4q
+? `#note` on an input, then `(keydown.enter)="saved = note.value"`. What is `note` in that statement?
+?? `#note` num input, depois `(keydown.enter)="saved = note.value"`. O que é `note` nessa instrução?
++ The `<input>` element itself :: Right. A template reference variable names the element for the rest of the template.
+++ O próprio elemento `<input>` :: Isso. Uma variável de referência de template dá nome ao elemento para o resto do template.
+- A field of the class, created by the `#` :: Nothing is added to the class; the name exists only in the template.
+-- Um campo da classe, criado pelo `#` :: Nada é acrescentado à classe; o nome existe só no template.
+- The text typed so far, kept up to date by Angular :: It is the element; `.value` reads the text at that moment.
+-- O texto digitado até agora, mantido atualizado pelo Angular :: É o elemento; o `.value` lê o texto naquele instante.
+- The last key pressed :: Keys are what `$event` would carry, not `note`.
+-- A última tecla apertada :: Teclas viriam no `$event`, não no `note`.
+
+@ event-binding quiz hard #ex-byr0h845
+? A designer asks for a clickable `<div>` that adds 15 minutes. Why does the lesson say to make it a `<button>`?
+?? Uma designer pede uma `<div>` clicável que acrescenta 15 minutos. Por que a aula diz para fazer um `<button>`?
+- `(click)` only works on buttons, so a div would never fire :: `(click)` works on any element; that is part of the problem.
+-- O `(click)` só funciona em botões, então a div nunca dispararia :: O `(click)` funciona em qualquer elemento; isso é parte do problema.
+- A `<div>` cannot hold text, only other elements :: It can hold anything.
+-- Uma `<div>` não pode conter texto, só outros elementos :: Ela pode conter qualquer coisa.
+- Buttons are faster to draw :: Drawing speed is not the reason.
+-- Botões desenham mais rápido :: A velocidade de desenho não é o motivo.
++ A `<div>` gets no Tab, no Enter and no name :: Right. `look` and a screen reader both found the controls by role and name.
+++ Uma `<div>` não tem Tab, nem Enter, nem nome :: Isso. O `look` e um leitor de tela acharam os controles por papel e nome.
+
+@ event-binding ordering medium #ex-f8pq5j7z
+? Put what happened, when `look` clicked `Add 15` once, in order.
+?? Coloque em ordem o que aconteceu quando o `look` clicou em `Add 15` uma vez.
+> the button fired a `click` event
+>> o botão disparou um evento `click`
+> Angular ran `add(15)`
+>> o Angular rodou `add(15)`
+> `add` set `minutes` to 60
+>> o `add` pôs `minutes` em 60
+> Angular drew the template again, showing 60
+>> o Angular desenhou o template de novo, mostrando 60
+
+@ checked-templates quiz medium #ex-krh64mhs
+? The broken bench template had three mistakes. How many did `ng build` report?
+?? O template quebrado do bench tinha três erros. Quantos o `ng build` relatou?
+- Three, one per mistake :: The string handed to `[max]` was not reported.
+-- Três, um por erro :: A string passada ao `[max]` não foi relatada.
++ Two: the misspelt field and the missing argument :: Right. Bindings to plain HTML elements' properties are not type-checked.
+++ Dois: o campo escrito errado e o argumento que faltava :: Isso. Bindings a propriedades de elementos HTML puros não têm o tipo conferido.
+- One, because the build stops at the first error :: The build lists every error it finds.
+-- Um, porque o build para no primeiro erro :: O build lista todo erro que encontra.
+- None; templates are only checked by `ng test` :: `ng build` reported two.
+-- Nenhum; templates só são conferidos pelo `ng test` :: O `ng build` relatou dois.
+
+@ checked-templates matching medium #ex-jj57mvgw
+? Match each error code with the mistake that produced it in this lesson.
+?? Associe cada código de erro ao erro que o produziu nesta aula.
+< `TS2551` :: a field name with a typo
+<< `TS2551` :: um nome de campo com erro de digitação
+< `TS2554` :: a method called without its argument
+<< `TS2554` :: um método chamado sem o argumento
+< `NG8002` :: a binding to a property the element does not have
+<< `NG8002` :: um binding a uma propriedade que o elemento não tem
+< `NG8001` :: a tag no import made known
+<< `NG8001` :: uma tag que nenhum import tornou conhecida
+x a string where a DOM property wants a number
+xx uma string onde uma propriedade do DOM quer um número
+
+@ checked-templates quiz hard #ex-gh6g4qp0
+? Your template compiles with `strictTemplates` on. What can you conclude?
+?? O seu template compila com o `strictTemplates` ligado. O que você pode concluir?
+- The page shows the right numbers :: Compiling says nothing about whether the values are correct; tests do.
+-- A página mostra os números certos :: Compilar não diz nada sobre os valores estarem certos; os testes dizem.
+- Every binding to every element has the right type :: Bindings to plain HTML elements' properties are not checked.
+-- Todo binding a todo elemento tem o tipo certo :: Bindings a propriedades de elementos HTML puros não são conferidos.
++ Every name exists and every call fits :: Right. That is what the compiler can promise.
+++ Todo nome existe e toda chamada cabe :: Isso. É o que o compilador pode prometer.
+- No user can make it throw an error :: Data at run time can still be wrong in ways types do not see.
+-- Nenhum usuário consegue fazê-lo lançar um erro :: Dados em tempo de execução ainda podem estar errados de jeitos que os tipos não veem.
+
+@ the-week-in-numbers quiz medium #ex-bdcpfg00
+? `look --a11y main` first answered that nothing matched `main`. What did that reveal about the page?
+?? O `look --a11y main` respondeu primeiro que nada correspondia a `main`. O que isso revelou sobre a página?
+- That `look` cannot read landmarks :: It read one as soon as it existed.
+-- Que o `look` não lê marcos :: Ele leu um assim que ele existiu.
+- That Angular removes `<main>` from templates :: There was no `<main>` in the template yet.
+-- Que o Angular remove o `<main>` dos templates :: Ainda não havia `<main>` no template.
++ It had no landmark for a screen reader to jump to :: Right. Wrapping the week in `<main>` gave it one.
+++ Ela não tinha um marco para um leitor de tela saltar :: Isso. Envolver a semana num `<main>` deu um a ela.
+- That the dev server was not running :: The same command found `main` once it was added.
+-- Que o servidor de desenvolvimento não estava rodando :: O mesmo comando achou o `main` depois que ele foi acrescentado.
+
+@ the-week-in-numbers numeric easy #ex-h6c9mh32
+? What value did the accessibility tree give the progress bar named `Done this week`?
+?? Que valor a árvore de acessibilidade deu à barra de progresso chamada `Done this week`?
+= 90
+== 90
+
+@ the-week-in-numbers quiz medium #ex-nd5d70aq
+? Where did the progress bar's name, `Done this week`, come from?
+?? De onde veio o nome da barra de progresso, `Done this week`?
+- An `aria-label` Angular adds to every `<progress>` :: Angular adds no labels; the template has to supply one.
+-- Um `aria-label` que o Angular acrescenta a todo `<progress>` :: O Angular não acrescenta rótulos; o template precisa fornecer um.
++ The `<label for="week-progress">` beside it :: Right. A progress bar is a labelable element, as a field is.
+++ Do `<label for="week-progress">` ao lado dele :: Isso. Uma barra de progresso é um elemento rotulável, como um campo.
+- The paragraph above it, which mentions the numbers :: Being nearby names nothing; the `for` attribute does.
+-- Do parágrafo acima, que menciona os números :: Estar perto não nomeia nada; o atributo `for` nomeia.
+- The `[max]` binding, which carries a description :: `[max]` sets the maximum and nothing else.
+-- Do binding `[max]`, que leva uma descrição :: O `[max]` define o máximo e mais nada.
+
+@ drill quiz hard #ex-k9n6n37j
+? Which binding sends data from the DOM into the class?
+?? Qual binding manda dados do DOM para a classe?
+- `[value]="minutes"` :: Square brackets carry data from the class to the DOM.
+-- `[value]="minutes"` :: Colchetes levam dados da classe para o DOM.
+- `{{ minutes }}` :: Interpolation is one way too, class to page.
+-- `{{ minutes }}` :: A interpolação também é de mão única, da classe para a página.
+- `[class.long]="minutes > 40"` :: A class binding is a property binding, class to DOM.
+-- `[class.long]="minutes > 40"` :: Um class binding é um property binding, da classe para o DOM.
++ `(input)="typed($event)"` :: Right. Round brackets bring the event, and its data, back into the class.
+++ `(input)="typed($event)"` :: Isso. Os parênteses trazem o evento, e os dados dele, de volta para a classe.
+
+@ drill multiple-choice medium #ex-5fn1c29r
+? Which of these are allowed in an event binding but not inside `{{ }}`? Choose all that apply.
+?? Quais destes são permitidos num event binding mas não dentro de `{{ }}`? Escolha todos os que se aplicam.
++ `minutes = 0` :: Right. Assignment is the event binding's exception.
+++ `minutes = 0` :: Isso. A atribuição é a exceção do event binding.
++ `saved = note.value` :: Right. An assignment too, reading a template reference.
+++ `saved = note.value` :: Isso. Também uma atribuição, lendo uma referência de template.
+- `course.sessions * minutes` :: Arithmetic is allowed in both.
+-- `course.sessions * minutes` :: Contas são permitidas nos dois.
+- `hours(minutes)` :: Calling a method is allowed in both.
+-- `hours(minutes)` :: Chamar um método é permitido nos dois.

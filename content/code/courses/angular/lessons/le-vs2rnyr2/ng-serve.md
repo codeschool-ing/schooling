@@ -1,0 +1,401 @@
+---
+title: The dev server, and a way to read what it serves
+version: 1
+---
+
+**`ng serve` builds the application into memory, serves it at `http://localhost:4200`, and builds it
+again every time you save a file.** It is the command you leave running all day, in a terminal of
+its own. Start it in a second terminal, in `~/planner`:
+
+```
+ana@dev:~/planner$ npx ng serve
+❯ Building...
+✔ Building...
+Initial chunk files | Names         | Raw size
+main.js             | main          | 47.76 kB | 
+styles.css          | styles        | 95 bytes | 
+
+                    | Initial total | 47.85 kB
+
+Application bundle generation complete. [1.961 seconds] - 2026-10-29T23:35:48.445Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://localhost:4200/
+```
+
+The table is the build: `main.js` is your application, `styles.css` the global styles. The
+framework's own packages are not in it: in development they are served as separate files, prepared
+once and reused, which is part of why a change rebuilds in a fraction of a second. `Watch mode enabled` means it is now waiting for you to change something. It keeps that
+terminal; stop it with Ctrl-C when you are done for the day.
+
+**The memory it holds** is the figure lesson 1's table quoted. `ps` lists the processes and the
+memory each one holds, in kilobytes, in its first column:
+
+```
+ana@dev:~/planner$ ps -o rss=,args= -u ana | sort -rn | head -3
+433224 ng serve (planner)
+81432 npm exec ng serve
+20020 /home/ana/planner/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.28.1 --ping
+```
+
+The first line is the dev server, the second the `npx` that started it, the third `esbuild`, the
+compiler the CLI uses underneath.
+
+Two things go wrong with it often enough to know in advance. Start a second one while the first is
+running and it refuses, because the port is taken:
+
+```
+ana@dev:~/planner$ npx ng serve
+An unhandled exception occurred: Port 4200 is already in use. Use '--port' to specify a different port.
+See "/tmp/ng-4yZzVb/angular-errors.log" for further details.
+```
+
+At a terminal it asks instead whether to use another port. Either way, the fix is usually to find
+the terminal where the first one is running. And inside a virtual machine, `npx ng serve --host
+0.0.0.0` makes it listen on every address of the guest rather than only its own `localhost`, which
+is what a browser on the host needs.
+
+## look: reading a page from the terminal
+
+Open `http://localhost:4200` in a browser and you see Angular's welcome page. A browser window cannot
+be pasted into a lesson, so this course reads pages with a short program instead, the way
+`javascript` used `page`. Save it beside `page.mjs`, as `~/js-tools/look.mjs`:
+
+```javascript
+// look.mjs: open a page of your app in a real browser, and print what a
+// person would see on it. The transcripts in this course that start with
+// `look` were made with it.
+//
+//   look URL [options]
+//
+// The browser is Chromium with no window, driven by Playwright, the same one
+// page.mjs drives. What it prints, in order:
+//   - each console message, as page.mjs prints them ([warn], [error], and
+//     "Uncaught" for an exception nobody caught)
+//   - each dialog the page opens, alert() or confirm(), as [dialog]
+//   - each action it performs, as "-- " and the action
+//   - at the end, the text of the page as a reader sees it: what the browser
+//     renders, with hidden elements left out
+//
+// Options, applied in order after the page has loaded:
+//   --do 'click TEXT' | 'fill LABEL = TEXT' | 'check LABEL' | 'press KEY'
+//        | 'select LABEL = OPTION' | 'go PATH' | 'wait MS'
+//        click finds a button or a link by what it says; fill, check and
+//        select find a form field by its label, as a screen reader would;
+//        check clicks a checkbox, so a ticked one is unticked
+//   --text SEL     print the text of SEL instead of the whole page
+//   --html SEL     print SEL's HTML instead of text, without the attributes
+//                  Angular adds to keep a component's styles to itself
+//                  (_ngcontent-…, _nghost-…); --raw keeps them
+//   --a11y SEL     print SEL's accessibility tree as Chromium builds it for a
+//                  screen reader: each role, its name, its value, its state
+//                  and its description
+//   --styles       print the CSS rules the page's stylesheets hold, as the
+//                  browser read them
+//   --today DATE   make the browser's clock say DATE (YYYY-MM-DD), at 09:00
+//   --network      list the requests the page's own code made with fetch or
+//                  XMLHttpRequest, and their status: the data, not the scripts
+//   --no-js        open the page with JavaScript turned off
+//   --wait MS      how long to let the page settle after each step (500)
+//   --url          print the address the page ended up at, before its text
+//   --scripts      print the application's own script files the page loaded,
+//                  in the order it asked for them, before its text
+//   --accept       answer yes to a confirm() the page shows; without it, every
+//                  dialog is printed as [dialog] and answered no
+import { chromium } from "playwright";
+
+const args = process.argv.slice(2);
+const url = args.shift();
+if (!url) { console.error("usage: look URL [options]"); process.exit(2); }
+const opt = { do: [], wait: 500 };
+while (args.length) {
+  const a = args.shift();
+  if (a === "--do") opt.do.push(args.shift());
+  else if (a === "--text") opt.text = args.shift();
+  else if (a === "--html") opt.html = args.shift();
+  else if (a === "--raw") opt.raw = true;
+  else if (a === "--a11y") opt.a11y = args.shift();
+  else if (a === "--styles") opt.styles = true;
+  else if (a === "--today") opt.today = args.shift();
+  else if (a === "--network") opt.network = true;
+  else if (a === "--no-js") opt.noJs = true;
+  else if (a === "--wait") opt.wait = Number(args.shift());
+  else if (a === "--url") opt.url = true;
+  else if (a === "--scripts") opt.scripts = true;
+  else if (a === "--accept") opt.accept = true;
+  else { console.error(`look: unknown option ${a}`); process.exit(2); }
+}
+
+const browser = await chromium.launch();
+const context = await browser.newContext({
+  locale: "en-GB", // so the browser's own messages are in the course's language
+  timezoneId: process.env.TZ || undefined,
+  javaScriptEnabled: !opt.noJs,
+});
+const page = await context.newPage();
+if (opt.today) await page.clock.setFixedTime(new Date(`${opt.today}T09:00:00`));
+
+const say = (s) => process.stdout.write(s + "\n");
+page.on("console", (m) => {
+  const t = m.type();
+  if (t === "error") say(`[error] ${m.text()}`);
+  else if (t === "warning") say(`[warn] ${m.text()}`);
+  else say(m.text());
+});
+page.on("pageerror", (e) => say(`Uncaught ${e.name}: ${e.message}`));
+page.on("dialog", async (d) => {
+  say(`[dialog] ${d.message()}`);
+  await (opt.accept ? d.accept() : d.dismiss());
+});
+const origin = new URL(url).origin;
+const data = (q) => ["fetch", "xhr"].includes(q.resourceType());
+if (opt.network) {
+  page.on("response", (r) => data(r.request()) && say(`net  ${r.request().method()} ${r.url().replace(origin, "")}  ${r.status()}`));
+  page.on("requestfailed", (q) => data(q) && say(`net  ${q.method()} ${q.url().replace(origin, "")}  failed: ${q.failure()?.errorText}`));
+}
+
+// The accessibility tree of the element SEL matches, as the browser hands it to
+// a screen reader, one line per node: role, "name", [level or state], value.
+// Nodes that only group others (generic, none) are left out and their
+// children kept, and the text of a node already named by it is not repeated.
+// A date or time field is one line: the parts the browser draws inside it,
+// a spinbutton for each part and the picker's button, are the browser's own.
+async function axTree(sel) {
+  const cdp = await context.newCDPSession(page);
+  const { root } = await cdp.send("DOM.getDocument", { depth: 0 });
+  const { nodeId } = await cdp.send("DOM.querySelector", { nodeId: root.nodeId, selector: sel });
+  const { node } = await cdp.send("DOM.describeNode", { nodeId, depth: -1 });
+  const inside = new Set();
+  const collect = (d) => { inside.add(d.backendNodeId); (d.children ?? []).forEach(collect); };
+  collect(node);
+  const { nodes } = await cdp.send("Accessibility.getFullAXTree");
+  const byId = new Map(nodes.map((n) => [n.nodeId, n]));
+  const parent = new Map(nodes.flatMap((n) => (n.childIds ?? []).map((c) => [c, byId.get(n.nodeId)])));
+  const lines = [];
+  const DRAWN = ["Date", "DateTime", "InputTime"];
+  const focusedWithin = (n) => (n.childIds ?? []).some((id) => {
+    const c = byId.get(id);
+    return c.properties?.some((p) => p.name === "focused" && p.value?.value) || focusedWithin(c);
+  });
+  const walk = (n, depth, named) => {
+    const role = n.role?.value;
+    const name = n.name?.value ?? "";
+    if (role === "StaticText") {
+      if (!named) lines.push(`${"  ".repeat(depth)}- text: ${name}`);
+      return;
+    }
+    const shown = !n.ignored && !["generic", "none", "InlineTextBox", "LineBreak"].includes(role);
+    if (shown) {
+      let line = `${"  ".repeat(depth)}- ${role}${name ? ` "${name}"` : ""}`;
+      for (const p of n.properties ?? []) {
+        const v = p.value?.value;
+        if (p.name === "level") line += ` [level=${v}]`;
+        else if (["checked", "expanded", "pressed"].includes(p.name) && v !== "false") line += ` [${p.name}${v === "true" || v === true ? "" : `=${v}`}]`;
+        else if (["disabled", "invalid", "required", "focused"].includes(p.name) && v && v !== "false") line += ` [${p.name}]`;
+      }
+      if (DRAWN.includes(role) && focusedWithin(n)) line += " [focused]";
+      if (n.value?.value !== undefined && n.value.value !== "") line += `: ${n.value.value}`;
+      if (n.description?.value) line += ` (description: ${n.description.value})`;
+      lines.push(line);
+    }
+    if (DRAWN.includes(role)) return;
+    for (const id of n.childIds ?? []) walk(byId.get(id), shown ? depth + 1 : depth, shown ? Boolean(name) : named);
+  };
+  // An element with no role of its own, such as a component's tag, has no node
+  // in the tree: start from the nodes inside it whose parent is outside it.
+  for (const n of nodes) {
+    if (inside.has(n.backendDOMNodeId) && !inside.has(parent.get(n.nodeId)?.backendDOMNodeId)) walk(n, 0, false);
+  }
+  return lines.join("\n");
+}
+
+const settle = () => page.waitForTimeout(opt.wait);
+const field = (label) => page.getByLabel(label, { exact: true });
+await page.goto(url);
+await settle();
+for (const action of opt.do) {
+  say(`-- ${action}`);
+  const [verb, ...rest] = action.split(" ");
+  const arg = rest.join(" ");
+  const [label, value] = arg.split(" = ");
+  if (verb === "click") await page.getByRole("button", { name: arg, exact: true })
+    .or(page.getByRole("link", { name: arg, exact: true })).first().click();
+  else if (verb === "fill") await field(label).fill(value ?? "");
+  else if (verb === "check") await field(arg).click();
+  else if (verb === "select") await field(label).selectOption(value);
+  else if (verb === "press") await page.keyboard.press(arg);
+  else if (verb === "go") await page.goto(new URL(arg, origin).href);
+  else if (verb === "wait") await page.waitForTimeout(Number(arg));
+  else say(`look: unknown action ${verb}`);
+  await settle();
+}
+
+if (opt.url) say(`url: ${new URL(page.url()).pathname}`);
+if (opt.scripts) {
+  // The dev server also serves its own client and the packages it prepared
+  // (/@vite/, /@fs/); what is left are the files the build made of your code.
+  const files = await page.evaluate(() => performance.getEntriesByType("resource")
+    .map((e) => new URL(e.name).pathname)
+    .filter((p) => p.endsWith(".js") && !p.startsWith("/@")));
+  say(`scripts: ${files.join(" ")}`);
+}
+const pick = opt.html || opt.a11y || opt.text || "body";
+const target = page.locator(pick).first();
+if (!opt.styles && (await target.count()) === 0) {
+  say(`(nothing on the page matches ${pick})`);
+} else if (opt.html) {
+  let html = await target.evaluate((e) => e.outerHTML);
+  if (!opt.raw) html = html.replace(/ _ng(content|host)-[\w-]+=""/g, "");
+  say(html);
+} else if (opt.a11y) {
+  say(await axTree(pick));
+} else if (opt.styles) {
+  const rules = await page.evaluate(() =>
+    [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules].map((r) => r.cssText)));
+  say(rules.join("\n"));
+} else {
+  say((await target.innerText()).trim());
+}
+await browser.close();
+```
+
+and give it a command of its own, as `javascript` lesson 1 did for `page`:
+
+```sh
+cat > ~/.local/bin/look <<'END'
+#!/bin/sh
+exec node "$HOME/js-tools/look.mjs" "$@"
+END
+chmod +x ~/.local/bin/look
+```
+
+You do not need to read the program now; its first lines say what it does. It opens the address
+you give it in Chromium, through the Playwright you installed for `javascript`, and prints what the
+page put in the console and then the text a person would read. With `--text h1` it prints only the
+first heading:
+
+```
+ana@dev:~/planner$ look http://localhost:4200/ --text h1
+[vite] connecting...
+[vite] connected.
+Angular is running in development mode.
+Hello, planner
+```
+
+The three lines before the heading are the console. `[vite]` is the dev server's live-reload
+connection, which `ng serve` builds on Vite, and `Angular is running in development mode` is
+Angular saying that the checks lessons 7 and 9 rely on are switched on. A production build, two
+sections on, prints neither.
+
+## Your first edit
+
+`src/app/app.html` is 20 kilobytes of welcome page. Replace all of it with two lines:
+
+```html
+<!-- src/app/app.html -->
+<h1>Study planner</h1>
+<router-outlet />
+```
+
+`<router-outlet />` is where the router will draw a screen, from lesson 17; it draws nothing yet.
+The first line is an HTML comment naming the file, as every file this course asks you to save does,
+and the build drops comments from templates. As soon as you save, the dev server's terminal adds a
+line:
+
+```
+ana@dev:~/planner$ npx ng serve
+❯ Building...
+✔ Building...
+Initial chunk files | Names         | Raw size
+main.js             | main          | 47.76 kB | 
+styles.css          | styles        | 95 bytes | 
+
+                    | Initial total | 47.85 kB
+
+Application bundle generation complete. [1.961 seconds] - 2026-10-29T23:35:48.445Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://localhost:4200/
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  |  2.39 kB | 
+
+Application bundle generation complete. [0.189 seconds] - 2026-10-29T23:35:51.874Z
+
+Component update sent to client(s).
+```
+
+**Only the template was rebuilt and sent**, and the open page swapped it in place without
+reloading. Ask again:
+
+```
+ana@dev:~/planner$ look http://localhost:4200/
+[vite] connecting...
+[vite] connected.
+Angular is running in development mode.
+Study planner
+```
+
+## The data, in public/
+
+Last, the planner's data from lesson 1, in the folder the build copies as it is. Save it as
+`public/courses.json`:
+
+```schooling-example
+{"language": "json", "file": "public/courses.json", "parts": [
+ {"code": "{\n  \"courses\": [\n    { \"id\": \"html-css\", \"name\": \"HTML and CSS\" },\n    { \"id\": \"javascript\", \"name\": \"JavaScript\" },\n    { \"id\": \"git\", \"name\": \"Git\" }\n  ],", "note": "Three courses. A course's `id` is how its sessions find it, and its `name` is what a person reads."},
+ {"code": "  \"sessions\": [\n    { \"id\": 1, \"courseId\": \"javascript\", \"date\": \"2026-10-13\", \"minutes\": 45, \"done\": true },\n    { \"id\": 2, \"courseId\": \"html-css\", \"date\": \"2026-10-19\", \"minutes\": 30, \"done\": true },\n    { \"id\": 3, \"courseId\": \"javascript\", \"date\": \"2026-10-20\", \"minutes\": 60, \"done\": true },\n    { \"id\": 4, \"courseId\": \"git\", \"date\": \"2026-10-22\", \"minutes\": 25, \"done\": false },\n    { \"id\": 5, \"courseId\": \"javascript\", \"date\": \"2026-10-24\", \"minutes\": 50, \"done\": false },\n    { \"id\": 6, \"courseId\": \"html-css\", \"date\": \"2026-10-27\", \"minutes\": 40, \"done\": false }\n  ]\n}", "note": "Six sessions. `courseId` is the `id` of the course the session belongs to. `date` is written `YYYY-MM-DD`, so dates sort correctly as text, and `minutes` is a whole number."}
+]}
+```
+
+Anything in `public/` is served at the root of the site, so the file should now be at
+`/courses.json`. `-i` asks `curl` for the status line before the body:
+
+```
+ana@dev:~/planner$ curl -si http://localhost:4200/courses.json | head -1
+HTTP/1.1 404 Not Found
+```
+
+**The dev server reads `public/` when it starts**, so a file added while it runs is not there for it
+yet, and an address that looks like a file it does not have, with an extension such as `.json`, gets
+a 404. Stop the server with Ctrl-C in its terminal, and start it again:
+
+```
+ana@dev:~/planner$ npx ng serve
+❯ Building...
+✔ Building...
+Initial chunk files | Names         | Raw size
+main.js             | main          |  2.39 kB | 
+styles.css          | styles        | 95 bytes | 
+
+                    | Initial total |  2.48 kB
+
+Application bundle generation complete. [1.731 seconds] - 2026-10-29T23:35:59.082Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://localhost:4200/
+```
+
+```
+ana@dev:~/planner$ curl -s http://localhost:4200/courses.json | head -4
+{
+  "courses": [
+    { "id": "html-css", "name": "HTML and CSS" },
+    { "id": "javascript", "name": "JavaScript" },
+```
+
+An address **without** an extension is treated differently, and it matters from lesson 17 on: the
+dev server answers `/courses/git`, which is no file at all, with the page itself, `index.html`, so
+that the application can read the address and decide what to draw:
+
+```
+ana@dev:~/planner$ curl -si http://localhost:4200/courses/git | head -1
+HTTP/1.1 200 OK
+```
+
+Nothing in the application reads it yet. Lesson 6 does, with the first signal that waits for
+something.
