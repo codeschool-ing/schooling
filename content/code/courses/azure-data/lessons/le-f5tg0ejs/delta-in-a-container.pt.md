@@ -81,7 +81,7 @@ orders = DeltaTable(TABLE, storage_options=AZURITE).to_pyarrow_dataset()
 duckdb.sql(sys.argv[1]).show()
 ```
 
-Com o Azurite rodando e as quatro linhas de "Every time you open a terminal" da lição 1 digitadas,
+Com o Azurite rodando e as quatro linhas de "Toda vez que abrir um terminal" da lição 1 digitadas,
 crie o contêiner, grave a tabela e ponha o export cru da noite ao lado dela, na outra metade do
 lakehouse:
 
