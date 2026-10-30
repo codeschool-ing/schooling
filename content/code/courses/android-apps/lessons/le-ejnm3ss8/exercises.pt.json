@@ -1,0 +1,442 @@
+{
+  "ex-7ae03wks": {
+    "prompt": "O planner lança o envio no `viewModelScope` e o estudante arrasta o app para fora. O que acontece com o envio?",
+    "hint": "Onde vive uma corrotina?",
+    "choices": [
+      {
+        "text": "Acaba com o processo, pela metade",
+        "why": "Isso: uma corrotina vive no processo, e o processo é do sistema para encerrar."
+      },
+      {
+        "text": "Passa para uma thread do sistema e termina lá",
+        "why": "Nenhuma corrotina sai do seu processo; o sistema não tem thread que a adote."
+      },
+      {
+        "text": "Fica pausado e continua na próxima vez que o app abrir",
+        "why": "Nada foi gravado, então não há o que continuar."
+      },
+      {
+        "text": "Continua rodando, porque está numa thread de fundo",
+        "why": "Uma thread de fundo ainda é uma thread do processo que acabou de terminar."
+      }
+    ]
+  },
+  "ex-mwbjyapv": {
+    "prompt": "Por que um pedido do WorkManager sobrevive a uma reinicialização do celular?",
+    "hint": "Onde o pedido fica guardado, e quem é avisado quando o celular liga?",
+    "choices": [
+      {
+        "text": "O Google Play services guarda uma cópia e a restaura",
+        "why": "O WorkManager não depende do Play services; a cópia é dele."
+      },
+      {
+        "text": "O banco do WorkManager e um receiver de boot",
+        "why": "Isso: o pedido está no disco, e o `RECEIVE_BOOT_COMPLETED` é como o WorkManager fica sabendo que o celular ligou."
+      },
+      {
+        "text": "O agendador de jobs do sistema mantém os jobs entre reinicializações sozinho",
+        "why": "O WorkManager não conta com isso; ele reagenda a partir do próprio banco."
+      },
+      {
+        "text": "O pedido vive em `SharedPreferences`",
+        "why": "O WorkManager guarda os pedidos num banco SQLite próprio."
+      }
+    ]
+  },
+  "ex-qrx84wfr": {
+    "prompt": "Ligue cada tarefa à ferramenta que a seção 02 lhe dá.",
+    "hint": "Pergunte: alguém está esperando ver, precisa ser exato, precisa rodar em algum momento?",
+    "pairs": [
+      {
+        "left": "Carregar a lista de cursos que o estudante está olhando",
+        "right": "Uma corrotina no escopo da tela"
+      },
+      {
+        "left": "Enviar sessões novas em algum momento com rede",
+        "right": "WorkManager"
+      },
+      {
+        "left": "Lembrar o estudante às 19:00 em ponto",
+        "right": "Um alarme"
+      }
+    ],
+    "right_distractors": [
+      "Um pedido periódico a cada cinco minutos"
+    ]
+  },
+  "ex-5z5zkde6": {
+    "prompt": "`doWork` captura uma `IOException` na tentativa 1 de 3. O que o `SyncWorker` devolve?",
+    "hint": "As tentativas contam a partir de 0.",
+    "choices": [
+      {
+        "text": "`Result.failure()`",
+        "why": "Isso é a tentativa 2, a última das três."
+      },
+      {
+        "text": "`Result.retry()`",
+        "why": "Isso: `1 < 3 - 1`, então pede para tentar de novo."
+      },
+      {
+        "text": "`Result.success()` com `sent : 0`",
+        "why": "Nada foi enviado; relatar sucesso esconderia a falha."
+      },
+      {
+        "text": "Repassa a exceção para o WorkManager",
+        "why": "O `catch` a mantém no worker; uma exceção que escapa conta como falha."
+      }
+    ]
+  },
+  "ex-qkabmma5": {
+    "prompt": "Por que o `SyncWorker` só tenta de novo em `IOException`, e deixa qualquer outra exceção falhar?",
+    "hint": "Que falhas uma tentativa posterior consegue resolver?",
+    "choices": [
+      {
+        "text": "O WorkManager proíbe tentar de novo com outro tipo de exceção",
+        "why": "O worker decide; o WorkManager tenta de novo o que responder `retry`."
+      },
+      {
+        "text": "Um problema de rede passa; um bug se repete",
+        "why": "Isso: tentar de novo uma `IllegalStateException` só gasta bateria."
+      },
+      {
+        "text": "Outras exceções derrubam o app, então não dá para tentar de novo",
+        "why": "Uma exceção que escapa de `doWork` é registrada como falha; o app não cai."
+      },
+      {
+        "text": "`IOException` é a única exceção verificada do Kotlin",
+        "why": "O Kotlin não tem exceções verificadas; `@Throws` é para quem chama do Java."
+      }
+    ]
+  },
+  "ex-vyy0b3e6": {
+    "prompt": "`PlannerWorkerFactory.createWorker` devolve `null` para o `SummaryWorker`. O que o WorkManager faz?",
+    "hint": "A seção 03 diz que `null` não é erro.",
+    "choices": [
+      {
+        "text": "Marca o pedido como `FAILED`",
+        "why": "O teste da cadeia mostra o `SummaryWorker` dando certo."
+      },
+      {
+        "text": "Por reflexão, como sempre",
+        "why": "Isso: é assim que um worker sem dependência extra continua sendo criado."
+      },
+      {
+        "text": "Pede ao Hilt",
+        "why": "Este projeto não tem Hilt; o recurso é a fábrica padrão do próprio WorkManager."
+      },
+      {
+        "text": "Repete `createWorker` até receber um worker",
+        "why": "Pergunta uma vez e depois recorre ao padrão."
+      }
+    ]
+  },
+  "ex-df255wv8": {
+    "prompt": "No `SyncWorkerTest`, quantas sessões a saída da tentativa bem-sucedida disse que foram enviadas?",
+    "hint": "`Data {sent : …}`"
+  },
+  "ex-s7jxdty4": {
+    "prompt": "Quem confere que `NetworkType.CONNECTED` vale antes de o `SyncWorker` rodar?",
+    "hint": "Não é o seu código.",
+    "choices": [
+      {
+        "text": "`doWork`, na primeira linha",
+        "why": "O worker nunca vê a restrição; ele só é chamado quando ela vale."
+      },
+      {
+        "text": "O sistema, por meio do WorkManager",
+        "why": "Isso: as restrições são conferidas pelo sistema, não pelo seu código."
+      },
+      {
+        "text": "O `Uploader`, que falha sem rede",
+        "why": "Ele falharia, mas esse é o caminho da nova tentativa, não da restrição."
+      },
+      {
+        "text": "`PlannerApp.onCreate`",
+        "why": "O `onCreate` só agenda o pedido."
+      }
+    ]
+  },
+  "ex-j1hspvm7": {
+    "prompt": "Uma sincronização periódica rodou uma vez. Passam seis horas com o celular sem rede. O que o teste da seção 04 diz que acontece?",
+    "hint": "Olhe a linha depois de `six hours later`.",
+    "choices": [
+      {
+        "text": "Roda mesmo assim, porque o período acabou",
+        "why": "Os envios ficaram em 1 até as restrições serem atendidas de novo."
+      },
+      {
+        "text": "O pedido fica `SUCCEEDED` e é removido",
+        "why": "Um pedido periódico nunca chega a `SUCCEEDED`; ele voltou a `ENQUEUED`."
+      },
+      {
+        "text": "Espera, `ENQUEUED`, até a rede voltar",
+        "why": "Isso: cada período espera as suas restrições de novo."
+      },
+      {
+        "text": "O período é pulado e o próximo começa em seis horas",
+        "why": "Nada foi pulado: o segundo envio rodou assim que as restrições foram atendidas."
+      }
+    ]
+  },
+  "ex-zxq06w5e": {
+    "prompt": "`scheduleSync` é chamada no `onCreate`, que roda a cada início de processo. O que impede o planner de acumular pedidos periódicos?",
+    "hint": "O pedido tem nome.",
+    "choices": [
+      {
+        "text": "Trabalho único com `KEEP`, que deixa o primeiro em paz",
+        "why": "Isso: três chamadas deixaram um pedido, com o primeiro id."
+      },
+      {
+        "text": "O WorkManager junta pedidos idênticos comparando os workers",
+        "why": "Sem um nome único, cada `enqueue` acrescenta um pedido novo."
+      },
+      {
+        "text": "O `onCreate` roda uma vez por instalação",
+        "why": "Ele roda toda vez que o processo começa."
+      },
+      {
+        "text": "As restrições recusam um duplicado",
+        "why": "Restrições são sobre o estado do celular, não sobre outros pedidos."
+      }
+    ]
+  },
+  "ex-kjpt88vc": {
+    "prompt": "Um pedido periódico pede 5 minutos. Quantos minutos o WorkManager usa de fato?",
+    "hint": "O terceiro teste imprimiu.",
+    "unit": "minutos"
+  },
+  "ex-swra5veq": {
+    "prompt": "Com `BackoffPolicy.___` e 30 segundos, uma nova tentativa espera 30 segundos, depois 60, depois 120.",
+    "hint": "A outra política soma 30 a cada vez.",
+    "blanks": [
+      {
+        "accept": [
+          "EXPONENTIAL"
+        ]
+      }
+    ]
+  },
+  "ex-p0rtfz8k": {
+    "prompt": "Na cadeia, como o `SummaryWorker` sabe quantas sessões foram enviadas?",
+    "hint": "`inputData`",
+    "choices": [
+      {
+        "text": "Chama o `Uploader` de novo",
+        "why": "Isso enviaria duas vezes; ele só lê."
+      },
+      {
+        "text": "A entrada dele é a `Data` de saída",
+        "why": "Isso: numa cadeia, a saída de cada pedido é a entrada do próximo."
+      },
+      {
+        "text": "Os dois workers dividem uma variável de `companion object`",
+        "why": "Só o nome da chave é compartilhado; valores não sobreviveriam a um reinício do processo assim."
+      },
+      {
+        "text": "Lê a contagem do log do WorkManager",
+        "why": "Workers se comunicam por `Data`, não por logs."
+      }
+    ]
+  },
+  "ex-hz4mwgrz": {
+    "prompt": "O servidor está fora. Logo depois de a cadeia ser enfileirada, quais são os estados da sincronização e do resumo?",
+    "hint": "Uma nova tentativa não é falha.",
+    "choices": [
+      {
+        "text": "`FAILED` e `FAILED`",
+        "why": "Isso é o que uma `failure` faria; a sincronização pediu nova tentativa."
+      },
+      {
+        "text": "`ENQUEUED` e `BLOCKED`",
+        "why": "Isso: a sincronização espera o atraso, e o resumo espera a sincronização."
+      },
+      {
+        "text": "`RUNNING` e `ENQUEUED`",
+        "why": "Com o executor síncrono nada ainda está rodando quando o teste lê."
+      },
+      {
+        "text": "`ENQUEUED` e `SUCCEEDED` com mensagem vazia",
+        "why": "O resumo nunca rodou; está preso atrás da sincronização."
+      }
+    ]
+  },
+  "ex-qwc2gs27": {
+    "prompt": "Um estudante toca \"sincronizar agora\" duas vezes num segundo. A cadeia usa `beginUniqueWork(\"sync-now\", REPLACE, …)`. O que acontece?",
+    "hint": "`REPLACE` cancela o que ainda espera.",
+    "choices": [
+      {
+        "text": "Duas cadeias rodam, e as sessões são enviadas duas vezes",
+        "why": "Um nome único permite uma cadeia por vez."
+      },
+      {
+        "text": "O segundo toque é ignorado",
+        "why": "Isso é `KEEP`; `REPLACE` faz o oposto."
+      },
+      {
+        "text": "A primeira cadeia, inacabada, é cancelada; uma nova roda",
+        "why": "Isso: a antiga termina `CANCELLED`, e um envio acontece."
+      },
+      {
+        "text": "O WorkManager recusa a segunda cadeia e lança uma exceção no botão",
+        "why": "Trabalho único é uma política, não um erro."
+      }
+    ]
+  },
+  "ex-7035ftbq": {
+    "prompt": "Ponha em ordem a vida de um pedido único cuja primeira tentativa encontra a rede caída e a segunda dá certo.",
+    "hint": "Ele fica `ENQUEUED` mais de uma vez.",
+    "items": [
+      "`ENQUEUED`, esperando rodar",
+      "`RUNNING`, e `doWork` devolve `retry`",
+      "`ENQUEUED` de novo, durante o atraso de espera",
+      "`RUNNING`, e `doWork` devolve `success`",
+      "`SUCCEEDED`"
+    ]
+  },
+  "ex-4398mzr7": {
+    "prompt": "Você dá à `PlannerApp` um `Configuration.Provider`, mas deixa o manifesto sem a entrada `tools:node=\"remove\"`. O que dá errado?",
+    "hint": "Algo inicializa o WorkManager antes de a sua `Application` ter voz.",
+    "choices": [
+      {
+        "text": "O build falha porque existem duas configurações",
+        "why": "Nada falha no build; o problema aparece quando um worker é construído."
+      },
+      {
+        "text": "Nada: o `Configuration.Provider` sempre ganha",
+        "why": "O inicializador da biblioteca monta o WorkManager primeiro, com a configuração padrão."
+      },
+      {
+        "text": "A sua fábrica nunca é usada, então o `SyncWorker` não é construído",
+        "why": "Isso: a fábrica padrão só conhece o construtor de dois parâmetros."
+      },
+      {
+        "text": "O app pede ao estudante uma permissão de inicialização",
+        "why": "Não existe essa permissão; é uma questão de combinação de manifestos."
+      }
+    ]
+  },
+  "ex-1mdqpbst": {
+    "prompt": "Quais permissões o WorkManager pôs no manifesto combinado? Escolha todas as que se aplicam.",
+    "hint": "A seção 06 listou as permissões do manifesto combinado.",
+    "choices": [
+      {
+        "text": "`RECEIVE_BOOT_COMPLETED`",
+        "why": "Sim: é como o WorkManager reagenda depois de reiniciar."
+      },
+      {
+        "text": "`INTERNET`",
+        "why": "Não: o WorkManager confere a rede, não a usa; a aula 13 acrescenta esta."
+      },
+      {
+        "text": "`ACCESS_NETWORK_STATE`",
+        "why": "Sim: deixa o WorkManager conferir a restrição de rede."
+      },
+      {
+        "text": "`POST_NOTIFICATIONS`",
+        "why": "Não: essa é da aula 19, e o app precisa pedi-la."
+      }
+    ]
+  },
+  "ex-t3e33wkz": {
+    "prompt": "O `grep -c WorkManagerInitializer` no manifesto combinado imprimiu que número?",
+    "hint": "O manifesto da própria biblioteca imprimiu 1."
+  },
+  "ex-9je9v5rw": {
+    "prompt": "Qual destas impede a sincronização do planner de rodar até o estudante abrir o app de novo?",
+    "hint": "Uma linha da tabela está em negrito.",
+    "choices": [
+      {
+        "text": "O celular reiniciar durante a noite",
+        "why": "O receiver de boot reagenda tudo."
+      },
+      {
+        "text": "O sistema encerrar o processo por memória",
+        "why": "O pedido está no disco; o sistema reinicia o trabalho."
+      },
+      {
+        "text": "Forçar parada nas configurações do app",
+        "why": "Isso: todo job é cancelado, e o Android respeita por completo."
+      },
+      {
+        "text": "O Doze, enquanto o celular fica parado",
+        "why": "O Doze adia o trabalho para janelas de manutenção; não o cancela."
+      }
+    ]
+  },
+  "ex-23a355mt": {
+    "prompt": "Uma testadora relata que a sincronização roda num celular e para em outro de outra marca, com o mesmo app. Qual é a causa mais provável que a seção 07 cita?",
+    "hint": "Algo faz com os apps o que o Forçar parada faz.",
+    "choices": [
+      {
+        "text": "O gerenciador de bateria da marca",
+        "why": "Isso: tem o efeito de um Forçar parada, e nada no código passa por cima."
+      },
+      {
+        "text": "O Android do segundo celular não tem WorkManager",
+        "why": "O WorkManager vai dentro do app, não com o Android."
+      },
+      {
+        "text": "O período de seis horas é longo demais para aquela marca",
+        "why": "Um período não depende da marca; quinze minutos é o único mínimo."
+      },
+      {
+        "text": "O `KEEP` se comporta diferente entre fabricantes",
+        "why": "As políticas de trabalho único são código do WorkManager, iguais em todo lugar."
+      }
+    ]
+  },
+  "ex-tbsxtrej": {
+    "prompt": "Um colega escreve um worker que envia \"a sessão acrescentada às 09:14\" pelo id. A seção 07 sugere outra coisa. Por quê?",
+    "hint": "Workers rodam atrasados, e às vezes mais de uma vez.",
+    "choices": [
+      {
+        "text": "Workers não recebem ids em `Data`",
+        "why": "Um id curto cabe em `Data` com folga."
+      },
+      {
+        "text": "Enviar o que falta continua certo quando roda atrasado ou duas vezes",
+        "why": "Isso: quando ele roda, a sessão pode ter mudado ou já ter sido enviada."
+      },
+      {
+        "text": "Um worker por sessão passaria do mínimo de 15 minutos",
+        "why": "O mínimo é para pedidos periódicos, não para quantos pedidos únicos existem."
+      },
+      {
+        "text": "O id se perderia se o processo morresse",
+        "why": "A `Data` de entrada fica no banco do WorkManager e sobrevive."
+      }
+    ]
+  },
+  "ex-k6ktse34": {
+    "prompt": "Ligue cada `Result` ao que o WorkManager faz em seguida.",
+    "hint": "Uma delas é definitiva.",
+    "pairs": [
+      {
+        "left": "`Result.success()`",
+        "right": "Guarda a saída e começa o próximo pedido da cadeia"
+      },
+      {
+        "left": "`Result.retry()`",
+        "right": "Devolve o pedido à fila para rodar depois do atraso de espera"
+      },
+      {
+        "left": "`Result.failure()`",
+        "right": "Nunca mais o roda, e falha o que está encadeado depois"
+      }
+    ],
+    "right_distractors": [
+      "Pergunta ao estudante se deve tentar de novo"
+    ]
+  },
+  "ex-x6jsfd6a": {
+    "prompt": "Um worker cuja `doWork` é uma função `suspend` estende `___`.",
+    "hint": "O `SyncWorker` da seção 03.",
+    "blanks": [
+      {
+        "accept": [
+          "CoroutineWorker"
+        ]
+      }
+    ]
+  }
+}
