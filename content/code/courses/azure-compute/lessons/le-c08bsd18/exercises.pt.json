@@ -1,0 +1,451 @@
+{
+  "ex-7xn387dn": {
+    "prompt": "Para qual destes a loja precisa de um registry Premium?",
+    "hint": "Três dos quatro vêm com todo tier, ou com o Standard.",
+    "choices": [
+      {
+        "text": "Redundância de zona entre as zonas de disponibilidade de brazilsouth",
+        "why": "Todo tier tem, ligada por padrão, numa região com zonas."
+      },
+      {
+        "text": "Uma réplica do registry em southcentralus",
+        "why": "Isso. Geo-replicação é um dos recursos que a documentação liga ao Premium."
+      },
+      {
+        "text": "Uma regra de artifact cache para python:3.12-slim do Docker Hub",
+        "why": "O artifact cache existe no Basic, no Standard e no Premium."
+      },
+      {
+        "text": "Pull anônimo, para qualquer pessoa baixar a imagem",
+        "why": "O Standard também tem."
+      }
+    ]
+  },
+  "ex-7qwc4t37": {
+    "prompt": "Um pipeline que faz push e pull num registry Basic é apontado para um Premium. O que precisa mudar nos comandos docker dele?",
+    "hint": "Os tiers diferem em limites e recursos, não em protocolo.",
+    "choices": [
+      {
+        "text": "Os pushes, que o Premium recebe por uma API de upload separada",
+        "why": "Todo tier expõe a mesma API de dados, então um push é o mesmo pedido."
+      },
+      {
+        "text": "O formato do manifest, porque o Premium guarda tipos de mídia Docker",
+        "why": "O tier não diz nada sobre formatos de manifest; o registry guarda o que recebe."
+      },
+      {
+        "text": "Nada além do login server, se o nome do registry mudou",
+        "why": "Isso. Basic, Standard e Premium falam uma API só; só o endereço no nome da imagem muda."
+      },
+      {
+        "text": "O login, porque o Premium exige o usuário admin",
+        "why": "Nenhum tier exige o usuário admin; ele vem desligado em todos."
+      }
+    ]
+  },
+  "ex-3k1qc17y": {
+    "prompt": "Quais destas afirmações valem para az acr login --name shopregistry? Marque todas as que se aplicam.",
+    "hint": "Siga o token do az login até o Docker.",
+    "choices": [
+      {
+        "text": "Ele entra com a identidade do Microsoft Entra que o az login obteve",
+        "why": "Ele troca o token dessa identidade por um token do registry."
+      },
+      {
+        "text": "O token do registry que ele obtém dura três horas",
+        "why": "Por isso um pipeline entra de novo a cada execução."
+      },
+      {
+        "text": "Ele entrega o token ao Docker, então o docker push funciona sem digitar senha",
+        "why": "O Docker o guarda na configuração para os comandos seguintes."
+      },
+      {
+        "text": "Ele liga o usuário admin durante a sessão",
+        "why": "O usuário admin é uma conta separada, desligada por padrão, e o az acr login não mexe nela."
+      },
+      {
+        "text": "Ele guarda no registry uma senha para a identidade, sem validade",
+        "why": "Nenhuma senha é guardada; o token expira e é buscado de novo."
+      }
+    ]
+  },
+  "ex-k9ts7vvd": {
+    "prompt": "Um registry foi passado para o modo \"RBAC Registry + ABAC Repository Permissions\". Depois de az aks update --attach-acr, os nós do cluster ainda não conseguem fazer pull. Qual é a correção?",
+    "hint": "Nesse modo o papel de pull tem outro nome.",
+    "choices": [
+      {
+        "text": "Ligar o usuário admin e dar a senha dele ao cluster",
+        "why": "Isso contornaria os papéis com um segredo compartilhado, o arranjo que as identidades gerenciadas substituem."
+      },
+      {
+        "text": "Atribuir Container Registry Repository Reader à identidade dos nós, à mão",
+        "why": "Isso. Esse modo usa Repository Reader no lugar de AcrPull, e o --attach-acr não é suportado nele."
+      },
+      {
+        "text": "Passar o registry para Premium, que esse modo exige para pulls",
+        "why": "O modo trata de atribuição de papéis, não de tier."
+      },
+      {
+        "text": "Esperar três horas, até o token dos nós ser renovado",
+        "why": "Um token renovado traz as mesmas permissões; o que falta é o papel."
+      }
+    ]
+  },
+  "ex-fse75f21": {
+    "prompt": "Na maior parte do Azure, os dados de um registry também podem ficar na área par da mesma geografia. Um registry criado em Brazil South guarda os dados dentro da própria ___.",
+    "hint": "O único lugar em que o registry desta lição foi criado.",
+    "blanks": [
+      {
+        "accept": [
+          "região",
+          "regiao"
+        ]
+      }
+    ]
+  },
+  "ex-rtrsnky1": {
+    "prompt": "De que é calculado o digest que o docker push imprime?",
+    "hint": "A seção 03 passou algo pelo sha256sum e obteve os mesmos 64 caracteres.",
+    "choices": [
+      {
+        "text": "O nome do repositório e a tag, então cada tag tem o seu digest",
+        "why": "1.0 e latest imprimiram o mesmo digest para a mesma imagem, então a tag não entra no cálculo."
+      },
+      {
+        "text": "Os bytes do documento de manifest que a tag nomeia",
+        "why": "Isso. O sha256sum sobre os bytes do índice deu o Docker-Content-Digest."
+      },
+      {
+        "text": "O momento do push, que torna cada push único",
+        "why": "O push do latest deu o digest que a 1.0 já tinha, minutos depois."
+      },
+      {
+        "text": "O tamanho descomprimido de todas as camadas somado",
+        "why": "Tamanho não é hash; duas imagens diferentes podem ter o mesmo tamanho."
+      }
+    ]
+  },
+  "ex-bfwy3wj9": {
+    "prompt": "Ponha em ordem os passos de publicar a loja num registry.",
+    "hint": "O nome é o destino, e o manifest cita os blobs.",
+    "items": [
+      "Fazer o build da imagem",
+      "Dar a ela uma tag com o nome do registry na frente",
+      "Enviar os blobs que o registry não tem",
+      "Pôr o manifest sob a tag",
+      "Ler o digest que o push imprimiu"
+    ],
+    "trap": "O manifest vai por último: ele cita blobs que o registry já precisa ter."
+  },
+  "ex-10hkh0gd": {
+    "prompt": "A loja fez push de 1.0 e latest, depois construiu a 1.1 e fez push dela como 1.1 e latest. O que a tag 1.0 nomeia agora?",
+    "hint": "Veja as três linhas que o laço sobre as tags imprimiu.",
+    "choices": [
+      {
+        "text": "O build da 1.1, porque latest e 1.0 eram uma tag só",
+        "why": "Duas tags numa imagem são dois ponteiros; mover um não move o outro."
+      },
+      {
+        "text": "Nada: o push do latest deixou a imagem 1.0 sem tag",
+        "why": "Uma imagem fica sem tag quando a última tag sai; a 1.0 ficou."
+      },
+      {
+        "text": "Um índice novo que lista as imagens 1.0 e 1.1 lado a lado",
+        "why": "Push não junta índices; cada build tem o seu."
+      },
+      {
+        "text": "O digest que nomeava antes da mudança, caractere por caractere",
+        "why": "Isso. Só o latest se moveu; a 1.0 continua nomeando o primeiro build."
+      }
+    ]
+  },
+  "ex-agm0g027": {
+    "prompt": "A versão 1.1 foi construída FROM a imagem 1.0 com uma linha ENV a mais. Quantos blobs de camada o push dela precisou enviar?",
+    "hint": "Uma linha ENV muda a configuração, não os arquivos."
+  },
+  "ex-0md71mr1": {
+    "prompt": "Um Deployment do Kubernetes nomeia shopregistry.azurecr.io/shop:latest, e os nós fizeram pull em momentos diferentes de um dia em que o latest se moveu. O que está rodando, e o que evita isso?",
+    "hint": "Nada avisou da mudança.",
+    "choices": [
+      {
+        "text": "Uma versão: o registry recusa mover uma tag que um nó já baixou",
+        "why": "O registry local moveu o latest sem reclamar, e o ACR faz o mesmo se a tag não estiver travada."
+      },
+      {
+        "text": "Duas versões atrás de um nome; nomear o digest evita isso",
+        "why": "Isso. Cada nó guarda o que o latest era quando baixou; um digest não pode significar duas coisas."
+      },
+      {
+        "text": "A versão mais nova em todos os nós, porque cada nó compara digests a cada minuto",
+        "why": "Um nó fica com a imagem que tem; nada no registry avisa que uma tag se moveu."
+      },
+      {
+        "text": "Duas versões; um nome de tag mais longo como latest-stable evita isso",
+        "why": "Qualquer tag pode ser movida; o tamanho do nome não muda nada."
+      }
+    ]
+  },
+  "ex-rzpdfte0": {
+    "prompt": "Um colega passa um token do GitHub ao az acr build com --build-arg GITHUB_TOKEN=... . O que há de errado nisso?",
+    "hint": "Leia o aviso no texto de ajuda da opção.",
+    "choices": [
+      {
+        "text": "Quick tasks ignoram build args, então o build falha sem o token",
+        "why": "Quick tasks aceitam build args; a ajuda documenta a opção."
+      },
+      {
+        "text": "Um build arg fica visível para o time do ACR; --secret-build-arg é para segredos",
+        "why": "Isso. A ajuda diz isso em maiúsculas, e a documentação acrescenta os logs de diagnóstico."
+      },
+      {
+        "text": "O token expira depois de três horas, antes de o build acabar",
+        "why": "Três horas é o token do registry do az acr login, outro token."
+      },
+      {
+        "text": "Build args são gravados na tag da imagem",
+        "why": "A tag vem do --image; build args vão para o Dockerfile."
+      }
+    ]
+  },
+  "ex-bkvbwxq9": {
+    "prompt": "Ligue cada gatilho de uma task criada com az acr task create a como ele começa.",
+    "hint": "A ajuda imprimiu um padrão para três deles.",
+    "pairs": [
+      {
+        "left": "Commit",
+        "right": "Ligado desde a criação da task"
+      },
+      {
+        "left": "Pull request",
+        "right": "Desligado até ser ligado"
+      },
+      {
+        "left": "Atualização da imagem base",
+        "right": "Ligado, depois que a task rodou uma vez"
+      },
+      {
+        "left": "Agendamento",
+        "right": "Presente quando se dá uma expressão cron"
+      }
+    ],
+    "right_distractors": [
+      "Roda sempre que uma tag do registry é apagada"
+    ]
+  },
+  "ex-y7rgqreh": {
+    "prompt": "Um registry Premium tem desde janeiro uma política de retenção de 7 dias para manifests sem tag. Em março ainda guarda centenas de cópias sem tag da loja, todas enviadas pelo Docker 29 depois de janeiro. Por quê?",
+    "hint": "A seção 03 imprimiu o tipo de mídia do que foi enviado.",
+    "choices": [
+      {
+        "text": "A política espera 30 dias, seja qual for a configuração",
+        "why": "A configuração vai de 0 a 365 dias e é respeitada."
+      },
+      {
+        "text": "A política só apaga no dia da semana em que foi ligada",
+        "why": "Cada manifest sem tag recebe a sua hora de exclusão, os seus dias depois de perder a tag."
+      },
+      {
+        "text": "Esses manifests usam tipos de mídia OCI, que a política não trata; o acr purge trata",
+        "why": "Isso. A política lê só tipos de mídia Docker, e o Docker 29 escreve tipos OCI."
+      },
+      {
+        "text": "Uma política de retenção vale para registries Basic e é ignorada no Premium",
+        "why": "É o contrário: a política é um recurso do Premium."
+      }
+    ]
+  },
+  "ex-vqvece4c": {
+    "prompt": "Um gatilho de imagem base dispara quando a imagem citada no FROM é reconstruída sob a mesma tag, então essa tag precisa ser ___, como 3.12-slim, que o mantenedor move para cada build corrigido.",
+    "hint": "O contrário de uma tag única.",
+    "blanks": [
+      {
+        "accept": [
+          "estável",
+          "estavel"
+        ]
+      }
+    ]
+  },
+  "ex-y9b3cpvv": {
+    "prompt": "O DELETE do digest da 1.0 respondeu 202. A imagem ainda está no laptop, mas o docker pull desse digest falha. Por quê?",
+    "hint": "Um pull começa com uma pergunta a alguém.",
+    "choices": [
+      {
+        "text": "O DELETE apagou também a cópia do laptop",
+        "why": "O registry não alcança o armazenamento local do Docker; a cópia continua lá."
+      },
+      {
+        "text": "Apagar deu um digest novo à imagem, então o antigo não nomeia nada",
+        "why": "Um digest é calculado dos bytes; apagar não recalcula nada."
+      },
+      {
+        "text": "Um pull pede o manifest ao registry primeiro, e o registry não o tem mais",
+        "why": "Isso. not found é a resposta do registry, seja o que for que o laptop guarde."
+      },
+      {
+        "text": "O registry precisa reiniciar antes de servir esse digest de novo",
+        "why": "Reiniciar não muda nada; o manifest saiu do armazenamento."
+      }
+    ]
+  },
+  "ex-km0m3xge": {
+    "prompt": "O shopregistry tem origem em brazilsouth e uma réplica em southcentralus. De que nome um cluster em southcentralus faz pull?",
+    "hint": "Você faz push uma vez, para um nome.",
+    "choices": [
+      {
+        "text": "shopregistry.azurecr.io, o mesmo login server de todo lugar",
+        "why": "Isso. O Azure leva o pedido à réplica que julga melhor para o cliente."
+      },
+      {
+        "text": "shopregistry-southcentralus.azurecr.io, um registry próprio",
+        "why": "Uma réplica não é um segundo registry, e não tem um nome próprio desse tipo."
+      },
+      {
+        "text": "O endereço da região de origem, então os pulls vão para brazilsouth",
+        "why": "Puxar da origem através de um continente é o que a réplica existe para evitar."
+      },
+      {
+        "text": "Um nome que ele aprende pelo webhook da replicação",
+        "why": "Webhooks avisam que uma cópia terminou; não distribuem endereços."
+      }
+    ]
+  },
+  "ex-n1md3zrp": {
+    "prompt": "Um registry guarda 40 GB de imagens, com a região de origem e duas réplicas. Quantos GB de armazenamento são cobrados?",
+    "hint": "O armazenamento é cobrado por réplica, e a região de origem também guarda uma cópia.",
+    "unit": "GB"
+  },
+  "ex-ep7havfk": {
+    "prompt": "Um pipeline faz push de shop:1.2 em brazilsouth e logo faz deploy num cluster em southcentralus, cujos pods dizem manifest unknown. Dois minutos depois os mesmos pods sobem. O que aconteceu, e o que o pipeline deve fazer?",
+    "hint": "O registry fica consistente com o tempo, não na hora.",
+    "choices": [
+      {
+        "text": "A réplica precisava do próprio az acr login; entrar em cada região",
+        "why": "As credenciais são do registry e valem igual em todas as regiões."
+      },
+      {
+        "text": "O push foi copiado em segundo plano; repetir com espera crescente, ou esperar o webhook da réplica",
+        "why": "Isso. Esses são os dois remédios que a documentação cita."
+      },
+      {
+        "text": "manifest unknown significa que a imagem foi apagada; fazer push de novo",
+        "why": "Nada foi apagado; dois minutos depois o mesmo digest estava lá."
+      },
+      {
+        "text": "Uma task em southcentralus falhou ao reconstruir a imagem; mover as tasks para lá",
+        "why": "As tasks são da região de origem, e nenhuma task participou deste push."
+      }
+    ]
+  },
+  "ex-5qek0xct": {
+    "prompt": "Quais erros do wrong.bicep compilaram sem aviso nenhum? Marque todos os que se aplicam.",
+    "hint": "Dois dos cinco são tipados como qualquer string ou qualquer número.",
+    "choices": [
+      {
+        "text": "name: 'shop-registry'",
+        "why": "BCP416: o hífen quebra o padrão de nome de letras e dígitos."
+      },
+      {
+        "text": "nome de sku 'Premuim'",
+        "why": "O nome do SKU é tipado como um dos tiers ou qualquer string, então o erro passou."
+      },
+      {
+        "text": "adminUserEnabled: 'false'",
+        "why": "BCP036: texto onde a API espera um booleano."
+      },
+      {
+        "text": "stauts na política de retenção",
+        "why": "BCP089, com status sugerido como a grafia certa."
+      },
+      {
+        "text": "days: 400",
+        "why": "O tipo diz só que é um número; o intervalo de 0 a 365 está na ajuda da CLI, não no tipo."
+      }
+    ]
+  },
+  "ex-fpqs7pyq": {
+    "prompt": "O Defender for Cloud não relata achados para a imagem da loja. O que isso diz?",
+    "hint": "Um scan compara pacotes com vulnerabilidades publicadas.",
+    "choices": [
+      {
+        "text": "Que o app.py não tem falhas de segurança",
+        "why": "O scanner lê pacotes que consegue identificar; o código da loja não é um."
+      },
+      {
+        "text": "Que nenhum segredo foi copiado para nenhuma camada",
+        "why": "Um token num arquivo não é um pacote com vulnerabilidade publicada."
+      },
+      {
+        "text": "Que a imagem vai continuar sem achados enquanto estiver em uso",
+        "why": "Uma vulnerabilidade publicada no mês que vem não está no resultado de hoje."
+      },
+      {
+        "text": "Que os pacotes que ele identificou não tinham vulnerabilidade publicada quando escaneou",
+        "why": "Isso. É tudo o que se afirma, naquele dia."
+      }
+    ]
+  },
+  "ex-k6bqrtaj": {
+    "prompt": "Ponha em ordem segura os passos de lançar a loja 1.2 pelo ACR.",
+    "hint": "O deploy nomeia o que o push informou, e a tag é protegida por último.",
+    "items": [
+      "az acr login --name shopregistry",
+      "docker push shopregistry.azurecr.io/shop:1.2",
+      "Pegar o digest que o push imprimiu",
+      "Fazer deploy de shopregistry.azurecr.io/shop@ esse digest",
+      "Travar a tag 1.2 com --write-enabled false"
+    ],
+    "trap": "Entre antes do push: o Docker precisa do token do registry para enviar qualquer coisa."
+  },
+  "ex-zq88y503": {
+    "prompt": "Ligue cada forma de apagar ao que ela remove.",
+    "hint": "Duas são do ACR, uma é um comando só, e uma é o registry local.",
+    "pairs": [
+      {
+        "left": "Política de retenção",
+        "right": "Manifests sem tag de tipo Docker, alguns dias depois de perderem a tag"
+      },
+      {
+        "left": "acr purge --untagged",
+        "right": "Tags mais velhas que o --ago, depois os manifests que ficaram sem nenhuma"
+      },
+      {
+        "left": "az acr repository delete --image shop@sha256:…",
+        "right": "Um manifest, as tags dele e as camadas que nenhuma outra imagem usa"
+      },
+      {
+        "left": "Um registry com REGISTRY_STORAGE_DELETE_ENABLED=false",
+        "right": "Nada: responde 405"
+      }
+    ],
+    "right_distractors": [
+      "As camadas de uma imagem, deixando as tags no lugar"
+    ]
+  },
+  "ex-vven6gyt": {
+    "prompt": "brazilsouth, a região de origem do shopregistry, está fora do ar por uma tarde. O registry tem uma réplica em southcentralus. O que continua funcionando?",
+    "hint": "Separe o registry em plano de dados e plano de controle.",
+    "choices": [
+      {
+        "text": "Nada até brazilsouth voltar, porque a região de origem guarda o registry",
+        "why": "A região de origem guarda as configurações; o plano de dados continua pelas réplicas."
+      },
+      {
+        "text": "Tudo, inclusive mudanças nas regras de rede, pela réplica",
+        "why": "As configurações não mudam até a região de origem se recuperar."
+      },
+      {
+        "text": "Push e pull por shopregistry.azurecr.io; as tasks esperam a região de origem",
+        "why": "Isso. As operações de dados vão para a réplica, e as tasks pertencem à região de origem."
+      },
+      {
+        "text": "Pulls, mas pushes são recusados porque as réplicas são só de leitura",
+        "why": "A replicação é ativo-ativo: toda réplica aceita escrita."
+      }
+    ]
+  },
+  "ex-v91052wk": {
+    "prompt": "Um registry Standard atende até 10.000 pedidos de leitura por minuto. Um nó que baixa a loja faz 9 leituras: o índice, o manifest da imagem, a configuração e 6 camadas. Quantos nós conseguem baixá-la em um minuto antes de o registry responder 429? Dê um número inteiro.",
+    "hint": "Divida e arredonde para baixo: um nó termina o pull ou não termina."
+  }
+}

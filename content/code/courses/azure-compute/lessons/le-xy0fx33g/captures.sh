@@ -103,6 +103,6 @@ run "sed -e 's/audiences:/audience:/' -e 's/serviceaccount:shop/serviceaccounts:
 run 'bicep build slips.bicep'
 
 block az-fic
-run "az identity federated-credential create --help | sed -n '/^Properties Arguments/,/^Global Arguments/p'"
+run "az identity federated-credential create --help | sed -n '/^Properties Arguments/,/^$/p'"
 
 quiet 'kind delete cluster --name shop'
