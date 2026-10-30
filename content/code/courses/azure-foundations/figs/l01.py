@@ -28,7 +28,7 @@ def zone_mapping():
             f.rect(cx - 34, 56, 68, 40, stroke='--wire', fill='--ink')
             f.text(cx, 70, T('zone', 'zona'), size=9, fill='--paper-dim')
             f.text(cx, 86, str(i + 1), size=12, weight='600', mono=True)
-            px = phys_x[mapping[i]]
+            px = phys_x[mapping[i]] + (-16 if x0 == 40 else 16)
             stroke = '--phosphor' if x0 == 40 else '--amber'
             f.arrow([(cx, 114), (cx, 140), (px, 190), (px, 213)], stroke=stroke, width=1.3)
     f.rect(40, 214, 640, 96, stroke='--paper-dim', fill='--ink', dash='5 4')
@@ -69,10 +69,10 @@ def pairs():
     f.arrow([(346, 99), (379, 99)], stroke='--amber', width=1.5)
     f.arrow([(521, 92), (554, 92)], stroke='--phosphor', width=1.5)
     f.arrow([(554, 106), (521, 106)], stroke='--phosphor', width=1.5)
-    f.text(360, 168, T('amber: the pair runs one way, the region it points at has another pair',
-                       'âmbar: o par vale num sentido só, a região apontada tem outro par'),
+    f.text(360, 168, T('one arrow: the pair runs one way, and the region it points at has another pair',
+                       'uma seta: o par vale num sentido só, e a região apontada tem outro par'),
            size=10, fill='--amber')
-    f.text(360, 192, T('green: two regions that are each other\'s pair',
-                       'verde: duas regiões que são par uma da outra'), size=10, fill='--phosphor')
+    f.text(360, 192, T('two arrows: two regions that are each other\'s pair',
+                       'duas setas: duas regiões que são par uma da outra'), size=10, fill='--phosphor')
     return f, T('São Paulo\'s pair is in Texas, and Texas\'s pair is not São Paulo.',
                 'O par de São Paulo fica no Texas, e o par do Texas não é São Paulo.')
