@@ -83,12 +83,29 @@ terminal that was closed without stopping it:
 
 ```
 ana@laptop:~/gcp$ timeout 10 fake-gcs-server -scheme http -port 4443 -backend memory -location southamerica-east1 2>&1 | tail -3
-time=2026-10-30T15:06:30.251-03:00 level=ERROR msg="listen tcp 0.0.0.0:4443: bind: address already in use"
+time=2026-10-30T16:10:45.868-03:00 level=ERROR msg="listen tcp 0.0.0.0:4443: bind: address already in use"
 ```
 
 `address already in use` means an emulator is already answering, so there is nothing to fix unless
 you wanted an empty one. To stop the old one, find its process and end it: `pgrep -af
 fake-gcs-server` prints its number, and `kill` followed by that number stops it.
+
+**An error after a delete that worked.** Every `gcloud storage rm` against fake-gcs-server ends with
+an error, and the object is gone all the same:
+
+```
+ana@laptop:~/gcp$ gcloud storage rm gs://quitanda-raw-dev/note.txt
+Removing objects:
+  
+.Removing gs://quitanda-raw-dev/note.txt...
+.ERROR: 'NoneType' object has no attribute 'items'
+
+ana@laptop:~/gcp$ gcloud storage ls gs://quitanda-raw-dev
+```
+
+The `ERROR` line is the command line failing to read the emulator's reply to the delete, after the
+delete has happened, and the empty listing below it is the proof. Against Cloud Storage the same
+command ends at `Removing gs://…`. Here, read past it, and check with `ls` when it matters.
 
 ## When the installation itself fails
 

@@ -82,12 +82,29 @@ trás num terminal fechado sem interrompê-lo:
 
 ```
 ana@laptop:~/gcp$ timeout 10 fake-gcs-server -scheme http -port 4443 -backend memory -location southamerica-east1 2>&1 | tail -3
-time=2026-10-30T15:06:30.251-03:00 level=ERROR msg="listen tcp 0.0.0.0:4443: bind: address already in use"
+time=2026-10-30T16:10:45.868-03:00 level=ERROR msg="listen tcp 0.0.0.0:4443: bind: address already in use"
 ```
 
 `address already in use` quer dizer que já há um emulador respondendo, então não há nada a corrigir, a
 menos que você quisesse um vazio. Para parar o antigo, encontre o processo dele e encerre-o: `pgrep
 -af fake-gcs-server` mostra o número dele, e `kill` seguido desse número o interrompe.
+
+**Um erro depois de uma exclusão que funcionou.** Todo `gcloud storage rm` contra o fake-gcs-server
+termina com um erro, e o objeto some do mesmo jeito:
+
+```
+ana@laptop:~/gcp$ gcloud storage rm gs://quitanda-raw-dev/note.txt
+Removing objects:
+  
+.Removing gs://quitanda-raw-dev/note.txt...
+.ERROR: 'NoneType' object has no attribute 'items'
+
+ana@laptop:~/gcp$ gcloud storage ls gs://quitanda-raw-dev
+```
+
+A linha `ERROR` é a linha de comando falhando ao ler a resposta do emulador à exclusão, depois que a
+exclusão aconteceu, e a listagem vazia logo abaixo é a prova. Contra o Cloud Storage o mesmo comando
+termina em `Removing gs://…`. Aqui, passe por cima dela, e confira com `ls` quando importar.
 
 ## Quando a própria instalação falha
 

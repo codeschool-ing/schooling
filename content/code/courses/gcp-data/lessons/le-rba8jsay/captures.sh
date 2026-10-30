@@ -89,3 +89,10 @@ run 'gcloud storage buckets create gs://quitanda.raw.prod'
 run 'gcloud storage buckets create gs://goog-quitanda'
 run 'gcloud storage buckets create gs://quitanda-raw-prod'
 run 'gcloud storage buckets create gs://quitanda-raw-prod'
+
+block fail-rm
+emu_stop gcs; emu_start gcs
+gcloud storage buckets create gs://quitanda-raw-dev > /dev/null 2>&1
+echo hello > note.txt && gcloud storage cp note.txt gs://quitanda-raw-dev/note.txt > /dev/null 2>&1
+run 'gcloud storage rm gs://quitanda-raw-dev/note.txt'
+run 'gcloud storage ls gs://quitanda-raw-dev'

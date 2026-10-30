@@ -34,9 +34,9 @@ ana@laptop:~/gcp$ gcloud storage cp export/orders-2026-10-0[23].csv gs://quitand
 Copying file://export/orders-2026-10-02.csv to gs://quitanda-raw-prod/raw/orders/orders-2026-10-02.csv
 Copying file://export/orders-2026-10-03.csv to gs://quitanda-raw-prod/raw/orders/orders-2026-10-03.csv
   
+..
 
-
-Average throughput: 88.1kiB/s
+Average throughput: 27.0kiB/s
 ```
 
 `gcloud storage buckets create` made the bucket, and `--location` is where its data lives: São
@@ -99,13 +99,13 @@ uses the ordinary flat namespace, which is the default and the only one fake-gcs
 
 ```
 ana@laptop:~/gcp$ gcloud storage objects describe gs://quitanda-raw-prod/raw/orders/orders-2026-10-01.csv --format='value(size,md5_hash,generation)'
-64	R0DILdLg74YE8u85q+7WgQ==	1793383629365701
+64	R0DILdLg74YE8u85q+7WgQ==	1793387499627831
 ana@laptop:~/gcp$ printf '01-3,c-22,990\n' >> export/orders-2026-10-01.csv && gcloud storage cp export/orders-2026-10-01.csv gs://quitanda-raw-prod/raw/orders/orders-2026-10-01.csv
 Copying file://export/orders-2026-10-01.csv to gs://quitanda-raw-prod/raw/orders/orders-2026-10-01.csv
   
 
 ana@laptop:~/gcp$ gcloud storage objects describe gs://quitanda-raw-prod/raw/orders/orders-2026-10-01.csv --format='value(size,md5_hash,generation)'
-78	Lz4TVx6/63wQznBxKPlXhg==	1793383635165064
+78	Lz4TVx6/63wQznBxKPlXhg==	1793387513610968
 ana@laptop:~/gcp$ gcloud storage hash export/orders-2026-10-01.csv --skip-crc32c
 ---
 digest_format: base64
