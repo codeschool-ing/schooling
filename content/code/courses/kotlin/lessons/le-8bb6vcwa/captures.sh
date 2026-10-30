@@ -16,13 +16,6 @@ set -uo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 source "$HERE/../../lab.sh"
 
-# kr FILE.kt BLOCK: compile FILE.kt into a jar named after it and run it
-kr() { local f=$1 j; j=$(echo "${f%.kt}" | tr 'A-Z' 'a-z').jar
-  block "$2"; put "$MD" "$f"; run "kotlinc $f -include-runtime -d $j && java -jar $j"; }
-# kc FILE.kt BLOCK: compile only, for a file the compiler refuses
-kc() { local f=$1 j; j=$(echo "${f%.kt}" | tr 'A-Z' 'a-z').jar
-  block "$2"; put "$MD" "$f"; run "kotlinc $f -include-runtime -d $j"; }
-
 fresh kt/l02
 MD=$HERE/two-types.md
 kr Nulls.kt nulls

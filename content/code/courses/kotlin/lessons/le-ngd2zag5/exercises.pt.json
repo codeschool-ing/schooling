@@ -1,0 +1,419 @@
+{
+  "ex-ny01fjg8": {
+    "prompt": "Onde a inferência de tipo nunca se aplica na declaração de uma função?",
+    "hint": "Chamadores que o compilador ainda não viu.",
+    "choices": [
+      {
+        "text": "Parâmetros",
+        "why": "Isso: todo parâmetro tem o tipo escrito."
+      },
+      {
+        "text": "O tipo de retorno de um corpo de expressão única",
+        "why": "Esse pode ser inferido da expressão, como o `isLong` mostrou."
+      },
+      {
+        "text": "`val` declarados dentro do corpo",
+        "why": "Dentro do corpo, os nomes são inferidos exatamente como no `main`."
+      },
+      {
+        "text": "Valores padrão de parâmetros, que precisam de tipo próprio",
+        "why": "Um padrão assume o tipo do parâmetro; não carrega tipo próprio."
+      }
+    ]
+  },
+  "ex-tjc8je49": {
+    "prompt": "Dentro de `fun total(minutes: List<Int>): Int`, uma linha diz `minutes = listOf()`. O que acontece?",
+    "hint": "Que tipo de nome é um parâmetro?",
+    "choices": [
+      {
+        "text": "Substitui também a lista de quem chamou",
+        "why": "Mesmo que compilasse, só mudaria um nome local; aqui nem compila."
+      },
+      {
+        "text": "Funciona, e só esta chamada vê uma lista vazia",
+        "why": "Isso valeria para um `var`; um parâmetro não é."
+      },
+      {
+        "text": "Não compila: um parâmetro é um `val`",
+        "why": "Isso: crie um `var` local se precisar, como `sum`."
+      },
+      {
+        "text": "Compila com um aviso de sombreamento",
+        "why": "Sombrear é declarar um nome novo; atribuir a um parâmetro é recusado."
+      }
+    ]
+  },
+  "ex-a6p61krf": {
+    "prompt": "`fun hours(minutes: Int): Int` devolve `minutes / 60` dentro de `if (minutes > 0)` e mais nada. Para onde o compilador aponta?",
+    "hint": "`Hours.kt:6:1`.",
+    "choices": [
+      {
+        "text": "Para o `if`, pedindo um `else`",
+        "why": "Este `if` é uma instrução, então não precisa de `else`; o fim da função é que não tem `return`."
+      },
+      {
+        "text": "Para a chave de fechamento, com `missing return statement`",
+        "why": "Isso: o caminho em que `minutes` é zero ou menos termina ali sem nada."
+      },
+      {
+        "text": "Para a chamada no `main`, já que 90 é positivo",
+        "why": "O compilador verifica a função uma vez, para todo argumento possível."
+      },
+      {
+        "text": "Para lugar nenhum: devolve 0 por padrão",
+        "why": "O Kotlin não inventa valor de retorno."
+      }
+    ]
+  },
+  "ex-xcq1prab": {
+    "prompt": "Uma função declarada no topo de um arquivo, fora de qualquer classe, se chama função de nível ___.",
+    "hint": "Onde ela mora no arquivo.",
+    "blanks": [
+      {
+        "accept": [
+          "superior"
+        ]
+      }
+    ]
+  },
+  "ex-cmsw62s3": {
+    "prompt": "`fun isLong(minutes: Int) = minutes >= 60`. Qual é o custo de deixar o tipo de retorno de fora?",
+    "hint": "O que decide o tipo, e o que acontece quando isso muda?",
+    "choices": [
+      {
+        "text": "Ele só é verificado em tempo de execução",
+        "why": "O tipo é inferido e verificado na compilação como qualquer outro."
+      },
+      {
+        "text": "Devolve `Any`, então quem chama precisa fazer cast",
+        "why": "Devolve `Boolean`, inferido do `>=`."
+      },
+      {
+        "text": "Quem chama de Java não consegue chamar uma função de tipo inferido",
+        "why": "O método compilado tem tipo de retorno concreto; o Java o vê como qualquer outro."
+      },
+      {
+        "text": "Editar o corpo muda o tipo para todo chamador",
+        "why": "Isso: escreva o tipo numa função da qual outro código depende."
+      }
+    ]
+  },
+  "ex-rg3yx6jb": {
+    "prompt": "Por que `fun label(minutes: Int) = if (minutes >= 60) \"long\"` é recusado?",
+    "hint": "Qual é o valor quando a condição é falsa?",
+    "choices": [
+      {
+        "text": "Um corpo de expressão única não aceita um `if`",
+        "why": "O `label` com `else` é exatamente isso, e compila."
+      },
+      {
+        "text": "Um `if` usado como valor precisa do `else`",
+        "why": "Isso: sem ele não há valor para o caso falso."
+      },
+      {
+        "text": "O tipo de retorno precisa ser escrito quando há um `if`",
+        "why": "O tipo é inferido sem problema quando os dois ramos existem."
+      },
+      {
+        "text": "Literais de string precisam de um `return` na frente",
+        "why": "Um corpo de expressão não tem `return` nenhum."
+      }
+    ]
+  },
+  "ex-3grsk4r3": {
+    "prompt": "O Kotlin não tem operador ternário, porque o `___` com `else` já é uma expressão.",
+    "hint": "O `label` o usou.",
+    "blanks": [
+      {
+        "accept": [
+          "if"
+        ]
+      }
+    ]
+  },
+  "ex-dhe3zj27": {
+    "prompt": "`describe(course, minutes = 30, done = false, date = \"2026-11-02\")`. Como definir só `done` como `true`?",
+    "hint": "Posições não conseguem pular um parâmetro.",
+    "choices": [
+      {
+        "text": "`describe(\"Kotlin\", true)`",
+        "why": "A segunda posição é `minutes`, um `Int`, então `true` não cabe."
+      },
+      {
+        "text": "`describe(\"Kotlin\", , true)`",
+        "why": "Um espaço vazio não é sintaxe do Kotlin."
+      },
+      {
+        "text": "`describe(\"Kotlin\", done = true)`",
+        "why": "Isso: o nome pula `minutes` e o deixa em 30."
+      },
+      {
+        "text": "Escrever uma sobrecarga `describeDone(course)`",
+        "why": "Esse é o jeito Java que os padrões substituem."
+      }
+    ]
+  },
+  "ex-nddqqysm": {
+    "prompt": "`describe(\"Kotlin\", done = true)` imprimiu uma linha. Quantos minutos ela mostrou?",
+    "hint": "O padrão do parâmetro que foi pulado."
+  },
+  "ex-4aev6gfj": {
+    "prompt": "Que argumento a seção 04 diz para nomear antes de tudo, por hábito?",
+    "hint": "Quem lê não adivinha o que ele significa.",
+    "choices": [
+      {
+        "text": "O primeiro argumento",
+        "why": "O primeiro é o que quem lê mais conhece pelo nome da função."
+      },
+      {
+        "text": "Um `Boolean`",
+        "why": "Isso: `done = true` diz o que o `true` sozinho não diz."
+      },
+      {
+        "text": "Toda `String`, para a ordem ficar livre",
+        "why": "Um nome de curso passado primeiro se lê bem sem nome."
+      },
+      {
+        "text": "Qualquer argumento com mais de dez caracteres",
+        "why": "Comprimento não é o que torna um valor obscuro."
+      }
+    ]
+  },
+  "ex-n3e45aap": {
+    "prompt": "Uma classe Java chama uma função Kotlin com dois parâmetros padrão. Sem anotação nenhuma, o que o Java vê?",
+    "hint": "A JVM não tem argumentos padrão.",
+    "choices": [
+      {
+        "text": "Três sobrecargas, uma para cada quantidade de argumentos",
+        "why": "Isso é o que o `@JvmOverloads` pede; sem ele há uma."
+      },
+      {
+        "text": "Os padrões, aplicados automaticamente quando o Java omite argumentos",
+        "why": "O Java não consegue omitir argumentos; não há onde aplicá-los."
+      },
+      {
+        "text": "Um método que recebe todos os parâmetros",
+        "why": "Isso: o Java tem de passar todos, a menos que a função tenha `@JvmOverloads`."
+      },
+      {
+        "text": "Nada; funções com padrão são invisíveis ao Java",
+        "why": "Elas são visíveis, com todos os parâmetros obrigatórios."
+      }
+    ]
+  },
+  "ex-5t07x5dk": {
+    "prompt": "`week` é `intArrayOf(20, 25)`. O que `total(10, *week, 5)` devolve?",
+    "hint": "O espalhamento põe os dois elementos no meio."
+  },
+  "ex-x533dgpf": {
+    "prompt": "Dentro de `fun total(vararg minutes: Int)`, qual é o tipo de `minutes`?",
+    "hint": "Um array de valores `int` simples na JVM.",
+    "choices": [
+      {
+        "text": "`List<Int>`",
+        "why": "Um `vararg` é um array, não uma lista."
+      },
+      {
+        "text": "`Array<Int>`",
+        "why": "Isso encaixotaria cada número; o `Int` recebe o array primitivo."
+      },
+      {
+        "text": "`IntArray`",
+        "why": "Isso: mais barato que uma lista de `Integer` encaixotados."
+      },
+      {
+        "text": "`Int`, chamado uma vez por valor",
+        "why": "A função roda uma vez, com todos os valores reunidos num array."
+      }
+    ]
+  },
+  "ex-fr8z9kkq": {
+    "prompt": "O que o `*` significa em `total(*week)`?",
+    "hint": "Não é aritmética.",
+    "choices": [
+      {
+        "text": "Passar os elementos do array como argumentos separados",
+        "why": "Isso: desempacota o array na lista de argumentos."
+      },
+      {
+        "text": "Passar um ponteiro para o array em vez de uma cópia",
+        "why": "O Kotlin não tem ponteiros; o `*` aqui só desempacota."
+      },
+      {
+        "text": "Multiplicar cada elemento pelo próximo argumento",
+        "why": "Não há multiplicação; o resultado foi uma soma simples."
+      },
+      {
+        "text": "Tornar o array mutável dentro da função",
+        "why": "Mutabilidade não tem nada a ver com o `*`."
+      }
+    ]
+  },
+  "ex-70e0bjkn": {
+    "prompt": "`fun log(vararg lines: String, prefix: String = \"> \")`. O que `log(\"planned\", \"done\", \"* \")` imprime?",
+    "hint": "Nada marca onde as linhas terminam.",
+    "choices": [
+      {
+        "text": "Duas linhas começando com `* `",
+        "why": "Só `prefix = \"* \"` faria isso."
+      },
+      {
+        "text": "Três linhas começando com `> `, sendo a última `> * `",
+        "why": "Isso: a terceira string é mais uma linha, e o prefixo fica com o padrão."
+      },
+      {
+        "text": "Um erro de compilação, já que o terceiro argumento é ambíguo",
+        "why": "Não é ambíguo para o compilador: valores posicionais depois de um `vararg` entram todos nele."
+      },
+      {
+        "text": "Duas linhas, e o `* ` é ignorado",
+        "why": "O Kotlin não ignora argumento nenhum."
+      }
+    ]
+  },
+  "ex-n3xqhnbp": {
+    "prompt": "No `Report.kt`, a função local `line` usa `course`. De onde vem `course`?",
+    "hint": "Ninguém o passou.",
+    "choices": [
+      {
+        "text": "É um parâmetro de `line`",
+        "why": "O `line` recebe só `label` e `value`."
+      },
+      {
+        "text": "De um `val` de nível superior no mesmo arquivo",
+        "why": "Não há nenhum; é o parâmetro de `report`."
+      },
+      {
+        "text": "Da função que declara `line`",
+        "why": "Isso: uma função local lê os parâmetros e os `val` da função que a contém."
+      },
+      {
+        "text": "O `main` o passa de forma implícita, pela chamada a `report`",
+        "why": "O `main` o passa a `report`; o `line` o lê de `report`."
+      }
+    ]
+  },
+  "ex-778p4q90": {
+    "prompt": "`private fun format(…)` está no topo de `Planner.kt`. Quem consegue chamá-la?",
+    "hint": "O `Main.kt` tentou.",
+    "choices": [
+      {
+        "text": "Qualquer arquivo compilado junto",
+        "why": "Esse é o padrão sem `private`."
+      },
+      {
+        "text": "Só código em `Planner.kt`",
+        "why": "Isso: o compilador recusou a chamada vinda do `Main.kt` pelo nome."
+      },
+      {
+        "text": "Só o `main`",
+        "why": "O `main` mora em `Main.kt`, que foi recusado."
+      },
+      {
+        "text": "Só funções declaradas abaixo dela no arquivo",
+        "why": "A ordem no arquivo não importa ao Kotlin."
+      }
+    ]
+  },
+  "ex-znbm51f3": {
+    "prompt": "`val result = log(\"planned 45 min\")`, sendo `log` um corpo de bloco sem tipo de retorno. O que `println(result)` imprime?",
+    "hint": "`Unit` é um valor de verdade.",
+    "choices": [
+      {
+        "text": "`null`",
+        "why": "O `log` devolve `Unit`, que não é `null`."
+      },
+      {
+        "text": "Nada; não compila",
+        "why": "Guardar um `Unit` é permitido."
+      },
+      {
+        "text": "`kotlin.Unit`",
+        "why": "Isso: o nome do único valor de `Unit`."
+      },
+      {
+        "text": "`void`",
+        "why": "O Kotlin não tem `void`; o `Unit` faz o papel dele."
+      }
+    ]
+  },
+  "ex-8psgtkw0": {
+    "prompt": "Por que `input.toIntOrNull() ?: fail(\"…\")` compila como `Int`, se `fail` devolve `Nothing`?",
+    "hint": "Nothing não tem valor nenhum.",
+    "choices": [
+      {
+        "text": "Porque o operador elvis converte `Nothing` em `0`",
+        "why": "Não há valor para converter: `fail` nunca retorna."
+      },
+      {
+        "text": "Porque `fail` é embutida na expressão",
+        "why": "Embutir não tem relação com a verificação de tipo."
+      },
+      {
+        "text": "Porque `Nothing` e `Int` são o mesmo tipo na JVM",
+        "why": "São tipos diferentes; o `Nothing` cabe sob qualquer tipo."
+      },
+      {
+        "text": "Porque `Nothing` cabe em qualquer tipo",
+        "why": "Isso: sem valores, ele nunca é do tipo errado."
+      }
+    ]
+  },
+  "ex-6vc9bmgv": {
+    "prompt": "Ligue cada função ao que ela devolve.",
+    "hint": "Duas não têm valor; as outras são o que dizem.",
+    "pairs": [
+      {
+        "left": "`fun log(m: String) { println(m) }`",
+        "right": "`Unit`"
+      },
+      {
+        "left": "`fun fail(m: String): Nothing = throw IllegalStateException(m)`",
+        "right": "`Nothing`"
+      },
+      {
+        "left": "`fun isLong(m: Int) = m >= 60`",
+        "right": "`Boolean`"
+      },
+      {
+        "left": "`fun hours(m: Int) = m / 60`",
+        "right": "`Int`"
+      }
+    ],
+    "right_distractors": [
+      "`Any?`"
+    ]
+  },
+  "ex-17n1a9a2": {
+    "prompt": "`report(load(), format(now()))` é chamado. Ponha os passos na ordem em que acontecem.",
+    "hint": "Argumentos antes, da esquerda para a direita; os argumentos de um argumento antes dele.",
+    "items": [
+      "`load()` roda",
+      "`now()` roda",
+      "`format(…)` roda",
+      "`report(…)` começa o corpo"
+    ]
+  },
+  "ex-x1ygj59r": {
+    "prompt": "`fun plan(course: String, minutes: Int = 30, done: Boolean = false)`. Quais chamadas compilam? Escolha todas as que se aplicam.",
+    "hint": "Argumentos nomeados ficam em qualquer ordem; um posicional ainda precisa estar no próprio lugar.",
+    "choices": [
+      {
+        "text": "`plan(\"Kotlin\")`",
+        "why": "Sim: os dois padrões se aplicam."
+      },
+      {
+        "text": "`plan(done = true, course = \"Kotlin\")`",
+        "why": "Sim: todos nomeados, qualquer ordem."
+      },
+      {
+        "text": "`plan(minutes = 45, \"Kotlin\")`",
+        "why": "Não: o posicional `\"Kotlin\"` está fora do lugar, como no `Mixed.kt`."
+      },
+      {
+        "text": "`plan(\"Kotlin\", true)`",
+        "why": "Não: a segunda posição é `minutes`, um `Int`."
+      }
+    ]
+  }
+}

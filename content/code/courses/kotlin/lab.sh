@@ -189,6 +189,8 @@ PY
 #   bare CMD          run CMD on the machine before lesson 1's install, as run does,
 #                     in ~/$BARE_D when that is set
 #   bare_quiet CMD    the same, printing nothing: what a capture stages
+#   kr FILE.kt BLOCK  a block that compiles FILE.kt from $MD and runs it
+#   kc FILE.kt BLOCK  a block that only compiles it, for a refusal
 # PLAIN_PATH=1 in the environment runs a command with the PATH a terminal has
 # before ~/.bashrc added the two bin directories to it.
 if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
@@ -205,6 +207,11 @@ if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
   bare() { _prompt "${BARE_D:-.}" "$*"; bash "$LAB_SH" bare "${BARE_D:+cd ~/$BARE_D && }$*" | _strip; }
   bare_quiet() { bash "$LAB_SH" bare "${BARE_D:+cd ~/$BARE_D && }$*" >/dev/null 2>&1 || true; }
   rebare() { bash "$LAB_SH" rebare; }
+  # kr FILE.kt BLOCK   compile FILE.kt out of $MD into a jar named after it, and run it
+  # kc FILE.kt BLOCK   compile only, for a file the compiler refuses
+  _jar() { echo "${1%.kt}" | tr 'A-Z' 'a-z'; }
+  kr() { block "$2"; put "$MD" "$1"; run "kotlinc $1 -include-runtime -d $(_jar "$1").jar && java -jar $(_jar "$1").jar"; }
+  kc() { block "$2"; put "$MD" "$1"; run "kotlinc $1 -include-runtime -d $(_jar "$1").jar"; }
   return 0
 fi
 
