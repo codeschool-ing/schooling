@@ -50,8 +50,8 @@ O que roda, aqui e na sua máquina:
 
 **Onde uma lição precisa do próprio Azure, ela ensina a partir da documentação da Microsoft e diz
 com todas as letras que aquela parte não foi executada**: nenhuma transcrição, e nenhuma saída
-escrita para parecer uma. Das 134 seções deste curso, 49 mostram uma transcrição ou compilam um
-arquivo no laboratório; as outras são lidas, com as respostas do laboratório citadas onde existem.
+escrita para parecer uma. Das 82 seções de leitura deste curso, 59 mostram uma transcrição do laboratório, a maioria compilando
+ou conferindo um arquivo; as outras 23 são lidas, e dizem isso.
 Todo comando e toda linha de saída num terminal foi executado num laboratório montado exatamente do
 jeito que as próximas três seções mandam você montar o seu. O prompt diz `ana@laptop:~/azure$`.
 

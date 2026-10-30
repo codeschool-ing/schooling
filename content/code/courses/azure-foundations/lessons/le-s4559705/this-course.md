@@ -46,9 +46,9 @@ What does run, here and on your machine:
   answer, and the published copy of **Azure Policy's built-in definitions**.
 
 **Where a lesson needs Azure itself, it teaches from Microsoft's documentation and says plainly that
-the part was not run**: no transcript, and no output written to look like one. Out of the 134
-sections in this course, 49 show a transcript or compile a file in the lab; the others are read,
-with the lab's answers quoted where they exist. Every command and every line of output in a
+the part was not run**: no transcript, and no output written to look like one. Of the 82
+reading sections in this course, 59 show a transcript from the lab, most of them compiling or
+checking a file; the other 23 are read, and say so. Every command and every line of output in a
 terminal was run in a lab built exactly the way the next three sections tell you to build yours.
 The prompt reads `ana@laptop:~/azure$`.
 
