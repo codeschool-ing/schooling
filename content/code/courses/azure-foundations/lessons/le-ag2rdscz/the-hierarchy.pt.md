@@ -63,6 +63,10 @@ governado do mesmo jeito: produção com políticas mais rígidas, não produç�
 baratas. Um departamento que se reorganiza a cada dois anos arrastaria a árvore junto, e cada mudança
 de uma assinatura de ramo muda o que ela herda.
 
+Esta árvore é o primeiro rascunho que uma equipe desenha, e tem um defeito que a lição 5 aponta: o
+desenho de landing zone da Microsoft desaconselha separar a produção do resto neste nível, e a lição 5
+redesenha a árvore da loja do jeito dele.
+
 ## Criando as caixas, e o que este laboratório pode fazer a respeito
 
 Cada caixa é criada por uma porta diferente. Um tenant vem com a assinatura do Azure, como na lição 1.

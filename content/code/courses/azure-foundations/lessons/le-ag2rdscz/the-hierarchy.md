@@ -61,6 +61,10 @@ under it is governed the same way: production with stricter policies, non-produc
 ones. A department that reorganises every two years would drag the tree with it, and every move of
 a subscription between branches changes what it inherits.
 
+This tree is the first draft a team draws, and it has a flaw lesson 5 names: Microsoft's landing-zone
+design advises against splitting production from the rest at this level, and lesson 5 redraws the
+shop's tree its way.
+
 ## Creating the boxes, and what this lab can do about it
 
 Each box is created by a different door. A tenant comes with signing up for Azure, as in lesson 1.
