@@ -16,7 +16,7 @@ section, where they already mark documents and e-mails.
 **The Data Map can apply those same labels to the assets it scanned, from their classifications**:
 a rule says that a column classified as a CPF gets "Confidential: personal data", and every table with
 such a column carries the label in the catalogue. The documentation makes this an option the
-organisation has to turn on, and it depends on the organisation's Microsoft 365 licences, which is the
+organisation has to turn on, and it depends on the organisation's Microsoft 365 licences. That is the
 point where the two families of the first section meet and where a data team usually finds it needs
 somebody from the Microsoft 365 side to agree. The label in the catalogue is information for whoever
 searches it; whether a query of that column is then refused or masked is decided by the store itself,

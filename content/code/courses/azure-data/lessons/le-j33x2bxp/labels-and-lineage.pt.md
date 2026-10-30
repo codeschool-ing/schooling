@@ -16,7 +16,7 @@ Purview da primeira seção, onde já marcam documentos e e-mails.
 **O Data Map pode aplicar esses mesmos rótulos aos ativos que varreu, a partir das classificações
 deles**: uma regra diz que uma coluna classificada como CPF ganha "Confidencial: dados pessoais", e
 toda tabela com uma coluna assim carrega o rótulo no catálogo. A documentação faz disso uma opção que a
-organização precisa ligar, e ela depende das licenças de Microsoft 365 da organização, que é o ponto
+organização precisa ligar, e ela depende das licenças de Microsoft 365 da organização. É o ponto
 em que as duas famílias da primeira seção se encontram e onde uma equipe de dados costuma descobrir
 que precisa da concordância de alguém do lado do Microsoft 365. O rótulo no catálogo é informação
 para quem o consulta; se uma consulta àquela coluna é então recusada ou mascarada é decidido pelo

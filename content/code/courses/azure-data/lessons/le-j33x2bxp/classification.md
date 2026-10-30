@@ -21,7 +21,7 @@ rules, its names and its threshold are its own.
 The export has the columns a customer export usually has, and two that are traps for a classifier: a
 courier tracking number of eleven digits, the length of a CPF, and a free-text note in which one
 customer's CPF was typed by an operator. The rows are made by a program, so you get the same file
-without copying personal data from anywhere; the names are invented, the e-mail addresses use the
+without copying personal data from anywhere. The names are invented, the e-mail addresses use the
 `example.com` domain kept for documentation, and the CPFs are random numbers built to pass the check
 digits, belonging to nobody on purpose. Save it as `make_export.py`:
 

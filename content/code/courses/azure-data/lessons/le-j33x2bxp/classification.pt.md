@@ -22,7 +22,7 @@ curso. Não é o Purview**, e as regras, os nomes e o limite dele são dele pró
 A exportação tem as colunas que uma exportação de clientes costuma ter, e duas que são armadilhas para
 um classificador: um número de rastreio da transportadora de onze dígitos, o tamanho de um CPF, e uma
 observação em texto livre em que o CPF de um cliente foi digitado por um operador. As linhas são
-feitas por um programa, então você tem o mesmo arquivo sem copiar dados pessoais de lugar nenhum; os
+feitas por um programa, então você tem o mesmo arquivo sem copiar dados pessoais de lugar nenhum. Os
 nomes são inventados, os e-mails usam o domínio `example.com`, reservado para documentação, e os CPFs
 são números aleatórios construídos para passar nos dígitos verificadores, que de propósito não são de
 ninguém. Salve como `make_export.py`:
