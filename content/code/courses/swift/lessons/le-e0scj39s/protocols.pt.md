@@ -47,8 +47,8 @@ ana@vm:~/sw/l08$ swift Describable.swift
 - Closures, 30 min
 ```
 
-Leia o protocolo de cima para baixo. `var title: String { get }` exige uma propriedade chamada
-`title`, do tipo `String`, que possa ser **lida**. Não diz que a propriedade é armazenada: um tipo pode
+Leia o protocolo de cima para baixo. A primeira linha, que termina em `{ get }`, exige uma
+propriedade chamada `title`, do tipo `String`, que possa ser **lida**. Não diz que a propriedade é armazenada: um tipo pode
 calculá-la. `{ get set }` exigiria uma que também pudesse ser escrita. `func summary() -> String`
 exige um método exatamente com esse nome e esse tipo, e o protocolo não tem corpo para ele, só a
 assinatura.

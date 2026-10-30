@@ -47,8 +47,8 @@ ana@vm:~/sw/l08$ swift Describable.swift
 - Closures, 30 min
 ```
 
-Read the protocol from the top. `var title: String { get }` requires a property called `title`, of
-type `String`, that can be **read**. It does not say the property is stored: a type may compute it.
+Read the protocol from the top. Its first line, ending in `{ get }`, requires a property called
+`title`, of type `String`, that can be **read**. It does not say the property is stored: a type may compute it.
 `{ get set }` would require one that can also be written. `func summary() -> String` requires a
 method with exactly that name and type, and the protocol has no body for it, only the signature.
 

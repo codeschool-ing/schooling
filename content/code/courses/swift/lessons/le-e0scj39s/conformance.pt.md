@@ -79,7 +79,7 @@ level: Beginner
 Ana's planner
 ```
 
-`Level` cumpre `var title: String { get }` com uma propriedade **calculada**, o que é permitido
+`Level` cumpre o requisito `title`, `{ get }`, com uma propriedade **calculada**, o que é permitido
 porque o requisito só pedia para lê-la. `Planner` é uma classe, e uma classe cumpre os requisitos do
 mesmo jeito; o `final` diz que nada herda dela, ponto a que a aula 10 volta. O array guarda um caso
 de enum e uma instância de classe lado a lado, porque o que eles compartilham é o protocolo.

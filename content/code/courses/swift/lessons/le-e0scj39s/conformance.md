@@ -79,7 +79,7 @@ level: Beginner
 Ana's planner
 ```
 
-`Level` meets `var title: String { get }` with a **computed** property, which is allowed because
+`Level` meets the `title` requirement, `{ get }`, with a **computed** property, which is allowed because
 the requirement asked only to read it. `Planner` is a class, and a class meets the requirements in
 the same way; the `final` says nothing inherits from it, which lesson 10 comes back to. The array
 holds an enum case and a class instance side by side, because what they share is the protocol.
