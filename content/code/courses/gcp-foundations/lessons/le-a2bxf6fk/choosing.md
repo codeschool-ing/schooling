@@ -43,5 +43,5 @@ the cache at the edge never passes through the load balancer, so it is processed
 egress instead.
 
 **The first five rules cost the same as one.** The planner's HTTPS rule needs a second on port 80 only to
-redirect plain HTTP to HTTPS, which it wants, and the second rule costs nothing more: both are inside the first
+redirect plain HTTP to HTTPS, which it wants, and the second rule costs nothing more. Both are inside the first
 five, and the pricing page's own example says one rule and three rules are both 0.025 an hour.

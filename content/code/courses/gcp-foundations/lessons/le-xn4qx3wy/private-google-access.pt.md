@@ -16,15 +16,15 @@ O Google publica dois conjuntos de endereços para alcançar as APIs dele de for
 nome que resolve para eles. Pergunte ao resolvedor do próprio laptop:
 
 ```
-ana@laptop:~/gcp$ getent hosts private.googleapis.com restricted.googleapis.com
-199.36.153.11   private.googleapis.com
+ana@laptop:~/gcp$ getent hosts private.googleapis.com restricted.googleapis.com | sort
 199.36.153.10   private.googleapis.com
-199.36.153.9    private.googleapis.com
-199.36.153.8    private.googleapis.com
-199.36.153.7    restricted.googleapis.com
-199.36.153.5    restricted.googleapis.com
+199.36.153.11   private.googleapis.com
 199.36.153.4    restricted.googleapis.com
+199.36.153.5    restricted.googleapis.com
 199.36.153.6    restricted.googleapis.com
+199.36.153.7    restricted.googleapis.com
+199.36.153.8    private.googleapis.com
+199.36.153.9    private.googleapis.com
 ```
 
 **Respostas reais**, do DNS público: quatro endereços cada, as faixas `/30` `199.36.153.8/30` e

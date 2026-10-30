@@ -21,6 +21,10 @@
 # NOT PRODUCED HERE, and said so in the prose: Cloud Shell itself, its editor,
 # its preview and .customize_environment.
 #
+# `size` IS EXPECTED TO DIFFER: the lab's home grows with every lesson recorded
+# after this one, and the prose quotes the total only roughly, "about a
+# gigabyte and a quarter".
+#
 # Recorded 2026-10-30 on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail

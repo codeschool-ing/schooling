@@ -6,7 +6,7 @@
 #   python3 ../../paste.py . out.txt
 #
 # Runs in the lab lesson 1 built (../../from-lessons.sh says how), plus the two
-# things the second ```sh fence of "records" installs: dig and dnslib. If
+# things the ```sh fence of "records" installs: dig and dnslib. If
 # either is missing, that fence is run first, quietly, with `sudo` dropped
 # when the script already runs as root. zones.tf is read out of the ```hcl
 # fence of "zones" into a fresh ~/gcp/dns-zones, and googleapis.tf out of the
@@ -35,7 +35,7 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 lab
 
 if ! command -v dig > /dev/null || ! python3 -c 'import dnslib' 2> /dev/null; then
-  { fences sh "$HERE/records.md" 2 | sed '/^mkdir/d'; } | { [ "$(id -u)" = 0 ] && sed 's/^sudo //' || cat; } \
+  { fences sh "$HERE/records.md" 1 | sed '/^mkdir/d'; } | { [ "$(id -u)" = 0 ] && sed 's/^sudo //' || cat; } \
     | bash > "$LAB_ROOT/install.log" 2>&1 || { cat "$LAB_ROOT/install.log"; exit 1; }
 fi
 

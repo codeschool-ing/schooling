@@ -39,6 +39,11 @@
 # machine has the package and the failure needs it absent), the apt lock, and
 # everything in "a-real-account", which needs a Google account.
 #
+# `check` IS EXPECTED TO DIFFER once Google publishes a CLI newer than 589.0.0:
+# `gcloud version` then adds a notice that updates are available, which it did
+# not print when this was recorded. The versions above the notice are the
+# pinned ones and do not move; the prose quotes nothing from the notice.
+#
 # Recorded 2026-10-30 on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail

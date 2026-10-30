@@ -16,15 +16,15 @@ Google publishes two sets of addresses for reaching its APIs privately, each beh
 them. Ask the laptop's own resolver:
 
 ```
-ana@laptop:~/gcp$ getent hosts private.googleapis.com restricted.googleapis.com
-199.36.153.11   private.googleapis.com
+ana@laptop:~/gcp$ getent hosts private.googleapis.com restricted.googleapis.com | sort
 199.36.153.10   private.googleapis.com
-199.36.153.9    private.googleapis.com
-199.36.153.8    private.googleapis.com
-199.36.153.7    restricted.googleapis.com
-199.36.153.5    restricted.googleapis.com
+199.36.153.11   private.googleapis.com
 199.36.153.4    restricted.googleapis.com
+199.36.153.5    restricted.googleapis.com
 199.36.153.6    restricted.googleapis.com
+199.36.153.7    restricted.googleapis.com
+199.36.153.8    private.googleapis.com
+199.36.153.9    private.googleapis.com
 ```
 
 **Real answers**, from public DNS: four addresses each, the `/30` ranges `199.36.153.8/30` and

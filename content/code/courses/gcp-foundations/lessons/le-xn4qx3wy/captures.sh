@@ -16,7 +16,8 @@
 # says no network is involved.
 #
 # REACHES THE INTERNET: one block, `names`, which asks the machine's resolver
-# for two of Google's names. The answers are public DNS.
+# for two of Google's names. The answers are public DNS, sorted, because the
+# resolver hands the four addresses of each name out in rotating order.
 #
 # NOT PRODUCED HERE, and said so in the prose: any route, router, NAT or
 # subnet, and any packet.
@@ -46,7 +47,7 @@ run 'terraform plan -input=false -no-color | grep -E "^Plan|# google|min_ports|n
 
 cd ~/gcp && at '~/gcp'
 block names
-run 'getent hosts private.googleapis.com restricted.googleapis.com'
+run 'getent hosts private.googleapis.com restricted.googleapis.com | sort'
 
 tf_dir pga
 tf_file "$HERE/private-google-access.md" 1 subnet.tf

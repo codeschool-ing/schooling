@@ -45,9 +45,9 @@ ana@laptop:~/gcp$ gcloud asset --help | sed -n "/^GROUPS/,/^NOTES/p" | grep -E "
 ```
 
 Three groups and the commands. The ones this lesson uses are **`search-all-resources`** and
-**`search-all-iam-policies`**, which answer questions across a whole organisation in seconds; `export` writes a
-full snapshot to Cloud Storage or BigQuery, for questions too big for a search; `get-history` returns an
-asset's past states; and **feeds** publish every change to a Pub/Sub topic, which is lesson 12's machinery
+**`search-all-iam-policies`**, which answer questions across a whole organisation in seconds. `export` writes a
+full snapshot to Cloud Storage or BigQuery, for questions too big for a search. `get-history` returns an
+asset's past states. And **feeds** publish every change to a Pub/Sub topic, which is lesson 12's machinery
 pointed at the estate instead of the bill.
 
 Reading the inventory needs a role where the search starts: `roles/cloudasset.viewer` on the organisation

@@ -41,6 +41,6 @@ por ela soma a cobrança de processamento à saída da lição 1, e **o Cloud CD
 do cache na borda nunca passa pelo balanceador, então ninguém a processa e ela é cobrada como saída de CDN.
 
 **As cinco primeiras regras custam o mesmo que uma.** A regra HTTPS do planner precisa de uma segunda na porta
-80 só para redirecionar HTTP simples para HTTPS, o que ele quer, e a segunda regra não custa nada a mais: as duas
+80 só para redirecionar HTTP simples para HTTPS, o que ele quer, e a segunda regra não custa nada a mais. As duas
 estão dentro das cinco primeiras, e o próprio exemplo da página de preços diz que uma regra e três regras custam
 0,025 por hora.
