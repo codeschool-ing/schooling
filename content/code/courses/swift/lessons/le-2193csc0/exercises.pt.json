@@ -1,0 +1,435 @@
+{
+  "ex-2m24hch9": {
+    "prompt": "Uma struct e uma classe têm cada uma duas propriedades armazenadas sem valor padrão e sem `init` escrito. Qual compila?",
+    "hint": "O que o compilador escreve para uma delas?",
+    "choices": [
+      {
+        "text": "A struct",
+        "why": "Isso: ela ganha um inicializador memberwise; a classe recebe `has no initializers`."
+      },
+      {
+        "text": "A classe",
+        "why": "A classe é a recusada, com uma nota sob cada propriedade."
+      },
+      {
+        "text": "As duas, com valores padrão zero e string vazia",
+        "why": "O Swift não inventa valor padrão para uma propriedade."
+      },
+      {
+        "text": "Nenhuma, até as duas terem um `init`",
+        "why": "A struct compilou sem um."
+      }
+    ]
+  },
+  "ex-y21bqvts": {
+    "prompt": "`print(second)` para uma instância de `final class SessionRef`, compilada com `swiftc KindsFixed.swift -o kindsfixed`, imprimiu `kindsfixed.SessionRef`. Por que não as propriedades?",
+    "choices": [
+      {
+        "text": "Porque o `final` esconde as propriedades do `print`",
+        "why": "O `final` só proíbe subclasses."
+      },
+      {
+        "text": "Porque as propriedades são `var`",
+        "why": "As da struct também são `var`, e ela as imprimiu."
+      },
+      {
+        "text": "Uma classe se descreve pela identidade, não pelo conteúdo",
+        "why": "Isso: uma struct é descrita pelo conteúdo, uma instância de classe pela identidade."
+      },
+      {
+        "text": "Porque o programa foi compilado, não rodado com `swift`",
+        "why": "Os dois comandos imprimem uma classe do mesmo jeito."
+      }
+    ]
+  },
+  "ex-w9b64ep5": {
+    "prompt": "Quais destes uma `class` tem e uma `struct` não tem? Escolha todos os que se aplicam.",
+    "hint": "A tabela no fim da seção 02.",
+    "choices": [
+      {
+        "text": "Herança de uma superclasse",
+        "why": "Sim, a menos que a classe seja `final`."
+      },
+      {
+        "text": "`===`",
+        "why": "Sim: identidade só existe para referências."
+      },
+      {
+        "text": "Propriedades armazenadas",
+        "why": "As duas têm."
+      },
+      {
+        "text": "`deinit`",
+        "why": "Sim: código que roda quando a instância some, lição 11."
+      },
+      {
+        "text": "Métodos",
+        "why": "As duas têm; os de struct que a mudam são `mutating`."
+      }
+    ]
+  },
+  "ex-zr4xag43": {
+    "prompt": "`var monday = StudySession(course: \"Swift\", minutes: 45)`, uma struct. Depois `var tuesday = monday` e `tuesday.minutes = 60`. Quanto vale `monday.minutes`?",
+    "hint": "A atribuição copiou o valor."
+  },
+  "ex-pxdzvcfb": {
+    "prompt": "Por que `func extend(_ session: StudySession) { session.minutes += 15 }` não compila?",
+    "hint": "Que tipo de nome é um parâmetro?",
+    "choices": [
+      {
+        "text": "`+=` não funciona em propriedades",
+        "why": "Funciona, num `var`; o `Copies.swift` o usou em `longer.minutes`."
+      },
+      {
+        "text": "Um parâmetro é um `let`, uma cópia constante",
+        "why": "Isso: `'session' is a 'let' constant`. Copie para um `var` e devolva o valor novo."
+      },
+      {
+        "text": "A função não tem tipo de retorno",
+        "why": "Uma função pode não devolver nada; o erro é sobre o parâmetro."
+      },
+      {
+        "text": "Structs não podem ser passadas para funções sem `inout`",
+        "why": "Podem, e chegam como cópias."
+      }
+    ]
+  },
+  "ex-ez7j825d": {
+    "prompt": "`var week = [monday, tuesday]` guarda duas structs `StudySession`. `var copy = week; copy[0].minutes = 0`. Qual afirmação é verdadeira depois?",
+    "hint": "Um array de valores é um valor.",
+    "choices": [
+      {
+        "text": "`week[0].minutes` também é 0, porque arrays são compartilhados",
+        "why": "Arrays compartilham um buffer só até alguém escrever, e isto foi uma escrita."
+      },
+      {
+        "text": "`monday.minutes` é 0, porque o array o guardava",
+        "why": "O array guardava uma cópia de `monday` desde que foi construído."
+      },
+      {
+        "text": "Não compila: um elemento de array é constante",
+        "why": "`copy` é um `var`, então os elementos podem mudar."
+      },
+      {
+        "text": "Só `copy[0].minutes` é 0",
+        "why": "Isso: o programa imprimiu `45 0`."
+      }
+    ]
+  },
+  "ex-twp57em9": {
+    "prompt": "Igual a antes, mas `StudySession` é uma `final class`: `let monday = StudySession(course: \"Swift\", minutes: 45)`, `let tuesday = monday`, `tuesday.minutes = 60`. Quanto vale `monday.minutes`?",
+    "hint": "Quantas sessões existem?"
+  },
+  "ex-ewyzrjt5": {
+    "prompt": "`let monday` guarda uma instância de classe, e `monday.minutes = 0` compila. Por que o `let` não recusa?",
+    "choices": [
+      {
+        "text": "Propriedades de classe ignoram `let` e `var` por completo",
+        "why": "Uma propriedade `let` de uma classe continua sem poder mudar."
+      },
+      {
+        "text": "O `let` prende a referência, e as propriedades `var` da instância continuam mutáveis",
+        "why": "Isso: `monday` sempre alcança a mesma sessão; os minutos dela estão livres."
+      },
+      {
+        "text": "É um bug do compilador no Swift 6.4.2",
+        "why": "É o significado definido de `let` para uma referência."
+      },
+      {
+        "text": "`minutes` é `mutating`",
+        "why": "`mutating` é uma palavra para métodos de struct."
+      }
+    ]
+  },
+  "ex-25hgb5r4": {
+    "prompt": "Uma função recebe uma instância da classe `StudySession` e zera os minutos dela. O código de quem chama não tem `&` nem `inout`. O que a sessão de quem chamou mostra depois?",
+    "hint": "O que a função recebeu?",
+    "choices": [
+      {
+        "text": "Os minutos antigos, porque a função tinha uma cópia",
+        "why": "Esse é o caso da struct; um parâmetro de classe é uma cópia da referência."
+      },
+      {
+        "text": "Um erro de compilação, porque o parâmetro é um `let`",
+        "why": "O `let` prende a referência, e a propriedade ainda pode mudar."
+      },
+      {
+        "text": "0",
+        "why": "Isso: uma instância, alcançada pelos dois, e nada no ponto da chamada avisou quem lê."
+      },
+      {
+        "text": "Uma quebra, por mudar uma instância compartilhada sem permissão",
+        "why": "Nada verifica isso; é o comportamento comum de classe."
+      }
+    ]
+  },
+  "ex-t45sjcq2": {
+    "prompt": "Um método de struct acrescenta a um dos arrays da struct. O que ele precisa na frente do `func`?",
+    "choices": [
+      {
+        "text": "`inout`",
+        "why": "`inout` marca um parâmetro, não um método."
+      },
+      {
+        "text": "`mutating`",
+        "why": "Isso: a nota disse `mark method 'mutating' to make 'self' mutable`."
+      },
+      {
+        "text": "`var`",
+        "why": "`var` nomeia uma variável; um método não é uma."
+      },
+      {
+        "text": "`final`, para ninguém sobrescrever a mudança",
+        "why": "`final` é para classes, e structs não têm subclasses."
+      }
+    ]
+  },
+  "ex-p04vz5fw": {
+    "prompt": "`let frozen = Week(minutes: [45, 30])`, e `Week` tem `mutating func add` e um `func total` comum. Que chamada compila?",
+    "hint": "Uma struct `let` não muda de jeito nenhum.",
+    "choices": [
+      {
+        "text": "`frozen.add(60)`",
+        "why": "Recusada: `cannot use mutating member on immutable value`."
+      },
+      {
+        "text": "`frozen.total()`",
+        "why": "Isso: ele lê e não muda nada, então um `let` basta."
+      },
+      {
+        "text": "As duas, porque `frozen` foi inicializado com valores",
+        "why": "Como foi construído não importa; é um `let`."
+      },
+      {
+        "text": "Nenhuma das duas, até `frozen` virar uma declaração `var`",
+        "why": "Métodos não mutating funcionam num `let`."
+      }
+    ]
+  },
+  "ex-8a1dy79p": {
+    "prompt": "Dentro de um método comum de struct, o valor em que o método foi chamado, `___`, é uma constante.",
+    "hint": "A mensagem do compilador o nomeou.",
+    "blanks": [
+      {
+        "accept": [
+          "self"
+        ]
+      }
+    ]
+  },
+  "ex-tdm7zy4b": {
+    "prompt": "`x` e `y` são duas instâncias de uma classe, cada uma com 45 minutos, e `z = x`. O que `print(x === y, x === z)` imprime?",
+    "hint": "`===` pergunta sobre instâncias, não conteúdo.",
+    "choices": [
+      {
+        "text": "`true true`",
+        "why": "`x` e `y` são duas instâncias, seja o que guardem."
+      },
+      {
+        "text": "`false true`",
+        "why": "Isso."
+      },
+      {
+        "text": "`true false`",
+        "why": "`z` é um segundo nome para a instância de `x`."
+      },
+      {
+        "text": "Não compila sem `Equatable`",
+        "why": "`===` não precisa de nada; o `==` é que precisa."
+      }
+    ]
+  },
+  "ex-3yaggsza": {
+    "prompt": "O que fez `a == b` compilar para `struct SessionValue`?",
+    "choices": [
+      {
+        "text": "Structs sempre se comparam com `==`, sem nada declarado",
+        "why": "Sem uma conformidade declarada não há `==`."
+      },
+      {
+        "text": "Uma função `==` escrita abaixo da struct",
+        "why": "Nenhuma foi escrita."
+      },
+      {
+        "text": "`: Equatable`, e o compilador escreveu a comparação",
+        "why": "Isso: toda propriedade armazenada é comparável, então o compilador compara todas."
+      },
+      {
+        "text": "Os dois valores foram criados com o mesmo literal",
+        "why": "Como um valor foi feito não lhe dá um operador."
+      }
+    ]
+  },
+  "ex-habajsxn": {
+    "prompt": "Por que o compilador se recusa a escrever `==` para uma classe, quando escreve para uma struct?",
+    "hint": "Duas contas com o mesmo nome.",
+    "choices": [
+      {
+        "text": "Para uma classe, igualdade é uma decisão de significado",
+        "why": "Isso: duas instâncias com conteúdos iguais podem ainda ser duas coisas diferentes no mundo."
+      },
+      {
+        "text": "Classes não podem seguir `Equatable` em circunstância alguma",
+        "why": "Podem; você escreve o `==`, como mostra a lição 8."
+      },
+      {
+        "text": "Comparar propriedades de uma classe é mais lento que de uma struct",
+        "why": "Velocidade não é o motivo; significado é."
+      },
+      {
+        "text": "`===` já faz o mesmo trabalho",
+        "why": "`===` faz outra pergunta: a mesma instância, não conteúdos iguais."
+      }
+    ]
+  },
+  "ex-hyz3qb8t": {
+    "prompt": "`var copy = week`, depois `copy.append(90)`. Quando os elementos de `week` foram copiados de fato?",
+    "hint": "A seção 07 perguntou a cada array onde estava o buffer.",
+    "choices": [
+      {
+        "text": "No `var copy = week`",
+        "why": "Os buffers ainda eram o mesmo depois da atribuição."
+      },
+      {
+        "text": "No `append`",
+        "why": "Isso: a primeira escrita num buffer compartilhado é o momento da cópia."
+      },
+      {
+        "text": "Nunca, porque os dois compartilham um buffer para sempre",
+        "why": "Então `week` teria quatro elementos; ficou com três."
+      },
+      {
+        "text": "Quando o `print` os leu",
+        "why": "Ler nunca copia."
+      }
+    ]
+  },
+  "ex-r3c47gv8": {
+    "prompt": "Uma struct `Log` guarda uma classe `Storage`, sem a verificação `isKnownUniquelyReferenced`. `var tuesday = monday; tuesday.add(30)`. O que acontece com `monday`?",
+    "hint": "O que a atribuição copiou?",
+    "choices": [
+      {
+        "text": "Nada: uma struct é copiada, então o armazenamento vai junto",
+        "why": "A struct é copiada, e a referência dentro dela também, não a instância."
+      },
+      {
+        "text": "O compilador recusa uma classe dentro de uma struct",
+        "why": "Aceita; é por isso que a verificação existe."
+      },
+      {
+        "text": "Ganha os 30 também, pelo armazenamento compartilhado",
+        "why": "Isso: os dois logs alcançam um `Storage`, então a struct se comporta como classe."
+      },
+      {
+        "text": "`monday` quebra na próxima leitura",
+        "why": "Nada quebra; a mudança é silenciosa, que é o perigo."
+      }
+    ]
+  },
+  "ex-hy6ckhcr": {
+    "prompt": "Arrays só copiam os elementos quando um dos que compartilham escreve. A técnica se chama copy-on-___.",
+    "blanks": [
+      {
+        "accept": [
+          "write"
+        ]
+      }
+    ]
+  },
+  "ex-p13j32ga": {
+    "prompt": "Qual destes o \"Choosing Between Structures and Classes\" da Apple dá como motivo para uma classe?",
+    "choices": [
+      {
+        "text": "Um tipo com mais de dez propriedades",
+        "why": "Tamanho não é um dos motivos; o copy-on-write torna valores grandes baratos."
+      },
+      {
+        "text": "A identidade importa: toda parte precisa ver uma instância",
+        "why": "Isso, com interoperabilidade com Objective-C e herança como os outros dois."
+      },
+      {
+        "text": "Qualquer tipo que tenha métodos",
+        "why": "Structs têm métodos."
+      },
+      {
+        "text": "Um tipo que vai ser comparado com `==`",
+        "why": "Structs ganham `==` do compilador com mais facilidade que classes."
+      }
+    ]
+  },
+  "ex-bsjdna4w": {
+    "prompt": "No `Choosing.swift`, `var edited = store.sessions[0]; edited.minutes = 90`. Por que a tela da semana ainda imprimiu `[45, 30]`?",
+    "hint": "Que tipo é uma sessão ali?",
+    "choices": [
+      {
+        "text": "A tela guarda em cache o que imprimiu da primeira vez",
+        "why": "O `show` lê o repositório toda vez."
+      },
+      {
+        "text": "`PlannerStore` é uma struct, então as telas tinham cópias dele",
+        "why": "É uma classe; as duas telas viram as duas sessões acrescentadas."
+      },
+      {
+        "text": "`StudySession` é uma struct, então `edited` era uma cópia",
+        "why": "Isso: escrevê-la de volta em `store.sessions[0]` é o passo visível que mudaria o repositório."
+      },
+      {
+        "text": "`edited.minutes = 90` é ignorado fora de um método `mutating`",
+        "why": "Mudou `edited`; `edited` não está no repositório."
+      }
+    ]
+  },
+  "ex-9qkgyc9v": {
+    "prompt": "Ligue cada linha ao que ela imprime, onde `S` é uma struct e `C` uma classe, cada uma com `var minutes`.",
+    "hint": "Copiar ou compartilhar.",
+    "pairs": [
+      {
+        "left": "`var a = S(minutes: 45); var b = a; b.minutes = 60; print(a.minutes)`",
+        "right": "45"
+      },
+      {
+        "left": "`let a = C(minutes: 45); let b = a; b.minutes = 60; print(a.minutes)`",
+        "right": "60"
+      },
+      {
+        "left": "`let a = C(minutes: 45); let b = C(minutes: 45); print(a === b)`",
+        "right": "false"
+      }
+    ],
+    "right_distractors": [
+      "true"
+    ]
+  },
+  "ex-5nwgghyg": {
+    "prompt": "Ponha o que acontece no `Unique.swift` em ordem, a partir da primeira linha que roda.",
+    "hint": "Quando o armazenamento fica compartilhado?",
+    "items": [
+      "`monday.add(45)` encontra o armazenamento sem compartilhar e escreve no lugar",
+      "`tuesday = monday` copia a struct e a referência dentro dela",
+      "`tuesday.add(30)` encontra o armazenamento compartilhado e o copia",
+      "30 é acrescentado só ao armazenamento novo de `tuesday`"
+    ]
+  },
+  "ex-f64e3420": {
+    "prompt": "Um planner precisa de uma lista de sessões que duas telas leem e mudam, cada uma vendo as mudanças da outra. O que deve guardar a lista?",
+    "hint": "O formato da seção 08: valores para os dados, uma referência para o lugar.",
+    "choices": [
+      {
+        "text": "Uma struct de que cada tela guarda a sua própria cópia separada",
+        "why": "Então cada tela só vê as suas mudanças."
+      },
+      {
+        "text": "Um array `let` global que as duas telas leem",
+        "why": "Um array `let` não pode ser mudado."
+      },
+      {
+        "text": "O array de cada tela, sincronizado à mão",
+        "why": "Duas cópias mantidas iguais à mão é o bug que uma instância compartilhada evita."
+      },
+      {
+        "text": "Uma instância de classe que as duas telas referenciam",
+        "why": "Isso: o `PlannerStore`, guardando valores `StudySession`."
+      }
+    ]
+  }
+}
