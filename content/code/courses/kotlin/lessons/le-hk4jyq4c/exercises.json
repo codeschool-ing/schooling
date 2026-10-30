@@ -1,0 +1,614 @@
+[
+  {
+    "id": "ex-fhbn2p3f",
+    "version": 1,
+    "section": "read-only-and-mutable",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`val week: List<Int> = listOf(45, 30, 60)` and then `week.add(90)`. What happens?",
+    "hint": "Which list type has `add`?",
+    "choices": [
+      {
+        "text": "The list grows to four items",
+        "correct": false,
+        "why": "`List` has no `add` to call."
+      },
+      {
+        "text": "It does not compile: `List` has no `add`",
+        "correct": true,
+        "why": "Right: `unresolved reference 'add' on receiver of type 'List<Int>'`."
+      },
+      {
+        "text": "It throws `UnsupportedOperationException` when that line runs",
+        "correct": false,
+        "why": "That is what Java's unmodifiable lists do; Kotlin refuses at compile time."
+      },
+      {
+        "text": "A new list is returned and `week` is unchanged",
+        "correct": false,
+        "why": "`add` does not exist on `List` at all; `week + 90` would make a new list."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7p7avdr",
+    "version": 1,
+    "section": "read-only-and-mutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val log = mutableListOf(45, 30)`, `val view: List<Int> = log`, then `log.add(60)`. What does `println(view)` print?",
+    "hint": "Two names, how many lists?",
+    "choices": [
+      {
+        "text": "`[45, 30]`, because `view` is read-only",
+        "correct": false,
+        "why": "Read-only is a property of the name, not a frozen copy."
+      },
+      {
+        "text": "`[45, 30, 60]`",
+        "correct": true,
+        "why": "Right: one list, seen through two types."
+      },
+      {
+        "text": "A compile error, since `view` and `log` share a list",
+        "correct": false,
+        "why": "Sharing is allowed; it is what happened."
+      },
+      {
+        "text": "`[60]`, the items added after `view` was made",
+        "correct": false,
+        "why": "`view` shows the whole list, old items and new."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww0zd8pc",
+    "version": 1,
+    "section": "read-only-and-mutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the section recommend a function that builds a list return?",
+    "hint": "`buildList` does it in one call.",
+    "choices": [
+      {
+        "text": "A `MutableList`, so callers can add more",
+        "correct": false,
+        "why": "That hands every caller a way to change data the function owns."
+      },
+      {
+        "text": "An `Array`, which is cheaper",
+        "correct": false,
+        "why": "An array can be changed by anybody who holds it."
+      },
+      {
+        "text": "A `Set`, since a set cannot change",
+        "correct": false,
+        "why": "A `Set` drops repeats, which changes the data; and `MutableSet` changes too."
+      },
+      {
+        "text": "A `List`, built from a private `MutableList`",
+        "correct": true,
+        "why": "Right: mutable inside, read-only outside."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsbpvf8e",
+    "version": 1,
+    "section": "map-filter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `filter` return?",
+    "hint": "`sessions` was printed again afterwards, unchanged.",
+    "choices": [
+      {
+        "text": "A new list of the items that passed",
+        "correct": true,
+        "why": "Right, in their original order."
+      },
+      {
+        "text": "The same list with the failing items removed in place",
+        "correct": false,
+        "why": "Nothing is removed in place; the original is untouched."
+      },
+      {
+        "text": "The number of items that passed",
+        "correct": false,
+        "why": "That is `count`."
+      },
+      {
+        "text": "`true` if every item passed the test",
+        "correct": false,
+        "why": "That is `all`."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2zrv8dm",
+    "version": 1,
+    "section": "map-filter",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sessions` is `Kotlin 45`, `Android 30`, `Kotlin 60`, `Go 20`. What is `sessions.filter { it.first == \"Kotlin\" }.map { it.second }.sum()`?",
+    "hint": "The Kotlin sessions, their minutes, the total.",
+    "value": 105,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x3bagqh3",
+    "version": 1,
+    "section": "map-filter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the type of `sessions.mapNotNull { if (it.second >= 45) it.first else null }`?",
+    "hint": "The `null`s are dropped.",
+    "choices": [
+      {
+        "text": "`List<String?>`",
+        "correct": false,
+        "why": "That would be `map`; `mapNotNull` removes the nulls and the `?`."
+      },
+      {
+        "text": "`List<String>`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`List<Pair<String, Int>>`",
+        "correct": false,
+        "why": "The lambda returns the course name, a `String`."
+      },
+      {
+        "text": "`String?`",
+        "correct": false,
+        "why": "It returns a list, one item per non-null result."
+      }
+    ]
+  },
+  {
+    "id": "ex-hs3njy83",
+    "version": 1,
+    "section": "aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `maxBy { it.second }` and `maxOf { it.second }`?",
+    "hint": "One printed `(Kotlin, 60)`.",
+    "choices": [
+      {
+        "text": "`maxBy` is lazy and `maxOf` is eager",
+        "correct": false,
+        "why": "Both are eager list functions."
+      },
+      {
+        "text": "`maxOf` allows ties and `maxBy` does not",
+        "correct": false,
+        "why": "Ties are not the difference; what is returned is."
+      },
+      {
+        "text": "`maxBy` gives the item, `maxOf` the value",
+        "correct": true,
+        "why": "Right: the session, against its number of minutes."
+      },
+      {
+        "text": "None: they are two names for the same function",
+        "correct": false,
+        "why": "Their results have different types."
+      }
+    ]
+  },
+  {
+    "id": "ex-bc7ax5np",
+    "version": 1,
+    "section": "aggregates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On an empty list, which call throws?",
+    "hint": "The ones with no answer for nothing.",
+    "choices": [
+      {
+        "text": "`sumOf { it.second }`",
+        "correct": false,
+        "why": "The sum of nothing is 0."
+      },
+      {
+        "text": "`maxByOrNull { it.second }`",
+        "correct": false,
+        "why": "It returns `null`."
+      },
+      {
+        "text": "`maxBy { it.second }`",
+        "correct": true,
+        "why": "Right: `NoSuchElementException`."
+      },
+      {
+        "text": "`count { it.second > 0 }`",
+        "correct": false,
+        "why": "It counts zero items."
+      }
+    ]
+  },
+  {
+    "id": "ex-m69m23y5",
+    "version": 1,
+    "section": "aggregates",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each function to the question it answers.",
+    "hint": "The table in section 04.",
+    "pairs": [
+      {
+        "left": "`any { … }`",
+        "right": "Does at least one item pass?"
+      },
+      {
+        "left": "`all { … }`",
+        "right": "Does every item pass?"
+      },
+      {
+        "left": "`distinct()`",
+        "right": "Which items are there, without repeats?"
+      },
+      {
+        "left": "`take(2)`",
+        "right": "What are the first two items?"
+      }
+    ],
+    "right_distractors": [
+      "Which item comes last after sorting?"
+    ]
+  },
+  {
+    "id": "ex-eefjz9bh",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `sessions.groupBy { it.first }` return?",
+    "hint": "Every session is kept.",
+    "choices": [
+      {
+        "text": "A map from each course to its total minutes",
+        "correct": false,
+        "why": "That needs `mapValues` afterwards."
+      },
+      {
+        "text": "A list of course names without repeats",
+        "correct": false,
+        "why": "That is `map { it.first }.distinct()`."
+      },
+      {
+        "text": "A map from each course to its sessions",
+        "correct": true,
+        "why": "Right: `{Kotlin=[…, …], Android=[…], Go=[…]}`."
+      },
+      {
+        "text": "A map from each course to its last session",
+        "correct": false,
+        "why": "That is what `associate` ends up with, losing the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-4n6s0rh0",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`sessions.associate { it.first to it.second }` printed `Kotlin=60`, though Kotlin had 45 and 60. What happened to the 45?",
+    "hint": "A map holds one value per key.",
+    "choices": [
+      {
+        "text": "It was added to 60 and then halved",
+        "correct": false,
+        "why": "`associate` does no arithmetic."
+      },
+      {
+        "text": "The second entry replaced it, silently",
+        "correct": true,
+        "why": "Right: a repeated key keeps the last value."
+      },
+      {
+        "text": "It is kept under a second, hidden `Kotlin` key",
+        "correct": false,
+        "why": "There are no duplicate keys in a map, hidden or not."
+      },
+      {
+        "text": "`associate` threw, and the exception was swallowed",
+        "correct": false,
+        "why": "Nothing was thrown; the replacement is its normal behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1gefbjd",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `partition` give you that `filter` does not?",
+    "hint": "`val (long, short) = …`.",
+    "choices": [
+      {
+        "text": "A count of each half",
+        "correct": false,
+        "why": "It returns the lists themselves."
+      },
+      {
+        "text": "Items sorted by the test's result",
+        "correct": false,
+        "why": "Order within each half is the original."
+      },
+      {
+        "text": "A lazy result that is computed on demand",
+        "correct": false,
+        "why": "`partition` on a list is eager."
+      },
+      {
+        "text": "The items that failed, as a second list",
+        "correct": true,
+        "why": "Right: both halves, in a `Pair`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vha7gm1e",
+    "version": 1,
+    "section": "fold-reduce",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`listOf(45, 30, 60, 20).fold(0) { acc, m -> acc + m }`. What is the result?",
+    "hint": "It is `sum()` written out.",
+    "value": 155,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-tz8pzsde",
+    "version": 1,
+    "section": "fold-reduce",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `fold` safer than `reduce` on a list that might be empty?",
+    "hint": "Where does each get its starting value?",
+    "choices": [
+      {
+        "text": "`fold` starts from the value you gave it, with no first item needed",
+        "correct": true,
+        "why": "Right: `reduce` takes the first item, and an empty list has none."
+      },
+      {
+        "text": "`fold` skips empty lists and `reduce` loops forever",
+        "correct": false,
+        "why": "`reduce` throws at once; it does not loop."
+      },
+      {
+        "text": "`fold` catches exceptions inside the lambda",
+        "correct": false,
+        "why": "Neither catches anything."
+      },
+      {
+        "text": "`fold` is lazy, so it never reaches the empty part",
+        "correct": false,
+        "why": "`fold` on a list is eager."
+      }
+    ]
+  },
+  {
+    "id": "ex-79pv1mk7",
+    "version": 1,
+    "section": "fold-reduce",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many numbers does `listOf(45, 30, 60, 20).runningFold(0) { acc, m -> acc + m }` contain?",
+    "hint": "It includes the starting value.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-w0ym9bz8",
+    "version": 1,
+    "section": "sequences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sequence runs `filter` then `map` then `first()` over 45, 30, 60, 20, and 45 passes the filter. Which lambdas run?",
+    "hint": "Item by item, and it stops when the answer is known.",
+    "choices": [
+      {
+        "text": "`filter` on all four, then `map` on those that passed",
+        "correct": false,
+        "why": "That is the list's order."
+      },
+      {
+        "text": "`filter 45`, `map 45`",
+        "correct": true,
+        "why": "Right: two calls, and the other items are never touched."
+      },
+      {
+        "text": "`map` on all four, then `filter`",
+        "correct": false,
+        "why": "The order of the steps is the order written."
+      },
+      {
+        "text": "None until `toList()` is called",
+        "correct": false,
+        "why": "`first()` is a terminal operation too."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgc4t8xs",
+    "version": 1,
+    "section": "sequences",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`minutes.asSequence().map { println(it); it * 2 }` stands alone on a line. What prints?",
+    "hint": "What makes a sequence do its work?",
+    "choices": [
+      {
+        "text": "Every item, once",
+        "correct": false,
+        "why": "That needs a terminal operation, such as `toList()`."
+      },
+      {
+        "text": "Only the first item",
+        "correct": false,
+        "why": "Nothing asked even for the first."
+      },
+      {
+        "text": "A compiler warning about an unused sequence",
+        "correct": false,
+        "why": "The section says the compiler does not warn."
+      },
+      {
+        "text": "Nothing at all, since no terminal operation ran",
+        "correct": true,
+        "why": "Right: with no terminal operation, no lambda runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yszfn21",
+    "version": 1,
+    "section": "sequences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a list of a dozen sessions and a chain of two steps, which does the section recommend?",
+    "hint": "A list is the default.",
+    "choices": [
+      {
+        "text": "A sequence, which is faster for every size",
+        "correct": false,
+        "why": "For a few dozen items its machinery costs more than the lists it saves."
+      },
+      {
+        "text": "The list, as the simpler default",
+        "correct": true,
+        "why": "Right: simpler, easier to debug, and cheap at that size."
+      },
+      {
+        "text": "An array, to avoid boxing",
+        "correct": false,
+        "why": "The section compares lists and sequences."
+      },
+      {
+        "text": "A `Flow`",
+        "correct": false,
+        "why": "`Flow` is for values that arrive over time, lesson 16."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj14c0as",
+    "version": 1,
+    "section": "maps-and-sets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`goals` is a `Map<String, Int>`. What is the type of `goals[\"Swift\"]`?",
+    "hint": "It printed `null`.",
+    "choices": [
+      {
+        "text": "`Int`",
+        "correct": false,
+        "why": "The key might be missing, so the read is nullable."
+      },
+      {
+        "text": "`Int?`: the key is not promised",
+        "correct": true,
+        "why": "Right: a map cannot promise a key is there."
+      },
+      {
+        "text": "`Pair<String, Int>`",
+        "correct": false,
+        "why": "Reading by key gives the value only."
+      },
+      {
+        "text": "`Boolean`",
+        "correct": false,
+        "why": "That is `\"Swift\" in goals`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8ar7vew",
+    "version": 1,
+    "section": "maps-and-sets",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many items does `setOf(\"Kotlin\", \"Android\", \"Kotlin\", \"Go\")` have?",
+    "hint": "A set allows no repeats.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-r3dgdn52",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps in order to get each course's total for sessions of 30 minutes or more.",
+    "hint": "Filter before you group, and sum each group last.",
+    "items": [
+      "`sessions`",
+      "`.filter { it.second >= 30 }`",
+      "`.groupBy { it.first }`",
+      "`.mapValues { (_, list) -> list.sumOf { it.second } }`"
+    ]
+  },
+  {
+    "id": "ex-2hnm58pg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which calls are safe on a list that may be empty, returning rather than throwing? Choose all that apply.",
+    "hint": "Sums and counts have an answer for nothing; extremes need `OrNull`.",
+    "choices": [
+      {
+        "text": "`sumOf { it.second }`",
+        "correct": true,
+        "why": "Yes: 0."
+      },
+      {
+        "text": "`first()`",
+        "correct": false,
+        "why": "No: `NoSuchElementException`."
+      },
+      {
+        "text": "`fold(0) { acc, s -> acc + s.second }`",
+        "correct": true,
+        "why": "Yes: the starting value."
+      },
+      {
+        "text": "`minByOrNull { it.second }`",
+        "correct": true,
+        "why": "Yes: `null`."
+      },
+      {
+        "text": "`reduce { a, b -> a }`",
+        "correct": false,
+        "why": "No: it has no first item to start from."
+      }
+    ]
+  }
+]
