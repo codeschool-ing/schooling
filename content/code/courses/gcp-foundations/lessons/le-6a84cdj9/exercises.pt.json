@@ -1,0 +1,342 @@
+{
+  "ex-e7yjzvv9": {
+    "prompt": "Que método HTTP o `gcloud pubsub topics create orders` usou, segundo o `--log-http`?",
+    "hint": "Leia a linha method.",
+    "choices": [
+      {
+        "text": "POST, em /v1/topics",
+        "why": "O log mostra PUT no nome do tópico."
+      },
+      {
+        "text": "PUT, no nome do tópico como endereço",
+        "why": "Isso. O endereço é o nome do recurso sob /v1/."
+      },
+      {
+        "text": "GET, com o nome na consulta",
+        "why": "GET lê; não cria."
+      },
+      {
+        "text": "Uma chamada gRPC sem método HTTP",
+        "why": "O gcloud usou REST aqui, e registrou."
+      }
+    ]
+  },
+  "ex-34s4m9rh": {
+    "prompt": "Por que o pedido do gcloud foi para `localhost:8085` em vez de `pubsub.googleapis.com`?",
+    "hint": "As propriedades da lição 1.",
+    "choices": [
+      {
+        "text": "O PUBSUB_EMULATOR_HOST define o endereço do gcloud",
+        "why": "Essa variável é para as bibliotecas cliente."
+      },
+      {
+        "text": "O gcloud sempre tenta localhost primeiro",
+        "why": "Ele vai aonde as propriedades dizem."
+      },
+      {
+        "text": "O Google o redirecionou",
+        "why": "Nada chegou ao Google."
+      },
+      {
+        "text": "Uma propriedade de override de endpoint",
+        "why": "Isso. Sem ele, o mesmo pedido iria ao Google."
+      }
+    ]
+  },
+  "ex-zwj7ggbj": {
+    "prompt": "A assinatura voltou com `ackDeadlineSeconds` e `messageRetentionDuration`, embora o pedido não mandasse nenhum. Por quê?",
+    "hint": "Padrões.",
+    "choices": [
+      {
+        "text": "A API preenche o que não foi dito",
+        "why": "Isso. A mesma coisa que o Terraform mostra como known after apply."
+      },
+      {
+        "text": "O curl os acrescenta",
+        "why": "O curl mandou exatamente o corpo escrito."
+      },
+      {
+        "text": "Foram copiados do tópico",
+        "why": "Tópicos não têm prazo de ack."
+      },
+      {
+        "text": "O emulador os inventa para testes",
+        "why": "A API do Google devolve os padrões do mesmo jeito."
+      }
+    ]
+  },
+  "ex-f5f7g1hs": {
+    "prompt": "O 401 do Google nomeou o método `google.pubsub.v1.Publisher.ListTopics`, embora o `curl` tenha chamado um endereço REST. O que isso diz?",
+    "hint": "Duas portas para um serviço.",
+    "choices": [
+      {
+        "text": "O curl usou gRPC escondido",
+        "why": "O curl mandou um HTTP GET."
+      },
+      {
+        "text": "O pedido chegou ao serviço errado",
+        "why": "O serviço nomeado é pubsub.googleapis.com."
+      },
+      {
+        "text": "Os dois chegam a um método",
+        "why": "Isso. O endereço REST mapeia para o método gRPC, e o erro o nomeia."
+      },
+      {
+        "text": "O nome do método faz parte do token",
+        "why": "O token é a palavra placeholder."
+      }
+    ]
+  },
+  "ex-6ea9j1kw": {
+    "prompt": "O gcloud imprime todo pedido e resposta que troca quando recebe a opção `--log-___`.",
+    "hint": "O protocolo.",
+    "blanks": [
+      {
+        "accept": [
+          "http"
+        ]
+      }
+    ]
+  },
+  "ex-2kft7m8h": {
+    "prompt": "Por que o `publisher.publish(...)` devolve um future em vez de um id de mensagem?",
+    "hint": "Ele não espera.",
+    "choices": [
+      {
+        "text": "O Pub/Sub atribui ids um dia depois",
+        "why": "Ids voltam com a publicação."
+      },
+      {
+        "text": "O emulador não tem ids",
+        "why": "Ele devolveu 1, 2 e 3."
+      },
+      {
+        "text": "O envio vem depois",
+        "why": "Isso. O id chega quando o future se resolve."
+      },
+      {
+        "text": "Futures são exigidos pelo gRPC",
+        "why": "É escolha da biblioteca, por velocidade."
+      }
+    ]
+  },
+  "ex-6nhcjfra": {
+    "prompt": "As mensagens foram publicadas com a biblioteca e lidas com `curl`. O que isso mostra?",
+    "hint": "Um serviço.",
+    "choices": [
+      {
+        "text": "Os dois são clientes da mesma API",
+        "why": "Isso. Nenhum lado sabe qual o outro usou."
+      },
+      {
+        "text": "A biblioteca guarda mensagens localmente",
+        "why": "O curl as leu do emulador."
+      },
+      {
+        "text": "O curl só lê o que o curl mandou",
+        "why": "Ele leu o que a biblioteca mandou."
+      },
+      {
+        "text": "gRPC e REST dividem uma porta por acaso",
+        "why": "O ponto é o serviço, não a porta."
+      }
+    ]
+  },
+  "ex-n44v94xs": {
+    "prompt": "Por que o pull com `curl` passou os dados pelo `@base64d` do jq?",
+    "hint": "Como o JSON leva bytes?",
+    "choices": [
+      {
+        "text": "O emulador criptografa mensagens",
+        "why": "base64 é codificação, não criptografia."
+      },
+      {
+        "text": "O publish.py os codificou duas vezes",
+        "why": "Ele mandou bytes simples; a API os codificou."
+      },
+      {
+        "text": "O jq não imprime texto simples",
+        "why": "Consegue; o campo é que era base64."
+      },
+      {
+        "text": "Bytes viajam em base64",
+        "why": "Isso. Bytes viajam no JSON como texto base64."
+      }
+    ]
+  },
+  "ex-pqbhfh1w": {
+    "prompt": "Uma chamada de listagem devolve mais itens do que uma resposta comporta. O que um programa com `curl` tem de fazer que a biblioteca faz por ele?",
+    "hint": "Leia a tabela.",
+    "choices": [
+      {
+        "text": "Repetir a chamada com um limite maior",
+        "why": "Limites têm teto; páginas são a resposta."
+      },
+      {
+        "text": "Seguir o nextPageToken até o fim",
+        "why": "Isso. Os resultados da biblioteca são um laço que busca páginas conforme anda."
+      },
+      {
+        "text": "Mudar para gRPC",
+        "why": "O gRPC também pagina."
+      },
+      {
+        "text": "Nada; a API devolve tudo",
+        "why": "É isso que a paginação existe para evitar."
+      }
+    ]
+  },
+  "ex-yf3mcc5t": {
+    "prompt": "Quantas mensagens o `publish.py` publicou?",
+    "hint": "1001 a 1003."
+  },
+  "ex-ygv4evy1": {
+    "prompt": "Ligue cada coisa que a biblioteca acrescenta ao que ela poupa o programa.",
+    "hint": "Da tabela.",
+    "pairs": [
+      {
+        "left": "repetições",
+        "right": "tratar um 503 à mão"
+      },
+      {
+        "left": "agrupamento",
+        "right": "um pedido por mensagem"
+      },
+      {
+        "left": "paginação",
+        "right": "seguir o nextPageToken"
+      },
+      {
+        "left": "credenciais",
+        "right": "escrever o cabeçalho Authorization"
+      }
+    ],
+    "right_distractors": [
+      "escolher a região"
+    ]
+  },
+  "ex-5khvxjmv": {
+    "prompt": "Ponha em ordem os lugares em que as Application Default Credentials procuram.",
+    "hint": "Variável primeiro.",
+    "items": [
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "o arquivo que o gcloud auth application-default login escreve",
+      "o servidor de metadados"
+    ],
+    "trap": "Pôr o servidor de metadados primeiro é o deslize: uma variável definida numa máquina do Google Cloud sobrepõe a conta presa, e é assim que um programa é apontado para outro lugar de propósito."
+  },
+  "ex-p4fk4hqk": {
+    "prompt": "Por que o `publish.py` não precisou de credencial contra o emulador?",
+    "hint": "O que a biblioteca faz com o PUBSUB_EMULATOR_HOST?",
+    "choices": [
+      {
+        "text": "O emulador não confere credencial",
+        "why": "Isso. O emulador não confere nenhuma."
+      },
+      {
+        "text": "Usou o token de mentira",
+        "why": "Esse token é do gcloud, não da biblioteca."
+      },
+      {
+        "text": "Usou o arquivo da lição 9",
+        "why": "Só quando a variável o nomeou."
+      },
+      {
+        "text": "Perguntou ao servidor de metadados",
+        "why": "Não há nenhum num laptop."
+      }
+    ]
+  },
+  "ex-4w46tqtj": {
+    "prompt": "Sem o `PUBSUB_EMULATOR_HOST`, o `publish.py` levantou `DefaultCredentialsError`. O que isso significa?",
+    "hint": "Os três lugares.",
+    "choices": [
+      {
+        "text": "O Google recusou o pedido",
+        "why": "Nenhum pedido foi feito."
+      },
+      {
+        "text": "O tópico não existe no Google",
+        "why": "A biblioteca parou antes de perguntar."
+      },
+      {
+        "text": "Nenhuma das três respondeu",
+        "why": "Isso. Nem variável, nem arquivo ADC, nem servidor de metadados."
+      },
+      {
+        "text": "Falta a biblioteca no Python",
+        "why": "Ela a importou e rodou."
+      }
+    ]
+  },
+  "ex-5dmvsdm1": {
+    "prompt": "Com o arquivo da lição 9 no `GOOGLE_APPLICATION_CREDENTIALS`, a biblioteca parou em `/tmp/github-token`. O que aconteceria num job do GitHub Actions?",
+    "hint": "O arquivo existe lá.",
+    "choices": [
+      {
+        "text": "Ele precisa também de uma chave de conta de serviço",
+        "why": "A federação substitui a chave."
+      },
+      {
+        "text": "Ele publica como deployer@",
+        "why": "Isso. Sem chave em lugar nenhum."
+      },
+      {
+        "text": "Ele publica como o usuário do GitHub",
+        "why": "A troca termina no token do deployer@."
+      },
+      {
+        "text": "Ele falha do mesmo jeito",
+        "why": "O arquivo de token existe no job."
+      }
+    ]
+  },
+  "ex-81r1189c": {
+    "prompt": "O `google.auth.default()` devolveu o projeto `None` para o arquivo de federação. O que um programa deve fazer?",
+    "hint": "Uma identidade federada não leva nenhum.",
+    "choices": [
+      {
+        "text": "Falhar, já que não tem projeto",
+        "why": "Ele nomeia um e segue."
+      },
+      {
+        "text": "Ler o projeto do token",
+        "why": "O token não o leva."
+      },
+      {
+        "text": "Usar o da configuração ativa do gcloud",
+        "why": "Um job de CI não tem configuração do gcloud em que confiar."
+      },
+      {
+        "text": "Nomear o próprio projeto explicitamente",
+        "why": "Isso. Como o publish.py faz com planner-dev."
+      }
+    ]
+  },
+  "ex-nm5dtxj8": {
+    "prompt": "Em que endereço um programa no Google Cloud alcança o servidor de metadados?",
+    "hint": "O último octeto dele."
+  },
+  "ex-wvx4b45q": {
+    "prompt": "O job de relatórios do planner roda num laptop em desenvolvimento, no GitHub Actions nos testes e no Cloud Run em produção, com o mesmo código. Como as credenciais dele devem ser arranjadas?",
+    "hint": "Onde roda decide.",
+    "choices": [
+      {
+        "text": "Uma chave de conta de serviço nos três",
+        "why": "Esse é o último recurso da lição 8, copiado três vezes."
+      },
+      {
+        "text": "Um caminho de credencial no código",
+        "why": "O código não deve nomear nenhuma."
+      },
+      {
+        "text": "A variável do emulador em produção",
+        "why": "Isso não manda credencial ao Google, que recusa."
+      },
+      {
+        "text": "ADC em todo lugar, uma fonte por lugar",
+        "why": "Isso. O arquivo ADC da pessoa, um arquivo de federação, e a conta de serviço presa."
+      }
+    ]
+  }
+}
