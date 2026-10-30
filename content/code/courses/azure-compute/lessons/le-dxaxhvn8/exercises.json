@@ -15,7 +15,7 @@
         "why": "There is no import of Dapr anywhere in `app.py`; the sidecar is a program of its own, in a container of its own."
       },
       {
-        "text": "In a container of its own, sharing the shop's network namespace and its localhost",
+        "text": "In its own container, on the shop's localhost",
         "correct": true,
         "why": "Yes. That is why the metadata says it reaches the app at `127.0.0.1:8080`."
       },
@@ -52,7 +52,7 @@
         "why": "The sidecar listens on 3500; the shop listens on 8080."
       },
       {
-        "text": "Because the sidecar joined the shop's namespace and has no network of its own to publish on",
+        "text": "The sidecar has no network of its own, only the shop's",
         "correct": true,
         "why": "Yes. Ports belong to a network namespace, and this one is the shop's."
       },
@@ -162,12 +162,12 @@
     "hint": "Look at the key Redis actually held.",
     "choices": [
       {
-        "text": "The state store is scoped to the shop, so billing reads an empty copy",
+        "text": "The state store is scoped to the shop",
         "correct": false,
         "why": "Nothing was scoped; billing loaded the component and reached the same Redis."
       },
       {
-        "text": "Billing's sidecar looked for `billing||order-1`, and every key carries its app id in front",
+        "text": "Each app's keys carry its app id, so it asked for another key",
         "correct": true,
         "why": "Yes. The default prefix is the app id, so two apps on one store see only their own keys."
       },
@@ -235,7 +235,7 @@
         "why": "Each app has its own copy; billing's failure does not move its message to audit."
       },
       {
-        "text": "Drops it, and writes an error in the sidecar's log",
+        "text": "Drops it, with an error in its own log",
         "correct": true,
         "why": "Yes. A wrong route loses messages, and the app's own log says nothing about it."
       },
@@ -320,17 +320,17 @@
     "hint": "What did the component map the topic `orders` to?",
     "choices": [
       {
-        "text": "Billing and audit ended up with the same consumer ID",
+        "text": "Billing and audit ended up with the same consumer ID, so one group",
         "correct": false,
         "why": "Their consumer IDs are their app ids, which differ, and they still shared the messages."
       },
       {
-        "text": "The topic became one queue, both apps received from it, and a queue gives each message to one receiver",
+        "text": "The topic became one queue, which gives each message to one receiver",
         "correct": true,
         "why": "Yes. The API stayed the same and the delivery became the queue's."
       },
       {
-        "text": "The emulator balances load between receivers, as Azure would not",
+        "text": "The emulator spreads load across receivers, which Azure would not do",
         "correct": false,
         "why": "A Service Bus queue in Azure hands each message to one receiver too."
       },
@@ -418,12 +418,12 @@
         "why": "Both would read the one queue `orders`, and a queue still gives each message to one receiver."
       },
       {
-        "text": "A higher `maxDeliveryCount` on the queue",
+        "text": "A higher `maxDeliveryCount`, so each message is offered more than once",
         "correct": false,
         "why": "That is how often a failing message is retried, not how many receivers get it."
       },
       {
-        "text": "The topics component, and a topic `orders` with subscriptions `billing` and `audit` declared beforehand",
+        "text": "The topics component, with subscriptions `billing` and `audit` declared first",
         "correct": true,
         "why": "Yes. Each app reads its own subscription, and with entity management off they must exist first."
       }
@@ -445,7 +445,7 @@
         "why": "BCP089 came for `appID`, a property the compiler knows. `componentType` is a plain string."
       },
       {
-        "text": "It compiles in silence, and `daprd` refuses the type when it starts",
+        "text": "It compiles silently; `daprd` refuses it at start",
         "correct": true,
         "why": "Yes. The open-source sidecar exited with `couldn't find message bus`; the template had been written without a word."
       },
@@ -487,7 +487,7 @@
         "why": "Nothing refuses it; it deploys, and receives nothing."
       },
       {
-        "text": "They wait in the broker with no sidecar to receive them, until a replica starts",
+        "text": "They wait in the broker until some replica starts",
         "correct": true,
         "why": "Yes. That is why billing keeps one replica, or gets a scale rule on the queue's length."
       }
@@ -657,7 +657,7 @@
         "why": "A missing role fails when the store is used; a component that was never loaded is a different answer."
       },
       {
-        "text": "Audit's app id is not in `scopes`, so its sidecar never loaded the component",
+        "text": "The list leaves audit out, so nothing was loaded for it",
         "correct": true,
         "why": "Yes. Scopes name the app ids that load a component, and audit is not one of them."
       },

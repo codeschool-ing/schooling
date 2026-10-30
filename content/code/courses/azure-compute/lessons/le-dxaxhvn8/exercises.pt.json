@@ -8,7 +8,7 @@
         "why": "Não há import do Dapr em lugar nenhum do `app.py`; o sidecar é um programa próprio, num contêiner próprio."
       },
       {
-        "text": "Num contêiner próprio, dividindo o namespace de rede e o localhost da loja",
+        "text": "Num contêiner próprio, no localhost da loja",
         "why": "Isso. É por isso que os metadados dizem que ele alcança o app em `127.0.0.1:8080`."
       },
       {
@@ -34,7 +34,7 @@
         "why": "O sidecar escuta na 3500; a loja escuta na 8080."
       },
       {
-        "text": "Porque o sidecar entrou no namespace da loja e não tem rede própria onde publicar",
+        "text": "O sidecar não tem rede própria, só a da loja",
         "why": "Isso. Portas pertencem a um namespace de rede, e este é o da loja."
       },
       {
@@ -78,7 +78,7 @@
         "why": "É isso que faz uma mudança no template. Uma configuração do Dapr não faz parte de uma revisão."
       },
       {
-        "text": "Nenhuma revisão é criada, e todas as revisões existentes reiniciam com a porta nova",
+        "text": "Nenhuma revisão nova; todas as existentes reiniciam com a porta nova",
         "why": "Isso. Por isso uma mudança no Dapr não pode ser testada antes em 10% do tráfego."
       },
       {
@@ -107,11 +107,11 @@
     "hint": "Veja a chave que o Redis de fato guardava.",
     "choices": [
       {
-        "text": "O armazenamento tem escopo só da loja, então o billing lê uma cópia vazia",
+        "text": "O armazenamento tem escopo só da loja",
         "why": "Nada tinha escopo; o billing carregou o componente e alcançou o mesmo Redis."
       },
       {
-        "text": "O sidecar do billing procurou `billing||order-1`, e toda chave leva o app id na frente",
+        "text": "As chaves levam o app id na frente, então ele pediu outra chave",
         "why": "Isso. O prefixo padrão é o app id, então dois apps num armazenamento só veem as próprias chaves."
       },
       {
@@ -146,19 +146,19 @@
     "hint": "As respostas que ele entende são SUCCESS, RETRY e DROP, e o código de status também diz algo.",
     "choices": [
       {
-        "text": "Tenta de novo até o app responder SUCCESS",
+        "text": "Tenta de novo até o app finalmente responder SUCCESS",
         "why": "Tentar de novo é o que `RETRY` pede; um 404 é lido como uma rota que não existe."
       },
       {
-        "text": "Entrega a mensagem ao outro assinante",
+        "text": "Entrega a mensagem ao outro assinante, o audit",
         "why": "Cada app tem a sua cópia; a falha do billing não passa a mensagem dele ao audit."
       },
       {
-        "text": "Descarta a mensagem e escreve um erro no log do sidecar",
+        "text": "Descarta, com um erro registrado no próprio log",
         "why": "Isso. Uma rota errada perde mensagens, e o log do próprio app não diz nada."
       },
       {
-        "text": "Encerra a assinatura daquele tópico",
+        "text": "Encerra de vez a assinatura daquele tópico no broker",
         "why": "A assinatura continua; cada mensagem que encontra o 404 é descartada."
       }
     ]
@@ -215,11 +215,11 @@
     "hint": "Ao que o componente ligou o tópico `orders`?",
     "choices": [
       {
-        "text": "Billing e audit acabaram com o mesmo consumer ID",
+        "text": "Billing e audit acabaram com o mesmo consumer ID, logo um grupo só",
         "why": "Os consumer IDs deles são os app ids, que são diferentes, e mesmo assim dividiram as mensagens."
       },
       {
-        "text": "O tópico virou uma fila só, os dois apps recebiam dela, e uma fila entrega cada mensagem a um receptor",
+        "text": "O tópico virou uma fila só, e ela entrega cada mensagem a um único receptor",
         "why": "Isso. A API ficou a mesma e a entrega passou a ser a da fila."
       },
       {
@@ -282,11 +282,11 @@
         "why": "Os dois leriam a mesma fila `orders`, e uma fila continua entregando cada mensagem a um receptor."
       },
       {
-        "text": "Um `maxDeliveryCount` maior na fila",
+        "text": "Um `maxDeliveryCount` maior, para cada mensagem ser oferecida mais de uma vez",
         "why": "Isso é quantas vezes uma mensagem que falha é tentada de novo, não quantos receptores a recebem."
       },
       {
-        "text": "O componente de tópicos, e um tópico `orders` com as assinaturas `billing` e `audit` declaradas antes",
+        "text": "O componente de tópicos, com as assinaturas `billing` e `audit` declaradas antes",
         "why": "Isso. Cada app lê a própria assinatura, e com o gerenciamento desligado elas precisam existir antes."
       }
     ]
@@ -300,7 +300,7 @@
         "why": "O BCP089 veio para `appID`, uma propriedade que o compilador conhece. `componentType` é uma string qualquer."
       },
       {
-        "text": "Compila em silêncio, e o `daprd` recusa o tipo ao iniciar",
+        "text": "Compila calado; o `daprd` o recusa ao iniciar",
         "why": "Isso. O sidecar de código aberto saiu com `couldn't find message bus`; o template tinha sido escrito sem uma palavra."
       },
       {
@@ -330,7 +330,7 @@
         "why": "Nada o recusa; ele é implantado e não recebe nada."
       },
       {
-        "text": "Ficam esperando no broker, sem sidecar para recebê-los, até uma réplica iniciar",
+        "text": "Esperam no broker até alguma réplica iniciar",
         "why": "Isso. É por isso que o billing mantém uma réplica, ou ganha uma regra de escala pelo tamanho da fila."
       }
     ]
@@ -444,7 +444,7 @@
         "why": "Um papel faltando falha quando o armazenamento é usado; um componente que nunca foi carregado é outra resposta."
       },
       {
-        "text": "O app id do audit não está em `scopes`, então o sidecar dele nunca carregou o componente",
+        "text": "A lista deixa o audit de fora, e nada foi carregado para ele",
         "why": "Isso. Scopes nomeiam os app ids que carregam um componente, e o audit não é um deles."
       },
       {

@@ -78,9 +78,9 @@ the tagged copy:
 ```
 ana@laptop:~/azure$ docker tag shop:1.0 shop:latest
 ana@laptop:~/azure$ kind load docker-image shop:latest --name shop
-Image: "shop:latest" with ID "sha256:9d01a6c28e4e4350855a86b4caa7609bef7aed47ab29e015f8c8b0c6def4a254" not yet present on node "shop-worker2", loading...
-Image: "shop:latest" with ID "sha256:9d01a6c28e4e4350855a86b4caa7609bef7aed47ab29e015f8c8b0c6def4a254" not yet present on node "shop-worker", loading...
-Image: "shop:latest" with ID "sha256:9d01a6c28e4e4350855a86b4caa7609bef7aed47ab29e015f8c8b0c6def4a254" not yet present on node "shop-control-plane", loading...
+Image: "shop:latest" with ID "sha256:7c124f4e5b5b8fe4d6f2f0f60719afcb74b2083478cbd0ac04e69eb37e43b6dd" not yet present on node "shop-worker", loading...
+Image: "shop:latest" with ID "sha256:7c124f4e5b5b8fe4d6f2f0f60719afcb74b2083478cbd0ac04e69eb37e43b6dd" not yet present on node "shop-control-plane", loading...
+Image: "shop:latest" with ID "sha256:7c124f4e5b5b8fe4d6f2f0f60719afcb74b2083478cbd0ac04e69eb37e43b6dd" not yet present on node "shop-worker2", loading...
 ana@laptop:~/azure$ kubectl apply -f hurried.yaml
 pod/hurried created
 ana@laptop:~/azure$ kubectl wait --for=condition=Ready pod/hurried --timeout=60s
@@ -171,9 +171,9 @@ Waiting for deployment "shop" rollout to finish: 2 of 3 updated replicas are ava
 deployment "shop" successfully rolled out
 ana@laptop:~/azure$ kubectl get pods -l app=shop -o custom-columns=POD:.metadata.name,NODE:.spec.nodeName,QOS:.status.qosClass,READY:.status.containerStatuses[0].ready
 POD                     NODE           QOS          READY
-shop-6897f59f8b-69bgk   shop-worker2   Guaranteed   true
-shop-6897f59f8b-hm6fq   shop-worker    Guaranteed   true
-shop-6897f59f8b-kjvgw   shop-worker    Guaranteed   true
+shop-6897f59f8b-67fw4   shop-worker    Guaranteed   true
+shop-6897f59f8b-qpt99   shop-worker2   Guaranteed   true
+shop-6897f59f8b-r7qr8   shop-worker    Guaranteed   true
 ```
 
 **`Guaranteed`, ready, and spread over both workers.** Nothing here was checked by a safeguard:
@@ -200,7 +200,7 @@ That is everything this lesson needs the cluster for. Delete it:
 ```
 ana@laptop:~/azure$ kind delete cluster --name shop
 Deleting cluster "shop" ...
-Deleted nodes: ["shop-worker2" "shop-worker" "shop-control-plane"]
+Deleted nodes: ["shop-worker" "shop-control-plane" "shop-worker2"]
 ```
 
 ## Where the rules stop

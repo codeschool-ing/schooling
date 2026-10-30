@@ -72,9 +72,9 @@ que rodar:
 
 ```
 ana@laptop:~/azure$ kind load docker-image shop:1.0 --name shop
-Image: "shop:1.0" with ID "sha256:9d01a6c28e4e4350855a86b4caa7609bef7aed47ab29e015f8c8b0c6def4a254" not yet present on node "shop-worker2", loading...
-Image: "shop:1.0" with ID "sha256:9d01a6c28e4e4350855a86b4caa7609bef7aed47ab29e015f8c8b0c6def4a254" not yet present on node "shop-worker", loading...
-Image: "shop:1.0" with ID "sha256:9d01a6c28e4e4350855a86b4caa7609bef7aed47ab29e015f8c8b0c6def4a254" not yet present on node "shop-control-plane", loading...
+Image: "shop:1.0" with ID "sha256:7c124f4e5b5b8fe4d6f2f0f60719afcb74b2083478cbd0ac04e69eb37e43b6dd" not yet present on node "shop-worker", loading...
+Image: "shop:1.0" with ID "sha256:7c124f4e5b5b8fe4d6f2f0f60719afcb74b2083478cbd0ac04e69eb37e43b6dd" not yet present on node "shop-control-plane", loading...
+Image: "shop:1.0" with ID "sha256:7c124f4e5b5b8fe4d6f2f0f60719afcb74b2083478cbd0ac04e69eb37e43b6dd" not yet present on node "shop-worker2", loading...
 ```
 
 ## Um pod sem lugar para ir
@@ -167,8 +167,8 @@ Karpenter, e um orçamento acima de 100%.
 ana@laptop:~/azure$ sed -e 's#karpenter.azure.com/sku-family#kubernetes.azure.com/agentpool#' -e 's/WhenEmptyOrUnderutilized/WhenUnderutilized/' -e 's/"20%"/"120%"/' nodepool.yaml > slips.yaml
 ana@laptop:~/azure$ kubectl apply --dry-run=server -f slips.yaml
 The NodePool "shop" is invalid: 
-* spec.disruption.budgets[0].nodes: Invalid value: "120%": spec.disruption.budgets[0].nodes in body should match '^((100|[0-9]{1,2})%|[0-9]+)$'
 * spec.disruption.consolidationPolicy: Unsupported value: "WhenUnderutilized": supported values: "WhenEmpty", "WhenEmptyOrUnderutilized", "Balanced"
+* spec.disruption.budgets[0].nodes: Invalid value: "120%": spec.disruption.budgets[0].nodes in body should match '^((100|[0-9]{1,2})%|[0-9]+)$'
 * <nil>: Invalid value: null: some validation rules were not checked because the object was invalid; correct the existing errors to complete validation
 ana@laptop:~/azure$ sed -e 's#karpenter.azure.com/sku-family#kubernetes.azure.com/agentpool#' nodepool.yaml > slips.yaml
 ana@laptop:~/azure$ kubectl apply --dry-run=server -f slips.yaml
