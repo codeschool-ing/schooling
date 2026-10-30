@@ -1,0 +1,446 @@
+{
+  "ex-wezscxe2": {
+    "prompt": "No Google Cloud, quem roda o servidor web na frente de uma função Python?",
+    "hint": "Você escreve uma função, não um programa que escuta.",
+    "choices": [
+      {
+        "text": "O seu main.py, que precisa abrir a porta 8080 sozinho",
+        "why": "O main.py só define a função; nada nele escuta."
+      },
+      {
+        "text": "Um nginx compartilhado que o Google roda para toda função da região",
+        "why": "Cada função é um serviço próprio do Cloud Run com o framework dentro."
+      },
+      {
+        "text": "O Functions Framework",
+        "why": "Isso. A mesma biblioteca que você rodou localmente, num contêiner no Cloud Run."
+      },
+      {
+        "text": "O gunicorn, que você põe no requirements.txt",
+        "why": "O build instala o framework; você não acrescenta nada para servir HTTP."
+      }
+    ]
+  },
+  "ex-k68dqts2": {
+    "prompt": "A função de cotação devolveu {\"error\": \"POST a list of items\"}, 405 para um GET. Quem escolheu o 405?",
+    "hint": "Olhe o return.",
+    "choices": [
+      {
+        "text": "A função, ao devolver um dicionário e o número 405",
+        "why": "Isso. O framework transformou o par num corpo JSON e num status."
+      },
+      {
+        "text": "O framework, que por padrão só aceita POST",
+        "why": "O framework passa todo método para a função."
+      },
+      {
+        "text": "O curl, que informa 405 quando não manda corpo",
+        "why": "O curl só imprime o status que o servidor mandou."
+      },
+      {
+        "text": "O Cloud Run, que recusa GET em funções HTTP",
+        "why": "Nada foi publicado, e funções HTTP aceitam qualquer método."
+      }
+    ]
+  },
+  "ex-ctb43t0g": {
+    "prompt": "Com PRICES = mug 3500, tee 7900, poster 2500 (centavos), que total_cents a função de cotação devolve para três posters e uma mug?",
+    "hint": "3 x 2500 + 1 x 3500.",
+    "unit": "centavos"
+  },
+  "ex-bgf32b4p": {
+    "prompt": "Um desenvolvedor põe um contador no nível do módulo da função de cotação para numerar cada cotação. Em produção os números se repetem e pulam. Por quê?",
+    "hint": "Quantas cópias do módulo existem?",
+    "choices": [
+      {
+        "text": "Inteiros do Python estouram depois de alguns milhares de chamadas",
+        "why": "Inteiros do Python não estouram."
+      },
+      {
+        "text": "O framework recarrega o main.py antes de toda requisição",
+        "why": "O módulo é carregado uma vez por instância, e é por isso que o PRICES é reaproveitado."
+      },
+      {
+        "text": "As requisições são repetidas, e cada repetição incrementa duas vezes",
+        "why": "Uma chamada HTTP não é repetida pela plataforma; as cópias é que são o problema."
+      },
+      {
+        "text": "Cada instância tem o seu contador, e instâncias sobem e descem",
+        "why": "Isso. O que precisa sobreviver a uma chamada vai para um banco ou uma fila."
+      }
+    ]
+  },
+  "ex-5rzywpbr": {
+    "prompt": "A opção do functions-framework que dá o nome da função dentro do main.py é --___.",
+    "hint": "Ela aponta o framework para a função.",
+    "blanks": [
+      {
+        "accept": [
+          "target"
+        ]
+      }
+    ]
+  },
+  "ex-q7hdez1f": {
+    "prompt": "O que uma função de evento devolve para dizer que deu certo?",
+    "hint": "O framework lê uma coisa só.",
+    "choices": [
+      {
+        "text": "A string OK",
+        "why": "O framework manda o OK sozinho; a função não devolve nada."
+      },
+      {
+        "text": "Nada; não lançar é sucesso",
+        "why": "Isso. Uma exceção vira um 500, que é falha."
+      },
+      {
+        "text": "O número 200",
+        "why": "Status é coisa de função HTTP; uma função de evento não devolve nada."
+      },
+      {
+        "text": "O evento que recebeu, sem mudança",
+        "why": "Nada é lido do valor de retorno."
+      }
+    ]
+  },
+  "ex-w0gex8nb": {
+    "prompt": "Ligue cada atributo do CloudEvent ao que ele diz.",
+    "hint": "Os quatro que o curl mandou como cabeçalhos.",
+    "pairs": [
+      {
+        "left": "id",
+        "right": "Este evento, único para a sua origem"
+      },
+      {
+        "left": "source",
+        "right": "O que o produziu"
+      },
+      {
+        "left": "type",
+        "right": "Que tipo de coisa aconteceu"
+      },
+      {
+        "left": "specversion",
+        "right": "A versão da especificação"
+      }
+    ],
+    "right_distractors": [
+      "Quantas vezes foi entregue"
+    ]
+  },
+  "ex-zpyw4tga": {
+    "prompt": "Uma requisição para a função notify levava ce-type, ce-source e ce-specversion, mas nenhum ce-id. O que aconteceu?",
+    "hint": "O terminal da função imprimiu algo?",
+    "choices": [
+      {
+        "text": "A função rodou com id vazio e o imprimiu",
+        "why": "O terminal dela mostrou um evento, o primeiro."
+      },
+      {
+        "text": "O framework inventou um id e respondeu 200",
+        "why": "Respondeu 400; inventar ids quebraria a deduplicação."
+      },
+      {
+        "text": "O framework respondeu 400 e nunca chamou a função",
+        "why": "Isso. Sem id não é um CloudEvent."
+      },
+      {
+        "text": "O curl se recusou a mandar uma requisição sem o cabeçalho",
+        "why": "O curl mandou; o 400 voltou do framework."
+      }
+    ]
+  },
+  "ex-ejk7faxe": {
+    "prompt": "Mandar os atributos do CloudEvent como cabeçalhos ce- com os dados no corpo se chama modo de conteúdo ___.",
+    "hint": "O outro modo é o estruturado.",
+    "blanks": [
+      {
+        "accept": [
+          "binário",
+          "binario",
+          "binary"
+        ]
+      }
+    ]
+  },
+  "ex-bz229v74": {
+    "prompt": "Uma função de evento captura toda exceção, registra no log e volta normalmente, \"para o log ficar limpo\". O que isso custa no Google Cloud?",
+    "hint": "O que uma volta normal diz ao remetente?",
+    "choices": [
+      {
+        "text": "Falhas passam por sucesso e nunca são repetidas",
+        "why": "Isso. Capture o que você tratou e deixe o resto escapar."
+      },
+      {
+        "text": "Nada; o evento é repetido de qualquer jeito depois de uma entrada de log",
+        "why": "As repetições são decididas pelo status, e uma volta normal é um 2xx."
+      },
+      {
+        "text": "A função é desativada depois de dez erros registrados",
+        "why": "Não existe essa regra; ela continua recebendo eventos."
+      },
+      {
+        "text": "Um 500 para cada chamada, cobrado em dobro",
+        "why": "Uma volta normal é um 2xx, não um 500."
+      }
+    ]
+  },
+  "ex-h88vy5zy": {
+    "prompt": "Como uma função com gatilho de Pub/Sub recebe mensagens?",
+    "hint": "Quem abre a conexão?",
+    "choices": [
+      {
+        "text": "Mantém uma conexão aberta com o tópico e lê dele",
+        "why": "Nada escuta o tópico; essa é a imagem errada comum."
+      },
+      {
+        "text": "Puxa a assinatura a cada poucos segundos",
+        "why": "Uma função não fica consultando; ela é chamada."
+      },
+      {
+        "text": "O Pub/Sub grava cada mensagem num arquivo que a função abre",
+        "why": "A entrega é uma requisição HTTP, não um arquivo."
+      },
+      {
+        "text": "Uma assinatura de push faz um POST de cada mensagem para ela por HTTP",
+        "why": "Isso. O gatilho é uma assinatura apontada para a função."
+      }
+    ]
+  },
+  "ex-k39e12c6": {
+    "prompt": "Por que o curso usa o pubsub.py em vez do gcloud pubsub contra o emulador?",
+    "hint": "O que o gcloud verifica antes de tudo?",
+    "choices": [
+      {
+        "text": "O gcloud não consegue criar assinaturas de push",
+        "why": "Consegue, com uma conta; a conta é o obstáculo."
+      },
+      {
+        "text": "O gcloud exige conta; a biblioteca não",
+        "why": "Isso. Com PUBSUB_EMULATOR_HOST definida, a biblioteca não precisa de credencial."
+      },
+      {
+        "text": "O emulador fala um protocolo que o gcloud nunca aprendeu",
+        "why": "O emulador fala a própria API do Pub/Sub."
+      },
+      {
+        "text": "O pubsub.py é mais rápido porque pula a criptografia",
+        "why": "Velocidade não é o motivo; a verificação de conta é."
+      }
+    ]
+  },
+  "ex-vee5mc9y": {
+    "prompt": "O que impede o pubsub.py de criar um tópico no Pub/Sub real?",
+    "hint": "Leia as primeiras linhas do main.",
+    "choices": [
+      {
+        "text": "O id de projeto planner-dev, que o Google recusa",
+        "why": "Um id de projeto não é trava; o programa verifica outra coisa antes."
+      },
+      {
+        "text": "O token no-account, que a biblioteca manda",
+        "why": "Essa variável é do Terraform; a biblioteca não a lê."
+      },
+      {
+        "text": "Ele sai quando PUBSUB_EMULATOR_HOST não está definida",
+        "why": "Isso. Sem a variável a biblioteca iria ao serviço real."
+      },
+      {
+        "text": "A rede do Docker, que não tem rota para o Google",
+        "why": "O pubsub.py roda no laptop, não num contêiner."
+      }
+    ]
+  },
+  "ex-1k3z9wvz": {
+    "prompt": "Ponha em ordem o caminho da mensagem 1042, do comando até a linha impressa.",
+    "hint": "Siga a figura da esquerda para a direita.",
+    "items": [
+      "O pubsub.py publica 1042 com source=web",
+      "O tópico guarda uma cópia para a assinatura orders-fn",
+      "A assinatura faz um POST para localhost:8080",
+      "O framework transforma o push num CloudEvent",
+      "O on_order decodifica o base64 e imprime a linha"
+    ]
+  },
+  "ex-x1an0ky9": {
+    "prompt": "Onde no CloudEvent o on_order encontra o número do pedido?",
+    "hint": "Está codificado.",
+    "choices": [
+      {
+        "text": "Em data.message.data, em base64",
+        "why": "Isso. A função decodifica."
+      },
+      {
+        "text": "No cabeçalho ce-id",
+        "why": "O id é o id da mensagem, 1, não o pedido."
+      },
+      {
+        "text": "No atributo source",
+        "why": "O source trazia web, o atributo definido."
+      },
+      {
+        "text": "Na URL do endpoint de push",
+        "why": "O endpoint é o mesmo para toda mensagem."
+      }
+    ]
+  },
+  "ex-1msn6p15": {
+    "prompt": "O que a versão publicada desta cadeia tem que a do laptop não tinha? Escolha todas as que se aplicam.",
+    "hint": "A seção cita as diferenças.",
+    "choices": [
+      {
+        "text": "Um token de identidade que prova que quem chama é o Pub/Sub",
+        "why": "Isso; o push do laptop não levava nenhum."
+      },
+      {
+        "text": "Um tópico e uma assinatura morando no projeto",
+        "why": "Isso; aqui moravam num contêiner."
+      },
+      {
+        "text": "Um formato diferente de conteúdo para a mensagem",
+        "why": "O formato é o que você rodou."
+      },
+      {
+        "text": "Uma função que puxa em vez de receber o push",
+        "why": "Ela continua recebendo o push."
+      }
+    ]
+  },
+  "ex-n80mjx9y": {
+    "prompt": "Como o Google chama hoje a segunda geração do Cloud Functions?",
+    "hint": "O nome diz sobre o que ela é feita.",
+    "choices": [
+      {
+        "text": "App Engine functions",
+        "why": "O App Engine é a plataforma da lição 19."
+      },
+      {
+        "text": "Eventarc functions",
+        "why": "O Eventarc entrega eventos; não roda código."
+      },
+      {
+        "text": "Cloud Functions Plus",
+        "why": "Esse produto não existe."
+      },
+      {
+        "text": "Cloud Run functions",
+        "why": "Isso. Cada uma é um serviço do Cloud Run com o framework dentro."
+      }
+    ]
+  },
+  "ex-w56q4nqf": {
+    "prompt": "Um pico traz 300 requisições simultâneas a uma função de primeira geração. De quantas instâncias ela precisa, no mínimo?",
+    "hint": "Uma requisição por instância.",
+    "unit": "instâncias"
+  },
+  "ex-5sasqg37": {
+    "prompt": "Qual limite é igual nas duas gerações?",
+    "hint": "Uma das linhas da tabela não muda.",
+    "choices": [
+      {
+        "text": "A chamada HTTP mais longa",
+        "why": "9 minutos contra 60."
+      },
+      {
+        "text": "A chamada de evento mais longa, 9 minutos",
+        "why": "Isso. Só o HTTP ganhou a hora."
+      },
+      {
+        "text": "Requisições por instância",
+        "why": "Uma contra até 1.000."
+      },
+      {
+        "text": "A maior instância que dá para pedir, em memória",
+        "why": "8 GiB contra 32 GiB."
+      }
+    ]
+  },
+  "ex-92b21a4h": {
+    "prompt": "Uma função chama a própria URL por engano a cada requisição que recebe. Qual configuração do main.tf limita o estrago?",
+    "hint": "É um teto de cópias.",
+    "choices": [
+      {
+        "text": "timeout_seconds",
+        "why": "Limita uma chamada, não quantas rodam."
+      },
+      {
+        "text": "available_memory",
+        "why": "Memória por instância não limita instâncias."
+      },
+      {
+        "text": "max_instance_count",
+        "why": "Isso. Ele limita até onde o laço pode escalar."
+      },
+      {
+        "text": "entry_point",
+        "why": "Dá o nome da função, só isso."
+      }
+    ]
+  },
+  "ex-5vhw0em0": {
+    "prompt": "O plan imprimiu uri = (known after apply). O que o tornaria conhecido?",
+    "hint": "Quem escolhe o endereço?",
+    "choices": [
+      {
+        "text": "Publicar a função, porque o Google atribui o endereço nessa hora",
+        "why": "Isso. Como o id de uma instância, é decidido do outro lado."
+      },
+      {
+        "text": "Pôr um token real em GOOGLE_OAUTH_ACCESS_TOKEN e planejar de novo",
+        "why": "Um plan não cria a função; o endereço aparece quando ela existe."
+      },
+      {
+        "text": "Pôr uma linha uri no service_config",
+        "why": "É uma saída, não algo que se define."
+      },
+      {
+        "text": "Rodar o terraform init com o espelho de novo",
+        "why": "O init instala o provider; não decide endereços."
+      }
+    ]
+  },
+  "ex-hrvash13": {
+    "prompt": "No gcloud functions deploy, a opção que transforma uma função HTTP numa alimentada pelas mensagens de Pub/Sub de orders é --trigger-___=orders.",
+    "hint": "Diz o que alimenta a função.",
+    "blanks": [
+      {
+        "accept": [
+          "topic"
+        ]
+      }
+    ]
+  },
+  "ex-75sgcekz": {
+    "prompt": "Ordene pelo número de instâncias que 200 requisições simultâneas exigiriam, do menor para o maior.",
+    "hint": "Divida pelo que uma instância atende de uma vez.",
+    "items": [
+      "Uma função de segunda geração com concorrência 200",
+      "Uma função de segunda geração com concorrência 80",
+      "Uma função de segunda geração com concorrência 10",
+      "Uma função de primeira geração"
+    ],
+    "trap": "A primeira geração atende uma requisição por instância, então precisa das 200."
+  },
+  "ex-0r5n4579": {
+    "prompt": "Uma equipe precisa redimensionar fotos de produto sempre que uma é enviada. Que formato serve melhor?",
+    "hint": "Um pedaço pequeno de trabalho com gatilho claro.",
+    "choices": [
+      {
+        "text": "Uma máquina do Compute Engine consultando o bucket a cada minuto",
+        "why": "Paga o mês inteiro para esperar, e atrasa até um minuto."
+      },
+      {
+        "text": "Uma função HTTP que o navegador chama depois do upload",
+        "why": "Uma aba fechada deixaria uma foto sem redimensionar."
+      },
+      {
+        "text": "Um serviço do Cloud Run com vinte rotas",
+        "why": "Uma reação não precisa de uma aplicação."
+      },
+      {
+        "text": "Uma função de evento disparada pelo upload",
+        "why": "Isso. A lição 18 liga exatamente isto."
+      }
+    ]
+  }
+}
