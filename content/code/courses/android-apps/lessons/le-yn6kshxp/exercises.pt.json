@@ -1,0 +1,416 @@
+{
+  "ex-sp01rtnn": {
+    "prompt": "Por que o `WeekUiState` calcula `totalMinutes` a partir de `sessions` em vez de guardá-lo num campo?",
+    "hint": "A seção 02 abre com uma tela mostrando 90 ao lado de uma lista que soma 135.",
+    "choices": [
+      {
+        "text": "Para que o total nunca discorde da lista",
+        "why": "Isso: um valor calculado da lista acompanha toda mudança nela, e nada pode esquecer de atualizá-lo."
+      },
+      {
+        "text": "Porque uma data class não pode guardar um `Int` ao lado de uma `List`",
+        "why": "Uma data class guarda qualquer mistura de campos; a escolha é sobre consistência."
+      },
+      {
+        "text": "Para a tela recompor menos vezes",
+        "why": "Uma propriedade calculada não muda quando a tela recompõe; o estado é trocado de qualquer jeito."
+      },
+      {
+        "text": "Porque o `SavedStateHandle` não guarda números",
+        "why": "O handle guarda números sem problema, e o total nem está no handle."
+      }
+    ]
+  },
+  "ex-fe4bq3zr": {
+    "prompt": "`draftMinutes` é uma `String`. O que daria errado se fosse um `Int`?",
+    "hint": "Pense no campo enquanto o estudante está no meio da digitação.",
+    "choices": [
+      {
+        "text": "Nada, um `Int` só gastaria menos memória",
+        "why": "Um campo vazio e `\"4\"` a caminho de `\"45\"` são estados que um `Int` não representa com fidelidade."
+      },
+      {
+        "text": "Um campo vazio ou pela metade não teria como aparecer",
+        "why": "Isso: o texto sendo digitado ainda não é um número, então fica como texto e é convertido uma vez, em `canAdd` e `onAdd`."
+      },
+      {
+        "text": "O `OutlinedTextField` se recusaria a compilar",
+        "why": "Compilaria com uma conversão na chamada; o problema aparece quando alguém digita."
+      },
+      {
+        "text": "O total seria calculado em horas",
+        "why": "A unidade não tem nada a ver com o tipo do rascunho."
+      }
+    ]
+  },
+  "ex-daktp9sz": {
+    "prompt": "O ViewModel guarda um `MutableStateFlow` privado e o expõe como um `___` só de leitura, para que só ele possa mudar o estado.",
+    "hint": "O tipo que `asStateFlow()` devolve.",
+    "blanks": [
+      {
+        "accept": [
+          "StateFlow"
+        ]
+      }
+    ]
+  },
+  "ex-g43p9mad": {
+    "prompt": "No planner, o que a `WeekScreen` faz quando o estudante marca a caixa de uma sessão?",
+    "hint": "O estado desce, os eventos sobem.",
+    "choices": [
+      {
+        "text": "Chama `onToggleDone(id)` e desenha o estado que voltar",
+        "why": "Isso: a tela informa a intenção e nunca muda a sessão ela mesma."
+      },
+      {
+        "text": "Faz `session.done = true` na lista que recebeu",
+        "why": "`done` é `val` numa classe imutável, e editar o estado recebido é exatamente o que o fluxo em uma direção proíbe."
+      },
+      {
+        "text": "Guarda a marca num `remember` até o ViewModel alcançar",
+        "why": "Essa é a segunda cópia da verdade de que a seção 03 avisa."
+      },
+      {
+        "text": "Escreve a marca no `SavedStateHandle`",
+        "why": "A tela nunca toca no handle; só o ViewModel toca."
+      }
+    ]
+  },
+  "ex-fq3k4da6": {
+    "prompt": "Por que a aula divide a tela em `WeekScreen` e `WeekRoute`?",
+    "hint": "Qual das duas o teste de captura chamou?",
+    "choices": [
+      {
+        "text": "Porque um composable só pode receber quatro parâmetros",
+        "why": "Não existe esse limite; a `WeekScreen` recebe cinco."
+      },
+      {
+        "text": "Para uma parte desenhar de qualquer valor e outra ligar",
+        "why": "Isso: o teste desenhou a `WeekScreen` com um estado inventado; só a `WeekRoute` toca no ViewModel."
+      },
+      {
+        "text": "Porque `viewModel()` não pode ser chamado dentro de uma `Column`",
+        "why": "Pode ser chamado em qualquer composable; a divisão é sobre do que cada parte depende."
+      },
+      {
+        "text": "Para a activity escolher um ViewModel diferente a cada rotação",
+        "why": "O mesmo ViewModel é mantido na rotação, que é o ponto da seção 04."
+      }
+    ]
+  },
+  "ex-1se00fzm": {
+    "prompt": "O teste de captura desenhou três sessões de 45, 25 e 90 minutos. Que total a tela mostrou, em minutos?",
+    "hint": "Some.",
+    "unit": "min"
+  },
+  "ex-5k7j543k": {
+    "prompt": "Uma colega faz o `onDraftChange` ignorar qualquer tecla que não seja dígito, sem mudar o estado. O que o estudante vê ao digitar uma letra?",
+    "hint": "O valor de quem o campo mostra?",
+    "choices": [
+      {
+        "text": "A letra aparece e some na próxima recomposição",
+        "why": "O campo nunca guarda texto próprio, então não há onde mostrar a letra antes de o estado mudar."
+      },
+      {
+        "text": "O app quebra, porque o campo e o estado discordam",
+        "why": "Eles não podem discordar: o campo mostra `state.draftMinutes` e nada mais."
+      },
+      {
+        "text": "Nada muda no campo: a letra é recusada",
+        "why": "Isso: o campo desenha o estado; um estado que não mudou desenha o mesmo texto."
+      },
+      {
+        "text": "A letra fica e é convertida em 0 pelo `toIntOrNull`",
+        "why": "O `toIntOrNull` dá `null` para uma letra, e a letra nem chegou ao estado."
+      }
+    ]
+  },
+  "ex-ga83v39k": {
+    "prompt": "O `RecreateTest` imprimiu as identidades antes e depois do `recreate()`. Qual mudou?",
+    "hint": "Duas activities diferentes, um…",
+    "choices": [
+      {
+        "text": "As duas: uma activity nova e um ViewModel novo",
+        "why": "Então a sessão teria se perdido, e o teste encontrou 45 minutos depois da recriação."
+      },
+      {
+        "text": "Só a activity",
+        "why": "Isso: a activity é um objeto novo e o ViewModelStore passou o ViewModel antigo para ela."
+      },
+      {
+        "text": "Só o ViewModel",
+        "why": "É o contrário: a recriação troca a activity e mantém o ViewModel."
+      },
+      {
+        "text": "Nenhuma, porque o Robolectric não recria",
+        "why": "Recria: a identidade da activity mudou."
+      }
+    ]
+  },
+  "ex-83e4x5vk": {
+    "prompt": "Ligue onde um valor mora ao primeiro evento que o perde.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "um `remember` simples",
+        "right": "uma rotação"
+      },
+      {
+        "left": "um campo do ViewModel",
+        "right": "o processo morto em segundo plano"
+      },
+      {
+        "left": "`SavedStateHandle`",
+        "right": "o app tirado dos recentes"
+      }
+    ],
+    "right_distractors": [
+      "uma versão nova do app instalada"
+    ]
+  },
+  "ex-ekv8n56h": {
+    "prompt": "O que o `ViewModelStore` faz quando a activity dele é destruída de vez, e não por uma mudança de configuração?",
+    "hint": "O store só é mantido numa mudança de configuração.",
+    "choices": [
+      {
+        "text": "Passa os ViewModels para a próxima activity que abrir",
+        "why": "Ele só os passa adiante numa mudança de configuração; fora isso não há sucessor."
+      },
+      {
+        "text": "Escreve os ViewModels no `Bundle` salvo",
+        "why": "Só os valores do `SavedStateHandle` chegam ao `Bundle`; um ViewModel nunca é serializado."
+      },
+      {
+        "text": "Chama `onCleared()` em cada ViewModel e se esvazia",
+        "why": "Isso: é o fim da vida de um ViewModel."
+      },
+      {
+        "text": "Mantém todos até o processo terminar",
+        "why": "Eles são descartados com a activity, e é por isso que o `ProcessDeathTest` recebeu um novo."
+      }
+    ]
+  },
+  "ex-ywsc29f5": {
+    "prompt": "Depois que o `ProcessDeathTest` reconstruiu a activity a partir do `Bundle`, o que voltou?",
+    "hint": "O `after:` da saída.",
+    "choices": [
+      {
+        "text": "O rascunho \"30\", e nenhuma sessão",
+        "why": "Isso: o rascunho estava no handle e a sessão só na memória do ViewModel antigo."
+      },
+      {
+        "text": "A sessão, e um rascunho vazio",
+        "why": "A sessão nunca foi escrita no handle, então nada podia trazê-la de volta."
+      },
+      {
+        "text": "Os dois, porque o ViewModel era o mesmo",
+        "why": "O teste imprimiu `same ViewModel: false`."
+      },
+      {
+        "text": "Nenhum dos dois: o Bundle fica vazio depois do `destroy()`",
+        "why": "O Bundle foi preenchido pelo `saveInstanceState` antes do `destroy()`, e o rascunho voltou."
+      }
+    ]
+  },
+  "ex-8z73nspz": {
+    "prompt": "Qual destes pertence a um `SavedStateHandle`?",
+    "hint": "O que o estudante estava fazendo no meio, nunca os dados em si.",
+    "choices": [
+      {
+        "text": "Todas as sessões de estudo do semestre",
+        "why": "Isso é dado; pertence a um banco, e um Bundle grande falha com `TransactionTooLargeException`."
+      },
+      {
+        "text": "O id do curso na tela",
+        "why": "Isso: pequeno, e suficiente para recarregar todo o resto."
+      },
+      {
+        "text": "A activity, para ela ser restaurada como estava",
+        "why": "Uma activity não é algo que um Bundle guarde, e guardá-la é o vazamento da seção 06."
+      },
+      {
+        "text": "A tela renderizada como bitmap",
+        "why": "Um bitmap é grande e é redesenhado a partir do estado de qualquer jeito."
+      }
+    ]
+  },
+  "ex-wd7s94r0": {
+    "prompt": "Um estudante digita 45, troca para um app de vídeo por uma hora e volta. O celular tinha matado o processo do planner. Qual frase descreve o que ele vê?",
+    "hint": "A seção 05 imitou exatamente isso num teste.",
+    "choices": [
+      {
+        "text": "O app abre na primeira tela sem nada digitado",
+        "why": "O sistema recria a activity com o Bundle, e o rascunho está nele."
+      },
+      {
+        "text": "A mesma tela com 45 no campo, e as sessões adicionadas antes sumidas",
+        "why": "Isso: o handle sobrevive ao processo e a lista em memória desta aula não; a aula 15 conserta a segunda metade."
+      },
+      {
+        "text": "Tudo exatamente como estava, porque o ViewModel foi mantido",
+        "why": "Um ViewModel vive na memória do processo e morre com ele."
+      },
+      {
+        "text": "Uma quebra, porque o estado do ViewModel é nulo",
+        "why": "Um ViewModel novo é construído com estado padrão e o rascunho do handle; nada é nulo."
+      }
+    ]
+  },
+  "ex-s6eaesh7": {
+    "prompt": "Por que o `LeakyViewModel`, que guarda o `Context` da activity, vaza memória?",
+    "hint": "Qual dos dois vive mais?",
+    "choices": [
+      {
+        "text": "Porque `getString` copia todos os recursos para o ViewModel",
+        "why": "`getString` devolve uma string; o problema é a referência guardada no campo."
+      },
+      {
+        "text": "Porque um `Context` não pode ser coletado de jeito nenhum",
+        "why": "Um `Context` é coletado como qualquer coisa quando nada aponta para ele."
+      },
+      {
+        "text": "O ViewModel sobrevive à activity e mantém a destruída alcançável",
+        "why": "Isso: depois de uma rotação a activity antiga e toda a árvore de views ficam na memória."
+      },
+      {
+        "text": "Porque o lint a marca, e código marcado é mantido pelo R8",
+        "why": "Lint e R8 não têm relação; o lint só relatou o problema."
+      }
+    ]
+  },
+  "ex-714snn0t": {
+    "prompt": "O lint relatou o campo que vaza sob a verificação chamada `___`.",
+    "hint": "Está entre colchetes no fim do aviso.",
+    "blanks": [
+      {
+        "accept": [
+          "StaticFieldLeak"
+        ]
+      }
+    ]
+  },
+  "ex-bsgb0pzh": {
+    "prompt": "Como o planner põe \"160 min this week\" na tela sem o ViewModel tocar nos recursos?",
+    "hint": "Valores de um lado, texto do outro.",
+    "choices": [
+      {
+        "text": "O ViewModel guarda um `Application` e formata com ele",
+        "why": "O curso cita o `AndroidViewModel` e não o usa, para manter o ViewModel testável sem Android."
+      },
+      {
+        "text": "O estado traz os números e a `WeekScreen` os formata com `stringResource`",
+        "why": "Isso: o ViewModel produz valores e a tela produz texto, no idioma do celular."
+      },
+      {
+        "text": "A string está fixa em inglês no estado",
+        "why": "Então nenhum outro idioma poderia mostrá-la; a seção 07 da aula 1 avisa contra exatamente isso."
+      },
+      {
+        "text": "A activity a formata e passa ao ViewModel",
+        "why": "O texto sai dos recursos da própria tela; o ViewModel nunca o recebe."
+      }
+    ]
+  },
+  "ex-vk74bvrf": {
+    "prompt": "Por que o `WeekViewModelTest` roda sem Robolectric?",
+    "hint": "Olhe os imports do ViewModel.",
+    "choices": [
+      {
+        "text": "Porque o Gradle pula o Android para testes no pacote `ui`",
+        "why": "Um nome de pacote não muda nada; do que a classe depende é que muda."
+      },
+      {
+        "text": "Porque o ViewModel não guarda nenhum objeto do Android",
+        "why": "Isso: Kotlin puro sobre um `StateFlow`, construído com um `SavedStateHandle` de um mapa."
+      },
+      {
+        "text": "Porque o `testDebugUnitTest` sempre usa o Robolectric de qualquer forma",
+        "why": "Só testes marcados com `@RunWith(RobolectricTestRunner::class)` o recebem; este é JUnit puro."
+      },
+      {
+        "text": "Porque ViewModels são stubs na JVM",
+        "why": "A classe `ViewModel` de verdade rodou; nada virou stub."
+      }
+    ]
+  },
+  "ex-9gsghezr": {
+    "prompt": "Ligue cada teste à pergunta que ele responde.",
+    "hint": "A tabela no fim da seção 07.",
+    "pairs": [
+      {
+        "left": "`WeekViewModelTest`",
+        "right": "O que o estado vira depois de cada evento?"
+      },
+      {
+        "left": "`WeekScreenShotTest`",
+        "right": "Como um estado aparece na tela?"
+      },
+      {
+        "left": "`RecreateTest`",
+        "right": "Tela, ViewModel e ciclo de vida estão conectados?"
+      }
+    ],
+    "right_distractors": [
+      "O app abre rápido num celular de verdade?"
+    ]
+  },
+  "ex-1gjbcqg3": {
+    "prompt": "Em `togglingMarksOneSessionAndTheCountFollows`, são adicionadas três sessões de 25, 50 e 90 minutos. Que total o teste espera?",
+    "hint": "Marcar uma como feita não muda o total."
+  },
+  "ex-a4n8w773": {
+    "prompt": "Ponha um toque em **Add** na ordem em que as coisas acontecem no planner.",
+    "hint": "Sobe, depois desce.",
+    "items": [
+      "o botão da `WeekScreen` chama `onAdd`",
+      "a `WeekRoute` chama `viewModel.onAdd(LocalDate.now())`",
+      "o ViewModel põe um `WeekUiState` novo no seu fluxo",
+      "o `collectAsStateWithLifecycle` entrega o estado novo à `WeekScreen`",
+      "a `WeekScreen` desenha o total novo"
+    ]
+  },
+  "ex-p681x0qf": {
+    "prompt": "Quais destes sobrevivem ao processo morto em segundo plano? Escolha todos os que se aplicam.",
+    "hint": "Só o que chegou ao Bundle, ou ao disco.",
+    "choices": [
+      {
+        "text": "Um valor em `rememberSaveable`",
+        "why": "Sim: é salvo no Bundle."
+      },
+      {
+        "text": "Um campo do ViewModel",
+        "why": "Não: o ViewModel morre com o processo."
+      },
+      {
+        "text": "Uma chave no `SavedStateHandle`",
+        "why": "Sim: é para isso que o handle existe."
+      },
+      {
+        "text": "Um valor num `remember` simples",
+        "why": "Não: nem sobrevive a uma rotação."
+      }
+    ]
+  },
+  "ex-fdr63b8n": {
+    "prompt": "Uma tela nova precisa do nome do curso no título. O ViewModel tem o id do curso. Onde o resultado da busca do nome deve ir parar?",
+    "hint": "Um estado para uma tela.",
+    "choices": [
+      {
+        "text": "Num campo do estado da tela, calculado pelo ViewModel",
+        "why": "Isso: tudo o que a tela desenha está no estado dela, e o ViewModel o cria."
+      },
+      {
+        "text": "Num `remember` dentro da tela, buscado no primeiro desenho",
+        "why": "Isso é uma segunda cópia da verdade, perdida na rotação, e a tela fazendo um trabalho que não deveria."
+      },
+      {
+        "text": "No `SavedStateHandle`, ao lado do id",
+        "why": "O handle guarda o id; o nome é dado que pode ser buscado de novo a partir dele."
+      },
+      {
+        "text": "Na activity, passado ao `setContent`",
+        "why": "A activity é recriada na rotação e precisaria buscar de novo; o lugar é o estado."
+      }
+    ]
+  }
+}
