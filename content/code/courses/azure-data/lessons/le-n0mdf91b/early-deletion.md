@@ -43,8 +43,8 @@ for half a year of archive and then the rehydration on top.
 
 **Put data in a cooler tier only when you know how long it will stay.** That is a question about the
 data, and Quitanda can answer it. The nightly exports are read by the finance team for about a month
-and kept seven years for the tax authority; they belong in hot for the first month, cool after it,
-and archive once nobody has read them for a year. The click files of lesson 3 are rewritten into
+and kept seven years under Quitanda's own retention rule; they belong in hot for the first month, cool after it,
+and a colder tier still once nobody has read them for a year. The click files of lesson 3 are rewritten into
 daily tables within a week and deleted; they never belong anywhere but hot, because every cooler tier
 would bill them for days they never lived.
 

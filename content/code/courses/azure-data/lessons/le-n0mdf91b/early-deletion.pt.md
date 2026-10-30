@@ -43,8 +43,8 @@ meio ano de archive e ainda a reidratação por cima.
 
 **Ponha dados num tier mais frio só quando souber quanto tempo eles vão ficar.** É uma pergunta sobre
 os dados, e a Quitanda sabe responder. As exportações noturnas são lidas pelo financeiro por cerca de
-um mês e guardadas sete anos para o fisco; elas vão para hot no primeiro mês, cool depois disso e
-archive quando ninguém as lê há um ano. Os arquivos de clique da lição 3 são reescritos em tabelas
+um mês e guardadas sete anos pela regra de retenção da própria Quitanda; elas vão para hot no primeiro mês, cool depois disso e um tier ainda mais frio quando ninguém as lê
+há um ano. Os arquivos de clique da lição 3 são reescritos em tabelas
 diárias dentro de uma semana e apagados; eles nunca vão para outro lugar além do hot, porque todo tier
 mais frio cobraria deles dias que nunca viveram.
 

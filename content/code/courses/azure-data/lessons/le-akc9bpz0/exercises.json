@@ -1,0 +1,606 @@
+[
+  {
+    "id": "ex-tdn8m5wg",
+    "version": 1,
+    "section": "soft-delete",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A blob is deleted in an account with blob soft delete set to 14 days. What happens on day 5?",
+    "hint": "Nothing moved; it is marked.",
+    "choices": [
+      {
+        "text": "It is gone, and only a backup can bring it back",
+        "correct": false,
+        "why": "That is the account without soft delete."
+      },
+      {
+        "text": "It sits in a recycle-bin container you can browse",
+        "correct": false,
+        "why": "Nothing is moved; the blob stays under its own name, marked deleted."
+      },
+      {
+        "text": "Kept, marked deleted, and billed until day 14",
+        "correct": true,
+        "why": "Right. After day 14 it is gone for good."
+      },
+      {
+        "text": "The delete was refused, because the blob is protected for 14 days",
+        "correct": false,
+        "why": "Soft delete never stops a delete; that is immutability."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nt1a6js",
+    "version": 1,
+    "section": "soft-delete",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An engineer deletes the whole `orders-raw` container by mistake. Blob soft delete is on; container soft delete is off. What can be recovered?",
+    "hint": "The two switches protect against different mistakes.",
+    "choices": [
+      {
+        "text": "Nothing; that needed the other switch",
+        "correct": true,
+        "why": "Right. The two are independent switches."
+      },
+      {
+        "text": "Every blob, because blob soft delete covers them",
+        "correct": false,
+        "why": "Blob soft delete covers blobs deleted one by one, not a deleted container."
+      },
+      {
+        "text": "The container, empty, since only blobs were soft deleted",
+        "correct": false,
+        "why": "Without container soft delete the container is gone too."
+      },
+      {
+        "text": "The blobs written in the last 14 days",
+        "correct": false,
+        "why": "Retention counts from the deletion, not from when blobs were written."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp33gmzn",
+    "version": 1,
+    "section": "soft-delete",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the longest blob soft-delete retention, in days, that the Terraform provider accepted?",
+    "hint": "The refusal printed the range.",
+    "value": 365,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-2jgpzdhs",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a versioned account, a program deletes `rates/usd-brl.csv`. What is left?",
+    "hint": "A delete with versioning destroys nothing.",
+    "choices": [
+      {
+        "text": "Nothing; versioning only protects overwrites",
+        "correct": false,
+        "why": "A delete turns the current content into a previous version."
+      },
+      {
+        "text": "The blob, unchanged, because deletes are refused while versioning is on",
+        "correct": false,
+        "why": "Nothing refuses the delete; only immutability does that."
+      },
+      {
+        "text": "A soft-deleted blob that disappears after the retention days",
+        "correct": false,
+        "why": "That is soft delete without versioning."
+      },
+      {
+        "text": "A previous version holding its content",
+        "correct": true,
+        "why": "Right. Restoring is a copy, which is itself a new version."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7y0z98n",
+    "version": 1,
+    "section": "versioning",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 50 GB table is rewritten whole every night in a versioned account with no rule for versions. Roughly how many GB of previous versions does it hold after 365 nights?",
+    "hint": "Each night leaves one full copy behind.",
+    "value": 18250,
+    "tolerance": 100,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-mgqwrq7b",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `snapshot.py`, how was the right exchange rate restored?",
+    "hint": "The last two lines of the program.",
+    "choices": [
+      {
+        "text": "By deleting the current blob, so the snapshot took its place",
+        "correct": false,
+        "why": "A snapshot never replaces its base on its own."
+      },
+      {
+        "text": "By copying the snapshot's URL over the blob's own name",
+        "correct": true,
+        "why": "Right, the same way a version is restored."
+      },
+      {
+        "text": "By an undelete of the snapshot",
+        "correct": false,
+        "why": "Nothing was deleted, and Azurite has no undelete."
+      },
+      {
+        "text": "By renaming the snapshot to the blob's name",
+        "correct": false,
+        "why": "Blob Storage has no rename, as lesson 3 counted."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcv20xa8",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between a snapshot and a version?",
+    "hint": "Who decides when each one is made?",
+    "choices": [
+      {
+        "text": "A snapshot is writable and a version is read-only",
+        "correct": false,
+        "why": "Both are read-only copies."
+      },
+      {
+        "text": "A version is made on every write; a snapshot only when a program asks",
+        "correct": true,
+        "why": "Right. Versioning automates what snapshots did by hand."
+      },
+      {
+        "text": "Snapshots are free, versions are billed",
+        "correct": false,
+        "why": "Both keep data that is billed."
+      },
+      {
+        "text": "Versions survive a delete, snapshots are deleted with the blob first",
+        "correct": false,
+        "why": "That is not what separates them; who triggers them is."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzx9eg9r",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `lifecycle.tf`, why does `prefix_match` start with `orders-raw/`?",
+    "hint": "A rule belongs to the account, not to one container.",
+    "choices": [
+      {
+        "text": "It is a folder the rule creates for moved blobs",
+        "correct": false,
+        "why": "A rule creates nothing; it moves and deletes."
+      },
+      {
+        "text": "Prefixes must start with the account's name",
+        "correct": false,
+        "why": "The account is implied; the prefix starts with the container."
+      },
+      {
+        "text": "It is optional decoration; the rule applies to the whole account",
+        "correct": false,
+        "why": "Without it the rule would apply to every block blob in the account."
+      },
+      {
+        "text": "It names the container first, then the start of the blob names",
+        "correct": true,
+        "why": "Right. So the rule touches the exports and nothing else in the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-akaeaq9n",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Quitanda's rule for the exports stop at cold instead of archive?",
+    "hint": "Which account are the exports in, and how is it replicated?",
+    "choices": [
+      {
+        "text": "Its account is ZRS, a replication with no such tier",
+        "correct": true,
+        "why": "Right, as lesson 4 found."
+      },
+      {
+        "text": "Cold is cheaper than archive for data kept seven years",
+        "correct": false,
+        "why": "Archive keeps a gigabyte for less; the reason is elsewhere."
+      },
+      {
+        "text": "A rule cannot move blobs to archive",
+        "correct": false,
+        "why": "The provider listed `tier_to_archive_...` actions."
+      },
+      {
+        "text": "Archive would break the versions rule",
+        "correct": false,
+        "why": "Versions have archive actions of their own."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhnc5wsw",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes a rule that moves logs to cold at 30 days and deletes them at 60. What does every log cost?",
+    "hint": "Lesson 4's minimums apply to what a rule does.",
+    "choices": [
+      {
+        "text": "30 days of hot and 30 of cold, as written",
+        "correct": false,
+        "why": "Cold's minimum is 90 days and is billed in full."
+      },
+      {
+        "text": "Nothing extra, since rules are exempt from early deletion",
+        "correct": false,
+        "why": "There is no such exemption."
+      },
+      {
+        "text": "30 days of hot and 90 of cold, 60 of them for days it did not stay",
+        "correct": true,
+        "why": "Right. A rule knows nothing about minimum days."
+      },
+      {
+        "text": "The rule is refused, because 60 is less than cold's minimum",
+        "correct": false,
+        "why": "Nothing checks the rule against the minimums; the bill does."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j40qs4w",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A life-cycle rule is saved at 14:00. When does Microsoft document that it starts moving blobs?",
+    "hint": "The policy is not instant.",
+    "choices": [
+      {
+        "text": "At once, for every blob that matches",
+        "correct": false,
+        "why": "Policies are run by the platform once a day, not on save."
+      },
+      {
+        "text": "At 14:00 the next day exactly",
+        "correct": false,
+        "why": "There is no fixed hour; it is up to 24 hours, then the time the actions take."
+      },
+      {
+        "text": "After 30 days, the shortest age in the rule",
+        "correct": false,
+        "why": "The ages are the blobs', not the rule's."
+      },
+      {
+        "text": "Within about 24 hours, and its actions take longer on a large account",
+        "correct": true,
+        "why": "Right. A rule written today archives nothing tonight."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkv0q0vw",
+    "version": 1,
+    "section": "immutability",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each protection to what it does.",
+    "hint": "Two keep a copy after the mistake, two refuse it.",
+    "pairs": [
+      {
+        "left": "soft delete",
+        "right": "keeps a deleted blob for some days"
+      },
+      {
+        "left": "versioning",
+        "right": "keeps what every write replaced"
+      },
+      {
+        "left": "time-based retention",
+        "right": "refuses changes until a date"
+      },
+      {
+        "left": "legal hold",
+        "right": "refuses changes until it is cleared"
+      }
+    ],
+    "right_distractors": [
+      "moves blobs to cheaper tiers"
+    ]
+  },
+  {
+    "id": "ex-52nqxm53",
+    "version": 1,
+    "section": "immutability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `audit.tf` set `locked = false` in its first version?",
+    "hint": "What can be undone on a locked policy?",
+    "choices": [
+      {
+        "text": "Locked policies are not supported on ZRS accounts",
+        "correct": false,
+        "why": "The lesson names no such limit."
+      },
+      {
+        "text": "Terraform cannot create a locked policy",
+        "correct": false,
+        "why": "`locked` is an attribute the provider accepts as `true` too."
+      },
+      {
+        "text": "So the design is tested first; locked, it only grows",
+        "correct": true,
+        "why": "Right. Locking is a reviewed change made once everyone agrees."
+      },
+      {
+        "text": "An unlocked policy refuses deletes for longer",
+        "correct": false,
+        "why": "Both refuse for the same period; only the locked one cannot be shortened."
+      }
+    ]
+  },
+  {
+    "id": "ex-zne8ehh3",
+    "version": 1,
+    "section": "immutability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A lawsuit requires Quitanda to keep September's invoices unchanged until it ends, a date nobody knows. Which protection fits?",
+    "hint": "One of them has no date.",
+    "choices": [
+      {
+        "text": "A time-based retention of seven years, to be safe",
+        "correct": false,
+        "why": "It fixes a date nobody chose, and a locked one cannot be shortened if the case ends early."
+      },
+      {
+        "text": "A legal hold, cleared when the case ends",
+        "correct": true,
+        "why": "Right. It lasts as long as it lasts."
+      },
+      {
+        "text": "Soft delete with the maximum of 365 days",
+        "correct": false,
+        "why": "Soft delete lets the change happen; the case needs it refused."
+      },
+      {
+        "text": "Versioning, so every change is kept",
+        "correct": false,
+        "why": "It keeps changes rather than refusing them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1axxtk25",
+    "version": 1,
+    "section": "where-azurite-is-weaker",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Azurite stored a soft-delete policy of 7 days. What did the listing with `--include d` show after a delete?",
+    "hint": "The setting answered as if it worked.",
+    "choices": [
+      {
+        "text": "An empty list",
+        "correct": true,
+        "why": "Right. The setting was stored and nothing was kept."
+      },
+      {
+        "text": "The deleted blob, with `deleted: true`",
+        "correct": false,
+        "why": "That is what Azure would show for seven days."
+      },
+      {
+        "text": "An error, because `--include d` is not supported",
+        "correct": false,
+        "why": "The listing answered without complaint, with nothing in it."
+      },
+      {
+        "text": "The blob, still current, because Azurite ignored the delete",
+        "correct": false,
+        "why": "The delete worked; the blob was simply gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk4tckqh",
+    "version": 1,
+    "section": "where-azurite-is-weaker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `APINotImplemented` from Azurite tell you?",
+    "hint": "Read the message that came with it.",
+    "choices": [
+      {
+        "text": "That the request was malformed and should be fixed",
+        "correct": false,
+        "why": "The same request works on Azure; it is the emulator that lacks it."
+      },
+      {
+        "text": "That the account needs a login first",
+        "correct": false,
+        "why": "That is the control-plane message, `Please run 'az login'`."
+      },
+      {
+        "text": "That Azurite has not written that operation",
+        "correct": true,
+        "why": "Right. The message says so plainly."
+      },
+      {
+        "text": "That the feature is switched off for this account",
+        "correct": false,
+        "why": "Nothing about the account was switched off; the message says the operation is not written."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrc2cq0z",
+    "version": 1,
+    "section": "where-azurite-is-weaker",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a passing test against Azurite prove? Choose all that apply.",
+    "hint": "Only what Azurite actually did, rather than stored or refused.",
+    "choices": [
+      {
+        "text": "That a snapshot is kept and can be copied back over the blob",
+        "correct": true,
+        "why": "Yes; Azurite implements snapshots."
+      },
+      {
+        "text": "That a deleted blob can be undeleted within the retention",
+        "correct": false,
+        "why": "Azurite kept nothing and refused the undelete."
+      },
+      {
+        "text": "That the soft-delete request is well formed",
+        "correct": true,
+        "why": "Yes, and nothing more."
+      },
+      {
+        "text": "That a stored version id restores the right content",
+        "correct": false,
+        "why": "Azurite gave no version ids at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-acvqwesk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the protections from the one that only keeps a deleted blob for a while to the one nobody can undo.",
+    "hint": "Soft delete is first; a locked policy is last.",
+    "items": [
+      "soft delete",
+      "versioning",
+      "unlocked time-based retention",
+      "locked time-based retention"
+    ]
+  },
+  {
+    "id": "ex-xbfp849v",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a life-cycle rule, the `blob_types` value for block blobs is spelt `___`.",
+    "hint": "Lower case first, then a capital.",
+    "blanks": [
+      {
+        "accept": [
+          "blockBlob"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-bkzyydy1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which protection would have saved the six log lines that lesson 2's `--overwrite` destroyed, with nothing else switched on?",
+    "hint": "An overwrite, not a delete.",
+    "choices": [
+      {
+        "text": "Versioning",
+        "correct": true,
+        "why": "Right. The overwrite would have left the six lines as a previous version."
+      },
+      {
+        "text": "Container soft delete",
+        "correct": false,
+        "why": "Nobody deleted the container."
+      },
+      {
+        "text": "A life-cycle rule",
+        "correct": false,
+        "why": "A rule moves and deletes by age; it keeps nothing."
+      },
+      {
+        "text": "A legal hold set after the overwrite",
+        "correct": false,
+        "why": "It would protect the new content, not the lost one."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqzs6se8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's audit records must not be changed for seven years, and an auditor will ask how that is guaranteed. Which design answers?",
+    "hint": "Keeping a copy is not the same as refusing the change.",
+    "choices": [
+      {
+        "text": "Versioning, with a life-cycle rule that keeps every version for seven years",
+        "correct": false,
+        "why": "Anybody allowed to delete versions can still delete them."
+      },
+      {
+        "text": "Soft delete at its maximum, renewed every year",
+        "correct": false,
+        "why": "365 days is the maximum, and it never refuses a change."
+      },
+      {
+        "text": "A tested restore procedure from Azurite snapshots",
+        "correct": false,
+        "why": "Azurite is a lab; it guarantees nothing about Azure."
+      },
+      {
+        "text": "A locked seven-year retention on a container that holds only the records",
+        "correct": true,
+        "why": "Right. Nobody can shorten it, and nothing else is locked in with it."
+      }
+    ]
+  }
+]
