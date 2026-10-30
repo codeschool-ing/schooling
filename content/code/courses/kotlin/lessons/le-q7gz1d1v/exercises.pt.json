@@ -1,0 +1,355 @@
+{
+  "ex-qecxh7q6": {
+    "prompt": "Quando o `coroutineScope { … }` retorna?",
+    "hint": "Concorrência estruturada.",
+    "choices": [
+      {
+        "text": "Assim que a última linha do bloco roda",
+        "why": "Ele também espera toda corrotina que o bloco iniciou."
+      },
+      {
+        "text": "Quando todo filho terminou",
+        "why": "Isso."
+      },
+      {
+        "text": "Na hora, deixando os filhos rodando em segundo plano",
+        "why": "Esse é o vazamento que um escopo existe para impedir."
+      },
+      {
+        "text": "Depois de um tempo-limite de um segundo",
+        "why": "Não há tempo-limite embutido."
+      }
+    ]
+  },
+  "ex-hgvejzhk": {
+    "prompt": "Na árvore de jobs, para que lado cada um viaja?",
+    "hint": "A figura no fim da seção 02.",
+    "choices": [
+      {
+        "text": "Os dois sobem",
+        "why": "O cancelamento vai para os filhos."
+      },
+      {
+        "text": "Os dois descem",
+        "why": "Uma falha vai para o pai."
+      },
+      {
+        "text": "Falha sobe, cancelamento desce",
+        "why": "Isso."
+      },
+      {
+        "text": "Falha desce para cada filho, cancelamento sobe até a raiz da árvore",
+        "why": "O contrário."
+      }
+    ]
+  },
+  "ex-jj1hcjpj": {
+    "prompt": "Por que o laço ocupado rodou até o fim depois do `cancelAndJoin()`?",
+    "hint": "Quando uma corrotina verifica o cancelamento?",
+    "choices": [
+      {
+        "text": "Ele rodou no `Dispatchers.Default`, que não é cancelável",
+        "why": "O laço educado rodou lá também e parou."
+      },
+      {
+        "text": "Nunca suspendeu, então nunca verificou",
+        "why": "Isso."
+      },
+      {
+        "text": "O `cancelAndJoin` só cancela depois de esperar",
+        "why": "Ele cancela primeiro."
+      },
+      {
+        "text": "O `println` dele estava num `finally`",
+        "why": "Não havia `finally` nele."
+      }
+    ]
+  },
+  "ex-eh4g3kgp": {
+    "prompt": "Um laço longo que nunca suspende pode chamar `___()` para parar na volta seguinte depois de cancelado.",
+    "hint": "O laço educado a chamou.",
+    "blanks": [
+      {
+        "accept": [
+          "ensureActive"
+        ]
+      }
+    ]
+  },
+  "ex-c20b77vk": {
+    "prompt": "Dentro do `finally` de uma corrotina cancelada, você chama uma função `suspend` para salvar a sessão. O que acontece, e o que resolve?",
+    "hint": "A corrotina já está cancelada.",
+    "choices": [
+      {
+        "text": "Funciona: o `finally` é isento de cancelamento",
+        "why": "O `finally` roda, mas chamadas suspensas nele lançam."
+      },
+      {
+        "text": "Lança exceção; `withContext(NonCancellable)` a deixa rodar",
+        "why": "Isso."
+      },
+      {
+        "text": "Trava até o programa terminar",
+        "why": "Lança na hora."
+      },
+      {
+        "text": "Roda em outra thread automaticamente",
+        "why": "Nada a move."
+      }
+    ]
+  },
+  "ex-g765ezpc": {
+    "prompt": "Dentro de um `coroutineScope`, um `launch` lança exceção. O que acontece com os outros filhos?",
+    "hint": "`reminder sync cancelled`, `export cancelled`.",
+    "choices": [
+      {
+        "text": "Terminam o trabalho normalmente",
+        "why": "Nenhum imprimiu o resultado."
+      },
+      {
+        "text": "São cancelados",
+        "why": "Isso, e os blocos `finally` deles rodam."
+      },
+      {
+        "text": "São reiniciados",
+        "why": "Nada reinicia."
+      },
+      {
+        "text": "Continuam rodando depois de o escopo já ter retornado a quem chamou",
+        "why": "Um escopo nunca retorna antes de os filhos terminarem."
+      }
+    ]
+  },
+  "ex-mqe8e20f": {
+    "prompt": "Depois de cancelar os irmãos, o que o `coroutineScope` faz com a falha?",
+    "hint": "`refresh failed: calendar unreachable`.",
+    "choices": [
+      {
+        "text": "Registra e retorna normalmente",
+        "why": "O `main` precisou pegá-la."
+      },
+      {
+        "text": "Engole",
+        "why": "O `main` a recebeu."
+      },
+      {
+        "text": "Relança para quem chamou",
+        "why": "Isso."
+      },
+      {
+        "text": "Tenta o filho que falhou mais uma vez antes de desistir e retornar",
+        "why": "Não há nova tentativa."
+      }
+    ]
+  },
+  "ex-hdtgfgej": {
+    "prompt": "Que trabalho combina com `supervisorScope` e não com `coroutineScope`?",
+    "hint": "Tarefas separadas, ou partes de um resultado?",
+    "choices": [
+      {
+        "text": "Carregar a semana e a meta para desenhar uma tela",
+        "why": "Sem uma delas não há tela: um resultado."
+      },
+      {
+        "text": "Enviar um lembrete a cada um de três aparelhos",
+        "why": "Isso: tarefas independentes."
+      },
+      {
+        "text": "Duas cargas `async` cujos resultados são combinados",
+        "why": "Partes de um resultado."
+      },
+      {
+        "text": "Qualquer trabalho no Android",
+        "why": "A escolha depende do trabalho, não da plataforma."
+      }
+    ]
+  },
+  "ex-v1dfb1ja": {
+    "prompt": "No `supervisorScope`, para que serve o `CoroutineExceptionHandler`?",
+    "hint": "O escopo não propaga a falha.",
+    "choices": [
+      {
+        "text": "Tentar de novo o filho que falhou",
+        "why": "Ele só relata."
+      },
+      {
+        "text": "Cancelar os irmãos depois de uma falha",
+        "why": "É isso que um supervisor evita."
+      },
+      {
+        "text": "Fazer o escopo lançar para quem chamou",
+        "why": "Um escopo supervisor não faz isso."
+      },
+      {
+        "text": "Tratar uma falha que ninguém mais pegou",
+        "why": "Isso: um último recurso."
+      }
+    ]
+  },
+  "ex-yzka34kn": {
+    "prompt": "`withTimeoutOrNull(500) { slowServer(2000) }`. O que devolve?",
+    "hint": "O servidor leva quatro vezes o limite.",
+    "choices": [
+      {
+        "text": "`null`",
+        "why": "Isso."
+      },
+      {
+        "text": "A semana, depois de 2000 ms",
+        "why": "Desistiu aos 500."
+      },
+      {
+        "text": "Lança `TimeoutCancellationException`",
+        "why": "Isso é o `withTimeout`."
+      },
+      {
+        "text": "Uma lista vazia, que o servidor devolve quando é lento demais",
+        "why": "Nada inventa uma lista."
+      }
+    ]
+  },
+  "ex-vyst17c4": {
+    "prompt": "Sem o último `println`, o `main` do `Timeout.kt` quebrou o projeto inteiro. Por quê?",
+    "hint": "Que tipo o `main` tinha?",
+    "choices": [
+      {
+        "text": "O `withTimeout` não é usado no `main`",
+        "why": "Ele é usado lá na versão final."
+      },
+      {
+        "text": "Um `main` que não devolve `Unit` colide com os outros `main`",
+        "why": "Isso: sobrecargas conflitantes."
+      },
+      {
+        "text": "Um `try` sem `finally` não é permitido como última expressão de uma função",
+        "why": "É permitido; o tipo dele era o problema."
+      },
+      {
+        "text": "O Gradle só roda o primeiro `main` que acha",
+        "why": "O `-Pmain` escolhe um."
+      }
+    ]
+  },
+  "ex-v68j8stq": {
+    "prompt": "Por que `tick 1` a `tick 4` foram impressos depois de o job ser cancelado?",
+    "hint": "O que o `runCatching` pegou?",
+    "choices": [
+      {
+        "text": "O `cancelAndJoin` espera o laço terminar antes de cancelar",
+        "why": "Ele cancelou aos 150 ms."
+      },
+      {
+        "text": "O `runCatching` engoliu cada `CancellationException`",
+        "why": "Isso."
+      },
+      {
+        "text": "O `repeat` não é cancelável",
+        "why": "É um laço comum; o catch foi o problema."
+      },
+      {
+        "text": "Os ticks ficaram guardados",
+        "why": "Eles rodaram depois do cancelamento."
+      }
+    ]
+  },
+  "ex-85pk18f4": {
+    "prompt": "Por que `session saved` nunca foi impresso no `Global.kt`?",
+    "hint": "Filho de quem ela era?",
+    "choices": [
+      {
+        "text": "O `runBlocking` não a esperou",
+        "why": "Isso: não era filha dele."
+      },
+      {
+        "text": "Corrotinas do `GlobalScope` nunca rodam",
+        "why": "Ela começou; o programa terminou antes."
+      },
+      {
+        "text": "A anotação `@OptIn` a desativou",
+        "why": "O `@OptIn` só permite a API."
+      },
+      {
+        "text": "O `delay` não funciona fora do `runBlocking`",
+        "why": "Funciona em qualquer corrotina."
+      }
+    ]
+  },
+  "ex-1nscb7zd": {
+    "prompt": "Ponha o que acontece no `Failure.kt` em ordem.",
+    "hint": "Sobe, desce, sobe de novo.",
+    "items": [
+      "o filho do calendário lança aos 200 ms",
+      "o escopo cancela os outros dois filhos",
+      "os blocos `finally` deles imprimem",
+      "o `coroutineScope` relança para o `main`",
+      "o `main` imprime `refresh failed`"
+    ]
+  },
+  "ex-q2k9hpe2": {
+    "prompt": "O cronômetro imprime a cada 100 ms e é cancelado aos 350 ms. Quantas linhas `studied` ele imprimiu?",
+    "hint": "100, 200, 300."
+  },
+  "ex-bxsrchdv": {
+    "prompt": "Quais destes deixam o cancelamento passar? Escolha todos os que se aplicam.",
+    "hint": "Pegue só o que o bloco realmente lança.",
+    "choices": [
+      {
+        "text": "`try { delay(100) } catch (e: java.io.IOException) { }`",
+        "why": "Sim: `CancellationException` não é `IOException`."
+      },
+      {
+        "text": "`runCatching { delay(100) }`",
+        "why": "Não: pega tudo."
+      },
+      {
+        "text": "`try { delay(100) } catch (e: Exception) { }`",
+        "why": "Não: `CancellationException` é uma `Exception`."
+      },
+      {
+        "text": "`try { delay(100) } catch (e: Exception) { if (e is CancellationException) throw e }`",
+        "why": "Sim: relança o cancelamento."
+      }
+    ]
+  },
+  "ex-51y97p6k": {
+    "prompt": "Ligue cada construtor ou escopo ao que ele faz.",
+    "hint": "Seções 02, 05 e 07.",
+    "pairs": [
+      {
+        "left": "`coroutineScope`",
+        "right": "Espera os filhos; uma falha cancela o resto"
+      },
+      {
+        "left": "`supervisorScope`",
+        "right": "Espera os filhos; cada um falha sozinho"
+      },
+      {
+        "left": "`GlobalScope`",
+        "right": "Não espera nada"
+      },
+      {
+        "left": "`withTimeoutOrNull`",
+        "right": "Dá `null` quando o tempo acaba"
+      }
+    ],
+    "right_distractors": [
+      "Reinicia filhos que falharam"
+    ]
+  },
+  "ex-39vwh0bp": {
+    "prompt": "`withTimeoutOrNull(500) { slowServer(200) }` devolveu a semana. Cerca de quantos milissegundos o bloco levou?",
+    "hint": "O delay do próprio servidor.",
+    "unit": "ms"
+  },
+  "ex-1pjqz7w5": {
+    "prompt": "Quando um filho de um `coroutineScope` falha, os irmãos dele são ___.",
+    "hint": "Os blocos `finally` deles rodaram.",
+    "blanks": [
+      {
+        "accept": [
+          "cancelados"
+        ]
+      }
+    ]
+  }
+}
