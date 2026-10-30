@@ -95,7 +95,7 @@ comm -13 /home/ana/.baseline <(find . -mindepth 1 -maxdepth 1 | sort) | xargs -r
 script=\$1; shift
 bash "\$script" "\$@"
 status=\$?
-for e in gcs pubsub firestore bigtable spanner; do emu_stop \$e; done
+for e in gcs pubsub firestore bigtable spanner; do emu_stop \$e; done > /dev/null 2>&1
 exit \$status
 EOF
   local status=$?

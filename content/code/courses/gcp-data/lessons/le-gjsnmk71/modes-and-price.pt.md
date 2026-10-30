@@ -77,8 +77,6 @@ for name, bill in (('the app', app), ('the app and a nightly full read', report)
 ana@laptop:~/gcp$ python3 price.py
 the app                              4.86   (reads 4.72, writes 0.00, deletes 0.00, storage 0.14)
 the app and a nightly full read     29.16   (reads 29.02, writes 0.00, deletes 0.00, storage 0.14)
-Terminated
-Terminated
 ```
 
 **O app custa 4,86 por mês**: 400.000 leituras por dia, todo cliente abrindo o histórico de pedidos, das

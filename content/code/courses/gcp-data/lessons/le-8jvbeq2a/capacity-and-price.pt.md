@@ -158,7 +158,6 @@ name: projects/planner-dev/instances/quitanda-sp
 processingUnits: 100
 state: READY
 updateTime: '2026-10-30T18:47:52.108394845Z'
-Terminated
 ```
 
 **`regional-southamerica-east1` não estava na lista do próprio emulador, e foi aceita**; no Google
