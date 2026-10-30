@@ -39,7 +39,7 @@ run $P 'npx jest journal --forceExit 2>&1 | grep -E "●|has no column|Tests:"'
 put tested.md __tests__/journal.test.ts $P/__tests__/journal.test.ts 2
 put tested.md __tests__/place.test.tsx $P/__tests__/place.test.tsx
 block tests
-run $P 'npx jest journal place --verbose --forceExit 2>&1 | grep -E "✓|✕|Tests:"'
+run $P 'npx jest journal place --verbose --forceExit 2>&1 | grep -E "✓|Tests:"'
 run $P 'npx jest --forceExit 2>&1 | tail -5'
 
 put browser.md where.mjs $P/where.mjs

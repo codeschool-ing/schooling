@@ -208,20 +208,20 @@ test("allowed, a session is logged with where it was done", async () => {
 ```
 
 ```
-ana@dev:~/planner$ npx jest journal place --verbose --forceExit 2>&1 | grep -E "✓|✕|Tests:"
-  ✓ an empty database is brought to the latest version (9 ms)
-  ✓ totals are per course, and a session logged twice counts once (1 ms)
+ana@dev:~/planner$ npx jest journal place --verbose --forceExit 2>&1 | grep -E "✓|Tests:"
+  ✓ an empty database is brought to the latest version (4 ms)
+  ✓ totals are per course, and a session logged twice counts once (2 ms)
   ✓ migrating twice changes nothing (1 ms)
-  ✓ a database left at version 1 moves to the latest version and keeps its rows (1 ms)
+  ✓ a database left at version 1 moves to the latest version and keeps its rows (2 ms)
   ✓ places count sessions per rounded place, and leave out sessions with none (1 ms)
-  ✓ two decimal places, and no more (7 ms)
-  ✓ refused, the switch stays off and says what that means (224 ms)
-  ✓ allowed, a session is logged with where it was done (79 ms)
+  ✓ two decimal places, and no more (4 ms)
+  ✓ refused, the switch stays off and says what that means (228 ms)
+  ✓ allowed, a session is logged with where it was done (93 ms)
 Tests:       8 passed, 8 total
 ana@dev:~/planner$ npx jest --forceExit 2>&1 | tail -5
 Tests:       52 passed, 52 total
 Snapshots:   0 total
-Time:        9.677 s, estimated 10 s
+Time:        9.3 s
 Ran all test suites.
 Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
 ```
