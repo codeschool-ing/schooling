@@ -8,13 +8,11 @@ the TLS version `TLS1_3`, which is not a value the storage API offers. In `typo2
 `primaryEndpoint`, without the final `s`:
 
 ```
-ana@laptop:~/azure/bicep$ bicep build typo.bicep
-ana@laptop:~/azure/bicep$ echo $?
-0
-ana@laptop:~/azure/bicep$ bicep build typo2.bicep
+ana@laptop:~/azure/bicep$ bicep build typo.bicep; echo "exit status $?"
+exit status 0
+ana@laptop:~/azure/bicep$ bicep build typo2.bicep; echo "exit status $?"
 /home/ana/azure/bicep/typo2.bicep(26,49) : Warning BCP083: The type "StorageAccountPropertiesCreateParametersOrStorageAccountProperties" does not contain property "primaryEndpoint". Did you mean "primaryEndpoints"? [https://aka.ms/bicep/core-diagnostics#BCP083]
-ana@laptop:~/azure/bicep$ echo $?
-0
+exit status 0
 ```
 
 **The first compiled cleanly, and the second compiled with a warning.** Both are worth reading slowly.
@@ -52,11 +50,10 @@ output connection string = 'DefaultEndpointsProtocol=https;AccountName=${account
 ```
 
 ```
-ana@laptop:~/azure/bicep$ bicep lint lint.bicep
+ana@laptop:~/azure/bicep$ bicep lint lint.bicep; echo "exit status $?"
 /home/ana/azure/bicep/lint.bicep(3,7) : Warning no-unused-params: Parameter "environment" is declared but never used. [https://aka.ms/bicep/linter-diagnostics#no-unused-params]
 /home/ana/azure/bicep/lint.bicep(15,100) : Warning outputs-should-not-contain-secrets: Outputs should not contain secrets. Found possible secret: function 'listKeys' [https://aka.ms/bicep/linter-diagnostics#outputs-should-not-contain-secrets]
-ana@laptop:~/azure/bicep$ echo $?
-0
+exit status 0
 ```
 
 `no-unused-params` caught a parameter nobody reads, which in a template means somebody will one day

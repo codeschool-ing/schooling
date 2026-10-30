@@ -107,11 +107,9 @@ run "jq -r '.outputs.blobEndpoint.value' shop.json"
 
 block typo
 sed 's/Standard_LRS/Standard_LRSS/; s/TLS1_2/TLS1_3/' shop.bicep > typo.bicep
-run 'bicep build typo.bicep'
-run 'echo $?'
+run 'bicep build typo.bicep; echo "exit status $?"'
 sed 's/account.properties.primaryEndpoints.blob/account.properties.primaryEndpoint.blob/' shop.bicep > typo2.bicep
-run 'bicep build typo2.bicep'
-run 'echo $?'
+run 'bicep build typo2.bicep; echo "exit status $?"'
 
 put lint.bicep <<'BICEP'
 // lint.bicep
@@ -132,5 +130,4 @@ output connection string = 'DefaultEndpointsProtocol=https;AccountName=${account
 BICEP
 
 block lint
-run 'bicep lint lint.bicep'
-run 'echo $?'
+run 'bicep lint lint.bicep; echo "exit status $?"'
