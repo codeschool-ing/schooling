@@ -1,0 +1,404 @@
+{
+  "ex-age37zp1": {
+    "prompt": "Qual a diferença entre `List` e `ForEach`?",
+    "hint": "Um tem aparência e o outro não.",
+    "choices": [
+      {
+        "text": "O `ForEach` rola e o `List` não",
+        "why": "O contrário: o `List` rola; o `ForEach` não é contêiner."
+      },
+      {
+        "text": "O `List` é um contêiner com estilo; o `ForEach` faz uma view por elemento",
+        "why": "Isso, e o `ForEach` funciona dentro de um `List`, de uma stack ou de um `Form`."
+      },
+      {
+        "text": "São dois nomes para a mesma view",
+        "why": "O `List(_:rowContent:)` é um atalho de um em volta do outro, o que não é a mesma coisa."
+      },
+      {
+        "text": "O `ForEach` é um laço `for` que roda uma vez por elemento",
+        "why": "É uma view; o SwiftUI decide quando construir cada linha."
+      }
+    ]
+  },
+  "ex-5e8120dh": {
+    "prompt": "Por que `List(model.plan.courses) { … }` pode ser escrito sem argumento `id:`?",
+    "hint": "A aula 1 declarou algo sobre o `Course`.",
+    "choices": [
+      {
+        "text": "Porque `Course` é uma struct",
+        "why": "Ser struct não diz nada sobre identidade."
+      },
+      {
+        "text": "Porque a lista usa a posição de cada linha",
+        "why": "Não usa; a seção 04 mostra por que não pode."
+      },
+      {
+        "text": "Porque `Course` adota `Identifiable`",
+        "why": "Isso: o `id` dele responde que linha cada elemento é."
+      },
+      {
+        "text": "Porque o `List` compara o valor inteiro de cada curso",
+        "why": "Aí uma renomeação faria do curso uma linha nova."
+      }
+    ]
+  },
+  "ex-mj8vw2xt": {
+    "prompt": "Qual destes ids é a pior escolha para um `ForEach` sobre as sessões do planner?",
+    "hint": "Um bom id é estável, único e dos dados.",
+    "choices": [
+      {
+        "text": "`id: \\.id`, o próprio id da sessão",
+        "why": "Esse é o que o `Identifiable` já usa."
+      },
+      {
+        "text": "`id: \\.date`, o dia planejado",
+        "why": "Isso: duas sessões no mesmo dia o compartilham, e mudar a sessão de dia o muda."
+      },
+      {
+        "text": "Um id que o servidor atribuiu e manda de volta a cada carga",
+        "why": "Estável e único, e a aula 12 usa exatamente isso."
+      },
+      {
+        "text": "Uma string que o app gerou uma vez quando a sessão foi criada",
+        "why": "Feita uma vez e guardada, é um bom id."
+      }
+    ]
+  },
+  "ex-z2ztfnb6": {
+    "prompt": "O `Identifiable` exige uma propriedade, `var id`, cujo tipo adota ___.",
+    "hint": "A restrição do tipo associado.",
+    "blanks": [
+      {
+        "accept": [
+          "Hashable"
+        ]
+      }
+    ]
+  },
+  "ex-8300qytw": {
+    "prompt": "`ForEach(titles, id: \\.self)` mostra uma lista de títulos de curso. O que a quebra?",
+    "hint": "O elemento é o próprio id.",
+    "choices": [
+      {
+        "text": "Nada; strings são `Hashable`, então são ids perfeitos",
+        "why": "Ser `Hashable` é exigido, não suficiente: duas strings iguais são um id só."
+      },
+      {
+        "text": "Um título maior que a linha",
+        "why": "O tamanho afeta o layout, não a identidade."
+      },
+      {
+        "text": "Dois cursos com o mesmo título, ou uma renomeação",
+        "why": "Isso: strings iguais colidem, e um curso renomeado vira outra linha."
+      },
+      {
+        "text": "Ordenar os títulos em ordem alfabética",
+        "why": "Mover uma linha cujo id não mudou é um movimento, que o SwiftUI trata."
+      }
+    ]
+  },
+  "ex-za90k4ca": {
+    "prompt": "No `identity.swift`, depois de apagar a primeira linha, qual linha a memória por posição mostrou aberta?",
+    "hint": "A posição 1 depois de apagar.",
+    "choices": [
+      {
+        "text": "`Mobile, lifecycle`",
+        "why": "Isso é o que a memória pelo id mostrou."
+      },
+      {
+        "text": "`SQL, indexes`",
+        "why": "Isso: uma linha que a pessoa nunca abriu, agora na posição 1."
+      },
+      {
+        "text": "`SQL, joins`",
+        "why": "Essa foi a linha apagada."
+      },
+      {
+        "text": "Nenhuma: a posição sumiu com a primeira linha",
+        "why": "A posição 1 ainda existe; agora guarda outra sessão."
+      }
+    ]
+  },
+  "ex-1dtwzhz1": {
+    "prompt": "Qual `ForEach` mantém o estado de cada linha com a sua sessão quando uma linha é apagada?",
+    "hint": "A identidade tem de seguir os dados.",
+    "choices": [
+      {
+        "text": "`ForEach(0..<plan.sessions.count)`",
+        "why": "A identidade é a posição."
+      },
+      {
+        "text": "`ForEach(Array(plan.sessions.enumerated()), id: \\.offset)`",
+        "why": "O `offset` é de novo a posição, escrita mais longa."
+      },
+      {
+        "text": "`ForEach(plan.sessions)`",
+        "why": "Isso: `StudySession` é `Identifiable`, então o id dela é a identidade."
+      },
+      {
+        "text": "`ForEach(plan.sessions, id: \\.minutes)`",
+        "why": "Duas sessões de 30 minutos dividiriam uma identidade."
+      }
+    ]
+  },
+  "ex-p6samesk": {
+    "prompt": "Um campo de texto em cada linha guarda uma nota meio digitada no `@State` da linha. Depois de apagar uma linha acima, uma nota aparece na sessão errada. Qual mudança resolve?",
+    "hint": "Onde o SwiftUI guarda o `@State` de uma linha?",
+    "choices": [
+      {
+        "text": "Dar ao `ForEach` os ids das sessões em vez das posições",
+        "why": "Isso: o estado é guardado pela identidade, então a identidade tem de seguir a sessão."
+      },
+      {
+        "text": "Passar a nota para um `@Binding` com valor padrão",
+        "why": "Um binding ainda tem de apontar para algum lugar, e a identidade da linha continua errada."
+      },
+      {
+        "text": "Reconstruir a lista depois de cada exclusão com um `UUID` novo por linha",
+        "why": "Ids novos fazem toda linha ser nova e perdem todas as notas."
+      },
+      {
+        "text": "Animar a exclusão para o SwiftUI acompanhar",
+        "why": "A animação segue a identidade; não a conserta."
+      }
+    ]
+  },
+  "ex-8fcps46w": {
+    "prompt": "Na tela do curso de SQL, o `onDelete` passa `offsets` contendo 1. O que o 1 conta?",
+    "hint": "Que coleção o `ForEach` recebeu?",
+    "choices": [
+      {
+        "text": "A posição 1 de `model.plan.sessions`",
+        "why": "Esse é o plano, todos os cursos juntos; a tela mostrou só SQL."
+      },
+      {
+        "text": "A posição 1 das sessões que a tela mostrou",
+        "why": "Isso, e é por isso que a seção 06 o traduz num id."
+      },
+      {
+        "text": "A sessão cujo id termina em 1",
+        "why": "Offsets são posições, não ids."
+      },
+      {
+        "text": "O número de linhas a apagar",
+        "why": "É um conjunto de posições; a contagem dele é quantas."
+      }
+    ]
+  },
+  "ex-ejc8hdn7": {
+    "prompt": "Por que `try? model.markDone(session.id)` é aceitável dentro da ação de deslizar, quando engolir erros não é aceitável em outros lugares?",
+    "hint": "De onde veio o id?",
+    "choices": [
+      {
+        "text": "Ações de deslizar não lançam erros, então qualquer erro se perde de qualquer jeito",
+        "why": "A closure poderia tratar o erro e mostrá-lo; o motivo é outro."
+      },
+      {
+        "text": "O `markDone` nunca lança erro",
+        "why": "Ele lança `unknownSession` para um id que não existe."
+      },
+      {
+        "text": "O id veio da linha recém deslizada, que existe",
+        "why": "Isso; onde o erro pudesse acontecer, a tela deveria mostrá-lo."
+      },
+      {
+        "text": "Erros numa lista são mostrados pelo SwiftUI automaticamente",
+        "why": "O SwiftUI não mostra nada de um erro que você descarta."
+      }
+    ]
+  },
+  "ex-6ce9hk69": {
+    "prompt": "Quantos testes o `swift test --filter Editing` rodou?",
+    "hint": "A última linha diz."
+  },
+  "ex-8nypqsxj": {
+    "prompt": "Em `aScreenOffsetIsNotAPlanIndex`, qual sessão o `plan.sessions.remove(at: 1)` removeu?",
+    "hint": "A posição 1 do plano inteiro.",
+    "choices": [
+      {
+        "text": "`s3`, a linha 1 da tela de SQL",
+        "why": "Isso é o que a pessoa queria, e não o que aconteceu."
+      },
+      {
+        "text": "`s2`, a sessão de mobile",
+        "why": "Isso: o teste fixa o bug, `[\"s1\", \"s3\", \"s4\"]`."
+      },
+      {
+        "text": "`s1`, porque offsets começam em 1",
+        "why": "Offsets começam em 0, como índices de array."
+      },
+      {
+        "text": "Nenhuma: o teste espera um erro",
+        "why": "O `remove(at:)` não lança erro; ele removeu uma sessão."
+      }
+    ]
+  },
+  "ex-z2tchgph": {
+    "prompt": "Depois de `plan.move(from: [2], to: 0, in: shown)` nas sessões de SQL `s1, s3, s4`, por que `s2` continua em segundo no plano inteiro?",
+    "hint": "Olhe o `slots`.",
+    "choices": [
+      {
+        "text": "O `move` só funciona no primeiro curso do plano",
+        "why": "Ele funciona nas sessões que foram mostradas."
+      },
+      {
+        "text": "O `s2` foi movido duas vezes e acabou onde começou",
+        "why": "Ele não foi movido nenhuma vez."
+      },
+      {
+        "text": "O SwiftUI restaura a ordem do outro curso",
+        "why": "Nenhum SwiftUI roda no pacote."
+      },
+      {
+        "text": "A nova ordem é escrita só nos lugares das sessões de SQL",
+        "why": "Isso: `slots` são as posições das sessões de SQL, e a posição de `s2` não é uma delas."
+      }
+    ]
+  },
+  "ex-azyf3718": {
+    "prompt": "Ponha os passos de `delete(at:in:)` em ordem.",
+    "hint": "Posições, depois ids, depois o plano.",
+    "items": [
+      "O `onDelete` entrega offsets em `shown`",
+      "Cada offset vira o id da sessão mostrada ali",
+      "Os ids são reunidos num `Set`",
+      "O plano remove toda sessão cujo id está no conjunto"
+    ]
+  },
+  "ex-1a6qhbtr": {
+    "prompt": "Um `ScrollView` tem um `VStack` de 8.000 `SessionCard`s. O que acontece antes de o primeiro cartão aparecer?",
+    "hint": "Uma stack simples não é preguiçosa.",
+    "choices": [
+      {
+        "text": "Só os cartões visíveis são construídos",
+        "why": "Isso é um `LazyVStack` ou um `List`."
+      },
+      {
+        "text": "Os 8.000 cartões são construídos",
+        "why": "Isso: uma stack comum carrega toda a hierarquia ao aparecer."
+      },
+      {
+        "text": "O SwiftUI recusa uma stack com mais de 1.000 views",
+        "why": "Não há esse limite; fica lento, não é recusado."
+      },
+      {
+        "text": "Os cartões são construídos em segundo plano enquanto o primeiro aparece",
+        "why": "Nada é adiado numa stack simples."
+      }
+    ]
+  },
+  "ex-h239bc07": {
+    "prompt": "Ligue cada contêiner à situação que lhe cabe.",
+    "hint": "A tabela da seção 07.",
+    "pairs": [
+      {
+        "left": "`VStack`",
+        "right": "Um punhado de linhas que sempre cabem"
+      },
+      {
+        "left": "`LazyVStack` num `ScrollView`",
+        "right": "Um feed longo de cartões próprios"
+      },
+      {
+        "left": "`List`",
+        "right": "Linhas com ações de deslizar e modo de edição"
+      }
+    ],
+    "right_distractors": [
+      "Uma grade de fotos posta à mão"
+    ]
+  },
+  "ex-4zx3t2xy": {
+    "prompt": "Segundo o artigo da Apple citado na seção 07, quando trocar uma stack simples por uma preguiçosa?",
+    "hint": "O preguiçoso troca correção de layout por desempenho.",
+    "choices": [
+      {
+        "text": "Desde o começo, em toda view com rolagem",
+        "why": "O artigo diz para começar pela stack comum."
+      },
+      {
+        "text": "Quando o simulador parece lento",
+        "why": "Ele diz para nunca perfilar no simulador."
+      },
+      {
+        "text": "Quando o perfilamento num aparelho mostra uma melhora que vale a pena",
+        "why": "Isso, com o template SwiftUI do Instruments."
+      },
+      {
+        "text": "Acima de 100 linhas, o limite que o artigo define",
+        "why": "O artigo não define número; diz para medir."
+      }
+    ]
+  },
+  "ex-pqffgj8d": {
+    "prompt": "O `diff.swift` contou as mudanças por posição para uma sessão acrescentada no topo. Quantas?",
+    "hint": "A linha começa com `by position:`."
+  },
+  "ex-3s26v194": {
+    "prompt": "Por que a diferença baseada em id torna a inserção barata para o SwiftUI?",
+    "hint": "Conte o que mudou pelo id.",
+    "choices": [
+      {
+        "text": "Porque strings se comparam mais rápido que posições",
+        "why": "O custo está nas linhas reconstruídas, não na comparação."
+      },
+      {
+        "text": "Quatro linhas são as mesmas, então só uma é nova",
+        "why": "Isso: as outras deslizam para baixo sem nada redesenhado nelas."
+      },
+      {
+        "text": "Porque o `difference(from:)` roda numa thread de fundo",
+        "why": "Ele roda onde é chamado; threads não são o ponto."
+      },
+      {
+        "text": "Porque a linha nova é desenhada por último",
+        "why": "A ordem de desenho não é o que a torna barata."
+      }
+    ]
+  },
+  "ex-mqve19ev": {
+    "prompt": "Um decodificador dá a cada sessão `id = UUID().uuidString` quando os dados chegam. Quanto custa cada atualização da lista?",
+    "hint": "Os ids são os mesmos entre duas cargas?",
+    "choices": [
+      {
+        "text": "Nada a mais: UUIDs são únicos, que é tudo de que um id precisa",
+        "why": "Únicos, e não estáveis: cada carga inventa novos."
+      },
+      {
+        "text": "Só as linhas cujo conteúdo mudou são reconstruídas",
+        "why": "Todo id é novo, então toda linha é nova."
+      },
+      {
+        "text": "Toda linha é removida e inserida de novo, perdendo o estado",
+        "why": "Isso; o id tem de vir com os dados, como os da aula 12."
+      },
+      {
+        "text": "Um erro de compilação, já que `UUID` não é `Hashable`",
+        "why": "O `UUID` e a string dele são `Hashable`."
+      }
+    ]
+  },
+  "ex-wzwrd1n5": {
+    "prompt": "Quais destes valem para um `ForEach` sobre sessões `Identifiable`? Escolha todos os que se aplicam.",
+    "hint": "A identidade é o id.",
+    "choices": [
+      {
+        "text": "Uma sessão renomeada mantém a linha e o estado",
+        "why": "Sim: o id não mudou."
+      },
+      {
+        "text": "Apagar uma linha sobe o estado de baixo uma linha",
+        "why": "Isso é o que a identidade por posição faz."
+      },
+      {
+        "text": "Inserir no topo é uma inserção só",
+        "why": "Sim, como o `diff.swift` contou."
+      },
+      {
+        "text": "Os offsets do `onDelete` são ids",
+        "why": "São posições no que o `ForEach` recebeu."
+      }
+    ]
+  }
+}

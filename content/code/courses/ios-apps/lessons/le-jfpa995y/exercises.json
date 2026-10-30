@@ -1,0 +1,650 @@
+[
+  {
+    "id": "ex-kpgk1czk",
+    "version": 1,
+    "section": "what-ios-allows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens to the planner a few seconds after the person switches to another app?",
+    "hint": "It is not a computer's window.",
+    "choices": [
+      {
+        "text": "It keeps running at a lower priority",
+        "correct": false,
+        "why": "That is a computer's behaviour; iOS suspends it."
+      },
+      {
+        "text": "It is suspended, in memory, using no processor",
+        "correct": true,
+        "why": "Right, and it may be removed from memory when room is needed."
+      },
+      {
+        "text": "It is closed and loses everything not on the server",
+        "correct": false,
+        "why": "It is suspended first; and the device's file keeps what was saved."
+      },
+      {
+        "text": "It refreshes its data every fifteen minutes",
+        "correct": false,
+        "why": "Only if the system grants a refresh task, when it chooses."
+      }
+    ]
+  },
+  {
+    "id": "ex-48bzcfr7",
+    "version": 1,
+    "section": "what-ios-allows",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to Apple's documentation, up to how many seconds of runtime does an app refresh task get?",
+    "hint": "The same number appears for a background push.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-g00ee83g",
+    "version": 1,
+    "section": "what-ios-allows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner sets `earliestBeginDate` to six in the morning. What does that promise?",
+    "hint": "Read the documentation's sentence about it.",
+    "choices": [
+      {
+        "text": "That the refresh runs at six, give or take a minute",
+        "correct": false,
+        "why": "The system does not guarantee launching at that date."
+      },
+      {
+        "text": "That it runs at six if the phone is charging",
+        "correct": false,
+        "why": "Charging is a processing task's condition, and it promises nothing either."
+      },
+      {
+        "text": "Only that it will not begin before six",
+        "correct": true,
+        "why": "Right: the system chooses when, and it may be many hours later."
+      },
+      {
+        "text": "That the app will be woken at six to show a notification",
+        "correct": false,
+        "why": "A refresh shows nothing; notifications are lesson 17."
+      }
+    ]
+  },
+  {
+    "id": "ex-azjgmtms",
+    "version": 1,
+    "section": "what-ios-allows",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to what to ask the system for.",
+    "hint": "Section 02's table.",
+    "pairs": [
+      {
+        "left": "Refresh the plan now and then",
+        "right": "`BGAppRefreshTask`"
+      },
+      {
+        "left": "Clean a database overnight on the charger",
+        "right": "`BGProcessingTask`"
+      },
+      {
+        "left": "A large download that should finish while suspended",
+        "right": "A background `URLSession`"
+      },
+      {
+        "left": "An export the person starts and watches, on iOS 26",
+        "right": "`BGContinuedProcessingTask`"
+      }
+    ],
+    "right_distractors": [
+      "`Timer.scheduledTimer`"
+    ]
+  },
+  {
+    "id": "ex-wzf8g91v",
+    "version": 1,
+    "section": "app-refresh",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BGTaskScheduler.shared.submit(request)` throws `notPermitted`. What are the two causes Apple's documentation gives?",
+    "hint": "Two lists in the app's configuration.",
+    "choices": [
+      {
+        "text": "The device is in Low Power Mode, or the app is in the foreground",
+        "correct": false,
+        "why": "Neither is what `notPermitted` means."
+      },
+      {
+        "text": "A background mode or an identifier missing from its lists",
+        "correct": true,
+        "why": "Right: both are in the app's declaration."
+      },
+      {
+        "text": "Too many requests, or an `earliestBeginDate` in the past",
+        "correct": false,
+        "why": "Too many requests is a different error."
+      },
+      {
+        "text": "The person has not granted permission in Settings",
+        "correct": false,
+        "why": "Refresh tasks ask the person nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-jbtqzs2f",
+    "version": 1,
+    "section": "app-refresh",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner's refresh handler call `scheduleRefresh` before it returns?",
+    "hint": "How many times does one request run?",
+    "choices": [
+      {
+        "text": "To extend the current task's 30 seconds",
+        "correct": false,
+        "why": "Nothing extends the current task."
+      },
+      {
+        "text": "Because the system refuses to run a handler that schedules nothing",
+        "correct": false,
+        "why": "No such rule; the cost is quieter."
+      },
+      {
+        "text": "A refresh request runs once",
+        "correct": true,
+        "why": "Right: without it, the app refreshes in the background exactly once."
+      },
+      {
+        "text": "To cancel the request the app made when it launched",
+        "correct": false,
+        "why": "A new request with the same identifier replaces the old; it is not a cancellation."
+      }
+    ]
+  },
+  {
+    "id": "ex-07s20dt1",
+    "version": 1,
+    "section": "app-refresh",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What happens, according to Apple's documentation, when the `backgroundTask` closure has not returned by the time the task runs out?",
+    "hint": "It is something Swift code can notice.",
+    "choices": [
+      {
+        "text": "The system cancels the task",
+        "correct": true,
+        "why": "Right: ordinary Swift cancellation, which section 07 practises."
+      },
+      {
+        "text": "The system waits for it and then shortens the next refresh",
+        "correct": false,
+        "why": "It does not wait."
+      },
+      {
+        "text": "The app is shown a dialog asking whether to keep running",
+        "correct": false,
+        "why": "Nobody is asked; the person is not even looking."
+      },
+      {
+        "text": "The work is moved to a processing task overnight",
+        "correct": false,
+        "why": "Nothing is moved; it is cancelled."
+      }
+    ]
+  },
+  {
+    "id": "ex-skjfwb8n",
+    "version": 1,
+    "section": "processing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which request property asks the system to wait for a charger?",
+    "hint": "It belongs to `BGProcessingTaskRequest`.",
+    "choices": [
+      {
+        "text": "`earliestBeginDate`",
+        "correct": false,
+        "why": "That is a time, not power."
+      },
+      {
+        "text": "`requiresExternalPower`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`requiresNetworkConnectivity`",
+        "correct": false,
+        "why": "That is the network."
+      },
+      {
+        "text": "`isDiscretionary`",
+        "correct": false,
+        "why": "That belongs to a background URL session's configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-shxwn4gz",
+    "version": 1,
+    "section": "processing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner, as written, have little use for a processing task?",
+    "hint": "What would it process?",
+    "choices": [
+      {
+        "text": "Processing tasks are refused to apps under 50 MB",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "Its store is one small file with nothing to compact or rebuild",
+        "correct": true,
+        "why": "Right: asking for time it does not need costs battery for nothing."
+      },
+      {
+        "text": "It already does all its work in `BGContinuedProcessingTask`",
+        "correct": false,
+        "why": "It targets iOS 17, where that task does not exist."
+      },
+      {
+        "text": "Processing tasks cannot reach the network",
+        "correct": false,
+        "why": "They can, with `requiresNetworkConnectivity`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qqmj8gy",
+    "version": 1,
+    "section": "processing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Apple's documentation require of a `BGContinuedProcessingTaskRequest` at submission?",
+    "hint": "Who starts it?",
+    "choices": [
+      {
+        "text": "That the device is charging",
+        "correct": false,
+        "why": "That is a processing request's option."
+      },
+      {
+        "text": "That it is submitted from the background at night",
+        "correct": false,
+        "why": "The opposite: from the foreground."
+      },
+      {
+        "text": "That it comes from the foreground, as a result of something the person did",
+        "correct": true,
+        "why": "Right, such as tapping a button."
+      },
+      {
+        "text": "That the app has no other task pending",
+        "correct": false,
+        "why": "Not a stated requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-x87n0wk3",
+    "version": 1,
+    "section": "background-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a background `URLSession` use a delegate instead of the `async` methods from lesson 12?",
+    "hint": "Where is the app while the transfer finishes?",
+    "choices": [
+      {
+        "text": "Because `async` methods are slower for large files",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "It finishes after the app has left memory",
+        "correct": true,
+        "why": "Right: an `await` needs the app alive; the system calls the delegate after relaunching it."
+      },
+      {
+        "text": "Because delegates are required on Linux",
+        "correct": false,
+        "why": "Background sessions are not on Linux at all."
+      },
+      {
+        "text": "To let the person cancel from a notification",
+        "correct": false,
+        "why": "Nothing in a background session does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-ym97dz1a",
+    "version": 1,
+    "section": "background-sessions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of the planner would justify a background session?",
+    "hint": "Files, not dozens of bytes.",
+    "choices": [
+      {
+        "text": "Sending each session added offline",
+        "correct": false,
+        "why": "A few dozen bytes; ordinary requests in a refresh fit."
+      },
+      {
+        "text": "Refreshing the list of courses each morning",
+        "correct": false,
+        "why": "Small JSON; an app refresh task fits."
+      },
+      {
+        "text": "Downloading a year of study as a file",
+        "correct": true,
+        "why": "Right: a large transfer the person need not wait for."
+      },
+      {
+        "text": "Showing a course cover",
+        "correct": false,
+        "why": "A cover is wanted on screen now, not later."
+      }
+    ]
+  },
+  {
+    "id": "ex-02jkswrs",
+    "version": 1,
+    "section": "scheduling-logic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With three sessions waiting at 22:30, when does the planner's rule ask for the next refresh?",
+    "hint": "The person's work is not on the server.",
+    "choices": [
+      {
+        "text": "At six the next morning",
+        "correct": false,
+        "why": "That is the rule with nothing waiting."
+      },
+      {
+        "text": "At 22:45",
+        "correct": true,
+        "why": "Right: fifteen minutes later."
+      },
+      {
+        "text": "Immediately, at 22:30",
+        "correct": false,
+        "why": "The rule asks for fifteen minutes later, and the system may wait longer."
+      },
+      {
+        "text": "At midnight, when the day changes",
+        "correct": false,
+        "why": "Nothing in the rule mentions midnight."
+      }
+    ]
+  },
+  {
+    "id": "ex-fk74yj0z",
+    "version": 1,
+    "section": "scheduling-logic",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lisbon, 22:30 on 24 October 2026, nothing waiting: how many minutes until the next refresh, as `background` printed?",
+    "hint": "The clocks go back that night.",
+    "value": 510,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-bpxqhhk0",
+    "version": 1,
+    "section": "scheduling-logic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `nextRefresh` use `calendar.nextDate(after:matching:)` instead of adding the hours until six to the current time?",
+    "hint": "Lisbon, 24 October.",
+    "choices": [
+      {
+        "text": "Adding seconds to a `Date` is not allowed in Swift",
+        "correct": false,
+        "why": "It is; the pending rule adds 900 seconds."
+      },
+      {
+        "text": "To make the result independent of the time zone",
+        "correct": false,
+        "why": "The opposite: it uses the calendar's time zone deliberately."
+      },
+      {
+        "text": "It knows the night the clocks change; a sum would give five o'clock",
+        "correct": true,
+        "why": "Right: that night is an hour longer, and the calendar counted it."
+      },
+      {
+        "text": "Because six o'clock is not a whole number of hours away",
+        "correct": false,
+        "why": "Half hours are easy to add; the clock change is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6r0rpxd",
+    "version": 1,
+    "section": "expiration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `syncUntilCancelled` save after every session instead of once at the end?",
+    "hint": "The end may never come.",
+    "choices": [
+      {
+        "text": "Because `FileStore` can only hold one session per write",
+        "correct": false,
+        "why": "It writes the whole snapshot each time."
+      },
+      {
+        "text": "So a task cut off midway keeps what it already sent",
+        "correct": true,
+        "why": "Right: otherwise those sessions would stay pending and be sent again."
+      },
+      {
+        "text": "To make the server log each one separately",
+        "correct": false,
+        "why": "The server logs each post anyway."
+      },
+      {
+        "text": "Because saving is what triggers the next post",
+        "correct": false,
+        "why": "The loop triggers the next post."
+      }
+    ]
+  },
+  {
+    "id": "ex-xq9734px",
+    "version": 1,
+    "section": "expiration",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each `background run 1.0` sent how many sessions before it was cancelled?",
+    "hint": "Each post takes 400 ms.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pm3yj5mw",
+    "version": 1,
+    "section": "expiration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the first run, `b3`'s post was cut off by the cancellation. What happened to `b3`?",
+    "hint": "It never reached the server.",
+    "choices": [
+      {
+        "text": "It was dropped, like a refused session",
+        "correct": false,
+        "why": "Only a 4xx drops a session; cancellation keeps it."
+      },
+      {
+        "text": "It was marked as sent, since its post had started",
+        "correct": false,
+        "why": "Only a success moves it across."
+      },
+      {
+        "text": "It stayed pending and went first in the next run",
+        "correct": true,
+        "why": "Right: the second run sent `b3` and `b4`."
+      },
+      {
+        "text": "It was sent twice, once in each run",
+        "correct": false,
+        "why": "The server logged six posts for six sessions."
+      }
+    ]
+  },
+  {
+    "id": "ex-jy4cteje",
+    "version": 1,
+    "section": "expiration",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one background run of the planner in order.",
+    "hint": "Send, save, and stop when told.",
+    "items": [
+      "Check that the task is not cancelled",
+      "Post the first pending session",
+      "Move it across and save the file",
+      "The time runs out and the task is cancelled"
+    ]
+  },
+  {
+    "id": "ex-h86hpwjb",
+    "version": 1,
+    "section": "expiration",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To run code the moment cancellation arrives, Apple's documentation suggests wrapping the work in `with___CancellationHandler`.",
+    "hint": "One word.",
+    "blanks": [
+      {
+        "accept": [
+          "Task"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6sq8pwes",
+    "version": 1,
+    "section": "testing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where do Apple's `_simulateLaunchForTaskWithIdentifier` and `_simulateExpirationForTaskWithIdentifier` commands work?",
+    "hint": "The guide is specific.",
+    "choices": [
+      {
+        "text": "On a device, typed at the debugger's prompt",
+        "correct": true,
+        "why": "Right: only on devices, per the guide."
+      },
+      {
+        "text": "In the simulator, from a menu",
+        "correct": false,
+        "why": "The guide says they work only on devices."
+      },
+      {
+        "text": "In the app's code, behind `#if DEBUG`",
+        "correct": false,
+        "why": "Referencing them in submitted code is cause for rejection; they are typed, not written."
+      },
+      {
+        "text": "On Linux, with `swift test`",
+        "correct": false,
+        "why": "They are calls into Apple's scheduler."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bjws55j",
+    "version": 1,
+    "section": "testing-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does `aCancelledSyncSendsNothingAndKeepsEverything` make the cancellation certain rather than a matter of timing?",
+    "hint": "The task cancels itself.",
+    "choices": [
+      {
+        "text": "It sleeps for one second before cancelling",
+        "correct": false,
+        "why": "A sleep would be timing, the thing it avoids."
+      },
+      {
+        "text": "It uses `SlowSource` with a longer delay",
+        "correct": false,
+        "why": "The test uses `FakeSource`, with no delay."
+      },
+      {
+        "text": "`withUnsafeCurrentTask` cancels the running task before the sync starts",
+        "correct": true,
+        "why": "Right: the sync sees a cancelled task on its first check."
+      },
+      {
+        "text": "It switches `FakeSource` offline",
+        "correct": false,
+        "why": "That would test offline, not cancellation."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3tn2haf",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these ran on the Linux machine? Choose all that apply.",
+    "hint": "Swift's cancellation ran; Apple's scheduler did not.",
+    "choices": [
+      {
+        "text": "`nextRefresh` for São Paulo and Lisbon",
+        "correct": true,
+        "why": "Yes: section 06."
+      },
+      {
+        "text": "`BGTaskScheduler.shared.submit`",
+        "correct": false,
+        "why": "No: Apple's framework, not run."
+      },
+      {
+        "text": "Three one-second runs of `syncUntilCancelled`",
+        "correct": true,
+        "why": "Yes: section 07."
+      },
+      {
+        "text": "The `_simulateExpiration…` debugger command",
+        "correct": false,
+        "why": "No: devices only, not run."
+      }
+    ]
+  }
+]

@@ -1,0 +1,461 @@
+{
+  "ex-e96hxctj": {
+    "prompt": "O planner chama a API da câmera, e o `Info.plist` não tem `NSCameraUsageDescription`. O que acontece?",
+    "hint": "A seção 02 cita a documentação da Apple sobre essa chave.",
+    "choices": [
+      {
+        "text": "O iOS mostra o alerta com uma frase padrão",
+        "why": "Não existe frase padrão: a chave é obrigatória, e a falta dela encerra o app."
+      },
+      {
+        "text": "O iOS encerra o app quando ele pede",
+        "why": "Isso. E nenhum passo da compilação avisou, e por isso a seção 06 confere o arquivo."
+      },
+      {
+        "text": "A câmera abre, e o alerta é pulado naquela sessão",
+        "why": "Nada chega à câmera sem a resposta da pessoa, e essa resposta precisa da frase."
+      },
+      {
+        "text": "O Xcode se recusa a compilar o app até a chave entrar",
+        "why": "A compilação passa; a falha chega no primeiro toque no botão da câmera."
+      }
+    ]
+  },
+  "ex-yasj0xwc": {
+    "prompt": "Qual frase de uso a diretriz 5.1.1 pede?",
+    "hint": "Um motivo, em termos de algo que a pessoa quer.",
+    "choices": [
+      {
+        "text": "\"O Planner precisa de acesso à sua câmera.\"",
+        "why": "Isso afirma uma necessidade e nenhum uso; a diretriz pede que a frase descreva o uso."
+      },
+      {
+        "text": "\"Permita a câmera para continuar usando o Planner.\"",
+        "why": "Não descreve nada e pressiona: a 5.1.1(iv) proíbe forçar o consentimento."
+      },
+      {
+        "text": "\"O Planner usa a câmera para fotografar suas anotações de uma sessão.\"",
+        "why": "Isso: ela diz para que serve o acesso, de forma clara e completa."
+      },
+      {
+        "text": "\"NSCameraUsageDescription\"",
+        "why": "Esse é o nome da chave; a pessoa o veria como motivo."
+      }
+    ]
+  },
+  "ex-3pdgfgy2": {
+    "prompt": "Uma pessoa tocou em *Não Permitir* ontem. Hoje o app chama o método de pedido de novo. O que a pessoa vê?",
+    "hint": "O sistema guarda a resposta.",
+    "choices": [
+      {
+        "text": "Nada: a chamada devolve a resposta guardada",
+        "why": "Isso. O alerta aparece uma vez, e depois só os Ajustes mudam a resposta."
+      },
+      {
+        "text": "O mesmo alerta, porque toda chamada pergunta",
+        "why": "O sistema pergunta uma vez e guarda o estado."
+      },
+      {
+        "text": "Outro alerta pedindo que reconsidere",
+        "why": "O iOS não tem segundo alerta; é por isso que a seção 07 existe."
+      },
+      {
+        "text": "O app Ajustes, aberto pelo iOS sozinho",
+        "why": "Só o app pode oferecer abrir os Ajustes, e só quando a pessoa toca num botão."
+      }
+    ]
+  },
+  "ex-0t3mzgcm": {
+    "prompt": "Ligue cada tipo de acesso à chave de que o `Info.plist` precisa.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "A câmera",
+        "right": "`NSCameraUsageDescription`"
+      },
+      {
+        "left": "Localização em uso",
+        "right": "`NSLocationWhenInUseUsageDescription`"
+      },
+      {
+        "left": "Salvar na biblioteca de fotos",
+        "right": "`NSPhotoLibraryAddUsageDescription`"
+      },
+      {
+        "left": "Rastreamento",
+        "right": "`NSUserTrackingUsageDescription`"
+      }
+    ],
+    "right_distractors": [
+      "`NSPrivacyTracking`"
+    ]
+  },
+  "ex-c42p1c8k": {
+    "prompt": "Em qual estado da câmera, e só nele, o `requestAccess` mostra o alerta?",
+    "hint": "Ninguém respondeu ainda.",
+    "choices": [
+      {
+        "text": "`.denied`",
+        "why": "Um estado negado é a resposta já dada; a chamada a devolve."
+      },
+      {
+        "text": "`.restricted` pelo Tempo de Uso",
+        "why": "Outra pessoa o definiu, e a pessoa também não consegue mudar."
+      },
+      {
+        "text": "`.notDetermined`",
+        "why": "Isso: ninguém perguntou ainda, então o iOS pergunta agora."
+      },
+      {
+        "text": "`.authorized`",
+        "why": "A pessoa já disse sim."
+      }
+    ]
+  },
+  "ex-ayzwecf7": {
+    "prompt": "Por que anexar uma foto existente com o `PhotosPicker` não precisa de frase de uso?",
+    "hint": "Onde roda o seletor?",
+    "choices": [
+      {
+        "text": "Fotos são menos privadas que a câmera, então o iOS as trata como dado público",
+        "why": "Uma biblioteca pode ser mais privada que a câmera; o motivo é quem a vê."
+      },
+      {
+        "text": "O seletor roda fora do app, que só vê a foto escolhida",
+        "why": "Isso. O app nunca recebe a biblioteca, então não há o que pedir."
+      },
+      {
+        "text": "O SwiftUI pergunta pelo app com uma frase própria",
+        "why": "Nenhum alerta aparece com o seletor fora do processo."
+      },
+      {
+        "text": "A frase de uso só é conferida pela App Review, não pelo iOS",
+        "why": "O iOS confere também: a chamada da câmera sem a chave encerra o app."
+      }
+    ]
+  },
+  "ex-nd4cxnsw": {
+    "prompt": "O `cameraAllowed()` termina o `switch` com `@unknown default: return false`. Por que esse caso está ali?",
+    "hint": "A enumeração é da Apple.",
+    "choices": [
+      {
+        "text": "Para pegar um erro lançado pelo `requestAccess`",
+        "why": "O `requestAccess` não lança; devolve um Bool."
+      },
+      {
+        "text": "Porque `.restricted` não é um caso de verdade",
+        "why": "Ele é real, e é tratado na linha de cima."
+      },
+      {
+        "text": "Um caso futuro precisa de resposta desde já",
+        "why": "Isso, e aqui um estado desconhecido quer dizer sem câmera."
+      },
+      {
+        "text": "O Swift exige isso em todo switch sobre enum",
+        "why": "Um switch sobre a sua própria enum não precisa; o da seção 07 não tem default nenhum."
+      }
+    ]
+  },
+  "ex-93pjgz0j": {
+    "prompt": "Uma escola gerencia os iPhones dos alunos e desligou a câmera. Que estado o planner vê, e o que o botão deve oferecer?",
+    "hint": "Quem tomou a decisão, e o aluno consegue desfazê-la?",
+    "choices": [
+      {
+        "text": "`.denied`, com um botão para os Ajustes",
+        "why": "O aluno não negou nada, e a chave nos Ajustes não é dele para virar."
+      },
+      {
+        "text": "`.restricted`, com uma frase e sem botão de Ajustes",
+        "why": "Isso: outra pessoa decidiu, então mandar para os Ajustes seria um beco sem saída."
+      },
+      {
+        "text": "`.notDetermined`, para o app perguntar ao aluno",
+        "why": "Perguntar não adianta quando o gerente do aparelho já decidiu."
+      },
+      {
+        "text": "`.authorized`, já que a escola liberou o app",
+        "why": "Desligar a câmera é o oposto de liberá-la."
+      }
+    ]
+  },
+  "ex-tmn9z5pz": {
+    "prompt": "Qual nível de localização o artigo da Apple chama de escolha preferida?",
+    "hint": "Mais privacidade e mais bateria.",
+    "choices": [
+      {
+        "text": "Always, para as atualizações chegarem em segundo plano",
+        "why": "Always é para quando for necessário; o artigo prefere o outro."
+      },
+      {
+        "text": "When In Use",
+        "why": "Isso, nas palavras do artigo: melhor para privacidade e bateria."
+      },
+      {
+        "text": "Nenhum: a localização precisa é a escolha preferida",
+        "why": "A precisão é outro ajuste; o artigo compara os dois níveis."
+      },
+      {
+        "text": "O que a pessoa escolher no alerta",
+        "why": "O app escolhe qual nível pedir; o artigo diz qual preferir."
+      }
+    ]
+  },
+  "ex-j5wg68tw": {
+    "prompt": "Por que o planner não pede localização nenhuma?",
+    "hint": "Compare o recurso com a permissão de que ele precisaria.",
+    "choices": [
+      {
+        "text": "A localização não funciona num iPhone sem chip de GPS ou cartão SIM",
+        "why": "Todo iPhone se localiza; a questão é se o planner deve."
+      },
+      {
+        "text": "A App Review rejeita todo app de estudo que usa localização",
+        "why": "A diretriz pede relevância à função principal, não uma proibição por categoria."
+      },
+      {
+        "text": "O único uso proposto pede Always, e um lembrete com horário resolve",
+        "why": "Isso: uma permissão mais forte que o problema não mereceu o lugar."
+      },
+      {
+        "text": "O Core Location não está disponível para apps SwiftUI",
+        "why": "Qualquer app iOS pode usar o Core Location; a seção 04 mostra o código."
+      }
+    ]
+  },
+  "ex-b6pngrtz": {
+    "prompt": "O `requestWhenInUseAuthorization()` volta na hora; a resposta da pessoa chega depois no ___ do gerenciador de localização.",
+    "hint": "O objeto que o `manager.delegate = self` nomeia.",
+    "blanks": [
+      {
+        "accept": [
+          "delegate",
+          "delegado"
+        ]
+      }
+    ]
+  },
+  "ex-ydss6pch": {
+    "prompt": "Qual destes é rastreamento, no sentido da Apple, e precisa do App Tracking Transparency?",
+    "hint": "Ligar a dados de outras empresas, para publicidade.",
+    "choices": [
+      {
+        "text": "Salvar o plano no servidor do próprio planner, como cópia",
+        "why": "Guardar dados dos próprios usuários para o próprio app não é rastreamento."
+      },
+      {
+        "text": "Contar travamentos para consertar o app",
+        "why": "Isso é diagnóstico do próprio app, e não ligar a dados de outros."
+      },
+      {
+        "text": "Dar a uma rede de anúncios um ID para cruzar apps",
+        "why": "Isso: liga os seus dados aos de outras empresas para publicidade."
+      },
+      {
+        "text": "Lembrar o último curso aberto no `UserDefaults` do app",
+        "why": "Isso é uma API de motivo obrigatório, declarada no manifesto, não rastreamento."
+      }
+    ]
+  },
+  "ex-8fef69tb": {
+    "prompt": "O que a documentação de `NSUserTrackingUsageDescription` diz que acontece sem a chave?",
+    "hint": "A seção 05 a cita.",
+    "choices": [
+      {
+        "text": "O app trava quando usa o framework",
+        "why": "Isso, a mesma falha da câmera sem a sua chave."
+      },
+      {
+        "text": "O alerta mostra uma frase genérica sobre anúncios",
+        "why": "Não existe frase genérica; a chave é obrigatória."
+      },
+      {
+        "text": "O rastreamento é liberado sem alerta",
+        "why": "A 5.1.2(i) exige permissão explícita pelo framework."
+      },
+      {
+        "text": "O App Store Connect manda um e-mail de lembrete ao desenvolvedor",
+        "why": "Esse e-mail é para APIs de motivo obrigatório que faltam no manifesto."
+      }
+    ]
+  },
+  "ex-d643yscm": {
+    "prompt": "O planner acrescenta um SDK de analytics para um gráfico. O que ler antes de publicar?",
+    "hint": "O app responde pelo que os seus SDKs fazem.",
+    "choices": [
+      {
+        "text": "Só a licença, já que privacidade é com o fabricante do SDK",
+        "why": "O app responde por um SDK que rastreia em nome dele."
+      },
+      {
+        "text": "O próprio manifesto de privacidade do SDK",
+        "why": "Isso: ele diz o que o SDK coleta e se rastreia, e o Xcode o junta ao seu."
+      },
+      {
+        "text": "O código-fonte dele, linha por linha, atrás de chamadas de rede",
+        "why": "Possível, mas é no manifesto que o SDK declara isso, e ele é curto."
+      },
+      {
+        "text": "Nada: SDKs do Swift Package Manager são revisados pela Apple",
+        "why": "A Apple não revisa pacotes; você os acrescenta sozinho."
+      }
+    ]
+  },
+  "ex-e4vn22df": {
+    "prompt": "O que o manifesto de privacidade registra que as frases de uso do `Info.plist` não registram?",
+    "hint": "Um diz por que o app pede; o outro, o que ele faz sem pedir.",
+    "choices": [
+      {
+        "text": "A frase mostrada no alerta de permissão",
+        "why": "Essa é a frase de uso, no `Info.plist`."
+      },
+      {
+        "text": "Dados coletados e APIs de motivo obrigatório usadas",
+        "why": "Isso, as duas citadas da página da Apple na seção 06."
+      },
+      {
+        "text": "O bundle identifier e a versão do app",
+        "why": "Essas são chaves do `Info.plist` da aula 1."
+      },
+      {
+        "text": "O certificado com que o app é assinado",
+        "why": "A assinatura é da aula 21 e não tem relação com este arquivo."
+      }
+    ]
+  },
+  "ex-96ftctmr": {
+    "prompt": "O planner guarda o último curso aberto no `UserDefaults`, lido só por ele. O código de motivo que ele declara é ___.",
+    "hint": "Quatro caracteres, um ponto e um dígito.",
+    "blanks": [
+      {
+        "accept": [
+          "CA92.1"
+        ]
+      }
+    ]
+  },
+  "ex-1jwnjs6m": {
+    "prompt": "Rodado no `Lesson1.plist`, o `check-privacy.swift` imprimiu `1 missing`. Que código de saída o `echo $?` imprimiu?",
+    "hint": "A última linha do `check-privacy.swift`."
+  },
+  "ex-025kyrqt": {
+    "prompt": "Acrescentar `tracking` às palavras do verificador deu duas linhas `MISSING`. Por que duas?",
+    "hint": "O rastreamento toca os dois arquivos.",
+    "choices": [
+      {
+        "text": "O verificador conta toda palavra duas vezes por engano",
+        "why": "`camera` e `userdefaults` apareceram uma vez cada na mesma execução."
+      },
+      {
+        "text": "Falta a frase de uso, e o manifesto diz que não rastreia",
+        "why": "Isso: rastrear precisa da frase e de um manifesto que o admita."
+      },
+      {
+        "text": "O `NSPrivacyTracking` tem de listar antes os domínios de anúncio",
+        "why": "Os domínios vão em `NSPrivacyTrackingDomains`, que este verificador não lê."
+      },
+      {
+        "text": "Um app que rastreia precisa de dois códigos de motivo para o `UserDefaults`",
+        "why": "A linha do `UserDefaults` deu `ok` naquela execução."
+      }
+    ]
+  },
+  "ex-pgbypcp5": {
+    "prompt": "Depois que a pessoa nega a câmera, o que vira o botão do planner?",
+    "hint": "Diretriz 5.1.1(iv): respeitar o ajuste, oferecer alternativa.",
+    "choices": [
+      {
+        "text": "Um alerta na abertura até a câmera ser liberada",
+        "why": "Isso é pressão, que a 5.1.1(iv) proíbe, e bloqueia o resto do app."
+      },
+      {
+        "text": "Nada: o botão some, já que uma sessão de estudo não precisa de foto nenhuma",
+        "why": "Escondê-lo não deixa a pessoa saber por que nem mudar."
+      },
+      {
+        "text": "Uma frase de que está desligada, com o caminho dos Ajustes",
+        "why": "Isso, no lugar onde a câmera estaria."
+      },
+      {
+        "text": "O mesmo botão, que chama `requestAccess` de novo",
+        "why": "A chamada devolve o não guardado; a pessoa tocaria e não veria nada."
+      }
+    ]
+  },
+  "ex-mkfpznw6": {
+    "prompt": "O `button(for:)` não tem caso `default`. O que isso compra?",
+    "hint": "O que acontece quando um quinto estado entra em `CameraAccess`?",
+    "choices": [
+      {
+        "text": "Código mais rápido, já que o compilador pula um ramo",
+        "why": "Velocidade não é o ponto; a conferência é."
+      },
+      {
+        "text": "Um estado novo não compila até ganhar uma resposta",
+        "why": "Isso: o compilador confere que todo caso é tratado."
+      },
+      {
+        "text": "Nada; o Swift acrescenta um default vazio",
+        "why": "O Swift não acrescenta default; caso não tratado é erro de compilação."
+      },
+      {
+        "text": "Ele deixa o `denied.swift` rodar sem Foundation",
+        "why": "O arquivo não precisa de Foundation de qualquer jeito; não é isso que o `default` decide."
+      }
+    ]
+  },
+  "ex-4c372c9y": {
+    "prompt": "Ponha em ordem a vida de uma permissão de câmera, para alguém que primeiro diz não e depois muda de ideia.",
+    "hint": "A figura da seção 07.",
+    "items": [
+      "`.notDetermined`",
+      "O app chama `requestAccess`",
+      "A pessoa toca *Não Permitir*: `.denied`",
+      "O botão oferece os Ajustes",
+      "A pessoa liga a chave: `.authorized`"
+    ]
+  },
+  "ex-htq0b7dm": {
+    "prompt": "Quais destes precisam de uma chave ou entrada nos dois arquivos de privacidade do planner? Escolha todos os que se aplicam.",
+    "hint": "Frases de uso para o que pede; o manifesto para APIs de motivo obrigatório.",
+    "choices": [
+      {
+        "text": "Tirar uma foto com a câmera",
+        "why": "Sim: `NSCameraUsageDescription`."
+      },
+      {
+        "text": "Escolher uma foto com o `PhotosPicker`",
+        "why": "Não: o seletor roda fora do app."
+      },
+      {
+        "text": "Guardar o último curso no `UserDefaults`",
+        "why": "Sim: uma API de motivo obrigatório, `CA92.1`."
+      },
+      {
+        "text": "Agendar um lembrete num horário que a pessoa definiu",
+        "why": "Não: notificações pedem com a sua própria chamada e não precisam de nenhum dos dois arquivos."
+      }
+    ]
+  },
+  "ex-5gwjvje0": {
+    "prompt": "Quando o planner deve chamar o `requestAccess` da câmera?",
+    "hint": "Perguntadas fora de contexto, as pessoas dizem não.",
+    "choices": [
+      {
+        "text": "Na abertura, para que todas as permissões se resolvam de uma vez",
+        "why": "Fora de contexto, e o não que isso provoca é permanente."
+      },
+      {
+        "text": "No onboarding, numa tela explicando cada recurso",
+        "why": "Ainda antes de a pessoa querer uma foto; o momento do uso é depois."
+      },
+      {
+        "text": "Quando a pessoa toca no botão que tira a foto",
+        "why": "Isso: o pedido está no contexto e o motivo é óbvio."
+      },
+      {
+        "text": "Depois de uma semana, quando a pessoa confiar no app",
+        "why": "Escolher o momento pelo calendário continua fora de contexto."
+      }
+    ]
+  }
+}

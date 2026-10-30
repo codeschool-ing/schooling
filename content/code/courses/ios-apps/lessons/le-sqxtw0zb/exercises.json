@@ -1,0 +1,733 @@
+[
+  {
+    "id": "ex-7pcvhwy8",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the planner's server listen on `127.0.0.1` and not on every address?",
+    "hint": "It has no password and accepts anything posted to it.",
+    "choices": [
+      {
+        "text": "Python cannot listen on any other address",
+        "correct": false,
+        "why": "`ThreadingHTTPServer` takes any address; this one was chosen."
+      },
+      {
+        "text": "So that nothing else on the network reaches it",
+        "correct": true,
+        "why": "Right: `127.0.0.1` means this machine, which suits a server with no password."
+      },
+      {
+        "text": "Because App Transport Security requires that address",
+        "correct": false,
+        "why": "ATS is about the app's connections, and since iOS 17 it refuses IP addresses by default."
+      },
+      {
+        "text": "To make the responses arrive faster than over Wi-Fi",
+        "correct": false,
+        "why": "Speed is not the reason; who can reach it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6w61bcv",
+    "version": 1,
+    "section": "the-server",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each request to what the planner's server answers.",
+    "hint": "Section 02 tried three of them with `curl`.",
+    "pairs": [
+      {
+        "left": "`GET /courses`",
+        "right": "200, the two courses"
+      },
+      {
+        "left": "`GET /courses/art/sessions`",
+        "right": "404, `no course art`"
+      },
+      {
+        "left": "`GET /courses?fail`",
+        "right": "500, on purpose"
+      },
+      {
+        "left": "`POST /sessions` for course `art`",
+        "right": "422, `no course art`"
+      }
+    ],
+    "right_distractors": [
+      "401, a password is needed"
+    ]
+  },
+  {
+    "id": "ex-ph3kd8mc",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You stop the server with `Ctrl-C` and start it again. What happened to the session you posted?",
+    "hint": "Where does the server keep its sessions?",
+    "choices": [
+      {
+        "text": "It is still there, in a file beside `serve.py`",
+        "correct": false,
+        "why": "The server writes no file; its lists live in memory."
+      },
+      {
+        "text": "It comes back once the app posts it a second time on start",
+        "correct": false,
+        "why": "Nothing reposts it; the app has not been written to."
+      },
+      {
+        "text": "It is gone: the lists start again from the four in the file",
+        "correct": true,
+        "why": "Right, and for a course that is useful: every run starts from the same data."
+      },
+      {
+        "text": "It is kept, marked as done",
+        "correct": false,
+        "why": "Nothing marks it; it is simply not kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmcf1vt3",
+    "version": 1,
+    "section": "fetching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Linux, `URLSession.shared` gives `type 'URLSession' (aka 'AnyObject') has no member 'shared'`. What is missing?",
+    "hint": "On Linux the networking types live in a module of their own.",
+    "choices": [
+      {
+        "text": "`import FoundationNetworking`",
+        "correct": true,
+        "why": "Right: the open-source Foundation keeps `URLSession` there, behind `#if canImport`."
+      },
+      {
+        "text": "A newer Swift toolchain than 6.4.2",
+        "correct": false,
+        "why": "6.4.2 has `URLSession`; the file did not import the module that holds it."
+      },
+      {
+        "text": "`libcurl4-openssl-dev`, from the `apt` line of lesson 1",
+        "correct": false,
+        "why": "That package was installed; a missing library fails when linking, not with this message."
+      },
+      {
+        "text": "`import SwiftUI`",
+        "correct": false,
+        "why": "SwiftUI does not exist on Linux, and it is not where `URLSession` lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yhx0jmn",
+    "version": 1,
+    "section": "fetching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`URLSession.shared.data(from:)` gets a `404` from the server. What does the call do?",
+    "hint": "To `URLSession`, only a missing answer is an error.",
+    "choices": [
+      {
+        "text": "Throws a `URLError` with code 404",
+        "correct": false,
+        "why": "No error is thrown for an HTTP status; `URLError` codes are about the connection."
+      },
+      {
+        "text": "Returns, with the status in the response",
+        "correct": true,
+        "why": "Right, which is why section 05's client checks the status itself."
+      },
+      {
+        "text": "Returns an empty `Data` and no response",
+        "correct": false,
+        "why": "The body arrives too: here it was `{\"error\": …}`."
+      },
+      {
+        "text": "Retries the request until it gets a `200`",
+        "correct": false,
+        "why": "`URLSession` does not retry a status for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-59w9ye20",
+    "version": 1,
+    "section": "fetching",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the course prefer SwiftUI's `task` modifier for starting a load from a view?",
+    "hint": "What happens to the work when the view goes away?",
+    "choices": [
+      {
+        "text": "It runs the request on the main thread, which is faster",
+        "correct": false,
+        "why": "The request runs wherever `URLSession` runs it; speed is not the point."
+      },
+      {
+        "text": "It retries automatically when the network comes back",
+        "correct": false,
+        "why": "It does no retrying; that is the screen's choice."
+      },
+      {
+        "text": "It cancels the work when the view disappears",
+        "correct": true,
+        "why": "Right; a `Task` started in `onAppear` is cancelled by nothing."
+      },
+      {
+        "text": "It is the only place `await` is allowed in SwiftUI",
+        "correct": false,
+        "why": "Any asynchronous context allows `await`, a `Task` included."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7d1epmk",
+    "version": 1,
+    "section": "decoding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `WireSession`, the enum that maps `courseID` to the server's `courseId` is called ___.",
+    "hint": "It conforms to `CodingKey`.",
+    "blanks": [
+      {
+        "accept": [
+          "CodingKeys"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xc3mdz4g",
+    "version": 1,
+    "section": "decoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `DecodingError` does a body with `\"course_id\"` instead of `\"courseId\"` produce?",
+    "hint": "The type requires a key the JSON does not have.",
+    "choices": [
+      {
+        "text": "`typeMismatch`, at the path `course_id`",
+        "correct": false,
+        "why": "A type mismatch is a value of the wrong type, like `\"forty\"` for an `Int`."
+      },
+      {
+        "text": "`keyNotFound`, for `courseId`",
+        "correct": true,
+        "why": "Right: the decoder looked for `courseId` and found no such key."
+      },
+      {
+        "text": "None: the extra key is ignored and `courseID` is empty",
+        "correct": false,
+        "why": "Extra keys are ignored, but a missing required one throws; nothing is left half-built."
+      },
+      {
+        "text": "`dataCorrupted`, because the JSON is not valid",
+        "correct": false,
+        "why": "The JSON is valid; it has a different key in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d67ft34s",
+    "version": 1,
+    "section": "decoding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague makes `StudySession` itself `Codable` and drops `WireSession`. The server later sends dates as Unix timestamps. What breaks first?",
+    "hint": "Where would the model's shape have to change?",
+    "choices": [
+      {
+        "text": "Nothing: `JSONDecoder` converts a timestamp into the day text",
+        "correct": false,
+        "why": "A number does not decode into a `String`; it is a `typeMismatch`."
+      },
+      {
+        "text": "Only the tests, which can be updated",
+        "correct": false,
+        "why": "The decoding fails in the app as well as in the tests."
+      },
+      {
+        "text": "Decoding, and the fix changes the type all screens use",
+        "correct": true,
+        "why": "Right. With a wire type, the change stays in `Wire.swift` and the model keeps its day."
+      },
+      {
+        "text": "The server, which refuses the old date format on `POST`",
+        "correct": false,
+        "why": "The question is about the app reading the server's answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-88av61sx",
+    "version": 1,
+    "section": "decoding",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After adding `WireTests.swift`, how many tests did `swift test` report in its last line?",
+    "hint": "Two from lesson 1, two new.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3bkrx6rq",
+    "version": 1,
+    "section": "status-codes",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the client's checks in the order `send` makes them.",
+    "hint": "Answer, status, shape.",
+    "items": [
+      "Was there an answer at all, or was it cancelled?",
+      "Is the response an `HTTPURLResponse`?",
+      "Is the status between 200 and 299?",
+      "Does the body decode as the expected type?"
+    ]
+  },
+  {
+    "id": "ex-ayp4syz8",
+    "version": 1,
+    "section": "status-codes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody moves the decoding in `send` above the status check. The server answers `500` with `{\"error\": \"database down\"}`. What does the screen get?",
+    "hint": "Try to decode an error message as a list of courses.",
+    "choices": [
+      {
+        "text": "`status(500, \"database down\")`, as before",
+        "correct": false,
+        "why": "The status is never reached: decoding failed first."
+      },
+      {
+        "text": "`unreadable`: the app blames itself",
+        "correct": true,
+        "why": "Right: the error page is read as data, and the message says it is a bug in the app."
+      },
+      {
+        "text": "`offline`, so the screen offers a retry",
+        "correct": false,
+        "why": "There was an answer; offline is for no answer at all."
+      },
+      {
+        "text": "An empty list of courses",
+        "correct": false,
+        "why": "An object does not decode as an array; it throws rather than producing an empty one."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvykw99j",
+    "version": 1,
+    "section": "status-codes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the client report when nothing was listening on port 8099?",
+    "hint": "It is one of the `offline` cases.",
+    "choices": [
+      {
+        "text": "`status(503, \"\")`",
+        "correct": false,
+        "why": "A status needs a server to send it; nothing answered."
+      },
+      {
+        "text": "`offline(\"timedOut\")`",
+        "correct": false,
+        "why": "A refused connection fails at once; a timeout is section 07's slow server."
+      },
+      {
+        "text": "`unreadable(\"the body was empty\")`",
+        "correct": false,
+        "why": "Unreadable is a success with the wrong body."
+      },
+      {
+        "text": "`offline(\"cannotConnectToHost\")`",
+        "correct": true,
+        "why": "Right: the `URLError` code for a refused connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj78s5jd",
+    "version": 1,
+    "section": "status-codes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the base URL passed to `APIClient` rather than written inside it?",
+    "hint": "Think of where the planner runs.",
+    "choices": [
+      {
+        "text": "One client, this machine or a real server",
+        "correct": true,
+        "why": "Right, and a test can hand it whatever it needs."
+      },
+      {
+        "text": "Swift does not allow a URL literal inside a struct",
+        "correct": false,
+        "why": "It does; `fetch` writes URLs inline."
+      },
+      {
+        "text": "`URLSession` refuses a request to a hard-coded address",
+        "correct": false,
+        "why": "`URLSession` cannot tell where an address came from."
+      },
+      {
+        "text": "App Transport Security reads it from the initializer",
+        "correct": false,
+        "why": "ATS reads `Info.plist`, never an initializer."
+      }
+    ]
+  },
+  {
+    "id": "ex-4npmfzym",
+    "version": 1,
+    "section": "the-error-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a screen's load modelled as one `Loadable` enum rather than three properties `isLoading`, `courses` and `error`?",
+    "hint": "Count the combinations each one allows.",
+    "choices": [
+      {
+        "text": "An enum uses less memory than three properties",
+        "correct": false,
+        "why": "Memory is not the argument; impossible states are."
+      },
+      {
+        "text": "One state at a time, each drawn by a `switch`",
+        "correct": true,
+        "why": "Right: three properties allow loading and an error at once, and nothing insists the error is drawn."
+      },
+      {
+        "text": "SwiftUI can only observe enums, not booleans",
+        "correct": false,
+        "why": "SwiftUI observes any stored state; lesson 6 uses plain values."
+      },
+      {
+        "text": "`URLSession` returns a `Loadable` directly",
+        "correct": false,
+        "why": "`Loadable` is the planner's own type, in `Loadable.swift`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wjhct6hg",
+    "version": 1,
+    "section": "the-error-state",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these errors does the planner offer a retry for? Choose all that apply.",
+    "hint": "A retry only where asking again could give a different answer.",
+    "choices": [
+      {
+        "text": "`offline(\"timedOut\")`",
+        "correct": true,
+        "why": "Yes: the network may come back."
+      },
+      {
+        "text": "`status(500, …)`",
+        "correct": true,
+        "why": "Yes: a server error can pass."
+      },
+      {
+        "text": "`status(404, …)`",
+        "correct": false,
+        "why": "No: the course is gone, and asking again gives the same 404."
+      },
+      {
+        "text": "`unreadable(…)`",
+        "correct": false,
+        "why": "No: the same answer gives the same bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwcdafce",
+    "version": 1,
+    "section": "the-error-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the message for `cancelled` an empty string?",
+    "hint": "Who started the load, and where are they now?",
+    "choices": [
+      {
+        "text": "Because the server sends no body when a request is cancelled",
+        "correct": false,
+        "why": "The message is the app's own sentence, not the server's."
+      },
+      {
+        "text": "It is a placeholder to be translated later",
+        "correct": false,
+        "why": "It is empty on purpose, and section 06 says why."
+      },
+      {
+        "text": "The screen that asked has gone, so there is nobody to tell",
+        "correct": true,
+        "why": "Right; section 07's `task(id:)` code writes nothing at all for a cancelled load."
+      },
+      {
+        "text": "Swift does not allow an enum case without a message",
+        "correct": false,
+        "why": "It does; `cancelled` has no associated value at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-pztd3h6v",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The fetch with `?delay=3` was cancelled after 300 ms. What did the server do?",
+    "hint": "Look at the end of the server's log in section 02.",
+    "choices": [
+      {
+        "text": "Stopped at once, because the client cancelled",
+        "correct": false,
+        "why": "The server did not know; it slept its three seconds."
+      },
+      {
+        "text": "Answered later, to a client that had gone",
+        "correct": true,
+        "why": "Right: cancelling stops the waiting, not work that already reached the server."
+      },
+      {
+        "text": "Logged a `499` status for the request",
+        "correct": false,
+        "why": "The log says `200` and then that the client had gone."
+      },
+      {
+        "text": "Crashed with a broken pipe",
+        "correct": false,
+        "why": "`reply` catches the broken pipe and logs one line."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6tp56d2",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request is cancelled before it starts and another is stopped in flight. Which errors reach `send`, and what does it make of them?",
+    "hint": "Cancelling arrives in two shapes.",
+    "choices": [
+      {
+        "text": "Both arrive as `URLError(.timedOut)`, which becomes `offline`",
+        "correct": false,
+        "why": "A timeout is different from a cancellation, and the client keeps them apart."
+      },
+      {
+        "text": "Two errors, both made `.cancelled`",
+        "correct": true,
+        "why": "Right: two shapes, one meaning for a screen."
+      },
+      {
+        "text": "Neither: a cancelled request returns an empty body",
+        "correct": false,
+        "why": "A cancelled call throws; it returns no body."
+      },
+      {
+        "text": "A `status(499, \"\")` from the server for both of them",
+        "correct": false,
+        "why": "No status comes back for a request nobody waited for."
+      }
+    ]
+  },
+  {
+    "id": "ex-xq4e8n2n",
+    "version": 1,
+    "section": "cancellation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds did the impatient client's session wait for data before giving up?",
+    "hint": "It is `timeoutIntervalForRequest`.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-tb42qm17",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `CourseDetailView`, why does the `task(id:)` code return early when the load came back `.failed(.cancelled)`?",
+    "hint": "When is it cancelled?",
+    "choices": [
+      {
+        "text": "To retry the same course once more",
+        "correct": false,
+        "why": "It does not retry; it leaves the state alone."
+      },
+      {
+        "text": "To keep a spinner on screen until the network returns",
+        "correct": false,
+        "why": "The new load sets its own state; the old one stays silent."
+      },
+      {
+        "text": "A newer load for another course has replaced it",
+        "correct": true,
+        "why": "Right: the old load must not land its sessions on top of the new course's."
+      },
+      {
+        "text": "Because `Loadable.run` cannot represent a cancellation",
+        "correct": false,
+        "why": "It can: `.failed(.cancelled)` is exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-dj9tpcrs",
+    "version": 1,
+    "section": "transport-security",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On iOS 17, which `Info.plist` key lets the planner reach `http://127.0.0.1:8012` during development, and nothing more?",
+    "hint": "The narrow exception, not the wide one.",
+    "choices": [
+      {
+        "text": "`NSAllowsArbitraryLoads`",
+        "correct": false,
+        "why": "That turns ATS off for everything and has to be justified to review."
+      },
+      {
+        "text": "`NSAllowsLocalNetworking`",
+        "correct": true,
+        "why": "Right: local names and IP addresses, which iOS 17 stopped allowing by default."
+      },
+      {
+        "text": "`NSExceptionDomains` with `localhost`",
+        "correct": false,
+        "why": "The URL uses an IP address, and the narrow local key covers it."
+      },
+      {
+        "text": "No key: ATS ignores port numbers above 8000",
+        "correct": false,
+        "why": "ATS has no rule about port numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-884fv18d",
+    "version": 1,
+    "section": "transport-security",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did every `http` request in this lesson work on Linux without any exception?",
+    "hint": "Where does ATS live?",
+    "choices": [
+      {
+        "text": "Because Linux encrypts local traffic for you",
+        "correct": false,
+        "why": "Nothing encrypted it; the server speaks plain HTTP."
+      },
+      {
+        "text": "ATS lives in Apple's systems, not the open Foundation",
+        "correct": true,
+        "why": "Right, which is also why this section was not run."
+      },
+      {
+        "text": "Because the server sent `Content-Type: application/json`",
+        "correct": false,
+        "why": "The content type has nothing to do with ATS."
+      },
+      {
+        "text": "Because port 8012 counts as HTTPS",
+        "correct": false,
+        "why": "The scheme, not the port, says whether it is HTTPS."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2dm6232",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student on a train opens the planner, and the course list request times out. Trace it: which `APIError`, which `Loadable`, and what does `CourseListView` draw?",
+    "hint": "Stage one fails; the error can be retried.",
+    "choices": [
+      {
+        "text": "`status(408, \"\")`, `.failed`, a message with no button",
+        "correct": false,
+        "why": "A timeout produces no status; nothing answered."
+      },
+      {
+        "text": "`cancelled`, `.loading`, a spinner that stays",
+        "correct": false,
+        "why": "Nobody cancelled it; the session gave up waiting."
+      },
+      {
+        "text": "`offline(\"timedOut\")`, `.failed`, the offline message and a Try again button",
+        "correct": true,
+        "why": "Right: offline can be retried, so the button is drawn."
+      },
+      {
+        "text": "`unreadable(…)`, `.loaded([])`, an empty list",
+        "correct": false,
+        "why": "No body arrived to be unreadable, and `run` never turns an error into a list."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjqwv6e7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of this lesson ran on the Linux machine, and which was only written from Apple's documentation? Pick the one that was NOT run.",
+    "hint": "SwiftUI is the line.",
+    "choices": [
+      {
+        "text": "The `fetch` program and its three outcomes",
+        "correct": false,
+        "why": "That ran: section 05 shows its output."
+      },
+      {
+        "text": "The cancelled and timed-out requests",
+        "correct": false,
+        "why": "Those ran: section 07 shows them."
+      },
+      {
+        "text": "`CourseListView` drawing the three states",
+        "correct": true,
+        "why": "Right: it is SwiftUI, written from the documentation and not run."
+      },
+      {
+        "text": "The `WireTests` decoding tests",
+        "correct": false,
+        "why": "They ran under `swift test` in section 04."
+      }
+    ]
+  }
+]

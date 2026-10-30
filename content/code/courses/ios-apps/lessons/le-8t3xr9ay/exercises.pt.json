@@ -1,0 +1,454 @@
+{
+  "ex-bgjn95s9": {
+    "prompt": "Na tela de curso do planner, a lista marca as sessões feitas e o rodapé as soma. Onde o `done` deve morar?",
+    "hint": "Um fato, um dono.",
+    "choices": [
+      {
+        "text": "Na linha, e o rodapé pergunta a cada linha",
+        "why": "Aí a linha vira dona e o rodapé depende das linhas estarem na tela; o fato pertence ao plano."
+      },
+      {
+        "text": "Uma vez, no plano de onde a tela é desenhada",
+        "why": "Isso. A lista e o total são calculados a partir dele, então não podem discordar."
+      },
+      {
+        "text": "Na lista e no rodapé, sincronizados depois de cada toque",
+        "why": "Duas cópias sincronizadas é justamente o que dá errado na primeira vez que um passo é esquecido."
+      },
+      {
+        "text": "No `Toggle`, que lembra se está ligado",
+        "why": "Um `Toggle` não guarda nada: ele recebe um binding para o `Bool` de outra view."
+      }
+    ]
+  },
+  "ex-bbfjgg10": {
+    "prompt": "Qual destes é uma segunda fonte da verdade esperando para discordar?",
+    "hint": "Dá para calculá-lo a partir do plano?",
+    "choices": [
+      {
+        "text": "A lista de sessões do plano",
+        "why": "Essa é a própria fonte da verdade."
+      },
+      {
+        "text": "Um `Binding` para o plano, entregue à tela de detalhe",
+        "why": "Um binding não guarda valor; ele lê e escreve o do dono."
+      },
+      {
+        "text": "Um `total` definido uma vez a partir do `weekTotal`",
+        "why": "Isso: ele pode ser calculado, então guardá-lo cria uma cópia que fica velha."
+      },
+      {
+        "text": "O `id` do curso, que nunca muda",
+        "why": "Ele faz parte dos dados, não é derivado deles."
+      }
+    ]
+  },
+  "ex-w45y6p83": {
+    "prompt": "Por que uma view SwiftUI não consegue guardar um contador numa propriedade `var` comum?",
+    "hint": "O que acontece com a struct quando o body do pai roda?",
+    "choices": [
+      {
+        "text": "A struct é refeita, e a cópia nova começa do valor inicial",
+        "why": "Isso. O `@State` guarda o valor fora da struct por esse motivo."
+      },
+      {
+        "text": "Structs não podem ter propriedades `var`",
+        "why": "Podem; o `Plan` da aula 1 tem duas."
+      },
+      {
+        "text": "O SwiftUI transforma toda propriedade em `let` ao compilar",
+        "why": "Nada reescreve as suas propriedades; o `body` não é `mutating`, e a struct é substituída."
+      },
+      {
+        "text": "Uma `var` é compartilhada entre todas as cópias da view",
+        "why": "Cada cópia de uma struct tem as suas propriedades; esse é o problema, não a cura."
+      }
+    ]
+  },
+  "ex-k4sh5q97": {
+    "prompt": "Um pai cria `CourseDetailView(plan: newPlan)` com outro plano enquanto a view está na tela. A view o guarda com `_plan = State(initialValue: plan)`. O que ela mostra?",
+    "hint": "Quando o SwiftUI usa o valor inicial?",
+    "choices": [
+      {
+        "text": "O plano novo, porque o inicializador rodou de novo",
+        "why": "Rodou, e o SwiftUI ignorou o valor: o armazenamento que ele guardou vale."
+      },
+      {
+        "text": "O plano antigo, do armazenamento que o SwiftUI guardou",
+        "why": "Isso. O valor inicial é usado na primeira vez que a view aparece, e não depois."
+      },
+      {
+        "text": "Um plano vazio, porque os dois valores conflitam",
+        "why": "Não há mistura; um valor é mantido."
+      },
+      {
+        "text": "Um erro em tempo de execução dizendo que o estado foi definido duas vezes",
+        "why": "Nada reclama, e é por isso que esta armadilha é difícil de ver."
+      }
+    ]
+  },
+  "ex-k3gq7sya": {
+    "prompt": "Por que a documentação da Apple diz para declarar propriedades `@State` como `private`?",
+    "hint": "Quem é dono do valor?",
+    "choices": [
+      {
+        "text": "Propriedades privadas são mais rápidas de ler",
+        "why": "Controle de acesso trata de quem vê um nome, não de velocidade."
+      },
+      {
+        "text": "O SwiftUI se recusa a compilar estado público",
+        "why": "Compila; o conselho é de desenho."
+      },
+      {
+        "text": "A view é dona dele, e nada de fora deveria defini-lo",
+        "why": "Isso. Um pai que quer influenciá-lo passa um valor inicial ou é ele mesmo o dono do estado."
+      },
+      {
+        "text": "Para que não se possa fazer um binding para ele com `$`",
+        "why": "O `$plan` funciona dentro da view, e esse binding é justamente o que as filhas recebem."
+      }
+    ]
+  },
+  "ex-021d8svn": {
+    "prompt": "Dentro do inicializador, `_plan` nomeia o próprio property ___, e não o plano dentro dele.",
+    "hint": "Duas palavras na aula; a lacuna é a segunda.",
+    "blanks": [
+      {
+        "accept": [
+          "wrapper"
+        ]
+      }
+    ]
+  },
+  "ex-bamyb6ny": {
+    "prompt": "O que contém um `Binding<Bool>` entregue a um `Toggle`?",
+    "hint": "Não o valor.",
+    "choices": [
+      {
+        "text": "Uma cópia do `Bool` tirada quando o toggle foi feito",
+        "why": "Uma cópia ficaria para trás; um binding alcança o valor do dono."
+      },
+      {
+        "text": "Um jeito de ler o valor e um de escrevê-lo",
+        "why": "Isso: duas operações que alcançam o lugar onde o dono o guarda."
+      },
+      {
+        "text": "A view que é dona do valor",
+        "why": "Ele não conhece o dono; o valor pode estar num `@State` ou num objeto."
+      },
+      {
+        "text": "Um nome de notificação para postar quando muda",
+        "why": "Não há notificação; a escrita vai direto para o armazenamento."
+      }
+    ]
+  },
+  "ex-3smcjfh1": {
+    "prompt": "Em `ForEach($plan.sessions) { $session in … }`, o que é `session` dentro da closure?",
+    "hint": "O parâmetro da closure é declarado com cifrão.",
+    "choices": [
+      {
+        "text": "Outro binding, igual a `$session`",
+        "why": "O `$session` é o binding; sem o cifrão é o valor."
+      },
+      {
+        "text": "O índice da sessão no array",
+        "why": "Um `ForEach` sobre uma coleção de valores `Identifiable` dá elementos, não índices."
+      },
+      {
+        "text": "O valor atual da sessão",
+        "why": "Isso; `$session` é o binding para ele, e ler `session` lê através dele."
+      },
+      {
+        "text": "Uma cópia privada que a linha muda à vontade, salva quando a linha some",
+        "why": "Não há cópia privada nem salvamento depois; as escritas passam na hora."
+      }
+    ]
+  },
+  "ex-ac3vw6n8": {
+    "prompt": "Um preview quer mostrar a `SessionRow` sem pai. Qual binding ele passa?",
+    "hint": "Um que ignora escritas.",
+    "choices": [
+      {
+        "text": "`$session`, de um `let` no preview",
+        "why": "Um `let` não tem valor projetado; o `$` funciona em `@State` e `@Binding`."
+      },
+      {
+        "text": "`.constant(…)`, um binding que ignora escritas",
+        "why": "Isso. O `Binding.constant` é o jeito padrão de dar um valor fixo a uma view."
+      },
+      {
+        "text": "`nil`, já que bindings são opcionais",
+        "why": "`@Binding var session: StudySession` não é opcional."
+      },
+      {
+        "text": "Um `@State` novo, declarado no topo do arquivo",
+        "why": "O `@State` pertence a uma view, não ao nível de cima de um arquivo."
+      }
+    ]
+  },
+  "ex-11j0ccye": {
+    "prompt": "Ligue cada pedaço de sintaxe ao que ele é.",
+    "hint": "O cifrão é o valor projetado.",
+    "pairs": [
+      {
+        "left": "`plan`",
+        "right": "O valor guardado no estado"
+      },
+      {
+        "left": "`$plan`",
+        "right": "Um binding para o plano inteiro"
+      },
+      {
+        "left": "`$plan.sessions[2].done`",
+        "right": "Um binding estreitado para um campo"
+      },
+      {
+        "left": "`_plan`",
+        "right": "O próprio wrapper `State`"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia do plano para a filha"
+    ]
+  },
+  "ex-y42y02cr": {
+    "prompt": "O `binding.swift` imprimiu `a copy:` primeiro. Quantas sessões estavam feitas no armazenamento nesse momento?",
+    "hint": "Leia a lista depois de `storage is`."
+  },
+  "ex-dy0mdrb3": {
+    "prompt": "No `Ref`, por que o setter de `value` é declarado `nonmutating`?",
+    "hint": "O que definir `value` muda?",
+    "choices": [
+      {
+        "text": "Para que o `Ref` possa ser uma classe",
+        "why": "Ele é uma struct; o `nonmutating` existe para structs."
+      },
+      {
+        "text": "Porque key paths só funcionam em valores imutáveis",
+        "why": "O subscript recebe um `WritableKeyPath`, que serve para escrever."
+      },
+      {
+        "text": "Defini-lo chama `write` e deixa o próprio `Ref` intacto",
+        "why": "Isso, e por isso uma `let` com um `Ref`, como `DoneToggle.isOn`, ainda pode ser escrita através dele."
+      },
+      {
+        "text": "Para o compilador copiar o armazenamento a cada escrita",
+        "why": "Nada é copiado; a closure escreve na caixa `Storage`."
+      }
+    ]
+  },
+  "ex-sy5ganew": {
+    "prompt": "`sessions[1].done` compila embora o `Ref` não declare um `subscript(Int)`. O que faz funcionar?",
+    "hint": "Olhe o atributo no tipo.",
+    "choices": [
+      {
+        "text": "O Swift acrescenta um subscript inteiro a toda struct genérica",
+        "why": "Ele não acrescenta nada disso; algo no `Ref` pediu."
+      },
+      {
+        "text": "O `@dynamicMemberLookup` transforma `[1]` e `.done` em key paths para o subscript",
+        "why": "Isso: o Swift monta `\\.[1]` e `\\.done` e chama `subscript(dynamicMember:)` com cada um."
+      },
+      {
+        "text": "O `Storage` é uma classe, então o conteúdo dele é alcançável por índice",
+        "why": "A expressão está em `sessions`, um `Ref`, não no armazenamento."
+      },
+      {
+        "text": "O `print` converte a expressão em tempo de execução",
+        "why": "Ela é resolvida na compilação; o `print` só recebe o resultado."
+      }
+    ]
+  },
+  "ex-n5h8x9ke": {
+    "prompt": "Ponha as três linhas que o `binding.swift` imprimiu na ordem em que apareceram.",
+    "hint": "Cópia, binding, estreitado.",
+    "items": [
+      "`storage is [false, false]`",
+      "`storage is [true, false]`",
+      "`storage is [true, true]`"
+    ]
+  },
+  "ex-6b80gbnr": {
+    "prompt": "O teste que falhou esperava 150. Quanto `screen.total.done` realmente valia?",
+    "hint": "O Swift Testing imprimiu o lado esquerdo.",
+    "unit": "minutos"
+  },
+  "ex-707febs0": {
+    "prompt": "Por que o `DerivedTotal` passa onde o `StoredTotal` falha?",
+    "hint": "Quando cada total é calculado?",
+    "choices": [
+      {
+        "text": "O `DerivedTotal` usa outro `weekTotal`",
+        "why": "Os dois chamam o `weekTotal(today:)` da aula 1."
+      },
+      {
+        "text": "O `StoredTotal` marca outra sessão como feita",
+        "why": "Os dois testes marcam `s3`."
+      },
+      {
+        "text": "O Swift Testing roda propriedades calculadas antes das armazenadas",
+        "why": "A ordem dos testes não tem nada com isso; cada teste tem o seu valor."
+      },
+      {
+        "text": "O total dele é calculado ao ser lido, depois da mudança",
+        "why": "Isso. O armazenado foi calculado no `init` e nunca soube de `s3`."
+      }
+    ]
+  },
+  "ex-ytr58be8": {
+    "prompt": "Um colega mantém o `StoredTotal` e acrescenta uma linha que atualiza o `total` depois de cada `markDone`. O que ainda está errado?",
+    "hint": "Quantos jeitos há de mudar um plano?",
+    "choices": [
+      {
+        "text": "Toda outra mudança, `add` inclusive, precisa da mesma linha, e uma vai faltar",
+        "why": "Isso: a cópia só fica certa enquanto todo escritor lembrar dela."
+      },
+      {
+        "text": "Nada; o teste passa agora, então o desenho está certo",
+        "why": "Passa para o `markDone`; o próximo tipo de mudança traz o bug de volta."
+      },
+      {
+        "text": "O `total` não pode ser atribuído porque é `let`",
+        "why": "Ele é `var` no `StoredTotal`."
+      },
+      {
+        "text": "O `weekTotal` é lento demais para chamar tantas vezes",
+        "why": "Ele filtra uma lista curta; velocidade não é o problema aqui."
+      }
+    ]
+  },
+  "ex-yp6qkx9r": {
+    "prompt": "Uma `SessionForm` guarda `@State private var draft = Draft()`, onde `Draft` é uma classe. O stepper muda `draft.minutes` e o número na tela não se mexe. Por quê?",
+    "hint": "O que o `@State` observa?",
+    "choices": [
+      {
+        "text": "Steppers só funcionam com estado `Int`, não com propriedades",
+        "why": "Um stepper funciona com qualquer `Binding` para um valor ordenável."
+      },
+      {
+        "text": "A referência não mudou, então o `@State` não viu nada",
+        "why": "Isso. Faça do `Draft` uma struct, ou o torne observável como a aula 7 faz."
+      },
+      {
+        "text": "O `Draft()` é criado de novo a cada atualização e começa em 30",
+        "why": "O valor inicial é usado uma vez; o mesmo objeto é mantido."
+      },
+      {
+        "text": "Classes não podem ser guardadas num property wrapper",
+        "why": "Podem ser guardadas; as mudanças dentro delas é que não são vistas."
+      }
+    ]
+  },
+  "ex-vnqrtf1j": {
+    "prompt": "Um pai e a filha declaram cada um `@State var plan`, o da filha inicializado a partir do do pai. A filha acrescenta uma sessão. O que o pai mostra?",
+    "hint": "Conte os donos.",
+    "choices": [
+      {
+        "text": "A sessão nova, já que o plano da filha veio do pai",
+        "why": "Veio do pai uma vez; depois disso há dois planos."
+      },
+      {
+        "text": "Uma falha, já que dois estados guardam um plano",
+        "why": "Nada falha; eles guardam dois planos."
+      },
+      {
+        "text": "O plano antigo: há dois planos, e só o da filha mudou",
+        "why": "Isso. A filha deveria receber um `@Binding` para o plano do pai."
+      },
+      {
+        "text": "A sessão nova, depois que o body do pai roda de novo",
+        "why": "O estado do pai não mudou, então o body dele não tem nada novo para desenhar."
+      }
+    ]
+  },
+  "ex-k80vwbgv": {
+    "prompt": "Qual destes é um bom uso de `@State` no planner?",
+    "hint": "Algo que nasce com a view e de que ninguém mais precisa.",
+    "choices": [
+      {
+        "text": "O plano na `CourseDetailView`, copiado da lista",
+        "why": "Isso cria um segundo dono; a tela de detalhe recebe um binding."
+      },
+      {
+        "text": "Se o detalhamento da tela da semana está aberto",
+        "why": "Isso: pertence àquela view, nasce com ela e não importa a mais ninguém."
+      },
+      {
+        "text": "O total da semana, mantido em dia por cada linha",
+        "why": "Ele pode ser calculado, então deve ser."
+      },
+      {
+        "text": "A lista de cursos que toda tela mostra",
+        "why": "Compartilhada por várias telas, então pertence acima delas, como a aula 7 faz."
+      }
+    ]
+  },
+  "ex-7f65yvaa": {
+    "prompt": "Na seção 08, por que a `CourseDetailView` recebe `@Binding var plan` em vez de `@State`?",
+    "hint": "Quem é dono do plano?",
+    "choices": [
+      {
+        "text": "O `@State` não é permitido numa view aberta por um `NavigationLink`",
+        "why": "É permitido; aqui ele só seria um segundo dono."
+      },
+      {
+        "text": "A lista é dona dele, e a tela de detalhe o muda",
+        "why": "Isso: uma mudança feita na tela de detalhe tem de cair no único plano da lista."
+      },
+      {
+        "text": "Bindings são mais rápidos de desenhar que estado",
+        "why": "Velocidade não é o motivo; posse é."
+      },
+      {
+        "text": "Um binding deixa a tela de detalhe guardar a sua cópia do plano",
+        "why": "Um binding é o contrário de uma cópia."
+      }
+    ]
+  },
+  "ex-zx1wcs80": {
+    "prompt": "Ponha em ordem os passos de um toque no toggle de uma `SessionRow`.",
+    "hint": "Do dedo ao rodapé.",
+    "items": [
+      "O `Toggle` escreve `true` no seu `Binding<Bool>`",
+      "A escrita passa por `$session` e `$plan`",
+      "O plano no `@State` da lista muda",
+      "O SwiftUI roda o `body` de novo nas views que o leram",
+      "O rodapé calcula o `weekTotal` a partir do plano novo"
+    ]
+  },
+  "ex-h9dmbrpe": {
+    "prompt": "Quais destes não guardam valor próprio? Escolha todos os que se aplicam.",
+    "hint": "Um binding alcança o de outro.",
+    "choices": [
+      {
+        "text": "`@Binding var session: StudySession`",
+        "why": "Sim: lê e escreve a sessão do dono."
+      },
+      {
+        "text": "`@State private var plan: Plan`",
+        "why": "Não: este é o dono, e o SwiftUI guarda o valor para ele."
+      },
+      {
+        "text": "O `Ref` montado na seção 05",
+        "why": "Sim: duas closures, e o valor está no `Storage`."
+      },
+      {
+        "text": "`let plan: Plan` passado para leitura",
+        "why": "Não: uma `let` guarda uma cópia, a de leitura."
+      }
+    ]
+  },
+  "ex-xa9vs136": {
+    "prompt": "Guarde o que a pessoa fez, e ___ o que decorre disso.",
+    "hint": "O contrário de guardar.",
+    "blanks": [
+      {
+        "accept": [
+          "calcule",
+          "calcular",
+          "derive"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+{
+ "wall": "ana@vm:~/l13$ swift swiftdata.swift\nswiftdata.swift:2:8: error: no such module 'SwiftData'\n1 | // swiftdata.swift\n2 | import SwiftData\n  |        `- error: no such module 'SwiftData'\n3 | ",
+ "query": "ana@vm:~/l13$ swift build\nBuilding for debugging...\n[Constructing description]\n[Planning deferred tasks]\n[30 / 46] PlannerCore\n[40 / 52] query-product\n[43 / 52] week-product\n[46 / 53] PlannerCore\n[52 / 55]\n[55 / 55] query-product\nBuild complete! (5.34 secs)\nana@vm:~/l13$ .build/debug/query\n[\"s4\", \"s5\", \"s2\"]\n[\"s4 2026-10-27 45 min\", \"s3 2026-10-23 60 min\"]\n[\"s1\", \"s2\", \"s3\", \"s5\"]",
+ "refused": "ana@vm:~/l13$ echo 'let thisWeek = #Predicate<StudySession> { mondayOf($0.date) == \"2026-10-19\" }' >> Sources/query/main.swift\nana@vm:~/l13$ swift build 2>&1 | grep -m1 \"Global functions\"\n/home/ana/l13/Sources/query/main.swift:26:43: error: Global functions are not supported in this predicate (from macro 'Predicate')\nana@vm:~/l13$ sed -i '$d' Sources/query/main.swift\nana@vm:~/l13$ swift build 2>&1 | tail -1\nBuild complete! (0.87 secs)"
+}
