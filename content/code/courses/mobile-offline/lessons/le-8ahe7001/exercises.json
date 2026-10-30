@@ -1,0 +1,504 @@
+[
+  {
+    "id": "ex-r3j215t0",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A session typed on the train has not been sent yet. Which kind of local data is it?",
+    "choices": [
+      {
+        "text": "Pinned for offline",
+        "correct": false,
+        "why": "Pinning is the person asking to keep a copy of something the server has."
+      },
+      {
+        "text": "A cache entry, since the server will have it later",
+        "correct": false,
+        "why": "Later is the problem: tonight, nothing else has it."
+      },
+      {
+        "text": "Source of truth",
+        "correct": true,
+        "why": "Right. Until the outbox delivers it, the phone holds the only copy."
+      },
+      {
+        "text": "Temporary data that belongs in tmp/",
+        "correct": false,
+        "why": "tmp/ is emptied by the system, which would lose the session."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfwgg0xb",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The person pins a course's notes for a flight. The cover-picture cache needs room. What may happen to the notes?",
+    "choices": [
+      {
+        "text": "Nothing, until the person unpins them",
+        "correct": true,
+        "why": "Right. A pinned item is kept, and its size is shown to the person."
+      },
+      {
+        "text": "Evicted if they are the least recently used",
+        "correct": false,
+        "why": "That is the rule for a cache. A pin is a promise to the person."
+      },
+      {
+        "text": "Evicted first, being the largest item",
+        "correct": false,
+        "why": "Size decides eviction among cache entries; pinned notes are not one."
+      },
+      {
+        "text": "Moved to Library/Caches/ to free the database",
+        "correct": false,
+        "why": "That would hand them to the system to delete."
+      }
+    ]
+  },
+  {
+    "id": "ex-w86b9q1p",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the planner's data to the kind it is.",
+    "pairs": [
+      {
+        "left": "a session not yet sent",
+        "right": "source of truth"
+      },
+      {
+        "left": "notes kept for a flight",
+        "right": "pinned for offline"
+      },
+      {
+        "left": "the catalogue of courses",
+        "right": "cache"
+      }
+    ],
+    "right_distractors": [
+      "temporary file"
+    ]
+  },
+  {
+    "id": "ex-d3tkpxty",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a server's 304 Not Modified tell the planner?",
+    "choices": [
+      {
+        "text": "The resource was deleted and the copy should go",
+        "correct": false,
+        "why": "Deletion is a 404 or 410; 304 says the opposite."
+      },
+      {
+        "text": "The request was malformed",
+        "correct": false,
+        "why": "That is a 400."
+      },
+      {
+        "text": "Try again later",
+        "correct": false,
+        "why": "That would be a 503 or a 429."
+      },
+      {
+        "text": "It is still current; keep it",
+        "correct": true,
+        "why": "Right, and the answer carries no body, which is what makes the check cheap."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3v3jg0w",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With max-age=60 and stale-while-revalidate=300, the copy was downloaded at second 0. What does the planner do at second 90?",
+    "choices": [
+      {
+        "text": "Shows nothing until the network answers",
+        "correct": false,
+        "why": "That is after second 360, when the copy is too old to show."
+      },
+      {
+        "text": "Shows the old copy, and checks behind it",
+        "correct": true,
+        "why": "Right. In the lesson's run that check came back 200 with Chess in it."
+      },
+      {
+        "text": "Deletes the copy and downloads the whole body again",
+        "correct": false,
+        "why": "An expired copy is checked, not thrown away."
+      },
+      {
+        "text": "Shows the copy and asks the server nothing",
+        "correct": false,
+        "why": "That is the fresh window, which ended at second 60."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvvvyw32",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lesson's run, the catalogue changed at second 40 and the screen at second 45 still showed three courses. What does the lesson make of that?",
+    "choices": [
+      {
+        "text": "A bug in fetch.ts: it should ask at each read",
+        "correct": false,
+        "why": "Asking on every read is what max-age exists to avoid."
+      },
+      {
+        "text": "The price of max-age, paid knowingly for 60 seconds",
+        "correct": true,
+        "why": "Right. Freshness means trusting a copy over the network for that long."
+      },
+      {
+        "text": "A broken ETag, because the server did not change it",
+        "correct": false,
+        "why": "The tag did change; at second 90 it no longer matched."
+      },
+      {
+        "text": "Proof that the session list should be cached for longer",
+        "correct": false,
+        "why": "The session list is not cached this way at all; lesson 11 pulls it with a cursor."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbt5gvht",
+    "version": 1,
+    "section": "expiry",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To ask whether its copy changed, the client sends the tag it holds in the ___ header.",
+    "blanks": [
+      {
+        "accept": [
+          "If-None-Match"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3tvw54kt",
+    "version": 1,
+    "section": "expiry",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's run of six reads, how many requests reached the server?",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-fjdf3ebq",
+    "version": 1,
+    "section": "size-limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson give the cache a budget in bytes rather than in entries?",
+    "choices": [
+      {
+        "text": "SQLite counts rows slowly once the cache holds thousands of them",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "Entries are harder to evict",
+        "correct": false,
+        "why": "Eviction works the same; the question is when to start."
+      },
+      {
+        "text": "The platforms' HTTP caches refuse a limit given in entries",
+        "correct": false,
+        "why": "They refuse nothing; it is the wrong measure."
+      },
+      {
+        "text": "Pictures differ widely in size, and the disk is what runs out",
+        "correct": true,
+        "why": "Right. A hundred entries can be 4 MB or 400."
+      }
+    ]
+  },
+  {
+    "id": "ex-91nqep6q",
+    "version": 1,
+    "section": "size-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the run, Spanish was stored first but Statistics was evicted. Why?",
+    "choices": [
+      {
+        "text": "`get spanish` made Spanish recently used",
+        "correct": true,
+        "why": "Right. The hit moved it to the back of the queue."
+      },
+      {
+        "text": "The cache evicts in alphabetical order",
+        "correct": false,
+        "why": "Order is by last use, not by name."
+      },
+      {
+        "text": "Statistics was the largest picture",
+        "correct": false,
+        "why": "It was 3 MB, smaller than Spanish's 4 MB."
+      },
+      {
+        "text": "Statistics had expired",
+        "correct": false,
+        "why": "lru.ts has no expiry; it only has a budget."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk9yk7jr",
+    "version": 1,
+    "section": "size-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does lru.ts order its entries with a counter instead of the time of use?",
+    "choices": [
+      {
+        "text": "A counter takes less space in the table than a full timestamp does",
+        "correct": false,
+        "why": "Both are integers; space is not the argument."
+      },
+      {
+        "text": "Node cannot read the time inside SQLite",
+        "correct": false,
+        "why": "It can; that is not why."
+      },
+      {
+        "text": "LRU needs an order, and a corrected clock could move backwards",
+        "correct": true,
+        "why": "Right. A counter cannot go backwards when the phone's clock is set."
+      },
+      {
+        "text": "Times would make the cache expire its entries on a schedule of their own",
+        "correct": false,
+        "why": "Ordering by time would not add expiry; the problem is the order itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8drqw65",
+    "version": 1,
+    "section": "size-limits",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `put` does in lru.ts when a new cover does not fit.",
+    "items": [
+      "finds the least recently used entry",
+      "deletes that entry's file",
+      "deletes that entry's row",
+      "writes the new file and its row"
+    ]
+  },
+  {
+    "id": "ex-hjh9sedf",
+    "version": 1,
+    "section": "the-os-clears",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When may iOS empty an app's Library/Caches/?",
+    "choices": [
+      {
+        "text": "When the disk is nearly full",
+        "correct": true,
+        "why": "Right, even with the app closed. That is the agreement the folder's name makes."
+      },
+      {
+        "text": "When the person asks in Settings",
+        "correct": false,
+        "why": "The system does it on its own when the disk is nearly full."
+      },
+      {
+        "text": "Not at all; Caches is backed up and kept",
+        "correct": false,
+        "why": "Caches is neither backed up nor kept."
+      },
+      {
+        "text": "At each update of the app, when the container is rebuilt from scratch",
+        "correct": false,
+        "why": "An update keeps the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2afvx4v",
+    "version": 1,
+    "section": "the-os-clears",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `rm -rf cache.db covers covers.db`, both programs carried on. What in their code made that so?",
+    "choices": [
+      {
+        "text": "A try/catch around every line",
+        "correct": false,
+        "why": "Neither has one; they never meet the error."
+      },
+      {
+        "text": "A backup of the cache in the database",
+        "correct": false,
+        "why": "Backing up a cache would make it a second source of truth."
+      },
+      {
+        "text": "Each creates what it needs, and checks before it reads",
+        "correct": true,
+        "why": "Right: create table if not exists, mkdir, and existsSync in get."
+      },
+      {
+        "text": "The system restores the folder from the backup on the next launch",
+        "correct": false,
+        "why": "It restores nothing; the app fetches again."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gpczagd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library defaulted to putting the planner's database in Library/Caches/. Testing finds nothing wrong for months. What does the lesson predict?",
+    "choices": [
+      {
+        "text": "No harm: iOS backs up Caches when it holds a database",
+        "correct": false,
+        "why": "iOS leaves Caches out whatever it holds."
+      },
+      {
+        "text": "The sessions vanish the day the disk fills",
+        "correct": true,
+        "why": "Right. The cache is the system's to empty, and it held the only copy."
+      },
+      {
+        "text": "Slower reads, because Caches is on a different disk",
+        "correct": false,
+        "why": "It is the same disk; the risk is deletion."
+      },
+      {
+        "text": "The database is moved to Documents/ at the next update",
+        "correct": false,
+        "why": "Nothing moves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gwc7j90",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may live under the LRU rule of lru.ts? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a course's cover picture",
+        "correct": true,
+        "why": "It can be downloaded again."
+      },
+      {
+        "text": "a thumbnail of a picture the server keeps",
+        "correct": true,
+        "why": "Also a copy of something the server has."
+      },
+      {
+        "text": "a session typed offline",
+        "why": "That is the source of truth, and must never be evicted."
+      },
+      {
+        "text": "notes the person pinned",
+        "why": "A pin is kept until the person removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-whmxare8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A catalogue changes once a term. A team sets max-age=0 on it to be safe. What does the lesson's reasoning say they lost?",
+    "choices": [
+      {
+        "text": "The ETag, which max-age=0 disables",
+        "correct": false,
+        "why": "The tag still works; every read now uses it."
+      },
+      {
+        "text": "The cache, which max-age=0 deletes",
+        "correct": false,
+        "why": "The copy is kept; it is never trusted without a check."
+      },
+      {
+        "text": "Safety: with max-age=0 the planner shows a stale catalogue for longer",
+        "correct": false,
+        "why": "It does the reverse."
+      },
+      {
+        "text": "Requests saved on most reads, and a screen that opens offline",
+        "correct": true,
+        "why": "Right. How long to trust a copy is a question about the data, and this data changes rarely."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nsm75v5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does lru.ts delete a cover's file before its row?",
+    "choices": [
+      {
+        "text": "SQLite refuses to delete a row whose file exists",
+        "correct": false,
+        "why": "SQLite knows nothing about the file."
+      },
+      {
+        "text": "Deleting files is faster",
+        "correct": false,
+        "why": "Order, not speed, is the point."
+      },
+      {
+        "text": "It leaves an orphan, never a false hit",
+        "correct": true,
+        "why": "Right. A stop between the two leaves a file no row names, which the sweep of lesson 18 finds; no read mistakes it for a hit."
+      },
+      {
+        "text": "The row holds the file's contents, so it has to be read first",
+        "correct": false,
+        "why": "It holds the name, size and last use."
+      }
+    ]
+  }
+]
