@@ -418,7 +418,7 @@
         "why": "Nada é recusado; a sequência funciona e deixa o posicionamento mais fraco."
       },
       {
-        "text": "O disco de shop-web-2 pode cair no domínio de falha em que shop-web-1 estava",
+        "text": "O disco de shop-web-2 fica livre para cair no domínio de falha de shop-web-1",
         "why": "Isso. O conselho documentado é deixar a primeira rodando até a segunda existir."
       },
       {
@@ -868,7 +868,7 @@
         "why": "O suporte de longo prazo nunca é automático: exige o tier Premium e o plano escolhido de forma explícita."
       },
       {
-        "text": "Atualiza o cluster sozinho, fora da janela e por cima do budget",
+        "text": "O AKS age sozinho, uma minor por vez, e passa por cima dos dois",
         "why": "Isso. É o upgrade iniciado pela plataforma, que traz o cluster de volta a uma versão suportada."
       }
     ]
@@ -1054,7 +1054,7 @@
         "why": "Esse código é para um token cuja audiência não é a da credencial, outro erro."
       },
       {
-        "text": "O endpoint v2 quer a forma https://storage.azure.com/.default",
+        "text": "A versão 2 quer <resource>/.default, que a forma sem sufixo não tem",
         "why": "Isso. O serviço de metadados aceitava o recurso sem sufixo; o endpoint v2 quer <resource>/.default."
       }
     ]
@@ -1470,7 +1470,7 @@
         "why": "O cookie dura uma hora, não para sempre."
       },
       {
-        "text": "Staging por até uma hora, até o cookie x-ms-routing-name vencer",
+        "text": "O mesmo slot por até uma hora, até o cookie vencer",
         "why": "Isso. O cookie guarda a escolha por uma hora; um link com x-ms-routing-name=self nomeia a produção."
       },
       {
@@ -1577,7 +1577,7 @@
     "hint": "Aula 19. Texto em volta de uma expressão.",
     "choices": [
       {
-        "text": "Incorreto: use @{parameters('shopUrl')}/orders",
+        "text": "Incorreto: com texto em volta, a expressão precisa de chaves",
         "why": "Isso. @{...} põe o valor dentro de uma string."
       },
       {
@@ -1595,12 +1595,12 @@
     ]
   },
   "ex-kwkccfgk": {
-    "prompt": "Get_orders falha em todas as tentativas numa manhã. Any_orders roda depois dele em Succeeded, e uma ação Alert nomeia Get_orders com Failed e TimedOut. Ponha em ordem o que o motor faz.",
-    "hint": "Aula 19. Cada status é definido pela ação anterior no runAfter.",
+    "prompt": "Get_orders falha em todas as tentativas numa manhã. Uma ação Alert nomeia Get_orders no runAfter com Failed e TimedOut. Ponha em ordem o que o motor faz.",
+    "hint": "Aula 19. Uma ação espera o status do que ela nomeia.",
     "items": [
       "O gatilho dispara às 06:00",
-      "Get_orders é tentado e repetido, e é marcado Failed",
-      "Any_orders é marcado Skipped",
+      "Get_orders é tentado, e depois repetido com um minuto de intervalo",
+      "Get_orders é marcado Failed",
       "Alert roda, porque nomeou o status Failed"
     ],
     "trap": "Rodar Alert antes de Get_orders ter um status final é o deslize: uma ação espera até o que ela nomeia no runAfter terminar."
