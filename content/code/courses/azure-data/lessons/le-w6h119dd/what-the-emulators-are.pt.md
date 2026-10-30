@@ -21,7 +21,7 @@ responde a ele.
 |---|---|---|---|
 | Blob Storage, Queue, Table | Azurite 3.37.0 | contêineres, blobs, camadas, SAS | regras de ciclo de vida, exclusão reversível, versionamento, o endpoint do Data Lake |
 | Cosmos DB | o emulador vNext | bancos, contêineres, itens, consultas, change feed | níveis de consistência, unidades de requisição reais, throttling, regiões |
-| Event Hubs | o emulador 2.2.1 | partições, grupos de consumidores, envio, leitura | captura para o armazenamento, unidades de throughput, a escala compatível com Kafka |
+| Event Hubs | o emulador 2.2.1 | partições, grupos de consumidores, envio, leitura | captura para o armazenamento, unidades de throughput, as camadas e seus limites |
 | Azure SQL, Managed Instance | SQL Server 2025 | o motor, o T-SQL, os planos de consulta | modelos de compra, pausa do serverless, pools elásticos, failover |
 | PostgreSQL servidor flexível | PostgreSQL 17.6 | o motor | alta disponibilidade, os parâmetros do servidor que o Azure trava |
 | Azure Cache for Redis | Redis 8.2.2 | o motor | camadas, clustering entre shards, aplicação de patches |

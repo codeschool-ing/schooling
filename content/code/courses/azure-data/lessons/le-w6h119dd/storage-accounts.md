@@ -21,7 +21,7 @@ section spends so long on the name.
 | `StorageV2` | blobs, files, queues, tables | the default, and the answer for almost everything |
 | `BlockBlobStorage` | block and append blobs only | premium performance for blobs: small, frequent reads and writes |
 | `FileStorage` | file shares only | premium file shares |
-| `Storage`, `BlobStorage` | as their names say | legacy kinds; Microsoft retires them, and a new account never uses them |
+| `Storage`, `BlobStorage` | as their names say | legacy kinds, which Microsoft announced it would retire in September 2026; a new account never uses them |
 
 **General-purpose v2, `StorageV2`, is the kind this course means whenever it says storage account.**
 It is the only kind that offers every access tier of lesson 4, every replication option below and the

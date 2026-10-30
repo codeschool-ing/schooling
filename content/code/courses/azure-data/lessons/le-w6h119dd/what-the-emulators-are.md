@@ -20,7 +20,7 @@ the control plane, Azure Resource Manager, and no emulator anywhere answers it.
 |---|---|---|---|
 | Blob Storage, Queue, Table | Azurite 3.37.0 | containers, blobs, tiers, SAS | life-cycle rules, soft delete, versioning, the Data Lake endpoint |
 | Cosmos DB | the vNext emulator | databases, containers, items, queries, change feed | consistency levels, real request units, throttling, regions |
-| Event Hubs | the emulator 2.2.1 | partitions, consumer groups, sending, reading | capture into storage, throughput units, the Kafka-compatible scaling |
+| Event Hubs | the emulator 2.2.1 | partitions, consumer groups, sending, reading | capture into storage, throughput units, the tiers and their limits |
 | Azure SQL, Managed Instance | SQL Server 2025 | the engine, T-SQL, the query plans | purchasing models, serverless pause, elastic pools, failover |
 | PostgreSQL flexible server | PostgreSQL 17.6 | the engine | high availability, the server parameters Azure locks |
 | Azure Cache for Redis | Redis 8.2.2 | the engine | tiers, clustering across shards, patching |

@@ -21,7 +21,7 @@ tabelas, `.file.` para compartilhamentos de arquivos e `.dfs.` para a interface 
 | `StorageV2` | blobs, arquivos, filas, tabelas | o padrão, e a resposta para quase tudo |
 | `BlockBlobStorage` | só block blobs e append blobs | desempenho premium para blobs: leituras e escritas pequenas e frequentes |
 | `FileStorage` | só compartilhamentos de arquivos | compartilhamentos de arquivos premium |
-| `Storage`, `BlobStorage` | o que os nomes dizem | tipos legados; a Microsoft os aposenta, e uma conta nova nunca os usa |
+| `Storage`, `BlobStorage` | o que os nomes dizem | tipos legados, que a Microsoft anunciou aposentar em setembro de 2026; uma conta nova nunca os usa |
 
 **General-purpose v2, o `StorageV2`, é o tipo de que este curso fala sempre que diz conta de
 armazenamento.** É o único tipo que oferece todas as camadas de acesso da lição 4, todas as opções de
