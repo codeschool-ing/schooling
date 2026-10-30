@@ -47,6 +47,7 @@ case "${1:-}" in
     # shellcheck source=capture.sh
     . "$COURSE/capture.sh"
     fence "$COURSE/lessons/le-c0fx9rz5/provider.md" 1     # Terraform
+    fence "$COURSE/lessons/le-zk4hkc0n/sdk.md" 1          # the OpenTelemetry SDK
     ;;
   *)
     echo "usage: bash lab.sh student|tools" >&2
