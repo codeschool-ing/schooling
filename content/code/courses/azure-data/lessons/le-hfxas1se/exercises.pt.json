@@ -1,0 +1,421 @@
+{
+  "ex-x1440ae2": {
+    "prompt": "O que uma consulta do Stream Analytics produz enquanto o job está iniciado?",
+    "hint": "Ela nunca termina.",
+    "choices": [
+      {
+        "text": "Um conjunto de resultados, quando o stream acaba",
+        "why": "Um stream não acaba; um job que esperasse o fim nunca responderia."
+      },
+      {
+        "text": "Linhas gravadas na saída sempre que tem algo a dizer",
+        "why": "Isso. A resposta é outro stream, como uma linha por minuto para uma contagem por minuto."
+      },
+      {
+        "text": "Uma tabela no event hub que os leitores consultam depois",
+        "why": "Um event hub guarda eventos, não tabelas; o job grava nas saídas que recebeu."
+      },
+      {
+        "text": "Uma partição nova por janela",
+        "why": "Janelas são grupos de eventos na consulta; não criam nada na entrada."
+      }
+    ]
+  },
+  "ex-7hmz84fq": {
+    "prompt": "A Quitanda quer cada contagem de checkouts com o bairro da loja, a partir de uma lista pequena que muda uma vez por mês. Onde fica a lista?",
+    "hint": "Um job tem dois tipos de entrada.",
+    "choices": [
+      {
+        "text": "Dentro de cada clique, enviada pelo app",
+        "why": "Repetir uma lista mensal em milhões de eventos é desperdício; o job pode fazer a junção."
+      },
+      {
+        "text": "Num segundo event hub, que o job lê como um stream à parte do primeiro",
+        "why": "Uma lista que muda por mês não é um stream; ela expiraria com a retenção do hub."
+      },
+      {
+        "text": "Uma entrada de referência, do Blob Storage ou do SQL Database",
+        "why": "Isso. Entradas de referência são tabelas pequenas com que o stream é juntado, atualizadas num horário."
+      },
+      {
+        "text": "Na tabela de saída, preenchida pela tela",
+        "why": "A saída recebe as linhas do job; não é de onde o job lê consultas auxiliares."
+      }
+    ]
+  },
+  "ex-9zptbkn8": {
+    "prompt": "O `terraform validate` aceitou o job. O que ele teria dito de uma consulta com `TumblingWindw(minute, 1)` escrito errado?",
+    "hint": "O que é `transformation_query` para o provider?",
+    "choices": [
+      {
+        "text": "Que a função de janela é desconhecida, com a linha",
+        "why": "O provider não interpreta a linguagem de consulta; essa checagem é do serviço."
+      },
+      {
+        "text": "Válido, porque para o provider a consulta é uma string",
+        "why": "Isso. Só o serviço a recusa, quando o job é criado ou iniciado."
+      },
+      {
+        "text": "Um aviso, e o job rodaria com uma janela tumbling",
+        "why": "Nada adivinha a função pretendida; uma consulta errada é recusada pelo serviço, não corrigida."
+      },
+      {
+        "text": "Que a consulta precisa de `TIMESTAMP BY`",
+        "why": "A consulta tem, e o validate não lê a consulta de qualquer forma."
+      }
+    ]
+  },
+  "ex-ds59h37p": {
+    "prompt": "Sem `TIMESTAMP BY`, por qual relógio uma consulta do Stream Analytics conta?",
+    "hint": "O outro relógio é o do app.",
+    "choices": [
+      {
+        "text": "A da chegada ao Azure",
+        "why": "Isso: a hora de chegada, o enqueued time da lição 22."
+      },
+      {
+        "text": "A hora que o app escreveu no corpo do evento",
+        "why": "Esse campo só vira o relógio quando o `TIMESTAMP BY` o nomeia."
+      },
+      {
+        "text": "A hora em que a linha de saída é gravada",
+        "why": "A hora da saída é resultado das janelas, não o que as corta."
+      },
+      {
+        "text": "A hora em que o job foi iniciado",
+        "why": "A hora de início decide onde a leitura começa, não como os eventos são agrupados."
+      }
+    ]
+  },
+  "ex-580wwd5d": {
+    "prompt": "O `windows.py` mostrou que os dez eventos foram recebidos no mesmo milissegundo. Se o job contasse pela hora de chegada, o que a tela mostraria?",
+    "hint": "Eles foram enviados num lote só.",
+    "choices": [
+      {
+        "text": "Quatro janelas, como pela hora do evento, porque o lote mantém as horas do app",
+        "why": "As horas do app só são usadas quando o `TIMESTAMP BY` as nomeia; a chegada juntou os dez."
+      },
+      {
+        "text": "Nada, porque um lote conta como um evento",
+        "why": "Um lote é uma forma de envio; o job continua vendo dez eventos."
+      },
+      {
+        "text": "Dez checkouts no minuto da chegada",
+        "why": "Isso, num momento em que ninguém comprava; pela hora do evento eles se espalham por quatro minutos."
+      },
+      {
+        "text": "Cinco checkouts, porque o checkout 7 está atrasado",
+        "why": "Atraso é uma noção da hora do evento; pela hora de chegada nada está atrasado."
+      }
+    ]
+  },
+  "ex-tvew41eg": {
+    "prompt": "Na execução com 20 segundos de tolerância, por que o checkout 4, das 20:00:40, contou na janela das 20:00 embora tenha chegado depois do checkout 3, das 20:00:50?",
+    "hint": "Compare a hora dele com a marca d'água quando ele chegou.",
+    "choices": [
+      {
+        "text": "Estava dez atrás, menos que os vinte permitidos",
+        "why": "Isso. A marca d'água estava em 20:00:30, então 20:00:40 não estava atrasado."
+      },
+      {
+        "text": "O programa ordena todos os eventos pela hora antes de contar",
+        "why": "Ele os repassa na ordem de chegada; é por isso que o checkout 7 pôde se atrasar."
+      },
+      {
+        "text": "O `adjust` o moveu para a janela certa",
+        "why": "Essa execução usou `drop`, e o checkout 4 nunca ficou atrás da marca d'água."
+      },
+      {
+        "text": "Janelas pela hora do evento aceitam todo evento que pertence a elas, por mais atrasado",
+        "why": "O checkout 7 pertencia à mesma janela e foi descartado; uma janela fecha quando a marca d'água passa dela."
+      }
+    ]
+  },
+  "ex-bk1xsz51": {
+    "prompt": "No `windows.py drop 20`, a janela das 20:00 às 20:01 foi fechada pelo checkout 6, das 20:01:30. Em que segundo depois das 20:01 estava a marca d'água então? Responda os segundos, de 0 a 59.",
+    "hint": "A maior hora vista, menos a tolerância.",
+    "unit": "segundos"
+  },
+  "ex-g5jgr2cg": {
+    "prompt": "Ligue cada pergunta à janela que a responde.",
+    "hint": "Uma delas só existe onde eventos a mudam.",
+    "pairs": [
+      {
+        "left": "Checkouts por hora, para um relatório",
+        "right": "tumbling"
+      },
+      {
+        "left": "Checkouts nos últimos cinco minutos, atualizados a cada minuto",
+        "right": "hopping"
+      },
+      {
+        "left": "Um cliente fechou mais de dez pedidos em algum intervalo de dez minutos?",
+        "right": "sliding"
+      },
+      {
+        "left": "Quanto dura uma visita ao app?",
+        "right": "session"
+      }
+    ],
+    "right_distractors": [
+      "snapshot"
+    ]
+  },
+  "ex-w3gemnxc": {
+    "prompt": "Uma janela hopping de cinco minutos com passo de um minuto. Em quantas janelas cada evento é contado?",
+    "hint": "Tamanho dividido pelo passo.",
+    "choices": [
+      {
+        "text": "Uma",
+        "why": "Uma janela por evento é tumbling, que é uma hopping cujo passo é igual ao tamanho."
+      },
+      {
+        "text": "Cinco",
+        "why": "Isso. Cinco janelas sobrepostas cobrem qualquer instante."
+      },
+      {
+        "text": "Seis, contando a que está abrindo",
+        "why": "Cada instante fica em exatamente tamanho ÷ passo janelas, aqui cinco."
+      },
+      {
+        "text": "Depende de quantos eventos chegam no minuto",
+        "why": "Janelas hopping são fixas no tempo; essa dependência descreve janelas sliding."
+      }
+    ]
+  },
+  "ex-9m6ywvm9": {
+    "prompt": "A checagem de fraude conta os checkouts de cada cliente com `TumblingWindow(minute, 10)` e marca mais de dez. Um cliente fecha seis pedidos das 20:07 às 20:09 e mais seis das 20:10 às 20:12. O que acontece?",
+    "hint": "Onde fica a fronteira da janela?",
+    "choices": [
+      {
+        "text": "Marcado, com doze numa janela",
+        "why": "Os doze atravessam a fronteira das 20:10; nenhuma janela tumbling guarda mais de seis."
+      },
+      {
+        "text": "Não é marcado: duas janelas de seis; uma sliding pegaria",
+        "why": "Isso. Doze caíram em seis minutos, o que uma janela que anda com os eventos enxerga."
+      },
+      {
+        "text": "Marcado duas vezes, uma por janela",
+        "why": "Nenhuma janela passa de dez, então nenhuma marca."
+      },
+      {
+        "text": "Não é marcado, porque janelas tumbling ignoram o agrupamento por cliente",
+        "why": "O `GROUP BY customer` funciona com qualquer janela; a falha vem da fronteira."
+      }
+    ]
+  },
+  "ex-5vpfss75": {
+    "prompt": "Por que uma janela session agrupada por cliente precisa de mais memória numa noite movimentada do que uma contagem de um minuto?",
+    "hint": "Uma janela guarda estado até fechar.",
+    "choices": [
+      {
+        "text": "Janelas session guardam o corpo de cada evento",
+        "why": "O que uma janela guarda depende da agregação, não do tipo de janela."
+      },
+      {
+        "text": "Cada pessoa on-line mantém um grupo aberto próprio",
+        "why": "Isso. Uma contagem é um número por janela; as sessões abertas crescem com os clientes on-line."
+      },
+      {
+        "text": "Sessões só fecham quando o job para",
+        "why": "Uma sessão fecha depois do tempo limite sem evento, ou na duração máxima."
+      },
+      {
+        "text": "Janelas session leem cada partição duas vezes",
+        "why": "A leitura é a mesma para toda janela; a diferença é o estado guardado."
+      }
+    ]
+  },
+  "ex-tz0rtzgj": {
+    "prompt": "Com `adjust`, o checkout 7, das 20:00:55, foi contado na janela das 20:01. O que é verdade sobre as contagens?",
+    "hint": "Compare com a execução com `drop`.",
+    "choices": [
+      {
+        "text": "As duas janelas agora estão corretas, cada uma com os seus checkouts",
+        "why": "A janela das 20:00 ainda diz quatro e foram cinco."
+      },
+      {
+        "text": "O total da noite está certo; um minuto está errado",
+        "why": "Isso. Nada se perdeu, e um checkout está numa janela em que não aconteceu."
+      },
+      {
+        "text": "A janela das 20:00 foi reaberta para recebê-lo",
+        "why": "Uma janela fechada é definitiva; o `adjust` move o evento, não a janela."
+      },
+      {
+        "text": "O total fica com um a menos, como no `drop`",
+        "why": "O `drop` perdeu o evento; o `adjust` o manteve."
+      }
+    ]
+  },
+  "ex-1b9wrgyk": {
+    "prompt": "Com uma tolerância de 60 segundos nenhum checkout se atrasou. Por que não pôr 60, ou mais, em todo job?",
+    "hint": "Veja qual evento fechou a janela das 20:00.",
+    "choices": [
+      {
+        "text": "Porque o provider recusa tolerâncias acima de 59 segundos",
+        "why": "O limite do provider para a tolerância a fora de ordem é 599 segundos."
+      },
+      {
+        "text": "Porque uma tolerância maior descarta mais eventos",
+        "why": "Ela descarta menos: mais eventos cabem nela."
+      },
+      {
+        "text": "As janelas demoram mais a fechar",
+        "why": "Isso. A janela das 20:00 esperou o checkout 8 em vez do 6; a tolerância se paga em atraso."
+      },
+      {
+        "text": "Porque a tolerância é cobrada por segundo",
+        "why": "Jobs são cobrados por unidade de streaming-hora; tolerância não é um medidor."
+      }
+    ]
+  },
+  "ex-yfghdwqp": {
+    "prompt": "No Stream Analytics, eventos além de qualquer das tolerâncias são tratados por uma política, que é `Adjust` ou ___.",
+    "hint": "A outra escolha os descarta.",
+    "blanks": [
+      {
+        "accept": [
+          "Drop",
+          "`Drop`"
+        ]
+      }
+    ]
+  },
+  "ex-wpsyy551": {
+    "prompt": "Qual configuração do job pega um celular que envia os cliques um minuto atrasado mesmo quando nenhum evento posterior chega para mover uma marca d'água?",
+    "hint": "Ela compara o relógio do app com o do Azure.",
+    "choices": [
+      {
+        "text": "A tolerância a fora de ordem, que reordena os eventos",
+        "why": "Essa compara eventos entre si, então precisa de eventos posteriores para agir."
+      },
+      {
+        "text": "A tolerância a chegada tardia",
+        "why": "Isso. Ela compara a hora do próprio evento com a hora de chegada."
+      },
+      {
+        "text": "`output_error_policy`",
+        "why": "Essa configuração decide o que acontece quando a saída recusa uma linha."
+      },
+      {
+        "text": "O nível de compatibilidade",
+        "why": "Ele muda como a consulta é interpretada, inclusive o paralelismo; não mede atraso."
+      }
+    ]
+  },
+  "ex-zv8cm46s": {
+    "prompt": "O `validate` recusou uma tolerância a chegada tardia de 1.814.400 segundos. Qual é a maior que ele aceita, em segundos?",
+    "hint": "Um segundo a menos que 21 dias.",
+    "unit": "segundos"
+  },
+  "ex-w998fqq1": {
+    "prompt": "Um job de checkouts está iniciado e nenhum clique chega a noite toda. Quanto ele custa nessas horas?",
+    "hint": "Qual é o medidor?",
+    "choices": [
+      {
+        "text": "Nada, porque nenhum evento foi processado",
+        "why": "Não há cobrança por evento; o job é cobrado por estar iniciado."
+      },
+      {
+        "text": "As unidades, por hora",
+        "why": "Isso. Unidades de streaming-hora são cobradas chegue um evento ou um milhão."
+      },
+      {
+        "text": "Metade das unidades, porque o serviço reduz jobs ociosos",
+        "why": "As unidades são definidas no job; nada na lição as reduz pela metade sozinho."
+      },
+      {
+        "text": "Uma cobrança por janela fechada",
+        "why": "Janelas não são um medidor."
+      }
+    ]
+  },
+  "ex-ayn9ppgb": {
+    "prompt": "O job recebe 12 unidades de streaming para contar checkouts mais rápido, e a entrada é o hub `clicks` de quatro partições. O que limita até onde ele lê em paralelo?",
+    "hint": "O mesmo teto dos grupos de consumidores da lição 22.",
+    "choices": [
+      {
+        "text": "O nível de compatibilidade",
+        "why": "O nível 1.2 alinha a consulta com as partições, mas as partições continuam sendo quatro."
+      },
+      {
+        "text": "O número de colunas da tabela de saída",
+        "why": "Colunas não têm nada a ver com leitura em paralelo."
+      },
+      {
+        "text": "As unidades de streaming: doze unidades, doze leitores",
+        "why": "Unidades compram processador e memória; leitores em paralelo são limitados pelas partições."
+      },
+      {
+        "text": "As quatro partições do hub",
+        "why": "Isso. No máximo quatro leitores em paralelo, sejam quantas forem as unidades."
+      }
+    ]
+  },
+  "ex-6kg7bq8d": {
+    "prompt": "Ao preço ilustrativo da lição, 0,11 USD por unidade de streaming-hora, quanto custa um job de 6 unidades ligado 12 horas por dia num mês de 30 dias, em USD?",
+    "hint": "Unidades × horas × preço.",
+    "unit": "USD"
+  },
+  "ex-0fyjthb6": {
+    "prompt": "Ponha em ordem o que o `windows.py drop 20` fez com os seis primeiros checkouts.",
+    "hint": "A janela só fecha depois que a marca d'água passa do fim dela.",
+    "items": [
+      "Os checkouts 1, 2 e 3 são contados na janela das 20:00",
+      "O checkout 4, dez segundos fora do lugar, também é contado ali",
+      "O checkout 5 abre a janela das 20:01",
+      "O checkout 6 move a marca d'água para 20:01:10",
+      "A janela das 20:00 é impressa com quatro checkouts"
+    ]
+  },
+  "ex-qqcteqp0": {
+    "prompt": "Quais destas coisas a lição de fato executou? Marque todas as que se aplicam.",
+    "hint": "O próprio Stream Analytics não tem emulador.",
+    "choices": [
+      {
+        "text": "O Terraform recusando uma tolerância a fora de ordem de 600 segundos",
+        "why": "Isso; a faixa do provider é de 0 a 599."
+      },
+      {
+        "text": "O programa do curso descartando um checkout atrasado",
+        "why": "Isso; o checkout 7 com `drop`."
+      },
+      {
+        "text": "Um job do Stream Analytics contando checkouts por minuto",
+        "why": "Não há emulador; a consulta só foi declarada e validada como string."
+      },
+      {
+        "text": "Uma janela sliding sobre os eventos do emulador",
+        "why": "O programa implementa só janelas tumbling."
+      },
+      {
+        "text": "Um job lendo de onde parou na noite anterior",
+        "why": "Isso é documentado, não executado."
+      }
+    ]
+  },
+  "ex-sgktj3g9": {
+    "prompt": "O relógio de um celular está uma hora adiantado, e o job conta por `TIMESTAMP BY at` com 20 segundos de tolerância a fora de ordem. O que o primeiro clique dele faz?",
+    "hint": "O que move a marca d'água?",
+    "choices": [
+      {
+        "text": "É descartado, porque está atrasado",
+        "why": "Um clique do futuro é a maior hora vista, não um atrasado."
+      },
+      {
+        "text": "Nada, porque o serviço corrige relógios pela hora de chegada",
+        "why": "O `TIMESTAMP BY` confia no campo; só a tolerância a chegada tardia compara relógios, e só para eventos velhos."
+      },
+      {
+        "text": "Empurra a marca d'água uma hora à frente, e todo clique honesto daquela hora chega atrasado",
+        "why": "Isso. Todo clique correto da hora seguinte fica atrás da marca d'água."
+      },
+      {
+        "text": "Abre uma janela uma hora adiante e nada mais muda",
+        "why": "A marca d'água segue a maior hora vista, então toda janela aberta é afetada."
+      }
+    ]
+  }
+}
