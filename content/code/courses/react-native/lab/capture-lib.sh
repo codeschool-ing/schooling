@@ -42,11 +42,11 @@ run() {
 }
 quiet() { local dir=$1; shift; LAB as "$LID" "cd $dir && $*" >/dev/null 2>&1; return 0; }
 block() { printf '##### %s\n' "$1"; }
-put() {   # put MD FILE DEST
-  local md=$1 file=$2 dest=$3
+put() {   # put MD FILE DEST [N]: the Nth listing of FILE in MD, the first by default
+  local md=$1 file=$2 dest=$3 n=${4:-1}
   local real=$H${dest#/home/ana}
   mkdir -p "$(dirname "$real")"
-  python3 "$RN_LAB/extract.py" "$LESSON/$md" "$file" > "$real" ||
+  python3 "$RN_LAB/extract.py" "$LESSON/$md" "$file" "$n" > "$real" ||
     { echo "put: no listing of $file in $md" >&2; exit 1; }
   chown -R ana:ana "$H"
 }
