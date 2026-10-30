@@ -1,0 +1,693 @@
+[
+  {
+    "id": "ex-cznw0t9k",
+    "version": 1,
+    "section": "startup-scripts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does Compute Engine run a machine's startup script?",
+    "hint": "Not only at creation.",
+    "choices": [
+      {
+        "text": "Once, the first time the machine is created",
+        "correct": false,
+        "why": "That is the common belief; the guest environment runs it at every boot."
+      },
+      {
+        "text": "Whenever its metadata changes, without a reboot",
+        "correct": false,
+        "why": "A change takes effect at the next boot, or when you run the script runner by hand."
+      },
+      {
+        "text": "On every boot, as root",
+        "correct": true,
+        "why": "Right. Which is why the script must be safe to run twice."
+      },
+      {
+        "text": "Only when the machine is started from a stopped state, as an unprivileged user",
+        "correct": false,
+        "why": "It runs at every boot, and as root."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmdbztmh",
+    "version": 1,
+    "section": "startup-scripts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A public image runs its startup script; a custom image built from scratch boots and ignores it. What is the likely cause?",
+    "hint": "Who reads the startup-script key?",
+    "choices": [
+      {
+        "text": "No guest environment on the image to run it",
+        "correct": true,
+        "why": "Right. Google runs nothing; the guest environment on the machine does."
+      },
+      {
+        "text": "Custom images are not allowed startup scripts",
+        "correct": false,
+        "why": "They are; something on the machine has to run them."
+      },
+      {
+        "text": "The metadata key must be startup-script-url for custom images",
+        "correct": false,
+        "why": "Either key works when the guest environment is present."
+      },
+      {
+        "text": "The script is too long for the metadata server",
+        "correct": false,
+        "why": "Length would give an error at creation, not a silent skip."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rwm90r5",
+    "version": 1,
+    "section": "startup-scripts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Run on the laptop, startup.sh stopped with curl: (6) and status 6. Without -sSf and set -euo pipefail, what would it have done?",
+    "hint": "What is in ENV when curl fails quietly?",
+    "choices": [
+      {
+        "text": "Stopped anyway, because bash exits on the first error",
+        "correct": false,
+        "why": "bash carries on after a failed command unless told otherwise."
+      },
+      {
+        "text": "Asked for the zone again until the server answered",
+        "correct": false,
+        "why": "Nothing in the script retries."
+      },
+      {
+        "text": "Read the values from the Terraform state instead",
+        "correct": false,
+        "why": "The script knows nothing about Terraform."
+      },
+      {
+        "text": "Written a page with empty values and exited 0",
+        "correct": true,
+        "why": "Right. A silent failure nobody finds until a customer does."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb7ncss1",
+    "version": 1,
+    "section": "startup-scripts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The script is set with metadata_startup_script, and someone fixes a typo in it. What happens at the next apply, according to the provider's documentation?",
+    "hint": "That attribute is special among the ways to set a script.",
+    "choices": [
+      {
+        "text": "The metadata changes in place and the script runs at the next boot",
+        "correct": false,
+        "why": "That is what the startup-script key inside metadata does."
+      },
+      {
+        "text": "The instance is destroyed and a new one created",
+        "correct": true,
+        "why": "Right. That attribute forces replacement; the metadata key updates in place."
+      },
+      {
+        "text": "Nothing until somebody runs the script runner on the machine",
+        "correct": false,
+        "why": "Terraform does act on the change, and drastically."
+      },
+      {
+        "text": "The apply fails, because a running machine's script is locked",
+        "correct": false,
+        "why": "Nothing locks it; the provider plans a replacement."
+      }
+    ]
+  },
+  {
+    "id": "ex-x70bz2a5",
+    "version": 1,
+    "section": "startup-scripts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A startup script's output can be read from outside the machine on its ___ console, even when SSH is broken.",
+    "hint": "A port, not a screen.",
+    "blanks": [
+      {
+        "accept": [
+          "serial"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-by7jg5rh",
+    "version": 1,
+    "section": "the-metadata-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which header must every request to the metadata server carry?",
+    "hint": "It names whose metadata this is.",
+    "choices": [
+      {
+        "text": "Authorization: Bearer with the instance token",
+        "correct": false,
+        "why": "The token is what you ask for; you cannot need it to ask."
+      },
+      {
+        "text": "X-Forwarded-For with the machine's address",
+        "correct": false,
+        "why": "A request carrying that header is refused."
+      },
+      {
+        "text": "Metadata-Flavor: Google",
+        "correct": true,
+        "why": "Right. Without it the server answers 403."
+      },
+      {
+        "text": "X-Goog-Project with the project id",
+        "correct": false,
+        "why": "No such header is required; the machine already belongs to a project."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gz2p9y1",
+    "version": 1,
+    "section": "the-metadata-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the metadata server refuse requests that carry X-Forwarded-For?",
+    "hint": "Who adds that header?",
+    "choices": [
+      {
+        "text": "A proxy tricked into forwarding a request adds it on the way",
+        "correct": true,
+        "why": "Right. It closes the reverse-proxy route to the token."
+      },
+      {
+        "text": "Because the header would reveal the machine's internal address",
+        "correct": false,
+        "why": "The server is inside the host; revealing addresses is not the concern."
+      },
+      {
+        "text": "Because load balancers in front of the machine send it",
+        "correct": false,
+        "why": "A load balancer cannot reach the metadata address at all."
+      },
+      {
+        "text": "Because the header makes responses too large to cache",
+        "correct": false,
+        "why": "Caching has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5wdrpeg",
+    "version": 1,
+    "section": "the-metadata-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An attacker gets a shell on web-1. What does the Metadata-Flavor header do to stop them taking the service account's token?",
+    "hint": "A filter for forged fetches, or a lock?",
+    "choices": [
+      {
+        "text": "It blocks requests from interactive sessions",
+        "correct": false,
+        "why": "The server cannot tell a shell from a service."
+      },
+      {
+        "text": "It requires the request to come from the guest environment",
+        "correct": false,
+        "why": "Any process on the machine may ask."
+      },
+      {
+        "text": "It limits the token to read-only scopes for shells",
+        "correct": false,
+        "why": "Scopes are set per instance, not per caller."
+      },
+      {
+        "text": "Nothing: a shell sends the header like any program",
+        "correct": true,
+        "why": "Right. That is why the token should be worth as little as possible."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cjqrxvg",
+    "version": 1,
+    "section": "the-metadata-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script must react when the attribute shop-env changes, without polling every few seconds. What does the metadata server offer?",
+    "hint": "A query parameter.",
+    "choices": [
+      {
+        "text": "?recursive=true, which streams every change",
+        "correct": false,
+        "why": "recursive returns a whole tree at once; it does not wait."
+      },
+      {
+        "text": "?wait_for_change=true",
+        "correct": true,
+        "why": "Right. The guest environment uses it for new SSH keys."
+      },
+      {
+        "text": "A Pub/Sub topic the server publishes changes to",
+        "correct": false,
+        "why": "The metadata server publishes nothing."
+      },
+      {
+        "text": "A webhook URL set in the instance metadata",
+        "correct": false,
+        "why": "There is no such webhook."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjwrjpds",
+    "version": 1,
+    "section": "the-metadata-server",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong in instance metadata? Choose all that apply.",
+    "hint": "Who can read metadata?",
+    "choices": [
+      {
+        "text": "The environment name, staging",
+        "correct": true,
+        "why": "Right; nobody is hurt by reading it."
+      },
+      {
+        "text": "The database password",
+        "correct": false,
+        "why": "Every process and every viewer of the instance reads metadata; use Secret Manager."
+      },
+      {
+        "text": "The startup script itself",
+        "correct": true,
+        "why": "Right, as long as no secret is written inside it."
+      },
+      {
+        "text": "A service account's JSON key",
+        "correct": false,
+        "why": "That is the worst of both: a secret, and one that never expires."
+      }
+    ]
+  },
+  {
+    "id": "ex-a995p0es",
+    "version": 1,
+    "section": "the-service-account",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How long does the token the metadata server hands out live?",
+    "hint": "Short-lived, and replaced.",
+    "choices": [
+      {
+        "text": "Until the machine is deleted",
+        "correct": false,
+        "why": "That would be a key file's weakness."
+      },
+      {
+        "text": "Ninety days, like a rotated key",
+        "correct": false,
+        "why": "Tokens are far shorter than key rotation periods."
+      },
+      {
+        "text": "About an hour, renewed before it expires",
+        "correct": true,
+        "why": "Right. Your code never sees a key."
+      },
+      {
+        "text": "One request; each call needs a fresh one",
+        "correct": false,
+        "why": "A token is reused until it nears expiry."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nb89rrb",
+    "version": 1,
+    "section": "the-service-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "adc.py ran with GOOGLE_APPLICATION_CREDENTIALS pointing at a missing file and said \"File ... was not found.\" Why did it not go on to try the metadata server?",
+    "hint": "What does that variable mean to the library?",
+    "choices": [
+      {
+        "text": "The variable names one file, and only that file is used",
+        "correct": true,
+        "why": "Right. It is the first step of the order and it does not fall through."
+      },
+      {
+        "text": "The metadata server was tried first and had already failed",
+        "correct": false,
+        "why": "It comes last in the order, not first."
+      },
+      {
+        "text": "A missing file is treated as a revoked account",
+        "correct": false,
+        "why": "Nothing about the account was checked."
+      },
+      {
+        "text": "The run happened too fast for the network to come up",
+        "correct": false,
+        "why": "Timing is not why; the order is."
+      }
+    ]
+  },
+  {
+    "id": "ex-2spmke5y",
+    "version": 1,
+    "section": "the-service-account",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the places Application Default Credentials looks in the order it tries them.",
+    "hint": "The explicit choice first, the machine last.",
+    "items": [
+      "The file named by GOOGLE_APPLICATION_CREDENTIALS",
+      "The file gcloud auth application-default login writes",
+      "The metadata server"
+    ],
+    "trap": "The metadata server is last, which is why the laptop spent three seconds on it before giving up."
+  },
+  {
+    "id": "ex-fasf9nnz",
+    "version": 1,
+    "section": "the-service-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why create shop-web instead of using the Compute Engine default service account?",
+    "hint": "What did the default account get in older projects?",
+    "choices": [
+      {
+        "text": "The default account cannot be attached to E2 machines",
+        "correct": false,
+        "why": "It can be attached to any machine."
+      },
+      {
+        "text": "The default account's tokens never expire, unlike a dedicated account's",
+        "correct": false,
+        "why": "Its tokens expire like any other."
+      },
+      {
+        "text": "Terraform cannot read the default account's email",
+        "correct": false,
+        "why": "That is not the reason; the risk is its roles."
+      },
+      {
+        "text": "Old defaults hold Editor; a dedicated one holds only what it needs",
+        "correct": true,
+        "why": "Right. A stolen token then reads what a web server reads, nothing more."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fg4cymk",
+    "version": 1,
+    "section": "the-service-account",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the capture, how many seconds (real) did adc.py take to give up on a laptop with no metadata server? Answer to one decimal.",
+    "hint": "Read the real line of time.",
+    "value": 3.3,
+    "tolerance": 0.05,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-t36g00em",
+    "version": 1,
+    "section": "scopes-and-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A call from the machine succeeds only when what holds?",
+    "hint": "Two checks.",
+    "choices": [
+      {
+        "text": "The scope covers the API, whatever the roles",
+        "correct": false,
+        "why": "Roles are checked too."
+      },
+      {
+        "text": "The scope covers the API and a role covers the action",
+        "correct": true,
+        "why": "Right. Each can fail alone."
+      },
+      {
+        "text": "A role covers the action, whatever the scope",
+        "correct": false,
+        "why": "A narrow scope blocks it even with the role."
+      },
+      {
+        "text": "The machine is in the same zone as the resource",
+        "correct": false,
+        "why": "Location does not authorise anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghdajt7a",
+    "version": 1,
+    "section": "scopes-and-roles",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the plan the alias storage-ro became https://www.googleapis.com/auth/devstorage.___.",
+    "hint": "Read only.",
+    "blanks": [
+      {
+        "accept": [
+          "read_only"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8hsmh7fv",
+    "version": 1,
+    "section": "scopes-and-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Google recommend for a machine's scopes?",
+    "hint": "Which of the two checks can say \"this bucket\"?",
+    "choices": [
+      {
+        "text": "The narrowest scopes possible, and no IAM roles at all",
+        "correct": false,
+        "why": "Without roles the account can do nothing."
+      },
+      {
+        "text": "No scopes, so the metadata server issues no token",
+        "correct": false,
+        "why": "Then the machine has no use for its account."
+      },
+      {
+        "text": "cloud-platform, with IAM roles deciding access",
+        "correct": true,
+        "why": "Right. Roles are precise and change without touching the machine."
+      },
+      {
+        "text": "A different scope per process on the machine",
+        "correct": false,
+        "why": "Scopes are set per instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-p028p441",
+    "version": 1,
+    "section": "scopes-and-roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team removes a role from shop-web after a leak, and an hour-old token from web-1 is still working minutes later against an API that role covered. What explains it, and what cuts it off faster?",
+    "hint": "Role changes propagate; tokens live until they expire.",
+    "choices": [
+      {
+        "text": "Propagation takes a while; disabling the service account cuts faster",
+        "correct": true,
+        "why": "Right. A disabled account's credentials are refused."
+      },
+      {
+        "text": "The role was cached on the machine; reboot it",
+        "correct": false,
+        "why": "Roles are checked by the API, not cached on the machine."
+      },
+      {
+        "text": "Scopes override roles, so change the machine's scopes instead",
+        "correct": false,
+        "why": "Changing scopes needs a stop and does not touch issued tokens."
+      },
+      {
+        "text": "Metadata tokens ignore IAM; delete the instance",
+        "correct": false,
+        "why": "Every call is checked against IAM."
+      }
+    ]
+  },
+  {
+    "id": "ex-hmdx5n08",
+    "version": 1,
+    "section": "scopes-and-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Terraform refuses to change the scopes of a running web-1. What makes the change possible?",
+    "hint": "The machine has to stop for it.",
+    "choices": [
+      {
+        "text": "Running terraform apply twice",
+        "correct": false,
+        "why": "Repetition does not change what the API requires."
+      },
+      {
+        "text": "Moving the scopes into metadata",
+        "correct": false,
+        "why": "Scopes are not metadata values."
+      },
+      {
+        "text": "Detaching the service account first",
+        "correct": false,
+        "why": "That is itself a change needing a stop."
+      },
+      {
+        "text": "allow_stopping_for_update = true",
+        "correct": true,
+        "why": "Right. The change needs a stopped instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-0tk05gqt",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens when web-1 boots in order.",
+    "hint": "The script needs the metadata server and the guest environment.",
+    "items": [
+      "The guest environment starts on the machine",
+      "It reads the startup-script key from the metadata server",
+      "The script asks the metadata server for shop-env and the zone",
+      "nginx serves the page the script wrote"
+    ],
+    "trap": "The script cannot ask anything before the guest environment has fetched and started it."
+  },
+  {
+    "id": "ex-wjcshgeq",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each metadata path to what it returns.",
+    "hint": "instance/ is this machine, project/ is everyone's.",
+    "pairs": [
+      {
+        "left": "project/project-id",
+        "right": "The project's id, planner-dev"
+      },
+      {
+        "left": "instance/zone",
+        "right": "Where Compute Engine placed the machine"
+      },
+      {
+        "left": "instance/attributes/shop-env",
+        "right": "A value you set on this machine"
+      },
+      {
+        "left": "instance/service-accounts/default/token",
+        "right": "A short-lived access token"
+      }
+    ],
+    "right_distractors": [
+      "The machine's private key file"
+    ]
+  },
+  {
+    "id": "ex-4zdnjerm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web server fetches images from URLs that users type. Which change limits the damage if that feature is abused to reach the metadata server?",
+    "hint": "Two layers: the filter, and what the token is worth.",
+    "choices": [
+      {
+        "text": "Moving shop-env out of instance metadata",
+        "correct": false,
+        "why": "The token is the prize, not the environment name."
+      },
+      {
+        "text": "A dedicated service account holding only the web server's roles",
+        "correct": true,
+        "why": "Right. Even if a fetch got through, the token would be worth little."
+      },
+      {
+        "text": "Turning off OS Login on the machine",
+        "correct": false,
+        "why": "OS Login is about SSH, not the metadata server."
+      },
+      {
+        "text": "Using startup-script-url instead of the startup-script key",
+        "correct": false,
+        "why": "Where the script lives does not protect the token."
+      }
+    ]
+  },
+  {
+    "id": "ex-5wah1b3x",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In section 03's capture, what exit status did curl give for the metadata address on this laptop?",
+    "hint": "curl numbers its failures.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-mjy9g66v",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Google's libraries find credentials through Application ___ Credentials, the same search on a laptop and on a machine.",
+    "hint": "The credentials used when nothing else is said.",
+    "blanks": [
+      {
+        "accept": [
+          "Default"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
