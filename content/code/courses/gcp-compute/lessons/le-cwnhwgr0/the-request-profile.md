@@ -44,8 +44,8 @@ month.
 for nightly. An idle hour is where the models part company. Cloud Run scales to zero and pays
 nothing for it; a machine or a pod pays in full unless something stops it.
 
-**The duration** is how long one request runs, and with the rate it decides **how busy an instance
-is**. At one request a second and 100 ms each, an instance has a request inside it about a tenth of
+**The duration** is how long one request runs, and with the rate it decides how busy an instance
+is. At one request a second and 100 ms each, an instance has a request inside it about a tenth of
 the time; at 30 a second it almost never has none. That fraction is the number Cloud Run's two
 billing modes divide on, as the next section shows. The duration also decides which services can
 carry the request at all, which is section 04's subject.

@@ -45,8 +45,8 @@ embora carregue menos requisições no mês.
 office, 22 no nightly. Uma hora ociosa é onde os modelos se separam. O Cloud Run escala até zero e
 não paga nada por ela; uma máquina ou um pod pagam inteira, a não ser que algo os pare.
 
-**A duração** é quanto tempo uma requisição roda, e junto com a taxa ela decide **quão ocupada fica
-uma instância**. A uma requisição por segundo e 100 ms cada, a instância tem uma requisição dentro
+**A duração** é quanto tempo uma requisição roda, e junto com a taxa ela decide quão ocupada fica
+uma instância. A uma requisição por segundo e 100 ms cada, a instância tem uma requisição dentro
 dela mais ou menos um décimo do tempo; a 30 por segundo ela quase nunca fica vazia. Essa fração é o
 número em que os dois modos de cobrança do Cloud Run se dividem, como a próxima seção mostra. A
 duração também decide quais serviços conseguem carregar a requisição, que é o assunto da seção 04.
