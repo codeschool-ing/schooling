@@ -3,7 +3,7 @@ title: Interfaces
 version: 1
 ---
 
-O planejador lê sessões de algum lugar: da memória hoje, de um arquivo num curso posterior, de um
+O planejador lê sessões de algum lugar: da memória hoje, de um arquivo na lição 13, de um
 banco de dados no celular no `mobile-offline`. O código que mostra a semana não deveria se importar
 com qual. **Uma interface nomeia o que um armazenamento sabe fazer, e qualquer classe que prometa
 fazê-lo pode ocupar o lugar dele.**

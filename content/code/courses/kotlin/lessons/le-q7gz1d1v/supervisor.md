@@ -78,8 +78,8 @@ BUILD FAILED in 1s
 
 The calendar task failed at 50 milliseconds and the other two finished as if nothing had happened.
 **In a supervisor scope, each child must deal with its own failure**, because the scope does not
-propagate it: `CoroutineExceptionHandler` is a last-resort handler for an exception from a `launch`
-that nobody else caught, and here it reports the failure instead of letting it vanish or crash the
+propagate it. `CoroutineExceptionHandler` is a last-resort handler for an exception from a `launch`
+that nobody else caught. Here it reports the failure instead of letting it vanish or crash the
 program.
 
 ## Which one to use

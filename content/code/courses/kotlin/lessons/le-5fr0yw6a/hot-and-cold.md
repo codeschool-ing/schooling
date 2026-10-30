@@ -4,9 +4,9 @@ version: 1
 ---
 
 Lesson 16's flows were cold: a recipe that runs once per collector, from the start, and does nothing
-while nobody collects. That is right for reading a log. It is wrong for **the state of a screen**: the
-week's total exists whether or not anything is drawing it, a screen that opens late should see the
-current total and not a replay of how it got there, and two screens showing it should see the same
+while nobody collects. That is right for reading a log. It is wrong for **the state of a screen**. The
+week's total exists whether or not anything is drawing it. A screen that opens late should see the
+current total, not a replay of how it got there, and two screens showing it should see the same
 number, not run two producers.
 
 **A hot flow exists independently of its collectors**: it has a current value or a stream of events,

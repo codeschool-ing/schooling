@@ -3,8 +3,8 @@ title: The planner's week, as a state holder
 version: 1
 ---
 
-Everything since lesson 9 meets here. Lesson 9's sealed state for a screen, lesson 13's failures as
-values, lesson 15's scope and this lesson's backing `StateFlow` become one class: **a state holder that
+Everything since lesson 9 meets here: lesson 9's sealed state for a screen, lesson 13's failures as
+values, lesson 15's scope and this lesson's backing `StateFlow`. They become one class, **a state holder that
 loads the week, exposes its state as a `StateFlow` of a sealed type, and changes it only through its
 own functions**. On Android this class is called a ViewModel, and `android-apps` writes the same one with
 the framework's base class.

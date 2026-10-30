@@ -3,7 +3,7 @@ title: Interfaces
 version: 1
 ---
 
-The planner reads sessions from somewhere: memory today, a file in a later course, a database on the
+The planner reads sessions from somewhere: memory today, a file in lesson 13, a database on the
 phone in `mobile-offline`. Code that shows the week should not care which. **An interface names what
 a store can do, and any class that promises to do it can stand in for it.**
 

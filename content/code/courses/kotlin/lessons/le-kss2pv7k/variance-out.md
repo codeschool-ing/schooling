@@ -28,7 +28,7 @@ Variance.kt:9:38: error: initializer type mismatch: expected 'MutableList<Number
 
 `List<Int>` went into a `List<Number>` parameter. `MutableList<Int>` was refused as a
 `MutableList<Number>`, and the reason is what the second could do: **a `MutableList<Number>` accepts
-`add(2.5)`**, and if `numbers` and `log` were the same list, a `Double` would now be sitting in a list
+`add(2.5)`**. If `numbers` and `log` were the same list, a `Double` would now be sitting in a list
 of `Int`, and the next line reading `log[2]` as an `Int` would fail. A read-only `List` has no `add`,
 so the danger does not exist, and the compiler allows it.
 
