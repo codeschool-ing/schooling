@@ -1,0 +1,340 @@
+{
+  "ex-3tbep9ap": {
+    "prompt": "Quem pode pedir uma resposta a uma zona gerenciada privada?",
+    "hint": "Visibilidade.",
+    "choices": [
+      {
+        "text": "Qualquer um na internet",
+        "why": "Isso é uma zona pública."
+      },
+      {
+        "text": "Máquinas nas redes que ela lista",
+        "why": "Isso. Todo o resto recebe a resposta pública, ou nenhuma."
+      },
+      {
+        "text": "Quem tem papel no projeto",
+        "why": "Respostas de DNS não passam por papéis do IAM."
+      },
+      {
+        "text": "Só o servidor DNS do escritório",
+        "why": "O escritório só a alcança por uma política de entrada."
+      }
+    ]
+  },
+  "ex-wv544yac": {
+    "prompt": "Uma zona pública para `planner.example.com.` existe há uma semana, e ninguém na internet recebe as respostas dela. O que mais provavelmente faltou?",
+    "hint": "Um passo fora do Google Cloud.",
+    "choices": [
+      {
+        "text": "Tornar a zona privada",
+        "why": "Isso a esconderia da internet de vez."
+      },
+      {
+        "text": "Uma regra de firewall permitindo a porta 53",
+        "why": "Os servidores do Cloud DNS são do Google, não máquinas da rede."
+      },
+      {
+        "text": "Desligar o DNSSEC",
+        "why": "O DNSSEC não decide se uma zona é perguntada."
+      },
+      {
+        "text": "Delegar no registrador",
+        "why": "Isso. Sem a delegação, nenhum resolvedor é mandado ao Google para perguntar."
+      }
+    ]
+  },
+  "ex-rmxtqq08": {
+    "prompt": "Por que os `name_servers` da zona estavam *known after apply*?",
+    "hint": "Quem os escolhe?",
+    "choices": [
+      {
+        "text": "O Google os escolhe na criação",
+        "why": "Isso. É por isso que a delegação é um passo depois do apply."
+      },
+      {
+        "text": "O arquivo os omitiu por engano",
+        "why": "Eles não são algo que o arquivo define."
+      },
+      {
+        "text": "O registrador os manda de volta depois",
+        "why": "O registrador os recebe; não os escolhe."
+      },
+      {
+        "text": "Zonas privadas não têm servidores de nomes",
+        "why": "Esta era a zona pública, e as duas mostraram isso."
+      }
+    ]
+  },
+  "ex-mc0hm47v": {
+    "prompt": "O DNSSEC está ligado na zona pública, mas nenhum resolvedor confere as assinaturas. Que metade falta?",
+    "hint": "A zona mãe.",
+    "choices": [
+      {
+        "text": "Uma segunda zona gerenciada para as assinaturas",
+        "why": "As assinaturas vivem na mesma zona."
+      },
+      {
+        "text": "Um registro TXT com a chave",
+        "why": "Chaves são publicadas como registros DNSKEY, que o Cloud DNS faz."
+      },
+      {
+        "text": "Um registro DS que o registrador publica",
+        "why": "Isso. Assinar é a metade do Cloud DNS; o registro DS na zona mãe é a outra."
+      },
+      {
+        "text": "Tornar a zona privada",
+        "why": "Zonas privadas não são o que o DNSSEC protege."
+      }
+    ]
+  },
+  "ex-ytf2ye9s": {
+    "prompt": "Todo nome no Cloud DNS é escrito totalmente qualificado, terminando com um ___, como em `planner.example.com.`",
+    "hint": "O último caractere.",
+    "blanks": [
+      {
+        "accept": [
+          "ponto",
+          "."
+        ]
+      }
+    ]
+  },
+  "ex-v9qpc5sz": {
+    "prompt": "Um registro tem TTL de 300. Por quanto tempo um resolvedor guarda a resposta antes de perguntar de novo?",
+    "hint": "Em segundos.",
+    "choices": [
+      {
+        "text": "300 consultas",
+        "why": "Um TTL é tempo, não contagem."
+      },
+      {
+        "text": "Cinco horas",
+        "why": "300 é em segundos."
+      },
+      {
+        "text": "300 segundos: cinco minutos",
+        "why": "Isso. 300 segundos, que é quanto uma mudança leva para chegar a todos."
+      },
+      {
+        "text": "Até a zona mudar",
+        "why": "Resolvedores não são avisados de mudanças; esperam o TTL."
+      }
+    ]
+  },
+  "ex-7kgzqnyj": {
+    "prompt": "O `dig` pediu o registro A de `www.planner.example.com` e recebeu só um CNAME. O que um resolvedor faz em seguida?",
+    "hint": "Um CNAME é outro nome.",
+    "choices": [
+      {
+        "text": "Seguir até o nome que ele nomeia",
+        "why": "Isso. O CNAME diz o que www é; o endereço é do nome para onde ele aponta."
+      },
+      {
+        "text": "Dizer que www não tem endereço",
+        "why": "Ele tem, pelo nome que o CNAME nomeia."
+      },
+      {
+        "text": "Perguntar ao registrador",
+        "why": "Registradores guardam delegações, não registros."
+      },
+      {
+        "text": "Usar o registro MX no lugar",
+        "why": "MX é para e-mail."
+      }
+    ]
+  },
+  "ex-w0hbs3xg": {
+    "prompt": "Um nome foi consultado um instante antes de o registro dele ser criado, e veio NXDOMAIN. Por que ele ainda parece faltar depois?",
+    "hint": "Respostas negativas são respostas.",
+    "choices": [
+      {
+        "text": "Registros novos levam um dia para ser criados",
+        "why": "A criação é rápida; o cache é o atraso."
+      },
+      {
+        "text": "A zona tem de ser recriada",
+        "why": "Registros são acrescentados a uma zona existente."
+      },
+      {
+        "text": "O dig só lê o arquivo de zona uma vez por dia",
+        "why": "O dig não lê arquivo; ele pergunta a um servidor."
+      },
+      {
+        "text": "O NXDOMAIN é guardado como qualquer resposta",
+        "why": "Isso. Resolvedores guardam a resposta negativa por um tempo."
+      }
+    ]
+  },
+  "ex-rwd2qs5s": {
+    "prompt": "Por que o próprio `planner.example.com.` nunca pode ser um CNAME?",
+    "hint": "O que mais vive no ápice?",
+    "choices": [
+      {
+        "text": "CNAMEs só funcionam para www",
+        "why": "Qualquer nome que não tenha mais nada pode ser um."
+      },
+      {
+        "text": "SOA e NS moram ali",
+        "why": "Isso. Um CNAME não pode ficar ao lado de outros registros do mesmo nome."
+      },
+      {
+        "text": "O Cloud DNS cobra a mais por CNAMEs no ápice",
+        "why": "É uma regra do DNS, não um preço."
+      },
+      {
+        "text": "O registrador proíbe",
+        "why": "A regra está na zona, seja quem for o registrador."
+      }
+    ]
+  },
+  "ex-jq2b0y7y": {
+    "prompt": "Ligue cada tipo de registro ao que ele diz.",
+    "hint": "Quatro tipos do arquivo de zona.",
+    "pairs": [
+      {
+        "left": "A",
+        "right": "um endereço IPv4"
+      },
+      {
+        "left": "CNAME",
+        "right": "este nome é outro nome"
+      },
+      {
+        "left": "MX",
+        "right": "para onde vai o e-mail do domínio"
+      },
+      {
+        "left": "NS",
+        "right": "que servidores respondem pela zona"
+      }
+    ],
+    "right_distractors": [
+      "quem é dono do domínio"
+    ]
+  },
+  "ex-42syg50k": {
+    "prompt": "Na rede planner, para o que `storage.googleapis.com` resolve depois que a sobreposição é aplicada?",
+    "hint": "Siga o curinga.",
+    "choices": [
+      {
+        "text": "Um de 199.36.153.8 a .11",
+        "why": "Isso. O curinga o torna private.googleapis.com, que tem os quatro endereços privados."
+      },
+      {
+        "text": "Os endereços públicos, como no laptop",
+        "why": "O laptop está fora da rede; dentro, a zona privada ganha."
+      },
+      {
+        "text": "Nada; a zona privada não tem registro storage",
+        "why": "O curinga cobre."
+      },
+      {
+        "text": "192.168.0.53, o servidor do escritório",
+        "why": "Só office.planner.internal é encaminhado para lá."
+      }
+    ]
+  },
+  "ex-em7e8am7": {
+    "prompt": "Alguém apaga o registro curinga da zona privada `googleapis.com`. Para o que `pubsub.googleapis.com` resolve dentro da rede planner?",
+    "hint": "A primeira correspondência é final.",
+    "choices": [
+      {
+        "text": "Os endereços públicos dele",
+        "why": "Isso exigiria cair para o DNS público, o que não acontece."
+      },
+      {
+        "text": "private.googleapis.com",
+        "why": "Só pelo curinga, que sumiu."
+      },
+      {
+        "text": "Nada: nome inexistente",
+        "why": "Isso. Uma zona privada toma o domínio inteiro; a internet não é perguntada."
+      },
+      {
+        "text": "restricted.googleapis.com",
+        "why": "Nada na zona aponta para lá."
+      }
+    ]
+  },
+  "ex-51n5gwhw": {
+    "prompt": "O que uma zona de encaminhamento para `office.planner.internal.` faz com uma pergunta?",
+    "hint": "Ela responde perguntando.",
+    "choices": [
+      {
+        "text": "Responde de registros copiados do escritório",
+        "why": "Ela não guarda registros; encaminha."
+      },
+      {
+        "text": "Pergunta a 192.168.0.53",
+        "why": "Isso. Pela VPN, ao próprio servidor do escritório."
+      },
+      {
+        "text": "Manda para o DNS público",
+        "why": "O DNS público não sabe nada de office.planner.internal."
+      },
+      {
+        "text": "Recusa a menos que o escritório tenha peering",
+        "why": "O escritório é alcançado por VPN, não por peering."
+      }
+    ]
+  },
+  "ex-w5hqph2s": {
+    "prompt": "O escritório quer resolver `db.planner.internal`. Do que a rede planner precisa?",
+    "hint": "A outra direção.",
+    "choices": [
+      {
+        "text": "Uma zona de encaminhamento para planner.internal",
+        "why": "Isso mandaria as perguntas do próprio planner para outro lugar."
+      },
+      {
+        "text": "Tornar planner.internal público",
+        "why": "Isso publica nomes internos na internet."
+      },
+      {
+        "text": "Um peering com o escritório",
+        "why": "O escritório não é uma rede VPC."
+      },
+      {
+        "text": "Uma política de servidor de entrada",
+        "why": "Isso. Ela dá ao Cloud DNS um endereço para o qual o servidor do escritório encaminha."
+      }
+    ]
+  },
+  "ex-ke5hqwhf": {
+    "prompt": "Quantos recursos o plano em `~/gcp/dns-zones` acrescentou, com os dois arquivos presentes?",
+    "hint": "Quatro zonas e dois conjuntos de registros."
+  },
+  "ex-aedfc9sk": {
+    "prompt": "Ponha em ordem os lugares que o resolvedor do servidor de metadados tenta.",
+    "hint": "Privado antes de público.",
+    "items": [
+      "office.planner.internal., uma zona de encaminhamento",
+      "planner.internal., uma zona privada",
+      "os nomes internos de máquinas do Compute Engine",
+      "o DNS público"
+    ],
+    "trap": "Pôr planner.internal antes de office.planner.internal é o deslize: o nome mais específico é tentado primeiro, então os nomes do escritório chegam ao escritório."
+  },
+  "ex-skafkbhz": {
+    "prompt": "O planner vai mudar `api.planner.example.com` para um endereço novo amanhã, e o registro tem TTL de 86400. O que ele deve fazer hoje?",
+    "hint": "Resolvedores guardam respostas.",
+    "choices": [
+      {
+        "text": "Apagar o registro hoje, recriar amanhã",
+        "why": "Isso serve NXDOMAIN no meio, e o guarda em cache."
+      },
+      {
+        "text": "Mudar os servidores de nomes no registrador",
+        "why": "A zona fica onde está; só um registro muda."
+      },
+      {
+        "text": "Tornar o registro um CNAME para o endereço novo",
+        "why": "Um CNAME aponta para um nome, não para um endereço."
+      },
+      {
+        "text": "Baixar o TTL agora, subir depois da mudança",
+        "why": "Isso. Com 86400, o endereço antigo poderia ser servido por um dia depois da mudança."
+      }
+    ]
+  }
+}

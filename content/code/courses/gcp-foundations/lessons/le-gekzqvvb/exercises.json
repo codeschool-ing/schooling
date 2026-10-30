@@ -1,0 +1,500 @@
+[
+  {
+    "id": "ex-3tbep9ap",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who can ask a private managed zone for an answer?",
+    "hint": "Visibility.",
+    "choices": [
+      {
+        "text": "Anybody on the internet",
+        "correct": false,
+        "why": "That is a public zone."
+      },
+      {
+        "text": "Machines in the networks it lists",
+        "correct": true,
+        "why": "Right. Everybody else gets the public answer, or none."
+      },
+      {
+        "text": "Anyone with a role on the project",
+        "correct": false,
+        "why": "DNS answers are not gated by IAM roles."
+      },
+      {
+        "text": "Only the office's DNS server",
+        "correct": false,
+        "why": "The office reaches it only through an inbound policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-wv544yac",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A public zone for `planner.example.com.` has existed for a week, and nobody on the internet gets its answers. What was most likely missed?",
+    "hint": "A step outside Google Cloud.",
+    "choices": [
+      {
+        "text": "Making the zone private",
+        "correct": false,
+        "why": "That would hide it from the internet altogether."
+      },
+      {
+        "text": "A firewall rule allowing port 53",
+        "correct": false,
+        "why": "Cloud DNS's servers are Google's, not machines in the network."
+      },
+      {
+        "text": "Turning DNSSEC off",
+        "correct": false,
+        "why": "DNSSEC does not decide whether a zone is asked."
+      },
+      {
+        "text": "Delegating at the registrar",
+        "correct": true,
+        "why": "Right. Without the delegation, no resolver is sent to Google to ask."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmxtqq08",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why were the zone's `name_servers` *known after apply*?",
+    "hint": "Who picks them?",
+    "choices": [
+      {
+        "text": "Google picks them at creation",
+        "correct": true,
+        "why": "Right. That is why delegation is a step after the apply."
+      },
+      {
+        "text": "The file left them out by mistake",
+        "correct": false,
+        "why": "They are not something the file sets."
+      },
+      {
+        "text": "The registrar sends them back later",
+        "correct": false,
+        "why": "The registrar receives them; it does not choose them."
+      },
+      {
+        "text": "Private zones have no name servers",
+        "correct": false,
+        "why": "This was the public zone, and both showed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc0hm47v",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "DNSSEC is on for the public zone, but no resolver checks its signatures. What half is missing?",
+    "hint": "The parent zone.",
+    "choices": [
+      {
+        "text": "A second managed zone for the signatures",
+        "correct": false,
+        "why": "Signatures live in the same zone."
+      },
+      {
+        "text": "A TXT record with the key",
+        "correct": false,
+        "why": "Keys are published as DNSKEY records, which Cloud DNS makes."
+      },
+      {
+        "text": "A DS record the registrar publishes",
+        "correct": true,
+        "why": "Right. Signing is Cloud DNS's half; the DS record in the parent is the other."
+      },
+      {
+        "text": "Making the zone private",
+        "correct": false,
+        "why": "Private zones are not what DNSSEC protects."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytf2ye9s",
+    "version": 1,
+    "section": "zones",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every name in Cloud DNS is written fully qualified, ending with a ___, as in `planner.example.com.`",
+    "hint": "The last character.",
+    "blanks": [
+      {
+        "accept": [
+          "dot",
+          "period",
+          "full stop",
+          "."
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v9qpc5sz",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A record has a TTL of 300. How long can a resolver keep its answer before asking again?",
+    "hint": "In seconds.",
+    "choices": [
+      {
+        "text": "300 queries",
+        "correct": false,
+        "why": "A TTL is time, not a count."
+      },
+      {
+        "text": "Five hours",
+        "correct": false,
+        "why": "300 is seconds."
+      },
+      {
+        "text": "300 seconds: five minutes",
+        "correct": true,
+        "why": "Right. 300 seconds, which is how long a change takes to reach everybody."
+      },
+      {
+        "text": "Until the zone changes",
+        "correct": false,
+        "why": "Resolvers are not told about changes; they wait out the TTL."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kgzqnyj",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dig` asked for the A record of `www.planner.example.com` and got only a CNAME. What does a resolver do next?",
+    "hint": "A CNAME is another name.",
+    "choices": [
+      {
+        "text": "Follow it to the name it names",
+        "correct": true,
+        "why": "Right. The CNAME says what www is; the address belongs to the name it points at."
+      },
+      {
+        "text": "Report that www has no address",
+        "correct": false,
+        "why": "It has one, through the name the CNAME names."
+      },
+      {
+        "text": "Ask the registrar",
+        "correct": false,
+        "why": "Registrars hold delegations, not records."
+      },
+      {
+        "text": "Use the MX record instead",
+        "correct": false,
+        "why": "MX is for mail."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0hbs3xg",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A name was looked up a moment before its record was created, and answered NXDOMAIN. Why can it still look missing afterwards?",
+    "hint": "Negative answers are answers.",
+    "choices": [
+      {
+        "text": "New records take a day to be created",
+        "correct": false,
+        "why": "Creation is quick; caching is the delay."
+      },
+      {
+        "text": "The zone must be recreated",
+        "correct": false,
+        "why": "Records are added to an existing zone."
+      },
+      {
+        "text": "dig only reads the zone file once a day",
+        "correct": false,
+        "why": "dig reads no file; it asks a server."
+      },
+      {
+        "text": "NXDOMAIN is cached like any answer",
+        "correct": true,
+        "why": "Right. Resolvers keep the negative answer for a while."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwd2qs5s",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `planner.example.com.` itself never be a CNAME?",
+    "hint": "What else lives at the apex?",
+    "choices": [
+      {
+        "text": "CNAMEs only work for www",
+        "correct": false,
+        "why": "Any name that holds nothing else can be one."
+      },
+      {
+        "text": "SOA and NS live there",
+        "correct": true,
+        "why": "Right. A CNAME cannot sit beside other records of the same name."
+      },
+      {
+        "text": "Cloud DNS charges extra for apex CNAMEs",
+        "correct": false,
+        "why": "It is a rule of DNS, not a price."
+      },
+      {
+        "text": "The registrar forbids it",
+        "correct": false,
+        "why": "The rule is in the zone, whoever the registrar is."
+      }
+    ]
+  },
+  {
+    "id": "ex-jq2b0y7y",
+    "version": 1,
+    "section": "records",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each record type to what it says.",
+    "hint": "Four types from the zone file.",
+    "pairs": [
+      {
+        "left": "A",
+        "right": "an IPv4 address"
+      },
+      {
+        "left": "CNAME",
+        "right": "this name is another name"
+      },
+      {
+        "left": "MX",
+        "right": "where the domain's mail goes"
+      },
+      {
+        "left": "NS",
+        "right": "which servers answer for the zone"
+      }
+    ],
+    "right_distractors": [
+      "who owns the domain"
+    ]
+  },
+  {
+    "id": "ex-42syg50k",
+    "version": 1,
+    "section": "private-zones-and-forwarding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the planner network, what does `storage.googleapis.com` resolve to after the override is applied?",
+    "hint": "Follow the wildcard.",
+    "choices": [
+      {
+        "text": "One of 199.36.153.8 to .11",
+        "correct": true,
+        "why": "Right. The wildcard makes it private.googleapis.com, which holds the four private addresses."
+      },
+      {
+        "text": "Its public addresses, as from the laptop",
+        "correct": false,
+        "why": "The laptop is outside the network; inside, the private zone wins."
+      },
+      {
+        "text": "Nothing; the private zone has no storage record",
+        "correct": false,
+        "why": "The wildcard covers it."
+      },
+      {
+        "text": "192.168.0.53, the office server",
+        "correct": false,
+        "why": "Only office.planner.internal is forwarded there."
+      }
+    ]
+  },
+  {
+    "id": "ex-em7e8am7",
+    "version": 1,
+    "section": "private-zones-and-forwarding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone deletes the wildcard record from the private `googleapis.com` zone. What does `pubsub.googleapis.com` resolve to inside the planner network?",
+    "hint": "The first match is final.",
+    "choices": [
+      {
+        "text": "Its public addresses",
+        "correct": false,
+        "why": "That would need a fall back to public DNS, which does not happen."
+      },
+      {
+        "text": "private.googleapis.com",
+        "correct": false,
+        "why": "Only through the wildcard, which is gone."
+      },
+      {
+        "text": "Nothing: no such name",
+        "correct": true,
+        "why": "Right. A private zone takes its whole domain; the internet is not asked."
+      },
+      {
+        "text": "restricted.googleapis.com",
+        "correct": false,
+        "why": "Nothing in the zone points there."
+      }
+    ]
+  },
+  {
+    "id": "ex-51n5gwhw",
+    "version": 1,
+    "section": "private-zones-and-forwarding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a forwarding zone for `office.planner.internal.` do with a question?",
+    "hint": "It answers by asking.",
+    "choices": [
+      {
+        "text": "Answers from records copied from the office",
+        "correct": false,
+        "why": "It holds no records; it forwards."
+      },
+      {
+        "text": "Asks 192.168.0.53 for it",
+        "correct": true,
+        "why": "Right. Over the VPN, to the office's own server."
+      },
+      {
+        "text": "Sends it to public DNS",
+        "correct": false,
+        "why": "Public DNS knows nothing about office.planner.internal."
+      },
+      {
+        "text": "Refuses it unless the office is peered",
+        "correct": false,
+        "why": "The office is reached by VPN, not by peering."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5hqph2s",
+    "version": 1,
+    "section": "private-zones-and-forwarding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The office wants to resolve `db.planner.internal`. What does the planner network need?",
+    "hint": "The other direction.",
+    "choices": [
+      {
+        "text": "A forwarding zone for planner.internal",
+        "correct": false,
+        "why": "That would send planner's own questions elsewhere."
+      },
+      {
+        "text": "Making planner.internal public",
+        "correct": false,
+        "why": "That publishes internal names to the internet."
+      },
+      {
+        "text": "A peering with the office",
+        "correct": false,
+        "why": "The office is not a VPC network."
+      },
+      {
+        "text": "An inbound server policy",
+        "correct": true,
+        "why": "Right. It gives Cloud DNS an address the office server forwards to."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke5hqwhf",
+    "version": 1,
+    "section": "private-zones-and-forwarding",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many resources did the plan in `~/gcp/dns-zones` add, with both files present?",
+    "hint": "Four zones and two record sets.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-aedfc9sk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the places the metadata server's resolver tries in order.",
+    "hint": "Private before public.",
+    "items": [
+      "office.planner.internal., a forwarding zone",
+      "planner.internal., a private zone",
+      "Compute Engine's internal machine names",
+      "public DNS"
+    ],
+    "trap": "Putting planner.internal before office.planner.internal is the slip: the most specific name is tried first, so the office's names reach the office."
+  },
+  {
+    "id": "ex-skafkbhz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner is moving `api.planner.example.com` to a new address tomorrow, and its record has a TTL of 86400. What should it do today?",
+    "hint": "Resolvers keep answers.",
+    "choices": [
+      {
+        "text": "Delete the record today, recreate it tomorrow",
+        "correct": false,
+        "why": "That serves NXDOMAIN in between, and caches it."
+      },
+      {
+        "text": "Change the registrar's name servers",
+        "correct": false,
+        "why": "The zone stays where it is; only one record moves."
+      },
+      {
+        "text": "Make the record a CNAME to the new address",
+        "correct": false,
+        "why": "A CNAME points at a name, not an address."
+      },
+      {
+        "text": "Lower the TTL now, raise it after the move",
+        "correct": true,
+        "why": "Right. With 86400, the old address could be served for a day after the move."
+      }
+    ]
+  }
+]
