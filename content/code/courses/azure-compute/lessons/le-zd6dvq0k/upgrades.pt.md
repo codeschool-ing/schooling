@@ -110,31 +110,31 @@ ana@laptop:~/azure$ kubectl uncordon shop-worker3
 node/shop-worker3 uncordoned
 ana@laptop:~/azure$ kubectl drain shop-worker2 --ignore-daemonsets
 node/shop-worker2 cordoned
-Warning: ignoring DaemonSet-managed Pods: kube-system/kindnet-x6s98, kube-system/kube-proxy-fdg8r
-evicting pod default/shop-7d76d574f5-rgn8q
-evicting pod default/shop-7d76d574f5-8wfqp
-evicting pod default/shop-7d76d574f5-l2w4c
-error when evicting pods/"shop-7d76d574f5-rgn8q" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-error when evicting pods/"shop-7d76d574f5-l2w4c" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/shop-7d76d574f5-rgn8q
-evicting pod default/shop-7d76d574f5-l2w4c
-error when evicting pods/"shop-7d76d574f5-l2w4c" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/shop-7d76d574f5-l2w4c
-pod/shop-7d76d574f5-8wfqp evicted
-pod/shop-7d76d574f5-rgn8q evicted
-pod/shop-7d76d574f5-l2w4c evicted
+Warning: ignoring DaemonSet-managed Pods: kube-system/kindnet-kdh8x, kube-system/kube-proxy-2gbkm
+evicting pod default/shop-7d76d574f5-zdmpb
+evicting pod default/shop-7d76d574f5-9q8dk
+evicting pod default/shop-7d76d574f5-qbm4n
+error when evicting pods/"shop-7d76d574f5-9q8dk" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+error when evicting pods/"shop-7d76d574f5-qbm4n" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/shop-7d76d574f5-9q8dk
+evicting pod default/shop-7d76d574f5-qbm4n
+error when evicting pods/"shop-7d76d574f5-qbm4n" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/shop-7d76d574f5-qbm4n
+pod/shop-7d76d574f5-zdmpb evicted
+pod/shop-7d76d574f5-9q8dk evicted
+pod/shop-7d76d574f5-qbm4n evicted
 node/shop-worker2 drained
 ana@laptop:~/azure$ kubectl get pods -o custom-columns=POD:.metadata.name,NODE:.spec.nodeName,READY:.status.containerStatuses[0].ready
 POD                     NODE           READY
-shop-7d76d574f5-hxdv2   shop-worker3   true
-shop-7d76d574f5-q5zrp   shop-worker3   true
-shop-7d76d574f5-tvfsz   shop-worker3   true
+shop-7d76d574f5-5ch79   shop-worker3   true
+shop-7d76d574f5-gn6gp   shop-worker3   true
+shop-7d76d574f5-rtvbw   shop-worker3   true
 ana@laptop:~/azure$ kubectl get nodes
 NAME                 STATUS                     ROLES           AGE    VERSION
-shop-control-plane   Ready                      control-plane   2m1s   v1.37.0
-shop-worker          Ready                      <none>          107s   v1.37.0
-shop-worker2         Ready,SchedulingDisabled   <none>          107s   v1.37.0
-shop-worker3         Ready                      <none>          107s   v1.37.0
+shop-control-plane   Ready                      control-plane   110s   v1.37.0
+shop-worker          Ready                      <none>          97s    v1.37.0
+shop-worker2         Ready,SchedulingDisabled   <none>          96s    v1.37.0
+shop-worker3         Ready                      <none>          97s    v1.37.0
 ana@laptop:~/azure$ kubectl uncordon shop-worker2
 node/shop-worker2 uncordoned
 ```
@@ -160,38 +160,38 @@ NAME   MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
 shop   3               N/A               0                     45s
 ana@laptop:~/azure$ kubectl drain shop-worker3 --ignore-daemonsets --timeout=10s
 node/shop-worker3 cordoned
-evicting pod default/shop-7d76d574f5-tvfsz
-evicting pod default/shop-7d76d574f5-hxdv2
-evicting pod default/shop-7d76d574f5-q5zrp
-Warning: ignoring DaemonSet-managed Pods: kube-system/kindnet-ws2wl, kube-system/kube-proxy-mhfsg
-error when evicting pods/"shop-7d76d574f5-hxdv2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-error when evicting pods/"shop-7d76d574f5-q5zrp" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-error when evicting pods/"shop-7d76d574f5-tvfsz" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/shop-7d76d574f5-q5zrp
-evicting pod default/shop-7d76d574f5-tvfsz
-evicting pod default/shop-7d76d574f5-hxdv2
-error when evicting pods/"shop-7d76d574f5-q5zrp" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-error when evicting pods/"shop-7d76d574f5-hxdv2" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-error when evicting pods/"shop-7d76d574f5-tvfsz" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
-evicting pod default/shop-7d76d574f5-q5zrp
-evicting pod default/shop-7d76d574f5-tvfsz
-evicting pod default/shop-7d76d574f5-hxdv2
-There are pending pods in node "shop-worker3" when an error occurred: [error when evicting pods/"shop-7d76d574f5-q5zrp" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-tvfsz" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-hxdv2" -n "default": global timeout reached: 10s]
-pod/shop-7d76d574f5-hxdv2
-pod/shop-7d76d574f5-q5zrp
-pod/shop-7d76d574f5-tvfsz
-error: unable to drain node "shop-worker3" due to error: [error when evicting pods/"shop-7d76d574f5-q5zrp" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-tvfsz" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-hxdv2" -n "default": global timeout reached: 10s], continuing command...
+Warning: ignoring DaemonSet-managed Pods: kube-system/kindnet-m4ds6, kube-system/kube-proxy-864nx
+evicting pod default/shop-7d76d574f5-rtvbw
+evicting pod default/shop-7d76d574f5-gn6gp
+evicting pod default/shop-7d76d574f5-5ch79
+error when evicting pods/"shop-7d76d574f5-rtvbw" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+error when evicting pods/"shop-7d76d574f5-gn6gp" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+error when evicting pods/"shop-7d76d574f5-5ch79" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/shop-7d76d574f5-rtvbw
+evicting pod default/shop-7d76d574f5-5ch79
+evicting pod default/shop-7d76d574f5-gn6gp
+error when evicting pods/"shop-7d76d574f5-rtvbw" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+error when evicting pods/"shop-7d76d574f5-5ch79" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+error when evicting pods/"shop-7d76d574f5-gn6gp" -n "default" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.
+evicting pod default/shop-7d76d574f5-rtvbw
+evicting pod default/shop-7d76d574f5-5ch79
+evicting pod default/shop-7d76d574f5-gn6gp
+There are pending pods in node "shop-worker3" when an error occurred: [error when evicting pods/"shop-7d76d574f5-rtvbw" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-5ch79" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-gn6gp" -n "default": global timeout reached: 10s]
+pod/shop-7d76d574f5-5ch79
+pod/shop-7d76d574f5-gn6gp
+pod/shop-7d76d574f5-rtvbw
+error: unable to drain node "shop-worker3" due to error: [error when evicting pods/"shop-7d76d574f5-rtvbw" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-5ch79" -n "default": global timeout reached: 10s, error when evicting pods/"shop-7d76d574f5-gn6gp" -n "default": global timeout reached: 10s], continuing command...
 There are pending nodes to be drained:
  shop-worker3
-error when evicting pods/"shop-7d76d574f5-q5zrp" -n "default": global timeout reached: 10s
-error when evicting pods/"shop-7d76d574f5-tvfsz" -n "default": global timeout reached: 10s
-error when evicting pods/"shop-7d76d574f5-hxdv2" -n "default": global timeout reached: 10s
+error when evicting pods/"shop-7d76d574f5-rtvbw" -n "default": global timeout reached: 10s
+error when evicting pods/"shop-7d76d574f5-5ch79" -n "default": global timeout reached: 10s
+error when evicting pods/"shop-7d76d574f5-gn6gp" -n "default": global timeout reached: 10s
 ana@laptop:~/azure$ kubectl get nodes
-NAME                 STATUS                     ROLES           AGE     VERSION
-shop-control-plane   Ready                      control-plane   2m12s   v1.37.0
-shop-worker          Ready                      <none>          118s    v1.37.0
-shop-worker2         Ready                      <none>          118s    v1.37.0
-shop-worker3         Ready,SchedulingDisabled   <none>          118s    v1.37.0
+NAME                 STATUS                     ROLES           AGE    VERSION
+shop-control-plane   Ready                      control-plane   2m2s   v1.37.0
+shop-worker          Ready                      <none>          109s   v1.37.0
+shop-worker2         Ready                      <none>          108s   v1.37.0
+shop-worker3         Ready,SchedulingDisabled   <none>          109s   v1.37.0
 ```
 
 Havia espaço no `shop-worker2`, e não fez diferença: **o orçamento recusa antes de o scheduler ser
@@ -235,5 +235,5 @@ Isso é tudo para o que o cluster é necessário nesta lição. Apague-o:
 ```
 ana@laptop:~/azure$ kind delete cluster --name shop
 Deleting cluster "shop" ...
-Deleted nodes: ["shop-worker" "shop-worker3" "shop-control-plane" "shop-worker2"]
+Deleted nodes: ["shop-control-plane" "shop-worker2" "shop-worker" "shop-worker3"]
 ```

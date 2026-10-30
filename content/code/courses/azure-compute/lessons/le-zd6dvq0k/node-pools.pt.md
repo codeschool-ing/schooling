@@ -41,10 +41,10 @@ rótulos são rótulos comuns do Kubernetes, e o API server não se importa com 
 ```
 ana@laptop:~/azure$ kubectl get nodes -L kubernetes.azure.com/agentpool,kubernetes.azure.com/mode
 NAME                 STATUS   ROLES           AGE   VERSION   AGENTPOOL   MODE
-shop-control-plane   Ready    control-plane   37s   v1.37.0               
-shop-worker          Ready    <none>          23s   v1.37.0   system      system
-shop-worker2         Ready    <none>          23s   v1.37.0   apps        user
-shop-worker3         Ready    <none>          23s   v1.37.0   apps        user
+shop-control-plane   Ready    control-plane   32s   v1.37.0               
+shop-worker          Ready    <none>          19s   v1.37.0   system      system
+shop-worker2         Ready    <none>          18s   v1.37.0   apps        user
+shop-worker3         Ready    <none>          19s   v1.37.0   apps        user
 ```
 
 O que o kind não consegue reproduzir é o pool em si. Os três workers são contêineres do Docker que o
@@ -81,10 +81,10 @@ da lição 10:
 
 ```
 ana@laptop:~/azure$ kind load docker-image shop:1.0 --name shop
-Image: "shop:1.0" with ID "sha256:567bcd65e3e080ec2ccac97a6be0885b176edd7091c5be2e77d359f915b9cb41" not yet present on node "shop-worker", loading...
-Image: "shop:1.0" with ID "sha256:567bcd65e3e080ec2ccac97a6be0885b176edd7091c5be2e77d359f915b9cb41" not yet present on node "shop-worker3", loading...
-Image: "shop:1.0" with ID "sha256:567bcd65e3e080ec2ccac97a6be0885b176edd7091c5be2e77d359f915b9cb41" not yet present on node "shop-control-plane", loading...
-Image: "shop:1.0" with ID "sha256:567bcd65e3e080ec2ccac97a6be0885b176edd7091c5be2e77d359f915b9cb41" not yet present on node "shop-worker2", loading...
+Image: "shop:1.0" with ID "sha256:37ebdc55856893f0e92d36aa5e2f2d3dfe9562b28b868f95e3915a03f99beb8f" not yet present on node "shop-control-plane", loading...
+Image: "shop:1.0" with ID "sha256:37ebdc55856893f0e92d36aa5e2f2d3dfe9562b28b868f95e3915a03f99beb8f" not yet present on node "shop-worker2", loading...
+Image: "shop:1.0" with ID "sha256:37ebdc55856893f0e92d36aa5e2f2d3dfe9562b28b868f95e3915a03f99beb8f" not yet present on node "shop-worker", loading...
+Image: "shop:1.0" with ID "sha256:37ebdc55856893f0e92d36aa5e2f2d3dfe9562b28b868f95e3915a03f99beb8f" not yet present on node "shop-worker3", loading...
 ```
 
 Antes de o shop chegar, o `shop-worker3` recebe cordon, que o marca como não agendável e não move
@@ -146,9 +146,9 @@ Waiting for deployment "shop" rollout to finish: 2 of 3 updated replicas are ava
 deployment "shop" successfully rolled out
 ana@laptop:~/azure$ kubectl get pods -o custom-columns=POD:.metadata.name,NODE:.spec.nodeName,READY:.status.containerStatuses[0].ready
 POD                     NODE           READY
-shop-7d76d574f5-8wfqp   shop-worker2   true
-shop-7d76d574f5-l2w4c   shop-worker2   true
-shop-7d76d574f5-rgn8q   shop-worker2   true
+shop-7d76d574f5-9q8dk   shop-worker2   true
+shop-7d76d574f5-qbm4n   shop-worker2   true
+shop-7d76d574f5-zdmpb   shop-worker2   true
 ```
 
 **As três réplicas estão no `shop-worker2`**: o node system tem taint contra elas, o control plane tem

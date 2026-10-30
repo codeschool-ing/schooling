@@ -151,10 +151,8 @@ az aks maintenanceconfiguration add --resource-group shop --cluster-name shop-ak
 Its help states the range of `--duration`, and agrees with the compiler's minimum:
 
 ```
-ana@laptop:~/azure$ az aks maintenanceconfiguration add --help | grep -m1 -- "--duration"
+ana@laptop:~/azure$ az aks maintenanceconfiguration add --help | grep -- "^    --duration"
     --duration                     : The length of maintenance window range from 4 to 24 hours.
-Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
-BrokenPipeError: [Errno 32] Broken pipe
 ```
 
 The windows are the last decision AKS leaves to you about its own machinery. Lesson 12 is about

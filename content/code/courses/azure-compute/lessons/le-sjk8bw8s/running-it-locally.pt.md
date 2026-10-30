@@ -159,7 +159,7 @@ ana@laptop:~/azure$ az functionapp create --help | grep -E '^    --(image|plan|f
     --plan -p                                      : Name or resource id of the functionapp app
 ```
 
-**Qual delas aceita um contêiner não é detalhe.** A tabela de opções de hospedagem da documentação
+**Nem todas aceitam um contêiner.** A tabela de opções de hospedagem da documentação
 diz que um contêiner roda no plano Premium, num plano Dedicado (App Service) e no Container Apps,
 por `--environment`; o plano Flex Consumption e o plano Consumption só aceitam código: os mesmos
 arquivos sem o `Dockerfile`, implantados como pacote. A aula 16 trata do que cada plano faz com a

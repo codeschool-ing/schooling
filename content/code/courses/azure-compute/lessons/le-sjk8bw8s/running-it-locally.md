@@ -160,7 +160,7 @@ ana@laptop:~/azure$ az functionapp create --help | grep -E '^    --(image|plan|f
     --plan -p                                      : Name or resource id of the functionapp app
 ```
 
-**Which of these accepts a container is not a detail.** The documentation's table of hosting options
+**Not all of them take a container.** The documentation's table of hosting options
 says a container runs on the Premium plan, on a Dedicated (App Service) plan, and on Container Apps,
 through `--environment`; the Flex Consumption plan and the Consumption plan take code only: the same
 files without the `Dockerfile`, deployed as a package. Lesson 16 is about what each plan does to the
