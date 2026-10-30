@@ -69,12 +69,8 @@ run 'az vmss create --help | tr -s "[:space:]" " " | grep -o "\-\-automatic-repa
 block healthz
 SEVEN="$HERE/../le-gpjpyeh5/the-shop-at-home.md"
 mkdir -p shop
-if [ -f "$SEVEN" ]; then
-  from_example "$SEVEN" app.py > shop/app.py
-  from_lesson "$SEVEN" Dockerfile > shop/Dockerfile
-else
-  cp /tmp/claude-0/-home-user-schooling/799218e8-cf26-5295-af2c-62af17912846/scratchpad/shop/app.py /tmp/claude-0/-home-user-schooling/799218e8-cf26-5295-af2c-62af17912846/scratchpad/shop/Dockerfile shop/
-fi
+from_example "$SEVEN" app.py > shop/app.py
+from_lesson "$SEVEN" Dockerfile > shop/Dockerfile
 quiet 'docker rm -f shop'
 quiet 'docker build -q -t shop:1.0 shop'
 run 'docker run -d --name shop -p 8080:8080 shop:1.0'
