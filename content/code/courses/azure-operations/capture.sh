@@ -4,7 +4,9 @@
 #   azurite_up              a fresh, empty Azurite on 10000-10002 (removed at exit)
 #   kusto_up                a fresh Kusto emulator on 8080, started by lesson 9's
 #                           own fence, and its kql.py in ~/azure/kusto
+#   kusto_db                the database `shop`, as lesson 9 creates it
 #   kusto_load MD:FILE...   write each .kql file a lesson shows and run it
+#   kq 'KQL'                print and run python3 kql.py 'KQL', as typed
 #   student_env             the variables lesson 1 has the student export
 #   run 'command'           print ana's prompt and the command, then run it
 #                           and print stdout and stderr together
@@ -54,6 +56,11 @@ kusto_up() {
   mkdir -p "$HOME/azure/kusto"
   from_lesson "$LAB_COURSE/lessons/le-ch185v14/emulator.md" kql.py > "$HOME/azure/kusto/kql.py"
 }
+
+kusto_db() { python3 "$HOME/azure/kusto/kql.py" '.create database shop volatile' > /dev/null || exit 1; }
+
+# a short query typed inline, as the lessons show it: python3 kql.py '...'
+kq() { prompt "python3 kql.py '$1'"; python3 "$HOME/azure/kusto/kql.py" "$1" 2>&1; return 0; }
 
 # the tables a lesson's queries read, loaded from the .kql files the lessons show
 kusto_load() {
