@@ -1,0 +1,472 @@
+{
+  "ex-ddnz30t9": {
+    "prompt": "Ponha a vida de um service worker em ordem.",
+    "items": [
+      "register",
+      "install",
+      "activate",
+      "fetch"
+    ]
+  },
+  "ex-drjz0zkc": {
+    "prompt": "Por que um service worker só roda em HTTPS ou localhost?",
+    "choices": [
+      {
+        "text": "Ele responde toda requisição do site",
+        "why": "Certo: um atacante na rede gostaria de instalar um."
+      },
+      {
+        "text": "O HTTP simples é lento demais para ele",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O Cache Storage precisa de um certificado para abrir",
+        "why": "O estoque não tem certificado próprio."
+      },
+      {
+        "text": "Navegadores tiram páginas HTTP do cache",
+        "why": "Eles guardam páginas HTTP também."
+      }
+    ]
+  },
+  "ex-ev98jcfd": {
+    "prompt": "Um worker é servido de /assets/sw.js. Que endereços ele controla?",
+    "choices": [
+      {
+        "text": "O site inteiro",
+        "why": "Isso precisa do /sw.js na raiz."
+      },
+      {
+        "text": "Só a página que o registrou",
+        "why": "Escopo é uma pasta, não uma página."
+      },
+      {
+        "text": "Só os abaixo de /assets/",
+        "why": "Sim: o escopo dele é a pasta dele."
+      },
+      {
+        "text": "Nenhum até o navegador reiniciar",
+        "why": "Não precisa reiniciar."
+      }
+    ]
+  },
+  "ex-kw7hzj14": {
+    "prompt": "Por que o sw.js fica em public/ e não em src/?",
+    "choices": [
+      {
+        "text": "O Vite não lê JavaScript em src/",
+        "why": "Todo o código do planner está lá."
+      },
+      {
+        "text": "O nome e o lugar dele não podem mudar",
+        "why": "Certo: copiado para a raiz, sem hash."
+      },
+      {
+        "text": "Service workers precisam ser escritos em TypeScript",
+        "why": "Ele é JavaScript puro."
+      },
+      {
+        "text": "public/ fica no cache por um ano",
+        "why": "Ele vai com no-cache."
+      }
+    ]
+  },
+  "ex-d8mhsfg1": {
+    "prompt": "Por que o server.ts precisou de uma entrada nova na tabela de tipos?",
+    "choices": [
+      {
+        "text": "O worker recusa JSON",
+        "why": "Ele guarda o plano."
+      },
+      {
+        "text": "O gzip precisa de um tipo",
+        "why": "A compressão não lê o tipo."
+      },
+      {
+        "text": "O Lighthouse reprovou a página",
+        "why": "Nada a mediu ainda."
+      },
+      {
+        "text": "Ele não tinha tipo para .html",
+        "why": "Sim: application/octet-stream, não uma página."
+      }
+    ]
+  },
+  "ex-v7zj3kj1": {
+    "prompt": "Por que a página registra o worker no load e não na hora?",
+    "choices": [
+      {
+        "text": "Para não atrapalhar a página",
+        "why": "Certo."
+      },
+      {
+        "text": "Um worker registrado cedo é ignorado",
+        "why": "Ele ainda instalaria."
+      },
+      {
+        "text": "O load é quando o cache abre",
+        "why": "O cache é do worker, aberto por ele."
+      },
+      {
+        "text": "O plano só é interpretado depois do load",
+        "why": "Ele é interpretado quando o main.ts roda."
+      }
+    ]
+  },
+  "ex-efgbne7r": {
+    "prompt": "Ligue cada tipo de arquivo à estratégia que o planner lhe dá.",
+    "pairs": [
+      {
+        "left": "/assets/, os scripts com hash",
+        "right": "cache first"
+      },
+      {
+        "left": "as páginas",
+        "right": "network first"
+      },
+      {
+        "left": "fontes, capas, o plano",
+        "right": "stale while revalidate"
+      }
+    ],
+    "right_distractors": [
+      "cache only"
+    ]
+  },
+  "ex-v6bp6eb4": {
+    "prompt": "Por que as páginas do planner são network first, e não stale while revalidate?",
+    "choices": [
+      {
+        "text": "Páginas não podem ir para o cache",
+        "why": "Vão, como o teste offline mostrou."
+      },
+      {
+        "text": "O stale while revalidate não funciona offline",
+        "why": "Funciona, com uma cópia guardada."
+      },
+      {
+        "text": "O plano delas estaria uma visita atrasado",
+        "why": "Sim: um visitante online deve ver a página desenhada agora."
+      },
+      {
+        "text": "Requisições navigate são lentas",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-hv0mvqwg": {
+    "prompt": "Qual é o custo do network first com sinal fraco de celular?",
+    "choices": [
+      {
+        "text": "A cópia é apagada",
+        "why": "Ela fica para a próxima falha."
+      },
+      {
+        "text": "Uma espera pela rede",
+        "why": "Certo, o timeout inteiro, a menos que o worker desista antes."
+      },
+      {
+        "text": "A página aparece duas vezes",
+        "why": "Uma resposta é dada."
+      },
+      {
+        "text": "O POST para /vitals se perde",
+        "why": "O worker não o trata."
+      }
+    ]
+  },
+  "ex-3f0ch5pa": {
+    "prompt": "Como o tratador de fetch deixa o POST para /vitals com o navegador?",
+    "choices": [
+      {
+        "text": "Ele chama event.preventDefault()",
+        "why": "Não é assim que um fetch é liberado."
+      },
+      {
+        "text": "Ele responde com status 405",
+        "why": "Isso o recusaria."
+      },
+      {
+        "text": "Ele o guarda",
+        "why": "Um POST não vai para o cache."
+      },
+      {
+        "text": "Ele retorna sem chamar respondWith",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-7519db2x": {
+    "prompt": "Por que o offline.ts abre o primeiro endereço duas vezes antes de ficar offline?",
+    "choices": [
+      {
+        "text": "A primeira página não é controlada",
+        "why": "Certo, não a página que o instalou."
+      },
+      {
+        "text": "A primeira visita não tem fontes",
+        "why": "Ela tem."
+      },
+      {
+        "text": "Para medir o LCP",
+        "why": "Ele não mede métrica nenhuma."
+      },
+      {
+        "text": "O Playwright precisa de aquecimento antes de poder ficar offline",
+        "why": "O motivo é do worker."
+      }
+    ]
+  },
+  "ex-55jxbtcq": {
+    "prompt": "Offline, o curso de JavaScript mostrou \"You are offline\". Que parte do worker fez isso?",
+    "choices": [
+      {
+        "text": "O cacheFirst",
+        "why": "Esse é para /assets/."
+      },
+      {
+        "text": "A página de erro do próprio navegador",
+        "why": "O título veio do offline.html."
+      },
+      {
+        "text": "O networkFirst, sem cópia daquela página",
+        "why": "Sim: o último recurso dele, buscado no install."
+      },
+      {
+        "text": "O activate",
+        "why": "Ele só apaga caches antigos."
+      }
+    ]
+  },
+  "ex-0g3w01k5": {
+    "prompt": "Com a página de Git aberta offline, por que um clique em All courses ainda funciona?",
+    "choices": [
+      {
+        "text": "O worker guardou a página inicial no install",
+        "why": "Ele só guardou o offline.html."
+      },
+      {
+        "text": "O mount a desenha a partir do plano na página",
+        "why": "Certo: nenhuma requisição é feita."
+      },
+      {
+        "text": "O navegador guarda toda página que já carregou",
+        "why": "A página inicial nunca foi carregada aqui."
+      },
+      {
+        "text": "Links escapam do setOffline",
+        "why": "Nada escapa."
+      }
+    ]
+  },
+  "ex-debdf67k": {
+    "prompt": "Um sw.js novo é instalado. Por que ele não assume na hora?",
+    "choices": [
+      {
+        "text": "Ele precisa ser aprovado pelo servidor",
+        "why": "O servidor não é perguntado."
+      },
+      {
+        "text": "O cache dele ainda está baixando",
+        "why": "O install tinha terminado."
+      },
+      {
+        "text": "Navegadores atualizam workers uma vez por semana",
+        "why": "Eles conferem a cada navegação."
+      },
+      {
+        "text": "O antigo ainda controla abas abertas",
+        "why": "Sim: duas versões não podem servir uma página."
+      }
+    ]
+  },
+  "ex-t8xvem9g": {
+    "prompt": "Por que mudar o worker do planner quer dizer mudar o CACHE?",
+    "choices": [
+      {
+        "text": "Para a versão nova começar limpa",
+        "why": "Certo, e faz o arquivo diferir em pelo menos um byte."
+      },
+      {
+        "text": "Nomes de cache vencem depois de um dia",
+        "why": "Eles não vencem."
+      },
+      {
+        "text": "O navegador exige uma versão no nome",
+        "why": "Qualquer nome funciona; a versão é um hábito do planner."
+      },
+      {
+        "text": "As páginas são guardadas sob ele",
+        "why": "Verdade, mas não o motivo de ele mudar."
+      }
+    ]
+  },
+  "ex-dt86cjn3": {
+    "prompt": "Quando o skipWaiting e o clients.claim são seguros?",
+    "choices": [
+      {
+        "text": "Sempre: só deixam atualizações mais rápidas",
+        "why": "Eles podem misturar dois builds numa página."
+      },
+      {
+        "text": "Só no localhost",
+        "why": "O lugar não é a condição."
+      },
+      {
+        "text": "Quando páginas antigas não quebram",
+        "why": "Sim; senão pergunte à pessoa antes."
+      },
+      {
+        "text": "Quando o worker não tem tratador de fetch",
+        "why": "Aí há pouco a atualizar."
+      }
+    ]
+  },
+  "ex-nz3j4p85": {
+    "prompt": "O revisit.ts imprimiu undefined para cada requisição de uma página controlada. Por quê?",
+    "choices": [
+      {
+        "text": "O servidor caiu",
+        "why": "As páginas carregaram."
+      },
+      {
+        "text": "O worker respondeu",
+        "why": "Certo: a ferramenta não tem linha para isso."
+      },
+      {
+        "text": "O revisit.ts tem um bug no laço",
+        "why": "O laço está certo; os casos são mais antigos que o worker."
+      },
+      {
+        "text": "O CDP fica desligado para service workers",
+        "why": "O worker tem a própria lista, no próprio alvo."
+      }
+    ]
+  },
+  "ex-xhqcjc4v": {
+    "prompt": "O que permite a um site descartar os caches e workers que pôs no navegador de cada visitante?",
+    "choices": [
+      {
+        "text": "Cache-Control: no-store no sw.js",
+        "why": "Isso impede o cache HTTP de guardar o sw.js, nada mais."
+      },
+      {
+        "text": "Um nome novo de CACHE num worker que nunca instala",
+        "why": "Um worker que não instala não ativa."
+      },
+      {
+        "text": "Reiniciar o servidor",
+        "why": "Os caches estão no navegador."
+      },
+      {
+        "text": "Clear-Site-Data: \"storage\", ou unregister()",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-cm4mev6m": {
+    "prompt": "Por que o fetchAndKeep só guarda respostas cujo ok é verdadeiro?",
+    "choices": [
+      {
+        "text": "Um erro passaria pela página",
+        "why": "Certo, offline, sem como perceber."
+      },
+      {
+        "text": "Erros são grandes demais para guardar",
+        "why": "Tamanho não é o motivo."
+      },
+      {
+        "text": "O Cache Storage rejeita um 500",
+        "why": "Ele guardaria."
+      },
+      {
+        "text": "O ok é falso em toda cópia guardada",
+        "why": "Um 200 guardado é ok."
+      }
+    ]
+  },
+  "ex-tfpaps48": {
+    "prompt": "O que torna arriscado guardar uma resposta opaca de outro servidor?",
+    "choices": [
+      {
+        "text": "Ela é cifrada",
+        "why": "Opaca é sobre ler, não cifrar."
+      },
+      {
+        "text": "Ela vence na hora",
+        "why": "O Cache Storage não vence nada."
+      },
+      {
+        "text": "O status dela não pode ser lido",
+        "why": "Sim, então um erro parece um sucesso; e ela ocupa megabytes da cota."
+      },
+      {
+        "text": "Ela quebra o CSP do planner",
+        "why": "O planner não define CSP."
+      }
+    ]
+  },
+  "ex-d30hczmb": {
+    "prompt": "Que framework empacota e registra sozinho um src/service-worker.js?",
+    "choices": [
+      {
+        "text": "Next.js",
+        "why": "O guia dele escreve um public/sw.js à mão."
+      },
+      {
+        "text": "SvelteKit",
+        "why": "Sim, com $service-worker para os arquivos do build."
+      },
+      {
+        "text": "Nuxt",
+        "why": "Ele usa um módulo."
+      },
+      {
+        "text": "Angular",
+        "why": "Ele usa o @angular/service-worker."
+      }
+    ]
+  },
+  "ex-76mcjk3h": {
+    "prompt": "O que as ferramentas dos frameworks deixam para o projeto?",
+    "choices": [
+      {
+        "text": "A lista de arquivos com hash",
+        "why": "Isso é o que elas escrevem."
+      },
+      {
+        "text": "Registrar o worker",
+        "why": "Vários fazem por você."
+      },
+      {
+        "text": "Escolher HTTPS",
+        "why": "Isso é do deploy."
+      },
+      {
+        "text": "Que arquivos recebem qual estratégia",
+        "why": "Certo: depende de quanto cada um muda."
+      }
+    ]
+  },
+  "ex-t5ggrycm": {
+    "prompt": "O estoque de requisições e respostas de um worker se chama Cache ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Storage"
+        ]
+      }
+    ]
+  },
+  "ex-f3qbaqev": {
+    "prompt": "O método que mantém um worker instalando até uma promise se resolver é event.___.",
+    "hint": "Duas palavras juntas, em camel case.",
+    "blanks": [
+      {
+        "accept": [
+          "waitUntil"
+        ]
+      }
+    ]
+  }
+}

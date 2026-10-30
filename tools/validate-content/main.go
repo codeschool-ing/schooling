@@ -833,6 +833,13 @@ var allowedOutsideTheFont = map[rune]string{
 	'\u25b6': "Vue Router's warnings, as Nuxt prints them, hang two lines off the message with it " +
 		"(`├▶ fix:` and `╰▶ see:`). IBM Plex Mono has no U+25B6 at all. Both lines carry it in the " +
 		"same column, so whatever width the reader's machine gives it moves them together",
+	// `next build` ends with a table of routes, one of these before each.
+	'\u25cb': "`next build` marks a route prerendered as static content with it, in its route " +
+		"table and in the legend under it. IBM Plex Mono has no U+25CB at all. The two columns at " +
+		"the right of those lines move by whatever the reader's machine gives the glyph, which is " +
+		"a fraction of a cell; the alternative is a table that is not the one the build printed",
+	'\u25d0': "`next build` marks a partially prerendered route with it, in the same table and " +
+		"legend as U+25CB, with the same consequence. IBM Plex Mono has no U+25D0 at all",
 }
 
 // coverage is the set of code points the interface declares a face for.

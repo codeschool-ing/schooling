@@ -526,7 +526,13 @@ jobs:
   Browser:
     needs: Changes
     if: needs.Changes.outputs.browser == 'true'
-    runs-on: ubuntu-latest
+    # NAMED, NOT `latest`, because the browser is downloaded for an image.
+    # `ubuntu-latest` moved to 26.04 under this job, and the Playwright in
+    # `package.json` answers "does not support chromium on ubuntu26.04-x64":
+    # every suite below failed before opening a page, on a commit that changed
+    # nothing. The other jobs build what they run and stay on `latest`; this
+    # one moves when Playwright does, in the same diff.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     services:
