@@ -40,14 +40,8 @@ LESSON7="$HERE/../le-gpjpyeh5/the-shop-at-home.md"
 
 quiet 'unset HTTPS_PROXY https_proxy HTTP_PROXY http_proxy'
 mkdir -p shop
-if [ -f "$LESSON7" ]; then
-  from_example "$LESSON7" app.py > shop/app.py
-  from_lesson "$LESSON7" Dockerfile > shop/Dockerfile
-else
-  # until lesson 7 is written: the plan's byte-identical copies
-  cp /tmp/claude-0/-home-user-schooling/799218e8-cf26-5295-af2c-62af17912846/scratchpad/shop/app.py \
-     /tmp/claude-0/-home-user-schooling/799218e8-cf26-5295-af2c-62af17912846/scratchpad/shop/Dockerfile shop/
-fi
+from_example "$LESSON7" app.py > shop/app.py
+from_lesson "$LESSON7" Dockerfile > shop/Dockerfile
 from_lesson "$HERE/the-control-plane.md" cluster.yaml > cluster.yaml
 from_lesson "$HERE/node-pools.md" shop.yaml > shop.yaml
 from_lesson "$HERE/upgrades.md" pdb.yaml > pdb.yaml
