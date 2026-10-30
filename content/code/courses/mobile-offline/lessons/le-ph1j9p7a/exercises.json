@@ -1,0 +1,505 @@
+[
+  {
+    "id": "ex-q1ef4pst",
+    "version": 1,
+    "section": "what-a-conflict-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes two writes to the same session a conflict?",
+    "choices": [
+      {
+        "text": "They arrive at the server within the same second",
+        "correct": false,
+        "why": "Timing is not it: the lesson's two edits were fifteen minutes apart and still conflict."
+      },
+      {
+        "text": "One of them fails on the server with an error",
+        "correct": false,
+        "why": "Both are valid and both are answered; that is why a conflict is silent."
+      },
+      {
+        "text": "Neither writer had seen the other's write",
+        "correct": true,
+        "why": "Right. That is what concurrent means here."
+      },
+      {
+        "text": "They come from two different people",
+        "correct": false,
+        "why": "Ana alone made both, on her phone and her tablet."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfeg28e5",
+    "version": 1,
+    "section": "what-a-conflict-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The tablet pulls the phone's change to 30 minutes, then ticks the session done a second later. Is that a conflict?",
+    "choices": [
+      {
+        "text": "No: the tick was made by a device that had seen the change",
+        "correct": true,
+        "why": "Right. It is an ordinary edit of the newest version."
+      },
+      {
+        "text": "Yes, because they change different fields of one row",
+        "correct": false,
+        "why": "Different fields would not conflict even if they were concurrent in a field-by-field merge; here they are not concurrent at all."
+      },
+      {
+        "text": "Yes, because the two writes are a second apart",
+        "correct": false,
+        "why": "Closeness in time does not make writes concurrent."
+      },
+      {
+        "text": "It depends on which of the two the server happens to receive first",
+        "correct": false,
+        "why": "The order of arrival does not change what the tablet knew."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5fg64k3",
+    "version": 1,
+    "section": "what-a-conflict-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The outbox of lesson 8 and the idempotency keys of lesson 10 both work. What do they do about the two edits of this lesson?",
+    "choices": [
+      {
+        "text": "The outbox holds the phone's write until the tablet's has been merged",
+        "correct": false,
+        "why": "Each outbox drains on its own device and knows nothing of the other."
+      },
+      {
+        "text": "They merge the two copies before sending them",
+        "correct": false,
+        "why": "Neither device sees the other's copy before sending."
+      },
+      {
+        "text": "The idempotency key rejects the second write as a duplicate",
+        "correct": false,
+        "why": "The two writes are different operations with different keys."
+      },
+      {
+        "text": "They deliver each once, and never compare them",
+        "correct": true,
+        "why": "Right. They move operations; noticing a disagreement is a different job."
+      }
+    ]
+  },
+  {
+    "id": "ex-045s4wgk",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run with the devices' clocks, what does the server hold for s3 at the end?",
+    "choices": [
+      {
+        "text": "minutes 30, done true",
+        "correct": false,
+        "why": "That would be a merge of both edits, and last write wins does not merge."
+      },
+      {
+        "text": "minutes 20, done true",
+        "correct": true,
+        "why": "Right. The tablet's stamp, 10:20, was newer, and its row replaced the phone's."
+      },
+      {
+        "text": "minutes 30, done false",
+        "correct": false,
+        "why": "That is what the server's clock and the skewed phone produce."
+      },
+      {
+        "text": "minutes 20, done false",
+        "correct": false,
+        "why": "That is the row before the morning; one of the writes was kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr61w117",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Ana's change to 30 minutes disappear, when the tablet never touched the minutes?",
+    "choices": [
+      {
+        "text": "The phone's sync failed and was never retried",
+        "correct": false,
+        "why": "It was answered; the server dropped it on purpose."
+      },
+      {
+        "text": "The newer row replaced the older one whole",
+        "correct": true,
+        "why": "Right. Once the change is folded into a whole session, nothing records which field was touched."
+      },
+      {
+        "text": "The tablet's copy had a newer minutes value",
+        "correct": false,
+        "why": "The tablet's minutes were the old 20; nothing about them was newer."
+      },
+      {
+        "text": "SQLite refuses two updates to one row",
+        "correct": false,
+        "why": "No database is involved in the rule; it is one comparison of stamps."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjgvqepf",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Last write wins compares stamps and replaces the whole ___, so a field the winner never changed is lost too.",
+    "blanks": [
+      {
+        "accept": [
+          "row",
+          "record"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fmb2n2mh",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the run, Ana opens the planner on her phone at 11:30. What does she see, and what is she likely to conclude?",
+    "choices": [
+      {
+        "text": "An error saying her edit was rejected, so she types it again",
+        "correct": false,
+        "why": "Nothing reports the loss; that is the point of the lesson."
+      },
+      {
+        "text": "Both versions side by side, asking her to choose",
+        "correct": false,
+        "why": "That is lesson 14's screen, and last write wins never draws it."
+      },
+      {
+        "text": "30 minutes, because her phone keeps its own copy",
+        "correct": false,
+        "why": "The next pull replaces the local copy with the server's."
+      },
+      {
+        "text": "20 minutes, done; she thinks she forgot to save",
+        "correct": true,
+        "why": "Right. The loss looks like her mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-05xcef3f",
+    "version": 1,
+    "section": "whose-clock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The phone's clock runs two hours fast. With device clocks as stamps, what happens to its conflicts?",
+    "choices": [
+      {
+        "text": "It wins them until somebody fixes the clock",
+        "correct": true,
+        "why": "Right. Its stamps are two hours later than anybody else's."
+      },
+      {
+        "text": "The server notices the skew and corrects its stamps",
+        "correct": false,
+        "why": "Nothing in last write wins checks a device's clock."
+      },
+      {
+        "text": "It loses them, because its writes look like they come from the future",
+        "correct": false,
+        "why": "A later stamp is exactly what the rule rewards."
+      },
+      {
+        "text": "Nothing changes; skew only matters for delta sync",
+        "correct": false,
+        "why": "The skewed run kept the phone's row and lost the tablet's tick."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezk1m1qr",
+    "version": 1,
+    "section": "whose-clock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the server's clock as the stamp, which write wins a conflict?",
+    "choices": [
+      {
+        "text": "The one made latest in real time",
+        "correct": false,
+        "why": "The server never learns when an edit was made, only when it arrived."
+      },
+      {
+        "text": "The one from the device with the right clock",
+        "correct": false,
+        "why": "Device clocks are not read at all under this rule."
+      },
+      {
+        "text": "The one whose device synced last",
+        "correct": true,
+        "why": "Right. Arrival measures when a network was found, not intent."
+      },
+      {
+        "text": "The one that changed more fields",
+        "correct": false,
+        "why": "The rule counts no fields; it compares two times."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j900b87",
+    "version": 1,
+    "section": "whose-clock",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each stamp to the write it makes the winner.",
+    "pairs": [
+      {
+        "left": "the device's clock",
+        "right": "the edit made latest by that device's reckoning"
+      },
+      {
+        "left": "the server's clock",
+        "right": "the device that found a network last"
+      },
+      {
+        "left": "a device clock two hours fast",
+        "right": "that device, almost every time"
+      }
+    ],
+    "right_distractors": [
+      "the write made by somebody who had seen the other"
+    ]
+  },
+  {
+    "id": "ex-mcadbrw8",
+    "version": 1,
+    "section": "whose-clock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson prefer the server's clock for most apps, though it still loses an edit?",
+    "choices": [
+      {
+        "text": "No phone sets it, and its errors fall on all alike",
+        "correct": true,
+        "why": "Right. It is the better of two wrong answers."
+      },
+      {
+        "text": "It knows which writer had seen the other write",
+        "correct": false,
+        "why": "No clock knows that; lesson 14's version numbers do."
+      },
+      {
+        "text": "It keeps the edit made last in real time",
+        "correct": false,
+        "why": "It keeps the one that arrived last, which is a different thing."
+      },
+      {
+        "text": "It merges fields that the device clocks would replace",
+        "correct": false,
+        "why": "It merges nothing: the run with it lost the tick."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s8g6w3g",
+    "version": 1,
+    "section": "when-lww-is-right",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which of these fields is last write wins a safe rule? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the hour of the daily reminder",
+        "correct": true,
+        "why": "The newest choice is what the person wants."
+      },
+      {
+        "text": "a course's colour",
+        "correct": true,
+        "why": "It is replaced as a whole; nobody edits half a colour."
+      },
+      {
+        "text": "total minutes studied this month",
+        "why": "A counter: one device's increment would be lost."
+      },
+      {
+        "text": "a course's list of tags, stored in one field",
+        "why": "Two devices adding tags would keep one tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4kswmat",
+    "version": 1,
+    "section": "when-lww-is-right",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A counter of minutes studied reads 100 on both devices. Offline, the phone adds 30 and the tablet adds 45, and each sends its total. If the tablet's total wins, how many minutes does last write wins lose?",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ze2x0agg",
+    "version": 1,
+    "section": "when-lww-is-right",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the cheapest fix the lesson names for the session of this lesson?",
+    "choices": [
+      {
+        "text": "Use the server's clock instead of the devices'",
+        "correct": false,
+        "why": "That changes which edit is lost, not whether one is."
+      },
+      {
+        "text": "Forbid editing a session while offline",
+        "correct": false,
+        "why": "That gives up offline-first, which is the point of the course."
+      },
+      {
+        "text": "Stamp each field, and apply the rule to each one",
+        "correct": true,
+        "why": "Right. minutes and done never competed, so both survive."
+      },
+      {
+        "text": "Send the whole planner on every sync",
+        "correct": false,
+        "why": "More data does not decide between two versions of a row."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzmd988r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Shared course notes are stored as one text field with last write wins. Two classmates each add a paragraph offline. What happens, and what does the lesson say to do?",
+    "choices": [
+      {
+        "text": "Both paragraphs survive, because they were added and not changed",
+        "correct": false,
+        "why": "Each device sends its whole text; one text replaces the other."
+      },
+      {
+        "text": "One paragraph is lost; this field needs another rule",
+        "correct": true,
+        "why": "Right. Text two people edit is on the lesson's list of data the rule loses."
+      },
+      {
+        "text": "The server rejects the second paragraph with a conflict error",
+        "correct": false,
+        "why": "Last write wins never errors; it keeps one and drops the other."
+      },
+      {
+        "text": "One paragraph is lost, and switching to the server's clock fixes it",
+        "correct": false,
+        "why": "The server's clock changes which paragraph is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwmt4j5g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the morning of this lesson in order, as the server experiences it with device clocks.",
+    "items": [
+      "holds s3 stamped 09:00",
+      "receives the tablet's row stamped 10:20 and keeps it",
+      "receives the phone's row stamped 10:05",
+      "drops it as older and answers the phone"
+    ]
+  },
+  {
+    "id": "ex-rnqzzmgh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team says: \"our phones set their clocks from the network, so device stamps are safe.\" Which case from the lesson still breaks them?",
+    "choices": [
+      {
+        "text": "None: with right clocks on both devices, last write wins keeps both edits",
+        "correct": false,
+        "why": "The first run had right clocks and still lost the minutes."
+      },
+      {
+        "text": "A phone that syncs last, which always wins",
+        "correct": false,
+        "why": "That is the server's clock; with device stamps, the arrival order does not decide."
+      },
+      {
+        "text": "Two writes in the same second, which SQLite orders at random",
+        "correct": false,
+        "why": "The stamps are compared by the program, not ordered by a database."
+      },
+      {
+        "text": "A clock set by hand, and the edit lost even with right clocks",
+        "correct": true,
+        "why": "Right. People set clocks themselves, and the right-clock run lost an edit anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-s31ttv27",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which sentence does the lesson ask a team to be able to read aloud before choosing last write wins for sessions?",
+    "choices": [
+      {
+        "text": "\"Conflicts are rare enough on our phones that the rule will not matter to anyone.\"",
+        "correct": false,
+        "why": "That is the belief the sentence exists to replace."
+      },
+      {
+        "text": "\"The server keeps both copies until somebody chooses.\"",
+        "correct": false,
+        "why": "That describes lesson 14's approach, not this rule."
+      },
+      {
+        "text": "\"The later-stamped copy replaces the other, fields it did not change included.\"",
+        "correct": true,
+        "why": "Right. Accepting that cost aloud is what makes the rule a decision."
+      },
+      {
+        "text": "\"Every device's clock is checked against the server's.\"",
+        "correct": false,
+        "why": "Nothing in the rule checks clocks."
+      }
+    ]
+  }
+]
