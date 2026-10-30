@@ -1,0 +1,709 @@
+[
+  {
+    "id": "ex-81peqc97",
+    "version": 1,
+    "section": "where-state-lives",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of the planner to the kind of state it is.",
+    "pairs": [
+      {
+        "left": "a session marked done",
+        "right": "data"
+      },
+      {
+        "left": "the half-typed minutes of a new session",
+        "right": "UI state"
+      },
+      {
+        "left": "a button's pressed highlight",
+        "right": "ephemeral"
+      },
+      {
+        "left": "the week's total",
+        "right": "derived: computed again"
+      }
+    ],
+    "right_distractors": [
+      "configuration"
+    ]
+  },
+  {
+    "id": "ex-0tqxpjgn",
+    "version": 1,
+    "section": "where-state-lives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The user swipes the planner away on purpose and opens it again. What should the half-typed session form show?",
+    "choices": [
+      {
+        "text": "The half-typed minutes, as after a kill",
+        "correct": false,
+        "why": "UI state survives the system, not the user's choice to start again."
+      },
+      {
+        "text": "An error saying the draft was lost",
+        "correct": false,
+        "why": "Nothing was lost by accident; the user closed it."
+      },
+      {
+        "text": "Nothing: they chose a fresh start",
+        "correct": true,
+        "why": "Right. UI state is gone after the user closes the screen, and that is correct."
+      },
+      {
+        "text": "The last session the user submitted",
+        "correct": false,
+        "why": "That is data, and it belongs in the list, not in the form."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1rh97hm",
+    "version": 1,
+    "section": "where-state-lives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the planner not save the week's total in its UI state?",
+    "choices": [
+      {
+        "text": "It is derived from the data, and a saved copy can go stale",
+        "correct": true,
+        "why": "Right. Recompute it from the plan after a restore."
+      },
+      {
+        "text": "Numbers cannot be saved in saved state",
+        "correct": false,
+        "why": "Numbers can; the scroll position is one."
+      },
+      {
+        "text": "It is too large to fit in the saved state",
+        "correct": false,
+        "why": "It is three small numbers."
+      },
+      {
+        "text": "Totals are private data, and saved state can be read by other apps on the phone",
+        "correct": false,
+        "why": "Privacy is not the reason; staleness is."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4csjq2t",
+    "version": 1,
+    "section": "where-state-lives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The user had typed \"4\" on the way to \"45\" when the app was killed. What does the lesson say to save?",
+    "choices": [
+      {
+        "text": "Nothing, because \"4\" is not a valid session length yet",
+        "correct": false,
+        "why": "Validity is for submitting, not for saving where the user was."
+      },
+      {
+        "text": "A session of 4 minutes, added to the plan",
+        "correct": false,
+        "why": "That turns a half-typed field into data the user never submitted."
+      },
+      {
+        "text": "The default value of the field",
+        "correct": false,
+        "why": "That throws the user's typing away."
+      },
+      {
+        "text": "The raw string \"4\", as the user left it",
+        "correct": true,
+        "why": "Right. The user expects to find exactly what they typed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pp780nz4",
+    "version": 1,
+    "section": "configuration-change",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Android do by default when the user turns the phone?",
+    "choices": [
+      {
+        "text": "Kills the process and starts a new one",
+        "correct": false,
+        "why": "The process stays alive; only the Activity is rebuilt."
+      },
+      {
+        "text": "Destroys the Activity and creates a new one",
+        "correct": true,
+        "why": "Right, with onDestroy and then onCreate in the new configuration."
+      },
+      {
+        "text": "Nothing; only the views are resized",
+        "correct": false,
+        "why": "That is closer to what iOS does."
+      },
+      {
+        "text": "Suspends the app until the rotation ends",
+        "correct": false,
+        "why": "Suspension is a background state, not part of a rotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-y141rpmr",
+    "version": 1,
+    "section": "configuration-change",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A list loaded from the network is kept in a ViewModel. What happens to it after a rotation, and after the system kills the process?",
+    "choices": [
+      {
+        "text": "It survives both",
+        "correct": false,
+        "why": "A ViewModel lives in the process, and the kill takes the process."
+      },
+      {
+        "text": "It survives the rotation, not the kill",
+        "correct": true,
+        "why": "Right. Android's guide says ViewModels are destroyed during a system-initiated process death."
+      },
+      {
+        "text": "It survives the kill but not the rotation",
+        "correct": false,
+        "why": "That is the opposite of what Android's table says."
+      },
+      {
+        "text": "It survives neither",
+        "correct": false,
+        "why": "Surviving a rotation is what a ViewModel is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwnbprve",
+    "version": 1,
+    "section": "configuration-change",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these survive the system killing the process, according to Android's table? Choose all that apply.",
+    "choices": [
+      {
+        "text": "saved state",
+        "correct": true,
+        "why": "Yes: it is held by the system, outside the process."
+      },
+      {
+        "text": "persistent storage",
+        "correct": true,
+        "why": "Yes: it is on disk or the network."
+      },
+      {
+        "text": "a ViewModel",
+        "why": "It is in memory, in the process that died."
+      },
+      {
+        "text": "a field of the Activity",
+        "why": "It does not even survive a rotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-vt43vyrj",
+    "version": 1,
+    "section": "configuration-change",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Android app keeps its form through a rotation using only a ViewModel. What has that proved about process death?",
+    "choices": [
+      {
+        "text": "That iOS will restore it too",
+        "correct": false,
+        "why": "iOS has no ViewModel and no rotation rebuild."
+      },
+      {
+        "text": "That the form survives a kill as well",
+        "correct": false,
+        "why": "The ViewModel is in the process the kill takes."
+      },
+      {
+        "text": "That the app will crash with TransactionTooLargeException",
+        "correct": false,
+        "why": "A ViewModel does not go through the Binder buffer."
+      },
+      {
+        "text": "Nothing about the save path, which a turn never exercises",
+        "correct": true,
+        "why": "Right. The kill takes the ViewModel too, so it has to be tested on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdnc1xrz",
+    "version": 1,
+    "section": "configuration-change",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a turned iPhone not lose the planner's form the way a turned Android phone can?",
+    "choices": [
+      {
+        "text": "It lays the views out again",
+        "correct": true,
+        "why": "Right: nothing is destroyed, so only a kill is a danger there."
+      },
+      {
+        "text": "iPhones cannot be rotated",
+        "correct": false,
+        "why": "They can; the views are told their size changed."
+      },
+      {
+        "text": "iOS saves every form automatically",
+        "correct": false,
+        "why": "Nothing is saved; nothing is destroyed either."
+      },
+      {
+        "text": "SwiftUI keeps every form in a ViewModel that survives the rotation",
+        "correct": false,
+        "why": "ViewModel is Android's; the reason is that nothing is rebuilt."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4dtwayf",
+    "version": 1,
+    "section": "platform-tools",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each platform to how it keeps UI state across a kill.",
+    "pairs": [
+      {
+        "left": "Jetpack Compose",
+        "right": "rememberSaveable"
+      },
+      {
+        "left": "an Android ViewModel",
+        "right": "SavedStateHandle"
+      },
+      {
+        "left": "SwiftUI",
+        "right": "@SceneStorage"
+      },
+      {
+        "left": "React Native",
+        "right": "the app writes it to storage itself"
+      }
+    ],
+    "right_distractors": [
+      "onDestroy"
+    ]
+  },
+  {
+    "id": "ex-zfre676q",
+    "version": 1,
+    "section": "platform-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does Android actually write the values given to saved state?",
+    "choices": [
+      {
+        "text": "The instant each value changes",
+        "correct": false,
+        "why": "The guide says writes in between are deferred to the next stop."
+      },
+      {
+        "text": "In onDestroy",
+        "correct": false,
+        "why": "onDestroy may never run."
+      },
+      {
+        "text": "When the Activity is stopped",
+        "correct": true,
+        "why": "Right: on the way to the background, lesson 4's last reliable moment."
+      },
+      {
+        "text": "Once a minute, on a system timer",
+        "correct": false,
+        "why": "There is no such timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-akztahpm",
+    "version": 1,
+    "section": "platform-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does Apple's page say about @SceneStorage?",
+    "choices": [
+      {
+        "text": "It should be lightweight, and not hold sensitive data",
+        "correct": true,
+        "why": "Right, the same limits Android puts on saved state."
+      },
+      {
+        "text": "It is saved the instant a value changes",
+        "correct": false,
+        "why": "The page says the system makes no guarantees about when it is persisted."
+      },
+      {
+        "text": "It is the right place for model data",
+        "correct": false,
+        "why": "The page says model data should not be stored there."
+      },
+      {
+        "text": "It is shared between all of an app's scenes",
+        "correct": false,
+        "why": "Each scene has its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-cff9rav4",
+    "version": 1,
+    "section": "platform-tools",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A React Native app saves its form to AsyncStorage on the way to the background. What does that storage do that platform saved state does not?",
+    "choices": [
+      {
+        "text": "Survives a rotation",
+        "correct": false,
+        "why": "Saved state survives a rotation too."
+      },
+      {
+        "text": "Survives a system kill",
+        "correct": false,
+        "why": "Platform saved state does that as well."
+      },
+      {
+        "text": "Survives the user closing the app on purpose",
+        "correct": true,
+        "why": "Right, so the app has to clear it on submit and decide what is too old to offer."
+      },
+      {
+        "text": "Gets restored by the system automatically",
+        "correct": false,
+        "why": "The app reads it back itself; nothing is automatic."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzjcn649",
+    "version": 1,
+    "section": "round-trip",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "node restore.ts use prints its screen, saves 80 bytes and is killed. Why does its exit handler never print goodbye?",
+    "choices": [
+      {
+        "text": "The handler was registered after the kill",
+        "correct": false,
+        "why": "It was registered a few lines before."
+      },
+      {
+        "text": "SIGKILL ends the process without running any more of its code",
+        "correct": true,
+        "why": "Right: lesson 4's silent kill, from the inside."
+      },
+      {
+        "text": "Node.js does not support exit handlers in .ts files",
+        "correct": false,
+        "why": "It does; a normal exit would run it."
+      },
+      {
+        "text": "The terminal cut the last line of output when the process ended",
+        "correct": false,
+        "why": "Nothing was printed to cut."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdt415dp",
+    "version": 1,
+    "section": "round-trip",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shell reports the killed process with an exit status of 128 plus the signal's number. SIGKILL is signal 9. What status does it print?",
+    "value": 137,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-h9wgfx1d",
+    "version": 1,
+    "section": "round-trip",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the restore, the week's numbers appear on screen although they were not in saved-state.json. Where did they come from?",
+    "choices": [
+      {
+        "text": "From a cache that Node.js keeps on disk between one run and the next",
+        "correct": false,
+        "why": "Each run is a new process with nothing from the old one."
+      },
+      {
+        "text": "The file held them in a hidden field",
+        "correct": false,
+        "why": "The file is shown whole: course id, scroll and draft."
+      },
+      {
+        "text": "From the git repository",
+        "correct": false,
+        "why": "git holds the program, not the numbers."
+      },
+      {
+        "text": "They were computed again from the plan, which is data",
+        "correct": true,
+        "why": "Right. Derived values are recomputed, not saved."
+      }
+    ]
+  },
+  {
+    "id": "ex-rthee2az",
+    "version": 1,
+    "section": "round-trip",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The saved state names the course as mobile, and the title comes from the data. What happens if the course is renamed while the app is dead?",
+    "choices": [
+      {
+        "text": "The old title comes back from the saved state",
+        "correct": false,
+        "why": "The saved state holds no title."
+      },
+      {
+        "text": "The restore fails because the id changed",
+        "correct": false,
+        "why": "Renaming changes the title, not the id."
+      },
+      {
+        "text": "The screen comes back with the new name",
+        "correct": true,
+        "why": "Right. The id is looked up in the data as it is now."
+      },
+      {
+        "text": "Both titles appear side by side",
+        "correct": false,
+        "why": "There is only one title to show."
+      }
+    ]
+  },
+  {
+    "id": "ex-88dpfktq",
+    "version": 1,
+    "section": "round-trip",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the round trip in order.",
+    "items": [
+      "draw the screen from the UI state",
+      "write the UI state on the way to the background",
+      "the process is killed, with no callback",
+      "a new process reads the saved state",
+      "draw the same screen again"
+    ]
+  },
+  {
+    "id": "ex-0bqfr03q",
+    "version": 1,
+    "section": "ids-not-objects",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Android's guide recommends keeping saved state under how many kilobytes?",
+    "value": 50,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5amb4hd3",
+    "version": 1,
+    "section": "ids-not-objects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Saved with ids only, the planner's screen is 80 bytes. What happens to that size as the user adds thousands of sessions?",
+    "choices": [
+      {
+        "text": "It stays the same",
+        "correct": true,
+        "why": "Right. The same id, scroll position and draft, however large the plan."
+      },
+      {
+        "text": "It grows with every session",
+        "correct": false,
+        "why": "That is the whole-plan version."
+      },
+      {
+        "text": "It doubles every thousand sessions",
+        "correct": false,
+        "why": "Nothing in it depends on the sessions."
+      },
+      {
+        "text": "It shrinks, because old sessions are dropped",
+        "correct": false,
+        "why": "Nothing is dropped; nothing is added."
+      }
+    ]
+  },
+  {
+    "id": "ex-zb1v7z8s",
+    "version": 1,
+    "section": "ids-not-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Android 7.0 and later, what happens when a transaction exceeds the Binder buffer?",
+    "choices": [
+      {
+        "text": "The system silently drops the extra bytes",
+        "correct": false,
+        "why": "It is loud: an exception."
+      },
+      {
+        "text": "A warning appears in the log, and the app carries on as if nothing happened",
+        "correct": false,
+        "why": "That was the behaviour before Android 7.0."
+      },
+      {
+        "text": "The saved state is written to disk instead",
+        "correct": false,
+        "why": "Nothing moves it to disk on its own."
+      },
+      {
+        "text": "A TransactionTooLargeException is thrown as a runtime exception",
+        "correct": true,
+        "why": "Right, which ends the app unless something catches it."
+      }
+    ]
+  },
+  {
+    "id": "ex-32tr9j5n",
+    "version": 1,
+    "section": "ids-not-objects",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A course is deleted on another device while the planner is dead, and the saved state still names it. What does the lesson prefer to an empty screen?",
+    "choices": [
+      {
+        "text": "Recreating the course from the saved id",
+        "correct": false,
+        "why": "An id carries no course to recreate, and the user deleted it."
+      },
+      {
+        "text": "Handling it on purpose: refuse loudly, or fall back to the list and say why",
+        "correct": true,
+        "why": "Right. With ids, staleness is a lookup that fails where you can see it."
+      },
+      {
+        "text": "Drawing the course from a saved copy of the object",
+        "correct": false,
+        "why": "That draws something that no longer exists as if it were current."
+      },
+      {
+        "text": "Ignoring the saved state and every future one",
+        "correct": false,
+        "why": "One stale id does not make saving wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4bz0yma",
+    "version": 1,
+    "section": "ids-not-objects",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Android's guide says to store in saved state a minimal amount of data, such as an ___.",
+    "blanks": [
+      {
+        "accept": [
+          "ID",
+          "identifier"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x1r6myyz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team saves the whole open course, with its sessions, in rememberSaveable. It works for every tester. Which user meets the crash first?",
+    "choices": [
+      {
+        "text": "The newest user, with an empty plan",
+        "correct": false,
+        "why": "An empty plan saves a tiny state."
+      },
+      {
+        "text": "The most active user, whose plan is largest",
+        "correct": true,
+        "why": "Right. The saved state grows with the plan until it passes the Binder limit."
+      },
+      {
+        "text": "Any user who rotates the phone while the form is open",
+        "correct": false,
+        "why": "Rotation saves the same state the testers saved; the size is what differs."
+      },
+      {
+        "text": "An iPhone user",
+        "correct": false,
+        "why": "rememberSaveable is Android's."
+      }
+    ]
+  },
+  {
+    "id": "ex-svpjm50m",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belong in the planner's saved UI state? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the open course's id",
+        "correct": true,
+        "why": "Yes: what was selected, as an id."
+      },
+      {
+        "text": "the scroll position",
+        "correct": true,
+        "why": "Yes: where the user was."
+      },
+      {
+        "text": "the half-typed minutes, as a string",
+        "correct": true,
+        "why": "Yes: what they had started."
+      },
+      {
+        "text": "the list of all sessions",
+        "why": "That is data, and it lives in the database."
+      },
+      {
+        "text": "the week's total",
+        "why": "It is derived; recompute it."
+      }
+    ]
+  }
+]
