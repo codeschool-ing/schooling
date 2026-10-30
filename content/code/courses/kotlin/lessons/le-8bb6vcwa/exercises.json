@@ -1,0 +1,656 @@
+[
+  {
+    "id": "ex-3w7mccqd",
+    "version": 1,
+    "section": "two-types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the compiler say about `val course: String = null`?",
+    "hint": "`String` without a question mark.",
+    "choices": [
+      {
+        "text": "Nothing; `course` is simply empty",
+        "correct": false,
+        "why": "An empty string is `\"\"`, a value; `null` is the absence of one, and a `String` refuses it."
+      },
+      {
+        "text": "It refuses: null cannot be a value of a non-null type",
+        "correct": true,
+        "why": "Right: `null cannot be a value of a non-null type 'String'`, and no jar is written."
+      },
+      {
+        "text": "It compiles, and the program crashes when it reaches that line",
+        "correct": false,
+        "why": "The refusal is at compile time; this program never runs."
+      },
+      {
+        "text": "It infers `String?` instead",
+        "correct": false,
+        "why": "A written type is checked, never replaced by another."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jgke25w",
+    "version": 1,
+    "section": "two-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val note: String? = \"read chapter 3\"` and then `println(note.length)`. Why does the compiler refuse, when the note is plainly there?",
+    "hint": "What is a type a promise about?",
+    "choices": [
+      {
+        "text": "Because a string literal is stored as `null` until first used",
+        "correct": false,
+        "why": "The literal is a value from the start; nothing is lazy here."
+      },
+      {
+        "text": "`length` is not defined on strings that came from a literal",
+        "correct": false,
+        "why": "Every `String` has `length`; the trouble is the `?`."
+      },
+      {
+        "text": "The type says it could be null, and a type covers every value it allows",
+        "correct": true,
+        "why": "Right: the compiler reasons from `String?`, not from this particular value."
+      },
+      {
+        "text": "Smart casts do not work on literals",
+        "correct": false,
+        "why": "No check was written, so there was nothing to smart cast from."
+      }
+    ]
+  },
+  {
+    "id": "ex-187c1fyf",
+    "version": 1,
+    "section": "two-types",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each way of answering `null` to what it does.",
+    "hint": "The table at the end of section 02.",
+    "pairs": [
+      {
+        "left": "`note?.length`",
+        "right": "Null if `note` is null, the length otherwise"
+      },
+      {
+        "left": "`note ?: \"none\"`",
+        "right": "Uses a replacement when `note` is null"
+      },
+      {
+        "left": "`if (note != null) note.length`",
+        "right": "Treats `note` as a `String` inside the check"
+      },
+      {
+        "left": "`note!!.length`",
+        "right": "Throws `NullPointerException` if `note` is null"
+      }
+    ],
+    "right_distractors": [
+      "Converts `null` into an empty string"
+    ]
+  },
+  {
+    "id": "ex-aa7b625b",
+    "version": 1,
+    "section": "two-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`name` is a `String`. Which line compiles with nothing else written?",
+    "hint": "One direction is free.",
+    "choices": [
+      {
+        "text": "`val maybe: String? = name`",
+        "correct": true,
+        "why": "Right: every `String` is a `String?`."
+      },
+      {
+        "text": "`val sure: String = maybe`, where `maybe` is a `String?`",
+        "correct": false,
+        "why": "That direction needs an answer for `null`: `?:`, a check or `!!`."
+      },
+      {
+        "text": "`val n: Int = maybe?.length`",
+        "correct": false,
+        "why": "A safe call gives `Int?`, which does not go into an `Int`."
+      },
+      {
+        "text": "`val n: Int = maybe.length`",
+        "correct": false,
+        "why": "A plain dot on a `String?` is the refusal from `NoteLength.kt`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tadyvhyx",
+    "version": 1,
+    "section": "safe-call",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`note` is a `String?`. What is the type of `note?.length`?",
+    "hint": "One of its two outcomes is `null`.",
+    "choices": [
+      {
+        "text": "`Int`",
+        "correct": false,
+        "why": "It can be `null`, so it cannot be `Int`."
+      },
+      {
+        "text": "`Int?`",
+        "correct": true,
+        "why": "Right: a safe call is always nullable."
+      },
+      {
+        "text": "`String?`",
+        "correct": false,
+        "why": "`length` is a number; the `?` is what the safe call adds."
+      },
+      {
+        "text": "`Nothing?`",
+        "correct": false,
+        "why": "`Nothing?` holds only `null`, and this holds lengths too."
+      }
+    ]
+  },
+  {
+    "id": "ex-kazmrry3",
+    "version": 1,
+    "section": "safe-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SafeCall.kt` printed `14`, `null` and `0` for its three notes. What does the `0` tell you?",
+    "hint": "Look at the third item of the list.",
+    "choices": [
+      {
+        "text": "That `?.` turns a missing note into a length of zero",
+        "correct": false,
+        "why": "The missing note printed `null`; `?.` never invents a value."
+      },
+      {
+        "text": "That the third note is an empty string, which is present",
+        "correct": true,
+        "why": "Right: `\"\"` is a string of length 0, and only `null` is absent."
+      },
+      {
+        "text": "That the list had a third element the program could not read",
+        "correct": false,
+        "why": "An unreadable element would not print anything as tidy as `0`; the element was `\"\"`."
+      },
+      {
+        "text": "That `for` counts from zero",
+        "correct": false,
+        "why": "The loop printed lengths, not positions."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd0eppms",
+    "version": 1,
+    "section": "safe-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`second` is `null`. In `second?.uppercase()?.length`, how many functions actually run?",
+    "hint": "A chain stops at the first null.",
+    "choices": [
+      {
+        "text": "Both, with `uppercase` returning `null`",
+        "correct": false,
+        "why": "`uppercase` is never called on `null`; the first `?.` short-circuits."
+      },
+      {
+        "text": "One: `uppercase` runs, and `length` is skipped",
+        "correct": false,
+        "why": "`uppercase` would need a string to run on, and there is none."
+      },
+      {
+        "text": "None: the chain gives `null` at the first `?.`",
+        "correct": true,
+        "why": "Right: nothing after the first missing value runs."
+      },
+      {
+        "text": "None, and the program throws",
+        "correct": false,
+        "why": "A safe call never throws for a `null`; it hands back `null`."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9cschk8",
+    "version": 1,
+    "section": "elvis",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `minutesFrom(\"forty\")` return in `Elvis.kt`?",
+    "hint": "`toIntOrNull()` cannot read it, and then `?:` answers.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kkwv0r2b",
+    "version": 1,
+    "section": "elvis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `val text = note ?: return \"no note\"`, what is the type of `text` on the lines after it?",
+    "hint": "What has to be true to reach the next line?",
+    "choices": [
+      {
+        "text": "`String?`, the same as `note`",
+        "correct": false,
+        "why": "The null case left the function, so it cannot reach the next line."
+      },
+      {
+        "text": "`String`",
+        "correct": true,
+        "why": "Right: a null `note` returned, so `text` is never null."
+      },
+      {
+        "text": "`Any`, because two branches have different types",
+        "correct": false,
+        "why": "`return` has the type `Nothing`, which fits any type, so the result is `String`."
+      },
+      {
+        "text": "`Unit`, because `return` produces no value",
+        "correct": false,
+        "why": "The value comes from `note`; the `return` side never produces one at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-4mr9a108",
+    "version": 1,
+    "section": "elvis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session's minutes come from text, and `minutesFrom` turns `\"forty\"` into 0. The weekly total is now wrong without a message. Which right-hand side would make that mistake visible?",
+    "hint": "Section 04's table has three decisions.",
+    "choices": [
+      {
+        "text": "`?: 0`, as it is",
+        "correct": false,
+        "why": "That is the silent guess the question describes."
+      },
+      {
+        "text": "`?: -1`, so the total goes down",
+        "correct": false,
+        "why": "A negative minute is still a silent wrong number in the total."
+      },
+      {
+        "text": "`?: throw IllegalArgumentException(\"not a number: $input\")`",
+        "correct": true,
+        "why": "Right: a missing value that is a mistake should be heard, with the input in the message."
+      },
+      {
+        "text": "`!!` after `toIntOrNull()`",
+        "correct": false,
+        "why": "It stops the program, with no sentence saying what arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-n002rtp6",
+    "version": 1,
+    "section": "elvis",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`a?.length ?: 0 + 1` is read as `a?.length ?: (0 + 1)`, because `?:` binds more ___ than `+`.",
+    "hint": "The operator grabs its operands last.",
+    "blanks": [
+      {
+        "accept": [
+          "loosely",
+          "weakly"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jkzdb64k",
+    "version": 1,
+    "section": "smart-casts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `SmartCast.kt`, why does `note.length` compile on the last line of `describe`?",
+    "hint": "What happened when `note` was `null`?",
+    "choices": [
+      {
+        "text": "Because `describe` declares `note` as a `String`",
+        "correct": false,
+        "why": "It declares `String?`; the check made it a `String` from there on."
+      },
+      {
+        "text": "Because a null `note` has already returned",
+        "correct": true,
+        "why": "Right: past the early return, only a present note can arrive."
+      },
+      {
+        "text": "Because string templates accept nullable values",
+        "correct": false,
+        "why": "Printing a null is fine, but `.length` is a call on it, which is what needs the cast."
+      },
+      {
+        "text": "Because the call site passes a literal",
+        "correct": false,
+        "why": "The function is compiled once, for every caller, including `describe(null)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dejefw3z",
+    "version": 1,
+    "section": "smart-casts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `draft.note.length` refused after `if (draft.note != null)`, when `note` is a `var` property?",
+    "hint": "The message says what could happen in between.",
+    "choices": [
+      {
+        "text": "Something else could set the property to `null` between the check and the use",
+        "correct": true,
+        "why": "Right: the check proves nothing about a value that can change, so take a `val` copy."
+      },
+      {
+        "text": "Smart casts work on parameters and never on objects",
+        "correct": false,
+        "why": "They work on a `val` property of an object in the same module; it is the `var` that stops it."
+      },
+      {
+        "text": "The class was declared in the same file",
+        "correct": false,
+        "why": "Being in the same file helps; it is not the obstacle."
+      },
+      {
+        "text": "`!=` compares identity, so the check is unreliable",
+        "correct": false,
+        "why": "`!= null` is a plain null check, and it is reliable at the moment it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2nm4wbv",
+    "version": 1,
+    "section": "smart-casts",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To smart cast a `var` property, first copy it into a local ___, then check the copy.",
+    "hint": "`DraftFixed.kt` does it in one line.",
+    "blanks": [
+      {
+        "accept": [
+          "val"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qs5tb574",
+    "version": 1,
+    "section": "double-bang",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `input.toIntOrNull()!!` do when `input` is `\"forty\"`?",
+    "hint": "`Bang.kt` ran it.",
+    "choices": [
+      {
+        "text": "Returns 0",
+        "correct": false,
+        "why": "That would be `?: 0`."
+      },
+      {
+        "text": "Refuses to compile, since the result could be null",
+        "correct": false,
+        "why": "`!!` is exactly what makes it compile."
+      },
+      {
+        "text": "Throws `NullPointerException` at that line",
+        "correct": true,
+        "why": "Right: `at BangKt.main(Bang.kt:4)`."
+      },
+      {
+        "text": "Returns `null`, and `println` prints the word `null`",
+        "correct": false,
+        "why": "`!!` never returns `null`; it throws instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssbpct68",
+    "version": 1,
+    "section": "double-bang",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `?: error(\"minutes must be a number, got '$input'\")` give you that `!!` does not?",
+    "hint": "Both stop the program.",
+    "choices": [
+      {
+        "text": "It keeps the program running",
+        "correct": false,
+        "why": "`error` throws `IllegalStateException`, so the program stops as well."
+      },
+      {
+        "text": "A message saying what was expected and what arrived",
+        "correct": true,
+        "why": "Right: the person reading the log learns the input was `forty`."
+      },
+      {
+        "text": "A line number in the stack trace, pointing at the failing call",
+        "correct": false,
+        "why": "`!!` gave a line number too: `Bang.kt:4`."
+      },
+      {
+        "text": "A smaller jar",
+        "correct": false,
+        "why": "Both are a handful of bytes of bytecode."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4dh6e3z",
+    "version": 1,
+    "section": "double-bang",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Section 06 names a few honest uses of `!!`. Which of these are among them? Choose all that apply.",
+    "hint": "A crash has to be the failure you want.",
+    "choices": [
+      {
+        "text": "Inside a test",
+        "correct": true,
+        "why": "Yes: a crash with a line number is the failure a test wants."
+      },
+      {
+        "text": "Reading a value a user typed into a form",
+        "correct": false,
+        "why": "No: typed input is exactly where absence is normal."
+      },
+      {
+        "text": "A program you will throw away",
+        "correct": true,
+        "why": "Yes: most programs in a course, few in an app."
+      },
+      {
+        "text": "Reading an environment variable through `System.getenv`",
+        "correct": false,
+        "why": "No: section 07 showed it is null whenever the variable is unset."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2ekran8",
+    "version": 1,
+    "section": "platform-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val home = System.getenv(\"STUDY_HOME\")` and then `home.length`. Why did that compile?",
+    "hint": "Where does `getenv` come from?",
+    "choices": [
+      {
+        "text": "Because environment variables are never null on Linux",
+        "correct": false,
+        "why": "The second run showed the opposite: unset gives `null`."
+      },
+      {
+        "text": "Because `home` was declared as a `String`",
+        "correct": false,
+        "why": "No type was written; it was inferred."
+      },
+      {
+        "text": "`getenv` is Java, and `home` got a platform type",
+        "correct": true,
+        "why": "Right: a `String!` is allowed either way, and fails like Java."
+      },
+      {
+        "text": "Because `length` is a safe property on strings",
+        "correct": false,
+        "why": "No property is safe on a null; the platform type is why the compiler allowed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7gck4wb",
+    "version": 1,
+    "section": "platform-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`val home: String = System.getenv(\"STUDY_HOME\")` with the variable unset. Where does the program fail?",
+    "hint": "Kotlin inserts something at that line.",
+    "choices": [
+      {
+        "text": "It does not compile, because `getenv` can return null",
+        "correct": false,
+        "why": "A platform type may be declared either way, so it compiles."
+      },
+      {
+        "text": "At that very line, with `getenv(...) must not be null`",
+        "correct": true,
+        "why": "Right: the inserted check fails at the border."
+      },
+      {
+        "text": "At the first line that uses `home`",
+        "correct": false,
+        "why": "That is the undeclared platform type; declaring `String` moves the failure to the border."
+      },
+      {
+        "text": "Nowhere: `home` becomes an empty string",
+        "correct": false,
+        "why": "Kotlin never turns `null` into `\"\"` for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwjd3ktb",
+    "version": 1,
+    "section": "platform-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habit does section 07 recommend for every value that comes from Java?",
+    "hint": "Decide at the border.",
+    "choices": [
+      {
+        "text": "Add `!!` so a null fails early",
+        "correct": false,
+        "why": "That turns the border into a crash without a sentence."
+      },
+      {
+        "text": "Leave it inferred, exactly as you would with a Kotlin value",
+        "correct": false,
+        "why": "Inference gives the platform type, which is the unchecked one."
+      },
+      {
+        "text": "Wrap every Java call in `try`",
+        "correct": false,
+        "why": "Catching the crash is not the same as making absence part of the type."
+      },
+      {
+        "text": "Give it a type, nullable unless documented otherwise",
+        "correct": true,
+        "why": "Right: then the compiler is back in charge."
+      }
+    ]
+  },
+  {
+    "id": "ex-2r3106k7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student types a number of minutes. Put these in the order the planner's code should deal with them.",
+    "hint": "From text to a number the total can use.",
+    "items": [
+      "Read the text the student typed, a `String`",
+      "`toIntOrNull()` turns it into an `Int?`",
+      "`?:` decides what a missing number means",
+      "Add the resulting `Int` to the weekly total"
+    ]
+  },
+  {
+    "id": "ex-em0bzcc5",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`val notes = listOf(\"plan\", null, \"review notes\")`. What is `notes[2]?.length`?",
+    "hint": "Positions start at 0, and a space is a character.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8rqcy4r5",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`note` is a `String?` local `val`. Which lines compile? Choose all that apply.",
+    "hint": "Each needs an answer for null, or a result that stays nullable.",
+    "choices": [
+      {
+        "text": "`val n: Int? = note?.length`",
+        "correct": true,
+        "why": "Yes: the safe call gives `Int?`."
+      },
+      {
+        "text": "`val n: Int = note?.length`",
+        "correct": false,
+        "why": "No: `Int?` does not go into `Int` without `?:`."
+      },
+      {
+        "text": "`val n: Int = note?.length ?: 0`",
+        "correct": true,
+        "why": "Yes: the elvis operator answers the null case."
+      },
+      {
+        "text": "`val n = if (note != null) note.length else 0`",
+        "correct": true,
+        "why": "Yes: a local `val` smart casts inside the check."
+      }
+    ]
+  }
+]

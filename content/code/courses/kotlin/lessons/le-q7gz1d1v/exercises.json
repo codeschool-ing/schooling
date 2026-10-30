@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ex-qecxh7q6",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does `coroutineScope { … }` return?",
+    "hint": "Structured concurrency.",
+    "choices": [
+      {
+        "text": "As soon as its block's last line has run",
+        "correct": false,
+        "why": "It also waits for every coroutine the block started."
+      },
+      {
+        "text": "When every child has finished",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Immediately, leaving its children running in the background",
+        "correct": false,
+        "why": "That is the leak a scope exists to prevent."
+      },
+      {
+        "text": "After a timeout of one second",
+        "correct": false,
+        "why": "There is no built-in timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgvejzhk",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the tree of jobs, which way does each travel?",
+    "hint": "The figure at the end of section 02.",
+    "choices": [
+      {
+        "text": "Both up",
+        "correct": false,
+        "why": "Cancellation goes to the children."
+      },
+      {
+        "text": "Both down",
+        "correct": false,
+        "why": "A failure goes to the parent."
+      },
+      {
+        "text": "Failure up, cancellation down",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Failure down to every child, cancellation up to the root of the tree",
+        "correct": false,
+        "why": "The other way round."
+      }
+    ]
+  },
+  {
+    "id": "ex-jj1hcjpj",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the busy loop run to the end after `cancelAndJoin()`?",
+    "hint": "When does a coroutine check for cancellation?",
+    "choices": [
+      {
+        "text": "It ran on `Dispatchers.Default`, which cannot be cancelled",
+        "correct": false,
+        "why": "The polite loop ran there too and stopped."
+      },
+      {
+        "text": "It never suspended, so it never checked",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`cancelAndJoin` only cancels after joining",
+        "correct": false,
+        "why": "It cancels first."
+      },
+      {
+        "text": "Its `println` was inside a `finally`",
+        "correct": false,
+        "why": "There was no `finally` in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh4g3kgp",
+    "version": 1,
+    "section": "cancellation",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A long loop that never suspends can call `___()` to stop at the next pass once cancelled.",
+    "hint": "The polite loop called it.",
+    "blanks": [
+      {
+        "accept": [
+          "ensureActive"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c20b77vk",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Inside `finally` in a cancelled coroutine, you call a `suspend` function to save the session. What happens, and what fixes it?",
+    "hint": "The coroutine is already cancelled.",
+    "choices": [
+      {
+        "text": "It works: `finally` is exempt from cancellation",
+        "correct": false,
+        "why": "`finally` runs, but suspending calls in it throw."
+      },
+      {
+        "text": "It throws; `withContext(NonCancellable)` lets it run",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It hangs until the program ends",
+        "correct": false,
+        "why": "It throws at once."
+      },
+      {
+        "text": "It runs on another thread automatically",
+        "correct": false,
+        "why": "Nothing moves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g765ezpc",
+    "version": 1,
+    "section": "failure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `coroutineScope`, one `launch` throws. What happens to the other children?",
+    "hint": "`reminder sync cancelled`, `export cancelled`.",
+    "choices": [
+      {
+        "text": "They finish their work normally",
+        "correct": false,
+        "why": "Neither printed its result."
+      },
+      {
+        "text": "They are cancelled",
+        "correct": true,
+        "why": "Right, and their `finally` blocks run."
+      },
+      {
+        "text": "They are restarted",
+        "correct": false,
+        "why": "Nothing restarts."
+      },
+      {
+        "text": "They keep running after the scope has already returned to its caller",
+        "correct": false,
+        "why": "A scope never returns before its children finish."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqe8e20f",
+    "version": 1,
+    "section": "failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After cancelling the siblings, what does `coroutineScope` do with the failure?",
+    "hint": "`refresh failed: calendar unreachable`.",
+    "choices": [
+      {
+        "text": "Logs it and returns normally",
+        "correct": false,
+        "why": "`main` had to catch it."
+      },
+      {
+        "text": "Swallows it",
+        "correct": false,
+        "why": "`main` received it."
+      },
+      {
+        "text": "Rethrows it to its caller",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Retries the failed child once before giving up and returning",
+        "correct": false,
+        "why": "There is no retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdtgfgej",
+    "version": 1,
+    "section": "supervisor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which work suits `supervisorScope` rather than `coroutineScope`?",
+    "hint": "Separate jobs, or parts of one result?",
+    "choices": [
+      {
+        "text": "Loading the week and the goal to draw one screen",
+        "correct": false,
+        "why": "Without either there is no screen: one result."
+      },
+      {
+        "text": "Sending a reminder to each of three devices",
+        "correct": true,
+        "why": "Right: independent jobs."
+      },
+      {
+        "text": "Two `async` loads whose results are combined",
+        "correct": false,
+        "why": "Parts of one result."
+      },
+      {
+        "text": "Any work at all on Android",
+        "correct": false,
+        "why": "The choice depends on the work, not the platform."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1dfb1ja",
+    "version": 1,
+    "section": "supervisor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `supervisorScope`, what is the `CoroutineExceptionHandler` for?",
+    "hint": "The scope does not propagate the failure.",
+    "choices": [
+      {
+        "text": "To retry the failed child",
+        "correct": false,
+        "why": "It only reports."
+      },
+      {
+        "text": "To cancel the siblings after a failure",
+        "correct": false,
+        "why": "That is what a supervisor avoids."
+      },
+      {
+        "text": "To make the scope throw to its caller",
+        "correct": false,
+        "why": "A supervisor scope does not."
+      },
+      {
+        "text": "To handle a failure nobody else caught",
+        "correct": true,
+        "why": "Right: a last resort."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzka34kn",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`withTimeoutOrNull(500) { slowServer(2000) }`. What does it return?",
+    "hint": "The server takes four times the limit.",
+    "choices": [
+      {
+        "text": "`null`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The week, after 2000 ms",
+        "correct": false,
+        "why": "It gave up at 500."
+      },
+      {
+        "text": "It throws `TimeoutCancellationException`",
+        "correct": false,
+        "why": "That is `withTimeout`."
+      },
+      {
+        "text": "An empty list, which the server returns when it is too slow",
+        "correct": false,
+        "why": "Nothing invents a list."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyst17c4",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without its last `println`, `Timeout.kt`'s `main` broke the whole project. Why?",
+    "hint": "What type was `main`?",
+    "choices": [
+      {
+        "text": "`withTimeout` cannot be used in `main`",
+        "correct": false,
+        "why": "It is used there in the final version."
+      },
+      {
+        "text": "A `main` not returning `Unit` collides with the other `main`s",
+        "correct": true,
+        "why": "Right: conflicting overloads."
+      },
+      {
+        "text": "`try` without `finally` is not allowed as the last expression of a function",
+        "correct": false,
+        "why": "It is allowed; its type was the issue."
+      },
+      {
+        "text": "Gradle runs only the first `main` it finds",
+        "correct": false,
+        "why": "`-Pmain` picks one."
+      }
+    ]
+  },
+  {
+    "id": "ex-v68j8stq",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `tick 1` to `tick 4` print after the job was cancelled?",
+    "hint": "What did `runCatching` catch?",
+    "choices": [
+      {
+        "text": "`cancelAndJoin` waits for the loop to end before cancelling",
+        "correct": false,
+        "why": "It cancelled at 150 ms."
+      },
+      {
+        "text": "`runCatching` swallowed each `CancellationException`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`repeat` cannot be cancelled",
+        "correct": false,
+        "why": "It is an ordinary loop; the catch was the problem."
+      },
+      {
+        "text": "The ticks were buffered",
+        "correct": false,
+        "why": "They ran after cancellation."
+      }
+    ]
+  },
+  {
+    "id": "ex-85pk18f4",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `session saved` never printed in `Global.kt`?",
+    "hint": "Whose child was it?",
+    "choices": [
+      {
+        "text": "`runBlocking` did not wait for it",
+        "correct": true,
+        "why": "Right: not its child."
+      },
+      {
+        "text": "`GlobalScope` coroutines never run",
+        "correct": false,
+        "why": "It started; the program ended first."
+      },
+      {
+        "text": "The `@OptIn` annotation disabled it",
+        "correct": false,
+        "why": "`@OptIn` only allows the API."
+      },
+      {
+        "text": "`delay` does not work outside `runBlocking`",
+        "correct": false,
+        "why": "It works in any coroutine."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nscb7zd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens in `Failure.kt` in order.",
+    "hint": "Up, down, up again.",
+    "items": [
+      "the calendar child throws at 200 ms",
+      "the scope cancels the other two children",
+      "their `finally` blocks print",
+      "`coroutineScope` rethrows to `main`",
+      "`main` prints `refresh failed`"
+    ]
+  },
+  {
+    "id": "ex-q2k9hpe2",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The timer prints every 100 ms and is cancelled at 350 ms. How many `studied` lines did it print?",
+    "hint": "100, 200, 300.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bxsrchdv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these let cancellation through? Choose all that apply.",
+    "hint": "Catch only what the block really throws.",
+    "choices": [
+      {
+        "text": "`try { delay(100) } catch (e: java.io.IOException) { }`",
+        "correct": true,
+        "why": "Yes: `CancellationException` is not an `IOException`."
+      },
+      {
+        "text": "`runCatching { delay(100) }`",
+        "correct": false,
+        "why": "No: it catches everything."
+      },
+      {
+        "text": "`try { delay(100) } catch (e: Exception) { }`",
+        "correct": false,
+        "why": "No: `CancellationException` is an `Exception`."
+      },
+      {
+        "text": "`try { delay(100) } catch (e: Exception) { if (e is CancellationException) throw e }`",
+        "correct": true,
+        "why": "Yes: it rethrows the cancellation."
+      }
+    ]
+  },
+  {
+    "id": "ex-51y97p6k",
+    "version": 1,
+    "section": "scopes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each builder or scope to what it does.",
+    "hint": "Sections 02, 05 and 07.",
+    "pairs": [
+      {
+        "left": "`coroutineScope`",
+        "right": "Waits for its children; one failure cancels the rest"
+      },
+      {
+        "left": "`supervisorScope`",
+        "right": "Waits for its children; each fails alone"
+      },
+      {
+        "left": "`GlobalScope`",
+        "right": "Waits for nothing"
+      },
+      {
+        "left": "`withTimeoutOrNull`",
+        "right": "Gives `null` when time runs out"
+      }
+    ],
+    "right_distractors": [
+      "Restarts children that failed"
+    ]
+  },
+  {
+    "id": "ex-39vwh0bp",
+    "version": 1,
+    "section": "timeouts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`withTimeoutOrNull(500) { slowServer(200) }` returned the week. How many milliseconds did the block take, about?",
+    "hint": "The server's own delay.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-1pjqz7w5",
+    "version": 1,
+    "section": "failure",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When one child of a `coroutineScope` fails, its siblings are ___.",
+    "hint": "Their `finally` blocks ran.",
+    "blanks": [
+      {
+        "accept": [
+          "cancelled",
+          "canceled"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,515 @@
+[
+  {
+    "id": "ex-nak8ms0w",
+    "version": 1,
+    "section": "version-numbers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a write send back to the server, in optimistic concurrency?",
+    "choices": [
+      {
+        "text": "A lock it took on the row before editing",
+        "correct": false,
+        "why": "Nothing is locked; an offline phone would hold the lock for an hour."
+      },
+      {
+        "text": "The time on the device's clock when it was made",
+        "correct": false,
+        "why": "That is lesson 13's stamp, and it cannot say what the writer had seen."
+      },
+      {
+        "text": "The version number it read",
+        "correct": true,
+        "why": "Right. If the server's number has moved on, somebody wrote first."
+      },
+      {
+        "text": "A hash of the whole planner",
+        "correct": false,
+        "why": "One number per row is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-sz062wd6",
+    "version": 1,
+    "section": "version-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The phone sends s3 with version 1, and the server holds version 2. What does the lesson's server answer?",
+    "choices": [
+      {
+        "text": "409, with the current row in the body",
+        "correct": true,
+        "why": "Right. The phone learns version 2 exists and what it says."
+      },
+      {
+        "text": "404, because version 1 no longer exists",
+        "correct": false,
+        "why": "The session exists; 404 is for a session that does not."
+      },
+      {
+        "text": "412, because no If-Match header was sent",
+        "correct": false,
+        "why": "412 is the If-Match spelling; this server checks a field in the body."
+      },
+      {
+        "text": "200, and it saves the phone's copy as version 3",
+        "correct": false,
+        "why": "That would be last write wins again."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ntkvp1b",
+    "version": 1,
+    "section": "version-numbers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a 409, the phone sends its own copy again, now with version 2. What happens to the tablet's tick?",
+    "choices": [
+      {
+        "text": "It survives as version 2 in the server's history",
+        "correct": false,
+        "why": "The server keeps one row, not a history."
+      },
+      {
+        "text": "The server refuses again, because version 2 was not the phone's",
+        "correct": false,
+        "why": "The server checks only that the number matches, and it does."
+      },
+      {
+        "text": "It survives, because the server merges the two",
+        "correct": false,
+        "why": "The lesson's server merges nothing; the device has to."
+      },
+      {
+        "text": "It is lost, as under last write wins",
+        "correct": true,
+        "why": "Right. The version only made the loss take one more round trip."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrqvktk4",
+    "version": 1,
+    "section": "version-numbers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each HTTP piece to what it does in a version check.",
+    "pairs": [
+      {
+        "left": "ETag",
+        "right": "the version the server sends with a row"
+      },
+      {
+        "left": "If-Match",
+        "right": "the version the client says it read"
+      },
+      {
+        "left": "412 Precondition Failed",
+        "right": "the answer when If-Match does not match"
+      },
+      {
+        "left": "409 Conflict",
+        "right": "the lesson's answer to a stale version in the body"
+      }
+    ],
+    "right_distractors": [
+      "the answer when the row was deleted"
+    ]
+  },
+  {
+    "id": "ex-jv10tg21",
+    "version": 1,
+    "section": "vector-clocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a vector clock let two devices do that a version number does not?",
+    "choices": [
+      {
+        "text": "Resolve a conflict without asking anybody",
+        "correct": false,
+        "why": "It only detects one; the lesson says so in bold."
+      },
+      {
+        "text": "Detect a conflict with no single server counting",
+        "correct": true,
+        "why": "Right. Each device keeps its own counter, and the row carries them all."
+      },
+      {
+        "text": "Order writes by the real time they were made",
+        "correct": false,
+        "why": "It reads no time at all."
+      },
+      {
+        "text": "Store one integer per row",
+        "correct": false,
+        "why": "That is the version number; a vector clock carries one per device."
+      }
+    ]
+  },
+  {
+    "id": "ex-kj0vmgkc",
+    "version": 1,
+    "section": "vector-clocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compare {\"phone\":2,\"tablet\":1} with {\"phone\":1,\"tablet\":3}.",
+    "choices": [
+      {
+        "text": "before",
+        "correct": false,
+        "why": "The first is ahead on phone, so it is not before."
+      },
+      {
+        "text": "concurrent",
+        "correct": true,
+        "why": "Right. Each is ahead in one entry, so neither saw the other."
+      },
+      {
+        "text": "after",
+        "correct": false,
+        "why": "The second is ahead on tablet, so the first is not after."
+      },
+      {
+        "text": "equal",
+        "correct": false,
+        "why": "Equal clocks have the same value in every entry."
+      }
+    ]
+  },
+  {
+    "id": "ex-qf9sh80a",
+    "version": 1,
+    "section": "vector-clocks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When a device receives another device's row, it merges the clocks by taking the ___ value of every entry.",
+    "blanks": [
+      {
+        "accept": [
+          "larger",
+          "largest",
+          "maximum",
+          "max",
+          "higher",
+          "highest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-10pb5n49",
+    "version": 1,
+    "section": "vector-clocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson stay with version numbers for the planner?",
+    "choices": [
+      {
+        "text": "Vector clocks cannot tell an ordered write from a concurrent one",
+        "correct": false,
+        "why": "That is exactly what they do; the run printed both."
+      },
+      {
+        "text": "Vector clocks need every device's clock to be right",
+        "correct": false,
+        "why": "They read no wall clock; a skewed phone gets the same answer."
+      },
+      {
+        "text": "Node has no way to store a JSON object in SQLite",
+        "correct": false,
+        "why": "A clock fits in a text column as JSON."
+      },
+      {
+        "text": "It syncs through one server, so one integer per row is enough",
+        "correct": true,
+        "why": "Right. Vector clocks are for when no single place sees every write first."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvee66je",
+    "version": 1,
+    "section": "field-by-field",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the base in a three-way merge?",
+    "choices": [
+      {
+        "text": "The version both devices started from",
+        "correct": true,
+        "why": "Right. A field still at its base value was not touched by that side."
+      },
+      {
+        "text": "The copy with the most fields changed",
+        "correct": false,
+        "why": "The base is defined by history, not by a count."
+      },
+      {
+        "text": "The server's current row",
+        "correct": false,
+        "why": "That is theirs; the base is older."
+      },
+      {
+        "text": "The first row ever written for that session, at version 1 forever",
+        "correct": false,
+        "why": "The base moves: after a merge, the server's row becomes the new base."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjeyze9g",
+    "version": 1,
+    "section": "field-by-field",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Base minutes 20; the phone has 30; the server has 20. What does merge3 keep for minutes, and why?",
+    "choices": [
+      {
+        "text": "20, because the server's value wins a tie",
+        "correct": false,
+        "why": "There is no tie: the server never changed it."
+      },
+      {
+        "text": "A conflict, since the two copies differ",
+        "correct": false,
+        "why": "Two copies differing is not enough; both have to differ from the base."
+      },
+      {
+        "text": "30: only the phone moved it off the base",
+        "correct": true,
+        "why": "Right. The server's 20 is the base value, untouched."
+      },
+      {
+        "text": "25, the average",
+        "correct": false,
+        "why": "Nothing averages; the merge picks one side's value."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgxeymng",
+    "version": 1,
+    "section": "field-by-field",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's merge run, the second PUT was accepted. What version number did the server give the saved row?",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-c6cx4s6m",
+    "version": 1,
+    "section": "field-by-field",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A device keeps only its edited copy, not the row as the server last sent it. What can it no longer do on a 409?",
+    "choices": [
+      {
+        "text": "Tell which fields each side changed",
+        "correct": true,
+        "why": "Right. Without the base, 30 against 20 does not say who moved it."
+      },
+      {
+        "text": "Send anything with the server's version",
+        "correct": false,
+        "why": "It can send; it just cannot know what it should send."
+      },
+      {
+        "text": "Detect that a conflict happened at all",
+        "correct": false,
+        "why": "The 409 itself says that."
+      },
+      {
+        "text": "Read the server's current row from the reply",
+        "correct": false,
+        "why": "The reply still carries it; that part does not depend on the device."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0ggrnrh",
+    "version": 1,
+    "section": "asking-the-person",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which conflict does the lesson say to put in front of the person?",
+    "choices": [
+      {
+        "text": "Any concurrent edit of a session, so nothing is decided behind their back",
+        "correct": false,
+        "why": "Different fields merge silently, and asking for them teaches people to tap through."
+      },
+      {
+        "text": "A setting changed to two values",
+        "correct": false,
+        "why": "For a setting, lesson 13's rule is right and nobody is asked."
+      },
+      {
+        "text": "The same field of something they made, changed to two values",
+        "correct": true,
+        "why": "Right. Only that case has no answer in the data."
+      },
+      {
+        "text": "A field changed to the same value on both devices",
+        "correct": false,
+        "why": "Both agree, so the merge keeps it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ntt86af",
+    "version": 1,
+    "section": "asking-the-person",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should the planner's conflict screen show? Choose all that apply.",
+    "choices": [
+      {
+        "text": "each value with the device and time it was made",
+        "correct": true,
+        "why": "That is what lets the person recognise their own work."
+      },
+      {
+        "text": "a way to type a third value",
+        "correct": true,
+        "why": "Neither value may be the one they want."
+      },
+      {
+        "text": "what is in conflict, in the person's words",
+        "correct": true,
+        "why": "\"Guitar, Wednesday: how long?\" rather than a field name."
+      },
+      {
+        "text": "the two version numbers the server compared",
+        "why": "Those are for the program; the person needs the values."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1yq7q14",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "While one session waits for Ana to choose between 30 and 25 minutes, twenty other edits are in the outbox. What does the lesson say about them?",
+    "choices": [
+      {
+        "text": "They wait, so the planner does not sync around a dispute",
+        "correct": false,
+        "why": "One session in dispute is no reason for twenty to wait."
+      },
+      {
+        "text": "They sync; the conflict waits in its own table",
+        "correct": true,
+        "why": "Right. A conflict must never block the outbox."
+      },
+      {
+        "text": "They are merged into the disputed session",
+        "correct": false,
+        "why": "They are edits of other rows."
+      },
+      {
+        "text": "They are dropped until the conflict is resolved, then typed again",
+        "correct": false,
+        "why": "Nothing is dropped anywhere in this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp6hbvwc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the phone's sync of lesson 13's morning in order, as sync.ts runs it.",
+    "items": [
+      "sends its edit with version 1",
+      "receives 409 and the server's version 2",
+      "merges base, its copy and the server's row",
+      "sends the merge with version 2",
+      "receives 200 and version 3"
+    ]
+  },
+  {
+    "id": "ex-15ywy8xr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two servers in different regions each accept writes to the same rows and exchange them every minute. Which tool from this lesson finds the conflicts?",
+    "choices": [
+      {
+        "text": "A version number checked by either server",
+        "correct": false,
+        "why": "Each would count on its own, and two counters both reaching 2 say nothing."
+      },
+      {
+        "text": "The server's clock, since both are kept right",
+        "correct": false,
+        "why": "Right clocks still order by arrival; lesson 13 showed that loses an edit."
+      },
+      {
+        "text": "merge3 alone, run when the rows arrive",
+        "correct": false,
+        "why": "merge3 needs to know a conflict exists and what the base is; something else has to say so."
+      },
+      {
+        "text": "A vector clock with an entry per server",
+        "correct": true,
+        "why": "Right. No single place sees every write first, which is the case vector clocks are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-jh0emcsd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Base done false; the phone has done true; the tablet has done true. What does merge3 do?",
+    "choices": [
+      {
+        "text": "Reports a conflict, because both sides changed it",
+        "correct": false,
+        "why": "They changed it to the same value, so they agree."
+      },
+      {
+        "text": "Keeps false, because the changes cancel out",
+        "correct": false,
+        "why": "Two ticks do not cancel; both say done."
+      },
+      {
+        "text": "Keeps true, as both agree",
+        "correct": true,
+        "why": "Right. The first case of the rule: both agree, keep it."
+      },
+      {
+        "text": "Asks the person which tick to keep",
+        "correct": false,
+        "why": "There is nothing to choose between."
+      }
+    ]
+  }
+]

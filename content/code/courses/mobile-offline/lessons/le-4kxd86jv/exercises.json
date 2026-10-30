@@ -1,0 +1,504 @@
+[
+  {
+    "id": "ex-2sqtjvr9",
+    "version": 1,
+    "section": "files-not-blobs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the lesson keep a 5 MB PDF of course notes?",
+    "choices": [
+      {
+        "text": "In a blob column beside the sessions, so one backup and one transaction cover both",
+        "correct": false,
+        "why": "That is the tempting design the section takes apart: the database grew to 5136 KB."
+      },
+      {
+        "text": "In shared_prefs/, encoded as base64",
+        "correct": false,
+        "why": "Preferences are for small settings and are read whole."
+      },
+      {
+        "text": "On disk, with a row holding its path, size and hash",
+        "correct": true,
+        "why": "Right. The database stayed at 12 KB."
+      },
+      {
+        "text": "In the HTTP cache",
+        "correct": false,
+        "why": "The cache may vanish; lesson 17 keeps only copies there."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg44h8vc",
+    "version": 1,
+    "section": "files-not-blobs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which problems does the lesson give for large blobs inside SQLite? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a `select *` reads megabytes to show a title",
+        "correct": true,
+        "why": "Reading the row reads the chain of pages."
+      },
+      {
+        "text": "the file does not shrink until a VACUUM",
+        "correct": true,
+        "why": "Freed pages are reused, not returned."
+      },
+      {
+        "text": "a backup rule cannot exclude one row",
+        "correct": true,
+        "why": "Rules name files, not rows."
+      },
+      {
+        "text": "SQLite refuses values over 1 MB",
+        "why": "It stored 5 MB in the lesson's run."
+      }
+    ]
+  },
+  {
+    "id": "ex-78858ybw",
+    "version": 1,
+    "section": "files-not-blobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the attachment's file named after the SHA-256 of its contents?",
+    "choices": [
+      {
+        "text": "Equal contents share one file, checkable later",
+        "correct": true,
+        "why": "Right. Hashing it again tells whether the file still matches its row."
+      },
+      {
+        "text": "To hide what it is from other apps",
+        "correct": false,
+        "why": "Other apps cannot read the sandbox anyway."
+      },
+      {
+        "text": "Because file systems on phones refuse names with spaces in them",
+        "correct": false,
+        "why": "They accept spaces; that is not the reason."
+      },
+      {
+        "text": "So the backup skips it",
+        "correct": false,
+        "why": "A name decides nothing about backup; the folder does."
+      }
+    ]
+  },
+  {
+    "id": "ex-x1gt7njf",
+    "version": 1,
+    "section": "downloads-that-resume",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A server answers a `Range: bytes=1048576-` request with only that part. Which status does it send?",
+    "choices": [
+      {
+        "text": "200 OK, the whole file again",
+        "correct": false,
+        "why": "200 is the whole file, as on the first request."
+      },
+      {
+        "text": "304 Not Modified",
+        "correct": false,
+        "why": "304 has no body; it says the copy is current."
+      },
+      {
+        "text": "416 Range Not Satisfiable",
+        "correct": false,
+        "why": "That is for a range outside the file."
+      },
+      {
+        "text": "206 Partial Content",
+        "correct": true,
+        "why": "Right, with a Content-Range saying which part."
+      }
+    ]
+  },
+  {
+    "id": "ex-askxshgh",
+    "version": 1,
+    "section": "downloads-that-resume",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The notes are edited on the server between the two requests. Without `If-Range`, what does the resumed download produce?",
+    "choices": [
+      {
+        "text": "The new file whole, because a 206 always carries the latest version",
+        "correct": false,
+        "why": "A 206 carries the range asked for, of whatever the file is now."
+      },
+      {
+        "text": "A file made of two versions",
+        "correct": true,
+        "why": "Right. The old first megabyte meets the new rest, and no hash will match."
+      },
+      {
+        "text": "An error from the server refusing the range",
+        "correct": false,
+        "why": "Nothing tells the server to refuse; that is If-Range's job."
+      },
+      {
+        "text": "The old file whole, read from the part",
+        "correct": false,
+        "why": "Only a third of it was there."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d1x4ssg",
+    "version": 1,
+    "section": "downloads-that-resume",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's run, at which byte did the second request resume?",
+    "value": 1048576,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0s62dvh9",
+    "version": 1,
+    "section": "downloads-that-resume",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does download.ts give up after half a second of silence instead of waiting for the connection to close?",
+    "choices": [
+      {
+        "text": "Node closes every connection after 0.5 s",
+        "correct": false,
+        "why": "Node keeps a connection open; the timeout is the app's."
+      },
+      {
+        "text": "A dead connection on a phone goes quiet rather than closing",
+        "correct": true,
+        "why": "Right. Half a second suits a capture; a real app waits tens of seconds."
+      },
+      {
+        "text": "The server asks it to in a header",
+        "correct": false,
+        "why": "No header asks it."
+      },
+      {
+        "text": "To keep the file small",
+        "correct": false,
+        "why": "It wants the whole file; it just keeps what arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsredb47",
+    "version": 1,
+    "section": "disk-full",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put save.ts's steps in the order the lesson requires.",
+    "items": [
+      "ask statfs whether there is room",
+      "write the part file",
+      "fsync it",
+      "rename it to its real name",
+      "insert the row"
+    ]
+  },
+  {
+    "id": "ex-8hsehr3b",
+    "version": 1,
+    "section": "disk-full",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `/dev/full` stand in for in the lesson's run?",
+    "choices": [
+      {
+        "text": "A file the planner may delete when it is done",
+        "correct": false,
+        "why": "It is a device and not the planner's, which is why save.ts checks isFile."
+      },
+      {
+        "text": "The backup quota of Android",
+        "correct": false,
+        "why": "That was lesson 1's 25 MB, a different limit."
+      },
+      {
+        "text": "A slow network",
+        "correct": false,
+        "why": "It has nothing to do with the network."
+      },
+      {
+        "text": "A full disk",
+        "correct": true,
+        "why": "Right: a disk that runs out on the first write. Every write to it fails with ENOSPC."
+      }
+    ]
+  },
+  {
+    "id": "ex-yy5zvm0c",
+    "version": 1,
+    "section": "disk-full",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner inserts the row, then downloads the file, and the disk fills at 20 of 30 MB. What does the person meet on the plane?",
+    "choices": [
+      {
+        "text": "Notes the app says are there, which fail to open",
+        "correct": true,
+        "why": "Right. The row came before the whole file."
+      },
+      {
+        "text": "A message asking to free space, shown before the download",
+        "correct": false,
+        "why": "That is what asking statfs first would have given."
+      },
+      {
+        "text": "Nothing missing: the database rolls the row back when the write fails",
+        "correct": false,
+        "why": "The row was committed before the file was written; nothing ties them."
+      },
+      {
+        "text": "The full 30 MB, since the system makes room",
+        "correct": false,
+        "why": "Without allocateBytes, nothing was reserved."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xbb095v",
+    "version": 1,
+    "section": "disk-full",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The error a write returns on Linux and Android when the disk is full is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "ENOSPC"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mhfr3vv1",
+    "version": 1,
+    "section": "disk-full",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each platform to how it reports space the app may use.",
+    "pairs": [
+      {
+        "left": "Android",
+        "right": "StorageManager.getAllocatableBytes()"
+      },
+      {
+        "left": "iOS",
+        "right": "volumeAvailableCapacityForImportantUsageKey"
+      },
+      {
+        "left": "React Native",
+        "right": "FileSystem.getFreeDiskStorageAsync()"
+      }
+    ],
+    "right_distractors": [
+      "navigator.storage.persist()"
+    ]
+  },
+  {
+    "id": "ex-hwv8ds6c",
+    "version": 1,
+    "section": "orphans",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The sweep finds a file in attachments/ that no row names. What does it do?",
+    "choices": [
+      {
+        "text": "Uploads it to the server in case it matters",
+        "correct": false,
+        "why": "Nothing says what it is; the sweep does not guess."
+      },
+      {
+        "text": "Adds a row for it, guessing the name from the hash",
+        "correct": false,
+        "why": "A hash cannot give back the name or what it belonged to."
+      },
+      {
+        "text": "Deletes it",
+        "correct": true,
+        "why": "Right. Nothing can reach it, so it is only disk used."
+      },
+      {
+        "text": "Moves it to cache/",
+        "correct": false,
+        "why": "It would still be a file nothing reaches."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpe80kaz",
+    "version": 1,
+    "section": "orphans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does sweep.ts skip files ending in `.part`?",
+    "choices": [
+      {
+        "text": "They are downloads in progress, not orphans",
+        "correct": true,
+        "why": "Right. Deleting one throws away what the resume would use."
+      },
+      {
+        "text": "The system deletes them on its own at the next restart of the phone",
+        "correct": false,
+        "why": "attachments/ is not a folder the system clears."
+      },
+      {
+        "text": "They are too small to matter",
+        "correct": false,
+        "why": "A part can be most of a large file."
+      },
+      {
+        "text": "Their rows are kept in a different table",
+        "correct": false,
+        "why": "A part has no row at all, by design."
+      }
+    ]
+  },
+  {
+    "id": "ex-d704j2ks",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A photo the person attached to a session is missing from the disk. Should the sweep remove its row as it did for notes.pdf?",
+    "choices": [
+      {
+        "text": "Yes: a row with no file is an orphan",
+        "correct": false,
+        "why": "For a downloaded copy, yes; this one cannot be downloaded again."
+      },
+      {
+        "text": "Yes, and the server sends the photo back",
+        "correct": false,
+        "why": "Unless it was uploaded, the server never had it."
+      },
+      {
+        "text": "No: it is a loss to report, not a row to tidy",
+        "correct": true,
+        "why": "Right. Only a copy the server has can be fetched again on the next open."
+      },
+      {
+        "text": "No: rows are never removed",
+        "correct": false,
+        "why": "The sweep removed notes.pdf's row, on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7xrbw3a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is renaming the part file the moment a download counts as complete?",
+    "choices": [
+      {
+        "text": "Renaming copies the bytes, checking each one",
+        "correct": false,
+        "why": "A rename within a folder moves no bytes."
+      },
+      {
+        "text": "It is atomic: before it there is no notes.pdf, after it a whole one",
+        "correct": true,
+        "why": "Right. No reader can see a half file under the real name."
+      },
+      {
+        "text": "It frees the space the part took",
+        "correct": false,
+        "why": "The same blocks stay; only the name changes."
+      },
+      {
+        "text": "The server is told of it",
+        "correct": false,
+        "why": "The server knows nothing of the rename."
+      }
+    ]
+  },
+  {
+    "id": "ex-ky35m0d1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the lesson's run, which of these were true at the end? Choose all that apply.",
+    "choices": [
+      {
+        "text": "guitar-tabs.pdf had been deleted from the disk",
+        "correct": true,
+        "why": "It was an orphan file."
+      },
+      {
+        "text": "spanish-verbs.pdf still had its row and its file",
+        "correct": true,
+        "why": "The sweep left it alone."
+      },
+      {
+        "text": "notes.pdf had been downloaded again by the sweep",
+        "why": "The sweep removed the row; the next open downloads it."
+      },
+      {
+        "text": "the table held two rows",
+        "why": "It held one: sweep done, 1 attachments."
+      }
+    ]
+  },
+  {
+    "id": "ex-tszrd69w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "save.ts asks statfs for twice the file's size. What is the second half for?",
+    "choices": [
+      {
+        "text": "A second copy kept as a backup",
+        "correct": false,
+        "why": "No second copy is made."
+      },
+      {
+        "text": "The part and the final file, both kept",
+        "correct": false,
+        "why": "A rename leaves one file, not two."
+      },
+      {
+        "text": "The compressed copy",
+        "correct": false,
+        "why": "Nothing is compressed."
+      },
+      {
+        "text": "Room for the database's writes and the rest of the phone",
+        "correct": true,
+        "why": "Right. Filling the disk to the last byte breaks everything else."
+      }
+    ]
+  }
+]

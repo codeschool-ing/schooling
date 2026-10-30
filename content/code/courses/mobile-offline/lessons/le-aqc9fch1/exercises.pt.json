@@ -1,0 +1,323 @@
+{
+  "ex-vmntzdma": {
+    "prompt": "Qual status o servidor da aula respondeu a um cursor mais antigo que o histórico dele?",
+    "choices": [
+      {
+        "text": "404 Not Found",
+        "why": "404 diz que a coisa nunca existiu; 410 diz que existiu e se foi."
+      },
+      {
+        "text": "409 Conflict, porque o cursor discorda do cursor do próprio servidor",
+        "why": "Nada conflita; o histórico simplesmente se foi."
+      },
+      {
+        "text": "410 Gone",
+        "why": "Isso: existiu, e não vai existir de novo."
+      },
+      {
+        "text": "200 com as mudanças que ainda tinha",
+        "why": "Isso deixaria s3 no celular para sempre."
+      }
+    ]
+  },
+  "ex-xhbepq9h": {
+    "prompt": "Associe cada situação a como a aula diz que ela é detectada.",
+    "pairs": [
+      {
+        "left": "um cursor mais antigo que o histórico guardado",
+        "right": "o servidor responde 410"
+      },
+      {
+        "left": "um arquivo local danificado",
+        "right": "o PRAGMA integrity_check falha"
+      },
+      {
+        "left": "uma versão nova do app lendo o dado de outro jeito",
+        "right": "a versão de esquema guardada difere"
+      },
+      {
+        "left": "outra pessoa entra",
+        "right": "o id da conta muda"
+      }
+    ],
+    "right_distractors": [
+      "o relógio pula para a frente"
+    ]
+  },
+  "ex-r1t2c2q4": {
+    "prompt": "Por que responder 410 é melhor que responder com as mudanças que o servidor ainda tem?",
+    "choices": [
+      {
+        "text": "Esconderia deletes perdidos",
+        "why": "Isso: uma resposta parcial deixa deletes de que o celular não vai saber, sem sinal de que algo faltou. O 410 torna o limite visível."
+      },
+      {
+        "text": "Poupa o disco do servidor",
+        "why": "O disco foi poupado quando as lápides saíram."
+      },
+      {
+        "text": "É mais rápido de enviar",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Celulares não sabem ler respostas parciais",
+        "why": "Eles leem bem, e confiam nelas por engano."
+      }
+    ]
+  },
+  "ex-eqtgmnm7": {
+    "prompt": "Por que o `resync.ts` grava um segundo arquivo em vez de apagar e inserir linhas no banco em uso?",
+    "choices": [
+      {
+        "text": "Para guardar um backup do arquivo antigo",
+        "why": "O arquivo antigo é substituído, não guardado."
+      },
+      {
+        "text": "O SQLite não consegue apagar muitas linhas",
+        "why": "Consegue."
+      },
+      {
+        "text": "O snapshot está em outro formato",
+        "why": "É JSON, lido para as mesmas tabelas."
+      },
+      {
+        "text": "Uma queda no meio deixaria um planner com metade das sessões",
+        "why": "Isso, e uma transação segurada durante o download bloquearia toda outra escrita."
+      }
+    ]
+  },
+  "ex-dn84b7v3": {
+    "prompt": "O que torna a troca segura de observar pelas telas?",
+    "choices": [
+      {
+        "text": "Uma barra de progresso",
+        "why": "Uma barra mostra a espera; não torna nada seguro."
+      },
+      {
+        "text": "Um rename, que é atômico",
+        "why": "Isso: o arquivo antigo ou o novo, nunca uma mistura."
+      },
+      {
+        "text": "Uma trava no servidor",
+        "why": "A troca acontece no aparelho."
+      },
+      {
+        "text": "Copiar o arquivo byte a byte por cima do antigo",
+        "why": "Uma cópia pode ser vista pela metade."
+      }
+    ]
+  },
+  "ex-jmt458tv": {
+    "prompt": "Um app mantém o banco em modo WAL e renomeia só o `planner.db` numa ressincronização. Do que a aula avisa?",
+    "choices": [
+      {
+        "text": "Nada; o WAL deixa o rename mais rápido",
+        "why": "O WAL acrescenta um segundo arquivo, que é o perigo."
+      },
+      {
+        "text": "Escritas recentes deixadas no planner.db-wal, para trás ou aplicadas ao arquivo errado",
+        "why": "Isso. Faça o checkpoint e feche antes da troca."
+      },
+      {
+        "text": "O rename falha num celular",
+        "why": "Ele funciona; o que ele deixa para trás é o problema."
+      },
+      {
+        "text": "O cursor se perde",
+        "why": "O cursor está na tabela meta do arquivo novo."
+      }
+    ]
+  },
+  "ex-f3r2tr71": {
+    "prompt": "Ponha os passos do `resync.ts` em ordem.",
+    "items": [
+      "buscar o snapshot",
+      "gravá-lo no planner.db.next",
+      "copiar e aplicar a caixa de saída pendente",
+      "fechar os dois arquivos",
+      "renomear o arquivo novo por cima do antigo"
+    ]
+  },
+  "ex-026jjqrf": {
+    "prompt": "Depois da ressincronização com `s9` pendente, o que o `show` imprimiu ao lado de s9?",
+    "choices": [
+      {
+        "text": "Nada: ela tinha sumido",
+        "why": "Ela foi levada junto."
+      },
+      {
+        "text": "deleted",
+        "why": "Só s3 foi apagada."
+      },
+      {
+        "text": "saved, já que a ressincronização a enviou ao servidor",
+        "why": "Uma ressincronização baixa; a próxima drenagem envia."
+      },
+      {
+        "text": "waiting to send",
+        "why": "Isso. A linha dela na caixa de saída veio junto."
+      }
+    ]
+  },
+  "ex-dps93e7c": {
+    "prompt": "Por que as linhas da caixa de saída são copiadas com o `seq`?",
+    "choices": [
+      {
+        "text": "Para manter a ordem",
+        "why": "Isso. As regras da aula 8 dependem da ordem."
+      },
+      {
+        "text": "Para deixar o arquivo novo menor",
+        "why": "Tamanho não é isso."
+      },
+      {
+        "text": "O AUTOINCREMENT recusa outros valores",
+        "why": "Ele aceita valores explícitos."
+      },
+      {
+        "text": "O servidor lê o seq",
+        "why": "O seq nunca sai do aparelho."
+      }
+    ]
+  },
+  "ex-f48m6a9m": {
+    "prompt": "Enquanto estava fora, a pessoa alongou s5 e outro celular apagou s5. Depois da ressincronização, o snapshot não tem s5 e a caixa de saída tem um update dela. O que a aula diz que a ressincronização deve fazer?",
+    "choices": [
+      {
+        "text": "Descartar o update, já que o dado do servidor vence",
+        "why": "Isso joga fora a edição da pessoa em silêncio."
+      },
+      {
+        "text": "Mandar um delete ao servidor também",
+        "why": "Já foi apagada lá."
+      },
+      {
+        "text": "Manter a operação, e não esconder o conflito",
+        "why": "Isso. Resolvê-lo é das aulas 13 a 15."
+      },
+      {
+        "text": "Recusar terminar a ressincronização até a rede melhorar",
+        "why": "A rede não tem nada a ver com isso."
+      }
+    ]
+  },
+  "ex-s7p9njgy": {
+    "prompt": "Quais são verdade sobre a ressincronização na execução com pendência? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "o snapshot tinha cinco sessões",
+        "why": "s3 foi apagada no servidor."
+      },
+      {
+        "text": "uma operação pendente foi levada junto",
+        "why": "O create de s9."
+      },
+      {
+        "text": "s9 chegou ao servidor",
+        "why": "Nada foi enviado; ela continua esperando."
+      },
+      {
+        "text": "o cursor ficou em 6",
+        "why": "Ele foi para 7, o do snapshot."
+      }
+    ]
+  },
+  "ex-3y3shx7r": {
+    "prompt": "Quantos bytes tinha o snapshot de 2005 sessões na execução da aula?",
+    "unit": "bytes"
+  },
+  "ex-rsx5gjbe": {
+    "prompt": "Quando uma ressincronização é a opção mais barata, pela regra da aula?",
+    "choices": [
+      {
+        "text": "Quando as mudanças pesariam mais que o dado, ou são desconhecidas",
+        "why": "Isso. O 410 é o segundo caso."
+      },
+      {
+        "text": "Sempre que a rede for Wi-Fi",
+        "why": "O tipo de rede não muda a conta."
+      },
+      {
+        "text": "Uma vez por dia, à noite, com o celular carregando no Wi-Fi de casa",
+        "why": "Um horário não é o critério."
+      },
+      {
+        "text": "Quando a caixa de saída está comprida e a pessoa já esperou um tempo",
+        "why": "A caixa de saída é mantida de qualquer jeito."
+      }
+    ]
+  },
+  "ex-vmh46f6f": {
+    "prompt": "Uma equipe quer guardar lápides por 7 dias para poupar disco. O que a medição da aula diz que ela está trocando?",
+    "choices": [
+      {
+        "text": "Nada: celulares sempre sincronizam dentro de uma semana",
+        "why": "Um celular numa gaveta não."
+      },
+      {
+        "text": "Deltas mais lentos para todo celular",
+        "why": "Deltas continuam baratos como antes."
+      },
+      {
+        "text": "Algumas linhas por delete, contra um download completo para cada celular deixado de fora",
+        "why": "Isso. Cada um custa cerca de mil vezes um delta."
+      },
+      {
+        "text": "Mais conflitos",
+        "why": "Conflitos vêm de edições concorrentes, não da janela."
+      }
+    ]
+  },
+  "ex-xr8gbycq": {
+    "prompt": "Uma ressincronização é interrompida com o `planner.db.next` meio gravado e antes do rename. O app abre de novo. O que ele encontra?",
+    "choices": [
+      {
+        "text": "Metade do snapshot na tela",
+        "why": "As telas leem o planner.db, que nunca foi tocado."
+      },
+      {
+        "text": "A cópia anterior, intacta",
+        "why": "Isso, mais uma sobra que a próxima ressincronização remove. Nada leu o arquivo meio gravado."
+      },
+      {
+        "text": "Um planner vazio",
+        "why": "O arquivo antigo está intacto."
+      },
+      {
+        "text": "Um planner.db corrompido",
+        "why": "Só o arquivo .next estava sendo gravado."
+      }
+    ]
+  },
+  "ex-c46hzzde": {
+    "prompt": "Outra pessoa entra num tablet compartilhado. Qual passo desta aula se aplica, e por quê?",
+    "choices": [
+      {
+        "text": "Uma busca por delta, já que o servidor guarda um histórico só para as duas contas",
+        "why": "O cursor e as linhas são da outra pessoa."
+      },
+      {
+        "text": "Um 410 do servidor",
+        "why": "O aparelho detecta esse caso sozinho, pelo id da conta."
+      },
+      {
+        "text": "Nada: a conta só muda a tela",
+        "why": "Ela muda de quem é o dado no aparelho."
+      },
+      {
+        "text": "Uma ressincronização, sem levar a caixa de saída",
+        "why": "Isso. O trabalho pendente é de quem saiu, e não pode ser enviado como da nova pessoa."
+      }
+    ]
+  },
+  "ex-08he5nkd": {
+    "prompt": "Uma ressincronização baixa num segundo arquivo e o torna o banco com um ___ atômico.",
+    "blanks": [
+      {
+        "accept": [
+          "rename"
+        ]
+      }
+    ]
+  }
+}

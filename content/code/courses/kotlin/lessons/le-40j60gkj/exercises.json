@@ -1,0 +1,544 @@
+[
+  {
+    "id": "ex-90dvqafd",
+    "version": 1,
+    "section": "when-expression",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`when { m <= 0 -> \"nothing\"; m < 30 -> \"short\"; m < 90 -> \"normal\"; else -> \"long\" }` with `m = 20`. Which branch runs?",
+    "hint": "The first that matches wins.",
+    "choices": [
+      {
+        "text": "`normal`, since 20 is also below 90",
+        "correct": false,
+        "why": "Only the first match runs."
+      },
+      {
+        "text": "`short`",
+        "correct": true,
+        "why": "Right: tried in order."
+      },
+      {
+        "text": "Both `short` and `normal`",
+        "correct": false,
+        "why": "There is no fall-through."
+      },
+      {
+        "text": "`else`, because no branch is an exact value",
+        "correct": false,
+        "why": "Conditions match without exact values."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsctnrf5",
+    "version": 1,
+    "section": "when-expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `label(minutes: Int)` need an `else` branch?",
+    "hint": "Can the compiler see that four conditions cover every `Int`?",
+    "choices": [
+      {
+        "text": "Coverage of every `Int` is unproven",
+        "correct": true,
+        "why": "Right: only enums, sealed types and `Boolean` are known to be covered."
+      },
+      {
+        "text": "Every `when` needs an `else`",
+        "correct": false,
+        "why": "`next` over an enum had none."
+      },
+      {
+        "text": "Negative numbers are not covered",
+        "correct": false,
+        "why": "`m <= 0` covers them."
+      },
+      {
+        "text": "An `else` makes it faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2ek8bed",
+    "version": 1,
+    "section": "when-expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `is String -> \"${x.length}\"`, why does `x.length` compile when `x` is an `Any`?",
+    "hint": "Lesson 2's mechanism.",
+    "choices": [
+      {
+        "text": "`Any` has a `length` property",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The template converts `x` to text first",
+        "correct": false,
+        "why": "`.length` is called on `x` itself."
+      },
+      {
+        "text": "The branch smart casts `x` to `String`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`when` checks types only at run time",
+        "correct": false,
+        "why": "The compiler uses the `is` to type the branch."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bbe9x48",
+    "version": 1,
+    "section": "enums",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `PAUSED` status is added to an enum. What happens to a `when` over it with three branches and no `else`?",
+    "hint": "`EnumAdded.kt`.",
+    "choices": [
+      {
+        "text": "It compiles, and `PAUSED` takes the first branch",
+        "correct": false,
+        "why": "There is no default branch to take."
+      },
+      {
+        "text": "It compiles, and throws when `PAUSED` arrives",
+        "correct": false,
+        "why": "It never compiles."
+      },
+      {
+        "text": "The compiler adds an `else` that returns `null`",
+        "correct": false,
+        "why": "The compiler adds nothing."
+      },
+      {
+        "text": "It stops compiling, naming the `PAUSED` branch",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wycnj2v",
+    "version": 1,
+    "section": "enums",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should a saved file hold a status's `name` and not its `ordinal`?",
+    "hint": "Insert a value in the middle.",
+    "choices": [
+      {
+        "text": "The ordinal is slower to read",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "The ordinal moves when values are inserted",
+        "correct": true,
+        "why": "Right: a saved 2 would mean a different status."
+      },
+      {
+        "text": "`valueOf` does not accept numbers",
+        "correct": false,
+        "why": "True, but the reason is that the number is unstable."
+      },
+      {
+        "text": "Ordinals start at 1, which confuses readers",
+        "correct": false,
+        "why": "They start at 0, as `PLANNED` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4rh9gfh",
+    "version": 1,
+    "section": "enums",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can an enum not model a running session's start time?",
+    "hint": "How many `RUNNING` objects are there?",
+    "choices": [
+      {
+        "text": "Enums cannot have properties",
+        "correct": false,
+        "why": "`Status` had `mark`."
+      },
+      {
+        "text": "Enum constructors cannot take strings",
+        "correct": false,
+        "why": "`mark` was a `String`."
+      },
+      {
+        "text": "Each value is one shared object, so it cannot hold per-session data",
+        "correct": true,
+        "why": "Right: every running session would share one start time."
+      },
+      {
+        "text": "Times are not allowed in `when` branches",
+        "correct": false,
+        "why": "Nothing forbids that."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezsdvvpk",
+    "version": 1,
+    "section": "sealed-hierarchy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a class `sealed`?",
+    "hint": "Who can add a subclass?",
+    "choices": [
+      {
+        "text": "It cannot be instantiated or subclassed at all",
+        "correct": false,
+        "why": "It has subclasses; they are just all known."
+      },
+      {
+        "text": "Its subclasses are all known",
+        "correct": true,
+        "why": "Right, so the compiler sees every one."
+      },
+      {
+        "text": "Its properties are all `val`",
+        "correct": false,
+        "why": "That is not what `sealed` controls."
+      },
+      {
+        "text": "It is compiled to an enum",
+        "correct": false,
+        "why": "It stays a class hierarchy."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc91f5rw",
+    "version": 1,
+    "section": "sealed-hierarchy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `describe`, why is `s.startedAt` allowed only in the `Running` branch?",
+    "hint": "Which shapes have a start time?",
+    "choices": [
+      {
+        "text": "It is private to `Running`",
+        "correct": false,
+        "why": "It is a public property."
+      },
+      {
+        "text": "The other branches run before it is set",
+        "correct": false,
+        "why": "Order is not the reason."
+      },
+      {
+        "text": "`when` allows one property per branch",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "No other shape has a start time",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2caqmtqa",
+    "version": 1,
+    "section": "exhaustive",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `else -> \"$s is in progress\"`, a new `Skipped` session printed `… is in progress`. What went wrong?",
+    "hint": "What did the `else` mean when it was written?",
+    "choices": [
+      {
+        "text": "`Skipped` was declared in the wrong file",
+        "correct": false,
+        "why": "It compiled as part of the hierarchy."
+      },
+      {
+        "text": "The `else` caught a shape it was never written for",
+        "correct": true,
+        "why": "Right: the compiler could not ask, because the `else` answered."
+      },
+      {
+        "text": "`when` picked a random branch",
+        "correct": false,
+        "why": "It took the `else`, deterministically."
+      },
+      {
+        "text": "Data classes inside sealed classes lose their `toString`",
+        "correct": false,
+        "why": "`Skipped(course=Kotlin, reason=ill)` printed fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvaj9zj7",
+    "version": 1,
+    "section": "exhaustive",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The compiler said: `'when' expression must be ___. Add the 'is Skipped' branch or an 'else' branch.`",
+    "hint": "Covering every case.",
+    "blanks": [
+      {
+        "accept": [
+          "exhaustive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-awa7vwgv",
+    "version": 1,
+    "section": "exhaustive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `when` over a sealed type is used as a statement, its value ignored, and misses a subtype. What does Kotlin 2.4 do?",
+    "hint": "The rule changed in 1.7.",
+    "choices": [
+      {
+        "text": "Compiles it, since a statement needs no value",
+        "correct": false,
+        "why": "That was before 1.7."
+      },
+      {
+        "text": "Refuses it",
+        "correct": true,
+        "why": "Right: since 1.7, statements are checked too."
+      },
+      {
+        "text": "Warns once and compiles",
+        "correct": false,
+        "why": "It is an error, not a warning."
+      },
+      {
+        "text": "Adds an empty `else` silently",
+        "correct": false,
+        "why": "The compiler adds nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5r1rxvr5",
+    "version": 1,
+    "section": "sealed-interfaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can a `sealed interface` do that a `sealed class` cannot?",
+    "hint": "A type can extend one class.",
+    "choices": [
+      {
+        "text": "Hold properties with backing fields",
+        "correct": false,
+        "why": "That is a class's strength, not an interface's."
+      },
+      {
+        "text": "Let a type belong to several sealed hierarchies",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Skip exhaustiveness checks",
+        "correct": false,
+        "why": "Both are checked the same way."
+      },
+      {
+        "text": "Be subclassed from another module",
+        "correct": false,
+        "why": "Neither allows that."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cgdeg5a",
+    "version": 1,
+    "section": "sealed-interfaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`parse` returns `Parsed.Failed(ParseError.OutOfRange(900))` instead of throwing. What does that give its callers?",
+    "hint": "Which `when` stops compiling if a branch is missing?",
+    "choices": [
+      {
+        "text": "A stack trace pointing at `parse`",
+        "correct": false,
+        "why": "Nothing was thrown, so there is none."
+      },
+      {
+        "text": "Faster parsing",
+        "correct": false,
+        "why": "Not the point."
+      },
+      {
+        "text": "A failure the compiler will not let them ignore",
+        "correct": true,
+        "why": "Right: the `when` over `Parsed` needs a `Failed` branch."
+      },
+      {
+        "text": "Automatic retries with a valid number",
+        "correct": false,
+        "why": "Nothing retries."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwk7pvv5",
+    "version": 1,
+    "section": "modelling-state",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WeekScreen(loading: Boolean, sessions: List<Int>?, error: String?)`, counting each field as present or absent. How many combinations are there?",
+    "hint": "Two states for each of three fields.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-11q0qccg",
+    "version": 1,
+    "section": "modelling-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the sealed `WeekState`, how is a week with no sessions represented?",
+    "hint": "It is a real state the screen draws.",
+    "choices": [
+      {
+        "text": "`Loading`, until a session arrives",
+        "correct": false,
+        "why": "Loading means not yet known."
+      },
+      {
+        "text": "`Failed(\"empty\")`",
+        "correct": false,
+        "why": "An empty week is not an error."
+      },
+      {
+        "text": "`Loaded(emptyList())`",
+        "correct": true,
+        "why": "Right: loaded, with nothing in it."
+      },
+      {
+        "text": "`null`",
+        "correct": false,
+        "why": "There is no `null` in the sealed version."
+      }
+    ]
+  },
+  {
+    "id": "ex-akmatxf5",
+    "version": 1,
+    "section": "modelling-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `Loading` a `data object` and not a `data class`?",
+    "hint": "What data does loading carry?",
+    "choices": [
+      {
+        "text": "Objects load faster",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "It has no data, so one instance is enough",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A sealed interface cannot contain classes",
+        "correct": false,
+        "why": "`Loaded` and `Failed` are classes."
+      },
+      {
+        "text": "`when` cannot test a class with `is`",
+        "correct": false,
+        "why": "`is WeekState.Loaded` did."
+      }
+    ]
+  },
+  {
+    "id": "ex-3e41n0gk",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the tool from this lesson.",
+    "hint": "Values, types, or conditions.",
+    "pairs": [
+      {
+        "left": "A fixed set of statuses with a mark each",
+        "right": "`enum class`"
+      },
+      {
+        "left": "A fixed set of shapes, each with its own data",
+        "right": "`sealed interface`"
+      },
+      {
+        "left": "A chain of range checks on a number",
+        "right": "`when { … }` with conditions"
+      },
+      {
+        "left": "A state with no data and one instance",
+        "right": "`data object`"
+      }
+    ],
+    "right_distractors": [
+      "`lateinit var`"
+    ]
+  },
+  {
+    "id": "ex-86brw519",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`sealed interface S { data class A(val x: Int) : S; data class B(val y: String) : S }`. Which functions compile? Choose all that apply.",
+    "hint": "Every subtype once, or an `else`; and each property only where it exists.",
+    "choices": [
+      {
+        "text": "`fun f(s: S) = when (s) { is S.A -> s.x; is S.B -> s.y.length }`",
+        "correct": true,
+        "why": "Yes: exhaustive, and each branch smart casts."
+      },
+      {
+        "text": "`fun f(s: S) = when (s) { is S.A -> s.x }`",
+        "correct": false,
+        "why": "No: `B` is missing."
+      },
+      {
+        "text": "`fun f(s: S) = when (s) { is S.A -> s.y; is S.B -> 0 }`",
+        "correct": false,
+        "why": "No: `A` has no `y`."
+      },
+      {
+        "text": "`fun f(s: S) = when (s) { is S.B -> 1; else -> 0 }`",
+        "correct": true,
+        "why": "Yes, though the `else` hides future subtypes."
+      }
+    ]
+  }
+]

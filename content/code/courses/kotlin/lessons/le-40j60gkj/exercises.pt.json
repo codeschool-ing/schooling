@@ -1,0 +1,372 @@
+{
+  "ex-90dvqafd": {
+    "prompt": "`when { m <= 0 -> \"nothing\"; m < 30 -> \"short\"; m < 90 -> \"normal\"; else -> \"long\" }` com `m = 20`. Qual ramo roda?",
+    "hint": "O primeiro que bate vence.",
+    "choices": [
+      {
+        "text": "`normal`, já que 20 também é menor que 90",
+        "why": "Só o primeiro que bate roda."
+      },
+      {
+        "text": "`short`",
+        "why": "Isso: testados em ordem."
+      },
+      {
+        "text": "Tanto `short` quanto `normal`",
+        "why": "Não há fall-through."
+      },
+      {
+        "text": "`else`, porque nenhum ramo é um valor exato",
+        "why": "Condições batem sem valores exatos."
+      }
+    ]
+  },
+  "ex-dsctnrf5": {
+    "prompt": "Por que o `label(minutes: Int)` precisa de um ramo `else`?",
+    "hint": "O compilador consegue ver que quatro condições cobrem todo `Int`?",
+    "choices": [
+      {
+        "text": "A cobertura de todo `Int` não é provada",
+        "why": "Isso: só enums, tipos selados e `Boolean` se sabem cobertos."
+      },
+      {
+        "text": "Todo `when` precisa de `else`",
+        "why": "O `next` sobre um enum não tinha."
+      },
+      {
+        "text": "Números negativos não estão cobertos",
+        "why": "O `m <= 0` os cobre."
+      },
+      {
+        "text": "Um `else` o deixa mais rápido",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-z2ek8bed": {
+    "prompt": "Dentro de `is String -> \"${x.length}\"`, por que `x.length` compila se `x` é um `Any`?",
+    "hint": "O mecanismo da aula 2.",
+    "choices": [
+      {
+        "text": "O `Any` tem uma propriedade `length`",
+        "why": "Não tem."
+      },
+      {
+        "text": "O template converte `x` em texto antes",
+        "why": "O `.length` é chamado no próprio `x`."
+      },
+      {
+        "text": "O ramo faz smart cast de `x` para `String`",
+        "why": "Isso."
+      },
+      {
+        "text": "O `when` só verifica tipos em tempo de execução",
+        "why": "O compilador usa o `is` para tipar o ramo."
+      }
+    ]
+  },
+  "ex-3bbe9x48": {
+    "prompt": "Um status `PAUSED` é acrescentado a um enum. O que acontece com um `when` sobre ele com três ramos e sem `else`?",
+    "hint": "`EnumAdded.kt`.",
+    "choices": [
+      {
+        "text": "Compila, e o `PAUSED` pega o primeiro ramo",
+        "why": "Não há ramo padrão para pegar."
+      },
+      {
+        "text": "Compila, e lança exceção quando chega um `PAUSED`",
+        "why": "Nem compila."
+      },
+      {
+        "text": "O compilador acrescenta um `else` que devolve `null`",
+        "why": "O compilador não acrescenta nada."
+      },
+      {
+        "text": "Para de compilar, nomeando o ramo `PAUSED`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-4wycnj2v": {
+    "prompt": "Por que um arquivo salvo deve guardar o `name` de um status e não o `ordinal`?",
+    "hint": "Insira um valor no meio.",
+    "choices": [
+      {
+        "text": "O ordinal é mais lento de ler",
+        "why": "Velocidade não é o problema."
+      },
+      {
+        "text": "O ordinal muda quando valores são inseridos",
+        "why": "Isso: um 2 salvo passaria a significar outro status."
+      },
+      {
+        "text": "O `valueOf` não aceita números",
+        "why": "Verdade, mas o motivo é o número ser instável."
+      },
+      {
+        "text": "Ordinais começam em 1, o que confunde quem lê",
+        "why": "Começam em 0, como o `PLANNED` mostrou."
+      }
+    ]
+  },
+  "ex-b4rh9gfh": {
+    "prompt": "Por que um enum não consegue modelar a hora de início de uma sessão em andamento?",
+    "hint": "Quantos objetos `RUNNING` existem?",
+    "choices": [
+      {
+        "text": "Enums não têm propriedades",
+        "why": "O `Status` tinha `mark`."
+      },
+      {
+        "text": "Construtores de enum não recebem strings",
+        "why": "O `mark` era uma `String`."
+      },
+      {
+        "text": "Cada valor é um objeto compartilhado, então não guarda dados por sessão",
+        "why": "Isso: toda sessão em andamento dividiria uma hora de início."
+      },
+      {
+        "text": "Horas não são permitidas em ramos de `when`",
+        "why": "Nada proíbe isso."
+      }
+    ]
+  },
+  "ex-ezsdvvpk": {
+    "prompt": "O que torna uma classe `sealed`?",
+    "hint": "Quem pode acrescentar uma subclasse?",
+    "choices": [
+      {
+        "text": "Ela não pode ser instanciada nem herdada de jeito nenhum",
+        "why": "Ela tem subclasses; só que todas conhecidas."
+      },
+      {
+        "text": "Todas as subclasses são conhecidas",
+        "why": "Isso, então o compilador vê cada uma."
+      },
+      {
+        "text": "As propriedades dela são todas `val`",
+        "why": "Não é isso que o `sealed` controla."
+      },
+      {
+        "text": "Ela é compilada para um enum",
+        "why": "Ela continua uma hierarquia de classes."
+      }
+    ]
+  },
+  "ex-gc91f5rw": {
+    "prompt": "No `describe`, por que `s.startedAt` só é permitido no ramo `Running`?",
+    "hint": "Quais formas têm hora de início?",
+    "choices": [
+      {
+        "text": "É privado de `Running`",
+        "why": "É uma propriedade pública."
+      },
+      {
+        "text": "Os outros ramos rodam antes de ela ser definida",
+        "why": "A ordem não é o motivo."
+      },
+      {
+        "text": "O `when` permite uma propriedade por ramo",
+        "why": "Não existe essa regra."
+      },
+      {
+        "text": "Nenhuma outra forma tem hora de início",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2caqmtqa": {
+    "prompt": "Com `else -> \"$s is in progress\"`, uma nova sessão `Skipped` imprimiu `… is in progress`. O que deu errado?",
+    "hint": "O que o `else` significava quando foi escrito?",
+    "choices": [
+      {
+        "text": "`Skipped` foi declarado no arquivo errado",
+        "why": "Compilou como parte da hierarquia."
+      },
+      {
+        "text": "O `else` pegou uma forma para a qual nunca foi escrito",
+        "why": "Isso: o compilador não pôde perguntar, porque o `else` respondeu."
+      },
+      {
+        "text": "O `when` escolheu um ramo aleatório",
+        "why": "Ele pegou o `else`, de forma determinística."
+      },
+      {
+        "text": "Data classes dentro de sealed classes perdem o `toString`",
+        "why": "`Skipped(course=Kotlin, reason=ill)` imprimiu bem."
+      }
+    ]
+  },
+  "ex-tvaj9zj7": {
+    "prompt": "O compilador disse: `'when' expression must be ___. Add the 'is Skipped' branch or an 'else' branch.`",
+    "hint": "Cobrir todo caso.",
+    "blanks": [
+      {
+        "accept": [
+          "exhaustive"
+        ]
+      }
+    ]
+  },
+  "ex-awa7vwgv": {
+    "prompt": "Um `when` sobre um tipo selado é usado como instrução, com o valor ignorado, e esquece um subtipo. O que o Kotlin 2.4 faz?",
+    "hint": "A regra mudou na 1.7.",
+    "choices": [
+      {
+        "text": "Compila, já que uma instrução não precisa de valor",
+        "why": "Isso era antes da 1.7."
+      },
+      {
+        "text": "Recusa",
+        "why": "Isso: desde a 1.7, instruções também são verificadas."
+      },
+      {
+        "text": "Avisa uma vez e compila",
+        "why": "É um erro, não um aviso."
+      },
+      {
+        "text": "Acrescenta um `else` vazio em silêncio",
+        "why": "O compilador não acrescenta nada."
+      }
+    ]
+  },
+  "ex-5r1rxvr5": {
+    "prompt": "O que uma `sealed interface` faz que uma `sealed class` não faz?",
+    "hint": "Um tipo só estende uma classe.",
+    "choices": [
+      {
+        "text": "Guardar propriedades com campo de apoio",
+        "why": "Isso é força de uma classe, não de uma interface."
+      },
+      {
+        "text": "Deixar um tipo pertencer a várias hierarquias seladas",
+        "why": "Isso."
+      },
+      {
+        "text": "Pular a verificação de exaustividade",
+        "why": "As duas são verificadas do mesmo jeito."
+      },
+      {
+        "text": "Ser implementada a partir de outro módulo",
+        "why": "Nenhuma das duas permite isso."
+      }
+    ]
+  },
+  "ex-3cgdeg5a": {
+    "prompt": "O `parse` devolve `Parsed.Failed(ParseError.OutOfRange(900))` em vez de lançar exceção. O que isso dá a quem chama?",
+    "hint": "Qual `when` para de compilar se faltar um ramo?",
+    "choices": [
+      {
+        "text": "Um stack trace apontando para o `parse`",
+        "why": "Nada foi lançado, então não há."
+      },
+      {
+        "text": "Uma leitura mais rápida",
+        "why": "Não é o ponto."
+      },
+      {
+        "text": "Uma falha que o compilador não deixa ignorar",
+        "why": "Isso: o `when` sobre `Parsed` precisa de um ramo `Failed`."
+      },
+      {
+        "text": "Novas tentativas automáticas com um número válido",
+        "why": "Nada tenta de novo."
+      }
+    ]
+  },
+  "ex-nwk7pvv5": {
+    "prompt": "`WeekScreen(loading: Boolean, sessions: List<Int>?, error: String?)`, contando cada campo como presente ou ausente. Quantas combinações existem?",
+    "hint": "Dois estados para cada um de três campos."
+  },
+  "ex-11q0qccg": {
+    "prompt": "No `WeekState` selado, como é representada uma semana sem sessões?",
+    "hint": "É um estado real que a tela desenha.",
+    "choices": [
+      {
+        "text": "`Loading`, até chegar uma sessão",
+        "why": "Carregando quer dizer ainda não sabido."
+      },
+      {
+        "text": "`Failed(\"empty\")`",
+        "why": "Uma semana vazia não é erro."
+      },
+      {
+        "text": "`Loaded(emptyList())`",
+        "why": "Isso: carregado, sem nada dentro."
+      },
+      {
+        "text": "`null`",
+        "why": "Não há `null` na versão selada."
+      }
+    ]
+  },
+  "ex-akmatxf5": {
+    "prompt": "Por que `Loading` é um `data object` e não uma `data class`?",
+    "hint": "Que dados o carregamento carrega?",
+    "choices": [
+      {
+        "text": "Objetos carregam mais rápido",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Não tem dados, então uma instância basta",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma sealed interface não contém classes",
+        "why": "`Loaded` e `Failed` são classes."
+      },
+      {
+        "text": "O `when` não testa uma classe com `is`",
+        "why": "O `is WeekState.Loaded` testou."
+      }
+    ]
+  },
+  "ex-3e41n0gk": {
+    "prompt": "Ligue cada necessidade à ferramenta desta aula.",
+    "hint": "Valores, tipos ou condições.",
+    "pairs": [
+      {
+        "left": "Um conjunto fixo de status, cada um com uma marca",
+        "right": "`enum class`"
+      },
+      {
+        "left": "Um conjunto fixo de formas, cada uma com dados próprios",
+        "right": "`sealed interface`"
+      },
+      {
+        "left": "Uma corrente de testes de faixa num número",
+        "right": "`when { … }` com condições"
+      },
+      {
+        "left": "Um estado sem dados e uma instância",
+        "right": "`data object`"
+      }
+    ],
+    "right_distractors": [
+      "`lateinit var`"
+    ]
+  },
+  "ex-86brw519": {
+    "prompt": "`sealed interface S { data class A(val x: Int) : S; data class B(val y: String) : S }`. Quais funções compilam? Escolha todas as que se aplicam.",
+    "hint": "Cada subtipo uma vez, ou um `else`; e cada propriedade só onde existe.",
+    "choices": [
+      {
+        "text": "`fun f(s: S) = when (s) { is S.A -> s.x; is S.B -> s.y.length }`",
+        "why": "Sim: exaustivo, e cada ramo faz smart cast."
+      },
+      {
+        "text": "`fun f(s: S) = when (s) { is S.A -> s.x }`",
+        "why": "Não: falta o `B`."
+      },
+      {
+        "text": "`fun f(s: S) = when (s) { is S.A -> s.y; is S.B -> 0 }`",
+        "why": "Não: `A` não tem `y`."
+      },
+      {
+        "text": "`fun f(s: S) = when (s) { is S.B -> 1; else -> 0 }`",
+        "why": "Sim, embora o `else` esconda subtipos futuros."
+      }
+    ]
+  }
+}

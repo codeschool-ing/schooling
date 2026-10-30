@@ -1,0 +1,502 @@
+[
+  {
+    "id": "ex-w6yawxrb",
+    "version": 1,
+    "section": "two-architectures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In an offline-first planner, where does the week's screen get its rows from?",
+    "choices": [
+      {
+        "text": "Whichever answers first, the server or the database",
+        "correct": false,
+        "why": "Two sources racing would show different screens on different days."
+      },
+      {
+        "text": "The server, with the device as a fallback when the request fails",
+        "correct": false,
+        "why": "That is online-first with a cache in front of it, which the lesson says is not the same design."
+      },
+      {
+        "text": "The database on the device",
+        "correct": true,
+        "why": "Right. The server is reached by a separate step, later."
+      },
+      {
+        "text": "A copy kept in memory since the app opened",
+        "correct": false,
+        "why": "Memory is lost when the app closes; the database is what survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrs36x4m",
+    "version": 1,
+    "section": "two-architectures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call offline support a decision rather than a feature?",
+    "choices": [
+      {
+        "text": "It moves where the truth lives, and so the path of every write",
+        "correct": true,
+        "why": "Right. A cache in front of requests changes none of that."
+      },
+      {
+        "text": "Because it is switched on in the app's settings",
+        "correct": false,
+        "why": "There is no switch; that is the picture the lesson replaces."
+      },
+      {
+        "text": "Because the stores ask for it in the listing",
+        "correct": false,
+        "why": "The stores ask nothing about it."
+      },
+      {
+        "text": "Because it is cheap to add later, once the online version works",
+        "correct": false,
+        "why": "It is the opposite: it changes every write path, which is why it is decided early."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz00zbd9",
+    "version": 1,
+    "section": "two-architectures",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which screens suit offline-first? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the planner's list of study sessions",
+        "correct": true,
+        "why": "The session is the person's, and nothing the server knows makes it more true."
+      },
+      {
+        "text": "a notes screen where the person writes",
+        "correct": true,
+        "why": "Same shape: what they type is theirs."
+      },
+      {
+        "text": "the price of a course on sale",
+        "why": "A price is the server's to say."
+      },
+      {
+        "text": "a bank account's balance",
+        "why": "Showing an unconfirmed balance would be a lie."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t6v16cg",
+    "version": 1,
+    "section": "the-local-write",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `store.ts`, what is a new session's `sync` value when `addSession` writes it?",
+    "choices": [
+      {
+        "text": "synced",
+        "correct": false,
+        "why": "Nothing has been sent yet."
+      },
+      {
+        "text": "null, until the first sync runs and fills it in",
+        "correct": false,
+        "why": "The column is not null and has a default."
+      },
+      {
+        "text": "failed",
+        "correct": false,
+        "why": "Failed needs an answer from a server."
+      },
+      {
+        "text": "pending",
+        "correct": true,
+        "why": "Right. It is the column's default."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxkrwac2",
+    "version": 1,
+    "section": "the-local-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A developer adds a 'courses on offer' list that fetches straight from the server inside the week's screen. What does the lesson's rule predict?",
+    "choices": [
+      {
+        "text": "Nothing, as long as the fetch has a timeout",
+        "correct": false,
+        "why": "A timeout only decides how long the screen waits before it breaks."
+      },
+      {
+        "text": "That screen is the one that breaks in a tunnel",
+        "correct": true,
+        "why": "Right. The rule holds per screen, and this screen left it."
+      },
+      {
+        "text": "The whole app stops working offline",
+        "correct": false,
+        "why": "The other screens still read the database; one screen breaks."
+      },
+      {
+        "text": "The server is called twice for each session",
+        "correct": false,
+        "why": "Nothing about the sessions changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecdx7cp9",
+    "version": 1,
+    "section": "the-local-write",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each platform to how a screen observes the database, as the lesson quotes it.",
+    "pairs": [
+      {
+        "left": "Room",
+        "right": "a DAO method returning Flow<List<…>>"
+      },
+      {
+        "left": "SwiftData",
+        "right": "a @Query property in the view"
+      },
+      {
+        "left": "expo-sqlite with Drizzle",
+        "right": "the useLiveQuery hook"
+      }
+    ],
+    "right_distractors": [
+      "a timer that re-reads every second"
+    ]
+  },
+  {
+    "id": "ex-sdyfzte2",
+    "version": 1,
+    "section": "the-local-write",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the capture, `week` printed s7 as `waiting to send` immediately after `add`. What does that show about the design?",
+    "choices": [
+      {
+        "text": "The add command waited for the server and then wrote the row",
+        "correct": false,
+        "why": "add never calls a server; that is the point of the capture."
+      },
+      {
+        "text": "The screen drew the database, and the write had put the row there",
+        "correct": true,
+        "why": "Right. No step between them involved a network."
+      },
+      {
+        "text": "The row was copied to memory by add and read back by week",
+        "correct": false,
+        "why": "They are two separate processes; only the database joins them."
+      },
+      {
+        "text": "The session had been sent and the reply was still on its way",
+        "correct": false,
+        "why": "Nothing was sent; pending says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hkyk8qg",
+    "version": 1,
+    "section": "sync-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a single `dirty` boolean not enough for the planner's rows?",
+    "choices": [
+      {
+        "text": "Booleans are slower to query in SQLite",
+        "correct": false,
+        "why": "Speed is not the problem."
+      },
+      {
+        "text": "It takes more space than a text column",
+        "correct": false,
+        "why": "It takes less; space is not the problem."
+      },
+      {
+        "text": "The server cannot read a boolean",
+        "correct": false,
+        "why": "The column never reaches the server."
+      },
+      {
+        "text": "It cannot tell a refused row from one not sent yet",
+        "correct": true,
+        "why": "Right. A refusal is an answer and has to be kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0t731t0",
+    "version": 1,
+    "section": "sync-state",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order the states s8 passed through in the lesson's run.",
+    "items": [
+      "written by add, pending",
+      "still pending after sync offline",
+      "refused by the server during sync online",
+      "shown on the week as not saved, with the reason"
+    ]
+  },
+  {
+    "id": "ex-94fj3t7q",
+    "version": 1,
+    "section": "sync-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A later change stores `'synched'` in `sync` by mistake. What stops it, and what would happen without that?",
+    "choices": [
+      {
+        "text": "The check constraint; without it the row would be sent by no sync and counted by no screen",
+        "correct": true,
+        "why": "Right. It would match neither 'pending' nor 'synced'."
+      },
+      {
+        "text": "TypeScript's type; without it Node would refuse to run",
+        "correct": false,
+        "why": "Node strips types and checks none of them."
+      },
+      {
+        "text": "Nothing; SQLite accepts any text and the row is fine",
+        "correct": false,
+        "why": "The table has a check constraint, and the row would not be fine."
+      },
+      {
+        "text": "The server, which rejects the misspelt state when it receives the row and answers with a validation error",
+        "correct": false,
+        "why": "The state never leaves the device."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tgztkch",
+    "version": 1,
+    "section": "sync-state",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A row the server has accepted is marked ___ in the planner's `sync` column.",
+    "blanks": [
+      {
+        "accept": [
+          "synced"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kqq5p8km",
+    "version": 1,
+    "section": "what-the-user-is-told",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson call showing a change as done before the server has agreed?",
+    "choices": [
+      {
+        "text": "A pessimistic lock",
+        "correct": false,
+        "why": "That is a database technique, and the opposite idea."
+      },
+      {
+        "text": "A dirty read of the table",
+        "correct": false,
+        "why": "A dirty read is about transactions, not about screens."
+      },
+      {
+        "text": "An optimistic update",
+        "correct": true,
+        "why": "Right. The app acts as if the server will agree."
+      },
+      {
+        "text": "Eventual consistency, as the server's documentation defines it",
+        "correct": false,
+        "why": "Related, but it is not the name of the screen pattern."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hwaqrzd",
+    "version": 1,
+    "section": "what-the-user-is-told",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The server refuses a session an hour after it was typed. Which message follows the lesson?",
+    "choices": [
+      {
+        "text": "\"Statistics, 24 October: a session is at most 240 minutes. Shorten it or delete it.\"",
+        "correct": true,
+        "why": "Right: which item, why, and what to do."
+      },
+      {
+        "text": "None: the session is removed so the list stays clean and the person is not bothered",
+        "correct": false,
+        "why": "Deleting it throws away what the person typed."
+      },
+      {
+        "text": "\"Sync error 422: the request could not be processed\" in a banner at the top of the screen",
+        "correct": false,
+        "why": "It names neither the item nor what to do."
+      },
+      {
+        "text": "\"s8 failed\"",
+        "correct": false,
+        "why": "An id means nothing to the person."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxft4bwk",
+    "version": 1,
+    "section": "what-the-user-is-told",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with a spinner beside every pending row?",
+    "choices": [
+      {
+        "text": "Spinners use too much battery",
+        "correct": false,
+        "why": "The lesson's objection is about attention, not power."
+      },
+      {
+        "text": "It hides which rows are pending",
+        "correct": false,
+        "why": "It shows them; it shows them too loudly."
+      },
+      {
+        "text": "It alarms about the normal case, so the one that matters is ignored",
+        "correct": true,
+        "why": "Right. That is the second mistake, shouting."
+      },
+      {
+        "text": "It makes the session wait for the server before the row is written to the database",
+        "correct": false,
+        "why": "The row is already written; the spinner only decorates it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bqmwqfv",
+    "version": 1,
+    "section": "what-the-user-is-told",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Buying a course from inside the planner: what does the lesson say the screen should do?",
+    "choices": [
+      {
+        "text": "Show it as bought at once, and correct it if the card is declined",
+        "correct": false,
+        "why": "A refusal is common there, and showing bought first is a lie that costs money."
+      },
+      {
+        "text": "Wait for the server, and say that it is waiting",
+        "correct": true,
+        "why": "Right. Here the spinner tells the truth."
+      },
+      {
+        "text": "Queue it as pending and send it with the sessions",
+        "correct": false,
+        "why": "That makes the purchase optimistic too, which is the mistake."
+      },
+      {
+        "text": "Refuse to buy unless the phone is on Wi-Fi",
+        "correct": false,
+        "why": "The network type is not the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm9yf6g8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner keeps one boolean per row and deletes rows the server refuses. A student adds a 300-minute session on a plane. What do they see after landing and syncing?",
+    "choices": [
+      {
+        "text": "The session marked as not saved, with the reason",
+        "correct": false,
+        "why": "That needs a failed state and an error column; this planner has neither."
+      },
+      {
+        "text": "The session, saved, because the server accepts it on the second try",
+        "correct": false,
+        "why": "The server refuses the same row every time."
+      },
+      {
+        "text": "A crash, since SQLite refuses the 300-minute value",
+        "correct": false,
+        "why": "The local database accepts it; the server's rule refuses it."
+      },
+      {
+        "text": "It is gone, and nothing says why",
+        "correct": true,
+        "why": "Right. Both shortcuts in the lesson, together."
+      }
+    ]
+  },
+  {
+    "id": "ex-96qvve2y",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does `sync online` change for s7 in the lesson's run? Choose all that apply.",
+    "choices": [
+      {
+        "text": "its sync column",
+        "correct": true,
+        "why": "pending became synced."
+      },
+      {
+        "text": "what the week's screen says beside it",
+        "correct": true,
+        "why": "waiting to send became saved."
+      },
+      {
+        "text": "its minutes",
+        "why": "Its data did not change; only the fact about the server."
+      },
+      {
+        "text": "its date",
+        "why": "Same: the data stayed as typed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gvdqfaz",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the lesson's whole run, how many minutes does the week of 2026-10-19 hold in rows marked synced?",
+    "value": 150,
+    "tolerance": 0
+  }
+]

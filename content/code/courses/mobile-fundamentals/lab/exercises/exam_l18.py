@@ -1,0 +1,60 @@
+"""Exam questions for lesson 18 (le-gq5mpmdf). Ids are assigned by the coordinator."""
+import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from exgen import Q, C
+
+H = ("Lesson 18.", "Aula 18.")
+
+QS = [
+Q(None, None, "quiz", "easy",
+  ("Following Apple's Human Interface Guidelines, where does an iPhone app put the action people use most on its main screen?",
+   "Seguindo as Human Interface Guidelines da Apple, onde um app de iPhone põe a ação mais usada da tela principal?"),
+  hint=H, choices=[
+   C(False, "In a round button floating over the content, bottom right", "Num botão redondo flutuando sobre o conteúdo, embaixo à direita",
+     "That is Material's floating action button; the HIG has none.", "Esse é o botão de ação flutuante do Material; as HIG não têm um."),
+   C(True, "In the toolbar at the top, at the trailing end", "Na toolbar do alto, na ponta final",
+     "Right: a button beside the title.", "Isso: um botão ao lado do título."),
+   C(False, "As one of the tabs in the tab bar", "Como uma das abas da tab bar",
+     "Tabs move between sections; they are not actions.", "Abas levam de uma seção a outra; não são ações."),
+   C(False, "In a menu reached by swiping from the left edge", "Num menu aberto deslizando da borda esquerda",
+     "That describes a drawer, and the edge swipe is how Android goes back.", "Isso descreve uma gaveta, e o deslizar da borda é como o Android volta."),
+  ]),
+Q(None, None, "numeric", "medium",
+  ("At the default text size on iPhone, how many points is the `.body` text style, according to the HIG?",
+   "No tamanho de texto padrão do iPhone, quantos pontos tem o estilo de texto `.body`, segundo as HIG?"),
+  hint=H, value=17, tolerance=0),
+Q(None, None, "matching", "medium",
+  ("Match each Material 3 component to the HIG component that does the same job on an iPhone.",
+   "Associe cada componente do Material 3 ao componente das HIG que faz o mesmo trabalho num iPhone."),
+  hint=H,
+  pairs=[(("navigation bar", "barra de navegação"), ("tab bar", "tab bar")),
+         (("top app bar", "top app bar"), ("large title", "título grande")),
+         (("floating action button", "botão de ação flutuante"), ("toolbar button", "botão na toolbar")),
+         (("bottom sheet", "bottom sheet"), ("sheet", "sheet"))],
+  distractors=[("navigation drawer", "gaveta de navegação")]),
+Q(None, None, "quiz", "medium",
+  ("A planner app ships on Android and iOS. Which of these should be identical on both?",
+   "Um app de planejamento sai para Android e iOS. Qual destas coisas deveria ser idêntica nos dois?"),
+  hint=H, choices=[
+   C(False, "The corner where the add button sits", "O canto onde fica o botão de adicionar",
+     "Each guide has its own place for the main action.", "Cada guia tem o próprio lugar para a ação principal."),
+   C(False, "The font used for body text", "A fonte usada no texto do corpo",
+     "iOS asks for the system font through text styles; Material defaults to Roboto.", "O iOS pede a fonte do sistema por estilos de texto; o Material usa Roboto por padrão."),
+   C(True, "The accent colour", "A cor de destaque",
+     "Right: the brand's colours travel; the conventions do not.", "Isso: as cores da marca viajam; as convenções não."),
+   C(False, "The name and shape of the bar of sections", "O nome e a forma da barra de seções",
+     "Navigation bar on one, tab bar on the other.", "Barra de navegação numa, tab bar na outra."),
+  ]),
+Q(None, None, "quiz", "hard",
+  ("An Android app wants its brand's own green on every phone, including on Android 12 and later. What does it do about dynamic colour?",
+   "Um app Android quer o verde da própria marca em todo celular, inclusive do Android 12 em diante. O que ele faz com a cor dinâmica?"),
+  hint=H, choices=[
+   C(True, "Keeps its scheme and never opts in", "Mantém o esquema e nunca opta por ela",
+     "Right: dynamic colour is offered to an app that asks, never imposed.", "Isso: a cor dinâmica é oferecida a quem pede, nunca imposta."),
+   C(False, "Nothing it can do: Android 12 replaces every app's colours with the wallpaper's", "Não há o que fazer: o Android 12 troca as cores de todo app pelas do papel de parede",
+     "The system offers a scheme; the app decides whether to use it.", "O sistema oferece um esquema; o app decide se usa."),
+   C(False, "Sets its minimum version below Android 12", "Põe a versão mínima abaixo do Android 12",
+     "The minimum version does not turn dynamic colour on or off on newer phones.", "A versão mínima não liga nem desliga a cor dinâmica em celulares mais novos."),
+   C(False, "Uses a wallpaper that is the brand's green", "Usa um papel de parede no verde da marca",
+     "The wallpaper is the user's, not the app's.", "O papel de parede é do usuário, não do app."),
+  ]),
+]

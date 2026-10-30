@@ -1,0 +1,509 @@
+[
+  {
+    "id": "ex-pjgd5n14",
+    "version": 1,
+    "section": "the-payment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's run without a key, why was the card charged twice?",
+    "choices": [
+      {
+        "text": "The person tapped Buy twice",
+        "correct": false,
+        "why": "buy.ts was run once."
+      },
+      {
+        "text": "The server charges every purchase twice by design, once to check the card and once to take the money",
+        "correct": false,
+        "why": "It appends one purchase per request."
+      },
+      {
+        "text": "The answer was lost and the retry charged again",
+        "correct": true,
+        "why": "Right. The server had no way to know it was a retry."
+      },
+      {
+        "text": "The timeout was too short for a payment to finish",
+        "correct": false,
+        "why": "The answer was not slow; it was destroyed."
+      }
+    ]
+  },
+  {
+    "id": "ex-g325y0te",
+    "version": 1,
+    "section": "the-payment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line describes an idempotent operation?",
+    "choices": [
+      {
+        "text": "Doing it twice has the effect of doing it once",
+        "correct": true,
+        "why": "Right. The key makes a POST behave that way."
+      },
+      {
+        "text": "One the server answers in less than a second",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "One sent with POST",
+        "correct": false,
+        "why": "POST is the method that is not idempotent by definition."
+      },
+      {
+        "text": "One that does not fail",
+        "correct": false,
+        "why": "Failing has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4097k8m7",
+    "version": 1,
+    "section": "the-payment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the course describe *The Idempotency-Key HTTP Header Field*?",
+    "choices": [
+      {
+        "text": "A browser feature",
+        "correct": false,
+        "why": "It is a contract between client and server, not a browser behaviour."
+      },
+      {
+        "text": "Part of HTTP since 1999",
+        "correct": false,
+        "why": "It is recent and still a draft."
+      },
+      {
+        "text": "A header private to Stripe's API",
+        "correct": false,
+        "why": "Stripe uses it, many APIs copied it, and the IETF drafted it."
+      },
+      {
+        "text": "An IETF draft, not yet an RFC",
+        "correct": true,
+        "why": "Right, and it is cited as one."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpv9t8tb",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does `buy.ts` call `randomUUID()`, and why there?",
+    "choices": [
+      {
+        "text": "Inside the loop, so each try is fresh",
+        "correct": false,
+        "why": "A fresh key per try makes the server see a new purchase."
+      },
+      {
+        "text": "Before the loop, once",
+        "correct": true,
+        "why": "Right, so every retry carries it. The key names the operation, not the request."
+      },
+      {
+        "text": "On the server, when the purchase is charged",
+        "correct": false,
+        "why": "Only the device knows a retry is a retry."
+      },
+      {
+        "text": "It hashes the body instead, so equal purchases share a key",
+        "correct": false,
+        "why": "Two equal purchases may both be wanted."
+      }
+    ]
+  },
+  {
+    "id": "ex-snnyk26f",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A create was sent once and its answer lost. Compaction then folds an update into it and the drain resends under the same key. What happens on the lesson's server?",
+    "choices": [
+      {
+        "text": "The server applies the update",
+        "correct": false,
+        "why": "The body differs from the one saved under that key."
+      },
+      {
+        "text": "It is refused with 422, since the key was used with another body",
+        "correct": true,
+        "why": "Right, which is why a tried operation is never folded into."
+      },
+      {
+        "text": "A second session is created",
+        "correct": false,
+        "why": "The key exists; the server will not do the work again."
+      },
+      {
+        "text": "The old answer comes back and nothing is wrong",
+        "correct": false,
+        "why": "That is the server that does not compare bodies, and the update is lost there."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxrh5csr",
+    "version": 1,
+    "section": "keys",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The header the lesson's server reads to recognise a retry is ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Idempotency-Key"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-myjexf1n",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the key live in the outbox row?",
+    "choices": [
+      {
+        "text": "The server reads it from there",
+        "correct": false,
+        "why": "The server never sees the device's database."
+      },
+      {
+        "text": "SQLite makes UUIDs faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "To keep the payment details private",
+        "correct": false,
+        "why": "The key carries no payment detail."
+      },
+      {
+        "text": "So a new process, after the app was killed, reads the same key",
+        "correct": true,
+        "why": "Right. A key only in memory dies with the app."
+      }
+    ]
+  },
+  {
+    "id": "ex-r09ds0qn",
+    "version": 1,
+    "section": "what-the-server-keeps",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each case to what the lesson's server answered.",
+    "pairs": [
+      {
+        "left": "k-1 again, same body",
+        "right": "201 replayed, p1"
+      },
+      {
+        "left": "k-1 again, another course",
+        "right": "422"
+      },
+      {
+        "left": "k-1 from bia",
+        "right": "201, a new purchase"
+      },
+      {
+        "left": "k-2 while the first k-2 is charging",
+        "right": "409"
+      }
+    ],
+    "right_distractors": [
+      "404"
+    ]
+  },
+  {
+    "id": "ex-60xhqke2",
+    "version": 1,
+    "section": "what-the-server-keeps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the server compare a fingerprint of the body and not only the key?",
+    "choices": [
+      {
+        "text": "Or a reused key gets the wrong purchase back",
+        "correct": true,
+        "why": "Right. The guitar request would hear that Statistics was bought."
+      },
+      {
+        "text": "To check the body for viruses before the purchase is charged",
+        "correct": false,
+        "why": "Nothing here scans for that."
+      },
+      {
+        "text": "Hashing the body makes the reply faster to compute and to send",
+        "correct": false,
+        "why": "It is about correctness, not speed."
+      },
+      {
+        "text": "The key alone could be guessed by somebody who saw an earlier request",
+        "correct": false,
+        "why": "122 random bits are not guessed; the risk is a client bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfkkzrfk",
+    "version": 1,
+    "section": "what-the-server-keeps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A phone holds a purchase in its outbox for two days and retries it on a server that keeps keys for 24 hours. What happens?",
+    "choices": [
+      {
+        "text": "The server replays the saved answer",
+        "correct": false,
+        "why": "It no longer has one."
+      },
+      {
+        "text": "The server refuses with 422",
+        "correct": false,
+        "why": "It does not remember the key at all."
+      },
+      {
+        "text": "The key looks new and the card is charged again",
+        "correct": true,
+        "why": "Right. The window must outlast the outbox."
+      },
+      {
+        "text": "The phone refuses to send a key older than a day",
+        "correct": false,
+        "why": "Nothing on the phone checks the key's age."
+      }
+    ]
+  },
+  {
+    "id": "ex-mm4s7yvp",
+    "version": 1,
+    "section": "what-the-server-keeps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Unlike most 4xx answers, why is the 409 worth retrying?",
+    "choices": [
+      {
+        "text": "In a moment the key holds a finished answer, and the retry gets it",
+        "correct": true,
+        "why": "Right. The race ends; the answer stays."
+      },
+      {
+        "text": "409 is a server error, like a 503, so lesson 9's rule applies to it as well",
+        "correct": false,
+        "why": "It is a 4xx; the reason it is retried is particular."
+      },
+      {
+        "text": "The first request failed, and the key was released for any other try to use",
+        "correct": false,
+        "why": "It succeeded, a second later."
+      },
+      {
+        "text": "The key is deleted after a 409",
+        "correct": false,
+        "why": "It is kept and filled in."
+      }
+    ]
+  },
+  {
+    "id": "ex-y12a7e5x",
+    "version": 1,
+    "section": "what-the-server-keeps",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many hours does the lesson's server keep an answer under its key?",
+    "value": 24,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8h5b7nfx",
+    "version": 1,
+    "section": "natural-idempotency",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which HTTP methods are defined as idempotent?",
+    "choices": [
+      {
+        "text": "POST and PUT",
+        "correct": false,
+        "why": "POST is not."
+      },
+      {
+        "text": "POST and DELETE",
+        "correct": false,
+        "why": "POST is not."
+      },
+      {
+        "text": "PUT and DELETE",
+        "correct": true,
+        "why": "Right, and the server's code has to keep that promise."
+      },
+      {
+        "text": "GET alone",
+        "correct": false,
+        "why": "GET is safe and idempotent, but PUT and DELETE are idempotent too."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mvns4sy",
+    "version": 1,
+    "section": "natural-idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After two identical `PUT /sessions/s7`, how many sessions did the server hold?",
+    "choices": [
+      {
+        "text": "Two, one per request",
+        "correct": false,
+        "why": "The path names the row, so the second wrote over the first."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right. The same bytes over themselves."
+      },
+      {
+        "text": "Zero: the second PUT cancelled the first one",
+        "correct": false,
+        "why": "A PUT stores; it does not cancel."
+      },
+      {
+        "text": "It refused the second with 409",
+        "correct": false,
+        "why": "There is no key and nothing to refuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5rx31cw",
+    "version": 1,
+    "section": "natural-idempotency",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these still need an idempotency key even with a client-made id? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a PUT that also sends a confirmation e-mail",
+        "correct": true,
+        "why": "Its row is idempotent; its side effect is not."
+      },
+      {
+        "text": "charging a card for a course",
+        "correct": true,
+        "why": "The effect is at the processor."
+      },
+      {
+        "text": "adding 25 minutes to the week's total",
+        "correct": true,
+        "why": "An increment, said twice, adds twice."
+      },
+      {
+        "text": "storing session s7 as 25 minutes of guitar",
+        "why": "That states the whole result; PUT is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ydz2g22",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds keys but makes a new one each time the drain retries. Lesson 9's `drop` happens. What does the server do?",
+    "choices": [
+      {
+        "text": "Replays the first answer",
+        "correct": false,
+        "why": "The retry carries a key it has never seen."
+      },
+      {
+        "text": "Refuses the retry with 422",
+        "correct": false,
+        "why": "A new key is not a reused key."
+      },
+      {
+        "text": "Answers 409, since two keys for one purchase arrive close together",
+        "correct": false,
+        "why": "They arrive one after the other, and they differ."
+      },
+      {
+        "text": "Does the work again, as if there were no key",
+        "correct": true,
+        "why": "Right. A key per request is no key at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-eznwp5f9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened in the `buy.ts key` run.",
+    "items": [
+      "the key is made, before any request",
+      "the first POST charges p1 and its answer is lost",
+      "the retry carries the same key",
+      "the server replays p1 and charges nothing"
+    ]
+  },
+  {
+    "id": "ex-hqv3z9mm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner creates sessions with `PUT /sessions/<id>`, using ids like s7. Two phones of the same person each create their seventh session offline. What does the lesson point to?",
+    "choices": [
+      {
+        "text": "The server answers 409",
+        "correct": false,
+        "why": "This server stores whatever is PUT."
+      },
+      {
+        "text": "It is fine: PUT is idempotent, so both sessions are kept",
+        "correct": false,
+        "why": "Idempotent means the second replaces the first, which here loses one."
+      },
+      {
+        "text": "Both pick s7, and one overwrites the other",
+        "correct": true,
+        "why": "Right. Natural idempotency needs ids nobody else will choose, which is lesson 4's random ids."
+      },
+      {
+        "text": "An idempotency key fixes it",
+        "correct": false,
+        "why": "The two operations really are different; a key would not merge them."
+      }
+    ]
+  }
+]

@@ -1,0 +1,520 @@
+[
+  {
+    "id": "ex-jq0zxhbs",
+    "version": 1,
+    "section": "gradle-project",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does lesson 14 need a Gradle project when lessons 1 to 13 did not?",
+    "hint": "What does `launch` come from?",
+    "choices": [
+      {
+        "text": "Coroutines need a newer compiler",
+        "correct": false,
+        "why": "The language part is in 2.4.21 already."
+      },
+      {
+        "text": "Coroutines are a library that must be downloaded",
+        "correct": true,
+        "why": "Right: `kotlinx-coroutines`."
+      },
+      {
+        "text": "`kotlinc` cannot compile `suspend` functions on its own, without Gradle",
+        "correct": false,
+        "why": "It can; the library is what is missing."
+      },
+      {
+        "text": "Gradle runs programs faster than `java -jar`",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-vja8q1c7",
+    "version": 1,
+    "section": "gradle-project",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course run every build through `./gradlew` rather than `gradle`?",
+    "hint": "What does the wrapper pin?",
+    "choices": [
+      {
+        "text": "`gradle` cannot run Kotlin builds",
+        "correct": false,
+        "why": "It ran `gradle wrapper` on this project."
+      },
+      {
+        "text": "`./gradlew` skips the network",
+        "correct": false,
+        "why": "Its first run downloaded Gradle."
+      },
+      {
+        "text": "It pins the project's Gradle version",
+        "correct": true,
+        "why": "Right, on any machine, whatever Gradle is installed there."
+      },
+      {
+        "text": "`./gradlew` hides the build output",
+        "correct": false,
+        "why": "That is `-q`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tx2vqcsz",
+    "version": 1,
+    "section": "gradle-project",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A build fails with `Could not find org.jetbrains.kotlinx:kotlinx-coroutines-core:1.99.0`. What does that say?",
+    "hint": "`find`, not `GET`.",
+    "choices": [
+      {
+        "text": "No such version in the repository",
+        "correct": true,
+        "why": "Right: check the coordinates."
+      },
+      {
+        "text": "The network is down",
+        "correct": false,
+        "why": "That says `Could not GET` or `Could not resolve`."
+      },
+      {
+        "text": "The JDK is too old for the library",
+        "correct": false,
+        "why": "A JDK problem names a toolchain."
+      },
+      {
+        "text": "Gradle itself is not installed",
+        "correct": false,
+        "why": "Gradle ran and reported it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wj0hy5s",
+    "version": 1,
+    "section": "suspend",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where may a `suspend` function be called from?",
+    "hint": "`NotSuspend.kt` was refused.",
+    "choices": [
+      {
+        "text": "Anywhere",
+        "correct": false,
+        "why": "A plain `main` was refused."
+      },
+      {
+        "text": "Only from `main`",
+        "correct": false,
+        "why": "A plain `main` was exactly the refused case."
+      },
+      {
+        "text": "Inside a coroutine, or a caller marked the same way",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only from code running inside a `Thread` that the program started itself",
+        "correct": false,
+        "why": "Threads are not the requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9vg90yx",
+    "version": 1,
+    "section": "suspend",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `delay(300)` do that `Thread.sleep(300)` does not?",
+    "hint": "What happens to the thread meanwhile?",
+    "choices": [
+      {
+        "text": "It is more precise about the 300 ms",
+        "correct": false,
+        "why": "Precision is not the difference."
+      },
+      {
+        "text": "It frees the thread for other coroutines",
+        "correct": true,
+        "why": "Right: only the coroutine waits."
+      },
+      {
+        "text": "It starts a new thread to do the waiting",
+        "correct": false,
+        "why": "No thread is created."
+      },
+      {
+        "text": "It can be called from any function",
+        "correct": false,
+        "why": "It is `suspend`, so it cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gmnzh2m",
+    "version": 1,
+    "section": "suspend",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a plain function not call a `suspend` one?",
+    "hint": "What does the compiler add to every `suspend` function?",
+    "choices": [
+      {
+        "text": "Plain functions run on a different JVM",
+        "correct": false,
+        "why": "There is one JVM."
+      },
+      {
+        "text": "`suspend` functions are private by default",
+        "correct": false,
+        "why": "They are public by default."
+      },
+      {
+        "text": "The library forbids it at run time",
+        "correct": false,
+        "why": "The compiler refuses it."
+      },
+      {
+        "text": "It has no continuation to pass in",
+        "correct": true,
+        "why": "Right: the hidden parameter."
+      }
+    ]
+  },
+  {
+    "id": "ex-fn2reqje",
+    "version": 1,
+    "section": "launch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Launch.kt`, why did `planner open` print before `reminder 1`?",
+    "hint": "What does `launch` do before returning?",
+    "choices": [
+      {
+        "text": "`launch` returns at once",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reminders are printed with a lower priority",
+        "correct": false,
+        "why": "There are no priorities here."
+      },
+      {
+        "text": "`launch` waits 150 ms before starting",
+        "correct": false,
+        "why": "The 150 is `main`'s delay."
+      },
+      {
+        "text": "Output is buffered and reordered",
+        "correct": false,
+        "why": "Lines print in the order they run."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3hpv3jh",
+    "version": 1,
+    "section": "launch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `job.join()` do?",
+    "hint": "`main` waited for the third reminder.",
+    "choices": [
+      {
+        "text": "Starts the job",
+        "correct": false,
+        "why": "`launch` already started it."
+      },
+      {
+        "text": "Cancels the job",
+        "correct": false,
+        "why": "That is `cancel()`."
+      },
+      {
+        "text": "Suspends until the job finishes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Merges the job into the coroutine that launched it",
+        "correct": false,
+        "why": "Not what it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4r8svm2",
+    "version": 1,
+    "section": "async",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`loadWeek` waits 300 ms and `loadGoal` 200 ms. Started together with `async`, about how many milliseconds do both take?",
+    "hint": "The longer of the two.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-ce87kxxy",
+    "version": 1,
+    "section": "async",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`val w = async { loadWeek() }.await()` then `val g = async { loadGoal() }.await()`. Why is this no faster than plain calls?",
+    "hint": "When does the second start?",
+    "choices": [
+      {
+        "text": "`async` always runs on one thread",
+        "correct": false,
+        "why": "One thread was enough for overlap before."
+      },
+      {
+        "text": "Each is awaited before the next is started",
+        "correct": true,
+        "why": "Right: start both, then await."
+      },
+      {
+        "text": "`await` restarts the work",
+        "correct": false,
+        "why": "It only waits for it."
+      },
+      {
+        "text": "`async` needs `Dispatchers.IO` before two coroutines can overlap",
+        "correct": false,
+        "why": "The delays overlapped on one thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3pd7n61",
+    "version": 1,
+    "section": "async",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Async.kt` declares a second `loadWeek` while `Suspend.kt` already has one, in the same project. What happens?",
+    "hint": "One namespace for the whole of `src/main/kotlin`.",
+    "choices": [
+      {
+        "text": "Each file uses its own",
+        "correct": false,
+        "why": "Top-level functions share one namespace."
+      },
+      {
+        "text": "The later file wins",
+        "correct": false,
+        "why": "There is no order between files."
+      },
+      {
+        "text": "The project stops compiling",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Gradle renames one of them",
+        "correct": false,
+        "why": "Nothing is renamed."
+      }
+    ]
+  },
+  {
+    "id": "ex-0r2scky2",
+    "version": 1,
+    "section": "dispatchers",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each dispatcher to the work it is for.",
+    "hint": "The table in section 06.",
+    "pairs": [
+      {
+        "left": "`Dispatchers.Default`",
+        "right": "Keeping the processor busy"
+      },
+      {
+        "left": "`Dispatchers.IO`",
+        "right": "Waiting on files and the network"
+      },
+      {
+        "left": "`Dispatchers.Main`",
+        "right": "Drawing an app's screen"
+      }
+    ],
+    "right_distractors": [
+      "Running `main` in a plain JVM program"
+    ]
+  },
+  {
+    "id": "ex-2vprksmt",
+    "version": 1,
+    "section": "dispatchers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `withContext(Dispatchers.IO) { … }` returns, which thread does `main`'s next line run on?",
+    "hint": "`back on main`.",
+    "choices": [
+      {
+        "text": "The IO worker that ran the block",
+        "correct": false,
+        "why": "`withContext` returns to where it was called."
+      },
+      {
+        "text": "`main`, the caller's thread",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A new thread",
+        "correct": false,
+        "why": "None is created."
+      },
+      {
+        "text": "Whichever is free in the Default pool",
+        "correct": false,
+        "why": "The caller's dispatcher decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4q3nszr",
+    "version": 1,
+    "section": "dispatchers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On Android, a screen calls `loadWeek()` from `Dispatchers.Main`. Where should the file reading inside `loadWeek` happen?",
+    "hint": "The screen must not freeze.",
+    "choices": [
+      {
+        "text": "On `Main`, since that is where it was called",
+        "correct": false,
+        "why": "That freezes the screen while reading."
+      },
+      {
+        "text": "In `loadWeek`, on the IO dispatcher",
+        "correct": true,
+        "why": "Right: the caller never has to know."
+      },
+      {
+        "text": "In a new `Thread` started by the screen",
+        "correct": false,
+        "why": "That is the expensive old answer."
+      },
+      {
+        "text": "In `runBlocking` inside the screen",
+        "correct": false,
+        "why": "That blocks the screen's thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-85866bs6",
+    "version": 1,
+    "section": "threads-vs-coroutines",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "100,000 coroutines each `delay(1000)`. About how many seconds did the whole program take?",
+    "hint": "They all waited at the same time.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-87erkv8x",
+    "version": 1,
+    "section": "threads-vs-coroutines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a suspended coroutine cost, compared with a waiting thread?",
+    "hint": "Stack or heap?",
+    "choices": [
+      {
+        "text": "A small object, not a stack",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The same: a coroutine is a thread",
+        "correct": false,
+        "why": "One thread ran all 100,000."
+      },
+      {
+        "text": "More, because it keeps its own stack",
+        "correct": false,
+        "why": "It keeps only its state."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "It keeps its variables and where it stopped."
+      }
+    ]
+  },
+  {
+    "id": "ex-7zyhaet4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the first build in order.",
+    "hint": "Section 02.",
+    "items": [
+      "write `settings.gradle.kts` and `build.gradle.kts`",
+      "run `gradle wrapper`",
+      "`./gradlew run` downloads Gradle 9.8.2",
+      "the plugin and the library are downloaded",
+      "`Hello.kt` is compiled and run"
+    ]
+  },
+  {
+    "id": "ex-0yqmda0f",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these compile? Choose all that apply.",
+    "hint": "Where is each `delay` called from?",
+    "choices": [
+      {
+        "text": "`fun main() = runBlocking { delay(10) }`",
+        "correct": true,
+        "why": "Yes: inside a coroutine."
+      },
+      {
+        "text": "`fun main() { delay(10) }`",
+        "correct": false,
+        "why": "No: a plain function."
+      },
+      {
+        "text": "`suspend fun pause() = delay(10)`",
+        "correct": true,
+        "why": "Yes: from a `suspend` function."
+      },
+      {
+        "text": "`fun main() = runBlocking { launch { delay(10) } }`",
+        "correct": true,
+        "why": "Yes: inside a launched coroutine."
+      }
+    ]
+  }
+]

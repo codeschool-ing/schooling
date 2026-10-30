@@ -1,0 +1,30 @@
+---
+title: Onde o Kotlin roda
+version: 1
+---
+
+Este curso foi alcançado pela porta do Android, e o próximo curso é Android. A linguagem é mais larga
+que essa porta. **Um compilador Kotlin tem vários back ends**, e cada um transforma o mesmo código em
+algo que uma máquina diferente roda:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" data-fig=\"l20-targets\" aria-label=\"Uma caixa à esquerda, código Kotlin, com setas para quatro back ends: Kotlin/JVM produzindo arquivos de classe que rodam em servidores, desktops e Android; Kotlin/JS produzindo JavaScript para navegadores e Node.js; Kotlin/Wasm produzindo WebAssembly para navegadores; Kotlin/Native produzindo código de máquina para Linux, macOS, Windows e iOS. As linhas JVM e JS estão marcadas como rodadas nesta aula; a linha Native como descrita e não rodada.\"><defs><marker id=\"l20-targets-ah-wire\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--wire)\"></path></marker></defs><rect x=\"20\" y=\"100\" width=\"130\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"85\" y=\"122\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--phosphor)\">código Kotlin</text><text x=\"85\" y=\"142\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">.kt</text><rect x=\"240\" y=\"20\" width=\"340\" height=\"44\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"320\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">Kotlin/JVM</text><text x=\"490\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">arquivos de classe: servidores, Android</text><path d=\"M152 130 L238 42\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l20-targets-ah-wire)\"></path><text x=\"600\" y=\"42\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">rodado aqui</text><rect x=\"240\" y=\"80\" width=\"340\" height=\"44\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"320\" y=\"102\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">Kotlin/JS</text><text x=\"490\" y=\"102\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">JavaScript: navegadores, Node.js</text><path d=\"M152 130 L238 102\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l20-targets-ah-wire)\"></path><text x=\"600\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">rodado aqui</text><rect x=\"240\" y=\"140\" width=\"340\" height=\"44\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"320\" y=\"162\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">Kotlin/Wasm</text><text x=\"490\" y=\"162\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">WebAssembly: navegadores</text><path d=\"M152 130 L238 162\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l20-targets-ah-wire)\"></path><rect x=\"240\" y=\"200\" width=\"340\" height=\"44\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"320\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">Kotlin/Native</text><text x=\"490\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">código de máquina: Linux, macOS, iOS</text><path d=\"M152 130 L238 222\" stroke=\"var(--wire)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l20-targets-ah-wire)\"></path><text x=\"600\" y=\"222\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">descrito</text></svg>", "caption": "Um compilador, quatro back ends: esta aula roda o da JVM e o de JavaScript, e descreve o nativo."}
+```
+
+| back end | produz | roda em | onde você o encontra |
+|---|---|---|---|
+| Kotlin/JVM | arquivos `.class`, em jars | qualquer JVM: servidores, desktops, Android | toda aula deste curso |
+| Kotlin/JS | JavaScript | navegadores e Node.js | front ends web, ferramentas Node |
+| Kotlin/Wasm | WebAssembly | navegadores e runtimes Wasm | apps web que precisam de velocidade |
+| Kotlin/Native | código de máquina | Linux, macOS, Windows, iOS, sem JVM | apps iOS, ferramentas de linha de comando |
+
+O Android é o back end da JVM: um app Android é compilado para arquivos `.class` e depois convertido
+para o bytecode próprio do Android, e é por isso que toda linha deste curso roda lá sem mudança.
+
+**O que muda de um back end para outro é a biblioteca, não a linguagem.** O `java.io.File`, usado desde a
+aula 13, é da JVM; ele não existe em nenhum outro alvo. `List`, `map`, data classes, tipos selados,
+corrotinas e `Flow` são do próprio Kotlin, e existem em todos. A seção 06 constrói uma função para dois
+back ends e mostra onde essa linha cai.
+
+O resto desta aula dá três passos para fora da porta do Android, cada um pequeno o bastante para rodar:
+um servidor web na JVM, uma biblioteca compilada para a JVM e para JavaScript, e um script.

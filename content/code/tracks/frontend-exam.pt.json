@@ -1,0 +1,3022 @@
+{
+  "ex-5pr2sy5h": {
+    "prompt": "Para deixar o planner mais rápido, um colega configura o host para mandar `Cache-Control: max-age=31536000, immutable` em todo arquivo que serve, `index.html` incluído. O que acontece, depois do deploy de hoje, com uma aluna que visitou o site pela última vez há uma semana?",
+    "hint": "Fundamentos da Web e Internet, aula 7; Deploy, Design Systems e GraphQL, aula 1.",
+    "choices": [
+      {
+        "text": "Nada dá errado: os scripts do build novo têm nomes com hash novos, então o navegador dela os busca na próxima visita",
+        "why": "Os nomes novos só são encontrados pelo `index.html` novo, e o navegador dela está usando a cópia da semana passada sem perguntar nada a ninguém."
+      },
+      {
+        "text": "O navegador dela manda `If-None-Match` pela página, recebe um 200 com o HTML novo e então busca os scripts novos",
+        "why": "Uma cópia fresca é usada sem requisição nenhuma, e o `immutable` pula a checagem até num recarregamento. Requisição condicional só acontece quando a cópia fica velha."
+      },
+      {
+        "text": "Ela fica com o `index.html` da semana passada por até um ano, e ele continua nomeando os scripts antigos",
+        "why": "A página é o único arquivo que carrega os nomes novos, e é por isso que ela vai com `no-cache` e é checada toda vez. Guardada por um ano, ela prende a aluna na release antiga."
+      },
+      {
+        "text": "A CDN entrega a página nova a ela na hora, porque um deploy troca a pasta inteira no host",
+        "why": "Um deploy muda o que o host guarda, não o que está no disco dela. Uma CDN pode ser purgada; o navegador de um visitante, não."
+      }
+    ]
+  },
+  "ex-5b07nsf7": {
+    "prompt": "Numa revisão você encontra `fetchPolicy: \"no-cache\"` na query principal do planner. A autora explica: \"como o cabeçalho HTTP, ele guarda a resposta e confere com o servidor toda vez\". O que as duas aulas dizem?",
+    "hint": "Deploy, Design Systems e GraphQL, aula 10; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "Os dois guardam e revalidam; a política do Apollo só confere com uma query nova onde o HTTP manda `If-None-Match`",
+        "why": "O `no-cache` do Apollo sempre pergunta ao servidor e não guarda nada, então não existe cópia para revalidar."
+      },
+      {
+        "text": "Os nomes batem e os sentidos não: o `no-cache` do Apollo não guarda nada, o que fica mais perto do `no-store` do HTTP",
+        "why": "O `no-cache` do HTTP quer dizer guarde e pergunte antes de usar. Na tabela do Apollo, `no-cache` pergunta toda vez e não guarda nada; a política que pergunta e ainda escreve no cache é a `network-only`."
+      },
+      {
+        "text": "O `no-cache` do Apollo é um `cache-first` com vida curta, depois da qual ele pede ao servidor o que expirou",
+        "why": "O `cache-first` responde do cache sem perguntar quando todos os campos estão lá. O `no-cache` nem lê o cache."
+      },
+      {
+        "text": "O `no-cache` do HTTP também não guarda nada, então a comparação vale e a política faz o que a autora quer",
+        "why": "É a confusão contra a qual *Fundamentos da Web e Internet* avisa: `no-cache` pergunta, `no-store` recusa. O `no-cache` do HTTP guarda a cópia, sim."
+      }
+    ]
+  },
+  "ex-70hnhtfg": {
+    "prompt": "Ao mudar o planner para um host novo, Ana aponta `www.example.com` para o endereço novo. O registro tem TTL de 3600, e ela não o baixou antes. No máximo, quantos minutos depois da mudança um resolvedor ainda pode entregar a resposta antiga?",
+    "hint": "Fundamentos da Web e Internet, aula 8; Deploy, Design Systems e GraphQL, aula 4."
+  },
+  "ex-anzcj2ms": {
+    "prompt": "O planner vai para um domínio próprio, `example.com`, num host que deu ao projeto o nome `planner.pages.dev`. Associe cada necessidade ao registro que a atende.",
+    "hint": "Deploy, Design Systems e GraphQL, aula 4; Fundamentos da Web e Internet, aula 8.",
+    "pairs": [
+      {
+        "left": "`www.example.com` deve responder onde quer que `planner.pages.dev` responda",
+        "right": "`CNAME`"
+      },
+      {
+        "left": "o próprio `example.com`, acessado por IPv4",
+        "right": "`A`, com os endereços que a documentação do host lista"
+      },
+      {
+        "left": "o próprio `example.com`, acessado por IPv6",
+        "right": "`AAAA`"
+      },
+      {
+        "left": "a string aleatória que o host mostra, para provar que o domínio é seu",
+        "right": "`TXT`"
+      },
+      {
+        "left": "o e-mail da empresa para endereços em `@example.com`",
+        "right": "`MX`, nomeando um servidor e uma prioridade"
+      }
+    ],
+    "right_distractors": [
+      "`CNAME` em `@`, apontando para `planner.pages.dev`",
+      "`NS`, nomeando os servidores do host"
+    ]
+  },
+  "ex-pha08jh8": {
+    "prompt": "Ana roda o planner numa VPS dela, com um certificado do Let's Encrypt renovado automaticamente pelo desafio HTTP-01. Quando todo link já usava HTTPS, ela fechou a porta 80 no firewall. Dois meses depois o certificado expirou, e o log da renovação mostra o desafio falhando. Por quê?",
+    "hint": "Fundamentos da Web e Internet, aula 9; Deploy, Design Systems e GraphQL, aula 4.",
+    "choices": [
+      {
+        "text": "A autoridade pede o arquivo dela por HTTP puro, em `/.well-known/acme-challenge/<token>`, e agora nada responde ali",
+        "why": "O HTTP-01 prova o controle do nome servindo um arquivo por HTTP puro, então a porta 80 precisa continuar acessível. Fechá-la deixa a pergunta da autoridade sem resposta."
+      },
+      {
+        "text": "O HTTP-01 só emite o primeiro certificado; renovações exigem um registro `TXT` em `_acme-challenge`, que ela nunca criou",
+        "why": "A renovação responde à mesma pergunta da primeira emissão, pelo mesmo desafio. O DNS-01 é o que um nome curinga exige, não o que uma renovação exige."
+      },
+      {
+        "text": "Um certificado obtido por HTTP cobre endereços `http://`, e um site servido só por HTTPS precisa de outro tipo",
+        "why": "Um certificado liga uma chave a nomes, não a um esquema. O desafio é só a forma de provar o controle do nome."
+      },
+      {
+        "text": "A renovação funcionou, mas o servidor web manteve o certificado antigo na memória porque nada mandou recarregar",
+        "why": "Essa falha existe e é outra: o log mostraria uma renovação bem-sucedida. Aqui ele mostra o desafio falhando."
+      }
+    ]
+  },
+  "ex-enngfbaf": {
+    "prompt": "Arrumando as regras do planner, Ana publica `/* /beta/:splat 301` por engano, percebe cinco minutos depois e publica a correção. Um dia depois, algumas pessoas que visitaram nesses cinco minutos ainda caem em `/beta/`. Por quê, e o que teria deixado o erro curto?",
+    "hint": "Fundamentos da Web e Internet, aula 6; Deploy, Design Systems e GraphQL, aula 4.",
+    "choices": [
+      {
+        "text": "Os resolvedores delas guardaram as regras antigas pelo TTL do registro; baixar o TTL antes do deploy teria ajudado",
+        "why": "O arquivo de regras é lido pelo host a cada requisição, não distribuído pelo DNS. Nenhum resolvedor jamais o guardou."
+      },
+      {
+        "text": "A CDN ainda guarda as regras antigas, e purgar a borda logo depois da correção teria resolvido para todo mundo",
+        "why": "O host aplicou as regras novas na hora. O que sobra está no navegador de cada visitante, e nenhuma purga chega a um navegador."
+      },
+      {
+        "text": "Um `301` é seguido uma vez por visita, então a próxima visita lê as regras de novo e a correção chega a elas aí",
+        "why": "É o contrário: navegadores guardam um `301` sem ninguém pedir, e a próxima visita vai direto para `/beta/` sem requisição."
+      },
+      {
+        "text": "Os navegadores delas guardaram o `301` e pararam de perguntar; um `302` antes teria deixado o erro curto",
+        "why": "Um redirecionamento permanente é lembrado, então nada que Ana sirva chega a quem não está perguntando. Um `302` não é lembrado, e é o código para testar."
+      }
+    ]
+  },
+  "ex-vyxddz0c": {
+    "prompt": "O planner responde em `example.com` e em `www.example.com`, sem redirecionamento entre os dois. Um aluno entra em `www.example.com`, segue um link para `example.com/course/git` e aparece como deslogado. O que explica isso, e o que a aula 4 de *Deploy, Design Systems e GraphQL* faz a respeito?",
+    "hint": "Fundamentos da Web e Internet, aula 7; Deploy, Design Systems e GraphQL, aula 4.",
+    "choices": [
+      {
+        "text": "O cookie de sessão é `SameSite=Strict`; trocar para `Lax` faz o link de um nome para o outro levá-lo junto",
+        "why": "O `SameSite` decide qual site pode fazer o cookie ser enviado. Aqui o cookie nem pertence ao outro host, diga o `SameSite` o que disser."
+      },
+      {
+        "text": "Um cookie criado sem `Domain` volta só para o host que o criou; escolha um nome e mande o outro para ele com 301",
+        "why": "Sem `Domain`, o cookie fica preso exatamente a `www.example.com`. A aula 4 escolhe um endereço por página e redireciona a outra grafia, em vez de alargar o cookie."
+      },
+      {
+        "text": "Os dois nomes têm dois certificados, e o navegador descarta os cookies de uma sessão quando o certificado muda",
+        "why": "Certificados dizem quem responde por um nome; não decidem nada sobre cookies. O cookie ficou no nome que o criou."
+      },
+      {
+        "text": "O apex tem um registro `A` e o `www` um `CNAME`, e o navegador separa cookies pelo tipo de registro por trás do nome",
+        "why": "O navegador nunca vê tipos de registro. Os dois nomes são dois hosts, e só isso já separa o cookie."
+      }
+    ]
+  },
+  "ex-azw0yveh": {
+    "prompt": "Uma equipe apagou o projeto de documentação num host estático e deixou `docs.example.com` como `CNAME` para `example-docs.pages.dev`. O app principal cria o cookie de sessão com `Domain=example.com`. Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Deploy, Design Systems e GraphQL, aula 4; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "Qualquer pessoa que crie um projeto com esse nome nesse host consegue servir páginas em `docs.example.com`",
+        "why": "O registro aponta para um nome que agora é de ninguém, e quem o reivindicar primeiro responde pelo subdomínio: um subdomain takeover."
+      },
+      {
+        "text": "As páginas que um estranho servir ali recebem o cookie de sessão do app, já que `Domain=example.com` cobre todo subdomínio",
+        "why": "Um cookie alargado vai para todo subdomínio, o abandonado incluído. Por isso *Fundamentos da Web e Internet* manda não alargar nada sem motivo."
+      },
+      {
+        "text": "Apagar o `CNAME` primeiro e o projeto depois não teria deixado nada para tomar",
+        "why": "Um registro apontando para algo que não é mais seu é o perigo; um projeto sem registro apontando para ele é inofensivo."
+      },
+      {
+        "text": "O certificado válido do app para `example.com` impede um estranho de servir páginas nos subdomínios dele",
+        "why": "O host obtém um certificado para o projeto para o qual o nome aponta, seja qual for. Um certificado diz quem responde por um nome, e aqui seria o estranho."
+      },
+      {
+        "text": "Baixar o TTL do registro para sessenta segundos fecha o buraco, porque a resposta velha deixa de ser servida rápido",
+        "why": "O TTL diz por quanto tempo uma resposta pode ficar em cache, não para onde ela aponta. A resposta atual é que é a perigosa."
+      }
+    ]
+  },
+  "ex-sc48zvwc": {
+    "prompt": "Na aula 10 de *Deploy, Design Systems e GraphQL* o servidor GraphQL é parado, e o servidor de desenvolvimento registra `http proxy error: /graphql` com `ECONNREFUSED 127.0.0.1:4000`, enquanto a requisição da página recebe um 502. Lendo esse status como a aula 6 de *Fundamentos da Web e Internet* lê, onde está a falha?",
+    "hint": "Fundamentos da Web e Internet, aula 6; Deploy, Design Systems e GraphQL, aula 10.",
+    "choices": [
+      {
+        "text": "Na página: um 5xx é a resposta a uma requisição tão malformada que o proxy não conseguiu lê-la",
+        "why": "Uma requisição que o servidor não entende é um `400`, e um 4xx diz que o cliente pediu errado. Um 5xx diz que a falha está do lado do servidor."
+      },
+      {
+        "text": "No próprio proxy: um 502 quer dizer que o servidor de desenvolvimento falhou, e ele é o primeiro a reiniciar",
+        "why": "Foi o servidor de desenvolvimento que respondeu o 502, então ele está de pé. Um 502 é um proxy relatando o que está atrás dele."
+      },
+      {
+        "text": "Mais atrás: quem respondeu está bem, e o que escuta na 4000 caiu",
+        "why": "Um `502 Bad Gateway` é um proxy dizendo que a coisa atrás dele não deu uma resposta aproveitável. O log nomeia essa coisa: a porta 4000."
+      },
+      {
+        "text": "Em lugar nenhum ainda: o servidor está de pé e deliberadamente sem atender, e volta quando a manutenção acabar",
+        "why": "Isso descreve um `503 Service Unavailable`. Um 502 vem de um proxy, sobre o servidor atrás dele."
+      }
+    ]
+  },
+  "ex-f9qf55s0": {
+    "prompt": "O servidor GraphQL do planner responde toda requisição com 200, inclusive as queries que falharam, e o painel da equipe conta falhas pelo código de status. A aula 6 de *Fundamentos da Web e Internet* lista o que um erro dentro de um 200 quebra. Quais dessas consequências valem aqui? Marque todas as que se aplicam.",
+    "hint": "Deploy, Design Systems e GraphQL, aula 9; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "O painel mostra um serviço saudável enquanto as queries falham",
+        "why": "O software entre o planner e o servidor olha só para o número, e o número é sempre 200."
+      },
+      {
+        "text": "Um código que confere só `response.ok` trata toda query que falhou como sucesso",
+        "why": "O `ok` reflete o status. Se a query funcionou está na lista `errors` do corpo, que esse código nunca lê."
+      },
+      {
+        "text": "Uma biblioteca cliente que repete em caso de 5xx nunca repete uma query que falhou",
+        "why": "Uma regra de repetição baseada no status nunca dispara, porque nenhuma falha de GraphQL aqui é um 5xx."
+      },
+      {
+        "text": "Uma CDN na frente da API guarda uma resposta com falha e a serve a todo mundo que fizer a mesma query",
+        "why": "Toda query é um `POST` para um endereço só, e na prática só `GET` e `HEAD` vão para cache. É também por isso que os caches HTTP não ajudam o GraphQL."
+      },
+      {
+        "text": "Um erro de digitação no nome de um campo ainda volta como 500, então pelo menos esses chegam ao painel",
+        "why": "Uma query que o schema recusa volta com `errors` e sem `data`, e com um 200 como todo o resto."
+      }
+    ]
+  },
+  "ex-btrggaas": {
+    "prompt": "Um site responde em `example.com` e em `www.example.com`, por `http` e por `https`, com e sem barra no fim, e não redireciona nenhum deles para outro. Quantos endereços a aula 4 conta para a página inicial dele?",
+    "hint": "Deploy, Design Systems e GraphQL, aula 4."
+  },
+  "ex-t5m2t8nc": {
+    "prompt": "Numa revisão, um colega aponta para o `dist/index.html` gerado pelo build, onde `<script type=\"module\" crossorigin src=\"/assets/index-BVi82VJx.js\"></script>` fica no `<head>`: \"isso para o parser até o script rodar; mova para o fim do body\". Qual é a resposta certa?",
+    "hint": "Fundamentos da Web e Internet, aula 10; Deploy, Design Systems e GraphQL, aula 1.",
+    "choices": [
+      {
+        "text": "Um script de módulo age como `defer`: é buscado durante a análise e roda quando o documento termina",
+        "why": "Só um `<script src>` comum para o parser. No head, um módulo é descoberto cedo, buscado cedo e roda no mesmo momento em que rodaria no fim do body."
+      },
+      {
+        "text": "Ele bloqueia, sim, mas o bundle tem uns 3 kB, então mover renderia pouco demais para valer a mudança",
+        "why": "O tamanho não vem ao caso: um script de módulo não bloqueia o parser, pese o que pesar."
+      },
+      {
+        "text": "Hoje ele bloqueia; acrescentar `async` ao lado do `crossorigin` resolve e mantém os scripts da página na ordem",
+        "why": "O `async` roda o script no momento em que ele chega, interrompendo a análise, e não mantém ordem nenhuma. Um módulo já espera a análise."
+      },
+      {
+        "text": "O `crossorigin` já o atrasa até o body ser analisado, então a mudança do colega não faria diferença",
+        "why": "O `crossorigin` diz como a requisição é feita, não quando o script roda. Quem o atrasa é o `type=\"module\"`."
+      }
+    ]
+  },
+  "ex-bsjhag0f": {
+    "prompt": "Um pull request no `@planner/ui`, hoje em `0.2.0`, renomeia o token `muted` para `subtle` em toda a biblioteca e o publica como `0.2.1`. Os testes da própria biblioteca estão verdes. O que está errado?",
+    "hint": "Deploy, Design Systems e GraphQL, aulas 5 e 7.",
+    "choices": [
+      {
+        "text": "Nada: tokens são CSS e não exports, então renomear um não muda interface nenhuma e um patch está certo",
+        "why": "O nome de um token é uma interface. O `var(--muted)` de cada consumidor agora fica vazio, em silêncio, e nenhum compilador avisa."
+      },
+      {
+        "text": "Uma mudança que quebra saiu como patch: mantenha `muted` como alias depreciado primeiro e remova-o na `0.3.0`",
+        "why": "Renomear um token é uma mudança major, e antes da `1.0.0` o npm trata a minor como a parte que quebra. O alias mantém cada produto funcionando até ele migrar."
+      },
+      {
+        "text": "Precisa ser `1.0.0`: um rename é major, e a parte major é o primeiro número de qualquer versão, `0.x` incluída",
+        "why": "Antes da `1.0.0` as regras descem uma casa, então a `0.3.0` é a release que quebra. A `1.0.0` é a que promete estabilidade."
+      },
+      {
+        "text": "Um patch serve aqui, desde que os consumidores aceitem `^0.2.0`, para todo produto pegar o rename de uma vez",
+        "why": "`^0.2.0` aceita `0.2.1`, e é exatamente assim que as cores quebradas chegariam a todo consumidor automaticamente."
+      }
+    ]
+  },
+  "ex-cgwxjsbx": {
+    "prompt": "Meses atrás Ana apontou os registros `NS` do domínio dela para um provedor de DNS novo. Hoje ela acrescenta o registro `TXT` de verificação do host no painel de DNS original do registrador, que salva sem reclamar. Uma hora depois o host ainda não o encontra. Qual é a causa mais provável?",
+    "hint": "Fundamentos da Web e Internet, aula 8; Deploy, Design Systems e GraphQL, aula 4.",
+    "choices": [
+      {
+        "text": "Ela consultou o nome antes de criá-lo, então os resolvedores guardam uma resposta negativa pelo tempo que o `SOA` permite",
+        "why": "O cache negativo existe, mas perguntar aos servidores autoritativos ainda não acharia registro nenhum: ele foi escrito onde eles não leem."
+      },
+      {
+        "text": "Uma mudança de DNS leva até 48 horas para propagar, então o host precisa continuar checando até amanhã",
+        "why": "Nada se propaga: uma mudança leva o tempo do TTL antigo. E este registro nunca chegou aos servidores que respondem pelo domínio."
+      },
+      {
+        "text": "Um registro `TXT` não pode ficar num nome como `_vercel.example.com`; ele precisa estar no domínio puro",
+        "why": "Os hosts pedem justamente nomes assim, `_vercel.example.com` entre eles, e um `TXT` pode ficar sob qualquer nome."
+      },
+      {
+        "text": "Aquele lugar deixou de ser autoritativo quando o `NS` mudou, e ninguém mais lê o que se grava ali",
+        "why": "Depois de trocar os nameservers, o painel antigo continua funcionando e salvando, e ninguém o lê. Confira quais servidores são autoritativos antes de editar qualquer coisa."
+      }
+    ]
+  },
+  "ex-ck0aa94p": {
+    "prompt": "O servidor do planner agora manda uma `etag` com cada arquivo. Na visita seguinte, um navegador com uma cópia velha devolve essa tag no cabeçalho de requisição `___`, e quando ela bate a resposta é um `304 Not Modified` sem corpo.",
+    "hint": "Fundamentos da Web e Internet, aula 7; Renderização, Performance e PWA, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "If-None-Match"
+        ]
+      }
+    ]
+  },
+  "ex-g3hes5rx": {
+    "prompt": "O planner usa o service worker da aula 10 de *Renderização, Performance e PWA*: cache primeiro para `/assets/`, rede primeiro para as páginas. O deploy de hoje muda uma página e um script e deixa o `sw.js` como estava. Um visitante que volta precisa de um worker novo para ver a mudança?",
+    "hint": "Deploy, Design Systems e GraphQL, aula 1; Renderização, Performance e PWA, aula 10.",
+    "choices": [
+      {
+        "text": "Sim: o cache primeiro continua servindo o script antigo do cache do worker até o `CACHE` ser renomeado no `sw.js`",
+        "why": "O cache primeiro é indexado pelo endereço, e o script do build novo mora num endereço novo. O antigo simplesmente nunca mais é pedido."
+      },
+      {
+        "text": "Sim: enquanto o arquivo do worker não mudar um byte, o navegador nem pede uma página à rede",
+        "why": "A regra do byte é sobre o próprio arquivo do worker. As páginas dele são rede primeiro, então um visitante online recebe a página que o servidor desenha agora."
+      },
+      {
+        "text": "Não: com a rede de pé a página vem nova, e o arquivo editado mora num endereço que ninguém guardou",
+        "why": "Um build muda o nome de um arquivo quando muda o conteúdo, e a página nova aponta para o arquivo novo. Worker novo só é preciso quando o próprio worker muda."
+      },
+      {
+        "text": "Não, mas só depois que o visitante fechar todas as abas, porque o worker antigo controla as que ainda estão abertas",
+        "why": "Esperar é o que uma versão nova do worker faz. Este deploy não cria versão nova nenhuma, então não há o que esperar."
+      }
+    ]
+  },
+  "ex-dxgmabc7": {
+    "prompt": "O planner está no Netlify com `/* /index.html 200` no `_redirects`. Depois de um deploy, continuam chegando relatórios de erro, marcados com a release anterior, sobre scripts que o navegador se recusou a rodar por causa do tipo MIME. O que está acontecendo?",
+    "hint": "Deploy, Design Systems e GraphQL, aulas 4 e 11.",
+    "choices": [
+      {
+        "text": "Abas abertas antes do deploy pedem arquivos do build delas, e o pega-tudo responde com o `index.html`",
+        "why": "A release nova não tem esses arquivos, então a reescrita manda a página, como HTML e com 200, e o navegador não a roda. Relatórios de uma release antiga são essas abas, não um bug novo."
+      },
+      {
+        "text": "O deploy quebrou a tabela de `Content-Type` do host, então todo script da release nova agora sai como HTML",
+        "why": "Os relatórios trazem a release anterior. Os scripts do build novo existem e são enviados como JavaScript."
+      },
+      {
+        "text": "O Netlify aplica regras antes dos arquivos, então o `/*` engole todo script de verdade; um `!` depois do 200 resolve",
+        "why": "O Netlify só aplica uma regra quando nenhum arquivo bate. O `!` força a regra por cima de arquivos reais, o que pioraria tudo."
+      },
+      {
+        "text": "A CDN ainda guarda os scripts da release anterior com um `Content-Type` antigo, e uma purga os limparia",
+        "why": "Os arquivos que as abas antigas querem sumiram, não ficaram velhos, então nenhuma borda tem cópia para servir."
+      }
+    ]
+  },
+  "ex-66e5cx81": {
+    "prompt": "Amanhã o registro `www` do planner vai para um host novo, e ele tem TTL de um dia. Ponha os passos na ordem que faz a mudança levar minutos.",
+    "hint": "Fundamentos da Web e Internet, aula 8; Deploy, Design Systems e GraphQL, aula 4.",
+    "items": [
+      "Baixar o TTL do registro para sessenta segundos",
+      "Deixar passar pelo menos um TTL antigo, para toda cópia do número velho expirar",
+      "Apontar o registro para o host novo",
+      "Conferir que o site funciona no lugar novo",
+      "Subir o TTL de volta para cerca de um dia"
+    ],
+    "trap": "O deslize mais provável é baixar o TTL e mudar o registro na mesma hora. A própria redução fica presa ao TTL antigo, então precisa ser feita pelo menos esse tempo antes da mudança."
+  },
+  "ex-dkrhbd1c": {
+    "prompt": "Ana fez commit do `.env` com o token de suporte dentro, mandou para o repositório privado da equipe e percebeu uma hora depois. Ponha em ordem a resposta da aula 2.",
+    "hint": "Deploy, Design Systems e GraphQL, aula 2.",
+    "items": [
+      "Trocar o token no serviço que o emitiu e revogar o antigo",
+      "Ler nos logs do serviço o que o token antigo fez enquanto esteve exposto",
+      "Rodar `git rm --cached .env` e acrescentar `.env` ao `.gitignore`",
+      "Reescrever o histórico com `git filter-repo` e fazer force-push"
+    ],
+    "trap": "O deslize mais provável é começar pelo git. Nenhum commit, remoção ou reescrita alcança os clones e scanners que já têm o token; só trocá-lo no serviço deixa a cópia vazada inútil, com repositório privado ou não."
+  },
+  "ex-d8epjd74": {
+    "prompt": "O site de staging do planner ainda chama a API antiga. Alguém mudou `VITE_GRAPHQL_URL` no painel do host ontem, e ninguém fez push desde então. O que a aula 2 diz que está acontecendo?",
+    "hint": "Deploy, Design Systems e GraphQL, aula 2.",
+    "choices": [
+      {
+        "text": "O painel escreve o valor novo no `.env.local` do host, um arquivo que só o `npm run dev` lê",
+        "why": "O host não edita arquivos do projeto. Uma variável definida ali é lida pelo build, e o build não rodou desde então."
+      },
+      {
+        "text": "O navegador lê o `import.meta.env` do host quando a página abre, e ainda está usando a cópia de ontem",
+        "why": "O navegador não tem ambiente nenhum para ler. O `import.meta.env.VITE_GRAPHQL_URL` virou uma string literal quando o bundle foi gerado."
+      },
+      {
+        "text": "O último build escreveu o valor antigo no bundle como string, e nada muda até o site ser gerado de novo",
+        "why": "Num front-end a variável é lida uma vez, pelo build. O host serve o valor antigo até o próximo deploy gerar o site com o novo."
+      },
+      {
+        "text": "O host aplica o valor novo na hora, e as respostas antigas vêm da cópia que a CDN guarda da API de staging",
+        "why": "Nada mudou na API; o endereço que a página chama está fixo dentro do bundle que ela baixou."
+      }
+    ]
+  },
+  "ex-mcf778v5": {
+    "prompt": "Um preview encontrado por um buscador compete com o site de verdade. O Cloudflare Pages mantém os previews de fora acrescentando aos endereços deles o cabeçalho de resposta `X-Robots-Tag: ___`.",
+    "hint": "Deploy, Design Systems e GraphQL, aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "noindex"
+        ]
+      }
+    ]
+  },
+  "ex-wpbjawjr": {
+    "prompt": "No CI, o `npm ci` para com `Invalid: lock file's typescript@6.0.3 does not satisfy typescript@6.0.2`. Um colega propõe apagar o `package-lock.json` e fazer commit disso, para o build ficar verde. O que há de errado no plano?",
+    "hint": "Deploy, Design Systems e GraphQL, aula 3.",
+    "choices": [
+      {
+        "text": "Nada, desde que o workflow passe a usar `npm install`, que escreve um lockfile novo a cada execução",
+        "why": "Aí o CI instala o que for mais novo no dia de cada execução e confere um código que ninguém commitou. É exatamente o que o `npm ci` existe para impedir."
+      },
+      {
+        "text": "O cache do CI é indexado pelo hash do lockfile, então sem lockfile toda execução seguinte fica sem cache",
+        "why": "Um lockfile alterado custa uma execução lenta e depois o cache volta a estar quente. É um preço pequeno, não o problema aqui."
+      },
+      {
+        "text": "O lockfile é só uma dica para o npm, então apagá-lo não muda nada nas versões instaladas",
+        "why": "Ele é uma dica para o `npm install`. O `npm ci` instala exatamente o que ele registra, e é por isso que o CI confia nele."
+      },
+      {
+        "text": "Troca a versão fixa pelo mais novo do dia; acerte os dois arquivos pelo npm e commite ambos",
+        "why": "Um lockfile apagado é gerado de novo com as versões mais novas disponíveis, o oposto de fixar. O lockfile só muda pelo npm, no mesmo commit do `package.json`."
+      }
+    ]
+  },
+  "ex-ea7k8zfp": {
+    "prompt": "Um desenvolvedor num Mac roda pela primeira vez os testes de screenshot da biblioteca, e cada um escreve uma imagem nova em vez de comparar. As imagens aprovadas no repositório terminam em `-chromium-linux.png`. O que a aula 6 recomenda?",
+    "hint": "Deploy, Design Systems e GraphQL, aula 6.",
+    "choices": [
+      {
+        "text": "Fazer do CI, em Linux, o único fotógrafo, e atualizar as imagens pelo CI em vez de pelo notebook",
+        "why": "As imagens dependem das fontes, do build do navegador e do sistema que as desenhou. Uma máquina só aprovando mantém um conjunto só, que quer dizer alguma coisa."
+      },
+      {
+        "text": "Commitar também as novas `-chromium-darwin.png`, para cada sistema ter o próprio conjunto aprovado",
+        "why": "Dois conjuntos aprovados se afastam, e cada um só é conferido nas máquinas que o desenharam, então uma mudança pode passar num e nunca ser vista."
+      },
+      {
+        "text": "Aumentar a tolerância da comparação até as imagens do Mac e as do Linux caberem dentro dela",
+        "why": "Uma tolerância larga o bastante para perdoar outro sistema perdoa mudanças reais também; a padrão já deixou passar um cinza mais claro."
+      },
+      {
+        "text": "Trocar as imagens do Linux pelas do Mac, já que uma imagem é aprovada por quem rodou o teste por último",
+        "why": "Isso troca um fotógrafo por outro e faz o CI falhar em toda execução, porque o CI procura os nomes do Linux."
+      }
+    ]
+  },
+  "ex-x9dqqxj2": {
+    "prompt": "Uma página usa `<planner-session>`, cujo botão fica numa shadow root aberta e tem `part=\"button\"`. Associe cada coisa que a página escreve ao que ela faz com o elemento ou com o botão dele.",
+    "hint": "Deploy, Design Systems e GraphQL, aula 8.",
+    "pairs": [
+      {
+        "left": "`main button { background: red }`",
+        "right": "nada: os seletores da página param na shadow root"
+      },
+      {
+        "left": "`--accent` definido em `:root`",
+        "right": "chega até ele, como todo outro token do `tokens.css`"
+      },
+      {
+        "left": "`planner-session::part(button) { border-radius: 0 }`",
+        "right": "o estiliza, porque o elemento deu nome a essa peça"
+      },
+      {
+        "left": "`document.querySelector(\"button\")` na página de demonstração",
+        "right": "devolve `null` em vez do botão"
+      },
+      {
+        "left": "`planner-session { display: block }`",
+        "right": "transforma a linha num bloco, vencendo o `:host` do elemento"
+      }
+    ],
+    "right_distractors": [
+      "o estiliza só se a shadow root for `closed`",
+      "chega até ele só depois que o elemento define `composed: true`"
+    ]
+  },
+  "ex-cmv9bnsg": {
+    "prompt": "Os dados de campo de uma página de produto dizem que o CLS dela é 0,18 nos celulares e 0,03 nos desktops. O que se move é o parágrafo debaixo da imagem de destaque. Essa imagem é `<img src=\"hero-960.jpg\" srcset=\"…\" sizes=\"100vw\" alt=\"…\">`, com o estilo `width: 100%; height: auto;`. Que mudança na marcação remove a causa?",
+    "hint": "HTML e CSS, aula 4; Renderização, Performance e PWA, aula 5.",
+    "choices": [
+      {
+        "text": "Acrescentar `loading=\"lazy\"`, para a imagem parar de disputar a conexão com o texto",
+        "why": "O carregamento preguiçoso faz a imagem chegar enquanto alguém lê, de propósito. Sem o espaço reservado, isso continua sendo um deslocamento, e na imagem de destaque ainda atrasa o LCP."
+      },
+      {
+        "text": "Acrescentar `fetchpriority=\"high\"`, para a imagem chegar antes de o texto ser pintado",
+        "why": "A prioridade muda quando a requisição começa, não quanto espaço a caixa ocupa. Numa rede lenta a imagem ainda chega depois da primeira pintura, e o parágrafo ainda pula."
+      },
+      {
+        "text": "Acrescentar `width` e `height` na proporção do arquivo, para a altura ser conhecida antes de ele chegar",
+        "why": "O navegador lê os dois atributos como uma proporção e, com `height: auto`, calcula a altura a partir da largura antes de chegar um byte do arquivo. O parágrafo é posto abaixo desse espaço e não se move mais. O celular pontua pior porque o mesmo deslocamento cobre mais de uma janela pequena."
+      },
+      {
+        "text": "Oferecer arquivos menores no `srcset`, para a imagem chegar antes de o leitor alcançar o parágrafo",
+        "why": "Um arquivo menor chega antes e ainda assim chega depois do layout. Sem um tamanho guardado para ela, a caixa vai de 0 de altura à altura inteira e empurra o parágrafo para baixo."
+      }
+    ]
+  },
+  "ex-ndp26y9r": {
+    "prompt": "Para economizar dados móveis, um colega cria uma regra de lint que põe `loading=\"lazy\"` em todo `<img>` que o site renderiza. Na versão seguinte o LCP da página inicial vai de 2,1 s para 3,4 s, e nada mais mudou. O que aconteceu?",
+    "hint": "HTML e CSS, aula 4; Renderização, Performance e PWA, aula 7.",
+    "choices": [
+      {
+        "text": "A capa no topo, o elemento de LCP da página, virou uma requisição que espera o layout",
+        "why": "Uma imagem preguiçosa só é pedida depois que o navegador faz o layout da página e a vê perto da janela. Para a imagem do topo, uma requisição que teria começado na hora agora começa tarde, e a maior pintura espera por ela."
+      },
+      {
+        "text": "Imagens preguiçosas recebem prioridade baixa, e um download de prioridade baixa corre mais devagar",
+        "why": "O carregamento preguiçoso decide se e quando a requisição é feita, não a velocidade com que o arquivo desce. O tempo se perdeu antes de a requisição começar."
+      },
+      {
+        "text": "Na primeira rolagem o navegador buscou todas as imagens preguiçosas juntas, e elas atropelaram a capa",
+        "why": "As imagens preguiçosas mais abaixo são buscadas conforme o leitor se aproxima de cada uma, no teste do curso de HTML uns 1400 pixels antes, e não todas juntas. E o LCP se decidiu antes de alguém rolar."
+      },
+      {
+        "text": "Uma imagem preguiçosa não concorre a LCP, então a métrica passou para um bloco de texto mais lento abaixo",
+        "why": "Uma imagem preguiçosa ainda pode ser a maior coisa pintada; nada a tira da disputa. A capa continuou sendo o elemento de LCP e foi pintada mais tarde."
+      }
+    ]
+  },
+  "ex-jtz3mhgr": {
+    "prompt": "Com cada requisição 300 ms mais lenta, como num celular longe do servidor, uma página renderizada no cliente pintou o conteúdo em 948 ms, e a mesma página renderizada no servidor, em 640 ms. Um gestor propõe comprar mais banda da CDN em vez de mudar a forma de renderizar a página. Por que isso não fecharia a diferença?",
+    "hint": "Renderização, Performance e PWA, aula 1; Fundamentos da Web e Internet, aula 3.",
+    "choices": [
+      {
+        "text": "A página renderizada no servidor fez menos requisições, e um cano maior não reduz quantos arquivos a página precisa",
+        "why": "As duas versões fizeram as mesmas quatro requisições. A diferença é que a renderizada no cliente não podia começar cada requisição antes de a anterior voltar."
+      },
+      {
+        "text": "A banda só começa a contar acima de mais ou menos um megabyte, e as duas páginas têm poucos kilobytes",
+        "why": "Esse limite não existe: a banda encurta a transferência de qualquer arquivo. Essas transferências já eram minúsculas, então havia pouco para encurtar."
+      },
+      {
+        "text": "Os 300 ms são o tempo de renderização do servidor, que nenhuma mudança na rede ou na CDN consegue encurtar",
+        "why": "O servidor levou uns dois milissegundos até o primeiro byte. Os 300 são latência, o tempo até chegar o primeiro byte, somado a cada requisição."
+      },
+      {
+        "text": "A diferença é uma ida e volta a mais numa cadeia, os dados depois do script, e banda não encurta espera",
+        "why": "A página renderizada no cliente precisou do HTML, depois do script, depois dos dados, cada um descoberto só quando o anterior chegou: cerca de três esperas de 300 contra duas. A banda encurta a transferência; a latência alonga todo o resto."
+      }
+    ]
+  },
+  "ex-0xd3x0ab": {
+    "prompt": "Uma página não tem `<main>`. O `probe axe` do curso de HTML aponta `landmark-one-main` nela, mas o teste do pipeline do time, que roda o axe com as tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` e `wcag22aa` e espera uma lista vazia, passa. Por quê?",
+    "hint": "HTML e CSS, aula 2; Testes, Segurança e Acessibilidade, aula 10.",
+    "choices": [
+      {
+        "text": "O teste espera o `<h1>` antes de rodar o axe, e até lá um script já acrescentou o landmark",
+        "why": "Esperar o título faz o axe ver a página desenhada; não acrescenta nada a ela. Se nenhum elemento é um `main`, nenhum aparece."
+      },
+      {
+        "text": "Essa regra tem a tag `best-practice`, que as cinco tags deixam de fora, então nunca reprova o teste",
+        "why": "O axe guarda em `best-practice` os conselhos que nenhum critério da WCAG exige, como um landmark `main` por página. O teste escolheu as regras pela tag da WCAG para que um vermelho sempre signifique um critério reprovado. O conselho continua valendo a leitura."
+      },
+      {
+        "text": "O Chromium do Playwright monta a árvore de acessibilidade sem landmarks, então o axe não tem o que contar",
+        "why": "O axe lê a mesma árvore em qualquer Chromium. Os testes do curso acham títulos e botões pelo papel nela, e landmarks também são papéis."
+      },
+      {
+        "text": "Um `<main>` ausente é assunto do validador de HTML; o axe verifica contraste, nomes e texto alternativo",
+        "why": "O axe também tem regras de estrutura: `landmark-one-main`, `region` e `page-has-heading-one` foram todas apontadas na página-sopa do curso de HTML."
+      }
+    ]
+  },
+  "ex-df9m7mtg": {
+    "prompt": "Num app feito com um meta-framework, o time marca a rota `/settings` como deixada para o navegador e a rota `/orders` como renderizada a cada requisição. Nenhuma das duas é gerada antes. O que leva a primeira resposta de cada uma?",
+    "hint": "Renderização, Performance e PWA, aula 2.",
+    "choices": [
+      {
+        "text": "As duas levam a página pronta; só diferem em ela ser guardada ou não para o próximo visitante",
+        "why": "Ser guardada ou não é a diferença entre renderizar por requisição e gerar antes. Uma rota deixada para o navegador nem é renderizada no servidor."
+      },
+      {
+        "text": "`/settings` leva uma casca vazia para o script preencher; `/orders` leva a página pronta",
+        "why": "Nenhuma é pré-renderizada, e elas ficam nas duas pontas da tabela da aula 1: a rota deixada para o navegador manda o contêiner vazio e um script, a rota por requisição manda o HTML que o servidor acabou de desenhar."
+      },
+      {
+        "text": "`/settings` leva a página pronta e nenhum script; `/orders`, a página e um runtime para hidratá-la",
+        "why": "Deixar uma rota para o navegador significa o contrário: o servidor não manda conteúdo nenhum dela, e o script desenha tudo."
+      },
+      {
+        "text": "As duas levam uma casca vazia, pois só uma rota pré-renderizada tem conteúdo na primeira resposta",
+        "why": "Uma rota renderizada a cada requisição também manda a página pronta. O que falta a ela perto de uma pré-renderizada é só o momento em que o HTML foi feito."
+      }
+    ]
+  },
+  "ex-5hxye093": {
+    "prompt": "Um teste de componente escrito com Testing Library falha em `getByRole(\"button\", { name: \"Reserve\" })`. A marcação é `<div class=\"button\" onclick=\"reserve()\">Reserve</div>`, e clicar com o mouse funciona. Que correção serve ao teste e às pessoas que ele representa?",
+    "hint": "HTML e CSS, aula 2; Testes, Segurança e Acessibilidade, aula 3.",
+    "choices": [
+      {
+        "text": "Acrescentar `data-testid=\"reserve\"` e buscar com `getByTestId`, o que deixa a marcação como está",
+        "why": "O test id é a última consulta da lista da biblioteca, uma saída de emergência. Ninguém o vê, então um teste que precisa dele está testando um controle que quem usa leitor de tela também não acha."
+      },
+      {
+        "text": "Buscar com `getByText(\"Reserve\")`, que acha o elemento pelas palavras escritas nele",
+        "why": "O teste passaria e o defeito ficaria: o `<div>` continua sendo texto na árvore de acessibilidade, e o Tab continua sem alcançá-lo."
+      },
+      {
+        "text": "Dar a ele `cursor: pointer` e um estilo de `:focus`, para parecer e agir como um controle",
+        "why": "Estilos mudam a aparência. A árvore continua chamando de texto e o Tab continua pulando, porque um `<div>` não recebe foco."
+      },
+      {
+        "text": "Trocar o `<div>` por um `<button type=\"button\">` que chame a mesma função",
+        "why": "Um `<button>` é anunciado como botão, com o texto como nome, recebe foco e responde a Enter e a Espaço. O `getByRole` consulta a mesma árvore que o leitor de tela lê, então o teste passa porque a página mudou."
+      }
+    ]
+  },
+  "ex-p95v5gw7": {
+    "prompt": "Uma página de curso renderizada no servidor leva dois segundos para hidratar num celular lento. Ela tem um `<button type=\"button\">` *Mark done*, cujo comportamento é um listener que o script prende, e um `<form method=\"post\" action=\"/sessions\">` *Add session*, cujo envio o script também assume quando roda, e o servidor trata esse endereço. Alguém usa os dois um segundo depois de a página aparecer. O que acontece?",
+    "hint": "Renderização, Performance e PWA, aula 4; HTML e CSS, aula 3.",
+    "choices": [
+      {
+        "text": "O próprio navegador envia o formulário para `/sessions`, e o clique em *Mark done* se perde",
+        "why": "Um formulário com um `action` de verdade é a versão mais antiga de reproduzir eventos: o navegador monta e envia a requisição sem script. O botão não tem alternativa, então o clique chega a um elemento sem listener e é esquecido."
+      },
+      {
+        "text": "O navegador põe os dois numa fila, e o script os trata quando a hidratação termina",
+        "why": "HTML puro não enfileira nada. Reproduzir cliques exige event replay, um pequeno script embutido na página que os registra para a hidratação, e esta página não tem nenhum."
+      },
+      {
+        "text": "Nenhum dos dois faz nada, pois nenhum elemento funciona antes de o script prender seus listeners",
+        "why": "Isso vale para o botão. Enviar um formulário é coisa do próprio HTML: o navegador o manda para o `action` sem script nenhum, como todo formulário do curso de HTML fez."
+      },
+      {
+        "text": "O botão funciona, porque `<button>` é nativo, e o formulário espera o handler de envio",
+        "why": "Um `<button type=\"button\">` não faz nada sozinho; ele existe para um script lhe dar uma tarefa. Quem tem comportamento nativo é o formulário."
+      }
+    ]
+  },
+  "ex-1y4zjtqz": {
+    "prompt": "Uma fileira de links põe *Order this book* em primeiro na tela com `order: -1`. Ele é o último no HTML, e o Tab chega nele por último. Um colega propõe `tabindex=\"1\"` nele, para o foco ir para lá primeiro. O que isso faz?",
+    "hint": "HTML e CSS, aula 8; Testes, Segurança e Acessibilidade, aula 11.",
+    "choices": [
+      {
+        "text": "Leva o link para o começo da ordem de Tab da própria fileira e deixa o resto da página em paz",
+        "why": "Um `tabindex` positivo não é local à fileira. Ele monta uma segunda ordem de Tab que corre antes de tudo o mais na página."
+      },
+      {
+        "text": "Nada, porque um link já recebe foco e o `tabindex` só importa para o que não recebe",
+        "why": "O `tabindex` age em links também: `-1` tira um da ordem, e um valor positivo o põe antes de todo elemento que não tem valor."
+      },
+      {
+        "text": "O primeiro Tab da página cai nesse link onde quer que ele esteja, e o seguinte volta para o topo",
+        "why": "Um valor positivo cria uma ordem de Tab própria que corre antes da do documento. A correção está no HTML: pôr o link primeiro se ele deve vir primeiro, e montar o layout a partir daí."
+      },
+      {
+        "text": "Conserta a ordem do foco e deixa errada a ordem do leitor de tela, que é outro critério",
+        "why": "Nem a ordem do foco ele conserta: o foco salta para o link de onde quer que comece. E a ordem de leitura continua sendo a do HTML, então 2.4.3 e 1.3.2 seguem em jogo."
+      }
+    ]
+  },
+  "ex-bzxat1wa": {
+    "prompt": "A biblioteca `web-vitals` reporta um clique como `INP 1888 ms poor  (input 1, processing 1762, presentation 125)`. Por onde o trabalho deve começar?",
+    "hint": "Renderização, Performance e PWA, aula 5.",
+    "choices": [
+      {
+        "text": "Pelo que ocupava a thread principal antes do clique, como a hidratação, já que o atraso de entrada vem primeiro",
+        "why": "O atraso de entrada foi de 1 milissegundo. Nada estava no caminho quando o clique chegou."
+      },
+      {
+        "text": "Pela folha de estilos: a apresentação é estilo e layout, e uma folha menor faz o layout mais rápido",
+        "why": "A apresentação é 125 dos 1888 milissegundos. Mesmo tirando tudo, a interação continuaria ruim."
+      },
+      {
+        "text": "Pelo tempo de resposta do servidor, já que o clique esperava dados que a página buscou",
+        "why": "O INP termina na próxima pintura depois da interação, e as três partes dele não têm rede. Um handler que mostrasse algo na hora e buscasse depois teria um INP curto."
+      },
+      {
+        "text": "Pelo próprio handler do clique, que rodou quase a interação inteira enquanto nada podia ser pintado",
+        "why": "O processamento foi 1762 dos 1888 milissegundos. Na aula 5 o handler contava as sessões de cada curso filtrando todas para cada curso; contar uma vez e desenhar cem itens levou o mesmo clique a 88 ms."
+      }
+    ]
+  },
+  "ex-qw68wt51": {
+    "prompt": "Duas folhas de estilo respeitam o movimento reduzido de jeitos diferentes. Uma escreve a animação em `.notice` e acrescenta `@media (prefers-reduced-motion: reduce) { .notice { animation: none; } }`. A outra escreve a animação só dentro de `@media (prefers-reduced-motion: no-preference) { … }`. Por que o curso de acessibilidade chama a segunda de jeito mais seguro?",
+    "hint": "HTML e CSS, aula 11; Testes, Segurança e Acessibilidade, aula 13.",
+    "choices": [
+      {
+        "text": "Só o macOS e o iOS informam `reduce`, enquanto todo sistema informa `no-preference`",
+        "why": "Todo sistema grande tem o ajuste, *Reduce motion*, *Animation effects*, *Remove animations*, e o navegador o repassa como a mesma media query."
+      },
+      {
+        "text": "Um navegador que não conhece a query não casa com nenhum bloco, e com o segundo não mostra nada se mexendo",
+        "why": "Com o primeiro, esse navegador roda a animação, porque o bloco que a tiraria nunca casa. Com o segundo, a animação só existe onde o navegador disse com todas as letras que ninguém pediu menos."
+      },
+      {
+        "text": "O `animation: none` não alcança uma animação escrita com o atalho, só uma escrita com `animation-name`",
+        "why": "O `animation: none` zera o atalho inteiro; a captura do curso de HTML mostrou `animation-name: none` com o ajuste ligado."
+      },
+      {
+        "text": "O segundo também para as transições da página, que o `animation: none` deixa rodando",
+        "why": "Nenhum dos blocos mexe em transições; cada um fala só da animação que nomeia. Uma transição precisaria de regra própria em qualquer dos dois."
+      }
+    ]
+  },
+  "ex-zkkqrrj9": {
+    "prompt": "Durante um carregamento do Lighthouse, três tarefas rodam na thread principal entre a primeira pintura e o momento em que a página se acomoda: uma de 120 ms, uma de 40 ms e uma de 90 ms. Contando como o Total Blocking Time conta, quantos milissegundos de bloqueio isso dá?",
+    "hint": "Renderização, Performance e PWA, aula 6."
+  },
+  "ex-ct44xz63": {
+    "prompt": "Um menu desliza da esquerda enquanto a página carrega, animado em `left` de `-300px` até `0`. Ele é suave no notebook do desenvolvedor e engasga num celular intermediário enquanto o script da página ainda roda. Por que movê-lo com `transform: translateX()` ajuda?",
+    "hint": "HTML e CSS, aula 12; Fundamentos da Web e Internet, aula 10.",
+    "choices": [
+      {
+        "text": "Cada quadro passa a ser só composição, sem layout nem pintura na thread principal ocupada",
+        "why": "Animar `left` faz layout e pintura a cada quadro, e um quadro tem uns 16 milissegundos, que um layout no celular pode gastar sozinho. Um transform só muda a composição: o curso de HTML contou 0 layouts num segundo para ele, contra 62 para uma margem."
+      },
+      {
+        "text": "Um transform move o menu em pixels inteiros, então menos pixels são repintados do que com `left`",
+        "why": "O que muda não é quantos pixels mudam, e sim quais etapas rodam. `left` muda a geometria, e geometria significa layout e depois pintura."
+      },
+      {
+        "text": "Os celulares limitam uma animação em `left` a 30 quadros por segundo, e um transform roda na taxa da tela",
+        "why": "O navegador tenta rodar as duas a cada quadro; o curso de HTML contou 62 layouts num segundo para uma margem. Elas engasgam porque cada um desses quadros custa um layout."
+      },
+      {
+        "text": "`left` exige `position: absolute`, que põe o menu numa camada e repinta a página por baixo",
+        "why": "`left` também vale para caixas relative, fixed e sticky, e posicionar não cria camada por si. O custo é o layout que cada novo valor de `left` pede."
+      }
+    ]
+  },
+  "ex-4t5fj7k6": {
+    "prompt": "Associe cada resposta ao `Cache-Control` que a aula 9 dá a ela.",
+    "hint": "Renderização, Performance e PWA, aula 9; Fundamentos da Web e Internet, aula 7.",
+    "pairs": [
+      {
+        "left": "`/assets/index-B_kobX3K.js`, com o nome tirado de um hash do conteúdo",
+        "right": "`public, max-age=31536000, immutable`"
+      },
+      {
+        "left": "uma página com as sessões de um aluno logado",
+        "right": "`private, no-cache`"
+      },
+      {
+        "left": "uma página com os dados de pagamento de alguém",
+        "right": "`no-store`"
+      },
+      {
+        "left": "uma página de curso igual para todos, que uma CDN pode responder por dez segundos sem perguntar",
+        "right": "`max-age=0, s-maxage=10`"
+      }
+    ],
+    "right_distractors": [
+      "`public, max-age=604800`",
+      "`no-cache`"
+    ]
+  },
+  "ex-693k1hqf": {
+    "prompt": "Uma imagem de destaque tem `width: 100vw`, e no Windows a página rola alguns pixels para o lado. Alguém conserta envolvendo a página inteira num `<div class=\"wrapper\">` com `overflow: hidden`. O relato de bug seguinte diz que os títulos dos meses, com `position: sticky; top: 0`, não grudam mais. O que teria consertado o primeiro problema sem causar o segundo?",
+    "hint": "HTML e CSS, aulas 6 e 7.",
+    "choices": [
+      {
+        "text": "`overflow: auto` no wrapper, que esconde a rolagem lateral só quando há o que rolar",
+        "why": "O `auto` faz do wrapper um ancestral de rolagem exatamente como o `hidden`, e os títulos grudariam numa caixa que nunca se move."
+      },
+      {
+        "text": "`top: 0` escrito também no wrapper, para os títulos medirem o deslocamento a partir da página",
+        "why": "Um deslocamento num wrapper estático não faz nada, e os títulos já têm o deles. O que quebrou foi o ancestral em que eles grudam."
+      },
+      {
+        "text": "`position: relative` no wrapper, para os títulos terem um ancestral posicionado em que grudar",
+        "why": "O sticky não procura ancestral posicionado; essa é a regra do `absolute`. Ele gruda dentro do ancestral de rolagem mais próximo, que o `overflow: hidden` transformou no wrapper."
+      },
+      {
+        "text": "`width: 100%` na imagem de destaque, já que `100vw` conta a barra de rolagem vertical e a página não",
+        "why": "Com barras de rolagem clássicas, `100vw` inclui a largura da barra, então a imagem fica mais larga que a página. `100%` é a largura da página, nada rola para o lado, e nenhum ancestral precisa de `overflow`."
+      }
+    ]
+  },
+  "ex-7sa05pqk": {
+    "prompt": "O service worker de um site responde tudo sob `/assets/` com cache primeiro. Um colega muda o build para os arquivos de lá se chamarem `app.js` e `app.css`, sem hash, \"para os endereços ficarem estáveis\". O deploy seguinte muda o `app.js` e deixa o `sw.js` como estava. O que os visitantes que voltam executam?",
+    "hint": "Renderização, Performance e PWA, aula 10; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "O `app.js` novo, já que a página é rede primeiro e aponta o script recém-publicado",
+        "why": "A página aponta `/assets/app.js`, sim, e esse endereço está no cache do worker. Cache primeiro responde com a cópia sem perguntar à rede."
+      },
+      {
+        "text": "O `app.js` antigo, do cache do worker, até uma nova versão do worker trocar esse cache",
+        "why": "Cache primeiro só serve para um arquivo que nunca muda no mesmo endereço, e é isso que o nome com hash garante. Com nome fixo, o build novo mora no mesmo endereço, e a cópia vence. Um nome novo é a única correção que um cache não deixa passar."
+      },
+      {
+        "text": "O `app.js` novo, porque o navegador procura atualização a cada navegação e vê a mudança",
+        "why": "O que o navegador confere a cada navegação é o próprio `/sw.js`, e esse arquivo não mudou. Nenhum worker novo se instala, e o antigo segue respondendo do cache."
+      },
+      {
+        "text": "O que voltar primeiro, já que cache primeiro faz a cópia apostar corrida com a rede",
+        "why": "Apostar corrida não é o que cache primeiro faz: ele devolve a cópia se houver uma, e só pergunta à rede quando não há."
+      }
+    ]
+  },
+  "ex-dkyn8k5v": {
+    "prompt": "Uma folha de estilos não define tamanho de fonte no `<html>`, e um título tem `font-size: 1.5rem`. Uma leitora com baixa visão ajustou o tamanho padrão do texto no navegador para 20 pixels. Quantos pixels tem o tamanho de fonte do título para ela?",
+    "hint": "HTML e CSS, aula 6."
+  },
+  "ex-jrf8rz23": {
+    "prompt": "O texto do planner usa IBM Plex Sans com `font-display: swap`, e num celular lento a troca move uma linha da lista de cursos. Que mudanças reduzem esse deslocamento sem fazer o texto esperar a fonte? Marque todas as que se aplicam.",
+    "hint": "Renderização, Performance e PWA, aula 7.",
+    "choices": [
+      {
+        "text": "Fazer preload dos dois arquivos WOFF2 com `as=\"font\"` e `crossorigin`",
+        "why": "As fontes passam a começar junto com a folha de estilos, e não um passo depois dela, e no teste lento da aula o texto foi pintado uma vez só, já em Plex."
+      },
+      {
+        "text": "Trocar para `font-display: block`, para o texto só ser desenhado quando a fonte estiver lá",
+        "why": "Aí não há o que trocar, e o texto fica invisível até a fonte chegar: o LCP da aula esperou por ela, uns trezentos milissegundos depois do que com `swap`."
+      },
+      {
+        "text": "Acrescentar um `@font-face` para `local(\"Arial\")` com o `size-adjust` medido contra a Plex, listado depois dela",
+        "why": "A fonte reserva passa a ocupar o espaço que a Plex vai ocupar, então, quando a troca vem, as letras mudam e as linhas ficam onde estavam."
+      },
+      {
+        "text": "Pôr `system-ui` entre a fonte web e `sans-serif`, para a reserva ser a fonte da interface do sistema",
+        "why": "O `system-ui` tem um formato diferente em cada sistema, o contrário de uma reserva escolhida para combinar. A aula o tirou da lista."
+      },
+      {
+        "text": "Nomear a Arial na lista de fontes, em vez de deixar a reserva só com `sans-serif`",
+        "why": "A Arial mediu menos de um por cento de diferença na largura da Plex. `sans-serif` sozinho pega o que o sistema quiser, como a DejaVu Sans, cerca de um oitavo mais larga."
+      },
+      {
+        "text": "Tirar o `crossorigin` do preload, já que a fonte vem do próprio servidor da página",
+        "why": "Fontes são sempre pedidas em modo CORS. Um preload sem ele não bate com a requisição real, e a fonte é baixada uma segunda vez."
+      }
+    ]
+  },
+  "ex-ywm7e7fv": {
+    "prompt": "Um contêiner de grid com 800 pixels de largura tem `grid-template-columns: 200px 1fr 3fr` e `gap: 16px`. Quantos pixels de largura tem a terceira coluna?",
+    "hint": "HTML e CSS, aula 9."
+  },
+  "ex-9pg17j51": {
+    "prompt": "Num celular de 390 pixels de largura, uma página se monta com 980 de largura e o título de 32 pixels sai com uns 13 no vidro. Complete a linha que falta no head dela: `<meta name=\"viewport\" content=\"width=___, initial-scale=1\">`",
+    "hint": "HTML e CSS, aula 1.",
+    "blanks": [
+      {
+        "accept": [
+          "device-width"
+        ]
+      }
+    ]
+  },
+  "ex-t144rg25": {
+    "prompt": "Só a página de estatísticas desenha um gráfico, e a biblioteca do gráfico é a maior parte do bundle. Complete a linha que busca o código do gráfico na primeira vez que ela roda, e que faz o Vite dar a esse código um chunk só dele: `(await ___(\"./chart.ts\")).showChart(p)`",
+    "hint": "Renderização, Performance e PWA, aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "import"
+        ]
+      }
+    ]
+  },
+  "ex-2wvh8fzf": {
+    "prompt": "Um site passa a usar Tailwind e mantém o `site.css` antigo, que não está em camada nenhuma e contém `a { color: #8a1c1c; }`. Um link escrito `<a class=\"text-white bg-green-700\" href=\"…\">` mostra o texto vermelho. `.text-white` é (0,1,0) e `a` é (0,0,1). Por que o vermelho vence?",
+    "hint": "HTML e CSS, aulas 10 e 13.",
+    "choices": [
+      {
+        "text": "Os utilitários moram numa camada, e o que está fora de qualquer uma passa à frente de todas antes da especificidade",
+        "why": "Entre camadas a ordem decide primeiro, e estilos fora de camada ficam acima de todas, então a especificidade nem é comparada. Importar o arquivo antigo numa camada baixa, com `@import … layer(…)`, faz os utilitários vencerem de novo."
+      },
+      {
+        "text": "O `site.css` é ligado depois do arquivo do Tailwind, e a regra que vem depois vence qualquer que seja a especificidade",
+        "why": "A ordem só decide entre regras de mesma especificidade na mesma camada. Aqui as duas nem chegam à especificidade, porque uma está numa camada e a outra não."
+      },
+      {
+        "text": "O Preflight zera os links com especificidade maior que a dos utilitários, e o `site.css` se apoia nisso",
+        "why": "O Preflight fica em `base`, abaixo de `utilities`, e põe nos links a cor do texto em volta. Nada se apoia num reset."
+      },
+      {
+        "text": "Uma cor posta no próprio `a` vence uma que chega por uma classe, como o azul do link vence a cor do pai",
+        "why": "O `text-white` não chega ao link por herança; é uma regra que casa com o próprio link. Uma regra que casa vencer um valor herdado é verdade, e não é o que aconteceu aqui."
+      }
+    ]
+  },
+  "ex-asewrwfj": {
+    "prompt": "O planner, depois de instalado, deve abrir numa janela própria, sem barra de endereço e sem nada da barra de ferramentas do navegador. Complete o membro do manifesto dele: `\"display\": \"___\"`",
+    "hint": "Renderização, Performance e PWA, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "standalone"
+        ]
+      }
+    ]
+  },
+  "ex-exkqv9bm": {
+    "prompt": "Uma página de reservas tem `<form action=\"/cancel\" method=\"get\">` com um campo oculto para a reserva e um botão *Cancel my reservation*. O site fica atrás de uma CDN. Além de a barra de endereço mostrar `/cancel?booking=…`, o que dá errado com GET aqui?",
+    "hint": "HTML e CSS, aula 3; Renderização, Performance e PWA, aula 9.",
+    "choices": [
+      {
+        "text": "Um campo oculto fica fora de uma requisição GET, então o servidor não sabe qual reserva cancelar",
+        "why": "Um GET manda todo campo que tem nome, os ocultos inclusive, na query string. A reserva estaria ali mesmo, no endereço."
+      },
+      {
+        "text": "A validação nativa é pulada num formulário GET, então uma reserva vazia chega ao servidor sem conferência",
+        "why": "O navegador valida antes de enviar com qualquer método; o `method` só decide por onde os dados viajam."
+      },
+      {
+        "text": "A cópia de um cache responde a requisição, o servidor nem fica sabendo, e a reserva continua de pé",
+        "why": "GET é para requisições que só leem, e os caches agem com base nisso: na prática só `GET` e `HEAD` são guardados. Um GET que muda alguma coisa pode ser respondido por uma cópia, virar favorito, ou ser enviado de novo pelo botão voltar."
+      },
+      {
+        "text": "Uma CDN não repassa um GET com query string, então a requisição para na borda",
+        "why": "CDNs repassam query strings o tempo todo; uma busca é um GET com uma. O perigo é o contrário: uma cópia servida no lugar de a requisição ser repassada."
+      }
+    ]
+  },
+  "ex-1239v94p": {
+    "prompt": "Uma loja regenera cada página de forma incremental, com idade de uma hora. Um produto muda de nome. Por um tempo, a página do produto mostra o nome novo, e a página da categoria que o lista ainda mostra o antigo. O que faz as duas páginas mudarem juntas?",
+    "hint": "Renderização, Performance e PWA, aula 3.",
+    "choices": [
+      {
+        "text": "Uma idade menor na página da categoria, para ela regenerar assim que a do produto regenerar",
+        "why": "Cada página continua regenerando sozinha, quando é pedida depois da idade. Uma idade menor encurta a discordância e não alinha as duas."
+      },
+      {
+        "text": "Mandar as duas páginas com `stale-while-revalidate`, para as cópias velhas se renovarem em segundo plano",
+        "why": "É a mesma regra da idade, aplicada por uma CDN: cada cópia se renova na sua própria requisição, então as duas continuam mudando em momentos diferentes."
+      },
+      {
+        "text": "Revalidação sob demanda, com toda página renderizada a partir desses dados marcada de uma vez",
+        "why": "Um timer regenera uma página porque o tempo passou, uma página por vez. Marcar todas as cópias renderizadas a partir dos mesmos dados, como a aula fez com uma tag para a página inicial e as de curso, regenera todas juntas."
+      },
+      {
+        "text": "Manter as duas cópias no mesmo servidor, já que cópias em dois servidores vencem em momentos diferentes",
+        "why": "Essa é outra discordância, entre as cópias de dois servidores para a mesma página. Num servidor só, duas páginas diferentes continuam regenerando separadas."
+      }
+    ]
+  },
+  "ex-43a41fad": {
+    "prompt": "Ponha em ordem a vida de um service worker, da página que o instala até as requisições que ele responde.",
+    "hint": "Renderização, Performance e PWA, aula 10.",
+    "items": [
+      "Uma página chama `navigator.serviceWorker.register(\"/sw.js\")`, e o navegador baixa o arquivo",
+      "O `install` roda uma vez, o momento de buscar o que o worker quer ter desde o começo",
+      "O `activate` roda quando nada mais antigo controla uma página, o momento de apagar o que uma versão antiga deixou",
+      "Cada requisição de uma página que ele controla chega como um evento `fetch`, e o script decide a resposta"
+    ],
+    "trap": "O deslize comum é fazer o worker responder requisições logo depois do registro. Ele primeiro se instala, só ativa quando nenhuma versão antiga controla uma página, e controla as páginas abertas depois disso, então o `fetch` vem por último."
+  },
+  "ex-kqe1cttk": {
+    "prompt": "Um título é marrom na folha de estilos e cinza na página. Ponha em ordem o procedimento do curso de HTML para descobrir por quê.",
+    "hint": "HTML e CSS, aula 5.",
+    "items": [
+      "Clicar com o botão direito no título e escolher Inspecionar",
+      "Ler o painel Styles, que lista toda regra que casou, a mais importante primeiro",
+      "Achar as declarações de `color` e a que não está riscada",
+      "Ler o arquivo e a linha dessa regra, e se ela venceu pela especificidade ou pela ordem"
+    ],
+    "trap": "O atalho tentador é pôr `!important` na sua regra antes de ler a lista. No caso do curso, quem venceu foi uma duplicata esquecida mais abaixo no arquivo, e a lista mostra isso em um minuto."
+  },
+  "ex-6b85cy42": {
+    "prompt": "Todo campo de um formulário de pedido tem um valor que quebra a regra dele. Associe cada campo ao indicador que o `validity` informa para ele.",
+    "hint": "HTML e CSS, aula 3.",
+    "pairs": [
+      {
+        "left": "`required`, deixado vazio",
+        "right": "`valueMissing`"
+      },
+      {
+        "left": "`type=\"email\"`, com `ana@`",
+        "right": "`typeMismatch`"
+      },
+      {
+        "left": "`pattern=\"[0-9]{5}-[0-9]{3}\"`, com `05422000`",
+        "right": "`patternMismatch`"
+      },
+      {
+        "left": "`max=\"5\"`, com `9`",
+        "right": "`rangeOverflow`"
+      },
+      {
+        "left": "`minlength=\"2\"`, com `V`",
+        "right": "`tooShort`"
+      }
+    ],
+    "right_distractors": [
+      "`rangeUnderflow`",
+      "`badInput`"
+    ]
+  },
+  "ex-5m1grnnh": {
+    "prompt": "Uma rodada do axe numa página, com todas as tags da WCAG 2.2 AA, não aponta nenhuma violação. Quais destes problemas ainda podem estar nela? Marque todos os que se aplicam.",
+    "hint": "HTML e CSS, aula 2; Testes, Segurança e Acessibilidade, aula 10.",
+    "choices": [
+      {
+        "text": "Dois links chamados *Click here* que vão para páginas diferentes",
+        "why": "*Click here* é um nome, e o axe aceita. Se o texto do link diz para onde ele vai é uma questão de sentido, não da estrutura do documento."
+      },
+      {
+        "text": "Uma capa de livro dentro de um link, sem atributo `alt` nenhum",
+        "why": "É exatamente o que o axe acha: `image-alt` para a imagem e `link-name` para o link que ela deixa sem nome."
+      },
+      {
+        "text": "Um logotipo cujo `alt` é `image`",
+        "why": "`alt=\"image\"` passa em todas as regras. Se o texto diz o que a imagem significa, quem julga é uma pessoa."
+      },
+      {
+        "text": "Sessões concluídas desenhadas em `#aaaaaa` sobre branco, a 2,32:1",
+        "why": "Uma razão de contraste dá para decidir pelo documento. O axe apontou esta como `color-contrast`, contra os 4,5:1 que o AA pede para texto desse tamanho."
+      },
+      {
+        "text": "Um contorno de foco removido por um estilo, sem nada no lugar",
+        "why": "Um estilo que remove o contorno é CSS válido, e o axe não aperta Tab para ver onde o foco foi. Se o elemento focado está visível é pergunta da aula 11."
+      },
+      {
+        "text": "Um campo de texto que nenhum rótulo, atributo ou texto nomeia",
+        "why": "Um campo sem nome é uma das coisas que o axe consegue decidir, como um botão sem nome ou um id duplicado."
+      }
+    ]
+  },
+  "ex-fcv0pxzh": {
+    "prompt": "Um script insere um banner de consentimento no topo do `<body>` um segundo depois de a página ser pintada, sem toque nem clique do leitor, e o CLS da página passa de 0,1. Que jeito de mostrá-lo deixa o deslocamento fora da nota?",
+    "hint": "HTML e CSS, aula 7; Renderização, Performance e PWA, aula 5.",
+    "choices": [
+      {
+        "text": "Inseri-lo na primeira rolagem do leitor, já que um deslocamento logo depois de o leitor agir é perdoado",
+        "why": "O perdão cobre uma interação, um clique, um toque ou uma tecla, e o meio segundo depois dela. Rolar não é uma, e o leitor não pediu banner."
+      },
+      {
+        "text": "`position: fixed` no rodapé da janela, para cobrir parte da tela e não mover nenhuma outra caixa",
+        "why": "Uma caixa fixa fica fora do fluxo, então a chegada dela não move nada, e é assim que o botão de instalar do planner aparece tarde sem deslocamento. Ela custa espaço na tela enquanto estiver lá e não pode cobrir o elemento que tem o foco."
+      },
+      {
+        "text": "Fazê-lo surgir a partir de `opacity: 0`, que o compositor anima sem layout",
+        "why": "O esmaecimento é barato, mas a caixa ocupa o espaço dela no fluxo no momento em que é inserida, e tudo abaixo desce."
+      },
+      {
+        "text": "Dar ao banner `z-index: 9999`, para ele ser desenhado por cima da página em vez de empurrá-la",
+        "why": "O `z-index` decide o que fica na frente onde caixas se sobrepõem. Uma caixa no fluxo normal continua ocupando o espaço dela e empurrando o que vem depois."
+      }
+    ]
+  },
+  "ex-pkb5sbmq": {
+    "prompt": "Quais destes, no `<head>` de uma página, seguram a primeira pintura dela? Marque todos os que se aplicam.",
+    "hint": "Renderização, Performance e PWA, aula 7; HTML e CSS, aula 1.",
+    "choices": [
+      {
+        "text": "`<script type=\"module\" src=\"/assets/index.js\"></script>`, como o Vite escreve",
+        "why": "Um módulo é baixado sem parar o parser e roda depois que o documento foi lido, como com `defer`."
+      },
+      {
+        "text": "`<link rel=\"stylesheet\" href=\"site.css\">`",
+        "why": "O navegador espera toda folha de estilos do head antes de pintar, porque desenhar a página sem estilo e depois de novo a faria pular."
+      },
+      {
+        "text": "`<script src=\"menu.js\" defer></script>`",
+        "why": "O `defer` o baixa enquanto o parser segue e o executa depois, então o HTML é lido na velocidade máxima."
+      },
+      {
+        "text": "`<script src=\"menu.js\"></script>`",
+        "why": "Sem `defer`, `async` nem `type=\"module\"`, o navegador para de ler o HTML até o script ser baixado e executado, porque ele pode escrever na página."
+      },
+      {
+        "text": "`<link rel=\"preload\" href=\"/fonts/plex-400.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>`",
+        "why": "Um preload começa um download cedo e não bloqueia nada. O custo dele é a banda tirada de outras requisições."
+      }
+    ]
+  },
+  "ex-vyv3y85x": {
+    "prompt": "O LCP de uma página inicial é 3,8 s nos celulares. A atribuição do `web-vitals` o divide em tempo até o primeiro byte 0,3 s, atraso de carga do recurso 2,4 s, duração da carga do recurso 0,6 s e atraso de renderização do elemento 0,5 s. O elemento de LCP é uma imagem de destaque que um script de carrossel insere. Qual é a primeira correção?",
+    "hint": "Renderização, Performance e PWA, aulas 5 e 7.",
+    "choices": [
+      {
+        "text": "Comprimir a imagem em AVIF e oferecer arquivos menores no `srcset`, já que ela é o elemento de LCP",
+        "why": "Isso encurta a duração da carga do recurso, 0,6 dos 3,8 segundos. A maior parte é a espera antes de o download sequer começar."
+      },
+      {
+        "text": "Embutir o CSS crítico, para nada segurar a pintura depois que a imagem chegar",
+        "why": "Isso age no atraso de renderização do elemento, 0,5 segundo aqui. Vale fazer depois, e não é onde está a maior parte do tempo."
+      },
+      {
+        "text": "Servir o HTML de uma CDN perto do visitante, o que adianta todas as partes seguintes",
+        "why": "Isso encurta o tempo até o primeiro byte, que já é 0,3 segundo, e só adianta as outras partes no que economiza."
+      },
+      {
+        "text": "Pôr o `<img>` da imagem no HTML que o servidor manda, para o navegador achá-la sem o script",
+        "why": "O atraso de carga do recurso é o tempo até a imagem começar a carregar: 2,4 dos 3,8 segundos, gastos esperando um script apontá-la. Na primeira resposta, com `fetchpriority=\"high\"`, a requisição começa na hora."
+      }
+    ]
+  },
+  "ex-w55wb5g4": {
+    "prompt": "Um redesenho tira uma foto de produto da largura inteira e a põe numa coluna com metade da janela nos desktops, e o CSS é atualizado. O `<img>` mantém `srcset=\"p-480.jpg 480w, p-960.jpg 960w, p-1600.jpg 1600w\"` e não tem `sizes`. Numa janela de 1280 pixels com razão de pixels 1, o LCP piorou. Por quê?",
+    "hint": "Renderização, Performance e PWA, aula 5; HTML e CSS, aula 4.",
+    "choices": [
+      {
+        "text": "Sem `sizes` o navegador supõe `100vw`, então baixa um arquivo para 1280 pixels para desenhar um de 640",
+        "why": "O `sizes` é uma promessa sobre o layout que nada confere, lida antes do layout da página. Sem ele, vale a janela inteira, então o Chromium pega o de 1600 onde o de 960 bastava, e a duração da carga do recurso no LCP cresce junto."
+      },
+      {
+        "text": "Sem `sizes` o navegador ignora o `srcset` e cai no `src`, que é o maior arquivo",
+        "why": "O `srcset` continua sendo lido. A falta do `sizes` só muda a largura em que o navegador acha que a imagem será desenhada, que vira a janela inteira."
+      },
+      {
+        "text": "O navegador lê a nova largura do CSS antes de escolher, e uma coluna de meia largura pede um arquivo mais nítido",
+        "why": "O navegador escolhe o arquivo antes de calcular o layout, e é por isso que o `sizes` repete o que o CSS diz. Ele nunca viu a meia largura."
+      },
+      {
+        "text": "Uma coluna mais estreita tem menos pixels, e o Chromium então pega o arquivo mais largo para a foto não ficar borrada",
+        "why": "O Chromium pegou o arquivo mais estreito com pelo menos a largura desenhada vezes a razão de pixels. Um desenho mais estreito significaria um arquivo menor, se o `sizes` tivesse dito."
+      }
+    ]
+  },
+  "ex-3v6sfwt6": {
+    "prompt": "Um formulário lê o campo Minutos com `Number(new FormData(form).get(\"minutes\"))` e recusa a sessão quando `Number.isNaN(minutes)` dá verdadeiro. O campo não tem o atributo `required`. Alguém o deixa vazio e aperta Adicionar. O que a verificação enxerga?",
+    "hint": "JavaScript, aulas 2 e 12.",
+    "choices": [
+      {
+        "text": "`NaN`, e a sessão é recusada como se queria, porque uma string vazia não tem dígito nenhum para converter",
+        "why": "`Number` dá `NaN` para um texto que não consegue ler, como `\"42px\"`. A string vazia é a exceção que a aula 2 chama de armadilha: ela vira `0`."
+      },
+      {
+        "text": "`null`, já que ninguém digitou no campo, e `Number(null)` sai como `NaN`",
+        "why": "Todo campo volta do `FormData` como string, inclusive vazio, então o valor é `\"\"` e não `null`."
+      },
+      {
+        "text": "`0`, que não é `NaN`, então a verificação deixa passar; um `required` teria barrado o envio",
+        "why": "`Number(\"\")` é `0`, então uma verificação de `NaN` aceita o campo vazio. A validação nativa roda antes de o `submit` disparar, e é por isso que a aula 12 a põe primeiro."
+      },
+      {
+        "text": "A própria string `\"\"`, já que `Number` devolve o argumento sem mudança quando não consegue convertê-lo",
+        "why": "`Number` sempre devolve um número: o que leu, ou `NaN`. Nunca devolve a string que recebeu."
+      }
+    ]
+  },
+  "ex-5qyynhyw": {
+    "prompt": "Uma página de busca deve desistir de uma requisição que não respondeu em dois segundos, e o código que pega o erro precisa distinguir esse caso de alguém apertando Cancelar. Complete a opção: `fetch(url, { signal: AbortSignal.___(2000) })`",
+    "hint": "JavaScript, aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout"
+        ]
+      }
+    ]
+  },
+  "ex-emtvrt8g": {
+    "prompt": "Um colega reescreve o `markDone` do planner como `const next = { ...plan }; next.sessions.find((s) => s.id === id).done = true; return next;`, e a tela do React Native chama `setPlan(markDone(plan, id))`. O que há de errado?",
+    "hint": "JavaScript, aula 4; Apps Desktop e Mobile com Web, aula 7.",
+    "choices": [
+      {
+        "text": "O spread copia um nível só, então a sessão marcada pertence também ao plano antigo: o plano antigo foi editado no lugar",
+        "why": "`next.sessions` é o mesmo array de `plan.sessions`, com os mesmos objetos. As regras da aula 7 devolvem um plano novo e nunca editam o antigo, e foi por isso que puderam ir para o React sem mudança."
+      },
+      {
+        "text": "Nada: `next` é um objeto novo, então o plano antigo fica como estava e o React recebe um plano novo para desenhar",
+        "why": "O objeto de fora é novo, e é só isso que um spread faz de novo. A sessão alterada é a mesma para a qual o plano antigo também aponta."
+      },
+      {
+        "text": "O `find` devolve uma cópia da sessão, então mudar o `done` nela não altera nenhum dos dois planos",
+        "why": "O `find` devolve o próprio elemento, uma referência ao objeto que está no array. Escrever por ela muda esse objeto."
+      },
+      {
+        "text": "`{ ...plan }` copia tudo até o fundo, como faz o `structuredClone`, então o código está certo e só é mais lento do que precisava",
+        "why": "Essa é justamente a diferença que a aula 4 mostra: `structuredClone` copia até o fundo e o spread copia um nível."
+      }
+    ]
+  },
+  "ex-9d187m5z": {
+    "prompt": "Uma página guarda o tamanho medido de cada elemento em `const sizes = new Map()`, com o próprio elemento como chave. Linhas saem da lista o dia todo, e a memória da página não para de crescer. O que as aulas oferecem, e por que serve?",
+    "hint": "JavaScript, aulas 5 e 19.",
+    "choices": [
+      {
+        "text": "Esvaziá-lo com `sizes.clear()` num `setInterval` a cada minuto, o que o limita, entrem e saiam as linhas como for",
+        "why": "Isso joga fora os tamanhos de linhas ainda na tela e mantém as removidas até o próximo tique. As aulas amarram a vida de cada entrada à sua chave."
+      },
+      {
+        "text": "Usar como chave a string de id de cada elemento, para a entrada não segurar mais o próprio elemento",
+        "why": "As entradas continuam nunca saindo. Uma chave string guarda o tamanho para sempre como a chave objeto guardava, e nada amarra a entrada à linha."
+      },
+      {
+        "text": "Um `WeakSet` dos elementos, que os mantém listados sem virar o motivo de eles existirem",
+        "why": "Um `WeakSet` marca objetos e não guarda valor nenhum ao lado de cada um, então não tem onde pôr um tamanho."
+      },
+      {
+        "text": "Um `WeakMap` com o elemento como chave, que não mantém vivas as linhas removidas",
+        "why": "A aula 5 cita exatamente esse cache, o tamanho medido de cada elemento, e a aula 19 usa um `WeakMap` quando as chaves são objetos cuja vida deve decidir a da entrada."
+      }
+    ]
+  },
+  "ex-nz7dy9mr": {
+    "prompt": "Um widget de gráfico roda `window.addEventListener(\"resize\", this.redraw.bind(this))` quando é criado e `window.removeEventListener(\"resize\", this.redraw.bind(this))` quando a página o remove. A closure dele segura um array grande de pontos. Marque todas as que se aplicam.",
+    "hint": "JavaScript, aulas 7 e 19.",
+    "choices": [
+      {
+        "text": "A remoção não faz nada, porque cada `bind` cria uma função nova e as duas não são `===`",
+        "why": "O `removeEventListener` procura a mesma função, comparada com `===`, e um segundo `bind` é uma segunda função."
+      },
+      {
+        "text": "Todo widget removido fica na memória com seus pontos, porque o `window` ainda segura o listener dele",
+        "why": "Um listener vive enquanto viver o objeto que ele escuta, com tudo o que a closure capturou. O `window` vive enquanto a página viver."
+      },
+      {
+        "text": "A remoção funciona, já que as duas chamadas fazem o bind do mesmo método no mesmo objeto",
+        "why": "Mesmo método e mesmo objeto ainda dão duas funções ligadas diferentes, que é o bug que a aula 7 mostra com a campainha."
+      },
+      {
+        "text": "Fazer o bind uma vez no construtor e passar esse mesmo valor às duas chamadas resolve",
+        "why": "É a regra da aula 7: um bind só, guardado, usado para adicionar e para remover. Aí o listener sai, e o widget junto."
+      },
+      {
+        "text": "O coletor libera o widget mesmo assim, já que nenhuma variável da própria página aponta mais para ele",
+        "why": "O coletor mantém tudo o que se alcança a partir de uma raiz, e o `window`, pela lista de listeners, alcança a closure do widget."
+      }
+    ]
+  },
+  "ex-zk1rzvw3": {
+    "prompt": "Um erro de digitação, `totl = 0;` no lugar de `total = 0;`, está numa função em cada um destes lugares. Em quais ele lança um `ReferenceError` em vez de criar uma global sem avisar? Marque todas as que se aplicam.",
+    "hint": "JavaScript, aula 20; Apps Desktop e Mobile com Web, aula 11.",
+    "choices": [
+      {
+        "text": "o `src/main.ts` do planner, carregado por `<script type=\"module\">`",
+        "why": "Um módulo é strict sem precisar da string, no navegador como no Node."
+      },
+      {
+        "text": "o `electron/preload.cjs` do planner no Electron, como a aula 11 o escreveu",
+        "why": "Um arquivo `.cjs` é CommonJS, que é sloppy a não ser que diga `\"use strict\"`, e o preload da aula 11 não diz."
+      },
+      {
+        "text": "um método dentro do corpo de uma `class`, num arquivo `.cjs`",
+        "why": "Todo corpo de classe é strict, seja qual for o arquivo em volta."
+      },
+      {
+        "text": "um atributo `onclick=\"…\"` escrito no HTML",
+        "why": "Um handler inline roda como código sloppy; a sonda da aula 20 imprimiu `false`."
+      },
+      {
+        "text": "o `electron/main.mjs` do planner no Electron",
+        "why": "Um arquivo `.mjs` é um módulo ES no Node, e módulo ES é strict."
+      },
+      {
+        "text": "um `<script>` clássico sem `\"use strict\"` no topo",
+        "why": "Um script clássico é sloppy a não ser que ligue o modo strict por conta própria."
+      }
+    ]
+  },
+  "ex-6we7xx56": {
+    "prompt": "Uma página de estatísticas desenha o gráfico com uma biblioteca grande. O time troca o `import` da biblioteca por `import()`, para as outras páginas pararem de baixá-la. Que custo novo isso traz, e o que a aula 8 faz a respeito?",
+    "hint": "JavaScript, aula 9; Renderização, Performance e PWA, aula 8.",
+    "choices": [
+      {
+        "text": "A biblioteca passa a rodar em toda página, porque o `import()` sobe como um import estático, e nada se economiza",
+        "why": "O `import()` carrega o módulo quando a linha é alcançada; o programa da aula 9 nunca carregou `report.mjs` na execução que não pediu."
+      },
+      {
+        "text": "O chunk só é buscado quando a linha roda, e alguém espera; um `import()` no `pointerover` o busca antes",
+        "why": "Código carregado sob demanda é código que alguém espera. O ponteiro chega no link algumas centenas de milissegundos antes do clique, tempo para buscar o chunk."
+      },
+      {
+        "text": "Toda página passa a baixar mais um arquivo, o chunk, ao abrir, e um `<link rel=\"prefetch\">` o elimina",
+        "why": "As páginas que nunca rodam o `import()` nunca baixam o chunk; a página de curso não baixou código de gráfico nenhum."
+      },
+      {
+        "text": "O navegador recusa `import()` sem um import map, então o build precisa escrever um em toda página",
+        "why": "Import map serve para um nome solto que o navegador não sabe achar; o `import()` em si funciona numa página, e o bundler escreve o endereço real do chunk."
+      }
+    ]
+  },
+  "ex-e5hh17tx": {
+    "prompt": "Com os auxiliares da aula 14, em que `wait(ms, v)` cumpre com `v` depois de `ms` milissegundos e `fail(ms, m)` rejeita depois de `ms`, um programa roda `await Promise.any([fail(100, \"A is down\"), wait(400, \"B\"), wait(250, \"C\")])`. Cerca de quantos milissegundos depois do início dessa linha o `await` devolve o valor?",
+    "hint": "JavaScript, aula 14."
+  },
+  "ex-wzsv3fhq": {
+    "prompt": "A anotação de uma sessão é mostrada com `p.innerHTML = note`. O time adiciona uma Content Security Policy com `script-src 'self'` e fecha o chamado. Uma testadora salva a anotação `<b>3</b>` e vê um 3 em negrito. O que isso diz a ela?",
+    "hint": "JavaScript, aula 11; Testes, Segurança e Acessibilidade, aulas 8 e 9.",
+    "choices": [
+      {
+        "text": "A política não está sendo servida, porque com `script-src 'self'` o navegador recusa qualquer marcação que uma pessoa digitou",
+        "why": "Uma política diz de onde o código pode vir. Ela não tem nada a dizer sobre um `<b>`, que é marcação e não script."
+      },
+      {
+        "text": "Nada com que se preocupar: negrito não é script, e a política agora recusa o que quer que uma anotação faça",
+        "why": "A política barra um script injetado; não faz nada contra o próprio código da página transformando o texto de alguém em elementos, formulários e links incluídos."
+      },
+      {
+        "text": "A página ainda monta elementos com o que uma pessoa digitou; a correção é escrever a anotação com `textContent`",
+        "why": "O `<b>` é a testemunha da aula 9. Texto entra pelo método de texto, e `textContent` nunca lê sua string como HTML."
+      },
+      {
+        "text": "O navegador guardou a página antiga no cache, e um recarregamento forçado faz a política mostrar a anotação como texto puro",
+        "why": "Uma política nunca transforma marcação em texto, com cache ou sem. Só escrever o valor como texto faz isso."
+      }
+    ]
+  },
+  "ex-0e6c14wv": {
+    "prompt": "Um time entrega o mesmo controle Emprestar duas vezes: na web como uma `<div>` com listener de clique, e no app React Native como um `Pressable` sem `role`. Os dois parecem botões. O que cada um faz com quem não usa um ponteiro, e o que conserta cada um?",
+    "hint": "JavaScript, aula 12; Apps Desktop e Mobile com Web, aula 8.",
+    "choices": [
+      {
+        "text": "O Tab pula a `<div>`, e o leitor de tela anuncia o `Pressable` como nada em especial; `<button>` e `role=\"button\"` resolvem",
+        "why": "Uma `<div>` não recebe foco, então o teclado nunca chega nela. No React Native é o `role` que o TalkBack e o VoiceOver anunciam."
+      },
+      {
+        "text": "Os dois funcionam: Enter num elemento focado dispara o listener de clique, seja qual for o elemento",
+        "why": "O navegador transforma Enter e Espaço num clique num botão, não numa `<div>`, e a `<div>` nem chega a receber foco."
+      },
+      {
+        "text": "O Tab chega na `<div>` mas o Enter não faz nada, e o TalkBack pula o `Pressable`; um `tabindex` resolve os dois",
+        "why": "O Tab pulou a `<div>` na aula 12. E `tabindex` é um atributo da web; não diz nada a um leitor de tela nativo."
+      },
+      {
+        "text": "Só o da web; o React Native não tem suporte a leitor de tela, então o app precisa de uma versão acessível separada",
+        "why": "Um app React Native é lido pelo leitor de tela da própria plataforma, a partir das props `role` e `aria-label` que recebe."
+      }
+    ]
+  },
+  "ex-1edp3rra": {
+    "prompt": "Ponha as linhas que este programa imprime na ordem em que aparecem.\n\n```javascript\nsetTimeout(() => {\n  console.log(\"first timer\");\n  queueMicrotask(() => console.log(\"microtask from the first timer\"));\n}, 0);\nsetTimeout(() => console.log(\"second timer\"), 0);\nasync function load() {\n  console.log(\"load begins\");\n  await null;\n  console.log(\"load resumes\");\n}\nload();\nconsole.log(\"end\");\n```",
+    "hint": "JavaScript, aulas 13 e 14.",
+    "items": [
+      "`load begins`",
+      "`end`",
+      "`load resumes`",
+      "`first timer`",
+      "`microtask from the first timer`",
+      "`second timer`"
+    ],
+    "trap": "O deslize mais provável é pôr `load resumes` logo depois de `load begins`. O que vem depois de um `await` roda mais tarde, como microtarefa, então `end` vem antes; e uma microtarefa enfileirada por uma tarefa roda antes da tarefa seguinte."
+  },
+  "ex-yvrd51xj": {
+    "prompt": "Uma página roda a ordenação de dois segundos da aula 13 quando Sort é clicado. Um décimo de segundo depois, alguém clica em Ping, cujo handler só registra uma linha. Medida com `web-vitals`, qual parte da interação do Ping é a longa?",
+    "hint": "JavaScript, aula 13; Renderização, Performance e PWA, aula 5.",
+    "choices": [
+      {
+        "text": "O processamento, já que o handler do Ping é o que está rodando enquanto a pessoa espera a próxima pintura",
+        "why": "O handler do Ping roda quase nada depois que começa. A espera aconteceu antes de ele poder começar."
+      },
+      {
+        "text": "O atraso de apresentação, porque o navegador tem dois segundos de layout para fazer antes de pintar a mudança do Ping",
+        "why": "Apresentação é estilo, layout e pintura depois dos handlers. O Ping não muda nada na página, e a ordenação não era layout."
+      },
+      {
+        "text": "Nenhuma: o INP conta só o trabalho do handler mais lento, e o do Ping quase não leva tempo",
+        "why": "O INP vai do toque até a próxima pintura, e o tempo antes de o handler começar faz parte dele."
+      },
+      {
+        "text": "O atraso de entrada: o Ping espera quase 2 s para começar, porque a thread única está ocupada",
+        "why": "O clique entrou na fila na hora e foi atendido cerca de 2000 ms depois do início da ordenação. A aula 5 chama essa espera de atraso de entrada, longo sempre que a thread principal está ocupada com outra coisa."
+      }
+    ]
+  },
+  "ex-ga5weryg": {
+    "prompt": "A cascata de uma página mostra todas as requisições terminadas nos primeiros 300 ms, depois um trecho longo sem barra nenhuma, e a página aparece em cerca de dois segundos. Para onde a busca pelo atraso deve ir agora?",
+    "hint": "JavaScript, aula 22; Fundamentos da Web e Internet, aula 11.",
+    "choices": [
+      {
+        "text": "Para o servidor: o tempo depois da última requisição pertence à barra de espera, então é na API que cabe um perfil",
+        "why": "A barra de espera faz parte da linha de uma requisição, e todas as linhas tinham terminado. Um vão sem barras é tempo em que nada estava na rede."
+      },
+      {
+        "text": "O navegador estava ocupado, não a rede; um perfil em Bottom-Up, por self time, aponta a função",
+        "why": "Um vão longo sem nada é o navegador lendo ou rodando script. O profiler conta onde o programa estava, e o self time aponta o código que fez o trabalho."
+      },
+      {
+        "text": "Eram awaits em sequência, e o `Promise.all` fecha o vão",
+        "why": "Awaits em sequência desenham uma escada de barras, cada uma começando quando a anterior acaba. Este gráfico não tem barra nenhuma na parte lenta."
+      },
+      {
+        "text": "Os arquivos são grandes, e comprimi-los encolhe a barra de download de que o vão é feito",
+        "why": "Download é uma barra na linha de uma requisição. As linhas acabaram em 300 ms, então arquivos menores não encurtam o que veio depois."
+      }
+    ]
+  },
+  "ex-nfh1631c": {
+    "prompt": "Uma página instala o `watchErrors()` da aula 11. As configurações são lidas com `try { settings = JSON.parse(text); } catch { settings = {}; }`, e um arquivo salvo com uma vírgula a mais dá silenciosamente os padrões a todo usuário. Por que o monitor nunca relatou isso, e o que resolve?",
+    "hint": "JavaScript, aula 17; Deploy, Design Systems e GraphQL, aula 11.",
+    "choices": [
+      {
+        "text": "O listener de `error` só dispara para um `SyntaxError` encontrado na primeira leitura da página, então falta também o `unhandledrejection`",
+        "why": "Aqui o `JSON.parse` é síncrono e não há promise envolvida, e o evento `error` vê qualquer exceção que escape, a qualquer momento."
+      },
+      {
+        "text": "O `sendBeacon` recusou o relatório porque a página não estava fechando, e trocar por `fetch` o entrega",
+        "why": "O `sendBeacon` envia sempre que é chamado, fechando ou não. Relatório nenhum foi feito, porque nada chegou ao `report`."
+      },
+      {
+        "text": "O `catch` o pegou, então nada chegou ao `window`; esse `catch` precisa chamar `report` ou relançar",
+        "why": "Os dois eventos do `window` só veem o que nenhum `catch` pegou. Um erro engolido é invisível para eles, e é por isso que a aula 11 relata também dos `catch`es da própria página."
+      },
+      {
+        "text": "O `JSON.parse` devolve `undefined` para uma entrada ruim em vez de lançar, então não havia erro para relatar",
+        "why": "O `JSON.parse` lança um `SyntaxError` que diz a posição. O `catch` o recebeu e o descartou."
+      }
+    ]
+  },
+  "ex-dvmcfesp": {
+    "prompt": "Um teste chama `start(root(), async () => Response.json(data))` sem `await` e, na linha seguinte, verifica `screen.getByRole(\"heading\", { name: \"Study planner\" })`. Ele falha sem achar o título, embora a página funcione. Por quê, e o que a aula 3 escreve no lugar?",
+    "hint": "JavaScript, aula 14; Testes, Segurança e Acessibilidade, aula 3.",
+    "choices": [
+      {
+        "text": "A página desenha só depois do `load()`; o `findByRole` consulta até o elemento existir",
+        "why": "Uma função `async` devolve uma promise na hora, e o trabalho depois do `await load()` roda mais tarde. O `findBy…` consulta de novo e volta assim que o elemento está lá."
+      },
+      {
+        "text": "O jsdom não tem `fetch`, a página nunca carrega e o teste pede um navegador real",
+        "why": "O teste passa o próprio `load`, então nenhum `fetch` é chamado. A página carrega, só que depois da verificação."
+      },
+      {
+        "text": "O `getByRole` só vê o que foi desenhado antes de o teste começar, então meio segundo de pausa e a mesma consulta resolvem",
+        "why": "Uma pausa fixa falha numa máquina lenta e desperdiça tempo numa rápida. A aula 3 espera pela coisa, nunca pelo relógio."
+      },
+      {
+        "text": "O `Response.json(data)` monta uma resposta 500, que a página trata como carga falha e avisa",
+        "why": "O `Response.json` monta o 200 que um servidor mandaria com esses dados. O caso de falha da aula 3 passa `new Response(\"\", { status: 500 })`."
+      }
+    ]
+  },
+  "ex-fjk312c4": {
+    "prompt": "O `package.json` de uma dependência nova tem um script `postinstall`. Marque todas as que se aplicam.",
+    "hint": "JavaScript, aula 21; Testes, Segurança e Acessibilidade, aula 9.",
+    "choices": [
+      {
+        "text": "Com os padrões do npm, ele roda durante a instalação, como o seu usuário, e o npm não imprime nada sobre isso",
+        "why": "O `shelf-banner` deixou um arquivo para trás e o npm não disse nada; o arquivo foi o único sinal de que o script rodou."
+      },
+      {
+        "text": "O `npm ci --ignore-scripts` instala os arquivos do pacote e não roda nenhum dos scripts dele",
+        "why": "Essa execução não deixou arquivo. O custo é que um pacote que precisa mesmo compilar algo para de funcionar até você o recompilar de propósito."
+      },
+      {
+        "text": "O pnpm 10 o roda do mesmo jeito que o npm, e o Yarn 4 é o gerenciador que pula scripts de build por padrão",
+        "why": "É o contrário: o pnpm 10 pula os scripts de build de uma dependência a não ser que o projeto a nomeie, e o Yarn 4 os roda a não ser com `enableScripts: false`."
+      },
+      {
+        "text": "O `npm audit` lê o script e recusa o pacote antes de o script ter chance de rodar",
+        "why": "O `npm audit` lista vulnerabilidades conhecidas das versões instaladas. Não lê scripts, e roda depois da instalação."
+      },
+      {
+        "text": "Um pacote usado só pelo build nunca chega ao navegador, então os scripts dele rodam sem os direitos de ninguém",
+        "why": "O que chega ao navegador roda com os direitos da página, e o que roda no build ou nos testes roda com os seus."
+      }
+    ]
+  },
+  "ex-6z8j916f": {
+    "prompt": "Uma página em `https://app.example` envia um empréstimo com `fetch(\"https://api.example/loans\", { method: \"POST\", body: new FormData(form) })`, e as respostas da API não trazem cabeçalhos CORS. O `fetch` rejeita com `TypeError: Failed to fetch`, e o `withRetries` da aula 16 o envia mais três vezes. O que o laço provavelmente fez?",
+    "hint": "JavaScript, aula 16; Testes, Segurança e Acessibilidade, aula 7.",
+    "choices": [
+      {
+        "text": "Nada: uma falha de CORS quer dizer que o navegador nunca mandou a requisição, então toda nova tentativa falhou no mesmo ponto",
+        "why": "Um corpo que um formulário comum mandaria faz uma requisição simples, sem preflight. Ela chegou ao servidor; o navegador só escondeu a resposta da página."
+      },
+      {
+        "text": "Resolveu: na segunda tentativa o navegador põe os cabeçalhos CORS sozinho",
+        "why": "Os cabeçalhos CORS são a permissão do servidor, enviada na resposta. O navegador não pode concedê-los a si mesmo em tentativa nenhuma."
+      },
+      {
+        "text": "Repetiu um 404, o que a aula 16 diz que nunca ajuda, já que `Failed to fetch` é como um 404 chega",
+        "why": "Um 404 é uma resposta, e o `fetch` resolve com ele, com `ok: false`. `Failed to fetch` é a rejeição quando a página não recebe resposta que possa usar."
+      },
+      {
+        "text": "Quatro empréstimos, se o servidor salvou cada um: toda requisição chegou, e só a resposta foi escondida",
+        "why": "O CORS não impediu a requisição de chegar ao servidor. Um `POST` que funcionou e do qual nunca se teve notícia é exatamente o caso que a aula 16 manda não repetir."
+      }
+    ]
+  },
+  "ex-b76xzedg": {
+    "prompt": "Depois de uma revisão, um colega passa o token de sessão do `localStorage` para o `sessionStorage`, dizendo que um script injetado não consegue mais levá-lo. O que as duas aulas dizem?",
+    "hint": "JavaScript, aula 18; Testes, Segurança e Acessibilidade, aula 6.",
+    "choices": [
+      {
+        "text": "Ele tem razão: o `sessionStorage` pertence a uma aba, e um script injetado roda num contexto próprio",
+        "why": "Uma aba é a aba da página, e o script injetado roda nessa página. Todo script da mesma origem lê o mesmo `sessionStorage`."
+      },
+      {
+        "text": "Todo script da origem lê o `sessionStorage` também; só um cookie `HttpOnly` fica escondido deles",
+        "why": "A tabela da aula 6: os dois armazenamentos ficam abertos a todo script da origem, e só o cookie `HttpOnly` esconde o segredo deles."
+      },
+      {
+        "text": "Ele tem razão só em `https://`, onde o navegador mantém o `sessionStorage` cifrado entre leituras",
+        "why": "Nada nas duas aulas cifra o armazenamento web. O `https://` protege o caminho pela rede, não o que um script na página consegue ler."
+      },
+      {
+        "text": "Ficou pior: o `sessionStorage` vai ao servidor em toda requisição, como faz um cookie sem `HttpOnly`",
+        "why": "O armazenamento web é enviado pelo seu código e por mais nada. Cookies é que o navegador anexa a toda requisição."
+      }
+    ]
+  },
+  "ex-m21waavw": {
+    "prompt": "Associe cada necessidade à ferramenta que as aulas usam.",
+    "hint": "JavaScript, aulas 13 e 15.",
+    "pairs": [
+      {
+        "left": "uma barra na tela que cresce um pouco a cada quadro",
+        "right": "`requestAnimationFrame`"
+      },
+      {
+        "left": "consultar um servidor cuja resposta pode demorar mais que o intervalo",
+        "right": "um `setTimeout` encadeado"
+      },
+      {
+        "left": "uma busca enviada quando a pessoa para de digitar",
+        "right": "debounce"
+      },
+      {
+        "left": "atualizações regulares enquanto a página está rolando",
+        "right": "throttle"
+      },
+      {
+        "left": "um passo seguinte que precisa rodar antes de qualquer outra tarefa",
+        "right": "`queueMicrotask`"
+      }
+    ],
+    "right_distractors": [
+      "`setInterval`",
+      "um laço `while` que confere `performance.now()`"
+    ]
+  },
+  "ex-b8zhcha3": {
+    "prompt": "Associe cada ferramenta a quem desenha a tela do planner nela, e ao que do planner vai junto.",
+    "hint": "Apps Desktop e Mobile com Web, aula 10.",
+    "pairs": [
+      {
+        "left": "Capacitor",
+        "right": "uma WebView, e o planner inteiro vai junto"
+      },
+      {
+        "left": "React Native",
+        "right": "as views da própria plataforma, com React; as regras vão junto"
+      },
+      {
+        "left": "NativeScript",
+        "right": "as views da própria plataforma, com qualquer de vários frameworks; as regras vão junto"
+      },
+      {
+        "left": "Flutter",
+        "right": "o próprio motor, pixel a pixel; as regras são escritas de novo em Dart"
+      },
+      {
+        "left": "Ionic",
+        "right": "a mesma WebView do Capacitor, com componentes com cara de celular"
+      }
+    ],
+    "right_distractors": [
+      "as views da plataforma, convertidas do HTML do planner na hora do build",
+      "uma cópia do Chromium que ele carrega, com o Node.js ao lado"
+    ]
+  },
+  "ex-af8h2209": {
+    "prompt": "Alguém baixa o `.deb` do planner da página de release, com `SHA256SUMS`, `SHA256SUMS.asc` e o `planner-signing-key.asc` publicado. Ponha em ordem os passos da aula 14 para conferi-lo.",
+    "hint": "Apps Desktop e Mobile com Web, aula 14.",
+    "items": [
+      "Importar a chave publicada com `gpg --import planner-signing-key.asc`",
+      "Conferir a assinatura da lista com `gpg --verify SHA256SUMS.asc SHA256SUMS`",
+      "Conferir os pacotes contra a lista com `sha256sum -c SHA256SUMS`",
+      "Instalar o `.deb`, agora que as duas conferências disseram que está bom"
+    ],
+    "trap": "O deslize mais provável é rodar o `sha256sum -c` primeiro. Uma lista que bate com os arquivos prova pouco antes de a assinatura mostrar que ninguém a editou, porque quem pudesse mudar um arquivo poderia mudar a lista ao lado dele."
+  },
+  "ex-6j9r8e59": {
+    "prompt": "O planner deve manter a tela acesa durante uma sessão de estudo. Uma colega mostra a Screen Wake Lock API funcionando no Chrome do computador e diz que o app não precisa de plugin para isso. O que a aula 5 diz que esse teste deixa em aberto?",
+    "hint": "Apps Desktop e Mobile com Web, aula 5.",
+    "choices": [
+      {
+        "text": "Nada: a WebView é Chromium nos dois sistemas, então uma API que o Chrome do computador tem está lá no app",
+        "why": "A WebView do iOS é feita sobre o WebKit, o motor do Safari. Só a do Android é feita sobre o Chromium."
+      },
+      {
+        "text": "Se as lojas aceitam APIs da web, já que as duas recusam um app que chama uma em vez de um plugin",
+        "why": "Nenhuma regra das lojas trata de como o app é feito; a aula 6 diz que o critério é o que o app faz."
+      },
+      {
+        "text": "Se a WebView a tem nos dois sistemas: uma WebView não é o navegador de que é feita, e o Safari só a ganhou anos depois",
+        "why": "Essa é a primeira pergunta da aula 5, e o wake lock é o exemplo dela. Uma API do navegador pode faltar ou vir limitada na WebView feita a partir dele."
+      },
+      {
+        "text": "Se existe um plugin oficial, que a aula 5 manda procurar antes de considerar qualquer API da web",
+        "why": "A ordem da aula 5 começa pela web: ela já faz isso? O plugin oficial é a segunda pergunta."
+      }
+    ]
+  },
+  "ex-5w2z8b5s": {
+    "prompt": "Para testar uma configuração de build, um desenvolvedor acrescenta uma linha no começo de um arquivo em `android/app` cuja primeira linha diz que ele é gerado toda vez que o `capacitor update` roda. Depois do próximo `npx cap sync` a linha sumiu, e nada avisou. Qual era o arquivo? `android/app/___`",
+    "hint": "Apps Desktop e Mobile com Web, aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "capacitor.build.gradle"
+        ]
+      }
+    ]
+  },
+  "ex-1aqbjap0": {
+    "prompt": "O planner pede permissão de notificação no instante em que abre, e no iOS a pessoa toca em Não Permitir. Uma semana depois ela aperta Lembrar-me, e o app chama `requestPermissions()` de novo. O que acontece, e qual deveria ter sido o desenho?",
+    "hint": "Apps Desktop e Mobile com Web, aula 4; JavaScript, aula 18.",
+    "choices": [
+      {
+        "text": "Falha na hora, sem diálogo; o certo era pedir no toque do botão e, depois de um não, seguir sem lembretes",
+        "why": "No iOS o diálogo aparece uma vez e um pedido depois falha na hora. As duas aulas pedem no momento do uso, e uma recusa deixa o resto do app funcionando."
+      },
+      {
+        "text": "O iOS mostra o diálogo de novo, já que passou uma semana, então pedir na abertura serve se repetir",
+        "why": "Uma recusa não expira: um pedido depois falha na hora, e só a pessoa pode mudar a resposta, nos ajustes."
+      },
+      {
+        "text": "O plugin responde `prompt`, que quer dizer que a pessoa pode ser perguntada de novo, então o app insiste até ela aceitar",
+        "why": "`prompt` quer dizer que ninguém foi perguntado ainda. Depois do toque a resposta é `denied`, e perguntar de novo não mostra nada."
+      },
+      {
+        "text": "O pedido abre os ajustes do sistema para a pessoa, então o momento em que o app pergunta pouco importa",
+        "why": "Nenhuma das duas aulas tem um pedido abrindo os ajustes. Ele falha, e a pessoa precisa ir até lá por conta própria."
+      }
+    ]
+  },
+  "ex-dfye6phn": {
+    "prompt": "A medição da aula 6 imprime `5000 sessions, processor slowed 4x: open 920 ms`. Um colega propõe reescrever o planner em React Native porque a WebView é lenta demais. Lido com os limites da aula 5, o que o número diz?",
+    "hint": "Apps Desktop e Mobile com Web, aula 6; Renderização, Performance e PWA, aula 5.",
+    "choices": [
+      {
+        "text": "Precisa melhorar, fica entre 200 e 500 ms, e uma reescrita nativa é o que o leva para baixo de 200",
+        "why": "920 ms passa de 500, a linha do ruim. E a reescrita mira a causa errada."
+      },
+      {
+        "text": "É bom, já que o INP só conta o atraso de entrada e esses 920 ms são quase todos o handler rodando",
+        "why": "O INP são as três partes, atraso de entrada, processamento e apresentação, do toque até a próxima pintura."
+      },
+      {
+        "text": "É ruim, e a causa é a WebView, já que em velocidade total o mesmo toque levou só 167 ms",
+        "why": "A velocidade total só esconde o custo num computador rápido. O tempo cresce com o número de sessões, que é o desenho do planner."
+      },
+      {
+        "text": "É ruim, passa de 500 ms, e o tempo é o `render()` do planner reconstruindo cada linha, o que uma reescrita mantém",
+        "why": "O `render()` joga a tela fora e a monta de novo a cada mudança. A aula 6 manda medir primeiro e corrigir o desenho, desenhando menos, antes de culpar a WebView."
+      }
+    ]
+  },
+  "ex-793y12r3": {
+    "prompt": "A próxima mudança de um app Expo deve sair como atualização over-the-air, sem build novo na loja. Pela tabela da aula 9, quais mudanças podem ir por esse caminho? Marque todas as que se aplicam.",
+    "hint": "Apps Desktop e Mobile com Web, aula 9.",
+    "choices": [
+      {
+        "text": "a correção de um bug numa das telas",
+        "why": "JavaScript e assets são o que uma atualização carrega, e a correção de uma tela é isso."
+      },
+      {
+        "text": "um texto, uma cor ou uma imagem nova",
+        "why": "Isso muda o que o bundle desenha e nada nativo."
+      },
+      {
+        "text": "uma tela nova feita com componentes que já estão no app, se ela não muda o que o app é",
+        "why": "Permitido, dentro das regras das lojas: o revisor aprovou um app, e a atualização não pode transformá-lo em outro."
+      },
+      {
+        "text": "uma biblioteca de câmera que traz uma permissão nova",
+        "why": "O app instalado não tem esse código nativo, e um bundle que o chama para na chamada. Isso pede build de loja e uma runtime version nova."
+      },
+      {
+        "text": "transformar o planner numa loja, com o código nativo exatamente como está",
+        "why": "Um propósito novo nunca é atualização, seja qual for o código: é um app novo para um revisor ver."
+      }
+    ]
+  },
+  "ex-q44cvgzd": {
+    "prompt": "O planner no Electron escreve a anotação de uma sessão com `innerHTML`, e uma anotação forjada roda um script na janela. Com os `webPreferences` e o preload da aula 11, o que esse script alcança?",
+    "hint": "Apps Desktop e Mobile com Web, aula 11; JavaScript, aula 11.",
+    "choices": [
+      {
+        "text": "Qualquer arquivo que o usuário possa ler, porque o processo principal roda Node.js e a janela pertence a ele",
+        "why": "O processo principal tem Node; a página não. `require` e `process` são indefinidos na janela, e o processo principal atende um canal só."
+      },
+      {
+        "text": "O que a própria página alcança, mais o `window.desktop.exportPlan`, cujo handler confere o que recebe",
+        "why": "O `contextIsolation` deixa para a página uma função só do preload, e o `ipcMain.handle` recusa o que não for string de até um milhão de caracteres."
+      },
+      {
+        "text": "Nada: o `sandbox: true` impede de rodar na janela qualquer script de fora do `dist/` do build",
+        "why": "O sandbox limita o que o renderer pode fazer no sistema operacional; não escolhe quais scripts rodam. A aula 11 deixa isso para uma Content Security Policy."
+      },
+      {
+        "text": "O `ipcRenderer.invoke` em qualquer canal que nomear, já que o preload trouxe o `ipcRenderer` para a janela",
+        "why": "O `ipcRenderer` do preload vive num mundo que a página não vê. A página só recebe o que o `exposeInMainWorld` pôs no `window`."
+      }
+    ]
+  },
+  "ex-5rjpky34": {
+    "prompt": "Antes de o planner em Tauri ser lançado, uma revisora nota `\"csp\": null` no `tauri.conf.json`. Onde vai uma política, e o que ela fará pelo app?",
+    "hint": "Apps Desktop e Mobile com Web, aula 12; Testes, Segurança e Acessibilidade, aula 8.",
+    "choices": [
+      {
+        "text": "Em `capabilities/default.json`, ao lado do `core:default`, onde ela decide quais comandos a página pode chamar",
+        "why": "Uma capability concede permissões de plugin a janelas. Uma Content Security Policy é outra lista, sobre de onde a página pode carregar código."
+      },
+      {
+        "text": "Em lugar nenhum: no Tauri, `null` já quer dizer a política mais rígida que existe, e um script injetado é recusado",
+        "why": "`null` quer dizer que o template não definiu política nenhuma. Sem uma, a página roda qualquer script que chegue nela."
+      },
+      {
+        "text": "Em `app.security.csp`, posta em toda página; barra script inline injetado, não o código do app",
+        "why": "A aula 12 põe ali a string de política da aula 11. O `default-src 'self'` dela vale pelo `script-src`, que não admite script inline; uma política não faz nada contra código que vem do lugar certo."
+      },
+      {
+        "text": "Em `src-tauri/src/lib.rs`, como um comando em Rust que a página chama ao abrir para ligar a política",
+        "why": "Uma política que a própria página precisa ligar é uma que um script injetado poderia pular. O Tauri a acrescenta às páginas que serve."
+      }
+    ]
+  },
+  "ex-6ypygze4": {
+    "prompt": "No planner em Tauri, o comando `export_plan` da própria página funciona, mas uma chamada ao leitor de arquivo de texto do plugin de sistema de arquivos é recusada. Diga a permissão que o `capabilities/default.json` precisa listar para a janela principal: `___`",
+    "hint": "Apps Desktop e Mobile com Web, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "fs:allow-read-text-file"
+        ]
+      }
+    ]
+  },
+  "ex-w3hvjvyh": {
+    "prompt": "O planner está em `1.4.1`, versionado pelo `scripts/version.mjs` da aula 15. A próxima versão muda o formato do plano salvo, de modo que a `1.4.1` não consegue ler o que ela grava. Seguindo o versionamento semântico, que `versionCode` o script escreve para essa versão?",
+    "hint": "Apps Desktop e Mobile com Web, aula 15; JavaScript, aula 21."
+  },
+  "ex-4m5xscvm": {
+    "prompt": "A API do planner em `https://api.example` permite uma origem, `https://planner.example`, onde o site é servido, e as chamadas mandam o cookie de sessão com `credentials: \"include\"`. No app Capacitor no Android toda chamada falha com `TypeError: Failed to fetch`, e o console diz que foi bloqueada pela política de CORS. Qual é a correção?",
+    "hint": "Apps Desktop e Mobile com Web, aula 2; Testes, Segurança e Acessibilidade, aula 7.",
+    "choices": [
+      {
+        "text": "Acrescentar a origem do próprio app, `https://localhost` no Android e `capacitor://localhost` no iOS, à lista da API",
+        "why": "O Capacitor serve o app a partir de uma origem própria no celular. A API atende uma lista das origens em que confia, e a do app ainda não está nela."
+      },
+      {
+        "text": "Responder com `Access-Control-Allow-Origin: *`, que deixa o app entrar com qualquer origem que informar",
+        "why": "Com credenciais, o navegador recusa o curinga, e diz isso no console."
+      },
+      {
+        "text": "Pôr `server.url` em `https://api.example`, para o app ser servido a partir da origem da própria API",
+        "why": "Um app com `server.url` não contém o seu app; é uma WebView abrindo uma página remota, e a aula 2 diz que isso nunca vai para produção."
+      },
+      {
+        "text": "Ligar `cleartext: true`, que deixa a WebView alcançar um endereço que não seja `localhost`",
+        "why": "O `cleartext` libera `http` sem criptografia. A API está em `https`, e a recusa veio do CORS, não do esquema."
+      }
+    ]
+  },
+  "ex-xmfzz1p0": {
+    "prompt": "No `view.ts`, um colega desenha o controle **Done** como `<div class=\"tick\">Done</div>` com um listener de clique. O teste de componente `getByRole(\"button\", { name: \"Done\" })` agora lança erro, e o colega propõe mudar o teste. O que deveria mudar no lugar dele?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 3; HTML e CSS, aula 2.",
+    "choices": [
+      {
+        "text": "O teste: `getByText(\"Done\")` encontra o controle, e as palavras são o que a pessoa lê de qualquer jeito",
+        "why": "Encontra as palavras e esconde o defeito. A `<div>` continua sendo texto para um leitor de tela e o Tab nunca chega nela, e o teste parou de dizer isso."
+      },
+      {
+        "text": "O teste: `findByRole` espera, e o listener é ligado depois que o elemento é desenhado",
+        "why": "Nada aqui chega atrasado. `findByRole` espera um elemento que vai aparecer, e espera nenhuma transforma uma `<div>` num botão."
+      },
+      {
+        "text": "A marcação: um `<button>`, porque a `<div>` é texto puro na árvore de acessibilidade",
+        "why": "`getByRole` pergunta à árvore de acessibilidade, onde a `<div>` é texto sem papel. O teste que falha está relatando o que um teclado e um leitor de tela encontram, e o `<button>` traz o papel, o foco e as duas teclas."
+      },
+      {
+        "text": "O teste: um `data-testid` na `<div>` sobrevive a qualquer troca de nome da classe",
+        "why": "Um test id é o último recurso, e nenhuma pessoa o vê. Um teste que precisa dele está encontrando algo que nenhuma pessoa encontra."
+      }
+    ]
+  },
+  "ex-2y91jnw3": {
+    "prompt": "A API do planner permite duas origens, `http://localhost:5173` e `http://localhost:4173`, e fica atrás de um cache compartilhado. Alguém apaga `vary: \"Origin\"` do `corsHeaders`, dizendo que é detalhe de cache. O que pode dar errado agora?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 7; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "O cache guarda uma resposta por endereço, e a 4173 recebe a cópia cuja permissão nomeia a porta 5173",
+        "why": "Um cache arquiva a resposta pelo endereço, a menos que o `Vary` diga que outro cabeçalho a decidiu. Recebendo a cópia feita para a 5173, o navegador na 4173 compara as origens e não deixa a página lê-la."
+      },
+      {
+        "text": "Sem o `Vary`, o navegador lê o cabeçalho de permissão como `*`, e qualquer site passa a ler as respostas",
+        "why": "Nenhum navegador lê um `Vary` ausente como curinga. O cabeçalho de permissão continua nomeando uma origem, e com credenciais um `*` seria recusado de qualquer forma."
+      },
+      {
+        "text": "O preflight deixa de ser lembrado por `600` segundos, e cada requisição custa mais um `OPTIONS`",
+        "why": "Essa memória é o `access-control-max-age`, respondido no próprio `OPTIONS`, e tirar o `Vary` não mexe nele."
+      },
+      {
+        "text": "O navegador só anexa cookies a respostas que variam por `Origin`, então `credentials: \"include\"` quebra",
+        "why": "Se um `fetch` entre origens manda cookies depende do `credentials` e do `Allow-Credentials: true`, não do `Vary`."
+      }
+    ]
+  },
+  "ex-p13e90jx": {
+    "prompt": "Um tutorial guarda o JWT do planner no `localStorage` e o manda num cabeçalho `Authorization`. Um colega defende: o armazenamento web pertence a uma origem, então nenhum outro site consegue lê-lo. O que essa defesa deixa de fora?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 5; JavaScript, aula 18.",
+    "choices": [
+      {
+        "text": "O armazenamento é compartilhado por todas as portas de um host, então uma página em `localhost:3000` lê o que `localhost:5173` gravou",
+        "why": "A porta faz parte da origem, então essas duas são origens diferentes e não leem o armazenamento uma da outra."
+      },
+      {
+        "text": "O `localStorage` é esvaziado quando a aba fecha, e as pessoas saem da conta ao acaso",
+        "why": "Esse é o `sessionStorage`. O `localStorage` guarda o valor até alguém apagá-lo, o que o torna pior para um segredo, não melhor."
+      },
+      {
+        "text": "Um token no cabeçalho `Authorization` é mandado pelo navegador a todo site por conta própria, o que é CSRF",
+        "why": "Quem põe esse cabeçalho é o próprio código da página. O navegador anexa um cookie por conta própria; um cabeçalho que o código não escreveu ele nunca anexa."
+      },
+      {
+        "text": "A ameaça é um script dentro da página, que tem a mesma origem; o `HttpOnly` esconde o cookie dele",
+        "why": "A fronteira de origem barra outros sites, e um script injetado ou uma biblioteca não é outro site. Um token que a página guarda é tão seguro quanto a página está livre de scripts; um cookie `HttpOnly` é ilegível para todos eles."
+      }
+    ]
+  },
+  "ex-8mz7t9dg": {
+    "prompt": "`expect(await page.getByRole(\"listitem\").count()).toBe(3)` passa no laptop da Ana e falha em algumas execuções do CI com `Received: 0`. A verificação é obrigatória, então o pull request dela não pode ser mergeado. Qual é a correção?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 4; Deploy, Design Systems e GraphQL, aula 3.",
+    "choices": [
+      {
+        "text": "`await page.waitForTimeout(1000)` antes da contagem, para um runner lento ter tempo de buscar os dados",
+        "why": "Uma pausa fixa é longa demais numa máquina rápida e curta demais numa lenta, então o teste continua instável, só que menos vezes."
+      },
+      {
+        "text": "Um `toHaveCount(3)` web-first no locator, que pergunta de novo à página até a lista ser desenhada",
+        "why": "O original lê a página uma vez, no `load`, antes de os dados chegarem. Uma asserção web-first tenta de novo até a resposta estar certa ou o tempo limite passar, e espera exatamente o que a rede precisar."
+      },
+      {
+        "text": "Rodar o job até ficar verde: o código não mudou, então uma execução verde prova que funciona",
+        "why": "Uma execução verde de um teste instável prova que a máquina estava rápida daquela vez. O mesmo código volta a falhar numa tarde movimentada."
+      },
+      {
+        "text": "Pedir a um administrador que faça o merge passando por cima da regra, já que a falha é do runner e não do código",
+        "why": "O bypass de administrador é um dos caminhos pelos quais código vermelho chega à `main`, e aqui o defeito está no tempo do próprio teste, que o bypass deixa onde está."
+      }
+    ]
+  },
+  "ex-jwze5wmv": {
+    "prompt": "O ruleset de um repositório exige `CI / check`. Numa arrumação, o job é renomeado para `test`. Um mês depois, a `main` tem um commit cuja própria execução de `e2e/a11y.spec.ts` ficou vermelha com `color-contrast: 2`. Qual é o caminho mais provável por onde ele entrou?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 10; Deploy, Design Systems e GraphQL, aula 3.",
+    "choices": [
+      {
+        "text": "A regra esperava um `CI / check` que nunca mais rodou, e quem a tirou de lá não deixou nada obrigatório",
+        "why": "Um job renomeado deixa a regra esperando uma verificação que não existe mais, todo merge trava, e a saída de costume é remover a exigência. Daí em diante, vermelho vira sugestão."
+      },
+      {
+        "text": "`color-contrast` é uma das regras `best-practice` do axe, então um vermelho ali nunca bloqueia um merge",
+        "why": "`color-contrast` testa o 1.4.3, um critério de nível AA, e o teste escolhe regras pelas tags da WCAG. O vermelho dele é um critério falhando."
+      },
+      {
+        "text": "Uma verificação obrigatória que nenhum job relata conta como aprovada, então a troca de nome abriu o portão na hora",
+        "why": "É o contrário: uma verificação obrigatória que nunca relata deixa o botão de merge cinza, e é por isso que alguém acaba removendo-a."
+      },
+      {
+        "text": "Rulesets valem para pushes diretos à `main`, e um merge feito pelo botão passa por fora deles",
+        "why": "A regra é justamente sobre merges: ela mantém o botão cinza até a verificação nomeada ficar verde no último commit."
+      }
+    ]
+  },
+  "ex-4p8esnbn": {
+    "prompt": "O pull request do Bruno desenha a nota de cada sessão com `note.innerHTML = s.note.replace(/\\n/g, \"<br>\")`. Revisando, qual comentário a Ana deixa nessa linha?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 13; Testes, Segurança e Acessibilidade, aula 9.",
+    "choices": [
+      {
+        "text": "**nit:** eu usaria `textContent` aqui, mas `innerHTML` também funciona, fica totalmente a seu critério",
+        "why": "Um nit é um ponto que o autor pode ignorar, e este não é: a nota que alguém digitou vira marcação na página."
+      },
+      {
+        "text": "**question:** `innerHTML` é a escolha certa para a nota? Talvez eu mesmo tivesse escrito de outro jeito",
+        "why": "A Ana sabe a resposta, então uma pergunta faz o Bruno adivinhar o quanto ela se importa. Quando você tem certeza, diga."
+      },
+      {
+        "text": "**blocking:** uma nota com `<b>` vira um elemento na página; `textContent` com `pre-line` mantém as quebras",
+        "why": "Diz o que acontece, por que importa e uma correção, mirando a linha. `innerHTML` é um sink: lê o texto da pessoa como marcação, o que é cross-site scripting, e precisa mudar antes do merge."
+      },
+      {
+        "text": "Você esqueceu de escapar a nota. Isso está errado e nunca deveria ter sido aberto desse jeito",
+        "why": "Mira o Bruno, não o código, e não diz nem o que acontece nem como corrigir."
+      }
+    ]
+  },
+  "ex-yeb2jy8h": {
+    "prompt": "Um colega acrescenta `<button onclick=\"toggleTheme()\">Theme</button>` ao `index.html`. Funciona no `npm run dev`. No site construído, servido com a política do planner, apertar o botão não faz nada e o console cita `script-src 'self'`. Qual é a correção?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 8; JavaScript, aula 12.",
+    "choices": [
+      {
+        "text": "Acrescentar `'unsafe-inline'` ao `script-src`, palavra-chave que só libera atributos de handler",
+        "why": "`'unsafe-inline'` libera todo script inline, os injetados também, o que desfaz a linha que justifica a política."
+      },
+      {
+        "text": "Mandar os mesmos cabeçalhos também pelo servidor de desenvolvimento, para o botão já falhar enquanto se desenvolve",
+        "why": "Isso quebra o servidor de desenvolvimento, cujo CSS chega em elementos `<style>` inline que a política recusa, e o botão continua quebrado."
+      },
+      {
+        "text": "Carregar `toggleTheme` de uma CDN com hash `integrity`, no qual a política confia",
+        "why": "`script-src 'self'` permite scripts da própria origem da página e de nenhum outro lugar. O integrity confere um arquivo; não amplia a lista."
+      },
+      {
+        "text": "Ligar a função com `addEventListener` no módulo do planner: um atributo `onclick` é código inline",
+        "why": "Um atributo `onclick` é código numa string dentro da marcação, e a política recusa código inline. Um listener ligado pelo script do bundle vem da própria origem, então roda."
+      }
+    ]
+  },
+  "ex-94q59d2v": {
+    "prompt": "O total semanal do planner pulsa. Um colega manteria `.week { animation: pulse 1s ease-in-out 3; }` e acrescentaria a regra global de *HTML e CSS*: um bloco `prefers-reduced-motion: reduce` que reduz toda animação a `0.01ms`. A aula 13 põe a animação dentro de `no-preference`. O que isso compra?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 13; HTML e CSS, aula 12.",
+    "choices": [
+      {
+        "text": "Com `no-preference`, quem pediu menos movimento recebe um fade curto no lugar do pulso",
+        "why": "Um fade para esses leitores é uma opção que o site pode escrever. Pôr a animação dentro de `no-preference` não lhes dá nada."
+      },
+      {
+        "text": "Um navegador que não conhece a media query não casa com nenhum dos blocos, e então não mostra pulso nenhum",
+        "why": "Com a animação dentro de `no-preference`, o padrão é ficar parado, e só se move o navegador que repassa a configuração como sem preferência. O bloco `reduce` dá o pulso a todos cujo navegador não repassa a configuração."
+      },
+      {
+        "text": "Uma animação de `0.01ms` fica abaixo do que o axe aceita, então a versão do colega reprova no `e2e/a11y.spec.ts`",
+        "why": "O axe lê o documento e nunca cronometra uma animação. Movimento é uma das perguntas que a aula 10 deixa para outros testes."
+      },
+      {
+        "text": "Um bloco `reduce` é ignorado quando a regra que ele sobrescreve vem antes na folha de estilos",
+        "why": "Na cascata, a regra posterior vence, e é por isso que a regra global é carregada depois das outras. A ordem não é o que separa as duas abordagens."
+      }
+    ]
+  },
+  "ex-d16d9jtt": {
+    "prompt": "Depois que o planner ganha um tema escuro, o `e2e/palette.spec.ts` relata `--link: 3.02:1` só no esquema escuro. Onde fica a correção?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 13; HTML e CSS, aula 10.",
+    "choices": [
+      {
+        "text": "Um novo `--link` só no bloco escuro; o anel de foco é desenhado com ele e acompanha",
+        "why": "O bloco escuro redefine as propriedades customizadas no `:root`, e deixou o verde como estava. Redefinir `--link` ali corrige os links só no escuro, e o `:focus-visible`, desenhado com `var(--link)`, muda junto."
+      },
+      {
+        "text": "Em lugar nenhum: cor de link é contraste não textual, 1.4.11, cuja exigência é 3:1, e 3.02:1 passa",
+        "why": "Um link é texto, então o 1.4.3 pede 4.5:1. 3:1 é a exigência para partes de um controle e para o anel de foco, não para palavras."
+      },
+      {
+        "text": "`color-scheme: light dark` no `:root`, que faz o navegador clarear os links da página no escuro",
+        "why": "Essa declaração deixa o navegador desenhar as próprias partes, botões, campos e barras de rolagem, em qualquer esquema. O planner já a tem, e ela não recolore os links da página."
+      },
+      {
+        "text": "Uma cor fixa em `a { color: … }`, porque uma propriedade redefinida dentro de `@media` é lida uma vez só",
+        "why": "Redefinir propriedades customizadas dentro de uma media query é justamente como o tema funciona, e uma cor fixa ficaria errada no esquema claro."
+      }
+    ]
+  },
+  "ex-xjxbhppz": {
+    "prompt": "Para anunciar uma sessão nova, um colega põe `<p role=\"status\">Session added: …</p>` dentro do `render`, que começa com `root.replaceChildren()`. A verificação do Playwright sobre o texto do status passa, e o NVDA não diz nada. Por quê?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 12.",
+    "choices": [
+      {
+        "text": "Um status espera o leitor terminar de falar, então uma mensagem depois de um clique precisa ser `role=\"alert\"`",
+        "why": "`alert` interrompe, e é para erros que não podem esperar. Um status educado é lido; este fica mudo por outro motivo."
+      },
+      {
+        "text": "Um parágrafo não pode ser região viva; o leitor observa uma `<div>` com `aria-live`",
+        "why": "`role=\"status\"` em qualquer elemento o torna uma região viva, e a correção da aula é um parágrafo."
+      },
+      {
+        "text": "Ela nasce cheia e é refeita a cada desenho, e o leitor só anuncia mudanças numa região que já estava lá",
+        "why": "O leitor observa as regiões vivas da página e lê o que muda nelas. Uma que nasce cheia geralmente não é lida por ninguém, então a região é feita uma vez ao lado da raiz e o texto é posto depois."
+      },
+      {
+        "text": "O leitor só lê o que recebe o foco, então é preciso mover o foco para cima da própria mensagem",
+        "why": "Uma região viva é justamente o jeito de ser ouvido sem o foco. A correção da aula devolve o foco ao formulário e deixa o status falar."
+      }
+    ]
+  },
+  "ex-qz6kfeg4": {
+    "prompt": "Uma mudança de CSS deixa o botão **Add session** do planner coberto pelo total semanal em telas estreitas. Qual é a camada de testes mais baixa capaz de ver isso?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 1.",
+    "choices": [
+      {
+        "text": "Um teste de componente, porque `getByRole` só encontra os controles que uma pessoa consegue alcançar",
+        "why": "`getByRole` lê a árvore de acessibilidade, e um botão coberto continua nela com papel e nome. O jsdom não tem layout para dizer o que está por cima."
+      },
+      {
+        "text": "O verificador de tipos, porque o `tsc` lê o `style.css` junto com o `view.ts`",
+        "why": "O `tsc` lê arquivos TypeScript e os formatos dos valores. Uma folha de estilos fica fora do que ele verifica."
+      },
+      {
+        "text": "Um teste unitário do `render`, porque o que o `render` devolve é a própria página",
+        "why": "O `render` desenha numa raiz e não devolve nada, e nenhuma camada abaixo do navegador calcula onde cada coisa fica."
+      },
+      {
+        "text": "Um teste ponta a ponta num Chromium de verdade, porque o jsdom não calcula layout e não distingue coberto de livre",
+        "why": "O jsdom é o DOM sem layout, sem CSS e sem tela, então se um elemento cobre outro só existe num navegador. Esse é o topo da pirâmide, e aqui é a camada mais baixa que enxerga o defeito."
+      }
+    ]
+  },
+  "ex-kh77bhyr": {
+    "prompt": "No planning poker de *Fazer toda página passar no axe*, as cartas viradas são 2, 13, 3 e 3. O que o time faz em seguida?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 16.",
+    "choices": [
+      {
+        "text": "Anotar 5, a média das quatro cartas, para nenhuma estimativa ser descartada",
+        "why": "A média esconde o motivo do 13, que é justamente a informação que ninguém mais na mesa tem ainda."
+      },
+      {
+        "text": "Quem tirou 13 e quem tirou 2 explicam, e depois o time vota de novo",
+        "why": "O maior e o menor dizem por quê. Um 13 é um sinal, e o motivo dele muitas vezes é um problema que os outros não tinham visto, achado em dois minutos e não em produção."
+      },
+      {
+        "text": "Ficar com 3, o número em que a maior parte do time concordou, e passar para o próximo ticket",
+        "why": "Maioria não é argumento. O sentido de virar as cartas juntos é que a preocupação de quem fala pouco pese tanto quanto as outras."
+      },
+      {
+        "text": "Registrar 13, o mais seguro, para o planejamento não ficar curto",
+        "why": "Um 13 não é um tamanho para registrar. Inflar estimativas só tira o sentido da velocidade do time."
+      }
+    ]
+  },
+  "ex-kwedqg16": {
+    "prompt": "Para manter a chave secreta de um provedor de pagamento fora do histórico, um colega a grava no `.env.local` como `VITE_PAYMENT_KEY`, vê que o `git status` não mostra nada para commitar e a lê com `import.meta.env.VITE_PAYMENT_KEY`. O que está errado?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; Deploy, Design Systems e GraphQL, aula 2.",
+    "choices": [
+      {
+        "text": "O build copia todo valor `VITE_` para o bundle, e todo visitante lê uma chave que o Git nunca viu",
+        "why": "A lista de ignorados mantém o arquivo fora do histórico, e o prefixo põe o valor no JavaScript que todo visitante baixa. Uma chave secreta pertence a um servidor que o time controla."
+      },
+      {
+        "text": "O template commita o `.env.local`, então a chave já está no histórico e precisa ser revogada",
+        "why": "O `.gitignore` do template tem `*.local`, e é por isso que o `git status` não mostrou nada. O vazamento está em outro lugar."
+      },
+      {
+        "text": "O Vite só lê o `.env`, então `import.meta.env.VITE_PAYMENT_KEY` sai `undefined` no build final",
+        "why": "O Vite lê o `.env.local` em todos os modos. O valor chega, e esse é o problema."
+      },
+      {
+        "text": "Nada: o bundle é feito na máquina de build, e o `.gitignore` mantém a chave fora de todo e qualquer clone",
+        "why": "Onde o bundle é feito deixa de importar quando ele é servido. Tudo o que está nele pode ser lido por quem abre a página."
+      }
+    ]
+  },
+  "ex-c8pshknv": {
+    "prompt": "O push da Ana é rejeitado, e o `git pull` para com `fatal: Need to specify how to reconcile divergent branches.` Ela tem um commit que ninguém mais tem. Ela roda `git pull --rebase` e faz o push. Por que isso não quebra a regra contra fazer rebase de commits compartilhados?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 6.",
+    "choices": [
+      {
+        "text": "Porque o `--rebase` faz um commit de merge, e um merge não reescreve nada que já existe",
+        "why": "Quem faz merge é o `--no-rebase`. O `--rebase` reaplica commits, o que lhes dá ids novos."
+      },
+      {
+        "text": "Porque o pull faz rebase do commit do Bruno em cima do dela, e o remoto aceita o que recebe de volta",
+        "why": "O commit do Bruno é a base e fica exatamente como estava. Nada que veio do remoto ganha id novo."
+      },
+      {
+        "text": "Porque o `--ff-only` roda antes e junta os ramos, sem deixar nada para o rebase reescrever",
+        "why": "O `--ff-only` só aceita o caso em que não há nada para juntar e recusa o resto. Aqui os ramos tinham divergido."
+      },
+      {
+        "text": "Porque o único commit reescrito é o dela, que não tinha ido para o remoto, reaplicado em cima do do Bruno",
+        "why": "A regra é sobre commits que outra pessoa já tem. O dela nunca tinha saído da máquina, então só ele ganha um id novo, e o push move a `main` para a frente."
+      }
+    ]
+  },
+  "ex-9wemdfx6": {
+    "prompt": "Um teste de componente do `view.ts` precisa de substitutos. Seguindo a aula 2, quais destes ele deveria substituir? Marque todas as que se aplicam.",
+    "hint": "Testes, Segurança e Acessibilidade, aula 2.",
+    "choices": [
+      {
+        "text": "o relógio que o `today()` lê",
+        "why": "Um teste não controla a hora, e `vi.useFakeTimers()` com `setSystemTime` deixa o teste dizer o que `new Date()` devolve."
+      },
+      {
+        "text": "o `weekTotal`, que a view chama para desenhar o total",
+        "why": "Mocá-lo deixa o teste mais rápido em nada e cego para o defeito que o primeiro teste achou. É código que o teste pode rodar de verdade."
+      },
+      {
+        "text": "a rede pela qual um fetch sairia",
+        "why": "A rede está fora do controle do teste, então é uma das três coisas que a aula manda substituir."
+      },
+      {
+        "text": "o callback `update`, para o qual o `render` entrega um plano novo",
+        "why": "A saída do `render` é uma chamada, então o teste passa um `vi.fn()` e lê o plano que ele recebeu, o que continua sendo uma asserção sobre a saída."
+      },
+      {
+        "text": "o `markDone` do `planner.ts`, para o teste verificar que foi chamado uma vez",
+        "why": "Isso verifica como o código funciona hoje, e falha numa refatoração e passa num bug. O teste lê o plano que saiu."
+      },
+      {
+        "text": "a página simulada, para o teste não depender do jsdom",
+        "why": "O jsdom é o que permite que um teste de componente rode; ele é o ambiente, não uma entrada a substituir."
+      }
+    ]
+  },
+  "ex-hf02a50x": {
+    "prompt": "Antes da correção da aula 6, o servidor do planner mandava `Set-Cookie: sid=…; HttpOnly; SameSite=Lax; Path=/`. Quais destas afirmações valem para esse cookie? Marque todas as que se aplicam.",
+    "hint": "Testes, Segurança e Acessibilidade, aula 6; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "uma única requisição para um endereço `http://` puro o levaria às claras",
+        "why": "Ele não tem `Secure`, que é o atributo que mantém o cookie fora do HTTP puro."
+      },
+      {
+        "text": "um script na página consegue copiá-lo de `document.cookie`",
+        "why": "O `HttpOnly` está lá, então o `document.cookie` não o mostra."
+      },
+      {
+        "text": "sem `Max-Age` nem `Expires`, o navegador o guarda até a janela fechar",
+        "why": "Isso faz dele um cookie de sessão no sentido do navegador, sem um tempo de vida escolhido de propósito."
+      },
+      {
+        "text": "sem `Domain`, o navegador o manda para todos os subdomínios do host",
+        "why": "Omitido, o `Domain` mantém o cookie exatamente no host que o criou. Escrevê-lo é que amplia."
+      },
+      {
+        "text": "o nome não tem o prefixo `__Host-`, então o navegador não exige nada de `Secure`, `Path=/` e ausência de `Domain`",
+        "why": "O prefixo transforma essas três regras numa só que o navegador confere. Sem ele, um erro nelas passa em silêncio."
+      },
+      {
+        "text": "apagá-lo na saída da conta também encerra o login no servidor",
+        "why": "Se o login acaba é decisão do servidor. O teste da aula 6 mandou o cookie antigo de novo depois da saída e recebeu 200."
+      }
+    ]
+  },
+  "ex-js8fs56t": {
+    "prompt": "Um time copia o repositório, todos os ramos e todos os commits, para um novo serviço de hospedagem e não configura nada lá. Quais destas coisas deixam de acontecer? Marque todas as que se aplicam.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 8.",
+    "choices": [
+      {
+        "text": "o botão de merge de um pull request esperando uma aprovação",
+        "why": "Aprovações obrigatórias são uma configuração do serviço de hospedagem na cópia dele da `main`, e o serviço novo não tem nenhuma."
+      },
+      {
+        "text": "cada commit mantendo autor, mensagem e pai",
+        "why": "Isso está dentro de cada commit. Qualquer cópia do repositório leva junto."
+      },
+      {
+        "text": "um `git push --force` para a `main` ser recusado",
+        "why": "Essa recusa é uma regra de proteção no servidor, o aviso da aula 7 virado cadeado, e não viajou com os commits."
+      },
+      {
+        "text": "o `git status` deixando de fora o que o `.gitignore` lista",
+        "why": "O `.gitignore` é um arquivo do repositório, lido pelo Git em cada máquina, então funciona em todo clone."
+      },
+      {
+        "text": "um merge recusado até as verificações passarem",
+        "why": "Verificações obrigatórias fazem parte da proteção do ramo, que mora no servidor antigo e não no Git."
+      },
+      {
+        "text": "o `git merge --abort` devolvendo um merge em conflito ao estado anterior",
+        "why": "É um comando do Git, rodado na sua própria máquina, e não precisa de nada de servidor nenhum."
+      }
+    ]
+  },
+  "ex-4zsge5s0": {
+    "prompt": "Numa página de curso do planner, lida de cima para baixo, os controles são o link de voltar, um botão **Done**, um campo de data, o campo Minutes, o campo Note e **Add session**. Começando sem nada em foco, quantas vezes é preciso apertar Tab no Chromium para o foco chegar em **Add session**?",
+    "hint": "Testes, Segurança e Acessibilidade, aula 11."
+  },
+  "ex-k8ncwm48": {
+    "prompt": "O time de quatro pessoas da padaria termina cerca de 30 pontos numa sprint normal de dez dias. Nesta, a Ana e o Bruno têm os dez dias, a Carla tem 7 e o Diego 8. Escalando os 30 de costume pelos dias disponíveis, como a aula 18 faz, qual é a capacidade do time, em pontos, aproximadamente?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 18."
+  },
+  "ex-ghb5m1ns": {
+    "prompt": "A página do planner em `http://localhost:5173` chama `fetch` com `method: \"POST\"` e `content-type: application/json` para a API na porta 3000. Antes de essa requisição sair, o navegador manda uma própria para o mesmo endereço, usando o método HTTP ___, aquele que pergunta a um servidor o que é permitido.",
+    "hint": "Testes, Segurança e Acessibilidade, aula 7; Fundamentos da Web e Internet, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "OPTIONS"
+        ]
+      }
+    ]
+  },
+  "ex-r4awycy8": {
+    "prompt": "Desde a tag `v1.0`, o `git log --oneline v1.0..HEAD` mostra `fix(view): give the back link a name` e `feat(view): a dark theme`, sem `!` e sem rodapé `BREAKING CHANGE:`. Pela regra da aula 11, a próxima release recebe a tag ___.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "v1.1.0",
+          "1.1.0"
+        ]
+      }
+    ]
+  },
+  "ex-c1vxvp96": {
+    "prompt": "O axe achou ícones sem `alt` e um cinza de concluído a 2.32:1 no planner. Ponha a tarefa em ordem, do ticket ao merge.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 12; Testes, Segurança e Acessibilidade, aula 10.",
+    "items": [
+      "Escrever o ticket, com as duas páginas passando no axe em WCAG 2.2 AA como critério de aceite",
+      "Fazer pull da `main` e então criar um ramo cujo nome começa com o número do ticket",
+      "Acrescentar o `e2e/a11y.spec.ts` e vê-lo falhar com `image-alt: 3`",
+      "Dar `alt=\"\"` aos ícones e `#6b6b6b` ao cinza de concluído, e ver o teste passar",
+      "Abrir o pull request com `Closes #` e o número do ticket na descrição",
+      "Fazer o merge quando estiver aprovado e as verificações estiverem verdes"
+    ],
+    "trap": "O deslize de costume é corrigir as cores antes de o teste existir. Um teste escrito depois da correção nunca foi visto falhando, então ninguém sabe se ele falha."
+  },
+  "ex-ffqpfdm8": {
+    "prompt": "O ramo `rolls` da Ana muda um preço que o Bruno também mudou na `main`. Ponha os passos em ordem, do rebase até a `main` conter o commit dela.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 6.",
+    "items": [
+      "No `rolls`, rodar `git rebase main` e ler `CONFLICT (content)`",
+      "Editar o `menu.html` para dizer o único preço desejado, sem os três marcadores",
+      "`git add menu.html`, que diz que este conflito está resolvido",
+      "`git rebase --continue`, e salvar a mensagem como está",
+      "`git switch main` e `git merge rolls`, que é um fast-forward"
+    ],
+    "trap": "O deslize mais provável é digitar `git commit` depois do `git add`, como num merge. Durante um rebase o passo é `git rebase --continue`, para o rebase seguir para o próximo commit."
+  },
+  "ex-66gac4tx": {
+    "prompt": "Uma revisora procura no planner os lugares onde texto vira código. Associe cada linha ao jeito seguro que a aula 9 dá.",
+    "hint": "Testes, Segurança e Acessibilidade, aula 9; JavaScript, aula 11.",
+    "pairs": [
+      {
+        "left": "`note.innerHTML = s`",
+        "right": "`textContent`, ou `createElement` e `append`"
+      },
+      {
+        "left": "`row.insertAdjacentHTML(\"beforeend\", s)`",
+        "right": "`insertAdjacentText`, ou `append`"
+      },
+      {
+        "left": "`link.href = s`",
+        "right": "conferir antes que `new URL(s).protocol` é `https:` ou `http:`"
+      },
+      {
+        "left": "`button.setAttribute(\"onclick\", s)`",
+        "right": "`addEventListener` com uma função"
+      },
+      {
+        "left": "`setTimeout(s, 100)`",
+        "right": "uma função no lugar, nunca uma string"
+      }
+    ],
+    "right_distractors": [
+      "passar a string por `encodeURIComponent` antes",
+      "envolver a linha em `try` e `catch`"
+    ]
+  },
+  "ex-y077jex6": {
+    "prompt": "Cada situação pede um caminho de volta diferente. Associe-a ao comando que a aula 4 dá para ela.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "pairs": [
+      {
+        "left": "uma edição no `menu.html`, nunca adicionada, precisa sumir",
+        "right": "`git restore menu.html`"
+      },
+      {
+        "left": "um `git add` foi engano, e a edição deve continuar no arquivo",
+        "right": "`git restore --staged menu.html`"
+      },
+      {
+        "left": "um commit que já está na `main` compartilhada tirou o pão de centeio por engano",
+        "right": "`git revert` desse commit"
+      },
+      {
+        "left": "o último commit, sem push, tem um erro de digitação na mensagem",
+        "right": "`git commit --amend`"
+      },
+      {
+        "left": "o último commit, sem push, deve ser refeito, com a mudança pronta para commitar de novo",
+        "right": "`git reset --soft HEAD~1`"
+      }
+    ],
+    "right_distractors": [
+      "`git reset --hard HEAD~1`",
+      "`git rm --cached menu.html`"
+    ]
+  },
+  "ex-d1jhvj70": {
+    "prompt": "Um colega liga um modelo à ferramenta de design para sugerir cinco nomes para um novo componente de botão, e põe temperature em 0.2 e top-p em 0.5 \"para ele ser cuidadoso\". O que a aula 1 diz dessa configuração?",
+    "hint": "IA no Desenvolvimento, aula 1.",
+    "choices": [
+      {
+        "text": "Certa para essa tarefa: temperatura baixa e top-p baixo juntos são o que a aula 1 usa para tudo que acaba virando código",
+        "why": "A aula 1 dá temperatura baixa a código, extração e classificação, onde há uma resposta correta. Uma lista de nomes não é isso, e ela também muda uma das duas configurações, não as duas."
+      },
+      {
+        "text": "Errada nas duas coisas: nomes pedem variedade, perto do padrão do provedor, e a aula 1 muda uma das duas, não as duas",
+        "why": "Para nomes, alternativas e ideias de teste a variedade é o objetivo, então a temperatura fica perto do padrão, muitas vezes 1. E mexer em temperature e top-p juntos deixa ninguém capaz de dizer qual fez o quê."
+      },
+      {
+        "text": "Inofensiva: temperature e top-p se anulam quando os dois estão definidos, e a resposta sai sorteada exatamente como no padrão",
+        "why": "Eles não se anulam. A temperatura muda a forma da distribuição e o top-p corta a cauda dela; definidos juntos, os dois agem no sorteio."
+      },
+      {
+        "text": "Errada porque nomes são tarefa para temperatura 0, que faz o modelo devolver os mesmos cinco a cada vez que é chamado",
+        "why": "Temperatura 0 dá a mesma resposta toda vez, o contrário do que um pedido de alternativas quer. A aula 1 põe nomes perto do padrão do provedor."
+      }
+    ]
+  },
+  "ex-vvzfs2zn": {
+    "prompt": "Um widget de ajuda manda a conversa inteira a cada mensagem nova, como faz o `conversation.py` da aula 2. Naquela captura, todas as requisições até o turno 10 leram 6.070 tokens de entrada, e todas até o turno 20 leram 24.740. Por qual fator dobrar a conversa multiplicou os tokens de entrada dela? Uma casa decimal.",
+    "hint": "IA no Desenvolvimento, aula 2."
+  },
+  "ex-ms1mdjg5": {
+    "prompt": "Um pull request intitulado *Compute the subtotal once in total()* foi escrito com um assistente. O diff faz `total()` guardar o subtotal numa variável, e os oito testes passam. `discount()` ainda chama `subtotal()` por conta própria e `shipping()` chama os dois. Revisando na ordem da aula 13 de git, qual é o primeiro achado?",
+    "hint": "IA no Desenvolvimento, aula 3; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 13.",
+    "choices": [
+      {
+        "text": "Nenhum: oito testes verdes são o que a segunda pergunta da aula 13, *funciona?*, pede, então a revisão pode passar para os nomes",
+        "why": "Testes verdes dizem que o comportamento não mudou. Não dizem se a mudança fez o que foi pedido, e essa é a pergunta 1, antes de *funciona?*."
+      },
+      {
+        "text": "Um nit sobre o nome da variável, já que uma refatoração que mantém o comportamento não tem mais nada a revisar além da leitura",
+        "why": "Nomes são a pergunta 3. Um problema na pergunta 1 torna as seguintes irrelevantes, e esta mudança tem um."
+      },
+      {
+        "text": "A pergunta 1 falha: os outros dois métodos ainda recalculam, e a economia que o pedido queria não acontece",
+        "why": "A pergunta 1 é se a mudança faz o que o ticket pediu. A aula 3 de *IA no Desenvolvimento* achou exatamente isto: os testes passaram e estavam certos em passar, e a mudança não economizou nada, o que só se acha lendo a mudança contra o pedido."
+      },
+      {
+        "text": "Um comentário bloqueante dizendo que o diff do assistente deve ser recusado de vez, porque código de assistente precisa de um segundo autor humano",
+        "why": "Nada nas duas aulas recusa uma mudança por quem a escreveu. A revisão responde se ela está boa para o merge, e aqui a resposta vem do que ela faz."
+      }
+    ]
+  },
+  "ex-3bq3m4hq": {
+    "prompt": "Um projeto de front-end guarda `VITE_PAYMENTS_SECRET=sk_live_…` em `.env.local`, que o `.gitignore` cobre. O autor diz que a chave está segura \"porque o git ignora o arquivo e o assistente do editor só lê o repositório\". Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 3; Deploy, Design Systems e GraphQL, aula 2.",
+    "choices": [
+      {
+        "text": "Um assistente manda o que estiver aberto numa aba, e o `.gitignore` não diz nada ao editor sobre isso",
+        "why": "Aula 3 de *IA no Desenvolvimento*: um arquivo ignorado continua sendo um arquivo no disco, e uma aba é uma aba. Só uma lista de exclusão que o assistente lê o deixa de fora."
+      },
+      {
+        "text": "O prefixo `VITE_` manda o build copiar o valor para o bundle que todo visitante baixa",
+        "why": "Aula 2 de *Deploy, Design Systems e GraphQL*: o Vite copia uma variável porque o nome dela diz isso. Uma chave secreta no bundle pode ser lida por qualquer um que abra a página."
+      },
+      {
+        "text": "Minificar o bundle troca o nome do valor, então uma string copiada para ele não pode mais ser lida",
+        "why": "Minificar troca nomes de variáveis. Uma string continua uma string, e o `grep` a acha no arquivo gerado."
+      },
+      {
+        "text": "Se uma requisição levando a chave foi recusada pelo modelo, a chave não saiu e não precisa ser trocada",
+        "why": "Uma recusa é uma resposta, e chega depois que a requisição já foi, com tudo dentro. Um segredo que saiu é trocado."
+      },
+      {
+        "text": "Uma chave que começa com `sk_` é do tipo publicável, feita para o navegador",
+        "why": "A aula 2 de *Deploy, Design Systems e GraphQL* dá `pk_` contra `sk_` como a convenção comum, e `sk_` é a secreta, só para servidor."
+      }
+    ]
+  },
+  "ex-e2j1egm5": {
+    "prompt": "Um assistente escreve uma correção para um campo de data que aceitava `31/02`, e um teste para ela na mesma resposta. O teste passa na primeira execução. O que a aula 5 de *IA no Desenvolvimento* e a aula 12 do projeto de portfólio dizem que está faltando?",
+    "hint": "IA no Desenvolvimento, aula 5; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Já basta: um teste que passa na primeira execução prova que a correção funciona, e é disso que uma correção precisa",
+        "why": "Um teste que passa desde a primeira execução não se distingue de um que não verifica nada. As duas aulas dizem isso."
+      },
+      {
+        "text": "Uma segunda resposta do assistente, para dois modelos diferentes concordarem que o teste está certo antes de ficar",
+        "why": "Duas respostas são dois sorteios do mesmo tipo de palpite. O que decide é se o teste enxerga o bug, não quantos modelos o escreveram."
+      },
+      {
+        "text": "Cobertura de cada linha da correção, que é o que prova que um teste novo exercita a mudança",
+        "why": "Executar uma linha não é verificar o que ela faz. Um teste pode cobrir a correção e não afirmar nada sobre `31/02`."
+      },
+      {
+        "text": "O teste rodado no código de antes da correção, onde deveria falhar; só então se sabe que ele enxerga o bug",
+        "why": "Aula 5 de *IA no Desenvolvimento*: um teste gerado deve falhar antes da mudança que ele testa. Aula 12 do portfólio: para um bug, o teste vem primeiro, e você o vê falhar."
+      }
+    ]
+  },
+  "ex-jg10fe1f": {
+    "prompt": "Uma equipe liga um bot que revisa todo pull request com um modelo e publica uma aprovação ou um pedido de mudanças. Alguém propõe pôr a aprovação do bot entre as verificações obrigatórias da `main`. O que dizem a aula 4 de *IA no Desenvolvimento* e a aula 3 de *Deploy, Design Systems e GraphQL*?",
+    "hint": "IA no Desenvolvimento, aula 4; Deploy, Design Systems e GraphQL, aula 3.",
+    "choices": [
+      {
+        "text": "Manter os comentários para quem decide; exigir as verificações verdadeiras ou falsas, como testes e tipos",
+        "why": "A aula 4 de *IA no Desenvolvimento* mantém a decisão de merge longe do bot, cuja aprovação é uma afirmação. A verificação obrigatória da aula 3 de *Deploy, Design Systems e GraphQL* é um job com nome que passa ou falha."
+      },
+      {
+        "text": "Exigir, já que uma verificação que ninguém é obrigado a esperar é uma sugestão, e o bot lê todo pull request",
+        "why": "Essa frase fala de verificações verdadeiras ou falsas. A aprovação de um bot é uma lista de hipóteses, e a aula 4 de *IA no Desenvolvimento* mostrou três confiantes e o bug real ausente."
+      },
+      {
+        "text": "Exigir às sextas, quando os revisores humanos estão menos atentos, e deixar as pessoas fazerem merge sozinhas nos outros dias",
+        "why": "Nada nas duas aulas faz uma trava depender do dia. O bot ajuda nos pull requests de sexta à tarde comentando, não decidindo."
+      },
+      {
+        "text": "Desligar o bot, já que um modelo deixa passar um erro de um a mais numa fronteira e os comentários gastam tokens à toa",
+        "why": "A aula 4 de *IA no Desenvolvimento* diz que um bom modelo acha achados locais e mecânicos como esse. O bot é útil como primeira leitura."
+      }
+    ]
+  },
+  "ex-e36m7dhc": {
+    "prompt": "A busca de documentação por trás de um widget de ajuda usa busca vetorial. Um colega quer trocar para busca híbrida \"porque é sempre melhor\". O que a avaliação de doze perguntas da aula 6 mostrou?",
+    "hint": "IA no Desenvolvimento, aula 6.",
+    "choices": [
+      {
+        "text": "A busca por palavra-chave venceu, 12 de 12, porque cada pergunta tinha as mesmas palavras dos trechos",
+        "why": "A busca por palavra-chave achou 10 de 12, a pior das três. A aula 6 mostrou uma pergunta que quase não divide palavras com o trecho dela."
+      },
+      {
+        "text": "11 de 12, como a vetorial; trocou um erro por outro, então meça nas suas próprias perguntas",
+        "why": "A busca vetorial e a híbrida acharam 11 de 12 cada uma, e o erro mudou de lugar. Se a híbrida ajuda um widget é uma medida nas perguntas dele, rodada a cada mudança."
+      },
+      {
+        "text": "A híbrida achou 12 de 12, porque juntar dois rankings sempre recupera o que qualquer um deles perde",
+        "why": "Não achou. Juntar os dois rankings consertou o identificador que a vetorial perdia e perdeu outra pergunta."
+      },
+      {
+        "text": "A vetorial achou 12 de 12 sozinha, então a híbrida acrescenta custo sem ganho e não vale testar",
+        "why": "A vetorial perdeu uma, o código de erro E1042, que é a razão de a busca híbrida existir. A aula 6 não a descarta; ela a mede."
+      }
+    ]
+  },
+  "ex-ffk7a91v": {
+    "prompt": "As ferramentas de um agente foram descritas às pressas. Associe cada falha à regra da aula 7 que a corrige.",
+    "hint": "IA no Desenvolvimento, aula 7.",
+    "pairs": [
+      {
+        "left": "`manage_order(action, ...)`, que tanto consulta pedidos quanto os reembolsa",
+        "right": "estreita, com uma tarefa cada"
+      },
+      {
+        "left": "uma descrição de `get_order` que nunca diz que os valores estão em centavos",
+        "right": "dizer as unidades e os formatos"
+      },
+      {
+        "left": "uma ferramenta que responde com um log de 5.000 linhas",
+        "right": "resultados que o modelo consegue usar: simples e curtos"
+      },
+      {
+        "left": "uma falha respondida com um stack trace",
+        "right": "erros que dizem o que fazer"
+      },
+      {
+        "left": "uma consulta que não muda nada e não traz anotação dizendo isso",
+        "right": "somente leitura quando for, dito nas anotações"
+      }
+    ],
+    "right_distractors": [
+      "um system prompt pedindo ao modelo para escolher ferramentas com cuidado",
+      "mais ferramentas, para o modelo sempre achar uma que sirva"
+    ]
+  },
+  "ex-tfr0dank": {
+    "prompt": "O servidor de uma página de checkout chama `create_return` para um modelo, estoura o tempo e tenta de novo. A segunda tentativa responde `R-1042-1` outra vez em vez de abrir uma segunda devolução, porque a chave de idempotência vem do ___, não do modelo.",
+    "hint": "IA no Desenvolvimento, aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "host",
+          "hospedeiro",
+          "anfitrião"
+        ]
+      }
+    ]
+  },
+  "ex-wwqzcpbw": {
+    "prompt": "Um chat de ajuda transmite a resposta em streaming para um `<div aria-live=\"polite\">` que o script cria quando a resposta começa, e define o texto do div de novo a cada pedaço que chega. O que há de errado para quem usa leitor de tela? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 9; Testes, Segurança e Acessibilidade, aula 12.",
+    "choices": [
+      {
+        "text": "Uma região criada no momento em que o texto chega geralmente não é lida por ninguém; ela tem de existir antes",
+        "why": "Aula 12 de *Testes, Segurança e Acessibilidade*: o leitor acompanha as regiões vivas que já estão na página, então a região é criada uma vez e mantida."
+      },
+      {
+        "text": "Atualizada a cada pedaço, ela lê fragmentos um atrás do outro em vez de uma resposta",
+        "why": "Aula 9 de *IA no Desenvolvimento*: anunciar a resposta uma vez, quando estiver completa, ou por frase, para o leitor ter algo que consiga acompanhar."
+      },
+      {
+        "text": "Ela deveria ser `role=\"alert\"`, para cada pedaço interromper o que o leitor está dizendo",
+        "why": "Um alerta interrompe e é para erros que não podem esperar. Uma resposta chegando é um status, e interromper a cada pedaço piora."
+      },
+      {
+        "text": "Uma região viva só é lida quando tem o foco do teclado, então o foco tem de ir para o div",
+        "why": "Uma região viva é lida sem o foco; é para isso que ela existe. Mover o foco ainda tiraria a pessoa do campo da pergunta."
+      },
+      {
+        "text": "O streaming tem de ser desligado sempre que um leitor de tela for detectado, porque os dois não funcionam juntos",
+        "why": "Nada diz isso. A correção está no que a região recebe e quando, enquanto a página continua transmitindo para quem está olhando."
+      }
+    ]
+  },
+  "ex-p5f8y676": {
+    "prompt": "Dois modelos são testados para um recurso que explica erros de formulário aos usuários. Nos trinta casos da equipe, o mais barato erra quatro e o mais caro nenhum. Um colega diz que o mais barato ganha no preço. O que a aula 10 diz?",
+    "hint": "IA no Desenvolvimento, aula 10.",
+    "choices": [
+      {
+        "text": "O mais barato ganha: saída é mais cara que entrada, então o modelo que escreve menos custa menos no total",
+        "why": "Saída é mais cara que entrada, mas isso fala do tamanho da resposta num mesmo modelo. Não diz nada de um modelo que responde errado."
+      },
+      {
+        "text": "Ainda não: o preço se decide pela contagem de tokens de cada provedor, que tem de ser comparada antes",
+        "why": "Contar tokens por provedor importa antes de comparar em dólares. Vem depois de saber quais modelos são bons o bastante."
+      },
+      {
+        "text": "O modelo mais barato que falha é o mais caro: a resposta errada custa o que nenhuma lista de preços mostra",
+        "why": "A aula 10 diz isso com essas palavras. Uma explicação errada vira um chamado de suporte ou um cliente perdido, então a avaliação decide quais modelos são candidatos antes de comparar preços."
+      },
+      {
+        "text": "O mais barato ganha se o cache estiver ligado, já que entrada em cache custa um décimo e cobre as quatro falhas",
+        "why": "O cache baixa o preço de um prompt repetido. Não torna certa uma resposta errada."
+      }
+    ]
+  },
+  "ex-jzx6ramk": {
+    "prompt": "Uma página de produto pede a um modelo para arrumar avaliações de clientes mantendo a formatação, e mostra o resultado com `card.innerHTML = reply` e um comentário: `// our own output, safe`. Uma avaliação continha `<script>alert(\"hi\")</script>`. O que dizem a aula 11 de *IA no Desenvolvimento* e a aula 9 de *Testes, Segurança e Acessibilidade*?",
+    "hint": "IA no Desenvolvimento, aula 11; Testes, Segurança e Acessibilidade, aula 9.",
+    "choices": [
+      {
+        "text": "Seguro como está: um modelo reescreve o que lê, então uma tag script numa avaliação não sobrevive na resposta",
+        "why": "Na aula 11 de *IA no Desenvolvimento* o modelo manteve a tag, porque lhe pediram para manter a marcação. A resposta copiou o que ele leu."
+      },
+      {
+        "text": "Seguro quando o system prompt mandar o modelo tirar scripts, já que a instrução vai junto em toda requisição",
+        "why": "Se um modelo obedece a uma instrução é questão de probabilidade, não de regra. A defesa que se sustenta está no código, onde o texto vira HTML."
+      },
+      {
+        "text": "Inseguro só em navegadores que rodam scripts inline, então um cabeçalho `Content-Security-Policy` torna o `innerHTML` a escolha certa",
+        "why": "As duas aulas põem a correção no ponto em que a string vira marcação. Um cabeçalho não muda o que o `innerHTML` faz com a string."
+      },
+      {
+        "text": "Inseguro: a resposta é texto de fora, e `innerHTML` é um sink; escape-a, ou monte o card com `textContent`",
+        "why": "Aula 11 de *IA no Desenvolvimento*: trate a resposta de um modelo como qualquer outra coisa que veio de fora, porque muitas vezes veio. A aula 9 de *Testes, Segurança e Acessibilidade* lista `innerHTML` como sink, com `textContent` como o jeito seguro."
+      }
+    ]
+  },
+  "ex-q647fxh0": {
+    "prompt": "Um currículo diz *I care about accessibility*. Qual linha sob o projeto de portfólio transforma essa afirmação no que a aula 1 do portfólio chama de evidência, escrita como a aula 4 de *Do Estudo ao Emprego* pede?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 1; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4.",
+    "choices": [
+      {
+        "text": "Fiz a página de agendamento de uma escola de dança, com formulário que funciona só pelo teclado, labels e axe no CI",
+        "why": "Diz o que foi feito e para quem, o que passou a ser verdade e como qualquer um verifica: o *fiz, o quê, comprovado por* da aula 4, e o formulário com labels, caminho de teclado e checagem da aula 1."
+      },
+      {
+        "text": "Apaixonado por acessibilidade e design inclusivo, com sólido conhecimento de WCAG 2.2, ARIA e CSS moderno",
+        "why": "É a mesma afirmação com mais palavras. A aula 4 corta o que todo currículo diz, e a aula 1 diz que uma afirmação sem evidência é a mesma no currículo e no repositório."
+      },
+      {
+        "text": "Desenvolvi uma aplicação web responsiva usando HTML5, CSS3, TypeScript, Vite e o executor de testes Vitest, de ponta a ponta",
+        "why": "Uma lista de tecnologias descreve igualmente um projeto que funciona e um que nunca rodou. Responde a uma pergunta que ninguém fez."
+      },
+      {
+        "text": "Melhorei a acessibilidade do projeto em 40%, medidos em relação aos referenciais usuais do mercado de software",
+        "why": "Um entrevistador pergunta de onde veio um número. Sem medição e sem base de comparação, ele custa mais do que número nenhum."
+      }
+    ]
+  },
+  "ex-ms5t7en4": {
+    "prompt": "Um perfil no GitHub tem cinco repositórios de tutoriais de front-end e um projeto terminado. O que as aulas 2 do portfólio e 5 de *Do Estudo ao Emprego* dizem para fazer com os tutoriais?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 2; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5.",
+    "choices": [
+      {
+        "text": "Apagá-los, já que um revisor que encontra um tutorial na lista para de confiar no resto do perfil",
+        "why": "Nada precisa ser apagado. O que prejudica é um tutorial apresentado como trabalho seu, ou um que disputa o primeiro clique com o projeto."
+      },
+      {
+        "text": "Deixá-los sem fixar, com uma linha dizendo qual tutorial seguem, e fixar o projeto",
+        "why": "As duas aulas separam o que existe do que é visto primeiro. Evidência fixada, descrições honestas e prática arquivada ou privada param a disputa."
+      },
+      {
+        "text": "Fixar os seis, para o revisor ver quanto trabalho veio antes do projeto",
+        "why": "O revisor amostra. Seis repositórios fixados com o mesmo peso são seis chances de ser julgado pelo mais fraco."
+      },
+      {
+        "text": "Renomeá-los com o problema do projeto, para parecerem versões anteriores dele",
+        "why": "Um tutorial renomeado continua o mesmo tutorial, reconhecido pelos nomes dos arquivos, e a aula 2 diz para nunca apresentar um como seu."
+      }
+    ]
+  },
+  "ex-gzka8nca": {
+    "prompt": "Antes de mandar o link de um portfólio de front-end, quais destas batem com o que a aula 3 diz que o revisor fará primeiro? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3; Testes, Segurança e Acessibilidade, aula 13.",
+    "choices": [
+      {
+        "text": "Abrir o link no ar num celular",
+        "why": "Aula 3: o link no ar primeiro, e muitas vezes num celular."
+      },
+      {
+        "text": "Estreitar o layout para 320 pixels e ver se ele continua de pé",
+        "why": "A aula 3 verifica o layout em 320 pixels, o que a aula 13 de *Testes, Segurança e Acessibilidade* explica: o 1.4.10 *Reflow* pede nenhuma rolagem lateral nessa largura."
+      },
+      {
+        "text": "Usar o formulário só com o teclado",
+        "why": "A aula 3 pergunta se o formulário pode ser usado só com o teclado, nas ferramentas de desenvolvedor do navegador, antes de qualquer código."
+      },
+      {
+        "text": "Contar os quadradinhos verdes do gráfico de contribuições",
+        "why": "O gráfico mede com que frequência alguém fez push. Nada no parágrafo de front-end da aula 3 olha para ele."
+      },
+      {
+        "text": "Ler a lista de dependências do `package.json` antes de abrir a página",
+        "why": "O código vem por último na ordem da aula 3, e ali o revisor olha como o estado flui e se os estados existem."
+      },
+      {
+        "text": "Ver se é a cópia de um site famoso, que mostra mais habilidade",
+        "why": "A aula 3 diz que um bom projeto é uma interface para dados reais com todos os estados desenhados, não a cópia de um site famoso."
+      }
+    ]
+  },
+  "ex-3h4ad77g": {
+    "prompt": "Uma amiga pede uma página para organizar a fila da oficina de bicicletas dela. Associe cada pergunta da aula 4 à parte do briefing que a resposta preenche.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 4.",
+    "pairs": [
+      {
+        "left": "Como você vai saber que está funcionando, daqui a um mês?",
+        "right": "pronto quando"
+      },
+      {
+        "left": "Quem usaria, e em quê?",
+        "right": "usuários"
+      },
+      {
+        "left": "O que nunca pode acontecer?",
+        "right": "não pode"
+      },
+      {
+        "left": "Se só pudesse fazer uma coisa, qual seria?",
+        "right": "precisa"
+      }
+    ],
+    "right_distractors": [
+      "fora do escopo",
+      "o banco de dados a usar"
+    ]
+  },
+  "ex-n19wkyky": {
+    "prompt": "A aula 7 lê as datas dos marcos do loanbook nas tags: `v0.2.0` em 2026-06-15 e `v0.3.0` em 2026-06-29. A nota semanal tinha se preocupado com HTTPS. Quantos dias levou o marco do deploy, de uma tag à seguinte?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 7."
+  },
+  "ex-msad8541": {
+    "prompt": "Um entrevistador de uma equipe que trabalha em sprints de duas semanas pergunta como você organizou seu projeto de portfólio feito sozinho. Qual resposta cabe na aula 8 do portfólio e na aula 15 de git?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 8; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 15.",
+    "choices": [
+      {
+        "text": "Fiz sprints de duas semanas sozinho, com planning, review e gráfico de burndown, para treinar para uma equipe como a de vocês",
+        "why": "Feita por uma pessoa só, cada cerimônia responde a uma pergunta que ninguém está fazendo. A aula 8 chama isso de teatro."
+      },
+      {
+        "text": "Estimei cada card em story points para poder mostrar minha velocidade ao longo das seis semanas",
+        "why": "Velocidade responde quanto uma equipe consegue assumir num sprint. Sozinho, você já sabe o que fez semana passada."
+      },
+      {
+        "text": "Um quadro de três colunas com limite de um card em *doing*, porque cerimônias de sprint precisam de mais de uma pessoa",
+        "why": "A aula 8 dá essa frase para a entrevista: conhecer o vocabulário, e uma decisão com o motivo. A aula 15 de git diz que o limite de WIP é o que impede o quadro de virar uma lista."
+      },
+      {
+        "text": "Sem quadro: um projeto solo não tem quem coordenar, então anotar tarefas seria teatro",
+        "why": "A aula 8 mantém um quadro para uma pessoa, porque a função dele é lembrar o que você esqueceria."
+      }
+    ]
+  },
+  "ex-9rgf81gq": {
+    "prompt": "A árvore de trabalho tem uma correção em `app.py`, o teste dela em `test_app.py`, e um `print(\"DEBUG body\", body)` esquecido em `app.py`. Ponha em ordem os passos da aula 9 até um commit que tenha a correção e o teste e mais nada.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 9.",
+    "items": [
+      "`git add -p app.py`, respondendo `y` ao hunk da correção e `n` ao da linha de debug",
+      "`git diff`, que agora lista só a linha de debug e o teste fora do stage",
+      "`git restore app.py`, que joga fora a linha de debug",
+      "`git add test_app.py`",
+      "`git commit`, com um corpo dizendo que o teste veio primeiro e falhou"
+    ],
+    "trap": "O deslize mais provável é restaurar `app.py` antes de pôr a correção no stage. O `git restore` devolve o arquivo ao que está no stage, então, sem nada no stage, ele joga fora a correção junto com a linha de debug."
+  },
+  "ex-g0kk1t01": {
+    "prompt": "Você é o único revisor do seu próprio pull request do portfólio. Quais destas dão a distância que a aula 10 pede, ou a verificação que a aula 4 de *IA no Desenvolvimento* aceitaria? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 10; IA no Desenvolvimento, aula 4.",
+    "choices": [
+      {
+        "text": "Ler o diff na manhã seguinte em vez de cinco minutos depois de escrevê-lo",
+        "why": "O tempo é a primeira das três distâncias da aula 10: o intervalo deixa você ver o código em vez da intenção."
+      },
+      {
+        "text": "Lê-lo na página de pull request do site de hospedagem em vez de no editor",
+        "why": "Uma vista diferente: a mudança aparece como o revisor vai vê-la."
+      },
+      {
+        "text": "Ler os testes primeiro, depois conferir se o código faz o que eles afirmam",
+        "why": "Uma ordem diferente, que é o que um revisor faz."
+      },
+      {
+        "text": "Pedir a um assistente para aprovar o diff e fazer o merge quando ele disser que está bom",
+        "why": "A aula 4 de *IA no Desenvolvimento* mantém a decisão de merge longe de um bot: a aprovação dele é uma afirmação, e o silêncio sobre um bug parece aprovação."
+      },
+      {
+        "text": "Relê-lo no editor na mesma hora, enquanto o que você quis fazer ainda está fresco",
+        "why": "Esse frescor é o problema. Você lembra o que quis, e a memória completa o que o diff não diz."
+      }
+    ]
+  },
+  "ex-wqbmd4z5": {
+    "prompt": "Uma página de loja lista quarenta produtos, cada um com um botão *Add to cart*. O axe não aponta problemas. O que uma volta pelo teclado como a da aula 13 encontra, e por que o axe não encontrou?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 13; Testes, Segurança e Acessibilidade, aula 10.",
+    "choices": [
+      {
+        "text": "Tudo certo: quarenta botões com um nome cada é o piso, e a volta repete o que o axe já verificou",
+        "why": "Na aula 13 a volta achou o que o axe deixou passar. Todo nome estava correto e nenhum era útil."
+      },
+      {
+        "text": "Que os botões falham no contraste de 4,5:1, que o axe pula em elementos repetidos",
+        "why": "Contraste é uma das coisas que o axe decide. O problema aqui é o que os nomes dizem."
+      },
+      {
+        "text": "Que quarenta botões são paradas demais, então todos menos o primeiro deveriam ganhar `tabindex=\"-1\"`",
+        "why": "Tirar os botões da ordem de tabulação os torna inalcançáveis pelo teclado. A correção está nos nomes."
+      },
+      {
+        "text": "Quarenta paradas chamadas *Add to cart*; cada uma precisa dizer em que age, o que o axe não julga",
+        "why": "O *Borrower, Lend, Borrower, Lend* da aula 13 virou *Lend Projector 1 to*. A aula 10 de *Testes, Segurança e Acessibilidade* lista se um nome descreve o que o controle faz entre as perguntas que uma máquina não responde."
+      }
+    ]
+  },
+  "ex-3gwj0mmg": {
+    "prompt": "Um app de página única do portfólio chama um serviço de clima cuja única chave dá acesso à conta inteira. O autor segue a aula 14 do portfólio e lê a chave de uma variável de ambiente, `VITE_WEATHER_KEY`, no build. Por que isso não basta aqui?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Deploy, Design Systems e GraphQL, aula 2.",
+    "choices": [
+      {
+        "text": "O build põe o valor num arquivo que todo visitante baixa; chave da conta inteira fica num servidor",
+        "why": "Aula 2 de *Deploy, Design Systems e GraphQL*: se o navegador tem, quem usa o navegador tem, e um serviço com uma chave só é tratado como secreto. O ambiente da aula 14 protege um valor que o servidor lê em execução."
+      },
+      {
+        "text": "Basta, desde que o arquivo `.env` esteja no `.gitignore`, que é a metade da aula 14 que realmente importa",
+        "why": "Ignorar o arquivo mantém o valor fora do repositório. O bundle é um segundo lugar, feito da mesma variável, e é público por natureza."
+      },
+      {
+        "text": "Basta se a variável for lida com colchetes e sem valor padrão, para que uma chave ausente falhe na hora",
+        "why": "Essa regra faz um segredo ausente falhar alto. Não faz nada por um presente copiado para a página."
+      },
+      {
+        "text": "Falha porque o hook de pre-commit não reconhece `VITE_`, e a chave acaba num commit por acidente",
+        "why": "A chave nem está num commit aqui. Está no JavaScript gerado, onde nenhum hook olha."
+      }
+    ]
+  },
+  "ex-9mvqd5vf": {
+    "prompt": "Um site de portfólio vai ficar num host estático gratuito. Quais destas a aula 15 diz para verificar nas páginas atuais do próprio provedor antes de confiar no plano gratuito? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Deploy, Design Systems e GraphQL, aula 1.",
+    "choices": [
+      {
+        "text": "se ele dorme quando ocioso, deixando lenta a primeira visita",
+        "why": "Uma das cinco da aula 15: um plano que dorme faz o revisor esperar no primeiro clique."
+      },
+      {
+        "text": "se ele expira depois de um período de teste",
+        "why": "Também uma das cinco; um plano gratuito que acaba transforma o link do currículo num erro."
+      },
+      {
+        "text": "como sair dele, já que um portfólio dura mais que a maioria dos planos gratuitos",
+        "why": "A quinta verificação. A aula 1 de *Deploy, Design Systems e GraphQL* diz o mesmo pelo outro lado: um plano gratuito é decisão de negócio de outra empresa."
+      },
+      {
+        "text": "os limites que este curso cita para cada um dos quatro hosts",
+        "why": "Nenhum dos dois cursos cita limites. A aula 1 de *Deploy, Design Systems e GraphQL* explica: um número escrito em outubro de 2026 estaria errado antes de você ler."
+      },
+      {
+        "text": "qual host tem mais estrelas no GitHub",
+        "why": "Popularidade não está na lista. As cinco verificações são sobre o que acontece com o seu site."
+      }
+    ]
+  },
+  "ex-7tjrmm0s": {
+    "prompt": "A seção *Run it* do README de um portfólio diz `npm ci && npm run dev`, e os dois funcionam no notebook do autor. Como as aulas 16 do portfólio e 3 de *Deploy, Design Systems e GraphQL* mandam descobrir se a afirmação se sustenta?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16; Deploy, Design Systems e GraphQL, aula 3.",
+    "choices": [
+      {
+        "text": "Rodar os dois comandos de novo no notebook depois de apagar o `node_modules`, que remove tudo o que foi instalado",
+        "why": "O notebook continua com toda variável que você já definiu e todo arquivo que nunca entrou num commit. A aula 16 chama sua máquina de pior lugar para esse teste."
+      },
+      {
+        "text": "Clonar o repositório numa máquina sem nada do projeto e digitar exatamente o que o README diz",
+        "why": "A aula 16 roda o README a frio numa máquina feita do zero; a aula 3 de *Deploy, Design Systems e GraphQL* mostra o porquê: um arquivo que está no seu computador e não está no repositório só falha numa cópia limpa."
+      },
+      {
+        "text": "Pedir a um amigo para ler o README e dizer se os passos parecem completos",
+        "why": "Ler não é rodar. O passo que você faz por hábito e esqueceu de escrever é invisível para quem lê também."
+      },
+      {
+        "text": "Pôr um selo dizendo *build passing*, para o revisor ver que funciona sem rodar nada",
+        "why": "Um selo informa o que o CI rodou. Não testa o que o README manda uma pessoa digitar."
+      }
+    ]
+  },
+  "ex-tb2q47dx": {
+    "prompt": "Qual texto `alt` serve para a captura de tela no topo do README de um planejador de estudos, pela aula 17 do portfólio e pela aula 12 de *Testes, Segurança e Acessibilidade*?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 17; Testes, Segurança e Acessibilidade, aula 12.",
+    "choices": [
+      {
+        "text": "`alt=\"Screenshot of my project\"`",
+        "why": "Diz o tipo de arquivo e nada do que ele mostra. A aula 12 também diz para não começar com *imagem de*, já que o leitor já diz *imagem*."
+      },
+      {
+        "text": "`alt=\"\"`, porque o parágrafo do README logo acima já diz o que é o projeto",
+        "why": "`alt` vazio marca decoração. A captura é a primeira evidência que o revisor vê, então carrega sentido."
+      },
+      {
+        "text": "`alt=\"The planner: three sessions this week, one course marked done\"`",
+        "why": "Diz em uma linha o que a imagem mostra, o que a aula 17 também usa como teste da imagem, e é aquilo para que a imagem serve, a regra da aula 12."
+      },
+      {
+        "text": "`alt=\"planner-2026-10-03.png\"`, para o arquivo poder ser encontrado de novo",
+        "why": "Um nome de arquivo é o que o leitor usa quando falta o `alt`, e não diz nada do que a imagem mostra."
+      }
+    ]
+  },
+  "ex-2ce2mr9n": {
+    "prompt": "Seu roteiro de dois minutos sobre o projeto dá dois minutos e quarenta quando você cronometra em voz alta. Onde a aula 19 diz para cortar?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 19.",
+    "choices": [
+      {
+        "text": "No problema, já que o ouvinte pode ler no README de quem era o problema",
+        "why": "O problema já é curto, uns vinte e cinco segundos, e é o que faz o ouvinte se importar."
+      },
+      {
+        "text": "Deixar como está: falar mais rápido, já que o conteúdo estava certo e o ritmo é que estava lento",
+        "why": "A aula 19 diz que a correção não é falar mais rápido. É cortar."
+      },
+      {
+        "text": "No resultado, terminando na decisão para o ouvinte lembrar da parte difícil",
+        "why": "O resultado já é curto e termina em algo que o ouvinte pode abrir, que é a evidência."
+      },
+      {
+        "text": "Na decisão: manter a escolha e o motivo, e cortar o segundo motivo, o histórico e as alternativas",
+        "why": "A decisão é o que cresce, porque todo detalhe parece essencial para quem o decidiu. O que se corta é o que as perguntas da aula 20 vão pedir de qualquer jeito."
+      }
+    ]
+  },
+  "ex-8vja6395": {
+    "prompt": "Um anúncio para uma vaga júnior de front-end diz que você seria a única pessoa responsável pelo produto inteiro, do design ao deploy. O que a aula 1 diz para fazer com essa linha?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 1.",
+    "choices": [
+      {
+        "text": "Perguntar na triagem com quem você aprenderia: ela soa como vaga sênior com salário de júnior",
+        "why": "A aula 1 aponta essa linha como uma que merece uma segunda leitura em vez de passar batido, e a pergunta a fazer é quem ensinaria você."
+      },
+      {
+        "text": "Tratá-la como desejável, como o quarto framework, e se candidatar como a qualquer anúncio",
+        "why": "Não é mais uma ferramenta. Ela muda o que é o trabalho, e a aula 1 a destaca por isso."
+      },
+      {
+        "text": "Pular o anúncio, já que uma empresa que escreve isso avisou que não contrata júnior",
+        "why": "A aula 1 não diz para pular. Diz para perguntar, e a resposta decide."
+      },
+      {
+        "text": "Reescrever o currículo para mostrar que você já fez sozinho cada parte de um produto",
+        "why": "O currículo defende o trabalho que o anúncio descreve. Dizer que já tocou um produto inteiro sozinho não responde à pergunta que a linha levanta."
+      }
+    ]
+  },
+  "ex-nbyexvn5": {
+    "prompt": "Seu gráfico de contribuições está vazio nas seis semanas do projeto de portfólio, embora você tenha feito push toda semana. `git log --format='%an <%ae>'` mostra em todo commit o endereço pessoal que você digitou no dia em que instalou o git, que sua conta no GitHub não tem. Para onde apontam a aula 5 de *Do Estudo ao Emprego* e a aula 18 do portfólio?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5; O Projeto de Portfólio: do Briefing ao Deploy, aula 18.",
+    "choices": [
+      {
+        "text": "O gráfico conta pull requests com merge, não commits, então cada commit precisa de um pull request próprio",
+        "why": "O gráfico conta commits feitos com um endereço ligado à sua conta. Pull requests não são a questão aqui."
+      },
+      {
+        "text": "O endereço dos commits não é da conta; mude o `user.email` para o no-reply e os próximos contam",
+        "why": "Aula 5: garanta que seus commits contam usando um e-mail que o GitHub liga à sua conta. A aula 18 configura o endereço no-reply exatamente para isso, e antes do primeiro push."
+      },
+      {
+        "text": "Reescrever os commits com o endereço novo e dar force-push na `main`, para as seis semanas ficarem verdes",
+        "why": "A `main` no GitHub é um branch que um revisor pode ter clonado, e a única regra da arrumação é reescrever só o que ninguém mais tem."
+      },
+      {
+        "text": "Fazer push de alguns commits vazios por dia nas próximas semanas, para o gráfico bater com o currículo",
+        "why": "A aula 5 diz que commits vazios para deixar o gráfico verde aparecem para quem clicar num quadradinho, e são lidos exatamente como são."
+      }
+    ]
+  },
+  "ex-786rc337": {
+    "prompt": "A aula 8 conta as etapas da planilha inventada com `cut -d, -f5 applications.csv | tail -n +2 | sort | uniq -c | sort -rn`. Somando as contagens que ele imprimiu, quantas candidaturas o arquivo tem?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 8."
+  },
+  "ex-72k57bj3": {
+    "prompt": "A aula 9 manda anotar as pessoas que você conhece, numa ordem dada, antes de pedir indicação a alguém. Ponha a lista nessa ordem.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 9.",
+    "items": [
+      "pessoas com quem você estudou, em qualquer curso, que hoje trabalham em algum lugar",
+      "professores e instrutores",
+      "pessoas de empregos anteriores, em qualquer área",
+      "família e vizinhos, perguntando de forma direta",
+      "pessoas nas empresas da sua lista que você nunca conheceu"
+    ],
+    "trap": "O deslize mais provável é começar pelos desconhecidos nas empresas que você quer. A aula 9 os põe por último, como o grupo mais difícil, e a mensagem que ela escreve é para eles."
+  },
+  "ex-kqsxnzm9": {
+    "prompt": "Um exercício para casa pede um formulário de agendamento que recuse uma data no passado, em umas três horas. Qual entrega cabe na aula 13 de *Do Estudo ao Emprego* e na aula 12 do portfólio?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Cada requisito do briefing mais um tema escuro e animações, enviados dois dias depois porque demoraram mais que o planejado",
+        "why": "Uma entrega atrasada e perfeita costuma ser pior que uma no prazo, e um recurso a mais por cima parece não ter lido o briefing."
+      },
+      {
+        "text": "O formulário com testes em todo componente e relatório de cobertura em 95%, sem nota, já que os testes explicam as escolhas",
+        "why": "A aula 13 pede uma nota: o que você fez, o que escolheu e por quê, o que faria com mais tempo. E um teste que falha quando a regra é removida diz mais que a cobertura."
+      },
+      {
+        "text": "O briefing feito primeiro, um README testado numa máquina limpa, uma nota curta e um teste visto falhar sem a regra",
+        "why": "É a lista da aula 13. A aula 12 do portfólio acrescenta como saber que o teste guarda a regra: tire a regra e veja o teste certo falhar."
+      },
+      {
+        "text": "Metade do briefing feita com perfeição e o resto deixado de fora em silêncio, para o revisor julgar o trabalho caprichado",
+        "why": "Quando o tempo acabar, pare e diga o que falta na nota. Um buraco em silêncio pesa mais que um honesto."
+      }
+    ]
+  },
+  "ex-tg55kry8": {
+    "prompt": "Uma recrutadora que não é técnica abre a triagem com *me fale sobre você*. Qual resposta segue a aula 11 de *Do Estudo ao Emprego*, que pega a forma da aula 19 do portfólio?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 11; O Projeto de Portfólio: do Briefing ao Deploy, aula 19.",
+    "choices": [
+      {
+        "text": "Um passeio pela stack do projeto de portfólio, do framework ao CSS, para mostrar a profundidade por trás do currículo",
+        "why": "Quem está verificando não é técnica, e a aula 19 guarda a tecnologia dentro da decisão, onde ela tem um motivo."
+      },
+      {
+        "text": "A história de como você se interessou por computadores, para a recrutadora ver motivação antes do currículo",
+        "why": "A aula 11 pede o que você faz, a evidência e o que você procura, em dois minutos. Motivação não está na lista."
+      },
+      {
+        "text": "Um pedido de desculpas curto por ainda não ter emprego em TI, seguido da lista de cursos que você terminou",
+        "why": "Não há do que se desculpar, e uma lista de cursos não é evidência de que você termina as coisas."
+      },
+      {
+        "text": "Dois minutos: o que você faz, o projeto de portfólio como evidência com o resultado, e a vaga que você procura",
+        "why": "A primeira verificação da aula 11 é que você é quem o currículo diz, contado do jeito que a aula 19 contou um projeto: o que você faz, a evidência, o que você procura."
+      }
+    ]
+  },
+  "ex-qkewyct5": {
+    "prompt": "*Me conte uma vez em que você falhou.* Qual resposta tem a forma que a aula 15 de *Do Estudo ao Emprego* pede, com o material tirado de uma retrospectiva como a da aula 21 do portfólio?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15; O Projeto de Portfólio: do Briefing ao Deploy, aula 21.",
+    "choices": [
+      {
+        "text": "Estimei o marco das regras em três dias e meio; levou cinco, porque eu não tinha contado o tratamento de erros. Agora estimo cada marco com os itens should.",
+        "why": "Uma história STAR com resultado honesto, e a última frase é o que mudou. Os fatos vêm primeiro e a conclusão depois, como a retrospectiva os escreve."
+      },
+      {
+        "text": "Sinceramente, sou meio perfeccionista, então meus projetos demoram mais porque fico melhorando até ficar certo.",
+        "why": "É a qualidade disfarçada que a aula 15 diz que os entrevistadores já ouviram milhares de vezes. Não tem falha nenhuma nela."
+      },
+      {
+        "text": "O deploy falhou porque o plano gratuito mudou os limites sem avisar, o que ninguém poderia prever.",
+        "why": "Uma resposta que põe a culpa em outra coisa é a outra que a aula 15 diz que fracassa. E não diz nada do que você mudou."
+      },
+      {
+        "text": "Uma vez perdemos um prazo, mas a equipe se uniu e no fim tudo foi entregue e o cliente ficou feliz.",
+        "why": "Nenhuma falha sua e nenhuma ação sua: *nós*, não *eu*, e um resultado sem nada aprendido."
+      }
+    ]
+  },
+  "ex-91yawyyz": {
+    "prompt": "Uma proposta para vaga júnior de front-end chega por escrito. Associe cada cláusula ao que a aula 18 diz para verificar nela.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 18.",
+    "pairs": [
+      {
+        "left": "período de experiência (*contrato de experiência*)",
+        "right": "que fique dentro dos 90 dias que a lei permite"
+      },
+      {
+        "left": "não concorrência",
+        "right": "o que cobre, por quanto tempo, e se você é pago nesse período"
+      },
+      {
+        "left": "propriedade intelectual",
+        "right": "que não reivindique o que você faz no seu tempo, portfólio incluído"
+      },
+      {
+        "left": "exclusividade, num contrato PJ",
+        "right": "se proíbe outros clientes"
+      },
+      {
+        "left": "aviso prévio, num contrato PJ",
+        "right": "quanto cada lado tem de dar, já que o contrato é que define"
+      }
+    ],
+    "right_distractors": [
+      "o valor mensal do vale-refeição",
+      "o preço de exercício e o cliff"
+    ]
+  },
+  "ex-fb65qkq6": {
+    "prompt": "Seu primeiro ticket no trabalho é corrigir o label de um formulário que o leitor de tela anuncia errado. O que a aula 20 de *Do Estudo ao Emprego* quer dele, com os hábitos da aula 10 do portfólio?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; O Projeto de Portfólio: do Briefing ao Deploy, aula 10.",
+    "choices": [
+      {
+        "text": "Corrigir os outros labels da página já que está ali, para a primeira mudança mostrar quanto você consegue fazer",
+        "why": "Um pull request que corrige em silêncio várias coisas sem relação é mais difícil de revisar. A aula 10 abre um card para o que encontra e corrige à parte."
+      },
+      {
+        "text": "Pequeno, bem terminado e visível: o quê e por quê na mensagem, autorrevisão antes, e *pronto* dito à equipe",
+        "why": "Aula 20: pequeno, bem terminado no padrão da equipe, e visível. A autorrevisão antes da revisão é o hábito da aula 10."
+      },
+      {
+        "text": "Pedir uma primeira tarefa maior, já que um label é pequeno demais para mostrar à equipe o que você sabe",
+        "why": "A aula 20 diz o contrário: uma primeira tarefa grande que se arrasta por três semanas é o pior começo."
+      },
+      {
+        "text": "Fazer o merge em silêncio, sem mencionar a ninguém, já que anunciar uma correção de uma linha soa como se gabar",
+        "why": "Visível é uma das três regras: dizer que está pronto onde a equipe diz essas coisas, como o fim normal de uma tarefa."
+      }
+    ]
+  },
+  "ex-s9qp93e5": {
+    "prompt": "Na primeira semana você anotou com seu gestor como é um bom resultado ao fim de um período de experiência de 90 dias. A aula 21 confere essa lista na metade, por volta do dia ___, para ouvir sobre uma diferença com seis semanas pela frente.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 21.",
+    "blanks": [
+      {
+        "accept": [
+          "45"
+        ]
+      }
+    ]
+  },
+  "ex-90p69q42": {
+    "prompt": "Uma vez por semana, escolha uma coisa que você fez só porque mandaram (*sempre limpe o cache do build primeiro*) e descubra por que ela funciona. A aula 22 diz que é assim que a camada de ___ cresce sem um curso.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 22.",
+    "blanks": [
+      {
+        "accept": [
+          "fundamentos",
+          "fundamento",
+          "fundamentals"
+        ]
+      }
+    ]
+  },
+  "ex-2ta62r30": {
+    "prompt": "A linha de evidência no topo do seu currículo aponta para o repositório do portfólio. Pela aula 3 de *Do Estudo ao Emprego* e pela aula 16 do portfólio, o que a primeira tela do README deve mostrar a quem clica?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 3; O Projeto de Portfólio: do Briefing ao Deploy, aula 16.",
+    "choices": [
+      {
+        "text": "Os passos de instalação, para o revisor poder rodar o projeto antes de decidir qualquer coisa",
+        "why": "Passos de instalação de um projeto que o leitor ainda não consegue imaginar são o que a aula 16 tira da primeira tela."
+      },
+      {
+        "text": "Uma fileira de selos e um sumário, para o leitor ver que o projeto é mantido e organizado",
+        "why": "A aula 16 tira os dois da primeira tela: eles empurram o parágrafo e a imagem para baixo da dobra."
+      },
+      {
+        "text": "Um parágrafo dizendo o que é e para quem, uma imagem dele funcionando, e o endereço no ar",
+        "why": "O mesmo trabalho dos dez segundos do currículo: o que é isso e se funciona. A aula 16 põe um endereço no ar na segunda linha, como link."
+      },
+      {
+        "text": "Um parágrafo sobre você e por que construiu o projeto, já que o currículo já disse o que ele é",
+        "why": "A aula 16 manda o parágrafo sobre você para o perfil. O README é sobre o projeto."
+      }
+    ]
+  }
+}

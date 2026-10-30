@@ -1,0 +1,51 @@
+---
+title: Reaching the camera from shared code
+version: 1
+---
+
+**Every approach except native has a border between the shared code and the platform, and a device
+feature lives on the far side of it.** The camera, the contacts, a fingerprint reader and a
+notification are each an Android API in Kotlin and an iOS API in Swift. Shared code in JavaScript,
+Dart or common Kotlin cannot call either one directly, so each approach has a named way across:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 272\" role=\"img\" data-fig=\"l02-border\" aria-label=\"Five rows, one per approach, with a dashed border between shared code on the left and platform code on the right. React Native's JavaScript crosses it through a native module, Flutter's Dart through a platform channel, common Kotlin through expect and actual, and a wrapped page's JavaScript through a plugin. On the right of each crossing is the Android API in Kotlin and the iOS API in Swift. A native app has nothing shared: Kotlin calls Android and Swift calls iOS directly.\"><defs><marker id=\"l02-border-ah-paper-dim\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"110\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">shared code</text><text x=\"330\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--amber)\">the border</text><text x=\"580\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">platform code</text><path d=\"M330 30 L330 262\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"5 4\"></path><rect x=\"20\" y=\"34\" width=\"180\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"110.0\" y=\"47.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">React Native</text><text x=\"110.0\" y=\"59.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">JavaScript or TypeScript</text><path d=\"M200 53 L448 53\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l02-border-ah-paper-dim)\"></path><text x=\"265\" y=\"45\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--phosphor)\">native module</text><rect x=\"450\" y=\"34\" width=\"260\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"580.0\" y=\"53.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Android API in Kotlin, iOS API in Swift</text><rect x=\"20\" y=\"80\" width=\"180\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"110.0\" y=\"93.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Flutter</text><text x=\"110.0\" y=\"105.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Dart</text><path d=\"M200 99 L448 99\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l02-border-ah-paper-dim)\"></path><text x=\"265\" y=\"91\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--phosphor)\">platform channel</text><rect x=\"450\" y=\"80\" width=\"260\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"580.0\" y=\"99.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Android API in Kotlin, iOS API in Swift</text><rect x=\"20\" y=\"126\" width=\"180\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"110.0\" y=\"139.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Kotlin Multiplatform</text><text x=\"110.0\" y=\"151.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">common Kotlin</text><path d=\"M200 145 L448 145\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l02-border-ah-paper-dim)\"></path><text x=\"265\" y=\"137\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--phosphor)\">expect / actual</text><rect x=\"450\" y=\"126\" width=\"260\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"580.0\" y=\"145.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Android API in Kotlin, iOS API in Swift</text><rect x=\"20\" y=\"172\" width=\"180\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"110.0\" y=\"185.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">web wrapper</text><text x=\"110.0\" y=\"197.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">the page's JavaScript</text><path d=\"M200 191 L448 191\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l02-border-ah-paper-dim)\"></path><text x=\"265\" y=\"183\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--phosphor)\">plugin</text><rect x=\"450\" y=\"172\" width=\"260\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"580.0\" y=\"191.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Android API in Kotlin, iOS API in Swift</text><rect x=\"20\" y=\"218\" width=\"180\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"></rect><text x=\"110.0\" y=\"231.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">native</text><text x=\"110.0\" y=\"243.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">nothing shared</text><rect x=\"450\" y=\"218\" width=\"260\" height=\"38\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"580.0\" y=\"237.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">Kotlin calls Android, Swift calls iOS</text></svg>", "caption": "Shared code reaches the camera across a border, and the far side is always Kotlin and Swift. A native app has no border because it has nothing shared."}
+```
+
+## Four ways across
+
+- **React Native: a native module.** Its documentation describes a Turbo Native Module in four steps:
+  write a typed specification in TypeScript or Flow, let Codegen turn it into native interfaces,
+  call it from your JavaScript, and write the Android half in Kotlin or Java and the iOS half in
+  Swift or Objective-C against those interfaces.
+- **Flutter: a platform channel.** Its overview calls it "a mechanism for communicating between your
+  Dart code and the platform-specific code of your host app". The channel has a name and a codec;
+  a Dart `Map` goes in and arrives as a `HashMap` in Kotlin or a `Dictionary` in Swift.
+- **Kotlin Multiplatform: `expect` and `actual`.** The common code declares a function with
+  `expect` and no body, and each platform's source set declares the same function with `actual` and
+  the real implementation. Kotlin's documentation says the compiler checks that every expected
+  declaration has a matching actual one in every platform, so a missing iOS half is a build error
+  rather than a crash.
+- **Capacitor and Cordova: a plugin.** The page calls a JavaScript function, and the plugin's native
+  half, in Kotlin or Java and in Swift, does the work and answers. `front-multiplatform` writes one
+  in its lesson 5.
+
+**Native has no border, because there is nothing shared to cross from.** A Kotlin app calls the
+Android camera API in Kotlin, and a Swift app calls the iOS one in Swift.
+
+## What the border costs
+
+**Somebody has to write the far side, in Kotlin and in Swift.** For the camera, the location and
+the common features, a library already exists, and a React Native or Flutter app installs it like
+any other dependency. For a feature Apple or Google released this year, or one few apps use, the
+library may not exist yet, and then the team writes the native half itself, in the two languages it
+chose a multiplatform tool to avoid.
+
+**That is the honest shape of "write once".** Most of the app is written once, and a thin layer at
+the edge is written per platform. A team choosing React Native for an app that is mostly lists and
+forms crosses the border a few times. A team building around a new sensor crosses it on every
+screen, and pays for it every time. Lesson 3 turns that into one of the criteria.
+
+**The border is also where permissions live.** Asking for the camera is a platform request with a
+platform dialog, whatever the language on the near side. Lesson 12 is about that request, and it
+reads the same in every approach.

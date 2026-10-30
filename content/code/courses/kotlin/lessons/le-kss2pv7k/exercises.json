@@ -1,0 +1,536 @@
+[
+  {
+    "id": "ex-fzvjw4je",
+    "version": 1,
+    "section": "generic-functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `firstOrDefault(listOf(45, 30), 0)`, what is `T`?",
+    "hint": "Inferred from the arguments.",
+    "choices": [
+      {
+        "text": "`Int`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Any`",
+        "correct": false,
+        "why": "Every argument is an `Int`, so nothing wider is needed."
+      },
+      {
+        "text": "`List<Int>`",
+        "correct": false,
+        "why": "That is the parameter's type, not `T`."
+      },
+      {
+        "text": "Nothing until it is written explicitly",
+        "correct": false,
+        "why": "The compiler infers it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qe960ydf",
+    "version": 1,
+    "section": "generic-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does making `firstOrDefault` generic buy over writing it for `List<Any>`?",
+    "hint": "`n + 1` compiled.",
+    "choices": [
+      {
+        "text": "It runs faster",
+        "correct": false,
+        "why": "Erasure makes them the same at run time."
+      },
+      {
+        "text": "The result keeps the argument's type",
+        "correct": true,
+        "why": "Right: no cast at the caller."
+      },
+      {
+        "text": "It accepts `null`",
+        "correct": false,
+        "why": "Unrelated to generics here."
+      },
+      {
+        "text": "It can be called from Java only that way",
+        "correct": false,
+        "why": "Both are callable from Java."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy0tgap3",
+    "version": 1,
+    "section": "classes-and-bounds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `class Ranked<T : Comparable<T>>` allow inside the class that `class Ranked<T>` would not?",
+    "hint": "What does the bound promise?",
+    "choices": [
+      {
+        "text": "Storing a `List<T>`",
+        "correct": false,
+        "why": "Any `T` can be stored."
+      },
+      {
+        "text": "Comparing two `T`s, as `maxOrNull` does",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Using `T` as a nullable type",
+        "correct": false,
+        "why": "An unbounded `T` is already nullable."
+      },
+      {
+        "text": "Calling the constructor with no arguments",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4p7mgag",
+    "version": 1,
+    "section": "classes-and-bounds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where is the error reported when `Ranked` gets a list of `Session`, which is not comparable?",
+    "hint": "The bound moved it.",
+    "choices": [
+      {
+        "text": "Inside `top()`, where items are compared",
+        "correct": false,
+        "why": "The bound stops it before that."
+      },
+      {
+        "text": "At the call that builds the `Ranked`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "At run time, with a `ClassCastException`",
+        "correct": false,
+        "why": "It never compiles."
+      },
+      {
+        "text": "Nowhere: sessions are compared by name",
+        "correct": false,
+        "why": "There is no such default."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdnj8n8w",
+    "version": 1,
+    "section": "classes-and-bounds",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A type parameter written `<T : ___>` cannot be a nullable type.",
+    "hint": "The default bound without its question mark.",
+    "blanks": [
+      {
+        "accept": [
+          "Any"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1p3f67ae",
+    "version": 1,
+    "section": "variance-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a `MutableList<Int>` refused as a `MutableList<Number>`?",
+    "hint": "What could the wider type let you add?",
+    "choices": [
+      {
+        "text": "`Int` is not a `Number`",
+        "correct": false,
+        "why": "It is; `List<Int>` fitted `List<Number>`."
+      },
+      {
+        "text": "Mutable lists cannot be passed to functions",
+        "correct": false,
+        "why": "They are passed all the time."
+      },
+      {
+        "text": "Through it, `add(2.5)` would put a `Double` in a list of `Int`",
+        "correct": true,
+        "why": "Right: invariant, because it both takes and gives `E`."
+      },
+      {
+        "text": "The JVM stores `Int` and `Number` lists differently",
+        "correct": false,
+        "why": "Erasure makes them the same list at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-4c5jmn48",
+    "version": 1,
+    "section": "variance-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`class Source<out T>` declares `fun put(value: T)`. What happens?",
+    "hint": "A parameter is an `in` position.",
+    "choices": [
+      {
+        "text": "It does not compile",
+        "correct": true,
+        "why": "Right: `T` is declared `out` but occurs in an `in` position."
+      },
+      {
+        "text": "It compiles, and `put` is never called",
+        "correct": false,
+        "why": "The compiler refuses the declaration."
+      },
+      {
+        "text": "It compiles with a warning about variance",
+        "correct": false,
+        "why": "It is an error."
+      },
+      {
+        "text": "The `out` is ignored for that function",
+        "correct": false,
+        "why": "Nothing is ignored."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwdk0ztd",
+    "version": 1,
+    "section": "variance-in",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each declaration to what it allows.",
+    "hint": "The table in section 05.",
+    "pairs": [
+      {
+        "left": "`out T`",
+        "right": "`X<Int>` where `X<Number>` is wanted"
+      },
+      {
+        "left": "`in T`",
+        "right": "`X<Number>` where `X<Int>` is wanted"
+      },
+      {
+        "left": "neither",
+        "right": "`X<Int>` only where `X<Int>` is wanted"
+      }
+    ],
+    "right_distractors": [
+      "`X<Int>` where `X<String>` is wanted"
+    ]
+  },
+  {
+    "id": "ex-08t3tjg9",
+    "version": 1,
+    "section": "variance-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`deliver(sink: Sink<Int>)` accepted a `Printer`, which is a `Sink<Any>`. Why?",
+    "hint": "What does a sink do with `T`?",
+    "choices": [
+      {
+        "text": "`Any` and `Int` are the same type at run time",
+        "correct": false,
+        "why": "They are not."
+      },
+      {
+        "text": "`Sink` is `in T`: what accepts any value accepts an `Int`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Printer` overrides `put` for `Int`",
+        "correct": false,
+        "why": "It overrides it for `Any`."
+      },
+      {
+        "text": "Kotlin converts `Int` to `Any` automatically",
+        "correct": false,
+        "why": "It is the sink's type that varies, not the value's."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdt2x8b6",
+    "version": 1,
+    "section": "variance-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which short rule does the section give?",
+    "hint": "Read from, write into.",
+    "choices": [
+      {
+        "text": "Classes are `out`, interfaces are `in`",
+        "correct": false,
+        "why": "Either can be either."
+      },
+      {
+        "text": "`out` for numbers, `in` for strings",
+        "correct": false,
+        "why": "The element type does not decide it."
+      },
+      {
+        "text": "Read from: `out`; write into: `in`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Always `out`, unless the compiler complains",
+        "correct": false,
+        "why": "Variance follows what the type does."
+      }
+    ]
+  },
+  {
+    "id": "ex-106xd4n4",
+    "version": 1,
+    "section": "star-projection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `items.add(0)` refused when `items` is a `MutableList<*>`?",
+    "hint": "What does the star say about the element type?",
+    "choices": [
+      {
+        "text": "`MutableList<*>` is read-only",
+        "correct": false,
+        "why": "`clear()` worked on it."
+      },
+      {
+        "text": "The element type is unknown, so nothing is known to fit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`0` is an `Int`, and stars hold `String`",
+        "correct": false,
+        "why": "A star holds some unknown type."
+      },
+      {
+        "text": "`add` is not defined on lists",
+        "correct": false,
+        "why": "It is defined on `MutableList`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fp2011zc",
+    "version": 1,
+    "section": "star-projection",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What type do you get reading an item from a `List<*>`?",
+    "hint": "It could be anything.",
+    "choices": [
+      {
+        "text": "`Nothing`",
+        "correct": false,
+        "why": "That is what goes in, not what comes out."
+      },
+      {
+        "text": "`Any?`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Int`",
+        "correct": false,
+        "why": "Nothing says the items are numbers."
+      },
+      {
+        "text": "`*`",
+        "correct": false,
+        "why": "`*` is not a type you can hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzz02qbg",
+    "version": 1,
+    "section": "erasure-and-reified",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `value is List<T>` refused inside an ordinary generic function?",
+    "hint": "What remains of `T` at run time?",
+    "choices": [
+      {
+        "text": "`is` cannot test lists",
+        "correct": false,
+        "why": "`is List<*>` works."
+      },
+      {
+        "text": "`T` might be nullable",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Generic functions cannot use `is`",
+        "correct": false,
+        "why": "They can, on types that exist at run time."
+      },
+      {
+        "text": "`T` is erased: there is nothing to compare with",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3r8f08n",
+    "version": 1,
+    "section": "erasure-and-reified",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why must a function with a `reified` type parameter be `inline`?",
+    "hint": "Where is the type argument known?",
+    "choices": [
+      {
+        "text": "Because `inline` functions run faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Because the JVM keeps types only for inline functions",
+        "correct": false,
+        "why": "The JVM keeps none; the copy has it written in."
+      },
+      {
+        "text": "Each copy is made at a call site, where `T` is known",
+        "correct": true,
+        "why": "Right: the compiler writes the real type into the copy."
+      },
+      {
+        "text": "So Java can supply the type",
+        "correct": false,
+        "why": "Java cannot call it at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-294bgara",
+    "version": 1,
+    "section": "erasure-and-reified",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`listOf<Any>(45, \"read chapter 3\", 30, 2.5).only<Int>()`. How many items does it return?",
+    "hint": "Only the whole numbers.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n5ksrbvc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`mixed.only<Int>()` is called. Put what happens in order.",
+    "hint": "Compile time first, then run time.",
+    "items": [
+      "the compiler sees `T` is `Int` at this call",
+      "it copies `only`'s body here, with `Int` written in",
+      "at run time, `filter` keeps items where `it is Int`",
+      "`map` casts each kept item to `Int`"
+    ]
+  },
+  {
+    "id": "ex-hetbme0h",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which assignments compile? Choose all that apply.",
+    "hint": "Read-only lists are `out`; mutable ones are invariant; comparators are `in`.",
+    "choices": [
+      {
+        "text": "`val a: List<Number> = listOf(1, 2)`",
+        "correct": true,
+        "why": "Yes: covariant."
+      },
+      {
+        "text": "`val b: MutableList<Number> = mutableListOf<Int>()`",
+        "correct": false,
+        "why": "No: invariant."
+      },
+      {
+        "text": "`val c: Comparator<String> = Comparator<CharSequence> { x, y -> x.length - y.length }`",
+        "correct": true,
+        "why": "Yes: contravariant."
+      },
+      {
+        "text": "`val d: List<*> = listOf(\"a\", 1)`",
+        "correct": true,
+        "why": "Yes: any list fits a star."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyc40p70",
+    "version": 1,
+    "section": "generic-functions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fun <T> List<T>.second(): T? = if (size >= 2) this[1] else null`. What is `listOf(45, 30, 60).second()`?",
+    "hint": "Positions start at 0.",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-c26nfxsx",
+    "version": 1,
+    "section": "variance-out",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why may a `List<Int>` be passed where a `List<Number>` is expected?",
+    "hint": "What can nobody do through a `List`?",
+    "choices": [
+      {
+        "text": "Because `Int` and `Number` are the same class",
+        "correct": false,
+        "why": "`Int` is a subtype of `Number`."
+      },
+      {
+        "text": "`List` is `out`: it has no `add`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because the function copies the list first",
+        "correct": false,
+        "why": "Nothing is copied."
+      },
+      {
+        "text": "Because the compiler skips type checks for lists",
+        "correct": false,
+        "why": "It checks; the variance allows it."
+      }
+    ]
+  }
+]
