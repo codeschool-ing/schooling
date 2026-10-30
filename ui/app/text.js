@@ -675,6 +675,26 @@ const RULES = {
       build provisioner required_plugins`,
   }),
 
+  /* Bicep, Azure's language for Resource Manager templates. Strings take the
+     single quote only, and `'''` opens one that spans lines. */
+  bicep: language({
+    quotes: ["'"],
+    long: ["'''"],
+    keywords: `targetScope metadata param var resource module output existing import type func
+      for in if true false null`,
+  }),
+
+  /* KQL, the query language of Azure Monitor, Log Analytics and Data
+     Explorer. The keywords are the tabular operators and the words that join
+     them; a function such as `bin(` is coloured as a call. */
+  kql: language({
+    block: null,
+    keywords: `let where project extend summarize by take limit top order sort asc desc join kind
+      on union render count distinct parse with mv-expand make-series from to step range
+      datatable print evaluate lookup as and or not in has contains startswith endswith between
+      ago now true false`,
+  }),
+
   /* ---------- and the ones that are not keyword languages ----------
 
      CSS, HTML, JSON, YAML and INI have no vocabulary to list: what carries the
