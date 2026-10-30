@@ -64,8 +64,8 @@ For a total that is higher than last month, the same order as lesson 13's, with 
 4. **Group by resource and meter**, filtered to what grew. A meter that was not there last month is a
    new kind of charge: a Windows licence, a public IP address, data leaving the region.
 
-And for the bill that really is wrong, a charge for a resource that never existed, or a price that is
-not the one on the list for its date: the evidence is the lines, with their resource ids and dates,
-and the place to take it is a billing support request in the portal. In this format a correction to an
+Then there is the bill that really is wrong: a charge for a resource that never existed, or a price
+that is not the one on the list for its date. The evidence is the lines, with their resource ids and
+dates, and the place to take it is a billing support request in the portal. In this format a correction to an
 earlier period arrives as a new line with `ChargeClass` set to `Correction`, never as an edit to the
 old one. **A bill is history, and history is corrected by adding to it.**

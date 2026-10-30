@@ -95,7 +95,7 @@ or fights it.
 
 The second way works on the bill instead of the resources. Cost Management has a **tag inheritance**
 setting which, once switched on, applies a subscription's and a resource group's tags to the
-**usage records** of the resources inside them. Microsoft's documentation is precise about the
+usage records of the resources inside them. Microsoft's documentation is precise about the
 difference: inherited tags are applied *to child resource usage records and not the resources
 themselves*. Nothing in Azure changes; the export of this lesson's next section gains the tags.
 

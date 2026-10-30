@@ -151,8 +151,8 @@ With an account, the Bicep file is deployed at the scope of the subscription, as
 `terraform apply`. **Neither was run**: both are requests to Resource Manager.
 
 A budget on its own only notifies. **To make it act, a budget at the scope of a subscription or a
-resource group can call an action group**, Azure Monitor's list of things to do when an alert fires:
-send a text message, call a webhook, start an automation runbook that deallocates every machine in a
+resource group can call an action group.** An action group is Azure Monitor's list of things to do
+when an alert fires: send a text message, call a webhook, start an automation runbook that deallocates every machine in a
 resource group. That turns a warning into a brake, and the brake is a program somebody wrote and
 tested, not a setting. The `azure-operations` course, in the tracks that include it, builds action
 groups in its lesson 12. Here the point is the limit of the thing: **a budget does not stop spending unless you build the part that does**, and a

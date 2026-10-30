@@ -66,8 +66,8 @@ Para um total maior que o do mês anterior, a mesma ordem da lição 13, com uma
    passado é um tipo novo de cobrança: uma licença do Windows, um endereço IP público, dados saindo da
    região.
 
-E para a fatura que está mesmo errada, uma cobrança por um recurso que nunca existiu, ou um preço que
-não é o da lista para a sua data: a prova são as linhas, com os seus ids de recurso e datas, e o lugar
+E há a fatura que está mesmo errada: uma cobrança por um recurso que nunca existiu, ou um preço que
+não é o da lista para a sua data. A prova são as linhas, com os seus ids de recurso e datas, e o lugar
 para levá-la é um pedido de suporte de cobrança no portal. Neste formato uma correção de um período
 anterior chega como uma linha nova com `ChargeClass` igual a `Correction`, nunca como uma edição da
 antiga. **Uma fatura é história, e história se corrige acrescentando.**

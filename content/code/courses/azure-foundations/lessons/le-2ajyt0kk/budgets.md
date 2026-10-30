@@ -116,8 +116,8 @@ month is heading over*, the other *this month is most of the way there*.
 ## How late an alert is
 
 **A budget is not watching in real time, and the delay is part of the design.** Microsoft's
-documentation gives the chain: cost and usage data reaches Cost Management between 8 and 24 hours
-after it happens, budgets are evaluated against it **once every 24 hours**, and the e-mail goes out
+documentation gives the chain. Cost and usage data reaches Cost Management between 8 and 24 hours
+after it happens. Budgets are evaluated against it once every 24 hours, and the e-mail goes out
 within an hour of the evaluation:
 
 ```schooling-figure

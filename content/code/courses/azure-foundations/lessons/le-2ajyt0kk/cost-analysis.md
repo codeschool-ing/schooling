@@ -25,7 +25,7 @@ mistake:
 
 Microsoft ships a set of views to start from. The **smart views**, such as *Services* and
 *Resources*, open with the month's cost and its forecast at the top and a table of the biggest
-contributors underneath, and each row drills down: from a subscription to its groups, from a group to
+contributors underneath. Each row drills down: from a subscription to its groups, from a group to
 its resources, from a resource to its meters. The **customisable views**, among them *Accumulated
 costs* and *Daily costs*, are charts you can change and save.
 

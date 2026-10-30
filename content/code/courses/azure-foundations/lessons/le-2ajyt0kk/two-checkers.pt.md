@@ -150,8 +150,8 @@ Com uma conta, o arquivo Bicep é implantado no escopo da assinatura, como a li�
 `terraform apply`. **Nenhum dos dois foi executado**: os dois são pedidos ao Resource Manager.
 
 Sozinho, um orçamento só avisa. **Para fazê-lo agir, um orçamento no escopo de uma assinatura ou de um
-grupo de recursos pode chamar um action group**, a lista de coisas a fazer do Azure Monitor quando um
-alerta dispara: mandar uma mensagem de texto, chamar um webhook, iniciar um runbook de automação que
+grupo de recursos pode chamar um action group.** Um action group é a lista de coisas a fazer do Azure
+Monitor quando um alerta dispara: mandar uma mensagem de texto, chamar um webhook, iniciar um runbook de automação que
 desaloca todas as máquinas de um grupo de recursos. Isso transforma um aviso num freio, e o freio é um
 programa que alguém escreveu e testou, não uma configuração. O curso `azure-operations`, nas trilhas
 que o incluem, monta action groups na sua lição 12. Aqui a questão é o limite da coisa: **um orçamento

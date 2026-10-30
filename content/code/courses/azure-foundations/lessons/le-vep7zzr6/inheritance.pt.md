@@ -95,7 +95,7 @@ um pode mudá-la e toda implantação posterior desse recurso ou a repete ou bri
 
 O segundo jeito trabalha na fatura em vez de nos recursos. O Cost Management tem uma configuração de
 **herança de tags** que, ligada, aplica as tags de uma assinatura e de um grupo de recursos aos
-**registros de uso** dos recursos dentro deles. A documentação da Microsoft é precisa sobre a
+registros de uso dos recursos dentro deles. A documentação da Microsoft é precisa sobre a
 diferença: as tags herdadas são aplicadas *aos registros de uso dos recursos filhos e não aos próprios
 recursos*. Nada no Azure muda; a exportação da próxima seção desta lição ganha as tags.
 

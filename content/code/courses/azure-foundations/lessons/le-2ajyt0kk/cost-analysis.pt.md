@@ -24,7 +24,7 @@ Toda visão da análise de custos são as mesmas três escolhas, e errar a prime
 
 A Microsoft entrega um conjunto de visões para começar. As **visões inteligentes**, como *Services* e
 *Resources*, abrem com o custo do mês e a sua previsão no topo e uma tabela dos maiores contribuintes
-embaixo, e cada linha se abre: de uma assinatura para os seus grupos, de um grupo para os seus
+embaixo. Cada linha se abre: de uma assinatura para os seus grupos, de um grupo para os seus
 recursos, de um recurso para os seus medidores. As **visões personalizáveis**, entre elas
 *Accumulated costs* e *Daily costs*, são gráficos que você muda e salva.
 
