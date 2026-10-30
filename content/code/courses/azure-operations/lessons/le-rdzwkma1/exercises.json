@@ -1,0 +1,308 @@
+[
+  {
+    "id": "ex-8rcfywdd",
+    "version": 1,
+    "section": "two-commitments",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the commitment that fits it.",
+    "hint": "Specific and steady, or a mix that moves?",
+    "pairs": [
+      {
+        "left": "Two D4s v5 VMs that run all year in brazilsouth",
+        "right": "A reservation"
+      },
+      {
+        "left": "Compute spend that moves between VMs and Container Apps",
+        "right": "A savings plan"
+      },
+      {
+        "left": "Instances that run only in business-hour peaks",
+        "right": "Pay as you go"
+      }
+    ]
+  },
+  {
+    "id": "ex-btka8bam",
+    "version": 1,
+    "section": "two-commitments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to a reserved hour when no matching VM runs in it?",
+    "hint": "Applied by the hour.",
+    "choices": [
+      {
+        "text": "It carries over to the next hour",
+        "correct": false,
+        "why": "Unused hours do not carry over."
+      },
+      {
+        "text": "It is refunded at the end of the month",
+        "correct": false,
+        "why": "There is no refund for unused hours."
+      },
+      {
+        "text": "It is lost",
+        "correct": true,
+        "why": "Right. That is the whole risk of committing."
+      },
+      {
+        "text": "It is charged at pay-as-you-go rates",
+        "correct": false,
+        "why": "It is paid at the reserved rate, with nothing to show for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ynfrnhjg",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the average, 2.87 instances, the wrong size for the workers' reservation?",
+    "hint": "How many hours ran exactly two?",
+    "choices": [
+      {
+        "text": "Reservations must be whole numbers above the average",
+        "correct": false,
+        "why": "No such rule; the floor is what matters."
+      },
+      {
+        "text": "A third reserved instance idles in 480 hours",
+        "correct": true,
+        "why": "Right. Commit to the floor, not the mean."
+      },
+      {
+        "text": "The average includes weekends, which are free",
+        "correct": false,
+        "why": "Weekends are billed like any other hours."
+      },
+      {
+        "text": "The median is always lower than the average",
+        "correct": false,
+        "why": "Not always; and the floor is the measure here."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w2nwpsd",
+    "version": 1,
+    "section": "sizing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 480,
+    "tolerance": 0,
+    "prompt": "In the month of WorkerHours, how many hours ran exactly two instances?",
+    "hint": "The second query.",
+    "unit": "hours"
+  },
+  {
+    "id": "ex-d4095ts8",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a real decision use three months or more rather than this lesson's one?",
+    "hint": "What could one month miss?",
+    "choices": [
+      {
+        "text": "Reservations need three months of history to be bought",
+        "correct": false,
+        "why": "No such requirement exists."
+      },
+      {
+        "text": "Because a month has too few hours to compute a percentile",
+        "correct": false,
+        "why": "720 hours is plenty for a percentile."
+      },
+      {
+        "text": "A seasonal low might not be in one month",
+        "correct": true,
+        "why": "Right. The floor has to hold for the whole term."
+      },
+      {
+        "text": "To average out the business-hour peaks",
+        "correct": false,
+        "why": "Peaks are paid as you go anyway; the floor is the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-gk8dry9q",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 387.4,
+    "tolerance": 0.01,
+    "prompt": "In commit.kql's answer, what does the month cost with 2 instances reserved, in USD?",
+    "hint": "The cost column.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-zaeg79n6",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Committing to 3 instances discounts more of the month's usage than committing to 2. Why does it cost more?",
+    "hint": "Look at unused_pct.",
+    "choices": [
+      {
+        "text": "The reserved rate rises with the size",
+        "correct": false,
+        "why": "The rate is the same per instance-hour."
+      },
+      {
+        "text": "Pay-as-you-go hours become more expensive",
+        "correct": false,
+        "why": "The pay-as-you-go rate is fixed."
+      },
+      {
+        "text": "The query double-counts the third instance",
+        "correct": false,
+        "why": "It counts each committed instance once per hour."
+      },
+      {
+        "text": "The third instance is paid in hours it idles",
+        "correct": true,
+        "why": "Right. 22% of the committed hours had nothing to cover."
+      }
+    ]
+  },
+  {
+    "id": "ex-76nwz9rp",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the shop's order for covering its compute?",
+    "hint": "Most specific first, peaks last.",
+    "choices": [
+      {
+        "text": "Reserve the floor, savings plan the rest, peaks as you go",
+        "correct": true,
+        "why": "Right. Each tool covers the usage it fits."
+      },
+      {
+        "text": "Savings plan for everything, including peaks",
+        "correct": false,
+        "why": "Peaks would leave committed dollars unused off-peak."
+      },
+      {
+        "text": "Reserve the maximum, so that nothing is ever paid as you go",
+        "correct": false,
+        "why": "That wastes most of the reservation most of the time."
+      },
+      {
+        "text": "No commitments, since prices are illustrative",
+        "correct": false,
+        "why": "Illustrative prices are for the lesson; the shape holds with real ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhwrhh0g",
+    "version": 1,
+    "section": "hybrid-benefit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Azure Hybrid Benefit remove from a Windows VM's hourly rate?",
+    "hint": "Something you already own.",
+    "choices": [
+      {
+        "text": "The compute it runs on",
+        "correct": false,
+        "why": "Compute is still paid, or discounted by a reservation."
+      },
+      {
+        "text": "The Windows licence",
+        "correct": true,
+        "why": "Right. You use the licence you already hold."
+      },
+      {
+        "text": "The managed disk",
+        "correct": false,
+        "why": "Disks are billed separately and unaffected."
+      },
+      {
+        "text": "Network egress charges",
+        "correct": false,
+        "why": "Egress has nothing to do with licences."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh0ca880",
+    "version": 1,
+    "section": "hybrid-benefit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team switches Hybrid Benefit on for forty Windows VMs to save money, without counting licences. What is the risk?",
+    "hint": "The benefit is an assertion.",
+    "choices": [
+      {
+        "text": "Azure refuses the setting until it sees proof",
+        "correct": false,
+        "why": "Azure accepts it; the organisation asserts eligibility."
+      },
+      {
+        "text": "The VMs stop running",
+        "correct": false,
+        "why": "They run normally."
+      },
+      {
+        "text": "An audit finds licences that were never there",
+        "correct": true,
+        "why": "Right. You must hold and count them."
+      },
+      {
+        "text": "The reservation on those VMs is cancelled",
+        "correct": false,
+        "why": "The two combine; neither cancels the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-8pnrwhk1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about this lesson are true? Choose all that apply.",
+    "hint": "Measured, priced, not bought.",
+    "choices": [
+      {
+        "text": "The rates used are illustrative",
+        "correct": true,
+        "why": "Yes. The price list was out of reach."
+      },
+      {
+        "text": "Committing to the floor was the cheapest of the four sizes",
+        "correct": true,
+        "why": "Yes. 387.40 USD."
+      },
+      {
+        "text": "A reservation was bought for the shop",
+        "correct": false,
+        "why": "No. Reservations are billing objects in a real account."
+      },
+      {
+        "text": "Hybrid Benefit applies to the shop's Linux App Service",
+        "correct": false,
+        "why": "No. There is no licence in that rate to remove."
+      }
+    ]
+  }
+]
