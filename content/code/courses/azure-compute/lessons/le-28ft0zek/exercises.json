@@ -1,0 +1,686 @@
+[
+  {
+    "id": "ex-8g5yn4ge",
+    "version": 1,
+    "section": "ingress-and-its-limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop's Ingress is applied to a cluster with no ingress controller in it. What happens?",
+    "hint": "Look at what `kubectl get ingress` printed in the lab.",
+    "choices": [
+      {
+        "text": "The API server refuses it, because the cluster has no IngressClass to match",
+        "correct": false,
+        "why": "It was created: the API server stores an Ingress whether or not anything will read it."
+      },
+      {
+        "text": "It is stored and nothing routes by it; its address stays empty",
+        "correct": true,
+        "why": "Right. An address is written back by a controller, and with none the Ingress is a record nobody reads."
+      },
+      {
+        "text": "kube-proxy serves it on port 80 of every node",
+        "correct": false,
+        "why": "kube-proxy implements Services, not Ingress objects; it never reads one."
+      },
+      {
+        "text": "The Service it names gets an external load balancer instead",
+        "correct": false,
+        "why": "Only a Service of type LoadBalancer asks for one, and the Ingress changes nothing about the Service."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2w6k5xz",
+    "version": 1,
+    "section": "ingress-and-its-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's Ingress was written for AGIC. Why would moving to ingress-nginx mean rewriting it, though both read the same resource?",
+    "hint": "Which part of the file is Kubernetes's, and which part is a controller's?",
+    "choices": [
+      {
+        "text": "ingress-nginx reads a different apiVersion of the Ingress",
+        "correct": false,
+        "why": "Both read `networking.k8s.io/v1`; the resource is the same."
+      },
+      {
+        "text": "Its probe path and draining are annotations, and only AGIC reads `appgw.ingress.kubernetes.io/`",
+        "correct": true,
+        "why": "Right. What the fields cannot say goes into annotations, and each controller has its own prefix and spelling."
+      },
+      {
+        "text": "An Ingress is bound to its controller when it is created and cannot move",
+        "correct": false,
+        "why": "Nothing binds it; a class name or annotation only says which controller should read it."
+      },
+      {
+        "text": "ingress-nginx needs one Ingress per Service",
+        "correct": false,
+        "why": "One Ingress may name several Services across its rules; the canary is where nginx asks for a second Ingress."
+      }
+    ]
+  },
+  {
+    "id": "ex-az7mfz0h",
+    "version": 1,
+    "section": "ingress-and-its-limits",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these can the Ingress resource express in its own fields, with no annotation? Choose all that apply.",
+    "hint": "Host, path, backend, certificate, class: that is the vocabulary.",
+    "choices": [
+      {
+        "text": "Requests for shop.example.com go to the shop",
+        "correct": true,
+        "why": "A rule matches a host."
+      },
+      {
+        "text": "Ten per cent of requests go to the shop at 1.1",
+        "correct": false,
+        "why": "There is no weight field; ingress-nginx does it with a second, annotated Ingress."
+      },
+      {
+        "text": "Paths under /orders go to the Service shop-v1-0",
+        "correct": true,
+        "why": "A path with pathType Prefix naming a backend Service and port."
+      },
+      {
+        "text": "Requests carrying the header x-shop-canary go elsewhere",
+        "correct": false,
+        "why": "A header match is not in the Ingress API; it is an annotation or an HTTPRoute."
+      },
+      {
+        "text": "TLS for the host, with the certificate in a Secret",
+        "correct": true,
+        "why": "The `tls` entry names the Secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-gs7ny345",
+    "version": 1,
+    "section": "ingress-and-its-limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Kubernetes documentation recommends Gateway instead of Ingress and says the Ingress API has been ___: it stays available and supported, and is no longer developed.",
+    "hint": "One word for an API that will not change again.",
+    "blanks": [
+      {
+        "accept": [
+          "frozen"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2nfhwnhv",
+    "version": 1,
+    "section": "ingress-and-its-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster uses the application routing add-on's managed NGINX. According to Microsoft's documentation read on 30 October 2026, what should its team plan?",
+    "hint": "Upstream Ingress NGINX was retired.",
+    "choices": [
+      {
+        "text": "Nothing: the add-on replaces NGINX in place, and the Ingress objects keep working",
+        "correct": false,
+        "why": "The successor reads the Gateway API, so the Ingress objects have to be rewritten as routes."
+      },
+      {
+        "text": "Moving to AGIC, which Microsoft now recommends for new clusters",
+        "correct": false,
+        "why": "AGIC's own pages point at Application Gateway for Containers instead."
+      },
+      {
+        "text": "A move to the add-on's Gateway API implementation or to Application Gateway for Containers before support ends in November 2026",
+        "correct": true,
+        "why": "Right. Microsoft patches critical security issues in the add-on's NGINX until then, and names those two destinations."
+      },
+      {
+        "text": "Pinning the add-on's NGINX version so that it is never upgraded",
+        "correct": false,
+        "why": "An unpatched proxy at the front door is the risk the retirement notice is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rkgmhj8",
+    "version": 1,
+    "section": "agic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With AGIC, where does a request to the shop pass through the AGIC pod?",
+    "hint": "AGIC writes configuration; something else carries requests.",
+    "choices": [
+      {
+        "text": "At every request, because AGIC is the proxy in front of the pods",
+        "correct": false,
+        "why": "That is NGINX's arrangement. AGIC carries no requests."
+      },
+      {
+        "text": "Only on the first request to a new pod, to register it",
+        "correct": false,
+        "why": "A new pod reaches the gateway through a configuration write, never through a request."
+      },
+      {
+        "text": "Nowhere: the gateway sends requests straight to pod addresses",
+        "correct": true,
+        "why": "Right. AGIC watches the cluster and rewrites the gateway through ARM; the traffic never touches it."
+      },
+      {
+        "text": "On requests that fail the gateway's health probe",
+        "correct": false,
+        "why": "The probe is the gateway's, built from the pod's readiness probe; AGIC does not handle requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-afrma74s",
+    "version": 1,
+    "section": "agic",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod of the shop is replaced during a rolling update. Put in order what happens before the Application Gateway sends requests to the new pod.",
+    "hint": "The change starts in the cluster and ends outside it.",
+    "items": [
+      "The new pod becomes ready and its address enters the Service's endpoints",
+      "AGIC sees the change through the API server",
+      "AGIC computes the gateway's new configuration",
+      "AGIC sends the configuration to Azure Resource Manager",
+      "The Application Gateway applies it and adds the address to its backend pool"
+    ],
+    "trap": "Until the last step the gateway still has the old address, which is why connection draining exists."
+  },
+  {
+    "id": "ex-9kvhps91",
+    "version": 1,
+    "section": "agic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop answers `/` with a 404. Its Deployment has no readiness probe and its Ingress no `health-probe-path`. What does AGIC's gateway do?",
+    "hint": "What does AGIC probe when nothing tells it otherwise, and which statuses count as healthy?",
+    "choices": [
+      {
+        "text": "It probes /healthz, which every container image is expected to have",
+        "correct": false,
+        "why": "Nothing tells AGIC about /healthz unless a probe or the annotation names it."
+      },
+      {
+        "text": "It skips health checks for pods without a readiness probe",
+        "correct": false,
+        "why": "The gateway always probes; without a pod probe, AGIC fills in defaults."
+      },
+      {
+        "text": "It sends requests anyway, since the pods are Ready in Kubernetes",
+        "correct": false,
+        "why": "Readiness in Kubernetes and health at the gateway are two separate verdicts."
+      },
+      {
+        "text": "It probes `/`, gets 404 outside 200 to 399, and marks every pod unhealthy",
+        "correct": true,
+        "why": "Right. With no probe AGIC uses the Ingress path, and a 404 is not a healthy answer, so the gateway serves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-cq39zgey",
+    "version": 1,
+    "section": "agic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An Application Gateway already serves another site through a listener created by hand. AGIC is then pointed at it with default settings. What happens to that listener?",
+    "hint": "Who does AGIC think the gateway belongs to?",
+    "choices": [
+      {
+        "text": "AGIC removes it within seconds, because by default it owns the whole gateway",
+        "correct": true,
+        "why": "Right. AGIC overwrites any configuration no Ingress describes; shared mode, Helm only, is the way around it."
+      },
+      {
+        "text": "AGIC leaves it alone, because it only touches what it created",
+        "correct": false,
+        "why": "That is shared mode, which is not the default and needs the Helm installation."
+      },
+      {
+        "text": "AGIC refuses to start until the listener is removed",
+        "correct": false,
+        "why": "It does not refuse; it takes the gateway over."
+      },
+      {
+        "text": "The listener is copied into a new Ingress in the default namespace",
+        "correct": false,
+        "why": "AGIC writes from the cluster to the gateway, never the other way round."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3jzr901",
+    "version": 1,
+    "section": "agic",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each AGIC setting to what it does.",
+    "hint": "Two are flags of the add-on, two are annotations on the Ingress.",
+    "pairs": [
+      {
+        "left": "--appgw-subnet-cidr",
+        "right": "Creates a gateway in a new subnet of that size"
+      },
+      {
+        "left": "--appgw-id",
+        "right": "Uses an Application Gateway that already exists"
+      },
+      {
+        "left": "appgw.ingress.kubernetes.io/connection-draining",
+        "right": "Reduces 502s while pods are being removed"
+      },
+      {
+        "left": "appgw.ingress.kubernetes.io/health-probe-path",
+        "right": "Sets the path the gateway probes"
+      }
+    ],
+    "right_distractors": [
+      "Sends a share of the traffic to a canary"
+    ]
+  },
+  {
+    "id": "ex-579e3smh",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Gateway API resource to the owner the API was designed around.",
+    "hint": "One file per owner; the grant is written by the side being referred to.",
+    "pairs": [
+      {
+        "left": "GatewayClass",
+        "right": "Whoever installs the controller"
+      },
+      {
+        "left": "Gateway",
+        "right": "The team that runs the cluster"
+      },
+      {
+        "left": "HTTPRoute",
+        "right": "The team that ships the application"
+      },
+      {
+        "left": "ReferenceGrant",
+        "right": "The owners of the namespace referred to"
+      }
+    ],
+    "right_distractors": [
+      "The API server, on its own"
+    ]
+  },
+  {
+    "id": "ex-mhqrnmdn",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A rule of an HTTPRoute lists two backends with weights 3 and 1. What percentage of the rule's requests goes to the second backend?",
+    "hint": "A weight is divided by the sum of the weights in its list.",
+    "value": 25,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-vp7t0hg9",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request for shop.example.com carries `x-shop-canary: yes`. Both rules of the shop's route match `/`. Which rule does a conforming controller apply?",
+    "hint": "Exact path, longest prefix, method, then...",
+    "choices": [
+      {
+        "text": "`everyone`, because a weighted rule outranks a single backend",
+        "correct": false,
+        "why": "Weights play no part in choosing a rule; they only split the chosen rule's requests."
+      },
+      {
+        "text": "`testers`, because with equal paths the match with more header matches wins",
+        "correct": true,
+        "why": "Right. Both have a PathPrefix of `/` and no method, and `testers` has one header against none."
+      },
+      {
+        "text": "Whichever the controller chooses, as the order is implementation-specific",
+        "correct": false,
+        "why": "The specification fixes the order for path, method, header and query matches."
+      },
+      {
+        "text": "Both, so the request is sent to 1.0 and to 1.1",
+        "correct": false,
+        "why": "One request goes to one backend of one rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-90df5yfk",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which mistakes in an HTTPRoute does `kubectl apply --dry-run=server` refuse, with no controller installed? Choose all that apply.",
+    "hint": "The definition carries its own validation; existence is a controller's question.",
+    "choices": [
+      {
+        "text": "A PathPrefix whose value is `orders`",
+        "correct": true,
+        "why": "The definition requires an absolute path starting with `/`."
+      },
+      {
+        "text": "A backend Service named without a port",
+        "correct": true,
+        "why": "A rule in the definition: a Service reference must have a port."
+      },
+      {
+        "text": "A backend Service that does not exist",
+        "correct": false,
+        "why": "Accepted: the API server does not look. A controller would report it, and answer its share with 500."
+      },
+      {
+        "text": "Weights of 90 and 30, which add up to 120",
+        "correct": false,
+        "why": "Accepted, and correct: weights are proportions, and their sum does not have to be 100."
+      },
+      {
+        "text": "A weight of 1000001",
+        "correct": true,
+        "why": "The definition sets a maximum of 1,000,000."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yetdpwe",
+    "version": 1,
+    "section": "gateway-api",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's route sends 90 to `shop-v1-0` and 10 to `shop-v1-1`. A typo renames the first backend to `shop-v1-2`, which does not exist, and the API server accepts it. Under a conforming controller, what percentage of that rule's requests is answered with a 500?",
+    "hint": "An invalid backend's share of the requests gets 500s.",
+    "value": 90,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-8q61dr4e",
+    "version": 1,
+    "section": "application-gateway-for-containers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the bring-your-own strategy, the cluster team deletes the shop's Gateway. What happens to its Application Gateway for Containers frontend?",
+    "hint": "Who created the frontend, and where?",
+    "choices": [
+      {
+        "text": "The ALB Controller deletes it along with the Gateway",
+        "correct": false,
+        "why": "That is the managed strategy, where the controller created the frontend."
+      },
+      {
+        "text": "It stays in Azure with its FQDN, because the Azure administrator owns it",
+        "correct": true,
+        "why": "Right. On bring-your-own you created it in Azure, and only you delete it."
+      },
+      {
+        "text": "It is moved to the next Gateway created in the cluster",
+        "correct": false,
+        "why": "A frontend is referenced by name from a Gateway; nothing moves it on its own."
+      },
+      {
+        "text": "Azure keeps it for a grace period and then deletes it",
+        "correct": false,
+        "why": "The documentation describes no grace period; the frontend is the administrator's to delete."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1z93da1",
+    "version": 1,
+    "section": "application-gateway-for-containers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three Application Gateway for Containers resources, each with one association, will share one delegated subnet. By Microsoft's rule, how many addresses must that subnet have available?",
+    "hint": "Each association assumes at least 256.",
+    "value": 768,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-7hm6qhrg",
+    "version": 1,
+    "section": "application-gateway-for-containers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four slips were made in `agc.bicep`: a chosen `fqdn` on the frontend, `subnet` for `subnets`, a `/26`, and a misspelt delegation. What did `bicep build` say?",
+    "hint": "The compiler checks the type, not the documentation.",
+    "choices": [
+      {
+        "text": "One warning per slip, four in all",
+        "correct": false,
+        "why": "Three of them are strings the type does not restrict, and they passed in silence."
+      },
+      {
+        "text": "Nothing at all: it only checks syntax",
+        "correct": false,
+        "why": "It checks properties against the resource type, which is how it caught the read-only one."
+      },
+      {
+        "text": "A refusal of the `/26`, smaller than the documented `/24`",
+        "correct": false,
+        "why": "An address prefix is a string to the compiler; the `/24` rule lives in the documentation."
+      },
+      {
+        "text": "One warning, BCP073: `fqdn` is read-only",
+        "correct": true,
+        "why": "Right. The FQDN is Azure's to generate, and the type says so; the other three compiled cleanly."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fv8a23n",
+    "version": 1,
+    "section": "application-gateway-for-containers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Application Gateway for Containers, the child resource that is one entry point for clients, with a name Azure generates, is a ___.",
+    "hint": "A CNAME can point at it.",
+    "blanks": [
+      {
+        "accept": [
+          "frontend"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vc2f355y",
+    "version": 1,
+    "section": "application-gateway-for-containers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The ALB Controller's managed identity is given Contributor on the Application Gateway for Containers resource. Why is that not enough?",
+    "hint": "Control actions and data actions are different permissions.",
+    "choices": [
+      {
+        "text": "Contributor cannot be given to a managed identity",
+        "correct": false,
+        "why": "Any role can be assigned to a managed identity; the question is what the role allows."
+      },
+      {
+        "text": "The controller signs in with a client secret, not the identity",
+        "correct": false,
+        "why": "It uses the identity through workload identity, the federated credential of lesson 13."
+      },
+      {
+        "text": "Its built-in role has data actions that Owner and Contributor lack",
+        "correct": true,
+        "why": "Right. AppGw for Containers Configuration Manager carries them, so it is the role to assign."
+      },
+      {
+        "text": "Contributor is too broad, and Azure refuses roles wider than needed",
+        "correct": false,
+        "why": "Azure assigns broad roles without complaint; the problem is a missing permission, not an excess."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzszw2fm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop wants a 90/10 canary written as an HTTPRoute, and a proxy that Azure operates outside the cluster. Which option of this lesson fits?",
+    "hint": "Two requirements: what it reads, and where the proxy runs.",
+    "choices": [
+      {
+        "text": "AGIC as an add-on",
+        "correct": false,
+        "why": "The proxy is outside, but AGIC reads only Ingress and has no weighted split."
+      },
+      {
+        "text": "The application routing add-on's Gateway API implementation",
+        "correct": false,
+        "why": "It reads routes, but its gateways are pods on the cluster's own nodes."
+      },
+      {
+        "text": "Application Gateway for Containers",
+        "correct": true,
+        "why": "Right. It reads the Gateway API and its data plane is Azure-operated, outside the cluster."
+      },
+      {
+        "text": "The add-on's managed NGINX, with canary annotations",
+        "correct": false,
+        "why": "It runs in the cluster, reads Ingress, and its support ends in November 2026."
+      }
+    ]
+  },
+  {
+    "id": "ex-9b7n401f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Gateway's conditions read `Accepted=Unknown Pending: Waiting for controller`. What wrote that?",
+    "hint": "Was a controller ever there?",
+    "choices": [
+      {
+        "text": "The controller, to say it is still provisioning the gateway",
+        "correct": false,
+        "why": "A controller that had seen it would write `True` or `False` with its own reason."
+      },
+      {
+        "text": "The definition's default for status, so an unclaimed gateway says so",
+        "correct": true,
+        "why": "Right. Nothing has claimed the class, and the default is all there is."
+      },
+      {
+        "text": "The API server, after failing to reach the gateway's address",
+        "correct": false,
+        "why": "The API server never contacts a gateway; it has no address to try."
+      },
+      {
+        "text": "kubectl, while waiting for the apply to finish",
+        "correct": false,
+        "why": "The conditions are stored in the object; kubectl only printed them."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dfra3ps",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of both AGIC and Application Gateway for Containers? Choose all that apply.",
+    "hint": "Compare where the proxy runs, what runs in the cluster, and what each reads.",
+    "choices": [
+      {
+        "text": "The proxy that carries requests runs outside the cluster",
+        "correct": true,
+        "why": "An Application Gateway for one, an Azure-operated data plane for the other."
+      },
+      {
+        "text": "A controller pod in the cluster turns Kubernetes resources into Azure configuration",
+        "correct": true,
+        "why": "AGIC for one, the ALB Controller for the other."
+      },
+      {
+        "text": "They read Gateway API routes",
+        "correct": false,
+        "why": "Only Application Gateway for Containers does; AGIC reads Ingress alone."
+      },
+      {
+        "text": "They read Ingress objects",
+        "correct": true,
+        "why": "AGIC reads nothing else, and Application Gateway for Containers reads both."
+      },
+      {
+        "text": "By default they take over an existing gateway and its listeners",
+        "correct": false,
+        "why": "That is AGIC's ownership of an Application Gateway; Application Gateway for Containers has frontends of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-2acszmca",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's HTTPRoute in the namespace `shop` attached to `shop-gateway` in `infra` with no ReferenceGrant. Why was none needed?",
+    "hint": "One cross-namespace reference is controlled from the gateway's side.",
+    "choices": [
+      {
+        "text": "ReferenceGrant is only needed for Services in another cluster",
+        "correct": false,
+        "why": "It covers references across namespaces within a cluster."
+      },
+      {
+        "text": "Routes may refer to anything in any namespace",
+        "correct": false,
+        "why": "A route naming a Service in `finance` needs the finance team's grant."
+      },
+      {
+        "text": "The grant is created automatically when the route is applied",
+        "correct": false,
+        "why": "Nothing creates one; it is written by the owners of the namespace referred to."
+      },
+      {
+        "text": "Attachment to a gateway is the exception: its `allowedRoutes` selected the namespace",
+        "correct": true,
+        "why": "Right. The gateway accepts routes from namespaces labelled `gateway-access: \"true\"`, and `shop` is one."
+      }
+    ]
+  }
+]
