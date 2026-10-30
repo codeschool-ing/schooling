@@ -1,0 +1,396 @@
+{
+  "ex-6t3fjxwr": {
+    "prompt": "No `Callbacks.swift`, por que \"the request is on its way\" foi impresso em segundo, antes de o curso chegar?",
+    "hint": "O que o `loadCourse` fez antes de retornar?",
+    "choices": [
+      {
+        "text": "O `print` é mais rápido que uma closure",
+        "why": "Velocidade não tem nada a ver; a ordem vem de quando cada linha roda."
+      },
+      {
+        "text": "O `loadCourse` retornou na hora e chamou de volta 200 ms depois",
+        "why": "Isso: ele só agendou a closure, então a linha seguinte do programa rodou antes."
+      },
+      {
+        "text": "O semáforo reordenou as linhas",
+        "why": "O semáforo só manteve o programa vivo até o `signal()`."
+      },
+      {
+        "text": "O Swift roda a última linha de um arquivo do nível de cima antes das outras",
+        "why": "O código do nível de cima roda de cima para baixo; as closures rodaram depois porque foram chamadas depois."
+      }
+    ]
+  },
+  "ex-8gcf3pjb": {
+    "prompt": "Quais problemas dos completion handlers a seção 02 aponta? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Cada passo dependente fica uma closure mais para dentro",
+        "why": "Sim: a ordem na página deixa de ser a ordem no tempo."
+      },
+      {
+        "text": "Um caminho que esquece de chamar a closure ainda compila",
+        "why": "Sim: e quem chamou espera para sempre."
+      },
+      {
+        "text": "Eles não funcionam no Linux",
+        "why": "Eles rodaram no Linux na seção 02, pelo `Dispatch`."
+      },
+      {
+        "text": "Um erro não tem mais quem chamou para onde ser lançado",
+        "why": "Sim: então os handlers ganham um parâmetro de erro ou um `Result`."
+      }
+    ]
+  },
+  "ex-e4p9g83w": {
+    "prompt": "O que acontece com o `Callbacks.swift` se você apagar o `finished.wait()`?",
+    "hint": "O que mantém o programa vivo enquanto as closures esperam?",
+    "choices": [
+      {
+        "text": "Nada muda",
+        "why": "A espera é o que segurava o processo aberto por 400 ms."
+      },
+      {
+        "text": "Não compila: um semáforo precisa ser esperado",
+        "why": "O compilador não acompanha semáforos."
+      },
+      {
+        "text": "Imprime duas linhas e sai",
+        "why": "Isso: o nível de cima termina antes de qualquer closure ser chamada."
+      },
+      {
+        "text": "Imprime as quatro linhas na ordem do fonte",
+        "why": "Sem a espera as closures nem chegam a imprimir."
+      }
+    ]
+  },
+  "ex-z2m3409h": {
+    "prompt": "O que o `await` marca?",
+    "choices": [
+      {
+        "text": "Um ponto de suspensão da função",
+        "why": "Isso: a função pausa ali se precisar esperar, e outro código roda enquanto isso."
+      },
+      {
+        "text": "Uma chamada que roda numa thread nova em paralelo",
+        "why": "O `await` não promete paralelismo; as duas cargas rodaram uma depois da outra."
+      },
+      {
+        "text": "Uma função cujo resultado é um opcional",
+        "why": "Opcionais são um `?`; o `await` é sobre tempo."
+      },
+      {
+        "text": "Uma chamada que o compilador roda na partida, antes do resto",
+        "why": "Ela roda onde está escrita, em ordem."
+      }
+    ]
+  },
+  "ex-kkys5djx": {
+    "prompt": "`func report()` contém `await loadCourse(named: \"Swift\")`. O que o compilador diz?",
+    "hint": "Olhe a assinatura de `report`.",
+    "choices": [
+      {
+        "text": "Nada; o `await` torna a chamada válida em qualquer lugar",
+        "why": "Uma função que não é `async` não pode pausar, então não pode aguardar."
+      },
+      {
+        "text": "Um aviso de que a chamada é lenta",
+        "why": "É um erro, e nenhum programa é gerado."
+      },
+      {
+        "text": "Que `loadCourse` precisa ser `throws`",
+        "why": "Nada aqui lança erro."
+      },
+      {
+        "text": "'async' call in a function that does not support concurrency",
+        "why": "Isso, com uma nota oferecendo marcar `report` como `async`."
+      }
+    ]
+  },
+  "ex-ay0z4hcx": {
+    "prompt": "Enquanto uma função `async` espera num `await`, a ___ em que ela rodava fica livre para rodar outro trabalho.",
+    "hint": "Nem a função, nem a tarefa.",
+    "blanks": [
+      {
+        "accept": [
+          "thread"
+        ]
+      }
+    ]
+  },
+  "ex-g4x5qjz8": {
+    "prompt": "O que `Task { … }` devolve ao código que o escreveu?",
+    "choices": [
+      {
+        "text": "O resultado da closure, depois de esperá-lo",
+        "why": "Ele retorna na hora, antes de o trabalho rodar."
+      },
+      {
+        "text": "Uma alça para o trabalho, para aguardar",
+        "why": "Isso: `await task.value` dá o resultado quando ele existe."
+      },
+      {
+        "text": "Nada",
+        "why": "Ele devolve uma `Task<Success, Failure>`."
+      },
+      {
+        "text": "Uma thread",
+        "why": "Uma tarefa não é uma thread; muitas tarefas dividem poucas threads."
+      }
+    ]
+  },
+  "ex-9rrxs12n": {
+    "prompt": "O `Forgotten.swift` imprimiu \"done\" e nunca \"saved\". Por quê?",
+    "hint": "Quando termina o processo de um script?",
+    "choices": [
+      {
+        "text": "A tarefa lançou um erro que ninguém pegou",
+        "why": "Nada lançou; o `try?` estava lá e a espera não foi cancelada."
+      },
+      {
+        "text": "O `Task.sleep` não funciona no nível de cima",
+        "why": "Funcionou em todos os outros programas da lição."
+      },
+      {
+        "text": "O processo acabou antes",
+        "why": "Isso: nada aguardou a tarefa, e o programa terminou por baixo dela."
+      },
+      {
+        "text": "Uma tarefa só imprime quando é destacada",
+        "why": "Qualquer tarefa pode imprimir; esta nunca chegou ao `print`."
+      }
+    ]
+  },
+  "ex-nk3cjee0": {
+    "prompt": "Uma tarefa feita com `Task { … }` não está presa à função que a criou. O Swift a chama de não ___.",
+    "hint": "O contrário do que o `async let` cria.",
+    "blanks": [
+      {
+        "accept": [
+          "estruturada"
+        ]
+      }
+    ]
+  },
+  "ex-s1mtpyrw": {
+    "prompt": "Três cargas independentes de 300 ms cada são aguardadas uma depois da outra. Quantos milissegundos isso leva, aproximadamente?",
+    "hint": "A seção 05 mediu."
+  },
+  "ex-kbxq3c5n": {
+    "prompt": "As mesmas três cargas iniciadas com `async let` e aguardadas juntas. Quantos milissegundos, aproximadamente?"
+  },
+  "ex-9hm6v53m": {
+    "prompt": "Uma função inicia `async let report = loadReport()` e retorna cedo num erro, sem aguardar `report`. O que acontece com a carga?",
+    "hint": "Uma tarefa filha não pode viver mais que o seu escopo.",
+    "choices": [
+      {
+        "text": "Continua rodando em segundo plano, como o `Forgotten.swift`",
+        "why": "Isso é uma tarefa não estruturada; o `async let` cria uma filha."
+      },
+      {
+        "text": "Ela é cancelada, e aguardada, quando o escopo termina",
+        "why": "Isso: o escopo termina, então a filha é cancelada e aguardada ali."
+      },
+      {
+        "text": "O compilador recusa um escopo que não aguarda todo `async let`",
+        "why": "Compila; a limpeza é feita por você em tempo de execução."
+      },
+      {
+        "text": "O programa quebra",
+        "why": "Nada está errado a ponto de quebrar; a filha é cancelada."
+      }
+    ]
+  },
+  "ex-50k4s4wq": {
+    "prompt": "Em que ordem o `for await … in group` entrega os resultados?",
+    "choices": [
+      {
+        "text": "A ordem em que as tarefas foram adicionadas",
+        "why": "Statistics foi adicionado em terceiro e veio por último."
+      },
+      {
+        "text": "A ordem alfabética dos nomes dos cursos",
+        "why": "SQL veio antes de Kotlin."
+      },
+      {
+        "text": "A ordem em que terminam",
+        "why": "Isso: SQL aos 150 ms, Swift aos 250, Kotlin aos 300, Statistics aos 500."
+      },
+      {
+        "text": "Uma ordem aleatória escolhida quando o grupo abre",
+        "why": "A ordem é a de chegada, que os atrasos decidiram."
+      }
+    ]
+  },
+  "ex-x72ab88y": {
+    "prompt": "Quatro cargas num grupo levam 150, 250, 300 e 500 ms. Quantos milissegundos o grupo inteiro leva, aproximadamente?",
+    "hint": "As filhas rodam lado a lado."
+  },
+  "ex-5kzchwgy": {
+    "prompt": "Por que cada filha no `Group.swift` devolve `(course, minutes)` e não só os minutos?",
+    "hint": "Pense em quem chama e precisa dos minutos do Kotlin.",
+    "choices": [
+      {
+        "text": "Um grupo de tarefas recusa filhas que devolvem um `Int` simples",
+        "why": "`withTaskGroup(of: Int.self)` é válido."
+      },
+      {
+        "text": "Os resultados chegam na ordem de chegada, então a posição não diz nada",
+        "why": "Isso: cada resposta tem de dizer a que pertence."
+      },
+      {
+        "text": "Tuplas são mais rápidas de mandar entre tarefas",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para imprimir o nome; a soma sairia errada sem ele",
+        "why": "A soma é a mesma em qualquer ordem."
+      }
+    ]
+  },
+  "ex-rsxk0y4z": {
+    "prompt": "O que `task.cancel()` faz com uma tarefa que está rodando?",
+    "hint": "Cooperativo.",
+    "choices": [
+      {
+        "text": "Para a thread dela na hora",
+        "why": "O Swift nunca para uma tarefa por fora."
+      },
+      {
+        "text": "Liga uma marca que o código dela deve conferir",
+        "why": "Isso: `Task.sleep` e `checkCancellation` a leem; um laço que nunca confere continua."
+      },
+      {
+        "text": "Lança um erro nela, na linha em que estiver",
+        "why": "Erros só aparecem onde o código confere."
+      },
+      {
+        "text": "Apaga o resultado dela",
+        "why": "Uma tarefa cancelada ainda produz um resultado, ou um erro."
+      }
+    ]
+  },
+  "ex-9jbmdr7p": {
+    "prompt": "No `Cooperate.swift`, o laço descuidado foi cancelado depois de dois cursos e ainda devolveu 270. Por quê?",
+    "choices": [
+      {
+        "text": "O cancelamento chegou tarde demais para importar",
+        "why": "Chegou depois de dois cursos; a versão cuidadosa parou ali."
+      },
+      {
+        "text": "Um grupo de tarefas ignorou o pedido",
+        "why": "Não há grupo nesse programa."
+      },
+      {
+        "text": "O `try?` descartou cada erro",
+        "why": "Isso: toda espera lançou na hora, e o laço seguiu."
+      },
+      {
+        "text": "O `Task.sleep` não confere o cancelamento",
+        "why": "Confere; é por isso que lançou na hora depois do cancelamento."
+      }
+    ]
+  },
+  "ex-x3r0h5fh": {
+    "prompt": "Ligue cada trecho de código ao que ele faz quanto ao cancelamento.",
+    "pairs": [
+      {
+        "left": "`try await Task.sleep(…)`",
+        "right": "Lança `CancellationError` se a tarefa foi cancelada"
+      },
+      {
+        "left": "`try? await Task.sleep(…)`",
+        "right": "Encerra a espera e deixa o código seguir"
+      },
+      {
+        "left": "`try Task.checkCancellation()`",
+        "right": "Lança naquela linha se cancelada, sem esperar"
+      },
+      {
+        "left": "`Task.isCancelled`",
+        "right": "Um `Bool` que o código lê e decide"
+      }
+    ],
+    "right_distractors": [
+      "Para todas as tarefas do programa"
+    ]
+  },
+  "ex-fkp2a3xw": {
+    "prompt": "Uma tarefa iniciada com `Task { … }` dentro de outra tarefa. A externa é cancelada. O que acontece com a interna?",
+    "hint": "Ela é filha?",
+    "choices": [
+      {
+        "text": "Continua rodando",
+        "why": "Isso: é não estruturada, não filha, então o cancelamento não chega nela."
+      },
+      {
+        "text": "É cancelada junto com a mãe, como um `async let`",
+        "why": "Só tarefas filhas são canceladas com a mãe."
+      },
+      {
+        "text": "A tarefa externa não pode ser cancelada enquanto contém outra",
+        "why": "Qualquer tarefa pode ser cancelada."
+      },
+      {
+        "text": "As duas quebram",
+        "why": "Cancelamento é uma marca, nunca uma quebra."
+      }
+    ]
+  },
+  "ex-cxry9ycs": {
+    "prompt": "Ponha estes acontecimentos do `Cancel.swift` na ordem em que acontecem no tempo.",
+    "items": [
+      "A tarefa começa e o `loadMinutes` começa a dormir",
+      "O nível de cima espera 100 ms",
+      "O `task.cancel()` liga a marca",
+      "O `Task.sleep` lança `CancellationError`",
+      "O `catch` imprime \"stopped\""
+    ]
+  },
+  "ex-d2np0m21": {
+    "prompt": "Ligue cada situação à ferramenta que a tabela da seção 06 indica.",
+    "pairs": [
+      {
+        "left": "O tratador de um botão precisa carregar a semana",
+        "right": "`Task { … }`"
+      },
+      {
+        "left": "As sessões precisam do curso antes",
+        "right": "`await`"
+      },
+      {
+        "left": "Exatamente três cargas independentes",
+        "right": "`async let`"
+      },
+      {
+        "left": "Uma carga por curso de uma lista",
+        "right": "Um grupo de tarefas"
+      }
+    ],
+    "right_distractors": [
+      "Um semáforo"
+    ]
+  },
+  "ex-exmr1v97": {
+    "prompt": "Um planner carrega 20 cursos num grupo de tarefas, e uma carga falha com erro. Que variante faz as outras 19 pararem em vez de terminarem à toa?",
+    "hint": "Seção 06, o tipo que lança.",
+    "choices": [
+      {
+        "text": "`withTaskGroup`, com `try?` dentro de cada filha",
+        "why": "O `try?` esconde a falha, então nada cancela o resto."
+      },
+      {
+        "text": "Vinte `async let`",
+        "why": "Vinte nomes não servem para uma lista conhecida só na execução."
+      },
+      {
+        "text": "`withThrowingTaskGroup` e `for try await`",
+        "why": "Isso: o primeiro erro é relançado e o grupo cancela as outras filhas."
+      },
+      {
+        "text": "Vinte valores `Task { … }` separados, cancelados um a um num laço",
+        "why": "Isso funciona só se você escrever tudo, o que o grupo já faz."
+      }
+    ]
+  }
+}
