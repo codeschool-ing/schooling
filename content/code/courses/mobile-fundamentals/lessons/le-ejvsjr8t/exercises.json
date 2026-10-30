@@ -1,0 +1,721 @@
+[
+  {
+    "id": "ex-1k49pppk",
+    "version": 1,
+    "section": "one-thread",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which thread does an Android app receive a tap on one of its buttons?",
+    "choices": [
+      {
+        "text": "Whichever processor core is free at the time",
+        "correct": false,
+        "why": "Free cores do not take the app's events. Several cores help only when the app hands work to other threads itself."
+      },
+      {
+        "text": "A thread the system creates for each touch",
+        "correct": false,
+        "why": "No thread is created per touch; the touch is queued for the main thread, which the documentation describes step by step."
+      },
+      {
+        "text": "The main thread, the same one that draws the screen",
+        "correct": true,
+        "why": "Right. Android calls it the UI thread for exactly that reason: touches arrive on it and drawing happens on it."
+      },
+      {
+        "text": "A background thread, so that drawing is never interrupted",
+        "correct": false,
+        "why": "That is the arrangement people imagine, and it is the reverse of the real one: input and drawing share one thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wz2amg6",
+    "version": 1,
+    "section": "one-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Android's documentation gives two rules for its single-thread model. Which pair is it?",
+    "choices": [
+      {
+        "text": "Do not block it; touch the toolkit only from it",
+        "correct": true,
+        "why": "Right. The first sends slow work away, the second makes its result come back."
+      },
+      {
+        "text": "Use one thread per screen, and close it when the screen closes",
+        "correct": false,
+        "why": "Screens do not get threads of their own; every screen is drawn by the one main thread."
+      },
+      {
+        "text": "Run all work on the UI thread; keep each function short",
+        "correct": false,
+        "why": "Short functions help, but disk and network can block in one short call. Slow work must leave the thread."
+      },
+      {
+        "text": "Draw from a worker; read input on the main thread",
+        "correct": false,
+        "why": "Drawing from a worker is exactly what the second rule forbids, because the toolkit is not thread-safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8s34x94",
+    "version": 1,
+    "section": "one-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a React Native app, the JavaScript thread is busy for half a second. What still works during it?",
+    "choices": [
+      {
+        "text": "A button whose pressed look is set in JavaScript",
+        "correct": false,
+        "why": "That touch waits for the JavaScript thread, so the button stops answering, the documentation's own example."
+      },
+      {
+        "text": "Timers set with setTimeout",
+        "correct": false,
+        "why": "Timers run on the same JavaScript thread and wait for it like everything else there."
+      },
+      {
+        "text": "Nothing at all, since the whole app runs on one thread",
+        "correct": false,
+        "why": "A React Native app has two threads that matter, and the native main one is not the busy one here."
+      },
+      {
+        "text": "Scrolling a ScrollView",
+        "correct": true,
+        "why": "Right. The scroll happens on the native main thread, which is free."
+      }
+    ]
+  },
+  {
+    "id": "ex-16gpry41",
+    "version": 1,
+    "section": "one-thread",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a Node.js program stand in for a phone's main thread in this lesson's experiment?",
+    "choices": [
+      {
+        "text": "Because Node.js uses the same graphics engine as Android",
+        "correct": false,
+        "why": "Node.js draws nothing. The model is about the loop, not about graphics."
+      },
+      {
+        "text": "Its loop runs one function at a time, so a long one stops timers",
+        "correct": true,
+        "why": "Right. That one property carries over exactly; the rest of a phone does not."
+      },
+      {
+        "text": "Because Node.js measures frames exactly as a display does",
+        "correct": false,
+        "why": "Its timers wobble, as the idle run shows; the lesson says plainly that it is a model."
+      },
+      {
+        "text": "Because phones run JavaScript on their main thread, as Node.js does",
+        "correct": false,
+        "why": "Native apps run Kotlin or Swift there; only the shape of the loop is shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyskvdpp",
+    "version": 1,
+    "section": "the-budget",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A phone's display refreshes 120 times a second. How many milliseconds does one frame get? Give two decimal places.",
+    "value": 8.33,
+    "tolerance": 0.01,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-d9nt2wnk",
+    "version": 1,
+    "section": "the-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A frame's work runs 1 ms past its 16.67 ms slot. According to Android's documentation, what does the user see?",
+    "choices": [
+      {
+        "text": "The frame, shown 1 ms late",
+        "correct": false,
+        "why": "That is the common picture and the documentation contradicts it: a late frame is not shown late."
+      },
+      {
+        "text": "The previous picture for another whole slot; the frame is dropped",
+        "correct": true,
+        "why": "Right. Missing the slot by any amount loses the frame."
+      },
+      {
+        "text": "A blank screen until the work ends",
+        "correct": false,
+        "why": "The screen keeps the last picture it had; nothing goes blank."
+      },
+      {
+        "text": "The ANR dialog",
+        "correct": false,
+        "why": "An ANR takes 5 seconds without answering input, not 1 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqrmgsqg",
+    "version": 1,
+    "section": "the-budget",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match how long a frame took to what Android's documentation calls it.",
+    "pairs": [
+      {
+        "left": "40 ms",
+        "right": "a slow frame"
+      },
+      {
+        "left": "1.5 s",
+        "right": "a frozen frame"
+      },
+      {
+        "left": "6 s without answering a touch",
+        "right": "an ANR"
+      },
+      {
+        "left": "10 ms at 60 Hz",
+        "right": "on time"
+      }
+    ],
+    "right_distractors": [
+      "a watchdog termination"
+    ]
+  },
+  {
+    "id": "ex-f00z0ra7",
+    "version": 1,
+    "section": "the-budget",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An animation's work takes 12 ms a frame and runs smoothly on a 60 Hz phone. On a 120 Hz phone, unchanged, what happens?",
+    "choices": [
+      {
+        "text": "It runs twice as smoothly, because the screen is faster",
+        "correct": false,
+        "why": "A faster screen asks more often, which leaves each frame less time, not more."
+      },
+      {
+        "text": "The system lowers the screen to 60 Hz for that app",
+        "correct": false,
+        "why": "The lesson describes no such rescue; it says the frames are dropped."
+      },
+      {
+        "text": "Nothing changes; the budget is 16 ms on every phone",
+        "correct": false,
+        "why": "16 ms is the budget at 60 Hz only. The budget is 1000 divided by the refresh rate."
+      },
+      {
+        "text": "It misses slots: 12 ms is over the 8.33 ms budget",
+        "correct": true,
+        "why": "Right. Code that fits at 60 Hz can miss every slot at 120 Hz."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4sd372b",
+    "version": 1,
+    "section": "the-budget",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which frame is allowed to take longer than 16 ms without being a defect, according to the same Android page?",
+    "choices": [
+      {
+        "text": "The first frame of a new screen",
+        "correct": true,
+        "why": "Right. The screen has to be built and laid out before it can be drawn."
+      },
+      {
+        "text": "The last frame before the app goes to the background",
+        "correct": false,
+        "why": "The page names no such exception."
+      },
+      {
+        "text": "Any frame during a scroll",
+        "correct": false,
+        "why": "Scrolling is exactly where a slow frame shows as a stutter."
+      },
+      {
+        "text": "Every frame on a 120 Hz display",
+        "correct": false,
+        "why": "A 120 Hz display gives less time, 8.33 ms, not an exemption."
+      }
+    ]
+  },
+  {
+    "id": "ex-85nkbjhq",
+    "version": 1,
+    "section": "what-blocks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these, done on the main thread, can cost the planner frames? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Parsing a year of sessions downloaded as one JSON document",
+        "correct": true,
+        "why": "Computing: the parser reads every character before it returns."
+      },
+      {
+        "text": "Reading the saved plan from a file",
+        "correct": true,
+        "why": "Waiting: storage answers in its own time while the thread does nothing."
+      },
+      {
+        "text": "Fetching the course list from a server",
+        "correct": true,
+        "why": "Waiting, and the longest kind: a network can take seconds or never answer."
+      },
+      {
+        "text": "Setting a session's done flag in a plan of five sessions",
+        "why": "Copying a list of five takes far less than a frame; it is the size of the work that matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddntt7c1",
+    "version": 1,
+    "section": "what-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a network call on the main thread a problem even though the processor is idle while it waits?",
+    "choices": [
+      {
+        "text": "Because the radio uses the processor while it waits",
+        "correct": false,
+        "why": "The processor really is idle. The cost is the thread, not the processor."
+      },
+      {
+        "text": "It is a problem only on iOS",
+        "correct": false,
+        "why": "Android throws NetworkOnMainThreadException for it; both platforms treat it as a fault."
+      },
+      {
+        "text": "While it waits, the loop cannot turn, so no frame is drawn",
+        "correct": true,
+        "why": "Right. Waiting holds the thread exactly as computing does."
+      },
+      {
+        "text": "Because a request from the main thread is sent twice, once per retry",
+        "correct": false,
+        "why": "Nothing about the thread repeats the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh686h8z",
+    "version": 1,
+    "section": "what-blocks",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each signal to the platform or tool it comes from.",
+    "pairs": [
+      {
+        "left": "NetworkOnMainThreadException",
+        "right": "Android, when a network connection is opened on the main thread"
+      },
+      {
+        "left": "StrictMode",
+        "right": "Android, a developer tool for accidental disk and network access"
+      },
+      {
+        "left": "0x8badf00d",
+        "right": "iOS, the code of a watchdog termination"
+      },
+      {
+        "left": "the ANR dialog",
+        "right": "Android, no answer to input within 5 seconds"
+      }
+    ],
+    "right_distractors": [
+      "React Native, a JavaScript thread that is busy for one frame"
+    ]
+  },
+  {
+    "id": "ex-qxr86w0j",
+    "version": 1,
+    "section": "what-blocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An iOS app holds its main thread far too long. What does the user see?",
+    "choices": [
+      {
+        "text": "The app is terminated by the watchdog and disappears",
+        "correct": true,
+        "why": "Right. The crash report then carries the code 0x8badf00d."
+      },
+      {
+        "text": "A dialog asking whether to wait or close the app",
+        "correct": false,
+        "why": "That is Android's ANR dialog. iOS has none."
+      },
+      {
+        "text": "A warning in the status bar",
+        "correct": false,
+        "why": "There is no such warning; the watchdog terminates the app."
+      },
+      {
+        "text": "Nothing; iOS moves the work to another thread for the app",
+        "correct": false,
+        "why": "No system moves an app's work for it. That is the developer's job, and the next sections show how."
+      }
+    ]
+  },
+  {
+    "id": "ex-naa23gwq",
+    "version": 1,
+    "section": "what-blocks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Android, an ANR is triggered when the app has not responded to a touch or a key press within ___ seconds.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q039abmj",
+    "version": 1,
+    "section": "what-blocks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A React Native screen parses a large response with JSON.parse inside a press handler. A student says it is fine because fetch is asynchronous. What is wrong with that?",
+    "choices": [
+      {
+        "text": "JSON.parse runs on the native main thread, so the scroll freezes",
+        "correct": false,
+        "why": "It runs on the JavaScript thread; the native scroll keeps going."
+      },
+      {
+        "text": "Nothing; asynchronous code cannot block a thread",
+        "correct": false,
+        "why": "Any synchronous step inside asynchronous code still runs to the end on its thread."
+      },
+      {
+        "text": "The wait is asynchronous; the parse is synchronous and runs on the JavaScript thread",
+        "correct": true,
+        "why": "Right. fetch frees the thread while the network answers, and JSON.parse holds it until it ends."
+      },
+      {
+        "text": "fetch is synchronous in React Native",
+        "correct": false,
+        "why": "fetch does not hold the thread while it waits; the problem is the parse."
+      }
+    ]
+  },
+  {
+    "id": "ex-vafmvmzv",
+    "version": 1,
+    "section": "measured",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's main run, how many frames were dropped while the sort ran on the clock's thread?",
+    "value": 33,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ksxdag7m",
+    "version": 1,
+    "section": "measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the captured runs, the sort took 554 ms on the main thread and 470 ms on the worker. What does the lesson conclude from that?",
+    "choices": [
+      {
+        "text": "Workers sort faster, so moving work makes it quicker",
+        "correct": false,
+        "why": "The lesson says the difference does not matter: the work is the same, and the numbers vary from run to run."
+      },
+      {
+        "text": "The work took about as long; what changed is which thread waited",
+        "correct": true,
+        "why": "Right. With the worker, the clock drew a frame in every slot."
+      },
+      {
+        "text": "The main thread is slower than a worker at sorting",
+        "correct": false,
+        "why": "One run on one machine cannot show that, and the lesson does not claim it."
+      },
+      {
+        "text": "The numbers prove the program has a bug",
+        "correct": false,
+        "why": "Timings differ between runs; that is expected, and the lesson says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqx4rzh2",
+    "version": 1,
+    "section": "measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does frames.ts make its sessions from a fixed seed instead of Math.random?",
+    "choices": [
+      {
+        "text": "Math.random is not allowed in a worker",
+        "correct": false,
+        "why": "It is allowed there. The reason is repeatability."
+      },
+      {
+        "text": "To make the sort faster on both threads",
+        "correct": false,
+        "why": "The seed changes which data is sorted, not how fast."
+      },
+      {
+        "text": "Because type stripping refuses Math.random",
+        "correct": false,
+        "why": "Type stripping only removes types; it refuses enums and namespaces, not functions."
+      },
+      {
+        "text": "So both runs sort the same list",
+        "correct": true,
+        "why": "Right. The worker makes its own copy, and the seed keeps it equal to the main thread's."
+      }
+    ]
+  },
+  {
+    "id": "ex-3a8mqjya",
+    "version": 1,
+    "section": "measured",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You run node frames.ts main on your laptop and get 41 frames dropped rather than 33. What does that tell you?",
+    "choices": [
+      {
+        "text": "That your file differs from the lesson's",
+        "correct": false,
+        "why": "The same file gives different timings on another machine and on another run."
+      },
+      {
+        "text": "That the Node.js you run is the wrong version",
+        "correct": false,
+        "why": "A wrong version fails to run the file at all, as lesson 1 shows; it does not change a count."
+      },
+      {
+        "text": "That run's sort took longer; the shape holds",
+        "correct": true,
+        "why": "Right. Timings vary by machine and run; what holds is that the main run drops frames and the worker run does not."
+      },
+      {
+        "text": "That the worker run will now drop frames as well",
+        "correct": false,
+        "why": "The worker run keeps the clock's thread free whatever the machine's speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpbxm81d",
+    "version": 1,
+    "section": "off-the-thread",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the three steps of moving work off the main thread in order.",
+    "items": [
+      "Hand the slow work to another thread",
+      "Keep drawing frames on the main thread while it runs",
+      "Bring the result back to the main thread and show it"
+    ]
+  },
+  {
+    "id": "ex-j3xrg0zn",
+    "version": 1,
+    "section": "off-the-thread",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Kotlin dispatcher to the work Android's documentation gives it.",
+    "pairs": [
+      {
+        "left": "Dispatchers.Main",
+        "right": "the UI and quick work"
+      },
+      {
+        "left": "Dispatchers.IO",
+        "right": "disk and network"
+      },
+      {
+        "left": "Dispatchers.Default",
+        "right": "sorting a list, parsing JSON"
+      }
+    ],
+    "right_distractors": [
+      "drawing views from a background thread"
+    ]
+  },
+  {
+    "id": "ex-rjb06bfc",
+    "version": 1,
+    "section": "off-the-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the Swift fragment, what does @MainActor on refresh() guarantee?",
+    "choices": [
+      {
+        "text": "That week is set on the main thread",
+        "correct": true,
+        "why": "Right. The caller is on the main actor, so the result lands there."
+      },
+      {
+        "text": "That the sort runs on the main thread",
+        "correct": false,
+        "why": "The sort is inside Task.detached, which belongs to no actor; that is the point."
+      },
+      {
+        "text": "That the function finishes within one frame",
+        "correct": false,
+        "why": "No annotation can promise a duration; it says where code runs."
+      },
+      {
+        "text": "That the work runs on a new thread created for it",
+        "correct": false,
+        "why": "@MainActor means the main thread, the opposite of a new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-svp8qs21",
+    "version": 1,
+    "section": "off-the-thread",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Kotlin worker thread finishes sorting and sets the list on screen directly from that thread. Which rule does it break?",
+    "choices": [
+      {
+        "text": "Do not block the UI thread",
+        "correct": false,
+        "why": "It kept the UI thread free; that half was right."
+      },
+      {
+        "text": "Use Dispatchers.IO for every background task",
+        "correct": false,
+        "why": "There is no such rule; Default suits a sort."
+      },
+      {
+        "text": "None; the toolkit accepts changes from any thread",
+        "correct": false,
+        "why": "Android's documentation says the toolkit is not thread-safe."
+      },
+      {
+        "text": "Do not touch the UI toolkit from outside the UI thread",
+        "correct": true,
+        "why": "Right. The result has to come back to the main thread first: the third step."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgp7vjhe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner's week view stutters when it opens on a phone with a long history. The sort runs inside the function that draws the list. What is the first change?",
+    "choices": [
+      {
+        "text": "Lower the screen's refresh rate to 60 Hz",
+        "correct": false,
+        "why": "A bigger budget hides the cost on one phone; the work is still on the drawing thread."
+      },
+      {
+        "text": "Sort once, off the main thread",
+        "correct": true,
+        "why": "Right. It leaves the drawing function and stops repeating on every draw, Android's ANR guide's own example."
+      },
+      {
+        "text": "Show the ANR dialog earlier",
+        "correct": false,
+        "why": "The app does not show that dialog; the system does, and it is the failure, not a fix."
+      },
+      {
+        "text": "Turn on StrictMode in the release build",
+        "correct": false,
+        "why": "StrictMode finds disk and network on the main thread during development; it does not move a sort."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ze1rz3p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a good reason to run work on the main thread?",
+    "choices": [
+      {
+        "text": "It is a network request, and the answer is needed on screen",
+        "correct": false,
+        "why": "The answer can come back to the main thread; the waiting must not happen there."
+      },
+      {
+        "text": "It changes a view, and it is quick",
+        "correct": true,
+        "why": "Right. Touching the UI is the main thread's job, and quick work fits in the frame."
+      },
+      {
+        "text": "It runs once a day",
+        "correct": false,
+        "why": "A frame lost once a day is still lost, and a long wait still earns an ANR."
+      },
+      {
+        "text": "The phone has several cores, so the main thread is never full",
+        "correct": false,
+        "why": "Cores do not share the main thread's work; it is one thread whatever the processor."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2zznwee",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A frame that misses its slot by a single millisecond is not shown late; Android ___ it entirely.",
+    "blanks": [
+      {
+        "accept": [
+          "drops",
+          "skips",
+          "discards"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
