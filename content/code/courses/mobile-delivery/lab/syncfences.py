@@ -9,7 +9,7 @@ reported and not touched."""
 import pathlib, re, sys
 
 FENCE = re.compile(r"^```([^\n]*)\n(.*?)^```[ \t]*$", re.S | re.M)
-SKIP = ("schooling-figure", "schooling-example")
+SKIP = ("schooling-figure", "schooling-example", "localised")
 bad = 0
 for pt in sorted(pathlib.Path(sys.argv[1]).glob("*.pt.md")):
     en = pt.with_name(pt.name[: -len(".pt.md")] + ".md")
