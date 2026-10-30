@@ -1,0 +1,421 @@
+{
+  "ex-grj9rgdw": {
+    "prompt": "Na fonte única da verdade do planner, de onde a tela da semana lê as sessões?",
+    "hint": "Um dos dois lugares está sempre ali.",
+    "choices": [
+      {
+        "text": "Só do Room",
+        "why": "Isso: a rede só escreve no Room."
+      },
+      {
+        "text": "Do servidor, com o Room como reserva quando offline",
+        "why": "Esse é o desenho de duas fontes que a seção começa recusando."
+      },
+      {
+        "text": "De quem respondeu por último",
+        "why": "Aí toda pergunta sobre a tela tem duas metades."
+      },
+      {
+        "text": "Da lista em memória do repositório",
+        "why": "O repositório não guarda lista; `week()` devolve o `Flow` do Room."
+      }
+    ]
+  },
+  "ex-fgfjgcgc": {
+    "prompt": "Como uma sessão buscada pelo `refresh()` chega a uma tela que já coleta `week()`?",
+    "hint": "Aula 15, seção 06.",
+    "choices": [
+      {
+        "text": "`refresh()` devolve as sessões e a tela as acrescenta à lista",
+        "why": "`refresh()` devolve só uma contagem dentro de um `Result`."
+      },
+      {
+        "text": "A escrita no Room faz o `Flow` rodar a consulta de novo",
+        "why": "Isso: um caminho só, pelo banco."
+      },
+      {
+        "text": "A tela precisa chamar `week()` de novo depois de cada refresh",
+        "why": "O `Flow` que ela já tem responde de novo sozinho."
+      },
+      {
+        "text": "O Retrofit a empurra para cada coletor",
+        "why": "O Retrofit não sabe nada de coletores."
+      }
+    ]
+  },
+  "ex-kfwyx5qd": {
+    "prompt": "Por que o `SessionRepository` recebe o DAO e a API pelo construtor?",
+    "hint": "Veja como cada teste o monta.",
+    "choices": [
+      {
+        "text": "Para um teste lhe dar um banco em memória e um servidor próprio",
+        "why": "Isso, e a seção 07 passa fakes do mesmo jeito."
+      },
+      {
+        "text": "O Room exige que os DAOs sejam passados",
+        "why": "O Room entrega DAOs; não exige que alguém os receba."
+      },
+      {
+        "text": "Para fazer da classe um singleton",
+        "why": "Parâmetros de construtor não fazem nada virar singleton."
+      },
+      {
+        "text": "Porque o Kotlin proíbe campos `val` definidos dentro da classe",
+        "why": "O Kotlin permite; a escolha é sobre testes."
+      }
+    ]
+  },
+  "ex-g37cnjkh": {
+    "prompt": "O `refresh()` pega `IOException` e `HttpException` e mais nada. O que acontece com uma `SerializationException` de uma resposta malformada?",
+    "hint": "Que falhas a seção chama de comuns?",
+    "choices": [
+      {
+        "text": "Vira um `Result.failure`",
+        "why": "Só as duas exceções nomeadas viram um `Result`."
+      },
+      {
+        "text": "É lançada para quem chamou, alto",
+        "why": "Isso: uma resposta malformada é um bug a ver, não uma condição de rede a absorver."
+      },
+      {
+        "text": "O Room desfaz e a tela fica vazia",
+        "why": "Nada tinha sido escrito ainda, e as linhas do Room ficam intactas."
+      },
+      {
+        "text": "O Retrofit tenta a requisição de novo",
+        "why": "O Retrofit não tenta de novo sozinho."
+      }
+    ]
+  },
+  "ex-c9wt4472": {
+    "prompt": "Uma linha que o usuário acrescentou no celular e o servidor ainda não tem é guardada com `___ = false`.",
+    "hint": "A coluna nova da seção 03.",
+    "blanks": [
+      {
+        "accept": [
+          "synced"
+        ]
+      }
+    ]
+  },
+  "ex-s5q8n3ek": {
+    "prompt": "O `refreshIfStale()` devolveu `null` às 12:05. O que isso queria dizer?",
+    "hint": "Não é uma falha.",
+    "choices": [
+      {
+        "text": "O refresh falhou em silêncio",
+        "why": "Uma falha é `Result.failure`; `null` é outra coisa."
+      },
+      {
+        "text": "O servidor respondeu sem sessões",
+        "why": "Nenhuma requisição foi feita às 12:05."
+      },
+      {
+        "text": "Não precisava",
+        "why": "Isso: o dado tinha cinco minutos, abaixo do `maxAge`."
+      },
+      {
+        "text": "O relógio não estava definido",
+        "why": "O teste o definiu; a decisão o usou."
+      }
+    ]
+  },
+  "ex-37qaaem6": {
+    "prompt": "Entre 12:00, 12:05 e 12:20, quantas requisições o servidor recebeu?",
+    "hint": "A última linha do `RefreshTest`."
+  },
+  "ex-kk2bdr5g": {
+    "prompt": "O sistema mata o processo do planner e o estudante o abre de novo dois minutos depois. O que o `refreshIfStale()` faz?",
+    "hint": "Onde mora o `lastRefresh`?",
+    "choices": [
+      {
+        "text": "Devolve `null`, já que o dado tem dois minutos",
+        "why": "O processo novo não sabe quando o antigo atualizou."
+      },
+      {
+        "text": "Atualiza na hora, porque o `lastRefresh` estava na memória",
+        "why": "Isso: a direção segura para errar; guarde numa tabela para evitar."
+      },
+      {
+        "text": "Falha, porque o Room perdeu as sessões",
+        "why": "O Room é um arquivo; as sessões sobrevivem ao processo."
+      },
+      {
+        "text": "Espera quinze minutos antes da primeira requisição",
+        "why": "Sem atualização registrada, a regra manda perguntar já."
+      }
+    ]
+  },
+  "ex-d9f0nba8": {
+    "prompt": "Ligue cada situação à exceção que o repositório recebe.",
+    "hint": "Uma resposta com erro, ou nenhuma resposta.",
+    "pairs": [
+      {
+        "left": "o servidor responde 503",
+        "right": "`HttpException`"
+      },
+      {
+        "left": "nada escuta na porta",
+        "right": "`ConnectException`"
+      },
+      {
+        "left": "a resposta não é JSON válido",
+        "right": "`SerializationException`"
+      }
+    ],
+    "right_distractors": [
+      "`SQLiteConstraintException`"
+    ]
+  },
+  "ex-6x9tqxyn": {
+    "prompt": "Depois de dois refreshes que falharam no `OfflineTest`, o que a semana ainda continha?",
+    "hint": "O que um refresh que falha escreve?",
+    "choices": [
+      {
+        "text": "Nada: uma falha limpa o cache",
+        "why": "Nada no `refresh()` apaga linhas."
+      },
+      {
+        "text": "A sessão do primeiro refresh",
+        "why": "Isso: uma falha muda uma mensagem, não os dados."
+      },
+      {
+        "text": "Uma sessão provisória marcada como erro",
+        "why": "O repositório nunca escreve erros no Room."
+      },
+      {
+        "text": "As duas sessões que o servidor teria mandado",
+        "why": "O servidor mandou uma sessão, uma vez."
+      }
+    ]
+  },
+  "ex-0bjyjs9f": {
+    "prompt": "Um ViewModel recebe `Result.failure` do `refreshIfStale()`. Que resposta a aula recomenda?",
+    "hint": "Dois erros comuns parecem código que funciona.",
+    "choices": [
+      {
+        "text": "Limpar a lista até um refresh dar certo",
+        "why": "Isso transforma uma rede lenta em dados perdidos na tela."
+      },
+      {
+        "text": "Ignorar, já que os dados continuam ali",
+        "why": "Aí o usuário confia numa semana que pode estar velha."
+      },
+      {
+        "text": "Manter a lista e mostrar uma linha dizendo que o servidor não respondeu",
+        "why": "Isso: os dados e a falha chegam à tela."
+      },
+      {
+        "text": "Tentar em loop até o servidor responder",
+        "why": "Um loop apertado drena a bateria; tentativas com espera são a aula 9 do `mobile-offline`."
+      }
+    ]
+  },
+  "ex-8q79vvd2": {
+    "prompt": "O estudante acrescenta uma sessão enquanto o servidor responde 503. Quando ela aparece na semana?",
+    "hint": "Onde o `add()` escreve primeiro?",
+    "choices": [
+      {
+        "text": "Na hora",
+        "why": "Isso: primeiro no Room, marcada como não sincronizada."
+      },
+      {
+        "text": "Quando o servidor se recuperar",
+        "why": "Esse é o desenho errado com que a seção começa."
+      },
+      {
+        "text": "Depois do próximo `refresh()`",
+        "why": "O refresh traz as linhas do servidor; esta já é local."
+      },
+      {
+        "text": "Nunca: o 503 a descarta",
+        "why": "Um envio que falha deixa a linha onde está."
+      }
+    ]
+  },
+  "ex-ytskz26r": {
+    "prompt": "Que ids de sessão o `WriteTest` deixou esperando envio?",
+    "hint": "O primeiro `POST` encontrou um 503.",
+    "choices": [
+      {
+        "text": "`[1]`",
+        "why": "Isso: o `POST` da sessão 2 teve resposta."
+      },
+      {
+        "text": "`[1, 2]`",
+        "why": "A sessão 2 foi enviada e marcada como sincronizada."
+      },
+      {
+        "text": "`[2]`",
+        "why": "Foi o primeiro `POST` que falhou."
+      },
+      {
+        "text": "`[]`",
+        "why": "Nada tentou a sessão 1 de novo."
+      }
+    ]
+  },
+  "ex-6d3zxtzp": {
+    "prompt": "Um estudante marca a sessão 7 como feita offline, e o próximo refresh traz a cópia do servidor com `done: false`. Com o código desta aula, o que a semana mostra?",
+    "hint": "O que o `upsertAll` faz com um id que já existe?",
+    "choices": [
+      {
+        "text": "Feita, porque mudanças locais vencem",
+        "why": "Nada neste código prefere a cópia local."
+      },
+      {
+        "text": "Não feita: a cópia do servidor sobrescreveu a local",
+        "why": "Isso, o problema que a seção 04 nomeou e o `mobile-offline` resolve."
+      },
+      {
+        "text": "As duas cópias, lado a lado",
+        "why": "Um id, uma linha."
+      },
+      {
+        "text": "Um erro, porque os ids colidem",
+        "why": "O `@Upsert` substitui; não falha num id existente."
+      }
+    ]
+  },
+  "ex-f9q072ha": {
+    "prompt": "Que ferramenta a aula nomeia para enviar depois as linhas não sincronizadas, mesmo após o celular reiniciar?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Uma corrotina no `viewModelScope`",
+        "why": "Ela morre com a tela, que dirá com um reinício."
+      },
+      {
+        "text": "O WorkManager",
+        "why": "Isso."
+      },
+      {
+        "text": "Um `Flow` do Room",
+        "why": "Um `Flow` lê; não manda nada a lugar nenhum."
+      },
+      {
+        "text": "Uma segunda chamada a `refresh()`",
+        "why": "O `refresh()` baixa; nunca envia linhas locais."
+      }
+    ]
+  },
+  "ex-k12ya3sq": {
+    "prompt": "O que faz do `FakeSessionDao` um fake e não um mock?",
+    "hint": "Ele funciona?",
+    "choices": [
+      {
+        "text": "Funciona, com uma implementação pequena em memória",
+        "why": "Isso: um mock registra chamadas e recebe ordem do que devolver."
+      },
+      {
+        "text": "É gerado pelo Room",
+        "why": "É escrito à mão na pasta de teste."
+      },
+      {
+        "text": "Só roda sob o Robolectric",
+        "why": "O teste dele roda na JVM pura."
+      },
+      {
+        "text": "Registra a ordem das chamadas",
+        "why": "Isso é o que um mock faz."
+      }
+    ]
+  },
+  "ex-b124c5c9": {
+    "prompt": "O `between()` de um DAO fake devolve `flowOf(rows.values.toList())`, montado uma vez. Que teste passaria por engano?",
+    "hint": "O Room de verdade responde de novo depois de uma escrita.",
+    "choices": [
+      {
+        "text": "Um teste de que a tela atualiza depois de um add",
+        "why": "Esse falharia com este fake, que é o resultado honesto."
+      },
+      {
+        "text": "Um teste que só lê a primeira emissão, enquanto a tela real depende das seguintes",
+        "why": "Isso: o fake esconde a propriedade de que a tela depende."
+      },
+      {
+        "text": "Um teste do SQL do `between`",
+        "why": "Nenhum fake testa SQL; para isso existem os testes com Room."
+      },
+      {
+        "text": "Todo teste, porque o `flowOf` nunca emite",
+        "why": "O `flowOf` emite os valores uma vez."
+      }
+    ]
+  },
+  "ex-7qdh1bhm": {
+    "prompt": "Ligue cada pergunta ao tipo de teste que a responde.",
+    "hint": "O último parágrafo da seção.",
+    "pairs": [
+      {
+        "left": "O meu SQL devolve a semana em ordem de data?",
+        "right": "Room em memória, sob o Robolectric"
+      },
+      {
+        "left": "O meu mapeamento de erros transforma um 503 numa falha?",
+        "right": "MockWebServer"
+      },
+      {
+        "left": "A tela mostra um add offline?",
+        "right": "Fakes, na JVM pura"
+      }
+    ],
+    "right_distractors": [
+      "Um teste instrumentado num celular"
+    ]
+  },
+  "ex-zfyx6aev": {
+    "prompt": "Ordene o que acontece dentro do `add()` quando o servidor está acessível.",
+    "hint": "Primeiro o Room.",
+    "items": [
+      "inserir a linha com `synced = false`",
+      "o `Flow` da semana a emite",
+      "fazer o `POST` dela ao servidor",
+      "`markSynced(id)`"
+    ]
+  },
+  "ex-e0hc0qk2": {
+    "prompt": "Quais destes quebram a fonte única da verdade? Escolha todos os que se aplicam.",
+    "hint": "Alguma tela lê algo que não é o Room?",
+    "choices": [
+      {
+        "text": "Uma tela que mostra `api.sessions()` direto quando online",
+        "why": "Sim: a tela agora lê a rede."
+      },
+      {
+        "text": "O `refresh()` escrevendo as sessões do servidor no Room",
+        "why": "Não: esse é o único caminho que a regra permite."
+      },
+      {
+        "text": "Um ViewModel que guarda a própria cópia da lista e acrescenta sessões novas a ela",
+        "why": "Sim: duas listas que podem discordar."
+      },
+      {
+        "text": "O `add()` escrevendo no Room antes de enviar",
+        "why": "Não: é escrever primeiro no local, e a tela continua lendo o Room."
+      }
+    ]
+  },
+  "ex-q6gmve0a": {
+    "prompt": "Por que o `refresh()` devolve um `Result<Int>` e não a lista de sessões?",
+    "hint": "Como os dados chegam à tela?",
+    "choices": [
+      {
+        "text": "Listas não podem ser devolvidas por uma função `suspend`",
+        "why": "O `api.sessions()` devolve uma."
+      },
+      {
+        "text": "Porque os dados só chegam à tela pelo Room",
+        "why": "Isso: devolver a lista convidaria um segundo caminho."
+      },
+      {
+        "text": "Para economizar memória",
+        "why": "A lista fica na memória de qualquer jeito, por pouco tempo."
+      },
+      {
+        "text": "O `Result` é exigido pelo Retrofit",
+        "why": "O Retrofit lança exceção; o repositório escolheu o `Result`."
+      }
+    ]
+  }
+}
