@@ -11,9 +11,7 @@ entregar a ele um store que leva dez segundos para escrever.
 
 A parte que a aula 11 deixou bagunçada é quem constrói o store. Ela escreveu um `object Stores` com o
 único `InMemorySessionStore`, e uma fábrica no companion do ViewModel que ia buscá-lo ali. Funciona, e
-não cresce. Uma segunda tela precisa do mesmo store e escreve a própria fábrica; uma terceira precisa
-do store, de um relógio e de um cliente de rede; e cada fábrica é uma lista escrita à mão do que
-passar, que ninguém confere até uma tela quebrar em tempo de execução com a coisa errada.
+não cresce. Uma segunda tela precisa do mesmo store e escreve a própria fábrica; uma terceira precisa do store, de um relógio e de um cliente de rede. Cada fábrica é uma lista escrita à mão do que passar, que ninguém confere até uma tela quebrar em tempo de execução com a coisa errada.
 
 A versão arrumada, ainda sem biblioteca, é uma classe que constrói tudo uma vez, num lugar só,
 em geral chamada de **contêiner**:

@@ -45,7 +45,4 @@ taps "Turn on reminders", on a card that has already said what a reminder is. Go
 gives the same advice, and the Android 13 notification permission is the clearest case: an app
 targeting 33 or later decides that moment for itself, as lesson 19 section 05 described.
 
-The order the rest of the lesson builds, then: the request itself, in section 03; a pure function
-that turns Android's answers into what the card should offer, in section 04; the card in its three
-states, in section 05; and a test that walks the whole path, refusal, explanation, second refusal,
-settings, in section 06.
+The order the rest of the lesson builds, then. Section 03 makes the request itself, and section 04 writes a pure function that turns Android's answers into what the card should offer. Section 05 draws the card in its three states, and section 06 is a test that walks the whole path: refusal, explanation, second refusal, settings.

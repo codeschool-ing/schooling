@@ -3,11 +3,7 @@ title: Two keys on Google Play, one key everywhere else
 version: 1
 ---
 
-**On Google Play the key you made is not the one phones see.** Google's documentation on app signing
-describes the arrangement it calls Play App Signing: you sign the bundle with your **upload key**,
-Google Play checks that signature to know the upload came from you, builds the APKs, and signs them
-with the **app signing key**, which Google generates or receives from you and keeps in its own key
-management service. Configuring it is required to distribute through Google Play, according to the
+**On Google Play the key you made is not the one phones see.** Google's documentation on app signing describes the arrangement it calls Play App Signing. You sign the bundle with your **upload key**, and Google Play checks that signature to know the upload came from you. Then it builds the APKs and signs them with the **app signing key**, which Google generates or receives from you and keeps in its own key management service. Configuring it is required to distribute through Google Play, according to the
 same page, except for apps created before August 2021.
 
 ```schooling-figure

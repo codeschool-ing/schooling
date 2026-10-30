@@ -10,9 +10,7 @@ week's total. By lesson 22 it keeps its data in a database, talks to a server, w
 reminder and goes out as a signed bundle. Today it is eight files and one line of text on a screen.
 
 Android Studio writes these files for you from a template, and the template changes with every
-release. **Writing them by hand once is the fastest way to know what each one is for**, and it is
-what every later lesson starts from: lessons 2 to 22 each begin with a copy of the project exactly as
-this section leaves it, and add the files that lesson shows. Make a directory for it:
+release. **Writing them by hand once is the fastest way to know what each one is for.** It is also what every later lesson starts from: lessons 2 to 22 each begin with a copy of the project exactly as this section leaves it, and add the files that lesson shows. Make a directory for it:
 
 ```
 ana@vm:~$ mkdir -p ~/planner && cd ~/planner

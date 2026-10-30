@@ -127,9 +127,7 @@ relatório em `app/build/reports/androidTests/connected/`. O Android Studio roda
 
 ## Onde os testes instrumentados valem o custo
 
-Guarde-os para o que só um aparelho mostra: que a notificação aparece mesmo na gaveta, que a caixa de
-permissão devolve o que a aula 20 espera, que uma tela rola suave num celular lento, que uma migração
-da aula 15 funciona no SQLite que o celular traz. O Google também oferece aparelhos gerenciados,
+Guarde-os para o que só um aparelho mostra. Que a notificação aparece mesmo na gaveta, e que a caixa de permissão devolve o que a aula 20 espera. Que uma tela rola suave num celular lento, e que uma migração da aula 15 funciona no SQLite que o celular traz. O Google também oferece aparelhos gerenciados,
 emuladores que o Gradle liga e desliga para a própria execução de testes, e fazendas remotas de
 aparelhos que rodam os mesmos testes em dezenas de modelos. Os dois precisam ou de um computador que
 rode um emulador ou de uma conta num serviço, e nenhum foi usado aqui.

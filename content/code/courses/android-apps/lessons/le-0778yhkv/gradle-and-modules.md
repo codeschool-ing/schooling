@@ -88,9 +88,5 @@ requires a recent one for new apps and updates; lesson 22 gives the date it was 
 
 ## Modules, and when one is not enough
 
-This project has one module, `:app`. A module is a directory with its own build file, compiled on
-its own, and a project splits into several for two reasons: **so that a change recompiles less**,
-since Gradle rebuilds only the modules a change touched and the ones that depend on them, and **so
-that the dependencies are enforced**, since a module cannot use a class from another it does not
-declare. Large apps have dozens. A study planner with one person building it gets nothing from that
+This project has one module, `:app`. A module is a directory with its own build file, compiled on its own. A project splits into several for two reasons. The first is **so that a change recompiles less**: Gradle rebuilds only the modules a change touched and the ones that depend on them. The second is **so that the dependencies are enforced**: a module cannot use a class from another it does not declare. Large apps have dozens. A study planner with one person building it gets nothing from that
 split but more build files, so this course keeps one module and lesson 22 returns to the question.

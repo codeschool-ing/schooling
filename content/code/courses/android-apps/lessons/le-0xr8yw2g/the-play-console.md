@@ -4,10 +4,7 @@ version: 1
 ---
 
 **Publishing on Google Play needs a Google Play developer account, and creating one costs money.**
-Google charges a one-time registration fee. Its amount, and the identity checks that come with a new
-account, are set out in the Play Console Help pages on `support.google.com`, and **those pages could
-not be reached from the computer this course was recorded on**, so this course does not quote a
-figure. Read the current amount there before you start; a student who never publishes on Google
+Google charges a one-time registration fee. Its amount, and the identity checks that come with a new account, are set out in the Play Console Help pages on `support.google.com`. **Those pages could not be reached from the computer this course was recorded on**, so this course does not quote a figure. Read the current amount there before you start; a student who never publishes on Google
 Play never pays it, and the `direct` flavour of section 03 is a way to hand the planner to a few
 people without an account at all.
 
@@ -19,8 +16,7 @@ step are the ones that could not be reached, so check each step there when you d
 ## The target API rule, with its date
 
 Google's page *Target API level requirements for Google Play apps* states that **starting 31 August
-2026, new apps and app updates must target Android 16 (API level 36) or higher to be submitted to
-Google Play**, with lower levels for Wear OS, Android Automotive OS, Android TV and Android XR apps.
+2026, new apps and app updates must target Android 16 (API level 36) or higher to be submitted to Google Play**. The page sets lower levels for Wear OS, Android Automotive OS, Android TV and Android XR apps.
 It also states that existing apps must target Android 15, API 35, or higher to remain available to
 new users on devices running a newer Android than the app targets. The planner targets 36, which is
 why lesson 1 chose it. The rule moves every year, and the page is where its next date appears.
@@ -45,5 +41,4 @@ it has already seen, which is the one rule here a student meets on their second 
 ## What `mobile-delivery` takes further
 
 The steps after the first upload, such as staged rollouts, release notes in several languages, the
-App Store's equivalent and automating all of it, are the subject of `mobile-delivery`, a later course on this track that every student takes,
-and this lesson stops at the first release.
+App Store's equivalent and automating all of it, are the subject of `mobile-delivery`, a later course on this track that every student takes. This lesson stops at the first release.

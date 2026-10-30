@@ -94,10 +94,7 @@ ana@vm:~$ echo $ANDROID_HOME
 
 ## The Android CLI, and what it asks the first time
 
-The first tool to run is `android`, the **Android CLI**. In version 23.0 of the command-line tools
-it is the replacement for `sdkmanager`, as the end of this section shows, and the zip carries only a
-small launcher: the first time it runs, it downloads its own latest version and shows you two
-things to read.
+The first tool to run is `android`, the **Android CLI**. In version 23.0 of the command-line tools it is the replacement for `sdkmanager`, as the end of this section shows. The zip carries only a small launcher: the first time it runs, it downloads its own latest version and shows you two things to read.
 
 ```
 ana@vm:~$ android --version

@@ -121,7 +121,4 @@ section 04 needs to tell "never asked" from "refused twice". And **the answer th
 is not the whole state**: after a refusal, `shouldShowRequestPermissionRationale` may have changed,
 so the function asks Android again rather than trusting the boolean alone.
 
-The `answers` counter is the plainest way to say "recompute after every answer". A screen that
-the student can leave and come back to should also recompute when it resumes, because the student
-may have changed the permission in Settings meanwhile; lesson 11's lifecycle-aware collection is the
-tool for that, and the planner's screen in a real app would use it.
+The `answers` counter is the plainest way to say "recompute after every answer". A screen that the student can leave and come back to should also recompute when it resumes, because the student may have changed the permission in Settings meanwhile. Lesson 11's lifecycle-aware collection is the tool for that, and the planner's screen in a real app would use it.

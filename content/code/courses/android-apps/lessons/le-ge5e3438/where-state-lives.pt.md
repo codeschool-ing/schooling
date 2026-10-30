@@ -28,8 +28,7 @@ motivo para desinstalar o app. Cada resposta aponta para uma linha.
 **Vida curta demais.** O seletor de minutos da seção 06 com `remember` simples perde o número quando o
 celular gira. A correção é uma palavra, e a seção 04 a mediu.
 
-**Vida longa demais, ou coisa demais dentro.** Pôr a lista de cursos num `rememberSaveable` sobrevive a
-uma rotação, e escreve cada curso no `Bundle` toda vez que a activity para, rumo ao limite de 50 kB que
+**Vida longa demais, ou coisa demais dentro.** Pôr a lista de cursos num `rememberSaveable` sobrevive a uma rotação. Também escreve cada curso no `Bundle` toda vez que a activity para, rumo ao limite de 50 kB que
 a aula 2 citou, para dados que um banco de dados já guarda e poderia carregar de novo. O
 `rememberSaveable` é para o que só os dedos do usuário produziram e nada mais consegue reconstruir.
 

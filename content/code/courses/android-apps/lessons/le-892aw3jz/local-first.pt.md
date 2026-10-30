@@ -80,8 +80,7 @@ com o JSON que o DTO da aula 14 escreveu.
 sincronizadas depois é uma fila que precisa sobreviver ao app ser fechado, tentar de novo com
 intervalos crescentes e nunca mandar a mesma sessão duas vezes. O WorkManager da aula 18 é a
 ferramenta do Android que roda esse trabalho quando a rede volta, mesmo depois de um reinício. O
-desenho da fila em si, a **outbox**, é do curso `mobile-offline`: a aula 7 dele é a ideia desta seção
-por inteiro, a aula 8 é a outbox, e a aula 10 é a chave de idempotência que impede um `POST` repetido
+desenho da fila em si, a **outbox**, é do curso `mobile-offline`. A aula 7 dele é a ideia desta seção por inteiro, a aula 8 é a outbox, e a aula 10 é a chave de idempotência que impede um `POST` repetido
 de criar uma sessão duas vezes.
 
 Duas coisas que o código acima não trata, para você reconhecê-las quando morderem. O id é escolhido

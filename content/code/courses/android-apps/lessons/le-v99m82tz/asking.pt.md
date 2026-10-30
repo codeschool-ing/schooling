@@ -121,7 +121,4 @@ precisa para separar "nunca pedida" de "recusada duas vezes". E **a resposta que
 não é o estado inteiro**: depois de uma recusa, o `shouldShowRequestPermissionRationale` pode ter
 mudado, então a função pergunta ao Android de novo em vez de confiar só no booleano.
 
-O contador `answers` é o jeito mais simples de dizer "recalcule depois de cada resposta". Uma tela de
-onde o estudante pode sair e voltar também deveria recalcular quando volta ao primeiro plano, porque o
-estudante pode ter mudado a permissão nas Configurações nesse meio-tempo; a coleta atenta ao ciclo de
-vida da aula 11 é a ferramenta para isso, e a tela do planner num app de verdade a usaria.
+O contador `answers` é o jeito mais simples de dizer "recalcule depois de cada resposta". Uma tela de onde o estudante pode sair e voltar também deveria recalcular quando volta ao primeiro plano, porque o estudante pode ter mudado a permissão nas Configurações nesse meio-tempo. A coleta atenta ao ciclo de vida da aula 11 é a ferramenta para isso, e a tela do planner num app de verdade a usaria.

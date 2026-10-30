@@ -23,8 +23,7 @@ observá-las, a `MainActivity` da aula 1 ganha uma linha de log em cada uma:
 ]}
 ```
 
-**`ComponentActivity` é a classe a estender.** A `Activity` do próprio Android é a base de tudo, e
-`androidx.activity` acrescenta por cima o que o código moderno precisa: um objeto `Lifecycle` que
+**`ComponentActivity` é a classe a estender.** A `Activity` do próprio Android é a base de tudo. O `androidx.activity` acrescenta por cima o que o código moderno precisa: um objeto `Lifecycle` que
 outro código pode observar, o botão voltar como callback, o `setContent` do Compose e o mecanismo de
 estado salvo de que o `ViewModel` da aula 10 depende. Projetos mais antigos estendem
 `AppCompatActivity`, que acrescenta a barra de ferramentas e os temas de antes do Compose sobre a

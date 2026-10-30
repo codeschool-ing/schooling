@@ -11,9 +11,7 @@ that takes ten seconds to write.
 
 The part lesson 11 left untidy is who builds the store. It wrote an `object Stores` holding the one
 `InMemorySessionStore`, and a factory in the ViewModel's companion that reached into it. That works,
-and it does not grow. A second screen needs the same store and writes its own factory; a third
-needs the store and a clock and a network client; and every factory is a hand-written list of what
-to pass, which nobody checks until a screen crashes at run time with the wrong thing.
+and it does not grow. A second screen needs the same store and writes its own factory; a third needs the store and a clock and a network client. Every factory is a hand-written list of what to pass, which nobody checks until a screen crashes at run time with the wrong thing.
 
 The tidy version, still with no library, is one class that builds everything once, in one place,
 usually called a **container**:

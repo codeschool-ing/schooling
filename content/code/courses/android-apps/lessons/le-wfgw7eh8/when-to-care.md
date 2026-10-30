@@ -4,11 +4,7 @@ version: 1
 ---
 
 **Recomposition is not a cost to minimise; wasteful recomposition is.** Compose is built to run
-composables again, and a composable that reruns on every change it reads is doing its job. The four
-sections before this one each showed a way the work grows beyond what the screen needs: a parent that
-reads a value only to pass it on (section 02), an argument rebuilt on every run (section 03), a type
-the compiler cannot trust (section 04), a source that changes far more often than the result
-(section 05). And section 06 showed the one that is not about speed at all, a remembered value that
+composables again, and a composable that reruns on every change it reads is doing its job. The four sections before this one each showed a way the work grows beyond what the screen needs. A parent reads a value only to pass it on (section 02), or an argument is rebuilt on every run (section 03). A type is one the compiler cannot trust (section 04), or a source changes far more often than the result (section 05). And section 06 showed the one that is not about speed at all, a remembered value that
 lands on the wrong item.
 
 **Measure before changing anything.** Every fix above costs some readability: a lambda instead of a

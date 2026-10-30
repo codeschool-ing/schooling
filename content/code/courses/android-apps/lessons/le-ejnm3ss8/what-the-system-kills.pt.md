@@ -43,9 +43,7 @@ e funcionar no de outra. Não há nada no código que passe por cima disso, e ne
 
 ## Vendo num aparelho
 
-Num celular com as opções de desenvolvedor, a documentação do Google mostra como ver o que o
-WorkManager pediu ao sistema: `adb shell dumpsys jobscheduler` lista os jobs do app com as suas
-restrições, e o **Background Task Inspector** do Android Studio mostra cada pedido, o estado e a
+Num celular com as opções de desenvolvedor, a documentação do Google mostra como ver o que o WorkManager pediu ao sistema. `adb shell dumpsys jobscheduler` lista os jobs do app com as suas restrições, e o **Background Task Inspector** do Android Studio mostra cada pedido, o estado e a
 cadeia. Para provocar o Doze sem esperar, `adb shell dumpsys deviceidle force-idle` põe um celular
 conectado nele na hora. **Não executado**, como o resto desta seção.
 

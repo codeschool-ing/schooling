@@ -5,10 +5,7 @@ version: 1
 
 **A recomposição não é um custo a minimizar; a recomposição desperdiçada é.** O Compose foi feito
 para rodar composables de novo, e um composable que roda de novo a cada mudança que lê está fazendo o
-trabalho dele. As quatro seções antes desta mostraram, cada uma, um jeito de o trabalho crescer além
-do que a tela precisa: um pai que lê um valor só para repassá-lo (seção 02), um argumento
-reconstruído a cada execução (seção 03), um tipo em que o compilador não pode confiar (seção 04), uma
-fonte que muda muito mais que o resultado (seção 05). E a seção 06 mostrou o que nem é sobre
+trabalho dele. As quatro seções antes desta mostraram, cada uma, um jeito de o trabalho crescer além do que a tela precisa. Um pai lê um valor só para repassá-lo (seção 02), ou um argumento é reconstruído a cada execução (seção 03). Um tipo é um em que o compilador não pode confiar (seção 04), ou uma fonte muda muito mais que o resultado (seção 05). E a seção 06 mostrou o que nem é sobre
 velocidade, um valor lembrado que cai no item errado.
 
 **Meça antes de mudar qualquer coisa.** Cada correção acima custa um pouco de legibilidade: uma lambda

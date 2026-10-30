@@ -3,7 +3,7 @@ title: As restrições descem, os tamanhos sobem
 version: 1
 ---
 
-**O layout no Compose é uma conversa por elemento, feita uma vez por quadro**: o pai diz a cada
+**O layout no Compose é uma conversa por elemento, feita uma vez por quadro.** O pai diz a cada
 filho o menor e o maior tamanho que ele pode ter, o filho escolhe um tamanho dentro desses limites e
 avisa, e então o pai decide onde colocá-lo. Os limites se chamam **restrições** (*constraints*), e
 um filho não pode responder fora deles. Esse é o protocolo inteiro, e cada contêiner desta aula é um
@@ -102,5 +102,5 @@ vezes, e o aninhamento profundo podia multiplicar o trabalho: um layout de dez n
 medindo duas vezes, mede o elemento mais interno mais de mil vezes. Com uma medição cada, aninhar não
 custa nada a mais, e é por isso que código Compose aninha `Row` em `Column` em `Box` sem pensar duas
 vezes. Quando um pai precisa mesmo saber o tamanho de um filho antes de medi-lo, o Compose tem as
-medições *intrínsecas*, uma pergunta mais barata feita sem medir; este curso não precisa delas, e a
+medições *intrínsecas*, uma pergunta mais barata feita sem medir. Este curso não precisa delas, e a
 documentação do Google sobre medições intrínsecas nos layouts do Compose as cobre.

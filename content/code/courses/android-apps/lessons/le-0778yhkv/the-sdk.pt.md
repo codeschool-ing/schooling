@@ -95,10 +95,7 @@ ana@vm:~$ echo $ANDROID_HOME
 
 ## A Android CLI, e o que ela pergunta da primeira vez
 
-A primeira ferramenta a rodar é `android`, a **Android CLI**. Na versão 23.0 das ferramentas de linha
-de comando ela é a substituta do `sdkmanager`, como o fim desta seção mostra, e o zip traz só um
-pequeno lançador: na primeira execução, ele baixa a versão mais recente de si mesmo e mostra duas
-coisas para ler.
+A primeira ferramenta a rodar é `android`, a **Android CLI**. Na versão 23.0 das ferramentas de linha de comando ela é a substituta do `sdkmanager`, como o fim desta seção mostra. O zip traz só um pequeno lançador: na primeira execução, ele baixa a versão mais recente de si mesmo e mostra duas coisas para ler.
 
 ```
 ana@vm:~$ android --version
@@ -179,10 +176,7 @@ quem conversar até um celular ou um emulador ser conectado.
 ## O emulador, se o seu computador consegue rodar um
 
 **Não executado.** A máquina de gravação não tinha `/dev/kvm`, então estes comandos não foram
-digitados para este curso. A documentação do Google para a Android CLI instala um emulador e uma
-imagem de sistema como pacotes do SDK, iguais aos três acima, o pacote `emulator` e uma imagem em
-`system-images/`, e cria e inicia um aparelho virtual com `android emulator`; `android emulator
---help` lista os comandos. Com o Android Studio, o Device Manager faz o mesmo numa janela.
+digitados para este curso. A documentação do Google para a Android CLI instala um emulador e uma imagem de sistema como pacotes do SDK, iguais aos três acima: o pacote `emulator` e uma imagem em `system-images/`. Depois cria e inicia um aparelho virtual com `android emulator`; `android emulator --help` lista os comandos. Com o Android Studio, o Device Manager faz o mesmo numa janela.
 
 ## `sdkmanager`, que você vai ver em todo lugar
 

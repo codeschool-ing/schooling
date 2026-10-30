@@ -119,10 +119,7 @@ ana@vm:~/planner$ ./gradlew --console=plain testDebugUnitTest --tests '*Permissi
 ```
 
 **The answer is `false` in two different situations, and they need different responses.** Not
-granted means the app can still ask, and lesson 20 shows when and how. Granted and then turned off in
-settings means the student made a decision in a place your app does not control; asking again is not
-possible, and the honest response is to show the reminder inside the app and, at most, a line
-saying where the setting is.
+granted means the app can still ask, and lesson 20 shows when and how. Granted and then turned off in settings means the student made a decision in a place your app does not control. Asking again is not possible; the honest response is to show the reminder inside the app and, at most, a line saying where the setting is.
 
 On Android 12 the function answered `true` with nothing granted, because `canNotify` skips the
 permission check below 33. **The `SDK_INT` test states the rule in the code rather than leaving it

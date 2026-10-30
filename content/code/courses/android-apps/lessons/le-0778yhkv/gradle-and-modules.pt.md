@@ -86,10 +86,6 @@ Play exige um recente para apps novos e atualizações; a aula 22 dá a data em 
 
 ## Módulos, e quando um não basta
 
-Este projeto tem um módulo, `:app`. Um módulo é um diretório com seu próprio arquivo de build,
-compilado à parte, e um projeto se divide em vários por dois motivos: **para que uma mudança
-recompile menos**, já que o Gradle refaz só os módulos que a mudança tocou e os que dependem deles,
-e **para que as dependências sejam respeitadas**, já que um módulo não consegue usar uma classe de
-outro que ele não declara. Apps grandes têm dezenas. Um planner de estudos feito por uma pessoa não
+Este projeto tem um módulo, `:app`. Um módulo é um diretório com seu próprio arquivo de build, compilado à parte. Um projeto se divide em vários por dois motivos. O primeiro é **para que uma mudança recompile menos**: o Gradle refaz só os módulos que a mudança tocou e os que dependem deles. O segundo é **para que as dependências sejam respeitadas**: um módulo não consegue usar uma classe de outro que ele não declara. Apps grandes têm dezenas. Um planner de estudos feito por uma pessoa não
 ganha nada com essa divisão além de mais arquivos de build, então este curso fica com um módulo e a
 aula 22 volta à pergunta.

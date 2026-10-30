@@ -45,7 +45,4 @@ reminders", num cartão que já disse o que é um lembrete. A documentação do 
 conselho, e a permissão de notificação do Android 13 é o caso mais claro: um app que mira 33 ou mais
 decide esse momento sozinho, como a seção 05 da aula 19 descreveu.
 
-A ordem que o resto da aula constrói, então: o pedido em si, na seção 03; uma função pura que
-transforma as respostas do Android no que o cartão deve oferecer, na seção 04; o cartão nos seus três
-estados, na seção 05; e um teste que percorre o caminho inteiro, recusa, explicação, segunda recusa,
-configurações, na seção 06.
+A ordem que o resto da aula constrói, então. A seção 03 faz o pedido em si, e a seção 04 escreve uma função pura que transforma as respostas do Android no que o cartão deve oferecer. A seção 05 desenha o cartão nos seus três estados, e a seção 06 é um teste que percorre o caminho inteiro: recusa, explicação, segunda recusa, configurações.

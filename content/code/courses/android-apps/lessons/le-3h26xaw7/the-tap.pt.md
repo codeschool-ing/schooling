@@ -3,9 +3,7 @@ title: O toque, e a notificação que se substitui
 version: 1
 ---
 
-**Um toque numa notificação é um intent disparado pelo sistema, mais tarde, em nome do app**, e é isso
-que um `PendingIntent` é: um `Intent` embrulhado com a identidade do seu app, para que o sistema possa
-abrir a sua activity quando o estudante tocar, mesmo que o processo tenha morrido horas antes. O toque
+**Um toque numa notificação é um intent disparado pelo sistema, mais tarde, em nome do app.** É isso que um `PendingIntent` é: um `Intent` embrulhado com a identidade do seu app, para que o sistema possa abrir a sua activity quando o estudante tocar, mesmo que o processo tenha morrido horas antes. O toque
 do planner abre a `MainActivity` com o id do curso como extra; a navegação da aula 9 o levaria dali
 para a tela do curso.
 

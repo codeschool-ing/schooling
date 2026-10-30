@@ -26,8 +26,7 @@ data class StudySession(
 )
 ```
 
-O teste dá a uma tela três filhos, e passa argumentos a eles de três jeitos diferentes a cada vez que
-a tela roda: a mesma lista que ela lembrou, uma lista nova com o mesmo conteúdo, e um `Draft` novo,
+O teste dá a uma tela três filhos. A cada vez que a tela roda, ele passa argumentos a eles de três jeitos diferentes: a mesma lista que ela lembrou, uma lista nova com o mesmo conteúdo, e um `Draft` novo,
 uma classe pequena com um `var` dentro:
 
 ```kotlin

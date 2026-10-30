@@ -4,10 +4,7 @@ version: 1
 ---
 
 **Publicar no Google Play exige uma conta de desenvolvedor do Google Play, e criar uma custa
-dinheiro.** O Google cobra uma taxa de registro única. O valor dela, e as verificações de identidade
-que vêm com uma conta nova, estão nas páginas de ajuda do Play Console em `support.google.com`, e
-**essas páginas não puderam ser acessadas do computador em que este curso foi gravado**, então este
-curso não cita um valor. Leia o valor atual lá antes de começar; um estudante que nunca publica no
+dinheiro.** O Google cobra uma taxa de registro única. O valor dela, e as verificações de identidade que vêm com uma conta nova, estão nas páginas de ajuda do Play Console em `support.google.com`. **Essas páginas não puderam ser acessadas do computador em que este curso foi gravado**, então este curso não cita um valor. Leia o valor atual lá antes de começar; um estudante que nunca publica no
 Google Play nunca o paga, e o flavour `direct` da seção 03 é um jeito de entregar o planner a algumas
 pessoas sem conta nenhuma.
 
@@ -21,8 +18,7 @@ quando for fazê-lo.
 
 A página do Google *Target API level requirements for Google Play apps* diz que **a partir de 31 de
 agosto de 2026, apps novos e atualizações de apps precisam ter como alvo o Android 16 (nível de API
-36) ou superior para serem enviados ao Google Play**, com níveis menores para apps de Wear OS,
-Android Automotive OS, Android TV e Android XR. Ela diz também que apps existentes precisam ter como
+36) ou superior para serem enviados ao Google Play**. A página fixa níveis menores para apps de Wear OS, Android Automotive OS, Android TV e Android XR. Ela diz também que apps existentes precisam ter como
 alvo o Android 15, API 35, ou superior para continuarem disponíveis a usuários novos em aparelhos
 com um Android mais novo que o alvo do app. O planner tem como alvo o 36, e é por isso que a aula 1
 o escolheu. A regra muda todo ano, e a página é onde a próxima data aparece.
@@ -48,5 +44,4 @@ viu, e essa é a única regra daqui que um estudante encontra no segundo envio.
 ## O que `mobile-delivery` leva adiante
 
 Os passos depois do primeiro envio, como lançamentos graduais, notas de versão em vários idiomas, o
-equivalente na App Store e a automação de tudo isso, são o assunto de `mobile-delivery`, um curso
-posterior desta trilha que todo estudante faz, e esta aula para na primeira versão publicada.
+equivalente na App Store e a automação de tudo isso, são o assunto de `mobile-delivery`, um curso posterior desta trilha que todo estudante faz. Esta aula para na primeira versão publicada.

@@ -78,9 +78,7 @@ class AskTwiceTest {
 }
 ```
 
-O registro falso é a única parte inventada, e é pequeno: todo pedido conta como uma caixa mostrada,
-o conselho de explicar é `true` depois da primeira recusa e `false` depois da segunda, que é a regra
-do Android 11 da seção 02, e toda resposta é uma recusa. `LocalActivityResultRegistryOwner` é como uma
+O registro falso é a única parte inventada, e é pequeno. Todo pedido conta como uma caixa mostrada, e toda resposta é uma recusa. O conselho de explicar é `true` depois da primeira recusa e `false` depois da segunda, que é a regra do Android 11 da seção 02. `LocalActivityResultRegistryOwner` é como uma
 composição encontra o seu registro, então fornecer o falso ali basta para o
 `rememberLauncherForActivityResult` de verdade usá-lo. Todo o resto é o código das seções 03 a 05.
 
@@ -113,7 +111,4 @@ caixa para todo pedido, por construção.
 Nas configurações de notificação do app, o estudante pode permitir notificações, o que no Android 13
 e posteriores também concede `POST_NOTIFICATIONS`. Quando ele volta, o planner precisa perceber: a
 nota da seção 03 sobre recalcular quando a tela volta ao primeiro plano é exatamente sobre isso. O
-contrário também acontece. Um estudante pode revogar uma permissão nas Configurações a qualquer
-momento, e o Android encerra o processo do app quando isso acontece, então um app que conferiu uma vez
-na abertura e guardou a resposta está errado depois disso, e é por isso que o `canNotify` da aula 19
-confere a cada chamada.
+contrário também acontece. Um estudante pode revogar uma permissão nas Configurações a qualquer momento, e o Android encerra o processo do app quando isso acontece. Um app que conferiu uma vez na abertura e guardou a resposta está errado depois disso, e é por isso que o `canNotify` da aula 19 confere a cada chamada.

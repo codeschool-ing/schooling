@@ -3,10 +3,7 @@ title: Entidades: uma classe que é uma tabela
 version: 1
 ---
 
-**Uma entidade é uma data class com `@Entity`, e cada propriedade vira uma coluna.** O Room dá à
-tabela e às colunas os nomes da classe e das propriedades, a não ser que você diga outra coisa, e
-para uma tabela que outro código vai consultar à mão vale dizer: SQL se escreve em `snake_case` por
-convenção, e o servidor do planner fala assim também.
+**Uma entidade é uma data class com `@Entity`, e cada propriedade vira uma coluna.** O Room dá à tabela e às colunas os nomes da classe e das propriedades, a não ser que você diga outra coisa. Para uma tabela que outro código vai consultar à mão, vale dizer: SQL se escreve em `snake_case` por convenção, e o servidor do planner fala assim também.
 
 ```kotlin
 // app/src/main/java/com/example/planner/data/Entities.kt

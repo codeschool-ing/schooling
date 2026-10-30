@@ -21,9 +21,7 @@ O manifesto da seção 03 já traz a linha:
 ao estudante, e o app nunca pode ter a permissão no Android 13 ou posterior. Com ela, a permissão
 existe para ser pedida, e é a resposta do estudante que a concede.
 
-Há uma exceção que vale conhecer, da documentação do Google e não executada aqui: um app que mira a 32
-ou menos, instalado no Android 13, tem a caixa de diálogo mostrada pelo próprio sistema, por volta do
-momento em que o app cria o primeiro canal de notificação. Este projeto mira a 36, então é trabalho
+Há uma exceção que vale conhecer, da documentação do Google e não executada aqui. Um app que mira a 32 ou menos, instalado no Android 13, tem a caixa de diálogo mostrada pelo próprio sistema, por volta do momento em que o app cria o primeiro canal de notificação. Este projeto mira a 36, então é trabalho
 do app pedir, num momento que ele escolhe.
 
 ## Quatro celulares, uma função
@@ -119,10 +117,7 @@ ana@vm:~/planner$ ./gradlew --console=plain testDebugUnitTest --tests '*Permissi
 ```
 
 **A resposta é `false` em duas situações diferentes, e elas pedem respostas diferentes.** Não
-concedida quer dizer que o app ainda pode pedir, e a aula 20 mostra quando e como. Concedida e depois
-desligada nas configurações quer dizer que o estudante tomou uma decisão num lugar que o seu app não
-controla; pedir de novo não é possível, e a resposta honesta é mostrar o lembrete dentro do app e, no
-máximo, uma linha dizendo onde fica a configuração.
+concedida quer dizer que o app ainda pode pedir, e a aula 20 mostra quando e como. Concedida e depois desligada nas configurações quer dizer que o estudante tomou uma decisão num lugar que o seu app não controla. Pedir de novo não é possível; a resposta honesta é mostrar o lembrete dentro do app e, no máximo, uma linha dizendo onde fica a configuração.
 
 No Android 12 a função respondeu `true` sem nada concedido, porque o `canNotify` pula a conferência da
 permissão abaixo de 33. **O teste de `SDK_INT` deixa a regra escrita no código, em vez de depender do

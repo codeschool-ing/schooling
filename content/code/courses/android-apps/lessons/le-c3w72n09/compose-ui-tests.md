@@ -88,9 +88,7 @@ WeekScreenTest > tickingASessionMovesTheTotal PASSED
 BUILD SUCCESSFUL in 17s
 ```
 
-One test, and it covers what a student does on this screen: the total reads 45 of 160 before, the
-Wednesday session's box is off, a tap turns it on, and the total reads 135 of 160 after, because
-90 minutes moved from planned to done. **Nothing in the test knows how `WeekScreen` stores or
+One test, and it covers what a student does on this screen. The total reads 45 of 160 before, the Wednesday session's box is off, and a tap turns it on. After it the total reads 135 of 160, because 90 minutes moved from planned to done. **Nothing in the test knows how `WeekScreen` stores or
 computes anything**; rename a variable, split the composable in two, move the total into a
 `ViewModel` as lesson 10 would, and the test still passes for as long as the screen behaves.
 

@@ -3,10 +3,7 @@ title: Entities: a class that is a table
 version: 1
 ---
 
-**An entity is a data class with `@Entity` on it, and every property becomes a column.** Room
-names the table and the columns after the class and its properties unless you say otherwise, and
-for a table other code will query by hand, saying otherwise is worth it: SQL is written in
-`snake_case` by convention, and the planner's server speaks it too.
+**An entity is a data class with `@Entity` on it, and every property becomes a column.** Room names the table and the columns after the class and its properties unless you say otherwise. For a table other code will query by hand, saying otherwise is worth it: SQL is written in `snake_case` by convention, and the planner's server speaks it too.
 
 ```kotlin
 // app/src/main/java/com/example/planner/data/Entities.kt

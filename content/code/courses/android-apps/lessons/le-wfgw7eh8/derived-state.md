@@ -105,9 +105,7 @@ owns the minutes but only passes lambdas down, ran once: section 02's reading la
 ## When it is worth it
 
 `derivedStateOf` has a cost of its own: an extra object, and a recomputation of its block whenever a
-source changes. It pays when **the result changes much less often than the input**, and the
-classic case is lesson 8's list, where the scroll position changes on every frame of a fling and a
-*back to top* button needs to know only whether the first item is off screen. For a result that
+source changes. It pays when **the result changes much less often than the input**. The classic case is lesson 8's list: the scroll position changes on every frame of a fling, and a *back to top* button needs to know only whether the first item is off screen. For a result that
 changes as often as its input, `derivedStateOf` is pure overhead: a `fullName` built from a first and
 last name changes whenever either does, and a plain expression is right.
 

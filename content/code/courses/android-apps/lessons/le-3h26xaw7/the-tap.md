@@ -3,9 +3,7 @@ title: The tap, and the notification that replaces itself
 version: 1
 ---
 
-**A tap on a notification is an intent fired by the system, later, on the app's behalf**, and that
-is what a `PendingIntent` is: an `Intent` wrapped with your app's identity, so that the system can
-start your activity when the student taps, even if your process died hours ago. The planner's tap
+**A tap on a notification is an intent fired by the system, later, on the app's behalf.** That is what a `PendingIntent` is: an `Intent` wrapped with your app's identity, so that the system can start your activity when the student taps, even if your process died hours ago. The planner's tap
 opens `MainActivity` with the course id as an extra; lesson 9's navigation would take it from there
 to the course's screen.
 

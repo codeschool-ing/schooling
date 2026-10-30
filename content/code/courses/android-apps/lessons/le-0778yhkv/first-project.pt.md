@@ -11,9 +11,7 @@ offline, manda um lembrete e sai como um bundle assinado. Hoje são oito arquivo
 texto numa tela.
 
 O Android Studio escreve estes arquivos para você a partir de um modelo, e o modelo muda a cada
-versão. **Escrevê-los à mão uma vez é o jeito mais rápido de saber para que serve cada um**, e é
-daqui que toda aula seguinte parte: as aulas 2 a 22 começam, cada uma, de uma cópia do projeto
-exatamente como esta seção o deixa, e acrescentam os arquivos que a aula mostra. Crie um diretório
+versão. **Escrevê-los à mão uma vez é o jeito mais rápido de saber para que serve cada um.** É também daqui que toda aula seguinte parte: as aulas 2 a 22 começam, cada uma, de uma cópia do projeto exatamente como esta seção o deixa, e acrescentam os arquivos que a aula mostra. Crie um diretório
 para ele:
 
 ```

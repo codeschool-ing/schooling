@@ -78,9 +78,7 @@ class AskTwiceTest {
 }
 ```
 
-The fake registry is the only invented part, and it is small: every request counts as a dialog
-shown, the advice to explain is `true` after the first refusal and `false` after the second, which
-is Android 11's rule from section 02, and every answer is a refusal. `LocalActivityResultRegistryOwner`
+The fake registry is the only invented part, and it is small. Every request counts as a dialog shown, and every answer is a refusal. The advice to explain is `true` after the first refusal and `false` after the second, which is Android 11's rule from section 02. `LocalActivityResultRegistryOwner`
 is how a composition finds its registry, so providing the fake there is enough for the real
 `rememberLauncherForActivityResult` to use it. Everything else is the code of sections 03 to 05.
 
@@ -112,7 +110,4 @@ request by construction.
 
 From the app's notification settings the student can allow notifications, which on Android 13 and
 later also grants `POST_NOTIFICATIONS`. When they come back, the planner has to notice: section 03's
-note on recomputing when the screen resumes is about exactly this. The reverse also happens. A student
-can revoke a permission in Settings at any time, and Android ends the app's process when they do,
-so an app that checked once at start-up and cached the answer is wrong after that, which is why
-`canNotify` in lesson 19 checks on every call.
+note on recomputing when the screen resumes is about exactly this. The reverse also happens. A student can revoke a permission in Settings at any time, and Android ends the app's process when they do. An app that checked once at start-up and cached the answer is wrong after that, which is why `canNotify` in lesson 19 checks on every call.

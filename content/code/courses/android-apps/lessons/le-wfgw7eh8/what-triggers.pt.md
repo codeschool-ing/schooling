@@ -10,7 +10,7 @@ composable, associada àquele composable; uma escrita então encontra exatamente
 leram, e só esses rodam de novo. Isso é a **recomposição**, e a aula 3 prometeu medi-la.
 
 Para medir, cada composable abaixo registra que rodou, com `SideEffect`. A aula 3 disse que o corpo
-de um composable não deve fazer trabalho, e o `SideEffect` é a exceção autorizada: o Compose roda o
+de um composable não deve fazer trabalho, e o `SideEffect` é a exceção autorizada. O Compose roda o
 bloco dele uma vez depois que cada composição do composable que o contém é aplicada, que é
 exatamente a contagem que se quer.
 

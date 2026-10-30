@@ -105,9 +105,7 @@ minutos mas só passa lambdas para baixo, rodou uma vez: a leitura mais tarde da
 ## Quando vale a pena
 
 O `derivedStateOf` tem um custo próprio: um objeto a mais, e o recálculo do bloco sempre que uma fonte
-muda. Ele se paga quando **o resultado muda muito menos que a entrada**, e o caso clássico é a lista
-da aula 8, onde a posição de rolagem muda a cada quadro de um arrasto rápido e um botão de *voltar ao
-topo* só precisa saber se o primeiro item saiu da tela. Para um resultado que muda tanto quanto a
+muda. Ele se paga quando **o resultado muda muito menos que a entrada**. O caso clássico é a lista da aula 8: a posição de rolagem muda a cada quadro de um arrasto rápido, e um botão de *voltar ao topo* só precisa saber se o primeiro item saiu da tela. Para um resultado que muda tanto quanto a
 entrada, o `derivedStateOf` é puro desperdício: um `fullName` montado com nome e sobrenome muda sempre
 que qualquer um dos dois muda, e uma expressão simples é o certo.
 

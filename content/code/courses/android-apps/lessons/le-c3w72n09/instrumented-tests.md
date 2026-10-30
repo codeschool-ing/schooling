@@ -127,9 +127,7 @@ beside each one.
 
 ## Where instrumented tests earn their cost
 
-Keep them for what only a device can show: that the notification actually appears in the shade,
-that the permission dialog returns what lesson 20 expects, that a screen scrolls smoothly on a slow
-phone, that a migration of lesson 15 works on the SQLite build the phone ships. Google also offers
+Keep them for what only a device can show. That the notification actually appears in the shade, and that the permission dialog returns what lesson 20 expects. That a screen scrolls smoothly on a slow phone, and that a migration of lesson 15 works on the SQLite build the phone ships. Google also offers
 managed devices, emulators that Gradle starts and stops for the test run itself, and remote device
 farms that run the same tests on dozens of models. Both need either a computer that can run an
 emulator or an account with a service, and neither was used here.

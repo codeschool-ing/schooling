@@ -27,9 +27,7 @@ Três propriedades fazem dele uma boa escolha para uma tela:
 
 ## A outra escola
 
-O guia de arquitetura do Google para Android defende o oposto: que todo evento que um ViewModel
-produz vire estado, um campo `userMessage` no estado da tela, e que a tela chame o ViewModel de volta
-depois de mostrá-lo, para que o ViewModel limpe o campo. O argumento é que estado pode ser testado
+O guia de arquitetura do Google para Android defende o oposto: que todo evento que um ViewModel produz vire estado, um campo `userMessage` no estado da tela. A tela chama o ViewModel de volta depois de mostrá-lo, para que o ViewModel limpe o campo. O argumento é que estado pode ser testado
 lendo `state.value`, sobrevive ao processo num `SavedStateHandle` se precisar, e não pode se perder
 entre um envio e uma recepção.
 

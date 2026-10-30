@@ -64,7 +64,7 @@ do que desenhou e não pede nada ao sistema antigo de `View`. O `createAndroidCo
 ```
 
 A frase fica no canto porque nada mandou que ela fosse para outro lugar; a aula 6 é sobre mandar.
-`@GraphicsMode(NATIVE)` é o que deixa o Robolectric desenhar pixels de verdade, e o `@Config` dá um
+`@GraphicsMode(NATIVE)` é o que deixa o Robolectric desenhar pixels de verdade. O `@Config` dá um
 tamanho à tela de faz de conta: 320 por 200 pixels independentes de densidade, com o dobro da
 densidade das primeiras telas Android, então o PNG tem 640 por 400.
 

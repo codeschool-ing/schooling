@@ -8,9 +8,7 @@ coisas**: deu certo, falhou de vez, ou deve ser tentada de novo mais tarde. Todo
 WorkManager, as condições, o agendamento e as novas tentativas, existe para decidir quando `doWork`
 é chamada e o que fazer com a resposta.
 
-Parta do projeto da aula 1 e acrescente o WorkManager ao módulo. Este é o arquivo de build inteiro,
-com duas linhas a mais para a biblioteca e o seu auxiliar de testes, uma para testes de corrotinas, e
-um bloco `testLogging` que imprime o que cada teste escreve, para você ver as mesmas linhas que esta
+Parta do projeto da aula 1 e acrescente o WorkManager ao módulo. Este é o arquivo de build inteiro. Ele tem duas linhas a mais para a biblioteca e o seu auxiliar de testes, uma para testes de corrotinas, e um bloco `testLogging` que imprime o que cada teste escreve, para você ver as mesmas linhas que esta
 seção mostra:
 
 ```kotlin

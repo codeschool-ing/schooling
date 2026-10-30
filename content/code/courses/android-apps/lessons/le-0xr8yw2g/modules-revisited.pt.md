@@ -37,9 +37,6 @@ mesmo `libs.versions.toml`.
 
 ## Onde o curso termina
 
-Vinte e duas aulas atrás, o planner era oito arquivos e uma frase numa tela. Agora ele tem telas em
-Compose que sobrevivem à rotação, estado em ViewModels, dados de um servidor e do Room atrás de um
-repositório, sincronização em segundo plano que sobrevive ao app, um lembrete que pede antes de
-notificar, testes em três níveis e um bundle assinado e encolhido que o Google Play aceitaria. Os
+Vinte e duas aulas atrás, o planner era oito arquivos e uma frase numa tela. Agora ele tem telas em Compose que sobrevivem à rotação, estado em ViewModels, e dados de um servidor e do Room atrás de um repositório. Tem sincronização em segundo plano que sobrevive ao app, um lembrete que pede antes de notificar, testes em três níveis e um bundle assinado e encolhido que o Google Play aceitaria. Os
 cursos que vêm depois nesta trilha, `mobile-offline` e `mobile-delivery`, levam o mesmo planner
 adiante sem supor qual das três plataformas você escolheu.

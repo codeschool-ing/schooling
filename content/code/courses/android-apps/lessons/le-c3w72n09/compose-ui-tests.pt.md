@@ -89,9 +89,7 @@ WeekScreenTest > tickingASessionMovesTheTotal PASSED
 BUILD SUCCESSFUL in 17s
 ```
 
-Um teste, e ele cobre o que um estudante faz nesta tela: o total diz 45 de 160 antes, a caixa da
-sessão de quarta está desmarcada, um toque a marca, e o total diz 135 de 160 depois, porque 90
-minutos passaram de planejados a feitos. **Nada no teste sabe como o `WeekScreen` guarda ou calcula
+Um teste, e ele cobre o que um estudante faz nesta tela. O total diz 45 de 160 antes, a caixa da sessão de quarta está desmarcada, e um toque a marca. Depois dele o total diz 135 de 160, porque 90 minutos passaram de planejados a feitos. **Nada no teste sabe como o `WeekScreen` guarda ou calcula
 qualquer coisa**; renomeie uma variável, divida o composable em dois, leve o total para um
 `ViewModel` como a aula 10 faria, e o teste continua passando enquanto a tela se comportar.
 
@@ -123,7 +121,4 @@ começo.
 
 A falha mais comum num teste de Compose é um localizador que não casa com nenhum nó, ou com mais de
 um. Duas ferramentas dizem por quê. `rule.onRoot().printToLog("week")` escreve a árvore de semântica
-inteira no log, com o texto, o papel e a tag de cada nó. E `useUnmergedTree = true` num localizador
-olha dentro dos nós que o Compose juntou: uma `Row` com uma `Checkbox` e um `Text` pode aparecer como
-um nó só com os dois textos, e o `AskTwiceTest` da aula 20 leu o texto da árvore juntada do mesmo
-jeito.
+inteira no log, com o texto, o papel e a tag de cada nó. E `useUnmergedTree = true` num localizador olha dentro dos nós que o Compose juntou. Uma `Row` com uma `Checkbox` e um `Text` pode aparecer como um nó só com os dois textos; o `AskTwiceTest` da aula 20 leu o texto da árvore juntada do mesmo jeito.

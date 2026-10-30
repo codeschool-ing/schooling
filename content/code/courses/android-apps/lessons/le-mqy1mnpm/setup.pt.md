@@ -8,8 +8,7 @@ version: 1
 que diga "injete em mim".** Cada uma é uma linha ou duas, e esquecer qualquer uma produz uma mensagem
 que a nomeia.
 
-O arquivo de build do módulo aplica os plugins do KSP e do Hilt, cujas versões o catálogo da aula 1
-já fixa, e acrescenta o runtime do Hilt, o compilador dele para o KSP, o `hiltViewModel()` do Hilt
+O arquivo de build do módulo aplica os plugins do KSP e do Hilt, cujas versões o catálogo da aula 1 já fixa. Ele acrescenta o runtime do Hilt, o compilador dele para o KSP, o `hiltViewModel()` do Hilt
 para Compose, e a biblioteca de testes com o mesmo compilador para os testes:
 
 ```kotlin

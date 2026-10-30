@@ -18,9 +18,7 @@ o `WeekViewModel` escreve o rascunho nele a cada tecla, em `onDraftChange`, e o 
 ## Imitando isso num teste
 
 A coisa real precisa de um aparelho. **Não executado**: a documentação do Google reproduz isso num
-celular ou num emulador pondo o app em segundo plano e rodando `adb shell am kill
-com.example.planner`, que mata um processo em segundo plano do jeito que o sistema mata, e depois
-reabrindo o app pelos recentes. A máquina de gravação não tinha nenhum dos dois.
+celular ou num emulador pondo o app em segundo plano e rodando `adb shell am kill com.example.planner`, e depois reabrindo o app pelos recentes. Esse comando mata um processo em segundo plano do jeito que o sistema mata. A máquina de gravação não tinha nenhum dos dois.
 
 O que um teste consegue é separar as duas metades. O Robolectric conduz uma activity pelo ciclo de
 vida à mão: este teste salva o estado da activity num `Bundle`, destrói a activity *não* como mudança

@@ -4,9 +4,7 @@ version: 1
 ---
 
 **Lesson 1 section 06 promised to return to modules, and the answer for the planner is still one.**
-A module pays for itself in two ways, both named there: it recompiles less, because Gradle rebuilds
-only the modules a change touches and the ones that depend on them, and it enforces boundaries,
-because code cannot use a class from a module it does not declare. Neither has bitten the planner
+A module pays for itself in two ways, both named there. It recompiles less, because Gradle rebuilds only the modules a change touches and the ones that depend on them. And it enforces boundaries, because code cannot use a class from a module it does not declare. Neither has bitten the planner
 yet: its build is quick, and one person holds all of it in their head.
 
 ## The signs that one module is no longer enough
@@ -36,9 +34,6 @@ same `libs.versions.toml`.
 
 ## Where the course ends
 
-Twenty-two lessons ago the planner was eight files and a sentence on a screen. It now has screens in
-Compose that survive rotation, state in ViewModels, data from a server and from Room behind one
-repository, background sync that outlives the app, a reminder that asks before it notifies, tests at
-three levels, and a signed, shrunk bundle that Google Play would accept. The courses that follow on
+Twenty-two lessons ago the planner was eight files and a sentence on a screen. It now has screens in Compose that survive rotation, state in ViewModels, and data from a server and from Room behind one repository. It has background sync that outlives the app, a reminder that asks before it notifies, tests at three levels, and a signed, shrunk bundle that Google Play would accept. The courses that follow on
 this track, `mobile-offline` and `mobile-delivery`, take the same planner further without assuming
 which of the three platforms you chose.

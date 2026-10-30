@@ -152,8 +152,6 @@ Voltar ao app roda `onStart` e `onResume` na mesma instância, e o `onCreate` n�
 O Voltar é diferente: ele **encerra** a activity, e o `onDestroy` diz `finishing true`. O usuário
 disse que terminou com essa tela, e o objeto vai embora.
 
-Essa diferença, o Home guarda e o Voltar encerra, tem uma exceção que vale conhecer: a partir do
-Android 12 uma activity de launcher não é encerrada pelo Voltar, e sim levada para o segundo plano,
-como se o Home tivesse sido apertado, segundo a documentação do Google sobre o ciclo de vida da
-activity. O `ActivityScenario.close()` encerra a activity em qualquer versão, que é o que o teste
+Essa diferença, o Home guarda e o Voltar encerra, tem uma exceção que vale conhecer. Segundo a documentação do Google sobre o ciclo de vida da activity, a partir do Android 12 uma activity de launcher não é encerrada pelo Voltar, e sim levada para o segundo plano,
+como se o Home tivesse sido apertado. O `ActivityScenario.close()` encerra a activity em qualquer versão, que é o que o teste
 acima mostra. **Não executado** num aparelho.

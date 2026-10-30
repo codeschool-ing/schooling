@@ -13,9 +13,7 @@ Então os canais do planner merecem ser desenhados como o estudante vai vê-los,
 notificação do app: um nome, uma frase de descrição e um canal separado para cada tipo de notificação
 que alguém poderia querer tratar de outro jeito. O planner tem um tipo hoje.
 
-Parta do projeto da aula 1. O arquivo de build é o da aula 1 com um bloco a mais, `testLogging`, que
-imprime o que cada teste escreve para você ver as linhas que esta aula mostra; notificações não
-precisam de biblioteca nova, porque o `androidx.core`, que já está lá, traz as versões compatíveis de
+Parta do projeto da aula 1. O arquivo de build é o da aula 1 com um bloco a mais, `testLogging`, que imprime o que cada teste escreve para você ver as linhas que esta aula mostra. Notificações não precisam de biblioteca nova, porque o `androidx.core`, que já está lá, traz as versões compatíveis de
 todas as classes usadas aqui:
 
 ```kotlin
