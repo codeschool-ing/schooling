@@ -1,0 +1,584 @@
+[
+  {
+    "id": "ex-fyf36t1e",
+    "version": 1,
+    "section": "the-two-rules",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these break a rule of hooks? Choose every one.",
+    "hint": "Top level, and only from components or hooks.",
+    "choices": [
+      {
+        "text": "`useState` inside an `if`",
+        "correct": true,
+        "why": "Breaks rule one."
+      },
+      {
+        "text": "`useEffect` after an early `return`",
+        "correct": true,
+        "why": "Breaks rule one."
+      },
+      {
+        "text": "`useState` called from a click handler",
+        "correct": true,
+        "why": "Breaks rule two."
+      },
+      {
+        "text": "A custom hook `useWeek` that calls `useState`",
+        "correct": false,
+        "why": "Allowed: a hook may call hooks."
+      }
+    ]
+  },
+  {
+    "id": "ex-aw7stz7z",
+    "version": 1,
+    "section": "the-two-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why may a function named `useWeekLogger` call `useEffect`, when an ordinary helper may not?",
+    "hint": "When is a custom hook called?",
+    "choices": [
+      {
+        "text": "It is called during a render, like a component",
+        "correct": true,
+        "why": "Right. The name tells the linter and the reader that it will be."
+      },
+      {
+        "text": "React reads the `use` prefix at run time and switches modes",
+        "correct": false,
+        "why": "React never reads the name; the prefix is for tools and people."
+      },
+      {
+        "text": "Hooks are allowed anywhere in TypeScript files",
+        "correct": false,
+        "why": "The rule has nothing to do with the language."
+      },
+      {
+        "text": "Because it is exported",
+        "correct": false,
+        "why": "Exporting changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-y1m8p150",
+    "version": 1,
+    "section": "why-order-matters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does React know which `useState` call is `monday`?",
+    "hint": "The figure numbers the slots.",
+    "choices": [
+      {
+        "text": "By the name of the variable it is assigned to",
+        "correct": false,
+        "why": "The name never reaches React; destructuring happens after the call returns."
+      },
+      {
+        "text": "By the type of its initial value",
+        "correct": false,
+        "why": "Several slots hold strings; the type cannot tell them apart."
+      },
+      {
+        "text": "By its position in the order of calls",
+        "correct": true,
+        "why": "Right. The first call gets slot one, every render."
+      },
+      {
+        "text": "By a hidden key the compiler adds",
+        "correct": false,
+        "why": "No key is added; order is the whole mechanism."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvx8t90n",
+    "version": 1,
+    "section": "why-order-matters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did React choose order over a key per hook, such as `useState('open', false)`?",
+    "hint": "Think of two custom hooks inside one component.",
+    "choices": [
+      {
+        "text": "Strings are slow to compare",
+        "correct": false,
+        "why": "Speed was not the argument."
+      },
+      {
+        "text": "Two hooks could pick the same key",
+        "correct": true,
+        "why": "Right. Order cannot collide, because each component's list is its own."
+      },
+      {
+        "text": "TypeScript cannot type a string key",
+        "correct": false,
+        "why": "It can; the problem is two hooks using the same string."
+      },
+      {
+        "text": "Keys are reserved for lists",
+        "correct": false,
+        "why": "That is a different `key`, for elements."
+      }
+    ]
+  },
+  {
+    "id": "ex-bd79sgda",
+    "version": 1,
+    "section": "a-return-before-a-hook",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the early `return` above the title effect, how many hooks did `App` call on its first render?",
+    "hint": "Five `useState` and one effect.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "hooks"
+  },
+  {
+    "id": "ex-j02qzd98",
+    "version": 1,
+    "section": "a-return-before-a-hook",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the app with the early `return` disappear completely, rather than show the loading line?",
+    "hint": "What happens to the tree when rendering throws?",
+    "choices": [
+      {
+        "text": "The loading line was drawn and then hidden by CSS",
+        "correct": false,
+        "why": "No CSS was involved; the tree was removed."
+      },
+      {
+        "text": "An uncaught render error",
+        "correct": true,
+        "why": "Right. Lesson 12 shows how to catch it."
+      },
+      {
+        "text": "The fetch failed",
+        "correct": false,
+        "why": "The fetch succeeded; the render after it threw."
+      },
+      {
+        "text": "Vite's overlay covered it",
+        "correct": false,
+        "why": "The overlay is for compile errors; this one happened at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h80k3d2",
+    "version": 1,
+    "section": "a-return-before-a-hook",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the type check say about the early `return` above two effects?",
+    "hint": "It ran just before `look`.",
+    "choices": [
+      {
+        "text": "An error at the `return`",
+        "correct": false,
+        "why": "It passed."
+      },
+      {
+        "text": "No errors",
+        "correct": true,
+        "why": "Right. The rules of hooks are not types; the linter checks them."
+      },
+      {
+        "text": "A warning that the effect is unreachable",
+        "correct": false,
+        "why": "TypeScript cannot know the effect is unreachable on some renders."
+      },
+      {
+        "text": "It refused to run while the dev server was up",
+        "correct": false,
+        "why": "They run side by side."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbmqfvre",
+    "version": 1,
+    "section": "the-quiet-version",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After \"Show minutes left\", an empty week and back, the summary said \"80 of 195\". What happened to `showLeft`?",
+    "hint": "In the empty week the component called no hooks.",
+    "choices": [
+      {
+        "text": "It was reset to its initial value",
+        "correct": true,
+        "why": "Right. React dropped the only slot and later made a fresh one."
+      },
+      {
+        "text": "It was kept, and the button lied about it",
+        "correct": false,
+        "why": "The button and the line agreed: both showed `false`."
+      },
+      {
+        "text": "It moved to `WeekNav`'s slot",
+        "correct": false,
+        "why": "Each component has its own list."
+      },
+      {
+        "text": "It became `undefined` and React printed an error",
+        "correct": false,
+        "why": "Nothing was printed; that is why this version is worse."
+      }
+    ]
+  },
+  {
+    "id": "ex-25df3m8s",
+    "version": 1,
+    "section": "the-quiet-version",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the one-hook `WeekSummary` lose its state silently while `App` crashed?",
+    "hint": "Compare zero slots with six.",
+    "choices": [
+      {
+        "text": "`WeekSummary` is not inside strict mode",
+        "correct": false,
+        "why": "Everything is inside strict mode in this app."
+      },
+      {
+        "text": "A component with no slots looks new, so there was no mismatch to detect",
+        "correct": true,
+        "why": "Right. With hooks on both sides of the `return`, it would have crashed too."
+      },
+      {
+        "text": "React checks hook order only in `App`",
+        "correct": false,
+        "why": "React checks every component the same way."
+      },
+      {
+        "text": "`useState` is safe after a return; `useEffect` is not",
+        "correct": false,
+        "why": "Both are hooks and follow the same rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-xt0cptqr",
+    "version": 1,
+    "section": "the-quiet-version",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With 80 of 195 minutes done, how many minutes did \"Show minutes left\" display?",
+    "hint": "Planned minus done.",
+    "value": 115,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-mz8ydkcw",
+    "version": 1,
+    "section": "the-linter-knows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which rule found the hook after the early `return`?",
+    "hint": "It is set to `error` in `.oxlintrc.json`.",
+    "choices": [
+      {
+        "text": "`exhaustive-deps`",
+        "correct": false,
+        "why": "That one reads dependency arrays."
+      },
+      {
+        "text": "`only-export-components`",
+        "correct": false,
+        "why": "That one is about fast refresh and exports."
+      },
+      {
+        "text": "TypeScript's `strict` mode",
+        "correct": false,
+        "why": "TypeScript passed."
+      },
+      {
+        "text": "`rules-of-hooks`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9vr3c9p",
+    "version": 1,
+    "section": "the-linter-knows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`const [a, setA] = ok ? useState(1) : [1, () => {}]` is one line. Why does the linter still refuse it?",
+    "hint": "It is not reading lines.",
+    "choices": [
+      {
+        "text": "The hook is called on one side of a condition only",
+        "correct": true,
+        "why": "Right. It pointed at both halves of the expression."
+      },
+      {
+        "text": "Arrays cannot replace a hook's return value",
+        "correct": false,
+        "why": "Type-wise they can; the rule is about order."
+      },
+      {
+        "text": "Ternaries are forbidden in components",
+        "correct": false,
+        "why": "Ternaries are everywhere in JSX."
+      },
+      {
+        "text": "The line is too long for the formatter",
+        "correct": false,
+        "why": "That is a formatter's concern, not a linter rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-svm7f5w8",
+    "version": 1,
+    "section": "the-linter-knows",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The template runs Oxlint with the command `npm run ___`.",
+    "hint": "A script in `package.json`.",
+    "blanks": [
+      {
+        "accept": [
+          "lint"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dhzpsp2j",
+    "version": 1,
+    "section": "stale-closures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After \"Next week\", the interval with `[]` still logged 19 October. Why?",
+    "hint": "Which render created the callback?",
+    "choices": [
+      {
+        "text": "`setInterval` copies the values it is given once, when it starts",
+        "correct": false,
+        "why": "It received no arguments; the function read a captured variable."
+      },
+      {
+        "text": "The click did not change `monday`",
+        "correct": false,
+        "why": "The screen showed the new week."
+      },
+      {
+        "text": "It closed over the first render's `monday`",
+        "correct": true,
+        "why": "Right, and the empty array never let the effect run again."
+      },
+      {
+        "text": "Strict mode keeps a copy of the old state",
+        "correct": false,
+        "why": "Strict mode keeps no copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-10c02xfe",
+    "version": 1,
+    "section": "stale-closures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did adding `monday` to the interval's array change?",
+    "hint": "Cleanup and run again.",
+    "choices": [
+      {
+        "text": "Nothing visible, since the interval had been correct all along",
+        "correct": false,
+        "why": "The log changed from 19 to 26 October."
+      },
+      {
+        "text": "The old interval was cleared and a new one started",
+        "correct": true,
+        "why": "Right. The new one closed over the new week."
+      },
+      {
+        "text": "The interval ran twice as often",
+        "correct": false,
+        "why": "One interval at a time."
+      },
+      {
+        "text": "The interval read `monday` from the DOM",
+        "correct": false,
+        "why": "It reads the variable it captured."
+      }
+    ]
+  },
+  {
+    "id": "ex-4v4fpa5x",
+    "version": 1,
+    "section": "stale-closures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The keyboard effect keeps `[]` and is not stale. What makes it safe?",
+    "hint": "It never reads `monday` itself.",
+    "choices": [
+      {
+        "text": "Keyboard events are always fresh",
+        "correct": false,
+        "why": "The event is fresh; a captured variable would not be."
+      },
+      {
+        "text": "`window` listeners are re-created on every render",
+        "correct": false,
+        "why": "With `[]` it is created once."
+      },
+      {
+        "text": "It is inside `App`, which never re-renders",
+        "correct": false,
+        "why": "`App` re-renders on every state change."
+      },
+      {
+        "text": "It uses the updater form, so React hands it the latest week",
+        "correct": true,
+        "why": "Right. Re-running the effect would add listeners for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7htyp1yz",
+    "version": 1,
+    "section": "stale-closures",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the way out.",
+    "hint": "Does the effect's work depend on the value, or only change it?",
+    "pairs": [
+      {
+        "left": "A timer that logs the current week",
+        "right": "Add the value to the array"
+      },
+      {
+        "left": "A key listener that moves the week",
+        "right": "Use the updater form"
+      },
+      {
+        "left": "A total shown on screen",
+        "right": "No effect: compute it while rendering"
+      }
+    ],
+    "right_distractors": [
+      "Remove the array altogether"
+    ]
+  },
+  {
+    "id": "ex-0nwfs263",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of the early-`return` crash in order.",
+    "hint": "The first render is fine.",
+    "items": [
+      "`App` renders while loading and returns after six hooks",
+      "The data arrives and `status` becomes `'ready'`",
+      "`App` renders again and calls eight hooks",
+      "React throws \"Rendered more hooks\"",
+      "The tree is removed and the page is empty"
+    ]
+  },
+  {
+    "id": "ex-gjrwttzw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague writes `if (!user) return null` at the top of a component that has three hooks below. What do you suggest?",
+    "hint": "The order fix from the section.",
+    "choices": [
+      {
+        "text": "Move the hooks above the `return`",
+        "correct": true,
+        "why": "Right: every hook first, then every return."
+      },
+      {
+        "text": "Wrap each hook in `if (user)`",
+        "correct": false,
+        "why": "That breaks the same rule three times."
+      },
+      {
+        "text": "Turn off `rules-of-hooks` for this file",
+        "correct": false,
+        "why": "The rule is right; the code is wrong."
+      },
+      {
+        "text": "Leave it: it works while `user` exists",
+        "correct": false,
+        "why": "It breaks the day `user` changes between renders."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkaksjmd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component's effect subscribes to a chat room named by a prop, with `[]`. The prop changes from `general` to `random`. What does the user see?",
+    "hint": "The subscription was made by the first render.",
+    "choices": [
+      {
+        "text": "Messages from `random`, because the prop changed",
+        "correct": false,
+        "why": "The effect never ran again to subscribe to it."
+      },
+      {
+        "text": "No messages, because the effect errors",
+        "correct": false,
+        "why": "Nothing errors; it is silent."
+      },
+      {
+        "text": "The old room's messages under the new name",
+        "correct": true,
+        "why": "Right. The heading renders from the prop; the subscription is stale."
+      },
+      {
+        "text": "Both rooms, merged",
+        "correct": false,
+        "why": "Only one subscription was ever made."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfepgyqt",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rules of hooks are there?",
+    "hint": "The first section says it in its title.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "rules"
+  }
+]

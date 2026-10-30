@@ -1,0 +1,616 @@
+[
+  {
+    "id": "ex-jtrbgtxp",
+    "version": 1,
+    "section": "a-trigger",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `WeekNav` change the week, when the week is kept in `App`?",
+    "hint": "Look at what `App` passes as `onChange`.",
+    "choices": [
+      {
+        "text": "It changes its `monday` prop",
+        "correct": false,
+        "why": "Props are read-only; changing one would change nothing React watches."
+      },
+      {
+        "text": "It keeps its own copy of the week in a variable and React reads it from there",
+        "correct": false,
+        "why": "A plain variable is created again on every render, and React never reads it."
+      },
+      {
+        "text": "It calls the function its parent passed down as a prop",
+        "correct": true,
+        "why": "Right. `App` hands `setMonday` down, and the child calls it with the new Monday."
+      },
+      {
+        "text": "It reloads the page with the week in the address",
+        "correct": false,
+        "why": "Nothing reloads; addresses are lesson 17's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-brm7cz3e",
+    "version": 1,
+    "section": "a-trigger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Opened in your own browser, the planner probably shows a week with no sessions. Why?",
+    "hint": "Where does the starting week come from now?",
+    "choices": [
+      {
+        "text": "It starts at today's week, and the data is in October 2026",
+        "correct": true,
+        "why": "Right. A few presses of a button reach the data's week."
+      },
+      {
+        "text": "The data failed to load",
+        "correct": false,
+        "why": "The data is a module; it always loads."
+      },
+      {
+        "text": "Strict mode clears state on load",
+        "correct": false,
+        "why": "Strict mode does not change what the screen shows."
+      },
+      {
+        "text": "`today()` returns a date in UTC",
+        "correct": false,
+        "why": "It reads the local date; the week is right, it is just empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1vxnyf2",
+    "version": 1,
+    "section": "render-and-commit",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of an update in order, after \"Next week\" is pressed.",
+    "hint": "Only the last of React's steps touches the page.",
+    "items": [
+      "`setMonday` is called with the new Monday",
+      "React calls `App` and every component below it",
+      "React compares the new tree with the last one",
+      "React changes the page where the two differ",
+      "The browser paints"
+    ]
+  },
+  {
+    "id": "ex-pnw0khyw",
+    "version": 1,
+    "section": "render-and-commit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can React call a component and throw the result away?",
+    "hint": "What does rendering change?",
+    "choices": [
+      {
+        "text": "Because the browser caches every component",
+        "correct": false,
+        "why": "The browser knows nothing about components."
+      },
+      {
+        "text": "Because components without state are skipped",
+        "correct": false,
+        "why": "Every component under the change was called, stateless or not."
+      },
+      {
+        "text": "It cannot, since a render reaches the page",
+        "correct": false,
+        "why": "Strict mode throws away a render on every load in development."
+      },
+      {
+        "text": "Rendering changes nothing",
+        "correct": true,
+        "why": "Right, as long as components are pure: the page changes only at the commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jpxffhr",
+    "version": 1,
+    "section": "what-re-renders",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With strict mode off, how many components were called after one press of \"Next week\"?",
+    "hint": "Count the lines after `-- click button Next week`.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "components"
+  },
+  {
+    "id": "ex-8gpnp1j9",
+    "version": 1,
+    "section": "what-re-renders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WeekNav` received the same `onChange` and only a new `monday`. Why was it called again?",
+    "hint": "What does React compare before rendering a child?",
+    "choices": [
+      {
+        "text": "Because its props changed",
+        "correct": false,
+        "why": "That is true here and not the reason: it would have rendered with identical props too."
+      },
+      {
+        "text": "Because its parent rendered",
+        "correct": true,
+        "why": "Right. React renders every component below the one whose state changed, unless you ask for `memo`."
+      },
+      {
+        "text": "Because a clicked button renders itself again",
+        "correct": false,
+        "why": "Being clicked does nothing to a component; its parent's state does."
+      },
+      {
+        "text": "Because strict mode was on",
+        "correct": false,
+        "why": "Strict mode was off for that transcript."
+      }
+    ]
+  },
+  {
+    "id": "ex-d24jbsez",
+    "version": 1,
+    "section": "what-re-renders",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "If `WeekNav` kept the week in its own state instead of `App`, what would a press of \"Next week\" render?",
+    "hint": "A state change renders that component and what is below it.",
+    "choices": [
+      {
+        "text": "Every component, as now",
+        "correct": false,
+        "why": "Components above or beside the changed one are not rendered."
+      },
+      {
+        "text": "No component, because a child has no state of its own",
+        "correct": false,
+        "why": "Any component can have state; `Probe` did."
+      },
+      {
+        "text": "`App` and `WeekNav`, but not the cards",
+        "correct": false,
+        "why": "`App` is above `WeekNav` and would not render."
+      },
+      {
+        "text": "`WeekNav` only, so the summary and the cards would not change",
+        "correct": true,
+        "why": "Right. Which is why the state lives above every component that reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-metrx34g",
+    "version": 1,
+    "section": "strict-mode",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did every `render` line appear twice on the first load?",
+    "hint": "Look at what wraps `<App />` in `main.tsx`.",
+    "choices": [
+      {
+        "text": "A bug in `rendered.ts`",
+        "correct": false,
+        "why": "The file logs once per call; there were two calls."
+      },
+      {
+        "text": "The page loaded twice because of Vite",
+        "correct": false,
+        "why": "One load; removing `StrictMode` alone halved the lines."
+      },
+      {
+        "text": "`look` prints every console line twice",
+        "correct": false,
+        "why": "Without strict mode it printed each once."
+      },
+      {
+        "text": "Strict mode, in development",
+        "correct": true,
+        "why": "Right. It throws the second result away, to find impure components."
+      }
+    ]
+  },
+  {
+    "id": "ex-czpbyt7c",
+    "version": 1,
+    "section": "strict-mode",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does strict mode do? Choose every one.",
+    "hint": "Three of the four are in the section.",
+    "choices": [
+      {
+        "text": "Calls each component a second time in development",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Runs effects, cleans them up and runs them again",
+        "correct": true,
+        "why": "Yes, which lesson 5 uses."
+      },
+      {
+        "text": "Warns about deprecated interfaces",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Renders twice in the production build too",
+        "correct": false,
+        "why": "No: in a build it does nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-terxjsbt",
+    "version": 1,
+    "section": "strict-mode",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component adds one item to a list declared outside it every time it renders. What does strict mode make visible?",
+    "hint": "Two calls, one result kept.",
+    "choices": [
+      {
+        "text": "Two items per render, so the impurity shows at once",
+        "correct": true,
+        "why": "Right. That is what the second call is for."
+      },
+      {
+        "text": "No difference: the second call's result is thrown away",
+        "correct": false,
+        "why": "The result is thrown away; the item it added to the list is not."
+      },
+      {
+        "text": "An error that stops the render",
+        "correct": false,
+        "why": "Strict mode does not detect the mutation; it makes its effect double."
+      },
+      {
+        "text": "A warning naming the list",
+        "correct": false,
+        "why": "React cannot see your variable; you see the doubling."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cgrkt5z",
+    "version": 1,
+    "section": "the-dom-barely-moves",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many changes did the `MutationObserver` report after \"Next week\"?",
+    "hint": "Count the records on the `DOM:` line.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "changes"
+  },
+  {
+    "id": "ex-pnf8ksda",
+    "version": 1,
+    "section": "the-dom-barely-moves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What kind were all the changes after \"Next week\"?",
+    "hint": "The observer printed the type first.",
+    "choices": [
+      {
+        "text": "Text inside nodes that already existed",
+        "correct": true,
+        "why": "Right. Every record was `characterData`."
+      },
+      {
+        "text": "New elements added for the new week",
+        "correct": false,
+        "why": "No element was created or removed."
+      },
+      {
+        "text": "The whole `#root` replaced",
+        "correct": false,
+        "why": "That happened once, on load."
+      },
+      {
+        "text": "Attributes on the buttons",
+        "correct": false,
+        "why": "The buttons were untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fnhhw42",
+    "version": 1,
+    "section": "the-dom-barely-moves",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does keeping DOM nodes, rather than recreating them, matter to a keyboard user?",
+    "hint": "What does the browser associate with a node?",
+    "choices": [
+      {
+        "text": "Keyboard events are slower on new nodes",
+        "correct": false,
+        "why": "Speed is not the issue; what the node remembers is."
+      },
+      {
+        "text": "Screen readers cannot read nodes created after load",
+        "correct": false,
+        "why": "They read them; the trouble is losing the place the user was at."
+      },
+      {
+        "text": "It does not; only the paint time matters",
+        "correct": false,
+        "why": "Focus moving away is a real failure for someone without a mouse."
+      },
+      {
+        "text": "A recreated node would lose focus and selection",
+        "correct": true,
+        "why": "Right. The button you pressed still has focus after the click."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bnd394d",
+    "version": 1,
+    "section": "the-dom-barely-moves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the word \"session\" under Organic chemistry change in the new week?",
+    "hint": "Look at the ternary in `CourseCard`.",
+    "choices": [
+      {
+        "text": "React rewrites every text node in a card when one changes",
+        "correct": false,
+        "why": "Only the differing nodes were written; this one differed."
+      },
+      {
+        "text": "The course was renamed",
+        "correct": false,
+        "why": "The heading did not change."
+      },
+      {
+        "text": "`MutationObserver` reports every word on the line",
+        "correct": false,
+        "why": "It reports nodes that changed, and this one changed."
+      },
+      {
+        "text": "Zero sessions takes the plural",
+        "correct": true,
+        "why": "Right. One session became none, and the ternary chose `sessions`."
+      }
+    ]
+  },
+  {
+    "id": "ex-n9spge8k",
+    "version": 1,
+    "section": "position-and-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After two presses and \"Next week\", the Statistics probe still said 2. Why?",
+    "hint": "State belongs to a place in the tree.",
+    "choices": [
+      {
+        "text": "The count is saved in the browser's storage",
+        "correct": false,
+        "why": "Nothing was stored; it lived in React."
+      },
+      {
+        "text": "Same type, same place",
+        "correct": true,
+        "why": "Right. The first card's `Probe` was still there after the render."
+      },
+      {
+        "text": "`Probe` did not render again",
+        "correct": false,
+        "why": "It rendered, and kept its state."
+      },
+      {
+        "text": "The click went to the wrong card",
+        "correct": false,
+        "why": "It went where it was aimed."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3yran24",
+    "version": 1,
+    "section": "position-and-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `key={monday}` on `CourseList`, every probe went back to 0 after \"Next week\". What did the new key do?",
+    "hint": "A different key is a different component.",
+    "choices": [
+      {
+        "text": "It sorted the courses by date",
+        "correct": false,
+        "why": "Keys do not sort anything."
+      },
+      {
+        "text": "React rebuilt the list from scratch",
+        "correct": true,
+        "why": "Right. Nothing under the old key survived."
+      },
+      {
+        "text": "It set every `count` to `monday`",
+        "correct": false,
+        "why": "The key never reaches the component as a value."
+      },
+      {
+        "text": "It stopped `Probe` from rendering",
+        "correct": false,
+        "why": "They rendered, freshly created."
+      }
+    ]
+  },
+  {
+    "id": "ex-crbch3pv",
+    "version": 1,
+    "section": "position-and-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A form edits one student at a time and should start empty when another student is chosen. With this lesson's tool, what is the least code?",
+    "hint": "The tool resets a whole subtree at once.",
+    "choices": [
+      {
+        "text": "`key={student.id}` on the form",
+        "correct": true,
+        "why": "Right. A new id is a new form, with fresh state."
+      },
+      {
+        "text": "Clear each field when the choice changes",
+        "correct": false,
+        "why": "That works, and it is one line per field."
+      },
+      {
+        "text": "Reload the page",
+        "correct": false,
+        "why": "That resets everything else too, and loses the choice."
+      },
+      {
+        "text": "Turn strict mode off",
+        "correct": false,
+        "why": "Strict mode has nothing to do with resetting."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2723k98",
+    "version": 1,
+    "section": "position-and-key",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each change to what happens to `Probe`'s count.",
+    "hint": "Ask whether the same type stays at the same position.",
+    "pairs": [
+      {
+        "left": "The parent renders with new props",
+        "right": "It is kept"
+      },
+      {
+        "left": "An ancestor's `key` changes",
+        "right": "It goes back to 0"
+      },
+      {
+        "left": "Strict mode calls the component a second time",
+        "right": "Nothing visible happens"
+      }
+    ],
+    "right_distractors": [
+      "It doubles"
+    ]
+  },
+  {
+    "id": "ex-3y895jvv",
+    "version": 1,
+    "section": "position-and-key",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make React treat a component as a new one, give it a different ___.",
+    "hint": "The attribute `CourseList` received.",
+    "blanks": [
+      {
+        "accept": [
+          "key"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wtxydtjp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component calls `Math.random()` to pick a colour while it renders. In development, what changes compared with production?",
+    "hint": "How many times is it called, and which result is kept?",
+    "choices": [
+      {
+        "text": "No change: one call in both",
+        "correct": false,
+        "why": "Development calls it twice under strict mode."
+      },
+      {
+        "text": "Both colours are drawn, one on top of the other",
+        "correct": false,
+        "why": "Only one result reaches the commit."
+      },
+      {
+        "text": "React refuses to render it",
+        "correct": false,
+        "why": "React cannot tell a random number from any other value."
+      },
+      {
+        "text": "It is called twice and one colour is shown",
+        "correct": true,
+        "why": "Right. The extra call is thrown away; the impurity is that the colour changes on every render anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpt89awk",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without strict mode, how many `render` lines does one load of the page print?",
+    "hint": "App, WeekNav, WeekSummary, CourseList, and three of each card.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-e1qf33zb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about this lesson's screen is true?",
+    "hint": "Separate rendering from changing the page.",
+    "choices": [
+      {
+        "text": "The components with new props rendered, and the rest were skipped",
+        "correct": false,
+        "why": "All ten rendered."
+      },
+      {
+        "text": "The elements were recreated for the new week",
+        "correct": false,
+        "why": "No element was recreated."
+      },
+      {
+        "text": "Ten renders, ten text changes",
+        "correct": true,
+        "why": "Right: every component was called, and the commit wrote only the difference."
+      },
+      {
+        "text": "No component, because the page was already drawn",
+        "correct": false,
+        "why": "The logs show ten calls."
+      }
+    ]
+  }
+]

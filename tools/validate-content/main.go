@@ -846,6 +846,10 @@ var allowedOutsideTheFont = map[rune]string{
 		"a fraction of a cell; the alternative is a table that is not the one the build printed",
 	'\u25d0': "`next build` marks a partially prerendered route with it, in the same table and " +
 		"legend as U+25CB, with the same consequence. IBM Plex Mono has no U+25D0 at all",
+	// And Next.js's own banner, which opens `next dev`, `next build` and `next start`.
+	'\u25b2': "Next.js opens the first line of `next dev`, `next build` and `next start` with it " +
+		"(`▲ Next.js 16.4.3`). IBM Plex Mono has no U+25B2 at all. It opens a line and nothing is " +
+		"aligned to what follows it",
 }
 
 // coverage is the set of code points the interface declares a face for.

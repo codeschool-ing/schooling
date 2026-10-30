@@ -1,0 +1,432 @@
+{
+  "ex-tm7w8kb1": {
+    "prompt": "Dentro de um handler de clique, `setMonday('2026-10-26')` roda e a linha seguinte registra `monday`. O que sai?",
+    "hint": "`monday` é a constante desta renderização.",
+    "choices": [
+      {
+        "text": "`2026-10-26`, o valor que acabou de ser definido",
+        "why": "O setter agenda a próxima renderização; ele não muda a constante que você tem."
+      },
+      {
+        "text": "`undefined`, porque o estado está sendo atualizado naquele momento",
+        "why": "A variável mantém o valor durante a renderização inteira; não há meio-termo."
+      },
+      {
+        "text": "O valor antigo",
+        "why": "Certo. O valor novo chega na próxima renderização."
+      },
+      {
+        "text": "Um erro dizendo que o estado foi lido depois de definido",
+        "why": "Ler é permitido; é simplesmente o retrato."
+      }
+    ]
+  },
+  "ex-54ch701f": {
+    "prompt": "O `TwoWeeks` chamou `setMonday(addDays(monday, 7))` duas vezes. Por que a semana andou só uma?",
+    "hint": "A partir de que cada chamada calculou o valor?",
+    "choices": [
+      {
+        "text": "O React ignora uma segunda chamada ao setter no mesmo evento",
+        "why": "As duas chamadas foram aplicadas; pediram o mesmo valor."
+      },
+      {
+        "text": "O strict mode desfez uma delas",
+        "why": "O strict mode não desfaz chamadas ao setter."
+      },
+      {
+        "text": "As duas calcularam o dia 26 a partir do mesmo retrato",
+        "why": "Certo. Pedir o 26 duas vezes é pedir uma."
+      },
+      {
+        "text": "O `addDays` devolveu o mesmo dia duas vezes por causa de fuso horário",
+        "why": "O `addDays` funcionou; recebeu a mesma entrada duas vezes."
+      }
+    ]
+  },
+  "ex-4ebcs923": {
+    "prompt": "Um handler chama três setters diferentes. Quantas vezes o componente renderiza por causa desse clique?",
+    "hint": "A seção dá nome ao comportamento.",
+    "choices": [
+      {
+        "text": "Uma, depois de as três serem aplicadas",
+        "why": "Certo. Isso é batching."
+      },
+      {
+        "text": "Três, uma por setter",
+        "why": "Chamadas num evento são juntadas e aplicadas juntas."
+      },
+      {
+        "text": "Nenhuma até o próximo clique",
+        "why": "Ele renderiza logo depois do evento."
+      },
+      {
+        "text": "Duas, porque o strict mode está ligado",
+        "why": "O strict mode dobra a chamada, não o número de renderizações que o evento causa."
+      }
+    ]
+  },
+  "ex-fwk7qspb": {
+    "prompt": "Por que o planejador escreve `useState(() => mondayOf(today()))` e não `useState(mondayOf(today()))`?",
+    "hint": "Quando o valor inicial é usado?",
+    "choices": [
+      {
+        "text": "A segunda forma é um erro de tipo",
+        "why": "As duas compilam; diferem em quando a data é calculada."
+      },
+      {
+        "text": "Para a semana se atualizar à meia-noite",
+        "why": "Nenhuma das formas se atualiza sozinha."
+      },
+      {
+        "text": "Funções são mais rápidas que strings",
+        "why": "O valor é uma string de qualquer jeito."
+      },
+      {
+        "text": "Para a data ser calculada uma vez",
+        "why": "Certo. O React chama a função uma vez."
+      }
+    ]
+  },
+  "ex-gpjss2tf": {
+    "prompt": "Com duas funções de atualização, a que dia de novembro a semana chegou depois de um clique?",
+    "hint": "Duas semanas depois de segunda, 19 de outubro."
+  },
+  "ex-va282ywy": {
+    "prompt": "Com a forma de função, o registro depois das duas chamadas ainda dizia `2026-10-19`. Por quê?",
+    "hint": "Quem viu o valor intermediário?",
+    "choices": [
+      {
+        "text": "As funções de atualização ainda não tinham rodado",
+        "why": "Tendo rodado ou não, `monday` é a constante desta renderização e não muda."
+      },
+      {
+        "text": "A forma de função não funciona dentro de handlers",
+        "why": "Funcionou: a semana andou duas semanas."
+      },
+      {
+        "text": "O registro é impresso antes do clique",
+        "why": "Ele sai dentro do handler, depois das duas chamadas."
+      },
+      {
+        "text": "`monday` é o retrato; a fila viu os valores novos",
+        "why": "Certo. O dia 26 só existiu entre as duas funções."
+      }
+    ]
+  },
+  "ex-wkxcktfv": {
+    "prompt": "O botão de um contador roda `setCount(count + 1)` e um timer que disparou no mesmo momento roda `setCount(count + 1)` também, os dois da mesma renderização. O que corrige para os dois contarem?",
+    "hint": "O valor novo depende do antigo.",
+    "choices": [
+      {
+        "text": "Chamar `setCount(count + 2)` no botão e nada no timer",
+        "why": "Isso conta dois sempre que o botão é apertado, com timer ou sem."
+      },
+      {
+        "text": "Guardar `count` numa variável fora do componente",
+        "why": "O React não renderizaria quando ela mudasse."
+      },
+      {
+        "text": "`setCount((c) => c + 1)` nos dois",
+        "why": "Certo. Cada função recebe o que a anterior devolveu."
+      },
+      {
+        "text": "Desligar o strict mode",
+        "why": "O strict mode não está envolvido."
+      }
+    ]
+  },
+  "ex-0ma2c7sz": {
+    "prompt": "Depois de \"Next week\", o `WeekSummary` quebrado mostrou \"Week of 26 Oct 2026\" e \"80 of 195\". Por que os totais antigos?",
+    "hint": "Quando um valor inicial é usado?",
+    "choices": [
+      {
+        "text": "Os totais foram copiados para o estado uma vez e nunca recalculados",
+        "why": "Certo. Um valor inicial só é usado na primeira renderização."
+      },
+      {
+        "text": "As sessões novas ainda não tinham carregado",
+        "why": "Nada carrega; as sessões estavam nas props."
+      },
+      {
+        "text": "O `minutes` guarda os resultados em cache",
+        "why": "O `minutes` é uma soma simples, calculada a cada chamada."
+      },
+      {
+        "text": "O React pulou a renderização do `WeekSummary`",
+        "why": "Ele renderizou: a linha da semana mudou."
+      }
+    ]
+  },
+  "ex-kzrsg5vy": {
+    "prompt": "Classifique cada valor do planejador: guardado como estado, ou calculado ao renderizar.",
+    "hint": "Pergunte o que o definiria.",
+    "pairs": [
+      {
+        "left": "Qual semana o usuário escolheu",
+        "right": "Guardado"
+      },
+      {
+        "left": "Os minutos feitos nesta semana",
+        "right": "Calculado"
+      },
+      {
+        "left": "Se a sessão s2 está feita",
+        "right": "Guardado, dentro de `sessions`"
+      },
+      {
+        "left": "O nome do curso aberto",
+        "right": "Calculado a partir de `openId`"
+      }
+    ],
+    "right_distractors": [
+      "Buscado no servidor"
+    ]
+  },
+  "ex-k34v95bc": {
+    "prompt": "Uma tela mostra uma caixa de busca e os cursos cujos nomes combinam com ela. O que deve ser estado?",
+    "hint": "Um deles o usuário define; o outro decorre dele.",
+    "choices": [
+      {
+        "text": "Os cursos que combinam, para estarem prontos quando a tela renderizar",
+        "why": "Eles decorrem do texto e dos cursos, e uma cópia ficaria desatualizada."
+      },
+      {
+        "text": "Os dois, mantidos em sincronia por uma função extra",
+        "why": "Essa é a cópia contra a qual a seção alerta, com o trabalho de mantê-la em dia."
+      },
+      {
+        "text": "Nenhum: ler o valor da caixa no DOM",
+        "why": "O React não renderizaria quando o texto mudasse."
+      },
+      {
+        "text": "O texto digitado",
+        "why": "Certo. A lista é um filtro calculado a partir dele em cada renderização."
+      }
+    ]
+  },
+  "ex-98fmng36": {
+    "prompt": "Por que `openId` e `sessions` moram no `App`?",
+    "hint": "Quem os lê?",
+    "choices": [
+      {
+        "text": "O estado de um componente tem que ser declarado na raiz do app",
+        "why": "Qualquer componente pode ter estado; o `Probe` tinha na aula 3."
+      },
+      {
+        "text": "O `CourseScreen` não pode ter estado",
+        "why": "Pode; só esconderia o estado da primeira tela."
+      },
+      {
+        "text": "As duas telas os leem, e o `App` está acima das duas",
+        "why": "Certo. O estado fica no pai comum mais próximo de quem o lê."
+      },
+      {
+        "text": "O `App` renderiza menos que os filhos",
+        "why": "O lugar tem a ver com quem lê o estado, não com contagem de renderizações."
+      }
+    ]
+  },
+  "ex-86t58w4k": {
+    "prompt": "Levar o estado para o pai comum mais próximo dos componentes que o leem se chama lifting state ___.",
+    "hint": "Uma direção.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ]
+      }
+    ]
+  },
+  "ex-t76zx7yj": {
+    "prompt": "Por que o `openId` precisa do tipo escrito, `useState<string | null>(null)`?",
+    "hint": "O que o TypeScript inferiria só de `null`?",
+    "choices": [
+      {
+        "text": "De `null` ele inferiria um tipo que depois não comporta um id",
+        "why": "Certo. A anotação diz que ele guarda uma string ou nada."
+      },
+      {
+        "text": "Porque `null` não é permitido no estado",
+        "why": "É permitido, e aqui significa nenhum curso aberto."
+      },
+      {
+        "text": "Porque o Vite exige argumentos genéricos",
+        "why": "O Vite remove os tipos e nunca os lê."
+      },
+      {
+        "text": "Para a segunda tela renderizar primeiro",
+        "why": "Tipos não afetam a ordem de renderização."
+      }
+    ]
+  },
+  "ex-bj98tq2a": {
+    "prompt": "Depois de marcar a sessão de Statistics de 21 de outubro, quantos minutos o resumo disse que estavam feitos?",
+    "hint": "80 antes, mais a sessão que acabou de ser feita.",
+    "unit": "minutos"
+  },
+  "ex-g6k7anw4": {
+    "prompt": "O `CourseScreen` escreve `[...sessions].sort(…)`. O que dá errado com `sessions.sort(…)`?",
+    "hint": "De quem é o array?",
+    "choices": [
+      {
+        "text": "O `sort` devolve `undefined`",
+        "why": "Ele devolve o array ordenado; o problema é ser o mesmo array."
+      },
+      {
+        "text": "Ordena o estado do `App` no lugar, de dentro de um filho",
+        "why": "Certo. Um filho estaria mudando dados que recebeu."
+      },
+      {
+        "text": "Strings não podem ser comparadas com `localeCompare`",
+        "why": "Podem, e estas ficam em ordem certa."
+      },
+      {
+        "text": "Nada: as duas são iguais",
+        "why": "Uma ordena uma cópia, a outra ordena o original."
+      }
+    ]
+  },
+  "ex-bq04wfmv": {
+    "prompt": "Como o React decide que o estado novo difere do antigo?",
+    "hint": "Para objetos, uma pergunta.",
+    "choices": [
+      {
+        "text": "Compara cada campo, recursivamente",
+        "why": "Ele não olha por dentro; é por isso que a mutação se esconde."
+      },
+      {
+        "text": "Serializa os dois em JSON e compara as strings",
+        "why": "Lento demais, e não é o que ele faz."
+      },
+      {
+        "text": "Pergunta ao navegador se a página mudou",
+        "why": "A página é o resultado da comparação, não a entrada."
+      },
+      {
+        "text": "`Object.is` nos dois valores",
+        "why": "Certo. Para um objeto: é o mesmo objeto?"
+      }
+    ]
+  },
+  "ex-5pq2r7pc": {
+    "prompt": "Sem strict mode, ponha em ordem o que aconteceu depois do `toggleDone` que muta.",
+    "hint": "Os dados mudaram antes de qualquer coisa mostrar.",
+    "items": [
+      "A caixa é clicada",
+      "`session.done` vira true dentro do mesmo array",
+      "O React vê o mesmo array e pula a renderização",
+      "\"Back to courses\" causa uma renderização",
+      "O resumo mostra 120"
+    ]
+  },
+  "ex-d9symc2q": {
+    "prompt": "Com strict mode, o `toggleDone` que muta deixou o total em 80. Por quê?",
+    "hint": "Quantas vezes o strict mode roda uma função de atualização?",
+    "choices": [
+      {
+        "text": "Rodou a função duas vezes, e ela desvirou o `done`",
+        "why": "Certo. Uma função pura dá a mesma resposta duas vezes; esta se desfez."
+      },
+      {
+        "text": "O strict mode recusa estado que muta",
+        "why": "Ele não recusa nada; ele repetiu a função."
+      },
+      {
+        "text": "O clique não chegou à caixa",
+        "why": "Chegou; sem strict mode o total virou 120."
+      },
+      {
+        "text": "O 80 estava em cache no `WeekSummary`",
+        "why": "O `WeekSummary` calcula os totais em toda renderização."
+      }
+    ]
+  },
+  "ex-g1xvr29w": {
+    "prompt": "Associe cada mudança ao jeito que dá ao React um array novo.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "Acrescentar `s`",
+        "right": "`[...all, s]`"
+      },
+      {
+        "left": "Remover o de `id`",
+        "right": "`all.filter((x) => x.id !== id)`"
+      },
+      {
+        "left": "Ordenar por data",
+        "right": "`[...all].sort(byDate)`"
+      }
+    ],
+    "right_distractors": [
+      "`all.push(s)`",
+      "`all.sort(byDate)`"
+    ]
+  },
+  "ex-xjre4ng3": {
+    "prompt": "Em `all.map((s) => (s.id === id ? { ...s, done: !s.done } : s))`, quais objetos de sessão são novos?",
+    "hint": "Veja o que a função devolve para os outros.",
+    "choices": [
+      {
+        "text": "Todos eles",
+        "why": "Os outros são devolvidos como estavam, os mesmos objetos."
+      },
+      {
+        "text": "Nenhum: o `map` reaproveita o array",
+        "why": "O `map` devolve um array novo, e a sessão certa é um objeto novo."
+      },
+      {
+        "text": "O que tem o id certo",
+        "why": "Certo. Cinco são reaproveitados e um é copiado com um campo trocado."
+      },
+      {
+        "text": "As sessões do curso aberto",
+        "why": "Só a marcada."
+      }
+    ]
+  },
+  "ex-3re7zv9g": {
+    "prompt": "Quais destas linhas são atualizações seguras do estado `sessions`? Escolha todas.",
+    "hint": "Seguro quer dizer array novo, e o antigo intacto.",
+    "choices": [
+      {
+        "text": "`setSessions((all) => [...all, s])`",
+        "why": "Seguro."
+      },
+      {
+        "text": "`setSessions((all) => { all.push(s); return all })`",
+        "why": "Inseguro: mesmo array, mudado no lugar."
+      },
+      {
+        "text": "`setSessions((all) => all.filter((x) => !x.done))`",
+        "why": "Seguro."
+      },
+      {
+        "text": "`setSessions((all) => all.toSorted(byDate))`",
+        "why": "Seguro: o `toSorted` devolve um array novo."
+      }
+    ]
+  },
+  "ex-bpfkvz7k": {
+    "prompt": "Marcar uma sessão na segunda tela mudou os totais da primeira. O que fez a primeira tela se atualizar?",
+    "hint": "Ninguém disse nada ao `WeekSummary`.",
+    "choices": [
+      {
+        "text": "O `CourseScreen` chamou o `WeekSummary` diretamente",
+        "why": "Componentes não chamam uns aos outros."
+      },
+      {
+        "text": "O `WeekSummary` guarda os totais e o `toggleDone` também os atualiza",
+        "why": "Os totais não são guardados em lugar nenhum."
+      },
+      {
+        "text": "Os totais são calculados a partir de `sessions` em toda renderização",
+        "why": "Certo. Estado novo, renderização nova, somas novas."
+      },
+      {
+        "text": "A página recarregou em \"Back to courses\"",
+        "why": "Nada recarregou; o `openId` virou `null`."
+      }
+    ]
+  }
+}
