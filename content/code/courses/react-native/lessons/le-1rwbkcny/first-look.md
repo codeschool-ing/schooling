@@ -45,7 +45,17 @@ package.json
 tsconfig.json
 ana@dev:~/hello$ npm install
 
-added 460 packages in 32s
+added 460 packages, and audited 461 packages in 31s
+
+8 vulnerabilities (5 low, 3 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
 ```
 
 `--no-install` stopped it from installing straight away so that the installation could be its own

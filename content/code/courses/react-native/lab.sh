@@ -27,7 +27,11 @@
 #     lesson N-1 left (capture-lib.sh's start_from), so a lesson can be
 #     recorded again on its own; node_modules is copied as hard links, which
 #     npm never writes through. A student has one home and one ~/planner.
-#   - Node.js and the Android SDK are mounted into every home from one copy.
+#   - Node.js, the Android SDK and Gradle's home (~/.gradle, its caches and
+#     downloaded distributions) are mounted into every home from one copy, as
+#     a student has one of each. So a lesson's Gradle build finds the caches
+#     an earlier lesson's build filled, and the times Gradle prints are those
+#     of a computer that has built before.
 #   - The recording machine reaches the internet through a gateway that
 #     re-signs TLS. Its certificate bundle is copied to /var/lib/rnlab/ca.crt
 #     and npm, Node and Gradle are pointed at it (npm_config_cafile,
@@ -160,7 +164,8 @@ as() { # as LESSON 'cmd'
   local cmd=$*
   # The proxy and the trust store, for Gradle, in the place Gradle reads them:
   # JAVA_TOOL_OPTIONS would print a line into every transcript with java in it.
-  mkdir -p "$h/.gradle"
+  mkdir -p "$h/.gradle" $BASE/gradle/init.d
+  cp $BASE/skel/.gradle/init.d/* $BASE/gradle/init.d/
   {
     echo "systemProp.javax.net.ssl.trustStore=$BASE/cacerts"
     echo "systemProp.javax.net.ssl.trustStorePassword=changeit"
@@ -173,18 +178,19 @@ as() { # as LESSON 'cmd'
       done
       echo "systemProp.http.nonProxyHosts=localhost|127.0.0.1"
     fi
-  } > "$h/.gradle/gradle.properties"
-  chown -R ana:ana "$h/.gradle"
+  } > $BASE/gradle/gradle.properties
+  chown -R ana:ana "$h/.gradle" $BASE/gradle/gradle.properties $BASE/gradle/init.d
   unshare -m --propagation private --pid --fork --mount-proc -- bash -c '
     mount --bind "$1" /home/ana
     mount --bind '"$BASE"'/node /home/ana/.local/node
     mount --bind '"$BASE"'/sdk /home/ana/Android/Sdk
+    mount --bind '"$BASE"'/gradle /home/ana/.gradle
     exec runuser -u ana -- env -i HOME=/home/ana USER=ana LOGNAME=ana SHELL=/bin/bash \
       PATH=/home/ana/.local/bin:/usr/local/bin:/usr/bin:/bin \
       TZ=America/Sao_Paulo LANG=C.UTF-8 LC_ALL=C.UTF-8 TERM=dumb \
       NO_COLOR=1 NODE_DISABLE_COLORS=1 FORCE_COLOR=0 CI=1 EXPO_OFFLINE=1 \
       EXPO_NO_TELEMETRY=1 PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers \
-      npm_config_update_notifier=false npm_config_fund=false npm_config_audit=false \
+      npm_config_update_notifier=false npm_config_fund=false \
       npm_config_cafile='"$BASE"'/ca.crt NODE_EXTRA_CA_CERTS='"$BASE"'/ca.crt \
       HTTPS_PROXY="${HTTPS_PROXY:-}" HTTP_PROXY="${HTTP_PROXY:-}" NO_PROXY="127.0.0.1,localhost" \
       https_proxy="${HTTPS_PROXY:-}" http_proxy="${HTTP_PROXY:-}" no_proxy="127.0.0.1,localhost" \

@@ -83,3 +83,9 @@ start_from() {
 commit() {
   LAB as "$LID" "cd $1 && git add -A && GIT_AUTHOR_DATE='$2:00 -0300' GIT_COMMITTER_DATE='$2:00 -0300' git commit -q -m '$3'" >/dev/null
 }
+# jsonedit DIR FILE 'js': change a JSON file the way the lesson asks the student
+# to in an editor; `c` is the parsed file, and it is written back with two
+# spaces, as the templates write it.
+jsonedit() {
+  LAB as "$LID" "cd $1 && node -e 'const fs=require(\"fs\");const c=JSON.parse(fs.readFileSync(\"$2\"));$3;fs.writeFileSync(\"$2\",JSON.stringify(c,null,2)+\"\\n\")'"
+}
