@@ -79,7 +79,7 @@ membros. Nada no plano diz que a vinculação, no apply, removeria um terceiro V
 à mão no mês passado, porque o Terraform não sabe que esse Viewer existe até ler a política no Google. A
 diferença está no nome do recurso, e o nome é o que se deve ler. Os dois levam um `etag` que é
 `(known after apply)`: o provider lê a política, e o etag dela, no momento em que grava, que é o
-ler-mudar-gravar da seção anterior feito por você.
+ler-mudar-gravar da seção anterior feito no seu lugar.
 
 ## As regras que mantêm uma equipe segura
 
