@@ -95,7 +95,7 @@ Q("ex-sg0ey2cq", "sectionlist", "quiz", "medium",
 Q("ex-xhfvep1k", "sectionlist", "quiz", "medium",
   ("What does `ListEmptyComponent` prevent?", "O que o `ListEmptyComponent` evita?"),
   choices=[
-   C(False, "A crash when `sections` is empty", "Uma falha quando `sections` está vazio", "An empty list does not crash.", "Uma lista vazia não falha."),
+   C(False, "A crash when `sections` is empty", "Uma falha do app quando `sections` chega vazio do servidor", "An empty list does not crash.", "Uma lista vazia não falha."),
    C(True, "A blank screen that looks like a failure", "Uma tela em branco que parece uma falha",
      "Right: it says there is nothing yet.", "Isso: diz que ainda não há nada."),
    C(False, "Re-renders of the section headers whenever the list's data changes", "Novas renderizações dos cabeçalhos sempre que os dados da lista mudam",
