@@ -78,6 +78,21 @@ export AZURE_DEFAULTS_LOCATION=brazilsouth
 
 Your prompt gains `(venv)` at the front; the transcripts leave it out.
 
+**If you built the lab in `azure-foundations` lesson 1, keep it.** It has the same command line and
+the same compiler, at the same versions, and it starts every terminal with `source ~/azure/env.sh`
+instead of the four lines above. Two things differ, and only one of them matters here: that lab
+keeps the CLI's settings, and so the compiler, in `~/azure/.azure`, and this course calls the
+compiler by its own name, `bicep`, rather than through `az bicep`. One line puts it on the path for
+good:
+
+```sh
+echo 'export PATH="$AZURE_CONFIG_DIR/bin:$PATH"' >> ~/azure/env.sh
+source ~/azure/env.sh
+```
+
+The transcripts were recorded with the four lines above, so where a path to the compiler appears
+in one, yours names `~/azure/.azure/bin` instead.
+
 ## Checking it answers
 
 In your working terminal:
