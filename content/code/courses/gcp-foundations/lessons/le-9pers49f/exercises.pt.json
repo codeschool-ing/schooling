@@ -1,0 +1,329 @@
+{
+  "ex-sr0076g8": {
+    "prompt": "O que pode ser concedido a um principal no IAM?",
+    "hint": "Uma permissão chega dentro de alguma coisa.",
+    "choices": [
+      {
+        "text": "Uma permissão avulsa, como `pubsub.topics.publish`",
+        "why": "Não há como conceder uma permissão sozinha. Ela precisa estar num papel."
+      },
+      {
+        "text": "Um papel, com um conjunto de permissões",
+        "why": "Isso. Uma permissão nunca é concedida sozinha; ela sempre chega dentro de um papel."
+      },
+      {
+        "text": "Uma permissão ou um papel, o que for menor",
+        "why": "Concessões são feitas de papéis. Um papel personalizado é o jeito de ter um pequeno."
+      },
+      {
+        "text": "Uma API, habilitada para aquele principal",
+        "why": "APIs são habilitadas por projeto, não por principal."
+      }
+    ]
+  },
+  "ex-rsasfkg4": {
+    "prompt": "Leia `resourcemanager.projects.delete` em voz alta. O que ela permite?",
+    "hint": "Serviço, recurso, verbo.",
+    "choices": [
+      {
+        "text": "Apagar qualquer recurso dentro de um projeto",
+        "why": "O recurso no nome é o próprio projeto, não o que ele guarda."
+      },
+      {
+        "text": "Gerenciar quem pode apagar projetos",
+        "why": "Essa seria uma permissão sobre políticas do IAM. Esta é a própria exclusão."
+      },
+      {
+        "text": "Restaurar um projeto apagado",
+        "why": "Restaurar tem uma permissão própria, com o verbo undelete."
+      },
+      {
+        "text": "Apagar um projeto",
+        "why": "Isso. Os projetos do Resource Manager, o verbo delete."
+      }
+    ]
+  },
+  "ex-de1v1hyz": {
+    "prompt": "Um deployer recebeu Editor no projeto de produção para atualizar o site. Qual é o problema?",
+    "hint": "O que mais o Editor permite?",
+    "choices": [
+      {
+        "text": "Ele pode mudar quase todo o resto, também",
+        "why": "Isso. O Editor abrange todo serviço habilitado, e cresce quando o Google acrescenta serviços."
+      },
+      {
+        "text": "O Editor não consegue fazer deploy de sites",
+        "why": "O Editor consegue fazer o deploy do site. O problema é todo o resto que ele faz."
+      },
+      {
+        "text": "O Editor deixa o deployer conceder papéis a outros",
+        "why": "Gerenciar o IAM é o que o Owner acrescenta. O Editor sozinho não concede papéis."
+      },
+      {
+        "text": "O Editor expira depois de noventa dias",
+        "why": "Uma concessão não expira a não ser que uma condição lhe dê validade."
+      }
+    ]
+  },
+  "ex-rnyka7a8": {
+    "prompt": "Por que o número de Owners de um projeto de produção mede quantas pessoas podem tomá-lo?",
+    "hint": "O que o Owner pode conceder?",
+    "choices": [
+      {
+        "text": "O Owner é o único papel que pode ler o projeto",
+        "why": "O Viewer também lê. O que o Owner acrescenta é o IAM."
+      },
+      {
+        "text": "Os Owners recebem a fatura do projeto",
+        "why": "A fatura vai para a conta de faturamento, lição 11."
+      },
+      {
+        "text": "O Owner pode conceder qualquer papel, o próprio Owner inclusive, a qualquer um",
+        "why": "Isso. Ter Owner é ter o poder de fazer de qualquer um qualquer coisa."
+      },
+      {
+        "text": "O Owner pula as políticas da organização",
+        "why": "Lição 4: nenhum papel levanta uma restrição, o Owner inclusive."
+      }
+    ]
+  },
+  "ex-s4wqvyk3": {
+    "prompt": "O serviço de pedidos do planner publica no `orders` e não faz mais nada com o Pub/Sub. Que papel predefinido serve?",
+    "hint": "O papel de trabalho no meio da escada.",
+    "choices": [
+      {
+        "text": "`roles/pubsub.editor`",
+        "why": "O editor cria e apaga tópicos, o que o serviço nunca precisa."
+      },
+      {
+        "text": "`roles/pubsub.admin`",
+        "why": "O admin também gerencia quem pode usar os tópicos. Demais."
+      },
+      {
+        "text": "`roles/pubsub.publisher`",
+        "why": "Isso. Ele publica, e não cria, não apaga nem consome."
+      },
+      {
+        "text": "`roles/editor`",
+        "why": "O papel básico Editor alcança todo serviço do projeto."
+      }
+    ]
+  },
+  "ex-a1sy09vb": {
+    "prompt": "O `roles/pubsub.publisher` é concedido ao serviço de pedidos no tópico `orders` em vez de no projeto. O que muda?",
+    "hint": "Até onde uma concessão alcança?",
+    "choices": [
+      {
+        "text": "Ele pode publicar no `orders` e em nenhum outro tópico",
+        "why": "Isso. Quanto menor o recurso da concessão, menor o erro possível."
+      },
+      {
+        "text": "Nada, já que papéis valem para o projeto inteiro",
+        "why": "Muitos serviços aceitam concessões em recursos avulsos, e o Pub/Sub é um deles."
+      },
+      {
+        "text": "Ele pode publicar em todo tópico, mas só a partir do `orders`",
+        "why": "Publicar não tem 'a partir de'. A concessão no `orders` cobre o `orders`."
+      },
+      {
+        "text": "Ele também precisa de Viewer no projeto para ver o tópico",
+        "why": "Publicar precisa da permissão de publicar no tópico, que a concessão dá."
+      }
+    ]
+  },
+  "ex-2dekvd8m": {
+    "prompt": "Uma equipe de segurança precisa ler todo projeto da produção. Onde o papel dela é concedido?",
+    "hint": "O menor recurso que cobre o trabalho.",
+    "choices": [
+      {
+        "text": "Em cada projeto de produção, um a um",
+        "why": "Funciona até o projeto novo do mês que vem, que ninguém lembra de acrescentar."
+      },
+      {
+        "text": "Na organização",
+        "why": "Isso alcança non-production e shared também, que o trabalho não precisa."
+      },
+      {
+        "text": "Na conta de faturamento",
+        "why": "Uma conta de faturamento não concede nada em projetos."
+      },
+      {
+        "text": "Na pasta `production`",
+        "why": "Isso. O trabalho cobre projetos, e a pasta é o menor nó que guarda todos eles."
+      }
+    ]
+  },
+  "ex-3k2b3wjr": {
+    "prompt": "Um papel concedido há um ano agora permite usar um recurso que não existia na época. Isso é um bug?",
+    "hint": "Como os papéis predefinidos mudam com o tempo?",
+    "choices": [
+      {
+        "text": "Sim: as permissões de uma concessão ficam congeladas quando ela é feita",
+        "why": "É assim que um papel personalizado se comporta, não um predefinido."
+      },
+      {
+        "text": "Não: o Google acrescenta permissões novas aos papéis predefinidos",
+        "why": "Isso. Papéis predefinidos crescem por adição, então uma concessão pode permitir mais do que no dia em que foi feita."
+      },
+      {
+        "text": "Sim: o papel deve ter sido trocado por um personalizado",
+        "why": "Um papel personalizado nem teria ganhado a permissão."
+      },
+      {
+        "text": "Não: concessões são renovadas todo ano com o papel mais novo",
+        "why": "Concessões não são renovadas; o papel que elas nomeiam mudou por baixo."
+      }
+    ]
+  },
+  "ex-we2j7he9": {
+    "prompt": "Para concessões em produção, prefira papéis cujo estágio de lançamento seja ___ em vez de BETA ou ALPHA.",
+    "hint": "Disponibilidade geral.",
+    "blanks": [
+      {
+        "accept": [
+          "GA"
+        ]
+      }
+    ]
+  },
+  "ex-5qfq5yk4": {
+    "prompt": "Ligue cada papel do Pub/Sub ao seu trabalho.",
+    "hint": "Viewer, papéis de trabalho, editor, admin.",
+    "pairs": [
+      {
+        "left": "`roles/pubsub.viewer`",
+        "right": "lista e lê tópicos"
+      },
+      {
+        "left": "`roles/pubsub.publisher`",
+        "right": "publica mensagens"
+      },
+      {
+        "left": "`roles/pubsub.subscriber`",
+        "right": "consome mensagens"
+      },
+      {
+        "left": "`roles/pubsub.admin`",
+        "right": "gerencia quem pode usá-los"
+      }
+    ],
+    "right_distractors": [
+      "paga pelas mensagens"
+    ]
+  },
+  "ex-yn7jhyse": {
+    "prompt": "Por que o `terraform validate` recusou `role_id = \"reports-reader\"`?",
+    "hint": "Compare com as regras de um id de projeto.",
+    "choices": [
+      {
+        "text": "Um id de papel não pode ter hífen",
+        "why": "Isso. Letras, dígitos, sublinhados e pontos, de três a sessenta e quatro."
+      },
+      {
+        "text": "Um id de papel precisa começar com `roles/`",
+        "why": "`roles/` abre o nome dos papéis predefinidos. O nome completo de um papel personalizado é escrito pelo Google."
+      },
+      {
+        "text": "O id tem mais de sessenta e quatro caracteres",
+        "why": "Ele tem catorze. O problema é o caractere, não o tamanho."
+      },
+      {
+        "text": "O Google já tem um papel com esse id",
+        "why": "O `validate` não pergunta nada ao Google; ele conferiu a forma."
+      }
+    ]
+  },
+  "ex-6s6hnhrz": {
+    "prompt": "Onde um papel personalizado pode ser definido?",
+    "hint": "Dois dos quatro níveis da árvore.",
+    "choices": [
+      {
+        "text": "Em qualquer nó: organização, pasta ou projeto",
+        "why": "Pastas são o único nível que não guarda papéis personalizados."
+      },
+      {
+        "text": "Num único recurso, como um tópico",
+        "why": "Um papel pode ser concedido num recurso, mas é definido na organização ou num projeto."
+      },
+      {
+        "text": "Na organização ou num projeto",
+        "why": "Isso. Nunca numa pasta: um papel para muitos projetos é definido na organização."
+      },
+      {
+        "text": "Na conta de faturamento, para poder ser cobrado",
+        "why": "Papéis não custam nada e não moram em contas de faturamento."
+      }
+    ]
+  },
+  "ex-knpjsewc": {
+    "prompt": "Seis meses depois de escrever um papel personalizado para o job de relatórios, o job é recusado por uma permissão que o Pub/Sub acrescentou semana passada. O que houve?",
+    "hint": "Um papel personalizado cresce sozinho?",
+    "choices": [
+      {
+        "text": "Papéis personalizados expiram depois de seis meses",
+        "why": "Eles duram até alguém apagá-los."
+      },
+      {
+        "text": "O papel personalizado não a ganhou; alguém precisa acrescentá-la",
+        "why": "Isso. Papéis predefinidos crescem com o serviço, os personalizados ficam como foram escritos."
+      },
+      {
+        "text": "O Google removeu uma permissão do papel",
+        "why": "O Google não edita papéis personalizados. O que falta é a nova."
+      },
+      {
+        "text": "A concessão passou sozinha para o papel predefinido",
+        "why": "Concessões não se movem. O papel personalizado continua sendo o que o job tem."
+      }
+    ]
+  },
+  "ex-rrtd1es7": {
+    "prompt": "O plano do papel personalizado passa. No apply, o Google recusa uma das permissões dele. Como pode?",
+    "hint": "Cada permissão tem um nível de suporte que o provider não conhece.",
+    "choices": [
+      {
+        "text": "O provider esqueceu de mandá-la",
+        "why": "O plano mostra toda permissão, e o apply manda todas."
+      },
+      {
+        "text": "Papéis personalizados levam uma permissão cada",
+        "why": "Um papel personalizado pode ter milhares."
+      },
+      {
+        "text": "O estágio era `GA`, que proíbe permissões novas",
+        "why": "O estágio é um rótulo para pessoas; ele não proíbe nada."
+      },
+      {
+        "text": "Essa permissão não é aceita em papéis personalizados",
+        "why": "Isso. Algumas são `NOT_SUPPORTED` em papéis personalizados, e só o Google sabe quais."
+      }
+    ]
+  },
+  "ex-y4qbs6w0": {
+    "prompt": "Um papel personalizado é apagado por engano. Por quantos dias ele pode ser restaurado?",
+    "hint": "Uma semana.",
+    "unit": "dias"
+  },
+  "ex-rfxh2tqj": {
+    "prompt": "O job de relatórios precisa consumir de uma assinatura e listar tópicos. Um colega propõe `roles/pubsub.editor` no projeto, 'por segurança'. Qual é a concessão melhor?",
+    "hint": "Menor papel, menor recurso.",
+    "choices": [
+      {
+        "text": "`roles/pubsub.editor` no projeto, como proposto",
+        "why": "O editor cria e apaga tópicos e assinaturas, o que o job nunca faz."
+      },
+      {
+        "text": "`roles/viewer` na organização",
+        "why": "O Viewer não consome mensagens, e a organização é larga demais."
+      },
+      {
+        "text": "`roles/owner` só na assinatura",
+        "why": "Owner em qualquer coisa deixa quem o tem conceder papéis ali."
+      },
+      {
+        "text": "Um papel estreito, concedido onde o job trabalha",
+        "why": "Isso. 'Por segurança' com Editor quer dizer que o job pode apagar todo tópico. Estreito é o seguro."
+      }
+    ]
+  }
+}

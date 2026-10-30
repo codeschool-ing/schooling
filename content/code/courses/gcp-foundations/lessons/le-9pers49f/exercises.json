@@ -1,0 +1,481 @@
+[
+  {
+    "id": "ex-sr0076g8",
+    "version": 1,
+    "section": "basic-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can be granted to a principal in IAM?",
+    "hint": "A permission arrives inside something.",
+    "choices": [
+      {
+        "text": "A single permission, such as `pubsub.topics.publish`",
+        "correct": false,
+        "why": "There is no way to grant a permission on its own. It has to be in a role."
+      },
+      {
+        "text": "A role, holding a set of permissions",
+        "correct": true,
+        "why": "Right. A permission is never granted alone; it always arrives inside a role."
+      },
+      {
+        "text": "A permission or a role, whichever is smaller",
+        "correct": false,
+        "why": "Grants are made of roles. A custom role is how you get a small one."
+      },
+      {
+        "text": "An API, enabled for that principal",
+        "correct": false,
+        "why": "APIs are enabled per project, not per principal."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsasfkg4",
+    "version": 1,
+    "section": "basic-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Read `resourcemanager.projects.delete` aloud. What does it allow?",
+    "hint": "Service, resource, verb.",
+    "choices": [
+      {
+        "text": "Deleting any resource inside a project",
+        "correct": false,
+        "why": "The resource in the name is the project itself, not what it holds."
+      },
+      {
+        "text": "Managing who may delete projects",
+        "correct": false,
+        "why": "That would be a permission on IAM policies. This one is the deletion itself."
+      },
+      {
+        "text": "Restoring a deleted project",
+        "correct": false,
+        "why": "Restoring has a permission of its own, with the verb undelete."
+      },
+      {
+        "text": "Deleting a project",
+        "correct": true,
+        "why": "Right. The Resource Manager's projects, the verb delete."
+      }
+    ]
+  },
+  {
+    "id": "ex-de1v1hyz",
+    "version": 1,
+    "section": "basic-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deployer was given Editor on the production project to update the website. What is the problem?",
+    "hint": "What else does Editor allow?",
+    "choices": [
+      {
+        "text": "It may change nearly everything else, too",
+        "correct": true,
+        "why": "Right. Editor spans every enabled service, and it grows as Google adds services."
+      },
+      {
+        "text": "Editor cannot deploy websites",
+        "correct": false,
+        "why": "Editor can deploy the website. The trouble is everything else it can do."
+      },
+      {
+        "text": "Editor lets the deployer grant roles to others",
+        "correct": false,
+        "why": "Managing IAM is what Owner adds. Editor alone cannot grant roles."
+      },
+      {
+        "text": "Editor expires after ninety days",
+        "correct": false,
+        "why": "A grant has no expiry unless a condition gives it one."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnyka7a8",
+    "version": 1,
+    "section": "basic-roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the number of Owners of a production project measure how many people can take it over?",
+    "hint": "What can Owner grant?",
+    "choices": [
+      {
+        "text": "Owner is the only role that can read the project",
+        "correct": false,
+        "why": "Viewer reads it too. What Owner adds is the IAM."
+      },
+      {
+        "text": "Owners receive the project's bill",
+        "correct": false,
+        "why": "The bill goes to the billing account, lesson 11."
+      },
+      {
+        "text": "Owner may grant any role, Owner included, to anybody",
+        "correct": true,
+        "why": "Right. Holding Owner is holding the power to make anybody anything."
+      },
+      {
+        "text": "Owner bypasses organisation policies",
+        "correct": false,
+        "why": "Lesson 4: no role lifts a constraint, Owner included."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4wqvyk3",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner's order service publishes to `orders` and does nothing else with Pub/Sub. Which predefined role fits?",
+    "hint": "The working role in the middle of the ladder.",
+    "choices": [
+      {
+        "text": "`roles/pubsub.editor`",
+        "correct": false,
+        "why": "Editor creates and deletes topics, which the service never needs."
+      },
+      {
+        "text": "`roles/pubsub.admin`",
+        "correct": false,
+        "why": "Admin also manages who may use the topics. Far too much."
+      },
+      {
+        "text": "`roles/pubsub.publisher`",
+        "correct": true,
+        "why": "Right. It publishes, and it cannot create, delete or consume."
+      },
+      {
+        "text": "`roles/editor`",
+        "correct": false,
+        "why": "The basic Editor role reaches every service in the project."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1sy09vb",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`roles/pubsub.publisher` is granted to the order service on the topic `orders` rather than on the project. What changes?",
+    "hint": "Where does a grant reach?",
+    "choices": [
+      {
+        "text": "It may publish to `orders` and to no other topic",
+        "correct": true,
+        "why": "Right. The smaller the resource the grant is on, the smaller the mistake can be."
+      },
+      {
+        "text": "Nothing, as roles are always project-wide",
+        "correct": false,
+        "why": "Many services accept grants on single resources, and Pub/Sub is one."
+      },
+      {
+        "text": "It may publish to every topic, but only from `orders`",
+        "correct": false,
+        "why": "Publishing has no 'from'. The grant on `orders` covers `orders`."
+      },
+      {
+        "text": "It also needs Viewer on the project to see the topic",
+        "correct": false,
+        "why": "Publishing needs the publish permission on the topic, which the grant gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dekvd8m",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A security team must read every project in production. Where is its role granted?",
+    "hint": "The smallest resource that spans the job.",
+    "choices": [
+      {
+        "text": "On each production project, one by one",
+        "correct": false,
+        "why": "That works until next month's new project, which nobody remembers to add."
+      },
+      {
+        "text": "On the organisation",
+        "correct": false,
+        "why": "That reaches non-production and shared too, which the job does not need."
+      },
+      {
+        "text": "On the billing account",
+        "correct": false,
+        "why": "A billing account grants nothing on projects."
+      },
+      {
+        "text": "On the folder `production`",
+        "correct": true,
+        "why": "Right. The job spans projects, and the folder is the smallest node that holds them all."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k2b3wjr",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A role granted a year ago now lets its holder use a feature that did not exist then. Is that a bug?",
+    "hint": "How do predefined roles change over time?",
+    "choices": [
+      {
+        "text": "Yes: a grant's permissions are frozen when it is made",
+        "correct": false,
+        "why": "That is how a custom role behaves, not a predefined one."
+      },
+      {
+        "text": "No: Google adds new permissions to predefined roles",
+        "correct": true,
+        "why": "Right. Predefined roles grow by addition, so a grant can allow more than it did on the day it was made."
+      },
+      {
+        "text": "Yes: the role must have been changed to a custom one",
+        "correct": false,
+        "why": "A custom role would not have gained the permission at all."
+      },
+      {
+        "text": "No: grants are renewed every year with the latest role",
+        "correct": false,
+        "why": "Grants are not renewed; the role they name changed underneath."
+      }
+    ]
+  },
+  {
+    "id": "ex-we2j7he9",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For production grants, prefer roles whose launch stage is ___ rather than BETA or ALPHA.",
+    "hint": "Generally available.",
+    "blanks": [
+      {
+        "accept": [
+          "GA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5qfq5yk4",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Pub/Sub role to its job.",
+    "hint": "Viewer, working roles, editor, admin.",
+    "pairs": [
+      {
+        "left": "`roles/pubsub.viewer`",
+        "right": "lists and reads topics"
+      },
+      {
+        "left": "`roles/pubsub.publisher`",
+        "right": "publishes messages"
+      },
+      {
+        "left": "`roles/pubsub.subscriber`",
+        "right": "consumes messages"
+      },
+      {
+        "left": "`roles/pubsub.admin`",
+        "right": "manages who may use them"
+      }
+    ],
+    "right_distractors": [
+      "pays for the messages"
+    ]
+  },
+  {
+    "id": "ex-yn7jhyse",
+    "version": 1,
+    "section": "custom-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `terraform validate` refuse `role_id = \"reports-reader\"`?",
+    "hint": "Compare with the rules for a project id.",
+    "choices": [
+      {
+        "text": "A role id may not hold a hyphen",
+        "correct": true,
+        "why": "Right. Letters, digits, underscores and full stops, three to sixty-four of them."
+      },
+      {
+        "text": "A role id must start with `roles/`",
+        "correct": false,
+        "why": "`roles/` begins predefined roles' names. A custom role's full name is written by Google."
+      },
+      {
+        "text": "The id is longer than sixty-four characters",
+        "correct": false,
+        "why": "It has fourteen. The character is the problem, not the length."
+      },
+      {
+        "text": "Google already has a role with that id",
+        "correct": false,
+        "why": "`validate` asks Google nothing; it checked the form."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s6hnhrz",
+    "version": 1,
+    "section": "custom-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where can a custom role be defined?",
+    "hint": "Two of the four levels of the tree.",
+    "choices": [
+      {
+        "text": "On any node: organisation, folder or project",
+        "correct": false,
+        "why": "Folders are the one level that cannot hold custom roles."
+      },
+      {
+        "text": "On a single resource, such as one topic",
+        "correct": false,
+        "why": "A role can be granted on a resource, but it is defined on the organisation or a project."
+      },
+      {
+        "text": "On the organisation or on a project",
+        "correct": true,
+        "why": "Right. Never on a folder: a role meant for many projects is defined on the organisation."
+      },
+      {
+        "text": "On the billing account, so it can be charged",
+        "correct": false,
+        "why": "Roles cost nothing and do not live on billing accounts."
+      }
+    ]
+  },
+  {
+    "id": "ex-knpjsewc",
+    "version": 1,
+    "section": "custom-roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Six months after writing a custom role for the reports job, the job is refused for a permission Pub/Sub added last week. What happened?",
+    "hint": "Does a custom role grow on its own?",
+    "choices": [
+      {
+        "text": "Custom roles expire after six months",
+        "correct": false,
+        "why": "They last until somebody deletes them."
+      },
+      {
+        "text": "The custom role did not gain it; somebody has to add it",
+        "correct": true,
+        "why": "Right. Predefined roles grow with the service, custom roles stay as written."
+      },
+      {
+        "text": "Google removed a permission from the role",
+        "correct": false,
+        "why": "Google does not edit custom roles. It is the missing new one."
+      },
+      {
+        "text": "The grant moved to the predefined role by itself",
+        "correct": false,
+        "why": "Grants never move. The custom role is still what the job holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrtd1es7",
+    "version": 1,
+    "section": "custom-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan for the custom role passes. At apply, Google refuses one of its permissions. How can that be?",
+    "hint": "Each permission has a support level the provider does not know.",
+    "choices": [
+      {
+        "text": "The provider forgot to send it",
+        "correct": false,
+        "why": "The plan shows every permission, and the apply sends them all."
+      },
+      {
+        "text": "Custom roles take only one permission each",
+        "correct": false,
+        "why": "A custom role may hold thousands."
+      },
+      {
+        "text": "The stage was `GA`, which forbids new permissions",
+        "correct": false,
+        "why": "The stage is a label for people; it forbids nothing."
+      },
+      {
+        "text": "That permission is not supported in custom roles",
+        "correct": true,
+        "why": "Right. Some are `NOT_SUPPORTED` in custom roles, and only Google knows which."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4qbs6w0",
+    "version": 1,
+    "section": "custom-roles",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A custom role is deleted by mistake. For how many days can it be restored?",
+    "hint": "A week.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-rfxh2tqj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The reports job needs to consume from one subscription and list topics. A colleague proposes `roles/pubsub.editor` on the project, 'to be safe'. What is the better grant?",
+    "hint": "Smallest role, smallest resource.",
+    "choices": [
+      {
+        "text": "`roles/pubsub.editor` on the project, as proposed",
+        "correct": false,
+        "why": "Editor creates and deletes topics and subscriptions, which the job never does."
+      },
+      {
+        "text": "`roles/viewer` on the organisation",
+        "correct": false,
+        "why": "Viewer cannot consume messages, and the organisation is far too wide."
+      },
+      {
+        "text": "`roles/owner` on the subscription only",
+        "correct": false,
+        "why": "Owner on anything lets its holder grant roles there."
+      },
+      {
+        "text": "A narrow role, granted where the job works",
+        "correct": true,
+        "why": "Right. 'To be safe' with Editor means the job can delete every topic. Narrow is the safe choice."
+      }
+    ]
+  }
+]
