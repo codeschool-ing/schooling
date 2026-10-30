@@ -1,0 +1,320 @@
+{
+  "ex-zs75ct8h": {
+    "prompt": "O que um CRDT garante sobre duas cópias que receberam as mesmas atualizações?",
+    "choices": [
+      {
+        "text": "Que elas guardam o que a pessoa quis dizer",
+        "why": "Intenção é justamente o que ele não promete."
+      },
+      {
+        "text": "Que um servidor aprovou cada atualização",
+        "why": "Nenhum servidor precisa decidir nada."
+      },
+      {
+        "text": "Que estão no mesmo estado, qualquer que seja a ordem",
+        "why": "Isso. É a consistência eventual forte."
+      },
+      {
+        "text": "Que nenhuma atualização foi entregue duas vezes",
+        "why": "Repetições podem acontecer; a idempotência as torna inofensivas."
+      }
+    ]
+  },
+  "ex-c23dwgyq": {
+    "prompt": "Associe cada propriedade da mescla ao problema de sincronização que ela remove.",
+    "pairs": [
+      {
+        "left": "comutativa",
+        "right": "os aparelhos sincronizam na ordem em que acham rede"
+      },
+      {
+        "left": "associativa",
+        "right": "atualizações viajam por outros aparelhos, em grupos"
+      },
+      {
+        "left": "idempotente",
+        "right": "uma nova tentativa entrega a mesma atualização de novo"
+      }
+    ],
+    "right_distractors": [
+      "dois aparelhos põem valores diferentes no mesmo campo"
+    ]
+  },
+  "ex-xxm9djtg": {
+    "prompt": "Dois aparelhos põem valores diferentes no mesmo campo de um CRDT ao mesmo tempo. O que acontece?",
+    "choices": [
+      {
+        "text": "Uma regra fixa guarda um, o mesmo em todo aparelho",
+        "why": "Isso. Última escrita vence com um desempate melhor, não uma leitura de intenção."
+      },
+      {
+        "text": "Os dois valores ficam, lado a lado, naquele campo para sempre",
+        "why": "Um registrador guarda um valor; uma regra fixa o escolhe."
+      },
+      {
+        "text": "A mescla falha até uma pessoa escolher",
+        "why": "Uma mescla de CRDT nunca falha; esse é o ponto dele."
+      },
+      {
+        "text": "O aparelho que sincronizou por último vence",
+        "why": "A ordem de sincronização não faz diferença para um CRDT."
+      }
+    ]
+  },
+  "ex-j71grd89": {
+    "prompt": "Por que o contador só de crescimento nunca perde um incremento?",
+    "choices": [
+      {
+        "text": "Ele guarda o total mais novo por timestamp",
+        "why": "Isso é a última escrita vence, que perdeu 45 minutos."
+      },
+      {
+        "text": "O servidor soma os totais que os aparelhos mandam",
+        "why": "Somar totais conta os 100 em comum duas vezes; os totais da aula 13 eram o problema."
+      },
+      {
+        "text": "Ele trava o contador enquanto um aparelho soma",
+        "why": "Não existe trava em lugar nenhum num CRDT."
+      },
+      {
+        "text": "Cada aparelho escreve só a própria entrada",
+        "why": "Isso. Nada sobrescreve nada, então a mescla guarda toda contagem."
+      }
+    ]
+  },
+  "ex-depw5zwg": {
+    "prompt": "Um G-counter mostra {phone: 60, tablet: 40}. Offline, o celular soma 30 e o tablet soma 45. Qual é o total depois que as duas cópias se mesclam?"
+  },
+  "ex-hm3y2xgy": {
+    "prompt": "A mescla de dois G-counters guarda, para cada aparelho, qual contagem?",
+    "choices": [
+      {
+        "text": "A soma das contagens das duas cópias",
+        "why": "Somar contaria duas vezes uma entrada em comum, e mesclar duas vezes somaria de novo."
+      },
+      {
+        "text": "A maior",
+        "why": "Isso. A contagem de um aparelho só cresce, então a maior é a mais recente."
+      },
+      {
+        "text": "A mais nova",
+        "why": "As contagens não têm hora; nenhuma é necessária."
+      },
+      {
+        "text": "A do celular, porque foi criada primeiro",
+        "why": "Nenhum aparelho vale mais que outro."
+      }
+    ]
+  },
+  "ex-aqmk48zq": {
+    "prompt": "Na execução, o celular acrescenta `weekly` de novo com a etiqueta p2 enquanto o tablet remove `weekly`. Por que `weekly` fica?",
+    "choices": [
+      {
+        "text": "A mudança do celular chegou depois",
+        "why": "A ordem de chegada não importa; a execução mesclou nos dois sentidos."
+      },
+      {
+        "text": "A remoção só alcançou a a1, que era o que ele via",
+        "why": "Isso. A p2 nunca foi observada por quem removeu, então sobrevive."
+      },
+      {
+        "text": "As adições são aplicadas depois das remoções na função de mescla",
+        "why": "O mergeSet faz duas uniões; nada é aplicado numa ordem."
+      },
+      {
+        "text": "Conjuntos guardam todo valor já acrescentado",
+        "why": "`weekly` só com a etiqueta a1 teria sido removida."
+      }
+    ]
+  },
+  "ex-xj8spdzr": {
+    "prompt": "Um orçamento de estudo permite 120 minutos por semana. Dois aparelhos offline registram cada um os últimos 20 minutos nele. O que a aula diz que um CRDT pode fazer?",
+    "choices": [
+      {
+        "text": "Um PN-counter recusa os segundos 20 minutos",
+        "why": "Um PN-counter soma e subtrai; não recusa nada."
+      },
+      {
+        "text": "Um OR-set remove um dos dois registros",
+        "why": "Nenhuma mescla remove algo que ninguém pediu para remover."
+      },
+      {
+        "text": "Um G-counter se limita a 120",
+        "why": "A mescla dele é um máximo por aparelho; ele não tem limite."
+      },
+      {
+        "text": "Nada: recusar é papel de um servidor",
+        "why": "Isso. Uma regra que vale em todos os aparelhos precisa de um lugar que diga sim ou não."
+      }
+    ]
+  },
+  "ex-ppadvjcs": {
+    "prompt": "O que um aparelho manda no Yjs para o outro devolver só o que falta?",
+    "choices": [
+      {
+        "text": "O vetor de estado dele",
+        "why": "Isso. Ele diz o que esta cópia já viu."
+      },
+      {
+        "text": "O documento inteiro",
+        "why": "É disso que o vetor de estado os poupa."
+      },
+      {
+        "text": "Um timestamp da última sincronização",
+        "why": "O Yjs não lê relógio para sincronizar."
+      },
+      {
+        "text": "Um número de versão por linha",
+        "why": "Esse é o mecanismo da aula 14, não o do Yjs."
+      }
+    ]
+  },
+  "ex-8w592vna": {
+    "prompt": "Na primeira execução do Yjs, por que os 30 minutos e o feita sobreviveram os dois?",
+    "choices": [
+      {
+        "text": "O Yjs perguntou qual valor guardar",
+        "why": "Nada foi perguntado; não havia pergunta."
+      },
+      {
+        "text": "O celular sincronizou depois do tablet",
+        "why": "A ordem não importa numa mescla de CRDT."
+      },
+      {
+        "text": "s3 é um Y.Map aninhado, então cada campo é uma chave própria",
+        "why": "Isso. Cada campo tem a própria história, e eles nunca competiram."
+      },
+      {
+        "text": "O Yjs guardou uma cópia da base, como a aula 14 faz",
+        "why": "Nenhuma cópia da base foi guardada; a separação veio da forma do dado."
+      }
+    ]
+  },
+  "ex-vapcz03j": {
+    "prompt": "Os dois aparelhos mudam os minutos de s3 num documento Yjs, para 30 e para 25. O que a aula diz que o app precisa fazer se a Ana deve escolher?",
+    "choices": [
+      {
+        "text": "Perceber o caso sozinho",
+        "why": "Isso. O Yjs resolveu com um desempate e seguiu em frente."
+      },
+      {
+        "text": "Ler o conflito que o Yjs registra no documento",
+        "why": "Nada no documento diz que houve conflito."
+      },
+      {
+        "text": "Ligar o modo de conflito do Yjs antes de sincronizar",
+        "why": "A aula não cita modo nenhum assim; um CRDT não para para perguntar."
+      },
+      {
+        "text": "Nada: o Yjs guarda os dois valores no campo até alguém escolher",
+        "why": "Os dois aparelhos mostraram 25 e os 30 tinham sumido."
+      }
+    ]
+  },
+  "ex-ywm9dsap": {
+    "prompt": "Um app pode guardar um documento Yjs inteiro no SQLite como os bytes de `Y.encodeStateAsUpdate(doc)`, numa coluna do tipo ___.",
+    "blanks": [
+      {
+        "accept": [
+          "BLOB"
+        ]
+      }
+    ]
+  },
+  "ex-m8ks0xvr": {
+    "prompt": "Na execução da aula com a coleta de lixo desligada, quantos bytes o documento Yjs pesava depois de as mil anotações serem acrescentadas e apagadas?"
+  },
+  "ex-vjfn9mdw": {
+    "prompt": "Por que um app desligaria a coleta de lixo do Yjs, sabendo o custo?",
+    "choices": [
+      {
+        "text": "A sincronização fica mais rápida sem ela",
+        "why": "A execução mediu tamanho, e as atualizações cresceram."
+      },
+      {
+        "text": "Sem ela, dois aparelhos não conseguem mais mesclar",
+        "why": "Eles mesclam de qualquer jeito; a coleta decide o que é guardado."
+      },
+      {
+        "text": "Para oferecer desfazer ou mostrar uma versão anterior",
+        "why": "Isso. As duas coisas exigem que o conteúdo apagado ainda esteja lá."
+      },
+      {
+        "text": "Porque o SQLite não guarda um documento coletado",
+        "why": "Qualquer um dos documentos é só bytes num BLOB."
+      }
+    ]
+  },
+  "ex-jsw2p067": {
+    "prompt": "Para quais destes um CRDT é a ferramenta errada, segundo a aula? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "a última vaga livre numa aula ao vivo",
+        "why": "Uma regra que vale em todos os aparelhos precisa de um servidor que possa recusar."
+      },
+      {
+        "text": "um relatório sobre os minutos de todos os alunos",
+        "why": "Bytes num BLOB não podem ser consultados com SQL."
+      },
+      {
+        "text": "anotações compartilhadas em que duas colegas digitam",
+        "why": "Esse é o caso para o qual os CRDTs existem."
+      },
+      {
+        "text": "minutos estudados, somados de dois aparelhos",
+        "why": "Um contador em que toda soma conta é o forte de um CRDT."
+      }
+    ]
+  },
+  "ex-jt6yw4f6": {
+    "prompt": "Uma equipe quer levar as sessões do planner para um documento Yjs para evitar telas de conflito. O que a aula avisa que eles perdem?",
+    "choices": [
+      {
+        "text": "Convergência: dois aparelhos podem discordar para sempre",
+        "why": "Convergência é justamente o que o Yjs garante."
+      },
+      {
+        "text": "O caso do mesmo campo, agora resolvido em silêncio",
+        "why": "Isso. A aula 14 o guardava para a pessoa; um CRDT escolhe um."
+      },
+      {
+        "text": "A edição offline, já que o Yjs precisa de servidor para mesclar",
+        "why": "O Yjs mesclou duas cópias offline sem servidor nenhum."
+      },
+      {
+        "text": "As anotações, que o Yjs não consegue mesclar",
+        "why": "As anotações se mesclaram perfeitamente na execução."
+      }
+    ]
+  },
+  "ex-6k8qcmdm": {
+    "prompt": "Ponha em ordem uma sincronização Yjs entre o celular e o tablet, como o programa da aula a faz.",
+    "items": [
+      "cada aparelho edita a própria cópia offline",
+      "cada um codifica o vetor de estado dele",
+      "cada um codifica, para o outro, as atualizações que faltam naquele vetor",
+      "cada um aplica a atualização que recebeu"
+    ]
+  },
+  "ex-4acqsw5a": {
+    "prompt": "Que parte do planner a aula sugere entregar a um CRDT?",
+    "choices": [
+      {
+        "text": "As sessões, com os campos de minutos e feita",
+        "why": "As versões da aula 14 servem a elas, e mantêm os conflitos visíveis."
+      },
+      {
+        "text": "O planner inteiro, como um documento por conta",
+        "why": "O servidor não conseguiria mais consultá-lo nem recusar uma escrita."
+      },
+      {
+        "text": "A lista de cursos e os nomes deles",
+        "why": "Um nome é substituído inteiro; a regra da aula 13 basta ali."
+      },
+      {
+        "text": "As anotações e os minutos estudados",
+        "why": "Isso. Uma lista compartilhada e um contador em que toda soma conta."
+      }
+    ]
+  }
+}

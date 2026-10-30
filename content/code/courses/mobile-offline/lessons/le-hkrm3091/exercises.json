@@ -1,0 +1,484 @@
+[
+  {
+    "id": "ex-zs75ct8h",
+    "version": 1,
+    "section": "what-a-crdt-promises",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a CRDT guarantee about two copies that have received the same updates?",
+    "choices": [
+      {
+        "text": "That they hold what the person meant",
+        "correct": false,
+        "why": "Intent is exactly what it does not promise."
+      },
+      {
+        "text": "That a server approved every update",
+        "correct": false,
+        "why": "No server has to decide anything."
+      },
+      {
+        "text": "That they are in the same state, whatever the order",
+        "correct": true,
+        "why": "Right. That is strong eventual consistency."
+      },
+      {
+        "text": "That no update was delivered twice",
+        "correct": false,
+        "why": "Repeats may happen; idempotence makes them harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-c23dwgyq",
+    "version": 1,
+    "section": "what-a-crdt-promises",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property of the merge to the sync problem it removes.",
+    "pairs": [
+      {
+        "left": "commutative",
+        "right": "devices sync in whatever order they find a network"
+      },
+      {
+        "left": "associative",
+        "right": "updates travel through other devices, in groups"
+      },
+      {
+        "left": "idempotent",
+        "right": "a retry delivers the same update again"
+      }
+    ],
+    "right_distractors": [
+      "two devices set the same field to different values"
+    ]
+  },
+  {
+    "id": "ex-xxm9djtg",
+    "version": 1,
+    "section": "what-a-crdt-promises",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two devices set the same field of a CRDT to different values at the same time. What happens?",
+    "choices": [
+      {
+        "text": "A fixed rule keeps one, the same on every device",
+        "correct": true,
+        "why": "Right. Last write wins with a better tie-break, not a reading of intent."
+      },
+      {
+        "text": "Both values are kept, side by side, in that field forever",
+        "correct": false,
+        "why": "A register keeps one value; a fixed rule picks it."
+      },
+      {
+        "text": "The merge fails until a person chooses",
+        "correct": false,
+        "why": "A CRDT merge never fails; that is its point."
+      },
+      {
+        "text": "The device that synced last wins",
+        "correct": false,
+        "why": "The order of syncing makes no difference to a CRDT."
+      }
+    ]
+  },
+  {
+    "id": "ex-j71grd89",
+    "version": 1,
+    "section": "counters-and-sets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the grow-only counter never lose an increment?",
+    "choices": [
+      {
+        "text": "It keeps the newest total by timestamp",
+        "correct": false,
+        "why": "That is last write wins, which lost 45 minutes."
+      },
+      {
+        "text": "The server adds the totals the devices send",
+        "correct": false,
+        "why": "Adding totals counts the shared 100 twice; lesson 13's totals were the problem."
+      },
+      {
+        "text": "It locks the counter while a device adds to it",
+        "correct": false,
+        "why": "There is no lock anywhere in a CRDT."
+      },
+      {
+        "text": "Each device writes only its own entry",
+        "correct": true,
+        "why": "Right. Nothing overwrites anything, so the merge keeps every count."
+      }
+    ]
+  },
+  {
+    "id": "ex-depw5zwg",
+    "version": 1,
+    "section": "counters-and-sets",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A G-counter reads {phone: 60, tablet: 40}. Offline, the phone adds 30 and the tablet adds 45. What is the total after the two copies merge?",
+    "value": 175,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hm3y2xgy",
+    "version": 1,
+    "section": "counters-and-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The merge of two G-counters keeps, for each device, which count?",
+    "choices": [
+      {
+        "text": "The sum of the two copies' counts",
+        "correct": false,
+        "why": "Summing would count a shared entry twice, and merging twice would add it again."
+      },
+      {
+        "text": "The larger one",
+        "correct": true,
+        "why": "Right. A device's own count only grows, so the larger is the later."
+      },
+      {
+        "text": "The newer one",
+        "correct": false,
+        "why": "Counts carry no time; none is needed."
+      },
+      {
+        "text": "The phone's, because it was created first",
+        "correct": false,
+        "why": "No device ranks above another."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqmk48zq",
+    "version": 1,
+    "section": "counters-and-sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the run, the phone re-adds `weekly` with tag p2 while the tablet removes `weekly`. Why does `weekly` stay?",
+    "choices": [
+      {
+        "text": "The phone's change arrived later",
+        "correct": false,
+        "why": "Arrival order does not matter; the run merged both ways."
+      },
+      {
+        "text": "The tablet's remove covered only a1, the tag it had seen",
+        "correct": true,
+        "why": "Right. p2 was never observed by the remover, so it survives."
+      },
+      {
+        "text": "Adds are applied after removes in the merge function",
+        "correct": false,
+        "why": "mergeSet takes two unions; nothing is applied in an order."
+      },
+      {
+        "text": "Sets keep every value ever added",
+        "correct": false,
+        "why": "`weekly` with tag a1 alone would have been removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj8spdzr",
+    "version": 1,
+    "section": "counters-and-sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A study budget allows 120 minutes a week. Two offline devices each record the last 20 minutes against it. What does the lesson say a CRDT can do about it?",
+    "choices": [
+      {
+        "text": "A PN-counter refuses the second 20 minutes",
+        "correct": false,
+        "why": "A PN-counter adds and subtracts; it refuses nothing."
+      },
+      {
+        "text": "An OR-set removes one of the two records",
+        "correct": false,
+        "why": "No merge removes something nobody asked to remove."
+      },
+      {
+        "text": "A G-counter caps itself at 120",
+        "correct": false,
+        "why": "Its merge is a maximum per device; it has no cap."
+      },
+      {
+        "text": "Nothing: refusing it is a server's job",
+        "correct": true,
+        "why": "Right. A rule across all devices needs one place that says yes or no."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppadvjcs",
+    "version": 1,
+    "section": "yjs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a device send in Yjs so that the other sends back only what is missing?",
+    "choices": [
+      {
+        "text": "Its state vector",
+        "correct": true,
+        "why": "Right. It says what this copy has already seen."
+      },
+      {
+        "text": "Its whole document",
+        "correct": false,
+        "why": "That is what the state vector saves them from."
+      },
+      {
+        "text": "A timestamp of its last sync",
+        "correct": false,
+        "why": "Yjs reads no clock to sync."
+      },
+      {
+        "text": "A version number per row",
+        "correct": false,
+        "why": "That is lesson 14's mechanism, not Yjs's."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w592vna",
+    "version": 1,
+    "section": "yjs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first Yjs run, why did 30 minutes and done both survive?",
+    "choices": [
+      {
+        "text": "Yjs asked which value to keep",
+        "correct": false,
+        "why": "Nothing was asked; there was no question."
+      },
+      {
+        "text": "The phone synced after the tablet",
+        "correct": false,
+        "why": "Order does not matter in a CRDT merge."
+      },
+      {
+        "text": "s3 is a nested Y.Map, so each field is its own key",
+        "correct": true,
+        "why": "Right. Each field has its own history, and they never competed."
+      },
+      {
+        "text": "Yjs kept a base copy, as lesson 14 does",
+        "correct": false,
+        "why": "No base copy was kept; the separation came from the data's shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-vapcz03j",
+    "version": 1,
+    "section": "yjs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both devices change s3's minutes in a Yjs document, to 30 and to 25. What does the lesson say the app has to do if Ana should choose?",
+    "choices": [
+      {
+        "text": "Notice the case itself",
+        "correct": true,
+        "why": "Right. Yjs settled it with a tie-break and moved on."
+      },
+      {
+        "text": "Read the conflict Yjs records in the document",
+        "correct": false,
+        "why": "Nothing in the document says a conflict happened."
+      },
+      {
+        "text": "Turn on Yjs's conflict mode before syncing",
+        "correct": false,
+        "why": "The lesson names no such mode; a CRDT does not stop to ask."
+      },
+      {
+        "text": "Nothing: Yjs keeps both values in the field until somebody picks one",
+        "correct": false,
+        "why": "Both devices showed 25 and the 30 was gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywm9dsap",
+    "version": 1,
+    "section": "yjs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An app can store a whole Yjs document in SQLite as the bytes of `Y.encodeStateAsUpdate(doc)`, in a column of type ___.",
+    "blanks": [
+      {
+        "accept": [
+          "BLOB"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m8ks0xvr",
+    "version": 1,
+    "section": "libraries",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's run with garbage collection off, how many bytes did the Yjs document weigh after the thousand notes were added and deleted?",
+    "value": 12887,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vjfn9mdw",
+    "version": 1,
+    "section": "libraries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would an app turn Yjs's garbage collection off, knowing the cost?",
+    "choices": [
+      {
+        "text": "Syncing is faster without it",
+        "correct": false,
+        "why": "The run measured size, and the updates grew."
+      },
+      {
+        "text": "Without it, two devices can no longer merge",
+        "correct": false,
+        "why": "They merge either way; collection decides what is kept."
+      },
+      {
+        "text": "To offer undo or show an earlier version",
+        "correct": true,
+        "why": "Right. Both need the deleted content to still be there."
+      },
+      {
+        "text": "Because SQLite cannot store a collected document",
+        "correct": false,
+        "why": "Either document is just bytes in a BLOB."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsw2p067",
+    "version": 1,
+    "section": "libraries",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which of these is a CRDT the wrong tool, according to the lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the last free seat in a live class",
+        "correct": true,
+        "why": "A rule across all devices needs a server that can refuse."
+      },
+      {
+        "text": "a report over every student's minutes",
+        "correct": true,
+        "why": "Bytes in a BLOB cannot be queried with SQL."
+      },
+      {
+        "text": "shared notes two classmates type into",
+        "why": "That is the case CRDTs are for."
+      },
+      {
+        "text": "minutes studied, added from two devices",
+        "why": "A counter where every addition counts is a CRDT's strength."
+      }
+    ]
+  },
+  {
+    "id": "ex-jt6yw4f6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to move the planner's sessions into a Yjs document to avoid conflict screens. What does the lesson warn they lose?",
+    "choices": [
+      {
+        "text": "Convergence: two devices may disagree forever",
+        "correct": false,
+        "why": "Convergence is exactly what Yjs guarantees."
+      },
+      {
+        "text": "The same-field case, now settled in silence",
+        "correct": true,
+        "why": "Right. Lesson 14 kept it for the person; a CRDT picks one."
+      },
+      {
+        "text": "Offline editing, since Yjs needs a server to merge",
+        "correct": false,
+        "why": "Yjs merged two offline copies with no server at all."
+      },
+      {
+        "text": "The notes, which Yjs cannot merge",
+        "correct": false,
+        "why": "The notes merged perfectly in the run."
+      }
+    ]
+  },
+  {
+    "id": "ex-6k8qcmdm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a Yjs sync between the phone and the tablet in order, as the lesson's program does it.",
+    "items": [
+      "each device edits its own copy offline",
+      "each encodes its state vector",
+      "each encodes, for the other, the updates missing from that vector",
+      "each applies the update it received"
+    ]
+  },
+  {
+    "id": "ex-4acqsw5a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of the planner does the lesson suggest giving to a CRDT?",
+    "choices": [
+      {
+        "text": "The sessions, with their minutes and done fields",
+        "correct": false,
+        "why": "Lesson 14's versions suit them, and keep the conflicts visible."
+      },
+      {
+        "text": "The whole planner, as one document per account",
+        "correct": false,
+        "why": "The server could no longer query it or refuse a write."
+      },
+      {
+        "text": "The list of courses and their names",
+        "correct": false,
+        "why": "A name is replaced whole; lesson 13's rule is enough there."
+      },
+      {
+        "text": "The notes and the minutes studied",
+        "correct": true,
+        "why": "Right. A shared list and a counter where every addition counts."
+      }
+    ]
+  }
+]
