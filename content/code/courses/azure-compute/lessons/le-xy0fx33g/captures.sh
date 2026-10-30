@@ -81,7 +81,7 @@ run 'python3 decode.py token'
 
 block api-token
 run 'kubectl exec -n shop shop -- cat /var/run/secrets/kubernetes.io/serviceaccount/token > api-token'
-run 'python3 decode.py api-token | grep -A2 -e aud -e warnafter -e lifetime'
+run "python3 decode.py api-token | grep -e kid -e '\"aud\"' -e '\"https' -e '\"sub\"' -e warnafter -e lifetime"
 
 block floor
 run 'kubectl create token orders -n shop --audience api://AzureADTokenExchange --duration 5m'

@@ -40,14 +40,38 @@ The command line names the two switches a cluster needs, and the query that read
 back. Its help is real text from this version; the query needs a subscription and was refused:
 
 ```
-TRANSCRIPT:az-create
+ana@laptop:~/azure$ az aks create --help | grep -e "--enable-oidc-issuer" -e "--enable-workload-identity "
+    --enable-oidc-issuer                                          : Enable OIDC issuer.
+    --enable-workload-identity                                    : Enable workload identity addon.
+ana@laptop:~/azure$ az aks show --resource-group shop --name shop-aks --query oidcIssuerProfile.issuerUrl --output tsv
+ERROR: Please run 'az login' to setup account.
 ```
 
 kind's API server serves the same two documents, through the same paths, and `kubectl` can read
 them with `--raw`. Ask the cluster from the last section:
 
 ```
-TRANSCRIPT:discovery
+ana@laptop:~/azure$ kubectl get --raw /.well-known/openid-configuration | jq
+{
+  "issuer": "https://kubernetes.default.svc.cluster.local",
+  "jwks_uri": "https://172.19.0.2:6443/openid/v1/jwks",
+  "response_types_supported": [
+    "id_token"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "RS256"
+  ]
+}
+ana@laptop:~/azure$ kubectl get --raw /openid/v1/jwks | jq '.keys[] | {kid, kty, alg, use}'
+{
+  "kid": "99-AqXpwvaaJFbhi-CMj4RxNpGO2Fraa1hS_2keI3XU",
+  "kty": "RSA",
+  "alg": "RS256",
+  "use": "sig"
+}
 ```
 
 The `kid` in the key set is the `kid` in the header of the token decoded in the last section:
@@ -75,7 +99,15 @@ credential. Save it as `~/azure/identity.bicep`, the notes left out:
 Compile it, and read the credential back out of the template:
 
 ```
-TRANSCRIPT:bicep
+ana@laptop:~/azure$ bicep build identity.bicep
+ana@laptop:~/azure$ jq '.resources[] | select(.type | endswith("federatedIdentityCredentials")) | .properties' identity.json
+{
+  "issuer": "[reference(resourceId('Microsoft.ContainerService/managedClusters', 'shop-aks'), '2026-01-01').oidcIssuerProfile.issuerURL]",
+  "subject": "system:serviceaccount:shop:orders",
+  "audiences": [
+    "api://AzureADTokenExchange"
+  ]
+}
 ```
 
 It compiles with no warnings, and the issuer in the template is still an expression, resolved by
@@ -90,7 +122,10 @@ Make three slips at once: `audience` for `audiences`, an extra `s` in the subjec
 switched off.
 
 ```
-TRANSCRIPT:bicep-slips
+ana@laptop:~/azure$ sed -e 's/audiences:/audience:/' -e 's/serviceaccount:shop/serviceaccounts:shop/' -e '/oidcIssuerProfile/,/}/s/enabled: true/enabled: false/' identity.bicep > slips.bicep
+ana@laptop:~/azure$ bicep build slips.bicep
+/home/ana/azure/slips.bicep(39,3) : Warning BCP035: The specified "object" declaration is missing the following required properties: "audiences". If this is a resource type definition inaccuracy, report it using https://aka.ms/bicep-type-issues. [https://aka.ms/bicep/core-diagnostics#BCP035]
+/home/ana/azure/slips.bicep(42,5) : Warning BCP089: The property "audience" is not allowed on objects of type "FederatedIdentityCredentialProperties". Did you mean "audiences"? [https://aka.ms/bicep/core-diagnostics#BCP089]
 ```
 
 **One slip out of three was found.** The misspelt property is refused with the right name
@@ -110,13 +145,48 @@ section did.
 what each property is compared with:
 
 ```
-TRANSCRIPT:az-fic
+ana@laptop:~/azure$ az identity federated-credential create --help | sed -n '/^Properties Arguments/,/^$/p'
+Properties Arguments
+    --audiences                                                  : The aud value in the token sent
+                                                                   to Azure for getting the user-
+                                                                   assigned managed identity token.
+                                                                   The value configured in the
+                                                                   federated credential and the one
+                                                                   in the incoming token must
+                                                                   exactly match for Azure to issue
+                                                                   the access token.  Support
+                                                                   shorthand-syntax, json-file and
+                                                                   yaml-file. Try "??" to show more.
+                                                                   Default:
+                                                                   ['api://AzureADTokenExchange'].
+    --issuer                                                     : The openId connect metadata URL
+                                                                   of the issuer of the identity
+                                                                   provider that Azure AD would use
+                                                                   in the token exchange protocol
+                                                                   for validating tokens before
+                                                                   issuing a token as the user-
+                                                                   assigned managed identity.
+    --subject                                                    : The sub value in the token sent
+                                                                   to Azure AD for getting the user-
+                                                                   assigned managed identity token.
+                                                                   The value configured in the
+                                                                   federated credential and the one
+                                                                   in the incoming token must
+                                                                   exactly match for Azure AD to
+                                                                   issue the access token. Either
+                                                                   'subject' or
+                                                                   'claimsMatchingExpression' must
+                                                                   be defined, but not both.
 ```
 
 Three phrases in it decide behaviour. The audience **defaults** to `api://AzureADTokenExchange`, the
 value Microsoft's documentation recommends and warns against changing. Subject and audience must
-**exactly match** the token. And `--claims-matching-expression-value`, in preview, replaces the
-subject with an expression over the token's claims; it cannot be used together with `--subject`.
+**exactly match** the token, so `system:serviceaccount:shop:*` is a subject containing an asterisk,
+matched by no token, and not a pattern. And the subject's last sentence names the one alternative:
+`claimsMatchingExpression`, which the same help lists among its preview arguments and which tests
+the token's claims with an expression instead of one fixed string. A credential has one or the
+other, never both.
+
 For the shop, the command is this. It was not run in this course: it needs a subscription.
 
 ```sh
@@ -144,6 +214,6 @@ out:
   concurrently fails with HTTP 409, so a template that declares more than one makes each depend on
   the one before. Credentials under different identities can be created in parallel.
 
-The first limit is the one that grows with the platform, and AKS has an answer for it called
+The first limit is the one that grows with the platform. AKS has an answer for it called
 identity bindings, which let many clusters share one credential through a proxy AKS runs; the
 documentation treats it as its own subject, and this course leaves it there.

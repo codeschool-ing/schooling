@@ -13,17 +13,16 @@ and then moves a tag to show what a digest protects you from.
 
 There is no Azure registry in this course. What stands in for one is the **distribution registry**,
 the open-source registry that began at Docker and is now a CNCF project, published as the image
-`registry:3`. It
-speaks the OCI distribution API, the same HTTP API that `shopregistry.azurecr.io` speaks to Docker,
-so every request below has the same shape against ACR. It is not ACR: there is no sign-in, no
+`registry:3`. It speaks the OCI distribution API, the same HTTP API that `shopregistry.azurecr.io`
+speaks to Docker, so every request below has the same shape against ACR. It is not ACR: there is no sign-in, no
 tier, no replication and no scanning, and the sections that follow say where those come in.
 
 Start it with its storage in a named volume, so the images survive the container. `-d` keeps the
-terminal free, and the prompt comes back with the container's id:
+terminal free and prints the container's id:
 
 ```
 ana@laptop:~/azure$ docker run -d --name registry -p 5000:5000 -v shop-registry:/var/lib/registry registry:3 | cut -c1-12
-a840d6e4d1a6
+a210baede287
 ana@laptop:~/azure$ curl -s -i localhost:5000/v2/ | grep -i -E '^HTTP|^docker-distribution'
 HTTP/1.1 200 OK
 Docker-Distribution-Api-Version: registry/2.0
@@ -40,32 +39,32 @@ send it to**, so `localhost:5000/shop:1.0` means the repository `shop` on the re
 
 ```
 ana@laptop:~/azure$ docker build --quiet --tag shop:1.0 shop | cut -c1-19
-sha256:c7b466c1bab2
+sha256:3e0a1805feba
 ana@laptop:~/azure$ docker tag shop:1.0 localhost:5000/shop:1.0
 ana@laptop:~/azure$ docker push localhost:5000/shop:1.0
 The push refers to repository [localhost:5000/shop]
-acca7542dfc7: Waiting
-c6e0519ecc17: Waiting
-220d43390895: Pushed
-44136fa355b3: Pushed
-f574edac59d9: Waiting
-acca7542dfc7: Pushed
-c6e0519ecc17: Pushed
 98de7320882b: Waiting
+c6e0519ecc17: Pushed
+c7660dcffdbf: Waiting
+868de9318199: Waiting
 3eb771151506: Pushed
+44136fa355b3: Pushed
+46a894d7e97f: Pushed
+acca7542dfc7: Pushed
 c7660dcffdbf: Pushed
 868de9318199: Pushed
 98de7320882b: Pushed
 f574edac59d9: Pushed
 6fc242d221a6: Pushed
-1.0: digest: sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2 size: 856
+1.0: digest: sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676 size: 856
 ```
 
-Each line is one blob the image needs: its layers, its configuration, and the attestation that
-Docker 29 attaches to a build, a record of how it was made. The ids are the first twelve characters of each
-blob's digest, and yours will differ. The last line is the one that matters. **The digest it prints
-is the image's name in the registry**, and `size: 856` is the length in bytes of the document that
-digest is computed from.
+Each id is one blob the image needs: its layers, its configuration, and the attestation that
+Docker 29 attaches to a build, a record of how it was made. The ids are the first twelve characters
+of each blob's digest, and yours will differ; a blob shown as `Waiting` is queued behind the others
+and appears again when it is sent. **The digest on the last line is the image's
+name in the registry**, and `size: 856` is the length in bytes of the document that digest is
+computed from.
 
 ## Reading it back
 
@@ -80,12 +79,12 @@ ana@laptop:~/azure$ curl -s localhost:5000/v2/shop/tags/list
 {"name":"shop","tags":["1.0"]}
 ana@laptop:~/azure$ curl -s -I -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5000/v2/shop/manifests/1.0 | grep -i -E '^content-type|^docker-content-digest'
 Content-Type: application/vnd.oci.image.index.v1+json
-Docker-Content-Digest: sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
+Docker-Content-Digest: sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
 ana@laptop:~/azure$ curl -s -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5000/v2/shop/manifests/1.0 | jq -c '.manifests[] | {platform: (.platform.os + "/" + .platform.architecture), digest, size}'
 {"platform":"linux/amd64","digest":"sha256:ef188112e7902124d910d0993669bfd411709d9473347c83bd88d05b98e0f72f","size":1812}
-{"platform":"unknown/unknown","digest":"sha256:c60204436df1843d66055ae622806de1e0e34a457dc15ca30f160bef79cd82ad","size":837}
+{"platform":"unknown/unknown","digest":"sha256:d137d882968c0fb41bb03280fe997398829cadf4fdfa3f2deb8c63e93e1db058","size":837}
 ana@laptop:~/azure$ curl -s -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5000/v2/shop/manifests/1.0 | sha256sum
-c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2  -
+3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676  -
 ```
 
 The document behind the tag is not one manifest but an **index**, a list of manifests, one per
@@ -122,18 +121,18 @@ Take the digest into a variable, remove both local names, and ask for the image 
 ```
 ana@laptop:~/azure$ D=$(curl -s -o /dev/null -w '%header{docker-content-digest}' -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5000/v2/shop/manifests/1.0)
 ana@laptop:~/azure$ echo $D
-sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
+sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
 ana@laptop:~/azure$ docker image rm shop:1.0 localhost:5000/shop:1.0
 Untagged: shop:1.0
 Untagged: localhost:5000/shop:1.0
-Deleted: sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
+Deleted: sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
 ana@laptop:~/azure$ docker pull localhost:5000/shop@$D
-localhost:5000/shop@sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2: Pulling from shop
-Digest: sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
-Status: Downloaded newer image for localhost:5000/shop@sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
-localhost:5000/shop@sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
+localhost:5000/shop@sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676: Pulling from shop
+Digest: sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
+Status: Downloaded newer image for localhost:5000/shop@sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
+localhost:5000/shop@sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
 ana@laptop:~/azure$ docker image ls --digests --format "{{.Repository}}  {{.Tag}}  {{.Digest}}" localhost:5000/shop
-localhost:5000/shop  <none>  sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
+localhost:5000/shop  <none>  sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
 ```
 
 The image came back, and `docker image ls` lists it with no tag at all: what you hold is identified
@@ -149,7 +148,7 @@ sends nothing new, and the digest is the one `1.0` has:
 ```
 ana@laptop:~/azure$ docker tag localhost:5000/shop@$D localhost:5000/shop:latest
 ana@laptop:~/azure$ docker push localhost:5000/shop:latest | tail -n 1
-latest: digest: sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2 size: 856
+latest: digest: sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676 size: 856
 ```
 
 Now the shop's next version. Version 1.1 differs from 1.0 only in the version `/version` reports, so
@@ -170,36 +169,36 @@ ana@laptop:~/azure$ cat shop-1.1/Dockerfile
 FROM localhost:5000/shop:1.0
 ENV SHOP_VERSION=1.1
 ana@laptop:~/azure$ docker build --quiet --tag localhost:5000/shop:1.1 shop-1.1 | cut -c1-19
-sha256:9fc79b3f4441
+sha256:5ae14e5b334e
 ana@laptop:~/azure$ docker tag localhost:5000/shop:1.1 localhost:5000/shop:latest
 ana@laptop:~/azure$ docker push localhost:5000/shop:1.1
 The push refers to repository [localhost:5000/shop]
-f7c6185168c9: Pushed
-6fc242d221a6: Layer already exists
-c6e0519ecc17: Layer already exists
-c7660dcffdbf: Layer already exists
 868de9318199: Layer already exists
 98de7320882b: Layer already exists
-44136fa355b3: Already exists
-f574edac59d9: Layer already exists
-acca7542dfc7: Layer already exists
 3eb771151506: Layer already exists
-1.1: digest: sha256:9fc79b3f4441e15f35bcec6f680ef80c729c274559aa9d2c40aff77138f93e95 size: 856
+acca7542dfc7: Layer already exists
+c7660dcffdbf: Layer already exists
+580b1718bd00: Pushed
+44136fa355b3: Already exists
+6fc242d221a6: Layer already exists
+f574edac59d9: Layer already exists
+c6e0519ecc17: Layer already exists
+1.1: digest: sha256:5ae14e5b334e8b2192e83b1f5cfee8064c619fe7f284fed7903d8e310a7c6f82 size: 856
 ana@laptop:~/azure$ docker push localhost:5000/shop:latest | tail -n 1
-latest: digest: sha256:9fc79b3f4441e15f35bcec6f680ef80c729c274559aa9d2c40aff77138f93e95 size: 856
+latest: digest: sha256:5ae14e5b334e8b2192e83b1f5cfee8064c619fe7f284fed7903d8e310a7c6f82 size: 856
 ana@laptop:~/azure$ for t in 1.0 1.1 latest; do printf '%-7s' $t; curl -s -o /dev/null -w '%header{docker-content-digest}\n' -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5000/v2/shop/manifests/$t; done
-1.0    sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2
-1.1    sha256:9fc79b3f4441e15f35bcec6f680ef80c729c274559aa9d2c40aff77138f93e95
-latest sha256:9fc79b3f4441e15f35bcec6f680ef80c729c274559aa9d2c40aff77138f93e95
+1.0    sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676
+1.1    sha256:5ae14e5b334e8b2192e83b1f5cfee8064c619fe7f284fed7903d8e310a7c6f82
+latest sha256:5ae14e5b334e8b2192e83b1f5cfee8064c619fe7f284fed7903d8e310a7c6f82
 ```
 
-**One blob was pushed**, the new configuration; every layer was already there, so a release that
-changes a setting or a small file costs the registry almost nothing. Then the three lines at the
+**Only one line says `Pushed`**, and every layer was already there, so a release that changes a
+setting or a small file costs the registry almost nothing. Then the three lines at the
 end. `latest` moved to the 1.1 build, as it was told to. `1.0` names the digest it named before, to
 the character, and so does every copy of that image, anywhere.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 320\" role=\"img\" aria-label=\"Three tags, two indexes and the blobs they name. The tag 1.0 points at index A, the build of 1.0. The tag 1.1 points at index B. latest pointed at index A until the push of 1.1 and points at index B now. Each index lists an image for linux/amd64 and a build attestation. Both images share the same layers; only their configs differ, so the push of 1.1 sent one new blob.\"><defs><marker id=\"acr-tags-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker><marker id=\"acr-tags-ah2\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker></defs><text x=\"85\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">tags, which move</text><text x=\"330\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">indexes, named by digest</text><text x=\"600\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">blobs, named by digest</text><rect x=\"20\" y=\"52\" width=\"130\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"85\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">1.0</text><rect x=\"20\" y=\"132\" width=\"130\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"85\" y=\"150\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--phosphor)\">latest</text><rect x=\"20\" y=\"212\" width=\"130\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"85\" y=\"230\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">1.1</text><rect x=\"230\" y=\"40\" width=\"200\" height=\"80\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"330\" y=\"60\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\" font-weight=\"600\">index A, built as 1.0</text><text x=\"330\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">image for linux/amd64</text><text x=\"330\" y=\"100\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">build attestation</text><rect x=\"230\" y=\"190\" width=\"200\" height=\"80\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"330\" y=\"210\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--phosphor)\" font-weight=\"600\">index B, built as 1.1</text><text x=\"330\" y=\"232\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">image for linux/amd64</text><text x=\"330\" y=\"250\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">build attestation</text><rect x=\"500\" y=\"36\" width=\"200\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"600\" y=\"51\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">config of A</text><text x=\"600\" y=\"67\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">SHOP_VERSION 1.0</text><rect x=\"500\" y=\"118\" width=\"200\" height=\"52\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"600\" y=\"136\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">the same layers</text><text x=\"600\" y=\"154\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">python:3.12-slim, then app.py</text><rect x=\"500\" y=\"210\" width=\"200\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"600\" y=\"225\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">config of B</text><text x=\"600\" y=\"241\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">SHOP_VERSION 1.1</text><path d=\"M150 70 L228 76\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M150 156 L228 214\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M150 144 L228 104\" stroke=\"var(--amber)\" stroke-width=\"1.5\" fill=\"none\" stroke-dasharray=\"4 4\" marker-end=\"url(#acr-tags-ah2)\"></path><text x=\"150\" y=\"112\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">before 1.1</text><path d=\"M150 230 L228 236\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 64 L498 58\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 100 L498 136\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 210 L498 154\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 246 L498 234\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M40 292 L680 292\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"4 4\"></path><text x=\"360\" y=\"308\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">the push of 1.1 uploaded one blob: every layer was already in the registry</text></svg>", "caption": "A tag names an index, the index names images, and the images name their blobs, all by digest. Moving latest changed one pointer; nothing that index A names was touched, so anything that asks for A by digest still gets the 1.0 build."}
+{"svg": "<svg viewBox=\"0 0 720 320\" role=\"img\" aria-label=\"Three tags, two indexes and the blobs they name. The tag 1.0 points at index A, the build of 1.0. The tag 1.1 points at index B. latest pointed at index A until the push of 1.1 and points at index B now. Each index lists an image for linux/amd64 and a build attestation. Both images share the same layers; only their configs differ, so the push of 1.1 sent no layer at all.\"><defs><marker id=\"acr-tags-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker><marker id=\"acr-tags-ah2\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker></defs><text x=\"85\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">tags, which move</text><text x=\"330\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">indexes, named by digest</text><text x=\"600\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">blobs, named by digest</text><rect x=\"20\" y=\"52\" width=\"130\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"85\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">1.0</text><rect x=\"20\" y=\"132\" width=\"130\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"85\" y=\"150\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--phosphor)\">latest</text><rect x=\"20\" y=\"212\" width=\"130\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"85\" y=\"230\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">1.1</text><rect x=\"230\" y=\"40\" width=\"200\" height=\"80\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"330\" y=\"60\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\" font-weight=\"600\">index A, built as 1.0</text><text x=\"330\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">image for linux/amd64</text><text x=\"330\" y=\"100\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">build attestation</text><rect x=\"230\" y=\"190\" width=\"200\" height=\"80\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"330\" y=\"210\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--phosphor)\" font-weight=\"600\">index B, built as 1.1</text><text x=\"330\" y=\"232\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">image for linux/amd64</text><text x=\"330\" y=\"250\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">build attestation</text><rect x=\"500\" y=\"36\" width=\"200\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"600\" y=\"51\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">config of A</text><text x=\"600\" y=\"67\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">no SHOP_VERSION set</text><rect x=\"500\" y=\"118\" width=\"200\" height=\"52\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"600\" y=\"136\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">the same layers</text><text x=\"600\" y=\"154\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">python:3.12-slim, then app.py</text><rect x=\"500\" y=\"210\" width=\"200\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"600\" y=\"225\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">config of B</text><text x=\"600\" y=\"241\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">SHOP_VERSION=1.1</text><path d=\"M150 70 L228 76\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M150 156 L228 214\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M150 144 L228 104\" stroke=\"var(--amber)\" stroke-width=\"1.5\" fill=\"none\" stroke-dasharray=\"4 4\" marker-end=\"url(#acr-tags-ah2)\"></path><text x=\"20\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">before 1.1</text><path d=\"M150 230 L228 236\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 64 L498 58\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 100 L498 136\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 210 L498 154\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M430 246 L498 234\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\" marker-end=\"url(#acr-tags-ah)\"></path><path d=\"M40 292 L680 292\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"4 4\"></path><text x=\"360\" y=\"308\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">the push of 1.1 sent no layer: every one was already in the registry</text></svg>", "caption": "A tag names an index, the index names images, and the images name their blobs, all by digest. Moving latest changed one pointer; nothing that index A names was touched, so anything that asks for A by digest still gets the 1.0 build."}
 ```
 
 Nothing announced the move. A pull of `latest` this morning and a pull of `latest` now give two

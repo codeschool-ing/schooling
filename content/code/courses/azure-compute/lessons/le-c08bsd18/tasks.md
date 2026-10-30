@@ -99,7 +99,7 @@ not the build stages before it in a multi-stage Dockerfile. And the delay depend
 lives: a base in an Azure registry triggers at once, while one on Docker Hub or in Microsoft's public
 registry is checked at a random interval of 10 to 60 minutes.
 
-Put that beside section 03 and the cost is plain. **The rebuild pushes under the tags the task
+Beside section 03, the cost is plain. **The rebuild pushes under the tags the task
 names**, so `latest` moves the way it moved there, and an image that only `latest` pointed at is left
 with no tag at all, still stored, still billed. `$ID` is what keeps a release reachable: the rebuild
 gets a new id, and the old one still names the old image.
@@ -158,7 +158,7 @@ ana@laptop:~/azure$ curl -s -X DELETE -o /dev/null -w '%{http_code}\n' localhost
 ana@laptop:~/azure$ curl -s localhost:5000/v2/shop/tags/list
 {"name":"shop","tags":["1.1","latest"]}
 ana@laptop:~/azure$ docker pull localhost:5000/shop@$D
-Error response from daemon: failed to resolve reference "localhost:5000/shop@sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2": localhost:5000/shop@sha256:c7b466c1bab2f4401a74c49d0cdfe202f914762789445ec19fae68aef4322bf2: not found
+Error response from daemon: failed to resolve reference "localhost:5000/shop@sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676": localhost:5000/shop@sha256:3e0a1805feba9be06fd2fe3ecafccc439d4fd529ba375cb4f58390a894f70676: not found
 ```
 
 **The `202` deleted the manifest, and the tags that named it went with it**: `1.0` is gone from the
@@ -169,14 +169,15 @@ image uses. A deployment that named that digest would now fail to start a new re
 Microsoft's warnings about both tools tell you not to purge untagged images that something pulls by
 digest. Pin a digest that still carries a tag, and lock the tag.
 
-The same registry with deletion switched off, by the environment variable that overrides that line
-of its configuration, keeps its data, because the volume outlived the container, and refuses:
+Now switch deletion off with the environment variable that overrides that line of the
+configuration. The volume outlived the container, so the data is still there, and the registry
+refuses:
 
 ```
 ana@laptop:~/azure$ docker rm -f registry
 registry
 ana@laptop:~/azure$ docker run -d --name registry -p 5000:5000 -v shop-registry:/var/lib/registry -e REGISTRY_STORAGE_DELETE_ENABLED=false registry:3 | cut -c1-12
-8f09489cb5a2
+a0aed46776f8
 ana@laptop:~/azure$ curl -s localhost:5000/v2/shop/tags/list
 {"name":"shop","tags":["1.1","latest"]}
 ana@laptop:~/azure$ L=$(curl -s -o /dev/null -w '%header{docker-content-digest}' -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5000/v2/shop/manifests/latest)

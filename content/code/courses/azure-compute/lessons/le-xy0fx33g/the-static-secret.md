@@ -6,9 +6,9 @@ version: 1
 The shop's order API runs in the AKS cluster of lesson 11, and from this lesson on it writes a
 receipt for every order into a Blob Storage container. To do that it has to sign in to Microsoft
 Entra ID, the directory behind every Azure identity, and get a token for the storage account. The
-answer most teams reach for first is quick: register an application in Entra ID, give it a client
-secret, put the application's id, the tenant's id and the secret in a Kubernetes Secret, and hand
-the Secret to the pod as three environment variables. The Azure SDK finds them and signs in.
+answer most teams reach for first is quick. Register an application in Entra ID and give it a
+client secret. Put the application's id, the tenant's id and the secret in a Kubernetes Secret, and
+hand the Secret to the pod as three environment variables. The Azure SDK finds them and signs in.
 **It works on the first afternoon, and everything wrong with it happens on the days after.** This
 section is about those days, seen from the side of whoever has to keep the tenant safe.
 
@@ -34,7 +34,10 @@ data:
 The strings under `data` look scrambled, and that is the whole of their protection:
 
 ```
-TRANSCRIPT:secret
+ana@laptop:~/azure$ grep CLIENT_SECRET secret.yaml
+  AZURE_CLIENT_SECRET: bm90LWEtcmVhbC1zZWNyZXQ=
+ana@laptop:~/azure$ grep CLIENT_SECRET secret.yaml | awk '{print $2}' | base64 -d; echo
+not-a-real-secret
 ```
 
 **Base64 is an encoding, and anybody can reverse it with a command every Linux machine has.**
@@ -57,7 +60,12 @@ Unlike a key that lives until somebody deletes it, an Entra ID client secret has
 that create one:
 
 ```
-TRANSCRIPT:secret-years
+ana@laptop:~/azure$ az ad sp create-for-rbac --help | grep -A1 -- "--years"
+    --years                             : Number of years for which the credentials will be valid.
+                                          Default: 1 year.
+ana@laptop:~/azure$ az ad app credential reset --help | grep -A1 -- "--end-date"
+    --end-date             : Finer grain of expiry time if '--years' is insufficient, e.g.
+                             '2020-12-31T11:59:59+00:00' or '2299-12-31'.
 ```
 
 **A year, unless somebody chooses otherwise, and the help itself offers `2299-12-31` to whoever
@@ -84,7 +92,7 @@ holds a copy, from anywhere that can reach Entra ID.
 
 The second answer people reach for has no secret in it at all: give the permission to the node.
 Every AKS cluster has a **kubelet identity**, a managed identity of `azure-foundations` lesson 8
-that AKS creates in the node resource group and attaches to the node pools' scale sets, and the
+that AKS creates in the node resource group and attaches to the node pools' scale sets. The
 kubelet uses it to pull images from the registry of lesson 10. Grant it a role on the storage
 account and the order API can write receipts, asking the Instance Metadata Service at
 `169.254.169.254` for a token, with nothing stored anywhere.
@@ -97,7 +105,7 @@ for every pod not on the host network, and what its documentation tells those po
 is the subject of this lesson.
 
 The third answer has a history, and you will still find it in older clusters and older articles.
-**Microsoft Entra pod-managed identity** tried to make the node's route safe: a DaemonSet called
+**Microsoft Entra pod-managed identity** tried to make the node's route safe. A DaemonSet called
 NMI intercepted every pod's request to the metadata service and answered only for the identities
 bound to that pod, while a controller attached those identities to the node pool's scale set. It
 never left preview. Microsoft's documentation, read on 30 October 2026, says the open-source
@@ -118,6 +126,7 @@ was told in advance whose signature to believe. The next section reads the token
 gives a pod; the one after it writes down the trust on the Azure side; the last one follows the
 exchange between the two.
 
-If the cluster already has secrets like `orders-entra`'s, the command `az ad app credential list
---id <application id>` lists the metadata of an application's secrets, end dates included, and a secret that is
-old, used from a pod and due to expire next quarter is the first one to replace.
+If the cluster already has secrets like `orders-entra`'s, they can be found. The command `az ad
+app credential list --id <application id>` lists the metadata of an application's secrets, end
+dates included. A secret that is old, used from a pod and due to expire next quarter is the first
+one to replace.

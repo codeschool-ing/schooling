@@ -3,8 +3,8 @@ title: The projected token, which Kubernetes already gives a pod
 version: 1
 ---
 
-**Kubernetes can already prove who a pod is.** Its API server signs tokens for service accounts,
-and a projected service account token volume asks the kubelet for one with the audience and the
+**Kubernetes can already prove who a pod is.** Its API server signs tokens for service accounts.
+A projected service account token volume asks the kubelet for one with the audience and the
 lifetime you choose, writes it into a file in the pod and replaces it before it runs out.
 Workload identity is built on that file. The pod is given a token whose audience is
 `api://AzureADTokenExchange`, four environment variables that say where the token is and which
@@ -21,8 +21,8 @@ of this lesson.
 On an AKS cluster with workload identity turned on, you write two things. The service account
 carries the annotation `azure.workload.identity/client-id`, the client id of the managed identity
 the pod should become. The pod carries the label `azure.workload.identity/use: "true"`. AKS runs
-a **mutating admission webhook**, a program the API server consults while a pod is being created,
-and when it sees a pod with that label it adds the rest:
+a **mutating admission webhook**, a program the API server consults while a pod is being created.
+When it sees a pod with that label, it adds the rest:
 
 - **`AZURE_CLIENT_ID`**, copied from the annotation;
 - **`AZURE_TENANT_ID`**, from the annotation `azure.workload.identity/tenant-id` if the service
@@ -67,8 +67,13 @@ which is every current distribution and Docker Desktop, they are harmless. Creat
 give its nodes the shop's image from lesson 7:
 
 ```
-TRANSCRIPT:create
-TRANSCRIPT:load
+ana@laptop:~/azure$ kind create cluster --name shop --config cluster.yaml --quiet
+ana@laptop:~/azure$ kubectl wait --for=condition=Ready nodes --all --timeout=120s
+node/shop-control-plane condition met
+node/shop-worker condition met
+ana@laptop:~/azure$ kind load docker-image shop:1.0 --name shop
+Image: "shop:1.0" with ID "sha256:e12f2489dfed00b906d45acfa642bfc3ae3b02cfd5a14f95afceb83c8d80e3ea" not yet present on node "shop-control-plane", loading...
+Image: "shop:1.0" with ID "sha256:e12f2489dfed00b906d45acfa642bfc3ae3b02cfd5a14f95afceb83c8d80e3ea" not yet present on node "shop-worker", loading...
 ```
 
 Now the namespace, the service account and the pod. Save this as `orders.yaml`. Everything from
@@ -131,7 +136,19 @@ warns against writing it into an application: the webhook chooses it, and it can
 that needs the token reads `AZURE_FEDERATED_TOKEN_FILE` and opens whatever path it names.
 
 ```
-TRANSCRIPT:apply
+ana@laptop:~/azure$ kubectl apply -f orders.yaml
+namespace/shop created
+serviceaccount/orders created
+pod/shop created
+ana@laptop:~/azure$ kubectl wait -n shop --for=condition=Ready pod/shop --timeout=120s
+pod/shop condition met
+ana@laptop:~/azure$ kubectl exec -n shop shop -- env | grep ^AZURE_ | sort
+AZURE_AUTHORITY_HOST=https://login.microsoftonline.com/
+AZURE_CLIENT_ID=11112222-bbbb-3333-cccc-4444dddd5555
+AZURE_FEDERATED_TOKEN_FILE=/var/run/secrets/azure/tokens/azure-identity-token
+AZURE_TENANT_ID=aaaabbbb-0000-cccc-1111-dddd2222eeee
+ana@laptop:~/azure$ kubectl get mutatingwebhookconfigurations
+No resources found
 ```
 
 The four variables are in the container, and the last command shows who put them there: nobody.
@@ -144,7 +161,9 @@ Read the token the way a program in the pod should, through the variable, and ke
 laptop:
 
 ```
-TRANSCRIPT:token-cat
+ana@laptop:~/azure$ kubectl exec -n shop shop -- sh -c 'cat "$AZURE_FEDERATED_TOKEN_FILE"' > token
+ana@laptop:~/azure$ wc -c token
+1085 token
 ```
 
 A token like this one is a JSON Web Token: three parts separated by dots, the first two
@@ -158,7 +177,38 @@ third alone. Save it as `~/azure/decode.py`:
 Run it on the copy:
 
 ```
-TRANSCRIPT:token-decode
+ana@laptop:~/azure$ python3 decode.py token
+header: {"alg": "RS256", "kid": "99-AqXpwvaaJFbhi-CMj4RxNpGO2Fraa1hS_2keI3XU"}
+claims: {
+  "aud": [
+    "api://AzureADTokenExchange"
+  ],
+  "exp": 1793393959,
+  "iat": 1793390359,
+  "iss": "https://kubernetes.default.svc.cluster.local",
+  "jti": "dcc0b3bb-706b-43b5-b95a-6d464941e0df",
+  "kubernetes.io": {
+    "namespace": "shop",
+    "node": {
+      "name": "shop-worker",
+      "uid": "77f5b5db-474b-41a0-b7e7-4bcbbf5897c2"
+    },
+    "pod": {
+      "name": "shop",
+      "uid": "4f8ea57a-9baf-4df6-91d4-3788efe16004"
+    },
+    "serviceaccount": {
+      "name": "orders",
+      "uid": "b8f4510f-b05c-47d1-a701-e5caa22e5d09"
+    }
+  },
+  "nbf": 1793390359,
+  "sub": "system:serviceaccount:shop:orders"
+}
+iat 2026-10-30T19:59:19+00:00
+exp 2026-10-30T20:59:19+00:00
+lifetime: 3600 seconds
+signature: 342 characters, not checked
 ```
 
 Read it against the pod that produced it. `iss` is the cluster's issuer, the name it signs as;
@@ -167,12 +217,12 @@ the next section. `sub` is `system:serviceaccount:shop:orders`, the namespace an
 account, and it is the string the trust on the Azure side will be written against. `aud` is the
 audience the volume asked for. `exp` minus `iat` is the 3,600 seconds of `expirationSeconds`.
 Under `kubernetes.io` the cluster says more than Entra ID will look at: the pod's name and uid,
-the node it runs on, and the service account's uid, which is why a token from a deleted pod stops
-being accepted by the API server even before it expires. The header carries `alg`, `RS256`, and a
+the node it runs on, and the service account's uid. That binding is why the API server stops
+accepting a token from a deleted pod even before it expires. The header carries `alg`, `RS256`, and a
 `kid`, the id of the key that signed it.
 
 **`decode.py` believed every word, and that is exactly what it must never be used for.** Anybody
-can write those claims into a file; what makes this token worth something is the signature, made
+can write those claims into a file. What makes this token worth something is the signature, made
 with the cluster's private key, which only the cluster's public key can check. Checking it is the
 job of whoever receives the token, Entra ID in this lesson, and a program that decoded its own
 token and trusted the result would be trusting a note it could have written itself.
@@ -183,7 +233,18 @@ The pod holds another token, the one every pod is given to talk to the API serve
 Kubernetes always mounts it. Decode it too, and keep only the lines that differ:
 
 ```
-TRANSCRIPT:api-token
+ana@laptop:~/azure$ kubectl exec -n shop shop -- cat /var/run/secrets/kubernetes.io/serviceaccount/token > api-token
+ana@laptop:~/azure$ python3 decode.py api-token | grep -e kid -e '"aud"' -e '"https' -e '"sub"' -e warnafter -e lifetime
+  "aud": [
+    "https://kubernetes.default.svc.cluster.local"
+  ],
+--
+    "warnafter": 1793393966
+  },
+  "nbf": 1793390359,
+--
+lifetime: 31536000 seconds
+signature: 342 characters, not checked
 ```
 
 Same issuer, same subject, same signing key, so the same cluster vouches for the same service
@@ -202,7 +263,8 @@ A token can be made short, but not too short. Asking the API server directly for
 minutes, which is what the kubelet does for the volume, gets a refusal:
 
 ```
-TRANSCRIPT:floor
+ana@laptop:~/azure$ kubectl create token orders -n shop --audience api://AzureADTokenExchange --duration 5m
+error: failed to create token: TokenRequest.authentication.k8s.io "" is invalid: spec.expirationSeconds: Invalid value: 300: may not specify a duration less than 10 minutes
 ```
 
 **Ten minutes is the floor, and the kubelet keeps the file fresh above it.** The Kubernetes

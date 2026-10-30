@@ -88,7 +88,7 @@ going down from Premium needs the Premium-only resources, such as replications, 
 **Read the zone redundancy line of the help against the last row of that table.** The CLI says the
 setting defaults to `Disabled` and cannot be changed afterwards. The documentation, in a page dated
 March 2026, says zone redundancy is now on for every registry in a region with availability zones,
-in every tier, whatever the property says, and that the portal, the CLI and the API may go on
+in every tier, whatever the property says. It adds that the portal, the CLI and the API may go on
 displaying `Disabled` for a registry that is in fact zone-redundant. The help text is generated from
 the same definitions as the requests, so it describes the API faithfully, and the API's property is
 the part that went out of date. Lesson 6 explained what zones buy; here they come free.
