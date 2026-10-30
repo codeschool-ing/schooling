@@ -57,6 +57,10 @@ serve() { # serve DIR PORT 'command'
   # namespace the moment the command returns. unserve kills every session.
   # What the server prints goes to ~/.serve-PORT.log; `served PORT` shows it.
   local dir=$1 port=$2; shift 2
+  # something already answering would be measured instead of this server, and silently
+  if curl -s --noproxy '*' -o /dev/null "http://127.0.0.1:$port/"; then
+    echo "serve: port $port is already taken by something else" >&2; exit 1
+  fi
   setsid bash "$RN_COURSE/lab.sh" as "$LID" "cd $dir && exec $*" </dev/null >"$H/.serve-$port.log" 2>&1 &
   SERVERS="$SERVERS $!"
   for _ in $(seq 100); do
