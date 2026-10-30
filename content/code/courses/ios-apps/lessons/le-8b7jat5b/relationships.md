@@ -55,7 +55,7 @@ about the data, not a setting**: an app where a course is a tag on independent s
 ## A relationship is not a foreign key you maintain
 
 The planner's server and lesson 1's values join a session to its course by `courseID`, text. The
-records join by reference. Both are right in their place: an id is what can cross a network and
-survive on another phone; a reference is what the store keeps consistent for you, with the delete rule
-above, so that no code of yours has to find and fix the sessions of a deleted course. Section 02's
+records join by reference. Both are right in their place. An id is what can cross a network and survive on another phone. A
+reference is what the store keeps consistent for you, with the delete rule above, so that no code of
+yours has to find and fix the sessions of a deleted course. Section 02's
 `value` is where one becomes the other.

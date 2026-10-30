@@ -13,10 +13,9 @@ executado; está escrito a partir da documentação da Apple para os modificador
 
 O SwiftUI trata o teclado como parte da **área segura**, a região que o conteúdo é disposto para evitar,
 ao lado da barra de status e do indicador de início. A documentação da Apple para `SafeAreaRegions` lista
-`keyboard` como uma das regiões, "a extensão atual de qualquer teclado de software". Então quando o
-teclado sobe, o conteúdo do formulário ganha menos altura, e um `Form` rola, de modo que o campo em que
-se digita pode ser trazido para cima do teclado; que o SwiftUI faça isso com a linha focada é um
-comportamento dele no iOS, que este curso não viu rodar. É um dos motivos de o formulário do planner ser
+`keyboard` como uma das regiões, "a extensão atual de qualquer teclado de software". Então quando o teclado sobe, o conteúdo do formulário ganha menos altura. Um `Form` rola, de modo que o
+campo em que se digita pode ser trazido para cima do teclado. Que o SwiftUI faça isso com a linha
+focada é um comportamento dele no iOS, e este curso não o viu rodar. É um dos motivos de o formulário do planner ser
 um `Form` e não um `VStack` de campos: uma pilha simples mais alta que o espaço que sobra não rola, e os
 campos de baixo ficam sob o teclado.
 

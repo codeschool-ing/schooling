@@ -12,10 +12,9 @@ from Apple's documentation for the modifiers named, as it stood on 30 October 20
 
 SwiftUI treats the keyboard as part of the **safe area**, the region content is laid out to avoid,
 alongside the status bar and the home indicator. Apple's documentation for `SafeAreaRegions` lists
-`keyboard` as one of the regions, "the current extent of any software keyboard". So when the keyboard
-rises, the form's content gets less height, and a `Form` scrolls, so the field being typed into can be
-brought above the keyboard; that SwiftUI does this for the focused row is its behaviour on iOS, which
-this course did not see run. It is one reason the planner's form is a `Form` and not a `VStack` of
+`keyboard` as one of the regions, "the current extent of any software keyboard". So when the keyboard rises, the form's content gets less height. A `Form` scrolls, so the field being
+typed into can be brought above the keyboard. That SwiftUI does this for the focused row is its
+behaviour on iOS, and this course did not see it run. It is one reason the planner's form is a `Form` and not a `VStack` of
 fields: a plain stack taller than what is left does not scroll, and its lower fields stay under the
 keyboard.
 

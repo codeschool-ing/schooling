@@ -46,9 +46,9 @@ endereço de um app no telefone de uma pessoa, então o servidor o trata como da
 junto da conta, e removido quando a conta é.
 
 A documentação é explícita em dois pontos que vale repetir. Um token pertence a um app: dois apps no
-mesmo telefone recebem tokens diferentes. E o app se registra e recebe o token a cada abertura, então
-envia o que acabou de receber em vez de confiar no último que enviou; um servidor com um token que já não
-é o do telefone envia para ninguém, e nada falha onde alguém veja.
+mesmo telefone recebem tokens diferentes. E o app se registra e recebe o token a cada abertura, então envia o que acabou de receber em vez de
+confiar no último que enviou. Um servidor com um token que já não é o do telefone envia para ninguém,
+e nada falha onde alguém veja.
 
 ## Permissão, de novo
 
@@ -60,8 +60,8 @@ os lembretes locais, e uma resposta cobre os dois.
 ## O que o planner envia, e por que tão pouco
 
 O servidor do planner envia um tipo de push: uma sessão foi acrescentada em outro aparelho do estudante.
-Ele poderia, em vez disso, manter o telefone em dia em silêncio, com pushes em segundo plano, e a
-documentação da Apple para esses diz que o sistema os trata como baixa prioridade, não garante a entrega,
-pode limitá-los, e pede no máximo dois ou três por hora. A aula 16 trata do que o iOS permite em segundo
+Ele poderia, em vez disso, manter o telefone em dia em silêncio, com pushes em segundo plano. A
+documentação da Apple para esses diz que o sistema os trata como baixa prioridade, não garante a
+entrega e pode limitá-los, e ela pede no máximo dois ou três por hora. A aula 16 trata do que o iOS permite em segundo
 plano, e a resposta do planner ali, atualizar quando o app abre, vale aqui também: **um push diz que algo
 aconteceu, e o app busca o quê**.

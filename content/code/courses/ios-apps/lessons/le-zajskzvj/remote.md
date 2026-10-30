@@ -45,9 +45,9 @@ the address of one app on one person's phone, so the server treats it as persona
 against the account, and removed when the account is.
 
 The documentation is explicit on two points worth repeating. A token belongs to one app: two apps on the
-same phone get different ones. And the app registers and receives its token at every launch, so it
-sends the one it has just received rather than trusting the last it sent; a server holding a token that
-is no longer the phone's sends to nobody, and nothing fails where anyone can see it.
+same phone get different ones. And the app registers and receives its token at every launch, so it sends the one it has just
+received rather than trusting the last it sent. A server holding a token that is no longer the
+phone's sends to nobody, and nothing fails where anyone can see it.
 
 ## Permission, again
 
@@ -59,8 +59,8 @@ moment as for its local reminders, and the one answer covers both.
 ## What the planner sends, and why so little
 
 The planner's server sends one kind of push: a session was added on another of the student's devices.
-It could instead keep the phone in step silently, with background pushes, and Apple's documentation for
-those says the system treats them as low priority, does not guarantee their delivery, and may throttle
-them, and asks for no more than two or three an hour. Lesson 16 is about what iOS
+It could instead keep the phone in step silently, with background pushes. Apple's documentation for
+those says the system treats them as low priority, does not guarantee their delivery and may throttle
+them, and it asks for no more than two or three an hour. Lesson 16 is about what iOS
 allows in the background, and the planner's answer there, refreshing when the app opens, holds here as
 well: **a push says that something happened, and the app fetches what**.

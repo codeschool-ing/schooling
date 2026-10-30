@@ -4,9 +4,9 @@ version: 1
 ---
 
 **SwiftUI never animates a view; it animates a change of state.** The belief to drop is that an
-animation is something you start, like a timer. In SwiftUI the state changes at once, the body runs at
-once with the new value, and an animation is an instruction attached to that change, saying how the
-screen should travel from what it showed to what it now has to show. There are two places to attach it.
+animation is something you start, like a timer. In SwiftUI the state changes at once, and the body runs at once with the new value. An animation is
+an instruction attached to that change, saying how the screen should travel from what it showed to
+what it now has to show. There are two places to attach it.
 Nothing in this section was run: it is written from Apple's documentation for `animation(_:value:)`,
 `withAnimation(_:_:)` and `Transaction`, as it stood on 30 October 2026.
 
