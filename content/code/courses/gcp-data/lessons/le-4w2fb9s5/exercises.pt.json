@@ -1,0 +1,405 @@
+{
+  "ex-7ehw2r38": {
+    "prompt": "O que o standby de uma instância regional do Cloud SQL faz enquanto o primário está saudável?",
+    "hint": "É seguro, não capacidade.",
+    "choices": [
+      {
+        "text": "Recebe toda escrita no disco dele, e não serve nada",
+        "why": "Isso. Ele está lá para o dia em que o primário falhar."
+      },
+      {
+        "text": "Faz o backup noturno, para o primário não ficar lento",
+        "why": "Backups são um mecanismo à parte."
+      },
+      {
+        "text": "Reaplica o log alguns segundos atrás, como uma réplica",
+        "why": "Ele é síncrono: nada fica atrás."
+      },
+      {
+        "text": "Responde consultas de leitura, dividindo a carga do primário",
+        "why": "O standby não aceita conexões."
+      }
+    ]
+  },
+  "ex-gvynnw6t": {
+    "prompt": "Depois de um failover, a que a aplicação se conecta?",
+    "hint": "O endereço e o que está atrás dele são duas coisas diferentes.",
+    "choices": [
+      {
+        "text": "A nada, até uma pessoa promover o standby",
+        "why": "O failover é automático."
+      },
+      {
+        "text": "A um endereço privado novo, que precisa ser informado a ela",
+        "why": "A instância mantém o endereço."
+      },
+      {
+        "text": "O mesmo endereço, na máquina da outra zona",
+        "why": "Isso. O endereço não muda; o que está atrás dele muda."
+      },
+      {
+        "text": "Ao endereço da réplica de leitura, já que o standby não é legível",
+        "why": "O standby vira o primário e passa a ser legível."
+      }
+    ]
+  },
+  "ex-8a7m4axq": {
+    "prompt": "Uma instância regional é criada e alguém roda `DELETE FROM orders` por engano. O que o standby guarda?",
+    "hint": "Quando o disco do standby recebe cada escrita?",
+    "choices": [
+      {
+        "text": "Os pedidos, já que o standby é uma cópia de antes",
+        "why": "Não é uma cópia de antes; são as mesmas escritas, agora."
+      },
+      {
+        "text": "Uma tabela vazia, escrita antes de o commit voltar",
+        "why": "Isso. A replicação síncrona copia o engano também."
+      },
+      {
+        "text": "Os pedidos até o próximo failover",
+        "why": "Nada espera por um failover."
+      },
+      {
+        "text": "O que o último backup guardava",
+        "why": "O standby não é um backup."
+      }
+    ]
+  },
+  "ex-a73995h0": {
+    "prompt": "Pelos preços de alta disponibilidade (0,1239 USD por vCPU-hora, 0,021 USD por GiB-hora), quanto custa em 730 horas a máquina de uma instância regional de 2 vCPU e 8 GiB, em USD?",
+    "hint": "Dois de um, oito do outro, depois 730 horas."
+  },
+  "ex-qtt8sqec": {
+    "prompt": "Qual destas pertence a uma réplica de leitura?",
+    "hint": "Quem sai prejudicado se a resposta tiver um segundo de atraso?",
+    "choices": [
+      {
+        "text": "A baixa de estoque do checkout",
+        "why": "Uma réplica recusa escritas."
+      },
+      {
+        "text": "O relatório de hora em hora de pedidos por bairro",
+        "why": "Isso. Ninguém sai prejudicado com um segundo de atraso ali."
+      },
+      {
+        "text": "O backup noturno",
+        "why": "Os backups são tirados da instância pelo Cloud SQL."
+      },
+      {
+        "text": "A página que mostra ao cliente o pedido que ele acabou de fazer",
+        "why": "Ele talvez ainda não tenha sido reaplicado."
+      }
+    ]
+  },
+  "ex-fk7c9r68": {
+    "prompt": "O que uma réplica de leitura da instância da aula 6 acrescenta à conta do mês?",
+    "hint": "A página de preços tem uma frase sobre réplicas.",
+    "choices": [
+      {
+        "text": "Nada, réplicas vêm incluídas na alta disponibilidade",
+        "why": "Elas são cobradas à parte."
+      },
+      {
+        "text": "Só o disco dela",
+        "why": "A máquina também é cobrada."
+      },
+      {
+        "text": "O preço de uma instância inteira, 177,34 pelo mesmo tamanho",
+        "why": "Isso. Réplicas são cobradas pela tarifa de instâncias independentes."
+      },
+      {
+        "text": "Meia instância, já que ela só lê",
+        "why": "Ler não corta o preço pela metade."
+      }
+    ]
+  },
+  "ex-2h84wkhk": {
+    "prompt": "São Paulo caiu. A réplica em outra região está 40 segundos atrás. O que significa promovê-la?",
+    "hint": "Replicação assíncrona, e o que nunca foi enviado.",
+    "choices": [
+      {
+        "text": "A réplica faz failover sozinha, como um standby",
+        "why": "Promover é um comando que alguém roda."
+      },
+      {
+        "text": "Nada se perde, já que a réplica é síncrona entre regiões",
+        "why": "Réplicas são assíncronas."
+      },
+      {
+        "text": "Aceitar perder 40 segundos e mudar de endereço",
+        "why": "Isso. Essa decisão é o motivo de precisar estar escrita antes."
+      },
+      {
+        "text": "Esperar a réplica alcançar, e então promover",
+        "why": "Com o primário fora, nada mais chega."
+      }
+    ]
+  },
+  "ex-hp6jevxa": {
+    "prompt": "`gcloud sql instances ___ quitanda-orders-reports` para de vez a replicação de uma réplica e a torna uma instância que aceita escritas.",
+    "hint": "Um verbo e um substantivo em inglês, unidos por hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "promote-replica"
+        ]
+      }
+    ]
+  },
+  "ex-bv1v4ctw": {
+    "prompt": "O que fez `~/gcp/pg/reports` iniciar como réplica e não como servidor próprio?",
+    "hint": "O `-R` escreveu duas coisas.",
+    "choices": [
+      {
+        "text": "O arquivo `standby.signal` e a linha `primary_conninfo`",
+        "why": "Isso. O arquivo o mantém em recuperação; a linha diz de onde fazer o streaming."
+      },
+      {
+        "text": "A tabela `orders`, que só réplicas têm",
+        "why": "A tabela veio do primário."
+      },
+      {
+        "text": "O `--auth=trust` na réplica",
+        "why": "Isso é sobre quem pode se conectar."
+      },
+      {
+        "text": "A porta, 5434",
+        "why": "Qualquer porta serviria."
+      }
+    ]
+  },
+  "ex-57t49se9": {
+    "prompt": "Com a reaplicação pausada, o primário tinha 1.100 pedidos e a réplica 1.000, e `bytes_behind` dava 21.952. Onde estavam aqueles cem pedidos?",
+    "hint": "Recebido não é aplicado.",
+    "choices": [
+      {
+        "text": "No arquivo, esperando `pg_switch_wal()`",
+        "why": "O arquivamento ainda não estava ligado."
+      },
+      {
+        "text": "Perdidos: uma réplica pausada descarta o que chega",
+        "why": "Retomar os trouxe."
+      },
+      {
+        "text": "Ainda no primário, esperando o envio",
+        "why": "Os bytes foram enviados; o intervalo é entre enviado e reaplicado."
+      },
+      {
+        "text": "Na réplica, recebidos no log dela e ainda não aplicados",
+        "why": "Isso. Retomar os aplicou e o intervalo foi a 0."
+      }
+    ]
+  },
+  "ex-0hrgnsqk": {
+    "prompt": "Um `INSERT` na réplica falhou com `cannot execute INSERT in a read-only transaction`. Quem recusou?",
+    "hint": "Uma configuração, ou o estado do servidor?",
+    "choices": [
+      {
+        "text": "Uma permissão na tabela, que ninguém concedeu",
+        "why": "O mesmo usuário escreve no primário."
+      },
+      {
+        "text": "O próprio motor, já que um servidor em recuperação é só leitura",
+        "why": "Isso. Uma réplica do Cloud SQL recusa do mesmo jeito."
+      },
+      {
+        "text": "O `--auth=trust`, que só permite leituras",
+        "why": "Trust é sobre senhas, não sobre escritas."
+      },
+      {
+        "text": "O Cloud SQL, que não está no notebook",
+        "why": "Não há Cloud SQL aqui; isto é PostgreSQL."
+      }
+    ]
+  },
+  "ex-7zsvx14m": {
+    "prompt": "Que hora o `gcloud sql instances clone --point-in-time` espera para 15:46:55 em São Paulo, três horas atrás do UTC?",
+    "hint": "A referência dá o formato e o fuso.",
+    "choices": [
+      {
+        "text": "`2026-10-30 15:46:55`, lida no fuso da região",
+        "why": "A flag não tem fuso de região."
+      },
+      {
+        "text": "Um id de transação, como 733",
+        "why": "Isso é o que o PostgreSQL registrou, não o que a flag aceita."
+      },
+      {
+        "text": "`2026-10-30T15:46:55-03:00`, a hora local com o deslocamento",
+        "why": "A referência pede UTC."
+      },
+      {
+        "text": "`2026-10-30T18:46:55Z`",
+        "why": "Isso. RFC 3339, em UTC."
+      }
+    ]
+  },
+  "ex-5f3x0r8y": {
+    "prompt": "O log do servidor restaurado disse `recovery stopping before commit of transaction 733`. O que era a transação 733?",
+    "hint": "Compare a hora dela com a do alvo.",
+    "choices": [
+      {
+        "text": "O `DELETE` sem `WHERE`",
+        "why": "Isso. A recuperação parou logo antes dele."
+      },
+      {
+        "text": "O próprio backup base",
+        "why": "Um backup não é uma transação no log."
+      },
+      {
+        "text": "O insert dos últimos cem pedidos",
+        "why": "Esses foram restaurados: a contagem deu 1.100."
+      },
+      {
+        "text": "O `CREATE TABLE`, que veio depois do backup",
+        "why": "A tabela já existia antes do backup base."
+      }
+    ]
+  },
+  "ex-b0gz2pwd": {
+    "prompt": "Uma instância Enterprise com recuperação a um ponto no tempo ligada descobre, no dia nove, que teve uma migração ruim no dia um. O que pode trazer de volta o banco como era antes da migração?",
+    "hint": "Compare a retenção do log com nove dias.",
+    "choices": [
+      {
+        "text": "Um clone para o segundo antes da migração",
+        "why": "O Enterprise guarda no máximo 7 dias de log."
+      },
+      {
+        "text": "O standby regional",
+        "why": "Ele tem a migração também."
+      },
+      {
+        "text": "Um backup tirado antes disso",
+        "why": "Isso. Além do alcance do log, só um backup de antes ajuda."
+      },
+      {
+        "text": "Uma réplica de leitura promovida agora",
+        "why": "Uma réplica tem a migração também."
+      }
+    ]
+  },
+  "ex-7z4svvpk": {
+    "prompt": "Ordene os passos da recuperação feita no notebook.",
+    "hint": "O arquivamento precisa vir antes do backup de que ele depende.",
+    "items": [
+      "Ligar o `archive_mode` e reiniciar",
+      "Tirar um backup base",
+      "Anotar a hora, depois cometer o engano",
+      "Copiar o backup base e acrescentar `recovery.signal`",
+      "Definir a hora alvo e iniciar a cópia"
+    ]
+  },
+  "ex-shvz89m9": {
+    "prompt": "`gcloud sql backups restore BACKUP_ID --restore-instance=quitanda-orders` roda na instância de produção. O que acontece com os pedidos escritos desde aquele backup?",
+    "hint": "A recuperação a um ponto no tempo cria uma instância nova; uma restauração cria?",
+    "choices": [
+      {
+        "text": "Desaparecem, trocados pelo conteúdo antigo",
+        "why": "Isso. Restaure numa outra instância antes."
+      },
+      {
+        "text": "Vão para uma réplica automaticamente",
+        "why": "Nenhuma réplica está envolvida."
+      },
+      {
+        "text": "Ficam, já que uma restauração cria uma instância nova",
+        "why": "Isso é o clone; uma restauração sobrescreve o destino."
+      },
+      {
+        "text": "São mesclados com as linhas do backup",
+        "why": "Nada é mesclado."
+      }
+    ]
+  },
+  "ex-k8vk3vca": {
+    "prompt": "Quantos backups automáticos uma instância Enterprise mantém por padrão?",
+    "hint": "A referência dá dois padrões.",
+    "choices": [
+      {
+        "text": "15",
+        "why": "Esse é o Enterprise Plus."
+      },
+      {
+        "text": "35",
+        "why": "É o máximo de dias de log no Enterprise Plus."
+      },
+      {
+        "text": "365",
+        "why": "É o máximo que a flag permite."
+      },
+      {
+        "text": "7",
+        "why": "Isso. O Enterprise Plus mantém 15."
+      }
+    ]
+  },
+  "ex-zkgmktj1": {
+    "prompt": "Ligue cada falha à cópia que protege contra ela.",
+    "hint": "Uma cópia não protege contra nenhuma delas.",
+    "pairs": [
+      {
+        "left": "Uma zona fica sem energia",
+        "right": "O standby regional"
+      },
+      {
+        "left": "A região inteira cai",
+        "right": "Uma réplica em outra região"
+      },
+      {
+        "left": "`DELETE FROM orders` às 15:46",
+        "right": "Um clone para as 15:45"
+      },
+      {
+        "left": "Uma migração ruim descoberta no dia nove",
+        "right": "Um backup sob demanda de antes dela"
+      }
+    ],
+    "right_distractors": [
+      "Uma réplica na mesma região"
+    ]
+  },
+  "ex-8hyec72k": {
+    "prompt": "A Quitanda quer tirar os relatórios do primário E se proteger da perda de São Paulo, pelo menor custo. Qual arranjo faz as duas coisas?",
+    "hint": "Uma cópia pode fazer dois dos trabalhos.",
+    "choices": [
+      {
+        "text": "Uma instância regional, já que o standby fica em outra zona",
+        "why": "O standby não serve leituras, e as duas zonas ficam em São Paulo."
+      },
+      {
+        "text": "Uma réplica de leitura em outra região, usada pelos relatórios",
+        "why": "Isso. Ela recebe as leituras, e pode ser promovida se a região cair."
+      },
+      {
+        "text": "Duas réplicas de leitura em São Paulo",
+        "why": "Nenhuma sobrevive à perda da região."
+      },
+      {
+        "text": "Sete dias de backups automáticos",
+        "why": "Backups não servem leituras."
+      }
+    ]
+  },
+  "ex-3fb1nr94": {
+    "prompt": "Por que a cópia restaurada na 5435 ainda tinha 1.100 pedidos enquanto a original na 5433 não tinha nenhum?",
+    "hint": "De onde a recuperação partiu?",
+    "choices": [
+      {
+        "text": "O `pg_switch_wal()` desfez o DELETE",
+        "why": "Ele só fechou um segmento de log."
+      },
+      {
+        "text": "A original desfez o DELETE ao reiniciar",
+        "why": "O DELETE foi confirmado; nada o desfaz."
+      },
+      {
+        "text": "A recuperação reaplicou só até o alvo",
+        "why": "Isso. O diretório danificado nunca foi usado."
+      },
+      {
+        "text": "A cópia restaurada leu a réplica, que ainda tinha os pedidos",
+        "why": "A réplica tinha copiado o DELETE: mostrava 0."
+      }
+    ]
+  }
+}
