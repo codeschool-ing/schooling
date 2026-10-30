@@ -12,7 +12,24 @@ SAS without rotating the key that every other client also uses.
 The finance team's analysts need to list and read the exports for the month-end close. A policy on
 the container, called `analysts`, gives them that for one day:
 
-@@CAP policy@@
+```
+ana@laptop:~/azure$ az storage container policy create -c orders-raw -n analysts --permissions rl --expiry "$(date -u -d "+1 day" +%Y-%m-%dT%H:%MZ)" -o none
+ana@laptop:~/azure$ az storage container policy list -c orders-raw -o table
+Name      Expiry                Permissions
+--------  --------------------  -------------
+analysts  2026-10-31T19:15:00Z  rl
+ana@laptop:~/azure$ CSAS=$(az storage container generate-sas -n orders-raw --policy-name analysts -o tsv 2>/dev/null)
+ana@laptop:~/azure$ echo "$CSAS" | tr "&" "\n"
+sv=2026-04-06
+si=analysts
+sr=c
+sig=t3GqcW01uPtpONUBQAS2tbv8k8DfoF9rn4Gbcz%2BmjeU%3D
+ana@laptop:~/azure$ curl -s "$CONTAINER?restype=container&comp=list&$CSAS" | grep -o "<Name>[^<]*</Name>"
+<Name>exports/2026/10/orders-2026-10-29.csv</Name>
+ana@laptop:~/azure$ az storage container policy delete -c orders-raw -n analysts -o none
+ana@laptop:~/azure$ curl -s "$CONTAINER?restype=container&comp=list&$CSAS" | grep -o "<Code>.*</Code>"
+<Code>AuthorizationFailure</Code>
+```
 
 **The SAS has no `sp` and no `se`.** It names the policy with `si=analysts`, the resource with
 `sr=c` for the container, and the signature. The permissions `rl`, read and list, and the expiry are

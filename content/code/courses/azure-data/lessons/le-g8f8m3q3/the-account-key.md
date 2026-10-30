@@ -30,13 +30,25 @@ export BLOB=$CONTAINER/exports/2026/10/orders-2026-10-29.csv
 
 ## Signed with the key
 
-@@CAP key@@
+```
+ana@laptop:~/azure$ az storage container create -n orders-raw -o none && az storage blob upload -c orders-raw -n exports/2026/10/orders-2026-10-29.csv -f export/orders-2026-10-29.csv --no-progress -o none
+ana@laptop:~/azure$ env -u AZURE_STORAGE_CONNECTION_STRING az storage container list --account-name devstoreaccount1 --account-key "$KEY" --blob-endpoint "$ACCOUNT" --query "[].name" -o tsv
+orders-raw
+ana@laptop:~/azure$ env -u AZURE_STORAGE_CONNECTION_STRING az storage container list --account-name devstoreaccount1 --account-key "${KEY/E/F}" --blob-endpoint "$ACCOUNT" --query "[].name" -o tsv 2>&1
+ERROR: 
+The request may be blocked by network rules of storage account. Please check network rule set using 'az storage account show -n accountname --query networkRuleSet'.
+If you want to change the default action to apply when no rule matches, please use 'az storage account update'.
+                    
+ana@laptop:~/azure$ az storage account keys list -n stquitandadataprd 2>&1 | tail -1
+ERROR: Please run 'az login' to setup account.
+```
 
 **The second command left the connection string out and gave the account name and the key
 instead**, which is what the connection string had been doing all along: the command line signs each
 request with an HMAC of its contents, computed with the key, and Azurite recomputes it and compares.
 The third changed one character of the key, and Azurite refused the request because the signature did
-not match. The key itself never travels; only the signature does.
+not match. The command line's message does not say so: its error line is empty, and it suggests checking the
+account's network rules, which have nothing to do with it here. **The cause is the signature.** The key itself never travels; only the signature does.
 
 The last command asks for the keys of an account on Azure. It is a control-plane request, so it
 stops at the login as every such command has in this course. On Azure, **whoever can list the keys

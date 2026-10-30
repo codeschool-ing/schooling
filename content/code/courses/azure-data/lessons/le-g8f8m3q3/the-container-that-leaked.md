@@ -71,7 +71,22 @@ resource "azurerm_storage_account" "data" {
 }
 ```
 
-@@CAP tf-hardened@@
+```
+ana@laptop:~/azure/tf/hardened$ terraform init -no-color | grep -E 'Installing|Installed|successfully'
+- Installing hashicorp/azurerm v5.12.0...
+- Installed hashicorp/azurerm v5.12.0 (signed by HashiCorp)
+Terraform has been successfully initialized!
+ana@laptop:~/azure/tf/hardened$ terraform validate -no-color
+Success! The configuration is valid.
+
+ana@laptop:~/azure/tf/hardened$ sed -i 's/"TLS1_2"/"TLS1_0"/' main.tf && terraform validate -no-color
+
+Error: expected min_tls_version to be one of ["TLS1_2"], got TLS1_0
+
+  with azurerm_storage_account.data,
+  on main.tf line 31, in resource "azurerm_storage_account" "data":
+  31:   min_tls_version                 = "TLS1_0"
+```
 
 Line by line, from the leak each one closes:
 
@@ -100,8 +115,8 @@ documents, such as access from an unusual place or an unusual amount of data rea
 plan, scans uploaded blobs for malware. It is a paid plan per storage account and is switched on in
 Microsoft Defender for Cloud.
 
-**The logs say who read what, and how.** With a diagnostic setting sending the blob service's logs to
-a Log Analytics workspace, each request is a row in the table `StorageBlobLogs`, and one of its columns,
+**The logs say who read what, and how.** A diagnostic setting can send the blob service's logs to a Log
+Analytics workspace, where each request is a row in the table `StorageBlobLogs`. One of its columns,
 `AuthenticationType`, says whether the request was signed with the key, with a SAS, with Entra ID, or
 by nobody. A query of this shape, in Kusto, the workspace's query language, lists anonymous reads by
 blob; it was not run in this course:

@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-yctb21g8",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two items in the `orders` container are both called `o-1001`. How can that be?",
+    "hint": "Look at their `customerId`.",
+    "choices": [
+      {
+        "text": "An `id` is unique only within one partition key value",
+        "correct": true,
+        "why": "Right: identity is the pair."
+      },
+      {
+        "text": "The emulator does not check `id`s, and Azure would refuse the second",
+        "correct": false,
+        "why": "The emulator refused a true duplicate with 409."
+      },
+      {
+        "text": "`upsert_item` renamed the second one silently",
+        "correct": false,
+        "why": "Both kept their `id`; they differ in customer."
+      },
+      {
+        "text": "`id`s are unique per database, and these are in two",
+        "correct": false,
+        "why": "One database, one container."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bkk5yje",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a point read, `read_item`, need to find an order?",
+    "hint": "Both halves of the identity.",
+    "choices": [
+      {
+        "text": "The `id` alone",
+        "correct": false,
+        "why": "Two items can share it."
+      },
+      {
+        "text": "The `_rid` the service assigned",
+        "correct": false,
+        "why": "That is internal; the read in `model.py` used `id` and key."
+      },
+      {
+        "text": "A query with `enable_cross_partition_query`",
+        "correct": false,
+        "why": "That is a query, not a point read."
+      },
+      {
+        "text": "The `id` and the partition key value",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-20y3xeme",
+    "version": 1,
+    "section": "the-model",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What HTTP status did the emulator answer for an item of 2.1 MB?",
+    "hint": "Payload Too Large.",
+    "value": 413,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gmbah8sj",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants each order to keep a list of every event in its life, appended forever. What will happen?",
+    "hint": "An item has a ceiling.",
+    "choices": [
+      {
+        "text": "An order eventually passes 2 MB and its next write fails",
+        "correct": true,
+        "why": "Right: an unbounded list inside one item is a design that fails on a write."
+      },
+      {
+        "text": "Cosmos DB moves the list to a second item when it is full",
+        "correct": false,
+        "why": "Nothing splits an item for you."
+      },
+      {
+        "text": "The logical partition reaches 20 GB on the first year",
+        "correct": false,
+        "why": "One order's events are far from 20 GB; the item limit comes first."
+      },
+      {
+        "text": "Nothing; items have no size limit",
+        "correct": false,
+        "why": "The emulator refused 2.1 MB with 413."
+      }
+    ]
+  },
+  {
+    "id": "ex-20zt3g8r",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a logical partition?",
+    "hint": "You choose it by choosing the key.",
+    "choices": [
+      {
+        "text": "A piece of Azure's storage and compute",
+        "correct": false,
+        "why": "That is a physical partition."
+      },
+      {
+        "text": "A range of the hash, split as the container grows",
+        "correct": false,
+        "why": "A logical partition is never split."
+      },
+      {
+        "text": "Every item that shares one value of the partition key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A container inside a database",
+        "correct": false,
+        "why": "A container holds many logical partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzdcp12y",
+    "version": 1,
+    "section": "partitions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At most how many GB can one logical partition hold, according to the documentation?",
+    "hint": "It is never split, so it has a hard limit.",
+    "value": 20,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0gb176sf",
+    "version": 1,
+    "section": "partitions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container has 40,000 RU/s over four physical partitions. Half of all writes carry one key value. How many RU/s can those writes use at most?",
+    "hint": "One value lives in one physical partition, and the throughput is shared evenly.",
+    "value": 10000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-q5xp38qb",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A container throttles every evening while its average use is under a third of what it pays for. What is the likeliest cause?",
+    "hint": "Average across partitions, limits per partition.",
+    "choices": [
+      {
+        "text": "Too little throughput, bought for the average",
+        "correct": false,
+        "why": "The average says there is spare throughput; it is in the wrong place."
+      },
+      {
+        "text": "The items are larger than 2 MB",
+        "correct": false,
+        "why": "That fails writes with 413, not throttling."
+      },
+      {
+        "text": "Too many physical partitions, each with too little to do",
+        "correct": false,
+        "why": "Idle partitions do not throttle the busy one; the busy one's share does."
+      },
+      {
+        "text": "A hot partition: one key value takes the evening's load",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-qydfqsn6",
+    "version": 1,
+    "section": "three-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`reads.py` showed 1 RU for every read. What does that tell you about Azure's prices?",
+    "hint": "Lesson 1 met this number.",
+    "choices": [
+      {
+        "text": "That the three reads cost the same on Azure",
+        "correct": false,
+        "why": "On Azure they differ; the emulator's 1 is a placeholder."
+      },
+      {
+        "text": "That queries are free below a thousand items",
+        "correct": false,
+        "why": "Nothing here measured a price."
+      },
+      {
+        "text": "Nothing: the emulator charges 1 for everything",
+        "correct": true,
+        "why": "Right; lesson 13 teaches the real units from the documentation."
+      },
+      {
+        "text": "That a point read costs the same as writing an item",
+        "correct": false,
+        "why": "No write was measured."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcdmepbk",
+    "version": 1,
+    "section": "three-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the cross-partition query take one request here, when on Azure it would take more?",
+    "hint": "Read the last line of the output.",
+    "choices": [
+      {
+        "text": "The library batched the partitions into one request",
+        "correct": false,
+        "why": "It sends one per partition; there was one."
+      },
+      {
+        "text": "The emulator has a single physical partition",
+        "correct": true,
+        "why": "Right: `feed ranges in the container: 1`."
+      },
+      {
+        "text": "`enable_cross_partition_query` collapses the fan-out",
+        "correct": false,
+        "why": "It only allows the query to be sent."
+      },
+      {
+        "text": "The query matched only 40 items",
+        "correct": false,
+        "why": "The fan-out follows the partitions, not the result size."
+      }
+    ]
+  },
+  {
+    "id": "ex-zby45r74",
+    "version": 1,
+    "section": "three-reads",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Azure, order these reads of the same data from cheapest to dearest.",
+    "hint": "The more the engine has to do and visit, the dearer.",
+    "items": [
+      "A point read by `id` and key",
+      "A query naming the key's value",
+      "A query on another field, across partitions"
+    ]
+  },
+  {
+    "id": "ex-0q3bfjkv",
+    "version": 1,
+    "section": "three-reads",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Python library refuses to send a query that visits every partition unless the call sets the option ___ to `True`.",
+    "hint": "Four words joined by underscores, as `reads.py` wrote it.",
+    "blanks": [
+      {
+        "accept": [
+          "enable_cross_partition_query"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-62fwzzzg",
+    "version": 1,
+    "section": "choosing-the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/placedDate` had 365 values of 274 orders each. Why is it still a bad key for orders?",
+    "hint": "Look at the hot hour column.",
+    "choices": [
+      {
+        "text": "Each evening's writes all carry today's date",
+        "correct": true,
+        "why": "Right: 100% of the evening on one value."
+      },
+      {
+        "text": "Its partitions pass 20 GB within the year",
+        "correct": false,
+        "why": "274 orders a day is tiny."
+      },
+      {
+        "text": "Dates cannot be partition keys in Cosmos DB",
+        "correct": false,
+        "why": "Any string path can be."
+      },
+      {
+        "text": "Too many values, which wastes physical partitions",
+        "correct": false,
+        "why": "365 values is few, not many."
+      }
+    ]
+  },
+  {
+    "id": "ex-18szbbgz",
+    "version": 1,
+    "section": "choosing-the-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Besides its three values, what makes `/status` wrong as a partition key in a way the table cannot show?",
+    "hint": "What happens to an order between `paid` and `delivered`?",
+    "choices": [
+      {
+        "text": "Status strings are too short to hash well",
+        "correct": false,
+        "why": "Hashing does not care about length."
+      },
+      {
+        "text": "Queries by status are refused on Cosmos DB",
+        "correct": false,
+        "why": "They are allowed; across partitions if status is not the key."
+      },
+      {
+        "text": "It changes over an order's life, and moving an item to another key means deleting and rewriting it",
+        "correct": true,
+        "why": "Right: a delete and a new write every time."
+      },
+      {
+        "text": "Status is not unique, and a key has to be",
+        "correct": false,
+        "why": "The key is meant to repeat; the `id` is what is unique within it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7nhk4pw",
+    "version": 1,
+    "section": "choosing-the-key",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At about 1 KB an order, roughly how many million orders fill one logical partition's 20 GB? Use 1 GB = 1,000,000 KB.",
+    "hint": "Twenty gigabytes of kilobytes.",
+    "value": 20,
+    "tolerance": 0.5
+  },
+  {
+    "id": "ex-jbapnmva",
+    "version": 1,
+    "section": "choosing-the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rekey.py` asked the emulator to change the partition key to `/placedDate`. What happened?",
+    "hint": "Compare `before` and `after`.",
+    "choices": [
+      {
+        "text": "The emulator refused it with an error",
+        "correct": false,
+        "why": "It returned without an error."
+      },
+      {
+        "text": "The key changed, and the items were rehashed",
+        "correct": false,
+        "why": "`after` still said `/customerId`."
+      },
+      {
+        "text": "It answered success and kept `/customerId`",
+        "correct": true,
+        "why": "Right: a success that did nothing."
+      },
+      {
+        "text": "A new container was created beside the old one",
+        "correct": false,
+        "why": "No container was created; the old one is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-bntzydw0",
+    "version": 1,
+    "section": "hierarchical-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the key `/customerId` then `/orderMonth`, what does a point read have to name?",
+    "hint": "`hier.py` said it.",
+    "choices": [
+      {
+        "text": "The `id` and the customer",
+        "correct": false,
+        "why": "That is a prefix, enough for a query and not for a point read."
+      },
+      {
+        "text": "The `id`, the customer and the month",
+        "correct": true,
+        "why": "Right: every level."
+      },
+      {
+        "text": "The month alone, since it is the deepest level",
+        "correct": false,
+        "why": "A level cannot be named without those above it."
+      },
+      {
+        "text": "The `id` alone, since the key is hierarchical",
+        "correct": false,
+        "why": "The hierarchy adds to what a read must name."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nsrsnnt",
+    "version": 1,
+    "section": "hierarchical-keys",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many levels can a hierarchical partition key have at most?",
+    "hint": "The section's first sentence.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hj10cd8w",
+    "version": 1,
+    "section": "hierarchical-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is a hierarchical key worth its cost over a plain `/customerId`?",
+    "hint": "What problem does the second level solve?",
+    "choices": [
+      {
+        "text": "When one customer outgrows a logical partition",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whenever a container has more than one kind of item",
+        "correct": false,
+        "why": "That is a design question, not one of size."
+      },
+      {
+        "text": "When queries need to sort by month",
+        "correct": false,
+        "why": "Sorting is a query's `ORDER BY`, not a key."
+      },
+      {
+        "text": "When the emulator has a single physical partition",
+        "correct": false,
+        "why": "The emulator's shape says nothing about Azure's need."
+      }
+    ]
+  },
+  {
+    "id": "ex-fx0afdhq",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each candidate key for orders with its verdict in `spread.py`.",
+    "hint": "One verdict on the right fits none of them.",
+    "pairs": [
+      {
+        "left": "/id",
+        "right": "spreads perfectly, answers no customer question"
+      },
+      {
+        "left": "/customerId",
+        "right": "answers the app's question in one partition"
+      },
+      {
+        "left": "/placedDate",
+        "right": "the whole evening's writes on one value"
+      },
+      {
+        "left": "/status",
+        "right": "three values, one holding nearly everything"
+      }
+    ],
+    "right_distractors": [
+      "larger than 2 MB per item"
+    ]
+  },
+  {
+    "id": "ex-zf91y2pv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the emulator show faithfully? Choose all that apply.",
+    "hint": "Two of the five are its simplifications.",
+    "choices": [
+      {
+        "text": "An `id` unique per partition key value",
+        "correct": true,
+        "why": "Yes: two `o-1001`, and a 409 for a third."
+      },
+      {
+        "text": "The 2 MB ceiling on an item",
+        "correct": true,
+        "why": "Yes: 413."
+      },
+      {
+        "text": "Hierarchical keys and prefix queries",
+        "correct": true,
+        "why": "Yes: `MultiHash` accepted."
+      },
+      {
+        "text": "The price of a cross-partition query",
+        "correct": false,
+        "why": "It charged 1 for everything."
+      },
+      {
+        "text": "The refusal to change a partition key",
+        "correct": false,
+        "why": "It answered success and kept the old key."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgcnt881",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's app also needs a screen listing every order placed in the last hour, for the warehouse. With `/customerId` as the key, what does that screen cost?",
+    "hint": "Which partitions hold the last hour's orders?",
+    "choices": [
+      {
+        "text": "A query in one partition, since the hour is recent",
+        "correct": false,
+        "why": "Recent orders are spread over thousands of customers."
+      },
+      {
+        "text": "A point read per order",
+        "correct": false,
+        "why": "The screen does not know the `id`s in advance."
+      },
+      {
+        "text": "Nothing extra: Cosmos DB indexes the date",
+        "correct": false,
+        "why": "An index helps inside each partition; the query still visits every one."
+      },
+      {
+        "text": "A cross-partition query, dearer as the container splits",
+        "correct": true,
+        "why": "Right; a second, rarer question pays for the key chosen for the first."
+      }
+    ]
+  }
+]
