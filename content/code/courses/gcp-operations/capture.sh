@@ -104,7 +104,7 @@ for m in re.finditer(r'^```([a-z-]*)\n(.*?)^```$', text, re.S | re.M):
             found.append(''.join(p['code'] for p in ex['parts']))
     elif body.split('\n', 1)[0].lstrip('#/ ').startswith(want):
         found.append(body)
-    elif lang == 'json' and before.endswith('`' + want + '`:'):
+    elif lang in ('json', '') and before.endswith('`' + want + '`:'):
         found.append(body)
 if len(found) != 1:
     sys.exit(f'{sys.argv[1]}: expected one block for {want}, found {len(found)}')
