@@ -41,9 +41,9 @@ there is one. To use `id-shop-app` the program must name it, by its client id, w
 `app.bicep` put that client id in the application setting `AZURE_CLIENT_ID`: the code reads it from
 the environment and never has the value written into it.
 
-That one setting is easy to forget, and the failure it causes is quiet: the program signs in as the
-**system-assigned** identity, which has no role on the storage account, and the read is refused with
-an authorisation error that looks like a missing role rather than a wrong identity. When a managed
+That one setting is easy to forget, and the failure it causes is quiet. The program signs in as the
+**system-assigned** identity, which has no role on the storage account. The read is refused with an
+authorisation error that looks like a missing role rather than a wrong identity. When a managed
 identity is refused something it was given, **first check which identity the token belongs to**: its
 `oid` claim is the object id of the principal that signed in.
 

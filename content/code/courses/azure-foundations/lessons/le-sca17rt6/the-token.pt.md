@@ -41,8 +41,8 @@ sistema**, se houver uma. Para usar o `id-shop-app` o programa precisa nomeá-lo
 exatamente por isso que o `app.bicep` pôs esse client id na configuração `AZURE_CLIENT_ID` da
 aplicação: o código o lê do ambiente e nunca tem o valor escrito dentro dele.
 
-Essa configuração é fácil de esquecer, e a falha que ela causa é silenciosa: o programa entra como a
-identidade **atribuída pelo sistema**, que não tem papel na storage account, e a leitura é recusada com
+Essa configuração é fácil de esquecer, e a falha que ela causa é silenciosa. O programa entra como a
+identidade **atribuída pelo sistema**, que não tem papel na storage account. A leitura é recusada com
 um erro de autorização que parece um papel faltando e não uma identidade errada. Quando uma identidade
 gerenciada é recusada em algo que recebeu, **confira primeiro de quem é o token**: a claim `oid` dele é
 o object id do principal que fez login.
