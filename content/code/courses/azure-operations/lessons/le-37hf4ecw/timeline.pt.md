@@ -7,7 +7,7 @@ version: 1
 quinta. As requisições são as da lição 9. As outras duas são escritas aqui, pelo curso, que diz isso.
 
 O **activity log** registra toda mudança feita pelo Resource Manager, numa tabela chamada `AzureActivity`: qual operação,
-por quem, de onde, e se deu certo. Onze das mudanças da semana, no formato dela (a lição 21 lê esta tabela de verdade):
+por quem, de onde, e se deu certo. Doze das mudanças da semana, no formato dela (a lição 21 lê esta tabela de verdade):
 
 ```kql
 // activity.kql: the subscription's week of changes, in the shape of the AzureActivity table
@@ -20,6 +20,7 @@ datatable(TimeGenerated: datetime, OperationNameValue: string, ActivityStatusVal
     datetime(2026-10-14 12:05), "MICROSOFT.RESOURCES/DEPLOYMENTS/WRITE", "Success", "3fa2c1d0-7b8e-4c55-9a1e-2d4b6f8e0c11", "", "rg-shop", "shop-main-42", dynamic({}),
     datetime(2026-10-14 12:11), "MICROSOFT.WEB/SITES/SLOTS/SLOTSSWAP/ACTION", "Success", "3fa2c1d0-7b8e-4c55-9a1e-2d4b6f8e0c11", "", "rg-shop", "app-shop-api/staging", dynamic({}),
     datetime(2026-10-15 16:58), "MICROSOFT.SQL/SERVERS/DATABASES/WRITE", "Failure", "bruno@example.com", "198.51.100.7", "rg-shop", "sql-shop/shop", dynamic({"sku": "S1", "error": "AuthorizationFailed"}),
+    datetime(2026-10-15 16:59), "MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE", "Success", "ana@example.com", "203.0.113.24", "rg-shop", "rg-shop", dynamic({"role": "SQL DB Contributor", "principal": "bruno@example.com"}),
     datetime(2026-10-15 17:02), "MICROSOFT.SQL/SERVERS/DATABASES/WRITE", "Success", "bruno@example.com", "198.51.100.7", "rg-shop", "sql-shop/shop", dynamic({"sku": "S1", "previousSku": "S3"}),
     datetime(2026-10-15 17:44), "MICROSOFT.SQL/SERVERS/DATABASES/WRITE", "Success", "carla@example.com", "203.0.113.51", "rg-shop", "sql-shop/shop", dynamic({"sku": "S3", "previousSku": "S1"}),
     datetime(2026-10-16 14:30), "MICROSOFT.INSIGHTS/SCHEDULEDQUERYRULES/WRITE", "Success", "3fa2c1d0-7b8e-4c55-9a1e-2d4b6f8e0c11", "", "rg-shop", "checkout-failing", dynamic({}),
@@ -69,6 +70,7 @@ union
 ana@laptop:~/azure/kusto$ python3 kql.py < timeline.kql
 Local  Source    Event
 13:58  activity  bruno@example.com MICROSOFT.SQL/SERVERS/DATABASES/WRITE Failure S1
+13:59  activity  ana@example.com MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE Success
 14:00  requests  9 checkouts failed in 10 minutes
 14:02  activity  bruno@example.com MICROSOFT.SQL/SERVERS/DATABASES/WRITE Success S1
 14:10  requests  32 checkouts failed in 10 minutes
@@ -87,7 +89,7 @@ Local  Source    Event
 ```
 
 Leia de cima para baixo e o incidente se conta sozinho. Uma linha de `requests` leva o rótulo do começo do seu bin de
-dez minutos, então a linha das 14:00 guarda as falhas a partir das 14:05. Às 13:58 `bruno` tentou mudar o tamanho do banco e foi recusado; às
+dez minutos, então a linha das 14:00 guarda as falhas a partir das 14:05. Às 13:58 `bruno` tentou mudar o tamanho do banco e foi recusado; às 13:59 `ana` lhe deu o papel que faltava; às
 14:02 conseguiu, **S1**, abaixo do S3. Três minutos depois os checkouts começaram a falhar. A chamada veio às 14:15, a
 declaração às 14:22. Às 14:38 Carla achou a mudança no activity log, às 14:44 a desfez, e as falhas pararam dentro daquele bin de
 dez minutos. A nota de Carla diz 17:02 porque ela copiou do log, em UTC, e é assim que dois relógios entram num canal só;

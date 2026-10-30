@@ -6,7 +6,7 @@
 #   bash captures.sh
 #
 # AzureActivity and IncidentLog are written by the course, as the lesson says:
-# eleven changes in the shape of the activity log, and eight lines of an
+# twelve changes in the shape of the activity log, and eight lines of an
 # incident channel. The callers are documentation names and addresses
 # (example.com, 198.51.100.0/24, 203.0.113.0/24) and an invented application id. AppRequests is lesson 9's generated week.
 

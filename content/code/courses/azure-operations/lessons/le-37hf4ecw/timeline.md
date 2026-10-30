@@ -7,7 +7,7 @@ version: 1
 Thursday. The requests are lesson 9's. The other two are written here, by the course, and say so.
 
 The **activity log** records every change made through Resource Manager, in a table called
-`AzureActivity`: what operation, by whom, from where, and whether it succeeded. Eleven of the week's
+`AzureActivity`: what operation, by whom, from where, and whether it succeeded. Twelve of the week's
 changes, in its shape (lesson 21 reads this table properly):
 
 ```kql
@@ -21,6 +21,7 @@ datatable(TimeGenerated: datetime, OperationNameValue: string, ActivityStatusVal
     datetime(2026-10-14 12:05), "MICROSOFT.RESOURCES/DEPLOYMENTS/WRITE", "Success", "3fa2c1d0-7b8e-4c55-9a1e-2d4b6f8e0c11", "", "rg-shop", "shop-main-42", dynamic({}),
     datetime(2026-10-14 12:11), "MICROSOFT.WEB/SITES/SLOTS/SLOTSSWAP/ACTION", "Success", "3fa2c1d0-7b8e-4c55-9a1e-2d4b6f8e0c11", "", "rg-shop", "app-shop-api/staging", dynamic({}),
     datetime(2026-10-15 16:58), "MICROSOFT.SQL/SERVERS/DATABASES/WRITE", "Failure", "bruno@example.com", "198.51.100.7", "rg-shop", "sql-shop/shop", dynamic({"sku": "S1", "error": "AuthorizationFailed"}),
+    datetime(2026-10-15 16:59), "MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE", "Success", "ana@example.com", "203.0.113.24", "rg-shop", "rg-shop", dynamic({"role": "SQL DB Contributor", "principal": "bruno@example.com"}),
     datetime(2026-10-15 17:02), "MICROSOFT.SQL/SERVERS/DATABASES/WRITE", "Success", "bruno@example.com", "198.51.100.7", "rg-shop", "sql-shop/shop", dynamic({"sku": "S1", "previousSku": "S3"}),
     datetime(2026-10-15 17:44), "MICROSOFT.SQL/SERVERS/DATABASES/WRITE", "Success", "carla@example.com", "203.0.113.51", "rg-shop", "sql-shop/shop", dynamic({"sku": "S3", "previousSku": "S1"}),
     datetime(2026-10-16 14:30), "MICROSOFT.INSIGHTS/SCHEDULEDQUERYRULES/WRITE", "Success", "3fa2c1d0-7b8e-4c55-9a1e-2d4b6f8e0c11", "", "rg-shop", "checkout-failing", dynamic({}),
@@ -70,6 +71,7 @@ union
 ana@laptop:~/azure/kusto$ python3 kql.py < timeline.kql
 Local  Source    Event
 13:58  activity  bruno@example.com MICROSOFT.SQL/SERVERS/DATABASES/WRITE Failure S1
+13:59  activity  ana@example.com MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE Success
 14:00  requests  9 checkouts failed in 10 minutes
 14:02  activity  bruno@example.com MICROSOFT.SQL/SERVERS/DATABASES/WRITE Success S1
 14:10  requests  32 checkouts failed in 10 minutes
@@ -89,7 +91,7 @@ Local  Source    Event
 
 Read it top to bottom and the incident tells itself. A `requests` row is labelled with the start of its
 ten-minute bin, so the 14:00 row holds the failures from 14:05 on. At 13:58 `bruno` tried to change the database's
-size and was refused; at 14:02 he succeeded, **S1**, down from S3. Three minutes later checkouts started
+size and was refused; at 13:59 `ana` gave him the role he lacked; at 14:02 he succeeded, **S1**, down from S3. Three minutes later checkouts started
 failing. The page came at 14:15, the declaration at 14:22. At 14:38 Carla found the change in the activity
 log, at 14:44 she reverted it, and the failures stopped inside that ten-minute bin. Carla's note says 17:02 because she copied it from
 the log, in UTC, which is how two clocks get into one channel; a timeline in one time zone settles it.
