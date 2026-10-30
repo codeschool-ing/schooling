@@ -539,6 +539,118 @@
   {
     "id": "ex-a0ncn7xk",
     "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Somebody holding a read-only SAS URL for one export edits `sp=r` to `sp=rw` in it and tries to upload. What happens?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "The write succeeds, since the permission is in the URL",
+        "correct": false,
+        "why": "The permission is signed; editing it breaks the signature."
+      },
+      {
+        "text": "It is refused: the signature no longer matches its parameters",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is refused with `AuthorizationPermissionMismatch`, and reads keep working with the edited URL",
+        "correct": false,
+        "why": "The edited URL is refused for everything; the mismatch was the unedited SAS trying to write."
+      },
+      {
+        "text": "The service looks the token up and finds it was issued read-only",
+        "correct": false,
+        "why": "A key-signed SAS is stored nowhere; the service checks the signature."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqxtw55t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A service SAS signed with `--permissions` and `--expiry`, valid for a year, turns up in a public ticket. It names no stored access policy. How is it revoked before its expiry?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Delete the stored access policies on the container",
+        "correct": false,
+        "why": "It names none, so deleting them changes nothing for it."
+      },
+      {
+        "text": "Revoke the user delegation keys",
+        "correct": false,
+        "why": "Those revoke SAS signed with them; this one was signed with the account key."
+      },
+      {
+        "text": "Set the container's public access level to `off`",
+        "correct": false,
+        "why": "That setting is about anonymous requests, not signed ones."
+      },
+      {
+        "text": "Regenerate the account key that signed it, and move every client off it first",
+        "correct": true,
+        "why": "Right, and that is why a SAS for outsiders should name a policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmj3g0kx",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Stored access policies are written per group or per purpose, never per person, because Microsoft's documentation allows a container at most ___ of them.",
+    "hint": "Lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9s0cqrrp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The hardened account declares `shared_access_key_enabled = false`. Which of these still reaches a blob in it?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "A service SAS signed against a stored access policy",
+        "correct": false,
+        "why": "It is still signed with the account key, and refused."
+      },
+      {
+        "text": "A user delegation SAS",
+        "correct": true,
+        "why": "Right: it is signed with a key Entra ID issued, not the account key."
+      },
+      {
+        "text": "A connection string carrying `key2` instead of `key1`",
+        "correct": false,
+        "why": "Both account keys are refused."
+      },
+      {
+        "text": "An anonymous `curl`, if the container's level is `blob`",
+        "correct": false,
+        "why": "The same file sets `allow_nested_items_to_be_public = false`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvyra3qa",
+    "version": 1,
     "type": "ordering",
     "difficulty": "hard",
     "drillable": false,
@@ -552,7 +664,7 @@
     ]
   },
   {
-    "id": "ex-eqxtw55t",
+    "id": "ex-97th6smh",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -563,7 +675,7 @@
     "tolerance": 0.1
   },
   {
-    "id": "ex-cmj3g0kx",
+    "id": "ex-jzefdqtr",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -594,7 +706,7 @@
     ]
   },
   {
-    "id": "ex-9s0cqrrp",
+    "id": "ex-z0nkbpzw",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -625,7 +737,7 @@
     ]
   },
   {
-    "id": "ex-wvyra3qa",
+    "id": "ex-k1bw94tq",
     "version": 1,
     "type": "numeric",
     "difficulty": "easy",
@@ -636,7 +748,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-97th6smh",
+    "id": "ex-xyt5q4n0",
     "version": 1,
     "type": "cloze",
     "difficulty": "medium",
@@ -654,7 +766,7 @@
     ]
   },
   {
-    "id": "ex-jzefdqtr",
+    "id": "ex-gb036c62",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -685,7 +797,7 @@
     ]
   },
   {
-    "id": "ex-z0nkbpzw",
+    "id": "ex-049j7tw7",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -716,7 +828,7 @@
     ]
   },
   {
-    "id": "ex-k1bw94tq",
+    "id": "ex-mn4wga74",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -747,7 +859,7 @@
     ]
   },
   {
-    "id": "ex-xyt5q4n0",
+    "id": "ex-bqmvd0t3",
     "version": 1,
     "type": "matching",
     "difficulty": "hard",
@@ -773,7 +885,7 @@
     ]
   },
   {
-    "id": "ex-gb036c62",
+    "id": "ex-jk37fdxr",
     "version": 1,
     "type": "cloze",
     "difficulty": "medium",
@@ -791,7 +903,7 @@
     ]
   },
   {
-    "id": "ex-049j7tw7",
+    "id": "ex-xh992p7k",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -822,7 +934,7 @@
     ]
   },
   {
-    "id": "ex-mn4wga74",
+    "id": "ex-2n599fth",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -853,7 +965,7 @@
     ]
   },
   {
-    "id": "ex-bqmvd0t3",
+    "id": "ex-qydkm4qd",
     "version": 1,
     "type": "cloze",
     "difficulty": "easy",
@@ -871,7 +983,7 @@
     ]
   },
   {
-    "id": "ex-jk37fdxr",
+    "id": "ex-d9gmkszd",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -902,7 +1014,7 @@
     ]
   },
   {
-    "id": "ex-xh992p7k",
+    "id": "ex-t65ghamh",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -933,7 +1045,7 @@
     ]
   },
   {
-    "id": "ex-2n599fth",
+    "id": "ex-59492mtn",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -964,7 +1076,7 @@
     ]
   },
   {
-    "id": "ex-qydkm4qd",
+    "id": "ex-g7z7zzjk",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -975,7 +1087,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-d9gmkszd",
+    "id": "ex-795hargr",
     "version": 1,
     "type": "matching",
     "difficulty": "medium",
@@ -1002,7 +1114,7 @@
     ]
   },
   {
-    "id": "ex-t65ghamh",
+    "id": "ex-vj8jswpy",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1033,7 +1145,7 @@
     ]
   },
   {
-    "id": "ex-59492mtn",
+    "id": "ex-kq6j5cfm",
     "version": 1,
     "type": "ordering",
     "difficulty": "easy",
@@ -1049,7 +1161,7 @@
     ]
   },
   {
-    "id": "ex-g7z7zzjk",
+    "id": "ex-yw41xf50",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -1060,7 +1172,7 @@
     "tolerance": 500
   },
   {
-    "id": "ex-795hargr",
+    "id": "ex-h8p33c8r",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1091,7 +1203,7 @@
     ]
   },
   {
-    "id": "ex-vj8jswpy",
+    "id": "ex-wpxn6575",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1122,7 +1234,7 @@
     ]
   },
   {
-    "id": "ex-kq6j5cfm",
+    "id": "ex-n62rebee",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -1133,7 +1245,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-yw41xf50",
+    "id": "ex-wmmgg2xf",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1164,7 +1276,7 @@
     ]
   },
   {
-    "id": "ex-h8p33c8r",
+    "id": "ex-5y7hshak",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1195,7 +1307,7 @@
     ]
   },
   {
-    "id": "ex-wpxn6575",
+    "id": "ex-p2emttv1",
     "version": 1,
     "type": "cloze",
     "difficulty": "medium",
@@ -1214,7 +1326,7 @@
     ]
   },
   {
-    "id": "ex-n62rebee",
+    "id": "ex-9ar2hpef",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1245,7 +1357,7 @@
     ]
   },
   {
-    "id": "ex-wmmgg2xf",
+    "id": "ex-e1c1j7xs",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1276,7 +1388,7 @@
     ]
   },
   {
-    "id": "ex-5y7hshak",
+    "id": "ex-kbevc0tj",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1307,7 +1419,7 @@
     ]
   },
   {
-    "id": "ex-p2emttv1",
+    "id": "ex-cgyha6rn",
     "version": 1,
     "type": "matching",
     "difficulty": "medium",
@@ -1334,7 +1446,7 @@
     ]
   },
   {
-    "id": "ex-9ar2hpef",
+    "id": "ex-jf8e392c",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1365,7 +1477,7 @@
     ]
   },
   {
-    "id": "ex-e1c1j7xs",
+    "id": "ex-fkfkr50e",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1396,7 +1508,7 @@
     ]
   },
   {
-    "id": "ex-kbevc0tj",
+    "id": "ex-z40mfffw",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1427,7 +1539,7 @@
     ]
   },
   {
-    "id": "ex-cgyha6rn",
+    "id": "ex-hh5drka8",
     "version": 1,
     "type": "multiple-choice",
     "difficulty": "easy",
@@ -1458,7 +1570,7 @@
     ]
   },
   {
-    "id": "ex-jf8e392c",
+    "id": "ex-ne38dg9b",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1489,7 +1601,7 @@
     ]
   },
   {
-    "id": "ex-fkfkr50e",
+    "id": "ex-x4xqncd1",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -1500,7 +1612,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-z40mfffw",
+    "id": "ex-tn0h0apd",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1531,7 +1643,7 @@
     ]
   },
   {
-    "id": "ex-hh5drka8",
+    "id": "ex-htdf44m0",
     "version": 1,
     "type": "multiple-choice",
     "difficulty": "hard",
@@ -1562,7 +1674,7 @@
     ]
   },
   {
-    "id": "ex-ne38dg9b",
+    "id": "ex-d60e2e30",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -1573,7 +1685,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-x4xqncd1",
+    "id": "ex-wb12sekr",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1604,7 +1716,7 @@
     ]
   },
   {
-    "id": "ex-tn0h0apd",
+    "id": "ex-rwbb96sk",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1635,7 +1747,7 @@
     ]
   },
   {
-    "id": "ex-htdf44m0",
+    "id": "ex-c067yhms",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1666,7 +1778,7 @@
     ]
   },
   {
-    "id": "ex-d60e2e30",
+    "id": "ex-v6xdjn62",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1697,7 +1809,7 @@
     ]
   },
   {
-    "id": "ex-wb12sekr",
+    "id": "ex-c331ynxk",
     "version": 1,
     "type": "numeric",
     "difficulty": "easy",
@@ -1708,7 +1820,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-rwbb96sk",
+    "id": "ex-qrvqvwv4",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1739,7 +1851,7 @@
     ]
   },
   {
-    "id": "ex-c067yhms",
+    "id": "ex-2tk9m8sp",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1770,7 +1882,7 @@
     ]
   },
   {
-    "id": "ex-v6xdjn62",
+    "id": "ex-ss3gt99h",
     "version": 1,
     "type": "matching",
     "difficulty": "medium",
@@ -1797,7 +1909,7 @@
     ]
   },
   {
-    "id": "ex-c331ynxk",
+    "id": "ex-7a8ak4df",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -1808,7 +1920,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-qrvqvwv4",
+    "id": "ex-v3n46hck",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -1819,7 +1931,7 @@
     "tolerance": 0.01
   },
   {
-    "id": "ex-2tk9m8sp",
+    "id": "ex-znc2ncbh",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1850,7 +1962,7 @@
     ]
   },
   {
-    "id": "ex-ss3gt99h",
+    "id": "ex-pt2n14h7",
     "version": 1,
     "type": "numeric",
     "difficulty": "hard",
@@ -1861,7 +1973,7 @@
     "tolerance": 0.01
   },
   {
-    "id": "ex-7a8ak4df",
+    "id": "ex-tdqns3pp",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1892,7 +2004,7 @@
     ]
   },
   {
-    "id": "ex-v3n46hck",
+    "id": "ex-yma61a7p",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -1923,7 +2035,7 @@
     ]
   },
   {
-    "id": "ex-znc2ncbh",
+    "id": "ex-q028e7dc",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1954,7 +2066,7 @@
     ]
   },
   {
-    "id": "ex-pt2n14h7",
+    "id": "ex-7w4gbx6b",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -1965,7 +2077,7 @@
     "tolerance": 0.01
   },
   {
-    "id": "ex-tdqns3pp",
+    "id": "ex-5w7mf0wt",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -1996,7 +2108,7 @@
     ]
   },
   {
-    "id": "ex-yma61a7p",
+    "id": "ex-cyej294t",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2027,7 +2139,7 @@
     ]
   },
   {
-    "id": "ex-q028e7dc",
+    "id": "ex-e7hpryzb",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -2058,7 +2170,7 @@
     ]
   },
   {
-    "id": "ex-7w4gbx6b",
+    "id": "ex-tc1hagyy",
     "version": 1,
     "type": "numeric",
     "difficulty": "hard",
@@ -2069,7 +2181,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-5w7mf0wt",
+    "id": "ex-ddty9a79",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2100,7 +2212,7 @@
     ]
   },
   {
-    "id": "ex-cyej294t",
+    "id": "ex-dnpfm4vy",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2131,7 +2243,7 @@
     ]
   },
   {
-    "id": "ex-e7hpryzb",
+    "id": "ex-0ab2fvjr",
     "version": 1,
     "type": "matching",
     "difficulty": "easy",
@@ -2157,7 +2269,7 @@
     ]
   },
   {
-    "id": "ex-tc1hagyy",
+    "id": "ex-6vwnqpx5",
     "version": 1,
     "type": "matching",
     "difficulty": "medium",
@@ -2184,7 +2296,7 @@
     ]
   },
   {
-    "id": "ex-ddty9a79",
+    "id": "ex-4zadzwtw",
     "version": 1,
     "type": "numeric",
     "difficulty": "easy",
@@ -2195,7 +2307,7 @@
     "tolerance": 0.01
   },
   {
-    "id": "ex-dnpfm4vy",
+    "id": "ex-d0vyvz1a",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -2226,7 +2338,7 @@
     ]
   },
   {
-    "id": "ex-0ab2fvjr",
+    "id": "ex-nhd5g0g9",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2257,7 +2369,7 @@
     ]
   },
   {
-    "id": "ex-6vwnqpx5",
+    "id": "ex-46f9fef5",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2288,7 +2400,7 @@
     ]
   },
   {
-    "id": "ex-4zadzwtw",
+    "id": "ex-rxtdfhdp",
     "version": 1,
     "type": "numeric",
     "difficulty": "easy",
@@ -2299,7 +2411,7 @@
     "tolerance": 0
   },
   {
-    "id": "ex-d0vyvz1a",
+    "id": "ex-s1m54x7d",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -2330,7 +2442,7 @@
     ]
   },
   {
-    "id": "ex-nhd5g0g9",
+    "id": "ex-cwmhy6gd",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2361,7 +2473,7 @@
     ]
   },
   {
-    "id": "ex-46f9fef5",
+    "id": "ex-n85t8ymc",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2392,7 +2504,7 @@
     ]
   },
   {
-    "id": "ex-rxtdfhdp",
+    "id": "ex-h0s1awn6",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -2423,7 +2535,7 @@
     ]
   },
   {
-    "id": "ex-s1m54x7d",
+    "id": "ex-z41sv7gp",
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
@@ -2434,7 +2546,7 @@
     "tolerance": 0.01
   },
   {
-    "id": "ex-cwmhy6gd",
+    "id": "ex-xemz6vzv",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
@@ -2465,7 +2577,7 @@
     ]
   },
   {
-    "id": "ex-n85t8ymc",
+    "id": "ex-vfvmyjys",
     "version": 1,
     "type": "ordering",
     "difficulty": "medium",
@@ -2482,7 +2594,7 @@
     ]
   },
   {
-    "id": "ex-h0s1awn6",
+    "id": "ex-by39fh7z",
     "version": 1,
     "type": "matching",
     "difficulty": "medium",
@@ -2512,7 +2624,7 @@
     ]
   },
   {
-    "id": "ex-z41sv7gp",
+    "id": "ex-qxnqpfsy",
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
@@ -2543,7 +2655,7 @@
     ]
   },
   {
-    "id": "ex-xemz6vzv",
+    "id": "ex-qbspqhy3",
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",

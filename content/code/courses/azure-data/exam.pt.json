@@ -364,6 +364,84 @@
     ]
   },
   "ex-a0ncn7xk": {
+    "prompt": "Alguém com a URL de um SAS só de leitura para uma exportação troca `sp=r` por `sp=rw` nela e tenta um upload. O que acontece?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "A gravação dá certo, já que a permissão está na URL",
+        "why": "A permissão é assinada; editá-la quebra a assinatura."
+      },
+      {
+        "text": "É recusada: a assinatura não bate mais com os parâmetros",
+        "why": "Isso."
+      },
+      {
+        "text": "É recusada com `AuthorizationPermissionMismatch`, e as leituras seguem funcionando com a URL editada",
+        "why": "A URL editada é recusada para tudo; o mismatch era o SAS original tentando gravar."
+      },
+      {
+        "text": "O serviço consulta o token e vê que foi emitido só para leitura",
+        "why": "Um SAS assinado com a chave não fica guardado em lugar nenhum; o serviço confere a assinatura."
+      }
+    ]
+  },
+  "ex-eqxtw55t": {
+    "prompt": "Um SAS de serviço assinado com `--permissions` e `--expiry`, válido por um ano, aparece num chamado público. Ele não cita nenhuma política de acesso armazenada. Como revogá-lo antes de expirar?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "Apagar as políticas de acesso armazenadas do contêiner",
+        "why": "Ele não cita nenhuma, então apagá-las não muda nada para ele."
+      },
+      {
+        "text": "Revogar as chaves de delegação de usuário",
+        "why": "Elas revogam SAS assinados com elas; este foi assinado com a chave da conta."
+      },
+      {
+        "text": "Pôr o nível de acesso público do contêiner em `off`",
+        "why": "Essa configuração trata de requisições anônimas, não de assinadas."
+      },
+      {
+        "text": "Regenerar a chave da conta que o assinou, depois de tirar todos os clientes dela",
+        "why": "Isso, e é por isso que um SAS para gente de fora deve citar uma política."
+      }
+    ]
+  },
+  "ex-cmj3g0kx": {
+    "prompt": "Políticas de acesso armazenadas são criadas por grupo ou por finalidade, nunca por pessoa, porque a documentação da Microsoft permite no máximo ___ delas por contêiner.",
+    "hint": "Lição 6.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "cinco"
+        ]
+      }
+    ]
+  },
+  "ex-9s0cqrrp": {
+    "prompt": "A conta reforçada declara `shared_access_key_enabled = false`. Qual destas ainda chega a um blob dela?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "Um SAS de serviço assinado contra uma política de acesso armazenada",
+        "why": "Ele continua assinado com a chave da conta, e é recusado."
+      },
+      {
+        "text": "Um SAS de delegação de usuário",
+        "why": "Isso: ele é assinado com uma chave emitida pelo Entra ID, não com a da conta."
+      },
+      {
+        "text": "Uma connection string com a `key2` em vez da `key1`",
+        "why": "As duas chaves da conta são recusadas."
+      },
+      {
+        "text": "Um `curl` anônimo, se o nível do contêiner for `blob`",
+        "why": "O mesmo arquivo define `allow_nested_items_to_be_public = false`."
+      }
+    ]
+  },
+  "ex-wvyra3qa": {
     "prompt": "Ordene estes desenhos do `costs.py` pelo custo do mês aos preços ilustrativos da lição, do mais barato ao mais caro.",
     "hint": "Lição 7.",
     "items": [
@@ -373,11 +451,11 @@
       "500 GB de imagens, 20 TB por mês para a internet"
     ]
   },
-  "ex-eqxtw55t": {
+  "ex-97th6smh": {
     "prompt": "O site da Quitanda manda 3 TB (3.072 GB) de imagens para a internet num mês. Contando os 100 GB por mês gratuitos e um preço ilustrativo fixo de 0,10 USD por GB depois deles, quanto custa a transferência, em USD?",
     "hint": "Lição 7."
   },
-  "ex-cmj3g0kx": {
+  "ex-jzefdqtr": {
     "prompt": "O job noturno roda em máquinas numa sub-rede privada com NAT gateway e lê o lake, na mesma região, pelo endereço público da conta. Que mudança tira a cobrança por GB desse tráfego e não custa nada?",
     "hint": "Lição 7.",
     "choices": [
@@ -399,7 +477,7 @@
       }
     ]
   },
-  "ex-9s0cqrrp": {
+  "ex-z0nkbpzw": {
     "prompt": "Um parceiro copia 5 TB do histórico de pedidos da Quitanda para a própria conta, em outra região, com um token SAS que a Quitanda deu. Na fatura de quem cai a transferência para fora de `brazilsouth`?",
     "hint": "Lição 7.",
     "choices": [
@@ -421,11 +499,11 @@
       }
     ]
   },
-  "ex-wvyra3qa": {
+  "ex-k1bw94tq": {
     "prompt": "Um `GP_Gen5_4` provisionado tem quatro vCores. A um preço ilustrativo de 0,25 USD por vCore-hora e um mês de 730 horas, quanto custa a computação dele num mês, em USD?",
     "hint": "Lição 8."
   },
-  "ex-97th6smh": {
+  "ex-xyt5q4n0": {
     "prompt": "`SERVERPROPERTY('EngineEdition')` responde 3 no contêiner de SQL Server do laboratório. Conectado ao Azure SQL Database, a Microsoft documenta que a mesma consulta responde ___.",
     "hint": "Lição 8.",
     "blanks": [
@@ -436,7 +514,7 @@
       }
     ]
   },
-  "ex-jzefdqtr": {
+  "ex-gb036c62": {
     "prompt": "Os bancos de teste dos doze desenvolvedores dividem um pool Standard de 100 eDTUs com máximo de 50 por banco. A equipe põe todas as suítes de teste num pipeline só, que começa às nove toda manhã. O que acontece?",
     "hint": "Lição 8.",
     "choices": [
@@ -458,7 +536,7 @@
       }
     ]
   },
-  "ex-z0nkbpzw": {
+  "ex-049j7tw7": {
     "prompt": "Por que serverless com pausa automática é a compra errada para o banco de pedidos de produção da Quitanda, além do preço?",
     "hint": "Lição 8.",
     "choices": [
@@ -480,7 +558,7 @@
       }
     ]
   },
-  "ex-k1bw94tq": {
+  "ex-mn4wga74": {
     "prompt": "No Azure SQL Database, conectada a `quitanda`, a tela de suporte roda um `JOIN` com `delivery.dbo.deliveries`. Os dois bancos estão no mesmo servidor lógico. O que acontece?",
     "hint": "Lição 9.",
     "choices": [
@@ -502,7 +580,7 @@
       }
     ]
   },
-  "ex-xyt5q4n0": {
+  "ex-bqmvd0t3": {
     "prompt": "Associe cada caminho até a Managed Instance ao modo como ele leva o banco.",
     "hint": "Lição 9.",
     "pairs": [
@@ -523,7 +601,7 @@
       "um agente que roda T-SQL contra bancos-alvo num agendamento"
     ]
   },
-  "ex-gb036c62": {
+  "ex-jk37fdxr": {
     "prompt": "O endpoint público de uma Managed Instance vem desligado. Quando alguém o liga, ele responde na porta ___, e não na de sempre do SQL Server.",
     "hint": "Lição 9.",
     "blanks": [
@@ -534,7 +612,7 @@
       }
     ]
   },
-  "ex-049j7tw7": {
+  "ex-xh992p7k": {
     "prompt": "A Quitanda tem licenças de SQL Server com Software Assurance. Que `license_type` na declaração da instância faz ela pagar a computação sem a licença da Microsoft?",
     "hint": "Lição 9.",
     "choices": [
@@ -556,7 +634,7 @@
       }
     ]
   },
-  "ex-mn4wga74": {
+  "ex-2n599fth": {
     "prompt": "Um desenvolvedor roda `DELETE FROM orders` sem `WHERE` no PostgreSQL flexible server, que tem alta disponibilidade com redundância de zona e uma réplica de leitura. Qual cópia traz as linhas de volta?",
     "hint": "Lição 10.",
     "choices": [
@@ -578,7 +656,7 @@
       }
     ]
   },
-  "ex-bqmvd0t3": {
+  "ex-qydkm4qd": {
     "prompt": "Com `pgbouncer.enabled` ligado, uma aplicação chega ao pooler embutido do flexible server mudando só a porta de conexão, de 5432 para ___.",
     "hint": "Lição 10.",
     "blanks": [
@@ -589,7 +667,7 @@
       }
     ]
   },
-  "ex-jk37fdxr": {
+  "ex-d9gmkszd": {
     "prompt": "Um flexible server foi criado com 1 TB de armazenamento para um banco de 40 GB. Como a Quitanda chega a uma conta menor pelo disco?",
     "hint": "Lição 10.",
     "choices": [
@@ -611,7 +689,7 @@
       }
     ]
   },
-  "ex-xh992p7k": {
+  "ex-t65ghamh": {
     "prompt": "Num flexible server General Purpose, um operador define `shared_preload_libraries` como `pg_stat_statements` pelo Azure às duas da tarde. O que tem de acontecer antes de a view responder?",
     "hint": "Lição 10.",
     "choices": [
@@ -633,7 +711,7 @@
       }
     ]
   },
-  "ex-2n599fth": {
+  "ex-59492mtn": {
     "prompt": "Num contêiner particionado por `/customerId`, um programa chama `create_item` com `{\"id\": \"o-7\", \"customerId\": \"c-3\"}` e depois com `{\"id\": \"o-7\", \"customerId\": \"c-9\"}`. O que o contêiner guarda depois?",
     "hint": "Lição 11.",
     "choices": [
@@ -655,11 +733,11 @@
       }
     ]
   },
-  "ex-qydkm4qd": {
+  "ex-g7z7zzjk": {
     "prompt": "Um contêiner tem 60.000 RU/s e seis partições físicas. À noite, toda gravação leva o mesmo valor da chave de partição. No máximo, quantas unidades de requisição por segundo essas gravações podem usar?",
     "hint": "Lição 11."
   },
-  "ex-d9gmkszd": {
+  "ex-795hargr": {
     "prompt": "Associe cada chave candidata para os pedidos da Quitanda ao que a lição mediu sobre ela.",
     "hint": "Lição 11.",
     "pairs": [
@@ -681,7 +759,7 @@
       }
     ]
   },
-  "ex-t65ghamh": {
+  "ex-vj8jswpy": {
     "prompt": "Um programa chama `replace_container` no emulador para trocar a chave de um contêiner de `/customerId` para `/placedDate`, e não recebe erro. Qual é o jeito documentado de ter esse contêiner particionado por data no Azure?",
     "hint": "Lição 11.",
     "choices": [
@@ -703,7 +781,7 @@
       }
     ]
   },
-  "ex-59492mtn": {
+  "ex-kq6j5cfm": {
     "prompt": "Ordene os cinco níveis de consistência do Cosmos DB da promessa mais forte para a mais fraca.",
     "hint": "Lição 12.",
     "items": [
@@ -714,11 +792,11 @@
       "eventual"
     ]
   },
-  "ex-g7z7zzjk": {
+  "ex-yw41xf50": {
     "prompt": "Uma página faz 4.500 leituras pontuais por segundo de um documento de 1 KB. Seguindo o \"cerca do dobro\" da documentação, quantas unidades de requisição por segundo ela precisa em bounded staleness?",
     "hint": "Lição 12."
   },
-  "ex-795hargr": {
+  "ex-h8p33c8r": {
     "prompt": "Dois clientes tentam comprar o último maço de coentro no mesmo instante. Cada cliente lê o estoque, vê 1 e grava 0. O que impede que as duas compras passem?",
     "hint": "Lição 12.",
     "choices": [
@@ -740,7 +818,7 @@
       }
     ]
   },
-  "ex-vj8jswpy": {
+  "ex-wpxn6575": {
     "prompt": "Uma conta no Azure foi criada em eventual. Um cliente criado com `consistency_level=\"Strong\"` lê um pedido. O que diz a documentação?",
     "hint": "Lição 12.",
     "choices": [
@@ -762,11 +840,11 @@
       }
     ]
   },
-  "ex-kq6j5cfm": {
+  "ex-n62rebee": {
     "prompt": "Um contêiner roda em autoscale com máximo de 5.000 RU/s. Entre três e quatro da manhã a carga nunca passa de 200 RU/s. Por quantas RU/s essa hora é cobrada?",
     "hint": "Lição 13."
   },
-  "ex-yw41xf50": {
+  "ex-wmmgg2xf": {
     "prompt": "Um contêiner em autoscale com máximo de 6.000 RU/s foi cobrado, na média das horas do mês, a 5.000 RU/s. Com o autoscale a 1,5 vez o preço manual, que forma de pagar teria saído mais barata?",
     "hint": "Lição 13.",
     "choices": [
@@ -788,7 +866,7 @@
       }
     ]
   },
-  "ex-h8p33c8r": {
+  "ex-5y7hshak": {
     "prompt": "O Normalized RU Consumption de um contêiner fica em 100% a noite toda enquanto o consumo total é uma fração do provisionado, e os 429 sobem. Qual é a correção?",
     "hint": "Lição 13.",
     "choices": [
@@ -810,7 +888,7 @@
       }
     ]
   },
-  "ex-wpxn6575": {
+  "ex-p2emttv1": {
     "prompt": "Consultada sobre os padrões, a `RetryOptions` da biblioteca Python desiste de uma requisição limitada depois de ___ tentativas ou trinta segundos de espera, o que vier antes.",
     "hint": "Lição 13.",
     "blanks": [
@@ -822,7 +900,7 @@
       }
     ]
   },
-  "ex-n62rebee": {
+  "ex-9ar2hpef": {
     "prompt": "O pedido `o-9` é pago, embalado e entregue em quarenta segundos. Um leitor do feed no modo latest version, que consulta uma vez por minuto, lê em seguida. O que ele vê?",
     "hint": "Lição 14.",
     "choices": [
@@ -844,7 +922,7 @@
       }
     ]
   },
-  "ex-wmmgg2xf": {
+  "ex-e1c1j7xs": {
     "prompt": "Uma colega muda o `processor.py` para gravar o token de continuação primeiro e a visão depois, \"para a posição nunca se perder\". O que um crash entre as duas gravações causa agora?",
     "hint": "Lição 14.",
     "choices": [
@@ -866,7 +944,7 @@
       }
     ]
   },
-  "ex-5y7hshak": {
+  "ex-kbevc0tj": {
     "prompt": "A Quitanda apaga pedidos marcando-os como apagados e dando a eles um `ttl`. A visão de gastos é refeita por um processador que roda uma vez por noite. Qual `ttl` está errado?",
     "hint": "Lição 14.",
     "choices": [
@@ -888,7 +966,7 @@
       }
     ]
   },
-  "ex-p2emttv1": {
+  "ex-cgyha6rn": {
     "prompt": "Associe cada parte do change feed processor da Microsoft ao que ela é.",
     "hint": "Lição 14.",
     "pairs": [
@@ -910,7 +988,7 @@
       }
     ]
   },
-  "ex-9ar2hpef": {
+  "ex-jf8e392c": {
     "prompt": "Um programa guarda páginas de produto no Azure Cache for Redis, deixado na política de despejo padrão documentada, e grava todas as chaves sem tempo de vida. O que acontece quando o cache enche?",
     "hint": "Lição 15.",
     "choices": [
@@ -932,7 +1010,7 @@
       }
     ]
   },
-  "ex-e1c1j7xs": {
+  "ex-fkfkr50e": {
     "prompt": "Quando o preço de um produto muda no Cosmos DB, por que o programa apaga a chave do cache em vez de gravar o preço novo no Redis?",
     "hint": "Lição 15.",
     "choices": [
@@ -954,7 +1032,7 @@
       }
     ]
   },
-  "ex-kbevc0tj": {
+  "ex-z40mfffw": {
     "prompt": "Num Redis clusterizado, qual par de chaves um único `MSET` consegue gravar junto?",
     "hint": "Lição 15.",
     "choices": [
@@ -976,7 +1054,7 @@
       }
     ]
   },
-  "ex-cgyha6rn": {
+  "ex-hh5drka8": {
     "prompt": "Num Redis gerenciado, quais destas continuam sendo decisões do seu programa? Marque todas as que se aplicam.",
     "hint": "Lição 15.",
     "choices": [
@@ -998,7 +1076,7 @@
       }
     ]
   },
-  "ex-jf8e392c": {
+  "ex-ne38dg9b": {
     "prompt": "Num pool SQL dedicado, a tabela de pedidos da Quitanda é declarada com `DISTRIBUTION = HASH(store)`, e a Quitanda tem cinco lojas. O que acontece com uma consulta sobre a tabela inteira?",
     "hint": "Lição 16.",
     "choices": [
@@ -1020,11 +1098,11 @@
       }
     ]
   },
-  "ex-fkfkr50e": {
+  "ex-x4xqncd1": {
     "prompt": "Um pool SQL serverless roda três consultas que processam 3 MB, 25,2 MB e 40 MB. Com o mínimo documentado de 10 MB por consulta e cada consulta arredondada para o megabyte seguinte, quantos MB são cobrados no total?",
     "hint": "Lição 16."
   },
-  "ex-z40mfffw": {
+  "ex-tn0h0apd": {
     "prompt": "O pool dedicado da Quitanda atende um relatório que roda uma hora por noite. O arquivo Terraform declara o workspace, o lake e o pool. De onde vem a economia de pausá-lo?",
     "hint": "Lição 16.",
     "choices": [
@@ -1046,7 +1124,7 @@
       }
     ]
   },
-  "ex-hh5drka8": {
+  "ex-htdf44m0": {
     "prompt": "Quais destas reduzem os bytes que um leitor do lake precisa buscar para responder \"vendas de hoje por forma de pagamento\" sobre um mês de arquivos de pedidos? Marque todas as que se aplicam.",
     "hint": "Lição 16.",
     "choices": [
@@ -1068,11 +1146,11 @@
       }
     ]
   },
-  "ex-ne38dg9b": {
+  "ex-d60e2e30": {
     "prompt": "A um preço ilustrativo de 0,20 USD por CU-hora, quanto custa uma capacidade F16 num mês de 30 dias se ela fica ligada 10 horas por dia e pausada no resto, em USD?",
     "hint": "Lição 17."
   },
-  "ex-x4xqncd1": {
+  "ex-wb12sekr": {
     "prompt": "A carga noturna precisa gravar os pedidos, os itens e o resumo do dia de modo que nenhum leitor veja um sem os outros. No Fabric, que item consegue isso?",
     "hint": "Lição 17.",
     "choices": [
@@ -1094,7 +1172,7 @@
       }
     ]
   },
-  "ex-tn0h0apd": {
+  "ex-rwbb96sk": {
     "prompt": "Um lakehouse tem um atalho para uma pasta no Amazon S3, e um notebook o lê toda hora. Em qual conta essa leitura entra?",
     "hint": "Lição 17.",
     "choices": [
@@ -1116,7 +1194,7 @@
       }
     ]
   },
-  "ex-htdf44m0": {
+  "ex-c067yhms": {
     "prompt": "Uma capacidade chegou ao estágio em que os relatórios falham. Um administrador a pausa para zerar a dívida e a retoma. O que a documentação diz que acontece com o consumo acumulado?",
     "hint": "Lição 17.",
     "choices": [
@@ -1138,7 +1216,7 @@
       }
     ]
   },
-  "ex-d60e2e30": {
+  "ex-v6xdjn62": {
     "prompt": "Uma tabela Delta de um arquivo guarda outubro; um pedido é apagado, o que grava um arquivo novo. Depois uma ferramenta que lê Parquet mas não o log do Delta é apontada para a pasta. Quantos pedidos ela conta?",
     "hint": "Lição 18.",
     "choices": [
@@ -1160,11 +1238,11 @@
       }
     ]
   },
-  "ex-wb12sekr": {
+  "ex-c331ynxk": {
     "prompt": "Um job faz append numa tabela Delta, particionada por dia, a cada 15 minutos, dia e noite. Antes de qualquer compactação, quantos arquivos de dados a partição de um dia guarda?",
     "hint": "Lição 18."
   },
-  "ex-rwbb96sk": {
+  "ex-qrvqvwv4": {
     "prompt": "Um cliente pede à Quitanda que apague seus pedidos, e o delete faz commit na segunda. A tabela passa por vacuum toda noite com o padrão de sete dias. Quando as linhas do cliente somem do disco?",
     "hint": "Lição 18.",
     "choices": [
@@ -1186,7 +1264,7 @@
       }
     ]
   },
-  "ex-c067yhms": {
+  "ex-2tk9m8sp": {
     "prompt": "Um job lê só o que foi acrescentado à tabela de pedidos desde a última execução. De madrugada, uma compactação trocou 527 arquivos por 31. O que impede o job de ler o mês de novo como 31 arquivos novos?",
     "hint": "Lição 18.",
     "choices": [
@@ -1208,7 +1286,7 @@
       }
     ]
   },
-  "ex-v6xdjn62": {
+  "ex-ss3gt99h": {
     "prompt": "Associe cada origem de onde um pipeline da Quitanda copia ao integration runtime em que a lição rodaria a cópia.",
     "hint": "Lição 19.",
     "pairs": [
@@ -1230,15 +1308,15 @@
       }
     ]
   },
-  "ex-c331ynxk": {
+  "ex-7a8ak4df": {
     "prompt": "Um trigger tumbling window tem janelas de 24 horas a partir de `2026-10-01T06:00:00Z` (três da manhã em São Paulo). Ele é ativado ao meio-dia, horário de São Paulo, de 15 de outubro. Quantas janelas ele deve ao pipeline de uma vez?",
     "hint": "Lição 19."
   },
-  "ex-qrvqvwv4": {
+  "ex-v3n46hck": {
     "prompt": "Um pipeline de quatro atividades roda a cada 10 minutos num mês de 30 dias, e cada execução é iniciada por uma execução de trigger. A um preço ilustrativo de 1,00 USD por mil execuções, quanto dá a linha de orquestração, em USD?",
     "hint": "Lição 19."
   },
-  "ex-2tk9m8sp": {
+  "ex-znc2ncbh": {
     "prompt": "A carga noturna falha em 12 de outubro e ninguém percebe até o dia 14. Ela é iniciada por um trigger de agendamento. O que o trigger faz a respeito do dia 12?",
     "hint": "Lição 19.",
     "choices": [
@@ -1260,11 +1338,11 @@
       }
     ]
   },
-  "ex-ss3gt99h": {
+  "ex-pt2n14h7": {
     "prompt": "Uma noite roda três mapping data flows em sequência em 8 cores, cada um com 4 minutos de trabalho, sem tempo de vida, e cada um espera uma partida a frio ilustrativa de 5 minutos. A um preço ilustrativo de 0,30 USD por vCore-hora, quanto custa a noite, em USD?",
     "hint": "Lição 20."
   },
-  "ex-7a8ak4df": {
+  "ex-tdqns3pp": {
     "prompt": "Alguém muda o `clean.py` para tirar a vírgula do total em vez de trocá-la por ponto. Por que a exportação real da noite carregaria sem reclamação?",
     "hint": "Lição 20.",
     "choices": [
@@ -1286,7 +1364,7 @@
       }
     ]
   },
-  "ex-v3n46hck": {
+  "ex-yma61a7p": {
     "prompt": "Uma equipe de analistas que sabe SQL e Data Factory, e nada de Python, precisa juntar e agregar tabelas já arrumadas, e nada além disso está previsto. Qual a lição diz que ganha?",
     "hint": "Lição 20.",
     "choices": [
@@ -1308,7 +1386,7 @@
       }
     ]
   },
-  "ex-znc2ncbh": {
+  "ex-q028e7dc": {
     "prompt": "A Quitanda planeja levar os pipelines e os mapping data flows do Data Factory para o Fabric. Qual metade vai com menos facilidade, e por quê?",
     "hint": "Lição 20.",
     "choices": [
@@ -1330,11 +1408,11 @@
       }
     ]
   },
-  "ex-pt2n14h7": {
+  "ex-7w4gbx6b": {
     "prompt": "Um job cluster de três máquinas roda 40 minutos por noite durante 30 noites. Cada máquina consome um ilustrativo 1 DBU por hora, o DBU custa um ilustrativo 0,30 USD na tarifa de jobs, e o Azure cobra de cada máquina um ilustrativo 0,20 USD por hora. Quanto dá o mês, em USD?",
     "hint": "Lição 21."
   },
-  "ex-tdqns3pp": {
+  "ex-5w7mf0wt": {
     "prompt": "Um engenheiro concede `SELECT` no schema `quitanda_prd.sales` para `analysts`, \"para economizar três linhas\". O que essa concessão faz que as concessões por tabela não faziam?",
     "hint": "Lição 21.",
     "choices": [
@@ -1356,7 +1434,7 @@
       }
     ]
   },
-  "ex-yma61a7p": {
+  "ex-cyej294t": {
     "prompt": "Alguém apaga `quitanda_prd.sales.orders`, uma tabela externa sobre o contêiner curated, e uma analista apaga uma tabela gerenciada feita para a pergunta de uma tarde. O que acontece com os arquivos?",
     "hint": "Lição 21.",
     "choices": [
@@ -1378,7 +1456,7 @@
       }
     ]
   },
-  "ex-q028e7dc": {
+  "ex-e7hpryzb": {
     "prompt": "O Unity Catalog não dá nada às analistas na tabela de clientes, e mesmo assim uma analista lê todas as colunas com uma ferramenta que tem um token SAS do contêiner curated. O que isso mostra?",
     "hint": "Lição 21.",
     "choices": [
@@ -1400,11 +1478,11 @@
       }
     ]
   },
-  "ex-7w4gbx6b": {
+  "ex-tc1hagyy": {
     "prompt": "Um namespace Standard recebe 2.500 eventos por segundo de cerca de 0,2 KB cada, e dois grupos de consumidores leem cada um todos os eventos. Pela definição documentada de unidade de throughput, qual é o menor número de unidades que dá conta disso?",
     "hint": "Lição 22."
   },
-  "ex-5w7mf0wt": {
+  "ex-ddty9a79": {
     "prompt": "No emulador, um leitor de `clicks` usa o grupo de consumidores `analytics`, que a configuração nunca declarou, e não imprime nada por cinco segundos. O que ele provou?",
     "hint": "Lição 22.",
     "choices": [
@@ -1426,7 +1504,7 @@
       }
     ]
   },
-  "ex-cyej294t": {
+  "ex-dnpfm4vy": {
     "prompt": "Para deixar a checagem de fraude mais rápida, a equipe roda cinco cópias dela num grupo de consumidores, todas lendo a partição 2. O que cada cópia recebe?",
     "hint": "Lição 22.",
     "choices": [
@@ -1448,7 +1526,7 @@
       }
     ]
   },
-  "ex-e7hpryzb": {
+  "ex-0ab2fvjr": {
     "prompt": "Associe cada tier à maior retenção que a documentação da Microsoft dá a ele.",
     "hint": "Lição 22.",
     "pairs": [
@@ -1469,7 +1547,7 @@
       "30 dias"
     ]
   },
-  "ex-tc1hagyy": {
+  "ex-6vwnqpx5": {
     "prompt": "Associe cada pergunta à janela do Stream Analytics que a responde.",
     "hint": "Lição 23.",
     "pairs": [
@@ -1491,11 +1569,11 @@
       }
     ]
   },
-  "ex-ddty9a79": {
+  "ex-4zadzwtw": {
     "prompt": "Um job de 2 unidades de streaming fica ligado das 8h às 20h todos os dias de um mês de 30 dias. A um preço ilustrativo de 0,11 USD por unidade de streaming-hora, quanto dá o mês dele, em USD?",
     "hint": "Lição 23."
   },
-  "ex-dnpfm4vy": {
+  "ex-d0vyvz1a": {
     "prompt": "Um job soma a receita por dia, e o financeiro quer que o total do dia inclua todo pedido, não importa em que minuto. Um evento chega além das tolerâncias do job. Que política de ordenação serve, e o que ela custa?",
     "hint": "Lição 23.",
     "choices": [
@@ -1517,7 +1595,7 @@
       }
     ]
   },
-  "ex-0ab2fvjr": {
+  "ex-nhd5g0g9": {
     "prompt": "Uma consulta conta checkouts por minuto sem `TIMESTAMP BY`. Um celular num túnel guarda três checkouts tocados às 20h00 e os envia às 20h03. Em que minuto eles caem?",
     "hint": "Lição 23.",
     "choices": [
@@ -1539,7 +1617,7 @@
       }
     ]
   },
-  "ex-6vwnqpx5": {
+  "ex-46f9fef5": {
     "prompt": "Um leitor grava o checkpoint de um evento e depois soma o pagamento ao total do cliente. O processo morre entre as duas coisas. O que acontece com esse pagamento?",
     "hint": "Lição 24.",
     "choices": [
@@ -1561,11 +1639,11 @@
       }
     ]
   },
-  "ex-4zadzwtw": {
+  "ex-rxtdfhdp": {
     "prompt": "Um leitor faz checkpoint a cada cem eventos. O último checkpoint foi no número de sequência 299 de uma partição, ele tratou até o 349 e caiu. Quantos eventos dessa partição ele trata pela segunda vez ao voltar?",
     "hint": "Lição 24."
   },
-  "ex-d0vyvz1a": {
+  "ex-s1m54x7d": {
     "prompt": "No modo `guard` o leitor guarda o último número de sequência aplicado junto com os totais, num blob só, e pula tudo que for igual ou menor. Depois do crash e do reinício, por que o total de `c-17` ainda está 990 acima?",
     "hint": "Lição 24.",
     "choices": [
@@ -1587,7 +1665,7 @@
       }
     ]
   },
-  "ex-nhd5g0g9": {
+  "ex-cwmhy6gd": {
     "prompt": "Para tirar duplicatas, um leitor descarta qualquer pagamento com o mesmo cliente e o mesmo valor de outro visto no último minuto. O que há de errado nessa regra?",
     "hint": "Lição 24.",
     "choices": [
@@ -1609,7 +1687,7 @@
       }
     ]
   },
-  "ex-46f9fef5": {
+  "ex-n85t8ymc": {
     "prompt": "No classificador do curso, a coluna `tracking` tinha números de onze dígitos em toda linha amostrada, o formato de um CPF, e não foi rotulada. Por quê?",
     "hint": "Lição 25.",
     "choices": [
@@ -1622,7 +1700,7 @@
         "why": "A amostra foi a mesma para toda coluna."
       },
       {
-        "text": "Nenhum dos números passou nos dígitos verificadores",
+        "text": "Nenhum número passou no cálculo dos verificadores",
         "why": "Isso: o validador mantém o padrão honesto."
       },
       {
@@ -1631,7 +1709,7 @@
       }
     ]
   },
-  "ex-rxtdfhdp": {
+  "ex-h0s1awn6": {
     "prompt": "A coluna `notes` tem um CPF em dez linhas, digitado por um operador. Que resposta a lição recomenda?",
     "hint": "Lição 25.",
     "choices": [
@@ -1653,11 +1731,11 @@
       }
     ]
   },
-  "ex-s1m54x7d": {
+  "ex-z41sv7gp": {
     "prompt": "A preços ilustrativos de 0,40 USD por unidade de capacidade-hora do Data Map e 0,60 USD por vCore-hora de varredura, quanto dá um mês de 30 dias (730 horas) com uma unidade de capacidade e quatro varreduras semanais de 4 vCore-horas cada, em USD?",
     "hint": "Lição 25."
   },
-  "ex-cwmhy6gd": {
+  "ex-xemz6vzv": {
     "prompt": "Um script Python numa máquina virtual lê os arquivos do Capture e grava um Parquet limpo no lake. O que o grafo de linhagem do Purview mostra para esse arquivo?",
     "hint": "Lição 25.",
     "choices": [
@@ -1679,7 +1757,7 @@
       }
     ]
   },
-  "ex-n85t8ymc": {
+  "ex-vfvmyjys": {
     "prompt": "Ordene as seis perguntas da lição para escolher um armazenamento, na ordem em que ela manda fazê-las.",
     "hint": "Lição 26.",
     "items": [
@@ -1691,7 +1769,7 @@
       "Quanto custa, nessa carga de trabalho?"
     ]
   },
-  "ex-h0s1awn6": {
+  "ex-by39fh7z": {
     "prompt": "Associe cada carga de trabalho da Quitanda ao armazenamento que a lição dá a ela.",
     "hint": "Lição 26.",
     "pairs": [
@@ -1716,7 +1794,7 @@
       "um pool SQL serverless"
     ]
   },
-  "ex-z41sv7gp": {
+  "ex-qxnqpfsy": {
     "prompt": "O `compare.py` calcula a tela \"meus pedidos\" em 371 USD por mês no Azure SQL Database, quase tudo em dois vCores. Os pedidos da Quitanda já ficam nesse banco por causa do checkout. Quanto a tela soma à conta ali?",
     "hint": "Lição 26.",
     "choices": [
@@ -1738,7 +1816,7 @@
       }
     ]
   },
-  "ex-xemz6vzv": {
+  "ex-qbspqhy3": {
     "prompt": "A equipe de fraude quer gravar os status dos pedidos direto no próprio contêiner do Cosmos DB, enquanto a loja continua gravando no Azure SQL Database. O que diz a regra da lição que vale para todos os armazenamentos?",
     "hint": "Lição 26.",
     "choices": [
