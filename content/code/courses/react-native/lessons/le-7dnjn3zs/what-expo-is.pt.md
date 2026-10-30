@@ -27,7 +27,7 @@ da alternativa local a cada parte dele.
 
 **Cada versão do SDK do Expo é feita para exatamente uma versão do React Native.** O SDK 58, que este
 curso usa, anda junto com o React Native 0.88. Toda biblioteca do SDK é testada contra essa versão e
-contra as outras da mesma versão do SDK, e essa é a principal coisa de que o Expo poupa você: descobrir
+contra as outras da mesma versão do SDK. Essa é a principal coisa de que o Expo poupa você: descobrir
 qual versão de uma biblioteca de câmera funciona com qual versão de uma biblioteca de navegação e com
 qual versão do React Native, uma falha de cada vez.
 

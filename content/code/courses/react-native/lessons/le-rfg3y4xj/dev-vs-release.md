@@ -14,7 +14,7 @@ a developer sees, and it differs from the one people install in ways that are ea
 | names | as written | minified, in the parts the minifier may rename |
 | speed | slower, by design | as fast as it will be |
 
-**A bug that appears only in release is almost always one of four things**: a check that existed only in
+**A bug that appears only in release is almost always one of four things.** It is a check that existed only in
 development and was hiding a mistake; a value fixed at build time that was different on the machine that
 built the release; code that depended on a name the minifier changed; or data the release meets and
 development never did. This lesson shows the second and the fourth for real, since they are the common

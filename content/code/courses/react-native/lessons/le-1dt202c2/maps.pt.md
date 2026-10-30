@@ -47,6 +47,6 @@ Cada `Marker` é um alfinete, e o `title` é o que um toque nele mostra.
   informação precisa estar em outro lugar também.
 
 *Este arquivo foi conferido pelo compilador de TypeScript contra o `react-native-maps` 1.29.11, a versão
-que o SDK 58 espera, e não foi executado: o planner não o instala, porque um mapa com chave precisa de um
+que o SDK 58 espera, e não foi executado. O planner não o instala: um mapa com chave precisa de um
 projeto do Google Cloud que este curso não tem, e os dois ou três lugares do planner se leem bem como uma
 linha de texto.*

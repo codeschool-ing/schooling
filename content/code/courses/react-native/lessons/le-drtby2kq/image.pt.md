@@ -19,7 +19,7 @@ nos assets do app) em cada resolução que o projeto oferece: `icon.png`, `icon@
 a lado são escolhidos pela densidade de pixels da tela.
 
 **Uma imagem da rede sem `width` e `height` é desenhada com zero por zero**, ou seja, não é desenhada,
-sem erro nenhum. É a pergunta mais comum sobre o React Native do tipo "a minha imagem não aparece". Dê a
+sem erro nenhum. É a resposta de costume quando alguém pergunta por que uma imagem não aparece no React Native. Dê a
 ela um tamanho, ou um `flex` e um `aspectRatio` que produzam um.
 
 ## Pixels que você vê, pixels que você paga

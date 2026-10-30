@@ -14,7 +14,7 @@ um desenvolvedor vê, e ele difere do que as pessoas instalam de jeitos fáceis 
 | nomes | como foram escritos | minificados, nas partes que o minificador pode renomear |
 | velocidade | mais lento, de propósito | tão rápido quanto vai ser |
 
-**Um bug que só aparece em release quase sempre é uma de quatro coisas**: uma conferência que só existia em
+**Um bug que só aparece em release quase sempre é uma de quatro coisas.** É uma conferência que só existia em
 desenvolvimento e escondia um erro; um valor fixado na hora do build que era diferente na máquina que
 construiu o release; código que dependia de um nome que o minificador mudou; ou dados que o release
 encontra e o desenvolvimento nunca encontrou. Esta aula mostra a segunda e a quarta de verdade, já que são

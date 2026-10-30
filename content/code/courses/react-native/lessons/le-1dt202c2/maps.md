@@ -47,5 +47,5 @@ screen. Each `Marker` is a pin, and `title` is what a tap on it shows.
   information, and the information has to be somewhere else as well.
 
 *This file was checked by the TypeScript compiler against `react-native-maps` 1.29.11, the version SDK 58
-expects, and was not run: the planner does not install it, because a map with a key needs a Google Cloud
+expects, and was not run. The planner does not install it: a map with a key needs a Google Cloud
 project this course does not have, and the planner's two or three places read well as a line of text.*

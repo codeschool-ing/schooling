@@ -5,8 +5,8 @@ version: 1
 
 **Most of this course runs on an ordinary computer with no phone attached.** React Native's
 components, state, navigation, lists, forms, data fetching and animations are JavaScript, and they
-run in two places that need nothing but Node.js: in **tests**, with Jest, which renders your
-components without a screen and lets you press their buttons; and in a **browser**, because Expo
+run in two places that need nothing but Node.js. One is **tests**, with Jest, which renders your
+components without a screen and lets you press their buttons. The other is a **browser**, because Expo
 builds the same app for the web, drawn with HTML standing in for the native views. Every transcript
 in those lessons was recorded that way, on a Linux computer, and you can repeat each one on yours.
 

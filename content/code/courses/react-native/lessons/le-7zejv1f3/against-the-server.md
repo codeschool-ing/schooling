@@ -212,6 +212,5 @@ GET /plan
 
 Read it in order: `GET /` is the recording machine checking the server had started; then `curl`'s
 refused `POST` with its body; then one `GET /plan` for each browser visit. The second visit's save sent
-`OPTIONS /sessions` first, the browser asking whether a cross-origin `POST` with a JSON body is allowed,
-which lesson 10's bodiless `POST` never needed; then the `POST` itself, with the minutes as a number;
+`OPTIONS /sessions` first, the browser asking whether a cross-origin `POST` with a JSON body is allowed, which lesson 10's bodiless `POST` never needed. Then came the `POST` itself, with the minutes as a number;
 then a `GET /plan`, the refetch that put the new session on the course's screen.

@@ -19,7 +19,7 @@ Quatro lugares onde um app como o planner fica lento, e o que mede cada um:
 
 O primeiro e o último podem ser medidos num computador, e esta aula os mede; imagens podem ser calculadas
 com exatidão, e a conta conferida num navegador. **O que a taxa de quadros de um celular faz não foi medido
-para este curso**, que não tem celular; a aula 12 mediu uma animação num navegador pelo mesmo motivo, e a
+para este curso**, que não tem celular. A aula 12 mediu uma animação num navegador pelo mesmo motivo, e a
 mesma honestidade vale aqui: um computador é muito mais rápido que um celular barato, então um celular
 precisa confirmar qualquer coisa que um navegador sugira.
 

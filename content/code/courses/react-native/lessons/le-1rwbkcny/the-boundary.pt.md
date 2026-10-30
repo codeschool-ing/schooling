@@ -5,9 +5,8 @@ version: 1
 
 **Quase todo este curso roda num computador comum, sem celular conectado.** Os componentes, o estilo,
 a navegação, as listas, os formulários, a busca de dados e as animações do React Native são
-JavaScript, e rodam em dois lugares que não precisam de nada além do Node.js: em **testes**, com o
-Jest, que renderiza os seus componentes sem tela e deixa você apertar os botões deles; e num
-**navegador**, porque o Expo constrói o mesmo app para a web, desenhado com HTML no lugar das views
+JavaScript, e rodam em dois lugares que não precisam de nada além do Node.js. Um são os **testes**, com o
+Jest, que renderiza os seus componentes sem tela e deixa você apertar os botões deles. O outro é o **navegador**, porque o Expo constrói o mesmo app para a web, desenhado com HTML no lugar das views
 nativas. Toda transcrição dessas aulas foi gravada assim, num computador Linux, e você pode repetir
 cada uma no seu.
 

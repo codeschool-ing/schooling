@@ -212,6 +212,5 @@ GET /plan
 
 Leia em ordem: o `GET /` é a máquina de gravação conferindo que o servidor tinha subido; depois o `POST` recusado
 do `curl`, com o corpo; depois um `GET /plan` para cada visita do navegador. O salvamento da segunda visita mandou
-antes o `OPTIONS /sessions`, o navegador perguntando se um `POST` de outra origem com corpo JSON é permitido, de
-que o `POST` sem corpo da aula 10 nunca precisou; depois o próprio `POST`, com os minutos como número; depois um
+antes o `OPTIONS /sessions`, o navegador perguntando se um `POST` de outra origem com corpo JSON é permitido, de que o `POST` sem corpo da aula 10 nunca precisou. Depois veio o próprio `POST`, com os minutos como número; depois um
 `GET /plan`, a nova busca que pôs a sessão nova na tela do curso.

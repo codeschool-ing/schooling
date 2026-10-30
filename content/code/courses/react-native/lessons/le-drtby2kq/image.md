@@ -19,7 +19,7 @@ the app's assets) at every resolution the project provides: `icon.png`, `icon@2x
 `icon@3x.png` beside each other are chosen by the screen's pixel density.
 
 **A network image with no `width` and `height` is drawn at zero by zero**, which is to say not at all,
-with no error. It is the single most common "my image does not show" question about React Native.
+with no error. It is the usual answer when somebody asks why an image does not show in React Native.
 Give it a size, or a `flex` and an `aspectRatio` that produce one.
 
 ## Pixels you see, pixels you pay for

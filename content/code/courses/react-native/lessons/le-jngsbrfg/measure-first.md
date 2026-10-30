@@ -19,7 +19,7 @@ Four places an app built like the planner gets slow, and what measures each:
 
 The first and the last can be measured on a computer, and this lesson does; images can be reasoned about
 exactly, and the reasoning checked in a browser. **What a phone's frame rate does was not measured for this
-course**, which has no phone; lesson 12 measured an animation in a browser for the same reason, and the same
+course**, which has no phone. Lesson 12 measured an animation in a browser for the same reason, and the same
 honesty applies here: a computer is much faster than a cheap phone, so a phone has to confirm anything a
 browser suggests.
 

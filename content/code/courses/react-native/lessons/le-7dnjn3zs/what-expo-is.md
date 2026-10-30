@@ -27,7 +27,7 @@ alternative to each part of it.
 
 **An Expo SDK release is built for exactly one React Native version.** SDK 58, which this course uses,
 pairs with React Native 0.88. Every library in the SDK is tested against that version and against
-the others in the same release, which is the main thing Expo saves you from: finding out which
+the others in the same release. That is the main thing Expo saves you from: finding out which
 version of a camera library works with which version of a navigation library and which version of
 React Native, one crash at a time.
 
