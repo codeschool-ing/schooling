@@ -15,7 +15,7 @@ are meant to be used. The other three modifiers each narrow it:
 | `internal` | anywhere in the same **module** | anywhere in the same module |
 
 A module is what is compiled together: one Gradle module, one `kotlinc` run. `internal` matters once
-lesson 19 splits the planner into modules, where it means "public inside this module, invisible to
+lesson 19 builds a project of two modules, where it means "public inside this module, invisible to
 the others".
 
 ## Hiding the parts that keep a promise

@@ -15,7 +15,7 @@ biblioteca existe para ser usada. Os outros três modificadores estreitam isso:
 | `internal` | em qualquer lugar do mesmo **módulo** | em qualquer lugar do mesmo módulo |
 
 Um módulo é o que é compilado junto: um módulo Gradle, uma execução do `kotlinc`. O `internal` importa
-quando a lição 19 divide o planejador em módulos, onde ele quer dizer "público dentro deste módulo,
+quando a lição 19 monta um projeto de dois módulos, onde ele quer dizer "público dentro deste módulo,
 invisível para os outros".
 
 ## Escondendo as partes que cumprem uma promessa
