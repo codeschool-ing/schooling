@@ -31,12 +31,13 @@ sudo apt-get install -y postgresql-16
 ```
 
 **The package starts a server of its own** on port 5432, for the system's use, and this lesson leaves
-it alone. You run a second one in `~/gcp`, the way the emulators run: its files in a directory of
+it alone, or stopped if lesson 6 stopped it. A server of lesson 6 or 7 still running on port 5433
+has to be stopped first, with `Ctrl+C` in its terminal, because this one uses the same port. You run a second one in `~/gcp`, the way the emulators run: its files in a directory of
 yours, in the foreground of a terminal of its own, stopped with `Ctrl+C`. First the directory, once:
 
 ```sh
 export PATH="/usr/lib/postgresql/16/bin:$PATH"
-initdb -D ~/gcp/pg -U quitanda --auth=trust > /dev/null
+initdb -D ~/gcp/pg/columnar -U quitanda --auth=trust > /dev/null
 ```
 
 `-U quitanda` names the superuser, and `--auth=trust` lets anyone on this computer connect without a
@@ -45,7 +46,7 @@ in a terminal of its own:
 
 ```sh
 cd ~/gcp && export PATH="/usr/lib/postgresql/16/bin:$PATH"
-postgres -D ~/gcp/pg -k /tmp -p 5433 -c listen_addresses=''
+postgres -D ~/gcp/pg/columnar -k /tmp -p 5433 -c listen_addresses=''
 ```
 
 **`listen_addresses=''` is what makes `trust` safe**: the server answers only on a socket file in

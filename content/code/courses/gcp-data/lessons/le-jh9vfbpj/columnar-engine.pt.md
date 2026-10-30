@@ -31,12 +31,13 @@ sudo apt-get install -y postgresql-16
 ```
 
 **O pacote inicia um servidor próprio** na porta 5432, para uso do sistema, e esta aula o deixa em
-paz. Você roda um segundo em `~/gcp`, do jeito que os emuladores rodam: os arquivos num diretório seu,
+paz, ou parado, se a aula 6 o parou. Um servidor da aula 6 ou 7 ainda rodando na porta 5433 precisa
+ser parado antes, com `Ctrl+C` no terminal dele, porque este usa a mesma porta. Você roda um segundo em `~/gcp`, do jeito que os emuladores rodam: os arquivos num diretório seu,
 em primeiro plano num terminal só dele, parado com `Ctrl+C`. Primeiro o diretório, uma vez:
 
 ```sh
 export PATH="/usr/lib/postgresql/16/bin:$PATH"
-initdb -D ~/gcp/pg -U quitanda --auth=trust > /dev/null
+initdb -D ~/gcp/pg/columnar -U quitanda --auth=trust > /dev/null
 ```
 
 `-U quitanda` dá nome ao superusuário, e `--auth=trust` deixa qualquer pessoa neste computador se
@@ -45,7 +46,7 @@ nenhum. Depois, num terminal só dele:
 
 ```sh
 cd ~/gcp && export PATH="/usr/lib/postgresql/16/bin:$PATH"
-postgres -D ~/gcp/pg -k /tmp -p 5433 -c listen_addresses=''
+postgres -D ~/gcp/pg/columnar -k /tmp -p 5433 -c listen_addresses=''
 ```
 
 **`listen_addresses=''` é o que torna o `trust` seguro**: o servidor só responde num arquivo de socket

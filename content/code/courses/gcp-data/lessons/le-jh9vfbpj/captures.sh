@@ -48,9 +48,9 @@ run "gcloud alloydb clusters migrate-cloud-sql --help | sed -n '/^DESCRIPTION/,/
 # ---- columnar-engine: a PostgreSQL of the student's own --------------------------
 export PATH="/usr/lib/postgresql/16/bin:$PATH"
 mount -t tmpfs tmpfs /tmp || exit 1
-mkdir -p ~/gcp/pg && chown postgres ~/gcp/pg
-runuser -u postgres -- initdb -D "$HOME/gcp/pg" -U quitanda --auth=trust > /dev/null || exit 1
-( cd ~/gcp && setsid runuser -u postgres -- postgres -D "$HOME/gcp/pg" -k /tmp -p 5433 -c listen_addresses='' \
+mkdir -p ~/gcp/pg/columnar && chown postgres ~/gcp/pg/columnar
+runuser -u postgres -- initdb -D "$HOME/gcp/pg/columnar" -U quitanda --auth=trust > /dev/null || exit 1
+( cd ~/gcp && setsid runuser -u postgres -- postgres -D "$HOME/gcp/pg/columnar" -k /tmp -p 5433 -c listen_addresses='' \
     > ~/.pg.log 2>&1 < /dev/null & )
 for _ in $(seq 40); do pg_isready -q -h /tmp -p 5433 && break; sleep 0.25; done
 export PGHOST=/tmp PGPORT=5433 PGUSER=quitanda PGDATABASE=postgres
@@ -70,8 +70,8 @@ block pg-point
 run "psql -c 'EXPLAIN (ANALYZE, BUFFERS, COSTS OFF) SELECT * FROM orders WHERE order_id = 1234567'"
 block pg-alloydb-only
 run "psql -c \"SELECT google_columnar_engine_add('orders')\""
-kill "$(head -1 ~/gcp/pg/postmaster.pid)" 2>/dev/null
-for _ in $(seq 40); do [ -f ~/gcp/pg/postmaster.pid ] || break; sleep 0.25; done
+kill "$(head -1 ~/gcp/pg/columnar/postmaster.pid)" 2>/dev/null
+for _ in $(seq 40); do [ -f ~/gcp/pg/columnar/postmaster.pid ] || break; sleep 0.25; done
 
 # ---- the-bill -------------------------------------------------------------------
 example "$L/the-bill.md" compare.py compare.py
