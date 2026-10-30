@@ -1,0 +1,265 @@
+{
+  "ex-2zfnf2b7": {
+    "prompt": "Qual destes comandos do Terraform rodou por inteiro no laboratório, sem credenciais do Azure?",
+    "hint": "Quais só leem os arquivos e o esquema do provider?",
+    "choices": [
+      {
+        "text": "terraform plan",
+        "why": "O plan pergunta ao Resource Manager o que existe, e parou no login."
+      },
+      {
+        "text": "terraform validate",
+        "why": "Certo. Ele confere a configuração com o esquema do provider, localmente."
+      },
+      {
+        "text": "terraform init com o backend azurerm",
+        "why": "O backend precisa da API de Storage, e também parou no login."
+      },
+      {
+        "text": "terraform apply",
+        "why": "O apply muda o Azure; nada no laboratório consegue."
+      }
+    ]
+  },
+  "ex-n55mwqqz": {
+    "prompt": "Por que fazer commit do `.terraform.lock.hcl` e não do `.terraform/`?",
+    "hint": "Um é um registro, o outro é o que ele registra.",
+    "choices": [
+      {
+        "text": "O arquivo de lock é pequeno, e o Git recusa diretórios",
+        "why": "O Git guarda diretórios sem problema; o motivo é o que cada um é."
+      },
+      {
+        "text": "`.terraform/` guarda o estado, que precisa ficar privado",
+        "why": "O estado fica no backend; `.terraform/` guarda o provider baixado."
+      },
+      {
+        "text": "O lock registra versões e checksums; o .terraform guarda 254 MB baixados",
+        "why": "Certo. Todos instalam os mesmos bytes a partir do registro, e ninguém faz commit dos bytes."
+      },
+      {
+        "text": "O arquivo de lock impede duas pessoas de aplicar ao mesmo tempo",
+        "why": "Isso é a trava do estado, um lease no backend; este arquivo fixa providers."
+      }
+    ]
+  },
+  "ex-dscnpqsh": {
+    "prompt": "Por que o provider azurerm exige `subscription_id` desde a versão 4?",
+    "hint": "O que ele teria de fazer de outro jeito?",
+    "choices": [
+      {
+        "text": "Para nunca adivinhar qual assinatura mudar",
+        "why": "Certo. Uma assinatura padrão é o último `az account set` de alguém."
+      },
+      {
+        "text": "Porque nomes de grupo de recursos são únicos por assinatura",
+        "why": "É verdade, e não é o motivo de o provider insistir."
+      },
+      {
+        "text": "Para cobrar o uso do próprio Terraform naquela assinatura",
+        "why": "O Terraform não é cobrado pelo Azure."
+      },
+      {
+        "text": "Porque tokens OIDC não carregam tenant",
+        "why": "O tenant vem à parte; a assinatura é outra pergunta."
+      }
+    ]
+  },
+  "ex-n183hqy4": {
+    "prompt": "Lendo o erro do `terraform plan` do laboratório da direita para a esquerda, o que falhou primeiro?",
+    "hint": "A causa mais de dentro está no fim.",
+    "choices": [
+      {
+        "text": "Montar um autorizador para o Resource Manager",
+        "why": "Essa é a falha mais de fora, consequência das outras."
+      },
+      {
+        "text": "Alcançar o Terraform Registry",
+        "why": "O provider já tinha sido instalado pelo init."
+      },
+      {
+        "text": "A linha de comando do Azure não tinha login",
+        "why": "Certo. `Please run 'az login'` é a causa mais de dentro; o resto vem dela."
+      },
+      {
+        "text": "Ler o id da assinatura",
+        "why": "O id foi aceito; o tenant é que não foi encontrado."
+      }
+    ]
+  },
+  "ex-kq2xr7jy": {
+    "prompt": "Ligue cada lugar onde o Terraform roda ao jeito como ele deve entrar.",
+    "hint": "Três lugares, três mecanismos, nenhum é segredo guardado.",
+    "pairs": [
+      {
+        "left": "O seu notebook",
+        "right": "az login, como você"
+      },
+      {
+        "left": "Um workflow do GitHub",
+        "right": "OIDC com ARM_USE_OIDC"
+      },
+      {
+        "left": "Uma VM de agente auto-hospedado no Azure",
+        "right": "Uma identidade gerenciada"
+      }
+    ],
+    "right_distractors": [
+      "Um client secret no bloco do provider"
+    ]
+  },
+  "ex-7z1v9dj4": {
+    "prompt": "Por que a loja mantém a conta de estado em `rg-tfstate`, sem nenhuma configuração do Terraform gerenciando?",
+    "hint": "O que a própria configuração da loja poderia apagar um dia?",
+    "choices": [
+      {
+        "text": "Contas de armazenamento não podem dividir grupo com recursos do app",
+        "why": "Podem; a separação é uma decisão sobre risco."
+      },
+      {
+        "text": "Para a configuração que apagaria rg-shop nunca ser dona do próprio registro",
+        "why": "Certo. Um destroy não leva o estado junto."
+      },
+      {
+        "text": "Para pagar menos pelos blobs de estado",
+        "why": "O preço é por conta e por dado, não por grupo de recursos."
+      },
+      {
+        "text": "Porque backends recusam contas em outros grupos",
+        "why": "O backend aceita o grupo que você nomear."
+      }
+    ]
+  },
+  "ex-wj64c4eq": {
+    "prompt": "O bloco de backend omite `use_azuread_auth`. O que muda, e por que a loja se importa?",
+    "hint": "O que o backend usa no lugar da sua identidade?",
+    "choices": [
+      {
+        "text": "Nada; o backend sempre usa a identidade logada",
+        "why": "Sem a opção, ele busca a chave da conta."
+      },
+      {
+        "text": "O estado deixa de ser cifrado em repouso",
+        "why": "A cifragem em repouso não depende de como o backend se autentica."
+      },
+      {
+        "text": "A trava deixa de funcionar",
+        "why": "Leases funcionam com qualquer jeito de entrar."
+      },
+      {
+        "text": "Ele usa a chave da conta, e quem tem a chave lê todo estado",
+        "why": "Certo. O estado guarda todo valor que o Terraform conhece, e a loja desliga o acesso por chave."
+      }
+    ]
+  },
+  "ex-9kpxt45r": {
+    "prompt": "O `terraform plan` falhou na API do Resource Manager e o `terraform init` com o backend falhou na API de Storage. O que o par ensina?",
+    "hint": "Duas APIs, dois papéis.",
+    "choices": [
+      {
+        "text": "Que o backend e o provider usam versões diferentes do Terraform",
+        "why": "Um binário do Terraform rodou os dois."
+      },
+      {
+        "text": "Estado e recursos ficam atrás de papéis separados",
+        "why": "Certo. Storage Blob Data Contributor na conta, Contributor nos grupos de recursos."
+      },
+      {
+        "text": "Que o Azurite respondeu a uma delas",
+        "why": "Nenhuma chegou ao Azurite; o bloco de backend nomeia uma conta real."
+      },
+      {
+        "text": "Que a rede do laboratório bloqueia armazenamento",
+        "why": "As duas pararam no login, antes de qualquer requisição de rede ao Azure."
+      }
+    ]
+  },
+  "ex-54dx2ggw": {
+    "prompt": "O que é a trava de estado do backend azurerm?",
+    "hint": "Um recurso do Blob Storage.",
+    "choices": [
+      {
+        "text": "Uma linha numa tabela de trava separada",
+        "why": "Não precisa de tabela; esse era o desenho antigo do backend S3."
+      },
+      {
+        "text": "Um arquivo chamado terraform.lock ao lado do estado",
+        "why": "Não há segundo arquivo; a posse é sobre o próprio blob de estado."
+      },
+      {
+        "text": "Um lease no blob de estado",
+        "why": "Certo. Enquanto ativo, ninguém mais o pega nem sobrescreve o blob."
+      },
+      {
+        "text": "Um lock do Resource Manager na conta de armazenamento",
+        "why": "Esses impedem apagar a conta; são assunto da lição 7."
+      }
+    ]
+  },
+  "ex-kcjw15ax": {
+    "prompt": "Pegar um lease num blob que já tem um falha com o código de erro Lease___.",
+    "hint": "Duas palavras juntas, depois de Lease.",
+    "blanks": [
+      {
+        "accept": [
+          "AlreadyPresent"
+        ]
+      }
+    ]
+  },
+  "ex-93d6d718": {
+    "prompt": "Uma esteira foi cancelada durante um `terraform apply`, e o estado agora está travado. O que a loja faz antes de rodar `terraform force-unlock`?",
+    "hint": "O que quebrar um lease não confere?",
+    "choices": [
+      {
+        "text": "Espera sessenta segundos para o lease expirar",
+        "why": "O lease do Terraform não tem prazo; era infinito na transcrição."
+      },
+      {
+        "text": "Apaga o blob de estado e envia um novo",
+        "why": "Isso destrói o registro; nada numa trava pede isso."
+      },
+      {
+        "text": "Confirma que quem segurava foi mesmo embora",
+        "why": "Certo. Quebrar libera o blob esteja alguém escrevendo ou não."
+      },
+      {
+        "text": "Põe o force-unlock no passo de retry da esteira",
+        "why": "É exatamente o que a regra da loja proíbe."
+      }
+    ]
+  },
+  "ex-kbjdtgvm": {
+    "prompt": "Ponha em ordem o que a esteira da loja faz com o Terraform.",
+    "hint": "Verificações locais primeiro, depois o Azure, depois a trava.",
+    "trap": "Entrar antes das verificações locais é o deslize: elas não precisam de identidade e falham mais rápido.",
+    "items": [
+      "terraform fmt -check e validate",
+      "Entrar com OIDC",
+      "o init alcança o blob de estado",
+      "o plan pega o lease, lê o estado e os recursos"
+    ]
+  },
+  "ex-2jxfs5rh": {
+    "prompt": "Quais destas coisas protegem o estado da loja? Marque todas as que se aplicam.",
+    "hint": "Versões, separação, identidade, o lease.",
+    "choices": [
+      {
+        "text": "Versionamento de blobs na conta de estado",
+        "why": "Sim. A lição 7 restaura a partir dele."
+      },
+      {
+        "text": "Desligar o acesso por chave na conta",
+        "why": "Sim. Só identidades com o papel de dados conseguem ler."
+      },
+      {
+        "text": "O lease pego durante plan e apply",
+        "why": "Sim. Duas execuções não o escrevem ao mesmo tempo."
+      },
+      {
+        "text": "Fazer commit do terraform.tfstate no repositório como backup",
+        "why": "Não. Ele guarda todo valor que o Terraform conhece, os sensíveis incluídos."
+      }
+    ]
+  }
+}
