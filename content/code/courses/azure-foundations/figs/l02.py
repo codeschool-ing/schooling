@@ -72,7 +72,7 @@ def resource_id():
               'ns': T('provider namespace', 'namespace do provider'), 'type': T('type', 'tipo'),
               'name': T('name', 'nome'), 'child': T('child resource', 'recurso filho')}
     lines = [segs[:4], segs[4:]]
-    cw = 6.6
+    cw = 7.3
     for li, line in enumerate(lines):
         y = 60 + li * 110
         total = sum(len(s) for s, _ in line) * cw
