@@ -1,0 +1,274 @@
+{
+ "ex-crnky3f7": {
+  "prompt": "Um contêiner no Cloud Run imprime `level=error msg=\"stock lookup failed\"`. Que severidade a entrada recebe?",
+  "hint": "De onde o Cloud Logging lê uma severidade?",
+  "choices": [
+   {
+    "text": "ERROR, pela palavra depois de level=",
+    "why": "O Cloud Logging não interpreta texto; só um campo JSON chamado severity conta."
+   },
+   {
+    "text": "DEFAULT",
+    "why": "Certo. É texto puro, sem campo severity."
+   },
+   {
+    "text": "INFO, o padrão da saída padrão",
+    "why": "O padrão é DEFAULT, abaixo de INFO."
+   },
+   {
+    "text": "WARNING, porque a linha menciona uma falha",
+    "why": "Nada lê as palavras da linha."
+   }
+  ]
+ },
+ "ex-j9ggng4z": {
+  "prompt": "Um programa escreve linhas JSON com o campo `level` em vez de `severity`. O que quebra?",
+  "hint": "O Cloud Logging conhece um desses nomes.",
+  "choices": [
+   {
+    "text": "Nada: o Cloud Logging aceita os dois nomes",
+    "why": "Só severity é lido; level fica como campo comum do payload."
+   },
+   {
+    "text": "As entradas são rejeitadas como malformadas",
+    "why": "Elas são guardadas; por isso ninguém percebe."
+   },
+   {
+    "text": "Toda entrada fica sem severidade, então alertas de erro nunca casam",
+    "why": "Certo. As entradas estão lá e invisíveis a todo filtro de severidade."
+   },
+   {
+    "text": "As entradas viram textPayload",
+    "why": "Continuam JSON, então jsonPayload; só falta a severidade."
+   }
+  ]
+ },
+ "ex-sgrrcp7t": {
+  "prompt": "Um stack trace do Python é impresso em vinte linhas na saída de erro. Como ele chega ao Cloud Logging?",
+  "hint": "Uma linha, uma entrada.",
+  "choices": [
+   {
+    "text": "Como vinte entradas de texto separadas",
+    "why": "Certo. A lição 11 o escreve numa entrada só."
+   },
+   {
+    "text": "Como uma entrada, juntada pelo Cloud Logging",
+    "why": "O Cloud Logging não junta linhas num log comum de contêiner."
+   },
+   {
+    "text": "Como uma entrada ERROR, porque é a saída de erro",
+    "why": "O fluxo não faz de vinte linhas uma entrada."
+   },
+   {
+    "text": "De jeito nenhum: a saída de erro não é coletada",
+    "why": "As duas saídas são coletadas."
+   }
+  ]
+ },
+ "ex-6hmwzk2s": {
+  "prompt": "Que entradas `severity>=WARNING` seleciona das três linhas do logdemo.py?",
+  "hint": "A terceira linha não tem severidade.",
+  "choices": [
+   {
+    "text": "A linha WARNING e a linha level=error",
+    "why": "A linha level=error é DEFAULT, abaixo de WARNING."
+   },
+   {
+    "text": "Só a linha WARNING, como o jq mostrou",
+    "why": "Certo. Uma entrada, como a execução do jq mostrou."
+   },
+   {
+    "text": "As três, já que toda linha foi escrita pela loja",
+    "why": "O filtro é sobre severidade, não autoria."
+   },
+   {
+    "text": "Nenhuma: >= não pode ser usado em severidade",
+    "why": "As severidades são ordenadas justamente para poder."
+   }
+  ]
+ },
+ "ex-3hnf2cby": {
+  "prompt": "Uma entrada não tem o campo `httpRequest`. `httpRequest.status>=200` casa com ela?",
+  "hint": "Um campo ausente compara como nada.",
+  "choices": [
+   {
+    "text": "Sim, um número ausente conta como zero",
+    "why": "Zero falharia >=200 de qualquer jeito; mas ausente não casa nunca."
+   },
+   {
+    "text": "Sim, filtros ignoram campos que a entrada não tem",
+    "why": "Ignorar casaria tudo; ele faz o contrário."
+   },
+   {
+    "text": "Não, ela não casa",
+    "why": "Certo. Uma entrada sem o campo não casa, seja qual for a comparação."
+   },
+   {
+    "text": "A consulta é rejeitada como inválida",
+    "why": "É válida; só seleciona entradas com requisição."
+   }
+  ]
+ },
+ "ex-wn694szj": {
+  "prompt": "Qual consulta é a forma mais barata de achar os avisos da loja num mês de logs?",
+  "hint": "Campos indexados primeiro.",
+  "choices": [
+   {
+    "text": "jsonPayload.message:\"warn\"",
+    "why": "Uma busca por conteúdo no payload lê toda entrada."
+   },
+   {
+    "text": "textPayload=~\"(?i)warning\"",
+    "why": "Uma expressão regular sobre texto é a mais lenta de todas, e perde as entradas JSON."
+   },
+   {
+    "text": "resource.labels.service_name=\"shop-api\" severity=WARNING",
+    "why": "Certo. Recurso e severidade estreitam a busca rápido."
+   },
+   {
+    "text": "NOT severity=DEFAULT",
+    "why": "Isso seleciona quase tudo, avisos e muito mais."
+   }
+  ]
+ },
+ "ex-ae9kz3de": {
+  "prompt": "O bucket `_Default` de um projeto novo guarda entradas por quanto tempo?",
+  "hint": "A cobrança de retenção começa depois dele.",
+  "choices": [
+   {
+    "text": "400 dias",
+    "why": "Isso é o _Required, para logs de auditoria."
+   },
+   {
+    "text": "30 dias, e depois some",
+    "why": "Certo. Retenção maior custa 0,01 USD por GiB por mês."
+   },
+   {
+    "text": "90 dias",
+    "why": "Isso é o bucket da própria loja, escolhido no Terraform."
+   },
+   {
+    "text": "Até o projeto ser apagado",
+    "why": "_Default tem retenção padrão fixa, não para sempre."
+   }
+  ]
+ },
+ "ex-2c57jnkw": {
+  "prompt": "O sink de erros para o Pub/Sub foi aplicado, mas nenhuma mensagem chega. O último recurso da lição ficou de fora. Por quê?",
+  "hint": "Quem publica no tópico?",
+  "choices": [
+   {
+    "text": "Sinks precisam de um minuto por entrada para entregar",
+    "why": "A entrega é quase em tempo real; algo a recusa."
+   },
+   {
+    "text": "A identidade de escrita do sink não tem permissão de publicar ali",
+    "why": "Certo. Sem o vínculo de IAM ele não roteia nada."
+   },
+   {
+    "text": "Sinks para Pub/Sub só aceitam entradas INFO",
+    "why": "Essa restrição não existe."
+   },
+   {
+    "text": "O tópico precisa estar em outro projeto",
+    "why": "Tópicos do mesmo projeto funcionam."
+   }
+  ]
+ },
+ "ex-6y0sb5h5": {
+  "prompt": "O que acontece com uma entrada descartada por uma exclusão?",
+  "hint": "Guardada ou não?",
+  "choices": [
+   {
+    "text": "É guardada mas escondida das consultas",
+    "why": "Ela não é guardada."
+   },
+   {
+    "text": "É guardada por 30 dias, depois apagada",
+    "why": "Essa é a retenção do _Default, para entradas guardadas."
+   },
+   {
+    "text": "Nunca é guardada nem cobrada",
+    "why": "Certo. Por isso o ruído do healthz vai para lá."
+   },
+   {
+    "text": "Vai para o bucket _Required",
+    "why": "_Required só recebe os próprios logs de auditoria."
+   }
+  ]
+ },
+ "ex-eem7bchf": {
+  "prompt": "Um projeto guarda 100 GiB de logs num mês. A 0,50 USD por GiB depois dos primeiros 50 GiB, quanto é a cobrança de armazenamento?",
+  "hint": "Tire os 50 grátis primeiro.",
+  "unit": "USD"
+ },
+ "ex-z3tp129e": {
+  "prompt": "Ligue cada campo JSON ao que o Cloud Logging faz dele.",
+  "hint": "Um item da direita não é campo especial.",
+  "pairs": [
+   {
+    "left": "severity",
+    "right": "a severidade da entrada"
+   },
+   {
+    "left": "message",
+    "right": "o texto mostrado numa lista de resultados"
+   },
+   {
+    "left": "logging.googleapis.com/trace",
+    "right": "o trace a que a entrada pertence"
+   },
+   {
+    "left": "httpRequest",
+    "right": "a requisição HTTP da entrada"
+   }
+  ],
+  "right_distractors": [
+   "a retenção da entrada"
+  ]
+ },
+ "ex-n9hpmy9z": {
+  "prompt": "Um destino mais um filtro, no Log Router, se chama ___.",
+  "hint": "Quatro letras; o plano criou dois deles.",
+  "blanks": [
+   {
+    "accept": [
+     "sink"
+    ]
+   }
+  ]
+ },
+ "ex-fxrxt23k": {
+  "prompt": "O log de debug fica ligado em produção e escreve 1 GiB por hora. Quanto, aproximadamente, um mês de 720 horas soma à fatura?",
+  "hint": "720 GiB, menos 50 grátis, a 0,50 USD.",
+  "choices": [
+   {
+    "text": "Nada: logs dentro de 30 dias são grátis",
+    "why": "Guardar é cobrado uma vez, na chegada; os 30 dias estão incluídos."
+   },
+   {
+    "text": "Cerca de 7 USD",
+    "why": "Isso seria a taxa de retenção, não a de armazenamento."
+   },
+   {
+    "text": "Cerca de 335 USD",
+    "why": "Certo. 670 GiB a 0,50 USD."
+   },
+   {
+    "text": "Cerca de 3.600 USD",
+    "why": "Dez vezes demais: confira o preço por GiB."
+   }
+  ]
+ },
+ "ex-cx2jphsc": {
+  "prompt": "Ponha em ordem o que acontece com uma linha de erro da loja.",
+  "hint": "Do programa ao assinante.",
+  "items": [
+   "O programa imprime uma linha JSON com severity ERROR",
+   "O Cloud Run a envia ao Cloud Logging",
+   "O Log Router casa o filtro do sink de erros",
+   "O sink a publica em shop-log-errors"
+  ],
+  "trap": "Casar o sink antes de o Cloud Logging receber a linha é o deslize: o roteador só vê o que chegou."
+ }
+}
