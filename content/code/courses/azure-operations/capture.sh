@@ -2,8 +2,9 @@
 # turn a script into the transcripts a lesson quotes. Not for the student.
 #
 #   azurite_up              a fresh, empty Azurite on 10000-10002 (removed at exit)
-#   kusto_up                a fresh Kusto emulator on 8080 with an empty database
-#                           `shop`, as lesson 9 has the student start it
+#   kusto_up                a fresh Kusto emulator on 8080, started by lesson 9's
+#                           own fence, and its kql.py in ~/azure/kusto
+#   kusto_load MD:FILE...   write each .kql file a lesson shows and run it
 #   student_env             the variables lesson 1 has the student export
 #   run 'command'           print ana's prompt and the command, then run it
 #                           and print stdout and stderr together
@@ -30,8 +31,8 @@ for v in $(compgen -e | grep -E '^(CLAUDE|AI_AGENT|CCR_)'); do unset "$v"; done
 # as after `source venv/bin/activate`, with Terraform and Bicep where the lessons put them
 export PATH="$HOME/azure/venv/bin:$HOME/.local/bin:$HOME/.azure/bin:$PATH"
 
+LAB_COURSE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 AZURITE_IMAGE=mcr.microsoft.com/azure-storage/azurite:3.37.0
-KUSTO_IMAGE=mcr.microsoft.com/azuredataexplorer/kustainer-linux:2026.10.29.1806-2643-0ef1614-master
 
 azurite_up() {
   docker rm -f azurite > /dev/null 2>&1
@@ -41,15 +42,27 @@ azurite_up() {
 }
 
 kusto_up() {
+  # lesson 9's own fence starts it; its own kql.py creates the database
   docker rm -f kusto > /dev/null 2>&1
-  docker run -d --name kusto -e ACCEPT_EULA=Y -m 4g -p 8080:8080 "$KUSTO_IMAGE" > /dev/null || exit 1
+  fence "$LAB_COURSE/lessons/le-ch185v14/emulator.md" 1
   for _ in $(seq 120); do
     curl -s -o /dev/null -X POST http://127.0.0.1:8080/v1/rest/mgmt \
       -H 'Content-Type: application/json' -d '{"csl":".show version"}' && break
     sleep 1
   done
-  curl -s -o /dev/null -X POST http://127.0.0.1:8080/v1/rest/mgmt -H 'Content-Type: application/json' \
-    -d '{"csl":".create database shop volatile"}' || { echo "kusto did not start"; exit 1; }
+  sleep 5
+  mkdir -p "$HOME/azure/kusto"
+  from_lesson "$LAB_COURSE/lessons/le-ch185v14/emulator.md" kql.py > "$HOME/azure/kusto/kql.py"
+}
+
+# the tables a lesson's queries read, loaded from the .kql files the lessons show
+kusto_load() {
+  local md file
+  for spec in "$@"; do
+    md=${spec%%:*}; file=${spec##*:}
+    from_lesson "$LAB_COURSE/lessons/$md" "$file" > "$HOME/azure/kusto/$file"
+    python3 "$HOME/azure/kusto/kql.py" < "$HOME/azure/kusto/$file" > /dev/null || { echo "loading $file failed"; exit 1; }
+  done
 }
 
 lab_down() { docker rm -f azurite kusto > /dev/null 2>&1 || true; }
