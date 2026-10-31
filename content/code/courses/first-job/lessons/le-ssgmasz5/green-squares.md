@@ -8,7 +8,7 @@ than it interests reviewers. It measures **how often you pushed**, not what you 
 reviews profiles knows how easily it is filled.
 
 What it can do is contradict you. A CV that says *six months building this project* next to a graph that
-is empty for those six months invites a question, and **the honest answer is usually that the work was
+is empty for those six months invites a question. **The honest answer is usually that the work was
 somewhere else**: a private repository, a work account, a lab that never touched GitHub. That is a fine
 answer; have it ready.
 

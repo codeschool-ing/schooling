@@ -8,7 +8,7 @@ júniores muito mais do que interessa a quem avalia. Ele mede **com que frequên
 você construiu, e todo mundo que avalia perfis sabe como ele é fácil de encher.
 
 O que ele pode fazer é contradizer você. Um currículo que diz *seis meses construindo este projeto* ao lado
-de um gráfico vazio nesses seis meses convida uma pergunta, e **a resposta honesta costuma ser que o trabalho
+de um gráfico vazio nesses seis meses convida uma pergunta. **A resposta honesta costuma ser que o trabalho
 estava em outro lugar**: um repositório privado, uma conta de trabalho, um laboratório que nunca passou pelo
 GitHub. É uma boa resposta; tenha-a pronta.
 

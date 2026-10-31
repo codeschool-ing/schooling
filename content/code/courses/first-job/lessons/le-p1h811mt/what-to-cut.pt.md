@@ -10,8 +10,8 @@ version: 1
 Corte, nesta ordem:
 
 **O que é privado.** Foto, idade, data de nascimento, estado civil, filhos, *CPF*, *RG* e endereço completo.
-Nada disso diz se você consegue fazer o trabalho, tudo isso convida a um julgamento que não tem nada a ver
-com o trabalho, e um número de documento num arquivo que vai ser encaminhado por aí é um número de
+Nada disso diz se você consegue fazer o trabalho, e tudo isso convida a um julgamento que não tem nada a
+ver com o trabalho. Um número de documento num arquivo que vai ser encaminhado por aí é um número de
 documento que você não controla mais. **Cidade e estado bastam.** Currículos brasileiros tradicionalmente
 trazem quase tudo isso, e muitos ainda trazem; deixar de fora já não é incomum, e ninguém vai pedir antes de
 uma proposta.
