@@ -94,7 +94,7 @@ ana@lab:~/emb$ du -sh ~/.venvs/emb ~/models ~/.cache/pip
 ```
 
 Leva alguns minutos, quase todos no `pip`, que baixa cerca de 360 MB de pacotes e os guarda num
-cache; o `du` mediu isso por último, e `rm -rf ~/.cache/pip` devolve o espaço depois que a
+cache. O `du` mediu isso por último, e `rm -rf ~/.cache/pip` devolve o espaço depois que a
 preparação deu certo. O que fica para trás:
 
 - `~/.venvs/emb`, um **ambiente virtual**: uma cópia particular do Python com todas as bibliotecas

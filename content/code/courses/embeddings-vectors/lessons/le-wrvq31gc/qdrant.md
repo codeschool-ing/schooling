@@ -6,9 +6,9 @@ version: 1
 Qdrant is a vector database server, open source and written in Rust, that you run yourself or rent
 as Qdrant Cloud. Its Python client also has a **local mode**: give it a `path` instead of a URL and
 it runs a Python implementation of the same API inside your process, storing the data in a
-directory. **Local mode is what ran here.** The Qdrant server is a separate program the machine this
-course was recorded on could not fetch, so everything below is the client on its own, and this section says where that differs
-from the real thing.
+directory. **Local mode is what ran here.** The Qdrant server is a separate program that the machine
+this course was recorded on could not fetch. Everything below is the client on its own, and this
+section says where that differs from the real thing.
 
 ```schooling-example
 {

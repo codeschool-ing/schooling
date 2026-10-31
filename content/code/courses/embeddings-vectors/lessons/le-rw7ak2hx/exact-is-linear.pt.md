@@ -11,7 +11,7 @@ e de um conjunto de consultas cujas respostas verdadeiras você conhece.
 ## Cem mil vetores, e o que eles são
 
 O atalho óbvio é encher um índice de números aleatórios. **Vetores aleatórios são o teste errado
-para um índice aproximado**, porque não têm vizinhanças: em 384 dimensões, pontos uniformemente
+para um índice aproximado**, porque não têm vizinhanças. Em 384 dimensões, pontos uniformemente
 aleatórios ficam quase à mesma distância uns dos outros, e um índice que aposta em estrutura não tem
 em que apostar. A seção sobre IVF mede o que isso faz. Embeddings de verdade são o oposto; tudo o que
 as aulas 3 a 6 fizeram dependia de textos sobre o mesmo assunto caírem perto uns dos outros.

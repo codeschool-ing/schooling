@@ -25,7 +25,7 @@ bodies of the eight shipping articles joined into one text do:
     },
     {
       "code": "tok = Tokenizer.from_file(os.path.join(os.environ[\"MINILM_DIR\"], \"tokenizer.json\"))\ntok.no_truncation()\nstart, end = tok.encode(long).offsets[254]\nprint(\"the last piece read:\", repr(long[start:end]), \"in\", repr(long[end - 40:end + 30]))",
-      "note": "A tokenizer with no limit, to find where the 254th piece of text falls. Index 0 is `[CLS]`, so index 254 is the last piece the model keeps."
+      "note": "A tokeniser with no limit, to find where the 254th piece of text falls. Index 0 is `[CLS]`, so index 254 is the last piece the model keeps."
     },
     {
       "code": "a = embed(long)\nb = embed(long + \" Every word after the limit is ignored, however important.\")\nc = embed(\"Refunds go back to the card you paid with. \" + long)\nprint(\"a sentence added at the end:  \", np.abs(a - b).max())\nprint(\"a sentence added at the start:\", np.abs(a - c).max())",
@@ -67,14 +67,14 @@ where it bites is the long documents, and nothing in the output marks them.
 
 **Chroma truncates silently too**, in the version this lab runs. Its embedding function has a check
 that raises a `ValueError` for a text over 256 pieces. The last line of `length.py` shows it did not
-fire: Chroma's tokenizer is set to cut at 256 before the check counts, so the check counts at most
+fire: Chroma's tokeniser is set to cut at 256 before the check counts, so the check counts at most
 256 and passes. The vector it returned matches `minilm.py`'s for the same long text to
 `1.1920929e-07`, which is to say it is the same truncated vector.
 
 ## What to do about it
 
 Count before you embed. `minilm.pieces(text)` gives every piece of a text, before the cut, and every
-model's own tokenizer can do the same; a text over the limit is one to cut deliberately rather than
+model's own tokeniser can do the same; a text over the limit is one to cut deliberately rather than
 leave to the library. Lesson 3 cut long texts into chunks for search, and `rag` makes chunk size a
 design decision. The limit is a property of each model, written on its card, and the next section is
 about where to read it. Lesson 8's price sheet showed how far apart the providers' limits are.

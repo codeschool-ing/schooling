@@ -38,13 +38,13 @@ documented API and printed nothing here; no output is shown because none was pro
 
 **The index definition carries the same two facts every vector store fixes at creation**, the ones
 lesson 11 named: the dimension and the metric. `similarity` takes `euclidean`, `cosine` or
-`dotProduct`, Atlas's names for the three operators of this lesson's second section. A field that a
+`dotProduct`, Atlas's names for the three operators of section 03 of this lesson. A field that a
 query will filter on is declared in the index as well, with `type: "filter"`, because the filter is
 applied inside the index search rather than after it; lesson 17 explains why that matters.
 
 The document itself accepts any array. Nothing in a MongoDB collection insists that `embedding` has
-384 numbers, the way `vector(384)` did, so the place that knows the dimension is the index, which
-MongoDB's documentation says enforces `numDimensions` when it indexes and when it queries. The insert
+384 numbers, the way `vector(384)` did, so the place that knows the dimension is the index. MongoDB's
+documentation says it enforces `numDimensions` when it indexes and when it queries. The insert
 itself is not refused, so a check at write time has to be your own.
 
 ## The search is a stage of a pipeline
@@ -79,8 +79,8 @@ which transforms the documents the previous one produced. The vector search is a
 ```
 
 Two of its fields have no counterpart in the SQL of this lesson. `numCandidates` is how many
-neighbours the approximate search gathers before keeping the best `limit`; it plays the part that
-`hnsw.ef_search` plays in pgvector, which lesson 16 met, and here it is written in every query
+neighbours the approximate search gathers before keeping the best `limit`. It plays the part that
+`hnsw.ef_search` plays in pgvector, which lesson 16 meets, and here it is written in every query
 instead of set for the session. It cannot be smaller than `limit`. Setting `exact: true` instead runs
 an exact search over every document, the equivalent of PostgreSQL's sequential scan.
 

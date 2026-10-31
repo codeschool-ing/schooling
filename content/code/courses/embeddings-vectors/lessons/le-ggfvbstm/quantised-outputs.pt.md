@@ -63,10 +63,11 @@ perto*.
 Leia primeiro as linhas do MiniLM. **O int8 manteve 22 das 24 consultas entre os 3 primeiros com um
 quarto dos bytes**, e perdeu uma na posição 1, 18 contra 19. **O binário manteve 23 entre os 3
 primeiros com um trinta e dois avos dos bytes**, uma a mais que o float. Isso não é o binário sendo
-melhor: com 24 perguntas, uma consulta mudando de lugar é acaso, e a leitura honesta das linhas do
-MiniLM é que nenhuma das duas codificações custou nada que esta medida consiga ver.
+melhor: com 24 perguntas, uma consulta mudando de lugar é acaso. A leitura honesta das linhas do
+MiniLM é que nenhuma das duas codificações custou nada entre os 3 primeiros que esta medida consiga
+ver. Na posição 1 o binário pagou, 16 contra 19.
 
-O WordLlama é onde o custo aparece. O vetor binário dele tem 256 bits, contra 384 do MiniLM, e caiu
+O WordLlama é onde o custo aparece nas duas colunas. O vetor binário dele tem 256 bits, contra 384 do MiniLM, e caiu
 para 15 na posição 1 e 21 entre os 3 primeiros, vindo de 20 e 24. Menos coordenadas deixam menos
 bits para carregar a diferença entre dois artigos parecidos.
 

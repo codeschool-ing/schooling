@@ -61,10 +61,10 @@ program negates it to keep *higher is closer*.
 Read the MiniLM rows first. **int8 kept 22 of the 24 queries in the top 3 at a quarter of the
 bytes**, and lost one at rank 1, 18 against 19. **Binary kept 23 in the top 3 at a thirty-second of
 the bytes**, one more than float. That is not binary being better: with 24 questions, one query
-moving is chance, and the honest reading of the MiniLM rows is that neither encoding cost anything
-this measurement can see.
+moving is chance. The honest reading of the MiniLM rows is that neither encoding cost anything in
+the top 3 that this measurement can see. Rank 1 is where binary paid, 16 against 19.
 
-WordLlama is where the cost shows. Its binary vector has 256 bits, against MiniLM's 384, and it
+WordLlama is where the cost shows in both columns. Its binary vector has 256 bits, against MiniLM's 384, and it
 dropped to 15 at rank 1 and 21 in the top 3, from 20 and 24. Fewer coordinates leave fewer bits to
 carry the difference between two close articles.
 

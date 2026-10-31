@@ -86,8 +86,8 @@ mais abaixo na ordem e ainda ficção científica e aventura.
 ## Filtre enquanto desce, não depois de cortar
 
 **O laço desce pela ordem inteira e para quando tem cinco**; ele nunca corta a ordem antes. Com 60
-livros isso não custa nada, já que todo livro já tem nota. Com um milhão de livros e um índice que devolve
-só os 50 mais próximos, faz diferença: se as regras tiram 46 desses 50, o leitor recebe quatro
-recomendações, e pedir mais ao índice é a única saída. A aula 17 encontra exatamente esse problema em
+livros isso não custa nada, já que todo livro já tem nota. Com um milhão de livros e um índice que
+devolve só os 50 mais próximos, faz diferença. Se as regras tiram 46 desses 50, o leitor recebe
+quatro recomendações, e pedir mais ao índice é a única saída. A aula 17 encontra exatamente esse problema em
 bancos de vetores, onde um filtro aplicado depois da busca devolve menos resultados que os pedidos, e
 mostra os caminhos para contorná-lo.

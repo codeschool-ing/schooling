@@ -39,13 +39,13 @@ porque nenhuma foi produzida.
 
 **A definição do índice traz os mesmos dois fatos que todo banco de vetores fixa na criação**, os que
 a aula 11 nomeou: a dimensão e a métrica. `similarity` aceita `euclidean`, `cosine` ou `dotProduct`,
-os nomes do Atlas para os três operadores da segunda seção desta aula. Um campo pelo qual uma consulta
+os nomes do Atlas para os três operadores da seção 03 desta aula. Um campo pelo qual uma consulta
 vai filtrar também é declarado no índice, com `type: "filter"`, porque o filtro é aplicado dentro da
 busca no índice e não depois dela; a aula 17 explica por que isso importa.
 
 O documento em si aceita qualquer array. Nada numa coleção do MongoDB exige que `embedding` tenha
-384 números, como `vector(384)` exigia, então quem conhece a dimensão é o índice, que segundo a
-documentação do MongoDB impõe `numDimensions` ao indexar e ao consultar. A inserção em si não é
+384 números, como `vector(384)` exigia, então quem conhece a dimensão é o índice. Segundo a
+documentação do MongoDB, ele impõe `numDimensions` ao indexar e ao consultar. A inserção em si não é
 recusada, então uma verificação na hora da escrita tem de ser sua.
 
 ## A busca é um estágio de um pipeline
@@ -80,8 +80,8 @@ estágio chamado `$vectorSearch`, e ele tem de ser o primeiro:
 ```
 
 Dois dos campos dele não têm equivalente no SQL desta aula. `numCandidates` é quantos vizinhos a
-busca aproximada reúne antes de ficar com os `limit` melhores; ele faz o papel que `hnsw.ef_search`
-faz no pgvector, que a aula 16 apresentou, e aqui é escrito em cada consulta em vez de definido para
+busca aproximada reúne antes de ficar com os `limit` melhores. Ele faz o papel que `hnsw.ef_search`
+faz no pgvector, que a aula 16 apresenta, e aqui é escrito em cada consulta em vez de definido para
 a sessão. Ele não pode ser menor que `limit`. Usar `exact: true` no lugar dele roda uma busca exata
 sobre todos os documentos, o equivalente à varredura sequencial do PostgreSQL.
 

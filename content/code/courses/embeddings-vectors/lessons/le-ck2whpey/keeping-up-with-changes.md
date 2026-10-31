@@ -132,10 +132,10 @@ one, which is why it is slow. The space it freed stays inside the files, ready f
 is not given back.
 
 **REINDEX took `6291.040 ms` and halved both indexes**, to 20,488,192 and 16,891,904 bytes,
-because it built them again from the 10,000 rows that are left. `CONCURRENTLY` builds the new copies beside the
-old ones and swaps them in, so searches keep working throughout; for that time, the index exists
-twice. pgvector's own documentation suggests reindexing before vacuuming an HNSW index for this
-reason. The table keeps its 32,768,000 bytes either way: its free space is reused by the next
+because it built them again from the 10,000 rows that are left. pgvector's own documentation
+suggests reindexing before vacuuming an HNSW index for this reason. `CONCURRENTLY` builds the new
+copies beside the old ones and swaps them in, so searches keep working throughout; for that time,
+the index exists twice. The table keeps its 32,768,000 bytes either way: its free space is reused by the next
 inserts.
 
 **So rebuild when a large share has been deleted or replaced**, not on a timer. A graph full of

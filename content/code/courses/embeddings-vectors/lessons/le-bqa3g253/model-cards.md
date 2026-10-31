@@ -39,8 +39,8 @@ ana@lab:~/emb$ jq -c "{truncation: .truncation.max_length, padding: .padding.str
 {"truncation":128,"padding":{"Fixed":128}}
 ```
 
-**There are three different lengths in them, and none is 256.** 512 is the room the architecture
-has, the number of positions it holds a learned vector for. 512 again is what the tokenizer's
+**There are three lengths in them, and none is 256.** 512 is the room the architecture
+has, the number of positions it holds a learned vector for. 512 again is what the tokeniser's
 configuration allows. 128 is what `tokenizer.json` truncates and pads to if nobody changes it.
 `minilm.py` and Chroma both change it to 256, and Chroma's source remarks on it in a comment: *for
 some reason sentence-transformers uses 256 even though the HF config has a max length of 128*. The

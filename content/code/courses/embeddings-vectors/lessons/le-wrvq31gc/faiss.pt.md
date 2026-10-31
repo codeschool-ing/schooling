@@ -35,8 +35,9 @@ aula 1:
 }
 ```
 
-As notas são os produtos escalares que a aula 1 imprimiu, 0,4456 para o artigo do presente, porque o
-`IndexFlatIP` compara pelo produto interno e os vetores têm comprimento 1. Um índice **plano** (*flat*)
+As notas são os produtos escalares que a aula 1 imprimiu, aqui com quatro casas: 0,4456 para o
+artigo do presente, que a aula 1 mostrou como 0,446. Elas coincidem porque o `IndexFlatIP` compara
+pelo produto interno e os vetores têm comprimento 1. Um índice **plano** (*flat*)
 é busca exata: ele compara a pergunta com cada vetor guardado, que é o `D @ q` da aula 3 escrito em
 C++.
 
