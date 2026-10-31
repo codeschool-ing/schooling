@@ -101,7 +101,7 @@ IP 203.0.113.70.51820 > 203.0.113.2.51820: UDP, length 96
 Só UDP entre os dois roteadores, na porta 51820. Os dois primeiros pacotes, **de 148 e 92 bytes, são o
 handshake**: a metade assimétrica, em que as duas pontas combinam seus pares de chaves em chaves
 simétricas novas. Tudo o que vem depois é a metade simétrica, ChaCha20-Poly1305: o pacote de 32 bytes é
-um keepalive vazio, e os demais carregam o pedido da filial e a resposta. Quem está no caminho descobre
+um keepalive vazio, e os três de 96 bytes carregam o lado da filial na conexão. Quem está no caminho descobre
 que os dois escritórios conversam, com que frequência e quanto, e nada do que foi dito.
 
 ```schooling-figure

@@ -18,7 +18,7 @@ ip saddr 192.168.0.0/16 oifname "eth3" tcp dport 22 ct state new accept comment 
 ```
 
 **`192.168.0.0/16`.** A `/16` keeps only the first two bytes, so nftables normalised the address to
-the network it really describes, which contains every range in the lab that starts with `192.168`: the
+the network it really describes. That network contains every range in the lab that starts with `192.168`: the
 management segment, and also the staff LAN, the servers and the branch. From the staff LAN:
 
 ```

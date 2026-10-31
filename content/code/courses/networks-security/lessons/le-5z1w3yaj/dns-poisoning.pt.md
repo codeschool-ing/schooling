@@ -5,10 +5,9 @@ version: 1
 
 Um **resolvedor** (*resolver*) pergunta nomes a outros servidores em nome dos seus clientes e guarda
 cada resposta em um **cache** pelo tempo que o TTL dela permite. Todo cliente do resolvedor passa então
-a receber a resposta guardada sem que ninguém pergunte de novo. É isso que torna o DNS rápido, e é
-isso que torna tão valiosa uma resposta falsa no cache: **envenene um cache e todo cliente daquele
-resolvedor é mandado para o endereço errado até a entrada expirar**, sem que nenhum deles tenha feito
-nada de errado.
+a receber a resposta guardada sem que ninguém pergunte de novo. É isso que torna o DNS rápido. É
+também o que torna tão valiosa uma resposta falsa no cache: **envenene um cache e todo cliente daquele
+resolvedor é mandado para o endereço errado até a entrada expirar**. Nenhum deles fez nada de errado.
 
 A entrada clássica é uma corrida. O DNS viaja quase sempre sobre UDP, que não tem handshake, e o
 resolvedor aceita a primeira resposta que combina com a sua pergunta. Um atacante que consegue

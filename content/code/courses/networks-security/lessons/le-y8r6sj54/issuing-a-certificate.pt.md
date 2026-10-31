@@ -21,10 +21,10 @@ subject=CN = app.corp.example.com
 dentro dele. Numa instalação real isso roda em `app`, e só o CSR viaja até a CA.
 
 **A CA decide o que assinar.** Ela não copia o que quer que o pedido solicite; aplica o seu próprio
-perfil. As extensões deste certificado, escritas antes da assinatura: a seção `[server]` do
-`ca.cnf` e mais uma linha com o nome, feitas com
+perfil. As extensões deste certificado ficam escritas antes da assinatura, em `app.ext`: a seção
+`[server]` do `ca.cnf` e mais uma linha com o nome. Dentro de `ca`,
 `{ sed -n "/^\[server\]/,/^\[/p" ca.cnf | sed "\$d"; echo "subjectAltName = DNS:app.corp.example.com"; } > app.ext`
-dentro de `ca`:
+gera o arquivo:
 
 ```
 root@admin:~# cd ca; cat app.ext

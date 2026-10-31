@@ -15,7 +15,7 @@ root@fw:~# jq -c "select(.event_type==\"http\") | .http | {hostname, url, http_u
 
 **Do HTTP puro o inspetor leu tudo**: o host, o caminho, o programa que fez a requisição, a resposta
 do servidor. Do TLS 1.3 ele leu uma coisa só, o **SNI**, o nome do servidor que o cliente põe na
-primeira mensagem para o servidor saber qual certificado apresentar. O `subject` e o `issuer` do
+primeira mensagem para o servidor saber qual certificado apresentar. O `subject` e o `issuerdn` do
 certificado são `null`, porque o TLS 1.3 criptografa o certificado também. No TLS 1.2 o certificado
 passava pela rede em claro, e produtos de inspeção mais antigos dependiam de lê-lo.
 

@@ -55,4 +55,4 @@ isso.
 
 Um cliente que confia no `ad` está confiando na palavra do seu resolvedor, então o trecho entre os
 dois também precisa ser confiável: aqui é o loopback, na mesma máquina. Numa rede, esse último
-salto também precisa de proteção, e ela vem da criptografia: DNS sobre TLS ou sobre HTTPS.
+salto precisa ser cifrado, com DNS sobre TLS ou sobre HTTPS.

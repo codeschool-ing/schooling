@@ -28,7 +28,8 @@ table ip filter {
 matches when that source already has **more than four** tracked connections. A matching packet is
 answered with a TCP reset, so the client learns at once rather than waiting. The rule has to come
 before the rule that accepts the internet into the shop, or the accept would decide first. `nft -f`
-appends it at the end, so on `fw` it is loaded, deleted by its handle and inserted again at the top:
+appends it at the end, so on `fw` it is loaded, deleted by its handle and inserted again near the
+top, right after the rule for established connections:
 
 ```sh
 nft -f perclient.nft; h=$(nft -a list chain ip filter forward | grep "at most 4" | grep -o "handle [0-9]*" | cut -d" " -f2); nft delete rule ip filter forward handle $h; nft insert rule ip filter forward index 1 iifname "eth0" ip daddr 192.0.2.80 tcp dport 443 ct state new add @web_clients { ip saddr ct count over 4 } counter reject with tcp reset comment \"at most 4 open connections per client\"

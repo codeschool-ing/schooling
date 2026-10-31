@@ -16,9 +16,9 @@ The network design that follows is about **direction**:
 | the backup server pulls from the clients | the backup server | not through the network: nothing inside may open a connection to it |
 | the backup is also copied offline or to immutable storage | a separate process, on a schedule | no: the copy cannot be changed for a set period, by anybody |
 
-In the terms of lesson 4's matrix, the backup server has a **row** (it may reach the machines it backs
-up, on the one port its agent uses) and an **empty column** (nothing may start a conversation with it,
-except administration from the management segment). That is the same shape as the DMZ's, drawn for
+In the terms of lesson 4's matrix, the backup server has a **row**: it may reach the machines it backs
+up, on the one port its agent uses. Its column is **empty**: nothing may start a conversation with it,
+except administration from the management segment. That is the same shape as the DMZ's, drawn for
 the opposite reason: there the empty cells protect the inside from the DMZ, here they protect the
 backup from the inside.
 

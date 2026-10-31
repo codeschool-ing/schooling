@@ -28,7 +28,7 @@ root@admin:~# grep -v '^#' feed.txt | while read a; do jq -r --arg a $a 'select(
       6 203.0.113.50
 ```
 
-Seis registros de `203.0.113.50`: os dois fluxos e os quatro descartes de antes. Os outros dois
+Seis registros de `203.0.113.50`: os seus dois fluxos, as suas três sondagens e a tentativa posterior na porta 23. Os outros dois
 endereços nunca apareceram. Esse olhar para trás, feito sobre meses de registros de fluxo, é muitas
 vezes como uma intrusão é descoberta: um endereço citado hoje no relatório de outra pessoa acaba tendo
 visitado em julho.

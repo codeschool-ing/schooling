@@ -5,9 +5,9 @@ version: 1
 
 A **resolver** asks other servers for names on behalf of its clients and keeps each answer in a
 **cache** for as long as its TTL allows. Every client of the resolver then gets the cached answer
-without anybody asking again. That is what makes DNS fast, and it is what makes a false answer in the
+without anybody asking again. That is what makes DNS fast. It is also what makes a false answer in the
 cache so valuable: **poison one cache and every client of that resolver is sent to the wrong address
-until the entry expires**, without any of them having done anything wrong.
+until the entry expires**. None of them did anything wrong.
 
 The classic way in is a race. DNS mostly travels over UDP, which has no handshake, and the resolver
 accepts the first answer that matches its question. An attacker who can guess when the resolver will

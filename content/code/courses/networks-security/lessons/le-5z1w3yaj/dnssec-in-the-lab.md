@@ -50,5 +50,5 @@ there is **`ad`, authenticated data**: the resolver checked the signature and sa
 ```
 
 A client that trusts `ad` is trusting its resolver's word, so the link between the two has to be
-trustworthy too: here it is the loopback, on the same machine. Across a network, that last hop needs
-protecting too, by encrypting it with DNS over TLS or over HTTPS.
+trustworthy too: here it is the loopback, on the same machine. Across a network, that last hop has to
+be encrypted, with DNS over TLS or over HTTPS.

@@ -29,7 +29,8 @@ table ip filter {
 casa quando essa origem já tem **mais de quatro** conexões rastreadas. Um pacote que casa é respondido
 com um reset TCP, então o cliente fica sabendo na hora em vez de ficar esperando. A regra tem de vir
 antes da regra que aceita a internet na loja, senão o accept decidiria primeiro. O `nft -f` a põe no
-fim, então no `fw` ela é carregada, apagada pelo seu handle e inserida de novo no topo:
+fim, então no `fw` ela é carregada, apagada pelo seu handle e inserida de novo perto do topo, logo
+depois da regra das conexões estabelecidas:
 
 ```sh
 nft -f perclient.nft; h=$(nft -a list chain ip filter forward | grep "at most 4" | grep -o "handle [0-9]*" | cut -d" " -f2); nft delete rule ip filter forward handle $h; nft insert rule ip filter forward index 1 iifname "eth0" ip daddr 192.0.2.80 tcp dport 443 ct state new add @web_clients { ip saddr ct count over 4 } counter reject with tcp reset comment \"at most 4 open connections per client\"
@@ -77,7 +78,7 @@ ana@remote:~$ curl -s -o /dev/null -w "%{http_code}\n" https://www.example.com/
 
 ## Escolhendo o número
 
-Quatro é uma demonstração. Um limite real é definido a partir do que os clientes reais fazem: um
+Quatro é uma demonstração. Um limite real é definido a partir do que os clientes reais fazem. Um
 navegador abre até seis conexões para um host, e um escritório inteiro atrás de um único endereço de
 NAT divide uma só contagem, o problema que a aula 3 encontrou com os limites de taxa. Meça primeiro a
 origem legítima mais movimentada, depois defina o limite bem acima dela.

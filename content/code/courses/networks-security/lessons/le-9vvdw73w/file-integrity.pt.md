@@ -32,7 +32,7 @@ AIDE successfully initialized database.
 Number of entries:	43
 ```
 
-43 entradas. Conferido na hora, nada difere, e o AIDE sai com 0:
+43 entradas. Conferido na hora, o AIDE não encontra diferenças:
 
 ```
 root@www:~# aide --config /etc/aide/shop.conf --check | grep -E "^AIDE|^Number|found"; echo "exit $?"

@@ -31,8 +31,8 @@ root@db:~# conntrack -L -p tcp --dport 5432 2>/dev/null | grep ESTABLISHED | sed
 tcp      6 431997 ESTABLISHED src=192.168.20.10 dst=192.168.20.30 sport=52666 dport=5432
 ```
 
-Então a política muda: `app` perde o acesso ao banco de dados, e as regras de `db` são geradas de novo
-sem a linha de aceite dele:
+Então a política muda: `app` perde o acesso ao banco de dados, e o `db` carrega de novo as suas regras
+sem a linha de aceite do `app`:
 
 ```
 root@db:~# sed -i 's/ip saddr { 192.168.20.10 } tcp dport 5432 accept.*/# app withdrawn from the database, ticket 6203/' segment.nft && nft -f segment.nft && nft list chain inet host input | grep -c 5432

@@ -19,7 +19,7 @@ ip saddr 192.168.0.0/16 oifname "eth3" tcp dport 22 ct state new accept comment 
 ```
 
 **`192.168.0.0/16`.** Um `/16` mantém só os dois primeiros bytes, então o nftables normalizou o endereço
-para a rede que ele de fato descreve, que contém toda faixa do laboratório que começa com `192.168`: o
+para a rede que ele de fato descreve. Essa rede contém toda faixa do laboratório que começa com `192.168`: o
 segmento de gerência, e também a LAN da equipe, os servidores e a filial. Da LAN da equipe:
 
 ```
