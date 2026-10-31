@@ -14,7 +14,7 @@ only the message changes. A cache is a way of not reading the guide again on eve
 
 ## Ollama's cache
 
-Ollama keeps one. It holds on to the prompts it has read recently, and when a request arrives it
+Ollama keeps one. It holds on to the prompts it has read recently. When a request arrives it
 looks among them for the one that shares the longest beginning with the new prompt, token by token
 from the start, and reuses the work for that stretch. Nothing has to be switched on, and nothing in
 a reply says it happened, except the time. Ollama reports

@@ -31,11 +31,11 @@ cache, ou quase nada.
 Um provedor hospedado cobra por token, não por segundo, e os provedores que têm cache cobram um token
 lido do cache bem abaixo de um token de entrada comum. Alguns também cobram a mais para escrever um
 prefixo no cache da primeira vez. A documentação deles dá os números, e o `cost.py` da aula 16 recebe
-um preço por token; para contar um cache você daria a ele um preço para os tokens em cache e outro
+um preço por token. Para contar um cache você daria a ele um preço para os tokens em cache e outro
 para o resto, e a resposta do provedor diz quantos de cada uma chamada usou.
 
 Onde escrever custa a mais, a conta tem uma armadilha: **um prefixo usado uma vez só custa mais com
 cache do que sem**. O prompt com a mensagem primeiro pagaria para escrever o prefixo de cada chamada
-e nunca leria nenhum de volta. A regra que faz um cache compensar é a que a última seção mediu, um
-começo fixo longo e um fim variável curto, e a verificação é a mesma de qualquer outra coisa que custa
+e nunca leria nenhum de volta. A regra que faz um cache compensar é a que a última seção mediu: um
+começo fixo longo e um fim variável curto. A verificação é a mesma de qualquer outra coisa que custa
 dinheiro: rode, leia o que o provedor relata, e compare.

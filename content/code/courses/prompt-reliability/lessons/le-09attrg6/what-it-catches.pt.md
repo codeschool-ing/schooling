@@ -84,7 +84,7 @@ Esses dois números precisam de uma referência, e a honesta é uma verificaçã
 45 das setenta respostas ao acaso, e em média as marcações caem em respostas erradas na mesma
 proporção que as respostas erradas têm na execução inteira: 26 de 70, uma precisão de 0,37. A revocação
 seria 45 de 70, 0,64. **Os 0,40 e 0,69 do revisor mal passam de uma verificação que joga uma
-moeda**, que é o que a tabela diz quando lida por colunas: ele marcou 18 das 26 respostas erradas,
+moeda**. A tabela diz o mesmo quando lida por colunas: ele marcou 18 das 26 respostas erradas,
 69%, e 27 das 44 certas, 61%.
 
 ## O que ele disse
