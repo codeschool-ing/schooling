@@ -145,6 +145,23 @@ resource "google_cloud_run_v2_job" "load" {
       service_account = google_service_account.run.email
       max_retries     = 0
 
+      /* AN HOUR, BECAUSE TEN MINUTES WAS THE DEFAULT AND NOBODY CHOSE IT. The
+         second attempt at v0.54.0, with the memory below, ran for exactly 600
+         seconds and was stopped by Cloud Run ("Terminating task because it has
+         reached the maximum timeout of 600 seconds"). The write is one
+         transaction of a row per statement — some 17,700 sections and 66,500
+         questions, each with its translations — and every statement is a round
+         trip to Cloud SQL. That is a few milliseconds each, and it adds up to
+         more than ten minutes.
+
+         The transaction is what makes the stop harmless: nothing was written
+         and the catalogue students see did not move. It is also why the limit
+         must not be tight, because a load killed at 99% has done no work at
+         all. Batching the writes would bring this down by an order of
+         magnitude, and that is the real fix; this is the one that lets the
+         deploy through first. */
+      timeout = "3600s"
+
       containers {
         image = "us-docker.pkg.dev/cloudrun/container/hello"
 
