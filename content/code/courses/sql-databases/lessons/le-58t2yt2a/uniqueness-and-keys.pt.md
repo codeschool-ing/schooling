@@ -95,7 +95,7 @@ No PostgreSQL os dois não são bem intercambiáveis:
 O que decide na prática. Use uma restrição para unicidade simples numa coluna, porque ela diz o que
 quer dizer e outras tabelas podem referenciá-la. Use um índice único quando precisar das duas
 últimas linhas daquela tabela — *"único entre as linhas não excluídas"*, *"único ignorando a caixa"*
-— que é o material da seção anterior.
+— que é o material da seção sobre índices parciais e de expressão.
 
 Um índice construído antes pode ser promovido depois, que é como se acrescenta uma restrição de
 unicidade a uma tabela viva sem segurar um bloqueio enquanto ele é construído:

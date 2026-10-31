@@ -36,7 +36,7 @@ WHERE placed_at > DATE '…'                         -- no
 Duas consequências sobre as quais vale agir:
 
 **Não acrescente um índice em `(a)` quando você tem um em `(a, b)`.** O mais largo já serve a toda
-consulta que o estreito serviria. É um dos dois duplicados da seção anterior.
+consulta que o estreito serviria. É um dos dois duplicados da seção sobre custo.
 
 **Acrescente um em `(b)` se você consulta `b` sozinho.** O composto não ajuda ali, e nenhuma
 reordenação faz um índice servir ao mesmo tempo a `a` sozinho e a `b` sozinho.
@@ -93,6 +93,6 @@ Duas ou três é onde quase todo o valor está. Um índice de seis colunas costu
 acrescentando uma coluna por chamado, e ele serve às mesmas consultas que um de duas serviria
 custando mais em toda escrita.
 
-E se você se pegar querendo `(a, b)` e `(b, a)` os dois, são dois índices e às vezes é a resposta
-certa — mas confira antes se a segunda consulta é uma que alguém roda, porque este é exatamente o
-formato que a seção anterior chamou de imposto permanente sobre as escritas.
+E se você se pegar querendo `(a, b)` e `(b, a)` os dois, são dois índices, e às vezes é a resposta
+certa. Confira antes se a segunda consulta é uma que alguém roda, porque este é exatamente o formato
+que a seção sobre custo chamou de imposto permanente sobre as escritas.

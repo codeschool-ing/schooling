@@ -35,9 +35,9 @@ each one also fixes the estimate.
 ## 2. Add the index the plan is asking for
 
 The plan is asking for one when a scan reads a large table to keep a few rows, or when a nested
-loop has a sequential scan on its inner side. It says which column in the `Filter` line. These
-are the two runs from the section on `EXPLAIN ANALYZE`, before the index on `customer_id` and
-after it:
+loop has a sequential scan on its inner side. It says which column in the `Filter` line. Here is
+the run from the section on `EXPLAIN ANALYZE`, before the index on `customer_id`, and the same
+query after it:
 
 ```
 shop=# EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;
@@ -123,7 +123,7 @@ than the one before.
 ## 4. Fix the estimate
 
 When the plan's shape is wrong — a nested loop that should have been a hash, a hash built on the
-wrong side — and the scans are already using their indexes, the previous section applies.
+wrong side — and the scans are already using their indexes, the section on estimates applies.
 `ANALYZE`; an expression index, or a rewrite so the column is bare; extended statistics for
 columns that move together. The index is not the fix here; the planner would have used it if it
 had known.

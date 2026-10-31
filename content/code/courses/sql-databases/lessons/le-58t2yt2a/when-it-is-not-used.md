@@ -98,8 +98,8 @@ The index is fine. Using it would mean following six hundred thousand pointers t
 and reading the table straight through is faster. **The planner is not ignoring your index; it
 priced both plans and picked one.**
 
-The partial index is the tool for the other half of this — the 3% of rows where `status =
-'pending'` — and it has its own section.
+The partial index is the tool for the other half of this — the three orders in a thousand where
+`status = 'pending'` — and it has its own section.
 
 ## The statistics are out of date
 

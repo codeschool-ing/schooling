@@ -36,7 +36,7 @@ WHERE placed_at > DATE '…'                         -- no
 Two consequences worth acting on:
 
 **Do not add an index on `(a)` when you have one on `(a, b)`.** The wider one already serves every
-query the narrow one would. It is one of the two duplicates from the last section.
+query the narrow one would. It is one of the two duplicates from the section on cost.
 
 **Do add one on `(b)` if you query `b` alone.** The composite does not help there, and no amount of
 reordering makes one index serve both `a` alone and `b` alone.
@@ -93,6 +93,6 @@ Two or three is where almost all the value is. An index on six columns is usuall
 one column per ticket, and it serves the same queries a two-column one would while costing more on
 every write.
 
-And if you find yourself wanting `(a, b)` and `(b, a)` both, that is two indexes and it is
-sometimes the right answer — but check first whether the second query is one anybody runs, because
-this is exactly the shape the last section called a permanent tax on writes.
+And if you find yourself wanting `(a, b)` and `(b, a)` both, that is two indexes, and it is
+sometimes the right answer. Check first whether the second query is one anybody runs, because this
+is exactly the shape the section on cost called a permanent tax on writes.

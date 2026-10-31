@@ -13,13 +13,10 @@ sorted, with a pointer beside each value to the row it came from.**
 Not a setting. Not a hint to the planner. A structure, on disk, that has to be written and kept up
 to date, and which is why everything else in this lesson is a trade rather than a free improvement.
 
-> **The `orders` table changes shape from here on.** Lessons 1 to 8 ran against a shop with a few
-> rows in it, where `ordered_on` is a `date` and every query returns instantly — which is the point
-> when what is being taught is what a join means. An index is only visible against volume, so this
-> lesson and the two after it run against the shop with a million orders that the previous section
-> loaded, with a `placed_at timestamptz` in place of `ordered_on`. The captured output from here on
-> is that database. Nothing about the SQL changes; what changes is that a scan now costs something
-> you can read off the clock.
+> **The `orders` table changes shape from here on.** This lesson and the two after it run against
+> the shop with a million orders that the previous section loaded, with a `placed_at timestamptz` in
+> place of `ordered_on`. Nothing about the SQL changes; what changes is that a scan now costs
+> something you can read off the clock.
 
 ## Why sorted is the whole trick
 
@@ -36,8 +33,8 @@ out of a billion.
 | 1,000,000 | 20 |
 | 1,000,000,000 | 30 |
 
-Look at that table for a second, because it explains the shape of everything that follows: **a
-thousand times more data costs ten more steps.** A scan of the same table costs a thousand times
+That table explains the shape of everything that follows: **a thousand times more data costs ten
+more steps.** A scan of the same table costs a thousand times
 more work. That gap is what an index buys, and it is why the gain grows with the table rather than
 staying the same.
 

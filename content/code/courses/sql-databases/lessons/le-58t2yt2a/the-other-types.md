@@ -114,6 +114,6 @@ than an index type.
 | **hash** | equality on a long value, and nothing else | PostgreSQL, rarely worth it |
 
 The useful takeaway is not the table. It is that **`LIKE '%…%'`, searching inside a JSON column,
-and "no two bookings may overlap" are all solvable** — and that if you are on MySQL or SQLite, two
-of them are solvable differently and one of them is not, which is a thing to know before you design
-the feature rather than afterwards.
+and "no two bookings may overlap" are all solvable.** On MySQL or SQLite, two of them are solvable
+differently and one of them is not — a thing to know before you design the feature rather than
+afterwards.

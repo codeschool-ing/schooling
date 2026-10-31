@@ -95,7 +95,7 @@ shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
 (2 rows)
 ```
 
-`rows=49493`, a menos de um por cento das 50 000 que um quarto de duzentas mil seria, o que está
+`rows=49493`, cerca de um por cento abaixo das 50 000 que um quarto de duzentas mil seria, o que está
 certo: quatro motivos, distribuídos por igual. Uma instrução, e o planejador passou de chutar a
 saber. Não dá 50 000 exatas porque o `ANALYZE` lê uma amostra da tabela e não ela inteira — que é
 também por que as estimativas na sua tela podem diferir destas um pouco.
@@ -141,7 +141,7 @@ vindo da aplicação, esta é a primeira coisa a suspeitar.
 
 | estimativa contra real | causa usual |
 |---|---|
-| muito abaixo, numa varredura com função ou aritmética | sem estatísticas para a expressão |
+| muito abaixo ou acima, numa varredura com função ou aritmética | sem estatísticas para a expressão |
 | muito abaixo ou acima numa tabela recém-carregada | nunca analisada |
 | muito abaixo numa condição de várias colunas | colunas correlacionadas |
 | certa em toda varredura, errada acima de uma junção | a seletividade da junção, e a ordem em que as junções foram tentadas |
