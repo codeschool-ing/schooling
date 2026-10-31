@@ -3,8 +3,8 @@ title: Mudando o registro, e a versão do Mac
 version: 1
 ---
 
-As regras da seção 03 valem, e importam mais: um arquivo de texto quebrado por um erro de digitação se
-conserta com um editor, um registro quebrado na chave errada pode impedir o Windows de iniciar.
+As regras da seção 04 valem, e importam mais: um arquivo de texto quebrado por um erro de digitação se
+conserta com um editor; um registro quebrado na chave errada pode impedir o Windows de iniciar.
 
 1. *Exporte antes de mudar.* No `regedit`, *Arquivo > Exportar* a chave que você vai mexer; o arquivo
    `.reg` que ele grava pode ser aberto com clique duplo para pô-la de volta.
@@ -31,8 +31,8 @@ Remove-ItemProperty -Path 'HKCU:\Software\OfficeApp' -Name Server
 ```
 
 **Nada disso foi rodado para esta aula.** O PowerShell trata o registro como uma unidade, `HKLM:` e
-`HKCU:`, então o `New-Item`, o `Get-ItemProperty` e o `Remove-ItemProperty` da aula 12 funcionam em
-chaves e valores como funcionam em pastas e arquivos, e o `-WhatIf` funciona também.
+`HKCU:`, então o `New-Item`, o `Get-ItemProperty` e o `Remove-ItemProperty` funcionam em chaves e
+valores como os comandos da aula 12 funcionam em pastas e arquivos, e o `-WhatIf` funciona também.
 
 A **Restauração do Sistema**, quando está ligada, guarda o registro a cada ponto de restauração, e é o
 caminho de volta quando uma mudança impede o Windows de funcionar normalmente. A aula 17 a usa.

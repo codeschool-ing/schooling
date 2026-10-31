@@ -6,7 +6,7 @@ version: 1
 Back to the shop. For one person at home, **Home** is enough: it runs the same programs at the same
 speed, and nothing in the table's "no" column is something a household misses.
 
-For the office, **Pro**, and the reasons are specific rather than general:
+For the office, **Pro**, for four reasons:
 
 1. **It can join the organisation.** Lesson 2 said an office PC should be set up with a work account.
    On Home that option does not exist, so the PC stays a personal machine that happens to be in an

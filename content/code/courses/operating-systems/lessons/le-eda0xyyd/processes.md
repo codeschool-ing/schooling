@@ -8,8 +8,8 @@ and there is one program and two processes, each with its own memory and its own
 somebody says a computer is slow, the question is almost never *which program is installed*. It is
 *which processes are running*, and what each one is doing.
 
-Everything in this lesson happens in a folder called `office` in your home folder, with one short
-file in it. Make them first, on your server:
+From here to the end of the lesson, everything happens in a folder called `office` in your home
+folder, with one short file in it. Make them first, on your server:
 
 ```sh
 mkdir ~/office && cd ~/office

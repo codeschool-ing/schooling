@@ -34,7 +34,7 @@ systeminfo | Select-String "OS Name", "Total Physical Memory"
 ```
 
 **None of the Windows commands in this lesson were run for it.** `systeminfo` prints a long page of
-text, and `Select-String` picks lines out of it, the same job as `grep` in section 04. The last line
+text, and `Select-String` picks lines out of it, the same job as `grep` in section 05. The last line
 answers the uptime question on Windows: the date and time of the last boot.
 
 On a Mac most of the Linux commands work as they are. The exceptions are few, and worth having in one

@@ -37,4 +37,4 @@ PS /home/ana> $PROFILE
 
 A user setting overrides the machine's for that person only, which is what makes it safe: a broken
 `.bashrc` breaks one account, and `/etc` is untouched. **To reset a program for one person, move its
-dot-folder aside**, never delete it straight away; it is lesson 12's copy-first rule again.
+dot-folder aside**, never delete it straight away; it is section 04's copy-first rule again.

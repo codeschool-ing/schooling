@@ -25,7 +25,7 @@ cron-daemon-common: /etc/crontab
 - **122 itens** no `/etc` deste servidor mínimo, arquivos e pastas. Um desktop tem algumas centenas.
 - O `/etc/hostname` é uma linha: o nome da máquina, o que aparece em todo prompt deste curso.
 - O `/etc/hosts` liga nomes a endereços antes de qualquer servidor DNS ser consultado. O
-  `127.0.1.1 server` é como a máquina acha a si mesma pelo nome. A seção 03 acrescenta uma linha a ele.
+  `127.0.1.1 server` é como a máquina acha a si mesma pelo nome. A seção 04 acrescenta uma linha a ele.
 - O `dpkg -S` pergunta que pacote instalou um arquivo. O `/etc/crontab` pertence ao
   `cron-daemon-common`; o `/etc/hosts` não pertence a **pacote nenhum**, porque o instalador o escreveu
   para esta máquina. A diferença importa na atualização: os arquivos de configuração de um pacote são os

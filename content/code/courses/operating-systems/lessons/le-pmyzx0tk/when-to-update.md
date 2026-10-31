@@ -48,7 +48,7 @@ and it is why active hours exist.
 ## The way back
 
 - *Windows*: *Settings > Windows Update > Update history > Uninstall updates*, or `wusa` from section
-  02; a feature update can be rolled back within ten days, in *System > Recovery > Go back*.
+  03; a feature update can be rolled back within ten days, in *System > Recovery > Go back*.
 - *Linux*: `apt install package=version` puts back an older version while the archive still has it,
   and a server's disk snapshot or backup is the bigger way back.
 - *Anything*: the backup taken before, which lesson 17 relies on.

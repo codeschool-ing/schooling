@@ -36,8 +36,8 @@ Count
   `systemd`, and the services it started.
 - `pgrep -a` finds processes by name and prints their ID and command line.
 - `Get-Process -Name` found the same process, with the same ID, from PowerShell, and **counted 12**
-  on the whole machine. A desktop runs hundreds; this is a minimal server, and
-  yours, the standard installation, runs more than this one.
+  on the whole machine. A desktop runs hundreds. This is a minimal server, and yours, from the
+  standard installation, runs more.
 
 Stopping it takes the ID:
 

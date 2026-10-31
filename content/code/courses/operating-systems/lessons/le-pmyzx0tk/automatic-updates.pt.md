@@ -4,7 +4,7 @@ version: 2
 ---
 
 Um Ubuntu Server padrão instala o **unattended-upgrades** e o liga, e o que você montou na aula 1 o tem.
-O servidor em que estas transcrições foram gravadas foi montado sem ele, então lá ele é instalado aqui,
+O servidor em que estas transcrições foram gravadas foi montado sem ele, então ele é instalado aqui,
 com a ferramenta da aula 11. No seu, o primeiro comando responde que ele já está na versão mais nova, e
 os demais leem os mesmos arquivos:
 

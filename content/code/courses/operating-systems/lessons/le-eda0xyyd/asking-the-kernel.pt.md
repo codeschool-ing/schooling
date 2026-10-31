@@ -18,7 +18,9 @@ write(1, "Ribeiro Contabilidade\nOpen 8:00 "..., 41) = 41
 read(3, "", 131072)                     = 0
 ```
 
-Quatro pedidos, e eles são tudo o que o `cat` faz:
+Quatro pedidos levam o arquivo até a tela. O `cat` pediu mais do que isso: o `-e trace=` registrou
+só três tipos de chamada, e o `grep -A3` guardou só as linhas a partir de `notice.txt`. Estes quatro
+são o trabalho:
 
 1. `openat(..., "notice.txt", O_RDONLY) = 3`: *abra este arquivo para leitura.* O kernel confere que
    o arquivo existe e que a Ana pode lê-lo, e responde com um número, `3`, que o programa vai usar

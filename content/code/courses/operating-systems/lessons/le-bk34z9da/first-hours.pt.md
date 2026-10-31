@@ -25,9 +25,10 @@ diffutils/noble-updates,noble-security 1:3.10-1ubuntu0.1 amd64 [upgradable from:
 dpkg/noble-updates,noble-security 1.22.6ubuntu6.6 amd64 [upgradable from: 1.22.6ubuntu6]
 ```
 
-O `sudo apt update` só **atualiza a lista**: ele baixou o catálogo atual dos servidores do Ubuntu (as
-quatro linhas `Hit`) e comparou com o que está instalado. Cinquenta pacotes têm versões mais novas, e o
-segundo comando os lista: o `apt`, a própria ferramenta de pacotes, os arquivos base, os utilitários
+O `sudo apt update` só **atualiza a lista**: ele pediu o catálogo atual aos servidores do Ubuntu (as
+quatro linhas `Hit`, cada uma um repositório cuja lista não tinha mudado desde a última busca) e comparou
+com o que está instalado. Cinquenta pacotes têm versões mais novas, e o `apt list --upgradable` mostra
+os cinco primeiros: o `apt`, a própria ferramenta de pacotes, os arquivos base, os utilitários
 principais. A aula 11 trata do `apt` em detalhe.
 
 O segundo comando os instala:

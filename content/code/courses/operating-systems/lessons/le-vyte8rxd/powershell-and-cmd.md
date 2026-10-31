@@ -47,7 +47,7 @@ with the same danger.
 
 The most useful switch in PowerShell for this lesson is **`-WhatIf`**. `Remove-Item archive -Recurse
 -WhatIf` **described** what it would delete and deleted nothing: the last command still found both
-files in `archive`. It is section 05's "look first", built into the command, and most cmdlets that
+files in `archive`. It is section 06's "look first", built into the command, and most cmdlets that
 change something accept it. **`-Confirm`** is the equivalent of `rm -i`.
 
 `Remove-Item` on a folder that has something in it asks for confirmation unless `-Recurse` is given,

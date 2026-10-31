@@ -37,7 +37,7 @@ system_profiler SPHardwareDataType       # model, chip, memory, serial number
 ```
 
 **Nenhum destes foi rodado para esta aula.** São comandos do macOS, e a máquina de onde vêm os
-registros deste curso é Linux. O `uname` é o que você já conhece da aula 1, e num Mac ele imprime
+registros deste curso é Linux. O `uname` é o mesmo comando do Linux, e num Mac ele imprime
 `arm64` ou `x86_64`, conforme o chip.
 
 ## Antes de mexer em qualquer coisa

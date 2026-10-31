@@ -25,7 +25,7 @@ cron-daemon-common: /etc/crontab
 - **122 entries** in `/etc` on this minimal server, files and folders. A desktop has a few hundred.
 - `/etc/hostname` is one line: the machine's name, the one in every prompt of this course.
 - `/etc/hosts` maps names to addresses before any DNS server is asked. `127.0.1.1 server` is how the
-  machine finds itself by name. Section 03 adds a line to it.
+  machine finds itself by name. Section 04 adds a line to it.
 - `dpkg -S` asks which package installed a file. `/etc/crontab` belongs to `cron-daemon-common`;
   `/etc/hosts` belongs to **no package**, because the installer wrote it for this machine. That
   difference matters on upgrade: a package's configuration files are ones apt knows how to update, and

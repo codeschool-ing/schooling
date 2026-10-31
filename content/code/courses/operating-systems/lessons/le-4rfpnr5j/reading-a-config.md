@@ -20,8 +20,8 @@ ana@server:~$ ls /etc/apt/apt.conf.d
 99capture-plain
 ```
 
-**49 lines, and one of them is a setting**: `[Journal]`, a section heading, with nothing under it.
-Everything else starts with `#`. The file lists every option **commented out, with its default value**:
+**49 lines, and only one of them is not a comment**: `[Journal]`, a section heading, with nothing
+under it. The rest are comments and blank lines. The file lists every option **commented out, with its default value**:
 `#Storage=auto` says that storage is automatic unless somebody removes the `#` and changes it.
 
 That convention answers two questions at once. **What can be set** is the whole file. **What is set**

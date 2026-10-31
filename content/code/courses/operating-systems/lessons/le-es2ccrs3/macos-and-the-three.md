@@ -4,7 +4,7 @@ version: 2
 ---
 
 **macOS uses both models.** Underneath it is Unix: every file has an owner, a group and the nine letters
-of section 01, and Terminal's `ls -l` shows them exactly as on Linux. **On top, it supports ACLs** in the
+of section 02, and Terminal's `ls -l` shows them exactly as on Linux. **On top, it supports ACLs** in the
 Windows style, which Finder's *Get Info > Sharing & Permissions* edits when you add a named person.
 
 ```sh

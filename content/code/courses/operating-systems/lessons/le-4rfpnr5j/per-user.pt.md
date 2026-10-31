@@ -39,4 +39,4 @@ PS /home/ana> $PROFILE
 Um ajuste do usuário se sobrepõe ao da máquina só para aquela pessoa, e é isso que o torna seguro: um
 `.bashrc` quebrado quebra uma conta, e o `/etc` fica intacto. **Para restaurar um programa para uma
 pessoa, mova a pasta de ponto dele para o lado**, nunca a apague de cara; é a regra de copiar antes da
-aula 12 de novo.
+seção 04 de novo.

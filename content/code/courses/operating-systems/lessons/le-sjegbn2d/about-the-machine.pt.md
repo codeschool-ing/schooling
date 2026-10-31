@@ -35,7 +35,7 @@ systeminfo | Select-String "OS Name", "Total Physical Memory"
 ```
 
 **Nenhum dos comandos do Windows desta aula foi rodado para ela.** O `systeminfo` imprime uma página
-comprida de texto, e o `Select-String` pesca linhas dela, o mesmo trabalho do `grep` na seção 04. A
+comprida de texto, e o `Select-String` pesca linhas dela, o mesmo trabalho do `grep` na seção 05. A
 última linha responde a pergunta do uptime no Windows: a data e a hora da última inicialização.
 
 No Mac a maioria dos comandos do Linux funciona como está. As exceções são poucas, e vale tê-las num

@@ -16,7 +16,7 @@ O topo da árvore são cinco **chaves raiz**, e duas delas são onde quase tudo 
 | HKEY_CLASSES_ROOT | tipos de arquivo e o que os abre | uma visão sobre o HKLM e o HKCU |
 | HKEY_CURRENT_CONFIG | o perfil de hardware atual | uma visão dentro do HKLM |
 
-**O HKLM e o HKCU são o `/etc` e os arquivos de ponto da seção 04**, na forma do Windows: um para a
+**O HKLM e o HKCU são o `/etc` e os arquivos de ponto da seção 05**, na forma do Windows: um para a
 máquina, um por pessoa. Os arquivos em que eles ficam guardados se chamam **hives**.
 
 Dentro, as *chaves* são pastas e os *valores* são as configurações, cada um com *nome*, *tipo* e

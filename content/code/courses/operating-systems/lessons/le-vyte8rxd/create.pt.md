@@ -35,7 +35,7 @@ reports/2026/q3
 - O `touch` cria um arquivo vazio ou, se o arquivo existe, só atualiza a data dele. Não muda conteúdo
   em nenhum dos casos.
 - O `echo "…" > todo.txt` cria um arquivo com uma linha. O `>` manda a saída do `echo` para o arquivo
-  em vez da tela, o assunto da seção 03.
+  em vez da tela, o assunto da seção 04.
 - O `ls -F` marca pastas com `/`, e o `find` lista tudo abaixo de uma pasta, por mais fundo que
   seja.
 

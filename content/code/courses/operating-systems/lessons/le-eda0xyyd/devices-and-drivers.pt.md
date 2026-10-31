@@ -42,8 +42,7 @@ sequência de bytes. O `/dev/null` é um dispositivo que engole tudo o que se es
 com um `b`. O ponto não são os nomes. É que um programa pode escrever num dispositivo com o mesmo
 `write` que usou num arquivo na seção anterior, e o driver faz o resto.
 
-A lista aqui é curta porque este é um servidor sem tela, impressora ou som. Num computador de mesa, o
-`/dev` também tem os discos, a webcam e a placa de som.
+A lista para em doze linhas porque o `head -12` a corta ali. Num computador de mesa, o `/dev` também tem os discos, a webcam e a placa de som.
 
 ## Dispositivos no Windows
 

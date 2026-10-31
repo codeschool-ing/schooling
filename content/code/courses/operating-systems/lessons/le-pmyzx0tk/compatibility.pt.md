@@ -41,6 +41,6 @@ PS /home/ana> $PSVersionTable.PSVersion.ToString()
 | macOS | apps Intel rodam no Apple silicon pelo **Rosetta 2** | só apps do Mac | um app diz o macOS mais velho que aceita |
 | Linux | `dpkg --add-architecture` para pacotes de 32 bits | só programas do Linux | bibliotecas da mesma distribuição e versão |
 
-O **Modo de compatibilidade** vale uma frase: muitos programas velhos do Windows que se recusam a
+O **Modo de compatibilidade** funciona porque muitos programas velhos do Windows que se recusam a
 iniciar só perguntaram *que Windows é este?* e não gostaram da resposta, o `ProductName` da aula 5 visto
 do outro lado. Dizer a eles uma versão mais velha muitas vezes basta.

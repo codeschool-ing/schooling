@@ -40,6 +40,6 @@ PS /home/ana> $PSVersionTable.PSVersion.ToString()
 | macOS | Intel apps run on Apple silicon through **Rosetta 2** | Mac apps only | an app states the oldest macOS it accepts |
 | Linux | `dpkg --add-architecture` for 32-bit packages | Linux programs only | libraries from the same distribution and release |
 
-**Compatibility mode** is worth a sentence: many old Windows programs that refuse to start only asked
+**Compatibility mode** works because many old Windows programs that refuse to start only asked
 *which Windows is this?* and did not like the answer, lesson 5's `ProductName` from the other side.
 Telling them an older version is often enough.

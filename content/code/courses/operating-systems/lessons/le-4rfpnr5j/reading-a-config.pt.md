@@ -20,8 +20,8 @@ ana@server:~$ ls /etc/apt/apt.conf.d
 99capture-plain
 ```
 
-**49 linhas, e uma delas é configuração**: `[Journal]`, um título de seção, sem nada embaixo. Todo o
-resto começa com `#`. O arquivo lista cada opção **comentada, com o valor padrão**: o `#Storage=auto` diz
+**49 linhas, e só uma delas não é comentário**: `[Journal]`, um título de seção, sem nada embaixo. O
+resto são comentários e linhas vazias. O arquivo lista cada opção **comentada, com o valor padrão**: o `#Storage=auto` diz
 que o armazenamento é automático a não ser que alguém tire o `#` e mude.
 
 Essa convenção responde duas perguntas de uma vez. **O que pode ser configurado** é o arquivo inteiro.

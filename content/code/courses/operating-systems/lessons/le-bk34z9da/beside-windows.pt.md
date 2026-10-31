@@ -45,8 +45,8 @@ System clock synchronized: no
           RTC in local TZ: no
 ```
 
-Este registro vem de uma máquina virtual que pega emprestado o relógio do computador que a roda, então
-ela não tem relógio de hardware próprio: `RTC time: n/a`, e nem sincronização de horário própria. Num PC
+Este registro vem de um contêiner, um sistema que roda dentro de outro computador e pega emprestado o
+relógio dele, então não tem relógio de hardware próprio: `RTC time: n/a`, e nem sincronização de horário própria. Num PC
 de verdade a linha mostra o relógio de hardware, e `RTC in local TZ: no` é o hábito do Linux. A correção
 de costume para o dual boot é mandar o Linux fazer o que o Windows faz:
 

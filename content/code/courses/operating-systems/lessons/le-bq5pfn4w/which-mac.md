@@ -37,7 +37,7 @@ system_profiler SPHardwareDataType       # model, chip, memory, serial number
 ```
 
 **None of these were run for this lesson.** They are macOS commands, and the machine this course's
-transcripts come from is Linux. `uname` is the one you already know from lesson 1, and on a Mac it
+transcripts come from is Linux. `uname` is the same command as on Linux, and on a Mac it
 prints `arm64` or `x86_64` depending on the chip.
 
 ## Before touching anything
