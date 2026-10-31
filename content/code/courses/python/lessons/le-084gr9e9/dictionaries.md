@@ -34,15 +34,15 @@ most of the time.
   "language": "python",
   "parts": [
     {
-      "code": "person[\"email\"] = \"ada@example.com\"\n",
+      "code": "person[\"email\"] = \"ada@example.com\"",
       "note": "Assigning to a key adds it, or replaces its value if it is already there."
     },
     {
-      "code": "person.setdefault(\"city\", \"Paris\")\n",
+      "code": "person.setdefault(\"city\", \"Paris\")",
       "note": "`setdefault` writes the value only if the key is absent."
     },
     {
-      "code": "del person[\"email\"]\n"
+      "code": "del person[\"email\"]"
     },
     {
       "code": "value = person.pop(\"city\", None)",

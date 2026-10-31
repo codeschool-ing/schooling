@@ -34,15 +34,15 @@ de um arquivo JSON, é a maior parte das vezes.
   "language": "python",
   "parts": [
     {
-      "code": "person[\"email\"] = \"ada@example.com\"\n",
+      "code": "person[\"email\"] = \"ada@example.com\"",
       "note": "Atribuir a uma chave a acrescenta, ou substitui o valor dela se ela já existe."
     },
     {
-      "code": "person.setdefault(\"city\", \"Paris\")\n",
+      "code": "person.setdefault(\"city\", \"Paris\")",
       "note": "O `setdefault` grava o valor só se a chave estiver ausente."
     },
     {
-      "code": "del person[\"email\"]\n"
+      "code": "del person[\"email\"]"
     },
     {
       "code": "value = person.pop(\"city\", None)",

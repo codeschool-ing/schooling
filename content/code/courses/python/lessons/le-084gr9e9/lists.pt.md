@@ -30,15 +30,15 @@ um a mais.
   "language": "python",
   "parts": [
     {
-      "code": "langs[1] = \"rust\"\n",
+      "code": "langs[1] = \"rust\"",
       "note": "Atribuir a uma posição substitui o item que está ali, no lugar."
     },
     {
-      "code": "langs.append(\"c\")\n",
+      "code": "langs.append(\"c\")",
       "note": "O `append` põe um item no fim."
     },
     {
-      "code": "langs.extend([\"zig\", \"r\"])\n",
+      "code": "langs.extend([\"zig\", \"r\"])",
       "note": "O `extend` põe vários no fim."
     },
     {
@@ -71,15 +71,15 @@ um a mais.
   "language": "python",
   "parts": [
     {
-      "code": "langs.sort()\n",
+      "code": "langs.sort()",
       "note": "O `sort` trabalha no lugar e devolve `None`."
     },
     {
-      "code": "best = sorted(langs)\n",
+      "code": "best = sorted(langs)",
       "note": "O `sorted` faz uma lista nova e deixa a original em paz."
     },
     {
-      "code": "langs.sort(reverse=True)\n"
+      "code": "langs.sort(reverse=True)"
     },
     {
       "code": "langs.sort(key=len)",

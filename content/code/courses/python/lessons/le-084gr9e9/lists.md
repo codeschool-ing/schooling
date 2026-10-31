@@ -30,15 +30,15 @@ off-by-one.
   "language": "python",
   "parts": [
     {
-      "code": "langs[1] = \"rust\"\n",
+      "code": "langs[1] = \"rust\"",
       "note": "Assigning to a position replaces the item there, in place."
     },
     {
-      "code": "langs.append(\"c\")\n",
+      "code": "langs.append(\"c\")",
       "note": "`append` puts one item on the end."
     },
     {
-      "code": "langs.extend([\"zig\", \"r\"])\n",
+      "code": "langs.extend([\"zig\", \"r\"])",
       "note": "`extend` puts several on the end."
     },
     {
@@ -71,15 +71,15 @@ inside the list, which is legal and almost never what you meant.
   "language": "python",
   "parts": [
     {
-      "code": "langs.sort()\n",
+      "code": "langs.sort()",
       "note": "`sort` works in place and returns `None`."
     },
     {
-      "code": "best = sorted(langs)\n",
+      "code": "best = sorted(langs)",
       "note": "`sorted` makes a new list and leaves the original alone."
     },
     {
-      "code": "langs.sort(reverse=True)\n"
+      "code": "langs.sort(reverse=True)"
     },
     {
       "code": "langs.sort(key=len)",
