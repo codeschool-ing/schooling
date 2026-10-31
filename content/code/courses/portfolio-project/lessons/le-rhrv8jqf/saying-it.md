@@ -25,7 +25,7 @@ choice about the first version rather than a limit of the author.
 section, lesson 16, and each line has the same shape: *what was decided, and what it costs*. For
 accounts: *the borrower is a name typed in; the cost is that anybody who can open the page can lend*.
 
-That second half is the part people leave out, and it is the part that matters. **A decision with no
+That second half is the part people leave out. **A decision with no
 cost reads as a claim that there was no trade-off**, and every reviewer knows there always is one.
 Naming the cost yourself does two things: it shows you saw it, and it takes the question away from
 the interviewer, who would otherwise ask it in lesson 20 as if you had not.

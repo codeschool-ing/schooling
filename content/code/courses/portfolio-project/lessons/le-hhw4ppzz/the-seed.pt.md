@@ -28,7 +28,7 @@ Tripod              Eduardo Lins   2026-09-23  2026-09-30
 ```
 
 Oito itens, quatro fora, e **cada empréstimo escolhido para mostrar algo**: o Laptop 03 saiu há nove dias,
-então está atrasado; os outros três vencem em dias diferentes, então a lista não é uniforme; quatro itens
+então está atrasado, e os outros três vencem em dias diferentes, então a lista não é uniforme. Quatro itens
 estão disponíveis, então o formulário *Lend* aparece também. Todo estado que a página tem está na tela ao
 mesmo tempo. Rode de novo e ele recusa, como a quarta parte diz que deve:
 

@@ -20,7 +20,7 @@ ana@laptop:~/loanbook$ git log --oneline main..
 diff is the empty state and nothing else. Nobody reading the pull request will know there was a
 `console.log`, and nobody needs to.
 
-The injection problem is different, and the difference matters. It is **not a slip in this change**:
+The injection problem is different. It is **not a slip in this change**:
 it was already in the code this change touched. The honest move is not to widen this pull request
 into a rewrite of the page, but to **open a card for it**, lesson 8, and fix it in its own change,
 where a reviewer can see it as the decision it is. A pull request that quietly fixes three unrelated

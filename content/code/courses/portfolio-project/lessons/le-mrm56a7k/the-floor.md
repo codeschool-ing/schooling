@@ -13,7 +13,7 @@ of what a reviewer, or a real user, will run into:
 | everything works **by keyboard**, with visible focus | Tab reaches every field and button, and you can see where you are |
 | text has **contrast** of at least 4.5:1 | grey on white is dark enough to read in a corridor |
 | **headings and landmarks** mark the structure | one `h1`, the content inside `main`, the table's headers marked as such |
-| changes are **announced** | *lent until the 13th* is read out, not only drawn |
+| changes are **announced** | *… lent to … until …* is read out, not only drawn |
 | it works at **320 pixels** with no sideways scrolling | the table becomes a list on a small phone |
 | touch targets are at least **24 pixels** | a finger can press *Return* without pressing its neighbour |
 

@@ -29,7 +29,7 @@ ca4540f Build and run in a container
 c40ef55 License under MIT
 ```
 
-Read only the subjects and the project explains itself. It said what it was for, served an empty
+**Read only the subjects and the project explains itself.** It said what it was for, served an empty
 page, listed, lent, took back. Then it met the problem of lesson 5 and refused a second loan, tested
 the rule, cleaned up its errors, handled the empty list, marked late loans. Then accessibility, the
 phone, a bug found by a test, configuration for the container, a health check, the container, the

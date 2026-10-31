@@ -25,7 +25,7 @@ a primeira versão e não um limite de quem fez.
 aula 16, e toda linha tem o mesmo formato: *o que foi decidido, e o que isso custa*. Para contas: *quem
 pega emprestado é um nome digitado; o custo é que qualquer pessoa que abra a página pode emprestar*.
 
-Essa segunda metade é a que as pessoas deixam de fora, e é a que importa. **Uma decisão sem custo é lida
+Essa segunda metade é a que as pessoas deixam de fora. **Uma decisão sem custo é lida
 como a afirmação de que não houve troca**, e todo avaliador sabe que sempre há. Nomear o custo você mesmo
-faz duas coisas: mostra que você viu, e tira a pergunta da entrevista, que de outro modo a faria na aula
+faz duas coisas: mostra que você viu, e tira a pergunta do entrevistador, que de outro modo a faria na aula
 20 como se você não tivesse visto.

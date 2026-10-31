@@ -71,7 +71,7 @@ ana@laptop:~$ curl -sS https://loans.lab/api/items | python3 -m json.tool | head
             "lent_on": "2026-10-06",
 ```
 
-O `openssl` mostra no que se vai confiar antes de confiar: a raiz local do Caddy, válida por dez anos. O
+O `openssl` mostra no que se vai confiar antes de confiar: a raiz local do Caddy, válida até 2036. O
 `update-ca-certificates` a acrescenta à lista do sistema, e daí em diante a mesma requisição dá certo, em
 HTTPS, com os dados de exemplo. Esses dois comandos são do Ubuntu. No macOS o mesmo arquivo vai para o
 chaveiro System, pelo Acesso às Chaves, marcado como *Sempre Confiar*; no Windows, para *Autoridades de

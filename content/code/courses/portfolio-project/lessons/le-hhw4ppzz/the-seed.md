@@ -28,8 +28,8 @@ Tripod              Eduardo Lins   2026-09-23  2026-09-30
 ```
 
 Eight items, four out, and **each loan chosen to show something**: Laptop 03 went out nine days ago, so it
-is overdue; the other three are due on different days, so the list is not uniform; four items are
-available, so the *Lend* form appears too. Every state the page has is on screen at once. Run it a second
+is overdue, and the other three are due on different days, so the list is not uniform. Four items
+are available, so the *Lend* form appears too. Every state the page has is on screen at once. Run it a second
 time and it refuses, as its fourth part says it should:
 
 ```
