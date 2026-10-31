@@ -34,7 +34,6 @@ ana@pc1:~$ echo lab-only-password | sudo -u tec sudo -S useradd bruno
 ```
 
 O `sudo` pediu primeiro a senha da tec, que a gravação passou com `-S` em vez de digitar, e só então
-recusou: `is not allowed to
-execute`, com o comando exato e o computador. **Essa recusa encerra o assunto para essa
-conta**, e o próximo passo certo não é achar outro jeito de rodar o mesmo comando. É passar o pedido para
+recusou: `is not allowed to execute`, com o comando exato e o computador. **Essa recusa encerra o
+assunto para essa conta**, e o próximo passo certo não é achar outro jeito de rodar o mesmo comando. É passar o pedido para
 quem cria contas, aula 7, com o que foi pedido.

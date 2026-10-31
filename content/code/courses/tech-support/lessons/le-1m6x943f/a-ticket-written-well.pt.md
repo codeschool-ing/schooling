@@ -24,5 +24,5 @@ Pendente:    dono do job de exportação avisado; test.txt vazio em reports, de 
 ```
 
 O segundo leva alguns minutos a mais para escrever. Na próxima vez que a pasta compartilhada encher, ele
-poupa a tarde: a causa tem nome, o comando que falhou está lá para ninguém tentar de novo, e o que vai
+**poupa a tarde**: a causa tem nome, o comando que falhou está lá para ninguém tentar de novo, e o que vai
 enchê-la de novo tem uma linha própria.

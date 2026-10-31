@@ -15,5 +15,5 @@ porque ninguém pode perguntar o que você quis dizer:
 - **Diga quando o chamado vai fechar**, e o que a pessoa faz se o problema voltar: responder esta
   mensagem, não abrir outra, para o histórico ficar num lugar só, aula 5.
 
-Uma resposta escrita também é um registro. Tudo nela pode ser encaminhado ao gestor da pessoa, e deve ser
+**Uma resposta escrita também é um registro.** Tudo nela pode ser encaminhado ao gestor da pessoa, e deve ser
 bem lido lá também.

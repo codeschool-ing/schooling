@@ -4,7 +4,7 @@ version: 1
 ---
 
 As ferramentas desta aula também são o jeito mais comum de criminosos entrarem no computador das pessoas,
-e o método não exige nenhuma habilidade técnica: **alguém liga, diz que é da TI ou do banco, e pede para a
+e o método não exige nenhuma habilidade técnica. **Alguém liga, diz que é da TI ou do banco, e pede para a
 pessoa instalar uma ferramenta de suporte remoto** para resolver um problema urgente. Conectado, ele tem
 tudo o que um técnico teria.
 

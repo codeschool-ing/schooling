@@ -23,7 +23,7 @@ Two things went wrong while this lesson was being written, and both are common:
   its fields, so a spreadsheet split `(Q35 + ICH9, 2009)` into two columns and shifted every column after
   it by one.
 - **A fallback that never fired.** The first version wrote `none` when the serial was empty. It is never
-  empty: a machine with no serial says `Not Specified`, and many PCs say *To Be Filled By O.E.M.*, and
+  empty: a machine with no serial says `Not Specified`, many PCs say *To Be Filled By O.E.M.*, and
   both are text that looks like a serial to a script that only checks for nothing.
 
 The register then needs the people's half beside each line:
