@@ -23,7 +23,7 @@ ac-0Z5Q on 2026-03-21, memories in use: 0
 ```
 
 O `ac-0Z5Q` não tem nada, porque nada no depósito é dele. Parece óbvio, e é a regra quebrada por
-acidente com mais frequência: memórias guardadas numa tabela compartilhada e buscadas por semelhança,
+acidente com mais frequência. Memórias guardadas numa tabela compartilhada e buscadas por semelhança,
 do jeito que a busca da aula 15 funcionava antes do `--as`, um dia entregam a preferência de um
 cliente a outro. **A conta vem da sessão, como na aula 15**, e o depósito é dividido por ela antes de
 qualquer busca.

@@ -11,7 +11,7 @@ inclusive coisas que eles nunca deveriam ter digitado e que você nunca pediu.
 Esta aula trabalha sobre o log de chamadas do assistente da Tarefa, um marketplace brasileiro
 inventado onde clientes contratam freelancers: 22 chamadas ao longo de sete meses. Todo registro,
 prompts e respostas, foi escrito pelo curso, e nenhum modelo os produziu. Todo CPF, número de cartão,
-telefone, endereço e chave neles é inventado: os CPFs têm dígitos verificadores válidos de propósito,
+telefone, endereço e chave neles é inventado. Os CPFs têm dígitos verificadores válidos de propósito,
 os cartões são os números de teste que as bandeiras publicam, e a chave da AWS é a que a própria
 documentação da Amazon usa como exemplo. Cole-o:
 
@@ -166,7 +166,7 @@ de busca, a temperatura. Registre uma referência à configuração e guarde a c
 
 ## O que nenhuma camada pode guardar
 
-Algumas coisas não são questão de prazo. O código de segurança de um cartão é o caso mais claro: o
+Algumas coisas não são questão de prazo. O código de segurança de um cartão é o caso mais claro. O
 PCI DSS, o padrão que as bandeiras impõem a quem lida com dados de cartão, proíbe guardá-lo depois
 que o pagamento foi autorizado, de qualquer forma, criptografado ou não. Um cliente que o digita num
 chat de suporte o entregou ao log, e nenhum limite de retenção torna aceitável guardá-lo. O mesmo

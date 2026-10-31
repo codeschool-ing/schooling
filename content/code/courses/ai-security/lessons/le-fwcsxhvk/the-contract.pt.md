@@ -62,5 +62,5 @@ a retenção de dado sensível, os termos do fornecedor. Escrevê-lo antes de o 
 tarde. Reconstruí-lo depois de um incidente significa explicar decisões que ninguém escreveu.
 
 O custo de não fazer nada disso está no art. 52: sanções que chegam a 2% do faturamento da empresa no
-Brasil, limitadas a R$ 50 milhões por infração, ao lado de outras que podem doer mais, como a
+Brasil, limitadas a R$ 50 milhões por infração. Outras podem doer mais, como a
 publicização da infração e a suspensão do tratamento.

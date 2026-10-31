@@ -24,5 +24,5 @@ beside a pull request, everyone who has read the list pictures the same thing: a
 other code without being checked. A shared name turns a vague worry into a question that can be asked
 of a specific feature, and that is how this course uses it.
 
-Every entry is a failure this course has already met, under a name of its own. The next section puts
+Eight of the ten entries are failures this course covers under names of its own: two in lesson 2, and the rest in the lessons ahead. The next section puts
 the two names side by side.

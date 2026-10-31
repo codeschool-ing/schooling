@@ -3,10 +3,10 @@ title: As verificações do curso, rodadas como uma suíte
 version: 1
 ---
 
-Vinte e duas aulas deixaram programas que saem com um status: o `threats.py` sai com 1 quando um
-fluxo que cruza uma fronteira não tem ameaça escrita contra ele, o `search.py --audit` quando um
-leitor consegue ver um documento que não é dele, o `prompts.py status` quando um arquivo sob revisão
-mudou sem um nome ao lado. **Cada um já é um teste.** O que nenhum deles faz ainda é rodar sozinho.
+Vinte e duas aulas deixaram programas que saem com um status. O `threats.py` sai com 1 quando um
+fluxo que cruza uma fronteira não tem ameaça escrita contra ele, e o `search.py --audit` quando um
+leitor consegue ver um documento que não é dele. O `prompts.py status` sai com 1 quando um arquivo
+sob revisão mudou sem um nome ao lado. **Cada um já é um teste.** O que nenhum deles faz ainda é rodar sozinho.
 Uma verificação que alguém lembra de rodar antes de uma versão é uma verificação pulada justo na
 semana em que importa.
 

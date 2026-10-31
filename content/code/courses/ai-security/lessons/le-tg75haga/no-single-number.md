@@ -35,13 +35,13 @@ shortlist starts to look unreliable.
 The cause is in the `base` column, which no change to the shortlist can move: 60% of Southeastern
 applicants are good and 50% of Northeastern ones. Alexandra Chouldechova proved in 2017 that when
 base rates differ, **no classifier that makes mistakes can have equal precision, equal TPR and equal
-FPR across the groups at the same time**, and Jon Kleinberg, Sendhil Mullainathan and Manish Raghavan
-proved a close relative of it for risk scores in 2016. Equalise two and the third
+FPR across the groups at the same time**. Jon Kleinberg, Sendhil Mullainathan and Manish Raghavan
+proved a close relative of that result for risk scores in 2016. Equalise two and the third
 gives way. Version 1 kept precision equal and paid in TPR; version 2 bought TPR and paid in precision
 and FPR. Neither is a bug in the shortlist. It is arithmetic.
 
 That arithmetic assumes the base rates are true. Here they come from a reviewer's judgement, which is
-the measurement row of the first section: if reviewers rate Northeastern work more harshly, the 0.50
+the measurement row of the four sources at the start of this lesson: if reviewers rate Northeastern work more harshly, the 0.50
 is itself part of the bias, and equalising against it locks the bias in.
 
 ## Choosing is the work
@@ -55,7 +55,7 @@ willing to have fall unevenly**. Name the two errors in the terms of the people 
 For a feature that decides who gets work, many teams decide that the freelancer's error is the
 graver one and hold the TPR gap close to zero, accepting a precision gap and telling clients so.
 Another team may decide otherwise. What makes either defensible is that the choice is **written down
-with its numbers**, in the same document lesson 12 called the RIPD: the metric chosen, the reason,
+with its numbers**, in the same document lesson 12 calls the RIPD: the metric chosen, the reason,
 the gaps measured, the date, and when they will be measured again. That is also what a review
 request under art. 20 of the LGPD will ask to see.
 

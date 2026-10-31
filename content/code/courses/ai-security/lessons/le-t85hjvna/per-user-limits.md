@@ -154,8 +154,8 @@ can use up the key's budget by themselves: 20 a minute is a third of it here.
 ## What else rides on the identifier
 
 **A refusal the user can understand.** The refused request gets an HTTP 429 with a `Retry-After`
-header and a message that says the limit is per person, so a legitimate user who hits it knows to
-wait rather than to retry in a loop, which would only refuse them for longer.
+header and a message that says the limit is per person. A legitimate user who hits it then knows to
+wait rather than retry in a loop, which would only keep them refused for longer.
 
 **Cost, not only count.** One request can carry a few hundred tokens or a hundred thousand. A
 request limit bounds the rate; a daily budget of tokens per user bounds the bill. Both are kept by the

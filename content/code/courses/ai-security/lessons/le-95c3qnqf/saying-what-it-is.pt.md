@@ -150,5 +150,5 @@ A `reply` oferece copiar o texto e nada mais. **O cliente é quem vê todas as r
 as que nenhuma verificação pegou: a fila errada da aula 14, o erro confiante do `q1` da aula 15. Um
 botão de denúncia em toda resposta é o monitoramento mais barato que existe, e a aula 22 parte dele.
 Não custa nada mostrá-lo e custa muito pouco ler o que chega, desde que cada denúncia venha com o
-que a aula 20 registrou da chamada, para que alguém encontre a resposta, a versão do prompt e o
-modelo, e não uma captura de tela e um palpite.
+que a aula 20 registrou da chamada. Assim alguém encontra a resposta, a versão do prompt e o modelo,
+e não uma captura de tela e um palpite.

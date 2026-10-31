@@ -3,7 +3,7 @@ title: Enviar o que a finalidade precisa, e um marcador para o resto
 version: 2
 ---
 
-O princípio da necessidade é fácil de aceitar e difícil de aplicar à mão: quem constrói o recurso de
+O princípio da necessidade é fácil de aceitar e difícil de aplicar à mão. Quem constrói o recurso de
 resumo envia o ticket inteiro, porque o ticket inteiro é o que o código tem, e decidir campo a campo
 é trabalho de outra pessoa. **O jeito de aplicá-lo é escrever a finalidade como a lista dos campos
 de que ela precisa**, para que um campo que ninguém listou fique de fora sem que alguém precise

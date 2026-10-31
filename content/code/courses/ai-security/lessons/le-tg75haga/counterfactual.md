@@ -9,7 +9,7 @@ decision**: if this person were the same in every way except one, would the syst
 differently? Change the one field, keep everything else, run the system again, and count the
 decisions that flip.
 
-`guard counterfactual` does that to the profiles from the first section. It moves every Southeastern
+`guard counterfactual` does that to the sixteen profiles from the start of this lesson. It moves every Southeastern
 CEP to Recife, `50010-000`, and every Northeastern one to São Paulo, `01310-100`. The rating and the
 number of jobs stay as they were. Save it as `~/guard/tools/counterfactual.py`:
 

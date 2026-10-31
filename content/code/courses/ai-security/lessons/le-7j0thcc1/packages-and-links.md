@@ -137,7 +137,7 @@ Three habits make this hold in a team:
 
 ## Links are names too
 
-Lesson 9's `out-6` linked to `pay-tarefa.example`, a host that looked like Tarefa's. A model that
+Lesson 9's `out-6` links to `pay-tarefa.example`, a host that looks like Tarefa's. A model that
 invents a plausible link produces the same risk as one that invents a package: a name that somebody
 else can own. The host allowlist of lesson 9 is the same defence as the registry snapshot here, one
 for the client's browser and one for the developer's machine.

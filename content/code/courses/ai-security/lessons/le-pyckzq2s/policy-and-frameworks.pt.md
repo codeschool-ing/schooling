@@ -46,7 +46,7 @@ encaixam nelas com naturalidade:
 | Manage | tratar os riscos, e responder quando um acontece | aulas 5 a 7, 9 a 11, 14 a 19, 21, 24 |
 
 A **ISO/IEC 42001**, publicada em dezembro de 2023, é uma norma de sistema de gestão para IA,
-construída como a ISO/IEC 27001 é para segurança da informação: requisitos de uma política de IA,
+construída como a ISO/IEC 27001 é para segurança da informação. Ela traz requisitos de uma política de IA,
 papéis, avaliação de riscos, uma avaliação de impacto para cada sistema de IA, e um conjunto de
 controles de referência no seu Anexo A, com um ciclo de auditorias internas e melhoria. Ao contrário
 do framework do NIST, **ela pode ser certificada** por um auditor externo, e é por isso que aparece em

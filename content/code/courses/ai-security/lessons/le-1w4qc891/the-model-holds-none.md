@@ -43,6 +43,6 @@ people who can read the secret store.
 ## What a leaked key costs
 
 A finding that reached the repository is not fixed by deleting the line. The key is in the history,
-in every clone and every copy of the build logs, so the only fix is to **rotate it**: issue a new key,
+in every clone and every copy of the build logs. The only fix is to **rotate it**: issue a new key,
 deploy it, and revoke the old one, so that the copies open nothing. That is why rotation has to be
 cheap enough to do on a bad afternoon, and the next section is about keeping it that way.

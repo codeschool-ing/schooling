@@ -286,7 +286,7 @@ exit 1
 
 **An allowlist of fields.** `in-3` carries a `priority` field the form never offered. A request
 builder that copies every field it receives into the prompt turns any extra field into an
-instruction the developer never wrote; accepting only the fields that are named closes that path at
+instruction the developer never wrote. Accepting only the fields that are named closes that path at
 no cost. This is the same move as lesson 12's purpose list, applied to the other direction.
 
 **Closed lists where the answer is closed.** `category` takes one of five values. *Photography* may be a perfectly good category for Tarefa to add one day. Until then it is a value the rest of the system has no handling for, so it is refused at the door, with a message that says which values exist.

@@ -41,4 +41,4 @@ lesson 24 the response when it fires.
 Every limit in this lesson is a number somebody chose: 60 tokens, 100,000 a day, R$ 20,00. **None of
 them is correct**, and all of them are better than none. What makes them defensible is a note beside
 each saying why it is that number, what traffic it was set against, and when it will be looked at
-again, so that the next person who raises one knows what they are trading.
+again. Then the next person who raises one knows what they are trading.

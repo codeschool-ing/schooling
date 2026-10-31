@@ -43,8 +43,8 @@ exit status 1
 ```
 
 Dois motivos para o build vermelho, e são de tipos diferentes. A chave vencida é uma promessa que
-passou da data. O candidato é uma medição que não passou da barra: 40,4% é um décimo de ponto acima
-do teto. **Isso não é a constatação de que o candidato é ruim.** Diz que 120 tentativas não
+passou da data. O candidato é uma medição que não passou da barra: 40,4% fica quatro décimos de ponto
+acima do teto. **Isso não é a constatação de que o candidato é ruim.** Diz que 120 tentativas não
 conseguem mostrar que ele é bom o bastante. As escolhas honestas de quem o escreveu são: rodar mais
 tentativas e ver se o intervalo desce abaixo de 40%, ou tirar a frase de que o classificador nunca
 precisou. Baixar o teto para deixá-lo passar não é uma delas.
@@ -73,9 +73,10 @@ entregue a jobs que rodam código que alguém com permissão de escrita já acei
 vindo de um fork que pudesse imprimir a chave no próprio log de build é o vazamento de que a aula 17
 tratou, com o sistema de CI como mensageiro.
 
-A verificação de taxa também custa dinheiro a cada execução. As 240 chamadas dela custam menos de um
-real aos preços da aula 18; 240 chamadas a cada push de cada branch, num repositório movimentado,
-são uma linha de orçamento que cresce sem ninguém ter decidido isso. Rodá-la só quando os arquivos
+A verificação de taxa também custa dinheiro a cada execução. As duas medições de taxa da seção
+anterior fizeram 240 chamadas, menos de um real aos preços da aula 18. 240 chamadas a cada push de
+cada branch, num repositório movimentado, são uma linha de orçamento que cresce sem ninguém ter
+decidido isso. Rodá-la só quando os arquivos
 que ela mede mudam é a resposta barata, e o teto diário da aula 18 é a rede de segurança.
 
 ## O que um build vermelho significa

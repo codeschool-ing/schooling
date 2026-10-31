@@ -148,5 +148,5 @@ person would, which is exactly the use nobody designed for.
 including the ones no check caught: the wrong queue of lesson 14, the confident error of lesson 15's
 `q1`. A report button on every reply is the cheapest monitoring there is, and lesson 22 builds on
 it. It costs nothing to show and very little to read, provided each report arrives with what lesson
-20 logged for the call, so that somebody can find the reply, the prompt version and the model,
-rather than a screenshot and a guess.
+20 logged for the call. Then somebody can find the reply, the prompt version and the model, rather
+than a screenshot and a guess.

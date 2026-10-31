@@ -257,7 +257,7 @@ r5  BLOCK link to a host not on the allowlist: https://pay-tarefa.example/confir
 r6  pass  
 ```
 
-Duas de seis passam. Cada bloqueio nomeia a camada, e o nome é o que torna a cadeia manutenível: uma
+Duas de seis passam. Cada bloqueio nomeia a camada, e o nome é o que torna a cadeia manutenível. Uma
 reclamação sobre uma resposta bloqueada vai à camada que a bloqueou, e quem lê o log distingue um falso
 positivo da moderação de um CPF que estava mesmo lá.
 
