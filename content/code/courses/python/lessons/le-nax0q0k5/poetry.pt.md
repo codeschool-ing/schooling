@@ -50,8 +50,8 @@ $ poetry env info -p
 /root/.cache/pypoetry/virtualenvs/rates-mFpQSSuL-py3.11
 ```
 
-O Poetry guarda os ambientes num cache central, nomeados a partir do caminho do projeto e de um
-hash dele. O `uv` põe o `.venv` ao lado do seu código.
+O Poetry guarda os ambientes num cache central, nomeados a partir do projeto, com um hash do
+caminho dele. O `uv` põe o `.venv` ao lado do seu código.
 
 Nenhum dos dois está errado e as consequências diferem: um editor acha o `.venv` sem ser avisado,
 e um cache central sobrevive a um `rm -rf` do diretório do projeto. Se você prefere o primeiro:
