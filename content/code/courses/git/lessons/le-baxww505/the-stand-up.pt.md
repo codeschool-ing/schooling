@@ -49,5 +49,5 @@ para fora da reunião.
 **Problemas são citados na daily e resolvidos depois dela.** Quando duas pessoas começam a discutir como
 corrigir algo, o útil é dizer *"vamos ver isso depois"*, e as duas que precisam ficam. As equipes costumam
 chamar isso de *parking lot* (estacionamento). Uma daily que chega sempre a trinta minutos custa a quatro
-pessoas uma hora por semana cada, e em geral é porque está resolvendo problemas na frente de quem não está
+pessoas mais de uma hora por semana cada, e em geral é porque está resolvendo problemas na frente de quem não está
 envolvido.

@@ -27,8 +27,8 @@ ana@vm:~/site$ git switch -c 23-holiday-notice
 Switched to a new branch '23-holiday-notice'
 ```
 
-Olhe a segunda linha. `Your branch is up to date with 'origin/main'`, e um comando depois o `git pull`
-traz um commit que a Ana não tinha: o pão de centeio do Bruno, que entrou ontem. A mensagem é tão recente
+Olhe o que o `git switch` diz: `Your branch is up to date with 'origin/main'`. Um comando depois, o
+`git pull` traz um commit que a Ana não tinha: o pão de centeio do Bruno, que entrou ontem. A mensagem é tão recente
 quanto a última vez que o Git perguntou ao servidor, que é o ponto da aula 7 sobre o `fetch`. Começar de
 um `main` velho não custa nada no início, e depois vira conflitos que nunca precisariam ter existido.
 
@@ -85,7 +85,7 @@ Os commits estão em inglês e o ticket e o pull request em português, o que é
 brasileiras: o que fica no histórico do Git segue a regra da aula 11, e a conversa fica na língua de
 quem conversa. Dois detalhes pesam aqui. **`Closes #23`** é
 uma palavra-chave desta vez: quando o pull request entra, o serviço de hospedagem fecha o ticket 23
-sozinho. E o pull request ganhou o número 24, não o 1: o GitHub e o GitLab numeram tickets e pull requests
+sozinho. E o pull request ganhou o número 24, não o 1: o GitHub numera tickets e pull requests
 com um contador só, então `#24` não é ambíguo em lugar nenhum do projeto.
 
 Se você quer olhos cedo num trabalho que não terminou, abra como **rascunho** (*draft*): ele roda os

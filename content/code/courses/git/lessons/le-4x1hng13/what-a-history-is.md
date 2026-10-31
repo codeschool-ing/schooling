@@ -115,6 +115,6 @@ snapshot of everything, every time, stays small — **an unchanged file is never
 when you do ask what changed, Git compares two snapshots and works it out, which is lesson 3's
 subject.
 
-You will not type `cat-file` again in this course. It is here because it shows the three things a
-commit is made of with nothing in the way: a snapshot of the files, the metadata that answers
+`cat-file` is not an everyday command, and this course shows it only once more, in lesson 5, on a
+merge. It is here because it shows the three things a commit is made of with nothing in the way: a snapshot of the files, the metadata that answers
 who, when and why, and a pointer to the commit before.

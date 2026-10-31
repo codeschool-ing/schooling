@@ -43,7 +43,7 @@ o id sai completamente diferente. Então ninguém distribui ids e duas pessoas n
 o mesmo: o mesmo commit tem o mesmo id em qualquer máquina do mundo. O `d03056f` do log curto são
 só os sete primeiros caracteres, o que quase sempre basta para distinguir um commit do outro.
 
-A quinta pergunta era **o que mudou junto**. Aqui está o commit do Bruno, com os arquivos que ele
+A quinta pergunta era **o que mudou junto**. Aqui está o commit do Bruno, com os arquivos em que ele
 mexeu:
 
 ```
@@ -116,6 +116,7 @@ fotografia de tudo, toda vez, continua pequena — **um arquivo que não mudou n
 vezes.** E quando você pergunta o que mudou, o Git compara duas fotografias e calcula, que é o
 assunto da aula 3.
 
-Você não vai digitar `cat-file` de novo neste curso. Ele está aqui porque mostra, sem nada no
+O `cat-file` não é um comando do dia a dia, e este curso só o mostra mais uma vez, na aula 5, num
+merge. Ele está aqui porque mostra, sem nada no
 caminho, as três coisas de que um commit é feito: uma fotografia dos arquivos, os metadados que
 respondem quem, quando e por quê, e um ponteiro para o commit anterior.

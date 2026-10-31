@@ -21,8 +21,8 @@ e o Bitbucket têm formatos próprios com as mesmas ideias:
 {"language": "yaml", "file": ".github/workflows/checks.yml", "parts": [{"code": "name: checks\n", "note": "O nome que a página do pull request mostra ao lado do resultado."}, {"code": "on: pull_request\n", "note": "Quando roda: toda vez que um pull request é aberto ou ganha um commit novo."}, {"code": "jobs:\n  links:\n    runs-on: ubuntu-latest\n", "note": "Uma máquina nova, criada para esta execução e jogada fora depois. Nada do notebook de ninguém está nela."}, {"code": "    steps:\n      - uses: actions/checkout@v5\n", "note": "Um clone do branch, exatamente como foi enviado. A imagem não rastreada não está nele, como não estava no /tmp/fresh."}, {"code": "      - run: ./check-links.sh\n", "note": "O check. Uma saída diferente de zero reprova a execução, e o pull request mostra um X vermelho em vez de um visto verde."}]}
 ```
 
-Com esse arquivo no `main`, o primeiro push do `34-allergens` da Ana teria voltado com um X vermelho em um
-minuto, e o log teria dito `missing: images/allergens.png`. Ninguém precisaria abrir o branch para descobrir.
+Com esse arquivo no `main`, o pull request do `34-allergens` teria mostrado um X vermelho um minuto depois
+do primeiro push da Ana, e o log teria dito `missing: images/allergens.png`. Ninguém precisaria abrir o branch para descobrir.
 
 ## Fazendo valer
 

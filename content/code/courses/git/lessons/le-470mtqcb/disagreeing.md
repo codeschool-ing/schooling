@@ -9,9 +9,9 @@ every comment to avoid friction is not a good review. It is a review in which on
 ## Disagree once, with a reason
 
 Suppose Ana had written *"blocking: use a list of times instead of a time field."* Bruno thinks the field is
-better, because a list of thirty options is slow to use on a phone. The reply that works:
+better, because a list of twenty-seven options is slow to use on a phone. The reply that works:
 
-> I went with the time field because a list of every half hour is thirty options, and most orders come
+> I went with the time field because a list of every half hour is twenty-seven options, and most orders come
 > from phones. With `min` and `max` it cannot go outside opening hours. Does that cover what you were worried about?
 
 It says **what he chose, why, and asks what the worry was**. Maybe Ana's worry was customers typing 7:13;

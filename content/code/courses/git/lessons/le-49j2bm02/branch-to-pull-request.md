@@ -27,7 +27,7 @@ ana@vm:~/site$ git switch -c 23-holiday-notice
 Switched to a new branch '23-holiday-notice'
 ```
 
-Look at the second line. `Your branch is up to date with 'origin/main'`, and one command later `git pull`
+Look at what `git switch` says: `Your branch is up to date with 'origin/main'`. One command later `git pull`
 brings in a commit Ana did not have: Bruno's rye bread, merged yesterday. The message is only as fresh as
 the last time Git asked the server, which is lesson 7's point about `fetch`. Starting from a stale `main`
 costs nothing at first, and then turns into conflicts that were never necessary.
@@ -82,8 +82,8 @@ what a reviewer needs to know before reading the diff:
 > To check: open index.html; the notice is the last line.
 
 Two details carry weight here. **`Closes #23`** is a keyword this time: when the pull request is merged, the
-hosting service closes ticket 23 by itself. And the pull request got number 24, not 1: GitHub and GitLab
-number tickets and pull requests from one shared counter, so `#24` is unambiguous anywhere in the project.
+hosting service closes ticket 23 by itself. And the pull request got number 24, not 1: GitHub numbers
+tickets and pull requests from one shared counter, so `#24` is unambiguous anywhere in the project.
 
 If you want early eyes on work that is not finished, open it as a **draft**: it runs the checks and
 accepts comments but cannot be merged until you say it is ready.

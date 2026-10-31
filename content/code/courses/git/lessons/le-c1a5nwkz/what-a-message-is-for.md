@@ -65,9 +65,9 @@ why**, since the diff already shows what. The change here is the winter opening 
 sed -i 's/half past five/half past six/' index.html
 ```
 
-Commit it with `git commit -a` and no `-m`. nano opens with an empty message: type the three
-paragraphs that `git log` prints below, save with Ctrl+O and leave with Ctrl+X, and the commit is
-made with what you wrote.
+Commit it with `git commit -a` and no `-m`. nano opens with an empty message: type the first line,
+a blank line and the three-line body that `git log` prints below, save with Ctrl+O and leave with
+Ctrl+X, and the commit is made with what you wrote.
 
 
 ```

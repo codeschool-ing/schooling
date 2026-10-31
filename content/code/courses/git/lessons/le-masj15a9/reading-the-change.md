@@ -58,7 +58,7 @@ ana@vm:~/site$ git diff --stat main...
  3 files changed, 8 insertions(+), 1 deletion(-)
 ```
 
-Three files and eight lines. That already says something: a ticket about ordering touched `style.css`,
+Three files, eight lines added and one removed. That already says something: a ticket about ordering touched `style.css`,
 and only by a few lines. Now the lines themselves:
 
 ```
@@ -99,7 +99,7 @@ Walk it with the four questions:
 2. **Does it work?** Open `order.html` in a browser and press *Order* with the field empty. It submits.
    Nothing stops a customer ordering for no time at all, or for three in the morning. That is the important
    finding, and reading alone might have missed it; running it made it obvious.
-3. **Can the next person understand it?** It is five lines, and yes.
+3. **Can the next person understand it?** The new page is five lines, and yes.
 4. **Is it consistent?** The heading colour changed from `darkorange` to `saddlebrown` on every page of the
    site. That has nothing to do with ticket #30.
 
