@@ -30,7 +30,7 @@ exist.
 
 The answers go into a file, one entry per threat. Each entry names the flow, the STRIDE letter, the
 threat in one line, an **impact** and a **likelihood** from 1 to 3, and the **control** that answers
-it, which is the name of a command from an earlier lesson, or `null` while nothing does. The course
+it. The control is the name of a command from an earlier lesson, or `null` while nothing does. The course
 wrote this register; paste it:
 
 ```sh

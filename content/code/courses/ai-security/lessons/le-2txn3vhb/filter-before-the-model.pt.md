@@ -54,7 +54,7 @@ uma tela que mostra quantos resultados houve conta a esse cliente que algo combi
 
 Com um índice vetorial vale a mesma regra. Todo documento leva seu dono e sua visibilidade como
 metadados, e a consulta passa ao índice o filtro do leitor, que ordena só o que passou. Um índice por
-cliente é a forma mais forte, com um custo de operação; um índice compartilhado com filtro em toda
+cliente é a forma mais forte, com um custo de operação. Um índice compartilhado com filtro em toda
 consulta é a forma comum, e aí o filtro é toda a proteção, então ele é testado.
 
 ## Testar o filtro, não o modelo

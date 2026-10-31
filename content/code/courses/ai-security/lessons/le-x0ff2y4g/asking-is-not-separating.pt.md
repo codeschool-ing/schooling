@@ -48,7 +48,7 @@ modelo aplica.
 ## O que um delimitador faz, e o que não faz
 
 Envolver o material em marcadores, `<ticket>` e `</ticket>` ou uma linha de `=====`, é a segunda
-correção comum. Ela ajuda mais o **código** que o modelo: o código sabe exatamente onde o texto do
+correção comum. Ela ajuda mais o **código** que o modelo. O código sabe exatamente onde o texto do
 cliente começa e termina, e pode conferir que o texto não contém uma cópia do marcador, para que um
 ticket não pareça fechar o próprio bloco antes da hora. Um marcador feito de uma sequência aleatória
 gerada a cada chamada, em vez de uma palavra fixa, deixa essa verificação simples.

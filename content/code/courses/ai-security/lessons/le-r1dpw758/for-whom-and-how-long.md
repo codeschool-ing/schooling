@@ -22,8 +22,8 @@ ana@lab:~/guard$ guard memory show --as ac-0Z5Q --now 2026-03-21
 ac-0Z5Q on 2026-03-21, memories in use: 0
 ```
 
-`ac-0Z5Q` has nothing, because nothing in the store is theirs. That sounds obvious and is the rule
-most often broken by accident: a memory kept in one shared table and looked up by similarity, the way
+`ac-0Z5Q` has nothing, because nothing in the store is theirs. That sounds obvious, and it is the rule
+most often broken by accident. A memory kept in one shared table and looked up by similarity, the way
 lesson 15's search worked before it had `--as`, will one day hand one client's preference to
 another. **The account comes from the session, as in lesson 15**, and the store is partitioned by it
 before anything is looked up.

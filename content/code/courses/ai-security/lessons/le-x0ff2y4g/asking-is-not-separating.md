@@ -48,7 +48,7 @@ can read the rule the model applies.
 ## What a delimiter does, and does not
 
 Wrapping the material in markers, `<ticket>` and `</ticket>` or a line of `=====`, is the second
-common fix. It helps the **code** more than the model: the code knows exactly where the client's text
+common fix. It helps the **code** more than the model. The code knows exactly where the client's text
 starts and ends, and can check that the text contains no copy of the marker, so that a ticket cannot
 appear to close its own block early. A marker made of a random string generated per call, rather than
 a fixed word, makes that check simple.

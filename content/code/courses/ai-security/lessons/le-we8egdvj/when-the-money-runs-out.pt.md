@@ -42,5 +42,5 @@ separa. A aula 22 monta o monitoramento onde isso mora, e a aula 24 a resposta q
 
 Todo limite desta aula é um número que alguém escolheu: 60 tokens, 100.000 por dia, R$ 20,00. **Nenhum
 deles está certo**, e todos são melhores que nenhum. O que os torna defensáveis é uma nota ao lado de
-cada um dizendo por que é esse número, contra que tráfego foi definido e quando vai ser revisto, para
-que a próxima pessoa que aumentar um saiba o que está trocando.
+cada um dizendo por que é esse número, contra que tráfego foi definido e quando vai ser revisto. Assim
+a próxima pessoa que aumentar um sabe o que está trocando.

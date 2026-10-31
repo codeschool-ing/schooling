@@ -54,7 +54,7 @@ that shows how many results there were tells that client something matched which
 
 With a vector index the same rule holds. Every document carries its owner and visibility as metadata,
 and the query passes the reader's filter to the index, which ranks only what passes. An index per
-client is the stronger form, at a cost in operations; one shared index with a filter on every query
+client is the stronger form, at a cost in operations. One shared index with a filter on every query
 is the common one, and then the filter is the whole of the protection, so it is tested.
 
 ## Testing the filter, not the model
