@@ -50,7 +50,7 @@ uma testada antes de ser aceita. Os backups da aula 11 comparam a rede com esse 
 diferença entre os dois é uma mudança que não passou pelo pipeline.
 
 Um pós-check que falha aqui é relatado, não desfeito. O `post-receive` não pode recusar nada, já que
-o commit já está na `main`, e a resposta automática segura a uma falha é discutível: reverter o
+o commit já está na `main`. E a resposta automática segura a uma falha é discutível: reverter o
 último commit e implantar de novo é o certo quando a mudança quebrou a rede, e o errado quando a
 rede quebrou sozinha enquanto a mudança entrava. Muitas equipes param e chamam uma pessoa; a linha
 `DEPLOY FAILED` no `post-receive` é o gancho para isso, e num pipeline real ela acionaria alguém ou

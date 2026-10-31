@@ -40,7 +40,7 @@ lines underneath, and asks which lines of one are absent from the other:
     },
     {
       "code": "missing = diff_network_config(intended, actual, \"cisco_ios\")\nextra = diff_network_config(actual, intended, \"cisco_ios\")\nprint(f\"{host}, missing from the router:\\n{missing or '(nothing)'}\")\nprint(f\"{host}, on the router and not intended:\\n{extra or '(nothing)'}\")",
-      "note": "**Two questions, each a diff by sections.** What the intended configuration has and the router lacks, and what the router has that nobody intended. A line is shown under the section it belongs to, wherever it sits in the file."
+      "note": "**Two questions, each a diff by sections.** What the intended configuration has and the router lacks, and what the router has that nobody intended."
     }
   ]
 }
@@ -58,9 +58,8 @@ interface eth2
 ```
 
 **Each line is shown under the section it belongs to**, wherever it sits in the file, and the
-blank line and `!` are gone because they are not configuration. The two directions answer two
-different questions: what the data asks for and the router lacks, and what the router has that
-nobody wrote down. The first is usually a change that failed; the second is the drift.
+blank line and `!` are gone because they are not configuration. Of the two directions, the first
+usually means a change that failed, and the second is the drift.
 
 The parser named is `cisco_ios`, because FRR's configuration has the same shape, sections opened by
 a line and indented beneath it. `netutils` has parsers for about thirty platforms, and the right

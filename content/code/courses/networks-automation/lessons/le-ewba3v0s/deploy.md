@@ -50,7 +50,7 @@ each one tested before it was accepted. Lesson 11's backups compare the network 
 history; a difference between them is a change that did not come through the pipeline.
 
 A failed post-check here is reported, not undone. `post-receive` cannot refuse anything, since the
-commit is already on `main`, and the safe automatic response to a failure is debatable: reverting
+commit is already on `main`. And the safe automatic response to a failure is debatable: reverting
 the last commit and deploying again is right when the change broke the network, and wrong when the
 network broke on its own while the change was going in. Many teams stop and call a person; the
 `DEPLOY FAILED` line in `post-receive` is the hook for that, and in a real pipeline it would page

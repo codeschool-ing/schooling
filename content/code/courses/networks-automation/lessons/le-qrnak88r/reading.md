@@ -18,7 +18,7 @@ interface from one datastore:
     },
     {
       "code": "def interface_config(body):\n    return (f'<config xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\">'\n            f'<interfaces xmlns=\"{IF}\">{body}</interfaces></config>')\n\n\ndef describe(m, source, name):\n    \"\"\"The description and enabled leaves of one interface, read from a datastore.\"\"\"\n    xpath = f\"/if:interfaces/if:interface[if:name='{name}']\"\n    data = m.get_config(source=source, filter=(\"xpath\", (NS, xpath))).data\n    desc = data.findtext(\".//if:description\", default=\"(none)\", namespaces=NS)\n    enabled = data.findtext(\".//if:enabled\", namespaces=NS)\n    return f\"{source:<9} {name}: description={desc!r} enabled={enabled}\"",
-      "note": "**Every edit in this lesson is a `<config>` wrapping part of the ietf-interfaces tree.** The outer element belongs to NETCONF's namespace and the inner ones to the model's; section 06 shows what happens when the first is left out."
+      "note": "**Every edit in this lesson is a `<config>` wrapping part of the ietf-interfaces tree.** The outer element belongs to NETCONF's namespace and the inner ones to the model's; section 07 shows what happens when the first is left out."
     }
   ]
 }

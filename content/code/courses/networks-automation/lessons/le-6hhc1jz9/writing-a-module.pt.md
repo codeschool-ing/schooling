@@ -57,8 +57,8 @@ module example-branches {
 ```
 
 Cada peça é de uma das seções anteriores: um `typedef` com um `range`, uma `list` com chave `id`,
-um nome `mandatory` com um `length`, uma `lan` com o tipo `inet:ipv4-prefix` importado do
-`ietf-inet-types`, uma `leaf-list` de no máximo dois servidores DNS, e uma `enumeration` com um
+um nome `mandatory` com um `length`. A `lan` tem o tipo `inet:ipv4-prefix`, importado do
+`ietf-inet-types`; uma `leaf-list` guarda no máximo dois servidores DNS, e uma `enumeration` tem um
 `default`. Uma instrução é nova. **`must` é uma regra entre nós**, uma expressão XPath que tem que
 ser verdadeira para toda filial: aqui, uma filial `active` precisa de pelo menos um `dns-server`.
 

@@ -69,6 +69,6 @@ ip prefix-list MGMT seq 10 permit 192.0.12.0/24
 ```
 
 Um roteador certo, um errado, um faltando, e cada um dos três parece bem sozinho. O laço que fez
-a pergunta é shell puro no `ctl`, um `ssh` por roteador com o comando como argumento, e já é uma
+a pergunta é shell puro no `ctl`, um `ssh` por roteador com o comando como argumento. Ele já é uma
 pequena automação: ele perguntou a mesma coisa aos três do mesmo jeito, o que uma pessoa lendo
 três terminais não faz.

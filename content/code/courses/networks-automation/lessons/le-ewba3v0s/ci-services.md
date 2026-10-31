@@ -45,6 +45,6 @@ deploy job's secrets are attached.
 
 The one file it needs that the lab's project lacks is `requirements.txt`, the libraries and their
 versions, which on `ctl` come from the lab's virtual environment. **The scripts in `ci/` did not
-change.** That is the reason to keep them in the project rather than
-in the CI service's configuration: the pipeline can be run by hand, tested in the lab, and moved to
-another service by rewriting the twenty lines around it.
+change.** That is the reason to keep them in the project rather than in the CI
+service's configuration: the pipeline can be run by hand, tested in the lab, and moved to another
+service by rewriting the 25 lines of YAML around it.

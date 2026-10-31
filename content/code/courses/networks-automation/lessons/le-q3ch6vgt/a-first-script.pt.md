@@ -45,7 +45,7 @@ user	0m0.238s
 sys	0m0.137s
 ```
 
-E a pergunta da primeira seção, feita de novo:
+E a pergunta feita depois da mudança à mão, feita de novo:
 
 ```
 ana@ctl:~$ for r in core1 edge1 edge2; do echo "== $r"; ssh netops@$r "show running-config" | grep MGMT; done
@@ -64,5 +64,5 @@ deste roteador, e vale conferir em cada plataforma antes de confiar num script p
 qualquer coisa. Uma linha com outro número de sequência teria deixado o erro no lugar.
 
 `send_config_set` entra e sai do modo de configuração sozinho, e `save_config` é o
-`write memory` deste driver. **Salvar faz parte do script**, então o erro da primeira seção,
-esquecer de salvar, não pode acontecer em um roteador e não nos outros.
+`write memory` deste driver. **Salvar faz parte do script**, então o erro clássico apontado na
+mudança à mão, esquecer de salvar, não pode acontecer em um roteador e não nos outros.

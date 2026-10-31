@@ -49,7 +49,7 @@ two point-to-point interfaces, so it should have two `Full` neighbours, and ever
 is a LAN every router should have a route to. A branch added to the data is tested the day it is
 added, by the same three lines.
 
-These tests are slower, over a second, because each one opens an SSH session, and they are the
+These tests are slower, over a second, because each one opens an SSH session. They are also the
 only ones that can find what files cannot: a cable that is unplugged, a process that did not start,
 a neighbour that disagrees about a timer. Before a change, they are a **pre-check**: the network is
 healthy now, so a failure afterwards is the change's. After a change, they are the **post-check**,

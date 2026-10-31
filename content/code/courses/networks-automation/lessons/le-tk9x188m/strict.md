@@ -37,7 +37,7 @@ exit
 **No error, no warning, and a configuration with `ip address` and nothing after it.** That is
 Jinja2's default on purpose: a name it cannot find renders as an empty string, which suits a web
 page with an optional field. For a router it is the worst outcome available, because the file looks
-complete. Sent to FRR, that line is refused as `% Command incomplete`; sent to some other platform, an incomplete command can
+complete. Sent to FRR, that line is refused as incomplete; sent to some other platform, an incomplete command can
 mean something else entirely.
 
 `StrictUndefined` makes a missing name an exception instead:
@@ -53,7 +53,7 @@ jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'address'
 The traceback names the template, the line, the expression and the key that was not there, which
 is all the information needed to fix the data. **Nothing is rendered, so nothing can be sent.**
 
-Where a value really is optional, the template has to say so, which is the point: `{% if
+Where a value really is optional, the template has to say so. `{% if
 i.description %}` in the next section's template is a decision that an interface may have no
 description, written where a reader can see it. Without `StrictUndefined`, every value is
 optional, and nobody decided that.

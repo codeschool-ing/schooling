@@ -28,7 +28,7 @@ ana@ctl:~$ grep example.net /etc/hosts
 | `pc1`, `pc2` | um computador na LAN de cada filial, para testar a rede a partir dele |
 | `sw1`, `h1` a `h3` | um switch OpenFlow e três computadores ligados nele, para a aula 15 |
 
-O `ctl` tem uma interface, na rede de gerência:
+O `ctl` tem uma interface além da loopback, na rede de gerência:
 
 ```
 ana@ctl:~$ ip -br addr
@@ -107,6 +107,6 @@ Connection to edge1 (192.0.2.12) 22 port [tcp/ssh] succeeded!
 ```
 
 O `ping` respondeu, e o `nc -vz` conectou na porta 22 sem enviar nada. A terceira pergunta é um
-`ssh netops@edge1` interativo, que a próxima seção abre. **Um script que falha em qualquer um
+`ssh netops@edge1` interativo, que *A mudança, feita à mão* abre duas seções adiante. **Um script que falha em qualquer um
 desses três lugares falha por um motivo que não está no script**, e nenhuma mudança no script
 resolve.

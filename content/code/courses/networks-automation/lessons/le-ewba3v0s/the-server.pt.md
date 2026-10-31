@@ -72,7 +72,7 @@ exit 1
 
 O `test.sh` são as verificações offline da aula 13 em ordem de custo, e o `set -e` o para na
 primeira que falhar. O `deploy.sh` renderiza, aplica, e depois roda o pós-check até seis vezes, com
-dez segundos de intervalo, que é a lição da aula 13 sobre convergência transformada num loop: uma
+dez segundos de intervalo. É a lição da aula 13 sobre convergência transformada num loop: uma
 rede ainda convergindo ganha um minuto, e uma que está quebrada é relatada no fim dele.
 
 Os hooks em si são instalados no repositório do servidor, fora do projeto, como

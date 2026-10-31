@@ -10,7 +10,7 @@ ana@ctl:~$ cd net && python backup.py
 no change since the last backup
 ```
 
-**No commit, no file with a new date, nothing.** That matters more than it looks. A backup job that
+**No commit, no file with a new date, nothing.** A backup job that
 wrote a dated copy every night, `edge1-2026-10-01.conf` next to `edge1-2026-09-30.conf`, would
 produce three hundred and sixty-five files a year per router, nearly all of them identical, and
 finding the night something changed would mean comparing them pairwise. In Git, the night

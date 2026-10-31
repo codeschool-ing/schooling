@@ -363,20 +363,20 @@
   },
   {
     "id": "ex-seh79jxr",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "hard",
     "drillable": false,
-    "prompt": "A second session asks for a lock on `nc1`'s candidate while the first holds it. What does it get?",
+    "prompt": "A first session holds the lock on `nc1`'s candidate. What does a second session get when it tries to edit the candidate?",
     "hint": "An error tag.",
     "choices": [
       {
-        "text": "The lock, shared",
+        "text": "Its edit, applied beside the first session's",
         "correct": false,
-        "why": "Locks are exclusive."
+        "why": "The lock refuses it."
       },
       {
-        "text": "A wait until the first releases it",
+        "text": "A wait until the first session releases the lock",
         "correct": false,
         "why": "It is refused at once."
       },
@@ -1259,8 +1259,8 @@
     "type": "quiz",
     "difficulty": "medium",
     "drillable": false,
-    "prompt": "A rendered configuration differed from the router by one byte. Which Jinja2 option fixed it?",
-    "hint": "The last newline.",
+    "prompt": "Jinja2 drops a template's last newline by default, so a rendered configuration would differ from the router's by one byte. Which option prevents that?",
+    "hint": "It keeps something.",
     "choices": [
       {
         "text": "`trim_blocks=True`",
@@ -1888,11 +1888,11 @@
   },
   {
     "id": "ex-7geva4ma",
-    "version": 1,
+    "version": 2,
     "type": "numeric",
     "difficulty": "medium",
     "drillable": false,
-    "prompt": "`deploy.sh` retries the post-check up to how many times?",
+    "prompt": "`deploy.sh` runs the post-check at most how many times?",
     "hint": "Ten seconds apart.",
     "value": 6,
     "tolerance": 0,
@@ -2374,32 +2374,32 @@
   },
   {
     "id": "ex-2ntyx863",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "medium",
     "drillable": false,
-    "prompt": "Netmiko's `send_config_set` sent a line FRR refused. How did lesson 8 find out?",
-    "hint": "Read back.",
+    "prompt": "Netmiko's `send_config_set` sent a line FRR refused, and returned normally. What did lesson 8 add so that the refusal stops the script?",
+    "hint": "A regular expression.",
     "choices": [
       {
-        "text": "Netmiko raised an exception the moment the router printed its error message",
+        "text": "Nothing: Netmiko raises on any refusal by default",
         "correct": false,
-        "why": "It did not."
+        "why": "It returned the refusal as text, with no exception."
       },
       {
-        "text": "The SSH session closed",
+        "text": "A `save_config()` after every line",
         "correct": false,
-        "why": "It stayed open."
+        "why": "Saving checks nothing."
       },
       {
-        "text": "By reading the output and the configuration back",
+        "text": "`error_pattern=r\"% \"`, which turns FRR's refusal into an exception",
         "correct": true,
         "why": "Right."
       },
       {
-        "text": "The router rebooted to undo the line, and Netmiko lost the connection",
+        "text": "A longer SSH timeout, so that the router has time to report the error",
         "correct": false,
-        "why": "No."
+        "why": "The router answered at once; the session stayed open."
       }
     ]
   },

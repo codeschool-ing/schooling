@@ -86,6 +86,6 @@ formato consegue dizer sobre eles.**
   trata de perceber quando os dois divergem.
 
 `yaml.safe_load` transformou o YAML no mesmo tipo de dicionário Python que o JSON teria dado.
-Depois do parse, um script não sabe dizer de que formato os dados vieram, e esse é o ponto: **os
-formatos servem para armazenar e transportar, e o programa trabalha sobre o dicionário.** Os
+Depois do parse, um script não sabe dizer de que formato os dados vieram. **Os formatos servem
+para armazenar e transportar, e o programa trabalha sobre o dicionário.** Os
 problemas todos acontecem nas bordas, no parse e na escrita de volta, e é ali que esta aula olha.

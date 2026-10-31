@@ -69,7 +69,7 @@ resposta é não, um cabo ou um processo que caiu, o teste online é o lugar cer
 papel.
 
 Os testes também têm limites que vale nomear. Eles verificam o que alguém pensou em verificar; a
-rede tem outras maneiras de falhar. Ferramentas que analisam configurações inteiras offline, como
-o Batfish, que modela o plano de controle da rede a partir dos arquivos de configuração e responde
-a perguntas como "esta LAN alcança aquela?", vão muito além de testes escritos à mão, ao custo de
-rodar um serviço próprio.
+rede tem outras maneiras de falhar. Ferramentas que analisam configurações inteiras offline vão muito
+além de testes escritos à mão, ao custo de rodar um serviço próprio. O Batfish é uma delas: modela
+o plano de controle da rede a partir dos arquivos de configuração e responde a perguntas como
+"esta LAN alcança aquela?".

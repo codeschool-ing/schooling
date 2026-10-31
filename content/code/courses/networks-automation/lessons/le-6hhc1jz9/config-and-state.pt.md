@@ -17,7 +17,7 @@ contra `ro`. A diferença decide o que um protocolo deixa você fazer com um nó
 Os modelos do IETF passaram por dois jeitos de organizar isso. O mais antigo, ainda visível nos
 nós `x--` do `ietf-interfaces`, guardava o estado numa árvore separada, `interfaces-state`, de
 modo que a mesma interface aparecia duas vezes. Desde a **NMDA**, a Network Management Datastore
-Architecture de 2018, o estado mora ao lado da configuração na mesma árvore, e o protocolo decide
+Architecture de 2018, o estado mora ao lado da configuração na mesma árvore. O protocolo decide
 qual dos dois você está lendo: o datastore `running` guarda só configuração, e um datastore
 chamado `operational` guarda tudo o que o equipamento está de fato usando, configurado ou
 aprendido.
