@@ -28,7 +28,7 @@ embrulha-o num pacote novo, do seu próprio endereço público para o endereço 
 filial, e envia esse. A operadora roteia o pacote de fora, o que ela sabe fazer. O roteador da filial
 o desembrulha e entrega o pacote original na sua LAN. Na maioria das VPNs, o pacote de dentro também é
 **cifrado**, para que a rede que o carrega não consiga ler nem o conteúdo nem os endereços privados — a
-última seção desta aula olha o que continua visível.
+próxima seção olha o que continua visível.
 
 ## Montando uma
 

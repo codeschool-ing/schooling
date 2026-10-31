@@ -68,4 +68,4 @@ at a table and count.
 Scalability also means that the people can keep up. A design with one kind of access switch, one kind
 of distribution pair and one way of numbering things can be extended by somebody who did not build it.
 A design where every building is a special case cannot, however fast its routers are. That is the bridge
-to the last section of this lesson: what is not written down does not scale.
+to the section on documentation, at the end of this lesson: what is not written down does not scale.

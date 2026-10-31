@@ -27,8 +27,8 @@ network can deliver**. The head office's router takes a packet addressed to the 
 a new packet addressed from its own public address to the branch router's public address, and sends
 that. The provider routes the outer packet, which it knows how to do. The branch router unwraps it
 and delivers the original packet on its LAN. In most VPNs the inner packet is also **encrypted**, so
-that the network carrying it can read neither its contents nor its private addresses — the last
-section of this lesson looks at what remains visible.
+that the network carrying it can read neither its contents nor its private addresses — the next
+section looks at what remains visible.
 
 ## Building one
 

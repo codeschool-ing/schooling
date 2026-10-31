@@ -78,5 +78,5 @@ Two more facts about the table, both of which lesson 19 and the port security se
   memory, and a table that is full cannot learn the next address. What a switch does then is the
   subject of the port security section.
 - **Entries can also be static.** `dynamic` in these commands filters for learnt entries; an entry
-  typed by an administrator does not age and is not replaced by what the switch sees. The last
-  section of this lesson relies on exactly that.
+  typed by an administrator does not age and is not replaced by what the switch sees. The section on
+  port security, at the end of this lesson, relies on exactly that.

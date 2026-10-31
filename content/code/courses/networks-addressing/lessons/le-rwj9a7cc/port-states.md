@@ -77,5 +77,5 @@ port. So a port that has to come into use waits about 30 seconds, which is why `
 result.
 
 `disabled` is not a decision of the protocol. It is a port with no signal or one an administrator
-switched off. The unplugged `p3` in the first section was `state disabled` beside `NO-CARRIER`, and
-the last section of this lesson shows a port put there on purpose.
+switched off. The unplugged `p3` in the section on the loop was `state disabled` beside `NO-CARRIER`, and
+the section on protecting the tree, at the end of this lesson, shows a port put there on purpose.

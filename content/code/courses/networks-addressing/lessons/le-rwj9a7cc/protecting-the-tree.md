@@ -10,7 +10,7 @@ the core switch or a cheap switch somebody brought from home and plugged in unde
 Two things can go wrong. If the new device has a lower bridge ID, it **becomes the root**, and the
 whole network reshapes itself around it: traffic between two floors may now cross a desk switch on a
 cable nobody planned for. And a person who connects two wall sockets to the same small switch, or
-plugs both ends of one cable into it, builds the loop from the first section of this lesson in a
+plugs both ends of one cable into it, builds the loop this lesson opened with in a
 place nobody is watching. The defences below are all settings on the ports where those devices
 appear: the edge.
 
@@ -53,8 +53,8 @@ was placed.
 **BPDU filter** stops a port sending BPDUs and makes it ignore those it receives. It is sometimes
 used on ports facing another organisation's network, where the two trees must not merge. On an
 ordinary access port it is the opposite of protection: **a port that ignores BPDUs cannot find out
-that it is part of a loop**. A cable between two filtered ports is the storm from the first
-section, with spanning tree switched on everywhere else. If a port is meant to face computers only,
+that it is part of a loop**. A cable between two filtered ports is the storm this lesson opened
+with, with spanning tree switched on everywhere else. If a port is meant to face computers only,
 BPDU guard is the setting that says so and acts on it.
 
 ## The last line: storm control

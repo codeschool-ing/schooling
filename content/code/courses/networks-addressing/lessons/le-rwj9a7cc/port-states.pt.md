@@ -77,5 +77,5 @@ que a `p3` do `sw1` estava em `listening` logo depois de o cabo entrar, e por is
 esperou 40 segundos antes de ler o resultado.
 
 `disabled` não é uma decisão do protocolo. É uma porta sem sinal, ou uma que um administrador
-desligou. A `p3` desconectada da primeira seção estava em `state disabled` ao lado de `NO-CARRIER`, e
-a última seção desta lição mostra uma porta posta ali de propósito.
+desligou. A `p3` desconectada da seção do laço estava em `state disabled` ao lado de `NO-CARRIER`, e
+a seção sobre proteger a árvore, no fim desta aula, mostra uma porta posta ali de propósito.

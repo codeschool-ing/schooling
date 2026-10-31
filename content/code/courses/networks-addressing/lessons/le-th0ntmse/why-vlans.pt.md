@@ -14,8 +14,8 @@ desconectado.
 O laboratório desta aula são dois switches, sw1 e sw2, ligados por um cabo entre as portas p24 de
 cada um, e cinco PCs. O pc1 e o pc3 são de um departamento e têm endereços em 10.20.10.0/24; o pc2
 e o pc4 são de outro, em 10.20.20.0/24. O pc5 é o diferente: o endereço dele está na faixa do
-primeiro departamento, e a porta dele vai para a VLAN do segundo, que é o experimento da última
-seção. Os switches são a bridge do kernel Linux com a filtragem de VLAN ligada, configurada com o
+primeiro departamento, e a porta dele vai para a VLAN do segundo, que é o experimento da seção sobre a
+VLAN nativa, no fim desta aula. Os switches são a bridge do kernel Linux com a filtragem de VLAN ligada, configurada com o
 comando `bridge vlan`. Um switch comercial diz as mesmas coisas com as palavras dele, e a aula diz
 quais são onde elas diferem.
 
@@ -102,5 +102,5 @@ O que uma VLAN não faz importa tanto quanto. Ela não criptografa nada, e não 
 ligar — isso é segurança de porta e 802.1X, da aula 18. **A convenção que este laboratório segue é
 uma VLAN por sub-rede IP**: 10.20.10.0/24 vive na VLAN 10 e 10.20.20.0/24 na VLAN 20, então o
 domínio de broadcast e a sub-rede são o mesmo conjunto de máquinas. O pc5 quebra essa convenção de
-propósito, e a última seção mostra o que acontece quando o endereço diz uma coisa e a porta diz
+propósito, e a seção sobre a VLAN nativa mostra o que acontece quando o endereço diz uma coisa e a porta diz
 outra.

@@ -69,4 +69,4 @@ resumo no lugar de muitas rotas fica para a aula 16. Esta seção só pede que v
 Escalabilidade também quer dizer que as pessoas conseguem acompanhar. Um projeto com um tipo de switch de
 acesso, um tipo de par de distribuição e um jeito de numerar as coisas pode ser estendido por alguém que
 não o montou. Um projeto em que cada prédio é um caso especial não pode, por mais rápidos que sejam os
-roteadores. Essa é a ponte para a última seção desta aula: o que não está escrito não escala.
+roteadores. Essa é a ponte para a seção sobre documentação, no fim desta aula: o que não está escrito não escala.
