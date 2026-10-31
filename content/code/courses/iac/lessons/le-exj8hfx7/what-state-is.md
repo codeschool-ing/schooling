@@ -91,7 +91,7 @@ ana@laptop:~/shop$ jq "{version, terraform_version, serial, lineage}" terraform.
 `version` is the format of the file itself, not of anything in it. `terraform_version` is the
 Terraform that last wrote it. `serial` goes up by one on every write, so of two copies the one with
 the higher serial is the newer. `lineage` is a random id given to the state when it was created and
-kept through every serial after that: two files with different lineages are not two versions of one
+kept through every serial after that. Two files with different lineages are not two versions of one
 history, they are two histories, and Terraform refuses to write one over the other. You will see
 both of those numbers do their job in the last section of this lesson.
 
@@ -136,7 +136,7 @@ ana@laptop:~/shop$ jq ".resources[] | select(.name == \"web\") | .instances[0] |
 The `dependencies` list is there for the day the configuration no longer says. Delete the whole
 `main.tf` and Terraform still knows, from the state alone, that the security group has to go before
 the VPC it lives in. The attribute copy is why a plan can show `~ update in-place` with the old
-value beside the new one, and it is also why the state is **sensitive**: whatever a provider
+value beside the new one. It is also why the state is **sensitive**: whatever a provider
 returns lands in it, and lesson 12 finds a password there in plain text.
 
 So there are three things, and every command in this lesson is about keeping them in agreement:

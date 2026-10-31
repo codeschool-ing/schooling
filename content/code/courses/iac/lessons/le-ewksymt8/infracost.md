@@ -53,7 +53,7 @@ servers.
 reads a Terraform directory or a plan's JSON, works out which attributes of each resource carry a
 price, asks a pricing service for those prices, and prints a breakdown per resource with a monthly
 total. Its `diff` command compares two versions of the code, the branch against the main line, and
-prints the change in cost; its integrations for the common CI systems post that difference as a
+prints the change in cost. Its integrations for the common CI systems post that difference as a
 comment on the pull request, so it sits beside the plan that lesson 15 puts there.
 
 Three things about it are worth knowing before you adopt it:

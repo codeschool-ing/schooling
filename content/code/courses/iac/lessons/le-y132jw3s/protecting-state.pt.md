@@ -3,7 +3,7 @@ title: Cifrar o estado antes de ele sair do laptop
 version: 2
 ---
 
-As três últimas seções mantêm segredos fora do estado onde um provider permite. Alguma coisa sempre
+As duas últimas seções mantêm segredos fora do estado onde um provider permite. Alguma coisa sempre
 entra mesmo assim: um recurso sem argumento write-only, um data source que lê um segredo, uma chave
 que um provider gera e devolve. Para esse resto, a proteção do próprio estado é a última linha, e a
 seção "protecting" da aula 7 montou a maior parte dela: um bucket que ninguém de fora do time

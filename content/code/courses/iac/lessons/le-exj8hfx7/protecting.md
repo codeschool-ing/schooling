@@ -17,7 +17,7 @@ and the ways to keep it out.
 
 So the bucket's permissions are the state's permissions. The blocked public access from
 two sections back is the floor. Above it, the people and pipelines that run Terraform on this
-configuration need to read and write that key, and nobody else needs anything; a policy that lets
+configuration need to read and write that key, and nobody else needs anything. A policy that lets
 "all developers" list the bucket is a policy that hands them every secret in every state in it.
 `encrypt = true` protects the object on S3's disks, and does nothing against somebody the bucket
 lets in. It is the access policy that does the work.

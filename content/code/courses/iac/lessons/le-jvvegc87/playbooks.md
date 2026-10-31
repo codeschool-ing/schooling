@@ -50,7 +50,7 @@ and which says exactly where each one comes from once other collections are inst
 
 `cache_valid_time: 3600` means the package lists are refreshed only if they are more than an hour old,
 so a second run does not download them again. The `Configure the site` task replaces Ubuntu's
-default site with a server block of three lines, which is enough for nginx to serve the page.
+default site with a server block of four lines, which is enough for nginx to serve the page.
 
 ```
 ana@laptop:~/shop/ansible$ ansible-playbook site.yml

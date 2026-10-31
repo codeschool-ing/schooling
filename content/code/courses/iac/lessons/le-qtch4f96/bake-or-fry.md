@@ -8,7 +8,7 @@ machine. The question this lesson is about is **when the shop's software gets on
 and there are two answers.
 
 **Configuring at boot** starts every machine from a plain image and installs what it needs as it
-comes up: a script handed to the machine at launch (on AWS, its *user data*, run by cloud-init),
+comes up. That can be a script handed to the machine at launch (on AWS, its *user data*, run by cloud-init),
 or Ansible reaching in a minute later, the way lesson 18 did. People call it *frying*: the work is
 done fresh, every time, on the machine that needs it.
 

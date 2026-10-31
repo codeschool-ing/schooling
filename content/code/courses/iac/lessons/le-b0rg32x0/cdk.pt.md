@@ -237,5 +237,5 @@ mudanças exigem substituição; o moto não consegue criar um para uma stack ex
 comandos passam `--method=template` e comparam só os templates.
 
 O state é a stack, como na seção anterior. O `cdk.out` é saída de build que o próximo synth reescreve,
-e fica fora do controle de versão, como o `node_modules`. O que vai para o git é o programa, que é a razão de ser do CDK:
+e você o deixa fora do controle de versão, como faz com o `node_modules`. O que vai para o git é o programa, que é a razão de ser do CDK:
 **laços, funções e classes para a descrição, com o CloudFormation ainda fazendo o deploy.**

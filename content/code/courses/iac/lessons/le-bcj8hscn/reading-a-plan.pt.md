@@ -106,12 +106,12 @@ git init -q . && printf ".terraform/\n*.tfstate*\ntfplan*\n" > .gitignore
 git add -A && git commit -qm 'the shop network, web and its role'
 ```
 
-Os dois ids de AMI são imagens de exemplo que vêm com o moto, e a AWS não tem imagens com esses
+Os ids de AMI desta aula são imagens de exemplo que vêm com o moto, e a AWS não tem imagens com esses
 ids. Numa conta real você poria no lugar o id de uma imagem de verdade, buscado com um data source
 como a aula 5 fez.
 
-Para ver todos de uma vez, a Ana faz quatro edições de uma tacada na configuração da loja: renomeia
-a sub-rede `a`, passa a instância `web` para uma imagem mais nova, apaga a sub-rede `b` e acrescenta
+Para ver todos de uma vez, a Ana faz quatro edições de uma tacada na configuração da loja. Ela muda
+a tag de nome da sub-rede `a`, passa a instância `web` para uma imagem mais nova, apaga a sub-rede `b` e acrescenta
 um bucket de arquivos, uma política que deixa o `web` lê-lo e uma senha para um banco de dados que
 vem depois:
 
@@ -242,7 +242,7 @@ O data source tem outro verbo:
 ```
 
 Um data source normalmente é lido durante o plano, e você nem o vê no corpo. Este cita o ARN do
-bucket, que só existe quando o bucket existir, então a leitura fica para o apply e **o `(known
+bucket, que só existe quando o bucket existir, então a leitura fica para o apply. Daí **o `(known
 after apply)` se espalha para tudo que é construído a partir dele**: o texto da política e a role
 policy que a usa. Esse marcador indica um valor que ninguém conhece até o apply; a aula 2 o
 encontrou nos ids. A aula 5 explica quando uma leitura é adiada.

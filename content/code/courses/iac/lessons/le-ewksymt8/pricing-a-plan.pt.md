@@ -113,14 +113,14 @@ ana@laptop:~/shop$ terraform show -json tfplan | jq -c '.resource_changes[] | se
 
 **Os preços estão escritos no script, e não consultados quando ele roda.** A lista de preços da AWS é
 um download que muda, então os preços abaixo são linhas da planilha de preços do curso de nuvem, o
-`prices.py`, copiadas da coluna `sa-east-1` do jeito que aquele curso as imprime: os preços públicos de
-tabela da AWS, em USD, sem impostos, nas versões de oferta que ele fixa, `AmazonEC2` 20260925174521 e
+`prices.py`, copiadas da coluna `sa-east-1` do jeito que aquele curso as imprime. São os preços públicos
+de tabela da AWS, em USD, sem impostos, nas versões de oferta que aquela planilha fixa, `AmazonEC2` 20260925174521 e
 `AmazonVPC` 20260917190528. A aula 10 do curso de nuvem explica como essa planilha é lida e por que uma
 versão fixada imprime os mesmos números no ano que vem. O que esta aula faz é a conta, e por isso a
 sua execução dela imprime os valores desta página.
 
-O `price.py`, salvo no `~/shop`, lê um plano na entrada padrão, põe preço nos quatro tipos de recurso para os quais tem
-uma linha e conta um mês como 730 horas, a convenção do curso de nuvem:
+O `price.py`, salvo no `~/shop`, lê um plano na entrada padrão, põe preço nos três tipos de recurso para os quais tem
+linhas e conta um mês como 730 horas, a convenção do curso de nuvem:
 
 ```python
 #!/usr/bin/env python3
@@ -186,7 +186,7 @@ no line on the sheet: aws_internet_gateway.shop, aws_subnet.private_c, aws_subne
 ```
 
 Antes de um único recurso existir, o plano vale **175.73 USD por mês** a preço de tabela. A surpresa é
-a ordem. O NAT gateway, uma linha no `network.tf` com um comentário em cima, custa 67.89, mais do que
+a ordem. O NAT gateway, um bloco no `network.tf` com um comentário em cima, custa 67.89, mais do que
 qualquer um dos servidores web, com 52.10. Os 52.10 de cada servidor são as horas dele mais o disco de
 20 GB; o endereço que o gateway segura soma 3.65. A VPC, as sub-redes e o internet gateway não têm
 linha, porque a AWS não cobra por eles por hora.

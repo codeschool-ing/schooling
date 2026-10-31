@@ -172,11 +172,11 @@ estado**, de modo que um plan de um nem consiga enxergar os recursos do outro. O
 - cada estado tem a sua trava, então um apply demorado em dev nunca bloqueia uma correção urgente
   em prod.
 
-Há três jeitos comuns de dar a cada ambiente o seu estado, e as próximas seções os tratam um por vez:
-**workspaces**, que mantêm um diretório e trocam o estado por baixo dele; **um diretório por
-ambiente**, cada um com a sua key de backend; e o **Terragrunt**, uma ferramenta que gera o segundo
-arranjo para você. Eles diferem em onde mora a escolha do ambiente, e é isso que decide a facilidade com que um comando atinge o
-ambiente errado.
+Há três jeitos comuns de dar a cada ambiente o seu estado, e as próximas seções os tratam um por vez.
+Os **workspaces** mantêm um diretório e trocam o estado por baixo dele; **um diretório por
+ambiente** dá a cada um a sua key de backend; e o **Terragrunt** é uma ferramenta que gera o segundo
+arranjo para você. Eles diferem em onde mora a escolha do ambiente, e é isso que decide a facilidade
+com que um comando atinge o ambiente errado.
 
 O isolamento também tem uma camada abaixo do estado. Dois estados na mesma conta da AWS, acessados
 com as mesmas credenciais, estão separados pela contabilidade do Terraform e por mais nada; quem

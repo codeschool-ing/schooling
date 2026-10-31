@@ -12,7 +12,7 @@ there is a newer one. On AWS that is Terraform, and the handover between the two
 ```
 
 The lab's moto cannot run the Packer build that would make an AMI, so the two AMIs below were
-**staged**: made in moto from a throwaway instance, the way lesson 5 made its images, and named the
+**staged**. They were made in moto from a throwaway instance, the way lesson 5 made its images, and named the
 way the `amazon-ebs` source in the section on the template would name them. There is nothing
 inside either; moto keeps a record with an id. What Terraform does with them is exactly what it
 would do on a real account. To make the same two in your moto, run what Ana ran, in the directory
@@ -186,8 +186,8 @@ Plan: 1 to add, 0 to change, 1 to destroy.
 
 `git revert` puts `1.0.1` back in `terraform.tfvars`, and the plan replaces the instance again, now
 towards the older image. Two things make that possible, and both are decisions rather than
-accidents: the old AMI still exists, because **an image pipeline keeps the last few versions instead of
-deleting each one the day its successor ships**; and no machine was ever changed after it
+accidents. The old AMI still exists, because **an image pipeline keeps the last few versions instead of
+deleting each one the day its successor ships**. And no machine was ever changed after it
 started, so the version number really does describe what will run.
 
 One web server replaced at a time is the simple case. A shop with several behind a load balancer

@@ -26,9 +26,10 @@ Os passos vêm ordenados pelo que custam e pelo que exigem:
 | `plan` | o que a mudança faz com o que existe | leitura na nuvem e no state |
 | `apply` | nada: ele faz a coisa | escrita |
 
-Uma falha cedo é uma falha em segundos, antes de qualquer credencial chegar ao job. Os dois
-primeiros passos rodam com `terraform init -backend=false`, que instala os providers e nunca toca no
-state; assim, um pull request que nem consegue se formatar nunca chega a um plan.
+Uma falha cedo é uma falha em segundos, antes de qualquer credencial chegar ao job. Nenhum
+dos dois primeiros passos toca no state: o `check` roda `terraform init -backend=false`, que instala
+os providers e nunca lê o backend, e o `scan` lê só os arquivos. Um pull request que nem consegue se
+formatar nunca chega a um plan.
 
 Aqui está o scan fazendo o seu trabalho. Um pull request abre SSH no grupo `web` para a internet
 inteira, a mesma mudança que a aula 1 viu um colega fazer à mão. Desta vez ela chega como um

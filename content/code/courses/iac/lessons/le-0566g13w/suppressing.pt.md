@@ -120,7 +120,7 @@ achado e alguém tem de decidir de novo, com o que souber então. O skip em linh
 campo de validade; o mesmo efeito ali vem de um ticket, ou do baseline da seção 08.
 
 A Ana devolve a data com o mesmo `sed`, as duas datas trocadas,
-`sed -i "s/exp:2026-03-31/exp:2027-03-31/" main.tf`, e faz o commit das três supressões como
+`sed -i "s/exp:2026-03-31/exp:2027-03-31/" main.tf`, e faz o commit delas como
 *suppress three findings*. Se você está lendo isto depois de 31 de março de 2027, essa data já passou
 para você também e o achado aparece nas duas execuções; uma data mais adiante mostra a diferença.
 

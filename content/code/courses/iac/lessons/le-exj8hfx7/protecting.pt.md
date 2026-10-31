@@ -16,7 +16,7 @@ que `sensitive = true` a esconda na tela; a aula 12 a mostra lá e os jeitos de 
 
 Então as permissões do bucket são as permissões do estado. O bloqueio de acesso público de
 duas seções atrás é o mínimo. Acima dele, as pessoas e os pipelines que rodam o Terraform nesta
-configuração precisam ler e gravar aquela key, e mais ninguém precisa de nada; uma política que deixa
+configuração precisam ler e gravar aquela key, e mais ninguém precisa de nada. Uma política que deixa
 "todos os desenvolvedores" listarem o bucket é uma política que entrega a eles todos os segredos de
 todos os estados que estão lá. O `encrypt = true` protege o objeto nos discos do S3, e não faz nada
 contra alguém que o bucket deixa entrar. Quem faz o trabalho é a política de acesso.

@@ -91,8 +91,8 @@ uma data source é algo para o qual ele só olha, toda vez, e em que acredita.
 
 Por que uma configuração ia querer saber o número da própria conta? Porque dele se monta um nome que
 precisa ser único, e uma policy que dá acesso a "esta conta" precisa dizer qual. As duas coisas
-aparecem mais adiante nesta aula, e nenhuma precisa ser digitada: uma configuração que lê a conta e a
-região funciona sem mudança na próxima conta e na próxima região.
+aparecem quatro seções adiante, num bucket e na policy dele, e nenhuma precisa ser digitada: uma
+configuração que lê a conta e a região funciona sem mudança na próxima conta e na próxima região.
 
 A documentação do provider lista as data sources ao lado dos recursos, e a maioria dos tipos de
 recurso tem uma correspondente: `aws_vpc` e `data "aws_vpc"`, `aws_subnet` e `data "aws_subnet"`.

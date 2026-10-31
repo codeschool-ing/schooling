@@ -25,9 +25,10 @@ The steps are ordered by what they cost and by what they need:
 | `plan` | what the change does to what exists | read access to the cloud and the state |
 | `apply` | nothing: it does the thing | write access |
 
-A failure early is a failure in seconds, before any credential has been handed to the job. The
-first two steps run with `terraform init -backend=false`, which installs the providers and never
-touches the state, so a pull request that cannot even format itself never reaches a plan.
+A failure early is a failure in seconds, before any credential has been handed to the job. Neither
+of the first two steps touches the state: `check` runs `terraform init -backend=false`, which
+installs the providers and never reads the backend, and `scan` reads only the files. A pull request
+that cannot even format itself never reaches a plan.
 
 Here is the scan doing its job. A pull request opens SSH on the `web` group to the whole internet,
 the change that lesson 1 watched a colleague make by hand. This time it arrives as a file in a

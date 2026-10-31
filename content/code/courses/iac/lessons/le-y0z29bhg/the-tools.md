@@ -31,7 +31,7 @@ modules carries over to OpenTofu unchanged, because it began as the same code.
 provider, a separate program, knows how to turn `resource "aws_vpc"` into the right calls and read
 the result back. There are providers for every large cloud, for DNS services, for GitHub, for
 monitoring systems, and for things that are not services at all, like generating a random name or
-writing a local file. Lesson 2 meets four of them.
+writing a local file. Lesson 2 meets three of them.
 
 The table has no row for "the tool that does both jobs well", on purpose. A
 working setup uses one tool from the provisioning rows, one from the configuration rows or Packer,

@@ -33,10 +33,9 @@ posição e o elemento, e usou a posição como o `netnum` que o `cidrsubnet` qu
 seção de funções feita uma vez por zona. A terceira acrescentou um `if`, que mantém só os
 elementos para os quais a condição é verdadeira.
 
-Esse segundo resultado, um map de zona para faixa, merece um segundo olhar. É exatamente o formato
-que o `for_each` da aula 4 aceita para criar uma sub-rede por entrada, e montá-lo com uma
-expressão `for` é como uma lista que alguém digitou vira recursos identificados por algo com
-significado.
+Esse segundo resultado, um map de zona para faixa, é exatamente o formato que o `for_each` da
+aula 4 aceita para criar uma sub-rede por entrada. Montá-lo com uma expressão `for` é como uma
+lista que alguém digitou vira recursos identificados por algo com significado.
 
 ## Dois itens, uma chave
 

@@ -97,7 +97,7 @@ trabalho antes de o script começar.
 A aula 9 abriu um plan salvo e encontrou dentro dele uma cópia do
 state, então **quem pode baixar os artefatos deste pipeline pode ler o que o state guarda**, e a
 aula 12 trata do que isso pode incluir. É também por isso que `expire_in: 3 days` é uma decisão e
-não faxina: um plan que esperou mais do que isso por aprovação é um plan que alguém deveria refazer
+não faxina. Um plan que esperou mais do que isso por aprovação é um plan que alguém deveria refazer
 em vez de aplicar, e um arquivo que você não guarda mais é um arquivo que ninguém baixa.
 
 O `apply` carrega o resto. As `rules` dele só o incluem em pipelines da branch padrão, e o

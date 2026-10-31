@@ -136,7 +136,7 @@ aws_subnet.a: Creation complete after 0s [id=subnet-e30146a6aa7865aaf]
 Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ```
 
-Three resources, and not one of their tags or ranges was typed twice. `shop-dev-a` came from
+Three resources, and not one of their tags was typed twice, nor either subnet's range. `shop-dev-a` came from
 `"${local.name}-a"`, which came from `var.environment`; change the environment and every name and
 tag follows.
 

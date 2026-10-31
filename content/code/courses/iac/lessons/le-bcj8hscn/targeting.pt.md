@@ -132,7 +132,7 @@ Plan: 0 to add, 1 to change, 0 to destroy.
 O resize continua pendente. Neste caso a Ana sabe que está, e o aplica à noite com um `terraform
 apply` comum. O perigo é o dia em que ninguém sabe: um apply com target deixa mudanças para trás sem
 registro de que ficaram, e a próxima pessoa a rodar um plano completo as encontra misturadas à
-mudança dela, sem revisão.
+própria mudança, sem revisão.
 
 ## Quando é a ferramenta certa
 

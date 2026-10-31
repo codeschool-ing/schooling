@@ -91,8 +91,8 @@ source is something it only looks at, every time, and believes.
 
 Why would a configuration want to know its own account number? Because a name that must be unique
 can be built from it, and a policy that grants access to "this account" needs to say which one. Both
-appear later in this lesson, and neither has to be typed: a configuration that reads its account and
-region works unchanged in the next account and the next region.
+appear four sections on, in a bucket and its policy, and neither has to be typed: a configuration
+that reads its account and region works unchanged in the next account and the next region.
 
 The provider documentation lists data sources beside the resources, and most resource types have a
 matching one: `aws_vpc` and `data "aws_vpc"`, `aws_subnet` and `data "aws_subnet"`. A few exist only

@@ -112,8 +112,9 @@ Note: You didn't use the -out option to save this plan, so Terraform can't
 guarantee to take exactly these actions if you run "terraform apply" now.
 ```
 
-Only the tags move; the id is among the 20 unchanged attributes the plan hides, and the summary
-counts one change and nothing added or destroyed. This is the cheap kind of change.
+Only the tags move. The id is printed unchanged above them, so the subnet keeps it, and the plan
+hides the other 20 unchanged attributes; the summary counts one change and nothing added or
+destroyed. This is the cheap kind of change.
 
 ## A change that forces a replacement
 

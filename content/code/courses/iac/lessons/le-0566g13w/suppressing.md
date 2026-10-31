@@ -122,7 +122,7 @@ skip has no expiry field; the same effect there comes from a ticket, or from the
 08.
 
 Ana puts the date back with the same `sed`, the two dates swapped,
-`sed -i "s/exp:2026-03-31/exp:2027-03-31/" main.tf`, and commits the three suppressions as *suppress
+`sed -i "s/exp:2026-03-31/exp:2027-03-31/" main.tf`, and commits them as *suppress
 three findings*. If you are reading this after 31 March 2027, that date has passed for you too and
 the finding shows in both runs; a later date shows the difference.
 

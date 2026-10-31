@@ -70,8 +70,8 @@ não do Terraform:
   `terraform init` imprime `(unauthenticated)`, o seu imprime que o provider é assinado pela
   HashiCorp, e o arquivo de lock que ele escreve tem mais linhas do que a página mostra. A aula 2
   mostra esse arquivo.
-- **Duas transcrições mostram o Terraform Registry sem responder**, nas aulas 10 e 17. O seu vai
-  baixar o que elas não conseguiram.
+- **Três transcrições mostram um registry de providers ou de módulos fora de alcance**, nas aulas
+  2, 10 e 17. O seu vai baixar o que elas não conseguiram.
 - **Dois scanners imprimem uma reclamação sobre a rede** na aula 14, e os seus não vão imprimir.
 - **Algumas ferramentas foram compiladas a partir do código-fonte**, porque os downloads delas ficam
   num site que a máquina de gravação não alcançava. Você instala os programas publicados, e cada aula

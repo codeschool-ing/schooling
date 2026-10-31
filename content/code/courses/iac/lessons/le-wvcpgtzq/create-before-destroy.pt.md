@@ -146,8 +146,8 @@ com nome único, um load balancer, uma role do IAM, um bucket; onde o provider o
 
 **Por que o security group é o caso típico.** Numa conta real a AWS se recusa a apagar um grupo que
 ainda está associado a uma instância em execução, então a ordem padrão tentaria destruir primeiro e
-falharia. O grupo deste laboratório não está associado a nada: o moto perdeu a lista de grupos de
-uma instância quando o grupo foi substituído, o que a AWS não faz, então a aula deixa a associação
+falharia. O grupo deste laboratório não está associado a nada. Quando o grupo foi substituído, o moto
+perdeu a lista de grupos da instância, o que a AWS não faz, então a aula deixa a associação
 de fora em vez de citar um plan que só o moto imprimiria. E uma regra que a documentação afirma: o
 Terraform também aplica `create_before_destroy`, implicitamente, a todo recurso de que o recurso
 marcado depende.
