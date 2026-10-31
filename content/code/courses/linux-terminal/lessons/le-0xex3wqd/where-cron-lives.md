@@ -52,9 +52,9 @@ job does nothing here**, because anacron will run those directories instead —
 section 09.
 
 **The sixth field is a user name.** `/etc/crontab` and `/etc/cron.d` have one and
-your own crontab does not, which is the single commonest mistake when copying a
-line from one to the other: paste a `/etc/cron.d` line into `crontab -e` and the
-user name is read as the command.
+your own crontab does not. That is the commonest mistake when copying a line from
+one to the other: paste a `/etc/cron.d` line into `crontab -e` and the user name
+is read as the command.
 
 ## `/etc/cron.d`, where packages put things
 

@@ -93,7 +93,7 @@ ma        # set mark a here
 `a        # jump to the exact position of mark a
 ```
 
-Two marks are set for you and are worth knowing:
+Three marks are set for you and are worth knowing:
 
 | | |
 |---|---|

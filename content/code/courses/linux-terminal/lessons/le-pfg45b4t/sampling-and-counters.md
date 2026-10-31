@@ -100,8 +100,8 @@ cd ~/work/load
 pkill -f spin.sh
 ```
 
-The `all` row is an average across four cores. Here every core is at 97 to 100% so the
-average is honest — but **one core at 100% and three idle averages to 25%**, and
+The `all` row is an average across four cores. Here every core is at 97 to 100%, so the
+average is honest. But **one core at 100% and three idle averages to 25%**, and
 that is the most common shape of a real problem: a program that is not threaded,
 on a machine with plenty of spare capacity.
 
@@ -126,7 +126,7 @@ The command-line tools in this lesson give you averages — `await` is a mean.
 of this whole toolkit**, and the honest answer to "is the tail bad" is either
 application metrics, `bpftrace`'s histograms, or `perf`.
 
-Which is worth saying plainly: these tools find *which resource* and *which
+These tools find *which resource* and *which
 process*. For *which request*, you need instrumentation that was there before
 the incident.
 

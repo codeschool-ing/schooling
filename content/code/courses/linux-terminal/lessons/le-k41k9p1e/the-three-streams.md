@@ -118,7 +118,7 @@ be much harder to debug than one that does not.
 
 ## And notice what changed shape
 
-Look at those two outputs again. On the screen, `ls` printed the five names **across the line, in
+Look at those two outputs again. On the screen, `ls` printed the six names **across the line, in
 columns**. In the file, it printed them **one per line**.
 
 **`ls` asks whether its output is a terminal, and formats accordingly** — the `isatty()` question

@@ -148,7 +148,7 @@ passar o texto adiante:
 some-command | tee out.txt | grep error
 ```
 
-O `tee -a` acrescenta. É o jeito padrão de guardar uma cópia do que passou, e o jeito padrão de
-escrever num arquivo do root a partir de um pipeline, já que o `sudo cmd > /root/arquivo` falha — **o
-redirecionamento é feito pelo seu shell, não pelo `sudo`** — e o `cmd | sudo tee /root/arquivo`
-funciona.
+O `tee -a` acrescenta. É o jeito padrão de guardar uma cópia do que passou. É também o jeito
+padrão de escrever num arquivo do root a partir de um pipeline: o `sudo cmd > /root/arquivo` falha,
+porque **o redirecionamento é feito pelo seu shell, não pelo `sudo`**, e o
+`cmd | sudo tee /root/arquivo` funciona.

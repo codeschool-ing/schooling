@@ -81,5 +81,5 @@ Quase tudo se reduz a quatro perguntas, e as formas são estáveis nos três:
 | **uma opção de "não faça de verdade"** | `apt --dry-run`, `dnf --assumeno`, `zypper install --dry-run` |
 
 **Essa última linha é a de usar num sistema desconhecido.** Quando você não tem certeza do que um
-comando vai fazer numa distribuição que não usa todo dia, peça que ele te conte em vez de adivinhar
-— cada um dos três tem um jeito de imprimir o plano e parar.
+comando vai fazer numa distribuição que não usa todo dia, peça que ele te conte em vez de adivinhar.
+Cada um dos três tem um jeito de imprimir o plano e parar.

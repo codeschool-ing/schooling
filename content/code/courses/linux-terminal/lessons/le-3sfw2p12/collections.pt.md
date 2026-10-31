@@ -81,7 +81,7 @@ e é o que o pipeline quer.
 
 ## A contagem que não está lá
 
-Esta é a armadilha desta seção, e é real.
+Esta é a armadilha desta seção.
 
 ```
 PS /home/ana/work/ps> $empty = @(); $empty.Count; ($empty | Measure-Object).Count

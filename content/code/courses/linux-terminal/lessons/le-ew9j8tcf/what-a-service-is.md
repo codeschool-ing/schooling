@@ -44,7 +44,7 @@ written to daemonise the old way needs `Type=forking` to be told so.
 
 ## Where a service keeps its things
 
-The same four places every time, and knowing them is most of finding your way around an unfamiliar
+The same five places every time, and knowing them is most of finding your way around an unfamiliar
 one:
 
 | | |

@@ -78,7 +78,7 @@ exit 0
 ```
 
 **`ran` was never printed and the status is 0.** The lock was busy, the command
-did not run, and nothing is reported as broken.
+did not run, and nothing reports a failure.
 
 ```sh
 */5 * * * * /usr/bin/flock -E 0 -n /tmp/sync.lock /home/ana/bin/sync.sh

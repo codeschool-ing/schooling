@@ -124,8 +124,8 @@ unzip: /usr/bin/zipinfo
 ```
 
 **This is the one to have in your fingers.** A strange binary, a config file you did not write, a
-library in a version that surprises you — `dpkg -S` names the package in an instant, because it is
-a database lookup rather than a search.
+library in a version that surprises you — `dpkg -S` names the package in an instant. It is a
+database lookup rather than a search.
 
 And the answer that teaches the most is the one where there is no answer:
 

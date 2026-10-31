@@ -9,11 +9,10 @@ o resto é vocabulário.
 **Em todo outro editor, o teclado digita. No vim, o teclado digita só quando você
 está no modo de inserção.** No resto do tempo as teclas de letra são comandos.
 
-É por isso que digitar `hello` num vim recém-aberto move o cursor e apaga alguma
-coisa: o `h` é esquerda, o `e` é fim-de-palavra, o `l` é direita, o segundo `l` é
-direita de novo, e o `o` abre uma linha nova — o que finalmente te põe no modo de
-inserção, que é por que a confusão normalmente termina com uma linha em branco
-perdida.
+É por isso que digitar `hello` num vim recém-aberto só move o cursor: o `h` é
+esquerda, o `e` é fim-de-palavra, o `l` é direita, o segundo `l` é direita de
+novo. Aí o `o` abre uma linha nova, o que finalmente te põe no modo de inserção.
+É por isso que a confusão normalmente termina com uma linha em branco perdida.
 
 ## Os modos que você vai usar
 

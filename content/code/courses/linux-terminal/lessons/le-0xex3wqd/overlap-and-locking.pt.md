@@ -78,7 +78,7 @@ exit 0
 ```
 
 **O `ran` nunca foi impresso e o status é 0.** A trava estava ocupada, o comando
-não rodou, e nada é relatado como quebrado.
+não rodou, e nada relata uma falha.
 
 ```sh
 */5 * * * * /usr/bin/flock -E 0 -n /tmp/sync.lock /home/ana/bin/sync.sh

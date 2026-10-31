@@ -9,7 +9,7 @@ new words.
 
 **Same caveat as section 10**: these transcripts were captured on Ubuntu with `zypper` installed
 and the lesson's own repository configured. The commands and their output are real; the
-distribution is not SUSE, and the one place that shows is pointed out below. Section 10's block
+distribution is not SUSE, and the two places that shows are pointed out below. Section 10's block
 built the repository; this tells `zypper` about it:
 
 ```sh
@@ -28,7 +28,7 @@ Repository priorities are without effect. All enabled repositories share the sam
 ```
 
 `zypper repos` — `zypper lr` for short — is `dnf repolist`. Note the columns: **zypper shows
-priority and refresh state in the listing**, which dnf does not, and the first line is it telling
+GPG checking and refresh state in the listing**, which dnf does not, and the first line is it telling
 you that with one repository priorities cannot matter.
 
 Adding and refreshing:

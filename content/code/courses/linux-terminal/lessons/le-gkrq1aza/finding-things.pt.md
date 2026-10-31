@@ -123,8 +123,8 @@ unzip: /usr/bin/zipinfo
 ```
 
 **Este é o de ter nos dedos.** Um binário estranho, um arquivo de configuração que você não escreveu,
-uma biblioteca numa versão que te surpreende — o `dpkg -S` nomeia o pacote num instante, porque é uma
-consulta a banco de dados e não uma busca.
+uma biblioteca numa versão que te surpreende — o `dpkg -S` nomeia o pacote num instante. É uma
+consulta a banco de dados, não uma busca.
 
 E a resposta que mais ensina é aquela em que não há resposta:
 

@@ -3,8 +3,8 @@ title: `ssh`, porque toda máquina está em outro lugar
 version: 3
 ---
 
-Esta é uma seção numa aula cujo título não menciona ela, e está aqui porque **toda máquina Linux
-que você vai administrar é uma que você alcança por ssh.** O curso não tem lugar melhor, e ficar
+O título desta aula não menciona o ssh. Ele está aqui porque **toda máquina Linux que você vai
+administrar é uma que você alcança por ssh**. O curso não tem lugar melhor, e ficar
 sem isso até lá seria desonesto sobre como o trabalho é.
 
 Chaves, o prompt de impressão digital, e onde as coisas moram. Túneis, arquivos de configuração e
@@ -93,8 +93,8 @@ ana@vm:~$ cat ~/.ssh/id_ed25519.pub
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKHhDDaH171LJb/mce2OhMnKDYo5PArO8BPrVDTHdhd ana@vm
 ```
 
-Publicar aquela linha não te custa nada. Publicar o outro arquivo te custa tudo. A seção 13 da aula
-4 disse que o `.ssh` é o diretório mais sensível que você tem, e é por isso — **o ssh confere as
+Publicar aquela linha não te custa nada. Publicar o outro arquivo te custa tudo. A seção 04 da aula
+4 deu ao `~/.ssh` o modo `700`, seu e de mais ninguém, e é por isso — **o ssh confere as
 permissões e recusa uma chave que outra pessoa poderia ler.**
 
 `-t ed25519` é o algoritmo a usar; ele é curto, rápido e atual. `-N ""` quer dizer sem frase
@@ -182,4 +182,4 @@ Faça isso *depois* de confirmar que sua chave funciona, de uma sessão que voc�
 
 **E o host que você não alcança é quase sempre um firewall.** `ssh: connect to host … port 22:
 Connection refused` quer dizer que algo respondeu e disse não; `Connection timed out` quer dizer
-que nada respondeu. Os dois apontam em direções diferentes, e a aula 11 volta a essa diferença.
+que nada respondeu. Os dois apontam em direções diferentes.

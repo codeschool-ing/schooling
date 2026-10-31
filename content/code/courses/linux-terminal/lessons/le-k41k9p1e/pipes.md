@@ -80,7 +80,7 @@ that is still almost always the right trade, because it removes lines entirely.
 the whole thing, and why some programs refuse to work in one.
 
 **It carries bytes, not records.** Every tool in this lesson invents its own idea of a line and a
-field from the same stream of bytes, which is why they compose at all — and also why a filename
+field from the same stream of bytes, which is why they compose at all. It is also why a filename
 with a space in it breaks a pipeline that assumed whitespace separated things. Section 16 is that
 failure, with the fix.
 

@@ -104,7 +104,7 @@ name
 
 The comma inside the quotes is a comma to `cut`, so the name came out cut in half. **Nothing in
 this lesson parses CSV correctly**; for real CSV with quoting, use a tool that knows the format —
-`csvcut` from csvkit, `mlr`, or a few lines of python.
+`csvcut` from csvkit, `mlr`, or a few lines of Python.
 
 **It cannot handle variable whitespace** without `tr -s` first, as above.
 

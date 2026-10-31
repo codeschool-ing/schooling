@@ -15,7 +15,7 @@ version: 3
 
 **A menor unidade é um minuto.** Nada no cron roda mais frequentemente que isso,
 e um job que precisa disso é um job para um serviço que fica rodando — ou para o
-timer do systemd da seção 12, que faz segundos.
+timer do systemd da seção 11, que faz segundos.
 
 | o que você escreve | o que quer dizer |
 |---|---|
@@ -121,9 +121,9 @@ Restrinja um campo no cron, e teste o outro no comando.
 | `@reboot` | uma vez, quando o cron inicia |
 
 **O `@reboot` não é uma agenda e é o que merece um aviso.** Ele roda quando o
-*cron* inicia, que normalmente mas nem sempre é perto do boot, ele não roda se o
-cron for reiniciado sem a máquina reiniciar — e não é assim que um programa que
-deveria estar sempre rodando é iniciado. Isso é um serviço do systemd (aula 5),
+*cron* inicia, que normalmente mas nem sempre é perto do boot, e não roda se o
+cron for reiniciado sem a máquina reiniciar. Também não é assim que se inicia um
+programa que deveria estar sempre rodando. Isso é um serviço do systemd (aula 5),
 que o reinicia quando ele morre, o registra, e o ordena depois das coisas de que
 ele precisa.
 

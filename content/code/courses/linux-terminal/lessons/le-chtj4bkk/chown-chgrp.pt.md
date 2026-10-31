@@ -75,14 +75,14 @@ controla, e é como duas pessoas compartilham um arquivo sem ninguém virar root
 
 Tente com um grupo em que você não está e é recusado pelo mesmo motivo do `chown`.
 
-## `-R`, e as duas flags que importam com ele
+## `-R`, e as flags que importam com ele
 
 ```
 sudo chown -R www-data:www-data /srv/www
 ```
 
 Recursivo, e é o jeito normal de entregar uma árvore inteira a uma conta de serviço depois de um
-deploy. Duas opções valem conhecer:
+deploy. Estas são as opções que valem conhecer:
 
 | | faz |
 |---|---|

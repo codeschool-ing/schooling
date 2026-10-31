@@ -53,7 +53,7 @@ job diário não faz nada aqui**, porque o anacron vai rodar aqueles diretórios
 seção 09.
 
 **O sexto campo é um nome de usuário.** O `/etc/crontab` e o `/etc/cron.d` têm um
-e o seu próprio crontab não tem, que é o erro mais comum ao copiar uma linha de
+e o seu próprio crontab não tem. Esse é o erro mais comum ao copiar uma linha de
 um para o outro: cole uma linha do `/etc/cron.d` no `crontab -e` e o nome do
 usuário é lido como o comando.
 

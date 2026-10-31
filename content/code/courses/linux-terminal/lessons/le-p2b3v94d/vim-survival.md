@@ -62,7 +62,7 @@ which:
 
 | | |
 |---|---|
-| `process ID: 7985` **still running** | somebody else has this file open. Press `q` and go and ask |
+| `process ID: 3361` **still running** | somebody else has this file open. Press `q` and go and ask |
 | that process is gone | vim or the machine died. Your unsaved work is in the swap file |
 
 Press Enter past the `-- More --` and the choices appear. The ones that matter:
@@ -76,7 +76,7 @@ Press Enter past the `-- More --` and the choices appear. The ones that matter:
 
 **The right sequence when the work was yours and the editor died:** press `r`,
 look at what came back, save it somewhere, and then `:q` and delete the swap
-file — vim will not do that for you, and until it is gone you get this screen
+file. Vim will not delete it for you, and until it is gone you get this screen
 every time.
 
 ```sh

@@ -3,7 +3,7 @@ title: Onde os doze bits acabam
 version: 2
 ---
 
-O modelo desta aula tem um limite duro, e ele é fácil de enunciar: **um arquivo tem um dono e um
+O modelo desta aula tem um limite duro, e ele é fácil de enunciar. **Um arquivo tem um dono e um
 grupo.** Então ele consegue dizer *a ana, e qualquer um do team, e todo o resto* — e não consegue
 dizer *a ana e a carla, e mais ninguém*.
 
@@ -99,7 +99,8 @@ other::---
 `rw-` sob uma máscara `r--` entrega `r--`. Não é bug; é como um arquivo com ACL continua se
 comportando de forma sensata quando alguém roda `chmod` nele.
 
-E essa é a armadilha: **`chmod g+w` num arquivo com ACL altera a máscara, e não a entrada do grupo.**
+**Num arquivo com ACL, `chmod g+w` altera a máscara, e não a entrada do grupo** — e essa é a
+armadilha.
 A linha do meio do `ls -l`, num arquivo com ACL, *é* a máscara, o que significa que a listagem comum
 está te contando algo mais sutil do que parece. Leia o `getfacl` quando houver um `+`.
 

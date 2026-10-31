@@ -108,7 +108,7 @@ $ ls 'with space.txt'
 with space.txt
 ```
 
-**This is the single most common beginner error in the shell**, and it is not really about
+**This is the most common beginner error in the shell**, and it is not really about
 filenames — it is about who splits the line. Lesson 9's `quoting` section is the full treatment;
 the rule to carry until then is *if it has a space in it, put quotes around it.*
 
@@ -138,7 +138,7 @@ without it the file is close to untouchable.
 
 ### Read the error, and it tells you which part was wrong
 
-Three failures in this section and each one names its own kind:
+Three failures so far in this lesson, and each one names its own kind:
 
 | message | what it means |
 |---|---|

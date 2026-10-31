@@ -42,7 +42,7 @@ ana@vm:~/work/scripts$ ./drift.sh
 
 **The interval is three seconds and the cycles are five apart.** The work is
 inside the loop, so every run pushes the next one later. An hourly backup that
-takes four minutes runs at 03:00, then 03:04, then 03:08, and by the end of the
+takes four minutes runs at 03:00, then 04:04, then 05:08, and by the end of the
 week it is running in the afternoon.
 
 The other four:
@@ -114,8 +114,8 @@ has been running since it was installed.
 
 ## What each section owes you
 
-The rest of the lesson is cron for eight sections, because it is what is there
-and because everything that goes wrong with it goes wrong quietly; systemd timers
-for four, because it is what a new service is written with; and three at the end
-on the part that is neither — locking, failure, and the job surviving its own
-success.
+The rest of the lesson is cron for seven sections, because it is what is there
+and because everything that goes wrong with it goes wrong quietly. Then systemd
+timers for four, because that is what a new service is written with. The three at
+the end are on the part that is neither: locking, failure, and the job surviving
+its own success.

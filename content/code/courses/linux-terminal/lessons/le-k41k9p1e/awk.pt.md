@@ -196,7 +196,7 @@ saída. É uma linguagem de verdade e o manual tem cem páginas.
 
 **A linha a traçar é esta**: quando o programa precisa de uma segunda condição e de uma terceira
 variável, e você começou a contar aspas, ele virou um programa. Escreva num arquivo — que é a aula 9
-— ou em python. Um `awk` de uma linha com doze partes é impressionante e ninguém nunca vai conseguir
+— ou em Python. Um `awk` de uma linha com doze partes é impressionante e ninguém nunca vai conseguir
 mudá-lo com segurança.
 
 O `awk` que vale ter nos dedos são cinco padrões:

@@ -112,10 +112,10 @@ forum answers because it makes the immediate error go away.
 
 **It works by removing the check rather than by fixing the problem.** The thing that was actually
 wrong — the wrong owner, a missing `x` on a directory two levels up, a group nobody was in — is
-still wrong; it just no longer matters, and neither does anything else.
+still wrong. It just no longer matters, and neither does anything else.
 
-Two things to do instead, in this order: work out **which bit** was missing, with `namei -l` from
-section 03; and if the answer really is "these two accounts need to share this", that is what
+Do two things instead, in this order. First work out **which bit** was missing, with `namei -l` from
+section 03. Then, if the answer really is "these two accounts need to share this", that is what
 groups are for (section 08) and what ACLs are for (section 13).
 
 There is one place `777` is correct, and it is `/tmp` — which is `1777`, and the leading `1` is the

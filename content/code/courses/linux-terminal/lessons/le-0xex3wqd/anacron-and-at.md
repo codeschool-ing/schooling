@@ -196,9 +196,8 @@ long: `LS_COLORS`, which tells `ls` what colour to paint each kind of file, and
 which the job will also carry.
 
 **That is friendlier and no more reliable.** The job runs with whatever happened
-to be set in the terminal you typed it in — including a `JAVA_HOME` from a
-session you have forgotten — which is not a thing you chose and not a thing
-anybody else can reproduce.
+to be set in the terminal you typed it in, including a `JAVA_HOME` from a session
+you have forgotten. You did not choose that, and nobody else can reproduce it.
 
 **Use it for "run this at four, once".** A migration, a restart during a window,
 a reminder to a script. Anything that repeats belongs in one of the other three.

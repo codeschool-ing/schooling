@@ -146,6 +146,6 @@ passing the text on:
 some-command | tee out.txt | grep error
 ```
 
-`tee -a` appends. It is the standard way to keep a copy of what went past, and the standard way to
-write to a root-owned file from a pipeline, since `sudo cmd > /root/file` fails — **the redirection
-is done by your shell, not by `sudo`** — and `cmd | sudo tee /root/file` works.
+`tee -a` appends. It is the standard way to keep a copy of what went past. It is also the standard
+way to write to a root-owned file from a pipeline: `sudo cmd > /root/file` fails, because **the
+redirection is done by your shell, not by `sudo`**, and `cmd | sudo tee /root/file` works.

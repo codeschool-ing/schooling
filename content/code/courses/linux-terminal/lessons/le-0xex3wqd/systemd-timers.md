@@ -148,4 +148,4 @@ file syntax with about forty settings, where cron has five fields.
 
 **On a machine where the job is one line, cron is still the right answer.** On a
 machine where the job belongs to a service you already wrote a unit for, the
-timer is fifteen lines and everything above.
+timer is ten lines and everything above.

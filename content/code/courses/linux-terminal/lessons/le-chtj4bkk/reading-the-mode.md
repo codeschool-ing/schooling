@@ -103,10 +103,10 @@ drwxrwsr-x 2 root team  4096 Sep 14 22:44 /srv/team
 drwxrwxrwt 38 root root 36864 Sep 14 22:45 /tmp
 ```
 
-An `s` where an `x` should be, and a `t` at the end. Those are the special bits, they are section
-10, and for now the thing to notice is only that **they sit in an `x` slot** — so a lowercase `s`
-means the special bit is on *and* execute is on, and an uppercase `S` means the special bit is on
-and execute is not, which is almost always a mistake.
+An `s` where an `x` should be, and a `t` at the end. Those are the special bits, and section 10
+covers them. For now, notice only that **they sit in an `x` slot**. A lowercase `s` means the
+special bit is on *and* execute is on; an uppercase `S` means the special bit is on and execute is
+not, which is almost always a mistake.
 
 And a `+` at the end of the nine:
 

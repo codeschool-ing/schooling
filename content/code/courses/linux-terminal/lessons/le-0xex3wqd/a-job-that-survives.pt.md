@@ -168,9 +168,9 @@ root@vm:~# grep upload-logs /var/log/syslog | tail -4
 ```
 
 **Três execuções, um arquivo, e nenhum e-mail.** O log distingue a execução que
-fez o trabalho das duas que corretamente não fizeram nada; o syslog diz que o cron
-iniciou o job a cada minuto; e a caixa de correio não cresceu, porque
-silêncio é o que um job funcionando parece.
+fez o trabalho das duas que corretamente não fizeram nada, e o syslog diz que o
+cron iniciou o job a cada minuto. A caixa de correio não cresceu, porque silêncio
+é o que um job funcionando parece.
 
 Que é o problema inteiro com o nono item, abaixo.
 

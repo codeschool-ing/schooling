@@ -41,8 +41,8 @@ systemctl list-units --type=target          # what is active
 ```
 
 **O `set-default` é um link simbólico**, exatamente como na seção 09: o
-`/etc/systemd/system/default.target` apontando para o que você escolheu. Tudo no systemd é um link
-simbólico em algum lugar, e quando você vê isso o projeto deixa de ser misterioso.
+`/etc/systemd/system/default.target` apontando para o que você escolheu. Habilitar, desabilitar e o
+target padrão são todos links simbólicos, e quando você vê isso o projeto deixa de ser misterioso.
 
 **O `isolate` não é o `start`.** Ele inicia aquele target e **para tudo que não está nele**, o que
 num servidor em produção significa arrancar serviços de baixo de quem estava usando. Útil num

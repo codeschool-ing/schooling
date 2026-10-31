@@ -153,4 +153,4 @@ cron tem cinco campos.
 
 **Numa máquina em que o job é uma linha, o cron continua sendo a resposta certa.**
 Numa máquina em que o job pertence a um serviço para o qual você já escreveu uma
-unidade, o timer são quinze linhas e tudo acima.
+unidade, o timer são dez linhas e tudo acima.

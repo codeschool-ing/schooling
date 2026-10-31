@@ -113,7 +113,7 @@ Compare com a versão correta no topo desta seção: `287 /health`, `279 /`. Nen
 certo.
 
 **E nada naquela saída parece incorreto à primeira vista.** As contagens são plausíveis e os caminhos
-são reais. O `/` repetindo três vezes é a única pista, e numa listagem de vinte linhas você não a
+são reais. O `/health` repetindo três vezes é a única pista, e numa listagem de vinte linhas você não a
 veria. Este é o argumento para rodar um pipeline novo em poucas linhas primeiro, onde dá para
 conferir a resposta a olho.
 

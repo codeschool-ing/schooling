@@ -98,8 +98,8 @@ b
 byte value, so `LC_ALL=C` changes nothing. On a machine set to `en_US.UTF-8` the first command gives
 `a A b B` — case-insensitive, letter by letter — and the second still gives `A B a b`.
 
-That matters in exactly one situation and it is a bad one: **a script that compares sorted output
-between two machines.** `comm` and `join` in section 15 both require their inputs to be sorted *the
+That matters in exactly one situation, and it is a bad one: **a script that compares sorted output
+between two machines**. `comm` and `join` in section 15 both require their inputs to be sorted *the
 same way*, and two machines with different locales produce different orders from the same data.
 
 The fix is to be explicit. **`LC_ALL=C sort` in a script** makes the order deterministic, and it is
@@ -122,7 +122,7 @@ And `sort --parallel=4` uses several cores, which on a large file is a real diff
 
 ## The two habits
 
-**Reduce before you sort.** `grep` and `cut` first: sorting twelve hundred four-character fields is
+**Reduce before you sort.** `grep` and `cut` first: sorting twelve hundred three-character fields is
 cheaper than sorting twelve hundred lines of well over a hundred characters, and on a large log the ratio
 is the same but the numbers are minutes.
 

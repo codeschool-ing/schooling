@@ -23,7 +23,7 @@ controle em que este shell está.**
 O `free` lê o `/proc/meminfo`. O `top` também, e todo agente de monitoramento
 escrito antes de mais ou menos 2018 também. Todos eles vão te dizer que esta
 máquina tem 16 GB, e todos estão errados por dois — e num contêiner com limite de
-512 MB estão errados por trinta vezes.
+512 MB estão errados por trinta e duas vezes.
 
 ## Por quê
 

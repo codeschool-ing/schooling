@@ -104,10 +104,10 @@ drwxrwsr-x 2 root team  4096 Sep 14 22:44 /srv/team
 drwxrwxrwt 38 root root 36864 Sep 14 22:45 /tmp
 ```
 
-Um `s` onde deveria haver um `x`, e um `t` no fim. Esses são os bits especiais, eles são a seção 10,
-e por ora o que importa notar é que **eles ocupam uma vaga de `x`** — então um `s` minúsculo quer
-dizer que o bit especial está ligado *e* a execução também, e um `S` maiúsculo quer dizer que o bit
-especial está ligado e a execução não, o que é quase sempre um engano.
+Um `s` onde deveria haver um `x`, e um `t` no fim. Esses são os bits especiais, e a seção 10
+trata deles. Por ora, note só que **eles ocupam uma vaga de `x`**. Um `s` minúsculo quer dizer que o
+bit especial está ligado *e* a execução também; um `S` maiúsculo quer dizer que o bit especial está
+ligado e a execução não, o que é quase sempre um engano.
 
 E um `+` no fim dos nove:
 

@@ -70,10 +70,10 @@ _64-linux-gnu/perl/5.38 /usr/share/perl/5.38 /usr/local/lib/site_perl) at /usr/g
 BEGIN failed--compilation aborted at /usr/games/cowsay line 14.
 ```
 
-**Quatro linhas de perl, e nenhuma delas diz "pacote".** O comando existe, ele roda, e falha dentro
+**Cinco linhas de perl, e nenhuma delas diz "pacote".** O comando existe, ele roda, e falha dentro
 de si mesmo procurando uma biblioteca que não está lá.
 
-É esse o motivo de esta seção valer o espaço. Encontrado sozinho — num log, na máquina de outra
+Encontrado sozinho — num log, na máquina de outra
 pessoa, uma semana depois — este erro parece um bug no `cowsay`. Não é. É um pacote que nunca foi
 configurado, e o `dpkg -l` diz isso em duas letras.
 

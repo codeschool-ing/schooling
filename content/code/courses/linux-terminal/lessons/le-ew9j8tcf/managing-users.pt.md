@@ -123,7 +123,7 @@ drwxr-x--- 2 1005 dora 4096 Oct  7 11:36 /home/dora
 A conta se foi — o `getent` não imprime nada. **O diretório pessoal continua lá, e o `ls` agora
 imprime `1005` onde havia um nome**, porque não sobrou nada para consultar o número.
 
-Essa é a demonstração mais visível da afirmação da seção 02 de que o sistema de arquivos guarda
+Essa é a demonstração mais clara da afirmação da seção 02 de que o sistema de arquivos guarda
 números. Nada naqueles arquivos mudou. O mapeamento mudou.
 
 O `userdel -r` remove a casa e a caixa de correio também — e **vale não fazer por reflexo.** A

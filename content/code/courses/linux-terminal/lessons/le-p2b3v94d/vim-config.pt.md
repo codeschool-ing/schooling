@@ -9,18 +9,15 @@ programa diferente que você não conhece.
 
 ## As dez linhas
 
-```vim
-" ~/.vimrc — the minimum
-set number              " line numbers
-set ignorecase          " searching is case-insensitive
-set smartcase           " unless the pattern has a capital in it
-set incsearch           " jump to matches as you type
-set hlsearch            " highlight every match
-set expandtab           " the Tab key inserts spaces
-set tabstop=4           " a Tab character displays as four columns
-set shiftwidth=4        " > and < indent by four
-set scrolloff=3         " keep three lines visible above and below the cursor
-syntax on               " colour, if the terminal has it
+```schooling-example
+{"language": "vim", "file": "~/.vimrc", "parts": [
+ {"code": "\" ~/.vimrc — the minimum\nset number", "note": "Números de linha à esquerda."},
+ {"code": "set ignorecase\nset smartcase", "note": "A busca não diferencia maiúsculas de minúsculas, a não ser que o padrão tenha uma maiúscula."},
+ {"code": "set incsearch\nset hlsearch", "note": "Pular para as ocorrências enquanto você digita, e destacar todas elas."},
+ {"code": "set expandtab\nset tabstop=4\nset shiftwidth=4", "note": "A tecla Tab insere espaços, um caractere de tab aparece como quatro colunas, e `>` e `<` indentam quatro."},
+ {"code": "set scrolloff=3", "note": "Manter três linhas visíveis acima e abaixo do cursor."},
+ {"code": "syntax on", "note": "Cor, se o terminal tiver."}
+]}
 ```
 
 A `"` começa um comentário, que é uma esquisitice do próprio vim e não um erro de
@@ -97,7 +94,7 @@ ana@vm:~$ which vimtutor || echo 'vimtutor: not installed'
 Ele abre uma cópia de um arquivo de aula que você edita enquanto lê. Se você vai
 usar o vim de alguma forma, é a melhor meia hora disponível.
 
-**O `:help`** é o manual e é genuinamente bom:
+**O `:help`** é o manual e é bom:
 
 ```vim
 :help                 " the front page

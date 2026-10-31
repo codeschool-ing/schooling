@@ -44,7 +44,7 @@ programa escrito para virar daemon do jeito antigo precisa de `Type=forking` par
 
 ## Onde um serviço guarda as coisas dele
 
-Os mesmos quatro lugares, sempre, e conhecê-los é a maior parte de se achar num serviço
+Os mesmos cinco lugares, sempre, e conhecê-los é a maior parte de se achar num serviço
 desconhecido:
 
 | | |

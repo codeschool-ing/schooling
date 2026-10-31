@@ -26,9 +26,9 @@ PS /home/ana/work/ps> Get-Doubled -Number "twelve"
 Get-Doubled: Cannot process argument transformation on parameter 'Number'. Cannot convert value "twelve" to type "System.Int32". Error: "The input string 'twelve' was not in a correct format."
 ```
 
-Nada dentro da função precisou testar coisa nenhuma. Compare com o
-`logreport.sh` da aula 9, que gasta quatro linhas conferindo que o `-t` é um
-número.
+Nada dentro da função precisou testar coisa nenhuma. Compare com o script de
+relatório da aula 9, que confere o `-t` à mão, com uma expressão regular e um
+`die`.
 
 A declaração cresce até onde você precisar:
 
@@ -138,7 +138,7 @@ got access.log
 got sales.csv
 ```
 
-**Dois arquivos entraram e o primeiro disse um.** O corpo rodou uma vez, no fim,
+**Dois arquivos entraram e a primeira função informou um.** O corpo rodou uma vez, no fim,
 com o `$Item` segurando o que chegou por último. Nenhum erro — a forma de sempre.
 
 O `[Parameter(ValueFromPipelineByPropertyName)]` é o outro: ele preenche o `$Path`

@@ -15,7 +15,7 @@ version: 3
 
 **The smallest unit is one minute.** Nothing in cron runs more often than that,
 and a job that needs to is a job for a service that stays running — or for
-section 12's systemd timer, which can do seconds.
+section 11's systemd timer, which can do seconds.
 
 | what you write | what it means |
 |---|---|
@@ -120,8 +120,8 @@ Restrict one field in cron, and test the other in the command.
 | `@reboot` | once, when cron starts |
 
 **`@reboot` is not a schedule and it is the one worth a warning.** It runs when
-*cron* starts, which is usually but not always near boot, it does not run if cron
-is restarted without the machine rebooting — and it is not how a program that
+*cron* starts, which is usually but not always near boot, and it does not run if
+cron is restarted without the machine rebooting. Nor is it how a program that
 should always be running gets started. That is a systemd service (lesson 5),
 which restarts it when it dies, logs it, and orders it after the things it needs.
 

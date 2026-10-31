@@ -97,7 +97,7 @@ root@vm:~# systemctl --root=/ is-enabled hello.service
 disabled
 ```
 
-Three entries in that listing, and two of them were not put there by you — that is what an enabled
+Nine entries in that listing, and only one of them was put there by you — that is what an enabled
 service looks like on any machine. Lesson 3 section 11 taught you to read `->`; this is that
 reading, cashed in.
 

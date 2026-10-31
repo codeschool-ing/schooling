@@ -112,7 +112,7 @@ Compare it with the correct version at the top of this section: `287 /health`, `
 number here is right.
 
 **And nothing in that output looks incorrect at a glance.** The counts are plausible and the paths
-are real. The `/` repeating three times is the only tell, and on a listing of twenty lines you
+are real. `/health` repeating three times is the only tell, and on a listing of twenty lines you
 would not see it. This is the argument for running a new pipeline on a few lines first, where you
 can check the answer by eye.
 

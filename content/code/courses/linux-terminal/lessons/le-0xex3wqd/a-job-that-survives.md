@@ -168,9 +168,9 @@ root@vm:~# grep upload-logs /var/log/syslog | tail -4
 ```
 
 **Three runs, one archive, and no mail at all.** The log distinguishes the run
-that did the work from the two that correctly did nothing; syslog says cron
-started the job each minute; and the mailbox did not grow, because
-silence is what a working job looks like.
+that did the work from the two that correctly did nothing, and syslog says cron
+started the job each minute. The mailbox did not grow, because silence is what a
+working job looks like.
 
 Which is the whole problem with the ninth item, below.
 

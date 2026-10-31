@@ -43,7 +43,7 @@ ana@vm:~/work/scripts$ ./drift.sh
 **O intervalo é de três segundos e os ciclos estão a cinco de distância.** O
 trabalho está dentro do laço, então cada execução empurra a próxima para mais
 tarde. Um backup de hora em hora que leva quatro minutos roda às 03:00, depois às
-03:04, depois às 03:08, e no fim da semana está rodando à tarde.
+04:04, depois às 05:08, e no fim da semana está rodando à tarde.
 
 Os outros quatro:
 
@@ -115,7 +115,8 @@ uma linha a um que roda desde que ela foi instalada.
 
 ## O que cada seção te deve
 
-O resto da aula é cron por oito seções, porque é o que está lá e porque tudo que
-dá errado com ele dá errado em silêncio; timers do systemd por quatro, porque é
-com o que um serviço novo é escrito; e três no fim sobre a parte que não é nem um
-nem outro — travas, falha, e o job sobrevivendo ao próprio sucesso.
+O resto da aula é cron por sete seções, porque é o que está lá e porque tudo que
+dá errado com ele dá errado em silêncio. Depois, timers do systemd por quatro,
+porque é com isso que um serviço novo é escrito. As três do fim tratam da parte
+que não é nem um nem outro: travas, falha, e o job sobrevivendo ao próprio
+sucesso.

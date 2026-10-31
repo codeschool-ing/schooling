@@ -107,7 +107,7 @@ ls -l sales.csv | awk '{print $8}'      # the year — if the file is over six m
 ```
 
 **The `awk` version is counting columns in a rendering.** Lesson 8's own `cut`
-section was about that going wrong, and its `awk` section measured it: in a
+section was about that going wrong. Its `awk` section measured it: in a
 twelve-hundred-line log where every line looks the same shape, `awk '{print NF}'`
 reports four different field counts, because one field is free text with spaces
 in it.
@@ -144,7 +144,7 @@ user	0m0.000s
 sys	0m0.003s
 ```
 
-A hundred and thirty times, on this machine. For a shell you type at, nobody
+A hundred and thirty-five times, on this machine. For a shell you type at, nobody
 notices; for something a scheduler runs every minute, somebody does.
 
 **The objects are only as good as the command that made them.** A cmdlet that

@@ -95,11 +95,10 @@ root@vm:~# exit
 logout
 ```
 
-**That one line is the whole report.** Which process, by name and pid; how much
-it had (`anon-rss` 102 MB — its own data, which is what counted against the
-limit); its `oom_score_adj`; and, crucially, `Memory cgroup out of memory`
-rather than plain `Out of memory`, which tells you it hit *a limit* and not *the
-machine*.
+**That one line is the whole report.** Which process, by name and pid. How much
+it had: `anon-rss` of 102016 kB, its own data, which is what counted against the
+limit. Its `oom_score_adj`. And `Memory cgroup out of memory` rather than plain
+`Out of memory`, which tells you it hit *a limit* and not *the machine*.
 
 ```sh
 dmesg -T | grep -i 'killed process'       # the kernel ring buffer, with dates

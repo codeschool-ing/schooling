@@ -49,8 +49,9 @@ docker-ce:
         500 https://download.docker.com/linux/ubuntu noble/stable amd64 Packages
 ```
 
-This is a real machine behind on Docker: installed `29.3.1`, candidate `29.8.0`, and four
-intermediate versions the repository still carries.
+This is a real machine behind on Docker: installed `29.3.1`, candidate `29.8.0`, and the
+repository still carries the versions between them: three show below the candidate before `head`
+cuts the list.
 
 **`500` is the priority.** Every version gets one, and apt picks the highest-priority version, using
 the newest to break ties. The defaults are worth knowing because they explain more than they look

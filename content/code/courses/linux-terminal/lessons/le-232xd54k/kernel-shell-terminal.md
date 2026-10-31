@@ -116,6 +116,6 @@ half the questions people ask are answered by the first word of the line they pa
 **You type into a terminal, which feeds a shell, which asks the kernel, which owns the machine.**
 
 Four things, three of which are ordinary programs and one of which is not. The rest of this course
-spends its time at the second layer — the shell is the tool you are learning — and the reason it
-was worth naming all four is that when you are stuck, knowing which one is refusing you is very
-nearly the answer.
+spends its time at the second layer, because the shell is the tool you are learning. All four were
+worth naming anyway: when you are stuck, knowing which one is refusing you is very nearly the
+answer.

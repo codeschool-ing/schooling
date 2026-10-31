@@ -153,7 +153,7 @@ O `dir` e o `cd` são apelidos aqui. **O `ls`, o `cat` e o `ps` não são** — 
 Windows PowerShell eles são, apontando para `Get-ChildItem`, `Get-Content` e
 `Get-Process`.
 
-O motivo é óbvio depois que você vê: no Linux esses são programas de verdade que
+No Linux esses são programas de verdade que
 uma pessoa digitando `ls` quer dizer, então o PowerShell remove os apelidos e
 deixa os de verdade passarem. No Windows não há um `/bin/ls` para colidir.
 

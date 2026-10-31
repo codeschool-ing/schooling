@@ -100,7 +100,7 @@ pkill -f spin.sh
 ```
 
 A linha `all` é uma média sobre quatro núcleos. Aqui todo núcleo está entre 97 e 100%,
-então a média é honesta — mas **um núcleo a 100% e três ociosos dão média de
+então a média é honesta. Mas **um núcleo a 100% e três ociosos dão média de
 25%**, e essa é a forma mais comum de um problema real: um programa sem threads,
 numa máquina com bastante capacidade sobrando.
 
@@ -125,7 +125,7 @@ média. O `iostat -x` não tem percentil, e o `vmstat` também não. **Esse é u
 limite real deste toolkit inteiro**, e a resposta honesta para "a cauda está
 ruim" é ou métricas da aplicação, ou os histogramas do `bpftrace`, ou o `perf`.
 
-O que vale dizer sem rodeios: estas ferramentas acham *qual recurso* e *qual
+Estas ferramentas acham *qual recurso* e *qual
 processo*. Para *qual requisição*, você precisa de instrumentação que já estava
 lá antes do incidente.
 

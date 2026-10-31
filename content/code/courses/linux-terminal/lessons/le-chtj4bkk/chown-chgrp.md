@@ -75,14 +75,14 @@ controls, and it is how two people share a file without anybody becoming root.
 
 Try it with a group you are not in and it is refused for the same reason `chown` was.
 
-## `-R`, and the two flags that matter with it
+## `-R`, and the flags that matter with it
 
 ```
 sudo chown -R www-data:www-data /srv/www
 ```
 
 Recursive, and it is the normal way to hand a whole tree to a service account after deploying it.
-Two options are worth knowing:
+These are the options worth knowing:
 
 | | does |
 |---|---|

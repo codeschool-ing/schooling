@@ -104,7 +104,7 @@ name
 
 A vírgula dentro das aspas é uma vírgula para o `cut`, então o nome saiu cortado ao meio. **Nada
 nesta aula interpreta CSV corretamente**; para CSV de verdade com aspas, use uma ferramenta que
-conheça o formato — o `csvcut` do csvkit, o `mlr`, ou algumas linhas de python.
+conheça o formato — o `csvcut` do csvkit, o `mlr`, ou algumas linhas de Python.
 
 **Ele não lida com espaço em branco variável** sem um `tr -s` antes, como acima.
 

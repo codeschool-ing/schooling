@@ -118,5 +118,5 @@ que elas colaram.
 **Você digita num terminal, que alimenta um shell, que pede ao kernel, que é dono da máquina.**
 
 Quatro coisas, três delas programas comuns e uma que não é. O resto deste curso passa o tempo na
-segunda camada — o shell é a ferramenta que você está aprendendo — e o motivo de valer a pena
-nomear as quatro é que, quando você travar, saber qual delas está te recusando é quase a resposta.
+segunda camada, porque o shell é a ferramenta que você está aprendendo. Mesmo assim valeu a pena
+nomear as quatro: quando você travar, saber qual delas está te recusando é quase a resposta.

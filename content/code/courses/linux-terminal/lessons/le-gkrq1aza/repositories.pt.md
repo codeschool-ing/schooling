@@ -118,8 +118,8 @@ Então, quando você vir `is no longer signed`, **leia primeiro a linha `E: Fail
 dela**. `403` e `404` são respostas de rede e um problema de chave não é. Um problema de chave mostra
 `NO_PUBKEY` e um id de chave em hexadecimal.
 
-**E repare no que não aconteceu: nada foi instalado nem atualizado.** Dois repositórios falharam,
-sete funcionaram, e a máquina está exatamente como estava. O `update` só escreve num cache.
+**E repare no que não aconteceu: nada foi instalado nem atualizado.** Dos nove índices que o apt
+pediu, dois falharam e sete funcionaram, e a máquina está exatamente como estava. O `update` só escreve num cache.
 
 ## O resto do vocabulário
 
@@ -133,8 +133,8 @@ apt list --upgradable      # what upgrade would do, before doing it
 **O `apt list --upgradable` é o que rodar primeiro**, toda vez. É a simulação, é instantâneo, e
 transforma "168 not upgraded" de um número numa lista que dá para ler.
 
-O `full-upgrade` — `dist-upgrade` em instruções mais antigas — difere do `upgrade` num ponto e é
-importante: o `upgrade` puro nunca vai remover um pacote para viabilizar uma atualização, e o
+O `full-upgrade` — `dist-upgrade` em instruções mais antigas — difere do `upgrade` num ponto: o
+`upgrade` puro nunca vai remover um pacote para viabilizar uma atualização, e o
 `full-upgrade` vai. Num servidor, rode o `upgrade`, leia o que ele segurou, e decida sobre esses à
 mão.
 

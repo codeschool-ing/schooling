@@ -98,7 +98,7 @@ não lembra nomes — o `Get-Command -Noun Service` os acha. E o `Get-` é segur
 
 **Três. Parâmetros são nomeados e tipados.** Então não há opções de uma letra para
 decorar nem `getopts`: o `-Recurse` diz o que faz, e `[int]$Threshold` num bloco
-`param` são quatro linhas de validação de bash.
+`param` faz a conferência que o script da aula 9 escreveu à mão.
 
 **Quatro. Valores têm tipo.** Então o `Sort-Object` num número ordena
 numericamente — desde que seja mesmo um número, que é a armadilha que esta aula
@@ -106,7 +106,7 @@ repete três vezes. Texto lido de um arquivo é texto até você converter.
 
 ## E as quatro coisas que o bash faz melhor
 
-Simetria não é honestidade. Há coisas em que o pipeline de texto ganha de lavada.
+Há coisas em que o pipeline de texto ganha de lavada.
 
 **Iniciar.** 0,4 segundo contra 0,003. Para qualquer coisa que um agendador roda
 num cronograma, esse é o argumento inteiro.

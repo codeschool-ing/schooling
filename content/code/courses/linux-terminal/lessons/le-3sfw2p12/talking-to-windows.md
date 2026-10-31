@@ -111,7 +111,7 @@ different from `ssh`.
 that, and anything you want to do with the result you parse.
 
 **`Invoke-Command` sends a script block and receives objects.** They are
-serialised on the far end, sent over the wire, and rehydrated on yours — so
+serialised on the far end, sent over the wire, and rehydrated on yours. So
 `Invoke-Command -ComputerName web01,web02 { Get-Service }` gives you one
 collection of service objects from two machines, with a `PSComputerName` property
 saying which is which, and you can `Group-Object` it.
@@ -149,7 +149,7 @@ The executables are even named differently — `powershell.exe` against
 `pwsh.exe` — and both can be installed at once.
 
 **Assume 5.1 on a server you did not set up.** Most of this lesson is identical
-on it; the differences that will catch you are `.Count` on a single object
+on it. The differences that will catch you are `.Count` on a single object
 (section 09), `ConvertTo-Json -Depth`, ternary and null-coalescing operators
 that 5.1 does not have, and `Get-WmiObject` still being present there and gone
 here.

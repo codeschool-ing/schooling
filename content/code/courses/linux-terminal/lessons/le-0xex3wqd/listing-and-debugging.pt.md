@@ -58,7 +58,7 @@ Sat 2026-10-17 13:44:00 UTC 1 week 2 days Wed 2026-10-07 13:18:17 UTC           
 
 **`NEXT` e `LAST` são as duas colunas que valem o comando.** Um timer cujo `LAST`
 é mais velho que o período dele não rodou, e isso é um fato sobre o qual você pode
-agir. O `report.timer` da seção 12 está lá, esperando 03:01:02 com um traço no
+agir. O `report.timer` da seção 10 está lá, esperando 03:01:02 com um traço no
 `LAST`, porque nunca disparou; o `anacron.timer` é o anacron da seção 09, iniciado
 pelo systemd. As três linhas de traços lá embaixo são timers carregados e não
 ativos.
@@ -77,8 +77,8 @@ desabilitado é exatamente o que você está procurando quando um job parou.
 | `systemctl status report.timer` | quando ele dispara em seguida |
 | `systemctl status report.service` | como a última execução terminou |
 
-O `report.timer` da seção 12 só vai disparar às três da manhã, mas o serviço
-dele pode ser iniciado à mão, que é o teste que a seção 12 recomendou — e aí tudo
+O `report.timer` da seção 10 só vai disparar às três da manhã, mas o serviço
+dele pode ser iniciado à mão, que é o teste que a seção 10 recomendou — e aí tudo
 naquela tabela tem algo a dizer:
 
 ```
@@ -97,8 +97,9 @@ TriggeredBy=report.timer
 **O journal tem a execução**: o systemd iniciando o serviço, a saída do próprio
 script com o nome e o id de processo dele — `report.sh[5547]: report ran` — e o
 serviço terminando. O `systemctl show` diz como a última execução terminou,
-`Result=success` com status de saída 0, e qual timer o inicia. É tudo o que o e-mail de um job do cron
-teria dito, e mais, sem nenhum sistema de e-mail envolvido.
+`Result=success` com status de saída 0, e qual timer o inicia. É tudo o que o
+e-mail de um job do cron teria dito, e mais, sem nenhum sistema de e-mail
+envolvido.
 
 **O journal é a vantagem do timer sobre o cron aqui.** A saída de um job do cron
 vai para o e-mail — se houver um MTA, se alguém ler. O job de um timer roda sob o

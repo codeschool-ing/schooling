@@ -67,8 +67,8 @@ line two$
 ```
 
 A file edited on Windows has `\r\n` at the end of every line. Section 05's `cat -A` shows it as
-`^M$`, and a shell script with those endings fails with an error that names a command you can see
-is spelled correctly — because the command it actually tried to run had an invisible carriage
+`^M$`. A shell script with those endings fails with an error that names a command you can see is
+spelled correctly, because the command it actually tried to run had an invisible carriage
 return on the end of its name.
 
 `-c` complements the set, so `-dc` is "delete everything except". That last line is the sanitiser

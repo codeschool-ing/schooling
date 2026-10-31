@@ -27,7 +27,7 @@ Get-Doubled: Cannot process argument transformation on parameter 'Number'. Canno
 ```
 
 Nothing inside the function had to test anything. Compare with lesson 9's
-`logreport.sh`, which spends four lines checking that `-t` is a number.
+report script, which checks `-t` by hand with a regular expression and a `die`.
 
 The declaration grows as far as you need:
 
@@ -138,7 +138,7 @@ got access.log
 got sales.csv
 ```
 
-**Two files went in and the first one said one.** The body ran once, at the end,
+**Two files went in and the first function reported one.** The body ran once, at the end,
 with `$Item` holding whatever arrived last. No error — the usual shape.
 
 `[Parameter(ValueFromPipelineByPropertyName)]` is the other one: it fills

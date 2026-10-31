@@ -59,7 +59,7 @@ the UTC minute, on a machine where New York was four hours behind.
 
 So on this cron, `CRON_TZ` is an ordinary environment variable: exported into the
 job, ignored by the scheduler. A line written for `08:30 New York` runs at 08:30
-UTC — three and a half hours early in summer, and nothing warns you.
+UTC — four hours early in summer, and nothing warns you.
 
 **The portable way is to do the conversion yourself**, once, in the crontab, with
 a comment:
