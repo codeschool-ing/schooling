@@ -46,6 +46,6 @@ Providers change their terms, their regions and their subprocessors. The assessm
 least once a year, and whenever the provider announces a change to its terms**, by running the same
 list against the new answers. And the exit is planned on the first day rather than the last: which
 model version the assistant pins, how the data is deleted and confirmed, and what Tarefa would switch
-to. **A provider Tarefa cannot leave is a provider whose next price rise Tarefa cannot refuse**, and
-that is a security question as much as a commercial one, because the day a provider stops meeting a
-MUST is the day leaving has to be possible.
+to. **A provider Tarefa cannot leave is a provider whose next price rise Tarefa cannot refuse.** That
+is a security question as much as a commercial one, because the day a provider stops meeting a MUST
+is the day leaving has to be possible.

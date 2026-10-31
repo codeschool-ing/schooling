@@ -94,7 +94,7 @@ aa32449d3f    1800        4        2.2
 
 `r6` goes first, though it arrived late in the week: a reply that insulted a freelancer is published
 harm, and it is looked at within the hour. `r4` is next, the same day: a client says the reply
-repeated their message with their CPF in it, which is personal data in a place it should not be, and
+repeated their message with their CPF in it. That is personal data in a place it should not be, and
 possibly lesson 11's log, lesson 12's provider and lesson 5's filter all at once. The six `wrong`
 reports wait for the weekly review, because a wrong answer costs the client time, and the review is
 where patterns show. The two `other` reports are ordinary support questions that arrived through the

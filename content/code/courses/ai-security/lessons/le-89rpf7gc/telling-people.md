@@ -111,7 +111,7 @@ Art. 48 §1 lists what goes in, and every item can be written from INC-7's file:
 | the measures taken or to be taken to reverse or mitigate the effects | key revoked in 28 minutes; new key limited to refunds; prompt fixed; the clients told |
 
 The clients are told within the same three working days, in plain words: what happened, which of
-their data, what Tarefa did, and **what they can do**, which here is to distrust any message that
+their data, what Tarefa did, and **what they can do**. Here that is to distrust any message that
 quotes their payment and asks for money or a code. A message that only apologises leaves them with
 nothing to act on.
 
