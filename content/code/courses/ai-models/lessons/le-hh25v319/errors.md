@@ -74,7 +74,7 @@ the line in another place, and a few labelled borderline cases move the line.
 Five cases are wrong for all three models: c10, c24, c26, c32 and c34. Two of them are the ones ana
 hesitated over in section 03, the school discount and the refund of the difference. **When every
 candidate disagrees with a label, suspect the label before the models.** Here they do not even
-agree with each other: for c24, qwen2.5:3b says `product-question` and llama3.2:3b a list starting
+agree with each other. For c24, qwen2.5:3b says `product-question` and llama3.2:3b a list starting
 with `order-status`, which is a sign of a hard case rather than of a wrong label.
 
 And then the 1b, whose first six of thirty-six are typical:

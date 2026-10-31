@@ -80,7 +80,7 @@ chance of declaring a busy neighbour dead when it was only slow to answer, and t
 both ends of each link.
 
 The usual answer on real networks is **BFD** (*Bidirectional Forwarding Detection*), which lesson 15
-named: a separate, very light protocol that exchanges hellos many times a second and tells OSPF the
+named. It is a separate, very light protocol that exchanges hellos many times a second and tells OSPF the
 moment a neighbour stops answering, so OSPF's own timers can stay at their defaults. It was not run in this
 lab.
 

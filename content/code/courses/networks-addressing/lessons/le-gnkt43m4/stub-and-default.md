@@ -65,6 +65,6 @@ to r2 still pulled, r2 has no route to pc1's network, so a default towards r2 wo
 a router that could only answer `!N`. **Choosing where the default points is the one routing
 decision a stub makes**, and it has to be made knowing what lies behind the next hop.
 
-The pattern this lesson ends with is the one that survives in practice: a stub at the edges with a
-single default, a specific route back towards it from the core, and a routing protocol in the middle
-wherever there is more than one way to go. Lesson 16 starts on the middle.
+The pattern this lesson ends with is the one that survives in practice. A stub at the edges holds a
+single default, the core holds a specific route back towards it, and a routing protocol runs in the
+middle wherever there is more than one way to go. Lesson 16 starts on the middle.

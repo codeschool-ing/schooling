@@ -90,7 +90,7 @@ exemplos, para dois commits que nunca tocam num preço negativo: as convenções
 `money.py`. Mais dois vêm entre aspas e um entre crases, o que o projeto também não escreve. **As
 checagens mediram exatamente o que foram escritas para medir**, e um exemplo copiado palavra por
 palavra cumpre toda regra de forma. Uma quinta checagem, de que um assunto igual a um exemplo falha,
-levaria a nota de catorze para nove, e é a próxima coisa que a ana acrescenta, porque uma checagem é
+levaria a nota de catorze para nove. É a próxima coisa que a ana acrescenta, porque uma checagem é
 mais barata de escrever do que a discussão sobre se a nota era real.
 
 É assim que uma avaliação cresce: uma rodada, uma leitura do que passou, e uma checagem para o que não

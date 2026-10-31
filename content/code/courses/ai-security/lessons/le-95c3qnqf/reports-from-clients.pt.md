@@ -94,7 +94,7 @@ aa32449d3f    1800        4        2.2
 
 A `r6` vem primeiro, embora tenha chegado no fim da semana: uma resposta que ofendeu um freelancer é um
 dano publicado, e é olhada em até uma hora. A `r4` vem em seguida, no mesmo dia: um cliente diz que a
-resposta repetiu a mensagem dele com o CPF dentro, que é dado pessoal num lugar onde não deveria
+resposta repetiu a mensagem dele com o CPF dentro. Isso é dado pessoal num lugar onde não deveria
 estar, e possivelmente no log da aula 11, no fornecedor da aula 12 e no filtro da aula 5 de uma vez. As
 seis denúncias `wrong` esperam a revisão semanal, porque uma resposta errada custa tempo ao cliente, e
 a revisão é onde os padrões aparecem. As duas `other` são perguntas comuns de suporte que chegaram pelo

@@ -4,7 +4,7 @@ version: 1
 ---
 
 As verificações da aula 13 funcionam quando alguém as roda. **Integração contínua é o arranjo em
-que ninguém precisa rodar**: toda mudança enviada ao repositório compartilhado é testada
+que ninguém precisa rodar.** Toda mudança enviada ao repositório compartilhado é testada
 automaticamente, uma mudança que falha é recusada antes que alguém construa em cima dela, e o que
 chega à branch principal é implantado pela mesma maquinaria todas as vezes. A pessoa que faz a
 mudança deixa de ser o que garante que as verificações rodaram.

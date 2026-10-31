@@ -15,7 +15,7 @@ fixo, gestor, mesa. Esse arranjo não tem férias remuneradas, *13º salário* n
 negociados no preço, e a aula 17 faz a conta de compará-lo com um salário *CLT*.
 
 **Trabalhar para uma empresa de fora** a partir do Brasil é comum em desenvolvimento e cada vez mais em
-suporte, e costuma ser um contrato do mesmo tipo: você fatura em dólar ou euro como empresa, ou por meio de
+suporte. Costuma ser um contrato do mesmo tipo: você fatura em dólar ou euro como empresa, ou por meio de
 uma intermediária que o emprega aqui. Paga numa moeda mais forte e pede duas coisas que um primeiro emprego
 raramente tem: **inglês de trabalho**, falado além de escrito, e **a capacidade de trabalhar sem ninguém do
 lado**.

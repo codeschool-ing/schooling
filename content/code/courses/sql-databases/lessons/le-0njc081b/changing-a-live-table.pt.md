@@ -31,28 +31,34 @@ as duas conseguem viver.
 
 O truque é que o PostgreSQL confia num `CHECK` que ele já validou.
 
-```sql
--- 1. add the rule, NOT VALID: instant, no scan, applies to new rows only
-ALTER TABLE invoices
-    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;
-
--- 2. backfill the existing nulls, in batches, at your own pace
-UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;
--- … repeat
-
--- 3. validate: scans, but takes only a SHARE UPDATE EXCLUSIVE lock,
---    so reads and writes continue
-ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;
-
--- 4. now SET NOT NULL is instant, because the proof already exists
-ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;
-ALTER TABLE invoices DROP CONSTRAINT invoices_status_present;
+```schooling-example
+{
+  "language": "sql",
+  "parts": [
+    {
+      "code": "ALTER TABLE invoices\n    ADD CONSTRAINT invoices_status_present CHECK (status IS NOT NULL) NOT VALID;\n",
+      "note": "**Acrescente a regra, `NOT VALID`.** É instantâneo, não varre nada e vale só para linhas novas."
+    },
+    {
+      "code": "UPDATE invoices SET status = 'draft' WHERE status IS NULL AND id BETWEEN 1 AND 100000;\n",
+      "note": "**Preencha os nulos existentes**, em lotes, no seu ritmo — e repita até não sobrar nenhum."
+    },
+    {
+      "code": "ALTER TABLE invoices VALIDATE CONSTRAINT invoices_status_present;\n",
+      "note": "**Valide.** Este varre, mas pega só um lock `SHARE UPDATE EXCLUSIVE`, então leituras e escritas continuam."
+    },
+    {
+      "code": "ALTER TABLE invoices ALTER COLUMN status SET NOT NULL;\nALTER TABLE invoices DROP CONSTRAINT invoices_status_present;",
+      "note": "**Agora o `SET NOT NULL` é instantâneo**, porque a prova já existe, e a restrição auxiliar pode sair."
+    }
+  ]
+}
 ```
 
-Quatro comandos em vez de um, e em nenhum momento a tabela fica travada por mais que um instante.
+Quatro passos em vez de um comando, e em nenhum momento a tabela fica travada por mais que um instante.
 
 **`NOT VALID` é a ideia central e ela generaliza.** Significa *"aplique esta regra de agora em
-diante, e não confira o que já está aqui"* — que é exatamente o que você quer, porque as linhas novas
+diante, e não confira o que já está aqui"*. É exatamente o que você quer: as linhas novas
 são as que você controla, e as antigas você conserta na sua velocidade. Chaves estrangeiras também
 aceitam:
 

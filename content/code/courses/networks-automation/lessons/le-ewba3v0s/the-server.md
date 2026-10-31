@@ -71,7 +71,7 @@ exit 1
 
 `test.sh` is lesson 13's offline checks in order of cost, and `set -e` stops it at the first one
 that fails. `deploy.sh` renders, applies, and then runs the post-check up to six times, ten seconds
-apart, which is lesson 13's lesson about convergence turned into a loop: a network still converging
+apart. That is lesson 13's lesson about convergence turned into a loop: a network still converging
 gets a minute, and one that is broken is reported at the end of it.
 
 The hooks themselves are installed in the server's repository, outside the project, as

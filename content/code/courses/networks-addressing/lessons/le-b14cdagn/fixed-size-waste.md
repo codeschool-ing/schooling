@@ -3,7 +3,7 @@ title: Equal subnets, unequal needs
 version: 2
 ---
 
-Lesson 12 cut a block into subnets with one mask, so every piece came out the same size. That works
+Cut a block into subnets with one mask and every piece comes out the same size. That works
 when the networks are the same size, and real ones almost never are. **VLSM** (*Variable Length
 Subnet Masking*) is the plain idea of giving each subnet the mask that fits it, and this lesson
 plans, builds and breaks one.
@@ -17,7 +17,7 @@ The company in this lesson's lab has one block, 10.20.32.0/24, and four networks
 | operations | 20 |
 | the link between the routers r1 and r2 | 2 |
 
-The tempting first move is the one lesson 12 taught: four networks, so cut the /24 into four equal
+The tempting first move is the plainest one: four networks, so cut the /24 into four equal
 pieces. Two bits of the host part go to the subnet number, which leaves a /26. This lesson runs on lesson 12's
 network, `plan.sh`, built with `sudo bash ~/netlab/netlab.sh up plan`, and on hq1 `ipcalc` shows what
 one of those pieces holds:

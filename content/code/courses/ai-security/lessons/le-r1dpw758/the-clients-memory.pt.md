@@ -36,7 +36,7 @@ Uma memória é escrita num lugar e copiada para outros. Apagar a linha no depó
 
 Um botão de "esquecer" honesto diz o que apaga e o que não consegue apagar. Um pedido para apagar tudo
 sobre uma pessoa é uma operação diferente e maior, e o depósito de memórias é um dos lugares que ela
-precisa alcançar, o que é um motivo para manter o depósito simples o bastante para achar uma pessoa
+precisa alcançar. Isso é um motivo para manter o depósito simples o bastante para achar uma pessoa
 nele.
 
 ## Uma memória é texto que o cliente escreveu

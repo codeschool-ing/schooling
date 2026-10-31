@@ -40,7 +40,7 @@ ana@lab:~/emb$ python search.py "the box never showed up"
 
 **The money-back question puts the refund article second, behind the gift article, as in lesson
 1**, but this time against all 40 articles rather than six that were picked for it. *the box never showed up* finds **A parcel marked as delivered that
-never arrived** at 0.458, without one meaningful word in common.
+never arrived** at 0.458, though the question shares only the word *never* with that title.
 
 Look at what comes second and third for the box. **Resetting your password** at 0.300 and **Wrong
 book in the parcel** at 0.290 have nothing to do with a missing parcel. A search always returns `k`

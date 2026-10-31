@@ -54,7 +54,7 @@ double(5)                   # 10
 ```
 
 `multiply` lembra de `n` depois que `multiplier` já devolveu. Isso é um FECHAMENTO, é a
-maquinaria do `nonlocal` de duas seções atrás, e é a única ideia com que a aula 12 constrói
+maquinaria do `nonlocal` de três seções atrás, e é a única ideia com que a aula 12 constrói
 decoradores.
 
 ## Por que isso importa antes da aula 12

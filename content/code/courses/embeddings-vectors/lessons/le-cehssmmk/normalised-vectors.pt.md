@@ -52,9 +52,9 @@ q21  raw h37  cosine h05  relevant h05
 
 ## Comprimento não é significado
 
-**A palavra *refund* ("reembolso") sozinha tem um vetor de comprimento 9,104; o título *When your
+**A palavra *refund* ("reembolso") sozinha tem um vetor de comprimento 9,104.** O título *When your
 refund arrives* ("quando o seu reembolso chega") tem 3,945, e os 40 artigos vão de 1,212 a
-2,280.** O WordLlama tira a média dos vetores fixos dos tokens de um texto, e a média de setas que
+2,280. O WordLlama tira a média dos vetores fixos dos tokens de um texto, e a média de setas que
 apontam para muitos lados é mais curta que as próprias setas. Uma palavra sozinha não entra em média
 com nada, então continua comprida. O comprimento registra o quanto os tokens de um texto discordam
 entre si, e não é isso que uma busca quer saber.
@@ -62,7 +62,7 @@ entre si, e não é isso que uma busca quer saber.
 O produto escalar conta isso mesmo assim. Diante de *discount for a classroom set* ("desconto para
 um lote de livros para a turma"), o produto escalar puro põe **Audiobooks** ("audiolivros") em
 primeiro, 1,707 contra 1,554 de **Orders for schools and libraries** ("pedidos para escolas e
-bibliotecas"), o artigo que de fato oferece 15% de desconto às escolas. Audiobooks ganha no
+bibliotecas"). Esse é o artigo que de fato oferece 15% de desconto às escolas. Audiobooks ganha no
 comprimento, 1,905 contra 1,490. Tire os comprimentos e a ordem se inverte: cosseno 0,212 para
 Audiobooks e 0,247 para o artigo das escolas.
 

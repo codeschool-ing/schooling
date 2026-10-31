@@ -33,7 +33,7 @@ class Countdown:                     # the same thing, by hand
         return self.n + 1
 ```
 
-Eight lines against three, and the eight have a place to put a bug. **Anything you would write as
+Six lines against three, and the six have a place to put a bug. **Anything you would write as
 a class holding a position is a generator instead**, and the last section of this lesson writes
 one both ways on purpose.
 

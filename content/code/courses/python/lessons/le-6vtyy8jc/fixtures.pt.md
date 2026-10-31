@@ -61,8 +61,8 @@ def test_writes_a_file(tmp_path):
     assert p.read_text().startswith("BRL")
 ```
 
-`tmp_path` é um diretório novo por teste, com o nome dele — `/tmp/pytest-of-voce/pytest-0/
-test_escreve_um_arquivo0/`. `capsys` captura o que foi impresso, `monkeypatch` desfaz o que
+`tmp_path` é um diretório novo por teste, com o nome dele — `/tmp/pytest-of-you/pytest-0/
+test_writes_a_file0/`. `capsys` captura o que foi impresso, `monkeypatch` desfaz o que
 mudou, `caplog` recolhe registros de log. `pytest --fixtures` lista toda fixture disponível onde
 você está.
 

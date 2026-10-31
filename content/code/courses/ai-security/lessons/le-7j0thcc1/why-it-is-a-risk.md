@@ -28,7 +28,7 @@ has invented a product.
 Three properties put it in this course rather than only in a quality review:
 
 - **It is exploitable.** When a model reliably invents the same name, such as a software package,
-  somebody can register that name and wait. The third section of this lesson is that case.
+  somebody can register that name and wait. This lesson's section *Names that do not exist yet* is that case.
 - **It carries authority it has not earned.** A wrong answer from a form that says *"we will reply in
   two days"* is visibly a guess. A wrong answer in the assistant's confident voice is read as policy.
 - **It cannot be fixed inside the model.** Better models invent less; none invents nothing. The

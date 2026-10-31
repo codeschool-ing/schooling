@@ -65,5 +65,5 @@ Quando a subclasse É o pai em todo lugar em que o pai é usado, e só muda COMO
 `Student` é uma `Person` — todo método que recebe uma `Person` funciona com um.
 
 **Quando a subclasse precisa recusar um método do pai** — "um quadrado é um retângulo, mas mudar a
-largura dele tem de mudar a altura" — a relação não era o que parecia. A seção depois da próxima é
-a alternativa.
+largura dele tem de mudar a altura" — a relação não era o que parecia. A composição, três seções
+adiante, é a alternativa.

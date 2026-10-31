@@ -32,7 +32,7 @@ for order in orders:
     if order.customer_id in blocked_list:            # a loop, inside an operator
 ```
 
-`in` contra uma lista. Duas seções atrás.
+`in` contra uma lista, que é a seção 05 desta aula.
 
 ```python
 matched = [(c, o) for o in orders for c in customers if c.id == o.customer_id]

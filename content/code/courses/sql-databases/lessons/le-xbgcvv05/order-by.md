@@ -45,7 +45,7 @@ PostgreSQL treats null as larger than everything, so it lands last ascending and
 the empty ones at the bottom on one database puts them at the top on another.
 
 Say `NULLS FIRST` or `NULLS LAST` whenever the column is nullable and the position matters. It is
-four characters and it removes a difference nobody tests for.
+two words and it removes a difference nobody tests for.
 
 ## Sorting by something you computed
 

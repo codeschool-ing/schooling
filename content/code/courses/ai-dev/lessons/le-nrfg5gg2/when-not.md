@@ -18,7 +18,7 @@ yours to decide.
   generated `verify_signature` that returns `True` on a malformed input passes every test that
   only checks valid signatures. Lesson 11 comes back to this.
 - **Money, dates and units**, where the obvious code is subtly wrong. Lesson 3 section 07 found a
-  rounding bug in four lines of the shop's own code. These are the places to write the tests first
+  rounding bug in a three-line function of the shop's own code. These are the places to write the tests first
   and keep the assistant's suggestion only if it passes them.
 
 ## When it is not yours to decide

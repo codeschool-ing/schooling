@@ -8,7 +8,7 @@ nova. A pergunta desta aula é **quando o software da loja chega a esse disco**,
 respostas.
 
 **Configurar no boot** liga toda máquina a partir de uma imagem limpa e instala o que ela precisa
-enquanto ela sobe: um script entregue à máquina no lançamento (na AWS, o *user data*, que o
+enquanto ela sobe. Pode ser um script entregue à máquina no lançamento (na AWS, o *user data*, que o
 cloud-init executa), ou o Ansible entrando um minuto depois, como na aula 18. Em inglês isso tem
 apelido, *frying*, fritar: o trabalho é feito na hora, toda vez, na máquina que precisa dele.
 

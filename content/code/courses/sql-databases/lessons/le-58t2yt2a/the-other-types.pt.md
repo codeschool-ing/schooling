@@ -114,6 +114,5 @@ FTS5, e não um tipo de índice.
 | **hash** | igualdade num valor longo, e mais nada | PostgreSQL, raramente vale |
 
 O que se leva de útil não é a tabela. É que **`LIKE '%…%'`, buscar dentro de uma coluna JSON e "duas
-reservas não podem se sobrepor" são todos solúveis** — e que, se você está no MySQL ou no SQLite,
-dois deles são solúveis de outro jeito e um não é, o que é algo a saber antes de projetar a
-funcionalidade e não depois.
+reservas não podem se sobrepor" são todos solúveis.** No MySQL ou no SQLite, dois deles são
+solúveis de outro jeito e um não é — algo a saber antes de projetar a funcionalidade e não depois.

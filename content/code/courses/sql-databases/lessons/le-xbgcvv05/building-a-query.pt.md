@@ -47,7 +47,7 @@ ORDER BY price DESC, id
 LIMIT  20;
 ```
 
-O `, id` é a regra da seção anterior, e acrescentá-lo no mesmo momento que o `LIMIT` é como você para
+O `, id` é a regra da seção `order-by`, e acrescentá-lo no mesmo momento que o `LIMIT` é como você para
 de esquecer.
 
 ## Conferindo uma resposta que você não verifica a olho

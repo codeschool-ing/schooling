@@ -27,5 +27,5 @@ User=sales
 - E o arquivo explica o erro: pertence ao `root` com modo `600`, legível só pelo root, enquanto o serviço
   roda como o usuário `sales`.
 
-Isso é uma causa, achada em quatro comandos, por alguém que não é dono do sistema. A próxima seção é sobre
+Isso é uma causa, achada em quatro linhas de comando, por alguém que não é dono do sistema. A próxima seção é sobre
 o que fazer com ela.

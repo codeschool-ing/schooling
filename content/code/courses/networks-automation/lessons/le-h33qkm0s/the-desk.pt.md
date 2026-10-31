@@ -5,9 +5,9 @@ version: 1
 
 Os sistemas de chamados que as pessoas usam no trabalho, o ServiceNow, o Jira Service Management ou
 as centrais open source como o Zammad e o GLPI, ou são licenciados ou são um pequeno data center para
-instalar, e esta aula precisa só da parte que todos têm em comum: chamados com número, status e
-comentários, por trás de uma API JSON que recebe um token. A central de chamados do laboratório é
-essa parte, um programa chamado `deskd` escrito para este curso, e roda na máquina chamada
+instalar. Esta aula precisa só da parte que todos têm em comum: chamados com número, status e
+comentários, por trás de uma API JSON que recebe um token. **A central de chamados do laboratório é
+essa parte**, um programa chamado `deskd` escrito para este curso, e roda na máquina chamada
 `tickets`.
 
 Ele é curto o bastante para ler inteiro, e lê-lo diz exatamente o que a última seção desta aula pode

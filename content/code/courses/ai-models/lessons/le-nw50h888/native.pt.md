@@ -68,7 +68,7 @@ user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.13.16
 }
 ```
 
-A mesma requisição um instante depois levou 0,42 segundo, porque o modelo já estava carregado, e
+A mesma requisição um instante depois levou 0,42 segundo, porque o modelo já estava carregado. E
 respondeu `order-status` onde a primeira disse `other.`: mesmo com temperatura 0 um modelo pode
 responder a mesma pergunta de dois jeitos, como a seção 08 da aula 5 avisou. Os ajustes que uma API
 põe no nível de cima, o Ollama põe em `options`: `temperature` aqui, e `num_ctx` na seção 04.

@@ -8,7 +8,7 @@ Michael Widenius — que escreveu a primeira versão do MySQL e a batizou com o 
 forkou o código e começou o MariaDB, com o nome da outra filha. Essa é a origem inteira, e ela
 explica as duas coisas que as pessoas erram sobre a dupla.
 
-**Não são duas marcas do mesmo produto.** São desenvolvidos separadamente há quinze anos por times
+**Não são duas marcas do mesmo produto.** São desenvolvidos separadamente há mais de quinze anos por times
 diferentes com prioridades diferentes.
 
 **Também não são dois bancos diferentes.** Compartilham um ancestral, um protocolo de rede, um
@@ -17,11 +17,11 @@ nos dois sem um caractere mudar.
 
 ## O que ainda é igual
 
-Toda captura desta aula que não era sobre `RETURNING` ou `GROUP BY` voltou idêntica dos dois. O
-mesmo `CREATE TABLE` carregou nos dois sem edição. `AUTO_INCREMENT`, `DESCRIBE`,
+O mesmo `CREATE TABLE` carregou nos dois sem edição. `AUTO_INCREMENT`, `DESCRIBE`,
 `SHOW CREATE TABLE`, `||` como OU, `5 / 2` como `2.5000`, a collation padrão que ignora caixa, o
 InnoDB como motor de armazenamento, o DDL confirmando implicitamente — tudo compartilhado, porque
-tudo herdado.
+tudo herdado. Onde esta aula capturou o MariaDB, foi para mostrar onde os dois se separam:
+`sql_mode`, `GROUP BY` e `RETURNING`.
 
 O cliente também é compartilhado: o `mysql` conecta num servidor MariaDB e o `mariadb` conecta num
 MySQL, porque o protocolo é o mesmo. A maioria dos drivers lista um e fala com os dois.
@@ -40,8 +40,8 @@ MySQL, porque o protocolo é o mesmo. A maioria dos drivers lista um e fala com 
 | licença do motor | GPL, mais uma edição comercial | só GPL |
 | replicação | a própria, mais Group Replication | a própria, mais Galera |
 
-As capturas do `DESCRIBE` da seção anterior mostram a terceira linha sem que ninguém peça: o
-MariaDB imprimiu `int(11)` e o MySQL imprimiu `int`. O número nunca foi um limite de largura — é
+A captura do `DESCRIBE` da seção anterior mostra a metade do MySQL na terceira linha sem que
+ninguém peça: `int`, sem número depois. O MariaDB mantém o número e imprime `int(11)`. O número nunca foi um limite de largura — é
 uma dica de exibição que quase nada jamais usou — e o MySQL 8 a removeu enquanto o MariaDB a
 manteve. É a menor diferença possível e é um bom exemplo da forma: cosmética, inofensiva, e
 suficiente para deixar um diff de esquema entre os dois barulhento.
@@ -64,8 +64,8 @@ licença que alguém consiga apontar.
 replicação multi-primária. Ou porque sua distribuição Linux entrega MariaDB como padrão, o que
 muitas fazem, e é assim que a maioria das pessoas acaba nele sem nunca escolher.
 
-**Nenhum dos dois, se a decisão estiver mesmo aberta.** Soa cínico e é a leitura honesta desta aula
-até aqui: se nada te obriga, as seções sobre rigor são um argumento a favor do PostgreSQL, e o
+**Nenhum dos dois, se a decisão estiver mesmo aberta.** Soa cínico, e é a leitura honesta desta aula
+até aqui. Se nada te obriga, as seções sobre rigor são um argumento a favor do PostgreSQL. O
 motivo de estar no MySQL ou no MariaDB quase sempre é que você já está.
 
 ## Migrar entre os dois

@@ -10,8 +10,8 @@ them. Written into `inventory.ini` by hand, they would be correct until the firs
 replaced, and then wrong with nothing to say so.
 
 So Terraform writes the inventory. The `local_file` resource of the `local` provider writes a file
-on the laptop, and `templatefile` fills the file from a template, the same `%{ for }` directives
-lesson 3 used:
+on the laptop, and `templatefile` fills the file from a template, with a `%{ for }`
+directive, which lesson 3 introduced alongside `%{ if }`:
 
 ```hcl
 terraform {

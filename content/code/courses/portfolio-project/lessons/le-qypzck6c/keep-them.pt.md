@@ -4,7 +4,7 @@ version: 1
 ---
 
 Nada disso significa apagar o que serviu para você aprender. Os tutoriais que você seguiu são o registro
-de como você chegou aqui, e alguns leitores gostam de ver. O que importa é onde eles ficam.
+de como você chegou aqui, e alguns leitores gostam de ver. **O que importa é onde eles ficam.**
 
 - **Deixe públicos, e não fixe.** O problema do museu da aula 1 é sobre o que é visto primeiro, não sobre
   o que existe.

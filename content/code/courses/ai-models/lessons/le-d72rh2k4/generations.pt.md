@@ -54,7 +54,7 @@ Llama 4 Scout (17b 16 experts instruct model)
 Llama 4 Scout (17b 16 experts model)
 ```
 
-Leia como quatro gerações, cada uma respondendo a uma pergunta diferente:
+Leia em cinco grupos, cada um respondendo a uma pergunta diferente:
 
 - **Llama 2 e Llama 3**: dois ou três tamanhos, cada um como `model` base e como modelo ajustado
   `chat` ou `instruct`, os dois tipos da aula 1 seção 07 lado a lado.

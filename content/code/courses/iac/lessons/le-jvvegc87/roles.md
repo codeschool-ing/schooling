@@ -60,7 +60,7 @@ shop_server_name: shop.example.com
 shop_root: /var/www/shop
 ```
 
-The tasks move unchanged, with one level of indentation less because they are no longer inside a
+The tasks move unchanged, indented four spaces less because they are no longer inside a
 play:
 
 ```yaml

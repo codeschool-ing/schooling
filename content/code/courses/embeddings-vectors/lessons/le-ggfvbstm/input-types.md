@@ -26,7 +26,8 @@ name `task`.
 `search.py` runs the help centre's search through Cohere's SDK: the articles as
 `search_document`, the 24 customer questions as `search_query`, and the measure lesson 3 builds.
 That measure counts a question as answered when one of its relevant articles is ranked first, or
-among the first three. The last two lines send the questions with the wrong type on purpose:
+among the first three. The program's last two runs send the questions with the wrong type on
+purpose:
 
 ```schooling-example
 {
@@ -56,8 +57,9 @@ among the first three. The last two lines send the questions with the wrong type
 
 **All three lines are the same, 19 at rank 1 and 22 in the top 3.** labembed embeds every question
 the same way whatever type it arrives with, so the three runs compared the same vectors. That is the
-expected result in this lab and the one to distrust everywhere else. Against an asymmetric model the first line is the one it was trained for and the other two are not, and a
-careless pipeline that indexes and asks with the same type is wrong in a way no error reports.
+expected result in this lab and the one to distrust everywhere else. Against an asymmetric model the
+first line is the one it was trained for and the other two are not. A careless pipeline that
+indexes and asks with the same type is then wrong in a way no error reports.
 
 This is also how you find out whether the type matters for a model you are choosing. Run the same
 measurement with the right pair and with a wrong one, on your own questions. If the two lines

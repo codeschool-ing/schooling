@@ -82,9 +82,9 @@ HOLD for a person: the draft promises a refund
 ok to send
 ```
 
-**The first draft is held for a person; the second goes.** The check does not understand a draft; it
+**The first draft is held for a person; the second goes.** The check does not understand a draft. It
 looks for promises that only a tool result could back, in either order, *refund processed* or
-*processed your refund*, and it errs towards holding, which costs a person a minute and costs the shop
+*processed your refund*. It errs towards holding, which costs a person a minute and costs the shop
 nothing. It passed the second draft, which promises nothing and is still wrong about the mugs. **A
 check for one kind of mistake is silent about every other kind**, which is why the next defence is a
 person.

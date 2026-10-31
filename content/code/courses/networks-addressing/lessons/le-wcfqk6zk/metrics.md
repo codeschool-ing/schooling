@@ -4,7 +4,7 @@ version: 2
 ---
 
 Longest prefix cannot choose between two routes to the same prefix: they are the same length. Then
-the **metric** decides, and **the lower metric wins**. It is a cost, and the router takes the
+the metric decides, and **the lower metric wins**. It is a cost, and the router takes the
 cheaper road. The most common reason to have two such routes is a backup: two ways out, one
 preferred, the other waiting.
 

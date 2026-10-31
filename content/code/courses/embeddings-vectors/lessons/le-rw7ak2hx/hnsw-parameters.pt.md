@@ -91,8 +91,8 @@ consulta numa escala em que cada passo dobra.
 vetores reais, uma estrutura que as células do k-means capturam excepcionalmente bem, e em outros
 dados a ordem pode se inverter. O que as curvas mostram em geral é a forma: o recall sobe rápido e
 depois achata, então os últimos milésimos custam tanto tempo quanto tudo o que veio antes. O HNSW
-continua sendo o padrão que a maioria dos sistemas escolhe, por motivos que este gráfico não mostra:
-ele não precisa de treino, recebe vetores um de cada vez enquanto a coleção existir e não tem células
+continua sendo o padrão que a maioria dos sistemas escolhe, por motivos que este gráfico não mostra.
+Ele não precisa de treino, recebe vetores um de cada vez enquanto a coleção existir e não tem células
 que envelhecem quando os dados mudam de perfil.
 
 ## Os mesmos três em outros lugares

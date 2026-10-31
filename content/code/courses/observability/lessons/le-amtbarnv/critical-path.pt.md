@@ -13,7 +13,7 @@ momento.
 
 Na loja toda chamada é feita uma depois da outra, então o caminho crítico de um checkout é ele
 inteiro, e a lição é aritmética. Dos 439 ms, a rede de cartões responde por 400. Deixar o `INSERT`
-dez vezes mais rápido economiza menos de um milissegundo, e acabar com a conexão que o `orders` abre
+dez vezes mais rápido economiza cerca de um milissegundo, e acabar com a conexão que o `orders` abre
 por mensagem economiza talvez vinte. **A única mudança que um cliente poderia notar está no
 payments**.
 

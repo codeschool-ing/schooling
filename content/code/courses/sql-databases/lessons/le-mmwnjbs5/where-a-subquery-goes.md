@@ -26,8 +26,8 @@ SELECT * FROM products
 WHERE  category_id IN (SELECT id FROM categories WHERE archived);
 ```
 
-You have already written the second of those four times in this course, in lessons 5 and 6, without
-it being given a name. This is the name.
+You have already written the second of those several times, in lessons 5 and 6, without it being
+given a name. This is the name.
 
 ## A scalar subquery returns exactly one value
 
@@ -56,9 +56,10 @@ That asymmetry is worth holding on to. Too many rows is loud; no rows is silent.
 SELECT * FROM (SELECT customer_id, count(*) AS orders FROM orders GROUP BY customer_id) t;
 ```
 
-The `t` at the end is not decoration. PostgreSQL and MySQL both refuse a derived table with no
-alias, because every column of it has to be reachable as `something.column`. SQLite is relaxed
-about it; write the alias anyway, so the query means the same thing everywhere.
+The `t` at the end is not decoration. MySQL refuses a derived table with no alias, and so did
+PostgreSQL before version 16, because every column of it has to be reachable as `something.column`.
+PostgreSQL 16 and SQLite are relaxed about it; write the alias anyway, so the query means the same
+thing everywhere.
 
 The same rule applies to the columns inside: `count(*)` with no `AS` gives you a column whose name
 is up to the database, and you cannot refer to it reliably from outside. Name everything a derived

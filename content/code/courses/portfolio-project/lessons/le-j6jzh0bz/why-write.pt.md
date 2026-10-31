@@ -11,7 +11,7 @@ próxima estimativa erra tanto quanto esta, pelo mesmo motivo.
 
 **Quem avalia.** As três provas da aula 1 eram *você termina*, *você decide* e *você explica*. Uma
 retrospectiva acrescenta uma quarta que nenhum outro arquivo do repositório consegue mostrar: **você aprende
-com o próprio trabalho.** Alguém que escreve *as regras levaram cinco dias onde eu estimei três e meio,
+com o próprio trabalho.** Alguém que escreve *o marco das regras levou cinco dias onde eu estimei três e meio,
 porque não contei o tratamento de erros* mostrou um hábito que equipes valorizam mais do que qualquer
 tecnologia.
 

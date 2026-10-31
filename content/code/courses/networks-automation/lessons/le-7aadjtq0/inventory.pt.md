@@ -128,7 +128,7 @@ ana@ctl:~$ cd net && ansible-inventory --host edge1
 }
 ```
 
-As quatro variáveis de conexão são a parte de rede. **`ansible_connection: network_cli` quer dizer
+Três das variáveis de conexão são a parte de rede. **`ansible_connection: network_cli` quer dizer
 "entrar por SSH num CLI"**, como o Netmiko faz, em vez do jeito habitual do Ansible de copiar
 Python para um host Linux e rodá-lo lá, o que um roteador não consegue fazer. O
 `ansible_network_os` nomeia a plataforma, `frr.frr.frr` da collection `frr.frr`, para o Ansible

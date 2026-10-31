@@ -48,7 +48,7 @@ ORDER BY price DESC, id
 LIMIT  20;
 ```
 
-The `, id` is the previous section's rule, and adding it at the same moment as the `LIMIT` is how
+The `, id` is the `order-by` section's rule, and adding it at the same moment as the `LIMIT` is how
 you stop forgetting it.
 
 ## Checking an answer you cannot verify by eye

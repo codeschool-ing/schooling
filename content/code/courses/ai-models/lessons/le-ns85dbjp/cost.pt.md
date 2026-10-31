@@ -67,7 +67,7 @@ Três leituras:
   reclassificar um acúmulo, avaliar candidatos (aula 5).
 - **A saída é uma fatia pequena aqui**, de 5% a 25%. Isso é uma propriedade desta carga, prompt
   longo e resposta curta. Inverta, uma pergunta curta e uma resposta longa, e o preço de saída
-  domina; ele é de quatro a oito vezes o preço de entrada em cinco dos seis provedores acima.
+  domina; ele vai de quatro a pouco mais de oito vezes o preço de entrada em cinco dos seis provedores acima.
 
 Nenhum desses números diz qual modelo escolher. Eles dizem quanto cada um custaria **para esta
 carga**, que é o único custo que significa alguma coisa. Repare que `batch` está em branco em duas

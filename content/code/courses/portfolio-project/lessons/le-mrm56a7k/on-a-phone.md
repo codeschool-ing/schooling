@@ -29,7 +29,7 @@ index 937365a..5659798 100644
 
 Below 36rem, about 576 pixels at the default font size, the table stops being a table. The header row is
 hidden, and every row and cell becomes a block, so each item is a small card: its name, its status, its
-action, one under the other. Nothing scrolls sideways, and the buttons get the full width of the screen.
+action, one under the other. Nothing scrolls sideways, and each cell gets the full width of the screen.
 
 Two things about how this was done are worth copying. **The breakpoint is in `rem`, not pixels**, so a
 reader who has set a larger font gets the phone layout sooner, which is what they need. And **the HTML did
@@ -38,4 +38,5 @@ announces a table with its headers on a large screen.
 
 The check is quick. Open the browser's developer tools, choose a device width of 320, and use the page.
 Then do the same on a real phone, if you have one, because a real thumb finds what a simulated one does not.
-For loanbook, the brief of lesson 4 required it: *a teacher can lend an item from a phone.*
+For loanbook, the brief of lesson 4 required it: *Marta can open it from the IT room and a teacher from a
+phone.*

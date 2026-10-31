@@ -33,7 +33,7 @@ class Countdown:                     # the same thing, by hand
         return self.n + 1
 ```
 
-Oito linhas contra três, e as oito têm onde pôr um defeito. **Qualquer coisa que você escreveria
+Seis linhas contra três, e as seis têm onde pôr um defeito. **Qualquer coisa que você escreveria
 como classe guardando uma posição é um gerador em vez disso**, e a última seção desta aula escreve
 uma dos dois jeitos de propósito.
 

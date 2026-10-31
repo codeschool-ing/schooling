@@ -18,8 +18,8 @@ Três detalhes fazem funcionar:
 
 Se perguntarem primeiro o seu salário atual, você pode responder com a pretensão no lugar: *o que eu procuro
 para esta vaga é…*. E se você já tem a faixa deles pelo anúncio ou pela triagem (aula 11), nem precisa dizer
-um número: *a faixa que vocês mencionaram funciona para mim*, ou *eu esperava a parte de cima dela, pelo
-projeto que fiz.*
+um número. *A faixa que vocês mencionaram funciona para mim* basta, ou *eu esperava a parte de cima dela,
+pelo projeto que fiz.*
 
 Nunca invente uma proposta concorrente para subir o número. É fácil de conferir, e ser pego encerra o
 processo.

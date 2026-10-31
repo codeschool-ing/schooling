@@ -109,6 +109,6 @@ Você não consegue projetar deadlocks para fora por completo. Uma mudança de e
 nova, uma tarefa em lote que alguém acrescentou — cada uma é uma chance de um novo par de ordens.
 Ordem consistente os torna raros, e raro não é nunca.
 
-Então o erro de deadlock entra, junto da falha de serialização da seção anterior, na lista de coisas
-que a sua aplicação precisa saber rodar de novo. Isso é uma seção adiante, e é o mesmo laço para os
-dois.
+Então o erro de deadlock entra, junto da falha de serialização da seção `write-skew`, na lista de
+coisas que a sua aplicação precisa saber rodar de novo. Isso é a seção `retrying`, duas adiante, e é
+o mesmo laço para os dois.

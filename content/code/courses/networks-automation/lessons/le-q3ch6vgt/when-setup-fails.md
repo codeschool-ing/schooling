@@ -91,9 +91,9 @@ netlab: up: OSPF is Full and every service above answers
 `file` agrees. Saving the script from inside the virtual machine, with `nano ~/netlab/netlab.sh`
 and a paste, avoids the problem altogether.
 
-**A service did not start.** Each line of `up` that ends in `started` was checked: the last thing
-the script does is wait until every one of them accepts a connection, and it names any that never
-did with `nothing answers on` and its address. That line means the program started and stopped
+**A service did not start.** Every line of `up` that ends in `started`, apart from `sw1`'s, was
+checked: the last thing the script does is wait until each of those services accepts a connection.
+It names any that never did with `nothing answers on` and its address. That line means the program started and stopped
 again, almost always because it was cut short or changed on its way into the file. Its own error
 is in the file `netlab.sh` sends it to, beside the line that starts it: `/var/log/devapi.err` on
 each router, for instance, which `enter` reads as `root`:

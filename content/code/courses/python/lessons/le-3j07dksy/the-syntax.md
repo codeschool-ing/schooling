@@ -32,8 +32,7 @@ greet(3)          # runs; the annotation is not consulted
 `hello, 3 ` — the `f`-string was happy to format an integer. The failure, when there is one,
 happens later and somewhere else.
 
-That is the single most important sentence in this lesson. A type hint is a note for a reader,
-an editor and a checker, and it is lesson 15 that reads it.
+A type hint is a note for a reader, an editor and a checker, and it is lesson 15 that reads it.
 
 ## Where the annotations go
 

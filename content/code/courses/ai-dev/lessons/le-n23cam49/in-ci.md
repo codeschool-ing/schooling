@@ -20,7 +20,7 @@ useful, and dangerous in the same way an unchecked one would be.**
 
 ## What to keep out of its hands
 
-- **Never the decision to merge.** A bot's approval is a claim, and lesson 4 section 03 showed three
+- **Never the decision to merge.** A bot's approval is a claim, and lesson 4 section 02 showed three
   confident claims, none of them a bug, and the real bug missing. The checks that gate a merge are the ones that are true or
   false: the tests, the linter, the type checker. The bot's comments inform the person who decides.
 - **Not its own triage.** A finding the bot is wrong about should be answered on the pull request,

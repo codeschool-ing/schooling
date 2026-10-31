@@ -3,7 +3,7 @@ title: The follow-up message
 version: 1
 ---
 
-A follow-up is shorter than the first message, and it adds one thing:
+A follow-up is shorter than the first message, and **it adds one thing**:
 
 > Hi Mariana, a quick follow-up on my application for the junior IT support role (ref. 2031), sent on the
 > 3rd. I'm still very interested, and since then I've added a recorded demo of the lab (link). Happy to talk

@@ -14,9 +14,10 @@ ana@obs:~/shop$ ./promq 'otelcol_processor_tail_sampling_sampling_traces_on_memo
 __name__=otelcol_processor_tail_sampling_sampling_traces_on_memory instance=otel-collector:8888 job=otel-collector  707
 ```
 
-707 traces held at this moment, at five checkouts a second. The figure grows with traffic times the
-wait, and `num_traces` is its ceiling. When more traces arrive than it allows, the oldest are
-dropped before any decision is made, and counted in
+707 traces held at this moment. Ten seconds of checkouts at about four and a half a second is some
+45 traces, so the processor holds far more than the traces still waiting for a decision.
+`num_traces` is the ceiling. When more traces arrive than it allows, the oldest go, and one that
+goes before its decision is dropped and counted in
 `otelcol_processor_tail_sampling_sampling_trace_dropped_too_early`. A wait too short decides before
 slow traces end; a wait too long holds more in memory. **The wait should be a little longer than
 your slowest normal request**, which is a number the span metrics in the next section can tell you.

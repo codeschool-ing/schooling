@@ -18,5 +18,5 @@ hora. Escreva as respostas antes da primeira conversa e deixe-as perto do telefo
 - Disponibilidade para as próximas etapas. Quando você poderia fazer uma entrevista técnica, e se
   consegue tirar uma tarde para ela.
 
-Honestidade é mais barata aqui do que em qualquer outro ponto do processo. Um salário ou uma escala que você
+**Honestidade é mais barata aqui do que em qualquer outro ponto do processo.** Um salário ou uma escala que você
 não aceita, escondidos agora, são descobertos na proposta, depois de todo mundo gastar semanas.

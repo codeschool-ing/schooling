@@ -26,11 +26,20 @@ information at the top where a reader sees it before the body.
 
 ## Both forms, side by side
 
-```python
-@timed                          # the name `load_rows` now refers to
-def load_rows(path): ...        # whatever `timed` returned
-
-load_rows = timed(load_rows)    # the same rebinding, said out loud
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "@timed\ndef load_rows(path): ...\n",
+      "note": "The name `load_rows` now refers to whatever `timed` returned."
+    },
+    {
+      "code": "load_rows = timed(load_rows)",
+      "note": "The same rebinding, said out loud."
+    }
+  ]
+}
 ```
 
 The name is rebound. The original function still exists — the wrapper is holding it — but

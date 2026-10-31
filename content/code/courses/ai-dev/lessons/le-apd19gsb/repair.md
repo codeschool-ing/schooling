@@ -3,8 +3,8 @@ title: When the reply does not fit
 version: 2
 ---
 
-The second email of section 06, João's, is the one that goes wrong.
-The first reply to it is not JSON at all.
+The second email of section 06, João's, goes wrong the way the first did:
+the first reply to it is not JSON at all.
 
 ## One more try, with the reason
 

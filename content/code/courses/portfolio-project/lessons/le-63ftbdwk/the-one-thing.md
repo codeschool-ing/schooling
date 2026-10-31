@@ -39,7 +39,7 @@ Both loans were accepted, and the list now shows **Projector 2 twice**, once for
 exactly Marta's first story from lesson 4, reproduced in four commands, and it is the must-not line
 of the brief broken in the most direct way possible.
 
-This is the moment the lesson is about. The skeleton proves that a page, an API and a database can
+The skeleton proves that a page, an API and a database can
 be wired together, which is what every to-do list proves. **The part of loanbook that proves
 something is this refusal**, and it is not in the skeleton. If the project stopped here, it would be
 lesson 2's tutorial with a different noun.

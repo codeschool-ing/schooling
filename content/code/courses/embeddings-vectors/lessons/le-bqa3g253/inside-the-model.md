@@ -5,7 +5,7 @@ version: 1
 
 `model.encode` looks like one operation, and it is four: **cut the text into pieces, run the
 transformer, average the pieces, scale the average to length 1.** sentence-transformers runs them as
-a short list of modules, a transformer with its tokenizer, a pooling module and a normalising one;
+a short list of modules, a transformer with its tokeniser, a pooling module and a normalising one;
 `minilm.py` does the same with onnxruntime.
 
 ```schooling-figure
@@ -27,7 +27,7 @@ implementation of the same model.
     },
     {
       "code": "tok = Tokenizer.from_file(os.path.join(DIR, \"tokenizer.json\"))\ntok.enable_truncation(256)\ntok.enable_padding(pad_id=0, pad_token=\"[PAD]\")\nenc = tok.encode_batch(texts)\nprint(enc[0].tokens)\nprint(enc[0].attention_mask)\nids = np.array([e.ids for e in enc], dtype=np.int64)\nmask = np.array([e.attention_mask for e in enc], dtype=np.int64)",
-      "note": "Step 1. Load the tokenizer, cut at 256 pieces and pad to the longest text in the batch. Print the first title's pieces and its attention mask."
+      "note": "Step 1. Load the tokeniser, cut at 256 pieces and pad to the longest text in the batch. Print the first title's pieces and its attention mask."
     },
     {
       "code": "model = onnxruntime.InferenceSession(os.path.join(DIR, \"model.onnx\"))\nhidden = model.run(None, {\"input_ids\": ids, \"attention_mask\": mask,\n                          \"token_type_ids\": np.zeros_like(ids)})[0]\nprint(\"one vector per piece:\", hidden.shape)",
@@ -52,7 +52,7 @@ implementation of the same model.
 
 ## Pieces, and the mask that marks the padding
 
-The tokenizer split *When your refund arrives* into **word pieces**: lower-cased, with *refund* cut
+The tokeniser split *When your refund arrives* into **word pieces**: lower-cased, with *refund* cut
 into `ref` and `##und` because the vocabulary of 30,522 pieces has no single entry for it. The
 `##` says the piece continues a word. `[CLS]` and `[SEP]` mark the start and the end of every text.
 

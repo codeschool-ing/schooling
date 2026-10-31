@@ -4,7 +4,7 @@ version: 1
 ---
 
 None of this means deleting what you learned from. The tutorials you followed are a record of how
-you got here, and some readers like seeing it. What matters is where they sit.
+you got here, and some readers like seeing it. **What matters is where they sit.**
 
 - **Leave them public, and do not pin them.** Lesson 1's museum problem is about what is seen first,
   not about what exists.

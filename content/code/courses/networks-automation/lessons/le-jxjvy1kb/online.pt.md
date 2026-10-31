@@ -48,8 +48,8 @@ duas interfaces ponto a ponto, então deveria ter dois vizinhos `Full`, e toda i
 uma LAN para a qual todo roteador deveria ter uma rota. Uma filial acrescentada aos dados é testada
 no dia em que é acrescentada, pelas mesmas três linhas.
 
-Esses testes são mais lentos, mais de um segundo, porque cada um abre uma sessão SSH, e são os
-únicos que conseguem achar o que arquivos não mostram: um cabo desconectado, um processo que não
+Esses testes são mais lentos, mais de um segundo, porque cada um abre uma sessão SSH. São também
+os únicos que conseguem achar o que arquivos não mostram: um cabo desconectado, um processo que não
 subiu, um vizinho que discorda sobre um timer. Antes de uma mudança, eles são um **pré-check**: a
 rede está saudável agora, então uma falha depois é culpa da mudança. Depois de uma mudança, eles são
 o **pós-check**, e a próxima seção mostra como é quando um falha.

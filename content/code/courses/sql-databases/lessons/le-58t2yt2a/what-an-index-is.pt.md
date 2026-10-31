@@ -14,12 +14,9 @@ Não é uma configuração. Não é uma dica para o planejador. É uma estrutura
 escrita e mantida em dia, e é por isso que todo o resto desta aula é uma troca e não uma melhoria de
 graça.
 
-> **A tabela `orders` muda de forma daqui em diante.** As aulas 1 a 8 rodaram contra uma loja com
-> algumas linhas, onde `ordered_on` é um `date` e toda consulta responde na hora — que é o certo
-> quando o que se ensina é o que um join significa. Um índice só aparece contra volume, então esta
-> aula e as duas seguintes rodam contra a loja com um milhão de pedidos que a etapa anterior
-> carregou, com um `placed_at timestamptz` no lugar de `ordered_on`. A saída capturada daqui em
-> diante é desse banco. Nada muda no SQL; o que muda é que uma varredura passa a custar algo que dá
+> **A tabela `orders` muda de forma daqui em diante.** Esta aula e as duas seguintes rodam contra a
+> loja com um milhão de pedidos que a etapa anterior carregou, com um `placed_at timestamptz` no
+> lugar de `ordered_on`. Nada muda no SQL; o que muda é que uma varredura passa a custar algo que dá
 > para ler no relógio.
 
 ## Por que estar em ordem é o truque inteiro
@@ -37,8 +34,8 @@ Vinte desses passos chegam a uma linha em um milhão, e trinta chegam a uma em u
 | 1.000.000 | 20 |
 | 1.000.000.000 | 30 |
 
-Olhe essa tabela por um segundo, porque ela explica o formato de tudo o que vem depois: **mil vezes
-mais dado custa dez passos a mais.** Uma varredura da mesma tabela custa mil vezes mais trabalho.
+Essa tabela explica o formato de tudo o que vem depois: **mil vezes mais dado custa dez passos a
+mais.** Uma varredura da mesma tabela custa mil vezes mais trabalho.
 Essa distância é o que um índice compra, e é por isso que o ganho cresce com a tabela em vez de
 ficar igual.
 

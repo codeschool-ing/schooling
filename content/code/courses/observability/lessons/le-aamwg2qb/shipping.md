@@ -153,7 +153,7 @@ ana@obs:~/shop$ diff otel/collector.yaml otel/collector-logs.yaml
 >       exporters: [otlp_http/loki, elasticsearch, otlp_grpc/graylog]
 ```
 
-**Two exporters added, and one line changed**: the logs pipeline now ends in three exporters, and
+**Two exporters added, and one line changed**, besides the comment at the top: the logs pipeline now ends in three exporters, and
 every line is sent to all three. The traces pipeline is untouched. The Collector is recreated with
 the new file, and Graylog is given an input to receive on, its *OpenTelemetry (gRPC)* type on the
 standard port, through its API. Graylog refuses a change through its API that does not carry an

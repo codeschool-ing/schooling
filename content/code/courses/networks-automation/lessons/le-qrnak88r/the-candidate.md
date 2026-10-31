@@ -41,11 +41,11 @@ system or another script, saw the old configuration. **Nothing was half applied*
 nothing was applied at all until `commit`.
 
 `edit-config` **merges** by default: the XML sent is laid over the existing tree, so the
-interface's `type` and its other leaves stayed as they were. The protocol has other operations
-for when merging is wrong, set with an `operation` attribute on an element: `replace` makes that
-element exactly what was sent, `delete` removes it and fails if it is absent, `remove` removes
-it and does not fail, and `create` fails if it already exists.
+interface's `type` and its other leaves stayed as they were. For when merging is wrong, the
+protocol has other operations, set with an `operation` attribute on an element. `replace` makes
+that element exactly what was sent, and `create` fails if it already exists. `delete` removes it
+and fails if it is absent; `remove` removes it and does not fail.
 
 The candidate is shared. **On `nc1` there is one candidate for every session**, so an edit left
-there by one script is still there when the next script commits. The next two sections are about
+there by one script is still there when the next script commits. The next three sections show
 what that costs, and how to prevent it.

@@ -3,7 +3,7 @@ title: Aceitando uma completação
 version: 2
 ---
 
-Uma completação chega formatado, indentado, plausível e no seu estilo, e é tentador ler isso como
+Uma completação chega formatada, indentada, plausível e no seu estilo, e é tentador ler isso como
 correto. **Leia como você leria o código de um colega numa revisão**: contra o que o código deveria
 fazer, não contra a aparência dele. O jeito mais rápido de fazer isso é escrever o que ele deveria
 fazer como testes, antes de decidir ficar com qualquer coisa.
@@ -116,8 +116,8 @@ ana@dev:~/shop$ python -m pytest -q
 Doze testes passam: os oito que o projeto tinha e os quatro novos. O diff mostra mais uma coisa que
 os testes não conseguem: **sumiu a linha em branco entre `remove()` e `subtotal()`**. A sugestão
 tomou o lugar da linha vazia do cursor e parou antes de escrever uma sua, então o próximo método
-começa logo embaixo. Quem revisa a põe de volta. Esse é o formato da maioria dos completações
-aceitas: certo, quase, com o último detalhe deixado para quem lê o diff.
+começa logo embaixo. Quem revisa a põe de volta. Esse é o formato da maioria das completações
+aceitas: certa, quase, com o último detalhe deixado para quem lê o diff.
 
 ## Os hábitos
 

@@ -65,10 +65,11 @@ ana@desk:~/desk$ diff <(cut -d, -f3,4 runs/hot-a.jsonl) <(cut -d, -f3,4 runs/hot
 >  "case": "c39", "answer": "other"
 ```
 
-O c06, o pacote marcado como entregue, foi `order-status` uma vez e `refund` na outra; o c10, a nota
-fiscal, foi `refund` e depois `product-question`. O c32 e o c39 foram no sentido contrário: errados
-na primeira execução, certos na segunda. **Quatro respostas mudaram e a nota mudou um**, porque duas
-mudanças se anularam. Esses são os casos que ficam perto das fronteiras do próprio modelo, e você
+O c06, o pacote marcado como entregue, foi `order-status` uma vez e `refund` na outra, certo e
+depois errado; o c10, a nota fiscal, foi `refund` e depois `product-question`, errado nas duas. O
+c32 e o c39 foram no sentido contrário ao do c06: errados na primeira execução, certos na segunda.
+**Quatro respostas mudaram e a nota mudou um**, porque duas mudanças se anularam e a do c10 não
+mudou nada. Esses são os casos que ficam perto das fronteiras do próprio modelo, e você
 descobre quais são rodando mais de uma vez.
 
 ## O que resulta

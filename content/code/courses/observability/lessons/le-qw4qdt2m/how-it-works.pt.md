@@ -40,9 +40,9 @@ opentelemetry-instrumentation-wsgi       0.66b0
 
 O Flask para as requisições que chegam, o `requests` para as chamadas que saem, o psycopg para o
 banco. Os pacotes `wsgi` e `dbapi` são as camadas genéricas sobre as quais o primeiro e o último
-são construídos. A imagem os instalou porque os requisitos dela os nomeavam. Em vez disso, o
-`opentelemetry-bootstrap`, que vem com o lançador, pode ler o que um programa tem
-instalado e imprimir os pacotes de instrumentação correspondentes.
+são construídos. A imagem os instalou porque os requisitos dela os nomeavam. Um projeto sem essa lista pode recorrer
+ao `opentelemetry-bootstrap`, que vem com o lançador: ele lê o que um programa tem instalado e
+imprime os pacotes de instrumentação correspondentes.
 
 **Todo o resto vem do ambiente**, o mesmo SDK que a aula 2 montou à mão, descrito por variáveis em
 vez de código:

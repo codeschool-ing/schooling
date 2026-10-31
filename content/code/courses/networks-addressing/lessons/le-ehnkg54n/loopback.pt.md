@@ -78,4 +78,4 @@ dizer sim.
 O loopback também explica uma confusão que aparece em chamados de suporte. Quando alguém diz que um
 serviço "funciona no servidor mas não da minha máquina", muitas vezes o serviço escuta só em
 `127.0.0.1`. Testado no servidor, responde; testado de qualquer outro lugar, a conexão é recusada,
-porque nada escuta no endereço de verdade do servidor. A última seção desta aula mostra, com `ss`, os endereços em que o servidor deste escritório escuta.
+porque nada escuta no endereço de verdade do servidor. A seção sobre as faixas especiais, no fim desta aula, mostra com `ss` os endereços em que o servidor deste escritório escuta.

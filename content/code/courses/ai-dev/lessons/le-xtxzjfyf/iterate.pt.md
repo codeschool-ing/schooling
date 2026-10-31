@@ -125,8 +125,8 @@ swap: parse_price replaced in shop/money.py
 13 passed in 0.69s
 ```
 
-Treze testes: os oito que o projeto tinha e os cinco novos. Os testes que ela escreveu na aula 5,
-seção 06, julgaram o código dela do mesmo jeito que julgaram o do modelo, e é isso que faz valer a
+Treze testes: os oito que o projeto tinha e os cinco novos. Os testes que ela escreveu na aula 5
+seção 06 julgaram o código dela do mesmo jeito que julgaram o do modelo, e é isso que faz valer a
 pena escrevê-los primeiro: eles não se importam com quem escreveu a mudança.
 
 ## Quando parar de iterar

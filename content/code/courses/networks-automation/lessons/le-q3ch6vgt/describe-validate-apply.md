@@ -52,7 +52,7 @@ edge1: verified
 edge2: verified
 ```
 
-Now the description is edited with the mistake from the first section, and the script is run
+Now the description is edited with the typo from the change by hand, and the script is run
 again:
 
 ```

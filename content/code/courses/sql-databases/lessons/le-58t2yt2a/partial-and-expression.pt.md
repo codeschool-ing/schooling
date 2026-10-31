@@ -20,7 +20,7 @@ batida — **as inserções e os updates dos outros cinquenta milhões não o to
 no índice quando fica pendente e sai quando deixa de estar, então o custo de escrita é proporcional
 às linhas que lhe interessam em vez de à tabela.
 
-Ele responde à objeção de duas seções atrás. Um índice comum numa coluna de status com três valores
+Ele responde à objeção da seção sobre custo. Um índice comum numa coluna de status com três valores
 não ganha nada, porque valor nenhum é seletivo o bastante. Um índice parcial no valor raro é
 seletivo por construção.
 
@@ -44,8 +44,8 @@ juntas. Um índice único parcial impõe a regra direito, em todo nível de isol
 conexão.
 
 **O planejador precisa provar que o índice se aplica.** Uma consulta dizendo `WHERE status =
-'pending'` pode usar o índice acima; uma dizendo `WHERE status = $1` não pode, porque o valor não é
-conhecido quando o plano é feito, e uma dizendo `WHERE status <> 'done'` também não, porque não é a
+'pending'` pode usar o índice acima. Uma dizendo `WHERE status = $1` não pode, porque o valor não é
+conhecido quando o plano é feito. E uma dizendo `WHERE status <> 'done'` também não, porque não é a
 mesma condição. Mantenha a condição da consulta reconhecivelmente igual à do índice.
 
 MySQL e MariaDB não têm índices parciais. PostgreSQL e SQLite têm.

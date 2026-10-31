@@ -11,7 +11,7 @@ typed**, which includes things they should never have typed and you never asked 
 This lesson works on the call log of the assistant at Tarefa, an invented Brazilian marketplace
 where clients hire freelancers: 22 calls over seven months. Every record, prompts and replies alike,
 was written by the course, and no model produced them. Every CPF, card number, phone number, address
-and key in them is invented: the CPFs have valid check digits on purpose, the cards are the networks'
+and key in them is invented. The CPFs have valid check digits on purpose, the cards are the networks'
 published test numbers, and the AWS key is the one Amazon's own documentation uses as an example.
 Paste it:
 
@@ -167,7 +167,7 @@ configuration once.
 
 ## What no tier may keep
 
-Some things are not a question of how long. A card's security code is the clearest case: the PCI
+Some things are not a question of how long. A card's security code is the clearest case. The PCI
 DSS, the standard the card networks impose on anybody who handles card data, forbids storing it
 after the payment has been authorised, in any form, encrypted or not. A client who types it into a
 support chat has handed it to the log, and no retention limit makes keeping it acceptable. The

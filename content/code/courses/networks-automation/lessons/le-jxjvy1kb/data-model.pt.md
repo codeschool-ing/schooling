@@ -82,9 +82,9 @@ errado, o que também deixa `address` faltando; `interfaces.1.address` tem `300`
 um octeto; e `interfaces.1.ospf` diz quais duas palavras teria aceitado. O template nunca rodou, e
 o status de saída é 1.
 
-São três tipos de erro pegos por uma declaração só, e nenhum deles precisou de um roteador. Eles
-teriam chegado a um por três caminhos diferentes: um `KeyError`, uma configuração que o FRR recusa,
-e uma interface sem OSPF e sem erro nenhum.
+São três tipos de erro pegos por uma declaração só, e nenhum deles precisou de um roteador. Sem o
+modelo, eles teriam aparecido de três jeitos diferentes: um `UndefinedError` do `StrictUndefined`,
+um `ValueError` do filtro `network`, e uma interface sem linha de OSPF e sem erro nenhum.
 
 Abaixo do modelo há o próprio YAML. O `yamllint` verifica a sintaxe e o layout dos arquivos:
 

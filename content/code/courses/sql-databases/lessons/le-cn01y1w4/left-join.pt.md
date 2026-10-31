@@ -55,7 +55,7 @@ O hábito: **ponha na esquerda a tabela de que a pergunta trata.**
 
 ## Os nulos que ela cria não estão nos dados
 
-Isso pega todo mundo uma vez. `o.total` é `NOT NULL` na tabela — a aula 3 declarou — e aqui está ele,
+Isso pega todo mundo uma vez. `o.total` é `NOT NULL` na tabela — o `joins.sql` declara — e aqui está ele,
 nulo.
 
 O nulo não foi lido de lugar nenhum. **A junção o inventou**, porque não havia linha de onde tirar um

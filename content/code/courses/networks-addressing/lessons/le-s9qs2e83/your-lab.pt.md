@@ -5,9 +5,9 @@ version: 1
 
 Toda transcrição deste curso foi impressa por uma rede de verdade, e quem monta essa rede é você, no
 seu próprio computador. Não é um rack de equipamentos. **É uma máquina Linux com Ubuntu 24.04, na
-qual um script monta cada rede de que o curso precisa com peças do kernel Linux**: um namespace de
-rede para cada dispositivo, um cabo virtual entre dois deles, uma bridge dentro de um namespace para
-cada switch, e o FRR, a suíte de roteamento de código aberto, para os roteadores. Um escritório
+qual um script monta cada rede de que o curso precisa com peças do kernel Linux.** Cada dispositivo
+é um namespace de rede, um cabo é um par virtual entre dois deles, cada switch é uma bridge dentro de
+um namespace, e os roteadores rodam o FRR, a suíte de roteamento de código aberto. Um escritório
 inteiro, com switch, roteador e provedor, cabe numa máquina só, e nada disso encosta na rede em que o
 seu computador está de verdade.
 

@@ -25,7 +25,7 @@ ana@obs:~/shop$ curl -sG localhost:9090/api/v1/query --data-urlencode 'query=sum
 
 **5.9 per cent over the last minute, 1.7 per cent over the last ten**, for the same failures. A
 panel with a ten-minute window would have shown a mild bump during an outage in which one charge in
-ten failed. A one-minute window shows it as it was, and is noisier the rest of the time. Neither
+ten failed. A one-minute window shows it closer to how it was, and is noisier the rest of the time. Neither
 is wrong. A dashboard should say which window it uses, in the panel's title or its legend, and an
 alert, in lesson 16, uses two at once.
 

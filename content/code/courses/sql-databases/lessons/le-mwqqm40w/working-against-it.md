@@ -74,7 +74,7 @@ The list is longer than it feels on the first week:
 - **bind variables**, which is most of the rest
 - **the transaction boundaries**: what is in one, and how long it is open
 - **the constraints in your own schema**, which lesson 3 argued for and no licence affects
-- **committing what you started** in a client window, which is the last section's support call
+- **committing what you started** in a client window, which is the support call from the section on transactions
 - **not putting a function on an indexed column** in a `WHERE`, which is lesson 9 and is free
 
 None of that needs a privilege, a licence or a meeting.

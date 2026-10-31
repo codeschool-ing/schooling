@@ -95,9 +95,9 @@ O `file` diz `with CRLF line terminators`, o `sed` tira o caractere a mais de to
 `file` concorda. Salvar o script de dentro da máquina virtual, com `nano ~/netlab/netlab.sh` e um
 colar, evita o problema de vez.
 
-**Um serviço não subiu.** Cada linha do `up` que termina em `started` foi conferida: a última coisa
-que o script faz é esperar até cada um deles aceitar uma conexão, e ele nomeia o que nunca aceitou
-com `nothing answers on` e o endereço. Essa linha quer dizer que o programa começou e parou de
+**Um serviço não subiu.** Cada linha do `up` que termina em `started`, menos a do `sw1`, foi
+conferida: a última coisa que o script faz é esperar até cada um desses serviços aceitar uma
+conexão. Ele nomeia o que nunca aceitou com `nothing answers on` e o endereço. Essa linha quer dizer que o programa começou e parou de
 novo, quase sempre porque foi cortado ou alterado no caminho para o arquivo. O erro dele está no
 arquivo para onde o `netlab.sh` o manda, ao lado da linha que o liga: `/var/log/devapi.err` em cada
 roteador, por exemplo, que o `enter` lê como `root`:

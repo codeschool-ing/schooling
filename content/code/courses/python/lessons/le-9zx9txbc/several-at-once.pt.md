@@ -47,7 +47,7 @@ with ExitStack() as stack:
     merge(files)
 ```
 
-Todo arquivo é fechado na saída, em ordem inversa, termine o bloco como terminar. Esta é a
+**Todo arquivo é fechado na saída**, em ordem inversa, termine o bloco como terminar. Esta é a
 resposta quando a contagem vem do dado e não do código — e escrever isso com um `try`/`finally` e
 uma lista é a versão que vaza os que foram abertos antes da falha.
 

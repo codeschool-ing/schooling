@@ -39,7 +39,7 @@ está errada é o mesmo nó com uma varredura sequencial como filho interno: aí
 lida uma vez por linha externa, e o custo do plano é o produto dos dois lados. Essa forma quer
 dizer que falta um índice, e é o achado mais comum numa junção lenta.
 
-Aqui está a contagem de voltas fazendo o que a seção anterior avisou:
+Aqui está a contagem de voltas fazendo o que a seção sobre `EXPLAIN ANALYZE` avisou:
 
 ```
 shop=# EXPLAIN ANALYZE SELECT count(*) FROM orders o JOIN order_lines l ON l.order_id = o.id WHERE o.status = 'pending';
@@ -137,7 +137,7 @@ graça, e o merge os percorre. É o plano quando as entradas já estão ordenada
 indexadas, ou um `ORDER BY` que teria que acontecer de qualquer jeito — e é o que escala além da
 memória, porque nada é hasheado. Ele ter vencido o hash join aqui, 874 ms contra 1212, é o
 `Batches: 8` de cima: com um `work_mem` maior o hash teria vencido, e a estimativa do planejador
-sobre isso é uma configuração, que é o assunto da última seção.
+sobre isso é uma configuração, que a seção sobre ordenação retoma.
 
 Desligar um método de junção é um jeito de **ver** um plano e nunca um jeito de entregar um. A
 configuração é por sessão, e a seção sobre correções diz o que fazer no lugar.
@@ -189,7 +189,7 @@ shop=# EXPLAIN ANALYZE SELECT c.city, count(*) FROM customers c JOIN orders o ON
 ```
 
 Toda captura até aqui foi tirada numa sessão que começou com
-`SET max_parallel_workers_per_gather = 0`, a linha do começo da primeira etapa, para que os planos
+`SET max_parallel_workers_per_gather = 0`, a linha da seção sobre `EXPLAIN`, para que os planos
 se lessem como uma árvore só. Este é o mesmo relatório por cidade numa sessão nova, em que a
 consulta paralela está ligada, que é o padrão: `Gather Merge` no topo, `Workers Launched: 2`, e
 `Parallel` na frente da varredura de `orders`. Três processos leem um terço de `orders` cada —

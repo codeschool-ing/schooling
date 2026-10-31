@@ -73,7 +73,7 @@ NULL     2026-03    260      <- sales whose region we do not know
 NULL     NULL      9100      <- grand total
 ```
 
-Row two and row four both say `NULL` for region and mean completely different things. A person
+Row three and row four both say `NULL` for region and mean completely different things. A person
 reading the table cannot tell, and neither can the program that renders it.
 
 `GROUPING()` is the answer: it returns `1` when the column was rolled up for that row and `0` when

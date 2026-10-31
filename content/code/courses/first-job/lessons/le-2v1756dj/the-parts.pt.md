@@ -20,8 +20,8 @@ Leia cada parte, e anote o que falta:
   acrescentam.
 - Trabalho. O cargo, o horário, **a escala** em vagas de suporte, e se é presencial, híbrido ou remoto, com
   quantos dias.
-- Letras miúdas. As cláusulas da terceira seção.
-- Participação. Opções de ações ou ações, se houver; raro em propostas júnior, e explicado no fim.
+- Letras miúdas. As cláusulas duas seções adiante.
+- Participação. Opções de ações ou ações, se houver; raro em propostas júnior, e explicado no fim da próxima seção.
 
 Uma proposta que existe só como ligação ou mensagem de chat ainda não é uma proposta. **Peça os detalhes por
 escrito** antes de pedir demissão de qualquer lugar ou recusar outro processo.

@@ -24,5 +24,5 @@ lado de um pull request, todo mundo que leu a lista imagina a mesma coisa: a res
 por outro código sem ser conferida. Um nome comum transforma uma preocupação vaga numa pergunta que pode
 ser feita a um recurso específico, e é assim que este curso o usa.
 
-Toda entrada é uma falha que este curso já encontrou, com um nome próprio. A próxima seção põe os dois
+Oito das dez entradas são falhas que este curso cobre com nomes próprios: duas na aula 2, e as outras nas aulas que vêm pela frente. A próxima seção põe os dois
 nomes lado a lado.

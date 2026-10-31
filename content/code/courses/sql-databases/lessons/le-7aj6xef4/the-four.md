@@ -16,7 +16,7 @@ not the kind of thing the other two are.
 A database server, developed since 1996 by a distributed group of contributors with no single
 company behind it, under a permissive licence of its own. It is the strictest of the four about
 what it will accept, the widest in what it can store, and the one with an extension mechanism that
-other projects build on — PostGIS for geography, TimescaleDB for time series, `pgvector` for
+other projects build on. PostGIS for geography, TimescaleDB for time series and `pgvector` for
 embeddings are all Postgres with something loaded into it.
 
 The name is said *post-gres-cue-ell*, and the project answers to `postgres` in every command you
@@ -34,16 +34,16 @@ it.
 
 The fork of MySQL that the original authors started in 2009, when Oracle acquired Sun. It is GPL,
 with no commercial edition of the engine, and for several years it was a drop-in replacement: the
-same protocol, the same client, the same SQL. Fifteen years of separate development have moved
-the two apart, and the section on the fork is about how far.
+same protocol, the same client, the same SQL. More than fifteen years of separate development have
+moved the two apart, and the section on the fork is about how far.
 
 ## SQLite
 
 **Not a server.** It is a C library that your program links against, and the database is one file
 on disk. There is no process to start, no port to connect to, no user to create. It is in the
-public domain, it is the most widely deployed database in the world by an enormous margin — every
-Android phone, every iPhone, every browser, most desktop applications — and it is the one whose
-place in the list is most often misunderstood.
+public domain, and it is the most widely deployed database in the world by an enormous margin —
+every Android phone, every iPhone, every browser, most desktop applications. It is also the one
+whose place in the list is most often misunderstood.
 
 ## The shape of the comparison
 
@@ -217,6 +217,6 @@ The rows are lesson 1's `INSERT`s, unchanged — they are the portable part. The
 transcripts in this lesson are taken with `sqlite3 -column -header shop.db`, which draws the
 headings, and the `mysql` ones with `sudo mysql -t shop`, which draws the boxes.
 
-There is a fifth engine you will meet in a corporate job, and it is different enough — in what it
+There is a fifth engine you will meet in a corporate job. It is different enough — in what it
 costs, in how it is bought, and in what it does to the shape of a system — that it gets lesson 13
 to itself.

@@ -40,8 +40,8 @@ ana@lab:~/emb$ python search.py "the box never showed up"
 
 **A pergunta sobre dinheiro de volta põe o artigo do reembolso em segundo, atrás do artigo do
 presente, como na aula 1**, mas agora contra os 40 artigos, e não contra seis escolhidos a dedo. *the box never showed up* ("a caixa nunca chegou") encontra **A parcel marked as
-delivered that never arrived** ("um pacote marcado como entregue que nunca chegou") com 0,458, sem
-nenhuma palavra importante em comum.
+delivered that never arrived** ("um pacote marcado como entregue que nunca chegou") com 0,458, embora
+a pergunta só tenha em comum com esse título a palavra *never*.
 
 Veja o que vem em segundo e terceiro para a caixa. **Resetting your password** ("redefinir sua
 senha"), com 0,300, e **Wrong book in the parcel** ("livro errado no pacote"), com 0,290, não têm

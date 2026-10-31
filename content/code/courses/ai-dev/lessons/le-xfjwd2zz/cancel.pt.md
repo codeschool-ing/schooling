@@ -39,7 +39,7 @@ srv  update_slots: all slots are idle
 
 **O Ollama parou também.** `cancel task` é o servidor percebendo a conexão fechada, e `n_tokens = 47`
 é até onde ele chegou, contando a pergunta e o template além dos poucos tokens de resposta por trás
-dos quarenta caracteres que o script guardou. Um provedor se comporta do mesmo jeito visto de fora. Se
+dos 42 caracteres que o script guardou. Um provedor se comporta do mesmo jeito visto de fora. Se
 os tokens que ele escreveu antes de perceber são cobrados está nos termos dele; planeje como se
 fossem.
 

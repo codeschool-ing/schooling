@@ -37,6 +37,6 @@ histórico do que disparou:
 | todo incidente foi anunciado por uma regra? | escreva a regra que o teria anunciado |
 | toda regra tem runbook e dono? | escreva, ou apague a regra |
 
-O `alerts.json` mora no repositório com o resto da configuração do assistente, então mudar um limite é
+O `alerts.json` mora no repositório com o resto da configuração do assistente. Mudar um limite é então
 um pull request que alguém revisa, com o motivo na descrição, e não um campo editado num painel no fim
 de uma noite longa.

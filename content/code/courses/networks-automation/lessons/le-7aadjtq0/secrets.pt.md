@@ -3,7 +3,7 @@ title: Segredos num repositório
 version: 2
 ---
 
-Um diretório de playbooks mora no Git, e a aula 14 o roda a partir de um pipeline. **Senhas e
+Um diretório de playbooks mora no Git, e a aula 14 roda um repositório como ele a partir de um pipeline. **Senhas e
 tokens não podem estar nele como texto**, e precisam estar em algum lugar que o playbook consiga
 ler. A resposta do Ansible é o **Vault**: um valor ou um arquivo inteiro cifrado com uma senha do
 vault, decifrado em memória quando o playbook roda.
@@ -96,5 +96,5 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 O `INC-1001` foi aberto. Mas olhe o status da task: **`ok`, não `changed`**, embora ela tenha
 criado um chamado. O `uri` não tem como saber que um POST mudou algo do outro lado, então ele
 reporta o que sabe. Uma task assim deveria dizer isso ela mesma, com `changed_when: true` ou uma
-condição sobre o status code, ou o recap mente e o relatório noturno da aula 14 diz que nada
+condição sobre o status code, ou o recap mente e um relatório noturno feito a partir dele diz que nada
 aconteceu.

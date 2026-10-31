@@ -66,9 +66,9 @@ para o porquê**, já que o diff mostra o quê. A mudança aqui é o horário de
 sed -i 's/half past five/half past six/' index.html
 ```
 
-Faça o commit com `git commit -a` e sem `-m`. O nano abre com a mensagem vazia: digite os três
-parágrafos que o `git log` imprime abaixo, salve com Ctrl+O e saia com Ctrl+X, e o commit é feito com
-o que você escreveu.
+Faça o commit com `git commit -a` e sem `-m`. O nano abre com a mensagem vazia: digite a primeira
+linha, uma linha em branco e o corpo de três linhas que o `git log` imprime abaixo, salve com Ctrl+O e
+saia com Ctrl+X, e o commit é feito com o que você escreveu.
 
 
 ```

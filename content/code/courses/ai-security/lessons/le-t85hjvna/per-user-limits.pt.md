@@ -154,8 +154,8 @@ sozinho gastar o orçamento da chave: 20 por minuto é um terço dele aqui.
 ## O que mais depende do identificador
 
 **Uma recusa que o usuário entende.** A requisição recusada recebe um HTTP 429 com um cabeçalho
-`Retry-After` e uma mensagem dizendo que o limite é por pessoa, para que um usuário legítimo que o
-atinja saiba esperar em vez de tentar de novo em loop, o que só o deixaria recusado por mais tempo.
+`Retry-After` e uma mensagem dizendo que o limite é por pessoa. Assim um usuário legítimo que o
+atinja sabe esperar em vez de tentar de novo em loop, o que só o deixaria recusado por mais tempo.
 
 **Custo, não só contagem.** Uma requisição pode levar algumas centenas de tokens ou cem mil. Um limite
 de requisições limita o ritmo; um orçamento diário de tokens por usuário limita a conta. Os dois são

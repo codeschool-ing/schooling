@@ -50,8 +50,9 @@ __name__=checkout:burn_rate:5m  14.946663312584985
 __name__=checkout:burn_rate:30m  12.473343961001747
 ```
 
-24.8 over one minute, 14.9 over five, 12.5 over thirty: checkouts are failing at about thirteen
-times the rate the month can afford, and it is still happening now. That is a SEV-2 by the shop's table: a large share of customers cannot buy. **The first
+24.8 over one minute, 14.9 over five, 12.5 over thirty: over the last five minutes checkouts have
+failed at 14.9 times the rate the month can afford, and the one-minute window says it is still
+happening now. That is a SEV-2 by the shop's table: a large share of customers cannot buy. **The first
 act is to say so**, where everybody can see it, with the commander's name:
 
 ```
@@ -71,8 +72,9 @@ job=payments  0.12473572938689217
 job=orders  0.125
 ```
 
-11% of the storefront's requests, 12.5% of orders' and of payments'. Payments fails the most, and every service above it fails in proportion. The same column of
-red that lesson 11 read in a single trace, here in three numbers.
+11% of the storefront's requests, 12.5% of orders' and of payments'. Payments, the deepest of the
+three, fails as often as orders, and the storefront above them fails nearly as often. The same column
+of red that lesson 11 read in a single trace, here in three numbers.
 
 **And the question that solves most incidents: what changed?** The marks of the last half hour:
 

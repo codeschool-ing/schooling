@@ -48,8 +48,8 @@ ana@vm:~/site$ git log --oneline --graph -3
 
 **O `--squash` pega todas as mudanças do branch e as prepara como uma mudança só**, sem fazer commit e
 sem registrar que um branch entrou. O commit que vem depois é um commit comum, único, com o número do
-pull request na mensagem. Três commits, inclusive um que corrigia um erro de outro, viraram uma linha
-do histórico.
+pull request na mensagem. Três commits, inclusive um que só reescrevia o que outro
+tinha acabado de pôr, viraram uma linha do histórico.
 
 ## Rebase and merge
 

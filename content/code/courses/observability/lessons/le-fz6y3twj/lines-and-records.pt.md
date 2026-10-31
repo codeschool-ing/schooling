@@ -55,7 +55,7 @@ ana@obs:~/shop$ jq -c 'select(.duration_ms >= 150)' scratch/json.log | wc -l
 ```
 
 **Quarenta e nove dos dois jeitos**, então a expressão regular está certa, desta vez. Ela também
-erra no dia em que alguém mudar a frase para *in 0.217 s*, não casa nada se uma linha disser *in
+erra no dia em que alguém mudar a frase para *in 0.217 s*, e não casa nada se uma linha disser *in
 1200 ms* com espaço. E a próxima pessoa não consegue lê-la sem um minuto de reflexão. O campo
 sobrevive a tudo isso, e se compõe: a pergunta seguinte, *os lentos que foram pagos, com o id do
 pedido*, é mais uma condição:

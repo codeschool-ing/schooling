@@ -298,7 +298,7 @@ for n in pc1 pc2 pc3 srv r1; do
 done
 ```
 
-Each line reads as the drawing at its top: four PCs and a server on sw1's ports, the router r1 with
+Each line reads as the drawing at its top: three PCs and a server on sw1's ports, the router r1 with
 the provider behind it, and the provider's other side leading to the load balancer and its two web
 servers. The two `nft` blocks are the firewall and NAT on r1 and the load balancer's rule on lb, which
 the last sections of this lesson take apart. Build it:
@@ -333,8 +333,8 @@ changes to say so. That is how to read every transcript in this course:
 `exit` leaves a device's shell, and `sudo bash ~/netlab/netlab.sh down` takes the network away.
 
 A few moves happen between transcripts, and the prose says when. To **pull a cable**, set one end of
-it down at a root prompt on that device, `ip link set p1 down`, and `ip link set p1 up` plugs it back in: the other
-end sees the signal go and come back, exactly as with a real cable. To **watch one device while
+it down at a root prompt on that device with `ip link set p1 down`; `ip link set p1 up` plugs it back
+in. The other end sees the signal go and come back, exactly as with a real cable. To **watch one device while
 another does something**, open a second terminal on the machine and a second `on` in it. And to
 **empty what a device has learnt**, `ip neigh flush all` clears its neighbour table and, on a switch,
 `bridge fdb flush dev br0 dynamic` clears the addresses it learnt.

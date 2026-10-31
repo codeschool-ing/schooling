@@ -39,7 +39,7 @@ escolheu o caminho mais curto. Corte um cabo e o caminho lógico muda, enquanto 
 ## Por que isso importa para o suporte
 
 O desenho físico é como você acha o defeito. O desenho lógico é como você prevê o estrago. Quando o
-financeiro diz "a rede está lenta desde cedo", o mapa físico diz qual armário e qual switch; o mapa
+financeiro diz "a rede está lenta desde cedo", o mapa físico diz qual armário e qual switch. O mapa
 lógico diz se os PCs da recepção dividem o tráfego desse switch, se o link reserva agora carrega
 tudo, e quem mais vai ligar daqui a pouco.
 

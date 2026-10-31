@@ -44,14 +44,14 @@ segundo. Leia os endereços MAC e a VLAN de cada um:
 ```
 
 Os endereços IP não mudam em momento nenhum, `10.20.10.21 > 10.20.20.22` na ida e o contrário na
-volta. O que muda é o quadro em volta do pacote: **a cada passagem pelo roteador, os endereços MAC e o
-tag de VLAN são reescritos, e os endereços IP lá dentro continuam como estavam** (o roteador também
-diminui o TTL em um, que esta captura não mostra). É isso que o roteamento faz com todo pacote, visto
+volta. O que muda é o quadro em volta do pacote. **A cada passagem pelo roteador, os endereços MAC e o
+tag de VLAN são reescritos, e os endereços IP lá dentro continuam como estavam.** O roteador também
+diminui o TTL em um, o que esta captura não mostra. É isso que o roteamento faz com todo pacote, visto
 aqui num só cabo. Todo quadro tem 102 bytes, o tamanho com tag que a aula 19 mediu.
 
 O custo sai da contagem. **Um tronco até um roteador em um braço leva cada pacote roteado duas
 vezes**, uma subindo e uma descendo. O cabo é full duplex, então a subida e a descida usam os dois
-sentidos dele e não competem entre si; mas toda conversa entre todo par de VLANs divide esses dois
+sentidos dele e não competem entre si. Mas toda conversa entre todo par de VLANs divide esses dois
 sentidos, junto com o que for endereçado ao próprio roteador. Se o braço é um enlace de 1 Gb/s, então
 1 Gb/s em cada sentido é o máximo que consegue passar entre todas as VLANs juntas, por mais rápido
 que o switch seja por dentro. O tráfego que fica dentro de uma VLAN nunca toca o braço: o pc1 e o

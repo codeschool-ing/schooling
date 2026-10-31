@@ -28,8 +28,8 @@ table ip lb {
 ```
 
 The `prerouting` rule reads like a sentence: a packet for `192.0.2.80`, TCP port `80`, gets its
-destination rewritten (`dnat`) to one of two addresses, chosen by `numgen inc mod 2`, a counter that
-goes up by one for each new connection and is taken modulo 2. Counter 0 means web1, at 10.99.0.11;
+destination rewritten (`dnat`) to one of two addresses, chosen by `numgen inc mod 2`. That is a counter
+that goes up by one for each new connection and is taken modulo 2. Counter 0 means web1, at 10.99.0.11;
 counter 1 means web2, at 10.99.0.18. **Taking the servers in turn like this is called round
 robin.** The `postrouting` rule rewrites the source as well, so the web servers answer the
 balancer and the balancer answers the client.
@@ -70,8 +70,7 @@ in every connection, and by needing the keys to decrypt HTTPS.
 **A real load balancer checks its servers and stops sending connections to one that does not
 answer.** This rule has no such check. If web2 were switched off, every second connection would go
 to a machine that is not there, and half the visitors would wait for a page that never comes. Without a
-health check, two servers are not more reliable than one; they are two chances to fail, and the
-check is what the lab's one-line rule leaves out.
+health check, two servers are not more reliable than one; they are two chances to fail.
 
 There is one more trade in the `masquerade` rule. Because lb rewrites the source, web1's log shows
 lb's address on every request rather than the visitor's. A layer 7 balancer works around that by

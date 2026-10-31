@@ -52,7 +52,7 @@ data.insert(0, x)     # everything after it shifts up one slot
 
 A list is contiguous, so putting something at the front moves every other element. At a hundred
 thousand items that is 32 microseconds against `append`'s 19 nanoseconds — **about seventeen
-hundred times** — and the next section is what to use instead.
+hundred times** — and section 08 of this lesson is what to use instead.
 
 ## Strings, and a rule that is half a myth
 

@@ -109,7 +109,7 @@ another value that is different from 20. When you want "everything that is not 2
 ones we do not know about", it is one operator instead of an `OR`.
 
 **And `coalesce` in a `WHERE` clause deserves suspicion.** `WHERE coalesce(price, 0) > 100` reads
-well and does two things at once: it makes a claim that an unknown price is zero, and — from the
+well and does two things at once. It claims that an unknown price is zero. And — from the
 `where` section — it puts a function around the column and loses the index. Usually what was meant
 is `WHERE price > 100`, which already excludes the unknowns, or `WHERE price > 100 OR price IS
 NULL` if they belong in the answer. Deciding which is the point.

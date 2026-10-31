@@ -10,8 +10,8 @@ version: 1
 Cut, in this order:
 
 **What is private.** A photo, age, date of birth, marital status, children, *CPF*, *RG* and a full street
-address. None of it tells anybody whether you can do the job, all of it invites a judgement that has
-nothing to do with the job, and a document number on a file that will be forwarded around is a document
+address. None of it tells anybody whether you can do the job, and all of it invites a judgement that
+has nothing to do with the job. A document number on a file that will be forwarded around is a document
 number you no longer control. **City and state are enough.** Brazilian CVs traditionally carry most of
 this, and many still do; leaving it out is not unusual any more, and nobody will ask for it before an
 offer.

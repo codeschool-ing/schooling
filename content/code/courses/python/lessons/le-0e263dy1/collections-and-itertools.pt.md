@@ -58,13 +58,28 @@ Uma lista é lenta para remover da FRENTE — todos os outros itens deslizam. Um
 
 ## Quatro `itertools` que ganham a importação
 
-```python
-from itertools import product, chain, groupby, islice
-
-product(sizes, colours)          # every pair, without the nested loop
-chain(a, b, c)                   # iterate three lists as one
-islice(rows, 10)                 # the first ten of anything, without a list
-groupby(sorted(rows, key=k), k)  # runs of equal keys — SORT FIRST
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "from itertools import product, chain, groupby, islice\n\nproduct(sizes, colours)",
+      "note": "O `product` dá todos os pares, sem o laço aninhado."
+    },
+    {
+      "code": "chain(a, b, c)",
+      "note": "O `chain` percorre três listas como se fossem uma."
+    },
+    {
+      "code": "islice(rows, 10)",
+      "note": "O `islice` pega os dez primeiros de qualquer coisa, sem montar uma lista."
+    },
+    {
+      "code": "groupby(sorted(rows, key=k), k)",
+      "note": "O `groupby` acha sequências de chaves iguais, então **ordene antes pela mesma chave**."
+    }
+  ]
+}
 ```
 
 O `groupby` é o que pega as pessoas: ele agrupa chaves iguais CONSECUTIVAS, então uma entrada

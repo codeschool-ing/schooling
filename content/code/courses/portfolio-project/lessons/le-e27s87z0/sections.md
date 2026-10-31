@@ -30,6 +30,6 @@ works**. A reviewer who stops after *What it does* has still learned the project
 after *Run it* can still try it.
 
 Keep each section to what its question needs. *Run it* is four commands, not a tutorial on installing
-Python. *Deploy* names the two files in `deploy/` and the five commands, not a guide to systemd. A
+Python. *Deploy* names the two files in `deploy/` and the six commands, not a guide to systemd. A
 README is a map, and the detail belongs in the files it points to, where it is kept up to date with the
 code.

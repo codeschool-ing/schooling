@@ -123,7 +123,7 @@ So the rule for a program that talks to several providers through one shape:
   headers, how an error is worded.
 - **The evaluation is per provider too**, run through the path the program will actually use.
   Lesson 5's numbers for a model through its own API say nothing certain about the same model
-  through a compatible endpoint that ignores half the request.
+  through a compatible endpoint that ignores part of the request.
 
 The shape is the cheapest way to *compare* providers, which is what Anthropic says its endpoint is
 for. Whether to *stay* on it is the trade lesson 16 put to OpenAI's own newer API: reach against

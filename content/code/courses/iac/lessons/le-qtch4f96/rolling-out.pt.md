@@ -12,7 +12,7 @@ repositórios é **um valor só: a versão**.
 ```
 
 O moto do laboratório não consegue rodar o build do Packer que faria uma AMI, então as duas AMIs
-abaixo foram **encenadas**: criadas no moto a partir de uma instância descartável, do jeito que a
+abaixo foram **encenadas**. Foram criadas no moto a partir de uma instância descartável, do jeito que a
 aula 5 fez as imagens dela, e nomeadas como o source `amazon-ebs` da seção sobre o template as
 nomearia. Não há nada dentro de nenhuma das duas; o moto guarda um registro com um id. O que o
 Terraform faz com elas é exatamente o que faria numa conta de verdade. Para criar as mesmas duas no seu moto, rode o que a Ana rodou, no
@@ -187,8 +187,8 @@ Plan: 1 to add, 0 to change, 1 to destroy.
 
 O `git revert` põe `1.0.1` de volta no `terraform.tfvars`, e o plan substitui a instância de novo,
 agora em direção à imagem mais antiga. Duas coisas tornam isso possível, e as duas são decisões e não
-acasos: a AMI antiga ainda existe, porque **um pipeline de imagens guarda as últimas versões em vez de
-apagar cada uma no dia em que a sucessora sai**; e nenhuma máquina foi alterada depois de ligar, então o
+acasos. A AMI antiga ainda existe, porque **um pipeline de imagens guarda as últimas versões em vez de
+apagar cada uma no dia em que a sucessora sai**. E nenhuma máquina foi alterada depois de ligar, então o
 número da versão descreve de verdade o que vai rodar.
 
 Um servidor web substituído por vez é o caso simples. Uma loja com vários atrás de um load balancer

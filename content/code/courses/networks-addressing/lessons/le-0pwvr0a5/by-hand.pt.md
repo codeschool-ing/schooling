@@ -4,7 +4,7 @@ version: 1
 ---
 
 Converter cada octeto para binário funciona e é lento. Há um atalho que dá a rede e o broadcast de
-qualquer endereço em poucos segundos, e ele se apoia no padrão da seção anterior: toda faixa começa num
+qualquer endereço em poucos segundos, e ele se apoia no padrão de duas seções atrás: toda faixa começa num
 múltiplo do próprio tamanho. **O método do tamanho do bloco** tem quatro passos.
 
 1. **Ache o octeto interessante**: aquele em que a máscara não é nem 255 nem 0. Os octetos antes dele são
@@ -52,9 +52,9 @@ utilizável de `.32.1` a `.47.254`. **O método e a calculadora concordam, e o m
 de aritmética.** O sipcalc acrescenta duas leituras que valem nota. `Host address (decimal) 2886741325`
 e `(hex) AC102D4D` são o endereço como o número único de 32 bits que a aula 8 disse que ele era: `AC` é
 172, `10` é 16, `2D` é 45, `4D` é 77. E `Cisco wildcard 0.0.15.255` é a máscara do avesso, 255 − 240 = 15
-no terceiro octeto, como a primeira seção desta aula explicou.
+no terceiro octeto, como a seção sobre a máscara em binário explicou.
 
-Mais um, com o octeto interessante em outro lugar: `10.0.77.200/21`. `/21` é 16 + 5, então a máscara é
+Mais um, com um bloco menor: `10.0.77.200/21`. `/21` é 16 + 5, então a máscara é
 `255.255.248.0`, o terceiro octeto de novo, e o bloco é 256 − 248 = 8. Os múltiplos de 8 perto de 77 são
 72 e 80, então a rede é `10.0.72.0` e o broadcast é 72 + 8 − 1 = 79 no terceiro octeto: `10.0.79.255`. O
 quarto octeto do endereço, 200, não importou nada, porque ali a máscara é 0. Esse não passou por uma

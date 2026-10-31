@@ -47,12 +47,12 @@ da WAN, a matriz inteira é um endereço público.
 
 Uma empresa compra uma de três coisas, e vale reconhecer os nomes:
 
-- **Uma linha dedicada** — um circuito exclusivo entre dois pontos, com a mesma capacidade de dia e
+- **Uma linha dedicada** é um circuito exclusivo entre dois pontos, com a mesma capacidade de dia e
   de noite, usada ou não. Simples e cara.
-- **MPLS** — uma rede privada da operadora que leva o tráfego de vários clientes separado, com a
+- **MPLS** é uma rede privada da operadora que leva o tráfego de vários clientes separado, com a
   operadora roteando entre as sedes do cliente.
-- **A internet** — uma conexão comum de internet em cada sede, de longe a mais barata, com as sedes
-  ligadas através dela por uma VPN. É o que o resto desta aula monta.
+- **A internet**, aqui, é uma conexão comum de internet em cada sede, de longe a mais barata, com as
+  sedes ligadas através dela por uma VPN. É o que o resto desta aula monta.
 
 Nenhuma das três rodou no laboratório além do que ele mostra: um roteador fazendo o papel da
 operadora, com dois links.

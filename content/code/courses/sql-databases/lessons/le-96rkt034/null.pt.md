@@ -91,7 +91,7 @@ Para incluir os desconhecidos deliberadamente:
 SELECT count(*) FROM customers WHERE city <> 'Porto' OR city IS NULL;   -- 6
 ```
 
-Agora é seis, três e um, que somam dez.
+Agora é seis, e com os quatro do Porto dá dez.
 
 ## Os lugares onde morde e ninguém te avisa
 

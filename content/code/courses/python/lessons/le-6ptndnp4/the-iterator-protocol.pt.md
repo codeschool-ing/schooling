@@ -38,7 +38,7 @@ while True:
 ```
 
 **Toda surpresa desta aula decorre disso.** O laço pede um iterador uma vez e então puxa valores
-até a exceção — então um segundo laço sobre o mesmo ITERADOR não recebe nada, e um segundo laço
+até a exceção. Então um segundo laço sobre o mesmo ITERADOR não recebe nada, e um segundo laço
 sobre a mesma LISTA recebe um iterador novo e funciona.
 
 ## `StopIteration` é um sinal, e não um erro

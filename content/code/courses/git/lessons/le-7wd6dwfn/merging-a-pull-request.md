@@ -48,8 +48,8 @@ ana@vm:~/site$ git log --oneline --graph -3
 
 **`--squash` takes all of the branch's changes and stages them as one change**, without committing and
 without recording that a branch was merged. The commit that follows is a single ordinary commit with
-the pull request's number in its message. Three commits, including one that fixed a typo in another,
-became one line of history.
+the pull request's number in its message. Three commits, including one that only reworded what another had
+just added, became one line of history.
 
 ## Rebase and merge
 

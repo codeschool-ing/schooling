@@ -56,7 +56,7 @@ of the hour's budget went in four minutes.**
 Two lessons sit in those numbers. **An SLI that reads 99.7% can still mean trouble**: the objective
 was met, and there is a third of the budget left for the rest of the window. Another incident like
 this one would miss it. And **the window decides how dramatic an incident looks**: the same 55
-failures against a 28-day budget of about fifty thousand would be about a tenth of one per cent of
+failures against a 28-day budget of about fifty-four thousand would be about a tenth of one per cent of
 it. The lab's one-hour window makes every incident look large on purpose, so that a lesson can watch
 the budget move. A real team sees this as a small dip in a long line, and the policy in the next
 section decides what that dip means.

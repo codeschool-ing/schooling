@@ -11,12 +11,12 @@ toda falha atingem todo mundo de uma vez.
 
 O projeto clássico tem três camadas:
 
-- **Acesso** — onde as máquinas se ligam. Um switch por andar ou por sala, muitas portas, barato. A
+- Acesso — onde as máquinas se ligam. Um switch por andar ou por sala, muitas portas, barato. A
   função dele é conectar pessoas, e mais nada.
-- **Distribuição** — o gateway da LAN de cada switch de acesso, e o lugar onde as regras são aplicadas:
+- Distribuição — o gateway da LAN de cada switch de acesso, e o lugar onde as regras são aplicadas:
   quais LANs podem conversar, quais rotas são resumidas antes de subir (a seção de escalabilidade
   desta aula). Cada aparelho de distribuição atende um bloco do prédio.
-- **Núcleo** — o meio, que leva o tráfego entre os blocos de distribuição o mais rápido que puder. **O
+- Núcleo — o meio, que leva o tráfego entre os blocos de distribuição o mais rápido que puder. **O
   núcleo carrega o tráfego de todo mundo, então não filtra nada nem faz trabalho esperto**; tudo o que
   poderia deixá-lo lento ou quebrá-lo fica uma camada abaixo.
 

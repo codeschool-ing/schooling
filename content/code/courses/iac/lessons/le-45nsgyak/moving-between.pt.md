@@ -184,7 +184,7 @@ guarantee to take exactly these actions if you run "terraform apply" now.
 ```
 
 **`Plan: 1 to import, 0 to add, 0 to change, 0 to destroy`** é a linha a ler. Ela quer dizer que o
-bucket vai entrar no estado, e que o bloco no `main.tf` já o descreve como ele é: se a configuração
+bucket vai entrar no estado, e que o bloco no `main.tf` já o descreve como ele é. Se a configuração
 discordasse do bucket real, o mesmo plan mostraria também uma mudança, e o time a veria antes de
 qualquer coisa acontecer. O apply faz o que o plan disse:
 

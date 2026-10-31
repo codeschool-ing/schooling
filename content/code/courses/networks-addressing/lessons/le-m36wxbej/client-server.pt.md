@@ -58,4 +58,4 @@ aceita vira um socket próprio, separado dos outros por quem está na outra pont
 É isso que torna o cliente-servidor simples de operar. O endereço e a porta do servidor são
 publicados uma vez — num registro DNS, num arquivo de configuração, numa URL — e todo cliente o
 encontra do mesmo jeito. É também a fraqueza do modelo: quando o `srv` para, as três conversas param
-junto, e nenhum cliente pode fazer nada a respeito. A última seção desta aula pesa os dois lados.
+junto, e nenhum cliente pode fazer nada a respeito. A seção sobre a escolha, no fim desta aula, pesa os dois lados.

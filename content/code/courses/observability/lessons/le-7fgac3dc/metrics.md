@@ -25,7 +25,7 @@ Two checkouts took under 0.1 seconds: the two sent before payments was slowed. A
 and `_sum` how many seconds they added up to, so the mean is 167.50 / 111, about 1.51 seconds.
 
 That is the shape of a metric: **a handful of numbers that grow, whatever the traffic.** A thousand
-checkouts or a million cost the same seven lines. Prometheus reads them every fifteen seconds and
+checkouts or a million cost the same lines. Prometheus reads them every fifteen seconds and
 keeps the history, which is what lets it answer *how slow were checkouts over the last two
 minutes*:
 
@@ -35,9 +35,9 @@ ana@obs:~/shop$ curl -s localhost:9090/api/v1/query --data-urlencode 'query=hist
 ```
 
 The query asks for the 99th percentile: the time under which 99 checkouts in a hundred finished.
-The answer, 2.485 seconds, is **not a time any request took.** The checkout timed with `curl` took 1.54, and every slow checkout waited the same
-one and a half seconds in payments.
-A histogram knows only which bucket a request fell into, so Prometheus assumes the 109 requests
+The answer, 2.485 seconds, is **not a time any request took.** The checkout timed with `curl` took
+1.54, and every slow checkout waited the same one and a half seconds in payments. A histogram knows
+only which bucket a request fell into, so Prometheus assumes the 109 requests
 between 1 and 2.5 were spread evenly across that range and reads the percentile off that
 assumption. Lesson 5 writes this query step by step, and lesson 6 is about choosing buckets so that
 the assumption costs less.

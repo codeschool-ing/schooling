@@ -47,4 +47,4 @@ O único arquivo de que ele precisa e que o projeto do laboratório não tem é 
 bibliotecas e suas versões, que no `ctl` vêm do ambiente virtual do laboratório. **Os scripts em
 `ci/` não mudaram.** Esse é o motivo de mantê-los no projeto em vez de na configuração do serviço de
 CI: o pipeline pode ser rodado à mão, testado no laboratório, e levado para outro serviço
-reescrevendo as vinte linhas em volta dele.
+reescrevendo as 25 linhas de YAML em volta dele.

@@ -95,7 +95,7 @@ uncached 3.50  cached 0.35  dollars per 1,000 e-mails, input only
 Essa é a divisão do Ollama aos preços do Sonnet 4.5; o Claude conta tokens com o próprio
 tokenizador, então os números seriam outros e o que se mantém é a proporção. Dez vezes mais barato
 na entrada, para o prompt longo. Sem cache, os exemplos fazem cada requisição custar catorze vezes
-o prompt sozinho, US$ 3,50 por mil e-mails contra US$ 0,25; com cache, cerca de uma vez e meia,
+o prompt sozinho, US$ 3,50 por mil e-mails contra US$ 0,25; com cache, cerca de 1,4 vez,
 US$ 0,35.
 
 Se os exemplos melhoram a *classificação* é pergunta da aula 5, não do cache, e esta execução dá

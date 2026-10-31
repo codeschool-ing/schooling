@@ -8,7 +8,7 @@ it is meant for, how it scored, and where it is known to fail. It is the closest
 to a datasheet, and most people skip it and read the benchmark table instead. The table is the
 least useful part for a decision about your own task, because it measures somebody else's.
 
-Llama 3.1's card runs to over a thousand lines. Two of its paragraphs answer questions ana has to
+Llama 3.1's card runs to almost a thousand lines. Two of its paragraphs answer questions ana has to
 ask about any model before Lantern Books depends on it:
 
 ```
@@ -27,7 +27,7 @@ ask about any model before Lantern Books depends on it:
 
 **Languages.** *Supported* means the makers tested it and stand behind the results. Portuguese is
 on Llama 3.1's list, which matters for a shop whose customers write in Portuguese. The same card
-says, a few hundred lines further on, that it was trained on more languages than those eight, and
+says, a few lines further on, that it was trained on more languages than those eight. Near its end, it
 "strongly discourage[s]" using it to converse in the others without further work. A language that
 works in a quick test and is not on the list is a language nobody measured.
 

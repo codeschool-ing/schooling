@@ -79,7 +79,7 @@ Unused:
 
 Leia pedaço por pedaço: vendas é 10.20.32.0/25, hosts do .1 ao .126; engenharia é 10.20.32.128/26,
 hosts do .129 ao .190; operações é 10.20.32.192/27, hosts do .193 ao .222; o enlace é
-10.20.32.224/30, hosts .225 e .226. A coluna em binário mostra cada máscara andando mais um bit para
+10.20.32.224/30, hosts .225 e .226. A coluna em binário mostra cada máscara andando mais para
 a direita, e cada rede começando onde a anterior terminou. No fim, `Needed size: 228 addresses`, a
 soma 128 + 64 + 32 + 4, e os 28 endereços que sobram aparecem como os três blocos em que caem: um
 /30, um /29 e um /28.
@@ -91,7 +91,7 @@ soma 128 + 64 + 32 + 4, e os 28 endereços que sobram aparecem como os três blo
 A ordem não é enfeite. Posicione as mesmas sub-redes sem cuidado e um bloco que tem espaço pode não
 conseguir guardá-las. Suponha que alguém coloque primeiro o enlace em 10.20.32.64/30 e operações em
 10.20.32.192/27, porque esses números pareciam arrumados. Ainda há 220 endereços livres, e vendas só
-precisa de 128 deles, mas **um /25 só pode começar no .0 ou no .128**, e cada uma dessas metades agora
+precisa de 128 deles. Mas **um /25 só pode começar no .0 ou no .128**, e cada uma dessas metades agora
 tem uma sub-rede pequena dentro. Vendas não cabe mais em lugar nenhum do bloco. Do maior para o menor
 nunca se encurrala assim, e o espaço livre que sobra fica no fim, em pedaços alinhados que uma rede
 futura pode ocupar inteiros.

@@ -147,6 +147,6 @@ git version 2.43.0
 Python 3.12.3
 ```
 
-Each dot is a second of waiting, and `done` means every line of srv.yaml has been carried out. srv now
+The dots are cloud-init waiting, and `done` means every line of srv.yaml has been carried out. srv now
 has everything the rest of this lesson uses. If any step here went differently, the next section is
 about exactly that.

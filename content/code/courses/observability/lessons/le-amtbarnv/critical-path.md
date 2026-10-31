@@ -13,7 +13,7 @@ else at the time.
 
 In the shop every call is made one after another, so the critical path of a checkout is all of it,
 and the lesson is arithmetic. Of the 439 ms, the card network is 400. Making the `INSERT` ten times
-faster saves under a millisecond, and removing the connection `orders` opens per message saves
+faster saves about a millisecond, and removing the connection `orders` opens per message saves
 perhaps twenty. **The only change a customer could notice is in payments**.
 
 ```schooling-figure

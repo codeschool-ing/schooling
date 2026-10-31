@@ -17,6 +17,6 @@ segundos; os dois minutos estão ensaiados; as perguntas são esperadas; a retro
 em seguida. Sempre haverá uma próxima funcionalidade, e ela pertence ao *ainda não*, não ao *não terminado*.
 Decida se vai continuar melhorando ou arquivar, aula 18, e diga.
 
-O curso termina aqui, e o próximo começa onde este deixa o projeto: o **first-job** leva o trabalho terminado
+O curso termina aqui. O próximo, o **first-job**, começa onde este deixa o projeto: leva o trabalho terminado
 às pessoas que vão lê-lo, pelo currículo, pelas candidaturas e pelas entrevistas para as quais este curso vem
 preparando desde a primeira aula.

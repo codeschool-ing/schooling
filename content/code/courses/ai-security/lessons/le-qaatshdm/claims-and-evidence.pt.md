@@ -49,5 +49,5 @@ menos uma vez por ano, e sempre que o fornecedor anunciar uma mudança nos termo
 lista contra as respostas novas. E a saída é planejada no primeiro dia, não no último: que versão de
 modelo o assistente fixa, como os dados são apagados e confirmados, e para onde a Tarefa iria. **Um
 fornecedor de que a Tarefa não consegue sair é um fornecedor cujo próximo aumento de preço a Tarefa não
-consegue recusar**, e essa é uma questão de segurança tanto quanto comercial, porque o dia em que um
+consegue recusar.** Essa é uma questão de segurança tanto quanto comercial, porque o dia em que um
 fornecedor deixa de atender um MUST é o dia em que sair precisa ser possível.

@@ -58,7 +58,7 @@ Oracle behaves the same way: **`CREATE`, `ALTER`, `DROP` and `TRUNCATE` issue an
 before and after themselves.** A transaction in progress when you run one is committed, including
 the part you had not decided about yet.
 
-So the migration rule from lesson 11 is the Oracle rule too: **one reversible step at a time, and
+So the migration rule from lesson 12 is the Oracle rule too: **one reversible step at a time, and
 a tool that can resume**, because a script of six `ALTER TABLE`s that fails on the fourth has
 applied three of them.
 

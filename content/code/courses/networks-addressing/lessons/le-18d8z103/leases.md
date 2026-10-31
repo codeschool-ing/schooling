@@ -42,8 +42,8 @@ lease 10.20.10.101 {
 One block per address lent. pc1's lease of 10.20.10.100 `starts 2 2026/09/29 11:20:32` and `ends 2
 2026/09/29 11:30:32`: ten minutes, the `default-lease-time 600` of the configuration. The `2` is
 the day of the week, Tuesday. **The times in this file are in UTC**, while the `tcpdump` in the
-section on DORA printed the lab's local time, `08:20` in São Paulo: the same moment, three hours
-apart on the page, which is worth knowing before you match a lease against a log. `binding state
+section on DORA printed the lab's local time, `08:20` in São Paulo. It is the same moment, three
+hours apart on the page, and worth knowing before you match a lease against a log. `binding state
 active` is a lease in use, `next binding state free` is what it becomes at the end, and
 `client-hostname "pc1"` is the name the client sent, which is the quickest way to find out whose a
 lease is.
@@ -80,7 +80,8 @@ The last three lines are the client's timetable, measured from the lease's start
 ACK starts the clock again. That moment is the `renewal in 291 seconds` that `dhclient` printed when
 it bound the address. If that server has not answered by **rebind**, the client broadcasts its
 request to any server that will listen. If nobody has answered by **expire**, the client stops using
-the address. Half and seven eighths are the protocol's defaults, from RFC 2131. This client brings the first one forward by a random amount, which is why every `renewal in` in this lesson is a
+the address. Half and seven eighths are the protocol's defaults, from RFC 2131. This client
+brings the first one forward by a random amount, which is why every `renewal in` in this lesson is a
 different number below 300 — 291 for pc1, 283 for the printer.
 
 A client that is finished with an address can give it back early:

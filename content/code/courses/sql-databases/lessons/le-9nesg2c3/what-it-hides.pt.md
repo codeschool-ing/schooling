@@ -105,4 +105,4 @@ mesma razão.
 Cada uma das cinco é o mapeador fazendo exatamente o que documenta, e cada uma é visível num
 lugar: a instrução que o servidor recebeu. Toda coluna, `NULL` onde se esperava um default, sem
 `ORDER BY`, um `BEGIN` sem `COMMIT` por dois segundos, uma busca que nunca chegou. O log mostra as
-cinco, e é por isso que a segunda seção disse para deixá-lo ligado.
+cinco, e é por isso que a seção sobre o que ele emite disse para deixá-lo ligado.

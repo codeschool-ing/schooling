@@ -6,7 +6,7 @@ version: 1
 Todo prompt que o assistente da Tarefa monta sai para uma empresa que a Tarefa não opera. A aula 12
 decidiu o que pode entrar num prompt; a aula 13 desenhou o fluxo que cruza para a zona do fornecedor.
 **Esta aula é sobre escolher quem está do outro lado desse fluxo**, porque as práticas do fornecedor
-viram as da Tarefa: um fornecedor que guarda prompts por um ano significa que as palavras dos clientes
+viram as da Tarefa. Um fornecedor que guarda prompts por um ano significa que as palavras dos clientes
 da Tarefa existem por um ano, e nada no código da própria Tarefa muda isso.
 
 A escolha começa com uma lista curta de perguntas escrita antes de alguém ler uma página de vendas,

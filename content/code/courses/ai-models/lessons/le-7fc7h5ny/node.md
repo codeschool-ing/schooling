@@ -55,8 +55,9 @@ bill: the program read four files and did the arithmetic on the CPU.
 
 Read the misses the way lesson 5 section 07 read errors, by what was confused with what. `c34`,
 which a person labelled `other`, was called `refund`; `c36`, a refund, was called `address-change`;
-`c38`, a product question, was called `other`. The scores say how sure it was, and they are low on
-exactly these: 0.441, 0.502, 0.488, against 0.910 on the refund it got right. **A score is the
+`c38`, a product question, was called `other`. The scores say how sure it was. All three misses are
+low, 0.441, 0.502 and 0.488, against 0.910 on the refund it got right, and so is `c35`, which it got right at
+0.366. **A score is the
 model's confidence, not its accuracy**, and a threshold under which an e-mail goes to a person is
 the obvious use for it.
 

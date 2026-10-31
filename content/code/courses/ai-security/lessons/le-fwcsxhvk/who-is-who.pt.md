@@ -4,7 +4,7 @@ version: 2
 ---
 
 A intuição que a maioria dos desenvolvedores traz é que um fornecedor de modelo é infraestrutura,
-como um banco de dados ou uma fila: um lugar por onde o dado passa a caminho de uma resposta, e
+como um banco de dados ou uma fila. Nessa visão, é um lugar por onde o dado passa a caminho de uma resposta, e
 portanto algo sobre o que a lei de privacidade tem pouco a dizer. **A LGPD lê do outro jeito.**
 Enviar um ticket à API de um fornecedor é tratamento, a palavra da lei para qualquer coisa feita com
 dado pessoal, e o art. 5, X lista a transferência e a comunicação entre as operações que ela cobre.
@@ -134,8 +134,8 @@ tratamento ao mínimo que esse propósito exige. O resumo de um logo atrasado n�
 nascimento do Marcos. A próxima seção transforma esse princípio num arquivo.
 
 **O dado sai do Brasil?** Se o fornecedor roda o modelo fora do país, enviar o ticket é uma
-transferência internacional, e o art. 33 só a permite nos casos que lista: um país que a ANPD
-reconhece como de proteção adequada, ou garantias que o controlador oferece, das quais a comum é um
+transferência internacional, e o art. 33 só a permite nos casos que lista. Dois deles são um país que a ANPD
+reconhece como de proteção adequada e garantias que o controlador oferece. A garantia comum é um
 contrato com as cláusulas-padrão da ANPD, publicadas na Resolução CD/ANPD nº 19 de 2024. Onde o
 modelo roda faz parte, então, da escolha do fornecedor, junto com o preço e a qualidade.
 

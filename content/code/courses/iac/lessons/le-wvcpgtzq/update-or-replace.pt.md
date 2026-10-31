@@ -112,8 +112,8 @@ Note: You didn't use the -out option to save this plan, so Terraform can't
 guarantee to take exactly these actions if you run "terraform apply" now.
 ```
 
-Só as tags mudam; o id está entre os 20 atributos inalterados que o plan esconde, e o resumo conta
-uma mudança e nada adicionado ou destruído. Esse é o tipo barato de mudança.
+Só as tags mudam. O id aparece sem mudança acima delas, então a sub-rede o mantém, e o plan esconde
+os outros 20 atributos inalterados; o resumo conta uma mudança e nada adicionado ou destruído. Esse é o tipo barato de mudança.
 
 ## Uma mudança que força uma substituição
 

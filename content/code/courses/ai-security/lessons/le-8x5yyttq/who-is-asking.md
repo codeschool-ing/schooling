@@ -247,8 +247,8 @@ ap-08  Lima Advocacia         REVIEW  sandbox  use case legal-drafting needs a p
 Each decision names every rule that produced it, not only the first, so that a refusal can be
 explained to the company and a mistake can be fixed. Studio Pixel typed its CNPJ with the last digit
 wrong; the registry has the right one, and the refusal tells them which check failed. Disparo Total
-is refused twice over: the Receita lists it as *inapta*, a status it gives, among other reasons, to a
-company that has stopped filing the declarations it must file; and its use case is prohibited, which
+is refused twice over. The Receita lists it as *inapta*, a status it gives, among other reasons, to a
+company that has stopped filing the declarations it must file. And its use case is prohibited, which
 is the next section.
 
 ## Signals, not proofs

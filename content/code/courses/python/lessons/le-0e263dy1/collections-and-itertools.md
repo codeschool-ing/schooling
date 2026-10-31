@@ -59,13 +59,28 @@ A list is slow to remove from the FRONT — every other item shifts. A `deque` i
 
 ## Four `itertools` that earn their import
 
-```python
-from itertools import product, chain, groupby, islice
-
-product(sizes, colours)          # every pair, without the nested loop
-chain(a, b, c)                   # iterate three lists as one
-islice(rows, 10)                 # the first ten of anything, without a list
-groupby(sorted(rows, key=k), k)  # runs of equal keys — SORT FIRST
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "from itertools import product, chain, groupby, islice\n\nproduct(sizes, colours)",
+      "note": "`product` gives every pair, without the nested loop."
+    },
+    {
+      "code": "chain(a, b, c)",
+      "note": "`chain` iterates three lists as one."
+    },
+    {
+      "code": "islice(rows, 10)",
+      "note": "`islice` takes the first ten of anything, without building a list."
+    },
+    {
+      "code": "groupby(sorted(rows, key=k), k)",
+      "note": "`groupby` finds runs of equal keys, so **sort by the same key first**."
+    }
+  ]
+}
 ```
 
 `groupby` is the one that catches people: it groups CONSECUTIVE equal keys, so unsorted input

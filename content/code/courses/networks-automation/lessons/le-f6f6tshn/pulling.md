@@ -30,7 +30,7 @@ edge2:
   groups: [routers]
 ```
 
-The same script then commits whatever changed:
+`net/backup.py` reads all three and commits whatever changed:
 
 ```schooling-example
 {

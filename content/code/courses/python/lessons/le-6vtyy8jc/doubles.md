@@ -62,6 +62,6 @@ raises `TypeError: missing a required argument: 'subject'` instead.
 ## When not to use one at all
 
 A pure function needs no double. A class you can construct in three lines needs no double. Reach
-for one at a genuine boundary — the network, the clock, the filesystem, the payment gateway — and
-prefer passing a simple object you wrote over patching a name, because a real object has a real
+for one at a genuine boundary — the network, the clock, the filesystem, the payment gateway. Even
+there, prefer passing a simple object you wrote over patching a name, because a real object has a real
 signature and does not answer attributes it has never heard of.

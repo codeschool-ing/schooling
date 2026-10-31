@@ -52,7 +52,7 @@ joga fora o plano com preço; o resto da aula segue a partir dos dois servidores
 lê um diretório de Terraform ou o JSON de um plano, descobre quais atributos de cada recurso carregam
 um preço, pede esses preços a um serviço de preços e imprime um detalhamento por recurso com um total
 mensal. O comando `diff` compara duas versões do código, a branch contra a linha principal, e imprime
-a mudança no custo; as integrações dele com os sistemas de CI mais comuns publicam essa diferença como
+a mudança no custo. As integrações dele com os sistemas de CI mais comuns publicam essa diferença como
 comentário no pull request, ao lado do plano que a aula 15 põe lá.
 
 Três coisas sobre ele valem saber antes de adotá-lo:

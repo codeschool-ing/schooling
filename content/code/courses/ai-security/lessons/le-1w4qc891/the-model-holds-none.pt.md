@@ -43,7 +43,7 @@ e menos cuidadoso que o das pessoas que podem ler o cofre de segredos.
 ## Quanto custa uma chave vazada
 
 Um achado que chegou ao repositório não se resolve apagando a linha. A chave está no histórico, em
-cada clone e em cada cópia dos logs do build, então a única correção é **rotacioná-la**: emitir uma
+cada clone e em cada cópia dos logs do build. A única correção é **rotacioná-la**: emitir uma
 chave nova, implantá-la e revogar a antiga, para que as cópias não abram nada. É por isso que rotacionar
 precisa ser barato o bastante para ser feito numa tarde ruim, e a próxima seção trata de mantê-lo
 assim.

@@ -30,8 +30,8 @@ commit leva à issue.
 Para um portfólio isso faz três coisas. **Mostra que o trabalho foi planejado**, não improvisado: o cartão
 existia antes do código. **Mantém a discussão num lugar só**: se a issue diz por que o índice foi para o
 banco e não para o código, a mensagem de commit pode ser curta e ainda assim ser entendida. E **dá um
-índice ao histórico**: quem quer ver como a coisa única foi construída abre a issue 3 e tem o commit, o
-teste e a discussão a um clique.
+índice ao histórico**: quem quer ver como a coisa única foi construída abre a issue 3 e tem o commit que a
+fechou e a discussão a um clique.
 
 Use a palavra-chave só no commit que termina o cartão. Um commit que é parte do trabalho pode dizer *refs
 #3*, que liga sem fechar.

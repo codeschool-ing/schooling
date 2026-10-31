@@ -3,7 +3,7 @@ title: The other types, and when each is the right answer
 version: 1
 ---
 
-Four more that come up constantly, and one instruction each about when to reach for it.
+Five more that come up constantly, and one instruction each about when to reach for it.
 
 ## `boolean`
 

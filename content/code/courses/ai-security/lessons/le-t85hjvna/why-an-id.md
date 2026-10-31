@@ -32,7 +32,7 @@ and no name, e-mail address or phone number; OpenAI's suggests hashing the usern
 address. The next section shows why a plain hash of an e-mail address protects less than it seems
 to.
 
-Field names change between API versions, so the habit to keep is independent of them: **every model
+Field names change between API versions, so the habit to keep is independent of them. **Every model
 call carries the identity of the person it is for, in a field meant for it, and in a form that
 identifies nobody to the provider.** Here is the shape of a request with one, written as the JSON
 body an application would send; this lesson sends nothing anywhere:
@@ -47,7 +47,7 @@ body an application would send; this lesson sends nothing anywhere:
 ```
 
 `eu-fe47aa8e7cd5e1b6f8bc` is the identifier `guard enduser`, in the next section, produces for the
-account `ac-7Q2M`, the client whose e-mail address you met in lesson 11. The next section is how it
+account `ac-7Q2M`, the client whose e-mail address turns up in lesson 11's logs. The next section is how it
 is made.
 
 ## What the provider does with it
@@ -56,5 +56,5 @@ An identifier lets the provider tell Tarefa *which* user tripped its abuse detec
 can deal with one account instead of having the key restricted. What each provider actually does
 with the field, how long it keeps it and whether it acts on it automatically is set out in its terms
 and documentation, and differs between providers. Read them for the provider you use, the same way
-lesson 12 read the contract. The field costs a few bytes per request, and the day it matters is the
+lesson 12 reads the contract. The field costs a few bytes per request, and the day it matters is the
 day an abuse report names your key.

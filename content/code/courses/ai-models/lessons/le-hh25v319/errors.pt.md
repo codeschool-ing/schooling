@@ -75,7 +75,7 @@ traça a linha em outro lugar, e alguns casos de fronteira rotulados mudam a lin
 Cinco casos estão errados para os três modelos: c10, c24, c26, c32 e c34. Dois deles são os que a
 ana hesitou em rotular na seção 03, o desconto para escola e o reembolso da diferença. **Quando
 todos os candidatos discordam de um rótulo, desconfie do rótulo antes dos modelos.** Aqui eles nem
-concordam entre si: para o c24, o qwen2.5:3b diz `product-question` e o llama3.2:3b uma lista que
+concordam entre si. Para o c24, o qwen2.5:3b diz `product-question` e o llama3.2:3b uma lista que
 começa com `order-status`, o que é sinal de caso difícil, não de rótulo errado.
 
 E então o 1b, cujos seis primeiros de trinta e seis são típicos:

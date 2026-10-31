@@ -42,7 +42,7 @@ editado para consertar os casos de fronteira. Cada um desses é a mudança de um
 avaliação, e os casos respondem se ela piorou as coisas.
 
 O `evalkit gate` transforma essa conferência em algo que um programa pode recusar. Ele compara a
-nota frouxa de um modelo numa execução nova com a linha de base e falha, com status de saída 1, se a
+nota frouxa de um modelo numa execução nova com a linha de base. Falha, com status de saída 1, se a
 nova for pior por mais casos do que o permitido, um a menos que lhe digam outro número:
 
 ```

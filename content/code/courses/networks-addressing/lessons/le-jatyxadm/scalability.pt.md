@@ -60,8 +60,8 @@ prédio ali — e nenhuma rota se resume nunca, porque os blocos não se alinham
 endereços é barato no primeiro dia e impossível de mudar no milésimo**, já que todo aparelho, toda regra
 de firewall e todo documento carregam os endereços.
 
-A conta das máscaras e de quantos hosts um bloco comporta é a aula 12; cortar um bloco em pedaços de
-tamanhos diferentes, como o campus faz com suas `/30`s e `/24`s, é a aula 13; e fazer o OSPF anunciar um
+A conta das máscaras e de quantos hosts um bloco comporta é a aula 12. Cortar um bloco em pedaços de
+tamanhos diferentes, como o campus faz com suas `/30`s e `/24`s, é a aula 13, e fazer o OSPF anunciar um
 resumo no lugar de muitas rotas fica para a aula 16. Esta seção só pede que você olhe uma tabela e conte.
 
 ## O outro tipo de crescimento
@@ -69,4 +69,4 @@ resumo no lugar de muitas rotas fica para a aula 16. Esta seção só pede que v
 Escalabilidade também quer dizer que as pessoas conseguem acompanhar. Um projeto com um tipo de switch de
 acesso, um tipo de par de distribuição e um jeito de numerar as coisas pode ser estendido por alguém que
 não o montou. Um projeto em que cada prédio é um caso especial não pode, por mais rápidos que sejam os
-roteadores. Essa é a ponte para a última seção desta aula: o que não está escrito não escala.
+roteadores. Essa é a ponte para a seção sobre documentação, no fim desta aula: o que não está escrito não escala.

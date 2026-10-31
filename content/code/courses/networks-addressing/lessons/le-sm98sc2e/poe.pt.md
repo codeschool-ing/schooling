@@ -23,12 +23,12 @@ A preocupação óbvia é que um switch empurrando energia por todos os cabos da
 ligado na porta errada. **Um PSE dentro do padrão não põe energia num cabo até encontrar um PD na
 outra ponta.** Ele passa por três etapas:
 
-1. **Detecção.** O PSE aplica uma tensão pequena e inofensiva e procura uma *resistência de
+1. Detecção: o PSE aplica uma tensão pequena e inofensiva e procura uma *resistência de
    assinatura* de 25 kΩ que o PD apresenta na entrada. A placa de rede de um notebook não a
    apresenta, então ela nunca recebe energia.
-2. **Classificação.** O PD anuncia uma **classe**, que diz ao PSE quanta energia ele pode puxar.
+2. Classificação: o PD anuncia uma **classe**, que diz ao PSE quanta energia ele pode puxar.
    Dispositivos dos padrões mais novos também podem refinar o número depois, via LLDP.
-3. **Energização**, e a partir daí o PSE vigia a corrente. Se o PD é desconectado, o PSE percebe e
+3. Energização, e a partir daí o PSE vigia a corrente. Se o PD é desconectado, o PSE percebe e
    tira a energia da porta.
 
 Essa proteção pertence ao padrão. Alguns equipamentos baratos vendem *PoE passivo*, que põe tensão
@@ -52,7 +52,7 @@ O 802.3af e o 802.3at mandam energia por dois dos quatro pares do cabo. **O 802.
 quatro**, e é assim que chega a 60 e 90 W, e é por isso que ele é o padrão para dispositivos como
 câmeras com aquecedor, pontos de acesso grandes e telas pequenas.
 
-Dentro do Type 1 as classes dizem quanto menos que o máximo um dispositivo precisa: **a classe 1
+Dentro do Type 1 as classes dizem quanto menos que o máximo um dispositivo precisa. **A classe 1
 reserva 4 W na porta, a classe 2 reserva 7 W, e a classe 3 os 15,4 W inteiros.** A classe 4 é os
 30 W do Type 2, e o 802.3bt acrescenta as classes 5 a 8, até 90 W. Um dispositivo que não anuncia
 nada é classe 0 e recebe o máximo do Type 1. Essas reservas são o que a próxima seção soma, porque um

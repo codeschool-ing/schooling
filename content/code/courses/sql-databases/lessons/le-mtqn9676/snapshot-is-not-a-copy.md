@@ -68,9 +68,9 @@ Once you have the test, you see it everywhere, and it is always the same answer:
 | the exchange rate on a payment | rates move constantly and the payment happened once |
 | the terms accepted, on the acceptance | the terms were rewritten; that person agreed to the old ones |
 
-This repository does exactly this, which is worth knowing because it is a real system and not an
-exercise. Its certificate migration says everything on the document is captured when it is issued —
-the name, the title, the school — and none of it read live, because *"a course can be renamed or
+The platform you are reading this on does exactly this, which is worth knowing because it is a
+real system and not an exercise. Its certificate migration says everything on the document is
+captured when it is issued: the name, the title, the school. None of it is read live, because *"a course can be renamed or
 removed from the catalogue entirely… and a certificate that read its title live would silently
 start naming something else, or nothing."*
 

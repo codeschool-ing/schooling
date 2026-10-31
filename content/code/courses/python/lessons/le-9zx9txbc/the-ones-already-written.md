@@ -49,7 +49,7 @@ with suppress(FileNotFoundError):
     path.unlink()
 ```
 
-`try`/`except`/`pass`, with the class named where a reader sees it. Two lines to one, and the
+`try`/`except`/`pass`, with the class named where a reader sees it. Three lines to one, and the
 name is the point — a bare `except: pass` says nothing about what was expected.
 
 ## `redirect_stdout`
@@ -60,8 +60,8 @@ with redirect_stdout(buffer):
     noisy_library_call()
 ```
 
-For the library that prints and has no option not to. Lesson 16 uses it to test something that
-was written to print.
+For the library that prints and has no option not to. Inside a test, lesson 16 does the same job
+with pytest's `capsys`.
 
 ## And the shape they share
 

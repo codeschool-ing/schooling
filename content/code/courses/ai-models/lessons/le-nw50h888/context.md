@@ -13,7 +13,7 @@ adds a second number, the window **it** gives the model, and that one is a setti
 
 Four thousand tokens, whatever the model was trained for. A conversation longer than that does not
 fail. `context.py` sends the triage prompt, thirty-nine of ana's cases as worked examples (each
-e-mail and the label a person gave it), and the fortieth as the question, three times, with three
+e-mail and the label a person gave it), and the fortieth as the question. It sends them three times, with three
 values of `num_ctx`:
 
 ```python

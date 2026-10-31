@@ -43,8 +43,8 @@ The interesting part is the destination of the question. ARP sent its question t
 `ff02::1:ff00:10`, a solicited-node multicast address**: `ff02::1:ff` followed by the last 24 bits of
 the address being looked for. srv's address ends in `00:00:10` (the last two groups, `0000:0010`, with
 their last six hex digits taken), so the group is `ff02::1:ff00:10`. Every machine joins the group
-for each of its own addresses, so in practice only the machine with the right address, and the rare
-one whose address happens to end in the same 24 bits, has to look at the question. pc2, whose
+for each of its own addresses. So in practice only the machine with the right address has to look
+at the question, along with the rare one whose address happens to end in the same 24 bits. pc2, whose
 addresses end in `d2:63ba`, is in group `ff02::1:ffd2:63ba` and never had to read this one.
 
 The answer lands in the same kind of table ARP fills:
@@ -54,7 +54,7 @@ ana@pc1:~$ ip -6 neigh
 2001:db8:20:10::10 dev eth0 lladdr 02:9e:43:3e:ca:ae REACHABLE 
 ```
 
-`02:9e:43:3e:ca:ae` is srv's MAC, and you can check it against srv's link-local address from the first
+`02:9e:43:3e:ca:ae` is srv's MAC, and you can check it against srv's link-local address from the notation
 section of this lesson, `fe80::9e:43ff:fe3e:caae`: the same digits with `ff:fe` in the middle and the
 `02` turned into `00`.
 

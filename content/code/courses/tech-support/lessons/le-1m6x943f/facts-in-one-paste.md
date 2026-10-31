@@ -24,5 +24,5 @@ disk /:   10% used, 6.1G free
 ```
 
 Seven lines, and each one would otherwise be a question to her or a guess in the ticket. A script like
-this is also where a support team starts to share its habits: the same facts, in the same order, from
-every technician.
+this is also where a support team starts to share its habits: **the same facts, in the same order, from
+every technician**.

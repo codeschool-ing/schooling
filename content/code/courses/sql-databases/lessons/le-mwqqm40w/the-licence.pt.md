@@ -93,7 +93,7 @@ Porque responde a perguntas que de outro modo parecem má engenharia, e um desen
 consegue ler essas respostas vai passar um ano propondo coisas que já são entendidas:
 
 - **por que a lógica de negócio está no banco.** A licença está paga; os servidores de aplicação
-  são baratos. A próxima seção é sobre como isso se parece.
+  são baratos. A seção sobre PL/SQL é sobre como isso se parece.
 - **por que não há réplica de relatório**, e por que relatórios rodam à noite na instância de
   produção.
 - **por que o ambiente de teste é menor**, e por que um plano que está bem lá não é evidência.

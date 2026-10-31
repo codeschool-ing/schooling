@@ -10,7 +10,7 @@ ana@ctl:~$ cd net && python backup.py
 no change since the last backup
 ```
 
-**Nenhum commit, nenhum arquivo com data nova, nada.** Isso importa mais do que parece. Um job de
+**Nenhum commit, nenhum arquivo com data nova, nada.** Um job de
 backup que gravasse uma cópia datada toda noite, `edge1-2026-10-01.conf` ao lado de
 `edge1-2026-09-30.conf`, produziria trezentos e sessenta e cinco arquivos por ano por roteador,
 quase todos idênticos, e achar a noite em que algo mudou significaria compará-los dois a dois. No

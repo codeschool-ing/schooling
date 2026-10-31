@@ -74,7 +74,7 @@ total 89208
 -rw-r--r-- 1 ana ana   231508 Mar 30  2023 vocab.txt
 ```
 
-`model.onnx` is the transformer, 90,387,606 bytes. The rest is the tokenizer and its settings.
+`model.onnx` is the transformer, 90,387,606 bytes. The rest is the tokeniser and its settings.
 `minilm.py`, which every lesson so far has imported, wraps them in fifty lines:
 
 ```schooling-example

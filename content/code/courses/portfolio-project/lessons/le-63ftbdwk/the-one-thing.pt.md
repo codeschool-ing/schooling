@@ -39,7 +39,7 @@ Os dois empréstimos foram aceitos, e a lista agora mostra o **Projector 2 duas 
 professora. É exatamente a primeira história da Marta na aula 4, reproduzida em quatro comandos, e é a
 linha de não deve do briefing quebrada do jeito mais direto possível.
 
-Este é o momento de que a aula trata. O esqueleto prova que uma página, uma API e um banco podem ser
+O esqueleto prova que uma página, uma API e um banco podem ser
 ligados, que é o que toda lista de tarefas prova. **A parte do loanbook que prova algo é esta recusa**, e
 ela não está no esqueleto. Se o projeto parasse aqui, seria o tutorial da aula 2 com outro substantivo.
 

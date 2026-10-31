@@ -112,6 +112,6 @@ programa trocando o nome do modelo. A aula 5 mostra quanto ele custa em qualidad
 ## Qualquer outra coisa
 
 **Leia a última linha do que foi impresso antes de pesquisar.** Um instalador que falha imprime uma
-página, e o Python imprime um traceback; a causa é a linha que diz `ERROR`, `Error` ou o nome da
+página, e o Python imprime um traceback. A causa é a linha que diz `ERROR`, `Error` ou o nome da
 exceção, e as linhas em volta são onde aconteceu. Uma mensagem que cita um pacote ou um comando para
 rodar, como a primeira daqui, quer dizer exatamente isso.

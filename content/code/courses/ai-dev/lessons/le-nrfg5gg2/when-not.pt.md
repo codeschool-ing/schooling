@@ -17,7 +17,7 @@ em que você não consegue conferir o que ele lhe dá**, ou em que mandar o cód
   explorados depois. Um `verify_signature` gerado que devolve `True` numa entrada malformada passa
   em todo teste que só confere assinaturas válidas. A aula 11 volta a isso.
 - **Dinheiro, datas e unidades**, onde o código óbvio está sutilmente errado. A aula 3 seção 07
-  achou um bug de arredondamento em quatro linhas do próprio código da loja. São os lugares para
+  achou um bug de arredondamento numa função de três linhas do próprio código da loja. São os lugares para
   escrever os testes primeiro e só ficar com a sugestão do assistente se ela passar neles.
 
 ## Quando a decisão não é sua

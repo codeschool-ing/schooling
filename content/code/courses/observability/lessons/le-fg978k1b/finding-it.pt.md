@@ -26,6 +26,6 @@ culpado tem nome**: a métrica, o label e, pelos labels das próprias séries, o
 
 A mesma visão existe na interface web do Prometheus, em *Status*, *TSDB Status*. Um hábito que vale
 ter é olhá-la antes do problema, para que os números normais sejam conhecidos: neste laboratório,
-alguns milhares de séries e nenhum label acima de algumas centenas de valores. Uma equipe que conhece
+alguns milhares de séries e, fora os próprios nomes de métrica, nenhum label acima de algumas centenas de valores. Uma equipe que conhece
 o seu normal vê um salto no dia em que ele acontece; uma que não conhece o vê no dia em que o
 Prometheus é morto por falta de memória.

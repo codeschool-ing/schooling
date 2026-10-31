@@ -4,7 +4,7 @@ version: 2
 ---
 
 **A redação acontece na entrada, antes de o registro chegar a qualquer depósito.** Redigir um log
-depois de gravado deixa uma janela em que a cópia sem redação existe, e nessa janela ela entra no
+depois de gravado deixa uma janela em que a cópia sem redação existe. Nessa janela ela entra no
 backup, é enviada a um fornecedor de logs, é indexada para busca e é lida por quem estava depurando.
 Cada uma dessas é uma cópia que a redação posterior não alcança. No `~/guard`, o `tiers.py` faz a
 camada com redação com a mesma função que o `guard redact` chama, e numa aplicação de verdade essa
@@ -80,7 +80,7 @@ ana@lab:~/guard$ guard scan logs/raw
 ```
 
 Metade do log. São registros de um assistente de suporte que nunca pediu número de documento a
-ninguém, e a proporção é invenção do curso, mas o formato é o que as equipes encontram quando olham
+ninguém. A proporção é invenção do curso, mas o formato é o que as equipes encontram quando olham
 pela primeira vez: as pessoas colam aquilo sobre o que são perguntadas, e são perguntadas sobre as
 próprias contas.
 

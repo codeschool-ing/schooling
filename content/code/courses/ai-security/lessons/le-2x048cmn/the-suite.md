@@ -3,10 +3,10 @@ title: The course's checks, run as one suite
 version: 1
 ---
 
-Twenty-two lessons left behind programs that exit with a status: `threats.py` exits 1 when a flow
-crossing a boundary has no threat written against it, `search.py --audit` when a reader can see a
-document that is not theirs, `prompts.py status` when a file under review changed without a name
-beside it. **Each one is a test already.** What none of them does yet is run on its own. A check
+Twenty-two lessons left behind programs that exit with a status. `threats.py` exits 1 when a flow
+crossing a boundary has no threat written against it, and `search.py --audit` when a reader can see a
+document that is not theirs. `prompts.py status` exits 1 when a file under review changed without a
+name beside it. **Each one is a test already.** What none of them does yet is run on its own. A check
 somebody remembers to run before a release is a check that is skipped the week it matters.
 
 ## One file of checks

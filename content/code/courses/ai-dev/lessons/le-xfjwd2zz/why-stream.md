@@ -44,8 +44,8 @@ create: first word after 13.6 s, all 132 tokens after 13.6 s
 stream: first word after 0.3 s, all 154 tokens after 14.8 s
 ```
 
-**The totals are close**, 13.6 and 14.8 seconds, because the model needs about the
-same time for 132 tokens as for 154; the two replies are two draws and not the same length. What
+**The totals are close**, 13.6 and 14.8 seconds, for two replies that are two draws and not the
+same length: 132 tokens and 154. What
 changed is the first number. Waited for, the first word arrives with the last one, after thirteen
 seconds of nothing. Streamed, it arrives after three tenths of a second, and the reader is reading
 while the rest is written.

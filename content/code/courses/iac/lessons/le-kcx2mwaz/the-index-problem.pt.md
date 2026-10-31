@@ -68,7 +68,7 @@ ferramenta faz exatamente o que os endereços dizem, e imprime cada linha disso.
 o plano: uma mudança descrita como "remover uma sub-rede" cujo resumo diz
 `1 to add, 2 to destroy` é a linha onde parar, e a aula 9 transforma isso em hábito.
 
-Vale saber exatamente onde o problema morde e onde não:
+Exatamente onde o problema morde, e onde não:
 
 - **Acrescentar no fim** da lista só acrescenta uma cópia, porque nenhum índice existente se move.
 - **Remover o último elemento** só remove um.

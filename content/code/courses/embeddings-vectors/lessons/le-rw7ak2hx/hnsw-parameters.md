@@ -89,7 +89,7 @@ along a scale where each step is a doubling.
 that k-means cells capture unusually well, and on other data the order can reverse. What the curves
 do show in general is the shape: recall climbs quickly and then flattens, so the last few
 thousandths cost as much time as everything before them. HNSW is still the default most systems
-choose, for reasons this chart cannot show: it needs no training, it takes vectors one at a time
+choose, for reasons this chart cannot show. It needs no training, it takes vectors one at a time
 for as long as the collection lives, and it has no cells to go stale when the data drifts.
 
 ## The same three in other places

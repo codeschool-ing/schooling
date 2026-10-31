@@ -3,7 +3,7 @@ title: Sending what the purpose needs, and a placeholder for the rest
 version: 2
 ---
 
-The principle of necessity is easy to agree with and hard to apply by hand: a developer building
+The principle of necessity is easy to agree with and hard to apply by hand. A developer building
 the summary feature sends the whole ticket, because the whole ticket is what the code has, and
 deciding field by field is somebody else's job. **The way to apply it is to write the purpose down
 as a list of the fields it needs**, so that a field nobody listed is dropped without anybody having

@@ -227,7 +227,7 @@ r4  ok    grounded in hc-payouts
 exit 0
 ```
 
-As quatro passaram, e isso merece ser lido, não pulado. Com três páginas curtas na frente e a
+As quatro passaram. Com três páginas curtas na frente e a
 temperatura em 0, o modelo ficou dentro das páginas, e disse que não sabia sobre parcelamento em vez de
 chutar, que é o comportamento que a `a5` representa. As suas respostas podem vir com outras palavras.
 

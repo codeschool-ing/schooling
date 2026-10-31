@@ -33,9 +33,9 @@ position and the element, and used the position for the `netnum` that `cidrsubne
 is the arithmetic of the functions section done once per zone. The third added an `if`, which
 keeps only the elements for which the condition is true.
 
-That second result, a map from zone to range, is worth looking at twice. It is exactly the shape
-that `for_each` in lesson 4 takes to create one subnet per entry, and building it with a `for`
-expression is how a list someone typed becomes resources keyed by something meaningful.
+That second result, a map from zone to range, is exactly the shape that `for_each` in lesson 4
+takes to create one subnet per entry. Building it with a `for` expression is how a list someone
+typed becomes resources keyed by something meaningful.
 
 ## Two items, one key
 

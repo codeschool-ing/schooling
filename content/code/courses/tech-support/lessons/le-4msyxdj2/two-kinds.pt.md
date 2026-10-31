@@ -3,14 +3,15 @@ title: Dois tipos de limite
 version: 1
 ---
 
-Os limites do papel vêm de dois lugares:
+Os limites do papel vêm de dois lugares.
 
-- **A conta não consegue.** A organização deu à conta de suporte os direitos que o trabalho dela pede e nada
-  mais: ela pode reiniciar o serviço de impressão mas não criar usuários, ou pode trocar senhas num
-  departamento e não em outro. O computador recusa, e a questão acaba ali.
-- **A conta consegue, e o papel não permite.** Uma conta de suporte com `sudo` completo, como a que este
-  curso usa, faz quase tudo num computador. O que ela *pode* fazer está escrito na política da organização,
-  e só o técnico fica entre as duas coisas.
+No primeiro, a conta não consegue. A organização deu à conta de suporte os direitos que o trabalho dela pede
+e nada mais: ela pode reiniciar o serviço de impressão mas não criar usuários, ou pode trocar senhas num
+departamento e não em outro. O computador recusa, e a questão acaba ali.
+
+No segundo, **a conta consegue, e o papel não permite**. Uma conta de suporte com `sudo` completo, como a
+que este curso usa, faz quase tudo num computador. O que ela *pode* fazer está escrito na política da
+organização, e só o técnico fica entre as duas coisas.
 
 Pedidos que ficam fora do papel, e aparecem em todo service desk:
 

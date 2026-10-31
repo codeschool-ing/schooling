@@ -13,7 +13,7 @@ mostrar trabalho de verdade. Alguns não são, e vale reconhecê-los:
 - Não há conversa antes. Uma empresa que manda um exercício grande antes de alguém falar com você está
   gastando o seu tempo para poupar o dela.
 
-Recusar é permitido, e pode ser educado: *Obrigada; não consigo me comprometer com vários dias de um
+**Recusar é permitido**, e pode ser educado: *Obrigada; não consigo me comprometer com vários dias de um
 exercício não pago. Faço com prazer um mais curto, ou apresento meu projeto de portfólio numa conversa.*
 Algumas empresas aceitam a alternativa; as que não aceitam disseram algo útil.
 

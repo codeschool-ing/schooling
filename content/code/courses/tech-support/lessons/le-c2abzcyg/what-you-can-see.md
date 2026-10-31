@@ -27,5 +27,5 @@ User=sales
 - And the file explains the error: it belongs to `root` with mode `600`, readable by root alone, while
   the service runs as the user `sales`.
 
-That is a cause, found in four commands, by someone who does not own the system. The next section is
+That is a cause, found in four command lines, by someone who does not own the system. The next section is
 about what to do with it.

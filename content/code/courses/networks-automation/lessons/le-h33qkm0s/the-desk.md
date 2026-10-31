@@ -4,9 +4,9 @@ version: 1
 ---
 
 The ticketing systems people use at work, ServiceNow, Jira Service Management or the open-source
-desks such as Zammad and GLPI, are either licensed or a small data centre to install, and this
-lesson needs only the part they share: tickets with a number, a status and comments, behind a JSON
-API that takes a token. The lab's service desk is that part, a program called `deskd` written for
+desks such as Zammad and GLPI, are either licensed or a small data centre to install. This lesson
+needs only the part they share: tickets with a number, a status and comments, behind a JSON API
+that takes a token. **The lab's service desk is that part**, a program called `deskd` written for
 this course, and it runs on the machine called `tickets`.
 
 It is short enough to read in full, and reading it tells you exactly what the last section of

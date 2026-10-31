@@ -7,7 +7,7 @@ version: 1
 whole method, and work flows across it one card at a time. When somebody finishes something, they **pull**
 the next card from the top of *to do*. Nobody pushes work at them.
 
-What stops that from becoming chaos is the WIP limit from the first section. It is not optional in kanban; it
+What stops that from becoming chaos is the WIP limit from *The board*, two sections back. It is not optional in kanban; it
 is the mechanism. Without a limit, a board with no sprint is just a list that grows.
 
 ## What it measures instead

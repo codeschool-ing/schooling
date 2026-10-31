@@ -4,7 +4,7 @@ version: 1
 ---
 
 Uma chamada custa centavos. **Um laço custa o mês.** Uma integração que tenta de novo a cada erro, um
-agente que chama a si mesmo, um script de cliente com um bug: cada um manda o mesmo tipo de requisição
+agente que chama a si mesmo, um script de cliente com um bug. Cada um manda o mesmo tipo de requisição
 de novo e de novo, e cada requisição é barata o bastante para ninguém notar até o total chegar.
 
 Um dia de chamadas do assistente, escrito por uma regra e não observado: cinco clientes fazendo vinte
@@ -156,7 +156,7 @@ total spent R$ 20,03
 O teto segurou, e o alerta veio seis minutos antes dele. **Ele também parou todo cliente que perguntou
 alguma coisa depois das 14:26**: cada um dos cinco perdeu sete das suas vinte perguntas, por um laço
 com que não tinha nada a ver. O total parou em R$ 20,03, acima do teto por parte de uma chamada,
-porque a verificação roda depois de a chamada ser atendida; um teto que nunca pode ser ultrapassado
+porque a verificação roda depois de a chamada ser atendida. Um teto que nunca pode ser ultrapassado
 confere o custo estimado antes. Um teto global é a última linha, para o caso que nada mais pegou. Como
 única linha, ele transforma o bug de uma conta na queda de todos.
 
@@ -182,7 +182,7 @@ total caiu para R$ 5,83, e o teto nem chegou perto, que é como um teto deveria 
 dos dias. O orçamento por conta é aplicado com o identificador de usuário final da aula 7, e é isso que
 faz "por conta" significar alguma coisa quando todas as requisições chegam pela chave de um parceiro.
 
-Três níveis, então, e cada um pega o que os outros não pegam:
+Quatro limites, então, e cada um pega o que os outros não pegam:
 
 | limite | para | aula |
 |---|---|---|

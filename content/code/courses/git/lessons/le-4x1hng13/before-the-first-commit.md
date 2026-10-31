@@ -56,8 +56,8 @@ Omit --global to set the identity only in this repository.
 fatal: unable to auto-detect email address (got 'ana@vm.(none)')
 ```
 
-Two complaints, and **the second is a refusal**: no commit was made. You met the reason in the last
-two sections. Every commit records an author, and Git will not invent one. It tried — `ana@vm.(none)`
+Two complaints, and **the second is a refusal**: no commit was made. You met the reason in the section
+on what a history is. Every commit records an author, and Git will not invent one. It tried — `ana@vm.(none)`
 is the account name and the machine's name glued together — and rightly decided that is not an
 address.
 

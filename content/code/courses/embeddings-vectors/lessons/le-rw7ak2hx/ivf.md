@@ -119,5 +119,5 @@ is to train again, which means rebuilding the index.
 
 pgvector's `ivfflat` is the same index. Its `lists` is `nlist` and its `ivfflat.probes` is
 `nprobe`, with a default of 1. Its documentation suggests starting from `lists` as the row count
-divided by 1,000, for up to a million rows, and `probes` as the square root of `lists`, and
-building the index after the table holds its data, so that the training sees it.
+divided by 1,000, for up to a million rows, and `probes` as the square root of `lists`. It also
+says to build the index after the table holds its data, so that the training sees it.

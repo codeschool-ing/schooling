@@ -12,5 +12,5 @@ dar nome a elas impede o passo de isolar de pular alguma.
 
 As camadas não são uma ordem de probabilidade, e nem sempre são checadas de cima para baixo. São uma
 lista de conferência: quando uma checagem descarta uma camada, ela é riscada, e quando sobra uma só, é ali
-que o teste vai. Um técnico que só desconfia da rede, ou só do usuário, tem um mapa de três camadas e
-perde o que está nas outras duas.
+que o teste vai. Um técnico que só desconfia da rede, ou só do usuário, trabalha com um mapa de uma camada só e
+perde o que está nas outras quatro.

@@ -111,7 +111,7 @@ O § 1º do art. 48 lista o que entra, e cada item pode ser escrito a partir do 
 | as medidas adotadas ou a adotar para reverter ou mitigar os efeitos | chave revogada em 28 minutos; chave nova limitada a reembolsos; prompt corrigido; os clientes avisados |
 
 Os clientes são avisados dentro dos mesmos três dias úteis, em palavras simples: o que aconteceu,
-quais dados deles, o que a Tarefa fez, e **o que eles podem fazer**, que aqui é desconfiar de
+quais dados deles, o que a Tarefa fez, e **o que eles podem fazer**. Aqui, isso é desconfiar de
 qualquer mensagem que cite o pagamento deles e peça dinheiro ou um código. Uma mensagem que só pede
 desculpas os deixa sem nada para fazer.
 

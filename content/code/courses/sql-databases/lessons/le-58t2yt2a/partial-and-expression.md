@@ -20,7 +20,7 @@ inserts and updates of the other fifty million rows do not touch it at all.** A 
 index when it becomes pending and leaves when it stops being, so the write cost is proportional to
 the rows you care about rather than to the table.
 
-It answers the objection from two sections ago. An ordinary index on a status column with three
+It answers the objection from the section on cost. An ordinary index on a status column with three
 values earns nothing, because no value is selective enough. A partial index on the rare value is
 selective by construction.
 
@@ -43,8 +43,8 @@ code — which lesson 8 showed is a write skew waiting for two requests to arriv
 unique index enforces it properly, at every isolation level, against every connection.
 
 **The planner has to prove the index applies.** A query saying `WHERE status = 'pending'` can use
-the index above; one saying `WHERE status = $1` cannot, because the value is not known when the
-plan is made, and one saying `WHERE status <> 'done'` cannot either, because that is not the same
+the index above. One saying `WHERE status = $1` cannot, because the value is not known when the
+plan is made. And one saying `WHERE status <> 'done'` cannot either, because that is not the same
 condition. Keep the query's condition recognisably the same as the index's.
 
 MySQL and MariaDB have no partial indexes. PostgreSQL and SQLite do.

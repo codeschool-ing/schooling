@@ -10,10 +10,10 @@ pensou.
 ## Discorde uma vez, com um motivo
 
 Suponha que a Ana tivesse escrito *"blocking: use uma lista de horários em vez de um campo de hora."* O
-Bruno acha o campo melhor, porque uma lista de trinta opções é lenta de usar no celular. A resposta que
+Bruno acha o campo melhor, porque uma lista de vinte e sete opções é lenta de usar no celular. A resposta que
 funciona:
 
-> Fui no campo de hora porque uma lista com cada meia hora são trinta opções, e a maioria dos pedidos vem
+> Fui no campo de hora porque uma lista com cada meia hora são vinte e sete opções, e a maioria dos pedidos vem
 > do celular. Com `min` e `max` não dá para sair do horário de funcionamento. Isso cobre o que te
 > preocupava?
 

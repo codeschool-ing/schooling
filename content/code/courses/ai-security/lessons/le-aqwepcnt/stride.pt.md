@@ -29,7 +29,7 @@ motivo de o `T` aparecer em quatro fluxos do registro da Tarefa, e de as aulas 5
 
 As respostas vão para um arquivo, uma entrada por ameaça. Cada entrada nomeia o fluxo, a letra do
 STRIDE, a ameaça em uma linha, um **impacto** e uma **probabilidade** de 1 a 3, e o **controle** que a
-responde, que é o nome de um comando de uma aula anterior, ou `null` enquanto nada responde. O curso
+responde. O controle é o nome de um comando de uma aula anterior, ou `null` enquanto nada responde. O curso
 escreveu este registro; cole:
 
 ```sh

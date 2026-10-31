@@ -96,7 +96,7 @@ ls: cannot access '/proc/net/if_inet6': No such file or directory
 A segunda linha `listen` do site padrão, `[::]:80`, é a que o nginx não consegue abrir, e a ausência
 de `/proc/net/if_inet6` é o kernel dizendo que aqui não há IPv6. **No seu computador a imagem
 provavelmente liga**, porque um kernel Linux comum tem IPv6 mesmo quando o Docker não dá ao
-contêiner um endereço próprio: o `docker run` então não imprime nada e mantém o nginx rodando até
+contêiner um endereço próprio. Então o `docker run` não imprime nada e mantém o nginx rodando até
 você apertar Ctrl+C, e o `ls` imprime o nome do arquivo. Esse é justamente o ponto: o build rodou numa máquina e a imagem roda em outras,
 e **o código de saída de um provisioner não diz nada sobre o resultado funcionar onde vai rodar**.
 Só ligar a imagem diz, e é por isso que um pipeline de imagens roda a imagem e pergunta algo a ela

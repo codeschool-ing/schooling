@@ -42,7 +42,7 @@ SELECT DISTINCT c.name FROM customers c JOIN orders o ON o.customer_id = c.id;
 ```
 
 Two rows, correct answer, and the defect is still there — the query built four rows and then threw
-one away. Add one column and it comes back. Add a `count(*)` and `DISTINCT` cannot save it at all.
+two away. Add one column and it comes back. Add a `count(*)` and `DISTINCT` cannot save it at all.
 
 ## Fan-out is a property of the relationship
 

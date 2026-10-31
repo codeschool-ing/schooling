@@ -5,14 +5,14 @@ version: 2
 
 ## A revisão é uma conversa
 
-O Bruno revisa. Ele pede para o aviso aparecer mais, então a Ana faz um segundo commit **no mesmo branch** e
-envia de novo; o pull request se atualiza sozinho, sem precisar abrir outro. As aulas 13 e 14 são sobre os
+O Bruno revisa. Se ele pede uma mudança, a Ana faz mais um commit **no mesmo branch** e envia
+de novo; o pull request se atualiza sozinho, sem precisar abrir outro. As aulas 13 e 14 são sobre os
 dois lados dessa conversa, o que comentar e como receber um comentário. Para a vida da tarefa, o que importa
 é que a volta pode acontecer várias vezes, e cada volta é mais commits no branch.
 
 Quando o Bruno aprova e os checks estão verdes, o pull request entra pelo botão, e duas coisas acontecem
 no servidor: o commit de merge chega ao `main`, e o ticket 23 fecha. Na sua máquina o botão é o
-programa da primeira seção:
+programa salvo na seção 02:
 
 ```bash
 bash ~/merge-button.sh 23-holiday-notice 24 ana 'Say the bakery closes on public holidays'

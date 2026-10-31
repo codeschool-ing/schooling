@@ -47,8 +47,8 @@ Somebody is reading page 1 while a new product is inserted that sorts above ever
 seen. They click to page 2. Everything has shifted down by one, so `OFFSET 20` now starts on the
 row that was last on page 1.
 
-**They see that row twice, and the row that would have been first on page 2 is never shown to
-them.** No error, nothing in a log, and it is unreproducible because it depends on somebody else's
+**They see that row twice, and the new row, which went in on page 1 after they had left it, is
+never shown to them.** No error, nothing in a log, and it is unreproducible because it depends on somebody else's
 timing.
 
 On a busy table this is not a rare edge case. It is what happens all day, quietly.

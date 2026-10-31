@@ -3,8 +3,8 @@ title: Test: one change, one result
 version: 1
 ---
 
-A name that a computer resolves on its own, without asking a DNS server, comes from `/etc/hosts`, the
-networks course's lesson on names. So the hypothesis is specific: **`pc1`'s `/etc/hosts` has the wrong
+A name that a computer resolves on its own, without asking a DNS server, comes from `/etc/hosts`, lesson 4 of
+the Networks and Protocols course. So the hypothesis is specific: **`pc1`'s `/etc/hosts` has the wrong
 address for `intranet`**. Look first, then change one thing:
 
 ```

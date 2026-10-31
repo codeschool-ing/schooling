@@ -44,8 +44,8 @@ O PostgreSQL trata nulo como maior que tudo, então ele cai por último no cresc
 decrescente. **Outros bancos escolhem diferente** — o MySQL põe nulos primeiro no crescente — então
 uma consulta que põe os vazios embaixo num banco põe no topo em outro.
 
-Diga `NULLS FIRST` ou `NULLS LAST` sempre que a coluna aceitar nulo e a posição importar. São quatro
-caracteres e removem uma diferença que ninguém testa.
+Diga `NULLS FIRST` ou `NULLS LAST` sempre que a coluna aceitar nulo e a posição importar. São duas
+palavras e removem uma diferença que ninguém testa.
 
 ## Ordenando por algo que você calculou
 

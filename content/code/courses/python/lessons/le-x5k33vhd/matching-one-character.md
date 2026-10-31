@@ -35,11 +35,28 @@ you expected ASCII. `re.ASCII` narrows it.
 
 ## Escaping, inside and outside
 
-```python
-r"\."          # a literal dot
-r"[.]"         # also a literal dot — inside a class, most things are literal
-r"[\d.]"       # a digit or a dot
-r"[a\-z]"      # a, a hyphen, or z — the escape makes the hyphen literal
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "r\"\\.\"",
+      "note": "A literal dot."
+    },
+    {
+      "code": "r\"[.]\"",
+      "note": "Also a literal dot: inside a class, most things are literal."
+    },
+    {
+      "code": "r\"[\\d.]\"",
+      "note": "A digit or a dot."
+    },
+    {
+      "code": "r\"[a\\-z]\"",
+      "note": "`a`, a hyphen, or `z`. The escape makes the hyphen literal."
+    }
+  ]
+}
 ```
 
 **Inside a class almost nothing is special**, which is why `[.]` needs no backslash. The

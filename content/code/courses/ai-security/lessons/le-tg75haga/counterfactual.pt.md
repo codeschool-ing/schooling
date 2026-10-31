@@ -8,7 +8,7 @@ decisões antes de dizer qualquer coisa. **Um teste contrafactual faz uma pergun
 cada decisão**: se esta pessoa fosse igual em tudo menos numa coisa, o sistema decidiria diferente?
 Mude o campo, mantenha o resto, rode o sistema de novo e conte as decisões que mudam.
 
-O `guard counterfactual` faz isso com os perfis da primeira seção. Ele leva todo CEP do Sudeste para
+O `guard counterfactual` faz isso com os dezesseis perfis do começo desta aula. Ele leva todo CEP do Sudeste para
 Recife, `50010-000`, e todo CEP do Nordeste para São Paulo, `01310-100`. A nota e o número de
 trabalhos ficam como estavam. Salve-o como `~/guard/tools/counterfactual.py`:
 

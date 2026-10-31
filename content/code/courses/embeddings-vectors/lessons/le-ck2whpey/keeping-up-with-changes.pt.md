@@ -132,10 +132,10 @@ para uma delas, e por isso é lento. O espaço liberado fica dentro dos arquivos
 novas, e não é devolvido.
 
 **O REINDEX levou `6291.040 ms` e cortou os dois índices pela metade**, para 20.488.192 e 16.891.904
-bytes, porque os construiu de novo a partir das 10.000 linhas que sobraram. O `CONCURRENTLY` constrói
-as cópias novas ao lado das antigas e troca, então as buscas continuam funcionando o tempo todo;
-nesse intervalo, o índice existe duas vezes. A própria documentação do pgvector sugere reindexar
-antes de rodar o vacuum num índice HNSW, por esse motivo. A tabela continua com os seus 32.768.000
+bytes, porque os construiu de novo a partir das 10.000 linhas que sobraram. A própria documentação
+do pgvector sugere reindexar antes de rodar o vacuum num índice HNSW, por esse motivo. O
+`CONCURRENTLY` constrói as cópias novas ao lado das antigas e troca, então as buscas continuam
+funcionando o tempo todo; nesse intervalo, o índice existe duas vezes. A tabela continua com os seus 32.768.000
 bytes nos dois casos: o espaço livre dela é reaproveitado pelas próximas inserções.
 
 **Então reconstrua quando uma parte grande tiver sido apagada ou substituída**, e não por

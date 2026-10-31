@@ -35,8 +35,9 @@ question:
 }
 ```
 
-The scores are the dot products lesson 1 printed, 0.4456 for the gift article, because
-`IndexFlatIP` compares by inner product and the vectors have length 1. A **flat** index is exact
+The scores are the dot products lesson 1 printed, here to four places: 0.4456 for the gift article,
+which lesson 1 showed as 0.446. They agree because `IndexFlatIP` compares by inner product and the
+vectors have length 1. A **flat** index is exact
 search: it compares the query with every stored vector, which is lesson 3's `D @ q` written in C++.
 
 **What comes back are positions.** `[17 14 21]` means the 18th, 15th and 22nd vectors that were

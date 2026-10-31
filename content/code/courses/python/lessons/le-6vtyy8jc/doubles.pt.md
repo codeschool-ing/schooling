@@ -63,6 +63,6 @@ assinatura real e levanta `TypeError: missing a required argument: 'subject'` no
 
 Uma função pura não precisa de dublê. Uma classe que você constrói em três linhas não precisa de
 dublê. Recorra a um numa fronteira de verdade — a rede, o relógio, o sistema de arquivos, o
-gateway de pagamento — e prefira passar um objeto simples que você escreveu a trocar um nome,
+gateway de pagamento. Mesmo ali, prefira passar um objeto simples que você escreveu a trocar um nome,
 porque um objeto de verdade tem assinatura de verdade e não responde atributos de que nunca ouviu
 falar.

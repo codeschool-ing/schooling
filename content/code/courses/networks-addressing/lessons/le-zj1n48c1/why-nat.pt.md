@@ -6,12 +6,12 @@ version: 2
 O IPv4 tem 2 elevado a 32 endereços, cerca de 4,3 bilhões, e há mais dispositivos que isso. **O NAT,
 tradução de endereços de rede, deixa uma rede inteira usar endereços privados por dentro e dividir um
 endereço público por fora.** As faixas privadas são reservadas pela RFC 1918 — `10.0.0.0/8`,
-`172.16.0.0/12` e `192.168.0.0/16` — e a aula 8 trata delas: qualquer um pode usá-las, então o mesmo
+`172.16.0.0/12` e `192.168.0.0/16` — e a aula 8 trata delas. Qualquer um pode usá-las, então o mesmo
 endereço existe em milhares de escritórios ao mesmo tempo, e nenhum roteador da internet tem rota
 para nenhum deles.
 
-O escritório da aula 1 é montado assim, e esta aula roda nele: `sudo bash ~/netlab/netlab.sh up office`.
-O pc1 tem um endereço privado:
+O escritório da aula 1 é montado assim, e esta aula roda nele:
+`sudo bash ~/netlab/netlab.sh up office`. O pc1 tem um endereço privado:
 
 ```
 ana@pc1:~$ ip -br addr show eth0

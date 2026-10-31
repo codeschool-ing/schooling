@@ -89,7 +89,7 @@ edge2: matches
 ```
 
 **A rota não está nos dados, então o envio a remove.** Esse é o sentido de um template da
-configuração inteira, e é também por isso que ele não deve ser ligado numa rede numa tarde
+configuração inteira. É também por isso que ele não deve ser ligado numa rede numa tarde
 qualquer: toda linha feita à mão que ninguém escreveu nos dados é removida pelo primeiro
 `--commit`. A ordem segura é a que esta aula seguiu. Primeiro renderize, compare e faça os dados
 baterem com a rede, sem enviar nada; só então deixe os dados decidirem.

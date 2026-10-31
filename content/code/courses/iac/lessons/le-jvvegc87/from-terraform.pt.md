@@ -10,8 +10,8 @@ máquinas os conhece. Escritos à mão no `inventory.ini`, eles estariam certos 
 ser substituída, e depois errados sem nada que avise.
 
 Então o Terraform escreve o inventário. O recurso `local_file` do provider `local` escreve um arquivo
-no laptop, e o `templatefile` preenche o arquivo a partir de um template, com as mesmas diretivas
-`%{ for }` que a aula 3 usou:
+no laptop, e o `templatefile` preenche o arquivo a partir de um template, com uma diretiva
+`%{ for }`, que a aula 3 apresentou junto com `%{ if }`:
 
 ```hcl
 terraform {

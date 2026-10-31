@@ -47,7 +47,8 @@ Alguém está lendo a página 1 enquanto um produto novo é inserido e ordena ac
 pessoa viu. Ela clica para a página 2. Tudo deslocou uma posição para baixo, então o `OFFSET 20`
 agora começa na linha que era a última da página 1.
 
-**Ela vê aquela linha duas vezes, e a linha que seria a primeira da página 2 nunca é mostrada.** Sem
+**Ela vê aquela linha duas vezes, e a linha nova, que entrou na página 1 depois que ela saiu de lá,
+nunca é mostrada.** Sem
 erro, sem nada num log, e é irreproduzível porque depende do momento de outra pessoa.
 
 Numa tabela movimentada isso não é caso raro. É o que acontece o dia inteiro, em silêncio.

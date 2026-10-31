@@ -54,7 +54,7 @@ address, a small switch with a few ports on the back, and an access point. **Wha
 four jobs, one power plug.
 
 A business network takes the box apart on purpose. The provider's equipment ends at its own modem
-or terminal; the company's router and firewall come after it; the switches sit in a rack; and the
+or terminal; the company's router and firewall come after it; the switches sit in a rack. The
 access points are spread across ceilings, each one fed by a single cable that carries its power
 too, which is lesson 21. Separate devices can each be replaced, sized and placed where they work
 best, and when one fails, the other three keep working.

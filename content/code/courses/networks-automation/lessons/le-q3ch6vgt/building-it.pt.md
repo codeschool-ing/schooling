@@ -6,7 +6,7 @@ version: 1
 O laboratório é um script, o `netlab.sh`, e ele está impresso aqui inteiro. Você não precisa
 entendê-lo antes de usar: a aula 1 é sobre por que a automação existe, e este script é o oposto do
 que o curso ensina, um programa longo em shell que constrói uma rede específica à mão. Leia agora
-se quiser ver como nove máquinas cabem num computador, ou depois, quando uma aula disser "o
+se quiser ver como treze máquinas cabem num computador, ou depois, quando uma aula disser "o
 laboratório faz isto" e você quiser conferir.
 
 Crie um diretório para ele na sua home, na máquina virtual:
@@ -670,11 +670,11 @@ user	0m5.231s
 sys	0m1.078s
 ```
 
-Vinte e cinco segundos, e a maior parte é espera: o `wait_ready` no fim do script segura o prompt
+Quase vinte e seis segundos, e a maior parte é espera: o `wait_ready` no fim do script segura o prompt
 até o OSPF formar as duas adjacências e cada filial aprender a rede da outra. **Cinco linhas dizem
 `skipped`, e isso está certo depois da aula 1.** Cada uma nomeia o programa que está esperando e a
 aula que o entrega a você. Salve o programa ao lado do `netlab.sh`, reconstrua com `reset`, e a
-linha passa a dizer `started`.
+linha deixa de dizer `skipped`.
 
 O `enter` abre um shell numa das máquinas do laboratório, como `ana` a menos que você nomeie outra
 pessoa. No `ctl` o prompt muda, e dali os roteadores estão a um nome de distância:

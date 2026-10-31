@@ -34,7 +34,6 @@ ana@pc1:~$ echo lab-only-password | sudo -u tec sudo -S useradd bruno
 ```
 
 `sudo` asked for tec's password first, which the recording passed in with `-S` rather than typing it, and
-only then refused: `is not
-allowed to execute`, naming the exact command and the computer. **That refusal is the end of the
-matter for this account**, and the right next step is not to find another way to run the same command. It
+only then refused: `is not allowed to execute`, naming the exact command and the computer. **That
+refusal is the end of the matter for this account**, and the right next step is not to find another way to run the same command. It
 is to pass the request on to whoever creates accounts, lesson 7, with what was asked.

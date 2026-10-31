@@ -3,7 +3,8 @@ title: Percorrer uma árvore com WITH RECURSIVE
 version: 2
 ---
 
-A aula 1 lhe deu uma tabela que aponta para si mesma:
+A aula 5 juntou `employees` com ela mesma por `manager_id`. Uma árvore de categorias tem a mesma
+forma, uma tabela que aponta para si mesma:
 
 ```sql
 CREATE TABLE categories (

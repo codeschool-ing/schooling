@@ -77,8 +77,8 @@ left to expand can improve the list. A single greedy walk would stop at the firs
 closer neighbour; the list lets the search step past such a dead end, because the second and
 third best are still there to expand.
 
-With FAISS's default list of 16, it reached 0.536, which exact search confirms is the true best match for this query, **after
-261 comparisons in all**, out of 100,000 vectors. That is the whole trick: the top layers bring
+With FAISS's default list of 16, it reached 0.536 **after 261 comparisons in all**, out of
+100,000 vectors, and exact search confirms that 0.536 is the true best match for this query. That is the whole trick: the top layers bring
 the search to the right neighbourhood in a few long jumps, and the bottom layer searches that
 neighbourhood carefully.
 

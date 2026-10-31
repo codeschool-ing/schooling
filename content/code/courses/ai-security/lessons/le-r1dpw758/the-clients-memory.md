@@ -36,7 +36,7 @@ A memory is written in one place and copied to others. Deleting the line in the 
 
 An honest "forget" button says what it deletes and what it cannot. A request to erase everything
 about a person is a different and larger operation, and the memory store is one of the places it has
-to reach, which is a reason to keep the store simple enough to find a person in.
+to reach. That is a reason to keep the store simple enough to find a person in.
 
 ## A memory is text the client wrote
 

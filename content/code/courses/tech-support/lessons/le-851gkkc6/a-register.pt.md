@@ -23,7 +23,7 @@ Duas coisas deram errado enquanto esta aula era escrita, e as duas são comuns:
   campos entre aspas, então uma planilha dividia `(Q35 + ICH9, 2009)` em duas colunas e deslocava todas as
   colunas seguintes em uma.
 - **Um valor padrão que nunca entrava.** A primeira versão escrevia `none` quando o número de série vinha
-  vazio. Ele nunca vem vazio: uma máquina sem número de série diz `Not Specified`, e muitos PCs dizem *To Be
+  vazio. Ele nunca vem vazio: uma máquina sem número de série diz `Not Specified`, muitos PCs dizem *To Be
   Filled By O.E.M.*, e os dois são texto que parece número de série para um script que só confere se veio
   nada.
 

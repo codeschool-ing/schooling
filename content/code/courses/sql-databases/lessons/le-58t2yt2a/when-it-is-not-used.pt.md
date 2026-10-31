@@ -96,8 +96,8 @@ está ótimo. Usá-lo significaria seguir seiscentos mil ponteiros para páginas
 tabela direto é mais rápido. **O planejador não está ignorando o seu índice; ele precificou os dois
 planos e escolheu um.**
 
-O índice parcial é a ferramenta para a outra metade disso — os 3% de linhas em que `status =
-'pending'` — e tem seção própria.
+O índice parcial é a ferramenta para a outra metade disso — os três pedidos em mil em que
+`status = 'pending'` — e tem seção própria.
 
 ## As estatísticas estão velhas
 

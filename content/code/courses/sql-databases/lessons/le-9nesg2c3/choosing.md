@@ -23,8 +23,8 @@ length, and which columns are sent — are the price, and it is a small one.
 
 A screen that shows a customer and their last ten orders is the N+1 shape, and the mapper's own
 eager-loading fix is the right tool: one instruction at the query, two statements to the server,
-and the objects that the screen is going to render. The rule is the second section's — read the
-log once per screen — and nothing else is needed.
+and the objects that the screen is going to render. The rule is the one from the section on what it
+emits — read the log once per screen — and nothing else is needed.
 
 ## Reports: SQL
 

@@ -34,7 +34,7 @@ do `pip-compile`, `uv.lock` — quatro formatos para uma ideia, e nenhum deles l
 a parte que faz de uma migração uma migração.
 
 **Os verbos não mudaram.** Acrescentar uma dependência, resolver, travar, sincronizar, rodar.
-Toda uma dessas ferramentas tem esses cinco, com nomes diferentes, e saber o que eles querem dizer
+Cada uma dessas ferramentas tem esses cinco, com nomes diferentes, e saber o que eles querem dizer
 se transfere sem mudança.
 
 ## O que fazer a respeito

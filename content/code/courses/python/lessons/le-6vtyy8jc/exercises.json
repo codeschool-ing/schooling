@@ -201,7 +201,7 @@
       {
         "text": "`-` is the left operand of the comparison and `+` is the right one",
         "correct": false,
-        "why": "The diff is oriented by expected against actual, not by which side was written first."
+        "why": "It is the other way round: `+` is the left operand, which is what arrived, and `-` is the right one, which `pytest` takes as the expected value."
       },
       {
         "text": "`-` marks a line that failed and `+` a line that passed",
@@ -238,7 +238,7 @@
       {
         "text": "The summary lists every failure in a few lines; the top is only the first one",
         "correct": true,
-        "why": "The first failure is rarely the interesting one, and scrolling to find the others costs more than reading four lines."
+        "why": "The first failure is rarely the interesting one, and scrolling to find the others costs more than reading one line per failure."
       }
     ]
   },
@@ -788,7 +788,7 @@
   },
   {
     "id": "ex-bkd3tzvg",
-    "version": 1,
+    "version": 2,
     "section": "exceptions-and-approximations",
     "type": "quiz",
     "difficulty": "easy",
@@ -798,8 +798,8 @@
     "choices": [
       {
         "text": "The test fails, with the exception printed underneath as the reason that it failed",
-        "correct": false,
-        "why": "It is reported as a failure only when an assertion is what raised."
+        "correct": true,
+        "why": "An exception raised in the body is a failure, `F`, with its traceback underneath — which looks like a broken test rather than a proven behaviour."
       },
       {
         "text": "The test passes, since raising is what the code was expected to do",
@@ -808,8 +808,8 @@
       },
       {
         "text": "The exception escapes the test and the run reports it as an error rather than a failure",
-        "correct": true,
-        "why": "Which looks like a broken test rather than a proven behaviour."
+        "correct": false,
+        "why": "An error, `E`, is an exception before the body started, in a fixture; one raised by the body itself is a failure."
       },
       {
         "text": "The test is skipped, and the exception raised is attached to the skip reason as its cause",
@@ -1701,7 +1701,7 @@
       {
         "text": "A test raised before its body started, as a fixture does when it fails",
         "correct": true,
-        "why": "It is reported as an error rather than a failure, because no assertion was reached."
+        "why": "It is reported as an error rather than a failure, because the test body never started."
       },
       {
         "text": "A test failed on an assertion, which is what an error in a suite is",

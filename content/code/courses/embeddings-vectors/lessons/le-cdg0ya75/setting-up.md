@@ -95,7 +95,7 @@ ana@lab:~/emb$ du -sh ~/.venvs/emb ~/models ~/.cache/pip
 ```
 
 It takes a few minutes, most of them in `pip`, which downloads about 360 MB of packages and keeps
-them in a cache; `du` measured that last, and `rm -rf ~/.cache/pip` gives the space back once the
+them in a cache. `du` measured that last, and `rm -rf ~/.cache/pip` gives the space back once the
 setup has worked. What it leaves behind:
 
 - `~/.venvs/emb`, a **virtual environment**: a private copy of Python with every library the course

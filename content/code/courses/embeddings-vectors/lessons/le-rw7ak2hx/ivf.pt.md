@@ -120,5 +120,5 @@ conserto é treinar de novo, o que significa reconstruir o índice.
 
 O `ivfflat` do pgvector é o mesmo índice. O `lists` dele é o `nlist` e o `ivfflat.probes` é o
 `nprobe`, com padrão 1. A documentação sugere começar com `lists` igual ao número de linhas dividido
-por 1.000, para até um milhão de linhas, e `probes` igual à raiz quadrada de `lists`, e construir o
-índice depois que a tabela já tem os dados, para que o treino os veja.
+por 1.000, para até um milhão de linhas, e `probes` igual à raiz quadrada de `lists`. Ela também
+diz para construir o índice depois que a tabela já tem os dados, para que o treino os veja.

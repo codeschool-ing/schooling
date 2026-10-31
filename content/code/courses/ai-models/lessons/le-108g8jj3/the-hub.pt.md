@@ -34,10 +34,10 @@ mesmos bytes toda vez, e a avaliação da aula 5 continua valendo para ele.
 
 ## O que tem num repositório
 
-Os arquivos que formam a caixa da aula 1 seção 06: os pesos, muitas vezes divididos em vários
+Um repositório guarda os arquivos que formam a caixa da aula 1 seção 06. São os pesos, muitas vezes divididos em vários
 arquivos; o tokenizador e a configuração dele, que guarda o template de chat; um arquivo de
 configuração com os números de arquitetura com que a aula 3 fez as contas; e o `README.md`, que é o
 cartão do modelo. Arquivos de pesos no formato `safetensors` guardam só números. Alguns repositórios
 mais antigos ainda trazem pesos no formato pickle do Python, que pode executar código ao ser
-carregado, e são um motivo para preferir repositórios que publicam `safetensors` e para não carregar
+carregado. Eles são um motivo para preferir repositórios que publicam `safetensors` e para não carregar
 nada de uma fonte que você não conferiu.

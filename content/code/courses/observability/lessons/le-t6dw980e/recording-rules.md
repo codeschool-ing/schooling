@@ -4,7 +4,7 @@ version: 2
 ---
 
 An SLI computed by hand is a query. An objective a team lives by is **a set of recording rules**,
-evaluated every few seconds and stored as series. That way dashboards and alerts read the same
+evaluated on a schedule, every thirty seconds in this file, and stored as series. That way dashboards and alerts read the same
 numbers and nobody retypes the expression with a different window. The shop's, in
 `prometheus/rules/slo.yml`, a file to save as the `cat` below prints it:
 

@@ -4,7 +4,7 @@ version: 1
 ---
 
 Lesson 13's checks work when somebody runs them. **Continuous integration is the arrangement in
-which nobody has to**: every change pushed to the shared repository is tested automatically, a
+which nobody has to.** Every change pushed to the shared repository is tested automatically, a
 change that fails is refused before anybody else builds on it, and what reaches the main branch is
 deployed by the same machinery every time. The person making the change stops being the thing
 that guarantees the checks ran.

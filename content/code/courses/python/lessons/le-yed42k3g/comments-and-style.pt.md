@@ -60,6 +60,6 @@ aplica por você**, e a ferramenta é a resposta. O que vale carregar até lá �
 
 - `snake_case` para nomes de variáveis e funções
 - `MAIUSCULAS` para constantes
-- uma linha em branco entre funções, duas entre definições de topo
+- uma linha em branco entre métodos, duas entre definições de topo
 - e um nome que diga o que a coisa é, porque `dados`, `temp` e `x` são três jeitos de não ter
   decidido

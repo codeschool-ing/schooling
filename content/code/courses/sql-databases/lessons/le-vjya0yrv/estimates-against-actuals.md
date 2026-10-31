@@ -95,7 +95,7 @@ shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
 (2 rows)
 ```
 
-`rows=49493`, within a percent of the 50 000 that a quarter of two hundred thousand would be,
+`rows=49493`, about a percent short of the 50 000 that a quarter of two hundred thousand would be,
 which is right: four reasons, evenly spread. One statement, and the planner went from guessing to
 knowing. It is not exactly 50 000 because `ANALYZE` reads a sample of the table rather than all of
 it — which is also why the estimates on your own screen may differ from these by a little.
@@ -138,7 +138,7 @@ this is the first thing to suspect.
 
 | estimate against actual | usual cause |
 |---|---|
-| way under, on a scan with a function or arithmetic | no statistics for the expression |
+| way under or over, on a scan with a function or arithmetic | no statistics for the expression |
 | way under or over on a newly loaded table | never analysed |
 | way under on a multi-column condition | correlated columns |
 | right on every scan, wrong above a join | the join's selectivity, and the order the joins were tried in |

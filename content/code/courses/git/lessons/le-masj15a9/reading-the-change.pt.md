@@ -59,7 +59,7 @@ ana@vm:~/site$ git diff --stat main...
  3 files changed, 8 insertions(+), 1 deletion(-)
 ```
 
-Três arquivos e oito linhas. Isso já diz alguma coisa: um ticket sobre pedidos mexeu no `style.css`, e só
+Três arquivos, oito linhas acrescentadas e uma removida. Isso já diz alguma coisa: um ticket sobre pedidos mexeu no `style.css`, e só
 em poucas linhas. Agora as linhas em si:
 
 ```
@@ -100,7 +100,7 @@ Percorra com as quatro perguntas:
 2. **Funciona?** Abra o `order.html` num navegador e aperte *Order* com o campo vazio. Ele envia. Nada
    impede um cliente de pedir para horário nenhum, ou para as três da manhã. Essa é a descoberta
    importante, e só lendo talvez ela passasse; rodando, ficou óbvia.
-3. **A próxima pessoa vai entender?** São cinco linhas, e sim.
+3. **A próxima pessoa vai entender?** A página nova tem cinco linhas, e sim.
 4. **Combina com o resto?** A cor do título mudou de `darkorange` para `saddlebrown` em todas as páginas do
    site. Isso não tem nada a ver com o ticket #30.
 

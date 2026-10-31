@@ -66,7 +66,7 @@ order intact within each group.
 ## What it costs
 
 `O(n log n)`, measured in the section on the curves: ten times the data, about fourteen times the
-work. Python's sort is Timsort, which is much faster on data that is already partly ordered — at a
+work. Python's sort is Timsort, which is much faster on data that is already partly ordered. At a
 million floats, sorting a random list takes 344 ms and sorting an already-sorted one takes 85,
 because it finds the runs that are already in order and merges them.
 
@@ -85,4 +85,4 @@ at n = 1,000,000 floats
 ```
 
 Sorting everything to take the biggest one is `O(n log n)` where `max` is a single pass. For the
-top few, `heapq.nlargest` is twenty-three times a full sort at a million items.
+top few, `heapq.nlargest` is twenty-three times faster than a full sort at a million items.

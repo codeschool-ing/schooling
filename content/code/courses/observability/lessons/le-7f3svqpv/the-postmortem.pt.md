@@ -15,7 +15,7 @@ minutos depois da versão, e o incidente foi encerrado nove minutos depois de co
 
 | | |
 |---|---|
-| usuários | mais ou menos um checkout em nove falhou com 502 por quatro minutos |
+| usuários | mais ou menos um checkout em oito falhou com 502 por quatro minutos |
 | serviços | o payments, e através dele o orders e a vitrine |
 | orçamento de erros | uma taxa de queima de cinco minutos de uns 15 a 19; a de trinta minutos passou de 12 |
 | dados | nada perdido; cobranças que falharam não foram feitas, então ninguém pagou por um pedido que falhou |

@@ -24,5 +24,5 @@ disk /:   10% used, 6.1G free
 ```
 
 Sete linhas, e cada uma seria de outro jeito uma pergunta a ela ou um palpite no chamado. Um script assim é
-também onde uma equipe de suporte começa a dividir hábitos: os mesmos fatos, na mesma ordem, de todo
-técnico.
+também onde uma equipe de suporte começa a dividir hábitos: **os mesmos fatos, na mesma ordem, de todo
+técnico**.

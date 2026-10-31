@@ -48,8 +48,8 @@ resource "aws_vpc" "shop" {
 }
 ```
 
-Num diretório novo o Terraform precisa antes de `terraform init`, que baixa o provider da AWS e que
-a aula 2 lê linha por linha. Depois, o primeiro `terraform apply` não encontra essa VPC e a cria.
+Num diretório novo o Terraform precisa antes de `terraform init`, que baixa o provider da AWS; a
+aula 2 mostra o que ele imprime. Depois, o primeiro `terraform apply` não encontra essa VPC e a cria.
 Veja as últimas linhas:
 
 ```

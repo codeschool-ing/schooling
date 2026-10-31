@@ -52,7 +52,7 @@ edge1: verified
 edge2: verified
 ```
 
-Agora a descrição é editada com o erro da primeira seção, e o script roda de novo:
+Agora a descrição é editada com o erro de digitação da mudança à mão, e o script roda de novo:
 
 ```
 ana@ctl:~$ sed -i 's#192.0.2.0/24#192.0.12.0/24#' intent.yaml

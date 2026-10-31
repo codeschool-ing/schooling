@@ -31,7 +31,7 @@ For a portfolio this does three things. **It shows the work was planned**, not i
 existed before the code. **It keeps the discussion in one place**: if the issue says why the index
 went in the database and not in the code, the commit message can be short and still be understood.
 And **it gives the history an index**: a reviewer who wants to see how the one thing was built opens
-issue 3 and has the commit, the test and the discussion in one click.
+issue 3 and has the commit that closed it and the discussion in one click.
 
 Use the keyword only on the commit that finishes the card. A commit that is part of the work can say
 *refs #3* instead, which links without closing.

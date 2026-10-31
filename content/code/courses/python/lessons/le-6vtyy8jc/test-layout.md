@@ -30,7 +30,7 @@ ERROR tests/test_rates.py
 everything passes. `pytest` treats the directory holding the topmost `conftest.py` as the root and
 puts it on `sys.path`, so `app` becomes importable.
 
-This is the single most common first hour with `pytest`, and the fix looks like superstition until
+This is the most common first hour with `pytest`, and the fix looks like superstition until
 you know what the file is for.
 
 ## What `conftest.py` actually is

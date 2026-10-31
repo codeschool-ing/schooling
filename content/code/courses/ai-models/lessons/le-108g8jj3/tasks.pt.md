@@ -64,7 +64,7 @@ Um modelo de chat faz isso porque o prompt lhe diz os rótulos. Um modelo de cla
 porque foi treinado com exemplos rotulados, e responde com um rótulo e uma nota, nunca com uma
 frase, nunca com `Refund.`. Para uma tarefa de alto volume e rótulos fixos, um classificador pequeno
 ajustado com alguns milhares de e-mails da própria loja pode ser mais barato, mais rápido e mais
-consistente que qualquer modelo de chat, e é o tipo de modelo que a aula 1 seção 11 tinha em mente
+consistente que qualquer modelo de chat. É o tipo de modelo que a aula 1 seção 11 tinha em mente
 no quarto degrau.
 
 Duas outras linhas merecem nome por causa dos cursos seguintes: `feature-extraction` e

@@ -17,7 +17,7 @@ account set a lower one. Anthropic's, in its own words:
 
 A cap per tier, chosen by the provider, and a spend limit below it, chosen by ana. Past either, the
 API refuses with a message that says so and says when access resumes. The cap is there to protect
-the provider and the account's balance; **the spend limit is ana's own protection**, and its right
+the provider and the account's balance; **the spend limit is ana's own protection**. Its right
 value is lesson 4's monthly estimate with room for a bad week, not the tier's cap.
 
 A router adds a narrower one. OpenRouter's documentation lists three sources of credit limits, and

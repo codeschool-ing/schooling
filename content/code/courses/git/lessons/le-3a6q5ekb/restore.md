@@ -80,7 +80,7 @@ ana@vm:~/site$ git status --short
 ana@vm:~/site$ git restore menu.html
 ```
 
-The menu from three commits ago, rye bread and its old price included, is back in the working tree,
+The menu from three commits ago, rye bread included and no cheese roll yet, is back in the working tree,
 and `git status` shows it as an ordinary modification. You could commit it, which would record
 *"the menu as it was on Wednesday"* as a new change on top of the history. Here it was not wanted,
 so a plain `git restore` put the current version back.

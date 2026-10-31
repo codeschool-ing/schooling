@@ -27,7 +27,7 @@ Hosts/Net: 254                   Class B, APIPA
 `169.254.0.0/16` is **link-local**. A machine that asked for an address by DHCP and heard nothing
 back picks one from this range for itself, checks nobody on the link has it, and uses it. Windows
 calls the mechanism APIPA (Automatic Private IP Addressing), and that is the label this ipcalc
-prints. The `Class B` beside it is the first-octet rule from this lesson's second section and means
+prints. The `Class B` beside it is the first-octet rule from this lesson's section on classes and means
 nothing here. **A PC with a 169.254 address has not reached its DHCP server**: it can talk to other
 machines on the same cable that did the same, and to nothing beyond, because routers do not forward
 link-local addresses. Lesson 10 is about why the DHCP server did not answer.
@@ -41,7 +41,7 @@ ana@pc1:~$ ip route get 8.8.8.8
 ```
 
 `ip route get` asks the routing table what it would do with a packet, and sends nothing. `8.8.8.8`
-is a public address on the real internet, which this lab cannot reach; the answer is the same
+is a public address on the real internet, which this lab cannot reach. The answer is the same
 anyway: **an address on no network pc1 is attached to goes to the gateway**, `via 10.20.10.1`, out
 of `eth0`, from `10.20.10.21`. Lesson 14 reads routing tables in full.
 

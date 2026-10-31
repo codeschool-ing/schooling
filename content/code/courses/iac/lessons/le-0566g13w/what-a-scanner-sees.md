@@ -5,7 +5,7 @@ version: 2
 
 A security scanner for infrastructure code sounds like something that looks at your cloud. **It
 looks at your files.** It parses the Terraform configuration, takes each resource with its
-arguments, and holds it against a catalogue of rules, each of which is a small function: *does this
+arguments, and holds it against a catalogue of rules. Each rule is a small function: *does this
 security group let port 22 in from `0.0.0.0/0`?*, *does this bucket have a public access block?*,
 *is this volume encrypted?* It needs no credentials, calls no API and never opens the state. Lesson
 13 placed it on the ladder of checks between `terraform validate` and a test run, and that is the

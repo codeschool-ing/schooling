@@ -4,8 +4,7 @@ version: 1
 ---
 
 Lesson 10 section 05 found Llama 4 Maverick in ten entries of the sheet, more than fourteen times
-apart on input price. On
-OpenRouter, one model name can stand for several of them, and **OpenRouter picks one per
+apart on input price. On OpenRouter, one model name can stand for several of them, and **OpenRouter picks one per
 request**. Its documentation says how, by default:
 
 ```
@@ -85,7 +84,7 @@ it:
 
 So against OpenRouter the same request goes to DeepInfra, or to Together if DeepInfra cannot take
 it, and **fails rather than move further** with `allow_fallbacks: false`. Which of those ana wants
-depends on lesson 5 section 10's decision: if the evaluation was run against one provider's serving
+depends on lesson 5 section 10's decision. If the evaluation was run against one provider's serving
 of the model, a different provider is a different candidate, and failing may be the honest result.
 
 **Record the provider with every answer.** OpenRouter's response names it, and an evaluation or an

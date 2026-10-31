@@ -34,7 +34,7 @@ ana@vm:~/site$ git log --oneline --graph --all -4
 | * 9677eef Open on Sundays from seven
 ```
 
-A mesma bifurcação que a aula 5 resolveu com merge. Desta vez, no `cheese`:
+O mesmo formato de bifurcação que a aula 5 resolveu com merge. Desta vez, no `cheese`:
 
 ```
 ana@vm:~/site$ git rebase main

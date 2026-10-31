@@ -11,7 +11,7 @@ version: 1
 | in this track | most of it, the figure below | the networks course, and more depth | the Linux course, and more depth |
 
 **A+** is the one written for the support technician's job as a whole. Its first exam is about hardware,
-mobile devices, networking and virtualisation, the second about operating systems, security, software
+mobile devices, networking and virtualisation. The second is about operating systems, security, software
 troubleshooting and what CompTIA calls operational procedures: documentation, change management,
 communication and professionalism, which is to say a good part of this course.
 

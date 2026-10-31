@@ -18,7 +18,7 @@ fazer sentido no mudo. Planeje como roteiro antes de gravar qualquer coisa:
 ```
 
 Cada momento mostra **algo acontecendo**, não algo existindo: um empréstimo, uma recusa, uma devolução. A
-recusa ganha mais tempo porque é o ponto do projeto, aula 5. O terminal ganha quinze segundos, o bastante
+recusa ganha quinze segundos só dela, tanto quanto qualquer momento, porque é o ponto do projeto, aula 5. O terminal ganha quinze segundos, o bastante
 para mostrar evidência e não o bastante para perder quem assiste.
 
 Três regras práticas. **Grave com os dados de exemplo**, para o vídeo ser reproduzível e não mostrar ninguém

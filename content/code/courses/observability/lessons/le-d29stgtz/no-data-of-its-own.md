@@ -58,4 +58,4 @@ Prometheus	prometheus	prometheus	http://prometheus:9090
 names its data source by a `uid` written in the file works the same on every Grafana that loaded the
 same file. One that names it by an id Grafana generated works only on the Grafana that generated it.
 The admin password comes from the file you wrote in lesson 1, `.grafana-password`, read by `$(cat ...)` so it
-never appears on the screen. The next section stops needing it at all.
+never appears on the screen. Two sections on, a robot's token replaces it.

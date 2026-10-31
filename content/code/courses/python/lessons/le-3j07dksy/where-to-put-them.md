@@ -14,12 +14,20 @@ version: 2
 
 ## The ones that need nothing
 
-```python
-def _slug(title: str) -> str:
-    return title.lower().replace(" ", "-")      # annotated anyway: it is a boundary of one line
-
-def _key(row):
-    return row["city"]                          # a `sorted` key, three lines from its use
+```schooling-example
+{
+  "language": "python",
+  "parts": [
+    {
+      "code": "def _slug(title: str) -> str:\n    return title.lower().replace(\" \", \"-\")\n",
+      "note": "Annotated anyway: it is a boundary of one line."
+    },
+    {
+      "code": "def _key(row):\n    return row[\"city\"]",
+      "note": "A `sorted` key, three lines from its use."
+    }
+  ]
+}
 ```
 
 A two-line private helper used once, beside its caller, is understood by reading it. A checker

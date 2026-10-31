@@ -78,5 +78,5 @@ can only ever say yes.
 Loopback also explains a confusion that turns up in support calls. When somebody reports that a
 service "works on the server but not from my machine", the service is often listening on
 `127.0.0.1` only. Tested on the server, it answers; tested from anywhere else, the connection is
-refused, because nothing listens on the server's real address. This lesson's last section shows,
-with `ss`, the addresses this office's server listens on.
+refused, because nothing listens on the server's real address. The section on special ranges, at the end of this
+lesson, shows with `ss` the addresses this office's server listens on.

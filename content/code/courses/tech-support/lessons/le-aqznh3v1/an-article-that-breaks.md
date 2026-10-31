@@ -34,6 +34,6 @@ ana@pc2:~$ curl -sS -m 10 http://intranet/
 curl: (7) Failed to connect to intranet port 80 after 3094 ms: Couldn't connect to server
 ```
 
-The same fault as lesson 1, **3094 milliseconds and nothing**, produced by following the team's own
+The same fault as lesson 1, here **3094 milliseconds and nothing**, produced by following the team's own
 documentation. That is the worst thing a KB can do: nobody suspects the article, because the article is
 what they were told to trust. Lesson 1 fixed one computer; the article would have broken the next one.

@@ -86,9 +86,9 @@ citations: every citation checks out
 
 Nenhum dos três é sobre produtos, e a resposta é a frase fixa, palavra por palavra. **Essa frase é o
 motivo da terceira instrução.** Sem ela, a continuação provável de uma pergunta sobre bicicletas no
-chat de suporte de uma loja é uma resposta sobre bicicletas, e a aula 1 seção 11, mostrou de onde
-vêm as continuações prováveis. Fazer dela uma frase exata, em vez de "diga quando", é a aula 5, seção
-05, de novo: um programa distingue essa resposta de todas as outras comparando duas strings, e o
+chat de suporte de uma loja é uma resposta sobre bicicletas, e a aula 1 seção 11 mostrou de onde
+vêm as continuações prováveis. Fazer dela uma frase exata, em vez de "diga quando", é a aula 5 seção
+05 de novo: um programa distingue essa resposta de todas as outras comparando duas strings, e o
 verificador da próxima seção faz isso.
 
 ## Escolhas no prompt

@@ -24,7 +24,7 @@ which is what this section is about. Read it as three kinds of line:
 - **column definitions** — a name, a type, and any constraints that apply to that column alone;
 - **table constraints** — at the end, for anything that spans more than one column;
 - **nothing else.** There is no place in `CREATE TABLE` for a comment about intent, which is why
-  the last section of this lesson is about naming.
+  this lesson has a section on naming.
 
 ## `IF NOT EXISTS` and why it is usually wrong
 

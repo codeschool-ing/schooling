@@ -23,7 +23,7 @@ list(islice(naturals(), 5))       # [0, 1, 2, 3, 4]
 
 - **Memory**: one value at a time, however many there are.
 - **Time**: the work for value six hundred never happens if you stop at five.
-- **Composition**: a chain of generators is still one value at a time, which is the next section.
+- **Composition**: a chain of generators is still one value at a time, which is two sections on.
 - **The impossible**: a stream with no end — a log being written, a sequence, a poll.
 
 ## Where it ends

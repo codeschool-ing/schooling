@@ -110,10 +110,10 @@ Eles têm buracos. Uma transação que pega um número e depois é desfeita não
 o maior id está errado.
 
 E eles são adivinháveis. Se `/orders/1004` é um endereço válido na sua aplicação, `/orders/1003`
-também é, e pertence a outra pessoa. Isso é um problema de autorização, não de chave — o conserto é
-verificar quem está pedindo, não esconder o número — mas é a razão de sistemas públicos muitas vezes
-carregarem um segundo identificador aleatório (um `UUID`) para uso em URLs, mantendo o inteiro
-pequeno internamente.
+também é, e pertence a outra pessoa. Isso é um problema de autorização, não de chave: o conserto é
+verificar quem está pedindo, não esconder o número. Mesmo assim, é a razão de sistemas públicos
+muitas vezes carregarem um segundo identificador aleatório (um `UUID`) para uso em URLs, mantendo o
+inteiro pequeno internamente.
 
 ## Chaves feitas de mais de uma coluna
 

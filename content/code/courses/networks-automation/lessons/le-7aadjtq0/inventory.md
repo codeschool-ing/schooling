@@ -126,7 +126,7 @@ ana@ctl:~$ cd net && ansible-inventory --host edge1
 }
 ```
 
-The four connection variables are the network part. **`ansible_connection: network_cli` means
+Three of the connection variables are the network part. **`ansible_connection: network_cli` means
 "log in over SSH to a CLI"**, as Netmiko does, instead of Ansible's usual way of copying Python to
 a Linux host and running it there, which a router cannot do. `ansible_network_os` names the
 platform, `frr.frr.frr` from the `frr.frr` collection, so Ansible knows its prompts and its

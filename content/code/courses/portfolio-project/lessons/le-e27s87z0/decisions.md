@@ -35,7 +35,7 @@ The third part is the one lesson 6 insisted on, and it is the one that makes the
 of choices with only reasons reads as a list of things you like. With their costs, it reads as
 judgement, because it shows you knew what you were giving up.
 
-Two or four decisions is the right number. Pick the ones a reviewer would otherwise ask about: the
+Two to four decisions is the right number. Pick the ones a reviewer would otherwise ask about: the
 unusual choice, *no framework*; the one with a visible limit, *SQLite*; the one that looks like a gap,
 *no accounts*; and the one that is the point of the project, *the database refuses*. Each is also a
 question you are now ready for in lesson 20, because you wrote the answer before anybody asked.

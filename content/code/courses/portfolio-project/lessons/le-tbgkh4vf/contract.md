@@ -3,8 +3,9 @@ title: Errors as part of the contract
 version: 1
 ---
 
-Step 8, *Answer every error as JSON*, made every row of the table answer. Here are all of them, one
-after the other:
+Step 8, *Answer every error as JSON*, gave the first six rows of the table their answers. Only the
+spaces of the fourth row waited, for step 13 and lesson 12. Here are the six, one after the other, with
+a loan and a return that succeed:
 
 ```
 ana@laptop:~/loanbook$ curl -s -i localhost:8000/api/nothing

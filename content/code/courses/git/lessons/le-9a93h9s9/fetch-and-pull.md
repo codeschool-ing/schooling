@@ -65,8 +65,8 @@ eadf998 Take rye bread off until the flour arrives
 
 `git fetch` copied Bruno's commit into Ana's repository and moved her bookmark: `6555c9b..eab2026
 main -> origin/main`. **Her own `main` did not move, and no file changed.** Now `git status` tells the
-truth: *behind 'origin/main' by 1 commit, and can be fast-forwarded*. The log with `--all` shows the
-bookmark one commit ahead of her branch.
+truth: *behind 'origin/main' by 1 commit, and can be fast-forwarded*. The log with `--all` includes
+`eab2026`, which only the bookmark points at so far, one commit above her own `6555c9b`.
 
 That makes fetch the safe way to look. It is always harmless, and it answers *what have the others
 done?* without touching anything you are working on.

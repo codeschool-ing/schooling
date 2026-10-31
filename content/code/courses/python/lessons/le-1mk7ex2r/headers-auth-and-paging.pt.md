@@ -27,8 +27,8 @@ histórico de terminal, e um token numa é um token em todos eles.
 os.environ["API_TOKEN"]       # from the environment
 ```
 
-Nem no arquivo. Isso é o `.env` da aula 18 e o `.gitignore` da aula 17, e o modo de falhar é um
-repositório que alguém torna público dois anos depois.
+Nem no arquivo. Um arquivo que guarda um segredo vai para o `.gitignore`, como o `.venv/` da aula
+18, e o modo de falhar é um repositório que alguém torna público dois anos depois.
 
 ## O limite de taxa é um cabeçalho
 

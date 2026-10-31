@@ -138,7 +138,7 @@ Três hábitos fazem isso valer numa equipe:
 
 ## Links também são nomes
 
-O `out-6` da aula 9 tinha um link para `pay-tarefa.example`, um host que parecia o da Tarefa. Um modelo
+O `out-6` da aula 9 tem um link para `pay-tarefa.example`, um host que parece o da Tarefa. Um modelo
 que inventa um link plausível produz o mesmo risco que um que inventa um pacote: um nome que outra pessoa
 pode possuir. A lista de hosts da aula 9 é a mesma defesa que o snapshot de registro daqui, uma para o
 navegador do cliente e outra para a máquina de quem desenvolve.

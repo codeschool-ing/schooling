@@ -78,16 +78,16 @@ looked at 10 of 60 to find 5
 ```
 
 **It looked at 10 of the 60 books to fill five places**, and the skipped lines say why each of
-the other five went. Caio's three finished books ranked at the very top of his own list, *Around the
-World in Eighty Days* was out of stock, and *The Invisible Man* was a second Wells. In
-their places came *Frankenstein* at 0.359 and *Treasure Island* at 0.357, further down the ranking
-and still science fiction and adventure.
+the other five went. Caio's three finished books ranked at the very top of his own list, *Around
+the World in Eighty Days* was out of stock, and *The Invisible Man* was a second Wells. In their
+places came *Frankenstein* at 0.359 and *Treasure Island* at 0.357, further down the
+ranking and still science fiction and adventure.
 
 ## Filter while you walk, not after you cut
 
 **The loop walks down the full ranking and stops when it has five**; it never cuts the ranking
-first. With 60 books that costs nothing, since every book has a score already. With a million books and an
-index that returns only the nearest 50, it matters: if the rules remove 46 of those 50, the reader
-gets four recommendations, and asking the index for more is the only fix. Lesson 17 meets exactly
+first. With 60 books that costs nothing, since every book has a score already. With a million
+books and an index that returns only the nearest 50, it matters. If the rules remove 46 of those
+50, the reader gets four recommendations, and asking the index for more is the only fix. Lesson 17 meets exactly
 this problem in vector databases, where a filter applied after the search returns fewer results
 than asked for, and shows the ways around it.

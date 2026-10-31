@@ -6,7 +6,7 @@ version: 1
 Every prompt Tarefa's assistant builds leaves for a company Tarefa does not run. Lesson 12 decided
 what may go in a prompt; lesson 13 drew the flow that crosses into the provider's zone. **This lesson
 is about choosing who is on the other side of that flow**, because the provider's practices become
-Tarefa's: a provider that keeps prompts for a year means Tarefa's clients' words exist for a year, and
+Tarefa's. A provider that keeps prompts for a year means Tarefa's clients' words exist for a year, and
 nothing in Tarefa's own code changes that.
 
 The choice starts with a short list of questions written before anybody reads a sales page, so that

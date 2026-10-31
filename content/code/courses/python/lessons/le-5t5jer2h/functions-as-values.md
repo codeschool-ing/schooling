@@ -54,7 +54,7 @@ double(5)                   # 10
 ```
 
 `multiply` remembers `n` after `multiplier` has returned. That is a CLOSURE, it is the
-`nonlocal` machinery from two sections ago, and it is the single idea lesson 12 builds decorators
+`nonlocal` machinery from three sections ago, and it is the single idea lesson 12 builds decorators
 out of.
 
 ## Why this matters before lesson 12

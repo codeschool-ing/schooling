@@ -257,7 +257,7 @@ r5  BLOCK link to a host not on the allowlist: https://pay-tarefa.example/confir
 r6  pass  
 ```
 
-Two of six pass. Each block names its layer, and the name is what makes the chain maintainable: a
+Two of six pass. Each block names its layer, and the name is what makes the chain maintainable. A
 complaint about a blocked reply goes to the layer that blocked it, and the person reading the log can
 tell a moderation false positive from a CPF that was really there.
 

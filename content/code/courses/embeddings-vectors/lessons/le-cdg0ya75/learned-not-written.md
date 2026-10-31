@@ -83,5 +83,5 @@ does not care about order. All-MiniLM-L6-v2 sees a difference, 0.9795, because i
 
 Notice how small that difference is. Even the contextual model scores *the dog bit the man* and
 *the man bit the dog* as almost the same text, because they share all their words and their topic.
-An embedding measures **what a text is about** far better than **what it asserts**, and that is the
+**An embedding measures what a text is about far better than what it asserts**, and that is the
 subject of the next section.

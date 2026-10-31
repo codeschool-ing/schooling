@@ -45,8 +45,8 @@ FAILED test_slug.py::test_keeps_punctuation - AssertionError: assert 'hello,...
 ```
 
 **Read the report from the bottom.** On a suite with thirty failures the top of the output is the
-first one, which is rarely the interesting one, and the summary gives you every name in four
-lines.
+first one, which is rarely the interesting one, and the summary gives you every name, one line
+each.
 
 ## What it will not print
 
@@ -61,4 +61,4 @@ E       assert (0.1 + 0.2) == 0.3
 
 Here the rewriting shows the expression rather than its value, and `0.30000000000000004` — which
 is the actual answer and the whole reason the test fails — does not appear. That is the case
-`approx` exists for, two sections along.
+`approx` exists for, four sections along.

@@ -68,7 +68,7 @@ and the next time the same mistake costs a second of CI instead of an outage. Wh
 no, a cable or a crashed process, the online test is the right place, and it has done its job.
 
 Tests also have limits worth naming. They check what somebody thought to check; the network has
-other ways to fail. Tools that analyse whole configurations offline, such as Batfish, which models
-the network's control plane from the configuration files and answers questions like "can this LAN
-reach that one", go much further than hand-written tests, at the cost of running a service of
-their own.
+other ways to fail. Tools that analyse whole configurations offline go much further than hand-written
+tests, at the cost of running a service of their own. Batfish is one: it models the network's
+control plane from the configuration files and answers questions like "can this LAN reach that
+one".

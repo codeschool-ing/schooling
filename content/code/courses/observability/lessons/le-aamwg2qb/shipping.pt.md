@@ -155,7 +155,7 @@ ana@obs:~/shop$ diff otel/collector.yaml otel/collector-logs.yaml
 >       exporters: [otlp_http/loki, elasticsearch, otlp_grpc/graylog]
 ```
 
-**Dois exporters acrescentados, e uma linha mudada**: a esteira de logs agora termina em três
+**Dois exporters acrescentados, e uma linha mudada**, fora o comentário do topo: a esteira de logs agora termina em três
 exporters, e toda linha é mandada aos três. A esteira de rastros fica intocada. O Collector é recriado
 com o arquivo novo, e o Graylog ganha uma input para receber, do tipo *OpenTelemetry (gRPC)* na porta
 padrão, pela API dele. O Graylog recusa uma mudança pela API que não traga um cabeçalho

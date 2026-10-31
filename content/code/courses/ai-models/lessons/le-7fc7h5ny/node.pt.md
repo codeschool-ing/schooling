@@ -56,7 +56,8 @@ requisição, sem conta: o programa leu quatro arquivos e fez a conta na CPU.
 Leia os erros do jeito que a seção 07 da aula 5 leu erros, pelo que foi confundido com o quê. O
 `c34`, que uma pessoa rotulou `other`, virou `refund`; o `c36`, um reembolso, virou
 `address-change`; o `c38`, uma pergunta sobre produto, virou `other`. As notas dizem quão seguro ele
-estava, e são baixas justamente nesses: 0,441, 0,502, 0,488, contra 0,910 no reembolso que acertou.
+estava. Os três erros têm nota baixa, 0,441, 0,502 e 0,488, contra 0,910 no reembolso que acertou, e o `c35` também, que ele acertou com
+0,366.
 **Uma nota é a confiança do modelo, não a precisão dele**, e um limite abaixo do qual o e-mail vai
 para uma pessoa é o uso óbvio para ela.
 

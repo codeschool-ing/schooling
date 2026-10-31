@@ -14,7 +14,7 @@ tudo depois depende dele.
 Perguntar é como você aprende isso, e há um jeito de perguntar que respeita o tempo dos outros:
 
 - Tente primeiro, por um tempo definido. Quinze ou trinta minutos sozinho, dependendo da tarefa. A
-  resposta de fraqueza da aula 15 era uma regra de verdade: *depois de trinta minutos travado, eu pergunto*.
+  resposta de fraqueza da aula 15 era uma regra de verdade: *depois de trinta minutos no mesmo problema, pergunto a alguém*.
 - Pergunte com o que você tentou. *Estou tentando redefinir o MFA de um usuário; achei a página de
   administração, mas a opção está desabilitada. Falta alguma permissão?* Essa pergunta se responde numa
   frase.

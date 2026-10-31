@@ -23,8 +23,8 @@ há noção de valor inteiro para comparar, porque o valor não é inteiro.
 **As duas listas são unidas por posição e nada garante isso.** `17` é a nota de SQL101 da Ana
 porque é a primeira de uma lista e SQL101 é o primeiro da outra. Insira um curso no meio de uma
 lista e esqueça a outra, e toda nota depois dela passa a pertencer ao curso errado. Nada reclama.
-É a mesma falha que o formato de conteúdo deste repositório recusa — *nada se une por posição* — e
-é por isso.
+É a mesma falha que a plataforma em que você está lendo isto recusa no próprio conteúdo — *nada se
+une por posição* — e é por isso.
 
 **Acrescentar um curso significa reescrever uma string.** Ler a linha, acrescentar, escrever de
 volta. Duas matrículas no mesmo segundo e uma se perde.

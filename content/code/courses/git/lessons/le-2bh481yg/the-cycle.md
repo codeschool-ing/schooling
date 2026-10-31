@@ -55,7 +55,7 @@ On branch main
 nothing to commit, working tree clean
 ```
 
-Four lines, each worth reading once:
+Three lines, and four things in them worth reading once:
 
 - `[main (root-commit) 6abda31]` is the branch the commit went onto, the fact that it is the first
   commit of the repository, which is what *root* means, and its short id.

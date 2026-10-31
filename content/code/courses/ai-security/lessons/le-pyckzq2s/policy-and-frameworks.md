@@ -46,7 +46,7 @@ naturally:
 | Manage | treating the risks, and responding when one happens | lessons 5 to 7, 9 to 11, 14 to 19, 21, 24 |
 
 **ISO/IEC 42001**, published in December 2023, is a management system standard for AI, built like
-ISO/IEC 27001 is for information security: requirements for an AI policy, roles, risk assessment, an
+ISO/IEC 27001 is for information security. It sets requirements for an AI policy, roles, risk assessment, an
 impact assessment for each AI system, and a set of reference controls in its Annex A, with a cycle
 of internal audits and improvement. Unlike the NIST framework, **it can be certified** by an external
 auditor, which is why it appears in contracts and tenders.

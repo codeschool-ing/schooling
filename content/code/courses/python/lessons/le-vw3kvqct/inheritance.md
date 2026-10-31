@@ -66,5 +66,5 @@ When the subclass IS the parent in every place the parent is used, and only chan
 is done. A `Student` is a `Person` — every method that takes a `Person` works with one.
 
 **When the subclass has to refuse a parent method** — "a square is a rectangle, but setting its
-width has to change its height" — the relationship was not what it looked like. The next section
-but one is the alternative.
+width has to change its height" — the relationship was not what it looked like. Composition, three
+sections on, is the alternative.

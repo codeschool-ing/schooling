@@ -4,7 +4,7 @@ version: 1
 ---
 
 A última linha da tabela, *algo que ninguém esperava*, não tem frase para o usuário. Tem uma linha no log do
-servidor, e o log é parte do produto tanto quanto a página.
+servidor, e **o log é parte do produto tanto quanto a página.**
 
 O loanbook escreve uma linha por requisição, com o método, o caminho e o status com que respondeu:
 
@@ -22,14 +22,14 @@ POST /api/items/1/return 409
 ```
 
 São oito requisições e oito linhas, e uma pessoa lendo isso depois de uma reclamação vê exatamente o que
-aconteceu: duas requisições ruins, um item desconhecido, um empréstimo, uma recusa, uma devolução, e uma
+aconteceu: um endereço desconhecido, duas requisições ruins, um item desconhecido, um empréstimo, uma recusa, uma devolução, e uma
 devolução recusada. A linha é escrita por `log_message`, que o loanbook sobrescreve para cada requisição
 virar uma linha com o status no fim, em vez do padrão da biblioteca com a data e o endereço do cliente.
 
 Três regras para o que o log de um projeto de portfólio diz:
 
 - **Uma linha por evento, sempre no mesmo formato**, para dar para procurar com `grep` e para uma
-  ferramenta ler depois, aula 15.
+  ferramenta ler depois.
 - **O bastante para encontrar a requisição, e não mais.** O caminho e o status, sim. O corpo da requisição,
   não: ele tem nomes de pessoas, e um log é guardado por mais tempo e lido por mais gente que um banco.
 - **Traceback para o inesperado, nunca para o esperado.** O log do passo 7 tinha um traceback para um corpo

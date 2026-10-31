@@ -13,7 +13,7 @@ Most managers have an answer in their head and have never said it. Asking gets i
 turns a guess into a list: *close tickets in the N1 queue without escalating the common ones; know the
 backup routine; document one procedure that is missing.*
 
-Then **check it halfway**, at around day 45: *here's the list we made; this is where I think I am; is that
+Then **check it halfway**, at around day 45. *Here's the list we made; this is where I think I am; is that
 how it looks from your side?* If there is a gap, you hear about it with six weeks left to close it, not on
 the last day.
 

@@ -78,7 +78,7 @@ is no state in which the database holds two answers.
 **Notice that `teachers` got a surrogate key** while `courses` kept `code` and `students` kept
 `email`. That is lesson 1's argument arriving in practice: a course code is printed in the
 prospectus and does not change, an email is at least argued about, and a teacher's name is exactly
-the kind of thing that changes — so the one being invented here is the one that needed inventing.
+the kind of thing that changes. So the one being invented here is the one that needed inventing.
 Normalisation says *split*; it does not say what the new table's key should be, and that is still
 your decision.
 

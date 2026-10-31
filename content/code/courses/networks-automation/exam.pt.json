@@ -249,15 +249,15 @@
     "hint": "NETCONF sobre SSH."
   },
   "ex-seh79jxr": {
-    "prompt": "Uma segunda sessão pede lock na candidate do `nc1` enquanto a primeira o segura. O que ela recebe?",
+    "prompt": "Uma primeira sessão segura o lock na candidate do `nc1`. O que uma segunda sessão recebe ao tentar editar a candidate?",
     "hint": "Uma tag de erro.",
     "choices": [
       {
-        "text": "O lock, compartilhado",
-        "why": "Locks são exclusivos."
+        "text": "A edição dela, aplicada ao lado da edição da primeira",
+        "why": "O lock a recusa."
       },
       {
-        "text": "Uma espera até a primeira liberar",
+        "text": "Uma espera até a primeira sessão liberar o lock",
         "why": "É recusado na hora."
       },
       {
@@ -874,8 +874,8 @@
     ]
   },
   "ex-qdwn1xya": {
-    "prompt": "Uma configuração renderizada diferia do roteador por um byte. Que opção do Jinja2 corrigiu?",
-    "hint": "A última quebra de linha.",
+    "prompt": "Por padrão o Jinja2 descarta a última quebra de linha do template, e a configuração renderizada ficaria diferente da do roteador por um byte. Que opção evita isso?",
+    "hint": "Ela mantém algo.",
     "choices": [
       {
         "text": "`trim_blocks=True`",
@@ -1313,7 +1313,7 @@
     ]
   },
   "ex-7geva4ma": {
-    "prompt": "O `deploy.sh` repete o pós-check até quantas vezes?",
+    "prompt": "O `deploy.sh` roda o pós-check no máximo quantas vezes?",
     "hint": "Dez segundos entre elas.",
     "unit": "tentativas"
   },
@@ -1650,24 +1650,24 @@
     ]
   },
   "ex-2ntyx863": {
-    "prompt": "O `send_config_set` do Netmiko mandou uma linha que o FRR recusou. Como a aula 8 descobriu?",
-    "hint": "Leia de volta.",
+    "prompt": "O `send_config_set` do Netmiko mandou uma linha que o FRR recusou e retornou normalmente. O que a aula 8 acrescentou para a recusa parar o script?",
+    "hint": "Uma expressão regular.",
     "choices": [
       {
-        "text": "O Netmiko lançou exceção no instante em que o roteador imprimiu a mensagem de erro",
-        "why": "Não lançou."
+        "text": "Nada: o Netmiko lança exceção em qualquer recusa por padrão",
+        "why": "Ele devolveu a recusa como texto, sem exceção."
       },
       {
-        "text": "A sessão SSH fechou",
-        "why": "Ficou aberta."
+        "text": "Um `save_config()` depois de cada linha",
+        "why": "Salvar não verifica nada."
       },
       {
-        "text": "Lendo a saída e a configuração de volta",
+        "text": "`error_pattern=r\"% \"`, que transforma a recusa do FRR em exceção",
         "why": "Isso."
       },
       {
-        "text": "O roteador reiniciou para desfazer a linha, e o Netmiko perdeu a conexão",
-        "why": "Não."
+        "text": "Um timeout de SSH maior, para o roteador ter tempo de relatar o erro",
+        "why": "O roteador respondeu na hora; a sessão ficou aberta."
       }
     ]
   },

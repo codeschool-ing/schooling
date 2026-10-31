@@ -68,7 +68,7 @@ does exactly what the addresses say, and it prints every line of it. The danger 
 reading the plan: a change described as "remove one subnet" whose summary says
 `1 to add, 2 to destroy` is the line to stop at, and lesson 9 turns that into a habit.
 
-Where the problem bites and where it does not is worth knowing exactly:
+Exactly where the problem bites, and where it does not:
 
 - **Adding at the end** of the list only adds a copy, because no existing index moves.
 - **Removing the last element** only removes one.

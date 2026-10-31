@@ -28,7 +28,7 @@ embrulha-o num pacote novo, do seu próprio endereço público para o endereço 
 filial, e envia esse. A operadora roteia o pacote de fora, o que ela sabe fazer. O roteador da filial
 o desembrulha e entrega o pacote original na sua LAN. Na maioria das VPNs, o pacote de dentro também é
 **cifrado**, para que a rede que o carrega não consiga ler nem o conteúdo nem os endereços privados — a
-última seção desta aula olha o que continua visível.
+próxima seção olha o que continua visível.
 
 ## Montando uma
 
@@ -46,9 +46,10 @@ root@rbr:~# ip addr add 10.255.255.2/30 dev wg0 && ip link set wg0 up && ip rout
 ```
 
 Leia as três linhas da matriz. A `wg0` é criada; depois o `wg set` dá a ela uma **porta de escuta**,
-51820, uma chave privada tirada de um arquivo, e um **par**: a chave pública da filial (`+JFz…`), o
-**endpoint** dela, `198.51.100.2:51820` — o endereço público do roteador da filial — e os **allowed
-IPs**, `10.30.10.0/24,10.255.255.2/32`, os endereços que podem chegar por este túnel. A última linha dá
+51820, uma chave privada tirada de um arquivo, e um **par**, a filial. O par é identificado pela chave
+pública dela (`+JFz…`) e encontrado no seu **endpoint**, `198.51.100.2:51820`, o endereço público do
+roteador da filial. Os **allowed IPs** dele, `10.30.10.0/24,10.255.255.2/32`, são os endereços que
+podem chegar por este túnel. A última linha dá
 um endereço à `wg0`, sobe a interface e acrescenta a rota que manda a LAN da filial para dentro do túnel.
 As linhas da filial são o espelho delas.
 
@@ -88,7 +89,7 @@ peer: +JFzEjDfzTBIMYnsaG9+qGoe12VEnNzYlLvJ6Ftnojo=
 
 O ping que falhou agora funciona. Três detalhes dizem que ele passou pelo túnel:
 
-- **`ttl=62`.** O pc2 mandou a resposta com TTL 64, e dois roteadores tiraram um cada: o `rbr` e o
+- **A resposta chegou com `ttl=62`.** O pc2 mandou a resposta com TTL 64, e dois roteadores tiraram um cada: o `rbr` e o
   `rhq`. O roteador da operadora encaminhou o pacote *de fora*, cujo TTL é outro número, e nunca tocou
   no de dentro.
 - **O traceroute tem três saltos, e nenhum é a operadora.** O salto 2 é `10.255.255.2`, o endereço do

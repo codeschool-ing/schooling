@@ -4,7 +4,7 @@ version: 1
 ---
 
 One call costs cents. **A loop costs the month.** An integration that retries on every error, an
-agent that calls itself, a client script with a bug: each sends the same kind of request again and
+agent that calls itself, a client script with a bug. Each sends the same kind of request again and
 again, and each request is cheap enough that nobody notices until the total arrives.
 
 A day of the assistant's calls, written by a rule rather than observed: five clients asking twenty
@@ -157,7 +157,7 @@ total spent R$ 20,03
 The ceiling held, and the alert came six minutes before it. **It also stopped every client who asked
 anything after 14:26**: each of the five lost seven of their twenty questions, for a loop they had
 nothing to do with. The total stopped at R$ 20,03, past the ceiling by part of one call, because the
-check runs after a call is served; a ceiling that must never be crossed checks the estimated cost
+check runs after a call is served. A ceiling that must never be crossed checks the estimated cost
 before. A global ceiling is the last line, for the case nothing else caught. As the only line, it
 turns one account's bug into everybody's outage.
 
@@ -183,7 +183,7 @@ fell to R$ 5,83, and the ceiling was never approached, which is how a ceiling sh
 The per-account budget is enforced with the end-user identifier of lesson 7, which is what makes "per
 account" mean something when the requests all arrive through one partner's key.
 
-Three levels, then, and each catches what the others cannot:
+Four limits, then, and each catches what the others cannot:
 
 | limit | stops | lesson |
 |---|---|---|

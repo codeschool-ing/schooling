@@ -26,7 +26,7 @@ lento. Todos os 111 levaram menos de 2,5 segundos, então 109 caíram entre um s
 cerca de 1,51 segundo.
 
 Essa é a forma de uma métrica: **um punhado de números que crescem, seja qual for o tráfego.** Mil
-checkouts ou um milhão custam as mesmas sete linhas. O Prometheus as lê a cada quinze segundos e
+checkouts ou um milhão custam as mesmas linhas. O Prometheus as lê a cada quinze segundos e
 guarda o histórico, que é o que permite responder *quão lentos foram os checkouts nos últimos dois
 minutos*:
 
@@ -36,9 +36,9 @@ ana@obs:~/shop$ curl -s localhost:9090/api/v1/query --data-urlencode 'query=hist
 ```
 
 A consulta pede o percentil 99: o tempo abaixo do qual 99 checkouts em cem terminaram. A resposta,
-2,485 segundos, **não é um tempo que alguma requisição levou.** O checkout cronometrado com o `curl` levou
-1,54, e todo checkout lento esperou o mesmo segundo e meio no payments. Um histograma só sabe em que bucket uma requisição caiu, então o Prometheus supõe que as 109
-requisições entre 1 e 2,5 se espalharam por igual nessa faixa e lê o percentil a partir dessa
+2,485 segundos, **não é um tempo que alguma requisição levou.** O checkout cronometrado com o
+`curl` levou 1,54, e todo checkout lento esperou o mesmo segundo e meio no payments. Um histograma
+só sabe em que bucket uma requisição caiu, então o Prometheus supõe que as 109 requisições entre 1 e 2,5 se espalharam por igual nessa faixa e lê o percentil a partir dessa
 suposição. A aula 5 escreve esta consulta passo a passo, e a aula 6 trata de escolher os buckets
 para que a suposição custe menos.
 

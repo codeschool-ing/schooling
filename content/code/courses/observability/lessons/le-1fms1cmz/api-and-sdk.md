@@ -36,7 +36,8 @@ hands back spans that do nothing, cheaply. That means a library can be instrumen
 people who never set OpenTelemetry up, at almost no cost to them.
 
 The **SDK** is what makes the calls real, and it is set up once, when the program starts. It has
-three parts, and the shop's storefront and payments share one function that assembles them:
+three parts, and the shop's storefront, payments, mailer and report share one function that
+assembles them:
 
 ```schooling-example
 {
@@ -44,7 +45,7 @@ three parts, and the shop's storefront and payments share one function that asse
   "file": "common/tracing.py",
   "parts": [
     {
-      "code": "\"\"\"The OpenTelemetry SDK, set up by hand, for the services instrumented by hand.\"\"\"\nfrom opentelemetry import trace\nfrom opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter\nfrom opentelemetry.sdk.resources import Resource\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import BatchSpanProcessor\n\n",
+      "code": "\"\"\"The OpenTelemetry SDK, set up by hand, for the services instrumented by hand.\"\"\"\nfrom opentelemetry import trace\nfrom opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter\nfrom opentelemetry.sdk.resources import Resource\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import BatchSpanProcessor\n\n\n",
       "note": "Everything imported from `opentelemetry.sdk` is the SDK. Only `trace`, the first import, is the API, and it is the only one the rest of the service uses."
     },
     {

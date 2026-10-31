@@ -199,7 +199,7 @@ out-2  REJECT  not JSON: Expecting value at character 0
 ```
 
 `out-2` is the JSON of `out-1` with a friendly sentence in front. The tempting fix is to search the
-reply for the first `{` and parse from there, and it is a bad fix: a parser that digs JSON out of
+reply for the first `{` and parse from there, and it is a bad fix. A parser that digs JSON out of
 prose accepts anything that contains an object somewhere, including a reply that says something else
 entirely around it. Refuse it and ask again. Many providers also offer a structured output mode that
 constrains the reply to valid JSON, or to a given schema, while it is generated, and it is worth

@@ -52,9 +52,9 @@ porque todas foram tiradas numa rajada quando o mailer voltou.
 Duas coisas sobre ler isso num armazenamento de rastros:
 
 - **O comprimento do rastro não é o que alguém esperou.** Um armazenamento de rastros mede um rastro
-  do início do primeiro span ao fim do último, então esses checkouts aparecem com vinte e poucos
-  segundos. O cliente esperou uns 430 ms, a duração do span raiz. Busque pelo span raiz quando a
-  pergunta é sobre o cliente, e pelo rastro quando ela é sobre o pedido.
+  do início do primeiro span ao fim do último, então os três checkouts atrasados aparecem com
+  catorze a vinte e sete segundos. O cliente esperou uns 430 ms, a duração do span raiz. Busque
+  pelo span raiz quando a pergunta é sobre o cliente, e pelo rastro quando ela é sobre o pedido.
 - **A espera não tem span próprio.** Ela é a lacuna entre um span num serviço e um span em outro, medida
   nos relógios de duas máquinas. No laboratório os dois relógios são o do mesmo host; entre hosts reais,
   alguns milissegundos de diferença de relógio podem fazer uma espera curta parecer negativa, o que é

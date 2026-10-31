@@ -23,8 +23,8 @@ transação, e quais colunas são mandadas — são o preço, e é um preço peq
 
 Uma tela que mostra um cliente e seus últimos dez pedidos é a forma do N+1, e a própria correção
 de carga ansiosa do mapeador é a ferramenta certa: uma instrução na consulta, duas instruções ao
-servidor, e os objetos que a tela vai desenhar. A regra é a da segunda seção — leia o log uma vez
-por tela — e mais nada é preciso.
+servidor, e os objetos que a tela vai desenhar. A regra é a da seção sobre o que ele emite — leia o log uma
+vez por tela — e mais nada é preciso.
 
 ## Relatórios: SQL
 

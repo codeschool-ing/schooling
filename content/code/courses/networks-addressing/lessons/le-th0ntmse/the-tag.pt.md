@@ -91,6 +91,6 @@ mais longo em outro cabeçalho, como os 24 bits do VXLAN. Nenhum dos dois roda n
 Vale saber duas consequências de acrescentar bytes a um quadro. O maior quadro Ethernet cresceu de
 1518 para 1522 bytes para dar lugar ao tag, então um equipamento num tronco tem de aceitar quadros
 quatro bytes mais longos do que uma porta de acesso jamais entrega. E a soma de verificação no fim
-do quadro cobre todos os bytes, então o switch a recalcula toda vez que põe ou tira um tag; o
+do quadro cobre todos os bytes, então o switch a recalcula toda vez que põe ou tira um tag. O
 tcpdump no Linux não mostra essa soma, e é por isso que os tamanhos acima são 98 e 102 e não quatro
 bytes a mais.

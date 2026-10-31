@@ -40,7 +40,7 @@ edited to fix the borderline cases. Each of those is a change to one input of th
 the cases answer whether it made things worse.
 
 `evalkit gate` makes that check something a program can refuse. It compares a model's loose score
-in a new run with the baseline and fails, with exit status 1, if the new one is worse by more than
+in a new run with the baseline. It fails, with exit status 1, if the new one is worse by more than
 the cases allowed, one unless told otherwise:
 
 ```

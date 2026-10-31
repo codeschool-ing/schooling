@@ -41,6 +41,6 @@ Três notas práticas:
 
 - **Um marcador por versão do prompt**, para que um alerta diga qual versão vazou e desde quando.
 - **Nunca ponha um segredo num prompt de sistema** confiando no canário para protegê-lo. O canário relata
-  um vazamento; não impede nenhum. Chaves e credenciais ficam com as ferramentas, como disse a aula 10.
+  um vazamento; não impede nenhum. Chaves e credenciais ficam com as ferramentas, como mostra a aula 10.
 - **Escreva o prompt de sistema como se ele fosse ser lido.** Provavelmente vai ser, por alguém. Um prompt
   que envergonharia a empresa se publicado é um prompt a reescrever, sejam quais forem os filtros atrás.

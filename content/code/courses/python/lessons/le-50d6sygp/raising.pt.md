@@ -62,5 +62,5 @@ except OSError:
     raise                     # the same exception, same traceback
 ```
 
-Um `raise` pelado dentro de um tratamento relevanta o que você capturou. É assim que se faz algo de
+Um `raise` pelado dentro de um tratamento relança o que você capturou. É assim que se faz algo de
 passagem sem engolir a falha — e ele mantém o traceback original, que um `raise e` truncaria.

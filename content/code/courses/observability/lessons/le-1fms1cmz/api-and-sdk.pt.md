@@ -36,7 +36,8 @@ devolve spans que não fazem nada, a custo baixo. Assim uma biblioteca pode ser 
 uma vez e distribuída a quem nunca configurou o OpenTelemetry, quase sem custo para essas pessoas.
 
 O **SDK** é o que torna as chamadas reais, e ele é configurado uma vez, quando o programa começa.
-Tem três partes, e o storefront e o payments da loja dividem uma função que as monta:
+Tem três partes, e o storefront, o payments, o mailer e o report da loja dividem uma função
+que as monta:
 
 ```schooling-example
 {
@@ -44,7 +45,7 @@ Tem três partes, e o storefront e o payments da loja dividem uma função que a
   "file": "common/tracing.py",
   "parts": [
     {
-      "code": "\"\"\"The OpenTelemetry SDK, set up by hand, for the services instrumented by hand.\"\"\"\nfrom opentelemetry import trace\nfrom opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter\nfrom opentelemetry.sdk.resources import Resource\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import BatchSpanProcessor\n\n",
+      "code": "\"\"\"The OpenTelemetry SDK, set up by hand, for the services instrumented by hand.\"\"\"\nfrom opentelemetry import trace\nfrom opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter\nfrom opentelemetry.sdk.resources import Resource\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import BatchSpanProcessor\n\n\n",
       "note": "Tudo o que vem de `opentelemetry.sdk` é o SDK. Só `trace`, a primeira importação, é a API, e é a única que o resto do serviço usa."
     },
     {

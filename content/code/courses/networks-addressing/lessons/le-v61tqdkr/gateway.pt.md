@@ -3,7 +3,7 @@ title: "O gateway padrão: o endereço de um roteador"
 version: 1
 ---
 
-"Gateway" soa como um equipamento. Na configuração de um host é um **endereço**: **o gateway padrão
+"Gateway" soa como um equipamento. Na configuração de um host é um endereço: **o gateway padrão
 é o endereço do roteador para o qual um host manda todo pacote cujo destino não está na sua própria
 rede.** A tabela de rotas do pc1 diz isso em duas linhas:
 
@@ -59,8 +59,8 @@ Ele perguntou o MAC do gateway, e é por isso que a tabela de vizinhos agora tem
 ```
 
 **Dois pares de endereços, com dois alcances diferentes.** Os endereços IP nomeiam as duas pontas
-da viagem e ficam no pacote o caminho todo; os endereços MAC nomeiam quem envia e quem recebe neste
-enlace e são jogados fora no r1, que embrulha o mesmo pacote num quadro novo para o enlace do
+da viagem e ficam no pacote o caminho todo. Os endereços MAC nomeiam quem envia e quem recebe neste
+enlace, e são jogados fora no r1, que embrulha o mesmo pacote num quadro novo para o enlace do
 provedor. A resposta voltou com `ttl=62`, os dois roteadores da aula 1, e pelo mesmo gateway: o
 quadro dela é de `02:1f:23:e7:e9:d5` para o pc1.
 

@@ -39,7 +39,7 @@ ana@pc1:~$ getent ahosts web
 
 `web` tem dois endereços, `2001:db8:99::80` e `192.0.2.80`, e **o IPv6 vem primeiro**. (`STREAM`,
 `DGRAM` e `RAW` são os três tipos de socket para que cada endereço serviria; leia só os endereços.)
-Neste laboratório os nomes vêm do `/etc/hosts` de cada máquina, que o `dualstack.sh` escreveu; na internet eles
+Neste laboratório os nomes vêm do `/etc/hosts` de cada máquina, que o `dualstack.sh` escreveu. Na internet eles
 vêm do DNS, onde um nome tem um registro **A** para IPv4 e um registro **AAAA** para IPv6, como o curso
 de redes mostrou. A ordem é escolha do sistema, e numa máquina com endereço IPv6 global ele põe o IPv6
 primeiro. Um programa que tenta os endereços na ordem, portanto, tenta o IPv6 primeiro.

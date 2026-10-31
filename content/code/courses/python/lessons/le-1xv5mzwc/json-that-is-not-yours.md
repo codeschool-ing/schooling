@@ -64,5 +64,5 @@ name the row when it fails.
 ## The rule
 
 **Read it as though they meant the documentation, and handle it as though they did not.** The
-error you raise should name the file, the row and the field — because when this fires you will be
+error you raise should name the file, the row and the field. When this fires you will be
 looking at somebody else's export, and nothing else in the program knows where it came from.

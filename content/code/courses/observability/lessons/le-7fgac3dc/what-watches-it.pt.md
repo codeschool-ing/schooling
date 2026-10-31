@@ -13,9 +13,10 @@ primeira vez que a sobe**, e esta página é a configuração que diz a cada uma
 ## O arquivo que sobe tudo
 
 O `compose.yaml` dá nome a cada contêiner, à imagem que ele roda, aos arquivos que lê e às portas que
-publica. Três serviços perto do fim têm uma linha `profiles` e não sobem com o resto: o
-Elasticsearch e o Graylog são da aula 9 e o Envoy é da aula 19, e cada uma dessas aulas diz como
-subi-los.
+publica. Um serviço com uma linha `profiles` não sobe com o resto. Os três perto do começo são
+programas que as aulas rodam à mão. Os cinco perto do fim são de duas aulas: o Elasticsearch, e o
+Graylog com o MongoDB e o OpenSearch de que ele precisa, da aula 9, e o Envoy da aula 19. Cada uma
+dessas aulas diz como subi-los.
 
 `~/shop/compose.yaml`
 

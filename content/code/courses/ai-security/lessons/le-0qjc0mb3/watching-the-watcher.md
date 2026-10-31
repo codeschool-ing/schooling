@@ -36,6 +36,6 @@ fired:
 | was every incident announced by a rule? | write the rule that would have |
 | does every rule have a runbook and an owner? | write it, or delete the rule |
 
-`alerts.json` lives in the repository with the rest of the assistant's configuration, so a change to a
-threshold is a pull request somebody reviews, with the reason in its description, rather than a field
-edited in a dashboard at the end of a long night.
+`alerts.json` lives in the repository with the rest of the assistant's configuration. A change to a
+threshold is then a pull request somebody reviews, with the reason in its description, rather than a
+field edited in a dashboard at the end of a long night.

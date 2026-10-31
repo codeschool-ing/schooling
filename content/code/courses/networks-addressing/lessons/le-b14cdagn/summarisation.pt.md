@@ -35,7 +35,7 @@ root@r2:~# ip route get 10.20.32.250
 ```
 
 A mesma resposta para os dois: em direção ao r1. O 10.20.32.250 está no espaço livre do plano, então
-o r1 não tem sub-rede para ele, e o r1 faz o que qualquer roteador faz com um endereço para o qual
+o r1 não tem sub-rede para ele. O r1 faz o que qualquer roteador faz com um endereço para o qual
 não tem rota específica: usa a padrão, que aponta de volta para o r2. Um ping do hq1 mostra onde isso
 termina:
 
