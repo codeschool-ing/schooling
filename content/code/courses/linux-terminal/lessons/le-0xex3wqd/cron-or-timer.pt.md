@@ -15,7 +15,7 @@ version: 1
 | **execuções perdidas** | perdidas | `Persistent=true` |
 | **execuções sobrepostas** | por sua conta | impedidas |
 | **saída** | por e-mail, se houver MTA | o journal |
-| **ambiente** | quatro variáveis, sem profile | o que a unidade disser |
+| **ambiente** | seis variáveis, sem profile | o que a unidade disser |
 | **dependências** | nenhuma | `After=`, `Requires=`, o grafo inteiro |
 | **dispersão** | escreva você mesmo | `RandomizedDelaySec=` |
 | **conferir** | a checagem de sintaxe do `crontab -e` | `systemd-analyze verify`, `calendar`, `list-timers` |

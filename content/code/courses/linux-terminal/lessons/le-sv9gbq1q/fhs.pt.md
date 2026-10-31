@@ -33,8 +33,9 @@ drwxr-xr-x 11 root root  4096 Feb 17  2026 /var
 
 Antes da tabela, duas coisas que essa listagem já te contou de graça.
 
-**Quatro deles são setas.** `/bin`, `/lib`, `/sbin` e `/lib64` não são diretórios: são links
-simbólicos apontando para dentro de `/usr`. Isso é o *usr merge*, concluído em todas as
+**Três deles são setas.** `/bin`, `/lib` e `/sbin` não são diretórios: são links simbólicos
+apontando para dentro de `/usr`, e o `/lib64` também é, embora esta listagem não o tenha pedido.
+Isso é o *usr merge*, concluído em todas as
 distribuições de peso entre 2012 e 2023, e a seção 11 explica o que é um link simbólico. Por
 enquanto: `/bin/ls` e `/usr/bin/ls` são o mesmo arquivo alcançado por dois nomes.
 

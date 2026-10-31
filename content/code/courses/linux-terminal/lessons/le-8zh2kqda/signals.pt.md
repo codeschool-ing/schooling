@@ -88,7 +88,7 @@ jobs
 ```
 
 **Leia o entrelaçamento antes do resultado, porque ele é real e parece quebrado.** Uma tarefa em
-segundo plano imprime quando quer, e o que você digita é ecoado onde o cursor estiver — então o
+segundo plano imprime quando quer, e o que você digita é ecoado onde o cursor estiver. Por isso o
 `kill -TERM $PID` aparece sem prompt na frente, na linha depois da saída da tarefa. O terminal não
 está confuso; ele está mostrando duas coisas dividindo uma tela. A seção 10 é sobre mantê-las
 separadas.
@@ -185,5 +185,6 @@ Três respostas diferentes para três perguntas diferentes: sim, ele existe e é
 importa — um script que só olha o `$?` não consegue distinguir "sumiu" de "não permitido", e os dois
 pedem respostas opostas.
 
-Essa é também a sua primeira olhada na recusa. O PID 1 é do `root` e a `ana` não pode tocá-lo; a
-seção 09 é o resto dessa regra.
+Essa é também a sua primeira olhada na recusa: o PID 1 é do `root` e a `ana` não pode tocá-lo. A
+seção 09 é o resto do `kill` — qual processo, como alcançar um grupo inteiro, e como a recusa aparece
+quando o processo não é seu.

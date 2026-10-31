@@ -15,7 +15,7 @@ version: 1
 | **missed runs** | lost | `Persistent=true` |
 | **overlapping runs** | yours to prevent | prevented |
 | **output** | mailed, if there is an MTA | the journal |
-| **environment** | four variables, no profile | whatever the unit says |
+| **environment** | six variables, no profile | whatever the unit says |
 | **dependencies** | none | `After=`, `Requires=`, the whole graph |
 | **jitter** | write it yourself | `RandomizedDelaySec=` |
 | **checking it** | `crontab -e`'s syntax check | `systemd-analyze verify`, `calendar`, `list-timers` |

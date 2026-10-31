@@ -64,7 +64,7 @@ Três coisas antes da comparação, porque as três estão visíveis acima.
 **A linha de comando do PID 1 está cortada**, nos dois, e em pontos diferentes. Isso não é o `head`:
 **o `ps` trunca a última coluna na largura do seu terminal** e faz isso em silêncio. O `ps auxww` —
 o `w` duas vezes — desliga isso, e é a diferença entre ler os argumentos de verdade de um processo e
-ler os primeiros oitenta. Os dois cortes caem em pontos diferentes porque as colunas na frente deles
+ler só o que cabe numa linha. Os dois cortes caem em pontos diferentes porque as colunas na frente deles
 têm larguras diferentes.
 
 **Os nomes entre colchetes são threads de kernel.** `[kthreadd]`, `[pool_workqueue_release]` — eles
@@ -84,7 +84,7 @@ Os dois comandos mostram todo processo da máquina. A diferença útil:
 | estado | **`STAT`** | não |
 
 Então: **`aux` quando você quer saber o que está usando a máquina, `-ef` quando você quer saber quem
-iniciou o quê.** É essa a escolha inteira entre os dois.
+iniciou o quê.**
 
 ## As colunas que vale conhecer
 

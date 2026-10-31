@@ -143,5 +143,5 @@ tem um motivo em vez de ser copiado. A aula 9 o desmonta direito, inclusive os l
 
 **E dê códigos de verdade aos seus próprios scripts.** Um script que sempre sai com 0 não pode ser
 usado por nada — nem pelo `&&`, nem pelo e-mail de falha de um job de cron, nem pelo
-`Restart=on-failure` da aula 5, que lê exatamente este número para decidir se um serviço morreu ou
+`Restart=on-failure` da aula 5. Esse lê exatamente este número para decidir se um serviço morreu ou
 terminou. O número é a interface inteira entre o seu programa e tudo que o roda.

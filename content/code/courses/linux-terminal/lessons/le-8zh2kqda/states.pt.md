@@ -44,7 +44,7 @@ ele usaria um processador se houvesse um livre. Essa distinção é a carga méd
 
 ## As letras extras depois do estado
 
-O segundo e o terceiro caractere são marcadores, e três deles vale reconhecer:
+O segundo e o terceiro caractere são marcadores, e vale reconhecer estes cinco:
 
 | | |
 |---|---|
@@ -86,9 +86,9 @@ ana@vm:~/work$ ps -eo pid,ppid,stat,comm,args | grep -E 'zombie|defunct' | grep 
  1095  1093 Z    python3         [python3] <defunct>
 ```
 
-O `1095` é o zumbi. Ele está em `Z`, pertence ao `1093` — o pai que não vai recolhê-lo — e o `ps`
-escreve `<defunct>` onde haveria uma linha de comando, entre colchetes, porque não há mais programa
-para nomear.
+O `1095` é o zumbi. Ele está em `Z`, pertence ao `1093` — o pai que não vai recolhê-lo — e, onde
+haveria uma linha de comando, o `ps` escreve o nome entre colchetes e `<defunct>` depois dele, porque
+não há mais programa para nomear.
 
 A primeira linha é outro zumbi, e já estava lá antes de o `zombie.py` começar: um `sh` cujo pai é o
 PID 1, no sandbox em que estas transcrições foram capturadas, onde o PID 1 não é um sistema de
@@ -103,8 +103,8 @@ ocupa é uma entrada na tabela de processos e um PID.
 **Então não se mata um zumbi**, e um `kill -9` nele não faz nada — você não sinaliza algo que já
 terminou. O que se faz é uma de duas coisas:
 
-- **esperar.** Quando o pai terminar, o zumbi é readotado pelo PID 1, que o recolhe na hora. Na
-  transcrição acima, o zumbi desapareceu quando o `sleep 60` terminou.
+- **esperar.** Quando o pai terminar, o zumbi é readotado pelo PID 1, que o recolhe na hora. No
+  caso do `zombie.py`, isso acontece quando o `time.sleep(60)` dele termina.
 - **consertar o pai.** Um punhado de zumbis é um programa com um bug. Milhares deles é um programa
   com um bug e uma máquina que logo não vai conseguir iniciar nada.
 

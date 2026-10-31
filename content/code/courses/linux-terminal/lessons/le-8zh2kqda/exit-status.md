@@ -143,6 +143,6 @@ has a reason rather than being copied. Lesson 9 takes it apart properly, includi
 `set -e` does not do what it looks like it does.
 
 **And give your own scripts real statuses.** A script that always exits 0 cannot be used by anything
-— not by `&&`, not by a cron job's failure mail, not by lesson 5's `Restart=on-failure`, which reads
-exactly this number to decide whether a service died or finished. The number is the whole interface
+— not by `&&`, not by a cron job's failure mail, not by lesson 5's `Restart=on-failure`. That one
+reads exactly this number to decide whether a service died or finished. The number is the whole interface
 between your program and everything that runs it.

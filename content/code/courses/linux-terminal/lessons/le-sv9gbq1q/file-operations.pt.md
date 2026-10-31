@@ -34,7 +34,7 @@ drwxr-xr-x 2 ana ana 4096 Oct  7 11:09 archive
 
 `touch` num nome que não existe cria um arquivo vazio. Num nome que **existe**, não muda nada além
 da marca de tempo. O `-d` define uma data à sua escolha, o que dá a este um arquivo com cara de ter
-um ano:
+quase dois anos:
 
 ```
 ana@vm:~/sandbox$ touch -d 2025-01-01 old.txt
@@ -54,7 +54,7 @@ recém-modificado para um sistema de build ou uma rotina de backup.
 ana@vm:~/sandbox$ mkdir -p deep/a/b/c
 ```
 
-Três diretórios, um comando. Num script, `-p` é quase sempre o que você quer, porque "crie isto se
+Quatro diretórios, um comando. Num script, `-p` é quase sempre o que você quer, porque "crie isto se
 ainda não existir" é o que você quis dizer, e a forma pelada falha quando já existe.
 
 ## `cp`, e o `-r` que você vai esquecer uma vez

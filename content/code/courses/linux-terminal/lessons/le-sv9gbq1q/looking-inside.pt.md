@@ -224,7 +224,7 @@ A distinção paga o aluguel no dia em que alguém jura que não mexeu num arqui
 conteúdo é de março. O `ctime` diz que algo no arquivo mudou hoje — então a permissão ou o nome
 mudou, e essa é outra conversa.
 
-**`Birth` é a hora de criação**, e é a mais nova das quatro: sistemas de arquivos antigos não
+**`Birth` é a hora de criação**, e é a adição mais recente das quatro: sistemas de arquivos antigos não
 registravam isso, e muita ferramenta ainda ignora. Não construa nada em cima dela sem conferir que
 está lá.
 

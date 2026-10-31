@@ -84,7 +84,7 @@ Both commands show every process on the machine. The useful difference:
 | state | **`STAT`** | no |
 
 So: **`aux` when you want to know what is using the machine, `-ef` when you want to know who
-started what.** That is the whole of choosing between them.
+started what.**
 
 ## The columns worth knowing
 
