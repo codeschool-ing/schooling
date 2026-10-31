@@ -21,10 +21,10 @@ ana@laptop:~$ curl -sS -o /dev/null -w "%{http_code}\n" https://www.example.com/
 200
 ```
 
-`www.example.com` resolveu, já que o curl citou o endereço que tentou, e a conexão foi recusada **depois
-de 1 ms**: algo na outra ponta respondeu na hora, e a resposta foi não. É o degrau 5. Uma recusa vem da
-própria máquina, sem nada escutando na porta (aula 3); um firewall que descarta teria deixado o curl
-esperando.
+`www.example.com` resolveu, já que o erro do curl é `(7) Failed to connect` e não o
+`(6) Could not resolve host` da seção 04. A conexão foi recusada **depois de 1 ms**: algo na outra
+ponta respondeu na hora, e a resposta foi não. É o degrau 5. Uma recusa vem da própria máquina,
+sem nada escutando na porta (aula 3); um firewall que descarta teria deixado o curl esperando.
 
 No servidor, o `ss -tlnp` não tem nada na 80 nem na 443, então o servidor web não está rodando.
 Iniciá-lo, aqui `sudo nginx` e num servidor normal `sudo systemctl start nginx`, e perguntar de novo deu
