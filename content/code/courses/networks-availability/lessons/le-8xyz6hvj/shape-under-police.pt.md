@@ -15,7 +15,8 @@ com o contador zerado apagando a regra e criando-a de novo, em `isp`:
 sudo nft flush chain ip contract police
 sudo nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop
 ```
- `hq` ganha um shaper a
+
+Depois, `hq` ganha um shaper a
 **4500 kbit**, dez por cento abaixo do contrato, e o upload roda de novo:
 
 ```

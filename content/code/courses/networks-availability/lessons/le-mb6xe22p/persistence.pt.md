@@ -60,7 +60,7 @@ para onde o cookie dizia, a conexão falhou, e não havia outro lugar para onde 
 Persistência sem health checks transforma um servidor morto numa queda justamente para os usuários que
 estavam nele, enquanto todo o resto segue normal e os painéis parecem bem.
 
-Duas linhas resolvem. Eis o backend como o `sed` o imprimiu em `lb1` depois da mudança, com o que cada linha
+Duas mudanças resolvem. Eis o backend como o `sed` o imprimiu em `lb1` depois da mudança, com o que cada linha
 faz; escreva-o no lugar do anterior e reinicie o HAProxy como antes:
 
 ```schooling-example

@@ -26,7 +26,7 @@ how a package database gets corrupted.
 `sudo`, or from a root shell, where it cannot tell whose home to make on each machine. Run it exactly
 as the message says, from your own prompt.
 
-**`install first: sudo apt-get install mtr-tiny`.** A package from the list in the first section is
+**`install first: sudo apt-get install mtr-tiny`.** A package from the list in the section on your lab is
 missing, here `mtr-tiny`. The message names every missing one; install them and run `up` again.
 
 **`netlab.sh: line 242: syntax error: unexpected end of file`.** The paste stopped early, and bash
@@ -50,7 +50,7 @@ typed on `web1` also stops the nginx of `web2` and `web3`. Stop a program on one
 `sudo bash netlab.sh kill web1 nginx`, typed on the virtual machine itself; the lessons do it that way.
 
 **And when nothing else works**, `sudo bash netlab.sh reset` builds the whole network again in about ten
-seconds. Past that, delete the virtual machine with `multipass delete --purge netlab` and start the
-first section again; the slow part is the download. It feels like giving up. It is what
+seconds. Past that, delete the virtual machine with `multipass delete --purge netlab` and start again
+from the section on your lab; the slow part is the download. It feels like giving up. It is what
 professionals do with a machine whose state nobody can explain any more, and it is why this course
 builds everything from a script you can read.

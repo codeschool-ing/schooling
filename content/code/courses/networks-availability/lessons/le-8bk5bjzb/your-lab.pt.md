@@ -22,7 +22,7 @@ que tenha um motivo para não escolher.
 
 | | o que é | quanto custa |
 |---|---|---|
-| instalado | Ubuntu 24.04 num computador só para isso, ou como sistema do computador que você usa | nada a comprar, e vinte e seis pacotes nesse computador para sempre, entre eles um servidor DNS e um servidor de VPN |
+| instalado | Ubuntu 24.04 num computador só para isso, ou como sistema do computador que você usa | nada a comprar, e vinte e cinco pacotes nesse computador para sempre, entre eles um servidor DNS e um servidor de VPN |
 | **uma máquina virtual com o Multipass** (recomendado) | a ferramenta da Canonical que cria uma máquina Ubuntu Server 24.04 com um comando, no Windows, no macOS e no Linux | 2 processadores, 2 GB de memória e 10 GB de disco enquanto ela roda |
 | online | um servidor Linux pequeno alugado por hora de um provedor de nuvem | dinheiro por cada hora que ele existir, e uma máquina na internet desde o primeiro minuto |
 
@@ -32,9 +32,10 @@ computador do dia a dia não é.
 
 **A máquina virtual** é o caminho recomendado porque não custa nada e some com um comando. O Multipass
 usa o hipervisor que cada sistema já tem: o Hyper-V no Windows, o framework de virtualização do macOS num
-Mac, o KVM no Linux. Qualquer outro hipervisor também serve, com a imagem de instalação do Ubuntu Server
-24.04 e meia hora de telas de instalador: VirtualBox no Windows, no Linux ou num Mac Intel, UTM num Mac
-com Apple silicon, o Gerenciador do Hyper-V no Windows, GNOME Boxes ou virt-manager no Linux.
+Mac, o KVM no Linux. Qualquer outro hipervisor também serve: VirtualBox no Windows, no
+Linux ou num Mac Intel, UTM num Mac com Apple silicon, o Gerenciador do Hyper-V no Windows, GNOME Boxes
+ou virt-manager no Linux. O preço é a imagem de instalação do Ubuntu Server 24.04 e meia hora de telas
+de instalador.
 
 **Online** aparece aqui para você saber que existe. O menor servidor Ubuntu 24.04 de qualquer provedor
 basta. A rede que o curso monta nunca chega à internet, então estar online não é um risco para ela, mas

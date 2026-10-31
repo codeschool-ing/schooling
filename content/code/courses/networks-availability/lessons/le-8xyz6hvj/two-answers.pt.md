@@ -29,5 +29,5 @@ some.
 **Nenhum dos dois é o melhor; eles ficam em lados opostos do mesmo enlace.** Um provedor faz policing, na
 borda dele, porque vende uma taxa e não tem interesse em guardar o excesso dos clientes. Um cliente faz
 shaping, no próprio roteador, porque uma fila que é dele é uma fila que ele pode arrumar, e era disso que
-as classes da aula 18 precisavam. A última seção desta aula põe os dois juntos num enlace só e mostra por
+as classes da aula 18 precisavam. A seção no fim desta aula, sobre shaping logo abaixo do contrato, põe os dois juntos num enlace só e mostra por
 que o número do cliente precisa ficar um pouco abaixo do número do provedor.

@@ -16,7 +16,8 @@ deleting the rule and adding it again, on `isp`:
 sudo nft flush chain ip contract police
 sudo nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop
 ```
- `hq` gets a shaper at **4500 kbit**, ten per
+
+Then `hq` gets a shaper at **4500 kbit**, ten per
 cent under the contract, and the upload runs again:
 
 ```
