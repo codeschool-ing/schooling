@@ -4,7 +4,7 @@ version: 1
 ---
 
 The tools in this lesson are also the most common way criminals get into people's computers, and the
-method needs no technical skill at all: **somebody phones, says they are from IT or from the bank, and
+method needs no technical skill at all. **Somebody phones, says they are from IT or from the bank, and
 asks the person to install a remote support tool** to fix an urgent problem. Once connected, they have
 everything a technician would have.
 

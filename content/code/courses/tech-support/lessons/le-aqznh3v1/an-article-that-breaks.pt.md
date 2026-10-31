@@ -34,6 +34,6 @@ ana@pc2:~$ curl -sS -m 10 http://intranet/
 curl: (7) Failed to connect to intranet port 80 after 3094 ms: Couldn't connect to server
 ```
 
-O mesmo defeito da aula 1, **3094 milissegundos e nada**, produzido seguindo a própria documentação da
+O mesmo defeito da aula 1, aqui **3094 milissegundos e nada**, produzido seguindo a própria documentação da
 equipe. É a pior coisa que uma KB pode fazer: ninguém desconfia do artigo, porque o artigo é aquilo em que
 disseram para confiar. A aula 1 consertou um computador; o artigo teria quebrado o próximo.

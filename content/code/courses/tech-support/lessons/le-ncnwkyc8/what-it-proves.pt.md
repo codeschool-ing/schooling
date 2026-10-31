@@ -7,9 +7,9 @@ Uma certificação é uma prova com uma lista publicada de assuntos, chamada de 
 organização que os empregadores reconhecem. Passar nela diz que, naquele dia, você sabia o suficiente daquela
 lista.
 
-- **O que ela dá**: uma linha no currículo que um recrutador consegue conferir sem entender do assunto, e um
+- O que ela dá: uma linha no currículo que um recrutador consegue conferir sem entender do assunto, e um
   programa de estudo, escrito por pessoas que olharam o que o trabalho pede.
-- **O que ela não dá**: experiência. Um empregador contratando para suporte também quer ver que você já
+- O que ela não dá: experiência. Um empregador contratando para suporte também quer ver que você já
   diagnosticou um defeito real e o registrou, e é para isso que serve o próximo curso, o portfólio.
 
 As três desta aula são **neutras quanto a fornecedor**: não são sobre os produtos de uma empresa, então o que

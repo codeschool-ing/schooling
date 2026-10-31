@@ -23,6 +23,6 @@ Confirmed:  Daniel saved the report himself
 Pending:    owner of the export job told; empty test.txt in reports, from a check
 ```
 
-The second takes a few minutes longer to write. The next time the shared folder fills, it saves the
-afternoon: the cause is named, the command that failed is there so nobody tries it again, and the thing
+The second takes a few minutes longer to write. The next time the shared folder fills, it **saves the
+afternoon**: the cause is named, the command that failed is there so nobody tries it again, and the thing
 that will fill it again has a line of its own.

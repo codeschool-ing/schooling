@@ -11,9 +11,9 @@ Alguns chamados não vão cumprir o prazo. O que importa é o que acontece antes
   mais horas na mesma mesa.
 - **Nunca manipule o relógio.** Fechar um chamado para parar o cronômetro e reabri-lo, marcá-lo como
   *aguardando usuário* quando o usuário é que está aguardando você, baixar a prioridade para caber no
-  prazo: cada um faz o relatório parecer melhor e o atendimento pior, e cada um fica visível para quem ler
+  prazo: cada um faz o relatório parecer melhor e o atendimento pior. E cada um fica visível para quem ler
   o histórico do chamado.
 
 Um relatório de SLA serve exatamente para uma coisa: mostrar onde o atendimento não cumpre o que promete,
 para algo mudar. Um relatório sempre verde por causa de como os chamados são tratados, e não de como os
-problemas são resolvidos, parou de medir alguma coisa.
+problemas são resolvidos, **parou de medir alguma coisa**.

@@ -3,14 +3,15 @@ title: Two kinds of limit
 version: 1
 ---
 
-The limits of the role come from two places:
+The limits of the role come from two places.
 
-- **The account cannot.** The organisation gave the support account the rights its work needs and no more:
-  it can restart the print service but cannot create users, or it can reset passwords in one department
-  and not another. The computer refuses, and the question ends there.
-- **The account can, and the role cannot.** A support account with full `sudo`, like the one this course
-  uses, can do almost anything on a computer. What it is *allowed* to do is written in the organisation's
-  policy, and only the technician is between the two.
+In the first, the account cannot. The organisation gave the support account the rights its work needs and
+no more: it can restart the print service but cannot create users, or it can reset passwords in one
+department and not another. The computer refuses, and the question ends there.
+
+In the second, **the account can, and the role cannot**. A support account with full `sudo`, like the one
+this course uses, can do almost anything on a computer. What it is *allowed* to do is written in the
+organisation's policy, and only the technician is between the two.
 
 Requests that fall outside the role, and come up in every service desk:
 

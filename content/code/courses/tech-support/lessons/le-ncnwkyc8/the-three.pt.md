@@ -11,7 +11,7 @@ version: 1
 | nesta trilha | a maior parte, na figura abaixo | o curso de redes, e mais profundidade | o curso de Linux, e mais profundidade |
 
 O **A+** é o que foi escrito para o trabalho do técnico de suporte como um todo. A primeira prova é sobre hardware, dispositivos
-móveis, redes e virtualização, a segunda sobre sistemas operacionais, segurança, solução de problemas de
+móveis, redes e virtualização. A segunda é sobre sistemas operacionais, segurança, solução de problemas de
 software e o que a CompTIA chama de procedimentos operacionais: documentação, gestão de mudanças,
 comunicação e profissionalismo, ou seja, boa parte deste curso.
 

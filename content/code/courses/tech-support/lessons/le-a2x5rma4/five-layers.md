@@ -12,5 +12,5 @@ layers, and naming them keeps the isolating step from skipping one.
 
 The layers are not a ranking of likelihood, and they are not always checked top to bottom. They are a
 checklist: when a check rules a layer out, it is crossed off, and when nothing is left but one, that is
-where the test goes. A technician who only ever suspects the network, or only the user, has a
-three-layer map and misses what is in the other two.
+where the test goes. A technician who only ever suspects the network, or only the user, works from a
+one-layer map and misses what is in the other four.

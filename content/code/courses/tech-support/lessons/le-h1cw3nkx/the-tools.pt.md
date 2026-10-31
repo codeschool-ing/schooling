@@ -12,9 +12,9 @@ O acesso remoto tem duas formas, e as ferramentas seguem essas formas:
 | VNC | a tela que já está ligada, compartilhada | áreas de trabalho Linux, e muitos aparelhos |
 | ferramentas de suporte remoto, como TeamViewer, AnyDesk ou a Assistência Rápida do Windows | a tela do próprio usuário, depois de ele aceitar um código ou uma pergunta | ajudar uma pessoa com o que está na tela dela |
 
-- **Acesso assistido**: o usuário está lá, vê a sessão, e concordou com ela desta vez. É o que o suporte
+- No **acesso assistido** o usuário está lá, vê a sessão, e concordou com ela desta vez. É o que o suporte
   remoto é, na maioria dos dias.
-- **Acesso não assistido**: o técnico pode conectar sem ninguém aceitar, num servidor ou num computador
+- No **acesso não assistido** o técnico pode conectar sem ninguém aceitar, num servidor ou num computador
   cujo dono concordou com isso antes, por escrito. É cômodo, e é o tipo que precisa das regras mais
   fortes, porque ninguém está olhando quando é usado.
 

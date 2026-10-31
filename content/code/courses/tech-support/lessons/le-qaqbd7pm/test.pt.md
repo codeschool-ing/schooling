@@ -3,8 +3,8 @@ title: Testar: uma mudança, um resultado
 version: 1
 ---
 
-Um nome que o computador resolve sozinho, sem perguntar a um servidor DNS, vem do `/etc/hosts`, a aula
-sobre nomes do curso de redes. Então a hipótese é específica: **o `/etc/hosts` do `pc1` tem o endereço
+Um nome que o computador resolve sozinho, sem perguntar a um servidor DNS, vem do `/etc/hosts`, aula 4 do
+curso Redes e Protocolos. Então a hipótese é específica: **o `/etc/hosts` do `pc1` tem o endereço
 errado para `intranet`**. Primeiro olhe, depois mude uma coisa:
 
 ```

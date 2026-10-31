@@ -15,5 +15,5 @@ because nobody can ask you what you meant:
 - **Say when the ticket will close**, and what they do if the problem comes back: reply to this
   message, not open a new one, so the history stays in one place, lesson 5.
 
-A written reply is also a record. Everything in it may be forwarded to their manager, and should read
+**A written reply is also a record.** Everything in it may be forwarded to their manager, and should read
 well there too.
