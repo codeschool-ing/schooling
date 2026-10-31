@@ -55,8 +55,8 @@ does not slow down; it stops, in a public region that is perfectly healthy. Join
 environments means their failures are joined too, and the link is a third thing that can fail.
 
 The designs that live with it well keep the traffic across the seam **few, coarse and
-asynchronous**: a copy of the stock refreshed every few minutes on the cloud side, orders put in a
-queue that the ERP drains when it can, reports sent across once a night. A page that needs one
+asynchronous**. The stock is copied to the cloud side and refreshed every few minutes, orders wait
+in a queue that the ERP drains when it can, and reports go across once a night. A page that needs one
 crossing per request is a page that the link can take down.
 
 A last shape of hybrid is worth recognising by name. AWS Outposts, Azure Stack and Google

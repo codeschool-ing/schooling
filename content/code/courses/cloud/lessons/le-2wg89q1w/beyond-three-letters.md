@@ -17,7 +17,7 @@ a single container on request are both here.
 **Functions as a service**, FaaS, takes a single function: a piece of code that receives one event, a
 request or a file arriving, and returns. The platform starts it when an event comes, runs as many
 copies as there are events, and runs none at all when nothing is happening. You pay per invocation and
-per GB-second, the two Lambda lines in the capture at the start of this lesson. The line sits a little
+per GB-second, the two units of the Lambda block in the capture at the start of this lesson. The line sits a little
 above PaaS, because there is not even a running process of yours to manage. Lesson 8 is about it,
 under the name it is usually sold by, *serverless*.
 

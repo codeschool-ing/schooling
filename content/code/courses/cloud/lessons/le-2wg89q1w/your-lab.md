@@ -21,7 +21,7 @@ The lessons were recorded on Ubuntu 24.04, and there are three ways to have a te
 **Install it, unless you are on a Mac.** On Linux it is the terminal you already have. On Windows,
 WSL runs a real Ubuntu beside Windows: `wsl --install -d Ubuntu-24.04` in an administrator
 PowerShell installs it, and the Ubuntu entry in the Start menu opens its terminal. Nothing this
-course installs needs to be a service or to change your system's settings: apart from five packages
+course installs needs to be a service or to change your system's settings: apart from six packages
 from Ubuntu's archive, it all lives in two directories in your home, and deleting them undoes it.
 
 **A virtual machine** is the path on a Mac, and on any computer you would rather not touch. The
@@ -40,5 +40,5 @@ hours and terms, which change. AWS's own CloudShell is the one that does not fit
 account, and the point of this course is that you never need one.
 
 Whichever you pick, the next section starts at the same place: a terminal on Ubuntu 24.04, logged
-in as yourself. The section after it, on failures, is the one to read when a command does not
+in as yourself. The section on failures, two after it, is the one to read when a command does not
 answer the way the transcript does.

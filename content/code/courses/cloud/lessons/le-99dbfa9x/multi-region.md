@@ -16,7 +16,7 @@ somewhere else when the region fails.
 business survives a day without the system; an RTO of five minutes means somebody has to be able to
 switch regions in five minutes, at three in the morning, and it has to work the first time.
 
-Both are decisions about the business stated in the language of time, and the question to ask is
+Both are decisions about the business stated in the language of time. The question that sets them is
 "what does an hour of this system being down cost us, and what does an hour of lost orders cost us?"
 The answers pick a point on a scale.
 

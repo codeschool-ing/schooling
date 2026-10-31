@@ -22,8 +22,8 @@ you can read all three, and this course uses the neutral version above.
 ## What the line means, and what it does not
 
 **Below the line, the provider does the job and you cannot.** You will never be offered a way to patch
-the hypervisor or replace a disk in their building, so there is no point planning for it, and no
-point worrying about it either: it is their business, and their contract says how well they do it.
+the hypervisor or replace a disk in their building, so there is no point planning for it, or
+worrying about it. It is their business, and their contract says how well they do it.
 
 **Above the line, you do the job and the provider will not.** That half is the one that bites. The
 provider is not being unhelpful when it leaves your virtual machine unpatched; touching it would mean

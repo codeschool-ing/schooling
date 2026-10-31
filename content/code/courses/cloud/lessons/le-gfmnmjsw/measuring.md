@@ -41,8 +41,9 @@ scales well looks like.
 ```
 
 The opposite curve is the warning. When cost per user rises as users grow, something in the design
-grows faster than the business: logs kept forever, a query that scans every row it ever stored, a
-replica per customer, a NAT gateway carrying traffic that doubles every time a feature is added.
+grows faster than the business. It may be logs kept forever, a query that scans every row it ever
+stored, a replica per customer, or a NAT gateway carrying traffic that doubles every time a feature is
+added.
 A total rising is normal; **a unit cost rising is a defect waiting to be found**.
 
 Choosing the unit is a decision in itself. It should be something the product counts anyway, that grows

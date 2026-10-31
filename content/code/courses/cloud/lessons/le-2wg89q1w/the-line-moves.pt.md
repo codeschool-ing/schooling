@@ -23,7 +23,7 @@ lê os três, e este curso usa a versão neutra acima.
 
 **Abaixo da linha, o provedor faz a tarefa e você não consegue.** Nunca vão oferecer a você um jeito de
 aplicar patch no hipervisor ou trocar um disco no prédio deles, então não adianta planejar isso, nem se
-preocupar: é assunto deles, e o contrato diz quão bem eles fazem.
+preocupar. É assunto deles, e o contrato diz quão bem eles fazem.
 
 **Acima da linha, você faz a tarefa e o provedor não faz.** É nessa metade que os problemas aparecem. O provedor não
 está sendo pouco prestativo quando deixa a sua máquina virtual sem patches; mexer nela seria entrar no

@@ -4,8 +4,8 @@ version: 1
 ---
 
 A course is most often abandoned here, on an error about a tool the student has not finished
-installing. These are the failures met while this lesson was recorded, in the order the setup meets
-them, and what each one means.
+installing. These are the failures met while this lesson was recorded, and what each one
+means.
 
 **The virtual environment was not created.** Ubuntu ships Python without the part that makes
 virtual environments, and this is what `python3 -m venv` says without it:

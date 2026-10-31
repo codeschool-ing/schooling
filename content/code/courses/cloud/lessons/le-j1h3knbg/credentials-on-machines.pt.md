@@ -34,7 +34,7 @@ uma URL a mando de um atacante pode ser levada a buscar o endereço de metadados
 bastava para entregar as credenciais da role. Um pedido que exige um `PUT` e um token antes é muito
 mais difícil de arrancar de uma aplicação.
 
-Uma função funciona do mesmo jeito pela sua role de execução, que a aula 8 usa, e um contêiner
+Uma função funciona do mesmo jeito pela sua role de execução, à qual a aula 8 volta, e um contêiner
 rodando num serviço gerenciado tem um endpoint equivalente próprio.
 
 ## Como um programa acha as credenciais

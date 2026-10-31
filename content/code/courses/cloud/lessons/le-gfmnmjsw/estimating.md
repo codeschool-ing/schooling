@@ -62,8 +62,8 @@ came from, so anybody checking it can find the number in `python3 prices.py`:
 }
 ```
 
-A month here is **730 hours**, which is a year's 8,760 hours divided by twelve; it is the convention
-the providers' calculators use, and it makes months of 28 and 31 days cost the same.
+Because every month counts as **730 hours**, a month of 28 days and one of 31 cost the same in the
+estimate.
 
 The total is **298.64 USD a month**, before tax. Read down the column before trusting it, because an
 estimate is also the first look at where the money goes. The two machines are 98.11, the largest line

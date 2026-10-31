@@ -4,8 +4,8 @@ version: 1
 ---
 
 On a computer under a desk, the disk is inside the box and switching the box off does nothing to
-it. **An instance has two kinds of disk, and they behave in opposite ways** when it is switched off,
-which is why "I stopped it and my files were gone" and "I deleted it and I am still being billed"
+it. **An instance has two kinds of disk, and they behave in opposite ways** when it is switched off.
+That is why "I stopped it and my files were gone" and "I deleted it and I am still being billed"
 are both things people say in their first month.
 
 ## A network volume and a local disk

@@ -23,8 +23,8 @@ documenta com clareza:
 
 ## Nenhum estado entre chamadas
 
-O handler desta aula já mostrou isso com um contador. **O que uma função guarda na memória pertence
-a um ambiente de execução, e a plataforma cria e descarta esses ambientes quando quer.** **Então
+O handler desta aula já mostrou isso com um contador. O que uma função guarda na memória pertence
+a um ambiente de execução, e a plataforma cria e descarta esses ambientes quando quer. **Então
 todo pedaço de estado mora fora: num banco de dados, num cache, num armazenamento de objetos ou numa
 fila.** A sessão de um usuário é uma linha ou um token assinado, não uma variável. Um arquivo em
 processamento está num bucket, não no `/tmp` esperando a próxima chamada encontrá-lo.

@@ -56,8 +56,7 @@ gate; nothing in any policy is read for it.
 applies to the request and decides. Most of this lesson is about that decision: what a policy says,
 how several of them combine, and how to write ones that allow the job and nothing next to it.
 
-You met the same split in HTTP, in the `networks` course, under names that confuse everybody once.
-Status `401 Unauthorized` means the first gate failed: the server does not know who you are, and
+HTTP draws the same split, under names that confuse everybody once. Status `401 Unauthorized` means the first gate failed: the server does not know who you are, and
 "unauthorised" is a historical misnomer for "unauthenticated". Status `403 Forbidden` means the
 second one did: it knows exactly who you are, and the answer is no. Cloud APIs do not all keep the
 two numbers apart, so read the error code rather than the status. S3 answers a signature it cannot

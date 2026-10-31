@@ -56,8 +56,7 @@ expirada nunca chega ao segundo portão; nenhuma política é lida para ele.
 se aplicam ao pedido e decide. Quase toda esta aula é sobre essa decisão: o que uma política diz,
 como várias se combinam e como escrever políticas que permitam o trabalho e nada ao lado dele.
 
-Você viu a mesma divisão no HTTP, no curso `networks`, com nomes que confundem todo mundo uma vez. O
-status `401 Unauthorized` quer dizer que o primeiro portão falhou: o servidor não sabe quem você é, e
+O HTTP faz a mesma divisão, com nomes que confundem todo mundo uma vez. O status `401 Unauthorized` quer dizer que o primeiro portão falhou: o servidor não sabe quem você é, e
 "não autorizado" é um nome histórico equivocado para "não autenticado". O status `403 Forbidden`
 quer dizer que falhou o segundo: ele sabe exatamente quem você é, e a resposta é não. Nem toda API
 de nuvem mantém os dois números separados, então leia o código do erro, não o status. O S3 responde a

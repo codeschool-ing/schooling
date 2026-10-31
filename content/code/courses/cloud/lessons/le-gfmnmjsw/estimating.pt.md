@@ -62,8 +62,7 @@ linha veio, para que quem for conferir ache o número em `python3 prices.py`:
 }
 ```
 
-Um mês aqui são **730 horas**, as 8.760 horas do ano divididas por doze; é a convenção que as
-calculadoras dos provedores usam, e faz meses de 28 e de 31 dias custarem o mesmo.
+Como todo mês conta como **730 horas**, um mês de 28 dias e um de 31 custam o mesmo na estimativa.
 
 O total é **298,64 USD por mês**, sem impostos. Leia a coluna antes de confiar nele, porque uma
 estimativa também é a primeira olhada em para onde vai o dinheiro. As duas máquinas somam 98,11, a maior

@@ -53,9 +53,9 @@ A vitrine acima consulta o estoque em toda página de produto. Se a VPN cai, a v
 ela para, numa região pública perfeitamente saudável. Ligar dois ambientes quer dizer que as falhas
 deles também ficam ligadas, e o link é uma terceira coisa que pode falhar.
 
-Os desenhos que convivem bem com isso mantêm o tráfego pela emenda **escasso, em blocos grandes e assíncrono**: uma
-cópia do estoque atualizada a cada poucos minutos do lado da nuvem, pedidos numa fila que o ERP
-esvazia quando pode, relatórios mandados uma vez por noite. Uma página que precisa de uma travessia
+Os desenhos que convivem bem com isso mantêm o tráfego pela emenda **escasso, em blocos grandes e assíncrono**. O
+estoque é copiado para o lado da nuvem e atualizado a cada poucos minutos, os pedidos esperam numa
+fila que o ERP esvazia quando pode, e os relatórios atravessam uma vez por noite. Uma página que precisa de uma travessia
 por requisição é uma página que o link consegue derrubar.
 
 Vale reconhecer pelo nome uma última forma de híbrido. AWS Outposts, Azure Stack e Google Distributed

@@ -5,9 +5,9 @@ version: 1
 
 Com a **plataforma como serviço** não existe máquina em que fazer login. Você entrega à plataforma a sua
 aplicação, e ela a monta, a inicia, a reinicia quando cai e manda para ela as requisições que chegam.
-O que você entrega é uma de duas coisas: o código-fonte, com um arquivo que lista os pacotes de que ele
-precisa e uma linha dizendo qual comando o inicia; ou uma **imagem de contêiner**, a aplicação já
-empacotada com o runtime, que volta como CaaS na seção sobre FaaS, CaaS e DBaaS.
+O que você entrega é uma de duas coisas. Uma é o código-fonte, com um arquivo que lista os pacotes de
+que ele precisa e uma linha dizendo qual comando o inicia. A outra é uma **imagem de contêiner**, a
+aplicação já empacotada com o runtime; ela volta como CaaS na seção sobre FaaS, CaaS e DBaaS.
 
 O Heroku foi um dos primeiros a vender esse formato, e o Google App Engine, o AWS Elastic Beanstalk e o
 Azure App Service são outros. Eles diferem nos detalhes e compartilham a ideia: a linha subiu além do

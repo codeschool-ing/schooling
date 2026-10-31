@@ -70,7 +70,7 @@ a lista de quem pode se tornar esta identidade.
 Tudo o que não é uma pessoa sentada no console, e cada vez mais as pessoas também:
 
 - uma máquina virtual, pela role anexada a ela, que a AWS chama de instance profile;
-- uma função, pela sua role de execução, que a aula 8 dá a toda função que escreve;
+- uma função, pela sua role de execução, que a aula 8 conta entre o que continua sendo seu;
 - uma pessoa de outra conta, que assume uma role nesta em vez de ter um usuário aqui;
 - uma pessoa que fez login pelo provedor de identidade da organização;
 - um pipeline de build fora da nuvem, que prova quem é com um token emitido pela própria plataforma.

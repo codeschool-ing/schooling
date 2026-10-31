@@ -4,8 +4,8 @@ version: 1
 ---
 
 A function is the right tool when work arrives in bursts, finishes quickly and needs to remember
-nothing. **Each case below breaks one of those three conditions**, and each was met in an earlier
-section of this lesson.
+nothing. **The first three cases below each break one of those conditions, and the last two are
+costs of the platform itself**; each was met in an earlier section of this lesson.
 
 - Long-running jobs. A one-hour video transcode or a forty-minute batch does not fit the 15-minute
   wall on Lambda, and a heavy computation hits the CPU-time limit on Workers much sooner. Cutting

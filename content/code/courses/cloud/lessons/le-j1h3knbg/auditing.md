@@ -38,7 +38,7 @@ itself one of the entries already kept.
 
 ## The review
 
-The log answers questions about the past. The review is how the present stays honest. On a calendar
+The log answers questions about the past. The review asks about now: who can still do what. On a calendar
 — every quarter is a common rhythm — somebody goes through the identities and asks, for each:
 
 1. Does this person or program still need to exist? Leavers and retired services first.
