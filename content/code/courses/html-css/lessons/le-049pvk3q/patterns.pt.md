@@ -75,7 +75,7 @@ at 330,230: a  "Book swap"
 at 30,110: a  "Book swap"
 ```
 
-Um ponto no canto inferior direito do cartão, sobre o parágrafo, e um ponto no canto superior esquerdo, no padding, acertam os dois **o link**. Na cópia da página sem o `::after`, o mesmo canto acerta o article. O nome do link continua sendo só *Book swap*.
+Um ponto no canto inferior direito do cartão, sobre o parágrafo, e um ponto no canto superior esquerdo, no padding, acertam os dois **o link**. Sem o `::after`, nenhum dos dois pontos seria o link: um está sobre o parágrafo e o outro é o próprio padding do cartão. O nome do link continua sendo só *Book swap*.
 
 ## Texto só para leitores de tela
 
@@ -96,4 +96,4 @@ A legenda é desenhada como uma caixa de **1 por 1 pixel**, recortada até sumir
 
 ## Um cabeçalho sticky que não esconde as âncoras
 
-O quarto padrão são duas linhas e fecha a seção 06: um cabeçalho com `position: sticky; top: 0` mantém o menu na tela, e `html { scroll-padding-top: 4rem; }` faz um pulo para `#events` parar 4rem antes, para o título da seção não ficar embaixo do cabeçalho. Sticky costuma ser uma escolha melhor que fixed para um cabeçalho, porque ocupa o próprio espaço no topo da página em vez de cobrir conteúdo.
+O quarto padrão são duas linhas, e resolve o que a seção 06 deixou em aberto. Um cabeçalho com `position: sticky; top: 0` mantém o menu na tela, e `html { scroll-padding-top: 4rem; }` faz um pulo para `#events` parar 4rem antes, para o título da seção não ficar embaixo do cabeçalho. Sticky costuma ser uma escolha melhor que fixed para um cabeçalho, porque ocupa o próprio espaço no topo da página em vez de cobrir conteúdo.

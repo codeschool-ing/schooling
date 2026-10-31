@@ -37,8 +37,8 @@ ana@laptop:~/site$ probe percent.html box .half
 div.half  x 0      y 0      width 300    height 160
 ```
 
-The child is **300 wide**, half of 600. It is **160 tall**: 100 from `height: 50%`, half of the column's 200, plus **60** from `padding-top: 10%`. Ten per cent of the column's **width**, not of its height. The rule exists so that padding on all four sides is the same size when written as the same percentage, and before `aspect-ratio` existed it was the trick used to make a box keep its proportions: `padding-top: 56.25%` on an empty box made it 16:9 at any width. Section 11 shows the modern way.
+The child is **300 wide**, half of 600. It is **160 tall**: 100 from `height: 50%`, half of the column's 200, plus **60** from `padding-top: 10%`. Ten per cent of the column's **width**, not of its height. The rule exists so that padding on all four sides is the same size when written as the same percentage. Before `aspect-ratio` existed, it was also the trick for making a box keep its proportions: `padding-top: 56.25%` on an empty box made it 16:9 at any width. Section 11 shows the modern way.
 
 ## Percentages and the page
 
-`width: 100%` on a block is usually unnecessary: a block already takes the full width of its container. And with `content-box`, `width: 100%` plus padding is wider than the container, which is one more reason for section 04's rule. Where percentages earn their place is in layouts where something should be a share of its container, and lessons 8 and 9 give better tools for most of those: the `fr` unit and `flex` share space more precisely than percentages, and without any arithmetic about borders.
+`width: 100%` on a block is usually unnecessary: a block already takes the full width of its container. And with `content-box`, `width: 100%` plus padding is wider than the container, which is one more reason for section 04's rule. Percentages earn their place in layouts where something should be a share of its container. Lessons 8 and 9 give better tools for most of those: the `fr` unit and `flex` share space more precisely than percentages, and without any arithmetic about borders.

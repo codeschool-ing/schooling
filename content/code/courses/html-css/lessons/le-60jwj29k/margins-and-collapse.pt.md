@@ -3,7 +3,7 @@ title: Margens, e quando duas viram uma
 version: 1
 ---
 
-As margens têm um comportamento que padding e borda não têm, e que surpreende todo mundo uma vez: **margens verticais que se tocam colapsam numa só**, do tamanho da maior delas. Aqui estão quatro cartões de evento, cada um com 24 pixels de margem em cima e embaixo, cada um com um título de 16 pixels de margem em cima e embaixo:
+As margens têm um comportamento que padding e borda não têm, e que surpreende todo mundo uma vez: **margens verticais que se tocam colapsam numa só**, do tamanho da maior delas. Aqui estão quatro cartões de evento, cada um com um título de 16 pixels de margem em cima e embaixo. Os três primeiros também têm 24 pixels de margem em cima e embaixo; o quarto troca isso por `margin: 0 auto`, que a última parte desta seção explica:
 
 ```html
 <!doctype html>

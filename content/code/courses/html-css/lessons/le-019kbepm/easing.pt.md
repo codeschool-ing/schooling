@@ -69,7 +69,7 @@ Para que serve cada um:
 
 - **`ease-out`** começa rápido e desacelera no fim. Coisas que **chegam**, como um painel que desliza para dentro ou um menu que abre, parecem responder com ele: reagem na hora e assentam com suavidade.
 - **`ease-in`** começa devagar e acelera. Coisas que **saem**: parece algo ganhando velocidade na saída. Como entrada, parece atrasado, porque no começo nada parece acontecer.
-- **`ease`** e **`ease-in-out`** são lentos nas duas pontas, para algo que vai de um lugar da tela a outro.
+- **`ease-in-out`** é lento nas duas pontas, para algo que vai de um lugar da tela a outro. O `ease`, o padrão, costuma ser posto junto com ele, mas começa rápido: em 100 ms estava à frente do `ease-out`, 81,7 contra 75,6, e só o fim dele é lento.
 - **`linear`** é constante, o que parece mecânico para movimento e é o certo para coisas que não devem parecer movimento, como um spinner ou uma barra de progresso enchendo.
 
 Cada palavra-chave é um atalho de **`cubic-bezier(x1, y1, x2, y2)`**, uma curva que você mesmo pode desenhar no DevTools clicando no pequeno ícone de curva ao lado de uma função de tempo no painel Styles. **`steps(n)`** pula em n passos iguais em vez de se mover suavemente, para um efeito quadro a quadro.

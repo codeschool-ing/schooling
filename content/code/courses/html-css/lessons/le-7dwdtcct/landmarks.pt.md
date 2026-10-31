@@ -31,4 +31,4 @@ A página inicial semântica da seção 02 usa quatro deles, e aqui estão eles 
 
 ## Landmarks de graça
 
-Nada disso precisa de atributo. `role="navigation"` existe e faz o mesmo que `<nav>`, e você vai encontrá-lo em código antigo, escrito antes de os elementos existirem. **A primeira regra de uso do ARIA**, a especificação que define esses papéis, é não usá-lo onde um elemento HTML já faz o serviço, porque o elemento traz o papel, o comportamento de teclado e o tratamento do navegador junto, e um atributo traz só o papel.
+Nada disso precisa de atributo. `role="navigation"` existe e faz o mesmo que `<nav>`, e você vai encontrá-lo em código antigo, escrito antes de os elementos existirem. **A primeira regra de uso do ARIA**, a especificação que define esses papéis, é não usá-lo onde um elemento HTML já faz o serviço. O elemento traz o papel, o comportamento de teclado e o tratamento do navegador junto, e um atributo traz só o papel.

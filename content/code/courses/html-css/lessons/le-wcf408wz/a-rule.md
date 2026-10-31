@@ -65,7 +65,7 @@ Two rules set `font-size` on that `<h2>`. The first is the **browser's default s
 
 **In a `<style>` element in the head**, which works the same way for one page. It is useful for a single page, for a demonstration like the pages in this course, and for small pieces of CSS that must arrive with the HTML.
 
-**In a `style` attribute on an element**, `<p style="color: grey">`. This applies to that one element only, cannot use selectors, cannot be reused, and is hard to override, as section 09 measures. Avoid it in what you write by hand; you will meet it in code that a script or a framework generates.
+**In a `style` attribute on an element**, `<p style="color: grey">`. This applies to that one element only, cannot use selectors, cannot be reused, and is hard to override, as section 09 explains. Avoid it in what you write by hand; you will meet it in code that a script or a framework generates.
 
 ## Comments, and what happens to a mistake
 

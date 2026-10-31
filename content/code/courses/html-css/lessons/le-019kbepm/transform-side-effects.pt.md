@@ -84,4 +84,4 @@ ana@laptop:~/site$ probe flat.html top 100 140
 at 100,140: div.menu  "Share · Save · Report"
 ```
 
-Com o transform, o ponto onde o menu fica por cima do cartão seguinte mostra **o cartão seguinte**: o 100 do menu só vale dentro do contexto de empilhamento do cartão levantado, e esse contexto inteiro é desenhado abaixo de um irmão com `z-index: 1`. Sem o transform, o menu fica por cima. Um efeito de hover que levanta um cartão pode, portanto, esconder o próprio dropdown sob o cartão de baixo, e é por isso que a correção da aula 7 vale aqui também: dê ao cartão aberto um `z-index` maior que o dos irmãos, ou tire o menu de dentro dele.
+Com o transform, o ponto onde o menu fica por cima do cartão seguinte mostra **o cartão seguinte**: o 100 do menu só vale dentro do contexto de empilhamento do cartão levantado, e esse contexto inteiro é desenhado abaixo de um irmão com `z-index: 1`. Sem o transform, o menu fica por cima. Um efeito de hover que levanta um cartão pode, portanto, esconder o próprio dropdown sob o cartão de baixo. A correção da aula 7 vale aqui também: dê ao cartão aberto um `z-index` maior que o dos irmãos, ou tire o menu de dentro dele.

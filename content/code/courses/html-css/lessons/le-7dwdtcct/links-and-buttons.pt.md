@@ -71,7 +71,7 @@ O primeiro Tab foi para o `<button>`, e o Enter reservou o livro. O seguinte foi
 
 ## O que um `<button>` traz e uma `<div>` não
 
-Para a `<div>` se comportar como botão você precisaria de: `role="button"` para a árvore dizer o que ela é, `tabindex="0"` para ela poder receber foco, um tratamento de tecla para Enter *e* para Espaço, porque botões respondem aos dois, um estilo de foco visível e um estado desabilitado quando for preciso. São cinco coisas a lembrar e acertar em cada uma delas. `<button>` já tem todas, e corretas em todo navegador.
+Para a `<div>` se comportar como botão você precisaria de `role="button"` para a árvore dizer o que ela é, e de `tabindex="0"` para ela poder receber foco. Depois, de um tratamento de tecla para Enter *e* para Espaço, porque botões respondem aos dois, de um estilo de foco visível e de um estado desabilitado quando for preciso. São cinco coisas a lembrar e acertar em cada uma delas. `<button>` já tem todas, e corretas em todo navegador.
 
 O mesmo vale para links: `<a href>` recebe foco, abre com Enter, mostra o endereço ao passar o mouse, pode ser aberto numa nova aba e é anunciado como link. Um `<span>` com um tratamento de clique que muda a página não faz nada disso, e um `<a>` sem `href` também não recebe foco.
 

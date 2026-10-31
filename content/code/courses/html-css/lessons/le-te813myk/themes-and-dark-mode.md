@@ -63,7 +63,7 @@ a  color: rgb(143, 209, 173)
 axe: no violations
 ```
 
-In the light scheme the page is `rgb(251, 248, 242)` with near-black text and the green link. In the dark scheme it is `rgb(22, 26, 23)` with light text and a **lighter** green link, `rgb(143, 209, 173)`, and axe passed both. That last part is the work in a dark theme. The green that reads well on cream, `#2f6f4e`, is far too dark to read on near-black, so the dark theme is not the light one inverted: every colour is chosen again for its own background, and checked. This repository's own interface does exactly that with its palette in both themes, and runs axe on every screen in both.
+In the light scheme the page is `rgb(251, 248, 242)` with near-black text and the green link. In the dark scheme it is `rgb(22, 26, 23)` with light text and a **lighter** green link, `rgb(143, 209, 173)`, and axe passed both. That last part is the work in a dark theme. The green that reads well on cream, `#2f6f4e`, is far too dark to read on near-black, so the dark theme is not the light one inverted: every colour is chosen again for its own background, and checked. The interface you are reading this lesson in does exactly that with its palette in both themes, and runs axe on every screen in both.
 
 ## Two details that are easy to miss
 

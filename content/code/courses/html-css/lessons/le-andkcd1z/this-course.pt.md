@@ -9,7 +9,7 @@ O curso pressupõe `web-fundamentals` e se apoia em duas aulas dele em particula
 
 ## O site que você vai construir
 
-Todo exemplo do curso pertence a um mesmo site pequeno: a **Andorinha Books**, um sebo em Pinheiros, São Paulo. Ela é inventada, e foi escolhida porque um sebo precisa de um pouco de tudo: uma página inicial, uma lista de eventos, um formulário para encomendar um livro, uma tabela de horários, fotos das estantes e um layout que funcione no celular de quem está parado na frente da loja. Cada aula acrescenta a parte que ensina.
+Todo exemplo do curso pertence a um mesmo site pequeno: a **Andorinha Books**, um sebo em Pinheiros, São Paulo. Ela é inventada. Um sebo foi a escolha porque precisa de um pouco de tudo. Ele tem uma página inicial, uma lista de eventos, um formulário para encomendar um livro, uma tabela de horários, fotos das estantes e um layout que funcione no celular de quem está parado na frente da loja. Cada aula acrescenta a parte que ensina.
 
 As páginas são arquivos que você escreve, numa pasta do seu próprio computador, e a próxima seção monta essa pasta. Cada aula mostra inteira cada página que usa, na seção que a usa. Você abre uma página com um clique duplo: o navegador lê um arquivo HTML do seu disco exatamente como lê um vindo de um servidor, e isso é tudo de que este curso precisa.
 
@@ -17,7 +17,7 @@ As páginas são arquivos que você escreve, numa pasta do seu próprio computad
 
 O resultado de HTML e CSS é uma **imagem**, e uma imagem é difícil de citar. "O cartão é mais estreito que o do lado" é uma descrição; não é algo que se possa conferir. Por isso toda afirmação deste curso sobre o que o navegador fez é uma medição, impressa por um programinha chamado `probe`.
 
-O `probe` abre uma página no Chromium, o motor que está dentro do Chrome e do Edge, e faz a ele as perguntas que o painel Elements responde quando você clica em alguma coisa: onde está esta caixa, qual a largura dela, que cor esta regra acabou dando, o que um leitor de tela anunciaria aqui. Ele imprime as respostas como texto. Aqui ele abre a primeira página desta aula e imprime o título e o que a tecnologia assistiva enxerga nela:
+O `probe` abre uma página no Chromium, o motor que está dentro do Chrome e do Edge. Depois faz a ele as perguntas que o painel Elements responde quando você clica em alguma coisa: onde está esta caixa, qual a largura dela, que cor esta regra acabou dando, o que um leitor de tela anunciaria aqui. Ele imprime as respostas como texto. Aqui ele abre a primeira página desta aula e imprime o título e o que a tecnologia assistiva enxerga nela:
 
 ```
 ana@laptop:~/site$ probe skeleton.html title tree

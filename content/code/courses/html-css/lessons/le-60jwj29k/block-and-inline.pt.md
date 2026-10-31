@@ -81,6 +81,6 @@ div.frame        x 8      y 8      width 122    height 86
 div.frame.fixed  x 8      y 94     width 122    height 82
 ```
 
-A primeira moldura tem 86 pixels de altura para uma imagem de 80 e 2 pixels de borda, então sobram 4 pixels: o espaço abaixo da linha de base que a aula 1 encontrou no modo padrão. A segunda moldura diz `img { display: block; }`, a imagem não está mais numa linha de texto, e a moldura tem 82, exatamente imagem mais borda. `vertical-align: bottom` na imagem também o remove, tirando a imagem da linha de base. Qualquer um dos dois costuma ser a primeira linha do tratamento de imagens numa folha de estilos.
+A primeira moldura tem 86 pixels de altura para uma imagem de 80 e 2 pixels de borda, então sobram 4 pixels: o espaço abaixo da linha de base que a aula 1 encontrou no modo padrão. A segunda moldura tem a classe `fixed`, cuja regra dá `display: block` à imagem: a imagem não está mais numa linha de texto, e a moldura tem 82, exatamente imagem mais borda. `vertical-align: bottom` na imagem também o remove, tirando a imagem da linha de base. Qualquer um dos dois costuma ser a primeira linha do tratamento de imagens numa folha de estilos.
 
 As aulas 8 e 9 acrescentam mais dois valores, `flex` e `grid`, que mudam como um elemento monta os **filhos**. Tudo nesta aula é sobre a própria caixa.

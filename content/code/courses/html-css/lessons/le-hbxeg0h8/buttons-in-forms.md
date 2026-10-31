@@ -3,7 +3,7 @@ title: Buttons in a form
 version: 1
 ---
 
-Lesson 2 ended with a warning that this section explains: **a `<button>` inside a form submits the form, unless it says otherwise.** The `type` attribute of a button has three values:
+Lesson 2's section on links and buttons ended with a warning that this section explains: **a `<button>` inside a form submits the form, unless it says otherwise.** The `type` attribute of a button has three values:
 
 - `submit`, the default: sends the form.
 - `button`: does nothing on its own, for a script to give it a job.

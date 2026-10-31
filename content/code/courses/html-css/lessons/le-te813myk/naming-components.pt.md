@@ -5,15 +5,13 @@ version: 2
 
 As classes são onde vive a maior parte dos seletores de uma folha de estilos, e um nome de classe é lido muito mais vezes do que é escrito. Sem uma convenção, o mesmo site acaba com `.card`, `.event-box`, `.eventCard` e `.tile` para quatro versões de uma coisa só, e um seletor como `.card .title` que pega também o título de um cartão dentro de outro cartão. Uma convenção de nomes evita as duas coisas. A que mais equipes conhecem é o **BEM**, de *block, element, modifier* (bloco, elemento, modificador), e o `css/components/event-card.css` da seção 09 está escrito nele:
 
-```css
-.event-card { padding: calc(var(--space) * 2); border-left: 4px solid var(--color-accent); }
-.event-card__title { margin: 0; font-size: 1.1rem; }
-.event-card--cancelled { --color-accent: #8a1c1c; }
+```schooling-example
+{"language": "css", "file": "event-card.css", "parts": [
+ {"code": ".event-card { padding: calc(var(--space) * 2); border-left: 4px solid var(--color-accent); }", "note": "O bloco é o componente: `.event-card`. Um nome, um componente, um arquivo."},
+ {"code": ".event-card__title { margin: 0; font-size: 1.1rem; }", "note": "Um elemento é uma parte que só existe dentro do bloco, escrita com dois sublinhados. É uma classe própria, então a regra é `.event-card__title`, não `.event-card .title`. É uma classe só, especificidade (0,1,0), e ela não tem como pegar o título de outra coisa."},
+ {"code": ".event-card--cancelled { --color-accent: #8a1c1c; }", "note": "Um modificador é uma variante, escrita com dois hifens. Vai no bloco, ao lado da classe do próprio bloco, e aqui faz o mínimo possível: redefine `--color-accent`, o padrão da seção 03, e tudo dentro do cartão acompanha."}
+]}
 ```
-
-- **O bloco** é o componente: `.event-card`. Um nome, um componente, um arquivo.
-- **Um elemento** é uma parte que só existe dentro dele, escrita com dois sublinhados: `.event-card__title`. É uma classe própria, então a regra é `.event-card__title`, não `.event-card .title`. É uma classe só, especificidade (0,1,0), e ela não tem como pegar o título de outra coisa.
-- **Um modificador** é uma variante, escrita com dois hifens: `.event-card--cancelled`. Vai no bloco, ao lado da classe do próprio bloco, e aqui faz o mínimo possível: redefine `--color-accent`, o padrão da seção 03, e tudo dentro do cartão acompanha.
 
 ```
 ana@laptop:~/site$ probe site.html style .event-card border-left-color,padding-top style .event-card__title font-size

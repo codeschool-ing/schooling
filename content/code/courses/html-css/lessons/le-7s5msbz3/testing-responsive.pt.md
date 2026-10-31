@@ -12,7 +12,7 @@ Uma página responsiva precisa ser conferida em mais larguras que a da tela em q
 **Confira as configurações de quem lê.** Dê zoom de 200% e olhe o texto, seção 06. Ligue o movimento reduzido e o esquema escuro, seção 08 e aula 10. Use a página com o teclado numa largura estreita, onde menus e ordem mudam.
 
 ::: track qa
-Em `web-automation` isso vira teste. Um teste põe o viewport numa lista de larguras, 320 entre elas, e em cada uma afirma o que esta aula mediu à mão: que o documento não é mais largo que a janela, que o menu é alcançável, que uma barra lateral está abaixo do conteúdo e não ao lado. Uma captura de tela comparada com uma referência em cada largura pega o resto, como fazem os testes de grafo e de página inicial deste próprio repositório.
+Em `web-automation` isso vira teste. Um teste põe o viewport numa lista de larguras, 320 entre elas, e em cada uma afirma o que esta aula mediu à mão. O documento não é mais largo que a janela, o menu é alcançável, e uma barra lateral está abaixo do conteúdo e não ao lado. Uma captura de tela comparada com uma referência em cada largura pega o resto, como fazem os testes de grafo e de página inicial deste próprio repositório.
 :::
 
 ::: track frontend

@@ -95,7 +95,7 @@ The review is the **media object**: an image and a block of text side by side, t
 
 ## Centred in both directions
 
-The empty-basket message is centred with `justify-content: center` and `align-items: center` in a box 200 tall. The paragraph is at x 424.67, which is (1024 − 174.64) / 2, and vertically in the middle of the box. Two declarations, and the message stays centred whatever its length or the window's width.
+The empty-basket message is centred with `justify-content: center` and `align-items: center` in a box 200 tall. The paragraph is at x 424.67, which is (1024 − 174.64) / 2 to within a hundredth of a pixel, and vertically in the middle of the box. Two declarations, and the message stays centred whatever its length or the window's width.
 
 ## A footer that stays at the bottom
 

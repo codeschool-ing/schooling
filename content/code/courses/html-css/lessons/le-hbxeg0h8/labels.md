@@ -3,7 +3,7 @@ title: Every field has a label
 version: 1
 ---
 
-A field with no label is a box and a guess. **`<label>`** is the element that says what a field is for, and the browser does two things with it: it makes the label's text the field's **accessible name**, and it makes clicking the text put the cursor in the field, which matters to anybody whose aim is unsteady and to anybody on a phone.
+A field with no label is a box and a guess. **`<label>`** is the element that says what a field is for, and the browser does two things with it. It makes the label's text the field's **accessible name**. And it makes clicking the text put the cursor in the field, which matters to anybody whose aim is unsteady and to anybody on a phone.
 
 There are two ways to join a label to its field, and one way people think they have joined them and have not. Here are all three:
 
