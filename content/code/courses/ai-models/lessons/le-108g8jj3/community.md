@@ -4,7 +4,7 @@ version: 1
 ---
 
 Most repositories on the Hub were not made by a model's makers. They were made from one: fine-tuned
-on somebody's data, quantized to fit a laptop, merged from two others. The Hub's documentation names
+on somebody's data, quantised to fit a laptop, merged from two others. The Hub's documentation names
 the relationships and the field that records them:
 
 ```
@@ -30,7 +30,7 @@ Four relationships, each changing something lessons 2 to 5 care about:
 
 ## Before trusting one
 
-A community repository can be excellent; many of the most used quantizations are community uploads.
+A community repository can be excellent; many of the most used quantisations are community uploads.
 It can also be abandoned, mislabelled or worse. Five checks, in order, before ana would let one near
 Lantern Books' e-mail:
 

@@ -36,7 +36,7 @@ one: the set (section 03), the scoring (04), the harness (05), and how to read w
 (06 to 10).
 
 **The candidates are three small open models on your own machine.** `llama3.2:3b` is the course's
-model; `llama3.2:1b` is the smaller one lesson 1 named for a weaker computer; and `qwen2.5:3b`, from
+model, and `llama3.2:1b` is the smaller one lesson 1 named for a weaker computer. `qwen2.5:3b`, from
 another family at the same size, is here because an evaluation needs candidates to compare and this
 lesson alone uses it. Pull it before section 05 with `ollama pull qwen2.5:3b`; with less memory,
 run the other two. They stand in for the hosted rows of lesson 4's matrix, which need keys, and

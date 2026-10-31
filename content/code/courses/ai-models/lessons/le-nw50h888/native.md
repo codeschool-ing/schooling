@@ -29,8 +29,7 @@ read 75 tokens, wrote 3
 ```
 
 The answer is llama3.2:3b's, and the durations are this machine's. **Every response carries its own
-accounting**: how many tokens were read
-(`prompt_eval_count`), how many written (`eval_count`), and how long each part took, in
+accounting**: how many tokens were read (`prompt_eval_count`), how many written (`eval_count`), and how long each part took, in
 nanoseconds. The tokens-per-second line is the formula Ollama's documentation gives, and it is
 lesson 3 section 05's throughput measured on your own hardware instead of computed from a
 bandwidth. Most of the 7.73 seconds in all was the server loading the model from disk, which the
@@ -68,11 +67,10 @@ user-agent: ollama-python/0.6.3 (x86_64 linux) Python/3.13.16
 }
 ```
 
-The same request a moment later took 0.42 seconds, because the model was already loaded, and it
+The same request a moment later took 0.42 seconds, because the model was already loaded. It also
 answered `order-status` where the first said `other.`: even at temperature 0 a model can answer the
 same question two ways, as lesson 5 section 08 warned. The settings that an API puts at the top
-level, Ollama puts in `options`: `temperature` here, and
-`num_ctx` in section 04.
+level, Ollama puts in `options`: `temperature` here, and `num_ctx` in section 04.
 
 ## Loaded, and for how long
 

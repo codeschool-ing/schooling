@@ -22,8 +22,8 @@ watsonx/meta-llama/llama-4-maverick-17b              watsonx                    
 watsonx/meta-llama/llama-4-maverick-17b-128e-instruc watsonx                       0.371    1.484
 ```
 
-Dez entradas, e a faixa que a aula 2 seção 05 fez a gente esperar: de **US$ 0,05 na entrada e US$ 0,10
-na saída** num host a **US$ 0,72 e US$ 0,72** em outro, mais de catorze vezes de distância na entrada
+Dez entradas, e a faixa que a aula 2 seção 05 fez a gente esperar. Vão de **US$ 0,05 na entrada e US$
+0,10 na saída** num host a **US$ 0,72 e US$ 0,72** em outro, mais de catorze vezes de distância na entrada
 para pesos que deveriam ser os mesmos. Dois dos nomes trazem `fp8`, uma precisão reduzida escolhida pelo
 host, então "os mesmos" já é uma pergunta.
 

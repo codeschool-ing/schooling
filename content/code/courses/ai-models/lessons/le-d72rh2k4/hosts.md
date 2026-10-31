@@ -22,8 +22,8 @@ watsonx/meta-llama/llama-4-maverick-17b              watsonx                    
 watsonx/meta-llama/llama-4-maverick-17b-128e-instruc watsonx                       0.371    1.484
 ```
 
-Ten entries, and the spread lesson 2 section 05 led us to expect: from **$0.05 in and $0.10 out** at
-one host to **$0.72 and $0.72** at another, more than fourteen times apart on input for weights that
+Ten entries, and the spread lesson 2 section 05 led us to expect. They run from **$0.05 in and $0.10
+out** at one host to **$0.72 and $0.72** at another, more than fourteen times apart on input for weights that
 are meant to be the same. Two of the names carry `fp8`, a reduced precision chosen by the host, so
 "the same" is itself a question.
 

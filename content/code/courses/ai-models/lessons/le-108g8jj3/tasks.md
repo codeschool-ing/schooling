@@ -62,7 +62,7 @@ Her sorting task is **text-classification**: a text in, one of five labels out. 
 by being told the labels in a prompt. A classification model does it by having been trained on
 labelled examples, and answers with a label and a score, never with a sentence, never with
 `Refund.`. For a high-volume, fixed-label task, a small classifier fine-tuned on a few thousand of
-the shop's own e-mails can be cheaper, faster and more consistent than any chat model, and it is
+the shop's own e-mails can be cheaper, faster and more consistent than any chat model. It is
 the kind of model lesson 1 section 11 meant by its fourth step.
 
 Two other rows are worth a name for the courses that follow: `feature-extraction` and

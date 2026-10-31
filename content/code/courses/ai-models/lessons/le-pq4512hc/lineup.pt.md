@@ -41,7 +41,7 @@ barato tinha um quinto da janela.
 Duas características dos nomes pegam qualquer um que escolha por uma lista:
 
 - **As faixas não compartilham versão.** Neste commit Flash e Flash-Lite estão na 3.5 e o Pro na
-  3.1, e ainda `preview`. "O Gemini mais novo" são três números diferentes.
+  3.1, e ainda `preview`. "O Gemini mais novo" é 3.5 ou 3.1, conforme a faixa.
 - **Os nomes `-latest` são apelidos**, o tipo móvel da aula 2 seção 06, e não apontam para onde os
   números sugerem. O `gemini-flash-latest` custa US$ 0,75 e US$ 3,75, o preço de outra entrada Flash,
   e não do `gemini-3.5-flash`, a US$ 1,50 e US$ 9. Um apelido chamado "latest" é o que o Google estiver

@@ -30,7 +30,7 @@ ana@desk:~/desk$ python sheet.py pick --needs response_schema --min-window 32000
 
 De 2.990 entradas de chat com preço, os dois limites deixam **1.617**: saída estruturada e uma janela
 de 32.000 tiram quase metade. O terceiro comando acrescenta um teto de US$ 1 por milhão de tokens de
-entrada, que não é um dos limites dela e está ali para mostrar o que acontece quando uma preferência
+entrada, que não é um dos limites dela. Está ali para mostrar o que acontece quando uma preferência
 vira filtro: **893**, e os mais baratos dessa lista são entradas de que ela nunca ouviu falar, a
 preços que parecem erro.
 

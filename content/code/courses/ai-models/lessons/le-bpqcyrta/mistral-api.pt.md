@@ -50,8 +50,8 @@ authorization: Bearer ollam…
 ```
 
 **`POST /v1/chat/completions`**, com a chave como um token `Bearer` e um corpo de `model` e
-`messages` com papéis: o mesmo caminho e o mesmo formato do Chat Completions da OpenAI, que a aula
-20 ensina como o formato comum do mercado, e que o Ollama responde. Só o `user-agent`, que nomeia o
+`messages` com papéis: o mesmo caminho e o mesmo formato do Chat Completions da OpenAI. A aula
+20 ensina esse formato como o comum do mercado, e o Ollama o responde. Só o `user-agent`, que nomeia o
 SDK e a versão, diz que este é o SDK da Mistral. A outra coisa que importa é **a chave**: aqui um
 valor de mentira, e na Mistral o que decide qual conta está pagando.
 

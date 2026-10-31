@@ -31,7 +31,8 @@ impõe. O preâmbulo dela diz de que tipo:
 ```
 
 Então uma equipe que lê "MIT" no repositório e para ali leu a licença errada. As restrições de uso
-estão num anexo da Model License, e o parágrafo acima diz que elas acompanham todo derivado.
+estão num anexo da Model License, e o parágrafo seguinte ao citado acima diz
+que elas acompanham todo derivado.
 
 ## Um modelo feito a partir de outro
 

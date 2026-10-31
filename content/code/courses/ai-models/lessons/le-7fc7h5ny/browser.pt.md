@@ -75,8 +75,9 @@ do clique. Essa é a propriedade que nenhuma API das aulas 6 a 9 consegue oferec
 o texto é a mensagem do próprio cliente ela pode ser o argumento inteiro. A pergunta da seção 07 da
 aula 2, *para onde vão os dados*, tem a resposta mais curta possível.
 
-O preço está na outra coluna. A página baixou **27.507.633 bytes**, e o modelo era 9.668 deles. Só
-o `.wasm` do runtime tinha 26.861.777. Todo visitante baixa o runtime e o modelo antes da primeira
+O preço está na outra coluna. A página baixou **27.507.633 bytes**, e os quatro arquivos do modelo
+somavam 9.668. Só o `.wasm` do runtime tinha
+26.861.777. Todo visitante baixa o runtime e o modelo antes da primeira
 resposta, e depois roda os dois no aparelho que tiver. Com o modelo da ana isso não é nada; com um
 de verdade, o arquivo do modelo é do tamanho que a seção 03 da aula 3 calcula, e quem paga é a
 conexão e a memória do visitante, não uma conta.

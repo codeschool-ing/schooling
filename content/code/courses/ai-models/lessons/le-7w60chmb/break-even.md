@@ -68,7 +68,7 @@ claude-haiku-4-5: $107 per million requests
 ```
 
 **A dollar and twenty-eight cents a month.** At 400 e-mails a day, Lantern Books' whole sorting load
-costs less than a coffee on the cheapest model the sheet lists for Anthropic, and a machine would
+costs less than a coffee on the cheapest model the sheet lists for Anthropic. A machine would
 have to sort **467,290 e-mails a day** to cost the same. Now Claude Opus 5.5, which the sheet prices
 at four times as much per token:
 

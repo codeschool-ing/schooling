@@ -68,8 +68,8 @@ claude-haiku-4-5: $107 per million requests
 ```
 
 **Um dólar e vinte e oito centavos por mês.** A 400 e-mails por dia, toda a carga de classificação
-da Lantern Books custa menos que um café no modelo mais barato que a tabela lista para a Anthropic,
-e uma máquina teria de classificar **467.290 e-mails por dia** para custar o mesmo. Agora o Claude
+da Lantern Books custa menos que um café no modelo mais barato que a tabela lista para a Anthropic.
+Uma máquina teria de classificar **467.290 e-mails por dia** para custar o mesmo. Agora o Claude
 Opus 5.5, a que a tabela dá quatro vezes esse preço por token:
 
 ```

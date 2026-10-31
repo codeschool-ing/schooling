@@ -16,7 +16,7 @@ com um código de status próprio, e a documentação diz o que a biblioteca faz
 ```
 
 O `retries.py` classifica um caso com um número dado de novas tentativas e mede o tempo. O Ollama
-nunca fica ocupado desse jeito, então o relay faz o papel da API ocupada: pare-o no segundo terminal
+nunca fica ocupado desse jeito, então o relay faz o papel da API ocupada. Pare-o no segundo terminal
 com Ctrl-C e suba de novo com `--fail`, que responde as duas próximas requisições com um 529 em vez
 de repassá-las:
 
@@ -72,7 +72,7 @@ ana@desk:~/desk$ python retries.py 0
 OverloadedError 529 after 0.0 s
 ```
 
-Os dois padrões são razoáveis, e o ponto é saber qual está rodando:
+Os dois ajustes são razoáveis, e o ponto é saber qual está rodando:
 
 - **As novas tentativas contam no limite de requisições.** A aula 21 define um limite de requisições
   por minuto, e um programa que faz 50 chamadas num minuto ocupado pode mandar 150.

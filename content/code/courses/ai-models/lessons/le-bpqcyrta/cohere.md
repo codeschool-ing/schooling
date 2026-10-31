@@ -50,7 +50,7 @@ outranks any copy.
 
 ## Where Command fits ana's list
 
-A Command A at $2.50 input sits between Claude Sonnet and GPT-5.4 on price, with a 256,000-token
-window and function calling but, per the sheet, no `S`: structured output is not recorded. That
-rules it out of extraction until checked, as DeepSeek was in lesson 4, and leaves it a candidate for
-sorting and drafting like any other row.
+A Command A at $2.50 and $10 has GPT-5.4's input price and Claude Sonnet's output price, with a
+256,000-token window and function calling but, per the sheet, no `S`: structured output is not
+recorded. That rules it out of extraction until checked, as DeepSeek was in lesson 4, and leaves it
+a candidate for sorting and drafting like any other row.

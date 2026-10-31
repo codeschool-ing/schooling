@@ -36,7 +36,7 @@ significa alguma coisa para a Lantern Books. Isso é uma **avaliação**, e o re
 uma: o conjunto (seção 03), a pontuação (04), o harness (05), e como ler o que sai (06 a 10).
 
 **Os candidatos são três modelos abertos pequenos na sua própria máquina.** O `llama3.2:3b` é o
-modelo do curso; o `llama3.2:1b` é o menor que a aula 1 apontou para um computador mais fraco; e o
+modelo do curso, e o `llama3.2:1b` é o menor que a aula 1 apontou para um computador mais fraco. O
 `qwen2.5:3b`, de outra família no mesmo tamanho, está aqui porque uma avaliação precisa de
 candidatos para comparar, e só esta aula o usa. Baixe-o antes da seção 05 com `ollama pull
 qwen2.5:3b`; com menos memória, rode os outros dois. Eles fazem o papel das linhas hospedadas da

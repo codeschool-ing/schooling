@@ -4,7 +4,7 @@ version: 1
 ---
 
 Mistral is the one company in this directory that sells closed models through an API and also
-publishes open weights for many of its models, and it is based in France, which matters to some
+publishes open weights for many of its models. It is based in France, which matters to some
 buyers for lesson 2 section 07's reason. Its current entries in the sheet, in rough order of size:
 
 ```

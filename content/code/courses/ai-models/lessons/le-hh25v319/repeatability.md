@@ -63,10 +63,10 @@ ana@desk:~/desk$ diff <(cut -d, -f3,4 runs/hot-a.jsonl) <(cut -d, -f3,4 runs/hot
 >  "case": "c39", "answer": "other"
 ```
 
-c06, the parcel marked delivered, was `order-status` once and `refund` the other time; c10, the
-invoice, was `refund` and then `product-question`. c32 and c39 went the other way: wrong in the
-first run, right in the second. **Four answers moved and the score moved by one**, because two of
-the moves cancelled out. These are the cases that sit close to the model's own boundaries, and you
+c06, the parcel marked delivered, was `order-status` once and `refund` the other time, right and
+then wrong; c10, the invoice, was `refund` and then `product-question`, wrong both times. c32 and
+c39 went the other way from c06: wrong in the first run, right in the second. **Four answers moved
+and the score moved by one**, because two of the moves cancelled out and c10's changed nothing. These are the cases that sit close to the model's own boundaries, and you
 find out which ones they are by running more than once.
 
 ## What follows

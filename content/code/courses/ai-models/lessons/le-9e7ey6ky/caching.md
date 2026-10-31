@@ -94,7 +94,7 @@ uncached 3.50  cached 0.35  dollars per 1,000 e-mails, input only
 That is Ollama's split priced at Sonnet 4.5's rates; Claude counts tokens with its own tokenizer,
 so the numbers would differ and the ratio is what carries over. Ten times cheaper on input, for the
 long prompt. Uncached, the examples make every request cost fourteen times what the bare prompt
-costs, $3.50 per thousand e-mails against $0.25; cached, about one and a half times, $0.35.
+costs, $3.50 per thousand e-mails against $0.25; cached, about 1.4 times, $0.35.
 
 Whether the examples make the *sorting* better is lesson 5's question, not the cache's, and this
 run gives a hint: with them, the model copied their format and answered `Label: order-status`,

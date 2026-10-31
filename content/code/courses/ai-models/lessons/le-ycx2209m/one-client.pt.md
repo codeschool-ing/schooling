@@ -4,7 +4,7 @@ version: 1
 ---
 
 A seção 05 da aula 8 chamou a Chat Completions de formato que a maior parte do setor copiou, e as
-aulas 9, 14, 15 e 19 continuaram a encontrá-lo: Mistral, Ollama, LM Studio, OpenRouter e o
+aulas 9, 14, 15 e 19 continuaram a encontrá-lo. Mistral, Ollama, LM Studio, OpenRouter e o
 roteador do Hugging Face aceitam todos uma requisição escrita para a biblioteca da OpenAI. A
 Anthropic e o Google oferecem o mesmo, num endpoint separado ao lado das APIs próprias. O
 `compat.py` manda dez casos da ana a oito provedores por um único cliente, e muda três coisas por

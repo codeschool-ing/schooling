@@ -39,8 +39,8 @@ nenhum. E um servidor que não conhece o campo o ignora sem dizer nada, como o O
 fez com o `provider` na seção 03, então **um campo de privacidade é conferido contra o serviço a que
 é mandado**, nunca suposto pela requisição.
 
-A mesma documentação lista controles mais estritos ao lado: `zdr`, para usar só endpoints com
-retenção zero de dados, `only` e `ignore`, para nomear provedores, e `quantizations`, para recusar
+A mesma documentação lista controles mais estritos ao lado. O `zdr` usa só endpoints com
+retenção zero de dados, `only` e `ignore` nomeiam provedores, e `quantizations` recusa
 um host que sirva o modelo numa precisão menor que a avaliada. Cada um é uma linha na requisição, e
 cada um transforma uma pergunta das aulas 2 e 10 em algo que um programa garante em vez de uma
 pessoa lembrar.

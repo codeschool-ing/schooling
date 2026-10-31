@@ -14,7 +14,7 @@ plano, liga-o junto com o computador e acrescenta o comando `ollama` ao terminal
 foi usado neste curso, que foi gravado em Linux.
 
 **Linux**, e os caminhos da máquina virtual e online: o script do próprio Ollama. Ele precisa do
-`zstd` para descompactar o que baixa, e um Ubuntu mínimo pode não ter, então instale-o antes; numa
+`zstd` para descompactar o que baixa, e um Ubuntu mínimo pode não ter, então instale-o antes. Numa
 máquina que já tem, a linha não muda nada:
 
 ```

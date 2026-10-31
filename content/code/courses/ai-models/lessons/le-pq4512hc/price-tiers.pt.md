@@ -33,8 +33,8 @@ Por milhão de tokens, entrada e saída:
 As linhas **flex** e **priority** são o registro, na tabela, de o Google vender o mesmo modelo em
 níveis diferentes de serviço. A tabela registra preços e não promessas, então o que cada nível
 garante é algo para ler na página do provedor antes de depender disso. Onde eles são uma escolha por
-requisição e não por conta, viram uma troca de latência exatamente do tipo da aula 4 seção 06: a
-classificação em segundo plano poderia rodar no flex pela metade do preço, um rascunho para um
+requisição e não por conta, viram uma troca de latência exatamente do tipo da aula 4 seção 06. A
+classificação em segundo plano poderia rodar no flex pela metade do preço, e um rascunho para um
 atendente esperando poderia pagar pelo priority no p95.
 
 ## O preço que muda com o prompt

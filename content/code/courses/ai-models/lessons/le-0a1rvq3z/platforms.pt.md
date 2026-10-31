@@ -17,7 +17,7 @@ Claude Haiku 4.5
   Microsoft Foundry ID        claude-haiku-4-5
 ```
 
-Os mesmos pesos com cinco grafias. Na API da Anthropic o identificador datado termina em `-20251001`
+Os mesmos pesos com cinco nomes, quatro deles distintos. Na API da Anthropic o identificador datado termina em `-20251001`
 e o apelido o dispensa. O Bedrock põe o fornecedor na frente, `anthropic.`. O Google Cloud põe a data
 depois de um `@`. O Microsoft Foundry usa a forma de apelido. A aula 2 mostrou os prefixos regionais
 do Bedrock por cima disso: `us.`, `eu.`, `global.`.
@@ -41,6 +41,6 @@ documentação dela descreve a própria API, não uma tradução.
 O formato da requisição muda com a plataforma, que é um dos motivos de a aula 17 ensinar a Messages
 API da Anthropic diretamente e a aula 20 o formato compatível com a OpenAI que muitas plataformas
 também oferecem. **Guarde o nome do modelo na configuração, nunca no código**: o mesmo programa então
-passa entre Anthropic, Bedrock e Vertex trocando uma configuração, e a avaliação da aula 5 roda de novo
-no endereço novo como se ele fosse um candidato novo, que em cobrança, região e limites de requisição
+passa entre Anthropic, Bedrock e Vertex trocando uma configuração. A avaliação da aula 5 então roda de
+novo no endereço novo como se ele fosse um candidato novo, que em cobrança, região e limites de requisição
 ele é.

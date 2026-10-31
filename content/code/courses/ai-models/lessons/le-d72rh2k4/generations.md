@@ -54,14 +54,14 @@ Llama 4 Scout (17b 16 experts instruct model)
 Llama 4 Scout (17b 16 experts model)
 ```
 
-Read it as four generations, each answering a different question:
+Read it in five groups, each answering a different question:
 
 - **Llama 2 and Llama 3**: two sizes or three, each as a base `model` and a tuned `chat` or
   `instruct` model, lesson 1 section 07's two kinds side by side.
 - **Llama 3.1**: 8B, 70B and 405B, the sizes lesson 3 computed memory for, and the 405B published
   three ways: BF16 weights for two machine layouts, and **FP8 quantized**, lesson 3 section 04's
   smaller precision released by the makers themselves.
-- **Llama 3.2**: small models, **1B and 3B**, including versions already quantized to INT4 for
+- **Llama 3.2**: small models, **1B and 3B**, including versions already quantised to INT4 for
   phones and laptops, and **vision** models at 11B and 90B that read images.
 - **Llama 3.3**: a single 70B instruct model, and no base model listed beside it.
 - **Llama 4**: two models named Scout and Maverick, described by **experts** rather than by size,

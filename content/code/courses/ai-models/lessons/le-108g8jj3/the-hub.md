@@ -33,9 +33,9 @@ same bytes every time, and lesson 5's evaluation stays true of it.
 
 ## What is in a repository
 
-The files that make up lesson 1 section 06's box: the weights, often split into several files; the
+A repository holds the files that make up lesson 1 section 06's box. There are the weights, often split into several files; the
 tokenizer and its configuration, which holds the chat template; a configuration file with the
 architecture numbers lesson 3 computed with; and the `README.md`, which is the model card. Weight
 files in the `safetensors` format hold only numbers. Some older repositories still carry weights in
-Python's pickle format, which can run code when loaded, and are a reason to prefer repositories that
+Python's pickle format, which can run code when loaded. They are a reason to prefer repositories that
 publish `safetensors` and to load nothing from a source you have not checked.

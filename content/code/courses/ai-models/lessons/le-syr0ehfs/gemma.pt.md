@@ -16,8 +16,8 @@ repositório a descreve numa frase:
 
 "Based on Gemini research and technology", e publicada como pesos. Os termos sob os quais a Gemma é
 lançada ficam no site do próprio Google, que a máquina em que este curso foi gravado não conseguiu
-alcançar, então esta aula não os cita. É exatamente o aviso da aula 2 seção 04 na prática: o
-repositório acima é o código, e o arquivo de licença dele é o do código.
+alcançar, então esta aula não os cita. É exatamente o aviso da aula 2 seção 04 na prática: **o
+repositório acima é o código, e o arquivo de licença dele é o do código**.
 
 ## Lendo os nomes da Gemma
 

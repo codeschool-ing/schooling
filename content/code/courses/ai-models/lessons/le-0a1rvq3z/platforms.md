@@ -17,7 +17,7 @@ Claude Haiku 4.5
   Microsoft Foundry ID        claude-haiku-4-5
 ```
 
-The same weights under five spellings. On Anthropic's API the dated identifier ends in
+The same weights under five names, four of them distinct. On Anthropic's API the dated identifier ends in
 `-20251001` and the alias drops it. Bedrock prefixes the vendor, `anthropic.`. Google Cloud puts the
 date after an `@`. Microsoft Foundry uses the alias form. Lesson 2 showed Bedrock's regional
 prefixes on top of that: `us.`, `eu.`, `global.`.
@@ -41,5 +41,5 @@ and its documentation describes it rather than a translation of it.
 The request shape changes with the platform, which is one reason lesson 17 teaches Anthropic's
 Messages API directly and lesson 20 the OpenAI-compatible shape many platforms also offer. **Keep
 the model's name in configuration, never in code**: the same program then moves between Anthropic,
-Bedrock and Vertex by changing a setting, and lesson 5's evaluation is re-run on the new address as
+Bedrock and Vertex by changing a setting. Lesson 5's evaluation is then re-run on the new address as
 if it were a new candidate, which in billing, region and rate limits it is.
