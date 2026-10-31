@@ -55,7 +55,7 @@ The habit: **put the table the question is about on the left.**
 
 ## The nulls it creates are not in the data
 
-This catches everybody once. `o.total` is `NOT NULL` in the table — lesson 3 declared it — and here
+This catches everybody once. `o.total` is `NOT NULL` in the table — `joins.sql` declares it — and here
 it is, null.
 
 The null was not read from anywhere. **The join invented it**, because there was no row to take a

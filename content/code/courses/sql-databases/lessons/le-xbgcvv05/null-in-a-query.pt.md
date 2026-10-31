@@ -111,7 +111,7 @@ como só mais um valor diferente de 20. Quando você quer "tudo que não é 20, 
 sabemos", é um operador em vez de um `OR`.
 
 **E `coalesce` numa cláusula `WHERE` merece desconfiança.** `WHERE coalesce(price, 0) > 100` lê bem e
-faz duas coisas ao mesmo tempo: afirma que um preço desconhecido é zero, e — da seção `where` — põe
+faz duas coisas ao mesmo tempo. Afirma que um preço desconhecido é zero. E — da seção `where` — põe
 uma função em volta da coluna e perde o índice. Normalmente o que se queria era `WHERE price > 100`,
 que já exclui os desconhecidos, ou `WHERE price > 100 OR price IS NULL` se eles pertencem à resposta.
 Decidir qual é o ponto.

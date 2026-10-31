@@ -23,8 +23,8 @@ notion of a whole value to compare against, because the value is not whole.
 **The two lists are joined by position and nothing enforces it.** `17` is Ana's SQL101 grade
 because it is first in one list and SQL101 is first in the other. Insert a course in the middle of
 one list and forget the other, and every grade after it now belongs to the wrong course. Nothing
-complains. This is the same failure this repository's own content format refuses — *nothing joins
-by position* — and it is why.
+complains. This is the same failure the platform you are reading this on refuses in its own content —
+*nothing joins by position* — and it is why.
 
 **Adding a course means rewriting a string.** Read the row, append, write it back. Two enrolments
 in the same second and one is lost.

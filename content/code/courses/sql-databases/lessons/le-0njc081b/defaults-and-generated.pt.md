@@ -102,5 +102,5 @@ CREATE TRIGGER invoices_touch
 ```
 
 Vale fazer assim em vez de na aplicação, pela razão que a aula 1 deu sobre restrições: a aplicação
-nunca é uma aplicação, e um `updated_at` que alguns escritores mantêm e outros não é pior que não ter,
+nunca é uma aplicação. Um `updated_at` que alguns escritores mantêm e outros não é pior que não ter,
 porque parece confiável.

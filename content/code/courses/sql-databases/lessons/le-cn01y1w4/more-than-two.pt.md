@@ -120,7 +120,7 @@ A de outra pessoa, rápido:
 3. **Note todo `LEFT`**, e confira que nada depois dele é interno.
 4. **Diga o que é uma linha.** *"Uma linha por linha de pedido."* Se você não consegue, a consulta
    também não sabe.
-5. **Aí leia o `WHERE`**, procurando uma coluna da direita, que é o bug da seção anterior.
+5. **Aí leia o `WHERE`**, procurando uma coluna da direita, que é o bug da seção `on-against-where`.
 
 São cinco perguntas e nenhuma é sobre sintaxe, que é o ponto: junções são difíceis pelo que
 significam, não por como são escritas.

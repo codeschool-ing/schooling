@@ -120,7 +120,7 @@ Somebody else's, at speed:
 3. **Note every `LEFT`**, and check nothing after it is inner.
 4. **Say what one row is.** *"One row per order line."* If you cannot, the query does not know
    either.
-5. **Then read `WHERE`**, looking for a right-hand column, which is the previous section's bug.
+5. **Then read `WHERE`**, looking for a right-hand column, which is the `on-against-where` section's bug.
 
 That is five questions and none of them is about syntax, which is the point: joins are hard because
 of what they mean, not because of how they are written.

@@ -3,7 +3,7 @@ title: Os outros tipos, e quando cada um é a resposta certa
 version: 1
 ---
 
-Mais quatro que aparecem o tempo todo, e uma instrução sobre quando buscar cada um.
+Mais cinco que aparecem o tempo todo, e uma instrução sobre quando buscar cada um.
 
 ## `boolean`
 

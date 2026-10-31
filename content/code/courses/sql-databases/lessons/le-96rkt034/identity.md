@@ -113,7 +113,7 @@ looking at the highest id is wrong.
 
 And they are guessable. If `/orders/1004` is a valid address in your application, so is
 `/orders/1003`, and it belongs to somebody else. That is an authorisation problem and not a key
-problem — the fix is checking who is asking, not hiding the number — but it is the reason public
+problem: the fix is checking who is asking, not hiding the number. It is still the reason public
 systems often carry a second, random identifier (a `UUID`) for use in URLs, while keeping the
 small integer internally.
 

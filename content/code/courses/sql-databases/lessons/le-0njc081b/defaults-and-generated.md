@@ -102,5 +102,5 @@ CREATE TRIGGER invoices_touch
 ```
 
 It is worth doing it this way rather than in the application, for the reason lesson 1 gave about
-constraints: the application is never one application, and an `updated_at` that some writers
+constraints: the application is never one application. An `updated_at` that some writers
 maintain and others do not is worse than not having one, because it looks trustworthy.
