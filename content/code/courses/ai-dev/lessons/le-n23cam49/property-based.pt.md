@@ -4,7 +4,7 @@ version: 2
 ---
 
 Um teste baseado em exemplos confere as entradas em que você pensou. Um **teste baseado em
-propriedades** afirma algo que tem de valer para toda entrada, e uma biblioteca gera centenas de
+propriedades** afirma algo que tem de valer para toda entrada, e uma biblioteca gera muitas
 entradas procurando uma em que seja falso. Em Python essa biblioteca é o **hypothesis**. Quando acha
 uma falha, ele a encolhe até a entrada mais simples que ainda falha, o que torna o relatório
 legível.

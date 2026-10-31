@@ -112,7 +112,7 @@ end_turn 3 'Ready.'
 ```
 
 Essa é a mesma chamada, palavra por palavra, que iria para os servidores da Anthropic com as
-outras duas variáveis. `stop_reason` e `usage` são os dois campos que este curso mais lê, e a
+duas variáveis `ANTHROPIC_` trocadas. `stop_reason` e `usage` são os dois campos que este curso mais lê, e a
 aula 2 começa por eles.
 
 ## Num Mac

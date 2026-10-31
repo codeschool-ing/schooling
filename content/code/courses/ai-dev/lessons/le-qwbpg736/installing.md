@@ -111,8 +111,8 @@ ana@dev:~$ python -c 'import anthropic; r = anthropic.Anthropic().messages.creat
 end_turn 3 'Ready.'
 ```
 
-That is the same call, word for word, that would go to Anthropic's servers with the other two
-variables. `stop_reason` and `usage` are the two fields this course reads most, and lesson 2 starts
+That is the same call, word for word, that would go to Anthropic's servers with the two `ANTHROPIC_`
+variables changed. `stop_reason` and `usage` are the two fields this course reads most, and lesson 2 starts
 with them.
 
 ## On a Mac

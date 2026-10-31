@@ -65,7 +65,7 @@ Two steps. **Step 1**: the model asks for the order. **Step 2**: with the delive
 conversation, it answers, and `stop_reason` is no longer `tool_use`, so the loop ends.
 
 Read the answer against the tool results. The delivery date, 28 September, came from `get_order`.
-That the window "has expired" came from nowhere: the model never read the returns page, so it does
+That the window "has expired" came from nowhere. The model never read the returns page, so it does
 not know the window is 30 days, and nothing told it what day it is today, so it could not have
 counted to 30 anyway. The recording was made on 7 October, nine days after delivery; the answer is
 wrong. **Every fact in an agent's answer should have a tool result behind it**, which is what makes

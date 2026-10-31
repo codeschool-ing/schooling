@@ -73,7 +73,7 @@ inteiro ao `int()`, exatamente como no traceback; e as linhas novas põem o pre�
 unidades incluídas, e ficam com os dois primeiros caracteres. E não é um diff que algo consiga
 aplicar: diz que o arquivo é novo (`--- /dev/null`), e o cabeçalho promete seis linhas do arquivo
 antigo onde o corpo cita sete. Se uma resposta está certa é uma pergunta para um programa tanto
-quanto para uma pessoa, e a aula 5 seção 05, a faz.
+quanto para uma pessoa, e a aula 5 seção 05 a faz.
 
 ## O que conta como evidência
 

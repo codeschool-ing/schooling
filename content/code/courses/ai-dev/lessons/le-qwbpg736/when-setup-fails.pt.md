@@ -20,7 +20,7 @@ ERROR: This version requires zstd for extraction. Please install zstd and try ag
 ```
 
 O Ollama é baixado comprimido com `zstd`, e um Ubuntu mínimo não o tem. A mensagem diz a solução:
-`sudo apt install zstd`, e rodar o instalador de novo. O primeiro comando da seção 03 o instala
+`sudo apt install zstd`, e rodar o instalador de novo. O primeiro bloco da seção 03 o instala
 antes de você chegar aqui.
 
 ## O Ollama está instalado e nada responde

@@ -73,8 +73,8 @@ ana@dev:~/shop$ python check_package.py cartmoney
 cartmoney: not on PyPI. Do not install it, and do not register it to make the error go away.
 ```
 
-**`pymoney` exists, and it is the wrong package.** One release, on 5 March 2011, for Python 2.2,
-and nothing since: the "well maintained" in the reply is the model's, and the index says the
+**`pymoney` exists, and it is the wrong package.** Its first upload and its last are both from 5 March
+2011, for Python 2.2, and nothing since: the "well maintained" in the reply is the model's, and the index says the
 opposite. `money` is a little better and stopped in 2016. Neither was invented, and the check found
 the problem anyway, because it reads dates and a description where the reply had adjectives.
 

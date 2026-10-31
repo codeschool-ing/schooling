@@ -28,8 +28,9 @@ good faith.
   model write 79.80 rather than 7980.00 in its answer. Dates, currencies, ids: the description is the
   only place the model learns them.
 - **Typed arguments, required where they are required.** The schema is enforced by the server
-  (lesson 8 shows the same for function calling), so a missing or mistyped argument is refused before
-  your code runs.
+  (lesson 8 shows the same for function calling), so a missing argument is refused before your code
+  runs. A wrong type is not always refused: lesson 7 section 08 shows a string `"0"` accepted for an
+  integer.
 - **Results the model can use.** Plain, short, with the field names it was told about. A tool that
   returns a 5,000-line log fills the context and costs the next step's input.
 - **Errors that say what to do.** `'../../.env' is not a page of the handbook` tells the model to pick

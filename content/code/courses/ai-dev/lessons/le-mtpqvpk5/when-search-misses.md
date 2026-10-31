@@ -106,4 +106,4 @@ hybrid: my parcel never arrived
 
 E1042's passage is back in the top three, in third place, and the parcel question still finds the
 tracking passage first. **Hybrid search is not free**, though, and lesson 6 section 09 measures where
-it does worse than either of its parts.
+it does worse than vector search alone.

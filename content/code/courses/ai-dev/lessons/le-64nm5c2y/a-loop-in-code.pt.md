@@ -65,7 +65,7 @@ Dois passos. **Passo 1**: o modelo pede o pedido. **Passo 2**: com a data de ent
 responde, e o `stop_reason` não é mais `tool_use`, então o laço termina.
 
 Leia a resposta contra os resultados das ferramentas. A data de entrega, 28 de setembro, veio do
-`get_order`. Que o prazo "has expired" não veio de lugar nenhum: o modelo nunca leu a página de
+`get_order`. Que o prazo "has expired" não veio de lugar nenhum. O modelo nunca leu a página de
 devoluções, então não sabe que o prazo é de 30 dias, e nada lhe disse que dia é hoje, então não teria
 como contar até 30 de qualquer jeito. A gravação foi feita em 7 de outubro, nove dias depois da
 entrega; a resposta está errada. **Todo fato na resposta de um agente deveria ter um resultado de

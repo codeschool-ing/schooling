@@ -84,8 +84,9 @@ contrário:
 - **Você paga cada token de entrada em cada requisição.** Uma janela que você enche é uma conta que
   você paga, toda vez; a aula 2 seção 05 põe números nisso.
 - **Uma janela cheia é mais lenta.** O modelo lê tudo antes de escrever o primeiro token, e a
-  espera pelo primeiro token cresce com o prompt. Na máquina da gravação, ler 1.400 tokens levou
-  uns vinte segundos; a aula 2 seção 07 mede isso.
+  espera pelo primeiro token cresce com o prompt. Na máquina da gravação, uma requisição com
+  1.417 tokens novos para ler levou 47,9 segundos, e a seguinte, com 11, levou 8,9; a aula 2
+  seção 07 tem as duas.
 - **Uma janela cheia não é uma janela bem lida.** Os modelos são mensuravelmente piores em usar
   informação enterrada no meio de um contexto muito longo do que no começo ou no fim, um resultado
   publicado primeiro como *Lost in the Middle* (Liu e outros, 2023). Pôr o repositório inteiro no

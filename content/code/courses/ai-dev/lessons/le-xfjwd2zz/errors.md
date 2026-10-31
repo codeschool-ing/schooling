@@ -66,7 +66,7 @@ words arrived, the answer did not. Two wrong ways to handle it are common:
 - **Leaving the partial text as if it were the answer.** It reads like an answer, and it stops in
   the middle of a sentence. Mark it, or replace it.
 - **Retrying and appending.** A second request starts the reply again from the first word.
-  Appended to what is on the screen, it repeats a sentence and a half. A retry replaces.
+  Appended to what is on the screen, it repeats what the person has already read. A retry replaces.
 
 ## Retrying a stream
 

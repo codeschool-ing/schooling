@@ -34,7 +34,7 @@ drwxr-xr-x 8 ana ana  4096 Oct  7 15:07 ..
 -rw-r--r-- 1 ana ana 26752 Oct  7 15:07 vectors.npy
 ```
 
-Twenty-six vectors of 256 numbers, in about a second on a laptop processor, most of it loading
+Twenty-six vectors of 256 numbers, in about a second on four processor cores with no GPU, most of it loading
 the model. The index is two files: the vectors, 26,752 bytes as a numpy array, and the passages with
 their ids. **That is a vector database at its smallest**: a matrix, and a list that says which row is
 which passage.

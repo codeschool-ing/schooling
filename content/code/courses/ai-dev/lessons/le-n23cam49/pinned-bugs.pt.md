@@ -10,8 +10,8 @@ o código inclui os bugs dele.
 
 ## Pedindo testes
 
-A ana pede testes para o `apply_coupon`, com a versão com bug da aula 4 seção 02 ainda no lugar, e
-pede os imports, porque um arquivo de testes que não consegue importar o que testa é a falha mais
+A ana pede testes para o `apply_coupon`, com a versão com bug da aula 4 seção 02 ainda no lugar.
+Ela pede também os imports, porque um arquivo de testes que não consegue importar o que testa é a falha mais
 comum de um arquivo gerado. O `--write` põe o bloco de código da resposta direto em
 `tests/test_generated.py`. Depois ela lista o que ele testa, e toda linha que menciona o último dia
 do cupom, antes de rodá-lo:

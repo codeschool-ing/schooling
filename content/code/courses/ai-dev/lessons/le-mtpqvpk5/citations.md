@@ -5,8 +5,8 @@ version: 2
 
 An answer with citations looks trustworthy, and that is a risk of its own. A citation is a claim
 about where a sentence came from, and **a model can produce a citation the same way it produces any
-other text**: the likely-looking id, after the likely-looking sentence. The good news is that this
-claim, unlike most of what a model says, can be checked by a program.
+other text**: the likely-looking id, after the likely-looking sentence. Unlike most of what a model says, this
+claim can be checked by a program.
 
 ## Three checks a program can make
 

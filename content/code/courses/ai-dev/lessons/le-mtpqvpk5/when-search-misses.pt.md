@@ -107,4 +107,4 @@ hybrid: my parcel never arrived
 
 O trecho do E1042 volta aos três primeiros, em terceiro, e a pergunta da encomenda ainda acha o trecho
 de rastreio em primeiro. **A busca híbrida não sai de graça**, porém, e a aula 6 seção 09 mede onde ela
-vai pior que cada uma das partes.
+vai pior que a busca vetorial sozinha.

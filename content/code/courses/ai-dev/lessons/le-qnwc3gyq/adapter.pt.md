@@ -102,8 +102,8 @@ ana@dev:~/shop$ python -c 'import anthropic; print(anthropic.OverloadedError.__m
 APIStatusError False
 ```
 
-**`OverloadedError` é irmão do `InternalServerError`, não um tipo dele**: os dois vêm direto do
-`APIStatusError`. No primeiro dia em que a Anthropic estivesse sobrecarregada, o adaptador deixaria um
+**`OverloadedError` não é um tipo de `InternalServerError`**: a classe-mãe dele é `APIStatusError`,
+então um `except InternalServerError` nunca o vê. No primeiro dia em que a Anthropic estivesse sobrecarregada, o adaptador deixaria um
 529 chegar à pessoa, sem a OpenAI ser consultada. O código parece certo, e a lista de exceções é um
 palpite sobre a árvore de classes do SDK. Não foi preciso provedor nenhum para descobrir isso; bastou
 uma linha de Python.

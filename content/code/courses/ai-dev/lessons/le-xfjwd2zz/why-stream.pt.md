@@ -44,9 +44,8 @@ create: first word after 13.6 s, all 132 tokens after 13.6 s
 stream: first word after 0.3 s, all 154 tokens after 14.8 s
 ```
 
-**Os totais são próximos**, 13,6 e 14,8 segundos, porque o modelo precisa de
-mais ou menos o mesmo tempo para 132 tokens que para 154; as duas respostas são dois sorteios e não
-têm o mesmo tamanho. O que mudou foi o primeiro número. Esperando, a primeira palavra chega junto com
+**Os totais são próximos**, 13,6 e 14,8 segundos, para duas respostas que são dois sorteios e não
+têm o mesmo tamanho: 132 tokens e 154. O que mudou foi o primeiro número. Esperando, a primeira palavra chega junto com
 a última, depois de treze segundos de nada. Em streaming, ela chega depois de três décimos de
 segundo, e o leitor já está lendo enquanto o resto é escrito.
 

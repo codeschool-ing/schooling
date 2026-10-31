@@ -11,8 +11,8 @@ the model continues the pattern it was shown.
 ## A commit subject, two ways
 
 `CONVENTIONS.md` says a commit subject is imperative and under sixty characters. The shop's own
-five commits were made before anybody wrote that down, and they are single nouns: `Conventions`,
-`README`, `Coupons`. ana's script, `scratch/subject.py`, asks for a subject for the latest commit, once with only its
+five commits were made before anybody wrote that down, and the latest three are single nouns:
+`Conventions`, `README`, `Coupons`. ana's script, `scratch/subject.py`, asks for a subject for the latest commit, once with only its
 diff, and once with three subjects written to the rule and the rule itself:
 
 ```python

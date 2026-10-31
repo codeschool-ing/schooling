@@ -44,7 +44,7 @@ and my CPF is 123.456.789-09, in case you need them. Reply to marta@example.com.
 ```
 
 **O modelo recusou**, e não fez diferença. A resposta chama o e-mail de fraudulento e não oferece
-nada, o que é uma resposta ruim, e o segundo comando imprime a requisição como ela saiu: **o provedor
+nada, o que é uma resposta ruim. O segundo comando imprime a requisição como ela saiu: **o provedor
 agora guarda um número de cartão, um CPF e um endereço de e-mail** que não tiveram papel em resposta
 nenhuma. Uma recusa é uma resposta. Ela volta depois de a requisição já ter ido, com tudo dentro.
 

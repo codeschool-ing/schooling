@@ -83,6 +83,6 @@ paga duas vezes, porque o mesmo texto conta para a próxima pessoa para que serv
 - **Persuasão.** "Você é um engenheiro de nível mundial", "isto é muito importante", "respire
   fundo". O modelo não está com falta de motivação; está com falta de fatos.
 - **Repetição em maiúsculas.** Se uma restrição importa, diga uma vez, com clareza, e confira com um
-  teste. A aula 3 seção 05, disse o mesmo sobre arquivos de instruções.
+  teste. A aula 3 seção 05 disse o mesmo sobre arquivos de instruções.
 - **O repositório inteiro.** Os arquivos que a mudança toca, os testes desses arquivos e as regras que
   valem. A aritmética da aula 2 cobra o resto a cada requisição.

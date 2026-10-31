@@ -201,7 +201,7 @@ o módulo inteiro. Cada uma das próximas seções pega uma parte dele, mostra d
     },
     {
       "code": "def hybrid_search(query, k=3):\n    \"\"\"Reciprocal rank fusion: each list votes 1/(60 + rank) for each chunk it found.\"\"\"\n    votes = Counter()\n    by_id = {}\n    for found in (vector_search(query, 10), keyword_search(query, 10)):\n        for rank, (c, _) in enumerate(found):\n            votes[c[\"id\"]] += 1 / (60 + rank)\n            by_id[c[\"id\"]] = c\n    return [(by_id[i], v) for i, v in votes.most_common(k)]\n\n\n",
-      "note": "**As duas, combinadas** pela fusão de postos recíprocos. Seção 06 também."
+      "note": "**As duas, combinadas** pela fusão por posição recíproca. Seção 06 também."
     },
     {
       "code": "NOT_THERE = \"The handbook does not say.\"\n\n\ndef prompt(question, found):\n    passages = \"\\n\".join(f\"[{c['id']}] {c['text']}\" for c, _ in found)\n    return (\"Answer only from the passages below. Cite the passage id in square brackets after \"\n            \"every sentence. If the passages do not contain the answer, reply with exactly: \"\n            f\"{NOT_THERE}\\n\\n{passages}\\n\\nQuestion: {question}\")\n\n\n",

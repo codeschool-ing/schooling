@@ -27,8 +27,9 @@ então uma descrição que diz menos que o código é um contrato que o modelo v
   escrever 79,80 e não 7980,00 na resposta. Datas, moedas, ids: a descrição é o único lugar onde o
   modelo os aprende.
 - **Argumentos tipados, obrigatórios onde são obrigatórios.** O esquema é imposto pelo servidor (a
-  aula 8 mostra o mesmo para chamada de funções), então um argumento faltando ou com tipo errado é
-  recusado antes de o seu código rodar.
+  aula 8 mostra o mesmo para chamada de funções), então um argumento faltando é recusado antes de o
+  seu código rodar. Um tipo errado nem sempre é recusado: a aula 7 seção 08 mostra uma string `"0"`
+  aceita no lugar de um inteiro.
 - **Resultados que o modelo consegue usar.** Simples, curtos, com os nomes de campo que lhe disseram.
   Uma ferramenta que devolve um log de 5.000 linhas enche o contexto e custa a entrada do passo
   seguinte.
