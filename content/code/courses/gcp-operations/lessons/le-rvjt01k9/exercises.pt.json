@@ -1,0 +1,270 @@
+{
+ "ex-t32yjtc7": {
+  "prompt": "O que uma métrica de contador baseada em log registra a cada minuto?",
+  "hint": "Só o casamento importa.",
+  "choices": [
+   {
+    "text": "Quantas entradas casaram com o filtro",
+    "why": "Certo. Nada mais da entrada é guardado, exceto rótulos extraídos."
+   },
+   {
+    "text": "O texto de toda entrada que casou",
+    "why": "As entradas ficam no bucket de log; a métrica guarda um número."
+   },
+   {
+    "text": "O total desde que a métrica foi criada, crescendo para sempre",
+    "why": "Ela é DELTA, uma contagem por intervalo, nunca cumulativa."
+   },
+   {
+    "text": "A severidade da pior entrada",
+    "why": "A severidade pode ser filtrada; não é o que se conta."
+   }
+  ]
+ },
+ "ex-sat6y0kz": {
+  "prompt": "No checkout.log, 14:01 não tem linha que case. O que o contador registra para aquele minuto?",
+  "hint": "Não é zero.",
+  "choices": [
+   {
+    "text": "Um ponto com zero",
+    "why": "Sem entrada, sem ponto: ausência não é zero."
+   },
+   {
+    "text": "O valor do minuto anterior, repetido",
+    "why": "Nada é carregado adiante."
+   },
+   {
+    "text": "Nenhum ponto",
+    "why": "Certo. A lição 14 mostra por que isso importa para um alerta."
+   },
+   {
+    "text": "Um erro, porque a métrica não achou nada",
+    "why": "Não achar nada é normal e silencioso."
+   }
+  ]
+ },
+ "ex-n7etepsc": {
+  "prompt": "Um time acrescenta o id do pedido como rótulo no contador de tentativas. O que acontece?",
+  "hint": "Cada valor distinto é uma série própria.",
+  "choices": [
+   {
+    "text": "Nada muda: rótulos são grátis",
+    "why": "Cada série é cobrada e consultada por si."
+   },
+   {
+    "text": "Uma série por pedido: cara e lenta",
+    "why": "Certo. Valores de rótulo sem limite são o erro mais comum."
+   },
+   {
+    "text": "A métrica recusa rótulos com mais de dez valores",
+    "why": "Não existe limite tão pequeno; por isso fica caro."
+   },
+   {
+    "text": "As tentativas ficam mais fáceis de alertar",
+    "why": "Um alerta quer o total, agora espalhado por milhares de séries."
+   }
+  ]
+ },
+ "ex-5qpb2t99": {
+  "prompt": "Some os pontos do contador de 14:12 a 14:17 inclusive (12, 15, 18, 13, 16, 11). Quantas tentativas houve no trecho ruim?",
+  "hint": "Seis minutos, seis números."
+ },
+ "ex-jf5s5e8s": {
+  "prompt": "Por que olhar os valores do log antes de declarar os buckets de uma distribuição?",
+  "hint": "Buckets podem mudar depois?",
+  "choices": [
+   {
+    "text": "O Cloud Monitoring exige exatamente um bucket por valor",
+    "why": "Quaisquer limites são aceitos; bons limites mantêm o formato dos dados."
+   },
+   {
+    "text": "Os buckets são fixos quando a métrica é criada",
+    "why": "Certo. Mudá-los significa uma métrica nova."
+   },
+   {
+    "text": "Valores fora dos buckets são apagados do log",
+    "why": "O log fica intacto; extremos caem no bucket de estouro."
+   },
+   {
+    "text": "Os limites dos buckets decidem que entradas casam",
+    "why": "O filtro decide o casamento; buckets só fazem o histograma do valor."
+   }
+  ]
+ },
+ "ex-hje8htv2": {
+  "prompt": "O que faz de `shop/order_value_cents` uma distribuição em vez de um contador?",
+  "hint": "Ele lê um número de cada entrada.",
+  "choices": [
+   {
+    "text": "O filtro dele em \"order placed\"",
+    "why": "Um contador poderia usar o mesmo filtro."
+   },
+   {
+    "text": "O nome terminado em _cents",
+    "why": "Um nome não decide nada."
+   },
+   {
+    "text": "value_extractor com DISTRIBUTION e buckets",
+    "why": "Certo. O número extraído é o que vai para o histograma."
+   },
+   {
+    "text": "metric_kind = \"DELTA\"",
+    "why": "O contador de tentativas também é DELTA."
+   }
+  ]
+ },
+ "ex-j5h0hgs3": {
+  "prompt": "A lição 9 exclui as entradas bem-sucedidas de `/healthz`. Um contador de requisições healthz é criado depois no mesmo projeto. O que ele conta?",
+  "hint": "Uma entrada excluída chega à métrica?",
+  "choices": [
+   {
+    "text": "Todo health check, já que métricas leem antes das exclusões",
+    "why": "A lição diz o contrário: entradas excluídas nunca são contadas."
+   },
+   {
+    "text": "Só as que falharam; as excluídas nunca chegam a ele",
+    "why": "Certo. Uma contradição que nenhum plano pega."
+   },
+   {
+    "text": "Nada: o plano se recusa a criá-lo",
+    "why": "O plano não vê conflito; os dois são válidos sozinhos."
+   },
+   {
+    "text": "Todo check, duas vezes",
+    "why": "Nada dobra; a exclusão os remove."
+   }
+  ]
+ },
+ "ex-kqftca9t": {
+  "prompt": "O que abre um incidente numa política de alerta baseada em log?",
+  "hint": "Sem limite, sem janela.",
+  "choices": [
+   {
+    "text": "Uma taxa acima de um limite por cinco minutos",
+    "why": "Isso é uma condição de métrica, lição 14."
+   },
+   {
+    "text": "Dez entradas que casam numa hora",
+    "why": "Contar é trabalho de métrica."
+   },
+   {
+    "text": "Uma entrada que casa com o filtro",
+    "why": "Certo. Uma linha basta."
+   },
+   {
+    "text": "Uma pessoa marcando uma entrada como importante",
+    "why": "Ninguém marca entradas; o filtro decide."
+   }
+  ]
+ },
+ "ex-dtn543b1": {
+  "prompt": "Por que a política de break-glass tem `notification_rate_limit`?",
+  "hint": "Um alerta de log dispara uma vez por entrada que casa.",
+  "choices": [
+   {
+    "text": "Para atrasar a primeira notificação em cinco minutos",
+    "why": "A primeira vai na hora; o limite restringe as seguintes."
+   },
+   {
+    "text": "Para dez tentativas não mandarem dez mensagens",
+    "why": "Certo. E o Cloud Monitoring exige isso em alertas de log."
+   },
+   {
+    "text": "Para fechar o incidente depois de cinco minutos",
+    "why": "Fechar é o auto_close, meia hora aqui."
+   },
+   {
+    "text": "Para manter a política dentro do nível gratuito",
+    "why": "É sobre pessoas, não preço."
+   }
+  ]
+ },
+ "ex-xxssqby8": {
+  "prompt": "A política de break-glass como escrita nesta lição é aplicada. Acontece um deploy com break-glass. Quem fica sabendo?",
+  "hint": "Procure um canal na política.",
+  "choices": [
+   {
+    "text": "Os owners do projeto, por e-mail",
+    "why": "Nenhum canal os nomeia; nada é enviado por padrão."
+   },
+   {
+    "text": "Quem fez o deploy",
+    "why": "A política não conhece essa pessoa."
+   },
+   {
+    "text": "Ninguém: abre um incidente, e nenhum canal é nomeado",
+    "why": "Certo. A lição 14 acrescenta os canais."
+   },
+   {
+    "text": "O suporte do Google",
+    "why": "Seus alertas não vão para o Google."
+   }
+  ]
+ },
+ "ex-fmm6a1dz": {
+  "prompt": "Ligue cada pergunta à ferramenta que a responde.",
+  "hint": "Uma ferramenta para cada.",
+  "pairs": [
+   {
+    "left": "Isto está acontecendo mais que o normal?",
+    "right": "um contador e um alerta sobre a taxa dele"
+   },
+   {
+    "left": "Isto aconteceu alguma vez?",
+    "right": "um alerta baseado em log"
+   },
+   {
+    "left": "Como esses valores se espalham?",
+    "right": "uma distribuição"
+   }
+  ],
+  "right_distractors": [
+   "um uptime check"
+  ]
+ },
+ "ex-63mebefa": {
+  "prompt": "O campo de `google_logging_metric` que tira o valor de um rótulo de cada entrada é `label____`.",
+  "hint": "Uma palavra no plural, depois do sublinhado.",
+  "blanks": [
+   {
+    "accept": [
+     "extractors",
+     "_extractors"
+    ]
+   }
+  ]
+ },
+ "ex-aa37sf7a": {
+  "prompt": "Ponha em ordem o caminho de uma linha \"payment retried\" até um ponto num gráfico.",
+  "hint": "A linha é escrita antes de qualquer coisa contá-la.",
+  "items": [
+   "A API escreve a linha JSON",
+   "A entrada é guardada num bucket de log",
+   "O filtro do contador casa e o rótulo é extraído",
+   "O ponto do minuto é escrito no Cloud Monitoring"
+  ],
+  "trap": "Contar antes de a entrada ser guardada é o deslize: uma entrada excluída nunca é contada."
+ },
+ "ex-3h66eb5c": {
+  "prompt": "Os dois métodos de pagamento tiveram tentativas em números parecidos no trecho ruim. O que isso sugere?",
+  "hint": "Como seria um provedor falhando?",
+  "choices": [
+   {
+    "text": "O provedor pix falhou",
+    "why": "O cartão teve tantas tentativas quanto."
+   },
+   {
+    "text": "O extrator de rótulos está quebrado",
+    "why": "Os dois valores saíram como esperado."
+   },
+   {
+    "text": "Uma causa antes dos dois",
+    "why": "Certo. A chamada do próprio checkout, não um provedor."
+   },
+   {
+    "text": "Nada: tentativas são normais",
+    "why": "Dez vezes o fundo não é normal."
+   }
+  ]
+ }
+}

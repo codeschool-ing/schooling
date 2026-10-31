@@ -1,0 +1,270 @@
+{
+ "ex-xjzb4rwv": {
+  "prompt": "Em que ordem o Cloud Armor avalia as regras de uma política?",
+  "hint": "A primeira que casa decide.",
+  "choices": [
+   {
+    "text": "Na ordem em que estão escritas no arquivo",
+    "why": "A ordem do arquivo não significa nada; o plano até as reordenou."
+   },
+   {
+    "text": "Do menor número de prioridade para cima",
+    "why": "Certo. 1000, depois 2000, depois o padrão."
+   },
+   {
+    "text": "Todas as regras, e a ação mais rígida vence",
+    "why": "A avaliação para no primeiro casamento."
+   },
+   {
+    "text": "Primeiro regras de negar, depois de permitir",
+    "why": "A prioridade decide, não a ação."
+   }
+  ]
+ },
+ "ex-xt74fs3j": {
+  "prompt": "Uma regra de WAF nova tem `preview = true`. O que acontece com uma requisição que ela casa?",
+  "hint": "Registrada, não recusada.",
+  "choices": [
+   {
+    "text": "É recusada com 403",
+    "why": "Isso é a regra sem preview."
+   },
+   {
+    "text": "Fica retida até alguém revisar",
+    "why": "Nada espera uma pessoa."
+   },
+   {
+    "text": "Passa, e o veredito é registrado",
+    "why": "Certo. Uma semana disso mostra os falsos positivos."
+   },
+   {
+    "text": "É limitada por taxa em vez disso",
+    "why": "Preview não tem nada a ver com limitação de taxa."
+   }
+  ]
+ },
+ "ex-ezwmrm0d": {
+  "prompt": "`deny(418)` passa no `terraform validate` e no `terraform plan`. O que acontece no apply contra o Google?",
+  "hint": "De quem é a regra sobre quais códigos são permitidos?",
+  "choices": [
+   {
+    "text": "Funciona: o plano provou",
+    "why": "O plano prova o schema, que só diz \"string\"."
+   },
+   {
+    "text": "O Cloud Armor usa 403 em silêncio",
+    "why": "Ele recusa em vez de substituir."
+   },
+   {
+    "text": "O Google recusa: deny aceita 403, 404 ou 502",
+    "why": "Certo. Achado no apply, ou lendo a documentação."
+   },
+   {
+    "text": "A regra é criada em preview automaticamente",
+    "why": "Preview é só o que você define."
+   }
+  ]
+ },
+ "ex-w6eh8z9k": {
+  "prompt": "Por que um serviço do Cloud Run pode contornar a política do Cloud Armor da loja?",
+  "hint": "Onde a política está anexada?",
+  "choices": [
+   {
+    "text": "Ele é alcançável no próprio endereço run.app",
+    "why": "Certo. A política fica no balanceador, não no serviço."
+   },
+   {
+    "text": "O Cloud Armor não suporta HTTPS",
+    "why": "Suporta; HTTPS é o caso normal."
+   },
+   {
+    "text": "Regras só valem para o Compute Engine",
+    "why": "Valem para os backends do balanceador, Cloud Run incluso."
+   },
+   {
+    "text": "A regra padrão permite tudo",
+    "why": "Essa regra está dentro da política; contornar é nunca chegar a ela."
+   }
+  ]
+ },
+ "ex-7dxwmrvg": {
+  "prompt": "O que `rate_based_ban` com `ban_duration_sec = 600` faz com um cliente acima do limite?",
+  "hint": "Limitar versus banir.",
+  "choices": [
+   {
+    "text": "Recusa só as requisições acima de sessenta por minuto",
+    "why": "Isso é throttle; um ban recusa tudo por um tempo."
+   },
+   {
+    "text": "Recusa todas as requisições dele por dez minutos",
+    "why": "Certo. Com 429."
+   },
+   {
+    "text": "Bloqueia o endereço dele para sempre",
+    "why": "O ban dura ban_duration_sec."
+   },
+   {
+    "text": "Manda um CAPTCHA para ele",
+    "why": "Isso é gestão de bots, outro recurso."
+   }
+  ]
+ },
+ "ex-2yb9gty1": {
+  "prompt": "Uma loja que vende para empresas limita o checkout por IP. O que dá errado?",
+  "hint": "Quem compartilha um endereço?",
+  "choices": [
+   {
+    "text": "Nada: cada comprador tem endereço próprio",
+    "why": "Funcionários de uma empresa compartilham o endereço de saída dela."
+   },
+   {
+    "text": "Endereços IPv6 não podem ser limitados",
+    "why": "Podem."
+   },
+   {
+    "text": "Muitos funcionários atrás de um endereço dividem um limite",
+    "why": "Certo. A chave ali deveria ser a sessão ou a conta."
+   },
+   {
+    "text": "O limite conta só a primeira requisição",
+    "why": "Ele conta toda requisição do intervalo."
+   }
+  ]
+ },
+ "ex-hvcsmmhf": {
+  "prompt": "Para que serve principalmente o limite de taxa do checkout da loja?",
+  "hint": "Cartões roubados.",
+  "choices": [
+   {
+    "text": "Parar inundações de rede",
+    "why": "A borda do Google absorve essas antes do Cloud Armor."
+   },
+   {
+    "text": "Teste de cartões",
+    "why": "Certo. Um script testando milhares de cartões roubados."
+   },
+   {
+    "text": "Economizar instâncias do Cloud Run",
+    "why": "No máximo um efeito colateral."
+   },
+   {
+    "text": "Esconder preços de concorrentes",
+    "why": "A regra é só em /checkout."
+   }
+  ]
+ },
+ "ex-4f9s1g1f": {
+  "prompt": "Uma política (5 USD), três regras (1 USD cada) e 12 milhões de requisições a 0,75 USD por milhão. Quanto dá o mês, aproximadamente?",
+  "hint": "8 mais 9.",
+  "unit": "USD"
+ },
+ "ex-sykdjx4f": {
+  "prompt": "Chega uma inundação de um milhão de `GET /products` bem formados por minuto. O que a para?",
+  "hint": "Parece requisição de verdade.",
+  "choices": [
+   {
+    "text": "A borda do Google, que a descarta como inválida",
+    "why": "As requisições são HTTP válido; a borda as deixa passar."
+   },
+   {
+    "text": "Uma regra do Cloud Armor que conta e recusa",
+    "why": "Certo. A camada 7 precisa de uma regra."
+   },
+   {
+    "text": "O uptime check",
+    "why": "Ele percebe; não para nada."
+   },
+   {
+    "text": "O Binary Authorization",
+    "why": "Ele decide que imagens rodam, não que requisições chegam."
+   }
+  ]
+ },
+ "ex-96mx75vb": {
+  "prompt": "Durante um ataque, 100 milhões de requisições são recusadas pela política no nível Standard. Elas são cobradas?",
+  "hint": "Avaliada é cobrada.",
+  "choices": [
+   {
+    "text": "Não: requisições recusadas são grátis",
+    "why": "Toda requisição avaliada é cobrada, recusada ou não."
+   },
+   {
+    "text": "Sim, cerca de 75 USD",
+    "why": "Certo. O Enterprise inclui requisições e oferece proteção na fatura."
+   },
+   {
+    "text": "Só se a proteção adaptativa estava ligada",
+    "why": "Isso é recurso do Enterprise; a cobrança é por requisição de qualquer jeito."
+   },
+   {
+    "text": "Sim, 7.500 USD",
+    "why": "Cem vezes demais: 0,75 USD por milhão."
+   }
+  ]
+ },
+ "ex-ga6ymppj": {
+  "prompt": "Uma regra avaliada e registrada mas não aplicada está em modo ___.",
+  "hint": "Sete letras.",
+  "blanks": [
+   {
+    "accept": [
+     "preview"
+    ]
+   }
+  ]
+ },
+ "ex-fy1y9309": {
+  "prompt": "Ligue cada chave de limite de taxa ao risco dela.",
+  "hint": "Um risco não é sobre chave.",
+  "pairs": [
+   {
+    "left": "IP",
+    "right": "um escritório atrás de um endereço divide o limite"
+   },
+   {
+    "left": "HTTP_HEADER",
+    "right": "clientes sem o cabeçalho dividem uma chave vazia"
+   },
+   {
+    "left": "HTTP_COOKIE",
+    "right": "o cliente define e muda o valor"
+   }
+  ],
+  "right_distractors": [
+   "a política custa 5 USD por mês"
+  ]
+ },
+ "ex-r9ejbrx7": {
+  "prompt": "Ponha em ordem a introdução segura de uma regra de WAF.",
+  "hint": "Observe antes de bloquear.",
+  "items": [
+   "Acrescentar a regra com preview ligado",
+   "Ler uma semana de vereditos de preview no log de requisições",
+   "Baixar a sensibilidade ou acrescentar exceções para falsos positivos",
+   "Desligar o preview"
+  ],
+  "trap": "Desligar o preview antes de ler o log é o deslize: requisições legítimas são recusadas primeiro."
+ },
+ "ex-8mnr7k9s": {
+  "prompt": "Quais destes são recursos do Cloud Armor Enterprise e não do Standard? Escolha todos os que se aplicam.",
+  "hint": "O Standard tem tudo o que esta lição configurou.",
+  "choices": [
+   {
+    "text": "Proteção adaptativa",
+    "why": "Sim."
+   },
+   {
+    "text": "Bans por taxa",
+    "why": "Não. O Standard tem."
+   },
+   {
+    "text": "A equipe de resposta a DDoS do Google durante um ataque",
+    "why": "Sim."
+   },
+   {
+    "text": "Regras de WAF pré-configuradas",
+    "why": "Não. O Standard tem."
+   }
+  ]
+ }
+}

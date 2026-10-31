@@ -1,0 +1,397 @@
+[
+ {
+  "id": "ex-c9xq647w",
+  "version": 1,
+  "section": "sdk",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In checkout.py, which line decides where the spans go?",
+  "hint": "Only one names a destination.",
+  "choices": [
+   {
+    "text": "tracer.start_as_current_span(\"POST /orders\")",
+    "correct": false,
+    "why": "That creates a span; it says nothing about where it goes."
+   },
+   {
+    "text": "The OTLPSpanExporter's endpoint",
+    "correct": true,
+    "why": "Right. And it names the Collector, not Google."
+   },
+   {
+    "text": "Resource.create with service.name",
+    "correct": false,
+    "why": "That says what produced the data."
+   },
+   {
+    "text": "provider.shutdown()",
+    "correct": false,
+    "why": "That flushes the batch before exit."
+   }
+  ]
+ },
+ {
+  "id": "ex-7cq8p3p9",
+  "version": 1,
+  "section": "sdk",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A short script ends and its spans never reach the Collector. Which line is probably missing?",
+  "hint": "The exporter sends in batches.",
+  "choices": [
+   {
+    "text": "trace.set_tracer_provider(provider)",
+    "correct": false,
+    "why": "Without it no spans would be recorded at all, a different symptom."
+   },
+   {
+    "text": "The service.version attribute",
+    "correct": false,
+    "why": "A missing attribute does not stop export."
+   },
+   {
+    "text": "provider.shutdown()",
+    "correct": true,
+    "why": "Right. The last batch leaves only when the provider is shut down."
+   },
+   {
+    "text": "A time.sleep in each span",
+    "correct": false,
+    "why": "The sleeps stand for work; they are not needed for export."
+   }
+  ]
+ },
+ {
+  "id": "ex-xjpqrmej",
+  "version": 1,
+  "section": "sdk",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why do the three inner spans share the trace id of `POST /orders`?",
+  "hint": "Look at the with blocks.",
+  "choices": [
+   {
+    "text": "They were started inside its with block, as its children",
+    "correct": true,
+    "why": "Right. Nesting makes them one trace."
+   },
+   {
+    "text": "The Collector joins spans that arrive together",
+    "correct": false,
+    "why": "The ids are set by the SDK before export."
+   },
+   {
+    "text": "They have the same service.name",
+    "correct": false,
+    "why": "Every span of a service shares that; traces are separate."
+   },
+   {
+    "text": "They ran in less than a second",
+    "correct": false,
+    "why": "Timing does not join spans."
+   }
+  ]
+ },
+ {
+  "id": "ex-rbrc0de5",
+  "version": 1,
+  "section": "collector",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the Collector's debug output, why does `POST /orders` appear last?",
+  "hint": "When does a span end?",
+  "choices": [
+   {
+    "text": "Spans are sorted alphabetically",
+    "correct": false,
+    "why": "'charge' would then come before 'load'."
+   },
+   {
+    "text": "The parent is sent in a second batch",
+    "correct": false,
+    "why": "All four were in one batch."
+   },
+   {
+    "text": "The log lists spans as they end, and the parent ends last",
+    "correct": true,
+    "why": "Right. It ends when its last child has ended."
+   },
+   {
+    "text": "It was the slowest span",
+    "correct": false,
+    "why": "Order is about ending, not duration."
+   }
+  ]
+ },
+ {
+  "id": "ex-ek7eavd1",
+  "version": 1,
+  "section": "collector",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A span attribute carries a customer's e-mail address. Where is the cheapest place to remove it from every service?",
+  "hint": "One file, every service.",
+  "choices": [
+   {
+    "text": "In each service's code",
+    "correct": false,
+    "why": "Correct but repeated per service, and easy to miss one."
+   },
+   {
+    "text": "In an attributes processor in the Collector",
+    "correct": true,
+    "why": "Right. One change covers every service sending to it."
+   },
+   {
+    "text": "In Cloud Trace, after it is stored",
+    "correct": false,
+    "why": "By then the personal data is already stored."
+   },
+   {
+    "text": "In the batch processor's timeout",
+    "correct": false,
+    "why": "Batching changes timing, not content."
+   }
+  ]
+ },
+ {
+  "id": "ex-392m2yeb",
+  "version": 1,
+  "section": "collector",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each part of a Collector pipeline to what it does.",
+  "hint": "In, through, out.",
+  "pairs": [
+   {
+    "left": "receiver",
+    "right": "where data comes in"
+   },
+   {
+    "left": "processor",
+    "right": "what happens to it on the way"
+   },
+   {
+    "left": "exporter",
+    "right": "where it goes"
+   }
+  ],
+  "right_distractors": [
+   "which code produced it"
+  ]
+ },
+ {
+  "id": "ex-h633939w",
+  "version": 1,
+  "section": "to-google",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To send the shop's spans to Cloud Trace instead of the debug log, what changes?",
+  "hint": "The code still sends OTLP to localhost.",
+  "choices": [
+   {
+    "text": "checkout.py's exporter",
+    "correct": false,
+    "why": "The code is untouched; that is the point."
+   },
+   {
+    "text": "The Collector's exporter, in its file",
+    "correct": true,
+    "why": "Right. debug becomes googlecloud."
+   },
+   {
+    "text": "The OpenTelemetry SDK version",
+    "correct": false,
+    "why": "The version is irrelevant to the destination."
+   },
+   {
+    "text": "Every span's attributes",
+    "correct": false,
+    "why": "Attributes travel unchanged."
+   }
+  ]
+ },
+ {
+  "id": "ex-06q4ag2z",
+  "version": 1,
+  "section": "to-google",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`otelcol-contrib validate` exits 0 on collector-gcp.yaml. What does that prove?",
+  "hint": "It never started the exporter.",
+  "choices": [
+   {
+    "text": "That Google accepted a test span",
+    "correct": false,
+    "why": "Nothing was sent; the Collector was not started."
+   },
+   {
+    "text": "That the service account has cloudtrace.agent",
+    "correct": false,
+    "why": "No credential was checked."
+   },
+   {
+    "text": "That every component and key is known",
+    "correct": true,
+    "why": "Right. A misspelt key fails it, as projectt did."
+   },
+   {
+    "text": "That the traces will appear in Cloud Trace within a minute",
+    "correct": false,
+    "why": "Validation says nothing about delivery."
+   }
+  ]
+ },
+ {
+  "id": "ex-09xj57n2",
+  "version": 1,
+  "section": "to-google",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team moves from Cloud Trace to another vendor. What has to be redone?",
+  "hint": "What is written against Cloud Monitoring?",
+  "choices": [
+   {
+    "text": "The instrumentation in every service",
+    "correct": false,
+    "why": "That is what OpenTelemetry keeps portable."
+   },
+   {
+    "text": "Nothing at all",
+    "correct": false,
+    "why": "The vendor-side work does not move."
+   },
+   {
+    "text": "Dashboards, alert policies and SLOs",
+    "correct": true,
+    "why": "Right. The instrumentation moves; those stay behind."
+   },
+   {
+    "text": "The semantic conventions of the attributes",
+    "correct": false,
+    "why": "They are the same everywhere."
+   }
+  ]
+ },
+ {
+  "id": "ex-xpkezyas",
+  "version": 1,
+  "section": "to-google",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "On Cloud Run, how does the googlecloud exporter authenticate?",
+  "hint": "Lesson 5's order of credentials.",
+  "choices": [
+   {
+    "text": "With a key file mounted into the sidecar",
+    "correct": false,
+    "why": "A key is the last resort and not needed."
+   },
+   {
+    "text": "As the service account, through the metadata server",
+    "correct": true,
+    "why": "Right. With roles/cloudtrace.agent."
+   },
+   {
+    "text": "With the developer's application default credentials",
+    "correct": false,
+    "why": "Those live on a laptop."
+   },
+   {
+    "text": "It needs no authentication inside Google",
+    "correct": false,
+    "why": "Every call is authenticated, as some identity."
+   }
+  ]
+ },
+ {
+  "id": "ex-g62dt6j4",
+  "version": 1,
+  "section": "collector",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The Collector exporter that writes what it receives to its own log is called `___`.",
+  "hint": "Five letters.",
+  "blanks": [
+   {
+    "accept": [
+     "debug"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-64ah95nf",
+  "version": 1,
+  "section": "collector",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "value": 4,
+  "tolerance": 0,
+  "prompt": "How many spans did the Collector receive for the one checkout?",
+  "hint": "Count the lines after ScopeTraces."
+ },
+ {
+  "id": "ex-t9eq5qdh",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put a span's journey in order, from the code to Cloud Trace.",
+  "hint": "Code, SDK, Collector, Google.",
+  "items": [
+   "The code ends a span",
+   "The SDK's batch processor sends it over OTLP",
+   "The Collector's receiver accepts it",
+   "The googlecloud exporter writes it to Cloud Trace"
+  ],
+  "trap": "Exporting before the receiver accepts it is the slip: a Collector's pipeline runs receivers first."
+ },
+ {
+  "id": "ex-6gyt3kez",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these ran for real on your computer in this lesson? Choose all that apply.",
+  "hint": "Everything local was real.",
+  "choices": [
+   {
+    "text": "A traced checkout producing four spans",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "A Collector receiving them over OTLP",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "The googlecloud exporter sending to Cloud Trace",
+    "correct": false,
+    "why": "No. It was only validated."
+   },
+   {
+    "text": "Validation of the Google configuration",
+    "correct": true,
+    "why": "Yes."
+   }
+  ]
+ }
+]

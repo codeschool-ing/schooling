@@ -1,0 +1,440 @@
+[
+ {
+  "id": "ex-92ta0chg",
+  "version": 1,
+  "section": "state-bucket",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which setting on the state bucket makes a deleted state recoverable?",
+  "hint": "Every write keeps the previous one.",
+  "choices": [
+   {
+    "text": "public_access_prevention",
+    "correct": false,
+    "why": "That keeps it private; it keeps no history."
+   },
+   {
+    "text": "versioning",
+    "correct": true,
+    "why": "Right. Noncurrent versions are what the restore used."
+   },
+   {
+    "text": "uniform_bucket_level_access",
+    "correct": false,
+    "why": "That simplifies permissions; nothing is kept."
+   },
+   {
+    "text": "A lifecycle rule deleting old versions",
+    "correct": false,
+    "why": "That limits the history; it does not create it."
+   }
+  ]
+ },
+ {
+  "id": "ex-9nbwhfzq",
+  "version": 1,
+  "section": "state-bucket",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Two configurations are given the same backend `prefix` by mistake. What happens?",
+  "hint": "The prefix is the configuration's address.",
+  "choices": [
+   {
+    "text": "Terraform refuses the second init",
+    "correct": false,
+    "why": "Nothing checks; the prefix is just a folder."
+   },
+   {
+    "text": "Each one's apply overwrites the other's state",
+    "correct": true,
+    "why": "Right. And each plan then proposes to destroy the other's resources."
+   },
+   {
+    "text": "They share it safely, thanks to the lock",
+    "correct": false,
+    "why": "The lock serialises writes; it cannot make two configurations one."
+   },
+   {
+    "text": "The bucket keeps two files under the same name, one per configuration",
+    "correct": false,
+    "why": "One name is one object; the second write replaces it."
+   }
+  ]
+ },
+ {
+  "id": "ex-pahs3s8j",
+  "version": 1,
+  "section": "state-bucket",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is the state bucket kept out of the project's general IAM?",
+  "hint": "What does the state hold?",
+  "choices": [
+   {
+    "text": "Reading the state means reading its secrets",
+    "correct": true,
+    "why": "Right. Every attribute, generated passwords included."
+   },
+   {
+    "text": "Cloud Storage charges more for buckets shared by many accounts",
+    "correct": false,
+    "why": "Price does not depend on who has access."
+   },
+   {
+    "text": "Terraform refuses to lock a bucket other accounts can read",
+    "correct": false,
+    "why": "Locking works whoever can read the bucket."
+   },
+   {
+    "text": "Versioning only works on buckets with few readers",
+    "correct": false,
+    "why": "Versioning has nothing to do with readers."
+   }
+  ]
+ },
+ {
+  "id": "ex-ty6v0qm0",
+  "version": 1,
+  "section": "locking",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `Error 412: Precondition failed` mean in the lock message?",
+  "hint": "How is the lock object created?",
+  "choices": [
+   {
+    "text": "The service account lacks permission to write the bucket",
+    "correct": false,
+    "why": "That would be a 403; 412 is a condition on the object."
+   },
+   {
+    "text": "The state file is corrupt",
+    "correct": false,
+    "why": "The state was not read at all; the lock write failed first."
+   },
+   {
+    "text": "The lock object already exists",
+    "correct": true,
+    "why": "Right. It is written only if absent, and somebody holds it."
+   },
+   {
+    "text": "The bucket's versioning is off",
+    "correct": false,
+    "why": "Locking does not depend on versioning."
+   }
+  ]
+ },
+ {
+  "id": "ex-3xwmnaf9",
+  "version": 1,
+  "section": "locking",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Plans fail with the lock error, and the lock's `Who` is the CI runner, created 40 minutes ago. What comes before `terraform force-unlock`?",
+  "hint": "The lock may be protecting something.",
+  "choices": [
+   {
+    "text": "Nothing: 40 minutes is long enough to be sure",
+    "correct": false,
+    "why": "A long apply can take that long; time alone proves nothing."
+   },
+   {
+    "text": "Running the plan again with -lock=false",
+    "correct": false,
+    "why": "That ignores the lock instead of finding out why it is there."
+   },
+   {
+    "text": "Deleting default.tfstate so the lock no longer matters",
+    "correct": false,
+    "why": "That is the lost-state accident, caused on purpose."
+   },
+   {
+    "text": "Checking that the CI job is really dead",
+    "correct": true,
+    "why": "Right. If it is still applying, unlocking lets two writers in."
+   }
+  ]
+ },
+ {
+  "id": "ex-rs67rvnp",
+  "version": 1,
+  "section": "locking",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A tutorial suggests `-lock=false` for \"Error acquiring the state lock\" in a pipeline. What is the risk?",
+  "hint": "What was the lock for?",
+  "choices": [
+   {
+    "text": "Terraform runs more slowly without the lock",
+    "correct": false,
+    "why": "It is faster, if anything; speed is not the problem."
+   },
+   {
+    "text": "Two runs write the state and the second wins",
+    "correct": true,
+    "why": "Right. One of them silently loses what it recorded."
+   },
+   {
+    "text": "Cloud Storage refuses writes without a lock",
+    "correct": false,
+    "why": "It accepts them; that is the danger."
+   },
+   {
+    "text": "The state stops being versioned",
+    "correct": false,
+    "why": "Versioning is the bucket's, unaffected by the flag."
+   }
+  ]
+ },
+ {
+  "id": "ex-5hgqrdr6",
+  "version": 1,
+  "section": "accident",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the state was deleted, the plan proposed to create both resources. What did that plan mean?",
+  "hint": "Did the resources exist?",
+  "choices": [
+   {
+    "text": "The resources had been deleted with the state",
+    "correct": false,
+    "why": "They were untouched; only the record went."
+   },
+   {
+    "text": "Terraform had lost track of resources that still existed",
+    "correct": true,
+    "why": "Right. A plan to create what exists is a stop sign."
+   },
+   {
+    "text": "The configuration had changed since the last apply",
+    "correct": false,
+    "why": "Nothing in the files changed."
+   },
+   {
+    "text": "The emulator had restarted and forgotten them",
+    "correct": false,
+    "why": "They were still there; the restore showed no changes."
+   }
+  ]
+ },
+ {
+  "id": "ex-15gvj3aa",
+  "version": 1,
+  "section": "accident",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why was the newest version of `default.tfstate` the wrong one to restore?",
+  "hint": "Look at its serial and its resources.",
+  "choices": [
+   {
+    "text": "The newest version is always the lock, not the state",
+    "correct": false,
+    "why": "The list was filtered to default.tfstate."
+   },
+   {
+    "text": "It was corrupted by the deletion",
+    "correct": false,
+    "why": "It was a valid state: an empty one."
+   },
+   {
+    "text": "The plan after the accident wrote an empty state",
+    "correct": true,
+    "why": "Right. Serial 1 and nothing: restoring it would change nothing."
+   },
+   {
+    "text": "Versions newer than an hour cannot be read",
+    "correct": false,
+    "why": "There is no such delay."
+   }
+  ]
+ },
+ {
+  "id": "ex-fnn3vb5y",
+  "version": 1,
+  "section": "accident",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 6,
+  "tolerance": 0,
+  "prompt": "In the list of versions, which `serial` held the shop's state as it should be: two resources, after `slow.tf` was removed?",
+  "hint": "Three resources was the version with slow.tf."
+ },
+ {
+  "id": "ex-2bz0gzn7",
+  "version": 1,
+  "section": "accident",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why did `terraform state push` need `-force` in the restore?",
+  "hint": "Compare the serials.",
+  "choices": [
+   {
+    "text": "Because the lock was still held by the plan",
+    "correct": false,
+    "why": "The plan had finished and released it."
+   },
+   {
+    "text": "It replaced a state of another lineage",
+    "correct": true,
+    "why": "Right. The empty state was a new lineage; -force says you mean it."
+   },
+   {
+    "text": "Pushing to a versioned bucket always requires it",
+    "correct": false,
+    "why": "Versioning has nothing to do with push."
+   },
+   {
+    "text": "Because the token was fake",
+    "correct": false,
+    "why": "The emulator never checked the token."
+   }
+  ]
+ },
+ {
+  "id": "ex-z762vqnp",
+  "version": 1,
+  "section": "prevention",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After an import, why would the google provider still propose to create the price list object?",
+  "hint": "Not every resource type can be imported.",
+  "choices": [
+   {
+    "text": "The object was deleted with the state",
+    "correct": false,
+    "why": "It still existed; the state was the only thing lost."
+   },
+   {
+    "text": "Its import block named the wrong bucket",
+    "correct": false,
+    "why": "There is no import block for it: the type does not support one."
+   },
+   {
+    "text": "Its resource type has no import at all",
+    "correct": true,
+    "why": "Right. The only proposal left is to write it again."
+   },
+   {
+    "text": "Objects are always recreated on every plan",
+    "correct": false,
+    "why": "With its state, the object showed no changes."
+   }
+  ]
+ },
+ {
+  "id": "ex-1aahp518",
+  "version": 1,
+  "section": "prevention",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A pull request changes the backend `prefix` from `shop` to `shop-prod`, and its plan proposes to create twelve resources that exist. What is the right reading?",
+  "hint": "A new prefix is a new, empty state.",
+  "choices": [
+   {
+    "text": "Twelve new resources were added in the same pull request",
+    "correct": false,
+    "why": "They exist already; the plan says create because the state is empty."
+   },
+   {
+    "text": "Stop: the state has to be moved, not recreated",
+    "correct": true,
+    "why": "Right. init -migrate-state moves it; applying would duplicate or fail."
+   },
+   {
+    "text": "Apply: Terraform will find and adopt the existing ones",
+    "correct": false,
+    "why": "Terraform adopts only through import; apply creates."
+   },
+   {
+    "text": "Approve it: renaming the prefix is cosmetic",
+    "correct": false,
+    "why": "The prefix is the state's address, far from cosmetic."
+   }
+  ]
+ },
+ {
+  "id": "ex-mf0z8fy8",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the restore of a deleted state in order.",
+  "hint": "Look before you push.",
+  "items": [
+   "List the noncurrent versions of default.tfstate",
+   "Read each version's serial and resources",
+   "Download the version with the right serial",
+   "terraform state push it",
+   "Plan, and expect no changes"
+  ],
+  "trap": "Pushing the newest version without reading it is the slip: here it was the empty state the plan wrote."
+ },
+ {
+  "id": "ex-zdq339vp",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The block that tells Terraform which real object a resource address is, without creating it, is called `___`.",
+  "hint": "One word, also a verb.",
+  "blanks": [
+   {
+    "accept": [
+     "import"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-5631mbb0",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these leave Terraform proposing to create resources that already exist? Choose all that apply.",
+  "hint": "Each one leaves an empty state where the old one was expected.",
+  "choices": [
+   {
+    "text": "The state object is deleted",
+    "correct": true,
+    "why": "Yes."
+   },
+   {
+    "text": "The backend prefix is changed without migrating",
+    "correct": true,
+    "why": "Yes: a new, empty state."
+   },
+   {
+    "text": "The lock is left behind by a killed apply",
+    "correct": false,
+    "why": "No. Plans are refused, not misled."
+   },
+   {
+    "text": "An old empty version is restored instead of the right one",
+    "correct": true,
+    "why": "Yes, as the newest version would have been."
+   },
+   {
+    "text": "A noncurrent version is deleted by the lifecycle rule",
+    "correct": false,
+    "why": "No. The current state is untouched."
+   }
+  ]
+ }
+]

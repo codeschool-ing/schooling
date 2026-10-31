@@ -1,0 +1,398 @@
+[
+ {
+  "id": "ex-t32yjtc7",
+  "version": 1,
+  "section": "counters",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a log-based counter metric record each minute?",
+  "hint": "Only the match matters.",
+  "choices": [
+   {
+    "text": "How many entries matched its filter",
+    "correct": true,
+    "why": "Right. Nothing else about the entry is kept, except extracted labels."
+   },
+   {
+    "text": "The text of every entry that matched",
+    "correct": false,
+    "why": "The entries stay in the log bucket; the metric keeps a number."
+   },
+   {
+    "text": "The total since the metric was created, growing for ever",
+    "correct": false,
+    "why": "It is DELTA, a count per interval, never cumulative."
+   },
+   {
+    "text": "The severity of the worst entry",
+    "correct": false,
+    "why": "Severity can be filtered on; it is not what is counted."
+   }
+  ]
+ },
+ {
+  "id": "ex-sat6y0kz",
+  "version": 1,
+  "section": "counters",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In checkout.log, 14:01 has no matching line. What does the counter record for that minute?",
+  "hint": "Not zero.",
+  "choices": [
+   {
+    "text": "A point of zero",
+    "correct": false,
+    "why": "No entry, no point: absence is not zero."
+   },
+   {
+    "text": "The previous minute's value, repeated",
+    "correct": false,
+    "why": "Nothing is carried forward."
+   },
+   {
+    "text": "No point at all",
+    "correct": true,
+    "why": "Right. Lesson 14 shows why that matters to an alert."
+   },
+   {
+    "text": "An error, because the metric found nothing",
+    "correct": false,
+    "why": "Finding nothing is normal and silent."
+   }
+  ]
+ },
+ {
+  "id": "ex-n7etepsc",
+  "version": 1,
+  "section": "counters",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team adds the order id as a label on the retry counter. What happens?",
+  "hint": "Every distinct value is its own series.",
+  "choices": [
+   {
+    "text": "Nothing changes: labels are free",
+    "correct": false,
+    "why": "Each series is billed and queried on its own."
+   },
+   {
+    "text": "One series per order: costly and slow",
+    "correct": true,
+    "why": "Right. Unbounded label values are the commonest mistake."
+   },
+   {
+    "text": "The metric refuses labels with more than ten values",
+    "correct": false,
+    "why": "There is no such small limit; that is why it gets expensive."
+   },
+   {
+    "text": "Retries become easier to alert on",
+    "correct": false,
+    "why": "An alert wants the total, which is now scattered over thousands of series."
+   }
+  ]
+ },
+ {
+  "id": "ex-5qpb2t99",
+  "version": 1,
+  "section": "counters",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 85,
+  "tolerance": 0,
+  "prompt": "Add the counter's points from 14:12 to 14:17 inclusive (12, 15, 18, 13, 16, 11). How many retries happened in the bad patch?",
+  "hint": "Six minutes, six numbers."
+ },
+ {
+  "id": "ex-jf5s5e8s",
+  "version": 1,
+  "section": "metrics",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why look at the values in the log before declaring a distribution's buckets?",
+  "hint": "Can buckets change later?",
+  "choices": [
+   {
+    "text": "Cloud Monitoring needs exactly one bucket per value",
+    "correct": false,
+    "why": "Any bounds are accepted; good ones keep the data's shape."
+   },
+   {
+    "text": "Buckets are fixed when the metric is created",
+    "correct": true,
+    "why": "Right. Changing them means a new metric."
+   },
+   {
+    "text": "Values outside the buckets are deleted from the log",
+    "correct": false,
+    "why": "The log is untouched; outliers land in the overflow bucket."
+   },
+   {
+    "text": "The bucket bounds decide which entries match",
+    "correct": false,
+    "why": "The filter decides matching; buckets only histogram the value."
+   }
+  ]
+ },
+ {
+  "id": "ex-hje8htv2",
+  "version": 1,
+  "section": "metrics",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What makes `shop/order_value_cents` a distribution rather than a counter?",
+  "hint": "It reads a number out of each entry.",
+  "choices": [
+   {
+    "text": "Its filter on \"order placed\"",
+    "correct": false,
+    "why": "A counter could use the same filter."
+   },
+   {
+    "text": "Its name ending in _cents",
+    "correct": false,
+    "why": "A name decides nothing."
+   },
+   {
+    "text": "value_extractor with DISTRIBUTION and buckets",
+    "correct": true,
+    "why": "Right. The extracted number is what is histogrammed."
+   },
+   {
+    "text": "metric_kind = \"DELTA\"",
+    "correct": false,
+    "why": "The retry counter is DELTA too."
+   }
+  ]
+ },
+ {
+  "id": "ex-j5h0hgs3",
+  "version": 1,
+  "section": "metrics",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Lesson 9 excludes successful `/healthz` entries. A counter of healthz requests is then created in the same project. What does it count?",
+  "hint": "Does an excluded entry reach the metric?",
+  "choices": [
+   {
+    "text": "Every health check, since metrics read before exclusions",
+    "correct": false,
+    "why": "The lesson says the opposite: excluded entries are never counted."
+   },
+   {
+    "text": "Only the failed ones; the excluded ones never reach it",
+    "correct": true,
+    "why": "Right. A contradiction no plan catches."
+   },
+   {
+    "text": "Nothing: the plan refuses to create it",
+    "correct": false,
+    "why": "The plan sees no conflict; both are valid alone."
+   },
+   {
+    "text": "Every check, twice",
+    "correct": false,
+    "why": "Nothing doubles; the exclusion removes them."
+   }
+  ]
+ },
+ {
+  "id": "ex-kqftca9t",
+  "version": 1,
+  "section": "log-alerts",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What opens an incident in a log-based alert policy?",
+  "hint": "No threshold, no window.",
+  "choices": [
+   {
+    "text": "A rate above a threshold for five minutes",
+    "correct": false,
+    "why": "That is a metric condition, lesson 14."
+   },
+   {
+    "text": "Ten matching entries in an hour",
+    "correct": false,
+    "why": "Counting is a metric's job."
+   },
+   {
+    "text": "One entry matching the filter",
+    "correct": true,
+    "why": "Right. One line is enough."
+   },
+   {
+    "text": "A person marking an entry as important",
+    "correct": false,
+    "why": "Nobody marks entries; the filter decides."
+   }
+  ]
+ },
+ {
+  "id": "ex-dtn543b1",
+  "version": 1,
+  "section": "log-alerts",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the break-glass policy carry `notification_rate_limit`?",
+  "hint": "A log alert fires once per matching entry.",
+  "choices": [
+   {
+    "text": "To delay the first notification by five minutes",
+    "correct": false,
+    "why": "The first goes at once; the limit caps the ones after it."
+   },
+   {
+    "text": "So ten retries do not send ten messages",
+    "correct": true,
+    "why": "Right. And Cloud Monitoring requires it on log alerts."
+   },
+   {
+    "text": "To close the incident after five minutes",
+    "correct": false,
+    "why": "Closing is auto_close, half an hour here."
+   },
+   {
+    "text": "To keep the policy inside the free tier",
+    "correct": false,
+    "why": "It is about people, not price."
+   }
+  ]
+ },
+ {
+  "id": "ex-xxssqby8",
+  "version": 1,
+  "section": "log-alerts",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The break-glass policy as written in this lesson is applied. A break-glass deployment happens. Who is told?",
+  "hint": "Read the policy for a channel.",
+  "choices": [
+   {
+    "text": "The project's owners, by e-mail",
+    "correct": false,
+    "why": "No channel names them; nothing is sent by default."
+   },
+   {
+    "text": "Whoever made the deployment",
+    "correct": false,
+    "why": "The policy knows no such person."
+   },
+   {
+    "text": "Nobody: an incident opens, and no channel is named",
+    "correct": true,
+    "why": "Right. Lesson 14 adds the channels."
+   },
+   {
+    "text": "Google support",
+    "correct": false,
+    "why": "Your alerts are not sent to Google."
+   }
+  ]
+ },
+ {
+  "id": "ex-fmm6a1dz",
+  "version": 1,
+  "section": "log-alerts",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each question to the tool that answers it.",
+  "hint": "One tool for each.",
+  "pairs": [
+   {
+    "left": "Is this happening more than usual?",
+    "right": "a counter and an alert on its rate"
+   },
+   {
+    "left": "Has this happened at all?",
+    "right": "a log-based alert"
+   },
+   {
+    "left": "How are these values spread?",
+    "right": "a distribution"
+   }
+  ],
+  "right_distractors": [
+   "an uptime check"
+  ]
+ },
+ {
+  "id": "ex-63mebefa",
+  "version": 1,
+  "section": "metrics",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The field of `google_logging_metric` that takes a label's value out of each entry is `label____`.",
+  "hint": "A plural word, after the underscore.",
+  "blanks": [
+   {
+    "accept": [
+     "extractors",
+     "_extractors"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-aa37sf7a",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the path of a \"payment retried\" line to a point on a chart in order.",
+  "hint": "The line is written before anything counts it.",
+  "items": [
+   "The API writes the JSON line",
+   "The entry is stored in a log bucket",
+   "The counter's filter matches it and its label is extracted",
+   "The minute's point is written to Cloud Monitoring"
+  ],
+  "trap": "Counting before the entry is stored is the slip: an excluded entry is never counted."
+ },
+ {
+  "id": "ex-3h66eb5c",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Both payment methods retried in similar numbers during the bad patch. What does that suggest?",
+  "hint": "What would one provider failing look like?",
+  "choices": [
+   {
+    "text": "The pix provider failed",
+    "correct": false,
+    "why": "Card retried just as much."
+   },
+   {
+    "text": "The label extractor is broken",
+    "correct": false,
+    "why": "Both values came out as expected."
+   },
+   {
+    "text": "A cause upstream of both",
+    "correct": true,
+    "why": "Right. The checkout's own call, not one provider."
+   },
+   {
+    "text": "Nothing: retries are normal",
+    "correct": false,
+    "why": "Ten times the background is not normal."
+   }
+  ]
+ }
+]

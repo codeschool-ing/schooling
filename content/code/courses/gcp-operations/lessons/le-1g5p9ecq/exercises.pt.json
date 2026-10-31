@@ -1,0 +1,240 @@
+{
+ "ex-kxb7wmfm": {
+  "prompt": "Qual é um bom SLI para a API da loja?",
+  "hint": "Escrito do lado de quem usa.",
+  "choices": [
+   {
+    "text": "Uso de CPU das instâncias do Cloud Run",
+    "why": "Ninguém sente CPU; sente requisições que falham ou demoram."
+   },
+   {
+    "text": "Fração de requisições sem nenhum 5xx",
+    "why": "Certo. Uma razão de eventos bons, como quem usa os vê."
+   },
+   {
+    "text": "O número de instâncias rodando",
+    "why": "Uma contagem de máquinas não diz nada sobre quem usa."
+   },
+   {
+    "text": "O número de deploys desta semana",
+    "why": "Isso é métrica de entrega, não de qualidade do serviço."
+   }
+  ]
+ },
+ "ex-7nvhcd6s": {
+  "prompt": "A API caiu e as requisições nunca chegam a ela. Onde o SLI precisa ser medido para contá-las como falhas?",
+  "hint": "Dentro da API, elas nem são vistas.",
+  "choices": [
+   {
+    "text": "Dentro da API, no próprio código",
+    "why": "Uma API morta não conta nada; o SLI parece perfeito."
+   },
+   {
+    "text": "Na frente da API, na entrada",
+    "why": "Certo. É onde o request_count é medido."
+   },
+   {
+    "text": "No banco de dados",
+    "why": "O banco nunca vê requisições que não chegaram."
+   },
+   {
+    "text": "No Error Reporting",
+    "why": "Ele agrupa erros registrados, e estes não foram."
+   }
+  ]
+ },
+ "ex-b5zpf6vh": {
+  "prompt": "O que separa um SLO de um SLA?",
+  "hint": "Um é interno.",
+  "choices": [
+   {
+    "text": "Um SLA é medido numa janela mais curta",
+    "why": "Janelas variam; a diferença é a promessa."
+   },
+   {
+    "text": "Um SLO é escrito em porcentagem e um SLA em minutos",
+    "why": "Qualquer um pode ser escrito de qualquer jeito."
+   },
+   {
+    "text": "O SLA promete algo, com consequência",
+    "why": "Certo. E o SLO é mais apertado, para perceber antes."
+   },
+   {
+    "text": "Um SLO se aplica só a latência",
+    "why": "Qualquer SLI pode ter um SLO."
+   }
+  ]
+ },
+ "ex-h3ahzsce": {
+  "prompt": "Um serviço atende 1.000.000 de requisições na janela, com SLO de 99,5%. Quantas requisições é o orçamento de erro?",
+  "hint": "0,5% das requisições.",
+  "unit": "requisições"
+ },
+ "ex-4r9kd8vz": {
+  "prompt": "O que significa uma taxa de queima de 1?",
+  "hint": "Comparada ao ritmo que a meta permite.",
+  "choices": [
+   {
+    "text": "Uma requisição falhou",
+    "why": "Uma taxa é uma razão, não uma contagem."
+   },
+   {
+    "text": "O orçamento acabou",
+    "why": "Isso é o estado depois da queima, não o ritmo."
+   },
+   {
+    "text": "O orçamento duraria exatamente a janela",
+    "why": "Certo. Abaixo de 1 poupa; acima de 1 gasta antes."
+   },
+   {
+    "text": "1% das requisições está falhando",
+    "why": "Para uma meta de 99,5% isso seria taxa de queima 2."
+   }
+  ]
+ },
+ "ex-9rjmcxx8": {
+  "prompt": "O dia 19 queimou a 4,77 em média no dia. O que essa média esconde?",
+  "hint": "As falhas vieram numa tarde.",
+  "choices": [
+   {
+    "text": "Algumas horas que queimaram bem mais rápido",
+    "why": "Certo. Um número diário espalha uma tarde ruim por 24 horas."
+   },
+   {
+    "text": "Que o SLO foi perdido naquele dia",
+    "why": "O SLO é de 28 dias, e foi cumprido."
+   },
+   {
+    "text": "Uma taxa de queima abaixo de 1 no resto do mês",
+    "why": "Esses dias aparecem separados; a média não esconde nada sobre eles."
+   },
+   {
+    "text": "Nada: a média é a história inteira",
+    "why": "Médias achatam picos, como a lição 8 mostrou."
+   }
+  ]
+ },
+ "ex-267enn5g": {
+  "prompt": "Com 5% do orçamento de erro restante, o que a loja faz?",
+  "hint": "Aritmética em vez de opinião.",
+  "choices": [
+   {
+    "text": "Sobe a meta para 99,9% para compensar",
+    "why": "Uma meta mais apertada sem orçamento é uma meta já perdida."
+   },
+   {
+    "text": "Congela releases arriscados",
+    "why": "Certo. Até a janela passar dos dias ruins."
+   },
+   {
+    "text": "Nada até o primeiro dia do mês seguinte",
+    "why": "A janela é móvel; não há reinício mensal."
+   },
+   {
+    "text": "Entrega mais rápido para usar o resto",
+    "why": "5% restantes é o sinal para desacelerar."
+   }
+  ]
+ },
+ "ex-ktyctx40": {
+  "prompt": "Com janela móvel de 28 dias, em que dia as falhas do dia 19 deixam de contar contra o orçamento?",
+  "hint": "19 mais 28."
+ },
+ "ex-zxv4e24m": {
+  "prompt": "Por que alertar sobre a taxa de queima em vez do SLI em cinco minutos?",
+  "hint": "Um soluço, ou um gasto real?",
+  "choices": [
+   {
+    "text": "Taxas de queima são mais baratas de calcular",
+    "why": "Custo não é o motivo."
+   },
+   {
+    "text": "Só chama com risco real",
+    "why": "Certo. Um SLI de cinco minutos chama a cada soluço."
+   },
+   {
+    "text": "O Cloud Monitoring não consegue alertar sobre um SLI",
+    "why": "Consegue; só é a pergunta errada."
+   },
+   {
+    "text": "O SLI só é conhecido no fim da janela",
+    "why": "Ele é calculado continuamente."
+   }
+  ]
+ },
+ "ex-r01cbnz3": {
+  "prompt": "Por que a política de queima rápida também precisa da condição de 5 minutos, unida por AND?",
+  "hint": "Ainda está acontecendo?",
+  "choices": [
+   {
+    "text": "Para pegar incidentes de menos de cinco minutos",
+    "why": "Com AND, um pico curto sozinho não dispara."
+   },
+   {
+    "text": "Porque uma condição por política não é permitida",
+    "why": "Uma condição é permitida."
+   },
+   {
+    "text": "Para um incidente que já acabou não continuar chamando",
+    "why": "Certo. A média da hora fica alta depois da correção; os cinco minutos não."
+   },
+   {
+    "text": "Para dobrar o limite para 28,8",
+    "why": "As duas condições usam 14,4; nada dobra."
+   }
+  ]
+ },
+ "ex-4yq2erpt": {
+  "prompt": "Uma taxa de queima de 14,4 dura uma hora contra uma janela de 28 dias (672 horas). Que porcentagem do orçamento inteiro é gasta?",
+  "hint": "14,4 dividido por 672, em porcentagem.",
+  "unit": "%"
+ },
+ "ex-zdk90baz": {
+  "prompt": "A função que uma condição usa para ler a taxa de queima de um SLO é `select_slo____`.",
+  "hint": "Duas palavras unidas por sublinhado, depois de slo.",
+  "blanks": [
+   {
+    "accept": [
+     "_burn_rate",
+     "burn_rate"
+    ]
+   }
+  ]
+ },
+ "ex-7gj7sdpq": {
+  "prompt": "Ligue cada termo ao valor da loja.",
+  "hint": "Um valor da direita não pertence a nenhum.",
+  "pairs": [
+   {
+    "left": "SLI",
+    "right": "fração de requisições sem 5xx"
+   },
+   {
+    "left": "SLO",
+    "right": "99,5% em 28 dias"
+   },
+   {
+    "left": "orçamento de erro",
+    "right": "0,5% das requisições da janela"
+   },
+   {
+    "left": "SLA",
+    "right": "nenhum: a loja não vende garantia"
+   }
+  ],
+  "right_distractors": [
+   "90% de CPU"
+  ]
+ },
+ "ex-607dx03p": {
+  "prompt": "Ponha em ordem a construção do SLO da loja.",
+  "hint": "Decida o que é bom antes de definir uma meta para isso.",
+  "items": [
+   "Decidir o que é uma requisição boa",
+   "Escolher onde medi-la",
+   "Definir a meta e a janela",
+   "Alertar sobre a taxa de queima"
+  ],
+  "trap": "Definir 99,5% antes de decidir o que conta como bom é o deslize: o número ainda não mediria nada."
+ }
+}

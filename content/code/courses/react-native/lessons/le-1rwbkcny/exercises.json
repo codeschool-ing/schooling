@@ -1,0 +1,629 @@
+[
+  {
+    "id": "ex-enjmbg4x",
+    "version": 1,
+    "section": "what-runs-where",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On an Android phone, what does a React Native `<Text>` become?",
+    "choices": [
+      {
+        "text": "A `<p>` element inside a WebView the app hides",
+        "correct": false,
+        "why": "There is no WebView: nothing in a React Native app draws HTML."
+      },
+      {
+        "text": "Kotlin source that the build generates from the component",
+        "correct": false,
+        "why": "Your components are never translated into Kotlin; they run as JavaScript."
+      },
+      {
+        "text": "A `TextView`",
+        "correct": true,
+        "why": "Right: the platform's own label, the one a Kotlin app would create."
+      },
+      {
+        "text": "A bitmap that Hermes paints",
+        "correct": false,
+        "why": "Hermes runs code; the platform draws its own views."
+      }
+    ]
+  },
+  {
+    "id": "ex-andvgz8g",
+    "version": 1,
+    "section": "what-runs-where",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component runs a loop that takes two seconds. What does the person holding the phone notice?",
+    "choices": [
+      {
+        "text": "Scrolling still works, but presses get no answer until the loop ends",
+        "correct": true,
+        "why": "Right: native scrolling lives on the main thread, and every answer you wrote waits for the JavaScript thread."
+      },
+      {
+        "text": "The whole app freezes, scrolling included, and Android offers to close it",
+        "correct": false,
+        "why": "That is the main thread blocked. The loop blocks the JavaScript thread, which is a different one."
+      },
+      {
+        "text": "Nothing, because Hermes moves long loops to a background thread",
+        "correct": false,
+        "why": "Hermes runs your code on one thread and moves nothing."
+      },
+      {
+        "text": "The app restarts",
+        "correct": false,
+        "why": "A slow loop is not a crash."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjsadn5b",
+    "version": 1,
+    "section": "what-runs-where",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each step of putting a component on screen with where it happens.",
+    "pairs": [
+      {
+        "left": "render: your components return elements",
+        "right": "the JavaScript thread"
+      },
+      {
+        "left": "layout: flexbox becomes sizes and positions",
+        "right": "Yoga, in C++"
+      },
+      {
+        "left": "mount: native views are created or updated",
+        "right": "the main thread"
+      }
+    ],
+    "right_distractors": [
+      "a WebView"
+    ]
+  },
+  {
+    "id": "ex-hzfh2asq",
+    "version": 1,
+    "section": "what-runs-where",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which thread may create or change a native view?",
+    "choices": [
+      {
+        "text": "Any thread, as long as it holds a reference to the view",
+        "correct": false,
+        "why": "Both platforms refuse view changes from other threads."
+      },
+      {
+        "text": "The JavaScript thread",
+        "correct": false,
+        "why": "That is where React decides what changes; it hands the result over."
+      },
+      {
+        "text": "Yoga's thread",
+        "correct": false,
+        "why": "Yoga computes sizes and positions; it owns no thread and touches no view."
+      },
+      {
+        "text": "The main thread",
+        "correct": true,
+        "why": "Right, and that is why a native module that draws hands its work to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xm2bg8a",
+    "version": 1,
+    "section": "the-bridge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the old bridge, why could JavaScript not ask native code for a view's size and use it in the next line?",
+    "choices": [
+      {
+        "text": "Views had no size until the app was restarted",
+        "correct": false,
+        "why": "They had one; the problem was getting it back."
+      },
+      {
+        "text": "Every call was a queued message, and the answer arrived later in a callback",
+        "correct": true,
+        "why": "Right: the bridge was asynchronous by design."
+      },
+      {
+        "text": "Measuring was forbidden on Android",
+        "correct": false,
+        "why": "Both platforms measure views all the time."
+      },
+      {
+        "text": "JSON cannot represent a number",
+        "correct": false,
+        "why": "It can; the delay came from the queue, not the format."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpbfdt05",
+    "version": 1,
+    "section": "the-bridge",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these were costs of the old bridge? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Data crossing it was serialised to JSON and copied",
+        "correct": true,
+        "why": "Yes: a large array crossed as text."
+      },
+      {
+        "text": "Every native module was created when the app opened",
+        "correct": true,
+        "why": "Yes: the bridge needed its table of modules up front."
+      },
+      {
+        "text": "Components had to be written in Objective-C",
+        "why": "Components were JavaScript then as now."
+      },
+      {
+        "text": "A JavaScript-driven animation stuttered when the JavaScript thread was busy",
+        "correct": true,
+        "why": "Yes: each frame was a message too."
+      }
+    ]
+  },
+  {
+    "id": "ex-fhntx61k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 2021 blog post advises sending fewer, larger messages \"to reduce bridge traffic\". What should you conclude for an app on React Native 0.88?",
+    "choices": [
+      {
+        "text": "Follow it exactly: the bridge is still there, just renamed",
+        "correct": false,
+        "why": "There is no bridge in 0.88; JSI calls are not queued messages."
+      },
+      {
+        "text": "Its mechanism no longer exists; keep only the part about not blocking the JavaScript thread",
+        "correct": true,
+        "why": "Right: the bridge is gone, and the thread it ran on is still one thread."
+      },
+      {
+        "text": "Ignore everything written before 2024 about React Native",
+        "correct": false,
+        "why": "Components and hooks are written as they were; most of it still applies."
+      },
+      {
+        "text": "Turn the bridge back on for the screens that send lots of data",
+        "correct": false,
+        "why": "Since 0.82 the old architecture cannot be turned on at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw6y7jz3",
+    "version": 1,
+    "section": "new-architecture",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the new architecture with what it does.",
+    "pairs": [
+      {
+        "left": "JSI",
+        "right": "lets JavaScript call a C++ object directly"
+      },
+      {
+        "left": "Fabric",
+        "right": "keeps the tree of views and mounts native views"
+      },
+      {
+        "left": "TurboModules",
+        "right": "native modules created on first use"
+      },
+      {
+        "left": "Codegen",
+        "right": "writes the glue from a typed spec at build time"
+      }
+    ],
+    "right_distractors": [
+      "serialises calls to JSON in batches"
+    ]
+  },
+  {
+    "id": "ex-67fpt3rw",
+    "version": 1,
+    "section": "new-architecture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A native module's `getString()` is called through JSI and does 300 ms of disk work before returning. What happens?",
+    "choices": [
+      {
+        "text": "Hermes refuses the call because it is too slow",
+        "correct": false,
+        "why": "Nothing measures or refuses it."
+      },
+      {
+        "text": "Nothing waits, because JSI moves synchronous calls to a background queue",
+        "correct": false,
+        "why": "JSI calls the function directly on the calling thread; it queues nothing."
+      },
+      {
+        "text": "The main thread waits, and the screen freezes",
+        "correct": false,
+        "why": "The call runs on the JavaScript thread, not the main one."
+      },
+      {
+        "text": "The JavaScript thread waits the 300 ms",
+        "correct": true,
+        "why": "Right: a synchronous call removes the overhead of crossing, not the cost of the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-djq4wedd",
+    "version": 1,
+    "section": "new-architecture",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An app has forty libraries installed and its first screen uses three native modules. With TurboModules, which are created at launch?",
+    "choices": [
+      {
+        "text": "The three the first screen calls",
+        "correct": true,
+        "why": "Right: each is created the first time JavaScript asks for it."
+      },
+      {
+        "text": "All forty, so that any of them can be called",
+        "correct": false,
+        "why": "That was the bridge's table. TurboModules wait to be asked for."
+      },
+      {
+        "text": "None until the user grants a permission",
+        "correct": false,
+        "why": "Permissions have nothing to do with when modules are created."
+      },
+      {
+        "text": "Only the ones written in C++",
+        "correct": false,
+        "why": "The language a module is written in does not decide when it is created."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pvea8da",
+    "version": 1,
+    "section": "new-architecture",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the new architecture, ___ generates the C++ glue between JavaScript and a native module from a typed TypeScript spec.",
+    "blanks": [
+      {
+        "accept": [
+          "Codegen",
+          "codegen"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x9ncrw86",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants to keep the old architecture on a React Native 0.88 project \"to be safe\". What is the honest answer?",
+    "choices": [
+      {
+        "text": "Set `newArchEnabled=false` in `gradle.properties` and it goes back",
+        "correct": false,
+        "why": "That switch stopped having that effect in 0.82, when the old architecture was removed."
+      },
+      {
+        "text": "It is the default and cannot be changed, but Expo can change it",
+        "correct": false,
+        "why": "Expo runs on the same React Native; it cannot bring back what was removed."
+      },
+      {
+        "text": "Nothing of the kind exists any more: 0.82 removed it",
+        "correct": true,
+        "why": "Right. Since 0.82 the new architecture is the only one."
+      },
+      {
+        "text": "Only on iOS, where the bridge is still the default",
+        "correct": false,
+        "why": "Both platforms changed together."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbk2nzbp",
+    "version": 1,
+    "section": "the-boundary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these needs a Mac?",
+    "choices": [
+      {
+        "text": "The iOS simulator",
+        "correct": true,
+        "why": "Right: it comes with Xcode, which Apple licenses for macOS alone."
+      },
+      {
+        "text": "Building the Android app",
+        "correct": false,
+        "why": "The Android SDK runs on Linux, Windows and macOS."
+      },
+      {
+        "text": "Running the app's tests with Jest",
+        "correct": false,
+        "why": "Jest runs on Node.js, on any computer."
+      },
+      {
+        "text": "Opening the app's web build in a browser",
+        "correct": false,
+        "why": "Any browser on any computer does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-4sr5zcyq",
+    "version": 1,
+    "section": "the-boundary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A lesson says, in italics, that a step was not run. What does that tell you about the step?",
+    "choices": [
+      {
+        "text": "It does not work, and you should skip it",
+        "correct": false,
+        "why": "It works where the hardware exists; the recording computer lacked it."
+      },
+      {
+        "text": "Its output was shortened and simplified to fit the page",
+        "correct": false,
+        "why": "A step that was not run has no output to simplify."
+      },
+      {
+        "text": "It is taught from the platform's documentation, with no transcript",
+        "correct": true,
+        "why": "Right: a transcript of something that never ran would be invented."
+      },
+      {
+        "text": "It costs money",
+        "correct": false,
+        "why": "Some such steps cost money and most do not; the italics say only that it was not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-beq9m3vf",
+    "version": 1,
+    "section": "your-computer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Windows with WSL 2, `npm install` takes minutes for a project that installs in seconds elsewhere. What is the likely cause?",
+    "choices": [
+      {
+        "text": "WSL 2 cannot run Node.js 22",
+        "correct": false,
+        "why": "It runs it; the transcripts of this course came from the same Linux binary."
+      },
+      {
+        "text": "It lives under `/mnt/c`, across the boundary",
+        "correct": true,
+        "why": "Right: many small files across that boundary are slow. Move it into `~`."
+      },
+      {
+        "text": "npm is downloading the Android SDK with the packages",
+        "correct": false,
+        "why": "npm never installs the Android SDK."
+      },
+      {
+        "text": "Expo needs an account before installing",
+        "correct": false,
+        "why": "No account is involved in installing packages."
+      }
+    ]
+  },
+  {
+    "id": "ex-jj0vs1je",
+    "version": 1,
+    "section": "your-computer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this course recommend installing on your own computer over a virtual machine?",
+    "choices": [
+      {
+        "text": "Expo refuses to run inside a virtual machine",
+        "correct": false,
+        "why": "It runs there; the trouble is reaching it from a phone and running an emulator."
+      },
+      {
+        "text": "A virtual machine needs a paid licence",
+        "correct": false,
+        "why": "VirtualBox and UTM are free."
+      },
+      {
+        "text": "The course's commands are written for macOS",
+        "correct": false,
+        "why": "They were recorded on Linux and work on all three systems."
+      },
+      {
+        "text": "Full speed, your own browser, and a phone on the same Wi-Fi reaches it directly",
+        "correct": true,
+        "why": "Right: each of those is harder inside a virtual machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-cst7a3q6",
+    "version": 1,
+    "section": "first-look",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `file` call the `.hbc` that `npx expo export --platform android` wrote?",
+    "choices": [
+      {
+        "text": "ELF 64-bit ARM executable",
+        "correct": false,
+        "why": "That would be machine code, which React Native does not produce from your JavaScript."
+      },
+      {
+        "text": "JavaScript source, UTF-8 text",
+        "correct": false,
+        "why": "The text was compiled before it was written out."
+      },
+      {
+        "text": "Hermes JavaScript bytecode",
+        "correct": true,
+        "why": "Right: bytecode for the engine the app carries."
+      },
+      {
+        "text": "Java archive data (JAR)",
+        "correct": false,
+        "why": "Kotlin and Java ship in other files of the app; your code is not among them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zq46zrc",
+    "version": 1,
+    "section": "first-look",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course write `--template blank-typescript@sdk-58` rather than leaving the version off?",
+    "choices": [
+      {
+        "text": "Without it you get the newest template, which follows Expo and not the course",
+        "correct": true,
+        "why": "Right: pinning keeps your project matching every transcript."
+      },
+      {
+        "text": "Without it the template is JavaScript instead of TypeScript",
+        "correct": false,
+        "why": "`blank-typescript` already decides the language; `@sdk-58` decides the release."
+      },
+      {
+        "text": "Version 58 is the last one that works offline",
+        "correct": false,
+        "why": "No version is chosen for that reason."
+      },
+      {
+        "text": "npx refuses a template without a version",
+        "correct": false,
+        "why": "It accepts one and takes the newest."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgz3kyvw",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom with its usual cause.",
+    "pairs": [
+      {
+        "left": "`command not found` just after installing Node.js",
+        "right": "the terminal predates the change to PATH"
+      },
+      {
+        "left": "npm says `EACCES`",
+        "right": "a folder an earlier `sudo npm` left to root"
+      },
+      {
+        "left": "`ENOSPC` while the development server starts on Linux",
+        "right": "too few file watchers allowed"
+      },
+      {
+        "left": "a certificate error on an office network",
+        "right": "traffic re-signed by the network"
+      }
+    ],
+    "right_distractors": [
+      "the disk is out of space"
+    ]
+  },
+  {
+    "id": "ex-twb0x3st",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`npm install` fails behind your office network with a certificate error. Which fix is the right one?",
+    "choices": [
+      {
+        "text": "Turn off strict SSL in npm's settings",
+        "correct": false,
+        "why": "That makes every download accept anybody's answer, for good."
+      },
+      {
+        "text": "Run npm with `sudo`",
+        "correct": false,
+        "why": "Root trusts the same certificates you do; it only creates permission problems."
+      },
+      {
+        "text": "Install an older Node.js that does not check certificates",
+        "correct": false,
+        "why": "Every Node.js checks them, and an old one brings its own problems."
+      },
+      {
+        "text": "Ask its administrators for their CA file and point `NODE_EXTRA_CA_CERTS` at it",
+        "correct": true,
+        "why": "Right: Node.js then trusts that one certificate and still checks everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2b43252",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A person taps a button whose handler changes some state. Put what happens in order.",
+    "items": [
+      "the touch arrives on the main thread",
+      "the handler runs on the JavaScript thread",
+      "React renders the components again",
+      "Yoga computes the new layout",
+      "the main thread mounts the changed views"
+    ]
+  },
+  {
+    "id": "ex-bm3a71sm",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After how many seconds of a blocked main thread does Android show its Application Not Responding dialog?",
+    "value": 5,
+    "tolerance": 0
+  }
+]

@@ -1,0 +1,253 @@
+{
+ "ex-88pnmc07": {
+  "prompt": "Duas séries têm o tipo de métrica `run.googleapis.com/request_count` mas diferem em `response_code_class`. Quantas séries são?",
+  "hint": "Mude qualquer rótulo e é outra série.",
+  "choices": [
+   {
+    "text": "Uma, com dois valores por ponto",
+    "why": "Um ponto guarda um valor; o rótulo cria uma segunda série."
+   },
+   {
+    "text": "Duas",
+    "why": "Certo. Cada combinação de rótulos é uma série própria."
+   },
+   {
+    "text": "Uma, porque o tipo de métrica é o mesmo",
+    "why": "O tipo é uma das três partes do nome, não o nome inteiro."
+   },
+   {
+    "text": "Nenhuma até um redutor combiná-las",
+    "why": "Elas existem como séries antes de qualquer redutor."
+   }
+  ]
+ },
+ "ex-51extrm4": {
+  "prompt": "Um processo exporta o total de pedidos desde que começou. Que tipo é esse?",
+  "hint": "Só cresce, até um reinício.",
+  "choices": [
+   {
+    "text": "GAUGE",
+    "why": "Um gauge é um valor num instante, como memória em uso."
+   },
+   {
+    "text": "DELTA",
+    "why": "Um delta é o que aconteceu num intervalo só."
+   },
+   {
+    "text": "CUMULATIVE",
+    "why": "Certo. Um total desde um início."
+   },
+   {
+    "text": "DISTRIBUTION",
+    "why": "Distribution é um tipo de valor, um histograma, não um kind."
+   }
+  ]
+ },
+ "ex-100cczsx": {
+  "prompt": "Qual destes a loja paga para enviar ao Cloud Monitoring?",
+  "hint": "As métricas do próprio Google são gratuitas para receber.",
+  "choices": [
+   {
+    "text": "run.googleapis.com/request_count",
+    "why": "O Google a publica; não é cobrada."
+   },
+   {
+    "text": "Uma métrica própria que o código dela escreve",
+    "why": "Certo. Cobrada por MiB recebido, depois de 150 grátis."
+   },
+   {
+    "text": "Os resultados do uptime check, como métricas",
+    "why": "As execuções são cobradas, não a métrica resultante."
+   },
+   {
+    "text": "As contagens de instâncias das revisões do Cloud Run",
+    "why": "Também é métrica do Google, e grátis."
+   }
+  ]
+ },
+ "ex-q10z4hky": {
+  "prompt": "No minuto 10 o contador cresceu 624. Qual é o `ALIGN_RATE` por segundo no período de 60 segundos?",
+  "hint": "Delta dividido pelos segundos do período.",
+  "unit": "por segundo"
+ },
+ "ex-48b80fcj": {
+  "prompt": "A latência média é cerca de 90 ms e a mediana 45 a 50 ms. O que a média descreve?",
+  "hint": "Onde alguma requisição caiu de fato?",
+  "choices": [
+   {
+    "text": "Uma requisição típica da loja",
+    "why": "A requisição típica é a mediana, perto de 50 ms."
+   },
+   {
+    "text": "As requisições lentas",
+    "why": "Essas levaram 2.400 ms, o p99."
+   },
+   {
+    "text": "Nenhuma requisição real",
+    "why": "Certo. É puxada para os dois lados e cai onde ninguém estava."
+   },
+   {
+    "text": "O pior minuto dos dez",
+    "why": "Cada linha tem a própria média; nenhuma é o pior minuto."
+   }
+  ]
+ },
+ "ex-2xwxpwjm": {
+  "prompt": "Uma queda de dois minutos aconteceu ontem, e o painel da semana com período de alinhamento de uma hora não mostra nada. Por quê?",
+  "hint": "O que um ponto por hora guarda?",
+  "choices": [
+   {
+    "text": "O Cloud Monitoring descarta dados com mais de um dia",
+    "why": "O dado é guardado; é resumido pelo período."
+   },
+   {
+    "text": "Dois minutos foram diluídos numa hora",
+    "why": "Certo. Um período de um minuto mostraria."
+   },
+   {
+    "text": "Quedas só são registradas por uptime checks",
+    "why": "As métricas de requisição também registraram, na resolução de minuto."
+   },
+   {
+    "text": "O redutor removeu a revisão com falha",
+    "why": "Uma soma mantém a contribuição de cada série."
+   }
+  ]
+ },
+ "ex-hjrajz2b": {
+  "prompt": "Três instâncias relatam p99 de 60, 70 e 2.000 ms. Qual é o p99 do serviço?",
+  "hint": "Percentis podem ser tirados em média?",
+  "choices": [
+   {
+    "text": "710 ms, a média das três",
+    "why": "Uma média de percentis não é um percentil."
+   },
+   {
+    "text": "2.000 ms, o maior",
+    "why": "Só se aquela instância servisse a maior parte do tráfego."
+   },
+   {
+    "text": "70 ms, o do meio",
+    "why": "A mediana de três percentis também não é a do serviço."
+   },
+   {
+    "text": "Não dá para saber com esses três",
+    "why": "Certo. Combine as distribuições primeiro, depois leia o percentil."
+   }
+  ]
+ },
+ "ex-cgva8ccs": {
+  "prompt": "Ponha os passos do primeiro gráfico do painel na ordem em que o Cloud Monitoring os aplica.",
+  "hint": "Por série primeiro, entre séries por último.",
+  "items": [
+   "Selecionar séries pelo filtro",
+   "Alinhar cada série a uma taxa em 60 segundos",
+   "Agrupar por response_code_class",
+   "Somar as séries de cada grupo"
+  ],
+  "trap": "Somar antes de alinhar é o deslize: contadores cumulativos com inícios diferentes não podem ser somados."
+ },
+ "ex-9ks7w6ec": {
+  "prompt": "O processo da API caiu e não exporta métricas. Qual destes ainda percebe?",
+  "hint": "Ele pergunta de fora.",
+  "choices": [
+   {
+    "text": "O uptime check",
+    "why": "Certo. Não depende de nada que o processo relate."
+   },
+   {
+    "text": "Um gráfico das métricas próprias do processo",
+    "why": "Um processo morto não escreve nada, então o gráfico só para."
+   },
+   {
+    "text": "A linha de latência p99 do painel",
+    "why": "Sem requisições servidas não há latências registradas."
+   },
+   {
+    "text": "Um redutor agrupado por revisão",
+    "why": "Ele só combina séries que existem."
+   }
+  ]
+ },
+ "ex-129dn64h": {
+  "prompt": "O `/healthz` da loja é mudado para consultar o banco. O banco fica lento. O que o uptime check relata?",
+  "hint": "Para que serve um uptime check?",
+  "choices": [
+   {
+    "text": "Nada: health checks ignoram respostas lentas",
+    "why": "Uma resposta lenta além do timeout é uma falha."
+   },
+   {
+    "text": "Um alerta preciso nomeando o banco",
+    "why": "Ele nomeia a URL; não sabe nada do banco."
+   },
+   {
+    "text": "Site fora do ar em todas as regiões",
+    "why": "Certo. Por isso o /healthz só verifica o processo."
+   },
+   {
+    "text": "Um aviso só da região mais perto do banco",
+    "why": "Toda região pergunta a mesma URL e vê a mesma lentidão."
+   }
+  ]
+ },
+ "ex-32et3ny6": {
+  "prompt": "Um uptime check roda a cada 5 minutos a partir de 3 regiões. Quantas execuções são num mês de 730 horas?",
+  "hint": "Regiões vezes execuções por hora vezes horas."
+ },
+ "ex-7k6fbkm3": {
+  "prompt": "No JSON do painel, o alinhador que divide o crescimento de cada intervalo pelos segundos dele é `ALIGN____`.",
+  "hint": "Quatro letras, depois do sublinhado.",
+  "blanks": [
+   {
+    "accept": [
+     "RATE"
+    ]
+   }
+  ]
+ },
+ "ex-xtznz8y9": {
+  "prompt": "Quais destes a lição rodou no seu computador? Escolha todos os que se aplicam.",
+  "hint": "Aritmética e planos, sim; o serviço do Google, não.",
+  "choices": [
+   {
+    "text": "A aritmética dos alinhadores sobre dados gerados",
+    "why": "Sim, align.py."
+   },
+   {
+    "text": "O plano do Terraform de um uptime check",
+    "why": "Sim, calculado localmente."
+   },
+   {
+    "text": "Um uptime check perguntando à loja de três regiões",
+    "why": "Não. Nada executa checks localmente."
+   },
+   {
+    "text": "Um painel desenhado pelo Cloud Monitoring",
+    "why": "Não. Só o JSON dele foi planejado."
+   }
+  ]
+ },
+ "ex-g0excwyp": {
+  "prompt": "Alertas de latência olham o p99 ao longo de vários minutos em vez de um ponto. Que linha da saída do align.py mostra por quê?",
+  "hint": "Um minuto parece saudável e não é diferente.",
+  "choices": [
+   {
+    "text": "O minuto 1, onde a média é mais alta",
+    "why": "Uma média alta não é a lição sobre pontos isolados."
+   },
+   {
+    "text": "O minuto 5, onde o p99 cai para 55 por acaso",
+    "why": "Certo. Um minuto calmo zeraria um alerta de um ponto."
+   },
+   {
+    "text": "O minuto 4, o mais movimentado",
+    "why": "O nível de tráfego não muda a história do percentil aqui."
+   },
+   {
+    "text": "O minuto 10, o último",
+    "why": "Nada nele difere dos outros."
+   }
+  ]
+ }
+}

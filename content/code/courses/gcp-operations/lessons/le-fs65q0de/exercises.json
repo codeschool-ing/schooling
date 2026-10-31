@@ -1,0 +1,402 @@
+[
+ {
+  "id": "ex-crnky3f7",
+  "version": 1,
+  "section": "structured",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A container on Cloud Run prints `level=error msg=\"stock lookup failed\"`. What severity does the entry get?",
+  "hint": "Where does Cloud Logging read a severity from?",
+  "choices": [
+   {
+    "text": "ERROR, from the word after level=",
+    "correct": false,
+    "why": "Cloud Logging does not parse text; only a JSON field named severity counts."
+   },
+   {
+    "text": "DEFAULT",
+    "correct": true,
+    "why": "Right. It is plain text with no severity field."
+   },
+   {
+    "text": "INFO, the default for standard output",
+    "correct": false,
+    "why": "The default is DEFAULT, below INFO."
+   },
+   {
+    "text": "WARNING, because the line mentions a failure",
+    "correct": false,
+    "why": "Nothing reads the words of the line."
+   }
+  ]
+ },
+ {
+  "id": "ex-j9ggng4z",
+  "version": 1,
+  "section": "structured",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A program writes JSON lines with the field `level` instead of `severity`. What breaks?",
+  "hint": "Cloud Logging knows one of those names.",
+  "choices": [
+   {
+    "text": "Nothing: Cloud Logging accepts both names",
+    "correct": false,
+    "why": "Only severity is read; level stays an ordinary payload field."
+   },
+   {
+    "text": "The entries are rejected as malformed",
+    "correct": false,
+    "why": "They are stored; that is why nobody notices."
+   },
+   {
+    "text": "Every entry has no severity, so alerts on errors never match",
+    "correct": true,
+    "why": "Right. The entries are there and invisible to every severity filter."
+   },
+   {
+    "text": "The entries become textPayload",
+    "correct": false,
+    "why": "They are still JSON, so jsonPayload; only the severity is missing."
+   }
+  ]
+ },
+ {
+  "id": "ex-sgrrcp7t",
+  "version": 1,
+  "section": "structured",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A Python stack trace is printed over twenty lines on standard error. How does it arrive in Cloud Logging?",
+  "hint": "One line, one entry.",
+  "choices": [
+   {
+    "text": "As twenty separate text entries",
+    "correct": true,
+    "why": "Right. Lesson 11 writes it inside one entry instead."
+   },
+   {
+    "text": "As one entry, joined by Cloud Logging",
+    "correct": false,
+    "why": "Cloud Logging does not join lines for a plain container log."
+   },
+   {
+    "text": "As one ERROR entry, because it is standard error",
+    "correct": false,
+    "why": "The stream does not make twenty lines one entry."
+   },
+   {
+    "text": "Not at all: standard error is not collected",
+    "correct": false,
+    "why": "Both streams are collected."
+   }
+  ]
+ },
+ {
+  "id": "ex-6hmwzk2s",
+  "version": 1,
+  "section": "filters",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which entries does `severity>=WARNING` select from logdemo.py's three lines?",
+  "hint": "The third line has no severity.",
+  "choices": [
+   {
+    "text": "The WARNING line and the level=error line",
+    "correct": false,
+    "why": "The level=error line is DEFAULT, below WARNING."
+   },
+   {
+    "text": "Only the WARNING line, as jq showed",
+    "correct": true,
+    "why": "Right. One entry, as the jq run showed."
+   },
+   {
+    "text": "All three, since every line was written by the shop",
+    "correct": false,
+    "why": "The filter is about severity, not authorship."
+   },
+   {
+    "text": "None: >= cannot be used on severity",
+    "correct": false,
+    "why": "Severities are ordered precisely so that it can."
+   }
+  ]
+ },
+ {
+  "id": "ex-3hnf2cby",
+  "version": 1,
+  "section": "filters",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "An entry has no `httpRequest` field. Does `httpRequest.status>=200` match it?",
+  "hint": "A missing field compares as nothing.",
+  "choices": [
+   {
+    "text": "Yes, a missing number counts as zero",
+    "correct": false,
+    "why": "Zero would fail >=200 anyway; but missing does not match at all."
+   },
+   {
+    "text": "Yes, filters ignore fields an entry lacks",
+    "correct": false,
+    "why": "Ignoring would match everything; it does the opposite."
+   },
+   {
+    "text": "No, it does not match",
+    "correct": true,
+    "why": "Right. An entry without the field does not match, whatever the comparison."
+   },
+   {
+    "text": "The query is rejected as invalid",
+    "correct": false,
+    "why": "It is valid; it simply selects only entries with requests."
+   }
+  ]
+ },
+ {
+  "id": "ex-wn694szj",
+  "version": 1,
+  "section": "filters",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which query is the cheapest way to find the shop's warnings in a month of logs?",
+  "hint": "Indexed fields first.",
+  "choices": [
+   {
+    "text": "jsonPayload.message:\"warn\"",
+    "correct": false,
+    "why": "A contains search on the payload reads every entry."
+   },
+   {
+    "text": "textPayload=~\"(?i)warning\"",
+    "correct": false,
+    "why": "A regular expression over text is the slowest of all, and misses JSON entries."
+   },
+   {
+    "text": "resource.labels.service_name=\"shop-api\" severity=WARNING",
+    "correct": true,
+    "why": "Right. Resource and severity narrow the search quickly."
+   },
+   {
+    "text": "NOT severity=DEFAULT",
+    "correct": false,
+    "why": "That selects nearly everything, warnings and much more."
+   }
+  ]
+ },
+ {
+  "id": "ex-ae9kz3de",
+  "version": 1,
+  "section": "routing",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A new project's `_Default` bucket keeps entries for how long?",
+  "hint": "The retention pricing starts after it.",
+  "choices": [
+   {
+    "text": "400 days",
+    "correct": false,
+    "why": "That is _Required, for audit logs."
+   },
+   {
+    "text": "30 days, then gone",
+    "correct": true,
+    "why": "Right. Longer retention costs 0.01 USD per GiB per month."
+   },
+   {
+    "text": "90 days",
+    "correct": false,
+    "why": "That is the shop's own bucket, chosen in Terraform."
+   },
+   {
+    "text": "Until the project is deleted",
+    "correct": false,
+    "why": "_Default has a fixed default retention, not forever."
+   }
+  ]
+ },
+ {
+  "id": "ex-2c57jnkw",
+  "version": 1,
+  "section": "routing",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The error sink to Pub/Sub was applied, but no messages ever arrive. The lesson's last resource was left out. Why?",
+  "hint": "Who publishes to the topic?",
+  "choices": [
+   {
+    "text": "Sinks need a minute per entry to deliver",
+    "correct": false,
+    "why": "Delivery is near real time; something refuses it."
+   },
+   {
+    "text": "The sink's writer identity lacks permission to publish there",
+    "correct": true,
+    "why": "Right. Without the IAM binding it routes nothing."
+   },
+   {
+    "text": "Pub/Sub sinks accept only INFO entries",
+    "correct": false,
+    "why": "No such restriction exists."
+   },
+   {
+    "text": "The topic must be in another project",
+    "correct": false,
+    "why": "Same-project topics are fine."
+   }
+  ]
+ },
+ {
+  "id": "ex-6y0sb5h5",
+  "version": 1,
+  "section": "routing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What happens to an entry dropped by an exclusion?",
+  "hint": "Stored or not?",
+  "choices": [
+   {
+    "text": "It is stored but hidden from queries",
+    "correct": false,
+    "why": "It is not stored at all."
+   },
+   {
+    "text": "It is stored for 30 days, then deleted",
+    "correct": false,
+    "why": "That is _Default's retention, for entries that are kept."
+   },
+   {
+    "text": "It is never stored and never billed",
+    "correct": true,
+    "why": "Right. Which is why the healthz noise goes there."
+   },
+   {
+    "text": "It goes to the _Required bucket instead",
+    "correct": false,
+    "why": "_Required takes only its own audit logs."
+   }
+  ]
+ },
+ {
+  "id": "ex-eem7bchf",
+  "version": 1,
+  "section": "routing",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 25,
+  "tolerance": 0.01,
+  "prompt": "A project stores 100 GiB of logs in a month. At 0.50 USD per GiB after the first 50 GiB, what is the storage charge?",
+  "hint": "Subtract the free 50 first.",
+  "unit": "USD"
+ },
+ {
+  "id": "ex-z3tp129e",
+  "version": 1,
+  "section": "structured",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each JSON field to what Cloud Logging makes of it.",
+  "hint": "One right-hand item is not a special field.",
+  "pairs": [
+   {
+    "left": "severity",
+    "right": "the entry's severity"
+   },
+   {
+    "left": "message",
+    "right": "the text shown in a list of results"
+   },
+   {
+    "left": "logging.googleapis.com/trace",
+    "right": "the trace the entry belongs to"
+   },
+   {
+    "left": "httpRequest",
+    "right": "the entry's HTTP request"
+   }
+  ],
+  "right_distractors": [
+   "the entry's retention"
+  ]
+ },
+ {
+  "id": "ex-n9hpmy9z",
+  "version": 1,
+  "section": "routing",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A destination plus a filter, in the Log Router, is called a ___.",
+  "hint": "Four letters; the plan created two of them.",
+  "blanks": [
+   {
+    "accept": [
+     "sink"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-fxrxt23k",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Debug logging is left on in production and writes 1 GiB an hour. Roughly what does a 720-hour month add to the bill?",
+  "hint": "720 GiB, less 50 free, at 0.50 USD.",
+  "choices": [
+   {
+    "text": "Nothing: logs within 30 days are free",
+    "correct": false,
+    "why": "Storing is charged once, on arrival; the 30 days are included in it."
+   },
+   {
+    "text": "About 7 USD",
+    "correct": false,
+    "why": "That would be the retention rate, not the storage rate."
+   },
+   {
+    "text": "About 335 USD",
+    "correct": true,
+    "why": "Right. 670 GiB at 0.50 USD."
+   },
+   {
+    "text": "About 3,600 USD",
+    "correct": false,
+    "why": "Ten times too much: check the price per GiB."
+   }
+  ]
+ },
+ {
+  "id": "ex-cx2jphsc",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what happens to one of the shop's error lines in order.",
+  "hint": "From the program to the subscriber.",
+  "items": [
+   "The program prints one JSON line with severity ERROR",
+   "Cloud Run sends it to Cloud Logging",
+   "The Log Router matches the error sink's filter",
+   "The sink publishes it to shop-log-errors"
+  ],
+  "trap": "Matching the sink before Cloud Logging receives the line is the slip: the router only sees what has arrived."
+ }
+]

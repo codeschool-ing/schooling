@@ -1,0 +1,271 @@
+{
+ "ex-57qyx9gg": {
+  "prompt": "Na criptografia de envelope, o que o Cloud KMS criptografa?",
+  "hint": "Poucos bytes por objeto.",
+  "choices": [
+   {
+    "text": "Os metadados do bucket",
+    "why": "Metadados não são o assunto da criptografia de envelope."
+   },
+   {
+    "text": "Os próprios dados, objeto por objeto",
+    "why": "Os dados são criptografados localmente com uma DEK."
+   },
+   {
+    "text": "A chave de dados de cada objeto",
+    "why": "Certo. Ele embrulha DEKs; os dados nunca chegam a ele."
+   },
+   {
+    "text": "Senhas guardadas no Secret Manager",
+    "why": "Outro serviço, lição 17."
+   }
+  ]
+ },
+ "ex-q43tn5hf": {
+  "prompt": "O que fica guardado ao lado do texto cifrado em `order-1001.json`?",
+  "hint": "Nunca a DEK pura.",
+  "choices": [
+   {
+    "text": "Um hash do texto puro",
+    "why": "Não é guardado; e vazaria informação."
+   },
+   {
+    "text": "A própria KEK",
+    "why": "Aí a KEK estaria onde os dados estão."
+   },
+   {
+    "text": "A DEK embrulhada e a versão da KEK",
+    "why": "Certo. O bastante para pedir o desembrulho, nada mais."
+   },
+   {
+    "text": "A DEK, para poder descriptografar rápido",
+    "why": "A DEK pura nunca é guardada."
+   }
+  ]
+ },
+ "ex-tg12qed3": {
+  "prompt": "Depois de uma rotação, por que o order-1001 ainda descriptografa?",
+  "hint": "Algo foi criptografado de novo?",
+  "choices": [
+   {
+    "text": "A descriptografia ignora a versão",
+    "why": "Ela lê a versão no arquivo e a usa."
+   },
+   {
+    "text": "A rotação o recriptografou na versão 2",
+    "why": "Nada foi recriptografado."
+   },
+   {
+    "text": "A versão 1 ainda existe e embrulhou a DEK dele",
+    "why": "Certo. A rotação acrescenta uma versão; não remove nenhuma."
+   },
+   {
+    "text": "A DEK ficou em cache na memória",
+    "why": "Cada execução é um processo novo; nada fica em cache."
+   }
+  ]
+ },
+ "ex-vfhhmtfa": {
+  "prompt": "A versão 1 é destruída. O texto cifrado do order-1001 continua no disco. O que ele é agora?",
+  "hint": "Quem consegue desembrulhar a DEK dele?",
+  "choices": [
+   {
+    "text": "Ruído ilegível, para todos",
+    "why": "Certo. Dados tornados irrecuperáveis sem tocar neles."
+   },
+   {
+    "text": "Legível pelo suporte do Google, a pedido",
+    "why": "Uma versão destruída sumiu para o Google também."
+   },
+   {
+    "text": "Legível quando o arquivo voltar do backup",
+    "why": "O backup tem o mesmo texto cifrado e a mesma chave ausente."
+   },
+   {
+    "text": "Legível com a versão 2",
+    "why": "A versão 2 nunca embrulhou aquela DEK."
+   }
+  ]
+ },
+ "ex-w6ce2d11": {
+  "prompt": "Um bucket de São Paulo vai usar CMEK. Onde a chave precisa estar?",
+  "hint": "Mesma localização dos dados.",
+  "choices": [
+   {
+    "text": "Em qualquer lugar, desde que o IAM esteja certo",
+    "why": "A localização importa tanto quanto o IAM."
+   },
+   {
+    "text": "Em southamerica-east1",
+    "why": "Certo."
+   },
+   {
+    "text": "Na multirregião us, onde o KMS roda",
+    "why": "O KMS roda em muitas localizações."
+   },
+   {
+    "text": "Em global, para toda região poder usar",
+    "why": "Uma chave global não serve ao CMEK de um bucket regional."
+   }
+  ]
+ },
+ "ex-4s6fm1wf": {
+  "prompt": "Toda escrita no bucket com CMEK falha depois de criado. Qual é a peça faltante mais provável?",
+  "hint": "Quem embrulha as chaves dos objetos?",
+  "choices": [
+   {
+    "text": "O papel do agente de serviço do Cloud Storage na chave",
+    "why": "Certo. Sem encrypterDecrypter ele não embrulha."
+   },
+   {
+    "text": "versionamento no bucket",
+    "why": "Escritas não dependem de versionamento."
+   },
+   {
+    "text": "prevent_destroy na chave",
+    "why": "Isso é uma proteção do Terraform, não uma permissão."
+   },
+   {
+    "text": "Um nível de proteção HSM",
+    "why": "Chaves de software funcionam para CMEK."
+   }
+  ]
+ },
+ "ex-mzxkzey5": {
+  "prompt": "Por que o plano do KMS parou com `401 Invalid Credentials` quando os anteriores não pararam?",
+  "hint": "O que é lido durante um plano?",
+  "choices": [
+   {
+    "text": "Recursos de KMS sempre precisam de token real",
+    "why": "O key ring e a chave foram propostos sem problema."
+   },
+   {
+    "text": "Um data source precisa perguntar ao Google na hora do plano",
+    "why": "Certo. Recursos só são propostos; data sources são lidos."
+   },
+   {
+    "text": "A configuração era inválida",
+    "why": "O validate disse que era válida."
+   },
+   {
+    "text": "O token fake expirou",
+    "why": "Ele nunca foi válido."
+   }
+  ]
+ },
+ "ex-th6b26y9": {
+  "prompt": "O que `prevent_destroy = true` impede?",
+  "hint": "O próprio plano do Terraform.",
+  "choices": [
+   {
+    "text": "A rotação automática",
+    "why": "A rotação não é afetada."
+   },
+   {
+    "text": "Qualquer um destruir a chave no console",
+    "why": "Ele só amarra o Terraform."
+   },
+   {
+    "text": "Desabilitar a chave",
+    "why": "Desabilitar é outra operação."
+   },
+   {
+    "text": "O Terraform planejar a destruição da chave",
+    "why": "Certo. Que agendaria toda versão para destruição."
+   }
+  ]
+ },
+ "ex-re25rxrg": {
+  "prompt": "Uma versão é agendada para destruição com o período padrão. O que ainda pode acontecer?",
+  "hint": "Trinta dias.",
+  "choices": [
+   {
+    "text": "Ela continua criptografando dados novos até o fim",
+    "why": "Versões agendadas ficam desabilitadas."
+   },
+   {
+    "text": "Nada: é destruída na hora",
+    "why": "A destruição espera o período agendado."
+   },
+   {
+    "text": "Ela é grátis durante o período",
+    "why": "Versões agendadas são ativas e cobradas."
+   },
+   {
+    "text": "Cancelá-la, dentro da janela",
+    "why": "Certo. restore a deixa desabilitada."
+   }
+  ]
+ },
+ "ex-5hvdwc1x": {
+  "prompt": "Uma chave de software girada a cada trimestre tem quatro versões ativas depois de um ano. A 0,06 USD por versão por mês, quanto custa por mês?",
+  "hint": "Quatro versões.",
+  "unit": "USD"
+ },
+ "ex-z51dxkc1": {
+  "prompt": "Um bucket foi escrito por dois anos sob uma chave girada a cada trimestre. Alguém quer destruir as versões antigas para arrumar. O que acontece?",
+  "hint": "Toda versão ainda embrulha alguns objetos.",
+  "choices": [
+   {
+    "text": "Objetos escritos sob elas ficam ilegíveis",
+    "why": "Certo. Nunca destrua uma versão antiga para arrumar."
+   },
+   {
+    "text": "O Cloud Storage recriptografa os objetos antes",
+    "why": "Nada recriptografa automaticamente."
+   },
+   {
+    "text": "Nada: só a versão primária importa",
+    "why": "Objetos antigos são lidos pelas versões antigas."
+   },
+   {
+    "text": "A criptografia do bucket volta para as chaves do Google",
+    "why": "Não há volta para dados já escritos."
+   }
+  ]
+ },
+ "ex-1w1zeakp": {
+  "prompt": "Ponha os estados de uma versão de chave na ordem em que ela passa por eles, desde a criação.",
+  "hint": "O último não pode ser desfeito.",
+  "items": [
+   "Habilitada",
+   "Desabilitada",
+   "Agendada para destruição",
+   "Destruída"
+  ],
+  "trap": "Destruída antes de agendada é o deslize: a destruição sempre espera o período agendado."
+ },
+ "ex-6kx55aeq": {
+  "prompt": "Criptografia com uma chave no seu próprio Cloud KMS, usada por um serviço do Google, se chama customer-managed encryption, ou ___.",
+  "hint": "Quatro maiúsculas.",
+  "blanks": [
+   {
+    "accept": [
+     "CMEK"
+    ]
+   }
+  ]
+ },
+ "ex-styv6mst": {
+  "prompt": "Quais destes aconteceram no seu computador nesta lição? Escolha todos os que se aplicam.",
+  "hint": "Arquivos fizeram o papel do Cloud KMS.",
+  "choices": [
+   {
+    "text": "Dois pedidos criptografados sob duas versões de chave",
+    "why": "Sim."
+   },
+   {
+    "text": "Um pedido tornado ilegível ao apagar uma versão",
+    "why": "Sim."
+   },
+   {
+    "text": "Um key ring criado no Cloud KMS",
+    "why": "Não. Só planejado."
+   },
+   {
+    "text": "Uma contagem de 30 dias para destruição",
+    "why": "Não. O arquivo foi apagado na hora."
+   }
+  ]
+ }
+}

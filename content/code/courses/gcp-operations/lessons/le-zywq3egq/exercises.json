@@ -1,0 +1,383 @@
+[
+ {
+  "id": "ex-88pnmc07",
+  "version": 1,
+  "section": "metrics",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Two series share the metric type `run.googleapis.com/request_count` but differ in `response_code_class`. How many series are they?",
+  "hint": "Change any label and it is another series.",
+  "choices": [
+   {
+    "text": "One, with two values per point",
+    "correct": false,
+    "why": "A point holds one value; the label makes a second series."
+   },
+   {
+    "text": "Two",
+    "correct": true,
+    "why": "Right. Each combination of labels is its own series."
+   },
+   {
+    "text": "One, because the metric type is the same",
+    "correct": false,
+    "why": "The type is one of three parts of the name, not the whole of it."
+   },
+   {
+    "text": "None until a reducer combines them",
+    "correct": false,
+    "why": "They exist as series before any reducer."
+   }
+  ]
+ },
+ {
+  "id": "ex-51extrm4",
+  "version": 1,
+  "section": "metrics",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A process exports the total number of orders since it started. Which kind is that?",
+  "hint": "It only grows, until a restart.",
+  "choices": [
+   {
+    "text": "GAUGE",
+    "correct": false,
+    "why": "A gauge is a value at an instant, like memory in use."
+   },
+   {
+    "text": "DELTA",
+    "correct": false,
+    "why": "A delta is what happened in one interval only."
+   },
+   {
+    "text": "CUMULATIVE",
+    "correct": true,
+    "why": "Right. A total since a start time."
+   },
+   {
+    "text": "DISTRIBUTION",
+    "correct": false,
+    "why": "Distribution is a value type, a histogram, not a kind."
+   }
+  ]
+ },
+ {
+  "id": "ex-100cczsx",
+  "version": 1,
+  "section": "metrics",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does the shop pay to send to Cloud Monitoring?",
+  "hint": "Google's own metrics are free to receive.",
+  "choices": [
+   {
+    "text": "run.googleapis.com/request_count",
+    "correct": false,
+    "why": "Google publishes it; it is non-chargeable."
+   },
+   {
+    "text": "A custom metric its own code writes",
+    "correct": true,
+    "why": "Right. Charged by the MiB received, after 150 free."
+   },
+   {
+    "text": "The uptime check's results, as metrics",
+    "correct": false,
+    "why": "The executions are charged, not the resulting metric."
+   },
+   {
+    "text": "Instance counts of its Cloud Run revisions",
+    "correct": false,
+    "why": "Also a Google metric, and free."
+   }
+  ]
+ },
+ {
+  "id": "ex-q10z4hky",
+  "version": 1,
+  "section": "alignment",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 10.4,
+  "tolerance": 0.01,
+  "prompt": "In minute 10 the counter grew by 624. What is `ALIGN_RATE` per second over the 60-second period?",
+  "hint": "Delta divided by the period's seconds.",
+  "unit": "per second"
+ },
+ {
+  "id": "ex-48b80fcj",
+  "version": 1,
+  "section": "alignment",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The mean latency is about 90 ms and the median 45 to 50 ms. What does the mean describe?",
+  "hint": "Where did any request actually land?",
+  "choices": [
+   {
+    "text": "A typical request",
+    "correct": false,
+    "why": "The typical request is the median, near 50 ms."
+   },
+   {
+    "text": "The slow requests",
+    "correct": false,
+    "why": "Those took 2,400 ms, the p99."
+   },
+   {
+    "text": "No request: it sits between the fast and the slow",
+    "correct": true,
+    "why": "Right. It is pulled both ways and lands where nobody was."
+   },
+   {
+    "text": "The worst minute of the ten",
+    "correct": false,
+    "why": "Each row has its own mean; none is the worst minute."
+   }
+  ]
+ },
+ {
+  "id": "ex-2xwxpwjm",
+  "version": 1,
+  "section": "alignment",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A two-minute outage happened yesterday, and the week's dashboard at a one-hour alignment period shows nothing. Why?",
+  "hint": "What does one point per hour hold?",
+  "choices": [
+   {
+    "text": "Cloud Monitoring drops data older than a day",
+    "correct": false,
+    "why": "The data is kept; it is summarised by the period."
+   },
+   {
+    "text": "Two minutes were averaged into an hour",
+    "correct": true,
+    "why": "Right. A one-minute period would show it."
+   },
+   {
+    "text": "Outages are recorded only by uptime checks",
+    "correct": false,
+    "why": "The request metrics recorded it too, at minute resolution."
+   },
+   {
+    "text": "The reducer removed the failing revision",
+    "correct": false,
+    "why": "A sum keeps every series' contribution."
+   }
+  ]
+ },
+ {
+  "id": "ex-hjrajz2b",
+  "version": 1,
+  "section": "alignment",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Three instances report p99 latencies of 60, 70 and 2,000 ms. What is the service's p99?",
+  "hint": "Can percentiles be averaged?",
+  "choices": [
+   {
+    "text": "710 ms, the mean of the three",
+    "correct": false,
+    "why": "A mean of percentiles is not a percentile."
+   },
+   {
+    "text": "2,000 ms, the largest",
+    "correct": false,
+    "why": "Only if that instance served most of the traffic."
+   },
+   {
+    "text": "70 ms, the middle one",
+    "correct": false,
+    "why": "The median of three percentiles is not the service's either."
+   },
+   {
+    "text": "It cannot be told from these three numbers",
+    "correct": true,
+    "why": "Right. Combine the distributions first, then read the percentile."
+   }
+  ]
+ },
+ {
+  "id": "ex-cgva8ccs",
+  "version": 1,
+  "section": "alignment",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of the dashboard's first chart in the order Cloud Monitoring applies them.",
+  "hint": "Per series first, across series last.",
+  "items": [
+   "Select series by the filter",
+   "Align each series to a rate over 60 seconds",
+   "Group by response_code_class",
+   "Sum the series in each group"
+  ],
+  "trap": "Summing before aligning is the slip: cumulative counters with different start times cannot be added."
+ },
+ {
+  "id": "ex-9ks7w6ec",
+  "version": 1,
+  "section": "checks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The API process crashed and exports no metrics. Which of these still notices?",
+  "hint": "It asks from outside.",
+  "choices": [
+   {
+    "text": "The uptime check",
+    "correct": true,
+    "why": "Right. It depends on nothing the process reports."
+   },
+   {
+    "text": "A chart of the process's custom metrics",
+    "correct": false,
+    "why": "A dead process writes nothing, so the chart just stops."
+   },
+   {
+    "text": "The dashboard's p99 latency line",
+    "correct": false,
+    "why": "No requests served means no latencies recorded."
+   },
+   {
+    "text": "A reducer grouped by revision",
+    "correct": false,
+    "why": "It can only combine series that exist."
+   }
+  ]
+ },
+ {
+  "id": "ex-129dn64h",
+  "version": 1,
+  "section": "checks",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop's `/healthz` is changed to query the database. The database becomes slow. What does the uptime check report?",
+  "hint": "What is an uptime check for?",
+  "choices": [
+   {
+    "text": "Nothing: health checks ignore slow answers",
+    "correct": false,
+    "why": "A slow answer past the timeout is a failure."
+   },
+   {
+    "text": "A precise alert naming the database",
+    "correct": false,
+    "why": "It names the URL; it knows nothing of the database."
+   },
+   {
+    "text": "The site down, from every region at once",
+    "correct": true,
+    "why": "Right. Which is why /healthz checks only the process."
+   },
+   {
+    "text": "A warning only from the region nearest the database",
+    "correct": false,
+    "why": "Every region asks the same URL and sees the same slowness."
+   }
+  ]
+ },
+ {
+  "id": "ex-32et3ny6",
+  "version": 1,
+  "section": "checks",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "value": 26280,
+  "tolerance": 0,
+  "prompt": "An uptime check runs every 5 minutes from 3 regions. How many executions is that in a 730-hour month?",
+  "hint": "Regions times runs per hour times hours."
+ },
+ {
+  "id": "ex-7k6fbkm3",
+  "version": 1,
+  "section": "checks",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the dashboard JSON, the aligner that divides each interval's growth by its seconds is `ALIGN____`.",
+  "hint": "Four letters, after the underscore.",
+  "blanks": [
+   {
+    "accept": [
+     "RATE"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-xtznz8y9",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did the lesson run on your computer? Choose all that apply.",
+  "hint": "Arithmetic and plans, yes; Google's service, no.",
+  "choices": [
+   {
+    "text": "The aligners' arithmetic on generated data",
+    "correct": true,
+    "why": "Yes, align.py."
+   },
+   {
+    "text": "Terraform's plan of an uptime check",
+    "correct": true,
+    "why": "Yes, computed locally."
+   },
+   {
+    "text": "An uptime check asking the shop from three regions",
+    "correct": false,
+    "why": "No. Nothing executes checks locally."
+   },
+   {
+    "text": "A dashboard drawn by Cloud Monitoring",
+    "correct": false,
+    "why": "No. Only its JSON was planned."
+   }
+  ]
+ },
+ {
+  "id": "ex-g0excwyp",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Latency alerts look at p99 over several minutes rather than one point. Which row of align.py's output shows why?",
+  "hint": "One minute looks healthy and is not different.",
+  "choices": [
+   {
+    "text": "Minute 1, where the mean is highest",
+    "correct": false,
+    "why": "A high mean is not the lesson about single points."
+   },
+   {
+    "text": "Minute 5, where p99 drops to 55 by chance",
+    "correct": true,
+    "why": "Right. One quiet minute would reset a one-point alert."
+   },
+   {
+    "text": "Minute 4, the busiest",
+    "correct": false,
+    "why": "Traffic level does not change the percentile story here."
+   },
+   {
+    "text": "Minute 10, the last one",
+    "correct": false,
+    "why": "Nothing about it differs from the others."
+   }
+  ]
+ }
+]
