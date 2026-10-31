@@ -45,7 +45,7 @@ FAILED test_slug.py::test_keeps_punctuation - AssertionError: assert 'hello,...
 ```
 
 **Leia o relatório de baixo para cima.** Numa suíte com trinta falhas o topo da saída é a
-primeira, que raramente é a interessante, e o resumo dá todos os nomes em quatro linhas.
+primeira, que raramente é a interessante, e o resumo dá todos os nomes, um por linha.
 
 ## O que ele não vai imprimir
 
@@ -60,4 +60,4 @@ E       assert (0.1 + 0.2) == 0.3
 
 Aqui a reescrita mostra a expressão em vez do valor dela, e `0.30000000000000004` — que é a
 resposta de verdade e a razão inteira de o teste falhar — não aparece. É para esse caso que o
-`approx` existe, duas seções adiante.
+`approx` existe, quatro seções adiante.

@@ -9,8 +9,8 @@ def test_unknown_currency():
         rate("XYZ")
 ```
 
-**O bloco afirma que o código levantou.** Sem o `pytest.raises` a exceção escapa e o teste dá
-erro, que parece um teste quebrado em vez de um comportamento provado.
+**O bloco afirma que o código levantou.** Sem o `pytest.raises` a exceção escapa e o teste
+falha com ela, o que parece um teste quebrado em vez de um comportamento provado.
 
 ## `match` não é opcional na prática
 

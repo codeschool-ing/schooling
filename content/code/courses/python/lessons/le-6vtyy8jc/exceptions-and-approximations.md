@@ -10,7 +10,7 @@ def test_unknown_currency():
 ```
 
 **The block asserts that the code raised.** Without `pytest.raises` the exception escapes and the
-test errors, which looks like a broken test rather than a proven behaviour.
+test fails with it, which looks like a broken test rather than a proven behaviour.
 
 ## `match` is not optional in practice
 
