@@ -12,7 +12,7 @@ A responsive page has to be checked at more than the width of the screen you bui
 **Check the reader's settings.** Zoom to 200% and look at the text, section 06. Turn on reduced motion and the dark scheme, section 08 and lesson 10. Use the page with the keyboard at a narrow width, where menus and order change.
 
 ::: track qa
-In `web-automation` these become tests. A test sets the viewport to a list of widths, 320 among them, and at each one asserts what this lesson measured by hand: that the document is no wider than the window, that the menu is reachable, that a sidebar is below the content and not beside it. A screenshot compared against a reference at each width catches the rest, the way this repository's own graph and landing tests do.
+In `web-automation` these become tests. A test sets the viewport to a list of widths, 320 among them, and at each one asserts what this lesson measured by hand. The document is no wider than the window, the menu is reachable, and a sidebar is below the content and not beside it. A screenshot compared against a reference at each width catches the rest, the way this repository's own graph and landing tests do.
 :::
 
 ::: track frontend

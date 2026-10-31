@@ -75,7 +75,7 @@ at 330,230: a  "Book swap"
 at 30,110: a  "Book swap"
 ```
 
-A point in the bottom right corner of the card, over the paragraph, and a point at its top left, in its padding, both hit **the link**. On the copy of the page without the `::after`, the same corner hits the article. The link's name is still just *Book swap*.
+A point in the bottom right corner of the card, over the paragraph, and a point at its top left, in its padding, both hit **the link**. Without the `::after`, neither point would be the link: one is over the paragraph and the other is the card's own padding. The link's name is still just *Book swap*.
 
 ## Text for screen readers only
 
@@ -96,4 +96,4 @@ The caption is drawn as a **1 by 1 pixel** box, clipped to nothing, and the tree
 
 ## A sticky header that does not hide its anchors
 
-The fourth pattern is two lines and closes section 06: a header with `position: sticky; top: 0` keeps the menu on screen, and `html { scroll-padding-top: 4rem; }` makes a jump to `#events` stop 4rem short, so that the section's heading is not underneath the header. Sticky is usually the better choice than fixed for a header, because it takes up its own space at the top of the page instead of covering content.
+The fourth pattern is two lines, and it settles what section 06 left open. A header with `position: sticky; top: 0` keeps the menu on screen, and `html { scroll-padding-top: 4rem; }` makes a jump to `#events` stop 4rem short, so that the section's heading is not underneath the header. Sticky is usually the better choice than fixed for a header, because it takes up its own space at the top of the page instead of covering content.

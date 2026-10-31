@@ -65,7 +65,7 @@ Duas regras definem `font-size` nesse `<h2>`. A primeira é a **folha de estilos
 
 **Num elemento `<style>` no head**, que funciona do mesmo jeito para uma página. É útil para uma página só, para uma demonstração como as páginas deste curso, e para pequenos trechos de CSS que precisam chegar junto com o HTML.
 
-**Num atributo `style` num elemento**, `<p style="color: grey">`. Isso se aplica só àquele elemento, não usa seletores, não se reaproveita e é difícil de sobrescrever, como a seção 09 mede. Evite-o no que você escreve à mão; você vai encontrá-lo em código que um script ou um framework gera.
+**Num atributo `style` num elemento**, `<p style="color: grey">`. Isso se aplica só àquele elemento, não usa seletores, não se reaproveita e é difícil de sobrescrever, como a seção 09 explica. Evite-o no que você escreve à mão; você vai encontrá-lo em código que um script ou um framework gera.
 
 ## Comentários, e o que acontece com um erro
 

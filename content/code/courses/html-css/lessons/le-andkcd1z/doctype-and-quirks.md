@@ -46,7 +46,7 @@ compatMode: BackCompat
 div.frame  x 8      y 8      width 1008   height 80
 ```
 
-`compatMode` is the browser's own name for the mode: `CSS1Compat` is standards and `BackCompat` is quirks. In standards mode the `<div>` is **84** pixels tall for an 80-pixel image, because an image sits on the line of text like a letter does, and the line keeps room below it for the parts of letters that hang down, like the tail of a *g*. In quirks mode that space is not reserved and the `<div>` is exactly 80.
+`compatMode` is the browser's own name for the mode: `CSS1Compat` is standards and `BackCompat` is quirks. In standards mode the `<div>` is **84** pixels tall for an 80-pixel image. An image sits on the line of text like a letter does, and the line keeps room below it for the parts of letters that hang down, like the tail of a *g*. In quirks mode that space is not reserved and the `<div>` is exactly 80.
 
 Four pixels does not sound like much. But the rest of the course explains layout in standards mode, and every rule about boxes and space in lessons 6 to 9 assumes it. In quirks mode some of those rules come out differently, without warning, and you would be debugging a layout against the wrong rulebook. The space under images is something lesson 6 shows you how to remove on purpose.
 

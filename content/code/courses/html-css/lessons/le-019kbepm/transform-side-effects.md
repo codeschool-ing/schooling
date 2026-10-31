@@ -84,4 +84,4 @@ ana@laptop:~/site$ probe flat.html top 100 140
 at 100,140: div.menu  "Share · Save · Report"
 ```
 
-With the transform, the point where the menu hangs over the next card shows **the next card**: the menu's 100 only counts inside the lifted card's stacking context, and that whole context is drawn below a sibling with `z-index: 1`. Without the transform, the menu is on top. A hover effect that lifts a card can therefore hide its own dropdown under the card below, which is why the fix in lesson 7 applies here too: give the card that is open a higher `z-index` than its siblings, or move the menu out of it.
+With the transform, the point where the menu hangs over the next card shows **the next card**: the menu's 100 only counts inside the lifted card's stacking context, and that whole context is drawn below a sibling with `z-index: 1`. Without the transform, the menu is on top. A hover effect that lifts a card can therefore hide its own dropdown under the card below. The fix from lesson 7 applies here too: give the card that is open a higher `z-index` than its siblings, or move the menu out of it.

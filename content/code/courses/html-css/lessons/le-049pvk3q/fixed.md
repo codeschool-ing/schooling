@@ -52,7 +52,7 @@ ana@laptop:~/site$ probe fixed.html scroll 500 box .chat
 a.chat  x 927.98 y 1212   width 80.02  height 40
 ```
 
-`probe box` prints positions in page coordinates. Before scrolling the link is at y 712; after scrolling 500 pixels it is at **y 1212**, exactly 500 further down the page, which means it has not moved at all on the screen: 16 pixels from the bottom of a 768-pixel window, as `bottom: 16px` says.
+`probe box` prints positions in page coordinates. Before scrolling the link is at y 712; after scrolling 500 pixels it is at **y 1212**, exactly 500 further down the page. So it has not moved at all on the screen: it ends 16 pixels from the bottom of a 768-pixel window, as `bottom: 16px` says.
 
 ## What fixed costs
 

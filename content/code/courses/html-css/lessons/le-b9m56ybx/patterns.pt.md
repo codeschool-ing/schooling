@@ -95,7 +95,7 @@ A resenha é o **media object**: uma imagem e um bloco de texto lado a lado, o t
 
 ## Centralizado nas duas direções
 
-A mensagem de cesta vazia é centralizada com `justify-content: center` e `align-items: center` numa caixa de 200 de altura. O parágrafo está em x 424,67, que é (1024 − 174,64) / 2, e na vertical no meio da caixa. Duas declarações, e a mensagem continua centralizada seja qual for o comprimento dela ou a largura da janela.
+A mensagem de cesta vazia é centralizada com `justify-content: center` e `align-items: center` numa caixa de 200 de altura. O parágrafo está em x 424,67, que é (1024 − 174,64) / 2 com diferença de um centésimo de pixel, e na vertical no meio da caixa. Duas declarações, e a mensagem continua centralizada seja qual for o comprimento dela ou a largura da janela.
 
 ## Um rodapé que fica no fundo
 

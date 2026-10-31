@@ -22,7 +22,7 @@ ana@laptop:~/site$ probe order.html rules '.featured h2' color
 computed color: rgb(51, 51, 51)
 ```
 
-As três casam com o título do evento em destaque. **A última do arquivo vence**, então o título fica `#333333`, e não o marrom que `.featured h2` foi escrito para dar. Alguém acrescentou uma regra para `.featured`, a regra estava certa, e uma duplicata esquecida mais abaixo no arquivo a sobrescreveu. Ler a lista de baixo para cima, como o DevTools a desenha, é como se encontra isso.
+As três casam com o título do evento em destaque. **A última do arquivo vence**, então o título fica `#333333`, e não o marrom que `.featured h2` foi escrito para dar. Alguém acrescentou uma regra para `.featured`, a regra estava certa, e uma duplicata esquecida mais abaixo no arquivo a sobrescreveu. Ler a lista inteira é como se encontra isso: aqui a vencedora é a última linha, e o DevTools a desenha no topo, com as perdedoras riscadas abaixo dela.
 
 ## `!important`
 

@@ -36,4 +36,4 @@ ana@laptop:~/site$ wc -c first/out.css first/out.min.css
 12617 total
 ```
 
-**6749** bytes como escrito, **5868** minificado, para uma página com uma dúzia de classes. A folha de um site inteiro costuma ficar em algumas dezenas de kilobytes, porque, por maior que o site seja, ele usa uma escala só. O `front-delivery` é onde esse build vira parte de como um site é publicado.
+**6749** bytes como escrito, **5868** minificado, para uma página com dezesseis classes. A folha de um site inteiro costuma ficar em algumas dezenas de kilobytes, porque, por maior que o site seja, ele usa uma escala só. O `front-delivery` é onde esse build vira parte de como um site é publicado.

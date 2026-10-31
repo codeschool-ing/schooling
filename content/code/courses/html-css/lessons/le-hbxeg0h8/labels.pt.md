@@ -3,7 +3,7 @@ title: Todo campo tem um rótulo
 version: 1
 ---
 
-Um campo sem rótulo é uma caixa e um palpite. **`<label>`** é o elemento que diz para que serve um campo, e o navegador faz duas coisas com ele: transforma o texto do rótulo no **nome acessível** do campo, e faz um clique no texto pôr o cursor no campo, o que importa para quem tem a mira instável e para quem está no celular.
+Um campo sem rótulo é uma caixa e um palpite. **`<label>`** é o elemento que diz para que serve um campo, e o navegador faz duas coisas com ele. Transforma o texto do rótulo no **nome acessível** do campo. E faz um clique no texto pôr o cursor no campo, o que importa para quem tem a mira instável e para quem está no celular.
 
 Há dois jeitos de ligar um rótulo ao campo, e um jeito em que as pessoas acham que ligaram e não ligaram. Aqui estão os três:
 

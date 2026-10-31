@@ -58,7 +58,7 @@ With `wrap`, items that do not fit on the line move to a new one below, as words
 
 ## Each line is laid out on its own
 
-When a flex container wraps, **each line is a separate row** as far as the main axis is concerned: `justify-content` spreads the items of each line independently, so a last line with two covers is laid out as two covers, not aligned with the columns above. If you need the items in all the lines to line up in columns, that is a grid, lesson 9, and that difference is the most reliable way to choose between the two: **Flexbox lays things out in one dimension, a line, and Grid in two, rows and columns at once.**
+When a flex container wraps, **each line is a separate row** as far as the main axis is concerned. `justify-content` spreads the items of each line independently, so a last line with two covers is laid out as two covers, not aligned with the columns above. If you need the items in all the lines to line up in columns, that is a grid, lesson 9. That difference is the most reliable way to choose between the two: **Flexbox lays things out in one dimension, a line, and Grid in two, rows and columns at once.**
 
 With several lines there is one more property, **`align-content`**, which places the lines themselves on the cross axis when the container is taller than they need: packed at the top, spread out, centred. On a single-line container it does nothing, which is the usual reason it seems not to work.
 

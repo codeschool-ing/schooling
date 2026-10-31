@@ -3,7 +3,7 @@ title: Space between items: gap
 version: 1
 ---
 
-Space between flex items used to be made with margins, and margins cause two problems: the last item has a margin after it that nobody wanted, so the row ends short, and with wrapping the items at the start of each line have a margin before them. **`gap`** puts space **between** items and nowhere else:
+Space between flex items used to be made with margins, and margins cause two problems. The last item has a margin after it that nobody wanted, so the row ends short, and with wrapping the items at the start of each line have a margin before them. **`gap`** puts space **between** items and nowhere else:
 
 ```css
 .shelf {

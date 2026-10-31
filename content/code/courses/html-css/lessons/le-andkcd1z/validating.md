@@ -35,7 +35,7 @@ ana@laptop:~/site$ npx html-validate -f text unclosed-title.html
 /home/ana/site/unclosed-title.html:5:8: error [parser-error] failed to tokenize "Opening ho...", expected </title>.
 ```
 
-One line, at line 5, column 8: the title opened and the closing tag was never found. That is the page whose window was blank, and the validator points at the exact place in two seconds, where looking at the screen would have shown nothing at all.
+One line, at line 5, column 8: the title opened and the closing tag was never found. That is the page whose window was blank, and the validator points straight at the exact place, where looking at the screen would have shown nothing at all.
 
 ## The missing doctype
 

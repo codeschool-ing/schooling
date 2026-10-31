@@ -22,7 +22,7 @@ ana@laptop:~/site$ probe order.html rules '.featured h2' color
 computed color: rgb(51, 51, 51)
 ```
 
-All three match the featured event's heading. **The last one in the file wins**, so the heading is `#333333`, not the brown that `.featured h2` was written to give it. Somebody added a rule for `.featured`, the rule was right, and a forgotten duplicate further down the file overrode it. Reading the list from the bottom, as DevTools draws it, is how you find that.
+All three match the featured event's heading. **The last one in the file wins**, so the heading is `#333333`, not the brown that `.featured h2` was written to give it. Somebody added a rule for `.featured`, the rule was right, and a forgotten duplicate further down the file overrode it. Reading the whole list is how you find that: here the winner is the last line, and DevTools draws it at the top with the losers struck through below it.
 
 ## `!important`
 

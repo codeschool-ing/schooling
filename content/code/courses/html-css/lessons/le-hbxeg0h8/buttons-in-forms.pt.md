@@ -3,7 +3,7 @@ title: Botões num formulário
 version: 1
 ---
 
-A aula 2 terminou com um aviso que esta seção explica: **um `<button>` dentro de um formulário envia o formulário, a não ser que diga o contrário.** O atributo `type` de um botão tem três valores:
+A seção da aula 2 sobre links e botões terminou com um aviso que esta seção explica: **um `<button>` dentro de um formulário envia o formulário, a não ser que diga o contrário.** O atributo `type` de um botão tem três valores:
 
 - `submit`, o padrão: envia o formulário.
 - `button`: não faz nada sozinho, para um script lhe dar uma tarefa.

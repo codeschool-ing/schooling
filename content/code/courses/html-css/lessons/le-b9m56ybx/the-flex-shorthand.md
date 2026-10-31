@@ -61,6 +61,6 @@ p  x 196.56 y 64     width 59.59  height 24
 - With **`flex: auto`**, they are **160.86, 264.92 and 174.2**. Each starts from its content's width, and the leftover is shared equally on top, so the longest label stays the widest.
 - With **`flex: none`**, they are **46.25, 150.31 and 59.59**: exactly their content, and the rest of the row is empty.
 
-**`flex: 1` is the one for equal columns**, the reason it is the most common value in real stylesheets. `flex: auto` is for items that should fill a row while keeping their proportions, such as the tabs of a menu. `flex: none` is for something that must not change size, such as an icon or the price in the last section.
+**`flex: 1` is the one for equal columns**, the reason it is the most common value in real stylesheets. `flex: auto` is for items that should fill a row while keeping their proportions, such as the tabs of a menu. `flex: none` is for something that must not change size, such as an icon or the price in the previous section.
 
 Writing `flex` instead of the three longhands is also safer: `flex: 1` sets all three, whereas `flex-grow: 1` alone leaves the basis at `auto`, which is how somebody expecting equal columns gets the second row instead.

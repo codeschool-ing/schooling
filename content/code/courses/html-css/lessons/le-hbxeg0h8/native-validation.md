@@ -90,4 +90,4 @@ name=Ana+Souza&email=ana%40example.com&cep=05422-000&copies=2&title=Vidas+Secas
 
 A rule written into a form is a claim about the world, and a wrong one stops people who did nothing wrong. A `pattern` for names that allows only letters refuses *D'Ávila* and *Ana-Luísa*; a `maxlength` of 20 on a street refuses real streets. Check names and addresses as little as possible: `required`, and perhaps a maximum length the database actually has. Patterns belong to things with a format somebody defined, like a CEP.
 
-`pattern` is matched against the **whole** value, as if it were written between `^` and `$`, so `[0-9]{5}-[0-9]{3}` accepts `05422-000` and refuses `05422-0001`. Regular expressions have a lesson of their own in the `javascript` course; the patterns in a form are usually short enough to read.
+`pattern` is matched against the **whole** value, as if it were written between `^` and `$`, so `[0-9]{5}-[0-9]{3}` accepts `05422-000` and refuses `05422-0001`. Regular expressions are a subject of their own, and no lesson of this course teaches them; the patterns in a form are usually short enough to read.

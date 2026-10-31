@@ -36,4 +36,4 @@ ana@laptop:~/site$ wc -c first/out.css first/out.min.css
 12617 total
 ```
 
-**6749** bytes as written, **5868** minified, for a page with a dozen classes. A whole site's stylesheet typically stays at a few tens of kilobytes, because however big the site is, it uses one scale. `front-delivery` is where this build becomes part of how a site is deployed.
+**6749** bytes as written, **5868** minified, for a page with sixteen classes. A whole site's stylesheet typically stays at a few tens of kilobytes, because however big the site is, it uses one scale. `front-delivery` is where this build becomes part of how a site is deployed.

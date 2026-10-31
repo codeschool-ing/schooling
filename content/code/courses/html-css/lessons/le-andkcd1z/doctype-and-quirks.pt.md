@@ -46,7 +46,7 @@ compatMode: BackCompat
 div.frame  x 8      y 8      width 1008   height 80
 ```
 
-`compatMode` é o nome que o próprio navegador dá ao modo: `CSS1Compat` é o padrão e `BackCompat` é o de compatibilidade. No modo padrão a `<div>` tem **84** pixels de altura para uma imagem de 80, porque a imagem fica sobre a linha de texto como uma letra, e a linha reserva espaço embaixo para as partes das letras que descem, como o rabo do *g*. No modo de compatibilidade esse espaço não é reservado e a `<div>` tem exatamente 80.
+`compatMode` é o nome que o próprio navegador dá ao modo: `CSS1Compat` é o padrão e `BackCompat` é o de compatibilidade. No modo padrão a `<div>` tem **84** pixels de altura para uma imagem de 80. A imagem fica sobre a linha de texto como uma letra, e a linha reserva espaço embaixo para as partes das letras que descem, como o rabo do *g*. No modo de compatibilidade esse espaço não é reservado e a `<div>` tem exatamente 80.
 
 Quatro pixels não parece muito. Mas o resto do curso explica o layout no modo padrão, e toda regra sobre caixas e espaço das aulas 6 a 9 o pressupõe. No modo de compatibilidade algumas dessas regras saem diferentes, sem aviso, e você estaria depurando um layout com o livro de regras errado. O espaço embaixo das imagens é algo que a aula 6 mostra como remover de propósito.
 
