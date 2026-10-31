@@ -17,7 +17,7 @@ dia quer dizer que o negócio sobrevive a um dia sem o sistema; um RTO de cinco 
 alguém precisa conseguir trocar de região em cinco minutos, às três da manhã, e tem que funcionar na
 primeira vez.
 
-Os dois são decisões de negócio ditas na linguagem do tempo, e a pergunta a fazer é "quanto nos custa
+Os dois são decisões de negócio ditas na linguagem do tempo. A pergunta que os define é "quanto nos custa
 uma hora deste sistema fora do ar, e quanto nos custa uma hora de pedidos perdidos?". As respostas
 escolhem um ponto numa escala.
 

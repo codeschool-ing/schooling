@@ -66,5 +66,4 @@ formato da conta decidem entre eles.
 Uma empresa cujos funcionários entram pelo Microsoft 365, rodando SQL Server em máquinas Windows no
 próprio prédio, começa com o Azure na frente em identidade e licenças. Outro provedor tem de ganhar essa comparação; o Azure não precisa perdê-la.
 
-Nenhum dos casos produz um vencedor que a próxima empresa possa copiar, e nenhum pretendia
-produzir.
+Nenhum dos casos produz um vencedor que a próxima empresa possa copiar.

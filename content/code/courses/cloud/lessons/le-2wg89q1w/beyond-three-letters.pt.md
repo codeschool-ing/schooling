@@ -17,7 +17,7 @@ Serviços de Kubernetes gerenciado e serviços que rodam um único contêiner so
 **Funções como serviço**, o FaaS, recebe uma única função: um trecho de código que recebe um evento, uma
 requisição ou um arquivo chegando, e retorna. A plataforma a inicia quando um evento chega, roda tantas
 cópias quantos forem os eventos, e não roda nenhuma quando nada está acontecendo. Você paga por
-invocação e por GB-segundo, as duas linhas do Lambda na captura do começo desta aula. A linha fica um
+invocação e por GB-segundo, as duas unidades do bloco do Lambda na captura do começo desta aula. A linha fica um
 pouco acima do PaaS, porque não existe nem um processo seu rodando para administrar. A aula 8 trata
 disso, com o nome pelo qual costuma ser vendido, *serverless*.
 

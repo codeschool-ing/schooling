@@ -68,7 +68,7 @@ list of who can become this identity.
 Anything that is not a person sitting at the console, and increasingly the people too:
 
 - a virtual machine, through the role attached to it, which AWS calls an instance profile;
-- a function, through its execution role, which lesson 8 gives to every function it writes;
+- a function, through its execution role, which lesson 8 counts among what stays yours;
 - a person from another account, who assumes a role in this one instead of having a user here;
 - a person signed in through the organisation's identity provider;
 - a build pipeline outside the cloud, which proves who it is with a token its own platform issued.

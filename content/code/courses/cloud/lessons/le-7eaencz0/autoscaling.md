@@ -54,9 +54,8 @@ short, a group kills every new instance before it finishes starting and launches
 A group can be given subnets in more than one availability zone, and it spreads its instances
 across them and keeps them balanced. If a zone fails, the instances there fail their checks, and
 the group launches their replacements in the zones that are still working. Lesson 9 says what a
-zone is and why two of them rarely fail together; for now the point is that the group does the
-spreading, so a single `SubnetId` chosen by hand is no longer the thing that decides where your
-machines run.
+zone is and why two of them rarely fail together. Here it is enough that the group does the
+spreading, so a single `SubnetId` chosen by hand no longer decides where your machines run.
 
 **A group of one is useful too.** With minimum, desired and maximum all set to 1, a group never
 scales, but it replaces its only instance when that instance fails a check. It is the cheapest way

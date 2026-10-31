@@ -4,8 +4,8 @@ version: 1
 ---
 
 "Não consigo chegar no servidor" tem cinco causas comuns numa VPC, e elas ficam ao longo de um caminho
-só: o programa, o security group da máquina, a network ACL da sub-rede, a tabela de rotas da sub-rede,
-e a entrada vinda de fora, um endereço público ou um balanceador de carga. Conferir tudo numa ordem
+só. Em ordem: o programa, o security group da máquina, a network ACL da sub-rede, a tabela de rotas da
+sub-rede, e a entrada vinda de fora, um endereço público ou um balanceador de carga. Conferir tudo numa ordem
 fixa, e ler o sintoma antes de começar, transforma uma tarde mudando configurações ao acaso em poucos
 minutos.
 

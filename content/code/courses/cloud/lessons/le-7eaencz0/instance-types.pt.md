@@ -39,7 +39,7 @@ Mais letras podem vir depois do processador. `d` quer dizer que o host tem disco
 instância (o instance store, que não sobrevive a um stop; a seção sobre discos desta aula explica), e
 `n` quer dizer mais banda de rede. Então `m7gd.large` é a `m7g.large` com um disco local.
 
-**O `g` não é detalhe.** Um processador Arm roda programas compilados para Arm, e um binário feito
+**O `g` decide o que vai rodar.** Um processador Arm roda programas compilados para Arm, e um binário feito
 para x86-64 não inicia nele. As grandes distribuições Linux, os runtimes das linguagens e a maioria
 das imagens de contêiner publicam builds para Arm, então um serviço em Python ou Java costuma migrar
 sem mudança; o binário fechado de um fornecedor, ou uma biblioteca nativa que ninguém compilou para

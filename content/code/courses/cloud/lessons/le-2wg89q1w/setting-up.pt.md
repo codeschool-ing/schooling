@@ -51,7 +51,7 @@ Um ambiente virtual é um diretório com a sua própria cópia do instalador de 
 o que você instala ali não mexe em mais nada da máquina. Duas ferramentas vão neste. O **moto** imita
 a interface do S3 para a aula 5, e os pacotes de que o **cloud-init** precisa para conferir uma
 configuração de inicialização na aula 4. O cloud-init em si não é publicado no PyPI, então ele vem do
-próprio código-fonte, na versão 26.2, com um script de três linhas que o roda:
+próprio código-fonte, na versão 26.2, com um script de duas linhas que o roda:
 
 ```sh
 python3 -m venv ~/cloud/venv

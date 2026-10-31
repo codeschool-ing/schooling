@@ -55,8 +55,8 @@ sempre.
 Um grupo pode receber subnets em mais de uma zona de disponibilidade, e ele espalha as instâncias por
 elas e as mantém equilibradas. Se uma zona cai, as instâncias dali falham nas verificações, e o grupo
 lança as substitutas nas zonas que continuam funcionando. A aula 9 diz o que é uma zona e por que duas
-raramente caem juntas; por enquanto o ponto é que o grupo faz o espalhamento, então um `SubnetId`
-escolhido à mão deixa de ser o que decide onde as suas máquinas rodam.
+raramente caem juntas. Aqui basta saber que o grupo faz o espalhamento, então um `SubnetId`
+escolhido à mão deixa de decidir onde as suas máquinas rodam.
 
 **Um grupo de um também serve.** Com mínimo, desejado e máximo todos em 1, o grupo nunca escala, mas
 substitui a sua única instância quando ela falha numa verificação. É o jeito mais barato de ter uma

@@ -39,7 +39,7 @@ More letters can follow the processor. `d` means the host carries local disks fo
 (the instance store, which does not survive a stop; the section on disks in this lesson explains it), and `n` means
 more network bandwidth. So `m7gd.large` is `m7g.large` with a local disk.
 
-**The `g` is not a detail.** An Arm processor runs programs compiled for Arm, and a binary built for
+**The `g` decides what will run.** An Arm processor runs programs compiled for Arm, and a binary built for
 x86-64 will not start on it. The major Linux distributions, the language runtimes and most
 container images publish Arm builds, so a Python or Java service usually moves across unchanged;
 a vendor's closed binary, or a native library nobody compiled for `arm64`, is where the move stops.

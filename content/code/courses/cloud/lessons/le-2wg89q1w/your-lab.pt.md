@@ -23,7 +23,7 @@ As aulas foram gravadas no Ubuntu 24.04, e há três jeitos de ter um terminal n
 **Instale, a não ser que você use um Mac.** No Linux, é o terminal que você já tem. No Windows, o
 WSL roda um Ubuntu de verdade ao lado do Windows: `wsl --install -d Ubuntu-24.04` num PowerShell de
 administrador o instala, e o item Ubuntu do menu Iniciar abre o terminal dele. Nada que este curso
-instala precisa ser um serviço ou mudar as configurações do sistema: tirando cinco pacotes do
+instala precisa ser um serviço ou mudar as configurações do sistema: tirando seis pacotes do
 repositório do Ubuntu, tudo fica em dois diretórios da sua pasta pessoal, e apagá-los desfaz tudo.
 
 **Uma máquina virtual** é o caminho num Mac, e em qualquer computador que você prefira não mexer. As
@@ -42,5 +42,5 @@ suas horas e os seus termos, que mudam. O CloudShell da própria AWS é o que n�
 conta AWS, e a ideia deste curso é que você nunca precise de uma.
 
 Seja qual for a escolha, a seção seguinte começa do mesmo lugar: um terminal no Ubuntu 24.04, logado
-como você mesmo. A seção depois dela, sobre falhas, é a que se lê quando um comando não responde do
+como você mesmo. A seção sobre falhas, duas depois dela, é a que se lê quando um comando não responde do
 jeito que a transcrição mostra.

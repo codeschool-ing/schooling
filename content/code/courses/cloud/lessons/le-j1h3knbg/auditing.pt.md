@@ -38,7 +38,7 @@ e impedir é, por si só, uma das entradas já guardadas.
 
 ## A revisão
 
-O log responde perguntas sobre o passado. A revisão é como o presente se mantém honesto. Com data na
+O log responde perguntas sobre o passado. A revisão pergunta sobre o agora: quem ainda pode fazer o quê. Com data na
 agenda — a cada trimestre é um ritmo comum —, alguém percorre as identidades e pergunta, para cada
 uma:
 
