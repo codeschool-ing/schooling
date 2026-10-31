@@ -71,7 +71,7 @@ chegam em mais de um idioma, e os rótulos ficam em inglês.
 
 O método da lição 20 decide se os exemplos mereceram o lugar: os mesmos oito testes, com os mesmos
 `label.py` e `score.py`, uma vez sem os exemplos e uma vez com eles. O `prompt-zero.txt` é o mesmo
-prompt com os quatro exemplos tirados, e sem a lista de casos de borda da lição 20:
+prompt com os quatro exemplos tirados, e sem a lista de casos-limite da lição 20:
 
 ```
 ana@lab:~/pe$ cat prompt-zero.txt

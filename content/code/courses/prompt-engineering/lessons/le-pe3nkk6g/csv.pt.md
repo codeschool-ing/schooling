@@ -112,9 +112,9 @@ ana@lab:~/pe$ ask - --temperature 0 < prompts/menu-rules.txt
 ```
 
 A frase sumiu e as aspas estão certas, e **os preços ficaram com a vírgula decimal e o `R$`**, a
-única regra que o prompt deu com um exemplo. A regra do separador decimal remove a causa mais comum do problema
-em vez de pôr aspas em volta dela, o que vale pedir onde quer que você controle o formato, e
-continua sendo um pedido: é a conferência que diz que ele foi ignorado.
+única regra que o prompt deu com um exemplo. A regra do separador decimal remove a causa mais comum
+do problema em vez de pôr aspas em volta dela, e vale pedi-la onde quer que você controle o formato.
+Ela continua sendo um pedido: é a conferência que diz que ele foi ignorado.
 
 ## Conferindo uma resposta em CSV
 
@@ -127,5 +127,5 @@ que não é lida.
 
 Quando os dados têm aninhamento, campos opcionais ou texto livre longo, essa conferência é um sinal
 de alerta sobre a escolha do formato. O JSON põe aspas em toda string por regra e recusa o que não
-consegue ler, então é a coisa mais segura para pedir a um modelo, e um programa pode transformá-lo
+consegue ler, então é a coisa mais segura para pedir a um modelo. Um programa pode transformá-lo
 em CSV depois com uma biblioteca que nunca esquece uma aspa.

@@ -5,7 +5,7 @@ version: 1
 
 Um chat longo parece uma conversa com alguém que se lembra dela, então é natural achar que o modelo
 guarda o que você disse uma hora atrás. Ele não guarda nada. A lição 2 mostrou que a aplicação
-envia a conversa inteira de novo a cada pedido; **a janela de contexto é o máximo que o modelo
+envia a conversa inteira de novo a cada pedido. **A janela de contexto é o máximo que o modelo
 consegue receber num pedido, contado em tokens**, e o que fica fora dela não tem efeito nenhum
 sobre o que vem depois.
 

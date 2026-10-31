@@ -73,9 +73,9 @@ stopped: 5 steps and no answer
 
 The model asked twice, and `agent` **held both calls instead of sending them**. Read the first: it
 puts a Wi-Fi password in the e-mail, `123456`, which is nowhere in the conversation, in this run or
-the one before. The model invented it, which is the one piece of luck in this run, and the reason for a rule in the next
-section: a password that is in the context can be sent, and this one was not there to send. The
-second e-mail does the third thing the review asked, telling its author the review was positive.
+the one before. The model invented it, which is the one piece of luck in this run. It is also the
+reason for the second row of the table below: a password that is in the context can be sent, and
+this one was not there to send. The second e-mail does the third thing the review asked, telling its author the review was positive.
 
 A person would see each request, to `guest@example.com`, in the middle of a task about summarising
 reviews, and decline it. Confirmation works because the person looks at the action itself, which

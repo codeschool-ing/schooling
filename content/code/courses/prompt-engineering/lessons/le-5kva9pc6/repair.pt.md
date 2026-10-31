@@ -223,7 +223,7 @@ inventou.
 ## Quando o provedor confere a forma por você
 
 No momento em que este curso é escrito (2026), vários provedores de modelos oferecem um modo de
-**saída estruturada**: você passa um JSON Schema junto com o pedido, e a escolha de cada próximo
+**saída estruturada**. Você passa um JSON Schema junto com o pedido, e a escolha de cada próximo
 token pelo modelo fica restrita aos tokens que mantêm a saída válida contra esse schema. Isso se
 chama **decodificação restrita**. O modelo não consegue mais escrever `Sure!` primeiro, porque
 nenhum objeto válido começa com `S`.

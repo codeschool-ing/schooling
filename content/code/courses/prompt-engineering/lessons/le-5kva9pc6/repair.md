@@ -219,7 +219,7 @@ last line is what the caller sees then: a failure, recorded, never an object som
 
 ## When the provider checks the shape for you
 
-At the time of writing (2026), several model providers offer a **structured output** mode: you
+At the time of writing (2026), several model providers offer a **structured output** mode. You
 pass a JSON Schema with the request, and the model's choice of each next token is restricted to
 tokens that keep the output valid against that schema. This is called **constrained decoding**.
 The model can no longer write `Sure!` first, because no valid object starts with `S`.

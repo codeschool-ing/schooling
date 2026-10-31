@@ -134,7 +134,7 @@ fecha um caminho pelo qual a resposta poderia dar errado:
 | instrução | escrever o aviso para a porta | o modelo adivinha a tarefa: um anúncio, um post, uma redação |
 | contexto | o Café Aurora, a regra da cozinha | o modelo preenche a lacuna com o que é típico, que pode ser falso (lição 5) |
 | dados de entrada | o próprio horário | não há nada em que acertar |
-| formato de saída | português, quatro linhas, uma por regra | uma resposta correta que não pode ser usada onde vai ficar |
+| formato de saída | inglês, quatro linhas, uma por regra | uma resposta correta que não pode ser usada onde vai ficar |
 
 Nem todo prompt precisa das quatro, e mais longo não é melhor por si só: cada palavra é algo a partir
 do qual o modelo continua. A pergunta a fazer a cada linha é a que o teste responde. **A resposta

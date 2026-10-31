@@ -69,7 +69,7 @@ Ele foi cortado no meio da lista, em 150 tokens, e ainda não tinha chegado a um
 15.
 
 É por isso que a largura da seção anterior importa com um modelo e não com o `tot`, e por isso que as
-implementações costumam perguntar ao juiz várias vezes por estado e combinar os vereditos: a
+implementações costumam perguntar ao juiz várias vezes por estado e combinar os vereditos. É a
 votação da lição 27, aplicada a um passo, com os limites da lição 27.
 
 ## Quantas chamadas uma resposta exige

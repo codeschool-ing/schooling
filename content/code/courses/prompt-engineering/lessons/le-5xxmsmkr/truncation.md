@@ -106,8 +106,8 @@ sent: 67 tokens, 1 of 7 turns
 ## The system prompt is kept, on purpose
 
 In all three runs, the 53 tokens of the system prompt went through. That is a choice `tok fit`
-makes and most applications make: **the instructions are worth more than any single turn**,
-because without them the assistant forgets what it is for, how long its replies should be, and
+makes and most applications make: **the instructions are worth more than any single turn**.
+Without them the assistant forgets what it is for, how long its replies should be, and
 that the kitchen uses nuts. Cutting the oldest message first, with no exception, would have dropped
 the instructions before anything else, since they come first.
 

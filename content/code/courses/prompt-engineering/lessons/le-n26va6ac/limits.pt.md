@@ -23,7 +23,7 @@ tokens  words  chars  file
    203    147    651  chains/s7.txt
 ```
 
-Juntas, são 1.539 tokens de saída para uma resposta, na contagem do `tok`, contra 167 a 288 de uma cadeia só, e o prompt
+Juntas, são 1.539 tokens de saída para uma resposta, na contagem do `tok`, contra 167 a 288 de uma cadeia só. O prompt
 também vai sete vezes (ou uma, se a API aceitar um número de amostras e cobrar a entrada uma vez só;
 confira a documentação). **Sete amostras custam umas sete vezes o que custa uma**, e uma votação de
 vinte custa vinte. As amostras podem rodar em paralelo, então a espera não precisa crescer do mesmo

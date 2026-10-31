@@ -105,8 +105,8 @@ sent: 67 tokens, 1 of 7 turns
 ## O prompt de sistema fica, de propósito
 
 Nas três execuções, os 53 tokens do prompt de sistema passaram. Essa é uma escolha que o `tok fit`
-faz e que a maioria das aplicações faz: **as instruções valem mais que qualquer vez isolada**,
-porque sem elas o assistente esquece para que serve, de que tamanho devem ser as respostas e que a
+faz e que a maioria das aplicações faz: **as instruções valem mais que qualquer vez isolada**.
+Sem elas, o assistente esquece para que serve, de que tamanho devem ser as respostas e que a
 cozinha usa nozes. Cortar a mensagem mais antiga primeiro, sem exceção, teria descartado as
 instruções antes de tudo, já que elas vêm primeiro.
 

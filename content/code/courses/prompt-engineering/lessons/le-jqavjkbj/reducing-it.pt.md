@@ -148,7 +148,7 @@ Question: Who owns the café?
 **Nenhuma das fontes diz nada sobre um dono.** Elas apareceram porque mencionam o café. Um prompt
 que só dissesse "use estas fontes" deixaria o modelo com duas linhas sobre horários e uma pergunta
 que não dá para responder com elas, e a continuação mais provável de uma pergunta é uma resposta. É
-por isso que a instrução tem a segunda frase: se as fontes não contêm a resposta, diga que o manual
+por isso que a instrução tem a terceira frase: se as fontes não contêm a resposta, diga que o manual
 não diz. **Uma saída explícita transforma a resposta honesta numa resposta provável.** Aqui funcionou:
 
 ```

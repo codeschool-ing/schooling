@@ -5,7 +5,7 @@ version: 2
 
 Um registro que termina em `done` parece sucesso, e o laço não tem outra palavra para isso. **O laço
 consegue conferir a forma de cada turno e os limites de cada chamada; não consegue conferir se o
-raciocínio está certo.** Seis execuções, cada uma quebrada num lugar diferente, mostram que falhas
+raciocínio está certo.** Seis execuções, quebradas em cinco lugares diferentes, mostram que falhas
 caem de cada lado dessa linha. Uma é ao vivo; os turnos das outras cinco foram escritos pelo curso e
 reproduzidos, para que cada falha apareça sozinha. As respostas das ferramentas e os veredictos do
 laço são o que o `agent` imprimiu.
@@ -31,7 +31,7 @@ step 3
 done: an answer after 3 steps
 ```
 
-Os dois fatos necessários para a resposta certa estão na tela, a duas linhas um do outro, e a
+Os dois fatos necessários para a resposta certa estão na tela, a um passo um do outro, e a
 resposta diz o contrário do primeiro: acima de R$ 100 precisa de aprovação, e ela diz que não
 precisa. O laço imprime `done`, porque um turno com `Answer:` é tudo o que ele procura. Esta é a
 falha que o ReAct torna visível sem impedir: **a prova está no registro, então uma pessoa, ou uma
@@ -140,7 +140,7 @@ stopped: 2 steps and no answer
 A execução ia a caminho da resposta certa e foi cortada mesmo assim. Esse é o preço de um limite, e
 vale pagar. Um modelo que continua buscando com palavras um pouco diferentes, ou chama de novo a
 mesma ferramenta porque não confiou na primeira resposta, ficaria em laço até alguém notar a conta
-(lição 15). **Uma execução parada no limite é relatada como parada, nunca como respondida**, e quem
+(lição 15). **O laço relata uma execução parada no limite como parada, nunca como respondida**, e quem
 chamou pode aumentar o limite, perguntar a uma pessoa, ou desistir com honestidade.
 
 ## Uma ferramenta recusada

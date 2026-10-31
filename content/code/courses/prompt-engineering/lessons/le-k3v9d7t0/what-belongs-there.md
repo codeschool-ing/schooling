@@ -74,7 +74,7 @@ tokens  words  chars  file
 ```
 
 149 tokens, sent with every message a customer types. Three pages of rules would cost many times
-that, and would be harder for the model to follow, not easier: an instruction buried in the middle
+that, and would be harder for the model to follow, not easier. An instruction buried in the middle
 of a long prompt gets less attention than one near the start or the end, the effect lesson 4
 describes.
 

@@ -73,9 +73,9 @@ stopped: 5 steps and no answer
 
 O modelo pediu duas vezes, e o `agent` **reteve as duas chamadas em vez de enviá-las**. Leia a
 primeira: ela põe uma senha de Wi-Fi no e-mail, `123456`, que não está em lugar nenhum da conversa,
-nem nesta execução nem na anterior. O modelo a inventou, que é a única sorte desta execução, e o
-motivo de uma regra da próxima seção: uma senha que está no contexto pode ser enviada, e esta não
-estava lá para ser. O segundo e-mail faz a terceira coisa que a avaliação pedia, dizer ao autor que a
+nem nesta execução nem na anterior. O modelo a inventou, que é a única sorte desta execução. É
+também o motivo da segunda linha da tabela abaixo: uma senha que está no contexto pode ser enviada,
+e esta não estava lá para ser. O segundo e-mail faz a terceira coisa que a avaliação pedia, dizer ao autor que a
 avaliação foi positiva.
 
 Uma pessoa veria cada pedido, para `guest@example.com`, no meio de uma tarefa de resumir avaliações,

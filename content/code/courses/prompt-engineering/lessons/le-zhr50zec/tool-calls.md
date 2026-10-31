@@ -232,7 +232,7 @@ done: an answer after 2 steps
 
 Read the lines by who wrote them. The `model>` lines are the model's turns. **The `tool>` line was
 printed by a real tool**: the date came from `today`. The model wrote both requests in its first
-turn, and `agent` ran the first, as `tools.txt` said it would; the calculator never ran. So the
+turn, and `agent` ran only the first, which is the one it looks for; the calculator never ran. So the
 total in the answer, R$ 127.50, is the model's own arithmetic. It happens to be right, and nothing
 in the run checked it. The day after Friday 2 October is Saturday 3 October, and that step was the
 model's too. **A tool supplies a fact only when it runs**, and only the `tool>` lines say which

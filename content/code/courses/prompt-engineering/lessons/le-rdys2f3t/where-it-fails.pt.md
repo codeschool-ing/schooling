@@ -92,8 +92,8 @@ que foi descrito é trocada ou reembolsada na hora. Essa linha diz `refunded`, n
 vieram três trechos que dividem uma palavra cada com a pergunta e respondem outra coisa. A segunda
 pergunta, com as palavras do próprio manual, põe a regra certa em primeiro.
 
-A busca não tem como saber a diferença. **Não existe uma nota que queira dizer "não relevante"**: os
-três primeiros são devolvidos sejam eles quais forem. Com os três da primeira pergunta, o modelo os
+A busca não tem como saber a diferença. **Não existe uma nota que queira dizer "não relevante"**: qualquer
+trecho que tenha uma palavra em comum pode entrar entre os três primeiros, mesmo que responda a outra coisa. Com os três da primeira pergunta, o modelo os
 julgou direito:
 
 ```

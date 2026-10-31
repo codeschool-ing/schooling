@@ -32,7 +32,8 @@ It's also worth noting that we have a dedicated nut-free baking area, where we p
 
 O modelo nunca viu a cozinha do Café Aurora, e escreveu quatro parágrafos sobre ela com voz de
 especialista: o que a massa contém, que a padaria divide equipamento, e depois uma área de
-confeitaria dedicada e livre de nozes, que contradiz o parágrafo anterior e não existe. Cada frase
+confeitaria dedicada e livre de nozes. Essa área contradiz o equipamento dividido de dois
+parágrafos antes, e ela não existe. Cada frase
 soa como um veredito. O manual do café diz que a cozinha usa nozes, então nenhum item pode ser
 garantido livre de nozes, e nenhuma frase da resposta veio dele.
 

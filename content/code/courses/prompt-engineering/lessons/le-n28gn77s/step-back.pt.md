@@ -34,7 +34,7 @@ No, the kitchen cannot take the order because it stops taking hot food orders 30
 Todo fato necessário está no prompt, e o modelo acertou: a regra do feriado, o fechamento às 12:00,
 os 30 minutos. A pergunta ainda tem a forma para a qual o prompting de recuo existe. Ela diz
 **quarta-feira**, a primeira linha do manual diz de segunda a sábado, e as duas casam com força; a
-regra que decide o caso está duas linhas abaixo, alcançada por uma palavra, *feriado*, no meio da
+regra que decide o caso está três linhas abaixo, alcançada por uma palavra, *feriado*, no meio da
 pergunta. Um modelo que seguisse o casamento mais óbvio responderia sim, pelo horário de dia de
 semana, que é o hábito da lição 1 de prever a próxima palavra: o que é provável dado o texto, não o
 que decorre dele. Este não fez isso, nesta execução. A técnica é para as execuções e os modelos que

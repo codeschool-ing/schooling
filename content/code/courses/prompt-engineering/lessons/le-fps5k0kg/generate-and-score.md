@@ -163,8 +163,9 @@ context: bigram after ':'
   what       8.3%  ###
 ```
 
-It falls back to what follows a colon anywhere in its file, and `is` and `yes` tie at the top. Only
-the two templates ending in `the {x} is` put the item where the model can see it.
+It falls back to what follows a colon anywhere in its file, and `is` and `yes` tie at the top. The
+bare `{x}` shows the model the item and nothing else, and it answered `is` after every one. Only
+the two templates ending in `the {x} is` give it the item and `is` as its last two words.
 
 A large model sees far more than two words. The same five templates, the same four examples, scored
 on the local model:

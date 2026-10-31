@@ -71,7 +71,7 @@ is there cake?
 ```
 
 Um modelo que escreve o turno do outro lado está pondo palavras na boca de outra pessoa. Num programa,
-esse turno inventado pode ser lido como se o usuário a tivesse dito. Uma parada no rótulo do próximo
+esse turno inventado pode ser lido como se o usuário o tivesse dito. Uma parada no rótulo do próximo
 turno é uma proteção barata contra isso.
 
 APIs de chat que recebem uma lista de mensagens marcam os turnos com tokens próprios, e terminam o

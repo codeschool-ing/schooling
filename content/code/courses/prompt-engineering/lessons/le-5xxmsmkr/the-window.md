@@ -5,7 +5,7 @@ version: 1
 
 A long chat looks like a conversation with somebody who remembers it, so it is natural to think the
 model keeps what you told it an hour ago. It keeps nothing. Lesson 2 showed that the application
-sends the whole conversation again with every request; **the context window is the most the model
+sends the whole conversation again with every request. **The context window is the most the model
 can take in on one request, counted in tokens**, and anything outside it has no effect on what
 comes next.
 

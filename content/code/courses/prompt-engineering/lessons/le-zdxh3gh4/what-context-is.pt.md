@@ -46,7 +46,7 @@ cuja aprovação o manual exige acima de R$ 100. E vem assinada `[Your Name]`. �
 na forma mais comum: nenhum fato inventado sobre o mundo, só uma política plausível, certa por sorte
 num ponto e calada em outro.
 
-Com a página de reembolsos e quatro linhas sobre o trabalho no prompt, o `with-context.txt`, que a
+Com a página de reembolsos e cinco linhas sobre o trabalho no prompt, o `with-context.txt`, que a
 próxima seção mostra inteiro:
 
 ```
