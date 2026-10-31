@@ -42,10 +42,10 @@ The size of the body in bytes, which is how the far end knows where a response e
 
 It is counted in **bytes, not characters**, and in a language with accented letters those are not
 the same number. A string of twelve visible characters can be fourteen bytes, and a length
-calculated by counting characters is a response the receiver will wait forever for the end of.
+calculated by counting characters says twelve: the receiver stops two bytes before the body does.
 
-The other failure is subtler: a length larger than reality leaves a connection hanging, and a
-length smaller than reality leaves trailing bytes to be read as the start of whatever comes next.
+That is one of the two failure modes. A length smaller than reality leaves trailing bytes to be read
+as the start of whatever comes next, and a length larger than reality leaves a connection hanging.
 Both are the kind of defect that behaves differently depending on whether a proxy is in the way,
 which makes them memorable to debug.
 
